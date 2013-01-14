@@ -33,6 +33,6 @@ Same procedure as for submitting patches, but with the additional provisions:
     * For multi-product apps, concatenate the primary products, like this: compute-appengine-demo-suite-python.
     * For multi-language apps, concatenate the primary languages like this: appengine-sockets-python-java-go.
 1. Customize the default README.md, LICENSE.md, CONTRIB.md, as needed.
-1. Ensure that your code adheres to the recommended style guide for the language(s) you are using. Refer to the [Google Cloud Platform Samples Style Guide](https://github.com/GoogleCloudPlatform/Home/wiki/STYLE.html) for the recommended coding standards for this organization. In the event the existing style conflicts with the recommended style, the former takes precedence over the latter.
+1. Ensure that your code adheres to the recommended style guide for the language(s) you are using. Refer to the [Google Cloud Platform Samples Style Guide](https://github.com/GoogleCloudPlatform/Home/wiki/STYLE.html) for the recommended coding standards for this organization.
 1. Ensure that your code has an appropriate set of unit tests, which you have executed.
 1. Submit a pull request.
