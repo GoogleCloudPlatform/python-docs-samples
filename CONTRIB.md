@@ -13,7 +13,7 @@ Follow either of the two links above to access the appropriate CLA and instructi
 
 ## Submitting Patches
 
-1. Sign a Contributor License Agreement.
+1. Sign a Contributor License Agreement (see details above).
 1. Coordinate your plans with team members that are listed on the repo in question. This ensures that work isn't being duplicated and communicating your plan early also generally leads to better patches.
 1. Fork the desired repo, make and test your changes
 1. Ensure that your code adheres to the existing style in the sample to which you are contributing. Refer to the [Google Cloud Platform Samples Style Guide](https://github.com/GoogleCloudPlatform/Home/wiki/STYLE.html) for the recommended coding standards for this organization. In the event the existing style conflicts with the recommended style, the former takes precedence over the latter.
@@ -24,6 +24,17 @@ Follow either of the two links above to access the appropriate CLA and instructi
 
 Same procedure as for submitting patches, but with the additional provisions:
 
-1. Request creation of a boilerplate repo in the GoogleCloudPlatform organization.
-1. One of the organization owners will create a public repo for you with a default copy of README.md, LICENSE.md, and CONTRIB.md files from this project.
-1. Proceed with submitting your code via the steps above for submitting a patch.
+1. Send mail to one of the GoogleCloudPlatform owners with a short description of your proposed sample app.
+1. If accepted, sign a Contributor License Agreement (see details above).
+1. Clone the GoogleCloudPlatform/Home repo into a new repo. Follow this naming convention for your new repo:
+
+{product}-{app-name}-{language}
+products: appengine, compute, storage, bigquery, prediction, cloudsql
+example:  appengine-guestbook-python
+For multi-product apps, concatenate the primary products, like this: compute-appengine-demo-suite-python.
+For multi-language apps, concatenate the primary languages like this: appengine-sockets-python-java-go.
+
+1. Customize your README.md, LICENSE.md, CONTRIB.md, as needed.
+1. Ensure that your code adheres to the recommended style guide for the language(s) you are using. Refer to the [Google Cloud Platform Samples Style Guide](https://github.com/GoogleCloudPlatform/Home/wiki/STYLE.html) for the recommended coding standards for this organization. In the event the existing style conflicts with the recommended style, the former takes precedence over the latter.
+1. Ensure that your code has an appropriate set of unit tests, which you have executed.
+1. Submit a pull request.
