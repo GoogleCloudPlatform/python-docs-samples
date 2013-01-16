@@ -22,7 +22,7 @@ Follow either of the two links above to access the appropriate CLA and instructi
 ## Submitting an Enhancement
 
 
-1. Submit an enhancement issue to the repo in question. This ensures that work isn't being duplicated and communicating your plan early also generally leads to better patches.
+1. Submit an enhancement issue to the repo in question.
 1. The repo owner will respond to your enhancement issue promptly. Instructional value is the top priority when evaluating enhancements for this collection of repos. 
 1. If your enhancement issue is accepted, and you haven't already done so, sign a Contributor License Agreement (see details above).
 1. fork the desired repo, make your code changes and test your enhancement.
