@@ -15,7 +15,7 @@ Follow either of the two links above to access the appropriate CLA and instructi
 
 1. Sign a Contributor License Agreement (see details above).
 1. Fork the desired repo, make code changes and test your bug fix.
-1. Ensure that your code adheres to the existing style in the sample to which you are contributing. Refer to the [Google Cloud Platform Samples Style Guide](https://github.com/GoogleCloudPlatform/Home/wiki/STYLE.html) for the recommended coding standards for this organization. In the event the existing style conflicts with the recommended style, the former takes precedence over the latter.
+1. Ensure that your code adheres to the existing style in the sample to which you are contributing. Refer to the [Google Cloud Platform Samples Style Guide](https://github.com/GoogleCloudPlatform/Template/wiki/STYLE.html) for the recommended coding standards for this organization. In the event the existing style conflicts with the recommended style, the former takes precedence over the latter.
 1. Ensure that your code has an appropriate set of unit tests, which you have executed.
 1. Submit a pull request. 
 
@@ -26,15 +26,14 @@ Follow either of the two links above to access the appropriate CLA and instructi
 1. The repo owner will respond to your enhancement issue promptly. Instructional value is the top priority when evaluating enhancements for this collection of repos. 
 1. If your enhancement issue is accepted, and you haven't already done so, sign a Contributor License Agreement (see details above).
 1. Fork the desired repo, make your code changes and test your enhancement.
-1. Ensure that your code adheres to the existing style in the sample to which you are contributing. Refer to the [Google Cloud Platform Samples Style Guide](https://github.com/GoogleCloudPlatform/Home/wiki/STYLE.html) for the recommended coding standards for this organization. In the event the existing style conflicts with the recommended style, the former takes precedence over the latter.
+1. Ensure that your code adheres to the existing style in the sample to which you are contributing. Refer to the [Google Cloud Platform Samples Style Guide](https://github.com/GoogleCloudPlatform/Template/wiki/STYLE.html) for the recommended coding standards for this organization. In the event the existing style conflicts with the recommended style, the former takes precedence over the latter.
 1. Ensure that your code has an appropriate set of unit tests, which you have executed.
 1. Submit a pull request.
 
 ## Submitting a new sample app
 
-1. Sign a Contributor License Agreement (see details above).
-1. Submit an enhancement issue to the GoogleCloudPlatform/Template repo.
-1. The repo owner will respond to your enhancement issue promptly. Instructional value is the top priority when evaluating new app proposals for this collection of repos. 
+1. Submit an enhancement issue to the GoogleCloudPlatform/Template repo describing your proposed sample app.
+1. The Template repo owner will respond to your enhancement issue promptly. Instructional value is the top priority when evaluating new app proposals for this collection of repos. 
 1. If your proposal is accepted, and you haven't already done so, sign a Contributor License Agreement (see details above).
 1. Create your own repo for your app following this naming convention:
     * {product}-{app-name}-{language}
@@ -43,6 +42,6 @@ Follow either of the two links above to access the appropriate CLA and instructi
     * For multi-product apps, concatenate the primary products, like this: compute-appengine-demo-suite-python.
     * For multi-language apps, concatenate the primary languages like this: appengine-sockets-python-java-go.
 1. Clone the README.md, CONTRIB.md and LICENSE files from the GoogleCloudPlatform/Template repo.
-1. Ensure that your code adheres to the existing style in the sample to which you are contributing. Refer to the [Google Cloud Platform Samples Style Guide](https://github.com/GoogleCloudPlatform/Home/wiki/STYLE.html) for the recommended coding standards for this organization. In the event the existing style conflicts with the recommended style, the former takes precedence over the latter.
+1. Ensure that your code adheres to the existing style in the sample to which you are contributing. Refer to the [Google Cloud Platform Samples Style Guide](https://github.com/GoogleCloudPlatform/Template/wiki/STYLE.html) for the recommended coding standards for this organization. In the event the existing style conflicts with the recommended style, the former takes precedence over the latter.
 1. Ensure that your code has an appropriate set of unit tests, which you have executed.
-1. When you are ready to publish your app, submit a pull request to the GoogleCloudPlatform organization. 
+1. Submit a pull request to the GoogleCloudPlatform organization. 
