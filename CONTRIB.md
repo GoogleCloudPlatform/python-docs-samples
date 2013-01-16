@@ -31,17 +31,17 @@ Follow either of the two links above to access the appropriate CLA and instructi
 
 ## Submitting a new sample app
 
-Same procedure as for submitting patches, but with the additional provisions:
-
-1. Send mail to one of the GoogleCloudPlatform owners with a short description of your proposed sample app.
-1. If accepted, sign a Contributor License Agreement (see details above).
-1. Clone the GoogleCloudPlatform/Home repo into a new repo. Follow this naming convention for your new repo:
+1. Sign a Contributor License Agreement (see details above).
+1. Submit an enhancement issue to the GoogleCloudPlatform/Template repo.
+1. The repo owner will respond to your enhancement issue promptly. Instructional value is the top priority when evaluating new app proposals for this collection of repos. 
+1. If your proposal is accepted, build your app in your own repo.
+1. Follow this naming convention for your new repo:
     * {product}-{app-name}-{language}
     * products: appengine, compute, storage, bigquery, prediction, cloudsql
     * example:  appengine-guestbook-python
     * For multi-product apps, concatenate the primary products, like this: compute-appengine-demo-suite-python.
     * For multi-language apps, concatenate the primary languages like this: appengine-sockets-python-java-go.
-1. Customize the default README.md, LICENSE.md, CONTRIB.md, as needed.
-1. Ensure that your code adheres to the recommended style guide for the language(s) you are using. Refer to the [Google Cloud Platform Samples Style Guide](https://github.com/GoogleCloudPlatform/Home/wiki/STYLE.html) for the recommended coding standards for this organization.
+1. Clone the README.md, CONTRIB.md and LICENSE files from the GoogleCloudPlatform/Template repo.
+1. Ensure that your code adheres to the existing style in the sample to which you are contributing. Refer to the [Google Cloud Platform Samples Style Guide](https://github.com/GoogleCloudPlatform/Home/wiki/STYLE.html) for the recommended coding standards for this organization. In the event the existing style conflicts with the recommended style, the former takes precedence over the latter.
 1. Ensure that your code has an appropriate set of unit tests, which you have executed.
-1. Submit a pull request.
+1. When you are ready to publish your app, submit a pull request to the GoogleCloudPlatform organization. 
