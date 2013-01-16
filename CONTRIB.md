@@ -11,26 +11,17 @@ Please fill out either the individual or corporate Contributor License Agreement
 
 Follow either of the two links above to access the appropriate CLA and instructions for how to sign and return it. Once we receive it, we'll be able to accept your pull requests.
 
-## Submitting a Bug Fix
+## Contributing A Patch
 
-1. Sign a Contributor License Agreement (see details above).
-1. Fork the desired repo, make code changes and test your bug fix.
-1. Ensure that your code adheres to the existing style in the sample to which you are contributing. Refer to the [Google Cloud Platform Samples Style Guide](https://github.com/GoogleCloudPlatform/Template/wiki/style.html) for the recommended coding standards for this organization. In the event the existing style conflicts with the recommended style, the former takes precedence over the latter.
-1. Ensure that your code has an appropriate set of unit tests which all pass.
-1. Submit a pull request. 
-
-## Submitting an Enhancement
-
-
-1. Submit an enhancement issue to the repo in question.
-1. The repo owner will respond to your enhancement issue promptly. Instructional value is the top priority when evaluating enhancements for this collection of repos. 
-1. If your enhancement issue is accepted, and you haven't already done so, sign a Contributor License Agreement (see details above).
-1. Fork the desired repo, make your code changes and test your enhancement.
+1. Submit an issue describing your proposed change to the repo in question.
+1. The repo owner will respond to your issue promptly.
+1. If your proposed change is accepted, and you haven't already done so, sign a Contributor License Agreement (see details above).
+1. Fork the desired repo, develop and test your code changes.
 1. Ensure that your code adheres to the existing style in the sample to which you are contributing. Refer to the [Google Cloud Platform Samples Style Guide](https://github.com/GoogleCloudPlatform/Template/wiki/style.html) for the recommended coding standards for this organization. In the event the existing style conflicts with the recommended style, the former takes precedence over the latter.
 1. Ensure that your code has an appropriate set of unit tests which all pass.
 1. Submit a pull request.
 
-## Submitting a new sample app
+## Contributing A New Sample App
 
 1. Submit an enhancement issue to the GoogleCloudPlatform/Template repo describing your proposed sample app.
 1. The Template repo owner will respond to your enhancement issue promptly. Instructional value is the top priority when evaluating new app proposals for this collection of repos. 
