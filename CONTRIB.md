@@ -23,7 +23,7 @@ Follow either of the two links above to access the appropriate CLA and instructi
 
 ## Contributing A New Sample App
 
-1. Submit an enhancement issue to the GoogleCloudPlatform/Template repo describing your proposed sample app.
+1. Submit an issue to the GoogleCloudPlatform/Template repo describing your proposed sample app.
 1. The Template repo owner will respond to your enhancement issue promptly. Instructional value is the top priority when evaluating new app proposals for this collection of repos. 
 1. If your proposal is accepted, and you haven't already done so, sign a Contributor License Agreement (see details above).
 1. Create your own repo for your app following this naming convention:
