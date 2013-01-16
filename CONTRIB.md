@@ -17,7 +17,7 @@ Follow either of the two links above to access the appropriate CLA and instructi
 1. Fork the desired repo, make code changes and test your bug fix.
 1. Ensure that your code adheres to the existing style in the sample to which you are contributing. Refer to the [Google Cloud Platform Samples Style Guide](https://github.com/GoogleCloudPlatform/Home/wiki/STYLE.html) for the recommended coding standards for this organization. In the event the existing style conflicts with the recommended style, the former takes precedence over the latter.
 1. Ensure that your code has an appropriate set of unit tests, which you have executed.
-1. Submit a pull request. A pull request should address one issue in the repo. Please don't mix more than one logical change per pull request, because it makes the history hard to follow.
+1. Submit a pull request. 
 
 ## Submitting an Enhancement
 
@@ -25,10 +25,10 @@ Follow either of the two links above to access the appropriate CLA and instructi
 1. Submit an enhancement issue to the repo in question.
 1. The repo owner will respond to your enhancement issue promptly. Instructional value is the top priority when evaluating enhancements for this collection of repos. 
 1. If your enhancement issue is accepted, and you haven't already done so, sign a Contributor License Agreement (see details above).
-1. fork the desired repo, make your code changes and test your enhancement.
+1. Fork the desired repo, make your code changes and test your enhancement.
 1. Ensure that your code adheres to the existing style in the sample to which you are contributing. Refer to the [Google Cloud Platform Samples Style Guide](https://github.com/GoogleCloudPlatform/Home/wiki/STYLE.html) for the recommended coding standards for this organization. In the event the existing style conflicts with the recommended style, the former takes precedence over the latter.
 1. Ensure that your code has an appropriate set of unit tests, which you have executed.
-1. Submit a pull request. A pull request should address one issue in the repo. Please don't mix more than one logical change per pull request, because it makes the history hard to follow.
+1. Submit a pull request.
 
 ## Submitting a new sample app
 
