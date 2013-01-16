@@ -44,4 +44,4 @@ Follow either of the two links above to access the appropriate CLA and instructi
 1. Clone the README.md, CONTRIB.md and LICENSE files from the GoogleCloudPlatform/Template repo.
 1. Ensure that your code adheres to the existing style in the sample to which you are contributing. Refer to the [Google Cloud Platform Samples Style Guide](https://github.com/GoogleCloudPlatform/Template/wiki/style.html) for the recommended coding standards for this organization. In the event the existing style conflicts with the recommended style, the former takes precedence over the latter.
 1. Ensure that your code has an appropriate set of unit tests, which you have executed.
-1. Submit a pull request to the GoogleCloudPlatform organization. 
+1. Submit a request to fork your repo in GoogleCloudPlatform organizationt via your proposal issue.
