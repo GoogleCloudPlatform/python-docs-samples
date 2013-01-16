@@ -42,4 +42,4 @@ How do I run the project's automated tests?
 
 ## Licensing
 
-* See LICENSE.md
+* See LICENSE
