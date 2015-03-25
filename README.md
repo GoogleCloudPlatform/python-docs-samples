@@ -45,7 +45,7 @@ e.g.
 
 ## Contributing changes
 
-* See [CONTRIB.md](CONTRIB.md)
+* See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 
 ## Licensing
