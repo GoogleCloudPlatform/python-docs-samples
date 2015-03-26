@@ -1,52 +1,55 @@
-## Project name
+## Project Name
 
-A description of what this project does and who it serves.
+Project description.
 
-Include authorship, support contact and release information.
+See our other [Google Cloud Platform github
+repos](https://github.com/GoogleCloudPlatform) for sample applications and
+scaffolding for other python frameworks and use cases.
 
+## Run Locally
+1. Install the [Google Cloud SDK](https://cloud.google.com/sdk/), including the [gcloud tool](https://cloud.google.com/sdk/gcloud/), and [gcloud app component](https://cloud.google.com/sdk/gcloud-app).
+2. Setup the gcloud tool.
 
-## Project setup, installation, and configuration
+   ```
+   gcloud components update app
+   gcloud auth login
+   gcloud config set project <your-app-id>
+   ```
+   You don't need a valid app-id to run locally, but will need a valid id to deploy below.
+   
+1. Clone this repo.
 
-How do I, as a developer, start working on the project?
+   ```
+   git clone https://github.com/GoogleCloudPlatform/<REPO NAME>.git
+   ```
+1. Run this project locally from the command line.
 
-1. What dependencies does it have (where are they expressed) and how do I install them?
-1. Can I see the project working before I change anything?
+   ```
+   gcloud preview app run <REPO NAME>/
+   ```
 
-
-## Testing
-
-How do I run the project's automated tests?
-
-* Unit Tests
-
-* Integration Tests
-
+1. Visit the application at [http://localhost:8080](http://localhost:8080).
 
 ## Deploying
 
-### How to setup the deployment environment
+1. Use the [Cloud Developer Console](https://console.developer.google.com)  to create a project/app id. (App id and project id are identical)
+2. Configure gcloud with your app id.
 
-* Addons, packages, or other dependencies required for deployment.
-* Required environment variables or credentials not included in git.
-* Monitoring services and logging.
+   ```
+   gcloud config set project <your-app-id>
+   ```
+1. Use the [Admin Console](https://appengine.google.com) to view data, queues, and other AppEngine specific administration tasks.
+1. Use gcloud to deploy your app.
 
-### How to deploy
+   ```
+   gcloud preview app deploy <REPO NAME>/
+   ```
 
-
-## Troubleshooting & useful tools
-
-### Examples of common tasks
-
-e.g.
-* How to make curl requests while authenticated via oauth.
-* How to monitor background jobs.
-* How to run the app through a proxy.
-
+1. Congratulations!  Your application is now live at your-app-id.appspot.com
 
 ## Contributing changes
 
 * See [CONTRIBUTING.md](CONTRIBUTING.md)
-
 
 ## Licensing
 
