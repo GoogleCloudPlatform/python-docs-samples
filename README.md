@@ -38,7 +38,7 @@ scaffolding for other python frameworks and use cases.
    ```
    gcloud config set project <your-app-id>
    ```
-1. Use the [Admin Console](https://appengine.google.com) to view data, queues, and other AppEngine specific administration tasks.
+1. Use the [Admin Console](https://appengine.google.com) to view data, queues, and other App Engine specific administration tasks.
 1. Use gcloud to deploy your app.
 
    ```
