@@ -1,0 +1,37 @@
+sudo: false
+#add language, etc. here
+
+cache:
+  directories:
+        - $HOME/gcloud/
+env:
+        - GCLOUD=$HOME/gcloud/google-cloud-sdk/bin CLOUDSDK_PYTHON_SITEPACKAGES=1 GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/client_secrets.json
+
+before_install:
+        #ENCRYPT YOUR PRIVATE KEY
+        # 1. Install and login to the Travis CLI:
+        #       $ gem install travis
+        #       $ travis login
+        # 2. Move your json private key to client_secrets.json
+        # 3. Run:
+        #       $ travis encrypt-file client_secrets.json --add
+        # 4. Commit changes:
+        #       $ git add client_secrets.json.enc
+        #       $ git commit client_secrets.json.enc .travis.yml
+
+        - if [ ! -d $HOME/gcloud/google-cloud-sdk ]; then
+                mkdir -p $HOME/gcloud &&
+                wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz --directory-prefix=$HOME/gcloud &&
+                cd $HOME/gcloud &&
+                tar xzf google-cloud-sdk.tar.gz &&
+                printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh &&
+                cd $TRAVIS_BUILD_DIR;
+          fi
+        - printf 'y\n' | $GCLOUD/gcloud components update
+        - gcloud auth activate-service-account --key-file client_secrets.json
+
+install:
+        #Add app specific setup here
+
+script:
+        #Test and/or deploy your app with gcloud commands here!
