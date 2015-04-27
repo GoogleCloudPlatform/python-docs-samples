@@ -5,10 +5,10 @@ cache:
   directories:
         - $HOME/gcloud/
 env:
-        - GCLOUD=$HOME/gcloud/google-cloud-sdk/bin CLOUDSDK_PYTHON_SITEPACKAGES=1 GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/client_secrets.json
+        - GCLOUD=$HOME/gcloud/google-cloud-sdk/bin GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/client_secrets.json #Other environment variables on same line
 
 before_install:
-        #ENCRYPT YOUR PRIVATE KEY
+        #ENCRYPT YOUR PRIVATE KEY (If you need authentication)
         # 1. Install and login to the Travis CLI:
         #       $ gem install travis
         #       $ travis login
@@ -28,7 +28,9 @@ before_install:
                 cd $TRAVIS_BUILD_DIR;
           fi
         - printf 'y\n' | $GCLOUD/gcloud components update
-        - gcloud auth activate-service-account --key-file client_secrets.json
+        - if [ -a client_secrets.json ]; then
+                gcloud auth activate-service-account --key-file client_secrets.json;
+          fi
 
 install:
         #Add app specific setup here
