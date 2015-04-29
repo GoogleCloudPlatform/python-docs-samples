@@ -5,7 +5,7 @@ cache:
   directories:
         - $HOME/gcloud/
 env:
-        - GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/client_secrets.json #Other environment variables on same line
+        - PATH=$PATH:$HOME/gcloud/google-cloud-sdk/bin GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/client_secrets.json #Other environment variables on same line
 
 before_install:
         #ENCRYPT YOUR PRIVATE KEY (If you need authentication)
@@ -27,7 +27,6 @@ before_install:
                 printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh &&
                 cd $TRAVIS_BUILD_DIR;
           fi
-        - alias gcloud=$HOME/gcloud/google-cloud-sdk/bin/gcloud
         - printf 'y\n' | gcloud components update
         - if [ -a client_secrets.json ]; then
                 gcloud auth activate-service-account --key-file client_secrets.json;
