@@ -20,8 +20,13 @@ scaffolding for other python frameworks and use cases.
 1. Clone this repo.
 
    ```
+<<<<<<< HEAD
    git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
    cd python-docs-samples/datastore/ndb/overview
+=======
+   git clone https://github.com/GoogleCloudPlatform/datastore-pthon-samples.git
+   cd datastore-python-samples/ndb-overview
+>>>>>>> 23fb0ab7babac042c09d45ae61bb112322049f74
    ```
 1. Run this project locally from the command line.
 
