@@ -17,10 +17,11 @@
 
 import unittest
 
-import parent_child_models as models
+from google.appengine.ext import ndb
+
 import test_base
 
-from google.appengine.ext import ndb
+from .. import parent_child_models as models
 
 
 class ContactTestCase(test_base.TestCase):

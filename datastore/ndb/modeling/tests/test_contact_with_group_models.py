@@ -19,8 +19,9 @@ import unittest
 
 from google.appengine.ext import ndb
 
-import contact_with_group_models as models
 import test_base
+
+from .. import contact_with_group_models as models
 
 
 class ContactTestCase(test_base.TestCase):

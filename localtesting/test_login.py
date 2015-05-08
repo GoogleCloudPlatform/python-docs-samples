@@ -14,8 +14,9 @@
 
 # [START login_example]
 import unittest
-from google.appengine.ext import testbed
+
 from google.appengine.api import users
+from google.appengine.ext import testbed
 
 
 class LoginTestCase(unittest.TestCase):

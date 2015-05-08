@@ -1,0 +1,7 @@
+[run]
+include =
+    datastore/*
+    localtesting/*
+[report]
+exclude_lines =
+    pragma: NO COVER

@@ -17,8 +17,9 @@
 
 import unittest
 
-import naive_models as models
 import test_base
+
+from .. import naive_models as models
 
 
 class ContactTestCase(test_base.TestCase):

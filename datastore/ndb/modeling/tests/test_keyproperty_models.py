@@ -17,8 +17,9 @@
 
 import unittest
 
-import keyproperty_models as models
 import test_base
+
+from .. import keyproperty_models as models
 
 
 class ContactTestCase(test_base.TestCase):

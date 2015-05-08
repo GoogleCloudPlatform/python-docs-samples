@@ -1,6 +1,6 @@
 # dummy app.yaml for nosegae
 
-application: ndb-snippets
+application: python-docs-samples
 version: 1
 api_version: 1
 runtime: python27
