@@ -28,8 +28,9 @@ before_install:
                 cd $TRAVIS_BUILD_DIR;
           fi
         - printf 'y\n' | gcloud components update
-        - if [ -a client_secrets.json ]; then
-                gcloud auth activate-service-account --key-file client_secrets.json;
+        - openssl aes-256-cbc -K $encrypted_4fda24e244ca_key -iv $encrypted_4fda24e244ca_iv -in python-docs-samples.json.enc -out python-docs-samples.json -d
+        - if [ -a python-docs-samples.json ]; then
+                gcloud auth activate-service-account --key-file python-docs-samples.json;
           fi
 
 install:
