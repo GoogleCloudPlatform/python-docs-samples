@@ -1,7 +1,5 @@
 # dummy app.yaml for nosegae
 
-application: python-docs-samples
-version: 1
 api_version: 1
 runtime: python27
 threadsafe: true

@@ -17,9 +17,9 @@
 
 import unittest
 
-import test_base
+from datastore.ndb.modeling import structured_property_models as models
 
-from .. import structured_property_models as models
+import test_base
 
 
 class ContactTestCase(test_base.TestCase):

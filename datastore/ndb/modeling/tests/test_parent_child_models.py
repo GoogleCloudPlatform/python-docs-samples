@@ -17,11 +17,11 @@
 
 import unittest
 
+from datastore.ndb.modeling import parent_child_models as models
+
 from google.appengine.ext import ndb
 
 import test_base
-
-from .. import parent_child_models as models
 
 
 class ContactTestCase(test_base.TestCase):

@@ -17,11 +17,11 @@
 
 import unittest
 
+from datastore.ndb.modeling import contact_with_group_models as models
+
 from google.appengine.ext import ndb
 
 import test_base
-
-from .. import contact_with_group_models as models
 
 
 class ContactTestCase(test_base.TestCase):
