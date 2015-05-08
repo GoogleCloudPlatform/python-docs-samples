@@ -2,6 +2,7 @@
 include =
     datastore/*
     localtesting/*
+    bigquery/*
 [report]
 exclude_lines =
     pragma: NO COVER
