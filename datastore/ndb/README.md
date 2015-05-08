@@ -1,8 +1,6 @@
-## NDB Transactions Sample
+## NDB Overview Sample
 
-This is a sample app for Google App Engine that exercises the [NDB Transactions Python API](https://cloud-dot-devsite.googleplex.com/appengine/docs/python/ndb/transactions)
-
-This app presents a list of notes. After you submit a note with a particular title, you may not change that note or submit a new note with the same title. There are multiple note pages available.
+This is a sample app for Google App Engine that exercises the [NDB Python API](https://cloud.google.com/appengine/docs/python/ndb/).
 
 See our other [Google Cloud Platform github
 repos](https://github.com/GoogleCloudPlatform) for sample applications and
@@ -22,14 +20,14 @@ scaffolding for other python frameworks and use cases.
 1. Clone this repo.
 
    ```
-   git clone https://github.com/GoogleCloudPlatform/datastore-samples.git
-   cd datastore-samples/python/ndb/transactions
+   git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+   cd python-docs-samples/datastore/ndb/<sub-directory>
    ```
+
 1. Run this project locally from the command line.
 
    ```
-   pip install -r requirements.txt -t lib/
-   gcloud preview app run ./app.yaml
+   gcloud preview app run ./
    ```
 
 1. Visit the application at [http://localhost:8080](http://localhost:8080).
@@ -46,16 +44,15 @@ scaffolding for other python frameworks and use cases.
 1. Use gcloud to deploy your app.
 
    ```
-   pip install -r requirements.txt -t lib/
-   gcloud preview app deploy ./app.yaml
+   gcloud preview app deploy ./
    ```
 
 1. Congratulations!  Your application is now live at your-app-id.appspot.com
 
 ## Contributing changes
 
-* See [CONTRIBUTING.md](../../../CONTRIBUTING.md)
+* See [CONTRIBUTING.md](../../CONTRIBUTING.md)
 
 ## Licensing
 
-* See [LICENSE](../../../LICENSE)
+* See [LICENSE](../../LICENSE)
