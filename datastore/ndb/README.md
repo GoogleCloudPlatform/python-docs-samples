@@ -1,22 +1,58 @@
-appengine-ndb-snippets
-======================
+## NDB Overview Sample
 
-Sample code snippets for NDB.
+This is a sample app for Google App Engine that exercises the [NDB Python API](https://cloud.google.com/appengine/docs/python/ndb/).
 
-How to run the test
-===================
+See our other [Google Cloud Platform github
+repos](https://github.com/GoogleCloudPlatform) for sample applications and
+scaffolding for other python frameworks and use cases.
 
-To run the tests, please install App Engine Python SDK and tox and run
-tox with the environment variable PYTHONPATH to the App Engine Python SDK.
+## Run Locally
+1. Install the [Google Cloud SDK](https://cloud.google.com/sdk/), including the [gcloud tool](https://cloud.google.com/sdk/gcloud/), and [gcloud app component](https://cloud.google.com/sdk/gcloud-app).
+2. Setup the gcloud tool.
 
-You can install App Engine Python SDK with [Google Cloud SDK](https://cloud.google.com/sdk/) with the following command:
+   ```
+   gcloud components update app
+   gcloud auth login
+   gcloud config set project <your-app-id>
+   ```
+   You don't need a valid app-id to run locally, but will need a valid id to deploy below.
 
-    $ gcloud components update gae-python
+1. Clone this repo.
 
-Here is instructions to run the tests with virtualenv, $GCLOUD is your
-Google Cloud SDK installation path.
+   ```
+   git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+   cd python-docs-samples/datastore/ndb/<sub-directory>
+   ```
 
-    $ virtualenv -p python2.7 --no-site-packages .
-    $ source bin/activate
-    $ pip install tox
-    $ env PYTHONPATH=${GCLOUD}/platform/google_appengine tox
+1. Run this project locally from the command line.
+
+   ```
+   gcloud preview app run ./
+   ```
+
+1. Visit the application at [http://localhost:8080](http://localhost:8080).
+
+## Deploying
+
+1. Use the [Cloud Developer Console](https://console.developer.google.com)  to create a project/app id. (App id and project id are identical)
+2. Configure gcloud with your app id.
+
+   ```
+   gcloud config set project <your-app-id>
+   ```
+1. Use the [Admin Console](https://appengine.google.com) to view data, queues, and other App Engine specific administration tasks.
+1. Use gcloud to deploy your app.
+
+   ```
+   gcloud preview app deploy ./
+   ```
+
+1. Congratulations!  Your application is now live at your-app-id.appspot.com
+
+## Contributing changes
+
+* See [CONTRIBUTING.md](../../CONTRIBUTING.md)
+
+## Licensing
+
+* See [LICENSE](../../LICENSE)
