@@ -4,3 +4,4 @@
 .tox
 coverage.xml
 nosetests.xml
+python-docs-samples.json
