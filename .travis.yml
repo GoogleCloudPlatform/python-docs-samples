@@ -6,7 +6,7 @@ cache:
   directories:
         - $HOME/gcloud/
 env:
-        - PATH=$PATH:$HOME/gcloud/google-cloud-sdk/bin GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/client_secrets.json PYTHONPATH=${HOME}/gcloud/platform/google_appengine #Other environment variables on same line
+        - PATH=$PATH:$HOME/gcloud/google-cloud-sdk/bin GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/client_secrets.json PYTHONPATH=${HOME}/gcloud/google-cloud-sdk/platform/google_appengine #Other environment variables on same line
 
 before_install:
         #ENCRYPT YOUR PRIVATE KEY (If you need authentication)
