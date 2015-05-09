@@ -1,5 +1,6 @@
 sudo: false
 #add language, etc. here
+language: python
 
 cache:
   directories:
