@@ -17,7 +17,8 @@
 
 import unittest
 
-import keyproperty_models as models
+from datastore.ndb.modeling import keyproperty_models as models
+
 import test_base
 
 
