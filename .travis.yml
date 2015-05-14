@@ -33,6 +33,7 @@ before_install:
         - if [ -a python-docs-samples.json ]; then
                 gcloud auth activate-service-account --key-file python-docs-samples.json;
           fi
+        - ls $HOME/gcloud/google-cloud-sdk/platform/google_appengine  # debugging travis env
 
 install:
         - pip install tox
