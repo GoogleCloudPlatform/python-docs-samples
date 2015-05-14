@@ -37,6 +37,7 @@ before_install:
 
 install:
         - pip install tox
+        - tox --version
 
 script:
         - tox
