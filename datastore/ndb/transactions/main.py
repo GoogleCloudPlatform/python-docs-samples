@@ -13,12 +13,14 @@
 # limitations under the License.
 
 import cgi
-import flask
 import random
 import urllib
+
+import flask
+
 # [START taskq-imp]
-from google.appengine.ext import ndb
 from google.appengine.api import taskqueue
+from google.appengine.ext import ndb
 # [END taskq-imp]
 
 
@@ -47,12 +49,14 @@ def main_page():
         response += '<h3>%s</h3>' % cgi.escape(note.key.id())
         response += '<blockquote>%s</blockquote>' % cgi.escape(note.content)
 
-    response += """
-            <hr>
-            <form action="/add?%s" method="post">
-            Submit Note: <input value="Title" name="note_title"><br>
-            <textarea value="Note" name="note_text" rows="4" cols="60"></textarea>
-            <input type="submit" value="Etch in stone"></form>""" % urllib.urlencode({'page_name': page_name})
+    response += (
+        """<hr>
+           <form action="/add?%s" method="post">
+           Submit Note: <input value="Title" name="note_title"><br>
+           <textarea value="Note" name="note_text" rows="4" cols="60">
+           </textarea>
+           <input type="submit" value="Etch in stone"></form>"""
+        % urllib.urlencode({'page_name': page_name}))
     response += """
             <hr>
             <form>Switch page: <input value="%s" name="page_name">
@@ -120,6 +124,7 @@ def insert_if_absent_indep(note_key, note):
         return True
     return False
 
+
 # [START taskq]
 @ndb.transactional
 def insert_if_absent_taskq(note_key, note):
@@ -137,6 +142,7 @@ def insert_if_absent_taskq(note_key, note):
 def taskq_worker():
     pass
 
+
 def pick_random_insert(note_key, note):
     choice = random.randint(0, 5)
     if choice == 0:
@@ -149,7 +155,8 @@ def pick_random_insert(note_key, note):
         inserted = insert_if_absent_xg(note_key, note)
     elif choice == 3:
         # [START sometimes-call]
-        inserted = ndb.transaction(lambda: insert_if_absent_sometimes(note_key, note))
+        inserted = ndb.transaction(lambda:
+                                   insert_if_absent_sometimes(note_key, note))
         # [END sometimes-call]
     elif choice == 4:
         inserted = insert_if_absent_indep(note_key, note)
@@ -174,13 +181,15 @@ def add_note():
         note = Note(key=note_key, content=note_text)
         # [END calling]
         if pick_random_insert(note_key, note) is False:
-            return 'Already there<br><a href="%s">Return</a>' % flask.url_for('main_page', page_name=page_name)
+            return ('Already there<br><a href="%s">Return</a>'
+                    % flask.url_for('main_page', page_name=page_name))
         return flask.redirect(flask.url_for('main_page', page_name=page_name))
     elif choice == 1:
         # Use get_or_insert, which is transactional
         note = Note.get_or_insert(note_title, parent=parent, content=note_text)
         if note.content != note_text:
-            return 'Already there<br><a href="%s">Return</a>' % flask.url_for('main_page', page_name=page_name)
+            return ('Already there<br><a href="%s">Return</a>'
+                    % flask.url_for('main_page', page_name=page_name))
         return flask.redirect(flask.url_for('main_page', page_name=page_name))
 
 

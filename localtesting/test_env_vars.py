@@ -13,8 +13,9 @@
 #    limitations under the License.
 
 # [START env_example]
-import unittest
 import os
+import unittest
+
 from google.appengine.ext import testbed
 
 

@@ -1,0 +1,7 @@
+[
+	{"Name": "test", "Age": 0, "Weight": 100.0, "IsMagic": false},
+	{"Name": "test", "Age": 1, "Weight": 100.0, "IsMagic": false},
+	{"Name": "test", "Age": 2, "Weight": 100.0, "IsMagic": false},
+	{"Name": "test", "Age": 3, "Weight": 100.0, "IsMagic": false},
+	{"Name": "test", "Age": 0, "Weight": 100.0, "IsMagic": false}
+]

@@ -17,10 +17,11 @@
 
 import unittest
 
-import relation_model_models as models
-import test_base
+from datastore.ndb.modeling import relation_model_models as models
 
 from google.appengine.ext import ndb
+
+import test_base
 
 
 class ContactTestCase(test_base.TestCase):

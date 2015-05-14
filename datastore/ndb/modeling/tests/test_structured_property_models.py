@@ -17,7 +17,8 @@
 
 import unittest
 
-import structured_property_models as models
+from datastore.ndb.modeling import structured_property_models as models
+
 import test_base
 
 

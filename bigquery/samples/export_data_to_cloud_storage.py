@@ -1,5 +1,20 @@
-from samples.utils import get_service, poll_job
+#   Copyright 2015, Google, Inc.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 import uuid
+
+from bigquery.samples.utils import get_service
+from bigquery.samples.utils import poll_job
 
 
 # [START export_table]
@@ -9,21 +24,21 @@ def export_table(service, cloud_storage_path,
     # Generate a unique job_id so retries
     # don't accidentally duplicate export
     job_data = {
-            'jobReference': {
+        'jobReference': {
+            'projectId': projectId,
+            'jobId': str(uuid.uuid4())
+        },
+        'configuration': {
+            'extract': {
+                'sourceTable': {
                     'projectId': projectId,
-                    'jobId': str(uuid.uuid4())
-                    },
-            'configuration': {
-                    'extract': {
-                            'sourceTable': {
-                                    'projectId': projectId,
-                                    'datasetId': datasetId,
-                                    'tableId': tableId,
-                                    },
-                            'destinationUris': [cloud_storage_path],
-                            }
-                    }
+                    'datasetId': datasetId,
+                    'tableId': tableId,
+                },
+                'destinationUris': [cloud_storage_path],
             }
+        }
+    }
     return service.jobs().insert(
         projectId=projectId,
         body=job_data).execute(num_retries=num_retries)
@@ -52,11 +67,11 @@ def main():
     datasetId = raw_input("Enter a dataset ID: ")
     tableId = raw_input("Enter a table name to copy: ")
     cloud_storage_path = raw_input(
-            "Enter a Google Cloud Storage URI: ")
+        "Enter a Google Cloud Storage URI: ")
     interval = raw_input(
-            "Enter how often to poll the job (in seconds): ")
+        "Enter how often to poll the job (in seconds): ")
     num_retries = raw_input(
-            "Enter the number of retries in case of 500 error: ")
+        "Enter the number of retries in case of 500 error: ")
 
     run(cloud_storage_path,
         projectId, datasetId, tableId,

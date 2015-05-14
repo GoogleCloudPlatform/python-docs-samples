@@ -15,9 +15,10 @@
 import operator
 # [START taskqueue]
 import unittest
-from google.appengine.ext import testbed
+
 from google.appengine.api import taskqueue
 from google.appengine.ext import deferred
+from google.appengine.ext import testbed
 
 
 class TaskQueueTestCase(unittest.TestCase):
