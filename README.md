@@ -2,6 +2,9 @@
 
 This repository is holds the samples used in the python documentation on [cloud.google.com](cloud.google.com).
 
+[![Build Status](https://travis-ci.org/GoogleCloudPlatform/python-docs-samples.svg?branch=master)](https://travis-ci.org/GoogleCloudPlatform/python-docs-samples)
+[![Coverage Status](https://coveralls.io/repos/GoogleCloudPlatform/python-docs-samples/badge.svg?branch=master)](https://coveralls.io/r/GoogleCloudPlatform/python-docs-samples?branch=master)
+
 For more detailed introduction to a product, check the README in the corresponding folder. 
 
 ## Contributing changes
