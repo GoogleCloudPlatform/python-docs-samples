@@ -2,7 +2,6 @@
 
 This is a sample app for Google App Engine that exercises the [NDB Python API](https://cloud.google.com/appengine/docs/python/ndb/).
 
-<<<<<<< HEAD
 See our other [Google Cloud Platform github
 repos](https://github.com/GoogleCloudPlatform) for sample applications and
 scaffolding for other python frameworks and use cases.
@@ -57,5 +56,3 @@ scaffolding for other python frameworks and use cases.
 ## Licensing
 
 * See [LICENSE](../../LICENSE)
-=======
->>>>>>> f27081371547d83cb72eb84a0947eb17e95e62d9
