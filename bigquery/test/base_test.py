@@ -18,18 +18,32 @@ import unittest
 from bigquery.test import RESOURCE_PATH
 
 
+BUCKET_NAME_ENV = 'TEST_BUCKET_NAME'
+PROJECT_ID_ENV = 'TEST_PROJECT_ID'
+
+
 class BaseBigqueryTest(unittest.TestCase):
 
     def setUp(self):
-        # A hack to prevent get_application_default to choose App Engine route.
+        # A hack to prevent get_application_default from going GAE route.
         self._server_software_org = os.environ.get('SERVER_SOFTWARE')
         os.environ['SERVER_SOFTWARE'] = ''
-
+        test_bucket_name = os.environ.get(BUCKET_NAME_ENV, '')
+        test_project_id = os.environ.get(PROJECT_ID_ENV, '')
+        if not test_project_id or not test_bucket_name:
+            raise Exception('You need to define an env var "%s" and "%s" to '
+                            'run the test.'
+                            % (PROJECT_ID_ENV, BUCKET_NAME_ENV))
         with open(
                 os.path.join(RESOURCE_PATH, 'constants.json'),
                 'r') as constants_file:
 
             self.constants = json.load(constants_file)
+        self.constants['projectId'] = test_project_id
+        self.constants['cloudStorageInputURI'] = (
+            self.constants['cloudStorageInputURI'] % test_bucket_name)
+        self.constants['cloudStorageOutputURI'] = (
+            self.constants['cloudStorageOutputURI'] % test_bucket_name)
 
     def tearDown(self):
         os.environ['SERVER_SOFTWARE'] = self._server_software_org
