@@ -29,7 +29,11 @@ Google Cloud SDK installation path.
     $ virtualenv -p python2.7 --no-site-packages /some/where
     $ source /some/where/bin/activate
     $ pip install tox
-    $ env PYTHONPATH=${GCLOUD}/platform/google_appengine tox
+    $ export PYTHONPATH=${GCLOUD}/platform/google_appengine
+    $ export GOOGLE_APPLICATION_CREDENTIALS=your-service-account-json-file
+    $ export TEST_PROJECT_ID={YOUR_PROJECT_ID}
+    $ export TEST_BUCKET={YOUR_BUCKET_NAME}
+    $ tox
 
 ## Licensing
 
