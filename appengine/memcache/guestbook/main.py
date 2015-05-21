@@ -13,15 +13,17 @@
 # limitations under the License.
 
 # [START all]
+
 import cgi
 import cStringIO
 import logging
 import urllib
-import webapp2
 
-from google.appengine.ext import ndb
 from google.appengine.api import memcache
 from google.appengine.api import users
+from google.appengine.ext import ndb
+
+import webapp2
 
 
 class Greeting(ndb.Model):
@@ -32,7 +34,7 @@ class Greeting(ndb.Model):
 
 
 def guestbook_key(guestbook_name=None):
-    """Constructs a Datastore key for a Guestbook entity with guestbook_name."""
+    """Constructs a Datastore key for a Guestbook entity with guestbook_name"""
     return ndb.Key('Guestbook', guestbook_name or 'default_guestbook')
 
 
@@ -108,7 +110,7 @@ class MainPage(webapp2.RequestHandler):
             else:
                 output.write('An anonymous person wrote:')
             output.write('<blockquote>{}</blockquote>'.format(
-                             cgi.escape(greeting.content)))
+                cgi.escape(greeting.content)))
         return output.getvalue()
     # [END query_datastore]
 
