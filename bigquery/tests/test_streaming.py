@@ -11,21 +11,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+"""Tests for export_table_to_gcs."""
 import json
+import os
 import unittest
 
-from bigquery.samples.sync_query import run
-from bigquery.test.base_test import BaseBigqueryTest
+from bigquery.samples.streaming import run
+from tests import CloudBaseTest
 
 
-class TestSyncQuery(BaseBigqueryTest):
+class TestStreaming(CloudBaseTest):
 
-    def test_sync_query(self):
+    def test_stream_row_to_bigquery(self):
+
+        with open(
+                os.path.join(self.resource_path, 'streamrows.json'),
+                'r') as rows_file:
+
+            rows = json.load(rows_file)
+
         for result in run(self.constants['projectId'],
-                          self.constants['query'],
-                          5000,
+                          self.constants['datasetId'],
+                          self.constants['newTableId'],
+                          rows,
                           5):
-
             self.assertIsNotNone(json.loads(result))
 
 

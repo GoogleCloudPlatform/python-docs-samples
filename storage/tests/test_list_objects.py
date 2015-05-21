@@ -11,23 +11,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import json
-import unittest
-
-from bigquery.samples.async_query import run
-from bigquery.test.base_test import BaseBigqueryTest
+from storage.list_objects import main
+from tests import CloudBaseTest
 
 
-class TestAsyncQuery(BaseBigqueryTest):
-
-    def test_async_query(self):
-        for result in run(self.constants['projectId'],
-                          self.constants['query'],
-                          False,
-                          5,
-                          5):
-            self.assertIsNotNone(json.loads(result))
-
-
-if __name__ == '__main__':
-    unittest.main()
+class TestListObjects(CloudBaseTest):
+    def test_main(self):
+        args = [
+            'ignored_command_name',
+            self.constants['bucketName']
+        ]
+        main(args)
