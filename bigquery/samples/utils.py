@@ -15,7 +15,7 @@
 
 # [START get_service]
 def get_service():
-    from googleapiclient.discovery import build_from_document
+    from googleapiclient.discovery import build
     from oauth2client.client import GoogleCredentials
     credentials = GoogleCredentials.get_application_default()
     if credentials.create_scoped_required():
