@@ -38,8 +38,8 @@ by running:
 """
 
 import argparse
-import sys
 import json
+import sys
 
 from apiclient import discovery
 from oauth2client.client import GoogleCredentials
