@@ -26,8 +26,6 @@ command:
 Here is instructions to run the tests with virtualenv, $GCLOUD is your
 Google Cloud SDK installation path.
 
-    $ virtualenv -p python2.7 --no-site-packages /some/where
-    $ source /some/where/bin/activate
     $ pip install tox
     $ export PYTHONPATH=${GCLOUD}/platform/google_appengine
     $ export GOOGLE_APPLICATION_CREDENTIALS=your-service-account-json-file
