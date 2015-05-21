@@ -32,7 +32,7 @@ Google Cloud SDK installation path.
     $ export PYTHONPATH=${GCLOUD}/platform/google_appengine
     $ export GOOGLE_APPLICATION_CREDENTIALS=your-service-account-json-file
     $ export TEST_PROJECT_ID={YOUR_PROJECT_ID}
-    $ export TEST_BUCKET={YOUR_BUCKET_NAME}
+    $ export TEST_BUCKET_NAME={YOUR_BUCKET_NAME}
     $ tox
 
 ## Licensing
