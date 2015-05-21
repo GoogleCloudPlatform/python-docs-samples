@@ -21,4 +21,4 @@ class TestListObjects(CloudBaseTest):
             'ignored_command_name',
             self.constants['bucketName']
         ]
-        self.assertNotRaises(main(args))
+        main(args)

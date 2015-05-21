@@ -11,24 +11,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-"""Tests for export_table_to_gcs."""
-
+import json
 import unittest
 
-from bigquery.samples.export_data_to_cloud_storage import run
-from bigquery.test.base_test import BaseBigqueryTest
+from bigquery.samples.sync_query import run
+from tests import CloudBaseTest
 
 
-class TestExportTableToGCS(BaseBigqueryTest):
+class TestSyncQuery(CloudBaseTest):
 
-    def test_export_table(self):
-        run(self.constants['cloudStorageInputURI'],
-            self.constants['projectId'],
-            self.constants['datasetId'],
-            self.constants['newTableId'],
-            5,
-            5)
+    def test_sync_query(self):
+        for result in run(self.constants['projectId'],
+                          self.constants['query'],
+                          5000,
+                          5):
+
+            self.assertIsNotNone(json.loads(result))
 
 
 if __name__ == '__main__':

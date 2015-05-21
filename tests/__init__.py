@@ -22,12 +22,15 @@ import unittest
 
 BUCKET_NAME_ENV = 'TEST_BUCKET_NAME'
 PROJECT_ID_ENV = 'TEST_PROJECT_ID'
-RESOURCE_PATH = os.path.join(os.getcwd(), 'resources')
+RESOURCE_PATH = os.path.join(
+    os.path.abspath(os.path.dirname(__file__)), 'resources')
 
 
 class CloudBaseTest(unittest.TestCase):
 
     def setUp(self):
+        self.resource_path = RESOURCE_PATH
+
         # A hack to prevent get_application_default from going GAE route.
         self._server_software_org = os.environ.get('SERVER_SOFTWARE')
         os.environ['SERVER_SOFTWARE'] = ''

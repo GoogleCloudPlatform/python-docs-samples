@@ -11,9 +11,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import os
+import json
+import unittest
 
-RESOURCE_PATH = os.path.join(os.path.dirname(__file__),
-                             '..',
-                             '..',
-                             'resources')
+from bigquery.samples.async_query import run
+from tests import CloudBaseTest
+
+
+class TestAsyncQuery(CloudBaseTest):
+
+    def test_async_query(self):
+        for result in run(self.constants['projectId'],
+                          self.constants['query'],
+                          False,
+                          5,
+                          5):
+            self.assertIsNotNone(json.loads(result))
+
+
+if __name__ == '__main__':
+    unittest.main()

@@ -11,32 +11,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-"""Tests for export_table_to_gcs."""
+"""Tests for load_data_from_csv."""
+
 import json
 import os
 import unittest
 
-from bigquery.samples.streaming import run
-from bigquery.test import RESOURCE_PATH
-from bigquery.test.base_test import BaseBigqueryTest
+from bigquery.samples.load_data_from_csv import run
+from tests import CloudBaseTest
 
 
-class TestStreaming(BaseBigqueryTest):
+class TestLoadDataFromCSV(CloudBaseTest):
 
-    def test_stream_row_to_bigquery(self):
-
+    def setUp(self):
+        super(TestLoadDataFromCSV, self).setUp()
         with open(
-                os.path.join(RESOURCE_PATH, 'streamrows.json'),
-                'r') as rows_file:
+                os.path.join(self.resource_path, 'schema.json'),
+                'r') as schema_file:
+            self.schema = json.load(schema_file)
 
-            rows = json.load(rows_file)
-
-        for result in run(self.constants['projectId'],
-                          self.constants['datasetId'],
-                          self.constants['newTableId'],
-                          rows,
-                          5):
-            self.assertIsNotNone(json.loads(result))
+    def test_load_table(self):
+        run(self.schema,
+            self.constants['cloudStorageInputURI'],
+            self.constants['projectId'],
+            self.constants['datasetId'],
+            self.constants['newTableId'],
+            5,
+            5)
 
 
 if __name__ == '__main__':
