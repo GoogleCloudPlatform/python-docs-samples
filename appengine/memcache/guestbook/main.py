@@ -127,6 +127,7 @@ class Guestbook(webapp2.RequestHandler):
 
         greeting.content = self.request.get('content')
         greeting.put()
+        memcache.delete('{}:greetings'.format(guestbook_name))
         self.redirect('/?' +
                       urllib.urlencode({'guestbook_name': guestbook_name}))
 
