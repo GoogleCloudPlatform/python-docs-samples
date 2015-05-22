@@ -16,9 +16,7 @@ import os
 import unittest
 
 from bigquery.samples.async_query import run, main
-from tests import CloudBaseTest, BUCKET_NAME_ENV, PROJECT_ID_ENV
-from mock import patch
-
+from tests import CloudBaseTest, mock_raw_input, BUCKET_NAME_ENV, PROJECT_ID_ENV
 
 class TestAsyncQuery(CloudBaseTest):
 
@@ -31,23 +29,23 @@ class TestAsyncQuery(CloudBaseTest):
             self.assertIsNotNone(json.loads(result))
 
 
+def mock_get_input(input):
+    test_bucket_name = os.environ.get(BUCKET_NAME_ENV)
+    test_project_id = os.environ.get(PROJECT_ID_ENV)
+    answers = [test_bucket_name, test_project_id, 'n',
+               '1', '1']
+    ret = answers[TestAsyncRunner.i]
+    TestAsyncRunner.i += 1
+    return ret
+
+
 class TestAsyncRunner(CloudBaseTest):
 
     i = 0
 
-    def mock_get_input(input):
-        test_bucket_name = os.environ.get(BUCKET_NAME_ENV)
-        test_project_id = os.environ.get(PROJECT_ID_ENV)
-        answers = [test_bucket_name, test_project_id, 'n',
-                   '1', '1']
-        ret = answers[TestAsyncRunner.i]
-        TestAsyncRunner.i += 1
-        return ret
-
-
-    @patch('bigquery.samples.async_query.get_input', new=mock_get_input)
     def test_async_query_runner(self):
-        main()
+        with mock_raw_input(mock_get_input):
+            main()
 
 
 if __name__ == '__main__':

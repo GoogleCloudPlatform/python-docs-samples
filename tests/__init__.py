@@ -18,12 +18,21 @@ Common testing utilities between samples
 import json
 import os
 import unittest
-
+from contextlib import contextmanager
+import __builtin__
 
 BUCKET_NAME_ENV = 'TEST_BUCKET_NAME'
 PROJECT_ID_ENV = 'TEST_PROJECT_ID'
 RESOURCE_PATH = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), 'resources')
+
+
+@contextmanager
+def mock_raw_input(mock):
+    original_raw_input = __builtin__.raw_input
+    __builtin__.raw_input = mock
+    yield
+    __builtin__.raw_input = original_raw_input
 
 
 class CloudBaseTest(unittest.TestCase):

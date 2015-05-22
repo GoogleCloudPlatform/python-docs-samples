@@ -19,8 +19,6 @@ import uuid
 from bigquery.samples.utils import get_service
 from bigquery.samples.utils import paging
 from bigquery.samples.utils import poll_job
-from bigquery.samples.utils import get_input
-
 
 # [START async_query]
 def async_query(service, project_id, query, batch=False, num_retries=5):
@@ -71,14 +69,14 @@ def run(project_id, query_string, batch, num_retries, interval):
 
 # [START main]
 def main():
-    project_id = get_input("Enter the project ID: ")
-    query_string = get_input("Enter the Bigquery SQL Query: ")
-    batch = get_input("Run query as batch (y/n)?: ") in (
+    project_id = raw_input("Enter the project ID: ")
+    query_string = raw_input("Enter the Bigquery SQL Query: ")
+    batch = raw_input("Run query as batch (y/n)?: ") in (
         'True', 'true', 'y', 'Y', 'yes', 'Yes')
 
-    num_retries = get_input(
+    num_retries = raw_input(
         "Enter number of times to retry in case of 500 error: ")
-    interval = get_input(
+    interval = raw_input(
         "Enter how often to poll the query for completion (seconds): ")
     for result in run(project_id, query_string, batch, num_retries, interval):
         print(result)
