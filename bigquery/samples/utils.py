@@ -15,8 +15,12 @@
 
 # [START get_service]
 def get_service():
-    from discovery_doc import build_and_update
-    return build_and_update('bigquery', 'v2')
+    from googleapiclient.discovery import build
+    from oauth2client.client import GoogleCredentials
+    credentials = GoogleCredentials.get_application_default()
+    if credentials.create_scoped_required():
+        credentials = credentials.create_scoped('https://www.googleapis.com/auth/bigquery')
+    return build('bigquery','v2', credentials=GoogleCredentials.get_application_default())
 # [END get_service]
 
 
