@@ -15,11 +15,12 @@ import json
 import os
 import unittest
 
-from bigquery.samples.async_query import run, main
-from tests import CloudBaseTest, mock_raw_input, BUCKET_NAME_ENV, \
-    PROJECT_ID_ENV
+from bigquery.samples.async_query import main, run
 
-class TestAsyncQuery(CloudBaseTest):
+import tests
+
+
+class TestAsyncQuery(tests.CloudBaseTest):
 
     def test_async_query(self):
         for result in run(self.constants['projectId'],
@@ -30,14 +31,14 @@ class TestAsyncQuery(CloudBaseTest):
             self.assertIsNotNone(json.loads(result))
 
 
-class TestAsyncRunner(CloudBaseTest):
+class TestAsyncRunner(tests.CloudBaseTest):
 
     def test_async_query_runner(self):
-        test_bucket_name = os.environ.get(BUCKET_NAME_ENV)
-        test_project_id = os.environ.get(PROJECT_ID_ENV)
+        test_bucket_name = os.environ.get(tests.BUCKET_NAME_ENV)
+        test_project_id = os.environ.get(tests.PROJECT_ID_ENV)
         answers = [test_bucket_name, test_project_id, 'n',
                    '1', '1']
-        with mock_raw_input(answers):
+        with tests.mock_raw_input(answers):
             main()
 
 

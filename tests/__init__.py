@@ -15,10 +15,10 @@
 Common testing utilities between samples
 """
 
+import __builtin__
 import json
 import os
 import unittest
-import __builtin__
 
 from google.appengine.datastore import datastore_stub_util
 from google.appengine.ext import testbed
@@ -80,6 +80,7 @@ class CloudBaseTest(unittest.TestCase):
 
     def tearDown(self):
         os.environ['SERVER_SOFTWARE'] = self._server_software_org
+
 
 class DatastoreTestbedCase(unittest.TestCase):
     """A base test case for common setup/teardown tasks for test."""

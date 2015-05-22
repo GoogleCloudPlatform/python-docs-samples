@@ -33,6 +33,12 @@ Google Cloud SDK installation path.
     $ export TEST_BUCKET_NAME={YOUR_BUCKET_NAME}
     $ tox
 
+## Adding new tests
+
+Common testing utilities are located under ``tests``.
+
+When adding a new directory, be sure to edit ``.coveragerc`` to include it in coveralls.
+
 ## Licensing
 
 * See [LICENSE](LICENSE)

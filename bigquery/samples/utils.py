@@ -19,8 +19,9 @@ def get_service():
     from oauth2client.client import GoogleCredentials
     credentials = GoogleCredentials.get_application_default()
     if credentials.create_scoped_required():
-        credentials = credentials.create_scoped('https://www.googleapis.com/auth/bigquery')
-    return build('bigquery','v2', credentials=GoogleCredentials.get_application_default())
+        credentials = credentials.create_scoped(
+            'https://www.googleapis.com/auth/bigquery')
+    return build('bigquery', 'v2', credentials=credentials)
 # [END get_service]
 
 

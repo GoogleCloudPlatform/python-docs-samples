@@ -1,8 +1,10 @@
 [run]
 include =
+    appengine/*
+    bigquery/*
     datastore/*
     localtesting/*
-    bigquery/*
+    storage/*
 [report]
 exclude_lines =
     pragma: NO COVER
