@@ -27,7 +27,7 @@ RESOURCE_PATH = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), 'resources')
 
 
-class mock_raw_input_list(object):
+class mock_raw_input(object):
 
     def __init__(self, list_):
         self.i = 0
@@ -44,14 +44,6 @@ class mock_raw_input_list(object):
 
     def __exit__(self, exc_type, exc_value, traceback):
         __builtin__.raw_input = self.raw_input_cache
-
-
-@contextmanager
-def mock_raw_input(mock):
-    original_raw_input = __builtin__.raw_input
-    __builtin__.raw_input = mock
-    yield
-    __builtin__.raw_input = original_raw_input
 
 
 class CloudBaseTest(unittest.TestCase):
