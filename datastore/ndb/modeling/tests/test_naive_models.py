@@ -14,15 +14,12 @@
 
 """Test classes for code snippet for modeling article."""
 
-
-import unittest
-
 from datastore.ndb.modeling import naive_models as models
 
-import test_base
+from tests import DatastoreTestbedCase
 
 
-class ContactTestCase(test_base.TestCase):
+class ContactTestCase(DatastoreTestbedCase):
     """A test case for the naive Contact model classe."""
     NAME = 'Takashi Matsuo'
 
@@ -36,7 +33,3 @@ class ContactTestCase(test_base.TestCase):
         """Test for getting a NaiveContact entity."""
         contact = self.contact_key.get()
         self.assertEqual(contact.name, self.NAME)
-
-
-if __name__ == '__main__':
-    unittest.main()

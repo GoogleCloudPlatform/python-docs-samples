@@ -20,6 +20,9 @@ import os
 import unittest
 import __builtin__
 
+from google.appengine.datastore import datastore_stub_util
+from google.appengine.ext import testbed
+
 BUCKET_NAME_ENV = 'TEST_BUCKET_NAME'
 PROJECT_ID_ENV = 'TEST_PROJECT_ID'
 RESOURCE_PATH = os.path.join(
@@ -77,3 +80,23 @@ class CloudBaseTest(unittest.TestCase):
 
     def tearDown(self):
         os.environ['SERVER_SOFTWARE'] = self._server_software_org
+
+class DatastoreTestbedCase(unittest.TestCase):
+    """A base test case for common setup/teardown tasks for test."""
+    def setUp(self):
+        """Setup the datastore and memcache stub."""
+        # First, create an instance of the Testbed class.
+        self.testbed = testbed.Testbed()
+        # Then activate the testbed, which prepares the service stubs for
+        # use.
+        self.testbed.activate()
+        # Create a consistency policy that will simulate the High
+        # Replication consistency model.
+        self.policy = datastore_stub_util.PseudoRandomHRConsistencyPolicy(
+            probability=0)
+        # Initialize the datastore stub with this policy.
+        self.testbed.init_datastore_v3_stub(consistency_policy=self.policy)
+        self.testbed.init_memcache_stub()
+
+    def tearDown(self):
+        self.testbed.deactivate()

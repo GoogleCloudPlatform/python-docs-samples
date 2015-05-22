@@ -14,15 +14,14 @@
 
 """Test classes for code snippet for modeling article."""
 
-
 import unittest
 
 from datastore.ndb.modeling import keyproperty_models as models
 
-import test_base
+from tests import DatastoreTestbedCase
 
 
-class ContactTestCase(test_base.TestCase):
+class ContactTestCase(DatastoreTestbedCase):
     """A test case for the Contact model class with KeyProperty."""
     NAME = 'Takashi Matsuo'
 
@@ -50,7 +49,3 @@ class ContactTestCase(test_base.TestCase):
         numbers = contact.phone_numbers.fetch()
         self.assertEqual(1, len(numbers))
     # [END failing_test]
-
-
-if __name__ == '__main__':
-    unittest.main()

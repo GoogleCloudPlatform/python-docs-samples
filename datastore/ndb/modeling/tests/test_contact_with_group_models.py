@@ -14,17 +14,14 @@
 
 """Test classes for code snippet for modeling article."""
 
-
-import unittest
-
 from datastore.ndb.modeling import contact_with_group_models as models
 
 from google.appengine.ext import ndb
 
-import test_base
+from tests import DatastoreTestbedCase
 
 
-class ContactTestCase(test_base.TestCase):
+class ContactTestCase(DatastoreTestbedCase):
     """A test case for the Contact model with groups."""
     def setUp(self):
         """Creates 3 contacts and 1 group.
@@ -57,7 +54,3 @@ class ContactTestCase(test_base.TestCase):
         # How about 'members' property?
         friend_list = friends.members.fetch()
         self.assertEqual(len(friend_list), 1)
-
-
-if __name__ == '__main__':
-    unittest.main()

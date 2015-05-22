@@ -14,17 +14,14 @@
 
 """Test classes for code snippet for modeling article."""
 
-
-import unittest
-
 from datastore.ndb.modeling import relation_model_models as models
 
 from google.appengine.ext import ndb
 
-import test_base
+from tests import DatastoreTestbedCase
 
 
-class ContactTestCase(test_base.TestCase):
+class ContactTestCase(DatastoreTestbedCase):
     """A test case for the Contact model with relationship model."""
     def setUp(self):
         """Creates 1 contact and 1 company.
@@ -60,7 +57,3 @@ class ContactTestCase(test_base.TestCase):
                               title='president').put()
         # get the list of companies that Mary belongs to
         self.assertEqual(len(mary.companies), 2)
-
-
-if __name__ == '__main__':
-    unittest.main()
