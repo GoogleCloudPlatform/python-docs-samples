@@ -26,10 +26,8 @@ import httplib2
 
 RESOURCE_PATH = '..'  # look for discovery docs in the parent folder
 MAX_AGE = 86400  # update discovery docs older than a day
-BIGQUERY_SCOPES = ['https://www.googleapis.com/auth/bigquery']
 
-
-def build_and_update(api, version):
+def build_and_update(api, version, scopes=None):
     from oauth2client.client import GoogleCredentials
     from googleapiclient.discovery import build_from_document
 
@@ -42,8 +40,8 @@ def build_and_update(api, version):
         _update_discovery_doc(api, version, path)
 
     credentials = GoogleCredentials.get_application_default()
-    if credentials.create_scoped_required():
-        credentials = credentials.create_scoped(BIGQUERY_SCOPES)
+    if scopes is not None and credentials.create_scoped_required():
+        credentials = credentials.create_scoped(scopes)
     with open(path, 'r') as discovery_doc:
         return build_from_document(discovery_doc.read(),
                                    http=httplib2.Http(),

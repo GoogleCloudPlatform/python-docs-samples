@@ -74,9 +74,8 @@ def main():
     query_string = raw_input("Enter the Bigquery SQL Query: ")
     batch = raw_input("Run query as batch (y/n)?: ") in (
         'True', 'true', 'y', 'Y', 'yes', 'Yes')
-
-    num_retries = raw_input(
-        "Enter number of times to retry in case of 500 error: ")
+    num_retries = int(raw_input(
+        "Enter number of times to retry in case of 500 error: "))
     interval = raw_input(
         "Enter how often to poll the query for completion (seconds): ")
 
