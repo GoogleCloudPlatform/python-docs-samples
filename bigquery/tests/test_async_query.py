@@ -12,11 +12,12 @@
 # limitations under the License.
 #
 import json
+import os
 import unittest
 
-from bigquery.samples.async_query import run
-from tests import CloudBaseTest
-
+from bigquery.samples.async_query import run, main
+from tests import CloudBaseTest, mock_raw_input, BUCKET_NAME_ENV, \
+    PROJECT_ID_ENV
 
 class TestAsyncQuery(CloudBaseTest):
 
@@ -27,6 +28,17 @@ class TestAsyncQuery(CloudBaseTest):
                           5,
                           5):
             self.assertIsNotNone(json.loads(result))
+
+
+class TestAsyncRunner(CloudBaseTest):
+
+    def test_async_query_runner(self):
+        test_bucket_name = os.environ.get(BUCKET_NAME_ENV)
+        test_project_id = os.environ.get(PROJECT_ID_ENV)
+        answers = [test_bucket_name, test_project_id, 'n',
+                   '1', '1']
+        with mock_raw_input(answers):
+            main()
 
 
 if __name__ == '__main__':

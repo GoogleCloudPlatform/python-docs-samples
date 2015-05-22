@@ -18,12 +18,31 @@ Common testing utilities between samples
 import json
 import os
 import unittest
-
+import __builtin__
 
 BUCKET_NAME_ENV = 'TEST_BUCKET_NAME'
 PROJECT_ID_ENV = 'TEST_PROJECT_ID'
 RESOURCE_PATH = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), 'resources')
+
+
+class mock_raw_input(object):
+
+    def __init__(self, list_):
+        self.i = 0
+        self.list_ = list_
+
+    def get_next_value(self, question):
+        ret = self.list_[self.i]
+        self.i += 1
+        return ret
+
+    def __enter__(self):
+        self.raw_input_cache = __builtin__.raw_input
+        __builtin__.raw_input = self.get_next_value
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        __builtin__.raw_input = self.raw_input_cache
 
 
 class CloudBaseTest(unittest.TestCase):
