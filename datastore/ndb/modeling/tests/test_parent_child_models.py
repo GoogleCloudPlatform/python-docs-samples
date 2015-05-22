@@ -14,17 +14,14 @@
 
 """Test classes for code snippet for modeling article."""
 
-
-import unittest
-
 from datastore.ndb.modeling import parent_child_models as models
 
 from google.appengine.ext import ndb
 
-import test_base
+from tests import DatastoreTestbed
 
 
-class ContactTestCase(test_base.TestCase):
+class ContactTestCase(DatastoreTestbed):
     """A test case for the Contact model class with KeyProperty."""
     NAME = 'Takashi Matsuo'
 
@@ -83,7 +80,3 @@ class ContactTestCase(test_base.TestCase):
             models.PhoneNumber.phone_type == 'mobile')
         entities = query.fetch()
         self.assertEqual(0, len(entities))
-
-
-if __name__ == '__main__':
-    unittest.main()

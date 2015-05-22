@@ -12,36 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
-
 # from the app main.py
 from datastore.ndb.overview import main
 
-from google.appengine.datastore import datastore_stub_util
-from google.appengine.ext import testbed
+from tests import DatastoreTestbed
 
 import webapp2
 
 
-class TestHandlers(unittest.TestCase):
-    def setUp(self):
-        """Setup the datastore and memcache stub."""
-        # First, create an instance of the Testbed class.
-        self.testbed = testbed.Testbed()
-        # Then activate the testbed, which prepares the service stubs for
-        # use.
-        self.testbed.activate()
-        # Create a consistency policy that will simulate the High
-        # Replication consistency model.
-        self.policy = datastore_stub_util.PseudoRandomHRConsistencyPolicy(
-            probability=0)
-        # Initialize the datastore stub with this policy.
-        self.testbed.init_datastore_v3_stub(consistency_policy=self.policy)
-        self.testbed.init_memcache_stub()
-
-    def tearDown(self):
-        self.testbed.deactivate()
-
+class TestHandlers(DatastoreTestbed):
     def test_hello(self):
         # Build a request object passing the URI path to be tested.
         # You can also pass headers, query arguments etc.

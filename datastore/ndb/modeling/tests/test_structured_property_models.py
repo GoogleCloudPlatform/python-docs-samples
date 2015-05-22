@@ -14,15 +14,12 @@
 
 """Test classes for code snippet for modeling article."""
 
-
-import unittest
-
 from datastore.ndb.modeling import structured_property_models as models
 
-import test_base
+from tests import DatastoreTestbed
 
 
-class ContactTestCase(test_base.TestCase):
+class ContactTestCase(DatastoreTestbed):
     """A test case for the Contact model with StructuredProperty."""
     def setUp(self):
         """Creates one Contact entity with 2 phone numbers."""
@@ -67,7 +64,3 @@ class ContactTestCase(test_base.TestCase):
         self.assertEqual(len(scott.phone_numbers), 1)
         self.assertEqual(scott.phone_numbers[0].phone_type, 'home')
         self.assertEqual(scott.phone_numbers[0].number, '(650) 555 - 2200')
-
-
-if __name__ == '__main__':
-    unittest.main()
