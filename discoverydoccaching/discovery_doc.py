@@ -40,7 +40,7 @@ def build_and_update(api, version, scopes=None):
         _update_discovery_doc(api, version, path)
 
     credentials = GoogleCredentials.get_application_default()
-    if not scopes is None and credentials.create_scoped_required():
+    if scopes is not None and credentials.create_scoped_required():
         credentials = credentials.create_scoped(scopes)
     with open(path, 'r') as discovery_doc:
         return build_from_document(discovery_doc.read(),
