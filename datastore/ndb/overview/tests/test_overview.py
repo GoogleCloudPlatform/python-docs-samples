@@ -15,12 +15,12 @@
 # from the app main.py
 from datastore.ndb.overview import main
 
-from tests import DatastoreTestbed
+from tests import DatastoreTestbedCase
 
 import webapp2
 
 
-class TestHandlers(DatastoreTestbed):
+class TestHandlers(DatastoreTestbedCase):
     def test_hello(self):
         # Build a request object passing the URI path to be tested.
         # You can also pass headers, query arguments etc.
@@ -30,4 +30,3 @@ class TestHandlers(DatastoreTestbed):
 
         # Let's check if the response is correct.
         self.assertEqual(response.status_int, 200)
-        # self.assertEqual(response.body, 'Hello, world!')

@@ -18,10 +18,10 @@ import unittest
 
 from datastore.ndb.modeling import keyproperty_models as models
 
-from tests import DatastoreTestbed
+from tests import DatastoreTestbedCase
 
 
-class ContactTestCase(DatastoreTestbed):
+class ContactTestCase(DatastoreTestbedCase):
     """A test case for the Contact model class with KeyProperty."""
     NAME = 'Takashi Matsuo'
 

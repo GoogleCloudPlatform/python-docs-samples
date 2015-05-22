@@ -15,10 +15,10 @@
 # from the app main.py
 from datastore.ndb.transactions import main
 
-from tests import DatastoreTestbed
+from tests import DatastoreTestbedCase
 
 
-class TestHandlers(DatastoreTestbed):
+class TestHandlers(DatastoreTestbedCase):
     def setUp(self):
         super(TestHandlers, self).setUp()
         self.testbed.init_taskqueue_stub()

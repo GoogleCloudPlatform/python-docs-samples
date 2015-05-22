@@ -16,10 +16,10 @@
 
 from datastore.ndb.modeling import structured_property_models as models
 
-from tests import DatastoreTestbed
+from tests import  DatastoreTestbedCase
 
 
-class ContactTestCase(DatastoreTestbed):
+class ContactTestCase(DatastoreTestbedCase):
     """A test case for the Contact model with StructuredProperty."""
     def setUp(self):
         """Creates one Contact entity with 2 phone numbers."""

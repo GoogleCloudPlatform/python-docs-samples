@@ -16,10 +16,10 @@
 
 from datastore.ndb.modeling import naive_models as models
 
-from tests import DatastoreTestbed
+from tests import DatastoreTestbedCase
 
 
-class ContactTestCase(DatastoreTestbed):
+class ContactTestCase(DatastoreTestbedCase):
     """A test case for the naive Contact model classe."""
     NAME = 'Takashi Matsuo'
 

@@ -18,10 +18,10 @@ from datastore.ndb.modeling import contact_with_group_models as models
 
 from google.appengine.ext import ndb
 
-from tests import DatastoreTestbed
+from tests import DatastoreTestbedCase
 
 
-class ContactTestCase(DatastoreTestbed):
+class ContactTestCase(DatastoreTestbedCase):
     """A test case for the Contact model with groups."""
     def setUp(self):
         """Creates 3 contacts and 1 group.

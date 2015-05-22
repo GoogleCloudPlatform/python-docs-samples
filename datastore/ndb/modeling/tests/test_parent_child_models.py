@@ -18,10 +18,10 @@ from datastore.ndb.modeling import parent_child_models as models
 
 from google.appengine.ext import ndb
 
-from tests import DatastoreTestbed
+from tests import DatastoreTestbedCase
 
 
-class ContactTestCase(DatastoreTestbed):
+class ContactTestCase(DatastoreTestbedCase):
     """A test case for the Contact model class with KeyProperty."""
     NAME = 'Takashi Matsuo'
 

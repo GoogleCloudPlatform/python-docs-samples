@@ -81,7 +81,7 @@ class CloudBaseTest(unittest.TestCase):
     def tearDown(self):
         os.environ['SERVER_SOFTWARE'] = self._server_software_org
 
-class DatastoreTestbed(unittest.TestCase):
+class DatastoreTestbedCase(unittest.TestCase):
     """A base test case for common setup/teardown tasks for test."""
     def setUp(self):
         """Setup the datastore and memcache stub."""
