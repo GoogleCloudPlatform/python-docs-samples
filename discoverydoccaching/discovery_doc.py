@@ -27,6 +27,7 @@ import httplib2
 RESOURCE_PATH = '..'  # look for discovery docs in the parent folder
 MAX_AGE = 86400  # update discovery docs older than a day
 
+
 def build_and_update(api, version, scopes=None):
     from oauth2client.client import GoogleCredentials
     from googleapiclient.discovery import build_from_document

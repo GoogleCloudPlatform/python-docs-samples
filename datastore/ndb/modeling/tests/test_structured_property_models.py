@@ -16,7 +16,7 @@
 
 from datastore.ndb.modeling import structured_property_models as models
 
-from tests import  DatastoreTestbedCase
+from tests import DatastoreTestbedCase
 
 
 class ContactTestCase(DatastoreTestbedCase):
