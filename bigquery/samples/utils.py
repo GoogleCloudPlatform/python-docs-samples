@@ -48,3 +48,6 @@ def paging(service, request_func, num_retries=5, **kwargs):
             has_next = False
         yield response
 # [END paging]
+
+def get_input(text):
+    return input(text)

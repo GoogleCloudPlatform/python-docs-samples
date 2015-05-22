@@ -12,3 +12,4 @@ tox==1.9.0
 uritemplate==0.6
 virtualenv==12.0.7
 wsgiref==0.1.2
+mock==1.0.1
