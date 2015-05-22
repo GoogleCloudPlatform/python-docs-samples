@@ -18,7 +18,6 @@ Common testing utilities between samples
 import json
 import os
 import unittest
-from contextlib import contextmanager
 import __builtin__
 
 BUCKET_NAME_ENV = 'TEST_BUCKET_NAME'
