@@ -34,9 +34,8 @@ class TestAsyncQuery(tests.CloudBaseTest):
 class TestAsyncRunner(tests.CloudBaseTest):
 
     def test_async_query_runner(self):
-        test_bucket_name = os.environ.get(tests.BUCKET_NAME_ENV)
         test_project_id = os.environ.get(tests.PROJECT_ID_ENV)
-        answers = [test_bucket_name, test_project_id, 'n',
+        answers = [test_project_id, self.constants['query'], 'n',
                    '1', '1']
         with tests.mock_raw_input(answers):
             main()
