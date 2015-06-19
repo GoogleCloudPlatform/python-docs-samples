@@ -20,6 +20,7 @@ from bigquery.samples.utils import poll_job
 # [START export_table]
 def export_table(service, cloud_storage_path,
                  projectId, datasetId, tableId,
+                 export_format="CSV",
                  num_retries=5):
     """
     Starts an export job
@@ -30,6 +31,8 @@ def export_table(service, cloud_storage_path,
         cloud_storage_path: fully qualified
         path to a Google Cloud Storage location,
         e.g. gs://mybucket/myfolder/
+        export_format: format to export in;
+        "CSV", "NEWLINE_DELIMITED_JSON", or "AVRO".
 
     Returns: an extract job resource representing the
     job, see https://cloud.google.com/bigquery/docs/reference/v2/jobs
@@ -49,6 +52,7 @@ def export_table(service, cloud_storage_path,
                     'tableId': tableId,
                 },
                 'destinationUris': [cloud_storage_path],
+                'destinationFormat': export_format
             }
         }
     }
