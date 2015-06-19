@@ -21,6 +21,19 @@ from bigquery.samples.utils import poll_job
 def export_table(service, cloud_storage_path,
                  projectId, datasetId, tableId,
                  num_retries=5):
+    """
+    Starts an export job
+
+    Args:
+        service: initialized and authorized bigquery
+        google-api-client object,
+        cloud_storage_path: fully qualified
+        path to a Google Cloud Storage location,
+        e.g. gs://mybucket/myfolder/
+
+    Returns: an extract job resource representing the
+    job, see https://cloud.google.com/bigquery/docs/reference/v2/jobs
+    """
     # Generate a unique job_id so retries
     # don't accidentally duplicate export
     job_data = {

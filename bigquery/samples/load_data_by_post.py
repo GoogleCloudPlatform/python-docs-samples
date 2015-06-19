@@ -22,6 +22,18 @@ from oauth2client.client import GoogleCredentials
 
 # [START make_post]
 def make_post(http, schema, data, projectId, datasetId, tableId):
+    """
+    Creates an http POST request for loading data into
+    a bigquery table
+
+    Args:
+        http: an authorized httplib2 client,
+        schema: a valid bigquery schema,
+        see https://cloud.google.com/bigquery/docs/reference/v2/tables,
+        data: valid JSON to insert into the table
+
+    Returns: an http.request object
+    """
     url = ('https://www.googleapis.com/upload/bigquery/v2/projects/' +
            projectId + '/jobs')
     # Create the body of the request, separated by a boundary of xxx
