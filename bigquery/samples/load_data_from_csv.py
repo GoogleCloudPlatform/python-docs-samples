@@ -20,6 +20,17 @@ from bigquery.samples.utils import get_service, poll_job
 # [START load_table]
 def load_table(service, source_schema, source_csv,
                projectId, datasetId, tableId, num_retries=5):
+    """
+    service: an initialized and authorized bigquery
+    google-api-client object
+    source_schema: a valid bigquery schema,
+    see https://cloud.google.com/bigquery/docs/reference/v2/tables
+    source_csv: the fully qualified Google Cloud Storage location of
+    the data to load into your table
+    returns: a bigquery load job, see 
+    https://cloud.google.com/bigquery/docs/reference/v2/jobs#configuration.load
+    """
+
     # Generate a unique job_id so retries
     # don't accidentally duplicate query
     job_data = {
