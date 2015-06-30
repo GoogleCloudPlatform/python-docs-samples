@@ -29,10 +29,10 @@ def export_table(service, cloud_storage_path,
         service: initialized and authorized bigquery
         google-api-client object,
         cloud_storage_path: fully qualified
-        path to a Google Cloud Storage location,
-        e.g. gs://mybucket/myfolder/
-        export_format: format to export in;
-        "CSV", "NEWLINE_DELIMITED_JSON", or "AVRO".
+            path to a Google Cloud Storage location,
+            e.g. gs://mybucket/myfolder/
+            export_format: format to export in;
+            "CSV", "NEWLINE_DELIMITED_JSON", or "AVRO".
 
     Returns: an extract job resource representing the
     job, see https://cloud.google.com/bigquery/docs/reference/v2/jobs
@@ -65,7 +65,7 @@ def export_table(service, cloud_storage_path,
 # [START run]
 def run(cloud_storage_path,
         projectId, datasetId, tableId,
-        num_retries, interval):
+        num_retries, interval, export_format="CSV"):
 
     bigquery = get_service()
     resource = export_table(bigquery, cloud_storage_path,
@@ -74,6 +74,7 @@ def run(cloud_storage_path,
              resource['jobReference']['projectId'],
              resource['jobReference']['jobId'],
              interval,
+             export_format,
              num_retries)
 # [END run]
 
