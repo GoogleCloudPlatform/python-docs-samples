@@ -69,12 +69,13 @@ def run(cloud_storage_path,
 
     bigquery = get_service()
     resource = export_table(bigquery, cloud_storage_path,
-                            projectId, datasetId, tableId, num_retries)
+                            projectId, datasetId, tableId,
+                            num_retries=num_retries,
+                            export_format=export_format)
     poll_job(bigquery,
              resource['jobReference']['projectId'],
              resource['jobReference']['jobId'],
              interval,
-             export_format,
              num_retries)
 # [END run]
 
