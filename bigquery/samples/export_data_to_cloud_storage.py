@@ -20,19 +20,22 @@ from bigquery.samples.utils import poll_job
 # [START export_table]
 def export_table(service, cloud_storage_path,
                  projectId, datasetId, tableId,
+                 export_format="CSV",
                  num_retries=5):
     """
     Starts an export job
 
     Args:
         service: initialized and authorized bigquery
-        google-api-client object,
+            google-api-client object.
         cloud_storage_path: fully qualified
-        path to a Google Cloud Storage location,
-        e.g. gs://mybucket/myfolder/
+            path to a Google Cloud Storage location.
+            e.g. gs://mybucket/myfolder/
+        export_format: format to export in;
+            "CSV", "NEWLINE_DELIMITED_JSON", or "AVRO".
 
     Returns: an extract job resource representing the
-    job, see https://cloud.google.com/bigquery/docs/reference/v2/jobs
+        job, see https://cloud.google.com/bigquery/docs/reference/v2/jobs
     """
     # Generate a unique job_id so retries
     # don't accidentally duplicate export
@@ -49,6 +52,7 @@ def export_table(service, cloud_storage_path,
                     'tableId': tableId,
                 },
                 'destinationUris': [cloud_storage_path],
+                'destinationFormat': export_format
             }
         }
     }
@@ -61,11 +65,13 @@ def export_table(service, cloud_storage_path,
 # [START run]
 def run(cloud_storage_path,
         projectId, datasetId, tableId,
-        num_retries, interval):
+        num_retries, interval, export_format="CSV"):
 
     bigquery = get_service()
     resource = export_table(bigquery, cloud_storage_path,
-                            projectId, datasetId, tableId, num_retries)
+                            projectId, datasetId, tableId,
+                            num_retries=num_retries,
+                            export_format=export_format)
     poll_job(bigquery,
              resource['jobReference']['projectId'],
              resource['jobReference']['jobId'],
