@@ -28,7 +28,7 @@ before_install:
                 printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh &&
                 cd $TRAVIS_BUILD_DIR;
           fi
-        - gcloud -q components update gae-python
+        - gcloud -q components app-engine-python
         - openssl aes-256-cbc -K $encrypted_4fda24e244ca_key -iv $encrypted_4fda24e244ca_iv -in python-docs-samples.json.enc -out python-docs-samples.json -d
         - if [ -a python-docs-samples.json ]; then
                 gcloud auth activate-service-account --key-file python-docs-samples.json;
