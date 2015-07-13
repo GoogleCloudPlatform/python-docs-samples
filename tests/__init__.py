@@ -16,8 +16,11 @@ Common testing utilities between samples
 """
 
 import __builtin__
+import contextlib
 import json
 import os
+import StringIO
+import sys
 import unittest
 
 from google.appengine.datastore import datastore_stub_util
@@ -101,3 +104,16 @@ class DatastoreTestbedCase(unittest.TestCase):
 
     def tearDown(self):
         self.testbed.deactivate()
+
+
+@contextlib.contextmanager
+def capture_stdout():
+    """Capture stdout."""
+    fake_stdout = StringIO.StringIO()
+    old_stdout = sys.stdout
+
+    try:
+        sys.stdout = fake_stdout
+        yield fake_stdout
+    finally:
+        sys.stdout = old_stdout

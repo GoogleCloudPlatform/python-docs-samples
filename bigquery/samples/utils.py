@@ -29,7 +29,7 @@ def get_service():
 
 
 # [START poll_job]
-def poll_job(service, projectId, jobId, interval=5, num_retries=5):
+def poll_job(service, projectId, jobId, interval=5.0, num_retries=5):
     """checks the status of a job every *interval* seconds"""
 
     import time
@@ -40,7 +40,7 @@ def poll_job(service, projectId, jobId, interval=5, num_retries=5):
     while not job_resource['status']['state'] == 'DONE':
         print('Job is {}, waiting {} seconds...'
               .format(job_resource['status']['state'], interval))
-        time.sleep(interval)
+        time.sleep(float(interval))
         job_resource = job_get.execute(num_retries=num_retries)
 
     return job_resource
