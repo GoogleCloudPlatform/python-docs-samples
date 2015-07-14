@@ -39,7 +39,7 @@ class TestHandlers(DatastoreTestbedCase):
             POST={'content': 'asdf'},
             )
         response = request.get_response(main.app)
-        mock_images.resize.assert_called_once()
+        mock_images.resize.assert_called_once_with(mock.ANY, 32, 32)
 
         # Correct response is a redirect
         self.assertEqual(response.status_int, 302)
