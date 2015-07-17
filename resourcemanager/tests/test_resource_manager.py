@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from resourcemanager.samples import create_project, delete_project
+from resourcemanager import create_project, delete_project
 from tests import CloudBaseTest
 
 
