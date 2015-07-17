@@ -1,12 +1,13 @@
 from googleapiclient.discovery import build
 from oauth2client.client import GoogleCredentials
 import httplib2
+from time import sleep
 
 def build_client():
     return build('cloudresourcemanager',
                  'v1beta1',
                  credentials=GoogleCredentials.get_application_default()
-                 http=httplib2.Http(timeout=90) #Long timeout for create requests
+                 http=httplib2.Http(timeout=90)) #Long timeout for create requests
 
 def wait_for_active(project):
     timeout=1
