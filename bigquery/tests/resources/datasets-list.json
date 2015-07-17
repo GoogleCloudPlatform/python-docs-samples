@@ -1,0 +1,14 @@
+{
+    "datasets": [
+        {
+            "datasetReference": {
+                "datasetId": "test_dataset_java",
+                "projectId": "cloud-samples-tests"
+            },
+            "id": "cloud-samples-tests:test_dataset_java",
+            "kind": "bigquery#dataset"
+        }
+    ],
+    "etag": "\"ZduQht1tG1odVP6IPm66xfuN2eI/HmGRlylAN_zCB6N4JDeX_XDO0R0\"",
+    "kind": "bigquery#datasetList"
+}
