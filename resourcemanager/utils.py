@@ -1,7 +1,8 @@
-from googleapiclient.discovery import build
-from oauth2client.client import GoogleCredentials
-import httplib2
 from time import sleep
+
+from googleapiclient.discovery import build
+import httplib2
+from oauth2client.client import GoogleCredentials
 
 
 def build_client():
@@ -12,10 +13,12 @@ def build_client():
                  http=httplib2.Http(timeout=90))
 
 
-def wait_for_active(project):
+def wait_for_active(client, project):
     timeout = 1
     while project['lifecycleState'] != 'ACTIVE':
         sleep(timeout)
         timeout = timeout*2
-        project = client.projects().get(projectId=project_id).execute()
+        project = client.projects().get(
+            projectId=project['projectId']
+            ).execute()
     return project

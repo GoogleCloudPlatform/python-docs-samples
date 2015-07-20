@@ -1,5 +1,6 @@
-from utils import build_client
 import argparse
+
+from utils import build_client
 
 
 def run(id):
