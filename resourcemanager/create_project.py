@@ -1,11 +1,12 @@
 import argparse
 import json
+import logging
 import random
 
 from googleapiclient.errors import HttpError
+from parse import *
 from random_words import RandomWords
 from utils import build_client, wait_for_active
-
 
 rw = RandomWords()
 
@@ -20,6 +21,7 @@ def create_project(client, name, id, **labels):
         ).execute()
 
 
+
 def run(name, id=None, **labels):
     client = build_client()
     project = None
@@ -32,11 +34,12 @@ def run(name, id=None, **labels):
             try:
                 project = create_project(client, name, id, **labels)
             except HttpError as e:
-                code, uri, reason = str(e).parse(
-                    '<HttpError %s when requesting %s returned "%s">')
-                if not reason == "Requested entity already exists":
+                code, uri, reason = parse('<HttpError {} when requesting {} returned "{}">',
+                                          str(e))
+                if reason == "Requested entity already exists":
+                    logging.info("Project ID {} is taken".format(id))
+                else:
                     raise e
-    else:
         project = create_project(client, name, id, **labels)
 
     return wait_for_active(client, project)
