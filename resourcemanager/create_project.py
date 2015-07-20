@@ -3,7 +3,9 @@ import json
 import random
 
 from googleapiclient.errors import HttpError
-from random_words import RandomWords
+
+import RandomWords
+
 from utils import build_client, wait_for_active
 
 
