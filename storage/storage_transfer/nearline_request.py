@@ -11,6 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+# [START all]
 import json
 import logging
 
@@ -62,3 +63,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+# [END all]

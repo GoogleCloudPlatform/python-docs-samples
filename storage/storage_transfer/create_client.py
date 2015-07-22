@@ -11,6 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+# [START all]
 import logging
 
 from apiclient import discovery
@@ -25,3 +26,4 @@ def create_transfer_client():
     logging.getLogger().setLevel(logging.DEBUG)
     credentials = GoogleCredentials.get_application_default()
     return discovery.build('storagetransfer', 'v1', credentials=credentials)
+# [END all]
