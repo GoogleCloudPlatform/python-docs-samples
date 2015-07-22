@@ -7,13 +7,15 @@ This app creates two types of transfers using the Transfer Service tool.
 1. Set up a project on Google Developers Console.
   1. Go to the [Developers Console](https://cloud.google.com/console) and create or select your project.
      You will need the project ID later.
+1. Within Developers Console, select APIs & auth > Credentials.
+  1. Add a new JSON key credential for a service account.
+  1. Set the environment variable GOOGLE_APPLICATION_CREDENTIALS to point to your JSON key.
 1. Add the Storage Transfer service account, cloud-mobility@system.gserviceaccount.com as an
    editor of your project.
 1. Set up gcloud for application default credentials.
   1. `gcloud components update`
   1. `gcloud auth login`
   1. `gcloud config set project PROJECT_ID`
-  1. `export GOOGLE_APPLICATION_CREDENTIALS=PATH/TO/CREDENTIALS.json`
 1. Install [Google API Client Library for Python](https://developers.google.com/api-client-library/python/start/installation).
 
 ## Transfer from Amazon S3 to Google Cloud Storage
