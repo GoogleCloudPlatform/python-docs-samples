@@ -13,11 +13,11 @@
 #
 import unittest
 
+import create_client
+
 from mock import Mock
 from mock import patch
 from oauth2client.client import GoogleCredentials
-
-import create_client
 
 
 class CheckCreateClientTestCase(unittest.TestCase):
