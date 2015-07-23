@@ -10,8 +10,8 @@ This app creates two types of transfers using the Transfer Service tool.
 1. Within Developers Console, select APIs & auth > Credentials.
   1. Select Add credentials > Service account > JSON key.
   1. Set the environment variable GOOGLE_APPLICATION_CREDENTIALS to point to your JSON key.
-1. Add the Storage Transfer service account, cloud-mobility@system.gserviceaccount.com as an
-   editor of your project.
+1. Add the Storage Transfer service account as an editor of your project
+   storage-transfer-5031963314028297433@partnercontent.gserviceaccount.com
 1. Set up gcloud for application default credentials.
   1. `gcloud components update`
   1. `gcloud auth login`
