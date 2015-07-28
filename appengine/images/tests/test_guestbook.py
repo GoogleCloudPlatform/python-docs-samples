@@ -21,6 +21,12 @@ import webapp2
 
 
 class TestHandlers(DatastoreTestbedCase):
+    def setUp(self):
+        super(TestHandlers, self).setUp()
+
+        # Workaround for other tests clobbering our Greeting model.
+        reload(main)
+
     def test_get(self):
         # Build a request object passing the URI path to be tested.
         # You can also pass headers, query arguments etc.
