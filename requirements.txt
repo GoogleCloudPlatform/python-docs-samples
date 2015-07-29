@@ -1,0 +1,7 @@
+google-api-python-client
+flask
+mock
+nose
+nosegae
+RandomWords
+parse
