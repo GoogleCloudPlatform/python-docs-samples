@@ -21,10 +21,17 @@ import json
 import os
 import StringIO
 import sys
+import tempfile
 import unittest
 
-from google.appengine.datastore import datastore_stub_util
-from google.appengine.ext import testbed
+from nose.plugins.skip import SkipTest
+
+try:
+    APPENGINE_AVAILABLE = True
+    from google.appengine.datastore import datastore_stub_util
+    from google.appengine.ext import testbed
+except ImportError:
+    APPENGINE_AVAILABLE = False
 
 BUCKET_NAME_ENV = 'TEST_BUCKET_NAME'
 PROJECT_ID_ENV = 'TEST_PROJECT_ID'
@@ -82,12 +89,16 @@ class CloudBaseTest(unittest.TestCase):
             self.constants['cloudStorageOutputURI'] % test_bucket_name)
 
     def tearDown(self):
-        os.environ['SERVER_SOFTWARE'] = self._server_software_org
+        if self._server_software_org:
+            os.environ['SERVER_SOFTWARE'] = self._server_software_org
 
 
 class DatastoreTestbedCase(unittest.TestCase):
     """A base test case for common setup/teardown tasks for test."""
     def setUp(self):
+        if not APPENGINE_AVAILABLE:
+            raise SkipTest()
+
         """Setup the datastore and memcache stub."""
         # First, create an instance of the Testbed class.
         self.testbed = testbed.Testbed()
@@ -99,7 +110,9 @@ class DatastoreTestbedCase(unittest.TestCase):
         self.policy = datastore_stub_util.PseudoRandomHRConsistencyPolicy(
             probability=0)
         # Initialize the datastore stub with this policy.
-        self.testbed.init_datastore_v3_stub(consistency_policy=self.policy)
+        self.testbed.init_datastore_v3_stub(
+            datastore_file=tempfile.mkstemp()[1],
+            consistency_policy=self.policy)
         self.testbed.init_memcache_stub()
 
     def tearDown(self):
