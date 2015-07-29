@@ -47,7 +47,7 @@ def GetEntityViaMemcache(entity_key):
 
 
 # [START datastore_example_test]
-class DatstoreTestCase(unittest.TestCase):
+class DatastoreTestCase(unittest.TestCase):
 
     def setUp(self):
         # First, create an instance of the Testbed class.
