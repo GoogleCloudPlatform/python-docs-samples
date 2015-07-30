@@ -1,4 +1,5 @@
-
+.coveralls.yml
+coverage-gae.json
 *.pyc
 .coverage
 .tox
