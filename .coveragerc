@@ -5,6 +5,7 @@ include =
     datastore/*
     localtesting/*
     storage/*
+    blog/*
 [report]
 exclude_lines =
     pragma: NO COVER
