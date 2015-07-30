@@ -27,7 +27,7 @@ import webapp2
 
 
 RESOURCE_PATH = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), 'resources')
+    os.path.abspath(os.path.dirname(__file__)), '..', 'resources')
 
 
 class TestAuthSample(tests.DatastoreTestbedCase, tests.CloudBaseTest):
