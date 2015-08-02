@@ -63,8 +63,6 @@ class DatstoreTestCase(unittest.TestCase):
         # using ndb.get_context().set_cache_policy(False)
         ndb.get_context().clear_cache()
 
-# [END datastore_example_test]
-
     # [START datastore_example_teardown]
     def tearDown(self):
         self.testbed.deactivate()
@@ -95,7 +93,7 @@ class DatstoreTestCase(unittest.TestCase):
         self.assertNotEqual(None, retrieved_entity)
         self.assertEqual(18, retrieved_entity.number)
     # [END datastore_example_memcache]
-
+# [END datastore_example_test]
 
 # [START HRD_example_1]
 from google.appengine.datastore import datastore_stub_util  # noqa
