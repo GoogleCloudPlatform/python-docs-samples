@@ -11,33 +11,63 @@ For more detailed introduction to a product, check the README in the correspondi
 
 * See [CONTRIBUTING.md](CONTRIBUTING.md)
 
-### How to run the test
+## Testing
 
-To run the tests, please install App Engine Python SDK and tox and run
-tox with the environment variable PYTHONPATH to the App Engine Python
-SDK.
+### Local setup
 
-You can install App Engine Python SDK with
-[Google Cloud SDK](https://cloud.google.com/sdk/) with the following
-command:
+Before you can run tests locally you must have:
 
-    $ gcloud components update gae-python
+* The latest [tox](https://tox.readthedocs.org/en/latest/) and [pip](https://pypi.python.org/pypi/pip) installed.
 
-Here is instructions to run the tests with virtualenv, $GCLOUD is your
-Google Cloud SDK installation path.
+        $ sudo pip install --upgrade tox pip
 
-    $ pip install tox
-    $ export PYTHONPATH=${GCLOUD}/platform/google_appengine
-    $ export GOOGLE_APPLICATION_CREDENTIALS=your-service-account-json-file
-    $ export TEST_PROJECT_ID={YOUR_PROJECT_ID}
-    $ export TEST_BUCKET_NAME={YOUR_BUCKET_NAME}
-    $ tox
+* The [Google Cloud SDK](https://cloud.google.com/sdk/) installed. You can do so with the following command:
+
+        $ curl https://sdk.cloud.google.com | bash
+
+* Most tests require you to have an active, billing-enabled project on the [Google Developers Console](https://console.developers.google.com).
+* You will need a set of [Service Account Credentials](https://console.developers.google.com/project/_/apiui/credential) for your project in ``json`` form.
+* Set the environment variables appropriately for your project.
+
+        $ export GOOGLE_APPLICATION_CREDENTIALS=your-service-account-json-file
+        $ export TEST_PROJECT_ID=your-project-id
+        $ export TEST_BUCKET_NAME=your-bucket-name
+
+If you want to run the Google App Engine tests, you will need:
+
+* The App Engine Python SDK. You can install this with the Google Cloud SDK:
+
+        $ gcloud components update gae-python
+
+* You will need to set an additional environment variable:
+
+        $ export GAE_PYTHONPATH=~/google-cloud-sdk/platform/google_appengine
+
+### Test environments
+
+We use [tox](https://tox.readthedocs.org/en/latest/) to configure multiple python environments:
+
+* ``py27`` contains tests for samples that run in a normal Python 2.7 environment. This is (mostly) everything outside of the ``appengine`` directory.
+* ``gae`` contains tests for samples that run only in Google App Engine. This is (mostly) everything in the ``appengine`` directory.
+* ``pep8`` just runs the linter.
+
+To run tests for a particular environment, invoke tox with the ``-e`` flag:
+
+    tox -e py27
+
+To run one particular test suite or provide additional parameters to ``nose``, invoke tox like this:
+
+    toxe -e py27 -- storage/tests/test_list_objects.py
+
+*Note*: The ``gae`` environment can't be told to run one particular test at this time.
 
 ## Adding new tests
 
-Common testing utilities are located under ``tests``.
+There are a handful of common testing utilities are located under ``tests``, see existing tests for example usage.
 
-When adding a new directory, be sure to edit ``.coveragerc`` to include it in coveralls.
+When adding a new top-level directory, be sure to edit ``.coveragerc`` to include it in coveralls.
+
+To add new tests that require Google App Engine, please place them in the ``appengine`` directory if possible. If you place them elsewhere, you will need to modify ``tox.ini`` to make the environments appropriately run or ignore your test.
 
 ## Licensing
 
