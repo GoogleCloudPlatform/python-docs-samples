@@ -22,8 +22,12 @@ def get_service():
 
     credentials = GoogleCredentials.get_application_default()
 
-    # The build() method takes care of injecting the proper scopes
-    # for the given service, when using application default credentials.
+    # Create and return the service object for v2 of the bigquery api. You can
+    # browse available apis and versions here:
+    #   https://developers.google.com/api-client-library/python/apis/
+    #
+    # The build() method also takes care of injecting the necessary scopes
+    # to access the given service, when using application default credentials.
     return build('bigquery', 'v2', credentials=credentials)
 # [END get_service]
 
