@@ -1,6 +1,9 @@
 sudo: false
 #add language, etc. here
 language: python
+python:
+- "2.7"
+- "3.4"
 
 cache:
   directories:
