@@ -13,7 +13,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# [START all]
 """Command-line sample application for listing all objects
 in a bucket using the Cloud Storage API.
 
@@ -29,6 +28,7 @@ by running:
 
 """
 
+# [START all]
 import argparse
 import json
 import sys
@@ -53,7 +53,10 @@ def main(argv):
     # engine, these are available from the environment.
     credentials = GoogleCredentials.get_application_default()
 
-    # Construct the service object for interacting with the Cloud Storage API.
+    # Construct the service object for interacting with the Cloud Storage API -
+    # the 'storage' service, at version 'v1'.
+    # You can browse other available api services and versions here:
+    #     https://developers.google.com/api-client-library/python/apis/
     service = discovery.build('storage', 'v1', credentials=credentials)
 
     # Make a request to buckets.get to retrieve information about the bucket.
