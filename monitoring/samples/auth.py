@@ -35,7 +35,8 @@ point to the key file:
 
 $ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/json-key.json
 
-[1] https://developers.google.com/identity/protocols/application-default-credentials
+[1] https://developers.google.com/identity/protocols/\
+    application-default-credentials
 [2] https://console.developers.google.com/project/_/apiui/credential
 """  # NOQA
 
@@ -62,19 +63,19 @@ def ListTimeseries(project_name, service):
 
     timeseries = service.timeseries()
 
-    print 'Timeseries.list raw response:'
+    print('Timeseries.list raw response:')
     try:
         response = timeseries.list(
             project=project_name, metric=METRIC, youngest=YOUNGEST).execute()
 
-        print json.dumps(response,
+        print(json.dumps(response,
                          sort_keys=True,
                          indent=4,
-                         separators=(',', ': '))
+                         separators=(',', ': ')))
     except:
-        print 'Error:'
+        print('Error:')
         for error in sys.exc_info():
-            print error
+            print(error)
 
 
 def main(project_name):
@@ -87,7 +88,7 @@ def main(project_name):
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
-        print "Usage: %s <project-name>" % sys.argv[0]
+        print("Usage: {} <project-name>".format(sys.argv[0]))
         sys.exit(1)
     main(sys.argv[1])
 # [END all]

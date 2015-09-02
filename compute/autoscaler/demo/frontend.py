@@ -22,10 +22,15 @@ https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/compute/
     autoscaler/demo/tests/test_frontend.py
 """
 
-import BaseHTTPServer
+try:
+    import BaseHTTPServer
+    import SocketServer
+except:
+    import http.server as BaseHTTPServer
+    import socketserver as SocketServer
+
 from multiprocessing import Process
 import os
-import SocketServer
 import sys
 import time
 

@@ -14,10 +14,9 @@
 import json
 
 from bigquery.samples.utils import get_service, poll_job
-
 import httplib2
-
 from oauth2client.client import GoogleCredentials
+from six.moves import input
 
 
 # [START make_post]
@@ -75,16 +74,16 @@ def make_post(http, schema, data, projectId, datasetId, tableId):
 def main():
     credentials = GoogleCredentials.get_application_default()
     http = credentials.authorize(httplib2.Http())
-    projectId = raw_input('Enter the project ID: ')
-    datasetId = raw_input('Enter a dataset ID: ')
-    tableId = raw_input('Enter a table name to load the data to: ')
-    schema_path = raw_input(
+    projectId = input('Enter the project ID: ')
+    datasetId = input('Enter a dataset ID: ')
+    tableId = input('Enter a table name to load the data to: ')
+    schema_path = input(
         'Enter the path to the schema file for the table: ')
 
     with open(schema_path, 'r') as schema_file:
         schema = schema_file.read()
 
-    data_path = raw_input('Enter the path to the data file: ')
+    data_path = input('Enter the path to the data file: ')
 
     with open(data_path, 'r') as data_file:
         data = data_file.read()

@@ -31,7 +31,8 @@ Usage:
 where <project-id> is the id of the developers console [3] project you'd like
 to list the bigquery datasets and projects for.
 
-[1] https://developers.google.com/identity/protocols/application-default-credentials#howtheywork
+[1] https://developers.google.com/identity/protocols/\
+    application-default-credentials#howtheywork
 [2] https://cloud.google.com/sdk/
 [3] https://console.developers.google.com
 """  # NOQA
@@ -39,11 +40,9 @@ to list the bigquery datasets and projects for.
 import argparse
 from pprint import pprint
 
-from urllib2 import HTTPError
-
 from apiclient import discovery
-
 from oauth2client.client import GoogleCredentials
+from six.moves.urllib.error import HTTPError
 
 
 # [START list_datasets]

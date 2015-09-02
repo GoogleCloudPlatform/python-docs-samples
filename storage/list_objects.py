@@ -64,7 +64,7 @@ def main(argv):
     # specified bucket.
     req = service.buckets().get(bucket=args.bucket)
     resp = req.execute()
-    print json.dumps(resp, indent=2)
+    print(json.dumps(resp, indent=2))
     # [END list_bucket]
 
     # Create a request to objects.list to retrieve a list of objects.
@@ -76,7 +76,7 @@ def main(argv):
     # automatically handle paging with the pageToken.
     while req is not None:
         resp = req.execute()
-        print json.dumps(resp, indent=2)
+        print(json.dumps(resp, indent=2))
         req = service.objects().list_next(req, resp)
 
 if __name__ == '__main__':

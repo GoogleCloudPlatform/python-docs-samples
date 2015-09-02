@@ -11,13 +11,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from __future__ import print_function
-
 import ast
 import json
 import uuid
 
 from bigquery.samples.utils import get_service
+from six.moves import input
 
 
 # [START stream_row_to_bigquery]
@@ -57,18 +56,18 @@ def run(project_id, dataset_id, table_id, rows, num_retries):
 
 # [START main]
 def get_rows():
-    line = raw_input("Enter a row (python dict) into the table: ")
+    line = input("Enter a row (python dict) into the table: ")
     while line:
         yield ast.literal_eval(line)
-        line = raw_input("Enter another row into the table \n" +
-                         "[hit enter to stop]: ")
+        line = input("Enter another row into the table \n" +
+                     "[hit enter to stop]: ")
 
 
 def main():
-    project_id = raw_input("Enter the project ID: ")
-    dataset_id = raw_input("Enter a dataset ID: ")
-    table_id = raw_input("Enter a table ID : ")
-    num_retries = int(raw_input(
+    project_id = input("Enter the project ID: ")
+    dataset_id = input("Enter a dataset ID: ")
+    table_id = input("Enter a table ID : ")
+    num_retries = int(input(
         "Enter number of times to retry in case of 500 error: "))
 
     for result in run(project_id, dataset_id, table_id,

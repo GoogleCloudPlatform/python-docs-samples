@@ -15,6 +15,7 @@ import json
 import uuid
 
 from bigquery.samples.utils import get_service, poll_job
+from six.moves import input
 
 
 # [START load_table]
@@ -81,20 +82,20 @@ def run(source_schema, source_csv,
 
 # [START main]
 def main():
-    projectId = raw_input("Enter the project ID: ")
-    datasetId = raw_input("Enter a dataset ID: ")
-    tableId = raw_input("Enter a destination table name: ")
+    projectId = input("Enter the project ID: ")
+    datasetId = input("Enter a dataset ID: ")
+    tableId = input("Enter a destination table name: ")
 
-    schema_file_path = raw_input(
+    schema_file_path = input(
         "Enter the path to the table schema: ")
     with open(schema_file_path, 'r') as schema_file:
         schema = json.load(schema_file)
 
-    data_file_path = raw_input(
+    data_file_path = input(
         "Enter the Cloud Storage path for the CSV file: ")
-    num_retries = raw_input(
+    num_retries = input(
         "Enter number of times to retry in case of 500 error: ")
-    interval = raw_input(
+    interval = input(
         "Enter how often to poll the query for completion (seconds): ")
     run(schema,
         data_file_path,
