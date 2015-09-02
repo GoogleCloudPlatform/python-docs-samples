@@ -2,10 +2,11 @@
 include =
     appengine/*
     bigquery/*
-    datastore/*
-    localtesting/*
-    storage/*
     blog/*
+    compute/*
+    datastore/*
+    monitoring/*
+    storage/*
 [report]
 exclude_lines =
     pragma: NO COVER

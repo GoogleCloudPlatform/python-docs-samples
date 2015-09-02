@@ -14,7 +14,7 @@
 
 """Test classes for code snippet for modeling article."""
 
-from datastore.ndb.modeling import structured_property_models as models
+from appengine.ndb.modeling import structured_property_models as models
 
 from tests import DatastoreTestbedCase
 

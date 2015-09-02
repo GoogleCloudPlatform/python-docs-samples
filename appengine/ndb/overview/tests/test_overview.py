@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # from the app main.py
-from datastore.ndb.overview import main
+from appengine.ndb.overview import main
 
 from tests import DatastoreTestbedCase
 

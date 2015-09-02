@@ -17,17 +17,13 @@ import re
 
 from apiclient.http import HttpMock
 
-from bigquery.samples.appengine_auth import main
+from appengine.bigquery import main
 
 import mock
 
 import tests
 
 import webapp2
-
-
-RESOURCE_PATH = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), '..', 'resources')
 
 
 class TestAuthSample(tests.DatastoreTestbedCase, tests.CloudBaseTest):
@@ -71,7 +67,7 @@ class TestAuthSample(tests.DatastoreTestbedCase, tests.CloudBaseTest):
         request = webapp2.Request.blank('/')
 
         mock_http = HttpMock(
-            os.path.join(RESOURCE_PATH, 'datasets-list.json'),
+            os.path.join(self.resource_path, 'datasets-list.json'),
             {'status': '200'})
         with mock.patch.object(main.decorator, 'http', return_value=mock_http):
             original_projectid = main.PROJECTID
