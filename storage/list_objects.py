@@ -48,18 +48,24 @@ def main(argv):
     # Parse the command-line flags.
     args = parser.parse_args(argv[1:])
 
+    # [START list_bucket]
     # Get the application default credentials. When running locally, these are
     # available after running `gcloud auth login`. When running on compute
     # engine, these are available from the environment.
     credentials = GoogleCredentials.get_application_default()
 
-    # Construct the service object for interacting with the Cloud Storage API.
+    # Construct the service object for interacting with the Cloud Storage API -
+    # the 'storage' service, at version 'v1'.
+    # You can browse other available api services and versions here:
+    #     https://developers.google.com/api-client-library/python/apis/
     service = discovery.build('storage', 'v1', credentials=credentials)
 
-    # Make a request to buckets.get to retrieve information about the bucket.
+    # Make a request to buckets.get to retrieve a list of objects in the
+    # specified bucket.
     req = service.buckets().get(bucket=args.bucket)
     resp = req.execute()
     print json.dumps(resp, indent=2)
+    # [END list_bucket]
 
     # Create a request to objects.list to retrieve a list of objects.
     fields_to_return = \
