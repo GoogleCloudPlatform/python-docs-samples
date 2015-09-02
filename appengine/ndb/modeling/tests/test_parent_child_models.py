@@ -14,7 +14,7 @@
 
 """Test classes for code snippet for modeling article."""
 
-from datastore.ndb.modeling import parent_child_models as models
+from appengine.ndb.modeling import parent_child_models as models
 
 from google.appengine.ext import ndb
 
