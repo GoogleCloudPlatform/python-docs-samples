@@ -73,8 +73,8 @@ def main(argv):
             name=filename,
             bucket=args.bucket)
         resp = req.execute()
-        print '> Uploaded source file %s' % filename
-        print json.dumps(resp, indent=2)
+        print('> Uploaded source file {}'.format(filename))
+        print(json.dumps(resp, indent=2))
 
     # Construct a request to compose the source files into the destination.
     compose_req_body = {
@@ -88,8 +88,8 @@ def main(argv):
         destinationObject=args.destination,
         body=compose_req_body)
     resp = req.execute()
-    print '> Composed files into %s' % args.destination
-    print json.dumps(resp, indent=2)
+    print('> Composed files into {}'.format(args.destination))
+    print(json.dumps(resp, indent=2))
 
     # Download and print the composed object.
     req = service.objects().get_media(
@@ -97,8 +97,8 @@ def main(argv):
         object=args.destination)
 
     res = req.execute()
-    print '> Composed file contents:'
-    print res
+    print('> Composed file contents:')
+    print(res)
 
 
 if __name__ == '__main__':

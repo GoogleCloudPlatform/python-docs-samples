@@ -11,11 +11,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from __future__ import print_function  # For python 2/3 interoperability
-
 import json
 
 from bigquery.samples.utils import get_service, paging
+from six.moves import input
 
 
 # [START sync_query]
@@ -49,12 +48,12 @@ def run(project_id, query, timeout, num_retries):
 
 # [START main]
 def main():
-    project_id = raw_input("Enter the project ID: ")
-    query_string = raw_input("Enter the Bigquery SQL Query: ")
-    timeout = raw_input(
+    project_id = input("Enter the project ID: ")
+    query_string = input("Enter the Bigquery SQL Query: ")
+    timeout = input(
         "Enter how long to wait for the query to complete in milliseconds"
         "\n (if longer than 10 seconds, use an asynchronous query): ")
-    num_retries = int(raw_input(
+    num_retries = int(input(
         "Enter how many times to retry in case of server error"))
 
     for result in run(project_id, query_string, timeout, num_retries):

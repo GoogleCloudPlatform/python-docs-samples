@@ -37,7 +37,9 @@ class TestAsyncRunner(tests.CloudBaseTest):
         test_project_id = os.environ.get(tests.PROJECT_ID_ENV)
         answers = [test_project_id, self.constants['query'], 'n',
                    '1', '1']
-        with tests.mock_raw_input(answers):
+
+        with tests.mock_input_answers(
+                answers, target='bigquery.samples.async_query.input'):
             main()
 
 

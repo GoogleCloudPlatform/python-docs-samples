@@ -11,14 +11,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from __future__ import print_function  # For python 2/3 interoperability
-
 import json
 import uuid
 
 from bigquery.samples.utils import get_service
 from bigquery.samples.utils import paging
 from bigquery.samples.utils import poll_job
+from six.moves import input
 
 
 # [START async_query]
@@ -70,13 +69,13 @@ def run(project_id, query_string, batch, num_retries, interval):
 
 # [START main]
 def main():
-    project_id = raw_input("Enter the project ID: ")
-    query_string = raw_input("Enter the Bigquery SQL Query: ")
-    batch = raw_input("Run query as batch (y/n)?: ") in (
+    project_id = input("Enter the project ID: ")
+    query_string = input("Enter the Bigquery SQL Query: ")
+    batch = input("Run query as batch (y/n)?: ") in (
         'True', 'true', 'y', 'Y', 'yes', 'Yes')
-    num_retries = int(raw_input(
+    num_retries = int(input(
         "Enter number of times to retry in case of 500 error: "))
-    interval = raw_input(
+    interval = input(
         "Enter how often to poll the query for completion (seconds): ")
 
     for result in run(project_id, query_string, batch, num_retries, interval):

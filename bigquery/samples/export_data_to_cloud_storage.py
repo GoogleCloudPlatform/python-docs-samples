@@ -15,6 +15,7 @@ import uuid
 
 from bigquery.samples.utils import get_service
 from bigquery.samples.utils import poll_job
+from six.moves import input
 
 
 # [START export_table]
@@ -82,19 +83,19 @@ def run(cloud_storage_path,
 
 # [START main]
 def main():
-    projectId = raw_input("Enter the project ID: ")
-    datasetId = raw_input("Enter a dataset ID: ")
-    tableId = raw_input("Enter a table name to copy: ")
-    cloud_storage_path = raw_input(
+    projectId = input("Enter the project ID: ")
+    datasetId = input("Enter a dataset ID: ")
+    tableId = input("Enter a table name to copy: ")
+    cloud_storage_path = input(
         "Enter a Google Cloud Storage URI: ")
-    interval = raw_input(
+    interval = input(
         "Enter how often to poll the job (in seconds): ")
-    num_retries = raw_input(
+    num_retries = input(
         "Enter the number of retries in case of 500 error: ")
 
     run(cloud_storage_path,
         projectId, datasetId, tableId,
         num_retries, interval)
 
-    print 'Done exporting!'
+    print('Done exporting!')
 # [END main]
