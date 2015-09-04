@@ -28,7 +28,7 @@ class TaskQueueTestCase(unittest.TestCase):
 
         # root_path must be set the the location of queue.yaml.
         # Otherwise, only the 'default' queue will be available.
-        self.testbed.init_taskqueue_stub(root_path='.')
+        self.testbed.init_taskqueue_stub(root_path='tests/resources')
         self.taskqueue_stub = self.testbed.get_stub(
             testbed.TASKQUEUE_SERVICE_NAME)
 
