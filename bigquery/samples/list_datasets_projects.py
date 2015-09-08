@@ -75,7 +75,7 @@ def list_projects(service):
 
 def main(project_id):
     credentials = GoogleCredentials.get_application_default()
-    # Construct the service object for the interacting with the BigQuery API.
+    # Construct the service object for interacting with the BigQuery API.
     service = discovery.build('bigquery', 'v2', credentials=credentials)
 
     list_datasets(service, project_id)
