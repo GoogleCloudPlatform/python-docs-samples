@@ -40,13 +40,16 @@ Before you can run tests locally you must have:
 
 If you want to run the Google App Engine tests, you will need:
 
-* The App Engine Python SDK. You can install this with the Google Cloud SDK:
+* The App Engine Python SDK. You can install this by downloading it [here]
+(https://cloud.google.com/appengine/downloads?hl=en)
 
-        $ gcloud components update gae-python
+* You can also download it programatically with the tests/scripts/fetch_gae_sdk.py
+        
+        $ test/scripts/fetch_gae_sdk.py <dest dir>
 
 * You will need to set an additional environment variable:
 
-        $ export GAE_PYTHONPATH=~/google-cloud-sdk/platform/google_appengine
+        $ export GAE_PYTHONPATH=<path your AppeEngine sdk>
 
 To run the bigquery tests, you'll need to create a bigquery dataset:
 
