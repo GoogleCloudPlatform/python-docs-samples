@@ -15,11 +15,10 @@
 """Test classes for code snippet for modeling article."""
 
 from appengine.ndb.modeling import naive_models as models
+from tests import AppEngineTestbedCase
 
-from tests import DatastoreTestbedCase
 
-
-class ContactTestCase(DatastoreTestbedCase):
+class ContactTestCase(AppEngineTestbedCase):
     """A test case for the naive Contact model classe."""
     NAME = 'Takashi Matsuo'
 

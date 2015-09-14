@@ -96,13 +96,15 @@ class CloudBaseTest(unittest.TestCase):
             os.environ['SERVER_SOFTWARE'] = self._server_software_org
 
 
-class DatastoreTestbedCase(unittest.TestCase):
+class AppEngineTestbedCase(CloudBaseTest):
     """A base test case for common setup/teardown tasks for test."""
     def setUp(self):
+        super(AppEngineTestbedCase, self).setUp()
+
         if not APPENGINE_AVAILABLE:
             raise SkipTest()
 
-        """Setup the datastore and memcache stub."""
+        # Setup the datastore and memcache stub.
         # First, create an instance of the Testbed class.
         self.testbed = testbed.Testbed()
         # Then activate the testbed, which prepares the service stubs for
@@ -118,8 +120,20 @@ class DatastoreTestbedCase(unittest.TestCase):
             consistency_policy=self.policy)
         self.testbed.init_memcache_stub()
 
+        # Setup remaining stubs.
+        self.testbed.init_user_stub()
+        self.testbed.init_taskqueue_stub()
+
     def tearDown(self):
+        super(AppEngineTestbedCase, self).tearDown()
         self.testbed.deactivate()
+
+    def loginUser(self, email='user@example.com', id='123', is_admin=False):
+        self.testbed.setup_env(
+            user_email=email,
+            user_id=id,
+            user_is_admin='1' if is_admin else '0',
+            overwrite=True)
 
 
 @contextlib.contextmanager

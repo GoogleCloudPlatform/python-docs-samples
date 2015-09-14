@@ -14,19 +14,14 @@
 
 # from the app main.py
 from appengine.ndb.overview import main
-
-from tests import DatastoreTestbedCase
-
-import webapp2
+from tests import AppEngineTestbedCase
+import webtest
 
 
-class TestHandlers(DatastoreTestbedCase):
+class TestHandlers(AppEngineTestbedCase):
     def test_hello(self):
-        # Build a request object passing the URI path to be tested.
-        # You can also pass headers, query arguments etc.
-        request = webapp2.Request.blank('/')
-        # Get a response for that request.
-        response = request.get_response(main.app)
+        app = webtest.TestApp(main.app)
+        response = app.get('/')
 
         # Let's check if the response is correct.
         self.assertEqual(response.status_int, 200)

@@ -16,34 +16,20 @@ import os
 import re
 
 from apiclient.http import HttpMock
-
 from appengine.bigquery import main
-
 import mock
-
 import tests
+import webtest
 
-import webapp2
 
-
-class TestAuthSample(tests.DatastoreTestbedCase, tests.CloudBaseTest):
+class TestAuthSample(tests.AppEngineTestbedCase):
 
     def setUp(self):
-        tests.DatastoreTestbedCase.setUp(self)
-        tests.CloudBaseTest.setUp(self)
-
-        self.testbed.init_user_stub()
-
-    def loginUser(self, email='user@example.com', id='123', is_admin=False):
-        self.testbed.setup_env(
-            user_email=email,
-            user_id=id,
-            user_is_admin='1' if is_admin else '0',
-            overwrite=True)
+        super(TestAuthSample, self).setUp()
+        self.app = webtest.TestApp(main.app)
 
     def test_anonymous_get(self):
-        request = webapp2.Request.blank('/')
-        response = request.get_response(main.app)
+        response = self.app.get('/')
 
         # Should redirect to login
         self.assertEqual(response.status_int, 302)
@@ -53,8 +39,7 @@ class TestAuthSample(tests.DatastoreTestbedCase, tests.CloudBaseTest):
     def test_loggedin_get(self):
         self.loginUser()
 
-        request = webapp2.Request.blank('/')
-        response = request.get_response(main.app)
+        response = self.app.get('/')
 
         # Should redirect to login
         self.assertEqual(response.status_int, 302)
@@ -64,16 +49,15 @@ class TestAuthSample(tests.DatastoreTestbedCase, tests.CloudBaseTest):
     def test_oauthed_get(self, *args):
         self.loginUser()
 
-        request = webapp2.Request.blank('/')
-
         mock_http = HttpMock(
             os.path.join(self.resource_path, 'datasets-list.json'),
             {'status': '200'})
+
         with mock.patch.object(main.decorator, 'http', return_value=mock_http):
             original_projectid = main.PROJECTID
             try:
                 main.PROJECTID = self.constants['projectId']
-                response = request.get_response(main.app)
+                response = self.app.get('/')
             finally:
                 main.PROJECTID = original_projectid
 
