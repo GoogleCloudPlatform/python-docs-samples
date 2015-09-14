@@ -191,7 +191,3 @@ def add_note():
             return ('Already there<br><a href="%s">Return</a>'
                     % flask.url_for('main_page', page_name=page_name))
         return flask.redirect(flask.url_for('main_page', page_name=page_name))
-
-
-if __name__ == '__main__':
-    app.run()

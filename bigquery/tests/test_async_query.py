@@ -13,10 +13,8 @@
 #
 import json
 import os
-import unittest
 
 from bigquery.samples.async_query import main, run
-
 import tests
 
 
@@ -41,7 +39,3 @@ class TestAsyncRunner(tests.CloudBaseTest):
         with tests.mock_input_answers(
                 answers, target='bigquery.samples.async_query.input'):
             main()
-
-
-if __name__ == '__main__':
-    unittest.main()

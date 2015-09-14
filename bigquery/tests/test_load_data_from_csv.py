@@ -12,10 +12,8 @@
 # limitations under the License.
 #
 """Tests for load_data_from_csv."""
-
 import json
 import os
-import unittest
 
 from bigquery.samples.load_data_from_csv import run
 from tests import CloudBaseTest
@@ -38,7 +36,3 @@ class TestLoadDataFromCSV(CloudBaseTest):
             self.constants['newTableId'],
             5,
             5)
-
-
-if __name__ == '__main__':
-    unittest.main()

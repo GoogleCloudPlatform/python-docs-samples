@@ -12,10 +12,8 @@
 # limitations under the License.
 #
 import re
-import unittest
 
 from bigquery.samples import list_datasets_projects
-
 import tests
 
 
@@ -29,7 +27,3 @@ class TestListDatasetsProjects(tests.CloudBaseTest):
             r'Project list:.*bigquery#projectList.*projects', re.DOTALL))
         self.assertRegexpMatches(stdout, re.compile(
             r'Dataset list:.*datasets.*datasetId', re.DOTALL))
-
-
-if __name__ == '__main__':
-    unittest.main()

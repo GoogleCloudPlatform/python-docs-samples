@@ -12,10 +12,8 @@
 # limitations under the License.
 #
 import re
-import unittest
 
 from bigquery.samples import getting_started
-
 import tests
 
 
@@ -26,7 +24,3 @@ class TestGettingStarted(tests.CloudBaseTest):
         stdout = mock_stdout.getvalue()
         self.assertRegexpMatches(stdout, re.compile(
             r'Query Results:.hamlet', re.DOTALL))
-
-
-if __name__ == '__main__':
-    unittest.main()

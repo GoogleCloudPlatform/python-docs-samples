@@ -14,7 +14,6 @@
 """Tests for export_table_to_gcs."""
 import json
 import os
-import unittest
 
 from bigquery.samples.streaming import run
 from tests import CloudBaseTest
@@ -36,7 +35,3 @@ class TestStreaming(CloudBaseTest):
                           rows,
                           5):
             self.assertIsNotNone(json.loads(result))
-
-
-if __name__ == '__main__':
-    unittest.main()

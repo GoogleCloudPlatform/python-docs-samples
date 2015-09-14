@@ -12,7 +12,6 @@
 # limitations under the License.
 #
 import json
-import unittest
 
 from bigquery.samples.sync_query import run
 from tests import CloudBaseTest
@@ -27,7 +26,3 @@ class TestSyncQuery(CloudBaseTest):
                           5):
 
             self.assertIsNotNone(json.loads(result))
-
-
-if __name__ == '__main__':
-    unittest.main()

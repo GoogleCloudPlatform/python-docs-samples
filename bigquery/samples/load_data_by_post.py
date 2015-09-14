@@ -11,12 +11,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import argparse
 import json
 
-from bigquery.samples.utils import get_service, poll_job
+from utils import get_service, poll_job
 import httplib2
 from oauth2client.client import GoogleCredentials
-from six.moves import input
 
 
 # [START make_post]
@@ -71,33 +71,27 @@ def make_post(http, schema, data, projectId, datasetId, tableId):
 
 
 # [START main]
-def main():
+def main(project_id, dataset_id, table_name, schema_path, data_path):
     credentials = GoogleCredentials.get_application_default()
     http = credentials.authorize(httplib2.Http())
-    projectId = input('Enter the project ID: ')
-    datasetId = input('Enter a dataset ID: ')
-    tableId = input('Enter a table name to load the data to: ')
-    schema_path = input(
-        'Enter the path to the schema file for the table: ')
 
     with open(schema_path, 'r') as schema_file:
         schema = schema_file.read()
 
-    data_path = input('Enter the path to the data file: ')
-
     with open(data_path, 'r') as data_file:
         data = data_file.read()
 
-    resp, content = make_post(http,
-                              schema,
-                              data,
-                              projectId,
-                              datasetId,
-                              tableId)
+    resp, content = make_post(
+        http,
+        schema,
+        data,
+        project_id,
+        dataset_id,
+        table_name)
 
     if resp.status == 200:
         job_resource = json.loads(content)
-        service = get_service(credentials)
+        service = get_service()
         poll_job(service, **job_resource['jobReference'])
         print("Success!")
     else:
@@ -105,4 +99,24 @@ def main():
 # [END main]
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(
+        description='Loads data into BigQuery.')
+    parser.add_argument('project_id', help='Your Google Cloud project ID.')
+    parser.add_argument('dataset_id', help='A BigQuery dataset ID.')
+    parser.add_argument(
+        'table_name', help='Name of the table to load data into.')
+    parser.add_argument(
+        'schema_file',
+        help='Path to a schema file describing the table schema.')
+    parser.add_argument(
+        'data_file',
+        help='Path to the data file.')
+
+    args = parser.parse_args()
+
+    main(
+        args.project_id,
+        args.dataset_id,
+        args.table_name,
+        args.schema_file,
+        args.data_file)

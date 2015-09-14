@@ -11,10 +11,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import argparse
 import json
 
-from bigquery.samples.utils import get_service, paging
-from six.moves import input
+from utils import get_service, paging
 
 
 # [START sync_query]
@@ -30,7 +30,7 @@ def sync_query(service, project_id, query, timeout=10000, num_retries=5):
 
 
 # [START run]
-def run(project_id, query, timeout, num_retries):
+def main(project_id, query, timeout, num_retries):
     service = get_service()
     response = sync_query(service,
                           project_id,
@@ -42,21 +42,33 @@ def run(project_id, query, timeout, num_retries):
                        service.jobs().getQueryResults,
                        num_retries=num_retries,
                        **response['jobReference']):
-        yield json.dumps(page['rows'])
+        print(json.dumps(page['rows']))
 # [END run]
 
 
 # [START main]
-def main():
-    project_id = input("Enter the project ID: ")
-    query_string = input("Enter the Bigquery SQL Query: ")
-    timeout = input(
-        "Enter how long to wait for the query to complete in milliseconds"
-        "\n (if longer than 10 seconds, use an asynchronous query): ")
-    num_retries = int(input(
-        "Enter how many times to retry in case of server error"))
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description='Loads data into BigQuery.')
+    parser.add_argument('project_id', help='Your Google Cloud project ID.')
+    parser.add_argument('query', help='BigQuery SQL Query.')
+    parser.add_argument(
+        '-t', '--timeout',
+        help='Number seconds to wait for a result',
+        type=int,
+        default=30)
+    parser.add_argument(
+        '-r', '--num_retries',
+        help='Number of times to retry in case of 500 error.',
+        type=int,
+        default=5)
 
-    for result in run(project_id, query_string, timeout, num_retries):
-        print(result)
+    args = parser.parse_args()
+
+    main(
+        args.project_id,
+        args.query,
+        args.timeout,
+        args.num_retries)
 
 # [END main]

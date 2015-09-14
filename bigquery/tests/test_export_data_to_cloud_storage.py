@@ -13,9 +13,6 @@
 #
 
 """Tests for export_table_to_gcs."""
-
-import unittest
-
 from bigquery.samples.export_data_to_cloud_storage import run
 from tests import CloudBaseTest
 
@@ -48,6 +45,3 @@ class TestExportTableToGCS(CloudBaseTest):
             5,
             5,
             export_format="AVRO")
-
-if __name__ == '__main__':
-    unittest.main()

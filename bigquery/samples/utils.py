@@ -47,6 +47,8 @@ def poll_job(service, projectId, jobId, interval=5.0, num_retries=5):
         time.sleep(float(interval))
         job_resource = job_get.execute(num_retries=num_retries)
 
+    print('Job is {}.'.format(job_resource['status']['state']))
+
     return job_resource
 # [END poll_job]
 

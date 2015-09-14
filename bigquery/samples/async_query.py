@@ -11,13 +11,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import argparse
 import json
 import uuid
 
-from bigquery.samples.utils import get_service
-from bigquery.samples.utils import paging
-from bigquery.samples.utils import poll_job
-from six.moves import input
+from utils import get_service, paging, poll_job
 
 
 # [START async_query]
@@ -43,7 +41,7 @@ def async_query(service, project_id, query, batch=False, num_retries=5):
 
 
 # [START run]
-def run(project_id, query_string, batch, num_retries, interval):
+def main(project_id, query_string, batch, num_retries, interval):
     service = get_service()
 
     query_job = async_query(service,
@@ -63,21 +61,35 @@ def run(project_id, query_string, batch, num_retries, interval):
                        num_retries=num_retries,
                        **query_job['jobReference']):
 
-        yield json.dumps(page['rows'])
+        print(json.dumps(page['rows']))
 # [END run]
 
 
 # [START main]
-def main():
-    project_id = input("Enter the project ID: ")
-    query_string = input("Enter the Bigquery SQL Query: ")
-    batch = input("Run query as batch (y/n)?: ") in (
-        'True', 'true', 'y', 'Y', 'yes', 'Yes')
-    num_retries = int(input(
-        "Enter number of times to retry in case of 500 error: "))
-    interval = input(
-        "Enter how often to poll the query for completion (seconds): ")
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description='Loads data into BigQuery.')
+    parser.add_argument('project_id', help='Your Google Cloud project ID.')
+    parser.add_argument('query', help='BigQuery SQL Query.')
+    parser.add_argument(
+        '-b', '--batch', help='Run query in batch mode.', action='store_true')
+    parser.add_argument(
+        '-r', '--num_retries',
+        help='Number of times to retry in case of 500 error.',
+        type=int,
+        default=5)
+    parser.add_argument(
+        '-p', '--poll_interval',
+        help='How often to poll the query for completion (seconds).',
+        type=int,
+        default=1)
 
-    for result in run(project_id, query_string, batch, num_retries, interval):
-        print(result)
+    args = parser.parse_args()
+
+    main(
+        args.project_id,
+        args.query,
+        args.batch,
+        args.num_retries,
+        args.poll_interval)
 # [END main]
