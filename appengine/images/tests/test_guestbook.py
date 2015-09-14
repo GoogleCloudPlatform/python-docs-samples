@@ -28,6 +28,12 @@ class TestHandlers(DatastoreTestbedCase):
         reload(main)
 
     def test_get(self):
+        main.Greeting(
+            parent=main.guestbook_key('default_guestbook'),
+            author='123',
+            content='abc'
+        ).put()
+
         # Build a request object passing the URI path to be tested.
         # You can also pass headers, query arguments etc.
         request = webapp2.Request.blank('/')
@@ -43,7 +49,7 @@ class TestHandlers(DatastoreTestbedCase):
         request = webapp2.Request.blank(
             '/sign',
             POST={'content': 'asdf'},
-            )
+        )
         response = request.get_response(main.app)
         mock_images.resize.assert_called_once_with(mock.ANY, 32, 32)
 
@@ -53,10 +59,11 @@ class TestHandlers(DatastoreTestbedCase):
     def test_img(self):
         greeting = main.Greeting(
             parent=main.guestbook_key('default_guestbook'),
-            id=123,
+            id=123
         )
         greeting.author = 'asdf'
         greeting.content = 'asdf'
+        greeting.avatar = b'123'
         greeting.put()
 
         request = webapp2.Request.blank(
@@ -79,7 +86,7 @@ class TestHandlers(DatastoreTestbedCase):
         request = webapp2.Request.blank(
             '/sign',
             POST={'content': 'asdf'},
-            )
+        )
         response = request.get_response(main.app)
 
         request = webapp2.Request.blank('/')

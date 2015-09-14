@@ -11,12 +11,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from blog import main
 from tests import CloudBaseTest
 
+from .wiki import main
 
-class BlogTestCase(CloudBaseTest):
-    """Simple test case that ensures the blog code doesn't throw any errors."""
+
+class WikiTestCase(CloudBaseTest):
+    """Simple test case that ensures the wiki code doesn't throw any errors."""
 
     def test_main(self):
         main(self.constants['projectId'])
