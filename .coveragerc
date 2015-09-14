@@ -10,4 +10,4 @@ include =
 [report]
 exclude_lines =
     pragma: NO COVER
-    if __name__ == '__main__'
+    if __name__ == '__main__':

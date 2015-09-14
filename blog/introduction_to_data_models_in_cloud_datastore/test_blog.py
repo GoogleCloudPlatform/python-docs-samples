@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from blog import main
+from .blog import main
 from tests import CloudBaseTest
 
 
