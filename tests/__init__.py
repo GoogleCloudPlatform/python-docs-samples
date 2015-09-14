@@ -17,7 +17,6 @@ from .utils import (
     BUCKET_NAME_ENV,
     capture_stdout,
     CloudBaseTest,
-    mock_input_answers,
     PROJECT_ID_ENV,
     RESOURCE_PATH)
 
@@ -27,7 +26,6 @@ __all__ = [
     'BUCKET_NAME_ENV',
     'capture_stdout',
     'CloudBaseTest',
-    'mock_input_answers',
     'PROJECT_ID_ENV',
     'RESOURCE_PATH'
 ]

@@ -14,9 +14,9 @@
 import argparse
 import json
 
-from utils import get_service, poll_job
 import httplib2
 from oauth2client.client import GoogleCredentials
+from utils import get_service, poll_job
 
 
 # [START make_post]

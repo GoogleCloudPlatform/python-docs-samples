@@ -16,8 +16,8 @@ import ast
 import json
 import uuid
 
-from utils import get_service
 from six.moves import input
+from utils import get_service
 
 
 # [START stream_row_to_bigquery]

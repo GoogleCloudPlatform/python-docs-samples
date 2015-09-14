@@ -14,7 +14,7 @@
 import json
 
 from bigquery.samples.sync_query import main
-from tests import CloudBaseTest, capture_stdout
+from tests import capture_stdout, CloudBaseTest
 
 
 class TestSyncQuery(CloudBaseTest):

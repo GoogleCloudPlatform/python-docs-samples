@@ -16,7 +16,7 @@ import json
 import os
 
 from bigquery.samples import streaming
-from tests import CloudBaseTest, capture_stdout
+from tests import capture_stdout, CloudBaseTest
 
 
 class TestStreaming(CloudBaseTest):
