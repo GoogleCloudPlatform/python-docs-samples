@@ -11,8 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from .wiki import main
 from tests import CloudBaseTest
+
+from .wiki import main
 
 
 class WikiTestCase(CloudBaseTest):
