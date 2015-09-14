@@ -1,7 +1,7 @@
 # Introduction to data models in Cloud Datastore
 
 This sample code is used in [this blog post](). It demonstrates two data models
-using [Google Cloud Datstore](https://cloud.google.com/datastore).
+using [Google Cloud Datastore](https://cloud.google.com/datastore).
 
 ## Prerequisites
 
