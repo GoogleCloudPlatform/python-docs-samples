@@ -22,7 +22,9 @@ class TestListDatasetsProjects(tests.CloudBaseTest):
     def test_main(self):
         with tests.capture_stdout() as mock_stdout:
             list_datasets_projects.main(self.constants['projectId'])
+
         stdout = mock_stdout.getvalue()
+
         self.assertRegexpMatches(stdout, re.compile(
             r'Project list:.*bigquery#projectList.*projects', re.DOTALL))
         self.assertRegexpMatches(stdout, re.compile(

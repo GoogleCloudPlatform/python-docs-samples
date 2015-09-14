@@ -21,6 +21,7 @@ class TestGettingStarted(tests.CloudBaseTest):
     def test_main(self):
         with tests.capture_stdout() as mock_stdout:
             getting_started.main(self.constants['projectId'])
+
         stdout = mock_stdout.getvalue()
         self.assertRegexpMatches(stdout, re.compile(
             r'Query Results:.hamlet', re.DOTALL))

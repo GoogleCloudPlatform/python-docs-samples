@@ -13,35 +13,38 @@
 #
 
 """Tests for export_table_to_gcs."""
-from bigquery.samples.export_data_to_cloud_storage import run
+from bigquery.samples.export_data_to_cloud_storage import main
 from tests import CloudBaseTest
 
 
 class TestExportTableToGCS(CloudBaseTest):
 
     def test_export_table_csv(self):
-        run(self.constants['cloudStorageInputURI'],
+        main(
+            self.constants['cloudStorageInputURI'],
             self.constants['projectId'],
             self.constants['datasetId'],
             self.constants['newTableId'],
             5,
-            5,
+            1,
             export_format="CSV")
 
     def test_export_table_json(self):
-        run(self.constants['cloudStorageInputURI'],
+        main(
+            self.constants['cloudStorageInputURI'],
             self.constants['projectId'],
             self.constants['datasetId'],
             self.constants['newTableId'],
             5,
-            5,
+            1,
             export_format="NEWLINE_DELIMITED_JSON")
 
     def test_export_table_avro(self):
-        run(self.constants['cloudStorageInputURI'],
+        main(
+            self.constants['cloudStorageInputURI'],
             self.constants['projectId'],
             self.constants['datasetId'],
             self.constants['newTableId'],
             5,
-            5,
+            1,
             export_format="AVRO")

@@ -13,16 +13,19 @@
 #
 import json
 
-from bigquery.samples.sync_query import run
-from tests import CloudBaseTest
+from bigquery.samples.sync_query import main
+from tests import CloudBaseTest, capture_stdout
 
 
 class TestSyncQuery(CloudBaseTest):
 
     def test_sync_query(self):
-        for result in run(self.constants['projectId'],
-                          self.constants['query'],
-                          5000,
-                          5):
+        with capture_stdout() as stdout:
+            main(
+                self.constants['projectId'],
+                self.constants['query'],
+                30,
+                5)
 
-            self.assertIsNotNone(json.loads(result))
+        result = stdout.getvalue().split('\n')[0]
+        self.assertIsNotNone(json.loads(result))

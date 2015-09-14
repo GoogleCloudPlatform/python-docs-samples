@@ -12,30 +12,23 @@
 # limitations under the License.
 #
 import json
-import os
 
-from bigquery.samples.async_query import main, run
+from bigquery.samples.async_query import main
 import tests
 
 
 class TestAsyncQuery(tests.CloudBaseTest):
 
     def test_async_query(self):
-        for result in run(self.constants['projectId'],
-                          self.constants['query'],
-                          False,
-                          5,
-                          5):
-            self.assertIsNotNone(json.loads(result))
+        with tests.capture_stdout() as stdout:
+            main(
+                self.constants['projectId'],
+                self.constants['query'],
+                False,
+                5,
+                5)
 
+        value = stdout.getvalue().split('\n')[1]
 
-class TestAsyncRunner(tests.CloudBaseTest):
-
-    def test_async_query_runner(self):
-        test_project_id = os.environ.get(tests.PROJECT_ID_ENV)
-        answers = [test_project_id, self.constants['query'], 'n',
-                   '1', '1']
-
-        with tests.mock_input_answers(
-                answers, target='bigquery.samples.async_query.input'):
-            main()
+        self.assertIsNotNone(
+            json.loads(value))
