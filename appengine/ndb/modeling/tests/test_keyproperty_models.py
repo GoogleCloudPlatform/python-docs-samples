@@ -17,11 +17,10 @@
 import unittest
 
 from appengine.ndb.modeling import keyproperty_models as models
+from tests import AppEngineTestbedCase
 
-from tests import DatastoreTestbedCase
 
-
-class ContactTestCase(DatastoreTestbedCase):
+class ContactTestCase(AppEngineTestbedCase):
     """A test case for the Contact model class with KeyProperty."""
     NAME = 'Takashi Matsuo'
 

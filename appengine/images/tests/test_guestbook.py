@@ -15,17 +15,18 @@
 # from the app main.py
 from appengine.images import main
 import mock
-from tests import DatastoreTestbedCase
+from tests import AppEngineTestbedCase
+import webtest
 
-import webapp2
 
-
-class TestHandlers(DatastoreTestbedCase):
+class TestHandlers(AppEngineTestbedCase):
     def setUp(self):
         super(TestHandlers, self).setUp()
 
         # Workaround for other tests clobbering our Greeting model.
         reload(main)
+
+        self.app = webtest.TestApp(main.app)
 
     def test_get(self):
         main.Greeting(
@@ -34,11 +35,7 @@ class TestHandlers(DatastoreTestbedCase):
             content='abc'
         ).put()
 
-        # Build a request object passing the URI path to be tested.
-        # You can also pass headers, query arguments etc.
-        request = webapp2.Request.blank('/')
-        # Get a response for that request.
-        response = request.get_response(main.app)
+        response = self.app.get('/')
 
         # Let's check if the response is correct.
         self.assertEqual(response.status_int, 200)
@@ -46,11 +43,8 @@ class TestHandlers(DatastoreTestbedCase):
     @mock.patch('appengine.images.main.images')
     def test_post(self, mock_images):
         mock_images.resize.return_value = 'asdf'
-        request = webapp2.Request.blank(
-            '/sign',
-            POST={'content': 'asdf'},
-        )
-        response = request.get_response(main.app)
+
+        response = self.app.post('/sign', {'content': 'asdf'})
         mock_images.resize.assert_called_once_with(mock.ANY, 32, 32)
 
         # Correct response is a redirect
@@ -66,30 +60,19 @@ class TestHandlers(DatastoreTestbedCase):
         greeting.avatar = b'123'
         greeting.put()
 
-        request = webapp2.Request.blank(
-            '/img?img_id=%s' % greeting.key.urlsafe()
-        )
-        response = request.get_response(main.app)
+        response = self.app.get('/img?img_id=%s' % greeting.key.urlsafe())
 
         self.assertEqual(response.status_int, 200)
 
     def test_img_missing(self):
         # Bogus image id, should get error
-        request = webapp2.Request.blank('/img?img_id=123')
-        response = request.get_response(main.app)
-
-        self.assertEqual(response.status_int, 500)
+        self.app.get('/img?img_id=123', status=500)
 
     @mock.patch('appengine.images.main.images')
     def test_post_and_get(self, mock_images):
         mock_images.resize.return_value = 'asdf'
-        request = webapp2.Request.blank(
-            '/sign',
-            POST={'content': 'asdf'},
-        )
-        response = request.get_response(main.app)
 
-        request = webapp2.Request.blank('/')
-        response = request.get_response(main.app)
+        self.app.post('/sign', {'content': 'asdf'})
+        response = self.app.get('/')
 
         self.assertEqual(response.status_int, 200)

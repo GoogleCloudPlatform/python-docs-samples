@@ -14,14 +14,12 @@
 
 # from the app main.py
 from appengine.ndb.transactions import main
+from tests import AppEngineTestbedCase
 
-from tests import DatastoreTestbedCase
 
-
-class TestHandlers(DatastoreTestbedCase):
+class TestHandlers(AppEngineTestbedCase):
     def setUp(self):
         super(TestHandlers, self).setUp()
-        self.testbed.init_taskqueue_stub()
         main.app.config['TESTING'] = True
         self.app = main.app.test_client()
 
