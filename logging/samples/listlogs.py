@@ -58,7 +58,7 @@ def ListLogs(project_id, service):
     next_page_token = None
     while True:
         response = service.projects().logs().list(
-            projectsID=project_id, pageToken=next_page_token).execute()
+            projectsId=project_id, pageToken=next_page_token).execute()
         for log in response["logs"]:
             print log["name"]
         next_page_token = response.get("nextPageToken")
