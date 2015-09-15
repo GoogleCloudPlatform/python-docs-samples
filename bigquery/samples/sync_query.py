@@ -47,6 +47,7 @@ def main(project_id, query, timeout, num_retries):
         timeout,
         num_retries)
 
+    # [START paging]
     # Page through the result set and print all results.
     page_token = None
     while True:
@@ -59,6 +60,7 @@ def main(project_id, query, timeout, num_retries):
         page_token = page.get('pageToken')
         if not page_token:
             break
+    # [END paging]
 # [END run]
 
 
