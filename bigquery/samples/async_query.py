@@ -13,13 +13,15 @@
 #
 import argparse
 import json
+import time
 import uuid
 
-from .utils import get_service, paging, poll_job
+from googleapiclient import discovery
+from oauth2client.client import GoogleCredentials
 
 
 # [START async_query]
-def async_query(service, project_id, query, batch=False, num_retries=5):
+def async_query(bigquery, project_id, query, batch=False, num_retries=5):
     # Generate a unique job_id so retries
     # don't accidentally duplicate query
     job_data = {
@@ -34,34 +36,67 @@ def async_query(service, project_id, query, batch=False, num_retries=5):
             }
         }
     }
-    return service.jobs().insert(
+    return bigquery.jobs().insert(
         projectId=project_id,
         body=job_data).execute(num_retries=num_retries)
 # [END async_query]
 
 
+# [START poll_job]
+def poll_job(bigquery, job):
+    """Waits for a job to complete."""
+
+    print('Waiting for job to finish...')
+
+    request = bigquery.jobs().get(
+        projectId=job['jobReference']['projectId'],
+        jobId=job['jobReference']['jobId'])
+
+    while True:
+        result = request.execute(num_retries=2)
+
+        if result['status']['state'] == 'DONE':
+            if 'errorResult' in result['status']:
+                raise RuntimeError(result['status']['errorResult'])
+            print('Job complete.')
+            return
+
+        time.sleep(1)
+# [END poll_job]
+
+
 # [START run]
 def main(project_id, query_string, batch, num_retries, interval):
-    service = get_service()
+    # [START build_service]
+    # Grab the application's default credentials from the environment.
+    credentials = GoogleCredentials.get_application_default()
 
-    query_job = async_query(service,
-                            project_id,
-                            query_string,
-                            batch,
-                            num_retries)
+    # Construct the service object for interacting with the BigQuery API.
+    bigquery = discovery.build('bigquery', 'v2', credentials=credentials)
+    # [END build_service]
 
-    poll_job(service,
-             query_job['jobReference']['projectId'],
-             query_job['jobReference']['jobId'],
-             interval,
-             num_retries)
+    # Submit the job and wait for it to complete.
+    query_job = async_query(
+        bigquery,
+        project_id,
+        query_string,
+        batch,
+        num_retries)
 
-    for page in paging(service,
-                       service.jobs().getQueryResults,
-                       num_retries=num_retries,
-                       **query_job['jobReference']):
+    poll_job(bigquery, query_job)
+
+    # Page through the result set and print all results.
+    page_token = None
+    while True:
+        page = bigquery.jobs().getQueryResults(
+            pageToken=page_token,
+            **query_job['jobReference']).execute(num_retries=2)
 
         print(json.dumps(page['rows']))
+
+        page_token = page.get('pageToken')
+        if not page_token:
+            break
 # [END run]
 
 

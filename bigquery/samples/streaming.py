@@ -16,12 +16,13 @@ import ast
 import json
 import uuid
 
+from googleapiclient import discovery
+from oauth2client.client import GoogleCredentials
 from six.moves import input
-from .utils import get_service
 
 
 # [START stream_row_to_bigquery]
-def stream_row_to_bigquery(service, project_id, dataset_id, table_name, row,
+def stream_row_to_bigquery(bigquery, project_id, dataset_id, table_name, row,
                            num_retries=5):
     # Generate a unique row id so retries
     # don't accidentally duplicate insert
@@ -29,7 +30,7 @@ def stream_row_to_bigquery(service, project_id, dataset_id, table_name, row,
         'insertId': str(uuid.uuid4()),
         'rows': [{'json': row}]
     }
-    return service.tabledata().insertAll(
+    return bigquery.tabledata().insertAll(
         projectId=project_id,
         datasetId=dataset_id,
         tableId=table_name,
@@ -39,10 +40,17 @@ def stream_row_to_bigquery(service, project_id, dataset_id, table_name, row,
 
 # [START run]
 def main(project_id, dataset_id, table_name, num_retries):
-    service = get_service()
+    # [START build_service]
+    # Grab the application's default credentials from the environment.
+    credentials = GoogleCredentials.get_application_default()
+
+    # Construct the service object for interacting with the BigQuery API.
+    bigquery = discovery.build('bigquery', 'v2', credentials=credentials)
+    # [END build_service]
+
     for row in get_rows():
         response = stream_row_to_bigquery(
-            service, project_id, dataset_id, table_name, row, num_retries)
+            bigquery, project_id, dataset_id, table_name, row, num_retries)
         print(json.dumps(response))
 
 

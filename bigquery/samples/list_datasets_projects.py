@@ -69,6 +69,7 @@ def list_datasets(service, project):
 
     except HTTPError as err:
         print('Error in list_datasets: %s' % err.content)
+        raise err
 # [END list_datasets]
 
 
@@ -84,6 +85,7 @@ def list_projects(service):
 
     except HTTPError as err:
         print('Error in list_projects: %s' % err.content)
+        raise err
 # [END list_projects]
 
 

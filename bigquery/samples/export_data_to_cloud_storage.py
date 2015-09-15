@@ -12,13 +12,15 @@
 # limitations under the License.
 #
 import argparse
+import time
 import uuid
 
-from .utils import get_service, poll_job
+from googleapiclient import discovery
+from oauth2client.client import GoogleCredentials
 
 
 # [START export_table]
-def export_table(service, cloud_storage_path,
+def export_table(bigquery, cloud_storage_path,
                  project_id, dataset_id, table_id,
                  export_format="CSV",
                  num_retries=5):
@@ -26,7 +28,7 @@ def export_table(service, cloud_storage_path,
     Starts an export job
 
     Args:
-        service: initialized and authorized bigquery
+        bigquery: initialized and authorized bigquery
             google-api-client object.
         cloud_storage_path: fully qualified
             path to a Google Cloud Storage location.
@@ -56,26 +58,55 @@ def export_table(service, cloud_storage_path,
             }
         }
     }
-    return service.jobs().insert(
+    return bigquery.jobs().insert(
         projectId=project_id,
         body=job_data).execute(num_retries=num_retries)
 # [END export_table]
 
 
+# [START poll_job]
+def poll_job(bigquery, job):
+    """Waits for a job to complete."""
+
+    print('Waiting for job to finish...')
+
+    request = bigquery.jobs().get(
+        projectId=job['jobReference']['projectId'],
+        jobId=job['jobReference']['jobId'])
+
+    while True:
+        result = request.execute(num_retries=2)
+
+        if result['status']['state'] == 'DONE':
+            if 'errorResult' in result['status']:
+                raise RuntimeError(result['status']['errorResult'])
+            print('Job complete.')
+            return
+
+        time.sleep(1)
+# [END poll_job]
+
+
 # [START run]
 def main(cloud_storage_path, project_id, dataset_id, table_id,
          num_retries, interval, export_format="CSV"):
+    # [START build_service]
+    # Grab the application's default credentials from the environment.
+    credentials = GoogleCredentials.get_application_default()
 
-    bigquery = get_service()
-    resource = export_table(bigquery, cloud_storage_path,
-                            project_id, dataset_id, table_id,
-                            num_retries=num_retries,
-                            export_format=export_format)
-    poll_job(bigquery,
-             resource['jobReference']['projectId'],
-             resource['jobReference']['jobId'],
-             interval,
-             num_retries)
+    # Construct the service object for interacting with the BigQuery API.
+    bigquery = discovery.build('bigquery', 'v2', credentials=credentials)
+    # [END build_service]
+
+    job = export_table(
+        bigquery,
+        cloud_storage_path,
+        project_id,
+        dataset_id,
+        table_id,
+        num_retries=num_retries,
+        export_format=export_format)
+    poll_job(bigquery, job)
 # [END run]
 
 

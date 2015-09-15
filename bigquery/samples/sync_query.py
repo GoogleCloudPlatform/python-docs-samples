@@ -14,16 +14,17 @@
 import argparse
 import json
 
-from .utils import get_service, paging
+from googleapiclient import discovery
+from oauth2client.client import GoogleCredentials
 
 
 # [START sync_query]
-def sync_query(service, project_id, query, timeout=10000, num_retries=5):
+def sync_query(bigquery, project_id, query, timeout=10000, num_retries=5):
     query_data = {
         'query': query,
         'timeoutMs': timeout,
     }
-    return service.jobs().query(
+    return bigquery.jobs().query(
         projectId=project_id,
         body=query_data).execute(num_retries=num_retries)
 # [END sync_query]
@@ -31,18 +32,33 @@ def sync_query(service, project_id, query, timeout=10000, num_retries=5):
 
 # [START run]
 def main(project_id, query, timeout, num_retries):
-    service = get_service()
-    response = sync_query(service,
-                          project_id,
-                          query,
-                          timeout,
-                          num_retries)
+    # [START build_service]
+    # Grab the application's default credentials from the environment.
+    credentials = GoogleCredentials.get_application_default()
 
-    for page in paging(service,
-                       service.jobs().getQueryResults,
-                       num_retries=num_retries,
-                       **response['jobReference']):
+    # Construct the service object for interacting with the BigQuery API.
+    bigquery = discovery.build('bigquery', 'v2', credentials=credentials)
+    # [END build_service]
+
+    query_job = sync_query(
+        bigquery,
+        project_id,
+        query,
+        timeout,
+        num_retries)
+
+    # Page through the result set and print all results.
+    page_token = None
+    while True:
+        page = bigquery.jobs().getQueryResults(
+            pageToken=page_token,
+            **query_job['jobReference']).execute(num_retries=2)
+
         print(json.dumps(page['rows']))
+
+        page_token = page.get('pageToken')
+        if not page_token:
+            break
 # [END run]
 
 

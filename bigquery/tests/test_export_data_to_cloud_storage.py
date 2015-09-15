@@ -21,7 +21,7 @@ class TestExportTableToGCS(CloudBaseTest):
 
     def test_export_table_csv(self):
         main(
-            self.constants['cloudStorageInputURI'],
+            self.constants['cloudStorageOutputURI'],
             self.constants['projectId'],
             self.constants['datasetId'],
             self.constants['newTableId'],
@@ -31,7 +31,7 @@ class TestExportTableToGCS(CloudBaseTest):
 
     def test_export_table_json(self):
         main(
-            self.constants['cloudStorageInputURI'],
+            self.constants['cloudStorageOutputURI'],
             self.constants['projectId'],
             self.constants['datasetId'],
             self.constants['newTableId'],
@@ -41,7 +41,7 @@ class TestExportTableToGCS(CloudBaseTest):
 
     def test_export_table_avro(self):
         main(
-            self.constants['cloudStorageInputURI'],
+            self.constants['cloudStorageOutputURI'],
             self.constants['projectId'],
             self.constants['datasetId'],
             self.constants['newTableId'],

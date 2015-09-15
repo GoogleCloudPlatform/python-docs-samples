@@ -28,7 +28,7 @@ class TestAsyncQuery(tests.CloudBaseTest):
                 5,
                 5)
 
-        value = stdout.getvalue().split('\n')[1]
+        value = stdout.getvalue().strip().split('\n').pop()
 
         self.assertIsNotNone(
             json.loads(value))

@@ -13,14 +13,15 @@
 #
 import argparse
 import json
+import time
 
+from googleapiclient import discovery
 import httplib2
 from oauth2client.client import GoogleCredentials
-from .utils import get_service, poll_job
 
 
 # [START make_post]
-def make_post(http, schema, data, projectId, datasetId, tableId):
+def make_post(http, schema, data, project_id, dataset_id, table_id):
     """
     Creates an http POST request for loading data into
     a bigquery table
@@ -34,7 +35,7 @@ def make_post(http, schema, data, projectId, datasetId, tableId):
     Returns: an http.request object
     """
     url = ('https://www.googleapis.com/upload/bigquery/v2/projects/' +
-           projectId + '/jobs')
+           project_id + '/jobs')
     # Create the body of the request, separated by a boundary of xxx
     resource = ('--xxx\n' +
                 'Content-Type: application/json; charset=UTF-8\n' + '\n' +
@@ -45,9 +46,9 @@ def make_post(http, schema, data, projectId, datasetId, tableId):
                 '         "fields": ' + str(schema) + '\n' +
                 '      },\n' +
                 '      "destinationTable": {\n' +
-                '        "projectId": "' + projectId + '",\n' +
-                '        "datasetId": "' + datasetId + '",\n' +
-                '        "tableId": "' + tableId + '"\n' +
+                '        "projectId": "' + project_id + '",\n' +
+                '        "datasetId": "' + dataset_id + '",\n' +
+                '        "tableId": "' + table_id + '"\n' +
                 '      }\n' +
                 '    }\n' +
                 '  }\n' +
@@ -70,10 +71,34 @@ def make_post(http, schema, data, projectId, datasetId, tableId):
     # [END make_post]
 
 
+# [START poll_job]
+def poll_job(bigquery, job):
+    """Waits for a job to complete."""
+
+    print('Waiting for job to finish...')
+
+    request = bigquery.jobs().get(
+        projectId=job['jobReference']['projectId'],
+        jobId=job['jobReference']['jobId'])
+
+    while True:
+        result = request.execute(num_retries=2)
+
+        if result['status']['state'] == 'DONE':
+            if 'errorResult' in result['status']:
+                raise RuntimeError(result['status']['errorResult'])
+            print('Job complete.')
+            return
+
+        time.sleep(1)
+# [END poll_job]
+
+
 # [START main]
 def main(project_id, dataset_id, table_name, schema_path, data_path):
     credentials = GoogleCredentials.get_application_default()
     http = credentials.authorize(httplib2.Http())
+    bigquery = discovery.build('bigquery', 'v2', credentials=credentials)
 
     with open(schema_path, 'r') as schema_file:
         schema = schema_file.read()
@@ -90,9 +115,8 @@ def main(project_id, dataset_id, table_name, schema_path, data_path):
         table_name)
 
     if resp.status == 200:
-        job_resource = json.loads(content)
-        service = get_service()
-        poll_job(service, **job_resource['jobReference'])
+        job = json.loads(content)
+        poll_job(bigquery, job)
         print("Success!")
     else:
         print("Http error code: {}".format(resp.status))

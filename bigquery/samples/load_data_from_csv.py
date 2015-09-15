@@ -13,19 +13,21 @@
 #
 import argparse
 import json
+import time
 import uuid
 
-from .utils import get_service, poll_job
+from googleapiclient import discovery
+from oauth2client.client import GoogleCredentials
 
 
 # [START load_table]
-def load_table(service, project_id, dataset_id, table_name, source_schema,
+def load_table(bigquery, project_id, dataset_id, table_name, source_schema,
                source_path, num_retries=5):
     """
     Starts a job to load a bigquery table from CSV
 
     Args:
-        service: an initialized and authorized bigquery
+        bigquery: an initialized and authorized bigquery client
         google-api-client object
         source_schema: a valid bigquery schema,
         see https://cloud.google.com/bigquery/docs/reference/v2/tables
@@ -58,22 +60,51 @@ def load_table(service, project_id, dataset_id, table_name, source_schema,
         }
     }
 
-    return service.jobs().insert(
+    return bigquery.jobs().insert(
         projectId=project_id,
         body=job_data).execute(num_retries=num_retries)
 # [END load_table]
 
 
+# [START poll_job]
+def poll_job(bigquery, job):
+    """Waits for a job to complete."""
+
+    print('Waiting for job to finish...')
+
+    request = bigquery.jobs().get(
+        projectId=job['jobReference']['projectId'],
+        jobId=job['jobReference']['jobId'])
+
+    while True:
+        result = request.execute(num_retries=2)
+
+        if result['status']['state'] == 'DONE':
+            if 'errorResult' in result['status']:
+                raise RuntimeError(result['status']['errorResult'])
+            print('Job complete.')
+            return
+
+        time.sleep(1)
+# [END poll_job]
+
+
 # [START run]
 def main(project_id, dataset_id, table_name, schema_file, data_path,
          poll_interval, num_retries):
-    service = get_service()
+    # [START build_service]
+    # Grab the application's default credentials from the environment.
+    credentials = GoogleCredentials.get_application_default()
+
+    # Construct the service object for interacting with the BigQuery API.
+    bigquery = discovery.build('bigquery', 'v2', credentials=credentials)
+    # [END build_service]
 
     with open(schema_file, 'r') as f:
         schema = json.load(f)
 
     job = load_table(
-        service,
+        bigquery,
         project_id,
         dataset_id,
         table_name,
@@ -81,11 +112,7 @@ def main(project_id, dataset_id, table_name, schema_file, data_path,
         data_path,
         num_retries)
 
-    poll_job(service,
-             job['jobReference']['projectId'],
-             job['jobReference']['jobId'],
-             poll_interval,
-             num_retries)
+    poll_job(bigquery, job)
 # [END run]
 
 
