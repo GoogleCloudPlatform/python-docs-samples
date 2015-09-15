@@ -11,20 +11,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import argparse
 import ast
 import json
 import uuid
 
-from bigquery.samples.utils import get_service
+from googleapiclient import discovery
+from oauth2client.client import GoogleCredentials
 from six.moves import input
 
 
 # [START stream_row_to_bigquery]
-def stream_row_to_bigquery(service,
-                           project_id,
-                           dataset_id,
-                           table_id,
-                           row,
+def stream_row_to_bigquery(bigquery, project_id, dataset_id, table_name, row,
                            num_retries=5):
     # Generate a unique row id so retries
     # don't accidentally duplicate insert
@@ -32,45 +30,63 @@ def stream_row_to_bigquery(service,
         'insertId': str(uuid.uuid4()),
         'rows': [{'json': row}]
     }
-    return service.tabledata().insertAll(
+    return bigquery.tabledata().insertAll(
         projectId=project_id,
         datasetId=dataset_id,
-        tableId=table_id,
+        tableId=table_name,
         body=insert_all_data).execute(num_retries=num_retries)
     # [END stream_row_to_bigquery]
 
 
 # [START run]
-def run(project_id, dataset_id, table_id, rows, num_retries):
-    service = get_service()
-    for row in rows:
-        response = stream_row_to_bigquery(service,
-                                          project_id,
-                                          dataset_id,
-                                          table_id,
-                                          row,
-                                          num_retries)
-        yield json.dumps(response)
-# [END run]
+def main(project_id, dataset_id, table_name, num_retries):
+    # [START build_service]
+    # Grab the application's default credentials from the environment.
+    credentials = GoogleCredentials.get_application_default()
+
+    # Construct the service object for interacting with the BigQuery API.
+    bigquery = discovery.build('bigquery', 'v2', credentials=credentials)
+    # [END build_service]
+
+    for row in get_rows():
+        response = stream_row_to_bigquery(
+            bigquery, project_id, dataset_id, table_name, row, num_retries)
+        print(json.dumps(response))
 
 
-# [START main]
 def get_rows():
     line = input("Enter a row (python dict) into the table: ")
     while line:
         yield ast.literal_eval(line)
         line = input("Enter another row into the table \n" +
                      "[hit enter to stop]: ")
+# [END run]
 
 
-def main():
-    project_id = input("Enter the project ID: ")
-    dataset_id = input("Enter a dataset ID: ")
-    table_id = input("Enter a table ID : ")
-    num_retries = int(input(
-        "Enter number of times to retry in case of 500 error: "))
+# [START main]
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description='Streams data into BigQuery from the command line.')
+    parser.add_argument('project_id', help='Your Google Cloud project ID.')
+    parser.add_argument('dataset_id', help='A BigQuery dataset ID.')
+    parser.add_argument(
+        'table_name', help='Name of the table to load data into.')
+    parser.add_argument(
+        '-p', '--poll_interval',
+        help='How often to poll the query for completion (seconds).',
+        type=int,
+        default=1)
+    parser.add_argument(
+        '-r', '--num_retries',
+        help='Number of times to retry in case of 500 error.',
+        type=int,
+        default=5)
 
-    for result in run(project_id, dataset_id, table_id,
-                      get_rows(), num_retries):
-        print(result)
+    args = parser.parse_args()
+
+    main(
+        args.project_id,
+        args.dataset_id,
+        args.table_name,
+        args.num_retries)
 # [END main]

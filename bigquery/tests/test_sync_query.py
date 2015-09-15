@@ -12,22 +12,20 @@
 # limitations under the License.
 #
 import json
-import unittest
 
-from bigquery.samples.sync_query import run
-from tests import CloudBaseTest
+from bigquery.samples.sync_query import main
+from tests import capture_stdout, CloudBaseTest
 
 
 class TestSyncQuery(CloudBaseTest):
 
     def test_sync_query(self):
-        for result in run(self.constants['projectId'],
-                          self.constants['query'],
-                          5000,
-                          5):
+        with capture_stdout() as stdout:
+            main(
+                self.constants['projectId'],
+                self.constants['query'],
+                30,
+                5)
 
-            self.assertIsNotNone(json.loads(result))
-
-
-if __name__ == '__main__':
-    unittest.main()
+        result = stdout.getvalue().split('\n')[0]
+        self.assertIsNotNone(json.loads(result))

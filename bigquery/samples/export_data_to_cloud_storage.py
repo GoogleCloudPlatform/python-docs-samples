@@ -11,23 +11,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import argparse
+import time
 import uuid
 
-from bigquery.samples.utils import get_service
-from bigquery.samples.utils import poll_job
-from six.moves import input
+from googleapiclient import discovery
+from oauth2client.client import GoogleCredentials
 
 
 # [START export_table]
-def export_table(service, cloud_storage_path,
-                 projectId, datasetId, tableId,
+def export_table(bigquery, cloud_storage_path,
+                 project_id, dataset_id, table_id,
                  export_format="CSV",
                  num_retries=5):
     """
     Starts an export job
 
     Args:
-        service: initialized and authorized bigquery
+        bigquery: initialized and authorized bigquery
             google-api-client object.
         cloud_storage_path: fully qualified
             path to a Google Cloud Storage location.
@@ -42,60 +43,102 @@ def export_table(service, cloud_storage_path,
     # don't accidentally duplicate export
     job_data = {
         'jobReference': {
-            'projectId': projectId,
+            'projectId': project_id,
             'jobId': str(uuid.uuid4())
         },
         'configuration': {
             'extract': {
                 'sourceTable': {
-                    'projectId': projectId,
-                    'datasetId': datasetId,
-                    'tableId': tableId,
+                    'projectId': project_id,
+                    'datasetId': dataset_id,
+                    'tableId': table_id,
                 },
                 'destinationUris': [cloud_storage_path],
                 'destinationFormat': export_format
             }
         }
     }
-    return service.jobs().insert(
-        projectId=projectId,
+    return bigquery.jobs().insert(
+        projectId=project_id,
         body=job_data).execute(num_retries=num_retries)
 # [END export_table]
 
 
-# [START run]
-def run(cloud_storage_path,
-        projectId, datasetId, tableId,
-        num_retries, interval, export_format="CSV"):
+# [START poll_job]
+def poll_job(bigquery, job):
+    """Waits for a job to complete."""
 
-    bigquery = get_service()
-    resource = export_table(bigquery, cloud_storage_path,
-                            projectId, datasetId, tableId,
-                            num_retries=num_retries,
-                            export_format=export_format)
-    poll_job(bigquery,
-             resource['jobReference']['projectId'],
-             resource['jobReference']['jobId'],
-             interval,
-             num_retries)
+    print('Waiting for job to finish...')
+
+    request = bigquery.jobs().get(
+        projectId=job['jobReference']['projectId'],
+        jobId=job['jobReference']['jobId'])
+
+    while True:
+        result = request.execute(num_retries=2)
+
+        if result['status']['state'] == 'DONE':
+            if 'errorResult' in result['status']:
+                raise RuntimeError(result['status']['errorResult'])
+            print('Job complete.')
+            return
+
+        time.sleep(1)
+# [END poll_job]
+
+
+# [START run]
+def main(cloud_storage_path, project_id, dataset_id, table_id,
+         num_retries, interval, export_format="CSV"):
+    # [START build_service]
+    # Grab the application's default credentials from the environment.
+    credentials = GoogleCredentials.get_application_default()
+
+    # Construct the service object for interacting with the BigQuery API.
+    bigquery = discovery.build('bigquery', 'v2', credentials=credentials)
+    # [END build_service]
+
+    job = export_table(
+        bigquery,
+        cloud_storage_path,
+        project_id,
+        dataset_id,
+        table_id,
+        num_retries=num_retries,
+        export_format=export_format)
+    poll_job(bigquery, job)
 # [END run]
 
 
 # [START main]
-def main():
-    projectId = input("Enter the project ID: ")
-    datasetId = input("Enter a dataset ID: ")
-    tableId = input("Enter a table name to copy: ")
-    cloud_storage_path = input(
-        "Enter a Google Cloud Storage URI: ")
-    interval = input(
-        "Enter how often to poll the job (in seconds): ")
-    num_retries = input(
-        "Enter the number of retries in case of 500 error: ")
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description='Exports data from BigQuery to Google Cloud Storage.')
+    parser.add_argument('project_id', help='Your Google Cloud project ID.')
+    parser.add_argument('dataset_id', help='BigQuery dataset to export.')
+    parser.add_argument('table_id', help='BigQuery table to export.')
+    parser.add_argument(
+        'gcs_path',
+        help=('Google Cloud Storage path to store the exported data. For '
+              'example, gs://mybucket/mydata.csv'))
+    parser.add_argument(
+        '-p', '--poll_interval',
+        help='How often to poll the query for completion (seconds).',
+        type=int,
+        default=1)
+    parser.add_argument(
+        '-r', '--num_retries',
+        help='Number of times to retry in case of 500 error.',
+        type=int,
+        default=5)
 
-    run(cloud_storage_path,
-        projectId, datasetId, tableId,
-        num_retries, interval)
+    args = parser.parse_args()
 
-    print('Done exporting!')
+    main(
+        args.gcs_path,
+        args.project_id,
+        args.dataset_id,
+        args.table_id,
+        args.num_retries,
+        args.poll_interval)
 # [END main]

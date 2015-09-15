@@ -35,7 +35,21 @@ to list the bigquery datasets and projects for.
     application-default-credentials#howtheywork
 [2] https://cloud.google.com/sdk/
 [3] https://console.developers.google.com
-"""  # NOQA
+
+For more information on the BigQuery API you can visit:
+
+  https://developers.google.com/bigquery/docs/overview
+
+For more information on the BigQuery API Python library surface you
+can visit:
+
+  https://developers.google.com/resources/api-libraries/documentation/
+  bigquery/v2/python/latest/
+
+For information on the Python Client Library visit:
+
+  https://developers.google.com/api-client-library/python/start/get_started
+"""
 
 import argparse
 from pprint import pprint
@@ -55,6 +69,7 @@ def list_datasets(service, project):
 
     except HTTPError as err:
         print('Error in list_datasets: %s' % err.content)
+        raise err
 # [END list_datasets]
 
 
@@ -70,6 +85,7 @@ def list_projects(service):
 
     except HTTPError as err:
         print('Error in list_projects: %s' % err.content)
+        raise err
 # [END list_projects]
 
 
@@ -81,19 +97,6 @@ def main(project_id):
     list_datasets(service, project_id)
     list_projects(service)
 
-
-# For more information on the BigQuery API you can visit:
-#
-#   https://developers.google.com/bigquery/docs/overview
-#
-# For more information on the BigQuery API Python library surface you
-# can visit:
-#
-#   https://developers.google.com/resources/api-libraries/documentation/bigquery/v2/python/latest/
-#
-# For information on the Python Client Library visit:
-#
-#   https://developers.google.com/api-client-library/python/start/get_started
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Lists BigQuery datasets and projects.')

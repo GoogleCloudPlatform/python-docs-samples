@@ -22,7 +22,6 @@ import sys
 import tempfile
 import unittest
 
-from mock import patch
 from nose.plugins.skip import SkipTest
 from six.moves import cStringIO
 
@@ -37,28 +36,6 @@ BUCKET_NAME_ENV = 'TEST_BUCKET_NAME'
 PROJECT_ID_ENV = 'TEST_PROJECT_ID'
 RESOURCE_PATH = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), 'resources')
-
-
-# TODO: This can be written as a much simpler context manager.
-class mock_input_answers(object):
-
-    def __init__(self, list_, target):
-        self.i = 0
-        self.list_ = list_
-        self.target = target
-
-    def get_next_value(self, question):
-        ret = self.list_[self.i]
-        self.i += 1
-        print('Responding to {} with {}'.format(question, ret))
-        return u"{}".format(ret)
-
-    def __enter__(self):
-        self.patch = patch(self.target, self.get_next_value)
-        self.patch.__enter__()
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.patch.__exit__(exc_type, exc_value, traceback)
 
 
 class CloudBaseTest(unittest.TestCase):

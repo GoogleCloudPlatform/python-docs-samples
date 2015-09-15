@@ -20,9 +20,10 @@ displays the 10 of Shakespeare's works with the greatest number of distinct
 words.
 """
 # [START all]
+import argparse
+
 from apiclient.discovery import build
 from apiclient.errors import HttpError
-
 from oauth2client.client import GoogleCredentials
 
 
@@ -38,10 +39,11 @@ def main(project_id):
         # [START run_query]
         query_request = bigquery_service.jobs()
         query_data = {
-            'query': ('SELECT TOP(corpus, 10) as title, '
-                      'COUNT(*) as unique_words '
-                      'FROM [publicdata:samples.shakespeare];')
-            }
+            'query': (
+                'SELECT TOP(corpus, 10) as title, '
+                'COUNT(*) as unique_words '
+                'FROM [publicdata:samples.shakespeare];')
+        }
 
         query_response = query_request.query(
             projectId=project_id,
@@ -60,7 +62,11 @@ def main(project_id):
 
 
 if __name__ == '__main__':
-    # The id of the project to run queries under.
-    project_id = input("Enter the project ID: ")
-    main(project_id)
+    parser = argparse.ArgumentParser(
+        description='Queries the public BigQuery Shakespeare dataset.')
+    parser.add_argument('project_id', help='Your Google Cloud Project ID.')
+
+    args = parser.parse_args()
+
+    main(args.project_id)
 # [END all]

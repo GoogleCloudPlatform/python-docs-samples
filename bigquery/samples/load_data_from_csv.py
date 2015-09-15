@@ -11,21 +11,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import argparse
 import json
+import time
 import uuid
 
-from bigquery.samples.utils import get_service, poll_job
-from six.moves import input
+from googleapiclient import discovery
+from oauth2client.client import GoogleCredentials
 
 
 # [START load_table]
-def load_table(service, source_schema, source_csv,
-               projectId, datasetId, tableId, num_retries=5):
+def load_table(bigquery, project_id, dataset_id, table_name, source_schema,
+               source_path, num_retries=5):
     """
     Starts a job to load a bigquery table from CSV
 
     Args:
-        service: an initialized and authorized bigquery
+        bigquery: an initialized and authorized bigquery client
         google-api-client object
         source_schema: a valid bigquery schema,
         see https://cloud.google.com/bigquery/docs/reference/v2/tables
@@ -40,70 +42,115 @@ def load_table(service, source_schema, source_csv,
     # don't accidentally duplicate query
     job_data = {
         'jobReference': {
-            'projectId': projectId,
+            'projectId': project_id,
             'job_id': str(uuid.uuid4())
         },
         'configuration': {
             'load': {
-                'sourceUris': [source_csv],
+                'sourceUris': [source_path],
                 'schema': {
                     'fields': source_schema
                 },
                 'destinationTable': {
-                    'projectId': projectId,
-                    'datasetId': datasetId,
-                    'tableId': tableId
+                    'projectId': project_id,
+                    'datasetId': dataset_id,
+                    'tableId': table_name
                 }
             }
         }
     }
 
-    return service.jobs().insert(
-        projectId=projectId,
+    return bigquery.jobs().insert(
+        projectId=project_id,
         body=job_data).execute(num_retries=num_retries)
 # [END load_table]
 
 
+# [START poll_job]
+def poll_job(bigquery, job):
+    """Waits for a job to complete."""
+
+    print('Waiting for job to finish...')
+
+    request = bigquery.jobs().get(
+        projectId=job['jobReference']['projectId'],
+        jobId=job['jobReference']['jobId'])
+
+    while True:
+        result = request.execute(num_retries=2)
+
+        if result['status']['state'] == 'DONE':
+            if 'errorResult' in result['status']:
+                raise RuntimeError(result['status']['errorResult'])
+            print('Job complete.')
+            return
+
+        time.sleep(1)
+# [END poll_job]
+
+
 # [START run]
-def run(source_schema, source_csv,
-        projectId, datasetId, tableId, interval,  num_retries):
-    service = get_service()
+def main(project_id, dataset_id, table_name, schema_file, data_path,
+         poll_interval, num_retries):
+    # [START build_service]
+    # Grab the application's default credentials from the environment.
+    credentials = GoogleCredentials.get_application_default()
 
-    job = load_table(service, source_schema, source_csv,
-                     projectId, datasetId, tableId, num_retries)
+    # Construct the service object for interacting with the BigQuery API.
+    bigquery = discovery.build('bigquery', 'v2', credentials=credentials)
+    # [END build_service]
 
-    poll_job(service,
-             job['jobReference']['projectId'],
-             job['jobReference']['jobId'],
-             interval,
-             num_retries)
+    with open(schema_file, 'r') as f:
+        schema = json.load(f)
+
+    job = load_table(
+        bigquery,
+        project_id,
+        dataset_id,
+        table_name,
+        schema,
+        data_path,
+        num_retries)
+
+    poll_job(bigquery, job)
 # [END run]
 
 
 # [START main]
-def main():
-    projectId = input("Enter the project ID: ")
-    datasetId = input("Enter a dataset ID: ")
-    tableId = input("Enter a destination table name: ")
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description='Loads data into BigQuery from a CSV file in Google '
+                    'Cloud Storage.')
+    parser.add_argument('project_id', help='Your Google Cloud project ID.')
+    parser.add_argument('dataset_id', help='A BigQuery dataset ID.')
+    parser.add_argument(
+        'table_name', help='Name of the table to load data into.')
+    parser.add_argument(
+        'schema_file',
+        help='Path to a schema file describing the table schema.')
+    parser.add_argument(
+        'data_path',
+        help='Google Cloud Storage path to the CSV data, for example: '
+             'gs://mybucket/in.csv')
+    parser.add_argument(
+        '-p', '--poll_interval',
+        help='How often to poll the query for completion (seconds).',
+        type=int,
+        default=1)
+    parser.add_argument(
+        '-r', '--num_retries',
+        help='Number of times to retry in case of 500 error.',
+        type=int,
+        default=5)
 
-    schema_file_path = input(
-        "Enter the path to the table schema: ")
-    with open(schema_file_path, 'r') as schema_file:
-        schema = json.load(schema_file)
+    args = parser.parse_args()
 
-    data_file_path = input(
-        "Enter the Cloud Storage path for the CSV file: ")
-    num_retries = input(
-        "Enter number of times to retry in case of 500 error: ")
-    interval = input(
-        "Enter how often to poll the query for completion (seconds): ")
-    run(schema,
-        data_file_path,
-        projectId,
-        datasetId,
-        tableId,
-        interval,
-        num_retries)
-
-    print("Job complete!")
+    main(
+        args.project_id,
+        args.dataset_id,
+        args.table_name,
+        args.schema_file,
+        args.data_path,
+        args.poll_interval,
+        args.num_retries)
 # [END main]

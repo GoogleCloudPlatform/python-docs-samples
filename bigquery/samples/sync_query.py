@@ -11,52 +11,80 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import argparse
 import json
 
-from bigquery.samples.utils import get_service, paging
-from six.moves import input
+from googleapiclient import discovery
+from oauth2client.client import GoogleCredentials
 
 
 # [START sync_query]
-def sync_query(service, project_id, query, timeout=10000, num_retries=5):
+def sync_query(bigquery, project_id, query, timeout=10000, num_retries=5):
     query_data = {
         'query': query,
         'timeoutMs': timeout,
     }
-    return service.jobs().query(
+    return bigquery.jobs().query(
         projectId=project_id,
         body=query_data).execute(num_retries=num_retries)
 # [END sync_query]
 
 
 # [START run]
-def run(project_id, query, timeout, num_retries):
-    service = get_service()
-    response = sync_query(service,
-                          project_id,
-                          query,
-                          timeout,
-                          num_retries)
+def main(project_id, query, timeout, num_retries):
+    # [START build_service]
+    # Grab the application's default credentials from the environment.
+    credentials = GoogleCredentials.get_application_default()
 
-    for page in paging(service,
-                       service.jobs().getQueryResults,
-                       num_retries=num_retries,
-                       **response['jobReference']):
-        yield json.dumps(page['rows'])
+    # Construct the service object for interacting with the BigQuery API.
+    bigquery = discovery.build('bigquery', 'v2', credentials=credentials)
+    # [END build_service]
+
+    query_job = sync_query(
+        bigquery,
+        project_id,
+        query,
+        timeout,
+        num_retries)
+
+    # Page through the result set and print all results.
+    page_token = None
+    while True:
+        page = bigquery.jobs().getQueryResults(
+            pageToken=page_token,
+            **query_job['jobReference']).execute(num_retries=2)
+
+        print(json.dumps(page['rows']))
+
+        page_token = page.get('pageToken')
+        if not page_token:
+            break
 # [END run]
 
 
 # [START main]
-def main():
-    project_id = input("Enter the project ID: ")
-    query_string = input("Enter the Bigquery SQL Query: ")
-    timeout = input(
-        "Enter how long to wait for the query to complete in milliseconds"
-        "\n (if longer than 10 seconds, use an asynchronous query): ")
-    num_retries = int(input(
-        "Enter how many times to retry in case of server error"))
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description='Loads data into BigQuery.')
+    parser.add_argument('project_id', help='Your Google Cloud project ID.')
+    parser.add_argument('query', help='BigQuery SQL Query.')
+    parser.add_argument(
+        '-t', '--timeout',
+        help='Number seconds to wait for a result',
+        type=int,
+        default=30)
+    parser.add_argument(
+        '-r', '--num_retries',
+        help='Number of times to retry in case of 500 error.',
+        type=int,
+        default=5)
 
-    for result in run(project_id, query_string, timeout, num_retries):
-        print(result)
+    args = parser.parse_args()
+
+    main(
+        args.project_id,
+        args.query,
+        args.timeout,
+        args.num_retries)
 
 # [END main]

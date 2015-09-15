@@ -12,33 +12,19 @@
 # limitations under the License.
 #
 """Tests for load_data_from_csv."""
-
-import json
 import os
-import unittest
 
-from bigquery.samples.load_data_from_csv import run
+from bigquery.samples.load_data_from_csv import main
 from tests import CloudBaseTest
 
 
 class TestLoadDataFromCSV(CloudBaseTest):
-
-    def setUp(self):
-        super(TestLoadDataFromCSV, self).setUp()
-        with open(
-                os.path.join(self.resource_path, 'schema.json'),
-                'r') as schema_file:
-            self.schema = json.load(schema_file)
-
     def test_load_table(self):
-        run(self.schema,
-            self.constants['cloudStorageInputURI'],
+        main(
             self.constants['projectId'],
             self.constants['datasetId'],
             self.constants['newTableId'],
-            5,
+            os.path.join(self.resource_path, 'schema.json'),
+            self.constants['cloudStorageInputURI'],
+            1,
             5)
-
-
-if __name__ == '__main__':
-    unittest.main()
