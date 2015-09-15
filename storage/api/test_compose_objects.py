@@ -11,21 +11,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import unittest
+import os
 
-from mock import Mock
+from .compose_objects import main
+from tests import CloudBaseTest
 
-from transfer_check import check_operation
 
-
-class CheckTransferTestCase(unittest.TestCase):
-    """A test case for querying transfer job completion."""
-
-    def test_check_operation(self):
-        mock_client = Mock(spec=['transferOperations'])
-        execute = mock_client.transferOperations.return_value.list.return_value \
-            .execute
-        project_id = ""
-        job_name = ""
-        check_operation(mock_client, project_id, job_name)
-        execute.assert_called_with()
+class TestComposeObjects(CloudBaseTest):
+    def test_main(self):
+        args = [
+            'ignored_command_name',
+            self.constants['bucketName'],
+            'dest.txt',
+            os.path.join(self.resource_path, 'file1.txt'),
+            os.path.join(self.resource_path, 'file2.txt'),
+        ]
+        main(args)

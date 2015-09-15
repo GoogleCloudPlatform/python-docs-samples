@@ -15,29 +15,34 @@
 import json
 import logging
 
-import create_client
+from apiclient import discovery
+from oauth2client.client import GoogleCredentials
+
+
+logging.basicConfig(level=logging.DEBUG)
 
 # Edit these values with desired parameters.
 PROJECT_ID = 'YOUR_PROJECT_ID'
 JOB_NAME = 'YOUR_JOB_NAME'
 
 
-def check_operation(transfer_service_client, project_id, job_name):
+def check_operation(storagetransfer, project_id, job_name):
     """Review the transfer operations associated with a transfer job."""
     filterString = (
         '{{"project_id": "{project_id}", '
-        '"job_names": ["{job_name}"]}}').format(
-        project_id=project_id, job_name=job_name)
-    return transfer_service_client.transferOperations().list(
+        '"job_names": ["{job_name}"]}}'
+    ).format(project_id=project_id, job_name=job_name)
+    return storagetransfer.transferOperations().list(
         name="transferOperations",
         filter=filterString).execute()
 
 
 def main():
-    logging.getLogger().setLevel(logging.DEBUG)
-    transfer_service_client = create_client.create_transfer_client()
+    credentials = GoogleCredentials.get_application_default()
+    storagetransfer = discovery.build(
+        'storagetransfer', 'v1', credentials=credentials)
 
-    result = check_operation(transfer_service_client, PROJECT_ID, JOB_NAME)
+    result = check_operation(storagetransfer, PROJECT_ID, JOB_NAME)
     logging.info('Result of transferOperations/list: %s',
                  json.dumps(result, indent=4, sort_keys=True))
 
