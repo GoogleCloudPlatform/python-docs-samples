@@ -14,7 +14,7 @@
 import argparse
 import uuid
 
-from utils import get_service, poll_job
+from .utils import get_service, poll_job
 
 
 # [START export_table]

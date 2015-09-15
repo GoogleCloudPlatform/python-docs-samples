@@ -15,7 +15,7 @@ import argparse
 import json
 import uuid
 
-from utils import get_service, paging, poll_job
+from .utils import get_service, paging, poll_job
 
 
 # [START async_query]

@@ -15,7 +15,7 @@ import argparse
 import json
 import uuid
 
-from utils import get_service, poll_job
+from .utils import get_service, poll_job
 
 
 # [START load_table]

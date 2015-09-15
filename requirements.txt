@@ -1,7 +1,7 @@
-argparse==1.2.1
-google-api-python-client==1.3.2
-httplib2==0.9
-oauth2client==1.4.6
+argparse>=1.2.1
+google-api-python-client>=1.4.2
+httplib2>=0.9.1
+oauth2client>=1.5.1
 py==1.4.26
 pyasn1==0.1.7
 pyasn1-modules==0.0.5

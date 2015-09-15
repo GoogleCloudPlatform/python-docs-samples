@@ -14,7 +14,7 @@
 import argparse
 import json
 
-from utils import get_service, paging
+from .utils import get_service, paging
 
 
 # [START sync_query]
