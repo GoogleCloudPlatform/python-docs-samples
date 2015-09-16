@@ -11,7 +11,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import re
 
 import tests
@@ -21,13 +20,9 @@ from . import auth
 
 class TestTimeseriesList(tests.CloudBaseTest):
 
-    @classmethod
-    def setUpClass(cls):
-        cls.test_project_id = os.environ.get(tests.PROJECT_ID_ENV)
-
     def test_main(self):
         with tests.capture_stdout() as stdout:
-            auth.main(self.test_project_id)
+            auth.main(self.project_id)
         output = stdout.getvalue().strip()
         self.assertRegexpMatches(
             output, re.compile(r'Timeseries.list raw response:\s*'

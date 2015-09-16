@@ -21,13 +21,17 @@ from .async_query import main
 class TestAsyncQuery(tests.CloudBaseTest):
 
     def test_async_query(self):
+        query = (
+            'SELECT corpus FROM publicdata:samples.shakespeare '
+            'GROUP BY corpus;')
+
         with tests.capture_stdout() as stdout:
             main(
-                self.constants['projectId'],
-                self.constants['query'],
-                False,
-                5,
-                5)
+                project_id=self.project_id,
+                query_string=query,
+                batch=False,
+                num_retries=5,
+                interval=1)
 
         value = stdout.getvalue().strip().split('\n').pop()
 

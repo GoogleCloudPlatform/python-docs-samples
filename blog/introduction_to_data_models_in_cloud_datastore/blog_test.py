@@ -20,4 +20,4 @@ class BlogTestCase(CloudBaseTest):
     """Simple test case that ensures the blog code doesn't throw any errors."""
 
     def test_main(self):
-        main(self.constants['projectId'])
+        main(self.project_id)

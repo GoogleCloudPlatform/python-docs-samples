@@ -21,7 +21,7 @@ from .getting_started import main
 class TestGettingStarted(tests.CloudBaseTest):
     def test_main(self):
         with tests.capture_stdout() as mock_stdout:
-            main(self.constants['projectId'])
+            main(self.project_id)
 
         stdout = mock_stdout.getvalue()
         self.assertRegexpMatches(stdout, re.compile(

@@ -21,6 +21,8 @@ from . import streaming
 
 
 class TestStreaming(CloudBaseTest):
+    dataset_id = 'test_dataset'
+    table_id = 'test_table'
 
     def test_stream_row_to_bigquery(self):
         with open(
@@ -33,10 +35,10 @@ class TestStreaming(CloudBaseTest):
 
         with capture_stdout() as stdout:
             streaming.main(
-                self.constants['projectId'],
-                self.constants['datasetId'],
-                self.constants['newTableId'],
-                5)
+                self.project_id,
+                self.dataset_id,
+                self.table_id,
+                num_retries=5)
 
         results = stdout.getvalue().split('\n')
         self.assertIsNotNone(json.loads(results[0]))

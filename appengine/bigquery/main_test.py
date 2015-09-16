@@ -28,6 +28,7 @@ class TestAuthSample(tests.AppEngineTestbedCase):
     def setUp(self):
         super(TestAuthSample, self).setUp()
         self.app = webtest.TestApp(main.app)
+        main.PROJECTID = self.project_id
 
     def test_anonymous_get(self):
         response = self.app.get('/')
@@ -55,12 +56,7 @@ class TestAuthSample(tests.AppEngineTestbedCase):
             {'status': '200'})
 
         with mock.patch.object(main.decorator, 'http', return_value=mock_http):
-            original_projectid = main.PROJECTID
-            try:
-                main.PROJECTID = self.constants['projectId']
-                response = self.app.get('/')
-            finally:
-                main.PROJECTID = original_projectid
+            response = self.app.get('/')
 
         # Should make the api call
         self.assertEqual(response.status_int, 200)

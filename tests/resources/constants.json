@@ -1,8 +1,0 @@
-{
-	"datasetId": "test_dataset",
-	"currentTableId": "test_table",
-	"newTableId": "test_table2",
-	"cloudStorageInputURI": "gs://%s/data.csv",
-	"cloudStorageOutputURI": "gs://%s/output.csv",
-	"query": "SELECT corpus FROM publicdata:samples.shakespeare GROUP BY corpus;"
-}
