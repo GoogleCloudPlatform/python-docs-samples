@@ -16,7 +16,6 @@ Common testing utilities between samples
 """
 
 import contextlib
-import json
 import os
 import sys
 import tempfile
@@ -32,45 +31,30 @@ try:
 except ImportError:
     APPENGINE_AVAILABLE = False
 
-BUCKET_NAME_ENV = 'TEST_BUCKET_NAME'
-PROJECT_ID_ENV = 'TEST_PROJECT_ID'
+
 RESOURCE_PATH = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), 'resources')
+PROJECT_ID_ENV_VAR = 'TEST_PROJECT_ID'
+BUCKET_NAME_ENV_VAR = 'TEST_BUCKET_NAME'
 
 
 class CloudBaseTest(unittest.TestCase):
 
     def setUp(self):
         self.resource_path = RESOURCE_PATH
+        self.project_id = os.environ.get(PROJECT_ID_ENV_VAR)
 
-        # A hack to prevent get_application_default from going GAE route.
-        self._server_software_org = os.environ.get('SERVER_SOFTWARE')
-        os.environ['SERVER_SOFTWARE'] = ''
+        if not self.project_id:
+            raise EnvironmentError(
+                'You must set the {} environment variable to a valid Google '
+                'Cloud project ID.'.format(PROJECT_ID_ENV_VAR))
 
-        # Constants from environment
-        test_bucket_name = os.environ.get(BUCKET_NAME_ENV, '')
-        test_project_id = os.environ.get(PROJECT_ID_ENV, '')
-        if not test_project_id or not test_bucket_name:
-            raise Exception('You need to define an env var "%s" and "%s" to '
-                            'run the test.'
-                            % (PROJECT_ID_ENV, BUCKET_NAME_ENV))
+        self.bucket_name = os.environ.get(BUCKET_NAME_ENV_VAR)
 
-        # Constants from resources/constants.json
-        with open(
-                os.path.join(RESOURCE_PATH, 'constants.json'),
-                'r') as constants_file:
-
-            self.constants = json.load(constants_file)
-        self.constants['projectId'] = test_project_id
-        self.constants['bucketName'] = test_bucket_name
-        self.constants['cloudStorageInputURI'] = (
-            self.constants['cloudStorageInputURI'] % test_bucket_name)
-        self.constants['cloudStorageOutputURI'] = (
-            self.constants['cloudStorageOutputURI'] % test_bucket_name)
-
-    def tearDown(self):
-        if self._server_software_org:
-            os.environ['SERVER_SOFTWARE'] = self._server_software_org
+        if not self.bucket_name:
+            raise EnvironmentError(
+                'You must set the {} environment variable to a valid Google '
+                'Cloud Storage bucket.'.format(BUCKET_NAME_ENV_VAR))
 
 
 class AppEngineTestbedCase(CloudBaseTest):
@@ -80,6 +64,10 @@ class AppEngineTestbedCase(CloudBaseTest):
 
         if not APPENGINE_AVAILABLE:
             raise SkipTest()
+
+        # A hack to prevent get_application_default from going GAE route.
+        self._server_software_org = os.environ.get('SERVER_SOFTWARE')
+        os.environ['SERVER_SOFTWARE'] = ''
 
         # Setup the datastore and memcache stub.
         # First, create an instance of the Testbed class.
@@ -103,6 +91,10 @@ class AppEngineTestbedCase(CloudBaseTest):
 
     def tearDown(self):
         super(AppEngineTestbedCase, self).tearDown()
+
+        if self._server_software_org:
+            os.environ['SERVER_SOFTWARE'] = self._server_software_org
+
         self.testbed.deactivate()
 
     def loginUser(self, email='user@example.com', id='123', is_admin=False):
@@ -115,7 +107,7 @@ class AppEngineTestbedCase(CloudBaseTest):
 
 @contextlib.contextmanager
 def capture_stdout():
-    """Capture stdout."""
+    """Capture stdout to a StringIO object."""
     fake_stdout = cStringIO()
     old_stdout = sys.stdout
 

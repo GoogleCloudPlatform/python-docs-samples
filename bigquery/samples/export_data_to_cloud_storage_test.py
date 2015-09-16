@@ -19,33 +19,41 @@ from .export_data_to_cloud_storage import main
 
 
 class TestExportTableToGCS(CloudBaseTest):
+    dataset_id = 'test_dataset'
+    table_id = 'test_table'
 
     def test_export_table_csv(self):
+        cloud_storage_output_uri = \
+            'gs://{}/output.csv'.format(self.bucket_name)
         main(
-            self.constants['cloudStorageOutputURI'],
-            self.constants['projectId'],
-            self.constants['datasetId'],
-            self.constants['newTableId'],
-            5,
-            1,
+            cloud_storage_output_uri,
+            self.project_id,
+            self.dataset_id,
+            self.table_id,
+            num_retries=5,
+            interval=1,
             export_format="CSV")
 
     def test_export_table_json(self):
+        cloud_storage_output_uri = \
+            'gs://{}/output.json'.format(self.bucket_name)
         main(
-            self.constants['cloudStorageOutputURI'],
-            self.constants['projectId'],
-            self.constants['datasetId'],
-            self.constants['newTableId'],
-            5,
-            1,
+            cloud_storage_output_uri,
+            self.project_id,
+            self.dataset_id,
+            self.table_id,
+            num_retries=5,
+            interval=1,
             export_format="NEWLINE_DELIMITED_JSON")
 
     def test_export_table_avro(self):
+        cloud_storage_output_uri = \
+            'gs://{}/output.avro'.format(self.bucket_name)
         main(
-            self.constants['cloudStorageOutputURI'],
-            self.constants['projectId'],
-            self.constants['datasetId'],
-            self.constants['newTableId'],
-            5,
-            1,
+            cloud_storage_output_uri,
+            self.project_id,
+            self.dataset_id,
+            self.table_id,
+            num_retries=5,
+            interval=1,
             export_format="AVRO")

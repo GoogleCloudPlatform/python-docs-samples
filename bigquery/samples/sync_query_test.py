@@ -21,12 +21,16 @@ from .sync_query import main
 class TestSyncQuery(CloudBaseTest):
 
     def test_sync_query(self):
+        query = (
+            'SELECT corpus FROM publicdata:samples.shakespeare '
+            'GROUP BY corpus;')
+
         with capture_stdout() as stdout:
             main(
-                self.constants['projectId'],
-                self.constants['query'],
-                30,
-                5)
+                project_id=self.project_id,
+                query=query,
+                timeout=30,
+                num_retries=5)
 
         result = stdout.getvalue().split('\n')[0]
         self.assertIsNotNone(json.loads(result))

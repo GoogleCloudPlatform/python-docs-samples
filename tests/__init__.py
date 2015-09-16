@@ -14,18 +14,14 @@
 
 from .utils import (
     AppEngineTestbedCase,
-    BUCKET_NAME_ENV,
     capture_stdout,
     CloudBaseTest,
-    PROJECT_ID_ENV,
     RESOURCE_PATH)
 
 
 __all__ = [
     'AppEngineTestbedCase',
-    'BUCKET_NAME_ENV',
     'capture_stdout',
     'CloudBaseTest',
-    'PROJECT_ID_ENV',
     'RESOURCE_PATH'
 ]

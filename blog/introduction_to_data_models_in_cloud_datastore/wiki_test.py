@@ -20,4 +20,4 @@ class WikiTestCase(CloudBaseTest):
     """Simple test case that ensures the wiki code doesn't throw any errors."""
 
     def test_main(self):
-        main(self.constants['projectId'])
+        main(self.project_id)

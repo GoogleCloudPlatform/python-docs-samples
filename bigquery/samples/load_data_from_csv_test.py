@@ -20,12 +20,18 @@ from .load_data_from_csv import main
 
 
 class TestLoadDataFromCSV(CloudBaseTest):
+    dataset_id = 'test_dataset'
+    table_id = 'test_import_table'
+
     def test_load_table(self):
+        cloud_storage_input_uri = 'gs://{}/data.csv'.format(self.bucket_name)
+        schema_file = os.path.join(self.resource_path, 'schema.json')
+
         main(
-            self.constants['projectId'],
-            self.constants['datasetId'],
-            self.constants['newTableId'],
-            os.path.join(self.resource_path, 'schema.json'),
-            self.constants['cloudStorageInputURI'],
-            1,
-            5)
+            self.project_id,
+            self.dataset_id,
+            self.table_id,
+            schema_file=schema_file,
+            data_path=cloud_storage_input_uri,
+            poll_interval=1,
+            num_retries=5)

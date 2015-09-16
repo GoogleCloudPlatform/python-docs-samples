@@ -81,16 +81,22 @@ If you want to run the Google App Engine tests, you will need:
 
         $ export GAE_PYTHONPATH=<path your AppeEngine sdk>
 
-To run the bigquery tests, you'll need to create a bigquery dataset:
+To run the bigquery tests:
 
 * Create a dataset in your project named `test_dataset`.
-* Create a table named `test_table2`, upload ``tests/resources/data.csv`` and give it the following schema:
 
-        Name STRING
-        Age INTEGER
-        Weight FLOAT
-        IsMagic BOOLEAN
+        gcloud alpha bigquery datasets create test_dataset
 
+* Load sample data into google cloud storage (for import tests):
+
+        gsutil cp tests/resources/data.csv gs://$TEST_BUCKET_NAME/data.csv
+
+* Load the sample data into a table named `test_table` (for export and streaming tests):
+
+        gcloud alpha bigquery import \
+          gs://$TEST_BUCKET_NAME/data.csv \
+          test_dataset/test_table \
+          --schema-file tests/resources/schema.json
 
 ### Test environments
 

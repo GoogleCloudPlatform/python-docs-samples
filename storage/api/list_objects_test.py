@@ -20,6 +20,6 @@ class TestListObjects(CloudBaseTest):
     def test_main(self):
         args = [
             'ignored_command_name',
-            self.constants['bucketName']
+            self.bucket_name
         ]
         main(args)
