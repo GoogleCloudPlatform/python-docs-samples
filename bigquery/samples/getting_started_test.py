@@ -1,28 +1,28 @@
-# Copyright 2015 Google Inc. All rights reserved.
-#
+# Copyright 2015, Google, Inc.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+import re
 
-# from the app main.py
-from appengine.memcache.guestbook import main
-from tests import AppEngineTestbedCase
-import webtest
+import tests
+
+from .getting_started import main
 
 
-class TestHandlers(AppEngineTestbedCase):
+class TestGettingStarted(tests.CloudBaseTest):
+    def test_main(self):
+        with tests.capture_stdout() as mock_stdout:
+            main(self.constants['projectId'])
 
-    def test_hello(self):
-        app = webtest.TestApp(main.app)
-        response = app.get('/')
-
-        # Let's check if the response is correct.
-        self.assertEqual(response.status_int, 200)
+        stdout = mock_stdout.getvalue()
+        self.assertRegexpMatches(stdout, re.compile(
+            r'Query Results:.hamlet', re.DOTALL))

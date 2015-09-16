@@ -10,31 +10,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-import os
+#
 import re
-import unittest
-
-from monitoring.samples import auth
 
 import tests
 
+from .list_datasets_projects import main
 
-class TestTimeseriesList(tests.CloudBaseTest):
 
-    @classmethod
-    def setUpClass(cls):
-        cls.test_project_id = os.environ.get(tests.PROJECT_ID_ENV)
+class TestListDatasetsProjects(tests.CloudBaseTest):
 
     def test_main(self):
-        with tests.capture_stdout() as stdout:
-            auth.main(self.test_project_id)
-        output = stdout.getvalue().strip()
-        self.assertRegexpMatches(
-            output, re.compile(r'Timeseries.list raw response:\s*'
-                               r'{\s*"kind": "[^"]+",'
-                               r'\s*"oldest": *"[0-9]+', re.S))
+        with tests.capture_stdout() as mock_stdout:
+            main(self.constants['projectId'])
 
+        stdout = mock_stdout.getvalue()
 
-if __name__ == '__main__':
-    unittest.main()
+        self.assertRegexpMatches(stdout, re.compile(
+            r'Project list:.*bigquery#projectList.*projects', re.DOTALL))
+        self.assertRegexpMatches(stdout, re.compile(
+            r'Dataset list:.*datasets.*datasetId', re.DOTALL))

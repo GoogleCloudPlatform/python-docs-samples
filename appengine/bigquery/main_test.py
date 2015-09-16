@@ -16,10 +16,11 @@ import os
 import re
 
 from apiclient.http import HttpMock
-from appengine.bigquery import main
 import mock
 import tests
 import webtest
+
+from . import main
 
 
 class TestAuthSample(tests.AppEngineTestbedCase):

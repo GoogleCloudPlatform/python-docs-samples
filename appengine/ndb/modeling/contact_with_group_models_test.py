@@ -14,9 +14,10 @@
 
 """Test classes for code snippet for modeling article."""
 
-from appengine.ndb.modeling import contact_with_group_models as models
 from google.appengine.ext import ndb
 from tests import AppEngineTestbedCase
+
+from . import contact_with_group_models as models
 
 
 class ContactTestCase(AppEngineTestbedCase):

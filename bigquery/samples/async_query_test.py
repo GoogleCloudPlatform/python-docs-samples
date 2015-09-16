@@ -11,21 +11,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import re
+import json
 
-from bigquery.samples import list_datasets_projects
 import tests
 
+from .async_query import main
 
-class TestListDatasetsProjects(tests.CloudBaseTest):
 
-    def test_main(self):
-        with tests.capture_stdout() as mock_stdout:
-            list_datasets_projects.main(self.constants['projectId'])
+class TestAsyncQuery(tests.CloudBaseTest):
 
-        stdout = mock_stdout.getvalue()
+    def test_async_query(self):
+        with tests.capture_stdout() as stdout:
+            main(
+                self.constants['projectId'],
+                self.constants['query'],
+                False,
+                5,
+                5)
 
-        self.assertRegexpMatches(stdout, re.compile(
-            r'Project list:.*bigquery#projectList.*projects', re.DOTALL))
-        self.assertRegexpMatches(stdout, re.compile(
-            r'Dataset list:.*datasets.*datasetId', re.DOTALL))
+        value = stdout.getvalue().strip().split('\n').pop()
+
+        self.assertIsNotNone(
+            json.loads(value))

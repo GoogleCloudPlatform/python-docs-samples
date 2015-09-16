@@ -14,12 +14,15 @@
 
 """Test classes for code snippet for modeling article."""
 
-from appengine.ndb.modeling import naive_models as models
+import unittest
+
 from tests import AppEngineTestbedCase
+
+from . import keyproperty_models as models
 
 
 class ContactTestCase(AppEngineTestbedCase):
-    """A test case for the naive Contact model classe."""
+    """A test case for the Contact model class with KeyProperty."""
     NAME = 'Takashi Matsuo'
 
     def setUp(self):
@@ -29,6 +32,20 @@ class ContactTestCase(AppEngineTestbedCase):
         self.contact_key = contact.key
 
     def test_basic(self):
-        """Test for getting a NaiveContact entity."""
+        """Test for getting a Contact entity."""
         contact = self.contact_key.get()
         self.assertEqual(contact.name, self.NAME)
+
+    # This test fails because of the eventual consistency nature of
+    # HRD. We configure HRD consistency for the test datastore stub to
+    # match the production behavior.
+    @unittest.skip("Intentionally showing a failing test case.")
+    # [START failing_test]
+    def test_fails(self):
+        contact = self.contact_key.get()
+        models.PhoneNumber(contact=self.contact_key,
+                           phone_type='home',
+                           number='(650) 555 - 2200').put()
+        numbers = contact.phone_numbers.fetch()
+        self.assertEqual(1, len(numbers))
+    # [END failing_test]

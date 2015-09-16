@@ -15,7 +15,7 @@
 
 import unittest
 
-from compute.autoscaler.demo import frontend
+from . import frontend
 
 
 class FakeTime(object):
