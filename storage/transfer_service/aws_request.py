@@ -15,13 +15,18 @@
 import json
 import logging
 
-import create_client
+from apiclient import discovery
+from oauth2client.client import GoogleCredentials
+
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 def main():
-    """Transfer from standard Cloud Storage to Cloud Storage Nearline."""
-    logging.getLogger().setLevel(logging.DEBUG)
-    transfer_service_client = create_client.create_transfer_client()
+    """Create a one-off transfer from Amazon S3 to GCS."""
+    credentials = GoogleCredentials.get_application_default()
+    storagetransfer = discovery.build(
+        'storagetransfer', 'v1', credentials=credentials)
 
     # Edit this template with desired parameters.
     # Specify times below using US Pacific Time Zone.
@@ -36,28 +41,32 @@ def main():
                 "month": 1,
                 "year": 2015
             },
+            "scheduleEndDate": {
+                "day": 1,
+                "month": 1,
+                "year": 2015
+            },
             "startTimeOfDay": {
-                "hours": 1,
-                "minutes": 1
+                "hours": 0,
+                "minutes": 0
             }
         },
         "transferSpec": {
-            "gcsDataSource": {
-                "bucketName": "YOUR_SOURCE_BUCKET"
+            "awsS3DataSource": {
+                "bucketName": "YOUR_SOURCE_BUCKET",
+                "awsAccessKey": {
+                    "accessKeyId": "YOUR_ACCESS_KEY_ID",
+                    "secretAccessKey": "YOUR_SECRET_ACCESS_KEY"
+                }
             },
             "gcsDataSink": {
                 "bucketName": "YOUR_SINK_BUCKET"
-            },
-            "objectConditions": {
-                "minTimeElapsedSinceLastModification": "2592000s"
-            },
-            "transferOptions": {
-                "deleteObjectsFromSourceAfterTransfer": true
             }
         }
     }
     '''
-    result = transfer_service_client.transferJobs().create(body=json.loads(
+
+    result = storagetransfer.transferJobs().create(body=json.loads(
         transfer_job)).execute()
     logging.info('Returned transferJob: %s', json.dumps(result, indent=4))
 
