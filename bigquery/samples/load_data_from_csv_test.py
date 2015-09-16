@@ -14,8 +14,9 @@
 """Tests for load_data_from_csv."""
 import os
 
-from bigquery.samples.load_data_from_csv import main
 from tests import CloudBaseTest
+
+from .load_data_from_csv import main
 
 
 class TestLoadDataFromCSV(CloudBaseTest):

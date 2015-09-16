@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# from the app main.py
-from appengine.ndb.transactions import main
 from tests import AppEngineTestbedCase
+
+from . import main
 
 
 class TestHandlers(AppEngineTestbedCase):

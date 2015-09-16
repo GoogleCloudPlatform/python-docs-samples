@@ -11,19 +11,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import os
-
-from .compose_objects import main
 from tests import CloudBaseTest
 
+from .list_objects import main
 
-class TestComposeObjects(CloudBaseTest):
+
+class TestListObjects(CloudBaseTest):
     def test_main(self):
         args = [
             'ignored_command_name',
-            self.constants['bucketName'],
-            'dest.txt',
-            os.path.join(self.resource_path, 'file1.txt'),
-            os.path.join(self.resource_path, 'file2.txt'),
+            self.constants['bucketName']
         ]
         main(args)

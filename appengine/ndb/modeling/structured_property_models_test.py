@@ -14,8 +14,9 @@
 
 """Test classes for code snippet for modeling article."""
 
-from appengine.ndb.modeling import structured_property_models as models
 from tests import AppEngineTestbedCase
+
+from . import structured_property_models as models
 
 
 class ContactTestCase(AppEngineTestbedCase):

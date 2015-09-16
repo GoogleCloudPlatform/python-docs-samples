@@ -13,8 +13,9 @@
 #
 
 """Tests for export_table_to_gcs."""
-from bigquery.samples.export_data_to_cloud_storage import main
 from tests import CloudBaseTest
+
+from .export_data_to_cloud_storage import main
 
 
 class TestExportTableToGCS(CloudBaseTest):

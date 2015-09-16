@@ -11,14 +11,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from .list_objects import main
-from tests import CloudBaseTest
+import json
+
+from tests import capture_stdout, CloudBaseTest
+
+from .sync_query import main
 
 
-class TestListObjects(CloudBaseTest):
-    def test_main(self):
-        args = [
-            'ignored_command_name',
-            self.constants['bucketName']
-        ]
-        main(args)
+class TestSyncQuery(CloudBaseTest):
+
+    def test_sync_query(self):
+        with capture_stdout() as stdout:
+            main(
+                self.constants['projectId'],
+                self.constants['query'],
+                30,
+                5)
+
+        result = stdout.getvalue().split('\n')[0]
+        self.assertIsNotNone(json.loads(result))

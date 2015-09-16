@@ -11,24 +11,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import json
+import os
 
-from bigquery.samples.async_query import main
-import tests
+from tests import CloudBaseTest
+
+from .compose_objects import main
 
 
-class TestAsyncQuery(tests.CloudBaseTest):
-
-    def test_async_query(self):
-        with tests.capture_stdout() as stdout:
-            main(
-                self.constants['projectId'],
-                self.constants['query'],
-                False,
-                5,
-                5)
-
-        value = stdout.getvalue().strip().split('\n').pop()
-
-        self.assertIsNotNone(
-            json.loads(value))
+class TestComposeObjects(CloudBaseTest):
+    def test_main(self):
+        args = [
+            'ignored_command_name',
+            self.constants['bucketName'],
+            'dest.txt',
+            os.path.join(self.resource_path, 'file1.txt'),
+            os.path.join(self.resource_path, 'file2.txt'),
+        ]
+        main(args)
