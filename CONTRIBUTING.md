@@ -123,7 +123,7 @@ To run one particular test suite or provide additional parameters to
 *Note*: The ``gae`` environment can't be told to run one particular
  test at this time.
 
-## Adding new tests
+### Adding new tests
 
 There are a handful of common testing utilities are located under
 ``tests``, see existing tests for example usage.
@@ -135,4 +135,3 @@ To add new tests that require Google App Engine, please place them in
 the ``appengine`` directory if possible. If you place them elsewhere,
 you will need to modify ``tox.ini`` to make the environments
 appropriately run or ignore your test.
-
