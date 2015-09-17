@@ -13,11 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Sample for making BigQuery queries using the python sdk.
+"""Command-line application that demonstrates basic BigQuery API usage.
 
-This is a command-line script that queries a public shakespeare dataset, and
-displays the 10 of Shakespeare's works with the greatest number of distinct
-words.
+This sample queries a public shakespeare dataset and displays the 10 of
+Shakespeare's works with the greatest number of distinct words.
+
+This sample is used on this page:
+
+    https://cloud.google.com/bigquery/bigquery-api-quickstart
+
+For more information, see the README.md under /bigquery.
 """
 # [START all]
 import argparse
@@ -63,7 +68,8 @@ def main(project_id):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='Queries the public BigQuery Shakespeare dataset.')
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('project_id', help='Your Google Cloud Project ID.')
 
     args = parser.parse_args()

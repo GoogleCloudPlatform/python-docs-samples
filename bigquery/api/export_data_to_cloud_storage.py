@@ -1,4 +1,6 @@
-#   Copyright 2015, Google, Inc.
+#!/usr/bin/env python
+
+# Copyright 2015, Google, Inc.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -10,7 +12,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
+
+"""Command-line application to export a table from BigQuery to Google Cloud
+Storage.
+
+This sample is used on this page:
+
+    https://cloud.google.com/bigquery/exporting-data-from-bigquery
+
+For more information, see the README.md under /bigquery.
+"""
+
 import argparse
 import time
 import uuid
@@ -113,7 +125,8 @@ def main(cloud_storage_path, project_id, dataset_id, table_id,
 # [START main]
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='Exports data from BigQuery to Google Cloud Storage.')
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('project_id', help='Your Google Cloud project ID.')
     parser.add_argument('dataset_id', help='BigQuery dataset to export.')
     parser.add_argument('table_id', help='BigQuery table to export.')

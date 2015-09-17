@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+
 # Copyright 2015, Google, Inc.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,44 +12,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-"""Command-line skeleton application for BigQuery API.
 
-This is the sample for this page:
+"""Command-line application to list all projects and datasets in BigQuery.
+
+This sample is used on this page:
 
     https://cloud.google.com/bigquery/docs/managing_jobs_datasets_projects
 
-In order to run it, your environment must be setup with authentication
-information [1]. If you're running it in your local development environment and
-you have the Google Cloud SDK [2] installed, you can do this easily by running:
-
-    $ gcloud auth login
-
-Usage:
-
-    $ python list_datasets_projects.py <project-id>
-
-where <project-id> is the id of the developers console [3] project you'd like
-to list the bigquery datasets and projects for.
-
-[1] https://developers.google.com/identity/protocols/\
-    application-default-credentials#howtheywork
-[2] https://cloud.google.com/sdk/
-[3] https://console.developers.google.com
-
-For more information on the BigQuery API you can visit:
-
-  https://developers.google.com/bigquery/docs/overview
-
-For more information on the BigQuery API Python library surface you
-can visit:
-
-  https://developers.google.com/resources/api-libraries/documentation/
-  bigquery/v2/python/latest/
-
-For information on the Python Client Library visit:
-
-  https://developers.google.com/api-client-library/python/start/get_started
+For more information, see the README.md under /bigquery.
 """
 
 import argparse
@@ -60,9 +31,9 @@ from six.moves.urllib.error import HTTPError
 
 
 # [START list_datasets]
-def list_datasets(service, project):
+def list_datasets(bigquery, project):
     try:
-        datasets = service.datasets()
+        datasets = bigquery.datasets()
         list_reply = datasets.list(projectId=project).execute()
         print('Dataset list:')
         pprint(list_reply)
@@ -74,10 +45,10 @@ def list_datasets(service, project):
 
 
 # [START list_projects]
-def list_projects(service):
+def list_projects(bigquery):
     try:
         # Start training on a data set
-        projects = service.projects()
+        projects = bigquery.projects()
         list_reply = projects.list().execute()
 
         print('Project list:')
@@ -92,14 +63,15 @@ def list_projects(service):
 def main(project_id):
     credentials = GoogleCredentials.get_application_default()
     # Construct the service object for interacting with the BigQuery API.
-    service = discovery.build('bigquery', 'v2', credentials=credentials)
+    bigquery = discovery.build('bigquery', 'v2', credentials=credentials)
 
-    list_datasets(service, project_id)
-    list_projects(service)
+    list_datasets(bigquery, project_id)
+    list_projects(bigquery)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='Lists BigQuery datasets and projects.')
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('project_id', help='the project id to list.')
 
     args = parser.parse_args()
