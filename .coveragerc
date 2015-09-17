@@ -7,6 +7,7 @@ include =
     datastore/*
     monitoring/*
     storage/*
+    cloud_logging/*
 [report]
 exclude_lines =
     pragma: NO COVER
