@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Copyright 2015, Google, Inc.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -10,7 +12,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
+
+"""Command-line application that loads data into BigQuery from a CSV file in
+Google Cloud Storage.
+
+This sample is used on this page:
+
+    https://cloud.google.com/bigquery/loading-data-into-bigquery#loaddatagcs
+
+For more information, see the README.md under /bigquery.
+"""
+
 import argparse
 import json
 import time
@@ -119,8 +131,8 @@ def main(project_id, dataset_id, table_name, schema_file, data_path,
 # [START main]
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='Loads data into BigQuery from a CSV file in Google '
-                    'Cloud Storage.')
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('project_id', help='Your Google Cloud project ID.')
     parser.add_argument('dataset_id', help='A BigQuery dataset ID.')
     parser.add_argument(
