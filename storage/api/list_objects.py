@@ -74,7 +74,7 @@ def main(argv):
 
     # If you have too many items to list in one request, list_next() will
     # automatically handle paging with the pageToken.
-    while req is not None:
+    while req:
         resp = req.execute()
         print(json.dumps(resp, indent=2))
         req = service.objects().list_next(req, resp)
