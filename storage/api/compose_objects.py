@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-#
+#!/usr/bin/env python
+
 # Copyright (C) 2013 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,50 +13,34 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 # [START all]
 """Command-line sample application for composing objects using the Cloud
 Storage API.
 
-Before running, authenticate with the Google Cloud SDK by running:
-    $ gcloud auth login
+This sample is used on this page:
 
-Create a least two sample files:
+    https://cloud.google.com/storage/docs/json_api/v1/json-api-python-samples
+
+For more information, see the README.md under /storage.
+
+To run, create a least two sample files:
     $ echo "File 1" > file1.txt
     $ echo "File 2" > file2.txt
 
 Example invocation:
     $ python compose_objects.py my-bucket destination.txt file1.txt file2.txt
 
-Usage:
-    $ python compose_objects.py <your-bucket> <destination-file-name> \
-<source-1> [... <source-n>]
-
-You can also get help on all the command-line flags the program understands
-by running:
-    $ python compose-sample.py --help
-
 """
 
 import argparse
 import json
-import sys
 
 from apiclient import discovery
 from oauth2client.client import GoogleCredentials
 
-# Parser for command-line arguments.
-parser = argparse.ArgumentParser(
-    description=__doc__,
-    formatter_class=argparse.RawDescriptionHelpFormatter)
-parser.add_argument('bucket')
-parser.add_argument('destination', help='Destination file name')
-parser.add_argument('sources', nargs='+', help='Source files to compose')
 
-
-def main(argv):
-    # Parse the command-line flags.
-    args = parser.parse_args(argv[1:])
-
+def main(bucket, destination, sources):
     # Get the application default credentials. When running locally, these are
     # available after running `gcloud auth login`. When running on compute
     # engine, these are available from the environment.
@@ -67,40 +51,53 @@ def main(argv):
     service = discovery.build('storage', 'v1', credentials=credentials)
 
     # Upload the source files.
-    for filename in args.sources:
+    for filename in sources:
         req = service.objects().insert(
             media_body=filename,
             name=filename,
-            bucket=args.bucket)
+            bucket=bucket)
         resp = req.execute()
         print('> Uploaded source file {}'.format(filename))
         print(json.dumps(resp, indent=2))
 
     # Construct a request to compose the source files into the destination.
     compose_req_body = {
-        'sourceObjects': [{'name': filename} for filename in args.sources],
+        'sourceObjects': [{'name': filename} for filename in sources],
         'destination': {
             'contentType': 'text/plain',    # required
         }
     }
+
     req = service.objects().compose(
-        destinationBucket=args.bucket,
-        destinationObject=args.destination,
+        destinationBucket=bucket,
+        destinationObject=destination,
         body=compose_req_body)
+
     resp = req.execute()
-    print('> Composed files into {}'.format(args.destination))
+
+    print('> Composed files into {}'.format(destination))
     print(json.dumps(resp, indent=2))
 
     # Download and print the composed object.
     req = service.objects().get_media(
-        bucket=args.bucket,
-        object=args.destination)
+        bucket=bucket,
+        object=destination)
 
     res = req.execute()
+
     print('> Composed file contents:')
     print(res)
 
 
 if __name__ == '__main__':
-    main(sys.argv)
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('bucket', help='Your Cloud Storage bucket.')
+    parser.add_argument('destination', help='Destination file name.')
+    parser.add_argument('sources', nargs='+', help='Source files to compose.')
+
+    args = parser.parse_args()
+
+    main(parser.bucket, parser.destination, parser.sources)
 # [END all]

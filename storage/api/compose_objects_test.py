@@ -20,11 +20,9 @@ from .compose_objects import main
 
 class TestComposeObjects(CloudBaseTest):
     def test_main(self):
-        args = [
-            'ignored_command_name',
+        main(
             self.bucket_name,
             'dest.txt',
-            os.path.join(self.resource_path, 'file1.txt'),
-            os.path.join(self.resource_path, 'file2.txt'),
-        ]
-        main(args)
+            [os.path.join(self.resource_path, 'file1.txt'),
+             os.path.join(self.resource_path, 'file2.txt')]
+        )

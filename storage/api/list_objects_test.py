@@ -18,8 +18,4 @@ from .list_objects import main
 
 class TestListObjects(CloudBaseTest):
     def test_main(self):
-        args = [
-            'ignored_command_name',
-            self.bucket_name
-        ]
-        main(args)
+        main(self.bucket_name)
