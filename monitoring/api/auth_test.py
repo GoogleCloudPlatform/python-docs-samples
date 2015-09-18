@@ -23,7 +23,9 @@ class TestTimeseriesList(tests.CloudBaseTest):
     def test_main(self):
         with tests.capture_stdout() as stdout:
             auth.main(self.project_id)
+
         output = stdout.getvalue().strip()
+
         self.assertRegexpMatches(
             output, re.compile(r'Timeseries.list raw response:\s*'
                                r'{\s*"kind": "[^"]+",'

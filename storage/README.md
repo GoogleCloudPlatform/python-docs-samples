@@ -1,27 +1,31 @@
-## Python Samples for Google Cloud Storage
+# Google Cloud Storage Samples
 
-Two samples:
+This section contains samples for [Google Cloud Storage](https://cloud.google.com/storage).
 
-1. ``list_objects.py`` lists objects in a bucket.
-2. ``compose_objects.py`` composes objects together to create another.
+## Running the samples
 
-See the docstring for each sample for usage, or run the sample for the help text.
+1. Your environment must be setup with [authentication
+information](https://developers.google.com/identity/protocols/application-default-credentials#howtheywork). If you're running in your local development environment and you have the [Google Cloud SDK](https://cloud.google.com/sdk/) installed, you can do this easily by running:
 
-### Setup
+        $ gcloud auth login
 
-Before running the samples, you'll need the Google Cloud SDK in order to setup authentication.
+2. Install dependencies from the top-level [`requirements.txt`](../requirements.txt):
 
-1. Install the [Google Cloud SDK](https://cloud.google.com/sdk/), including the [gcloud tool](https://cloud.google.com/sdk/gcloud/), and [gcloud app component](https://cloud.google.com/sdk/gcloud-app).
-2. Setup the gcloud tool.
+        $ pip install -r requirements.txt
 
-   ```
-   gcloud components update app
-   gcloud auth login
-   gcloud config set project <your-app-id>
-   ```
+3. Depending on the sample, you may also need to create resources on the [Google Developers Console](https://console.developers.google.com). Refer to the sample description and associated documentation page.
 
-You will also need to install the dependencies using [pip](https://pypi.python.org/pypi/pip):
+## Additional resources
 
-```
-pip install -r requirements.txt
-```
+For more information on Cloud Storage you can visit:
+
+> https://cloud.google.com/storage
+
+For more information on the Cloud Storage API Python library surface you
+can visit:
+
+> https://developers.google.com/resources/api-libraries/documentation/storage/v1/python/latest/
+
+For information on the Python Client Library visit:
+
+> https://developers.google.com/api-client-library/python
