@@ -12,6 +12,7 @@
 # limitations under the License.
 #
 # [START all]
+import argparse
 import json
 import logging
 
@@ -21,31 +22,35 @@ from oauth2client.client import GoogleCredentials
 
 logging.basicConfig(level=logging.DEBUG)
 
-# Edit these values with desired parameters.
-PROJECT_ID = 'YOUR_PROJECT_ID'
-JOB_NAME = 'YOUR_JOB_NAME'
 
-
-def check_operation(storagetransfer, project_id, job_name):
+# [START main]
+def main(project_id, job_name):
     """Review the transfer operations associated with a transfer job."""
-    filterString = (
-        '{{"project_id": "{project_id}", '
-        '"job_names": ["{job_name}"]}}'
-    ).format(project_id=project_id, job_name=job_name)
-    return storagetransfer.transferOperations().list(
-        name="transferOperations",
-        filter=filterString).execute()
-
-
-def main():
     credentials = GoogleCredentials.get_application_default()
     storagetransfer = discovery.build(
         'storagetransfer', 'v1', credentials=credentials)
 
-    result = check_operation(storagetransfer, PROJECT_ID, JOB_NAME)
+    filterString = (
+        '{{"project_id": "{project_id}", '
+        '"job_names": ["{job_name}"]}}'
+    ).format(project_id=project_id, job_name=job_name)
+
+    result = storagetransfer.transferOperations().list(
+        name="transferOperations",
+        filter=filterString).execute()
     logging.info('Result of transferOperations/list: %s',
                  json.dumps(result, indent=4, sort_keys=True))
+# [END main]
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(
+        description='Review the transfer operations associated with a '
+                    'transfer job.')
+    parser.add_argument('project_id', help='Your Google Cloud project ID.')
+    parser.add_argument('job_name', help='Your job name.')
+
+    args = parser.parse_args()
+
+    main(args.project_id, args.job_name)
+
 # [END all]

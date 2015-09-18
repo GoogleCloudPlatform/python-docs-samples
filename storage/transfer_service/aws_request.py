@@ -12,6 +12,8 @@
 # limitations under the License.
 #
 # [START all]
+import argparse
+import datetime
 import json
 import logging
 
@@ -22,54 +24,83 @@ from oauth2client.client import GoogleCredentials
 logging.basicConfig(level=logging.DEBUG)
 
 
-def main():
-    """Create a one-off transfer from Amazon S3 to GCS."""
+# [START main]
+def main(description, project_id, day, month, year, hours, minutes,
+         source_bucket, access_key, secret_access_key, sink_bucket):
+    """Create a one-off transfer from Amazon S3 to Google Cloud Storage."""
     credentials = GoogleCredentials.get_application_default()
     storagetransfer = discovery.build(
         'storagetransfer', 'v1', credentials=credentials)
 
     # Edit this template with desired parameters.
     # Specify times below using US Pacific Time Zone.
-    transfer_job = '''
-    {
-        "description": "YOUR DESCRIPTION",
-        "status": "ENABLED",
-        "projectId": "YOUR_PROJECT_ID",
-        "schedule": {
-            "scheduleStartDate": {
-                "day": 1,
-                "month": 1,
-                "year": 2015
+    transfer_job = {
+        'description': description,
+        'status': 'ENABLED',
+        'projectId': project_id,
+        'schedule': {
+            'scheduleStartDate': {
+                'day': day,
+                'month': month,
+                'year': year
             },
-            "scheduleEndDate": {
-                "day": 1,
-                "month": 1,
-                "year": 2015
+            'scheduleEndDate': {
+                'day': day,
+                'month': month,
+                'year': year
             },
-            "startTimeOfDay": {
-                "hours": 0,
-                "minutes": 0
+            'startTimeOfDay': {
+                'hours': hours,
+                'minutes': minutes
             }
         },
-        "transferSpec": {
-            "awsS3DataSource": {
-                "bucketName": "YOUR_SOURCE_BUCKET",
-                "awsAccessKey": {
-                    "accessKeyId": "YOUR_ACCESS_KEY_ID",
-                    "secretAccessKey": "YOUR_SECRET_ACCESS_KEY"
+        'transferSpec': {
+            'awsS3DataSource': {
+                'bucketName': source_bucket,
+                'awsAccessKey': {
+                    'accessKeyId': access_key,
+                    'secretAccessKey': secret_access_key
                 }
             },
-            "gcsDataSink": {
-                "bucketName": "YOUR_SINK_BUCKET"
+            'gcsDataSink': {
+                'bucketName': sink_bucket
             }
         }
     }
-    '''
 
-    result = storagetransfer.transferJobs().create(body=json.loads(
-        transfer_job)).execute()
+    result = storagetransfer.transferJobs().create(body=transfer_job).execute()
     logging.info('Returned transferJob: %s', json.dumps(result, indent=4))
+# [END main]
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(
+        description='Create a one-off transfer from Amazon S3 to Google Cloud '
+        'Storage.')
+    parser.add_argument('description', help='Transfer description.')
+    parser.add_argument('project_id', help='Your Google Cloud project ID.')
+    parser.add_argument('date', help='Date YYYY/MM/DD.')
+    parser.add_argument('time', help='Time (24hr) HH:MM.')
+    parser.add_argument('source_bucket', help='Source bucket name.')
+    parser.add_argument('access_key', help='Your AWS access key id.')
+    parser.add_argument('secret_access_key', help='Your AWS secret access '
+                        'key.')
+    parser.add_argument('sink_bucket', help='Sink bucket name.')
+
+    args = parser.parse_args()
+    date = datetime.datetime.strptime(args.date, '%Y/%m/%d')
+    time = datetime.datetime.strptime(args.time, '%H:%M')
+
+    main(
+        args.description,
+        args.project_id,
+        date.year,
+        date.month,
+        date.day,
+        time.hour,
+        time.minute,
+        args.source_bucket,
+        args.access_key,
+        args.secret_access_key,
+        args.sink_bucket)
+
 # [END all]
