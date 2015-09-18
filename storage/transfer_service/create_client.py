@@ -10,20 +10,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-# [START all]
-import logging
 
+# [START all]
 from apiclient import discovery
 from oauth2client.client import GoogleCredentials
 
-CLOUD_SCOPES = 'https://www.googleapis.com/auth/cloud-platform'
-
 
 def create_transfer_client():
-    """Create a transfer client."""
-
-    logging.getLogger().setLevel(logging.DEBUG)
     credentials = GoogleCredentials.get_application_default()
     return discovery.build('storagetransfer', 'v1', credentials=credentials)
 # [END all]
