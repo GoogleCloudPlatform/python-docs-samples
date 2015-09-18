@@ -19,9 +19,9 @@
 Creates a new compute engine instance and uses it to apply a caption to
 an image.
 
-    https://cloud.google.com/bigquery/querying-data#asyncqueries
+    https://cloud.google.com/compute/docs/tutorials/python-guide
 
-For more information, see the README.md under /bigquery.
+For more information, see the README.md under /compute.
 """
 
 import argparse
