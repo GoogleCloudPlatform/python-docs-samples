@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Copyright 2015, Google, Inc.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -10,18 +12,24 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
+
 # [START all]
+"""Command-line sample that creates a one-time transfer from Amazon S3 to
+Google Cloud Storage.
+
+This sample is used on this page:
+
+    https://cloud.google.com/storage/transfer/create-transfer
+
+For more information, see README.md.
+"""
+
 import argparse
 import datetime
 import json
-import logging
 
 from apiclient import discovery
 from oauth2client.client import GoogleCredentials
-
-
-logging.basicConfig(level=logging.DEBUG)
 
 
 # [START main]
@@ -69,13 +77,14 @@ def main(description, project_id, day, month, year, hours, minutes,
     }
 
     result = storagetransfer.transferJobs().create(body=transfer_job).execute()
-    logging.info('Returned transferJob: %s', json.dumps(result, indent=4))
+    print('Returned transferJob: {}'.format(
+        json.dumps(result, indent=4)))
 # [END main]
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='Create a one-off transfer from Amazon S3 to Google Cloud '
-        'Storage.')
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('description', help='Transfer description.')
     parser.add_argument('project_id', help='Your Google Cloud project ID.')
     parser.add_argument('date', help='Date YYYY/MM/DD.')
@@ -102,5 +111,4 @@ if __name__ == '__main__':
         args.access_key,
         args.secret_access_key,
         args.sink_bucket)
-
 # [END all]
