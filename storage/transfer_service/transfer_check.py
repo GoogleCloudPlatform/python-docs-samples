@@ -44,15 +44,13 @@ def main(project_id, job_name):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='Review the transfer operations associated with a transfer'
-        ' job.')
+        description='Review the transfer operations associated with a '
+                    'transfer job.')
     parser.add_argument('project_id', help='Your Google Cloud project ID.')
     parser.add_argument('job_name', help='Your job name.')
 
     args = parser.parse_args()
 
-    main(
-        args.project_id,
-        args.job_name)
+    main(args.project_id, args.job_name)
 
 # [END all]

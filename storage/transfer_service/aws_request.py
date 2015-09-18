@@ -68,7 +68,6 @@ def main(description, project_id, day, month, year, hours, minutes,
         }
     }
 
-    print(transfer_job)
     result = storagetransfer.transferJobs().create(body=transfer_job).execute()
     logging.info('Returned transferJob: %s', json.dumps(result, indent=4))
 # [END main]
