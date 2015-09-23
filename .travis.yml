@@ -2,6 +2,10 @@ sudo: false
 #add language, etc. here
 language: python
 
+branches:
+  only:
+    - master
+
 cache:
   directories:
   - $HOME/.cache
