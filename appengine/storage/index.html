@@ -1,0 +1,16 @@
+<html>
+  <head>
+  <script type="text/javascript">
+    function getList() {
+      var bucket_name = self.document.getElementById("bucket_name").value;
+      location.pathname = bucket_name;
+    }
+  </script>
+  </head>
+  <body>
+    <h1>Google Cloud Storage Bucket Lister</h1>
+    bucket name:
+    <input id="bucket_name" type="text"/>
+    <button onclick="getList()">list</button>
+  </body>
+<html>
