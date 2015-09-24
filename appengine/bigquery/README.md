@@ -1,19 +1,25 @@
 ## Google App Engine accessing BigQuery using OAuth2
 
-This sample demonstrates [authenticating to BigQuery in App Engine using OAuth2](https://cloud.google.com/bigquery/authorization).
+This sample demonstrates [authenticating to BigQuery in App Engine using OAuth2](https://cloud.google.com/bigquery/authentication).
 
-### Setup
+### Running the sample
 
-* To install dependencies for this sample, run:
+1. To install dependencies for this sample, run:
 
-    $ pip install -t lib -r requirements.txt
+        $ pip install -t lib -r requirements.txt
 
-* You must then update `main.py` and replace `<myproject_id>` with your project's
-  id.
-* You'll need a client id from your project - instructions
-  [here](https://cloud-dot-devsite.googleplex.com/bigquery/authorization#clientsecrets).
-  Once you've downloaded the client's json secret, copy it to the root directory
-  of this project, and rename it to `client_secrets.json`.
-* You can then run the sample on your development server:
+2. You must then update `main.py` and replace `<your-project-id>` with your project's
+   ID.
 
-    $ dev_appserver.py .
+3. You'll need a client id from your project - instructions
+   [here](https://cloud.google.com/bigquery/authentication#clientsecrets).
+   Once you've downloaded the client's json secret, copy it to the root directory
+   of this project, and rename it to `client_secrets.json`.
+
+3. You can then run the sample on your development server:
+        
+        $ dev_appserver.py .
+
+   Or deploy the application:
+
+        $ appcfg.py update .
