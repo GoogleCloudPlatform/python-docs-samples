@@ -15,3 +15,4 @@ waitress==0.8.10
 WebOb==1.4.1
 WebTest==2.0.18
 Werkzeug==0.10.4
+nose-timer

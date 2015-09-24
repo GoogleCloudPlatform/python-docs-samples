@@ -14,11 +14,13 @@
 """Tests for load_data_from_csv."""
 import os
 
+from nose.plugins.attrib import attr
 from tests import CloudBaseTest
 
 from .load_data_from_csv import main
 
 
+@attr('slow')
 class TestLoadDataFromCSV(CloudBaseTest):
     dataset_id = 'test_dataset'
     table_id = 'test_import_table'
