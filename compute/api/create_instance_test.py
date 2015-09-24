@@ -11,11 +11,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from nose.plugins.attrib import attr
 import tests
 
 from .create_instance import main
 
 
+@attr('slow')
 class TestComputeGettingStarted(tests.CloudBaseTest):
 
     def test_main(self):

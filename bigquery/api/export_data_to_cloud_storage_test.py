@@ -13,11 +13,13 @@
 #
 
 """Tests for export_table_to_gcs."""
+from nose.plugins.attrib import attr
 from tests import CloudBaseTest
 
 from .export_data_to_cloud_storage import main
 
 
+@attr('slow')
 class TestExportTableToGCS(CloudBaseTest):
     dataset_id = 'test_dataset'
     table_id = 'test_table'
