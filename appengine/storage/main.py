@@ -14,109 +14,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Present formatted listings for Google Cloud Storage buckets.
-This Google App Engine application takes a bucket name in the URL path and uses
-the Google Cloud Storage JSON API and Google's Python client library to list
-the bucket's contents.
-For example, if this app is invoked with the URI
-http://bucket-list.appspot.com/foo, it would extract the bucket name 'foo' and
-issue a request to GCS for its contents. The app formats the listing into an
-XML document, which is prepended with a reference to an XSLT style sheet for
-human readable presentation.
-For more information:
-Google APIs Client Library for Python:
-  <https://code.google.com/p/google-api-python-client/>
-Google Cloud Storage JSON API:
-  <https://developers.google.com/storage/docs/json_api/>
-Using OAuth 2.0 for Server to Server Applications:
-  <https://developers.google.com/accounts/docs/OAuth2ServiceAccount>
-App Identity Python API Overview:
-  <https://code.google.com/appengine/docs/python/appidentity/overview.html>
+"""
+Sample Google App Engine application that lists the objects in a Google Cloud
+Storage bucket.
+
+For more information about Cloud Storage, see README.md in /storage.
+For more information about Google App Engine, see README.md in /appengine.
 """
 
-import os
+import json
 
-from apiclient.discovery import build as build_service
-from google.appengine.ext import webapp
-from google.appengine.ext.webapp.util import login_required
-import httplib2
-import jinja2
-from oauth2client.client import OAuth2WebServerFlow
-
-# NOTE: You must provide a client ID and secret with access to the GCS JSON
-# API.
-# You can acquire a client ID and secret from the Google Developers Console.
-#   <https://developers.google.com/console#:access>
-CLIENT_ID = ''
-CLIENT_SECRET = ''
-SCOPE = 'https://www.googleapis.com/auth/devstorage.read_only'
-USER_AGENT = 'app-engine-bucket-lister'
-
-# Since we don't plan to use all object attributes, we pass a fields argument
-# to specify what the server should return.
-FIELDS = 'items(name,media(timeCreated,hash,length))'
+from googleapiclient import discovery
+from oauth2client.client import GoogleCredentials
+import webapp2
 
 
-def GetBucketName(path):
-    bucket = path[1:]  # Trim the preceding slash
-    if bucket[-1] == '/':
-        # Trim final slash, if necessary.
-        bucket = bucket[:-1]
-    return bucket
+# The bucket that will be used to list objects.
+BUCKET_NAME = '<your-bucket-name>'
+
+credentials = GoogleCredentials.get_application_default()
+storage = discovery.build('storage', 'v1', credentials=credentials)
 
 
-class MainHandler(webapp.RequestHandler):
-    @login_required
+class MainPage(webapp2.RequestHandler):
     def get(self):
-        callback = self.request.host_url + '/oauth2callback'
-        flow = OAuth2WebServerFlow(
-            client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
-            redirect_uri=callback,
-            access_type='online',
-            scope=SCOPE,
-            user_agent=USER_AGENT)
+        response = storage.objects().list(bucket=BUCKET_NAME).execute()
 
-        bucket = GetBucketName(self.request.path)
-        step2_url = flow.step1_get_authorize_url()
-        # Add state to remember which bucket to list.
-        self.redirect(step2_url + '&state=%s' % bucket)
+        self.response.write(
+            '<h3>Objects.list raw response:</h3>'
+            '<pre>{}</pre>'.format(
+                json.dumps(response, sort_keys=True, indent=2)))
 
 
-class AuthHandler(webapp.RequestHandler):
-    @login_required
-    def get(self):
-        callback = self.request.host_url + '/oauth2callback'
-        flow = OAuth2WebServerFlow(
-            client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
-            redirect_uri=callback,
-            scope=SCOPE,
-            user_agent=USER_AGENT)
-
-        # Exchange the code (in self.request.params) for an access token.
-        credentials = flow.step2_exchange(self.request.params)
-        http = credentials.authorize(httplib2.Http())
-
-        bucket = self.request.get('state')
-        storage = build_service('storage', 'v1beta1', http=http)
-        list_response = storage.objects().list(bucket=bucket,
-                                               fields=FIELDS).execute()
-        template_values = {
-            'items': list_response['items'], 'bucket_name': bucket}
-
-        # We use a templating engine to format our output. For more
-        # information:
-        #   <http://jinja.pocoo.org/docs/>
-        jinja_env = jinja2.Environment(
-            loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
-        template = jinja_env.get_template('listing.html')
-        self.response.out.write(template.render(template_values))
-
-
-app = webapp.WSGIApplication(
-    [
-        ('/oauth2callback', AuthHandler),
-        ('/..*', MainHandler)
-    ],
-    debug=True)
+app = webapp2.WSGIApplication([
+    ('/', MainPage)
+], debug=True)
