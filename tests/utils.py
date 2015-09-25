@@ -28,6 +28,7 @@ try:
     APPENGINE_AVAILABLE = True
     from google.appengine.datastore import datastore_stub_util
     from google.appengine.ext import testbed
+    from google.appengine.api import namespace_manager
 except ImportError:
     APPENGINE_AVAILABLE = False
 
@@ -87,7 +88,9 @@ class AppEngineTestbedCase(CloudBaseTest):
 
         # Setup remaining stubs.
         self.testbed.init_user_stub()
-        self.testbed.init_taskqueue_stub()
+        self.testbed.init_taskqueue_stub(root_path='tests/resources')
+        self.taskqueue_stub = self.testbed.get_stub(
+            testbed.TASKQUEUE_SERVICE_NAME)
 
     def tearDown(self):
         super(AppEngineTestbedCase, self).tearDown()
@@ -103,6 +106,22 @@ class AppEngineTestbedCase(CloudBaseTest):
             user_id=id,
             user_is_admin='1' if is_admin else '0',
             overwrite=True)
+
+    def runTasks(self):
+        tasks = self.taskqueue_stub.get_filtered_tasks()
+        for task in tasks:
+            namespace = task.headers.get('X-AppEngine-Current-Namespace', '')
+            previous_namespace = namespace_manager.get_namespace()
+            try:
+                namespace_manager.set_namespace(namespace)
+                self.app.post(
+                    task.url,
+                    task.extract_params(),
+                    headers={
+                        k: v for k, v in task.headers.iteritems()
+                        if k.startswith('X-AppEngine')})
+            finally:
+                namespace_manager.set_namespace(previous_namespace)
 
 
 @contextlib.contextmanager
