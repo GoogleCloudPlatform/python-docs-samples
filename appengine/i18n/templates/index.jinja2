@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+{{ get_i18n_js_tag() }}
+An internationalized message generated in the Python code: {{ message|e }}<br>
+An internationalized message generated in jinja2 template:
+{{ gettext('Hello World from Jinja2 template!')|e }}<br>
+
+An internationalized message generated in javascript:
+<span id="js-message"></span><br>
+
+<script src="/static/js/main.js" type="text/javascript">
+</script>
+</html>

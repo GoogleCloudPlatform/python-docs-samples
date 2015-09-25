@@ -1,0 +1,8 @@
+# Extraction from Python source files
+[python: **.py]
+# Extraction from jinja2 templates
+[jinja2: templates/**.jinja2]
+encoding = utf-8
+[extractors]
+jinja2 = jinja2.ext:babel_extract
+
