@@ -1,0 +1,18 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: App Engine i18n sample\n"
+"Report-Msgid-Bugs-To: tmatsuo@google.com\n"
+"POT-Creation-Date: 2013-01-11 12:50-0800\n"
+"PO-Revision-Date: 2013-01-11 12:53-0800\n"
+"Last-Translator: Takashi Matsuo <tmatsuo@google.com>\n"
+"Language-Team: ja <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.6\n"
+
+#: static/js/main.js:5
+msgid "Hello World from javascript!"
+msgstr "Javascript から、こんにちは、世界！"
+

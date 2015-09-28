@@ -1,0 +1,38 @@
+{% extends "null_i18n_js.jinja2" %}
+{% block i18n_functions -%}
+var translations = {{ translations|safe }}
+function get_value_from_translations(translations, msgid) {
+  var ret = translations['catalog'][msgid]
+  if (typeof(ret) == 'undefined' &&
+      translations['fallback'] != null) {
+      ret = get_value_from_translations(translations['fallback'], msgid);
+  }
+  return ret;
+}
+
+function plural_index(count, translations) {
+  var s = 'var n = ' + count + '; var v = ' + translations['plural'];
+  eval(s);
+  return v;
+}
+
+function gettext(msgid) {
+  var value = get_value_from_translations(translations, msgid);
+
+  if (typeof(value) == 'undefined') {
+    return msgid;
+  } else {
+    return (typeof(value) == 'string') ? value : value[0];
+  }
+}
+
+function ngettext(singular, plural, count) {
+  var value = get_value_from_translations(translations, singular);
+
+  if (typeof(value) == 'undefined') {
+    return (count == 1) ? singular : plural;
+  } else {
+    return value[plural_index(count, translations)];
+  }
+}
+{%- endblock %}
