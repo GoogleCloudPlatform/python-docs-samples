@@ -1,0 +1,9 @@
+version: 1
+runtime: python27
+vm: true
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: .*  # This regex directs all routes to main.app
+  script: main.app
