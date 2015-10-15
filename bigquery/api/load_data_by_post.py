@@ -17,7 +17,7 @@
 
 This sample is used on this page:
 
-    https://cloud.google.com/bigquery/loading-data-post-request
+    https://cloud.google.com/bigquery/loading-data-into-bigquery
 
 For more information, see the README.md under /bigquery.
 """
@@ -26,74 +26,60 @@ import argparse
 import json
 import time
 
+from apiclient.http import MediaFileUpload
+
 from googleapiclient import discovery
-import httplib2
+
 from oauth2client.client import GoogleCredentials
 
 
 # [START make_post]
-def make_post(http, schema, data, project_id, dataset_id, table_id):
+def load_data(schema_path, data_path, project_id, dataset_id, table_id):
     """
     Creates an http POST request for loading data into
     a bigquery table
 
     Args:
-        http: an authorized httplib2 client,
-        schema: a valid bigquery schema,
-        see https://cloud.google.com/bigquery/docs/reference/v2/tables,
-        data: valid JSON to insert into the table
+        schema_path: the path to a file containing a valid bigquery schema.
+            see https://cloud.google.com/bigquery/docs/reference/v2/tables
+        data_path: the name of the file to insert into the table.
 
     Returns: an http.request object
     """
-    url = ('https://www.googleapis.com/upload/bigquery/v2/projects/' +
-           project_id + '/jobs')
-    # Create the body of the request, separated by a boundary of xxx
-    resource = ('--xxx\n' +
-                'Content-Type: application/json; charset=UTF-8\n' + '\n' +
-                '{\n' +
-                '   "configuration": {\n' +
-                '     "load": {\n' +
-                '       "schema": {\n'
-                '         "fields": ' + str(schema) + '\n' +
-                '      },\n' +
-                '      "destinationTable": {\n' +
-                '        "projectId": "' + project_id + '",\n' +
-                '        "datasetId": "' + dataset_id + '",\n' +
-                '        "tableId": "' + table_id + '"\n' +
-                '      }\n' +
-                '    }\n' +
-                '  }\n' +
-                '}\n' +
-                '--xxx\n' +
-                'Content-Type: application/octet-stream\n' +
-                '\n')
-    # Append data to the request body
-    resource += data
+    # Create a bigquery service object, using the application's default auth
+    credentials = GoogleCredentials.get_application_default()
+    bigquery = discovery.build('bigquery', 'v2', credentials=credentials)
 
-    # Signify the end of the body
-    resource += ('--xxx--\n')
+    insert_request = bigquery.jobs().insert(
+        projectId=project_id,
+        body={
+            "configuration": {
+                "load": {
+                    "schema": {
+                        "fields": json.load(open(schema_path, 'r'))
+                    },
+                    "destinationTable": {
+                        "projectId": project_id,
+                        "datasetId": dataset_id,
+                        "tableId": table_id
+                    }
+                }
+            }
+        },
+        media_body=MediaFileUpload(
+            data_path,
+            mimetype="application/octet-stream"))
 
-    headers = {'Content-Type': 'multipart/related; boundary=xxx'}
-
-    return http.request(url,
-                        method='POST',
-                        body=resource,
-                        headers=headers)
-    # [END make_post]
-
-
-# [START poll_job]
-def poll_job(bigquery, job):
-    """Waits for a job to complete."""
+    job = insert_request.execute()
 
     print('Waiting for job to finish...')
 
-    request = bigquery.jobs().get(
+    status_request = bigquery.jobs().get(
         projectId=job['jobReference']['projectId'],
         jobId=job['jobReference']['jobId'])
 
     while True:
-        result = request.execute(num_retries=2)
+        result = status_request.execute(num_retries=2)
 
         if result['status']['state'] == 'DONE':
             if 'errorResult' in result['status']:
@@ -102,35 +88,17 @@ def poll_job(bigquery, job):
             return
 
         time.sleep(1)
-# [END poll_job]
+# [END make_post]
 
 
 # [START main]
 def main(project_id, dataset_id, table_name, schema_path, data_path):
-    credentials = GoogleCredentials.get_application_default()
-    http = credentials.authorize(httplib2.Http())
-    bigquery = discovery.build('bigquery', 'v2', credentials=credentials)
-
-    with open(schema_path, 'r') as schema_file:
-        schema = schema_file.read()
-
-    with open(data_path, 'r') as data_file:
-        data = data_file.read()
-
-    resp, content = make_post(
-        http,
-        schema,
-        data,
+    load_data(
+        schema_path,
+        data_path,
         project_id,
         dataset_id,
         table_name)
-
-    if resp.status == 200:
-        job = json.loads(content)
-        poll_job(bigquery, job)
-        print("Success!")
-    else:
-        print("Http error code: {}".format(resp.status))
 # [END main]
 
 if __name__ == '__main__':
