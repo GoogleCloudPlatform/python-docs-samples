@@ -35,16 +35,16 @@ from oauth2client.client import GoogleCredentials
 
 # [START make_post]
 def load_data(schema_path, data_path, project_id, dataset_id, table_id):
-    """
-    Creates an http POST request for loading data into
-    a bigquery table
+    """Loads the given data file into BigQuery.
 
     Args:
         schema_path: the path to a file containing a valid bigquery schema.
             see https://cloud.google.com/bigquery/docs/reference/v2/tables
         data_path: the name of the file to insert into the table.
-
-    Returns: an http.request object
+        project_id: The project id that the table exists under. This is also
+            assumed to be the project id this request is to be made under.
+        dataset_id: The dataset id of the destination table.
+        table_id: The table id to load data into.
     """
     # Create a bigquery service object, using the application's default auth
     credentials = GoogleCredentials.get_application_default()
