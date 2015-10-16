@@ -50,26 +50,35 @@ def load_data(schema_path, data_path, project_id, dataset_id, table_id):
     credentials = GoogleCredentials.get_application_default()
     bigquery = discovery.build('bigquery', 'v2', credentials=credentials)
 
+    # Infer the data format from the name of the data file.
+    source_format = 'CSV'
+    if data_path[-5:].lower() == '.json':
+        source_format = 'NEWLINE_DELIMITED_JSON'
+
+    # Post to the jobs resource using the client's media upload interface. See:
+    # http://developers.google.com/api-client-library/python/guide/media_upload
     insert_request = bigquery.jobs().insert(
         projectId=project_id,
+        # Provide a configuration object. See:
+        # https://cloud.google.com/bigquery/docs/reference/v2/jobs#resource
         body={
-            "configuration": {
-                "load": {
-                    "schema": {
-                        "fields": json.load(open(schema_path, 'r'))
+            'configuration': {
+                'load': {
+                    'schema': {
+                        'fields': json.load(open(schema_path, 'r'))
                     },
-                    "destinationTable": {
-                        "projectId": project_id,
-                        "datasetId": dataset_id,
-                        "tableId": table_id
-                    }
+                    'destinationTable': {
+                        'projectId': project_id,
+                        'datasetId': dataset_id,
+                        'tableId': table_id
+                    },
+                    'sourceFormat': source_format,
                 }
             }
         },
         media_body=MediaFileUpload(
             data_path,
-            mimetype="application/octet-stream"))
-
+            mimetype='application/octet-stream'))
     job = insert_request.execute()
 
     print('Waiting for job to finish...')
@@ -78,12 +87,14 @@ def load_data(schema_path, data_path, project_id, dataset_id, table_id):
         projectId=job['jobReference']['projectId'],
         jobId=job['jobReference']['jobId'])
 
+    # Poll the job until it finishes.
     while True:
         result = status_request.execute(num_retries=2)
 
         if result['status']['state'] == 'DONE':
-            if 'errorResult' in result['status']:
-                raise RuntimeError(result['status']['errorResult'])
+            if result['status'].get('errors'):
+                raise RuntimeError('\n'.join(
+                    e['message'] for e in result['status']['errors']))
             print('Job complete.')
             return
 
