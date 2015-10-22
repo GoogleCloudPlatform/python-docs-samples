@@ -21,6 +21,7 @@ import sys
 import tempfile
 import unittest
 
+import httplib2
 from nose.plugins.skip import SkipTest
 from six.moves import cStringIO
 
@@ -135,3 +136,31 @@ def capture_stdout():
         yield fake_stdout
     finally:
         sys.stdout = old_stdout
+
+
+class Http2Mock(object):
+    """Mock httplib2.Http"""
+
+    def __init__(self, responses):
+        self.responses = responses
+
+    def add_credentials(self, user, pwd):
+        self.credentials = (user, pwd)
+
+    def request(self, token_uri, method, body, headers=None, *args, **kwargs):
+        response = self.responses.pop(0)
+        self.status = response.get('status', 200)
+        self.body = response.get('body', '')
+        self.headers = response.get('headers', '')
+        return (self, self.body)
+
+    def __enter__(self):
+        self.httplib2_orig = httplib2.Http
+        httplib2.Http = self
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        httplib2.Http = self.httplib2_orig
+
+    def __call__(self, *args, **kwargs):
+        return self
