@@ -11,6 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import re
+
 from nose.plugins.attrib import attr
 import tests
 
@@ -21,10 +23,20 @@ from .create_instance import main
 class TestComputeGettingStarted(tests.CloudBaseTest):
 
     def test_main(self):
-        with tests.capture_stdout():
+        with tests.capture_stdout() as mock_stdout:
             main(
                 self.project_id,
                 self.bucket_name,
                 'us-central1-f',
                 'test-instance',
                 wait=False)
+
+        stdout = mock_stdout.getvalue()
+
+        expected_output = re.compile(
+            (r'Instances in project %s and zone us-central1-.* - test-instance'
+             r'.*Deleting instance.*done..$') % self.project_id,
+            re.DOTALL)
+        self.assertRegexpMatches(
+            stdout,
+            expected_output)
