@@ -35,11 +35,13 @@ from six.moves import input
 # [START stream_row_to_bigquery]
 def stream_row_to_bigquery(bigquery, project_id, dataset_id, table_name, row,
                            num_retries=5):
-    # Generate a unique row id so retries
-    # don't accidentally duplicate insert
     insert_all_data = {
-        'insertId': str(uuid.uuid4()),
-        'rows': [{'json': row}]
+        'rows': [{
+            'json': row,
+            # Generate a unique id for each row so retries don't accidentally
+            # duplicate insert
+            'insertId': str(uuid.uuid4()),
+        }]
     }
     return bigquery.tabledata().insertAll(
         projectId=project_id,
