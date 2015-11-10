@@ -35,7 +35,8 @@ from oauth2client.client import GoogleCredentials
 def export_table(bigquery, cloud_storage_path,
                  project_id, dataset_id, table_id,
                  export_format="CSV",
-                 num_retries=5):
+                 num_retries=5,
+                 compression="NONE"):
     """
     Starts an export job
 
@@ -47,6 +48,8 @@ def export_table(bigquery, cloud_storage_path,
             e.g. gs://mybucket/myfolder/
         export_format: format to export in;
             "CSV", "NEWLINE_DELIMITED_JSON", or "AVRO".
+        compression: format to compress results with,
+            "NONE" (default) or "GZIP".
 
     Returns: an extract job resource representing the
         job, see https://cloud.google.com/bigquery/docs/reference/v2/jobs
@@ -66,7 +69,8 @@ def export_table(bigquery, cloud_storage_path,
                     'tableId': table_id,
                 },
                 'destinationUris': [cloud_storage_path],
-                'destinationFormat': export_format
+                'destinationFormat': export_format,
+                'compression': compression
             }
         }
     }
@@ -101,7 +105,7 @@ def poll_job(bigquery, job):
 
 # [START run]
 def main(cloud_storage_path, project_id, dataset_id, table_id,
-         num_retries, interval, export_format="CSV"):
+         num_retries, interval, export_format="CSV", compression="NONE"):
     # [START build_service]
     # Grab the application's default credentials from the environment.
     credentials = GoogleCredentials.get_application_default()
@@ -117,7 +121,8 @@ def main(cloud_storage_path, project_id, dataset_id, table_id,
         dataset_id,
         table_id,
         num_retries=num_retries,
-        export_format=export_format)
+        export_format=export_format,
+        compression=compression)
     poll_job(bigquery, job)
 # [END run]
 
@@ -144,6 +149,11 @@ if __name__ == '__main__':
         help='Number of times to retry in case of 500 error.',
         type=int,
         default=5)
+    parser.add_argument(
+        '-z', '--gzip',
+        help='compress resultset with gzip',
+        action='store_true',
+        default=False)
 
     args = parser.parse_args()
 
@@ -153,5 +163,6 @@ if __name__ == '__main__':
         args.dataset_id,
         args.table_id,
         args.num_retries,
-        args.poll_interval)
+        args.poll_interval,
+        compression="GZIP" if args.gzip else "NONE")
 # [END main]
