@@ -1,19 +1,15 @@
-## Google App Engine using Cloud Storage
+# Cloud Storage & Google App Engine
 
-This sample demonstrates how to use Google Cloud Storage from Google App Engine
+This sample demonstrates how to use the [Google Cloud Storage API](https://cloud.google.com/storage/docs/json_api/) from Google App Engine.
 
-### Running the sample
+Refer to the [App Engine Samples README](../README.md) for information on how to run and deploy this sample.
 
-1. To install dependencies for this sample, run:
+## Setup
 
-        $ pip install -t lib -r requirements.txt
+Before running the sample:
 
-2. You must then update `main.py` and replace `<your-bucket-name>` with your Cloud Storage bucket.
+1. You need a Cloud Storage Bucket. You create one with [`gsutil`](https://cloud.google.com/storage/docs/gsutil):
 
-3. You can then run the sample on your development server:
-        
-        $ dev_appserver.py .
+        gsutil mb gs://your-bucket-name
 
-   Or deploy the application:
-
-        $ appcfg.py update .
+2. Update `main.py` and replace `<your-bucket-name>` with your Cloud Storage bucket.

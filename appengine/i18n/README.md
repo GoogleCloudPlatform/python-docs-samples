@@ -1,8 +1,7 @@
-# App Engine Internationalization sample in Python
+# App Engine Internationalization Sample
 
 A simple example app showing how to build an internationalized app
-with App Engine. The main purpose of this example is to provide the
-basic how-to.
+with App Engine.
 
 ## What to internationalize
 
@@ -93,6 +92,9 @@ Open `locales/ja/LC_MESSAGES/jsmessages.po` and translate it.
 
     $ pybabel compile -d locales -D jsmessages
 
+### Running locally & deploying
+
+Refer to the [App Engine Samples README](../README.md) for information on how to run and deploy this sample.
 
 ## How it works
 
