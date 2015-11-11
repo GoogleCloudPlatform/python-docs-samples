@@ -88,6 +88,7 @@ class AppEngineTestbedCase(CloudBaseTest):
         self.testbed.init_memcache_stub()
 
         # Setup remaining stubs.
+        self.testbed.init_app_identity_stub()
         self.testbed.init_blobstore_stub()
         self.testbed.init_user_stub()
         self.testbed.init_taskqueue_stub(root_path='tests/resources')
