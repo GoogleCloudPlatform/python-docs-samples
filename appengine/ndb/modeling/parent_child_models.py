@@ -14,10 +14,10 @@
 
 """Models representing a contact with multiple phone numbers.
 
-This module provides models with a relationship with parent-child
-relationship to allow strong consistent query.
+This module shows a parent-child relationship implemented via entity groups
+that allows strongly consistent querying.
 
-Classes: Contact, PhoneNumber
+For more information, see README.md.
 """
 
 

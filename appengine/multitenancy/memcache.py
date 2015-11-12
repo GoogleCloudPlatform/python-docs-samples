@@ -16,7 +16,7 @@
 Sample App Engine application demonstrating how to use the Namespace Manager
 API with Memcache.
 
-For more information about App Engine, see README.md under /appengine.
+For more information, see README.md.
 """
 
 # [START all]

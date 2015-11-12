@@ -15,6 +15,8 @@
 """
 Sample Google App Engine application that demonstrates usage of the app
 identity API.
+
+For more information about App Engine, see README.md under /appengine.
 """
 
 # [START all]

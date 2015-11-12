@@ -14,7 +14,7 @@
 
 """A simple model for representing an address book contact.
 
-This module provides a simple model, Contact.
+For more information, see README.md.
 """
 
 # This is the first naive model for starting the article.  In the

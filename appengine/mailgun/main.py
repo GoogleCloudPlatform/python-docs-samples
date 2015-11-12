@@ -15,8 +15,12 @@
 # limitations under the License.
 
 """
-Sample Google App Engine application that sends mail using Mailgun.
+Sample Google App Engine application that demonstrates how to send mail using
+Mailgun.
+
+For more information, see README.md.
 """
+
 from urllib import urlencode
 
 import httplib2
