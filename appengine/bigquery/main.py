@@ -17,8 +17,7 @@
 Sample App Engine application that demonstrates authentication to BigQuery
 using User OAuth2 as opposed to OAuth2 Service Accounts.
 
-For more information about BigQuery, see README.md under /bigquery.
-For more information about App Engine, see README.md under /appengine.
+For more information, see README.md.
 """
 
 import json

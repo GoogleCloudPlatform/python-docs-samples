@@ -14,10 +14,10 @@
 
 """Models for representing a contact with multiple phone numbers.
 
-This module provides models with NDB's StructuredProperty to represent
-the one-to-many relationship.
+This module provides models that represent a one-to-many relationship by
+embedding a list of related entites using NDB's StructuredProperty.
 
-Classes: Contact, PhoneNumber
+For more information, see README.md.
 """
 
 

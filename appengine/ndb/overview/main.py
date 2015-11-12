@@ -12,6 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Cloud Datastore NDB API guestbook sample.
+
+This sample is used on this page:
+    https://cloud.google.com/appengine/docs/python/ndb/
+
+For more information, see README.md
+"""
+
 # [START all]
 import cgi
 import urllib

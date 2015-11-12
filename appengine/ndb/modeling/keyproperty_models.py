@@ -18,7 +18,7 @@
 This module provides models with a relationship with ndb.KeyProperty to
 allow a single contact to have multiple phone numbers.
 
-Classes: Contact, PhoneNumber
+For more information, see README.md.
 """
 
 

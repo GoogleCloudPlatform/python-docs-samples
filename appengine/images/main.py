@@ -12,6 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+Sample application that demonstrates how to use the App Engine Images API.
+
+For more information, see README.md.
+"""
+
 # [START all]
 
 import cgi

@@ -17,7 +17,7 @@
 This module provides models with structured properties, strong
 consistent querying, one-to-many grouping, many-to-many relationships.
 
-Classes: Company, ContactCompany, Contact, Group, PhoneNumber
+For more information, see README.md.
 """
 
 

@@ -16,7 +16,7 @@
 Sample App Engine application demonstrating how to connect to Google Cloud SQL
 using App Engine's native unix socket.
 
-For more information about App Engine, see README.md under /appengine.
+For more information, see the README.md.
 """
 
 import os

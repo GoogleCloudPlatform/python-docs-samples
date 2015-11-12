@@ -14,7 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""A small example showing how to build an i18n app with App Engine."""
+"""Sample application that demonstrates how to internationalize and localize
+and App Engine application.
+
+For more information, see README.md
+"""
 
 from i18n_utils import BaseHandler
 
