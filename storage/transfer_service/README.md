@@ -2,6 +2,15 @@
 
 This app creates two types of transfers using the Transfer Service tool.
 
+<!-- auto-doc-link -->
+These samples are used on the following documentation pages:
+
+>
+* https://cloud.google.com/storage/transfer/create-transfer
+* https://cloud.google.com/storage/transfer/create-client
+
+<!-- end-auto-doc-link -->
+
 ## Prerequisites
 
 1. Set up a project on Google Developers Console.
