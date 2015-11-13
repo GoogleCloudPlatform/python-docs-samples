@@ -1,0 +1,87 @@
+{
+  "/appengine/docs/python/ndb/": [
+    "appengine/ndb/overview/main.py"
+  ], 
+  "/storage/transfer/create-client": [
+    "storage/transfer_service/create_client.py"
+  ], 
+  "/storage/docs/json_api/v1/json-api-python-samples": [
+    "storage/api/list_objects.py"
+  ], 
+  "/bigquery/querying-data": [
+    "bigquery/api/async_query.py", 
+    "bigquery/api/sync_query.py"
+  ], 
+  "/bigquery/bigquery-api-quickstart": [
+    "bigquery/api/getting_started.py"
+  ], 
+  "/bigquery/docs/managing_jobs_datasets_projects": [
+    "bigquery/api/list_datasets_projects.py"
+  ], 
+  "/appengine/docs/python/blobstore/": [
+    "appengine/blobstore/main.py"
+  ], 
+  "/appengine/docs/python/images/usingimages": [
+    "appengine/images/main.py"
+  ], 
+  "/compute/docs/tutorials/python-guide": [
+    "compute/api/create_instance.py", 
+    "compute/api/startup-script.sh"
+  ], 
+  "/docs/authentication": [
+    "storage/api/list_objects.py"
+  ], 
+  "/bigquery/loading-data-into-bigquery": [
+    "bigquery/api/load_data_from_csv.py", 
+    "bigquery/api/load_data_by_post.py"
+  ], 
+  "/bigquery/streaming-data-into-bigquery": [
+    "bigquery/api/streaming.py"
+  ], 
+  "/appengine/docs/python/memcache/usingmemcache": [
+    "appengine/memcache/guestbook/main.py"
+  ], 
+  "/monitoring/demos/": [
+    "monitoring/api/auth.py"
+  ], 
+  "/appengine/docs/python/multitenancy/namespaces": [
+    "appengine/multitenancy/memcache.py", 
+    "appengine/multitenancy/datastore.py", 
+    "appengine/multitenancy/taskqueue.py"
+  ], 
+  "/bigquery/docs/data": [
+    "bigquery/api/sync_query.py"
+  ], 
+  "/bigquery/authentication": [
+    "appengine/bigquery/main.py", 
+    "bigquery/api/getting_started.py"
+  ], 
+  "/bigquery/exporting-data-from-bigquery": [
+    "bigquery/api/export_data_to_cloud_storage.py"
+  ], 
+  "/appengine/docs/python/ndb/transactions": [
+    "appengine/ndb/transactions/main.py"
+  ], 
+  "/monitoring/api/authentication": [
+    "appengine/bigquery/app.yaml", 
+    "monitoring/api/auth.py", 
+    "appengine/bigquery/main.py"
+  ], 
+  "/storage/transfer/create-transfer": [
+    "storage/transfer_service/nearline_request.py", 
+    "storage/transfer_service/aws_request.py", 
+    "storage/transfer_service/transfer_check.py"
+  ], 
+  "/storage/docs/authentication": [
+    "storage/api/list_objects.py"
+  ], 
+  "/appengine/docs/python/tools/localunittesting": [
+    "appengine/localtesting/runner.py", 
+    "appengine/localtesting/test_task_queue.py", 
+    "appengine/localtesting/test_login.py", 
+    "appengine/localtesting/queue.yaml", 
+    "appengine/localtesting/test_mail.py", 
+    "appengine/localtesting/test_env_vars.py", 
+    "appengine/localtesting/test_datastore.py"
+  ]
+}
