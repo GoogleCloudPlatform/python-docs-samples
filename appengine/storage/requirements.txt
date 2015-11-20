@@ -1,1 +1,1 @@
-google-api-python-client
+google-api-python-client==1.4.2

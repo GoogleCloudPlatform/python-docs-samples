@@ -35,7 +35,7 @@ from oauth2client.client import GoogleCredentials
 def main(bucket):
     # [START list_bucket]
     # Get the application default credentials. When running locally, these are
-    # available after running `gcloud auth login`. When running on compute
+    # available after running `gcloud init`. When running on compute
     # engine, these are available from the environment.
     credentials = GoogleCredentials.get_application_default()
 

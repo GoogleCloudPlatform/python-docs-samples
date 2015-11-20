@@ -11,7 +11,7 @@ locally and set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable.
 
         $ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
 
-2. Install dependencies from the top-level [`requirements.txt`](../requirements.txt):
+2. Install dependencies from `requirements.txt`:
 
         $ pip install -r requirements.txt
 

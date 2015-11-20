@@ -9,12 +9,12 @@ using [Google Cloud Datastore](https://cloud.google.com/datastore).
 
 2. [Enable the Datastore API](https://console.developers.google.com/project/_/apiui/apiview/datastore/overview).
 
-3. Install the [Google Cloud SDK](https://cloud.google.com/sdk) and be sure to run ``gcloud auth``.
+3. Install the [Google Cloud SDK](https://cloud.google.com/sdk) and be sure to run ``gcloud init``.
 
 
 ## Running the samples
 
-Install dependencies from the top-level [`requirements.txt`](../../requirements.txt):
+Install dependencies from `requirements.txt`:
 
     pip install -r requirements.txt
 
