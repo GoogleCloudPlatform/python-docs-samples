@@ -99,5 +99,5 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    main(parser.bucket, parser.destination, parser.sources)
+    main(args.bucket, args.destination, args.sources)
 # [END all]
