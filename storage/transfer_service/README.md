@@ -23,8 +23,7 @@ These samples are used on the following documentation pages:
    storage-transfer-<accountId>@partnercontent.gserviceaccount.com
 1. Set up gcloud for application default credentials.
   1. `gcloud components update`
-  1. `gcloud auth login`
-  1. `gcloud config set project PROJECT_ID`
+  1. `gcloud init`
 1. Install [Google API Client Library for Python](https://developers.google.com/api-client-library/python/start/installation).
 
 ## Transfer from Amazon S3 to Google Cloud Storage

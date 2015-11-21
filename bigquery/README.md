@@ -7,9 +7,9 @@ This section contains samples for [Google BigQuery](https://cloud.google.com/big
 1. Your environment must be setup with [authentication
 information](https://developers.google.com/identity/protocols/application-default-credentials#howtheywork). If you're running in your local development environment and you have the [Google Cloud SDK](https://cloud.google.com/sdk/) installed, you can do this easily by running:
 
-        $ gcloud auth login
+        $ gcloud init
 
-2. Install dependencies from the top-level [`requirements.txt`](../requirements.txt):
+2. Install dependencies in `requirements.txt`:
 
         $ pip install -r requirements.txt
 
