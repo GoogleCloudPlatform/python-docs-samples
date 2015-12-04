@@ -94,6 +94,7 @@ class AppEngineTestbedCase(CloudBaseTest):
         self.testbed.init_taskqueue_stub(root_path='tests/resources')
         self.taskqueue_stub = self.testbed.get_stub(
             testbed.TASKQUEUE_SERVICE_NAME)
+        self.testbed.init_logservice_stub()
 
     def tearDown(self):
         super(AppEngineTestbedCase, self).tearDown()
