@@ -24,7 +24,7 @@ before_install:
 install:
 # TODO: unpin tox when the following issue is fixed
 # https://bitbucket.org/hpk42/tox/issues/285/tox-220-breaks-some-toxini-config-files
-- pip install tox==2.0.1 coveralls
+- pip install tox coveralls
 
 script:
 - tox
