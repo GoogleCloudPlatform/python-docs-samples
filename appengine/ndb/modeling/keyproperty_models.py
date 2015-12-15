@@ -25,7 +25,7 @@ For more information, see README.md.
 # In the original article, it uses ReferenceProperty on the
 # PhoneNumber model. With ndb, there is no ReferenceProperty any more,
 # so here we use KeyProperty first. However this pattern has a
-# consistensy issue, shown in the test_fails function in
+# consistency issue, shown in the test_fails function in
 # test/test_keyproperty_models.py.
 
 
