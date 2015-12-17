@@ -43,7 +43,7 @@ def load_table(bigquery, project_id, dataset_id, table_name, source_schema,
         google-api-client object
         source_schema: a valid bigquery schema,
         see https://cloud.google.com/bigquery/docs/reference/v2/tables
-        source_csv: the fully qualified Google Cloud Storage location of
+        source_path: the fully qualified Google Cloud Storage location of
         the data to load into your table
 
     Returns: a bigquery load job, see
