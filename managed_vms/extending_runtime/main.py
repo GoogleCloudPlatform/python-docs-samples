@@ -13,16 +13,20 @@
 # limitations under the License.
 
 # [START app]
+import subprocess
+
 from flask import Flask
 
 
 app = Flask(__name__)
 
 
+# [START example]
 @app.route('/')
-def hello():
-    """Return a friendly HTTP greeting."""
-    return 'Hello World!'
+def fortune():
+    output = subprocess.check_output('/usr/games/fortune')
+    return output, 200, {'Content-Type': 'text/plain; charset=utf-8'}
+# [END example]
 
 
 if __name__ == '__main__':

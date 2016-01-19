@@ -1,0 +1,13 @@
+runtime: custom
+vm: true
+
+#[START env]
+env_variables:
+    # Replace user, password, and host with the values obtained when
+    # configuring your Cloud SQL instance.
+    SQLALCHEMY_DATABASE_URI: mysql+pymysql://user:password@host/db
+    # If you are connecting over SSL, you can specify your certificates by
+    # using a connection string such as:
+    #    > mysql+pymysql://user:password@host/db?
+    #    ssl_key=client-key.pem?ssl_cert=client-cert.pem?ssl_ca=server-ca.pem
+#[END env]

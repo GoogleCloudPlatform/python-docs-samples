@@ -1,4 +1,5 @@
-# Copyright 2015 Google Inc. All Rights Reserved.
+#!/usr/bin/env python
+# Copyright 2015 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,21 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START app]
-from flask import Flask
+
+from django.http import HttpResponse
 
 
-app = Flask(__name__)
-
-
-@app.route('/')
-def hello():
-    """Return a friendly HTTP greeting."""
-    return 'Hello World!'
-
-
-if __name__ == '__main__':
-    # This is used when running locally. Gunicorn is used to run the
-    # application on Google App Engine. See CMD in Dockerfile.
-    app.run(host='127.0.0.1', port=8080, debug=True)
-# [END app]
+def index(request):
+    return HttpResponse(
+        'Hello, World. This is Django running on Google App Engine')

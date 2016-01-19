@@ -1,2 +1,3 @@
 Flask==0.10.1
 gunicorn==19.4.5
+python-memcached==1.57

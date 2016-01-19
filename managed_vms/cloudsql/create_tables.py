@@ -1,3 +1,4 @@
+#! /usr/bin/env python
 # Copyright 2015 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START app]
-from flask import Flask
+# [START all]
 
-
-app = Flask(__name__)
-
-
-@app.route('/')
-def hello():
-    """Return a friendly HTTP greeting."""
-    return 'Hello World!'
+from main import db
 
 
 if __name__ == '__main__':
-    # This is used when running locally. Gunicorn is used to run the
-    # application on Google App Engine. See CMD in Dockerfile.
-    app.run(host='127.0.0.1', port=8080, debug=True)
-# [END app]
+    print('Creating all database tables...')
+    db.create_all()
+    print('Done!')
+# [END all]

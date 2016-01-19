@@ -1,0 +1,9 @@
+runtime: custom
+vm: true
+
+# [START env_variables]
+env_variables:
+    TWILIO_ACCOUNT_SID: your-account-sid
+    TWILIO_AUTH_TOKEN: your-auth-token
+    TWILIO_NUMBER: your-twilio-number
+# [END env_variables]

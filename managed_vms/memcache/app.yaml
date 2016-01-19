@@ -1,0 +1,7 @@
+runtime: custom
+vm: true
+
+# [START config]
+beta_settings:
+    use_memcache_proxy: true
+# [END config]

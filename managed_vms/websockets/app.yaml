@@ -1,0 +1,9 @@
+runtime: custom
+vm: true
+
+# [START network]
+network:
+  forwarded_ports:
+  - 65080
+  instance_tag: websocket
+# [END network]

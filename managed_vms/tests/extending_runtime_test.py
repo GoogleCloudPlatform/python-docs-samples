@@ -12,21 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START app]
-from flask import Flask
+import os
+import platform
+
+from nose.plugins.skip import SkipTest
+import requests
+
+from .runserver import RunServerTestCase
 
 
-app = Flask(__name__)
+if platform.system() != 'Linux':
+    raise SkipTest("Extending runtime test will only execute on Linux.")
 
 
-@app.route('/')
-def hello():
-    """Return a friendly HTTP greeting."""
-    return 'Hello World!'
+class ExtendingRuntimeTest(RunServerTestCase):
+    application_path = os.path.join(
+        os.path.dirname(__file__), '..', 'extending_runtime')
 
-
-if __name__ == '__main__':
-    # This is used when running locally. Gunicorn is used to run the
-    # application on Google App Engine. See CMD in Dockerfile.
-    app.run(host='127.0.0.1', port=8080, debug=True)
-# [END app]
+    def test_index(self):
+        r = requests.get(self.server_url)
+        self.assertEqual(r.status_code, 200)
+        self.assertTrue(len(r.text))
