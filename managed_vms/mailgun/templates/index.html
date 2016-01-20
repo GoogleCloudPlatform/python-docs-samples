@@ -1,3 +1,4 @@
+{#
 # Copyright 2015 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,22 +12,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# [START app]
-from flask import Flask
-
-
-app = Flask(__name__)
-
-
-@app.route('/')
-def hello():
-    """Return a friendly HTTP greeting."""
-    return 'Hello World!'
-
-
-if __name__ == '__main__':
-    # This is used when running locally. Gunicorn is used to run the
-    # application on Google App Engine. See CMD in Dockerfile.
-    app.run(host='127.0.0.1', port=8080, debug=True)
-# [END app]
+#}
+<!doctype html>
+<html>
+<head>
+  <title>Mailgun on Google App Engine Managed VMs</title>
+</head>
+<body>
+<!-- [START form] -->
+<form method="post" action="/send/email">
+  <input type="text" name="to" placeholder="Enter recipient email">
+  <input type="submit" name="submit" value="Send simple email">
+  <input type="submit" name="submit" value="Send complex email">
+</form>
+<!-- [END form] -->
+</body>
+</html>

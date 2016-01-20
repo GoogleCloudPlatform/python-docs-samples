@@ -12,21 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START app]
-from flask import Flask
+import os
+
+import requests
+
+from .runserver import RunServerTestCase
 
 
-app = Flask(__name__)
+class StaticFilesTest(RunServerTestCase):
+    application_path = os.path.join(
+        os.path.dirname(__file__), '..', 'static_files')
 
+    def test_index(self):
+        r = requests.get(self.server_url)
+        self.assertEqual(r.status_code, 200)
 
-@app.route('/')
-def hello():
-    """Return a friendly HTTP greeting."""
-    return 'Hello World!'
-
-
-if __name__ == '__main__':
-    # This is used when running locally. Gunicorn is used to run the
-    # application on Google App Engine. See ENTRYPOINT in the Dockerfile.
-    app.run(host='127.0.0.1', port=8080, debug=True)
-# [END app]
+        r = requests.get(self.server_url + 'static/main.css')
+        self.assertEqual(r.status_code, 200)

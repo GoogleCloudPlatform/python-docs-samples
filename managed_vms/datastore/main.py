@@ -12,21 +12,41 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START app]
-from flask import Flask
+import datetime
+
+from flask import Flask, request
+from gcloud import datastore
 
 
 app = Flask(__name__)
 
 
+# [START example]
 @app.route('/')
-def hello():
-    """Return a friendly HTTP greeting."""
-    return 'Hello World!'
+def index():
+    ds = datastore.Client()
+
+    entity = datastore.Entity(key=ds.key('visit'))
+    entity.update({
+        'user_ip': request.remote_addr,
+        'timestamp': datetime.datetime.utcnow()
+    })
+
+    ds.put(entity)
+
+    query = ds.query(kind='visit', order=('-timestamp',))
+
+    results = [
+        'Time: {timestamp} Addr: {user_ip}'.format(**x)
+        for x in query.fetch(limit=10)]
+
+    output = 'Last 10 visits:\n{}'.format('\n'.join(results))
+
+    return output, 200, {'Content-Type': 'text/plain; charset=utf-8'}
+# [END example]
 
 
 if __name__ == '__main__':
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See CMD in Dockerfile.
     app.run(host='127.0.0.1', port=8080, debug=True)
-# [END app]

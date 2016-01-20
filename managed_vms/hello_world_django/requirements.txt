@@ -1,2 +1,2 @@
-Flask==0.10.1
+Django==1.9.1
 gunicorn==19.4.5

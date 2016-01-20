@@ -1,0 +1,8 @@
+runtime: custom
+vm: true
+
+# [START env_variables]
+env_variables:
+    MAILGUN_DOMAIN_NAME: your-mailgun-domain-name
+    MAILGUN_API_KEY: your-mailgun-api-key
+# [END env_variables]

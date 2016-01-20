@@ -1,0 +1,8 @@
+runtime: custom
+vm: true
+
+# [START env_variables]
+env_variables:
+    SENDGRID_API_KEY: your-sendgrid-api-key
+    SENDGRID_SENDER: your-sendgrid-sender
+# [END env_variables]
