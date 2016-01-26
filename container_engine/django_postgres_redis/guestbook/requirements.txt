@@ -1,0 +1,7 @@
+Django==1.9.1
+django-redis-cache==1.6.5
+gunicorn==19.4.5
+hiredis==0.2.0
+psycopg2==2.6.1
+redis==2.10.5
+wheel==0.26.0
