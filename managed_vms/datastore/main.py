@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import datetime
+import socket
 
 from flask import Flask, request
 from gcloud import datastore
@@ -21,14 +22,31 @@ from gcloud import datastore
 app = Flask(__name__)
 
 
+def is_ipv6(addr):
+    """Checks if a given address is an IPv6 address."""
+    try:
+        socket.inet_pton(socket.AF_INET6, addr)
+        return True
+    except socket.error:
+        return False
+
+
 # [START example]
 @app.route('/')
 def index():
     ds = datastore.Client()
 
+    user_ip = request.remote_addr
+
+    # Keep only the first two octets of the IP address.
+    if is_ipv6(user_ip):
+        user_ip = ':'.join(user_ip.split(':')[:2])
+    else:
+        user_ip = '.'.join(user_ip.split('.')[:2])
+
     entity = datastore.Entity(key=ds.key('visit'))
     entity.update({
-        'user_ip': request.remote_addr,
+        'user_ip': user_ip,
         'timestamp': datetime.datetime.utcnow()
     })
 
