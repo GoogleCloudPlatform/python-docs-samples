@@ -17,13 +17,15 @@
 
 runtime: custom
 vm: true
-health_check:
-  enable_health_check: False
+
+# Kinto does not respond 404 to /_ah/health (sends a redirect)
 vm_health_check:
     enable_health_check: False
 
+# Using an in-memory backend so lock instances to 1
 manual_scaling:
     instances: 1
+
 
 # Temporary setting to keep gcloud from uploading the virtualenv
 skip_files:

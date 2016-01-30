@@ -27,16 +27,16 @@ RUN virtualenv /env
 # the context of the virtualenv and will have access to its dependencies.
 ENV VIRTUAL_ENV /env
 ENV PATH /env/bin:$PATH
+
+# Kinto config file
 ENV KINTO_INI /etc/kinto/kinto.ini
 
 # Install dependencies.
 ADD requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
+#Create Kinto config file and replace 8888 with 8080
 RUN kinto --ini $KINTO_INI --backend=memory init && sed  -i 's/8888/8080/g' $KINTO_INI
 
-# Add application code.
-ADD . /app
-
-# Use Gunicorn to serve the application.
+# Run the Kinto kickoff command
 CMD kinto --ini $KINTO_INI migrate && kinto --ini $KINTO_INI start
 
