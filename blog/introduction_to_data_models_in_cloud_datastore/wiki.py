@@ -72,7 +72,7 @@ def list_revisions(ds, page):
 
 
 def main(project_id):
-    ds = datastore.Client(dataset_id=project_id)
+    ds = datastore.Client(project_id)
 
     save_page(ds, 'page1', '1')
     save_page(ds, 'page1', '2')
