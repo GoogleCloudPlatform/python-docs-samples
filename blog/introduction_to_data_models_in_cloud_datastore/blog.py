@@ -76,7 +76,7 @@ def list_all_posts(ds):
 
 
 def main(project_id):
-    ds = datastore.Client(dataset_id=project_id)
+    ds = datastore.Client(project_id)
 
     print("Creating users...")
     create_user(ds, 'tonystark',
