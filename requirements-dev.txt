@@ -20,3 +20,4 @@ Flask-SQLAlchemy==2.0
 PyMySQL==0.6.6
 python-memcached==1.57
 PyCrypto==2.6.1
+flaky==3.0.3

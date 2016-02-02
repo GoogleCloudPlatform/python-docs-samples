@@ -11,11 +11,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from nose.plugins.attrib import attr
 from tests import CloudBaseTest
 
 from .wiki import main
 
 
+@attr('slow')
 class WikiTestCase(CloudBaseTest):
     """Simple test case that ensures the wiki code doesn't throw any errors."""
 
