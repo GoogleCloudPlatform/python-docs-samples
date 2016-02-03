@@ -10,22 +10,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-from flaky import flaky
-import gcloud
+
 from gcloud import datastore
-from nose.plugins.attrib import attr
-from tests import CloudBaseTest
+from tests import CloudBaseTest, mark_flaky
 
 from . import tasks
 
 
-def flaky_filter(e, *args):
-    return isinstance(e, gcloud.exceptions.GCloudError)
-
-
-@attr('slow')
-@flaky(rerun_filter=flaky_filter)
+@mark_flaky
 class DatastoreTasksTest(CloudBaseTest):
 
     def setUp(self):
