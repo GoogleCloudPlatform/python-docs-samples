@@ -16,7 +16,9 @@ from .utils import (
     AppEngineTestbedCase,
     capture_stdout,
     CloudBaseTest,
+    flaky_filter,
     Http2Mock,
+    mark_flaky,
     RESOURCE_PATH)
 
 
@@ -24,6 +26,8 @@ __all__ = [
     'AppEngineTestbedCase',
     'capture_stdout',
     'CloudBaseTest',
+    'flaky_filter',
     'Http2Mock',
+    'mark_flaky',
     'RESOURCE_PATH'
 ]

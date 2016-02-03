@@ -11,21 +11,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from flaky import flaky
-import gcloud
+from functools import wraps
+import time
+
 from gcloud import datastore
-from nose.plugins.attrib import attr
-from tests import CloudBaseTest
+from tests import CloudBaseTest, mark_flaky
 
 from . import snippets
 
 
-def flaky_filter(e, *args):
-    return isinstance(e, gcloud.exceptions.GCloudError)
+def eventually_consistent(f):
+    @wraps(f)
+    def inner(self, *args, **kwargs):
+        # This is pretty hacky, but make datastore wait 1s after any
+        # put operation to in order to account for eventual consistency.
+        original_put_multi = self.client.put_multi
+
+        def put_multi(*args, **kwargs):
+            result = original_put_multi(*args, **kwargs)
+            time.sleep(1)
+            return result
+
+        self.client.put_multi = put_multi
+
+        try:
+            result = f(self, *args, **kwargs)
+        finally:
+            self.client.put_multi = original_put_multi
+
+        return result
+    return inner
 
 
-@attr('slow')
-@flaky(rerun_filter=flaky_filter)
+@mark_flaky
 class DatastoreSnippetsTest(CloudBaseTest):
 
     def setUp(self):
@@ -110,16 +128,19 @@ class DatastoreSnippetsTest(CloudBaseTest):
     def test_batch_delete(self):
         snippets.batch_delete(self.client)
 
+    @eventually_consistent
     def test_unindexed_property_query(self):
         tasks = snippets.unindexed_property_query(self.client)
         self.to_delete_entities.extend(tasks)
         self.assertTrue(tasks)
 
+    @eventually_consistent
     def test_basic_query(self):
         tasks = snippets.basic_query(self.client)
         self.to_delete_entities.extend(tasks)
         self.assertTrue(tasks)
 
+    @eventually_consistent
     def test_projection_query(self):
         priorities, percents = snippets.projection_query(self.client)
         self.to_delete_entities.extend(self.client.query(kind='Task').fetch())
@@ -131,9 +152,11 @@ class DatastoreSnippetsTest(CloudBaseTest):
         self.to_delete_entities.extend(tasks)
         self.assertTrue(tasks)
 
+    @eventually_consistent
     def test_run_query(self):
         snippets.run_query(self.client)
 
+    @eventually_consistent
     def test_cursor_paging(self):
         for n in range(6):
             self.to_delete_entities.append(
@@ -147,46 +170,55 @@ class DatastoreSnippetsTest(CloudBaseTest):
         self.assertTrue(cursor_one)
         self.assertTrue(cursor_two)
 
+    @eventually_consistent
     def test_property_filter(self):
         tasks = snippets.property_filter(self.client)
         self.to_delete_entities.extend(tasks)
         self.assertTrue(tasks)
 
+    @eventually_consistent
     def test_composite_filter(self):
         tasks = snippets.composite_filter(self.client)
         self.to_delete_entities.extend(tasks)
         self.assertTrue(tasks)
 
+    @eventually_consistent
     def test_key_filter(self):
         tasks = snippets.key_filter(self.client)
         self.to_delete_entities.extend(tasks)
         self.assertTrue(tasks)
 
+    @eventually_consistent
     def test_ascending_sort(self):
         tasks = snippets.ascending_sort(self.client)
         self.to_delete_entities.extend(tasks)
         self.assertTrue(tasks)
 
+    @eventually_consistent
     def test_descending_sort(self):
         tasks = snippets.descending_sort(self.client)
         self.to_delete_entities.extend(tasks)
         self.assertTrue(tasks)
 
+    @eventually_consistent
     def test_multi_sort(self):
         tasks = snippets.multi_sort(self.client)
         self.to_delete_entities.extend(tasks)
         self.assertTrue(tasks)
 
+    @eventually_consistent
     def test_keys_only_query(self):
         keys = snippets.keys_only_query(self.client)
         self.to_delete_keys.extend(keys)
         self.assertTrue(keys)
 
+    @eventually_consistent
     def test_distinct_query(self):
         tasks = snippets.distinct_query(self.client)
         self.to_delete_entities.extend(tasks)
         self.assertTrue(tasks)
 
+    @eventually_consistent
     def test_distinct_on_query(self):
         tasks = snippets.distinct_on_query(self.client)
         self.to_delete_entities.extend(tasks)
@@ -241,6 +273,7 @@ class DatastoreSnippetsTest(CloudBaseTest):
         self.assertTrue(task_list)
         self.assertTrue(tasks_in_list)
 
+    @eventually_consistent
     def test_namespace_run_query(self):
         all_namespaces, filtered_namespaces = snippets.namespace_run_query(
             self.client)
@@ -248,18 +281,21 @@ class DatastoreSnippetsTest(CloudBaseTest):
         self.assertTrue(filtered_namespaces)
         self.assertTrue('google' in filtered_namespaces)
 
+    @eventually_consistent
     def test_kind_run_query(self):
         kinds = snippets.kind_run_query(self.client)
         self.to_delete_entities.extend(self.client.query(kind='Task').fetch())
         self.assertTrue(kinds)
         self.assertTrue('Task' in kinds)
 
+    @eventually_consistent
     def test_property_run_query(self):
         kinds = snippets.property_run_query(self.client)
         self.to_delete_entities.extend(self.client.query(kind='Task').fetch())
         self.assertTrue(kinds)
         self.assertTrue('Task' in kinds)
 
+    @eventually_consistent
     def test_property_by_kind_run_query(self):
         reprs = snippets.property_by_kind_run_query(self.client)
         self.to_delete_entities.extend(self.client.query(kind='Task').fetch())

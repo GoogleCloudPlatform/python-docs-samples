@@ -21,7 +21,10 @@ import sys
 import tempfile
 import unittest
 
+from flaky import flaky
+import gcloud
 import httplib2
+from nose.plugins.attrib import attr
 from nose.plugins.skip import SkipTest
 from six.moves import cStringIO
 
@@ -38,6 +41,18 @@ RESOURCE_PATH = os.path.join(
     os.path.abspath(os.path.dirname(__file__)), 'resources')
 PROJECT_ID_ENV_VAR = 'TEST_PROJECT_ID'
 BUCKET_NAME_ENV_VAR = 'TEST_BUCKET_NAME'
+
+
+def flaky_filter(e, *args):
+    exception_class, exception_instance, traceback = e
+    return isinstance(
+        exception_instance,
+        (gcloud.exceptions.GCloudError,))
+
+
+def mark_flaky(f):
+    return flaky(max_runs=3, rerun_filter=flaky_filter)(
+        attr('flaky')(f))
 
 
 class CloudBaseTest(unittest.TestCase):
