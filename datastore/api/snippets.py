@@ -786,6 +786,13 @@ def property_by_kind_run_query(client):
 
     return representations_by_property
 
+def eventual_consistent_query(client):
+
+    # [START eventual_consistent_query]
+    # Read consistency cannot be specified in gcloud-python.
+    # [END eventual_consistent_query]
+
+    return
 
 def main(project_id):
     client = datastore.Client(project_id)
