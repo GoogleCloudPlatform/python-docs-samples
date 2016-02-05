@@ -209,7 +209,7 @@ class DatastoreSnippetsTest(CloudBaseTest):
     @eventually_consistent
     def test_keys_only_query(self):
         keys = snippets.keys_only_query(self.client)
-        self.to_delete_keys.extend(keys)
+        self.to_delete_entities.extend(self.client.query(kind='Task').fetch())
         self.assertTrue(keys)
 
     @eventually_consistent

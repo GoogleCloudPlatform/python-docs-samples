@@ -24,10 +24,12 @@ before_install:
 install:
 # TODO: unpin tox when the following issue is fixed
 # https://bitbucket.org/hpk42/tox/issues/285/tox-220-breaks-some-toxini-config-files
-- pip install tox coveralls
+- pip install tox
 
 script:
 - tox
 
-after_success:
-- coveralls
+# Coveralls is disabled in travis because travis does not run all of our
+# tests. The full suite of tests is run on an internal Jenkins instance.
+# after_success:
+# - coveralls

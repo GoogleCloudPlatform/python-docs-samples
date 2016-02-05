@@ -11,7 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+import os
 import re
+from unittest.case import SkipTest
 
 import tests
 import webtest
@@ -22,6 +25,8 @@ from . import main
 class TestMySQLSample(tests.AppEngineTestbedCase):
 
     def setUp(self):
+        if not os.path.exists('/var/run/mysqld/mysqld.sock'):
+            raise SkipTest('No MySQL server found.')
         super(TestMySQLSample, self).setUp()
         self.app = webtest.TestApp(main.app)
 
