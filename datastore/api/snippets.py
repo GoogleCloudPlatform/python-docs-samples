@@ -663,7 +663,7 @@ def transactional_update(client):
             transfer_funds(client, account1.key, account2.key, 50)
         except gcloud.exceptions.Conflict:
             continue
-    # [END transaction_retry]
+    # [END transactional_retry]
 
     return account1.key, account2.key
 
