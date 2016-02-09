@@ -1,7 +1,5 @@
-version: 1
-runtime: python27
+runtime: python-compat
 vm: true
-api_version: 1
 threadsafe: true
 
 handlers:

@@ -4,7 +4,7 @@ This sample demonstrates using [Python on Google App Engine Managed VMs](https:/
 
 ### Running & deploying the sample
 
-1. Requirements.txt is not automatically processed by Google App Engine Managed VMs. To install dependencies for this sample, run:
+1. `requirements.txt` is automatically installed by the runtime when deploying, however, to run the sample locally you will need to install dependencies:
 
         $ pip install -t lib -r requirements.txt
 
@@ -14,4 +14,4 @@ This sample demonstrates using [Python on Google App Engine Managed VMs](https:/
 
 3. Deploy the sample:
 
-        $ appcfg.py update -A your-app-id .
+        $ gcloud preview app deploy

@@ -1,5 +1,11 @@
-runtime: custom
+runtime: python
 vm: true
+
+# Use a special gunicorn worker class to support websockets.
+entrypoint: gunicorn -b :$PORT -b :65080 -k flask_sockets.worker main:app
+
+runtime_config:
+  python_version: 3
 
 # [START network]
 network:

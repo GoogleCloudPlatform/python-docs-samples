@@ -13,8 +13,8 @@ You can run locally using django's `manage.py`:
 
 Follow the standard deployment instructions in
 [the top-level README](../README.md). Google App Engine runs the application
-using [gunicorn](http://gunicorn.org/) as defined by `CMD` in
-[`Dockerfile`](Dockerfile). You can use a different WSGI container if you want, as
+using [gunicorn](http://gunicorn.org/) as defined by `entrypoint` in
+[`app.yaml`](app.yaml). You can use a different WSGI container if you want, as
 long as it listens for web traffic on port `$PORT` and is declared in
 [`requirements.txt`](requirements.txt).
 
@@ -34,7 +34,7 @@ Then, we added a simple view in `hellworld.views`, added the app to
 `project_name.urls`.
 
 In order to deploy to Google App Engine, we created a simple
-[`app.yaml`](app.yaml) and [`Dockerfile`](Dockerfile).
+[`app.yaml`](app.yaml).
 
 ## Database notice
 

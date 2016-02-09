@@ -1,9 +1,0 @@
-.dockerignore
-Dockerfile
-.git
-.hg
-.svn
-env
-*.pyc
-__pycache__
-db.sqlite3

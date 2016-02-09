@@ -1,8 +1,0 @@
-.dockerignore
-Dockerfile
-.git
-.hg
-.svn
-env
-*.pyc
-__pycache__
