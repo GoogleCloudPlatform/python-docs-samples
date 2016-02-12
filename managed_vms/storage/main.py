@@ -15,7 +15,7 @@
 # [START app]
 import os
 
-from flask import current_app, Flask, request
+from flask import Flask, request
 from gcloud import storage
 
 # [start config]
@@ -23,7 +23,7 @@ app = Flask(__name__)
 
 
 # Configure this environment variable via app.yaml
-app.config['GCLOUD_STORAGE_BUCKET'] = os.environ['GCLOUD_STORAGE_BUCKET']
+CLOUD_STORAGE_BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 # [end config]
 
 
@@ -53,7 +53,7 @@ def upload():
     gcs = storage.Client()
 
     # Get the bucket that the file will be uploaded to.
-    bucket = gcs.get_bucket(current_app.config['GCLOUD_STORAGE_BUCKET'])
+    bucket = gcs.get_bucket(CLOUD_STORAGE_BUCKET)
 
     # Create a new blob and upload the file's content.
     blob = bucket.blob(uploaded_file.filename)

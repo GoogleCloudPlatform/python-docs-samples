@@ -15,12 +15,12 @@
 """Test classes for code snippet for modeling article."""
 
 from google.appengine.ext import ndb
-from tests import AppEngineTestbedCase
+from testing import AppEngineTest
 
 from . import parent_child_models as models
 
 
-class ContactTestCase(AppEngineTestbedCase):
+class ContactTestCase(AppEngineTest):
     """A test case for the Contact model class with KeyProperty."""
     NAME = 'Takashi Matsuo'
 

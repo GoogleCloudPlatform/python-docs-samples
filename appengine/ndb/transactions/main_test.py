@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from tests import AppEngineTestbedCase
+from testing import AppEngineTest
 
 from . import main
 
 
-class TestHandlers(AppEngineTestbedCase):
+class TestHandlers(AppEngineTest):
     def setUp(self):
         super(TestHandlers, self).setUp()
         main.app.config['TESTING'] = True

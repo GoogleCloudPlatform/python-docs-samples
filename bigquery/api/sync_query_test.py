@@ -13,12 +13,12 @@
 #
 import json
 
-from tests import capture_stdout, CloudBaseTest
+from testing import capture_stdout, CloudTest
 
 from .sync_query import main
 
 
-class TestSyncQuery(CloudBaseTest):
+class TestSyncQuery(CloudTest):
 
     def test_sync_query(self):
         query = (
@@ -27,7 +27,7 @@ class TestSyncQuery(CloudBaseTest):
 
         with capture_stdout() as stdout:
             main(
-                project_id=self.project_id,
+                project_id=self.config.GCLOUD_PROJECT,
                 query=query,
                 timeout=30,
                 num_retries=5)

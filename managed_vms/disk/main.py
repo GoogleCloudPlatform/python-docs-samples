@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import socket
 
 from flask import Flask, request
 
@@ -20,11 +21,27 @@ from flask import Flask, request
 app = Flask(__name__)
 
 
+def is_ipv6(addr):
+    """Checks if a given address is an IPv6 address."""
+    try:
+        socket.inet_pton(socket.AF_INET6, addr)
+        return True
+    except socket.error:
+        return False
+
+
 # [START example]
 @app.route('/')
 def index():
     instance_id = os.environ.get('GAE_MODULE_INSTANCE', '1')
+
     user_ip = request.remote_addr
+
+    # Keep only the first two octets of the IP address.
+    if is_ipv6(user_ip):
+        user_ip = ':'.join(user_ip.split(':')[:2])
+    else:
+        user_ip = '.'.join(user_ip.split('.')[:2])
 
     with open('/tmp/seen.txt', 'a') as f:
         f.write('{}\n'.format(user_ip))

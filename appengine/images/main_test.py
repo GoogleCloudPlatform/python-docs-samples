@@ -13,13 +13,13 @@
 # limitations under the License.
 
 import mock
-from tests import AppEngineTestbedCase
+from testing import AppEngineTest
 import webtest
 
 from . import main
 
 
-class TestHandlers(AppEngineTestbedCase):
+class TestHandlers(AppEngineTest):
     def setUp(self):
         super(TestHandlers, self).setUp()
 

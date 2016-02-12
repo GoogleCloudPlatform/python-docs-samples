@@ -15,7 +15,7 @@ from functools import wraps
 import time
 
 from gcloud import datastore
-from tests import CloudBaseTest, mark_flaky
+from testing import CloudTest, mark_flaky
 
 from . import snippets
 
@@ -44,11 +44,11 @@ def eventually_consistent(f):
 
 
 @mark_flaky
-class DatastoreSnippetsTest(CloudBaseTest):
+class DatastoreSnippetsTest(CloudTest):
 
     def setUp(self):
         super(DatastoreSnippetsTest, self).setUp()
-        self.client = datastore.Client(self.project_id)
+        self.client = datastore.Client(self.config.GCLOUD_PROJECT)
         self.to_delete_entities = []
         self.to_delete_keys = []
 

@@ -7,5 +7,5 @@ runtime_config:
 
 # [START env_variables]
 env_variables:
-    GCLOUD_DATASET_ID: your-project-id
+    GCLOUD_PROJECT: your-project-id
 # [END env_variables]

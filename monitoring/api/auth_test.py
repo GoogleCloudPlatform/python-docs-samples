@@ -13,16 +13,16 @@
 
 import re
 
-import tests
+import testing
 
 from . import auth
 
 
-class TestTimeseriesList(tests.CloudBaseTest):
+class TestTimeseriesList(testing.CloudTest):
 
     def test_main(self):
-        with tests.capture_stdout() as stdout:
-            auth.main(self.project_id)
+        with testing.capture_stdout() as stdout:
+            auth.main(self.config.GCLOUD_PROJECT)
 
         output = stdout.getvalue().strip()
 

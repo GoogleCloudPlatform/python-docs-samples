@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from tests import AppEngineTestbedCase
+from testing import AppEngineTest
 import webtest
 
 from . import main
 
 
-class TestWritingLogs(AppEngineTestbedCase):
+class TestWritingLogs(AppEngineTest):
     def setUp(self):
         super(TestWritingLogs, self).setUp()
 

@@ -11,11 +11,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from tests import CloudBaseTest
+from testing import CloudTest
 
 from .list_objects import main
 
 
-class TestListObjects(CloudBaseTest):
+class TestListObjects(CloudTest):
     def test_main(self):
-        main(self.bucket_name)
+        main(self.config.CLOUD_STORAGE_BUCKET)

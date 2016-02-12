@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import tests
+import testing
 import webtest
 
 from . import memcache
 
 
-class TestNamespaceMemcacheSample(tests.AppEngineTestbedCase):
+class TestNamespaceMemcacheSample(testing.AppEngineTest):
 
     def setUp(self):
         super(TestNamespaceMemcacheSample, self).setUp()

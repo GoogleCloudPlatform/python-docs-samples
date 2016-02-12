@@ -13,21 +13,21 @@
 #
 import json
 
-import tests
+import testing
 
 from .async_query import main
 
 
-class TestAsyncQuery(tests.CloudBaseTest):
+class TestAsyncQuery(testing.CloudTest):
 
     def test_async_query(self):
         query = (
             'SELECT corpus FROM publicdata:samples.shakespeare '
             'GROUP BY corpus;')
 
-        with tests.capture_stdout() as stdout:
+        with testing.capture_stdout() as stdout:
             main(
-                project_id=self.project_id,
+                project_id=self.config.GCLOUD_PROJECT,
                 query_string=query,
                 batch=False,
                 num_retries=5,

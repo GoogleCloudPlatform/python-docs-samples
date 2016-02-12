@@ -16,13 +16,13 @@ import os
 import re
 from unittest.case import SkipTest
 
-import tests
+import testing
 import webtest
 
 from . import main
 
 
-class TestMySQLSample(tests.AppEngineTestbedCase):
+class TestMySQLSample(testing.AppEngineTest):
 
     def setUp(self):
         if not os.path.exists('/var/run/mysqld/mysqld.sock'):

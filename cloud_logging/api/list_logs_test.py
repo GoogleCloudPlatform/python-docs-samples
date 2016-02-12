@@ -14,16 +14,16 @@
 import re
 import unittest
 
-import tests
+import testing
 
 from . import list_logs
 
 
-class TestListLogs(tests.CloudBaseTest):
+class TestListLogs(testing.CloudTest):
 
     def test_main(self):
-        with tests.capture_stdout() as stdout:
-            list_logs.main(self.project_id)
+        with testing.capture_stdout() as stdout:
+            list_logs.main(self.config.GCLOUD_PROJECT)
 
         output = stdout.getvalue().strip()
 

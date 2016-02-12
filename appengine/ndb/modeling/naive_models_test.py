@@ -14,12 +14,12 @@
 
 """Test classes for code snippet for modeling article."""
 
-from tests import AppEngineTestbedCase
+from testing import AppEngineTest
 
 from . import naive_models as models
 
 
-class ContactTestCase(AppEngineTestbedCase):
+class ContactTestCase(AppEngineTest):
     """A test case for the naive Contact model classe."""
     NAME = 'Takashi Matsuo'
 

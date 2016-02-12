@@ -8,5 +8,5 @@ runtime_config:
 #[START env]
 env_variables:
     GCLOUD_PROJECT: your-project-id
-    GCLOUD_STORAGE_BUCKET: your-bucket-name
+    CLOUD_STORAGE_BUCKET: your-bucket-name
 #[END env]
