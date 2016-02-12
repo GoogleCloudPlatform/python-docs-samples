@@ -111,7 +111,7 @@ def list_command(client, args):
 
 def delete_command(client, args):
     """Deletes a task."""
-    mark_done(client, args.task_id)
+    delete_task(client, args.task_id)
     print('Task {} deleted.'.format(args.task_id))
 
 
