@@ -66,7 +66,7 @@ def main(project_id, query, timeout, num_retries):
             pageToken=page_token,
             **query_job['jobReference']).execute(num_retries=2)
 
-        print(json.dumps(page['rows']))
+        print(json.dumps(page.get('rows', [])))
 
         page_token = page.get('pageToken')
         if not page_token:
