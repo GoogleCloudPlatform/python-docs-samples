@@ -60,17 +60,21 @@ def main(project_id, query, timeout, num_retries):
 
     # [START paging]
     # Page through the result set and print all results.
+    results = []
     page_token = None
+
     while True:
         page = bigquery.jobs().getQueryResults(
             pageToken=page_token,
             **query_job['jobReference']).execute(num_retries=2)
 
-        print(json.dumps(page['rows']))
+        results.extend(page.get('rows', []))
 
         page_token = page.get('pageToken')
         if not page_token:
             break
+
+    print(json.dumps(results))
     # [END paging]
 # [END run]
 
