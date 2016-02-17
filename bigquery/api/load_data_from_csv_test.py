@@ -10,27 +10,25 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-"""Tests for load_data_from_csv."""
-import os
 
 from nose.plugins.attrib import attr
-from tests import CloudBaseTest
+from testing import CloudTest
 
 from .load_data_from_csv import main
 
 
 @attr('slow')
-class TestLoadDataFromCSV(CloudBaseTest):
+class TestLoadDataFromCSV(CloudTest):
     dataset_id = 'test_dataset'
     table_id = 'test_import_table'
 
     def test_load_table(self):
-        cloud_storage_input_uri = 'gs://{}/data.csv'.format(self.bucket_name)
-        schema_file = os.path.join(self.resource_path, 'schema.json')
+        cloud_storage_input_uri = 'gs://{}/data.csv'.format(
+            self.config.CLOUD_STORAGE_BUCKET)
+        schema_file = self.resource_path('schema.json')
 
         main(
-            self.project_id,
+            self.config.GCLOUD_PROJECT,
             self.dataset_id,
             self.table_id,
             schema_file=schema_file,

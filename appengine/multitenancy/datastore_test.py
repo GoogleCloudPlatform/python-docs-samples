@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import tests
+import testing
 import webtest
 
 from . import datastore
 
 
-class TestNamespaceDatastoreSample(tests.AppEngineTestbedCase):
+class TestNamespaceDatastoreSample(testing.AppEngineTest):
 
     def setUp(self):
         super(TestNamespaceDatastoreSample, self).setUp()

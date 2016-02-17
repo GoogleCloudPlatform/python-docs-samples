@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import datetime
+import os
 import socket
 
 from flask import Flask, request
@@ -34,7 +35,7 @@ def is_ipv6(addr):
 # [START example]
 @app.route('/')
 def index():
-    ds = datastore.Client()
+    ds = datastore.Client(os.environ['GCLOUD_PROJECT'])
 
     user_ip = request.remote_addr
 

@@ -1,35 +1,27 @@
 sudo: false
-#add language, etc. here
 language: python
-
+services:
+  - memcached
+  - mysql
 branches:
   only:
-    - master
-
+  - master
 cache:
   directories:
   - $HOME/.cache
-
 env:
   global:
   - PATH=${PATH}:${HOME}/gcloud/google-cloud-sdk/bin
-  - GOOGLE_APPLICATION_CREDENTIALS=${TRAVIS_BUILD_DIR}/python-docs-samples.json
+  - GOOGLE_APPLICATION_CREDENTIALS=${TRAVIS_BUILD_DIR}/testing/resources/service-account.json
   - GAE_PYTHONPATH=${HOME}/.cache/google_appengine
-  - TEST_BUCKET_NAME=bigquery-devrel-samples-bucket
-  - TEST_PROJECT_ID=bigquery-devrel-samples
-
+  - secure: YIowCOMJ97rTcehKVT6Gi3u0Etm8s9+TBRGsNPJLgSF2zZdsh9IHcIc+tMDUMR3lpOe8y2a060RuODQcRsW1W1LIHej+ZE/gv6vATT6qNA3eKfKmZ9AyrpBO0fTOHlHrGBuU9ktBPR+iqvnq8MLWjnUozPFMJbuNBFITU7JP8jc=
 before_install:
-- tests/scripts/travis-before-install.sh
-
+- openssl aes-256-cbc -k "$secrets_password" -in secrets.tar.enc -out secrets.tar -d
+- tar xvf secrets.tar
 install:
-# TODO: unpin tox when the following issue is fixed
-# https://bitbucket.org/hpk42/tox/issues/285/tox-220-breaks-some-toxini-config-files
 - pip install tox
-
+- pip install -e git+https://github.com/GoogleCloudPlatform/python-repo-tools#egg=python-repo-tools
+- gcp-python-repo-tools download-appengine-sdk `dirname "${GAE_PYTHONPATH}"`
 script:
+- source ${TRAVIS_BUILD_DIR}/testing/resources/test-env.sh
 - tox
-
-# Coveralls is disabled in travis because travis does not run all of our
-# tests. The full suite of tests is run on an internal Jenkins instance.
-# after_success:
-# - coveralls

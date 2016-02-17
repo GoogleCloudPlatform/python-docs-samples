@@ -14,19 +14,19 @@
 import re
 
 from nose.plugins.attrib import attr
-import tests
+import testing
 
 from .create_instance import main
 
 
 @attr('slow')
-class TestComputeGettingStarted(tests.CloudBaseTest):
+class TestComputeGettingStarted(testing.CloudTest):
 
     def test_main(self):
-        with tests.capture_stdout() as mock_stdout:
+        with testing.capture_stdout() as mock_stdout:
             main(
-                self.project_id,
-                self.bucket_name,
+                self.config.GCLOUD_PROJECT,
+                self.config.CLOUD_STORAGE_BUCKET,
                 'us-central1-f',
                 'test-instance',
                 wait=False)
@@ -35,7 +35,7 @@ class TestComputeGettingStarted(tests.CloudBaseTest):
 
         expected_output = re.compile(
             (r'Instances in project %s and zone us-central1-.* - test-instance'
-             r'.*Deleting instance.*done..$') % self.project_id,
+             r'.*Deleting instance.*done..$') % self.config.GCLOUD_PROJECT,
             re.DOTALL)
         self.assertRegexpMatches(
             stdout,

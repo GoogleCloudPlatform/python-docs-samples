@@ -12,14 +12,14 @@
 # limitations under the License.
 #
 from nose.plugins.attrib import attr
-from tests import CloudBaseTest
+from testing import CloudTest
 
 from .blog import main
 
 
 @attr('slow')
-class BlogTestCase(CloudBaseTest):
+class BlogTestCase(CloudTest):
     """Simple test case that ensures the blog code doesn't throw any errors."""
 
     def test_main(self):
-        main(self.project_id)
+        main(self.config.GCLOUD_PROJECT)

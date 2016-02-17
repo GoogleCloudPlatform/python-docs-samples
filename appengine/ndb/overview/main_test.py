@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from tests import AppEngineTestbedCase
+from testing import AppEngineTest
 import webtest
 
 from . import main
 
 
-class TestHandlers(AppEngineTestbedCase):
+class TestHandlers(AppEngineTest):
     def test_hello(self):
         app = webtest.TestApp(main.app)
         response = app.get('/')

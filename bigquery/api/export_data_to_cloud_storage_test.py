@@ -14,22 +14,22 @@
 
 """Tests for export_table_to_gcs."""
 from nose.plugins.attrib import attr
-from tests import CloudBaseTest
+from testing import CloudTest
 
 from .export_data_to_cloud_storage import main
 
 
 @attr('slow')
-class TestExportTableToGCS(CloudBaseTest):
+class TestExportTableToGCS(CloudTest):
     dataset_id = 'test_dataset'
     table_id = 'test_table'
 
     def test_export_table_csv(self):
         cloud_storage_output_uri = \
-            'gs://{}/output.csv'.format(self.bucket_name)
+            'gs://{}/output.csv'.format(self.config.CLOUD_STORAGE_BUCKET)
         main(
             cloud_storage_output_uri,
-            self.project_id,
+            self.config.GCLOUD_PROJECT,
             self.dataset_id,
             self.table_id,
             num_retries=5,
@@ -38,10 +38,10 @@ class TestExportTableToGCS(CloudBaseTest):
 
     def test_export_table_json(self):
         cloud_storage_output_uri = \
-            'gs://{}/output.json'.format(self.bucket_name)
+            'gs://{}/output.json'.format(self.config.CLOUD_STORAGE_BUCKET)
         main(
             cloud_storage_output_uri,
-            self.project_id,
+            self.config.GCLOUD_PROJECT,
             self.dataset_id,
             self.table_id,
             num_retries=5,
@@ -50,10 +50,10 @@ class TestExportTableToGCS(CloudBaseTest):
 
     def test_export_table_avro(self):
         cloud_storage_output_uri = \
-            'gs://{}/output.avro'.format(self.bucket_name)
+            'gs://{}/output.avro'.format(self.config.CLOUD_STORAGE_BUCKET)
         main(
             cloud_storage_output_uri,
-            self.project_id,
+            self.config.GCLOUD_PROJECT,
             self.dataset_id,
             self.table_id,
             num_retries=5,

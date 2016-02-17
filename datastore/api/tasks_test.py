@@ -12,17 +12,17 @@
 # limitations under the License.
 
 from gcloud import datastore
-from tests import CloudBaseTest, mark_flaky
+from testing import CloudTest, mark_flaky
 
 from . import tasks
 
 
 @mark_flaky
-class DatastoreTasksTest(CloudBaseTest):
+class DatastoreTasksTest(CloudTest):
 
     def setUp(self):
         super(DatastoreTasksTest, self).setUp()
-        self.client = datastore.Client(self.project_id)
+        self.client = datastore.Client(self.config.GCLOUD_PROJECT)
 
     def tearDown(self):
         super(DatastoreTasksTest, self).tearDown()
@@ -31,7 +31,7 @@ class DatastoreTasksTest(CloudBaseTest):
                 [x.key for x in self.client.query(kind='Task').fetch()])
 
     def test_create_client(self):
-        tasks.create_client(self.project_id)
+        tasks.create_client(self.config.GCLOUD_PROJECT)
 
     def test_add_task(self):
         task_key = tasks.add_task(self.client, 'Test task')

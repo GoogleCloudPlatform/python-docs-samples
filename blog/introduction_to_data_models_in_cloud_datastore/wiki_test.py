@@ -12,14 +12,14 @@
 # limitations under the License.
 #
 from nose.plugins.attrib import attr
-from tests import CloudBaseTest
+from testing import CloudTest
 
 from .wiki import main
 
 
 @attr('slow')
-class WikiTestCase(CloudBaseTest):
+class WikiTestCase(CloudTest):
     """Simple test case that ensures the wiki code doesn't throw any errors."""
 
     def test_main(self):
-        main(self.project_id)
+        main(self.config.GCLOUD_PROJECT)

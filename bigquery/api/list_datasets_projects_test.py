@@ -13,16 +13,16 @@
 #
 import re
 
-import tests
+import testing
 
 from .list_datasets_projects import main
 
 
-class TestListDatasetsProjects(tests.CloudBaseTest):
+class TestListDatasetsProjects(testing.CloudTest):
 
     def test_main(self):
-        with tests.capture_stdout() as mock_stdout:
-            main(self.project_id)
+        with testing.capture_stdout() as mock_stdout:
+            main(self.config.GCLOUD_PROJECT)
 
         stdout = mock_stdout.getvalue()
 

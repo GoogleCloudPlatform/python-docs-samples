@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import tests
+import testing
 import webtest
 
 from . import taskqueue
 
 
-class TestNamespaceTaskQueueSample(tests.AppEngineTestbedCase):
+class TestNamespaceTaskQueueSample(testing.AppEngineTest):
 
     def setUp(self):
         super(TestNamespaceTaskQueueSample, self).setUp()
@@ -29,7 +29,7 @@ class TestNamespaceTaskQueueSample(tests.AppEngineTestbedCase):
         self.assertEqual(response.status_int, 200)
         self.assertTrue('Global: 0' in response.body)
 
-        self.runTasks()
+        self.run_tasks()
 
         response = self.app.get('/taskqueue')
         self.assertEqual(response.status_int, 200)
@@ -39,7 +39,7 @@ class TestNamespaceTaskQueueSample(tests.AppEngineTestbedCase):
         self.assertEqual(response.status_int, 200)
         self.assertTrue('a: 0' in response.body)
 
-        self.runTasks()
+        self.run_tasks()
 
         response = self.app.get('/taskqueue/a')
         self.assertEqual(response.status_int, 200)

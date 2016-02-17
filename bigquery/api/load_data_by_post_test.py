@@ -10,29 +10,27 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-import os
+
 import re
 
 from nose.plugins.attrib import attr
-
-import tests
+import testing
 
 from .load_data_by_post import load_data
 
 
 @attr('slow')
-class TestLoadDataByPost(tests.CloudBaseTest):
-    dataset_id = 'ephemeral_dataset'
+class TestLoadDataByPost(testing.CloudTest):
+    dataset_id = 'ephemeral_test_dataset'
     table_id = 'load_data_by_post'
 
     def test_load_csv_data(self):
-        schema_path = os.path.join(self.resource_path, 'schema.json')
-        data_path = os.path.join(self.resource_path, 'data.csv')
-        with tests.capture_stdout() as mock_stdout:
+        schema_path = self.resource_path('schema.json')
+        data_path = self.resource_path('data.csv')
+        with testing.capture_stdout() as mock_stdout:
             load_data(schema_path,
                       data_path,
-                      self.project_id,
+                      self.config.GCLOUD_PROJECT,
                       self.dataset_id,
                       self.table_id
                       )
@@ -43,13 +41,13 @@ class TestLoadDataByPost(tests.CloudBaseTest):
             r'Waiting for job to finish.*Job complete.', re.DOTALL))
 
     def test_load_json_data(self):
-        schema_path = os.path.join(self.resource_path, 'schema.json')
-        data_path = os.path.join(self.resource_path, 'data.json')
+        schema_path = self.resource_path('schema.json')
+        data_path = self.resource_path('data.json')
 
-        with tests.capture_stdout() as mock_stdout:
+        with testing.capture_stdout() as mock_stdout:
             load_data(schema_path,
                       data_path,
-                      self.project_id,
+                      self.config.GCLOUD_PROJECT,
                       self.dataset_id,
                       self.table_id
                       )

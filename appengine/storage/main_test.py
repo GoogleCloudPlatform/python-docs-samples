@@ -13,18 +13,18 @@
 # limitations under the License.
 import re
 
-import tests
+import testing
 import webtest
 
 from . import main
 
 
-class TestStorageSample(tests.AppEngineTestbedCase):
+class TestStorageSample(testing.AppEngineTest):
 
     def setUp(self):
         super(TestStorageSample, self).setUp()
         self.app = webtest.TestApp(main.app)
-        main.BUCKET_NAME = self.bucket_name
+        main.BUCKET_NAME = self.config.GCLOUD_PROJECT
 
     def test_get(self):
         response = self.app.get('/')

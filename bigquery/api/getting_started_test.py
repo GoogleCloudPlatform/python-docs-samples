@@ -13,15 +13,15 @@
 #
 import re
 
-import tests
+import testing
 
 from .getting_started import main
 
 
-class TestGettingStarted(tests.CloudBaseTest):
+class TestGettingStarted(testing.CloudTest):
     def test_main(self):
-        with tests.capture_stdout() as mock_stdout:
-            main(self.project_id)
+        with testing.capture_stdout() as mock_stdout:
+            main(self.config.GCLOUD_PROJECT)
 
         stdout = mock_stdout.getvalue()
         self.assertRegexpMatches(stdout, re.compile(

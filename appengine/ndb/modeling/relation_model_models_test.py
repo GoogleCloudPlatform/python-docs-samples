@@ -15,12 +15,12 @@
 """Test classes for code snippet for modeling article."""
 
 from google.appengine.ext import ndb
-from tests import AppEngineTestbedCase
+from testing import AppEngineTest
 
 from . import relation_model_models as models
 
 
-class ContactTestCase(AppEngineTestbedCase):
+class ContactTestCase(AppEngineTest):
     """A test case for the Contact model with relationship model."""
     def setUp(self):
         """Creates 1 contact and 1 company.

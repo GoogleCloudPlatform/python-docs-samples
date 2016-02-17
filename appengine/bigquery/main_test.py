@@ -12,23 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import re
 
 from apiclient.http import HttpMock
 import mock
-import tests
+import testing
 import webtest
 
 from . import main
 
 
-class TestAuthSample(tests.AppEngineTestbedCase):
+class TestAuthSample(testing.AppEngineTest):
 
     def setUp(self):
         super(TestAuthSample, self).setUp()
         self.app = webtest.TestApp(main.app)
-        main.PROJECTID = self.project_id
+        main.PROJECTID = self.config.GCLOUD_PROJECT
 
     def test_anonymous_get(self):
         response = self.app.get('/')
@@ -39,7 +38,7 @@ class TestAuthSample(tests.AppEngineTestbedCase):
                                  r'.*accounts.*Login.*')
 
     def test_loggedin_get(self):
-        self.loginUser()
+        self.login_user()
 
         response = self.app.get('/')
 
@@ -49,10 +48,10 @@ class TestAuthSample(tests.AppEngineTestbedCase):
 
     @mock.patch.object(main.decorator, 'has_credentials', return_value=True)
     def test_oauthed_get(self, *args):
-        self.loginUser()
+        self.login_user()
 
         mock_http = HttpMock(
-            os.path.join(self.resource_path, 'datasets-list.json'),
+            self.resource_path('datasets-list.json'),
             {'status': '200'})
 
         with mock.patch.object(main.decorator, 'http', return_value=mock_http):

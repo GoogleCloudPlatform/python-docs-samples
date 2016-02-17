@@ -16,12 +16,12 @@
 
 import unittest
 
-from tests import AppEngineTestbedCase
+from testing import AppEngineTest
 
 from . import keyproperty_models as models
 
 
-class ContactTestCase(AppEngineTestbedCase):
+class ContactTestCase(AppEngineTest):
     """A test case for the Contact model class with KeyProperty."""
     NAME = 'Takashi Matsuo'
 

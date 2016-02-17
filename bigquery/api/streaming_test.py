@@ -13,20 +13,19 @@
 #
 """Tests for export_table_to_gcs."""
 import json
-import os
 
-from tests import capture_stdout, CloudBaseTest
+from testing import capture_stdout, CloudTest
 
 from . import streaming
 
 
-class TestStreaming(CloudBaseTest):
+class TestStreaming(CloudTest):
     dataset_id = 'test_dataset'
     table_id = 'test_table'
 
     def test_stream_row_to_bigquery(self):
         with open(
-                os.path.join(self.resource_path, 'streamrows.json'),
+                self.resource_path('streamrows.json'),
                 'r') as rows_file:
 
             rows = json.load(rows_file)
@@ -35,7 +34,7 @@ class TestStreaming(CloudBaseTest):
 
         with capture_stdout() as stdout:
             streaming.main(
-                self.project_id,
+                self.config.GCLOUD_PROJECT,
                 self.dataset_id,
                 self.table_id,
                 num_retries=5)

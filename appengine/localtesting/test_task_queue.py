@@ -12,8 +12,9 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import operator
 # [START taskqueue]
+import operator
+import os
 import unittest
 
 from google.appengine.api import taskqueue
@@ -28,7 +29,8 @@ class TaskQueueTestCase(unittest.TestCase):
 
         # root_path must be set the the location of queue.yaml.
         # Otherwise, only the 'default' queue will be available.
-        self.testbed.init_taskqueue_stub(root_path='tests/resources')
+        self.testbed.init_taskqueue_stub(
+            root_path=os.path.join(os.path.dirname(__file__), 'resources'))
         self.taskqueue_stub = self.testbed.get_stub(
             testbed.TASKQUEUE_SERVICE_NAME)
 

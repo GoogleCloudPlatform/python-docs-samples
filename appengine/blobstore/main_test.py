@@ -12,20 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import tests
+import testing
 import webtest
 
 from . import main
 
 
-class TestBlobstoreSample(tests.AppEngineTestbedCase):
+class TestBlobstoreSample(testing.AppEngineTest):
 
     def setUp(self):
         super(TestBlobstoreSample, self).setUp()
         self.app = webtest.TestApp(main.app)
 
     def test_form(self):
-        self.loginUser()
+        self.login_user()
         response = self.app.get('/')
 
         self.assertTrue('/_ah/upload' in response)

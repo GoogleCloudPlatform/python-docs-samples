@@ -8,6 +8,7 @@ include =
     monitoring/*
     storage/*
     cloud_logging/*
+    managed_vms/*
 [report]
 exclude_lines =
     pragma: NO COVER

@@ -10,19 +10,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-import os
 
-from tests import CloudBaseTest
+from testing import CloudTest
 
 from .compose_objects import main
 
 
-class TestComposeObjects(CloudBaseTest):
+class TestComposeObjects(CloudTest):
     def test_main(self):
         main(
-            self.bucket_name,
+            self.config.CLOUD_STORAGE_BUCKET,
             'dest.txt',
-            [os.path.join(self.resource_path, 'file1.txt'),
-             os.path.join(self.resource_path, 'file2.txt')]
+            [self.resource_path('file1.txt'),
+             self.resource_path('file2.txt')]
         )

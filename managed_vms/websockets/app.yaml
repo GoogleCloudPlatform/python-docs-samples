@@ -4,8 +4,10 @@ vm: true
 # Use a special gunicorn worker class to support websockets.
 entrypoint: gunicorn -b :$PORT -b :65080 -k flask_sockets.worker main:app
 
+# We must use python 2 because flask-sockets depends on gevent which
+# doesn't currently have Python 3 support.
 runtime_config:
-  python_version: 3
+  python_version: 2
 
 # [START network]
 network:

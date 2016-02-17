@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from tests import AppEngineTestbedCase, Http2Mock
+from testing import AppEngineTest, Http2Mock
 import webtest
 
 from . import main
 
 
-class TestMailgunHandlers(AppEngineTestbedCase):
+class TestMailgunHandlers(AppEngineTest):
     def setUp(self):
         super(TestMailgunHandlers, self).setUp()
 

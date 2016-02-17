@@ -5,8 +5,14 @@ coverage-gae.json
 .tox
 coverage.xml
 nosetests.xml
+nosetests-*.xml
 python-docs-samples.json
+service-account.json
 __pycache__
 *db\.sqlite3
 managed_vms/django_tutorial/static/*
 **/migrations/*
+lib
+testing/resources/test-env.sh
+testing/resources/service-account.json
+secrets.tar

@@ -14,12 +14,12 @@
 
 """Test classes for code snippet for modeling article."""
 
-from tests import AppEngineTestbedCase
+from testing import AppEngineTest
 
 from . import structured_property_models as models
 
 
-class ContactTestCase(AppEngineTestbedCase):
+class ContactTestCase(AppEngineTest):
     """A test case for the Contact model with StructuredProperty."""
     def setUp(self):
         """Creates one Contact entity with 2 phone numbers."""
