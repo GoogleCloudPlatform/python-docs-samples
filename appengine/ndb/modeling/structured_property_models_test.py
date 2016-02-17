@@ -14,9 +14,8 @@
 
 """Test classes for code snippet for modeling article."""
 
+import structured_property_models as models
 from testing import AppEngineTest
-
-from . import structured_property_models as models
 
 
 class ContactTestCase(AppEngineTest):

@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import datastore
 import testing
 import webtest
-
-from . import datastore
 
 
 class TestNamespaceDatastoreSample(testing.AppEngineTest):

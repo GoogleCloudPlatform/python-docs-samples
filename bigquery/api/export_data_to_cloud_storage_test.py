@@ -10,16 +10,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
-"""Tests for export_table_to_gcs."""
-from nose.plugins.attrib import attr
+from export_data_to_cloud_storage import main
+import pytest
 from testing import CloudTest
 
-from .export_data_to_cloud_storage import main
 
-
-@attr('slow')
+@pytest.mark.slow
 class TestExportTableToGCS(CloudTest):
     dataset_id = 'test_dataset'
     table_id = 'test_table'

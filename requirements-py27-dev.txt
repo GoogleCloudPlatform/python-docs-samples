@@ -14,7 +14,7 @@ PyYAML==3.11
 waitress==0.8.10
 WebOb==1.6.0a0
 WebTest==2.0.20
-Werkzeug==0.11.3
+Werkzeug==0.11.4
 nose-timer==0.6.0
 Flask-SQLAlchemy==2.1
 PyMySQL==0.7.1
@@ -26,3 +26,5 @@ twilio==6.3.dev0
 sendgrid==1.6.22
 Flask-Sockets==0.2.0
 mysql-python==1.2.5
+pytest==2.8.7
+pytest-cov==2.2.1

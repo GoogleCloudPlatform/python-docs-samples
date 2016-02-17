@@ -16,10 +16,9 @@ import os
 import re
 from unittest.case import SkipTest
 
+import main
 import testing
 import webtest
-
-from . import main
 
 
 class TestMySQLSample(testing.AppEngineTest):

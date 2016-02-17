@@ -14,9 +14,8 @@
 
 """Test classes for code snippet for modeling article."""
 
+import naive_models as models
 from testing import AppEngineTest
-
-from . import naive_models as models
 
 
 class ContactTestCase(AppEngineTest):

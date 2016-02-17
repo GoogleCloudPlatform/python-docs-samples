@@ -13,9 +13,8 @@
 
 import re
 
+import auth
 import testing
-
-from . import auth
 
 
 class TestTimeseriesList(testing.CloudTest):

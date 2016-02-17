@@ -11,13 +11,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from nose.plugins.attrib import attr
+
+from load_data_from_csv import main
+import pytest
 from testing import CloudTest
 
-from .load_data_from_csv import main
 
-
-@attr('slow')
+@pytest.mark.slow
 class TestLoadDataFromCSV(CloudTest):
     dataset_id = 'test_dataset'
     table_id = 'test_import_table'

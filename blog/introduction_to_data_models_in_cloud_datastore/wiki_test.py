@@ -10,14 +10,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-from nose.plugins.attrib import attr
+
+
+import pytest
 from testing import CloudTest
+from wiki import main
 
-from .wiki import main
 
-
-@attr('slow')
+@pytest.mark.slow
 class WikiTestCase(CloudTest):
     """Simple test case that ensures the wiki code doesn't throw any errors."""
 

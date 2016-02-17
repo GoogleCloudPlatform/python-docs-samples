@@ -12,9 +12,8 @@
 # limitations under the License.
 
 from gcloud import datastore
+import tasks
 from testing import CloudTest, mark_flaky
-
-from . import tasks
 
 
 @mark_flaky

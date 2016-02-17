@@ -10,7 +10,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
+
 """A simple web server which responds to HTTP GET requests by consuming CPU.
 This binary runs in a GCE VM. It serves HTTP requests on port 80. Every request
 with path '/service' consumes 1 core-second of CPU time, with the timeout of

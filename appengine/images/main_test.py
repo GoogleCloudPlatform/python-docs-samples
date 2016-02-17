@@ -12,20 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import main
 import mock
 from testing import AppEngineTest
 import webtest
-
-from . import main
 
 
 class TestHandlers(AppEngineTest):
     def setUp(self):
         super(TestHandlers, self).setUp()
-
-        # Workaround for other tests clobbering our Greeting model.
-        reload(main)
-
         self.app = webtest.TestApp(main.app)
 
     def test_get(self):
@@ -40,7 +35,7 @@ class TestHandlers(AppEngineTest):
         # Let's check if the response is correct.
         self.assertEqual(response.status_int, 200)
 
-    @mock.patch('appengine.images.main.images')
+    @mock.patch('main.images')
     def test_post(self, mock_images):
         mock_images.resize.return_value = 'asdf'
 
@@ -68,7 +63,7 @@ class TestHandlers(AppEngineTest):
         # Bogus image id, should get error
         self.app.get('/img?img_id=123', status=500)
 
-    @mock.patch('appengine.images.main.images')
+    @mock.patch('main.images')
     def test_post_and_get(self, mock_images):
         mock_images.resize.return_value = 'asdf'
 

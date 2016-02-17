@@ -13,13 +13,12 @@
 
 import re
 
-from nose.plugins.attrib import attr
+from create_instance import main
+import pytest
 import testing
 
-from .create_instance import main
 
-
-@attr('slow')
+@pytest.mark.slow
 class TestComputeGettingStarted(testing.CloudTest):
 
     def test_main(self):

@@ -14,10 +14,9 @@
 
 import os
 
+import main
 from nose.plugins.skip import SkipTest
 from testing import CloudTest
-
-from . import main
 
 
 class ExtendingRuntimeTest(CloudTest):

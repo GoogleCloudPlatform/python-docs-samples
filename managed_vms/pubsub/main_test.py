@@ -16,9 +16,8 @@ import base64
 import json
 import os
 
+import main
 from testing import CloudTest
-
-from . import main
 
 
 class PubSubTest(CloudTest):

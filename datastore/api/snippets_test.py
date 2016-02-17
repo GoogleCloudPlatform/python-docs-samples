@@ -10,14 +10,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
+
 from functools import wraps
 import time
 
 from gcloud import datastore
+import snippets
 from testing import CloudTest, mark_flaky
-
-from . import snippets
 
 
 def eventually_consistent(f):

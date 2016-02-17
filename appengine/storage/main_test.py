@@ -13,10 +13,9 @@
 # limitations under the License.
 import re
 
+import main
 import testing
 import webtest
-
-from . import main
 
 
 class TestStorageSample(testing.AppEngineTest):

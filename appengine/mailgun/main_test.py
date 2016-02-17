@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import main
 from testing import AppEngineTest, Http2Mock
 import webtest
-
-from . import main
 
 
 class TestMailgunHandlers(AppEngineTest):

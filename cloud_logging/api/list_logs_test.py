@@ -14,9 +14,8 @@
 import re
 import unittest
 
+import list_logs
 import testing
-
-from . import list_logs
 
 
 class TestListLogs(testing.CloudTest):

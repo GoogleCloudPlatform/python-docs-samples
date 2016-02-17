@@ -16,9 +16,8 @@
 
 import unittest
 
+import keyproperty_models as models
 from testing import AppEngineTest
-
-from . import keyproperty_models as models
 
 
 class ContactTestCase(AppEngineTest):
