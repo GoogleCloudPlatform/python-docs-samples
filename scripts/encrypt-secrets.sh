@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-echo "Enter password for encryption: "
-read -s -p password
+read -s -p "Enter password for encryption: " password
+echo
 
 tar cvf secrets.tar testing/resources/{service-account.json,test-env.sh}
 openssl aes-256-cbc -k "$password" -in secrets.tar -out secrets.tar.enc
