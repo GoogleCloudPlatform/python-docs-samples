@@ -47,6 +47,20 @@ class Config(object):
         return os.environ[name]
 
 
+def get_resource_path(resource, local_path):
+    global_resource_path = os.path.join(GLOBAL_RESOURCE_PATH, *resource)
+    local_resource_path = os.path.join(local_path, 'resources', *resource)
+
+    if os.path.exists(local_resource_path):
+        return local_resource_path
+
+    if os.path.exists(global_resource_path):
+        return global_resource_path
+
+    raise EnvironmentError('Resource {} not found.'.format(
+        os.path.join(*resource)))
+
+
 class CloudTest(unittest.TestCase):
     """Common base class for cloud tests."""
     def __init__(self, *args, **kwargs):
@@ -58,16 +72,5 @@ class CloudTest(unittest.TestCase):
         silence_requests()
 
     def resource_path(self, *resource):
-        global_resource_path = os.path.join(GLOBAL_RESOURCE_PATH, *resource)
-        local_resource_path = os.path.join(
-            os.path.dirname(inspect.getfile(self.__class__)),
-            'resources', *resource)
-
-        if os.path.exists(local_resource_path):
-            return local_resource_path
-
-        if os.path.exists(global_resource_path):
-            return global_resource_path
-
-        raise EnvironmentError('Resource {} not found.'.format(
-            os.path.join(*resource)))
+        local_path = os.path.dirname(inspect.getfile(self.__class__))
+        return get_resource_path(resource, local_path)

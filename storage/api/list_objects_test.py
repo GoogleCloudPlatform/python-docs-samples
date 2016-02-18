@@ -12,9 +12,7 @@
 # limitations under the License.
 
 from list_objects import main
-from testing import CloudTest
 
 
-class TestListObjects(CloudTest):
-    def test_main(self):
-        main(self.config.CLOUD_STORAGE_BUCKET)
+def test_main(cloud_config):
+    main(cloud_config.CLOUD_STORAGE_BUCKET)
