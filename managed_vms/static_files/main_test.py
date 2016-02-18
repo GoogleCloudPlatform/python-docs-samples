@@ -13,17 +13,14 @@
 # limitations under the License.
 
 import main
-from testing import CloudTest
 
 
-class StaticFilesTest(CloudTest):
+def test_index():
+    main.app.testing = True
+    client = main.app.test_client()
 
-    def test_index(self):
-        main.app.testing = True
-        client = main.app.test_client()
+    r = client.get('/')
+    assert r.status_code == 200
 
-        r = client.get('/')
-        self.assertEqual(r.status_code, 200)
-
-        r = client.get('/static/main.css')
-        self.assertEqual(r.status_code, 200)
+    r = client.get('/static/main.css')
+    assert r.status_code == 200

@@ -15,21 +15,16 @@
 import os
 
 import main
-from nose.plugins.skip import SkipTest
-from testing import CloudTest
+import pytest
 
 
-class ExtendingRuntimeTest(CloudTest):
+@pytest.mark.skipif(
+    not os.path.exists('/usr/games/fortune'),
+    reason='Fortune executable is not installed.')
+def test_index():
+    main.app.testing = True
+    client = main.app.test_client()
 
-    def test_index(self):
-        if not os.path.exists('/usr/games/fortune'):
-            raise SkipTest(
-                'Extending runtime test will only execute if fortune is'
-                'installed')
-
-        main.app.testing = True
-        client = main.app.test_client()
-
-        r = client.get('/')
-        self.assertEqual(r.status_code, 200)
-        self.assertTrue(len(r.data))
+    r = client.get('/')
+    assert r.status_code == 200
+    assert len(r.data)
