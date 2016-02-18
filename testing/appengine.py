@@ -10,13 +10,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
 """
 Common testing tools for Google App Engine tests.
 """
 
 import os
+import sys
 import tempfile
 
 from nose.plugins.skip import SkipTest
@@ -31,6 +31,32 @@ except ImportError:
 
 
 from .cloud import CloudTest
+
+
+def setup_sdk_imports():
+    """Sets up appengine SDK third-party imports."""
+    if 'google' in sys.modules:
+        # Some packages, such as protobuf, clobber the google
+        # namespace package. This prevents that.
+        reload(sys.modules['google'])
+
+    # This sets up google-provided libraries.
+    import dev_appserver
+    dev_appserver.fix_sys_path()
+
+    # Fixes timezone and other os-level items.
+    import google.appengine.tools.os_compat
+    (google.appengine.tools.os_compat)
+
+
+def import_appengine_config():
+    """Imports an application appengine_config.py. This is used to
+    mimic the behavior of the runtime."""
+    try:
+        import appengine_config
+        (appengine_config)
+    except ImportError:
+        pass
 
 
 class AppEngineTest(CloudTest):

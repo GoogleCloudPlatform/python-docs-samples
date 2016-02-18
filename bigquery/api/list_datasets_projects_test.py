@@ -10,12 +10,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
+
 import re
 
+from list_datasets_projects import main
 import testing
-
-from .list_datasets_projects import main
 
 
 class TestListDatasetsProjects(testing.CloudTest):

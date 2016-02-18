@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import main
 from testing import CloudTest
-
-from . import main
 
 
 class HelloWorldTest(CloudTest):

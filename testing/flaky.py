@@ -10,7 +10,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
 """
 Tools for dealing with flaky tests.
@@ -20,7 +19,7 @@ from __future__ import absolute_import
 
 from flaky import flaky
 import gcloud
-from nose.plugins.attrib import attr
+import pytest
 
 
 def flaky_filter(e, *args):
@@ -34,4 +33,4 @@ def flaky_filter(e, *args):
 def mark_flaky(f):
     """Makes a test retry on remote service errors."""
     return flaky(max_runs=3, rerun_filter=flaky_filter)(
-        attr('flaky')(f))
+        pytest.mark.flaky(f))

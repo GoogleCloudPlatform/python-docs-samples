@@ -1,4 +1,4 @@
 Flask==0.10.1
-gcloud==0.9.0
+gcloud==0.10.0
 gunicorn==19.4.5
-oauth2client==1.5.2
+oauth2client==2.0.0

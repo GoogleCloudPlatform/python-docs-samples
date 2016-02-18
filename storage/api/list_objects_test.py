@@ -10,10 +10,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-from testing import CloudTest
 
-from .list_objects import main
+from list_objects import main
+from testing import CloudTest
 
 
 class TestListObjects(CloudTest):

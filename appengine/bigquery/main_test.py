@@ -15,11 +15,10 @@
 import re
 
 from apiclient.http import HttpMock
+import main
 import mock
 import testing
 import webtest
-
-from . import main
 
 
 class TestAuthSample(testing.AppEngineTest):

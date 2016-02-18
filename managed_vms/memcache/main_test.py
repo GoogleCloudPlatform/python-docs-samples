@@ -14,9 +14,8 @@
 
 from unittest.case import SkipTest
 
+import main
 from testing import CloudTest
-
-from . import main
 
 
 class MemcacheTest(CloudTest):

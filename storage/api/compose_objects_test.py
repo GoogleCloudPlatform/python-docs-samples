@@ -11,9 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from compose_objects import main
 from testing import CloudTest
-
-from .compose_objects import main
 
 
 class TestComposeObjects(CloudTest):

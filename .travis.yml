@@ -19,9 +19,10 @@ before_install:
 - openssl aes-256-cbc -k "$secrets_password" -in secrets.tar.enc -out secrets.tar -d
 - tar xvf secrets.tar
 install:
-- pip install tox
+- pip install tox coverage
 - pip install -e git+https://github.com/GoogleCloudPlatform/python-repo-tools#egg=python-repo-tools
 - gcp-python-repo-tools download-appengine-sdk `dirname "${GAE_PYTHONPATH}"`
 script:
 - source ${TRAVIS_BUILD_DIR}/testing/resources/test-env.sh
 - tox
+- coverage report

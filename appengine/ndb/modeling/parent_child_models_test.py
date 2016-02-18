@@ -15,9 +15,8 @@
 """Test classes for code snippet for modeling article."""
 
 from google.appengine.ext import ndb
+import parent_child_models as models
 from testing import AppEngineTest
-
-from . import parent_child_models as models
 
 
 class ContactTestCase(AppEngineTest):

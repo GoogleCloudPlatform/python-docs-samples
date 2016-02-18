@@ -13,13 +13,12 @@
 
 import re
 
-from nose.plugins.attrib import attr
+from load_data_by_post import load_data
+import pytest
 import testing
 
-from .load_data_by_post import load_data
 
-
-@attr('slow')
+@pytest.mark.slow
 class TestLoadDataByPost(testing.CloudTest):
     dataset_id = 'ephemeral_test_dataset'
     table_id = 'load_data_by_post'
