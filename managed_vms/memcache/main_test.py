@@ -12,27 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from unittest.case import SkipTest
-
 import main
-from testing import CloudTest
+import pytest
 
 
-class MemcacheTest(CloudTest):
+def test_index():
+    main.memcache_client.set('counter', 0)
 
-    def test_index(self):
-        main.memcache_client.set('counter', 0)
+    if main.memcache_client.get('counter') is None:
+        pytest.skip('Memcache is unavailable.')
 
-        if main.memcache_client.get('counter') is None:
-            raise SkipTest('Memcache is unavailable.')
+    main.app.testing = True
+    client = main.app.test_client()
 
-        main.app.testing = True
-        client = main.app.test_client()
+    r = client.get('/')
+    assert r.status_code == 200
+    assert '1' in r.data.decode('utf-8')
 
-        r = client.get('/')
-        self.assertEqual(r.status_code, 200)
-        self.assertTrue('1' in r.data.decode('utf-8'))
-
-        r = client.get('/')
-        self.assertEqual(r.status_code, 200)
-        self.assertTrue('2' in r.data.decode('utf-8'))
+    r = client.get('/')
+    assert r.status_code == 200
+    assert '2' in r.data.decode('utf-8')

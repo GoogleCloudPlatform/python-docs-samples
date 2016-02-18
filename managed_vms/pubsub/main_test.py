@@ -17,49 +17,52 @@ import json
 import os
 
 import main
-from testing import CloudTest
+import pytest
 
 
-class PubSubTest(CloudTest):
-    def setUp(self):
-        super(PubSubTest, self).setUp()
-        main.app.testing = True
-        self.client = main.app.test_client()
+@pytest.fixture
+def client():
+    main.app.testing = True
+    return main.app.test_client()
 
-    def test_index(self):
-        r = self.client.get('/')
-        self.assertEqual(r.status_code, 200)
 
-    def test_post_index(self):
-        r = self.client.post('/', data={'payload': 'Test payload'})
-        self.assertEqual(r.status_code, 200)
+def test_index(client):
+    r = client.get('/')
+    assert r.status_code == 200
 
-    def test_push_endpoint(self):
-        url = '/pubsub/push?token=' + os.environ['PUBSUB_VERIFICATION_TOKEN']
 
-        r = self.client.post(
-            url,
-            data=json.dumps({
-                "message": {
-                    "data": base64.b64encode(
-                        u'Test message'.encode('utf-8')
-                    ).decode('utf-8')
-                }
-            })
-        )
+def test_post_index(client):
+    r = client.post('/', data={'payload': 'Test payload'})
+    assert r.status_code == 200
 
-        self.assertEqual(r.status_code, 200)
 
-        # Make sure the message is visible on the home page.
-        r = self.client.get('/')
-        self.assertEqual(r.status_code, 200)
-        self.assertTrue('Test message' in r.data.decode('utf-8'))
+def test_push_endpoint(client):
+    url = '/pubsub/push?token=' + os.environ['PUBSUB_VERIFICATION_TOKEN']
 
-    def test_push_endpoint_errors(self):
-        # no token
-        r = self.client.post('/pubsub/push')
-        self.assertEqual(r.status_code, 400)
+    r = client.post(
+        url,
+        data=json.dumps({
+            "message": {
+                "data": base64.b64encode(
+                    u'Test message'.encode('utf-8')
+                ).decode('utf-8')
+            }
+        })
+    )
 
-        # invalid token
-        r = self.client.post('/pubsub/push?token=bad')
-        self.assertEqual(r.status_code, 400)
+    assert r.status_code == 200
+
+    # Make sure the message is visible on the home page.
+    r = client.get('/')
+    assert r.status_code == 200
+    assert 'Test message' in r.data.decode('utf-8')
+
+
+def test_push_endpoint_errors(client):
+    # no token
+    r = client.post('/pubsub/push')
+    assert r.status_code == 400
+
+    # invalid token
+    r = client.post('/pubsub/push?token=bad')
+    assert r.status_code == 400
