@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from unittest.case import SkipTest
+
 from testing import CloudTest
 
 from . import main
@@ -21,6 +23,10 @@ class MemcacheTest(CloudTest):
 
     def test_index(self):
         main.memcache_client.set('counter', 0)
+
+        if main.memcache_client.get('counter') is None:
+            raise SkipTest('Memcache is unavailable.')
+
         main.app.testing = True
         client = main.app.test_client()
 
