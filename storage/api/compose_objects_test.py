@@ -12,14 +12,12 @@
 # limitations under the License.
 
 from compose_objects import main
-from testing import CloudTest
 
 
-class TestComposeObjects(CloudTest):
-    def test_main(self):
-        main(
-            self.config.CLOUD_STORAGE_BUCKET,
-            'dest.txt',
-            [self.resource_path('file1.txt'),
-             self.resource_path('file2.txt')]
-        )
+def test_main(cloud_config, resource):
+    main(
+        cloud_config.CLOUD_STORAGE_BUCKET,
+        'dest.txt',
+        [resource('file1.txt'),
+         resource('file2.txt')]
+    )
