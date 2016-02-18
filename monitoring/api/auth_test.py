@@ -14,18 +14,15 @@
 import re
 
 import auth
-import testing
 
 
-class TestTimeseriesList(testing.CloudTest):
+def test_main(cloud_config, capsys):
+    auth.main(cloud_config.GCLOUD_PROJECT)
+    output, _ = capsys.readouterr()
 
-    def test_main(self):
-        with testing.capture_stdout() as stdout:
-            auth.main(self.config.GCLOUD_PROJECT)
-
-        output = stdout.getvalue().strip()
-
-        self.assertRegexpMatches(
-            output, re.compile(r'Timeseries.list raw response:\s*'
-                               r'{\s*"kind": "[^"]+",'
-                               r'\s*"oldest": *"[0-9]+', re.S))
+    assert re.search(
+        re.compile(
+            r'Timeseries.list raw response:\s*'
+            r'{\s*"kind": "[^"]+",'
+            r'\s*"oldest": *"[0-9]+', re.S),
+        output)
