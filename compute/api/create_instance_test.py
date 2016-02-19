@@ -14,28 +14,23 @@
 import re
 
 from create_instance import main
-import pytest
-import testing
+from testing import mark_flaky
 
 
-@pytest.mark.slow
-class TestComputeGettingStarted(testing.CloudTest):
+@mark_flaky
+def test_main(cloud_config, capsys):
+    main(
+        cloud_config.GCLOUD_PROJECT,
+        cloud_config.CLOUD_STORAGE_BUCKET,
+        'us-central1-f',
+        'test-instance',
+        wait=False)
 
-    def test_main(self):
-        with testing.capture_stdout() as mock_stdout:
-            main(
-                self.config.GCLOUD_PROJECT,
-                self.config.CLOUD_STORAGE_BUCKET,
-                'us-central1-f',
-                'test-instance',
-                wait=False)
+    out, _ = capsys.readouterr()
 
-        stdout = mock_stdout.getvalue()
+    expected_output = re.compile(
+        (r'Instances in project .* and zone us-central1-.* - test-instance'
+         r'.*Deleting instance.*done..$'),
+        re.DOTALL)
 
-        expected_output = re.compile(
-            (r'Instances in project %s and zone us-central1-.* - test-instance'
-             r'.*Deleting instance.*done..$') % self.config.GCLOUD_PROJECT,
-            re.DOTALL)
-        self.assertRegexpMatches(
-            stdout,
-            expected_output)
+    assert re.search(expected_output, out)

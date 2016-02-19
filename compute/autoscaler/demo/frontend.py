@@ -46,7 +46,7 @@ class CpuBurner(object):
         return os.times()[0]
 
     def busy_wait(self):
-        for _ in xrange(100000):
+        for _ in range(100000):
             pass
 
     def burn_cpu(self):

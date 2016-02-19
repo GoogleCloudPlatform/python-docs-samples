@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
-
 import frontend
+import pytest
 
 
 class FakeTime(object):
@@ -40,30 +39,33 @@ class FakeTime(object):
         self.cpu_time += self.cpu_time_step
 
 
-class TestHandlers(unittest.TestCase):
-    def setUp(self):
-        self.fake_time = FakeTime()
-        self.cpu_burner = frontend.CpuBurner()
-        self.cpu_burner.get_user_cputime = self.fake_time.get_user_cputime
-        self.cpu_burner.get_walltime = self.fake_time.get_walltime
-        self.cpu_burner.busy_wait = self.fake_time.busy_wait
-
-    # In this test scenario CPU time advances at 25% of the wall time speed.
-    # Given the request requires 1 CPU core second, we expect it to finish
-    # within the timeout (5 seconds) and return success.
-    def test_ok_response(self):
-        self.fake_time.cpu_time_step = 0.25
-        (code, _) = self.cpu_burner.handle_http_request()
-        self.assertEqual(200, code)
-
-    # In this test scenario CPU time advances at 15% of the wall time speed.
-    # Given the request requires 1 CPU core second, we expect it to timeout
-    # after 5 simulated wall time seconds and return error 500.
-    def test_timeout(self):
-        self.fake_time.cpu_time_step = 0.15
-        (code, _) = self.cpu_burner.handle_http_request()
-        self.assertEqual(500, code)
+@pytest.fixture
+def faketime():
+    return FakeTime()
 
 
-if __name__ == '__main__':
-    unittest.main()
+@pytest.fixture
+def cpuburner(faketime):
+    cpuburner = frontend.CpuBurner()
+    cpuburner.get_user_cputime = faketime.get_user_cputime
+    cpuburner.get_walltime = faketime.get_walltime
+    cpuburner.busy_wait = faketime.busy_wait
+    return cpuburner
+
+
+# In this test scenario CPU time advances at 25% of the wall time speed.
+# Given the request requires 1 CPU core second, we expect it to finish
+# within the timeout (5 seconds) and return success.
+def test_ok_response(faketime, cpuburner):
+    faketime.cpu_time_step = 0.25
+    (code, _) = cpuburner.handle_http_request()
+    assert code == 200
+
+
+# In this test scenario CPU time advances at 15% of the wall time speed.
+# Given the request requires 1 CPU core second, we expect it to timeout
+# after 5 simulated wall time seconds and return error 500.
+def test_timeout(faketime, cpuburner):
+    faketime.cpu_time_step = 0.15
+    (code, _) = cpuburner.handle_http_request()
+    assert code == 500
