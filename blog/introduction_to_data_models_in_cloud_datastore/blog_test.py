@@ -12,13 +12,9 @@
 # limitations under the License.
 
 from blog import main
-import pytest
-from testing import CloudTest
+from testing import mark_flaky
 
 
-@pytest.mark.slow
-class BlogTestCase(CloudTest):
-    """Simple test case that ensures the blog code doesn't throw any errors."""
-
-    def test_main(self):
-        main(self.config.GCLOUD_PROJECT)
+@mark_flaky
+def test_main(cloud_config):
+    main(cloud_config.GCLOUD_PROJECT)
