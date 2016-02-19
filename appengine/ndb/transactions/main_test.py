@@ -13,49 +13,37 @@
 # limitations under the License.
 
 import main
-from testing import AppEngineTest
+import pytest
 
 
-class TestHandlers(AppEngineTest):
-    def setUp(self):
-        super(TestHandlers, self).setUp()
-        main.app.config['TESTING'] = True
-        self.app = main.app.test_client()
+@pytest.fixture
+def app(testbed):
+    main.app.config['TESTING'] = True
+    return main.app.test_client()
 
-    def test_hello(self):
-        rv = self.app.get('/')
-        self.assertIn('Permenant note page', rv.data)
-        self.assertEqual(rv.status, '200 OK')
 
-    def test_post(self):
-        rv = self.app.post('/add', data=dict(
-            note_title='Title',
-            note_text='Text'
-        ), follow_redirects=True)
-        self.assertEqual(rv.status, '200 OK')
+def test_index(app):
+    rv = app.get('/')
+    assert 'Permanent note page' in rv.data
+    assert rv.status == '200 OK'
 
-    def test_post2(self):
-        rv = self.app.post('/add', data=dict(
-            note_title='Title2',
-            note_text='Text'
-        ), follow_redirects=True)
-        self.assertEqual(rv.status, '200 OK')
 
-    def test_post3(self):
-        rv = self.app.post('/add', data=dict(
-            note_title='Title3',
-            note_text='Text'
-        ), follow_redirects=True)
-        self.assertEqual(rv.status, '200 OK')
+def test_post(app):
+    rv = app.post('/add', data=dict(
+        note_title='Title',
+        note_text='Text'
+    ), follow_redirects=True)
+    assert rv.status == '200 OK'
 
-    def test_there(self):
-        rv = self.app.post('/add', data=dict(
-            note_title='Title',
-            note_text='New'
-        ), follow_redirects=True)
-        rv = self.app.post('/add', data=dict(
-            note_title='Title',
-            note_text='There'
-        ), follow_redirects=True)
-        self.assertIn('Already there', rv.data)
-        self.assertEqual(rv.status, '200 OK')
+
+def test_there(app):
+    rv = app.post('/add', data=dict(
+        note_title='Title',
+        note_text='New'
+    ), follow_redirects=True)
+    rv = app.post('/add', data=dict(
+        note_title='Title',
+        note_text='There'
+    ), follow_redirects=True)
+    assert 'Already there' in rv.data
+    assert rv.status == '200 OK'

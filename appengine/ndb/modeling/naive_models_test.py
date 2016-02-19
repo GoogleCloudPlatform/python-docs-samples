@@ -15,20 +15,11 @@
 """Test classes for code snippet for modeling article."""
 
 import naive_models as models
-from testing import AppEngineTest
 
 
-class ContactTestCase(AppEngineTest):
-    """A test case for the naive Contact model classe."""
-    NAME = 'Takashi Matsuo'
-
-    def setUp(self):
-        super(ContactTestCase, self).setUp()
-        contact = models.Contact(name=self.NAME)
-        contact.put()
-        self.contact_key = contact.key
-
-    def test_basic(self):
-        """Test for getting a NaiveContact entity."""
-        contact = self.contact_key.get()
-        self.assertEqual(contact.name, self.NAME)
+def test_models(testbed):
+    name = 'Takashi Matsuo'
+    contact = models.Contact(name=name)
+    contact.put()
+    contact = contact.key.get()
+    assert contact.name == name

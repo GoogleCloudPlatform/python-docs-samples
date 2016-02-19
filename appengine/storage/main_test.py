@@ -14,21 +14,16 @@
 import re
 
 import main
-import testing
 import webtest
 
 
-class TestStorageSample(testing.AppEngineTest):
+def test_get(cloud_config):
+    main.BUCKET_NAME = cloud_config.GCLOUD_PROJECT
+    app = webtest.TestApp(main.app)
 
-    def setUp(self):
-        super(TestStorageSample, self).setUp()
-        self.app = webtest.TestApp(main.app)
-        main.BUCKET_NAME = self.config.GCLOUD_PROJECT
+    response = app.get('/')
 
-    def test_get(self):
-        response = self.app.get('/')
-
-        self.assertEqual(response.status_int, 200)
-        self.assertRegexpMatches(
-            response.body,
-            re.compile(r'.*.*items.*etag.*', re.DOTALL))
+    assert response.status_int == 200
+    assert re.search(
+        re.compile(r'.*.*items.*etag.*', re.DOTALL),
+        response.body)

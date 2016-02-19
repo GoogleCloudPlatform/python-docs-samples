@@ -13,33 +13,28 @@
 # limitations under the License.
 
 import taskqueue
-import testing
 import webtest
 
 
-class TestNamespaceTaskQueueSample(testing.AppEngineTest):
+def test_taskqueue(testbed, run_tasks):
+    app = webtest.TestApp(taskqueue.app)
 
-    def setUp(self):
-        super(TestNamespaceTaskQueueSample, self).setUp()
-        self.app = webtest.TestApp(taskqueue.app)
+    response = app.get('/taskqueue')
+    assert response.status_int == 200
+    assert 'Global: 0' in response.body
 
-    def test_get(self):
-        response = self.app.get('/taskqueue')
-        self.assertEqual(response.status_int, 200)
-        self.assertTrue('Global: 0' in response.body)
+    run_tasks(app)
 
-        self.run_tasks()
+    response = app.get('/taskqueue')
+    assert response.status_int == 200
+    assert 'Global: 1' in response.body
 
-        response = self.app.get('/taskqueue')
-        self.assertEqual(response.status_int, 200)
-        self.assertTrue('Global: 1' in response.body)
+    response = app.get('/taskqueue/a')
+    assert response.status_int == 200
+    assert 'a: 0' in response.body
 
-        response = self.app.get('/taskqueue/a')
-        self.assertEqual(response.status_int, 200)
-        self.assertTrue('a: 0' in response.body)
+    run_tasks(app)
 
-        self.run_tasks()
-
-        response = self.app.get('/taskqueue/a')
-        self.assertEqual(response.status_int, 200)
-        self.assertTrue('a: 1' in response.body)
+    response = app.get('/taskqueue/a')
+    assert response.status_int == 200
+    assert 'a: 1' in response.body

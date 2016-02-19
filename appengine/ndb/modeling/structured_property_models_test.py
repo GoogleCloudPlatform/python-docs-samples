@@ -15,51 +15,44 @@
 """Test classes for code snippet for modeling article."""
 
 import structured_property_models as models
-from testing import AppEngineTest
 
 
-class ContactTestCase(AppEngineTest):
-    """A test case for the Contact model with StructuredProperty."""
-    def setUp(self):
-        """Creates one Contact entity with 2 phone numbers."""
-        super(ContactTestCase, self).setUp()
-        scott = models.Contact(name='scott')
-        scott.phone_numbers.append(
-            models.PhoneNumber(phone_type='home',
-                               number='(650) 555 - 2200'))
-        scott.phone_numbers.append(
-            models.PhoneNumber(phone_type='mobile',
-                               number='(650) 555 - 2201'))
-        scott.put()
-        self.scott_key = scott.key
+def test_phone_numbers(testbed):
+    # Create one Contact entity with 2 phone numbers.
+    scott = models.Contact(name='scott')
+    scott.phone_numbers.append(
+        models.PhoneNumber(phone_type='home',
+                           number='(650) 555 - 2200'))
+    scott.phone_numbers.append(
+        models.PhoneNumber(phone_type='mobile',
+                           number='(650) 555 - 2201'))
+    scott.put()
 
-    def test_phone_numbers(self):
-        """A test for 'phone_numbers' property."""
-        scott = self.scott_key.get()
-        # make sure there are 2 numbers, you can expect the order is preserved.
-        self.assertEqual(len(scott.phone_numbers), 2)
-        self.assertEqual(scott.phone_numbers[0].phone_type, 'home')
-        self.assertEqual(scott.phone_numbers[0].number, '(650) 555 - 2200')
-        self.assertEqual(scott.phone_numbers[1].phone_type, 'mobile')
-        self.assertEqual(scott.phone_numbers[1].number, '(650) 555 - 2201')
+    # make sure there are 2 numbers, you can expect the order is preserved.
+    assert len(scott.phone_numbers) == 2
+    assert scott.phone_numbers[0].phone_type == 'home'
+    assert scott.phone_numbers[0].number == '(650) 555 - 2200'
+    assert scott.phone_numbers[1].phone_type == 'mobile'
+    assert scott.phone_numbers[1].number == '(650) 555 - 2201'
 
-        # filer scott's phone numbers by type
-        home_numbers = [phone_number for phone_number in scott.phone_numbers
-                        if phone_number.phone_type == 'home']
-        self.assertEqual(len(home_numbers), 1)
-        self.assertEqual(home_numbers[0].number, '(650) 555 - 2200')
+    # filer scott's phone numbers by type
+    home_numbers = [phone_number for phone_number in scott.phone_numbers
+                    if phone_number.phone_type == 'home']
+    assert len(home_numbers) == 1
+    assert home_numbers[0].number == '(650) 555 - 2200'
 
-        # delete scott's mobile phone
-        mobile_numbers = [phone_number for phone_number in scott.phone_numbers
-                          if phone_number.phone_type == 'mobile']
-        self.assertEqual(len(mobile_numbers), 1)
-        lost_phone = mobile_numbers[0]
-        scott.phone_numbers.remove(lost_phone)
-        # Updates the entity (resending all its properties over the wire).
-        scott.put()
+    # delete scott's mobile phone
+    mobile_numbers = [phone_number for phone_number in scott.phone_numbers
+                      if phone_number.phone_type == 'mobile']
+    assert len(mobile_numbers) == 1
+    lost_phone = mobile_numbers[0]
+    scott.phone_numbers.remove(lost_phone)
 
-        # make sure there's no mobile phone of scott
-        scott = self.scott_key.get()
-        self.assertEqual(len(scott.phone_numbers), 1)
-        self.assertEqual(scott.phone_numbers[0].phone_type, 'home')
-        self.assertEqual(scott.phone_numbers[0].number, '(650) 555 - 2200')
+    # Updates the entity (resending all its properties over the wire).
+    scott.put()
+
+    # make sure there's no mobile phone of scott
+    scott = scott.key.get()
+    assert len(scott.phone_numbers) == 1
+    assert scott.phone_numbers[0].phone_type == 'home'
+    assert scott.phone_numbers[0].number == '(650) 555 - 2200'

@@ -16,42 +16,28 @@
 
 from google.appengine.ext import ndb
 import relation_model_models as models
-from testing import AppEngineTest
 
 
-class ContactTestCase(AppEngineTest):
-    """A test case for the Contact model with relationship model."""
-    def setUp(self):
-        """Creates 1 contact and 1 company.
+def test_relationship(testbed):
+    # Creates 1 contact and 2 companies
+    addressbook_key = ndb.Key('AddressBook', 'tmatsuo')
+    mary = models.Contact(parent=addressbook_key, name='Mary')
+    mary.put()
+    google = models.Company(name='Google')
+    google.put()
+    candit = models.Company(name='Candit')
+    candit.put()
 
-        Assuming the contact belongs to tmatsuo's addressbook.
-        """
-        super(ContactTestCase, self).setUp()
-        self.myaddressbook_key = ndb.Key('AddressBook', 'tmatsuo')
-        mary = models.Contact(parent=self.myaddressbook_key, name='Mary')
-        mary.put()
-        self.mary_key = mary.key
-        google = models.Company(name='Google')
-        google.put()
-        self.google_key = google.key
-        candit = models.Company(name='Candit')
-        candit.put()
-        self.candit_key = candit.key
+    # first google hires Mary
+    models.ContactCompany(parent=addressbook_key,
+                          contact=mary.key,
+                          company=google.key,
+                          title='engineer').put()
+    # then another company named 'candit' hires Mary too
+    models.ContactCompany(parent=addressbook_key,
+                          contact=mary.key,
+                          company=candit.key,
+                          title='president').put()
 
-    def test_relationship(self):
-        """Two companies hire Mary."""
-        mary = self.mary_key.get()
-        google = self.google_key.get()
-        candit = self.candit_key.get()
-        # first google hires Mary
-        models.ContactCompany(parent=self.myaddressbook_key,
-                              contact=mary.key,
-                              company=google.key,
-                              title='engineer').put()
-        # then another company named 'candit' hires Mary too
-        models.ContactCompany(parent=self.myaddressbook_key,
-                              contact=mary.key,
-                              company=candit.key,
-                              title='president').put()
-        # get the list of companies that Mary belongs to
-        self.assertEqual(len(mary.companies), 2)
+    # get the list of companies that Mary belongs to
+    assert len(mary.companies) == 2
