@@ -14,22 +14,20 @@
 import json
 
 from sync_query import main
-from testing import capture_stdout, CloudTest
 
 
-class TestSyncQuery(CloudTest):
+def test_sync_query(cloud_config, capsys):
+    query = (
+        'SELECT corpus FROM publicdata:samples.shakespeare '
+        'GROUP BY corpus;')
 
-    def test_sync_query(self):
-        query = (
-            'SELECT corpus FROM publicdata:samples.shakespeare '
-            'GROUP BY corpus;')
+    main(
+        project_id=cloud_config.GCLOUD_PROJECT,
+        query=query,
+        timeout=30,
+        num_retries=5)
 
-        with capture_stdout() as stdout:
-            main(
-                project_id=self.config.GCLOUD_PROJECT,
-                query=query,
-                timeout=30,
-                num_retries=5)
+    out, _ = capsys.readouterr()
+    result = out.split('\n')[0]
 
-        result = stdout.getvalue().split('\n')[0]
-        self.assertIsNotNone(json.loads(result))
+    assert json.loads(result) is not None

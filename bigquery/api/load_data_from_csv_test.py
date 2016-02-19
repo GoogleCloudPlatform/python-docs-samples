@@ -13,25 +13,24 @@
 
 
 from load_data_from_csv import main
-import pytest
-from testing import CloudTest
+from testing import mark_flaky
+
+DATASET_ID = 'test_dataset'
+TABLE_ID = 'test_import_table'
 
 
-@pytest.mark.slow
-class TestLoadDataFromCSV(CloudTest):
-    dataset_id = 'test_dataset'
-    table_id = 'test_import_table'
+@mark_flaky
+def test_load_table(cloud_config, resource):
+    cloud_storage_input_uri = 'gs://{}/data.csv'.format(
+        cloud_config.CLOUD_STORAGE_BUCKET)
+    schema_file = resource('schema.json')
 
-    def test_load_table(self):
-        cloud_storage_input_uri = 'gs://{}/data.csv'.format(
-            self.config.CLOUD_STORAGE_BUCKET)
-        schema_file = self.resource_path('schema.json')
-
-        main(
-            self.config.GCLOUD_PROJECT,
-            self.dataset_id,
-            self.table_id,
-            schema_file=schema_file,
-            data_path=cloud_storage_input_uri,
-            poll_interval=1,
-            num_retries=5)
+    main(
+        cloud_config.GCLOUD_PROJECT,
+        DATASET_ID,
+        TABLE_ID,
+        schema_file=schema_file,
+        data_path=cloud_storage_input_uri,
+        poll_interval=1,
+        num_retries=5
+    )

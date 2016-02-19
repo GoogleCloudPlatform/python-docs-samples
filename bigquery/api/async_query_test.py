@@ -14,25 +14,21 @@
 import json
 
 from async_query import main
-import testing
 
 
-class TestAsyncQuery(testing.CloudTest):
+def test_async_query(cloud_config, capsys):
+    query = (
+        'SELECT corpus FROM publicdata:samples.shakespeare '
+        'GROUP BY corpus;')
 
-    def test_async_query(self):
-        query = (
-            'SELECT corpus FROM publicdata:samples.shakespeare '
-            'GROUP BY corpus;')
+    main(
+        project_id=cloud_config.GCLOUD_PROJECT,
+        query_string=query,
+        batch=False,
+        num_retries=5,
+        interval=1)
 
-        with testing.capture_stdout() as stdout:
-            main(
-                project_id=self.config.GCLOUD_PROJECT,
-                query_string=query,
-                batch=False,
-                num_retries=5,
-                interval=1)
+    out, _ = capsys.readouterr()
+    value = out.strip().split('\n').pop()
 
-        value = stdout.getvalue().strip().split('\n').pop()
-
-        self.assertIsNotNone(
-            json.loads(value))
+    assert json.loads(value) is not None

@@ -14,44 +14,45 @@
 import re
 
 from load_data_by_post import load_data
-import pytest
-import testing
+from testing import mark_flaky
+
+DATASET_ID = 'ephemeral_test_dataset'
+TABLE_ID = 'load_data_by_post'
 
 
-@pytest.mark.slow
-class TestLoadDataByPost(testing.CloudTest):
-    dataset_id = 'ephemeral_test_dataset'
-    table_id = 'load_data_by_post'
+@mark_flaky
+def test_load_csv_data(cloud_config, resource, capsys):
+    schema_path = resource('schema.json')
+    data_path = resource('data.csv')
 
-    def test_load_csv_data(self):
-        schema_path = self.resource_path('schema.json')
-        data_path = self.resource_path('data.csv')
-        with testing.capture_stdout() as mock_stdout:
-            load_data(schema_path,
-                      data_path,
-                      self.config.GCLOUD_PROJECT,
-                      self.dataset_id,
-                      self.table_id
-                      )
+    load_data(
+        schema_path,
+        data_path,
+        cloud_config.GCLOUD_PROJECT,
+        DATASET_ID,
+        TABLE_ID
+    )
 
-        stdout = mock_stdout.getvalue()
+    out, _ = capsys.readouterr()
 
-        self.assertRegexpMatches(stdout, re.compile(
-            r'Waiting for job to finish.*Job complete.', re.DOTALL))
+    assert re.search(re.compile(
+        r'Waiting for job to finish.*Job complete.', re.DOTALL), out)
 
-    def test_load_json_data(self):
-        schema_path = self.resource_path('schema.json')
-        data_path = self.resource_path('data.json')
 
-        with testing.capture_stdout() as mock_stdout:
-            load_data(schema_path,
-                      data_path,
-                      self.config.GCLOUD_PROJECT,
-                      self.dataset_id,
-                      self.table_id
-                      )
+@mark_flaky
+def test_load_json_data(cloud_config, resource, capsys):
+    schema_path = resource('schema.json')
+    data_path = resource('data.json')
 
-        stdout = mock_stdout.getvalue()
+    load_data(
+        schema_path,
+        data_path,
+        cloud_config.GCLOUD_PROJECT,
+        DATASET_ID,
+        TABLE_ID
+    )
 
-        self.assertRegexpMatches(stdout, re.compile(
-            r'Waiting for job to finish.*Job complete.', re.DOTALL))
+    out, _ = capsys.readouterr()
+
+    assert re.search(re.compile(
+        r'Waiting for job to finish.*Job complete.', re.DOTALL), out)

@@ -12,47 +12,49 @@
 # limitations under the License.
 
 from export_data_to_cloud_storage import main
-import pytest
-from testing import CloudTest
+from testing import mark_flaky
+
+DATASET_ID = 'test_dataset'
+TABLE_ID = 'test_table'
 
 
-@pytest.mark.slow
-class TestExportTableToGCS(CloudTest):
-    dataset_id = 'test_dataset'
-    table_id = 'test_table'
+@mark_flaky
+def test_export_table_csv(cloud_config):
+    cloud_storage_output_uri = \
+        'gs://{}/output.csv'.format(cloud_config.CLOUD_STORAGE_BUCKET)
+    main(
+        cloud_storage_output_uri,
+        cloud_config.GCLOUD_PROJECT,
+        DATASET_ID,
+        TABLE_ID,
+        num_retries=5,
+        interval=1,
+        export_format="CSV")
 
-    def test_export_table_csv(self):
-        cloud_storage_output_uri = \
-            'gs://{}/output.csv'.format(self.config.CLOUD_STORAGE_BUCKET)
-        main(
-            cloud_storage_output_uri,
-            self.config.GCLOUD_PROJECT,
-            self.dataset_id,
-            self.table_id,
-            num_retries=5,
-            interval=1,
-            export_format="CSV")
 
-    def test_export_table_json(self):
-        cloud_storage_output_uri = \
-            'gs://{}/output.json'.format(self.config.CLOUD_STORAGE_BUCKET)
-        main(
-            cloud_storage_output_uri,
-            self.config.GCLOUD_PROJECT,
-            self.dataset_id,
-            self.table_id,
-            num_retries=5,
-            interval=1,
-            export_format="NEWLINE_DELIMITED_JSON")
+@mark_flaky
+def test_export_table_json(cloud_config):
+    cloud_storage_output_uri = \
+        'gs://{}/output.json'.format(cloud_config.CLOUD_STORAGE_BUCKET)
+    main(
+        cloud_storage_output_uri,
+        cloud_config.GCLOUD_PROJECT,
+        DATASET_ID,
+        TABLE_ID,
+        num_retries=5,
+        interval=1,
+        export_format="NEWLINE_DELIMITED_JSON")
 
-    def test_export_table_avro(self):
-        cloud_storage_output_uri = \
-            'gs://{}/output.avro'.format(self.config.CLOUD_STORAGE_BUCKET)
-        main(
-            cloud_storage_output_uri,
-            self.config.GCLOUD_PROJECT,
-            self.dataset_id,
-            self.table_id,
-            num_retries=5,
-            interval=1,
-            export_format="AVRO")
+
+@mark_flaky
+def test_export_table_avro(cloud_config):
+    cloud_storage_output_uri = \
+        'gs://{}/output.avro'.format(cloud_config.CLOUD_STORAGE_BUCKET)
+    main(
+        cloud_storage_output_uri,
+        cloud_config.GCLOUD_PROJECT,
+        DATASET_ID,
+        TABLE_ID,
+        num_retries=5,
+        interval=1,
+        export_format="AVRO")
