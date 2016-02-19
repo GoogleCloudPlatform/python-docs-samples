@@ -12,23 +12,11 @@
 # limitations under the License.
 
 import re
-import unittest
 
 import list_logs
-import testing
 
 
-class TestListLogs(testing.CloudTest):
-
-    def test_main(self):
-        with testing.capture_stdout() as stdout:
-            list_logs.main(self.config.GCLOUD_PROJECT)
-
-        output = stdout.getvalue().strip()
-
-        self.assertRegexpMatches(
-            output, re.compile(r'.*', re.S))
-
-
-if __name__ == '__main__':
-    unittest.main()
+def test_main(cloud_config, capsys):
+    list_logs.main(cloud_config.GCLOUD_PROJECT)
+    out, _ = capsys.readouterr()
+    assert re.search(re.compile(r'.*', re.S), out)
