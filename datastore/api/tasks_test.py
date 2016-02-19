@@ -12,58 +12,69 @@
 # limitations under the License.
 
 from gcloud import datastore
+import pytest
 import tasks
-from testing import CloudTest, mark_flaky
+from testing import mark_flaky
+
+
+@pytest.yield_fixture
+def client(cloud_config):
+    client = datastore.Client(cloud_config.GCLOUD_PROJECT)
+
+    yield client
+
+    # Delete anything created during the test.
+    with client.batch():
+        client.delete_multi(
+            [x.key for x in client.query(kind='Task').fetch()])
 
 
 @mark_flaky
-class DatastoreTasksTest(CloudTest):
+def test_create_client(cloud_config):
+    tasks.create_client(cloud_config.GCLOUD_PROJECT)
 
-    def setUp(self):
-        super(DatastoreTasksTest, self).setUp()
-        self.client = datastore.Client(self.config.GCLOUD_PROJECT)
 
-    def tearDown(self):
-        super(DatastoreTasksTest, self).tearDown()
-        with self.client.batch():
-            self.client.delete_multi(
-                [x.key for x in self.client.query(kind='Task').fetch()])
+@mark_flaky
+def test_add_task(client):
+    task_key = tasks.add_task(client, 'Test task')
+    task = client.get(task_key)
+    assert task
+    assert task['description'] == 'Test task'
 
-    def test_create_client(self):
-        tasks.create_client(self.config.GCLOUD_PROJECT)
 
-    def test_add_task(self):
-        task_key = tasks.add_task(self.client, 'Test task')
-        task = self.client.get(task_key)
-        self.assertTrue(task)
-        self.assertEqual(task['description'], 'Test task')
+@mark_flaky
+def test_mark_done(client):
+    task_key = tasks.add_task(client, 'Test task')
+    tasks.mark_done(client, task_key.id)
+    task = client.get(task_key)
+    assert task
+    assert task['done']
 
-    def test_mark_done(self):
-        task_key = tasks.add_task(self.client, 'Test task')
-        tasks.mark_done(self.client, task_key.id)
-        task = self.client.get(task_key)
-        self.assertTrue(task)
-        self.assertTrue(task['done'])
 
-    def test_list_tasks(self):
-        task1_key = tasks.add_task(self.client, 'Test task 1')
-        task2_key = tasks.add_task(self.client, 'Test task 2')
-        task_list = tasks.list_tasks(self.client)
-        self.assertEqual([x.key for x in task_list], [task1_key, task2_key])
+@mark_flaky
+def test_list_tasks(client):
+    task1_key = tasks.add_task(client, 'Test task 1')
+    task2_key = tasks.add_task(client, 'Test task 2')
+    task_list = tasks.list_tasks(client)
+    assert [x.key for x in task_list] == [task1_key, task2_key]
 
-    def test_delete_task(self):
-        task_key = tasks.add_task(self.client, 'Test task 1')
-        tasks.delete_task(self.client, task_key.id)
-        self.assertIsNone(self.client.get(task_key))
 
-    def test_format_tasks(self):
-        task1_key = tasks.add_task(self.client, 'Test task 1')
-        tasks.add_task(self.client, 'Test task 2')
-        tasks.mark_done(self.client, task1_key.id)
+@mark_flaky
+def test_delete_task(client):
+    task_key = tasks.add_task(client, 'Test task 1')
+    tasks.delete_task(client, task_key.id)
+    assert client.get(task_key) is None
 
-        output = tasks.format_tasks(tasks.list_tasks(self.client))
 
-        self.assertTrue('Test task 1' in output)
-        self.assertTrue('Test task 2' in output)
-        self.assertTrue('done' in output)
-        self.assertTrue('created' in output)
+@mark_flaky
+def test_format_tasks(client):
+    task1_key = tasks.add_task(client, 'Test task 1')
+    tasks.add_task(client, 'Test task 2')
+    tasks.mark_done(client, task1_key.id)
+
+    output = tasks.format_tasks(tasks.list_tasks(client))
+
+    assert 'Test task 1' in output
+    assert 'Test task 2' in output
+    assert 'done' in output
+    assert 'created' in output

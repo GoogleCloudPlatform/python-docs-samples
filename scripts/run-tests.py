@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import argparse
+import os
 import subprocess
 import sys
 
@@ -40,8 +41,9 @@ def main():
         per_directory_args = []
 
         if args.junit:
-            per_directory_args.append(
-                '--junitxml={}/junit.xml'.format(directory))
+            if os.path.isdir(directory):
+                per_directory_args.append(
+                    '--junitxml={}/junit.xml'.format(directory))
 
         # We could use pytest.main, however, we need import isolatation between
         # test runs. Without using subprocess, any test files that are named
