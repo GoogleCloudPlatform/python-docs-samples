@@ -11,15 +11,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import pytest
-from testing import CloudTest
+from testing import mark_flaky
 from wiki import main
 
 
-@pytest.mark.slow
-class WikiTestCase(CloudTest):
-    """Simple test case that ensures the wiki code doesn't throw any errors."""
-
-    def test_main(self):
-        main(self.config.GCLOUD_PROJECT)
+@mark_flaky
+def test_main(cloud_config):
+    main(cloud_config.GCLOUD_PROJECT)
