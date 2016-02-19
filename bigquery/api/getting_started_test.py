@@ -14,14 +14,12 @@
 import re
 
 from getting_started import main
-import testing
 
 
-class TestGettingStarted(testing.CloudTest):
-    def test_main(self):
-        with testing.capture_stdout() as mock_stdout:
-            main(self.config.GCLOUD_PROJECT)
+def test_main(cloud_config, capsys):
+    main(cloud_config.GCLOUD_PROJECT)
 
-        stdout = mock_stdout.getvalue()
-        self.assertRegexpMatches(stdout, re.compile(
-            r'Query Results:.hamlet', re.DOTALL))
+    out, _ = capsys.readouterr()
+
+    assert re.search(re.compile(
+        r'Query Results:.hamlet', re.DOTALL), out)

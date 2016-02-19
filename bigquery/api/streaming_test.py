@@ -14,28 +14,25 @@
 import json
 
 import streaming
-from testing import capture_stdout, CloudTest
 
 
-class TestStreaming(CloudTest):
-    dataset_id = 'test_dataset'
-    table_id = 'test_table'
+DATASET_ID = 'test_dataset'
+TABLE_ID = 'test_table'
 
-    def test_stream_row_to_bigquery(self):
-        with open(
-                self.resource_path('streamrows.json'),
-                'r') as rows_file:
 
-            rows = json.load(rows_file)
+def test_stream_row_to_bigquery(cloud_config, resource, capsys):
+    with open(resource('streamrows.json'), 'r') as rows_file:
+        rows = json.load(rows_file)
 
-        streaming.get_rows = lambda: rows
+    streaming.get_rows = lambda: rows
 
-        with capture_stdout() as stdout:
-            streaming.main(
-                self.config.GCLOUD_PROJECT,
-                self.dataset_id,
-                self.table_id,
-                num_retries=5)
+    streaming.main(
+        cloud_config.GCLOUD_PROJECT,
+        DATASET_ID,
+        TABLE_ID,
+        num_retries=5)
 
-        results = stdout.getvalue().split('\n')
-        self.assertIsNotNone(json.loads(results[0]))
+    out, _ = capsys.readouterr()
+    results = out.split('\n')
+
+    assert json.loads(results[0]) is not None

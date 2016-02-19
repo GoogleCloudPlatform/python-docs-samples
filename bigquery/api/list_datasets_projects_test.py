@@ -14,18 +14,14 @@
 import re
 
 from list_datasets_projects import main
-import testing
 
 
-class TestListDatasetsProjects(testing.CloudTest):
+def test_main(cloud_config, capsys):
+    main(cloud_config.GCLOUD_PROJECT)
 
-    def test_main(self):
-        with testing.capture_stdout() as mock_stdout:
-            main(self.config.GCLOUD_PROJECT)
+    out, _ = capsys.readouterr()
 
-        stdout = mock_stdout.getvalue()
-
-        self.assertRegexpMatches(stdout, re.compile(
-            r'Project list:.*bigquery#projectList.*projects', re.DOTALL))
-        self.assertRegexpMatches(stdout, re.compile(
-            r'Dataset list:.*datasets.*datasetId', re.DOTALL))
+    assert re.search(re.compile(
+        r'Project list:.*bigquery#projectList.*projects', re.DOTALL), out)
+    assert re.search(re.compile(
+        r'Dataset list:.*datasets.*datasetId', re.DOTALL), out)
