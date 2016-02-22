@@ -15,7 +15,7 @@
 import os
 
 from flask import Flask
-import memcache
+from pymemcache.client.base import Client as MemcacheClient
 
 
 app = Flask(__name__)
@@ -23,9 +23,8 @@ app = Flask(__name__)
 
 # [START client]
 memcache_addr = os.environ.get('MEMCACHE_PORT_11211_TCP_ADDR', 'localhost')
-memcache_port = os.environ.get('MEMCACHE_PORT_11211_TCP_PORT', '11211')
-memcache_client = memcache.Client([
-    '{}:{}'.format(memcache_addr, memcache_port)])
+memcache_port = os.environ.get('MEMCACHE_PORT_11211_TCP_PORT', 11211)
+memcache_client = MemcacheClient((memcache_addr, int(memcache_port)))
 # [END client]
 
 
@@ -37,7 +36,7 @@ def index():
     if not memcache_client.get('counter'):
         memcache_client.set('counter', 0)
 
-    value = memcache_client.incr('counter')
+    value = memcache_client.incr('counter', 1)
 
     return 'Value is {}'.format(value)
 # [END example]
