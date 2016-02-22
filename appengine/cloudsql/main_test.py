@@ -14,24 +14,20 @@
 
 import os
 import re
-from unittest.case import SkipTest
 
 import main
-import testing
+import pytest
 import webtest
 
 
-class TestMySQLSample(testing.AppEngineTest):
+@pytest.mark.skipif(
+    not os.path.exists('/var/run/mysqld/mysqld.sock'),
+    reason='MySQL server not available.')
+def test_app():
+    app = webtest.TestApp(main.app)
+    response = app.get('/')
 
-    def setUp(self):
-        if not os.path.exists('/var/run/mysqld/mysqld.sock'):
-            raise SkipTest('No MySQL server found.')
-        super(TestMySQLSample, self).setUp()
-        self.app = webtest.TestApp(main.app)
-
-    def test_get(self):
-        response = self.app.get('/')
-        self.assertEqual(response.status_int, 200)
-        self.assertRegexpMatches(
-            response.body,
-            re.compile(r'.*version.*', re.DOTALL))
+    assert response.status_int == 200
+    assert re.search(
+        re.compile(r'.*version.*', re.DOTALL),
+        response.body)

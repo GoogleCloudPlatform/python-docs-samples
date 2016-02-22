@@ -12,43 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Test classes for code snippet for modeling article."""
-
 import contact_with_group_models as models
 from google.appengine.ext import ndb
-from testing import AppEngineTest
 
 
-class ContactTestCase(AppEngineTest):
-    """A test case for the Contact model with groups."""
-    def setUp(self):
-        """Creates 3 contacts and 1 group.
+def test_models(testbed):
+    # Creates 3 contacts and 1 group.
+    # Assuming the group and contacts are private and belong to tmatsuo's
+    # addressbook.
+    addressbook_key = ndb.Key('AddressBook', 'tmatsuo')
 
-        Assuming the group and contacts are private and belong to tmatsuo's
-        addressbook.
-        """
-        super(ContactTestCase, self).setUp()
-        self.myaddressbook_key = ndb.Key('AddressBook', 'tmatsuo')
+    friends = models.Group(parent=addressbook_key, name='friends')
+    friends.put()
+    friends_key = friends.key
+    mary = models.Contact(parent=addressbook_key, name='Mary')
+    mary.put()
+    mary_key = mary.key
 
-        friends = models.Group(parent=self.myaddressbook_key, name='friends')
-        friends.put()
-        self.friends_key = friends.key
-        mary = models.Contact(parent=self.myaddressbook_key, name='Mary')
+    # Add Mary to your 'friends' group
+    mary = mary_key.get()
+    friends = friends_key.get()
+    if friends.key not in mary.groups:
+        mary.groups.append(friends.key)
         mary.put()
-        self.mary_key = mary.key
 
-    def test_groups(self):
-        # Add Mary to your 'friends' group
-        mary = self.mary_key.get()
-        friends = self.friends_key.get()
-        if friends.key not in mary.groups:
-            mary.groups.append(friends.key)
-            mary.put()
+    # Now Mary is your friend
+    mary = mary_key.get()
+    assert friends.key in mary.groups
 
-        # Now Mary is your friend
-        mary = self.mary_key.get()
-        self.assertTrue(friends.key in mary.groups)
-
-        # How about 'members' property?
-        friend_list = friends.members.fetch()
-        self.assertEqual(len(friend_list), 1)
+    # How about 'members' property?
+    friend_list = friends.members.fetch()
+    assert len(friend_list) == 1

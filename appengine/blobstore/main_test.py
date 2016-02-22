@@ -13,18 +13,13 @@
 # limitations under the License.
 
 import main
-import testing
 import webtest
 
 
-class TestBlobstoreSample(testing.AppEngineTest):
+def test_app(testbed, login):
+    app = webtest.TestApp(main.app)
 
-    def setUp(self):
-        super(TestBlobstoreSample, self).setUp()
-        self.app = webtest.TestApp(main.app)
+    login()
+    response = app.get('/')
 
-    def test_form(self):
-        self.login_user()
-        response = self.app.get('/')
-
-        self.assertTrue('/_ah/upload' in response)
+    assert '/_ah/upload' in response

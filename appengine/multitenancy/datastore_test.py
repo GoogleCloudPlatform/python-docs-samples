@@ -13,27 +13,22 @@
 # limitations under the License.
 
 import datastore
-import testing
 import webtest
 
 
-class TestNamespaceDatastoreSample(testing.AppEngineTest):
+def test_datastore(testbed):
+    app = webtest.TestApp(datastore.app)
 
-    def setUp(self):
-        super(TestNamespaceDatastoreSample, self).setUp()
-        self.app = webtest.TestApp(datastore.app)
+    response = app.get('/datastore')
+    assert response.status_int == 200
+    assert 'Global: 1' in response.body
 
-    def test_get(self):
-        response = self.app.get('/datastore')
-        self.assertEqual(response.status_int, 200)
-        self.assertTrue('Global: 1' in response.body)
+    response = app.get('/datastore/a')
+    assert response.status_int == 200
+    assert 'Global: 2' in response.body
+    assert 'a: 1' in response.body
 
-        response = self.app.get('/datastore/a')
-        self.assertEqual(response.status_int, 200)
-        self.assertTrue('Global: 2' in response.body)
-        self.assertTrue('a: 1' in response.body)
-
-        response = self.app.get('/datastore/b')
-        self.assertEqual(response.status_int, 200)
-        self.assertTrue('Global: 3' in response.body)
-        self.assertTrue('b: 1' in response.body)
+    response = app.get('/datastore/b')
+    assert response.status_int == 200
+    assert 'Global: 3' in response.body
+    assert 'b: 1' in response.body

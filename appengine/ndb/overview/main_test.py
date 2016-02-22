@@ -13,14 +13,10 @@
 # limitations under the License.
 
 import main
-from testing import AppEngineTest
 import webtest
 
 
-class TestHandlers(AppEngineTest):
-    def test_hello(self):
-        app = webtest.TestApp(main.app)
-        response = app.get('/')
-
-        # Let's check if the response is correct.
-        self.assertEqual(response.status_int, 200)
+def test_app(testbed):
+    app = webtest.TestApp(main.app)
+    response = app.get('/')
+    assert response.status_int == 200

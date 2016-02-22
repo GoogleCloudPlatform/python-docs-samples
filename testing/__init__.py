@@ -11,14 +11,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .appengine import AppEngineTest
 from .cloud import CloudTest
 from .flaky import flaky_filter, mark_flaky
 from .utils import capture_stdout, Http2Mock
 
 
 __all__ = [
-    'AppEngineTest',
     'capture_stdout',
     'CloudTest',
     'flaky_filter',

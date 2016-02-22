@@ -13,17 +13,11 @@
 # limitations under the License.
 
 import main
-from testing import AppEngineTest
 import webtest
 
 
-class TestAppIdentityHandler(AppEngineTest):
-    def setUp(self):
-        super(TestAppIdentityHandler, self).setUp()
-
-        self.app = webtest.TestApp(main.app)
-
-    def test_get(self):
-        response = self.app.get('/')
-        self.assertEqual(response.status_int, 200)
-        self.assertTrue('Verified: True' in response.text)
+def test_app(testbed):
+    app = webtest.TestApp(main.app)
+    response = app.get('/')
+    assert response.status_int == 200
+    assert 'Verified: True' in response.text

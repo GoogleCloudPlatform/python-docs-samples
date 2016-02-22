@@ -17,47 +17,48 @@ import re
 from apiclient.http import HttpMock
 import main
 import mock
-import testing
+import pytest
 import webtest
 
 
-class TestAuthSample(testing.AppEngineTest):
+@pytest.fixture
+def app(cloud_config, testbed):
+    main.PROJECTID = cloud_config.GCLOUD_PROJECT
+    return webtest.TestApp(main.app)
 
-    def setUp(self):
-        super(TestAuthSample, self).setUp()
-        self.app = webtest.TestApp(main.app)
-        main.PROJECTID = self.config.GCLOUD_PROJECT
 
-    def test_anonymous_get(self):
-        response = self.app.get('/')
+def test_anonymous(app):
+    response = app.get('/')
 
-        # Should redirect to login
-        self.assertEqual(response.status_int, 302)
-        self.assertRegexpMatches(response.headers['Location'],
-                                 r'.*accounts.*Login.*')
+    # Should redirect to login
+    assert response.status_int == 302
+    assert re.search(r'.*accounts.*Login.*', response.headers['Location'])
 
-    def test_loggedin_get(self):
-        self.login_user()
 
-        response = self.app.get('/')
+def test_loggedin(app, login):
+    login()
 
-        # Should redirect to login
-        self.assertEqual(response.status_int, 302)
-        self.assertRegexpMatches(response.headers['Location'], r'.*oauth2.*')
+    response = app.get('/')
 
-    @mock.patch.object(main.decorator, 'has_credentials', return_value=True)
-    def test_oauthed_get(self, *args):
-        self.login_user()
+    # Should redirect to oauth2
+    assert response.status_int == 302
+    assert re.search(r'.*oauth2.*', response.headers['Location'])
 
-        mock_http = HttpMock(
-            self.resource_path('datasets-list.json'),
-            {'status': '200'})
 
-        with mock.patch.object(main.decorator, 'http', return_value=mock_http):
-            response = self.app.get('/')
+def test_oauthed(resource, app, login):
+    login()
 
-        # Should make the api call
-        self.assertEqual(response.status_int, 200)
-        self.assertRegexpMatches(
-            response.body,
-            re.compile(r'.*datasets.*datasetReference.*etag.*', re.DOTALL))
+    mock_http = HttpMock(
+        resource('datasets-list.json'),
+        {'status': '200'})
+
+    with mock.patch.object(main.decorator, 'http', return_value=mock_http):
+        with mock.patch.object(
+                main.decorator, 'has_credentials', return_value=True):
+            response = app.get('/')
+
+    # Should make the api call
+    assert response.status_int == 200
+    assert re.search(
+        re.compile(r'.*datasets.*datasetReference.*etag.*', re.DOTALL),
+        response.body)

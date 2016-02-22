@@ -13,42 +13,43 @@
 # limitations under the License.
 
 import main
-from testing import AppEngineTest, Http2Mock
+import pytest
+from testing import Http2Mock
 import webtest
 
 
-class TestMailgunHandlers(AppEngineTest):
-    def setUp(self):
-        super(TestMailgunHandlers, self).setUp()
+@pytest.fixture
+def app():
+    return webtest.TestApp(main.app)
 
-        self.app = webtest.TestApp(main.app)
 
-    def test_get(self):
-        response = self.app.get('/')
-        self.assertEqual(response.status_int, 200)
+def test_get(app):
+    response = app.get('/')
+    assert response.status_int == 200
 
-    def test_post(self):
-        http = Http2Mock(responses=[{}])
 
-        with http:
-            response = self.app.post('/', {
-                'recipient': 'jonwayne@google.com',
-                'submit': 'Send simple email'})
+def test_post(app):
+    http = Http2Mock(responses=[{}])
 
-            self.assertEqual(response.status_int, 200)
+    with http:
+        response = app.post('/', {
+            'recipient': 'jonwayne@google.com',
+            'submit': 'Send simple email'})
 
-        http = Http2Mock(responses=[{}])
+        assert response.status_int == 200
 
-        with http:
-            response = self.app.post('/', {
-                'recipient': 'jonwayne@google.com',
-                'submit': 'Send complex email'})
+    http = Http2Mock(responses=[{}])
 
-            self.assertEqual(response.status_int, 200)
+    with http:
+        response = app.post('/', {
+            'recipient': 'jonwayne@google.com',
+            'submit': 'Send complex email'})
 
-        http = Http2Mock(responses=[{'status': 500, 'body': 'Test error'}])
+        assert response.status_int == 200
 
-        with http, self.assertRaises(Exception):
-            self.app.post('/', {
-                'recipient': 'jonwayne@google.com',
-                'submit': 'Send simple email'})
+    http = Http2Mock(responses=[{'status': 500, 'body': 'Test error'}])
+
+    with http, pytest.raises(Exception):
+        app.post('/', {
+            'recipient': 'jonwayne@google.com',
+            'submit': 'Send simple email'})

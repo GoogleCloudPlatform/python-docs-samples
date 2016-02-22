@@ -14,37 +14,31 @@
 
 """Test classes for code snippet for modeling article."""
 
-import unittest
-
 import keyproperty_models as models
-from testing import AppEngineTest
+import pytest
 
 
-class ContactTestCase(AppEngineTest):
-    """A test case for the Contact model class with KeyProperty."""
-    NAME = 'Takashi Matsuo'
+def test_models(testbed):
+    name = 'Takashi Matsuo'
+    contact = models.Contact(name=name)
+    contact.put()
+    contact = contact.key.get()
+    assert contact.name == name
 
-    def setUp(self):
-        super(ContactTestCase, self).setUp()
-        contact = models.Contact(name=self.NAME)
-        contact.put()
-        self.contact_key = contact.key
 
-    def test_basic(self):
-        """Test for getting a Contact entity."""
-        contact = self.contact_key.get()
-        self.assertEqual(contact.name, self.NAME)
+# This test fails because of the eventual consistency nature of
+# HRD. We configure HRD consistency for the test datastore stub to
+# match the production behavior.
+@pytest.mark.xfail
+# [START failing_test]
+def test_fails(self):
+    contact = models.Contact(name='Example')
+    contact.put()
 
-    # This test fails because of the eventual consistency nature of
-    # HRD. We configure HRD consistency for the test datastore stub to
-    # match the production behavior.
-    @unittest.skip("Intentionally showing a failing test case.")
-    # [START failing_test]
-    def test_fails(self):
-        contact = self.contact_key.get()
-        models.PhoneNumber(contact=self.contact_key,
-                           phone_type='home',
-                           number='(650) 555 - 2200').put()
-        numbers = contact.phone_numbers.fetch()
-        self.assertEqual(1, len(numbers))
-    # [END failing_test]
+    models.PhoneNumber(
+        contact=self.contact_key,
+        phone_type='home',
+        number='(650) 555 - 2200').put()
+    numbers = contact.phone_numbers.fetch()
+    assert 1 == len(numbers)
+# [END failing_test]

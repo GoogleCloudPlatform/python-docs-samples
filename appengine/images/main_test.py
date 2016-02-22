@@ -14,60 +14,64 @@
 
 import main
 import mock
-from testing import AppEngineTest
+import pytest
 import webtest
 
 
-class TestHandlers(AppEngineTest):
-    def setUp(self):
-        super(TestHandlers, self).setUp()
-        self.app = webtest.TestApp(main.app)
+@pytest.fixture
+def app(testbed):
+    return webtest.TestApp(main.app)
 
-    def test_get(self):
-        main.Greeting(
-            parent=main.guestbook_key('default_guestbook'),
-            author='123',
-            content='abc'
-        ).put()
 
-        response = self.app.get('/')
+def test_get(app):
+    main.Greeting(
+        parent=main.guestbook_key('default_guestbook'),
+        author='123',
+        content='abc'
+    ).put()
 
-        # Let's check if the response is correct.
-        self.assertEqual(response.status_int, 200)
+    response = app.get('/')
 
-    @mock.patch('main.images')
-    def test_post(self, mock_images):
+    # Let's check if the response is correct.
+    assert response.status_int == 200
+
+
+def test_post(app):
+    with mock.patch('main.images') as mock_images:
         mock_images.resize.return_value = 'asdf'
 
-        response = self.app.post('/sign', {'content': 'asdf'})
+        response = app.post('/sign', {'content': 'asdf'})
         mock_images.resize.assert_called_once_with(mock.ANY, 32, 32)
 
         # Correct response is a redirect
-        self.assertEqual(response.status_int, 302)
+        assert response.status_int == 302
 
-    def test_img(self):
-        greeting = main.Greeting(
-            parent=main.guestbook_key('default_guestbook'),
-            id=123
-        )
-        greeting.author = 'asdf'
-        greeting.content = 'asdf'
-        greeting.avatar = b'123'
-        greeting.put()
 
-        response = self.app.get('/img?img_id=%s' % greeting.key.urlsafe())
+def test_img(app):
+    greeting = main.Greeting(
+        parent=main.guestbook_key('default_guestbook'),
+        id=123
+    )
+    greeting.author = 'asdf'
+    greeting.content = 'asdf'
+    greeting.avatar = b'123'
+    greeting.put()
 
-        self.assertEqual(response.status_int, 200)
+    response = app.get('/img?img_id=%s' % greeting.key.urlsafe())
 
-    def test_img_missing(self):
-        # Bogus image id, should get error
-        self.app.get('/img?img_id=123', status=500)
+    assert response.status_int == 200
 
-    @mock.patch('main.images')
-    def test_post_and_get(self, mock_images):
+
+def test_img_missing(app):
+    # Bogus image id, should get error
+    app.get('/img?img_id=123', status=500)
+
+
+def test_post_and_get(app):
+    with mock.patch('main.images') as mock_images:
         mock_images.resize.return_value = 'asdf'
 
-        self.app.post('/sign', {'content': 'asdf'})
-        response = self.app.get('/')
+        app.post('/sign', {'content': 'asdf'})
+        response = app.get('/')
 
-        self.assertEqual(response.status_int, 200)
+        assert response.status_int == 200

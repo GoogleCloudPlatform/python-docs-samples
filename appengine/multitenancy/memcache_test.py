@@ -13,27 +13,22 @@
 # limitations under the License.
 
 import memcache
-import testing
 import webtest
 
 
-class TestNamespaceMemcacheSample(testing.AppEngineTest):
+def test_memcache(testbed):
+    app = webtest.TestApp(memcache.app)
 
-    def setUp(self):
-        super(TestNamespaceMemcacheSample, self).setUp()
-        self.app = webtest.TestApp(memcache.app)
+    response = app.get('/memcache')
+    assert response.status_int == 200
+    assert 'Global: 1' in response.body
 
-    def test_get(self):
-        response = self.app.get('/memcache')
-        self.assertEqual(response.status_int, 200)
-        self.assertTrue('Global: 1' in response.body)
+    response = app.get('/memcache/a')
+    assert response.status_int == 200
+    assert 'Global: 2' in response.body
+    assert 'a: 1' in response.body
 
-        response = self.app.get('/memcache/a')
-        self.assertEqual(response.status_int, 200)
-        self.assertTrue('Global: 2' in response.body)
-        self.assertTrue('a: 1' in response.body)
-
-        response = self.app.get('/memcache/b')
-        self.assertEqual(response.status_int, 200)
-        self.assertTrue('Global: 3' in response.body)
-        self.assertTrue('b: 1' in response.body)
+    response = app.get('/memcache/b')
+    assert response.status_int == 200
+    assert 'Global: 3' in response.body
+    assert 'b: 1' in response.body
