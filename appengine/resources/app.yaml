@@ -1,4 +1,4 @@
-# dummy app.yaml for nosegae
+# dummy app.yaml for tests
 
 api_version: 1
 runtime: python27

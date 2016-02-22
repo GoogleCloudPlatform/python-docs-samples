@@ -64,14 +64,13 @@ flag:
     tox -e py27
 
 To run one particular test suite or provide additional parameters to
-``nose``, invoke tox like this:
+``py.test``, invoke tox like this:
 
-    toxe -e py27 -- storage/tests/test_list_objects.py
+    toxe -e py27 -- storage/api
 
 ### Adding new tests
 
-When adding a new top-level directory, be sure to edit ``.coveragerc``
-to include it in coveralls.
+When adding a new top-level directory, be sure to edit ``.coveragerc`` and ``tox.ini`` to include it in tests and coverage reporting.
 
 To add new tests that require Google App Engine, please place them in
 the ``appengine`` directory if possible. If you place them elsewhere,
