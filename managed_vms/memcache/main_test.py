@@ -17,9 +17,9 @@ import pytest
 
 
 def test_index():
-    main.memcache_client.set('counter', 0)
-
-    if main.memcache_client.get('counter') is None:
+    try:
+        main.memcache_client.set('counter', 0)
+    except Exception:
         pytest.skip('Memcache is unavailable.')
 
     main.app.testing = True
