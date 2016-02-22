@@ -1,4 +1,4 @@
-gcloud==0.10.0
-google-api-python-client==1.4.2
-oauth2client==2.0.0
+gcloud==0.10.1
+google-api-python-client==1.5.0
+oauth2client==2.0.0.post1
 requests[security]==2.9.1
