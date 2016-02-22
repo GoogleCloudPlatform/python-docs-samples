@@ -41,7 +41,7 @@ def main_page():
     page_name = flask.request.args.get('page_name', 'default')
     response = """
         <html><body>
-            <h2>Permenant note page: %s</h2>""" % cgi.escape(page_name)
+            <h2>Permanent note page: %s</h2>""" % cgi.escape(page_name)
 
     parent = parent_key(page_name)
     notes = Note.query(ancestor=parent).fetch(20)
