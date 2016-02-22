@@ -1,11 +1,8 @@
 .coveralls.yml
-coverage-gae.json
 *.pyc
 .coverage
 .tox
 coverage.xml
-nosetests.xml
-nosetests-*.xml
 python-docs-samples.json
 service-account.json
 __pycache__

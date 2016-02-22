@@ -3,12 +3,12 @@ include =
     appengine/*
     bigquery/*
     blog/*
+    cloud_logging/*
     compute/*
     datastore/*
+    managed_vms/*
     monitoring/*
     storage/*
-    cloud_logging/*
-    managed_vms/*
 [report]
 exclude_lines =
     pragma: NO COVER
