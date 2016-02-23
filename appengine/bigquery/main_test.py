@@ -14,7 +14,7 @@
 
 import re
 
-from apiclient.http import HttpMock
+from googleapiclient.http import HttpMock
 import main
 import mock
 import pytest
@@ -23,7 +23,7 @@ import webtest
 
 @pytest.fixture
 def app(cloud_config, testbed):
-    main.PROJECTID = cloud_config.GCLOUD_PROJECT
+    main.PROJECTID = cloud_config.project
     return webtest.TestApp(main.app)
 
 

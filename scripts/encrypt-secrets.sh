@@ -17,7 +17,7 @@
 read -s -p "Enter password for encryption: " password
 echo
 
-tar cvf secrets.tar testing/resources/{service-account.json,test-env.sh}
+tar cvf secrets.tar testing/resources/{service-account.json,client-secrets.json,test-env.sh}
 openssl aes-256-cbc -k "$password" -in secrets.tar -out secrets.tar.enc
 rm secrets.tar
 

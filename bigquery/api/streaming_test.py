@@ -27,7 +27,7 @@ def test_stream_row_to_bigquery(cloud_config, resource, capsys):
     streaming.get_rows = lambda: rows
 
     streaming.main(
-        cloud_config.GCLOUD_PROJECT,
+        cloud_config.project,
         DATASET_ID,
         TABLE_ID,
         num_retries=5)

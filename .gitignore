@@ -12,6 +12,7 @@ managed_vms/django_tutorial/static/*
 lib
 testing/resources/test-env.sh
 testing/resources/service-account.json
+testing/resources/client-secrets.json
 secrets.tar
 .cache
 junit.xml

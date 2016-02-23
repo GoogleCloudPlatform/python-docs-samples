@@ -14,9 +14,9 @@
 import time
 
 from gcloud import datastore
+from gcp.testing.flaky import flaky
 import pytest
 import snippets
-from testing import mark_flaky
 
 
 class CleanupClient(datastore.Client):
@@ -43,19 +43,19 @@ class WaitingClient(CleanupClient):
 
 @pytest.yield_fixture
 def client(cloud_config):
-    client = CleanupClient(cloud_config.GCLOUD_PROJECT)
+    client = CleanupClient(cloud_config.project)
     yield client
     client.cleanup()
 
 
 @pytest.yield_fixture
 def waiting_client(cloud_config):
-    client = WaitingClient(cloud_config.GCLOUD_PROJECT)
+    client = WaitingClient(cloud_config.project)
     yield client
     client.cleanup()
 
 
-@mark_flaky
+@flaky
 class TestDatastoreSnippets:
     # These tests mostly just test the absence of exceptions.
     def test_incomplete_key(self, client):

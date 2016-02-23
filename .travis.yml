@@ -1,8 +1,8 @@
 sudo: false
 language: python
 services:
-  - memcached
-  - mysql
+- memcached
+- mysql
 branches:
   only:
   - master
@@ -13,15 +13,15 @@ env:
   global:
   - PATH=${PATH}:${HOME}/gcloud/google-cloud-sdk/bin
   - GOOGLE_APPLICATION_CREDENTIALS=${TRAVIS_BUILD_DIR}/testing/resources/service-account.json
+  - GOOGLE_CLIENT_SECRETS=${TRAVIS_BUILD_DIR}/testing/resources/client-secrets.json
   - GAE_PYTHONPATH=${HOME}/.cache/google_appengine
-  - secure: YIowCOMJ97rTcehKVT6Gi3u0Etm8s9+TBRGsNPJLgSF2zZdsh9IHcIc+tMDUMR3lpOe8y2a060RuODQcRsW1W1LIHej+ZE/gv6vATT6qNA3eKfKmZ9AyrpBO0fTOHlHrGBuU9ktBPR+iqvnq8MLWjnUozPFMJbuNBFITU7JP8jc=
+  - GAE_ROOT=${HOME}/.cache/
+  - secure: Orp9Et2TIwCG/Hf59aa0NUDF1pNcwcS4TFulXX175918cFREOzf/cNZNg+Ui585ZRFjbifZdc858tVuCVd8XlxQPXQgp7bwB7nXs3lby3LYg4+HD83Gaz7KOWxRLWVor6IVn8OxeCzwl6fJkdmffsTTO9csC4yZ7izHr+u7hiO4=
 before_install:
 - openssl aes-256-cbc -k "$secrets_password" -in secrets.tar.enc -out secrets.tar -d
 - tar xvf secrets.tar
 install:
 - pip install tox coverage
-- pip install -e git+https://github.com/GoogleCloudPlatform/python-repo-tools#egg=python-repo-tools
-- gcp-python-repo-tools download-appengine-sdk `dirname "${GAE_PYTHONPATH}"`
 script:
 - source ${TRAVIS_BUILD_DIR}/testing/resources/test-env.sh
 - tox

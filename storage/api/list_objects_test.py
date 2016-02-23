@@ -15,4 +15,4 @@ from list_objects import main
 
 
 def test_main(cloud_config):
-    main(cloud_config.CLOUD_STORAGE_BUCKET)
+    main(cloud_config.storage_bucket)

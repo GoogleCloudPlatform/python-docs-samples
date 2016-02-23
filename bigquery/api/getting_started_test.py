@@ -17,7 +17,7 @@ from getting_started import main
 
 
 def test_main(cloud_config, capsys):
-    main(cloud_config.GCLOUD_PROJECT)
+    main(cloud_config.project)
 
     out, _ = capsys.readouterr()
 
