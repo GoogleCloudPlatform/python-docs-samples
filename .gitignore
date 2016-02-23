@@ -5,6 +5,7 @@
 coverage.xml
 python-docs-samples.json
 service-account.json
+client-secrets.json
 __pycache__
 *db\.sqlite3
 managed_vms/django_tutorial/static/*
@@ -16,3 +17,4 @@ testing/resources/client-secrets.json
 secrets.tar
 .cache
 junit.xml
+credentials.dat
