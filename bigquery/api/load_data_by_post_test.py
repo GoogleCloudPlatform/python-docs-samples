@@ -13,14 +13,14 @@
 
 import re
 
+from gcp.testing.flaky import flaky
 from load_data_by_post import load_data
-from testing import mark_flaky
 
 DATASET_ID = 'ephemeral_test_dataset'
 TABLE_ID = 'load_data_by_post'
 
 
-@mark_flaky
+@flaky
 def test_load_csv_data(cloud_config, resource, capsys):
     schema_path = resource('schema.json')
     data_path = resource('data.csv')
@@ -28,7 +28,7 @@ def test_load_csv_data(cloud_config, resource, capsys):
     load_data(
         schema_path,
         data_path,
-        cloud_config.GCLOUD_PROJECT,
+        cloud_config.project,
         DATASET_ID,
         TABLE_ID
     )
@@ -39,7 +39,7 @@ def test_load_csv_data(cloud_config, resource, capsys):
         r'Waiting for job to finish.*Job complete.', re.DOTALL), out)
 
 
-@mark_flaky
+@flaky
 def test_load_json_data(cloud_config, resource, capsys):
     schema_path = resource('schema.json')
     data_path = resource('data.json')
@@ -47,7 +47,7 @@ def test_load_json_data(cloud_config, resource, capsys):
     load_data(
         schema_path,
         data_path,
-        cloud_config.GCLOUD_PROJECT,
+        cloud_config.project,
         DATASET_ID,
         TABLE_ID
     )

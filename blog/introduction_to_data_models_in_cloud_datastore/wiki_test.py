@@ -11,10 +11,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from testing import mark_flaky
+from gcp.testing.flaky import flaky
 from wiki import main
 
 
-@mark_flaky
+@flaky
 def test_main(cloud_config):
-    main(cloud_config.GCLOUD_PROJECT)
+    main(cloud_config.project)

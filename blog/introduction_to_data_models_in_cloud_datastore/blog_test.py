@@ -12,9 +12,9 @@
 # limitations under the License.
 
 from blog import main
-from testing import mark_flaky
+from gcp.testing.flaky import flaky
 
 
-@mark_flaky
+@flaky
 def test_main(cloud_config):
-    main(cloud_config.GCLOUD_PROJECT)
+    main(cloud_config.project)

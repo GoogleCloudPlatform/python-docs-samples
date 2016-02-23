@@ -12,19 +12,19 @@
 # limitations under the License.
 
 from export_data_to_cloud_storage import main
-from testing import mark_flaky
+from gcp.testing.flaky import flaky
 
 DATASET_ID = 'test_dataset'
 TABLE_ID = 'test_table'
 
 
-@mark_flaky
+@flaky
 def test_export_table_csv(cloud_config):
     cloud_storage_output_uri = \
-        'gs://{}/output.csv'.format(cloud_config.CLOUD_STORAGE_BUCKET)
+        'gs://{}/output.csv'.format(cloud_config.storage_bucket)
     main(
         cloud_storage_output_uri,
-        cloud_config.GCLOUD_PROJECT,
+        cloud_config.project,
         DATASET_ID,
         TABLE_ID,
         num_retries=5,
@@ -32,13 +32,13 @@ def test_export_table_csv(cloud_config):
         export_format="CSV")
 
 
-@mark_flaky
+@flaky
 def test_export_table_json(cloud_config):
     cloud_storage_output_uri = \
-        'gs://{}/output.json'.format(cloud_config.CLOUD_STORAGE_BUCKET)
+        'gs://{}/output.json'.format(cloud_config.storage_bucket)
     main(
         cloud_storage_output_uri,
-        cloud_config.GCLOUD_PROJECT,
+        cloud_config.project,
         DATASET_ID,
         TABLE_ID,
         num_retries=5,
@@ -46,13 +46,13 @@ def test_export_table_json(cloud_config):
         export_format="NEWLINE_DELIMITED_JSON")
 
 
-@mark_flaky
+@flaky
 def test_export_table_avro(cloud_config):
     cloud_storage_output_uri = \
-        'gs://{}/output.avro'.format(cloud_config.CLOUD_STORAGE_BUCKET)
+        'gs://{}/output.avro'.format(cloud_config.storage_bucket)
     main(
         cloud_storage_output_uri,
-        cloud_config.GCLOUD_PROJECT,
+        cloud_config.project,
         DATASET_ID,
         TABLE_ID,
         num_retries=5,

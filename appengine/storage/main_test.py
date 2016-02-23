@@ -18,7 +18,7 @@ import webtest
 
 
 def test_get(cloud_config):
-    main.BUCKET_NAME = cloud_config.GCLOUD_PROJECT
+    main.BUCKET_NAME = cloud_config.project
     app = webtest.TestApp(main.app)
 
     response = app.get('/')

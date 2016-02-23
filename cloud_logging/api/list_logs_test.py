@@ -17,6 +17,6 @@ import list_logs
 
 
 def test_main(cloud_config, capsys):
-    list_logs.main(cloud_config.GCLOUD_PROJECT)
+    list_logs.main(cloud_config.project)
     out, _ = capsys.readouterr()
     assert re.search(re.compile(r'.*', re.S), out)

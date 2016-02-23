@@ -22,7 +22,7 @@ def test_sync_query(cloud_config, capsys):
         'GROUP BY corpus;')
 
     main(
-        project_id=cloud_config.GCLOUD_PROJECT,
+        project_id=cloud_config.project,
         query=query,
         timeout=30,
         num_retries=5)

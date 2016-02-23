@@ -12,14 +12,14 @@
 # limitations under the License.
 
 from gcloud import datastore
+from gcp.testing.flaky import flaky
 import pytest
 import tasks
-from testing import mark_flaky
 
 
 @pytest.yield_fixture
 def client(cloud_config):
-    client = datastore.Client(cloud_config.GCLOUD_PROJECT)
+    client = datastore.Client(cloud_config.project)
 
     yield client
 
@@ -29,12 +29,12 @@ def client(cloud_config):
             [x.key for x in client.query(kind='Task').fetch()])
 
 
-@mark_flaky
+@flaky
 def test_create_client(cloud_config):
-    tasks.create_client(cloud_config.GCLOUD_PROJECT)
+    tasks.create_client(cloud_config.project)
 
 
-@mark_flaky
+@flaky
 def test_add_task(client):
     task_key = tasks.add_task(client, 'Test task')
     task = client.get(task_key)
@@ -42,7 +42,7 @@ def test_add_task(client):
     assert task['description'] == 'Test task'
 
 
-@mark_flaky
+@flaky
 def test_mark_done(client):
     task_key = tasks.add_task(client, 'Test task')
     tasks.mark_done(client, task_key.id)
@@ -51,7 +51,7 @@ def test_mark_done(client):
     assert task['done']
 
 
-@mark_flaky
+@flaky
 def test_list_tasks(client):
     task1_key = tasks.add_task(client, 'Test task 1')
     task2_key = tasks.add_task(client, 'Test task 2')
@@ -59,14 +59,14 @@ def test_list_tasks(client):
     assert [x.key for x in task_list] == [task1_key, task2_key]
 
 
-@mark_flaky
+@flaky
 def test_delete_task(client):
     task_key = tasks.add_task(client, 'Test task 1')
     tasks.delete_task(client, task_key.id)
     assert client.get(task_key) is None
 
 
-@mark_flaky
+@flaky
 def test_format_tasks(client):
     task1_key = tasks.add_task(client, 'Test task 1')
     tasks.add_task(client, 'Test task 2')

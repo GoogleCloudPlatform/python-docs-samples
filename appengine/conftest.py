@@ -1,35 +1,27 @@
-import pytest
-import testing.appengine
+# Copyright 2015 Google Inc. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
+# Import py.test hooks and fixtures for App Engine
+from gcp.testing.appengine import (
+    login,
+    pytest_configure,
+    pytest_runtest_call,
+    run_tasks,
+    testbed)
 
-def pytest_configure(config):
-    testing.appengine.setup_sdk_imports()
-
-
-def pytest_runtest_call(item):
-    testing.appengine.import_appengine_config()
-
-
-@pytest.yield_fixture
-def testbed():
-    testbed = testing.appengine.setup_testbed()
-    yield testbed
-    testbed.deactivate()
-
-
-@pytest.fixture
-def login(testbed):
-    def _login(email='user@example.com', id='123', is_admin=False):
-        testbed.setup_env(
-            user_email=email,
-            user_id=id,
-            user_is_admin='1' if is_admin else '0',
-            overwrite=True)
-    return _login
-
-
-@pytest.fixture
-def run_tasks(testbed):
-    def _run_tasks(app):
-        testing.appengine.run_tasks(testbed, app)
-    return _run_tasks
+(login)
+(pytest_configure)
+(pytest_runtest_call)
+(run_tasks)
+(testbed)

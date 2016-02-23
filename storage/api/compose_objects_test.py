@@ -16,7 +16,7 @@ from compose_objects import main
 
 def test_main(cloud_config, resource):
     main(
-        cloud_config.CLOUD_STORAGE_BUCKET,
+        cloud_config.storage_bucket,
         'dest.txt',
         [resource('file1.txt'),
          resource('file2.txt')]

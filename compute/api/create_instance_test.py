@@ -14,14 +14,14 @@
 import re
 
 from create_instance import main
-from testing import mark_flaky
+from gcp.testing.flaky import flaky
 
 
-@mark_flaky
+@flaky
 def test_main(cloud_config, capsys):
     main(
-        cloud_config.GCLOUD_PROJECT,
-        cloud_config.CLOUD_STORAGE_BUCKET,
+        cloud_config.project,
+        cloud_config.storage_bucket,
         'us-central1-f',
         'test-instance',
         wait=False)

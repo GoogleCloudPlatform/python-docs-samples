@@ -12,10 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from googleapiclient.http import HttpMockSequence
+import httplib2
 import main
+import mock
 import pytest
-from testing import Http2Mock
 import webtest
+
+
+class HttpMockSequenceWithCredentials(HttpMockSequence):
+    def add_credentials(self, *args):
+        pass
 
 
 @pytest.fixture
@@ -29,27 +36,31 @@ def test_get(app):
 
 
 def test_post(app):
-    http = Http2Mock(responses=[{}])
+    http = HttpMockSequenceWithCredentials([
+        ({'status': '200'}, '')])
+    patch_http = mock.patch.object(httplib2, 'Http', lambda: http)
 
-    with http:
+    with patch_http:
         response = app.post('/', {
             'recipient': 'jonwayne@google.com',
             'submit': 'Send simple email'})
 
         assert response.status_int == 200
 
-    http = Http2Mock(responses=[{}])
+    http = HttpMockSequenceWithCredentials([
+        ({'status': '200'}, '')])
 
-    with http:
+    with patch_http:
         response = app.post('/', {
             'recipient': 'jonwayne@google.com',
             'submit': 'Send complex email'})
 
         assert response.status_int == 200
 
-    http = Http2Mock(responses=[{'status': 500, 'body': 'Test error'}])
+    http = HttpMockSequenceWithCredentials([
+        ({'status': '500'}, 'Test error')])
 
-    with http, pytest.raises(Exception):
+    with patch_http, pytest.raises(Exception):
         app.post('/', {
             'recipient': 'jonwayne@google.com',
             'submit': 'Send simple email'})
