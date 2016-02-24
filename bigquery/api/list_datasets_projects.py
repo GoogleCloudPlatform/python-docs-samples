@@ -25,7 +25,7 @@ For more information, see the README.md under /bigquery.
 import argparse
 from pprint import pprint
 
-from apiclient import discovery
+from googleapiclient import discovery
 from oauth2client.client import GoogleCredentials
 from six.moves.urllib.error import HTTPError
 

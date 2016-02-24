@@ -26,10 +26,8 @@ import argparse
 import json
 import time
 
-from apiclient.http import MediaFileUpload
-
 from googleapiclient import discovery
-
+from googleapiclient.http import MediaFileUpload
 from oauth2client.client import GoogleCredentials
 
 

@@ -12,7 +12,7 @@
 # limitations under the License.
 
 # [START all]
-from apiclient import discovery
+from googleapiclient import discovery
 from oauth2client.client import GoogleCredentials
 
 

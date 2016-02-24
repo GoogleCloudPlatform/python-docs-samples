@@ -27,8 +27,8 @@ For more information, see the README.md under /bigquery.
 # [START all]
 import argparse
 
-from apiclient.discovery import build
-from apiclient.errors import HttpError
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 from oauth2client.client import GoogleCredentials
 
 
