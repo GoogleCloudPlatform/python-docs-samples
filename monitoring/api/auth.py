@@ -16,6 +16,10 @@
 
 """Sample command-line program for retrieving Google Cloud Monitoring API data.
 
+Prerequisites: To run locally, download a Service Account JSON file from
+your project and point GOOGLE_APPLICATION_CREDENTIALS to the file.
+
+
 This sample is used on this page:
 
     https://cloud.google.com/monitoring/api/authentication
@@ -29,7 +33,6 @@ import json
 
 from googleapiclient.discovery import build
 from oauth2client.client import GoogleCredentials
-
 
 METRIC = 'compute.googleapis.com/instance/disk/read_ops_count'
 YOUNGEST = '2015-01-01T00:00:00Z'
