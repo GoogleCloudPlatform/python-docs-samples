@@ -27,7 +27,7 @@ For more information, see README.md.
 import argparse
 import json
 
-from apiclient import discovery
+from googleapiclient import discovery
 from oauth2client.client import GoogleCredentials
 
 
