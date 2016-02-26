@@ -1,4 +1,4 @@
-runtime: python-compat
+runtime: custom
 vm: true
 threadsafe: true
 api_version: 1
