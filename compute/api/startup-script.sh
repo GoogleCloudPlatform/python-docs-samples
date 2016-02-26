@@ -21,9 +21,9 @@ apt-get -y install imagemagick
 # Use the metadata server to get the configuration specified during
 # instance creation. Read more about metadata here:
 # https://cloud.google.com/compute/docs/metadata#querying
-IMAGE_URL=$(curl http://metadata/computeMetadata/v1/instance/attributes/url -H "X-Google-Metadata-Request: True")
-TEXT=$(curl http://metadata/computeMetadata/v1/instance/attributes/text -H "X-Google-Metadata-Request: True")
-CS_BUCKET=$(curl http://metadata/computeMetadata/v1/instance/attributes/bucket -H "X-Google-Metadata-Request: True")
+IMAGE_URL=$(curl http://metadata/computeMetadata/v1/instance/attributes/url -H "Metadata-Flavor: Google")
+TEXT=$(curl http://metadata/computeMetadata/v1/instance/attributes/text -H "Metadata-Flavor: Google")
+CS_BUCKET=$(curl http://metadata/computeMetadata/v1/instance/attributes/bucket -H "Metadata-Flavor: Google")
 
 mkdir image-output
 cd image-output
