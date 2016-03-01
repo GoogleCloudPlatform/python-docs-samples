@@ -177,8 +177,7 @@ def main(project_id, color, size, count):
     write_custom_metric(client, project_id, now_rfc3339,
                         color, size, count)
     print ("Reading data from custom metric timeseries...")
-    write_custom_metric(client, project_id, now_rfc3339, color,
-                        size, count)
+    read_custom_metric(client, project_id, now_rfc3339, color, size)
 
 
 if __name__ == '__main__':
