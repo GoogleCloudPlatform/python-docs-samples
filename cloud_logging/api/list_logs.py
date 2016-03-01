@@ -25,6 +25,7 @@ For more information, see the README.md under /cloud_logging.
 
 # [START all]
 import argparse
+import sys
 
 from googleapiclient import discovery
 from oauth2client.client import GoogleCredentials
@@ -36,6 +37,9 @@ def list_logs(project_id, logging_service):
 
     while request:
         response = request.execute()
+        if len(response)==0:
+            print "No logs found in project {0}".format(project_id)
+            sys.exit(1) 
         for log in response['logs']:
             print(log['name'])
 
