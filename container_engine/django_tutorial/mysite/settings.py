@@ -78,10 +78,10 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'polls',
-        'USER': 'django_user',
-        'PASSWORD': 'django',
-        'HOST': '173.194.104.255',
+        'NAME': '<your-database-name>',
+        'USER': '<your-database-user>',
+        'PASSWORD': '<your-database-password>',
+        'HOST': '<your-cloudsql-host>',
         'PORT': '3306',
     }
 }
