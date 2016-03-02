@@ -37,9 +37,9 @@ def list_logs(project_id, logging_service):
 
     while request:
         response = request.execute()
-        if len(response)==0:
-            print "No logs found in project {0}".format(project_id)
-            sys.exit(1) 
+        if not response:
+            print("No logs found in {0} project").format(project_id)
+            return False 
         for log in response['logs']:
             print(log['name'])
 
