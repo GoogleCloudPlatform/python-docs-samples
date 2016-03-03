@@ -17,7 +17,7 @@ from django.conf.urls import include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
-    url(r'^', include('polls.urls')),
+    url(r'^$', include('polls.urls')),
 ]
 
 # Only serve static files from Django during development
