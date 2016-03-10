@@ -21,7 +21,7 @@ from gcloud import datastore
 
 
 def create_client(project_id):
-    return gcloud.datastore.Client(project_id)
+    return datastore.Client(project_id)
 # [END build_service]
 
 
