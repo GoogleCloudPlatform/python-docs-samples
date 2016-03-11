@@ -14,8 +14,6 @@
 import argparse
 import datetime
 
-import gcloud
-
 # [START build_service]
 from gcloud import datastore
 
