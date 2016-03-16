@@ -13,6 +13,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+# [START all]
+
 """Command-line sample application for listing all objects in a bucket using
 the Cloud Storage API.
 
@@ -56,6 +59,7 @@ def get_bucket_metadata(bucket):
 
 
 def list_bucket(bucket):
+    # [START list_bucket]
     """Returns a list of metadata of the objects within the given bucket."""
     service = create_service()
 
@@ -72,7 +76,7 @@ def list_bucket(bucket):
         all_objects.extend(resp.get('items', []))
         req = service.objects().list_next(req, resp)
     return all_objects
-
+    # [END list_bucket]
 
 def main(bucket):
     print(json.dumps(get_bucket_metadata(bucket), indent=2))
@@ -88,3 +92,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     main(args.bucket)
+-# [END all]
