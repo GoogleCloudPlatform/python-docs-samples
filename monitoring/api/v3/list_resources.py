@@ -74,7 +74,7 @@ def list_metric_descriptors(client, project_resource, metric):
     """
     request = client.projects().metricDescriptors().list(
         name=project_resource,
-        filter='metric.name="{}"'.format(metric))
+        filter='metric.type="{}"'.format(metric))
     response = request.execute()
     print(
         'list_metric_descriptors response:\n{}'.format(
@@ -87,7 +87,7 @@ def list_timeseries(client, project_resource, metric):
     """
     request = client.projects().timeSeries().list(
         name=project_resource,
-        filter='metric.name="{}"'.format(metric),
+        filter='metric.type="{}"'.format(metric),
         pageSize=3,
         interval_startTime=get_start_time(),
         interval_endTime=get_end_time())
