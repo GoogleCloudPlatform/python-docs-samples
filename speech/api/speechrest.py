@@ -19,6 +19,7 @@ processing."""
 import argparse
 import base64
 import json
+import os
 
 from googleapiclient import discovery
 
@@ -29,7 +30,8 @@ from oauth2client.client import GoogleCredentials
 
 # Path to local discovery file
 # [START discovery_doc]
-API_DISCOVERY_FILE = 'speech-discovery_google_rest_v1.json'
+API_DISCOVERY_FILE = os.path.join(
+    os.path.dirname(__file__), 'speech-discovery_google_rest_v1.json')
 # [END discovery_doc]
 
 
@@ -67,7 +69,7 @@ def main(speech_file):
                 'sampleRate': 16000
             },
             'audioRequest': {
-                'content': speech_content
+                'content': speech_content.decode('UTF-8')
                 }
             })
     # [END construct_request]
