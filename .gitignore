@@ -18,3 +18,4 @@ secrets.tar
 .cache
 junit.xml
 credentials.dat
+.nox
