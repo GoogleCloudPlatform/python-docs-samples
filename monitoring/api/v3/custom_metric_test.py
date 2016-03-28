@@ -27,18 +27,8 @@ from custom_metric import create_custom_metric, get_custom_metric
 from custom_metric import read_timeseries, write_timeseries_value
 import list_resources
 
-""" Change this to run against other prjoects
- GOOGLE_APPLICATION_CREDENTIALS must be the service account for this project
-"""
-
-# temporarily hard code to whitelisted project
-TEST_PROJECT_ID = 'cloud-monitoring-dev'
-# TEST_PROJECT_ID = os.getenv("GCLOUD_PROJECT", 'cloud-monitoring-dev')
-
-""" Custom metric domain for all cusotm metrics"""
+""" Custom metric domain for all custom metrics"""
 CUSTOM_METRIC_DOMAIN = "custom.googleapis.com"
-
-PROJECT_RESOURCE = "projects/{}".format(TEST_PROJECT_ID)
 
 METRIC = 'compute.googleapis.com/instance/cpu/usage_time'
 METRIC_NAME = ''.join(
@@ -47,7 +37,8 @@ METRIC_RESOURCE = "{}/{}".format(
     CUSTOM_METRIC_DOMAIN, METRIC_NAME)
 
 
-def test_custom_metric():
+def test_custom_metric(cloud_config):
+    PROJECT_RESOURCE = "projects/{}".format(cloud_config.project)
     client = list_resources.get_client()
     # Use a constant seed so psuedo random number is known ahead of time
     random.seed(1)
