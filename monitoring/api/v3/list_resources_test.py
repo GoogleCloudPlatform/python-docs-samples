@@ -24,14 +24,11 @@ import re
 
 import list_resources
 
-# temporarily hard code to whitelisted project
-TEST_PROJECT_ID = 'cloud-monitoring-dev'
-# TEST_PROJECT_ID = os.getenv("GCLOUD_PROJECT", 'cloud-monitoring-dev')
-PROJECT_RESOURCE = "projects/{}".format(TEST_PROJECT_ID)
 METRIC = 'compute.googleapis.com/instance/cpu/usage_time'
 
 
-def test_list_monitored_resources(capsys):
+def test_list_monitored_resources(cloud_config, capsys):
+    PROJECT_RESOURCE = "projects/{}".format(cloud_config.project)
     client = list_resources.get_client()
     list_resources.list_monitored_resource_descriptors(
         client, PROJECT_RESOURCE)
@@ -41,7 +38,8 @@ def test_list_monitored_resources(capsys):
     assert regex.search(stdout) is not None
 
 
-def test_list_metrics(capsys):
+def test_list_metrics(cloud_config, capsys):
+    PROJECT_RESOURCE = "projects/{}".format(cloud_config.project)
     client = list_resources.get_client()
     list_resources.list_metric_descriptors(
         client, PROJECT_RESOURCE, METRIC)
@@ -51,7 +49,8 @@ def test_list_metrics(capsys):
     assert regex.search(stdout) is not None
 
 
-def test_list_timeseries(capsys):
+def test_list_timeseries(cloud_config, capsys):
+    PROJECT_RESOURCE = "projects/{}".format(cloud_config.project)
     client = list_resources.get_client()
     list_resources.list_timeseries(
         client, PROJECT_RESOURCE, METRIC)
