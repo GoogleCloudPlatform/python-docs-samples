@@ -8,6 +8,7 @@ include =
     datastore/*
     managed_vms/*
     monitoring/*
+    speech/*
     storage/*
 [report]
 exclude_lines =

@@ -4,10 +4,10 @@ The tests in this repository are system tests and run against live services, the
 
 Before you can run tests locally you must have:
 
-* The latest [tox](https://tox.readthedocs.org/en/latest/),
+* The latest [nox](https://nox.readthedocs.org/en/latest/),
   [pip](https://pypi.python.org/pypi/pip), and [gcp-python-repo-tools](https://pypi.python.org/pypi/gcp-python-repo-tools) installed.
 
-        $ sudo pip install --upgrade tox pip gcp-python-repo-tools
+        $ sudo pip install --upgrade nox-automation pip gcp-python-repo-tools
 
 * The [Google Cloud SDK](https://cloud.google.com/sdk/) installed. You
   can do so with the following command:
@@ -50,29 +50,35 @@ If you want to run the Google App Engine tests, you will need:
 
 ### Test environments
 
-We use [tox](https://tox.readthedocs.org/en/latest/) to configure
-multiple python environments:
+We use [nox](https://nox.readthedocs.org/en/latest/) to configure
+multiple python sessions:
 
-* ``py27`` and ``py34`` contains tests for samples that run in a normal Python 2.7 pr 3.4 environment. This is everything outside of the ``appengine`` directory that isn't slow or flaky.
-* ``py27-all`` and ``py34-all`` runs all tests except for App Engine tests. This can time some time and some tests are flaky.
-* ``gae`` contains tests for samples that run only in Google App Engine. This is (mostly) everything in the ``appengine`` directory.
-* ``pep8`` just runs the linter.
+* ``tests`` contains tests for samples that run in a normal Python 2.7 or 3.4
+  environment. This is everything outside of the ``appengine`` directory. It's
+  parameterized to run all the tests using the 2.7 and 3.4 interpreters.
+* ``gae`` contains tests for samples that run only in Google App Engine. This is
+  (mostly) everything in the ``appengine`` directory.
+* ``lint`` just runs the linter.
 
-To run tests for a particular environment, invoke tox with the ``-e``
-flag:
+To see a list of the available sessions:
 
-    tox -e py27
+    nox -l
 
-To run one particular test suite or provide additional parameters to
-``py.test``, invoke tox like this:
+To run tests for a particular session, with a particular parameter, invoke nox
+with the ``-s`` flag:
 
-    toxe -e py27 -- storage/api
+    nox -s "tests(interpreter='python2.7')"
+
+To run one particular session or provide additional parameters to ``py.test``,
+invoke nox like this:
+
+    nox -s tests -- storage/api
 
 ### Adding new tests
-
-When adding a new top-level directory, be sure to edit ``.coveragerc`` and ``tox.ini`` to include it in tests and coverage reporting.
+When adding a new top-level directory, be sure to edit ``.coveragerc`` to
+include it in coverage reporting.
 
 To add new tests that require Google App Engine, please place them in
 the ``appengine`` directory if possible. If you place them elsewhere,
-you will need to modify ``tox.ini`` to make the environments
+you will need to modify ``nox.py`` to make the environments
 appropriately run or ignore your test.
