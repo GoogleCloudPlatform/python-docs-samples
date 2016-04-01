@@ -25,44 +25,7 @@ COMMON_PYTEST_ARGS = [
     '-x', '--no-success-flaky-report', '--cov', '--cov-config',
     '.coveragerc', '--cov-append', '--cov-report=']
 
-SAMPLES = [
-    'bigquery/api',
-    'blog/introduction_to_data_models_in_cloud_datastore',
-    'cloud_logging/api',
-    'compute/api',
-    'compute/autoscaler/demo',
-    'datastore/api',
-    'managed_vms/cloudsql',
-    'managed_vms/datastore',
-    'managed_vms/disk',
-    'managed_vms/extending_runtime',
-    'managed_vms/hello_world',
-    'managed_vms/hello_world_compat',
-    'managed_vms/memcache',
-    'managed_vms/pubsub',
-    'managed_vms/static_files',
-    'managed_vms/storage',
-    'monitoring/api',
-    'storage/api',
-]
-
-GAE_SAMPLES = [
-    'appengine/app_identity/signing',
-    'appengine/bigquery',
-    'appengine/blobstore',
-    'appengine/cloudsql',
-    'appengine/images',
-    'appengine/localtesting',
-    'appengine/logging/reading_logs',
-    'appengine/logging/writing_logs',
-    'appengine/mailgun',
-    'appengine/memcache/guestbook',
-    'appengine/multitenancy',
-    'appengine/ndb/modeling',
-    'appengine/ndb/overview',
-    'appengine/ndb/transactions',
-    'appengine/storage',
-]
+SESSION_TESTS_BLACKLIST = set(('appengine', 'testing'))
 
 
 def session_lint(session):
@@ -94,6 +57,21 @@ def session_reqcheck(session):
         session.run('gcprepotools', command, reqfile)
 
 
+def collect_sample_dirs(start_dir, blacklist=set()):
+    """Recursively collects a list of dirs that contain tests."""
+    # Collect all the directories that have tests in them.
+    for parent, subdirs, files in os.walk(start_dir):
+        if any(f for f in files if f[-8:] == '_test.py'):
+            # Don't recurse further, since py.test will do that.
+            del subdirs[:]
+            # This dir has tests in it. yield it.
+            yield parent
+        else:
+            # Filter out dirs we don't want to recurse into
+            subdirs[:] = [s for s in subdirs
+                          if s[0].isalpha() and s not in blacklist]
+
+
 @nox.parametrize('interpreter', ['python2.7', 'python3.4'])
 def session_tests(session, interpreter, extra_pytest_args=None):
     session.interpreter = interpreter
@@ -106,7 +84,8 @@ def session_tests(session, interpreter, extra_pytest_args=None):
 
     # session.posargs is any leftover arguments from the command line, which
     # allows users to run a particular test instead of all of them.
-    for sample in (session.posargs or SAMPLES):
+    for sample in (session.posargs or
+                   collect_sample_dirs('.', SESSION_TESTS_BLACKLIST)):
         session.run(
             'py.test', sample,
             *pytest_args,
@@ -130,7 +109,7 @@ def session_gae(session, extra_pytest_args=None):
 
     pytest_args = COMMON_PYTEST_ARGS + (extra_pytest_args or [])
 
-    for sample in (session.posargs or GAE_SAMPLES):
+    for sample in (session.posargs or collect_sample_dirs('appengine')):
         session.run(
             'py.test', sample,
             *pytest_args,
