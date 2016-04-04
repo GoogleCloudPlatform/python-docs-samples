@@ -86,6 +86,11 @@ def session_tests(session, interpreter, extra_pytest_args=None):
     # allows users to run a particular test instead of all of them.
     for sample in (session.posargs or
                    collect_sample_dirs('.', SESSION_TESTS_BLACKLIST)):
+        # Install additional dependencies if they exist
+        dirname = sample if os.path.isdir(sample) else os.path.dirname(sample)
+        for reqfile in list_files(dirname, 'requirements*.txt'):
+            session.install('-r', reqfile)
+
         session.run(
             'py.test', sample,
             *pytest_args,

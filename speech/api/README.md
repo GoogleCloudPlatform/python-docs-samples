@@ -37,10 +37,36 @@ See the
 [Cloud Platform Auth Guide](https://cloud.google.com/docs/authentication#developer_workflow)
 for more information.
 
+### Install the dependencies
+
+* If you're running the `speechrest.py` sample:
+
+    ```sh
+    $ pip install requirements-speechrest.txt
+    ```
+
+* If you're running the `speech_streaming.py` sample:
+
+    ```sh
+    $ pip install requirements-speech_streaming.txt
+    ```
+
 ## Run the example
 
-```sh
-$ python speechrest.py resources/audio.raw
-```
+* To run the `speechrest.py` sample:
 
-You should see a response with the transcription result.
+    ```sh
+    $ python speechrest.py resources/audio.raw
+    ```
+
+    You should see a response with the transcription result.
+
+* To run the `speech_streaming.py` sample:
+
+    ```sh
+    $ python speech_streaming.py
+    ```
+
+    The sample will run in a continuous loop, printing the data and metadata
+    it receives from the Speech API, which includes alternative transcriptions
+    of what it hears, and a confidence score. Say "exit" to exit the loop.

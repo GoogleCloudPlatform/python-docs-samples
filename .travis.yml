@@ -16,8 +16,13 @@ env:
   - GOOGLE_CLIENT_SECRETS=${TRAVIS_BUILD_DIR}/testing/resources/client-secrets.json
   - GAE_ROOT=${HOME}/.cache/
   - secure: Orp9Et2TIwCG/Hf59aa0NUDF1pNcwcS4TFulXX175918cFREOzf/cNZNg+Ui585ZRFjbifZdc858tVuCVd8XlxQPXQgp7bwB7nXs3lby3LYg4+HD83Gaz7KOWxRLWVor6IVn8OxeCzwl6fJkdmffsTTO9csC4yZ7izHr+u7hiO4=
+addons:
+  apt:
+    packages:
+    - portaudio19-dev
 before_install:
 - pip install --upgrade pip wheel virtualenv
+  # for speech api sample
 - openssl aes-256-cbc -k "$secrets_password" -in secrets.tar.enc -out secrets.tar -d
 - tar xvf secrets.tar
 install:
