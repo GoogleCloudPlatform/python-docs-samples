@@ -40,7 +40,7 @@ API_DISCOVERY_FILE = os.path.join(
 def get_speech_service():
     # [START authenticating]
     credentials = GoogleCredentials.get_application_default().create_scoped(
-        ['https://www.googleapis.com/auth/xapi.zoo'])
+        ['https://www.googleapis.com/auth/cloud-platform'])
     with open(API_DISCOVERY_FILE, 'r') as f:
         doc = f.read()
 
