@@ -315,7 +315,7 @@ def projection_query(client):
 
     for task in query.fetch():
         priorities.append(task['priority'])
-        percent_completes.append(task['priority'])
+        percent_completes.append(task['percent_complete'])
     # [END run_query_projection]
 
     return priorities, percent_completes
