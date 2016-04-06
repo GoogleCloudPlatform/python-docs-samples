@@ -9,6 +9,7 @@ include =
     dns/*
     datastore/*
     error_reporting/*
+    language/*
     managed_vms/*
     monitoring/*
     speech/*
