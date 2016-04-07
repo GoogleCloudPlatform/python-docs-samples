@@ -66,7 +66,7 @@ def create_custom_metric(client, project_id,
             {
                 "key": "environment",
                 "valueType": "STRING",
-                "description": "An abritrary measurement"
+                "description": "An arbitrary measurement"
             }
         ],
         "metricKind": metric_kind,
