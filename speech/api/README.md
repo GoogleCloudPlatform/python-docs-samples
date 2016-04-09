@@ -39,10 +39,10 @@ for more information.
 
 ### Install the dependencies
 
-* If you're running the `speechrest.py` sample:
+* If you're running the `speech_rest.py` sample:
 
     ```sh
-    $ pip install requirements-speechrest.txt
+    $ pip install requirements-speech_rest.txt
     ```
 
 * If you're running the `speech_streaming.py` sample:
@@ -53,10 +53,10 @@ for more information.
 
 ## Run the example
 
-* To run the `speechrest.py` sample:
+* To run the `speech_rest.py` sample:
 
     ```sh
-    $ python speechrest.py resources/audio.raw
+    $ python speech_rest.py resources/audio.raw
     ```
 
     You should see a response with the transcription result.

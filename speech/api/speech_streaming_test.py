@@ -53,6 +53,7 @@ def mock_audio_stream(filename):
     return mock_audio_stream
 
 
+# grpc doesn't yet support python3 https://github.com/grpc/grpc/issues/282
 @pytest.mark.skipif(
     sys.version_info >= (3, 0), reason="can't get grpc lib to work in python3")
 def test_main(resource, monkeypatch, capsys):
