@@ -1,8 +1,9 @@
 
-# Google Cloud Speech API Sample (REST API)
+# Google Cloud Speech API Samples
 
-This example demos accessing the [Google Cloud Speech API](http://cloud.google.com/speech)
-via its REST API.
+These examples demo accessing the [Google Cloud Speech API](http://cloud.google.com/speech)
+in streaming mode (via its gRPC API) and in non-streaming mode (via its REST
+API).
 
 ## Prerequisites
 
@@ -30,9 +31,9 @@ downloaded service account credentials before running this example:
 
     export GOOGLE_APPLICATION_CREDENTIALS=/path/to/your/credentials-key.json
 
-If you do not do this, you will see an error that looks something like this when
-you run the example script:
-`...<HttpError 403 when requesting https://speech.googleapis.com/v1/speech:recognize?alt=json returned "Request had insufficient authentication scopes.">`.
+If you do not do this, the REST api will return a 403. The streaming sample will
+just sort of hang silently.
+
 See the
 [Cloud Platform Auth Guide](https://cloud.google.com/docs/authentication#developer_workflow)
 for more information.
@@ -70,3 +71,7 @@ for more information.
     The sample will run in a continuous loop, printing the data and metadata
     it receives from the Speech API, which includes alternative transcriptions
     of what it hears, and a confidence score. Say "exit" to exit the loop.
+
+    Note that the `speech_streaming.py` sample does not yet support python 3, as
+    the upstream `grpcio` library's support is [not yet
+    complete](https://github.com/grpc/grpc/issues/282).
