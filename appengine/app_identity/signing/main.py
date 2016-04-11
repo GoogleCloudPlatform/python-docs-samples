@@ -14,7 +14,7 @@
 
 """
 Sample Google App Engine application that demonstrates usage of the app
-identity API.
+identity API to sign bytes and verify signatures.
 
 For more information about App Engine, see README.md under /appengine.
 """
