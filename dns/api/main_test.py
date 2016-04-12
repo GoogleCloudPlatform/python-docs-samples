@@ -13,9 +13,8 @@
 
 from gcloud import dns
 from gcp.testing.flaky import flaky
-import pytest
 import main
-
+import pytest
 
 TEST_ZONE_NAME = 'test-zone'
 TEST_ZONE_DNS_NAME = 'theadora.is.'
