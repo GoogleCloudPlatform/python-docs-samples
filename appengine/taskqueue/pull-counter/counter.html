@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<body>
+<form action="/" method="POST">
+  <label for="key">Key:</label><input type="text" name="key" id="key">
+  <input type="submit" value="+1">
+</form>
+<ul>
+{% for counter in counters %}
+<li>
+  {{counter.key.id()|e}}: {{counter.count|e}}
+</li>
+{% endfor %}
+</body>
+</html>
