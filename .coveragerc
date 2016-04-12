@@ -5,6 +5,7 @@ include =
     blog/*
     cloud_logging/*
     compute/*
+    dns/*
     datastore/*
     managed_vms/*
     monitoring/*
