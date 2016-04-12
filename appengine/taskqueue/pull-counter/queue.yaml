@@ -1,0 +1,3 @@
+queue:
+- name: pullq
+  mode: pull
