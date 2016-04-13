@@ -22,11 +22,13 @@ for this test, but it could be changed to a different project.
 
 import re
 
+from gcp.testing.flaky import flaky
 import list_resources
 
 METRIC = 'compute.googleapis.com/instance/cpu/usage_time'
 
 
+@flaky
 def test_list_monitored_resources(cloud_config, capsys):
     PROJECT_RESOURCE = "projects/{}".format(cloud_config.project)
     client = list_resources.get_client()
@@ -38,6 +40,7 @@ def test_list_monitored_resources(cloud_config, capsys):
     assert regex.search(stdout) is not None
 
 
+@flaky
 def test_list_metrics(cloud_config, capsys):
     PROJECT_RESOURCE = "projects/{}".format(cloud_config.project)
     client = list_resources.get_client()
@@ -49,6 +52,7 @@ def test_list_metrics(cloud_config, capsys):
     assert regex.search(stdout) is not None
 
 
+@flaky
 def test_list_timeseries(cloud_config, capsys):
     PROJECT_RESOURCE = "projects/{}".format(cloud_config.project)
     client = list_resources.get_client()

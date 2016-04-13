@@ -25,6 +25,7 @@ import time
 
 from custom_metric import create_custom_metric, get_custom_metric
 from custom_metric import read_timeseries, write_timeseries_value
+from gcp.testing.flaky import flaky
 import list_resources
 
 """ Custom metric domain for all custom metrics"""
@@ -37,6 +38,7 @@ METRIC_RESOURCE = "{}/{}".format(
     CUSTOM_METRIC_DOMAIN, METRIC_NAME)
 
 
+@flaky
 def test_custom_metric(cloud_config):
     PROJECT_RESOURCE = "projects/{}".format(cloud_config.project)
     client = list_resources.get_client()
