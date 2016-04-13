@@ -16,6 +16,7 @@ import io
 import re
 import sys
 
+from gcp.testing.flaky import flaky
 import pytest
 
 import speech_streaming
@@ -53,9 +54,11 @@ def mock_audio_stream(filename):
     return mock_audio_stream
 
 
-# grpc doesn't yet support python3 https://github.com/grpc/grpc/issues/282
+@flaky
 @pytest.mark.skipif(
-    sys.version_info >= (3, 0), reason="can't get grpc lib to work in python3")
+        sys.version_info >= (3, 0),
+        reason=("grpc doesn't yet support python3 "
+                'https://github.com/grpc/grpc/issues/282'))
 def test_main(resource, monkeypatch, capsys):
     monkeypatch.setattr(
         speech_streaming, 'record_audio',
