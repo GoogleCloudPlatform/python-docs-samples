@@ -39,6 +39,11 @@ def test_create_model_using_attributes(client):
     assert isinstance(result, snippets.Account)
 
 
+def test_create_model_using_populate(client):
+    result = snippets.create_model_using_populate()
+    assert isinstance(result, snippets.Account)
+
+
 def test_demonstrate_model_constructor_type_checking(client):
     with pytest.raises(datastore_errors.BadValueError):
         snippets.demonstrate_model_constructor_type_checking()
@@ -54,6 +59,21 @@ def test_save_model(client):
     result = snippets.save_model(
         snippets.create_model_using_keyword_arguments())
     assert isinstance(result, snippets.ndb.Key)
+
+
+def test_get_model(client):
+    sandy_key = snippets.save_model(
+        snippets.create_model_using_keyword_arguments())
+    result = snippets.get_model(sandy_key)
+    assert isinstance(result, snippets.Account)
+
+
+def test_get_key_kind_and_id(client):
+    sandy_key = snippets.save_model(
+        snippets.create_model_using_keyword_arguments())
+    kind_string, ident = snippets.get_key_kind_and_id(sandy_key)
+    assert kind_string == 'Account'
+    assert isinstance(ident, long)
 
 
 def test_get_url_safe_key(client):
@@ -121,7 +141,11 @@ def test_demonstrate_models_with_parent_hierarchy(client):
 
 
 def test_equivalent_ways_to_define_key_with_parent(client):
-    result = snippets.equivalent_ways_to_define_key_with_parent()
+    snippets.equivalent_ways_to_define_key_with_parent()
+
+
+def test_create_root_key(client):
+    result = snippets.create_root_key()
     assert result.id() == 'sandy@example.com'
 
 
