@@ -35,6 +35,15 @@ def create_model_using_attributes():
     return sandy
 
 
+def create_model_using_populate():
+    sandy = Account()
+    sandy.populate(
+        username='Sandy',
+        userid=123,
+        email='sandy@gmail.com')
+    return sandy
+
+
 def demonstrate_model_constructor_type_checking():
     bad = Account(
         username='Sandy', userid='not integer')  # raises an exception
@@ -48,6 +57,17 @@ def dmonstrate_model_attribute_type_checking(sandy):
 def save_model(sandy):
     sandy_key = sandy.put()
     return sandy_key
+
+
+def get_model(sandy_key):
+    sandy = sandy_key.get()
+    return sandy
+
+
+def get_key_kind_and_id(sandy_key):
+    kind_string = sandy_key.kind()  # returns 'Account'
+    ident = sandy_key.id()  # returns '2'
+    return kind_string, ident
 
 
 def get_url_safe_key(sandy_key):
@@ -123,6 +143,8 @@ def equivalent_ways_to_define_key_with_parent():
     ndb.Key('Revision', '1', parent=ndb.Key(
         'Message', 123, parent=ndb.Key('Account', 'sandy@example.com')))
 
+
+def create_root_key():
     sandy_key = ndb.Key(Account, 'sandy@example.com')
     return sandy_key
 
