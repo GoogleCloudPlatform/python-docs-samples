@@ -13,50 +13,34 @@
 # limitations under the License.
 
 # [START all]
-import os
 
-from google.appengine.api import taskqueue
 from google.appengine.ext import ndb
-import jinja2
 import webapp2
 
 
-JINJA_ENV = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
+COUNTER_KEY = 'default counter'
 
 
 class Counter(ndb.Model):
     count = ndb.IntegerProperty(indexed=False)
 
 
-class CounterHandler(webapp2.RequestHandler):
-    def get(self):
-        template_values = {'counters': Counter.query()}
-        counter_template = JINJA_ENV.get_template('counter.html')
-        self.response.out.write(counter_template.render(template_values))
-
+class UpdateCounterHandler(webapp2.RequestHandler):
     def post(self):
-        key = self.request.get('key')
-        if key != '':
-            # Add the task to the default queue.
-            taskqueue.add(url='/worker', params={'key': key})
-        self.redirect('/')
+        amount = int(self.request.get('amount'))
 
-
-class CounterWorker(webapp2.RequestHandler):
-    def post(self):  # should run at most 1/s due to entity group limit
-        key = self.request.get('key')
-
+        # This task should run at most once per second because of the datastore
+        # transaction write throughput.
         @ndb.transactional
         def update_counter():
-            counter = Counter.get_or_insert(key, count=0)
-            counter.count += 1
+            counter = Counter.get_or_insert(COUNTER_KEY, count=0)
+            counter.count += amount
             counter.put()
+
         update_counter()
 
 
 app = webapp2.WSGIApplication([
-    ('/', CounterHandler),
-    ('/worker', CounterWorker)
+    ('/update_counter', UpdateCounterHandler)
 ], debug=True)
 # [END all]
