@@ -1,5 +1,13 @@
 # App Engine Task Queue Counter
 
+To run this app locally, specify both `.yaml` files to `dev_appserver.py`:
+
+    dev_appserver.py -A your-app-id application.yaml worker.yaml
+
+To deploy this application, specify both `.yaml` files to `appcfg.py`:
+
+    appcfg.py update -A your-app-id -V 1 application.yaml worker.yaml
+
 <!-- auto-doc-link -->
 These samples are used on the following documentation page:
 

@@ -12,18 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.appengine.ext import ndb
-import main
+import application
 import webtest
+import worker
 
 
-def test_app(testbed, run_tasks):
-    key_name = 'foo'
+def test_all(testbed, run_tasks):
+    test_app = webtest.TestApp(application.app)
+    test_worker = webtest.TestApp(worker.app)
 
-    app = webtest.TestApp(main.app)
-    app.post('/', {'key': key_name})
-    run_tasks(app)
+    response = test_app.get('/')
+    assert '0' in response.body
 
-    key = ndb.Key('Counter', key_name)
-    counter = key.get()
-    assert counter.count == 1
+    test_app.post('/enqueue', {'amount': 5})
+    run_tasks(test_worker)
+
+    response = test_app.get('/')
+    assert '5' in response.body
