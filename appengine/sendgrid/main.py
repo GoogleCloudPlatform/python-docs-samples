@@ -34,9 +34,8 @@ def send_simple_message(recipient):
     message.set_subject('message subject')
     message.set_html('<strong>HTML message body</strong>')
     message.set_text('plaintext message body')
-    message.set_from('from: Example Sender <mailgun@{}>'.format(
-     SENDGRID_DOMAIN))
-    message.set_from('App Engine App <sendgrid@{}>'.format(SENDGRID_DOMAIN))
+    message.set_from('Example App Engine Sender <sendgrid@{}>'.format(
+        SENDGRID_DOMAIN))
     message.add_to(recipient)
     status, msg = sg.send(message)
     return (status, msg)
