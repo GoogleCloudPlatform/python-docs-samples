@@ -14,17 +14,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START sendgrid-imp]
 import sendgrid
+# [END sendgrid-imp]
 import webapp2
 
 # make a secure connection to SendGrid
+# [START sendgrid-config]
 SENDGRID_API_KEY = 'your-sendgrid-api-key'
 SENDGRID_DOMAIN = 'your-sendgrid-domain'
+# [END sendgrid-config]
 
 sg = sendgrid.SendGridClient(SENDGRID_API_KEY)
 
 
 def send_simple_message(recipient):
+    # [START sendgrid-send]
     message = sendgrid.Mail()
     message.set_subject('message subject')
     message.set_html('<strong>HTML message body</strong>')
@@ -35,6 +40,7 @@ def send_simple_message(recipient):
     message.add_to(recipient)
     status, msg = sg.send(message)
     return (status, msg)
+    # [END sendgrid-send]
 
 
 class MainPage(webapp2.RequestHandler):
