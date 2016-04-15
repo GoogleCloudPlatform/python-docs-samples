@@ -52,16 +52,24 @@ class EnqueueTaskHandler(webapp2.RequestHandler):
             'Task {} enqueued, ETA {}.'.format(task.name, task.eta))
 
 
+# AsyncEnqueueTaskHandler behaves the same as EnqueueTaskHandler, but shows
+# how to queue the task using the asyncronous API. This is not wired up by
+# default. To use this, change the MainPageHandler's form action to
+# /enqueue_async
 class AsyncEnqueueTaskHandler(webapp2.RequestHandler):
     def post(self):
         amount = int(self.request.get('amount'))
 
-        future = taskqueue.add_async(
+        queue = taskqueue.Queue(name='default')
+        task = taskqueue.Task(
             url='/update_counter',
             target='worker',
             params={'amount': amount})
 
-        task = future.wait()
+        rpc = queue.add_async(task)
+
+        # Wait for the rpc to complete and return the queued task.
+        task = rpc.get_result()
 
         self.response.write(
             'Task {} enqueued, ETA {}.'.format(task.name, task.eta))
@@ -70,5 +78,5 @@ class AsyncEnqueueTaskHandler(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
     ('/', MainPageHandler),
     ('/enqueue', EnqueueTaskHandler),
-    ('/enqueue_async', EnqueueTaskHandler)
+    ('/enqueue_async', AsyncEnqueueTaskHandler)
 ], debug=True)
