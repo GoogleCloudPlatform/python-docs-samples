@@ -283,3 +283,12 @@ def construct_keys_from_range_of_reserved_ids(first, last):
 def reserve_model_ids_up_to(N):
     first, last = MyModel.allocate_ids(max=N)
     return first, last
+
+
+class ModelWithUser(ndb.Model):
+    user_id = ndb.StringProperty()
+    color = ndb.StringProperty()
+
+    @classmethod
+    def get_by_user(cls, user):
+        return cls.query().filter(cls.user_id == user.user_id()).get()

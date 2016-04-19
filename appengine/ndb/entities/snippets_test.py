@@ -14,6 +14,7 @@
 
 import inspect
 
+from google.appengine.api import users
 from google.appengine.ext import ndb
 from google.appengine.ext.ndb.google_imports import datastore_errors
 import pytest
@@ -227,3 +228,10 @@ def test_construct_keys_from_range_of_reserved_ids(client):
 def test_reserve_model_ids_up_to(client):
     first, last = snippets.reserve_model_ids_up_to(5)
     assert last - first >= 4
+
+
+def test_model_with_user(client):
+    user = users.User(email='user@example.com', _user_id='123')
+    item = snippets.ModelWithUser(user_id=user.user_id())
+    item.put()
+    assert snippets.ModelWithUser.get_by_user(user) == item
