@@ -19,6 +19,8 @@ using App Engine's native unix socket.
 For more information, see the README.md.
 """
 
+# [START all]
+
 import os
 
 import MySQLdb
@@ -56,3 +58,5 @@ class MainPage(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
     ('/', MainPage),
 ], debug=True)
+
+# [END all]
