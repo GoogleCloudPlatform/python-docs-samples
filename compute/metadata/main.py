@@ -47,9 +47,9 @@ def wait_for_maintenance(callback):
         if r.status_code == 503:
             time.sleep(1)
             continue
-        # [END hanging_get]
 
         last_etag = r.headers['etag']
+        # [END hanging_get]
 
         if r.text == 'MIGRATE_ON_HOST_MAINTENANCE':
             in_maintenance = True
