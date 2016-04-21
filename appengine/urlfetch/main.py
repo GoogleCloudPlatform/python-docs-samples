@@ -18,13 +18,16 @@ URLS on App Engine
 """
 
 import logging
-# [START url-imports]
 import urllib
-import urllib2
 
+# [START urllib2-imports]
+import urllib2
+# [END urllib2-imports]
+
+# [START urlfetch-imports]
 from google.appengine.api import urlfetch
+# [END urlfetch-imports]
 import webapp2
-# [END url-imports]
 
 
 class UrlLibFetchHandler(webapp2.RequestHandler):
@@ -46,7 +49,7 @@ class UrlFetchHandler(webapp2.RequestHandler):
 
     def get(self):
         # [START urlfetch-get]
-        url = "http://www.googleadsfasdf.com/"
+        url = "http://www.google.com/"
         try:
             result = urlfetch.fetch(url)
             if result.status_code == 200:
