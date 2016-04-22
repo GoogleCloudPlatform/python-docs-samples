@@ -5,11 +5,7 @@ This section contains samples for [Google Compute Engine](https://cloud.google.c
 ## Running the samples
 
 1. Your environment must be setup with [authentication
-information](https://developers.google.com/identity/protocols/application-default-credentials#howtheywork). *Note* that Cloud Monitoring does not currently work
-with `gcloud auth`. You will need to use a *service account* when running
-locally and set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable.
-
-        $ export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
+information](https://developers.google.com/identity/protocols/application-default-credentials#howtheywork). If you're running on Compute Engine, this is already setup.
 
 2. Install dependencies from `requirements.txt`
 
@@ -22,11 +18,6 @@ locally and set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable.
 For more information on Compute Engine you can visit:
 
 > https://cloud.google.com/compute
-
-For more information on the Cloud Monitoring API Python library surface you
-can visit:
-
-> https://developers.google.com/resources/api-libraries/documentation/compute/v1/python/latest/
 
 For information on the Python Client Library visit:
 

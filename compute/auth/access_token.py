@@ -39,7 +39,7 @@ def get_access_token():
     r = requests.get(url, headers=METADATA_HEADERS)
     r.raise_for_status()
 
-    # Extract the access token from the respose.
+    # Extract the access token from the response.
     access_token = r.json()['access_token']
 
     return access_token
@@ -51,7 +51,7 @@ def list_buckets(project_id, access_token):
         'project': project_id
     }
     headers = {
-        'Authenication': 'Bearer {}'.format(access_token)
+        'Authentication': 'Bearer {}'.format(access_token)
     }
 
     r = requests.get(url, params=params, headers=headers)
