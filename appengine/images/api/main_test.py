@@ -13,8 +13,8 @@
 # limitations under the License.
 
 import main
-import pytest
 import mock
+import pytest
 import webtest
 
 
@@ -30,10 +30,9 @@ def test_img(app):
         photo = main.Photo(
             id=234
         )
-        photo.title='asdf'
-        photo.full_size_image=b'123'
+        photo.title = 'asdf'
+        photo.full_size_image = b'123'
         photo.put()
-        print photo.key.id()
 
         response = app.get('/img?id=%s' % photo.key.id())
 
