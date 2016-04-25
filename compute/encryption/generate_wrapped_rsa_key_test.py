@@ -15,4 +15,4 @@ import generate_wrapped_rsa_key
 
 
 def test_main():
-    generate_wrapped_rsa_key.main()
+    generate_wrapped_rsa_key.main(None)
