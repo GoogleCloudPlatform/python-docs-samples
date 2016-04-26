@@ -7,7 +7,7 @@ Before you can run tests locally you must have:
 * The latest [nox](https://nox.readthedocs.org/en/latest/),
   [pip](https://pypi.python.org/pypi/pip), and [gcp-python-repo-tools](https://pypi.python.org/pypi/gcp-python-repo-tools) installed.
 
-        $ sudo pip install --upgrade nox-automation pip gcp-python-repo-tools
+        $ sudo pip install --upgrade nox-automation
 
 * The [Google Cloud SDK](https://cloud.google.com/sdk/) installed. You
   can do so with the following command:
