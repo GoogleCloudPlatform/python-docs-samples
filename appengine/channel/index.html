@@ -189,7 +189,8 @@
       
       openChannel = function() {
         var token = '{{ token }}';
-        var channel = new goog.appengine.Channel(token);
+// [START create_channel_2]
+        var channel = new goog.appengine.Channel('{{ token }}');
         var handler = {
           'onopen': onOpened,
           'onmessage': onMessage,
@@ -197,8 +198,9 @@
           'onclose': function() {}
         };
         var socket = channel.open(handler);
-        socket.onopen = onOpened;
-        socket.onmessage = onMessage;
+// [END create_channel_2]
+        // socket.onopen = onOpened;
+        // socket.onmessage = onMessage;
       }
       
       initialize = function() {
