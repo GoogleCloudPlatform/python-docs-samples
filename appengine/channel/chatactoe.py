@@ -1,14 +1,26 @@
-#!/usr/bin/python2.4
+
+# Copyright 2016 Google Inc. All Rights Reserved.
 #
-# Copyright 2010 Google Inc. All Rights Reserved.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-# pylint: disable-msg=C6310
-
-"""Channel Tic Tac Toe
-
+"""
+Channel Tic Tac Toe
 This module demonstrates the App Engine Channel API by implementing a
 simple tic-tac-toe game.
+For more information, see the README.md.
 """
+
+# [START all]
 
 import datetime
 import logging
@@ -23,6 +35,8 @@ from google.appengine.api import users
 from google.appengine.ext import db
 
 
+CLOUD_PROJECT_ID = '<your_project_id>'
+
 class Game(db.Model):
   """All the data we store for a game"""
   userX = db.UserProperty()
@@ -31,7 +45,7 @@ class Game(db.Model):
   moveX = db.BooleanProperty()
   winner = db.StringProperty()
   winning_board = db.StringProperty()
-  
+
 
 class Wins():
   x_win_patterns = ['XXX......',
@@ -44,11 +58,12 @@ class Wins():
                     '..X.X.X..']
 
   o_win_patterns = map(lambda s: s.replace('X','O'), x_win_patterns)
-  
+
   x_wins = map(lambda s: re.compile(s), x_win_patterns)
   o_wins = map(lambda s: re.compile(s), o_win_patterns)
 
 
+# [START validate_message_3]
 class GameUpdater():
   """Creates an object to store the game's state, and handles validating moves
   and broadcasting updates to the game."""
@@ -83,7 +98,7 @@ class GameUpdater():
       # X just moved, check for X wins
       wins = Wins().x_wins
       potential_winner = self.game.userX.user_id()
-      
+
     for win in wins:
       if win.match(self.game.board):
         self.game.winner = potential_winner
@@ -102,8 +117,10 @@ class GameUpdater():
           self.game.put()
           self.send_update()
           return
+# [END validate_message_3]
 
 
+# [START validate_message_2]
 class GameFromRequest():
   game = None;
 
@@ -115,8 +132,10 @@ class GameFromRequest():
 
   def get_game(self):
     return self.game
+# [END validate_message_2]
 
 
+# [START validate_message_1]
 class MovePage(webapp2.RequestHandler):
 
   def post(self):
@@ -125,6 +144,7 @@ class MovePage(webapp2.RequestHandler):
     if game and user:
       id = int(self.request.get('i'))
       GameUpdater(game).make_move(id, user)
+# [END validate_message_1]
 
 
 class OpenedPage(webapp2.RequestHandler):
@@ -133,6 +153,7 @@ class OpenedPage(webapp2.RequestHandler):
     GameUpdater(game).send_update()
 
 
+# [START create_channel_1]
 class MainPage(webapp2.RequestHandler):
   """The main UI page, renders the 'index.html' template."""
 
@@ -157,7 +178,7 @@ class MainPage(webapp2.RequestHandler):
           game.userO = user
           game.put()
 
-      game_link = 'http://localhost:8080/?g=' + game_key
+      game_link = 'https://' + CLOUD_PROJECT_ID + '.appspot.com/?g=' + game_key
 
       if game:
         token = channel.create_channel(user.user_id() + game_key)
@@ -167,19 +188,16 @@ class MainPage(webapp2.RequestHandler):
                            'game_link': game_link,
                            'initial_message': GameUpdater(game).get_game_message()
                           }
-        # path = os.path.join(os.path.dirname(__file__), 'index.html')
         template = jinja_environment.get_template('index.html')
-        # self.response.out.write(template.render(path, template_values))
         self.response.out.write(template.render(template_values))
       else:
         self.response.out.write('No such game')
     else:
       self.redirect(users.create_login_url(self.request.uri))
+# [END create_channel_1]
 
 jinja_environment = jinja2.Environment(
         loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
-
-# app = webapp2.WSGIApplication([('/', MainPage)], debug=True)
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -187,10 +205,5 @@ app = webapp2.WSGIApplication([
     ('/move', MovePage)], debug=True)
 
 
-"""
-def main():
-  run_wsgi_app(app)
+# [END all]
 
-if __name__ == "__main__":
-  main()
-"""
