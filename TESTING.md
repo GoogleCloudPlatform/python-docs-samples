@@ -38,16 +38,6 @@ From the Cloud Console, create a new Service Account and download its json key. 
 * Run `source testing/resources/test-env.sh`.
 * Run `export GOOGLE_APPLICATION_CREDENTIALS=testing/resources/service-account.json`.
 
-If you want to run the Google App Engine tests, you will need:
-
-* The App Engine Python SDK. You can also download it programatically with `gcp-python-repo-tools`:
-
-        $ gcp-python-repo-tools download-appengine-sdk <dest>
-
-* Set the `GAE_PYTHONPATH` variable:
-
-        $ export GAE_PYTHONPATH=<path your AppeEngine sdk>
-
 ### Test environments
 
 We use [nox](https://nox.readthedocs.org/en/latest/) to configure
@@ -78,7 +68,6 @@ invoke nox like this:
 When adding a new top-level directory, be sure to edit ``.coveragerc`` to
 include it in coverage reporting.
 
-To add new tests that require Google App Engine, please place them in
-the ``appengine`` directory if possible. If you place them elsewhere,
-you will need to modify ``nox.py`` to make the environments
-appropriately run or ignore your test.
+To add new tests that require Google App Engine, you must place them in
+the ``appengine`` directory so that the py.test fixtures needed for App
+Engine are available.
