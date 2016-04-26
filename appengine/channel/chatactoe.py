@@ -35,7 +35,7 @@ from google.appengine.api import users
 from google.appengine.ext import db
 
 
-CLOUD_PROJECT_ID = '<your_project_id>'
+CLOUD_PROJECT_ID = 'your_project_id'
 
 class Game(db.Model):
   """All the data we store for a game"""
