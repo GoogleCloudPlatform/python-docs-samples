@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START app]
+import logging
 import os
 
 from flask import Flask, render_template, request
@@ -55,6 +56,15 @@ def send_email():
 
     return 'Email sent.'
 # [END example]
+
+
+@app.errorhandler(500)
+def server_error(e):
+    logging.exception('An error ocurred during a request.')
+    return """
+    An internal error occurred: <pre>{}</pre>
+    See logs for full stacktrace.
+    """.format(e), 500
 
 
 if __name__ == '__main__':
