@@ -15,16 +15,12 @@ import logging
 import os
 import random
 import re
-from django.utils import simplejson
+import json
+import jinja2
+import webapp2
 from google.appengine.api import channel
 from google.appengine.api import users
 from google.appengine.ext import db
-from google.appengine.ext import webapp
-from google.appengine.ext.webapp import template
-from google.appengine.ext.webapp.util import run_wsgi_app
-
-# specify the name of your settings module
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 
 
 class Game(db.Model):
@@ -54,6 +50,8 @@ class Wins():
 
 
 class GameUpdater():
+  """Creates an object to store the game's state, and handles validating moves
+  and broadcasting updates to the game."""
   game = None
 
   def __init__(self, game):
@@ -68,7 +66,7 @@ class GameUpdater():
       'winner': self.game.winner,
       'winningBoard': self.game.winning_board
     }
-    return simplejson.dumps(gameUpdate)
+    return json.dumps(gameUpdate)
 
   def send_update(self):
     message = self.get_game_message()
@@ -119,7 +117,7 @@ class GameFromRequest():
     return self.game
 
 
-class MovePage(webapp.RequestHandler):
+class MovePage(webapp2.RequestHandler):
 
   def post(self):
     game = GameFromRequest(self.request).get_game()
@@ -129,19 +127,18 @@ class MovePage(webapp.RequestHandler):
       GameUpdater(game).make_move(id, user)
 
 
-class OpenedPage(webapp.RequestHandler):
+class OpenedPage(webapp2.RequestHandler):
   def post(self):
     game = GameFromRequest(self.request).get_game()
     GameUpdater(game).send_update()
 
 
-class MainPage(webapp.RequestHandler):
+class MainPage(webapp2.RequestHandler):
   """The main UI page, renders the 'index.html' template."""
 
   def get(self):
     """Renders the main page. When this page is shown, we create a new
     channel to push asynchronous updates to the client."""
-    print 'in main page get'
     user = users.get_current_user()
     game_key = self.request.get('g')
     game = None
@@ -155,7 +152,8 @@ class MainPage(webapp.RequestHandler):
         game.put()
       else:
         game = Game.get_by_key_name(game_key)
-        if not game.userO:
+        # if not game.userO:
+        if not game.userO and game.userX != user:
           game.userO = user
           game.put()
 
@@ -169,23 +167,30 @@ class MainPage(webapp.RequestHandler):
                            'game_link': game_link,
                            'initial_message': GameUpdater(game).get_game_message()
                           }
-        path = os.path.join(os.path.dirname(__file__), 'index.html')
-
-        self.response.out.write(template.render(path, template_values))
+        # path = os.path.join(os.path.dirname(__file__), 'index.html')
+        template = jinja_environment.get_template('index.html')
+        # self.response.out.write(template.render(path, template_values))
+        self.response.out.write(template.render(template_values))
       else:
         self.response.out.write('No such game')
     else:
       self.redirect(users.create_login_url(self.request.uri))
 
+jinja_environment = jinja2.Environment(
+        loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
-application = webapp.WSGIApplication([
+# app = webapp2.WSGIApplication([('/', MainPage)], debug=True)
+
+app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/opened', OpenedPage),
     ('/move', MovePage)], debug=True)
 
 
+"""
 def main():
-  run_wsgi_app(application)
+  run_wsgi_app(app)
 
 if __name__ == "__main__":
   main()
+"""

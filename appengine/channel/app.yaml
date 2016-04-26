@@ -4,13 +4,15 @@ module: tictactoe
 version: 1
 runtime: python27
 api_version: 1
-threadsafe: false
+threadsafe: true
 
 handlers:
 - url: /.*
-  script: chatactoe.application
+  script: chatactoe.app
   #script: chatactoe.py
 
 libraries:
-- name: django
-  version: "1.4"
+- name: webapp2
+  version: latest
+- name: jinja2
+  version: latest
