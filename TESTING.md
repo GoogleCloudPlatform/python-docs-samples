@@ -7,7 +7,7 @@ Before you can run tests locally you must have:
 * The latest [nox](https://nox.readthedocs.org/en/latest/),
   [pip](https://pypi.python.org/pypi/pip), and [gcp-python-repo-tools](https://pypi.python.org/pypi/gcp-python-repo-tools) installed.
 
-        $ sudo pip install --upgrade nox-automation pip gcp-python-repo-tools
+        $ sudo pip install --upgrade nox-automation
 
 * The [Google Cloud SDK](https://cloud.google.com/sdk/) installed. You
   can do so with the following command:
@@ -37,16 +37,6 @@ From the Cloud Console, create a new Service Account and download its json key. 
 * Copy `testing/resources/test-env.tmpl.sh` to `testing/resources/test-env.sh`, and updated it with your configuration.
 * Run `source testing/resources/test-env.sh`.
 * Run `export GOOGLE_APPLICATION_CREDENTIALS=testing/resources/service-account.json`.
-
-If you want to run the Google App Engine tests, you will need:
-
-* The App Engine Python SDK. You can also download it programatically with `gcp-python-repo-tools`:
-
-        $ gcp-python-repo-tools download-appengine-sdk <dest>
-
-* Set the `GAE_PYTHONPATH` variable:
-
-        $ export GAE_PYTHONPATH=<path your AppeEngine sdk>
 
 ### Test environments
 
@@ -78,7 +68,6 @@ invoke nox like this:
 When adding a new top-level directory, be sure to edit ``.coveragerc`` to
 include it in coverage reporting.
 
-To add new tests that require Google App Engine, please place them in
-the ``appengine`` directory if possible. If you place them elsewhere,
-you will need to modify ``nox.py`` to make the environments
-appropriately run or ignore your test.
+To add new tests that require Google App Engine, you must place them in
+the ``appengine`` directory so that the py.test fixtures needed for App
+Engine are available.
