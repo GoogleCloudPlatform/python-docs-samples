@@ -63,6 +63,16 @@ def index():
     return render_template('index.html', external_ip=external_ip)
 # [END app]
 
+
+@app.errorhandler(500)
+def server_error(e):
+    logging.exception('An error ocurred during a request.')
+    return """
+    An internal error occurred: <pre>{}</pre>
+    See logs for full stacktrace.
+    """.format(e), 500
+
+
 if __name__ == '__main__':
     print("""
 This can not be run directly because the Flask development server does not

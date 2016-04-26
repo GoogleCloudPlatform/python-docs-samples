@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
 import os
 import socket
 
@@ -56,6 +57,15 @@ Seen:
 
     return output, 200, {'Content-Type': 'text/plain; charset=utf-8'}
 # [END example]
+
+
+@app.errorhandler(500)
+def server_error(e):
+    logging.exception('An error ocurred during a request.')
+    return """
+    An internal error occurred: <pre>{}</pre>
+    See logs for full stacktrace.
+    """.format(e), 500
 
 
 if __name__ == '__main__':
