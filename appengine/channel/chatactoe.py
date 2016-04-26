@@ -178,6 +178,7 @@ class MainPage(webapp2.RequestHandler):
           game.userO = user
           game.put()
 
+      global CLOUD_PROJECT_ID
       game_link = 'https://' + CLOUD_PROJECT_ID + '.appspot.com/?g=' + game_key
 
       if game:
