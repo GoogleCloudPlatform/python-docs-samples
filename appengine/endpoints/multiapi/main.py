@@ -39,12 +39,14 @@ class Shelves(remote.Service):
         return Response()
 
 
+# [START books]
 @api_collection.api_class(resource_name='books', path='books')
 class Books(remote.Service):
 
     @endpoints.method(Request, Response, path='bookmark')
     def bookmark(self, request):
         return Response()
+# [END books]
 # [END multiclass]
 
 # [START api_server]
