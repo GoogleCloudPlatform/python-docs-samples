@@ -14,8 +14,10 @@
 import re
 
 from customer_supplied_keys import main
+from gcp.testing.flaky import flaky
 
 
+@flaky
 def test_main(cloud_config, capsys):
     main(cloud_config.storage_bucket, __file__)
     out, err = capsys.readouterr()

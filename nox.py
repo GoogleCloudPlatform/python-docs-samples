@@ -25,7 +25,8 @@ COMMON_PYTEST_ARGS = [
     '-x', '--no-success-flaky-report', '--cov', '--cov-config',
     '.coveragerc', '--cov-append', '--cov-report=']
 
-SESSION_TESTS_BLACKLIST = set(('appengine', 'testing'))
+# Speech is temporarily disabled.
+SESSION_TESTS_BLACKLIST = set(('appengine', 'testing', 'speech'))
 
 
 def session_lint(session):
@@ -121,9 +122,15 @@ def session_gae(session, extra_pytest_args=None):
             success_codes=[0, 5])  # Treat no test collected as success.
 
 
-def session_travis(session):
+@nox.parametrize('subsession', ['gae', 'tests'])
+def session_travis(session, subsession):
     """On travis, just run with python3.4 and don't run slow or flaky tests."""
-    session_tests(
-        session, 'python3.4', extra_pytest_args=['-m not slow and not flaky'])
-    session_gae(
-        session, extra_pytest_args=['-m not slow and not flaky'])
+    if subsession == 'tests':
+        session_tests(
+            session,
+            'python3.4',
+            extra_pytest_args=['-m not slow and not flaky'])
+    else:
+        session_gae(
+            session,
+            extra_pytest_args=['-m not slow and not flaky'])
