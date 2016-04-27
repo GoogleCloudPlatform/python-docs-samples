@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START app]
+import logging
 import subprocess
 
 from flask import Flask
@@ -27,4 +28,14 @@ def fortune():
     output = subprocess.check_output('/usr/games/fortune')
     return output, 200, {'Content-Type': 'text/plain; charset=utf-8'}
 # [END example]
+
+
+@app.errorhandler(500)
+def server_error(e):
+    logging.exception('An error ocurred during a request.')
+    return """
+    An internal error occurred: <pre>{}</pre>
+    See logs for full stacktrace.
+    """.format(e), 500
+
 # [END app]

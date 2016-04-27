@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START app]
+import logging
 import os
 
 from flask import Flask, request
@@ -71,6 +72,15 @@ def receive_sms():
     response.message(message)
     return str(response), 200, {'Content-Type': 'application/xml'}
 # [END receive_sms]
+
+
+@app.errorhandler(500)
+def server_error(e):
+    logging.exception('An error ocurred during a request.')
+    return """
+    An internal error occurred: <pre>{}</pre>
+    See logs for full stacktrace.
+    """.format(e), 500
 
 
 if __name__ == '__main__':

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
 import os
 
 from flask import Flask
@@ -40,6 +41,15 @@ def index():
 
     return 'Value is {}'.format(value)
 # [END example]
+
+
+@app.errorhandler(500)
+def server_error(e):
+    logging.exception('An error ocurred during a request.')
+    return """
+    An internal error occurred: <pre>{}</pre>
+    See logs for full stacktrace.
+    """.format(e), 500
 
 
 if __name__ == '__main__':
