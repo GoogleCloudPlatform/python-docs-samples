@@ -137,6 +137,7 @@
         return state.userX == state.me ? 'X' : 'O';
       };
 
+// [START open_socket]
       sendMessage = function(path, opt_param) {
         path += '?g=' + state.game_key;
         if (opt_param) {
@@ -147,11 +148,18 @@
         xhr.send();
       };
 
+      onOpened = function() {
+        sendMessage('/opened');
+      };
+// [END open_socket]
+
+// [START update_state]
       moveInSquare = function(id) {
         if (isMyMove() && state.board[id] == ' ') {
           sendMessage('/move', 'i=' + id);
         }
       };
+// [END update_state]
 
       highlightSquare = function(id) {
         if (state.winner != "") {
@@ -170,10 +178,6 @@
 
           document.getElementById(i).style['background'] = color;
         }
-      };
-      
-      onOpened = function() {
-        sendMessage('/opened');
       };
       
       onMessage = function(m) {
