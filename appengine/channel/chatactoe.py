@@ -1,4 +1,3 @@
-
 # Copyright 2016 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,14 +27,15 @@ import os
 import random
 import re
 import json
-import jinja2
-import webapp2
+
 from google.appengine.api import channel
 from google.appengine.api import users
+from google.appengine.api import app_identity
 from google.appengine.ext import db
+import jinja2
+import webapp2
 
-
-CLOUD_PROJECT_ID = 'your_project_id'
+CLOUD_PROJECT_ID = app_identity.get_application_id()
 
 class Game(db.Model):
   """All the data we store for a game"""

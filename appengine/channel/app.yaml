@@ -1,18 +1,15 @@
-# uncomment below and replace with your Project ID
-# application: YOUR_PROJECT_ID
 module: tictactoe
-version: 1
 runtime: python27
+version: 1
 api_version: 1
 threadsafe: true
 
 handlers:
 - url: /.*
   script: chatactoe.app
-  #script: chatactoe.py
 
 libraries:
 - name: webapp2
-  version: latest
+  version: "2.5.2"
 - name: jinja2
-  version: latest
+  version: "2.6"
