@@ -131,11 +131,11 @@
       isMyMove = function() {
         return (state.winner == "") && 
             (state.moveX == (state.userX == state.me));
-      }
+      };
 
       myPiece = function() {
         return state.userX == state.me ? 'X' : 'O';
-      }
+      };
 
       sendMessage = function(path, opt_param) {
         path += '?g=' + state.game_key;
@@ -151,7 +151,7 @@
         if (isMyMove() && state.board[id] == ' ') {
           sendMessage('/move', 'i=' + id);
         }
-      }
+      };
 
       highlightSquare = function(id) {
         if (state.winner != "") {
@@ -170,7 +170,7 @@
 
           document.getElementById(i).style['background'] = color;
         }
-      }
+      };
       
       onOpened = function() {
         sendMessage('/opened');
@@ -185,7 +185,7 @@
         state.winner = newState.winner || "";
         state.winningBoard = newState.winningBoard || "";
         updateGame();
-      }
+      };
       
       openChannel = function() {
         var token = '{{ token }}';
@@ -201,7 +201,7 @@
 // [END create_channel_2]
         // socket.onopen = onOpened;
         // socket.onmessage = onMessage;
-      }
+      };
       
       initialize = function() {
         openChannel();
@@ -212,7 +212,7 @@
           square.onclick = new Function('moveInSquare(' + i + ')');
         }
         onMessage({data: '{{ initial_message }}'});
-      }      
+      };
 
       setTimeout(initialize, 100);
 

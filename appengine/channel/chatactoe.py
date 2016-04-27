@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 """
 Channel Tic Tac Toe
 This module demonstrates the App Engine Channel API by implementing a
@@ -19,17 +20,13 @@ For more information, see the README.md.
 """
 
 # [START all]
-
-import datetime
-import logging
-import os
-import random
-import re
 import json
+import os
+import re
 
+from google.appengine.api import app_identity
 from google.appengine.api import channel
 from google.appengine.api import users
-from google.appengine.api import app_identity
 from google.appengine.ext import db
 import jinja2
 import webapp2
@@ -102,7 +99,8 @@ class GameUpdater():
                 return
 
     def make_move(self, position, user):
-        if position >= 0 and user == self.game.userX or user == self.game.userO:
+        if (position >= 0 and user == self.game.userX or
+                user == self.game.userO):
             if self.game.moveX == (user == self.game.userX):
                 boardList = list(self.game.board)
                 if (boardList[position] == ' '):
@@ -174,7 +172,8 @@ class MainPage(webapp2.RequestHandler):
                     game.put()
 
             global CLOUD_PROJECT_ID
-            game_link = 'https://' + CLOUD_PROJECT_ID + '.appspot.com/?g=' + game_key
+            game_link = (
+                'https://' + CLOUD_PROJECT_ID + '.appspot.com/?g=' + game_key)
 
             if game:
                 token = channel.create_channel(user.user_id() + game_key)
@@ -195,10 +194,10 @@ class MainPage(webapp2.RequestHandler):
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
-app = webapp2.WSGIApplication(
-    [
-        ('/', MainPage), ('/opened', OpenedPage), ('/move', MovePage)
-    ],
-    debug=True)
+app = webapp2.WSGIApplication([
+    ('/', MainPage),
+    ('/opened', OpenedPage),
+    ('/move', MovePage)
+], debug=True)
 
 # [END all]
