@@ -20,8 +20,8 @@ using the Google OAuth2 flow."""
 import argparse
 
 import oauth2client.client
-import oauth2client.tools
 import oauth2client.file
+import oauth2client.tools
 import requests
 from six.moves import urllib
 

@@ -43,13 +43,13 @@ for more information.
 * If you're running the `speech_rest.py` sample:
 
     ```sh
-    $ pip install requirements-speech_rest.txt
+    $ pip install -r requirements-speech_rest.txt
     ```
 
 * If you're running the `speech_streaming.py` sample:
 
     ```sh
-    $ pip install requirements-speech_streaming.txt
+    $ pip install -r requirements-speech_streaming.txt
     ```
 
 ## Run the example
