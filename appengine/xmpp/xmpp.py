@@ -68,9 +68,9 @@ class ErrorHandler(webapp2.RequestHandler):
         # [END error]
 
 
-# [START send-chat-to-user]
 class SendChatHandler(webapp2.RequestHandler):
     def post(self):
+        # [START send-chat-to-user]
         user_address = 'example@gmail.com'
         msg = ('Someone has sent you a gift on Example.com. '
                'To view: http://example.com/gifts/')
@@ -81,7 +81,7 @@ class SendChatHandler(webapp2.RequestHandler):
             # Send an email message instead...
             # [END send-chat-to-user]
             pass
-# [START send-chat-to-user]
+# [END send-chat-to-user]
 
 
 # [START chat]
