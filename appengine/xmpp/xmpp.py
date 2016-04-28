@@ -44,7 +44,8 @@ class PresenceHandler(webapp2.RequestHandler):
         # from the resource (e.g., gmail), and then add the
         # address to the roster.
         sender = self.request.get('from').split('/')[0]
-        roster.add_contact(sender)
+        xmpp.send_presence(sender, status=self.request.get('status'),
+                           presence_show=self.request.get('show'))
         # [END presence]
 
 
