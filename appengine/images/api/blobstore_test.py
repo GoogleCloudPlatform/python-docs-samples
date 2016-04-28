@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import main
+import blobstore
 import mock
 import pytest
 import webtest
@@ -20,30 +20,26 @@ import webtest
 
 @pytest.fixture
 def app(testbed):
-    return webtest.TestApp(main.app)
+    return webtest.TestApp(blobstore.app)
 
 
 def test_img(app):
-    with mock.patch('main.images') as mock_images:
-        mock_images.resize.return_value = 'asdf'
-        mock_images.im_feeling_lucky.return_value = 'gsdf'
-        photo = main.Photo(
-            id=234
-        )
-        photo.title = 'asdf'
-        photo.full_size_image = b'123'
-        photo.put()
+    with mock.patch('blobstore.images') as mock_images:
+        with mock.patch('blobstore.blobstore') as mock_blobstore:
+            mock_blobstore.get.return_value = b'123'
+            mock_images.resize.return_value = 'asdf'
+            mock_images.im_feeling_lucky.return_value = 'gsdf'
 
-        response = app.get('/img?id=%s' % photo.key.id())
+            response = app.get('/img?blob_key=123')
 
-        assert response.status_int == 200
+            assert response.status_int == 200
 
 
 def test_img_missing(app):
-    # Bogus image id, should get error
-    app.get('/img?id=123', status=404)
+    # Bogus blob_key, should get error
+    app.get('/img?blob_key=123', status=404)
 
 
 def test_no_img_id(app):
-    # No image id, should get error
+    # No blob_key, should get error
     app.get('/img', status=404)
