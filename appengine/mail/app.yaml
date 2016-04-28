@@ -1,0 +1,47 @@
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+# [START bounce_service]
+# [START mail_service]
+inbound_services:
+- mail
+# [END mail_service]
+- mail_bounce
+# [END bounce_service]
+
+handlers:
+- url: /user/.+
+  script: user_signup.app
+- url: /send_mail
+  script: send_mail.app
+- url: /send_message
+  script: send_message.app
+# [START handle_incoming_email]
+- url: /_ah/mail/.+
+  script: handle_incoming_email.app
+  login: admin
+# [END handle_incoming_email]
+# [START handle_all_email]
+- url: /_ah/mail/owner@.*your_app_id\.appspotmail\.com
+  script: handle_owner.app
+  login: admin
+- url: /_ah/mail/support@.*your_app_id\.appspotmail\.com
+  script: handle_support.app
+  login: admin
+- url: /_ah/mail/.+
+  script: handle_catchall.app
+  login: admin
+# [END handle_all_email]
+# [START handle_bounced_email]
+- url: /_ah/bounce
+  script: handle_bounced_email.app
+  login: admin
+# [END handle_bounced_email]
+- url: /attachment
+  script: attachment.app
+- url: /header
+  script: header.app
+- url: /
+  static_files: index.html
+  upload: index.html
