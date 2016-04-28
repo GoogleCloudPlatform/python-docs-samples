@@ -9,7 +9,8 @@ handlers:
 # [START inbound-services]
 inbound_services:
 - xmpp_message
+# [END inbound-services]
 - xmpp_presence
 - xmpp_subscribe
 - xmpp_error
-# [END inbound-services]
+
