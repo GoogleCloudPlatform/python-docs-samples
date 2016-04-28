@@ -1,0 +1,12 @@
+runtime: python
+vm: true
+entrypoint: gunicorn -b :$PORT main:app
+
+runtime_config:
+  python_version: 3
+
+beta_settings:
+  # Enable Google Cloud Endpoints API management.
+  use_endpoints_api_management: true
+  # Specify the Swagger API specification.
+  endpoints_swagger_spec_file: swagger.yaml

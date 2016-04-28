@@ -1,0 +1,6 @@
+Flask==0.10.1
+gunicorn==19.4.5
+gcloud==0.12.0
+six==1.10.0
+pyyaml==3.11
+requests==2.9.1

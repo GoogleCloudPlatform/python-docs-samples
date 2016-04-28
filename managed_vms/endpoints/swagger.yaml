@@ -1,0 +1,106 @@
+swagger: "2.0"
+info:
+  description: "A simple Google Cloud Endpoints API example."
+  title: "Endpoints Example"
+  version: "1.0.0"
+host: "YOUR-PROJECT-ID.appspot.com"
+basePath: "/"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+schemes:
+- "https"
+paths:
+  "/echo":
+    post:
+      description: "Echo back a given message."
+      operationId: "echo"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Echo"
+          schema:
+            $ref: "#/definitions/echoMessage"
+      parameters:
+      - description: "Message to echo"
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: "#/definitions/echoMessage"
+  "/auth/info/googlejwt":
+    get:
+      description: "Returns the requests' authentication information."
+      operationId: "auth_info_google_jwt"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Authenication info."
+          schema:
+            $ref: "#/definitions/authInfoResponse"
+      x-security:
+      - google_jwt:
+          audiences:
+          # This must match the "aud" field in the JWT. You can add multiple
+          # audiences to accept JWTs from multiple clients.
+          - "echo.endpoints.sample.google.com"
+  "/auth/info/googleidtoken":
+    get:
+      description: "Returns the requests' authentication information."
+      operationId: "authInfoGoogleIdToken"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Authenication info."
+          schema:
+            $ref: "#/definitions/authInfoResponse"
+      x-security:
+      - google_id_token:
+          audiences:
+          # Your OAuth2 client's Client ID must be added here. You can add
+          # multiple client IDs to accept tokens from multiple clients.
+          - "YOUR-CLIENT-ID"
+definitions:
+  echoMessage:
+    properties:
+      message:
+        type: "string"
+  authInfoResponse:
+    properties:
+      id:
+        type: "string"
+      email:
+        type: "string"
+# This section requires all requests to any path to require an API key.
+security:
+- api_key: []
+securityDefinitions:
+  # This section configures basic authentication with an API key.
+  api_key:
+    type: "apiKey"
+    name: "key"
+    in: "query"
+  # This section configures authentication using Google API Service Accounts
+  # to sign a json web token. This is mostly used for server-to-server
+  # communication.
+  google_jwt:
+    authorizationUrl: ""
+    flow: "implicit"
+    type: "oauth2"
+    # This must match the 'iss' field in the JWT.
+    x-issuer: "jwt-client.endpoints.sample.google.com"
+    # Update this with your service account's email address.
+    x-jwks_uri: "https://www.googleapis.com/service_accounts/v1/jwk/YOUR-SERVICE-ACCOUNT-EMAIL"
+  # This section configures authentication using Google OAuth2 ID Tokens.
+  # ID Tokens can be obtained using OAuth2 clients, and can be used to access
+  # your API on behalf of a particular user.
+  google_id_token:
+    authorizationUrl: ""
+    flow: "implicit"
+    type: "oauth2"
+    x-issuer: "accounts.google.com"
+    x-jwks_uri: "https://www.googleapis.com/oauth2/v1/certs"
