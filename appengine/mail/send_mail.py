@@ -18,7 +18,7 @@ import webapp2
 
 
 def send_approved_mail(sender_address):
-    # [BEGIN send_mail]
+    # [START send_mail]
     mail.send_mail(sender=sender_address,
                    to="Albert Johnson <Albert.Johnson@example.com>",
                    subject="Your account has been approved",
@@ -32,7 +32,7 @@ Please let us know if you have any questions.
 
 The example.com Team
 """)
-    # [SEND send_mail]
+    # [END send_mail]
 
 
 class SendMailHandler(webapp2.RequestHandler):
