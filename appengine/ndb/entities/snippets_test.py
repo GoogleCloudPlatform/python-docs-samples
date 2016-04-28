@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import inspect
-
 from google.appengine.api import users
 from google.appengine.ext import ndb
 from google.appengine.ext.ndb.google_imports import datastore_errors
@@ -21,55 +19,46 @@ import pytest
 import snippets
 
 
-@pytest.yield_fixture
-def client(testbed):
-    yield testbed
-
-    for name, obj in inspect.getmembers(snippets):
-        if inspect.isclass(obj) and issubclass(obj, ndb.Model):
-            ndb.delete_multi(obj.query().iter(keys_only=True))
-
-
-def test_create_model_using_keyword_arguments(client):
+def test_create_model_using_keyword_arguments(testbed):
     result = snippets.create_model_using_keyword_arguments()
     assert isinstance(result, snippets.Account)
 
 
-def test_create_model_using_attributes(client):
+def test_create_model_using_attributes(testbed):
     result = snippets.create_model_using_attributes()
     assert isinstance(result, snippets.Account)
 
 
-def test_create_model_using_populate(client):
+def test_create_model_using_populate(testbed):
     result = snippets.create_model_using_populate()
     assert isinstance(result, snippets.Account)
 
 
-def test_demonstrate_model_constructor_type_checking(client):
+def test_demonstrate_model_constructor_type_checking(testbed):
     with pytest.raises(datastore_errors.BadValueError):
         snippets.demonstrate_model_constructor_type_checking()
 
 
-def test_dmonstrate_model_attribute_type_checking(client):
+def test_dmonstrate_model_attribute_type_checking(testbed):
     with pytest.raises(datastore_errors.BadValueError):
         snippets.dmonstrate_model_attribute_type_checking(
             snippets.create_model_using_keyword_arguments())
 
 
-def test_save_model(client):
+def test_save_model(testbed):
     result = snippets.save_model(
         snippets.create_model_using_keyword_arguments())
     assert isinstance(result, snippets.ndb.Key)
 
 
-def test_get_model(client):
+def test_get_model(testbed):
     sandy_key = snippets.save_model(
         snippets.create_model_using_keyword_arguments())
     result = snippets.get_model(sandy_key)
     assert isinstance(result, snippets.Account)
 
 
-def test_get_key_kind_and_id(client):
+def test_get_key_kind_and_id(testbed):
     sandy_key = snippets.save_model(
         snippets.create_model_using_keyword_arguments())
     kind_string, ident = snippets.get_key_kind_and_id(sandy_key)
@@ -77,14 +66,14 @@ def test_get_key_kind_and_id(client):
     assert isinstance(ident, long)
 
 
-def test_get_url_safe_key(client):
+def test_get_url_safe_key(testbed):
     sandy_key = snippets.save_model(
         snippets.create_model_using_keyword_arguments())
     result = snippets.get_url_safe_key(sandy_key)
     assert isinstance(result, str)
 
 
-def test_get_model_from_url_safe_key(client):
+def test_get_model_from_url_safe_key(testbed):
     sandy_key = snippets.save_model(
         snippets.create_model_using_keyword_arguments())
     result = snippets.get_model_from_url_safe_key(
@@ -93,7 +82,7 @@ def test_get_model_from_url_safe_key(client):
     assert result.username == 'Sandy'
 
 
-def test_get_key_and_numeric_id_from_url_safe_key(client):
+def test_get_key_and_numeric_id_from_url_safe_key(testbed):
     sandy_key = snippets.save_model(
         snippets.create_model_using_keyword_arguments())
     urlsafe = snippets.get_url_safe_key(sandy_key)
@@ -104,7 +93,7 @@ def test_get_key_and_numeric_id_from_url_safe_key(client):
     assert isinstance(kind_string, str)
 
 
-def test_update_model_from_key(client):
+def test_update_model_from_key(testbed):
     sandy = snippets.create_model_using_keyword_arguments()
     sandy_key = snippets.save_model(sandy)
     urlsafe = snippets.get_url_safe_key(sandy_key)
@@ -114,64 +103,64 @@ def test_update_model_from_key(client):
     assert key.get().email == 'sandy@example.co.uk'
 
 
-def test_delete_model(client):
+def test_delete_model(testbed):
     sandy = snippets.create_model_using_keyword_arguments()
     snippets.save_model(sandy)
     snippets.delete_model(sandy)
     assert sandy.key.get() is None
 
 
-def test_create_model_with_named_key(client):
+def test_create_model_with_named_key(testbed):
     result = snippets.create_model_with_named_key()
     assert 'sandy@example.com' == result
 
 
-def test_set_key_directly(client):
+def test_set_key_directly(testbed):
     account = snippets.Account()
     snippets.set_key_directly(account)
     assert account.key.id() == 'sandy@example.com'
 
 
-def test_create_model_with_generated_id(client):
+def test_create_model_with_generated_id(testbed):
     result = snippets.create_model_with_generated_id()
     assert isinstance(result.key.id(), long)
 
 
-def test_demonstrate_models_with_parent_hierarchy(client):
+def test_demonstrate_models_with_parent_hierarchy(testbed):
     snippets.demonstrate_models_with_parent_hierarchy()
 
 
-def test_equivalent_ways_to_define_key_with_parent(client):
+def test_equivalent_ways_to_define_key_with_parent(testbed):
     snippets.equivalent_ways_to_define_key_with_parent()
 
 
-def test_create_root_key(client):
+def test_create_root_key(testbed):
     result = snippets.create_root_key()
     assert result.id() == 'sandy@example.com'
 
 
-def test_create_model_with_parent_keys(client):
+def test_create_model_with_parent_keys(testbed):
     result = snippets.create_model_with_parent_keys()
     assert result.message_text == 'Hello'
 
 
-def test_get_parent_key_of_model(client):
+def test_get_parent_key_of_model(testbed):
     initial_revision = snippets.create_model_with_parent_keys()
     result = snippets.get_parent_key_of_model(initial_revision)
     assert result.kind() == 'Message'
 
 
-def test_operate_on_multiple_keys_at_once(client):
+def test_operate_on_multiple_keys_at_once(testbed):
     snippets.operate_on_multiple_keys_at_once([
         snippets.Account(email='a@a.com'), snippets.Account(email='b@b.com')])
 
 
-def test_create_expando_model(client):
+def test_create_expando_model(testbed):
     result = snippets.create_expando_model()
     assert result.foo == 1
 
 
-def test_get_properties_defined_on_expando(client):
+def test_get_properties_defined_on_expando(testbed):
     result = snippets.get_properties_defined_on_expando(
         snippets.create_expando_model())
     assert result['foo'] is not None
@@ -179,27 +168,27 @@ def test_get_properties_defined_on_expando(client):
     assert result['tags'] is not None
 
 
-def test_create_expando_model_with_defined_properties(client):
+def test_create_expando_model_with_defined_properties(testbed):
     result = snippets.create_expando_model_with_defined_properties()
     assert result.name == 'Sandy'
 
 
-def test_create_expando_model_that_isnt_indexed_by_default(client):
+def test_create_expando_model_that_isnt_indexed_by_default(testbed):
     result = snippets.create_expando_model_that_isnt_indexed_by_default()
     assert result['foo']
     assert result['bar']
 
 
-def test_demonstrate_wrong_way_to_query_expando(client):
+def test_demonstrate_wrong_way_to_query_expando(testbed):
     with pytest.raises(AttributeError):
         snippets.demonstrate_wrong_way_to_query_expando()
 
 
-def test_demonstrate_right_way_to_query_expando(client):
+def test_demonstrate_right_way_to_query_expando(testbed):
     snippets.demonstrate_right_way_to_query_expando()
 
 
-def test_demonstrate_model_put_and_delete_hooks(client):
+def test_demonstrate_model_put_and_delete_hooks(testbed):
     iterator = snippets.demonstrate_model_put_and_delete_hooks()
     iterator.next()
     assert snippets.notification == 'Gee wiz I have a new friend!'
@@ -208,29 +197,29 @@ def test_demonstrate_model_put_and_delete_hooks(client):
         'I have found occasion to rethink our friendship.')
 
 
-def test_reserve_model_ids(client):
+def test_reserve_model_ids(testbed):
     first, last = snippets.reserve_model_ids()
     assert last - first >= 99
 
 
-def test_reserve_model_ids_with_a_parent(client):
+def test_reserve_model_ids_with_a_parent(testbed):
     first, last = snippets.reserve_model_ids_with_a_parent(
         snippets.Friend().key)
     assert last - first >= 99
 
 
-def test_construct_keys_from_range_of_reserved_ids(client):
+def test_construct_keys_from_range_of_reserved_ids(testbed):
     result = snippets.construct_keys_from_range_of_reserved_ids(
         *snippets.reserve_model_ids())
     assert len(result) == 100
 
 
-def test_reserve_model_ids_up_to(client):
+def test_reserve_model_ids_up_to(testbed):
     first, last = snippets.reserve_model_ids_up_to(5)
     assert last - first >= 4
 
 
-def test_model_with_user(client):
+def test_model_with_user(testbed):
     user = users.User(email='user@example.com', _user_id='123')
     item = snippets.ModelWithUser(user_id=user.user_id())
     item.put()

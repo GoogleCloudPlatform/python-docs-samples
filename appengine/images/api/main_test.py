@@ -45,5 +45,5 @@ def test_img_missing(app):
 
 
 def test_no_img_id(app):
-    # Bogus image id, should get error
+    # No image id, should get error
     app.get('/img', status=404)

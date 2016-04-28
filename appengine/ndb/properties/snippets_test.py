@@ -12,23 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import inspect
-
-from google.appengine.ext import ndb
-import pytest
 import snippets
 
 
-@pytest.yield_fixture
-def client(testbed):
-    yield testbed
-
-    for name, obj in inspect.getmembers(snippets):
-        if inspect.isclass(obj) and issubclass(obj, ndb.Model):
-            ndb.delete_multi(obj.query().iter(keys_only=True))
-
-
-def test_account(client):
+def test_account(testbed):
     account = snippets.Account(
         username='flan',
         userid=123,
@@ -36,21 +23,21 @@ def test_account(client):
     account.put()
 
 
-def test_employee(client):
+def test_employee(testbed):
     employee = snippets.Employee(
         full_name='Hob Gadling',
         retirement_age=600)
     employee.put()
 
 
-def test_article(client):
+def test_article(testbed):
     article = snippets.create_article()
     assert article.title == 'Python versus Ruby'
     assert article.stars == 3
     assert sorted(article.tags) == sorted(['python', 'ruby'])
 
 
-def test_create_contact(client):
+def test_create_contact(testbed):
     guido = snippets.create_contact()
     assert guido.name == 'Guido'
     addresses = guido.addresses
@@ -62,7 +49,7 @@ def test_create_contact(client):
     assert addresses[1].city == 'SF'
 
 
-def test_contact_with_local_structured_property(client):
+def test_contact_with_local_structured_property(testbed):
     guido = snippets.create_contact_with_local_structured_property()
     assert guido.name == 'Guido'
     addresses = guido.addresses
@@ -70,13 +57,13 @@ def test_contact_with_local_structured_property(client):
     assert addresses[1].type == 'work'
 
 
-def test_create_some_entity(client):
+def test_create_some_entity(testbed):
     entity = snippets.create_some_entity()
     assert entity.name == 'Nick'
     assert entity.name_lower == 'nick'
 
 
-def test_computed_property(client):
+def test_computed_property(testbed):
     entity = snippets.create_some_entity()
     entity.name = 'Nick'
     assert entity.name_lower == 'nick'
@@ -84,7 +71,7 @@ def test_computed_property(client):
     assert entity.name_lower == 'nickie'
 
 
-def test_create_note_store(client):
+def test_create_note_store(testbed):
     note_stores, _ = snippets.create_note_store()
     assert len(note_stores) == 1
     assert note_stores[0].name == 'excellent'
@@ -93,7 +80,7 @@ def test_create_note_store(client):
     assert note_stores[0].note.when == 50
 
 
-def test_notebook(client):
+def test_notebook(testbed):
     note1 = snippets.Note(
         text='Refused to die.',
         when=1389)
@@ -113,7 +100,7 @@ def test_notebook(client):
     stored_notebook.put()
 
 
-def test_part(client, capsys):
+def test_part(testbed, capsys):
     snippets.print_part()
     stdout, _ = capsys.readouterr()
     assert stdout.strip() == 'RED'

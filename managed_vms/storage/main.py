@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START app]
+import logging
 import os
 
 from flask import Flask, request
@@ -30,7 +31,6 @@ CLOUD_STORAGE_BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 # [START form]
 @app.route('/')
 def index():
-    """Present the user with an upload form."""
     return """
 <form method="POST" action="/upload" enctype="multipart/form-data">
     <input type="file" name="file">
@@ -66,6 +66,15 @@ def upload():
     # The public URL can be used to directly access the uploaded file via HTTP.
     return blob.public_url
 # [END upload]
+
+
+@app.errorhandler(500)
+def server_error(e):
+    logging.exception('An error ocurred during a request.')
+    return """
+    An internal error occurred: <pre>{}</pre>
+    See logs for full stacktrace.
+    """.format(e), 500
 
 
 if __name__ == '__main__':
