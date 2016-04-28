@@ -18,7 +18,7 @@ import webapp2
 
 
 def send_example_mail(sender_address, email_thread_id):
-    # [BEGIN send_mail]
+    # [START send_mail]
     mail.send_mail(sender=sender_address,
                    to="Albert Johnson <Albert.Johnson@example.com>",
                    subject="An example email",
@@ -28,7 +28,7 @@ The email references a given email thread id.
 The example.com Team
 """,
                    headers={"References": email_thread_id})
-    # [SEND send_mail]
+    # [END send_mail]
 
 
 class SendMailHandler(webapp2.RequestHandler):
