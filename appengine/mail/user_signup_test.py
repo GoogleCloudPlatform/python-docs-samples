@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 import user_signup
 import webtest
 
@@ -25,7 +26,7 @@ def test_user_signup(testbed):
     assert 'An email has been sent to alice@example.com.' in response.body
 
     records = user_signup.UserConfirmationRecord.query().fetch(1)
-    response = app.get('/user/confirm?code=%s' % records[0].key.id())
+    response = app.get('/user/confirm?code={}'.format(records[0].key.id()))
     assert response.status_int == 200
     assert 'Confirmed alice@example.com.' in response.body
 

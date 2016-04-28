@@ -35,18 +35,19 @@ class UserSignupHandler(webapp2.RequestHandler):
         else:
             confirmation_url = create_new_user_confirmation(user_address)
             sender_address = (
-                'Example.com Support <%s@appspot.gserviceaccount.com>' %
-                app_identity.get_application_id())
+                'Example.com Support <{}@appspot.gserviceaccount.com>'.format(
+                    app_identity.get_application_id()))
             subject = 'Confirm your registration'
             body = """Thank you for creating an account!
 Please confirm your email address by clicking on the link below:
 
-%s
-""" % confirmation_url
+{}
+""".format(confirmation_url)
             mail.send_mail(sender_address, user_address, subject, body)
 # [END send-confirm-email]
             self.response.content_type = 'text/plain'
-            self.response.write('An email has been sent to %s.' % user_address)
+            self.response.write('An email has been sent to {}.'.format(
+                user_address))
 
     def get(self):
         self.response.content_type = 'text/html'
@@ -76,7 +77,7 @@ def create_new_user_confirmation(user_address):
     record = UserConfirmationRecord(user_address=user_address,
                                     id=random_id)
     record.put()
-    return 'https://%s/user/confirm?code=%s' % (
+    return 'https://{}/user/confirm?code={}'.format(
         socket.getfqdn(socket.gethostname()), random_id)
 
 
@@ -93,7 +94,8 @@ class ConfirmUserSignupHandler(webapp2.RequestHandler):
                 record.confirmed = True
                 record.put()
                 self.response.content_type = 'text/plain'
-                self.response.write('Confirmed %s.' % record.user_address)
+                self.response.write('Confirmed {}.'
+                                    .format(record.user_address))
                 return
         self.response.status_int = 404
 

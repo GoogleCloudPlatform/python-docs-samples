@@ -37,8 +37,8 @@ The example.com Team
 
 class SendMailHandler(webapp2.RequestHandler):
     def get(self):
-        send_approved_mail('%s@appspot.gserviceaccount.com' %
-                           app_identity.get_application_id())
+        send_approved_mail('{}@appspot.gserviceaccount.com'.format(
+            app_identity.get_application_id()))
         self.response.content_type = 'text/plain'
         self.response.write('Sent an email to Albert.')
 

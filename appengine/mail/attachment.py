@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 from google.appengine.api import app_identity
 from google.appengine.api import mail
 import webapp2
@@ -20,18 +21,19 @@ import webapp2
 class AttachmentHandler(webapp2.RequestHandler):
     def post(self):
         f = self.request.POST['file']
-        mail.send_mail(sender=('%s@appspot.gserviceaccount.com' %
-                               app_identity.get_application_id()),
+        mail.send_mail(sender='{}@appspot.gserviceaccount.com'.format(
+            app_identity.get_application_id()),
                        to="Albert Johnson <Albert.Johnson@example.com>",
                        subject="The doc you requested",
-                       body="""Attached is the document file you requested.
+                       body="""
+Attached is the document file you requested.
 
 The example.com Team
 """,
                        attachments=[(f.filename, f.file.read())])
 # [END send_attachment]
         self.response.content_type = 'text/plain'
-        self.response.write('Sent %s to Albert.' % f.filename)
+        self.response.write('Sent {} to Albert.'.format(f.filename))
 
     def get(self):
         self.response.content_type = 'text/html'
