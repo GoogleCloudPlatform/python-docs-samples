@@ -68,10 +68,25 @@ class ErrorHandler(webapp2.RequestHandler):
         # [END error]
 
 
+# [START send-chat-to-user]
+class SendChatHandler(webapp2.RequestHandler):
+    def post(self):
+        user_address = 'example@gmail.com'
+        msg = ('Someone has sent you a gift on Example.com. '
+               'To view: http://example.com/gifts/')
+        status_code = xmpp.send_message(user_address, msg)
+        chat_message_sent = (status_code == xmpp.NO_ERROR)
+
+        if not chat_message_sent:
+            # Send an email message instead...
+            # [END send-chat-to-user]
+            pass
+# [START send-chat-to-user]
+
+
 # [START chat]
 class XMPPHandler(webapp2.RequestHandler):
     def post(self):
-        print "REQUEST POST IS %s " % self.request.POST
         message = xmpp.Message(self.request.POST)
         if message.body[0:5].lower() == 'hello':
             message.reply("Greetings!")
@@ -83,4 +98,5 @@ app = webapp2.WSGIApplication([
     ('/_ah/xmpp/presence/available', PresenceHandler),
     ('/_ah/xmpp/error/', ErrorHandler),
     ('/send_presence', SendPresenceHandler),
+    ('/send_chat', SendChatHandler),
 ])
