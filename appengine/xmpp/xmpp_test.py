@@ -58,3 +58,8 @@ def test_error(xmpp_mock, app):
         'from': 'sender@example.com',
         'stanza': 'hello world'
     })
+
+
+@mock.patch('xmpp.xmpp')
+def test_send_chat(xmpp_mock, app):
+    app.post('/send_chat')
