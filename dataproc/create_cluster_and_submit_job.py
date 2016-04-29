@@ -166,7 +166,6 @@ def wait_for_job(dataproc, project, job_id):
             jobId=job_id).execute()
         # Handle exceptions
         if result['status']['state'] == 'ERROR':
-            print(result)
             raise Exception(result['status']['details'])
         elif result['status']['state'] == 'DONE':
             print('Job finished')
