@@ -201,8 +201,10 @@ def main(project_id, zone, cluster_name, bucket_name, pyspark_file=None):
 
         (cluster_id, output_bucket) = (
             get_cluster_id_by_name(cluster_list, cluster_name))
+        # [START call_submit_pyspark_job]
         job_id = submit_pyspark_job(
             dataproc, project_id, cluster_name, bucket_name, spark_filename)
+        # [END call_submit_pyspark_job]
         wait_for_job(dataproc, project_id, job_id)
 
         output = download_output(project_id, cluster_id, output_bucket, job_id)
