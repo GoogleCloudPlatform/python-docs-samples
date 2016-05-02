@@ -79,7 +79,7 @@ def auth_info_google_id_token():
 def unexpected_error(e):
     """Handle exceptions by returning swagger-compliant json."""
     response = jsonify({
-        'error': http_client.INTERNAL_SERVER_ERROR,
+        'code': http_client.INTERNAL_SERVER_ERROR,
         'message': 'Exception: {}'.format(e)})
     response.status_code = http_client.INTERNAL_SERVER_ERROR
     return response
