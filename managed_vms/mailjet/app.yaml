@@ -1,0 +1,13 @@
+runtime: python
+vm: true
+entrypoint: gunicorn -b :$PORT main:app
+
+runtime_config:
+  python_version: 3
+
+# [START env_variables]
+env_variables:
+    MAILJET_API_KEY: your-mailjet-api-key
+    MAILJET_API_SECRET: your-mailjet-api-secret
+    MAILJET_SENDER: your-mailjet-sender-address
+# [END env_variables]
