@@ -20,31 +20,24 @@ import webtest
 
 
 @pytest.fixture
-def app():
+def app(testbed):
     return webtest.TestApp(main.app)
 
 
 def test_url_lib(app):
     response = app.get('/')
-    assert response.status_int == 200
-    assert "I'm Feeling Lucky" in response.body
+    assert 'Google' in response.body
 
 
-@mock.patch("main.urlfetch")
-def test_url_fetch(urlfetch_mock, app):
-    urlfetch_mock.fetch = mock.Mock(
-        return_value=mock.Mock(content="I'm Feeling Lucky",
-                               status_code=200))
+def test_url_fetch(app):
     response = app.get('/url_fetch')
-    assert response.status_int == 200
-    assert "I'm Feeling Lucky" in response.body
+    assert 'Google' in response.body
 
 
 @mock.patch("main.urlfetch")
 def test_url_post(urlfetch_mock, app):
     urlfetch_mock.fetch = mock.Mock(
-        return_value=mock.Mock(content="Albert",
+        return_value=mock.Mock(content='Albert',
                                status_code=200))
     response = app.get('/url_post')
-    assert response.status_int == 200
-    assert "Albert" in response.body
+    assert 'Albert' in response.body
