@@ -1,0 +1,4 @@
+Flask==0.10.1
+requests==2.10.0
+requests-toolbelt==0.6.0
+mailjet_rest==1.1.1
