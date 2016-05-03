@@ -1,11 +1,11 @@
 beautifulsoup4==4.4.1
 coverage==4.1b2
-Django==1.9.5
+Django==1.9.6
 flaky==3.1.1
 Flask-Sockets==0.2.0
 Flask-SQLAlchemy==2.1
 Flask==0.10.1
-funcsigs==1.0.1
+funcsigs==1.0.2
 gcloud==0.13.0
 google-api-python-client==1.5.0
 itsdangerous==0.24
@@ -21,7 +21,7 @@ PyMySQL==0.7.2
 pytest-cov==2.2.1
 pytest==2.9.1
 PyYAML==3.11
-requests[security]==2.9.1
+requests[security]==2.10.0
 responses==0.5.1
 sendgrid==2.2.1
 twilio==6.3.dev0
