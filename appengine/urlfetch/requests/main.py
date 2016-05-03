@@ -17,7 +17,7 @@ import logging
 
 from flask import Flask
 
-# [start imports]
+# [START imports]
 import requests
 import requests_toolbelt.adapters.appengine
 
