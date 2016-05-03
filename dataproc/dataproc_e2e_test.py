@@ -27,4 +27,4 @@ ZONE = 'us-central1-b'
 def test_e2e(cloud_config):
     output = create_cluster_and_submit_job.main(
         cloud_config.project, ZONE, CLUSTER_NAME, cloud_config.storage_bucket)
-    assert "['Hello,', 'dog', 'elephant', 'panther', 'world!']" in output
+    assert b"['Hello,', 'dog', 'elephant', 'panther', 'world!']" in output
