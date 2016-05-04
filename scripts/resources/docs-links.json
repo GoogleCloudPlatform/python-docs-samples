@@ -1,87 +1,368 @@
 {
-  "/appengine/docs/python/ndb/": [
-    "appengine/ndb/overview/main.py"
+  "/storage/docs/encryption": [
+    "storage/api/customer_supplied_keys.py"
   ], 
-  "/storage/transfer/create-client": [
-    "storage/transfer_service/create_client.py"
+  "/appengine/docs/python/datastore/entity-property-reference": [
+    "appengine/ndb/properties/snippets.py", 
+    "appengine/ndb/properties/snippets_test.py"
   ], 
-  "/storage/docs/json_api/v1/json-api-python-samples": [
-    "storage/api/list_objects.py"
+  "/appengine/docs/python/images/usingimages": [
+    "appengine/images/guestbook/main.py"
+  ], 
+  "/appengine/docs/flexible/python/config/intro": [
+    "managed_vms/hello_world/app.yaml"
+  ], 
+  "/python/django/flexible-environment": [
+    "managed_vms/django_cloudsql/mysite/settings.py", 
+    "managed_vms/django_cloudsql/app.yaml"
+  ], 
+  "/appengine/docs/python/datastore/creating-entity-keys": [
+    "appengine/ndb/entities/snippets.py"
+  ], 
+  "/appengine/docs/python/ndb/queries": [
+    "appengine/ndb/queries/snippets.py", 
+    "appengine/ndb/queries/snippets_models.py", 
+    "appengine/ndb/queries/guestbook.py"
+  ], 
+  "/appengine/docs/python/datastore/projectionqueries": [
+    "appengine/ndb/projection_queries/snippets.py"
+  ], 
+  "/compute/docs/metadata": [
+    "compute/metadata/main.py"
+  ], 
+  "/compute/docs/access/create-enable-service-accounts-for-instances": [
+    "compute/auth/access_token.py", 
+    "compute/auth/application_default.py"
+  ], 
+  "/appengine/docs/flexible/python/serving-static-files": [
+    "managed_vms/static_files/static/main.css", 
+    "managed_vms/static_files/templates/index.html", 
+    "managed_vms/static_files/main.py"
+  ], 
+  "/dns/monitoring": [
+    "dns/api/main.py"
+  ], 
+  "/bigquery/authentication": [
+    "bigquery/api/getting_started.py"
+  ], 
+  "/appengine/docs/python/mail/sending-mail-with-mail-api": [
+    "appengine/mail/send_message.py", 
+    "appengine/mail/user_signup.py", 
+    "appengine/mail/send_mail.py"
+  ], 
+  "/appengine/docs/flexible/python/using-cloud-storage": [
+    "managed_vms/storage/app.yaml", 
+    "managed_vms/storage/requirements.txt", 
+    "managed_vms/storage/main.py"
+  ], 
+  "/appengine/docs/python/ndb/async": [
+    "appengine/ndb/async/app_sync.py", 
+    "appengine/ndb/async/app_async.py", 
+    "appengine/ndb/async/shopping_cart.py", 
+    "appengine/ndb/async/guestbook.py", 
+    "appengine/ndb/async/app_toplevel/app_toplevel.py"
+  ], 
+  "/dataproc/tutorials/python-library-example": [
+    "dataproc/create_cluster_and_submit_job.py", 
+    "dataproc/list_clusters.py", 
+    "dataproc/pyspark_sort.py"
+  ], 
+  "/bigquery/loading-data-post-request": [
+    "bigquery/api/load_data_by_post.py"
+  ], 
+  "/monitoring/demos/": [
+    "monitoring/api/v3/list_resources.py", 
+    "monitoring/api/v3/custom_metric.py", 
+    "monitoring/api/v2/auth.py"
+  ], 
+  "/appengine/docs/python/search/options": [
+    "appengine/search/snippets/snippets.py"
+  ], 
+  "/appengine/docs/python/runtime": [
+    "appengine/background/main.py"
+  ], 
+  "/appengine/docs/flexible/python/integrating-with-analytics": [
+    "managed_vms/analytics/main.py", 
+    "managed_vms/analytics/app.yaml"
+  ], 
+  "/speech/docs/non-streaming-rest-tutorial": [
+    "speech/api/speech_rest.py"
+  ], 
+  "/appengine/docs/flexible/python/using-sms-and-voice-services-via-twilio": [
+    "managed_vms/twilio/requirements.txt", 
+    "managed_vms/twilio/main.py", 
+    "managed_vms/twilio/app.yaml"
+  ], 
+  "/appengine/docs/python/endpoints/required_files": [
+    "appengine/endpoints/backend/app.yaml"
+  ], 
+  "/appengine/docs/python/mail/headers": [
+    "appengine/mail/header.py"
+  ], 
+  "/appengine/docs/python/appidentity/": [
+    "appengine/app_identity/signing/main.py", 
+    "appengine/app_identity/asserting/main.py", 
+    "appengine/app_identity/incoming/main.py"
+  ], 
+  "/appengine/docs/python/ndb/cache": [
+    "appengine/ndb/cache/snippets.py"
   ], 
   "/bigquery/querying-data": [
     "bigquery/api/async_query.py", 
     "bigquery/api/sync_query.py"
   ], 
+  "/appengine/docs/python/ndb/": [
+    "appengine/ndb/overview/main.py"
+  ], 
+  "/appengine/docs/python/datastore/creating-entity-models": [
+    "appengine/ndb/entities/snippets.py"
+  ], 
+  "/appengine/docs/python/images/": [
+    "appengine/images/api/blobstore.py", 
+    "appengine/images/api/main.py"
+  ], 
+  "/logging/docs/api/tasks/creating-logs": [
+    "cloud_logging/api/list_logs.py"
+  ], 
+  "/dns/zones/": [
+    "dns/api/main.py"
+  ], 
+  "/appengine/docs/python/taskqueue/push/creating-handlers": [
+    "appengine/taskqueue/counter/worker.yaml", 
+    "appengine/taskqueue/counter/worker.py"
+  ], 
   "/bigquery/bigquery-api-quickstart": [
     "bigquery/api/getting_started.py"
   ], 
-  "/bigquery/docs/managing_jobs_datasets_projects": [
-    "bigquery/api/list_datasets_projects.py"
+  "/compute/docs/api/how-tos/api-requests-responses": [
+    "compute/api/create_instance.py"
   ], 
-  "/appengine/docs/python/blobstore/": [
-    "appengine/blobstore/main.py"
-  ], 
-  "/appengine/docs/python/images/usingimages": [
-    "appengine/images/main.py"
-  ], 
-  "/compute/docs/tutorials/python-guide": [
-    "compute/api/create_instance.py", 
-    "compute/api/startup-script.sh"
-  ], 
-  "/docs/authentication": [
-    "storage/api/list_objects.py"
-  ], 
-  "/bigquery/loading-data-into-bigquery": [
-    "bigquery/api/load_data_from_csv.py", 
-    "bigquery/api/load_data_by_post.py"
-  ], 
-  "/bigquery/streaming-data-into-bigquery": [
-    "bigquery/api/streaming.py"
-  ], 
-  "/appengine/docs/python/memcache/usingmemcache": [
-    "appengine/memcache/guestbook/main.py"
-  ], 
-  "/monitoring/demos/": [
-    "monitoring/api/auth.py"
+  "/appengine/docs/python/endpoints/api_server": [
+    "appengine/endpoints/backend/main.py", 
+    "appengine/endpoints/backend/app.yaml"
   ], 
   "/appengine/docs/python/multitenancy/namespaces": [
-    "appengine/multitenancy/memcache.py", 
     "appengine/multitenancy/datastore.py", 
+    "appengine/multitenancy/memcache.py", 
     "appengine/multitenancy/taskqueue.py"
   ], 
-  "/bigquery/docs/data": [
-    "bigquery/api/sync_query.py"
+  "/appengine/docs/python/search/facet_search": [
+    "appengine/search/snippets/snippets.py"
   ], 
-  "/bigquery/authentication": [
-    "appengine/bigquery/main.py", 
-    "bigquery/api/getting_started.py"
+  "/appengine/docs/python/users/": [
+    "appengine/users/main.py"
   ], 
-  "/bigquery/exporting-data-from-bigquery": [
-    "bigquery/api/export_data_to_cloud_storage.py"
+  "/storage/transfer/create-client": [
+    "storage/transfer_service/create_client.py"
+  ], 
+  "/appengine/docs/python/channel/": [
+    "appengine/channel/chatactoe.py", 
+    "appengine/channel/index.html"
+  ], 
+  "/appengine/docs/python/tools/remoteapi": [
+    "appengine/remote_api/app.yaml", 
+    "appengine/remote_api/client.py"
   ], 
   "/appengine/docs/python/ndb/transactions": [
     "appengine/ndb/transactions/main.py"
   ], 
-  "/monitoring/api/authentication": [
-    "appengine/bigquery/app.yaml", 
-    "monitoring/api/auth.py", 
-    "appengine/bigquery/main.py"
+  "/appengine/docs/python/users/userobjects": [
+    "appengine/users/main.py", 
+    "appengine/ndb/entities/snippets.py"
   ], 
-  "/storage/transfer/create-transfer": [
-    "storage/transfer_service/nearline_request.py", 
-    "storage/transfer_service/aws_request.py", 
-    "storage/transfer_service/transfer_check.py"
+  "/appengine/docs/python/tools/webapp/blobstorehandlers": [
+    "appengine/blobstore/main.py"
+  ], 
+  "/appengine/docs/python/mail/attachments": [
+    "appengine/mail/attachment.py"
+  ], 
+  "/appengine/docs/python/mail/mailgun": [
+    "appengine/mailgun/main.py"
+  ], 
+  "/python/django/container-engine": [
+    "container_engine/django_tutorial/mysite/settings.py", 
+    "container_engine/django_tutorial/polls.yaml"
+  ], 
+  "/bigquery/exporting-data-from-bigquery": [
+    "bigquery/api/export_data_to_cloud_storage.py"
+  ], 
+  "/appengine/docs/flexible/python/runtime": [
+    "managed_vms/websockets/main.py"
   ], 
   "/storage/docs/authentication": [
     "storage/api/list_objects.py"
   ], 
+  "/appengine/docs/python/users/loginurls": [
+    "appengine/users/main.py"
+  ], 
+  "/appengine/docs/python/cloud-sql/": [
+    "appengine/cloudsql/main.py", 
+    "appengine/cloudsql/app.yaml"
+  ], 
+  "/appengine/docs/python/xmpp/": [
+    "appengine/xmpp/app.yaml", 
+    "appengine/xmpp/xmpp.py"
+  ], 
   "/appengine/docs/python/tools/localunittesting": [
     "appengine/localtesting/runner.py", 
-    "appengine/localtesting/test_task_queue.py", 
-    "appengine/localtesting/test_login.py", 
+    "appengine/localtesting/mail_test.py", 
     "appengine/localtesting/queue.yaml", 
-    "appengine/localtesting/test_mail.py", 
-    "appengine/localtesting/test_env_vars.py", 
-    "appengine/localtesting/test_datastore.py"
+    "appengine/localtesting/task_queue_test.py", 
+    "appengine/localtesting/login_test.py", 
+    "appengine/localtesting/env_vars_test.py", 
+    "appengine/localtesting/datastore_test.py"
+  ], 
+  "/appengine/docs/python/mail/bounce": [
+    "appengine/mail/app.yaml", 
+    "appengine/mail/handle_bounced_email.py"
+  ], 
+  "/appengine/docs/python/endpoints/getstarted/backend/write_api": [
+    "appengine/endpoints/backend/main.py", 
+    "appengine/endpoints/backend/app.yaml"
+  ], 
+  "/appengine/docs/python/mail/sendgrid": [
+    "appengine/sendgrid/main.py"
+  ], 
+  "/appengine/docs/python/mail/receiving-mail-with-mail-api": [
+    "appengine/mail/app.yaml", 
+    "appengine/mail/handle_incoming_email.py"
+  ], 
+  "/appengine/docs/python/datastore/creating-entities": [
+    "appengine/ndb/entities/snippets.py"
+  ], 
+  "/appengine/docs/flexible/python/sending-emails-with-sendgrid": [
+    "managed_vms/sendgrid/app.yaml", 
+    "managed_vms/sendgrid/requirements.txt", 
+    "managed_vms/sendgrid/main.py"
+  ], 
+  "/appengine/docs/python/ndb/subclassprop": [
+    "appengine/ndb/property_subclasses/my_models.py", 
+    "appengine/ndb/property_subclasses/snippets.py"
+  ], 
+  "/appengine/docs/python/endpoints/getstarted/backend/auth": [
+    "appengine/endpoints/backend/main.py"
+  ], 
+  "/appengine/docs/python/search/": [
+    "appengine/search/snippets/snippets.py"
+  ], 
+  "/compute/docs/disks/customer-supplied-encryption": [
+    "compute/encryption/generate_wrapped_rsa_key.py"
+  ], 
+  "/appengine/docs/python/logs/": [
+    "appengine/logging/writing_logs/main.py", 
+    "appengine/logging/reading_logs/main.py"
+  ], 
+  "/appengine/docs/python/users/adminusers": [
+    "appengine/users/main.py"
+  ], 
+  "/error-reporting/docs/setting-up-on-compute-engine": [
+    "error_reporting/main.py"
+  ], 
+  "/docs/authentication": [
+    "storage/api/list_objects.py"
+  ], 
+  "/bigquery/streaming-data-into-bigquery": [
+    "bigquery/api/streaming.py"
+  ], 
+  "/appengine/docs/python/endpoints/create_api": [
+    "appengine/endpoints/backend/main.py", 
+    "appengine/endpoints/multiapi/main.py"
+  ], 
+  "/appengine/docs/flexible/python/using-cloud-sql": [
+    "managed_vms/cloudsql/requirements.txt", 
+    "managed_vms/cloudsql/main.py", 
+    "managed_vms/cloudsql/app.yaml", 
+    "managed_vms/cloudsql/create_tables.py"
+  ], 
+  "/appengine/docs/python/how-requests-are-handled": [
+    "appengine/logging/writing_logs/main.py", 
+    "appengine/requests/main.py"
+  ], 
+  "/appengine/docs/python/issue-requests": [
+    "appengine/urlfetch/requests/main.py", 
+    "appengine/urlfetch/snippets/main.py", 
+    "appengine/urlfetch/async/rpc.py"
+  ], 
+  "/appengine/docs/flexible/python/writing-and-responding-to-pub-sub-messages": [
+    "managed_vms/pubsub/main.py", 
+    "managed_vms/pubsub/app.yaml"
+  ], 
+  "/compute/docs/instances/create-start-instance": [
+    "compute/api/create_instance.py"
+  ], 
+  "/appengine/docs/flexible/python/quickstart": [
+    "managed_vms/hello_world/main.py", 
+    "managed_vms/hello_world/requirements.txt", 
+    "managed_vms/hello_world/app.yaml"
+  ], 
+  "/storage/docs/json_api/v1/json-api-python-samples": [
+    "storage/api/crud_object.py", 
+    "storage/api/list_objects.py"
+  ], 
+  "/dns/records/": [
+    "dns/api/main.py"
+  ], 
+  "/compute/docs/tutorials/python-guide": [
+    "compute/api/startup-script.sh", 
+    "compute/api/create_instance.py"
+  ], 
+  "/appengine/docs/flexible/python/memcache-proxy": [
+    "managed_vms/memcache/requirements.txt", 
+    "managed_vms/memcache/main.py"
+  ], 
+  "/bigquery/docs/managing_jobs_datasets_projects": [
+    "bigquery/api/list_datasets_projects.py"
+  ], 
+  "/bigquery/create-simple-app-api": [
+    "bigquery/api/getting_started.py"
+  ], 
+  "/appengine/articles/best-practices-for-app-engine-memcache": [
+    "appengine/memcache/best_practices/migration_step1/migration1.py", 
+    "appengine/memcache/best_practices/batch/batch.py", 
+    "appengine/memcache/best_practices/migration_step2/migration2.py", 
+    "appengine/memcache/best_practices/failure/failure.py", 
+    "appengine/memcache/best_practices/sharing/sharing.py"
+  ], 
+  "/appengine/docs/python/endpoints/getstarted/backend/write_api_post": [
+    "appengine/endpoints/backend/main.py"
+  ], 
+  "/appengine/docs/python/using-the-modules-api": [
+    "appengine/modules/main.py"
+  ], 
+  "/appengine/docs/python/tools/appstats": [
+    "appengine/appstats/app.yaml", 
+    "appengine/appstats/appengine_config.py"
+  ], 
+  "/appengine/docs/python/blobstore/": [
+    "appengine/blobstore/main.py"
+  ], 
+  "/storage/transfer/create-manage-transfer-program": [
+    "storage/transfer_service/aws_request.py", 
+    "storage/transfer_service/transfer_check.py", 
+    "storage/transfer_service/nearline_request.py"
+  ], 
+  "/appengine/docs/flexible/python/using-cloud-datastore": [
+    "managed_vms/datastore/main.py", 
+    "managed_vms/datastore/app.yaml", 
+    "managed_vms/datastore/requirements.txt"
+  ], 
+  "/appengine/docs/flexible/python/sending-emails-with-mailgun": [
+    "managed_vms/mailgun/main.py"
+  ], 
+  "/bigquery/docs/loading-data-cloud-storage": [
+    "bigquery/api/load_data_from_csv.py"
+  ], 
+  "/appengine/docs/python/taskqueue/push/creating-tasks": [
+    "appengine/taskqueue/counter/application.py"
+  ], 
+  "/appengine/docs/python/search/results": [
+    "appengine/search/snippets/snippets.py"
+  ], 
+  "/bigquery/docs/data": [
+    "bigquery/api/sync_query.py"
+  ], 
+  "/appengine/docs/python/memcache/examples": [
+    "appengine/memcache/snippets/snippets.py", 
+    "appengine/memcache/guestbook/main.py"
   ]
 }

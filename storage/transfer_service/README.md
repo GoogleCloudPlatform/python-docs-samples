@@ -6,8 +6,8 @@ This app creates two types of transfers using the Transfer Service tool.
 These samples are used on the following documentation pages:
 
 >
-* https://cloud.google.com/storage/transfer/create-transfer
 * https://cloud.google.com/storage/transfer/create-client
+* https://cloud.google.com/storage/transfer/create-manage-transfer-program
 
 <!-- end-auto-doc-link -->
 
