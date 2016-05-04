@@ -23,5 +23,8 @@ Then,
 And you will see the message in the Errors Console.
 
 <!-- auto-doc-link -->
+These samples are used on the following documentation page:
+
+> https://cloud.google.com/error-reporting/docs/setting-up-on-compute-engine
 
 <!-- end-auto-doc-link -->

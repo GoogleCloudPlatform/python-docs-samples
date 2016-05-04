@@ -6,6 +6,6 @@ demonstrating various ways to make ndb projection queries.
 <!-- auto-doc-link -->
 These samples are used on the following documentation page:
 
-> https://cloud.google.com/appengine/docs/python/ndb/projectionqueries
+> https://cloud.google.com/appengine/docs/python/datastore/projectionqueries
 
 <!-- end-auto-doc-link -->

@@ -6,6 +6,6 @@ various operations on ndb properties.
 <!-- auto-doc-link -->
 These samples are used on the following documentation page:
 
-> https://cloud.google.com/appengine/docs/python/ndb/properties
+> https://cloud.google.com/appengine/docs/python/datastore/entity-property-reference
 
 <!-- end-auto-doc-link -->

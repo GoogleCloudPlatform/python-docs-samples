@@ -9,8 +9,10 @@ To deploy this application, specify both `.yaml` files to `appcfg.py`:
     appcfg.py update -A your-app-id -V 1 application.yaml worker.yaml
 
 <!-- auto-doc-link -->
-These samples are used on the following documentation page:
+These samples are used on the following documentation pages:
 
-> https://cloud.google.com/appengine/docs/python/taskqueue/overview-push
+>
+* https://cloud.google.com/appengine/docs/python/taskqueue/push/creating-handlers
+* https://cloud.google.com/appengine/docs/python/taskqueue/push/creating-tasks
 
 <!-- end-auto-doc-link -->
