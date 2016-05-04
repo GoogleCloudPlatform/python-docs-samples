@@ -20,6 +20,7 @@ various authentication methods.
 
 import base64
 import json
+import logging
 
 from flask import Flask, jsonify, request, send_from_directory
 from six.moves import http_client
@@ -78,6 +79,7 @@ def auth_info_google_id_token():
 @app.errorhandler(http_client.INTERNAL_SERVER_ERROR)
 def unexpected_error(e):
     """Handle exceptions by returning swagger-compliant json."""
+    logging.exception('An error occured while processing the request.')
     response = jsonify({
         'code': http_client.INTERNAL_SERVER_ERROR,
         'message': 'Exception: {}'.format(e)})
