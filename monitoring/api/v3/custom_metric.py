@@ -59,8 +59,6 @@ def create_custom_metric(client, project_id,
                          custom_metric_type, metric_kind):
     """Create custom metric descriptor"""
     metrics_descriptor = {
-        "name": "projects/{}/metricDescriptors/{}".format(
-            project_id, custom_metric_type),
         "type": custom_metric_type,
         "labels": [
             {
