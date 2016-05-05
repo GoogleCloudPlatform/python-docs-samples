@@ -4,8 +4,3 @@ entrypoint: gunicorn -b :$PORT main:app
 
 runtime_config:
   python_version: 3
-
-# [START config]
-beta_settings:
-    use_memcache_proxy: true
-# [END config]
