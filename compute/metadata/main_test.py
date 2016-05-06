@@ -13,6 +13,7 @@
 
 import main
 import mock
+import requests
 
 
 @mock.patch('main.requests')
@@ -31,6 +32,7 @@ def test_wait_for_maintenance(requests_mock):
     response3_mock = mock.Mock()
     response3_mock.status_code = 503
 
+    requests_mock.codes.ok = requests.codes.ok
     requests_mock.get.side_effect = [
         response1_mock, response2_mock, response3_mock, response2_mock,
         StopIteration()]
@@ -43,5 +45,6 @@ def test_wait_for_maintenance(requests_mock):
         pass
 
     assert callback_mock.call_count == 2
-    assert callback_mock.call_args_list[0][0] == (True,)
-    assert callback_mock.call_args_list[1][0] == (False,)
+    assert callback_mock.call_args_list[0][0] == (
+        'MIGRATE_ON_HOST_MAINTENANCE',)
+    assert callback_mock.call_args_list[1][0] == (None,)
