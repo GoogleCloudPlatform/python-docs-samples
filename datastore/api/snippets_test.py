@@ -11,9 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import time
-
 from gcloud import datastore
+from gcp.testing import eventually_consistent
 from gcp.testing.flaky import flaky
 import pytest
 import snippets
@@ -28,29 +27,13 @@ class CleanupClient(datastore.Client):
     def cleanup(self):
         with self.batch():
             self.delete_multi(
-                [x.key for x in self.entities_to_delete] +
-                self.keys_to_delete)
-
-
-# This is pretty hacky, but make datastore wait 1s after any
-# put operation to in order to account for eventual consistency.
-class WaitingClient(CleanupClient):
-    def put_multi(self, *args, **kwargs):
-        result = super(WaitingClient, self).put_multi(*args, **kwargs)
-        time.sleep(1)
-        return result
+                list(set([x.key for x in self.entities_to_delete])) +
+                list(set(self.keys_to_delete)))
 
 
 @pytest.yield_fixture
 def client(cloud_config):
     client = CleanupClient(cloud_config.project)
-    yield client
-    client.cleanup()
-
-
-@pytest.yield_fixture
-def waiting_client(cloud_config):
-    client = WaitingClient(cloud_config.project)
     yield client
     client.cleanup()
 
@@ -118,20 +101,23 @@ class TestDatastoreSnippets:
     def test_batch_delete(self, client):
         snippets.batch_delete(client)
 
-    def test_unindexed_property_query(self, waiting_client):
-        tasks = snippets.unindexed_property_query(waiting_client)
-        waiting_client.entities_to_delete.extend(tasks)
+    @eventually_consistent.mark
+    def test_unindexed_property_query(self, client):
+        tasks = snippets.unindexed_property_query(client)
+        client.entities_to_delete.extend(tasks)
         assert tasks
 
-    def test_basic_query(self, waiting_client):
-        tasks = snippets.basic_query(waiting_client)
-        waiting_client.entities_to_delete.extend(tasks)
+    @eventually_consistent.mark
+    def test_basic_query(self, client):
+        tasks = snippets.basic_query(client)
+        client.entities_to_delete.extend(tasks)
         assert tasks
 
-    def test_projection_query(self, waiting_client):
-        priorities, percents = snippets.projection_query(waiting_client)
-        waiting_client.entities_to_delete.extend(
-            waiting_client.query(kind='Task').fetch())
+    @eventually_consistent.mark
+    def test_projection_query(self, client):
+        priorities, percents = snippets.projection_query(client)
+        client.entities_to_delete.extend(
+            client.query(kind='Task').fetch())
         assert priorities
         assert percents
 
@@ -143,63 +129,74 @@ class TestDatastoreSnippets:
     def test_run_query(self, client):
         snippets.run_query(client)
 
-    def test_cursor_paging(self, waiting_client):
+    def test_cursor_paging(self, client):
         for n in range(6):
-            waiting_client.entities_to_delete.append(
-                snippets.insert(waiting_client))
+            client.entities_to_delete.append(
+                snippets.insert(client))
 
-        page_one, cursor_one, page_two, cursor_two = snippets.cursor_paging(
-            waiting_client)
+        @eventually_consistent.call
+        def _():
+            results = snippets.cursor_paging(client)
+            page_one, cursor_one, page_two, cursor_two = results
 
-        assert len(page_one) == 5
-        assert len(page_two) == 1
-        assert cursor_one
-        assert cursor_two
+            assert len(page_one) == 5
+            assert len(page_two) == 1
+            assert cursor_one
+            assert cursor_two
 
-    def test_property_filter(self, waiting_client):
-        tasks = snippets.property_filter(waiting_client)
-        waiting_client.entities_to_delete.extend(tasks)
+    @eventually_consistent.mark
+    def test_property_filter(self, client):
+        tasks = snippets.property_filter(client)
+        client.entities_to_delete.extend(tasks)
         assert tasks
 
-    def test_composite_filter(self, waiting_client):
-        tasks = snippets.composite_filter(waiting_client)
-        waiting_client.entities_to_delete.extend(tasks)
+    @eventually_consistent.mark
+    def test_composite_filter(self, client):
+        tasks = snippets.composite_filter(client)
+        client.entities_to_delete.extend(tasks)
         assert tasks
 
-    def test_key_filter(self, waiting_client):
-        tasks = snippets.key_filter(waiting_client)
-        waiting_client.entities_to_delete.extend(tasks)
+    @eventually_consistent.mark
+    def test_key_filter(self, client):
+        tasks = snippets.key_filter(client)
+        client.entities_to_delete.extend(tasks)
         assert tasks
 
-    def test_ascending_sort(self, waiting_client):
-        tasks = snippets.ascending_sort(waiting_client)
-        waiting_client.entities_to_delete.extend(tasks)
+    @eventually_consistent.mark
+    def test_ascending_sort(self, client):
+        tasks = snippets.ascending_sort(client)
+        client.entities_to_delete.extend(tasks)
         assert tasks
 
-    def test_descending_sort(self, waiting_client):
-        tasks = snippets.descending_sort(waiting_client)
-        waiting_client.entities_to_delete.extend(tasks)
+    @eventually_consistent.mark
+    def test_descending_sort(self, client):
+        tasks = snippets.descending_sort(client)
+        client.entities_to_delete.extend(tasks)
         assert tasks
 
-    def test_multi_sort(self, waiting_client):
-        tasks = snippets.multi_sort(waiting_client)
-        waiting_client.entities_to_delete.extend(tasks)
+    @eventually_consistent.mark
+    def test_multi_sort(self, client):
+        tasks = snippets.multi_sort(client)
+        client.entities_to_delete.extend(tasks)
         assert tasks
 
-    def test_keys_only_query(self, waiting_client):
-        keys = snippets.keys_only_query(waiting_client)
-        waiting_client.entities_to_delete.extend(
-            waiting_client.query(kind='Task').fetch())
+    @eventually_consistent.mark
+    def test_keys_only_query(self, client):
+        keys = snippets.keys_only_query(client)
+        client.entities_to_delete.extend(
+            client.query(kind='Task').fetch())
         assert keys
 
-    def test_distinct_query(self, waiting_client):
-        tasks = snippets.distinct_query(waiting_client)
-        waiting_client.entities_to_delete.extend(tasks)
+    @eventually_consistent.mark
+    def test_distinct_query(self, client):
+        tasks = snippets.distinct_query(client)
+        client.entities_to_delete.extend(tasks)
         assert tasks
 
-    def test_distinct_on_query(self, waiting_client):
-        tasks = snippets.distinct_on_query(waiting_client)
-        waiting_client.entities_to_delete.extend(tasks)
+    @eventually_consistent.mark
+    def test_distinct_on_query(self, client):
+        tasks = snippets.distinct_on_query(client)
+        client.entities_to_delete.extend(tasks)
         assert tasks
 
     def test_kindless_query(self, client):
@@ -251,29 +248,33 @@ class TestDatastoreSnippets:
         assert task_list
         assert tasks_in_list
 
-    def test_namespace_run_query(self, waiting_client):
+    @eventually_consistent.mark
+    def test_namespace_run_query(self, client):
         all_namespaces, filtered_namespaces = snippets.namespace_run_query(
-            waiting_client)
+            client)
         assert all_namespaces
         assert filtered_namespaces
         assert 'google' in filtered_namespaces
 
-    def test_kind_run_query(self, waiting_client):
-        kinds = snippets.kind_run_query(waiting_client)
-        waiting_client.entities_to_delete.extend(
-            waiting_client.query(kind='Task').fetch())
+    @eventually_consistent.mark
+    def test_kind_run_query(self, client):
+        kinds = snippets.kind_run_query(client)
+        client.entities_to_delete.extend(
+            client.query(kind='Task').fetch())
         assert kinds
         assert 'Task' in kinds
 
-    def test_property_run_query(self, waiting_client):
-        kinds = snippets.property_run_query(waiting_client)
-        waiting_client.entities_to_delete.extend(
-            waiting_client.query(kind='Task').fetch())
+    @eventually_consistent.mark
+    def test_property_run_query(self, client):
+        kinds = snippets.property_run_query(client)
+        client.entities_to_delete.extend(
+            client.query(kind='Task').fetch())
         assert kinds
         assert 'Task' in kinds
 
-    def test_property_by_kind_run_query(self, waiting_client):
-        reprs = snippets.property_by_kind_run_query(waiting_client)
-        waiting_client.entities_to_delete.extend(
-            waiting_client.query(kind='Task').fetch())
+    @eventually_consistent.mark
+    def test_property_by_kind_run_query(self, client):
+        reprs = snippets.property_by_kind_run_query(client)
+        client.entities_to_delete.extend(
+            client.query(kind='Task').fetch())
         assert reprs
