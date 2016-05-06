@@ -12,6 +12,7 @@
 # limitations under the License.
 
 from gcloud import datastore
+from gcp.testing import eventually_consistent
 from gcp.testing.flaky import flaky
 import pytest
 import tasks
@@ -55,8 +56,11 @@ def test_mark_done(client):
 def test_list_tasks(client):
     task1_key = tasks.add_task(client, 'Test task 1')
     task2_key = tasks.add_task(client, 'Test task 2')
-    task_list = tasks.list_tasks(client)
-    assert [x.key for x in task_list] == [task1_key, task2_key]
+
+    @eventually_consistent.call
+    def _():
+        task_list = tasks.list_tasks(client)
+        assert [x.key for x in task_list] == [task1_key, task2_key]
 
 
 @flaky
@@ -72,9 +76,11 @@ def test_format_tasks(client):
     tasks.add_task(client, 'Test task 2')
     tasks.mark_done(client, task1_key.id)
 
-    output = tasks.format_tasks(tasks.list_tasks(client))
+    @eventually_consistent.call
+    def _():
+        output = tasks.format_tasks(tasks.list_tasks(client))
 
-    assert 'Test task 1' in output
-    assert 'Test task 2' in output
-    assert 'done' in output
-    assert 'created' in output
+        assert 'Test task 1' in output
+        assert 'Test task 2' in output
+        assert 'done' in output
+        assert 'created' in output
