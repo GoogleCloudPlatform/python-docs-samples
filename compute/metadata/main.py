@@ -32,14 +32,14 @@ METADATA_HEADERS = {'Metadata-Flavor': 'Google'}
 
 def wait_for_maintenance(callback):
     url = METADATA_URL + 'instance/maintenance-event'
-    last_in_maintenance = False
+    last_maintenance_event = None
     # [START hanging_get]
-    last_etag = 0
+    last_etag = "0"
 
     while True:
         r = requests.get(
             url,
-            params={'last_etag': last_etag},
+            params={'last_etag': last_etag, 'wait_for_change': True},
             headers=METADATA_HEADERS)
 
         # During maintenance the service can return a 503, so these should
@@ -47,23 +47,31 @@ def wait_for_maintenance(callback):
         if r.status_code == 503:
             time.sleep(1)
             continue
+        elif r.status_code != requests.codes.ok:
+            print('Unexpected HTTP return code from metadata server: {}:{}.'
+                  .format(r.status_code, r.reason))
+            time.sleep(1)
+            continue
 
         last_etag = r.headers['etag']
         # [END hanging_get]
 
-        if r.text == 'MIGRATE_ON_HOST_MAINTENANCE':
-            in_maintenance = True
+        if r.text != 'NONE':
+            # Possible events:
+            #   MIGRATE_ON_HOST_MAINTENANCE: instance will be migrated
+            #   SHUTDOWN_ON_HOST_MAINTENANCE: instance will be shut down
+            maintenance_event = r.text
         else:
-            in_maintenance = False
+            maintenance_event = None
 
-        if in_maintenance != last_in_maintenance:
-            last_in_maintenance = in_maintenance
-            callback(in_maintenance)
+        if maintenance_event != last_maintenance_event:
+            last_maintenance_event = maintenance_event
+            callback(maintenance_event)
 
 
-def maintenance_callback(status):
-    if status:
-        print('Undergoing host maintenance')
+def maintenance_callback(event):
+    if event:
+        print('Undergoing host maintenance: {}'.format(event))
     else:
         print('Finished host maintenance')
 
