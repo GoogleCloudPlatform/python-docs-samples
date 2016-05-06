@@ -26,7 +26,7 @@ import time
 import requests
 
 
-METADATA_URL = "http://metadata.google.internal/computeMetadata/v1/"
+METADATA_URL = 'http://metadata.google.internal/computeMetadata/v1/'
 METADATA_HEADERS = {'Metadata-Flavor': 'Google'}
 
 
