@@ -17,7 +17,7 @@ import logging
 import os
 
 from flask import Flask, render_template, request
-# [start config]
+# [START config]
 import mailjet_rest
 import requests_toolbelt.adapters.appengine
 
