@@ -404,7 +404,7 @@ def key_filter(client):
     # [START key_filter]
     query = client.query(kind='Task')
     first_key = client.key('Task', 'first_task')
-    query.add_filter('__key__', '>', first_key)
+    query.key_filter(first_key, '>')
     # [END key_filter]
 
     return list(query.fetch())
@@ -477,7 +477,7 @@ def distinct_query(client):
 
     # [START distinct_query]
     query = client.query(kind='Task')
-    query.group_by = ['type', 'priority']
+    query.distinct_on = ['type', 'priority']
     query.order = ['type', 'priority']
     query.projection = ['type', 'priority']
     # [END distinct_query]
@@ -491,7 +491,7 @@ def distinct_on_query(client):
 
     # [START distinct_on_query]
     query = client.query(kind='Task')
-    query.group_by = ['type']
+    query.distinct_on = ['type']
     query.order = ['type', 'priority']
     # [END distinct_on_query]
 
@@ -506,7 +506,7 @@ def kindless_query(client):
 
     # [START kindless_query]
     query = client.query()
-    query.add_filter('__key__', '>', last_seen_key)
+    query.key_filter(last_seen_key, '>')
     # [END kindless_query]
 
     return list(query.fetch())
@@ -722,10 +722,8 @@ def namespace_run_query(client):
     start_namespace = client.key('__namespace__', 'g')
     end_namespace = client.key('__namespace__', 'h')
     query = client.query(kind='__namespace__')
-    query.add_filter(
-        '__key__', '>=', start_namespace)
-    query.add_filter(
-        '__key__', '<', end_namespace)
+    query.key_filter(start_namespace, '>=')
+    query.key_filter(end_namespace, '<')
 
     filtered_namespaces = [entity.key.id_or_name for entity in query.fetch()]
     # [END namespace_run_query]
