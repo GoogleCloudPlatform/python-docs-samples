@@ -14,6 +14,7 @@
 import argparse
 
 from gcloud import dns
+from gcloud.exceptions import NotFound
 
 
 # [START create_zone]
@@ -21,8 +22,8 @@ def create_zone(project_id, name, dns_name, description):
     client = dns.Client(project=project_id)
     zone = client.zone(
         name,  # examplezonename
-        dns_name=dns_name)  # example.com.
-    zone.description = description
+        dns_name=dns_name,  # example.com.
+        description=description)
     zone.create()
     return zone
 # [END create_zone]
@@ -31,9 +32,13 @@ def create_zone(project_id, name, dns_name, description):
 # [START get_zone]
 def get_zone(project_id, name):
     client = dns.Client(project=project_id)
-    zones, _ = client.list_zones()
-    zone = list(filter(lambda zone: zone.name == name, zones))
-    return zone.pop() if zone else None
+    zone = client.zone(name=name)
+
+    try:
+        zone.reload()
+        return zone
+    except NotFound:
+        return None
 # [END get_zone]
 
 
@@ -48,7 +53,7 @@ def list_zones(project_id):
 # [START delete_zone]
 def delete_zone(project_id, name):
     client = dns.Client(project=project_id)
-    zone = client.zone(name, None)
+    zone = client.zone(name)
     zone.delete()
 # [END delete_zone]
 
@@ -56,7 +61,7 @@ def delete_zone(project_id, name):
 # [START list_resource_records]
 def list_resource_records(project_id, zone_name):
     client = dns.Client(project=project_id)
-    zone = client.zone(zone_name, None)
+    zone = client.zone(zone_name)
 
     records, page_token = zone.list_resource_record_sets()
     while page_token is not None:
@@ -72,7 +77,7 @@ def list_resource_records(project_id, zone_name):
 # [START changes]
 def list_changes(project_id, zone_name):
     client = dns.Client(project=project_id)
-    zone = client.zone(zone_name, None)
+    zone = client.zone(zone_name)
 
     changes, _ = zone.list_changes()
 
