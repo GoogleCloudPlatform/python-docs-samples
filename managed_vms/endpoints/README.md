@@ -29,7 +29,7 @@ In your web browser, go to the following address: http://localhost:8080.
 
 With the app running locally, you can execute the simple echo client using:
 
-    $ python clients/echo-client.py http://localhost:8080 APIKEY
+    $ python clients/echo-client.py http://localhost:8080 APIKEY helloworld
 
 The `APIKEY` doesn't matter as the endpoint proxy is not running to do authentication.
 
