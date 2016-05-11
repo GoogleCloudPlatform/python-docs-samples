@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import contextlib
+import re
 import threading
 
 from gcloud.credentials import get_credentials
@@ -70,16 +71,27 @@ def request_stream(stop_audio, channels=CHANNELS, rate=RATE, chunk=CHUNK):
         # The initial request must contain metadata about the stream, so the
         # server knows how to interpret it.
         metadata = InitialRecognizeRequest(
-            encoding='LINEAR16', sample_rate=rate)
-        audio_request = AudioRequest(content=audio_stream.read(chunk))
+            encoding='LINEAR16', sample_rate=rate,
+            # Note that setting interim_results to True means that you'll
+            # likely get multiple results for the same bit of audio, as the
+            # system re-interprets audio in the context of subsequent audio.
+            # However, this will give us quick results without having to tell
+            # the server when to finalize a piece of audio.
+            interim_results=True, continuous=False,
+        )
+        data = audio_stream.read(chunk)
+        audio_request = AudioRequest(content=data)
 
         yield RecognizeRequest(
             initial_request=metadata,
             audio_request=audio_request)
 
         while not stop_audio.is_set():
+            data = audio_stream.read(chunk)
+            if not data:
+                raise StopIteration()
             # Subsequent requests can all just have the content
-            audio_request = AudioRequest(content=audio_stream.read(chunk))
+            audio_request = AudioRequest(content=data)
 
             yield RecognizeRequest(audio_request=audio_request)
 
@@ -95,8 +107,7 @@ def listen_print_loop(recognize_stream):
 
         # Exit recognition if any of the transcribed phrases could be
         # one of our keywords.
-        if any(alt.confidence > .5 and
-               (alt.transcript.strip() in ('exit', 'quit'))
+        if any(re.search(r'\b(exit|quit)\b', alt.transcript)
                for result in resp.results
                for alt in result.alternatives):
             print('Exiting..')

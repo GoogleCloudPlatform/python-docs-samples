@@ -52,6 +52,16 @@ for more information.
     $ pip install -r requirements-speech_streaming.txt
     ```
 
+    The sample uses the [PyAudio][pyaudio] library to stream audio from your
+    computer's microphone.  PyAudio depends on [PortAudio][portaudio], which may
+    need to be compiled when you install PyAudio. If you run into compilation
+    issues that mention PortAudio, you may have to [install some
+    dependencies][pyaudio-install].
+
+[pyaudio]: https://people.csail.mit.edu/hubert/pyaudio/
+[portaudio]: http://www.portaudio.com/
+[pyaudio-install]: https://people.csail.mit.edu/hubert/pyaudio/#downloads
+
 ## Run the example
 
 * To run the `speech_rest.py` sample:
