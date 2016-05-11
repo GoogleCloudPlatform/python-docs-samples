@@ -42,8 +42,12 @@ def list_instances(compute, project, zone):
 
 # [START create_instance]
 def create_instance(compute, project, zone, name, bucket):
-    source_disk_image = \
-        "projects/debian-cloud/global/images/debian-7-wheezy-v20150320"
+    # Get the latest Debian Jessie image.
+    image_response = compute.images().getFromFamily(
+        project='debian-cloud', family='debian-8').execute()
+    source_disk_image = image_response['selfLink']
+
+    # Configure the machine
     machine_type = "zones/%s/machineTypes/n1-standard-1" % zone
     startup_script = open(
         os.path.join(
