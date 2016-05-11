@@ -15,8 +15,8 @@ import contextlib
 import io
 import re
 import sys
+import time
 
-from gcp.testing.flaky import flaky
 import pytest
 
 import speech_streaming
@@ -39,6 +39,9 @@ class MockAudioStream(object):
         return self
 
     def read(self, num_frames):
+        # Approximate realtime by sleeping for the appropriate time for the
+        # requested number of frames
+        time.sleep(num_frames / float(speech_streaming.RATE))
         # audio is 16-bit samples, whereas python byte is 8-bit
         num_bytes = 2 * num_frames
         chunk = self.audio_file.read(num_bytes) or self.silence.read(num_bytes)
@@ -54,7 +57,6 @@ def mock_audio_stream(filename):
     return mock_audio_stream
 
 
-@flaky
 @pytest.mark.skipif(
         sys.version_info >= (3, 0),
         reason=("grpc doesn't yet support python3 "
