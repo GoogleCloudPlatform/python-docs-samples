@@ -11,8 +11,40 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 import generate_wrapped_rsa_key
+from googleapiclient import discovery
+from oauth2client.client import GoogleCredentials
 
 
 def test_main():
     generate_wrapped_rsa_key.main(None)
+
+
+def test_create_disk(cloud_config):
+    credentials = GoogleCredentials.get_application_default()
+    compute = discovery.build('compute', 'beta', credentials=credentials)
+
+    # Generate the key.
+    key_bytes = os.urandom(32)
+    google_public_key = generate_wrapped_rsa_key.get_google_public_cert_key()
+    wrapped_rsa_key = generate_wrapped_rsa_key.wrap_rsa_key(
+        google_public_key, key_bytes)
+
+    # Create the disk, if the encryption key is invalid, this will raise.
+    compute.disks().insert(
+        project=cloud_config.project,
+        zone='us-central1-f',
+        body={
+            'name': 'new-encrypted-disk',
+            'diskEncryptionKey': {
+                'rsaEncryptedKey': wrapped_rsa_key.decode('utf-8')
+            }
+        }).execute()
+
+    # Delete the disk.
+    compute.disks().delete(
+        project=cloud_config.project,
+        zone='us-central1-f',
+        disk='new-encrypted-disk').execute()
