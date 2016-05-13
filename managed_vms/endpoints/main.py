@@ -18,6 +18,7 @@ Demonstrates how to create a simple echo API as well as how to deal with
 various authentication methods.
 """
 
+import argparse
 import base64
 import json
 import logging
@@ -88,6 +89,10 @@ def unexpected_error(e):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Run your API Backend')
+    parser.add_argument('--port', type=int, help='Port to run on')
+    parser.add_argument('--debug', type=bool, help='Run in debug mode')
+    parsed = parser.parse_args()
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host='127.0.0.1', port=parsed.port, debug=parsed.debug)
