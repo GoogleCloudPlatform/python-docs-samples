@@ -32,7 +32,7 @@ def make_request(host, api_key, message):
         'message': message
     }
 
-    response = requests.post(url, params=params, json=body)
+    response = requests.post(url, params=params, data=body)
 
     response.raise_for_status()
     return response.text
