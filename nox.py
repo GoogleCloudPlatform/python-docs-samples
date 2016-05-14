@@ -59,7 +59,7 @@ def get_changed_files():
         # This is not a pull request.
         changed = subprocess.check_output(
             ['git', 'show', '--pretty=format:', '--name-only',
-                os.environ.get('TRAVIS_COMMIT_RANGE')])
+                os.environ.get('TRAVIS_COMMIT')])
     elif pr is not None:
         changed = subprocess.check_output(
             ['git', 'diff', '--name-only',
