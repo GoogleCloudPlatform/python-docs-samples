@@ -16,6 +16,7 @@ import os
 
 from google.appengine.ext import testbed as gaetestbed
 import main
+import mock
 import webtest
 
 
@@ -31,3 +32,11 @@ def test_app(testbed):
     tasks = tq_stub.get_filtered_tasks()
     assert len(tasks) == 1
     assert tasks[0].name == 'task1'
+
+    with mock.patch('main.update_counter') as mock_update:
+        # Force update to fail, otherwise the loop will go forever.
+        mock_update.side_effect = RuntimeError()
+
+        app.get('/_ah/start', status=500)
+
+        assert mock_update.called
