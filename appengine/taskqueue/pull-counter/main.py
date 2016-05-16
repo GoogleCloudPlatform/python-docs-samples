@@ -48,6 +48,13 @@ class CounterHandler(webapp2.RequestHandler):
         self.redirect('/')
 
 
+@ndb.transactional
+def update_counter(key, tasks):
+    counter = Counter.get_or_insert(key, count=0)
+    counter.count += len(tasks)
+    counter.put()
+
+
 class CounterWorker(webapp2.RequestHandler):
     def get(self):
         """Indefinitely fetch tasks and update the datastore."""
@@ -60,20 +67,18 @@ class CounterWorker(webapp2.RequestHandler):
                 logging.exception(e)
                 time.sleep(1)
                 continue
+
             if tasks:
                 key = tasks[0].tag
 
-                @ndb.transactional
-                def update_counter():
-                    counter = Counter.get_or_insert(key, count=0)
-                    counter.count += len(tasks)
-                    counter.put()
                 try:
-                    update_counter()
+                    update_counter(key, tasks)
                 except Exception as e:
                     logging.exception(e)
-                else:
+                    raise
+                finally:
                     queue.delete_tasks(tasks)
+
             time.sleep(1)
 
 
