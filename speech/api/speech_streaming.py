@@ -1,11 +1,25 @@
 #!/usr/bin/python
+# Copyright (C) 2016 Google Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+"""Sample that streams audio to the Google Cloud Speech API via GRPC."""
 
 import contextlib
 import re
 import threading
 
 from gcloud.credentials import get_credentials
-from google.cloud.speech.v1.cloud_speech_pb2 import *  # noqa
+from google.cloud.speech.v1 import cloud_speech_pb2 as cloud_speech
 from google.rpc import code_pb2
 from grpc.beta import implementations
 import pyaudio
@@ -70,7 +84,7 @@ def request_stream(stop_audio, channels=CHANNELS, rate=RATE, chunk=CHUNK):
     with record_audio(channels, rate, chunk) as audio_stream:
         # The initial request must contain metadata about the stream, so the
         # server knows how to interpret it.
-        metadata = InitialRecognizeRequest(
+        metadata = cloud_speech.InitialRecognizeRequest(
             encoding='LINEAR16', sample_rate=rate,
             # Note that setting interim_results to True means that you'll
             # likely get multiple results for the same bit of audio, as the
@@ -80,9 +94,9 @@ def request_stream(stop_audio, channels=CHANNELS, rate=RATE, chunk=CHUNK):
             interim_results=True, continuous=False,
         )
         data = audio_stream.read(chunk)
-        audio_request = AudioRequest(content=data)
+        audio_request = cloud_speech.AudioRequest(content=data)
 
-        yield RecognizeRequest(
+        yield cloud_speech.RecognizeRequest(
             initial_request=metadata,
             audio_request=audio_request)
 
@@ -91,9 +105,9 @@ def request_stream(stop_audio, channels=CHANNELS, rate=RATE, chunk=CHUNK):
             if not data:
                 raise StopIteration()
             # Subsequent requests can all just have the content
-            audio_request = AudioRequest(content=data)
+            audio_request = cloud_speech.AudioRequest(content=data)
 
-            yield RecognizeRequest(audio_request=audio_request)
+            yield cloud_speech.RecognizeRequest(audio_request=audio_request)
 
 
 def listen_print_loop(recognize_stream):
@@ -116,7 +130,7 @@ def listen_print_loop(recognize_stream):
 
 def main():
     stop_audio = threading.Event()
-    with beta_create_Speech_stub(
+    with cloud_speech.beta_create_Speech_stub(
             make_channel('speech.googleapis.com', 443)) as service:
         try:
             listen_print_loop(
