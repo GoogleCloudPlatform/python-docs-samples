@@ -1,12 +1,12 @@
 beautifulsoup4==4.4.1
-coverage==4.1b2
+coverage==4.1b3
 Django==1.9.6
 flaky==3.1.1
 Flask-Sockets==0.2.0
 Flask-SQLAlchemy==2.1
 Flask==0.10.1
 funcsigs==1.0.2
-gcloud==0.13.0
+gcloud==0.14.0
 google-api-python-client==1.5.0
 itsdangerous==0.24
 Jinja2==2.8
