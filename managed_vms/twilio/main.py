@@ -48,7 +48,7 @@ def send_sms():
     to = request.args.get('to')
     if not to:
         return ('Please provide the number to message in the "to" query string'
-                ' parameter.')
+                ' parameter.'), 400
 
     client = TwilioRestClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
     rv = client.messages.create(
