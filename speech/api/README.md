@@ -49,7 +49,7 @@ for more information.
 * If you're running the `speech_streaming.py` sample:
 
     ```sh
-    $ pip install -r requirements-speech_streaming.txt
+    $ pip install -r requirements-speech_grpc.txt
     ```
 
     The sample uses the [PyAudio][pyaudio] library to stream audio from your
