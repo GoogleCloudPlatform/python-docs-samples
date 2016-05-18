@@ -38,7 +38,7 @@ def send_email():
     to = request.form.get('to')
     if not to:
         return ('Please provide an email address in the "to" query string '
-                'parameter.')
+                'parameter.'), 400
 
     sg = sendgrid.SendGridClient(SENDGRID_API_KEY)
 
@@ -52,7 +52,7 @@ def send_email():
     status, response = sg.send(message)
 
     if status != 200:
-        return 'An error occurred: {}'.format(response)
+        return 'An error occurred: {}'.format(response), 500
 
     return 'Email sent.'
 # [END example]
