@@ -19,34 +19,29 @@ processing."""
 import argparse
 import base64
 import json
-import os
 
 from googleapiclient import discovery
-
 import httplib2
-
 from oauth2client.client import GoogleCredentials
 # [END import_libraries]
 
-# Path to local discovery file
-# [START discovery_doc]
-API_DISCOVERY_FILE = os.path.join(
-    os.path.dirname(__file__), 'speech-discovery_google_rest_v1.json')
-# [END discovery_doc]
+
+# [START authenticating]
+DISCOVERY_URL = ('https://{api}.googleapis.com/$discovery/rest?'
+                 'version={apiVersion}')
 
 
 # Application default credentials provided by env variable
 # GOOGLE_APPLICATION_CREDENTIALS
 def get_speech_service():
-    # [START authenticating]
     credentials = GoogleCredentials.get_application_default().create_scoped(
         ['https://www.googleapis.com/auth/cloud-platform'])
-    with open(API_DISCOVERY_FILE, 'r') as f:
-        doc = f.read()
+    http = httplib2.Http()
+    credentials.authorize(http)
 
-    return discovery.build_from_document(
-        doc, credentials=credentials, http=httplib2.Http())
-    # [END authenticating]
+    return discovery.build(
+        'speech', 'v1', http=http, discoveryServiceUrl=DISCOVERY_URL)
+# [END authenticating]
 
 
 def main(speech_file):
