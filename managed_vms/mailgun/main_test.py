@@ -13,11 +13,10 @@
 # limitations under the License.
 
 import os
-import re
 
 import pytest
-import responses
 import requests
+import responses
 
 
 @pytest.fixture
