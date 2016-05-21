@@ -2,7 +2,7 @@
 
 This is a basic example of running Mozillas [Kinto](https://github.com/Kinto/kinto/blob/master/docs/index.rst)
 on Managed VMs. Kinto provides a framework to sync JSON data across many devices and provide push notifications.
-Thius example uses a custom runtime to install Kinto and edit the config to run it on port 8080, which is the port that
+This example uses a custom runtime to install Kinto and edit the config to run it on port 8080, which is the port that
 the base Docker image is expecting. 
 
 Since Kinto is being imported as a Python library and run as-is, no additional code is necessary.
