@@ -1,5 +1,5 @@
 Flask==0.10.1
-gunicorn==19.5.0
+gunicorn==19.6.0
 gcloud==0.14.0
 six==1.10.0
 pyyaml==3.11
