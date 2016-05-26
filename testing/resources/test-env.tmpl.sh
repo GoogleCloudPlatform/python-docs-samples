@@ -2,7 +2,7 @@
 export GCLOUD_PROJECT=your-project-id
 export CLOUD_STORAGE_BUCKET=$GCLOUD_PROJECT
 
-# Environment variables for Managed VMs system tests.
+# Environment variables for App Engine Flexible system tests.
 export GA_TRACKING_ID=
 export SQLALCHEMY_DATABASE_URI=sqlite://
 export PUBSUB_TOPIC=gae-mvm-pubsub-topic

@@ -27,7 +27,7 @@ COMMON_PYTEST_ARGS = [
     '.coveragerc', '--cov-append', '--cov-report=']
 
 # Speech is temporarily disabled.
-TESTS_BLACKLIST = set(('appengine', 'testing', 'speech'))
+TESTS_BLACKLIST = set(('./appengine/standard', './testing', './speech'))
 APPENGINE_BLACKLIST = set()
 
 
@@ -50,7 +50,8 @@ def collect_sample_dirs(start_dir, blacklist=set()):
         else:
             # Filter out dirs we don't want to recurse into
             subdirs[:] = [s for s in subdirs
-                          if s[0].isalpha() and s not in blacklist]
+                          if s[0].isalpha() and
+                          os.path.join(parent, s) not in blacklist]
 
 
 def get_changed_files():
@@ -104,7 +105,7 @@ def run_tests_in_sesssion(
 
     if use_appengine:
         setup_appengine(session)
-        sample_root = 'appengine'
+        sample_root = 'appengine/standard'
     else:
         sample_root = '.'
 
