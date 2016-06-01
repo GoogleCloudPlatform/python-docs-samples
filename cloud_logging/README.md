@@ -24,7 +24,7 @@ For more information on Cloud Logging you can visit:
 For more information on the Clloud Logging API Python library surface you
 can visit:
 
-> https://developers.google.com/resources/api-libraries/documentation/logging/v1beta3/python/latest/
+> https://cloud.google.com/logging/docs/api/
 
 For information on the Python Client Library visit:
 
