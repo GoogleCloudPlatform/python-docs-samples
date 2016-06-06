@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc. All Rights Reserved.
+# Copyright 2016 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,21 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START app]
 import logging
 import os
 
 from flask import Flask
 import requests
+import requests_toolbelt.adapters.appengine
 
+# Use the App Engine Requests adapter. This makes sure that Requests uses
+# URLFetch.
+requests_toolbelt.adapters.appengine.monkeypatch()
 
 app = Flask(__name__)
-
 
 # Environment variables are defined in app.yaml.
 GA_TRACKING_ID = os.environ['GA_TRACKING_ID']
 
 
+# [START track_event]
 def track_event(category, action, label=None, value=0):
     data = {
         'v': '1',  # API Version.
@@ -56,6 +59,7 @@ def track_example():
         category='Example',
         action='test action')
     return 'Event tracked.'
+# [STOP track_event]
 
 
 @app.errorhandler(500)
@@ -71,4 +75,3 @@ if __name__ == '__main__':
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
     app.run(host='127.0.0.1', port=8080, debug=True)
-# [END app]

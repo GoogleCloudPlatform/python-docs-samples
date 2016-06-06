@@ -1,0 +1,12 @@
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: .*
+  script: main.app
+
+#[START env]
+env_variables:
+    GA_TRACKING_ID: your-tracking-id
+#[END env]
