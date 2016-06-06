@@ -59,7 +59,7 @@ def track_example():
         category='Example',
         action='test action')
     return 'Event tracked.'
-# [STOP track_event]
+# [END track_event]
 
 
 @app.errorhandler(500)
