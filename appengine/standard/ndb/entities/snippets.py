@@ -21,13 +21,13 @@ class Account(ndb.Model):
     email = ndb.StringProperty()
 
 
-def create_model_using_keyword_arguments():
+def create_entity_using_keyword_arguments():
     sandy = Account(
         username='Sandy', userid=123, email='sandy@example.com')
     return sandy
 
 
-def create_model_using_attributes():
+def create_entity_using_attributes():
     sandy = Account()
     sandy.username = 'Sandy'
     sandy.userid = 123
@@ -35,7 +35,7 @@ def create_model_using_attributes():
     return sandy
 
 
-def create_model_using_populate():
+def create_entity_using_populate():
     sandy = Account()
     sandy.populate(
         username='Sandy',
@@ -50,16 +50,16 @@ def demonstrate_model_constructor_type_checking():
     return bad
 
 
-def dmonstrate_model_attribute_type_checking(sandy):
+def demonstrate_entity_attribute_type_checking(sandy):
     sandy.username = 42  # raises an exception
 
 
-def save_model(sandy):
+def save_entity(sandy):
     sandy_key = sandy.put()
     return sandy_key
 
 
-def get_model(sandy_key):
+def get_entity(sandy_key):
     sandy = sandy_key.get()
     return sandy
 
@@ -75,7 +75,7 @@ def get_url_safe_key(sandy_key):
     return url_string
 
 
-def get_model_from_url_safe_key(url_string):
+def get_entity_from_url_safe_key(url_string):
     sandy_key = ndb.Key(urlsafe=url_string)
     sandy = sandy_key.get()
     return sandy
@@ -88,17 +88,17 @@ def get_key_and_numeric_id_from_url_safe_key(url_string):
     return key, ident, kind_string
 
 
-def update_model_from_key(key):
+def update_entity_from_key(key):
     sandy = key.get()
     sandy.email = 'sandy@example.co.uk'
     sandy.put()
 
 
-def delete_model(sandy):
+def delete_entity(sandy):
     sandy.key.delete()
 
 
-def create_model_with_named_key():
+def create_entity_with_named_key():
     account = Account(
         username='Sandy', userid=1234, email='sandy@example.com',
         id='sandy@example.com')
@@ -114,7 +114,7 @@ def set_key_directly(account):
     account.key = ndb.Key(Account, 'sandy@example.com')
 
 
-def create_model_with_generated_id():
+def create_entity_with_generated_id():
     # note: no id kwarg
     account = Account(username='Sandy', userid=1234, email='sandy@example.com')
     account.put()
@@ -127,7 +127,7 @@ class Revision(ndb.Model):
     message_text = ndb.StringProperty()
 
 
-def demonstrate_models_with_parent_hierarchy():
+def demonstrate_entities_with_parent_hierarchy():
     ndb.Key('Account', 'sandy@example.com', 'Message', 123, 'Revision', '1')
     ndb.Key('Account', 'sandy@example.com', 'Message', 123, 'Revision', '2')
     ndb.Key('Account', 'larry@example.com', 'Message', 456, 'Revision', '1')
@@ -149,7 +149,7 @@ def create_root_key():
     return sandy_key
 
 
-def create_model_with_parent_keys():
+def create_entity_with_parent_keys():
     account_key = ndb.Key(Account, 'sandy@example.com')
 
     # Ask Datastore to allocate an ID.
@@ -167,7 +167,7 @@ def create_model_with_parent_keys():
     return initial_revision
 
 
-def get_parent_key_of_model(initial_revision):
+def get_parent_key_of_entity(initial_revision):
     message_key = initial_revision.key.parent()
     return message_key
 
@@ -182,7 +182,7 @@ class Mine(ndb.Expando):
     pass
 
 
-def create_expando_model():
+def create_entity_using_expando_model():
     e = Mine()
     e.foo = 1
     e.bar = 'blah'
@@ -206,7 +206,7 @@ class FlexEmployee(ndb.Expando):
     age = ndb.IntegerProperty()
 
 
-def create_expando_model_with_defined_properties():
+def create_expando_model_entity_with_defined_properties():
     employee = FlexEmployee(name='Sandy', location='SF')
     return employee
 
@@ -215,7 +215,7 @@ class Specialized(ndb.Expando):
     _default_indexed = False
 
 
-def create_expando_model_that_isnt_indexed_by_default():
+def create_expando_model_entity_that_isnt_indexed_by_default():
     e = Specialized(foo='a', bar=['b'])
     return e._properties
     # {
