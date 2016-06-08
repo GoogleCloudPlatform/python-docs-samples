@@ -32,11 +32,14 @@ The script will also instruct you to follow a URL to enable APIs. You will need 
 
 From the Cloud Console, create a new Service Account and download its json key. Place this file in `testing/resources/service-account.json`.
 
+Create a new OAuth client ID. Create a file `testing/resources/client-secrets.json` and write the `client_id` and `client_secret` to the file in the [Client Secrets JSON format](https://developers.google.com/api-client-library/python/guide/aaa_client_secrets).
+
 ## Environment variables
 
 * Copy `testing/resources/test-env.tmpl.sh` to `testing/resources/test-env.sh`, and updated it with your configuration.
 * Run `source testing/resources/test-env.sh`.
 * Run `export GOOGLE_APPLICATION_CREDENTIALS=testing/resources/service-account.json`.
+* Run `export GOOGLE_CLIENT_SECRETS=testing/resources/client-secrets.json`.
 
 ### Test environments
 

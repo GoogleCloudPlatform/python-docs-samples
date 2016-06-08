@@ -25,11 +25,11 @@ gsutil defacl set public-read gs://$GCLOUD_PROJECT
 echo "Creating bigquery resources."
 gcloud alpha bigquery datasets create test_dataset
 gcloud alpha bigquery datasets create ephemeral_test_dataset
-gsutil cp tests/resources/data.csv gs://$GCLOUD_PROJECT/data.csv
+gsutil cp bigquery/api/resources/data.csv gs://$GCLOUD_PROJECT/data.csv
 gcloud alpha bigquery import \
     gs://$GCLOUD_PROJECT/data.csv \
     test_dataset/test_table \
-    --schema-file tests/resources/schema.json
+    --schema-file bigquery/api/resources/schema.json
 
 echo "Creating datastore indexes."
 gcloud preview app deploy -q datastore/api/index.yaml
@@ -38,4 +38,4 @@ echo "Creating pubsub resources."
 gcloud alpha pubsub topics create gae-mvm-pubsub-topic
 
 echo "To finish setup, follow this link to enable APIs."
-echo "https://console.cloud.google.com/flows/enableapi?apiid=datastore,pubsub,storage_api,logging,plus,bigquery,cloudmonitoring,compute_component"
+echo "https://console.cloud.google.com/flows/enableapi?project=${GCLOUD_PROJECT}&apiid=bigquery,cloudmonitoring,compute_component,datastore,datastore.googleapis.com,dataproc,dns,plus,pubsub,logging,storage_api,vision.googleapis.com"
