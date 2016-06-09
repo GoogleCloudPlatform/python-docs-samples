@@ -28,7 +28,9 @@ def cloud_config():
     return Namespace(
         project=os.environ.get('GCLOUD_PROJECT'),
         storage_bucket=os.environ.get('CLOUD_STORAGE_BUCKET'),
-        client_secrets=os.environ.get('GOOGLE_CLIENT_SECRETS'))
+        client_secrets=os.environ.get('GOOGLE_CLIENT_SECRETS'),
+        bigtable_cluster=os.environ.get('BIGTABLE_CLUSTER'),
+        bigtable_zone=os.environ.get('BIGTABLE_ZONE'))
 
 
 def get_resource_path(resource, local_path):

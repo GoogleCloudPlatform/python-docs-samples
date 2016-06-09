@@ -22,6 +22,12 @@ echo "Creating cloud storage bucket."
 gsutil mb gs://$GCLOUD_PROJECT
 gsutil defacl set public-read gs://$GCLOUD_PROJECT
 
+echo "Creating bigtable resources."
+gcloud alpha bigtable clusters create bigtable-test \
+    --description="Test cluster" \
+    --nodes=3 \
+    --zone=us-central1-c
+
 echo "Creating bigquery resources."
 gcloud alpha bigquery datasets create test_dataset
 gcloud alpha bigquery datasets create ephemeral_test_dataset
@@ -38,4 +44,4 @@ echo "Creating pubsub resources."
 gcloud alpha pubsub topics create gae-mvm-pubsub-topic
 
 echo "To finish setup, follow this link to enable APIs."
-echo "https://console.cloud.google.com/flows/enableapi?project=${GCLOUD_PROJECT}&apiid=bigquery,cloudmonitoring,compute_component,datastore,datastore.googleapis.com,dataproc,dns,plus,pubsub,logging,storage_api,vision.googleapis.com"
+echo "https://console.cloud.google.com/flows/enableapi?project=${GCLOUD_PROJECT}&apiid=bigtable,bigtableclusteradmin,bigtabletableadmin,bigquery,cloudmonitoring,compute_component,datastore,datastore.googleapis.com,dataproc,dns,plus,pubsub,logging,storage_api,vision.googleapis.com"

@@ -1,6 +1,8 @@
 # Environment variables for system tests.
 export GCLOUD_PROJECT=your-project-id
 export CLOUD_STORAGE_BUCKET=$GCLOUD_PROJECT
+export BIGTABLE_CLUSTER=bigtable-test
+export BIGTABLE_ZONE=us-central1-c
 
 # Environment variables for App Engine Flexible system tests.
 export GA_TRACKING_ID=

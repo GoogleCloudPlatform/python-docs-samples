@@ -26,8 +26,13 @@ COMMON_PYTEST_ARGS = [
     '-x', '--no-success-flaky-report', '--cov', '--cov-config',
     '.coveragerc', '--cov-append', '--cov-report=']
 
-# Speech is temporarily disabled.
-TESTS_BLACKLIST = set(('./appengine/standard', './testing', './speech'))
+# Bigtable and Speech are disabled because they use gRPC, which does not yet
+# support Python 3. See: https://github.com/grpc/grpc/issues/282
+TESTS_BLACKLIST = set((
+    './appengine/standard',
+    './bigtable',
+    './speech',
+    './testing'))
 APPENGINE_BLACKLIST = set()
 
 

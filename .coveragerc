@@ -1,6 +1,7 @@
 [run]
 include =
     appengine/*
+    bigtable/*
     bigquery/*
     blog/*
     cloud_logging/*
