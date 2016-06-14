@@ -27,22 +27,24 @@ Prerequisites:
 """
 
 import argparse
-import uuid
 
 from gcloud import bigtable
 from gcloud.bigtable import happybase
 
 
-def main(project, cluster_id, zone, table_name):
+def main(project_id, cluster_id, zone, table_name):
+    # [START connecting_to_bigtable]
     # The client must be created with admin=True because it will create a
     # table.
-    client = bigtable.Client(project=project, admin=True)
+    client = bigtable.Client(project=project_id, admin=True)
 
     with client:
         cluster = client.cluster(zone, cluster_id)
         cluster.reload()
         connection = happybase.Connection(cluster=cluster)
+        # [END connecting_to_bigtable]
 
+        # [START creating_a_table]
         print('Creating the {} table.'.format(table_name))
         column_family_name = 'cf1'
         connection.create_table(
@@ -50,27 +52,49 @@ def main(project, cluster_id, zone, table_name):
             {
                 column_family_name: dict()  # Use default options.
             })
-        table = connection.table(table_name)
+        # [END creating_a_table]
 
+        # [START writing_rows]
         print('Writing some greetings to the table.')
+        table = connection.table(table_name)
         column_name = '{fam}:greeting'.format(fam=column_family_name)
         greetings = [
             'Hello World!',
             'Hello Cloud Bigtable!',
             'Hello HappyBase!',
         ]
-        for value in greetings:
-            # Use a random key to distribute writes more evenly across shards.
-            # See: https://cloud.google.com/bigtable/docs/schema-design
-            row_key = str(uuid.uuid4())
+        for i, value in enumerate(greetings):
+            # Note: This example uses sequential numeric IDs for simplicity,
+            # but this can result in poor performance in a production
+            # application.  Since rows are stored in sorted order by key,
+            # sequential keys can result in poor distribution of operations
+            # across nodes.
+            #
+            # For more information about how to design a Bigtable schema for
+            # the best performance, see the documentation:
+            #
+            #     https://cloud.google.com/bigtable/docs/schema-design
+            row_key = 'greeting{}'.format(i)
             table.put(row_key, {column_name: value})
+        # [END writing_rows]
 
+        # [START getting_a_row]
+        print('Getting a single greeting by row key.')
+        key = 'greeting0'
+        row = table.row(key)
+        print('\t{}: {}'.format(key, row[column_name]))
+        # [END getting_a_row]
+
+        # [START scanning_all_rows]
         print('Scanning for all greetings:')
         for key, row in table.scan():
             print('\t{}: {}'.format(key, row[column_name]))
+        # [END scanning_all_rows]
 
+        # [START deleting_a_table]
         print('Deleting the {} table.'.format(table_name))
         connection.delete_table(table_name)
+        # [END deleting_a_table]
 
 
 if __name__ == '__main__':
@@ -79,7 +103,7 @@ if __name__ == '__main__':
                     ' Bigtable.',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument(
-        'project',
+        'project_id',
         help='Google Cloud Platform project ID that contains the Cloud' +
              ' Bigtable cluster.')
     parser.add_argument(
@@ -92,4 +116,4 @@ if __name__ == '__main__':
         default='Hello-Bigtable')
 
     args = parser.parse_args()
-    main(args.project, args.cluster, args.zone, args.table)
+    main(args.project_id, args.cluster, args.zone, args.table)
