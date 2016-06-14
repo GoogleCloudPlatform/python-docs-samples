@@ -21,22 +21,24 @@ from oauth2client.client import GoogleCredentials
 
 
 def write_entry(client, args):
+    # [START write]
     print('Writing log entry for logger '.format(args.logger_name))
     mylogger = client.logger(args.logger_name)
-    # [START write]
     mylogger.log_text(args.entry)
     # [END write]
 
 
 def list_entries(client, args):
     """Lists all entries for a logger"""
+    # [START list]
     logger = client.logger(args.logger_name)
     print('Listing all log entries for logger {}'.format(logger.name))
-    # [START list]
     entries = []
+    token = None
     while True:
-        new_entries, token = client.list_entries(filter_='logName="{}"'.format(
-           logger.full_name))
+        new_entries, token = client.list_entries(
+            filter_='logName="{}"'.format(logger.full_name),
+            page_token=token)
         entries += new_entries
         if token is None:
             break
@@ -54,9 +56,9 @@ def delete_logger(client, args):
 
     Note that a deletion can take several minutes to take effect.
     """
+    # [START delete]
     logger = client.logger(args.logger_name)
     print('Deleting all logging entries for {}'.format(logger.name))
-    # [START delete]
     logger.delete()
     # [END delete]
 

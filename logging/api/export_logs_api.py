@@ -42,8 +42,9 @@ def list_sinks(client, args):
 
     # [START list]
     sinks = []
+    token = None
     while True:
-        new_sinks, token = client.list_sinks()
+        new_sinks, token = client.list_sinks(page_token=token)
         sinks += new_sinks
         if token is None:
             break
@@ -62,11 +63,12 @@ def update_sink(client, args):
      will be exported to the destination.
     """
     # Removes the robot in textPayload part of filter
+    # [START update]
     sink = client.sink(
         args.sink_name,
         FILTER.format(args.project_id),
         DESTINATION.format(args.destination_bucket))
-    # [START update]
+
     sink.filter = ('logName="projects/{}/logs/syslog" '
                    'AND severity>= INFO'.format(sink.project))
     print('Updated sink {}'.format(sink.name))
@@ -76,11 +78,11 @@ def update_sink(client, args):
 
 def delete_sink(client, args):
     """Deletes a sink"""
+    # [START delete]
     sink = client.sink(
         args.sink_name,
         FILTER.format(args.project_id),
         DESTINATION.format(args.destination_bucket))
-    # [START delete]
     sink.delete()
     # [END delete]
     print('Deleted sink {}'.format(sink.name))

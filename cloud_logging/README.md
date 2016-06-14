@@ -1,4 +1,8 @@
-# Google Cloud Logging Samples
+# Google Cloud Logging v1 Samples
+
+**Note that these samples are for the v1 Samples, using the Google API Client. 
+ It's recommended you instead use the [Logging v2 samples](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/logging/api), which use the Google 
+ Cloud client library.**
 
 This section contains samples for [Google Cloud Logging](https://cloud.google.com/logging).
 
