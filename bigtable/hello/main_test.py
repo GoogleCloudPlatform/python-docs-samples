@@ -16,7 +16,7 @@ import random
 import re
 import sys
 
-from hello import main
+from main import main
 
 import pytest
 
@@ -41,7 +41,9 @@ def test_main(cloud_config, capsys):
     assert re.search(
         re.compile(r'Creating the Hello-Bigtable-[0-9]+ table\.'), out)
     assert re.search(re.compile(r'Writing some greetings to the table\.'), out)
-    assert re.search(re.compile(r'Scanning for all greetings'), out)
+    assert re.search(re.compile(r'Getting a single greeting by row key.'), out)
     assert re.search(re.compile(r'greeting0: Hello World!'), out)
+    assert re.search(re.compile(r'Scanning for all greetings'), out)
+    assert re.search(re.compile(r'greeting1: Hello Cloud Bigtable!'), out)
     assert re.search(
         re.compile(r'Deleting the Hello-Bigtable-[0-9]+ table\.'), out)
