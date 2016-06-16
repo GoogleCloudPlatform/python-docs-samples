@@ -14,7 +14,8 @@
 
 from google.appengine.ext import ndb
 from guestbook import Greeting
-from snippets_models import *  # noqa
+from snippets_models import (Account, Address, Article,
+                             Bar, Contact, Employee, FlexEmployee, Manager)
 
 
 def query_account_equality():
