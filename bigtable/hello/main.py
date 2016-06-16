@@ -37,13 +37,11 @@ def main(project_id, cluster_id, zone, table_name):
     # The client must be created with admin=True because it will create a
     # table.
     client = bigtable.Client(project=project_id, admin=True)
+    cluster = client.cluster(zone, cluster_id)
+    connection = happybase.Connection(cluster=cluster)
+    # [END connecting_to_bigtable]
 
-    with client:
-        cluster = client.cluster(zone, cluster_id)
-        cluster.reload()
-        connection = happybase.Connection(cluster=cluster)
-        # [END connecting_to_bigtable]
-
+    try:
         # [START creating_a_table]
         print('Creating the {} table.'.format(table_name))
         column_family_name = 'cf1'
@@ -95,6 +93,8 @@ def main(project_id, cluster_id, zone, table_name):
         print('Deleting the {} table.'.format(table_name))
         connection.delete_table(table_name)
         # [END deleting_a_table]
+    finally:
+        connection.close()
 
 
 if __name__ == '__main__':
