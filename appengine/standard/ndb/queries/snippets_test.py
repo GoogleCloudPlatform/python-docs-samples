@@ -14,7 +14,8 @@
 
 from guestbook import Greeting
 import snippets
-from snippets_models import *  # noqa
+from snippets_models import (Account, Address, Article,
+                             Bar, Contact, FlexEmployee, Message)
 
 
 def test_query_account_equality(testbed):
