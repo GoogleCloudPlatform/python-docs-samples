@@ -56,6 +56,7 @@ def make_channel(host, port):
     return implementations.secure_channel(host, port, composite_channel)
 
 
+# [START audio_stream]
 @contextlib.contextmanager
 def record_audio(channels, rate, chunk):
     """Opens a recording stream in a context manager."""
@@ -70,6 +71,7 @@ def record_audio(channels, rate, chunk):
     audio_stream.stop_stream()
     audio_stream.close()
     audio_interface.terminate()
+# [END audio_stream]
 
 
 def request_stream(stop_audio, channels=CHANNELS, rate=RATE, chunk=CHUNK):
