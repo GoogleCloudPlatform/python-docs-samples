@@ -1,4 +1,4 @@
-# Cloud Bigtable Hello World
+# Cloud Bigtable Hello World (HappyBase)
 
 This is a simple application that demonstrates using the [Google Cloud Client
 Library][gcloud-python] to connect to and interact with Cloud Bigtable.
