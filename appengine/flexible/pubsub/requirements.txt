@@ -1,4 +1,4 @@
-Flask==0.10.1
-gcloud==0.14.0
+Flask==0.11.1
+gcloud==0.16.1
 gunicorn==19.6.0
-oauth2client==2.1.0
+oauth2client==2.2.0
