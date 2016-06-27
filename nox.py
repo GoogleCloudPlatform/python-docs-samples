@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import fnmatch
+import itertools
 import os
 import subprocess
 import tempfile
@@ -103,30 +104,26 @@ def setup_appengine(session):
 
 def run_tests_in_sesssion(
         session, interpreter, use_appengine=False, skip_flaky=False,
-        changed_only=False):
+        changed_only=False, sample_directories=None):
     session.interpreter = interpreter
     session.install(REPO_TOOLS_REQ)
     session.install('-r', 'requirements-{}-dev.txt'.format(interpreter))
 
     if use_appengine:
         setup_appengine(session)
-        sample_root = 'appengine/standard'
-    else:
-        sample_root = '.'
 
     pytest_args = COMMON_PYTEST_ARGS[:]
 
     if skip_flaky:
         pytest_args.append('-m not slow and not flaky')
 
-    # session.posargs is any leftover arguments from the command line, which
-    # allows users to run a particular test instead of all of them.
-    if session.posargs:
-        sample_directories = session.posargs
-    else:
-        sample_directories = collect_sample_dirs(
-            sample_root,
-            TESTS_BLACKLIST if not use_appengine else APPENGINE_BLACKLIST)
+    if sample_directories is None:
+        # session.posargs is any leftover arguments from the command line,
+        # which allows users to run a particular test instead of all of them.
+        if session.posargs:
+            sample_directories = session.posargs
+        else:
+            sample_directories = collect_sample_dirs('.', TESTS_BLACKLIST)
 
     if changed_only:
         changed_files = get_changed_files()
@@ -154,7 +151,19 @@ def session_tests(session, interpreter):
 
 def session_gae(session):
     run_tests_in_sesssion(
-        session, 'python2.7', use_appengine=True)
+        session, 'python2.7', use_appengine=True,
+        sample_directories=collect_sample_dirs(
+            'appengine/standard',
+            APPENGINE_BLACKLIST))
+
+
+def session_grpc(session):
+    run_tests_in_sesssion(
+        session,
+        'python2.7',
+        sample_directories=itertools.chain(
+            collect_sample_dirs('speech'),
+            collect_sample_dirs('bigtable')))
 
 
 @nox.parametrize('subsession', ['gae', 'tests'])
@@ -166,7 +175,10 @@ def session_travis(session, subsession):
     else:
         run_tests_in_sesssion(
             session, 'python2.7', use_appengine=True, skip_flaky=True,
-            changed_only=True)
+            changed_only=True,
+            sample_directories=collect_sample_dirs(
+                'appengine/standard',
+                APPENGINE_BLACKLIST))
 
 
 def session_lint(session):
