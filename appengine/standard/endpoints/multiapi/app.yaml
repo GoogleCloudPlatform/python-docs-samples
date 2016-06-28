@@ -3,14 +3,12 @@ threadsafe: true
 api_version: 1
 
 handlers:
-# The endpoints handler must be mapped to /_ah/spi.
-# Apps send requests to /_ah/api, but the endpoints service handles mapping
-# those requests to /_ah/spi.
-- url: /_ah/spi/.*
+# The endpoints handler must be mapped to /_ah/api.
+- url: /_ah/api/.*
   script: main.api
 
 libraries:
 - name: pycrypto
   version: 2.6
 - name: endpoints
-  version: 1.0
+  version: 1.1
