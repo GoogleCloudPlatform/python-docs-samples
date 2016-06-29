@@ -364,5 +364,11 @@
   "/appengine/docs/python/memcache/examples": [
     "appengine/memcache/snippets/snippets.py", 
     "appengine/memcache/guestbook/main.py"
+  ],
+  "/bigtable/docs/samples-python-hello": [
+    "bigtable/hello/main.py"
+  ],
+  "/bigtable/docs/samples-python-hello-happybase": [
+    "bigtable/hello_happybase/main.py"
   ]
 }

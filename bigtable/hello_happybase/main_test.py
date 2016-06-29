@@ -33,8 +33,7 @@ def test_main(cloud_config, capsys):
         random.randrange(TABLE_NAME_RANGE))
     main(
         cloud_config.project,
-        cloud_config.bigtable_cluster,
-        cloud_config.bigtable_zone,
+        cloud_config.bigtable_instance,
         table_name)
 
     out, _ = capsys.readouterr()

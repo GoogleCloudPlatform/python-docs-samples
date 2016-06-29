@@ -30,13 +30,13 @@ from gcloud import bigtable
 from gcloud.bigtable import happybase
 
 
-def main(project_id, cluster_id, zone, table_name):
+def main(project_id, instance_id, table_name):
     # [START connecting_to_bigtable]
     # The client must be created with admin=True because it will create a
     # table.
     client = bigtable.Client(project=project_id, admin=True)
-    cluster = client.cluster(zone, cluster_id)
-    connection = happybase.Connection(cluster=cluster)
+    instance = client.instance(instance_id)
+    connection = happybase.Connection(instance=instance)
     # [END connecting_to_bigtable]
 
     try:
@@ -104,13 +104,11 @@ if __name__ == '__main__':
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('project_id', help='Your Cloud Platform project ID.')
     parser.add_argument(
-        'cluster', help='ID of the Cloud Bigtable cluster to connect to.')
-    parser.add_argument(
-        'zone', help='Zone that contains the Cloud Bigtable cluster.')
+        'instance_id', help='ID of the Cloud Bigtable instance to connect to.')
     parser.add_argument(
         '--table',
         help='Table to create and destroy.',
         default='Hello-Bigtable')
 
     args = parser.parse_args()
-    main(args.project_id, args.cluster, args.zone, args.table)
+    main(args.project_id, args.instance_id, args.table)
