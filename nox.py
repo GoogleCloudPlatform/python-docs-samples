@@ -117,13 +117,12 @@ def run_tests_in_sesssion(
     if skip_flaky:
         pytest_args.append('-m not slow and not flaky')
 
-    if sample_directories is None:
-        # session.posargs is any leftover arguments from the command line,
-        # which allows users to run a particular test instead of all of them.
-        if session.posargs:
-            sample_directories = session.posargs
-        else:
-            sample_directories = collect_sample_dirs('.', TESTS_BLACKLIST)
+    # session.posargs is any leftover arguments from the command line,
+    # which allows users to run a particular test instead of all of them.
+    if session.posargs:
+        sample_directories = session.posargs
+    elif sample_directories is None:
+        sample_directories = collect_sample_dirs('.', TESTS_BLACKLIST)
 
     if changed_only:
         changed_files = get_changed_files()
