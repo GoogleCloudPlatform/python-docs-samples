@@ -54,7 +54,7 @@ def export_table(bigquery, cloud_storage_path,
     Returns: an extract job resource representing the
         job, see https://cloud.google.com/bigquery/docs/reference/v2/jobs
     """
-    # Generate a unique job_id so retries
+    # Generate a unique job ID so retries
     # don't accidentally duplicate export
     job_data = {
         'jobReference': {

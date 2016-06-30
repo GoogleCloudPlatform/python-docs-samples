@@ -50,12 +50,12 @@ def load_table(bigquery, project_id, dataset_id, table_name, source_schema,
     https://cloud.google.com/bigquery/docs/reference/v2/jobs#configuration.load
     """
 
-    # Generate a unique job_id so retries
+    # Generate a unique job ID so retries
     # don't accidentally duplicate query
     job_data = {
         'jobReference': {
             'projectId': project_id,
-            'job_id': str(uuid.uuid4())
+            'jobId': str(uuid.uuid4())
         },
         'configuration': {
             'load': {
