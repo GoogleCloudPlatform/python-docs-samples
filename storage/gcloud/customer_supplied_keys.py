@@ -33,54 +33,55 @@ import os
 import tempfile
 
 from gcloud import storage
-from gcloud.storage import Blob
 
 # You can (and should) generate your own encryption key. os.urandom(32) is a
 # good way to accomplish this with Python.
-#     Although these keys are provided here for simplicity, please remember
+#
+# Although these keys are provided here for simplicity, please remember
 # that it is a bad idea to store your encryption keys in your source code.
 ENCRYPTION_KEY = os.urandom(32)
 
 
-def upload_object(bucket_name, filename, object_name, encryption_key):
+def upload_object(client, bucket_name, filename, object_name, encryption_key):
     """Uploads an object, specifying a custom encryption key.
 
     Args:
+        client: gcloud client
         bucket_name: name of the destination bucket
         filename: name of file to be uploaded
         object_name: name of resulting object
         encryption_key: encryption key to encrypt the object.
     """
-    client = storage.Client()
     bucket = client.get_bucket(bucket_name)
-    blob = Blob(object_name, bucket)
+    blob = bucket.blob(object_name)
     with open(filename, 'rb') as f:
       blob.upload_from_file(f, encryption_key=encryption_key)
 
 
-def download_object(bucket_name, object_name, filename, encryption_key):
+def download_object(client, bucket_name, object_name, filename, encryption_key):
     """Downloads an object protected by a custom encryption key.
 
     Args:
+        client: gcloud client
         bucket_name: name of the source bucket
         object_name: name of the object to be downloaded
         filename: name of the resulting file
         encryption_key: the encryption key that the object is encrypted by.
     """
-    client = storage.Client()
     bucket = client.get_bucket(bucket_name)
-    blob = Blob(object_name, bucket)
+    blob = bucket.blob(object_name)
     with open(filename, 'wb') as f:
         blob.download_to_file(f, encryption_key=encryption_key)
 
 
 def main(bucket, filename):
+    client = storage.Client()
     print('Uploading object gs://{}/{} using encryption key (base64 formatted)'
           ' {}'.format(bucket, filename, base64.encodestring(ENCRYPTION_KEY)))
-    upload_object(bucket, filename, filename, ENCRYPTION_KEY)
+    upload_object(client, bucket, filename, filename, ENCRYPTION_KEY)
     print('Downloading it back')
     with tempfile.NamedTemporaryFile(mode='w+b') as tmpfile:
-        download_object(bucket, object_name=filename,
+        download_object(client, bucket, object_name=filename,
                         filename=tmpfile.name, encryption_key=ENCRYPTION_KEY)
         assert filecmp.cmp(filename, tmpfile.name), \
             'Downloaded file has different content from the original file.'
