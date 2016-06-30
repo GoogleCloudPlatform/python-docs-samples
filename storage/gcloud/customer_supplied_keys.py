@@ -61,7 +61,7 @@ def upload_object(storage_client,
     bucket = storage_client.get_bucket(bucket_name)
     blob = bucket.blob(object_name)
     with open(filename, 'rb') as f:
-      blob.upload_from_file(f, encryption_key=encryption_key)
+        blob.upload_from_file(f, encryption_key=encryption_key)
 
 
 def download_object(storage_client,
@@ -92,8 +92,12 @@ def main(bucket, filename):
     upload_object(storage_client, bucket, filename, filename, ENCRYPTION_KEY)
     print('Downloading it back')
     with tempfile.NamedTemporaryFile(mode='w+b') as tmpfile:
-        download_object(storage_client, bucket, object_name=filename,
-                        filename=tmpfile.name, encryption_key=ENCRYPTION_KEY)
+        download_object(
+            storage_client,
+            bucket,
+            object_name=filename,
+            filename=tmpfile.name,
+            encryption_key=ENCRYPTION_KEY)
         assert filecmp.cmp(filename, tmpfile.name), \
             'Downloaded file has different content from the original file.'
     print('Done')
@@ -101,8 +105,8 @@ def main(bucket, filename):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-            description=__doc__,
-            formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('bucket', help='Your Cloud Storage bucket.')
     parser.add_argument('filename', help='A file to upload and download.')
 
