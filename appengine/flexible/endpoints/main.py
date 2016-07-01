@@ -76,6 +76,12 @@ def auth_info_google_id_token():
     return auth_info()
 
 
+@app.route('/auth/info/firebase', methods=['GET'])
+def auth_info_firebase():
+    """Auth info with Firebase auth."""
+    return auth_info()
+
+
 @app.errorhandler(http_client.INTERNAL_SERVER_ERROR)
 def unexpected_error(e):
     """Handle exceptions by returning swagger-compliant json."""

@@ -30,6 +30,8 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/echoMessage"
+      security:
+      - api_key: []
   "/auth/info/googlejwt":
     get:
       description: "Returns the requests' authentication information."
@@ -38,7 +40,7 @@ paths:
       - "application/json"
       responses:
         200:
-          description: "Authenication info."
+          description: "Authentication info."
           schema:
             $ref: "#/definitions/authInfoResponse"
       x-security:
@@ -55,7 +57,7 @@ paths:
       - "application/json"
       responses:
         200:
-          description: "Authenication info."
+          description: "Authentication info."
           schema:
             $ref: "#/definitions/authInfoResponse"
       x-security:
@@ -64,6 +66,21 @@ paths:
           # Your OAuth2 client's Client ID must be added here. You can add
           # multiple client IDs to accept tokens from multiple clients.
           - "YOUR-CLIENT-ID"
+  "/auth/info/firebase":
+    get:
+      description: "Returns the requests' authentication information."
+      operationId: "authInfoFirebase"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Authentication info."
+          schema:
+            $ref: "#/definitions/authInfoResponse"
+      x-security:
+      - firebase:
+          audiences:
+          - "YOUR-PROJECT-ID"
 definitions:
   echoMessage:
     properties:
@@ -75,9 +92,6 @@ definitions:
         type: "string"
       email:
         type: "string"
-# This section requires all requests to any path to require an API key.
-security:
-- api_key: []
 securityDefinitions:
   # This section configures basic authentication with an API key.
   api_key:
@@ -104,3 +118,10 @@ securityDefinitions:
     type: "oauth2"
     x-issuer: "accounts.google.com"
     x-jwks_uri: "https://www.googleapis.com/oauth2/v1/certs"
+  # This section configures authentication using Firebase Auth.
+  firebase:
+    authorizationUrl: ""
+    flow: "implicit"
+    type: "oauth2"
+    x-issuer: "https://securetoken.google.com/YOUR-PROJECT-ID"
+    x-jwks_uri: "https://www.googleapis.com/service_accounts/v1/metadata/x509/securetoken@system.gserviceaccount.com"
