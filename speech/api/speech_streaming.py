@@ -19,7 +19,7 @@ import re
 import threading
 
 from gcloud.credentials import get_credentials
-from google.cloud.speech.v1 import cloud_speech_pb2 as cloud_speech
+from google.cloud.speech.v1beta1 import cloud_speech_pb2 as cloud_speech
 from google.rpc import code_pb2
 from grpc.beta import implementations
 import pyaudio
@@ -75,7 +75,8 @@ def record_audio(channels, rate, chunk):
 
 
 def request_stream(stop_audio, channels=CHANNELS, rate=RATE, chunk=CHUNK):
-    """Yields `RecognizeRequest`s constructed from a recording audio stream.
+    """Yields `StreamingRecognizeRequest`s constructed from a recording audio
+    stream.
 
     Args:
         stop_audio: A threading.Event object stops the recording when set.
@@ -83,33 +84,29 @@ def request_stream(stop_audio, channels=CHANNELS, rate=RATE, chunk=CHUNK):
         rate: The sampling rate.
         chunk: Buffer audio into chunks of this size before sending to the api.
     """
+    # The initial request must contain metadata about the stream, so the
+    # server knows how to interpret it.
+    recognition_config = cloud_speech.RecognitionConfig(
+        encoding='LINEAR16', sample_rate=rate)
+    streaming_config = cloud_speech.StreamingRecognitionConfig(
+        config=recognition_config,
+        # Note that setting interim_results to True means that you'll likely get
+        # multiple results for the same bit of audio, as the system
+        # re-interprets audio in the context of subsequent audio. However, this
+        # will give us quick results without having to tell the server when to
+        # finalize a piece of audio.
+        interim_results=True, single_utterance=True
+    )
+    yield cloud_speech.StreamingRecognizeRequest(
+        streaming_config=streaming_config)
+
     with record_audio(channels, rate, chunk) as audio_stream:
-        # The initial request must contain metadata about the stream, so the
-        # server knows how to interpret it.
-        metadata = cloud_speech.InitialRecognizeRequest(
-            encoding='LINEAR16', sample_rate=rate,
-            # Note that setting interim_results to True means that you'll
-            # likely get multiple results for the same bit of audio, as the
-            # system re-interprets audio in the context of subsequent audio.
-            # However, this will give us quick results without having to tell
-            # the server when to finalize a piece of audio.
-            interim_results=True, continuous=False,
-        )
-        data = audio_stream.read(chunk)
-        audio_request = cloud_speech.AudioRequest(content=data)
-
-        yield cloud_speech.RecognizeRequest(
-            initial_request=metadata,
-            audio_request=audio_request)
-
         while not stop_audio.is_set():
             data = audio_stream.read(chunk)
             if not data:
                 raise StopIteration()
             # Subsequent requests can all just have the content
-            audio_request = cloud_speech.AudioRequest(content=data)
-
-            yield cloud_speech.RecognizeRequest(audio_request=audio_request)
+            yield cloud_speech.StreamingRecognizeRequest(audio_content=data)
 
 
 def listen_print_loop(recognize_stream):
@@ -136,7 +133,8 @@ def main():
             make_channel('speech.googleapis.com', 443)) as service:
         try:
             listen_print_loop(
-                service.Recognize(request_stream(stop_audio), DEADLINE_SECS))
+                service.StreamingRecognize(
+                    request_stream(stop_audio), DEADLINE_SECS))
         finally:
             # Stop the request stream once we're done with the loop - otherwise
             # it'll keep going in the thread that the grpc lib makes for it..
