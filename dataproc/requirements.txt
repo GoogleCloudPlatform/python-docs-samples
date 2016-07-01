@@ -1,2 +1,2 @@
 google-api-python-client==1.5.1
-gcloud==0.14.0
+gcloud==0.17.0
