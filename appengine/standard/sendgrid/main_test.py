@@ -32,6 +32,6 @@ def test_get(app):
 @mock.patch.object(main.sg, 'send', return_value=(200, "OK"))
 def test_post(send_mock, app):
     app.post('/send', {
-        'recipient': 'waprin@google.com'
+        'recipient': 'user@example.com'
     })
     send_mock.assert_called_once_with(mock.ANY)
