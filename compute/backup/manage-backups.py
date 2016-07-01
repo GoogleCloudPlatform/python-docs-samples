@@ -81,7 +81,7 @@ def deletable_items(items):
     # Global reasons
 
     if len(items) < minimum_number:
-        print('Fewer than {0} snapshots, not deleting any'.format(
+        print('Fewer than {} snapshots, not deleting any'.format(
             minimum_number))
         return result
 
@@ -93,7 +93,7 @@ def deletable_items(items):
         snapshot_age = now - item_timestamp
 
         if snapshot_age < one_week:
-            print('Snapshot "{0}" too new, not deleting.'.format(item['name']))
+            print('Snapshot "{}" too new, not deleting.'.format(item['name']))
             continue
 
         if item_timestamp.weekday() == 1 and snapshot_age < three_months:
@@ -127,7 +127,7 @@ def create_snapshot(compute, project, disk, dry_run):
 
 def delete_snapshots(compute, project, snapshots, dry_run):
     for snapshot in snapshots:
-        print('Deleting snapshot "{0}"'.format(snapshot['name']))
+        print('Deleting snapshot "{}"'.format(snapshot['name']))
 
         if not dry_run:
             result = compute.snapshots().delete(project=project,
