@@ -23,6 +23,7 @@ import json
 import logging
 
 from flask import Flask, jsonify, request, send_from_directory
+from flask_cors import cross_origin
 from six.moves import http_client
 import yaml
 
@@ -73,6 +74,13 @@ def auth_info_google_jwt():
 @app.route('/auth/info/googleidtoken', methods=['GET'])
 def auth_info_google_id_token():
     """Auth info with Google ID token."""
+    return auth_info()
+
+
+@app.route('/auth/info/firebase', methods=['GET'])
+@cross_origin(send_wildcard=True)
+def auth_info_firebase():
+    """Auth info with Firebase auth."""
     return auth_info()
 
 
