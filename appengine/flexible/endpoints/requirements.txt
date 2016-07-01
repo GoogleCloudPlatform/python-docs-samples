@@ -1,4 +1,5 @@
 Flask==0.11.1
+flask-cors==2.1.2
 gunicorn==19.6.0
 gcloud==0.17.0
 six==1.10.0
