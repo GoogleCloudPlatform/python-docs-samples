@@ -22,12 +22,20 @@ addons:
     - portaudio19-dev
 before_install:
 - pip install --upgrade pip wheel virtualenv
-- openssl aes-256-cbc -k "$secrets_password" -in secrets.tar.enc -out secrets.tar -d
-- tar xvf secrets.tar
+- if [ $TRAVIS_SECURE_ENV_VARS == "true" ]; then
+    openssl aes-256-cbc -k "$secrets_password" -in secrets.tar.enc -out secrets.tar -d;
+    tar xvf secrets.tar;
+  fi
 install:
 - pip install nox-automation coverage
 script:
-- source ${TRAVIS_BUILD_DIR}/testing/resources/test-env.sh
-- nox --stop-on-first-error -s lint travis
+- if [ $TRAVIS_SECURE_ENV_VARS == "true" ] ; then
+      source ${TRAVIS_BUILD_DIR}/testing/resources/test-env.sh;
+      nox --stop-on-first-error -s lint travis;
+    else
+       # only run lint on external PRs
+       nox --stop-on-first-error -s lint travis;
+  fi
+
 after_script:
 - coverage report
