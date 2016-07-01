@@ -23,8 +23,8 @@ from speech_gcs import main
         reason=("grpc doesn't yet support python3 "
                 'https://github.com/grpc/grpc/issues/282'))
 def test_main(cloud_config, capsys):
-    input_uri = 'gs://{}/speech/clip.flac'.format(cloud_config.storage_bucket)
-    output_uri = 'gs://{}/speech/clip.txt'.format(cloud_config.storage_bucket)
+    input_uri = 'gs://{}/speech/audio.flac'.format(cloud_config.storage_bucket)
+    output_uri = 'gs://{}/speech/audio.txt'.format(cloud_config.storage_bucket)
 
     main(input_uri, output_uri, 'FLAC', 16000)
 
