@@ -1,17 +1,19 @@
-# Cloud Bigtable Hello World
+# Cloud Bigtable Hello World via the HappyBase API
 
 This is a simple application that demonstrates using the [Google Cloud Client
-Library][gcloud-python-bigtable] to connect to and interact with Cloud Bigtable.
+Library HappyBase package][gcloud-python-happybase], an implementation of the [HappyBase
+API][happybase] to connect to and interact with Cloud Bigtable.
 
 <!-- auto-doc-link -->
 These samples are used on the following documentation page:
 
-> https://cloud.google.com/bigtable/docs/samples-python-hello
+> https://cloud.google.com/bigtable/docs/samples-python-hello-happybase
 
 <!-- end-auto-doc-link -->
 
-[gcloud-python-bigtable]: https://googlecloudplatform.github.io/gcloud-python/stable/bigtable-usage.html
-[sample-docs]: https://cloud.google.com/bigtable/docs/samples-python-hello
+[gcloud-python-happybase]: https://googlecloudplatform.github.io/gcloud-python/stable/happybase-package.html
+[happybase]: http://happybase.readthedocs.io/en/stable/
+[sample-docs]: https://cloud.google.com/bigtable/docs/samples-python-hello-happybase
 
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -43,7 +45,7 @@ Download the sample app and navigate into the app directory:
 
 2.  Change to the sample directory.
 
-        cd python-docs-samples/bigtable/hello
+        cd python-docs-samples/bigtable/hello_happybase
 
 
 ## Costs

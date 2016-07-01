@@ -33,12 +33,12 @@ from oauth2client.client import GoogleCredentials
 
 # [START async_query]
 def async_query(bigquery, project_id, query, batch=False, num_retries=5):
-    # Generate a unique job_id so retries
+    # Generate a unique job ID so retries
     # don't accidentally duplicate query
     job_data = {
         'jobReference': {
             'projectId': project_id,
-            'job_id': str(uuid.uuid4())
+            'jobId': str(uuid.uuid4())
         },
         'configuration': {
             'query': {

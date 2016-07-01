@@ -44,4 +44,4 @@ echo "Creating pubsub resources."
 gcloud alpha pubsub topics create gae-mvm-pubsub-topic
 
 echo "To finish setup, follow this link to enable APIs."
-echo "https://console.cloud.google.com/flows/enableapi?project=${GCLOUD_PROJECT}&apiid=bigtable,bigtableclusteradmin,bigtabletableadmin,bigquery,cloudmonitoring,compute_component,datastore,datastore.googleapis.com,dataproc,dns,plus,pubsub,logging,storage_api,vision.googleapis.com"
+echo "https://console.cloud.google.com/flows/enableapi?project=${GCLOUD_PROJECT}&apiid=bigtable.googleapis.com,bigtableadmin.googleapis.com,bigquery,cloudmonitoring,compute_component,datastore,datastore.googleapis.com,dataproc,dns,plus,pubsub,logging,storage_api,vision.googleapis.com"
