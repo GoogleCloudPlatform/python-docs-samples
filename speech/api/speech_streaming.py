@@ -29,7 +29,7 @@ import pyaudio
 # Audio recording parameters
 RATE = 16000
 CHANNELS = 1
-CHUNK = RATE / 10  # 100ms
+CHUNK = int(RATE / 10)  # 100ms
 
 # Keep the request alive for this many seconds
 DEADLINE_SECS = 8 * 60 * 60
