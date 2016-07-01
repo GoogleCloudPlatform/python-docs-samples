@@ -82,3 +82,10 @@ def test_auth_info(client):
         assert r.status_code == 200
         data = json.loads(r.data.decode('utf-8'))
         assert data['id'] == '123'
+
+
+def test_cors(client):
+    r = client.options(
+        '/auth/info/firebase', headers={'Origin': 'example.com'})
+    assert r.status_code == 200
+    assert r.headers['Access-Control-Allow-Origin'] == '*'
