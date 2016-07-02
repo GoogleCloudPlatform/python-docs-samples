@@ -15,8 +15,8 @@ import re
 import sys
 
 import pytest
-from speech_gcs import _gcs_uri
-from speech_gcs import main
+from speech_async_grpc import _gcs_uri
+from speech_async_grpc import main
 
 
 @pytest.mark.skipif(
