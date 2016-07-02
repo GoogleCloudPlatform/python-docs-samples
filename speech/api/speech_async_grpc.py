@@ -68,15 +68,20 @@ def main(input_uri, encoding, sample_rate):
     # Print the longrunning operation handle.
     print(response)
 
-    # Give the server a few seconds to process.
-    print('Waiting 5 seconds for server processing...')
-    time.sleep(5)
     # Construct a long running operation endpoint.
     service = operations_grpc.beta_create_Operations_stub(channel)
-    # Get the long running operation with response.
-    response = service.GetOperation(
-            operations_grpc.GetOperationRequest(name=response.name),
-            DEADLINE_SECS)
+
+    name = response.name
+    while True:
+        # Give the server a few seconds to process.
+        print('Waiting for server processing...')
+        time.sleep(1)
+        # Get the long running operation with response.
+        response = service.GetOperation(
+                operations_grpc.GetOperationRequest(name=name), DEADLINE_SECS)
+        if response.done:
+            break
+
     # Print the recognition results.
     results = cloud_speech.AsyncRecognizeResponse()
     response.response.Unpack(results)

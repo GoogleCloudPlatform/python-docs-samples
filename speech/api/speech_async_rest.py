@@ -74,14 +74,18 @@ def main(speech_file):
     print(json.dumps(response))
     # [END send_request]
 
-    # Give the server a few seconds to process.
-    print('Waiting 5 seconds for server processing...')
-    time.sleep(5)
-    # Construct a GetOperation request.
     name = response['name']
+    # Construct a GetOperation request.
     service_request = service.operations().get(name=name)
-    # Get the long running operation with response.
-    response = service_request.execute()
+    while True:
+        # Give the server a few seconds to process.
+        print('Waiting for server processing...')
+        time.sleep(1)
+        # Get the long running operation with response.
+        response = service_request.execute()
+        if 'done' in response and response['done']:
+            break
+
     print(json.dumps(response['response']['results']))
 
 
