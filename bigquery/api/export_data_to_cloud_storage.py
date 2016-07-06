@@ -154,6 +154,11 @@ if __name__ == '__main__':
         help='compress resultset with gzip',
         action='store_true',
         default=False)
+    parser.add_argument(
+        '-f', '--format',
+        help='output file format',
+        choices=['CSV', 'NEWLINE_DELIMITED_JSON', 'AVRO'],
+        default='CSV')
 
     args = parser.parse_args()
 
@@ -164,5 +169,6 @@ if __name__ == '__main__':
         args.table_id,
         args.num_retries,
         args.poll_interval,
+        export_format=args.format,
         compression="GZIP" if args.gzip else "NONE")
 # [END main]
