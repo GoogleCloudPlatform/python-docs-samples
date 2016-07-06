@@ -40,7 +40,7 @@ def get_speech_service():
     credentials.authorize(http)
 
     return discovery.build(
-        'speech', 'v1beta1', http=http, discoveryServiceUrl=DISCOVERY_URL)
+        'speech', 'v1', http=http, discoveryServiceUrl=DISCOVERY_URL)
 # [END authenticating]
 
 
@@ -57,13 +57,13 @@ def main(speech_file):
         speech_content = base64.b64encode(speech.read())
 
     service = get_speech_service()
-    service_request = service.speech().syncrecognize(
+    service_request = service.speech().recognize(
         body={
-            'config': {
+            'initialRequest': {
                 'encoding': 'LINEAR16',
                 'sampleRate': 16000
             },
-            'audio': {
+            'audioRequest': {
                 'content': speech_content.decode('UTF-8')
                 }
             })
