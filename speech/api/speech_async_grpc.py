@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # Copyright (C) 2016 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 """Sample that transcribes a FLAC audio file stored in Google Cloud Storage,
 using async GRPC."""
 
@@ -19,8 +20,8 @@ import argparse
 import time
 
 from gcloud.credentials import get_credentials
-from google.cloud.speech.v1beta1 import cloud_speech_pb2 as cloud_speech
-from google.longrunning import operations_grpc_pb2 as operations_grpc
+from google.cloud.speech.v1beta1 import cloud_speech_pb2
+from google.longrunning import operations_grpc_pb2
 from grpc.beta import implementations
 
 # Keep the request alive for this many seconds
@@ -52,58 +53,62 @@ def make_channel(host, port):
 
 def main(input_uri, encoding, sample_rate):
     channel = make_channel('speech.googleapis.com', 443)
-    service = cloud_speech.beta_create_Speech_stub(channel)
+    service = cloud_speech_pb2.beta_create_Speech_stub(channel)
     # The method and parameters can be inferred from the proto from which the
     # grpc client lib was generated. See:
     # https://github.com/googleapis/googleapis/blob/master/google/cloud/speech/v1beta1/cloud_speech.proto
-    response = service.AsyncRecognize(cloud_speech.AsyncRecognizeRequest(
-        config=cloud_speech.RecognitionConfig(
+    response = service.AsyncRecognize(cloud_speech_pb2.AsyncRecognizeRequest(
+        config=cloud_speech_pb2.RecognitionConfig(
             encoding=encoding,
             sample_rate=sample_rate,
         ),
-        audio=cloud_speech.RecognitionAudio(
+        audio=cloud_speech_pb2.RecognitionAudio(
             uri=input_uri,
         )
     ), DEADLINE_SECS)
+
     # Print the longrunning operation handle.
     print(response)
 
     # Construct a long running operation endpoint.
-    service = operations_grpc.beta_create_Operations_stub(channel)
+    service = operations_grpc_pb2.beta_create_Operations_stub(channel)
 
     name = response.name
+
     while True:
         # Give the server a few seconds to process.
         print('Waiting for server processing...')
         time.sleep(1)
         # Get the long running operation with response.
         response = service.GetOperation(
-                operations_grpc.GetOperationRequest(name=name), DEADLINE_SECS)
+            operations_grpc_pb2.GetOperationRequest(name=name),
+            DEADLINE_SECS)
+
         if response.done:
             break
 
     # Print the recognition results.
-    results = cloud_speech.AsyncRecognizeResponse()
+    results = cloud_speech_pb2.AsyncRecognizeResponse()
     response.response.Unpack(results)
     print(results)
 
 
 def _gcs_uri(text):
     if not text.startswith('gs://'):
-        raise ValueError(
+        raise argparse.ArgumentTypeError(
             'Cloud Storage uri must be of the form gs://bucket/path/')
     return text
 
 
-PROTO_URL = ('https://github.com/googleapis/googleapis/blob/master/'
-             'google/cloud/speech/v1beta1/cloud_speech.proto')
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('input_uri', type=_gcs_uri)
     parser.add_argument(
         '--encoding', default='FLAC', choices=[
             'LINEAR16', 'FLAC', 'MULAW', 'AMR', 'AMR_WB'],
-        help='How the audio file is encoded. See {}#L67'.format(PROTO_URL))
+        help='How the audio file is encoded. See {}#L67'.format(
+            'https://github.com/googleapis/googleapis/blob/master/'
+            'google/cloud/speech/v1beta1/cloud_speech.proto'))
     parser.add_argument('--sample_rate', default=16000)
 
     args = parser.parse_args()

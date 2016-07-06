@@ -22,7 +22,6 @@ import json
 import time
 
 from googleapiclient import discovery
-import httplib2
 from oauth2client.client import GoogleCredentials
 # [END import_libraries]
 
@@ -37,11 +36,10 @@ DISCOVERY_URL = ('https://{api}.googleapis.com/$discovery/rest?'
 def get_speech_service():
     credentials = GoogleCredentials.get_application_default().create_scoped(
         ['https://www.googleapis.com/auth/cloud-platform'])
-    http = httplib2.Http()
-    credentials.authorize(http)
 
     return discovery.build(
-        'speech', 'v1beta1', http=http, discoveryServiceUrl=DISCOVERY_URL)
+        'speech', 'v1beta1', credentials=credentials,
+        discoveryServiceUrl=DISCOVERY_URL)
 # [END authenticating]
 
 
@@ -53,8 +51,7 @@ def main(speech_file):
     """
     # [START construct_request]
     with open(speech_file, 'rb') as speech:
-        # Base64 encode the binary audio file for inclusion in the JSON
-        # request.
+        # Base64 encode the binary audio file for inclusion in the request.
         speech_content = base64.b64encode(speech.read())
 
     service = get_speech_service()
@@ -77,12 +74,14 @@ def main(speech_file):
     name = response['name']
     # Construct a GetOperation request.
     service_request = service.operations().get(name=name)
+
     while True:
         # Give the server a few seconds to process.
         print('Waiting for server processing...')
         time.sleep(1)
         # Get the long running operation with response.
         response = service_request.execute()
+
         if 'done' in response and response['done']:
             break
 
