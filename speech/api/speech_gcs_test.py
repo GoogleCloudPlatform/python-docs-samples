@@ -11,7 +11,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import re
 import sys
 
 import pytest
@@ -25,11 +24,12 @@ from speech_gcs import main
                 'https://github.com/grpc/grpc/issues/282'))
 def test_main(cloud_config, capsys):
     input_uri = 'gs://{}/speech/audio.flac'.format(cloud_config.storage_bucket)
+    output_uri = 'gs://{}/speech/audio.txt'.format(cloud_config.storage_bucket)
 
-    main(input_uri, 'FLAC', 16000)
+    main(input_uri, output_uri, 'FLAC', 16000)
 
     out, err = capsys.readouterr()
-    assert re.search(r'how old is the Brooklyn Bridge', out, re.DOTALL | re.I)
+    assert '[]\n' == out
 
 
 def test_gcs_uri():
