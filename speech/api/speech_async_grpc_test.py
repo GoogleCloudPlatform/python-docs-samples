@@ -11,6 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import argparse
 import re
 import sys
 
@@ -34,5 +35,5 @@ def test_main(cloud_config, capsys):
 
 def test_gcs_uri():
     _gcs_uri('gs://bucket/path')
-    with pytest.raises(ValueError):
+    with pytest.raises(argparse.ArgumentTypeError):
         _gcs_uri('/local/path')
