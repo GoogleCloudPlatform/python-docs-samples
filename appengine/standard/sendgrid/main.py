@@ -16,29 +16,31 @@
 
 # [START sendgrid-imp]
 import sendgrid
+from sendgrid.helpers import mail
 # [END sendgrid-imp]
 import webapp2
 
 # make a secure connection to SendGrid
 # [START sendgrid-config]
 SENDGRID_API_KEY = 'your-sendgrid-api-key'
-SENDGRID_DOMAIN = 'your-sendgrid-domain'
+SENDGRID_SENDER = 'your-sendgrid-sender'
 # [END sendgrid-config]
-
-sg = sendgrid.SendGridClient(SENDGRID_API_KEY)
 
 
 def send_simple_message(recipient):
     # [START sendgrid-send]
-    message = sendgrid.Mail()
-    message.set_subject('message subject')
-    message.set_html('<strong>HTML message body</strong>')
-    message.set_text('plaintext message body')
-    message.set_from('Example App Engine Sender <sendgrid@{}>'.format(
-        SENDGRID_DOMAIN))
-    message.add_to(recipient)
-    status, msg = sg.send(message)
-    return (status, msg)
+
+    sg = sendgrid.SendGridAPIClient(apikey=SENDGRID_API_KEY)
+
+    to_email = mail.Email(recipient)
+    from_email = mail.Email(SENDGRID_SENDER)
+    subject = 'This is a test email'
+    content = mail.Content('text/plain', 'Example message.')
+    message = mail.Mail(from_email, subject, to_email, content)
+
+    response = sg.client.mail.send.post(request_body=message.get())
+
+    return response
     # [END sendgrid-send]
 
 
@@ -59,10 +61,9 @@ class MainPage(webapp2.RequestHandler):
 class SendEmailHandler(webapp2.RequestHandler):
     def post(self):
         recipient = self.request.get('recipient')
-        (status, msg) = send_simple_message(recipient)
-        self.response.set_status(status)
-        if status == 200:
-            self.response.write(msg)
+        sg_response = send_simple_message(recipient)
+        self.response.set_status(sg_response.status_code)
+        self.response.write(sg_response.body)
 
 
 app = webapp2.WSGIApplication([
