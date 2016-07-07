@@ -14,4 +14,4 @@ This sample demonstrates how to extend the [python-compat](https://cloud.google.
 
 3. Deploy the sample:
 
-        $ gcloud preview app deploy
+        $ gcloud app deploy

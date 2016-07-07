@@ -14,4 +14,4 @@ This sample demonstrates using the [python-compat](https://cloud.google.com/appe
 
 3. Deploy the sample:
 
-        $ gcloud preview app deploy
+        $ gcloud app deploy
