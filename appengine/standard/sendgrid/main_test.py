@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import main
-
 import mock
 import pytest
 import webtest
@@ -29,9 +28,18 @@ def test_get(app):
     assert response.status_int == 200
 
 
-@mock.patch.object(main.sg, 'send', return_value=(200, "OK"))
-def test_post(send_mock, app):
+@mock.patch('python_http_client.client.Client._make_request')
+def test_post(make_request_mock, app):
+    response = mock.Mock()
+    response.getcode.return_value = 200
+    response.read.return_value = 'OK'
+    response.info.return_value = {}
+    make_request_mock.return_value = response
+
     app.post('/send', {
-        'recipient': 'waprin@google.com'
+        'recipient': 'user@example.com'
     })
-    send_mock.assert_called_once_with(mock.ANY)
+
+    assert make_request_mock.called
+    request = make_request_mock.call_args[0][1]
+    assert 'user@example.com' in request.data

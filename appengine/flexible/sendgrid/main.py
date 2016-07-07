@@ -18,6 +18,7 @@ import os
 
 from flask import Flask, render_template, request
 import sendgrid
+from sendgrid.helpers import mail
 
 # [START config]
 SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
@@ -40,19 +41,18 @@ def send_email():
         return ('Please provide an email address in the "to" query string '
                 'parameter.'), 400
 
-    sg = sendgrid.SendGridClient(SENDGRID_API_KEY)
+    sg = sendgrid.SendGridAPIClient(apikey=SENDGRID_API_KEY)
 
-    message = sendgrid.Mail(
-        to=to,
-        subject='This is a test email',
-        html='<p>Example HTML body.</p>',
-        text='Example text body.',
-        from_email=SENDGRID_SENDER)
+    to_email = mail.Email(to)
+    from_email = mail.Email(SENDGRID_SENDER)
+    subject = 'This is a test email'
+    content = mail.Content('text/plain', 'Example message.')
+    message = mail.Mail(from_email, subject, to_email, content)
 
-    status, response = sg.send(message)
+    response = sg.client.mail.send.post(request_body=message.get())
 
-    if status != 200:
-        return 'An error occurred: {}'.format(response), 500
+    if response.status_code != 200:
+        return 'An error occurred: {}'.format(response.body), 500
 
     return 'Email sent.'
 # [END example]

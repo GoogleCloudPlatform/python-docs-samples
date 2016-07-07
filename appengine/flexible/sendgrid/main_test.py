@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import main
-
 import mock
 import pytest
 
@@ -34,11 +32,18 @@ def test_get(app):
     assert r.status_code == 200
 
 
-@mock.patch.object(
-    main.sendgrid.SendGridClient, 'send', return_value=(200, "OK"))
-def test_post(send_mock, app):
-    r = app.post('/send/email', data={
+@mock.patch('python_http_client.client.Client._make_request')
+def test_post(make_request_mock, app):
+    response = mock.Mock()
+    response.getcode.return_value = 200
+    response.read.return_value = 'OK'
+    response.info.return_value = {}
+    make_request_mock.return_value = response
+
+    app.post('/send/email', data={
         'to': 'user@example.com'
     })
-    assert r.status_code == 200
-    assert send_mock.called
+
+    assert make_request_mock.called
+    request = make_request_mock.call_args[0][1]
+    assert 'user@example.com' in request.data.decode('utf-8')
