@@ -29,7 +29,7 @@ Note: setting allowed networks to 0.0.0.0/0 opens your SQL instance to traffic f
 * Alternatively, the instance can be created with the gcloud command line tool as follows, substituting `your-root-pw
  with a strong, unique password.
 
-    `gcloud sql instances create <instance_name> --assign-ip --authorized-networks=0.0.0.0/0  set-root-password=your-root-pw`
+        gcloud sql instances create <instance_name> --assign-ip --authorized-networks=0.0.0.0/0  set-root-password=your-root-pw
 
 * Create a Database And User
 
@@ -51,23 +51,21 @@ First make sure you have Django installed. It's recommended you do so in a
 [virtualenv](https://virtualenv.pypa.io/en/latest/). The requirements.txt
 contains just the Django dependency.
 
-`pip install -r requirements.txt`
+    pip install -r requirements.txt
 
 Once the database is setup, run the migrations.
 
-`python manage.py migrate`
+    python manage.py migrate
 
 If you'd like to use the admin console, create a superuser.
 
-`python manage.py createsuperuser`
+    python manage.py createsuperuser
 
 The app can be run locally the same way as any other Django app. 
 
-`python manage.py runserver`
+    python manage.py runserver
 
-Now you can view the admin panel of your local site at
-
-`http://localhost:8080/admin`
+Now you can view the admin panel of your local site at http://localhost:8080/admin
 
 ## Deploying
 
@@ -76,33 +74,31 @@ the static content is instead served from Google Cloud Storage.
 
 First, make a bucket and make it publically readable, replacing <your-gcs-bucket> with a bucket name, such as your project id:
 
-    `gsutil mb gs://<your-gcs-bucket>`
-    `gsutil defacl set public-read gs://<your-gcs-bucket>`
+    gsutil mb gs://<your-gcs-bucket>
+    gsutil defacl set public-read gs://<your-gcs-bucket>
 
 Next, gather all the static content locally into one folder using the Django `collectstatic` command
 
-    `python manage.py collectstatic`
+    python manage.py collectstatic
 
 Then upload it to CloudStorage using the `gsutil rsync` command
 
-    `gsutil rsync -R static/ gs://<your-gcs-bucket>/static` 
+    gsutil rsync -R static/ gs://<your-gcs-bucket>/static
 
 Now your static content can be served from the following URL:
 
-    `http://storage.googleapis.com/<your-gcs-bucket/static/`
+    http://storage.googleapis.com/<your-gcs-bucket/static/
 
 Make sure to replace <your-cloud-bucket> within `mysite/settings.py` to set STATIC_URL to the correct value to serve static content from, and
 uncomment the STATIC_URL to point to the new URL.
 
 The app can be deployed by running
 
-    `gcloud preview app deploy app.yaml --set-default --version=1 --promote`
+    gcloud app deploy
     
 which deploys to version 1, and `promote` makes version 1 the default version.
 
-Now you can view the admin panel of your deployed site at
-
-`https://<your-app-id>.appspot.com/admin`
+Now you can view the admin panel of your deployed site at https://<your-app-id>.appspot.com/admin.
 
 ## Contributing changes
 

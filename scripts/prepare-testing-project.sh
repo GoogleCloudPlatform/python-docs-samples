@@ -38,7 +38,7 @@ gcloud alpha bigquery import \
     --schema-file bigquery/api/resources/schema.json
 
 echo "Creating datastore indexes."
-gcloud preview app deploy -q datastore/api/index.yaml
+gcloud app deploy -q datastore/api/index.yaml
 
 echo "Creating pubsub resources."
 gcloud alpha pubsub topics create gae-mvm-pubsub-topic
