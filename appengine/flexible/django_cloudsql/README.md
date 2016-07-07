@@ -94,11 +94,11 @@ uncomment the STATIC_URL to point to the new URL.
 
 The app can be deployed by running
 
-    gcloud app deploy app.yaml --set-default --version=1 --promote
+    gcloud app deploy
     
 which deploys to version 1, and `promote` makes version 1 the default version.
 
-Now you can view the admin panel of your deployed site at https://<your-app-id>.appspot.com/admin
+Now you can view the admin panel of your deployed site at https://<your-app-id>.appspot.com/admin.
 
 ## Contributing changes
 
