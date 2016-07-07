@@ -87,7 +87,7 @@ def filter_samples(sample_dirs, changed_files):
             if changed_file.startswith(sample_dir):
                 result.append(sample_dir)
 
-    return result
+    return list(set(result))
 
 
 def setup_appengine(session):
