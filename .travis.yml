@@ -3,6 +3,7 @@ language: python
 services:
 - memcached
 - mysql
+- redis-server
 branches:
   only:
   - master
