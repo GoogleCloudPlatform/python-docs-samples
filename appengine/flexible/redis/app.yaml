@@ -1,0 +1,13 @@
+runtime: python
+vm: true
+entrypoint: gunicorn -b :$PORT main:app
+
+runtime_config:
+  python_version: 3
+
+# [START env_variables]
+env_variables:
+    REDIS_HOST: your-redis-host
+    REDIS_PORT: your-redis-port
+    REDIS_PASSWORD: your-redis-password
+# [END env_variables]
