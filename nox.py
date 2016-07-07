@@ -137,9 +137,14 @@ def run_tests_in_sesssion(
         for reqfile in list_files(dirname, 'requirements*.txt'):
             session.install('-r', reqfile)
 
+        # Ignore lib and env directories
+        ignore_args = [
+            '--ignore', os.path.join(sample, 'lib'),
+            '--ignore', os.path.join(sample, 'env')]
+
         session.run(
             'py.test', sample,
-            *pytest_args,
+            *(pytest_args + ignore_args),
             success_codes=[0, 5])  # Treat no test collected as success.
 
 
