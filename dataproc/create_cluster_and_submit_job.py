@@ -224,7 +224,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--zone', help='Region to create clusters in', required=True)
     parser.add_argument(
-        '--cluster_name', help='Region to create clusters in', required=True)
+        '--cluster_name', help='Name of the cluster to create', required=True)
     parser.add_argument(
         '--gcs_bucket', help='Bucket to upload Pyspark file to', required=True)
     parser.add_argument(
