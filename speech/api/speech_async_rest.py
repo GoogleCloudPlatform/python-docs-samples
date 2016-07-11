@@ -22,13 +22,12 @@ import json
 import time
 
 from googleapiclient import discovery
+import httplib2
 from oauth2client.client import GoogleCredentials
 # [END import_libraries]
 
 
 # [START authenticating]
-DISCOVERY_URL = ('https://{api}.googleapis.com/$discovery/rest?'
-                 'version={apiVersion}')
 
 
 # Application default credentials provided by env variable
@@ -36,10 +35,10 @@ DISCOVERY_URL = ('https://{api}.googleapis.com/$discovery/rest?'
 def get_speech_service():
     credentials = GoogleCredentials.get_application_default().create_scoped(
         ['https://www.googleapis.com/auth/cloud-platform'])
+    http = httplib2.Http()
+    credentials.authorize(http)
 
-    return discovery.build(
-        'speech', 'v1beta1', credentials=credentials,
-        discoveryServiceUrl=DISCOVERY_URL)
+    return discovery.build('speech', 'v1beta1', http=http)
 # [END authenticating]
 
 

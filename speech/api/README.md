@@ -72,6 +72,14 @@ for more information.
 
     You should see a response with the transcription result.
 
+* To run the `speech_async_rest.py` sample:
+
+    ```sh
+    $ python speech_async_rest.py resources/audio.raw
+    ```
+
+    You should see a response with the transcription result.
+
 * To run the `speech_streaming.py` sample:
 
     ```sh
