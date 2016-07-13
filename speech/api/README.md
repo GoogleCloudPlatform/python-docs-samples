@@ -44,6 +44,7 @@ Below is the list of pre-requisites you need to perform
 
 * Install [gcloud][gcloud]
 * Install [pip][pip]
+
 ### Install the dependencies
 
 The sample uses the [PyAudio][pyaudio] library to stream audio from your computer's microphone.  PyAudio depends on [PortAudio][portaudio], which may need to be compiled when you install PyAudio. 
