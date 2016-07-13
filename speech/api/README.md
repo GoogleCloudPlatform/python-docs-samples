@@ -72,7 +72,7 @@ The sample uses the [PyAudio][pyaudio] library to stream audio from your compute
 [pyaudio]: https://people.csail.mit.edu/hubert/pyaudio/
 [portaudio]: http://www.portaudio.com/
 [pyaudio-install]: https://people.csail.mit.edu/hubert/pyaudio/#downloads
-[pip-here]: https://pip.pypa.io/en/stable/installing/
+[pip]: https://pip.pypa.io/en/stable/installing/
 [virtualenv]: https://virtualenv.pypa.io/en/stable/installation/
 
 ## Run the example
