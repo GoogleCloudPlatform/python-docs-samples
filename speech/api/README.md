@@ -45,13 +45,13 @@ The sample uses the [PyAudio][pyaudio] library to stream audio from your compute
 * If you're running the `speech_rest.py` sample:
 
     ```sh
-    $ sudo pip install -r requirements-speech_rest.txt
+    $ pip install -r requirements-speech_rest.txt
     ```
 
 * If you're running the `speech_streaming.py` sample:
 
     ```sh
-    $ sudo pip install -r requirements-speech_grpc.txt
+    $ pip install -r requirements-speech_grpc.txt
     ```
 
 [pyaudio]: https://people.csail.mit.edu/hubert/pyaudio/
