@@ -40,11 +40,11 @@ for more information.
 
 ### Install pip
 
-Install `pip` if not already installed from [here][pip-here]
+Install [pip][pip] if not already installed
 
 ### Install virtualenv
 
-Install `virtualenv` if not already installed from [here][virtualenv]
+Install [virtualenv][virtualenv] if not already installed
 
 ### Create isolated Python environment
 
