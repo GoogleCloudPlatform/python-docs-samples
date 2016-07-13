@@ -49,8 +49,8 @@ Install [virtualenv][virtualenv] if not already installed
 ### Create isolated Python environment
 
 ```
-virtualenv ~/speechsamples
-source ~/speechsamples/bin/activate
+virtualenv speechsamples
+source speechsamples/bin/activate
 ```
 
 ### Install the dependencies
