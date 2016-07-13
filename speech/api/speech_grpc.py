@@ -18,7 +18,7 @@ using GRPC."""
 import argparse
 
 from gcloud.credentials import get_credentials
-from google.cloud.speech.v1 import cloud_speech_pb2 as cloud_speech
+from google.cloud.speech.v1beta1 import cloud_speech_pb2 as cloud_speech
 from grpc.beta import implementations
 
 # Keep the request alive for this many seconds
@@ -48,25 +48,23 @@ def make_channel(host, port):
     return implementations.secure_channel(host, port, composite_channel)
 
 
-def main(input_uri, output_uri, encoding, sample_rate):
+def main(input_uri, encoding, sample_rate):
     service = cloud_speech.beta_create_Speech_stub(
             make_channel('speech.googleapis.com', 443))
     # The method and parameters can be inferred from the proto from which the
     # grpc client lib was generated. See:
-    # https://github.com/googleapis/googleapis/blob/master/google/cloud/speech/v1/cloud_speech.proto
-    response = service.NonStreamingRecognize(cloud_speech.RecognizeRequest(
-        initial_request=cloud_speech.InitialRecognizeRequest(
+    # https://github.com/googleapis/googleapis/blob/master/google/cloud/speech/v1beta1/cloud_speech.proto
+    response = service.SyncRecognize(cloud_speech.SyncRecognizeRequest(
+        config=cloud_speech.RecognitionConfig(
             encoding=encoding,
             sample_rate=sample_rate,
-            output_uri=output_uri,
         ),
-        audio_request=cloud_speech.AudioRequest(
+        audio=cloud_speech.RecognitionAudio(
             uri=input_uri,
         )
     ), DEADLINE_SECS)
-    # This shouldn't actually print anything, since the transcription is output
-    # to the GCS uri specified
-    print(response.responses)
+    # Print the recognition results.
+    print(response.results)
 
 
 def _gcs_uri(text):
@@ -77,11 +75,10 @@ def _gcs_uri(text):
 
 
 PROTO_URL = ('https://github.com/googleapis/googleapis/blob/master/'
-             'google/cloud/speech/v1/cloud_speech.proto')
+             'google/cloud/speech/v1beta1/cloud_speech.proto')
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('input_uri', type=_gcs_uri)
-    parser.add_argument('output_uri', type=_gcs_uri)
     parser.add_argument(
         '--encoding', default='FLAC', choices=[
             'LINEAR16', 'FLAC', 'MULAW', 'AMR', 'AMR_WB'],
@@ -89,4 +86,4 @@ if __name__ == '__main__':
     parser.add_argument('--sample_rate', default=16000)
 
     args = parser.parse_args()
-    main(args.input_uri, args.output_uri, args.encoding, args.sample_rate)
+    main(args.input_uri, args.encoding, args.sample_rate)
