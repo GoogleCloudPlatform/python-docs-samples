@@ -106,3 +106,9 @@ The sample uses the [PyAudio][pyaudio] library to stream audio from your compute
     Note that the `speech_streaming.py` sample does not yet support python 3, as
     the upstream `grpcio` library's support is [not yet
     complete](https://github.com/grpc/grpc/issues/282).
+    
+### Deactivate virtualenv
+
+```
+deactivate
+```
