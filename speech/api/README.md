@@ -38,6 +38,21 @@ See the
 [Cloud Platform Auth Guide](https://cloud.google.com/docs/authentication#developer_workflow)
 for more information.
 
+### Install pip
+
+Install `pip` if not already installed from [here][pip-here]
+
+### Install virtualenv
+
+Install `virtualenv` if not already installed from [here][virtualenv]
+
+### Create isolated Python environment
+
+```
+virtualenv ~/speechsamples
+source ~/speechsamples/bin/activate
+```
+
 ### Install the dependencies
 
 The sample uses the [PyAudio][pyaudio] library to stream audio from your computer's microphone.  PyAudio depends on [PortAudio][portaudio], which may need to be compiled when you install PyAudio. If you run into compilation issues that mention PortAudio, you may have to [install some dependencies][pyaudio-install].
@@ -57,6 +72,8 @@ The sample uses the [PyAudio][pyaudio] library to stream audio from your compute
 [pyaudio]: https://people.csail.mit.edu/hubert/pyaudio/
 [portaudio]: http://www.portaudio.com/
 [pyaudio-install]: https://people.csail.mit.edu/hubert/pyaudio/#downloads
+[pip-here]: https://pip.pypa.io/en/stable/installing/
+[virtualenv]: https://virtualenv.pypa.io/en/stable/installation/
 
 ## Run the example
 
