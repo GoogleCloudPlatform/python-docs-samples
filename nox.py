@@ -62,7 +62,8 @@ def collect_sample_dirs(start_dir, blacklist=set()):
 
 def get_changed_files():
     # Debug info
-    print('TRAVIS_PULL_REQUEST: {}'.format(os.environ('TRAVIS_PULL_REQUEST')))
+    print('TRAVIS_PULL_REQUEST: {}'.format(
+        os.environ.get('TRAVIS_PULL_REQUEST')))
     print('TRAVIS_COMMIT: {}'.format(os.environ.get('TRAVIS_COMMIT')))
     print('TRAVIS_BRANCH: {}'.format(os.environ.get('TRAVIS_BRANCH')))
 
