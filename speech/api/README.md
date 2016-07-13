@@ -38,6 +38,12 @@ See the
 [Cloud Platform Auth Guide](https://cloud.google.com/docs/authentication#developer_workflow)
 for more information.
 
+### Pre-requisites
+
+Below is the list of pre-requisites you need to perform
+
+* Install [gcloud][gcloud]
+* Install [pip][pip]
 ### Install the dependencies
 
 The sample uses the [PyAudio][pyaudio] library to stream audio from your computer's microphone.  PyAudio depends on [PortAudio][portaudio], which may need to be compiled when you install PyAudio. 
@@ -65,6 +71,8 @@ The sample uses the [PyAudio][pyaudio] library to stream audio from your compute
 [pyaudio]: https://people.csail.mit.edu/hubert/pyaudio/
 [portaudio]: http://www.portaudio.com/
 [pyaudio-install]: https://people.csail.mit.edu/hubert/pyaudio/#downloads
+[gcloud]: https://cloud.google.com/sdk/gcloud/
+[pip]: https://pip.pypa.io/en/stable/installing/
 
 ## Run the example
 
