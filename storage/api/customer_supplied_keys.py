@@ -43,7 +43,7 @@ from oauth2client.client import GoogleCredentials
 # is a bad idea to store your encryption keys in your source code.
 ENCRYPTION_KEY = '4RzDI0TeWa9M/nAvYH05qbCskPaSU/CFV5HeCxk0IUA='
 
-# You can use openssl to quicly calculate the hash of any key.
+# You can use openssl to quickly calculate the hash of any key.
 # Try running this:
 #   openssl base64 -d <<< ENCRYPTION_KEY | openssl dgst -sha256 -binary \
 #     | openssl base64
