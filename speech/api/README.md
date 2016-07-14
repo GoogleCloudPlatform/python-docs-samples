@@ -38,6 +38,10 @@ See the
 [Cloud Platform Auth Guide](https://cloud.google.com/docs/authentication#developer_workflow)
 for more information.
 
+### Download code
+
+To download code or clone the repo go [here][home-page]
+
 ### Install pip
 
 Install [pip][pip] if not already installed
@@ -74,6 +78,7 @@ The sample uses the [PyAudio][pyaudio] library to stream audio from your compute
 [pyaudio-install]: https://people.csail.mit.edu/hubert/pyaudio/#downloads
 [pip]: https://pip.pypa.io/en/stable/installing/
 [virtualenv]: https://virtualenv.pypa.io/en/stable/installation/
+[home-page]: https://github.com/GoogleCloudPlatform/python-docs-samples
 
 ## Run the example
 
