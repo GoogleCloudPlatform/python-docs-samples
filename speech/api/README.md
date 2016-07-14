@@ -38,20 +38,17 @@ See the
 [Cloud Platform Auth Guide](https://cloud.google.com/docs/authentication#developer_workflow)
 for more information.
 
-### Download code
+### Setup
 
-To download code or clone the repo go [here][home-page] and then navigate appropriately. 
+Before running these samples perform the setup steps:
 
-### Install pip
+1. Clone this repo
+```
+git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+cd python-docs-samples/speech/api
+```
 
-Install [pip][pip] if not already installed
-
-### Install virtualenv
-
-Install [virtualenv][virtualenv] if not already installed
-
-### Create isolated Python environment
-
+2. Create virtualenv
 ```
 virtualenv speechsamples
 source speechsamples/bin/activate
