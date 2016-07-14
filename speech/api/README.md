@@ -38,6 +38,22 @@ See the
 [Cloud Platform Auth Guide](https://cloud.google.com/docs/authentication#developer_workflow)
 for more information.
 
+### Setup
+
+Before running these samples perform the steps:
+
+* Clone this repo
+    ```
+    git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+    cd python-docs-samples/speech/api
+    ```
+
+* Create virtualenv
+    ```
+    virtualenv env
+    source env/bin/activate
+    ```
+
 ### Install the dependencies
 
 The sample uses the [PyAudio][pyaudio] library to stream audio from your computer's microphone.  PyAudio depends on [PortAudio][portaudio], which may need to be compiled when you install PyAudio. If you run into compilation issues that mention PortAudio, you may have to [install some dependencies][pyaudio-install].
@@ -57,6 +73,9 @@ The sample uses the [PyAudio][pyaudio] library to stream audio from your compute
 [pyaudio]: https://people.csail.mit.edu/hubert/pyaudio/
 [portaudio]: http://www.portaudio.com/
 [pyaudio-install]: https://people.csail.mit.edu/hubert/pyaudio/#downloads
+[pip]: https://pip.pypa.io/en/stable/installing/
+[virtualenv]: https://virtualenv.pypa.io/en/stable/installation/
+[home-page]: https://github.com/GoogleCloudPlatform/python-docs-samples
 
 ## Run the example
 
@@ -89,3 +108,9 @@ The sample uses the [PyAudio][pyaudio] library to stream audio from your compute
     Note that the `speech_streaming.py` sample does not yet support python 3, as
     the upstream `grpcio` library's support is [not yet
     complete](https://github.com/grpc/grpc/issues/282).
+    
+### Deactivate virtualenv
+
+```
+deactivate
+```
