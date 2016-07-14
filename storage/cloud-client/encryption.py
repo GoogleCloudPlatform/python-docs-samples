@@ -96,6 +96,14 @@ def download_encrypted_blob(bucket_name, source_blob_name,
         destination_file_name))
 
 
+def rotate_encryption_key(bucket_name, blob_name, base64_encryption_key,
+                          base64_new_encryption_key):
+    """Performs a key rotation by re-writing an encrypted blob with a new
+    encryption key."""
+    raise NotImplementedError(
+        'This is currently not available using the Cloud Client Library.')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -121,6 +129,14 @@ if __name__ == '__main__':
     download_parser.add_argument('destination_file_name')
     download_parser.add_argument('base64_encryption_key')
 
+    rotate_parser = subparsers.add_parser(
+        'rotate', help=rotate_encryption_key.__doc__)
+    rotate_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
+    download_parser.add_argument('blob_name')
+    download_parser.add_argument('base64_encryption_key')
+    download_parser.add_argument('base64_new_encryption_key')
+
     args = parser.parse_args()
 
     if args.command == 'generate-encryption-key':
@@ -137,3 +153,9 @@ if __name__ == '__main__':
             args.source_blob_name,
             args.destination_file_name,
             args.base64_encryption_key)
+    elif args.command == 'rotate':
+        rotate_encryption_key(
+            args.bucket_name,
+            args.blob_name,
+            args.base64_encryption_key,
+            args.base64_new_encryption_key)
