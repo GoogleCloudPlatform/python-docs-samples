@@ -43,16 +43,16 @@ for more information.
 Before running these samples perform the setup steps:
 
 * Clone this repo
-```
-git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
-cd python-docs-samples/speech/api
-```
+    ```
+    git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+    cd python-docs-samples/speech/api
+    ```
 
 * Create virtualenv
-```
-virtualenv speechsamples
-source speechsamples/bin/activate
-```
+    ```
+    virtualenv speechsamples
+    source speechsamples/bin/activate
+    ```
 
 ### Install the dependencies
 
