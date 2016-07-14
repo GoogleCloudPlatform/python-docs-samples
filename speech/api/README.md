@@ -50,8 +50,8 @@ Before running these samples perform the steps:
 
 * Create virtualenv
     ```
-    virtualenv speechsamples
-    source speechsamples/bin/activate
+    virtualenv env
+    source env/bin/activate
     ```
 
 ### Install the dependencies
