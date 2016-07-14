@@ -43,10 +43,7 @@ from gcloud import storage
 ENCRYPTION_KEY = os.urandom(32)
 
 
-def upload_object(storage_client,
-                  bucket_name,
-                  filename,
-                  object_name,
+def upload_object(storage_client, bucket_name, filename, object_name,
                   encryption_key):
     """Uploads an object, specifying a custom encryption key.
 
@@ -60,14 +57,10 @@ def upload_object(storage_client,
     """
     bucket = storage_client.get_bucket(bucket_name)
     blob = bucket.blob(object_name)
-    with open(filename, 'rb') as f:
-        blob.upload_from_file(f, encryption_key=encryption_key)
+    blob.upload_from_filename(filename, encryption_key=encryption_key)
 
 
-def download_object(storage_client,
-                    bucket_name,
-                    object_name,
-                    filename,
+def download_object(storage_client, bucket_name, object_name, filename,
                     encryption_key):
     """Downloads an object protected by a custom encryption key.
 
@@ -81,8 +74,7 @@ def download_object(storage_client,
     """
     bucket = storage_client.get_bucket(bucket_name)
     blob = bucket.blob(object_name)
-    with open(filename, 'wb') as f:
-        blob.download_to_file(f, encryption_key=encryption_key)
+    blob.download_to_filename(filename, encryption_key=encryption_key)
 
 
 def main(bucket, filename):
@@ -98,8 +90,8 @@ def main(bucket, filename):
             object_name=filename,
             filename=tmpfile.name,
             encryption_key=ENCRYPTION_KEY)
-        assert filecmp.cmp(filename, tmpfile.name), \
-            'Downloaded file has different content from the original file.'
+        assert filecmp.cmp(filename, tmpfile.name), (
+            'Downloaded file has different content from the original file.')
     print('Done')
 
 
