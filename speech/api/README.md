@@ -40,7 +40,7 @@ for more information.
 
 ### Download code
 
-To download code or clone the repo go [here][home-page]
+To download code or clone the repo go [here][home-page] and then navigate appropriately. 
 
 ### Install pip
 
