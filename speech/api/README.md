@@ -40,7 +40,7 @@ for more information.
 
 ### Setup
 
-Before running these samples perform the setup steps:
+Before running these samples perform the steps:
 
 * Clone this repo
     ```
