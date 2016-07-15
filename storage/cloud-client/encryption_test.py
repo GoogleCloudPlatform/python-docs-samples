@@ -12,49 +12,56 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import base64
 import tempfile
 
+import encryption
 from gcloud import storage
-import manage_blobs
 import pytest
 
+TEST_ENCRYPTION_KEY = 'brtJUWneL92g5q0N2gyDSnlPSYAiIVZ/cWgjyZNeMy0='
+TEST_ENCRYPTION_KEY_DECODED = base64.b64decode(TEST_ENCRYPTION_KEY)
 
-def test_list_blobs(test_blob, cloud_config, capsys):
-    manage_blobs.list_blobs(cloud_config.storage_bucket)
+
+def test_generate_encryption_key(capsys):
+    encryption.generate_encryption_key()
     out, _ = capsys.readouterr()
-    assert test_blob in out
+    encoded_key = out.split(':', 1).pop().strip()
+    key = base64.b64decode(encoded_key)
+    assert len(key) == 32, 'Returned key should be 32 bytes'
 
 
-def test_upload_blob(cloud_config):
+def test_upload_encrypted_blob(cloud_config):
     with tempfile.NamedTemporaryFile() as source_file:
         source_file.write(b'test')
 
-        manage_blobs.upload_blob(
+        encryption.upload_encrypted_blob(
             cloud_config.storage_bucket,
             source_file.name,
-            'test_upload_blob')
+            'test_encrypted_upload_blob',
+            TEST_ENCRYPTION_KEY)
 
 
 @pytest.fixture
 def test_blob(cloud_config):
     """Provides a pre-existing blob in the test bucket."""
     bucket = storage.Client().bucket(cloud_config.storage_bucket)
-    blob = bucket.blob('manage_blobs_test_sigil')
-    blob.upload_from_string('Hello, is it me you\'re looking for?')
-    return blob.name
+    blob = bucket.blob('encrption_test_sigil')
+    content = 'Hello, is it me you\'re looking for?'
+    blob.upload_from_string(
+        content,
+        encryption_key=TEST_ENCRYPTION_KEY_DECODED)
+    return blob.name, content
 
 
 def test_download_blob(test_blob, cloud_config):
+    test_blob_name, test_blob_content = test_blob
     with tempfile.NamedTemporaryFile() as dest_file:
-        manage_blobs.download_blob(
+        encryption.download_encrypted_blob(
             cloud_config.storage_bucket,
-            test_blob,
-            dest_file.name)
+            test_blob_name,
+            dest_file.name,
+            TEST_ENCRYPTION_KEY)
 
-        assert dest_file.read()
-
-
-def test_delete_blob(test_blob, cloud_config):
-    manage_blobs.delete_blob(
-        cloud_config.storage_bucket,
-        test_blob)
+        downloaded_content = dest_file.read().decode('utf-8')
+        assert downloaded_content == test_blob_content

@@ -1,22 +1,24 @@
 #!/usr/bin/env python
 
-# Copyright (C) 2016 Google Inc.
+# Copyright 2016 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#            http://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Command-line sample application for simple CRUD management of blobs in a
-given bucket.
 
-For more information, see the README.md under /storage.
+"""This application demonstrates how to perform basic operations on blobs
+(objects) in a Google Cloud Storage bucket.
+
+For more information, see the README.md under /storage  and the documentation
+at https://cloud.google.com/storage/docs.
 """
 
 import argparse
@@ -73,7 +75,9 @@ def delete_blob(bucket_name, blob_name):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('bucket_name', help='Your cloud storage bucket.')
 
     subparsers = parser.add_subparsers(dest='command')
