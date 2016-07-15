@@ -12,6 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+Noxfile used with nox-automation to run tests across all samples.
+
+Use nox -l to see all possible sessions.
+
+In general, you'll want to run:
+
+    nox -s lint
+    # or
+    nox -s list -- /path/to/sample/dir
+
+And:
+
+    nox -s tests -- /path/to/sample/dir
+
+"""
+
 import fnmatch
 import itertools
 import os
@@ -20,13 +37,16 @@ import tempfile
 
 import nox
 
+# Location of our common testing utilities. This isn't published to PyPI.
 REPO_TOOLS_REQ =\
     'git+https://github.com/GoogleCloudPlatform/python-repo-tools.git'
 
+# Arguments used for every invocation of py.test.
 COMMON_PYTEST_ARGS = [
     '-x', '--no-success-flaky-report', '--cov', '--cov-config',
     '.coveragerc', '--cov-append', '--cov-report=']
 
+# Blacklists of samples to ingnore.
 # Bigtable and Speech are disabled because they use gRPC, which does not yet
 # support Python 3. See: https://github.com/grpc/grpc/issues/282
 TESTS_BLACKLIST = set((
@@ -38,6 +58,7 @@ APPENGINE_BLACKLIST = set()
 
 
 def list_files(folder, pattern):
+    """Lists all files below the given folder that match the pattern."""
     for root, folders, files in os.walk(folder):
         for filename in files:
             if fnmatch.fnmatch(filename, pattern):
@@ -45,7 +66,11 @@ def list_files(folder, pattern):
 
 
 def collect_sample_dirs(start_dir, blacklist=set()):
-    """Recursively collects a list of dirs that contain tests."""
+    """Recursively collects a list of dirs that contain tests.
+
+    This works by listing the contents of directories and finding
+    directories that have `*_test.py` files.
+    """
     # Collect all the directories that have tests in them.
     for parent, subdirs, files in os.walk(start_dir):
         if any(f for f in files if f[-8:] == '_test.py'):
@@ -61,6 +86,8 @@ def collect_sample_dirs(start_dir, blacklist=set()):
 
 
 def get_changed_files():
+    """Uses travis environment variables to determine which files
+    have changed for this pull request / push."""
     # Debug info
     print('TRAVIS_PULL_REQUEST: {}'.format(
         os.environ.get('TRAVIS_PULL_REQUEST')))
@@ -85,6 +112,8 @@ def get_changed_files():
 
 
 def filter_samples(sample_dirs, changed_files):
+    """Filers the list of sample directories to only include directories that
+    contain changed files."""
     result = []
     for sample_dir in sample_dirs:
         if sample_dir.startswith('./'):
@@ -97,6 +126,7 @@ def filter_samples(sample_dirs, changed_files):
 
 
 def setup_appengine(session):
+    """Installs the App Engine SDK."""
     # Install the app engine sdk and setup import paths.
     gae_root = os.environ.get('GAE_ROOT', tempfile.gettempdir())
     session.env['PYTHONPATH'] = os.path.join(gae_root, 'google_appengine')
@@ -111,6 +141,22 @@ def setup_appengine(session):
 def run_tests_in_sesssion(
         session, interpreter, use_appengine=False, skip_flaky=False,
         changed_only=False, sample_directories=None):
+    """This is the main function for executing tests.
+
+    It:
+    1. Install the common testing utilities.
+    2. Installs the test requirements for the current interpreter.
+    3. Determines which pytest arguments to use. skip_flaky causes extra
+       arguments to be passed that will skip tests marked flaky.
+    4. If posargs are specified, it will use that as the list of samples to
+       test.
+    5. If posargs is not specified, it will gather the list of samples by
+       walking the repository tree.
+    6. If changed_only was specified, it'll use Travis environment variables
+       to figure out which samples should be tested based on which files
+       were changed.
+    7. For each sample directory, it runs py.test.
+    """
     session.interpreter = interpreter
     session.install(REPO_TOOLS_REQ)
     session.install('-r', 'requirements-{}-dev.txt'.format(interpreter))
@@ -156,10 +202,12 @@ def run_tests_in_sesssion(
 
 @nox.parametrize('interpreter', ['python2.7', 'python3.4'])
 def session_tests(session, interpreter):
+    """Runs tests"""
     run_tests_in_sesssion(session, interpreter)
 
 
 def session_gae(session):
+    """Runs test for GAE Standard samples."""
     run_tests_in_sesssion(
         session, 'python2.7', use_appengine=True,
         sample_directories=collect_sample_dirs(
@@ -168,6 +216,8 @@ def session_gae(session):
 
 
 def session_grpc(session):
+    """Runs tests for samples that need grpc."""
+    # TODO: Remove this when grpc supports Python 3.
     run_tests_in_sesssion(
         session,
         'python2.7',
@@ -192,6 +242,7 @@ def session_travis(session, subsession):
 
 
 def session_lint(session):
+    """Lints each sample."""
     session.install('flake8', 'flake8-import-order')
     session.run(
         'flake8', '--builtin=gettext', '--max-complexity=10',
@@ -202,6 +253,7 @@ def session_lint(session):
 
 
 def session_reqcheck(session):
+    """Checks for out of date requirements."""
     session.install(REPO_TOOLS_REQ)
 
     if 'update' in session.posargs:
