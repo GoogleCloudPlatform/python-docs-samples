@@ -48,7 +48,7 @@ Before running these samples perform the steps:
     cd python-docs-samples/speech/api
     ```
 
-* Create virtualenv
+* Create [virtualenv][virtualenv]
     ```
     virtualenv env
     source env/bin/activate
@@ -78,6 +78,7 @@ The sample uses the [PyAudio][pyaudio] library to stream audio from your compute
 [pip]: https://pip.pypa.io/en/stable/installing/
 [virtualenv]: https://virtualenv.pypa.io/en/stable/installation/
 [home-page]: https://github.com/GoogleCloudPlatform/python-docs-samples
+[virtualenv]: https://virtualenv.pypa.io/en/stable/installation/
 
 ## Run the example
 
