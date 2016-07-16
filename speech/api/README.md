@@ -56,7 +56,9 @@ Before running these samples perform the steps:
 
 ### Install the dependencies
 
-The sample uses the [PyAudio][pyaudio] library to stream audio from your computer's microphone.  PyAudio depends on [PortAudio][portaudio], which may need to be compiled when you install PyAudio. If you run into compilation issues that mention PortAudio, you may have to [install some dependencies][pyaudio-install].
+The sample uses the [PyAudio][pyaudio] library to stream audio from your computer's microphone.  PyAudio depends on [PortAudio][portaudio], which may need to be compiled when you install PyAudio. 
+
+* You may run into compilation issues that mention PortAudio, in which case [install some dependencies][pyaudio-install].
 
 * If you're running the `speech_rest.py` sample:
 
