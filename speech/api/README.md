@@ -63,13 +63,13 @@ The sample uses the [PyAudio][pyaudio] library to stream audio from your compute
 * If you're running the `speech_rest.py` sample:
 
     ```sh
-    $ pip install -r requirements-speech_rest.txt
+    $ [pip][pip] install -r requirements-speech_rest.txt
     ```
 
 * If you're running the `speech_streaming.py` sample:
 
     ```sh
-    $ pip install -r requirements-speech_grpc.txt
+    $ [pip][pip] install -r requirements-speech_grpc.txt
     ```
 
 [pyaudio]: https://people.csail.mit.edu/hubert/pyaudio/
@@ -79,6 +79,7 @@ The sample uses the [PyAudio][pyaudio] library to stream audio from your compute
 [virtualenv]: https://virtualenv.pypa.io/en/stable/installation/
 [home-page]: https://github.com/GoogleCloudPlatform/python-docs-samples
 [virtualenv]: https://virtualenv.pypa.io/en/stable/installation/
+[pip]: https://pip.pypa.io/en/stable/installing/
 
 ## Run the example
 
