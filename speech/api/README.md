@@ -48,7 +48,7 @@ Before running these samples perform the steps:
     cd python-docs-samples/speech/api
     ```
 
-* Create [virtualenv][virtualenv]
+* Create a [virtualenv][virtualenv]
     ```
     virtualenv env
     source env/bin/activate
