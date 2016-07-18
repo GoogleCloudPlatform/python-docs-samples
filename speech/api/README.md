@@ -48,7 +48,7 @@ Before running these samples perform the steps:
     cd python-docs-samples/speech/api
     ```
 
-* Create virtualenv
+* Create a [virtualenv][virtualenv]
     ```
     virtualenv env
     source env/bin/activate
@@ -56,7 +56,9 @@ Before running these samples perform the steps:
 
 ### Install the dependencies
 
-The sample uses the [PyAudio][pyaudio] library to stream audio from your computer's microphone.  PyAudio depends on [PortAudio][portaudio], which may need to be compiled when you install PyAudio. If you run into compilation issues that mention PortAudio, you may have to [install some dependencies][pyaudio-install].
+The sample uses the [PyAudio][pyaudio] library to stream audio from your computer's microphone. PyAudio depends on [PortAudio][portaudio], which may need to be installed separately, depending on your platform:
+
+* Install the [pyAudio dependencies][pyaudio-install].
 
 * If you're running the `speech_rest.py` sample:
 
@@ -76,6 +78,7 @@ The sample uses the [PyAudio][pyaudio] library to stream audio from your compute
 [pip]: https://pip.pypa.io/en/stable/installing/
 [virtualenv]: https://virtualenv.pypa.io/en/stable/installation/
 [home-page]: https://github.com/GoogleCloudPlatform/python-docs-samples
+[virtualenv]: https://virtualenv.pypa.io/en/stable/installation/
 
 ## Run the example
 
