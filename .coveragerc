@@ -8,6 +8,7 @@ include =
     compute/*
     dns/*
     datastore/*
+    error_reporting/*
     managed_vms/*
     monitoring/*
     speech/*
