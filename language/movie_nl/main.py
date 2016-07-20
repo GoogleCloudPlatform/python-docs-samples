@@ -21,7 +21,6 @@ import os
 
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
-import httplib2
 from oauth2client.client import GoogleCredentials
 import requests
 
@@ -265,25 +264,20 @@ def rank_entities(reader, sentiment=None, topn=None, reverse_bool=False):
     items.sort(reverse=reverse_bool)
     items = [json.dumps(item[1]) for item in items]
 
-    if topn:
-        print('\n'.join(items[:topn]))
-    else:
-        print('\n'.join(items))
+    print('\n'.join(items[:topn]))
 
 
 def get_service():
     """Build a client to the Google Cloud Natural Language API."""
 
     credentials = GoogleCredentials.get_application_default()
-    scoped_credentials = credentials.create_scoped(
-        ['https://www.googleapis.com/auth/cloud-platform'])
-    http = httplib2.Http()
-    scoped_credentials.authorize(http)
-    return discovery.build('language', 'v1beta1', http=http)
+
+    return discovery.build('language', 'v1beta1',
+                           credentials=credentials)
 
 
 def analyze(input_dir, sentiment_writer, entity_writer, sample, log_file):
-    """Movie demo main program"""
+    """Analyze the document for sentiment and entities"""
 
     # Create logger settings
     logging.basicConfig(filename=log_file, level=logging.DEBUG)
@@ -321,7 +315,9 @@ if __name__ == '__main__':
         default=False
         )
     rank_parser.add_argument(
-        '--sample', help='number of top items to process', type=int)
+        '--sample', help='number of top items to process', type=int,
+        default=None
+        )
 
     analyze_parser = subparsers.add_parser('analyze')
 
