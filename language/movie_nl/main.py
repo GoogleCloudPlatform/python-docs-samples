@@ -282,11 +282,8 @@ def rank_entities(reader, sentiment=None, topn=None, reverse_bool=False):
         else:
             items.append(entity_item)
 
-    items.sort(reverse=True)
+    items.sort(reverse=reverse_bool)
     items = [json.dumps(item[1]) for item in items]
-
-    if reverse_bool:
-        items.reverse()
 
     if topn:
         print('\n'.join(items[:topn]))
@@ -340,7 +337,9 @@ if __name__ == '__main__':
     rank_parser.add_argument(
         '--sentiment', help='filter sentiment as "neg" or "pos"')
     rank_parser.add_argument(
-        '--reverse', help='reverse the order of the items')
+        '--reverse', help='reverse the order of the items', type=bool,
+        default=False
+        )
     rank_parser.add_argument(
         '--sample', help='number of top items to process', type=int)
 
