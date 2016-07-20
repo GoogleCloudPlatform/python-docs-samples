@@ -145,15 +145,15 @@ def get_wiki_title(wiki_url):
         return os.path.basename(wiki_url).replace('_', ' ')
 
 
-def to_entity_json(entity, e_tuple):
+def to_entity_json(entity, entity_sentiment):
     """Convert the entity info to json."""
     json_doc = {}
 
-    avg_sentiment = float(e_tuple[0]) / float(e_tuple[1])
+    avg_sentiment = float(entity_sentiment[0]) / float(entity_sentiment[1])
 
     json_doc['wiki_url'] = entity
     json_doc['name'] = get_wiki_title(entity)
-    json_doc['sentiment'] = float('%.3f' % e_tuple[0])
+    json_doc['sentiment'] = float('%.3f' % entity_sentiment[0])
     json_doc['avg_sentiment'] = float('%.3f' % avg_sentiment)
 
     return json.dumps(json_doc)
@@ -218,8 +218,8 @@ def process_movie_reviews(service, reader, sentiment_writer, entity_writer):
 
             collected_entities[ent] = (ent_sent, frequency)
 
-    for entity, e_tuple in collected_entities.items():
-        entity_writer.write(to_entity_json(entity, e_tuple))
+    for entity, entity_sentiment in collected_entities.items():
+        entity_writer.write(to_entity_json(entity, entity_sentiment))
         entity_writer.write('\n')
 
     sentiment_writer.flush()
