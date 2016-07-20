@@ -186,30 +186,26 @@ def process_movie_reviews(service, reader, sentiment_writer, entity_writer):
     collected_entities = {}
 
     for document in reader:
-        try:
-            sentiment_total, entities = get_sentiment_entities(
-                service, document)
-            document.label = get_sentiment_label(sentiment_total)
+        sentiment_total, entities = get_sentiment_entities(
+            service, document)
+        document.label = get_sentiment_label(sentiment_total)
 
-            sentiment_writer.write(
-                to_sentiment_json(
-                    document.doc_id,
-                    sentiment_total,
-                    document.label
-                )
+        sentiment_writer.write(
+            to_sentiment_json(
+                document.doc_id,
+                sentiment_total,
+                document.label
             )
+        )
 
-            sentiment_writer.write('\n')
+        sentiment_writer.write('\n')
 
-            for ent in entities:
-                ent_sent, frequency = collected_entities.get(ent, (0, 0))
-                ent_sent += sentiment_total
-                frequency += 1
+        for ent in entities:
+            ent_sent, frequency = collected_entities.get(ent, (0, 0))
+            ent_sent += sentiment_total
+            frequency += 1
 
-                collected_entities[ent] = (ent_sent, frequency)
-
-        except Exception:
-            logging.exception('Skipping {}'.format(document.doc_id))
+            collected_entities[ent] = (ent_sent, frequency)
 
     for entity, e_tuple in collected_entities.items():
         entity_writer.write(to_entity_json(entity, e_tuple))
@@ -231,7 +227,7 @@ def document_generator(dir_path_pattern, count=None):
             try:
                 text = f.read()
             except UnicodeDecodeError:
-                text = None
+                continue
 
             yield Document(text, doc_id, item)
 
@@ -277,70 +273,59 @@ def get_service():
     return discovery.build('language', 'v1beta1', http=http)
 
 
-def main(input_dir, sent_out, ent_out, sample, log_file,
-         operation, sentiment, ent_in, reverse_bool):
+def analyze(input_dir, sentiment_writer, entity_writer, sample, log_file):
     """Movie demo main program"""
 
-    sample = int(sample) if sample else None
+    # Create logger settings
+    logging.basicConfig(filename=log_file, level=logging.DEBUG)
 
-    if operation == 'rank':
-        with open(ent_in) as reader:
-            rank_entities(reader, sentiment, sample, reverse_bool)
-    else:
-        # Create logger settings
-        logging.basicConfig(filename=log_file, level=logging.DEBUG)
+    # Create a Google Service object
+    service = get_service()
 
-        # Create a Google Service object
-        service = get_service()
+    reader = document_generator(input_dir, sample)
 
-        # Create a sentiment output writer
-        sentiment_writer = open(sent_out, 'w')
+    # Process the movie documents
+    process_movie_reviews(service, reader, sentiment_writer, entity_writer)
 
-        # Create an entity output writer
-        entity_writer = open(ent_out, 'w')
-
-        reader = document_generator(input_dir, sample)
-
-        # Process the movie documents
-        process_movie_reviews(service, reader, sentiment_writer, entity_writer)
-
-        # close reader and writers
-        sentiment_writer.close()
-        entity_writer.close()
-        reader.close()
+    # close reader and writers
+    sentiment_writer.close()
+    entity_writer.close()
+    reader.close()
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--inp', help='location of the input', required=True)
-    parser.add_argument(
-        '--sout', help='location of the sentiment output', required=True)
-    parser.add_argument(
-        '--eout', help='location of the entity output', required=True)
-    parser.add_argument('--sample', help='number of top items to process')
-    parser.add_argument(
-        '--op',
-        help='operation to perform "rank" or "analyze"',
-        default='analyze')
-    parser.add_argument(
+
+    subparsers = parser.add_subparsers(dest='command')
+
+    rank_parser = subparsers.add_parser('rank')
+
+    rank_parser.add_argument(
+        'entity_input', help='location of entity input', type=argparse.FileType('r'))
+    rank_parser.add_argument(
         '--sentiment', help='filter sentiment as "neg" or "pos"')
-    parser.add_argument(
-        '--ein', help='location of entity input')
-    parser.add_argument(
+    rank_parser.add_argument(
         '--reverse', help='reverse the order of the items')
+    rank_parser.add_argument('--sample', help='number of top items to process')
+
+    analyze_parser = subparsers.add_parser('analyze')
+
+    analyze_parser.add_argument(
+        '--inp', help='location of the input', required=True)
+    analyze_parser.add_argument(
+        '--sout', help='location of the sentiment output', required=True,
+        type=argparse.FileType('w'))
+    analyze_parser.add_argument(
+        '--eout', help='location of the entity output', required=True,
+        type=argparse.FileType('w'))
+    analyze_parser.add_argument('--sample', help='number of top items to process')
+    analyze_parser.add_argument('--log_file', default='movie.log')
 
     args = parser.parse_args()
 
-    log_file = 'movie.log'
-
-    main(args.inp,
-         args.sout,
-         args.eout,
-         args.sample,
-         log_file,
-         args.op,
-         args.sentiment,
-         args.ein,
-         args.reverse)
+    if args.command == 'analyze':
+        analyze(args.inp, args.sout, args.eout, args.sample, args.log_file)
+    elif args.command == 'rank':
+        rank_entities(args.entity_input, args.sentiment, args.sample, args.reverse)

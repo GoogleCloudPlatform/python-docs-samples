@@ -110,7 +110,7 @@ $ pip install -r requirements.txt
 ### How to Run
 
 ```
-$ python main.py --inp "tokens/*/*" \
+$ python main.py analyze --inp "tokens/*/*" \
                  --sout sentiment.json \
                  --eout entity.json \
                  --sample 5
@@ -145,9 +145,7 @@ In order to sort and rank the entities generated, use the same `main.py` script.
 this will print the top 5 actors with negative sentiment:
 
 ```
-$ python main.py --inp entity.json \
-                 --sout sentiment.json \
-                 --eout entity.json \
+$ python main.py rank entity.json \
                  --sentiment neg \
                  --reverse True \
                  --sample 5
