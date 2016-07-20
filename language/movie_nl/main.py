@@ -326,6 +326,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.command == 'analyze':
-        analyze(args.inp, args.sout, args.eout, args.sample, args.log_file)
+        analyze(args.inp, args.sout, args.eout, int(args.sample), args.log_file)
     elif args.command == 'rank':
-        rank_entities(args.entity_input, args.sentiment, args.sample, args.reverse)
+        rank_entities(args.entity_input, args.sentiment, int(args.sample), args.reverse)
