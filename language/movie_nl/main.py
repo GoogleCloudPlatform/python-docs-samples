@@ -26,6 +26,7 @@ from oauth2client.client import GoogleCredentials
 import requests
 import socket
 
+
 def analyze_document(service, document):
     """Analyze the document and get the distribution of sentiments and
     the movie name."""
