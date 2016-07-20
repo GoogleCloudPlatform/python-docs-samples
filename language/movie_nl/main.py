@@ -24,7 +24,7 @@ from googleapiclient.errors import HttpError
 import httplib2
 from oauth2client.client import GoogleCredentials
 import requests
-
+import socket
 
 def analyze_document(service, document):
     """Analyze the document and get the distribution of sentiments and
@@ -59,6 +59,22 @@ def get_request_body(text, syntax=True, entities=True, sentiment=True):
 
     return body
 
+def get_response_with_retry(request, tries, retry=3):
+    """Get the response using re-try"""
+    try:
+        response = request.execute()
+        return response
+    except HttpError as e:
+        raise e
+    except socket.error as se:
+        if tries > retry:
+            raise se
+
+        logging.error('Re-trying the request {}'.format(tries))
+
+        tries+=1
+        return get_response_with_retry(request, tries, retry)
+
 
 def get_sentiment(service, sentence):
     """Get the sentence-level sentiment."""
@@ -68,10 +84,7 @@ def get_sentiment(service, sentence):
     docs = service.documents()
     request = docs.annotateText(body=body)
 
-    try:
-        response = request.execute()
-    except HttpError as e:
-        raise e
+    response = get_response_with_retry(request, 1)
 
     sentiment = response.get("documentSentiment")
 
