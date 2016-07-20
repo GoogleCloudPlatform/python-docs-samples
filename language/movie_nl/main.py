@@ -105,15 +105,15 @@ class Document(object):
             sentences = response.get('sentences', [])
 
             sent_list = [
-                sentence.get('text').get('content')for sentence in sentences
+                sentence.get('text').get('content') for sentence in sentences
             ]
 
-        for entity in entities:
-            ent_type = entity.get('type')
-            wiki_url = entity.get('metadata', {}).get('wikipedia_url')
+            for entity in entities:
+                ent_type = entity.get('type')
+                wiki_url = entity.get('metadata', {}).get('wikipedia_url')
 
-            if ent_type == 'PERSON' and wiki_url is not None:
-                ent_list.append(wiki_url)
+                if ent_type == 'PERSON' and wiki_url is not None:
+                    ent_list.append(wiki_url)
 
             self.sentent_pair = (sent_list, ent_list)
 
