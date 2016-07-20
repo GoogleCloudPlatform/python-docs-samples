@@ -303,12 +303,14 @@ if __name__ == '__main__':
     rank_parser = subparsers.add_parser('rank')
 
     rank_parser.add_argument(
-        'entity_input', help='location of entity input', type=argparse.FileType('r'))
+        'entity_input', help='location of entity input',
+        type=argparse.FileType('r'))
     rank_parser.add_argument(
         '--sentiment', help='filter sentiment as "neg" or "pos"')
     rank_parser.add_argument(
         '--reverse', help='reverse the order of the items')
-    rank_parser.add_argument('--sample', help='number of top items to process')
+    rank_parser.add_argument(
+        '--sample', help='number of top items to process', type=int)
 
     analyze_parser = subparsers.add_parser('analyze')
 
@@ -320,17 +322,14 @@ if __name__ == '__main__':
     analyze_parser.add_argument(
         '--eout', help='location of the entity output', required=True,
         type=argparse.FileType('w'))
-    analyze_parser.add_argument('--sample', help='number of top items to process')
+    analyze_parser.add_argument(
+        '--sample', help='number of top items to process', type=int)
     analyze_parser.add_argument('--log_file', default='movie.log')
 
     args = parser.parse_args()
 
-    sample = args.sample
-
-    if args.sample is not None:
-        sample = int(args.sample)
-
     if args.command == 'analyze':
-        analyze(args.inp, args.sout, args.eout, sample, args.log_file)
+        analyze(args.inp, args.sout, args.eout, args.sample, args.log_file)
     elif args.command == 'rank':
-        rank_entities(args.entity_input, args.sentiment, sample, args.reverse)
+        rank_entities(
+            args.entity_input, args.sentiment, args.sample, args.reverse)
