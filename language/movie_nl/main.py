@@ -20,6 +20,7 @@ import logging
 import os
 
 from googleapiclient import discovery
+from googleapiclient.errors import HttpError
 import httplib2
 from oauth2client.client import GoogleCredentials
 import requests
@@ -31,7 +32,11 @@ def analyze_document(service, document):
     logging.info('Analyzing {}'.format(document.doc_id))
 
     sentences, entities = document.extract_all_sentences(service)
-    sentiments = [get_sentiment(service, sentence) for sentence in sentences]
+
+    try:
+        sentiments = [get_sentiment(service, sentence) for sentence in sentences]
+    except HttpError as e:
+        raise e
 
     return sentiments, entities
 
@@ -62,7 +67,12 @@ def get_sentiment(service, sentence):
 
     docs = service.documents()
     request = docs.annotateText(body=body)
-    response = request.execute()
+
+    try:
+        response = request.execute()
+    except HttpError as e:
+        raise e
+
     sentiment = response.get("documentSentiment")
 
     if sentiment is None:
@@ -156,7 +166,11 @@ def to_entity_json(entity, e_tuple):
 
 def get_sentiment_entities(service, document):
     """Compute the overall sentiment volume in the document"""
-    sentiments, entities = analyze_document(service, document)
+
+    try:
+        sentiments, entities = analyze_document(service, document)
+    except HttpError as e:
+        raise e
 
     sentiments = [sent for sent in sentiments if sent[0] is not None]
     negative_sentiments = [
@@ -186,8 +200,13 @@ def process_movie_reviews(service, reader, sentiment_writer, entity_writer):
     collected_entities = {}
 
     for document in reader:
-        sentiment_total, entities = get_sentiment_entities(
-            service, document)
+        try:
+            sentiment_total, entities = get_sentiment_entities(
+                service, document)
+        except HttpError as e:
+            logging.error("Error in process_movie_reviews {}".format(e.content))
+            continue
+
         document.label = get_sentiment_label(sentiment_total)
 
         sentiment_writer.write(
