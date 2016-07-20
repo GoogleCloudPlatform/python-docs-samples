@@ -33,10 +33,7 @@ def analyze_document(service, document):
 
     sentences, entities = document.extract_all_sentences(service)
 
-    try:
-        sentiments = [get_sentiment(service, sentence) for sentence in sentences]
-    except HttpError as e:
-        raise e
+    sentiments = [get_sentiment(service, sentence) for sentence in sentences]
 
     return sentiments, entities
 
@@ -59,22 +56,6 @@ def get_request_body(text, syntax=True, entities=True, sentiment=True):
 
     return body
 
-def get_response_with_retry(request, tries, retry=3):
-    """Get the response using re-try"""
-    try:
-        response = request.execute()
-        return response
-    except HttpError as e:
-        raise e
-    except socket.error as se:
-        if tries > retry:
-            raise se
-
-        logging.error('Re-trying the request {}'.format(tries))
-
-        tries+=1
-        return get_response_with_retry(request, tries, retry)
-
 
 def get_sentiment(service, sentence):
     """Get the sentence-level sentiment."""
@@ -84,15 +65,15 @@ def get_sentiment(service, sentence):
     docs = service.documents()
     request = docs.annotateText(body=body)
 
-    response = get_response_with_retry(request, 1)
+    response = request.execute(num_retries=3)
 
-    sentiment = response.get("documentSentiment")
+    sentiment = response.get('documentSentiment')
 
     if sentiment is None:
         return (None, None)
     else:
-        pol = sentiment.get("polarity")
-        mag = sentiment.get("magnitude")
+        pol = sentiment.get('polarity')
+        mag = sentiment.get('magnitude')
 
     if pol is None and mag is not None:
         pol = 0
@@ -106,41 +87,43 @@ class Document(object):
         self.text = text
         self.doc_id = doc_id
         self.doc_path = doc_path
-        self.sentent_pair = None
+        self.sentence_entity_pair = None
         self.label = None
 
     def extract_all_sentences(self, service):
         """Extract the sentences in a document."""
 
-        if self.sentent_pair is None:
-            docs = service.documents()
-            request_body = get_request_body(
-                self.text,
-                syntax=True,
-                entities=True,
-                sentiment=False)
-            request = docs.annotateText(body=request_body)
+        if self.sentence_entity_pair is not None:
+            return self.sentence_entity_pair
 
-            ent_list = []
+        docs = service.documents()
+        request_body = get_request_body(
+            self.text,
+            syntax=True,
+            entities=True,
+            sentiment=False)
+        request = docs.annotateText(body=request_body)
 
-            response = request.execute()
-            entities = response.get('entities', [])
-            sentences = response.get('sentences', [])
+        ent_list = []
 
-            sent_list = [
-                sentence.get('text').get('content') for sentence in sentences
-            ]
+        response = request.execute()
+        entities = response.get('entities', [])
+        sentences = response.get('sentences', [])
 
-            for entity in entities:
-                ent_type = entity.get('type')
-                wiki_url = entity.get('metadata', {}).get('wikipedia_url')
+        sent_list = [
+            sentence.get('text', {}).get('content') for sentence in sentences
+        ]
 
-                if ent_type == 'PERSON' and wiki_url is not None:
-                    ent_list.append(wiki_url)
+        for entity in entities:
+            ent_type = entity.get('type')
+            wiki_url = entity.get('metadata', {}).get('wikipedia_url')
 
-            self.sentent_pair = (sent_list, ent_list)
+            if ent_type == 'PERSON' and wiki_url is not None:
+                ent_list.append(wiki_url)
 
-        return self.sentent_pair
+        self.sentence_entity_pair = (sent_list, ent_list)
+
+        return self.sentence_entity_pair
 
 
 def to_sentiment_json(doc_id, sent, label):
@@ -180,10 +163,7 @@ def to_entity_json(entity, e_tuple):
 def get_sentiment_entities(service, document):
     """Compute the overall sentiment volume in the document"""
 
-    try:
-        sentiments, entities = analyze_document(service, document)
-    except HttpError as e:
-        raise e
+    sentiments, entities = analyze_document(service, document)
 
     sentiments = [sent for sent in sentiments if sent[0] is not None]
     negative_sentiments = [
