@@ -164,8 +164,8 @@ def get_sentiment_entities(service, document):
     positive_sentiments = [
         polarity for polarity, magnitude in sentiments if polarity > 0.0]
 
-    negative = sum(negative_sentiment)
-    positive = sum(positive_sentiment)
+    negative = sum(negative_sentiments)
+    positive = sum(positive_sentiments)
     total = positive + negative
 
     return (total, entities)
