@@ -208,7 +208,7 @@ def process_movie_reviews(service, reader, sentiment_writer, entity_writer):
 
                 collected_entities[ent] = (ent_sent, frequency)
 
-        except Exception as e:
+        except Exception:
             logging.exception('Skipping {}'.format(document.doc_id))
 
     for entity, e_tuple in collected_entities.items():
