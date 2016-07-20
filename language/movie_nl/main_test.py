@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import io
+import StringIO
 import json
 
 import main
@@ -56,8 +56,8 @@ def test_process_movie_reviews():
     doc2 = main.Document('Tom Cruise is a great actor.', 'doc2', 'doc2')
 
     reader = [doc1, doc2]
-    swriter = io.StringIO()
-    ewriter = io.StringIO()
+    swriter = StringIO.StringIO()
+    ewriter = StringIO.StringIO()
 
     main.process_movie_reviews(service, reader, swriter, ewriter)
 
