@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 import StringIO
 import sys
-import json
 
 import main
 
@@ -82,30 +82,44 @@ def test_process_movie_reviews():
             'http://en.wikipedia.org/wiki/Tom_Cruise')
     assert entities[0].get('sentiment') == 2.0
 
+
 def test_rank_positive_entities():
     reader = [
-        '{"avg_sentiment": -12.0, "name": "Patrick Macnee", "sentiment": -12.0}',
-        '{"avg_sentiment": 5.0, "name": "Paul Rudd", "sentiment": 5.0}',
-        '{"avg_sentiment": -5.0, "name": "Martha Plimpton", "sentiment": -5.0}',
-        '{"avg_sentiment": 7.0, "name": "Lucy (2014 film)", "sentiment": 7.0}'
+        ('{"avg_sentiment": -12.0, '
+         '"name": "Patrick Macnee", "sentiment": -12.0}'),
+        ('{"avg_sentiment": 5.0, '
+         '"name": "Paul Rudd", "sentiment": 5.0}'),
+        ('{"avg_sentiment": -5.0, '
+         '"name": "Martha Plimpton", "sentiment": -5.0}'),
+        ('{"avg_sentiment": 7.0, '
+         '"name": "Lucy (2014 film)", "sentiment": 7.0}')
     ]
 
     sys.stdout = writer = StringIO.StringIO()
     main.rank_entities(reader, 'pos', topn=1, reverse_bool=False)
 
     sys.stdout = sys.__stdout__
-    assert writer.getvalue().strip() == '{"avg_sentiment": 5.0, "name": "Paul Rudd", "sentiment": 5.0}'
+    expected = ('{"avg_sentiment": 5.0, '
+                '"name": "Paul Rudd", "sentiment": 5.0}')
+    assert writer.getvalue().strip() == expected
+
 
 def test_rank_negative_entities():
     reader = [
-        '{"avg_sentiment": -12.0, "name": "Patrick Macnee", "sentiment": -12.0}',
-        '{"avg_sentiment": 5.0, "name": "Paul Rudd", "sentiment": 5.0}',
-        '{"avg_sentiment": -5.0, "name": "Martha Plimpton", "sentiment": -5.0}',
-        '{"avg_sentiment": 7.0, "name": "Lucy (2014 film)", "sentiment": 7.0}'
+        ('{"avg_sentiment": -12.0, '
+         '"name": "Patrick Macnee", "sentiment": -12.0}'),
+        ('{"avg_sentiment": 5.0, '
+         '"name": "Paul Rudd", "sentiment": 5.0}'),
+        ('{"avg_sentiment": -5.0, '
+         '"name": "Martha Plimpton", "sentiment": -5.0}'),
+        ('{"avg_sentiment": 7.0, '
+         '"name": "Lucy (2014 film)", "sentiment": 7.0}')
     ]
 
     sys.stdout = writer = StringIO.StringIO()
     main.rank_entities(reader, 'neg', topn=1, reverse_bool=True)
 
     sys.stdout = sys.__stdout__
-    assert writer.getvalue().strip() == '{"avg_sentiment": -5.0, "name": "Martha Plimpton", "sentiment": -5.0}'
+    expected = ('{"avg_sentiment": -5.0, '
+                '"name": "Martha Plimpton", "sentiment": -5.0}')
+    assert writer.getvalue().strip() == expected
