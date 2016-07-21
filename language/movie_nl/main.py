@@ -348,8 +348,7 @@ if __name__ == '__main__':
     rank_parser = subparsers.add_parser('rank')
 
     rank_parser.add_argument(
-        'entity_input', help='location of entity input',
-        type=argparse.FileType('r'))
+        '--entity_input', help='location of entity input')
     rank_parser.add_argument(
         '--sentiment', help='filter sentiment as "neg" or "pos"')
     rank_parser.add_argument(
