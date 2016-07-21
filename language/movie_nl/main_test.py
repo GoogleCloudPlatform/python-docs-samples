@@ -14,7 +14,6 @@
 
 import io
 import json
-import sys
 
 import main
 
@@ -83,7 +82,7 @@ def test_process_movie_reviews():
     assert entities[0].get('sentiment') == 2.0
 
 
-def test_rank_positive_entities():
+def test_rank_positive_entities(capsys):
     reader = [
         ('{"avg_sentiment": -12.0, '
          '"name": "Patrick Macnee", "sentiment": -12.0}'),
@@ -95,16 +94,15 @@ def test_rank_positive_entities():
          '"name": "Lucy (2014 film)", "sentiment": 7.0}')
     ]
 
-    sys.stdout = writer = io.BytesIO()
     main.rank_entities(reader, 'pos', topn=1, reverse_bool=False)
+    out, err = capsys.readouterr()
 
-    sys.stdout = sys.__stdout__
     expected = ('{"avg_sentiment": 5.0, '
                 '"name": "Paul Rudd", "sentiment": 5.0}')
-    assert writer.getvalue().strip() == expected
+    assert out.strip() == expected
 
 
-def test_rank_negative_entities():
+def test_rank_negative_entities(capsys):
     reader = [
         ('{"avg_sentiment": -12.0, '
          '"name": "Patrick Macnee", "sentiment": -12.0}'),
@@ -116,10 +114,9 @@ def test_rank_negative_entities():
          '"name": "Lucy (2014 film)", "sentiment": 7.0}')
     ]
 
-    sys.stdout = writer = io.BytesIO()
     main.rank_entities(reader, 'neg', topn=1, reverse_bool=True)
+    out, err = capsys.readouterr()
 
-    sys.stdout = sys.__stdout__
     expected = ('{"avg_sentiment": -5.0, '
                 '"name": "Martha Plimpton", "sentiment": -5.0}')
-    assert writer.getvalue().strip() == expected
+    assert out.strip() == expected
