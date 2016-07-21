@@ -145,7 +145,7 @@ In order to sort and rank the entities generated, use the same `main.py` script.
 this will print the top 5 actors with negative sentiment:
 
 ```
-$ python main.py rank entity.json \
+$ python main.py rank --entity_input entity.json \
                  --sentiment neg \
                  --reverse True \
                  --sample 5
