@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import json
-import StringIO
+import io
 import sys
 
 import main
@@ -57,8 +57,8 @@ def test_process_movie_reviews():
     doc2 = main.Document('Tom Cruise is a great actor.', 'doc2', 'doc2')
 
     reader = [doc1, doc2]
-    swriter = StringIO.StringIO()
-    ewriter = StringIO.StringIO()
+    swriter = io.BytesIO()
+    ewriter = io.BytesIO()
 
     main.process_movie_reviews(service, reader, swriter, ewriter)
 
@@ -95,7 +95,7 @@ def test_rank_positive_entities():
          '"name": "Lucy (2014 film)", "sentiment": 7.0}')
     ]
 
-    sys.stdout = writer = StringIO.StringIO()
+    sys.stdout = writer = io.BytesIO()
     main.rank_entities(reader, 'pos', topn=1, reverse_bool=False)
 
     sys.stdout = sys.__stdout__
@@ -116,7 +116,7 @@ def test_rank_negative_entities():
          '"name": "Lucy (2014 film)", "sentiment": 7.0}')
     ]
 
-    sys.stdout = writer = StringIO.StringIO()
+    sys.stdout = writer = io.BytesIO()
     main.rank_entities(reader, 'neg', topn=1, reverse_bool=True)
 
     sys.stdout = sys.__stdout__

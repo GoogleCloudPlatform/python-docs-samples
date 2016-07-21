@@ -196,7 +196,7 @@ def process_movie_reviews(service, reader, sentiment_writer, entity_writer):
             sentiment_total, entities = get_sentiment_entities(
                 service, document)
         except HttpError as e:
-            logging.error("Error process_movie_reviews {}".format(e.content))
+            logging.error('Error process_movie_reviews {}'.format(e.content))
             continue
 
         document.label = get_sentiment_label(sentiment_total)
