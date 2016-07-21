@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import io
 import json
 
 import main
+import six
 
 
 def test_get_request_body():
@@ -56,8 +56,8 @@ def test_process_movie_reviews():
     doc2 = main.Document('Tom Cruise is a great actor.', 'doc2', 'doc2')
 
     reader = [doc1, doc2]
-    swriter = io.BytesIO()
-    ewriter = io.BytesIO()
+    swriter = six.StringIO()
+    ewriter = six.StringIO()
 
     main.process_movie_reviews(service, reader, swriter, ewriter)
 
