@@ -150,10 +150,10 @@ def get_wiki_title(wiki_url):
     """Get the wikipedia page title for a given wikipedia URL.
 
     Args:
-        wiki_url: Wikipedia URL
+        wiki_url: Wikipedia URL e.g., http://en.wikipedia.org/wiki/Sean_Connery
 
     Returns:
-        Wikipedia canonical name
+        Wikipedia canonical name e.g., Sean Connery
 
     """
     try:
