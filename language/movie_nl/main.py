@@ -126,7 +126,17 @@ class Document(object):
 
 
 def to_sentiment_json(doc_id, sent, label):
-    """Convert the sentiment info to json."""
+    """Convert the sentiment info to json.
+
+    Args:
+        doc_id: Document id
+        sent: Overall Sentiment for the document
+        label: Actual label +1, 0, -1 for the document
+
+    Returns:
+        String json representation of the input
+
+    """
     json_doc = {}
 
     json_doc['doc_id'] = doc_id
@@ -137,7 +147,15 @@ def to_sentiment_json(doc_id, sent, label):
 
 
 def get_wiki_title(wiki_url):
-    """Get the wikipedia page title for a given wikipedia URL."""
+    """Get the wikipedia page title for a given wikipedia URL.
+
+    Args:
+        wiki_url: Wikipedia URL
+
+    Returns:
+        Wikipedia canonical name
+
+    """
     try:
         content = requests.get(wiki_url).text
         return content.split('title')[1].split('-')[0].split('>')[1].strip()
@@ -170,7 +188,16 @@ def to_entity_json(entity, entity_sentiment, entity_frequency):
 
 
 def get_sentiment_entities(service, document):
-    """Compute the overall sentiment volume in the document"""
+    """Compute the overall sentiment volume in the document.
+
+    Args:
+        service: Client to Google Natural Language API
+        document: Movie review document (See Document object)
+
+    Returns:
+        Tuple of total sentiment and entities found in the document
+
+    """
 
     sentiments, entities = analyze_document(service, document)
 
@@ -238,7 +265,16 @@ def process_movie_reviews(service, reader, sentiment_writer, entity_writer):
 
 
 def document_generator(dir_path_pattern, count=None):
-    """Generator for the input movie documents."""
+    """Generator for the input movie documents.
+
+    Args:
+        dir_path_pattern: Input dir pattern e.g., "foo/bar/*/*"
+        count: Number of documents to read else everything if None
+
+    Returns:
+        Generator which contains Document (See above)
+
+    """
     for running_count, item in enumerate(glob.iglob(dir_path_pattern)):
         if count and running_count >= count:
             raise StopIteration()
