@@ -146,7 +146,7 @@ def get_wiki_title(wiki_url):
 
 
 def to_entity_json(entity, entity_sentiment):
-    """Convert the entity info to json."""
+    """Convert entities and their associated sentiment to json."""
     json_doc = {}
 
     avg_sentiment = float(entity_sentiment[0]) / float(entity_sentiment[1])
