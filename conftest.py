@@ -15,9 +15,10 @@
 import os
 
 import pytest
+import requests
 
 
-class Namespace:
+class Namespace(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
@@ -48,3 +49,24 @@ def resource(request):
     testing resource"""
     local_path = os.path.dirname(request.module.__file__)
     return lambda *args: get_resource_path(args, local_path)
+
+
+def fetch_gcs_resource(resource, tmpdir, _chunk_size=1024):
+    resp = requests.get(resource, stream=True)
+    dest_file = str(tmpdir.join(os.path.basename(resource)))
+    with open(dest_file, 'wb') as f:
+        for chunk in resp.iter_content(_chunk_size):
+            f.write(chunk)
+
+    return dest_file
+
+
+@pytest.fixture(scope='module')
+def remote_resource(cloud_config):
+    """Provides a function that downloads the given resource from Cloud
+    Storage, returning the path to the downloaded resource."""
+    remote_uri = 'http://storage.googleapis.com/{}/'.format(
+        cloud_config.storage_bucket)
+
+    return lambda path, tmpdir: fetch_gcs_resource(
+        remote_uri + path.strip('/'), tmpdir)
