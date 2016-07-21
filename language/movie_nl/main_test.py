@@ -99,7 +99,7 @@ def test_rank_positive_entities(capsys):
 
     expected = ('{"avg_sentiment": 5.0, '
                 '"name": "Paul Rudd", "sentiment": 5.0}')
-    assert out.strip() == expected
+    assert out.strip().sort() == expected.sort()
 
 
 def test_rank_negative_entities(capsys):
@@ -119,4 +119,4 @@ def test_rank_negative_entities(capsys):
 
     expected = ('{"avg_sentiment": -5.0, '
                 '"name": "Martha Plimpton", "sentiment": -5.0}')
-    assert out.strip() == expected
+    assert out.strip().sort() == expected.sort()
