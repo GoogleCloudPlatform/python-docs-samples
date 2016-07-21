@@ -337,11 +337,6 @@ def analyze(input_dir, sentiment_writer, entity_writer, sample, log_file):
     # Process the movie documents
     process_movie_reviews(service, reader, sentiment_writer, entity_writer)
 
-    # close reader and writers
-    sentiment_writer.close()
-    entity_writer.close()
-    reader.close()
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -371,11 +366,9 @@ if __name__ == '__main__':
     analyze_parser.add_argument(
         '--inp', help='location of the input', required=True)
     analyze_parser.add_argument(
-        '--sout', help='location of the sentiment output', required=True,
-        type=argparse.FileType('w'))
+        '--sout', help='location of the sentiment output', required=True)
     analyze_parser.add_argument(
-        '--eout', help='location of the entity output', required=True,
-        type=argparse.FileType('w'))
+        '--eout', help='location of the entity output', required=True)
     analyze_parser.add_argument(
         '--sample', help='number of top items to process', type=int)
     analyze_parser.add_argument('--log_file', default='movie.log')
@@ -383,7 +376,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.command == 'analyze':
-        analyze(args.inp, args.sout, args.eout, args.sample, args.log_file)
+        with open(args.sout, 'w') as sout, open(args.eout, 'w') as eout:
+            analyze(args.inp, sout, eout, args.sample, args.log_file)
     elif args.command == 'rank':
-        rank_entities(
-            args.entity_input, args.sentiment, args.sample, args.reverse)
+        with open(args.entity_input, 'r') as entity_input:
+            rank_entities(
+                entity_input, args.sentiment, args.sample, args.reverse)
