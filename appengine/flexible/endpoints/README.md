@@ -40,7 +40,7 @@ Open the `swagger.yaml` file and in the `host` property, replace
 
 Then, deploy the sample using `gcloud`:
 
-    gcloud app deploy
+    gcloud beta app deploy
 
 Once deployed, you can access the application at https://YOUR-PROJECT-ID.appspot.com/.
 
