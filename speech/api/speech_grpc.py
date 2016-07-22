@@ -56,8 +56,14 @@ def main(input_uri, encoding, sample_rate):
     # https://github.com/googleapis/googleapis/blob/master/google/cloud/speech/v1beta1/cloud_speech.proto
     response = service.SyncRecognize(cloud_speech.SyncRecognizeRequest(
         config=cloud_speech.RecognitionConfig(
-            encoding=encoding,
-            sample_rate=sample_rate,
+            # There are a bunch of config options you can specify. See
+            # https://goo.gl/A6xv5G for the full list.
+            encoding=encoding,  # one of LINEAR16, FLAC, MULAW, AMR, AMR_WB
+            sample_rate=sample_rate,  # the rate in hertz
+            # See
+            # https://g.co/cloud/speech/docs/best-practices#language_support
+            # for a list of supported languages.
+            language_code='en-US',  # a BCP-47 language tag
         ),
         audio=cloud_speech.RecognitionAudio(
             uri=input_uri,

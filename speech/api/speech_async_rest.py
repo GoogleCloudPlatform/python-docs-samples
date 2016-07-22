@@ -57,8 +57,12 @@ def main(speech_file):
     service_request = service.speech().asyncrecognize(
         body={
             'config': {
-                'encoding': 'LINEAR16',
-                'sampleRate': 16000
+                # There are a bunch of config options you can specify. See
+                # https://goo.gl/EPjAup for the full list.
+                'encoding': 'LINEAR16',  # raw 16-bit signed LE samples
+                'sampleRate': 16000,  # 16 khz
+                # See https://goo.gl/DPeVFW for a list of supported languages.
+                'languageCode': 'en-US',  # a BCP-47 language tag
             },
             'audio': {
                 'content': speech_content.decode('UTF-8')
