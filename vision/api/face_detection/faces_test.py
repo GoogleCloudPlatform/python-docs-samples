@@ -13,8 +13,8 @@
 
 import os
 
-from faces import main
 from PIL import Image
+from faces import main
 
 
 def test_main(resource, tmpdir):
