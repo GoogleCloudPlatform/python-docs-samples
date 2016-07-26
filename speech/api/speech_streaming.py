@@ -83,13 +83,21 @@ def request_stream(stop_audio, channels=CHANNELS, rate=RATE, chunk=CHUNK):
     Args:
         stop_audio: A threading.Event object stops the recording when set.
         channels: How many audio channels to record.
-        rate: The sampling rate.
+        rate: The sampling rate in hertz.
         chunk: Buffer audio into chunks of this size before sending to the api.
     """
     # The initial request must contain metadata about the stream, so the
     # server knows how to interpret it.
     recognition_config = cloud_speech.RecognitionConfig(
-        encoding='LINEAR16', sample_rate=rate)
+        # There are a bunch of config options you can specify. See
+        # https://goo.gl/A6xv5G for the full list.
+        encoding='LINEAR16',  # raw 16-bit signed LE samples
+        sample_rate=rate,  # the rate in hertz
+        # See
+        # https://g.co/cloud/speech/docs/best-practices#language_support
+        # for a list of supported languages.
+        language_code='en-US',  # a BCP-47 language tag
+    )
     streaming_config = cloud_speech.StreamingRecognitionConfig(
         config=recognition_config,
         # Note that setting interim_results to True means that you'll likely
