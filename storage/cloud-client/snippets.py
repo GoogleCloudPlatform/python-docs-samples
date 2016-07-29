@@ -22,6 +22,7 @@ at https://cloud.google.com/storage/docs.
 """
 
 import argparse
+import datetime
 
 from gcloud import storage
 
@@ -126,6 +127,33 @@ def delete_blob(bucket_name, blob_name):
     print('Blob {} deleted.'.format(blob_name))
 
 
+def blob_metadata(bucket_name, blob_name):
+    """Prints out a blob's metadata."""
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+    blob = bucket.get_blob(blob_name)
+
+    print('Blob: {}'.format(blob.name))
+    print('Bucket: {}'.format(blob.bucket.name))
+    print('Storage class: {}'.format(blob.storage_class))
+    print('ID: {}'.format(blob.id))
+    print('Size: {} bytes'.format(blob.size))
+    print('Updated: {}'.format(blob.updated))
+    print('Generation: {}'.format(blob.generation))
+    print('Metageneration: {}'.format(blob.metageneration))
+    print('Etag: {}'.format(blob.etag))
+    print('Owner: {}'.format(blob.owner))
+    print('Component count: {}'.format(blob.component_count))
+    print('Crc32c: {}'.format(blob.crc32c))
+    print('md5_hash: {}'.format(blob.md5_hash))
+    print('Cache-control: {}'.format(blob.cache_control))
+    print('Content-type: {}'.format(blob.content_type))
+    print('Content-disposition: {}'.format(blob.content_disposition))
+    print('Content-encoding: {}'.format(blob.content_encoding))
+    print('Content-language: {}'.format(blob.content_language))
+    print('Metadata: {}'.format(blob.metadata))
+
+
 def make_blob_public(bucket_name, blob_name):
     """Makes a blob publicly accessible."""
     storage_client = storage.Client()
@@ -136,6 +164,26 @@ def make_blob_public(bucket_name, blob_name):
 
     print('Blob {} is publicly accessible at {}'.format(
         blob.name, blob.public_url))
+
+
+def generate_signed_url(bucket_name, blob_name):
+    """Generates a signed URL for a blob.
+
+    Note that this method requires a service account key file. You can not use
+    this if you are using Application Default Credentials from Google Compute
+    Engine or from the Google Cloud SDK.
+    """
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+
+    url = blob.generate_signed_url(
+        # This URL is valid for 1 hour
+        expiration=datetime.timedelta(hours=1),
+        # Allow GET requests using this URL.
+        method='GET')
+
+    print('The signed url for {} is {}'.format(blob.name, url))
 
 
 def rename_blob(bucket_name, blob_name, new_name):
@@ -193,6 +241,18 @@ if __name__ == '__main__':
     delete_parser = subparsers.add_parser('delete', help=delete_blob.__doc__)
     delete_parser.add_argument('blob_name')
 
+    metadata_parser = subparsers.add_parser(
+        'metadata', help=blob_metadata.__doc__)
+    metadata_parser.add_argument('blob_name')
+
+    make_public_parser = subparsers.add_parser(
+        'make-public', help=make_blob_public.__doc__)
+    make_public_parser.add_argument('blob_name')
+
+    signed_url_parser = subparsers.add_parser(
+        'signed-url', help=generate_signed_url.__doc__)
+    signed_url_parser.add_argument('blob_name')
+
     rename_parser = subparsers.add_parser('rename', help=rename_blob.__doc__)
     rename_parser.add_argument('blob_name')
     rename_parser.add_argument('new_name')
@@ -224,6 +284,12 @@ if __name__ == '__main__':
             args.destination_file_name)
     elif args.command == 'delete':
         delete_blob(args.bucket_name, args.blob_name)
+    elif args.command == 'metadata':
+        blob_metadata(args.bucket_name, args.blob_name)
+    elif args.command == 'make-public':
+        make_blob_public(args.bucket_name, args.blob_name)
+    elif args.command == 'signed-url':
+        generate_signed_url(args.bucket_name, args.blob_name)
     elif args.command == 'rename':
         rename_blob(args.bucket_name, args.blob_name, args.new_name)
     elif args.command == 'copy':

@@ -64,6 +64,12 @@ def test_download_blob(test_blob, cloud_config):
         assert dest_file.read()
 
 
+def test_blob_metadata(test_blob, cloud_config, capsys):
+    snippets.blob_metadata(cloud_config.storage_bucket, test_blob.name)
+    out, _ = capsys.readouterr()
+    assert test_blob.name in out
+
+
 def test_delete_blob(test_blob, cloud_config):
     snippets.delete_blob(
         cloud_config.storage_bucket,
@@ -76,6 +82,18 @@ def test_make_blob_public(test_blob, cloud_config):
         test_blob.name)
 
     r = requests.get(test_blob.public_url)
+    assert r.text == 'Hello, is it me you\'re looking for?'
+
+
+def test_generate_signed_url(test_blob, cloud_config, capsys):
+    snippets.generate_signed_url(
+        cloud_config.storage_bucket,
+        test_blob.name)
+
+    out, _ = capsys.readouterr()
+    url = out.rsplit().pop()
+
+    r = requests.get(url)
     assert r.text == 'Hello, is it me you\'re looking for?'
 
 
