@@ -28,13 +28,34 @@ SDK_PATH    Path to Google Cloud or Google App Engine SDK installation, usually
 TEST_PATH   Path to package containing test modules"""
 
 
+def append_or_insert_path(path):
+    """Adds GAE path to system path, or appends it to the google path
+    if that already exists.
+
+    Not all Google packages are inside namespaced packages, which means
+    there might be another named `google` on the path, and simply appending
+    the App Engine SDK to the path will not work since the other package
+    will get discovered and used first. This ugly hack emulates namespace
+    packages by first searching if a `google` package already exists by
+    importing it, and if so appending to its path, otherwise it just
+    inserts it into the import path by itself.
+    """
+    try:
+        import google
+        google.__path__.append("{0}/google".format(path))
+    except ImportError:
+        sys.path.insert(0, path)
+
+
 def main(sdk_path, test_path):
     # If the sdk path points to a google cloud sdk installation
     # then we should alter it to point to the GAE platform location.
+
     if os.path.exists(os.path.join(sdk_path, 'platform/google_appengine')):
-        sys.path.insert(0, os.path.join(sdk_path, 'platform/google_appengine'))
+        append_or_insert_path(
+            os.path.join(sdk_path, 'platform/google_appengine'))
     else:
-        sys.path.insert(0, sdk_path)
+        append_or_insert_path(sdk_path)
 
     # Ensure that the google.appengine.* packages are available
     # in tests as well as all bundled third-party packages.
@@ -51,7 +72,7 @@ def main(sdk_path, test_path):
         print "Note: unable to import appengine_config."
 
     # Discover and run tests.
-    suite = unittest.loader.TestLoader().discover(test_path)
+    suite = unittest.loader.TestLoader().discover(test_path, "*_test.py")
     unittest.TextTestRunner(verbosity=2).run(suite)
 
 
