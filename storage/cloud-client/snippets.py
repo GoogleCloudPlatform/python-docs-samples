@@ -266,11 +266,11 @@ if __name__ == '__main__':
 
     if args.command == 'create-bucket':
         create_bucket(args.bucket_name)
-    if args.command == 'delete-bucket':
+    elif args.command == 'delete-bucket':
         delete_bucket(args.bucket_name)
-    if args.command == 'list':
+    elif args.command == 'list':
         list_blobs(args.bucket_name)
-    if args.command == 'list-with-prefix':
+    elif args.command == 'list-with-prefix':
         list_blobs_with_prefix(args.bucket_name, args.prefix, args.delimiter)
     elif args.command == 'upload':
         upload_blob(
