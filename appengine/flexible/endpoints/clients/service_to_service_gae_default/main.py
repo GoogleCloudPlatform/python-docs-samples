@@ -49,11 +49,13 @@ def generate_jwt():
         "email": DEFAUTL_SERVICE_ACCOUNT
     })
 
-    headerAndPayload = '{}.{}'.format(base64.urlsafe_b64encode(header_json),
-                                      base64.urlsafe_b64encode(payload_json))
+    headerAndPayload = '{}.{}'.format(
+        base64.urlsafe_b64encode(header_json),
+        base64.urlsafe_b64encode(payload_json))
     (key_name, signature) = app_identity.sign_blob(headerAndPayload)
-    signed_jwt = '{}.{}'.format(headerAndPayload,
-                                base64.urlsafe_b64encode(signature))
+    signed_jwt = '{}.{}'.format(
+        headerAndPayload,
+        base64.urlsafe_b64encode(signature))
 
     return signed_jwt
 

@@ -57,8 +57,9 @@ def generate_jwt():
         "email": SERVICE_ACCOUNT_EMAIL
     })
 
-    headerAndPayload = '{}.{}'.format(base64.urlsafe_b64encode(header_json),
-                                      base64.urlsafe_b64encode(payload_json))
+    headerAndPayload = '{}.{}'.format(
+        base64.urlsafe_b64encode(header_json),
+        base64.urlsafe_b64encode(payload_json))
     slist = service.projects().serviceAccounts().signBlob(
         name=SERVICE_ACCOUNT,
         body={'bytesToSign': base64.b64encode(headerAndPayload)})
