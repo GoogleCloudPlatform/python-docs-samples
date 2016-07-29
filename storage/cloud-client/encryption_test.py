@@ -46,7 +46,7 @@ def test_upload_encrypted_blob(cloud_config):
 def test_blob(cloud_config):
     """Provides a pre-existing blob in the test bucket."""
     bucket = storage.Client().bucket(cloud_config.storage_bucket)
-    blob = bucket.blob('encrption_test_sigil')
+    blob = bucket.blob('encryption_test_sigil')
     content = 'Hello, is it me you\'re looking for?'
     blob.upload_from_string(
         content,
