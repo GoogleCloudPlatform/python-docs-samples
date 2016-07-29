@@ -248,7 +248,8 @@ def session_lint(session):
         'flake8', '--builtin=gettext', '--max-complexity=10',
         '--import-order-style=google',
         '--exclude',
-        'container_engine/django_tutorial/polls/migrations/*,.nox,.cache,env',
+        'container_engine/django_tutorial/polls/migrations/*,.nox,.cache,env,'
+        'lib',
         *(session.posargs or ['.']))
 
 
