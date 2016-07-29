@@ -19,10 +19,10 @@
 import argparse
 import base64
 
-from PIL import Image
-from PIL import ImageDraw
 from googleapiclient import discovery
 from oauth2client.client import GoogleCredentials
+from PIL import Image
+from PIL import ImageDraw
 
 
 # [START get_vision_service]
