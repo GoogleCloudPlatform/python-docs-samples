@@ -156,6 +156,8 @@ def main():
             # Stop the request stream once we're done with the loop - otherwise
             # it'll keep going in the thread that the grpc lib makes for it..
             stop_audio.set()
+            print ('Exiting.')
+            return
 
 
 if __name__ == '__main__':
