@@ -16,6 +16,7 @@
 
 from __future__ import division
 
+import argparse
 import contextlib
 import re
 import threading
@@ -25,7 +26,7 @@ from google.cloud.speech.v1beta1 import cloud_speech_pb2 as cloud_speech
 from google.rpc import code_pb2
 from grpc.beta import implementations
 import pyaudio
-from google.cloud.speech.v1beta1.cloud_speech_pb2 import StreamingRecognizeResponse
+
 
 # Audio recording parameters
 RATE = 16000
@@ -35,7 +36,6 @@ CHUNK = int(RATE / 10)  # 100ms
 # Keep the request alive for this many seconds
 DEADLINE_SECS = 8 * 60 * 60
 SPEECH_SCOPE = 'https://www.googleapis.com/auth/cloud-platform'
-SINGLE_UTTERANCE = False
 
 
 def make_channel(host, port):
@@ -78,7 +78,7 @@ def record_audio(channels, rate, chunk):
 # [END audio_stream]
 
 
-def request_stream(stop_audio, channels=CHANNELS, rate=RATE, chunk=CHUNK):
+def request_stream(stop_audio, single_utterance, channels=CHANNELS, rate=RATE, chunk=CHUNK):
     """Yields `StreamingRecognizeRequest`s constructed from a recording audio
     stream.
 
@@ -107,7 +107,7 @@ def request_stream(stop_audio, channels=CHANNELS, rate=RATE, chunk=CHUNK):
         # re-interprets audio in the context of subsequent audio. However, this
         # will give us quick results without having to tell the server when to
         # finalize a piece of audio.
-        interim_results=True, single_utterance=SINGLE_UTTERANCE
+        interim_results=True, single_utterance=single_utterance
     )
 
     yield cloud_speech.StreamingRecognizeRequest(
@@ -123,7 +123,7 @@ def request_stream(stop_audio, channels=CHANNELS, rate=RATE, chunk=CHUNK):
             yield cloud_speech.StreamingRecognizeRequest(audio_content=data)
 
 
-def listen_print_loop(recognize_stream):
+def listen_print_loop(recognize_stream, single_utterance):
     for resp in recognize_stream:
         if resp.error.code != code_pb2.OK:
             raise RuntimeError('Server error: ' + resp.error.message)
@@ -140,18 +140,27 @@ def listen_print_loop(recognize_stream):
             print('Exiting..')
             return
 
-        if SINGLE_UTTERANCE and resp.endpointer_type == StreamingRecognizeResponse.END_OF_UTTERANCE:
-            print ('End of utterance. Exiting...')
+        if (single_utterance and 
+                resp.endpointer_type ==
+                    cloud_speech.StreamingRecognizeResponse.END_OF_UTTERANCE):
+            print ('End of utterance. Exiting.')
             return
 
+parser = argparse.ArgumentParser()
+parser.add_argument('-s', '--single-utterance', action='store_true', default=False)
+
 def main():
+    args = parser.parse_args()
+
+    single_utterance = args.single_utterance
+
     stop_audio = threading.Event()
     with cloud_speech.beta_create_Speech_stub(
             make_channel('speech.googleapis.com', 443)) as service:
         try:
             listen_print_loop(
                 service.StreamingRecognize(
-                    request_stream(stop_audio), DEADLINE_SECS))
+                    request_stream(stop_audio, single_utterance), DEADLINE_SECS), single_utterance)
         finally:
             # Stop the request stream once we're done with the loop - otherwise
             # it'll keep going in the thread that the grpc lib makes for it..
