@@ -25,6 +25,7 @@ from google.cloud.speech.v1beta1 import cloud_speech_pb2 as cloud_speech
 from google.rpc import code_pb2
 from grpc.beta import implementations
 import pyaudio
+from google.cloud.speech.v1beta1.cloud_speech_pb2 import StreamingRecognizeResponse
 
 # Audio recording parameters
 RATE = 16000
@@ -34,6 +35,7 @@ CHUNK = int(RATE / 10)  # 100ms
 # Keep the request alive for this many seconds
 DEADLINE_SECS = 8 * 60 * 60
 SPEECH_SCOPE = 'https://www.googleapis.com/auth/cloud-platform'
+SINGLE_UTTERANCE = False
 
 
 def make_channel(host, port):
@@ -105,7 +107,7 @@ def request_stream(stop_audio, channels=CHANNELS, rate=RATE, chunk=CHUNK):
         # re-interprets audio in the context of subsequent audio. However, this
         # will give us quick results without having to tell the server when to
         # finalize a piece of audio.
-        interim_results=True, single_utterance=True
+        interim_results=True, single_utterance=SINGLE_UTTERANCE
     )
 
     yield cloud_speech.StreamingRecognizeRequest(
@@ -138,6 +140,9 @@ def listen_print_loop(recognize_stream):
             print('Exiting..')
             return
 
+        if SINGLE_UTTERANCE and resp.endpointer_type == StreamingRecognizeResponse.END_OF_UTTERANCE:
+            print ('End of utterance. Exiting...')
+            return
 
 def main():
     stop_audio = threading.Event()
