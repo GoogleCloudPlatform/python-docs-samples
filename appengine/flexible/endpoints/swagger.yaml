@@ -44,11 +44,21 @@ paths:
           schema:
             $ref: "#/definitions/authInfoResponse"
       x-security:
-      - google_jwt:
-          audiences:
-          # This must match the "aud" field in the JWT. You can add multiple
-          # audiences to accept JWTs from multiple clients.
-          - "echo.endpoints.sample.google.com"
+        - google_jwt:
+            audiences:
+            # This must match the "aud" field in the JWT. You can add multiple
+            # audiences to accept JWTs from multiple clients.
+            - "echo.endpoints.sample.google.com"
+        - gae_default_service_account:
+            audiences:
+            # This must match the "aud" field in the JWT. You can add multiple
+            # audiences to accept JWTs from multiple clients.
+            - "echo.endpoints.sample.google.com"
+        - google_service_account:
+            audiences:
+            # This must match the "aud" field in the JWT. You can add multiple
+            # audiences to accept JWTs from multiple clients.
+            - "echo.endpoints.sample.google.com"
   "/auth/info/googleidtoken":
     get:
       description: "Returns the requests' authentication information."
@@ -66,6 +76,7 @@ paths:
           # Your OAuth2 client's Client ID must be added here. You can add
           # multiple client IDs to accept tokens from multiple clients.
           - "YOUR-CLIENT-ID"
+          - "YOUR-SERVER-PROJECT-ID@appspot.gserviceaccount.com"
   "/auth/info/firebase":
     get:
       description: "Returns the requests' authentication information."
@@ -81,6 +92,7 @@ paths:
       - firebase:
           audiences:
           - "YOUR-PROJECT-ID"
+
 definitions:
   echoMessage:
     properties:
@@ -92,6 +104,7 @@ definitions:
         type: "string"
       email:
         type: "string"
+
 securityDefinitions:
   # This section configures basic authentication with an API key.
   api_key:
@@ -109,6 +122,28 @@ securityDefinitions:
     x-issuer: "jwt-client.endpoints.sample.google.com"
     # Update this with your service account's email address.
     x-jwks_uri: "https://www.googleapis.com/service_accounts/v1/jwk/YOUR-SERVICE-ACCOUNT-EMAIL"
+  # This section configures authentication using Google App Engine default
+  # service account to sign a json web token. This is mostly used for
+  # server-to-server communication.
+  gae_default_service_account:
+    authorizationUrl: ""
+    flow: "implicit"
+    type: "oauth2"
+    # Replace YOUR-CLIENT-PROJECT-ID with your client project ID.
+    x-issuer: "YOUR-CLIENT-PROJECT-ID@appspot.gserviceaccount.com"
+    # Replace YOUR-CLIENT-PROJECT-ID with your client project ID.
+    x-jwks_uri: "https://www.googleapis.com/robot/v1/metadata/x509/YOUR-CLIENT-PROJECT-ID@appspot.gserviceaccount.com"
+  # This section configures authentication using a service account
+  # to sign a json web token. This is mostly used for server-to-server
+  # communication.
+  google_service_account:
+    authorizationUrl: ""
+    flow: "implicit"
+    type: "oauth2"
+    # Replace YOUR-SERVICE-ACCOUNT-EMAIL with your service account email.
+    x-issuer: "YOUR-SERVICE-ACCOUNT-EMAIL"
+    # Replace YOUR-SERVICE-ACCOUNT-EMAIL with your service account email.
+    x-jwks_uri: "https://www.googleapis.com/robot/v1/metadata/x509/YOUR-SERVICE-ACCOUNT-EMAIL"
   # This section configures authentication using Google OAuth2 ID Tokens.
   # ID Tokens can be obtained using OAuth2 clients, and can be used to access
   # your API on behalf of a particular user.
