@@ -194,9 +194,12 @@ def run_tests_in_sesssion(
             '--ignore', os.path.join(sample, 'lib'),
             '--ignore', os.path.join(sample, 'env')]
 
+        # output junit report.
+        junit_args = ['--junitxml', os.path.join(sample, 'junit.xml')]
+
         session.run(
             'py.test', sample,
-            *(pytest_args + ignore_args),
+            *(pytest_args + ignore_args + junit_args),
             success_codes=[0, 5])  # Treat no test collected as success.
 
 
