@@ -25,6 +25,7 @@ import time
 
 from custom_metric import create_custom_metric, get_custom_metric
 from custom_metric import read_timeseries, write_timeseries_value
+from gcp.testing import eventually_consistent
 from gcp.testing.flaky import flaky
 import list_resources
 
@@ -53,9 +54,10 @@ def test_custom_metric(cloud_config):
 
     create_custom_metric(
         client, PROJECT_RESOURCE, METRIC_RESOURCE, METRIC_KIND)
-    custom_metric = None
+
     # wait until metric has been created, use the get call to wait until
     # a response comes back with the new metric
+    custom_metric = None
     while not custom_metric:
         time.sleep(1)
         custom_metric = get_custom_metric(
@@ -64,12 +66,13 @@ def test_custom_metric(cloud_config):
     write_timeseries_value(client, PROJECT_RESOURCE,
                            METRIC_RESOURCE, INSTANCE_ID,
                            METRIC_KIND)
+
     # Sometimes on new metric descriptors, writes have a delay in being
-    # read back. 3 seconds should be enough to make sure our read call
-    # picks up the write
-    time.sleep(3)
-    response = read_timeseries(client, PROJECT_RESOURCE, METRIC_RESOURCE)
-    value = int(
-        response['timeSeries'][0]['points'][0]['value']['int64Value'])
-    # using seed of 1 will create a value of 1
-    assert value == pseudo_random_value
+    # read back. Use eventually_consistent to account for this.
+    @eventually_consistent.call
+    def _():
+        response = read_timeseries(client, PROJECT_RESOURCE, METRIC_RESOURCE)
+        value = int(
+            response['timeSeries'][0]['points'][0]['value']['int64Value'])
+        # using seed of 1 will create a value of 1
+        assert value == pseudo_random_value
