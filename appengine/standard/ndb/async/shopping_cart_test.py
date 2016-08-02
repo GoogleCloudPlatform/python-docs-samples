@@ -140,4 +140,4 @@ def test_get_first_ready(testbed):
     testbed.init_urlfetch_stub()
 
     content = shopping_cart.get_first_ready()
-    assert 'html' in content
+    assert 'html' in content.lower()
