@@ -66,6 +66,6 @@ def test_update(example_sink, capsys):
     assert example_sink.filter_ == updated_filter
 
 
-def ttest_delete(example_sink, capsys):
+def test_delete(example_sink, capsys):
     export.delete_sink(TEST_SINK_NAME)
     assert not example_sink.exists()
