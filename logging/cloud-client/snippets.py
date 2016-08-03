@@ -54,11 +54,16 @@ def list_entries(logger_name):
     logging_client = logging.Client()
     logger = logging_client.logger(logger_name)
 
-    print('Latest entries for logger {}:'.format(logger.name))
+    print('Listing entries for logger {}:'.format(logger.name))
 
-    entries, token = logging_client.list_entries(
-        filter_='logName="{}"'.format(logger.full_name),
-        order_by=logging.DESCENDING)
+    entries = []
+    page_token = None
+
+    while True:
+        new_entries, page_token = logger.list_entries(page_token=page_token)
+        entries.extend(new_entries)
+        if not page_token:
+            break
 
     for entry in entries:
         timestamp = entry.timestamp.isoformat()
@@ -85,7 +90,7 @@ if __name__ == '__main__':
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument(
-        '--logger-name', help='Logger name', default='example_log')
+        'logger_name', help='Logger name', default='example_log')
     subparsers = parser.add_subparsers(dest='command')
     subparsers.add_parser('list', help=list_entries.__doc__)
     subparsers.add_parser('write', help=write_entry.__doc__)
