@@ -1,17 +1,20 @@
-# Google Cloud Logging v1 Samples
+# Stackdriver Logging v1 Samples
 
 **Note that these samples are for the v1 Samples, using the Google API Client. 
  It's recommended you instead use the [Logging v2 samples](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/logging/api), which use the Google 
  Cloud client library.**
 
-This section contains samples for [Google Cloud Logging](https://cloud.google.com/logging).
+This section contains samples for [Stackdriver Logging](https://cloud.google.com/logging).
+
+<!-- auto-doc-link -->
+<!-- end-auto-doc-link -->
 
 ## Running the samples
 
 1. Your environment must be setup with [authentication
 information](https://developers.google.com/identity/protocols/application-default-credentials#howtheywork). If you're running in your local development environment and you have the [Google Cloud SDK](https://cloud.google.com/sdk/) installed, you can do this easily by running:
 
-        $ gcloud init
+        $ gcloud beta auth application-default login
 
 2. Install dependencies from `requirements.txt`:
 
