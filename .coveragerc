@@ -4,7 +4,7 @@ include =
     bigtable/*
     bigquery/*
     blog/*
-    cloud_logging/*
+    logging/*
     compute/*
     dns/*
     datastore/*
