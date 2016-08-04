@@ -48,6 +48,12 @@ def test_list(example_sink, capsys):
 
 
 def test_create(cloud_config, capsys):
+    # Delete the sink if it exists, otherwise the test will fail in conflit.
+    client = logging.Client()
+    sink = client.sink(TEST_SINK_NAME)
+    if sink.exists():
+        sink.delete()
+
     export.create_sink(
         TEST_SINK_NAME,
         TEST_SINK_FILTER,
@@ -56,6 +62,7 @@ def test_create(cloud_config, capsys):
 
     out, _ = capsys.readouterr()
     assert TEST_SINK_NAME in out
+    assert sink.exists()
 
 
 def test_update(example_sink, capsys):
