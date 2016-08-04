@@ -4,17 +4,9 @@
  It's recommended you instead use the [Logging v2 samples](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/logging/api), which use the Google 
  Cloud client library.**
 
-This section contains samples for [Google Cloud Logging](https://cloud.google.com/logging).
+This section contains samples for [Stackdriver Logging](https://cloud.google.com/logging).
 
 <!-- auto-doc-link -->
-These samples are used on the following documentation pages:
-
->
-* https://cloud.google.com/storage/docs/encryption
-* https://cloud.google.com/storage/docs/json_api/v1/json-api-python-samples
-* https://cloud.google.com/storage/docs/authentication
-* https://cloud.google.com/docs/authentication
-
 <!-- end-auto-doc-link -->
 
 ## Running the samples
