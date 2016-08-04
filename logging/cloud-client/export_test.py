@@ -12,31 +12,42 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import random
+import string
+
 import export
 from gcloud import logging
 from gcp.testing import eventually_consistent
 import pytest
 
-TEST_SINK_NAME = 'example_sink'
+TEST_SINK_NAME_TMPL = 'example_sink_{}'
 TEST_SINK_FILTER = 'severity>=CRITICAL'
 
 
-@pytest.fixture
+def _random_id():
+    return ''.join(
+        random.choice(string.ascii_uppercase + string.digits)
+        for _ in range(6))
+
+
+@pytest.yield_fixture
 def example_sink(cloud_config):
     client = logging.Client()
 
     sink = client.sink(
-        TEST_SINK_NAME,
+        TEST_SINK_NAME_TMPL.format(_random_id()),
         TEST_SINK_FILTER,
         'storage.googleapis.com/{bucket}'.format(
             bucket=cloud_config.storage_bucket))
 
-    if sink.exists():
-        sink.delete()
-
     sink.create()
 
-    return sink
+    yield sink
+
+    try:
+        sink.delete()
+    except:
+        pass
 
 
 def test_list(example_sink, capsys):
@@ -48,31 +59,32 @@ def test_list(example_sink, capsys):
 
 
 def test_create(cloud_config, capsys):
-    # Delete the sink if it exists, otherwise the test will fail in conflit.
-    client = logging.Client()
-    sink = client.sink(TEST_SINK_NAME)
-    if sink.exists():
-        sink.delete()
+    sink_name = TEST_SINK_NAME_TMPL.format(_random_id())
 
-    export.create_sink(
-        TEST_SINK_NAME,
-        TEST_SINK_FILTER,
-        'storage.googleapis.com/{bucket}'.format(
-            bucket=cloud_config.storage_bucket))
+    try:
+        export.create_sink(
+            sink_name,
+            cloud_config.storage_bucket,
+            TEST_SINK_FILTER)
+    # Clean-up the temporary sink.
+    finally:
+        try:
+            logging.Client().sink(sink_name).delete()
+        except:
+            pass
 
     out, _ = capsys.readouterr()
-    assert TEST_SINK_NAME in out
-    assert sink.exists()
+    assert sink_name in out
 
 
 def test_update(example_sink, capsys):
     updated_filter = 'severity>=INFO'
-    export.update_sink(TEST_SINK_NAME, updated_filter)
+    export.update_sink(example_sink.name, updated_filter)
 
     example_sink.reload()
     assert example_sink.filter_ == updated_filter
 
 
 def test_delete(example_sink, capsys):
-    export.delete_sink(TEST_SINK_NAME)
+    export.delete_sink(example_sink.name)
     assert not example_sink.exists()
