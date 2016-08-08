@@ -1,0 +1,58 @@
+{
+  "basePath": "/_ah/api",
+  "consumes": [
+    "application/json"
+  ],
+  "definitions": {
+    "MainEcho": {
+      "properties": {
+        "content": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "host": null,
+  "info": {
+    "title": "echo",
+    "version": "v1"
+  },
+  "paths": {
+    "/echo/v1/echo": {
+      "post": {
+        "operationId": "EchoApi_echo",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "200_response",
+            "schema": {
+              "$ref": "#/definitions/MainEcho"
+            }
+          }
+        }
+      }
+    },
+    "/echo/v1/echo/getUserEmail": {
+      "get": {
+        "operationId": "EchoApi_getUserEmail",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "200_response",
+            "schema": {
+              "$ref": "#/definitions/MainEcho"
+            }
+          }
+        }
+      }
+    }
+  },
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "https"
+  ],
+  "swagger": "2.0"
+}
