@@ -24,8 +24,8 @@ from protorpc import remote
 
 # [START messages]
 class Echo(messages.Message):
-    """An echo that stores a message."""
-    message = messages.StringField(1)
+    """A proto Message that contains a simple string field."""
+    content = messages.StringField(1)
 # [END messages]
 
 # [START echo_api]
@@ -41,7 +41,7 @@ class EchoApi(remote.Service):
         http_method='POST',
         name='echo')
     def echo(self, request):
-        return Echo(message=request.message)
+        return Echo(content=request.content)
 
     @endpoints.method(
         # This method takes an empty request body.
@@ -58,7 +58,7 @@ class EchoApi(remote.Service):
         # raise 401 Unauthorized.
         if not user:
           raise endpoints.UnauthorizedException
-        return Echo(message=user.email())
+        return Echo(content=user.email())
 # [END echo_api]
 
 

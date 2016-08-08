@@ -15,40 +15,24 @@
 import endpoints
 import main
 import mock
-import unittest
-from google.appengine.ext import testbed
+import pytest
 from protorpc import message_types
 
-class EchoTestCase(unittest.TestCase):
-    """
-    Test cases for the Echo API.
-    """
 
-    def setUp(self):
-        self.testbed = testbed.Testbed()
-        self.testbed.activate()
+def test_echo():
+    api = main.EchoApi()
+    response = api.echo(main.Echo(content='Hello world!'))
+    assert 'Hello world!' == response.content
 
-    def tearDown(self):
-        self.testbed.deactivate()
+def test_get_user_email():
+    api = main.EchoApi()
 
-    def test_echo(self):
-        api = main.EchoApi()
-        response = api.echo(main.Echo(
-            message='Hello world!'))
-        self.assertEqual('Hello world!', response.message)
+    with mock.patch('main.endpoints.get_current_user') as user_mock:
+        user_mock.return_value = None
+        with pytest.raises(endpoints.UnauthorizedException):
+            api.get_user_email(message_types.VoidMessage())
 
-    def test_get_user_email(self):
-        api = main.EchoApi()
-
-        with mock.patch('main.endpoints.get_current_user') as user_mock:
-            user_mock.return_value = None
-            self.assertRaises(endpoints.UnauthorizedException,
-                              api.get_user_email, message_types.VoidMessage())
-
-            user_mock.return_value = mock.Mock()
-            user_mock.return_value.email.return_value = 'user@example.com'
-            response = api.get_user_email(message_types.VoidMessage())
-            self.assertEqual('user@example.com', response.message)
-
-if __name__ == '__main__':
-    unittest.main()
+        user_mock.return_value = mock.Mock()
+        user_mock.return_value.email.return_value = 'user@example.com'
+        response = api.get_user_email(message_types.VoidMessage())
+        assert 'user@example.com' == response.content

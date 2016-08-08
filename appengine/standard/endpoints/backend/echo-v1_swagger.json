@@ -1,44 +1,45 @@
 {
-  "basePath": "/_ah/api/echo/v1", 
+  "basePath": "/_ah/api",
   "consumes": [
     "application/json"
-  ], 
+  ],
   "definitions": {
     "MainEcho": {
       "properties": {
-        "message": {
+        "content": {
           "type": "string"
         }
-      }, 
+      },
       "type": "object"
     }
-  }, 
+  },
+  "host": null,
   "info": {
-    "title": "echo", 
+    "title": "echo",
     "version": "v1"
-  }, 
+  },
   "paths": {
-    "/echo": {
+    "/echo/v1/echo": {
       "post": {
-        "operationId": "EchoApi_echo", 
-        "parameters": [], 
+        "operationId": "EchoApi_echo",
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "200_response", 
+            "description": "200_response",
             "schema": {
               "$ref": "#/definitions/MainEcho"
             }
           }
         }
       }
-    }, 
-    "/echo/getUserEmail": {
+    },
+    "/echo/v1/echo/getUserEmail": {
       "get": {
-        "operationId": "EchoApi_getUserEmail", 
-        "parameters": [], 
+        "operationId": "EchoApi_getUserEmail",
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "200_response", 
+            "description": "200_response",
             "schema": {
               "$ref": "#/definitions/MainEcho"
             }
@@ -46,19 +47,12 @@
         }
       }
     }
-  }, 
+  },
   "produces": [
     "application/json"
-  ], 
+  ],
   "schemes": [
     "https"
-  ], 
-  "swagger": "2.0", 
-  "securityDefinitions": {
-    "api_key": {
-      "in": "query",
-      "name": "key",
-      "type": "apiKey"
-    }
-  }
+  ],
+  "swagger": "2.0"
 }
