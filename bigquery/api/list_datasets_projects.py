@@ -47,7 +47,6 @@ def list_datasets(bigquery, project):
 # [START list_projects]
 def list_projects(bigquery):
     try:
-        # Start training on a data set
         projects = bigquery.projects()
         list_reply = projects.list().execute()
 
