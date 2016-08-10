@@ -26,7 +26,27 @@ def test_async_query(cloud_config, capsys):
         query_string=query,
         batch=False,
         num_retries=5,
-        interval=1)
+        interval=1,
+        use_legacy_sql=True)
+
+    out, _ = capsys.readouterr()
+    value = out.strip().split('\n').pop()
+
+    assert json.loads(value) is not None
+
+
+def test_async_query_standard_sql(cloud_config, capsys):
+    query = (
+        'SELECT corpus FROM publicdata.samples.shakespeare '
+        'GROUP BY corpus;')
+
+    main(
+        project_id=cloud_config.project,
+        query_string=query,
+        batch=False,
+        num_retries=5,
+        interval=1,
+        use_legacy_sql=False)
 
     out, _ = capsys.readouterr()
     value = out.strip().split('\n').pop()
