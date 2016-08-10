@@ -10,8 +10,8 @@ Flask-SQLAlchemy==2.1
 Flask==0.11.1
 fluent-logger==0.4.3
 funcsigs==1.0.2
-gcloud==0.17.0
-gcloud[grpc]==0.17.0
+gcloud==0.18.1
+gcloud[grpc]==0.18.1
 google-api-python-client==1.5.1
 grpc-google-cloud-speech-v1beta1==1.0.1
 grpcio==1.0.0rc1
