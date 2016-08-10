@@ -15,10 +15,6 @@
 
 """Command-line application to perform an synchronous query in BigQuery.
 
-This sample is used on this page:
-
-    https://cloud.google.com/bigquery/querying-data#syncqueries
-
 For more information, see the README.md under /bigquery.
 """
 
@@ -30,10 +26,15 @@ from oauth2client.client import GoogleCredentials
 
 
 # [START sync_query]
-def sync_query(bigquery, project_id, query, timeout=10000, num_retries=5):
+def sync_query(
+        bigquery, project_id, query,
+        timeout=10000, num_retries=5, use_legacy_sql=False):
     query_data = {
         'query': query,
         'timeoutMs': timeout,
+        # Set to False to use standard SQL syntax. See:
+        # https://cloud.google.com/bigquery/sql-reference/enabling-standard-sql
+        'useLegacySQL': use_legacy_sql
     }
     return bigquery.jobs().query(
         projectId=project_id,
@@ -42,7 +43,7 @@ def sync_query(bigquery, project_id, query, timeout=10000, num_retries=5):
 
 
 # [START run]
-def main(project_id, query, timeout, num_retries):
+def main(project_id, query, timeout, num_retries, use_legacy_sql):
     # [START build_service]
     # Grab the application's default credentials from the environment.
     credentials = GoogleCredentials.get_application_default()
@@ -56,7 +57,8 @@ def main(project_id, query, timeout, num_retries):
         project_id,
         query,
         timeout,
-        num_retries)
+        num_retries,
+        use_legacy_sql)
 
     # [START paging]
     # Page through the result set and print all results.
@@ -96,6 +98,11 @@ if __name__ == '__main__':
         help='Number of times to retry in case of 500 error.',
         type=int,
         default=5)
+    parser.add_argument(
+        '-l', '--use_legacy_sql',
+        help='Use legacy BigQuery SQL syntax instead of standard SQL syntax.',
+        type=bool,
+        default=False)
 
     args = parser.parse_args()
 
@@ -103,6 +110,7 @@ if __name__ == '__main__':
         args.project_id,
         args.query,
         args.timeout,
-        args.num_retries)
+        args.num_retries,
+        args.use_legacy_sql)
 
 # [END main]

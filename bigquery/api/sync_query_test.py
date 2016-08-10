@@ -25,7 +25,26 @@ def test_sync_query(cloud_config, capsys):
         project_id=cloud_config.project,
         query=query,
         timeout=30,
-        num_retries=5)
+        num_retries=5,
+        use_legacy_sql=True)
+
+    out, _ = capsys.readouterr()
+    result = out.split('\n')[0]
+
+    assert json.loads(result) is not None
+
+
+def test_sync_query_standard_sql(cloud_config, capsys):
+    query = (
+        'SELECT corpus FROM publicdata.samples.shakespeare '
+        'GROUP BY corpus;')
+
+    main(
+        project_id=cloud_config.project,
+        query=query,
+        timeout=30,
+        num_retries=5,
+        use_legacy_sql=False)
 
     out, _ = capsys.readouterr()
     result = out.split('\n')[0]
