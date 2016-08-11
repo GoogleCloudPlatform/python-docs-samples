@@ -11,8 +11,8 @@ libraries:
 - name: pycrypto
   version: 2.6
 
-# Endpoints 1.1 uses background threads for caching and reporting to service
-# management and service control.
+# Endpoints Frameworks 2.0 uses background threads for caching and reporting to
+# service management and service control.
 manual_scaling:
   instances: 1
 
