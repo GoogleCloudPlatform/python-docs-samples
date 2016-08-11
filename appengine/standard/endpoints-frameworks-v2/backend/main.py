@@ -31,7 +31,12 @@ class Echo(messages.Message):
 
 
 # [START echo_api]
-@endpoints.api(name='echo', version='v1')
+@endpoints.api(name='echo',
+               version='v1',
+               allowed_client_ids=[
+                   endpoints.API_EXPLORER_CLIENT_ID,
+                   '407408718192.apps.googleusercontent.com'
+               ])
 class EchoApi(remote.Service):
 
     @endpoints.method(

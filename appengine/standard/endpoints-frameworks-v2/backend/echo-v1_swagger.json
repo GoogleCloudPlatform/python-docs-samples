@@ -1,0 +1,76 @@
+{
+  "host": "my-service.appspot.com",
+  "basePath": "/_ah/api",
+  "consumes": [
+    "application/json"
+  ],
+  "definitions": {
+    "MainEcho": {
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "info": {
+    "title": "echo",
+    "version": "v1"
+  },
+  "paths": {
+    "/echo/v1/echo": {
+      "post": {
+        "operationId": "EchoApi_echo",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "200_response",
+            "schema": {
+              "$ref": "#/definitions/MainEcho"
+            }
+          }
+        }
+      }
+    },
+    "/echo/v1/echo/getUserEmail": {
+      "get": {
+        "operationId": "EchoApi_getUserEmail",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "200_response",
+            "schema": {
+              "$ref": "#/definitions/MainEcho"
+            }
+          }
+        }
+      }
+    }
+  },
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "https"
+  ],
+  "swagger": "2.0",
+  "x-security": [
+    {
+      "google_id_token": {
+        "audiences": [
+          "407408718192.apps.googleusercontent.com"
+        ]
+      }
+    }
+  ],
+  "securityDefinitions": {
+    "google_id_token": {
+      "authorizationUrl": "",
+      "flow": "implicit",
+      "type": "oauth2",
+      "x-issuer": "https://accounts.google.com",
+      "x-jwks_uri": "https://www.googleapis.com/oauth2/v1/certs"
+    }
+  }
+}
