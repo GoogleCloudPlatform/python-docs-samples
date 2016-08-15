@@ -55,7 +55,7 @@ class EchoApi(remote.Service):
         # Require auth tokens to have the following scopes to access this API.
         scopes=[endpoints.EMAIL_SCOPE],
         # OAuth2 audiences allowed in incoming tokens.
-        audiences='your-oauth-client-id.com')
+        audiences=['your-oauth-client-id.com'])
     def get_user_email(self, request):
         user = endpoints.get_current_user()
         # If there's no user defined, the request was unauthenticated, so we
