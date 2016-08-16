@@ -62,7 +62,7 @@ def basic_entity(client):
     # [START basic_entity]
     task = datastore.Entity(client.key('Task'))
     task.update({
-        'type': 'Personal',
+        'category': 'Personal',
         'done': False,
         'priority': 4,
         'description': 'Learn Cloud Datastore'
@@ -80,7 +80,7 @@ def entity_with_parent(client):
     task = datastore.Entity(key=key_with_parent)
 
     task.update({
-        'type': 'Personal',
+        'category': 'Personal',
         'done': False,
         'priority': 4,
         'description': 'Learn Cloud Datastore'
@@ -97,7 +97,7 @@ def properties(client):
         key,
         exclude_from_indexes=['description'])
     task.update({
-        'type': 'Personal',
+        'category': 'Personal',
         'description': 'Learn Cloud Datastore',
         'created': datetime.datetime.utcnow(),
         'done': False,
@@ -135,7 +135,7 @@ def upsert(client):
     task = datastore.Entity(key=complete_key)
 
     task.update({
-        'type': 'Personal',
+        'category': 'Personal',
         'done': False,
         'priority': 4,
         'description': 'Learn Cloud Datastore'
@@ -155,7 +155,7 @@ def insert(client):
         task = datastore.Entity(key=incomplete_key)
 
         task.update({
-            'type': 'Personal',
+            'category': 'Personal',
             'done': False,
             'priority': 4,
             'description': 'Learn Cloud Datastore'
@@ -212,7 +212,7 @@ def batch_upsert(client):
     task1 = datastore.Entity(client.key('Task', 1))
 
     task1.update({
-        'type': 'Personal',
+        'category': 'Personal',
         'done': False,
         'priority': 4,
         'description': 'Learn Cloud Datastore'
@@ -221,7 +221,7 @@ def batch_upsert(client):
     task2 = datastore.Entity(client.key('Task', 2))
 
     task2.update({
-        'type': 'Work',
+        'category': 'Work',
         'done': False,
         'priority': 8,
         'description': 'Integrate Cloud Datastore'
@@ -296,7 +296,7 @@ def projection_query(client):
     # Create the entity that we're going to query.
     task = datastore.Entity(client.key('Task'))
     task.update({
-        'type': 'Personal',
+        'category': 'Personal',
         'done': False,
         'priority': 4,
         'description': 'Learn Cloud Datastore',
@@ -325,7 +325,7 @@ def ancestor_query(client):
     task = datastore.Entity(
         client.key('TaskList', 'default', 'Task'))
     task.update({
-        'type': 'Personal',
+        'category': 'Personal',
         'description': 'Learn Cloud Datastore',
     })
     client.put(task)
@@ -477,9 +477,9 @@ def distinct_query(client):
 
     # [START distinct_query]
     query = client.query(kind='Task')
-    query.distinct_on = ['type', 'priority']
-    query.order = ['type', 'priority']
-    query.projection = ['type', 'priority']
+    query.distinct_on = ['category', 'priority']
+    query.order = ['category', 'priority']
+    query.projection = ['category', 'priority']
     # [END distinct_query]
 
     return list(query.fetch())
@@ -491,8 +491,8 @@ def distinct_on_query(client):
 
     # [START distinct_on_query]
     query = client.query(kind='Task')
-    query.distinct_on = ['type']
-    query.order = ['type', 'priority']
+    query.distinct_on = ['category']
+    query.order = ['category', 'priority']
     # [END distinct_on_query]
 
     return list(query.fetch())
