@@ -14,7 +14,7 @@ gcloud==0.18.1
 gcloud[grpc]==0.18.1
 google-api-python-client==1.5.1
 grpc-google-cloud-speech-v1beta1==1.0.1
-grpcio==1.0.0rc1
+grpcio==1.0.0rc2
 gunicorn==19.6.0
 httplib2==0.9.2
 kinto==3.3.2
@@ -36,8 +36,8 @@ pyyaml==3.11
 PyYAML==3.11
 redis==2.10.5
 requests-toolbelt==0.7.0
-requests==2.10.0
-requests[security]==2.10.0
+requests==2.11.0
+requests[security]==2.11.0
 responses==0.5.1
 rsa==3.4.2
 sendgrid==3.1.10
