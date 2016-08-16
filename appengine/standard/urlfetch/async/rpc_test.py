@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+from google.appengine.api import urlfetch
 import mock
 import pytest
 import rpc
 import webtest
-
-from google.appengine.api import urlfetch
 
 
 @pytest.fixture
