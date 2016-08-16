@@ -27,7 +27,7 @@ class UrlFetchRpcHandler(webapp2.RequestHandler):
     def get(self):
         # [START urlfetch-rpc]
         rpc = urlfetch.create_rpc()
-        urlfetch.make_fetch_call(rpc, "http://www.google.com/")
+        urlfetch.make_fetch_call(rpc, 'http://www.google.com/')
 
         # ... do other things ...
         try:
@@ -36,10 +36,12 @@ class UrlFetchRpcHandler(webapp2.RequestHandler):
                 text = result.content
                 self.response.write(text)
             else:
-                self.response.status_code = result.status_code
-                logging.error("Error making RPC request")
+                self.response.status_int = result.status_code
+                self.response.write('URL returned status code {}'.format(
+                    result.status_code))
         except urlfetch.DownloadError:
-            logging.error("Error fetching URL0")
+            self.response.status_int = 500
+            self.response.write('Error fetching URL')
         # [END urlfetch-rpc]
 
 
@@ -52,7 +54,7 @@ class UrlFetchRpcCallbackHandler(webapp2.RequestHandler):
         def handle_result(rpc):
             result = rpc.get_result()
             self.response.write(result.content)
-            logging.info("Handling RPC in callback: result {}".format(result))
+            logging.info('Handling RPC in callback: result {}'.format(result))
 
         urls = ['http://www.google.com',
                 'http://www.github.com',
@@ -71,7 +73,7 @@ class UrlFetchRpcCallbackHandler(webapp2.RequestHandler):
         for rpc in rpcs:
             rpc.wait()
 
-        logging.info("Done waiting for RPCs")
+        logging.info('Done waiting for RPCs')
         # [END urlfetch-rpc-callback]
 
 
