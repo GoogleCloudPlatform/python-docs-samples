@@ -19,7 +19,7 @@ indexes:
   - name: created
 - kind: Task
   properties:
-  - name: type
+  - name: category
   - name: priority
 - kind: Task
   properties:
