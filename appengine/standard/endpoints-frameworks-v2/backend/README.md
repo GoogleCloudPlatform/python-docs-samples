@@ -11,9 +11,12 @@ This sample consists of two parts:
 
 For more info on running Standard applications locally, see [the getting started documentation](https://cloud.google.com/appengine/docs/python/quickstart).
 
-Install the Endpoints Frameworks v2 library into a vendor directory:
+Create a `lib` directory in which to install the Endpoints Frameworks v2 library. For more info, see [Installing a library](https://cloud.google.com/appengine/docs/python/tools/using-libraries-python-27#installing_a_library).
 
-    $ pip install -t lib TODO
+Install the Endpoints Frameworks v2 library:
+
+    $ mkdir lib
+    $ pip install -t lib google-endpoints
 
 Run the application:
 
