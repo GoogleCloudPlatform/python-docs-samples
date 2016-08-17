@@ -13,21 +13,13 @@
 # limitations under the License.
 
 import random
-import re
-import sys
 
 from main import main
 
-import pytest
-
-TABLE_NAME_FORMAT = 'Hello-Bigtable-{}'
+TABLE_NAME_FORMAT = 'hello_happybase-system-tests-{}'
 TABLE_NAME_RANGE = 10000
 
 
-@pytest.mark.skipif(
-    sys.version_info >= (3, 0),
-    reason=("grpc doesn't yet support python3 "
-            'https://github.com/grpc/grpc/issues/282'))
 def test_main(cloud_config, capsys):
     table_name = TABLE_NAME_FORMAT.format(
         random.randrange(TABLE_NAME_RANGE))
@@ -37,12 +29,10 @@ def test_main(cloud_config, capsys):
         table_name)
 
     out, _ = capsys.readouterr()
-    assert re.search(
-        re.compile(r'Creating the Hello-Bigtable-[0-9]+ table\.'), out)
-    assert re.search(re.compile(r'Writing some greetings to the table\.'), out)
-    assert re.search(re.compile(r'Getting a single greeting by row key.'), out)
-    assert re.search(re.compile(r'greeting0: Hello World!'), out)
-    assert re.search(re.compile(r'Scanning for all greetings'), out)
-    assert re.search(re.compile(r'greeting1: Hello Cloud Bigtable!'), out)
-    assert re.search(
-        re.compile(r'Deleting the Hello-Bigtable-[0-9]+ table\.'), out)
+    assert 'Creating the {} table.'.format(table_name) in out
+    assert 'Writing some greetings to the table.' in out
+    assert 'Getting a single greeting by row key.' in out
+    assert 'Hello World!' in out
+    assert 'Scanning for all greetings' in out
+    assert 'Hello Cloud Bigtable!' in out
+    assert 'Deleting the {} table.'.format(table_name) in out
