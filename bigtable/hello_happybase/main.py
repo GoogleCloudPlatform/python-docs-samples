@@ -77,16 +77,16 @@ def main(project_id, instance_id, table_name):
 
         # [START getting_a_row]
         print('Getting a single greeting by row key.')
-        key = 'greeting0'
+        key = 'greeting0'.encode('utf-8')
         row = table.row(key)
-        print('\t{}: {}'.format(key, row[column_name]))
+        print('\t{}: {}'.format(key, row[column_name.encode('utf-8')]))
         # [END getting_a_row]
 
         # [START scanning_all_rows]
         print('Scanning for all greetings:')
 
         for key, row in table.scan():
-            print('\t{}: {}'.format(key, row[column_name]))
+            print('\t{}: {}'.format(key, row[column_name.encode('utf-8')]))
         # [END scanning_all_rows]
 
         # [START deleting_a_table]

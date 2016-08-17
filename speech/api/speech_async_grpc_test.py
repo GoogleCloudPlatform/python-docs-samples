@@ -13,17 +13,12 @@
 
 import argparse
 import re
-import sys
 
 import pytest
 from speech_async_grpc import _gcs_uri
 from speech_async_grpc import main
 
 
-@pytest.mark.skipif(
-        sys.version_info >= (3, 0),
-        reason=("grpc doesn't yet support python3 "
-                'https://github.com/grpc/grpc/issues/282'))
 def test_main(cloud_config, capsys):
     input_uri = 'gs://{}/speech/audio.flac'.format(cloud_config.storage_bucket)
 
