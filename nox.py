@@ -197,7 +197,7 @@ def session_tests(session, interpreter):
         sample_directories = collect_sample_dirs('.')
 
     run_tests_in_sesssion(
-        session, interpreter, sample_directories, skip_flaky=True)
+        session, interpreter, sample_directories)
 
 
 def session_gae(session):
