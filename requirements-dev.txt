@@ -33,7 +33,6 @@ PyMySQL==0.7.6
 pytest-cov==2.3.0
 pytest==2.9.2
 pyyaml==3.11
-PyYAML==3.11
 redis==2.10.5
 requests-toolbelt==0.7.0
 requests==2.11.0
