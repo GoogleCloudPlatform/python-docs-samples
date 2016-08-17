@@ -8,6 +8,6 @@ mysql-python==1.2.5
 PyCrypto==2.6.1
 pytest-cov==2.3.0
 pytest==2.9.2
-PyYAML==3.11
+pyyaml==3.11
 responses==0.5.1
 WebTest==2.0.23
