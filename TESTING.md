@@ -14,6 +14,22 @@ Before you can run tests locally you must have:
 
         $ curl https://sdk.cloud.google.com | bash
 
+## System Dependencies
+
+Running the complete suite may require system dependencies. Most of these should be installable via typical package managers like `apt-get` and [brew](http://brew.sh/).
+
+For example, to install portaudio:
+
+    brew install portaudio
+
+If you have trouble installing a necessary system library, try filing an issue.
+
+### Troubleshooting
+
+#### PortAudio on OS X
+
+See [speech/api/README.md](speech/api/README.md).
+
 ## Preparing a project for testing
 
 Most tests require you to have an active, billing-enabled project on the
