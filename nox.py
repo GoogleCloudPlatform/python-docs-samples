@@ -121,8 +121,11 @@ def filter_samples(sample_dirs, changed_files):
 def setup_appengine(session):
     """Installs the App Engine SDK."""
     # Install the app engine sdk and setup import paths.
+    if session.interpreter.startswith('python3'):
+        return
+
     gae_root = os.environ.get('GAE_ROOT', tempfile.gettempdir())
-    session.env['PYTHONPATH'] = os.path.join(gae_root, 'google_appengine')
+    session.env['GAE_SDK_PATH'] = os.path.join(gae_root, 'google_appengine')
     session.run('gcprepotools', 'download-appengine-sdk', gae_root)
 
     # Create a lib directory to prevent the GAE vendor library from
@@ -132,7 +135,7 @@ def setup_appengine(session):
 
 
 def run_tests_in_sesssion(
-        session, interpreter, sample_directories, use_appengine=False,
+        session, interpreter, sample_directories, use_appengine=True,
         skip_flaky=False, changed_only=False):
     """This is the main function for executing tests.
 
@@ -189,13 +192,12 @@ def session_tests(session, interpreter):
     """Runs tests for all non-gae standard samples."""
     # session.posargs is any leftover arguments from the command line,
     # which allows users to run a particular test instead of all of them.
-    if session.posargs:
-        sample_directories = session.posargs
-    elif sample_directories is None:
-        sample_directories = collect_sample_dirs(
-            '.', set('./appengine/standard'))
+    sample_directories = session.posargs
+    if not sample_directories:
+        sample_directories = collect_sample_dirs('.')
 
-    run_tests_in_sesssion(session, interpreter, sample_directories)
+    run_tests_in_sesssion(
+        session, interpreter, sample_directories, skip_flaky=True)
 
 
 def session_gae(session):
@@ -212,12 +214,12 @@ def session_travis(session, subsession):
         sample_directories = collect_sample_dirs(
             '.', set('./appengine/standard'))
         run_tests_in_sesssion(
-            session, 'python3.4', sample_directories, skip_flaky=True,
-            changed_only=True)
+            session, 'python3.4', sample_directories,
+            skip_flaky=True, changed_only=True)
     else:
         sample_directories = collect_sample_dirs('appengine/standard')
         run_tests_in_sesssion(
-            session, 'python2.7', sample_directories, use_appengine=True,
+            session, 'python2.7', sample_directories,
             skip_flaky=True, changed_only=True)
 
 
