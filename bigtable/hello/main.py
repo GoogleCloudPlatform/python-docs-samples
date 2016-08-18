@@ -70,7 +70,7 @@ def main(project_id, instance_id, table_id):
             row = table.row(row_key)
             row.set_cell(
                 column_family_id,
-                column_id.encode('utf-8'),
+                column_id,
                 value.encode('utf-8'))
             row.commit()
         # [END writing_rows]
@@ -79,7 +79,7 @@ def main(project_id, instance_id, table_id):
         print('Getting a single greeting by row key.')
         key = 'greeting0'
         row = table.read_row(key.encode('utf-8'))
-        value = row.cells[column_family_id][column_id.encode('utf-8')][0].value
+        value = row.cells[column_family_id][column_id][0].value
         print('\t{}: {}'.format(key, value.decode('utf-8')))
         # [END getting_a_row]
 
@@ -90,7 +90,7 @@ def main(project_id, instance_id, table_id):
 
         for row_key, row in partial_rows.rows.items():
             key = row_key.decode('utf-8')
-            cell = row.cells[column_family_id][column_id.encode('utf-8')][0]
+            cell = row.cells[column_family_id][column_id][0]
             value = cell.value.decode('utf-8')
             print('\t{}: {}'.format(key, value))
         # [END scanning_all_rows]
