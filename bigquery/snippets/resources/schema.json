@@ -1,0 +1,1 @@
+[{"type": "STRING", "name": "Name"}, {"type": "INTEGER", "name": "Age"}, {"type": "FLOAT", "name": "Weight"}, {"type": "BOOLEAN", "name": "IsMagic"}]
