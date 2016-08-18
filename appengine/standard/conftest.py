@@ -14,9 +14,6 @@
 
 import os
 
-import six
-
-
 # Import py.test hooks and fixtures for App Engine
 from gcp.testing.appengine import (
     login,
@@ -24,6 +21,7 @@ from gcp.testing.appengine import (
     pytest_runtest_call,
     run_tasks,
     testbed)
+import six
 
 (login)
 (pytest_configure)
@@ -33,7 +31,7 @@ from gcp.testing.appengine import (
 
 
 def pytest_ignore_collect(path, config):
-    """Skip App Engine tests in python 3 and if no SDK is available."""
+    """Skip App Engine tests in python 3 or if no SDK is available."""
     if 'appengine/standard' in str(path):
         if six.PY3:
             return True
