@@ -15,6 +15,7 @@
 from gcloud import logging
 from gcp.testing import eventually_consistent
 import pytest
+
 import snippets
 
 TEST_LOGGER_NAME = 'example_log'
