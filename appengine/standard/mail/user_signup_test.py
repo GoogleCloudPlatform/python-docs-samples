@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import user_signup
 import webtest
+
+import user_signup
 
 
 def test_user_signup(testbed):

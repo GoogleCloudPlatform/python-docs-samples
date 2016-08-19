@@ -14,8 +14,9 @@
 
 """Test classes for code snippet for modeling article."""
 
-import keyproperty_models as models
 import pytest
+
+import keyproperty_models as models
 
 
 def test_models(testbed):

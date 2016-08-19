@@ -49,6 +49,9 @@ COMMON_PYTEST_ARGS = [
 # Libraries that only work on Python 2.7
 PY27_ONLY_LIBRARIES = ['mysql-python']
 
+# Whether we're running on Travis CI
+ON_TRAVIS = os.environ.get('TRAVIS', False)
+
 
 def list_files(folder, pattern):
     """Lists all files below the given folder that match the pattern."""
@@ -136,7 +139,7 @@ def setup_appengine(session):
 
 def run_tests_in_sesssion(
         session, interpreter, sample_directories, use_appengine=True,
-        skip_flaky=False, changed_only=False):
+        skip_flaky=False):
     """This is the main function for executing tests.
 
     It:
@@ -144,13 +147,6 @@ def run_tests_in_sesssion(
     2. Installs the test requirements.
     3. Determines which pytest arguments to use. skip_flaky causes extra
        arguments to be passed that will skip tests marked flaky.
-    4. If posargs are specified, it will use that as the list of samples to
-       test.
-    5. If posargs is not specified, it will gather the list of samples by
-       walking the repository tree.
-    6. If changed_only was specified, it'll use Travis environment variables
-       to figure out which samples should be tested based on which files
-       were changed.
     7. For each sample directory, it runs py.test.
     """
     session.interpreter = interpreter
@@ -164,13 +160,6 @@ def run_tests_in_sesssion(
 
     if skip_flaky:
         pytest_args.append('-m not slow and not flaky')
-
-    if changed_only:
-        changed_files = get_changed_files()
-        sample_directories = filter_samples(
-            sample_directories, changed_files)
-        print('Running tests on a subset of samples: ')
-        print('\n'.join(sample_directories))
 
     for sample in sample_directories:
         # Ignore lib and env directories
@@ -211,28 +200,61 @@ def session_gae(session):
 def session_travis(session, subsession):
     """On travis, just run with python3.4 and don't run slow or flaky tests."""
     if subsession == 'tests':
+        interpreter = 'python3.4'
         sample_directories = collect_sample_dirs(
             '.', set('./appengine/standard'))
-        run_tests_in_sesssion(
-            session, 'python3.4', sample_directories,
-            skip_flaky=True, changed_only=True)
-    else:
+    elif subsession == 'gae':
+        interpreter = 'python2.7'
         sample_directories = collect_sample_dirs('appengine/standard')
-        run_tests_in_sesssion(
-            session, 'python2.7', sample_directories,
-            skip_flaky=True, changed_only=True)
+
+    changed_files = get_changed_files()
+    sample_directories = filter_samples(
+        sample_directories, changed_files)
+
+    if not sample_directories:
+        print('No samples changed.')
+        return
+
+    print('Running tests on a subset of samples: ')
+    print('\n'.join(sample_directories))
+
+    run_tests_in_sesssion(
+        session, interpreter, sample_directories, skip_flaky=True)
 
 
 def session_lint(session):
     """Lints each sample."""
+    sample_directories = session.posargs
+    if not sample_directories:
+        sample_directories = collect_sample_dirs('.')
+
+    # On travis, on lint changed samples.
+    if ON_TRAVIS:
+        changed_files = get_changed_files()
+        sample_directories = filter_samples(
+            sample_directories, changed_files)
+
     session.install('flake8', 'flake8-import-order')
-    session.run(
-        'flake8', '--builtin=gettext', '--max-complexity=15',
-        '--import-order-style=google',
-        '--exclude',
-        'container_engine/django_tutorial/polls/migrations/*,.nox,.cache,env,'
-        'lib',
-        *(session.posargs or ['.']))
+
+    for sample_directory in sample_directories:
+        # Determine local import names
+        local_names = [
+            basename
+            for basename, extension
+            in [os.path.splitext(path) for path
+                in os.listdir(sample_directory)]
+            if extension == '.py' or os.path.isdir(
+                os.path.join(sample_directory, basename))]
+
+        session.run(
+            'flake8',
+            '--show-source',
+            '--builtin', 'gettext',
+            '--max-complexity', '15',
+            '--import-order-style', 'google',
+            '--exclude', '.nox,.cache,env,lib',
+            '--application-import-names', ','.join(local_names),
+            sample_directory)
 
 
 def session_reqcheck(session):

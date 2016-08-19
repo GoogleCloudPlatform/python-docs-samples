@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import migration2
-
 import webtest
+
+import migration2
 
 
 def test_get(testbed):

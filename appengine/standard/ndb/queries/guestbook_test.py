@@ -15,9 +15,10 @@
 import re
 
 from google.appengine.ext import ndb
-import guestbook
 import pytest
 import webtest
+
+import guestbook
 
 
 @pytest.fixture

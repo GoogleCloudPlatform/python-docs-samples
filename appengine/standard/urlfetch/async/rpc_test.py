@@ -16,8 +16,9 @@
 from google.appengine.api import urlfetch
 import mock
 import pytest
-import rpc
 import webtest
+
+import rpc
 
 
 @pytest.fixture

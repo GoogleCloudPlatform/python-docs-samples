@@ -15,8 +15,9 @@
 import datetime
 
 from google.appengine.ext import ndb
-import my_models
 import pytest
+
+import my_models
 import snippets
 
 

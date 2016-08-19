@@ -13,8 +13,9 @@
 
 import re
 
-import installed_app
 from oauth2client.client import GoogleCredentials
+
+import installed_app
 
 
 class Namespace(object):

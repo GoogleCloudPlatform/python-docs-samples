@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import main
 import mock
 from protorpc import message_types
+
+import main
 
 
 def test_list_greetings(testbed):

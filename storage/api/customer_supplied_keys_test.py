@@ -13,8 +13,9 @@
 
 import re
 
-from customer_supplied_keys import main
 from gcp.testing.flaky import flaky
+
+from customer_supplied_keys import main
 
 
 @flaky

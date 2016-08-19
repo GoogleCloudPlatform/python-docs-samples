@@ -13,10 +13,11 @@
 # limitations under the License.
 
 import endpoints
-import main
 import mock
 from protorpc import message_types
 import pytest
+
+import main
 
 
 def test_echo():

@@ -14,10 +14,11 @@
 
 from googleapiclient.http import HttpMockSequence
 import httplib2
-import main
 import mock
 import pytest
 import webtest
+
+import main
 
 
 class HttpMockSequenceWithCredentials(HttpMockSequence):
