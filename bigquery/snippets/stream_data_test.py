@@ -18,7 +18,7 @@ DATASET_ID = 'test_dataset'
 TABLE_ID = 'test_import_table'
 
 
-def test_stream_data(resource, capsys):
+def test_stream_data(capsys):
     stream_data.stream_data(
         DATASET_ID,
         TABLE_ID,
