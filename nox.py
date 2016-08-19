@@ -113,7 +113,7 @@ def get_changed_files():
 
             changed = subprocess.check_output(
                 ['git', 'diff', '--name-only',
-                    os.environ.get('TRAVIS_COMMIT'),
+                    git_head,
                     os.environ.get('TRAVIS_BRANCH')])
     else:
         changed = ''
