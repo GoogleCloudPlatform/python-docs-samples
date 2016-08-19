@@ -15,9 +15,10 @@
 import base64
 import tempfile
 
-import encryption
 from gcloud import storage
 import pytest
+
+import encryption
 
 TEST_ENCRYPTION_KEY = 'brtJUWneL92g5q0N2gyDSnlPSYAiIVZ/cWgjyZNeMy0='
 TEST_ENCRYPTION_KEY_DECODED = base64.b64decode(TEST_ENCRYPTION_KEY)

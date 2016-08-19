@@ -23,6 +23,7 @@ for this test, but it could be changed to a different project.
 import re
 
 from gcp.testing.flaky import flaky
+
 import list_resources
 
 METRIC = 'compute.googleapis.com/instance/cpu/usage_time'

@@ -13,9 +13,10 @@
 
 import os
 
-import generate_wrapped_rsa_key
 from googleapiclient import discovery
 from oauth2client.client import GoogleCredentials
+
+import generate_wrapped_rsa_key
 
 
 def test_main():

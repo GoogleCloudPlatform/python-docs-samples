@@ -16,8 +16,9 @@ Creates a Dataproc cluster, uploads a pyspark file to Google Cloud Storage,
 submits a job to Dataproc that runs the pyspark file, then downloads
 the output logs from Cloud Storage and verifies the expected output."""
 
-import create_cluster_and_submit_job
 from gcp.testing.flaky import flaky
+
+import create_cluster_and_submit_job
 
 CLUSTER_NAME = 'testcluster2'
 ZONE = 'us-central1-b'
