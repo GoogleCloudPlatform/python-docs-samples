@@ -219,8 +219,7 @@ def session_travis(session, subsession):
     print('\n'.join(sample_directories))
 
     run_tests_in_sesssion(
-        session, interpreter, sample_directories,
-        skip_flaky=True, changed_only=True)
+        session, interpreter, sample_directories, skip_flaky=True)
 
 
 def session_lint(session):
