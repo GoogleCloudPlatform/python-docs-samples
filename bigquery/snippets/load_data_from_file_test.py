@@ -11,8 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import load_data_from_file
 import pytest
+
+import load_data_from_file
 
 DATASET_ID = 'test_dataset'
 TABLE_ID = 'test_import_table'

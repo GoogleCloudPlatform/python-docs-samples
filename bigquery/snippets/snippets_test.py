@@ -14,6 +14,7 @@
 
 from gcloud import bigquery
 import pytest
+
 import snippets
 
 
