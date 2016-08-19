@@ -96,11 +96,25 @@ def get_changed_files():
         changed = subprocess.check_output(
             ['git', 'show', '--pretty=format:', '--name-only',
                 os.environ.get('TRAVIS_COMMIT')])
+
     elif pr is not None:
-        changed = subprocess.check_output(
-            ['git', 'diff', '--name-only',
-                os.environ.get('TRAVIS_COMMIT'),
-                os.environ.get('TRAVIS_BRANCH')])
+        try:
+            changed = subprocess.check_output(
+                ['git', 'diff', '--name-only',
+                    os.environ.get('TRAVIS_COMMIT'),
+                    os.environ.get('TRAVIS_BRANCH')])
+
+        except subprocess.CalledProcessError:
+            # Fallback to git head.
+            git_head = subprocess.check_output(
+                ['git', 'rev-parse', 'HEAD']).strip()
+
+            print('Falling back to HEAD: {}'.format(git_head))
+
+            changed = subprocess.check_output(
+                ['git', 'diff', '--name-only',
+                    os.environ.get('TRAVIS_COMMIT'),
+                    os.environ.get('TRAVIS_BRANCH')])
     else:
         changed = ''
         print('Uh... where are we?')
