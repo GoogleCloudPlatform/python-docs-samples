@@ -14,8 +14,9 @@
 
 import json
 
-import main
 import six
+
+import main
 
 
 def test_get_request_body():
