@@ -66,6 +66,7 @@ def list_tables(dataset_name, project=None):
 
     if not dataset.exists():
         print('Dataset {} does not exist.'.format(dataset_name))
+        return
 
     tables = []
     page_token = None
@@ -95,6 +96,7 @@ def list_rows(dataset_name, table_name, project=None):
 
     if not table.exists():
         print('Table {}:{} does not exist.'.format(dataset_name, table_name))
+        return
 
     # Reload the table so that the schema is available.
     table.reload()
