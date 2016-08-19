@@ -13,8 +13,9 @@
 
 import re
 
-from create_instance import main
 from gcp.testing.flaky import flaky
+
+from create_instance import main
 
 
 @flaky

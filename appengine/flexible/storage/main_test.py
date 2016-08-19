@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import main
 import pytest
 import requests
 from six import BytesIO
+
+import main
 
 
 @pytest.fixture

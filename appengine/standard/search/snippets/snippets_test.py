@@ -15,6 +15,7 @@
 
 from google.appengine.api import search
 import pytest
+
 import snippets
 
 

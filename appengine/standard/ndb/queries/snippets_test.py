@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from guestbook import Greeting
+
 import snippets
 from snippets_models import (Account, Address, Article,
                              Bar, Contact, FlexEmployee, Message)

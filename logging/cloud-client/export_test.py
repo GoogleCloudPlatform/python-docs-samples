@@ -15,10 +15,11 @@
 import random
 import string
 
-import export
 from gcloud import logging
 from gcp.testing import eventually_consistent
 import pytest
+
+import export
 
 TEST_SINK_NAME_TMPL = 'example_sink_{}'
 TEST_SINK_FILTER = 'severity>=CRITICAL'

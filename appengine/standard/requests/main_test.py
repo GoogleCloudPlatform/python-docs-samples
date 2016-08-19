@@ -15,9 +15,10 @@
 import os
 
 from google.appengine.runtime import DeadlineExceededError
-import main
 import mock
 import webtest
+
+import main
 
 
 def test_timer(testbed):

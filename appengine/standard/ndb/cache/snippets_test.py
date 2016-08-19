@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from google.appengine.ext import ndb
+
 import snippets
 
 

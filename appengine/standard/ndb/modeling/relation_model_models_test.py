@@ -15,6 +15,7 @@
 """Test classes for code snippet for modeling article."""
 
 from google.appengine.ext import ndb
+
 import relation_model_models as models
 
 

@@ -15,6 +15,7 @@ import argparse
 import re
 
 import pytest
+
 from speech_async_grpc import _gcs_uri
 from speech_async_grpc import main
 
