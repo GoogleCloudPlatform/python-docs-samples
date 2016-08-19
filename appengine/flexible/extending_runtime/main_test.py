@@ -14,8 +14,9 @@
 
 import os
 
-import main
 import pytest
+
+import main
 
 
 @pytest.mark.skipif(

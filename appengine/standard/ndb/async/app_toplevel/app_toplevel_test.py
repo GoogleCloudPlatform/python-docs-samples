@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import app_toplevel
 import pytest
 import webtest
+
+import app_toplevel
 
 
 @pytest.fixture

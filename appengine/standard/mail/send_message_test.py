@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import send_message
 import webtest
+
+import send_message
 
 
 def test_send_message(testbed):

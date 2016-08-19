@@ -14,6 +14,7 @@
 import re
 
 import pytest
+
 from speech_grpc import _gcs_uri
 from speech_grpc import main
 

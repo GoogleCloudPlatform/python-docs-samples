@@ -23,10 +23,11 @@ for this test, but it could be changed to a different project.
 import random
 import time
 
-from custom_metric import create_custom_metric, get_custom_metric
-from custom_metric import read_timeseries, write_timeseries_value
 from gcp.testing import eventually_consistent
 from gcp.testing.flaky import flaky
+
+from custom_metric import create_custom_metric, get_custom_metric
+from custom_metric import read_timeseries, write_timeseries_value
 import list_resources
 
 """ Custom metric domain for all custom metrics"""

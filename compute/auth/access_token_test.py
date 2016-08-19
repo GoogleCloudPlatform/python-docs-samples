@@ -11,8 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import access_token
 import mock
+
+import access_token
 
 
 @mock.patch('access_token.requests')

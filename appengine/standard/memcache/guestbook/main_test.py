@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import webtest
 
 import main
-import webtest
 
 
 def test_app(testbed):

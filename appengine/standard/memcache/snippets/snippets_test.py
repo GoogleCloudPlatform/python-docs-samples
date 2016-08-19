@@ -14,7 +14,9 @@
 
 from google.appengine.api import memcache
 from mock import patch
+
 import snippets
+
 
 SNIPPET_VALUES = {
     "weather_USA_98105": "raining",

@@ -11,8 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from blog import main
 from gcp.testing.flaky import flaky
+
+from blog import main
 
 
 @flaky
