@@ -6,5 +6,5 @@ pyasn1-modules==0.0.8
 rsa==3.4.2
 simplejson==3.8.2
 six==1.10.0
-uritemplate==0.6
+uritemplate==2.0.0rc1
 wheel==0.29.0
