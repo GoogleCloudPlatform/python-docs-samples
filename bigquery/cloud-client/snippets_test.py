@@ -40,7 +40,7 @@ def test_list_datasets(capsys):
 
 
 def test_list_tables(capsys):
-    # Requires teh dataset and table to have been created in the test project.
+    # Requires the dataset and table to have been created in the test project.
     snippets.list_tables(DATASET_ID)
 
     out, _ = capsys.readouterr()
