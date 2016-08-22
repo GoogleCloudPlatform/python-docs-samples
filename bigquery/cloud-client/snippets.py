@@ -104,6 +104,9 @@ def list_rows(dataset_name, table_name, project=None):
     rows = []
     page_token = None
 
+    # Load at most 25 results. You can change this to `while True` and change
+    # the max_results argument to load more rows from BigQuery, but note
+    # that this can take some time. It's preferred to use a query.
     while len(rows) < 25:
         results, total_rows, page_token = table.fetch_data(
             max_results=25, page_token=page_token)
