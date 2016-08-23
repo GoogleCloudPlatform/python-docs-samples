@@ -17,7 +17,7 @@ grpc-google-cloud-speech-v1beta1==1.0.1
 grpcio==1.0.0
 gunicorn==19.6.0
 httplib2==0.9.2
-kinto==4.0.0
+kinto==4.1.0
 mailjet-rest==v1.2.2
 mock==2.0.0
 mysql-python==1.2.5; python_version == '2.7'
