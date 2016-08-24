@@ -16,7 +16,6 @@ import logging
 import os
 
 from flask import Flask
-from scipy.misc import imread
 import scipy.misc
 
 app = Flask(__name__)
@@ -28,7 +27,7 @@ def resize():
     """Demonstrates using scipy to resize an image."""
     app_path = os.path.dirname(os.path.realpath(__file__))
     image_path = os.path.join(app_path, 'assets/google_logo.jpg')
-    img = imread(image_path)
+    img = scipy.misc.imread(image_path)
     img_tinted = scipy.misc.imresize(img, (300, 300))
     output_image_path = os.path.join(
         app_path, 'assets/resized_google_logo.jpg')
