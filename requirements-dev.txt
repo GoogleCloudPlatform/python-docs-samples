@@ -44,6 +44,6 @@ sendgrid==3.2.10
 simplejson==3.8.2
 six==1.10.0
 twilio==6.3.dev0
-uritemplate==2.0.0rc1
+uritemplate==2.0.0rc2
 WebTest==2.0.23
 wheel==0.29.0
