@@ -280,7 +280,10 @@ def session_reqcheck(session):
     else:
         command = 'check-requirements'
 
-    for reqfile in list_files('.', 'requirements*.txt'):
+    reqfiles = list(list_files('.', 'requirements*.txt'))
+    reqfiles.append('requirements-dev.in')
+
+    for reqfile in reqfiles:
         session.run('gcprepotools', command, reqfile)
 
 

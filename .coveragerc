@@ -1,19 +1,21 @@
 [run]
 include =
     appengine/*
-    bigtable/*
     bigquery/*
+    bigtable/*
     blog/*
-    logging/*
     compute/*
-    dns/*
     datastore/*
+    dataproc/*
+    dns/*
     error_reporting/*
     language/*
-    managed_vms/*
+    logging/*
     monitoring/*
+    pubsub/*
     speech/*
     storage/*
+    vision/*
 [report]
 exclude_lines =
     pragma: NO COVER
