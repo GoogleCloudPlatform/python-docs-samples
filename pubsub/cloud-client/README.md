@@ -13,4 +13,5 @@ Use the [Cloud SDK](https://cloud.google.com/sdk) to provide authentication:
 
 Run the samples:
 
-    TODO
+    python publisher.py -h
+    python subscriber.py -h
