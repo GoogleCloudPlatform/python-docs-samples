@@ -40,6 +40,7 @@ requests==2.11.1
 requests[security]==2.11.1
 responses==0.5.1
 rsa==3.4.2
+scipy==0.18.0
 sendgrid==3.2.10
 simplejson==3.8.2
 six==1.10.0
