@@ -141,7 +141,7 @@ class TestDatastoreSnippets:
             page_one, cursor_one, page_two, cursor_two = results
 
             assert len(page_one) == 5
-            assert len(page_two) == 1
+            assert len(page_two)
             assert cursor_one
             assert cursor_two
 
