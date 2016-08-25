@@ -1,3 +1,4 @@
+#[START_EXCLUDE]
 # Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#[END_EXCLUDE]
 
 """This is a sample Hello World API implemented using Google Cloud
 Endpoints."""
