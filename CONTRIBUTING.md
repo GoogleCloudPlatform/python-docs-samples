@@ -33,7 +33,8 @@ be able to accept your pull requests.
 
 ## Style
 
-Samples in this repository follow the [Google Python Style
+Samples in this repository follow [PEP
+8](https://www.python.org/dev/peps/pep-0008/) and the [Google Python Style
 Guide](https://google.github.io/styleguide/pyguide.html). This is enforced using
 the [flake8](https://pypi.python.org/pypi/flake8) tool.
 
