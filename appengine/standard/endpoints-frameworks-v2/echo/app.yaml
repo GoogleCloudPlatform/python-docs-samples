@@ -2,6 +2,7 @@ runtime: python27
 threadsafe: true
 api_version: 1
 
+#[START_EXCLUDE]
 skip_files:
 - ^(.*/)?#.*#$
 - ^(.*/)?.*~$
@@ -9,6 +10,7 @@ skip_files:
 - ^(.*/)?.*/RCS/.*$
 - ^(.*/)?\..*$
 - ^lib/setuptools/script \(dev\).tmpl$
+#[END_EXCLUDE]
 
 handlers:
 # The endpoints handler must be mapped to /_ah/api.
