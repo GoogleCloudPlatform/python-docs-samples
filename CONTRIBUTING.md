@@ -27,12 +27,23 @@ be able to accept your pull requests.
    Contributor License Agreement (see details above).
 1. Fork the desired repo, develop and test your code changes.
 1. Ensure that your code adheres to the existing style in the sample to which
-   you are contributing. Refer to the
-   [Google Cloud Platform Samples Style Guide]
-   (https://github.com/GoogleCloudPlatform/Template/wiki/style.html) for the
-   recommended coding standards for this organization.
+   you are contributing.
 1. Ensure that your code has an appropriate set of unit tests which all pass.
 1. Submit a pull request.
+
+## Style
+
+Samples in this repository follow [PEP
+8](https://www.python.org/dev/peps/pep-0008/) and the [Google Python Style
+Guide](https://google.github.io/styleguide/pyguide.html). This is enforced using
+the [flake8](https://pypi.python.org/pypi/flake8) tool.
+
+To use the same flake8 configuration as is used in the automated test suite,
+install [nox](https://nox.readthedocs.io/en/latest/) and run
+
+```shell
+nox -s lint -- path/to/sample
+```
 
 ## Testing
 
