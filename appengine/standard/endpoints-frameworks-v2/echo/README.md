@@ -2,11 +2,6 @@
 
 This demonstrates how to use Google Cloud Endpoints Frameworks v2 on Google App Engine Standard Environment using Python.
 
-This sample consists of two parts:
-
-1. The backend
-2. The clients
-
 ## Setup
 
 Create a `lib` directory in which to install the Endpoints Frameworks v2 library. For more info, see [Installing a library](https://cloud.google.com/appengine/docs/python/tools/using-libraries-python-27#installing_a_library).
