@@ -22,3 +22,9 @@ libraries:
   version: 2.6
 - name: ssl
   version: 2.7.11
+
+env_variables:
+  # Replace with your endpoints service name.
+  ENDPOINTS_SERVICE_NAME: your-service.appspot.com
+  # Replace with the version Id of your uploaded Endpoints service.
+  ENDPOINTS_SERVICE_VERSION: 2016-08-01r0
