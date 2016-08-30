@@ -5,4 +5,4 @@ gcloud==0.18.1
 six==1.10.0
 pyyaml==3.12
 requests==2.11.1
-google-api-python-client==1.5.2
+google-api-python-client==1.5.3
