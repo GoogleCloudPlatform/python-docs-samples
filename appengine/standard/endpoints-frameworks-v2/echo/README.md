@@ -23,7 +23,7 @@ In your web browser, go to the following address: http://localhost:8080/\_ah/api
 
 ## Deploying to Google App Engine
 
-Generate a swagger file by running: `endpointscfg.py get_swagger_spec main.EchoApi --hostname your-service.appspot.com`
+Generate a swagger file by running: `python lib/endpoints/endpointscfg.py get_swagger_spec main.EchoApi --hostname your-service.appspot.com`
 
 To set up OAuth2, replace `your-oauth-client-id.com` under the `x-security` section in `echo-v1_swagger.json` with your OAuth2 client ID. If you want to use Google OAuth2 Playground, use `407408718192.apps.googleusercontent.com` as your audience. To generate a JWT, go to the following address: `https://developers.google.com/oauthplayground`.
 
