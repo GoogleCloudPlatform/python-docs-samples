@@ -1,0 +1,29 @@
+body {
+  font-family: "helvetica", sans-serif;
+  text-align: center;
+}
+
+form {
+  padding: 5px 0 10px;
+  margin-bottom: 30px;
+}
+h3,legend {
+  font-weight: 400;
+  padding: 18px 0 15px;
+  margin: 0 0 0;
+}
+
+div.form-group {
+   margin-bottom: 10px;
+}
+
+input, textarea {
+  width: 250px;
+  font-size: 14px;
+  padding: 6px;
+}
+
+textarea {
+  vertical-align: top;
+  height: 75px;
+}

@@ -1,0 +1,17 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+service: backend
+
+handlers:
+- url: /.*
+  script: main.app
+
+libraries:
+- name: ssl
+  version: 2.7.11
+- name: pycrypto
+  version: 2.6
+
+env_variables:
+  FIREBASE_PROJECT_ID: '<PROJECT_ID>'
