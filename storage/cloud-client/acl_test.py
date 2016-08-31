@@ -48,87 +48,87 @@ def test_blob(cloud_config):
     acl.save()
 
 
-def test_get_bucket_acl(cloud_config, capsys):
-    acl.get_bucket_acl(cloud_config.storage_bucket)
+def test_print_bucket_acl(cloud_config, capsys):
+    acl.print_bucket_acl(cloud_config.storage_bucket)
     out, _ = capsys.readouterr()
     assert out
 
 
-def test_get_bucket_acl_for_user(test_bucket, cloud_config, capsys):
+def test_print_bucket_acl_for_user(test_bucket, cloud_config, capsys):
     test_bucket.acl.user(TEST_EMAIL).grant_owner()
     test_bucket.acl.save()
 
-    acl.get_bucket_acl_for_user(cloud_config.storage_bucket, TEST_EMAIL)
+    acl.print_bucket_acl_for_user(cloud_config.storage_bucket, TEST_EMAIL)
 
     out, _ = capsys.readouterr()
     assert 'OWNER' in out
 
 
-def test_set_bucket_acl(test_bucket, cloud_config):
-    acl.set_bucket_acl(cloud_config.storage_bucket, TEST_EMAIL)
+def test_add_bucket_owner(test_bucket, cloud_config):
+    acl.add_bucket_owner(cloud_config.storage_bucket, TEST_EMAIL)
 
     test_bucket.acl.reload()
     assert 'OWNER' in test_bucket.acl.user(TEST_EMAIL).get_roles()
 
 
-def test_remove_bucket_acl(test_bucket, cloud_config):
+def test_remove_bucket_owner(test_bucket, cloud_config):
     test_bucket.acl.user(TEST_EMAIL).grant_owner()
     test_bucket.acl.save()
 
-    acl.remove_bucket_acl(cloud_config.storage_bucket, TEST_EMAIL)
+    acl.remove_bucket_owner(cloud_config.storage_bucket, TEST_EMAIL)
 
     test_bucket.acl.reload()
     assert 'OWNER' not in test_bucket.acl.user(TEST_EMAIL).get_roles()
 
 
-def test_set_bucket_default_acl(test_bucket, cloud_config):
-    acl.set_bucket_default_acl(cloud_config.storage_bucket, TEST_EMAIL)
+def test_add_bucket_default_owner(test_bucket, cloud_config):
+    acl.add_bucket_default_owner(cloud_config.storage_bucket, TEST_EMAIL)
 
     test_bucket.default_object_acl.reload()
     roles = test_bucket.default_object_acl.user(TEST_EMAIL).get_roles()
     assert 'OWNER' in roles
 
 
-def test_remove_bucket_default_acl(test_bucket, cloud_config):
+def test_remove_bucket_default_owner(test_bucket, cloud_config):
     test_bucket.acl.user(TEST_EMAIL).grant_owner()
     test_bucket.acl.save()
 
-    acl.remove_bucket_default_acl(cloud_config.storage_bucket, TEST_EMAIL)
+    acl.remove_bucket_default_owner(cloud_config.storage_bucket, TEST_EMAIL)
 
     test_bucket.default_object_acl.reload()
     roles = test_bucket.default_object_acl.user(TEST_EMAIL).get_roles()
     assert 'OWNER' not in roles
 
 
-def test_get_blob_acl(test_blob, cloud_config, capsys):
-    acl.get_blob_acl(cloud_config.storage_bucket, test_blob.name)
+def test_print_blob_acl(test_blob, cloud_config, capsys):
+    acl.print_blob_acl(cloud_config.storage_bucket, test_blob.name)
     out, _ = capsys.readouterr()
     assert out
 
 
-def test_get_blob_acl_for_user(test_blob, cloud_config, capsys):
+def test_print_blob_acl_for_user(test_blob, cloud_config, capsys):
     test_blob.acl.user(TEST_EMAIL).grant_owner()
     test_blob.acl.save()
 
-    acl.get_blob_acl_for_user(
+    acl.print_blob_acl_for_user(
         cloud_config.storage_bucket, test_blob.name, TEST_EMAIL)
 
     out, _ = capsys.readouterr()
     assert 'OWNER' in out
 
 
-def test_set_blob_acl(test_blob, cloud_config):
-    acl.set_blob_acl(cloud_config.storage_bucket, test_blob.name, TEST_EMAIL)
+def test_add_blob_owner(test_blob, cloud_config):
+    acl.add_blob_owner(cloud_config.storage_bucket, test_blob.name, TEST_EMAIL)
 
     test_blob.acl.reload()
     assert 'OWNER' in test_blob.acl.user(TEST_EMAIL).get_roles()
 
 
-def test_remove_blob_acl(test_blob, cloud_config):
+def test_remove_blob_owner(test_blob, cloud_config):
     test_blob.acl.user(TEST_EMAIL).grant_owner()
     test_blob.acl.save()
 
-    acl.remove_blob_acl(
+    acl.remove_blob_owner(
         cloud_config.storage_bucket, test_blob.name, TEST_EMAIL)
 
     test_blob.acl.reload()
