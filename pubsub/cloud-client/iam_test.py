@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from gcloud import pubsub
-from gcp.testing import eventually_consistent
 import pytest
 
 import iam
