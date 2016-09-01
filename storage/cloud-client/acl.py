@@ -221,7 +221,8 @@ if __name__ == '__main__':
     add_bucket_default_owner_parser.add_argument('user_email')
 
     remove_bucket_default_owner_parser = subparsers.add_parser(
-        'remove-bucket-default-owner', help=remove_bucket_default_owner.__doc__)
+        'remove-bucket-default-owner',
+        help=remove_bucket_default_owner.__doc__)
     remove_bucket_default_owner_parser.add_argument('bucket_name')
     remove_bucket_default_owner_parser.add_argument('user_email')
 
