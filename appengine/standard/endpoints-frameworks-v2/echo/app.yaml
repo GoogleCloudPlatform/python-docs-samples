@@ -9,7 +9,7 @@ skip_files:
 - ^(.*/)?.*\.py[co]$
 - ^(.*/)?.*/RCS/.*$
 - ^(.*/)?\..*$
-- ^lib/setuptools/script \(dev\).tmpl$
+- ^(.*/)?setuptools/script \(dev\).tmpl$
 #[END_EXCLUDE]
 
 handlers:
