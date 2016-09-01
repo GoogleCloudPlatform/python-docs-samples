@@ -55,7 +55,7 @@ With the project deployed, you'll need to create an API key to access the API.
 
 With the API key, you can use the echo client to access the API:
 
-    $ python clients/echo-client.py https://YOUR-PROJECT-ID.appspot.com YOUR-API-KEY
+    $ python clients/echo-client.py https://YOUR-PROJECT-ID.appspot.com YOUR-API-KEY helloworld
 
 ### Using the JWT client (with key file)
 
