@@ -120,8 +120,6 @@ def write_timeseries_value(client, project_resource,
                 'zone': 'us-central1-f'
             }
         },
-        "metricKind": metric_kind,
-        "valueType": "INT64",
         "points": [
             {
                 "interval": {

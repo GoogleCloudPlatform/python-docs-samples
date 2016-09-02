@@ -14,10 +14,7 @@
 import contextlib
 import io
 import re
-import sys
 import time
-
-import pytest
 
 import speech_streaming
 
@@ -57,10 +54,6 @@ def mock_audio_stream(filename):
     return mock_audio_stream
 
 
-@pytest.mark.skipif(
-        sys.version_info >= (3, 0),
-        reason=("grpc doesn't yet support python3 "
-                'https://github.com/grpc/grpc/issues/282'))
 def test_main(resource, monkeypatch, capsys):
     monkeypatch.setattr(
         speech_streaming, 'record_audio',

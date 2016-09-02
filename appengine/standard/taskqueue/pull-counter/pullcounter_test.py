@@ -15,9 +15,10 @@
 import os
 
 from google.appengine.ext import testbed as gaetestbed
-import main
 import mock
 import webtest
+
+import main
 
 
 def test_app(testbed):

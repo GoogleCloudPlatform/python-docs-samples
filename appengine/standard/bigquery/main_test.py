@@ -15,10 +15,11 @@
 import re
 
 from googleapiclient.http import HttpMock
-import main
 import mock
 import pytest
 import webtest
+
+import main
 
 
 @pytest.fixture

@@ -1,0 +1,12 @@
+beautifulsoup4==4.5.1
+coverage==4.2
+flaky==3.3.0
+funcsigs==1.0.2
+mock==2.0.0
+mysql-python==1.2.5
+PyCrypto==2.6.1
+pytest-cov==2.3.1
+pytest==3.0.2
+pyyaml==3.12
+responses==0.5.1
+WebTest==2.0.23

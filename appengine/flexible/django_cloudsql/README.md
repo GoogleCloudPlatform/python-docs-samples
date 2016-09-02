@@ -100,6 +100,21 @@ which deploys to version 1, and `promote` makes version 1 the default version.
 
 Now you can view the admin panel of your deployed site at https://<your-app-id>.appspot.com/admin.
 
+### Production
+
+Once you are ready to serve your content in production, there are several
+changes required for the configuration. Most notable changes are: 
+* Add ".appspot.com" to your `ALLOWED_HOSTS`
+* Change the `DEBUG` variable to `False` in your settings.py file.
+* If you are using a Cloud SQL database
+instance, in order to change from `DEBUG = True`
+to `DEBUG = False` you will need to properly configure the database. See
+instructions
+[here](https://cloud.google.com/sql/docs/app-engine-connect#gaev2-csqlv2) and be
+sure to change your `app.yaml` file as well as the `HOST` key in your
+`DATABASES` object.
+ 
+
 ## Contributing changes
 
 * See [CONTRIBUTING.md](CONTRIBUTING.md)

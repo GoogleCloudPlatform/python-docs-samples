@@ -11,8 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from export_data_to_cloud_storage import main
 from gcp.testing.flaky import flaky
+
+from export_data_to_cloud_storage import main
 
 DATASET_ID = 'test_dataset'
 TABLE_ID = 'test_table'

@@ -80,6 +80,20 @@ The sample uses the [PyAudio][pyaudio] library to stream audio from your compute
 [home-page]: https://github.com/GoogleCloudPlatform/python-docs-samples
 [virtualenv]: https://virtualenv.pypa.io/en/stable/installation/
 
+### Troubleshooting
+
+#### PortAudio on OS X
+
+If you see the error
+    
+    fatal error: 'portaudio.h' file not found
+
+Try adding the following to your ~/.pydistutils.cfg file,
+substituting in your appropriate brew Cellar directory:
+
+    include_dirs=/usr/local/Cellar/portaudio/19.20140130/include/
+    library_dirs=/usr/local/YourUsername/homebrew/Cellar/portaudio/19.20140130/lib/
+
 ## Run the example
 
 * To run the `speech_rest.py` sample:

@@ -15,9 +15,10 @@
 import os
 import re
 
-import main
 import pytest
 import webtest
+
+import main
 
 
 @pytest.mark.skipif(
