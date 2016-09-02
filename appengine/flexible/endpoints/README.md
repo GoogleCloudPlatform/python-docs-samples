@@ -14,22 +14,25 @@ This sample consists of two parts:
 For more info on running Flexible applications locally, see [the getting started documentation](https://cloud.google.com/python/getting-started/hello-world).
 
 Install all the dependencies:
-
-    $ virtualenv env
-    $ source env/bin/activate
-    $ pip install -r requirements.txt
+```bash
+$ virtualenv env
+$ source env/bin/activate
+$ pip install -r requirements.txt
+```
 
 Run the application:
-
-    $ python main.py
+```bash
+$ python main.py
+```
 
 In your web browser, go to the following address: http://localhost:8080.
 
 ### Using the echo client
 
 With the app running locally, you can execute the simple echo client using:
-
-    $ python clients/echo-client.py http://localhost:8080 APIKEY helloworld
+```bash
+$ python clients/echo-client.py http://localhost:8080 APIKEY helloworld
+```
 
 The `APIKEY` doesn't matter as the endpoint proxy is not running to do authentication.
 
@@ -39,8 +42,9 @@ Open the `swagger.yaml` file and in the `host` property, replace
 `YOUR-PROJECT-ID` with your project's ID.
 
 Then, deploy the sample using `gcloud`:
-
-    gcloud beta app deploy
+```bash
+$ gcloud beta app deploy
+```
 
 Once deployed, you can access the application at https://YOUR-PROJECT-ID.appspot.com/.
 
@@ -54,8 +58,9 @@ With the project deployed, you'll need to create an API key to access the API.
 4. Choose 'Server Key'
 
 With the API key, you can use the echo client to access the API:
-
-    $ python clients/echo-client.py https://YOUR-PROJECT-ID.appspot.com YOUR-API-KEY helloworld
+```bash
+$ python clients/echo-client.py https://YOUR-PROJECT-ID.appspot.com YOUR-API-KEY helloworld
+```
 
 ### Using the JWT client (with key file)
 
@@ -73,8 +78,9 @@ To use the service account for authentication:
 2. Redeploy your application.
 
 Now you can use the JWT client to make requests to the API:
-
-    $ python clients/google-jwt-client.py https://YOUR-PROJECT-ID.appspot.com YOUR-API-KEY /path/to/service-account.json
+```bash
+$ python clients/google-jwt-client.py https://YOUR-PROJECT-ID.appspot.com YOUR-API-KEY /path/to/service-account.json
+```
 
 ### Using the ID Token client (with key file)
 
@@ -91,8 +97,9 @@ To use the client ID for authentication:
 2. Redeploy your application.
 
 Now you can use the client ID to make requests to the API:
-
-    $ python clients/google-id-token-client.py https://YOUR-PROJECT-ID.appspot.com YOUR-API-KEY /path/to/client-id.json
+```bash
+$ python clients/google-id-token-client.py https://YOUR-PROJECT-ID.appspot.com YOUR-API-KEY /path/to/client-id.json
+```
 
 ### Using the App Engine default service account client (no key file needed)
 
@@ -104,11 +111,12 @@ To use the App Engine default service account for authentication:
 1. Update the `gae_default_service_account`'s `x-issuer` and `x-jwks_uri` in `swagger.yaml` with your client project ID.
 2. Redeploy your server application.
 3. Update clients/service_to_service_gae_default/main.py, replace 'YOUR-CLIENT-PROJECT-ID' and 'YOUR-SERVER-PROJECT-ID' with your client project ID and your server project ID.
-4. Upload your application to Google App Engine by invoking the following command. Note that you need to provide project ID in the command because there are two projects (server and client projects) here and gcloud needs to know which project to pick. 
+4. Upload your application to Google App Engine by invoking the following command. Note that you need to provide project ID in the command because there are two projects (server and client projects) here and gcloud needs to know which project to pick.
+```bash
+$ gcloud app deploy app.yaml --project=YOUR-CLIENT-PROJECT-ID
+```
 
-    gcloud app deploy app.yaml --project=<YOUR-CLIENT-PROJECT-ID>
-
-Your client app is now deployed at https://<YOUR-CLIENT-PROJECT-ID>.appspot.com. When you access https://<YOUR-CLIENT-PROJECT-ID>.appspot.com, your client calls your server project API using
+Your client app is now deployed at https://YOUR-CLIENT-PROJECT-ID.appspot.com. When you access https://YOUR-CLIENT-PROJECT-ID.appspot.com, your client calls your server project API using
 the client's service account.
 
 ### Using the service account client (no key file needed)
@@ -120,7 +128,8 @@ The client project is running Google App Engine standard application.
 In the example, we use Google Cloud Identity and Access Management (IAM) API to create a JSON Web Token (JWT) for a service account, and use it to call an Endpoints API.
 
 To use the client, you will need to enable "Service Account Actor" role for App Engine default service account:
-1. Go to [IAM page] of your client project (https://console.cloud.google.com/iam-admin/iam).
+
+1. Go to [IAM page](https://console.cloud.google.com/iam-admin/iam) of your client project.
 2. For App Engine default service account, from “Role(s)” drop-down menu, select “Project”-“Service Account Actor”, and Save.
 
 You also need to install Google API python library because the client code (main.py) uses googleapiclient,
@@ -129,15 +138,17 @@ Google API python client library should have already been installed under 'lib' 
 [here](https://cloud.google.com/appengine/docs/python/tools/using-libraries-python-27#requesting_a_library).
 
 To use the client for authentication:
+
 1. Update the `google_service_account`'s `x-issuer` and `x-jwks_uri` in `swagger.yaml` with your service account email.
 2. Redeploy your server application.
-3. Update clients/service_to_service_non_default/main.py, replace 'YOUR-SERVICE-ACCOUNT-EMAIL', 'YOUR-SERVER-PROJECT-ID' and 'YOUR-CLIENT-PROJECT-ID'
-with your service account email, your server project ID, and your client project ID.
-4. Upload your application to Google App Engine by invoking the following command. Note that you need to provide project ID in the command because there are two projects (server and client projects) here and gcloud needs to know which project to pick. 
+3. Update clients/service_to_service_non_default/main.py by replacing 'YOUR-SERVICE-ACCOUNT-EMAIL', 'YOUR-SERVER-PROJECT-ID' and 'YOUR-CLIENT-PROJECT-ID'
+with your service account email, your server project ID, and your client project ID, respectively.
+4. Upload your application to Google App Engine by invoking the following command. Note that you need to provide project ID in the command because there are two projects (server and client projects) here and gcloud needs to know which project to pick.
+```bash
+$ gcloud app deploy app.yaml --project=YOUR-CLIENT-PROJECT-ID
+```
 
-    gcloud app deploy app.yaml --project=<YOUR-CLIENT-PROJECT-ID>
-
-Your client app is now deployed at https://<YOUR-CLIENT-PROJECT-ID>.appspot.com. When you access https://<YOUR-CLIENT-PROJECT-ID>.appspot.com, your client calls your server project API using
+Your client app is now deployed at https://YOUR-CLIENT-PROJECT-ID.appspot.com. When you access https://YOUR-CLIENT-PROJECT-ID.appspot.com, your client calls your server project API using
 the client's service account.
 
 ### Using the ID token client (no key file needed)
@@ -150,12 +161,14 @@ We refer to the project that serves API requests as the server project. You also
 The client project is running Google App Engine standard application.
 
 To use the client for authentication:
+
 1. Update the `google_id_token`'s audiences, replace `YOUR-SERVER-PROJECT-ID` with your server project ID.
 2. Redeploy your server application.
 3. Update clients/service_to_service_google_id_token/main.py, replace 'YOUR-CLIENT-PROJECT-ID' and 'YOUR-SERVER-PROJECT-ID' with your client project ID and your server project ID.
-4. Upload your application to Google App Engine by invoking the following command. Note that you need to provide project ID in the command because there are two projects (server and client projects) here and gcloud needs to know which project to pick. 
+4. Upload your application to Google App Engine by invoking the following command. Note that you need to provide project ID in the command because there are two projects (server and client projects) here and gcloud needs to know which project to pick.
+```bash
+$ gcloud app deploy app.yaml --project=YOUR-CLIENT-PROJECT-ID
+```
 
-    gcloud app deploy app.yaml --project=<YOUR-CLIENT-PROJECT-ID>
-
-Your client app is now deployed at https://<YOUR-CLIENT-PROJECT-ID>.appspot.com. When you access https://<YOUR-CLIENT-PROJECT-ID>.appspot.com, your client calls your server project API from
+Your client app is now deployed at https://YOUR-CLIENT-PROJECT-ID.appspot.com. When you access https://YOUR-CLIENT-PROJECT-ID.appspot.com, your client calls your server project API from
 the client's service account using Google ID token.
