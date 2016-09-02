@@ -80,7 +80,7 @@ def add_note():
     data = request.get_json()
 
     # Populates note properties according to the model,
-    # with the user ID as the key.
+    # with the user ID as the key name.
     note = Note(parent=ndb.Key(Note, claims['sub']),
                 message=data['message'])
 
