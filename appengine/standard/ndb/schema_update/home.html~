@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+  <head>
+    <!-- [START css] -->
+    <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.css">
+    <!-- [END css] -->
+    <style type="text/css">
+      body {
+        padding-top: 40px;
+        padding-bottom: 40px;
+        background-color: #f5f5f5;
+      }
+      blockquote {
+        margin-bottom: 10px;
+        border-left-color: #bbb;
+      }
+      form {
+        margin-top: 10px;
+      }
+      .form-signin input[type="text"] {
+        font-size: 16px;
+        height: auto;
+        margin-bottom: 15px;
+        padding: 7px 9px;
+      }
+      .row {
+        margin-left: 0px;
+        margin-top: 10px;
+        overflow: scroll;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Updating Datastore Schema Demo</a>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <br>
+      <form action="/add_entities" method="post" method="post">Add Entities:
+        <input value="ryan" name="author1">
+        <input value="sunset" name="name1">
+        <input value="lily" name="author2">
+        <input value="beach" name="name2">
+        <input type="submit" value="Add Entities">
+      </form>
+      {% for entity in current_entities %}
+        {% if updated_schema %}
+          <p>Author: {{entity.author}}, Name: {{entity.name}}, Votes: {{entity.num_votes}}, Average Rating: {{entity.avg_rating}}</p>
+        {% else %}
+          <p>Author: {{entity.author}}, Name: {{entity.name}}</p>
+        {% endif %}
+      {% endfor %}
+      {% if updated_schema %}
+        <p>Schema migration successfully initiated.</p>
+      {% endif %}
+      <br>
+      <form action="/update_schema" method="post" method="post">
+        <input type="submit" value="Update Schema">
+      </form>
+    </div>
+  </body>
+</html>
+{% endautoescape %}
