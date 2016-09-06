@@ -16,8 +16,8 @@ import json
 
 from google.appengine.ext import ndb
 import jwt
-import pytest
 import mock
+import pytest
 
 
 @pytest.fixture
