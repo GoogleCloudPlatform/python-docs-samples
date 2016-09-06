@@ -1,8 +1,11 @@
-import webapp2
-import update_schema
 import os
-import jinja2
 import time
+
+import jinja2
+import webapp2
+
+import update_schema
+
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),

@@ -1,9 +1,11 @@
-import webapp2
-import update_schema
-import jinja2
 import os
-from google.appengine.ext import deferred
 import time
+
+from google.appengine.ext import deferred
+import webapp2
+import jinja2
+
+import update_schema
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
