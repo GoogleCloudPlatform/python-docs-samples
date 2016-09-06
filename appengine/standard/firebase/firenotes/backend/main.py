@@ -96,10 +96,7 @@ def add_note():
         message=data['message'])
 
     # Some providers do not provide one of these so either can be used.
-    if 'name' in claims:
-        note.friendly_id = claims['name']
-    else:
-        note.friendly_id = claims['email']
+    note.friendly_id = claims.get('name', claims.get('email', 'Unknown'))
 
     # Stores note in database.
     note.put()
