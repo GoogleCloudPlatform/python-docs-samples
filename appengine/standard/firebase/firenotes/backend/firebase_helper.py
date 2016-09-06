@@ -28,13 +28,14 @@ import jwt.exceptions
 # For App Engine, pyjwt needs to use PyCrypto instead of Cryptography.
 jwt.register_algorithm('RS256', RSAAlgorithm(RSAAlgorithm.SHA256))
 
+# [START fetch_certificates]
 # This URL contains a list of active certificates used to sign Firebase
 # auth tokens.
 FIREBASE_CERTIFICATES_URL = (
     'https://www.googleapis.com/robot/v1/metadata/x509/'
     'securetoken@system.gserviceaccount.com')
 
-
+# [START get_firebase_certificates]
 def get_firebase_certificates():
     """Fetches the current Firebase certificates.
 
@@ -53,8 +54,11 @@ def get_firebase_certificates():
     certificates = json.loads(data)
 
     return certificates
+# [END get_firebase_certificates]
+# [END fetch_certificates]
 
 
+# [START extract_public_key_from_certificate]
 def extract_public_key_from_certificate(x509_certificate):
     """Extracts the PEM public key from an x509 certificate."""
     der_certificate_string = ssl.PEM_cert_to_DER_cert(x509_certificate)
@@ -68,8 +72,10 @@ def extract_public_key_from_certificate(x509_certificate):
     subject_public_key_info = tbs_certification[6]
 
     return subject_public_key_info
+# [EMD extract_public_key_from_certificate]
 
 
+# [START verify_auth_token]
 def verify_auth_token(request):
     """Verifies the JWT auth token in the request.
 
@@ -98,6 +104,7 @@ def verify_auth_token(request):
     # JWT signature.
     public_key = extract_public_key_from_certificate(certificate)
 
+    # [START decrypt_token]
     try:
         claims = jwt.decode(
             request_jwt,
@@ -107,5 +114,7 @@ def verify_auth_token(request):
     except jwt.exceptions.InvalidTokenError as e:
         logging.warning('JWT verification failed: {}'.format(e))
         return None
+    # [END decrypt_token]
 
     return claims
+# [END verify_auth_token]

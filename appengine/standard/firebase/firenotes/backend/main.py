@@ -25,7 +25,7 @@ import firebase_helper
 app = Flask(__name__)
 flask_cors.CORS(app)
 
-
+# [START note]
 class Note(ndb.Model):
     """NDB model class for a user's note.
 
@@ -34,8 +34,9 @@ class Note(ndb.Model):
     friendly_id = ndb.StringProperty()
     message = ndb.TextProperty()
     created = ndb.DateTimeProperty(auto_now_add=True)
+# [END note]
 
-
+# [START query_database]
 def query_database(user_id):
     """Fetches all notes associated with user_id.
 
@@ -56,8 +57,9 @@ def query_database(user_id):
         })
 
     return note_messages
+# [END query_database]
 
-
+# [START list_notes]
 @app.route('/notes', methods=['GET'])
 def list_notes():
     """Returns a list of notes added by the current Firebase user."""
@@ -70,8 +72,9 @@ def list_notes():
     notes = query_database(claims['sub'])
 
     return jsonify(notes)
+# [END list_notes]
 
-
+# [START add_note]
 @app.route('/notes', methods=['POST', 'PUT'])
 def add_note():
     """
@@ -87,6 +90,7 @@ def add_note():
     if not claims:
         return 'Unauthorized', 401
 
+    # [START create_entity]
     data = request.get_json()
 
     # Populates note properties according to the model,
@@ -97,12 +101,13 @@ def add_note():
 
     # Some providers do not provide one of these so either can be used.
     note.friendly_id = claims.get('name', claims.get('email', 'Unknown'))
+    # [END create_entity]
 
     # Stores note in database.
     note.put()
 
     return 'OK', 200
-
+# [END add_note]
 
 @app.errorhandler(500)
 def server_error(e):

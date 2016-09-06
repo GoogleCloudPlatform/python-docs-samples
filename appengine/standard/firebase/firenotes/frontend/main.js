@@ -36,6 +36,7 @@ $(function(){
 
     firebase.initializeApp(config);
 
+    // [START onAuthStateChanged]
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         $('#logged-out').hide();
@@ -61,11 +62,13 @@ $(function(){
         $('#logged-out').show();
 
       }
+    // [END onAuthStateChanged]
 
     });
 
   }
 
+  // [START configureFirebaseLoginWidget]
   // Firebase log-in widget
   function configureFirebaseLoginWidget() {
     var uiConfig = {
@@ -85,7 +88,9 @@ $(function(){
     var ui = new firebaseui.auth.AuthUI(firebase.auth());
     ui.start('#firebaseui-auth-container', uiConfig);
   }
+  // [END configureFirebaseLoginWidget]
 
+  // [START fetchNotes]
   // Fetch notes from the backend.
   function fetchNotes() {
     $.ajax(backendHostUrl + '/notes', {
@@ -102,7 +107,9 @@ $(function(){
       });
     });
   }
+  // [END fetchNotes]
 
+  // [START signOutBtn]
   // Sign out a user
   var signOutBtn =$('#sign-out');
   signOutBtn.click(function(event) {
@@ -114,7 +121,9 @@ $(function(){
       console.log(error);
     });
   });
+  // [END signOutBtn]
 
+  // [START saveNoteBtn]
   // Save a note to the backend
   var saveNoteBtn = $('#add-note');
   saveNoteBtn.click(function(event) {
@@ -139,6 +148,7 @@ $(function(){
     });
 
   });
+  // [END saveNoteBtn]
 
   configureFirebaseLogin();
   configureFirebaseLoginWidget();
