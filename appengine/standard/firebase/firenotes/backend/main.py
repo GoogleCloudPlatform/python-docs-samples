@@ -63,7 +63,7 @@ def list_notes():
     """Returns a list of notes added by the current Firebase user."""
 
     # Verify Firebase auth.
-    claims = firebase_helper.verify_auth_token()
+    claims = firebase_helper.verify_auth_token(request)
     if not claims:
         return 'Unauthorized', 401
 
@@ -83,7 +83,7 @@ def add_note():
     """
 
     # Verify Firebase auth.
-    claims = firebase_helper.verify_auth_token()
+    claims = firebase_helper.verify_auth_token(request)
     if not claims:
         return 'Unauthorized', 401
 
