@@ -11,14 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 import json
 import logging
 import os
 import ssl
 
 from Crypto.Util import asn1
-from flask import request
-from google.appengine.api import urlfetch, urlfetch_errors
+from google.appengine.api import urlfetch
+from google.appengine.api import urlfetch_errors
 import jwt
 from jwt.contrib.algorithms.pycrypto import RSAAlgorithm
 import jwt.exceptions
@@ -27,23 +28,26 @@ import jwt.exceptions
 # For App Engine, pyjwt needs to use PyCrypto instead of Cryptography.
 jwt.register_algorithm('RS256', RSAAlgorithm(RSAAlgorithm.SHA256))
 
+# This URL contains a list of active certificates used to sign Firebase
+# auth tokens.
 FIREBASE_CERTIFICATES_URL = (
     'https://www.googleapis.com/robot/v1/metadata/x509/'
     'securetoken@system.gserviceaccount.com')
 
 
 def get_firebase_certificates():
-    """Fetches the firebase certificates from firebase.
+    """Fetches the current Firebase certificates.
 
     Note: in a production application, you should cache this for at least
     an hour.
     """
     try:
-        result = urlfetch.Fetch(FIREBASE_CERTIFICATES_URL,
-                                validate_certificate=True)
+        result = urlfetch.Fetch(
+            FIREBASE_CERTIFICATES_URL,
+            validate_certificate=True)
         data = result.content
     except urlfetch_errors.Error:
-        logging.error('Error while fetching Firebase certificates')
+        logging.error('Error while fetching Firebase certificates.')
         raise
 
     certificates = json.loads(data)
@@ -66,10 +70,12 @@ def extract_public_key_from_certificate(x509_certificate):
     return subject_public_key_info
 
 
-def verify_auth_token():
+def verify_auth_token(request):
     """Verifies the JWT auth token in the request.
-    If none is found or if the token is invalid, returns None. Otherwise,
-    it returns a dictionary containing the JWT claims."""
+
+    If no token is found or if the token is invalid, returns None.
+    Otherwise, it returns a dictionary containing the JWT claims.
+    """
     if 'Authorization' not in request.headers:
         return None
 
@@ -89,7 +95,7 @@ def verify_auth_token():
         return None
 
     # Get the public key from the certificate. This is used to verify the
-    # jwt signature.
+    # JWT signature.
     public_key = extract_public_key_from_certificate(certificate)
 
     try:

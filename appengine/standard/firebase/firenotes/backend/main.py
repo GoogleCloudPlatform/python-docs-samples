@@ -28,15 +28,20 @@ flask_cors.CORS(app)
 
 class Note(ndb.Model):
     """NDB model class for a user's note.
-    Key is user id from decrypted token."""
+
+    Key is user id from decrypted token.
+    """
     friendly_id = ndb.StringProperty()
     message = ndb.TextProperty()
     created = ndb.DateTimeProperty(auto_now_add=True)
 
 
 def query_database(user_id):
-    """Fetches all notes associated with user_id and orders them
-    by date created, with most recent note processed first."""
+    """Fetches all notes associated with user_id.
+
+    Notes are ordered them by date created, with most recent note added
+    first.
+    """
     ancestor_key = ndb.Key(Note, user_id)
     query = Note.query(ancestor=ancestor_key).order(-Note.created)
     notes = query.fetch()
@@ -44,16 +49,20 @@ def query_database(user_id):
     note_messages = []
 
     for note in notes:
-        note_messages.append({'friendly_id': note.friendly_id,
-                              'message': note.message,
-                              'created': note.created})
+        note_messages.append({
+            'friendly_id': note.friendly_id,
+            'message': note.message,
+            'created': note.created
+        })
 
     return note_messages
 
 
 @app.route('/notes', methods=['GET'])
 def list_notes():
-    """Queries database for user's notes to display."""
+    """Returns a list of notes added by the current Firebase user."""
+
+    # Verify Firebase auth.
     claims = firebase_helper.verify_auth_token()
     if not claims:
         return 'Unauthorized', 401
@@ -73,6 +82,7 @@ def add_note():
         }
     """
 
+    # Verify Firebase auth.
     claims = firebase_helper.verify_auth_token()
     if not claims:
         return 'Unauthorized', 401
@@ -81,8 +91,9 @@ def add_note():
 
     # Populates note properties according to the model,
     # with the user ID as the key name.
-    note = Note(parent=ndb.Key(Note, claims['sub']),
-                message=data['message'])
+    note = Note(
+        parent=ndb.Key(Note, claims['sub']),
+        message=data['message'])
 
     # Some providers do not provide one of these so either can be used.
     if 'name' in claims:
