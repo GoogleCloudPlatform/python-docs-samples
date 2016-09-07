@@ -21,7 +21,7 @@ class AddEntitiesHandler(webapp2.RequestHandler):
         update_schema.add_entity(author1, name1)
         update_schema.add_entity(author2, name2)
         time.sleep(1)
-        current_entities = update_schema.get_current_entities()
+        current_entities = update_schema.get_current_entities(False)
         template_values = {
             'current_entities': current_entities,
             'updated_schema': False,

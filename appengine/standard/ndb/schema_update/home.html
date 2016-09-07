@@ -47,13 +47,15 @@
     </div>
     <div class="container">
       <br>
-      <form action="/add_entities" method="post" method="post">Add Entities:
-        <input value="ryan" name="author1">
-        <input value="sunset" name="name1">
-        <input value="matsumoto" name="author2">
-        <input value="beach" name="name2">
-        <input type="submit" value="Add Entities">
-      </form>
+      {% if updated_schema == false %}
+        <form action="/add_entities" method="post" method="post">Add Entities:
+          <input value="ryan" name="author1">
+          <input value="sunset" name="name1">
+          <input value="matsumoto" name="author2">
+          <input value="beach" name="name2">
+          <input type="submit" value="Add Entities">
+        </form>
+      {% endif %}
       {% for entity in current_entities %}
         {% if updated_schema %}
           <p>Author: {{entity.author}}, Name: {{entity.name}}, Votes: {{entity.num_votes}}, Average Rating: {{entity.avg_rating}}</p>
@@ -65,9 +67,11 @@
         <p>Schema migration successfully initiated.</p>
       {% endif %}
       <br>
-      <form action="/update_schema" method="post" method="post">
-        <input type="submit" value="Update Schema">
-      </form>
+      {% if updated_schema == false and current_entities|length > 0 %}
+        <form action="/update_schema" method="post" method="post">
+          <input type="submit" value="Update Schema">
+        </form>
+      {% endif %}
     </div>
   </body>
 </html>

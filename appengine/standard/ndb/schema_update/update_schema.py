@@ -3,31 +3,33 @@ import logging
 from google.appengine.ext import deferred
 from google.appengine.ext import ndb
 
-import updated_picture_model
+import models_v2
+import models_v1
+
 
 # ideal batch size may vary based on entity size.
 BATCH_SIZE = 100
 
-class Picture(ndb.Model):
-    author = ndb.StringProperty()
-    name = ndb.StringProperty(default='')
-    #num_votes = ndb.IntegerProperty(default=0)
-    #avg_rating = ndb.FloatProperty(default=0)
 
-
-def get_current_entities():
-    current_entities = list(Picture.query().fetch())
+def get_current_entities(updated_schema=False):
+    if updated_schema:
+        reload(models_v2)
+        current_entities = list(models_v2.Picture.query().fetch())
+    else:
+        reload(models_v1)
+        current_entities = list(models_v1.Picture.query().fetch())
     return current_entities
 
 
 def add_entity(author_value, name_value):
-    new_pic = Picture(author=author_value, name=name_value)
+    reload(models_v1)
+    new_pic = models_v1.Picture(author=author_value, name=name_value)
     new_pic.put()
-        
+
 
 def UpdateSchema(cursor=None, num_updated=0):
-    Picture = updated_picture_model.Picture()
-    query = Picture.query()
+    reload(models_v2)
+    query = models_v2.Picture.query()
     pictures, cursor, more = query.fetch_page(BATCH_SIZE, start_cursor=cursor)
 
     to_put = []

@@ -14,7 +14,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 class UpdateHandler(webapp2.RequestHandler):
     def get(self):
-        current_entities = update_schema.get_current_entities()
+        current_entities = update_schema.get_current_entities(False)
         template_values = {
             'current_entities': current_entities,
             'updated_schema': False,
@@ -25,7 +25,7 @@ class UpdateHandler(webapp2.RequestHandler):
     def post(self):
         deferred.defer(update_schema.UpdateSchema)
         time.sleep(1)
-        current_entities = update_schema.get_current_entities()
+        current_entities = update_schema.get_current_entities(True)
         template_values = {
             'current_entities': current_entities,
             'updated_schema': True,
