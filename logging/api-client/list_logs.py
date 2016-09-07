@@ -32,7 +32,7 @@ from oauth2client.client import GoogleCredentials
 
 # [START list_logs]
 def list_logs(project_id, logging_service):
-    request = logging_service.projects().logs().list(projectsId=project_id)
+    request = logging_service.projects().logs().list(projectId=project_id)
 
     while request:
         response = request.execute()
