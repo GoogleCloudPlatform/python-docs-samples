@@ -1,0 +1,15 @@
+runtime: python27
+api_version: 1
+service: default
+threadsafe: true
+
+handlers:
+
+# root
+- url: /
+  static_files: index.html
+  upload: index.html
+
+- url: /(.+)
+  static_files: \1
+  upload: (.+)

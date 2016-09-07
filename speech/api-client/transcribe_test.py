@@ -13,7 +13,7 @@
 
 import re
 
-from speech_rest import main
+from transcribe import main
 
 
 def test_main(resource, capsys):

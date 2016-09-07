@@ -29,6 +29,7 @@ pyasn1-modules==0.0.8
 pyasn1==0.1.9
 PyAudio==0.2.9
 PyCrypto==2.6.1
+pyjwt==1.4.1
 pymemcache==1.3.6
 PyMySQL==0.7.9
 pytest-cov==2.3.1
