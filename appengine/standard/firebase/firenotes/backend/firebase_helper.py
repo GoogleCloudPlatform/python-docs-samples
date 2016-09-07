@@ -35,6 +35,7 @@ FIREBASE_CERTIFICATES_URL = (
     'https://www.googleapis.com/robot/v1/metadata/x509/'
     'securetoken@system.gserviceaccount.com')
 
+
 # [START get_firebase_certificates]
 def get_firebase_certificates():
     """Fetches the current Firebase certificates.

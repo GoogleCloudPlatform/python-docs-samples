@@ -25,6 +25,7 @@ import firebase_helper
 app = Flask(__name__)
 flask_cors.CORS(app)
 
+
 # [START note]
 class Note(ndb.Model):
     """NDB model class for a user's note.
@@ -35,6 +36,7 @@ class Note(ndb.Model):
     message = ndb.TextProperty()
     created = ndb.DateTimeProperty(auto_now_add=True)
 # [END note]
+
 
 # [START query_database]
 def query_database(user_id):
@@ -59,6 +61,7 @@ def query_database(user_id):
     return note_messages
 # [END query_database]
 
+
 # [START list_notes]
 @app.route('/notes', methods=['GET'])
 def list_notes():
@@ -73,6 +76,7 @@ def list_notes():
 
     return jsonify(notes)
 # [END list_notes]
+
 
 # [START add_note]
 @app.route('/notes', methods=['POST', 'PUT'])
@@ -108,6 +112,7 @@ def add_note():
 
     return 'OK', 200
 # [END add_note]
+
 
 @app.errorhandler(500)
 def server_error(e):
