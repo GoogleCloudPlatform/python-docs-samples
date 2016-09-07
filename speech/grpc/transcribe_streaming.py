@@ -100,12 +100,6 @@ def request_stream(stop_audio, channels=CHANNELS, rate=RATE, chunk=CHUNK):
     )
     streaming_config = cloud_speech.StreamingRecognitionConfig(
         config=recognition_config,
-        # Note that setting interim_results to True means that you'll likely
-        # get multiple results for the same bit of audio, as the system
-        # re-interprets audio in the context of subsequent audio. However, this
-        # will give us quick results without having to tell the server when to
-        # finalize a piece of audio.
-        interim_results=True, single_utterance=True
     )
 
     yield cloud_speech.StreamingRecognizeRequest(
