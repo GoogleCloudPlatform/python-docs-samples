@@ -16,13 +16,13 @@ import io
 import re
 import time
 
-import speech_streaming
+import transcribe_streaming
 
 
 class MockAudioStream(object):
     def __init__(self, audio_filename, trailing_silence_secs=10):
         self.audio_filename = audio_filename
-        self.silence = io.BytesIO('\0\0' * speech_streaming.RATE *
+        self.silence = io.BytesIO('\0\0' * transcribe_streaming.RATE *
                                   trailing_silence_secs)
 
     def __enter__(self):
@@ -38,7 +38,7 @@ class MockAudioStream(object):
     def read(self, num_frames):
         # Approximate realtime by sleeping for the appropriate time for the
         # requested number of frames
-        time.sleep(num_frames / float(speech_streaming.RATE))
+        time.sleep(num_frames / float(transcribe_streaming.RATE))
         # audio is 16-bit samples, whereas python byte is 8-bit
         num_bytes = 2 * num_frames
         chunk = self.audio_file.read(num_bytes) or self.silence.read(num_bytes)
@@ -56,11 +56,11 @@ def mock_audio_stream(filename):
 
 def test_main(resource, monkeypatch, capsys):
     monkeypatch.setattr(
-        speech_streaming, 'record_audio',
+        transcribe_streaming, 'record_audio',
         mock_audio_stream(resource('quit.raw')))
-    monkeypatch.setattr(speech_streaming, 'DEADLINE_SECS', 5)
+    monkeypatch.setattr(transcribe_streaming, 'DEADLINE_SECS', 30)
 
-    speech_streaming.main()
+    transcribe_streaming.main()
     out, err = capsys.readouterr()
 
     assert re.search(r'transcript.*"quit"', out, re.DOTALL | re.I)

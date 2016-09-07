@@ -11,25 +11,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
 import re
 
-import pytest
-
-from speech_async_grpc import _gcs_uri
-from speech_async_grpc import main
+from transcribe_async import main
 
 
-def test_main(cloud_config, capsys):
-    input_uri = 'gs://{}/speech/audio.flac'.format(cloud_config.storage_bucket)
-
-    main(input_uri, 'FLAC', 16000)
-
+def test_main(resource, capsys):
+    main(resource('audio.raw'))
     out, err = capsys.readouterr()
+
     assert re.search(r'how old is the Brooklyn Bridge', out, re.DOTALL | re.I)
-
-
-def test_gcs_uri():
-    _gcs_uri('gs://bucket/path')
-    with pytest.raises(argparse.ArgumentTypeError):
-        _gcs_uri('/local/path')
