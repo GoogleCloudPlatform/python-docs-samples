@@ -17,7 +17,7 @@
 
 """Creates, writes, and reads a labeled custom metric.
 
-This is an example of how to use the Google Cloud Monitoring API to create,
+This is an example of how to use the Stackdriver Monitoring API to create,
 write, and read a labeled custom metric.
 The metric has two labels: color and size, and the data points represent
 the number of shirts of the given color and size in inventory.
