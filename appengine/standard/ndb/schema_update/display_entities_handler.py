@@ -1,10 +1,10 @@
 import os
 
 import jinja2
+import webapp2
 
 import models_v1
 import models_v2
-import webapp2
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),

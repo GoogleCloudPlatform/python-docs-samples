@@ -1,11 +1,11 @@
 import os
 import time
 
-from google.appengine.ext import ndb
 import jinja2
+import webapp2
+from google.appengine.ext import ndb
 
 import models_v1
-import webapp2
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
