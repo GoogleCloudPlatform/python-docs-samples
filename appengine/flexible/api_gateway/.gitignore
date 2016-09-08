@@ -1,0 +1,23 @@
+# Ignore bundler config.
+/.bundle
+
+# Ignore js and node files
+bundle.js
+bundle.js.map
+node_modules/
+venv/
+env/
+/assets/bundle.js
+/assets/lodash/
+/assets/contour/
+/assets/src/
+
+
+
+# Ignore all logfiles and tempfiles.
+/log/*
+!/log/.keep
+/tmp
+__pycache__
+*.pyc
+.DS_Store
