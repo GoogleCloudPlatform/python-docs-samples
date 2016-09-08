@@ -1,4 +1,4 @@
-# Cloud Monitoring API Samples
+# Stackdriver Monitoring API Samples
 
 <!-- auto-doc-link -->
 These samples are used on the following documentation page:
