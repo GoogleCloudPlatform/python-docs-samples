@@ -2,35 +2,22 @@ import os
 import time
 
 from google.appengine.ext import deferred
-import webapp2
 import jinja2
 
 import update_schema
+import webapp2
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
 
+
 class UpdateHandler(webapp2.RequestHandler):
-    def get(self):
-        current_entities = update_schema.get_current_entities(False)
-        template_values = {
-            'current_entities': current_entities,
-            'updated_schema': False,
-        }
-        template = JINJA_ENVIRONMENT.get_template('home.html')
-        self.response.write(template.render(template_values))
 
     def post(self):
-        deferred.defer(update_schema.UpdateSchema)
+        deferred.defer(update_schema.update_schema)
         time.sleep(1)
-        current_entities = update_schema.get_current_entities(True)
-        template_values = {
-            'current_entities': current_entities,
-            'updated_schema': True,
-        }
-        template = JINJA_ENVIRONMENT.get_template('home.html')
-        self.response.write(template.render(template_values))
+        self.redirect('/display_entities?updated=true')
 
-app = webapp2.WSGIApplication([('/update_schema', UpdateHandler),])
+app = webapp2.WSGIApplication([('/update_schema', UpdateHandler), ])

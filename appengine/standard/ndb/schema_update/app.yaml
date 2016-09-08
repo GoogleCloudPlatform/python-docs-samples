@@ -16,6 +16,11 @@ handlers:
   login: admin
   secure: always
 
+- url: /display_entities
+  script: display_entities_handler.app  # path to webapp2 application definition.
+  login: admin
+  secure: always
+
 # [START libraries]
 libraries:
 - name: webapp2
