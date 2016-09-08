@@ -1,6 +1,6 @@
 # Cloud Monitoring v3 Sample
 
-Sample command-line programs for retrieving Google Monitoring API V3 data.
+Sample command-line programs for retrieving Stackdriver Monitoring API V3 data.
 
 `list_resources.py` is a simple command-line program to demonstrate connecting to the Google
 Monitoring API to retrieve API data and print out some of the resources.

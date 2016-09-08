@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Sample command-line program for retrieving Google Cloud Monitoring API data.
+"""Sample command-line program for retrieving Stackdriver Monitoring API data.
 
 Prerequisites: To run locally, download a Service Account JSON file from
 your project and point GOOGLE_APPLICATION_CREDENTIALS to the file.

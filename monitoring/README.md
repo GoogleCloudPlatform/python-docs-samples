@@ -23,7 +23,7 @@ For more information on Cloud Monitoring you can visit:
 
 > https://cloud.google.com/monitoring
 
-For more information on the Cloud Monitoring API Python library surface you
+For more information on the Stackdriver Monitoring API Python library surface you
 can visit:
 
 > https://developers.google.com/resources/api-libraries/documentation/storage/v2beta2/python/latest/
