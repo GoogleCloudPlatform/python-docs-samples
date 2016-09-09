@@ -3,28 +3,15 @@ api_version: 1
 threadsafe: true
 
 builtins:
+# Deferred is required to use google.appengine.ext.deferred.
 - deferred: on
 
 handlers:
-- url: /update_schema
-  script: update_schema_handler.app  # path to webapp2 application definition.
-  login: admin
-  secure: always
+- url: /.*
+  script: main.app
 
-- url: /add_entities
-  script: add_entities_handler.app  # path to webapp2 application definition.
-  login: admin
-  secure: always
-
-- url: /display_entities
-  script: display_entities_handler.app  # path to webapp2 application definition.
-  login: admin
-  secure: always
-
-# [START libraries]
 libraries:
 - name: webapp2
   version: "2.5.2"
 - name: jinja2
   version: "2.6"
-# [END libraries]
