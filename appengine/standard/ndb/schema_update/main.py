@@ -23,9 +23,9 @@ new fields to the model class.
 
 import logging
 
-import jinja2
 from google.appengine.ext import deferred
 from google.appengine.ext import ndb
+import jinja2
 import webapp2
 
 import models_v1
