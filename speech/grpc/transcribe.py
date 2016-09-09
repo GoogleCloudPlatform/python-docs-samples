@@ -89,7 +89,7 @@ if __name__ == '__main__':
         '--encoding', default='FLAC', choices=[
             'LINEAR16', 'FLAC', 'MULAW', 'AMR', 'AMR_WB'],
         help='How the audio file is encoded. See {}#L67'.format(PROTO_URL))
-    parser.add_argument('--sample_rate', default=16000)
+    parser.add_argument('--sample_rate', type=int, default=16000)
 
     args = parser.parse_args()
     main(args.input_uri, args.encoding, args.sample_rate)

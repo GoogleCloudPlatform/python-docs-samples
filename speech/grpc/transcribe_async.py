@@ -115,7 +115,7 @@ if __name__ == '__main__':
         help='How the audio file is encoded. See {}#L67'.format(
             'https://github.com/googleapis/googleapis/blob/master/'
             'google/cloud/speech/v1beta1/cloud_speech.proto'))
-    parser.add_argument('--sample_rate', default=16000)
+    parser.add_argument('--sample_rate', type=int, default=16000)
 
     args = parser.parse_args()
     main(args.input_uri, args.encoding, args.sample_rate)
