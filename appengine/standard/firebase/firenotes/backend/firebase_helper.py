@@ -73,7 +73,7 @@ def extract_public_key_from_certificate(x509_certificate):
     subject_public_key_info = tbs_certification[6]
 
     return subject_public_key_info
-# [EMD extract_public_key_from_certificate]
+# [END extract_public_key_from_certificate]
 
 
 # [START verify_auth_token]
