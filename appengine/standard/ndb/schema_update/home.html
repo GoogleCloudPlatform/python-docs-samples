@@ -47,7 +47,7 @@
     </div>
     <div class="container">
       <br>
-      {% if updated_schema == false %}
+      {% if current_entities|length == 0 %}
         <form action="/add_entities" method="post" method="post">
           <input type="submit" value="Add Entities">
         </form>
@@ -63,7 +63,7 @@
         <p>Schema migration successfully initiated.</p>
       {% endif %}
       <br>
-      {% if updated_schema == false and current_entities|length > 0 %}
+      {% if updated_schema is none and current_entities|length > 0 %}
         <form action="/update_schema" method="post" method="post">
           <input type="submit" value="Update Schema">
         </form>

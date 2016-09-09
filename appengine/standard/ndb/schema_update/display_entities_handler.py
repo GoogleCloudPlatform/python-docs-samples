@@ -14,9 +14,13 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 def get_current_entities(updated_schema=False):
     if updated_schema:
+        # Re-imports the models_v2 module so its Picture class replaces the
+        # current class
         reload(models_v2)
         current_entities = list(models_v2.Picture.query().fetch())
     else:
+        # Re-imports the models_v1 module so its Picture class replaces the
+        # current class
         reload(models_v1)
         current_entities = list(models_v1.Picture.query().fetch())
     return current_entities
@@ -25,10 +29,6 @@ def get_current_entities(updated_schema=False):
 class DisplayEntitiesHandler(webapp2.RequestHandler):
     def get(self):
         updated_schema = self.request.params.get('updated')
-        if updated_schema is None:
-            updated_schema = False
-        else:
-            updated_schema = True
         current_entities = get_current_entities(updated_schema)
         template_values = {
             'current_entities': current_entities,
@@ -37,5 +37,5 @@ class DisplayEntitiesHandler(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('home.html')
         self.response.write(template.render(template_values))
 
-app = webapp2.WSGIApplication([('/display_entities', DisplayEntitiesHandler),
-                               ])
+app = webapp2.WSGIApplication(
+                             [('/display_entities', DisplayEntitiesHandler), ])

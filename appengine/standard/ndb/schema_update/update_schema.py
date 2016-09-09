@@ -10,6 +10,8 @@ BATCH_SIZE = 100
 
 
 def update_schema(cursor=None, num_updated=0):
+    # Re-imports the models_v2 module so its Picture class replaces the
+    # current class
     reload(models_v2)
     query = models_v2.Picture.query()
     pictures, cursor, more = query.fetch_page(BATCH_SIZE, start_cursor=cursor)
