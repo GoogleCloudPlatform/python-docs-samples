@@ -62,22 +62,42 @@ def test_list_rows(capsys):
     assert 'Age' in out
 
 
-def test_create_table(capsys):
+@pytest.fixture
+def temporary_table():
+    """Fixture that returns a factory for tables that do not yet exist and
+    will be automatically deleted after the test."""
     bigquery_client = bigquery.Client()
     dataset = bigquery_client.dataset(DATASET_ID)
-    table = dataset.table('test_create_table')
+    tables = []
 
-    if table.exists():
-        table.delete()
+    def factory(table_name):
+        new_table = dataset.table('test_create_table')
+        if new_table.exists():
+            new_table.delete()
+        tables.append(new_table)
+        return new_table
 
-    try:
-        snippets.create_table(DATASET_ID, table.name)
-        assert table.exists()
-    finally:
-        table.delete()
+    yield factory
+
+    for table in tables:
+        if table.exists():
+            table.delete()
 
 
-def test_delete_table(capsys):
+def test_create_table(temporary_table):
+    new_table = temporary_table('test_create_table')
+    snippets.create_table(DATASET_ID, new_table.name)
+    assert new_table.exists()
+
+
+@pytest.mark.slow
+def test_copy_table(temporary_table):
+    new_table = temporary_table('test_copy_table')
+    snippets.copy_table(DATASET_ID, TABLE_ID, new_table.name)
+    assert new_table.exists()
+
+
+def test_delete_table():
     # Create a table to delete
     bigquery_client = bigquery.Client()
     dataset = bigquery_client.dataset(DATASET_ID)
