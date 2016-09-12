@@ -71,7 +71,7 @@ def temporary_table():
     tables = []
 
     def factory(table_name):
-        new_table = dataset.table('test_create_table')
+        new_table = dataset.table(table_name)
         if new_table.exists():
             new_table.delete()
         tables.append(new_table)
