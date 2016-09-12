@@ -82,6 +82,32 @@ def list_tables(dataset_name, project=None):
         print(table.name)
 
 
+def create_table(dataset_name, table_name, project=None):
+    """Creates a simple table in the given dataset.
+
+    If no project is specified, then the currently active project is used.
+    """
+    bigquery_client = bigquery.Client(project=project)
+    dataset = bigquery_client.dataset(dataset_name)
+
+    if not dataset.exists():
+        print('Dataset {} does not exist.'.format(dataset_name))
+        return
+
+    table = dataset.table(table_name)
+
+    # Set the table schema
+    table.schema = (
+        bigquery.SchemaField('Name', 'STRING'),
+        bigquery.SchemaField('Age', 'INTEGER'),
+        bigquery.SchemaField('Weight', 'FLOAT'),
+    )
+
+    table.create()
+
+    print('Created table {} in dataset {}.'.format(table_name, dataset_name))
+
+
 def list_rows(dataset_name, table_name, project=None):
     """Prints rows in the given table.
 
@@ -155,6 +181,11 @@ if __name__ == '__main__':
         'list-tables', help=list_tables.__doc__)
     list_tables_parser.add_argument('dataset_name')
 
+    create_table_parser = subparsers.add_parser(
+        'create-table', help=create_table.__doc__)
+    create_table_parser.add_argument('dataset_name')
+    create_table_parser.add_argument('table_name')
+
     list_rows_parser = subparsers.add_parser(
         'list-rows', help=list_rows.__doc__)
     list_rows_parser.add_argument('dataset_name')
@@ -171,6 +202,8 @@ if __name__ == '__main__':
         list_datasets(args.project)
     elif args.command == 'list-tables':
         list_tables(args.dataset_name, args.project)
+    elif args.command == 'create-table':
+        create_table(args.dataset_name, args.table_name, args.project)
     elif args.command == 'list-rows':
         list_rows(args.dataset_name, args.table_name, args.project)
     elif args.command == 'delete-table':

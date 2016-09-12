@@ -62,6 +62,21 @@ def test_list_rows(capsys):
     assert 'Age' in out
 
 
+def test_create_table(capsys):
+    bigquery_client = bigquery.Client()
+    dataset = bigquery_client.dataset(DATASET_ID)
+    table = dataset.table('test_create_table')
+
+    if table.exists():
+        table.delete()
+
+    try:
+        snippets.create_table(DATASET_ID, table.name)
+        assert table.exists()
+    finally:
+        table.delete()
+
+
 def test_delete_table(capsys):
     # Create a table to delete
     bigquery_client = bigquery.Client()
