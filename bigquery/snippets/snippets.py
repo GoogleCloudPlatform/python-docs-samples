@@ -25,8 +25,11 @@ The dataset and table should already exist.
 """
 
 import argparse
+import time
+import uuid
 
 from gcloud import bigquery
+import gcloud.bigquery.job
 
 
 def list_projects():
@@ -82,6 +85,32 @@ def list_tables(dataset_name, project=None):
         print(table.name)
 
 
+def create_table(dataset_name, table_name, project=None):
+    """Creates a simple table in the given dataset.
+
+    If no project is specified, then the currently active project is used.
+    """
+    bigquery_client = bigquery.Client(project=project)
+    dataset = bigquery_client.dataset(dataset_name)
+
+    if not dataset.exists():
+        print('Dataset {} does not exist.'.format(dataset_name))
+        return
+
+    table = dataset.table(table_name)
+
+    # Set the table schema
+    table.schema = (
+        bigquery.SchemaField('Name', 'STRING'),
+        bigquery.SchemaField('Age', 'INTEGER'),
+        bigquery.SchemaField('Weight', 'FLOAT'),
+    )
+
+    table.create()
+
+    print('Created table {} in dataset {}.'.format(table_name, dataset_name))
+
+
 def list_rows(dataset_name, table_name, project=None):
     """Prints rows in the given table.
 
@@ -126,6 +155,50 @@ def list_rows(dataset_name, table_name, project=None):
         print(format_string.format(*row))
 
 
+def copy_table(dataset_name, table_name, new_table_name, project=None):
+    """Copies a table.
+
+    If no project is specified, then the currently active project is used.
+    """
+    bigquery_client = bigquery.Client(project=project)
+    dataset = bigquery_client.dataset(dataset_name)
+    table = dataset.table(table_name)
+
+    # This sample shows the destination table in the same dataset and project,
+    # however, it's possible to copy across datasets and projects. You can
+    # also copy muliple source tables into a single destination table by
+    # providing addtional arguments to `copy_table`.
+    destination_table = dataset.table(new_table_name)
+
+    # Create a job to copy the table to the destination table.
+    job_id = str(uuid.uuid4())
+    job = bigquery_client.copy_table(
+        job_id, destination_table, table)
+
+    # Create the table if it doesn't exist.
+    job.create_disposition = (
+        gcloud.bigquery.job.CreateDisposition.CREATE_IF_NEEDED)
+
+    # Start the job.
+    job.begin()
+
+    # Wait for the the job to finish.
+    print('Waiting for job to finish...')
+    wait_for_job(job)
+
+    print('Table {} copied to {}.'.format(table_name, new_table_name))
+
+
+def wait_for_job(job):
+    while True:
+        job.reload()  # Refreshes the state via a GET request.
+        if job.state == 'DONE':
+            if job.error_result:
+                raise RuntimeError(job.error_result)
+            return
+        time.sleep(1)
+
+
 def delete_table(dataset_name, table_name, project=None):
     """Deletes a table in a given dataset.
 
@@ -155,10 +228,21 @@ if __name__ == '__main__':
         'list-tables', help=list_tables.__doc__)
     list_tables_parser.add_argument('dataset_name')
 
+    create_table_parser = subparsers.add_parser(
+        'create-table', help=create_table.__doc__)
+    create_table_parser.add_argument('dataset_name')
+    create_table_parser.add_argument('table_name')
+
     list_rows_parser = subparsers.add_parser(
         'list-rows', help=list_rows.__doc__)
     list_rows_parser.add_argument('dataset_name')
     list_rows_parser.add_argument('table_name')
+
+    copy_table_parser = subparsers.add_parser(
+        'copy-table', help=copy_table.__doc__)
+    copy_table_parser.add_argument('dataset_name')
+    copy_table_parser.add_argument('table_name')
+    copy_table_parser.add_argument('new_table_name')
 
     delete_table_parser = subparsers.add_parser(
         'delete-table', help=delete_table.__doc__)
@@ -171,7 +255,11 @@ if __name__ == '__main__':
         list_datasets(args.project)
     elif args.command == 'list-tables':
         list_tables(args.dataset_name, args.project)
+    elif args.command == 'create-table':
+        create_table(args.dataset_name, args.table_name, args.project)
     elif args.command == 'list-rows':
         list_rows(args.dataset_name, args.table_name, args.project)
+    elif args.command == 'copy-table':
+        copy_table(args.dataset_name, args.table_name, args.new_table_name)
     elif args.command == 'delete-table':
         delete_table(args.dataset_name, args.table_name, args.project)
