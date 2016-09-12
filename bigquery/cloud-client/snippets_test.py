@@ -19,7 +19,7 @@ import snippets
 
 
 DATASET_ID = 'test_dataset'
-TABLE_ID = 'test_import_table'
+TABLE_ID = 'test_table'
 
 
 @pytest.mark.xfail(
