@@ -22,6 +22,7 @@ new fields to the model class.
 """
 
 import logging
+import os
 
 from google.appengine.ext import deferred
 from google.appengine.ext import ndb
@@ -33,7 +34,8 @@ import models_v2
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
-    loader=jinja2.FileSystemLoader('templates'),
+    loader=jinja2.FileSystemLoader(
+        os.path.join(os.path.dirname(__file__), 'templates')),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
 
