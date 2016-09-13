@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from google.appengine.ext import deferred
-from google.appengine.ext import ndb
 import pytest
 import webtest
 
