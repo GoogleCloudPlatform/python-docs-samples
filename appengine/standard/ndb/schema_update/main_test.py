@@ -12,22 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 from google.appengine.ext import deferred
+from google.appengine.ext import ndb
+import pytest
 import webtest
 
 import main
+import models_v1
+import models_v2
 
 
-def test_app(testbed):
-    app = webtest.TestApp(main.app)
+@pytest.fixture
+def app(testbed):
+    yield webtest.TestApp(main.app)
+
+
+def test_app(app):
     response = app.get('/')
     assert response.status_int == 200
 
 
-def test_add_entities(testbed):
-    app = webtest.TestApp(main.app)
+def test_add_entities(app):
     response = app.post('/add_entities')
     assert response.status_int == 200
     response = app.get('/')
@@ -38,17 +43,21 @@ def test_add_entities(testbed):
     assert 'Name: Sunset' in response.body
 
 
-def test_update_schema(testbed, run_tasks):
-    app = webtest.TestApp(main.app)
-    testbed.activate()
-    taskqueue_stub = testbed.get_stub('taskqueue')
-    response = app.post('/add_entities')
-    response = app.get('/')
+def test_update_schema(app, testbed):
+    reload(models_v1)
+    test_model = models_v1.Picture(author='Test', name='Test')
+    test_model.put()
+
     response = app.post('/update_schema')
     assert response.status_int == 200
-    tasks = taskqueue_stub.get_filtered_tasks()
+
+    # Run the queued task.
+    tasks = testbed.taskqueue_stub.get_filtered_tasks()
+    assert len(tasks) == 1
     deferred.run(tasks[0].payload)
-    response = app.get('/')
-    assert response.status_int == 200
-    assert 'Votes: 1' in response.body
-    assert 'Average Rating: 5.0' in response.body
+
+    # Check the updated items
+    reload(models_v2)
+    updated_model = test_model.key.get()
+    assert updated_model.num_votes == 1
+    assert updated_model.avg_rating == 5.0
