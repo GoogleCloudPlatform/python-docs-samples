@@ -20,12 +20,14 @@
 from __future__ import division
 
 import argparse
-import collections
 import datetime
 import random
 import uuid
 
-import pymysql
+from six.moves.urllib import parse
+import sqlalchemy
+from sqlalchemy.ext import declarative
+import sqlalchemy.orm
 
 
 SECONDS_IN_DAY = 24 * 60 * 60
@@ -38,47 +40,56 @@ TIMESTAMP_2016 = (
     datetime.datetime.fromtimestamp(0)).total_seconds()
 
 
-User = collections.namedtuple('User', ['id', 'date_joined'])
-
-UserSession = collections.namedtuple(
-        'UserSession',
-        ['id', 'login', 'logout', 'user_id', 'ip_address'])
-
-UserAction = collections.namedtuple(
-        'UserAction',
-        ['session_id', 'user_id', 'type', 'time', 'message'])
+Base = declarative.declarative_base()
 
 
-def generate_users(num_users):
+class User(Base):
+    __tablename__ = 'Users'
+
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
+    date_joined = sqlalchemy.Column(sqlalchemy.DateTime)
+
+
+class UserSession(Base):
+    __tablename__ = 'UserSessions'
+
+    id = sqlalchemy.Column(sqlalchemy.String(length=36), primary_key=True)
+    user_id = sqlalchemy.Column(
+            sqlalchemy.Integer, sqlalchemy.ForeignKey('Users.id'))
+    login_time = sqlalchemy.Column(sqlalchemy.DateTime)
+    logout_time = sqlalchemy.Column(sqlalchemy.DateTime)
+    ip_address = sqlalchemy.Column(sqlalchemy.String(length=40))
+
+
+class UserAction(Base):
+    __tablename__ = 'UserActions'
+
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
+    session_id = sqlalchemy.Column(
+            sqlalchemy.String(length=36),
+            sqlalchemy.ForeignKey('UserSessions.id'))
+    user_id = sqlalchemy.Column(
+            sqlalchemy.Integer, sqlalchemy.ForeignKey('Users.id'))
+    action_type = sqlalchemy.Column(sqlalchemy.String(length=64))
+    action_time = sqlalchemy.Column(sqlalchemy.DateTime)
+    message = sqlalchemy.Column(sqlalchemy.Text)
+
+
+def generate_users(session, num_users):
     users = []
 
-    for userid in range(num_users):
+    for userid in range(1, num_users + 1):
         # Add more users at the end of 2016 than the beginning.
         # https://en.wikipedia.org/wiki/Beta_distribution
         year_portion = random.betavariate(3, 1)
         date_joined = datetime.datetime.fromtimestamp(
             TIMESTAMP_2016 + SECONDS_IN_2016 * year_portion)
-        users.append(User(userid, date_joined))
+        user = User(id=userid, date_joined=date_joined)
+        users.append(user)
+        session.add(user)
 
+    session.commit()
     return users
-
-
-def insert_users(connection, users):
-    """Inserts rows into the Users table."""
-
-    with connection.cursor() as cursor:
-        cursor.execute('DELETE FROM `UserActions`')
-        cursor.execute('DELETE FROM `UserSessions`')
-        cursor.execute('DELETE FROM `Users`')
-
-    connection.commit()
-
-    with connection.cursor() as cursor:
-        cursor.executemany(
-            'INSERT INTO `Users` (`UserID`, `DateJoined`) VALUES (%s,%s)',
-            [(user.id, user.date_joined.isoformat(' ')) for user in users])
-
-    connection.commit()
 
 
 def random_ip():
@@ -96,26 +107,33 @@ def random_ip():
     return ip_address
 
 
-def simulate_user_session(connection, user, previous_session=None):
+def simulate_user_session(session, user, previous_user_session=None):
     """Simulates a single session (login to logout) of a user's history."""
     login_time = user.date_joined
 
-    if previous_session is not None:
+    if previous_user_session is not None:
         login_time = (
-            previous_session.logout +
+            previous_user_session.logout_time +
             datetime.timedelta(
                 days=1, seconds=random.randrange(SECONDS_IN_DAY)))
 
     session_id = str(uuid.uuid4())
+    user_session = UserSession(
+        id=session_id,
+        user_id=user.id,
+        login_time=login_time,
+        ip_address=random_ip())
+    session.add(user_session)
+    session.commit()
     previous_action_time = login_time
     total_actions = random.randrange(10) + 1
-    actions = []
 
     for _ in range(total_actions):
-        action_type=random.choice(['CLICKED', 'PURCHASED'])
-        action_time=(previous_action_time +
+        action_type = random.choice(['CLICKED', 'PURCHASED'])
+        action_time = (
+            previous_action_time +
             datetime.timedelta(seconds=random.randrange(59) + 1))
-        message='breed={}'.format(
+        message = 'breed={}'.format(
             random.choice([
                 'Albera',
                 'Angus',
@@ -133,77 +151,32 @@ def simulate_user_session(connection, user, previous_session=None):
         action = UserAction(
             session_id=session_id,
             user_id=user.id,
-            type=action_type,
-            time=action_time,
+            action_type=action_type,
+            action_time=action_time,
             message=message)
 
         previous_action_time = action_time
-        actions.append(action)
+        session.add(action)
 
-    logout_time = (
+    user_session.logout_time = (
         previous_action_time +
         datetime.timedelta(seconds=(1 + random.randrange(59))))
-
-    return (
-        UserSession(
-            session_id,
-            login_time,
-            logout_time,
-            user.id,
-            random_ip()),
-        actions)
+    session.commit()
+    return user_session
 
 
-def simulate_user_history(connection, user):
+def simulate_user_history(session, user):
     """Simulates the entire history of activity for a single user."""
     total_sessions = random.randrange(10)
-    sessions = []
-    actions = []
-    previous_session = None
+    previous_user_session = None
 
     for _ in range(total_sessions):
-        session, user_actions = simulate_user_session(
-                connection, user, previous_session)
-        sessions.append(session)
-        actions.extend(user_actions)
-        previous_session = session
-
-    with connection.cursor() as cursor:
-        cursor.executemany(
-            'INSERT INTO `UserSessions` '
-            '(`SessionID`, '
-            '`LoginTime`, '
-            '`LogoutTime`, '
-            '`UserID`, '
-            '`IPAddress`) '
-            'VALUES (%s,%s,%s,%s,%s)',
-            [(
-                session.id,
-                session.login.isoformat(' '),
-                session.logout.isoformat(' '),
-                session.user_id,
-                session.ip_address,
-            ) for session in sessions])
-        cursor.executemany(
-            'INSERT INTO `UserActions` '
-            '(`SessionID`, '
-            '`UserID`, '
-            '`ActionType`, '
-            '`ActionTime`, '
-            '`Message`) '
-            'VALUES (%s,%s,%s,%s,%s)',
-            [(
-                action.session_id,
-                action.user_id,
-                action.type,
-                action.time.isoformat(' '),
-                action.message,
-            ) for action in actions])
-
-    connection.commit()
+        user_session = simulate_user_session(
+            session, user, previous_user_session)
+        previous_user_session = user_session
 
 
-def run_simulation(connection, users):
+def run_simulation(session, users):
     """Simulates app activity for all users."""
 
     for n, user in enumerate(users):
@@ -211,21 +184,37 @@ def run_simulation(connection, users):
         if n % 100 == 0 and n != 0:
             print('Simulated data for {} users'.format(n))
 
-        simulate_user_history(connection, user)
+        simulate_user_history(session, user)
 
     print('COMPLETE: Simulated data for {} users'.format(len(users)))
 
 
+def populate_db(session, total_users=3):
+    """Populate database with total_users simulated users and their actions."""
+    users = generate_users(session, total_users)
+    run_simulation(session, users)
+
+
+def create_session(engine):
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
+    Session = sqlalchemy.orm.sessionmaker(bind=engine)
+    return Session()
+
+
 def main(total_users, host, user, password, db_name):
-    connection = pymysql.connect(
-        host=host, user=user, password=password, db=db_name)
+    engine = sqlalchemy.create_engine(
+        'mysql+pymysql://{user}:{password}@{host}/{db_name}'.format(
+            user=user,
+            password=parse.quote_plus(password),
+            host=host,
+            db_name=db_name))
+    session = create_session(engine)
 
     try:
-        users = generate_users(total_users)
-        insert_users(connection, users)
-        run_simulation(connection, users)
+        populate_db(session, total_users)
     finally:
-        connection.close()
+        session.close()
 
 
 if __name__ == '__main__':
