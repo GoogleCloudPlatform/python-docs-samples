@@ -57,7 +57,7 @@ def main(input_uri, encoding, sample_rate):
     response = service.SyncRecognize(cloud_speech.SyncRecognizeRequest(
         config=cloud_speech.RecognitionConfig(
             # There are a bunch of config options you can specify. See
-            # https://goo.gl/A6xv5G for the full list.
+            # https://goo.gl/KPZn97 for the full list.
             encoding=encoding,  # one of LINEAR16, FLAC, MULAW, AMR, AMR_WB
             sample_rate=sample_rate,  # the rate in hertz
             # See

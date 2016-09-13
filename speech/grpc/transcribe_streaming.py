@@ -90,7 +90,7 @@ def request_stream(stop_audio, channels=CHANNELS, rate=RATE, chunk=CHUNK):
     # server knows how to interpret it.
     recognition_config = cloud_speech.RecognitionConfig(
         # There are a bunch of config options you can specify. See
-        # https://goo.gl/A6xv5G for the full list.
+        # https://goo.gl/KPZn97 for the full list.
         encoding='LINEAR16',  # raw 16-bit signed LE samples
         sample_rate=rate,  # the rate in hertz
         # See
