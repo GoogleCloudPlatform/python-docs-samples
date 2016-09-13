@@ -121,7 +121,8 @@ def update_schema_task(cursor=None, num_updated=0, batch_size=100):
             update_schema_task, cursor=query.cursor(), num_updated=num_updated)
     else:
         logging.debug(
-            'UpdateSchema complete with {0} updates!'.format(num_updated))
+            'update_schema_task complete with {0} updates!'.format(
+                num_updated))
 
 
 app = webapp2.WSGIApplication([
