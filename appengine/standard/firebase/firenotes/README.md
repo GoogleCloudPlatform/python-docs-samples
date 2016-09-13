@@ -6,7 +6,7 @@ Authentication, Google App Engine, and Google Cloud Datastore.
 
 This sample is used on the following documentation page:
 
-<https://cloud.google.com/appengine/docs/python/authenticating-users-firebase-appengine/>
+[https://cloud.google.com/appengine/docs/python/authenticating-users-firebase-appengine/](https://cloud.google.com/appengine/docs/python/authenticating-users-firebase-appengine/)
 
 You'll need to have [Python 2.7](https://www.python.org/) and the [Google Cloud SDK](https://cloud.google.com/sdk/?hl=en)
 installed and initialized to an App Engine project before running the code in
@@ -51,7 +51,7 @@ server with the following command:
 
         dev_appserver.py frontend/app.yaml backend/app.yaml
 
-1. Visit <http://locahost:8080/> in a web browser.
+1. Visit [http://locahost:8080/](http://locahost:8080/) in a web browser.
 
 ## Deploy
 1. Change the backend host URL in `main.js` to
