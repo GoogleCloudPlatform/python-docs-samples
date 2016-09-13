@@ -1,3 +1,0 @@
-service: template
-runtime: nodejs
-vm: true

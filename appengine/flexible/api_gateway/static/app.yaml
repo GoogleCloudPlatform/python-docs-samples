@@ -1,8 +1,8 @@
 # [START runtime]
-service: flask1
+service: static
 runtime: python
 vm: true
-entrypoint: gunicorn -b :$PORT flask_server:app
+entrypoint: gunicorn -b :$PORT static_server:app
 
 runtime_config:
   python_version: 3
