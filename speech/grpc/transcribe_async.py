@@ -60,7 +60,7 @@ def main(input_uri, encoding, sample_rate):
     response = service.AsyncRecognize(cloud_speech_pb2.AsyncRecognizeRequest(
         config=cloud_speech_pb2.RecognitionConfig(
             # There are a bunch of config options you can specify. See
-            # https://goo.gl/A6xv5G for the full list.
+            # https://goo.gl/KPZn97 for the full list.
             encoding=encoding,  # one of LINEAR16, FLAC, MULAW, AMR, AMR_WB
             sample_rate=sample_rate,  # the rate in hertz
             # See
