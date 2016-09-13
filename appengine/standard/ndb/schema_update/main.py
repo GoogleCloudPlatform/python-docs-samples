@@ -77,7 +77,6 @@ class UpdateSchemaHandler(webapp2.RequestHandler):
     """Queues a task to start updating the model schema."""
     def post(self):
         deferred.defer(update_schema_task)
-
         self.response.write("""
         Schema update started. Check the console for task progress.
         <a href="/">View entities</a>.
