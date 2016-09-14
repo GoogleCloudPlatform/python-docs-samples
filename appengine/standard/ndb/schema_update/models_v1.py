@@ -15,6 +15,8 @@
 from google.appengine.ext import ndb
 
 
+# [START models_v1]
 class Picture(ndb.Model):
     author = ndb.StringProperty()
     name = ndb.StringProperty(default='')
+# [END models_v1]
