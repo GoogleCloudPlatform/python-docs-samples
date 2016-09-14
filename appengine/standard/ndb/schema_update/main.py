@@ -33,6 +33,7 @@ import webapp2
 import models_v1
 import models_v2
 
+
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(
         os.path.join(os.path.dirname(__file__), 'templates')),
@@ -42,6 +43,8 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 
 # [START display_entities]
+
+
 class DisplayEntitiesHandler(webapp2.RequestHandler):
     """Displays the current set of entities and options to add entities
     or update the schema."""
@@ -79,6 +82,8 @@ class AddEntitiesHandler(webapp2.RequestHandler):
 
 
 # [START update_schema]
+
+
 class UpdateSchemaHandler(webapp2.RequestHandler):
     """Queues a task to start updating the model schema."""
     def post(self):

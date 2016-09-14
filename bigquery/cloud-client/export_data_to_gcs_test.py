@@ -15,7 +15,7 @@ import export_data_to_gcs
 
 
 DATASET_ID = 'test_dataset'
-TABLE_ID = 'test_import_table'
+TABLE_ID = 'test_table'
 
 
 def test_export_data_to_gcs(cloud_config, capsys):
