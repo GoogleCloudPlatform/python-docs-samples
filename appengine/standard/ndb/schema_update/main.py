@@ -20,7 +20,7 @@ of it. v2 contains two extra fields. The application shows how to
 populate these new fields onto entities that existed prior to adding the
 new fields to the model class.
 """
-
+# [START imports]
 import logging
 import os
 
@@ -38,8 +38,10 @@ JINJA_ENVIRONMENT = jinja2.Environment(
         os.path.join(os.path.dirname(__file__), 'templates')),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
+# [END imports]
 
 
+# [START display_entities]
 class DisplayEntitiesHandler(webapp2.RequestHandler):
     """Displays the current set of entities and options to add entities
     or update the schema."""
@@ -54,8 +56,10 @@ class DisplayEntitiesHandler(webapp2.RequestHandler):
 
         template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.write(template.render(template_values))
+# [END display_entities]
 
 
+# [START add_entities]
 class AddEntitiesHandler(webapp2.RequestHandler):
     """Adds new entities using the v1 schema."""
     def post(self):
@@ -71,8 +75,10 @@ class AddEntitiesHandler(webapp2.RequestHandler):
         self.response.write("""
         Entities created. <a href="/">View entities</a>.
         """)
+# [END add_entities]
 
 
+# [START update_schema]
 class UpdateSchemaHandler(webapp2.RequestHandler):
     """Queues a task to start updating the model schema."""
     def post(self):
@@ -123,6 +129,7 @@ def update_schema_task(cursor=None, num_updated=0, batch_size=100):
         logging.debug(
             'update_schema_task complete with {0} updates!'.format(
                 num_updated))
+# [END update_schema]
 
 
 app = webapp2.WSGIApplication([
