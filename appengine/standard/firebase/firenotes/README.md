@@ -6,11 +6,9 @@ Authentication, Google App Engine, and Google Cloud Datastore.
 
 This sample is used on the following documentation page:
 
-<https://cloud.google.com/appengine/docs/python/authenticating-users-firebase-app-engine/>
+[https://cloud.google.com/appengine/docs/python/authenticating-users-firebase-appengine/](https://cloud.google.com/appengine/docs/python/authenticating-users-firebase-appengine/)
 
-You'll need to have [Python 2.7](https://www.python.org/), the
-[App Engine SDK](https://cloud.google.com/appengine/downloads#Google_App_Engine_SDK_for_Python),
-and the [Google Cloud SDK](https://cloud.google.com/sdk/?hl=en)
+You'll need to have [Python 2.7](https://www.python.org/) and the [Google Cloud SDK](https://cloud.google.com/sdk/?hl=en)
 installed and initialized to an App Engine project before running the code in
 this sample.
 
@@ -18,7 +16,11 @@ this sample.
 
 1. Clone this repo:
 
-        git clone https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/appengine/standard/firebase/firenotes
+        git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+
+1. Navigate to the directory that contains the sample code:
+
+        cd python-docs-samples/appengine/standard/firebase/firenotes
 
 1. Within a virtualenv, install the dependencies to the backend service:
 
@@ -32,7 +34,7 @@ this sample.
     application on the App Engine local development server.
 
 1. [Add Firebase to your app.](https://firebase.google.com/docs/web/setup#add_firebase_to_your_app)
-1. Add your Firebase Project ID to the backend’s `app.yaml` file as an
+1. Add your Firebase project ID to the backend’s `app.yaml` file as an
 environment variable.
 1. Select which providers you want to enable. Delete the providers from
 `main.js` that you do no want to offer. Enable the providers you chose to keep
@@ -49,7 +51,7 @@ server with the following command:
 
         dev_appserver.py frontend/app.yaml backend/app.yaml
 
-1. Visit <http://locahost:8080/> in a web browser.
+1. Visit [http://locahost:8080/](http://locahost:8080/) in a web browser.
 
 ## Deploy
 1. Change the backend host URL in `main.js` to
