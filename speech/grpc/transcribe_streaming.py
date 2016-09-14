@@ -90,7 +90,7 @@ def request_stream(stop_audio, channels=CHANNELS, rate=RATE, chunk=CHUNK):
     # server knows how to interpret it.
     recognition_config = cloud_speech.RecognitionConfig(
         # There are a bunch of config options you can specify. See
-        # https://goo.gl/A6xv5G for the full list.
+        # https://goo.gl/KPZn97 for the full list.
         encoding='LINEAR16',  # raw 16-bit signed LE samples
         sample_rate=rate,  # the rate in hertz
         # See
@@ -100,12 +100,6 @@ def request_stream(stop_audio, channels=CHANNELS, rate=RATE, chunk=CHUNK):
     )
     streaming_config = cloud_speech.StreamingRecognitionConfig(
         config=recognition_config,
-        # Note that setting interim_results to True means that you'll likely
-        # get multiple results for the same bit of audio, as the system
-        # re-interprets audio in the context of subsequent audio. However, this
-        # will give us quick results without having to tell the server when to
-        # finalize a piece of audio.
-        interim_results=True, single_utterance=True
     )
 
     yield cloud_speech.StreamingRecognizeRequest(
