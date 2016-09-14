@@ -20,7 +20,7 @@ of it. v2 contains two extra fields. The application shows how to
 populate these new fields onto entities that existed prior to adding the
 new fields to the model class.
 """
-
+# [START imports]
 import logging
 import os
 
@@ -56,8 +56,10 @@ class DisplayEntitiesHandler(webapp2.RequestHandler):
 
         template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.write(template.render(template_values))
+# [END display_entities]
 
 
+# [START add_entities]
 class AddEntitiesHandler(webapp2.RequestHandler):
     """Adds new entities using the v1 schema."""
     def post(self):
