@@ -99,7 +99,7 @@ def upload_object(bucket, filename, readers, owners):
     with open(filename, 'rb') as f:
         req = service.objects().insert(
             bucket=bucket, body=body,
-            # You can also just set media_body=filename, but # for the sake of
+            # You can also just set media_body=filename, but for the sake of
             # demonstration, pass in the more generic file handle, which could
             # very well be a StringIO or similar.
             media_body=http.MediaIoBaseUpload(f, 'application/octet-stream'))
