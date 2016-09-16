@@ -12,12 +12,7 @@ request and process a response using the API.
 
 1. Install the [Google Cloud SDK](https://cloud.google.com/sdk/), including the [gcloud tool](https://cloud.google.com/sdk/gcloud/), and [gcloud app component](https://cloud.google.com/sdk/gcloud-app).
 
-2. Setup the gcloud tool. This provides authentication to Google Cloud APIs and services.
-
-```
-$ gcloud init
-```
-
+2. Set up your [Cloud Natural Language API project](https://cloud.google.com/natural-language/docs/getting-started#set_up_a_project), which includes setting up a service account, and ensuring you've properly set up your `GOOGLE_APPLICATION_CREDENTIALS` for proper authentication to the service.
 
 ## Download the Code
 
