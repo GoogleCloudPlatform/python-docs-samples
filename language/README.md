@@ -13,5 +13,9 @@ to extract text from images, then uses the NL API to extract entity information
 from those texts, and stores the extracted information in a database in support
 of further analysis and correlation.
 
+- [sentiment](sentiment) contains the [Sentiment Analysis
+  Tutorial](https://cloud.google.com/natural-language/docs/sentiment-tutorial)
+code as used within the documentation.
+
 - [syntax_triples](syntax_triples) uses syntax analysis to find
 subject-verb-object triples in a given piece of text.
