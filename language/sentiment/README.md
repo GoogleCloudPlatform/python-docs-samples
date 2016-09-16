@@ -10,9 +10,14 @@ request and process a response using the API.
 
 ## Prerequisites
 
-1. Install the [Google Cloud SDK](https://cloud.google.com/sdk/), including the [gcloud tool](https://cloud.google.com/sdk/gcloud/), and [gcloud app component](https://cloud.google.com/sdk/gcloud-app).
+Set up your 
+[Cloud Natural Language API project](https://cloud.google.com/natural-language/docs/getting-started#set_up_a_project)
+, which includes:
 
-2. Set up your [Cloud Natural Language API project](https://cloud.google.com/natural-language/docs/getting-started#set_up_a_project), which includes setting up a service account, and ensuring you've properly set up your `GOOGLE_APPLICATION_CREDENTIALS` for proper authentication to the service.
+* Enabling the Natural Language API
+* Setting up a service account
+* Ensuring you've properly set up your `GOOGLE_APPLICATION_CREDENTIALS` for proper
+    authentication to the service.
 
 ## Download the Code
 
