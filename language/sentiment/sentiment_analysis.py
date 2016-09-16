@@ -52,4 +52,3 @@ if __name__ == '__main__':
         help='The filename of the movie review you\'d like to analyze.')
     args = parser.parse_args()
     main(args.movie_review_filename)
-

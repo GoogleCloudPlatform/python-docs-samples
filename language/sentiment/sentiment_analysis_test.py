@@ -44,4 +44,3 @@ def test_neutral(resource, capsys):
     out, err = capsys.readouterr()
     magnitude = re.search('magnitude of (.+?)', out)
     assert magnitude <= 2.0 is True
-
