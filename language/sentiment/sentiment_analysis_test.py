@@ -18,29 +18,29 @@ from sentiment_analysis import main
 def test_pos(resource, capsys):
     main(resource('pos.txt'))
     out, err = capsys.readouterr()
-    polarity = re.search('polarity of (.+?) with', out)
-    magnitude = re.search('magnitude of (.+?)', out)
+    polarity = float(re.search('polarity of (.+?) with', out).group(1))
+    magnitude = float(re.search('magnitude of (.+?)', out).group(1))
     assert polarity * magnitude > 0
 
 
 def test_neg(resource, capsys):
     main(resource('neg.txt'))
     out, err = capsys.readouterr()
-    polarity = re.search('polarity of (.+?) with', out)
-    magnitude = re.search('magnitude of (.+?)', out)
+    polarity = float(re.search('polarity of (.+?) with', out).group(1))
+    magnitude = float(re.search('magnitude of (.+?)', out).group(1))
     assert polarity * magnitude < 0
 
 
 def test_mixed(resource, capsys):
     main(resource('mixed.txt'))
     out, err = capsys.readouterr()
-    polarity = re.search('polarity of (.+?) with', out)
-    assert polarity <= 0.3 is True
-    assert polarity >= -0.3 is True
+    polarity = float(re.search('polarity of (.+?) with', out).group(1))
+    assert polarity <= 0.3
+    assert polarity >= -0.3
 
 
 def test_neutral(resource, capsys):
     main(resource('neutral.txt'))
     out, err = capsys.readouterr()
-    magnitude = re.search('magnitude of (.+?)', out)
-    assert magnitude <= 2.0 is True
+    magnitude = float(re.search('magnitude of (.+?)', out).group(1))
+    assert magnitude <= 2.0
