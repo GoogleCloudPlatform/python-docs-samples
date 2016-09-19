@@ -19,8 +19,11 @@ env:
   - secure: TQ0e6XKeFwVkoqgOJH9f/afyRouUSC6s7LC32C4JS+O2X4sXyXTPXACmzu5wCW0BXPc6HvITMLvkf7g6XXyGlCPkjM8Uw5Vg5F9+cwN1HMlI+gK6bMGTUfrwN5ruFT+KmEnD4F93NY3xkDbZd0fw23d/mVloTc6V0gUsxEUkuhM=
 addons:
   apt:
+    sources:
+    - deadsnakes
     packages:
     - portaudio19-dev
+    - python3.5
 install:
 - pip install --upgrade pip wheel virtualenv
 - pip install nox-automation coverage
