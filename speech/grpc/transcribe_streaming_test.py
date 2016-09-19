@@ -11,54 +11,53 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import contextlib
-import io
 import re
 import time
 
 import transcribe_streaming
 
 
-class MockAudioStream(object):
-    def __init__(self, audio_filename, trailing_silence_secs=10):
+class MockPyAudio(object):
+    def __init__(self, audio_filename):
         self.audio_filename = audio_filename
-        self.silence = io.BytesIO('\0\0' * transcribe_streaming.RATE *
-                                  trailing_silence_secs)
-
-    def __enter__(self):
-        self.audio_file = open(self.audio_filename)
-        return self
-
-    def __exit__(self, *args):
-        self.audio_file.close()
 
     def __call__(self, *args):
         return self
 
+    def open(self, *args, **kwargs):
+        self.audio_file = open(self.audio_filename, 'rb')
+        return self
+
+    def close(self):
+        self.audio_file.close()
+
+    def stop_stream(self):
+        pass
+
+    def terminate(self):
+        pass
+
     def read(self, num_frames):
+        if self.audio_file.closed:
+            raise IOError()
         # Approximate realtime by sleeping for the appropriate time for the
         # requested number of frames
         time.sleep(num_frames / float(transcribe_streaming.RATE))
         # audio is 16-bit samples, whereas python byte is 8-bit
         num_bytes = 2 * num_frames
-        chunk = self.audio_file.read(num_bytes) or self.silence.read(num_bytes)
+        try:
+            chunk = self.audio_file.read(num_bytes)
+        except ValueError:
+            raise IOError()
+        if not chunk:
+            raise IOError()
         return chunk
-
-
-def mock_audio_stream(filename):
-    @contextlib.contextmanager
-    def mock_audio_stream(channels, rate, chunk):
-        with open(filename, 'rb') as audio_file:
-            yield audio_file
-
-    return mock_audio_stream
 
 
 def test_main(resource, monkeypatch, capsys):
     monkeypatch.setattr(
-        transcribe_streaming, 'record_audio',
-        mock_audio_stream(resource('quit.raw')))
-    monkeypatch.setattr(transcribe_streaming, 'DEADLINE_SECS', 30)
+        transcribe_streaming.pyaudio, 'PyAudio',
+        MockPyAudio(resource('quit.raw')))
 
     transcribe_streaming.main()
     out, err = capsys.readouterr()
