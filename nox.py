@@ -190,7 +190,7 @@ def run_tests_in_sesssion(
             success_codes=[0, 5])  # Treat no test collected as success.
 
 
-@nox.parametrize('interpreter', ['python2.7', 'python3.4'])
+@nox.parametrize('interpreter', ['python2.7', 'python3.5'])
 def session_tests(session, interpreter):
     """Runs tests for all non-gae standard samples."""
     # session.posargs is any leftover arguments from the command line,
@@ -212,9 +212,9 @@ def session_gae(session):
 
 @nox.parametrize('subsession', ['gae', 'tests'])
 def session_travis(session, subsession):
-    """On travis, just run with python3.4 and don't run slow or flaky tests."""
+    """On travis, just run with python3.5 and don't run slow or flaky tests."""
     if subsession == 'tests':
-        interpreter = 'python3.4'
+        interpreter = 'python3.5'
         sample_directories = collect_sample_dirs(
             '.', set('./appengine/standard'))
     elif subsession == 'gae':
