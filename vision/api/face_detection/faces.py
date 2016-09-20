@@ -26,14 +26,9 @@ from PIL import ImageDraw
 
 
 # [START get_vision_service]
-DISCOVERY_URL = ('https://{api}.googleapis.com/$discovery/rest?'
-                 'version={apiVersion}')
-
-
 def get_vision_service():
     credentials = GoogleCredentials.get_application_default()
-    return discovery.build('vision', 'v1', credentials=credentials,
-                           discoveryServiceUrl=DISCOVERY_URL)
+    return discovery.build('vision', 'v1', credentials=credentials)
 # [END get_vision_service]
 
 
