@@ -44,7 +44,7 @@ def async_query(
                 'priority': 'BATCH' if batch else 'INTERACTIVE',
                 # Set to False to use standard SQL syntax. See:
                 # https://cloud.google.com/bigquery/sql-reference/enabling-standard-sql
-                'useLegacySQL': use_legacy_sql
+                'useLegacySql': use_legacy_sql
             }
         }
     }
