@@ -11,8 +11,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-""" Sample command-line program for writing and reading Stackdriver Monitoring API
-V3 custom metrics.
+""" Sample command-line program for writing and reading Stackdriver Monitoring
+API V3 custom metrics.
 
 Simple command-line program to demonstrate connecting to the Google
 Monitoring API to write custom metrics and read them back.
