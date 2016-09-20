@@ -32,9 +32,6 @@ import base64
 
 from googleapiclient import discovery
 from oauth2client.client import GoogleCredentials
-
-# The url template to retrieve the discovery document for trusted testers.
-DISCOVERY_URL = 'https://{api}.googleapis.com/$discovery/rest?version={apiVersion}'  # noqa
 # [END import_libraries]
 
 
@@ -43,8 +40,7 @@ def main(photo_file):
 
     # [START authenticate]
     credentials = GoogleCredentials.get_application_default()
-    service = discovery.build('vision', 'v1', credentials=credentials,
-                              discoveryServiceUrl=DISCOVERY_URL)
+    service = discovery.build('vision', 'v1', credentials=credentials)
     # [END authenticate]
 
     # [START construct_request]
