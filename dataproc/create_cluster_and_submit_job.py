@@ -17,7 +17,7 @@ import argparse
 import os
 
 from apiclient import discovery
-from gcloud import storage
+from google.cloud import storage
 from oauth2client.client import GoogleCredentials
 
 # Currently only the "global" region is supported

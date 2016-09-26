@@ -28,7 +28,7 @@ import argparse
 import time
 import uuid
 
-from gcloud import bigquery
+from google.cloud import bigquery
 import gcloud.bigquery.job
 
 

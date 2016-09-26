@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from gcloud import pubsub
+from google.cloud import pubsub
 from gcp.testing import eventually_consistent
 import pytest
 

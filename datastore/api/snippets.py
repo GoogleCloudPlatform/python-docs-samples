@@ -17,7 +17,7 @@ import datetime
 from pprint import pprint
 
 import gcloud
-from gcloud import datastore
+from google.cloud import datastore
 
 
 def incomplete_key(client):

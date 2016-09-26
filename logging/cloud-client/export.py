@@ -16,7 +16,7 @@
 
 import argparse
 
-from gcloud import logging
+from google.cloud import logging
 
 
 def list_sinks():

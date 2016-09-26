@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from gcloud import datastore
+from google.cloud import datastore
 from gcp.testing import eventually_consistent
 from gcp.testing.flaky import flaky
 import pytest

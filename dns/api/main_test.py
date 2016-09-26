@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from gcloud import dns
+from google.cloud import dns
 from gcp.testing.flaky import flaky
 import pytest
 

@@ -26,7 +26,7 @@ Prerequisites:
 
 import argparse
 
-from gcloud import bigtable
+from google.cloud import bigtable
 
 
 def main(project_id, instance_id, table_id):

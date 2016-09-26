@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from gcloud import logging
+from google.cloud import logging
 from gcp.testing import eventually_consistent
 import pytest
 

@@ -23,7 +23,7 @@ at https://cloud.google.com/storage/docs/encryption.
 
 import argparse
 
-from gcloud import storage
+from google.cloud import storage
 
 
 def print_bucket_acl(bucket_name):

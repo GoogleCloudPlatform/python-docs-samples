@@ -24,7 +24,7 @@ at https://cloud.google.com/storage/docs.
 import argparse
 import datetime
 
-from gcloud import storage
+from google.cloud import storage
 
 
 def create_bucket(bucket_name):

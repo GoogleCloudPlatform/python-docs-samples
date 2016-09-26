@@ -15,7 +15,7 @@
 import tempfile
 
 import gcloud
-from gcloud import storage
+from google.cloud import storage
 import pytest
 import requests
 
