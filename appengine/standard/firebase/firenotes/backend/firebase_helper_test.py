@@ -94,7 +94,7 @@ def test_extract_public_key_from_certificate(test_certificate):
 
 def make_jwt(private_key_bytes, claims=None, headers=None):
     jwt_claims = {
-        'iss': 'http://example.com',
+        'iss': 'https://securetoken.google.com/test_audience',
         'aud': 'test_audience',
         'user_id': '123',
         'sub': '123',
