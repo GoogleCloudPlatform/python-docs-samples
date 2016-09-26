@@ -112,8 +112,8 @@ def verify_auth_token(request):
             public_key,
             algorithms=['RS256'],
             audience=os.environ['FIREBASE_PROJECT_ID'],
-            issuer="https://securetoken.google.com/"
-            + os.environ['FIREBASE_PROJECT_ID'])
+            issuer='https://securetoken.google.com/{}'.format(
+                os.environ['FIREBASE_PROJECT_ID']))
     except jwt.exceptions.InvalidTokenError as e:
         logging.warning('JWT verification failed: {}'.format(e))
         return None
