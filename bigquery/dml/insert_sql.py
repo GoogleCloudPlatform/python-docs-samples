@@ -36,6 +36,7 @@ database. Then run this script.
 from __future__ import print_function
 
 import argparse
+# [START insert_sql]
 import time
 
 from gcloud import bigquery
@@ -43,6 +44,7 @@ from gcloud import exceptions
 
 
 def retry_query(query, times=3):
+    """Retry a query up to some number of times."""
 
     for attempt in range(times):
 
@@ -60,6 +62,8 @@ def retry_query(query, times=3):
 
 
 def insert_sql(sql_path, project=None, default_dataset=None):
+    """Run all the SQL statements in a SQL file."""
+
     client = bigquery.Client(project=project)
 
     with open(sql_path) as f:
@@ -74,12 +78,19 @@ def insert_sql(sql_path, project=None, default_dataset=None):
                 line[:60],
                 '...' if len(line) > 60 else ''))
             query = client.run_sync_query(line)
+
+            # Set use_legacy_sql to False to enable standard SQL syntax.
+            # This is required to use the Data Manipulation Language features.
+            #
+            # For more information about enabling standard SQL, see:
+            # https://cloud.google.com/bigquery/sql-reference/enabling-standard-sql
             query.use_legacy_sql = False
 
             if default_dataset is not None:
                 query.default_dataset = client.dataset(default_dataset)
 
             retry_query(query)
+# [END insert_sql]
 
 
 if __name__ == "__main__":
