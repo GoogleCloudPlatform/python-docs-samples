@@ -15,14 +15,12 @@
 # [START app]
 import logging
 
-from flask import Flask, render_template
-from flask_sockets import Sockets
+from flask import Flask
 import requests
 
 
 logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
-sockets = Sockets(app)
 
 
 # [START metadata]
@@ -48,19 +46,12 @@ def get_external_ip():
 # [END metadata]
 
 
-@sockets.route('/echo')
-def echo_socket(ws):
-    while True:
-        message = ws.receive()
-        ws.send(message)
-
-
 @app.route('/')
 def index():
     # Websocket connections must be made directly to this instance, so the
     # external IP address of this instance is needed.
     external_ip = get_external_ip()
-    return render_template('index.html', external_ip=external_ip)
+    return 'External IP: {}'.format(external_ip)
 # [END app]
 
 
@@ -74,10 +65,6 @@ def server_error(e):
 
 
 if __name__ == '__main__':
-    print("""
-This can not be run directly because the Flask development server does not
-support web sockets. Instead, use gunicorn:
-
-gunicorn -b 127.0.0.1:8080 -b 127.0.0.1:65080 -k flask_sockets.worker main:app
-
-""")
+    # This is used when running locally. Gunicorn is used to run the
+    # application on Google App Engine. See entrypoint in app.yaml.
+    app.run(host='127.0.0.1', port=8080, debug=True)

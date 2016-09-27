@@ -1,5 +1,5 @@
 runtime: python
-vm: true
+env: flex
 entrypoint: gunicorn -b :$PORT main:app
 
 runtime_config:
@@ -7,6 +7,5 @@ runtime_config:
 
 #[START env]
 env_variables:
-    GCLOUD_PROJECT: your-project-id
     CLOUD_STORAGE_BUCKET: your-bucket-name
 #[END env]

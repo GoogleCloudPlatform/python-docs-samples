@@ -51,7 +51,7 @@ def send_email():
 
     response = sg.client.mail.send.post(request_body=message.get())
 
-    if response.status_code != 200:
+    if response.status_code != 202:
         return 'An error occurred: {}'.format(response.body), 500
 
     return 'Email sent.'
