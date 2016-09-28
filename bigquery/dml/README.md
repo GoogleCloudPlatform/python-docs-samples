@@ -1,5 +1,12 @@
 # BigQuery DML Samples
 
+<!-- auto-doc-link -->
+These samples are used on the following documentation page:
+
+> https://cloud.google.combigquery/docs/loading-data-sql-dml
+
+<!-- end-auto-doc-link -->
+
 To create a test database, run the `populate_db.py` script.
 
 ```
