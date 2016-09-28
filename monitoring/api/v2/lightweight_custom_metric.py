@@ -17,7 +17,7 @@
 
 """Writes and reads a lightweight custom metric.
 
-This is an example of how to use the Google Cloud Monitoring API to write
+This is an example of how to use the Stackdriver Monitoring API to write
 and read a lightweight custom metric. Lightweight custom metrics have no
 labels and you do not need to create a metric descriptor for them.
 

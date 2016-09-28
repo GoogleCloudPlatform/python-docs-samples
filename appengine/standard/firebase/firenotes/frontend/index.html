@@ -1,0 +1,44 @@
+<!doctype html>
+<!--
+Copyright 2016 Google Inc. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+-->
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/3.2.1/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/ui/live/0.5/firebase-ui-auth.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/live/0.5/firebase-ui-auth.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="/main.js"></script>
+  <title>Firenotes</title>
+</head>
+<body>
+  <div id="logged-out">
+    <h1>Firenotes</h1>
+    <h3>Sign in to access your notebook</h3>
+    <div id="firebaseui-auth-container"></div>
+  </div>
+
+  <div id="logged-in">
+    <h1>Welcome, <span id="user"></span>!</h1>
+    <h3>Enter a note and save it to your personal notebook</h3>
+  <div id="form">
+    <form action="" method="post">
+      <div class="form-group">
+        <textarea id="note-content"></textarea>
+      </div>
+      <div class="form-group">
+        <button id="add-note">Save note</button>
+        <button id="sign-out">Sign out</button> 
+      </div>
+    </form>
+  </div>
+
+  <div id="notes-container"></div>
+  </div>
+</body>
+</html>

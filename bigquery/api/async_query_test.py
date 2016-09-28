@@ -36,9 +36,7 @@ def test_async_query(cloud_config, capsys):
 
 
 def test_async_query_standard_sql(cloud_config, capsys):
-    query = (
-        'SELECT corpus FROM publicdata.samples.shakespeare '
-        'GROUP BY corpus;')
+    query = 'SELECT [1, 2, 3] AS arr;'  # Only valid in standard SQL
 
     main(
         project_id=cloud_config.project,

@@ -1,4 +1,5 @@
-gcloud==0.18.1
+gcloud==0.18.3
 grpcio==1.0.0
 PyAudio==0.2.9
 grpc-google-cloud-speech-v1beta1==1.0.1
+six==1.10.0
