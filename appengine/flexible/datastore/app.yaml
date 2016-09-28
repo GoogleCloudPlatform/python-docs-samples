@@ -1,5 +1,5 @@
 runtime: python
-vm: true
+env: flex
 entrypoint: gunicorn -b :$PORT main:app
 
 runtime_config:
@@ -7,5 +7,5 @@ runtime_config:
 
 # [START env_variables]
 env_variables:
-    GCLOUD_PROJECT: your-project-id
+    GCLOUD_PROJECT: your-tracking-id
 # [END env_variables]
