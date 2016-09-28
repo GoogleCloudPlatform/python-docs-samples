@@ -1,0 +1,10 @@
+# Ignore python virtual environment
+env/
+
+# Ignore all logfiles and tempfiles.
+/log/*
+!/log/.keep
+/tmp
+__pycache__
+*.pyc
+.DS_Store

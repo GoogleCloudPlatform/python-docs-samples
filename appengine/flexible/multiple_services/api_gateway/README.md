@@ -1,6 +1,6 @@
 # Python Google Cloud Microservices Example - API Gateway
 
-This example demonstrates how to deploy multiple python services to [App Engine Flexible Environment](https://cloud.google.com/appengine/docs/flexible/)
+This example demonstrates how to deploy multiple python services to [App Engine flexible environment](https://cloud.google.com/appengine/docs/flexible/)
 
 ## To Run Locally
 
@@ -25,44 +25,23 @@ development ports specified in line `gateway/api_gateway.py:6`
 development ports {static: 8003, flask1: 8001, flask2: 8002}
 ```
 
-5. To run each server locally:
-```Bash
-$ source env/bin/activate
-$ export FLASK_DEBUG=1 #optional to run in debug mode
-$ python <server name>.py development
-$ deactivate #after shutting down server
-```
-
 ## To Deploy to App Engine
 
 ### YAML Files
 
 Each directory contains an `app.yaml file`.  This file will be the same as if
 each service were its own project except for the `service` line. For the gateway:
-```YAML
-service: default
-runtime: python
-vm: true
-entrypoint: gunicorn -b :$PORT api_gateway:app
 
-runtime_config:
-  python_version: 3
-```  
+[Gateway <default>](gateway/app.yaml)
 
 This is the `default` service.  There must be one (and not more).  The deployed
 url will be `https://<your project id>.appspot.com`
 
-For one of the other services:
+For the other services:
 
-```YAML
-service: <service name>
-runtime: python
-vm: true
-entrypoint: gunicorn -b :$PORT flask_server:app
-
-runtime_config:
-  python_version: 3
-```  
+[Flask Server 1 <flask1>](flask/app.yaml)
+[Flask Server 2 <flask2](flask2/app.yaml)
+[Static File Server <static>](static/app.yaml)
 
 Make sure the `entrypoint` line matches the filename of the server you want to deploy.
 
