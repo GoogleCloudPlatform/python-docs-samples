@@ -361,6 +361,9 @@
   "/bigquery/docs/data": [
     "bigquery/api/sync_query.py"
   ], 
+  "bigquery/docs/loading-data-sql-dml": [
+    "bigquery/dml/insert_sql.py"
+  ],
   "/appengine/docs/python/memcache/examples": [
     "appengine/memcache/snippets/snippets.py", 
     "appengine/memcache/guestbook/main.py"

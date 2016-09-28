@@ -1,0 +1,5 @@
+flake8==3.0.4
+gcloud==0.18.1
+PyMySQL==0.7.7
+six==1.10.0
+SQLAlchemy==1.0.15
