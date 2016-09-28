@@ -22,16 +22,15 @@ https://cloud.google.com/pubsub/docs.
 """
 
 import argparse
-import os
 
 from google.cloud import pubsub
 
 
-pubsub_client = pubsub.Client()
-
-
 # [START pubsub_list_subscriptions]
 def list_subscriptions():
+    # Instantiates the client library
+    pubsub_client = pubsub.Client()
+
     # Lists all subscriptions in the current project
     subscriptions = []
     next_page_token = None
@@ -49,6 +48,9 @@ def list_subscriptions():
 
 # [START pubsub_list_topic_subscriptions]
 def list_topic_subscriptions(topic_name):
+    # Instantiates the client library
+    pubsub_client = pubsub.Client()
+
     # Reference an existing topic, e.g. "my-topic"
     topic = pubsub_client.topic(topic_name)
 
@@ -69,6 +71,9 @@ def list_topic_subscriptions(topic_name):
 
 # [START pubsub_create_subscription]
 def create_subscription(topic_name, subscription_name):
+    # Instantiates the client library
+    pubsub_client = pubsub.Client()
+
     # References an existing topic, e.g. "my-topic"
     topic = pubsub_client.topic(topic_name)
 
@@ -84,10 +89,13 @@ def create_subscription(topic_name, subscription_name):
 
 # [START pubsub_create_push_subscription]
 def create_push_subscription(topic_name, subscription_name):
+    # Instantiates the client library
+    pubsub_client = pubsub.Client()
+
     # References an existing topic, e.g. "my-topic"
     topic = pubsub_client.topic(topic_name)
 
-    project_id = os.environ['GCLOUD_PROJECT'] or 'YOUR_PROJECT_ID'
+    project_id = pubsub_client.project
 
     # Prepares a new push subscription, e.g. "my-new-subscription"
     subscription = topic.subscription(
@@ -106,6 +114,9 @@ def create_push_subscription(topic_name, subscription_name):
 
 # [START pubsub_delete_subscription]
 def delete_subscription(topic_name, subscription_name):
+    # Instantiates the client library
+    pubsub_client = pubsub.Client()
+
     # References an existing topic, e.g. "my-topic"
     topic = pubsub_client.topic(topic_name)
 
@@ -119,8 +130,11 @@ def delete_subscription(topic_name, subscription_name):
 # [END pubsub_delete_subscription]
 
 
-# [START pubsub_get_subscription_metadata]
-def get_subscription_metadata(topic_name, subscription_name):
+# [START pubsub_get_subscription]
+def get_subscription(topic_name, subscription_name):
+    # Instantiates the client library
+    pubsub_client = pubsub.Client()
+
     # References an existing topic, e.g. "my-topic"
     topic = pubsub_client.topic(topic_name)
 
@@ -134,11 +148,14 @@ def get_subscription_metadata(topic_name, subscription_name):
     print('Topic: {}'.format(subscription.topic.name))
     print('Push config: {}'.format(subscription.push_endpoint))
     print('Ack deadline: {}s'.format(subscription.ack_deadline))
-# [END pubsub_get_subscription_metadata]
+# [END pubsub_get_subscription]
 
 
 # [START pubsub_pull_messages]
 def pull_messages(topic_name, subscription_name):
+    # Instantiates the client library
+    pubsub_client = pubsub.Client()
+
     # References an existing topic, e.g. "my-topic"
     topic = pubsub_client.topic(topic_name)
 
@@ -164,6 +181,9 @@ def pull_messages(topic_name, subscription_name):
 
 # [START pubsub_get_subscription_policy]
 def get_subscription_policy(topic_name, subscription_name):
+    # Instantiates the client library
+    pubsub_client = pubsub.Client()
+
     # References an existing topic, e.g. "my-topic"
     topic = pubsub_client.topic(topic_name)
 
@@ -173,12 +193,21 @@ def get_subscription_policy(topic_name, subscription_name):
     # Retrieves the IAM policy for the subscription
     policy = subscription.get_iam_policy()
 
-    print('Policy for subscription: {}'.format(policy.to_api_repr()))
+    print('Policy for subscription:')
+    print('Version: {}'.format(policy.version))
+    print('Owners: {}'.format(policy.owners))
+    print('Editors: {}'.format(policy.editors))
+    print('Viewers: {}'.format(policy.viewers))
+    print('Publishers: {}'.format(policy.publishers))
+    print('Subscribers: {}'.format(policy.subscribers))
 # [END pubsub_get_subscription_policy]
 
 
 # [START pubsub_set_subscription_policy]
 def set_subscription_policy(topic_name, subscription_name):
+    # Instantiates the client library
+    pubsub_client = pubsub.Client()
+
     # References an existing topic, e.g. "my-topic"
     topic = pubsub_client.topic(topic_name)
 
@@ -196,12 +225,21 @@ def set_subscription_policy(topic_name, subscription_name):
     # Updates the IAM policy for the subscription
     subscription.set_iam_policy(policy)
 
-    print('Updated policy for subscription: {}.'.format(policy.to_api_repr()))
+    print('Updated policy for subscription:')
+    print('Version: {}'.format(policy.version))
+    print('Owners: {}'.format(policy.owners))
+    print('Editors: {}'.format(policy.editors))
+    print('Viewers: {}'.format(policy.viewers))
+    print('Publishers: {}'.format(policy.publishers))
+    print('Subscribers: {}'.format(policy.subscribers))
 # [END pubsub_set_subscription_policy]
 
 
 # [START pubsub_test_subscription_permissions]
 def test_subscription_permissions(topic_name, subscription_name):
+    # Instantiates the client library
+    pubsub_client = pubsub.Client()
+
     # References an existing topic, e.g. "my-new-topic"
     topic = pubsub_client.topic(topic_name)
 
@@ -248,7 +286,7 @@ if __name__ == '__main__':
     delete_parser.add_argument('subscription_name')
 
     get_parser = subparsers.add_parser(
-        'get', help=get_subscription_metadata.__doc__)
+        'get', help=get_subscription.__doc__)
     get_parser.add_argument('topic_name')
     get_parser.add_argument('subscription_name')
 
@@ -286,7 +324,7 @@ if __name__ == '__main__':
     elif args.command == 'delete':
         delete_subscription(args.topic_name, args.subscription_name)
     elif args.command == 'get':
-        get_subscription_metadata(args.topic_name, args.subscription_name)
+        get_subscription(args.topic_name, args.subscription_name)
     elif args.command == 'receive':
         pull_messages(args.topic_name, args.subscription_name)
     elif args.command == 'get-policy':

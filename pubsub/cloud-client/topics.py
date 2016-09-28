@@ -26,11 +26,11 @@ import argparse
 from google.cloud import pubsub
 
 
-pubsub_client = pubsub.Client()
-
-
 # [START pubsub_list_topics]
 def list_topics():
+    # Instantiates the client library
+    pubsub_client = pubsub.Client()
+
     # Lists all topics in the current project
     topics = []
     next_page_token = None
@@ -48,6 +48,9 @@ def list_topics():
 
 # [START pubsub_create_topic]
 def create_topic(topic_name):
+    # Instantiates the client library
+    pubsub_client = pubsub.Client()
+
     # Prepares a topic instance, e.g. "my-new-topic"
     topic = pubsub_client.topic(topic_name)
 
@@ -60,6 +63,9 @@ def create_topic(topic_name):
 
 # [START pubsub_delete_topic]
 def delete_topic(topic_name):
+    # Instantiates the client library
+    pubsub_client = pubsub.Client()
+
     # References an existing topic, e.g. "my-new-topic"
     topic = pubsub_client.topic(topic_name)
 
@@ -72,6 +78,9 @@ def delete_topic(topic_name):
 
 # [START pubsub_publish_message]
 def publish_message(topic_name, data):
+    # Instantiates the client library
+    pubsub_client = pubsub.Client()
+
     # References an existing topic, e.g. "my-new-topic"
     topic = pubsub_client.topic(topic_name)
 
@@ -87,18 +96,30 @@ def publish_message(topic_name, data):
 
 # [START pubsub_get_topic_policy]
 def get_topic_policy(topic_name):
+    # Instantiates the client library
+    pubsub_client = pubsub.Client()
+
     # References an existing topic, e.g. "my-new-topic"
     topic = pubsub_client.topic(topic_name)
 
     # Retrieves the IAM policy for the topic
     policy = topic.get_iam_policy()
 
-    print('Policy for topic: {}'.format(policy.to_api_repr()))
+    print('Policy for topic:')
+    print('Version: {}'.format(policy.version))
+    print('Owners: {}'.format(policy.owners))
+    print('Editors: {}'.format(policy.editors))
+    print('Viewers: {}'.format(policy.viewers))
+    print('Publishers: {}'.format(policy.publishers))
+    print('Subscribers: {}'.format(policy.subscribers))
 # [END pubsub_get_topic_policy]
 
 
 # [START pubsub_set_topic_policy]
 def set_topic_policy(topic_name):
+    # Instantiates the client library
+    pubsub_client = pubsub.Client()
+
     # References an existing topic, e.g. "my-new-topic"
     topic = pubsub_client.topic(topic_name)
 
@@ -113,12 +134,21 @@ def set_topic_policy(topic_name):
     # Updates the IAM policy for the topic
     topic.set_iam_policy(policy)
 
-    print('Updated policy for topic: {}.'.format(policy.to_api_repr()))
+    print('Updated policy for topic:')
+    print('Version: {}'.format(policy.version))
+    print('Owners: {}'.format(policy.owners))
+    print('Editors: {}'.format(policy.editors))
+    print('Viewers: {}'.format(policy.viewers))
+    print('Publishers: {}'.format(policy.publishers))
+    print('Subscribers: {}'.format(policy.subscribers))
 # [END pubsub_set_topic_policy]
 
 
 # [START pubsub_test_topic_permissions]
 def test_topic_permissions(topic_name):
+    # Instantiates the client library
+    pubsub_client = pubsub.Client()
+
     # References an existing topic, e.g. "my-new-topic"
     topic = pubsub_client.topic(topic_name)
 
