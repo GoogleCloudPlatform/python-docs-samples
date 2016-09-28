@@ -61,27 +61,11 @@ class UserSession(Base):
     ip_address = sqlalchemy.Column(sqlalchemy.String(length=40))
 
 
-class UserAction(Base):
-    __tablename__ = 'UserActions'
-
-    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
-    session_id = sqlalchemy.Column(
-            sqlalchemy.String(length=36),
-            sqlalchemy.ForeignKey('UserSessions.id'))
-    user_id = sqlalchemy.Column(
-            sqlalchemy.Integer, sqlalchemy.ForeignKey('Users.id'))
-    action_type = sqlalchemy.Column(sqlalchemy.String(length=64))
-    action_time = sqlalchemy.Column(sqlalchemy.DateTime)
-    message = sqlalchemy.Column(sqlalchemy.Text)
-
-
 def generate_users(session, num_users):
     users = []
 
     for userid in range(1, num_users + 1):
-        # Add more users at the end of 2016 than the beginning.
-        # https://en.wikipedia.org/wiki/Beta_distribution
-        year_portion = random.betavariate(3, 1)
+        year_portion = random.random()
         date_joined = datetime.datetime.fromtimestamp(
             TIMESTAMP_2016 + SECONDS_IN_2016 * year_portion)
         user = User(id=userid, date_joined=date_joined)
@@ -123,45 +107,11 @@ def simulate_user_session(session, user, previous_user_session=None):
         user_id=user.id,
         login_time=login_time,
         ip_address=random_ip())
-    session.add(user_session)
-    session.commit()
-    previous_action_time = login_time
-    total_actions = random.randrange(10) + 1
-
-    for _ in range(total_actions):
-        action_type = random.choice(['CLICKED', 'PURCHASED'])
-        action_time = (
-            previous_action_time +
-            datetime.timedelta(seconds=random.randrange(59) + 1))
-        message = 'breed={}'.format(
-            random.choice([
-                'Albera',
-                'Angus',
-                'Beefalo',
-                'Droughtmaster',
-                'Longhorn',
-                'Guernsey',
-                'Highland',
-                'Holstein',
-                'Jersey',
-                'Normande',
-                'Shetland',
-                'Wagyu',
-            ]))
-        action = UserAction(
-            session_id=session_id,
-            user_id=user.id,
-            action_type=action_type,
-            action_time=action_time,
-            message=message)
-
-        previous_action_time = action_time
-        session.add(action)
-
     user_session.logout_time = (
-        previous_action_time +
+        login_time +
         datetime.timedelta(seconds=(1 + random.randrange(59))))
     session.commit()
+    session.add(user_session)
     return user_session
 
 
@@ -180,7 +130,6 @@ def run_simulation(session, users):
     """Simulates app activity for all users."""
 
     for n, user in enumerate(users):
-
         if n % 100 == 0 and n != 0:
             print('Simulated data for {} users'.format(n))
 

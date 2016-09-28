@@ -22,15 +22,13 @@ def test_populate_db_populates_users():
     session = create_session(engine)
 
     try:
-        populate_db(session, total_users=100)
+        populate_db(session, total_users=10)
 
         connection = session.connection().connection
         cursor = connection.cursor()
         cursor.execute('SELECT COUNT(*) FROM Users')
-        assert cursor.fetchone()[0] == 100
+        assert cursor.fetchone()[0] == 10
         cursor.execute('SELECT COUNT(*) FROM UserSessions')
-        assert cursor.fetchone()[0] >= 100
-        cursor.execute('SELECT COUNT(*) FROM UserActions')
-        assert cursor.fetchone()[0] >= 100
+        assert cursor.fetchone()[0] >= 10
     finally:
         session.close()

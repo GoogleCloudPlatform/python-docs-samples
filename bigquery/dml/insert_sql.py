@@ -14,9 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Sample to run line-separated SQL statements in Big Query from a file.
+"""Sample that runs a file containing INSERT SQL statements in Big Query.
 
-This could be used to run INSERT DML statements from a mysqldump output such as
+This could be used to run the INSERT statements in a mysqldump output such as
 
     mysqldump --user=root \
         --password='secret-password' \
@@ -27,41 +27,16 @@ This could be used to run INSERT DML statements from a mysqldump output such as
 To run, first create tables with the same names and columns as the sample
 database. Then run this script.
 
-    python insert_sql.py \
-            --project=my-project \
-            --default_dataset=my_db \
-            sample_db_export.sql
+    python insert_sql.py my-project my_dataset sample_db_export.sql
 """
 
-from __future__ import print_function
-
-import argparse
 # [START insert_sql]
-import time
+import argparse
 
 from gcloud import bigquery
-from gcloud import exceptions
 
 
-def retry_query(query, times=3):
-    """Retry a query up to some number of times."""
-
-    for attempt in range(times):
-
-        try:
-            query.run()
-            return
-        except exceptions.GCloudError as err:
-
-            if attempt == times - 1:
-                print('Giving up')
-                raise
-
-            print('Retrying, got error: {}'.format(err))
-            time.sleep(1)
-
-
-def insert_sql(sql_path, project=None, default_dataset=None):
+def insert_sql(project, default_dataset, sql_path):
     """Run all the SQL statements in a SQL file."""
 
     client = bigquery.Client(project=project)
@@ -70,8 +45,7 @@ def insert_sql(sql_path, project=None, default_dataset=None):
         for line in f:
             line = line.strip()
 
-            # Ignore blank lines and comments.
-            if line == '' or line.startswith('--') or line.startswith('/*'):
+            if not line.startswith('INSERT'):
                 continue
 
             print('Running query: {}{}'.format(
@@ -85,23 +59,20 @@ def insert_sql(sql_path, project=None, default_dataset=None):
             # For more information about enabling standard SQL, see:
             # https://cloud.google.com/bigquery/sql-reference/enabling-standard-sql
             query.use_legacy_sql = False
-
-            if default_dataset is not None:
-                query.default_dataset = client.dataset(default_dataset)
-
-            retry_query(query)
-# [END insert_sql]
+            query.default_dataset = client.dataset(default_dataset)
+            query.run()
 
 
 if __name__ == "__main__":
         parser = argparse.ArgumentParser(
             description=__doc__,
             formatter_class=argparse.RawDescriptionHelpFormatter)
-        parser.add_argument('--project', help='Google Cloud project name')
+        parser.add_argument('project', help='Google Cloud project name')
         parser.add_argument(
-                '--default-dataset', help='Default BigQuery dataset name')
+                'default_dataset', help='Default BigQuery dataset name')
         parser.add_argument('sql_path', help='Path to SQL file')
 
         args = parser.parse_args()
 
-        insert_sql(args.sql_path, args.project, args.default_dataset)
+        insert_sql(args.project, args.default_dataset, args.sql_path)
+# [END insert_sql]

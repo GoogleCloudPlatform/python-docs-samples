@@ -23,7 +23,7 @@ def test_insert_sql(cloud_config, capsys):
         'resources',
         'insert_sql_test.sql')
 
-    insert_sql(sql_path, default_dataset='test_dataset')
+    insert_sql(cloud_config.project, 'test_dataset', sql_path)
 
     out, _ = capsys.readouterr()
 
