@@ -63,7 +63,7 @@ def create_service():
     # Construct the service object for interacting with the Cloud Storage API -
     # the 'storage' service, at version 'v1'.
     # You can browse other available api services and versions here:
-    #     http://g.co/dev/api-client-library/python/apis/
+    #     http://g.co/dv/api-client-library/python/apis/
     return discovery.build('storage', 'v1', credentials=credentials)
 
 
@@ -95,7 +95,7 @@ def upload_object(bucket, filename, readers, owners):
         })
 
     # Now insert them into the specified bucket as a media insertion.
-    # http://g.co/dev/resources/api-libraries/documentation/storage/v1/python/latest/storage_v1.objects.html#insert
+    # http://g.co/dv/resources/api-libraries/documentation/storage/v1/python/latest/storage_v1.objects.html#insert
     with open(filename, 'rb') as f:
         req = service.objects().insert(
             bucket=bucket, body=body,
@@ -112,7 +112,7 @@ def get_object(bucket, filename, out_file):
     service = create_service()
 
     # Use get_media instead of get to get the actual contents of the object.
-    # http://g.co/dev/resources/api-libraries/documentation/storage/v1/python/latest/storage_v1.objects.html#get_media
+    # http://g.co/dv/resources/api-libraries/documentation/storage/v1/python/latest/storage_v1.objects.html#get_media
     req = service.objects().get_media(bucket=bucket, object=filename)
 
     downloader = http.MediaIoBaseDownload(out_file, req)
