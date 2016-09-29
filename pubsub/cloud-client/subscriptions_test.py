@@ -13,12 +13,13 @@
 # limitations under the License.
 
 from gcloud import pubsub
+from gcp.testing import eventually_consistent
 import pytest
 
-import iam
+import subscriber
 
-TEST_TOPIC = 'iam-test-topic'
-TEST_SUBSCRIPTION = 'iam-test-subscription'
+TEST_TOPIC = 'subscription-test-topic'
+TEST_SUBSCRIPTION = 'subscription-test-subscription'
 
 
 @pytest.fixture
@@ -39,11 +40,47 @@ def test_subscription(test_topic):
         subscription.delete()
 
 
-def test_get_topic_policy(test_topic, capsys):
-    iam.get_topic_policy(test_topic.name)
+def test_list(test_subscription, capsys):
+    test_subscription.create()
 
-    out, _ = capsys.readouterr()
-    assert test_topic.name in out
+    @eventually_consistent.call
+    def _():
+        subscriber.list_subscriptions(test_subscription.topic.name)
+        out, _ = capsys.readouterr()
+        assert test_subscription.name in out
+
+
+def test_create(test_subscription):
+    subscriber.create_subscription(
+        test_subscription.topic.name, test_subscription.name)
+
+    @eventually_consistent.call
+    def _():
+        assert test_subscription.exists()
+
+
+def test_delete(test_subscription):
+    test_subscription.create()
+
+    subscriber.delete_subscription(
+        test_subscription.topic.name, test_subscription.name)
+
+    @eventually_consistent.call
+    def _():
+        assert not test_subscription.exists()
+
+
+def test_receive(test_subscription, capsys):
+    topic = test_subscription.topic
+    test_subscription.create()
+
+    topic.publish('hello'.encode('utf-8'))
+
+    @eventually_consistent.call
+    def _():
+        subscriber.receive_message(topic.name, test_subscription.name)
+        out, _ = capsys.readouterr()
+        assert 'hello' in out
 
 
 def test_get_subscription_policy(test_subscription, capsys):
@@ -58,14 +95,6 @@ def test_get_subscription_policy(test_subscription, capsys):
     assert test_subscription.name in out
 
 
-def test_set_topic_policy(test_topic):
-    iam.set_topic_policy(test_topic.name)
-
-    policy = test_topic.get_iam_policy()
-    assert policy.viewers
-    assert policy.editors
-
-
 def test_set_subscription_policy(test_subscription):
     test_subscription.create()
 
@@ -76,15 +105,6 @@ def test_set_subscription_policy(test_subscription):
     policy = test_subscription.get_iam_policy()
     assert policy.viewers
     assert policy.editors
-
-
-def test_check_topic_permissions(test_topic, capsys):
-    iam.check_topic_permissions(test_topic.name)
-
-    out, _ = capsys.readouterr()
-
-    assert test_topic.name in out
-    assert 'pubsub.topics.publish' in out
 
 
 def test_check_subscription_permissions(test_subscription, capsys):
