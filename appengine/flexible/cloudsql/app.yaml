@@ -18,4 +18,4 @@ env_variables:
 # Cloud SQL instance.
 beta_settings:
     cloud_sql_instances: PROJECT:REGION:INSTANCE
-#[END cloudslq_settings]
+#[END cloudsql_settings]
