@@ -7,5 +7,5 @@ runtime_config:
 
 #[START env]
 env_variables:
-    GA_TRACKING_ID: your-project-id
+    GA_TRACKING_ID: your-tracking-id
 #[END env]
