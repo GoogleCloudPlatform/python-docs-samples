@@ -3,6 +3,7 @@ beautifulsoup4==4.5.1
 coverage==4.2
 cryptography==1.5.2
 Django==1.10.1
+flake8==3.0.4
 flaky==3.3.0
 flask-cors==3.0.2
 Flask-Sockets==0.2.1
@@ -45,6 +46,7 @@ scipy==0.18.1
 sendgrid==3.4.0
 simplejson==3.8.2
 six==1.10.0
+SQLAlchemy==1.1.0b3
 twilio==6.3.dev0
 uritemplate==3.0.0
 WebTest==2.0.23
