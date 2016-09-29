@@ -4,8 +4,3 @@ entrypoint: gunicorn -b :$PORT main:app
 
 runtime_config:
   python_version: 3
-
-# [START env_variables]
-env_variables:
-    GCLOUD_PROJECT: your-tracking-id
-# [END env_variables]
