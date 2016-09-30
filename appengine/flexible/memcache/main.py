@@ -23,8 +23,8 @@ app = Flask(__name__)
 
 
 # [START client]
-memcache_addr = os.environ.get('MEMCACHE_PORT_11211_TCP_ADDR', 'localhost')
-memcache_port = os.environ.get('MEMCACHE_PORT_11211_TCP_PORT', 11211)
+memcache_addr = os.environ.get('GAE_MEMCACHE_HOST', 'localhost')
+memcache_port = os.environ.get('GAE_MEMCACHE_PORT', 11211)
 memcache_client = MemcacheClient((memcache_addr, int(memcache_port)))
 # [END client]
 
