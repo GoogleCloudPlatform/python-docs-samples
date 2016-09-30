@@ -16,8 +16,8 @@ from collections import defaultdict
 import datetime
 from pprint import pprint
 
-import google.cloud.exceptions
 from google.cloud import datastore
+import google.cloud.exceptions
 
 
 def incomplete_key(client):
