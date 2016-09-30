@@ -26,7 +26,7 @@ Example invocation:
 import argparse
 
 # [START sync_query]
-from gcloud import bigquery
+from google.cloud import bigquery
 
 
 def sync_query(query):

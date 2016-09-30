@@ -29,7 +29,7 @@ import argparse
 import json
 from pprint import pprint
 
-from gcloud import bigquery
+from google.cloud import bigquery
 
 
 def stream_data(dataset_name, table_name, json_data):

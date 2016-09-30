@@ -29,7 +29,7 @@ import argparse
 import time
 import uuid
 
-from gcloud import bigquery
+from google.cloud import bigquery
 
 
 def export_data_to_gcs(dataset_name, table_name, destination):
