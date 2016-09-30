@@ -23,7 +23,7 @@ documentation at https://cloud.google.com/logging/docs.
 
 import argparse
 
-from gcloud import logging
+from google.cloud import logging
 
 
 def write_entry(logger_name):
