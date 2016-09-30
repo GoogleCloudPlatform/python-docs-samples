@@ -19,7 +19,7 @@ import logging
 import os
 
 from flask import current_app, Flask, render_template, request
-from gcloud import pubsub
+from google.cloud import pubsub
 
 
 app = Flask(__name__)

@@ -27,7 +27,7 @@ import argparse
 import time
 import uuid
 
-from gcloud import bigquery
+from google.cloud import bigquery
 
 
 def async_query(query):

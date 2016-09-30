@@ -19,7 +19,7 @@ using async GRPC."""
 import argparse
 import time
 
-from gcloud.credentials import get_credentials
+from google.cloud.credentials import get_credentials
 from google.cloud.speech.v1beta1 import cloud_speech_pb2
 from google.longrunning import operations_grpc_pb2
 from grpc.beta import implementations

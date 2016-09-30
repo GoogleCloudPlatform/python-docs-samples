@@ -18,7 +18,7 @@ import os
 import socket
 
 from flask import Flask, request
-from gcloud import datastore
+from google.cloud import datastore
 
 
 app = Flask(__name__)

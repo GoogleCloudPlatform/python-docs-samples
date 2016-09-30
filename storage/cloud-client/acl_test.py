@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from gcloud import storage
-import gcloud.storage.acl
+from google.cloud import storage
+import google.cloud.storage.acl
 import pytest
 
 import acl
@@ -27,8 +27,8 @@ TEST_EMAIL = 'jonwayne@google.com'
 def test_bucket(cloud_config):
     """Yields a bucket that resets its acl after the test completes."""
     bucket = storage.Client().bucket(cloud_config.storage_bucket)
-    acl = gcloud.storage.acl.BucketACL(bucket)
-    object_default_acl = gcloud.storage.acl.DefaultObjectACL(bucket)
+    acl = google.cloud.storage.acl.BucketACL(bucket)
+    object_default_acl = google.cloud.storage.acl.DefaultObjectACL(bucket)
     acl.reload()
     object_default_acl.reload()
     yield bucket
@@ -42,7 +42,7 @@ def test_blob(cloud_config):
     bucket = storage.Client().bucket(cloud_config.storage_bucket)
     blob = bucket.blob('storage_acl_test_sigil')
     blob.upload_from_string('Hello, is it me you\'re looking for?')
-    acl = gcloud.storage.acl.ObjectACL(blob)
+    acl = google.cloud.storage.acl.ObjectACL(blob)
     acl.reload()
     yield blob
     acl.save()

@@ -11,9 +11,17 @@ Flask-SQLAlchemy==2.1
 Flask==0.11.1
 fluent-logger==0.4.4
 funcsigs==1.0.2
-gcloud==0.18.3
-gcloud[grpc]==0.18.3
 google-api-python-client==1.5.3
+google-cloud-bigquery==0.20.0
+google-cloud-bigtable==0.20.0
+google-cloud-core==0.20.0
+google-cloud-datastore==0.20.0
+google-cloud-dns==0.20.0
+google-cloud-happybase==0.20.0
+google-cloud-logging==0.20.0
+google-cloud-pubsub==0.20.0
+google-cloud-storage==0.20.0
+google-cloud==0.20.0
 grpc-google-cloud-speech-v1beta1==1.0.1
 grpcio==1.0.0
 gunicorn==19.6.0
@@ -22,7 +30,7 @@ kinto==4.2.0
 mailjet-rest==v1.2.2
 mock==2.0.0
 mysql-python==1.2.5; python_version == '2.7'
-mysqlclient==1.3.7
+mysqlclient==1.3.8
 numpy==1.11.2rc1
 oauth2client==3.0.0
 Pillow==3.3.1
@@ -34,7 +42,7 @@ pyjwt==1.4.2
 pymemcache==1.3.6
 PyMySQL==0.7.9
 pytest-cov==2.3.1
-pytest==3.0.2
+pytest==3.0.3
 pyyaml==3.12
 redis==2.10.5
 requests-toolbelt==0.7.0

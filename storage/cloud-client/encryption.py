@@ -31,7 +31,7 @@ import argparse
 import base64
 import os
 
-from gcloud import storage
+from google.cloud import storage
 
 
 def generate_encryption_key():

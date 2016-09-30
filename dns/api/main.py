@@ -13,8 +13,8 @@
 
 import argparse
 
-from gcloud import dns
-from gcloud.exceptions import NotFound
+from google.cloud import dns
+from google.cloud.exceptions import NotFound
 
 
 # [START create_zone]

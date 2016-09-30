@@ -23,7 +23,7 @@ at https://cloud.google.com/pubsub/docs.
 
 import argparse
 
-from gcloud import pubsub
+from google.cloud import pubsub
 
 
 def list_subscriptions(topic_name):

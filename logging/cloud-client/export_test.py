@@ -15,8 +15,8 @@
 import random
 import string
 
-from gcloud import logging
 from gcp.testing import eventually_consistent
+from google.cloud import logging
 import pytest
 
 import export
