@@ -29,7 +29,7 @@ import time
 import uuid
 
 from google.cloud import bigquery
-import gcloud.bigquery.job
+import google.cloud.bigquery.job
 
 
 def list_projects():
@@ -177,7 +177,7 @@ def copy_table(dataset_name, table_name, new_table_name, project=None):
 
     # Create the table if it doesn't exist.
     job.create_disposition = (
-        gcloud.bigquery.job.CreateDisposition.CREATE_IF_NEEDED)
+        google.cloud.bigquery.job.CreateDisposition.CREATE_IF_NEEDED)
 
     # Start the job.
     job.begin()
