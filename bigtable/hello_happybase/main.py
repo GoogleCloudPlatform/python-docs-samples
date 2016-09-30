@@ -27,7 +27,7 @@ Prerequisites:
 import argparse
 
 from google.cloud import bigtable
-from google.cloud.bigtable import happybase
+from google.cloud import happybase
 
 
 def main(project_id, instance_id, table_name):
