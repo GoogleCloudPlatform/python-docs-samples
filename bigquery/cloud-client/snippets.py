@@ -145,7 +145,7 @@ def list_rows(dataset_name, table_name, project=None):
             break
 
     # Use format to create a simple table.
-    format_string = '{:<16} ' * len(table.schema)
+    format_string = '{!s:<16} ' * len(table.schema)
 
     # Print schema field names
     field_names = [field.name for field in table.schema]
