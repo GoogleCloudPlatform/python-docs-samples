@@ -1,5 +1,5 @@
 runtime: python
-vm: true
+env: flex
 entrypoint: gunicorn -b :$PORT main:app
 
 runtime_config:
@@ -7,6 +7,6 @@ runtime_config:
 
 # [START env_variables]
 env_variables:
-    MAILGUN_DOMAIN_NAME: your-mailgun-domain-name
-    MAILGUN_API_KEY: your-mailgun-api-key
+    MAILGUN_DOMAIN_NAME: sandboxf88ac31f30a3402ba6f8a965e6762bc4.mailgun.org
+    MAILGUN_API_KEY: key-39077b242ae1a10181127e7ac117c4ee
 # [END env_variables]
