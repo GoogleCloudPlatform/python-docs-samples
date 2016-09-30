@@ -33,7 +33,7 @@ database. Then run this script.
 # [START insert_sql]
 import argparse
 
-from gcloud import bigquery
+from google.cloud import bigquery
 
 
 def insert_sql(project, default_dataset, sql_path):

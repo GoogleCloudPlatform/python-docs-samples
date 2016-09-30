@@ -27,7 +27,7 @@ The dataset and table should already exist.
 
 import argparse
 import time
-from gcloud import bigquery
+from google.cloud import bigquery
 
 
 def load_data_from_file(dataset_name, table_name, source_file_name):

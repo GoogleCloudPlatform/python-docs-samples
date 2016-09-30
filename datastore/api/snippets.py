@@ -16,8 +16,8 @@ from collections import defaultdict
 import datetime
 from pprint import pprint
 
-import gcloud
-from gcloud import datastore
+from google.cloud import datastore
+import google.cloud.exceptions
 
 
 def incomplete_key(client):
@@ -539,7 +539,7 @@ def inequality_invalid(client):
 
         return list(query.fetch())
 
-    except gcloud.exceptions.BadRequest:
+    except google.cloud.exceptions.BadRequest:
         pass
 
 
@@ -579,7 +579,7 @@ def inequality_sort_invalid_not_same(client):
 
         return list(query.fetch())
 
-    except gcloud.exceptions.BadRequest:
+    except google.cloud.exceptions.BadRequest:
         pass
 
 
@@ -593,7 +593,7 @@ def inequality_sort_invalid_not_first(client):
 
         return list(query.fetch())
 
-    except gcloud.exceptions.BadRequest:
+    except google.cloud.exceptions.BadRequest:
         pass
 
 
@@ -661,7 +661,7 @@ def transactional_update(client):
     for _ in range(5):
         try:
             transfer_funds(client, account1.key, account2.key, 50)
-        except gcloud.exceptions.Conflict:
+        except google.cloud.exceptions.Conflict:
             continue
     # [END transactional_retry]
 
@@ -787,7 +787,7 @@ def property_by_kind_run_query(client):
 
 def eventual_consistent_query(client):
     # [START eventual_consistent_query]
-    # Read consistency cannot be specified in gcloud-python.
+    # Read consistency cannot be specified in google-cloud-python.
     # [END eventual_consistent_query]
     pass
 

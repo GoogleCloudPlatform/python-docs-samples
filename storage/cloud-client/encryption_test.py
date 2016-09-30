@@ -15,7 +15,7 @@
 import base64
 import tempfile
 
-from gcloud import storage
+from google.cloud import storage
 import pytest
 
 import encryption

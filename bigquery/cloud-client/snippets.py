@@ -28,8 +28,8 @@ import argparse
 import time
 import uuid
 
-from gcloud import bigquery
-import gcloud.bigquery.job
+from google.cloud import bigquery
+import google.cloud.bigquery.job
 
 
 def list_projects():
@@ -145,7 +145,7 @@ def list_rows(dataset_name, table_name, project=None):
             break
 
     # Use format to create a simple table.
-    format_string = '{:<16} ' * len(table.schema)
+    format_string = '{!s:<16} ' * len(table.schema)
 
     # Print schema field names
     field_names = [field.name for field in table.schema]
@@ -177,7 +177,7 @@ def copy_table(dataset_name, table_name, new_table_name, project=None):
 
     # Create the table if it doesn't exist.
     job.create_disposition = (
-        gcloud.bigquery.job.CreateDisposition.CREATE_IF_NEEDED)
+        google.cloud.bigquery.job.CreateDisposition.CREATE_IF_NEEDED)
 
     # Start the job.
     job.begin()

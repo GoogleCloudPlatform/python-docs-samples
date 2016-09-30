@@ -14,8 +14,8 @@
 
 import tempfile
 
-import gcloud
-from gcloud import storage
+from google.cloud import storage
+import google.cloud.exceptions
 import pytest
 import requests
 
@@ -103,7 +103,7 @@ def test_rename_blob(test_blob, cloud_config):
 
     try:
         bucket.delete_blob('test_rename_blob')
-    except gcloud.exceptions.NotFound:
+    except google.cloud.exceptions.exceptions.NotFound:
         pass
 
     snippets.rename_blob(bucket.name, test_blob.name, 'test_rename_blob')
@@ -117,7 +117,7 @@ def test_copy_blob(test_blob, cloud_config):
 
     try:
         bucket.delete_blob('test_copy_blob')
-    except gcloud.exceptions.NotFound:
+    except google.cloud.exceptions.NotFound:
         pass
 
     snippets.copy_blob(

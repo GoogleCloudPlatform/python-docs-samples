@@ -17,7 +17,7 @@ import logging
 import os
 
 from flask import Flask, request
-from gcloud import storage
+from google.cloud import storage
 
 # [start config]
 app = Flask(__name__)

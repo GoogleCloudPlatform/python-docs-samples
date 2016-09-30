@@ -15,7 +15,7 @@ import argparse
 import datetime
 
 # [START build_service]
-from gcloud import datastore
+from google.cloud import datastore
 
 
 def create_client(project_id):
