@@ -34,7 +34,7 @@ def is_ipv6(addr):
 # [START example]
 @app.route('/')
 def index():
-    instance_id = os.environ.get('GAE_MODULE_INSTANCE', '1')
+    instance_id = os.environ.get('GAE_INSTANCE', '1')
 
     user_ip = request.remote_addr
 
