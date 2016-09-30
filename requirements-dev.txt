@@ -11,16 +11,15 @@ Flask-SQLAlchemy==2.1
 Flask==0.11.1
 fluent-logger==0.4.4
 funcsigs==1.0.2
-gcloud==0.18.3
 google-api-python-client==1.5.3
 google-cloud-bigquery==0.20.0
 google-cloud-bigtable==0.20.0
+google-cloud-core==0.20.0
 google-cloud-datastore==0.20.0
 google-cloud-dns==0.20.0
 google-cloud-happybase==0.20.0
 google-cloud-logging==0.20.0
 google-cloud-pubsub==0.20.0
-google-cloud-speech==0.0.1
 google-cloud-storage==0.20.0
 google-cloud==0.20.0
 grpc-google-cloud-speech-v1beta1==1.0.1
