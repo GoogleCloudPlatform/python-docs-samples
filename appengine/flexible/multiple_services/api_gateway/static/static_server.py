@@ -1,10 +1,7 @@
 import sys
-from flask import Flask, url_for
+from flask import Flask
 
 app = Flask(__name__)
-
-# url_for('static', filename='style.css')
-# url_for('static', filename='index.js')
 
 @app.route('/hello')
 def say_hello():

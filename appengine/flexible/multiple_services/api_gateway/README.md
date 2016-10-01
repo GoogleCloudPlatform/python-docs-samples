@@ -52,8 +52,5 @@ The deployed url will be `https://<service name>-dot-<your project id>.appspot.c
 To deploy a service cd into its directory and run: `gcloud app deploy app.yaml`
 and enter `Y` when prompted.  Or to skip the check add `-q`.
 
-Recommend deploying the `static`, `flask1`, and `flask2` services first and
-then filling in the correct service urls into the gateway before deployment.
-
 To test if a service is successfully deployed, simply navigate to the root
 and you will see a message.  
