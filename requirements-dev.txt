@@ -2,7 +2,7 @@
 beautifulsoup4==4.5.1
 coverage==4.2
 cryptography==1.5.2
-Django==1.10.1
+Django==1.10.2
 flake8==3.0.4
 flaky==3.3.0
 flask-cors==3.0.2
@@ -30,7 +30,7 @@ kinto==4.2.0
 mailjet-rest==v1.2.2
 mock==2.0.0
 mysql-python==1.2.5; python_version == '2.7'
-mysqlclient==1.3.8
+mysqlclient==1.3.9
 numpy==1.11.2rc1
 oauth2client==3.0.0
 Pillow==3.3.1
