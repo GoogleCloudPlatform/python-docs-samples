@@ -21,7 +21,7 @@ def static_file(path):
     return app.send_static_file(path), 200, {'Content-Type': mimetype}
 
 if __name__  == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == 'development':
+    if len(sys.argv) > 1 and sys.argv[1] == '--development':
         app.run(port=int(8003))
     else:
         app.run()

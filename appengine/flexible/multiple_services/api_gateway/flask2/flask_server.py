@@ -12,7 +12,7 @@ def root():
     return 'This is flask server 2.'
 
 if __name__  == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == 'development':
+    if len(sys.argv) > 1 and sys.argv[1] == '--development':
         app.run(port=int(8002))
     else:
         app.run()

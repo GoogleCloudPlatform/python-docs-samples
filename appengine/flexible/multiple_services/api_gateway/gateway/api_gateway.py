@@ -4,10 +4,10 @@ import os
 from flask import Flask
 app = Flask(__name__)
 
-#development ports {static: 8003, flask1: 8001, flask2: 8002}
 @app.route('/environment')
 def get_env():
-    return str(os.environ)
+    configuration = 'production'
+    return app.config['MODE']
 
 @app.route('/test')
 def test():
@@ -15,27 +15,38 @@ def test():
 
 @app.route('/')
 def root():
-    print(os.environ)
-    print(os.environ['GAE_LONG_APP_ID'])
-    print('https://static-dot-' + os.environ['GAE_LONG_APP_ID'] + '.appspot.com')
-    # return 'https://static-dot-' + os.environ['GAE_LONG_APP_ID'] + '.appspot.com'
-    res = requests.get('https://static-dot-' + os.environ['GAE_LONG_APP_ID'] + '.appspot.com')
+    urls = {
+        'development': 'http://localhost:8003',
+        'production': 'https://static-dot-' + os.environ.get('GAE_LONG_APP_ID', '') + '.appspot.com'
+    }
+    environment = app.config['MODE']
+    print(environment)
+    print(urls[environment])
+    res = requests.get(urls[environment])
     return res.content
 
 @app.route('/hello/<service>')
 def say_hello(service):
+    environment = app.config['MODE']
     services = {
-        'flask1': { 'url': 'https://flask1-dot-' + os.environ['GAE_LONG_APP_ID'] + '.appspot.com', 'send': False },
-        'flask2': { 'url': 'https://flask2-dot-' + os.environ['GAE_LONG_APP_ID'] + '.appspot.com', 'send': False }
+        'production': {
+            'flask1': { 'url': 'https://flask1-dot-' + os.environ.get('GAE_LONG_APP_ID', '') + '.appspot.com', 'send': False },
+            'flask2': { 'url': 'https://flask2-dot-' + os.environ.get('GAE_LONG_APP_ID', '') + '.appspot.com', 'send': False }
+        },
+        'development': {
+            'flask1': {'url': 'http://localhost:8001', 'send': False },
+            'flask2': {'url': 'http://localhost:8002', 'send': False }
+        }
     }
+    environment = app.config['MODE']
     if service == 'everyone':
-        for key, val in services.items():
+        for key, val in services[environment].items():
             val['send'] = True
     else:
-        services[service]['send'] = True
+        services[environment][service]['send'] = True
 
     responses = []
-    for key, val in services.items():
+    for key, val in services[environment].items():
         if val['send'] == True:
             res = requests.get(val['url'] + '/hello')
             responses.append(res.content)
@@ -44,12 +55,20 @@ def say_hello(service):
 
 @app.route('/<path>')
 def static_file(path):
-    res = requests.get('https://static-dot-' + os.environ['GAE_LONG_APP_ID'] + '.appspot.com' + '/' + path)
+    environment = app.config['MODE']
+    url = {
+        'development': 'http://localhost:8003',
+        'production': 'https://static-dot-' + os.environ.get('GAE_LONG_APP_ID', '') + '.appspot.com'
+    }
+    res = requests.get(url[environment] + '/' + path)
     return res.content, 200, {'Content-Type': res.headers['Content-Type']}
 
 
 if __name__  == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == 'development':
+    if len(sys.argv) > 1 and sys.argv[1] == '--development':
+        app.config['MODE'] = 'development'
+        app.config['DEBUG'] = True
         app.run(port=int(8000))
     else:
+        app.config['MODE'] = 'production'
         app.run()
