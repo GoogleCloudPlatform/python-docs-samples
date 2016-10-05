@@ -9,3 +9,10 @@ handlers:
 libraries:
 - name: MySQLdb
   version: "latest"
+
+# [START env_variables]
+env_variables:
+    CLOUDSQL_CONNECTION_NAME: your-connection-name
+    CLOUDSQL_USER: root
+    CLOUDSQL_PASSWORD: your-cloudsql-user-password
+# [END env_variables]
