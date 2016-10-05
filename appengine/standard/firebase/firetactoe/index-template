@@ -1,0 +1,221 @@
+<html>
+  <head>
+      <script src='/_ah/channel/jsapi'></script>
+      <style type='text/css'>
+        .row {
+          float: top;
+        }
+        
+        .board {
+          margin: 20px;
+        }
+
+        td {
+          width: 50px;
+          height: 50px;
+          font-family: "Helvetica";
+          font-size: 16pt;
+          border: none;
+          margin: 0px;
+          padding: 0px;
+          text-align: center;
+          vertical-align: middle;
+        }
+        
+        td.ul {
+          border-bottom: 1pt solid black;
+          border-right: 1pt solid black;
+        }
+        
+        td.um {
+          border-bottom: 1pt solid black;
+        }
+        
+        td.ur {
+          border-bottom: 1pt solid black;
+          border-left: 1pt solid black;
+        }
+        
+        td.ml {
+          border-right: 1px solid black;
+        }
+        
+        td.mr {
+          border-left: 1px solid black;
+        }
+        
+        td.bl {
+          border-top: 1pt solid black;
+          border-right: 1pt solid black;
+        }
+        
+        td.bm {
+          border-top: 1pt solid black;
+        }
+        
+        td.br {
+          border-top: 1pt solid black;
+          border-left: 1pt solid black;
+        }      
+      </style>
+  </head>
+  <body>
+    <script type='text/javascript'>
+      var state = {
+        game_key: '{{ game_key }}',
+        me: '{{ me }}'
+      };
+
+      updateGame = function() {
+        for (i = 0; i < 9; i++) {
+          var square = document.getElementById(i);
+          square.innerHTML = state.board[i];
+          if (state.winner != '' && state.winningBoard != '') {
+            if (state.winningBoard[i] == state.board[i]) {
+              square.style.background = "red";
+            }
+          }
+        }
+        
+        var display = {
+          'other-player': 'none',
+          'your-move': 'none',
+          'their-move': 'none'
+        }; 
+
+        if (!state.userO || state.userO == '') {
+          display['other-player'] = 'block';          
+          var path = window.location.href + '?g={{ game_key }}';
+          var link = '<a href="' + path + '">' + path + '</a">';
+          document.getElementById('other-player').innerHTML = link;
+        } else if (isMyMove()) {
+          display['your-move'] = 'block';
+        } else {
+          display['their-move'] = 'block';
+        }
+        
+        for (var label in display) {
+          document.getElementById(label).style.display = display[label];
+        }
+      };
+      
+      isMyMove = function() {
+        return (state.winner == "") && 
+            (state.moveX == (state.userX == state.me));
+      }
+
+      myPiece = function() {
+        return state.userX == state.me ? 'X' : 'O';
+      }
+
+      sendMessage = function(path, opt_param) {
+        path += '?g=' + state.game_key;
+        if (opt_param) {
+          path += '&' + opt_param;
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', path, true);
+        xhr.send();
+      };
+
+      moveInSquare = function(id) {
+        if (isMyMove() && state.board[id] == ' ') {
+          sendMessage('/move', 'i=' + id);
+        }
+      }
+
+      highlightSquare = function(id) {
+        for (i = 0; i < 9; i++) {
+          if (i == id  && isMyMove()) {
+            if (state.board[i] = ' ') {
+              color = 'lightblue';
+            } else {
+              color = 'lightgrey';
+            }
+          } else {
+            color = 'white';
+          }
+
+          document.getElementById(i).style['background-color'] = color;
+        }
+      }
+      
+      onOpened = function() {
+        sendMessage('/opened');
+      };
+      
+      onMessage = function(m) {
+        newState = JSON.parse(m.data);
+        state.board = newState.board || state.board;
+        state.userX = newState.userX || state.userX;
+        state.userO = newState.userO || state.userO;
+        state.moveX = newState.moveX == 'true';
+        state.winner = newState.winner || "";
+        state.winningBoard = newState.winningBoard || "";
+        updateGame();
+      }
+      
+      openChannel = function() {
+        var token = '{{ token }}';
+        var channel = new goog.appengine.Channel(token);
+        var handler = {
+          'onopen': onOpened,
+          'onmessage': onMessage,
+          'onerror': function() {},
+          'onclose': function() {}
+        };
+        var socket = channel.open(handler);
+        socket.onopen = onOpened;
+        socket.onmessage = onMessage;
+      }
+      
+      initialize = function() {
+        openChannel();
+        var i;
+        for (i = 0; i < 9; i++) {
+          var square = document.getElementById(i);
+          square.onmouseover = new Function('highlightSquare(' + i + ')');
+          square.onclick = new Function('moveInSquare(' + i + ')');
+        }
+        onMessage({data: '{{ initial_message }}'});
+      }      
+
+      setTimeout(initialize, 100);
+
+    </script>
+    <div id='display-area'>
+      <h2>Channel-based Tic Tac Toe</h2>
+      <div id='other-player' style='display:none'>
+        Waiting for another player to join.<br>
+        Send them this link to play:<br>
+        <div id='game-link'>
+        </div>
+      </div>
+      <div id='your-move' style='display:none'>
+        Your move! Click a square to place your piece.
+      </div>
+      <div id='their-move' style='display:none'>
+        Waiting for other player to move...
+      </div>
+      <div id='board'>
+        <table style='border-spacing: 0px 0px'>
+          <tr>
+            <td id='0' class='ul'></td>
+            <td id='1' class='um'></td>
+            <td id='2' class='ur'></td>
+          </tr>
+          <tr>
+            <td id='3' class='ml'></td>
+            <td id='4' class='mm'></td>
+            <td id='5' class='mr'></td>
+          </tr>
+          <tr>
+            <td id='6' class='bl'></td>
+            <td id='7' class='bm'></td>
+            <td id='8' class='br'></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
