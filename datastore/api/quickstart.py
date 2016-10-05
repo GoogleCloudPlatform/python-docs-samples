@@ -24,16 +24,16 @@ def run_quickstart():
     datastore_client = datastore.Client()
 
     # The kind of the entity to retrieve
-    kind = 'Person'
+    kind = 'Task'
     # The name/ID of the entity to retrieve
-    name = 'Bob'
+    name = 'sampletask1'
     # The Datastore key for the entity
     task_key = datastore_client.key(kind, name)
 
     # Retrieves the entity
-    entity = datastore_client.get(task_key)
+    task = datastore_client.get(task_key)
 
-    print('Fetched entity: {}'.format(entity.key.name))
+    print('Fetched task: {}'.format(task.key.name))
     # [END datastore_quickstart]
 
 
