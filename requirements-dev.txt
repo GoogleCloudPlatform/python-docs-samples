@@ -26,20 +26,20 @@ grpc-google-cloud-speech-v1beta1==1.0.1
 grpcio==1.0.0
 gunicorn==19.6.0
 httplib2==0.9.2
-kinto==4.2.0
+kinto==4.3.0
 mailjet-rest==v1.2.2
 mock==2.0.0
 mysql-python==1.2.5; python_version == '2.7'
 mysqlclient==1.3.9
 numpy==1.11.2
 oauth2client==3.0.0
-Pillow==3.4.0
+Pillow==3.4.1
 pyasn1-modules==0.0.8
 pyasn1==0.1.9
 PyAudio==0.2.9
 PyCrypto==2.6.1
 pyjwt==1.4.2
-pymemcache==1.3.7
+pymemcache==1.3.8
 PyMySQL==0.7.9
 pytest-cov==2.3.1
 pytest==3.0.3
