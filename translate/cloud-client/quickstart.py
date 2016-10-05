@@ -14,29 +14,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 def run_quickstart():
-  # [START translate_quickstart]
-  # Imports the Google Cloud client library
-  from google.cloud import translate
+    # [START translate_quickstart]
+    # Imports the Google Cloud client library
+    from google.cloud import translate
 
-  # Your Translate API key
-  api_key = 'YOUR_API_KEY'
+    # Your Translate API key
+    api_key = 'YOUR_API_KEY'
 
-  # Instantiates a client
-  translate_client = translate.Client(api_key)
+    # Instantiates a client
+    translate_client = translate.Client(api_key)
 
-  # The text to translate
-  text = 'Hello, world!'
-  # The target language
-  target = 'ru'
+    # The text to translate
+    text = 'Hello, world!'
+    # The target language
+    target = 'ru'
 
-  # Translates some text into Russian
-  translation = translate_client.translate(text, target_language=target)
+    # Translates some text into Russian
+    translation = translate_client.translate(text, target_language=target)
 
-  print('Text: {}'.format(text))
-  print('Translation: {}'.format(translation['translatedText'].encode('utf-8')))
-  # [END translate_quickstart]
+    print('Text: {}'.format(text))
+    print('Translation: {}'.format(
+        translation['translatedText'].encode('utf-8')))
+    # [END translate_quickstart]
 
 
 if __name__ == '__main__':
-  run_quickstart()
+    run_quickstart()

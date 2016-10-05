@@ -14,28 +14,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 def run_quickstart():
-  # [START logging_quickstart]
-  # Imports the Google Cloud client library
-  from google.cloud import logging
+    # [START logging_quickstart]
+    # Imports the Google Cloud client library
+    from google.cloud import logging
 
-  # Instantiates a client
-  logging_client = logging.Client()
+    # Instantiates a client
+    logging_client = logging.Client()
 
-  # The name of the log to write to
-  log_name = 'my-log'
-  # Selects the log to write to
-  logger = logging_client.logger(log_name)
+    # The name of the log to write to
+    log_name = 'my-log'
+    # Selects the log to write to
+    logger = logging_client.logger(log_name)
 
-  # The data to log
-  text = 'Hello, world!'
+    # The data to log
+    text = 'Hello, world!'
 
-  # Writes the log entry
-  logger.log_text(text)
+    # Writes the log entry
+    logger.log_text(text)
 
-  print('Logged: {}'.format(text))
-  # [END logging_quickstart]
+    print('Logged: {}'.format(text))
+    # [END logging_quickstart]
 
 
 if __name__ == '__main__':
-  run_quickstart()
+    run_quickstart()

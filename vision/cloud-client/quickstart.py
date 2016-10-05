@@ -14,31 +14,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 def run_quickstart():
-  # [START vision_quickstart]
-  import io
+    # [START vision_quickstart]
+    import io
 
-  # Imports the Google Cloud client library
-  from google.cloud import vision
+    # Imports the Google Cloud client library
+    from google.cloud import vision
 
-  # Instantiates a client
-  vision_client = vision.Client()
+    # Instantiates a client
+    vision_client = vision.Client()
 
-  # The name of the image file to annotate
-  fileName = './resources/wakeupcat.jpg'
+    # The name of the image file to annotate
+    fileName = './resources/wakeupcat.jpg'
 
-  # Loads the image into memory
-  with io.open(fileName, 'rb') as image_file:
-    image = vision_client.image(content=image_file.read())
+    # Loads the image into memory
+    with io.open(fileName, 'rb') as image_file:
+        image = vision_client.image(content=image_file.read())
 
-  # Performs label detection on the image file
-  labels = image.detect_labels()
+    # Performs label detection on the image file
+    labels = image.detect_labels()
 
-  print('Labels:')
-  for label in labels:
-    print(label.description)
-  # [END vision_quickstart]
+    print('Labels:')
+    for label in labels:
+        print(label.description)
+    # [END vision_quickstart]
 
 
 if __name__ == '__main__':
-  run_quickstart()
+    run_quickstart()
