@@ -30,6 +30,16 @@ import uuid
 from google.cloud import bigquery
 
 
+def wait_for_job(job):
+    while True:
+        job.reload()  # Refreshes the state via a GET request.
+        if job.state == 'DONE':
+            if job.error_result:
+                raise RuntimeError(job.error_result)
+            return
+        time.sleep(1)
+
+
 def async_query(query):
     client = bigquery.Client()
     query_job = client.run_async_query(str(uuid.uuid4()), query)
@@ -38,16 +48,8 @@ def async_query(query):
 
     wait_for_job(query_job)
 
-    # Manually construct the QueryResults.
-    # TODO: The client library will provide a helper method that does this.
-    # https://github.com/GoogleCloudPlatform/gcloud-python/issues/2083
-    query_results = bigquery.query.QueryResults('', client)
-    query_results._properties['jobReference'] = {
-        'jobId': query_job.name,
-        'projectId': query_job.project
-    }
-
     # Drain the query results by requesting a page at a time.
+    query_results = query_job.results()
     page_token = None
 
     while True:
@@ -60,16 +62,6 @@ def async_query(query):
 
         if not page_token:
             break
-
-
-def wait_for_job(job):
-    while True:
-        job.reload()  # Refreshes the state via a GET request.
-        if job.state == 'DONE':
-            if job.error_result:
-                raise RuntimeError(job.error_result)
-            return
-        time.sleep(1)
 
 
 if __name__ == '__main__':
