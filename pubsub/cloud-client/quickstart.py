@@ -14,21 +14,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START pubsub_quickstart]
-# Imports the Google Cloud client library
-from google.cloud import pubsub
+def run_quickstart():
+  # [START pubsub_quickstart]
+  # Imports the Google Cloud client library
+  from google.cloud import pubsub
 
-# Instantiates a client
-pubsub_client = pubsub.Client()
+  # Instantiates a client
+  pubsub_client = pubsub.Client()
 
-# The name for the new topic
-topic_name = 'my-new-topic'
+  # The name for the new topic
+  topic_name = 'my-new-topic'
 
-# Prepares the new topic
-topic = pubsub_client.topic(topic_name)
+  # Prepares the new topic
+  topic = pubsub_client.topic(topic_name)
 
-# Creates the new topic
-topic.create()
+  # Creates the new topic
+  topic.create()
 
-print('Topic {} created'.format(topic.name))
-# [END pubsub_quickstart]
+  print('Topic {} created.'.format(topic.name))
+  # [END pubsub_quickstart]
+
+
+if __name__ == '__main__':
+  run_quickstart()

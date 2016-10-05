@@ -15,26 +15,29 @@
 # limitations under the License.
 
 def run_quickstart():
-  # [START logging_quickstart]
+  # [START vision_quickstart]
+  import io
+
   # Imports the Google Cloud client library
-  from google.cloud import logging
+  from google.cloud import vision
 
   # Instantiates a client
-  logging_client = logging.Client()
+  vision_client = vision.Client()
 
-  # The name of the log to write to
-  log_name = 'my-log'
-  # Selects the log to write to
-  logger = logging_client.logger(log_name)
+  # The name of the image file to annotate
+  fileName = './resources/wakeupcat.jpg'
 
-  # The data to log
-  text = 'Hello, world!'
+  # Loads the image into memory
+  with io.open(fileName, 'rb') as image_file:
+    image = vision_client.image(content=image_file.read())
 
-  # Writes the log entry
-  logger.log_text(text)
+  # Performs label detection on the image file
+  labels = image.detect_labels()
 
-  print('Logged: {}'.format(text))
-  # [END logging_quickstart]
+  print('Labels:')
+  for label in labels:
+    print(label.description)
+  # [END vision_quickstart]
 
 
 if __name__ == '__main__':

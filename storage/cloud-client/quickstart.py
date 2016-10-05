@@ -14,18 +14,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START storage_quickstart]
-# Imports the Google Cloud client library
-from google.cloud import storage
+def run_quickstart():
+  # [START storage_quickstart]
+  # Imports the Google Cloud client library
+  from google.cloud import storage
 
-# Instantiates a client
-storage_client = storage.Client()
+  # Instantiates a client
+  storage_client = storage.Client()
 
-# The name for the new bucket
-bucket_name = 'my-new-bucket'
+  # The name for the new bucket
+  bucket_name = 'my-new-bucket'
 
-# Creates the new bucket
-bucket = storage_client.create_bucket(bucket_name)
+  # Creates the new bucket
+  bucket = storage_client.create_bucket(bucket_name)
 
-print('Bucket {} created'.format(bucket.name))
-# [END storage_quickstart]
+  print('Bucket {} created.'.format(bucket.name))
+  # [END storage_quickstart]
+
+
+if __name__ == '__main__':
+  run_quickstart()

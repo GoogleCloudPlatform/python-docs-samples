@@ -14,22 +14,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START datastore_quickstart]
-# Imports the Google Cloud client library
-from google.cloud import datastore
+def run_quickstart():
+  # [START datastore_quickstart]
+  # Imports the Google Cloud client library
+  from google.cloud import datastore
 
-# Instantiates a client
-datastore_client = datastore.Client()
+  # Instantiates a client
+  datastore_client = datastore.Client()
 
-# The kind of the entity to retrieve
-kind = 'Task'
-# The id of the entity to retrieve
-id = 1234567890
-# The Datastore key for the entity
-task_key = datastore_client.key(kind, id)
+  # The kind of the entity to retrieve
+  kind = 'Person'
+  # The name/ID of the entity to retrieve
+  name = 'Bob'
+  # The Datastore key for the entity
+  task_key = datastore_client.key(kind, name)
 
-# Retrieves the entity
-entity = datastore_client.get(task_key)
+  # Retrieves the entity
+  entity = datastore_client.get(task_key)
 
-print('Got entity: {}'.format(entity.key.id))
-# [END datastore_quickstart]
+  print('Fetched entity: {}'.format(entity.key.name))
+  # [END datastore_quickstart]
+
+
+if __name__ == '__main__':
+  run_quickstart()

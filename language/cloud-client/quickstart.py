@@ -15,26 +15,23 @@
 # limitations under the License.
 
 def run_quickstart():
-  # [START logging_quickstart]
+  # [START language_quickstart]
   # Imports the Google Cloud client library
-  from google.cloud import logging
+  from google.cloud import language
 
   # Instantiates a client
-  logging_client = logging.Client()
+  language_client = language.Client()
 
-  # The name of the log to write to
-  log_name = 'my-log'
-  # Selects the log to write to
-  logger = logging_client.logger(log_name)
-
-  # The data to log
+  # The text to analyze
   text = 'Hello, world!'
+  document = language_client.document_from_text(text)
 
-  # Writes the log entry
-  logger.log_text(text)
+  # Detects the sentiment of the text
+  sentiment = document.analyze_sentiment()
 
-  print('Logged: {}'.format(text))
-  # [END logging_quickstart]
+  print('Text: {}'.format(text))
+  print('Sentiment: {}, {}'.format(sentiment.polarity, sentiment.magnitude))
+  # [END language_quickstart]
 
 
 if __name__ == '__main__':
