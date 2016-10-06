@@ -1,0 +1,5 @@
+python-jwt==1.2.1
+flask==0.11.1
+requests==2.11.1
+requests_toolbelt==0.7.0
+oauth2client==2.2.0

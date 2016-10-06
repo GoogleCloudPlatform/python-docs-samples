@@ -1,0 +1,48 @@
+body {
+  font-family: 'Helvetica';
+}
+
+#board {
+  width:152px;
+  height: 152px;
+  margin: 20px auto;
+}
+
+#display-area {
+  text-align: center;
+}
+
+#this-game {
+  font-size: 9pt;
+}
+
+div.cell {
+  float: left;
+  width: 50px;
+  height: 50px;
+  border: none;
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+
+  line-height: 50px;
+  font-family: "Helvetica";
+  font-size: 16pt;
+  text-align: center;
+}
+
+div.l {
+  border-right: 1pt solid black;
+}
+
+div.r {
+  border-left: 1pt solid black;
+}
+
+div.t {
+  border-bottom: 1pt solid black;
+}
+
+div.b {
+  border-top: 1pt solid black;
+}
