@@ -1,74 +1,44 @@
 import requests
 import sys
-import os
 from flask import Flask
+import services_config
 app = Flask(__name__)
+app.config['SERVICE_MAP'] = services_config.map_services('production')
 
-@app.route('/environment')
+@app.route('/env')
 def get_env():
-    configuration = 'production'
-    return app.config['MODE']
-
-@app.route('/test')
-def test():
-    return "GATEWAY OPERATIONAL"
+    print(app.config['SERVICE_MAP'])
+    return app.config
 
 @app.route('/')
 def root():
-    urls = {
-        'development': 'http://localhost:8003',
-        'production': 'https://static-dot-' + os.environ.get('GAE_LONG_APP_ID', '') + '.appspot.com'
-    }
-    environment = app.config['MODE']
-    print(environment)
-    print(urls[environment])
-    res = requests.get(urls[environment])
+    '''Gets index.html from the static file server'''
+    res = requests.get(app.config['SERVICE_MAP']['static'])
     return res.content
 
 @app.route('/hello/<service>')
 def say_hello(service):
-    environment = app.config['MODE']
-    services = {
-        'production': {
-            'flask1': { 'url': 'https://flask1-dot-' + os.environ.get('GAE_LONG_APP_ID', '') + '.appspot.com', 'send': False },
-            'flask2': { 'url': 'https://flask2-dot-' + os.environ.get('GAE_LONG_APP_ID', '') + '.appspot.com', 'send': False }
-        },
-        'development': {
-            'flask1': {'url': 'http://localhost:8001', 'send': False },
-            'flask2': {'url': 'http://localhost:8002', 'send': False }
-        }
-    }
-    environment = app.config['MODE']
-    if service == 'everyone':
-        for key, val in services[environment].items():
-            val['send'] = True
-    else:
-        services[environment][service]['send'] = True
+    '''Recieves requests from the buttons on the front end and resopnds
+    or sends request to the static file server'''
+    #if 'gateway' is specified return immediate
+    if service == 'gateway':
+        return 'Gateway says hello'
 
     responses = []
-    for key, val in services[environment].items():
-        if val['send'] == True:
-            res = requests.get(val['url'] + '/hello')
-            responses.append(res.content)
+    url = app.config['SERVICE_MAP'][service]
+    res = requests.get(url + '/hello')
+    responses.append(res.content)
 
     return '\n'.encode().join(responses)
 
 @app.route('/<path>')
 def static_file(path):
-    environment = app.config['MODE']
-    url = {
-        'development': 'http://localhost:8003',
-        'production': 'https://static-dot-' + os.environ.get('GAE_LONG_APP_ID', '') + '.appspot.com'
-    }
-    res = requests.get(url[environment] + '/' + path)
+    '''Handles static file requests from index.html'''
+    url = app.config['SERVICE_MAP']['static']
+    res = requests.get(url + '/' + path)
     return res.content, 200, {'Content-Type': res.headers['Content-Type']}
 
-
-if __name__  == "__main__":
+if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == '--development':
-        app.config['MODE'] = 'development'
-        app.config['DEBUG'] = True
-        app.run(port=int(8000))
-    else:
-        app.config['MODE'] = 'production'
-        app.run()
+        app.config['SERVICE_MAP'] = services_config.map_services('development')
+    app.run()
