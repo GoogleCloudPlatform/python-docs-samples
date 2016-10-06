@@ -23,17 +23,21 @@ def run_quickstart():
     # Instantiates a client
     datastore_client = datastore.Client()
 
-    # The kind of the entity to retrieve
+    # The kind for the new entity
     kind = 'Task'
-    # The name/ID of the entity to retrieve
+    # The name/ID for the new entity
     name = 'sampletask1'
-    # The Datastore key for the entity
+    # The Cloud Datastore key for the new entity
     task_key = datastore_client.key(kind, name)
 
-    # Retrieves the entity
-    task = datastore_client.get(task_key)
+    # Prepares the new entity
+    task = datastore.Entity(key=task_key)
+    task['description'] = 'Buy milk'
 
-    print('Fetched task: {}'.format(task.key.name))
+    # Saves the entity
+    datastore_client.put(task)
+
+    print('Saved {}: {}'.format(task.key.name, task['description']))
     # [END datastore_quickstart]
 
 
