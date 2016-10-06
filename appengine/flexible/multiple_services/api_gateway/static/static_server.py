@@ -22,7 +22,6 @@ def static_file(path):
 
 if __name__  == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == '--development':
-        app.config['DEBUG'] = True
         app.run(port=int(8001))
     else:
         app.run()
