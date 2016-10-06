@@ -18,9 +18,12 @@ google-cloud-core==0.20.0
 google-cloud-datastore==0.20.0
 google-cloud-dns==0.20.0
 google-cloud-happybase==0.20.0
+google-cloud-language==0.20.0
 google-cloud-logging==0.20.0
 google-cloud-pubsub==0.20.0
 google-cloud-storage==0.20.0
+google-cloud-translate==0.20.0
+google-cloud-vision==0.20.0
 google-cloud==0.20.0
 grpc-google-cloud-speech-v1beta1==1.0.1
 grpcio==1.0.0
@@ -54,7 +57,7 @@ scipy==0.18.1
 sendgrid==3.4.0
 simplejson==3.8.2
 six==1.10.0
-SQLAlchemy==1.1.0b3
+SQLAlchemy==1.1.0
 twilio==6.3.dev0
 uritemplate==3.0.0
 WebTest==2.0.23
