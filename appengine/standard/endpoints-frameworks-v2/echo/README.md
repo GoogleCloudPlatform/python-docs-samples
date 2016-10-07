@@ -11,16 +11,6 @@ Install the Endpoints Frameworks v2 library:
     $ mkdir lib
     $ pip install -t lib google-endpoints
 
-## Running Locally
-
-For more info on running Standard applications locally, see [the getting started documentation](https://cloud.google.com/appengine/docs/python/quickstart).
-
-Run the application:
-
-    $ dev_appserver.py app.yaml
-
-In your web browser, go to the following address: http://localhost:8080/\_ah/api/explorer
-
 ## Deploying to Google App Engine
 
 Generate a swagger file by running: `python lib/endpoints/endpointscfg.py get_swagger_spec main.EchoApi --hostname your-service.appspot.com`
@@ -36,3 +26,6 @@ Then, deploy the sample using `gcloud`:
     $ gcloud beta app deploy
 
 Once deployed, you can access the application at https://your-service.appspot.com
+
+Note that local deployment with dev_appserver.py is not yet supported with
+Endpoints Frameworks v2.
