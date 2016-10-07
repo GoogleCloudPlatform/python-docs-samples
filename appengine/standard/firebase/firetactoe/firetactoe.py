@@ -180,7 +180,7 @@ class Game(ndb.Model):
 @app.route('/move', methods=['POST'])
 def move():
     game = Game.get_by_id(request.args.get('g'))
-    position = int(request.args.get('i'))
+    position = int(request.form.get('i'))
     if not (game and (0 <= position <= 8)):
         return 'Game not found, or invalid position', 400
     game.make_move(position, users.get_current_user())

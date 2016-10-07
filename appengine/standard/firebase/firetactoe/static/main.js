@@ -39,49 +39,39 @@ function initGame(gameKey, me, token, channelId, initialMessage) {
   /**
    * Updates the displayed game board.
    */
-  function updateGame() {
-    for (var i = 0; i < 9; i++) {
-      var square = document.getElementById(i);
-      square.innerHTML = state.board[i];
+  function updateGame(newState) {
+    $.extend(state, newState);
+
+    $('.cell').each(function(i) {
+      var square = $(this);
+      var value = state.board[i];
+      square.html(' ' === value ? '' : value);
+
       if (state.winner && state.winningBoard) {
-        if (state.winningBoard[i] === state.board[i]) {
+        if (state.winningBoard[i] === value) {
           if (state.winner === state.me) {
-            square.style.background = 'green';
+            square.css('background', 'green');
           } else {
-            square.style.background = 'red';
+            square.css('background', 'red');
           }
         } else {
-          square.style.background = 'white';
+          square.css('background', '');
         }
       }
-    }
+    });
 
-    var display = {
-      'other-player': 'none',
-      'your-move': 'none',
-      'their-move': 'none',
-      'you-won': 'none',
-      'you-lost': 'none',
-      'board': 'block',
-      'this-game': 'block',
-    };
+    var displayArea = $('#display-area');
 
     if (!state.userO) {
-      display['other-player'] = 'block';
-      display['board'] = 'none';
-      display['this-game'] = 'none';
+      displayArea[0].className = 'waiting';
     } else if (state.winner === state.me) {
-      display['you-won'] = 'block';
+      displayArea[0].className = 'won';
     } else if (state.winner) {
-      display['you-lost'] = 'block';
+      displayArea[0].className = 'lost';
     } else if (isMyMove()) {
-      display['your-move'] = 'block';
+      displayArea[0].className = 'your-move';
     } else {
-      display['their-move'] = 'block';
-    }
-
-    for (var label in display) {
-      document.getElementById(label).style.display = display[label];
+      displayArea[0].className = 'their-move';
     }
   }
 
@@ -94,48 +84,12 @@ function initGame(gameKey, me, token, channelId, initialMessage) {
   }
 
   /**
-   * This message sends POST requests back to the App Engine server
-   */
-  function sendMessage(path, optParam) {
-    path += '?g=' + state.gameKey;
-    if (optParam) {
-      path += '&' + optParam;
-    }
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', path, true);
-    xhr.send();
-  }
-
-  /**
    * Send the user's latest move back to the server
    */
   function moveInSquare(e) {
-    var target = e.target || e.srcElement;
-    var id = parseInt(target.id, 10);
+    var id = $(e.currentTarget).index();
     if (isMyMove() && state.board[id] === ' ') {
-      sendMessage('/move', 'i=' + id);
-    }
-  }
-
-  function highlightSquare(e) {
-    if (state.winner) {
-      return;
-    }
-    var target = e.target || e.srcElement;
-    var id = parseInt(target.id, 10);
-    for (var i = 0; i < 9; i++) {
-      var color;
-      if (i === id  && isMyMove()) {
-        if (state.board[i] === ' ') {
-          color = 'lightBlue';
-        } else {
-          color = 'lightGrey';
-        }
-      } else {
-        color = 'white';
-      }
-
-      document.getElementById(i).style['background'] = color;
+      $.post('/move', {i: id});
     }
   }
 
@@ -144,7 +98,7 @@ function initGame(gameKey, me, token, channelId, initialMessage) {
    * After this method is called, the server may begin to send updates
    */
   function onOpened() {
-    sendMessage('/opened');
+    $.post('/opened');
   }
 
   /**
@@ -152,7 +106,7 @@ function initGame(gameKey, me, token, channelId, initialMessage) {
    * it is critical that this data be deleted since it costs money
    */
   function deleteChannel() {
-    sendMessage('/delete');
+    $.post('/delete');
   }
 
   /**
@@ -161,12 +115,9 @@ function initGame(gameKey, me, token, channelId, initialMessage) {
    * if a player has won the game, this function calls the server to delete
    * the data stored in Firebase
    */
-  function onMessage(m) {
-    var newState = m;
-    for (var key in newState) {
-      state[key] = newState[key];
-    }
-    updateGame();
+  function onMessage(newState) {
+    updateGame(newState);
+
     // now check to see if there is a winner
     if (channel && state.winner && state.winningBoard) {
       channel.off(); //stop listening on this path
@@ -204,13 +155,17 @@ function initGame(gameKey, me, token, channelId, initialMessage) {
    * finally it updates the game state with those values by calling onMessage()
    */
   function initialize() {
-    openChannel();
+    // Always include the gamekey in our requests
+    $.ajaxPrefilter(function(opts) {
+      if (opts.url.indexOf('?') > 0)
+        opts.url += '&g=' + state.gameKey;
+      else
+        opts.url += '?g=' + state.gameKey;
+    });
 
-    for (var i = 0; i < 9; i++) {
-      var square = document.getElementById(i);
-      square.onmouseover = highlightSquare;
-      square.onclick = moveInSquare;
-    }
+    $('#board').on('click', '.cell', moveInSquare);
+
+    openChannel();
 
     onMessage(initialMessage);
   }

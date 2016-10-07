@@ -12,6 +12,31 @@ body {
   text-align: center;
 }
 
+#other-player, #your-move, #their-move, #you-won, #you-lost {
+  display: none;
+}
+
+#display-area.waiting #other-player {
+  display: block;
+}
+
+#display-area.waiting #board, #display-area.waiting #this-game {
+  display: none;
+}
+#display-area.won #you-won {
+  display: block;
+}
+#display-area.lost #you-lost {
+  display: block;
+}
+#display-area.your-move #your-move {
+  display: block;
+}
+#display-area.their-move #their-move {
+  display: block;
+}
+
+
 #this-game {
   font-size: 9pt;
 }
@@ -29,6 +54,15 @@ div.cell {
   font-family: "Helvetica";
   font-size: 16pt;
   text-align: center;
+}
+
+.your-move div.cell:hover {
+  background: lightgrey;
+}
+
+.your-move div.cell:empty:hover {
+  background: lightblue;
+  cursor: pointer;
 }
 
 div.l {

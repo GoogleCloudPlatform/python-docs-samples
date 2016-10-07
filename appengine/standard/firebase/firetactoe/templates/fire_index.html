@@ -2,6 +2,7 @@
   <head>
     {% include "_firebase_config.html" %}
     <link rel="stylesheet" type="text/css" href="static/main.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="static/main.js"></script>
     <script>
       initGame('{{ game_key }}', '{{ me }}', '{{ token }}', '{{ channel_id }}',
@@ -10,25 +11,17 @@
     </script>
   </head>
   <body>
-    <div id='display-area'>
+    <div id='display-area' class="waiting">
       <h2>Firebase-enabled Tic Tac Toe</h2>
-      <div id='other-player' style='display:none'>
+      <div id='other-player'>
         Waiting for another player to join.<br>
         Send them this link to play:<br>
         <div id='game-link'><a href='{{ game_link }}'>{{ game_link }}</a></div>
       </div>
-      <div id='your-move' style='display:none'>
-        Your move! Click a square to place your piece.
-      </div>
-      <div id='their-move' style='display:none'>
-        Waiting for other player to move...
-      </div>
-      <div id='you-won'>
-        You won this game!
-      </div>
-      <div id='you-lost'>
-        You lost this game.
-      </div>
+      <div id='your-move'>Your move! Click a square to place your piece.</div>
+      <div id='their-move'>Waiting for other player to move...</div>
+      <div id='you-won'>You won this game!</div>
+      <div id='you-lost'>You lost this game.</div>
       <div id='board'>
         <div class='t l cell' id='0'></div>
         <div class='t c cell' id='1'></div>
