@@ -14,26 +14,25 @@
 
 """Tic Tac Toe with the Firebase API"""
 
-import datetime
+import base64
 import json
 import os
 import re
+import time
 import urllib
 
-from Crypto.PublicKey import RSA
+
 import flask
 from flask import request
+from google.appengine.api import app_identity
 from google.appengine.api import users
 from google.appengine.ext import ndb
 import httplib2
-import jwt
-from oauth2client.service_account import ServiceAccountCredentials
+from oauth2client.client import GoogleCredentials
 
 
 _FIREBASE_CONFIG = '_firebase_config.html'
-_SERVICE_ACCOUNT_FILENAME = 'credentials.json'
 
-_CWD = os.path.dirname(__file__)
 _IDENTITY_ENDPOINT = ('https://identitytoolkit.googleapis.com/'
                       'google.identity.identitytoolkit.v1.IdentityToolkit')
 _FIREBASE_SCOPES = [
@@ -69,10 +68,10 @@ def _get_http(_memo={}):
     if 'http' not in _memo:
         # Memoize the authorized http, to avoid fetching new access tokens
         http = httplib2.Http()
-        # Use service account credentials to make the Firebase calls
+        # Use application default credentials to make the Firebase calls
         # https://firebase.google.com/docs/reference/rest/database/user-auth
-        creds = ServiceAccountCredentials.from_json_keyfile_name(
-            os.path.join(_CWD, _SERVICE_ACCOUNT_FILENAME), _FIREBASE_SCOPES)
+        creds = GoogleCredentials.get_application_default().create_scoped(
+            _FIREBASE_SCOPES)
         creds.authorize(http)
         _memo['http'] = http
     return _memo['http']
@@ -87,26 +86,32 @@ def _send_firebase_message(u_id, message=None):
         return _get_http().request(url, 'DELETE')
 
 
-def create_custom_token(uid):
+def create_custom_token(uid, valid_minutes=60):
     """Create a secure token for the given id.
 
-    This method is used to create secure custom tokens to be passed to clients
-    it takes a unique id (uid) that will be used by Firebase's security rules
-    to prevent unauthorized access. In this case, the uid will be the channel
-    id which is a combination of user_id and game_key
+    This method is used to create secure custom JWT tokens to be passed to
+    clients. It takes a unique id (uid) that will be used by Firebase's
+    security rules to prevent unauthorized access. In this case, the uid will
+    be the channel id which is a combination of user_id and game_key
     """
-    with open(os.path.join(_CWD, _SERVICE_ACCOUNT_FILENAME), 'r') as f:
-        credentials = json.load(f)
+    header = base64.b64encode(json.dumps({'typ': 'JWT', 'alg': 'RS256'}))
 
-    payload = {
-        'iss': credentials['client_email'],
-        'sub': credentials['client_email'],
+    client_email = app_identity.get_service_account_name()
+    now = int(time.time())
+    payload = base64.b64encode(json.dumps({
+        'iss': client_email,
+        'sub': client_email,
         'aud': _IDENTITY_ENDPOINT,
         'uid': uid,
-    }
-    exp = datetime.timedelta(minutes=60)
-    return jwt.generate_jwt(
-        payload, RSA.importKey(credentials['private_key']), 'RS256', exp)
+        'iat': now,
+        'exp': now + (valid_minutes * 60),
+    }))
+
+    to_sign = '{}.{}'.format(header, payload)
+
+    # Sign the jwt
+    return '{}.{}'.format(to_sign, base64.b64encode(
+        app_identity.sign_blob(to_sign)[1]))
 
 
 class Game(ndb.Model):

@@ -9,7 +9,3 @@ handlers:
 - url: /.*
   script: firetactoe.app
   login: required
-
-libraries:
-- name: pycrypto
-  version: 2.6
