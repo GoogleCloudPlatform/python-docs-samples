@@ -4,3 +4,6 @@ entrypoint: gunicorn -b :$PORT main:app
 
 runtime_config:
   python_version: 3
+
+beta_settings:
+  enable_app_engine_apis: true
