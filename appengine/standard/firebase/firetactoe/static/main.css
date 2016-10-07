@@ -1,0 +1,82 @@
+body {
+  font-family: 'Helvetica';
+}
+
+#board {
+  width:152px;
+  height: 152px;
+  margin: 20px auto;
+}
+
+#display-area {
+  text-align: center;
+}
+
+#other-player, #your-move, #their-move, #you-won, #you-lost {
+  display: none;
+}
+
+#display-area.waiting #other-player {
+  display: block;
+}
+
+#display-area.waiting #board, #display-area.waiting #this-game {
+  display: none;
+}
+#display-area.won #you-won {
+  display: block;
+}
+#display-area.lost #you-lost {
+  display: block;
+}
+#display-area.your-move #your-move {
+  display: block;
+}
+#display-area.their-move #their-move {
+  display: block;
+}
+
+
+#this-game {
+  font-size: 9pt;
+}
+
+div.cell {
+  float: left;
+  width: 50px;
+  height: 50px;
+  border: none;
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+
+  line-height: 50px;
+  font-family: "Helvetica";
+  font-size: 16pt;
+  text-align: center;
+}
+
+.your-move div.cell:hover {
+  background: lightgrey;
+}
+
+.your-move div.cell:empty:hover {
+  background: lightblue;
+  cursor: pointer;
+}
+
+div.l {
+  border-right: 1pt solid black;
+}
+
+div.r {
+  border-left: 1pt solid black;
+}
+
+div.t {
+  border-bottom: 1pt solid black;
+}
+
+div.b {
+  border-top: 1pt solid black;
+}
