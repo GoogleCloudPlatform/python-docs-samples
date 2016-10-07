@@ -42,7 +42,13 @@ See the [Cloud Platform Auth Guide][auth-guide] for more information.
 
   ```sh
   git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
-  cd python-docs-samples/speech/api
+  cd python-docs-samples/speech/grpc
+  ```
+  
+* If you don't have it already, install [virtualenv][virtualenv].
+
+  ```sh
+  pip install virtualenv
   ```
 
 * Create a [virtualenv][virtualenv]. This isolates the python dependencies
