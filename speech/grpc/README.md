@@ -11,7 +11,7 @@ microphone.
 ### Enable the Speech API
 
 If you have not already done so, [enable the Google Cloud Speech
-API](console-speech) for your project.
+API][console-speech] for your project.
 
 [console-speech]: https://console.cloud.google.com/apis/api/speech.googleapis.com/overview?project=_
 
