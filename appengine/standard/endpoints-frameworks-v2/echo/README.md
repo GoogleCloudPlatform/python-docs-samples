@@ -26,3 +26,6 @@ Then, deploy the sample using `gcloud`:
     $ gcloud beta app deploy
 
 Once deployed, you can access the application at https://your-service.appspot.com
+
+Note that local deployment with dev_appserver.py is not yet supported with
+Endpoints Frameworks v2.
