@@ -24,7 +24,7 @@ installed. You'll need this to test and deploy your App Engine app.
   existing App Engine service account credentials file. Then set the environment
   variable `GOOGLE_APPLICATION_CREDENTIALS` to the path to this file:
 
-    export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
+      export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
 
   This allows the server to create unique secure tokens for each user for
   Firebase to validate.
