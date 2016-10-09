@@ -1,16 +1,8 @@
+import os
 import requests
-import sys
-import argparse
-from flask import Flask
 import services_config
 
-app = Flask(__name__)
-#create service map for production urls unless --development flag added
-app.config['SERVICE_MAP'] = services_config.map_services('production')
-
-#setup arg parser to handle development flag
-parser = argparse.ArgumentParser()
-parser.add_argument('-d', '--development', action='store_true')
+app = services_config.make_app(__name__)
 
 @app.route('/')
 def root():
@@ -20,11 +12,12 @@ def root():
 
 @app.route('/hello/<service>')
 def say_hello(service):
-    '''Recieves requests from the buttons on the front end and resopnds
+    '''Recieves requests from buttons on the front end and resopnds
     or sends request to the static file server'''
     #if 'gateway' is specified return immediate
     if service == 'gateway':
         return 'Gateway says hello'
+    #otherwise send request to service indicated by URL param
     responses = []
     url = app.config['SERVICE_MAP'][service]
     res = requests.get(url + '/hello')
@@ -33,13 +26,11 @@ def say_hello(service):
 
 @app.route('/<path>')
 def static_file(path):
-    '''Handles static file requests from index.html'''
+    '''Gets static files required by index.html to static file server'''
     url = app.config['SERVICE_MAP']['static']
     res = requests.get(url + '/' + path)
     return res.content, 200, {'Content-Type': res.headers['Content-Type']}
 
 if __name__ == '__main__':
-    args = parser.parse_args()
-    if args.development:
-        app.config['SERVICE_MAP'] = services_config.map_services('development')
-    app.run()
+    port = os.environ.get('PORT') or 8000
+    app.run(port=port)

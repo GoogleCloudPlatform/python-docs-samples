@@ -19,9 +19,9 @@ $ pip install -r requirements.txt
 $ deactivate
 ```
 
-4. To start server locally use the development flag `--development` or `-d`
+4. To start server locally:
 ```Bash
-$ python <filename>.py --development
+$ python <filename>.py
 ```
 
 ## To Deploy to App Engine
@@ -48,5 +48,14 @@ The deployed url will be `https://<service name>-dot-<your project id>.appspot.c
 
 ### Deployment
 
-To deploy a service cd into its directory and run: `gcloud app deploy app.yaml`
+To deploy a service cd into its directory and run:
+```Bash
+$ gcloud app deploy app.yaml
+```
 and enter `Y` when prompted.  Or to skip the check add `-q`.
+
+To deploy multiple services simultaneously just add the path to each `app.yaml`
+file as an argument to `gcloud app deploy `:
+```Bash
+$ gcloud app deploy gateway/app.yaml static/app.yaml
+```
