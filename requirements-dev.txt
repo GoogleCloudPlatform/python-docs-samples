@@ -8,6 +8,7 @@ flaky==3.3.0
 flask-cors==3.0.2
 Flask-Sockets==0.2.1
 Flask-SQLAlchemy==2.1
+flask==0.11.1
 Flask==0.11.1
 fluent-logger==0.4.4
 funcsigs==1.0.2
@@ -51,13 +52,14 @@ redis==2.10.5
 requests-toolbelt==0.7.0
 requests==2.11.1
 requests[security]==2.11.1
+requests_toolbelt==0.7.0
 responses==0.5.1
 rsa==3.4.2
 scipy==0.18.1
 sendgrid==3.4.0
 simplejson==3.8.2
 six==1.10.0
-SQLAlchemy==1.1.0
+SQLAlchemy==1.1.1
 twilio==6.3.dev0
 uritemplate==3.0.0
 WebTest==2.0.23
