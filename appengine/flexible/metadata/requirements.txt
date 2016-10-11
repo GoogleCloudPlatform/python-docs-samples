@@ -1,0 +1,4 @@
+Flask==0.11.1
+Flask-Sockets==0.2.1
+gunicorn==19.6.0
+requests[security]==2.11.1
