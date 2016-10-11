@@ -22,7 +22,7 @@ import base64
 import json
 import logging
 
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request
 from flask_cors import cross_origin
 from six.moves import http_client
 
