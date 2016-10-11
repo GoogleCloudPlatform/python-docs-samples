@@ -4,24 +4,27 @@ This example demonstrates how to deploy multiple python services to [App Engine 
 
 ## To Run Locally
 
-1. You will need to install Python 3 on your local machine
+Use [virtualenv](https://virtualenv.pypa.io/en/stable/) to set up each
+service's environment and start the each service in a separate terminal.
 
-2. Install virtualenv
-```Bash
-$ pip install virtualenv
-```
+Open a terminal and start the first service:
 
-3. To setup the environment in each server's directory:
 ```Bash
+$ cd gateway-service
 $ virtualenv -p python3 env
 $ source env/bin/activate
 $ pip install -r requirements.txt
-$ deactivate
+$ python main.py
 ```
 
-4. To start server locally:
+In a separate terminal, start the second service:
+
 ```Bash
-$ python <filename>.py
+$ cd static-service
+$ virtualenv -p python3 env
+$ source env/bin/activate
+$ pip install -r requirements.txt
+$ python main.py
 ```
 
 ## To Deploy to App Engine
@@ -33,16 +36,14 @@ separate App Engine service within the same project.
 
 For the gateway:
 
-[Gateway <default>](gateway/app.yaml)
+[Gateway service <default>](gateway/app.yaml)
 
 This is the `default` service.  There must be one (and not more).  The deployed
 url will be `https://<your project id>.appspot.com`
 
 For the static file server:
 
-[Static File Server <static>](static/app.yaml)
-
-Make sure the `entrypoint` line matches the filename of the server you want to deploy.
+[Static file service <static>](static/app.yaml)
 
 The deployed url will be `https://<service name>-dot-<your project id>.appspot.com`
 
