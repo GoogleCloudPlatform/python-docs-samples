@@ -1,7 +1,7 @@
-service: default
+service: static
 runtime: python
 vm: true
-entrypoint: gunicorn -b :$PORT api_gateway:app
+entrypoint: gunicorn -b :$PORT main:app
 
 runtime_config:
   python_version: 3

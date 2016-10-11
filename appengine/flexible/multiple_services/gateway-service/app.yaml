@@ -1,10 +1,10 @@
-service: static
+service: default
 runtime: python
 vm: true
-entrypoint: gunicorn -b :$PORT static_server:app
+entrypoint: gunicorn -b :$PORT main:app
 
 runtime_config:
   python_version: 3
-  
+
 manual_scaling:
   instances: 1

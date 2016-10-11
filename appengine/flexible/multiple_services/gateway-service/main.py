@@ -12,39 +12,46 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+from flask import Flask
 import requests
 import services_config
 
-app = services_config.make_app(__name__)
+app = Flask(__name__)
+services_config.init_app(app)
+
 
 @app.route('/')
 def root():
-    '''Gets index.html from the static file server'''
+    """Gets index.html from the static file server"""
     res = requests.get(app.config['SERVICE_MAP']['static'])
     return res.content
 
+
 @app.route('/hello/<service>')
 def say_hello(service):
-    '''Recieves requests from buttons on the front end and resopnds
-    or sends request to the static file server'''
-    #if 'gateway' is specified return immediate
+    """Recieves requests from buttons on the front end and resopnds
+    or sends request to the static file server"""
+    # If 'gateway' is specified return immediate
     if service == 'gateway':
         return 'Gateway says hello'
-    #otherwise send request to service indicated by URL param
+
+    # Otherwise send request to service indicated by URL param
     responses = []
     url = app.config['SERVICE_MAP'][service]
     res = requests.get(url + '/hello')
     responses.append(res.content)
     return '\n'.encode().join(responses)
 
+
 @app.route('/<path>')
 def static_file(path):
-    '''Gets static files required by index.html to static file server'''
+    """Gets static files required by index.html to static file server"""
     url = app.config['SERVICE_MAP']['static']
     res = requests.get(url + '/' + path)
     return res.content, 200, {'Content-Type': res.headers['Content-Type']}
 
+
 if __name__ == '__main__':
-    port = os.environ.get('PORT') or 8000
-    app.run(port=int(port))
+    # This is used when running locally. Gunicorn is used to run the
+    # application on Google App Engine. See entrypoint in app.yaml.
+    app.run(host='127.0.0.1', port=8000, debug=True)
