@@ -172,3 +172,16 @@ $ gcloud app deploy app.yaml --project=YOUR-CLIENT-PROJECT-ID
 
 Your client app is now deployed at https://YOUR-CLIENT-PROJECT-ID.appspot.com. When you access https://YOUR-CLIENT-PROJECT-ID.appspot.com, your client calls your server project API from
 the client's service account using Google ID token.
+
+## Viewing the Endpoints graphs
+
+By using Endpoints, you get access to several metrics that are displayed graphically in the Cloud Console.
+
+To view the Endpoints graphs:
+
+1. Go to the [Endpoints section in Cloud Console](https://console.cloud.google.com/endpoints) of the project you deployed your API to.
+2. Click on your API to view more detailed information about the metrics collected.
+
+## Swagger UI
+
+The Swagger UI is an open source Swagger project that allows you to explore your API through a UI. Find out more about it on the [Swagger site](http://swagger.io/swagger-ui/).
