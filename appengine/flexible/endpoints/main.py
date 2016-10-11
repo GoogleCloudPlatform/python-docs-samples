@@ -25,24 +25,9 @@ import logging
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import cross_origin
 from six.moves import http_client
-import yaml
 
 
 app = Flask(__name__)
-
-
-@app.route('/', methods=['GET'])
-def index():
-    """Shows the index page."""
-    return send_from_directory('.', 'index.html')
-
-
-@app.route('/api-docs', methods=['GET'])
-def swagger_json():
-    """Serves up the Swagger spec for the API."""
-    with open('swagger.yaml', 'r') as f:
-        spec = yaml.safe_load(f)
-    return jsonify(spec)
 
 
 @app.route('/echo', methods=['POST'])
