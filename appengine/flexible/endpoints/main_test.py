@@ -29,16 +29,6 @@ def client(monkeypatch):
     return client
 
 
-def test_index(client):
-    r = client.get('/')
-    assert r.status_code == 200
-
-
-def test_api_docs(client):
-    r = client.get('/api-docs')
-    assert r.status_code == 200
-
-
 def test_echo(client):
     r = client.post(
         '/echo',
