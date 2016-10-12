@@ -27,16 +27,15 @@ def run_quickstart():
     translate_client = translate.Client(api_key)
 
     # The text to translate
-    text = 'Hello, world!'
+    text = u'Hello, world!'
     # The target language
     target = 'ru'
 
     # Translates some text into Russian
     translation = translate_client.translate(text, target_language=target)
 
-    print('Text: {}'.format(text))
-    print('Translation: {}'.format(
-        translation['translatedText'].encode('utf-8')))
+    print(u'Text: {}'.format(text))
+    print(u'Translation: {}'.format(translation['translatedText']))
     # [END translate_quickstart]
 
 

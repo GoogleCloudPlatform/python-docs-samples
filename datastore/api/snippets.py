@@ -539,7 +539,8 @@ def inequality_invalid(client):
 
         return list(query.fetch())
 
-    except google.cloud.exceptions.BadRequest:
+    except (google.cloud.exceptions.BadRequest,
+            google.cloud.exceptions.GrpcRendezvous):
         pass
 
 
@@ -579,7 +580,8 @@ def inequality_sort_invalid_not_same(client):
 
         return list(query.fetch())
 
-    except google.cloud.exceptions.BadRequest:
+    except (google.cloud.exceptions.BadRequest,
+            google.cloud.exceptions.GrpcRendezvous):
         pass
 
 
@@ -593,7 +595,8 @@ def inequality_sort_invalid_not_first(client):
 
         return list(query.fetch())
 
-    except google.cloud.exceptions.BadRequest:
+    except (google.cloud.exceptions.BadRequest,
+            google.cloud.exceptions.GrpcRendezvous):
         pass
 
 

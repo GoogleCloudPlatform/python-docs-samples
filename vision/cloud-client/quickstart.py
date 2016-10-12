@@ -18,6 +18,7 @@
 def run_quickstart():
     # [START vision_quickstart]
     import io
+    import os
 
     # Imports the Google Cloud client library
     from google.cloud import vision
@@ -26,11 +27,15 @@ def run_quickstart():
     vision_client = vision.Client()
 
     # The name of the image file to annotate
-    fileName = './resources/wakeupcat.jpg'
+    file_name = os.path.join(
+        os.path.dirname(__file__),
+        'resources/wakeupcat.jpg')
 
     # Loads the image into memory
-    with io.open(fileName, 'rb') as image_file:
-        image = vision_client.image(content=image_file.read())
+    with io.open(file_name, 'rb') as image_file:
+        content = image_file.read()
+        image = vision_client.image(
+            content=content)
 
     # Performs label detection on the image file
     labels = image.detect_labels()
