@@ -40,7 +40,7 @@ def detect_language(api_key, text):
 
 
 def list_languages(api_key):
-    """Lists all available langauges."""
+    """Lists all available languages."""
     translate_client = translate.Client(api_key)
 
     results = translate_client.get_languages()
@@ -50,9 +50,10 @@ def list_languages(api_key):
 
 
 def list_languages_with_target(api_key, target):
-    """Lists all available langauges and localizes them to the target language.
+    """Lists all available languages and localizes them to the target language.
 
     Target must be an ISO 639-1 language code.
+    See https://g.co/cloud/translate/v2/translate-reference#supported_languages
     """
     translate_client = translate.Client(api_key)
 
@@ -66,6 +67,7 @@ def translate_text(api_key, target, text):
     """Translates text into the target language.
 
     Target must be an ISO 639-1 language code.
+    See https://g.co/cloud/translate/v2/translate-reference#supported_languages
     """
     translate_client = translate.Client(api_key)
 

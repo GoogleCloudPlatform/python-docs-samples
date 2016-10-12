@@ -15,6 +15,9 @@ text between thousands of language pairs.
 
 ## Setup
 
+You will need to enable the Translate API and acquire and API key. See the
+[documentation][translate_docs] for details on how to do this.
+
 Install dependencies:
 
     virtualenv env
