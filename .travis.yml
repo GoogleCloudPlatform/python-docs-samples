@@ -16,7 +16,7 @@ env:
   - GOOGLE_APPLICATION_CREDENTIALS=${TRAVIS_BUILD_DIR}/testing/resources/service-account.json
   - GOOGLE_CLIENT_SECRETS=${TRAVIS_BUILD_DIR}/testing/resources/client-secrets.json
   - GAE_ROOT=${HOME}/.cache/
-  - secure: TQ0e6XKeFwVkoqgOJH9f/afyRouUSC6s7LC32C4JS+O2X4sXyXTPXACmzu5wCW0BXPc6HvITMLvkf7g6XXyGlCPkjM8Uw5Vg5F9+cwN1HMlI+gK6bMGTUfrwN5ruFT+KmEnD4F93NY3xkDbZd0fw23d/mVloTc6V0gUsxEUkuhM=
+  - secure: f3aU0nf8ZBV2QfZ03oeqvR0f/JM69P/7IH3IGoBcRUWVIXXhQ6Esh9SmCUILPtis1ZKu11I9c+NDebZio7PFgTqfvLbKzAkrg0ucx+Bsyx6379/S1trbLeKunERSGA3GqK6+OCoR5q/9sKxNvlm/c/e9h7xZmPfP5W0qwVR/K0M=
 addons:
   apt:
     sources:
