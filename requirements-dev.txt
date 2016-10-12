@@ -56,7 +56,7 @@ requests_toolbelt==0.7.0
 responses==0.5.1
 rsa==3.4.2
 scipy==0.18.1
-sendgrid==3.4.0
+sendgrid==3.6.0
 simplejson==3.8.2
 six==1.10.0
 SQLAlchemy==1.1.1
