@@ -34,7 +34,6 @@ def run_quickstart():
     # Loads the image into memory
     with io.open(file_name, 'rb') as image_file:
         content = image_file.read()
-        import pdb; pdb.set_trace()
         image = vision_client.image(
             content=content)
 
