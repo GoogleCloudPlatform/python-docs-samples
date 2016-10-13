@@ -16,7 +16,7 @@ google-api-python-client==1.5.3
 google-cloud-bigquery==0.20.0
 google-cloud-bigtable==0.20.0
 google-cloud-core==0.20.0
-google-cloud-datastore==0.20.0
+google-cloud-datastore==0.20.1
 google-cloud-dns==0.20.0
 google-cloud-happybase==0.20.0
 google-cloud-language==0.20.0
@@ -27,7 +27,7 @@ google-cloud-translate==0.20.0
 google-cloud-vision==0.20.0
 google-cloud==0.20.0
 grpc-google-cloud-speech-v1beta1==1.0.1
-grpcio==1.0.0
+grpcio==1.0.1rc1
 gunicorn==19.6.0
 httplib2==0.9.2
 kinto==4.3.1
