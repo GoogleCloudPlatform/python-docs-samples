@@ -11,7 +11,7 @@ These samples are used on the following documentation page:
 
 <!-- end-auto-doc-link -->
 
-[gcloud-python-happybase]: https://googlecloudplatform.github.io/gcloud-python/stable/happybase-package.html
+[gcloud-python-happybase]: https://github.com/GoogleCloudPlatform/google-cloud-python-happybase
 [happybase]: http://happybase.readthedocs.io/en/stable/
 [sample-docs]: https://cloud.google.com/bigtable/docs/samples-python-hello-happybase
 
