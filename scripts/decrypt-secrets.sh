@@ -20,11 +20,6 @@ ROOT=$( dirname "$DIR" )
 # Work from the project root.
 cd $ROOT
 
-read -s -p "Enter password for encryption: " PASSWORD
-echo
-
-tar cvf secrets.tar testing/{service-account.json,client-secrets.json,test-env.sh}
-openssl aes-256-cbc -k "$PASSWORD" -in secrets.tar -out testing/secrets.tar.enc
+openssl aes-256-cbc -k "$1" -in testing/secrets.tar.enc -out secrets.tar -d
+tar xvf secrets.tar
 rm secrets.tar
-
-travis encrypt "SECRETS_PASSWORD=$PASSWORD" --add --override
