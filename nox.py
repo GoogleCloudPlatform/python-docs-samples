@@ -320,3 +320,12 @@ def session_reqrollup(session):
         for requirement in sorted(requirements, key=lambda s: s.lower()):
             if not requirement.startswith('#'):
                 f.write(requirement)
+
+
+def session_readmegen(session):
+    session.install('-r', 'testing/requirements-dev.txt')
+
+    in_files = list(list_files('.', 'README.rst.in'))
+
+    for in_file in in_files:
+        session.run('python', 'scripts/readme-gen/readme_gen.py', in_file)
