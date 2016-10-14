@@ -37,7 +37,7 @@ def test_list_monitored_resources(cloud_config, capsys):
         client, PROJECT_RESOURCE)
     stdout, _ = capsys.readouterr()
     regex = re.compile(
-        'An application running')
+        'An application running', re.I)
     assert regex.search(stdout) is not None
 
 
@@ -49,7 +49,7 @@ def test_list_metrics(cloud_config, capsys):
         client, PROJECT_RESOURCE, METRIC)
     stdout, _ = capsys.readouterr()
     regex = re.compile(
-        u'Delta CPU usage time')
+        u'Delta CPU', re.I)
     assert regex.search(stdout) is not None
 
 
@@ -60,5 +60,5 @@ def test_list_timeseries(cloud_config, capsys):
     list_resources.list_timeseries(
         client, PROJECT_RESOURCE, METRIC)
     stdout, _ = capsys.readouterr()
-    regex = re.compile(u'list_timeseries response:\n')
+    regex = re.compile(u'list_timeseries response:\n', re.I)
     assert regex.search(stdout) is not None
