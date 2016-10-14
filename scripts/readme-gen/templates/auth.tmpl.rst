@@ -2,7 +2,7 @@ Authentication
 ++++++++++++++
 
 Authentication is typically done through `Application Default Credentials`_,
-this means you do not have to change the code to authenticate as long as
+which means you do not have to change the code to authenticate as long as
 your environment has credentials. You have a few options for setting up
 authentication:
 
