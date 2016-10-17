@@ -29,7 +29,9 @@
 function initGame(gameKey, me, token, channelId, initialMessage) {
   var state = {
     gameKey: gameKey,
-    me: me
+    me: me,
+    channelId: channelId,
+    initialMessage: initialMessage
   };
 
   // This is our Firebase realtime DB path that we'll listen to for updates
@@ -83,6 +85,7 @@ function initGame(gameKey, me, token, channelId, initialMessage) {
     return state.userX === state.me ? 'X' : 'O';
   }
 
+  // [START move_in_square]
   /**
    * Send the user's latest move back to the server
    */
@@ -92,6 +95,7 @@ function initGame(gameKey, me, token, channelId, initialMessage) {
       $.post('/move', {i: id});
     }
   }
+  // [END move_in_square]
 
   /**
    * This method lets the server know that the user has opened the channel
@@ -109,6 +113,7 @@ function initGame(gameKey, me, token, channelId, initialMessage) {
     $.post('/delete');
   }
 
+  // [START remove_listener]
   /**
    * This method is called every time an event is fired from Firebase
    * it updates the entire game state and checks for a winner
@@ -124,7 +129,9 @@ function initGame(gameKey, me, token, channelId, initialMessage) {
       deleteChannel(); //delete the data we wrote
     }
   }
+  // [END remove_listener]
 
+  // [START open_channel]
   /**
    * This function opens a realtime communication channel with Firebase
    * It logs in securely using the client token passed from the server
@@ -132,21 +139,26 @@ function initGame(gameKey, me, token, channelId, initialMessage) {
    * finally, it calls onOpened() to let the server know it is ready to receive messages
    */
   function openChannel() {
+    // [START auth_login]
     // sign into Firebase with the token passed from the server
     firebase.auth().signInWithCustomToken(token).catch(function(error) {
       console.log('Login Failed!', error.code);
       console.log('Error message: ', error.message);
     });
+    // [END auth_login]
 
+    // [START add_listener]
     // setup a database reference at path /channels/channelId
     channel = firebase.database().ref('channels/' + channelId);
     // add a listener to the path that fires any time the value of the data changes
     channel.on('value', function(data) {
       onMessage(data.val());
     });
+    // [END add_listener]
     onOpened();
     // let the server know that the channel is open
   }
+  // [END open_channel]
 
   /**
    * This function opens a communication channel with the server
