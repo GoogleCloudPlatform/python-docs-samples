@@ -31,7 +31,6 @@ import httplib2
 from oauth2client.client import GoogleCredentials
 
 
-
 _FIREBASE_CONFIG = '_firebase_config.html'
 
 _IDENTITY_ENDPOINT = ('https://identitytoolkit.googleapis.com/'
@@ -108,8 +107,7 @@ def create_custom_token(uid, valid_minutes=60):
     # use the app_identity service from google.appengine.api to get the
     # project's service account email automatically 
     client_email = app_identity.get_service_account_name()
-    # create standard header to identify this as a JWT
-    header = base64.b64encode(json.dumps({'typ': 'JWT', 'alg': 'RS256'}))
+
     now = int(time.time())
     # encode the required claims 
     # per https://firebase.google.com/docs/auth/server/create-custom-tokens
@@ -121,9 +119,9 @@ def create_custom_token(uid, valid_minutes=60):
         'iat': now,
         'exp': now + (valid_minutes * 60),
     }))
-
+    # add standard header to identify this as a JWT
+    header = base64.b64encode(json.dumps({'typ': 'JWT', 'alg': 'RS256'}))
     to_sign = '{}.{}'.format(header, payload)
-
     # Sign the jwt using the built in app_identity service
     return '{}.{}'.format(to_sign, base64.b64encode(
         app_identity.sign_blob(to_sign)[1]))
