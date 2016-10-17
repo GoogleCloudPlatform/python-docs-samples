@@ -62,7 +62,7 @@ class GreetingApi(remote.Service):
     GET_RESOURCE = endpoints.ResourceContainer(
         # The request body should be empty.
         message_types.VoidMessage,
-        # Accept one url parameter: and integer named 'id'
+        # Accept one url parameter: an integer named 'id'
         id=messages.IntegerField(1, variant=messages.Variant.INT32))
 
     @endpoints.method(
