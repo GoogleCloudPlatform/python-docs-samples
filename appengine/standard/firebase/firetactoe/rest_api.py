@@ -36,7 +36,7 @@ _FIREBASE_SCOPES = [
 def _get_http(_memo={}):
     """Provides an authed http object."""
     if 'http' not in _memo:
-        # Memorize the authorized http, to avoid fetching new access tokens
+        # Memoize the authorized http, to avoid fetching new access tokens
         http = httplib2.Http()
         # Use application default credentials to make the Firebase calls
         # https://firebase.google.com/docs/reference/rest/database/user-auth
@@ -46,7 +46,7 @@ def _get_http(_memo={}):
         _memo['http'] = http
     return _memo['http']
     
-def fb_put(path, value=None):
+def firebase_put(path, value=None):
     """Writes data to Firebase. Value should be a valid json object.
      Put writes an entire object at the given database path. Updates to 
      fields cannot be performed without overwriting the entire object
@@ -57,7 +57,7 @@ def fb_put(path, value=None):
     else:
         return None
 
-def fb_patch(path, value=None):
+def firebase_patch(path, value=None):
     """Allows specific children or fields to be updated without overwriting
      the entire object. Value should again be a valid json object
      """
@@ -67,7 +67,7 @@ def fb_patch(path, value=None):
     else:
         return None
 
-def fb_post(path, value=None):
+def firebase_post(path, value=None):
     """Post allows an object to be added to an existing list of data.
      Value should once again be a valid json object. A successful request 
      will be indicated by a 200 OK HTTP status code. The response will 
@@ -81,7 +81,7 @@ def fb_post(path, value=None):
 
 # [END rest_writing_data]
 # [START rest_reading_data]
-def fb_get(path):
+def firebase_get(path):
     """Get request allows reading of data at a particular path
      A successful request will be indicated by a 200 OK HTTP status code. 
      The response will contain the data being retrieved
@@ -94,7 +94,7 @@ def fb_get(path):
 # [END rest_reading_data]
 # [START rest_deleting_data]
 
-def fb_delete(path):
+def firebase_delete(path):
     """Delete removes the data at a particular path
      A successful request will be indicated by a 200 OK HTTP status code
      with a response containing JSON null.

@@ -29,9 +29,7 @@
 function initGame(gameKey, me, token, channelId, initialMessage) {
   var state = {
     gameKey: gameKey,
-    me: me,
-    channelId: channelId,
-    initialMessage: initialMessage
+    me: me
   };
 
   // This is our Firebase realtime DB path that we'll listen to for updates

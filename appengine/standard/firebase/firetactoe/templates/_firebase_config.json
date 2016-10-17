@@ -1,7 +1,0 @@
-{
-    "apiKey": "<YOUR API KEY HERE>",
-    "authDomain": "<YOUR AUTH DOMAIN HERE>",
-    "databaseURL": "<YOUR DATABASE URL HERE - REQUIRED>",
-    "storageBucket": "<YOUR STORAGE BUCKET HERE>",
-    "messagingSenderId": "<YOUR MESSAGING SENDER ID HERE>"
-}

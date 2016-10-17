@@ -31,10 +31,8 @@ import httplib2
 from oauth2client.client import GoogleCredentials
 
 
-import rest_api
 
-
-_FIREBASE_CONFIG = '_firebase_config.json'
+_FIREBASE_CONFIG = '_firebase_config.html'
 
 _IDENTITY_ENDPOINT = ('https://identitytoolkit.googleapis.com/'
                       'google.identity.identitytoolkit.v1.IdentityToolkit')
@@ -55,20 +53,23 @@ app = flask.Flask(__name__)
 
 
 def _get_firebase_db_url(_memo={}):
-    """Grabs the databaseURL from the Firebase config snippet."""
-    # Memorize the value, to avoid parsing the code snippet every time
+    """Grabs the databaseURL from the Firebase config snippet. Regex looks
+    scary, but all it is doing is pulling the 'databaseURL' field from the
+    Firebase javascript snippet"""
     if 'dburl' not in _memo:
+        # Memoize the value, to avoid parsing the code snippet every time
+        regex = re.compile(r'\bdatabaseURL\b.*?["\']([^"\']+)')
         cwd = os.path.dirname(__file__)
         with open(os.path.join(cwd, 'templates', _FIREBASE_CONFIG)) as f:
-            url = json.load(f)['databaseURL']
-        _memo['dburl'] = url
+            url = next(regex.search(line) for line in f if regex.search(line))
+        _memo['dburl'] = url.group(1)
     return _memo['dburl']
 
 # [START authed_http]
 def _get_http(_memo={}):
     """Provides an authed http object."""
     if 'http' not in _memo:
-        # Memorize the authorized http, to avoid fetching new access tokens
+        # Memoize the authorized http, to avoid fetching new access tokens
         http = httplib2.Http()
         # Use application default credentials to make the Firebase calls
         # https://firebase.google.com/docs/reference/rest/database/user-auth
