@@ -52,9 +52,11 @@ app = flask.Flask(__name__)
 
 
 def _get_firebase_db_url(_memo={}):
-    """Grabs the databaseURL from the Firebase config snippet."""
-    # Memoize the value, to avoid parsing the code snippet every time
+    """Grabs the databaseURL from the Firebase config snippet. Regex looks
+    scary, but all it is doing is pulling the 'databaseURL' field from the
+    Firebase javascript snippet"""
     if 'dburl' not in _memo:
+        # Memoize the value, to avoid parsing the code snippet every time
         regex = re.compile(r'\bdatabaseURL\b.*?["\']([^"\']+)')
         cwd = os.path.dirname(__file__)
         with open(os.path.join(cwd, 'templates', _FIREBASE_CONFIG)) as f:
@@ -62,7 +64,7 @@ def _get_firebase_db_url(_memo={}):
         _memo['dburl'] = url.group(1)
     return _memo['dburl']
 
-
+# [START authed_http]
 def _get_http(_memo={}):
     """Provides an authed http object."""
     if 'http' not in _memo:
@@ -75,17 +77,24 @@ def _get_http(_memo={}):
         creds.authorize(http)
         _memo['http'] = http
     return _memo['http']
+# [END authed_http]
 
-
+# [START send_msg]
 def _send_firebase_message(u_id, message=None):
+    """Updates data in firebase. If a message is provided, then it updates
+     the data at /channels/<channel_id> with the message using the PATCH
+     http method. If no message is provided, then the data at this location
+     is deleted using the DELETE http method
+     """
     url = '{}/channels/{}.json'.format(_get_firebase_db_url(), u_id)
 
     if message:
         return _get_http().request(url, 'PATCH', body=message)
     else:
         return _get_http().request(url, 'DELETE')
+# [END send_msg]
 
-
+# [START create_token]
 def create_custom_token(uid, valid_minutes=60):
     """Create a secure token for the given id.
 
@@ -94,25 +103,29 @@ def create_custom_token(uid, valid_minutes=60):
     security rules to prevent unauthorized access. In this case, the uid will
     be the channel id which is a combination of user_id and game_key
     """
-    header = base64.b64encode(json.dumps({'typ': 'JWT', 'alg': 'RS256'}))
 
+    # use the app_identity service from google.appengine.api to get the
+    # project's service account email automatically 
     client_email = app_identity.get_service_account_name()
+
     now = int(time.time())
+    # encode the required claims 
+    # per https://firebase.google.com/docs/auth/server/create-custom-tokens
     payload = base64.b64encode(json.dumps({
         'iss': client_email,
         'sub': client_email,
         'aud': _IDENTITY_ENDPOINT,
-        'uid': uid,
+        'uid': uid, # this is the important parameter as it will be the channel id
         'iat': now,
         'exp': now + (valid_minutes * 60),
     }))
-
+    # add standard header to identify this as a JWT
+    header = base64.b64encode(json.dumps({'typ': 'JWT', 'alg': 'RS256'}))
     to_sign = '{}.{}'.format(header, payload)
-
-    # Sign the jwt
+    # Sign the jwt using the built in app_identity service
     return '{}.{}'.format(to_sign, base64.b64encode(
         app_identity.sign_blob(to_sign)[1]))
-
+# [END create_token]
 
 class Game(ndb.Model):
     """All the data we store for a game"""
@@ -128,6 +141,7 @@ class Game(ndb.Model):
         d['winningBoard'] = d.pop('winning_board')
         return json.dumps(d, default=lambda user: user.user_id())
 
+    # [START send_update]
     def send_update(self):
         """Updates Firebase's copy of the board."""
         message = self.to_json()
@@ -140,6 +154,7 @@ class Game(ndb.Model):
             _send_firebase_message(
                 self.userO.user_id() + self.key.id(),
                 message=message)
+    # [END send_update]
 
     def _check_win(self):
         if self.moveX:
@@ -161,6 +176,7 @@ class Game(ndb.Model):
         if ' ' not in self.board:
             self.winner = 'Noone'
 
+    # [START make_move]
     def make_move(self, position, user):
         # If the user is a player, and it's their move
         if (user in (self.userX, self.userO)) and (
@@ -175,8 +191,9 @@ class Game(ndb.Model):
                 self.put()
                 self.send_update()
                 return
+    # [END make_move]
 
-
+# [START move_route]
 @app.route('/move', methods=['POST'])
 def move():
     game = Game.get_by_id(request.args.get('g'))
@@ -185,8 +202,9 @@ def move():
         return 'Game not found, or invalid position', 400
     game.make_move(position, users.get_current_user())
     return ''
+# [END move_route]
 
-
+# [START route_delete]
 @app.route('/delete', methods=['POST'])
 def delete():
     game = Game.get_by_id(request.args.get('g'))
@@ -196,6 +214,7 @@ def delete():
     _send_firebase_message(
         user.user_id() + game.key.id(), message=None)
     return ''
+# [END route_delete]
 
 
 @app.route('/opened', methods=['POST'])
@@ -226,6 +245,7 @@ def main_page():
             game.userO = user
             game.put()
 
+    # [START pass_token]
     # choose a unique identifier for channel_id
     channel_id = user.user_id() + game_key
     # encrypt the channel_id and send it as a custom token to the
@@ -236,6 +256,8 @@ def main_page():
     _send_firebase_message(
         channel_id, message=game.to_json())
 
+    # game_link is a url that you can open in another browser to play
+    # against this player
     game_link = '{}?g={}'.format(request.base_url, game_key)
 
     # push all the data to the html template so the client will
@@ -250,3 +272,4 @@ def main_page():
     }
 
     return flask.render_template('fire_index.html', **template_values)
+    # [END pass_token]
