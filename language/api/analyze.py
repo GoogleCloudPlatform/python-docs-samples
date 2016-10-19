@@ -24,8 +24,6 @@ from googleapiclient import discovery
 import httplib2
 from oauth2client.client import GoogleCredentials
 
-# TODO REMOVE - when discovery is public
-GOOGLE_API_KEY = "GOOGLE_API_KEY"
 
 # TODO REMOVE - when discovery is public
 DISCOVERY_URL = ('https://language.googleapis.com/$discovery/rest?'
@@ -37,7 +35,8 @@ def get_service():
         ['https://www.googleapis.com/auth/cloud-platform'])
     http = httplib2.Http()
     scoped_credentials.authorize(http)
-    return discovery.build('language', 'v1', http=http,
+    return discovery.build('language', 'v1',
+                           http=http,
                            discoveryServiceUrl=DISCOVERY_URL)
 
 
