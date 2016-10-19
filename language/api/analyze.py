@@ -24,15 +24,33 @@ from googleapiclient import discovery
 import httplib2
 from oauth2client.client import GoogleCredentials
 
+# TODO REMOVE - when discovery is public
+GOOGLE_API_KEY = "GOOGLE_API_KEY"
 
+# TODO REMOVE - when discovery is public
+DISCOVERY_URL = ('https://language.googleapis.com/$discovery/rest?'
+                 'version=v1&labels=GOOGLE_INTERNAL&key={}')
+
+# TODO UNCOMMENT - when discovery is public
+# def get_service():
+#     credentials = GoogleCredentials.get_application_default()
+#     scoped_credentials = credentials.create_scoped(
+#         ['https://www.googleapis.com/auth/cloud-platform'])
+#     http = httplib2.Http()
+#     scoped_credentials.authorize(http)
+#     return discovery.build('language', 'v1', http=http)
+# TODO END
+
+# TODO REMOVE - when discovery is public
 def get_service():
+    """Get language service using discovery."""
+    import os
+    api_key = os.environ[GOOGLE_API_KEY]
     credentials = GoogleCredentials.get_application_default()
-    scoped_credentials = credentials.create_scoped(
-        ['https://www.googleapis.com/auth/cloud-platform'])
-    http = httplib2.Http()
-    scoped_credentials.authorize(http)
-    return discovery.build('language', 'v1beta1', http=http)
-
+    service = discovery.build('language', 'v1', http=httplib2.Http(), credentials=credentials,
+                              discoveryServiceUrl=DISCOVERY_URL.format(api_key))
+    return service
+# TODO END
 
 def get_native_encoding_type():
     """Returns the encoding type that matches Python's native strings."""
