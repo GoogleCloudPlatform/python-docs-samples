@@ -42,6 +42,11 @@ def auth_info():
     encoded_info = request.headers.get('X-Endpoint-API-UserInfo', None)
 
     if encoded_info:
+        # Add paddings manually if necessary.
+        num_missed_paddings = 4 - len(encoded_info) % 4
+        if num_missed_paddings != 4:
+            encoded_info += b'=' * num_missed_paddings
+
         info_json = base64.b64decode(encoded_info).decode('utf-8')
         user_info = json.loads(info_json)
     else:
