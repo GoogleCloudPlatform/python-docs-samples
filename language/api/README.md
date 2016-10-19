@@ -38,6 +38,8 @@ where `<command>` is one of:  `entities`, `sentiment`, or `syntax`.
 
 The script will write to STDOUT the json returned from the API for the requested feature.
 
+## Example Runs
+
 * Example1:
 
 ```sh
