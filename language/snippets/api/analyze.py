@@ -29,28 +29,17 @@ GOOGLE_API_KEY = "GOOGLE_API_KEY"
 
 # TODO REMOVE - when discovery is public
 DISCOVERY_URL = ('https://language.googleapis.com/$discovery/rest?'
-                 'version=v1&labels=GOOGLE_INTERNAL&key={}')
+                 'version=v1&labels=GOOGLE_INTERNAL')
 
-# TODO UNCOMMENT - when discovery is public
-# def get_service():
-#     credentials = GoogleCredentials.get_application_default()
-#     scoped_credentials = credentials.create_scoped(
-#         ['https://www.googleapis.com/auth/cloud-platform'])
-#     http = httplib2.Http()
-#     scoped_credentials.authorize(http)
-#     return discovery.build('language', 'v1', http=http)
-# TODO END
-
-# TODO REMOVE - when discovery is public
 def get_service():
-    """Get language service using discovery."""
-    import os
-    api_key = os.environ[GOOGLE_API_KEY]
     credentials = GoogleCredentials.get_application_default()
-    service = discovery.build('language', 'v1', http=httplib2.Http(), credentials=credentials,
-                              discoveryServiceUrl=DISCOVERY_URL.format(api_key))
-    return service
-# TODO END
+    scoped_credentials = credentials.create_scoped(
+        ['https://www.googleapis.com/auth/cloud-platform'])
+    http = httplib2.Http()
+    scoped_credentials.authorize(http)
+    return discovery.build('language', 'v1', http=http,
+                           discoveryServiceUrl=DISCOVERY_URL)
+
 
 def get_native_encoding_type():
     """Returns the encoding type that matches Python's native strings."""
