@@ -31,5 +31,6 @@ def test_index():
     except OSError:
         pass  # if doesn't exist
     r = client.get('/')
-    assert filecmp.cmp(asset_path, fixtured_path)
+
+    assert os.path.isfile(fixtured_path)
     assert r.status_code == 200
