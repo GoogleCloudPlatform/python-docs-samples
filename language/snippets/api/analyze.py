@@ -99,15 +99,11 @@ def analyze_syntax(text, encoding='UTF32'):
             'type': 'PLAIN_TEXT',
             'content': text,
         },
-        'features': {
-            'extract_syntax': True,
-        },
-        'encodingType': encoding,
     }
 
     service = get_service()
 
-    request = service.documents().annotateText(body=body)
+    request = service.documents().analyzeSyntax(body=body)
     response = request.execute()
 
     return response
