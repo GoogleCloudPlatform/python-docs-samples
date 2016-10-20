@@ -1,0 +1,27 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Storage
+  short_name: Cloud Storage
+  url: https://cloud.google.com/storage/docs
+  description: > 
+    `Google Cloud Storage`_ allows world-wide storage and retrieval of any
+    amount of data at any time.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: List Objects
+  file: list_objects.py
+  show_help: true
+- name: CRUD Objects
+  file: crud_object.py
+  show_help: true
+- name: Compose objects
+  file: compose_objects.py
+  show_help: true
+- name: Customer-Supplied Encryption
+  file: customer_supplied_keys.py
+  show_help: true
