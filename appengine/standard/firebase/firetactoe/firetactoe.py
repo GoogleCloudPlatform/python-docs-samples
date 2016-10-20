@@ -64,6 +64,7 @@ def _get_firebase_db_url(_memo={}):
         _memo['dburl'] = url.group(1)
     return _memo['dburl']
 
+
 # [START authed_http]
 def _get_http(_memo={}):
     """Provides an authed http object."""
@@ -78,6 +79,7 @@ def _get_http(_memo={}):
         _memo['http'] = http
     return _memo['http']
 # [END authed_http]
+
 
 # [START send_msg]
 def _send_firebase_message(u_id, message=None):
@@ -94,6 +96,7 @@ def _send_firebase_message(u_id, message=None):
         return _get_http().request(url, 'DELETE')
 # [END send_msg]
 
+
 # [START create_token]
 def create_custom_token(uid, valid_minutes=60):
     """Create a secure token for the given id.
@@ -105,17 +108,17 @@ def create_custom_token(uid, valid_minutes=60):
     """
 
     # use the app_identity service from google.appengine.api to get the
-    # project's service account email automatically 
+    # project's service account email automatically
     client_email = app_identity.get_service_account_name()
 
     now = int(time.time())
-    # encode the required claims 
+    # encode the required claims
     # per https://firebase.google.com/docs/auth/server/create-custom-tokens
     payload = base64.b64encode(json.dumps({
         'iss': client_email,
         'sub': client_email,
         'aud': _IDENTITY_ENDPOINT,
-        'uid': uid, # this is the important parameter as it will be the channel id
+        'uid': uid,  # the important parameter, as it will be the channel id
         'iat': now,
         'exp': now + (valid_minutes * 60),
     }))
@@ -126,6 +129,7 @@ def create_custom_token(uid, valid_minutes=60):
     return '{}.{}'.format(to_sign, base64.b64encode(
         app_identity.sign_blob(to_sign)[1]))
 # [END create_token]
+
 
 class Game(ndb.Model):
     """All the data we store for a game"""
@@ -193,6 +197,7 @@ class Game(ndb.Model):
                 return
     # [END make_move]
 
+
 # [START move_route]
 @app.route('/move', methods=['POST'])
 def move():
@@ -203,6 +208,7 @@ def move():
     game.make_move(position, users.get_current_user())
     return ''
 # [END move_route]
+
 
 # [START route_delete]
 @app.route('/delete', methods=['POST'])
