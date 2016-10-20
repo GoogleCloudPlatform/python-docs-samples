@@ -100,7 +100,8 @@ To run this sample:
     For more information, see the README.md under /bigquery.
     
     Example invocation:
-        $ python sync_query.py           'SELECT corpus FROM `publicdata.samples.shakespeare` GROUP BY corpus'
+        $ python sync_query.py \
+              'SELECT corpus FROM `publicdata.samples.shakespeare` GROUP BY corpus'
     
     positional arguments:
       query       BigQuery SQL Query.
@@ -316,13 +317,16 @@ To run this sample:
 The client library
 -------------------------------------------------------------------------------
 
-This sample uses the `Google Cloud Client Library for Python <ccl-docs>`_.
+This sample uses the `Google Cloud Client Library for Python`_.
 You can read the documentation for more details on API usage and use GitHub
-to `browse the source <ccl-source>`_ and  `report issues <ccl-issues>`_.
+to `browse the source`_ and  `report issues`_.
 
-.. ccl-docs: https://googlecloudplatform.github.io/google-cloud-python/
-.. ccl-source: https://github.com/GoogleCloudPlatform/google-cloud-python
-.. ccl-issues: https://github.com/GoogleCloudPlatform/google-cloud-python/issues
+.. Google Cloud Client Library for Python:
+    https://googlecloudplatform.github.io/google-cloud-python/
+.. browse the source:
+    https://github.com/GoogleCloudPlatform/google-cloud-python
+.. report issues:
+    https://github.com/GoogleCloudPlatform/google-cloud-python/issues
 
 
 .. _Google Cloud SDK: https://cloud.google.com/sdk/
