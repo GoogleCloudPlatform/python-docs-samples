@@ -20,6 +20,6 @@ Start your application:
 
 Deploy using `gcloud`:
 
-    gcloud beta app deploy app.yaml
+    gcloud app deploy app.yaml
 
 You can now access the application at `https://your-app-id.appspot.com`.
