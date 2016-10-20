@@ -14,10 +14,9 @@
 
 import re
 
-from google.appengine.ext import ndb
 from google.appengine.api import users
+from google.appengine.ext import ndb
 import httplib2
-import mock
 import pytest
 import webtest
 
@@ -103,7 +102,7 @@ def test_index_nonexisting_game(app, monkeypatch):
     monkeypatch.setattr(httplib2, 'Http', mock_http)
     firetactoe.Game(id='razem', userX=users.get_current_user()).put()
 
-    response = app.get('/?g=razemfrazem', status=404)
+    app.get('/?g=razemfrazem', status=404)
 
     assert mock_http.request_url is None
 
@@ -113,7 +112,7 @@ def test_opened(app, monkeypatch):
     monkeypatch.setattr(httplib2, 'Http', mock_http)
     firetactoe.Game(id='razem', userX=users.get_current_user()).put()
 
-    response = app.post('/opened?g=razem', status=200)
+    app.post('/opened?g=razem', status=200)
 
     assert mock_http.request_url.startswith(
         'http://firebase.com/test-db-url/channels/')
@@ -127,7 +126,7 @@ def test_bad_move(app, monkeypatch):
         id='razem', userX=users.get_current_user(), board=9*' ',
         moveX=True).put()
 
-    response = app.post('/move?g=razem', {'i': 10}, status=400)
+    app.post('/move?g=razem', {'i': 10}, status=400)
 
     assert mock_http.request_url is None
 
@@ -139,7 +138,7 @@ def test_move(app, monkeypatch):
         id='razem', userX=users.get_current_user(), board=9*' ',
         moveX=True).put()
 
-    response = app.post('/move?g=razem', {'i': 0}, status=200)
+    app.post('/move?g=razem', {'i': 0}, status=200)
 
     game = ndb.Key('Game', 'razem').get()
     assert game.board == 'X' + (8 * ' ')
@@ -154,7 +153,7 @@ def test_delete(app, monkeypatch):
     monkeypatch.setattr(httplib2, 'Http', mock_http)
     firetactoe.Game(id='razem', userX=users.get_current_user()).put()
 
-    response = app.post('/delete?g=razem', status=200)
+    app.post('/delete?g=razem', status=200)
 
     assert mock_http.request_url.startswith(
         'http://firebase.com/test-db-url/channels/')
