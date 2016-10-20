@@ -55,7 +55,7 @@ class UserSession(Base):
 
     id = sqlalchemy.Column(sqlalchemy.String(length=36), primary_key=True)
     user_id = sqlalchemy.Column(
-            sqlalchemy.Integer, sqlalchemy.ForeignKey('Users.id'))
+        sqlalchemy.Integer, sqlalchemy.ForeignKey('Users.id'))
     login_time = sqlalchemy.Column(sqlalchemy.DateTime)
     logout_time = sqlalchemy.Column(sqlalchemy.DateTime)
     ip_address = sqlalchemy.Column(sqlalchemy.String(length=40))

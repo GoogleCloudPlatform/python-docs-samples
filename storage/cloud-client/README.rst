@@ -6,6 +6,8 @@ Google Cloud Storage Python Samples
 This directory contains samples for Google Cloud Storage. `Google Cloud Storage`_ allows world-wide storage and retrieval of any amount of data at any time.
 
 
+
+
 .. _Google Cloud Storage: https://cloud.google.com/storage/docs 
 
 Setup
@@ -16,7 +18,7 @@ Authentication
 ++++++++++++++
 
 Authentication is typically done through `Application Default Credentials`_,
-this means you do not have to change the code to authenticate as long as
+which means you do not have to change the code to authenticate as long as
 your environment has credentials. You have a few options for setting up
 authentication:
 
@@ -67,6 +69,18 @@ Install Dependencies
 
 Samples
 -------------------------------------------------------------------------------
+
+Quickstart
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python quickstart.py
+
 
 Snippets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
