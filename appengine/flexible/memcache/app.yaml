@@ -9,7 +9,7 @@ runtime_config:
 env_variables:
   # If you are using the App Engine Memcache service (currently in alpha),
   # uncomment this section and comment out the other Memcache variables.
-  # USE_APPENGINE_MEMCACHE: 1
+  # USE_GAE_MEMCACHE: 1
   MEMCACHE_SERVER: your-memcache-server
   # If you are using a Memcached server with SASL authentiation enabled,
   # fill in these values with your username and password.
