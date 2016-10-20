@@ -5,7 +5,7 @@ product:
   short_name: Cloud Datastore
   url: https://cloud.google.com/datastore/docs
   description: > 
-    `Cloud Datastore`_ is a NoSQL document database built for automatic
+    `Google Cloud Datastore`_ is a NoSQL document database built for automatic
     scaling, high performance, and ease of application development.
 
 setup:

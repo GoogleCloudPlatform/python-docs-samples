@@ -5,8 +5,8 @@ product:
   short_name: Cloud Bigtable
   url: https://cloud.google.com/bigtable/docs
   description: > 
-    `Cloud Bigtable`_ is Google's NoSQL Big Data database service. It's the
-    same database that powers many core Google services, including Search,
+    `Google Cloud Bigtable`_ is Google's NoSQL Big Data database service. It's
+    the same database that powers many core Google services, including Search,
     Analytics, Maps, and Gmail.
 
 setup:
