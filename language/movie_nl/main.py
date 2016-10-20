@@ -24,6 +24,9 @@ from googleapiclient.errors import HttpError
 from oauth2client.client import GoogleCredentials
 import requests
 
+# TODO REMOVE - when discovery is public
+DISCOVERY_URL = ('https://language.googleapis.com/$discovery/rest?'
+                 'version=v1&labels=GOOGLE_INTERNAL')
 
 def analyze_document(service, document):
     """Analyze the document and get the distribution of sentiments and
@@ -98,7 +101,7 @@ class Document(object):
         docs = service.documents()
         request_body = get_request_body(
             self.text,
-            syntax=True,
+            syntax=False,
             entities=True,
             sentiment=False)
         request = docs.annotateText(body=request_body)
@@ -319,8 +322,9 @@ def get_service():
 
     credentials = GoogleCredentials.get_application_default()
 
-    return discovery.build('language', 'v1beta1',
-                           credentials=credentials)
+    return discovery.build('language', 'v1',
+                           credentials=credentials,
+                           discoveryServiceUrl=DISCOVERY_URL)
 
 
 def analyze(input_dir, sentiment_writer, entity_writer, sample, log_file):
