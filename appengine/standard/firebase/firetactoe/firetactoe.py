@@ -75,7 +75,6 @@ def _get_firebase_db_url():
 
 # Memoize the authorized http, to avoid fetching new access tokens
 @lru_cache()
-# [START authed_http]
 def _get_http():
     """Provides an authed http object."""
     http = httplib2.Http()
@@ -85,10 +84,8 @@ def _get_http():
         _FIREBASE_SCOPES)
     creds.authorize(http)
     return http
-# [END authed_http]
 
 
-# [START send_msg]
 def _send_firebase_message(u_id, message=None):
     """Updates data in firebase. If a message is provided, then it updates
      the data at /channels/<channel_id> with the message using the PATCH
@@ -101,10 +98,8 @@ def _send_firebase_message(u_id, message=None):
         return _get_http().request(url, 'PATCH', body=message)
     else:
         return _get_http().request(url, 'DELETE')
-# [END send_msg]
 
 
-# [START create_token]
 def create_custom_token(uid, valid_minutes=60):
     """Create a secure token for the given id.
 
@@ -135,7 +130,6 @@ def create_custom_token(uid, valid_minutes=60):
     # Sign the jwt using the built in app_identity service
     return '{}.{}'.format(to_sign, base64.b64encode(
         app_identity.sign_blob(to_sign)[1]))
-# [END create_token]
 
 
 class Game(ndb.Model):
@@ -152,20 +146,16 @@ class Game(ndb.Model):
         d['winningBoard'] = d.pop('winning_board')
         return json.dumps(d, default=lambda user: user.user_id())
 
-    # [START send_update]
     def send_update(self):
         """Updates Firebase's copy of the board."""
         message = self.to_json()
         # send updated game state to user X
         _send_firebase_message(
-            self.userX.user_id() + self.key.id(),
-            message=message)
+            self.userX.user_id() + self.key.id(), message=message)
         # send updated game state to user O
         if self.userO:
             _send_firebase_message(
-                self.userO.user_id() + self.key.id(),
-                message=message)
-    # [END send_update]
+                self.userO.user_id() + self.key.id(), message=message)
 
     def _check_win(self):
         if self.moveX:
@@ -187,7 +177,6 @@ class Game(ndb.Model):
         if ' ' not in self.board:
             self.winner = 'Noone'
 
-    # [START make_move]
     def make_move(self, position, user):
         # If the user is a player, and it's their move
         if (user in (self.userX, self.userO)) and (
@@ -202,7 +191,6 @@ class Game(ndb.Model):
                 self.put()
                 self.send_update()
                 return
-    # [END make_move]
 
 
 # [START move_route]
@@ -224,8 +212,7 @@ def delete():
     if not game:
         return 'Game not found', 400
     user = users.get_current_user()
-    _send_firebase_message(
-        user.user_id() + game.key.id(), message=None)
+    _send_firebase_message(user.user_id() + game.key.id(), message=None)
     return ''
 # [END route_delete]
 
@@ -266,8 +253,7 @@ def main_page():
     # Firebase's data security rules will be able to decrypt the
     # token and prevent unauthorized access
     client_auth_token = create_custom_token(channel_id)
-    _send_firebase_message(
-        channel_id, message=game.to_json())
+    _send_firebase_message(channel_id, message=game.to_json())
 
     # game_link is a url that you can open in another browser to play
     # against this player
