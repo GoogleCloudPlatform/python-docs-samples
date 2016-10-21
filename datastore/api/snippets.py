@@ -652,7 +652,8 @@ def transactional_update(client):
     # [START transactional_update]
     def transfer_funds(client, from_key, to_key, amount):
         with client.transaction():
-            from_account, to_account = client.get_multi([from_key, to_key])
+            from_account = client.get(from_key)
+            to_account = client.get(to_key)
 
             from_account['balance'] -= amount
             to_account['balance'] += amount
