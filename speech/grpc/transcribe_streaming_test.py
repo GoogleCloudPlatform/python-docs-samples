@@ -62,4 +62,4 @@ def test_main(resource, monkeypatch, capsys):
     transcribe_streaming.main()
     out, err = capsys.readouterr()
 
-    assert re.search(r'transcript.*"quit"', out, re.DOTALL | re.I)
+    assert re.search(r'quit', out, re.DOTALL | re.I)

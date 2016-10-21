@@ -19,6 +19,7 @@ from __future__ import division
 import contextlib
 import re
 import signal
+import sys
 import threading
 
 from google.cloud import credentials
@@ -131,13 +132,15 @@ def record_audio(rate, chunk):
 # [END audio_stream]
 
 
-def request_stream(data_stream, rate):
+def request_stream(data_stream, rate, interim_results=True):
     """Yields `StreamingRecognizeRequest`s constructed from a recording audio
     stream.
 
     Args:
         data_stream: A generator that yields raw audio data to send.
         rate: The sampling rate in hertz.
+        interim_results: Whether to return intermediate results, before the
+            transcription is finalized.
     """
     # The initial request must contain metadata about the stream, so the
     # server knows how to interpret it.
@@ -146,12 +149,12 @@ def request_stream(data_stream, rate):
         # https://goo.gl/KPZn97 for the full list.
         encoding='LINEAR16',  # raw 16-bit signed LE samples
         sample_rate=rate,  # the rate in hertz
-        # See
-        # https://g.co/cloud/speech/docs/best-practices#language_support
+        # See http://g.co/cloud/speech/docs/languages
         # for a list of supported languages.
         language_code='en-US',  # a BCP-47 language tag
     )
     streaming_config = cloud_speech.StreamingRecognitionConfig(
+        interim_results=interim_results,
         config=recognition_config,
     )
 
@@ -164,21 +167,40 @@ def request_stream(data_stream, rate):
 
 
 def listen_print_loop(recognize_stream):
+    num_chars_printed = 0
     for resp in recognize_stream:
         if resp.error.code != code_pb2.OK:
             raise RuntimeError('Server error: ' + resp.error.message)
 
-        # Display the transcriptions & their alternatives
-        for result in resp.results:
-            print(result.alternatives)
+        if not resp.results:
+            continue
 
-        # Exit recognition if any of the transcribed phrases could be
-        # one of our keywords.
-        if any(re.search(r'\b(exit|quit)\b', alt.transcript, re.I)
-               for result in resp.results
-               for alt in result.alternatives):
-            print('Exiting..')
-            break
+        # Display the top transcription
+        result = resp.results[0]
+        transcript = result.alternatives[0].transcript
+
+        # Display interim results, but with a carriage return at the end of the
+        # line, so subsequent lines will overwrite them.
+        if not result.is_final:
+            # If the previous result was longer than this one, we need to print
+            # some extra spaces to overwrite the previous result
+            overwrite_chars = ' ' * max(0, num_chars_printed - len(transcript))
+
+            sys.stdout.write(transcript + overwrite_chars + '\r')
+            sys.stdout.flush()
+
+            num_chars_printed = len(transcript)
+
+        else:
+            print(transcript)
+
+            # Exit recognition if any of the transcribed phrases could be
+            # one of our keywords.
+            if re.search(r'\b(exit|quit)\b', transcript, re.I):
+                print('Exiting..')
+                break
+
+            num_chars_printed = 0
 
 
 def main():
