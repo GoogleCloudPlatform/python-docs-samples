@@ -30,6 +30,14 @@ from six.moves import http_client
 app = Flask(__name__)
 
 
+def _base64_decode(encoded_str):
+    # Add paddings manually if necessary.
+    num_missed_paddings = 4 - len(encoded_str) % 4
+    if num_missed_paddings != 4:
+        encoded_str += b'=' * num_missed_paddings
+    return base64.b64decode(encoded_str).decode('utf-8')
+
+
 @app.route('/echo', methods=['POST'])
 def echo():
     """Simple echo service."""
@@ -42,7 +50,7 @@ def auth_info():
     encoded_info = request.headers.get('X-Endpoint-API-UserInfo', None)
 
     if encoded_info:
-        info_json = base64.b64decode(encoded_info).decode('utf-8')
+        info_json = _base64_decode(encoded_info)
         user_info = json.loads(info_json)
     else:
         user_info = {'id': 'anonymous'}
