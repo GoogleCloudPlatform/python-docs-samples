@@ -43,8 +43,7 @@ class MockHttp(object):
 @pytest.fixture
 def app(testbed, monkeypatch, login):
     # Don't let the _get_http function memoize its value
-    orig_get_http = firetactoe._get_http
-    monkeypatch.setattr(firetactoe, '_get_http', lambda: orig_get_http({}))
+    firetactoe._get_http.cache_clear()
 
     # Provide a test firebase config. The following will set the databaseURL
     # databaseURL: "http://firebase.com/test-db-url"

@@ -15,6 +15,10 @@
 """Tic Tac Toe with the Firebase API"""
 
 import base64
+try:
+    from functools import lru_cache
+except ImportError:
+    from functools32 import lru_cache
 import json
 import os
 import re
@@ -51,33 +55,36 @@ O_WINS = map(lambda s: re.compile(s), _O_WIN_PATTERNS)
 app = flask.Flask(__name__)
 
 
-def _get_firebase_db_url(_memo={}):
+# Memoize the value, to avoid parsing the code snippet every time
+@lru_cache()
+def _get_firebase_db_url():
     """Grabs the databaseURL from the Firebase config snippet. Regex looks
     scary, but all it is doing is pulling the 'databaseURL' field from the
     Firebase javascript snippet"""
-    if 'dburl' not in _memo:
-        # Memoize the value, to avoid parsing the code snippet every time
-        regex = re.compile(r'\bdatabaseURL\b.*?["\']([^"\']+)')
-        cwd = os.path.dirname(__file__)
+    regex = re.compile(r'\bdatabaseURL\b.*?["\']([^"\']+)')
+    cwd = os.path.dirname(__file__)
+    try:
         with open(os.path.join(cwd, 'templates', _FIREBASE_CONFIG)) as f:
             url = next(regex.search(line) for line in f if regex.search(line))
-        _memo['dburl'] = url.group(1)
-    return _memo['dburl']
+    except StopIteration:
+        raise ValueError(
+            'Error parsing databaseURL. Please copy Firebase web snippet '
+            'into templates/{}'.format(_FIREBASE_CONFIG))
+    return url.group(1)
 
 
+# Memoize the authorized http, to avoid fetching new access tokens
+@lru_cache()
 # [START authed_http]
-def _get_http(_memo={}):
+def _get_http():
     """Provides an authed http object."""
-    if 'http' not in _memo:
-        # Memoize the authorized http, to avoid fetching new access tokens
-        http = httplib2.Http()
-        # Use application default credentials to make the Firebase calls
-        # https://firebase.google.com/docs/reference/rest/database/user-auth
-        creds = GoogleCredentials.get_application_default().create_scoped(
-            _FIREBASE_SCOPES)
-        creds.authorize(http)
-        _memo['http'] = http
-    return _memo['http']
+    http = httplib2.Http()
+    # Use application default credentials to make the Firebase calls
+    # https://firebase.google.com/docs/reference/rest/database/user-auth
+    creds = GoogleCredentials.get_application_default().create_scoped(
+        _FIREBASE_SCOPES)
+    creds.authorize(http)
+    return http
 # [END authed_http]
 
 
