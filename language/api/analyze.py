@@ -29,6 +29,7 @@ from oauth2client.client import GoogleCredentials
 DISCOVERY_URL = ('https://language.googleapis.com/$discovery/rest?'
                  'version=v1&labels=GOOGLE_INTERNAL')
 
+
 def get_service():
     credentials = GoogleCredentials.get_application_default()
     scoped_credentials = credentials.create_scoped(
