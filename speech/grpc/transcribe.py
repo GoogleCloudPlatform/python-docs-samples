@@ -22,7 +22,7 @@ from google.cloud.speech.v1beta1 import cloud_speech_pb2 as cloud_speech
 from grpc.beta import implementations
 
 # Keep the request alive for this many seconds
-DEADLINE_SECS = 10
+DEADLINE_SECS = 60
 SPEECH_SCOPE = 'https://www.googleapis.com/auth/cloud-platform'
 
 
@@ -48,7 +48,7 @@ def make_channel(host, port):
     return implementations.secure_channel(host, port, composite_channel)
 
 
-def main(input_uri, encoding, sample_rate):
+def main(input_uri, encoding, sample_rate, language_code='en-US'):
     service = cloud_speech.beta_create_Speech_stub(
             make_channel('speech.googleapis.com', 443))
     # The method and parameters can be inferred from the proto from which the
@@ -60,17 +60,21 @@ def main(input_uri, encoding, sample_rate):
             # https://goo.gl/KPZn97 for the full list.
             encoding=encoding,  # one of LINEAR16, FLAC, MULAW, AMR, AMR_WB
             sample_rate=sample_rate,  # the rate in hertz
-            # See
-            # https://g.co/cloud/speech/docs/best-practices#language_support
-            # for a list of supported languages.
-            language_code='en-US',  # a BCP-47 language tag
+            # See https://g.co/cloud/speech/docs/languages for a list of
+            # supported languages.
+            language_code=language_code,  # a BCP-47 language tag
         ),
         audio=cloud_speech.RecognitionAudio(
             uri=input_uri,
         )
     ), DEADLINE_SECS)
-    # Print the recognition results.
-    print(response.results)
+
+    # Print the recognition result alternatives and confidence scores.
+    for result in response.results:
+        print('Result:')
+        for alternative in result.alternatives:
+            print(u'  ({}): {}'.format(
+                alternative.confidence, alternative.transcript))
 
 
 def _gcs_uri(text):

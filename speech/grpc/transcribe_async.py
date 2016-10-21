@@ -51,22 +51,21 @@ def make_channel(host, port):
     return implementations.secure_channel(host, port, composite_channel)
 
 
-def main(input_uri, encoding, sample_rate):
+def main(input_uri, encoding, sample_rate, language_code='en-US'):
     channel = make_channel('speech.googleapis.com', 443)
     service = cloud_speech_pb2.beta_create_Speech_stub(channel)
     # The method and parameters can be inferred from the proto from which the
     # grpc client lib was generated. See:
     # https://github.com/googleapis/googleapis/blob/master/google/cloud/speech/v1beta1/cloud_speech.proto
-    response = service.AsyncRecognize(cloud_speech_pb2.AsyncRecognizeRequest(
+    operation = service.AsyncRecognize(cloud_speech_pb2.AsyncRecognizeRequest(
         config=cloud_speech_pb2.RecognitionConfig(
             # There are a bunch of config options you can specify. See
             # https://goo.gl/KPZn97 for the full list.
             encoding=encoding,  # one of LINEAR16, FLAC, MULAW, AMR, AMR_WB
             sample_rate=sample_rate,  # the rate in hertz
-            # See
-            # https://g.co/cloud/speech/docs/best-practices#language_support
-            # for a list of supported languages.
-            language_code='en-US',  # a BCP-47 language tag
+            # See https://g.co/cloud/speech/docs/languages for a list of
+            # supported languages.
+            language_code=language_code,  # a BCP-47 language tag
         ),
         audio=cloud_speech_pb2.RecognitionAudio(
             uri=input_uri,
@@ -74,29 +73,32 @@ def main(input_uri, encoding, sample_rate):
     ), DEADLINE_SECS)
 
     # Print the longrunning operation handle.
-    print(response)
+    print(operation)
 
     # Construct a long running operation endpoint.
     service = operations_grpc_pb2.beta_create_Operations_stub(channel)
 
-    name = response.name
+    name = operation.name
 
     while True:
         # Give the server a few seconds to process.
         print('Waiting for server processing...')
         time.sleep(1)
-        # Get the long running operation with response.
-        response = service.GetOperation(
+        operation = service.GetOperation(
             operations_grpc_pb2.GetOperationRequest(name=name),
             DEADLINE_SECS)
 
-        if response.done:
+        if operation.done:
             break
 
-    # Print the recognition results.
-    results = cloud_speech_pb2.AsyncRecognizeResponse()
-    response.response.Unpack(results)
-    print(results)
+    response = cloud_speech_pb2.AsyncRecognizeResponse()
+    operation.response.Unpack(response)
+    # Print the recognition result alternatives and confidence scores.
+    for result in response.results:
+        print('Result:')
+        for alternative in result.alternatives:
+            print(u'  ({}): {}'.format(
+                alternative.confidence, alternative.transcript))
 
 
 def _gcs_uri(text):
