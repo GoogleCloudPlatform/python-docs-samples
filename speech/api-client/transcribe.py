@@ -64,7 +64,8 @@ def main(speech_file):
                 # https://goo.gl/KPZn97 for the full list.
                 'encoding': 'LINEAR16',  # raw 16-bit signed LE samples
                 'sampleRate': 16000,  # 16 khz
-                # See https://goo.gl/A9KJ1A for a list of supported languages.
+                # See http://g.co/cloud/speech/docs/languages for a list of
+                # supported languages.
                 'languageCode': 'en-US',  # a BCP-47 language tag
             },
             'audio': {
