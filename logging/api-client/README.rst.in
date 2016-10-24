@@ -1,0 +1,18 @@
+# This file is used to generate README.rst
+
+product:
+  name: Stackdriver Logging
+  short_name: Stackdriver Logging
+  url: https://cloud.google.com/logging/docs
+  description: > 
+    `Stackdriver Logging`_ allows you to store, search, analyze, monitor,
+    and alert on log data and events from Google Cloud Platform and Amazon
+    Web Services.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: List logs
+  file: list_logs.py

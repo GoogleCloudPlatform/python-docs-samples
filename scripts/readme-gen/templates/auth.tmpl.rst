@@ -17,7 +17,7 @@ authentication:
 
 #. When running on App Engine or Compute Engine, credentials are already
    set-up. However, you may need to configure your Compute Engine instance
-   with `additional scopes <gce-auth>`_.
+   with `additional scopes`_.
 
 #. You can create a `Service Account key file`_. This file can be used to
    authenticate to Google Cloud Platform services from any environment. To use
@@ -29,5 +29,5 @@ authentication:
         export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
 
 .. _Application Default Credentials: https://cloud.google.com/docs/authentication#getting_credentials_for_server-centric_flow
-.. _gce-auth: https://cloud.google.com/compute/docs/authentication#using
+.. _additional scopes: https://cloud.google.com/compute/docs/authentication#using
 .. _Service Account key file: https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount

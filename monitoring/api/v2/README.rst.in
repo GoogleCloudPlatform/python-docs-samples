@@ -1,0 +1,28 @@
+# This file is used to generate README.rst
+
+product:
+  name: Stackdriver Monitoring
+  short_name: Stackdriver Monitoring
+  url: https://cloud.google.com/monitoring/docs
+  description: > 
+    `Stackdriver Monitoring `_ collects metrics, events, and metadata from
+    Google Cloud Platform, Amazon Web Services (AWS), hosted uptime probes,
+    application instrumentation, and a variety of common application components
+    including Cassandra, Nginx, Apache Web Server, Elasticsearch and many
+    others. Stackdriver ingests that data and generates insights via
+    dashboards, charts, and alerts.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Authenticating & basic operations
+  file: auth.py
+  show_help: true
+- name: Labeled custom metrics
+  file: labeled_custom_metric.py
+  show_help: true
+- name: Lightweight custom metrics
+  file: labeled_custom_metric.py
+  show_help: true

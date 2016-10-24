@@ -69,7 +69,7 @@ if __name__ == "__main__":
             formatter_class=argparse.RawDescriptionHelpFormatter)
         parser.add_argument('project', help='Google Cloud project name')
         parser.add_argument(
-                'default_dataset', help='Default BigQuery dataset name')
+            'default_dataset', help='Default BigQuery dataset name')
         parser.add_argument('sql_path', help='Path to SQL file')
 
         args = parser.parse_args()
