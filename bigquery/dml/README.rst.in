@@ -1,0 +1,29 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google BigQuery
+  short_name: BigQuery
+  url: https://cloud.google.com/bigquery/docs
+  description: > 
+    `Google BigQuery`_ is Google's fully managed, petabyte scale, low cost
+    analytics data warehouse. BigQuery is NoOps—there is no infrastructure to
+    manage and you don't need a database administrator—so you can focus on
+    analyzing data to find meaningful insights, use familiar SQL, and take
+    advantage of our pay-as-you-go model.
+
+description: |
+  This sample shows how to use Data Manipulation Language with BigQuery.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Populate sample DB
+  file: populate_db.py
+  show_help: true
+- name: Insert SQL
+  file: insert_sql.py
+  show_help: true
+
+cloud_client_library: true

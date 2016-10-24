@@ -1,0 +1,46 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google BigQuery
+  short_name: BigQuery
+  url: https://cloud.google.com/bigquery/docs
+  description: > 
+    `Google BigQuery`_ is Google's fully managed, petabyte scale, low cost
+    analytics data warehouse. BigQuery is NoOps—there is no infrastructure to
+    manage and you don't need a database administrator—so you can focus on
+    analyzing data to find meaningful insights, use familiar SQL, and take
+    advantage of our pay-as-you-go model.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Getting started
+  file: getting_started.py
+  show_help: true
+- name: Sync query
+  file: sync_query.py
+  show_help: true
+- name: Async query
+  file: async_query.py
+  show_help: true
+- name: Listing datasets and projects
+  file: list_datasets_projects.py
+  show_help: true
+- name: Load data by POST
+  file: load_data_by_post.py
+  show_help: true
+- name: Load data from CSV
+  file: load_data_from_csv.py
+  show_help: true
+- name: Load streaming data
+  file: streaming.py
+  show_help: true
+- name: Export data to Cloud Storage
+  file: export_data_to_cloud_storage.py
+  show_help: true
+- name: User auth with an installed app
+  file: installed_app.py
+  show_help: true
+

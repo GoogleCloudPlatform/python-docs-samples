@@ -6,6 +6,8 @@ Google Cloud Storage Python Samples
 This directory contains samples for Google Cloud Storage. `Google Cloud Storage`_ allows world-wide storage and retrieval of any amount of data at any time.
 
 
+
+
 .. _Google Cloud Storage: https://cloud.google.com/storage/docs 
 
 Setup
@@ -16,7 +18,7 @@ Authentication
 ++++++++++++++
 
 Authentication is typically done through `Application Default Credentials`_,
-this means you do not have to change the code to authenticate as long as
+which means you do not have to change the code to authenticate as long as
 your environment has credentials. You have a few options for setting up
 authentication:
 
@@ -29,7 +31,7 @@ authentication:
 
 #. When running on App Engine or Compute Engine, credentials are already
    set-up. However, you may need to configure your Compute Engine instance
-   with `additional scopes <gce-auth>`_.
+   with `additional scopes`_.
 
 #. You can create a `Service Account key file`_. This file can be used to
    authenticate to Google Cloud Platform services from any environment. To use
@@ -41,7 +43,7 @@ authentication:
         export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
 
 .. _Application Default Credentials: https://cloud.google.com/docs/authentication#getting_credentials_for_server-centric_flow
-.. _gce-auth: https://cloud.google.com/compute/docs/authentication#using
+.. _additional scopes: https://cloud.google.com/compute/docs/authentication#using
 .. _Service Account key file: https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount
 
 Install Dependencies
@@ -67,6 +69,18 @@ Install Dependencies
 
 Samples
 -------------------------------------------------------------------------------
+
+Quickstart
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python quickstart.py
+
 
 Snippets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -223,13 +237,16 @@ To run this sample:
 The client library
 -------------------------------------------------------------------------------
 
-This sample uses the `Google Cloud Client Library for Python <ccl-docs>`_.
+This sample uses the `Google Cloud Client Library for Python`_.
 You can read the documentation for more details on API usage and use GitHub
-to `browse the source <ccl-source>`_ and  `report issues <ccl-issues>`_.
+to `browse the source`_ and  `report issues`_.
 
-.. ccl-docs: https://googlecloudplatform.github.io/google-cloud-python/
-.. ccl-source: https://github.com/GoogleCloudPlatform/google-cloud-python
-.. ccl-issues: https://github.com/GoogleCloudPlatform/google-cloud-python/issues
+.. Google Cloud Client Library for Python:
+    https://googlecloudplatform.github.io/google-cloud-python/
+.. browse the source:
+    https://github.com/GoogleCloudPlatform/google-cloud-python
+.. report issues:
+    https://github.com/GoogleCloudPlatform/google-cloud-python/issues
 
 
 .. _Google Cloud SDK: https://cloud.google.com/sdk/

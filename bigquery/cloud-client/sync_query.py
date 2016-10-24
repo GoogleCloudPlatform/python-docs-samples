@@ -19,7 +19,7 @@
 For more information, see the README.md under /bigquery.
 
 Example invocation:
-    $ python sync_query.py \
+    $ python sync_query.py \\
           'SELECT corpus FROM `publicdata.samples.shakespeare` GROUP BY corpus'
 """
 
