@@ -88,6 +88,7 @@ def analyze_syntax(text, encoding='UTF32'):
             'type': 'PLAIN_TEXT',
             'content': text,
         },
+        'encoding_type': encoding
     }
 
     service = get_service()
