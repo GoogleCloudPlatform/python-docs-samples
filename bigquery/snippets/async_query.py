@@ -19,7 +19,7 @@
 For more information, see the README.md under /bigquery.
 
 Example invocation:
-    $ python async_query.py \
+    $ python async_query.py \\
           'SELECT corpus FROM `publicdata.samples.shakespeare` GROUP BY corpus'
 """
 
