@@ -40,8 +40,8 @@ class TaskQueueTestCase(unittest.TestCase):
     def testTaskAddedToQueue(self):
         taskqueue.Task(name='my_task', url='/url/of/my/task/').add()
         tasks = self.taskqueue_stub.get_filtered_tasks()
-        assert len(tasks) == 1
-        assert tasks[0].name == 'my_task'
+        self.assertEqual(len(tasks), 1)
+        self.assertEqual(tasks[0].name, 'my_task')
 # [END taskqueue]
 
     # [START filtering]
@@ -51,27 +51,27 @@ class TaskQueueTestCase(unittest.TestCase):
 
         # All tasks
         tasks = self.taskqueue_stub.get_filtered_tasks()
-        assert len(tasks) == 2
+        self.assertEqual(len(tasks), 2)
 
         # Filter by name
         tasks = self.taskqueue_stub.get_filtered_tasks(name='task_one')
-        assert len(tasks) == 1
-        assert tasks[0].name == 'task_one'
+        self.assertEqual(len(tasks), 1)
+        self.assertEqual(tasks[0].name, 'task_one')
 
         # Filter by URL
         tasks = self.taskqueue_stub.get_filtered_tasks(url='/url/of/task/1/')
-        assert len(tasks) == 1
-        assert tasks[0].name == 'task_one'
+        self.assertEqual(len(tasks), 1)
+        self.assertEqual(tasks[0].name, 'task_one')
 
         # Filter by queue
         tasks = self.taskqueue_stub.get_filtered_tasks(queue_names='queue-1')
-        assert len(tasks) == 1
-        assert tasks[0].name == 'task_one'
+        self.assertEqual(len(tasks), 1)
+        self.assertEqual(tasks[0].name, 'task_one')
 
         # Multiple queues
         tasks = self.taskqueue_stub.get_filtered_tasks(
             queue_names=['queue-1', 'queue-2'])
-        assert len(tasks) == 2
+        self.assertEqual(len(tasks), 2)
     # [END filtering]
 
     # [START deferred]
@@ -79,10 +79,10 @@ class TaskQueueTestCase(unittest.TestCase):
         deferred.defer(operator.add, 1, 2)
 
         tasks = self.taskqueue_stub.get_filtered_tasks()
-        assert len(tasks) == 1
+        self.assertEqual(len(tasks), 1)
 
         result = deferred.run(tasks[0].payload)
-        assert result == 3
+        self.assertEqual(result, 3)
     # [END deferred]
 
 if __name__ == '__main__':
