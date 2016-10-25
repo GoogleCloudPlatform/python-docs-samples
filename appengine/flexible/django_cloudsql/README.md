@@ -1,49 +1,46 @@
-# Getting started with Django on Google Cloud Platform
+# Getting started with Django on Google Cloud Platform on App Engine Flexible
 
 This repository is an example of how to run a [Django](https://www.djangoproject.com/) 
-app on Google App Engine Flexible Environment. It uses the [Writing your first Django app](https://docs.djangoproject.com/en/1.9/intro/tutorial01/) as the example app to deploy.
+app on Google App Engine Flexible Environment. It uses the 
+[Writing your first Django app](https://docs.djangoproject.com/en/1.9/intro/tutorial01/) as the 
+example app to deploy.
 
 
 ## Setup the database
 
-This tutorial assumes you are setting up Django using a SQL database, which is the easiest way to run Django. If you have an existing SQL database running, you can use that, but if not, these are the instructions for creating a managed MySQL instance using CloudSQL.
+This tutorial assumes you are setting up Django using a SQL database, which is the easiest way to 
+run Django.
 
+* Create a [Second Generation CloudSQL instance](https://cloud.google.com/sql/docs/create-instance)
 
-* Create a [CloudSQL instance](https://console.cloud.google.com/project/_/sql/create)
+* Ensure the [Cloud SQL Administration API](https://console.cloud.google.com/flows/enableapi?apiid=sqladmin) is enabled.
 
-    * In the instances list, click your Cloud SQL instance.
+* Install the [CloudSQL proxy](https://cloud.google.com/sql/docs/sql-proxy)
 
-    * Click Access Control.
+* Start the CloudSQL proxy using the connection string. The connection string can be obtained in the
+instance details in the console. It's in the form of <project>:<region>:<instance-name>.
+ 
+     ./cloud_sql_proxy -instances=[INSTANCE_CONNECTION_NAME]=tcp:3306
 
-    * In the IP address subsection, click Request an IPv4 address to enable access to the Cloud SQL instance through an 
-    IPv4 address. It will take a moment to initialize the new IP address.
+* Create a root password
 
-    * Also under Access Control, in the Authorization subsection, under Allowed Networks, click the add (+) button .
+    `gcloud sql instances set-root-password [YOUR_INSTANCE_NAME] --password [YOUR_INSTANCE_ROOT_PASSWORD]`
 
-    * In the Networks field, enter 0.0.0.0/0. This value allows access by all IP addresses.
+* Use the root user and root password to create the `polls` database: 
 
-    * Click Save.
+    `mysql -h 127.0.0.1 -u root -p -e "CREATE DATABASE polls;"`
 
-Note: setting allowed networks to 0.0.0.0/0 opens your SQL instance to traffic from any computer. For production databases, it's highly recommended to limit the authorized networks to only IP ranges that need  access.
+* Edit `app.yaml` to change the `cloud_sql_instances` to reflect the connection name of the 
+instance. This is in the form project:zone:instance
 
-* Alternatively, the instance can be created with the gcloud command line tool as follows, substituting `your-root-pw
- with a strong, unique password.
+* Optionally, use the root account to create a new MySQL user.
 
-        gcloud sql instances create <instance_name> --assign-ip --authorized-networks=0.0.0.0/0  set-root-password=your-root-pw
+     `mysql -h 127.0.0.1 -u root -p -e "CREATE USER 'user'@'%' IDENTIFIED BY 'password';"  ``
+     `mysql -h 127.0.0.1 -u root -p -e "GRANT ALL PRIVILEGES ON * . * TO 'user'@'%';" ``
 
-* Create a Database And User
-
-    * Using the root password created in the last step to create a new database, user, and password using your preferred MySQL client. Alternatively, follow these instructions to create the database and user from the console.
-        * From the CloudSQL instance in the console,  click New user.
-        * Enter a username and password for the application. For example, name the user "pythonapp" and give it a randomly 
-       generated password.
-        * Click Add.
-        * Click Databases and then click New database.
-        * For Name, enter the name of your database (for example, "polls"), and click Add.
-
-Once you have a SQL host, configuring mysite/settings.py to point to your database. Change `your-database-name`, 
-`your-database-user`, `your-database-host` , and `your-database-password` to match the settings created above. Note the 
-instance name is not used in this configuration, and the host name is the IP address you created.
+Once you have a SQL host, configuring mysite/settings.py to point to your database. Change 
+`your-cloudsql-connection-string` and `your-root-password`. If you created a new user and 
+password, update those settings as well.
 
 ## Running locally
 
@@ -55,6 +52,8 @@ contains just the Django dependency.
 
 Once the database is setup, run the migrations.
 
+    python manage.py makemigrations
+    python manage.py makemigrations polls
     python manage.py migrate
 
 If you'd like to use the admin console, create a superuser.
@@ -65,14 +64,30 @@ The app can be run locally the same way as any other Django app.
 
     python manage.py runserver
 
-Now you can view the admin panel of your local site at http://localhost:8080/admin
+Now you can view the admin panel of your local site at http://localhost:8000/admin
 
 ## Deploying
 
-Since the Django development server is not built for production, our container uses the Gunicorn server. Since Gunicorn doesn't serve static content,
-the static content is instead served from Google Cloud Storage.
+The app can be deployed by running
 
-First, make a bucket and make it publically readable, replacing <your-gcs-bucket> with a bucket name, such as your project id:
+    gcloud app deploy
+
+You can view your site with:
+
+    gcloud app browse
+
+Now you can view the admin panel of your deployed site at https://<your-app-id>.appspot.com/admin
+
+
+ ### Serving Static Files Using Cloud Storage
+
+Since the Django development server is not built for production, our container uses the Gunicorn 
+server. In `mysite/urls.py`, while in DEBUG mode, Django is configured to serve static files. 
+ However, in production, it's recommended to use Google Cloud Storage or an alternative CDN for 
+ serving static files. 
+
+First, make a bucket and make it publically readable, replacing <your-gcs-bucket> with a bucket name
+, such as your project id:
 
     gsutil mb gs://<your-gcs-bucket>
     gsutil defacl set public-read gs://<your-gcs-bucket>
@@ -89,31 +104,17 @@ Now your static content can be served from the following URL:
 
     http://storage.googleapis.com/<your-gcs-bucket/static/
 
-Make sure to replace <your-cloud-bucket> within `mysite/settings.py` to set STATIC_URL to the correct value to serve static content from, and
-uncomment the STATIC_URL to point to the new URL.
-
-The app can be deployed by running
-
-    gcloud app deploy
-    
-which deploys to version 1, and `promote` makes version 1 the default version.
-
-Now you can view the admin panel of your deployed site at https://<your-app-id>.appspot.com/admin.
+Make sure to replace <your-cloud-bucket> within `mysite/settings.py` to set STATIC_URL to the 
+correct value to serve static content from, and uncomment the STATIC_URL to point to the new URL.
 
 ### Production
 
 Once you are ready to serve your content in production, there are several
 changes required for the configuration. Most notable changes are: 
+
+* Use Google Cloud Storage or a CDN to serve static files
 * Add ".appspot.com" to your `ALLOWED_HOSTS`
 * Change the `DEBUG` variable to `False` in your settings.py file.
-* If you are using a Cloud SQL database
-instance, in order to change from `DEBUG = True`
-to `DEBUG = False` you will need to properly configure the database. See
-instructions
-[here](https://cloud.google.com/sql/docs/app-engine-connect#gaev2-csqlv2) and be
-sure to change your `app.yaml` file as well as the `HOST` key in your
-`DATABASES` object.
- 
 
 ## Contributing changes
 
