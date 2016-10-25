@@ -4,17 +4,15 @@ This sample shows how to use the [SleekXMPP](http://sleekxmpp.com/index.html)
 client and [Flask](http://flask.pocoo.org/) to build a simple chatbot that can
 be run on [Google Compute Engine](https://cloud.google.com/compute/). The
 chatbot does two things:
-	1. Sends messages to XMPP users via http get:
-	The server is running on port 5000
-	if running on virtual machine use:
-	http://<MACHINE IP>:5000/send_message?recipient=<RECIPIENT ADDRESS>&message=<MSG>
+	
+1. Sends messages to XMPP users via http get:
+	* The server is running on port 5000
+	* if running on virtual machine use: http://<MACHINE IP>:5000/send_message?recipient=<RECIPIENT ADDRESS>&message=<MSG>
+	* If running locally use: http://localhost:5000/send_message?recipient=<RECIPIENT ADDRESS>&message=<MSG>
 
-	If running locally use:
-	http://localhost:5000/send_message?recipient=<RECIPIENT ADDRESS>&message=<MSG>
-
-	2. Responds to incoming messages with a Wikipedia page on the topic:
-	Send a message with a topic (e.g., 'Hawaii') to the XMPP account the server is using
-	It should respond with a Wikipedia page (when one exists)
+2. Responds to incoming messages with a Wikipedia page on the topic:
+	* Send a message with a topic (e.g., 'Hawaii') to the XMPP account the server is using
+	* It should respond with a Wikipedia page (when one exists)
 
 ## Setup
 
