@@ -86,8 +86,8 @@ DATABASES = {
 # In the flexible environment, you connect to CloudSQL using a unix socket.
 # Locally, you can use the CloudSQL proxy to proxy a localhost connection
 # to the instance
-if os.getenv('APPENGINE_FLEXIBLE'):
     DATABASES['default']['HOST'] = '/cloudsql/<your-cloudsql-connection-string>'
+if os.getenv('GAE_APPENGINE_HOSTNAME'):
 else:
     DATABASES['default']['HOST'] = '127.0.0.1'
 # [END dbconfig]
