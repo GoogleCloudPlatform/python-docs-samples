@@ -1,0 +1,23 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Vision API
+  short_name: Cloud Vision API
+  url: https://cloud.google.com/vision/docs
+  description: > 
+    `Google Cloud Vision API`_ allows developers to easily integrate vision
+    detection features within applications, including image labeling, face and
+    landmark detection, optical character recognition (OCR), and tagging of
+    explicit content
+
+description: >
+  This sample demonstrates how to use the Cloud Vision API to do face detection.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Face detection
+  file: faces.py
+  show_help: true

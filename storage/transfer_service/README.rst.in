@@ -1,0 +1,28 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Storage
+  short_name: Cloud Storage
+  url: https://cloud.google.com/storage/docs
+  description: > 
+    `Google Cloud Storage`_ allows world-wide storage and retrieval of any
+    amount of data at any time.
+
+description: >
+    These samples demonstrate how to transfer data between Google Cloud Storage
+    and other storage systems.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Transfer to GCS Nearline
+  file: nearline_request.py
+  show_help: true
+- name: Transfer from AWS
+  file: aws_request.py
+  show_help: true
+- name: Check transfer status
+  file: transfer_check.py
+  show_help: true
