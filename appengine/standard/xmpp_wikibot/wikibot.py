@@ -14,16 +14,15 @@
 
 """Wikibot server example using SleekXMPP client library"""
 
-import sys
+import json
 import logging
-import getpass
 from optparse import OptionParser
-from flask import Flask, request
-import requests
+import sys
 import threading
 import urllib
-import json
 
+from flask import Flask, request
+import requests
 import sleekxmpp
 
 # Python versions before 3.0 do not use UTF-8 encoding
@@ -46,14 +45,14 @@ def send_message():
         recipient = request.args.get('recipient')
         message = request.args.get('message')
     except KeyError as e:
-        logging.info("key error: {0}".format(e))
+        logging.info('key error: {0}'.format(e))
 
     if chat_client and recipient and message:
         chat_client.send_message(mto=recipient, mbody=message)
-        return "message sent to:" + recipient + " with body:" + message
+        return 'message sent to:' + recipient + ' with body:' + message
     else:
-        logging.info("chat client or recipient or message does not exist!")
-    return "message failed to send"
+        logging.info('chat client or recipient or message does not exist!')
+    return 'message failed to send'
 
 def run_server():
     app.run(threaded=False, use_reloader=False)
@@ -73,12 +72,12 @@ class WikiBot(sleekxmpp.ClientXMPP):
         # and the XML streams are ready for use. We want to
         # listen for this event so that we we can initialize
         # our roster.
-        self.add_event_handler("session_start", self.start)
+        self.add_event_handler('session_start', self.start)
 
         # The message event is triggered whenever a message
         # stanza is received. Be aware that that includes
         # MUC messages and error messages.
-        self.add_event_handler("message", self.message)
+        self.add_event_handler('message', self.message)
 
     def start(self, event):
         """
@@ -109,17 +108,17 @@ class WikiBot(sleekxmpp.ClientXMPP):
                    how it may be used.
         """
         if msg['type'] in ('chat', 'normal'):
-            msg_body = "%(body)s" % msg
-            logging.info("Message sent was: " + msg_body)
+            msg_body = '%(body)s' % msg
+            logging.info('Message sent was: ' + msg_body)
             encoded_body = urllib.quote_plus(msg_body)
-            svrResponse = requests.get("https://en.wikipedia.org/w/api.php?action=parse&prop=sections&format=json&page=" + encoded_body)
+            svrResponse = requests.get('https://en.wikipedia.org/w/api.php?action=parse&prop=sections&format=json&page=' + encoded_body)
             doc = json.loads(svrResponse.content)
             try:
                 page_id = str(doc['parse']['pageid'])
                 defn_url = 'https://en.wikipedia.org/?curid=' + page_id
                 msg.reply("find out more about: '" + msg_body + "' here: " + defn_url).send()
             except KeyError as e:
-                logging.info("key error: {0}".format(e))
+                logging.info('key error: {0}'.format(e))
                 msg.reply("I wasn't able to locate info on: '" + msg_body + "' Sorry").send()
 
 
@@ -151,11 +150,6 @@ if __name__ == '__main__':
     # Setup logging.
     logging.basicConfig(level=opts.loglevel,
                         format='%(levelname)-8s %(message)s')
-
-    if opts.jid is None:
-        opts.jid = raw_input("Username: ")
-    if opts.password is None:
-        opts.password = getpass.getpass("Password: ")
 
 
     # Setup the WikiBot and register plugins. Note that while plugins may
@@ -196,10 +190,9 @@ if __name__ == '__main__':
     if xmpp.connect():
         # If you do not have the dnspython library installed, you will need
         # to manually specify the name of the server if it does not match
-        # the one in the JID. For example, to use Google Talk you would
-        # need to use:
+        # the one in the JID. For example:
         #
-        # if xmpp.connect(('talk.google.com', 5222)):
+        # if xmpp.connect(('<SERVER DOMAIN>.com', 5222)):
         #     ...
         xmpp.process(block=True)
         print("Done")
