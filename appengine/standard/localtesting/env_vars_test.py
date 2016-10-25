@@ -32,8 +32,8 @@ class EnvVarsTestCase(unittest.TestCase):
         self.testbed.deactivate()
 
     def testEnvVars(self):
-        assert os.environ['APPLICATION_ID'] == 'your-app-id'
-        assert os.environ['MY_CONFIG_SETTING'] == 'example'
+        self.assertEqual(os.environ['APPLICATION_ID'], 'your-app-id')
+        self.assertEqual(os.environ['MY_CONFIG_SETTING'], 'example')
 # [END env_example]
 
 if __name__ == '__main__':

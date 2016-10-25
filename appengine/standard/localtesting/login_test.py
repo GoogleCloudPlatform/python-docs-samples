@@ -41,11 +41,11 @@ class LoginTestCase(unittest.TestCase):
 
     # [START test]
     def testLogin(self):
-        assert not users.get_current_user()
+        self.assertFalse(users.get_current_user())
         self.loginUser()
-        assert users.get_current_user().email() == 'user@example.com'
+        self.assertEquals(users.get_current_user().email(), 'user@example.com')
         self.loginUser(is_admin=True)
-        assert users.is_current_user_admin()
+        self.assertTrue(users.is_current_user_admin())
     # [END test]
 # [END login_example]
 
