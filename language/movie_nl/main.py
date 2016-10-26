@@ -21,6 +21,7 @@ import os
 
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
+import httplib2
 from oauth2client.client import GoogleCredentials
 import requests
 
@@ -173,18 +174,9 @@ def get_sentiment_entities(service, document):
     """
 
     sentiments, entities = analyze_document(service, document)
+    score = sentiments.get('score')
 
-    sentiments = [sent for sent in sentiments if sent[0] is not None]
-    negative_sentiments = [
-        polarity for polarity, magnitude in sentiments if polarity < 0.0]
-    positive_sentiments = [
-        polarity for polarity, magnitude in sentiments if polarity > 0.0]
-
-    negative = sum(negative_sentiments)
-    positive = sum(positive_sentiments)
-    total = positive + negative
-
-    return (total, entities)
+    return (score, entities)
 
 
 def get_sentiment_label(sentiment):
@@ -288,12 +280,15 @@ def rank_entities(reader, sentiment=None, topn=None, reverse_bool=False):
 
 
 def get_service():
-    """Build a client to the Google Cloud Natural Language API."""
+    """"Build a client to the Google Cloud Natural Language API."""
 
     credentials = GoogleCredentials.get_application_default()
-
+    scoped_credentials = credentials.create_scoped(
+          ['https://www.googleapis.com/auth/cloud-platform'])
+    http = httplib2.Http()
+    scoped_credentials.authorize(http)
     return discovery.build('language', 'v1',
-                           credentials=credentials,
+                           http=http,
                            discoveryServiceUrl=DISCOVERY_URL)
 
 
