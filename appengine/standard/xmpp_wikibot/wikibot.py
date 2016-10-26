@@ -55,7 +55,7 @@ def send_message():
     return 'message failed to send'
 
 def run_server():
-    app.run(threaded=False, use_reloader=False, host='0.0.0.0', port=80)
+    app.run(threaded=False, use_reloader=False)
 
 class WikiBot(sleekxmpp.ClientXMPP):
 
