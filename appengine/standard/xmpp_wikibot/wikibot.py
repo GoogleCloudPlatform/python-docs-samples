@@ -111,8 +111,8 @@ class WikiBot(sleekxmpp.ClientXMPP):
             msg_body = '%(body)s' % msg
             logging.info('Message sent was: ' + msg_body)
             encoded_body = urllib.quote_plus(msg_body)
-            svrResponse = requests.get('https://en.wikipedia.org/w/api.php?action=parse&prop=sections&format=json&page=' + encoded_body)
-            doc = json.loads(svrResponse.content)
+            svr_response = requests.get('https://en.wikipedia.org/w/api.php?action=parse&prop=sections&format=json&page=' + encoded_body)
+            doc = json.loads(svr_response.content)
             try:
                 page_id = str(doc['parse']['pageid'])
                 defn_url = 'https://en.wikipedia.org/?curid=' + page_id
