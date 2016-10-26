@@ -26,6 +26,15 @@ You should also download the [Google Cloud SDK](https://cloud.google.com/sdk/).
 It will allow you to access many of the features of Google Compute Engine via
 your local machine.
 
+**IMPORTANT** You must enable tcp traffic on port 5000 to send messages to the
+XMPP server. This can be done by running the following SDK commands:
+    gcloud config set project <YOUR PROJECT NAME>
+
+    gcloud compute firewall-rules create wikibot-server-rule --allow tcp:5000 --source-ranges=0.0.0.0/0
+
+Or you can create a new firewall rule via the UI in the 
+[Networks](https://console.cloud.google.com/networking/networks/list) section of
+the Google Cloud Console.
 
 ### Installing files and dependencies
 
