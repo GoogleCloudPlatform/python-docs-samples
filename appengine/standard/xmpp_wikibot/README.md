@@ -28,6 +28,7 @@ your local machine.
 
 **IMPORTANT** You must enable tcp traffic on port 5000 to send messages to the
 XMPP server. This can be done by running the following SDK commands:
+    
     gcloud config set project <YOUR PROJECT NAME>
 
     gcloud compute firewall-rules create wikibot-server-rule --allow tcp:5000 --source-ranges=0.0.0.0/0
