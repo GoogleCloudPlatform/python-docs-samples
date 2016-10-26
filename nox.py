@@ -61,7 +61,7 @@ def list_files(folder, pattern):
                 yield os.path.join(root, filename)
 
 
-def collect_sample_dirs(start_dir, blacklist=set()):
+def collect_sample_dirs(start_dir, blacklist=set(), suffix='_test.py'):
     """Recursively collects a list of dirs that contain tests.
 
     This works by listing the contents of directories and finding
@@ -69,7 +69,7 @@ def collect_sample_dirs(start_dir, blacklist=set()):
     """
     # Collect all the directories that have tests in them.
     for parent, subdirs, files in os.walk(start_dir):
-        if any(f for f in files if f[-8:] == '_test.py'):
+        if any(f for f in files if f.endswith(suffix)):
             # Don't recurse further, since py.test will do that.
             del subdirs[:]
             # This dir has tests in it. yield it.
@@ -240,9 +240,9 @@ def session_lint(session):
     """Lints each sample."""
     sample_directories = session.posargs
     if not sample_directories:
-        sample_directories = collect_sample_dirs('.')
+        sample_directories = collect_sample_dirs('.', suffix='.py')
 
-    # On travis, on lint changed samples.
+    # On travis, only lint changed samples.
     if ON_TRAVIS:
         changed_files = get_changed_files()
         sample_directories = filter_samples(
