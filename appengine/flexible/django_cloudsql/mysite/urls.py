@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.conf import settings
 
 urlpatterns = [url(r'^', include('polls.urls')),
                url(r'^admin/', admin.site.urls)]
