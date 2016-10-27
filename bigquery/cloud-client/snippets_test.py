@@ -22,9 +22,6 @@ DATASET_ID = 'test_dataset'
 TABLE_ID = 'test_table'
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason='https://github.com/GoogleCloudPlatform/gcloud-python/issues/2143')
 def test_list_projects():
     snippets.list_projects()
     # No need to check the ouput, lack of exception is enough.
@@ -37,6 +34,29 @@ def test_list_datasets(capsys):
     out, _ = capsys.readouterr()
 
     assert DATASET_ID in out
+
+
+@pytest.fixture
+def cleanup_dataset():
+    dataset_name = 'test_temporary_dataset'
+    bigquery_client = bigquery.Client()
+    dataset = bigquery_client.dataset(dataset_name)
+
+    if dataset.exists():
+        dataset.delete()
+
+    yield dataset_name
+
+    if dataset.exists():
+        dataset.delete()
+
+
+def test_create_dataset(capsys, cleanup_dataset):
+    snippets.create_dataset(cleanup_dataset)
+
+    out, _ = capsys.readouterr()
+
+    assert cleanup_dataset in out
 
 
 def test_list_tables(capsys):
