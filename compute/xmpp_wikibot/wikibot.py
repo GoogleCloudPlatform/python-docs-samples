@@ -17,16 +17,17 @@
 import argparse
 import getpass
 import json
-import logging
-import threading
+import re
+import sys
 import urllib
 
 from flask import Flask, request
 import requests
+from six.moves import html_parser
 import sleekxmpp
 
-
 app = Flask(__name__)
+
 
 @app.route('/send_message', methods=['GET'])
 def send_message():
@@ -37,12 +38,7 @@ def send_message():
         chat_client.send_message(mto=recipient, mbody=message)
         return 'message sent to {} with body: {}'.format(recipient, message)
     else:
-        logging.info('chat client or recipient or message does not exist!')
         return 'message failed to send', 400
-
-
-def run_server(host='0.0.0.0'):
-    app.run(threaded=False, use_reloader=False, host=host)
 
 
 class WikiBot(sleekxmpp.ClientXMPP):
@@ -64,6 +60,13 @@ class WikiBot(sleekxmpp.ClientXMPP):
         # stanza is received. Be aware that that includes
         # MUC messages and error messages.
         self.add_event_handler('message', self.message)
+
+        # Register plugins. Note that while plugins may have
+        # interdependencies, the order you register them in doesn't matter.
+        self.register_plugin('xep_0030')  # Service Discovery
+        self.register_plugin('xep_0004')  # Data Forms
+        self.register_plugin('xep_0060')  # PubSub
+        self.register_plugin('xep_0199')  # XMPP Ping
 
     def start(self, event):
         """Process the session_start event.
@@ -94,22 +97,27 @@ class WikiBot(sleekxmpp.ClientXMPP):
         """
         if msg['type'] in ('chat', 'normal'):
             msg_body = msg['body']
-            logging.info('Message sent was: {}'.format(msg_body))
             encoded_body = urllib.quote_plus(msg_body)
-            svrResponse = requests.get(
+            response = requests.get(
                 'https://en.wikipedia.org/w/api.php?'
-                'action=parse&prop=sections&format=json&page={}'.format(
-                    encoded_body))
-            doc = json.loads(svrResponse.content)
-            try:
-                page_id = str(doc['parse']['pageid'])
-                defn_url = 'https://en.wikipedia.org/?curid={}'.format(page_id)
-                msg.reply('find out more about: "{}" here: {}'.format(
-                    msg_body, defn_url)).send()
-            except KeyError as e:
-                logging.info('key error: {0}'.format(e))
+                'action=query&list=search&format=json&srprop=snippet&'
+                'srsearch={}'.format(encoded_body))
+            doc = json.loads(response.content)
+
+            results = doc.get('query', {}).get('search')
+            if not results:
                 msg.reply('I wasn\'t able to locate info on "{}" Sorry'.format(
                     msg_body)).send()
+                return
+
+            snippet = results[0]['snippet']
+            title = urllib.quote_plus(results[0]['title'])
+
+            # Strip out html
+            snippet = html_parser.HTMLParser().unescape(
+                re.sub(r'<[^>]*>', '', snippet))
+            msg.reply(u'{}...\n(http://en.wikipedia.org/w/?title={})'.format(
+                snippet, title)).send()
 
 
 if __name__ == '__main__':
@@ -118,48 +126,28 @@ if __name__ == '__main__':
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
 
-    # Output verbosity options.
-    parser.add_argument(
-        '-q', '--quiet', help='set logging to ERROR', action='store_const',
-        dest='loglevel', const=logging.ERROR, default=logging.INFO)
-    parser.add_argument(
-        '-d', '--debug', help='set logging to DEBUG', action='store_const',
-        dest='loglevel', const=logging.DEBUG, default=logging.INFO)
-    parser.add_argument(
-        '-v', '--verbose', help='set logging to COMM', action='store_const',
-        dest='loglevel', const=5, default=logging.INFO)
-
     # JID and password options.
     parser.add_argument('-j', '--jid', help='JID to use', required=True)
     parser.add_argument('-p', '--password', help='password to use')
 
     args = parser.parse_args()
 
-    # Setup logging.
-    logging.basicConfig(level=args.loglevel,
-                        format='%(levelname)-8s %(message)s')
-
     if args.password is None:
         args.password = getpass.getpass('Password: ')
 
-    # Setup the WikiBot and register plugins. Note that while plugins may
-    # have interdependencies, the order in which you register them does
-    # not matter.
     xmpp = WikiBot(args.jid, args.password)
-    xmpp.register_plugin('xep_0030')  # Service Discovery
-    xmpp.register_plugin('xep_0004')  # Data Forms
-    xmpp.register_plugin('xep_0060')  # PubSub
-    xmpp.register_plugin('xep_0199')  # XMPP Ping
 
     chat_client = xmpp  # set the global variable
 
-    # start the app server and run it as a thread so that the XMPP server may
-    # also start
-    threading.Thread(target=run_server).start()
+    try:
+        # Connect to the XMPP server and start processing XMPP stanzas.
+        if not xmpp.connect():
+            print('Unable to connect.')
+            sys.exit(1)
 
-    # Connect to the XMPP server and start processing XMPP stanzas.
-    if xmpp.connect():
-        xmpp.process(block=True)
+        xmpp.process(block=False)
+
+        app.run(threaded=True, use_reloader=False, host='0.0.0.0', debug=False)
         print('Done')
-    else:
-        print('Unable to connect.')
+    finally:
+        xmpp.disconnect()
