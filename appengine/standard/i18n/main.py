@@ -20,9 +20,9 @@ and App Engine application.
 For more information, see README.md
 """
 
-from i18n_utils import BaseHandler
-
 import webapp2
+
+from i18n_utils import BaseHandler
 
 
 class MainHandler(BaseHandler):

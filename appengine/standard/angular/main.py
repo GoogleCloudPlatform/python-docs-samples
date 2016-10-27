@@ -14,9 +14,9 @@
 
 import json
 
-import model
-
 import webapp2
+
+import model
 
 
 def AsDict(guest):
