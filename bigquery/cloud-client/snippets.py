@@ -47,7 +47,7 @@ def list_projects():
             break
 
     for project in projects:
-        print(projects.name)
+        print(project.project_id)
 
 
 def list_datasets(project=None):
