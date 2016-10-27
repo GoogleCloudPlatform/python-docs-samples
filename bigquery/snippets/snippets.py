@@ -33,14 +33,27 @@ import google.cloud.bigquery.job
 
 
 def list_projects():
-    raise NotImplementedError(
-        'https://github.com/GoogleCloudPlatform/gcloud-python/issues/2143')
+    bigquery_client = bigquery.Client()
+
+    projects = []
+    page_token = None
+
+    while True:
+        results, page_token = bigquery_client.list_projects(
+            page_token=page_token)
+        projects.extend(results)
+
+        if not page_token:
+            break
+
+    for project in projects:
+        print(project.project_id)
 
 
 def list_datasets(project=None):
     """Lists all datasets in a given project.
 
-    If no project is specified, then the currently active project is used
+    If no project is specified, then the currently active project is used.
     """
     bigquery_client = bigquery.Client(project=project)
 
@@ -57,6 +70,20 @@ def list_datasets(project=None):
 
     for dataset in datasets:
         print(dataset.name)
+
+
+def create_dataset(dataset_name, project=None):
+    """Craetes a dataset in a given project.
+
+    If no project is specified, then the currently active project is used.
+    """
+    bigquery_client = bigquery.Client(project=project)
+
+    dataset = bigquery_client.dataset(dataset_name)
+
+    dataset.create()
+
+    print('Created dataset {}.'.format(dataset_name))
 
 
 def list_tables(dataset_name, project=None):
@@ -221,8 +248,15 @@ if __name__ == '__main__':
 
     subparsers = parser.add_subparsers(dest='command')
 
+    list_projects_parser = subparsers.add_parser(
+        'list-projects', help=list_projects.__doc__)
+
     list_datasets_parser = subparsers.add_parser(
         'list-datasets', help=list_datasets.__doc__)
+
+    create_dataset_parser = subparsers.add_parser(
+        'list-datasets', help=list_datasets.__doc__)
+    create_dataset_parser.add_argument('dataset_name')
 
     list_tables_parser = subparsers.add_parser(
         'list-tables', help=list_tables.__doc__)
@@ -251,8 +285,12 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    if args.command == 'list-datasets':
+    if args.command == 'list-projects':
+        list_projects()
+    elif args.command == 'list-datasets':
         list_datasets(args.project)
+    elif args.command == 'create-dataset':
+        create_dataset(args.dataset_name, args.project)
     elif args.command == 'list-tables':
         list_tables(args.dataset_name, args.project)
     elif args.command == 'create-table':
