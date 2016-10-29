@@ -58,12 +58,12 @@ using [pip](http://pip.readthedocs.io/en/stable/):
 
 You'll need to have an XMPP account prior to actually running the sample.
 If you do not have one, you can easily create an account at one of the many
-XMPP servers such as [Jabber.at](https://jabber.at/account/register/).
+XMPP servers such as [xmpp.jp](http://xmpp.jp).
 Once you have an account, run the following command:
 
     python wikibot.py '<YOUR XMPP USERNAME>' '<PASSWORD>'
 
-Where the username (e.g., 'bob@jabber.at') and password for the account that
+Where the username (e.g., 'bob@xmpp.jp') and password for the account that
 you'd like to use for your chatbot are passed in as arguments.
 
 Enter control-C to stop the server
