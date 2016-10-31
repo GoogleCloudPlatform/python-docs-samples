@@ -61,7 +61,7 @@ If you do not have one, you can easily create an account at one of the many
 XMPP servers such as [xmpp.jp](http://xmpp.jp).
 Once you have an account, run the following command:
 
-    python wikibot.py '<YOUR XMPP USERNAME>' '<PASSWORD>'
+    python wikibot.py -j '<YOUR XMPP USERNAME>' -p '<PASSWORD>'
 
 Where the username (e.g., 'bob@xmpp.jp') and password for the account that
 you'd like to use for your chatbot are passed in as arguments.
