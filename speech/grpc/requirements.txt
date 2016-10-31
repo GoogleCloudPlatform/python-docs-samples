@@ -1,5 +1,5 @@
 google-cloud-core==0.20.0
-grpcio==1.0.1rc1
+grpcio==1.0.1
 PyAudio==0.2.9
 grpc-google-cloud-speech-v1beta1==1.0.1
 six==1.10.0
