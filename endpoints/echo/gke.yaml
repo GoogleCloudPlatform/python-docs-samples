@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc. All Rights Reserved.
+# Copyright 2016 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -22,6 +23,9 @@ spec:
     targetPort: 8080
     protocol: TCP
     name: http
+  - port: 443
+    protocol: TCP
+    name: https
   selector:
     app: esp-echo
   type: LoadBalancer
@@ -37,17 +41,27 @@ spec:
       labels:
         app: esp-echo
     spec:
+      volumes:
+      - name: nginx-ssl
+        secret:
+          secretName: nginx-ssl
       containers:
       - name: esp
         image: b.gcr.io/endpoints/endpoints-runtime:0.3
         args: [
           "-p", "8080",
+          "-S", "443",
           "-a", "127.0.0.1:8081",
           "-s", "SERVICE_NAME",
           "-v", "SERVICE_VERSION",
         ]
         ports:
           - containerPort: 8080
+          - containerPort: 443
+        volumeMounts:
+        - mountPath: /etc/nginx/ssl
+          name: nginx-ssl
+          readOnly: true
       - name: echo
         image: b.gcr.io/endpoints/echo:latest
         ports:
