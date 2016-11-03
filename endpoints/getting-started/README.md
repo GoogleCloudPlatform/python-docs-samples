@@ -1,6 +1,10 @@
-# Google Cloud Endpoints & App Engine Flexible Environment & Python
+# Google Cloud Endpoints & Python
 
-This sample demonstrates how to use Google Cloud Endpoints on Google App Engine Flexible Environment using Python.
+This sample demonstrates how to use Google Cloud Endpoints using Python.
+
+For a complete walkthrough showing how to run this sample in different
+environments, see the
+[Google Cloud Endpoints Quickstarts](https://cloud.google.com/endpoints/docs/quickstarts).
 
 This sample consists of two parts:
 
@@ -10,8 +14,6 @@ This sample consists of two parts:
 ## Running locally
 
 ### Running the backend
-
-For more info on running Flexible applications locally, see [the getting started documentation](https://cloud.google.com/python/getting-started/hello-world).
 
 Install all the dependencies:
 ```bash
@@ -34,17 +36,10 @@ $ python clients/echo-client.py http://localhost:8080 APIKEY helloworld
 
 The `APIKEY` doesn't matter as the endpoint proxy is not running to do authentication.
 
-## Deploying to Google App Engine
+## Deploying to Production
 
-Open the `swagger.yaml` file and in the `host` property, replace
-`YOUR-PROJECT-ID` with your project's ID.
-
-Then, deploy the sample using `gcloud`:
-```bash
-$ gcloud beta app deploy
-```
-
-Once deployed, you can access the application at https://YOUR-PROJECT-ID.appspot.com/.
+See the
+[Google Cloud Endpoints Quickstarts](https://cloud.google.com/endpoints/docs/quickstarts).
 
 ### Using the echo client
 
@@ -170,16 +165,3 @@ $ gcloud app deploy app.yaml --project=YOUR-CLIENT-PROJECT-ID
 
 Your client app is now deployed at https://YOUR-CLIENT-PROJECT-ID.appspot.com. When you access https://YOUR-CLIENT-PROJECT-ID.appspot.com, your client calls your server project API from
 the client's service account using Google ID token.
-
-## Viewing the Endpoints graphs
-
-By using Endpoints, you get access to several metrics that are displayed graphically in the Cloud Console.
-
-To view the Endpoints graphs:
-
-1. Go to the [Endpoints section in Cloud Console](https://console.cloud.google.com/endpoints) of the project you deployed your API to.
-2. Click on your API to view more detailed information about the metrics collected.
-
-## Swagger UI
-
-The Swagger UI is an open source Swagger project that allows you to explore your API through a UI. Find out more about it on the [Swagger site](http://swagger.io/swagger-ui/).
