@@ -12,7 +12,7 @@ flask==0.11.1
 Flask==0.11.1
 fluent-logger==0.4.4
 funcsigs==1.0.2
-functools32==3.2.3-2; python_version < '3'
+functools32==3.2.3-2; python_version < "3"
 google-api-python-client==1.5.5
 google-cloud-bigquery==0.20.0
 google-cloud-bigtable==0.20.0
