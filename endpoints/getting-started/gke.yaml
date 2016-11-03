@@ -63,6 +63,6 @@ spec:
           name: nginx-ssl
           readOnly: true
       - name: echo
-        image: b.gcr.io/endpoints/echo:latest
+        image: gcr.io/google-samples/echo-python:1.0
         ports:
           - containerPort: 8081
