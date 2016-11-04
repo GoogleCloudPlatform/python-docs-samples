@@ -73,7 +73,7 @@ def _audio_data_generator(buff, stoprequest):
         A chunk of data that is the aggregate of all chunks of data in `buff`.
         The function will block until at least one data chunk is available.
     """
-    while not stoprequest.isSet():
+    while not stoprequest.is_set():
         # Use a blocking get() to ensure there's at least one chunk of data    
         chunk = buff.get()
         if not chunk:
@@ -93,7 +93,7 @@ def _audio_data_generator(buff, stoprequest):
 def _fill_buffer(audio_stream, buff, chunk, stoprequest):
     """Continuously collect data from the audio stream, into the buffer."""
     try:
-        while not stoprequest.isSet():
+        while not stoprequest.is_set():
             buff.put(audio_stream.read(chunk))
     except IOError:
         # This happens when the stream is closed. Signal that we're done.
@@ -129,6 +129,7 @@ def record_audio(rate, chunk, stoprequest):
     yield _audio_data_generator(buff, stoprequest)
 
     fill_buffer_thread.join()
+    audio_interface.terminate()
 # [END audio_stream]
 
 
