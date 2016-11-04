@@ -64,7 +64,7 @@ def make_channel(host, port):
     return implementations.secure_channel(host, port, composite_channel)
 
 
-def _audio_data_generator(buff):
+def _audio_data_generator(buff, stoprequest):
     """A generator that yields all available data in the given buffer.
 
     Args:
@@ -73,8 +73,8 @@ def _audio_data_generator(buff):
         A chunk of data that is the aggregate of all chunks of data in `buff`.
         The function will block until at least one data chunk is available.
     """
-    while True:
-        # Use a blocking get() to ensure there's at least one chunk of data
+    while not stoprequest.isSet():
+        # Use a blocking get() to ensure there's at least one chunk of data    
         chunk = buff.get()
         if not chunk:
             # A falsey value indicates the stream is closed.
@@ -90,19 +90,22 @@ def _audio_data_generator(buff):
         yield b''.join(data)
 
 
-def _fill_buffer(audio_stream, buff, chunk):
+def _fill_buffer(audio_stream, buff, chunk, stoprequest):
     """Continuously collect data from the audio stream, into the buffer."""
     try:
-        while True:
+        while not stoprequest.isSet():
             buff.put(audio_stream.read(chunk))
     except IOError:
         # This happens when the stream is closed. Signal that we're done.
         buff.put(None)
 
+    audio_stream.stop_stream()
+    audio_stream.close()
+
 
 # [START audio_stream]
 @contextlib.contextmanager
-def record_audio(rate, chunk):
+def record_audio(rate, chunk, stoprequest):
     """Opens a recording stream in a context manager."""
     audio_interface = pyaudio.PyAudio()
     audio_stream = audio_interface.open(
@@ -120,15 +123,12 @@ def record_audio(rate, chunk):
     # This is necessary so that the input device's buffer doesn't overflow
     # while the calling thread makes network requests, etc.
     fill_buffer_thread = threading.Thread(
-        target=_fill_buffer, args=(audio_stream, buff, chunk))
+        target=_fill_buffer, args=(audio_stream, buff, chunk, stoprequest))
     fill_buffer_thread.start()
 
-    yield _audio_data_generator(buff)
+    yield _audio_data_generator(buff, stoprequest)
 
-    audio_stream.stop_stream()
-    audio_stream.close()
     fill_buffer_thread.join()
-    audio_interface.terminate()
 # [END audio_stream]
 
 
@@ -166,7 +166,7 @@ def request_stream(data_stream, rate, interim_results=True):
         yield cloud_speech.StreamingRecognizeRequest(audio_content=data)
 
 
-def listen_print_loop(recognize_stream):
+def listen_print_loop(recognize_stream, stoprequest):
     num_chars_printed = 0
     for resp in recognize_stream:
         if resp.error.code != code_pb2.OK:
@@ -198,6 +198,7 @@ def listen_print_loop(recognize_stream):
             # one of our keywords.
             if re.search(r'\b(exit|quit)\b', transcript, re.I):
                 print('Exiting..')
+                stoprequest.set()
                 break
 
             num_chars_printed = 0
@@ -208,7 +209,11 @@ def main():
             make_channel('speech.googleapis.com', 443)) as service:
         # For streaming audio from the microphone, there are three threads.
         # First, a thread that collects audio data as it comes in
-        with record_audio(RATE, CHUNK) as buffered_audio_data:
+        
+        # stop request
+        stoprequest = threading.Event()
+
+        with record_audio(RATE, CHUNK, stoprequest) as buffered_audio_data:
             # Second, a thread that sends requests with that data
             requests = request_stream(buffered_audio_data, RATE)
             # Third, a thread that listens for transcription responses
@@ -220,7 +225,7 @@ def main():
 
             # Now, put the transcription responses to use.
             try:
-                listen_print_loop(recognize_stream)
+                listen_print_loop(recognize_stream, stoprequest)
 
                 recognize_stream.cancel()
             except face.CancellationError:
