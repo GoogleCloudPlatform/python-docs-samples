@@ -73,7 +73,8 @@ def _audio_data_generator(buff):
         A chunk of data that is the aggregate of all chunks of data in `buff`.
         The function will block until at least one data chunk is available.
     """
-    while True:
+    stop = False
+    while not stop:
         # Use a blocking get() to ensure there's at least one chunk of data. 
         chunk = buff.get()
         data = [chunk]
@@ -84,6 +85,11 @@ def _audio_data_generator(buff):
                 data.append(buff.get(block=False))
             except queue.Empty:
                 break
+
+        # If the data contains None then set stop = True.
+        if None in data:
+            stop = True
+            data.remove(None)
         yield b''.join(data)
 
 
@@ -94,6 +100,8 @@ def _fill_buffer(audio_stream, buff, chunk, stoprequest):
             buff.put(audio_stream.read(chunk))
     except IOError:
         pass
+    finally:
+        buff.put(None)
 
 
 # [START audio_stream]
