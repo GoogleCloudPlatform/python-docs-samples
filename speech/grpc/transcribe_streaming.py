@@ -74,7 +74,7 @@ def _audio_data_generator(buff):
         The function will block until at least one data chunk is available.
     """
     while True:
-        # Use a blocking get() to ensure there's at least one chunk of data    
+        # Use a blocking get() to ensure there's at least one chunk of data. 
         chunk = buff.get()
         data = [chunk]
 
