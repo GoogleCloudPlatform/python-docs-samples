@@ -26,6 +26,10 @@ vm_health_check:
 manual_scaling:
     instances: 1
 
+resources:
+  cpu: .5
+  memory_gb: 0.18
+  disk_size_gb: 10
 
 # Temporary setting to keep gcloud from uploading the virtualenv
 skip_files:
