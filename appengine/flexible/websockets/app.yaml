@@ -9,6 +9,14 @@ entrypoint: gunicorn -b :$PORT -b :65080 -k flask_sockets.worker main:app
 runtime_config:
   python_version: 2
 
+manual_scaling:
+  instances: 1
+
+resources:
+  cpu: .5
+  memory_gb: 0.18
+  disk_size_gb: 10
+
 # [START network]
 network:
   forwarded_ports:
