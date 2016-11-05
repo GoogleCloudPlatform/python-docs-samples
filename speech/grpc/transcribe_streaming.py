@@ -64,7 +64,7 @@ def make_channel(host, port):
     return implementations.secure_channel(host, port, composite_channel)
 
 
-def _audio_data_generator(buff, stoprequest):
+def _audio_data_generator(buff):
     """A generator that yields all available data in the given buffer.
 
     Args:
@@ -73,12 +73,9 @@ def _audio_data_generator(buff, stoprequest):
         A chunk of data that is the aggregate of all chunks of data in `buff`.
         The function will block until at least one data chunk is available.
     """
-    while not stoprequest.is_set():
+    while True:
         # Use a blocking get() to ensure there's at least one chunk of data    
         chunk = buff.get()
-        if not chunk:
-            # A falsey value indicates the stream is closed.
-            break
         data = [chunk]
 
         # Now consume whatever other data's still buffered.
@@ -96,11 +93,7 @@ def _fill_buffer(audio_stream, buff, chunk, stoprequest):
         while not stoprequest.is_set():
             buff.put(audio_stream.read(chunk))
     except IOError:
-        # This happens when the stream is closed. Signal that we're done.
-        buff.put(None)
-
-    audio_stream.stop_stream()
-    audio_stream.close()
+        pass
 
 
 # [START audio_stream]
@@ -126,9 +119,10 @@ def record_audio(rate, chunk, stoprequest):
         target=_fill_buffer, args=(audio_stream, buff, chunk, stoprequest))
     fill_buffer_thread.start()
 
-    yield _audio_data_generator(buff, stoprequest)
+    yield _audio_data_generator(buff)
 
     fill_buffer_thread.join()
+    audio_stream.close()
     audio_interface.terminate()
 # [END audio_stream]
 
