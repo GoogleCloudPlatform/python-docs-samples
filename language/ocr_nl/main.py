@@ -113,12 +113,19 @@ class TextAnalyzer(object):
     """Construct and use the Google Natural Language API service."""
 
     def __init__(self, db_filename=None):
+        # TODO REMOVE - when discovery is public
+        DISCOVERY_URL = ('https://language.googleapis.com/$discovery/rest?'
+                         'version=v1&labels=GOOGLE_INTERNAL')
+
+
         credentials = GoogleCredentials.get_application_default()
         scoped_credentials = credentials.create_scoped(
-                ['https://www.googleapis.com/auth/cloud-platform'])
+            ['https://www.googleapis.com/auth/cloud-platform'])
         http = httplib2.Http()
         scoped_credentials.authorize(http)
-        self.service = discovery.build('language', 'v1beta1', http=http)
+        self.service = discovery.build('language', 'v1',
+                                     http=http,
+                                     discoveryServiceUrl=DISCOVERY_URL)
 
         # This list will store the entity information gleaned from the
         # image files.
