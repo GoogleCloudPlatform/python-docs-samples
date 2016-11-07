@@ -5,7 +5,7 @@ This sample demonstrates how to use Google App Engine's [Namespace Manager API](
 <!-- auto-doc-link -->
 These samples are used on the following documentation page:
 
-> https://cloud.google.com/appengine/docs/python/multitenancy/namespaces
+> https://cloud.google.com/appengine/docs/python/multitenancy/multitenancy
 
 <!-- end-auto-doc-link -->
 
