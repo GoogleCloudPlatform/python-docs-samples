@@ -75,7 +75,7 @@ def _audio_data_generator(buff):
     """
     stop = False
     while not stop:
-        # Use a blocking get() to ensure there's at least one chunk of data. 
+        # Use a blocking get() to ensure there's at least one chunk of data.
         chunk = buff.get()
         data = [chunk]
 
@@ -86,7 +86,7 @@ def _audio_data_generator(buff):
             except queue.Empty:
                 break
 
-        # If `_fill_buffer` adds `None` to the buffer, the audio stream is closed.
+        # If `_fill_buffer` adds `None` to the buffer, audio stream is closed.
         # Yield the final bit of the buffer and exit the loop.
         if None in data:
             stop = True
