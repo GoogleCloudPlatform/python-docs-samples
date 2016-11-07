@@ -86,8 +86,8 @@ def _audio_data_generator(buff):
             except queue.Empty:
                 break
 
-        # If `_fill_buffer` adds `None` to the buffer, audio stream is closed.
-        # Yield the final bit of the buffer and exit the loop.
+        # If `_fill_buffer` adds `None` to the buffer, the audio stream is
+        # closed. Yield the final bit of the buffer and exit the loop.
         if None in data:
             stop = True
             data.remove(None)
@@ -213,7 +213,7 @@ def listen_print_loop(recognize_stream, stoprequest):
 def main():
     with cloud_speech.beta_create_Speech_stub(
             make_channel('speech.googleapis.com', 443)) as service:
-        
+
         # stoprequest is event object which is set in `listen_print_loop`
         # to indicate that the trancsription should be stopped.
         #
