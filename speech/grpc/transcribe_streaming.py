@@ -86,7 +86,8 @@ def _audio_data_generator(buff):
             except queue.Empty:
                 break
 
-        # If the data contains None then set stop = True.
+        # If `_fill_buffer` adds `None` to the buffer, the audio stream is closed.
+        # Yield the final bit of the buffer and exit the loop.
         if None in data:
             stop = True
             data.remove(None)
@@ -101,6 +102,8 @@ def _fill_buffer(audio_stream, buff, chunk, stoprequest):
     except IOError:
         pass
     finally:
+        # Add `None` to the buff, indicating that a stop request is made.
+        # This will signal `_audio_data_generator` to exit.
         buff.put(None)
 
 
@@ -208,12 +211,14 @@ def listen_print_loop(recognize_stream, stoprequest):
 
 
 def main():
+    # For streaming audio from the microphone, there are three threads.
+    # First, a thread that collects audio data as it comes in
     with cloud_speech.beta_create_Speech_stub(
             make_channel('speech.googleapis.com', 443)) as service:
-        # For streaming audio from the microphone, there are three threads.
-        # First, a thread that collects audio data as it comes in
         
-        # stop request
+        # stoprequest is event object which is set in `listen_print_loop`.
+        # To indicate that the trancsription should be stopped.
+        # `_fill_buffer` checks and stops collecting data from audio_stream.
         stoprequest = threading.Event()
 
         with record_audio(RATE, CHUNK, stoprequest) as buffered_audio_data:
