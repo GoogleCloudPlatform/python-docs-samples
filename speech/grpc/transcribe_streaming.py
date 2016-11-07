@@ -211,16 +211,18 @@ def listen_print_loop(recognize_stream, stoprequest):
 
 
 def main():
-    # For streaming audio from the microphone, there are three threads.
-    # First, a thread that collects audio data as it comes in
     with cloud_speech.beta_create_Speech_stub(
             make_channel('speech.googleapis.com', 443)) as service:
         
-        # stoprequest is event object which is set in `listen_print_loop`.
-        # To indicate that the trancsription should be stopped.
-        # `_fill_buffer` checks and stops collecting data from audio_stream.
+        # stoprequest is event object which is set in `listen_print_loop`
+        # to indicate that the trancsription should be stopped.
+        #
+        # The `_fill_buffer` thread checks this object, and closes
+        # the `audio_stream` once it's set.
         stoprequest = threading.Event()
 
+        # For streaming audio from the microphone, there are three threads.
+        # First, a thread that collects audio data as it comes in
         with record_audio(RATE, CHUNK, stoprequest) as buffered_audio_data:
             # Second, a thread that sends requests with that data
             requests = request_stream(buffered_audio_data, RATE)
