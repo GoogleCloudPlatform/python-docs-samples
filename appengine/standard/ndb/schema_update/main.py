@@ -102,7 +102,8 @@ def update_schema_task(cursor=None, num_updated=0, batch_size=100):
 
     # Get all of the entities for this Model.
     query = models_v2.Picture.query()
-    pictures, cursor, more = query.fetch_page(batch_size, start_cursor=cursor)
+    pictures, next_cursor, more = query.fetch_page(
+        batch_size, start_cursor=cursor)
 
     to_put = []
     for picture in pictures:
@@ -124,7 +125,7 @@ def update_schema_task(cursor=None, num_updated=0, batch_size=100):
     # If there are more entities, re-queue this task for the next page.
     if more:
         deferred.defer(
-            update_schema_task, cursor=query.cursor(), num_updated=num_updated)
+            update_schema_task, cursor=next_cursor, num_updated=num_updated)
     else:
         logging.debug(
             'update_schema_task complete with {0} updates!'.format(
