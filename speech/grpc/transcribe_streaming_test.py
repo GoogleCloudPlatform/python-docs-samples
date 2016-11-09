@@ -12,6 +12,7 @@
 # limitations under the License.
 
 import re
+import threading
 import time
 
 import transcribe_streaming
@@ -24,12 +25,16 @@ class MockPyAudio(object):
     def __call__(self, *args):
         return self
 
-    def open(self, *args, **kwargs):
-        self.audio_file = open(self.audio_filename, 'rb')
+    def open(self, stream_callback, *args, **kwargs):
+        self.closed = threading.Event()
+        self.stream_thread = threading.Thread(
+            target=self.stream_audio, args=(
+                self.audio_filename, stream_callback, self.closed))
+        self.stream_thread.start()
         return self
 
     def close(self):
-        self.audio_file.close()
+        self.closed.set()
 
     def stop_stream(self):
         pass
@@ -37,21 +42,17 @@ class MockPyAudio(object):
     def terminate(self):
         pass
 
-    def read(self, num_frames):
-        if self.audio_file.closed:
-            raise IOError()
-        # Approximate realtime by sleeping for the appropriate time for the
-        # requested number of frames
-        time.sleep(num_frames / float(transcribe_streaming.RATE))
-        # audio is 16-bit samples, whereas python byte is 8-bit
-        num_bytes = 2 * num_frames
-        try:
-            chunk = self.audio_file.read(num_bytes)
-        except ValueError:
-            raise IOError()
-        if not chunk:
-            raise IOError()
-        return chunk
+    @staticmethod
+    def stream_audio(audio_filename, callback, closed, num_frames=512):
+        with open(audio_filename, 'rb') as audio_file:
+            while not closed.is_set():
+                # Approximate realtime by sleeping for the appropriate time for
+                # the requested number of frames
+                time.sleep(num_frames / float(transcribe_streaming.RATE))
+                # audio is 16-bit samples, whereas python byte is 8-bit
+                num_bytes = 2 * num_frames
+                chunk = audio_file.read(num_bytes) or b'\0' * num_bytes
+                callback(chunk, None, None, None)
 
 
 def test_main(resource, monkeypatch, capsys):
