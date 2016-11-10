@@ -34,12 +34,7 @@ redis_client = redis.StrictRedis(
 # [START example]
 @app.route('/')
 def index():
-    # Set initial value if necessary
-    if not redis_client.get('counter'):
-        redis_client.set('counter', 0)
-
     value = redis_client.incr('counter', 1)
-
     return 'Value is {}'.format(value)
 # [END example]
 
