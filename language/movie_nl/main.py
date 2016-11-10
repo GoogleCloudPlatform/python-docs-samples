@@ -281,7 +281,7 @@ def rank_entities(reader, sentiment=None, topn=None, reverse_bool=False):
 
 
 def get_service():
-    """"Build a client to the Google Cloud Natural Language API."""
+    """Build a client to the Google Cloud Natural Language API."""
 
     credentials = GoogleCredentials.get_application_default()
     scoped_credentials = credentials.create_scoped(
