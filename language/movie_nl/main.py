@@ -29,6 +29,7 @@ import requests
 DISCOVERY_URL = ('https://language.googleapis.com/$discovery/rest?'
                  'version=v1&labels=GOOGLE_INTERNAL')
 
+
 def analyze_document(service, document):
     """Analyze the document and get the distribution of sentiments and
     the movie name."""
