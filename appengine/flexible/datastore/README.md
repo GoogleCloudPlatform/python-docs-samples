@@ -14,7 +14,6 @@ When running locally, you can use the [Google Cloud SDK](https://cloud.google.co
 
     $ gcloud init
 
-Set the ``GCLOUD_PROJECT`` environment variable to your Project ID before starting your application:
+Starting your application:
 
-    $ export GCLOUD_PROJECT=[your-project-id]
     $ python main.py

@@ -36,7 +36,7 @@ def is_ipv6(addr):
 # [START example]
 @app.route('/')
 def index():
-    ds = datastore.Client(os.environ['GCLOUD_PROJECT'])
+    ds = datastore.Client()
 
     user_ip = request.remote_addr
 
