@@ -63,7 +63,7 @@ def list_languages_with_target(api_key, target):
         print(u'{name} ({language})'.format(**language))
 
 
-def translate_text(api_key, target, text):
+def translate_text(api_key, target, text, model='base'):
     """Translates text into the target language.
 
     Target must be an ISO 639-1 language code.
@@ -73,7 +73,9 @@ def translate_text(api_key, target, text):
 
     # Text can also be a sequence of strings, in which case this method
     # will return a sequence of results for each text.
-    result = translate_client.translate(text, target_language=target)
+    result = translate_client.translate(text,
+                                        target_language=target,
+                                        model=model)
 
     print(u'Text: {}'.format(result['input']))
     print(u'Translation: {}'.format(result['translatedText']))
@@ -103,6 +105,7 @@ if __name__ == '__main__':
         'translate-text', help=translate_text.__doc__)
     translate_text_parser.add_argument('target')
     translate_text_parser.add_argument('text')
+    translate_text_parser.add_argument('model')
 
     args = parser.parse_args()
 
@@ -113,4 +116,4 @@ if __name__ == '__main__':
     elif args.command == 'list-languages-with-target':
         list_languages_with_target(args.api_key, args.target)
     elif args.command == 'translate-text':
-        translate_text(args.api_key, args.target, args.text)
+        translate_text(args.api_key, args.target, args.text, args.model)
