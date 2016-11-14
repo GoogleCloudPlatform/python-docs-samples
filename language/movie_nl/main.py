@@ -25,10 +25,6 @@ import httplib2
 from oauth2client.client import GoogleCredentials
 import requests
 
-# TODO REMOVE - when discovery is public
-DISCOVERY_URL = ('https://language.googleapis.com/$discovery/rest?'
-                 'version=v1&labels=GOOGLE_INTERNAL')
-
 
 def analyze_document(service, document):
     """Analyze the document and get the distribution of sentiments and
@@ -290,7 +286,7 @@ def get_service():
     scoped_credentials.authorize(http)
     return discovery.build('language', 'v1',
                            http=http,
-                           discoveryServiceUrl=DISCOVERY_URL)
+                           credentials=credentials)
 
 
 def analyze(input_dir, sentiment_writer, entity_writer, sample, log_file):
