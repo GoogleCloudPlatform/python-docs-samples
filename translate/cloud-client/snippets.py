@@ -63,7 +63,7 @@ def list_languages_with_target(api_key, target):
         print(u'{name} ({language})'.format(**language))
 
 
-def translate_text(api_key, target, text, model='base'):
+def translate_text(api_key, target, text, model=translate.BASE):
     """Translates text into the target language.
 
     Target must be an ISO 639-1 language code.
