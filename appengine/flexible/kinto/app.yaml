@@ -16,7 +16,7 @@
 # See https://cloud.google.com/appengine/docs/flexible/python/configuring-your-app-with-app-yaml
 
 runtime: custom
-vm: true
+env: flex
 
 # Kinto does not respond 404 to /_ah/health (sends a redirect)
 vm_health_check:

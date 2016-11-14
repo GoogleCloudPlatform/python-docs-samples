@@ -1,5 +1,5 @@
 runtime: python
-vm: true
+env: flex
 entrypoint: gunicorn -b :$PORT main:app
 
 runtime_config:
@@ -7,7 +7,6 @@ runtime_config:
 
 #[START env]
 env_variables:
-    GCLOUD_PROJECT: your-project-id
     PUBSUB_TOPIC: your-topic
     # This token is used to verify that requests originate from your
     # application. It can be any sufficiently random string.

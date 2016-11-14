@@ -35,7 +35,6 @@ Install dependencies, preferably with a virtualenv:
 
 Then set environment variables before starting your application:
 
-    $ export GCLOUD_PROJECT=[your-project-id]
     $ export PUBSUB_VERIFICATION_TOKEN=[your-verification-token]
     $ export PUBSUB_TOPIC=[your-topic]
     $ python main.py

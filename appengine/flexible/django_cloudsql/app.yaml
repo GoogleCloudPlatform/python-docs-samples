@@ -1,6 +1,6 @@
 # [START runtime]
 runtime: python
-vm: true
+env: flex
 entrypoint: gunicorn -b :$PORT mysite.wsgi
 
 beta_settings:

@@ -28,6 +28,5 @@ When running locally, you can use the [Google Cloud SDK](https://cloud.google.co
 
 Then set environment variables before starting your application:
 
-    $ export GCLOUD_PROJECT=[your-project-id]
     $ export CLOUD_STORAGE_BUCKET=[your-bucket-name]
     $ python main.py
