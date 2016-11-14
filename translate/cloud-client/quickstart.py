@@ -35,9 +35,10 @@ def run_quickstart():
     model = 'base'
 
     # Translates some text into Russian
-    translation = translate_client.translate(text,
-                                             target_language=target,
-                                             model=model)
+    translation = translate_client.translate(
+        text,
+        target_language=target,
+        model=model)
 
     print(u'Text: {}'.format(text))
     print(u'Translation: {}'.format(translation['translatedText']))
