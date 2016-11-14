@@ -1,2 +1,2 @@
 runtime: custom
-vm: true
+env: flex

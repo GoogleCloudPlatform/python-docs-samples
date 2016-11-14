@@ -1,6 +1,18 @@
 runtime: python
-vm: true
+env: flex
 entrypoint: gunicorn -b :$PORT main:app
 
 runtime_config:
   python_version: 3
+
+# [START env_variables]
+env_variables:
+  # If you are using the App Engine Memcache service (currently in alpha),
+  # uncomment this section and comment out the other Memcache variables.
+  # USE_GAE_MEMCACHE: 1
+  MEMCACHE_SERVER: your-memcache-server
+  # If you are using a Memcached server with SASL authentiation enabled,
+  # fill in these values with your username and password.
+  MEMCACHE_USERNAME: your-memcache-username
+  MEMCACHE_PASSWORD: your-memcache-password
+# [END env_variables]
