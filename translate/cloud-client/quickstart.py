@@ -24,7 +24,7 @@ def run_quickstart():
     api_key = 'YOUR_API_KEY'
 
     # Instantiates a client
-    translate_client = translate.Client(api_key)
+    translate_client = translate.Client(api_key=api_key)
 
     # The text to translate
     text = u'Hello, world!'

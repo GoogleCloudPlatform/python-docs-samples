@@ -73,9 +73,10 @@ def translate_text(api_key, target, text, model='base'):
 
     # Text can also be a sequence of strings, in which case this method
     # will return a sequence of results for each text.
-    result = translate_client.translate(text,
-                                        target_language=target,
-                                        model=model)
+    result = translate_client.translate(
+        text,
+        target_language=target,
+        model=model)
 
     print(u'Text: {}'.format(result['input']))
     print(u'Translation: {}'.format(result['translatedText']))
