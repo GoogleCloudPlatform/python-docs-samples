@@ -25,21 +25,15 @@ import httplib2
 from oauth2client.client import GoogleCredentials
 
 
-# TODO REMOVE - when discovery is public
-DISCOVERY_URL = ('https://language.googleapis.com/$discovery/rest?'
-                 'version=v1&labels=GOOGLE_INTERNAL')
-
-
 def get_service():
     credentials = GoogleCredentials.get_application_default()
     scoped_credentials = credentials.create_scoped(
         ['https://www.googleapis.com/auth/cloud-platform'])
     http = httplib2.Http()
     scoped_credentials.authorize(http)
-    # TODO Change to credentials=credentials
     return discovery.build('language', 'v1',
                            http=http,
-                           discoveryServiceUrl=DISCOVERY_URL)
+                           credentials=credentials)
 
 
 def get_native_encoding_type():
