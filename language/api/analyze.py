@@ -21,18 +21,12 @@ import json
 import sys
 
 from googleapiclient import discovery
-import httplib2
 from oauth2client.client import GoogleCredentials
 
 
 def get_service():
     credentials = GoogleCredentials.get_application_default()
-    scoped_credentials = credentials.create_scoped(
-        ['https://www.googleapis.com/auth/cloud-platform'])
-    http = httplib2.Http()
-    scoped_credentials.authorize(http)
     return discovery.build('language', 'v1',
-                           http=http,
                            credentials=credentials)
 
 
