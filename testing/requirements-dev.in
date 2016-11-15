@@ -6,7 +6,7 @@ mock==2.0.0
 mysql-python==1.2.5
 PyCrypto==2.6.1
 pytest-cov==2.4.0
-pytest==3.0.3
+pytest==3.0.4
 pyyaml==3.12
 responses==0.5.1
 WebTest==2.0.23
