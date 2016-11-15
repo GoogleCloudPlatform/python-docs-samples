@@ -21,7 +21,6 @@ import os
 
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
-import httplib2
 from oauth2client.client import GoogleCredentials
 import requests
 
@@ -280,12 +279,7 @@ def get_service():
     """Build a client to the Google Cloud Natural Language API."""
 
     credentials = GoogleCredentials.get_application_default()
-    scoped_credentials = credentials.create_scoped(
-          ['https://www.googleapis.com/auth/cloud-platform'])
-    http = httplib2.Http()
-    scoped_credentials.authorize(http)
     return discovery.build('language', 'v1',
-                           http=http,
                            credentials=credentials)
 
 
