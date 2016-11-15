@@ -23,13 +23,7 @@ def list_sinks():
     """Lists all sinks."""
     logging_client = logging.Client()
 
-    sinks = []
-    token = None
-    while True:
-        new_sinks, token = logging_client.list_sinks(page_token=token)
-        sinks.extend(new_sinks)
-        if token is None:
-            break
+    sinks = list(logging_client.list_sinks())
 
     if not sinks:
         print('No sinks.')

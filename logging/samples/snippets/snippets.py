@@ -56,16 +56,7 @@ def list_entries(logger_name):
 
     print('Listing entries for logger {}:'.format(logger.name))
 
-    entries = []
-    page_token = None
-
-    while True:
-        new_entries, page_token = logger.list_entries(page_token=page_token)
-        entries.extend(new_entries)
-        if not page_token:
-            break
-
-    for entry in entries:
+    for entry in logger.list_entries():
         timestamp = entry.timestamp.isoformat()
         print('* {}: {}'.format
               (timestamp, entry.payload))
