@@ -72,7 +72,7 @@ def test_process_movie_reviews():
     assert sentiments[0].get('sentiment') == 0.9
     assert sentiments[0].get('label') == 1
 
-    assert sentiments[1].get('sentiment') == 0.8
+    assert sentiments[1].get('sentiment') == 0.9
     assert sentiments[1].get('label') == 1
 
     # assert entities
