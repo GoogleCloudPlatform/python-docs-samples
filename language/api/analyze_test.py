@@ -33,7 +33,7 @@ def test_analyze_sentiment(capsys):
         'your face is really ugly and i hate it.')
 
     sentiment = result['documentSentiment']
-    assert sentiment['polarity'] < 0
+    assert sentiment['score'] < 0
     assert sentiment['magnitude'] < 1
 
     result = analyze.analyze_sentiment(
@@ -41,7 +41,7 @@ def test_analyze_sentiment(capsys):
         'angle of repose leaves little room for improvement.')
 
     sentiment = result['documentSentiment']
-    assert sentiment['polarity'] > 0
+    assert sentiment['score'] > 0
     assert sentiment['magnitude'] < 1
 
 
