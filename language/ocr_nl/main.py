@@ -115,10 +115,12 @@ class TextAnalyzer(object):
     def __init__(self, db_filename=None):
         credentials = GoogleCredentials.get_application_default()
         scoped_credentials = credentials.create_scoped(
-                ['https://www.googleapis.com/auth/cloud-platform'])
+            ['https://www.googleapis.com/auth/cloud-platform'])
         http = httplib2.Http()
         scoped_credentials.authorize(http)
-        self.service = discovery.build('language', 'v1beta1', http=http)
+        self.service = discovery.build('language', 'v1',
+                                       http=http,
+                                       credentials=credentials)
 
         # This list will store the entity information gleaned from the
         # image files.

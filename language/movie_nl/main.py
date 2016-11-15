@@ -21,6 +21,7 @@ import os
 
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
+import httplib2
 from oauth2client.client import GoogleCredentials
 import requests
 
@@ -30,10 +31,7 @@ def analyze_document(service, document):
     the movie name."""
     logging.info('Analyzing {}'.format(document.doc_id))
 
-    sentences, entities = document.extract_all_sentences(service)
-
-    sentiments = [get_sentiment(service, sentence) for sentence in sentences]
-
+    sentiments, entities = document.extract_sentiment_entities(service)
     return sentiments, entities
 
 
@@ -56,29 +54,6 @@ def get_request_body(text, syntax=True, entities=True, sentiment=True):
     return body
 
 
-def get_sentiment(service, sentence):
-    """Get the sentence-level sentiment."""
-    body = get_request_body(
-        sentence, syntax=False, entities=True, sentiment=True)
-
-    docs = service.documents()
-    request = docs.annotateText(body=body)
-
-    response = request.execute(num_retries=3)
-
-    sentiment = response.get('documentSentiment')
-
-    if sentiment is None:
-        return (None, None)
-    else:
-        pol = sentiment.get('polarity')
-        mag = sentiment.get('magnitude')
-
-    if pol is None and mag is not None:
-        pol = 0
-    return (pol, mag)
-
-
 class Document(object):
     """Document class captures a single document of movie reviews."""
 
@@ -86,32 +61,28 @@ class Document(object):
         self.text = text
         self.doc_id = doc_id
         self.doc_path = doc_path
-        self.sentence_entity_pair = None
+        self.sentiment_entity_pair = None
         self.label = None
 
-    def extract_all_sentences(self, service):
+    def extract_sentiment_entities(self, service):
         """Extract the sentences in a document."""
 
-        if self.sentence_entity_pair is not None:
+        if self.sentiment_entity_pair is not None:
             return self.sentence_entity_pair
 
         docs = service.documents()
         request_body = get_request_body(
             self.text,
-            syntax=True,
+            syntax=False,
             entities=True,
-            sentiment=False)
+            sentiment=True)
         request = docs.annotateText(body=request_body)
 
         ent_list = []
 
         response = request.execute()
         entities = response.get('entities', [])
-        sentences = response.get('sentences', [])
-
-        sent_list = [
-            sentence.get('text', {}).get('content') for sentence in sentences
-        ]
+        documentSentiment = response.get('documentSentiment', {})
 
         for entity in entities:
             ent_type = entity.get('type')
@@ -120,9 +91,9 @@ class Document(object):
             if ent_type == 'PERSON' and wiki_url is not None:
                 ent_list.append(wiki_url)
 
-        self.sentence_entity_pair = (sent_list, ent_list)
+        self.sentiment_entity_pair = (documentSentiment, ent_list)
 
-        return self.sentence_entity_pair
+        return self.sentiment_entity_pair
 
 
 def to_sentiment_json(doc_id, sent, label):
@@ -200,18 +171,9 @@ def get_sentiment_entities(service, document):
     """
 
     sentiments, entities = analyze_document(service, document)
+    score = sentiments.get('score')
 
-    sentiments = [sent for sent in sentiments if sent[0] is not None]
-    negative_sentiments = [
-        polarity for polarity, magnitude in sentiments if polarity < 0.0]
-    positive_sentiments = [
-        polarity for polarity, magnitude in sentiments if polarity > 0.0]
-
-    negative = sum(negative_sentiments)
-    positive = sum(positive_sentiments)
-    total = positive + negative
-
-    return (total, entities)
+    return (score, entities)
 
 
 def get_sentiment_label(sentiment):
@@ -318,8 +280,12 @@ def get_service():
     """Build a client to the Google Cloud Natural Language API."""
 
     credentials = GoogleCredentials.get_application_default()
-
-    return discovery.build('language', 'v1beta1',
+    scoped_credentials = credentials.create_scoped(
+          ['https://www.googleapis.com/auth/cloud-platform'])
+    http = httplib2.Http()
+    scoped_credentials.authorize(http)
+    return discovery.build('language', 'v1',
+                           http=http,
                            credentials=credentials)
 
 

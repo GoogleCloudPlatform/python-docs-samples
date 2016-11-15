@@ -22,7 +22,7 @@ def main(movie_review_filename):
     '''Run a sentiment analysis request on text within a passed filename.'''
 
     credentials = GoogleCredentials.get_application_default()
-    service = discovery.build('language', 'v1beta1', credentials=credentials)
+    service = discovery.build('language', 'v1', credentials=credentials)
 
     with open(movie_review_filename, 'r') as review_file:
         service_request = service.documents().analyzeSentiment(
@@ -35,11 +35,23 @@ def main(movie_review_filename):
         )
         response = service_request.execute()
 
-    polarity = response['documentSentiment']['polarity']
+    score = response['documentSentiment']['score']
     magnitude = response['documentSentiment']['magnitude']
 
-    print('Sentiment: polarity of {} with magnitude of {}'.format(
-        polarity, magnitude))
+    for i, sentence in enumerate(response['sentences']):
+        sentence_sentiment = sentence['sentiment']['score']
+        print('Sentence {} has a sentiment score of {}'.format(
+          i,
+          sentence_sentiment))
+
+    print('Overall Sentiment: score of {} with magnitude of {}'.format(
+      score,
+      magnitude)
+      )
+    return 0
+
+    print('Sentiment: score of {} with magnitude of {}'.format(
+        score, magnitude))
     return 0
 
 
