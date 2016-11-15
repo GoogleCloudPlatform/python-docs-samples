@@ -27,7 +27,7 @@ def run_quickstart():
     translate_client = translate.Client(api_key=api_key)
 
     # The text to translate
-    text = u'Hello, world!'
+    text = u'Hello, world'
     # The target language
     target = 'ru'
 
