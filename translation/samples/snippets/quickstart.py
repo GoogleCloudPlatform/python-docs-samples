@@ -31,14 +31,10 @@ def run_quickstart():
     # The target language
     target = 'ru'
 
-    # MT model type `base` or `nmt`
-    model = translate.BASE
-
     # Translates some text into Russian
     translation = translate_client.translate(
         text,
-        target_language=target,
-        model=model)
+        target_language=target)
 
     print(u'Text: {}'.format(text))
     print(u'Translation: {}'.format(translation['translatedText']))
