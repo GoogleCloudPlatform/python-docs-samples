@@ -30,6 +30,7 @@ class MainPage(webapp2.RequestHandler):
         value = memcache.get('example_key')
         self.response.write('Value is: {}'.format(value))
 
+
 app = webapp2.WSGIApplication([
     ('/', MainPage)
 ], debug=True)

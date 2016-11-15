@@ -1,1 +1,1 @@
-google-cloud-dns==0.20.0
+google-cloud-dns==0.21.0

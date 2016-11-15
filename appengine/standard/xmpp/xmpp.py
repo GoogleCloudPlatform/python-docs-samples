@@ -93,6 +93,7 @@ class XMPPHandler(webapp2.RequestHandler):
             message.reply("Greetings!")
 # [END chat]
 
+
 app = webapp2.WSGIApplication([
     ('/_ah/xmpp/message/chat/', XMPPHandler),
     ('/_ah/xmpp/subscribe', SubscribeHandler),

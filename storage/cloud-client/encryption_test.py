@@ -49,9 +49,8 @@ def test_blob(cloud_config):
     bucket = storage.Client().bucket(cloud_config.storage_bucket)
     blob = bucket.blob('encryption_test_sigil')
     content = 'Hello, is it me you\'re looking for?'
-    blob.upload_from_string(
-        content,
-        encryption_key=TEST_ENCRYPTION_KEY_DECODED)
+    blob.encryption_key = TEST_ENCRYPTION_KEY_DECODED
+    blob.upload_from_string(content)
     return blob.name, content
 
 

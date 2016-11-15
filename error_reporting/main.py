@@ -37,5 +37,6 @@ def simulate_error():
         report(traceback.format_exc())
 # [END error_reporting]
 
+
 if __name__ == '__main__':
     simulate_error()

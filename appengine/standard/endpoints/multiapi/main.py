@@ -49,6 +49,7 @@ class Books(remote.Service):
 # [END books]
 # [END multiclass]
 
+
 # [START api_server]
 api = endpoints.api_server([api_collection])
 # [END api_server]

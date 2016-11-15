@@ -1,2 +1,2 @@
 google-api-python-client==1.5.5
-requests==2.11.1
+requests==2.12.0
