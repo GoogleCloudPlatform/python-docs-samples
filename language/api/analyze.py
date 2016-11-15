@@ -31,7 +31,9 @@ def get_service():
         ['https://www.googleapis.com/auth/cloud-platform'])
     http = httplib2.Http()
     scoped_credentials.authorize(http)
-    return discovery.build('language', 'v1beta1', http=http)
+    return discovery.build('language', 'v1',
+                           http=http,
+                           credentials=credentials)
 
 
 def get_native_encoding_type():
@@ -48,7 +50,7 @@ def analyze_entities(text, encoding='UTF32'):
             'type': 'PLAIN_TEXT',
             'content': text,
         },
-        'encodingType': encoding,
+        'encoding_type': encoding,
     }
 
     service = get_service()
@@ -59,12 +61,13 @@ def analyze_entities(text, encoding='UTF32'):
     return response
 
 
-def analyze_sentiment(text):
+def analyze_sentiment(text, encoding='UTF32'):
     body = {
         'document': {
             'type': 'PLAIN_TEXT',
             'content': text,
-        }
+        },
+        'encoding_type': encoding
     }
 
     service = get_service()
@@ -81,15 +84,12 @@ def analyze_syntax(text, encoding='UTF32'):
             'type': 'PLAIN_TEXT',
             'content': text,
         },
-        'features': {
-            'extract_syntax': True,
-        },
-        'encodingType': encoding,
+        'encoding_type': encoding
     }
 
     service = get_service()
 
-    request = service.documents().annotateText(body=body)
+    request = service.documents().analyzeSyntax(body=body)
     response = request.execute()
 
     return response
@@ -108,7 +108,7 @@ if __name__ == '__main__':
     if args.command == 'entities':
         result = analyze_entities(args.text, get_native_encoding_type())
     elif args.command == 'sentiment':
-        result = analyze_sentiment(args.text)
+        result = analyze_sentiment(args.text, get_native_encoding_type())
     elif args.command == 'syntax':
         result = analyze_syntax(args.text, get_native_encoding_type())
 
