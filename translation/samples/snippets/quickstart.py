@@ -24,15 +24,21 @@ def run_quickstart():
     api_key = 'YOUR_API_KEY'
 
     # Instantiates a client
-    translate_client = translate.Client(api_key)
+    translate_client = translate.Client(api_key=api_key)
 
     # The text to translate
     text = u'Hello, world!'
     # The target language
     target = 'ru'
 
+    # MT model type `base` or `nmt`
+    model = translate.BASE
+
     # Translates some text into Russian
-    translation = translate_client.translate(text, target_language=target)
+    translation = translate_client.translate(
+        text,
+        target_language=target,
+        model=model)
 
     print(u'Text: {}'.format(text))
     print(u'Translation: {}'.format(translation['translatedText']))
