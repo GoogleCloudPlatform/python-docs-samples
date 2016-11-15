@@ -40,7 +40,9 @@ def main(movie_review_filename):
 
     for i, sentence in enumerate(response['sentences']):
         sentence_sentiment = sentence['sentiment']['score']
-        print('Sentence {} has a sentiment score of {}'.format(i, sentence_sentiment))
+        print('Sentence {} has a sentiment score of {}'.format(
+          i,
+          sentence_sentiment))
 
     print('Overall Sentiment: score of {} with magnitude of {}'.format(
       score,
