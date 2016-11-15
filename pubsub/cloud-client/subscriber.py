@@ -31,15 +31,7 @@ def list_subscriptions(topic_name):
     pubsub_client = pubsub.Client()
     topic = pubsub_client.topic(topic_name)
 
-    subscriptions = []
-    next_page_token = None
-    while True:
-        page, next_page_token = topic.list_subscriptions()
-        subscriptions.extend(page)
-        if not next_page_token:
-            break
-
-    for subscription in subscriptions:
+    for subscription in topic.list_subscriptions():
         print(subscription.name)
 
 

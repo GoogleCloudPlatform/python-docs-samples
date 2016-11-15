@@ -30,15 +30,7 @@ def list_topics():
     """Lists all Pub/Sub topics in the current project."""
     pubsub_client = pubsub.Client()
 
-    topics = []
-    next_page_token = None
-    while True:
-        page, next_page_token = pubsub_client.list_topics()
-        topics.extend(page)
-        if not next_page_token:
-            break
-
-    for topic in topics:
+    for topic in pubsub_client.list_topics():
         print(topic.name)
 
 
