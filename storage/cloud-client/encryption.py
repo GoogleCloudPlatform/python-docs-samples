@@ -62,10 +62,9 @@ def upload_encrypted_blob(bucket_name, source_file_name,
     # Encryption key must be an AES256 key represented as a bytestring with
     # 32 bytes. Since it's passed in as a base64 encoded string, it needs
     # to be decoded.
-    encryption_key = base64.b64decode(base64_encryption_key)
+    blob.encryption_key = base64.b64decode(base64_encryption_key)
 
-    blob.upload_from_filename(
-        source_file_name, encryption_key=encryption_key)
+    blob.upload_from_filename(source_file_name)
 
     print('File {} uploaded to {}.'.format(
         source_file_name,
@@ -86,10 +85,9 @@ def download_encrypted_blob(bucket_name, source_blob_name,
     # Encryption key must be an AES256 key represented as a bytestring with
     # 32 bytes. Since it's passed in as a base64 encoded string, it needs
     # to be decoded.
-    encryption_key = base64.b64decode(base64_encryption_key)
+    blob.encryption_key = base64.b64decode(base64_encryption_key)
 
-    blob.download_to_filename(
-        destination_file_name, encryption_key=encryption_key)
+    blob.download_to_filename(destination_file_name)
 
     print('Blob {} downloaded to {}.'.format(
         source_blob_name,

@@ -78,6 +78,7 @@ def main(speech_file):
     print(json.dumps(response))
     # [END send_request]
 
+
 # [START run_application]
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

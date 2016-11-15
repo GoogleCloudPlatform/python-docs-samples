@@ -35,18 +35,7 @@ import google.cloud.bigquery.job
 def list_projects():
     bigquery_client = bigquery.Client()
 
-    projects = []
-    page_token = None
-
-    while True:
-        results, page_token = bigquery_client.list_projects(
-            page_token=page_token)
-        projects.extend(results)
-
-        if not page_token:
-            break
-
-    for project in projects:
+    for project in bigquery_client.list_projects():
         print(project.project_id)
 
 
@@ -57,18 +46,7 @@ def list_datasets(project=None):
     """
     bigquery_client = bigquery.Client(project=project)
 
-    datasets = []
-    page_token = None
-
-    while True:
-        results, page_token = bigquery_client.list_datasets(
-            page_token=page_token)
-        datasets.extend(results)
-
-        if not page_token:
-            break
-
-    for dataset in datasets:
+    for dataset in bigquery_client.list_datasets():
         print(dataset.name)
 
 
@@ -98,17 +76,7 @@ def list_tables(dataset_name, project=None):
         print('Dataset {} does not exist.'.format(dataset_name))
         return
 
-    tables = []
-    page_token = None
-
-    while True:
-        results, page_token = dataset.list_tables(page_token=page_token)
-        tables.extend(results)
-
-        if not page_token:
-            break
-
-    for table in tables:
+    for table in dataset.list_tables():
         print(table.name)
 
 
@@ -157,19 +125,10 @@ def list_rows(dataset_name, table_name, project=None):
     # Reload the table so that the schema is available.
     table.reload()
 
-    rows = []
-    page_token = None
-
-    # Load at most 25 results. You can change this to `while True` and change
-    # the max_results argument to load more rows from BigQuery, but note
-    # that this can take some time. It's preferred to use a query.
-    while len(rows) < 25:
-        results, total_rows, page_token = table.fetch_data(
-            max_results=25, page_token=page_token)
-        rows.extend(results)
-
-        if not page_token:
-            break
+    # Load at most 25 results. You can change the max_results argument to load
+    # more rows from BigQuery, but note that this can take some time. It's
+    # preferred to use a query.
+    rows = list(table.fetch_data(max_results=25))
 
     # Use format to create a simple table.
     format_string = '{!s:<16} ' * len(table.schema)

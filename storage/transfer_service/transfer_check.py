@@ -50,6 +50,7 @@ def main(project_id, job_name):
         json.dumps(result, indent=4, sort_keys=True)))
 # [END main]
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,

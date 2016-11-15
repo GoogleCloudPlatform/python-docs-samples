@@ -110,6 +110,7 @@ def main(project_id, dataset_id, table_name, schema_path, data_path):
         table_name)
 # [END main]
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,

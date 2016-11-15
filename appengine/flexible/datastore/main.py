@@ -14,7 +14,6 @@
 
 import datetime
 import logging
-import os
 import socket
 
 from flask import Flask, request

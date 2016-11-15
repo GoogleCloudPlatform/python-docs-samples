@@ -29,7 +29,7 @@ def client(cloud_config):
     yield client
 
     # Delete anything created during the test.
-    for zone in client.list_zones()[0]:
+    for zone in client.list_zones():
         zone.delete()
 
 

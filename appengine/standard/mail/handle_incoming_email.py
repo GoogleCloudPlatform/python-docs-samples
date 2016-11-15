@@ -36,6 +36,7 @@ class LogSenderHandler(InboundMailHandler):
             plaintext = body.decode()
             logging.info("Plain text body of length %d.", len(plaintext))
 
+
 # [START app]
 app = webapp2.WSGIApplication([LogSenderHandler.mapping()], debug=True)
 # [END app]
