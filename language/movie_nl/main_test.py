@@ -80,7 +80,7 @@ def test_process_movie_reviews():
     assert entities[0].get('name') == 'Tom Cruise'
     assert (entities[0].get('wiki_url') ==
             'http://en.wikipedia.org/wiki/Tom_Cruise')
-    assert entities[0].get('sentiment') == 1.7
+    assert entities[0].get('sentiment') == 1.8
 
 
 def test_rank_positive_entities(capsys):
