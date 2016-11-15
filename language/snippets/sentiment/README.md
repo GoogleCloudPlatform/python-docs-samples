@@ -44,5 +44,5 @@ pass your own text files.)
 
 ```
 (env)$ python sentiment_analysis.py textfile.txt
-Sentiment: polarity of -0.1 with magnitude of 6.7
+Sentiment: score of -0.1 with magnitude of 6.7
 ```
