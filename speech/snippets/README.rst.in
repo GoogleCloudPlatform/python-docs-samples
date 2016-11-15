@@ -1,0 +1,20 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Speech API
+  short_name: Cloud Speech API
+  url: https://cloud.google.com/speech/docs/
+  description: >
+    The `Google Cloud Speech API`_ enables easy integration of Google speech
+    recognition technologies into developer applications. Send audio and receive
+    a text transcription from the Cloud Speech API service.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Quickstart
+  file: quickstart.py
+
+cloud_client_library: true
