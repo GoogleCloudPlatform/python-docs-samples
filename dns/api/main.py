@@ -45,7 +45,7 @@ def get_zone(project_id, name):
 # [START list_zones]
 def list_zones(project_id):
     client = dns.Client(project=project_id)
-    zones, _ = client.list_zones()
+    zones = client.list_zones()
     return [zone.name for zone in zones]
 # [END list_zones]
 
@@ -63,11 +63,7 @@ def list_resource_records(project_id, zone_name):
     client = dns.Client(project=project_id)
     zone = client.zone(zone_name)
 
-    records, page_token = zone.list_resource_record_sets()
-    while page_token is not None:
-        next_batch, page_token = zone.list_resource_record_sets(
-            page_token=page_token)
-        records.extend(next_batch)
+    records = zone.list_resource_record_sets()
 
     return [(record.name, record.record_type, record.ttl, record.rrdatas)
             for record in records]
@@ -79,7 +75,7 @@ def list_changes(project_id, zone_name):
     client = dns.Client(project=project_id)
     zone = client.zone(zone_name)
 
-    changes, _ = zone.list_changes()
+    changes = zone.list_changes()
 
     return [(change.started, change.status) for change in changes]
 # [END changes]
