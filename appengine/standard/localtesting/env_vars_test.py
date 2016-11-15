@@ -36,5 +36,6 @@ class EnvVarsTestCase(unittest.TestCase):
         self.assertEqual(os.environ['MY_CONFIG_SETTING'], 'example')
 # [END env_example]
 
+
 if __name__ == '__main__':
     unittest.main()

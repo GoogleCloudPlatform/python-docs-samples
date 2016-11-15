@@ -85,5 +85,6 @@ class TaskQueueTestCase(unittest.TestCase):
         self.assertEqual(result, 3)
     # [END deferred]
 
+
 if __name__ == '__main__':
     unittest.main()

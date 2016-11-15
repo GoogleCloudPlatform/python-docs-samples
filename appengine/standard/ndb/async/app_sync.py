@@ -31,4 +31,5 @@ class MyRequestHandler(webapp2.RequestHandler):
 
         self.response.out.write('Content of the page')
 
+
 app = webapp2.WSGIApplication([('/', MyRequestHandler)])

@@ -61,5 +61,6 @@ def main():
     with io.open(destination, 'w') as f:
         f.write(output)
 
+
 if __name__ == '__main__':
     main()

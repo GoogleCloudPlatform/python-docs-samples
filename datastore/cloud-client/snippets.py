@@ -365,9 +365,9 @@ def cursor_paging(client):
         page = next(query_iter.pages)
 
         tasks = list(page)
-        next_cusor = query_iter.next_page_token
+        next_cursor = query_iter.next_page_token
 
-        return tasks, next_cusor
+        return tasks, next_cursor
     # [END cursor_paging]
 
     page_one, cursor_one = get_one_page_of_tasks()

@@ -67,6 +67,7 @@ def main(project_id):
     list_datasets(bigquery, project_id)
     list_projects(bigquery)
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,

@@ -64,6 +64,7 @@ def main(photo_file):
         print('Found label: %s for %s' % (label, photo_file))
         # [END parse_response]
 
+
 # [START run_application]
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
