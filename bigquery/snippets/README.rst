@@ -150,7 +150,7 @@ To run this sample:
     $ python snippets.py
 
     usage: snippets.py [-h] [--project PROJECT]
-                       {list-datasets,list-tables,create-table,list-rows,copy-table,delete-table}
+                       {list-projects,list-datasets,list-tables,create-table,list-rows,copy-table,delete-table}
                        ...
     
     Samples that demonstrate basic operations in the BigQuery API.
@@ -163,10 +163,14 @@ To run this sample:
     The dataset and table should already exist.
     
     positional arguments:
-      {list-datasets,list-tables,create-table,list-rows,copy-table,delete-table}
+      {list-projects,list-datasets,list-tables,create-table,list-rows,copy-table,delete-table}
+        list-projects
         list-datasets       Lists all datasets in a given project. If no project
                             is specified, then the currently active project is
-                            used
+                            used.
+        list-datasets       Lists all datasets in a given project. If no project
+                            is specified, then the currently active project is
+                            used.
         list-tables         Lists all of the tables in a given dataset. If no
                             project is specified, then the currently active
                             project is used.
