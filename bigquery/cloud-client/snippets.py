@@ -128,7 +128,7 @@ def list_rows(dataset_name, table_name, project=None):
     # Load at most 25 results. You can change the max_results argument to load
     # more rows from BigQuery, but note that this can take some time. It's
     # preferred to use a query.
-    rows = table.fetch_data(max_results=25)
+    rows = list(table.fetch_data(max_results=25))
 
     # Use format to create a simple table.
     format_string = '{!s:<16} ' * len(table.schema)
