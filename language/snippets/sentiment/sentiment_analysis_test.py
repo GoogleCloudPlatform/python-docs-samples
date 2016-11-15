@@ -18,25 +18,25 @@ from sentiment_analysis import main
 def test_pos(resource, capsys):
     main(resource('pos.txt'))
     out, err = capsys.readouterr()
-    polarity = float(re.search('polarity of (.+?) with', out).group(1))
+    score = float(re.search('score of (.+?) with', out).group(1))
     magnitude = float(re.search('magnitude of (.+?)', out).group(1))
-    assert polarity * magnitude > 0
+    assert score * magnitude > 0
 
 
 def test_neg(resource, capsys):
     main(resource('neg.txt'))
     out, err = capsys.readouterr()
-    polarity = float(re.search('polarity of (.+?) with', out).group(1))
+    score = float(re.search('score of (.+?) with', out).group(1))
     magnitude = float(re.search('magnitude of (.+?)', out).group(1))
-    assert polarity * magnitude < 0
+    assert score * magnitude < 0
 
 
 def test_mixed(resource, capsys):
     main(resource('mixed.txt'))
     out, err = capsys.readouterr()
-    polarity = float(re.search('polarity of (.+?) with', out).group(1))
-    assert polarity <= 0.3
-    assert polarity >= -0.3
+    score = float(re.search('score of (.+?) with', out).group(1))
+    assert score <= 0.3
+    assert score >= -0.3
 
 
 def test_neutral(resource, capsys):
