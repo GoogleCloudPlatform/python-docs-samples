@@ -173,7 +173,7 @@ def run_tests_in_sesssion(
 
     pytest_args = COMMON_PYTEST_ARGS[:]
 
-    if skip_flaky:
+    if skip_flaky or True:
         pytest_args.append('-m not slow and not flaky')
 
     for sample in sample_directories:
