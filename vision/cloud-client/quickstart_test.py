@@ -12,17 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
-import six
-
 import quickstart
 
 
-@pytest.mark.xfail(
-    six.PY3,
-    strict=True,
-    reason='https://github.com/GoogleCloudPlatform/google-cloud-python/issues'
-           '/2525')
 def test_quickstart(capsys):
     quickstart.run_quickstart()
     out, _ = capsys.readouterr()
