@@ -668,8 +668,11 @@ def transactional_update(client):
     for _ in range(5):
         try:
             transfer_funds(client, account1.key, account2.key, 50)
+            break
         except google.cloud.exceptions.Conflict:
             continue
+    else:
+        print('Trasaction failed.')
     # [END transactional_retry]
 
     return account1.key, account2.key
