@@ -1,0 +1,3 @@
+# The sample bookstore has been built and tested with GRPC version
+# 1.0.0  It may work with other versions.
+grpcio == 1.0.0
