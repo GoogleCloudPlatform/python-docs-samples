@@ -36,7 +36,8 @@ def app():
 
 @pytest.fixture
 def mock_token():
-    with mock.patch('main.firebase_helper.verify_auth_token') as mock_verify:
+    patch = mock.patch('google.auth.id_token.verify_firebase_token')
+    with patch as mock_verify:
         yield mock_verify
 
 
