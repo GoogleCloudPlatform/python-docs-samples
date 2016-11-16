@@ -18,7 +18,7 @@ using GRPC."""
 import argparse
 
 from google.cloud.credentials import get_credentials
-from google.cloud.speech.v1beta1 import cloud_speech_pb2 as cloud_speech
+from google.cloud.grpc.speech.v1beta1 import cloud_speech_pb2 as cloud_speech
 from grpc.beta import implementations
 
 # Keep the request alive for this many seconds
