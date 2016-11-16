@@ -17,7 +17,9 @@ import mock
 import main
 
 
-@mock.patch("fluent.event")
-def test_error_sends(event_mock):
+@mock.patch("main.error_reporting")
+def test_error_sends(error_reporting_mock):
+    client_mock = mock.Mock()
+    error_reporting_mock.Client.return_value = client_mock
     main.simulate_error()
-    event_mock.Event.assert_called_once_with(mock.ANY, mock.ANY)
+    client_mock.report_exception.assert_called_once()
