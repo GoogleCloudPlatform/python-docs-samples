@@ -19,7 +19,7 @@ metadata:
 spec:
   ports:
   - port: 80
-    targetPort: 8080
+    targetPort: 8081
     protocol: TCP
     name: http
   selector:
@@ -42,15 +42,15 @@ spec:
       - name: esp
         image: b.gcr.io/endpoints/endpoints-runtime:0.3
         args: [
-          "-p", "8080",
-          "-a", "127.0.0.1:8081",
+          "-p", "8081",
+          "-a", "127.0.0.1:8080",
           "-s", "SERVICE_NAME",
           "-v", "SERVICE_VERSION",
         ]
       # [END esp]
         ports:
-        - containerPort: 8080
+        - containerPort: 8081
       - name: echo
         image: gcr.io/google-samples/echo-python:1.0
         ports:
-        - containerPort: 8081
+        - containerPort: 8080
