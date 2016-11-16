@@ -22,11 +22,12 @@ google-cloud-happybase==0.20.0
 google-cloud-language==0.21.0
 google-cloud-logging==0.21.0
 google-cloud-pubsub==0.21.0
+google-cloud-speech==0.21.0
 google-cloud-storage==0.21.0
 google-cloud-translate==0.21.0
 google-cloud-vision==0.21.0
 google-cloud==0.21.0
-grpc-google-cloud-speech-v1beta1==1.0.1
+grpc-google-cloud-speech-v1beta1==0.11.1
 grpcio==1.0.1
 gunicorn==19.6.0
 httplib2==0.9.2
