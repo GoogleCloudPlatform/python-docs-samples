@@ -32,4 +32,5 @@ class MyRequestHandler(webapp2.RequestHandler):
         self.response.out.write('Content of the page')
         future.get_result()
 
+
 app = webapp2.WSGIApplication([('/', MyRequestHandler)])

@@ -1,0 +1,24 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Datastore
+  short_name: Cloud Datastore
+  url: https://cloud.google.com/datastore/docs
+  description: > 
+    `Google Cloud Datastore`_ is a NoSQL document database built for automatic
+    scaling, high performance, and ease of application development.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Quickstart
+  file: quickstart.py
+- name: Tasks example app
+  file: tasks.py
+- name: Snippets
+  file: snippets.py
+  show_help: true
+
+cloud_client_library: true

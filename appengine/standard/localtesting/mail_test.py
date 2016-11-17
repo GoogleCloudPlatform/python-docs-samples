@@ -40,5 +40,6 @@ class MailTestCase(unittest.TestCase):
         self.assertEqual('alice@example.com', messages[0].to)
 # [END mail_example]
 
+
 if __name__ == '__main__':
     unittest.main()

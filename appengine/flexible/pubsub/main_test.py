@@ -16,8 +16,9 @@ import base64
 import json
 import os
 
-import main
 import pytest
+
+import main
 
 
 @pytest.fixture

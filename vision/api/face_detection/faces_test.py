@@ -14,6 +14,7 @@
 import os
 
 from PIL import Image
+
 from faces import main
 
 

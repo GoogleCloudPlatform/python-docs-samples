@@ -15,8 +15,9 @@
 """Test classes for code snippet for modeling article."""
 
 from google.appengine.ext import ndb
-import parent_child_models as models
 import pytest
+
+import parent_child_models as models
 
 
 NAME = 'Takashi Matsuo'

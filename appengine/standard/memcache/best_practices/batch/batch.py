@@ -30,6 +30,7 @@ class MainPage(webapp2.RequestHandler):
         self.response.write(tvalues)
         # [END batch]
 
+
 app = webapp2.WSGIApplication([
     ('/', MainPage),
 ], debug=True)

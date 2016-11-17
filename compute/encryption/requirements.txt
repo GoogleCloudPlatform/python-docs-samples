@@ -1,2 +1,2 @@
-cryptography==1.4
-requests==2.10.0
+cryptography==1.5.3
+requests==2.12.0

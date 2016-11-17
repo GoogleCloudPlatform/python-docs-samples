@@ -1,14 +1,12 @@
 #!/bin/bash
 
-# Decrypt secrets if not on an external PR.
+# Decrypt secrets and run tests if not on an external PR.
 if [[ $TRAVIS_SECURE_ENV_VARS == "true" ]]; then
-    openssl aes-256-cbc -k "$secrets_password" -in secrets.tar.enc -out secrets.tar -d;
-    tar xvf secrets.tar;
-fi
-
-if [[ $TRAVIS_SECURE_ENV_VARS == "true" ]]; then
-     source ${TRAVIS_BUILD_DIR}/testing/resources/test-env.sh;
-     nox --stop-on-first-error -s lint travis;
+    scripts/decrypt-secrets.sh "$SECRETS_PASSWORD"
+    source ${TRAVIS_BUILD_DIR}/testing/test-env.sh;
+    export GOOGLE_APPLICATION_CREDENTIALS=${TRAVIS_BUILD_DIR}/testing/service-account.json
+    export GOOGLE_CLIENT_SECRETS=${TRAVIS_BUILD_DIR}/testing/client-secrets.json
+    nox --stop-on-first-error -s lint travis;
 else
     # only run lint on external PRs
     echo 'External PR: only running lint.'

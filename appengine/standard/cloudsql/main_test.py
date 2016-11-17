@@ -15,15 +15,22 @@
 import os
 import re
 
-import main
 import pytest
 import webtest
 
 
+@pytest.fixture
+def main(monkeypatch):
+    monkeypatch.setenv('CLOUDSQL_USER', 'root')
+    monkeypatch.setenv('CLOUDSQL_PASSWORD', '')
+    import main
+    return main
+
+
 @pytest.mark.skipif(
     not os.path.exists('/var/run/mysqld/mysqld.sock'),
-    reason='MySQL server not available.')
-def test_app():
+    reason='Local MySQL server not available.')
+def test_app(main):
     app = webtest.TestApp(main.app)
     response = app.get('/')
 

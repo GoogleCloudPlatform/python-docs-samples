@@ -38,6 +38,7 @@ class MainPage(webapp2.RequestHandler):
 
         self.response.write('This is a protected page.')
 
+
 app = webapp2.WSGIApplication([
     ('/', MainPage)
 ], debug=True)

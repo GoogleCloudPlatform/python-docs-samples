@@ -11,10 +11,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from gcloud import dns
 from gcp.testing.flaky import flaky
-import main
+from google.cloud import dns
 import pytest
+
+import main
 
 TEST_ZONE_NAME = 'test-zone'
 TEST_ZONE_DNS_NAME = 'theadora.is.'
@@ -28,7 +29,7 @@ def client(cloud_config):
     yield client
 
     # Delete anything created during the test.
-    for zone in client.list_zones()[0]:
+    for zone in client.list_zones():
         zone.delete()
 
 

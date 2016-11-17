@@ -47,6 +47,7 @@ def main(project_id, zone):
     result = list_clusters(dataproc, project_id)
     print(result)
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,

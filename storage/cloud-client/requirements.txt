@@ -1,1 +1,1 @@
-gcloud==0.17.0
+google-cloud-storage==0.21.0

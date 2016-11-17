@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import contact_with_group_models as models
 from google.appengine.ext import ndb
+
+import contact_with_group_models as models
 
 
 def test_models(testbed):

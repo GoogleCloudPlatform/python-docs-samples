@@ -1,0 +1,30 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Bigtable
+  short_name: Cloud Bigtable
+  url: https://cloud.google.com/bigtable/docs
+  description: > 
+    `Google Cloud Bigtable`_ is Google's NoSQL Big Data database service. It's
+    the same database that powers many core Google services, including Search,
+    Analytics, Maps, and Gmail.
+
+description: |
+    This sample demonstrates using the `Google Cloud Client Library HappyBase
+    package`_, an implementation of the `HappyBase API`_ to connect to and
+    interact with Cloud Bigtable.
+
+    .. _Google Cloud Client Library HappyBase package:
+        https://github.com/GoogleCloudPlatform/google-cloud-python-happybase
+    .. _HappyBase API: http://happybase.readthedocs.io/en/stable/
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Basic example
+  file: main.py
+  show_help: true
+
+cloud_client_library: true

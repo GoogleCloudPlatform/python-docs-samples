@@ -20,8 +20,8 @@ For more information, see README.md.
 
 # [START all]
 
-import cStringIO
 import cgi
+import cStringIO
 import logging
 import urllib
 

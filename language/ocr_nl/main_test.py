@@ -59,7 +59,7 @@ def test_text_returns_entities():
     text = "Holmes and Watson walked to the cafe."
     text_analyzer = main.TextAnalyzer()
     entities = text_analyzer.nl_detect(text)
-    assert len(entities) == 2
+    assert entities
     etype, ename, salience, wurl = text_analyzer.extract_entity_info(
         entities[0])
     assert ename == 'holmes'
@@ -73,7 +73,7 @@ def test_entities_list(cloud_config):
     locale, document = main.extract_description(texts[image_path])
     text_analyzer = main.TextAnalyzer()
     entities = text_analyzer.nl_detect(document)
-    assert len(entities) == 4
+    assert entities
     etype, ename, salience, wurl = text_analyzer.extract_entity_info(
         entities[0])
     assert ename == 'bennet'

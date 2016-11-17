@@ -47,7 +47,6 @@ def list_datasets(bigquery, project):
 # [START list_projects]
 def list_projects(bigquery):
     try:
-        # Start training on a data set
         projects = bigquery.projects()
         list_reply = projects.list().execute()
 
@@ -67,6 +66,7 @@ def main(project_id):
 
     list_datasets(bigquery, project_id)
     list_projects(bigquery)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(

@@ -1,0 +1,28 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Pub/Sub
+  short_name: Cloud Pub/Sub
+  url: https://cloud.google.com/pubsub/docs
+  description: > 
+    `Google Cloud Pub/Sub`_ is a fully-managed real-time messaging service that
+    allows you to send and receive messages between independent applications.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Quickstart
+  file: quickstart.py
+- name: Publisher
+  file: publisher.py
+  show_help: true
+- name: Subscribers
+  file: subscriber.py
+  show_help: true
+- name: Identity and Access Management
+  file: iam.py
+  show_help: true
+
+cloud_client_library: true

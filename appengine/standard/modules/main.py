@@ -46,6 +46,7 @@ class GetBackendHandler(webapp2.RequestHandler):
             pass
         # [END access_another_module]
 
+
 app = webapp2.WSGIApplication([
     ('/', GetModuleInfoHandler),
     ('/access_backend', GetBackendHandler),

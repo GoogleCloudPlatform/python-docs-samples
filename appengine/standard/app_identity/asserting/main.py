@@ -54,6 +54,7 @@ class MainPage(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'application/json'
         self.response.write(json.dumps(result, indent=2))
 
+
 app = webapp2.WSGIApplication([
     ('/', MainPage)
 ], debug=True)
