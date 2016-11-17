@@ -43,18 +43,18 @@ spec:
     spec:
       containers:
       - name: esp
-        image: b.gcr.io/endpoints/endpoints-runtime:latest
+        image: b.gcr.io/endpoints/endpoints-runtime:1
         args: [
           "-p", "80",
           "-P", "9000",
           "-s", "SERVICE_NAME",
-          "-v", "SERVICE_VERSION",
+          "-v", "SERVICE_CONFIG_ID",
           "-a", "grpc://localhost:8000"
         ]
         ports:
           - containerPort: 80
           - containerPort: 9000
       - name: bookstore
-        image: gcr.io/endpointsv2/python-grpc-bookstore-server:latest
+        image: gcr.io/endpointsv2/python-grpc-bookstore-server:1
         ports:
           - containerPort: 8000
