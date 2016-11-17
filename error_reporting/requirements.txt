@@ -1,1 +1,1 @@
-fluent-logger==0.4.4
+google-cloud-error-reporting==0.21.0

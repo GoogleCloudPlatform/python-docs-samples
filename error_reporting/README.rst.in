@@ -1,0 +1,19 @@
+# This file is used to generate README.rst
+
+product:
+  name: Stackdriver Error Reporting
+  short_name: Error Reporting
+  url: https://cloud.google.com/error-reporting/docs/
+  description: >
+    `Stackdriver Error Reporting`_ aggregates and displays errors produced in
+     your running cloud services.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Report Exception
+  file: report_exception.py
+
+cloud_client_library: true
