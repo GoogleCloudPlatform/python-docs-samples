@@ -160,10 +160,8 @@ The client project is running Google App Engine standard application.
 
 To use the client for authentication:
 
-1. Update the `google_id_token`'s audiences, replace `YOUR-SERVER-PROJECT-ID` with your server project ID.
-2. Redeploy your server application.
-3. Update clients/service_to_service_google_id_token/main.py, replace 'YOUR-CLIENT-PROJECT-ID' and 'YOUR-SERVER-PROJECT-ID' with your client project ID and your server project ID.
-4. Upload your application to Google App Engine by invoking the following command. Note that you need to provide project ID in the command because there are two projects (server and client projects) here and gcloud needs to know which project to pick.
+1. Update clients/service_to_service_google_id_token/main.py, replace 'YOUR-CLIENT-PROJECT-ID' and 'YOUR-SERVER-PROJECT-ID' with your client project ID and your server project ID.
+2. Upload your application to Google App Engine by invoking the following command. Note that you need to provide project ID in the command because there are two projects (server and client projects) here and gcloud needs to know which project to pick.
 ```bash
 $ gcloud app deploy app.yaml --project=YOUR-CLIENT-PROJECT-ID
 ```
