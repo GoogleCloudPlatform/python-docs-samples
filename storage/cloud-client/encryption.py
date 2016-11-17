@@ -32,6 +32,7 @@ import base64
 import os
 
 from google.cloud import storage
+from google.cloud.storage import Blob
 
 
 def generate_encryption_key():
@@ -57,12 +58,11 @@ def upload_encrypted_blob(bucket_name, source_file_name,
     """
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
-    blob = bucket.blob(destination_blob_name)
-
     # Encryption key must be an AES256 key represented as a bytestring with
     # 32 bytes. Since it's passed in as a base64 encoded string, it needs
     # to be decoded.
-    blob.encryption_key = base64.b64decode(base64_encryption_key)
+    encryption_key = base64.b64decode(base64_encryption_key)
+    blob = Blob(destination_blob_name, bucket, encryption_key=encryption_key)
 
     blob.upload_from_filename(source_file_name)
 
@@ -80,12 +80,11 @@ def download_encrypted_blob(bucket_name, source_blob_name,
     """
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
-    blob = bucket.blob(source_blob_name)
-
     # Encryption key must be an AES256 key represented as a bytestring with
     # 32 bytes. Since it's passed in as a base64 encoded string, it needs
     # to be decoded.
-    blob.encryption_key = base64.b64decode(base64_encryption_key)
+    encryption_key = base64.b64decode(base64_encryption_key)
+    blob = Blob(source_blob_name, bucket, encryption_key=encryption_key)
 
     blob.download_to_filename(destination_file_name)
 
@@ -131,9 +130,9 @@ if __name__ == '__main__':
         'rotate', help=rotate_encryption_key.__doc__)
     rotate_parser.add_argument(
         'bucket_name', help='Your cloud storage bucket.')
-    download_parser.add_argument('blob_name')
-    download_parser.add_argument('base64_encryption_key')
-    download_parser.add_argument('base64_new_encryption_key')
+    rotate_parser.add_argument('blob_name')
+    rotate_parser.add_argument('base64_encryption_key')
+    rotate_parser.add_argument('base64_new_encryption_key')
 
     args = parser.parse_args()
 
