@@ -15,14 +15,14 @@
 """The Python gRPC Bookstore Server Example."""
 
 import argparse
-import grpc
-import status
 import time
+
+from google.protobuf import struct_pb2
+import grpc
 
 import bookstore
 import bookstore_pb2
-
-from google.protobuf import struct_pb2
+import status
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
@@ -99,11 +99,11 @@ def create_sample_bookstore():
 
 def serve(port, shutdown_grace_duration):
   """Configures and runs the bookstore API server."""
-
   store = create_sample_bookstore()
   server = bookstore_pb2.beta_create_Bookstore_server(BookstoreServicer(store))
   server.add_insecure_port('[::]:{}'.format(port))
   server.start()
+
   try:
     while True:
       time.sleep(_ONE_DAY_IN_SECONDS)
@@ -113,12 +113,14 @@ def serve(port, shutdown_grace_duration):
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(
-      description='Serve the Bookstore API',
-      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+      description=__doc__,
+      formatter_class=argparse.RawDescriptionHelpFormatter)
   parser.add_argument(
       '--port', type=int, default=8000, help='The port to listen on')
   parser.add_argument(
       '--shutdown_grace_duration', type=int, default=5,
       help='The shutdown grace duration, in seconds')
+
   args = parser.parse_args()
+
   serve(args.port, args.shutdown_grace_duration)
