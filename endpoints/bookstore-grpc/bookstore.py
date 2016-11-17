@@ -14,8 +14,6 @@
 
 import threading
 
-import status
-
 
 class ShelfInfo(object):
   """The contents of a single shelf."""

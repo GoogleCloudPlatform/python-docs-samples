@@ -24,7 +24,7 @@ Code = grpc.StatusCode
 
 @contextmanager
 def context(grpc_context):
-  """A context manager that automatically handles StatusException."""
+  """A context manager that automatically handles KeyError."""
   try:
     yield
   except KeyError as key_error:
