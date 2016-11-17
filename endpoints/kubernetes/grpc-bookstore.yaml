@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: esp-grpc-bookstore
+spec:
+  ports:
+  # Port that accepts JSON/HTTP requests over HTTP.
+  - port: 80
+    protocol: TCP
+    name: http
+  # Port that accepts gRPC and JSON/HTTP2 requests over HTTP.
+  - port: 9000
+    protocol: TCP
+    name: http2
+  selector:
+    app: esp-grpc-bookstore
+  type: LoadBalancer
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: esp-grpc-bookstore
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: esp-grpc-bookstore
+    spec:
+      containers:
+      - name: esp
+        image: b.gcr.io/endpoints/endpoints-runtime:latest
+        args: [
+          "-p", "80",
+          "-P", "9000",
+          "-s", "SERVICE_NAME",
+          "-v", "SERVICE_VERSION",
+          "-a", "grpc://localhost:8000"
+        ]
+        ports:
+          - containerPort: 80
+          - containerPort: 9000
+      - name: bookstore
+        image: gcr.io/endpointsv2/python-grpc-bookstore-server:latest
+        ports:
+          - containerPort: 8000
