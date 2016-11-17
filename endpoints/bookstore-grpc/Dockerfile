@@ -1,3 +1,4 @@
+# https://github.com/GoogleCloudPlatform/python-runtime
 FROM gcr.io/google_appengine/python
 
 # Create a virtualenv for dependencies. This isolates these packages from

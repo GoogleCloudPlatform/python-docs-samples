@@ -39,4 +39,4 @@ def context(grpc_context):
   try:
     yield
   except StatusException as exc:
-    se.fill(grpc_context)
+    exc.fill(grpc_context)

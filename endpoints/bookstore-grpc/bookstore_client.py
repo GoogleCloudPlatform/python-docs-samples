@@ -54,6 +54,7 @@ if __name__ == '__main__':
                       help='The port to connect to')
   parser.add_argument('--timeout', type=int, default=10,
                       help='The call timeout, in seconds')
-  parser.add_argument('--api_key', help='The API key to use for the call')
+  parser.add_argument('--api_key', default=None,
+                      help='The API key to use for the call')
   args = parser.parse_args()
   run(args.host, args.port, args.api_key, args.timeout)

@@ -16,6 +16,14 @@ import threading
 
 import status
 
+
+class ShelfInfo(object):
+  """The contents of a single shelf."""
+  def __init__(self, shelf):
+    self._shelf = shelf
+    self._last_book_id = 0
+    self._books = Bookstore.BookDict()
+
 class Bookstore(object):
   """An in-memory backend for storing Bookstore data."""
 
@@ -28,13 +36,6 @@ class Bookstore(object):
     def __missing__(self, key):
       raise status.StatusException(status.Code.NOT_FOUND,
                                    'Unable to find book "%s"' % key)
-
-  class ShelfInfo(object):
-    """The contents of a single shelf."""
-    def __init__(self, shelf):
-      self._shelf = shelf
-      self._last_book_id = 0
-      self._books = Bookstore.BookDict()
 
   def __init__(self):
     self._last_shelf_id = 0
@@ -50,7 +51,7 @@ class Bookstore(object):
       self._last_shelf_id += 1
       shelf_id = self._last_shelf_id
       shelf.id = shelf_id
-      self._shelves[shelf_id] = Bookstore.ShelfInfo(shelf)
+      self._shelves[shelf_id] = ShelfInfo(shelf)
       return (shelf, shelf_id)
 
   def get_shelf(self, shelf_id):
@@ -77,7 +78,7 @@ class Bookstore(object):
 
   def get_book(self, shelf_id, book_id):
     with self._lock:
-      return self._shelves[sheld_id]._books[book_id]
+      return self._shelves[shelf_id]._books[book_id]
 
   def delete_book(self, shelf_id, book_id):
     with self._lock:
