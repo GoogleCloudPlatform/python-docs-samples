@@ -27,6 +27,7 @@ from protorpc import remote
 class EchoRequest(messages.Message):
     content = messages.StringField(1)
 
+
 class EchoResponse(messages.Message):
     """A proto Message that contains a simple string field."""
     content = messages.StringField(1)
@@ -83,7 +84,7 @@ class EchoApi(remote.Service):
         # This method takes an empty request body.
         message_types.VoidMessage,
         # This method returns an Echo message.
-        Echo,
+        EchoResponse,
         path='echo/getUserEmail',
         http_method='GET',
         # Require auth tokens to have the following scopes to access this API.
@@ -96,7 +97,7 @@ class EchoApi(remote.Service):
         # raise 401 Unauthorized.
         if not user:
             raise endpoints.UnauthorizedException
-        return Echo(content=user.email())
+        return EchoResponse(content=user.email())
 # [END echo_api]
 
 
