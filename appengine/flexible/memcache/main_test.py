@@ -14,9 +14,15 @@
 
 import pytest
 
-import main
+try:
+    import main
+except ImportError:
+    main = None
 
 
+@pytest.mark.skipif(
+    not main,
+    reason='pylibmc not installed.')
 def test_index():
     try:
         main.memcache_client.set('counter', 0)
