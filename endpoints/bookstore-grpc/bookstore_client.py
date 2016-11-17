@@ -25,7 +25,7 @@ import grpc
 def run(host, port, api_key, timeout):
   """Makes a basic ListShelves call against a gRPC Bookstore server."""
 
-  channel = grpc.insecure_channel('{}:{}'.format(host,port))
+  channel = grpc.insecure_channel('{}:{}'.format(host, port))
 
   stub = bookstore_pb2.BookstoreStub(channel)
   metadata = [('x-api-key', api_key)] if api_key else None
