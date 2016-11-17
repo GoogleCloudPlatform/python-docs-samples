@@ -13,28 +13,16 @@
 # limitations under the License.
 
 # [START error_reporting]
-import traceback
-
-import fluent.event
-import fluent.sender
+from google.cloud import error_reporting
 
 
 def simulate_error():
-    fluent.sender.setup('myapp', host='localhost', port=24224)
-
-    def report(ex):
-        data = {}
-        data['message'] = '{0}'.format(ex)
-        data['serviceContext'] = {'service': 'myapp'}
-        # ... add more metadata
-        fluent.event.Event('errors', data)
-
-    # report exception data using:
+    client = error_reporting.Client()
     try:
         # simulate calling a method that's not defined
         raise NameError
     except Exception:
-        report(traceback.format_exc())
+        client.report_exception()
 # [END error_reporting]
 
 
