@@ -181,4 +181,5 @@ To view the Endpoints graphs:
 2. Click on your API to view more detailed information about the metrics collected.
 
 ## Swagger UI
+
 The Swagger UI is an open source Swagger project that allows you to explore your API through a UI. Find out more about it on the [Swagger site](http://swagger.io/swagger-ui/).
