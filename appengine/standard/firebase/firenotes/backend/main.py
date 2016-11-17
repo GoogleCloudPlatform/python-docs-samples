@@ -73,11 +73,13 @@ def list_notes():
     """Returns a list of notes added by the current Firebase user."""
 
     # Verify Firebase auth.
+    # [START verify_token]
     id_token = request.headers['Authorization'].split(' ').pop()
     claims = google.oauth2.id_token.verify_firebase_token(
         id_token, HTTP_REQUEST)
     if not claims:
         return 'Unauthorized', 401
+    # [END verify_token]
 
     notes = query_database(claims['sub'])
 
