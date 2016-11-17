@@ -9,7 +9,7 @@ Install all the Python dependencies:
 
     pip install -r requirements.txt
 
-Install the [GRPC libraries and tools](https://github.com/grpc/grpc/blob/v1.0.x/INSTALL.md)
+Install the [GRPC libraries and tools](http://www.grpc.io/docs/quickstart/python.html#prerequisites)
 
 ## Running the Server Locally
 
