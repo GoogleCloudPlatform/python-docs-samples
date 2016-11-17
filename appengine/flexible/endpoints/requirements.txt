@@ -2,11 +2,5 @@ Flask==0.11.1
 flask-cors==3.0.2
 gunicorn==19.6.0
 six==1.10.0
-<<<<<<< HEAD
-pyyaml==3.11
-requests==2.10.0
-google-api-python-client==1.5.1
-=======
 pyyaml==3.12
 requests==2.12.0
->>>>>>> upstream/master
