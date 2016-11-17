@@ -78,7 +78,7 @@ def create_sample_bookstore():
 
   shelf = bookstore_pb2.Shelf()
   shelf.theme = 'Fiction'
-  (_, fiction) = store.create_shelf(shelf)
+  _, fiction = store.create_shelf(shelf)
 
   book = bookstore_pb2.Book()
   book.title = 'README'
@@ -87,7 +87,7 @@ def create_sample_bookstore():
 
   shelf = bookstore_pb2.Shelf()
   shelf.theme = 'Fantasy'
-  (_, fantasy) = store.create_shelf(shelf)
+  _, fantasy = store.create_shelf(shelf)
 
   book = bookstore_pb2.Book()
   book.title = 'A Game of Thrones'
@@ -115,9 +115,10 @@ if __name__ == '__main__':
   parser = argparse.ArgumentParser(
       description='Serve the Bookstore API',
       formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-  parser.add_argument('--port', type=int, default=8000,
-                      help='The port to listen on')
-  parser.add_argument('--shutdown_grace_duration', type=int, default=5,
-                      help='The shutdown grace duration, in seconds')
+  parser.add_argument(
+      '--port', type=int, default=8000, help='The port to listen on')
+  parser.add_argument(
+      '--shutdown_grace_duration', type=int, default=5,
+      help='The shutdown grace duration, in seconds')
   args = parser.parse_args()
   serve(args.port, args.shutdown_grace_duration)

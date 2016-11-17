@@ -12,25 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import status
+
 from contextlib import contextmanager
 
-from grpc.beta import interfaces
+import grpc
 
 
-Code = interfaces.StatusCode
-
-
-class StatusException(Exception):
-  """An exception thrown to indicate failed GRPC call."""
-
-  def __init__(self, code, details):
-    self._code = code
-    self._details = details
-
-  def fill(self, context):
-    """Fills in a GRPC server-side context with exception info."""
-    context.code(self._code)
-    context.details(self._details)
+Code = grpc.StatusCode
 
 
 @contextmanager
@@ -38,5 +27,7 @@ def context(grpc_context):
   """A context manager that automatically handles StatusException."""
   try:
     yield
-  except StatusException as exc:
-    exc.fill(grpc_context)
+  except KeyError as key_error:
+    grpc_context.code(status.Code.NOT_FOUND)
+    grpc_context.details(
+        'Unable to find the item keyed by {}'.format(key_error))

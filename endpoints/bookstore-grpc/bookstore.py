@@ -22,24 +22,14 @@ class ShelfInfo(object):
   def __init__(self, shelf):
     self._shelf = shelf
     self._last_book_id = 0
-    self._books = Bookstore.BookDict()
+    self._books = dict()
 
 class Bookstore(object):
   """An in-memory backend for storing Bookstore data."""
 
-  class ShelfDict(dict):
-    def __missing__(self, key):
-      raise status.StatusException(status.Code.NOT_FOUND,
-                                   'Unable to find shelf "%s"' % key)
-
-  class BookDict(dict):
-    def __missing__(self, key):
-      raise status.StatusException(status.Code.NOT_FOUND,
-                                   'Unable to find book "%s"' % key)
-
   def __init__(self):
     self._last_shelf_id = 0
-    self._shelves = Bookstore.ShelfDict()
+    self._shelves = dict()
     self._lock = threading.Lock()
 
   def list_shelf(self):
@@ -82,5 +72,4 @@ class Bookstore(object):
 
   def delete_book(self, shelf_id, book_id):
     with self._lock:
-      _ = self._shelves[shelf_id]._books[book_id]
       del self._shelves[shelf_id]._books[book_id]
