@@ -76,7 +76,6 @@ paths:
           # Your OAuth2 client's Client ID must be added here. You can add
           # multiple client IDs to accept tokens from multiple clients.
           - "YOUR-CLIENT-ID"
-          - "YOUR-SERVER-PROJECT-ID@appspot.gserviceaccount.com"
   "/auth/info/firebase":
     get:
       description: "Returns the requests' authentication information."
