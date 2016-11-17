@@ -50,7 +50,7 @@ class Bookstore(object):
       self._last_shelf_id += 1
       shelf_id = self._last_shelf_id
       shelf.id = shelf_id
-      self._shelves[sid] = Bookstore.ShelfInfo(shelf)
+      self._shelves[shelf_id] = Bookstore.ShelfInfo(shelf)
       return (shelf, shelf_id)
 
   def get_shelf(self, shelf_id):
