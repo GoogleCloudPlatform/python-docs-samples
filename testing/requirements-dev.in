@@ -10,3 +10,4 @@ pytest==3.0.4
 pyyaml==3.12
 responses==0.5.1
 WebTest==2.0.23
+webapp2==3.0.0b1
