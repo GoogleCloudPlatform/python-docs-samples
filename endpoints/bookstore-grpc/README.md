@@ -1,11 +1,7 @@
 # Google Cloud Endpoints Bookstore App in Python
 
-## Installing Dependencies
+## Installing the dependencies using virtualenv:
 
-You'll probably want to start by creating a virtual Python environment, so that
-you can install dependencies without installing them globally.  To do this, run:
-
-    mkdir bookstore-env
     virtualenv bookstore-env
     source bookstore-env/bin/activate
 
@@ -13,7 +9,7 @@ Install all the Python dependencies:
 
     pip install -r requirements.txt
 
-Install the [GRPC libraries and tools](https://github.com/grpc/grpc/blob/release-0_15_0/INSTALL.md)
+Install the [GRPC libraries and tools](https://github.com/grpc/grpc/blob/v1.0.x/INSTALL.md)
 
 ## Running the Server Locally
 
@@ -42,5 +38,5 @@ code in the sample distribution.  To modify the sample or create your own GRPC
 API definition, you'll need to update the generated code. To do this, once the
 GRPC libraries and tools are installed, run:
 
-    protoc --python_out=. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_python_plugin` \
-        -I ./bookstore bookstore.proto
+    python -m grpc.tools.protoc --python_out=. --grpc_python_out=. \
+        --proto_path=. bookstore.protoo

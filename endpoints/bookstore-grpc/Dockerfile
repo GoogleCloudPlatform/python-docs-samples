@@ -3,14 +3,17 @@ FROM debian:jessie
 RUN apt-get update \
     && apt-get install --no-install-recommends -y -q ca-certificates \
     && apt-get -y -q upgrade \
-    && apt-get install -y python-dev python-pip \
+    && apt-get install -y python-dev python-pip virtualenv \
     && rm -rf /var/lib/apt/lists/*
+
+RUN virtualenv /env
+ENV VIRTUAL_ENV /env
+ENV PATH /env/bin:$PATH
 
 ADD . /bookstore/
 
-RUN cd /bookstore \
-    && pip install --ignore-installed six \
-    && pip install --ignore-installed -r requirements.txt
+WORKDIR /bookstore
+RUN pip install -r requirements.txt
 
 EXPOSE 8000
 

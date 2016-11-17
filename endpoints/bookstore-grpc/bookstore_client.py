@@ -15,30 +15,38 @@
 """The Python GRPC Bookstore Client Example."""
 
 import argparse
-
 import bookstore_pb2
 
 from google.protobuf import empty_pb2
 from grpc.beta import implementations
 
 
-def _add_endpoints_metadata(api_key):
-  def add_metadata(metadata):
-    if metadata:
-      for k, v in metadata:
-        yield (k, v)
-    if api_key:
-      yield ('x-api-key', api_key)
+class ApiKeyMetadata(object):
+    def __init__(self, api_key):
+        self.api_key = api_key
 
-  return add_metadata
+    def __call__(self, metadata):
+      if metadata:
+        for k, v in metadata:
+          yield (k, v)
+      if self.api_key:
+        yield ('x-api-key', self.api_key)
 
 
-def _run():
-  """Runs a basic ListShelves call against a GRPC server."""
+def run(args):
+  """Makes a basic ListShelves call against a gRPC Bookstore server."""
 
+  channel = implementations.insecure_channel(args.host, args.port)
+  stub = bookstore_pb2.beta_create_Bookstore_stub(
+      channel, metadata_transformer = ApiKeyMetadata(args.api_key))
+  shelves = stub.ListShelves(empty_pb2.Empty(), args.timeout)
+  print('ListShelves: {}'.format(shelves))
+
+
+if __name__ == '__main__':
   parser = argparse.ArgumentParser(
-      description='List bookstore shelves',
-      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+      description=__doc__,
+      formatter_class=argparse.RawDescriptionHelpFormatter)
   parser.add_argument('--host', default='localhost',
                       help='The host to connect to')
   parser.add_argument('--port', type=int, default=8000,
@@ -46,14 +54,4 @@ def _run():
   parser.add_argument('--timeout', type=int, default=10,
                       help='The call timeout, in seconds')
   parser.add_argument('--api_key', help='The API key to use for the call')
-  args = parser.parse_args()
-
-  channel = implementations.insecure_channel(args.host, args.port)
-  stub = bookstore_pb2.beta_create_Bookstore_stub(
-      channel, metadata_transformer = _add_endpoints_metadata(args.api_key))
-  shelves = stub.ListShelves(empty_pb2.Empty(), args.timeout)
-  print 'ListShelves: %s' % shelves
-
-
-if __name__ == '__main__':
-  _run()
+  run(parser.parse_args())

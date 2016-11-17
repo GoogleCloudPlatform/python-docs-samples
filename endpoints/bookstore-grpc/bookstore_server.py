@@ -12,17 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""The Python GRPC Bookstore Server Example."""
+"""The Python gRPC Bookstore Server Example."""
 
 import argparse
+import grpc
+import status
 import time
 
 import bookstore
 import bookstore_pb2
-import status
 
 from google.protobuf import struct_pb2
-from grpc.beta import interfaces
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
@@ -72,7 +72,7 @@ class BookstoreServicer(bookstore_pb2.BetaBookstoreServicer):
       return struct_pb2.Value()
 
 
-def _create_sample_bookstore():
+def create_sample_bookstore():
   """Creates a Bookstore with some initial sample data."""
   store = bookstore.Bookstore()
 
@@ -97,7 +97,7 @@ def _create_sample_bookstore():
   return store
 
 
-def _serve():
+def serve():
   """Configures and runs the bookstore API server."""
   parser = argparse.ArgumentParser(
       description='Serve the Bookstore API',
@@ -108,9 +108,9 @@ def _serve():
                       help='The shutdown grace duration, in seconds')
   args = parser.parse_args()
 
-  store = _create_sample_bookstore()
+  store = create_sample_bookstore()
   server = bookstore_pb2.beta_create_Bookstore_server(BookstoreServicer(store))
-  server.add_insecure_port('[::]:%d' % args.port)
+  server.add_insecure_port('[::]:{}'.format(args.port))
   server.start()
   try:
     while True:
@@ -120,4 +120,4 @@ def _serve():
 
 
 if __name__ == '__main__':
-  _serve()
+  serve()
