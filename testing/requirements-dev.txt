@@ -13,6 +13,7 @@ fluent-logger==0.4.4
 funcsigs==1.0.2
 functools32==3.2.3-2; python_version < "3"
 google-api-python-client==1.5.5
+google-auth==0.3.1
 google-cloud-bigquery==0.21.0
 google-cloud-bigtable==0.21.0
 google-cloud-core==0.21.0
@@ -63,5 +64,6 @@ sleekxmpp==1.3.1
 SQLAlchemy==1.1.4
 twilio==6.3.dev0
 uritemplate==3.0.0
+webapp2==3.0.0b1
 WebTest==2.0.23
 wheel==0.30.0a0

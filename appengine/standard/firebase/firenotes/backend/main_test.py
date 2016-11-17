@@ -36,7 +36,8 @@ def app():
 
 @pytest.fixture
 def mock_token():
-    with mock.patch('main.firebase_helper.verify_auth_token') as mock_verify:
+    patch = mock.patch('google.oauth2.id_token.verify_firebase_token')
+    with patch as mock_verify:
         yield mock_verify
 
 
@@ -55,7 +56,7 @@ def test_data():
 def test_list_notes_with_mock_token(testbed, app, mock_token, test_data):
     mock_token.return_value = {'sub': '123'}
 
-    r = app.get('/notes')
+    r = app.get('/notes', headers={'Authorization': 'Bearer 123'})
     assert r.status_code == 200
 
     data = json.loads(r.data)
@@ -66,7 +67,7 @@ def test_list_notes_with_mock_token(testbed, app, mock_token, test_data):
 def test_list_notes_with_bad_mock_token(testbed, app, mock_token):
     mock_token.return_value = None
 
-    r = app.get('/notes')
+    r = app.get('/notes', headers={'Authorization': 'Bearer 123'})
     assert r.status_code == 401
 
 
@@ -76,7 +77,8 @@ def test_add_note_with_mock_token(testbed, app, mock_token):
     r = app.post(
         '/notes',
         data=json.dumps({'message': 'Hello, world!'}),
-        content_type='application/json')
+        content_type='application/json',
+        headers={'Authorization': 'Bearer 123'})
 
     assert r.status_code == 200
 
@@ -90,5 +92,5 @@ def test_add_note_with_mock_token(testbed, app, mock_token):
 def test_add_note_with_bad_mock_token(testbed, app, mock_token):
     mock_token.return_value = None
 
-    r = app.post('/notes')
+    r = app.post('/notes', headers={'Authorization': 'Bearer 123'})
     assert r.status_code == 401
