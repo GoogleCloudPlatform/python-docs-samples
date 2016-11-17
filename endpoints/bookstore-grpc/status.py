@@ -12,14 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import status
-
 from contextlib import contextmanager
 
 import grpc
 
-
-Code = grpc.StatusCode
+import status
 
 
 @contextmanager
