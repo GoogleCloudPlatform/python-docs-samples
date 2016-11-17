@@ -1,13 +1,12 @@
-FROM debian:jessie
+FROM gcr.io/google_appengine/python
 
-RUN apt-get update \
-    && apt-get install --no-install-recommends -y -q ca-certificates \
-    && apt-get -y -q upgrade \
-    && apt-get install -y python-dev python-pip virtualenv \
-    && rm -rf /var/lib/apt/lists/*
-
+# Create a virtualenv for dependencies. This isolates these packages from
+# system-level packages.
 RUN virtualenv /env
-ENV VIRTUAL_ENV /env
+
+# Setting these environment variables are the same as running
+# source /env/bin/activate.
+ENV VIRTUAL_ENV -p python3.5 /env
 ENV PATH /env/bin:$PATH
 
 ADD . /bookstore/

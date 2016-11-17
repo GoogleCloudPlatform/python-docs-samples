@@ -17,7 +17,7 @@ import threading
 import status
 
 class Bookstore(object):
-  """Stores and manipulates bookstore data."""
+  """An in-memory backend for storing Bookstore data."""
 
   class ShelfDict(dict):
     def __missing__(self, key):
@@ -41,17 +41,17 @@ class Bookstore(object):
     self._shelves = Bookstore.ShelfDict()
     self._lock = threading.Lock()
 
-  def list_shelves(self):
+  def list_shelf(self):
     with self._lock:
       return [s._shelf for (_, s) in self._shelves.iteritems()]
 
   def create_shelf(self, shelf):
     with self._lock:
       self._last_shelf_id += 1
-      sid = self._last_shelf_id
-      shelf.id = sid
+      shelf_id = self._last_shelf_id
+      shelf.id = shelf_id
       self._shelves[sid] = Bookstore.ShelfInfo(shelf)
-      return (shelf, sid)
+      return (shelf, shelf_id)
 
   def get_shelf(self, shelf_id):
     with self._lock:
@@ -64,15 +64,15 @@ class Bookstore(object):
 
   def list_books(self, shelf_id):
     with self._lock:
-      return [b for (_, b) in self._shelves[shelf_id]._books.iteritems()]
+      return [book for (_, book) in self._shelves[shelf_id]._books.iteritems()]
 
   def create_book(self, shelf_id, book):
     with self._lock:
-      sinfo = self._shelves[shelf_id]
-      sinfo._last_book_id += 1
-      bid = sinfo._last_book_id
-      book.id = bid
-      sinfo._books[bid] = book
+      shelf_info = self._shelves[shelf_id]
+      shelf_info._last_book_id += 1
+      book_id = shelf_info._last_book_id
+      book.id = book_id
+      shelf_info._books[book_id] = book
       return book
 
   def get_book(self, shelf_id, book_id):

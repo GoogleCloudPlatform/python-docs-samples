@@ -34,9 +34,9 @@ class StatusException(Exception):
 
 
 @contextmanager
-def context(ctx):
+def context(grpc_context):
   """A context manager that automatically handles StatusException."""
   try:
     yield
-  except StatusException as se:
-    se.fill(ctx)
+  except StatusException as exc:
+    se.fill(grpc_context)

@@ -15,10 +15,11 @@
 """The Python GRPC Bookstore Client Example."""
 
 import argparse
-import bookstore_pb2
 
 from google.protobuf import empty_pb2
 from grpc.beta import implementations
+
+import bookstore_pb2
 
 
 class ApiKeyMetadata(object):
@@ -33,13 +34,13 @@ class ApiKeyMetadata(object):
         yield ('x-api-key', self.api_key)
 
 
-def run(args):
+def run(host, port, api_key, timeout):
   """Makes a basic ListShelves call against a gRPC Bookstore server."""
 
-  channel = implementations.insecure_channel(args.host, args.port)
+  channel = implementations.insecure_channel(host, port)
   stub = bookstore_pb2.beta_create_Bookstore_stub(
-      channel, metadata_transformer = ApiKeyMetadata(args.api_key))
-  shelves = stub.ListShelves(empty_pb2.Empty(), args.timeout)
+      channel, metadata_transformer = ApiKeyMetadata(api_key))
+  shelves = stub.ListShelves(empty_pb2.Empty(), timeout)
   print('ListShelves: {}'.format(shelves))
 
 
@@ -54,4 +55,5 @@ if __name__ == '__main__':
   parser.add_argument('--timeout', type=int, default=10,
                       help='The call timeout, in seconds')
   parser.add_argument('--api_key', help='The API key to use for the call')
-  run(parser.parse_args())
+  args = parser.parse_args()
+  run(args.host, args.port, args.api_key, args.timeout)

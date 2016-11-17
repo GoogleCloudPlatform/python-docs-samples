@@ -35,7 +35,7 @@ class BookstoreServicer(bookstore_pb2.BetaBookstoreServicer):
   def ListShelves(self, unused_request, context):
     with status.context(context):
       response = bookstore_pb2.ListShelvesResponse()
-      response.shelves.extend(self._store.list_shelves())
+      response.shelves.extend(self._store.list_shelf())
       return response
 
   def CreateShelf(self, request, context):
@@ -77,28 +77,41 @@ def create_sample_bookstore():
   store = bookstore.Bookstore()
 
   shelf = bookstore_pb2.Shelf()
-  shelf.theme = "Fiction"
+  shelf.theme = 'Fiction'
   (_, fiction) = store.create_shelf(shelf)
 
   book = bookstore_pb2.Book()
-  book.title = "REAMDE"
+  book.title = 'README'
   book.author = "Neal Stephenson"
   store.create_book(fiction, book)
 
   shelf = bookstore_pb2.Shelf()
-  shelf.theme = "Fantasy"
+  shelf.theme = 'Fantasy'
   (_, fantasy) = store.create_shelf(shelf)
 
   book = bookstore_pb2.Book()
-  book.title = "A Game of Thrones"
-  book.author = "George R.R. Martin"
+  book.title = 'A Game of Thrones'
+  book.author = 'George R.R. Martin'
   store.create_book(fantasy, book)
 
   return store
 
 
-def serve():
+def serve(port, shutdown_grace_duration):
   """Configures and runs the bookstore API server."""
+
+  store = create_sample_bookstore()
+  server = bookstore_pb2.beta_create_Bookstore_server(BookstoreServicer(store))
+  server.add_insecure_port('[::]:{}'.format(port))
+  server.start()
+  try:
+    while True:
+      time.sleep(_ONE_DAY_IN_SECONDS)
+  except KeyboardInterrupt:
+    server.stop(shutdown_grace_duration)
+
+
+if __name__ == '__main__':
   parser = argparse.ArgumentParser(
       description='Serve the Bookstore API',
       formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -107,17 +120,4 @@ def serve():
   parser.add_argument('--shutdown_grace_duration', type=int, default=5,
                       help='The shutdown grace duration, in seconds')
   args = parser.parse_args()
-
-  store = create_sample_bookstore()
-  server = bookstore_pb2.beta_create_Bookstore_server(BookstoreServicer(store))
-  server.add_insecure_port('[::]:{}'.format(args.port))
-  server.start()
-  try:
-    while True:
-      time.sleep(_ONE_DAY_IN_SECONDS)
-  except KeyboardInterrupt:
-    server.stop(args.shutdown_grace_duration)
-
-
-if __name__ == '__main__':
-  serve()
+  serve(args.port, args.shutdown_grace_duration)
