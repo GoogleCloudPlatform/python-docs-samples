@@ -13,28 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.cloud import translate
-import mock
-import pytest
 
 import quickstart
 
 
-@pytest.fixture
-def mock_client(cloud_config):
-    original_client_ctor = translate.Client
-
-    def new_client_ctor(api_key):
-        # Strip api_key argument and replace with our api key.
-        return original_client_ctor(cloud_config.api_key)
-
-    with mock.patch(
-            'google.cloud.translate.Client',
-            side_effect=new_client_ctor):
-        yield
-
-
-def test_quickstart(mock_client, capsys):
+def test_quickstart(capsys):
     quickstart.run_quickstart()
     out, _ = capsys.readouterr()
     assert u'Привет мир!' in out
