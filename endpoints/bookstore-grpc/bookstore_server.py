@@ -40,7 +40,7 @@ class BookstoreServicer(bookstore_pb2.BetaBookstoreServicer):
 
   def CreateShelf(self, request, context):
     with status.context(context):
-      (shelf, _) = self._store.create_shelf(request.shelf)
+      shelf, _ = self._store.create_shelf(request.shelf)
       return shelf
 
   def GetShelf(self, request, context):
