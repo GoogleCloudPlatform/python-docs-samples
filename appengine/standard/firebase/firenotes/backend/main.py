@@ -18,9 +18,14 @@ import logging
 from flask import Flask, jsonify, request
 import flask_cors
 from google.appengine.ext import ndb
+import google.auth.transport.requests
+import google.oauth2.id_token
+import requests_toolbelt.adapters.appengine
 
-import firebase_helper
-
+# Use the App Engine Requests adapter. This makes sure that Requests uses
+# URLFetch.
+requests_toolbelt.adapters.appengine.monkeypatch()
+HTTP_REQUEST = google.auth.transport.requests.Request()
 
 app = Flask(__name__)
 flask_cors.CORS(app)
@@ -68,7 +73,9 @@ def list_notes():
     """Returns a list of notes added by the current Firebase user."""
 
     # Verify Firebase auth.
-    claims = firebase_helper.verify_auth_token(request)
+    id_token = request.headers['Authorization'].split(' ').pop()
+    claims = google.oauth2.id_token.verify_firebase_token(
+        id_token, HTTP_REQUEST)
     if not claims:
         return 'Unauthorized', 401
 
@@ -90,7 +97,9 @@ def add_note():
     """
 
     # Verify Firebase auth.
-    claims = firebase_helper.verify_auth_token(request)
+    id_token = request.headers['Authorization'].split(' ').pop()
+    claims = google.oauth2.id_token.verify_firebase_token(
+        id_token, HTTP_REQUEST)
     if not claims:
         return 'Unauthorized', 401
 

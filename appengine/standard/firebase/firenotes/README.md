@@ -25,13 +25,6 @@ this sample.
 1. Within a virtualenv, install the dependencies to the backend service:
 
         pip install -r requirements.txt -t lib
-        pip install pycrypto
-
-    Although the pycrypto library is built in to the App Engine standard
-    environment, it will not be bundled until deployment since it is 
-    platform-dependent. Thus, the app.yaml file includes the bundled version of
-    pycrypto at runtime, but you still need to install it manually to run the 
-    application on the App Engine local development server.
 
 1. [Add Firebase to your app.](https://firebase.google.com/docs/web/setup#add_firebase_to_your_app)
 1. Add your Firebase project ID to the backend’s `app.yaml` file as an
