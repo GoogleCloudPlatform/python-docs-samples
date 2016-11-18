@@ -16,6 +16,6 @@
 
 import snippets
 
-def test_crop_hint(resource):
+def test_crop_hint_response_count(resource):
     result = snippets.crop_hint(resource('cat.jpg'))
-    print(result)
+    assert len(result['responses']) == 1
