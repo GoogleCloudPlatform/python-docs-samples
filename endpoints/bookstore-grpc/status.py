@@ -14,17 +14,15 @@
 
 from contextlib import contextmanager
 
-import grpc
-
 import status
 
 
 @contextmanager
 def context(grpc_context):
-  """A context manager that automatically handles KeyError."""
-  try:
-    yield
-  except KeyError as key_error:
-    grpc_context.code(status.Code.NOT_FOUND)
-    grpc_context.details(
-        'Unable to find the item keyed by {}'.format(key_error))
+    """A context manager that automatically handles KeyError."""
+    try:
+        yield
+    except KeyError as key_error:
+        grpc_context.code(status.Code.NOT_FOUND)
+        grpc_context.details(
+            'Unable to find the item keyed by {}'.format(key_error))

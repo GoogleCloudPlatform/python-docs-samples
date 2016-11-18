@@ -38,5 +38,5 @@ code in the sample distribution.  To modify the sample or create your own gRPC
 API definition, you'll need to update the generated code. To do this, once the
 gRPC libraries and tools are installed, run:
 
-    python -m grpc.tools.protoc --python_out=. --grpc_python_out=. \
-        --proto_path=. bookstore.protoo
+    python -m grpc.tools.protoc --python_out=generated_pb2 \
+        --grpc_python_out=generated_pb2 --proto_path=. bookstore.proto
