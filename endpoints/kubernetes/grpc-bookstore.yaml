@@ -18,10 +18,6 @@ metadata:
   name: esp-grpc-bookstore
 spec:
   ports:
-  # Port that accepts JSON/HTTP requests over HTTP.
-  - port: 80
-    protocol: TCP
-    name: http
   # Port that accepts gRPC and JSON/HTTP2 requests over HTTP.
   - port: 9000
     protocol: TCP
@@ -49,10 +45,9 @@ spec:
           "-P", "9000",
           "-s", "SERVICE_NAME",
           "-v", "SERVICE_CONFIG_ID",
-          "-a", "grpc://localhost:8000"
+          "-a", "grpc://127.0.0.1:8000"
         ]
         ports:
-          - containerPort: 80
           - containerPort: 9000
       - name: bookstore
         image: gcr.io/endpointsv2/python-grpc-bookstore-server:1
