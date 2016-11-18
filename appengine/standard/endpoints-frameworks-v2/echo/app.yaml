@@ -1,6 +1,8 @@
 runtime: python27
 threadsafe: true
 api_version: 1
+basic_scaling:
+  max_instances: 2
 
 #[START_EXCLUDE]
 skip_files:
