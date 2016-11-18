@@ -272,7 +272,7 @@ def session_lint(session):
             '--builtin', 'gettext',
             '--max-complexity', '15',
             '--import-order-style', 'google',
-            '--exclude', '.nox,.cache,env,lib',
+            '--exclude', '.nox,.cache,env,lib,generated_pb2',
             '--application-import-names', ','.join(local_names),
             sample_directory)
 
