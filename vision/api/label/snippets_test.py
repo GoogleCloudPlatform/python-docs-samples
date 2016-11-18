@@ -20,3 +20,22 @@ import snippets
 def test_crop_hint_response_count(resource):
     result = snippets.crop_hint(resource('cat.jpg'))
     assert len(result['responses']) == 1
+
+
+def test_crop_hint_response_dim(resource):
+    result = snippets.crop_hint(resource('cat.jpg'))
+    crop_hint = result['responses'][0]
+    crop_hint_annotation = crop_hint['cropHintsAnnotation']['cropHints'][0]
+    confidence = crop_hint_annotation['confidence']
+
+    assert confidence > 0.5
+    assert confidence < 0.9
+
+def test_web_annotations(resource):
+    result = snippets.web_annotation(resource('cat.jpg'))
+    web_annotation = result['responses'][0]['webAnnotation']
+    web_entities = web_annotation['webEntities']
+
+    assert len(web_entities) == 10
+    assert web_entities[0]['entityId'] == '/m/012cc2'
+    assert web_entities[0]['description'] == 'Russian Blue'
