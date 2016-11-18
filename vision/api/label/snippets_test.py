@@ -16,7 +16,6 @@
 
 import snippets
 
-def test_crop_hint(capsys):
-    result = snippets.crop_hint('resources/cat.jpg')
-    crop_hints = result['responses']
-    assert len(crop_hints) == 1
+def test_crop_hint(resource):
+    result = snippets.crop_hint(resource('cat.jpg'))
+    print(result)
