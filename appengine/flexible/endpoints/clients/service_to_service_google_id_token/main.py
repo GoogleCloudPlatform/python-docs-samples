@@ -43,8 +43,8 @@ def generate_jwt():
         "exp": now + 3600,
         # iss is the service account email.
         "iss": SERVICE_ACCOUNT_EMAIL,
-        # scope is the URL of the target service.
-        "scope": TARGET_AUD,
+        # target_audience is the URL of the target service.
+        "target_audience": TARGET_AUD,
         # aud must be Google token endpoints URL.
         "aud": "https://www.googleapis.com/oauth2/v4/token"
     })
