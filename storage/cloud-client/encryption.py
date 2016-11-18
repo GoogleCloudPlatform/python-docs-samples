@@ -97,8 +97,13 @@ def rotate_encryption_key(bucket_name, blob_name, base64_encryption_key,
                           base64_new_encryption_key):
     """Performs a key rotation by re-writing an encrypted blob with a new
     encryption key."""
-    raise NotImplementedError(
-        'This is currently not available using the Cloud Client Library.')
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+    blob = Blob(blob_name, bucket, encryption_key=base64.b64decode(base64_encryption_key))
+    blob_new = Blob(blob_name, bucket, encryption_key=base64.b64decode(base64_new_encryption_key))
+    token, bytes_rewritten, total_bytes = blob_new.rewrite(blob)
+    while token is not None:
+        token, bytes_rewritten, total_bytes = blob_new.rewrite(blob, token)
 
 
 if __name__ == '__main__':
