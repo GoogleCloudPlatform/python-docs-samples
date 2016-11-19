@@ -41,7 +41,6 @@ spec:
       - name: esp
         image: b.gcr.io/endpoints/endpoints-runtime:1
         args: [
-          "-p", "80",
           "-P", "9000",
           "-s", "SERVICE_NAME",
           "-v", "SERVICE_CONFIG_ID",
