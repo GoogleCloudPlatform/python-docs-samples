@@ -32,6 +32,7 @@ def test_crop_hint_response_dim(resource):
     assert confidence > 0.5
     assert confidence < 0.9
 
+
 def test_web_annotations(resource):
     result = snippets.web_annotation(resource('cat.jpg'))
     web_annotation = result['responses'][0]['webAnnotation']
