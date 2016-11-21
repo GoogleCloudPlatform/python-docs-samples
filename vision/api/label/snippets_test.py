@@ -29,8 +29,7 @@ def test_crop_hint_response_dim(resource):
     crop_hint_annotation = crop_hint['cropHintsAnnotation']['cropHints'][0]
     confidence = crop_hint_annotation['confidence']
 
-    assert confidence > 0.5
-    assert confidence < 0.9
+    assert 0.5 < confidence < 0.9
 
 
 def test_web_annotations(resource):
