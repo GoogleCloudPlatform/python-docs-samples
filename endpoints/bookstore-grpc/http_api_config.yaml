@@ -1,0 +1,114 @@
+# Copyright 2016 Google Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#
+# Example HTTP rules for Bookstore
+#
+
+# The configuration schema is defined by service.proto file
+# https://github.com/googleapis/googleapis/blob/master/google/api/service.proto
+type: google.api.Service
+config_version: 3
+
+#
+# HTTP rules define translation from HTTP/REST/JSON to gRPC. With these rules
+# HTTP/REST/JSON clients will be able to call the Bookstore service.
+#
+http:
+  rules:
+  #
+  # HTTP/REST/JSON clients can call the 'ListShelves' method of the Bookstore
+  # service using the GET HTTP verb and the '/shelves' URL path. The response
+  # will the JSON representation of the 'ListShelvesResponse' message.
+  #
+  # Client example (Assuming your service is hosted at the given 'DOMAIN_NAME'):
+  #   curl http://DOMAIN_NAME/v1/shelves
+  #
+  - selector: endpoints.examples.bookstore.Bookstore.ListShelves
+    get: /v1/shelves
+  #
+  # 'CreateShelf' can be called using the POST HTTP verb and the '/shelves' URL
+  # path. The posted HTTP body is the JSON respresentation of the 'shelf' field
+  # of 'CreateShelfRequest' protobuf message.
+  #
+  # Client example:
+  #   curl -d '{"theme":"Music"}' http://DOMAIN_NAME/v1/shelves
+  #
+  - selector: endpoints.examples.bookstore.Bookstore.CreateShelf
+    post: /v1/shelves
+    body: shelf
+  #
+  # 'GetShelf' is available via the GET HTTP verb and '/shelves/{shelf}' URL
+  # path, where {shelf} is the value of the 'shelf' field of 'GetShelfRequest'
+  # protobuf message.
+  #
+  # Client example - returns the first shelf:
+  #   curl http://DOMAIN_NAME/v1/shelves/1
+  #
+  - selector: endpoints.examples.bookstore.Bookstore.GetShelf
+    get: /v1/shelves/{shelf}
+  #
+  # 'DeleteShelf' can be called using the DELETE HTTP verb and
+  # '/shelves/{shelf}' URL path, where {shelf} is the value of the 'shelf' field
+  # of 'DeleteShelfRequest' protobuf message.
+  #
+  # Client example - deletes the second shelf:
+  #   curl -X DELETE http://DOMAIN_NAME/v1/shelves/2
+  #
+  - selector: endpoints.examples.bookstore.Bookstore.DeleteShelf
+    delete: /v1/shelves/{shelf}
+  #
+  # 'ListBooks' can be called using the GET HTTP verb and
+  # '/shelves/{shelf}/books' URL path, where {shelf} is the value of the 'shelf'
+  # field of 'ListBooksRequest' protobuf message.
+  #
+  # Client example - list the books from the first shelf:
+  #   curl http://DOMAIN_NAME/v1/shelves/1/books
+  #
+  - selector: endpoints.examples.bookstore.Bookstore.ListBooks
+    get: /v1/shelves/{shelf}/books
+  #
+  # 'CreateBook' can be called using the POST HTTP verb and
+  # '/shelves/{shelf}/books' URL path, where {shelf} is the value of the 'shelf'
+  # field of 'CreateBookRequest' protobuf message and the posted HTTP body is
+  # the JSON representation of the 'book' field of 'CreateBookRequest' message.
+  #
+  # Client example - create a new book in the first shelf:
+  #   curl -d '{"author":"foo","title":"bar"}' http://DOMAIN_NAME/v1/shelves/1/books
+  #
+  - selector: endpoints.examples.bookstore.Bookstore.CreateBook
+    post: /v1/shelves/{shelf}/books
+    body: book
+  #
+  # 'GetBook' can be called using the GET HTTP verb and
+  # '/shelves/{shelf}/books/{book}' URL path, where {shelf} is the value of the
+  # 'shelf' field of 'GetShelfRequest' protobuf message and {book} is the value
+  # of the 'book' field of the 'GetShelfRequest' message.
+  #
+  # Client example - get the first book from the second shelf:
+  #   curl http://DOMAIN_NAME/v1/shelves/2/books/1
+  #
+  - selector: endpoints.examples.bookstore.Bookstore.GetBook
+    get: /v1/shelves/{shelf}/books/{book}
+  #
+  # 'DeleteBook' can be called using DELETE HTTP verb and
+  # '/shelves/{shelf}/books/{book}' URL path, where {shelf} is the value of the
+  # 'shelf' field of 'DeleteShelfRequest' protobuf message and {book} is the
+  # value of the 'book' field of the 'DeleteShelfRequest' message.
+  #
+  # Client example - delete the first book from the first shelf:
+  #   curl -X DELETE http://DOMAIN_NAME/v1/shelves/1/books/1
+  #
+  - selector: endpoints.examples.bookstore.Bookstore.DeleteBook
+    delete: /v1/shelves/{shelf}/books/{book}
