@@ -21,7 +21,7 @@ import pytest
 
 import encryption
 
-TEST_ENCRYPTION_KEY = '0YSyzDHlx5QAqSDOnrpqktm3+RkqiP1udwjrk3d7SGk='
+TEST_ENCRYPTION_KEY = 'brtJUWneL92g5q0N2gyDSnlPSYAiIVZ/cWgjyZNeMy0='
 TEST_ENCRYPTION_KEY_DECODED = base64.b64decode(TEST_ENCRYPTION_KEY)
 
 TEST_ENCRYPTION_KEY_2 = 'o4OD7SWCaPjfeEGhAY+YCgMdY9UW+OJ8mvfWD9lNtO4='
@@ -77,6 +77,7 @@ def test_rotate_encryption_key(test_blob, cloud_config):
         test_blob_name,
         TEST_ENCRYPTION_KEY,
         TEST_ENCRYPTION_KEY_2)
+
     with tempfile.NamedTemporaryFile() as dest_file:
         encryption.download_encrypted_blob(
             cloud_config.storage_bucket,

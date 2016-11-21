@@ -99,11 +99,18 @@ def rotate_encryption_key(bucket_name, blob_name, base64_encryption_key,
     encryption key."""
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
-    blob = Blob(blob_name, bucket, encryption_key=base64.b64decode(base64_encryption_key))
-    blob_new = Blob(blob_name, bucket, encryption_key=base64.b64decode(base64_new_encryption_key))
-    token, bytes_rewritten, total_bytes = blob_new.rewrite(blob)
+    current_encryption_key = base64.b64decode(base64_encryption_key)
+    new_encryption_key = base64.b64decode(base64_new_encryption_key)
+    # Both source_blob and destination_blob refer to the same storage object,
+    # but destination_blob has the new encryption key.
+    source_blob = Blob(blob_name, bucket, encryption_key=current_encryption_key)
+    destination_blob = Blob(blob_name, bucket, encryption_key=new_encryption_key)
+    token, bytes_rewritten, total_bytes = destination_blob.rewrite(source_blob)
+
     while token is not None:
-        token, bytes_rewritten, total_bytes = blob_new.rewrite(blob, token)
+        token, bytes_rewritten, total_bytes = destination_blob.rewrite(source_blob, token)
+
+    print('Key rotation complete for Blob {}'.format(blob_name))
 
 
 if __name__ == '__main__':
