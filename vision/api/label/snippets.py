@@ -60,7 +60,7 @@ def crop_hint(photo_file):
     })
 
     response = service_request.execute()
-    return response
+    print(json.dumps(response, indent=2))
 
 
 def web_annotation(photo_file):
@@ -70,7 +70,7 @@ def web_annotation(photo_file):
 
     with open(photo_file, 'rb') as image:
         image_content = base64.b64encode(image.read())
-    
+
     service_request = service.images().annotate(body={
         'requests': [{
             'image': {
@@ -84,7 +84,7 @@ def web_annotation(photo_file):
     })
 
     response = service_request.execute()
-    return response
+    print(json.dumps(response, indent=2))
 
 
 if __name__ == '__main__':
@@ -95,7 +95,5 @@ if __name__ == '__main__':
 
     if args.command == 'crop_hint':
         response = crop_hint(args.image_file)
-        print(json.dumps(response, indent=2))
     elif args.command == 'web_annotation':
         response = web_annotation(args.image_file)
-        print(json.dumps(response, indent=2))

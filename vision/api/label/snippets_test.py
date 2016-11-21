@@ -15,16 +15,21 @@
 # limitations under the License.
 
 
+import json
 import snippets
 
 
-def test_crop_hint_response_count(resource):
-    result = snippets.crop_hint(resource('cat.jpg'))
+def test_crop_hint_response_count(capsys, resource):
+    snippets.crop_hint(resource('cat.jpg'))
+    stdout, _ = capsys.readouterr()
+    result = json.loads(stdout)
     assert len(result['responses']) == 1
 
 
-def test_crop_hint_response_dim(resource):
-    result = snippets.crop_hint(resource('cat.jpg'))
+def test_crop_hint_response_dim(capsys, resource):
+    snippets.crop_hint(resource('cat.jpg'))
+    stdout, _ = capsys.readouterr()
+    result = json.loads(stdout)
     crop_hint = result['responses'][0]
     crop_hint_annotation = crop_hint['cropHintsAnnotation']['cropHints'][0]
     confidence = crop_hint_annotation['confidence']
@@ -32,8 +37,10 @@ def test_crop_hint_response_dim(resource):
     assert 0.5 < confidence < 0.9
 
 
-def test_web_annotations(resource):
-    result = snippets.web_annotation(resource('cat.jpg'))
+def test_web_annotations(capsys, resource):
+    snippets.web_annotation(resource('cat.jpg'))
+    stdout, _ = capsys.readouterr()
+    result = json.loads(stdout)
     web_annotation = result['responses'][0]['webAnnotation']
     web_entities = web_annotation['webEntities']
 
