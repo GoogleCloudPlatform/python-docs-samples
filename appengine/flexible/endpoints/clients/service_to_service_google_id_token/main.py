@@ -28,6 +28,7 @@ SERVICE_ACCOUNT_EMAIL = "YOUR-CLIENT-PROJECT-ID@appspot.gserviceaccount.com"
 HOST = "YOUR-SERVER-PROJECT-ID.appspot.com"
 TARGET_AUD = "https://YOUR-SERVER-PROJECT-ID.appspot.com"
 
+
 def generate_jwt():
     """Generates a signed JSON Web Token using the Google App Engine default
     service account."""
