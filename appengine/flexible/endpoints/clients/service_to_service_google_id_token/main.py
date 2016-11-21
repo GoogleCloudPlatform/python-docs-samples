@@ -24,9 +24,9 @@ import urllib
 from google.appengine.api import app_identity
 import webapp2
 
-DEFAUTL_SERVICE_ACCOUNT = "YOUR-CLIENT-PROJECT-ID@appspot.gserviceaccount.com"
+SERVICE_ACCOUNT_EMAIL = "YOUR-CLIENT-PROJECT-ID@appspot.gserviceaccount.com"
 HOST = "YOUR-SERVER-PROJECT-ID.appspot.com"
-TARGET_AUD = "YOUR-SERVER-PROJECT-ID@appspot.gserviceaccount.com"
+TARGET_AUD = "https://YOUR-SERVER-PROJECT-ID.appspot.com"
 
 
 def generate_jwt():
@@ -42,11 +42,10 @@ def generate_jwt():
         "iat": now,
         # expires after one hour.
         "exp": now + 3600,
-        # iss is the Google App Engine default service account email.
-        "iss": DEFAUTL_SERVICE_ACCOUNT,
-        # scope must match 'audience' for google_id_token in the security
-        # configuration in your swagger spec.
-        "scope": TARGET_AUD,
+        # iss is the service account email.
+        "iss": SERVICE_ACCOUNT_EMAIL,
+        # target_audience is the URL of the target service.
+        "target_audience": TARGET_AUD,
         # aud must be Google token endpoints URL.
         "aud": "https://www.googleapis.com/oauth2/v4/token"
     })
