@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 import re
 
 from google.appengine.api import users
@@ -52,11 +53,12 @@ def app(testbed, monkeypatch, login):
 
     login(id='38')
 
+    firetactoe.app.debug = True
     return webtest.TestApp(firetactoe.app)
 
 
 def test_index_new_game(app, monkeypatch):
-    mock_http = MockHttp(200)
+    mock_http = MockHttp(200, content=json.dumps({'access_token': '123'}))
     monkeypatch.setattr(httplib2, 'Http', mock_http)
 
     response = app.get('/')
@@ -74,7 +76,7 @@ def test_index_new_game(app, monkeypatch):
 
 
 def test_index_existing_game(app, monkeypatch):
-    mock_http = MockHttp(200)
+    mock_http = MockHttp(200, content=json.dumps({'access_token': '123'}))
     monkeypatch.setattr(httplib2, 'Http', mock_http)
     userX = users.User('x@example.com', _user_id='123')
     firetactoe.Game(id='razem', userX=userX).put()
@@ -97,7 +99,7 @@ def test_index_existing_game(app, monkeypatch):
 
 
 def test_index_nonexisting_game(app, monkeypatch):
-    mock_http = MockHttp(200)
+    mock_http = MockHttp(200, content=json.dumps({'access_token': '123'}))
     monkeypatch.setattr(httplib2, 'Http', mock_http)
     firetactoe.Game(id='razem', userX=users.get_current_user()).put()
 
@@ -107,7 +109,7 @@ def test_index_nonexisting_game(app, monkeypatch):
 
 
 def test_opened(app, monkeypatch):
-    mock_http = MockHttp(200)
+    mock_http = MockHttp(200, content=json.dumps({'access_token': '123'}))
     monkeypatch.setattr(httplib2, 'Http', mock_http)
     firetactoe.Game(id='razem', userX=users.get_current_user()).put()
 
@@ -119,7 +121,7 @@ def test_opened(app, monkeypatch):
 
 
 def test_bad_move(app, monkeypatch):
-    mock_http = MockHttp(200)
+    mock_http = MockHttp(200, content=json.dumps({'access_token': '123'}))
     monkeypatch.setattr(httplib2, 'Http', mock_http)
     firetactoe.Game(
         id='razem', userX=users.get_current_user(), board=9*' ',
@@ -131,7 +133,7 @@ def test_bad_move(app, monkeypatch):
 
 
 def test_move(app, monkeypatch):
-    mock_http = MockHttp(200)
+    mock_http = MockHttp(200, content=json.dumps({'access_token': '123'}))
     monkeypatch.setattr(httplib2, 'Http', mock_http)
     firetactoe.Game(
         id='razem', userX=users.get_current_user(), board=9*' ',
@@ -148,7 +150,7 @@ def test_move(app, monkeypatch):
 
 
 def test_delete(app, monkeypatch):
-    mock_http = MockHttp(200)
+    mock_http = MockHttp(200, content=json.dumps({'access_token': '123'}))
     monkeypatch.setattr(httplib2, 'Http', mock_http)
     firetactoe.Game(id='razem', userX=users.get_current_user()).put()
 
