@@ -17,9 +17,10 @@ import tempfile
 
 from google.cloud import storage
 from google.cloud.storage import Blob
+import pytest
 
 import encryption
-import pytest
+
 
 TEST_ENCRYPTION_KEY = 'brtJUWneL92g5q0N2gyDSnlPSYAiIVZ/cWgjyZNeMy0='
 TEST_ENCRYPTION_KEY_DECODED = base64.b64decode(TEST_ENCRYPTION_KEY)
