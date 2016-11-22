@@ -27,6 +27,7 @@ DISCOVERY_URL = (
     'labels=TRUSTED_TESTER&version=v1'
 )
 
+
 def get_service():
     """Get vision service using discovery."""
     credentials = GoogleCredentials.get_application_default()
@@ -39,6 +40,7 @@ def get_service():
         http=http,
         discoveryServiceUrl=DISCOVERY_URL
     )
+
 
 def crop_hint(photo_file):
     """Run a crop hint request on the image."""
@@ -89,7 +91,7 @@ def web_annotation(photo_file):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('command', choices=['crop_hint','web_annotation'])
+    parser.add_argument('command', choices=['crop_hint', 'web_annotation'])
     parser.add_argument('image_file', help='The image you\'d like to process.')
     args = parser.parse_args()
 
