@@ -7,7 +7,7 @@ runtime_config:
 
 #[START env]
 env_variables:
-    # Replace user, password, database, project, and instance with the values obtained
+    # Replace user, password, database, and instance connection name with the values obtained
     # when configuring your Cloud SQL instance.
     SQLALCHEMY_DATABASE_URI: >-
       mysql+pymysql://USER:PASSWORD@/DATABASE?unix_socket=/cloudsql/INSTANCE_CONNECTION_NAME
