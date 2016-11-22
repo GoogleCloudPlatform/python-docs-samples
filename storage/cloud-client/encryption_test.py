@@ -15,11 +15,11 @@
 import base64
 import tempfile
 
+import encryption
 from google.cloud import storage
 from google.cloud.storage import Blob
-import pytest
 
-import encryption
+import pytest
 
 TEST_ENCRYPTION_KEY = 'brtJUWneL92g5q0N2gyDSnlPSYAiIVZ/cWgjyZNeMy0='
 TEST_ENCRYPTION_KEY_DECODED = base64.b64decode(TEST_ENCRYPTION_KEY)
@@ -51,7 +51,8 @@ def test_upload_encrypted_blob(cloud_config):
 def test_blob(cloud_config):
     """Provides a pre-existing blob in the test bucket."""
     bucket = storage.Client().bucket(cloud_config.storage_bucket)
-    blob = Blob('encryption_test_sigil', bucket, encryption_key=TEST_ENCRYPTION_KEY_DECODED)
+    blob = Blob('encryption_test_sigil',
+                bucket, encryption_key=TEST_ENCRYPTION_KEY_DECODED)
     content = 'Hello, is it me you\'re looking for?'
     blob.upload_from_string(content)
     return blob.name, content
