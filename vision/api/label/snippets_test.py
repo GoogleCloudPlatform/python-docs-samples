@@ -51,7 +51,7 @@ def test_web_annotations(capsys, resource):
     for entity in web_entities:
         entity_id = entity['entityId']
         desc = entity['description']
-        
+
         if entity_id == '/m/012cc2' and desc == 'Russian Blue':
             russian_blue = True
 
