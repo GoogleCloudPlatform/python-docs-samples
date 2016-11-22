@@ -15,10 +15,10 @@
 import base64
 import tempfile
 
-import encryption
 from google.cloud import storage
 from google.cloud.storage import Blob
 
+import encryption
 import pytest
 
 TEST_ENCRYPTION_KEY = 'brtJUWneL92g5q0N2gyDSnlPSYAiIVZ/cWgjyZNeMy0='
