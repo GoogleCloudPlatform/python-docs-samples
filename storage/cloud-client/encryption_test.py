@@ -16,12 +16,17 @@ import base64
 import tempfile
 
 from google.cloud import storage
+from google.cloud.storage import Blob
 import pytest
 
 import encryption
 
+
 TEST_ENCRYPTION_KEY = 'brtJUWneL92g5q0N2gyDSnlPSYAiIVZ/cWgjyZNeMy0='
 TEST_ENCRYPTION_KEY_DECODED = base64.b64decode(TEST_ENCRYPTION_KEY)
+
+TEST_ENCRYPTION_KEY_2 = 'o4OD7SWCaPjfeEGhAY+YCgMdY9UW+OJ8mvfWD9lNtO4='
+TEST_ENCRYPTION_KEY_2_DECODED = base64.b64decode(TEST_ENCRYPTION_KEY_2)
 
 
 def test_generate_encryption_key(capsys):
@@ -47,9 +52,9 @@ def test_upload_encrypted_blob(cloud_config):
 def test_blob(cloud_config):
     """Provides a pre-existing blob in the test bucket."""
     bucket = storage.Client().bucket(cloud_config.storage_bucket)
-    blob = bucket.blob('encryption_test_sigil')
+    blob = Blob('encryption_test_sigil',
+                bucket, encryption_key=TEST_ENCRYPTION_KEY_DECODED)
     content = 'Hello, is it me you\'re looking for?'
-    blob.encryption_key = TEST_ENCRYPTION_KEY_DECODED
     blob.upload_from_string(content)
     return blob.name, content
 
@@ -62,6 +67,25 @@ def test_download_blob(test_blob, cloud_config):
             test_blob_name,
             dest_file.name,
             TEST_ENCRYPTION_KEY)
+
+        downloaded_content = dest_file.read().decode('utf-8')
+        assert downloaded_content == test_blob_content
+
+
+def test_rotate_encryption_key(test_blob, cloud_config):
+    test_blob_name, test_blob_content = test_blob
+    encryption.rotate_encryption_key(
+        cloud_config.storage_bucket,
+        test_blob_name,
+        TEST_ENCRYPTION_KEY,
+        TEST_ENCRYPTION_KEY_2)
+
+    with tempfile.NamedTemporaryFile() as dest_file:
+        encryption.download_encrypted_blob(
+            cloud_config.storage_bucket,
+            test_blob_name,
+            dest_file.name,
+            TEST_ENCRYPTION_KEY_2)
 
         downloaded_content = dest_file.read().decode('utf-8')
         assert downloaded_content == test_blob_content
