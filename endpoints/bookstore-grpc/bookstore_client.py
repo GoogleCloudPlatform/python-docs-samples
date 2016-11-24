@@ -30,9 +30,9 @@ def run(host, port, api_key, auth_token, timeout):
     stub = bookstore_pb2.BookstoreStub(channel)
     metadata = []
     if api_key:
-      metadata.append(('x-api-key', api_key))
+        metadata.append(('x-api-key', api_key))
     if auth_token:
-      metadata.append(('authorization', 'Bearer ' + auth_token))
+        metadata.append(('authorization', 'Bearer ' + auth_token))
     shelves = stub.ListShelves(empty_pb2.Empty(), timeout, metadata=metadata)
     print('ListShelves: {}'.format(shelves))
 
@@ -50,6 +50,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--api_key', default=None, help='The API key to use for the call')
     parser.add_argument(
-        '--auth_token', default=None, help='The JWT auth key to use for the call')
+        '--auth_token', default=None,
+        help='The JWT auth token to use for the call')
     args = parser.parse_args()
     run(args.host, args.port, args.api_key, args.auth_token, args.timeout)
