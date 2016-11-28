@@ -19,7 +19,8 @@ metadata:
 spec:
   ports:
   # Port that accepts gRPC and JSON/HTTP2 requests over HTTP.
-  - port: 9000
+  - port: 80
+    targetPort: 9000
     protocol: TCP
     name: http2
   selector:
