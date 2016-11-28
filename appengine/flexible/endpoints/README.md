@@ -36,7 +36,7 @@ The `APIKEY` doesn't matter as the endpoint proxy is not running to do authentic
 
 ## Deploying to Google App Engine
 
-Open the `swagger.yaml` file and in the `host` property, replace
+Open the `openapi.yaml` file and in the `host` property, replace
 `YOUR-PROJECT-ID` with your project's ID.
 
 Then, deploy the sample using `gcloud`:
@@ -72,7 +72,7 @@ The JWT client demonstrates how to use a service account to authenticate to endp
 
 To use the service account for authentication:
 
-1. Update the `google_jwt`'s `x-jwks_uri` in `swagger.yaml` with your service account's email address.
+1. Update the `google_jwt`'s `x-jwks_uri` in `openapi.yaml` with your service account's email address.
 2. Redeploy your application.
 
 Now you can use the JWT client to make requests to the API:
@@ -91,7 +91,7 @@ The ID Token client demonstrates how to use user credentials to authenticate to 
 
 To use the client ID for authentication:
 
-1. Update the `/auth/info/googleidtoken`'s `audiences` in `swagger.yaml` with your client ID.
+1. Update the `/auth/info/googleidtoken`'s `audiences` in `openapi.yaml` with your client ID.
 2. Redeploy your application.
 
 Now you can use the client ID to make requests to the API:
@@ -106,7 +106,7 @@ We refer to the project that serves API requests as the server project. You also
 
 To use the App Engine default service account for authentication:
 
-1. Update the `gae_default_service_account`'s `x-issuer` and `x-jwks_uri` in `swagger.yaml` with your client project ID.
+1. Update the `gae_default_service_account`'s `x-issuer` and `x-jwks_uri` in `openapi.yaml` with your client project ID.
 2. Redeploy your server application.
 3. Update clients/service_to_service_gae_default/main.py, replace 'YOUR-CLIENT-PROJECT-ID' and 'YOUR-SERVER-PROJECT-ID' with your client project ID and your server project ID.
 4. Upload your application to Google App Engine by invoking the following command. Note that you need to provide project ID in the command because there are two projects (server and client projects) here and gcloud needs to know which project to pick.
@@ -137,7 +137,7 @@ Google API python client library should have already been installed under 'lib' 
 
 To use the client for authentication:
 
-1. Update the `google_service_account`'s `x-issuer` and `x-jwks_uri` in `swagger.yaml` with your service account email.
+1. Update the `google_service_account`'s `x-issuer` and `x-jwks_uri` in `openapi.yaml` with your service account email.
 2. Redeploy your server application.
 3. Update clients/service_to_service_non_default/main.py by replacing 'YOUR-SERVICE-ACCOUNT-EMAIL', 'YOUR-SERVER-PROJECT-ID' and 'YOUR-CLIENT-PROJECT-ID'
 with your service account email, your server project ID, and your client project ID, respectively.
