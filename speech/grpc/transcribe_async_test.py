@@ -11,17 +11,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import re
 
 from transcribe_async import main
 
 
-def test_main(resource, capsys):
+def test_main(resource, capsys, cloud_config):
 
-    # Run the transcribe_async sample on audio.raw, verify correct results
-    speech_storage_uri = 'gs://' + os.environ.get('CLOUD_STORAGE_BUCKET')
-    speech_storage_uri += '/speech/audio.raw'
-    main(speech_storage_uri, 'LINEAR16', 16000)
+    # Run the transcribe sample on audio.raw, verify correct results
+    main(cloud_config.speech_storage_uri, 'LINEAR16', 16000)
     out, err = capsys.readouterr()
     assert re.search(r'how old is the Brooklyn Bridge', out, re.DOTALL | re.I)

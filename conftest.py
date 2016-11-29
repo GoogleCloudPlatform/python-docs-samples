@@ -26,12 +26,15 @@ class Namespace(object):
 @pytest.fixture(scope='session')
 def cloud_config():
     """Provides a configuration object as a proxy to environment variables."""
+    speech_storage_uri = 'gs://' + os.environ.get('CLOUD_STORAGE_BUCKET')
+    speech_storage_uri += '/speech/audio.raw'
     return Namespace(
         project=os.environ.get('GCLOUD_PROJECT'),
         storage_bucket=os.environ.get('CLOUD_STORAGE_BUCKET'),
         client_secrets=os.environ.get('GOOGLE_CLIENT_SECRETS'),
         bigtable_instance=os.environ.get('BIGTABLE_CLUSTER'),
-        api_key=os.environ.get('API_KEY'))
+        api_key=os.environ.get('API_KEY'),
+        speech_storage_uri=speech_storage_uri)
 
 
 def get_resource_path(resource, local_path):
