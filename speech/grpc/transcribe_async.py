@@ -89,9 +89,7 @@ def main(input_uri, encoding, sample_rate, language_code='en-US'):
             DEADLINE_SECS)
 
         if operation.error.message:
-            print("")
-            print("Operation error:")
-            print(operation.error)
+            print('\nOperation error:\n{}'.format(operation.error))
 
         if operation.done:
             break
