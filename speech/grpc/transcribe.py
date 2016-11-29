@@ -90,7 +90,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('input_uri', type=_gcs_uri)
     parser.add_argument(
-        '--encoding', default='FLAC', choices=[
+        '--encoding', default='LINEAR16', choices=[
             'LINEAR16', 'FLAC', 'MULAW', 'AMR', 'AMR_WB'],
         help='How the audio file is encoded. See {}#L67'.format(PROTO_URL))
     parser.add_argument('--sample_rate', type=int, default=16000)

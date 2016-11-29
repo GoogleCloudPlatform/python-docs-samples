@@ -20,3 +20,6 @@ export SENDGRID_SENDER=
 export TWILIO_ACCOUNT_SID=
 export TWILIO_AUTH_TOKEN=
 export TWILIO_NUMBER=
+
+# Speech API Storage URI for GRPC tests
+export SPEECH_GRPC_STORAGE_URI=
