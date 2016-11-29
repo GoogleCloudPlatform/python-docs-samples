@@ -31,12 +31,12 @@ class EchoRequest(messages.Message):
 class EchoResponse(messages.Message):
     """A proto Message that contains a simple string field."""
     content = messages.StringField(1)
-# [END messages]
 
 
 ECHO_RESOURCE = endpoints.ResourceContainer(
     EchoRequest,
     n=messages.IntegerField(2, default=1))
+# [END messages]
 
 
 # [START echo_api]
@@ -74,8 +74,7 @@ class EchoApi(remote.Service):
         EchoResponse,
         path='echo/getApiKey',
         http_method='GET',
-        name='echo_api_key',
-        api_key_required=True)
+        name='echo_api_key')
     def echo_api_key(self, request):
         return EchoResponse(content=request.get_unrecognized_field_info('key'))
 
