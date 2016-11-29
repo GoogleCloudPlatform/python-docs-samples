@@ -23,8 +23,8 @@ addons:
     - python3.5-dev
 install:
 - pip install --upgrade pip wheel virtualenv
-- pip install nox-automation coverage
+- pip install --upgrade nox-automation coverage
+# Temporarily install this from source.
+- pip install --upgrade git+https://github.com/dhermes/ci-diff-helper.git
 script:
 - ./scripts/travis.sh
-after_script:
-- coverage report
