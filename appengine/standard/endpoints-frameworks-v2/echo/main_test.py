@@ -22,7 +22,8 @@ import main
 
 def test_echo():
     api = main.EchoApi()
-    response = api.echo(main.Echo(content='Hello world!'))
+    request = main.EchoApi.echo.remote.request_type(content='Hello world!')
+    response = api.echo(request)
     assert 'Hello world!' == response.content
 
 
