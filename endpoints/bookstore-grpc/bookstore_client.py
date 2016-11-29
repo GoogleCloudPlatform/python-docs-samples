@@ -18,8 +18,9 @@ import argparse
 
 from google.protobuf import empty_pb2
 
-from generated_pb2 import bookstore_pb2
 import grpc
+
+from generated_pb2 import bookstore_pb2
 
 
 def run(host, port, api_key, auth_token, timeout):
