@@ -19,8 +19,8 @@ import time
 
 from google.protobuf import struct_pb2
 
-from generated_pb2 import bookstore_pb2
 import bookstore
+from generated_pb2 import bookstore_pb2
 import status
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
