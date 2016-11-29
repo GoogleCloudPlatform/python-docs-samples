@@ -69,16 +69,15 @@ class EchoApi(remote.Service):
 
     @endpoints.method(
         # This method takes a ResourceContainer defined above.
-        ECHO_RESOURCE,
+        message_types.VoidMessage,
         # This method returns an Echo message.
         EchoResponse,
-        path='echo',
-        http_method='POST',
+        path='echo/getApiKey',
+        http_method='GET',
         name='echo_api_key',
         api_key_required=True)
     def echo_api_key(self, request):
-        output_content = ' '.join([request.content] * request.n)
-        return EchoResponse(content=output_content)
+        return EchoResponse(content=request.get_unrecognized_field_info('key'))
 
     @endpoints.method(
         # This method takes an empty request body.
