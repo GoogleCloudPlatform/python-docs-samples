@@ -24,9 +24,9 @@ app = Flask(__name__)
 # [START client]
 # Environment variables are defined in app.yaml.
 if os.environ.get('USE_GAE_MEMCACHE'):
-    MEMCACHE_SERVER = ':'.join(
+    MEMCACHE_SERVER = ':'.join([
         os.environ.get('GAE_MEMCACHE_HOST', 'localhost'),
-        os.environ.get('GAE_MEMCACHE_PORT', 11211))
+        os.environ.get('GAE_MEMCACHE_PORT', '11211')])
 else:
     MEMCACHE_SERVER = os.environ.get('MEMCACHE_SERVER', 'localhost:11211')
 
