@@ -103,11 +103,11 @@ def _determine_local_import_names(start_dir):
     This is used when running the linter to insure that import order is
     properly checked.
     """
+    file_ext_pairs = [os.path.splitext(path) for path in os.listdir(start_dir)]
     return [
         basename
         for basename, extension
-        in [os.path.splitext(path) for path
-            in os.listdir(start_dir)]
+        in file_ext_pairs
         if extension == '.py' or os.path.isdir(
             os.path.join(start_dir, basename))
         and basename not in ('__pycache__')]
@@ -241,7 +241,7 @@ def session_missing_tests(session):
     session.virtualenv = False
     print('The following samples do not have tests:')
     for sample in set(ALL_SAMPLE_DIRECTORIES) - set(ALL_TESTED_SAMPLES):
-        print('*', sample)
+        print('* {}'.format(sample))
 
 
 SAMPLES_WITH_GENERATED_READMES = sorted(
