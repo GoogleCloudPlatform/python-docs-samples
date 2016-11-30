@@ -176,15 +176,14 @@ if CHANGED_FILES is not None:
 
 def _session_tests(session, sample):
     """Runs py.test for a particular sample."""
-    # This happens when there are no changed samples for the session.
-    if sample is None:
-        session.virtualenv = False
-        return
-
     session.install('-r', 'testing/requirements.txt')
+    session.install(GCP_REPO_TOOLS_REQ)
+
     session.chdir(sample)
+
     if os.path.exists(os.path.join(sample, 'requirements.txt')):
         session.install('-r', 'requirements.txt')
+
     session.run('pytest', *PYTEST_COMMON_ARGS)
 
 
