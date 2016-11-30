@@ -11,15 +11,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-'''Demonstrates how to make a simple call to the Natural Language API'''
+"""Demonstrates how to make a simple call to the Natural Language API."""
 
 import argparse
+
 from googleapiclient import discovery
 from oauth2client.client import GoogleCredentials
 
 
 def main(movie_review_filename):
-    '''Run a sentiment analysis request on text within a passed filename.'''
+    """Run a sentiment analysis request on text within a passed filename."""
 
     credentials = GoogleCredentials.get_application_default()
     service = discovery.build('language', 'v1', credentials=credentials)
@@ -41,13 +42,10 @@ def main(movie_review_filename):
     for i, sentence in enumerate(response['sentences']):
         sentence_sentiment = sentence['sentiment']['score']
         print('Sentence {} has a sentiment score of {}'.format(
-          i,
-          sentence_sentiment))
+            i, sentence_sentiment))
 
     print('Overall Sentiment: score of {} with magnitude of {}'.format(
-      score,
-      magnitude)
-      )
+        score, magnitude))
     return 0
 
     print('Sentiment: score of {} with magnitude of {}'.format(
