@@ -27,6 +27,7 @@ The dataset and table should already exist.
 
 import argparse
 import time
+
 from google.cloud import bigquery
 
 
