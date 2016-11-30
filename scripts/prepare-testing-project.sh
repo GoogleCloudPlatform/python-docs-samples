@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+set -e
+
 GCLOUD_PROJECT=$(gcloud config list project --format="value(core.project)" 2>/dev/null)
 
 echo "Configuring project $GCLOUD_PROJECT for system tests."
