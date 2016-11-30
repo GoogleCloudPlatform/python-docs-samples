@@ -14,6 +14,7 @@
 
 from flask import Flask
 import requests
+
 import services_config
 
 app = Flask(__name__)

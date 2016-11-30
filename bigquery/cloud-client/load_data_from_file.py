@@ -27,6 +27,7 @@ The dataset and table should already exist.
 
 import argparse
 import time
+
 from google.cloud import bigquery
 
 
@@ -43,8 +44,6 @@ def load_data_from_file(dataset_name, table_name, source_file_name):
         # See https://cloud.google.com/bigquery/loading-data
         job = table.upload_from_file(
             source_file, source_format='text/csv')
-
-    job.begin()
 
     wait_for_job(job)
 

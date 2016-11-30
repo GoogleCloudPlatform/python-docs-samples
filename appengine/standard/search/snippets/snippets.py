@@ -112,7 +112,7 @@ def query_options():
     index = search.Index('products')
     query_string = "product: piano AND price < 5000"
 
-    # Create sort options to sory on price and brand.
+    # Create sort options to sort on price and brand.
     sort_price = search.SortExpression(
         expression='price',
         direction=search.SortExpression.DESCENDING,
