@@ -12,6 +12,7 @@
 # limitations under the License.
 
 from gcp.testing.flaky import flaky
+
 from wiki import main
 
 
