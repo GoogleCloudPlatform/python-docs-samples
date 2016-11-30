@@ -19,6 +19,8 @@ from transcribe import main
 def test_main(resource, capsys, cloud_config):
 
     # Run the transcribe sample on audio.raw, verify correct results
-    main(cloud_config.speech_storage_uri, 'LINEAR16', 16000)
+    speech_storage_uri = 'gs://' + cloud_config.storage_bucket
+    speech_storage_uri += '/speech/audio.raw'
+    main(speech_storage_uri, 'LINEAR16', 16000)
     out, err = capsys.readouterr()
     assert re.search(r'how old is the Brooklyn Bridge', out, re.DOTALL | re.I)
