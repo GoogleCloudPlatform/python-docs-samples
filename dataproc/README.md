@@ -60,4 +60,4 @@ you create the instance with the correct scopes.
     gcloud compute instances create --scopes="https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/compute,https://www.googleapis.com/auth/compute.readonly" test-instance
 
 If you did not create the instance with the right scopes, you can still upload a JSON service 
-account and set GOOGLE_APPLICATION_CREDENTIALS as described below.
+account and set `GOOGLE_APPLICATION_CREDENTIALS`. See [Google Application Default Credentials](https://developers.google.com/identity/protocols/application-default-credentials) for more details.
