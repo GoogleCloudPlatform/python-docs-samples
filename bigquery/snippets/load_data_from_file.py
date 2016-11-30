@@ -44,8 +44,6 @@ def load_data_from_file(dataset_name, table_name, source_file_name):
         job = table.upload_from_file(
             source_file, source_format='text/csv')
 
-    job.begin()
-
     wait_for_job(job)
 
     print('Loaded {} rows into {}:{}.'.format(

@@ -11,17 +11,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
-
 import load_data_from_file
 
 DATASET_ID = 'test_dataset'
 TABLE_ID = 'test_import_table'
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason='https://github.com/GoogleCloudPlatform/gcloud-python/issues/2133')
 def test_load_table(resource, capsys):
     data_path = resource('data.csv')
 
