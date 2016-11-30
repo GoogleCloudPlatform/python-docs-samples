@@ -56,7 +56,7 @@ def wait_for_job(job):
         job.reload()
         if job.state == 'DONE':
             if job.error_result:
-                raise RuntimeError(job.error_result)
+                raise RuntimeError(job.errors)
             return
         time.sleep(1)
 
