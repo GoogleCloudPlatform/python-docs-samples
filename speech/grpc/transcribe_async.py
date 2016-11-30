@@ -20,8 +20,8 @@ import argparse
 import time
 
 from google.cloud.credentials import get_credentials
-from google.cloud.speech.v1beta1 import cloud_speech_pb2
-from google.longrunning import operations_grpc_pb2
+from google.cloud.grpc.speech.v1beta1 import cloud_speech_pb2
+from google.longrunning import operations_pb2
 from grpc.beta import implementations
 
 # Keep the request alive for this many seconds
@@ -76,7 +76,7 @@ def main(input_uri, encoding, sample_rate, language_code='en-US'):
     print(operation)
 
     # Construct a long running operation endpoint.
-    service = operations_grpc_pb2.beta_create_Operations_stub(channel)
+    service = operations_pb2.beta_create_Operations_stub(channel)
 
     name = operation.name
 
@@ -85,8 +85,11 @@ def main(input_uri, encoding, sample_rate, language_code='en-US'):
         print('Waiting for server processing...')
         time.sleep(1)
         operation = service.GetOperation(
-            operations_grpc_pb2.GetOperationRequest(name=name),
+            operations_pb2.GetOperationRequest(name=name),
             DEADLINE_SECS)
+
+        if operation.error.message:
+            print('\nOperation error:\n{}'.format(operation.error))
 
         if operation.done:
             break
@@ -112,7 +115,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('input_uri', type=_gcs_uri)
     parser.add_argument(
-        '--encoding', default='FLAC', choices=[
+        '--encoding', default='LINEAR16', choices=[
             'LINEAR16', 'FLAC', 'MULAW', 'AMR', 'AMR_WB'],
         help='How the audio file is encoded. See {}#L67'.format(
             'https://github.com/googleapis/googleapis/blob/master/'
