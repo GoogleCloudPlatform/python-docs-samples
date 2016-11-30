@@ -180,7 +180,7 @@ def wait_for_job(job):
         job.reload()  # Refreshes the state via a GET request.
         if job.state == 'DONE':
             if job.error_result:
-                raise RuntimeError(job.error_result)
+                raise RuntimeError(job.errors)
             return
         time.sleep(1)
 
