@@ -12,7 +12,7 @@ cache:
   - $HOME/.cache
 env:
   global:
-    secure: V8kTaIK8NYMEUVzaekLoVgJzz5/9yA/KKL8CVgOmiPEjt1o1wAXy+ojyXCgjGmB16OOcTYKtXKvOBndDg99MxUzMc9uLrHF4ub2fJZy3ZoCfPaxHNOpIOTTAhB8J/nog/JpW5NnJOBGE8fAQ/TUy8nSvOwe27n4qKO5eWqTy5kA=
+    secure: RPClDmwFZnpBIKtMvlzjzZVam4flvJtSvxFD8mHCQVQ//KqyBbQxl970kqStOK7p0RXkOB3XuFDvVixqyuptoQ8wTdgSBEPAub4DwRpcmCc1exzErHIt9zep3cQhSUuzl8N/tNl3o6GG04NsZTeErORqxfDvk3WbqFa9593G358=
 addons:
   apt:
     sources:
@@ -24,7 +24,6 @@ addons:
 install:
 - pip install --upgrade pip wheel virtualenv
 - pip install --upgrade nox-automation coverage
-# Temporarily install this from source.
 - pip install --upgrade git+https://github.com/dhermes/ci-diff-helper.git
 script:
 - ./scripts/travis.sh
