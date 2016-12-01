@@ -184,7 +184,7 @@ def _session_tests(session, sample):
     if os.path.exists(os.path.join(sample, 'requirements.txt')):
         session.install('-r', 'requirements.txt')
 
-    session.run('pytest', *PYTEST_COMMON_ARGS)
+    session.run('pytest', *(PYTEST_COMMON_ARGS + session.posargs))
 
 
 @nox.parametrize('sample', GAE_STANDARD_SAMPLES)

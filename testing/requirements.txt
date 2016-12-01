@@ -11,3 +11,5 @@ pyyaml==3.12
 responses==0.5.1
 WebTest==2.0.23
 webapp2==3.0.0b1
+google-api-python-client==1.5.5
+google-cloud-core==0.21.0
