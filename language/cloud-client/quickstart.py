@@ -31,7 +31,7 @@ def run_quickstart():
     sentiment = document.analyze_sentiment()
 
     print('Text: {}'.format(text))
-    print('Sentiment: {}, {}'.format(sentiment.polarity, sentiment.magnitude))
+    print('Sentiment: {}, {}'.format(sentiment.score, sentiment.magnitude))
     # [END language_quickstart]
 
 
