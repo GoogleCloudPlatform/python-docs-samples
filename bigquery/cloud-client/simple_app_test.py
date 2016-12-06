@@ -18,4 +18,4 @@ import simple_app
 def test_query_shakespeare(capsys):
     simple_app.query_shakespeare()
     out, _ = capsys.readouterr()
-    assert 'Hamlet' in out
+    assert 'hamlet' in out
