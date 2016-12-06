@@ -53,6 +53,7 @@ def query_shakespeare():
             break
     # [END print_results]
 
+
 if __name__ == '__main__':
     query_shakespeare()
 # [END all]
