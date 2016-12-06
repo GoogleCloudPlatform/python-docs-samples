@@ -47,15 +47,16 @@ def test_entities_file(cloud_config, capsys):
 def test_syntax_text(cloud_config, capsys):
     snippets.syntax_text('President Obama is speaking at the White House.')
     out, _ = capsys.readouterr()
-    assert 'NOUN: President
-    'NOUN: Obama'
-    'VERB: is'
-    'VERB: speaking'
-    'ADP: at'
-    'DET: the'
-    'NOUN: White'
-    'NOUN: House'
-    'PUNCT: .' in out
+    assert (
+        'NOUN: President'
+        'NOUN: Obama'
+        'VERB: is'
+        'VERB: speaking'
+        'ADP: at'
+        'DET: the'
+        'NOUN: White'
+        'NOUN: House'
+        'PUNCT: .') in out
 
 
 def test_syntax_file(cloud_config, capsys):
@@ -63,12 +64,13 @@ def test_syntax_file(cloud_config, capsys):
         cloud_config.storage_bucket)
     snippets.syntax_file(cloud_storage_input_uri)
     out, _ = capsys.readouterr()
-    assert 'NOUN: President
-    'NOUN: Obama'
-    'VERB: is'
-    'VERB: speaking'
-    'ADP: at'
-    'DET: the'
-    'NOUN: White'
-    'NOUN: House'
-    'PUNCT: .' in out
+    assert (
+        'NOUN: President'
+        'NOUN: Obama'
+        'VERB: is'
+        'VERB: speaking'
+        'ADP: at'
+        'DET: the'
+        'NOUN: White'
+        'NOUN: House'
+        'PUNCT: .') in out
