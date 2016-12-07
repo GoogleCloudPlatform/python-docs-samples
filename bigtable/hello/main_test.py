@@ -16,13 +16,14 @@ import random
 
 from main import main
 
-TABLE_NAME_FORMAT = 'hell-bigtable-system-tests-{}'
+TABLE_NAME_FORMAT = 'hello-bigtable-system-tests-{}'
 TABLE_NAME_RANGE = 10000
 
 
 def test_main(cloud_config, capsys):
     table_name = TABLE_NAME_FORMAT.format(
         random.randrange(TABLE_NAME_RANGE))
+
     main(
         cloud_config.project,
         cloud_config.bigtable_instance,
