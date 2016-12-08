@@ -34,3 +34,12 @@ name: bookstore.<MY_PROJECT_ID>.appspot.com
 title: Bookstore gRPC API
 apis:
 - name: endpoints.examples.bookstore.Bookstore
+
+#
+# API usage restrictions.
+#
+usage:
+  rules:
+  # ListShelves methods can be called without an API Key.
+  - selector: endpoints.examples.bookstore.Bookstore.ListShelves
+    allow_unregistered_calls: true
