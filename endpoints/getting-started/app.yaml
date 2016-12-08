@@ -6,5 +6,5 @@ runtime_config:
   python_version: 3
 
 endpoints_api_service:
-  name: ENDPOINTS SERVICE-NAME # To be replaced.
-  config_id: ENDPOINTS CONFIG-ID # To be replaced.
+  name: ENDPOINTS SERVICE-NAME # To be replaced by the output of 'gcloud service-management deploy openapi.yaml' command.
+  config_id: ENDPOINTS CONFIG-ID # To be replaced by the output of 'gcloud service-management deploy openapi.yaml' command.
