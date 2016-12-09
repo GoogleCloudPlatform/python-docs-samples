@@ -133,9 +133,9 @@ def _setup_appengine_sdk(session):
 
 
 PYTEST_COMMON_ARGS = [
-    '-v', '--no-success-flaky-report', '--cov',
-    '--cov-config', os.path.abspath('.coveragerc'), '--cov-append',
-    '--cov-report', 'term', '--ignore', 'env', '--ignore', 'lib']
+    '--cov',
+    '--cov-config', os.path.abspath('.coveragerc'),
+    '--cov-report', 'term']
 
 FLAKE8_COMMON_ARGS = [
     '--show-source', '--builtin', 'gettext', '--max-complexity', '15',
