@@ -20,7 +20,6 @@ import main
 def test_create_and_read(testbed, login):
     app = webtest.TestApp(main.app)
 
-    login()
     response = app.get('/blobstore/read')
 
     assert 'abcde' in response
@@ -29,7 +28,6 @@ def test_create_and_read(testbed, login):
 def test_create_and_serve(testbed, login):
     app = webtest.TestApp(main.app)
 
-    login()
     response = app.get('/blobstore/serve')
     served_file_header = response.headers['X-AppEngine-BlobKey']
 
