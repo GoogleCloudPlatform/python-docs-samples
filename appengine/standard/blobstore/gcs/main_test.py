@@ -32,4 +32,3 @@ def test_create_and_serve(testbed, login):
     served_file_header = response.headers['X-AppEngine-BlobKey']
 
     assert 'encoded_gs_file' in served_file_header
-
