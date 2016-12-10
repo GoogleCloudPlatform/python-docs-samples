@@ -28,6 +28,18 @@ To run the client:
 As with the server, the `-h` command line flag shows the various settings
 available.
 
+## Generating a JWT token from a service account file
+
+Install Google Oauth2 client:
+
+    pip install --upgrade oauth2client
+
+To run the script:
+
+    python google-jwt-client.py --file=account_file --audiences=audiences --issuer=issuer
+
+The output can be used as "--auth_token" for bookstore_client.py
+
 ## Regenerating the API stubs
 
 The bookstore gRPC API is defined by `bookstore.proto`
