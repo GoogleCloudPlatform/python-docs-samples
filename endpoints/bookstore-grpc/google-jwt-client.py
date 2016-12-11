@@ -54,7 +54,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--file', help='The path to your service account json file.')
+    parser.add_argument('--file',
+                        help='The path to your service account json file.')
     parser.add_argument('--issuer', default='', help='issuer')
     parser.add_argument('--audiences', default='', help='audiences')
 
