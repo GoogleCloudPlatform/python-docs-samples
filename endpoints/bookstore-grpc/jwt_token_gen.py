@@ -26,6 +26,7 @@ import google.auth.jwt
 """Max lifetime of the token (one hour, in seconds)."""
 MAX_TOKEN_LIFETIME_SECS = 3600
 
+
 def generate_jwt(service_account_file, issuer, audiences):
     """Generates a signed JSON Web Token using a Google API Service Account."""
     with open(service_account_file, 'r') as fh:
