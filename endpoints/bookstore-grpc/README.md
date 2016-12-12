@@ -30,10 +30,6 @@ available.
 
 ## Generating a JWT token from a service account file
 
-Install Google Oauth2 client:
-
-    pip install --upgrade oauth2client
-
 To run the script:
 
     python google-jwt-client.py --file=account_file --audiences=audiences --issuer=issuer

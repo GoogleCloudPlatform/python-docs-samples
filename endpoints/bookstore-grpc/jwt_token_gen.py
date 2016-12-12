@@ -17,22 +17,29 @@
 """Example of generateing a JWT signed from a service account file."""
 
 import argparse
+import json
 import time
 
-import oauth2client.crypt
-from oauth2client.service_account import ServiceAccountCredentials
+import google.auth.crypt
+import google.auth.jwt
 
+"""Max lifetime of the token (one hour, in seconds)."""
+MAX_TOKEN_LIFETIME_SECS = 3600
 
 def generate_jwt(service_account_file, issuer, audiences):
     """Generates a signed JSON Web Token using a Google API Service Account."""
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(
-        service_account_file)
+    with open(service_account_file, 'r') as fh:
+        service_account_info = json.load(fh)
+
+    signer = google.auth.crypt.Signer.from_string(
+        service_account_info['private_key'],
+        service_account_info['private_key_id'])
 
     now = int(time.time())
 
     payload = {
         'iat': now,
-        'exp': now + credentials.MAX_TOKEN_LIFETIME_SECS,
+        'exp': now + MAX_TOKEN_LIFETIME_SECS,
         # aud must match 'audience' in the security configuration in your
         # swagger spec. It can be any string.
         'aud': audiences,
@@ -44,9 +51,7 @@ def generate_jwt(service_account_file, issuer, audiences):
         'email': 'user@example.com'
     }
 
-    signed_jwt = oauth2client.crypt.make_signed_jwt(
-        credentials._signer, payload, key_id=credentials._private_key_id)
-
+    signed_jwt = google.auth.jwt.encode(signer, payload)
     return signed_jwt
 
 
