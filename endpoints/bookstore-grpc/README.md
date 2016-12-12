@@ -32,7 +32,7 @@ available.
 
 To run the script:
 
-    python google-jwt-client.py --file=account_file --audiences=audiences --issuer=issuer
+    python jwt_token_gen.py --file=account_file --audiences=audiences --issuer=issuer
 
 The output can be used as "--auth_token" for bookstore_client.py
 
