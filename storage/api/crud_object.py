@@ -24,7 +24,6 @@ For more information, see the README.md under /storage.
 """
 
 import argparse
-import filecmp
 import json
 import tempfile
 
@@ -40,12 +39,8 @@ def main(bucket, filename, readers=[], owners=[]):
     print(json.dumps(resp, indent=2))
 
     print('Fetching object..')
-    with tempfile.NamedTemporaryFile(mode='w+b') as tmpfile:
+    with tempfile.TemporaryFile(mode='w+b') as tmpfile:
         get_object(bucket, filename, out_file=tmpfile)
-        tmpfile.seek(0)
-
-        if not filecmp.cmp(filename, tmpfile.name):
-            raise Exception('Downloaded file != uploaded object')
 
     print('Deleting object..')
     resp = delete_object(bucket, filename)
