@@ -5,8 +5,8 @@ entrypoint: gunicorn -b :$PORT main:app
 runtime_config:
   python_version: 3
 
-beta_settings:
-  # Enable Google Cloud Endpoints API management.
-  use_endpoints_api_management: true
-  # Specify the Open API specification.
-  endpoints_swagger_spec_file: openapi.yaml
+endpoints_api_service:
+  # The following values are to be replaced by information from the output of
+  # 'gcloud service-management deploy openapi.yaml' command.
+  name: ENDPOINTS SERVICE-NAME
+  config_id: ENDPOINTS CONFIG-ID
