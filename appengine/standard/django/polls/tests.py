@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from django import http
-from django.test import TestCase
+# Uncomment these imports and add tests here
 
-from . import views
+# from django import http
+# from django.test import TestCase
 
-# Tests go here
+# from . import views

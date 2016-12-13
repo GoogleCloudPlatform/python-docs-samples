@@ -1,20 +1,3 @@
-# Copyright 2015 Google Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-# This file specifies your Python application's runtime configuration.
-# See https://cloud.google.com/appengine/docs/managed-vms/config for details.
-
 # [START django_app]
 runtime: python27
 api_version: 1
@@ -29,11 +12,16 @@ handlers:
 # Only pure Python libraries can be vendored
 # Python libraries that use C extensions can
 # only be included if they are part of the App Engine SDK 
+# Using Third Party Libraries: https://cloud.google.com/appengine/docs/python/tools/using-libraries-python-27
 libraries:
 - name: MySQLdb
   version: 1.2.5
 # [END django_app]
 
+# Google App Engine limits application deployments to 10,000 uploaded files per
+# version. The skip_files section allows us to skip virtual environment files
+# to meet this requirement. The first 5 are the default regular expressions to
+# skip, while the last one is for all env/ files.
 skip_files:
 - ^(.*/)?#.*#$
 - ^(.*/)?.*~$

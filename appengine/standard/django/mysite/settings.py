@@ -93,9 +93,9 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 # [START db_setup]
-import os
 if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine'):
-    # Running on production App Engine, so use a Google Cloud SQL database.
+    # Running on production App Engine, so connect to Google Cloud SQL using the unix socket
+    # at /cloudsql/<your-cloudsql-connection string>
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -106,6 +106,8 @@ if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine'):
         }
     }
 else:
+    # Running locally so connect to either a local MySQL instance or connect to
+    # Cloud SQL via the proxy. To start the proxy:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -135,5 +137,5 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_ROOT='static'
+STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
