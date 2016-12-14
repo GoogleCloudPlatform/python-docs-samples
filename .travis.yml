@@ -24,6 +24,7 @@ addons:
 install:
 - pip install --upgrade pip wheel virtualenv
 - pip install --upgrade nox-automation coverage
+- pip install --upgrade pip install git+https://github.com/jonparrot/nox.git@hash
 # Temporarily install this from source.
 - pip install --upgrade git+https://github.com/dhermes/ci-diff-helper.git
 script:
