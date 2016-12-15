@@ -13,11 +13,11 @@
 
 import re
 
-from sentiment_analysis import main
+from sentiment_analysis import analyze
 
 
 def test_pos(resource, capsys):
-    main(resource('pos.txt'))
+    analyze(resource('pos.txt'))
     out, err = capsys.readouterr()
     score = float(re.search('score of (.+?) with', out).group(1))
     magnitude = float(re.search('magnitude of (.+?)', out).group(1))
@@ -25,7 +25,7 @@ def test_pos(resource, capsys):
 
 
 def test_neg(resource, capsys):
-    main(resource('neg.txt'))
+    analyze(resource('neg.txt'))
     out, err = capsys.readouterr()
     score = float(re.search('score of (.+?) with', out).group(1))
     magnitude = float(re.search('magnitude of (.+?)', out).group(1))
@@ -33,7 +33,7 @@ def test_neg(resource, capsys):
 
 
 def test_mixed(resource, capsys):
-    main(resource('mixed.txt'))
+    analyze(resource('mixed.txt'))
     out, err = capsys.readouterr()
     score = float(re.search('score of (.+?) with', out).group(1))
     assert score <= 0.3
@@ -41,7 +41,7 @@ def test_mixed(resource, capsys):
 
 
 def test_neutral(resource, capsys):
-    main(resource('neutral.txt'))
+    analyze(resource('neutral.txt'))
     out, err = capsys.readouterr()
     magnitude = float(re.search('magnitude of (.+?)', out).group(1))
     assert magnitude <= 2.0
