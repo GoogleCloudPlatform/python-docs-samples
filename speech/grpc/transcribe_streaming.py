@@ -22,10 +22,12 @@ import re
 import signal
 import sys
 
-from google.cloud import credentials
-from google.cloud.grpc.speech.v1beta1 import cloud_speech_pb2 as cloud_speech
+
+import google.auth
+import google.auth.transport.grpc
+import google.auth.transport.requests
+from google.cloud.grpc.speech.v1beta1 import cloud_speech_pb2
 from google.rpc import code_pb2
-from grpc.beta import implementations
 from grpc.framework.interfaces.face import face
 import pyaudio
 from six.moves import queue
@@ -43,25 +45,16 @@ SPEECH_SCOPE = 'https://www.googleapis.com/auth/cloud-platform'
 
 
 def make_channel(host, port):
-    """Creates an SSL channel with auth credentials from the environment."""
-    # In order to make an https call, use an ssl channel with defaults
-    ssl_channel = implementations.ssl_channel_credentials(None, None, None)
-
+    """Creates a secure channel with auth credentials from the environment."""
     # Grab application default credentials from the environment
-    creds = credentials.get_credentials().create_scoped([SPEECH_SCOPE])
-    # Add a plugin to inject the creds into the header
-    auth_header = (
-        'Authorization',
-        'Bearer ' + creds.get_access_token().access_token)
-    auth_plugin = implementations.metadata_call_credentials(
-        lambda _, cb: cb([auth_header], None),
-        name='google_creds')
+    credentials, _ = google.auth.default(scopes=[SPEECH_SCOPE])
 
-    # compose the two together for both ssl and google auth
-    composite_channel = implementations.composite_channel_credentials(
-        ssl_channel, auth_plugin)
+    # Create a secure channel using the credentials.
+    http_request = google.auth.transport.requests.Request()
+    target = '{}:{}'.format(host, port)
 
-    return implementations.secure_channel(host, port, composite_channel)
+    return google.auth.transport.grpc.secure_authorized_channel(
+        credentials, http_request, target)
 
 
 def _audio_data_generator(buff):
@@ -142,7 +135,7 @@ def request_stream(data_stream, rate, interim_results=True):
     """
     # The initial request must contain metadata about the stream, so the
     # server knows how to interpret it.
-    recognition_config = cloud_speech.RecognitionConfig(
+    recognition_config = cloud_speech_pb2.RecognitionConfig(
         # There are a bunch of config options you can specify. See
         # https://goo.gl/KPZn97 for the full list.
         encoding='LINEAR16',  # raw 16-bit signed LE samples
@@ -151,17 +144,17 @@ def request_stream(data_stream, rate, interim_results=True):
         # for a list of supported languages.
         language_code='en-US',  # a BCP-47 language tag
     )
-    streaming_config = cloud_speech.StreamingRecognitionConfig(
+    streaming_config = cloud_speech_pb2.StreamingRecognitionConfig(
         interim_results=interim_results,
         config=recognition_config,
     )
 
-    yield cloud_speech.StreamingRecognizeRequest(
+    yield cloud_speech_pb2.StreamingRecognizeRequest(
         streaming_config=streaming_config)
 
     for data in data_stream:
         # Subsequent requests can all just have the content
-        yield cloud_speech.StreamingRecognizeRequest(audio_content=data)
+        yield cloud_speech_pb2.StreamingRecognizeRequest(audio_content=data)
 
 
 def listen_print_loop(recognize_stream):
@@ -212,28 +205,29 @@ def listen_print_loop(recognize_stream):
 
 
 def main():
-    with cloud_speech.beta_create_Speech_stub(
-            make_channel('speech.googleapis.com', 443)) as service:
-        # For streaming audio from the microphone, there are three threads.
-        # First, a thread that collects audio data as it comes in
-        with record_audio(RATE, CHUNK) as buffered_audio_data:
-            # Second, a thread that sends requests with that data
-            requests = request_stream(buffered_audio_data, RATE)
-            # Third, a thread that listens for transcription responses
-            recognize_stream = service.StreamingRecognize(
-                requests, DEADLINE_SECS)
+    service = cloud_speech_pb2.SpeechStub(
+        make_channel('speech.googleapis.com', 443))
 
-            # Exit things cleanly on interrupt
-            signal.signal(signal.SIGINT, lambda *_: recognize_stream.cancel())
+    # For streaming audio from the microphone, there are three threads.
+    # First, a thread that collects audio data as it comes in
+    with record_audio(RATE, CHUNK) as buffered_audio_data:
+        # Second, a thread that sends requests with that data
+        requests = request_stream(buffered_audio_data, RATE)
+        # Third, a thread that listens for transcription responses
+        recognize_stream = service.StreamingRecognize(
+            requests, DEADLINE_SECS)
 
-            # Now, put the transcription responses to use.
-            try:
-                listen_print_loop(recognize_stream)
+        # Exit things cleanly on interrupt
+        signal.signal(signal.SIGINT, lambda *_: recognize_stream.cancel())
 
-                recognize_stream.cancel()
-            except face.CancellationError:
-                # This happens because of the interrupt handler
-                pass
+        # Now, put the transcription responses to use.
+        try:
+            listen_print_loop(recognize_stream)
+
+            recognize_stream.cancel()
+        except face.CancellationError:
+            # This happens because of the interrupt handler
+            pass
 
 
 if __name__ == '__main__':
