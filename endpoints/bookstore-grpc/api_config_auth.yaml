@@ -35,12 +35,23 @@ title: Bookstore gRPC API
 apis:
 - name: endpoints.examples.bookstore.Bookstore
 
+#
+# API usage restrictions.
+#
+usage:
+  rules:
+  - selector: "*"
+    allow_unregistered_calls: true
+
+#
+# Request authentication.
+#
 authentication:
   providers:
   - id: google_service_account
-    # Replace SERVICE-ACCOUNT-EMAIL with your service account's email address.
-    issuer: SERVICE-ACCOUNT-EMAI
-    jwks_uri: https://www.googleapis.com/robot/v1/metadata/x509/SERVICE-ACCOUNT-EMAI
+    # Replace SERVICE-ACCOUNT-ID with your service account's email address.
+    issuer: SERVICE-ACCOUNT-ID
+    jwks_uri: https://www.googleapis.com/robot/v1/metadata/x509/SERVICE-ACCOUNT-ID
   rules:
   # This auth rule will apply to all methods.
   - selector: "*"
