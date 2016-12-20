@@ -13,26 +13,28 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# [START full_tutorial_script]
+# [START import_libraries]
 import argparse
-
-
 from googleapiclient import discovery
-
-
 from oauth2client.client import GoogleCredentials
+# [END import_libraries]
 
 
 def authenticate():
     '''Authenticates the client library using default application
     credentials.'''
+    # [START authenticating_to_the_api]
     credentials = GoogleCredentials.get_application_default()
     service = discovery.build('language', 'v1', credentials=credentials)
+    # [END authenticating_to_the_api]
     return service
 
 
 def getResponse(filename):
-    '''Run sentiment analysis on text within a passed filename.'''
+    '''Runs sentiment analysis on text within the specified file.'''
     service = authenticate()
+    # [START constructing_the_request]
     with open(filename, 'r') as review_file:
         service_request = service.documents().analyzeSentiment(
             body={
@@ -43,11 +45,13 @@ def getResponse(filename):
             }
         )
         response = service_request.execute()
+        # [END constructing_the_request]
         return response
 
 
 def printResponseContents(response):
     '''Prints document sentiment, magnitude, and sentence score.'''
+    # [START parsing_the_response]
     score = response['documentSentiment']['score']
     magnitude = response['documentSentiment']['magnitude']
     for i, sentence in enumerate(response['sentences']):
@@ -56,8 +60,10 @@ def printResponseContents(response):
               sentence_sentiment))
     print('Overall Sentiment: score of {} with magnitude of {}'.format(
             score, magnitude))
+    # [END parsing_the_response]
 
 
+# [START running_your_application]
 def main(filename):
     '''Run sentiment analysis on the file contents given a filename.'''
     printResponseContents(getResponse(filename))
@@ -71,3 +77,5 @@ if __name__ == '__main__':
         help='The filename of the movie review you\'d like to analyze.')
     args = parser.parse_args()
     main(args.movie_review_filename)
+# [END running_your_application]
+# [END full_tutorial_script]
