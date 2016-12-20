@@ -16,61 +16,56 @@
 # [START full_tutorial_script]
 # [START import_libraries]
 import argparse
+import io
 
 from googleapiclient import discovery
-
 from oauth2client.client import GoogleCredentials
 # [END import_libraries]
 
 
-def get_response(filename):
-    """Runs sentiment analysis on text within the specified file."""
+def print_sentiment(filename):
+    """Prints sentiment analysis on a given file contents."""
     # [START authenticating_to_the_api]
     credentials = GoogleCredentials.get_application_default()
     service = discovery.build('language', 'v1', credentials=credentials)
     # [END authenticating_to_the_api]
+
     # [START constructing_the_request]
-    with open(filename, 'r') as review_file:
-        service_request = service.documents().analyzeSentiment(
-            body={
-                'document': {
-                    'type': 'PLAIN_TEXT',
-                    'content': review_file.read(),
-                }
+    with io.open(filename, 'r') as review_file:
+        review_file_contents = review_file.read()
+
+    service_request = service.documents().analyzeSentiment(
+        body={
+            'document': {
+                'type': 'PLAIN_TEXT',
+                'content': review_file_contents,
             }
-        )
-        response = service_request.execute()
-        # [END constructing_the_request]
-        return response
+        }
+    )
+    response = service_request.execute()
+    # [END constructing_the_request]
 
-
-def print_response_contents(response):
-    """Prints document sentiment, magnitude, and sentence score."""
     # [START parsing_the_response]
     score = response['documentSentiment']['score']
     magnitude = response['documentSentiment']['magnitude']
+
     for n, sentence in enumerate(response['sentences']):
         sentence_sentiment = sentence['sentiment']['score']
         print('Sentence {} has a sentiment score of {}'.format(n,
               sentence_sentiment))
+
     print('Overall Sentiment: score of {} with magnitude of {}'.format(
             score, magnitude))
     # [END parsing_the_response]
 
 
 # [START running_your_application]
-def main(filename):
-    """Run sentiment analysis on the file contents given a filename."""
-    print_response_contents(get_response(filename))
-    return 0
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
         'movie_review_filename',
         help='The filename of the movie review you\'d like to analyze.')
     args = parser.parse_args()
-    main(args.movie_review_filename)
+    print_sentiment(args.movie_review_filename)
 # [END running_your_application]
 # [END full_tutorial_script]

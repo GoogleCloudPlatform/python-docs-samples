@@ -11,32 +11,50 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import re
+
 import tutorial
 
 
-def test_neutral():
-    result = tutorial.get_response('reviews/bladerunner-neutral.txt')
-    assert result['language'] == 'en'
-    assert (-1 < result['documentSentiment']['score'] < 1)
-    assert (0 < result['documentSentiment']['magnitude'] < 2.0)
+def test_neutral(capsys):
+    tutorial.print_sentiment('reviews/bladerunner-neutral.txt')
+    out, err = capsys.readouterr()
+    regex = re.compile('Sentence \d has a sentiment score of \d', re.I)
+    assert regex.search(out) is not None
+    regex = re.compile('Overall Sentiment: score of -?[0-2]\.?[0-9]? with '
+                       'magnitude of [0-1]\.?[0-9]?', re.I)
+    assert regex.search(out) is not None
+    assert err == ''
 
 
-def test_pos():
-    result = tutorial.get_response('reviews/bladerunner-pos.txt')
-    assert result['language'] == 'en'
-    assert result['documentSentiment']['score'] > 0.0
-    assert result['documentSentiment']['magnitude'] > 2.0
+def test_pos(capsys):
+    tutorial.print_sentiment('reviews/bladerunner-pos.txt')
+    out, err = capsys.readouterr()
+    regex = re.compile('Sentence \d has a sentiment score of \d', re.I)
+    assert regex.search(out) is not None
+    regex = re.compile('Overall Sentiment: score of [0-9]\.?[0-9]? with '
+                       'magnitude of [0-9]\.?[0-9]?', re.I)
+    assert regex.search(out) is not None
+    assert err == ''
 
 
-def test_neg():
-    result = tutorial.get_response('reviews/bladerunner-neg.txt')
-    assert result['language'] == 'en'
-    assert result['documentSentiment']['score'] < 0.0
-    assert result['documentSentiment']['magnitude'] > 1.0
+def test_neg(capsys):
+    tutorial.print_sentiment('reviews/bladerunner-neg.txt')
+    out, err = capsys.readouterr()
+    regex = re.compile('Sentence \d has a sentiment score of \d', re.I)
+    assert regex.search(out) is not None
+    regex = re.compile('Overall Sentiment: score of -[0-9]\.?[0-9]? with '
+                       'magnitude of [2-7]\.?[0-9]?', re.I)
+    assert regex.search(out) is not None
+    assert err == ''
 
 
-def test_mixed():
-    result = tutorial.get_response('reviews/bladerunner-mixed.txt')
-    assert result['language'] == 'en'
-    assert (-1 < result['documentSentiment']['score'] < 1)
-    assert result['documentSentiment']['magnitude'] > 4.0
+def test_mixed(capsys):
+    tutorial.print_sentiment('reviews/bladerunner-mixed.txt')
+    out, err = capsys.readouterr()
+    regex = re.compile('Sentence \d has a sentiment score of \d', re.I)
+    assert regex.search(out) is not None
+    regex = re.compile('Overall Sentiment: score of -?[0-9]\.?[0-9]? with '
+                       'magnitude of [3-6]\.?[0-9]?', re.I)
+    assert regex.search(out) is not None
+    assert err == ''
