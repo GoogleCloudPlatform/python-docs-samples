@@ -17,43 +17,35 @@ import tutorial
 
 def test_neutral(capsys):
     tutorial.print_sentiment('reviews/bladerunner-neutral.txt')
-    out, err = capsys.readouterr()
-    regex = re.compile('Sentence \d has a sentiment score of \d', re.I)
-    assert regex.search(out) is not None
-    regex = re.compile('Overall Sentiment: score of -?[0-2]\.?[0-9]? with '
-                       'magnitude of [0-1]\.?[0-9]?', re.I)
-    assert regex.search(out) is not None
-    assert err == ''
+    out, _ = capsys.readouterr()
+    assert re.search(r'Sentence \d has a sentiment score of \d', out, re.I)
+    assert re.search(
+        r'Overall Sentiment: score of -?[0-2]\.?[0-9]? with '
+        r'magnitude of [0-1]\.?[0-9]?', out, re.I)
 
 
 def test_pos(capsys):
     tutorial.print_sentiment('reviews/bladerunner-pos.txt')
-    out, err = capsys.readouterr()
-    regex = re.compile('Sentence \d has a sentiment score of \d', re.I)
-    assert regex.search(out) is not None
-    regex = re.compile('Overall Sentiment: score of [0-9]\.?[0-9]? with '
-                       'magnitude of [0-9]\.?[0-9]?', re.I)
-    assert regex.search(out) is not None
-    assert err == ''
+    out, _ = capsys.readouterr()
+    assert re.search(r'Sentence \d has a sentiment score of \d', out, re.I)
+    assert re.search(
+        r'Overall Sentiment: score of [0-9]\.?[0-9]? with '
+        r'magnitude of [0-9]\.?[0-9]?', out, re.I)
 
 
 def test_neg(capsys):
     tutorial.print_sentiment('reviews/bladerunner-neg.txt')
-    out, err = capsys.readouterr()
-    regex = re.compile('Sentence \d has a sentiment score of \d', re.I)
-    assert regex.search(out) is not None
-    regex = re.compile('Overall Sentiment: score of -[0-9]\.?[0-9]? with '
-                       'magnitude of [2-7]\.?[0-9]?', re.I)
-    assert regex.search(out) is not None
-    assert err == ''
+    out, _ = capsys.readouterr()
+    assert re.search(r'Sentence \d has a sentiment score of \d', out, re.I)
+    assert re.search(
+        r'Overall Sentiment: score of -[0-9]\.?[0-9]? with '
+        r'magnitude of [2-7]\.?[0-9]?', out, re.I)
 
 
 def test_mixed(capsys):
     tutorial.print_sentiment('reviews/bladerunner-mixed.txt')
-    out, err = capsys.readouterr()
-    regex = re.compile('Sentence \d has a sentiment score of \d', re.I)
-    assert regex.search(out) is not None
-    regex = re.compile('Overall Sentiment: score of -?[0-9]\.?[0-9]? with '
-                       'magnitude of [3-6]\.?[0-9]?', re.I)
-    assert regex.search(out) is not None
-    assert err == ''
+    out, _ = capsys.readouterr()
+    assert re.search(r'Sentence \d has a sentiment score of \d', out, re.I)
+    assert re.search(
+        r'Overall Sentiment: score of -?[0-9]\.?[0-9]? with '
+        r'magnitude of [3-6]\.?[0-9]?', out, re.I)
