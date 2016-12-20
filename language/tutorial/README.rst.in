@@ -1,0 +1,20 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Natural Language Tutorial
+  short_name: Cloud Natural Language Tutorial
+  url: https://cloud.google.com/natural-language/docs/
+  description: >
+    The `Google Cloud Natural Language API`_ provides natural language
+    understanding technologies to developers, including sentiment analysis,
+    entity recognition, and syntax analysis. This API is part of the larger
+    Cloud Machine Learning API.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Language tutorial
+  file: tutorial.py
+  show_help: true
