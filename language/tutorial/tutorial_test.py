@@ -15,35 +15,28 @@ import tutorial
 
 
 def test_neutral():
-    result = tutorial.getResponse('reviews/bladerunner-neutral.txt')
+    result = tutorial.get_response('reviews/bladerunner-neutral.txt')
     assert result['language'] == 'en'
-    assert (result['documentSentiment']['score'] > -1 and
-            result['documentSentiment']['score'] < 1)
-    assert (result['documentSentiment']['score'] < 1 and
-            result['documentSentiment']['score'] > -1)
-    assert (result['documentSentiment']['magnitude'] > 0 and
-            result['documentSentiment']['magnitude'] < 2.0)
+    assert (-1 < result['documentSentiment']['score'] < 1)
+    assert (0 < result['documentSentiment']['magnitude'] < 2.0)
 
 
 def test_pos():
-    result = tutorial.getResponse('reviews/bladerunner-pos.txt')
+    result = tutorial.get_response('reviews/bladerunner-pos.txt')
     assert result['language'] == 'en'
     assert result['documentSentiment']['score'] > 0.0
     assert result['documentSentiment']['magnitude'] > 2.0
 
 
 def test_neg():
-    result = tutorial.getResponse('reviews/bladerunner-neg.txt')
+    result = tutorial.get_response('reviews/bladerunner-neg.txt')
     assert result['language'] == 'en'
     assert result['documentSentiment']['score'] < 0.0
     assert result['documentSentiment']['magnitude'] > 1.0
 
 
 def test_mixed():
-    result = tutorial.getResponse('reviews/bladerunner-mixed.txt')
+    result = tutorial.get_response('reviews/bladerunner-mixed.txt')
     assert result['language'] == 'en'
-    assert (result['documentSentiment']['score'] > -1
-            and result['documentSentiment']['score'] < 1)
-    assert (result['documentSentiment']['score'] < 1
-            and result['documentSentiment']['score'] > -1)
+    assert (-1 < result['documentSentiment']['score'] < 1)
     assert result['documentSentiment']['magnitude'] > 4.0

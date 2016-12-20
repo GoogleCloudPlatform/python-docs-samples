@@ -18,23 +18,17 @@
 import argparse
 
 from googleapiclient import discovery
+
 from oauth2client.client import GoogleCredentials
 # [END import_libraries]
 
 
-def authenticate():
-    '''Authenticates the client library using default application
-    credentials.'''
+def get_response(filename):
+    """Runs sentiment analysis on text within the specified file."""
     # [START authenticating_to_the_api]
     credentials = GoogleCredentials.get_application_default()
     service = discovery.build('language', 'v1', credentials=credentials)
     # [END authenticating_to_the_api]
-    return service
-
-
-def getResponse(filename):
-    '''Runs sentiment analysis on text within the specified file.'''
-    service = authenticate()
     # [START constructing_the_request]
     with open(filename, 'r') as review_file:
         service_request = service.documents().analyzeSentiment(
@@ -50,14 +44,14 @@ def getResponse(filename):
         return response
 
 
-def printResponseContents(response):
-    '''Prints document sentiment, magnitude, and sentence score.'''
+def print_response_contents(response):
+    """Prints document sentiment, magnitude, and sentence score."""
     # [START parsing_the_response]
     score = response['documentSentiment']['score']
     magnitude = response['documentSentiment']['magnitude']
-    for i, sentence in enumerate(response['sentences']):
+    for n, sentence in enumerate(response['sentences']):
         sentence_sentiment = sentence['sentiment']['score']
-        print('Sentence {} has a sentiment score of {}'.format(i,
+        print('Sentence {} has a sentiment score of {}'.format(n,
               sentence_sentiment))
     print('Overall Sentiment: score of {} with magnitude of {}'.format(
             score, magnitude))
@@ -66,8 +60,8 @@ def printResponseContents(response):
 
 # [START running_your_application]
 def main(filename):
-    '''Run sentiment analysis on the file contents given a filename.'''
-    printResponseContents(getResponse(filename))
+    """Run sentiment analysis on the file contents given a filename."""
+    print_response_contents(get_response(filename))
     return 0
 
 
