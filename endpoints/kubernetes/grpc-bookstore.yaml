@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
       - name: esp
-        image: b.gcr.io/endpoints/endpoints-runtime:1
+        image: gcr.io/endpoints-release/endpoints-runtime:1
         args: [
           "-P", "9000",
           "-s", "SERVICE_NAME",
