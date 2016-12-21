@@ -28,7 +28,7 @@ import google.auth.transport.grpc
 import google.auth.transport.requests
 from google.cloud.grpc.speech.v1beta1 import cloud_speech_pb2
 from google.rpc import code_pb2
-from grpc.framework.interfaces.face import face
+import grpc
 import pyaudio
 from six.moves import queue
 
@@ -225,7 +225,7 @@ def main():
             listen_print_loop(recognize_stream)
 
             recognize_stream.cancel()
-        except face.CancellationError:
+        except grpc.RpcError:
             # This happens because of the interrupt handler
             pass
 
