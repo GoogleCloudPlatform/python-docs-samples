@@ -36,7 +36,7 @@ import pyaudio
 from six.moves import queue
 
 # Seconds you have to wrap up your utterance
-WRAP_IT_UP_SECS = 55
+WRAP_IT_UP_SECS = 15
 
 # Audio recording parameters
 RATE = 16000
