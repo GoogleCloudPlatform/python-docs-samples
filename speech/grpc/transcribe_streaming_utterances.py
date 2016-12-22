@@ -66,8 +66,7 @@ def _audio_data_generator(buff):
         A chunk of data that is the aggregate of all chunks of data in `buff`.
         The function will block until at least one data chunk is available.
     """
-    stop = False
-    while not stop:
+    while True:
         # Use a blocking get() to ensure there's at least one chunk of data.
         data = [buff.get()]
 
@@ -78,11 +77,13 @@ def _audio_data_generator(buff):
             except queue.Empty:
                 break
 
-        # `None` in the buffer signals that the audio stream is closed. Yield
-        # the final bit of the buffer and exit the loop.
+        # `None` in the buffer signals that we should stop generating. Put the
+        # data back into the buffer for the next generator.
         if None in data:
-            stop = True
             data.remove(None)
+            if data:
+                buff.put(b''.join(data))
+            break
 
         yield b''.join(data)
 
@@ -158,7 +159,7 @@ def request_stream(data_stream, rate, interim_results=True):
         yield cloud_speech_pb2.StreamingRecognizeRequest(audio_content=data)
 
 
-def listen_print_loop(recognize_stream):
+def listen_print_loop(recognize_stream, buff):
     """Iterates through server responses and prints them.
 
     The recognize_stream passed is a generator that will block until a response
@@ -175,6 +176,10 @@ def listen_print_loop(recognize_stream):
             raise RuntimeError('Server error: ' + resp.error.message)
 
         if not resp.results:
+            if resp.endpointer_type is resp.END_OF_UTTERANCE:
+                # Signal the audio generator to stop generating, and leave the
+                # buffer to fill.
+                buff.put(None)
             continue
 
         # Display the top transcription
@@ -226,7 +231,7 @@ def main():
         # Now, put the transcription responses to use.
         try:
             while True:
-                listen_print_loop(recognize_stream)
+                listen_print_loop(recognize_stream, buff)
 
                 # Discard this stream and create a new one.
                 # Note: calling .cancel() doesn't immediately raise an RpcError
