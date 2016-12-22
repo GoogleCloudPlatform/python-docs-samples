@@ -17,6 +17,7 @@
 from __future__ import division
 
 import argparse
+import collections
 import contextlib
 import functools
 import logging
@@ -37,6 +38,7 @@ from six.moves import queue
 
 # Seconds you have to wrap up your utterance
 WRAP_IT_UP_SECS = 15
+SECS_OVERLAP = 1
 
 # Audio recording parameters
 RATE = 16000
@@ -63,15 +65,20 @@ def make_channel(host, port):
         credentials, http_request, target)
 
 
-def _audio_data_generator(buff):
+def _audio_data_generator(buff, overlap_buffer):
     """A generator that yields all available data in the given buffer.
 
     Args:
         buff - a Queue object, where each element is a chunk of data.
+        overlap_buffer - a ring buffer for storing trailing data chunks
     Yields:
         A chunk of data that is the aggregate of all chunks of data in `buff`.
         The function will block until at least one data chunk is available.
     """
+    if overlap_buffer:
+        yield b''.join(overlap_buffer)
+        overlap_buffer.clear()
+
     while True:
         # Use a blocking get() to ensure there's at least one chunk of data.
         data = [buff.get()]
@@ -90,6 +97,8 @@ def _audio_data_generator(buff):
             if data:
                 buff.put(b''.join(data))
             break
+        else:
+            overlap_buffer.extend(data)
 
         yield b''.join(data)
 
@@ -229,7 +238,8 @@ def main():
     # First, a thread that collects audio data as it comes in
     with record_audio(RATE, CHUNK) as buff:
         # Second, a thread that sends requests with that data
-        requests = request_stream(_audio_data_generator(buff), RATE)
+        overlap_buffer = collections.deque(maxlen=SECS_OVERLAP * RATE / CHUNK)
+        requests = request_stream(_audio_data_generator(buff, overlap_buffer), RATE)
         # Third, a thread that listens for transcription responses
         recognize_stream = service.StreamingRecognize(
             requests, DEADLINE_SECS)
@@ -248,7 +258,8 @@ def main():
                 recognize_stream.cancel()
 
                 logging.debug('Starting new stream')
-                requests = request_stream(_audio_data_generator(buff), RATE)
+                requests = request_stream(_audio_data_generator(
+                    buff, overlap_buffer), RATE)
                 recognize_stream = service.StreamingRecognize(
                         requests, DEADLINE_SECS)
 

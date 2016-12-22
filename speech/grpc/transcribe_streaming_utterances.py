@@ -16,6 +16,7 @@
 
 from __future__ import division
 
+import collections
 import contextlib
 import functools
 import re
@@ -35,6 +36,8 @@ from six.moves import queue
 # Audio recording parameters
 RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
+
+SECS_OVERLAP = 1
 
 # The Speech API has a streaming limit of 60 seconds of audio*, so keep the
 # connection alive for that long, plus some more to give the API time to figure
@@ -57,7 +60,7 @@ def make_channel(host, port):
         credentials, http_request, target)
 
 
-def _audio_data_generator(buff):
+def _audio_data_generator(buff, overlap_buffer):
     """A generator that yields all available data in the given buffer.
 
     Args:
@@ -66,6 +69,10 @@ def _audio_data_generator(buff):
         A chunk of data that is the aggregate of all chunks of data in `buff`.
         The function will block until at least one data chunk is available.
     """
+    if overlap_buffer:
+        yield b''.join(overlap_buffer)
+        overlap_buffer.clear()
+
     while True:
         # Use a blocking get() to ensure there's at least one chunk of data.
         data = [buff.get()]
@@ -84,6 +91,8 @@ def _audio_data_generator(buff):
             if data:
                 buff.put(b''.join(data))
             break
+        else:
+            overlap_buffer.extend(data)
 
         yield b''.join(data)
 
@@ -220,7 +229,8 @@ def main():
     # First, a thread that collects audio data as it comes in
     with record_audio(RATE, CHUNK) as buff:
         # Second, a thread that sends requests with that data
-        requests = request_stream(_audio_data_generator(buff), RATE)
+        overlap_buffer = collections.deque(maxlen=SECS_OVERLAP * RATE / CHUNK)
+        requests = request_stream(_audio_data_generator(buff, overlap_buffer), RATE)
         # Third, a thread that listens for transcription responses
         recognize_stream = service.StreamingRecognize(
             requests, DEADLINE_SECS)
@@ -238,7 +248,8 @@ def main():
                 # - it only raises when the iterator's next() is requested
                 recognize_stream.cancel()
 
-                requests = request_stream(_audio_data_generator(buff), RATE)
+                requests = request_stream(_audio_data_generator(
+                    buff, overlap_buffer), RATE)
                 # Third, a thread that listens for transcription responses
                 recognize_stream = service.StreamingRecognize(
                     requests, DEADLINE_SECS)
