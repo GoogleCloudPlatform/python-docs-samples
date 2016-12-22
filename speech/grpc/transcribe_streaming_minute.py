@@ -16,8 +16,10 @@
 
 from __future__ import division
 
+import argparse
 import contextlib
 import functools
+import logging
 import re
 import signal
 import sys
@@ -33,7 +35,7 @@ from grpc.framework.interfaces.face import face
 import pyaudio
 from six.moves import queue
 
-# Seconds to allow you to shut up
+# Seconds you have to wrap up your utterance
 WRAP_IT_UP_SECS = 55
 
 # Audio recording parameters
@@ -172,9 +174,9 @@ def listen_print_loop(recognize_stream, wrap_it_up_secs, max_recog_secs=60):
     the next result to overwrite it, until the response is a final one. For the
     final one, print a newline to preserve the finalized transcription.
     """
-    start_time = time.time()
+    # What time should we switch to a new stream?
     time_to_switch = time.time() + max_recog_secs - wrap_it_up_secs
-    wrap_it_up = False
+    graceful_exit = False
     num_chars_printed = 0
     for resp in recognize_stream:
         if resp.error.code != code_pb2.OK:
@@ -183,12 +185,8 @@ def listen_print_loop(recognize_stream, wrap_it_up_secs, max_recog_secs=60):
         if not resp.results:
             if resp.endpointer_type is resp.END_OF_SPEECH and (
                     time.time() > time_to_switch):
-                wrap_it_up = True
-                resp = next(recognize_stream)
-                if not resp.results:
-                    return True
-            else:
-                continue
+                graceful_exit = True
+            continue
 
         # Display the top transcription
         result = resp.results[0]
@@ -213,19 +211,17 @@ def listen_print_loop(recognize_stream, wrap_it_up_secs, max_recog_secs=60):
             # one of our keywords.
             if re.search(r'\b(exit|quit)\b', transcript, re.I):
                 print('Exiting..')
-                return False
+                recognize_stream.cancel()
+
+            elif graceful_exit:
+                break
 
             num_chars_printed = 0
-
-        if wrap_it_up:
-            return True
 
 
 def main():
     service = cloud_speech_pb2.SpeechStub(
         make_channel('speech.googleapis.com', 443))
-
-    keep_going = True
 
     # For streaming audio from the microphone, there are three threads.
     # First, a thread that collects audio data as it comes in
@@ -237,27 +233,35 @@ def main():
             requests, DEADLINE_SECS)
 
         # Exit things cleanly on interrupt
-        def handle_interrupt(*_):
-            keep_going = False
-            recognize_stream.cancel()
-        signal.signal(signal.SIGINT, handle_interrupt)
+        signal.signal(signal.SIGINT, lambda *_: recognize_stream.cancel())
 
         # Now, put the transcription responses to use.
-        while keep_going:
-            print('==== Continuing... ====')
-            keep_going = False
-            try:
-                keep_going = listen_print_loop(recognize_stream, WRAP_IT_UP_SECS)
+        try:
+            while True:
+                listen_print_loop(recognize_stream, WRAP_IT_UP_SECS)
 
+                # Discard this stream and create a new one.
+                # Note: calling .cancel() doesn't immediately raise an RpcError
+                # - it only raises when the iterator's next() is requested
                 recognize_stream.cancel()
-                next(recognize_stream)
+
+                logging.debug('Starting new stream')
+                requests = request_stream(_audio_data_generator(buff), RATE)
+                recognize_stream = service.StreamingRecognize(
+                        requests, DEADLINE_SECS)
+
+        except grpc.RpcError, e:
             # This happens because of the interrupt handler
-            except grpc.RpcError, e:
-                if keep_going:
-                    requests = request_stream(_audio_data_generator(buff), RATE)
-                    recognize_stream = service.StreamingRecognize(
-                            requests, DEADLINE_SECS)
+            pass
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+            '-v', '--verbose', help='increase output verbosity',
+            action='store_true')
+    args = parser.parse_args()
+    if args.verbose:
+        logging.basicConfig(level=logging.DEBUG)
+
     main()
