@@ -27,7 +27,7 @@ Key:
 
 .. _API Key:
     https://developers.google.com/api-client-library/python/guide/aaa_apikeys
-.. _Cloud Console: https://console.cloud.google.com/project?_
+.. _Cloud Platform Console: https://console.cloud.google.com/project?_
 
 Install Dependencies
 ++++++++++++++++++++
