@@ -28,6 +28,14 @@ To run the client:
 As with the server, the `-h` command line flag shows the various settings
 available.
 
+## Generating a JWT token from a service account file
+
+To run the script:
+
+    python jwt_token_gen.py --file=account_file --audiences=audiences --issuer=issuer
+
+The output can be used as "--auth_token" for bookstore_client.py
+
 ## Regenerating the API stubs
 
 The bookstore gRPC API is defined by `bookstore.proto`

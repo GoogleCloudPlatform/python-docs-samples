@@ -4,7 +4,7 @@ info:
   description: "A simple Google Cloud Endpoints API example."
   title: "Endpoints Example"
   version: "1.0.0"
-host: "YOUR-PROJECT-ID.appspot.com"
+host: "echo-api.endpoints.YOUR-PROJECT-ID.cloud.goog"
 # [END swagger]
 basePath: "/"
 consumes:
