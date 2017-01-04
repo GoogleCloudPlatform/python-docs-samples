@@ -182,18 +182,19 @@ def listen_print_loop(recognize_stream):
 
         # Display interim results, but with a carriage return at the end of the
         # line, so subsequent lines will overwrite them.
-        if not result.is_final:
-            # If the previous result was longer than this one, we need to print
-            # some extra spaces to overwrite the previous result
-            overwrite_chars = ' ' * max(0, num_chars_printed - len(transcript))
+        #
+        # If the previous result was longer than this one, we need to print
+        # some extra spaces to overwrite the previous result
+        overwrite_chars = ' ' * max(0, num_chars_printed - len(transcript))
 
+        if not result.is_final:
             sys.stdout.write(transcript + overwrite_chars + '\r')
             sys.stdout.flush()
 
             num_chars_printed = len(transcript)
 
         else:
-            print(transcript)
+            print(transcript + overwrite_chars)
 
             # Exit recognition if any of the transcribed phrases could be
             # one of our keywords.
