@@ -85,8 +85,11 @@ class MainPage(webapp2.RequestHandler):
         greetings = memcache.get('{}:greetings'.format(guestbook_name))
         if greetings is None:
             greetings = self.render_greetings(guestbook_name)
-            if not memcache.add('{}:greetings'.format(guestbook_name),
-                                greetings, 10):
+            try:
+                if not memcache.add('{}:greetings'.format(guestbook_name),
+                                    greetings, 10):
+                    logging.error('Memcache set failed.')
+            except:
                 logging.error('Memcache set failed.')
         return greetings
     # [END check_memcache]
