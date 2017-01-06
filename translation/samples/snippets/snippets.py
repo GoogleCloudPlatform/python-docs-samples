@@ -63,7 +63,7 @@ def list_languages_with_target(target):
         print(u'{name} ({language})'.format(**language))
 
 
-def translate_text_with_model(target, text, model=translate.BASE):
+def translate_text_with_model(target, text, model=translate.NMT):
     """Translates text into the target language.
 
     Make sure your project is whitelisted.
