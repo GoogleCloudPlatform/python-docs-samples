@@ -143,8 +143,10 @@ def detect_text(path):
 
     # Performs label detection on the image file
     texts = image.detect_text()
+    print 'Texts:'
     for text in texts:
         print text.description
+    print
 # [END text_detection]
 
 
@@ -161,12 +163,14 @@ def detect_properties(path):
 
     # Performs label detection on the image file
     properties = image.detect_properties()
+    print 'Properties:'
     for prop in properties:
         color = prop.colors[0]
         print 'fraction: ', color.pixel_fraction
         print 'r: ', color.color.red
         print 'g: ', color.color.green
         print 'b: ', color.color.blue
+    print
 # [END property_detection]
 
 
@@ -202,12 +206,10 @@ def run_snippets():
     detect_safe_search(file_name)
 
     # Detect text
-    yes_brittle = False  # Just in case detect_text is broken
-    if yes_brittle:
-        file_name = os.path.join(
-            os.path.dirname(__file__),
-            'resources/text.jpg')
-        detect_text(file_name)
+    file_name = os.path.join(
+        os.path.dirname(__file__),
+        'resources/text.jpg')
+    detect_text(file_name)
 
     # Detect properties
     file_name = os.path.join(
