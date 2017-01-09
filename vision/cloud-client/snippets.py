@@ -21,7 +21,6 @@ import os
 from google.cloud import vision
 
 
-# [START face_detection]
 def detect_faces(path):
     # Instantiates a client
     vision_client = vision.Client()
@@ -41,10 +40,24 @@ def detect_faces(path):
         print 'joy', face.emotions.joy
         print 'surprise', face.emotions.surprise
     print
-# [END face_detection]
 
 
-# [START label_detection]
+def detect_faces_gcs(path):
+    # Instantiates a client
+    vision_client = vision.Client()
+    image = vision_client.image(source_uri=path)
+
+    # Performs face detection on the image file
+    faces = image.detect_faces()
+
+    print 'Faces:'
+    for face in faces:
+        print 'anger', face.emotions.anger
+        print 'joy', face.emotions.joy
+        print 'surprise', face.emotions.surprise
+    print
+
+
 def detect_labels(path):
     # Instantiates a client
     vision_client = vision.Client()
@@ -62,10 +75,22 @@ def detect_labels(path):
     for label in labels:
         print label.description
     print
-# [END label_detection]
 
 
-# [START landmark_detection]
+def detect_labels_gcs(path):
+    # Instantiates a client
+    vision_client = vision.Client()
+    image = vision_client.image(source_uri=path)
+
+    # Performs label detection on the image file
+    labels = image.detect_labels()
+
+    print 'Labels:'
+    for label in labels:
+        print label.description
+    print
+
+
 def detect_landmarks(path):
     # Instantiates a client
     vision_client = vision.Client()
@@ -83,10 +108,22 @@ def detect_landmarks(path):
     for landmark in landmarks:
         print landmark.description
     print
-# [END landmark_detection]
 
 
-# [START logo_detection]
+def detect_landmarks_gcs(path):
+    # Instantiates a client
+    vision_client = vision.Client()
+    image = vision_client.image(source_uri=path)
+
+    # Performs label detection on the image file
+    landmarks = image.detect_landmarks()
+
+    print 'Landmarks:'
+    for landmark in landmarks:
+        print landmark.description
+    print
+
+
 def detect_logos(path):
     # Instantiates a client
     vision_client = vision.Client()
@@ -94,8 +131,7 @@ def detect_logos(path):
     # Loads the image into memory
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
-        image = vision_client.image(
-            content=content)
+        image = vision_client.image(content=content)
 
     # Performs label detection on the image file
     logos = image.detect_logos()
@@ -104,10 +140,22 @@ def detect_logos(path):
     for logo in logos:
         print logo.description
     print
-# [END logo_detection]
 
 
-# [START safe_search_detection]
+def detect_logos_gcs(path):
+    # Instantiates a client
+    vision_client = vision.Client()
+    image = vision_client.image(source_uri=path)
+
+    # Performs label detection on the image file
+    logos = image.detect_logos()
+
+    print 'Logos:'
+    for logo in logos:
+        print logo.description
+    print
+
+
 def detect_safe_search(path):
     # Instantiates a client
     vision_client = vision.Client()
@@ -127,10 +175,24 @@ def detect_safe_search(path):
         print 'spoofed', safe.spoof
         print 'violence', safe.violence
     print
-# [END safe_search_detection]
 
 
-# [START text_detection]
+def detect_safe_search_gcs(path):
+    # Instantiates a client
+    vision_client = vision.Client()
+    image = vision_client.image(source_uri=path)
+
+    # Performs label detection on the image file
+    safe_searches = image.detect_safe_search()
+    print 'Safe search:'
+    for safe in safe_searches:
+        print 'adult', safe.adult
+        print 'medical', safe.medical
+        print 'spoofed', safe.spoof
+        print 'violence', safe.violence
+    print
+
+
 def detect_text(path):
     # Instantiates a client
     vision_client = vision.Client()
@@ -147,10 +209,21 @@ def detect_text(path):
     for text in texts:
         print text.description
     print
-# [END text_detection]
 
 
-# [START property_detection]
+def detect_text_gcs(path):
+    # Instantiates a client
+    vision_client = vision.Client()
+    image = vision_client.image(source_uri=path)
+
+    # Performs label detection on the image file
+    texts = image.detect_text()
+    print 'Texts:'
+    for text in texts:
+        print text.description
+    print
+
+
 def detect_properties(path):
     # Instantiates a client
     vision_client = vision.Client()
@@ -171,51 +244,95 @@ def detect_properties(path):
         print 'g: ', color.color.green
         print 'b: ', color.color.blue
     print
-# [END property_detection]
+
+
+def detect_properties_gcs(path):
+    # Instantiates a client
+    vision_client = vision.Client()
+    image = vision_client.image(source_uri=path)
+
+    # Performs label detection on the image file
+    properties = image.detect_properties()
+    print 'Properties:'
+    for prop in properties:
+        color = prop.colors[0]
+        print 'fraction: ', color.pixel_fraction
+        print 'r: ', color.color.red
+        print 'g: ', color.color.green
+        print 'b: ', color.color.blue
+    print
 
 
 def run_snippets():
-    # Detect labels
+    # Detect labels from local file
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/wakeupcat.jpg')
     detect_labels(file_name)
 
-    # Detect a landmark
+    # Detect labels from Google Storage bucket
+    file_name = 'gs://cloud-samples-tests/vision/wakeupcat.jpg'
+    detect_labels_gcs(file_name)
+
+    # Detect a landmark in local file
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/landmark.jpg')
     detect_landmarks(file_name)
 
-    # Detect a face
+    # Detect a landmark in GS bucket
+    file_name = 'gs://cloud-samples-tests/vision/landmark.jpg'
+    detect_landmarks_gcs(file_name)
+
+    # Detect a face in local file
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/face_no_surprise.jpg')
     detect_faces(file_name)
 
-    # Detect a logo
+    # Detect a face in GS bucket
+    file_name = 'gs://cloud-samples-tests/vision/face_no_surprise.jpg'
+    detect_faces_gcs(file_name)
+
+    # Detect a logo in local file
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/logos.png')
     detect_logos(file_name)
 
-    # Detect safe search
+    # Detect a logo in GS bucket
+    file_name = 'gs://cloud-samples-tests/vision/logos.png'
+    detect_logos_gcs(file_name)
+
+    # Detect safe search in local file
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/wakeupcat.jpg')
     detect_safe_search(file_name)
 
-    # Detect text
+    # Detect safe search in GS bucket
+    file_name = 'gs://cloud-samples-tests/vision/wakeupcat.jpg'
+    detect_safe_search_gcs(file_name)
+
+    # Detect text in local file
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/text.jpg')
     detect_text(file_name)
 
-    # Detect properties
+    # Detect text in GS bucket
+    file_name = 'gs://cloud-samples-tests/vision/text.jpg'
+    detect_text_gcs(file_name)
+
+    # Detect properties in local file
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/landmark.jpg')
     detect_properties(file_name)
+
+    # Detect properties in GS bucket
+    file_name = 'gs://cloud-samples-tests/vision/landmark.jpg'
+    detect_properties_gcs(file_name)
 
 
 if __name__ == '__main__':
