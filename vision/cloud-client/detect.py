@@ -273,6 +273,42 @@ def run_all_local():
     detect_properties(file_name)
 
 
+def run_local(args):
+    if args.command == 'all-local':
+        run_all_local()
+    elif args.command == 'faces':
+        detect_faces(args.path)
+    elif args.command == 'labels':
+        detect_labels(args.path)
+    elif args.command == 'landmarks':
+        detect_landmarks(args.path)
+    elif args.command == 'text':
+        detect_text(args.path)
+    elif args.command == 'logos':
+        detect_logos(args.path)
+    elif args.command == 'safe-search':
+        detect_safe_search(args.path)
+    elif args.command == 'properties':
+        detect_properties(args.path)
+
+
+def run_cloud_storage(args):
+    if args.command == 'text-gcs':
+        detect_text_cloud_storage(args.cloud_storage_uri)
+    elif args.command == 'faces-gcs':
+        detect_faces_cloud_storage(args.cloud_storage_uri)
+    elif args.command == 'labels-gcs':
+        detect_labels_cloud_storage(args.cloud_storage_uri)
+    elif args.command == 'landmarks-gcs':
+        detect_landmarks_cloud_storage(args.cloud_storage_uri)
+    elif args.command == 'logos-gcs':
+        detect_logos_cloud_storage(args.cloud_storage_uri)
+    elif args.command == 'safe-search-gcs':
+        detect_safe_search_cloud_storage(args.cloud_storage_uri)
+    elif args.command == 'properties-gcs':
+        detect_properties_cloud_storage(args.cloud_storage_uri)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -280,7 +316,7 @@ if __name__ == '__main__':
     subparsers = parser.add_subparsers(dest='command')
 
     run_local_parser = subparsers.add_parser(
-        'local', help=run_all_local.__doc__)
+        'all-local', help=run_all_local.__doc__)
 
     detect_faces_parser = subparsers.add_parser(
         'faces', help=detect_faces.__doc__)
@@ -342,33 +378,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    if args.command == 'local':
-        run_all_local()
-    elif args.command == 'faces':
-        detect_faces(args.path)
-    elif args.command == 'faces-gcs':
-        detect_faces_cloud_storage(args.cloud_storage_uri)
-    elif args.command == 'labels':
-        detect_labels(args.path)
-    elif args.command == 'labels-gcs':
-        detect_labels_cloud_storage(args.cloud_storage_uri)
-    elif args.command == 'landmarks':
-        detect_landmarks(args.path)
-    elif args.command == 'landmarks-gcs':
-        detect_landmarks_cloud_storage(args.cloud_storage_uri)
-    elif args.command == 'text':
-        detect_text(args.path)
-    elif args.command == 'text-gcs':
-        detect_text_cloud_storage(args.cloud_storage_uri)
-    elif args.command == 'logos':
-        detect_logos(args.path)
-    elif args.command == 'logos-gcs':
-        detect_logos_cloud_storage(args.cloud_storage_uri)
-    elif args.command == 'safe-search':
-        detect_safe_search(args.path)
-    elif args.command == 'safe-search-gcs':
-        detect_safe_search_cloud_storage(args.cloud_storage_uri)
-    elif args.command == 'properties':
-        detect_properties(args.path)
-    elif args.command == 'properties-gcs':
-        detect_properties_cloud_storage(args.cloud_storage_uri)
+    if ('gcs' in args.command):
+        run_cloud_storage(args)
+    else:
+        run_local(args)
