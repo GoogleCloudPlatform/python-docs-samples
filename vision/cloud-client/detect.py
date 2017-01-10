@@ -41,9 +41,9 @@ def detect_faces(path):
 
     print('Faces:')
     for face in faces:
-        print('anger: {}').format(face.emotions.anger)
-        print('joy: {}').format(face.emotions.joy)
-        print('surprise: {}').format(face.emotions.surprise)
+        print('anger: {}'.format(face.emotions.anger))
+        print('joy: {}'.format(face.emotions.joy))
+        print('surprise: {}'.format(face.emotions.surprise))
 
 
 def detect_faces_cloud_storage(uri):
@@ -55,9 +55,9 @@ def detect_faces_cloud_storage(uri):
 
     print('Faces:')
     for face in faces:
-        print('anger: {}').format(face.emotions.anger)
-        print('joy: {}').format(face.emotions.joy)
-        print('surprise: {}').format(face.emotions.surprise)
+        print('anger: {}'.format(face.emotions.anger))
+        print('joy: {}'.format(face.emotions.joy))
+        print('surprise: {}'.format(face.emotions.surprise))
 
 
 def detect_labels(path):
@@ -156,10 +156,10 @@ def detect_safe_search(path):
     safe_searches = image.detect_safe_search()
     print('Safe search:')
     for safe in safe_searches:
-        print('adult: {}').format(safe.adult)
-        print('medical: {}').format(safe.medical)
-        print('spoofed: {}').format(safe.spoof)
-        print('violence: {}').format(safe.violence)
+        print('adult: {}'.format(safe.adult))
+        print('medical: {}'.format(safe.medical))
+        print('spoofed: {}'.format(safe.spoof))
+        print('violence: {}'.format(safe.violence))
 
 
 def detect_safe_search_cloud_storage(uri):
@@ -170,10 +170,10 @@ def detect_safe_search_cloud_storage(uri):
     safe_searches = image.detect_safe_search()
     print('Safe search:')
     for safe in safe_searches:
-        print('adult: {}').format(safe.adult)
-        print('medical: {}').format(safe.medical)
-        print('spoofed: {}').format(safe.spoof)
-        print('violence: {}').format(safe.violence)
+        print('adult: {}'.format(safe.adult))
+        print('medical: {}'.format(safe.medical))
+        print('spoofed: {}'.format(safe.spoof))
+        print('violence: {}'.format(safe.violence))
 
 
 def detect_text(path):
@@ -215,10 +215,10 @@ def detect_properties(path):
     print('Properties:')
     for prop in properties:
         color = prop.colors[0]
-        print('fraction: {}').format(color.pixel_fraction)
-        print('r: {}').format(color.color.red)
-        print('g: {}').format(color.color.green)
-        print('g: {}').format(color.color.blue)
+        print('fraction: {}'.format(color.pixel_fraction))
+        print('r: {}'.format(color.color.red))
+        print('g: {}'.format(color.color.green))
+        print('g: {}'.format(color.color.blue))
 
 
 def detect_properties_cloud_storage(uri):
@@ -229,10 +229,10 @@ def detect_properties_cloud_storage(uri):
     properties = image.detect_properties()
     for prop in properties:
         color = prop.colors[0]
-        print('fraction: {}').format(color.pixel_fraction)
-        print('r: {}').format(color.color.red)
-        print('g: {}').format(color.color.green)
-        print('g: {}').format(color.color.blue)
+        print('fraction: {}'.format(color.pixel_fraction))
+        print('r: {}'.format(color.color.red))
+        print('g: {}'.format(color.color.green))
+        print('g: {}'.format(color.color.blue))
 
 
 def run_all_local():
