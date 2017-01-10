@@ -38,9 +38,9 @@ def test_labels(capsys):
     assert 'whiskers' in out
 
 
-def test_labels_gcs(capsys):
+def test_labels_cloud_storage(capsys):
     file_name = 'gs://cloud-samples-tests/vision/wakeupcat.jpg'
-    detect.detect_labels_gcs(file_name)
+    detect.detect_labels_cloud_storage(file_name)
     out, _ = capsys.readouterr()
     assert 'whiskers' in out
 
@@ -54,9 +54,9 @@ def test_landmarks(capsys):
     assert 'Palace' in out
 
 
-def test_landmarks_gcs(capsys):
+def test_landmarks_cloud_storage(capsys):
     file_name = 'gs://cloud-samples-tests/vision/landmark.jpg'
-    detect.detect_landmarks_gcs(file_name)
+    detect.detect_landmarks_cloud_storage(file_name)
     out, _ = capsys.readouterr()
     assert 'Palace' in out
 
@@ -70,9 +70,9 @@ def test_faces(capsys):
     assert 'Likelihood.POSSIBLE' in out
 
 
-def test_faces_gcs(capsys):
+def test_faces_cloud_storage(capsys):
     file_name = 'gs://cloud-samples-tests/vision/face_no_surprise.jpg'
-    detect.detect_faces_gcs(file_name)
+    detect.detect_faces_cloud_storage(file_name)
     out, _ = capsys.readouterr()
     assert 'Likelihood.POSSIBLE' in out
 
@@ -86,9 +86,9 @@ def test_logos(capsys):
     assert 'Google' in out
 
 
-def test_logos_gcs(capsys):
+def test_logos_cloud_storage(capsys):
     file_name = 'gs://cloud-samples-tests/vision/logos.png'
-    detect.detect_logos_gcs(file_name)
+    detect.detect_logos_cloud_storage(file_name)
     out, _ = capsys.readouterr()
     assert 'Google' in out
 
@@ -102,9 +102,9 @@ def test_safe_search(capsys):
     assert 'Likelihood.VERY_LIKELY' in out
 
 
-def test_safe_search_gcs(capsys):
+def test_safe_search_cloud_storage(capsys):
     file_name = 'gs://cloud-samples-tests/vision/wakeupcat.jpg'
-    detect.detect_safe_search_gcs(file_name)
+    detect.detect_safe_search_cloud_storage(file_name)
     out, _ = capsys.readouterr()
     assert 'Likelihood.VERY_LIKELY' in out
 
@@ -118,9 +118,9 @@ def test_detect_text(capsys):
     assert '37%' in out
 
 
-def test_detect_text_gcs(capsys):
+def test_detect_text_cloud_storage(capsys):
     file_name = 'gs://cloud-samples-tests/vision/text.jpg'
-    detect.detect_text_gcs(file_name)
+    detect.detect_text_cloud_storage(file_name)
     out, _ = capsys.readouterr()
     assert '37%' in out
 
@@ -134,8 +134,8 @@ def test_detect_properties(capsys):
     assert 'fraction' in out
 
 
-def test_detect_properties_gcs(capsys):
+def test_detect_properties_cloud_storage(capsys):
     file_name = 'gs://cloud-samples-tests/vision/landmark.jpg'
-    detect.detect_properties_gcs(file_name)
+    detect.detect_properties_cloud_storage(file_name)
     out, _ = capsys.readouterr()
     assert 'fraction' in out
