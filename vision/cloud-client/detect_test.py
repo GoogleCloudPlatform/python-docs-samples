@@ -15,7 +15,9 @@
 import os
 
 import detect
+
 import pytest
+
 xfail = pytest.mark.xfail
 
 
