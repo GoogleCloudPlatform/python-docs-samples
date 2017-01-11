@@ -14,11 +14,9 @@
 
 import os
 
-import detect
-
 import pytest
 
-xfail = pytest.mark.xfail
+import detect
 
 
 def test_quickstart(capsys):
