@@ -262,10 +262,12 @@ def run_all_local():
         'resources/wakeupcat.jpg')
     detect_safe_search(file_name)
 
+    ''' TODO: Uncomment when https://goo.gl/c47YwV is fixed
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/text.jpg')
     detect_text(file_name)
+    '''
 
     file_name = os.path.join(
         os.path.dirname(__file__),
