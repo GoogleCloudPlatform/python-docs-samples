@@ -22,22 +22,22 @@ def run_quickstart():
     # Your Google Cloud Platform project ID
     project_id = 'YOUR_PROJECT_ID'
 
-    # The "global" zone lists all keys. It can be a specific zone if desired.
-    zone = 'global'
+    # Lists keys in the "global" location.
+    location = 'global'
 
     # Instantiates a client
     kms_client = discovery.build('cloudkms', 'v1beta1')
 
     # The resource name of the location associated with the KeyRings
-    parent = 'projects/{}/locations/{}'.format(project_id, zone)
+    parent = 'projects/{}/locations/{}'.format(project_id, location)
 
     # Lists key rings
     request = kms_client.projects().locations().keyRings().list(parent=parent)
     response = request.execute()
 
-    if 'key_rings' in response and len(response['key_rings']):
+    if 'keyRings' in response and response['keyRings']:
         print('Key rings:')
-        for key_ring in response['key_rings']:
+        for key_ring in response['keyRings']:
             print(key_ring['name'])
     else:
         print('No key rings found.')
