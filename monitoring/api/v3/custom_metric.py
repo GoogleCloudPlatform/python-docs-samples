@@ -100,6 +100,7 @@ def get_custom_data_point():
     return length
 
 
+# [START write_timeseries]
 def write_timeseries_value(client, project_resource,
                            custom_metric_type, instance_id, metric_kind):
     """Write the custom metric obtained by get_custom_data_point at a point in
@@ -136,6 +137,7 @@ def write_timeseries_value(client, project_resource,
     request = client.projects().timeSeries().create(
         name=project_resource, body={"timeSeries": [timeseries_data]})
     request.execute()
+# [END write_timeseries]
 
 
 def read_timeseries(client, project_resource, custom_metric_type):
