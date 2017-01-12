@@ -1,4 +1,4 @@
-Flask==0.11.1
+Flask==0.12
 google-cloud-pubsub==0.22.0
 gunicorn==19.6.0
 oauth2client==4.0.0
