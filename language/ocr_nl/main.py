@@ -44,7 +44,6 @@ import time
 
 from googleapiclient import discovery
 from googleapiclient import errors
-import httplib2
 
 BATCH_SIZE = 10
 
