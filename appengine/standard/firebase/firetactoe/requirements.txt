@@ -1,4 +1,4 @@
-flask==0.11.1
+flask==0.12
 requests==2.12.4
 requests_toolbelt==0.7.0
 oauth2client==4.0.0

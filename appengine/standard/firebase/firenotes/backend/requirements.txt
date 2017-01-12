@@ -1,4 +1,4 @@
-Flask==0.11.1
+Flask==0.12
 pyjwt==1.4.2
 flask-cors==3.0.2
 google-auth==0.5.0

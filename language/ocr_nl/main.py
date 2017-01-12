@@ -44,8 +44,6 @@ import time
 
 from googleapiclient import discovery
 from googleapiclient import errors
-import httplib2
-from oauth2client.client import GoogleCredentials
 
 BATCH_SIZE = 10
 
@@ -54,8 +52,7 @@ class VisionApi(object):
     """Construct and use the Cloud Vision API service."""
 
     def __init__(self):
-        credentials = GoogleCredentials.get_application_default()
-        self.service = discovery.build('vision', 'v1', credentials=credentials)
+        self.service = discovery.build('vision', 'v1')
 
     def detect_text(self, input_filenames, num_retries=3, max_results=6):
         """Uses the Vision API to detect text in the given file."""
@@ -113,14 +110,7 @@ class TextAnalyzer(object):
     """Construct and use the Google Natural Language API service."""
 
     def __init__(self, db_filename=None):
-        credentials = GoogleCredentials.get_application_default()
-        scoped_credentials = credentials.create_scoped(
-            ['https://www.googleapis.com/auth/cloud-platform'])
-        http = httplib2.Http()
-        scoped_credentials.authorize(http)
-        self.service = discovery.build('language', 'v1',
-                                       http=http,
-                                       credentials=credentials)
+        self.service = discovery.build('language', 'v1')
 
         # This list will store the entity information gleaned from the
         # image files.
