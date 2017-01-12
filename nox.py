@@ -191,6 +191,7 @@ def _session_tests(session, sample):
 def session_gae(session, sample):
     """Runs py.test for an App Engine standard sample."""
     session.interpreter = 'python2.7'
+    session.run('ls')
     session.install(GCP_REPO_TOOLS_REQ)
     _setup_appengine_sdk(session)
 
