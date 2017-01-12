@@ -14,6 +14,7 @@
 
 import os
 
+import mock
 import pytest
 import requests
 
@@ -71,3 +72,21 @@ def remote_resource(cloud_config):
 
     return lambda path, tmpdir: fetch_gcs_resource(
         remote_uri + path.strip('/'), tmpdir)
+
+
+@pytest.fixture
+def api_client_inject_project_id(cloud_config):
+    """Patches all googleapiclient requests to replace 'YOUR_PROJECT_ID' with
+    the project ID from cloud_config."""
+    import googleapiclient.http
+
+    class ProjectIdInjectingHttpRequest(googleapiclient.http.HttpRequest):
+        def __init__(self, http, postproc, uri, *args, **kwargs):
+            uri = uri.replace('YOUR_PROJECT_ID', cloud_config.project)
+            super(ProjectIdInjectingHttpRequest, self).__init__(
+                http, postproc, uri, *args, **kwargs)
+
+    with mock.patch(
+            'googleapiclient.http.HttpRequest',
+            new=ProjectIdInjectingHttpRequest):
+        yield
