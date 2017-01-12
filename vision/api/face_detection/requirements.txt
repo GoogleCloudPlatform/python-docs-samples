@@ -1,2 +1,2 @@
-google-api-python-client==1.5.5
-Pillow==3.4.2
+google-api-python-client==1.6.1
+Pillow==4.0.0
