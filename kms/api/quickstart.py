@@ -25,10 +25,10 @@ def run_quickstart():
     # Lists keys in the "global" location.
     location = 'global'
 
-    # Instantiates a client
+    # Creates an API client for the KMS API.
     kms_client = discovery.build('cloudkms', 'v1beta1')
 
-    # The resource name of the location associated with the KeyRings
+    # The resource name of the location associated with the key rings.
     parent = 'projects/{}/locations/{}'.format(project_id, location)
 
     # Lists key rings
