@@ -108,7 +108,7 @@ USE_TZ = True
 
 # [START staticurl]
 STATIC_URL = '/static/'
-#STATIC_URL = 'https://storage.googleapis.com/<your-gcs-bucket>/static/'
+# STATIC_URL = 'https://storage.googleapis.com/<your-gcs-bucket>/static/'
 # [END staticurl]
 
 STATIC_ROOT = 'static/'
