@@ -41,7 +41,7 @@ Open the `openapi.yaml` file and in the `host` property, replace
 
 Then, deploy the sample using `gcloud`:
 ```bash
-$ gcloud beta app deploy
+$ gcloud app deploy
 ```
 
 Once deployed, you can access the application at https://YOUR-PROJECT-ID.appspot.com/.
