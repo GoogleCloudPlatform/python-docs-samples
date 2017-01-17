@@ -1,5 +1,5 @@
 grpcio==1.0.4
-PyAudio==0.2.9
+PyAudio==0.2.10
 grpc-google-cloud-speech-v1beta1==0.14.0
 six==1.10.0
 requests==2.12.4
