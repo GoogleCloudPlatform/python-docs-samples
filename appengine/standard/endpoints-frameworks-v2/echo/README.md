@@ -29,7 +29,7 @@ Open the `app.yaml` file and in the `env_variables` section, replace [YOUR-PROJE
 
 Then, deploy the sample using `gcloud`:
 
-    $ gcloud beta app deploy
+    $ gcloud app deploy
 
 Once deployed, you can access the application at https://your-service.appspot.com
 
