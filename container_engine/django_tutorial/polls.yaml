@@ -19,12 +19,12 @@
 # instances of the bookshelf app are running on the cluster.
 # For more info about Pods see:
 #   https://cloud.google.com/container-engine/docs/pods/
-# For more info about Replication Controllers:
-#   https://cloud.google.com/container-engine/docs/replicationcontrollers/
+# For more info about Deployments:
+#   https://kubernetes.io/docs/user-guide/deployments/
 
-# [START replication_controller]
-apiVersion: v1
-kind: ReplicationController
+# [START kubernetes_deployment]
+apiVersion: extensions/v1beta1
+kind: Deployment
 metadata:
   name: polls
   labels:
@@ -39,14 +39,54 @@ spec:
       containers:
       - name: polls-app
         # Replace  with your project ID or use `make template`
-        image: gcr.io/$GCLOUD_PROJECT/polls
+        image: gcr.io/<your-project-id>/polls
         # This setting makes nodes pull the docker image every time before
         # starting the pod. This is useful when debugging, but should be turned
         # off in production.
         imagePullPolicy: Always
+        env:
+            # [START cloudsql_secrets]
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql
+                  key: username
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql
+                  key: password
+            # [END cloudsql_secrets]
         ports:
         - containerPort: 8080
-# [END replication_controller]
+
+      # [START proxy_container]
+      - image: b.gcr.io/cloudsql-docker/gce-proxy:1.05
+        name: cloudsql-proxy
+        command: ["/cloud_sql_proxy", "--dir=/cloudsql",
+                  "-instances=<your-cloudsql-connection-string>=tcp:3306",
+                  "-credential_file=/secrets/cloudsql/credentials.json"]
+        volumeMounts:
+          - name: cloudsql-oauth-credentials
+            mountPath: /secrets/cloudsql
+            readOnly: true
+          - name: ssl-certs
+            mountPath: /etc/ssl/certs
+          - name: cloudsql
+            mountPath: /cloudsql
+      # [END proxy_container] 
+      # [START volumes]
+      volumes:
+        - name: cloudsql-oauth-credentials
+          secret:
+            secretName: cloudsql-oauth-credentials
+        - name: ssl-certs
+          hostPath:
+            path: /etc/ssl/certs
+        - name: cloudsql
+          emptyDir:
+      # [END volumes]        
+# [END kubernetes_deployment]
 
 ---
 
