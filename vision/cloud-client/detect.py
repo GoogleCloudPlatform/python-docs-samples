@@ -218,7 +218,7 @@ def detect_properties(path):
         print('fraction: {}'.format(color.pixel_fraction))
         print('r: {}'.format(color.color.red))
         print('g: {}'.format(color.color.green))
-        print('g: {}'.format(color.color.blue))
+        print('b: {}'.format(color.color.blue))
 
 
 def detect_properties_cloud_storage(uri):
