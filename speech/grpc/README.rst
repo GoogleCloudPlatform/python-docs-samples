@@ -53,16 +53,25 @@ Install `PortAudio`_. This is required by the `PyAudio`_ library to stream
 audio from your computer's microphone. PyAudio depends on PortAudio for cross-platform compatibility, and is installed differently depending on the
 platform.
 
-For Mac OS X, you can use `Homebrew`_::
+* For Mac OS X, you can use `Homebrew`_::
 
-    brew install portaudio
+      brew install portaudio
 
-For Debian / Ubuntu Linux::
+  **Note**: if you encounter an error when running `pip install` that indicates
+  it can't find `portaudio.h`, try running `pip install` with the following
+  flags::
 
-    apt-get install portaudio19-dev python-all-dev
+      pip install --global-option='build_ext' \
+          --global-option='-I/usr/local/include' \
+          --global-option='-L/usr/local/lib' \
+          pyaudio
 
-Windows may work without having to install PortAudio explicitly (it will get
-installed with PyAudio).
+* For Debian / Ubuntu Linux::
+
+      apt-get install portaudio19-dev python-all-dev
+
+* Windows may work without having to install PortAudio explicitly (it will get
+  installed with PyAudio).
 
 For more details, see the `PyAudio installation`_ page.
 
