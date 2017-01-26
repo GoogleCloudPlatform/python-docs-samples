@@ -121,9 +121,9 @@ securityDefinitions:
     flow: "implicit"
     type: "oauth2"
     # This must match the 'iss' field in the JWT.
-    x-issuer: "jwt-client.endpoints.sample.google.com"
+    x-google-issuer: "jwt-client.endpoints.sample.google.com"
     # Update this with your service account's email address.
-    x-jwks_uri: "https://www.googleapis.com/service_accounts/v1/jwk/YOUR-SERVICE-ACCOUNT-EMAIL"
+    x-google-jwks_uri: "https://www.googleapis.com/service_accounts/v1/jwk/YOUR-SERVICE-ACCOUNT-EMAIL"
   # This section configures authentication using Google App Engine default
   # service account to sign a json web token. This is mostly used for
   # server-to-server communication.
@@ -132,9 +132,9 @@ securityDefinitions:
     flow: "implicit"
     type: "oauth2"
     # Replace YOUR-CLIENT-PROJECT-ID with your client project ID.
-    x-issuer: "YOUR-CLIENT-PROJECT-ID@appspot.gserviceaccount.com"
+    x-google-issuer: "YOUR-CLIENT-PROJECT-ID@appspot.gserviceaccount.com"
     # Replace YOUR-CLIENT-PROJECT-ID with your client project ID.
-    x-jwks_uri: "https://www.googleapis.com/robot/v1/metadata/x509/YOUR-CLIENT-PROJECT-ID@appspot.gserviceaccount.com"
+    x-google-jwks_uri: "https://www.googleapis.com/robot/v1/metadata/x509/YOUR-CLIENT-PROJECT-ID@appspot.gserviceaccount.com"
   # This section configures authentication using a service account
   # to sign a json web token. This is mostly used for server-to-server
   # communication.
@@ -153,12 +153,12 @@ securityDefinitions:
     authorizationUrl: ""
     flow: "implicit"
     type: "oauth2"
-    x-issuer: "accounts.google.com"
-    x-jwks_uri: "https://www.googleapis.com/oauth2/v1/certs"
+    x-google-issuer: "accounts.google.com"
+    x-google-jwks_uri: "https://www.googleapis.com/oauth2/v1/certs"
   # This section configures authentication using Firebase Auth.
   firebase:
     authorizationUrl: ""
     flow: "implicit"
     type: "oauth2"
-    x-issuer: "https://securetoken.google.com/YOUR-PROJECT-ID"
-    x-jwks_uri: "https://www.googleapis.com/service_accounts/v1/metadata/x509/securetoken@system.gserviceaccount.com"
+    x-google-issuer: "https://securetoken.google.com/YOUR-PROJECT-ID"
+    x-google-jwks_uri: "https://www.googleapis.com/service_accounts/v1/metadata/x509/securetoken@system.gserviceaccount.com"
