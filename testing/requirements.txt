@@ -1,15 +1,15 @@
 beautifulsoup4==4.5.3
-coverage==4.3.2
+coverage==4.3.4
 flaky==3.3.0
 funcsigs==1.0.2
 mock==2.0.0
 mysql-python==1.2.5; python_version < "3.0"
 PyCrypto==2.6.1
 pytest-cov==2.4.0
-pytest==3.0.5
+pytest==3.0.6
 pyyaml==3.12
 responses==0.5.1
 WebTest==2.0.24
-webapp2==3.0.0b1
+webapp2==2.5.2
 google-api-python-client==1.6.1
 google-cloud-core==0.22.1
