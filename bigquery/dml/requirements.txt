@@ -2,4 +2,4 @@ flake8==3.2.1
 google-cloud-bigquery==0.22.1
 PyMySQL==0.7.9
 six==1.10.0
-SQLAlchemy==1.1.4
+SQLAlchemy==1.1.5
