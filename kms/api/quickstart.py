@@ -20,7 +20,7 @@ def run_quickstart():
     from googleapiclient import discovery
 
     # Your Google Cloud Platform project ID
-    project_id = 'kms-testing'
+    project_id = 'YOUR_PROJECT_ID'
 
     # Lists keys in the "global" location.
     location = 'global'
