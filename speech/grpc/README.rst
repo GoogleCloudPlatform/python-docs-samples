@@ -121,6 +121,11 @@ To run this sample:
                          [--sample_rate SAMPLE_RATE]
                          input_uri
     
+    Transcribes a FLAC audio file stored in Google Cloud Storage using GRPC.
+    
+    Example usage:
+        python transcribe.py --encoding=FLAC --sample_rate=16000         gs://speech-demo/audio.flac
+    
     positional arguments:
       input_uri
     
@@ -147,6 +152,12 @@ To run this sample:
     usage: transcribe_async.py [-h] [--encoding {LINEAR16,FLAC,MULAW,AMR,AMR_WB}]
                                [--sample_rate SAMPLE_RATE]
                                input_uri
+    
+    Sample that transcribes a FLAC audio file stored in Google Cloud Storage,
+    using async GRPC.
+    
+    Example usage:
+        python transcribe_async.py --encoding=FLAC --sample_rate=16000             gs://speech-demo/audio.flac
     
     positional arguments:
       input_uri

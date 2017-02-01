@@ -13,8 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Sample that transcribes a FLAC audio file stored in Google Cloud Storage,
-using async GRPC."""
+"""
+Sample that transcribes a FLAC audio file stored in Google Cloud Storage,
+using async GRPC.
+
+Example usage:
+    python transcribe_async.py --encoding=FLAC --sample_rate=16000 \
+            gs://speech-demo/audio.flac
+"""
 
 import argparse
 import time
@@ -105,7 +111,9 @@ def _gcs_uri(text):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('input_uri', type=_gcs_uri)
     parser.add_argument(
         '--encoding', default='LINEAR16', choices=[
