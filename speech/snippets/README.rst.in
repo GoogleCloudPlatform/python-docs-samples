@@ -16,5 +16,11 @@ setup:
 samples:
 - name: Quickstart
   file: quickstart.py
+- name: Transcribe
+  file: transcribe.py
+  show_help: true
+- name: Transcribe async
+  file: transcribe_async.py
+  show_help: true
 
 cloud_client_library: true
