@@ -82,6 +82,56 @@ To run this sample:
     $ python quickstart.py
 
 
+Transcribe
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python transcribe.py
+
+    usage: transcribe.py [-h] speech_file
+    
+    Google Cloud Speech API sample application using the REST API for batch
+    processing.
+    
+    Example usage: python translate.py resources/audio.raw
+    
+    positional arguments:
+      speech_file  Full path of audio file to be recognized
+    
+    optional arguments:
+      -h, --help   show this help message and exit
+
+
+Transcribe async
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python transcribe_async.py
+
+    usage: transcribe_async.py [-h] speech_file
+    
+    Google Cloud Speech API sample application using the REST API for async
+    batch processing.
+    
+    Example usage: python transcribe_async.py resources/audio.raw
+    
+    positional arguments:
+      speech_file  Full path of audio file to be recognized
+    
+    optional arguments:
+      -h, --help   show this help message and exit
+
+
 
 
 The client library
