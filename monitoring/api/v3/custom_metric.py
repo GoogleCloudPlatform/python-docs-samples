@@ -74,8 +74,15 @@ def create_custom_metric(client, project_id,
         "displayName": "Custom Metric"
     }
 
-    client.projects().metricDescriptors().create(
+    return client.projects().metricDescriptors().create(
         name=project_id, body=metrics_descriptor).execute()
+
+
+def delete_metric_descriptor(
+        client, custom_metric_name):
+    """Delete a custom metric descriptor."""
+    client.projects().metricDescriptors().delete(
+        name=custom_metric_name).execute()
 
 
 def get_custom_metric(client, project_id, custom_metric_type):

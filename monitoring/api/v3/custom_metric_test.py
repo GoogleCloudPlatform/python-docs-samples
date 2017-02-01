@@ -26,8 +26,12 @@ import time
 from gcp.testing import eventually_consistent
 from gcp.testing.flaky import flaky
 
-from custom_metric import create_custom_metric, get_custom_metric
-from custom_metric import read_timeseries, write_timeseries_value
+from custom_metric import create_custom_metric
+from custom_metric import delete_metric_descriptor
+from custom_metric import get_custom_metric
+from custom_metric import read_timeseries
+from custom_metric import write_timeseries_value
+
 import list_resources
 
 """ Custom metric domain for all custom metrics"""
@@ -53,7 +57,7 @@ def test_custom_metric(cloud_config):
     INSTANCE_ID = "test_instance"
     METRIC_KIND = "GAUGE"
 
-    create_custom_metric(
+    custom_metric_descriptor = create_custom_metric(
         client, PROJECT_RESOURCE, METRIC_RESOURCE, METRIC_KIND)
 
     # wait until metric has been created, use the get call to wait until
@@ -77,3 +81,5 @@ def test_custom_metric(cloud_config):
             response['timeSeries'][0]['points'][0]['value']['int64Value'])
         # using seed of 1 will create a value of 1
         assert value == pseudo_random_value
+
+    delete_metric_descriptor(client, custom_metric_descriptor['name'])
