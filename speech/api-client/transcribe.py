@@ -75,7 +75,15 @@ def main(speech_file):
     # [END construct_request]
     # [START send_request]
     response = service_request.execute()
-    print(json.dumps(response))
+
+    # First print the raw json response
+    print(json.dumps(response, indent=2))
+
+    # Now print the actual transcriptions
+    for result in response.get('results', []):
+        print('Result:')
+        for alternative in result['alternatives']:
+            print(u'  Alternative: {}'.format(alternative['transcript']))
     # [END send_request]
 
 
