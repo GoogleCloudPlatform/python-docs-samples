@@ -14,7 +14,6 @@
 
 
 def test_quickstart(api_client_inject_project_id, capsys):
-    
     import quickstart
 
     quickstart.run_quickstart()
