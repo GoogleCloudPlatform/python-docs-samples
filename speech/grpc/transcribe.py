@@ -12,8 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Sample that transcribes a FLAC audio file stored in Google Cloud Storage,
-using GRPC."""
+"""Transcribes a FLAC audio file stored in Google Cloud Storage using GRPC.
+
+Example usage:
+    python transcribe.py --encoding=FLAC --sample_rate=16000 \
+        gs://speech-demo/audio.flac
+"""
 
 import argparse
 
@@ -80,7 +84,9 @@ def _gcs_uri(text):
 PROTO_URL = ('https://github.com/googleapis/googleapis/blob/master/'
              'google/cloud/speech/v1beta1/cloud_speech.proto')
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('input_uri', type=_gcs_uri)
     parser.add_argument(
         '--encoding', default='LINEAR16', choices=[
