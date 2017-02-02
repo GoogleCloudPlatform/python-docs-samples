@@ -21,7 +21,7 @@ import functions
 
 
 # Your Google Cloud Platform project ID
-PROJECT_ID = 'your-project-id'
+PROJECT_ID = 'YOUR_PROJECT_ID'
 
 # Your Google Cloud Platform Key Location
 LOCATION = 'global'
