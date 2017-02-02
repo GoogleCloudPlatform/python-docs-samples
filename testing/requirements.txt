@@ -13,3 +13,4 @@ WebTest==2.0.24
 webapp2==2.5.2
 google-api-python-client==1.6.1
 google-cloud-core==0.22.1
+git+git://github.com/GoogleCloudPlatform/python-repo-tools.git
