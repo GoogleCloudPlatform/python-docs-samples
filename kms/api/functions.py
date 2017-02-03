@@ -15,13 +15,15 @@
 
 import argparse
 import base64
+import io
 
-# Imports the Google APIs client library
 from googleapiclient import discovery
 
 
 # [START kms_create_keyring]
 def create_keyring(project_id, location, keyring):
+    """Creates a KeyRing in the given location. Potential locations include: 
+    global, asia-east1, europe-west1, us-central1, and us-east1."""
 
     # Creates an API client for the KMS API.
     kms_client = discovery.build('cloudkms', 'v1beta1')
@@ -34,12 +36,13 @@ def create_keyring(project_id, location, keyring):
         parent=parent, body={}, keyRingId=keyring)
     response = request.execute()
 
-    print 'Created KeyRing {}.'.format(response["name"])
+    print('Created KeyRing {}.'.format(response["name"]))
 # [END kms_create_keyring]
 
 
 # [START kms_create_cryptokey]
 def create_cryptokey(project_id, location, keyring, cryptokey):
+    """Creates a CrytoKey within a KeyRing in the given location."""
 
     # Creates an API client for the KMS API.
     kms_client = discovery.build('cloudkms', 'v1beta1')
@@ -54,12 +57,16 @@ def create_cryptokey(project_id, location, keyring, cryptokey):
         cryptoKeyId=cryptokey)
     response = request.execute()
 
-    print 'Created CryptoKey {}.'.format(response["name"])
+    print('Created CryptoKey {}.'.format(response["name"]))
 # [END kms_create_cryptokey]
 
 
 # [START kms_encrypt]
-def encrypt(project_id, location, keyring, cryptokey, infile, outfile):
+def encrypt(project_id, location, keyring, cryptokey, plaintext_file_name,
+            encrypted_file_name):
+    """Encrypts data from a plaintext_file_name using the provided CryptoKey
+    and saves it to an encrypted_file_name so it can only be recovered with a
+    call to decrypt."""
 
     # Creates an API client for the KMS API.
     kms_client = discovery.build('cloudkms', 'v1beta1')
@@ -68,27 +75,31 @@ def encrypt(project_id, location, keyring, cryptokey, infile, outfile):
     name = 'projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}'.format(
         project_id, location, keyring, cryptokey)
 
-    # Read text from input file.
-    i = open(infile, 'r')
-    text = i.read()
-    i.close()
-    encoded_text = base64.b64encode(text)
+    # Read text from the input file.
+    with io.open(plaintext_file_name, 'rb') as plaintext_file:
+        plaintext = plaintext_file.read()
+        encoded_text = base64.b64encode(plaintext)
 
-    # Use the KMS API to encrypt the text.
-    request = kms_client.projects().locations().keyRings().cryptoKeys().encrypt(name=name, body={"plaintext": encoded_text})
-    response = request.execute()
+        # Use the KMS API to encrypt the text.
+        cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
+        request = cryptokeys.encrypt(
+            name=name, body={"plaintext": encoded_text.decode('utf-8')})
+        response = request.execute()
 
-    # Write the encrypted text to a file.
-    o = open(outfile, 'w')
-    o.write(response["ciphertext"])
-    o.close()
+        # Write the encrypted text to a file.
+        with io.open(encrypted_file_name, 'wb') as encrypted_file:
+            encrypted_file.write(response["ciphertext"].encode('utf-8'))
 
-    print 'Saved encrypted text to {}.'.format(outfile)
+    print('Saved encrypted text to {}.'.format(encrypted_file_name))
 # [END kms_encrypt]
 
 
 # [START kms_decrypt]
-def decrypt(project_id, location, keyring, cryptokey, infile, outfile):
+def decrypt(project_id, location, keyring, cryptokey, encrypted_file_name,
+            decrypted_file_name):
+    """Decrypts data from encrypted_file_name that was previously encrypted
+    using the CryptoKey with a call to encrypt. Outputs decrypted data to
+    decrpyted_file_name."""
 
     # Creates an API client for the KMS API.
     kms_client = discovery.build('cloudkms', 'v1beta1')
@@ -97,64 +108,81 @@ def decrypt(project_id, location, keyring, cryptokey, infile, outfile):
     name = 'projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}'.format(
         project_id, location, keyring, cryptokey)
 
-    # Read cipher text from input file.
-    i = open(infile, 'r')
-    cipher_text = i.read()
-    i.close()
+    # Read cipher text from the input file.
+    with io.open(encrypted_file_name, 'rb') as encrypted_file:
+        cipher_text = encrypted_file.read()
 
-    # Use the KMS API to decrypt the text.
-    request = kms_client.projects().locations().keyRings().cryptoKeys().decrypt(name=name, body={"ciphertext": cipher_text})
-    response = request.execute()
+        # Use the KMS API to decrypt the text.
+        cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
+        request = cryptokeys.decrypt(
+            name=name, body={"ciphertext": cipher_text.decode('utf-8')})
+        response = request.execute()
 
-    # Write the plain text to a file.
-    o = open(outfile, 'w')
-    plaintext_encoded = response["plaintext"]
-    plaintext_decoded = base64.b64decode(plaintext_encoded)
-    o.write(plaintext_decoded)
-    o.close()
+        # Write the plain text to a file.
+        with io.open(decrypted_file_name, 'wb') as decrypted_file:
+            plaintext_encoded = response["plaintext"]
+            plaintext_decoded = base64.b64decode(plaintext_encoded)
+            decrypted_file.write(plaintext_decoded)
 
-    print 'Saved decrypted text to {}.'.format(outfile)
+    print('Saved decrypted text to {}.'.format(decrypted_file_name))
 # [END kms_decrypt]
 
 
 # [START kms_disable_cryptokey_version]
-def disable_cryptokey_version(project_id, location, keyring, cryptokey, version):
+def disable_cryptokey_version(project_id, location, keyring, cryptokey,
+                              version):
+    """Disables a CryptoKeyVersion associated with a given CryptoKey and
+    KeyRing."""
+
     # Creates an API client for the KMS API.
     kms_client = discovery.build('cloudkms', 'v1beta1')
 
-    # The resource name of the CryptoKeyVersion.
-    name = 'projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}/cryptoKeyVersions/{}'.format(project_id, location, keyring, cryptokey, version)
+    # Construct the resource name of the CryptoKeyVersion.
+    name = 'projects/{}/locations/{}/'.format(project_id, location)
+    name += 'keyRings/{}/cryptoKeys/{}/'.format(keyring, cryptokey)
+    name += 'cryptoKeyVersions/{}'.format(version)
 
     # Use the KMS API to disable the CryptoKeyVersion.
-    request = kms_client.projects().locations().keyRings().cryptoKeys().cryptoKeyVersions().patch(name=name, body={"state": 'DISABLED'}, updateMask="state")
+    cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
+    request = cryptokeys.cryptoKeyVersions().patch(
+        name=name, body={"state": 'DISABLED'}, updateMask="state")
     response = request.execute()
 
-    print 'CryptoKeyVersion {}\'s state has been set to {}.'.format(
-        name, response["state"])
+    print('CryptoKeyVersion {}\'s state has been set to {}.'.format(
+        name, response["state"]))
 # [END kms_disable_cryptokey_version]
 
 
 # [START kms_destroy_cryptokey_version]
 def destroy_cryptokey_version(
         project_id, location, keyring, cryptokey, version):
+    """Schedules a CryptoKeyVersion associated with a given CryptoKey and
+    KeyRing for destruction 24 hours in the future."""
+
     # Creates an API client for the KMS API.
     kms_client = discovery.build('cloudkms', 'v1beta1')
 
-    # The resource name of the CryptoKeyVersion.
-    name = 'projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}/cryptoKeyVersions/{}'.format(project_id, location, keyring, cryptokey, version)
+    # Construct the resource name of the CryptoKeyVersion.
+    name = 'projects/{}/locations/{}/'.format(project_id, location)
+    name += 'keyRings/{}/cryptoKeys/{}/'.format(keyring, cryptokey)
+    name += 'cryptoKeyVersions/{}'.format(version)
 
     # Use the KMS API to schedule the CryptoKeyVersion for destruction.
-    request = kms_client.projects().locations().keyRings().cryptoKeys().cryptoKeyVersions().destroy(name=name, body={})
+    cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
+    request = cryptokeys.cryptoKeyVersions().destroy(name=name, body={})
     response = request.execute()
 
-    print 'CryptoKeyVersion {}\'s state has been set to {}.'.format(
-        name, response["state"])
+    print('CryptoKeyVersion {}\'s state has been set to {}.'.format(
+        name, response["state"]))
 # [END kms_destroy_cryptokey_version]
 
 
 # [START kms_add_member_to_cryptokey_policy]
 def add_member_to_cryptokey_policy(
         project_id, location, keyring, cryptokey, member, role):
+    """Adds a member with a given role to the Identity and Access Management
+    (IAM) policy for a given CryptoKey associated with a KeyRing."""
+
     # Creates an API client for the KMS API.
     kms_client = discovery.build('cloudkms', 'v1beta1')
 
@@ -163,46 +191,37 @@ def add_member_to_cryptokey_policy(
         project_id, location, keyring, cryptokey)
 
     # Get the current IAM policy and add the new member to it.
-    policy_request = kms_client.projects().locations().keyRings().cryptoKeys().getIamPolicy(resource=parent)
+    cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
+    policy_request = cryptokeys.getIamPolicy(resource=parent)
     policy_response = policy_request.execute()
+    bindings = []
     if 'bindings' in policy_response.keys():
-        role_already_exists = False
-        for binding in policy_response['bindings']:
-            if binding['role'] == role:
-                role_already_exists = True
-                member_already_exists = False
-                for user in binding['members']:
-                    if user == member:
-                        member_already_exists = True
-                if not member_already_exists:
-                    binding['members'].append(member)
-        if not role_already_exists:
-            members = []
-            members.append(member)
-            binding = dict()
-            binding['role'] = role
-            binding['members'] = members
-            policy_response['bindings'].append(binding)
-    else:
-        members = []
-        members.append(member)
-        binding = dict()
-        binding['role'] = role
-        binding['members'] = members
-        bindings = []
-        bindings.append(binding)
-        policy_response['bindings'] = bindings
+        bindings = policy_response['bindings']
+    members = []
+    members.append(member)
+    new_binding = dict()
+    new_binding['role'] = role
+    new_binding['members'] = members
+    bindings.append(new_binding)
+    policy_response['bindings'] = bindings
 
     # Set the new IAM Policy.
-    request = kms_client.projects().locations().keyRings().cryptoKeys().setIamPolicy(resource=parent, body={"policy": policy_response})
+    cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
+    request = cryptokeys.setIamPolicy(
+        resource=parent, body={"policy": policy_response})
     request.execute()
 
-    print 'Member {} added with role {} to policy for CryptoKey {} in KeyRing {}'.format(member, role, cryptokey, keyring)
+    print_msg = 'Member {} added with role {} to policy'.format(member, role)
+    print_msg += ' for CryptoKey {} in KeyRing {}'.format(cryptokey, keyring)
+    print(print_msg)
 # [END kms_add_member_to_cryptokey_policy]
 
 
 # [START kms_get_keyring_policy]
 def get_keyring_policy(project_id, location, keyring):
+    """Gets the Identity and Access Management (IAM) policy for a given KeyRing
+    and prints out roles and the members assigned to those roles."""
+
     # Creates an API client for the KMS API.
     kms_client = discovery.build('cloudkms', 'v1beta1')
 
@@ -216,16 +235,16 @@ def get_keyring_policy(project_id, location, keyring):
     response = request.execute()
 
     if 'bindings' in response.keys():
-        print 'Printing IAM policy for resource {}:'.format(parent)
+        print('Printing IAM policy for resource {}:'.format(parent))
         for binding in response['bindings']:
-            print ''
-            print 'Role: {}'.format(binding['role'])
-            print 'Members:'
+            print('')
+            print('Role: {}'.format(binding['role']))
+            print('Members:')
             for member in binding['members']:
-                print member
-        print ''
+                print(member)
+        print('')
     else:
-        print 'No roles found for resource {}.'.format(parent)
+        print('No roles found for resource {}.'.format(parent))
 # [END kms_get_keyring_policy]
 
 
