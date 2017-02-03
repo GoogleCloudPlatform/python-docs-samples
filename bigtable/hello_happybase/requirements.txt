@@ -1,2 +1,2 @@
 google-cloud-happybase==0.22.0
-google-cloud-core==0.22.1
+google-cloud-core==0.23.0
