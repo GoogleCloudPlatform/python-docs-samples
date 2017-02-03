@@ -83,6 +83,11 @@ To run this sample:
 
     usage: transcribe.py [-h] speech_file
     
+    Google Cloud Speech API sample application using the REST API for batch
+    processing.
+    
+    Example usage: python transcribe.py resources/audio.raw
+    
     positional arguments:
       speech_file  Full path of audio file to be recognized
     
@@ -102,6 +107,11 @@ To run this sample:
     $ python transcribe_async.py
 
     usage: transcribe_async.py [-h] speech_file
+    
+    Google Cloud Speech API sample application using the REST API for async
+    batch processing.
+    
+    Example usage: python transcribe.py resources/audio.raw
     
     positional arguments:
       speech_file  Full path of audio file to be recognized
