@@ -17,7 +17,7 @@
 """Google Cloud Speech API sample application using the REST API for batch
 processing.
 
-Example usage: python translate.py resources/audio.raw
+Example usage: python transcribe.py resources/audio.raw
 """
 
 # [START import_libraries]
