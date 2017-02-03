@@ -13,7 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Google Cloud Speech API sample application using the REST API for batch
-processing."""
+processing.
+
+Example usage: python transcribe.py resources/audio.raw
+"""
 
 # [START import_libraries]
 import argparse
@@ -89,7 +92,9 @@ def main(speech_file):
 
 # [START run_application]
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
         'speech_file', help='Full path of audio file to be recognized')
     args = parser.parse_args()
