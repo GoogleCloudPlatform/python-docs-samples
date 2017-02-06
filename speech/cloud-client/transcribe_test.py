@@ -21,3 +21,10 @@ def test_main(resource, capsys):
     out, err = capsys.readouterr()
 
     assert re.search(r'how old is the Brooklyn Bridge', out, re.DOTALL | re.I)
+
+
+def test_main_gcs(resource, capsys):
+    main('gs://cloud-samples-tests/speech/brooklyn.flac')
+    out, err = capsys.readouterr()
+
+    assert re.search(r'how old is the Brooklyn Bridge', out, re.DOTALL | re.I)
