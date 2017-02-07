@@ -13,9 +13,7 @@
 # limitations under the License.
 
 
-def test_quickstart(api_client_inject_project_id, capsys):
+def test_quickstart(api_client_inject_project_id):
     import quickstart
 
     quickstart.run_quickstart()
-    out, _ = capsys.readouterr()
-    assert 'No key rings found' in out

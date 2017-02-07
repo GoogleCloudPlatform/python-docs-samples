@@ -80,13 +80,13 @@ def api_client_inject_project_id(cloud_config):
     the project ID from cloud_config."""
     import googleapiclient.http
 
-    class ProjectIdInjectingHttpRequest(googleapiclient.http.HttpRequest):
-        def __init__(self, http, postproc, uri, *args, **kwargs):
-            uri = uri.replace('YOUR_PROJECT_ID', cloud_config.project)
-            super(ProjectIdInjectingHttpRequest, self).__init__(
-                http, postproc, uri, *args, **kwargs)
+    old_execute = googleapiclient.http.HttpRequest.execute
+
+    def new_execute(self, http=None, num_retries=0):
+        self.uri = self.uri.replace('YOUR_PROJECT_ID', cloud_config.project)
+        return old_execute(self, http=http, num_retries=num_retries)
 
     with mock.patch(
-            'googleapiclient.http.HttpRequest',
-            new=ProjectIdInjectingHttpRequest):
+            'googleapiclient.http.HttpRequest.execute',
+            new=new_execute):
         yield
