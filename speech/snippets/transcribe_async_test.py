@@ -13,11 +13,19 @@
 
 import re
 
-from transcribe_async import main
+import transcribe_async
 
 
-def test_main(resource, capsys):
-    main(resource('audio.raw'))
+def test_transcribe(resource, capsys):
+    transcribe_async.transcribe_file(resource('audio.raw'))
+    out, err = capsys.readouterr()
+
+    assert re.search(r'how old is the Brooklyn Bridge', out, re.DOTALL | re.I)
+
+
+def test_transcribe_gcs(resource, capsys):
+    transcribe_async.transcribe_gcs(
+        'gs://python-docs-samples-tests/speech/audio.flac')
     out, err = capsys.readouterr()
 
     assert re.search(r'how old is the Brooklyn Bridge', out, re.DOTALL | re.I)
