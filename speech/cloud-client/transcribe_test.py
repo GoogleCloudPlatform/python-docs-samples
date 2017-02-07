@@ -13,18 +13,19 @@
 
 import re
 
-from transcribe import transcribe_file, transcribe_gcs
+import transcribe
 
 
 def test_transcribe_file(resource, capsys):
-    transcribe_file(resource('audio.raw'))
+    transcribe.transcribe_file(resource('audio.raw'))
     out, err = capsys.readouterr()
 
     assert re.search(r'how old is the Brooklyn Bridge', out, re.DOTALL | re.I)
 
 
 def test_transcribe_gcs(resource, capsys):
-    transcribe_gcs('gs://python-docs-samples-tests/speech/audio.flac')
+    transcribe.transcribe_gcs(
+        'gs://python-docs-samples-tests/speech/audio.flac')
     out, err = capsys.readouterr()
 
     assert re.search(r'how old is the Brooklyn Bridge', out, re.DOTALL | re.I)
