@@ -213,8 +213,7 @@ def add_member_to_cryptokey_policy(
     request.execute()
 
     print_msg = (
-        'Member {} added with role {} to policy'
-        ' for CryptoKey {} in KeyRing {}'
+        'Member {} added with role {} to policy for CryptoKey {} in KeyRing {}'
         .format(member, role, cryptokey, keyring))
     print(print_msg)
 # [END kms_add_member_to_cryptokey_policy]
