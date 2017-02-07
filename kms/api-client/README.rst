@@ -93,10 +93,12 @@ To run this sample:
 
     $ python snippets.py
 
-    usage: snippets.py [-h] {encrypt,decrypt,other} ...
+    usage: snippets.py [-h]
+                       {create_keyring,create_cryptokey,encrypt,decrypt,disable_cryptokey_version,destroy_cryptokey_version,add_member_to_cryptokey_policy,get_keyring_policy}
+                       ...
     
     positional arguments:
-      {encrypt,decrypt,other}
+      {create_keyring,create_cryptokey,encrypt,decrypt,disable_cryptokey_version,destroy_cryptokey_version,add_member_to_cryptokey_policy,get_keyring_policy}
     
     optional arguments:
       -h, --help            show this help message and exit
