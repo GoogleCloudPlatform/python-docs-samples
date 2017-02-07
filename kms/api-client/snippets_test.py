@@ -13,6 +13,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+import random
+import string
+
 from googleapiclient import discovery
 
 import snippets
@@ -22,10 +25,14 @@ import snippets
 LOCATION = 'global'
 
 # Your Google Cloud Platform KeyRing name
-KEYRING = 'sample-keyring-43'
+KEYRING = ''
+for _ in range(12):
+    KEYRING += random.choice(string.ascii_lowercase + string.digits)
 
 # Your Google Cloud Platform CryptoKey name
-CRYPTOKEY = 'sample-key-43'
+CRYPTOKEY = ''
+for _ in range(12):
+    CRYPTOKEY += random.choice(string.ascii_lowercase + string.digits)
 
 # Your Google Cloud Platform CryptoKeyVersion name
 VERSION = 1
