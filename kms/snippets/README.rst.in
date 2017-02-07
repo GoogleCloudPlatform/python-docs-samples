@@ -1,0 +1,20 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud KMS API
+  short_name: Cloud KMS API
+  url: https://cloud.google.com/kms/docs/
+  description: >
+    The `Google Cloud KMS API`_ is a service that allows you to keep encryption
+    keys centrally in the cloud, for direct use by cloud services.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Quickstart
+  file: quickstart.py
+- name: Snippets
+  file: snippets.py
+  show_help: True
