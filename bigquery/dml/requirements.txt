@@ -1,4 +1,4 @@
-flake8==3.2.1
+flake8==3.3.0
 google-cloud-bigquery==0.22.1
 PyMySQL==0.7.9
 six==1.10.0
