@@ -22,10 +22,10 @@ import snippets
 LOCATION = 'global'
 
 # Your Google Cloud Platform KeyRing name
-KEYRING = 'sample-keyring-40'
+KEYRING = 'sample-keyring-42'
 
 # Your Google Cloud Platform CryptoKey name
-CRYPTOKEY = 'sample-key-40'
+CRYPTOKEY = 'sample-key-42'
 
 # Your Google Cloud Platform CryptoKeyVersion name
 VERSION = 1

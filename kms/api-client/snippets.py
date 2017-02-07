@@ -347,14 +347,14 @@ if __name__ == '__main__':
             args.project_id,
             args.location,
             args.keyring,
-            args.crpytoykey,
+            args.cryptokey,
             args.version)
     elif args.command == 'destroy_cryptokey_version':
         destroy_cryptokey_version(
             args.project_id,
             args.location,
             args.keyring,
-            args.crpytoykey,
+            args.cryptokey,
             args.version)
     elif args.command == 'add_member_to_cryptokey_policy':
         add_member_to_cryptokey_policy(
