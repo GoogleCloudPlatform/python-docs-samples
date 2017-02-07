@@ -41,7 +41,7 @@ def create_keyring(project_id, location, keyring):
 
 # [START kms_create_cryptokey]
 def create_cryptokey(project_id, location, keyring, cryptokey):
-    """Creates a CrytoKey within a KeyRing in the given location."""
+    """Creates a CryptoKey within a KeyRing in the given location."""
 
     # Creates an API client for the KMS API.
     kms_client = discovery.build('cloudkms', 'v1beta1')
