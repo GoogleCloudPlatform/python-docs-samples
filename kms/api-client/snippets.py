@@ -256,6 +256,17 @@ if __name__ == '__main__':
         formatter_class=argparse.RawDescriptionHelpFormatter)
     subparsers = parser.add_subparsers(dest='command')
 
+    create_keyring_parser = subparsers.add_parser('create_keyring')
+    create_keyring_parser.add_argument('project_id')
+    create_keyring_parser.add_argument('location')
+    create_keyring_parser.add_argument('keyring')
+
+    create_cryptokey_parser = subparsers.add_parser('create_cryptokey')
+    create_cryptokey_parser.add_argument('project_id')
+    create_cryptokey_parser.add_argument('location')
+    create_cryptokey_parser.add_argument('keyring')
+    create_cryptokey_parser.add_argument('cryptokey')
+
     encrypt_parser = subparsers.add_parser('encrypt')
     encrypt_parser.add_argument('project_id')
     encrypt_parser.add_argument('location')
@@ -272,11 +283,50 @@ if __name__ == '__main__':
     decrypt_parser.add_argument('infile')
     decrypt_parser.add_argument('outfile')
 
-    other_parser = subparsers.add_parser('other')
+    disable_cryptokey_version_parser = subparsers.add_parser(
+        'disable_cryptokey_version')
+    disable_cryptokey_version_parser.add_argument('project_id')
+    disable_cryptokey_version_parser.add_argument('location')
+    disable_cryptokey_version_parser.add_argument('keyring')
+    disable_cryptokey_version_parser.add_argument('cryptokey')
+    disable_cryptokey_version_parser.add_argument('version')
+
+    destroy_cryptokey_version_parser = subparsers.add_parser(
+        'destroy_cryptokey_version')
+    destroy_cryptokey_version_parser.add_argument('project_id')
+    destroy_cryptokey_version_parser.add_argument('location')
+    destroy_cryptokey_version_parser.add_argument('keyring')
+    destroy_cryptokey_version_parser.add_argument('cryptokey')
+    destroy_cryptokey_version_parser.add_argument('version')
+
+    add_member_to_cryptokey_policy_parser = subparsers.add_parser(
+        'add_member_to_cryptokey_policy')
+    add_member_to_cryptokey_policy_parser.add_argument('project_id')
+    add_member_to_cryptokey_policy_parser.add_argument('location')
+    add_member_to_cryptokey_policy_parser.add_argument('keyring')
+    add_member_to_cryptokey_policy_parser.add_argument('cryptokey')
+    add_member_to_cryptokey_policy_parser.add_argument('member')
+    add_member_to_cryptokey_policy_parser.add_argument('role')
+
+    get_keyring_policy_parser = subparsers.add_parser('get_keyring_policy')
+    get_keyring_policy_parser.add_argument('project_id')
+    get_keyring_policy_parser.add_argument('location')
+    get_keyring_policy_parser.add_argument('keyring')
 
     args = parser.parse_args()
 
-    if args.command == 'encrypt':
+    if args.command == 'create_keyring':
+        create_keyring(
+            args.project_id,
+            args.location,
+            args.keyring)
+    elif args.command == 'create_cryptokey':
+        create_cryptokey(
+            args.project_id,
+            args.location,
+            args.keyring,
+            args.cryptokey)
+    elif args.command == 'encrypt':
         encrypt(
             args.project_id,
             args.location,
@@ -292,3 +342,30 @@ if __name__ == '__main__':
             args.cryptokey,
             args.infile,
             args.outfile)
+    elif args.command == 'disable_cryptokey_version':
+        disable_cryptokey_version(
+            args.project_id,
+            args.location,
+            args.keyring,
+            args.crpytoykey,
+            args.version)
+    elif args.command == 'destroy_cryptokey_version':
+        destroy_cryptokey_version(
+            args.project_id,
+            args.location,
+            args.keyring,
+            args.crpytoykey,
+            args.version)
+    elif args.command == 'add_member_to_cryptokey_policy':
+        add_member_to_cryptokey_policy(
+            args.project_id,
+            args.location,
+            args.keyring,
+            args.cryptokey,
+            args.member,
+            args.role)
+    elif args.command == 'get_keyring_policy':
+        get_keyring_policy(
+            args.project_id,
+            args.location,
+            args.keyring)
