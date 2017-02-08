@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "hackathon-sample-vision",
+  "private_key_id": "bdbb9da93a4cb5181496f2faba51a74439aecd8f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDh3WkLXSAEld4k\nhTnwBnnZA0nTdAWrM4j4r1LXhALwG+hHLtvtbH5z8DdHP9CkBHSDC878ZARup7Jk\nb8s3Dq9jKo7Eprxpq7g/Q39sFmuTZ/wbkyxM2V15NbWCSO5vF3dKu/91uJS3MYE6\nH6n4DiJ4QDfxuINu40xbRbimCSG2ayCxw1IMNB95d5OXm/deWgdSDuIVJN5X5Hhf\nKo0sY9rcPkIp/XmOWkFaCmXzSWEy+t5Md6naeAjlycGkpoSTes9P1slpISK+bfok\nb8siuJ1SloUgUxkjf39iT5TkXjc9mYFZONWpE9w28KB4mFhEU495G24bGu5cG2Bn\nZ+rYkETfAgMBAAECggEBAMVxUcR3UefwQtLWC8HBR37nmv/X6qSwVkpeqSJw6kiP\nfMvNMMAqGZisIwaLyI24v0lXZ0fG/wDkY9Pczl6A3dzodQl/YDFXxaa4EImiR8QC\nIKbSTuWXFllBFDyiGJzQfJ2+HiEAjDBgfEEdMO4BHSzVppIN5Adpd3RKTJIIZYoa\nEvgK2K7OFdehk1nJ4CyyFGhuNg5z1JpuQL9OzIvdnzNTaMWS4fbH/IS+SEZ1xXtG\n8jKraC6o4BlBvxqiPa/tFnCRRD9ZG0RWS5d5GqRnZzlpxpArGWEz1f1pDPsWElSN\nzgCHv8zBXbjU+jVTZOEYGx8NwZteuhQQRaDeZZA7lqECgYEA/NWteGboEHImjNjn\nrr+TvZtRsZftt8gPL3o76DKbXSrGYDN7EDYYg31aDmHOZHdsCTtTnlDSgfbtdp3j\ndg8DGrfqJZtlgJ2VvVtVIfBjnElU3rv3zV7qvn7YatCMBAZx4ZaDHexLxUMMPzFV\nLnT8On5yqtOi4wFOqt2KJC/aU7cCgYEA5LFLvvPU+G/onr03GDJyvXRX54QCD2n0\nUVCbZ+7hGUOaai0UiIcD7XmeZqaNunXP0MLT5z6JEX3TgaN+KPheME9JLcCSV3ig\nL1qz0o8mwb2i2UeLl+10ExORkkg2xUUT+BnovM1tDiz6fEaRKhf+k+iBGPZEFlEc\nQjXnOHEiqBkCgYBGXDiALzMZkIrF237uFIZK17RuVbdj05rWPY/6WEsALG00TF9M\n7aD4xqOPKQzEzK8WCpqEjj1myY7f2aR5MEhO4SuZ95rRpgkLvyT74uf1kDq8GVcm\noel1xdr4Lr0oSZrbioVGiIG1jakU1Oe9m/StWo8Slv7XaX+48RoGZALAFQKBgBV7\nQe4x4TNk76jZhS9Urcp1/zvT/o2MGlL5C1/75FEHNJ38lg0tAYVxAxwJUQ7OujKV\n2mnCSgXGl/N5dARNMCvBhtIxYI2u2v0XvARvRei083MNcWNX/qs8D1R6TArDrliD\ntoTllvTZ7L13s3MMxfEGyfmaSFMAU3M0tP9sQSEhAoGBAOV9uwpXJ2XBx4QMpmvU\nrw3WF450XMFasHP5BlukEbeWv6NbIRfu/9ix8b3nZ1v19d8LDJXMCk61xyTdt6bf\nFhFFEqDe65yCK2OcbNiFIxniCtZAHzEPO1+G8KSaaKxXI6kIvBQRHTQLxRU6Mwc1\n5Xl6zzg3+a/AUnIvJLVE+rQq\n-----END PRIVATE KEY-----\n",
+  "client_email": "hackathon-sample-vision@appspot.gserviceaccount.com",
+  "client_id": "108440335058605390261",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/hackathon-sample-vision%40appspot.gserviceaccount.com"
+}
