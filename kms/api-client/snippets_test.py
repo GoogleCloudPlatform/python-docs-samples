@@ -25,14 +25,12 @@ import snippets
 LOCATION = 'global'
 
 # Your Google Cloud Platform KeyRing name
-KEYRING = ''
-for _ in range(12):
-    KEYRING += random.choice(string.ascii_lowercase + string.digits)
+KEYRING = ''.join(
+    random.choice(string.ascii_lowercase + string.digits) for _ in range(12))
 
 # Your Google Cloud Platform CryptoKey name
-CRYPTOKEY = ''
-for _ in range(12):
-    CRYPTOKEY += random.choice(string.ascii_lowercase + string.digits)
+CRYPTOKEY = ''.join(
+    random.choice(string.ascii_lowercase + string.digits) for _ in range(12))
 
 # Your Google Cloud Platform CryptoKeyVersion name
 VERSION = 1
