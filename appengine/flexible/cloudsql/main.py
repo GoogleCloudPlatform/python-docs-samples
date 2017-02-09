@@ -19,6 +19,7 @@ import socket
 
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
+import sqlalchemy
 
 
 app = Flask(__name__)
@@ -69,7 +70,7 @@ def index():
     db.session.add(visit)
     db.session.commit()
 
-    visits = Visit.query.order_by(-Visit.timestamp).limit(10)
+    visits = Visit.query.order_by(sqlalchemy.desc(Visit.timestamp)).limit(10)
 
     results = [
         'Time: {} Addr: {}'.format(x.timestamp, x.user_ip)
