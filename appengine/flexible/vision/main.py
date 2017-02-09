@@ -20,6 +20,7 @@ from google.cloud import storage
 from google.cloud import datastore
 
 from flask import Flask, request, redirect
+import logging
 
 CLOUD_STORAGE_BUCKET = 'ryans-bucket-2017'
 
@@ -97,8 +98,8 @@ def upload_photo():
     vision_client = vision.Client()
 
     # Use the Cloud Vision client to detect a face for our image.
-    media_link = blob.media_link
-    image = vision_client.image(source_uri=media_link)
+    source_uri = 'gs://{}/{}'.format(CLOUD_STORAGE_BUCKET, blob.name)
+    image = vision_client.image(source_uri=source_uri)
     faces = image.detect_faces(limit=1)
 
     # If a face is detected, save to Datastore the likelihood that the face
