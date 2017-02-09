@@ -14,28 +14,30 @@
 
 import argparse
 
-from google.cloud.monitoring import (
-    Aligner, Client, MetricKind, Reducer, ValueType)
+from google.cloud import monitoring
 
 
-def create_metric_descriptor(client):
+def create_metric_descriptor():
+    client = monitoring.Client()
     descriptor = client.metric_descriptor(
         'custom.googleapis.com/my_metric',
-        metric_kind=MetricKind.GAUGE,
-        value_type=ValueType.DOUBLE,
+        metric_kind=monitoring.MetricKind.GAUGE,
+        value_type=monitoring.ValueType.DOUBLE,
         description='This is a simple example of a custom metric.')
     descriptor.create()
 
 
-def delete_metric_descriptor(client, descriptor):
+def delete_metric_descriptor(descriptor):
+    client = monitoring.Client()
     descriptor = client.metric_descriptor(
-        'custom.googleapis.com/my_metric'
+        descriptor
     )
     descriptor.delete()
-    print 'Deleted metric.'
+    print 'Deleted metric descriptor.'
 
 
-def write_time_series(client):
+def write_time_series():
+    client = monitoring.Client()
     resource = client.resource(
         'gce_instance',
         labels={
@@ -53,47 +55,57 @@ def write_time_series(client):
     client.write_point(metric, resource, 3.14)
 
 
-def list_time_series(client):
+def list_time_series():
+    client = monitoring.Client()
     metric = 'compute.googleapis.com/instance/cpu/utilization'
-    print(list(client.query(metric, minutes=5)))
+    query_results = client.query(metric, minutes=5)
+    for result in query_results:
+        print result
 
 
-def list_time_series_header(client):
+def list_time_series_header():
+    client = monitoring.Client()
     metric = 'compute.googleapis.com/instance/cpu/utilization'
-    print(list(client.query(metric, minutes=5).iter(headers_only=True)))
+    query_results = client.query(metric, minutes=5).iter(headers_only=True)
+    for result in query_results:
+        print result
 
 
-def list_time_series_aggregate(client):
+def list_time_series_aggregate():
+    client = monitoring.Client()
     metric = 'compute.googleapis.com/instance/cpu/utilization'
     print(list(client.query(metric, hours=1).align(
-        Aligner.ALIGN_MEAN, minutes=5)))
+        monitoring.Aligner.ALIGN_MEAN, minutes=5)))
 
 
-def list_time_series_reduce(client):
+def list_time_series_reduce():
+    client = monitoring.Client()
     metric = 'compute.googleapis.com/instance/cpu/utilization'
     print(list(client.query(metric, hours=1).align(
-        Aligner.ALIGN_MEAN, minutes=5).reduce(
-        Reducer.REDUCE_MEAN, 'resource.zone')))
+        monitoring.Aligner.ALIGN_MEAN, minutes=5).reduce(
+        monitoring.Reducer.REDUCE_MEAN, 'resource.zone')))
 
 
-def list_metric_descriptors(client):
+def list_metric_descriptors():
+    client = monitoring.Client()
     for descriptor in client.list_metric_descriptors():
         print(descriptor.type)
 
 
-def list_monitored_resources(client):
+def list_monitored_resources():
+    client = monitoring.Client()
     for descriptor in client.list_resource_descriptors():
         print (descriptor.type)
 
 
-def get_monitored_resource_descriptor(client, type):
+def get_monitored_resource_descriptor(type):
+    client = monitoring.Client()
     print(client.fetch_resource_descriptor(type))
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Demonstrates Monitoring API operations.')
-    parser.add_argument('--project_id', help='Your cloud project ID.')
 
     subparsers = parser.add_subparsers(dest='command')
 
@@ -160,25 +172,24 @@ if __name__ == '__main__':
     )
 
     args = parser.parse_args()
-    client = Client(args.project_id)
 
     if args.command == 'create-metric-descriptor':
-        create_metric_descriptor(client)
+        create_metric_descriptor()
     if args.command == 'list-metric-descriptors':
-        list_metric_descriptors(client)
+        list_metric_descriptors()
     if args.command == 'delete-metric-descriptor':
-        delete_metric_descriptor(client, args.metric)
+        delete_metric_descriptor(args.metric)
     if args.command == 'list-resources':
-        list_monitored_resources(client)
+        list_monitored_resources()
     if args.command == 'get-resource':
-        get_monitored_resource_descriptor(client, args.resource)
+        get_monitored_resource_descriptor(args.resource)
     if args.command == 'write-time-series':
-        write_time_series(client)
+        write_time_series()
     if args.command == 'list-time-series':
-        list_time_series(client)
+        list_time_series()
     if args.command == 'list-time-series-header':
-        list_time_series_header(client)
+        list_time_series_header()
     if args.command == 'list-time-series-reduce':
-        list_time_series_reduce(client)
+        list_time_series_reduce()
     if args.command == 'list-time-series-aggregate':
-        list_time_series_aggregate(client)
+        list_time_series_aggregate()

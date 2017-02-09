@@ -12,27 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.cloud import monitoring
-import pytest
-
 import snippets
 
 
-@pytest.yield_fixture
-def client(cloud_config):
-    client = monitoring.Client(cloud_config.project)
-    yield client
-
-
-def test_create_and_delete_metric_descriptor(capsys, client):
-    snippets.create_metric_descriptor(client)
-    snippets.delete_metric_descriptor(client, 'custom.googleapis.com/my_metric')
+def test_create_and_delete_metric_descriptor(capsys):
+    snippets.create_metric_descriptor()
+    snippets.delete_metric_descriptor('custom.googleapis.com/my_metric')
     out, _ = capsys.readouterr()
     assert 'Deleted metric' in out
 
 
-def test_list_metric_descriptors(capsys, client):
-    snippets.list_metric_descriptors(client)
+def test_list_metric_descriptors(capsys):
+    snippets.list_metric_descriptors()
     out, _ = capsys.readouterr()
     assert 'logging.googleapis.com/byte_count' in out
 

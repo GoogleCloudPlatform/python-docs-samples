@@ -38,5 +38,6 @@ def run_quickstart():
     print('Successfully wrote time series.')
 # [END monitoring_quickstart]
 
+
 if __name__ == '__main__':
     run_quickstart()
