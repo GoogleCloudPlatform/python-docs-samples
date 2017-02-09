@@ -3,4 +3,4 @@ PyAudio==0.2.10
 grpc-google-cloud-speech-v1beta1==0.14.0
 six==1.10.0
 requests==2.13.0
-google-auth==0.5.0
+google-auth==0.6.0
