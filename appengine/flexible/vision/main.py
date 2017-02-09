@@ -13,10 +13,11 @@
 # limitations under the License.
 
 # [START app]
-import logging
+from datetime import datetime
 
 from google.cloud import vision
 from google.cloud import storage
+from google.cloud import datastore
 
 from flask import Flask, request, redirect
 
@@ -48,8 +49,8 @@ def homepage():
     # Get your Cloud Storage bucket.
     bucket = storage_client.get_bucket(CLOUD_STORAGE_BUCKET)
 
-    # Create a Cloud Vision client.
-    vision_client = vision.Client()
+    # Create a Cloud Datastore client.
+    datastore_client = datastore.Client()
 
     # Loop through all items in your Cloud Storage bucket.
     for blob in bucket.list_blobs():
@@ -58,17 +59,18 @@ def homepage():
         blob_public_url = blob.public_url
         html_string += """<img src="{}" width=200 height=200>""".format(blob_public_url)
 
-        # Use the Cloud Vision client to detect a face for each image.
-        media_link = blob.media_link
-        image = vision_client.image(source_uri=media_link)
-        faces = image.detect_faces(limit=1)
-
-        # If a face is detected, output HTML with the likelihood that the face
-        # displays 'joy,' as determined by Google's Machine Learning algorithm.
-        if len(faces) > 0:
-            first_face = faces[0]
-            first_face_happiness = first_face.emotions.joy
-            html_string += """<p>Joy Likelihood for Face: {}</p>""".format(first_face_happiness)
+        # Use the Cloud Datastore client to fetch the timestamp of when this
+        # image was uploaded and the face joy likelihood. Output the photo
+        # name, the timestamp, and the joy likelihood to HTML.
+        query = datastore_client.query(kind='PhotoTimestamps')
+        query.add_filter('blob_name', '=', blob.name)
+        image_entities = list(query.fetch())
+        if len(image_entities) > 0:
+            timestamp = image_entities[0]['timestamp']
+            html_string += '<p>{} was uploaded {}.</p>'.format(
+                blob.name, timestamp)
+            face_joy = image_entities[0]['joy']
+            html_string += """<p>Joy Likelihood for Face: {}</p>""".format(face_joy)
 
     html_string += """</body></html>"""
     return html_string
@@ -90,6 +92,51 @@ def upload_photo():
 
     # Make the blob publicly viewable.
     blob.make_public()
+
+    # Create a Cloud Vision client.
+    vision_client = vision.Client()
+
+    # Use the Cloud Vision client to detect a face for our image.
+    media_link = blob.media_link
+    image = vision_client.image(source_uri=media_link)
+    faces = image.detect_faces(limit=1)
+
+    # If a face is detected, save to Datastore the likelihood that the face
+    # displays 'joy,' as determined by Google's Machine Learning algorithm.
+    if len(faces) > 0:
+        face = faces[0]
+
+        # Convert the face.emotions.joy enum type to a string, which will be
+        # something like 'Likelihood.VERY_LIKELY'. Parse that string by the
+        # period to extract only the 'VERY_LIKELY' portion.
+        face_joy = str(face.emotions.joy).split('.')[1]
+    else:
+        face_joy = 'Unknown'
+
+    # Create a Cloud Datastore client.
+    datastore_client = datastore.Client()
+
+    # Fetch the current date / time.
+    current_datetime = datetime.now()
+
+    # The kind for the new entity.
+    kind = 'PhotoTimestamps'
+    
+    # The name/ID for the new entity.
+    name = blob.name
+
+    # Create the Cloud Datastore key for the new entity.
+    key = datastore_client.key(kind, name)
+
+    # Construct the new entity using the key. Set dictionary values for entity
+    # keys blob_name, timestamp, and joy.
+    entity = datastore.Entity(key)
+    entity['blob_name'] = blob.name
+    entity['timestamp'] = current_datetime
+    entity['joy'] = face_joy
+
+    # Save the new entity to Datastore.
+    datastore_client.put(entity)
 
     # Redirect to the home page.
     return redirect('/')
