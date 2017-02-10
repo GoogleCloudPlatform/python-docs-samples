@@ -54,7 +54,6 @@ def write_time_series():
     metric = client.metric(
         type_='custom.googleapis.com/my_metric',
         labels={
-            'status': 'successful',
         }
     )
     client.write_point(metric, resource, 3.14)
