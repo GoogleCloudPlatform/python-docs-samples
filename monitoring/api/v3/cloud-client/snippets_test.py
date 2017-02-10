@@ -28,33 +28,33 @@ def test_list_metric_descriptors(capsys):
     assert 'logging.googleapis.com/byte_count' in out
 
 
-def test_list_resources(capsys, client):
-    snippets.list_monitored_resources(client)
+def test_list_resources(capsys):
+    snippets.list_monitored_resources()
     out, _ = capsys.readouterr()
     assert 'pubsub_topic' in out
 
 
-def test_get_resource(capsys, client):
-    snippets.get_monitored_resource_descriptor(client, 'pubsub_topic')
+def test_get_resource(capsys):
+    snippets.get_monitored_resource_descriptor('pubsub_topic')
     out, _ = capsys.readouterr()
     assert 'A topic in Google Cloud Pub/Sub' in out
 
 
-def test_time_series(capsys, client):
-    snippets.write_time_series(client)
+def test_time_series(capsys):
+    snippets.write_time_series()
 
-    snippets.list_time_series(client)
+    snippets.list_time_series()
     out, _ = capsys.readouterr()
     assert 'TimeSeries with' in out
 
-    snippets.list_time_series_header(client)
+    snippets.list_time_series_header()
     out, _ = capsys.readouterr()
     assert 'TimeSeries with' in out
 
-    snippets.list_time_series_aggregate(client)
+    snippets.list_time_series_aggregate()
     out, _ = capsys.readouterr()
     assert 'TimeSeries with' in out
 
-    snippets.list_time_series_reduce(client)
+    snippets.list_time_series_reduce()
     out, _ = capsys.readouterr()
     assert 'TimeSeries with' in out
