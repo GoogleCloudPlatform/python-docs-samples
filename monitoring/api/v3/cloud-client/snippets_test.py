@@ -15,8 +15,11 @@
 import snippets
 
 
-def test_create_and_delete_metric_descriptor(capsys):
+def test_create_get_delete_metric_descriptor(capsys):
     snippets.create_metric_descriptor()
+    snippets.get_metric_descriptor('custom.googleapis.com/my_metric')
+    out, _ = capsys.readouterr()
+    assert 'a simple example' in out
     snippets.delete_metric_descriptor('custom.googleapis.com/my_metric')
     out, _ = capsys.readouterr()
     assert 'Deleted metric' in out
