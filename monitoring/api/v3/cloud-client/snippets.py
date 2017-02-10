@@ -33,7 +33,7 @@ def delete_metric_descriptor(descriptor):
         descriptor
     )
     descriptor.delete()
-    print 'Deleted metric descriptor.'
+    print('Deleted metric descriptor.')
 
 
 def write_time_series():
@@ -60,7 +60,7 @@ def list_time_series():
     metric = 'compute.googleapis.com/instance/cpu/utilization'
     query_results = client.query(metric, minutes=5)
     for result in query_results:
-        print result
+        print(result)
 
 
 def list_time_series_header():
@@ -68,7 +68,7 @@ def list_time_series_header():
     metric = 'compute.googleapis.com/instance/cpu/utilization'
     query_results = client.query(metric, minutes=5).iter(headers_only=True)
     for result in query_results:
-        print result
+        print(result)
 
 
 def list_time_series_aggregate():
@@ -95,7 +95,7 @@ def list_metric_descriptors():
 def list_monitored_resources():
     client = monitoring.Client()
     for descriptor in client.list_resource_descriptors():
-        print (descriptor.type)
+        print(descriptor.type)
 
 
 def get_monitored_resource_descriptor(type):
