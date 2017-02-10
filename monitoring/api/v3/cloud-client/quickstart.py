@@ -29,9 +29,7 @@ def run_quickstart():
 
     metric = client.metric(
         type_='custom.googleapis.com/my_metric',
-        labels={
-            'status': 'successful',
-        }
+        labels={}
     )
 
     client.write_point(metric, resource, 3.14)
