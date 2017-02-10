@@ -128,10 +128,10 @@ def get_monitored_resource_descriptor(type_):
 
 
 def get_metric_descriptor(type_):
-    # [START get_monitored_resources]
+    # [START get_metric_descriptor]
     client = monitoring.Client()
     print(client.fetch_metric_descriptor(type_))
-    # [END get_monitored_resources]
+    # [END get_metric_descriptor]
 
 
 if __name__ == '__main__':
