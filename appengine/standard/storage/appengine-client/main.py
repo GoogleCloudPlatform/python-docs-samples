@@ -18,10 +18,9 @@
 """A sample app that uses GCS client to operate on bucket and file."""
 
 # [START imports]
-import logging
 import os
 
-import cloudstorage as gcs
+import cloudstorage
 from google.appengine.api import app_identity
 
 import webapp2
@@ -29,9 +28,10 @@ import webapp2
 # [END imports]
 
 # [START retries]
-my_default_retry_params = gcs.RetryParams(
-    initial_delay=0.2, max_delay=5.0, backoff_factor=2, max_retry_period=15)
-gcs.set_default_retry_params(my_default_retry_params)
+cloudstorage.set_default_retry_params(
+    cloudstorage.RetryParams(
+        initial_delay=0.2, max_delay=5.0, backoff_factor=2, max_retry_period=15
+        ))
 # [END retries]
 
 
@@ -45,65 +45,51 @@ class MainPage(webapp2.RequestHandler):
 
         self.response.headers['Content-Type'] = 'text/plain'
         self.response.write(
-            'Demo GCS Application running from Version: ' +
-            os.environ['CURRENT_VERSION_ID'] + '\n')
-        self.response.write('Using bucket name: ' + bucket_name + '\n\n')
+            'Demo GCS Application running from Version: {}\n'.format(
+                os.environ['CURRENT_VERSION_ID']))
+        self.response.write('Using bucket name: \n\n'.format(bucket_name))
 # [END get_default_bucket]
 
         bucket = '/' + bucket_name
         filename = bucket + '/demo-testfile'
         self.tmp_filenames_to_clean_up = []
 
-        try:
-            self.create_file(filename)
-            self.response.write('\n\n')
+        self.create_file(filename)
+        self.response.write('\n\n')
 
-            self.read_file(filename)
-            self.response.write('\n\n')
+        self.read_file(filename)
+        self.response.write('\n\n')
 
-            self.stat_file(filename)
-            self.response.write('\n\n')
+        self.stat_file(filename)
+        self.response.write('\n\n')
 
-            self.create_files_for_list_bucket(bucket)
-            self.response.write('\n\n')
+        self.create_files_for_list_bucket(bucket)
+        self.response.write('\n\n')
 
-            self.list_bucket(bucket)
-            self.response.write('\n\n')
+        self.list_bucket(bucket)
+        self.response.write('\n\n')
 
-            self.list_bucket_directory_mode(bucket)
-            self.response.write('\n\n')
+        self.list_bucket_directory_mode(bucket)
+        self.response.write('\n\n')
 
-        except Exception, e:
-            logging.exception(e)
-            self.delete_files()
-            self.response.write(
-                '\n\nThere was an error running the demo!Please check the logs'
-                ' for more details.\n')
-
-        else:
-            self.delete_files()
-            self.response.write('\n\nThe demo ran successfully!\n')
+        self.delete_files()
+        self.response.write('\n\nThe demo ran successfully!\n')
 
 # [START write]
     def create_file(self, filename):
-        """Create a file.
+        """Create a file."""
 
-        The retry_params specified in the open call will override the default
-        retry params for this particular file handle.
+        self.response.write('Creating file {}\n'.format(filename))
 
-        Args:
-        filename: filename.
-        """
-        self.response.write('Creating file %s\n' % filename)
-
-        write_retry_params = gcs.RetryParams(backoff_factor=1.1)
-        gcs_file = gcs.open(
+        # The retry_params specified in the open call will override the default
+        # retry params for this particular file handle.
+        write_retry_params = cloudstorage.RetryParams(backoff_factor=1.1)
+        with cloudstorage.open(
             filename, 'w', content_type='text/plain', options={
                 'x-goog-meta-foo': 'foo', 'x-goog-meta-bar': 'bar'},
-            retry_params=write_retry_params)
-        gcs_file.write('abcde\n')
-        gcs_file.write('f'*1024*4 + '\n')
-        gcs_file.close()
+                retry_params=write_retry_params) as cloudstorage_file:
+                    cloudstorage_file.write('abcde\n')
+                    cloudstorage_file.write('f'*1024*4 + '\n')
         self.tmp_filenames_to_clean_up.append(filename)
 # [END write]
 
@@ -112,17 +98,16 @@ class MainPage(webapp2.RequestHandler):
         self.response.write(
             'Abbreviated file content (first line and last 1K):\n')
 
-        gcs_file = gcs.open(filename)
-        self.response.write(gcs_file.readline())
-        gcs_file.seek(-1024, os.SEEK_END)
-        self.response.write(gcs_file.read())
-        gcs_file.close()
+        with cloudstorage.open(filename) as cloudstorage_file:
+            self.response.write(cloudstorage_file.readline())
+            cloudstorage_file.seek(-1024, os.SEEK_END)
+            self.response.write(cloudstorage_file.read())
 # [END read]
 
     def stat_file(self, filename):
         self.response.write('File stat:\n')
 
-        stat = gcs.stat(filename)
+        stat = cloudstorage.stat(filename)
         self.response.write(repr(stat))
 
     def create_files_for_list_bucket(self, bucket):
@@ -134,17 +119,13 @@ class MainPage(webapp2.RequestHandler):
 
 # [START list_bucket]
     def list_bucket(self, bucket):
-        """Create several files and paginate through them.
+        """Create several files and paginate through them."""
 
-        Production apps should set page_size to a practical value.
-
-        Args:
-        bucket: bucket.
-        """
         self.response.write('Listbucket result:\n')
 
+        # Production apps should set page_size to a practical value.
         page_size = 1
-        stats = gcs.listbucket(bucket + '/foo', max_keys=page_size)
+        stats = cloudstorage.listbucket(bucket + '/foo', max_keys=page_size)
         while True:
             count = 0
             for stat in stats:
@@ -154,29 +135,29 @@ class MainPage(webapp2.RequestHandler):
 
             if count != page_size or count == 0:
                 break
-            stats = gcs.listbucket(
+            stats = cloudstorage.listbucket(
                 bucket + '/foo', max_keys=page_size, marker=stat.filename)
 # [END list_bucket]
 
     def list_bucket_directory_mode(self, bucket):
         self.response.write('Listbucket directory mode result:\n')
-        for stat in gcs.listbucket(bucket + '/b', delimiter='/'):
-            self.response.write('%r' % stat)
+        for stat in cloudstorage.listbucket(bucket + '/b', delimiter='/'):
+            self.response.write(stat)
             self.response.write('\n')
             if stat.is_dir:
-                for subdir_file in gcs.listbucket(
+                for subdir_file in cloudstorage.listbucket(
                         stat.filename, delimiter='/'):
-                    self.response.write('  %r' % subdir_file)
+                    self.response.write('  {}'.format(subdir_file))
                     self.response.write('\n')
 
 # [START delete_files]
     def delete_files(self):
         self.response.write('Deleting files...\n')
         for filename in self.tmp_filenames_to_clean_up:
-            self.response.write('Deleting file %s\n' % filename)
+            self.response.write('Deleting file {}\n'.format(filename))
             try:
-                gcs.delete(filename)
-            except gcs.NotFoundError:
+                cloudstorage.delete(filename)
+            except cloudstorage.NotFoundError:
                 pass
 # [END delete_files]
 
