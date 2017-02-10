@@ -120,10 +120,17 @@ def list_monitored_resources():
     # [END list_monitored_resources]
 
 
-def get_monitored_resource_descriptor(type):
+def get_monitored_resource_descriptor(type_):
     # [START get_monitored_resources]
     client = monitoring.Client()
-    print(client.fetch_resource_descriptor(type))
+    print(client.fetch_resource_descriptor(type_))
+    # [END get_monitored_resources]
+
+
+def get_metric_descriptor(type_):
+    # [START get_monitored_resources]
+    client = monitoring.Client()
+    print(client.fetch_metric_descriptor(type_))
     # [END get_monitored_resources]
 
 
@@ -141,6 +148,17 @@ if __name__ == '__main__':
     list_metric_descriptor_parser = subparsers.add_parser(
         'list-metric-descriptors',
         help=list_metric_descriptors.__doc__
+    )
+
+    get_metric_descriptor_parser = subparsers.add_parser(
+        'get-metric-descriptor',
+        help=get_metric_descriptor.__doc__
+    )
+
+    get_metric_descriptor_parser.add_argument(
+        '--metric',
+        help='The metric type of the metric descriptor to see details about.',
+        required=True
     )
 
     delete_metric_descriptor_parser = subparsers.add_parser(
@@ -201,6 +219,8 @@ if __name__ == '__main__':
         create_metric_descriptor()
     if args.command == 'list-metric-descriptors':
         list_metric_descriptors()
+    if args.command == 'get-metric-descriptor':
+        get_metric_descriptor(args.metric)
     if args.command == 'delete-metric-descriptor':
         delete_metric_descriptor(args.metric)
     if args.command == 'list-resources':
