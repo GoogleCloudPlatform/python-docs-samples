@@ -74,16 +74,20 @@ def list_time_series_header():
 def list_time_series_aggregate():
     client = monitoring.Client()
     metric = 'compute.googleapis.com/instance/cpu/utilization'
-    print(list(client.query(metric, hours=1).align(
-        monitoring.Aligner.ALIGN_MEAN, minutes=5)))
+    query_results = client.query(metric, hours=1).align(
+        monitoring.Aligner.ALIGN_MEAN, minutes=5)
+    for result in query_results:
+        print(result)
 
 
 def list_time_series_reduce():
     client = monitoring.Client()
     metric = 'compute.googleapis.com/instance/cpu/utilization'
-    print(list(client.query(metric, hours=1).align(
+    query_results = client.query(metric, hours=1).align(
         monitoring.Aligner.ALIGN_MEAN, minutes=5).reduce(
-        monitoring.Reducer.REDUCE_MEAN, 'resource.zone')))
+        monitoring.Reducer.REDUCE_MEAN, 'resource.zone')
+    for result in query_results:
+        print(result)
 
 
 def list_metric_descriptors():
