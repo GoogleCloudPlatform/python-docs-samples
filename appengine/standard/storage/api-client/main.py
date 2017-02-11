@@ -32,7 +32,7 @@ import webapp2
 
 
 # The bucket that will be used to list objects.
-BUCKET_NAME = 'unique-apricot-158222'
+BUCKET_NAME = '<your-bucket-name>'
 
 # The filename for an object to be uploaded.
 FILE_NAME = 'storage-api-client-sample-file.txt'
