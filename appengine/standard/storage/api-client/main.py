@@ -34,21 +34,18 @@ import webapp2
 # The bucket that will be used to list objects.
 BUCKET_NAME = '<your-bucket-name>'
 
-# The filename for an object to be uploaded.
-FILE_NAME = 'storage-api-client-sample-file.txt'
-
 credentials = GoogleCredentials.get_application_default()
 storage = discovery.build('storage', 'v1', credentials=credentials)
 
 
 class MainPage(webapp2.RequestHandler):
-    def upload_object(self, bucket, filename):
+    def upload_object(self, bucket, file_object):
         body = {
-            'name': FILE_NAME,
+            'name': 'storage-api-client-sample-file.txt',
         }
         req = storage.objects().insert(
             bucket=bucket, body=body, media_body=http.MediaIoBaseUpload(
-                filename, 'application/octet-stream'))
+                file_object, 'application/octet-stream'))
         resp = req.execute()
         return resp
 
@@ -58,8 +55,7 @@ class MainPage(webapp2.RequestHandler):
         return resp
 
     def get(self):
-        string_io_file = StringIO.StringIO()
-        string_io_file.write('Hello World!')
+        string_io_file = StringIO.StringIO('Hello World!')
         self.upload_object(BUCKET_NAME, string_io_file)
 
         response = storage.objects().list(bucket=BUCKET_NAME).execute()
@@ -68,7 +64,7 @@ class MainPage(webapp2.RequestHandler):
             '<pre>{}</pre>'.format(
                 json.dumps(response, sort_keys=True, indent=2)))
 
-        self.delete_object(BUCKET_NAME, FILE_NAME)
+        self.delete_object(BUCKET_NAME, 'storage-api-client-sample-file.txt')
 
 
 app = webapp2.WSGIApplication([
