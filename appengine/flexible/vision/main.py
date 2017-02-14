@@ -14,20 +14,21 @@
 
 # [START app]
 from datetime import datetime
-
-from google.cloud import vision
-from google.cloud import storage
-from google.cloud import datastore
-
-from flask import Flask, request, redirect
 import logging
 
-CLOUD_STORAGE_BUCKET = 'ryans-bucket-2017'
+from flask import Flask, redirect, request
+
+from google.cloud import datastore
+from google.cloud import storage
+from google.cloud import vision
+
+
+CLOUD_STORAGE_BUCKET = '<your-storage-bucket>'
 
 HEADER_MESSAGE = (
     '<h1>Google Cloud Platform - Face Detection Sample</h1>'
     '<p>This Python Flask application demonstrates App Engine Flexible, Google'
-    ' Cloud Storage, and the Cloud Vision API.</p><br>')
+    ' Cloud Storage, Datastore, and the Cloud Vision API.</p><br>')
 
 app = Flask(__name__)
 
@@ -44,37 +45,27 @@ def homepage():
   <input type="submit" name="submit" value="Submit">
 </form> """
 
-    # Create a Cloud Storage client.
-    storage_client = storage.Client()
-
-    # Get your Cloud Storage bucket.
-    bucket = storage_client.get_bucket(CLOUD_STORAGE_BUCKET)
-
     # Create a Cloud Datastore client.
     datastore_client = datastore.Client()
 
-    # Loop through all items in your Cloud Storage bucket.
-    for blob in bucket.list_blobs():
+    # Use the Cloud Datastore client to fetch information from Datastore about
+    # each photo.
+    query = datastore_client.query(kind='PhotoTimestamps')
+    image_entities = list(query.fetch())
 
-        # Add HTML to display each image.
-        blob_public_url = blob.public_url
-        html_string += """<img src="{}" width=200 height=200>""".format(blob_public_url)
+    for image_entity in image_entities:
+        # Add HTML to display each image, its upload name, its timestamp,
+        # its timestamp, and its joy likelihood.
+        html_string += '<img src="{}" width=200 height=200>'.format(
+            image_entity['image_public_url'])
+        html_string += '<p>{} was uploaded {}.</p>'.format(
+            image_entity['blob_name'], image_entity['timestamp'])
+        html_string += """<p>Joy Likelihood for Face: {}</p>""".format(
+            image_entity['joy'])
 
-        # Use the Cloud Datastore client to fetch the timestamp of when this
-        # image was uploaded and the face joy likelihood. Output the photo
-        # name, the timestamp, and the joy likelihood to HTML.
-        query = datastore_client.query(kind='PhotoTimestamps')
-        query.add_filter('blob_name', '=', blob.name)
-        image_entities = list(query.fetch())
-        if len(image_entities) > 0:
-            timestamp = image_entities[0]['timestamp']
-            html_string += '<p>{} was uploaded {}.</p>'.format(
-                blob.name, timestamp)
-            face_joy = image_entities[0]['joy']
-            html_string += """<p>Joy Likelihood for Face: {}</p>""".format(face_joy)
-
-    html_string += """</body></html>"""
+    html_string += '</body></html>'
     return html_string
+
 
 @app.route('/upload_photo', methods=['GET', 'POST'])
 def upload_photo():
@@ -122,7 +113,7 @@ def upload_photo():
 
     # The kind for the new entity.
     kind = 'PhotoTimestamps'
-    
+
     # The name/ID for the new entity.
     name = blob.name
 
@@ -130,9 +121,10 @@ def upload_photo():
     key = datastore_client.key(kind, name)
 
     # Construct the new entity using the key. Set dictionary values for entity
-    # keys blob_name, timestamp, and joy.
+    # keys blob_name, storage_public_url, timestamp, and joy.
     entity = datastore.Entity(key)
     entity['blob_name'] = blob.name
+    entity['image_public_url'] = blob.public_url
     entity['timestamp'] = current_datetime
     entity['joy'] = face_joy
 
@@ -141,6 +133,7 @@ def upload_photo():
 
     # Redirect to the home page.
     return redirect('/')
+
 
 @app.errorhandler(500)
 def server_error(e):
