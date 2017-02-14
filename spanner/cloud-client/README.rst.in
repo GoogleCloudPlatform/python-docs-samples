@@ -1,0 +1,22 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Spanner
+  short_name: Cloud Spanner
+  url: https://cloud.google.com/spanner/docs
+  description: > 
+    `Google Cloud Spanner`_ is a highly scalable, transactional, managed,
+    NewSQL database service. Cloud Spanner solves the need for a
+    horizontally-scaling database with consistent global transactions and
+    SQL semantics.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Snippets
+  file: snippets.py
+  show_help: true
+
+cloud_client_library: true

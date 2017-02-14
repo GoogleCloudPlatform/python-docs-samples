@@ -32,6 +32,7 @@ def cloud_config():
         storage_bucket=os.environ.get('CLOUD_STORAGE_BUCKET'),
         client_secrets=os.environ.get('GOOGLE_CLIENT_SECRETS'),
         bigtable_instance=os.environ.get('BIGTABLE_CLUSTER'),
+        spanner_instance=os.environ.get('SPANNER_INSTANCE'),
         api_key=os.environ.get('API_KEY'))
 
 
