@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import google.cloud.exceptions
 from google.cloud import spanner
+import google.cloud.exceptions
 import google.cloud.spanner.client
 import mock
 import pytest

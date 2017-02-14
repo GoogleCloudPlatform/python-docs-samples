@@ -423,7 +423,7 @@ if __name__ == '__main__':
 
     if args.command == 'create_database':
         create_database(args.instance_id, args.database_id)
-    if args.command == 'insert_data':
+    elif args.command == 'insert_data':
         insert_data(args.instance_id, args.database_id)
     elif args.command == 'query_data':
         query_data(args.instance_id, args.database_id)
