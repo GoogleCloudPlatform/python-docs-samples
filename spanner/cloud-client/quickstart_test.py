@@ -41,7 +41,7 @@ def patch_instance(cloud_config):
 def example_database(cloud_config):
     spanner_client = spanner.Client()
     instance = spanner_client.instance(cloud_config.spanner_instance)
-    database = instance.database('my-database-name')
+    database = instance.database('my-database-id')
 
     if not database.exists():
         database.create()
