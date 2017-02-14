@@ -17,17 +17,34 @@ Setup
 Authentication
 ++++++++++++++
 
-Authentication for this service is done via an `API Key`_. To obtain an API
-Key:
+Authentication is typically done through `Application Default Credentials`_,
+which means you do not have to change the code to authenticate as long as
+your environment has credentials. You have a few options for setting up
+authentication:
 
-1. Open the `Cloud Platform Console`_
-2. Make sure that billing is enabled for your project.
-3. From the **Credentials** page, create a new **API Key** or use an existing
-   one for your project.
+#. When running locally, use the `Google Cloud SDK`_
 
-.. _API Key:
-    https://developers.google.com/api-client-library/python/guide/aaa_apikeys
-.. _Cloud Console: https://console.cloud.google.com/project?_
+    .. code-block:: bash
+
+        gcloud beta auth application-default login
+
+
+#. When running on App Engine or Compute Engine, credentials are already
+   set-up. However, you may need to configure your Compute Engine instance
+   with `additional scopes`_.
+
+#. You can create a `Service Account key file`_. This file can be used to
+   authenticate to Google Cloud Platform services from any environment. To use
+   the file, set the ``GOOGLE_APPLICATION_CREDENTIALS`` environment variable to
+   the path to the key file, for example:
+
+    .. code-block:: bash
+
+        export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
+
+.. _Application Default Credentials: https://cloud.google.com/docs/authentication#getting_credentials_for_server-centric_flow
+.. _additional scopes: https://cloud.google.com/compute/docs/authentication#using
+.. _Service Account key file: https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount
 
 Install Dependencies
 ++++++++++++++++++++
@@ -77,7 +94,6 @@ To run this sample:
     $ python snippets.py
 
     usage: snippets.py [-h]
-                       api_key
                        {detect-language,list-languages,list-languages-with-target,translate-text}
                        ...
     
@@ -88,7 +104,6 @@ To run this sample:
     https://cloud.google.com/translate/docs.
     
     positional arguments:
-      api_key               Your API key.
       {detect-language,list-languages,list-languages-with-target,translate-text}
         detect-language     Detects the text's language.
         list-languages      Lists all available languages.
