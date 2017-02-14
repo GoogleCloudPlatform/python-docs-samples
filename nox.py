@@ -138,7 +138,7 @@ PYTEST_COMMON_ARGS = [
     '--cov-report', 'term']
 
 FLAKE8_COMMON_ARGS = [
-    '--show-source', '--builtin', 'gettext', '--max-complexity', '15',
+    '--show-source', '--builtin', 'gettext', '--max-complexity', '20',
     '--import-order-style', 'google',
     '--exclude', '.nox,.cache,env,lib,generated_pb2',
 ]

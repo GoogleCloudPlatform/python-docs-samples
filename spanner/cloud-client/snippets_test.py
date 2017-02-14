@@ -1,0 +1,180 @@
+# Copyright 2016 Google, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import random
+import string
+
+from gcp.testing import eventually_consistent
+from google.cloud import spanner
+import pytest
+
+import snippets
+
+
+@pytest.fixture(scope='module')
+def spanner_instance(cloud_config):
+    spanner_client = spanner.Client()
+    return spanner_client.instance(cloud_config.spanner_instance)
+
+
+def unique_database_id():
+    return 'test-db-{}'.format(''.join(random.choice(
+        string.ascii_lowercase + string.digits) for _ in range(5)))
+
+
+def test_create_database(cloud_config, spanner_instance):
+    database_id = unique_database_id()
+    print(cloud_config.spanner_instance, database_id)
+    snippets.create_database(
+        cloud_config.spanner_instance, database_id)
+
+    database = spanner_instance.database(database_id)
+    database.reload()  # Will only succeed if the database exists.
+    database.drop()
+
+
+@pytest.fixture(scope='module')
+def temporary_database(cloud_config, spanner_instance):
+    database_id = unique_database_id()
+    snippets.create_database(cloud_config.spanner_instance, database_id)
+    snippets.insert_data(
+        cloud_config.spanner_instance, database_id)
+    database = spanner_instance.database(database_id)
+    database.reload()
+    yield database
+    database.drop()
+
+
+def test_query_data(cloud_config, temporary_database, capsys):
+    snippets.query_data(
+        cloud_config.spanner_instance, temporary_database.database_id)
+
+    out, _ = capsys.readouterr()
+
+    assert 'Total Junk' in out
+
+
+def test_read_data(cloud_config, temporary_database, capsys):
+    snippets.read_data(
+        cloud_config.spanner_instance, temporary_database.database_id)
+
+    out, _ = capsys.readouterr()
+
+    assert 'Total Junk' in out
+
+
+@pytest.fixture(scope='module')
+def temporary_database_with_column(cloud_config, temporary_database):
+    snippets.add_column(
+        cloud_config.spanner_instance, temporary_database.database_id)
+    yield temporary_database
+
+
+def test_update_data(cloud_config, temporary_database_with_column):
+    snippets.update_data(
+        cloud_config.spanner_instance,
+        temporary_database_with_column.database_id)
+
+
+def test_query_data_with_new_column(
+        cloud_config, temporary_database_with_column, capsys):
+    snippets.query_data_with_new_column(
+        cloud_config.spanner_instance,
+        temporary_database_with_column.database_id)
+
+    out, _ = capsys.readouterr()
+    assert 'MarketingBudget' in out
+
+
+@pytest.fixture(scope='module')
+def temporary_database_with_indexes(
+        cloud_config, temporary_database_with_column):
+    snippets.add_index(
+        cloud_config.spanner_instance,
+        temporary_database_with_column.database_id)
+    snippets.add_storing_index(
+        cloud_config.spanner_instance,
+        temporary_database_with_column.database_id)
+
+    yield temporary_database_with_column
+
+
+@pytest.mark.slow
+def test_query_data_with_index(
+        cloud_config, temporary_database_with_indexes, capsys):
+    @eventually_consistent.call
+    def _():
+        snippets.query_data_with_index(
+            cloud_config.spanner_instance,
+            temporary_database_with_indexes.database_id)
+
+        out, _ = capsys.readouterr()
+        assert 'Go, Go, Go' in out
+
+
+@pytest.mark.slow
+def test_read_data_with_index(
+        cloud_config, temporary_database_with_indexes, capsys):
+    @eventually_consistent.call
+    def _():
+        snippets.read_data_with_index(
+            cloud_config.spanner_instance,
+            temporary_database_with_indexes.database_id)
+
+        out, _ = capsys.readouterr()
+        assert 'Go, Go, Go' in out
+
+
+@pytest.mark.slow
+def test_read_data_with_storing_index(
+        cloud_config, temporary_database_with_indexes, capsys):
+    @eventually_consistent.call
+    def _():
+        snippets.read_data_with_storing_index(
+            cloud_config.spanner_instance,
+            temporary_database_with_indexes.database_id)
+
+        out, _ = capsys.readouterr()
+        assert 'Go, Go, Go' in out
+
+
+@pytest.mark.slow
+def test_read_write_transaction(
+        cloud_config, temporary_database_with_column, capsys):
+    @eventually_consistent.call
+    def _():
+        snippets.update_data(
+            cloud_config.spanner_instance,
+            temporary_database_with_column.database_id)
+        snippets.read_write_transaction(
+            cloud_config.spanner_instance,
+            temporary_database_with_column.database_id)
+
+        out, _ = capsys.readouterr()
+
+        assert '300000' in out
+
+
+@pytest.mark.slow
+def test_read_only_transaction(
+        cloud_config, temporary_database, capsys):
+    @eventually_consistent.call
+    def _():
+        snippets.read_only_transaction(
+            cloud_config.spanner_instance,
+            temporary_database.database_id)
+
+        out, _ = capsys.readouterr()
+
+        assert 'Forever Hold Your Peace' in out
