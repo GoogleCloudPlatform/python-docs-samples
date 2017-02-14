@@ -46,7 +46,9 @@ def send_simple_message(recipient):
         'text': 'Test message from Mailgun'
     }
 
-    resp, content = http.request(url, 'POST', urlencode(data))
+    resp, content = http.request(
+        url, 'POST', urlencode(data),
+        headers={"Content-Type": "application/x-www-form-urlencoded"})
 
     if resp.status != 200:
         raise RuntimeError(
@@ -68,7 +70,9 @@ def send_complex_message(recipient):
         'html': '<html>HTML <strong>version</strong> of the body</html>'
     }
 
-    resp, content = http.request(url, 'POST', urlencode(data))
+    resp, content = http.request(
+        url, 'POST', urlencode(data), 
+        headers={"Content-Type": "application/x-www-form-urlencoded"})
 
     if resp.status != 200:
         raise RuntimeError(
