@@ -4,12 +4,12 @@ product:
   name: Google Translate API
   short_name: Translate API
   url: https://cloud.google.com/translate/docs
-  description: > 
+  description: >
     With `Google Translate API`, you can dynamically translate text between
     thousands of language pairs.
 
 setup:
-- auth_api_key
+- auth
 - install_deps
 
 samples:
