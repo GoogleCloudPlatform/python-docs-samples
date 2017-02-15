@@ -113,10 +113,9 @@ securityDefinitions:
     flow: "implicit"
     type: "oauth2"
     # Replace YOUR-CLIENT-PROJECT-ID with your client project ID.
-    x-google-issuer: "limin-sample-client@appspot.gserviceaccount.com"
-    # Replace YOUR-CLIENT-PROJECT-ID with your client project ID.
-    x-google-jwks_uri: "https://www.googleapis.com/robot/v1/metadata/x509/limin-sample-client@appspot.gserviceaccount.com"
-    # This must match the "aud" field in the JWT. You can add multiple audiences to accept JWTs from multiple clients.
+    x-google-issuer: "YOUR-CLIENT-PROJECT-ID@appspot.gserviceaccount.com"
+    # Replace YOUR-CLIENT-PROJECT-ID with your client project ID
+    x-google-jwks_uri: "https://www.googleapis.com/robot/v1/metadata/x509/YOUR-CLIENT-PROJECT-ID@appspot.gserviceaccount.com"
     x-google-audiences: "echo.endpoints.sample.google.com"
   # This section configures authentication using a service account
   # to sign a json web token. This is mostly used for server-to-server
