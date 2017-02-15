@@ -16,7 +16,7 @@
 from datetime import datetime
 import logging
 
-from flask import Flask, redirect, request
+from flask import Flask, redirect, render_template, request
 
 from google.cloud import datastore
 from google.cloud import storage
@@ -25,26 +25,12 @@ from google.cloud import vision
 
 CLOUD_STORAGE_BUCKET = '<your-storage-bucket>'
 
-HEADER_MESSAGE = (
-    '<h1>Google Cloud Platform - Face Detection Sample</h1>'
-    '<p>This Python Flask application demonstrates App Engine Flexible, Google'
-    ' Cloud Storage, Datastore, and the Cloud Vision API.</p><br>')
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def homepage():
-
-    # Format the header message and a form to submit images.
-    html_string = HEADER_MESSAGE
-    html_string += """
-<html><body>
-<form action="upload_photo" method="POST" enctype="multipart/form-data">
-  Upload File: <input type="file" name="file"><br>
-  <input type="submit" name="submit" value="Submit">
-</form> """
-
     # Create a Cloud Datastore client.
     datastore_client = datastore.Client()
 
@@ -53,18 +39,8 @@ def homepage():
     query = datastore_client.query(kind='PhotoTimestamps')
     image_entities = list(query.fetch())
 
-    for image_entity in image_entities:
-        # Add HTML to display each image, its upload name, its timestamp,
-        # its timestamp, and its joy likelihood.
-        html_string += '<img src="{}" width=200 height=200>'.format(
-            image_entity['image_public_url'])
-        html_string += '<p>{} was uploaded {}.</p>'.format(
-            image_entity['blob_name'], image_entity['timestamp'])
-        html_string += """<p>Joy Likelihood for Face: {}</p>""".format(
-            image_entity['joy'])
-
-    html_string += '</body></html>'
-    return html_string
+    # Return a Jinja2 HTML template and pass in image_entities as a parameter.
+    return render_template('homepage.html', image_entities=image_entities)
 
 
 @app.route('/upload_photo', methods=['GET', 'POST'])
