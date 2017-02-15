@@ -672,7 +672,7 @@ def transactional_update(client):
         except google.cloud.exceptions.Conflict:
             continue
     else:
-        print('Trasaction failed.')
+        print('Transaction failed.')
     # [END transactional_retry]
 
     return account1.key, account2.key
