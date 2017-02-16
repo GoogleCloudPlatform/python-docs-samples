@@ -28,17 +28,14 @@ import argparse
 import datetime
 import json
 
-from googleapiclient import discovery
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
 
 
 # [START main]
 def main(description, project_id, day, month, year, hours, minutes,
          source_bucket, access_key, secret_access_key, sink_bucket):
     """Create a one-off transfer from Amazon S3 to Google Cloud Storage."""
-    credentials = GoogleCredentials.get_application_default()
-    storagetransfer = discovery.build(
-        'storagetransfer', 'v1', credentials=credentials)
+    storagetransfer = googleapiclient.discovery.build('storagetransfer', 'v1')
 
     # Edit this template with desired parameters.
     # Specify times below using US Pacific Time Zone.

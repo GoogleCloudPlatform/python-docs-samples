@@ -27,10 +27,8 @@ import argparse
 import json
 import tempfile
 
-from googleapiclient import discovery
-from googleapiclient import http
-
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
+import googleapiclient.http
 
 
 def main(bucket, filename, readers=[], owners=[]):
@@ -50,16 +48,11 @@ def main(bucket, filename, readers=[], owners=[]):
 
 
 def create_service():
-    # Get the application default credentials. When running locally, these are
-    # available after running `gcloud init`. When running on compute
-    # engine, these are available from the environment.
-    credentials = GoogleCredentials.get_application_default()
-
     # Construct the service object for interacting with the Cloud Storage API -
     # the 'storage' service, at version 'v1'.
     # You can browse other available api services and versions here:
     #     http://g.co/dv/api-client-library/python/apis/
-    return discovery.build('storage', 'v1', credentials=credentials)
+    return googleapiclient.discovery.build('storage', 'v1')
 
 
 def upload_object(bucket, filename, readers, owners):
@@ -97,7 +90,8 @@ def upload_object(bucket, filename, readers, owners):
             # You can also just set media_body=filename, but for the sake of
             # demonstration, pass in the more generic file handle, which could
             # very well be a StringIO or similar.
-            media_body=http.MediaIoBaseUpload(f, 'application/octet-stream'))
+            media_body=googleapiclient.http.MediaIoBaseUpload(
+                f, 'application/octet-stream'))
         resp = req.execute()
 
     return resp
@@ -110,7 +104,7 @@ def get_object(bucket, filename, out_file):
     # http://g.co/dv/resources/api-libraries/documentation/storage/v1/python/latest/storage_v1.objects.html#get_media
     req = service.objects().get_media(bucket=bucket, object=filename)
 
-    downloader = http.MediaIoBaseDownload(out_file, req)
+    downloader = googleapiclient.http.MediaIoBaseDownload(out_file, req)
 
     done = False
     while done is False:

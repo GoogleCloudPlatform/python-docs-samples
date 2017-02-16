@@ -37,8 +37,7 @@ import argparse
 import datetime
 import time
 
-from googleapiclient import discovery
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
 
 CUSTOM_METRIC_DOMAIN = "custom.cloudmonitoring.googleapis.com"
 CUSTOM_METRIC_NAME = "{}/shirt_inventory".format(CUSTOM_METRIC_DOMAIN)
@@ -157,10 +156,7 @@ def read_custom_metric(client, project_id, now_rfc3339, color, size):
 def get_client():
     """Builds an http client authenticated with the application default
     credentials."""
-    credentials = GoogleCredentials.get_application_default()
-    client = discovery.build(
-        'cloudmonitoring', 'v2beta2',
-        credentials=credentials)
+    client = googleapiclient.discovery.build('cloudmonitoring', 'v2beta2')
     return client
 
 
@@ -169,14 +165,14 @@ def main(project_id, color, size, count):
 
     client = get_client()
 
-    print ("Labels: color: {}, size: {}.".format(color, size))
-    print ("Creating custom metric...")
+    print("Labels: color: {}, size: {}.".format(color, size))
+    print("Creating custom metric...")
     create_custom_metric(client, project_id)
     time.sleep(2)
-    print ("Writing new data to custom metric timeseries...")
+    print("Writing new data to custom metric timeseries...")
     write_custom_metric(client, project_id, now_rfc3339,
                         color, size, count)
-    print ("Reading data from custom metric timeseries...")
+    print("Reading data from custom metric timeseries...")
     read_custom_metric(client, project_id, now_rfc3339, color, size)
 
 

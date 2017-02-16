@@ -18,28 +18,12 @@ import argparse
 import base64
 import json
 
-from googleapiclient import discovery
-import httplib2
-from oauth2client.client import GoogleCredentials
-
-DISCOVERY_URL = (
-    'https://vision.googleapis.com/$discovery/rest?'
-    'labels=TRUSTED_TESTER&version=v1'
-)
+import googleapiclient.discovery
 
 
 def get_service():
     """Get vision service using discovery."""
-    credentials = GoogleCredentials.get_application_default()
-    scoped_credentials = credentials.create_scoped(
-        ['https://www.googleapis.com/auth/cloud-platform'])
-    http = httplib2.Http()
-    scoped_credentials.authorize(http)
-    return discovery.build(
-        'vision', 'v1',
-        http=http,
-        discoveryServiceUrl=DISCOVERY_URL
-    )
+    return googleapiclient.discovery.build('vision', 'v1',)
 
 
 def crop_hint(photo_file):

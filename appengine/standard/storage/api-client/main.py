@@ -25,17 +25,15 @@ For more information about Google App Engine, see README.md in /appengine.
 import json
 import StringIO
 
-from googleapiclient import discovery
-from googleapiclient import http
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
+import googleapiclient.http
 import webapp2
 
 
 # The bucket that will be used to list objects.
 BUCKET_NAME = '<your-bucket-name>'
 
-credentials = GoogleCredentials.get_application_default()
-storage = discovery.build('storage', 'v1', credentials=credentials)
+storage = googleapiclient.discovery.build('storage', 'v1')
 
 
 class MainPage(webapp2.RequestHandler):
@@ -44,7 +42,8 @@ class MainPage(webapp2.RequestHandler):
             'name': 'storage-api-client-sample-file.txt',
         }
         req = storage.objects().insert(
-            bucket=bucket, body=body, media_body=http.MediaIoBaseUpload(
+            bucket=bucket, body=body,
+            media_body=googleapiclient.http.MediaIoBaseUpload(
                 file_object, 'application/octet-stream'))
         resp = req.execute()
         return resp
