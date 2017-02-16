@@ -71,7 +71,7 @@ def send_complex_message(recipient):
     }
 
     resp, content = http.request(
-        url, 'POST', urlencode(data), 
+        url, 'POST', urlencode(data),
         headers={"Content-Type": "application/x-www-form-urlencoded"})
 
     if resp.status != 200:
