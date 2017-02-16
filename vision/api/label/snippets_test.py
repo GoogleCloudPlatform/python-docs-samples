@@ -45,14 +45,4 @@ def test_web_annotations(capsys, resource):
     web_annotation = result['responses'][0]['webAnnotation']
     web_entities = web_annotation['webEntities']
 
-    assert len(web_entities) == 10
-    russian_blue = False
-
-    for entity in web_entities:
-        entity_id = entity['entityId']
-        desc = entity['description']
-
-        if entity_id == '/m/012cc2' and desc == 'Russian Blue':
-            russian_blue = True
-
-    assert russian_blue is True
+    assert len(web_entities)
