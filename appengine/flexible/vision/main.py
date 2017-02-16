@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc. All Rights Reserved.
+# Copyright 2017 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 # [START app]
 from datetime import datetime
 import logging
+import os
 
 from flask import Flask, redirect, render_template, request
 
@@ -23,7 +24,7 @@ from google.cloud import storage
 from google.cloud import vision
 
 
-CLOUD_STORAGE_BUCKET = '<your-storage-bucket>'
+CLOUD_STORAGE_BUCKET = os.environ.get('CLOUD_STORAGE_BUCKET')
 
 
 app = Flask(__name__)
