@@ -21,12 +21,16 @@ TEST_TOPIC = 'iam-test-topic'
 TEST_SUBSCRIPTION = 'iam-test-subscription'
 
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def test_topic():
     client = pubsub.Client()
     topic = client.topic(TEST_TOPIC)
-    topic.create()
+
+    if not topic.exists():
+        topic.create()
+
     yield topic
+
     if topic.exists():
         topic.delete()
 
