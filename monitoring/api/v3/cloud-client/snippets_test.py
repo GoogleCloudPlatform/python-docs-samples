@@ -19,7 +19,7 @@ def test_create_get_delete_metric_descriptor(capsys):
     snippets.create_metric_descriptor()
     snippets.get_metric_descriptor('custom.googleapis.com/my_metric')
     out, _ = capsys.readouterr()
-    assert "value_type='DOUBLE'" in out
+    assert 'DOUBLE' in out
     snippets.delete_metric_descriptor('custom.googleapis.com/my_metric')
     out, _ = capsys.readouterr()
     assert 'Deleted metric' in out
