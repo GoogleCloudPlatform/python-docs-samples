@@ -145,6 +145,7 @@ securityDefinitions:
     # Your OAuth2 client's Client ID must be added here. You can add multiple client IDs to accept tokens form multiple clients.
     x-google-audiences: "YOUR-CLIENT-ID"
   # This section configures authentication using Firebase Auth.
+  # [START firebaseAuth]
   firebase:
     authorizationUrl: ""
     flow: "implicit"
@@ -152,3 +153,4 @@ securityDefinitions:
     x-google-issuer: "https://securetoken.google.com/YOUR-PROJECT-ID"
     x-google-jwks_uri: "https://www.googleapis.com/service_accounts/v1/metadata/x509/securetoken@system.gserviceaccount.com"
     x-google-audiences: "YOUR-PROJECT-ID"
+  # [END firebaseAuth]
