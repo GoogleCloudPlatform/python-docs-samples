@@ -16,8 +16,8 @@
 import argparse
 import os
 
-import googleapiclient.discovery
 from google.cloud import storage
+import googleapiclient.discovery
 
 # Currently only the "global" region is supported
 REGION = 'global'

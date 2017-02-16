@@ -74,7 +74,7 @@ def analyze_syntax(text, encoding='UTF32'):
         'encoding_type': encoding
     }
 
-    service = googleapiclient.discovery.build()
+    service = googleapiclient.discovery.build('language', 'v1')
 
     request = service.documents().analyzeSyntax(body=body)
     response = request.execute()

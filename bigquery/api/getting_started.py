@@ -34,7 +34,7 @@ from googleapiclient.errors import HttpError
 def main(project_id):
     # [START build_service]
     # Construct the service object for interacting with the BigQuery API.
-    bigquery_service = googleapiclient.discovery('bigquery', 'v2')
+    bigquery_service = googleapiclient.discovery.build('bigquery', 'v2')
     # [END build_service]
 
     try:

@@ -54,7 +54,7 @@ def stream_row_to_bigquery(bigquery, project_id, dataset_id, table_name, row,
 def main(project_id, dataset_id, table_name, num_retries):
     # [START build_service]
     # Construct the service object for interacting with the BigQuery API.
-    bigquery = googleapiclient.discovery('bigquery', 'v2')
+    bigquery = googleapiclient.discovery.build('bigquery', 'v2')
     # [END build_service]
 
     for row in get_rows():
