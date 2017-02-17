@@ -21,19 +21,30 @@ Create your App Engine application:
 
     $ gcloud app create
 
+Set an environment variable for your project ID:
+
+    $ export PROJECT_ID=[YOUR_PROJECT_ID]
+
 Enable the APIs:
 
     $ gcloud service-management enable vision.googleapis.com
     $ gcloud service-management enable storage-component.googleapis.com
     $ gcloud service-management enable datastore.googleapis.com
 
-Create a Service Account and set the `GOOGLE_APPLICATION_CREDENTIALS`
-environment variable, replacing `YOUR_PROJECT_ID` and `/absolute/path/to/your/`
-with appropriate values.
+Create a Service Account to access the Google Cloud APIs when testing locally:
+
+    $ gcloud iam service-accounts create hackathon \
+    --display-name "My Hackathon Service Account"
+
+After creating your Service Account, create a Service Account key:
 
     $ gcloud iam service-accounts keys create ~/key.json --iam-account \
-    [YOUR_PROJECT_ID]@appspot.gserviceaccount.com
-    $ export GOOGLE_APPLICATION_CREDENTIALS="/absolute/path/to/your/key.json"
+    hackathon@${PROJECT_ID}.iam.gserviceaccount.com
+
+Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to point to where
+you just put your Service Account key:
+
+    $ export GOOGLE_APPLICATION_CREDENTIALS="/home/${USER}/key.json"
 
 ## Running locally
 
@@ -44,13 +55,13 @@ Create a virtual environment and install dependencies:
     $ pip install -r requirements.txt
 
 Create a Cloud Storage bucket. It is recommended that you name it the same as
-your project ID.
+your project ID:
 
-    $ gsutil mb gs://[YOUR_CLOUD_STORAGE_BUCKET]
+    $ gsutil mb gs://${PROJECT_ID}
 
 Set the environment variable `CLOUD_STORAGE_BUCKET`:
 
-    $ export CLOUD_STORAGE_BUCKET=[YOUR_CLOUD_STORAGE_BUCKET]
+    $ export CLOUD_STORAGE_BUCKET=${PROJECT_ID}
 
 Start your application locally:
 
@@ -73,4 +84,4 @@ take several minutes.
 
     $ gcloud app deploy
 
-Visit https://[YOUR_PROJECT_ID].appspot.com to view your deployed application.
+Visit `https://[YOUR_PROJECT_ID].appspot.com` to view your deployed application.
