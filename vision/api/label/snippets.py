@@ -23,7 +23,11 @@ import googleapiclient.discovery
 
 def get_service():
     """Get vision service using discovery."""
-    return googleapiclient.discovery.build('vision', 'v1',)
+    discovery_url = (
+        'https://vision.googleapis.com/$discovery/rest?'
+        'labels=TRUSTED_TESTER&version=v1')
+    return googleapiclient.discovery.build(
+        'vision', 'v1', discoveryServiceUrl=discovery_url)
 
 
 def crop_hint(photo_file):
