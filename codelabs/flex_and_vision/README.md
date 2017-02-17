@@ -21,7 +21,8 @@ Create your App Engine application:
 
     $ gcloud app create
 
-Set an environment variable for your project ID:
+Set an environment variable for your project ID, replacing `[YOUR_PROJECT_ID]`
+with your project ID:
 
     $ export PROJECT_ID=[YOUR_PROJECT_ID]
 
