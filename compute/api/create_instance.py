@@ -28,8 +28,7 @@ import argparse
 import os
 import time
 
-from googleapiclient import discovery
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
 from six.moves import input
 
 
@@ -146,8 +145,7 @@ def wait_for_operation(compute, project, zone, operation):
 
 # [START run]
 def main(project, bucket, zone, instance_name, wait=True):
-    credentials = GoogleCredentials.get_application_default()
-    compute = discovery.build('compute', 'v1', credentials=credentials)
+    compute = googleapiclient.discovery.build('compute', 'v1')
 
     print('Creating instance.')
 

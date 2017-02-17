@@ -17,7 +17,7 @@ import auth
 
 
 def test_main(cloud_config, capsys):
-    auth.main(cloud_config.project)
+    auth.list_timeseries(cloud_config.project)
     output, _ = capsys.readouterr()
 
     assert re.search(

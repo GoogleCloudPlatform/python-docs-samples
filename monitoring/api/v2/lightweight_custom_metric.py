@@ -37,8 +37,7 @@ import datetime
 import os
 import time
 
-from googleapiclient import discovery
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
 
 CUSTOM_METRIC_NAME = "custom.cloudmonitoring.googleapis.com/pid"
 
@@ -54,19 +53,10 @@ def get_now_rfc3339():
     return format_rfc3339(datetime.datetime.utcnow())
 
 
-def get_client():
-    """Builds an http client authenticated with the service account
-    credentials."""
-    credentials = GoogleCredentials.get_application_default()
-    client = discovery.build(
-        'cloudmonitoring', 'v2beta2',
-        credentials=credentials)
-    return client
-
-
 def main(project_id):
+    client = googleapiclient.discovery.build('cloudmonitoring', 'v2beta2')
+
     # Set up the write request.
-    client = get_client()
     now = get_now_rfc3339()
     desc = {"project": project_id,
             "metric": CUSTOM_METRIC_NAME}

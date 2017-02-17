@@ -12,11 +12,9 @@
 # limitations under the License.
 
 # [START all]
-from googleapiclient import discovery
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
 
 
 def create_transfer_client():
-    credentials = GoogleCredentials.get_application_default()
-    return discovery.build('storagetransfer', 'v1', credentials=credentials)
+    return googleapiclient.discovery.build('storagetransfer', 'v1')
 # [END all]
