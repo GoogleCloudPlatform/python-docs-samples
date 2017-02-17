@@ -51,10 +51,9 @@ Create a Service Account to access the Google Cloud APIs when testing locally:
 
 Give your newly created Service Account appropriate permissions:
 
-    gcloud iam service-accounts add-iam-policy-binding \
-      hackathon@${PROJECT_ID}.iam.gserviceaccount.com \
-      --member='user:hackathon@${PROJECT_ID}.iam.gserviceaccount.com' \
-      --role='roles/owner'
+    gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+    --member serviceAccount:hackathon@${PROJECT_ID}.iam.gserviceaccount.com \
+    --role roles/owner
 
 After creating your Service Account, create a Service Account key:
 
