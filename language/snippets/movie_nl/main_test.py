@@ -14,6 +14,7 @@
 
 import json
 
+import googleapiclient.discovery
 import six
 
 import main
@@ -50,7 +51,7 @@ def test_to_sentiment_json():
 
 
 def test_process_movie_reviews():
-    service = main.get_service()
+    service = googleapiclient.discovery.build('language', 'v1')
 
     doc1 = main.Document('Top Gun was awesome and Tom Cruise rocked!', 'doc1',
                          'doc1')

@@ -31,9 +31,7 @@ import argparse
 import sys
 import textwrap
 
-from googleapiclient import discovery
-import httplib2
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
 
 
 def dependents(tokens, head_index):
@@ -75,13 +73,7 @@ def analyze_syntax(text):
     the encoding used natively by Python.  Raises an
     errors.HTTPError if there is a connection problem.
     """
-    credentials = GoogleCredentials.get_application_default()
-    scoped_credentials = credentials.create_scoped(
-        ['https://www.googleapis.com/auth/cloud-platform'])
-    http = httplib2.Http()
-    scoped_credentials.authorize(http)
-    service = discovery.build(
-        'language', 'v1beta1', http=http)
+    service = googleapiclient.discovery.build('language', 'v1beta1')
     body = {
         'document': {
             'type': 'PLAIN_TEXT',

@@ -42,8 +42,8 @@ import sqlite3
 import sys
 import time
 
-from googleapiclient import discovery
-from googleapiclient import errors
+import googleapiclient.discovery
+import googleapiclient.errors
 
 BATCH_SIZE = 10
 
@@ -52,7 +52,7 @@ class VisionApi(object):
     """Construct and use the Cloud Vision API service."""
 
     def __init__(self):
-        self.service = discovery.build('vision', 'v1')
+        self.service = googleapiclient.discovery.build('vision', 'v1')
 
     def detect_text(self, input_filenames, num_retries=3, max_results=6):
         """Uses the Vision API to detect text in the given file."""
@@ -100,7 +100,7 @@ class VisionApi(object):
 
             return text_response
 
-        except errors.HttpError as e:
+        except googleapiclient.errors.HttpError as e:
             logging.error('Http Error for {}: {}'.format(filename, e))
         except KeyError as e2:
             logging.error('Key error: {}'.format(e2))
@@ -110,7 +110,7 @@ class TextAnalyzer(object):
     """Construct and use the Google Natural Language API service."""
 
     def __init__(self, db_filename=None):
-        self.service = discovery.build('language', 'v1')
+        self.service = googleapiclient.discovery.build('language', 'v1')
 
         # This list will store the entity information gleaned from the
         # image files.
@@ -143,7 +143,7 @@ class TextAnalyzer(object):
             request = self.service.documents().analyzeEntities(body=body)
             response = request.execute()
             entities = response['entities']
-        except errors.HttpError as e:
+        except googleapiclient.errors.HttpError as e:
             logging.error('Http Error: %s' % e)
         except KeyError as e2:
             logging.error('Key error: %s' % e2)
