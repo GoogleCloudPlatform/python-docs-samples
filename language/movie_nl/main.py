@@ -19,9 +19,8 @@ import json
 import logging
 import os
 
-from googleapiclient import discovery
+import googleapiclient.discovery
 from googleapiclient.errors import HttpError
-from oauth2client.client import GoogleCredentials
 import requests
 
 
@@ -275,14 +274,6 @@ def rank_entities(reader, sentiment=None, topn=None, reverse_bool=False):
     print('\n'.join(items[:topn]))
 
 
-def get_service():
-    """Build a client to the Google Cloud Natural Language API."""
-
-    credentials = GoogleCredentials.get_application_default()
-    return discovery.build('language', 'v1',
-                           credentials=credentials)
-
-
 def analyze(input_dir, sentiment_writer, entity_writer, sample, log_file):
     """Analyze the document for sentiment and entities"""
 
@@ -290,7 +281,7 @@ def analyze(input_dir, sentiment_writer, entity_writer, sample, log_file):
     logging.basicConfig(filename=log_file, level=logging.DEBUG)
 
     # Create a Google Service object
-    service = get_service()
+    service = googleapiclient.discovery.build('language', 'v1')
 
     reader = document_generator(input_dir, sample)
 

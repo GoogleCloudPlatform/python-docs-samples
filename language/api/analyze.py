@@ -20,14 +20,7 @@ import argparse
 import json
 import sys
 
-from googleapiclient import discovery
-from oauth2client.client import GoogleCredentials
-
-
-def get_service():
-    credentials = GoogleCredentials.get_application_default()
-    return discovery.build('language', 'v1',
-                           credentials=credentials)
+import googleapiclient.discovery
 
 
 def get_native_encoding_type():
@@ -47,7 +40,7 @@ def analyze_entities(text, encoding='UTF32'):
         'encoding_type': encoding,
     }
 
-    service = get_service()
+    service = googleapiclient.discovery.build('language', 'v1')
 
     request = service.documents().analyzeEntities(body=body)
     response = request.execute()
@@ -64,7 +57,7 @@ def analyze_sentiment(text, encoding='UTF32'):
         'encoding_type': encoding
     }
 
-    service = get_service()
+    service = googleapiclient.discovery.build('language', 'v1')
 
     request = service.documents().analyzeSentiment(body=body)
     response = request.execute()
@@ -81,7 +74,7 @@ def analyze_syntax(text, encoding='UTF32'):
         'encoding_type': encoding
     }
 
-    service = get_service()
+    service = googleapiclient.discovery.build('language', 'v1')
 
     request = service.documents().analyzeSyntax(body=body)
     response = request.execute()

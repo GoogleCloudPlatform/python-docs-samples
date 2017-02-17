@@ -25,14 +25,14 @@ import time
 
 from gcp.testing import eventually_consistent
 from gcp.testing.flaky import flaky
+import googleapiclient.discovery
+import pytest
 
 from custom_metric import create_custom_metric
 from custom_metric import delete_metric_descriptor
 from custom_metric import get_custom_metric
 from custom_metric import read_timeseries
 from custom_metric import write_timeseries_value
-
-import list_resources
 
 """ Custom metric domain for all custom metrics"""
 CUSTOM_METRIC_DOMAIN = "custom.googleapis.com"
@@ -44,10 +44,14 @@ METRIC_RESOURCE = "{}/{}".format(
     CUSTOM_METRIC_DOMAIN, METRIC_NAME)
 
 
+@pytest.fixture(scope='module')
+def client():
+    return googleapiclient.discovery.build('monitoring', 'v3')
+
+
 @flaky
-def test_custom_metric(cloud_config):
+def test_custom_metric(cloud_config, client):
     PROJECT_RESOURCE = "projects/{}".format(cloud_config.project)
-    client = list_resources.get_client()
     # Use a constant seed so psuedo random number is known ahead of time
     random.seed(1)
     pseudo_random_value = random.randint(0, 10)

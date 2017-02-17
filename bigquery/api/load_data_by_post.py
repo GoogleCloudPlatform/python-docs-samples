@@ -26,9 +26,8 @@ import argparse
 import json
 import time
 
-from googleapiclient import discovery
-from googleapiclient.http import MediaFileUpload
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
+import googleapiclient.http
 
 
 # [START make_post]
@@ -44,9 +43,8 @@ def load_data(schema_path, data_path, project_id, dataset_id, table_id):
         dataset_id: The dataset id of the destination table.
         table_id: The table id to load data into.
     """
-    # Create a bigquery service object, using the application's default auth
-    credentials = GoogleCredentials.get_application_default()
-    bigquery = discovery.build('bigquery', 'v2', credentials=credentials)
+    # Create a bigquery service object.
+    bigquery = googleapiclient.discovery.build('bigquery', 'v2')
 
     # Infer the data format from the name of the data file.
     source_format = 'CSV'
@@ -74,7 +72,7 @@ def load_data(schema_path, data_path, project_id, dataset_id, table_id):
                 }
             }
         },
-        media_body=MediaFileUpload(
+        media_body=googleapiclient.http.MediaFileUpload(
             data_path,
             mimetype='application/octet-stream'))
     job = insert_request.execute()

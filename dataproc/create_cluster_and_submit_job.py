@@ -16,9 +16,8 @@
 import argparse
 import os
 
-from apiclient import discovery
 from google.cloud import storage
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
 
 # Currently only the "global" region is supported
 REGION = 'global'
@@ -177,8 +176,7 @@ def wait_for_job(dataproc, project, job_id):
 def get_client():
     """Builds an http client authenticated with the service account
     credentials."""
-    credentials = GoogleCredentials.get_application_default()
-    dataproc = discovery.build('dataproc', 'v1', credentials=credentials)
+    dataproc = googleapiclient.discovery.build('dataproc', 'v1')
     return dataproc
 # [END get_client]
 

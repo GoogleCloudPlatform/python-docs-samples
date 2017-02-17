@@ -18,16 +18,14 @@
 import argparse
 import io
 
-from googleapiclient import discovery
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
 # [END import_libraries]
 
 
 def print_sentiment(filename):
     """Prints sentiment analysis on a given file contents."""
     # [START authenticating_to_the_api]
-    credentials = GoogleCredentials.get_application_default()
-    service = discovery.build('language', 'v1', credentials=credentials)
+    service = googleapiclient.discovery.build('language', 'v1')
     # [END authenticating_to_the_api]
 
     # [START constructing_the_request]

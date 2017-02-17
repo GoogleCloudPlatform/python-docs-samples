@@ -27,7 +27,7 @@ For more information, see the README.md under /bigquery.
 import argparse
 import pprint
 
-from googleapiclient import discovery
+import googleapiclient.discovery
 from googleapiclient.errors import HttpError
 from oauth2client import tools
 from oauth2client.client import AccessTokenRefreshError
@@ -51,7 +51,7 @@ def main(args):
         credentials = tools.run_flow(flow, storage, args)
 
     # Create a BigQuery client using the credentials.
-    bigquery_service = discovery.build(
+    bigquery_service = googleapiclient.discovery.build(
         'bigquery', 'v2', credentials=credentials)
 
     # List all datasets in BigQuery

@@ -27,8 +27,7 @@ import argparse
 import datetime
 import pprint
 
-from apiclient import discovery
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
 
 
 def format_rfc3339(datetime_instance):
@@ -96,17 +95,10 @@ def list_timeseries(client, project_resource, metric):
     print('list_timeseries response:\n{}'.format(pprint.pformat(response)))
 
 
-def get_client():
-    """Builds an http client authenticated with the service account
-    credentials."""
-    credentials = GoogleCredentials.get_application_default()
-    client = discovery.build('monitoring', 'v3', credentials=credentials)
-    return client
-
-
 def main(project_id):
+    client = googleapiclient.discovery.build('monitoring', 'v3')
+
     project_resource = "projects/{}".format(project_id)
-    client = get_client()
     list_monitored_resource_descriptors(client, project_resource)
     # Metric to list
     metric = 'compute.googleapis.com/instance/cpu/usage_time'
