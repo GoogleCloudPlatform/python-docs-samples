@@ -17,7 +17,7 @@
 def run_quickstart():
     # [START kms_quickstart]
     # Imports the Google APIs client library
-    from googleapiclient import discovery
+    import googleapiclient.discovery
 
     # Your Google Cloud Platform project ID
     project_id = 'YOUR_PROJECT_ID'
@@ -26,7 +26,7 @@ def run_quickstart():
     location = 'global'
 
     # Creates an API client for the KMS API.
-    kms_client = discovery.build('cloudkms', 'v1beta1')
+    kms_client = googleapiclient.discovery.build('cloudkms', 'v1beta1')
 
     # The resource name of the location associated with the key rings.
     parent = 'projects/{}/locations/{}'.format(project_id, location)
