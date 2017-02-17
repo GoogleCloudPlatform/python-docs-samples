@@ -26,8 +26,7 @@ For more information, see the README.md under /cloud_logging.
 # [START all]
 import argparse
 
-from googleapiclient import discovery
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
 
 
 # [START list_logs]
@@ -50,9 +49,7 @@ def list_logs(project_id, logging_service):
 
 def main(project_id):
     # [START build_service]
-    credentials = GoogleCredentials.get_application_default()
-    logging_service = discovery.build(
-        'logging', 'v1beta3', credentials=credentials)
+    logging_service = googleapiclient.discovery.build('logging', 'v1beta3')
     # [END build_service]
 
     list_logs(project_id, logging_service)

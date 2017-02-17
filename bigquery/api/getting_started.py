@@ -27,17 +27,14 @@ For more information, see the README.md under /bigquery.
 # [START all]
 import argparse
 
-from googleapiclient.discovery import build
+import googleapiclient.discovery
 from googleapiclient.errors import HttpError
-from oauth2client.client import GoogleCredentials
 
 
 def main(project_id):
     # [START build_service]
-    # Grab the application's default credentials from the environment.
-    credentials = GoogleCredentials.get_application_default()
     # Construct the service object for interacting with the BigQuery API.
-    bigquery_service = build('bigquery', 'v2', credentials=credentials)
+    bigquery_service = googleapiclient.discovery.build('bigquery', 'v2')
     # [END build_service]
 
     try:

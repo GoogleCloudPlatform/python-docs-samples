@@ -21,8 +21,7 @@ For more information, see the README.md under /bigquery.
 import argparse
 import json
 
-from googleapiclient import discovery
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
 
 
 # [START sync_query]
@@ -45,11 +44,8 @@ def sync_query(
 # [START run]
 def main(project_id, query, timeout, num_retries, use_legacy_sql):
     # [START build_service]
-    # Grab the application's default credentials from the environment.
-    credentials = GoogleCredentials.get_application_default()
-
     # Construct the service object for interacting with the BigQuery API.
-    bigquery = discovery.build('bigquery', 'v2', credentials=credentials)
+    bigquery = googleapiclient.discovery.build('bigquery', 'v2')
     # [END build_service]
 
     query_job = sync_query(

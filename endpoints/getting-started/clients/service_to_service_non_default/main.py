@@ -20,7 +20,7 @@ import httplib
 import json
 import time
 
-from googleapiclient.discovery import build
+import googleapiclient.discovery
 import httplib2
 from oauth2client.contrib.appengine import AppAssertionCredentials
 import webapp2
@@ -36,7 +36,8 @@ def generate_jwt():
     credentials = AppAssertionCredentials(
         'https://www.googleapis.com/auth/iam')
     http_auth = credentials.authorize(httplib2.Http())
-    service = build(serviceName='iam', version='v1', http=http_auth)
+    service = googleapiclient.discovery.build(
+        serviceName='iam', version='v1', http=http_auth)
 
     now = int(time.time())
 

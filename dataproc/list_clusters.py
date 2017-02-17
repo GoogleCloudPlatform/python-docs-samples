@@ -16,8 +16,7 @@
 
 import argparse
 
-from apiclient import discovery
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
 
 # Currently only the "global" region is supported
 REGION = 'global'
@@ -34,10 +33,8 @@ def list_clusters(dataproc, project):
 
 # [START get_client]
 def get_client():
-    """Builds an http client authenticated with the service account
-    credentials."""
-    credentials = GoogleCredentials.get_application_default()
-    dataproc = discovery.build('dataproc', 'v1', credentials=credentials)
+    """Builds a client to the dataproc API."""
+    dataproc = googleapiclient.discovery.build('dataproc', 'v1')
     return dataproc
 # [END get_client]
 

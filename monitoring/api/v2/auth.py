@@ -31,37 +31,32 @@ For more information, see the README.md under /monitoring.
 import argparse
 import json
 
-from googleapiclient.discovery import build
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
 
 METRIC = 'compute.googleapis.com/instance/disk/read_ops_count'
 YOUNGEST = '2015-01-01T00:00:00Z'
 
 
-def list_timeseries(monitoring, project_name):
+def list_timeseries(project_name):
     """Query the Timeseries.list API method.
 
     Args:
       monitoring: the CloudMonitoring service object.
       project_name: the name of the project you'd like to monitor.
     """
+    monitoring = googleapiclient.discovery.build('cloudmonitoring', 'v2beta2')
+
     timeseries = monitoring.timeseries()
 
     response = timeseries.list(
         project=project_name, metric=METRIC, youngest=YOUNGEST).execute()
 
     print('Timeseries.list raw response:')
-    print(json.dumps(response,
-                     sort_keys=True,
-                     indent=4,
-                     separators=(',', ': ')))
-
-
-def main(project_name):
-    credentials = GoogleCredentials.get_application_default()
-    monitoring = build('cloudmonitoring', 'v2beta2', credentials=credentials)
-
-    list_timeseries(monitoring, project_name)
+    print(json.dumps(
+      response,
+      sort_keys=True,
+      indent=2,
+      separators=(',', ': ')))
 
 
 if __name__ == '__main__':
@@ -72,5 +67,5 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    main(args.project_id)
+    list_timeseries(args.project_id)
 # [END all]

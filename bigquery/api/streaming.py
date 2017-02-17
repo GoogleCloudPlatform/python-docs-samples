@@ -27,8 +27,7 @@ import ast
 import json
 import uuid
 
-from googleapiclient import discovery
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
 from six.moves import input
 
 
@@ -54,11 +53,8 @@ def stream_row_to_bigquery(bigquery, project_id, dataset_id, table_name, row,
 # [START run]
 def main(project_id, dataset_id, table_name, num_retries):
     # [START build_service]
-    # Grab the application's default credentials from the environment.
-    credentials = GoogleCredentials.get_application_default()
-
     # Construct the service object for interacting with the BigQuery API.
-    bigquery = discovery.build('bigquery', 'v2', credentials=credentials)
+    bigquery = googleapiclient.discovery.build('bigquery', 'v2')
     # [END build_service]
 
     for row in get_rows():

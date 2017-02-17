@@ -19,16 +19,14 @@
 import argparse
 import base64
 
-from googleapiclient import discovery
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
 from PIL import Image
 from PIL import ImageDraw
 
 
 # [START get_vision_service]
 def get_vision_service():
-    credentials = GoogleCredentials.get_application_default()
-    return discovery.build('vision', 'v1', credentials=credentials)
+    return googleapiclient.discovery.build('vision', 'v1')
 # [END get_vision_service]
 
 

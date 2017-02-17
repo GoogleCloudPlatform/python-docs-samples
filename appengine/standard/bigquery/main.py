@@ -24,7 +24,7 @@ For more information, see README.md.
 import json
 import os
 
-from googleapiclient.discovery import build
+import googleapiclient.discovery
 from oauth2client.contrib.appengine import OAuth2DecoratorFromClientSecrets
 import webapp2
 
@@ -38,7 +38,7 @@ decorator = OAuth2DecoratorFromClientSecrets(
     scope='https://www.googleapis.com/auth/bigquery')
 
 # Create the bigquery api client
-service = build('bigquery', 'v2')
+service = googleapiclient.discovery.build('bigquery', 'v2')
 
 
 class MainPage(webapp2.RequestHandler):

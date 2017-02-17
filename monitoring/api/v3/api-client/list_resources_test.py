@@ -23,16 +23,22 @@ for this test, but it could be changed to a different project.
 import re
 
 from gcp.testing.flaky import flaky
+import googleapiclient.discovery
+import pytest
 
 import list_resources
 
 METRIC = 'compute.googleapis.com/instance/cpu/usage_time'
 
 
+@pytest.fixture(scope='module')
+def client():
+    return googleapiclient.discovery.build('monitoring', 'v3')
+
+
 @flaky
-def test_list_monitored_resources(cloud_config, capsys):
+def test_list_monitored_resources(cloud_config, client, capsys):
     PROJECT_RESOURCE = "projects/{}".format(cloud_config.project)
-    client = list_resources.get_client()
     list_resources.list_monitored_resource_descriptors(
         client, PROJECT_RESOURCE)
     stdout, _ = capsys.readouterr()
@@ -42,9 +48,8 @@ def test_list_monitored_resources(cloud_config, capsys):
 
 
 @flaky
-def test_list_metrics(cloud_config, capsys):
+def test_list_metrics(cloud_config, client, capsys):
     PROJECT_RESOURCE = "projects/{}".format(cloud_config.project)
-    client = list_resources.get_client()
     list_resources.list_metric_descriptors(
         client, PROJECT_RESOURCE, METRIC)
     stdout, _ = capsys.readouterr()
@@ -54,9 +59,8 @@ def test_list_metrics(cloud_config, capsys):
 
 
 @flaky
-def test_list_timeseries(cloud_config, capsys):
+def test_list_timeseries(cloud_config, client, capsys):
     PROJECT_RESOURCE = "projects/{}".format(cloud_config.project)
-    client = list_resources.get_client()
     list_resources.list_timeseries(
         client, PROJECT_RESOURCE, METRIC)
     stdout, _ = capsys.readouterr()
