@@ -13,67 +13,74 @@ for your project.
 Download the [Google Cloud SDK](https://cloud.google.com/sdk/docs/) to your
 local machine. Alternatively, you could use the [Cloud Shell](https://cloud.google.com/shell/docs/quickstart), which comes with the Google Cloud SDK pre-installed.
 
-Initialize the Google Cloud SDK:
+Initialize the Google Cloud SDK (skip if using Cloud Shell):
 
-    $ gcloud init
+    gcloud init
 
 Create your App Engine application:
 
-    $ gcloud app create
+    gcloud app create
 
 Set an environment variable for your project ID, replacing `[YOUR_PROJECT_ID]`
 with your project ID:
 
-    $ export PROJECT_ID=[YOUR_PROJECT_ID]
+    export PROJECT_ID=[YOUR_PROJECT_ID]
 
 Enable the APIs:
 
-    $ gcloud service-management enable vision.googleapis.com
-    $ gcloud service-management enable storage-component.googleapis.com
-    $ gcloud service-management enable datastore.googleapis.com
+    gcloud service-management enable vision.googleapis.com
+    gcloud service-management enable storage-component.googleapis.com
+    gcloud service-management enable datastore.googleapis.com
 
 Create a Service Account to access the Google Cloud APIs when testing locally:
 
-    $ gcloud iam service-accounts create hackathon \
+    gcloud iam service-accounts create hackathon \
     --display-name "My Hackathon Service Account"
+
+Give your newly created Service Account appropriate permissions:
+
+    gcloud iam service-accounts add-iam-policy-binding \
+      hackathon@${PROJECT_ID}.iam.gserviceaccount.com \
+      --member='user:hackathon@${PROJECT_ID}.iam.gserviceaccount.com' \
+      --role='roles/owner'
 
 After creating your Service Account, create a Service Account key:
 
-    $ gcloud iam service-accounts keys create ~/key.json --iam-account \
+    gcloud iam service-accounts keys create ~/key.json --iam-account \
     hackathon@${PROJECT_ID}.iam.gserviceaccount.com
 
 Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to point to where
 you just put your Service Account key:
 
-    $ export GOOGLE_APPLICATION_CREDENTIALS="/home/${USER}/key.json"
+    export GOOGLE_APPLICATION_CREDENTIALS="/home/${USER}/key.json"
 
 ## Running locally
 
 Create a virtual environment and install dependencies:
 
-    $ virtualenv -p python3 env
-    $ source env/bin/activate
-    $ pip install -r requirements.txt
+    virtualenv -p python3 env
+    source env/bin/activate
+    pip install -r requirements.txt
 
 Create a Cloud Storage bucket. It is recommended that you name it the same as
 your project ID:
 
-    $ gsutil mb gs://${PROJECT_ID}
+    gsutil mb gs://${PROJECT_ID}
 
 Set the environment variable `CLOUD_STORAGE_BUCKET`:
 
-    $ export CLOUD_STORAGE_BUCKET=${PROJECT_ID}
+    export CLOUD_STORAGE_BUCKET=${PROJECT_ID}
 
 Start your application locally:
 
-    $ python main.py
+    python main.py
 
 Visit `localhost:8080` to view your application running locally. Press `Control-C`
 on your command line when you are finished.
 
 When you are ready to leave your virtual environment:
 
-    $ deactivate
+    deactivate
 
 ## Deploying to App Engine
 
@@ -83,6 +90,6 @@ Cloud Storage bucket.
 Deploy your application to App Engine using `gcloud`. Please note that this may
 take several minutes.
 
-    $ gcloud app deploy
+    gcloud app deploy
 
 Visit `https://[YOUR_PROJECT_ID].appspot.com` to view your deployed application.
