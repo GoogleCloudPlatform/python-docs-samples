@@ -1,0 +1,5 @@
+Flask==0.12
+gunicorn==19.6.0
+google-cloud-vision==0.22.0
+google-cloud-storage==0.22.0
+google-cloud-datastore==0.22.0
