@@ -37,7 +37,7 @@ def homepage():
 
     # Use the Cloud Datastore client to fetch information from Datastore about
     # each photo.
-    query = datastore_client.query(kind='PhotoTimestamps')
+    query = datastore_client.query(kind='Faces')
     image_entities = list(query.fetch())
 
     # Return a Jinja2 HTML template and pass in image_entities as a parameter.
@@ -89,7 +89,7 @@ def upload_photo():
     current_datetime = datetime.now()
 
     # The kind for the new entity.
-    kind = 'PhotoTimestamps'
+    kind = 'Faces'
 
     # The name/ID for the new entity.
     name = blob.name
