@@ -2,7 +2,7 @@
 
 This sample demonstrates how to use the [Google Cloud Vision API](https://cloud.google.com/vision/), [Google Cloud Storage](https://cloud.google.com/storage/), and [Google Cloud Datastore](https://cloud.google.com/datastore/) on [Google App Engine Flexible Environment](https://cloud.google.com/appengine).
 
-## Setup and Authentication
+## Setup
 
 Create a new project with the [Google Cloud Platform console](https://console.cloud.google.com/).
 Make a note of your project ID, which may be different than your project name.
@@ -25,6 +25,18 @@ Set an environment variable for your project ID, replacing `[YOUR_PROJECT_ID]`
 with your project ID:
 
     export PROJECT_ID=[YOUR_PROJECT_ID]
+
+## Getting the sample code
+
+Run the following command to clone the Github repository:
+
+    git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+
+Change directory to the sample code location:
+
+    cd python-docs-samples/codelabs/flex_and_vision
+
+## Authentication
 
 Enable the APIs:
 
