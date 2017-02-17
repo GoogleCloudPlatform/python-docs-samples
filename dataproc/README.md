@@ -6,7 +6,7 @@ Note that while this sample demonstrates interacting with Dataproc via the API, 
 demonstrated here could also be accomplished using the Cloud Console or the gcloud CLI.
 
 `list_clusters.py` is a simple command-line program to demonstrate connecting to the
-Dataproc API and listing the clusters in a ergion
+Dataproc API and listing the clusters in a region
 
 `create_cluster_and_submit_job.py` demonstrates how to create a cluster, submit the 
 `pyspark_sort.py` job, download the output from Google Cloud Storage, and output the result.
