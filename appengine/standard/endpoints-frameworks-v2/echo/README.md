@@ -19,11 +19,11 @@ Remember to replace [YOUR-PROJECT-ID] with your project ID.
 
 To set up OAuth2, replace `your-oauth-client-id.com` under `audiences` in the annotation for `get_user_email` with your OAuth2 client ID. If you want to use Google OAuth2 Playground, use `407408718192.apps.googleusercontent.com` as your audience. To generate a JWT, go to the following address: `https://developers.google.com/oauthplayground`.
 
-Deploy the generated swagger spec to Google Cloud Service Management: `gcloud alpha service-management deploy echo-v1_swagger.json`
+Deploy the generated swagger spec to Google Cloud Service Management: `gcloud service-management deploy echo-v1_swagger.json`
 
 The command returns several lines of information, including a line similar to the following:
 
-   Service Configuration [2016-08-01r0] uploaded for service "echo-api.endpoints.[YOUR-PROJECT-ID].cloud.goog"
+    Service Configuration [2016-08-01r0] uploaded for service "echo-api.endpoints.[YOUR-PROJECT-ID].cloud.goog"
 
 Open the `app.yaml` file and in the `env_variables` section, replace [YOUR-PROJECT-ID] in `echo-api.endpoints.[YOUR-PROJECT-ID].cloud.goog` with your project ID. This is your Endpoints service name. Then replace `2016-08-01r0` with your uploaded service management configuration.
 
@@ -31,7 +31,22 @@ Then, deploy the sample using `gcloud`:
 
     $ gcloud app deploy
 
-Once deployed, you can access the application at https://your-service.appspot.com
+## Sending a request
 
-Note that local deployment with dev_appserver.py is not yet supported with
-Endpoints Frameworks v2.
+To send a request to the API, from a command line, invoke the following `cURL` command:
+
+    curl \
+      -H "Content-Type: application/json" \
+      -X POST \
+      -d '{"content":"echo"}' \
+      https://[YOUR-PROJECT-ID].appspot.com/_ah/api/echo/v1/echo
+
+You will get a 200 response with the following data:
+
+    {
+      "content": "echo"
+    }
+
+## Local deployment
+
+Local deployment with dev_appserver.py is not yet supported with Endpoints Frameworks v2.
