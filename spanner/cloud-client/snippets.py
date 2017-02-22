@@ -320,7 +320,7 @@ def read_write_transaction(instance_id, database_id):
 
         transfer_amount = 200000
 
-        if second_album_budget < transfer_amount:
+        if second_album_budget < 300000:
             # Raising an exception will automatically roll back the
             # transaction.
             raise ValueError(
