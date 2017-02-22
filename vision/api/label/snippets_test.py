@@ -42,7 +42,7 @@ def test_web_annotations(capsys, resource):
     snippets.web_annotation(resource('cat.jpg'))
     stdout, _ = capsys.readouterr()
     result = json.loads(stdout)
-    web_annotation = result['responses'][0]['webAnnotation']
+    web_annotation = result['responses'][0]['webDetection']
     web_entities = web_annotation['webEntities']
 
     assert len(web_entities)

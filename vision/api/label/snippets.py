@@ -67,7 +67,7 @@ def web_annotation(photo_file):
                 'content': image_content.decode('UTF-8')
             },
             'features': [{
-                'type': 'WEB_ANNOTATION',
+                'type': 'WEB_DETECTION',
                 'maxResults': 10
             }]
         }]
