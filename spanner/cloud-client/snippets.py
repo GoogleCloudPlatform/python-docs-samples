@@ -379,7 +379,7 @@ def read_only_transaction(instance_id, database_id):
         # is updated in-between the reads, the snapshot ensures that both
         # return the same data.
         keyset = spanner.KeySet(all_=True)
-        results = database.read(
+        results = snapshot.read(
             table='Albums',
             columns=('SingerId', 'AlbumId', 'AlbumTitle',),
             keyset=keyset,)
