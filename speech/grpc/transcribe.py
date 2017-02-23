@@ -24,7 +24,7 @@ import argparse
 import google.auth
 import google.auth.transport.grpc
 import google.auth.transport.requests
-from google.cloud.grpc.speech.v1beta1 import cloud_speech_pb2
+from google.cloud.proto.speech.v1beta1 import cloud_speech_pb2
 
 # Keep the request alive for this many seconds
 DEADLINE_SECS = 60
