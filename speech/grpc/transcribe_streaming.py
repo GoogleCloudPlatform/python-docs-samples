@@ -26,7 +26,7 @@ import sys
 import google.auth
 import google.auth.transport.grpc
 import google.auth.transport.requests
-from google.cloud.grpc.speech.v1beta1 import cloud_speech_pb2
+from google.cloud.proto.speech.v1beta1 import cloud_speech_pb2
 from google.rpc import code_pb2
 import grpc
 import pyaudio
