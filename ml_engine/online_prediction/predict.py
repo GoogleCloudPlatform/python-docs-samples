@@ -9,6 +9,7 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 """Examples of using the Cloud ML Engine's online prediction service."""
+from __future__ import print_function
 # [START import_libraries]
 import googleapiclient.discovery
 # [END import_libraries]
@@ -113,15 +114,28 @@ def census_to_example_bytes(json_instance):
 def main(project, model, version=None, force_tfrecord=False):
     import json
     while True:
-        user_input = json.loads(raw_input())
-        if force_tfrecord:
-            example_bytes = census_to_example_bytes(user_input)
-            result = predict_tf_records(
-                project, model, [example_bytes], version=version)
+        try:
+            user_input = json.loads(raw_input("Valid JSON >>>"))
+        except KeyboardInterrupt:
+            return
+
+        if not isinstance(user_input, list):
+            user_input = [user_input]
+        try:
+            if force_tfrecord:
+                example_bytes_list = [
+                    census_to_example_bytes(e)
+                    for e in user_input
+                ]
+                result = predict_tf_records(
+                    project, model, example_bytes_list, version=version)
+            else:
+                result = predict_json(
+                    project, model, user_input, version=version)
+        except RuntimeError as err:
+            print(str(err))
         else:
-            result = predict_json(
-                project, model, [user_input], version=version)
-        print(result)
+            print(result)
 
 
 if __name__ == '__main__':
