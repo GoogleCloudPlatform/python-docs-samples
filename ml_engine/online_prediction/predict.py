@@ -9,7 +9,6 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 """Examples of using the Cloud ML Engine's online prediction service."""
-
 # [START import_libraries]
 import googleapiclient.discovery
 # [END import_libraries]
@@ -111,57 +110,23 @@ def census_to_example_bytes(json_instance):
 # [END census_to_example_bytes]
 
 
-# [START predict_from_files]
-def predict_from_files(project,
-                       model,
-                       files,
-                       version=None,
-                       force_tfrecord=False):
+def main(project, model, version=None, force_tfrecord=False):
     import json
-    import itertools
-    instances = (json.loads(line)
-                 for f in files
-                 for line in f.readlines())
-
-    # Requests to online prediction
-    # can have at most 100 instances
-    args = [instances] * 100
-    instance_batches = itertools.izip(*args)
-
-    results = []
-    for batch in instance_batches:
+    while True:
+        user_input = json.loads(raw_input())
         if force_tfrecord:
-            example_bytes_list = [
-                census_to_example_bytes(instance)
-                for instance in batch
-            ]
-            results.append(predict_tf_records(
-                project,
-                model,
-                example_bytes_list,
-                version=version
-            ))
+            example_bytes = census_to_example_bytes(user_input)
+            result = predict_tf_records(
+                project, model, [example_bytes], version=version)
         else:
-            results.append(predict_json(
-                project,
-                model,
-                batch,
-                version=version
-            ))
-    return results
-# [END predict_from_files]
+            result = predict_json(
+                project, model, [user_input], version=version)
+        print(result)
 
 
 if __name__ == '__main__':
     import argparse
-    import os
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        'input_files',
-        help='File paths with examples to predict',
-        nargs='+',
-        type=os.path.abspath
-    )
     parser.add_argument(
         '--project',
         help='Project in which the model is deployed',
@@ -186,4 +151,4 @@ if __name__ == '__main__':
         default=False
     )
     args = parser.parse_args()
-    predict_from_files(**args.__dict__)
+    main(**args.__dict__)
