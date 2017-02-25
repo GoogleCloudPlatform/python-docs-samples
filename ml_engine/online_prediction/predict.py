@@ -16,6 +16,8 @@ import googleapiclient.discovery
 
 
 # [START authenticating]
+# To authenticate set the environment variable
+# GOOGLE_APPLICATION_CREDENTIALS=<path_to_service_account_file>
 def get_ml_engine_service():
     return googleapiclient.discovery.build('ml', 'v1beta1')
 # [END authenticating]
