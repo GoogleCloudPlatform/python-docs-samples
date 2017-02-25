@@ -34,3 +34,9 @@ def test_predict_json_error():
 def test_census_example_to_bytes():
     b = census_to_example_bytes(JSON)
     assert EXAMPLE_BYTE_STRING == base64.b64encode(b)
+
+def test_predict_tfrecord():
+    # Using the same model for TFRecords and
+    # JSON is currently broken.
+    # TODO(elibixby) when b/35742966 is fixed add
+    pass
