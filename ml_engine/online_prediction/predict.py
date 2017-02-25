@@ -16,9 +16,11 @@ import googleapiclient.discovery
 
 
 # [START authenticating]
-# To authenticate set the environment variable
-# GOOGLE_APPLICATION_CREDENTIALS=<path_to_service_account_file>
 def get_ml_engine_service():
+    """Create the ML Engine service object.
+    To authenticate set the environment variable
+    GOOGLE_APPLICATION_CREDENTIALS=<path_to_service_account_file>
+    """
     return googleapiclient.discovery.build('ml', 'v1beta1')
 # [END authenticating]
 
@@ -114,6 +116,7 @@ def census_to_example_bytes(json_instance):
 
 
 def main(project, model, version=None, force_tfrecord=False):
+    """Send user input to the prediction service."""
     import json
     while True:
         try:
