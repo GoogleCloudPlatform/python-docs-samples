@@ -1,4 +1,5 @@
-# Copyright 2016 Google Inc. All Rights Reserved. Licensed under the Apache
+#!/bin/python
+# Copyright 2017 Google Inc. All Rights Reserved. Licensed under the Apache
 # License, Version 2.0 (the "License"); you may not use this file except in
 # compliance with the License. You may obtain a copy of the License at
 # http://www.apache.org/licenses/LICENSE-2.0
@@ -8,6 +9,7 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations under
 # the License.
+
 """Examples of using the Cloud ML Engine's online prediction service."""
 from __future__ import print_function
 # [START import_libraries]
@@ -15,30 +17,27 @@ import googleapiclient.discovery
 # [END import_libraries]
 
 
-# [START authenticating]
-def get_ml_engine_service():
-    """Create the ML Engine service object.
-    To authenticate set the environment variable
-    GOOGLE_APPLICATION_CREDENTIALS=<path_to_service_account_file>
-    """
-    return googleapiclient.discovery.build('ml', 'v1beta1')
-# [END authenticating]
-
-
 # [START predict_json]
 def predict_json(project, model, instances, version=None):
-    """Send data instances to a deployed model for prediction
+    """Send json data to a deployed model for prediction.
+
     Args:
-        project: str, project where the Cloud ML Engine Model is deployed.
-        model: str, model name.
-        instances: [dict], dictionaries from string keys defined by the model
-        to data.
-        version: [optional] str, version of the model to target.
+        project (str): project where the Cloud ML Engine Model is deployed.
+        model (str): model name.
+        instances ([Mapping[str: any]]): dictionaries from string keys
+            defined by the model deployment, to data with types that match
+            expected tensors
+        version: str, version of the model to target.
     Returns:
-        A dictionary of prediction results defined by the model.
+        Mapping[str: any]: dictionary of prediction results defined by the
+            model.
     """
-    service = get_ml_engine_service()
+    # Create the ML Engine service object.
+    # To authenticate set the environment variable
+    # GOOGLE_APPLICATION_CREDENTIALS=<path_to_service_account_file>
+    service = googleapiclient.discovery.build('ml', 'v1beta1')
     name = 'projects/{}/models/{}'.format(project, model)
+
     if version is not None:
         name += '/versions/{}'.format(version)
 
@@ -58,30 +57,36 @@ def predict_json(project, model, instances, version=None):
 def predict_tf_records(project,
                        model,
                        example_bytes_list,
-                       key='tfrecord',
                        version=None):
-    """Send data instances to a deployed model for prediction
+    """Send protocol buffer data to a deployed model for prediction.
+
     Args:
-        project: str, project where the Cloud ML Engine Model is deployed
-        model: str, model name.
-        example_bytes_list: [str], Serialized tf.train.Example protos.
+        project (str): project where the Cloud ML Engine Model is deployed.
+        model (str): model name.
+        example_bytes_list ([str]): A list of bytestrings representing
+            serialized tf.train.Example protocol buffers. The contents of this
+            protocol buffer will change depending on the signature of your
+            deployed model.
         version: str, version of the model to target.
     Returns:
-        A dictionary of prediction results defined by the model.
+        Mapping[str: any]: dictionary of prediction results defined by the
+            model.
     """
     import base64
-    service = get_ml_engine_service()
+    service = googleapiclient.discovery.build('ml', 'v1beta1')
     name = 'projects/{}/models/{}'.format(project, model)
+
     if version is not None:
         name += '/versions/{}'.format(version)
 
     response = service.projects().predict(
         name=name,
         body={'instances': [
-            {key: {'b64': base64.b64encode(example_bytes)}}
+            {'b64': base64.b64encode(example_bytes)}
             for example_bytes in example_bytes_list
         ]}
     ).execute()
+
     if 'error' in response:
         raise RuntimeError(response['error'])
 
@@ -93,10 +98,14 @@ def predict_tf_records(project,
 def census_to_example_bytes(json_instance):
     """Serialize a JSON example to the bytes of a tf.train.Example.
     This method is specific to the signature of the Census example.
+    See: https://cloud.google.com/ml-engine/docs/concepts/prediction-overview
+    for details.
+
     Args:
-        json_instance: dict, representing data to be serialized.
+        json_instance (Mapping[str: any]): representing data to be serialized.
     Returns:
-        A string (as a container for bytes).
+        str: A string as a container for the serialized bytes of
+            tf.train.Example protocol buffer.
     """
     import tensorflow as tf
     feature_dict = {}
