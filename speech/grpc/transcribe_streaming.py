@@ -16,12 +16,16 @@
 
 from __future__ import division
 
+import logging
+logging.basicConfig(level=logging.INFO , format='%(asctime)s %(levelname)s %(funcName)s %(lineno)d %(threadName)s: %(message)s')
+logger = logging.getLogger(__name__)
+
 import contextlib
 import functools
 import re
 import signal
 import sys
-
+from itertools import imap
 
 import google.auth
 import google.auth.transport.grpc
@@ -30,11 +34,25 @@ from google.cloud.proto.speech.v1beta1 import cloud_speech_pb2
 from google.rpc import code_pb2
 import grpc
 import pyaudio
+import wave
+import time
 from six.moves import queue
 
 # Audio recording parameters
-RATE = 16000
-CHUNK = int(RATE / 10)  # 100ms
+RATE = 16000            # bytes/second
+PACKET_DURATION = 0.1    # 100 ms
+PACKET_SIZE = int(RATE*PACKET_DURATION)
+                        # 16000 bytes
+CHUNK_DURATION = 30    # 30 seconds
+NUM_CHUNKS = int(CHUNK_DURATION/PACKET_DURATION)
+                        # 30/0.1 = 300
+
+SUBCHUNK_DURATION = 1  # 1sec
+NUM_SUBCHUNKS = int(SUBCHUNK_DURATION/PACKET_DURATION)
+                        # 1/0.1 = 10
+SUBCHUNK_SLEEP = SUBCHUNK_DURATION
+
+audio_generated_for = 0.0
 
 # The Speech API has a streaming limit of 60 seconds of audio*, so keep the
 # connection alive for that long, plus some more to give the API time to figure
@@ -66,13 +84,17 @@ def _audio_data_generator(buff):
         A chunk of data that is the aggregate of all chunks of data in `buff`.
         The function will block until at least one data chunk is available.
     """
-    stop = False
-    while not stop:
+    global audio_generated_for
+    num_packets_to_yield = 500
+    stop_none = False
+    stop_limit = False
+    total_packets_yielded = 0
+    while not (stop_limit or stop_none):
         # Use a blocking get() to ensure there's at least one chunk of data.
         data = [buff.get()]
 
         # Now consume whatever other data's still buffered.
-        while True:
+        for _i in range(NUM_SUBCHUNKS-1):
             try:
                 data.append(buff.get(block=False))
             except queue.Empty:
@@ -81,11 +103,22 @@ def _audio_data_generator(buff):
         # `None` in the buffer signals that the audio stream is closed. Yield
         # the final bit of the buffer and exit the loop.
         if None in data:
-            stop = True
+            stop_none = True
             data.remove(None)
 
-        yield b''.join(data)
+        total_packets_yielded += len(data)
+        logger.debug('yielded {} packets of audio'.format(total_packets_yielded))
+        if( total_packets_yielded > num_packets_to_yield ):
+            stop_limit = True
+        if(len(data)>0):
+            audio_generated_for += (len(data)*PACKET_DURATION)
+            yield b''.join(data)
 
+    if( stop_none ):
+        logger.debug('None encountered')
+    elif( stop_limit ):
+        logger.warn('limit exceeded')
+    return
 
 def _fill_buffer(buff, in_data, frame_count, time_info, status_flags):
     """Continuously collect data from the audio stream, into the buffer."""
@@ -95,7 +128,7 @@ def _fill_buffer(buff, in_data, frame_count, time_info, status_flags):
 
 # [START audio_stream]
 @contextlib.contextmanager
-def record_audio(rate, chunk):
+def record_audio(rate, chunk_size):
     """Opens a recording stream in a context manager."""
     # Create a thread-safe buffer of audio data
     buff = queue.Queue()
@@ -106,7 +139,7 @@ def record_audio(rate, chunk):
         # The API currently only supports 1-channel (mono) audio
         # https://goo.gl/z757pE
         channels=1, rate=rate,
-        input=True, frames_per_buffer=chunk,
+        input=True, frames_per_buffer=chunk_size,
         # Run the audio stream asynchronously to fill the buffer object.
         # This is necessary so that the input device's buffer doesn't overflow
         # while the calling thread makes network requests, etc.
@@ -121,6 +154,66 @@ def record_audio(rate, chunk):
     buff.put(None)
     audio_interface.terminate()
 # [END audio_stream]
+
+# [START audio_file]
+@contextlib.contextmanager
+def get_audio(rate, chunk_size, audio_file):
+    """Opens a recording stream in a context manager."""
+    # Create a thread-safe buffer of audio data
+    buff = queue.Queue()
+
+    wr = wave.open(audio_file, 'rb')
+    data = wr.readframes(chunk_size)
+
+    i = 0
+    while data!='':
+        buff.put(data)
+        i+=1
+        logger.debug('put {} packets of data in buffer'.format(i))
+        data = wr.readframes(chunk_size)
+
+    logger.info('generated audio from file: {}'.format(audio_file))
+    logger.info('number of packets: {} '.format(i))
+    buff.put(None)
+    yield _audio_data_generator(buff)
+
+    # Signal the _audio_data_generator to finish
+# [END audio_file]
+
+# [START audio_file]
+@contextlib.contextmanager
+def get_audio_multiple(rate, chunk_size, audio_file):
+    """Opens a recording stream in a context manager."""
+    # Create a thread-safe buffer of audio data
+    assert chunk_size==PACKET_SIZE
+    buffs = []
+
+    wr = wave.open(audio_file, 'rb')
+    data = wr.readframes(PACKET_SIZE)
+
+    i = 0
+    while data!='':
+        if(i%NUM_CHUNKS== 0):
+            try:
+                buffs[-1].put(None)
+            except Exception as e:
+                pass
+            logger.debug('adding new buffer to list')
+            buffs.append(queue.Queue())
+        buffs[-1].put(data)
+        i+=1
+        logger.debug('put {} packets of data in buffer'.format(i))
+        data = wr.readframes(PACKET_SIZE)
+    logger.info('generated audio from file: {}'.format(audio_file))
+    logger.info('number of packets: {} '.format(i))
+    logger.info('number of buffers: {}'.format(len(buffs)))
+    buffs[-1].put(None)
+    yield imap(_audio_data_generator, buffs)
+
+    # Signal the _audio_data_generator to finish
+    for buff in buffs:
+        buff.put(None)
+# [END audio_file]
 
 
 def request_stream(data_stream, rate, interim_results=True):
@@ -154,6 +247,8 @@ def request_stream(data_stream, rate, interim_results=True):
 
     for data in data_stream:
         # Subsequent requests can all just have the content
+        logging.debug('requesting after {}s'.format(audio_generated_for))
+        time.sleep(SUBCHUNK_SLEEP)
         yield cloud_speech_pb2.StreamingRecognizeRequest(audio_content=data)
 
 
@@ -169,32 +264,39 @@ def listen_print_loop(recognize_stream):
     final one, print a newline to preserve the finalized transcription.
     """
     num_chars_printed = 0
+    num_responses = 0
     for resp in recognize_stream:
+        num_responses+=1
         if resp.error.code != code_pb2.OK:
             raise RuntimeError('Server error: ' + resp.error.message)
+        log_format = '{}s, err:{}, final:{}, conf:{}, {}'
 
         if not resp.results:
+            logger.debug(log_format.format(audio_generated_for, resp.error.code, None, None, resp.results)) 
             continue
 
         # Display the top transcription
         result = resp.results[0]
         transcript = result.alternatives[0].transcript
+        confidence = result.alternatives[0].confidence
 
         # Display interim results, but with a carriage return at the end of the
         # line, so subsequent lines will overwrite them.
         #
         # If the previous result was longer than this one, we need to print
         # some extra spaces to overwrite the previous result
-        overwrite_chars = ' ' * max(0, num_chars_printed - len(transcript))
+        # overwrite_chars = ' ' * max(0, num_chars_printed - len(transcript))
 
-        if not result.is_final:
-            sys.stdout.write(transcript + overwrite_chars + '\r')
-            sys.stdout.flush()
-
-            num_chars_printed = len(transcript)
-
+        log_message = log_format.format(audio_generated_for, resp.error.code, result.is_final, confidence, transcript)
+        if( result.is_final ):
+            logging.info(log_message)
         else:
-            print(transcript + overwrite_chars)
+            logging.debug(log_message)
+            # sys.stdout.write(str(confidence) + transcript + overwrite_chars + '\n')
+            # sys.stdout.flush()
+            # num_chars_printed = len(transcript)
+
+            # print(transcript + overwrite_chars)
 
             # Exit recognition if any of the transcribed phrases could be
             # one of our keywords.
@@ -202,16 +304,20 @@ def listen_print_loop(recognize_stream):
                 print('Exiting..')
                 break
 
-            num_chars_printed = 0
+            # num_chars_printed = 0
 
 
-def main():
+def main(args):
+    print 'making service'
     service = cloud_speech_pb2.SpeechStub(
         make_channel('speech.googleapis.com', 443))
 
     # For streaming audio from the microphone, there are three threads.
     # First, a thread that collects audio data as it comes in
-    with record_audio(RATE, CHUNK) as buffered_audio_data:
+    print 'opening file:'
+    speech_file = args.filename
+    with get_audio_multiple(RATE, PACKET_SIZE, speech_file) as list_buffered_audio_data:
+      for buffered_audio_data in list_buffered_audio_data:
         # Second, a thread that sends requests with that data
         requests = request_stream(buffered_audio_data, RATE)
         # Third, a thread that listens for transcription responses
@@ -232,6 +338,14 @@ def main():
             if code is not code.CANCELLED:
                 raise
 
+def parse_args():
+    import argparse
+    p = argparse.ArgumentParser()
+    p.add_argument('filename', type=str)
+    args = p.parse_args()
+    return args
 
 if __name__ == '__main__':
-    main()
+    args = parse_args()
+    main( args )
+
