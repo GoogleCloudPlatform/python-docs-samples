@@ -82,6 +82,69 @@ To run this sample:
     $ python quickstart.py
 
 
+Detect
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python detect.py
+
+    usage: detect.py [-h]
+                     {faces,faces-gcs,labels,labels-gcs,landmarks,landmarks-gcs,text,text-gcs,logos,logos-gcs,safe-search,safe-search-gcs,properties,properties-gcs,web,web-gcs,crophints,crophints-gcs,fulltext,fulltext-gcs}
+                     ...
+    
+    This application demonstrates how to perform basic operations with the
+    Google Cloud Vision API.
+    
+    Example Usage:
+    python detect.py text ./resources/wakeupcat.jpg
+    python detect.py labels ./resources/landmark.jpg
+    python detect.py web ./resources/landmark.jpg
+    
+    For more information, the documentation at
+    https://cloud.google.com/vision/docs.
+    
+    positional arguments:
+      {faces,faces-gcs,labels,labels-gcs,landmarks,landmarks-gcs,text,text-gcs,logos,logos-gcs,safe-search,safe-search-gcs,properties,properties-gcs,web,web-gcs,crophints,crophints-gcs,fulltext,fulltext-gcs}
+        faces               Detects faces in an image.
+        faces-gcs           Detects faces in the file located in Google Cloud
+                            Storage.
+        labels              Detects labels in the file.
+        labels-gcs          Detects labels in the file located in Google Cloud
+                            Storage.
+        landmarks           Detects landmarks in the file.
+        landmarks-gcs       Detects landmarks in the file located in Google Cloud
+                            Storage.
+        text                Detects text in the file.
+        text-gcs            Detects text in the file located in Google Cloud
+                            Storage.
+        logos               Detects logos in the file.
+        logos-gcs           Detects logos in the file located in Google Cloud
+                            Storage.
+        safe-search         Detects unsafe features in the file.
+        safe-search-gcs     Detects unsafe features in the file located in Google
+                            Cloud Storage.
+        properties          Detects image properties in the file.
+        properties-gcs      Detects image properties in the file located in Google
+                            Cloud Storage.
+        web                 detects web annotations given an image.
+        web-gcs             detects web annotations in the file located in google
+                            cloud storage.
+        crophints           detects crop hints in an image.
+        crophints-gcs       detects crop hints in the file located in google cloud
+                            storage.
+        fulltext            extracts full text from an image.
+        fulltext-gcs        extracts full text in the file located in google cloud
+                            storage.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
 
 
 The client library
