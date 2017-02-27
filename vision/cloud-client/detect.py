@@ -17,13 +17,19 @@
 """This application demonstrates how to perform basic operations with the
 Google Cloud Vision API.
 
+Example Usage:
+python detect.py text ./resources/wakeupcat.jpg
+python detect.py labels ./resources/landmark.jpg
+python detect.py web ./resources/landmark.jpg
+python detect.py web-uri http://wheresgus.com/dog.JPG
+python detect.py faces-uri gs://your-bucket/file.jpg
+
 For more information, the documentation at
 https://cloud.google.com/vision/docs.
 """
 
 import argparse
 import io
-import os
 
 from google.cloud import vision
 
@@ -38,26 +44,36 @@ def detect_faces(path):
     image = vision_client.image(content=content)
 
     faces = image.detect_faces()
-
     print('Faces:')
+
     for face in faces:
         print('anger: {}'.format(face.emotions.anger))
         print('joy: {}'.format(face.emotions.joy))
         print('surprise: {}'.format(face.emotions.surprise))
 
+        vertices = (['({},{})'.format(bound.x_coordinate, bound.y_coordinate)
+                    for bound in face.bounds.vertices])
 
-def detect_faces_cloud_storage(uri):
-    """Detects faces in the file located in Google Cloud Storage."""
+        print('face bounds: {}'.format(','.join(vertices)))
+
+
+def detect_faces_uri(uri):
+    """Detects faces in the file located in Google Cloud Storage or the web."""
     vision_client = vision.Client()
     image = vision_client.image(source_uri=uri)
 
     faces = image.detect_faces()
-
     print('Faces:')
+
     for face in faces:
         print('anger: {}'.format(face.emotions.anger))
         print('joy: {}'.format(face.emotions.joy))
         print('surprise: {}'.format(face.emotions.surprise))
+
+        vertices = (['({},{})'.format(bound.x_coordinate, bound.y_coordinate)
+                    for bound in face.bounds.vertices])
+
+        print('face bounds: {}'.format(','.join(vertices)))
 
 
 def detect_labels(path):
@@ -70,20 +86,21 @@ def detect_labels(path):
     image = vision_client.image(content=content)
 
     labels = image.detect_labels()
-
     print('Labels:')
+
     for label in labels:
         print(label.description)
 
 
-def detect_labels_cloud_storage(uri):
-    """Detects labels in the file located in Google Cloud Storage."""
+def detect_labels_uri(uri):
+    """Detects labels in the file located in Google Cloud Storage or on the
+    Web."""
     vision_client = vision.Client()
     image = vision_client.image(source_uri=uri)
 
     labels = image.detect_labels()
-
     print('Labels:')
+
     for label in labels:
         print(label.description)
 
@@ -98,20 +115,21 @@ def detect_landmarks(path):
     image = vision_client.image(content=content)
 
     landmarks = image.detect_landmarks()
-
     print('Landmarks:')
+
     for landmark in landmarks:
         print(landmark.description)
 
 
-def detect_landmarks_cloud_storage(uri):
-    """Detects landmarks in the file located in Google Cloud Storage."""
+def detect_landmarks_uri(uri):
+    """Detects landmarks in the file located in Google Cloud Storage or on the
+    Web."""
     vision_client = vision.Client()
     image = vision_client.image(source_uri=uri)
 
     landmarks = image.detect_landmarks()
-
     print('Landmarks:')
+
     for landmark in landmarks:
         print(landmark.description)
 
@@ -126,20 +144,21 @@ def detect_logos(path):
     image = vision_client.image(content=content)
 
     logos = image.detect_logos()
-
     print('Logos:')
+
     for logo in logos:
         print(logo.description)
 
 
-def detect_logos_cloud_storage(uri):
-    """Detects logos in the file located in Google Cloud Storage."""
+def detect_logos_uri(uri):
+    """Detects logos in the file located in Google Cloud Storage or on the Web.
+    """
     vision_client = vision.Client()
     image = vision_client.image(source_uri=uri)
 
     logos = image.detect_logos()
-
     print('Logos:')
+
     for logo in logos:
         print(logo.description)
 
@@ -153,27 +172,25 @@ def detect_safe_search(path):
 
     image = vision_client.image(content=content)
 
-    safe_searches = image.detect_safe_search()
+    safe = image.detect_safe_search()
     print('Safe search:')
-    for safe in safe_searches:
-        print('adult: {}'.format(safe.adult))
-        print('medical: {}'.format(safe.medical))
-        print('spoofed: {}'.format(safe.spoof))
-        print('violence: {}'.format(safe.violence))
+    print('adult: {}'.format(safe.adult))
+    print('medical: {}'.format(safe.medical))
+    print('spoofed: {}'.format(safe.spoof))
+    print('violence: {}'.format(safe.violence))
 
 
-def detect_safe_search_cloud_storage(uri):
-    """Detects unsafe features in the file located in Google Cloud Storage."""
+def detect_safe_search_uri(uri):
+    """Detects unsafe features in the file located in Google Cloud Storage or
+    on the Web."""
     vision_client = vision.Client()
     image = vision_client.image(source_uri=uri)
 
-    safe_searches = image.detect_safe_search()
-    print('Safe search:')
-    for safe in safe_searches:
-        print('adult: {}'.format(safe.adult))
-        print('medical: {}'.format(safe.medical))
-        print('spoofed: {}'.format(safe.spoof))
-        print('violence: {}'.format(safe.violence))
+    safe = image.detect_safe_search()
+    print('adult: {}'.format(safe.adult))
+    print('medical: {}'.format(safe.medical))
+    print('spoofed: {}'.format(safe.spoof))
+    print('violence: {}'.format(safe.violence))
 
 
 def detect_text(path):
@@ -187,19 +204,32 @@ def detect_text(path):
 
     texts = image.detect_text()
     print('Texts:')
+
     for text in texts:
-        print(text.description)
+        print('\n"{}"'.format(text.description))
+
+        vertices = (['({},{})'.format(bound.x_coordinate, bound.y_coordinate)
+                    for bound in text.bounds.vertices])
+
+        print('bounds: {}'.format(','.join(vertices)))
 
 
-def detect_text_cloud_storage(uri):
-    """Detects text in the file located in Google Cloud Storage."""
+def detect_text_uri(uri):
+    """Detects text in the file located in Google Cloud Storage or on the Web.
+    """
     vision_client = vision.Client()
     image = vision_client.image(source_uri=uri)
 
     texts = image.detect_text()
     print('Texts:')
+
     for text in texts:
-        print(text.description)
+        print('\n"{}"'.format(text.description))
+
+        vertices = (['({},{})'.format(bound.x_coordinate, bound.y_coordinate)
+                    for bound in text.bounds.vertices])
+
+        print('bounds: {}'.format(','.join(vertices)))
 
 
 def detect_properties(path):
@@ -211,74 +241,185 @@ def detect_properties(path):
 
     image = vision_client.image(content=content)
 
-    properties = image.detect_properties()
+    props = image.detect_properties()
     print('Properties:')
-    for prop in properties:
-        color = prop.colors[0]
+
+    for color in props.colors:
         print('fraction: {}'.format(color.pixel_fraction))
-        print('r: {}'.format(color.color.red))
-        print('g: {}'.format(color.color.green))
-        print('b: {}'.format(color.color.blue))
+        print('\tr: {}'.format(color.color.red))
+        print('\tg: {}'.format(color.color.green))
+        print('\tb: {}'.format(color.color.blue))
+        print('\ta: {}'.format(color.color.alpha))
 
 
-def detect_properties_cloud_storage(uri):
-    """Detects image properties in the file located in Google Cloud Storage."""
+def detect_properties_uri(uri):
+    """Detects image properties in the file located in Google Cloud Storage or
+    on the Web."""
     vision_client = vision.Client()
     image = vision_client.image(source_uri=uri)
 
-    properties = image.detect_properties()
-    for prop in properties:
-        color = prop.colors[0]
-        print('fraction: {}'.format(color.pixel_fraction))
-        print('r: {}'.format(color.color.red))
-        print('g: {}'.format(color.color.green))
-        print('g: {}'.format(color.color.blue))
+    props = image.detect_properties()
+    print('Properties:')
+
+    for color in props.colors:
+        print('frac: {}'.format(color.pixel_fraction))
+        print('\tr: {}'.format(color.color.red))
+        print('\tg: {}'.format(color.color.green))
+        print('\tb: {}'.format(color.color.blue))
+        print('\ta: {}'.format(color.color.alpha))
 
 
-def run_all_local():
-    """Runs all available detection operations on the local resources."""
-    file_name = os.path.join(
-        os.path.dirname(__file__),
-        'resources/wakeupcat.jpg')
-    detect_labels(file_name)
+def detect_web(path):
+    """detects web annotations given an image."""
+    vision_client = vision.Client()
 
-    file_name = os.path.join(
-        os.path.dirname(__file__),
-        'resources/landmark.jpg')
-    detect_landmarks(file_name)
+    with io.open(path, 'rb') as image_file:
+        content = image_file.read()
 
-    file_name = os.path.join(
-        os.path.dirname(__file__),
-        'resources/face_no_surprise.jpg')
-    detect_faces(file_name)
+    image = vision_client.image(content=content)
 
-    file_name = os.path.join(
-        os.path.dirname(__file__),
-        'resources/logos.png')
-    detect_logos(file_name)
+    notes = image.detect_web()
 
-    file_name = os.path.join(
-        os.path.dirname(__file__),
-        'resources/wakeupcat.jpg')
-    detect_safe_search(file_name)
+    if notes.pages_with_matching_images:
+        print('\n{} Pages with matching images retrieved')
 
-    ''' TODO: Uncomment when https://goo.gl/c47YwV is fixed
-    file_name = os.path.join(
-        os.path.dirname(__file__),
-        'resources/text.jpg')
-    detect_text(file_name)
-    '''
+        for page in notes.pages_with_matching_images:
+            print('Score : {}'.format(page.score))
+            print('Url   : {}'.format(page.url))
 
-    file_name = os.path.join(
-        os.path.dirname(__file__),
-        'resources/landmark.jpg')
-    detect_properties(file_name)
+    if notes.full_matching_images:
+        print ('\n{} Full Matches found: '.format(
+               len(notes.full_matching_images)))
+
+        for image in notes.full_matching_images:
+            print('Score:  {}'.format(image.score))
+            print('Url  : {}'.format(image.url))
+
+    if notes.partial_matching_images:
+        print ('\n{} Partial Matches found: '.format(
+               len(notes.partial_matching_images)))
+
+        for image in notes.partial_matching_images:
+            print('Score: {}'.format(image.score))
+            print('Url  : {}'.format(image.url))
+
+    if notes.web_entities:
+        print ('\n{} Web entities found: '.format(len(notes.web_entities)))
+
+        for entity in notes.web_entities:
+            print('Score      : {}'.format(entity.score))
+            print('Description: {}'.format(entity.description))
+
+
+def detect_web_uri(uri):
+    """detects web annotations in the file located in google cloud storage."""
+    vision_client = vision.Client()
+    image = vision_client.image(source_uri=uri)
+
+    notes = image.detect_web()
+
+    if notes.pages_with_matching_images:
+        print('\n{} Pages with matching images retrieved')
+
+        for page in notes.pages_with_matching_images:
+            print('Score : {}'.format(page.score))
+            print('Url   : {}'.format(page.url))
+
+    if notes.full_matching_images:
+        print ('\n{} Full Matches found: '.format(
+               len(notes.full_matching_images)))
+
+        for image in notes.full_matching_images:
+            print('Score:  {}'.format(image.score))
+            print('Url  : {}'.format(image.url))
+
+    if notes.partial_matching_images:
+        print ('\n{} Partial Matches found: '.format(
+               len(notes.partial_matching_images)))
+
+        for image in notes.partial_matching_images:
+            print('Score: {}'.format(image.score))
+            print('Url  : {}'.format(image.url))
+
+    if notes.web_entities:
+        print ('\n{} Web entities found: '.format(len(notes.web_entities)))
+
+        for entity in notes.web_entities:
+            print('Score      : {}'.format(entity.score))
+            print('Description: {}'.format(entity.description))
+
+
+def detect_crop_hints(path):
+    """detects crop hints in an image."""
+    vision_client = vision.Client()
+    with io.open(path, 'rb') as image_file:
+        content = image_file.read()
+    image = vision_client.image(content=content)
+
+    hints = image.detect_crop_hints()
+
+    for n, hint in enumerate(hints):
+        print('\nCrop Hint: {}'.format(n))
+
+        vertices = (['({},{})'.format(bound.x_coordinate, bound.y_coordinate)
+                    for bound in hint.bounds.vertices])
+
+        print('bounds: {}'.format(','.join(vertices)))
+
+
+def detect_crop_hints_uri(uri):
+    """detects crop hints in the file located in google cloud storage."""
+    vision_client = vision.Client()
+    image = vision_client.image(source_uri=uri)
+
+    hints = image.detect_crop_hints()
+    for n, hint in enumerate(hints):
+        print('\nCrop Hint: {}'.format(n))
+
+        vertices = (['({},{})'.format(bound.x_coordinate, bound.y_coordinate)
+                    for bound in hint.bounds.vertices])
+
+        print('bounds: {}'.format(','.join(vertices)))
+
+
+def detect_fulltext(path):
+    """extracts full text from an image."""
+    vision_client = vision.Client()
+
+    with io.open(path, 'rb') as image_file:
+        content = image_file.read()
+
+    image = vision_client.image(content=content)
+
+    fulltext = image.detect_full_text()
+
+    for b, page in enumerate(fulltext.pages):
+        print(page.width)
+        for bb, block in enumerate(page.blocks):
+            print('Block: {}'.format(block.bounding_box))
+            print('Type: {}'.format(dir(block)))
+            print('Type: {}'.format(block.block_type))
+            for p, paragraph in enumerate(block.paragraphs):
+                print('\tParagraph: ({})'.format(paragraph.bounding_box))
+                print('\twords: ({})'.format((paragraph.words)))
+                for w, word in enumerate(paragraph.words):
+                    for s, symbol in enumerate(word.symbols):
+                        print('\t\t\t$:{}'.format(symbol.text))
+
+    print(fulltext.text)
+
+
+def detect_fulltext_uri(uri):
+    """extracts full text in the file located in google cloud storage."""
+    vision_client = vision.Client()
+    image = vision_client.image(source_uri=uri)
+
+    fulltext = image.detect_full_text()
+    print(fulltext.text)
 
 
 def run_local(args):
-    if args.command == 'all-local':
-        run_all_local()
-    elif args.command == 'faces':
+    if args.command == 'faces':
         detect_faces(args.path)
     elif args.command == 'labels':
         detect_labels(args.path)
@@ -292,23 +433,35 @@ def run_local(args):
         detect_safe_search(args.path)
     elif args.command == 'properties':
         detect_properties(args.path)
+    elif args.command == 'web':
+        detect_web(args.path)
+    elif args.command == 'crophints':
+        detect_crop_hints(args.path)
+    elif args.command == 'fulltext':
+        detect_fulltext(args.path)
 
 
-def run_cloud_storage(args):
-    if args.command == 'text-gcs':
-        detect_text_cloud_storage(args.cloud_storage_uri)
-    elif args.command == 'faces-gcs':
-        detect_faces_cloud_storage(args.cloud_storage_uri)
-    elif args.command == 'labels-gcs':
-        detect_labels_cloud_storage(args.cloud_storage_uri)
-    elif args.command == 'landmarks-gcs':
-        detect_landmarks_cloud_storage(args.cloud_storage_uri)
-    elif args.command == 'logos-gcs':
-        detect_logos_cloud_storage(args.cloud_storage_uri)
-    elif args.command == 'safe-search-gcs':
-        detect_safe_search_cloud_storage(args.cloud_storage_uri)
-    elif args.command == 'properties-gcs':
-        detect_properties_cloud_storage(args.cloud_storage_uri)
+def run_uri(args):
+    if args.command == 'text-uri':
+        detect_text_uri(args.uri)
+    elif args.command == 'faces-uri':
+        detect_faces_uri(args.uri)
+    elif args.command == 'labels-uri':
+        detect_labels_uri(args.uri)
+    elif args.command == 'landmarks-uri':
+        detect_landmarks_uri(args.uri)
+    elif args.command == 'logos-uri':
+        detect_logos_uri(args.uri)
+    elif args.command == 'safe-search-uri':
+        detect_safe_search_uri(args.uri)
+    elif args.command == 'properties-uri':
+        detect_properties_uri(args.uri)
+    elif args.command == 'web-uri':
+        detect_web_uri(args.uri)
+    elif args.command == 'crophints-uri':
+        detect_crop_hints_uri(args.uri)
+    elif args.command == 'fulltext-uri':
+        detect_fulltext_uri(args.uri)
 
 
 if __name__ == '__main__':
@@ -317,70 +470,93 @@ if __name__ == '__main__':
         formatter_class=argparse.RawDescriptionHelpFormatter)
     subparsers = parser.add_subparsers(dest='command')
 
-    run_local_parser = subparsers.add_parser(
-        'all-local', help=run_all_local.__doc__)
-
     detect_faces_parser = subparsers.add_parser(
         'faces', help=detect_faces.__doc__)
     detect_faces_parser.add_argument('path')
 
     faces_file_parser = subparsers.add_parser(
-        'faces-gcs', help=detect_faces_cloud_storage.__doc__)
-    faces_file_parser.add_argument('cloud_storage_uri')
+        'faces-uri', help=detect_faces_uri.__doc__)
+    faces_file_parser.add_argument('uri')
 
     detect_labels_parser = subparsers.add_parser(
         'labels', help=detect_labels.__doc__)
     detect_labels_parser.add_argument('path')
 
     labels_file_parser = subparsers.add_parser(
-        'labels-gcs', help=detect_labels_cloud_storage.__doc__)
-    labels_file_parser.add_argument('cloud_storage_uri')
+        'labels-uri', help=detect_labels_uri.__doc__)
+    labels_file_parser.add_argument('uri')
 
     detect_landmarks_parser = subparsers.add_parser(
         'landmarks', help=detect_landmarks.__doc__)
     detect_landmarks_parser.add_argument('path')
 
     landmark_file_parser = subparsers.add_parser(
-        'landmarks-gcs', help=detect_landmarks_cloud_storage.__doc__)
-    landmark_file_parser.add_argument('cloud_storage_uri')
+        'landmarks-uri', help=detect_landmarks_uri.__doc__)
+    landmark_file_parser.add_argument('uri')
 
     detect_text_parser = subparsers.add_parser(
         'text', help=detect_text.__doc__)
     detect_text_parser.add_argument('path')
 
     text_file_parser = subparsers.add_parser(
-        'text-gcs', help=detect_text_cloud_storage.__doc__)
-    text_file_parser.add_argument('cloud_storage_uri')
+        'text-uri', help=detect_text_uri.__doc__)
+    text_file_parser.add_argument('uri')
 
     detect_logos_parser = subparsers.add_parser(
         'logos', help=detect_logos.__doc__)
     detect_logos_parser.add_argument('path')
 
     logos_file_parser = subparsers.add_parser(
-        'logos-gcs', help=detect_logos_cloud_storage.__doc__)
-    logos_file_parser.add_argument('cloud_storage_uri')
+        'logos-uri', help=detect_logos_uri.__doc__)
+    logos_file_parser.add_argument('uri')
 
     safe_search_parser = subparsers.add_parser(
         'safe-search', help=detect_safe_search.__doc__)
     safe_search_parser.add_argument('path')
 
     safe_search_file_parser = subparsers.add_parser(
-        'safe-search-gcs',
-        help=detect_safe_search_cloud_storage.__doc__)
-    safe_search_file_parser.add_argument('cloud_storage_uri')
+        'safe-search-uri',
+        help=detect_safe_search_uri.__doc__)
+    safe_search_file_parser.add_argument('uri')
 
     properties_parser = subparsers.add_parser(
-        'properties', help=detect_safe_search.__doc__)
+        'properties', help=detect_properties.__doc__)
     properties_parser.add_argument('path')
 
     properties_file_parser = subparsers.add_parser(
-        'properties-gcs',
-        help=detect_properties_cloud_storage.__doc__)
-    properties_file_parser.add_argument('cloud_storage_uri')
+        'properties-uri',
+        help=detect_properties_uri.__doc__)
+    properties_file_parser.add_argument('uri')
+
+    # 1.1 Vision features
+    web_parser = subparsers.add_parser(
+        'web', help=detect_web.__doc__)
+    web_parser.add_argument('path')
+
+    web_uri_parser = subparsers.add_parser(
+        'web-uri',
+        help=detect_web_uri.__doc__)
+    web_uri_parser.add_argument('uri')
+
+    crop_hints_parser = subparsers.add_parser(
+        'crophints', help=detect_crop_hints.__doc__)
+    crop_hints_parser.add_argument('path')
+
+    crop_hints_uri_parser = subparsers.add_parser(
+        'crophints-uri', help=detect_crop_hints_uri.__doc__)
+    crop_hints_uri_parser.add_argument('uri')
+
+    fulltext_parser = subparsers.add_parser(
+        'fulltext', help=detect_fulltext.__doc__)
+    fulltext_parser.add_argument('path')
+
+    fulltext_uri_parser = subparsers.add_parser(
+        'fulltext-uri', help=detect_fulltext_uri.__doc__)
+    fulltext_uri_parser.add_argument('uri')
 
     args = parser.parse_args()
 
-    if ('gcs' in args.command):
-        run_cloud_storage(args)
+    if ('uri' in args.command):
+        run_uri(args)
     else:
         run_local(args)
