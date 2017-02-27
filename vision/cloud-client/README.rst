@@ -8,7 +8,7 @@ This directory contains samples for Google Cloud Vision API. `Google Cloud Visio
 
 
 
-.. _Google Cloud Vision API: https://cloud.google.com/vision/docs 
+.. _Google Cloud Vision API: https://cloud.google.com/vision/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -80,6 +80,71 @@ To run this sample:
 .. code-block:: bash
 
     $ python quickstart.py
+
+
+Detect
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python detect.py
+
+    usage: detect.py [-h]
+                     {faces,faces-uri,labels,labels-uri,landmarks,landmarks-uri,text,text-uri,logos,logos-uri,safe-search,safe-search-uri,properties,properties-uri,web,web-uri,crophints,crophints-uri,fulltext,fulltext-uri}
+                     ...
+
+    This application demonstrates how to perform basic operations with the
+    Google Cloud Vision API.
+
+    Example Usage:
+    python detect.py text ./resources/wakeupcat.jpg
+    python detect.py labels ./resources/landmark.jpg
+    python detect.py web ./resources/landmark.jpg
+    python detect.py web-uri http://wheresgus.com/dog.JPG
+    python detect.py faces-uri gs://your-bucket/file.jpg
+
+    For more information, the documentation at
+    https://cloud.google.com/vision/docs.
+
+    positional arguments:
+      {faces,faces-uri,labels,labels-uri,landmarks,landmarks-uri,text,text-uri,logos,logos-uri,safe-search,safe-search-uri,properties,properties-uri,web,web-uri,crophints,crophints-uri,fulltext,fulltext-uri}
+        faces               Detects faces in an image.
+        faces-uri           Detects faces in the file located in Google Cloud
+                            Storage or the web.
+        labels              Detects labels in the file.
+        labels-uri          Detects labels in the file located in Google Cloud
+                            Storage or on the Web.
+        landmarks           Detects landmarks in the file.
+        landmarks-uri       Detects landmarks in the file located in Google Cloud
+                            Storage or on the Web.
+        text                Detects text in the file.
+        text-uri            Detects text in the file located in Google Cloud
+                            Storage or on the Web.
+        logos               Detects logos in the file.
+        logos-uri           Detects logos in the file located in Google Cloud
+                            Storage or on the Web.
+        safe-search         Detects unsafe features in the file.
+        safe-search-uri     Detects unsafe features in the file located in Google
+                            Cloud Storage or on the Web.
+        properties          Detects image properties in the file.
+        properties-uri      Detects image properties in the file located in Google
+                            Cloud Storage or on the Web.
+        web                 detects web annotations given an image.
+        web-uri             detects web annotations in the file located in google
+                            cloud storage.
+        crophints           detects crop hints in an image.
+        crophints-uri       detects crop hints in the file located in google cloud
+                            storage.
+        fulltext            extracts full text from an image.
+        fulltext-uri        extracts full text in the file located in google cloud
+                            storage.
+
+    optional arguments:
+      -h, --help            show this help message and exit
 
 
 
