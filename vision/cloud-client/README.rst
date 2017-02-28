@@ -3,12 +3,12 @@
 Google Cloud Vision API Python Samples
 ===============================================================================
 
-This directory contains samples for Google Cloud Vision API. `Google Cloud Vision API`_ allows developers to easily integrate vision detection features within applications, including image labeling, face and landmark detection, optical character recognition (OCR), and tagging of explicit content
+This directory contains samples for Google Cloud Vision API. [Google Cloud Vision API][0] allows developers to easily integrate vision detection features within applications, including image labeling, face and landmark detection, optical character recognition (OCR), and tagging of explicit content
 
 
 
 
-.. _Google Cloud Vision API: https://cloud.google.com/vision/docs
+[0]: https://cloud.google.com/vision/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -17,12 +17,12 @@ Setup
 Authentication
 ++++++++++++++
 
-Authentication is typically done through `Application Default Credentials`_,
+Authentication is typically done through [Application Default Credentials][11],
 which means you do not have to change the code to authenticate as long as
 your environment has credentials. You have a few options for setting up
 authentication:
 
-#. When running locally, use the `Google Cloud SDK`_
+#. When running locally, use the [Google Cloud SDK][12]
 
     .. code-block:: bash
 
@@ -31,7 +31,7 @@ authentication:
 
 #. When running on App Engine or Compute Engine, credentials are already
    set-up. However, you may need to configure your Compute Engine instance
-   with `additional scopes`_.
+   with [additional scopes][13].
 
 #. You can create a `Service Account key file`_. This file can be used to
    authenticate to Google Cloud Platform services from any environment. To use
@@ -42,14 +42,14 @@ authentication:
 
         export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
 
-.. _Application Default Credentials: https://cloud.google.com/docs/authentication#getting_credentials_for_server-centric_flow
-.. _additional scopes: https://cloud.google.com/compute/docs/authentication#using
-.. _Service Account key file: https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount
+[11]: https://cloud.google.com/docs/authentication#getting_credentials_for_server-centric_flow
+[12]: https://cloud.google.com/compute/docs/authentication#using
+[13]: https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount
 
 Install Dependencies
 ++++++++++++++++++++
 
-#. Install `pip`_ and `virtualenv`_ if you do not already have them.
+#. Install [pip][21] and [virtualenv][22] if you do not already have them.
 
 #. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
 
@@ -64,8 +64,8 @@ Install Dependencies
 
         $ pip install -r requirements.txt
 
-.. _pip: https://pip.pypa.io/
-.. _virtualenv: https://virtualenv.pypa.io/
+[21]: https://pip.pypa.io/
+[22]: https://virtualenv.pypa.io/
 
 Samples
 -------------------------------------------------------------------------------
@@ -152,16 +152,11 @@ To run this sample:
 The client library
 -------------------------------------------------------------------------------
 
-This sample uses the `Google Cloud Client Library for Python`_.
+This sample uses the [Google Cloud Client Library for Python][1].
 You can read the documentation for more details on API usage and use GitHub
-to `browse the source`_ and  `report issues`_.
+to [browse the source][2] and [report issues][3].
 
-.. Google Cloud Client Library for Python:
-    https://googlecloudplatform.github.io/google-cloud-python/
-.. browse the source:
-    https://github.com/GoogleCloudPlatform/google-cloud-python
-.. report issues:
-    https://github.com/GoogleCloudPlatform/google-cloud-python/issues
-
-
-.. _Google Cloud SDK: https://cloud.google.com/sdk/
+[1]: https://googlecloudplatform.github.io/google-cloud-python/
+[2]: https://github.com/GoogleCloudPlatform/google-cloud-python
+[3]: https://github.com/GoogleCloudPlatform/google-cloud-python/issues
+[4]: https://cloud.google.com/sdk/
