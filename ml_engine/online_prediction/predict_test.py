@@ -23,6 +23,7 @@ import predict
 
 MODEL = 'census'
 VERSION = 'v1'
+TF_RECORDS_VERSION = 'v1tfrecord'
 PROJECT = 'python-docs-samples-tests'
 JSON = {
     'age': 25,
@@ -64,5 +65,10 @@ def test_census_example_to_bytes():
     assert base64.b64encode(b) is not None
 
 
-def test_predict_tfrecord():
-    pass
+@pytest.mark.slow
+@pytest.mark.xfail('Single placeholder inputs broken in service b/35778449')
+def test_predict_tfrecords():
+    b = predict.census_to_example_bytes(JSON)
+    result = predict.predict_tfrecords(
+        PROJECT, MODEL, [b, b], version=TF_RECORDS_VERSION)
+    assert [EXPECTED_OUTPUT, EXPECTED_OUTPUT] == result
