@@ -12,6 +12,11 @@
 
 """Examples of using the Cloud ML Engine's online prediction service."""
 from __future__ import print_function
+
+import argparse
+import base64
+import json
+
 # [START import_libraries]
 import googleapiclient.discovery
 # [END import_libraries]
@@ -72,7 +77,6 @@ def predict_tf_records(project,
         Mapping[str: any]: dictionary of prediction results defined by the
             model.
     """
-    import base64
     service = googleapiclient.discovery.build('ml', 'v1beta1')
     name = 'projects/{}/models/{}'.format(project, model)
 
@@ -126,7 +130,6 @@ def census_to_example_bytes(json_instance):
 
 def main(project, model, version=None, force_tfrecord=False):
     """Send user input to the prediction service."""
-    import json
     while True:
         try:
             user_input = json.loads(raw_input("Valid JSON >>>"))
@@ -153,7 +156,6 @@ def main(project, model, version=None, force_tfrecord=False):
 
 
 if __name__ == '__main__':
-    import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--project',
