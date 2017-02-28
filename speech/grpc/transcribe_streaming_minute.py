@@ -12,7 +12,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Sample that streams audio to the Google Cloud Speech API via GRPC."""
+"""Sample that streams audio to the Google Cloud Speech API via GRPC.
+
+This sample expands on transcribe_streaming.py to work around the 1-minute
+limit on streaming requests. It does this by transcribing normally until
+WRAP_IT_UP_SECS seconds before the 1-minute limit. At that point, it waits for
+the end of an utterance and once it hears it, it closes the current stream and
+opens a new one. It also keeps a buffer of audio around while this is
+happening, that it sends to the new stream in its initial request, to minimize
+losing any speech that occurs while this happens.
+
+Note that you could do this a little more simply by simply re-starting the
+stream after every utterance, though this increases the possibility of audio
+being missed between streams. For learning purposes (and robustness), the more
+complex implementation is shown here.
+"""
 
 from __future__ import division
 
