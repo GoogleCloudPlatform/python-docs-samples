@@ -11,8 +11,6 @@
 # the License.
 
 """Examples of using the Cloud ML Engine's online prediction service."""
-from __future__ import print_function
-
 import argparse
 import base64
 import json
@@ -20,6 +18,8 @@ import json
 # [START import_libraries]
 import googleapiclient.discovery
 # [END import_libraries]
+
+import six
 
 
 # [START predict_json]
@@ -29,9 +29,10 @@ def predict_json(project, model, instances, version=None):
     Args:
         project (str): project where the Cloud ML Engine Model is deployed.
         model (str): model name.
-        instances ([Mapping[str: any]]): dictionaries from string keys
-            defined by the model deployment, to data with types that match
-            expected tensors
+        instances ([Mapping[str: Any]]): Keys should be the names of Tensors
+            your deployed model expects as inputs. Values should be datatypes
+            convertible to Tensors, or (potentially nested) lists of datatypes
+            convertible to tensors.
         version: str, version of the model to target.
     Returns:
         Mapping[str: any]: dictionary of prediction results defined by the
@@ -106,7 +107,10 @@ def census_to_example_bytes(json_instance):
     for details.
 
     Args:
-        json_instance (Mapping[str: any]): representing data to be serialized.
+        json_instance (Mapping[str: Any]): Keys should be the names of Tensors
+            your deployed model expects to parse using it's tf.FeatureSpec.
+            Values should be datatypes convertible to Tensors, or (potentially
+            nested) lists of datatypes convertible to tensors.
     Returns:
         str: A string as a container for the serialized bytes of
             tf.train.Example protocol buffer.
@@ -114,12 +118,15 @@ def census_to_example_bytes(json_instance):
     import tensorflow as tf
     feature_dict = {}
     for key, data in json_instance.iteritems():
-        if isinstance(data, str) or isinstance(data, unicode):
+        if isinstance(data, six.string_types):
             feature_dict[key] = tf.train.Feature(
                 bytes_list=tf.train.BytesList(value=[str(data)]))
-        elif isinstance(data, int) or isinstance(data, float):
+        elif isinstance(data, float):
             feature_dict[key] = tf.train.Feature(
                 float_list=tf.train.FloatList(value=[data]))
+        elif isinstance(data, int):
+            feature_dict[key] = tf.train.Feature(
+                int64_list=tf.train.Int64List(value=[data]))
     return tf.train.Example(
         features=tf.train.Features(
             feature=feature_dict
@@ -181,4 +188,9 @@ if __name__ == '__main__':
         default=False
     )
     args = parser.parse_args()
-    main(**args.__dict__)
+    main(
+        args.project,
+        args.model,
+        version=args.version,
+        force_tfrecord=args.force_tfrecord
+    )

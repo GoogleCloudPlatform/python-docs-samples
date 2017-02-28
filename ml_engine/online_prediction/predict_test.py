@@ -8,12 +8,14 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations under
 # the License.
+
 """Tests for predict.py ."""
+
 import base64
 
 import pytest
 
-from predict import census_to_example_bytes, predict_json
+import predict
 
 
 MODEL = 'census'
@@ -43,26 +45,21 @@ EXPECTED_OUTPUT = {
 
 
 def test_predict_json():
-    result = predict_json(PROJECT, MODEL, [JSON, JSON], version=VERSION)
+    result = predict.predict_json(
+        PROJECT, MODEL, [JSON, JSON], version=VERSION)
     assert [EXPECTED_OUTPUT, EXPECTED_OUTPUT] == result
 
 
 def test_predict_json_error():
     with pytest.raises(RuntimeError):
-        predict_json(PROJECT, MODEL, [{"foo": "bar"}], version=VERSION)
+        predict.predict_json(PROJECT, MODEL, [{"foo": "bar"}], version=VERSION)
 
 
-# TODO(elibixby) Run on Travis when TensorFlow PyPi package supports
-# Ubuntu 12.04 See:
-# https://github.com/tensorflow/tensorflow/blob/master/tensorflow/g3doc/get_started/os_setup.md#import-error
 @pytest.mark.slow
 def test_census_example_to_bytes():
-    b = census_to_example_bytes(JSON)
+    b = predict.census_to_example_bytes(JSON)
     assert base64.b64encode(b) is not None
 
 
 def test_predict_tfrecord():
-    # Using the same model for TFRecords and
-    # JSON is currently broken.
-    # TODO(elibixby) when b/35742966 is fixed add
     pass
