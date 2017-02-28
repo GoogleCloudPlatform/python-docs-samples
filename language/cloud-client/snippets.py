@@ -35,7 +35,7 @@ def sentiment_text(text):
 
     # Detects sentiment in the document. You can also analyze HTML with:
     #   document.doc_type == language.Document.HTML
-    sentiment = document.analyze_sentiment()
+    sentiment = document.analyze_sentiment().sentiment
 
     print('Score: {}'.format(sentiment.score))
     print('Magnitude: {}'.format(sentiment.magnitude))
@@ -50,7 +50,7 @@ def sentiment_file(gcs_uri):
 
     # Detects sentiment in the document. You can also analyze HTML with:
     #   document.doc_type == language.Document.HTML
-    sentiment = document.analyze_sentiment()
+    sentiment = document.analyze_sentiment().sentiment
 
     print('Score: {}'.format(sentiment.score))
     print('Magnitude: {}'.format(sentiment.magnitude))
@@ -65,15 +65,16 @@ def entities_text(text):
 
     # Detects entities in the document. You can also analyze HTML with:
     #   document.doc_type == language.Document.HTML
-    entities = document.analyze_entities()
+    entities = document.analyze_entities().entities
 
     for entity in entities:
         print('=' * 20)
         print('{:<16}: {}'.format('name', entity.name))
         print('{:<16}: {}'.format('type', entity.entity_type))
-        print('{:<16}: {}'.format('wikipedia_url', entity.wikipedia_url))
         print('{:<16}: {}'.format('metadata', entity.metadata))
         print('{:<16}: {}'.format('salience', entity.salience))
+        print('{:<16}: {}'.format('wikipedia_url',
+              entity.metadata.get('wikipedia_url', '-')))
 
 
 def entities_file(gcs_uri):
@@ -85,15 +86,16 @@ def entities_file(gcs_uri):
 
     # Detects sentiment in the document. You can also analyze HTML with:
     #   document.doc_type == language.Document.HTML
-    entities = document.analyze_entities()
+    entities = document.analyze_entities().entities
 
     for entity in entities:
         print('=' * 20)
         print('{:<16}: {}'.format('name', entity.name))
         print('{:<16}: {}'.format('type', entity.entity_type))
-        print('{:<16}: {}'.format('wikipedia_url', entity.wikipedia_url))
         print('{:<16}: {}'.format('metadata', entity.metadata))
         print('{:<16}: {}'.format('salience', entity.salience))
+        print('{:<16}: {}'.format('wikipedia_url',
+              entity.metadata.get('wikipedia_url', '-')))
 
 
 def syntax_text(text):
@@ -105,7 +107,7 @@ def syntax_text(text):
 
     # Detects syntax in the document. You can also analyze HTML with:
     #   document.doc_type == language.Document.HTML
-    tokens = document.analyze_syntax()
+    tokens = document.analyze_syntax().tokens
 
     for token in tokens:
         print('{}: {}'.format(token.part_of_speech, token.text_content))
@@ -120,7 +122,7 @@ def syntax_file(gcs_uri):
 
     # Detects syntax in the document. You can also analyze HTML with:
     #   document.doc_type == language.Document.HTML
-    tokens = document.analyze_syntax()
+    tokens = document.analyze_syntax().tokens
 
     for token in tokens:
         print('{}: {}'.format(token.part_of_speech, token.text_content))
