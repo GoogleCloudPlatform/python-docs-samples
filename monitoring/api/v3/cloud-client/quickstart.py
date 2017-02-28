@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START monitoring_quickstart]
-from google.cloud import monitoring
-
 
 def run_quickstart():
+    # [START monitoring_quickstart]
+    from google.cloud import monitoring
+
     client = monitoring.Client()
 
     resource = client.resource(
@@ -32,9 +32,10 @@ def run_quickstart():
         labels={}
     )
 
+    # Default arguments use endtime datetime.utcnow()
     client.write_point(metric, resource, 3.14)
     print('Successfully wrote time series.')
-# [END monitoring_quickstart]
+    # [END monitoring_quickstart]
 
 
 if __name__ == '__main__':
