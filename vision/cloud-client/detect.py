@@ -415,6 +415,20 @@ def detect_fulltext_uri(uri):
     image = vision_client.image(source_uri=uri)
 
     fulltext = image.detect_full_text()
+
+    for b, page in enumerate(fulltext.pages):
+        print(page.width)
+        for bb, block in enumerate(page.blocks):
+            print('Block: {}'.format(block.bounding_box))
+            print('Type: {}'.format(dir(block)))
+            print('Type: {}'.format(block.block_type))
+            for p, paragraph in enumerate(block.paragraphs):
+                print('\tParagraph: ({})'.format(paragraph.bounding_box))
+                print('\twords: ({})'.format((paragraph.words)))
+                for w, word in enumerate(paragraph.words):
+                    for s, symbol in enumerate(word.symbols):
+                        print('\t\t\t$:{}'.format(symbol.text))
+
     print(fulltext.text)
 
 
