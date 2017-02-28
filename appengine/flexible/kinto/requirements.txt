@@ -1,2 +1,0 @@
-gunicorn==19.6.0
-kinto==5.4.0
