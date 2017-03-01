@@ -92,7 +92,7 @@ class MainPage(webapp2.RequestHandler):
         # Add a link to view more log entries.
         elif offset:
             self.response.write(
-                '<a href="/?offset={}"">More</a'.format(
+                '<a href="/?offset={}"">More</a>'.format(
                     base64.urlsafe_b64encode(offset)))
 
 
