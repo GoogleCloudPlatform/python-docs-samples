@@ -43,10 +43,9 @@ import time
 import google.auth
 import google.auth.transport.grpc
 import google.auth.transport.requests
-import grpc
-from google.cloud.grpc.speech.v1beta1 import cloud_speech_pb2
+from google.cloud.proto.speech.v1beta1 import cloud_speech_pb2
 from google.rpc import code_pb2
-from grpc.framework.interfaces.face import face
+import grpc
 import pyaudio
 from six.moves import queue
 
@@ -187,7 +186,8 @@ def request_stream(data_stream, rate, interim_results=True):
         yield cloud_speech_pb2.StreamingRecognizeRequest(audio_content=data)
 
 
-def listen_print_loop(recognize_stream, wrap_it_up_secs, buff, max_recog_secs=60):
+def listen_print_loop(
+        recognize_stream, wrap_it_up_secs, buff, max_recog_secs=60):
     """Iterates through server responses and prints them.
 
     The recognize_stream passed is a generator that will block until a response
@@ -253,7 +253,8 @@ def main():
     with record_audio(RATE, CHUNK) as buff:
         # Second, a thread that sends requests with that data
         overlap_buffer = collections.deque(maxlen=SECS_OVERLAP * RATE / CHUNK)
-        requests = request_stream(_audio_data_generator(buff, overlap_buffer), RATE)
+        requests = request_stream(
+            _audio_data_generator(buff, overlap_buffer), RATE)
         # Third, a thread that listens for transcription responses
         recognize_stream = service.StreamingRecognize(
             requests, DEADLINE_SECS)
@@ -277,7 +278,7 @@ def main():
                 recognize_stream = service.StreamingRecognize(
                         requests, DEADLINE_SECS)
 
-        except grpc.RpcError, e:
+        except grpc.RpcError:
             # This happens because of the interrupt handler
             pass
 
