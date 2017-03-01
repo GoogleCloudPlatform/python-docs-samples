@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 # Copyright (C) 2016 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,6 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 """Sample that streams audio to the Google Cloud Speech API via GRPC.
 
 This sample expands on transcribe_streaming.py to work around the 1-minute
@@ -65,28 +67,28 @@ DEADLINE_SECS = 60 * 3 + 5
 SPEECH_SCOPE = 'https://www.googleapis.com/auth/cloud-platform'
 
 
-def make_channel(host, port):
+def make_channel(host):
     """Creates a secure channel with auth credentials from the environment."""
     # Grab application default credentials from the environment
     credentials, _ = google.auth.default(scopes=[SPEECH_SCOPE])
 
     # Create a secure channel using the credentials.
     http_request = google.auth.transport.requests.Request()
-    target = '{}:{}'.format(host, port)
 
     return google.auth.transport.grpc.secure_authorized_channel(
-        credentials, http_request, target)
+        credentials, http_request, host)
 
 
 def _audio_data_generator(buff, overlap_buffer):
     """A generator that yields all available data in the given buffer.
 
     Args:
-        buff - a Queue object, where each element is a chunk of data.
-        overlap_buffer - a ring buffer for storing trailing data chunks
+        buff (Queue): A Queue where each element is a chunk of data.
+        overlap_buffer (deque): a ring buffer for storing trailing data chunks
     Yields:
-        A chunk of data that is the aggregate of all chunks of data in `buff`.
-        The function will block until at least one data chunk is available.
+        bytes: A chunk of data that is the aggregate of all chunks of data in
+        `buff`. The function will block until at least one data chunk is
+        available.
     """
     if overlap_buffer:
         yield b''.join(overlap_buffer)
@@ -157,10 +159,10 @@ def request_stream(data_stream, rate, interim_results=True):
     stream.
 
     Args:
-        data_stream: A generator that yields raw audio data to send.
-        rate: The sampling rate in hertz.
-        interim_results: Whether to return intermediate results, before the
-            transcription is finalized.
+        data_stream (generator): The raw audio data to send.
+        rate (int): The sampling rate in hertz.
+        interim_results (boolean): Whether to return intermediate results,
+            before the transcription is finalized.
     """
     # The initial request must contain metadata about the stream, so the
     # server knows how to interpret it.
@@ -246,13 +248,14 @@ def listen_print_loop(
 
 def main():
     service = cloud_speech_pb2.SpeechStub(
-        make_channel('speech.googleapis.com', 443))
+        make_channel('speech.googleapis.com'))
 
     # For streaming audio from the microphone, there are three threads.
     # First, a thread that collects audio data as it comes in
     with record_audio(RATE, CHUNK) as buff:
         # Second, a thread that sends requests with that data
-        overlap_buffer = collections.deque(maxlen=SECS_OVERLAP * RATE / CHUNK)
+        overlap_buffer = collections.deque(
+            maxlen=int(SECS_OVERLAP * RATE / CHUNK))
         requests = request_stream(
             _audio_data_generator(buff, overlap_buffer), RATE)
         # Third, a thread that listens for transcription responses
@@ -286,8 +289,8 @@ def main():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
-            '-v', '--verbose', help='increase output verbosity',
-            action='store_true')
+        '-v', '--verbose', help='increase output verbosity',
+        action='store_true')
     args = parser.parse_args()
     if args.verbose:
         logging.basicConfig(level=logging.DEBUG)
