@@ -394,28 +394,29 @@ def detect_document(path):
     document = image.detect_full_text()
 
     for b, page in enumerate(document.pages):
-        pageText = ''
+        page_text = ''
 
         for bb, block in enumerate(page.blocks):
-            blockText = ''
+            block_text = ''
 
             for p, paragraph in enumerate(block.paragraphs):
-                paraText = ''
+                para_text = ''
 
                 for w, word in enumerate(paragraph.words):
-                    wordText = ''
+                    word_text = ''
 
                     for s, symbol in enumerate(word.symbols):
-                        wordText = wordText + symbol.text
-                    paraText = paraText + wordText
+                        word_text = word_text + symbol.text
 
-                blockText = blockText + paraText
-                print('\n--\nContent Block: {}'.format(blockText))
+                    para_text = para_text + word_text
+
+                block_text = block_text + para_text
+                print('\n--\nContent Block: {}'.format(block_text))
                 print('Block Bounding Box:\n{}'.format(block.bounding_box))
 
-            pageText = pageText + blockText
+            page_text = page_text + block_text
 
-        print('Page Content:\n{}'.format(pageText))
+        print('Page Content:\n{}'.format(page_text))
         print('Page Dimensions: w: {} h: {}'.format(page.width, page.height))
 
 
@@ -428,28 +429,29 @@ def detect_document_uri(uri):
     document = image.detect_full_text()
 
     for b, page in enumerate(document.pages):
-        pageText = ''
+        page_text = ''
 
         for bb, block in enumerate(page.blocks):
-            blockText = ''
+            block_text = ''
 
             for p, paragraph in enumerate(block.paragraphs):
-                paraText = ''
+                para_text = ''
 
                 for w, word in enumerate(paragraph.words):
-                    wordText = ''
+                    word_text = ''
 
                     for s, symbol in enumerate(word.symbols):
-                        wordText = wordText + symbol.text
-                    paraText = paraText + wordText
+                        word_text = word_text + symbol.text
 
-                blockText = blockText + paraText
-                print('\n--\nContent Block: {}'.format(blockText))
+                    para_text = para_text + word_text
+
+                block_text = block_text + para_text
+                print('\n--\nContent Block: {}'.format(block_text))
                 print('Block Bounding Box:\n{}'.format(block.bounding_box))
 
-            pageText = pageText + blockText
+            page_text = page_text + block_text
 
-        print('Page Content:\n{}'.format(pageText))
+        print('Page Content:\n{}'.format(page_text))
         print('Page Dimensions: w: {} h: {}'.format(page.width, page.height))
 
 
