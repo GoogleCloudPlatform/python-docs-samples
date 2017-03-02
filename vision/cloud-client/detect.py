@@ -270,7 +270,7 @@ def detect_properties_uri(uri):
 
 
 def detect_web(path):
-    """detects web annotations given an image."""
+    """Detects web annotations given an image."""
     vision_client = vision.Client()
 
     with io.open(path, 'rb') as image_file:
@@ -312,7 +312,7 @@ def detect_web(path):
 
 
 def detect_web_uri(uri):
-    """detects web annotations in the file located in google cloud storage."""
+    """Detects web annotations in the file located in Google Cloud Storage."""
     vision_client = vision.Client()
     image = vision_client.image(source_uri=uri)
 
@@ -350,7 +350,7 @@ def detect_web_uri(uri):
 
 
 def detect_crop_hints(path):
-    """detects crop hints in an image."""
+    """Detects crop hints in an image."""
     vision_client = vision.Client()
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
@@ -368,7 +368,7 @@ def detect_crop_hints(path):
 
 
 def detect_crop_hints_uri(uri):
-    """detects crop hints in the file located in google cloud storage."""
+    """Detects crop hints in the file located in Google Cloud Storage."""
     vision_client = vision.Client()
     image = vision_client.image(source_uri=uri)
 
@@ -382,8 +382,8 @@ def detect_crop_hints_uri(uri):
         print('bounds: {}'.format(','.join(vertices)))
 
 
-def detect_fulltext(path):
-    """extracts full text from an image."""
+def detect_document(path):
+    """Detects document features in an image."""
     vision_client = vision.Client()
 
     with io.open(path, 'rb') as image_file:
@@ -391,45 +391,68 @@ def detect_fulltext(path):
 
     image = vision_client.image(content=content)
 
-    fulltext = image.detect_full_text()
+    document = image.detect_full_text()
 
-    for b, page in enumerate(fulltext.pages):
-        print(page.width)
+    for b, page in enumerate(document.pages):
+        page_text = ''
+
         for bb, block in enumerate(page.blocks):
-            print('Block: {}'.format(block.bounding_box))
-            print('Type: {}'.format(dir(block)))
-            print('Type: {}'.format(block.block_type))
+            block_text = ''
+
             for p, paragraph in enumerate(block.paragraphs):
-                print('\tParagraph: ({})'.format(paragraph.bounding_box))
-                print('\twords: ({})'.format((paragraph.words)))
+                para_text = ''
+
                 for w, word in enumerate(paragraph.words):
+                    word_text = ''
+
                     for s, symbol in enumerate(word.symbols):
-                        print('\t\t\t$:{}'.format(symbol.text))
+                        word_text = word_text + symbol.text
 
-    print(fulltext.text)
+                    para_text = para_text + word_text
+
+                block_text = block_text + para_text
+                print('\n--\nContent Block: {}'.format(block_text))
+                print('Block Bounding Box:\n{}'.format(block.bounding_box))
+
+            page_text = page_text + block_text
+
+        print('Page Content:\n{}'.format(page_text))
+        print('Page Dimensions: w: {} h: {}'.format(page.width, page.height))
 
 
-def detect_fulltext_uri(uri):
-    """extracts full text in the file located in google cloud storage."""
+def detect_document_uri(uri):
+    """Detects document features in the file located in Google Cloud
+    Storage."""
     vision_client = vision.Client()
     image = vision_client.image(source_uri=uri)
 
-    fulltext = image.detect_full_text()
+    document = image.detect_full_text()
 
-    for b, page in enumerate(fulltext.pages):
-        print(page.width)
+    for b, page in enumerate(document.pages):
+        page_text = ''
+
         for bb, block in enumerate(page.blocks):
-            print('Block: {}'.format(block.bounding_box))
-            print('Type: {}'.format(dir(block)))
-            print('Type: {}'.format(block.block_type))
-            for p, paragraph in enumerate(block.paragraphs):
-                print('\tParagraph: ({})'.format(paragraph.bounding_box))
-                print('\twords: ({})'.format((paragraph.words)))
-                for w, word in enumerate(paragraph.words):
-                    for s, symbol in enumerate(word.symbols):
-                        print('\t\t\t$:{}'.format(symbol.text))
+            block_text = ''
 
-    print(fulltext.text)
+            for p, paragraph in enumerate(block.paragraphs):
+                para_text = ''
+
+                for w, word in enumerate(paragraph.words):
+                    word_text = ''
+
+                    for s, symbol in enumerate(word.symbols):
+                        word_text = word_text + symbol.text
+
+                    para_text = para_text + word_text
+
+                block_text = block_text + para_text
+                print('\n--\nContent Block: {}'.format(block_text))
+                print('Block Bounding Box:\n{}'.format(block.bounding_box))
+
+            page_text = page_text + block_text
+
+        print('Page Content:\n{}'.format(page_text))
+        print('Page Dimensions: w: {} h: {}'.format(page.width, page.height))
 
 
 def run_local(args):
@@ -451,8 +474,8 @@ def run_local(args):
         detect_web(args.path)
     elif args.command == 'crophints':
         detect_crop_hints(args.path)
-    elif args.command == 'fulltext':
-        detect_fulltext(args.path)
+    elif args.command == 'document':
+        detect_document(args.path)
 
 
 def run_uri(args):
@@ -474,8 +497,8 @@ def run_uri(args):
         detect_web_uri(args.uri)
     elif args.command == 'crophints-uri':
         detect_crop_hints_uri(args.uri)
-    elif args.command == 'fulltext-uri':
-        detect_fulltext_uri(args.uri)
+    elif args.command == 'document-uri':
+        detect_document_uri(args.uri)
 
 
 if __name__ == '__main__':
@@ -560,13 +583,13 @@ if __name__ == '__main__':
         'crophints-uri', help=detect_crop_hints_uri.__doc__)
     crop_hints_uri_parser.add_argument('uri')
 
-    fulltext_parser = subparsers.add_parser(
-        'fulltext', help=detect_fulltext.__doc__)
-    fulltext_parser.add_argument('path')
+    document_parser = subparsers.add_parser(
+        'document', help=detect_document.__doc__)
+    document_parser.add_argument('path')
 
-    fulltext_uri_parser = subparsers.add_parser(
-        'fulltext-uri', help=detect_fulltext_uri.__doc__)
-    fulltext_uri_parser.add_argument('uri')
+    document_uri_parser = subparsers.add_parser(
+        'document-uri', help=detect_document_uri.__doc__)
+    document_uri_parser.add_argument('uri')
 
     args = parser.parse_args()
 
