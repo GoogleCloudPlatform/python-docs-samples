@@ -17,7 +17,7 @@ import os
 import detect
 
 
-def test_labels(capsys):
+def test_labels(cloud_config, capsys):
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/wakeupcat.jpg')
@@ -26,14 +26,15 @@ def test_labels(capsys):
     assert 'Labels' in out
 
 
-def test_labels_uri(capsys):
-    file_name = 'gs://python-docs-samples-tests/vision/wakeupcat.jpg'
+def test_labels_uri(cloud_config, capsys):
+    file_name = ('gs://{}/vision/wakeupcat.jpg'.format(
+                 cloud_config.storage_bucket))
     detect.detect_labels_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'Labels' in out
 
 
-def test_landmarks(capsys):
+def test_landmarks(cloud_config, capsys):
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/landmark.jpg')
@@ -42,14 +43,15 @@ def test_landmarks(capsys):
     assert 'Palace' in out
 
 
-def test_landmarks_uri(capsys):
-    file_name = 'gs://python-docs-samples-tests/vision/landmark.jpg'
+def test_landmarks_uri(cloud_config, capsys):
+    file_name = ('gs://{}/vision/landmark.jpg'.format(
+                 cloud_config.storage_bucket))
     detect.detect_landmarks_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'Palace' in out
 
 
-def test_faces(capsys):
+def test_faces(cloud_config, capsys):
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/face_no_surprise.jpg')
@@ -58,14 +60,15 @@ def test_faces(capsys):
     assert 'Likelihood.POSSIBLE' in out
 
 
-def test_faces_uri(capsys):
-    file_name = 'gs://python-docs-samples-tests/vision/face_no_surprise.jpg'
+def test_faces_uri(cloud_config, capsys):
+    file_name = ('gs://{}/vision/face_no_surprise.jpg'.format(
+                 cloud_config.storage_bucket))
     detect.detect_faces_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'Likelihood.POSSIBLE' in out
 
 
-def test_logos(capsys):
+def test_logos(cloud_config, capsys):
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/logos.png')
@@ -74,14 +77,15 @@ def test_logos(capsys):
     assert 'Google' in out
 
 
-def test_logos_uri(capsys):
-    file_name = 'gs://python-docs-samples-tests/vision/logos.png'
+def test_logos_uri(cloud_config, capsys):
+    file_name = ('gs://{}/vision/logos.png'.format(
+                 cloud_config.storage_bucket))
     detect.detect_logos_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'Google' in out
 
 
-def test_safe_search(capsys):
+def test_safe_search(cloud_config, capsys):
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/wakeupcat.jpg')
@@ -90,14 +94,15 @@ def test_safe_search(capsys):
     assert 'Likelihood.VERY_LIKELY' in out
 
 
-def test_safe_search_uri(capsys):
-    file_name = 'gs://python-docs-samples-tests/vision/wakeupcat.jpg'
+def test_safe_search_uri(cloud_config, capsys):
+    file_name = ('gs://{}/vision/wakeupcat.jpg'.format(
+                 cloud_config.storage_bucket))
     detect.detect_safe_search_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'Likelihood.VERY_LIKELY' in out
 
 
-def test_detect_text(capsys):
+def test_detect_text(cloud_config, capsys):
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/text.jpg')
@@ -106,14 +111,15 @@ def test_detect_text(capsys):
     assert '37%' in out
 
 
-def test_detect_text_uri(capsys):
-    file_name = 'gs://python-docs-samples-tests/vision/text.jpg'
+def test_detect_text_uri(cloud_config, capsys):
+    file_name = ('gs://{}/vision/text.jpg'.format(
+                 cloud_config.storage_bucket))
     detect.detect_text_uri(file_name)
     out, _ = capsys.readouterr()
     assert '37%' in out
 
 
-def test_detect_properties(capsys):
+def test_detect_properties(cloud_config, capsys):
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/landmark.jpg')
@@ -122,15 +128,16 @@ def test_detect_properties(capsys):
     assert 'frac' in out
 
 
-def test_detect_properties_uri(capsys):
-    file_name = 'gs://python-docs-samples-tests/vision/landmark.jpg'
+def test_detect_properties_uri(cloud_config, capsys):
+    file_name = ('gs://{}/vision/landmark.jpg'.format(
+                 cloud_config.storage_bucket))
     detect.detect_properties_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'frac' in out
 
 
 # Vision 1.1 tests
-def test_detect_web(capsys):
+def test_detect_web(cloud_config, capsys):
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/landmark.jpg')
@@ -139,30 +146,32 @@ def test_detect_web(capsys):
     assert 'Description: Palace of Fine Arts Theatre' in out
 
 
-def test_detect_web_uri(capsys):
-    file_name = 'gs://python-docs-samples-tests/vision/landmark.jpg'
+def test_detect_web_uri(cloud_config, capsys):
+    file_name = ('gs://{}/vision/landmark.jpg'.format(
+                 cloud_config.storage_bucket))
     detect.detect_web_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'Description: Palace of Fine Arts Theatre' in out
 
 
-def test_detect_fulltext(capsys):
+def test_detect_document(cloud_config, capsys):
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/text.jpg')
-    detect.detect_fulltext(file_name)
+    detect.detect_document(file_name)
     out, _ = capsys.readouterr()
     assert '37%' in out
 
 
-def test_detect_fulltext_uri(capsys):
-    file_name = 'gs://python-docs-samples-tests/vision/text.jpg'
-    detect.detect_fulltext_uri(file_name)
+def test_detect_document_uri(cloud_config, capsys):
+    file_name = ('gs://{}/vision/text.jpg'.format(
+                 cloud_config.storage_bucket))
+    detect.detect_document_uri(file_name)
     out, _ = capsys.readouterr()
     assert '37%' in out
 
 
-def test_detect_crop_hints(capsys):
+def test_detect_crop_hints(cloud_config, capsys):
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/wakeupcat.jpg')
@@ -171,8 +180,9 @@ def test_detect_crop_hints(capsys):
     assert 'bounds: (0,0)' in out
 
 
-def test_detect_crop_hints_uri(capsys):
-    file_name = 'gs://python-docs-samples-tests/vision/wakeupcat.jpg'
+def test_detect_crop_hints_uri(cloud_config, capsys):
+    file_name = ('gs://{}/vision/wakeupcat.jpg'.format(
+                 cloud_config.storage_bucket))
     detect.detect_crop_hints_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'bounds: (0,0)' in out
