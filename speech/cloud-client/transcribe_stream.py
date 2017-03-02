@@ -1,8 +1,18 @@
 #!/usr/bin/env python
 
-# author: Yogesh Garg
-# email: yogeshg91@gmail.com
-# github: yogeshg
+# Copyright 2017 Google Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 """Google Cloud Speech API sample application for transcribing audio streams
 
@@ -14,25 +24,27 @@ sources:
 
 """
 
+# [START import_libraries]
 import logging
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
 from google.cloud import speech
+# [END import_libraries]
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 SAMPLE_RATE=16000
 speech_client = speech.Client()
 
 def transcribe_stream(stream):
     logging.debug('{} is closed: {}'.format(str(stream), stream.closed))
 
-    sample = speech_client.sample( stream=stream,
+    sample = speech_client.sample(stream=stream,
                                     encoding=speech.Encoding.LINEAR16,
                                     sample_rate=SAMPLE_RATE)
     results = list(sample.streaming_recognize())
-    print 'results len:{}'
-    for r in results:
-        for a in r.alternatives:
-            print a.confidence, a.transcript
+    print('results len:{}'.format(len(results)))
+    for result in results:
+        for alternative in result.alternatives:
+            print(str(alternative.confidence)+' '+str(alternative.transcript))
 
 def main(args):
     with open(args.filename, 'rb') as stream:
@@ -47,5 +59,5 @@ def parse_args():
 
 if __name__ == '__main__':
     args = parse_args()
-    main( args )
+    main(args)
 
