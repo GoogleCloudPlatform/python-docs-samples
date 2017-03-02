@@ -146,18 +146,18 @@ def test_detect_web_uri(capsys):
     assert 'Description: Palace of Fine Arts Theatre' in out
 
 
-def test_detect_fulltext(capsys):
+def test_detect_document(capsys):
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/text.jpg')
-    detect.detect_fulltext(file_name)
+    detect.detect_document(file_name)
     out, _ = capsys.readouterr()
     assert '37%' in out
 
 
-def test_detect_fulltext_uri(capsys):
+def test_detect_document_uri(capsys):
     file_name = 'gs://python-docs-samples-tests/vision/text.jpg'
-    detect.detect_fulltext_uri(file_name)
+    detect.detect_document_uri(file_name)
     out, _ = capsys.readouterr()
     assert '37%' in out
 
