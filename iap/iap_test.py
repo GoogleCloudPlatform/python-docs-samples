@@ -1,0 +1,47 @@
+# Copyright 2016 Google Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""Test script for Identity-Aware Proxy code samples."""
+import os
+
+from gcp.testing.flaky import flaky
+
+import make_iap_request
+import validate_jwt
+
+
+# The hostname of an application protected by Identity-Aware Proxy.
+# When a request is made to https://${JWT_REFLECT_HOSTNAME}/, the
+# application should respond with the value of the
+# X-Goog-Authenticated-User-JWT (and nothing else.) The
+# app_engine_app/ subdirectory contains an App Engine standard
+# environment app that does this.
+GOOGLE_CLOUD_PROJECT = os.getenv('GOOGLE_CLOUD_PROJECT')
+assert GOOGLE_CLOUD_PROJECT
+JWT_REFLECT_HOSTNAME = '{}.appspot.com'.format(GOOGLE_CLOUD_PROJECT)
+
+
+@flaky
+def test_main(cloud_config, capsys):
+    # JWTs are obtained by IAP-protected applications whenever an
+    # end-user makes a request.  We've set up an app that echoes back
+    # the JWT in order to expose it to this test.  Thus, this test
+    # exercises both make_iap_request and validate_jwt.
+    iap_jwt = make_iap_request.make_iap_request(
+        'https://{}/'.format(JWT_REFLECT_HOSTNAME))
+    jwt_validation_result = validate_jwt.validate_iap_jwt(
+        'https://{}'.format(JWT_REFLECT_HOSTNAME), iap_jwt)
+    assert jwt_validation_result[0]
+    assert jwt_validation_result[1]
+    assert not jwt_validation_result[2]
