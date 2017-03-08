@@ -19,29 +19,30 @@ import pytest
 import analyze
 
 
-# TODO: use `cloud_config` fixture instead of hardcoding
-LABEL_FILE_LOCATION = 'gs://python-docs-samples-tests/video/cat.mp4'
-FACES_FILE_LOCATION = 'gs://python-docs-samples-tests/video/gbike.mp4'
-SHOTS_FILE_LOCATION = (
-    'gs://python-docs-samples-tests/video/gbikes_dinosaur.mp4')
+LABEL_FILE_PATH = '/video/cat.mp4'
+FACES_FILE_PATH = '/video/gbike.mp4'
+SHOTS_FILE_PATH = '/video/gbikes_dinosaur.mp4'
 
 
 @pytest.mark.slow
-def test_cat_video_shots(capsys):
-    analyze.analyze_shots(SHOTS_FILE_LOCATION)
+def test_cat_video_shots(capsys, cloud_config):
+    analyze.analyze_shots(
+        'gs://{}{}'.format(cloud_config.bucket, SHOTS_FILE_PATH))
     out, _ = capsys.readouterr()
     assert 'Scene 1:' in out
 
 
 @pytest.mark.slow
-def test_cat_video_faces(capsys):
-    analyze.analyze_faces(FACES_FILE_LOCATION)
+def test_cat_video_faces(capsys, cloud_config):
+    analyze.analyze_faces(
+        'gs://{}{}'.format(cloud_config.bucket, FACES_FILE_PATH))
     out, _ = capsys.readouterr()
     assert 'Thumbnail' in out
 
 
 @pytest.mark.slow
-def test_cat_video_labels(capsys):
-    analyze.analyze_labels(LABEL_FILE_LOCATION)
+def test_cat_video_labels(capsys, cloud_config):
+    analyze.analyze_labels(
+        'gs://{}{}'.format(cloud_config.bucket, LABELS_FILE_PATH)
     out, _ = capsys.readouterr()
     assert 'Whiskers' in out
