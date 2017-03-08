@@ -19,7 +19,7 @@ import pytest
 import analyze
 
 
-LABEL_FILE_PATH = '/video/cat.mp4'
+LABELS_FILE_PATH = '/video/cat.mp4'
 FACES_FILE_PATH = '/video/gbike.mp4'
 SHOTS_FILE_PATH = '/video/gbikes_dinosaur.mp4'
 
