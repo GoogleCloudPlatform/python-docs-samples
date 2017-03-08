@@ -43,6 +43,6 @@ def test_cat_video_faces(capsys, cloud_config):
 @pytest.mark.slow
 def test_cat_video_labels(capsys, cloud_config):
     analyze.analyze_labels(
-        'gs://{}{}'.format(cloud_config.bucket, LABELS_FILE_PATH)
+        'gs://{}{}'.format(cloud_config.bucket, LABELS_FILE_PATH))
     out, _ = capsys.readouterr()
     assert 'Whiskers' in out
