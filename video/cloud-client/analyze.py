@@ -53,9 +53,10 @@ def analyze_faces(path):
         print('Thumbnail size: {}'.format(len(face.thumbnail)))
 
         for segment_id, segment in enumerate(face.segments):
-            print('Track {}: {} to {}'.format(segment_id,
-                  segment.start_time_offset,
-                  segment.end_time_offset))
+            print('Track {}: {} to {}'.format(
+                segment_id,
+                segment.start_time_offset,
+                segment.end_time_offset))
 
 
 def analyze_labels(path):
@@ -81,9 +82,10 @@ def analyze_labels(path):
         print('Locations:')
 
         for l, location in enumerate(label.locations):
-            print('\t{}: {} to {}'.format(l,
-                                          location.segment.start_time_offset,
-                                          location.segment.end_time_offset))
+            print('\t{}: {} to {}'.format(
+                l,
+                location.segment.start_time_offset,
+                location.segment.end_time_offset))
 
 
 def analyze_shots(path):
@@ -105,9 +107,10 @@ def analyze_shots(path):
     shots = operation.result().annotation_results[0]
 
     for note, shot in enumerate(shots.shot_annotations):
-        print('Scene {}: {} to {}'.format(note,
-                                          shot.start_time_offset,
-                                          shot.end_time_offset))
+        print('Scene {}: {} to {}'.format(
+            note,
+            shot.start_time_offset,
+            shot.end_time_offset))
 
 
 if __name__ == '__main__':
