@@ -1,5 +1,5 @@
 Flask==0.12
-Flask-SQLAlchemy==2.1
-gunicorn==19.6.0
+Flask-SQLAlchemy==2.2
+gunicorn==19.7.0
 PyMySQL==0.7.10
-psycopg2==2.6.2
+psycopg2==2.7

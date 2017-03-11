@@ -1,2 +1,2 @@
 MySQL-python==1.2.5
-Django==1.10.5
+Django==1.10.6
