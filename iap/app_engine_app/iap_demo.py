@@ -35,11 +35,12 @@ app = flask.Flask(__name__)
 
 @app.route('/')
 def echo_jwt():
-    return flask.request.headers.get('x-goog-authenticated-user-jwt')
+    return 'x-goog-authenticated-user-jwt: {}'.format(
+        flask.request.headers.get('x-goog-authenticated-user-jwt'))
 
 
 @app.route('/identity')
 def show_identity():
     user = users.get_current_user()
-    return '<p>Authenticated as {} ({}).</p>'.format(
+    return 'Authenticated as {} ({})'.format(
         user.email(), user.user_id())
