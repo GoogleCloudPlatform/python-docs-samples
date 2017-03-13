@@ -27,7 +27,7 @@ SHOTS_FILE_PATH = '/video/gbikes_dinosaur.mp4'
 @pytest.mark.slow
 def test_cat_video_shots(capsys, cloud_config):
     analyze.analyze_shots(
-        'gs://{}{}'.format(cloud_config.bucket, SHOTS_FILE_PATH))
+        'gs://{}{}'.format(cloud_config.storage_bucket, SHOTS_FILE_PATH))
     out, _ = capsys.readouterr()
     assert 'Scene 1:' in out
 
@@ -35,7 +35,7 @@ def test_cat_video_shots(capsys, cloud_config):
 @pytest.mark.slow
 def test_cat_video_faces(capsys, cloud_config):
     analyze.analyze_faces(
-        'gs://{}{}'.format(cloud_config.bucket, FACES_FILE_PATH))
+        'gs://{}{}'.format(cloud_config.storage_bucket, FACES_FILE_PATH))
     out, _ = capsys.readouterr()
     assert 'Thumbnail' in out
 
@@ -43,6 +43,6 @@ def test_cat_video_faces(capsys, cloud_config):
 @pytest.mark.slow
 def test_cat_video_labels(capsys, cloud_config):
     analyze.analyze_labels(
-        'gs://{}{}'.format(cloud_config.bucket, LABELS_FILE_PATH))
+        'gs://{}{}'.format(cloud_config.storage_bucket, LABELS_FILE_PATH))
     out, _ = capsys.readouterr()
     assert 'Whiskers' in out

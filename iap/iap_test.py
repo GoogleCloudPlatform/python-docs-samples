@@ -13,13 +13,11 @@
 # limitations under the License.
 
 """Test script for Identity-Aware Proxy code samples."""
-import os
 
 from gcp.testing.flaky import flaky
 
 import make_iap_request
 import validate_jwt
-
 
 # The hostname of an application protected by Identity-Aware Proxy.
 # When a request is made to https://${JWT_REFLECT_HOSTNAME}/, the
@@ -27,9 +25,9 @@ import validate_jwt
 # X-Goog-Authenticated-User-JWT (and nothing else.) The
 # app_engine_app/ subdirectory contains an App Engine standard
 # environment app that does this.
-GOOGLE_CLOUD_PROJECT = os.getenv('GOOGLE_CLOUD_PROJECT')
-assert GOOGLE_CLOUD_PROJECT
-JWT_REFLECT_HOSTNAME = '{}.appspot.com'.format(GOOGLE_CLOUD_PROJECT)
+# The project must have the service account used by this test added as a
+# member of the project.
+REFLECT_SERVICE_HOSTNAME = 'gcp-devrel-iap-reflect.appspot.com'
 
 
 @flaky
@@ -39,9 +37,11 @@ def test_main(cloud_config, capsys):
     # the JWT in order to expose it to this test.  Thus, this test
     # exercises both make_iap_request and validate_jwt.
     iap_jwt = make_iap_request.make_iap_request(
-        'https://{}/'.format(JWT_REFLECT_HOSTNAME))
+        'https://{}/'.format(REFLECT_SERVICE_HOSTNAME))
+    iap_jwt = iap_jwt.split(': ').pop()
     jwt_validation_result = validate_jwt.validate_iap_jwt(
-        'https://{}'.format(JWT_REFLECT_HOSTNAME), iap_jwt)
+        'https://{}'.format(REFLECT_SERVICE_HOSTNAME), iap_jwt)
+
     assert jwt_validation_result[0]
     assert jwt_validation_result[1]
     assert not jwt_validation_result[2]
