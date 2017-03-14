@@ -153,7 +153,7 @@ def main(project, model, version=None, force_tfrecord=False):
                     census_to_example_bytes(e)
                     for e in user_input
                 ]
-                result = predict_tf_records(
+                result = predict_examples(
                     project, model, example_bytes_list, version=version)
             else:
                 result = predict_json(

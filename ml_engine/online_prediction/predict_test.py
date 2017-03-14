@@ -54,7 +54,8 @@ def test_predict_json():
 
 def test_predict_json_error():
     with pytest.raises(RuntimeError):
-        predict.predict_json(PROJECT, MODEL, [{"foo": "bar"}], version=JSON_VERSION)
+        predict.predict_json(
+            PROJECT, MODEL, [{"foo": "bar"}], version=JSON_VERSION)
 
 
 @pytest.mark.slow
