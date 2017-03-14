@@ -62,10 +62,10 @@ def predict_json(project, model, instances, version=None):
 
 
 # [START predict_tf_records]
-def predict_tf_records(project,
-                       model,
-                       example_bytes_list,
-                       version=None):
+def predict_examples(project,
+                     model,
+                     example_bytes_list,
+                     version=None):
     """Send protocol buffer data to a deployed model for prediction.
 
     Args:
@@ -119,7 +119,7 @@ def census_to_example_bytes(json_instance):
     """
     import tensorflow as tf
     feature_dict = {}
-    for key, data in json_instance.iteritems():
+    for key, data in six.iteritems(json_instance):
         if isinstance(data, six.string_types):
             feature_dict[key] = tf.train.Feature(
                 bytes_list=tf.train.BytesList(value=[str(data)]))

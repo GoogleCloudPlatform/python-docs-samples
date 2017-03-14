@@ -22,8 +22,8 @@ import predict
 
 
 MODEL = 'census'
-VERSION = 'v1'
-TF_RECORDS_VERSION = 'v1tfrecord'
+JSON_VERSION = 'v1json'
+EXAMPLES_VERSION = 'v1example'
 PROJECT = 'python-docs-samples-tests'
 JSON = {
     'age': 25,
@@ -41,22 +41,20 @@ JSON = {
     'native_country': ' United-States'
 }
 EXPECTED_OUTPUT = {
-    u'probabilities': [0.9942260384559631, 0.005774002522230148],
-    u'logits': [-5.148599147796631],
-    u'classes': 0,
-    u'logistic': [0.005774001590907574]
+    u'confidence': 0.7760371565818787,
+    u'predictions': u' <=50K'
 }
 
 
 def test_predict_json():
     result = predict.predict_json(
-        PROJECT, MODEL, [JSON, JSON], version=VERSION)
+        PROJECT, MODEL, [JSON, JSON], version=JSON_VERSION)
     assert [EXPECTED_OUTPUT, EXPECTED_OUTPUT] == result
 
 
 def test_predict_json_error():
     with pytest.raises(RuntimeError):
-        predict.predict_json(PROJECT, MODEL, [{"foo": "bar"}], version=VERSION)
+        predict.predict_json(PROJECT, MODEL, [{"foo": "bar"}], version=JSON_VERSION)
 
 
 @pytest.mark.slow
@@ -66,9 +64,8 @@ def test_census_example_to_bytes():
 
 
 @pytest.mark.slow
-@pytest.mark.xfail('Single placeholder inputs broken in service b/35778449')
-def test_predict_tfrecords():
+def test_predict_examples():
     b = predict.census_to_example_bytes(JSON)
-    result = predict.predict_tfrecords(
-        PROJECT, MODEL, [b, b], version=TF_RECORDS_VERSION)
+    result = predict.predict_examples(
+        PROJECT, MODEL, [b, b], version=EXAMPLES_VERSION)
     assert [EXPECTED_OUTPUT, EXPECTED_OUTPUT] == result
