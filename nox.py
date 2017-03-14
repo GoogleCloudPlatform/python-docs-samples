@@ -184,7 +184,13 @@ def _session_tests(session, sample):
     if os.path.exists(os.path.join(sample, 'requirements.txt')):
         session.install('-r', 'requirements.txt')
 
-    session.run('pytest', *(PYTEST_COMMON_ARGS + session.posargs))
+    session.run(
+        'pytest',
+        *(PYTEST_COMMON_ARGS + session.posargs),
+        # Pytest will return 5 when no tests are collected. This can happen
+        # on travis where slow and flaky tests are excluded.
+        # See http://doc.pytest.org/en/latest/_modules/_pytest/main.html
+        success_codes=[0, 5])
 
 
 @nox.parametrize('sample', GAE_STANDARD_SAMPLES)

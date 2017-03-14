@@ -1,0 +1,5 @@
+PyJWT==1.4.2
+cryptography==1.7.2
+google-auth==0.8.0
+requests==2.13.0
+requests_toolbelt==0.7.1
