@@ -23,7 +23,7 @@ import time
 from google.appengine.api import app_identity
 import webapp2
 
-DEFAUTL_SERVICE_ACCOUNT = 'YOUR-CLIENT-PROJECT-ID@appspot.gserviceaccount.com'
+DEFAULT_SERVICE_ACCOUNT = 'YOUR-CLIENT-PROJECT-ID@appspot.gserviceaccount.com'
 HOST = "YOUR-SERVER-PROJECT-ID.appspot.com"
 
 
@@ -41,12 +41,12 @@ def generate_jwt():
         # expires after one hour.
         "exp": now + 3600,
         # iss is the Google App Engine default service account email.
-        'iss': DEFAUTL_SERVICE_ACCOUNT,
-        'sub': DEFAUTL_SERVICE_ACCOUNT,
+        'iss': DEFAULT_SERVICE_ACCOUNT,
+        'sub': DEFAULT_SERVICE_ACCOUNT,
         # aud must match 'audience' in the security configuration in your
         # swagger spec.It can be any string.
         'aud': 'echo.endpoints.sample.google.com',
-        "email": DEFAUTL_SERVICE_ACCOUNT
+        "email": DEFAULT_SERVICE_ACCOUNT
     })
 
     headerAndPayload = '{}.{}'.format(
