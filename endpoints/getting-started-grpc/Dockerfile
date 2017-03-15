@@ -12,17 +12,10 @@ RUN virtualenv /env
 ENV VIRTUAL_ENV -p python3.5 /env
 ENV PATH /env/bin:$PATH
 
-ADD . /hello/
-
-WORKDIR /hello
-
-RUN pip install -r requirements.txt
-
-EXPOSE 8000
-
-# Copy Server
-COPY . /hello/
+COPY requirements.txt /tmp/
+RUN pip install --requirement /tmp/requirements.txt
+COPY . /tmp/
 
 ENTRYPOINT []
 
-CMD ["python", "helloworld/greeter_server.py"]
+CMD ["python", "/tmp/greeter_server.py"]

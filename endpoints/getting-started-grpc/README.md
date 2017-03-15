@@ -15,23 +15,23 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
 
     ```bash
     # Run the server:
-    python helloworld/greeter_server.py
+    python greeter_server.py
 
     # Open another command line tab and enter the virtual environment:
     source env/bin/activate
 
     # In the new command line tab, run the client:
-    python helloworld/greeter_client.py
+    python greeter_client.py
     ```
 
-1. The gRPC Services have already been generated in `helloworld/`. If you
-   change the proto, or just wish to regenerate these files, run:
+1. The gRPC Services have already been generated. If you change the proto, or
+   just wish to regenerate these files, run:
 
     ```bash
-    python -m grpc_tools.protoc -I protos --python_out=helloworld --grpc_python_out=helloworld protos/helloworld.proto
+    python -m grpc_tools.protoc -I protos --python_out=. --grpc_python_out=. protos/helloworld.proto
     ```
 
-1. Generate the `out.pb` from the proto file.
+1. Generate the `out.pb` from the proto file:
 
     ```bash
     python -m grpc_tools.protoc --include_imports --include_source_info -I protos protos/helloworld.proto --descriptor_set_out out.pb
@@ -45,10 +45,10 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
     gcloud service-management deploy out.pb api_config.yaml
     # The Config ID should be printed out, looks like: 2017-02-01r0, remember this
 
-    # set your project to make commands easier
+    # Set your project ID as a variable to make commands easier:
     GCLOUD_PROJECT=<Your Project ID>
 
-    # Print out your Config ID again, in case you missed it
+    # Print out your Config ID again, in case you missed it:
     gcloud service-management configs list --service hellogrpc.endpoints.${GCLOUD_PROJECT}.cloud.goog
     ```
 
@@ -61,30 +61,30 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
     gcloud service-management enable cloudbuild.googleapis.com
     ```
 
-1. Build a docker image for your gRPC server, store in your Registry
+1. Build a docker image for your gRPC server, and store it in your Registry:
 
     ```bash
     gcloud container builds submit --tag gcr.io/${GCLOUD_PROJECT}/python-grpc-hello:1.0 .
     ```
 
-1. Either deploy to GCE (below) or GKE (further down)
+1. Either deploy to GCE (below) or GKE (further down).
 
 ### GCE
 
-1. Enable the Compute Engine API.
+1. Enable the Compute Engine API:
 
     ```bash
     gcloud service-management enable compute-component.googleapis.com
     ```
 
-1. Create your instance and ssh in.
+1. Create your instance and ssh in:
 
     ```bash
     gcloud compute instances create grpc-host --image-family gci-stable --image-project google-containers --tags=http-server
     gcloud compute ssh grpc-host
     ```
 
-1. Set some variables to make commands easier
+1. Set some variables to make commands easier:
 
     ```bash
     GCLOUD_PROJECT=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google")
@@ -92,15 +92,15 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
     SERVICE_CONFIG_ID=<Your Config ID>
     ```
 
-1. Pull your credentials to access Container Registry, and run your
-   gRPC server container
+1. Pull your credentials to access Container Registry, and run your gRPC server
+   container:
 
     ```bash
     /usr/share/google/dockercfg_update.sh
     docker run -d --name=grpc-hello gcr.io/${GCLOUD_PROJECT}/python-grpc-hello:1.0
     ```
 
-1. Run the Endpoints proxy
+1. Run the Endpoints proxy:
 
     ```bash
     docker run --detach --name=esp \
@@ -113,19 +113,19 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
         -a grpc://grpc-hello:50051
     ```
 
-1. Back on your local machine, get the external IP of your GCE instance.
+1. Back on your local machine, get the external IP of your GCE instance:
 
     ```bash
     gcloud compute instances list
     ```
 
-1. Run the client
+1. Run the client:
 
     ```bash
-    python helloworld/greeter_client.py --host=<IP of GCE Instance>:80 --api_key=<API Key from Console>
+    python greeter_client.py --host=<IP of GCE Instance>:80 --api_key=<API Key from Console>
     ```
 
-1. Cleanup
+1. Cleanup:
 
     ```bash
     gcloud compute instances delete grpc-host
@@ -134,34 +134,44 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
 ### GKE
 
 1. Create a cluster. You can specify a different zone than us-central1-a if you
-   want.
+   want:
 
     ```bash
     gcloud container clusters create my-cluster --zone=us-central1-a
     ```
 
-1. Edit `container-engine.yaml`. Replace `SERVICE_NAME`,
-   `SERVICE_CONFIG_ID`, and `GCLOUD_PROJECT` with your values.
+1. Edit `container-engine.yaml`. Replace `SERVICE_NAME`, `SERVICE_CONFIG_ID`,
+   and `GCLOUD_PROJECT` with your values:
 
-1. Deploy to GKE
+   `SERVICE_NAME` is equal to hellogrpc.endpoints.GCLOUD_PROJECT.cloud.goog,
+   replacing GCLOUD_PROJECT with your project ID.
+
+   `SERVICE_CONFIG_ID` can be found by running the following command, replacing
+   GCLOUD_PROJECT with your project ID.
+
+   ```bash
+   gcloud service-management configs list --service hellogrpc.endpoints.GCLOUD_PROJECT.cloud.goog
+   ```
+
+1. Deploy to GKE:
 
     ```bash
     kubectl create -f ./container-engine.yaml
     ```
 
-1. Get IP of load balancer, run until you see an External IP.
+1. Get IP of load balancer, run until you see an External IP:
 
     ```bash
     kubectl get svc grpc-hello
     ```
 
-1. Run the client
+1. Run the client:
 
     ```bash
-    python helloworld/greeter_client.py <IP of GKE LoadBalancer>:80 <API Key from Console>
+    python greeter_client.py --host=<IP of GKE LoadBalancer>:80 --api_key=<API Key from Console>
     ```
 
-1. Cleanup
+1. Cleanup:
 
     ```bash
     gcloud container clusters delete my-cluster --zone=us-central1-a
