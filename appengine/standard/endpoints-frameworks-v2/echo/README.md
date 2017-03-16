@@ -8,8 +8,7 @@ Create a `lib` directory in which to install the Endpoints Frameworks v2 library
 
 Install the Endpoints Frameworks v2 library:
 
-    $ mkdir lib
-    $ pip install -t lib google-endpoints
+    $ pip install -t lib -r requirements.txt
 
 ## Deploying to Google App Engine
 
