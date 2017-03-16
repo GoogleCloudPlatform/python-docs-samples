@@ -122,7 +122,7 @@ def test_add_member_to_cryptokey_policy(capsys, cloud_config):
         .format(MEMBER, ROLE, CRYPTOKEY, KEYRING))
     assert expected in out
 
-    kms_client = googleapiclient.discovery.build('cloudkms', 'v1beta1')
+    kms_client = googleapiclient.discovery.build('cloudkms', 'v1')
     parent = 'projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}'.format(
         cloud_config.project, LOCATION, KEYRING, CRYPTOKEY)
     cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
