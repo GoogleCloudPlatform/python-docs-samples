@@ -62,7 +62,7 @@ def serve():
         while True:
             time.sleep(_ONE_DAY_IN_SECONDS)
     except KeyboardInterrupt:
-        server.stop(0)
+        server.stop(grace=0)
 
 
 if __name__ == '__main__':
