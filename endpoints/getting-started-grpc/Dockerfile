@@ -12,10 +12,10 @@ RUN virtualenv /env
 ENV VIRTUAL_ENV -p python3.5 /env
 ENV PATH /env/bin:$PATH
 
-COPY requirements.txt /tmp/
-RUN pip install --requirement /tmp/requirements.txt
-COPY . /tmp/
+COPY requirements.txt /app/
+RUN pip install --requirement /app/requirements.txt
+COPY . /app/
 
 ENTRYPOINT []
 
-CMD ["python", "/tmp/greeter_server.py"]
+CMD ["python", "/app/greeter_server.py"]

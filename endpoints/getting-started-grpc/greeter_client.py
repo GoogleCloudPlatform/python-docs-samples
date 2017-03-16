@@ -29,8 +29,6 @@
 
 """The Python implementation of the GRPC helloworld.Greeter client."""
 
-from __future__ import print_function
-
 import argparse
 
 import grpc
@@ -47,10 +45,10 @@ def run(host, api_key):
         metadata.append(('x-api-key', api_key))
     response = stub.SayHello(
         helloworld_pb2.HelloRequest(name='you'), metadata=metadata)
-    print("Greeter client received: " + response.message)
+    print('Greeter client received: ' + response.message)
     response = stub.SayHelloAgain(
         helloworld_pb2.HelloRequest(name='you'), metadata=metadata)
-    print("Greeter client received: " + response.message)
+    print('Greeter client received: ' + response.message)
 
 
 if __name__ == '__main__':

@@ -55,6 +55,9 @@ def serve():
     helloworld_pb2_grpc.add_GreeterServicer_to_server(Greeter(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
+
+    # gRPC starts a new thread to service requests. Just make the main thread
+    # sleep.
     try:
         while True:
             time.sleep(_ONE_DAY_IN_SECONDS)
