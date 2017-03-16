@@ -85,14 +85,9 @@ def main(speech_file):
         if 'done' in response and response['done']:
             break
 
-    # First print the raw json response
-    print(json.dumps(response['response'], indent=2))
-
-    # Now print the actual transcriptions
-    for result in response['response'].get('results', []):
-        print('Result:')
-        for alternative in result['alternatives']:
-            print(u'  Alternative: {}'.format(alternative['transcript']))
+    # Print the entire response
+    print(json.dumps(
+        response['response'], indent=2, encoding='utf8', ensure_ascii=False))
 
 
 # [START run_application]
