@@ -26,8 +26,8 @@ def getCropHint(path):
         content = image_file.read()
     image = vision_client.image(content=content)
 
-    # Return bounds for the first crop hint.
-    return image.detect_crop_hints()[0].bounds.vertices
+    # Return bounds for the first crop hint using an aspect ratio of 1.77.
+    return image.detect_crop_hints({1.77})[0].bounds.vertices
     # [END get_crop_hint]
 
 
