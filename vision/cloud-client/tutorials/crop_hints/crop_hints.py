@@ -91,8 +91,7 @@ if __name__ == '__main__':
 
     if args.mode == 'crop':
         crop_to_hint(args.image_file)
-
-    if args.mode == 'draw':
+    elif args.mode == 'draw':
         draw_hint(args.image_file)
     # [END run_crop]
 # [END full_tutorial]
