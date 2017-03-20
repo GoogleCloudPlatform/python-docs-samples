@@ -140,7 +140,7 @@ PYTEST_COMMON_ARGS = [
 FLAKE8_COMMON_ARGS = [
     '--show-source', '--builtin', 'gettext', '--max-complexity', '20',
     '--import-order-style', 'google',
-    '--exclude', '.nox,.cache,env,lib,generated_pb2',
+    '--exclude', '.nox,.cache,env,lib,generated_pb2,*_pb2.py,*_pb2_grpc.py',
 ]
 
 # Location of our common testing utilities. This isn't published to PyPI.
