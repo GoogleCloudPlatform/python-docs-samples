@@ -22,7 +22,7 @@ Set up your
 ## Download the Code
 
 ```
-$ git clone https://github.com/GoogleCloudPlatform/python-dev-samples.git
+$ git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
 $ cd python-docs-samples/language/sentiment
 ```
 
