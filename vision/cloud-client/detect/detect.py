@@ -356,7 +356,7 @@ def detect_crop_hints(path):
         content = image_file.read()
     image = vision_client.image(content=content)
 
-    hints = image.detect_crop_hints()
+    hints = image.detect_crop_hints({1.77})
 
     for n, hint in enumerate(hints):
         print('\nCrop Hint: {}'.format(n))
@@ -372,7 +372,7 @@ def detect_crop_hints_uri(uri):
     vision_client = vision.Client()
     image = vision_client.image(source_uri=uri)
 
-    hints = image.detect_crop_hints()
+    hints = image.detect_crop_hints({1.77})
     for n, hint in enumerate(hints):
         print('\nCrop Hint: {}'.format(n))
 
