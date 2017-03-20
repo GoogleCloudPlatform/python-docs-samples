@@ -22,7 +22,7 @@ def test_crop(cloud_config, capsys):
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/cropme.jpg')
-    crop_hints.main(file_name, 'crop')
+    crop_hints.crop_to_hint(file_name)
     out, _ = capsys.readouterr()
     assert os.path.isfile('output-crop.jpg')
 
@@ -32,6 +32,6 @@ def test_draw(cloud_config, capsys):
     file_name = os.path.join(
         os.path.dirname(__file__),
         'resources/cropme.jpg')
-    crop_hints.main(file_name, 'draw')
+    crop_hints.draw_hint(file_name)
     out, _ = capsys.readouterr()
     assert os.path.isfile('output-hint.jpg')
