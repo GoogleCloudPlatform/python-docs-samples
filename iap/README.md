@@ -29,14 +29,20 @@ These samples are used on the following documentation pages:
 
 1. Enable the IAM API on your project.
 2. Create a VM with the IAM scope:
-   ```gcloud compute instances create INSTANCE_NAME
-   --scopes=https://www.googleapis.com/auth/iam```
+   ```
+   gcloud compute instances create INSTANCE_NAME
+   --scopes=https://www.googleapis.com/auth/iam
+   ```
 3. Give your VM's default service account the `Service Account Actor` role:
-   ```gcloud projects add-iam-policy-binding PROJET_ID
+   ```
+   gcloud projects add-iam-policy-binding PROJET_ID
    --role=roles/iam.serviceAccountActor
-   --member=serviceAccount:SERVICE_ACCOUNT```
+   --member=serviceAccount:SERVICE_ACCOUNT
+   ```
 4. Install the libraries listed in `requirements.txt`, e.g. by running:
-   ```virtualenv/bin/pip install -r requirements.txt```
+   ```
+   virtualenv/bin/pip install -r requirements.txt
+   ```
 5. Copy `make_iap_request.py` into your application.
 
 ### Using a downloaded service account private key
@@ -47,7 +53,9 @@ These samples are used on the following documentation pages:
 2. Set the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the path
    to your service account's `.json` file.
 3. Install the libraries listed in `requirements.txt`, e.g. by running:
-   ```virtualenv/bin/pip install -r requirements.txt```
+   ```
+   virtualenv/bin/pip install -r requirements.txt
+   ```
 4. Copy `make_iap_request.py` into your application.
 
 If you prefer to manage service account credentials manually, this method can
@@ -64,7 +72,9 @@ of how to do this.)
 For all other environments:
 
 1. Install the libraries listed in `requirements.txt`, e.g. by running:
-   ```virtualenv/bin/pip install -r requirements.txt```
+   ```
+   virtualenv/bin/pip install -r requirements.txt
+   ```
 2. Copy `validate_jwt.py` into your application.
 
 ## Running Tests
