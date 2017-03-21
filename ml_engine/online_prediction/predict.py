@@ -122,7 +122,7 @@ def census_to_example_bytes(json_instance):
     for key, data in six.iteritems(json_instance):
         if isinstance(data, six.string_types):
             feature_dict[key] = tf.train.Feature(
-                bytes_list=tf.train.BytesList(value=[str(data)]))
+                bytes_list=tf.train.BytesList(value=[data.encode('utf-8')]))
         elif isinstance(data, float):
             feature_dict[key] = tf.train.Feature(
                 float_list=tf.train.FloatList(value=[data]))
