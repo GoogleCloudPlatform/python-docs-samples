@@ -17,7 +17,7 @@
 """Outlines document text given an image.
 
 Example:
-    python doctext.py resources/cropme.jpg
+    python doctext.py resources/text_menu.jpg
 """
 # [START full_tutorial]
 # [START imports]
@@ -38,26 +38,17 @@ class FeatureType(Enum):
     SYMBOL = 5
 
 
-def draw_boxes(im, blocks, color, width):
+def draw_boxes(image, blocks, color):
     """Draw a border around the image using the hints in the vector list."""
     # [START draw_blocks]
-    draw = ImageDraw.Draw(im)
+    draw = ImageDraw.Draw(image)
 
     for block in blocks:
-        draw.line([block.vertices[0].x, block.vertices[0].y,
-                  block.vertices[1].x, block.vertices[1].y],
-                  fill=color, width=width)
-        draw.line([block.vertices[1].x, block.vertices[1].y,
-                  block.vertices[2].x, block.vertices[2].y],
-                  fill=color, width=width)
-        draw.line([block.vertices[2].x, block.vertices[2].y,
-                  block.vertices[3].x, block.vertices[3].y],
-                  fill=color, width=width)
-        draw.line([block.vertices[3].x, block.vertices[3].y,
-                  block.vertices[0].x, block.vertices[0].y],
-                  fill=color, width=width)
-
-    return im
+        draw.polygon([block.vertices[0].x, block.vertices[0].y,
+                     block.vertices[1].x, block.vertices[1].y,
+                     block.vertices[2].x, block.vertices[2].y,
+                     block.vertices[3].x, block.vertices[3].y], None, color)
+    return image
     # [END draw_blocks]
 
 
@@ -74,15 +65,16 @@ def get_document_bounds(image_file, feature):
     image = vision_client.image(content=content)
     document = image.detect_full_text()
 
-    for b, page in enumerate(document.pages):
+    # Append specified feature bounds by enumerating all document features
+    for page in document.pages:
 
-        for bb, block in enumerate(page.blocks):
+        for block in page.blocks:
 
-            for p, paragraph in enumerate(block.paragraphs):
+            for paragraph in block.paragraphs:
 
-                for w, word in enumerate(paragraph.words):
+                for word in paragraph.words:
 
-                    for s, symbol in enumerate(word.symbols):
+                    for symbol in word.symbols:
 
                         if (feature == FeatureType.SYMBOL):
                             bounds.append(symbol.bounding_box)
@@ -105,18 +97,18 @@ def get_document_bounds(image_file, feature):
 
 def render_doc_text(filein, fileout):
     # [START render_doc_text]
-    im = Image.open(filein)
+    image = Image.open(filein)
     bounds = get_document_bounds(filein, FeatureType.PAGE)
-    draw_boxes(im, bounds, 'blue', 3)
+    draw_boxes(image, bounds, 'blue')
     bounds = get_document_bounds(filein, FeatureType.PARA)
-    draw_boxes(im, bounds, 'green', 2)
+    draw_boxes(image, bounds, 'red')
     bounds = get_document_bounds(filein, FeatureType.WORD)
-    draw_boxes(im, bounds, 'yellow', 1)
+    draw_boxes(image, bounds, 'yellow')
 
     if fileout is not 0:
-        im.save(fileout)
+        image.save(fileout)
     else:
-        im.show()
+        image.show()
     # [END render_doc_text]
 
 
@@ -129,6 +121,5 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     render_doc_text(args.detect_file, args.out_file)
-
     # [END run_crop]
 # [END full_tutorial]
