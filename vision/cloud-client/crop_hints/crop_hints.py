@@ -52,18 +52,11 @@ def draw_hint(image_file):
 
     im = Image.open(image_file)
     draw = ImageDraw.Draw(im)
-    draw.line([vects[0].x_coordinate, vects[0].y_coordinate,
-              vects[1].x_coordinate, vects[1].y_coordinate],
-              fill='red', width=3)
-    draw.line([vects[1].x_coordinate, vects[1].y_coordinate,
-              vects[2].x_coordinate, vects[2].y_coordinate],
-              fill='red', width=3)
-    draw.line([vects[2].x_coordinate, vects[2].y_coordinate,
-              vects[3].x_coordinate, vects[3].y_coordinate],
-              fill='red', width=3)
-    draw.line([vects[3].x_coordinate, vects[3].y_coordinate,
-              vects[0].x_coordinate, vects[0].y_coordinate],
-              fill='red', width=3)
+    draw.polygon([
+        vects[0].x_coordinate, vects[0].y_coordinate,
+        vects[1].x_coordinate, vects[1].y_coordinate,
+        vects[2].x_coordinate, vects[2].y_coordinate,
+        vects[3].x_coordinate, vects[3].y_coordinate], None, 'red')
     im.save('output-hint.jpg', 'JPEG')
     # [END draw_hint]
 
@@ -74,8 +67,8 @@ def crop_to_hint(image_file):
     vects = get_crop_hint(image_file)
 
     im = Image.open(image_file)
-    im2 = im.crop((vects[0].x_coordinate, vects[0].y_coordinate,
-                  vects[2].x_coordinate - 1, vects[2].y_coordinate - 1))
+    im2 = im.crop([vects[0].x_coordinate, vects[0].y_coordinate,
+                  vects[2].x_coordinate - 1, vects[2].y_coordinate - 1])
     im2.save('output-crop.jpg', 'JPEG')
     # [END crop_to_hint]
 
