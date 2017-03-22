@@ -35,7 +35,7 @@ These samples are used on the following documentation pages:
    ```
 3. Give your VM's default service account the `Service Account Actor` role:
    ```
-   gcloud projects add-iam-policy-binding PROJET_ID
+   gcloud projects add-iam-policy-binding PROJECT_ID
    --role=roles/iam.serviceAccountActor
    --member=serviceAccount:SERVICE_ACCOUNT
    ```
