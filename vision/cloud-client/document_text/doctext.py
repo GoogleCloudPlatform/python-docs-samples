@@ -44,10 +44,11 @@ def draw_boxes(image, blocks, color):
     draw = ImageDraw.Draw(image)
 
     for block in blocks:
-        draw.polygon([block.vertices[0].x, block.vertices[0].y,
-                     block.vertices[1].x, block.vertices[1].y,
-                     block.vertices[2].x, block.vertices[2].y,
-                     block.vertices[3].x, block.vertices[3].y], None, color)
+        draw.polygon([
+            block.vertices[0].x, block.vertices[0].y,
+            block.vertices[1].x, block.vertices[1].y,
+            block.vertices[2].x, block.vertices[2].y,
+            block.vertices[3].x, block.vertices[3].y], None, color)
     return image
     # [END draw_blocks]
 
@@ -65,17 +66,12 @@ def get_document_bounds(image_file, feature):
     image = vision_client.image(content=content)
     document = image.detect_full_text()
 
-    # Append specified feature bounds by enumerating all document features
+    # Collect specified feature bounds by enumerating all document features
     for page in document.pages:
-
         for block in page.blocks:
-
             for paragraph in block.paragraphs:
-
                 for word in paragraph.words:
-
                     for symbol in word.symbols:
-
                         if (feature == FeatureType.SYMBOL):
                             bounds.append(symbol.bounding_box)
 
