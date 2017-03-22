@@ -67,8 +67,8 @@ def crop_to_hint(image_file):
     vects = get_crop_hint(image_file)
 
     im = Image.open(image_file)
-    im2 = im.crop(vects[0].x_coordinate, vects[0].y_coordinate,
-                  vects[2].x_coordinate - 1, vects[2].y_coordinate - 1)
+    im2 = im.crop([vects[0].x_coordinate, vects[0].y_coordinate,
+                  vects[2].x_coordinate - 1, vects[2].y_coordinate - 1])
     im2.save('output-crop.jpg', 'JPEG')
     # [END crop_to_hint]
 
