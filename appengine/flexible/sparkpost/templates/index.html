@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <title>Google App Engine Flexible, Python and SparkPost</title>
+  <body>
+  <h1>Using SparkPost And Python On Google App Engine</h1>
+    {% if err %}
+      <p><strong>Oh dear. Something unfortunate happened:</strong></p>
+    {% endif %}
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <ul>
+        {% for msg in messages %}
+        <li>{{ msg }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    {% endwith %}
+    <p>Enter your email address below to send yourself a "hello world" message:</p>
+    <form method="post" action="/send">
+      <label for="email">Recipient email:</label> 
+      <input type="email" name="email" id="email">
+      <input type="submit" value="send email!">
+    </form>
+  </body>
+</html>
