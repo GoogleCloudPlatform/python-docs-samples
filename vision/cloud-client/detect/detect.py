@@ -393,31 +393,22 @@ def detect_document(path):
 
     document = image.detect_full_text()
 
-    for b, page in enumerate(document.pages):
-        page_text = ''
+    for page in document.pages:
+        for block in page.blocks:
+            block_words = []
+            for paragraph in block.paragraphs:
+                block_words.extend(paragraph.words)
 
-        for bb, block in enumerate(page.blocks):
+            block_symbols = []
+            for word in block_words:
+                block_symbols.extend(word.symbols)
+
             block_text = ''
+            for symbol in block_symbols:
+                block_text = block_text + symbol.text
 
-            for p, paragraph in enumerate(block.paragraphs):
-                para_text = ''
-
-                for w, word in enumerate(paragraph.words):
-                    word_text = ''
-
-                    for s, symbol in enumerate(word.symbols):
-                        word_text = word_text + symbol.text
-
-                    para_text = para_text + word_text
-
-                block_text = block_text + para_text
-                print('\n--\nContent Block: {}'.format(block_text))
-                print('Block Bounding Box:\n{}'.format(block.bounding_box))
-
-            page_text = page_text + block_text
-
-        print('Page Content:\n{}'.format(page_text))
-        print('Page Dimensions: w: {} h: {}'.format(page.width, page.height))
+            print('Block Content: {}'.format(block_text))
+            print('Block Bounds:\n {}'.format(block.bounding_box))
 
 
 def detect_document_uri(uri):
@@ -428,31 +419,22 @@ def detect_document_uri(uri):
 
     document = image.detect_full_text()
 
-    for b, page in enumerate(document.pages):
-        page_text = ''
+    for page in document.pages:
+        for block in page.blocks:
+            block_words = []
+            for paragraph in block.paragraphs:
+                block_words.extend(paragraph.words)
 
-        for bb, block in enumerate(page.blocks):
+            block_symbols = []
+            for word in block_words:
+                block_symbols.extend(word.symbols)
+
             block_text = ''
+            for symbol in block_symbols:
+                block_text = block_text + symbol.text
 
-            for p, paragraph in enumerate(block.paragraphs):
-                para_text = ''
-
-                for w, word in enumerate(paragraph.words):
-                    word_text = ''
-
-                    for s, symbol in enumerate(word.symbols):
-                        word_text = word_text + symbol.text
-
-                    para_text = para_text + word_text
-
-                block_text = block_text + para_text
-                print('\n--\nContent Block: {}'.format(block_text))
-                print('Block Bounding Box:\n{}'.format(block.bounding_box))
-
-            page_text = page_text + block_text
-
-        print('Page Content:\n{}'.format(page_text))
-        print('Page Dimensions: w: {} h: {}'.format(page.width, page.height))
+            print('Block Content: {}'.format(block_text))
+            print('Block Bounds:\n {}'.format(block.bounding_box))
 
 
 def run_local(args):
