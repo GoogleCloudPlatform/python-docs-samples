@@ -1,1 +1,2 @@
 google-cloud-storage==0.22.0
+cachetools>=2.0.0
