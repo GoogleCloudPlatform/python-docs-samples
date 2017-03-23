@@ -86,10 +86,9 @@ To run this sample:
     Demonstrates web detection using the Google Cloud Vision API.
     
     Example usage:
-    
-    python web_detect.py https://goo.gl/X4qcB6
-    python web_detect.py ../detect/resources/landmark.jpg
-    python web_detect.py gs://your-bucket/image.png
+      python web_detect.py https://goo.gl/X4qcB6
+      python web_detect.py ../detect/resources/landmark.jpg
+      python web_detect.py gs://your-bucket/image.png
     
     positional arguments:
       image_url   The image to detect, can be web URI, Google Cloud Storage, or
