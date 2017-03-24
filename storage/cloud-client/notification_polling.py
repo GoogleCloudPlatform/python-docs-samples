@@ -71,92 +71,70 @@ ACTION_STRINGS = {
 
 
 DUPLICATE_EVENT_CACHE = LRUCache(10000)
-DUPLICATION_KEY = '{event_type}|{resource}|{generation}|{metageneration}'
+DUPLICATION_KEY = '{event_type}|{resource}|{metageneration}'
 
 
-class GcsEvent(object):
-    """Represents a single event message from GCS."""
+def Summarize(message):
+    # [START parse_message]
+    data = message.data
+    attributes = message.attributes
 
-    def __init__(self, message):
-        """Initializes a GcsEvent with a Pub/Sub message."""
-        # [START parse_message]
-        data = message.data
-        attributes = message.attributes
+    # The kind of event that just happened. Example: OBJECT_FINALIZE
+    event_type = attributes['eventType']
+    event_description = ACTION_STRINGS.get(
+        event_type, 'Unknown Event %s' % event_type)
 
-        # The kind of event that just happened. Example: OBJECT_FINALIZE
-        self.event_type = attributes['eventType']
+    # ID of the bucket. Example: "my_photos"
+    bucket_id = attributes['bucketId']
+    # The ID of the affected objet. Example: "image.jpeg"
+    object_id = attributes['objectId']
+    # Generation of the object. Example: 1234567
+    generation = attributes['objectGeneration']
+    # Format of the attached payload. Example: JSON_API_V1
+    payload_format = attributes['payloadFormat']
+    description = (
+        '{summary} - {bucket_id}/{object_id}\n'
+        '\tGeneration: {generation}\n').format(
+            summary=event_description,
+            bucket_id=bucket_id,
+            object_id=object_id,
+            generation=generation)
 
-        # ID of the bucket. Example: "my_photos"
-        self.bucket_id = attributes['bucketId']
+    if payload_format == 'JSON_API_V1':
+        # The payload is the JSON API object resource.
+        object_metadata = json.loads(data)
+        size = object_metadata['size']
+        content_type = object_metadata['contentType']
+        metageneration = object_metadata['metageneration']
+        description += (
+            '\tContent type: {content_type}\n'
+            '\tSize: {object_size}\n'
+            '\tMetageneration: {metageneration}\n').format(
+                content_type=content_type,
+                object_size=size,
+                metageneration=metageneration)
+    elif payload_format == 'NONE':
+        # There is no payload.
+        pass
+    else:
+        print('Unknown payload format %s', payload_format)
+    return description
+    # [END parse_message]
 
-        # The ID of the affected objet. Example: "image.jpeg"
-        self.object_id = attributes['objectId']
 
-        # Generation of the object. Example: 1234567
-        self.generation = attributes['objectGeneration']
-
-        # The full resource name of the object.
-        # Example: projects/_/buckets/my_photos/objects/image.jpeg
-        self.object_name = attributes['resource']
-
-        # Format of the attached payload. Example: JSON_API_V1
-        self.payload_format = attributes['payloadFormat']
-
-        # ID of the notification configuration responsible for this event.
-        # Example: projects/_/buckets/my_photos/notificationConfigs/1
-        self.notification_config = attributes['notificationConfig']
-
-        if self.payload_format == 'JSON_API_V1':
-            # The payload is the JSON API object resource.
-            self.object_metadata = json.loads(data)
-            self.object_size = self.object_metadata['size']
-            self.content_type = self.object_metadata['contentType']
-            self.metageneration = self.object_metadata['metageneration']
-        elif self.payload_format == 'NONE':
-            # There is no payload.
-            self.object_metadata = None
-            self.metageneration = None
-        else:
-            print('Unknown payload format %s', self.payload_format)
-            self.object_metadata = None
-            self.metageneration = None
-        # [END parse_message]
-
-    def Summary(self):
-        """Returns a one line summary of the event."""
-        return '%s - %s/%s' % (
-            ACTION_STRINGS.get(
-                self.event_type, 'Unknown event %s' % self.event_type),
-            self.bucket_id,
-            self.object_id)
-
-    def __unicode__(self):
-        description = (
-            '{summary}\n'
-            '\tGeneration: {generation}\n').format(
-                summary=self.Summary(),
-                bucket_id=self.bucket_id,
-                object_id=self.object_id,
-                generation=self.generation)
-        if self.object_metadata:
-            description += (
-                '\tContent type: {content_type}\n'
-                '\tSize: {object_size}\n').format(
-                    content_type=self.content_type,
-                    object_size=self.object_size)
-        return description
-
-    def dup_string(self):
-        """Returns a string unique to this specific event."""
-        # GCS will publish each notification at least once to a Cloud Pub/Sub
-        # topic, and Cloud Pub/Sub will deliver each message to each
-        # subscription at least once. We must be able to safely handle
-        # occasionally receiving duplicate messages.
-        return DUPLICATION_KEY.format(
-            event_type=self.event_type,
-            resource=self.object_name,
-            generation=self.generation,
-            metageneration=self.metageneration)
+def GetDedupString(message):
+    """Returns a string unique to this specific event."""
+    # GCS will publish each notification at least once to a Cloud Pub/Sub
+    # topic, and Cloud Pub/Sub will deliver each message to each
+    # subscription at least once. We must be able to safely handle
+    # occasionally receiving duplicate messages.
+    metageneration = 'unknown'
+    if message.attributes['payloadFormat'] == 'JSON_API_V1':
+        metageneration = json.loads(message.data)['metageneration']
+    return DUPLICATION_KEY.format(
+        event_type=message.attributes['eventType'],
+        resource=message.attributes['resource'],
+        metageneration=metageneration)
 
 
 if __name__ == '__main__':
@@ -181,10 +159,11 @@ if __name__ == '__main__':
     while True:
         pulled = subscription.pull(max_messages=100)
         for ack_id, message in pulled:
-            event = GcsEvent(message)
-            if event.dup_string() in DUPLICATE_EVENT_CACHE:
-                print('[DUPLICATE] %s' % event.Summary())
+            dup_string = GetDedupString(message)
+            summary = Summarize(message)
+            if dup_string in DUPLICATE_EVENT_CACHE:
+                print('[DUPLICATE] %s' % summary)
             else:
-                DUPLICATE_EVENT_CACHE[event.dup_string()] = 1
-                print(unicode(event))
+                DUPLICATE_EVENT_CACHE[dup_string] = 1
+                print(summary)
             subscription.acknowledge([ack_id])

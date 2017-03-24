@@ -15,7 +15,8 @@
 
 from google.cloud.pubsub.message import Message
 
-from notification_polling import GcsEvent
+from notification_polling import GetDedupString
+from notification_polling import Summarize
 
 
 MESSAGE_ID = 12345
@@ -37,12 +38,14 @@ def test_parse_json_message():
             '  "metageneration": 1'
             '}')
     message = Message(data, MESSAGE_ID, attributes=attributes)
-    event = GcsEvent(message)
-    assert unicode(event) == (u'Object created - mybucket/myobject\n'
-                              '\tGeneration: 1234567\n'
-                              '\tContent type: text/html\n'
-                              '\tSize: 12345\n')
-    assert event.Summary() == 'Object created - mybucket/myobject'
+    assert Summarize(message) == ('Object created - mybucket/myobject\n'
+                                  '\tGeneration: 1234567\n'
+                                  '\tContent type: text/html\n'
+                                  '\tSize: 12345\n'
+                                  '\tMetageneration: 1\n')
+    assert GetDedupString(message) == (
+        'OBJECT_FINALIZE|projects/_/buckets/mybucket/'
+        'objects/myobject#1234567|1')
 
 
 def test_parse_no_payload_message():
@@ -57,7 +60,8 @@ def test_parse_no_payload_message():
         'payloadFormat': 'NONE'}
     data = None
     message = Message(data, MESSAGE_ID, attributes=attributes)
-    event = GcsEvent(message)
-    assert unicode(event) == (u'Object created - mybucket/myobject\n'
-                              '\tGeneration: 1234567\n')
-    assert event.Summary() == 'Object created - mybucket/myobject'
+    assert Summarize(message) == ('Object created - mybucket/myobject\n'
+                                  '\tGeneration: 1234567\n')
+    assert GetDedupString(message) == (
+        'OBJECT_FINALIZE|projects/_/buckets/mybucket/'
+        'objects/myobject#1234567|unknown')
