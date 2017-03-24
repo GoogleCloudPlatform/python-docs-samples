@@ -45,6 +45,8 @@ EXPECTED_OUTPUT = {
     u'predictions': u' <=50K'
 }
 
+BYTESTRING = b'\n\xdb\x02\n\x15\n\x0ccapital_gain\x12\x05\x1a\x03\n\x01\x00\n\x0c\n\x03age\x12\x05\x1a\x03\n\x01\x19\n\x16\n\teducation\x12\t\n\x07\n\x05 11th\n\x15\n\x0ccapital_loss\x12\x05\x1a\x03\n\x01\x00\n\x17\n\x0ehours_per_week\x12\x05\x1a\x03\n\x01(\n\x13\n\x06gender\x12\t\n\x07\n\x05 Male\n\x1e\n\x0crelationship\x12\x0e\n\x0c\n\n Own-child\n$\n\noccupation\x12\x16\n\x14\n\x12 Machine-op-inspct\n$\n\x0emarital_status\x12\x12\n\x10\n\x0e Never-married\n\x12\n\x04race\x12\n\n\x08\n\x06 Black\n$\n\x0enative_country\x12\x12\n\x10\n\x0e United-States\n\x16\n\reducation_num\x12\x05\x1a\x03\n\x01\x07\n\x19\n\tworkclass\x12\x0c\n\n\n\x08 Private'
+
 
 def test_predict_json():
     result = predict.predict_json(
@@ -64,9 +66,7 @@ def test_census_example_to_bytes():
     assert base64.b64encode(b) is not None
 
 
-@pytest.mark.slow
 def test_predict_examples():
-    b = predict.census_to_example_bytes(JSON)
     result = predict.predict_examples(
-        PROJECT, MODEL, [b, b], version=EXAMPLES_VERSION)
+        PROJECT, MODEL, [BYTESTRING, BYTESTRING], version=EXAMPLES_VERSION)
     assert [EXPECTED_OUTPUT, EXPECTED_OUTPUT] == result
