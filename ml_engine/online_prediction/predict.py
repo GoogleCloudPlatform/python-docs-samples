@@ -89,7 +89,7 @@ def predict_examples(project,
     response = service.projects().predict(
         name=name,
         body={'instances': [
-            {'b64': base64.b64encode(example_bytes)}
+            {'b64': base64.b64encode(example_bytes).decode('utf-8')}
             for example_bytes in example_bytes_list
         ]}
     ).execute()
