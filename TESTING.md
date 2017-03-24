@@ -75,16 +75,14 @@ To see a list of the available sessions:
 To run tests for a particular session, with a particular parameter, invoke nox
 with the ``-s`` flag:
 
-    nox -s "tests(interpreter='python2.7')"
+    nox -s "py35(sample='./storage/cloud-client')"
 
 To run one particular session or provide additional parameters to ``py.test``,
 invoke nox like this:
 
-    nox -s tests -- storage/cloud-client
+    nox -s "py35(sample='./storage/cloud-client')" -- -k transfer
 
 ### Adding new tests
-When adding a new top-level directory, be sure to edit ``.coveragerc`` to
-include it in coverage reporting.
 
 To add new tests that require Google App Engine, you must place them in
 the ``appengine`` directory so that the py.test fixtures needed for App
