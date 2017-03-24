@@ -14,6 +14,7 @@
 
 
 from google.cloud.pubsub.message import Message
+
 from notification_polling import GcsEvent
 
 

@@ -14,18 +14,45 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This application demonstrates how to poll a Google Cloud Pub/Sub
-subscription for notification messages, parse those messages, and
-acknowledge successful handling of them.
+"""This application demonstrates how to poll for GCS notifications from a
+Cloud Pub/Sub subscription, parse the incoming message, and acknowledge the
+successful processing of the message.
 
-For more information, see the README.md file in this directory or the
-docs at https://cloud.google.com/storage/docs/pubsub-notifications
+This application will work with any subscription configured for pull rather
+than push notifications. If you do not already have notifications configured,
+you may consult the docs at
+https://cloud.google.com/storage/docs/reporting-changes or follow the steps
+below:
 
-Example usage:
-  python notification_poller.py bucketsubscription
+1. [Activate the Google Cloud Pub/Sub API], if you have not already done so.
+2. Create a Google Cloud Storage bucket:
+
+    ```
+    $ gsutil mb gs://testbucket
+    ```
+
+3. Create a Cloud Pub/Sub topic and publish bucket notifications there:
+
+   ```
+   $ gsutil notification create -f json -t testtopic gs://testbucket
+   ```
+
+4. Create a subscription for your new topic:
+
+   ```
+   $ gcloud beta pubsub subscriptions create testsubscription --topic=testtopic
+   ```
+
+5. Run this program:
+
+   ```
+   $ python notification_polling testsubscription`
+   ```
+
+6. While the program is running, upload and delete some files in the testbucket
+   bucket (you could use the console or gsutil) and watch as changes scroll by
+   in the app.
 """
-
-from __future__ import print_function
 
 import argparse
 import json

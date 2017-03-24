@@ -1,2 +1,3 @@
 google-cloud-storage==0.22.0
+google-cloud-pubsub==0.22.0
 cachetools>=2.0.0

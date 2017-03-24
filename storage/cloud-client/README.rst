@@ -154,7 +154,7 @@ To run this sample:
     
     This application demonstrates how to manage access control lists (acls) in
     Google Cloud Storage.
-
+    
     For more information, see the README.md under /storage and the documentation
     at https://cloud.google.com/storage/docs/encryption.
     
@@ -227,10 +227,9 @@ To run this sample:
                             same key provided when uploading the blob.
         rotate              Performs a key rotation by re-writing an encrypted
                             blob with a new encryption key.
-
+    
     optional arguments:
       -h, --help            show this help message and exit
-
 
 
 Notification Polling
@@ -242,54 +241,35 @@ To run this sample:
 
 .. code-block:: bash
 
-    $ python notification_polling.py mysubsription
+    $ python notification_polling.py
 
-    usage: notification_polling.py [subscriptionId]
-
+    usage: notification_polling.py [-h] [--project PROJECT] subscription
+    
+    This application demonstrates how to poll for GCS notifications from a Cloud
+    Pub/Sub subscription, parse the incoming message, and acknowledge the
+    successful processing of the message. This application will work with any
+    subscription configured for pull rather than push notifications. If you do not
+    already have notifications configured, you may consult the docs at
+    https://cloud.google.com/storage/docs/reporting-changes or follow the steps
+    below: 1. [Activate the Google Cloud Pub/Sub API], if you have not already
+    done so. 2. Create a Google Cloud Storage bucket: ``` $ gsutil mb
+    gs://testbucket ``` 3. Create a Cloud Pub/Sub topic and publish bucket
+    notifications there: ``` $ gsutil notification create -f json -t testtopic
+    gs://testbucket ``` 4. Create a subscription for your new topic: ``` $ gcloud
+    beta pubsub subscriptions create testsubscription --topic=testtopic ``` 5. Run
+    this program: ``` $ python notification_polling testsubscription` ``` 6. While
+    the program is running, upload and delete some files in the testbucket bucket
+    (you could use the console or gsutil) and watch as changes scroll by in the
+    app.
+    
+    positional arguments:
+      subscription       The ID of the Pub/Sub subscription
+    
     optional arguments:
-      -h, --help              show this help message and exit
-      -p, --project=PROJECT   specify the subscription's project ID, rather than
-                              using the application's default project ID.
+      -h, --help         show this help message and exit
+      --project PROJECT  The project of the subscription, if not in your default
+                         project
 
-    This application demonstrates how to poll for GCS notifications from a
-    Cloud Pub/Sub subscription, parse the incoming message, and acknowledge the
-    successful processing of the message.
-
-
-This application will work with any subscription configured for pull rather than
-push notifications. If you do not already have notifications configured, you may
-consult the docs at
-https://cloud.google.com/storage/docs/reporting-changes or follow the steps
-below:
-
-1. [Activate the Google Cloud Pub/Sub API], if you have not already done so.
-2. Create a Google Cloud Storage bucket:
-
-    ```
-    $ gsutil mb gs://testbucket
-    ```
-
-3. Create a Cloud Pub/Sub topic and publish bucket notifications there:
-
-   ```
-   $ gsutil notification create -f json -t testtopic gs://testbucket
-   ```
-
-4. Create a subscription for your new topic:
-
-   ```
-   $ gcloud beta pubsub subscriptions create testsubscription --topic=testtopic
-   ```
-
-5. Run this program:
-
-   ```
-   $ python notification_polling testsubscription`
-   ```
-
-6. While the program is running, upload and delete some files in the testbucket
-   bucket (you could use the console or gsutil) and watch as changes scroll by
-   in the app.
 
 
 
@@ -309,6 +289,3 @@ to `browse the source`_ and  `report issues`_.
 
 
 .. _Google Cloud SDK: https://cloud.google.com/sdk/
-
-
-[Activate the Google Cloud Pub/Sub API]: https://console.cloud.google.com/flows/enableapi?apiid=storage_component
