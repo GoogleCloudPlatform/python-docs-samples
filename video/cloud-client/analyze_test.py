@@ -20,7 +20,7 @@ import analyze
 
 
 LABELS_FILE_PATH = '/video/cat.mp4'
-FACES_FILE_PATH = '/video/gbike.mp4'
+FACES_FILE_PATH = '/video/googlework.mp4'
 SHOTS_FILE_PATH = '/video/gbikes_dinosaur.mp4'
 
 
@@ -33,7 +33,7 @@ def test_cat_video_shots(capsys, cloud_config):
 
 
 @pytest.mark.slow
-def test_cat_video_faces(capsys, cloud_config):
+def test_work_video_faces(capsys, cloud_config):
     analyze.analyze_faces(
         'gs://{}{}'.format(cloud_config.storage_bucket, FACES_FILE_PATH))
     out, _ = capsys.readouterr()
@@ -41,7 +41,7 @@ def test_cat_video_faces(capsys, cloud_config):
 
 
 @pytest.mark.slow
-def test_cat_video_labels(capsys, cloud_config):
+def test_dino_video_labels(capsys, cloud_config):
     analyze.analyze_labels(
         'gs://{}{}'.format(cloud_config.storage_bucket, LABELS_FILE_PATH))
     out, _ = capsys.readouterr()
