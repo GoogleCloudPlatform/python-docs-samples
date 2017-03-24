@@ -15,6 +15,7 @@
 """Tests for predict.py ."""
 
 import json
+
 import pytest
 
 import predict
