@@ -14,7 +14,6 @@
 
 """Tests for predict.py ."""
 
-import base64
 import json
 import pytest
 
@@ -53,8 +52,10 @@ def test_predict_json_error():
 
 @pytest.mark.slow
 def test_census_example_to_bytes():
+    import tensorflow as tf
     b = predict.census_to_example_bytes(JSON)
-    assert base64.b64encode(b) is not None
+    assert tf.train.Example.FromString(b) == tf.train.Example.FromString(
+        BYTESTRING)
 
 
 def test_predict_examples():
