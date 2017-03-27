@@ -10,6 +10,8 @@ You can also [read the SparkPost documentation here](https://developers.sparkpos
 
 ### Prerequisites
 
+ - a [Google Cloud Platform](https://cloud.google.com/) account
+ - the [Google Cloud SDK](https://cloud.google.com/sdk/) installed and configured
 
 ### Setup
 
