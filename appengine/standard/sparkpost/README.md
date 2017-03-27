@@ -6,13 +6,12 @@
 
 This sample app demonstrates how to send email with Python and [python-sparkpost](https://github.com/SparkPost/python-sparkpost) on the Google App Engine standard environment.
 
-You can also [read the SparkPost documentation](https://developers.sparkpost.com/).
+You can also [read the SparkPost documentation here](https://developers.sparkpost.com/).
+
+### Prerequisites
+
 
 ### Setup
-
-Prerequisites:
- - a [Google Cloud Platform](https://cloud.google.com/) account
- - the [Google Cloud SDK](https://cloud.google.com/sdk/) installed and configured
 
 1. Sign up for a SparkPost account [here](https://app.sparkpost.com/sign-up).
 
@@ -28,26 +27,24 @@ Prerequisites:
 
 ### Running Locally
 
-1. Run the service using the Google Cloud SDK dev app server:
-
+1. Run the app using the Google Cloud SDK dev app server:
     ```sh
     $GCLOUD_SDK/bin/dev_appserver.py app.yaml
     ```
 
-1. Visit the service in your browser: [http://localhost:8080/](http://localhost:8080/)
+1. Visit the app in your browser: [http://localhost:8080/](http://localhost:8080/)
 
-## Deploying To Google App Engine
-
+### Deploying To Google App Engine
 
 1. Deploy the app and dependencies to your Google Cloud project:
-
     ```sh
     gcloud app deploy
     ```
 
-1. Visit the app in your browser: `https://your-app-id.appspot.com/`
-
-Note: you can find your app ID from the output of `gcloud app describe`.
+1. Visit the app in your browser: 
+    ```sh
+    gcloud app browse
+    ```
 
 ### Running The Tests
 
@@ -57,5 +54,4 @@ pytest .
 ```
 
 [sparkpost]: https://www.sparkpost.com/
-[sparkpost-python-tutorial]: tbd
 
