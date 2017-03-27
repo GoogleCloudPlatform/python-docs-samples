@@ -87,17 +87,18 @@ def summarize(message):
     # [END parse_message]
 
 
-def poll_notifications(project, subscription_id):
+def poll_notifications(subscription_id):
     """Polls a Cloud Pub/Sub subscription for new GCS events for display."""
     # [BEGIN poll_notifications]
-    client = pubsub.Client(project=args.project)
+    client = pubsub.Client()
     subscription = pubsub.subscription.Subscription(
         subscription_id, client=client)
+
     if not subscription.exists():
         sys.stderr.write('Cannot find subscription {0}\n'.format(sys.argv[1]))
-        sys.exit(1)
+        return
 
-    print('Polling for messages.')
+    print('Polling for messages. Press ctrl+c to exit.')
     while True:
         pulled = subscription.pull(max_messages=100)
         for ack_id, message in pulled:
@@ -110,10 +111,7 @@ def poll_notifications(project, subscription_id):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__)
-    parser.add_argument(
-        '--project',
-        help='The project of the subscription, if not in your default project')
     parser.add_argument('subscription',
                         help='The ID of the Pub/Sub subscription')
     args = parser.parse_args()
-    poll_notifications(args.project, args.subscription)
+    poll_notifications(args.subscription)
