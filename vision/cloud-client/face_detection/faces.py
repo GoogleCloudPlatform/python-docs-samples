@@ -17,7 +17,6 @@
 """Draws squares around faces in the given image."""
 
 import argparse
-import base64
 
 from google.cloud import vision
 from PIL import Image, ImageDraw
@@ -54,7 +53,6 @@ def highlight_faces(image, faces, output_filename):
     draw = ImageDraw.Draw(im)
 
     for face in faces:
-        print(dir(face.bounds.vertices))
         box = [(bound.x_coordinate, bound.y_coordinate)
                for bound in face.bounds.vertices]
         draw.line(box + [box[0]], width=5, fill='#00ff00')
