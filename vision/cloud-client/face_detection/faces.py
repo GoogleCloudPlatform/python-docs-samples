@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Draws squares around faces in the given image."""
+"""Draws squares around detected faces in the given image."""
 
 import argparse
 
