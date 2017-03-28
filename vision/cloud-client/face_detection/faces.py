@@ -14,20 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Draws squares around faces in the given image."""
+"""Draws squares around detected faces in the given image."""
 
 import argparse
-import base64
 
-import googleapiclient.discovery
-from PIL import Image
-from PIL import ImageDraw
-
-
-# [START get_vision_service]
-def get_vision_service():
-    return googleapiclient.discovery.build('vision', 'v1')
-# [END get_vision_service]
+from google.cloud import vision
+from PIL import Image, ImageDraw
 
 
 def detect_face(face_file, max_results=4):
@@ -37,26 +29,14 @@ def detect_face(face_file, max_results=4):
         face_file: A file-like object containing an image with faces.
 
     Returns:
-        An array of dicts with information about the faces in the picture.
+        An array of Face objects with information about the picture.
     """
-    image_content = face_file.read()
-    batch_request = [{
-        'image': {
-            'content': base64.b64encode(image_content).decode('utf-8')
-            },
-        'features': [{
-            'type': 'FACE_DETECTION',
-            'maxResults': max_results,
-            }]
-        }]
+    content = face_file.read()
+    # [START get_vision_service]
+    image = vision.Client().image(content=content)
+    # [END get_vision_service]
 
-    service = get_vision_service()
-    request = service.images().annotate(body={
-        'requests': batch_request,
-        })
-    response = request.execute()
-
-    return response['responses'][0]['faceAnnotations']
+    return image.detect_faces()
 
 
 def highlight_faces(image, faces, output_filename):
@@ -73,8 +53,8 @@ def highlight_faces(image, faces, output_filename):
     draw = ImageDraw.Draw(im)
 
     for face in faces:
-        box = [(v.get('x', 0.0), v.get('y', 0.0))
-               for v in face['fdBoundingPoly']['vertices']]
+        box = [(bound.x_coordinate, bound.y_coordinate)
+               for bound in face.bounds.vertices]
         draw.line(box + [box[0]], width=5, fill='#00ff00')
 
     im.save(output_filename)
