@@ -37,6 +37,7 @@ def transcribe_streaming(stream_file):
             encoding=speech.encoding.Encoding.LINEAR16,
             sample_rate=16000)
         alternatives = audio_sample.streaming_recognize()
+
         for alternative in alternatives:
             print('Finished: {}'.format(alternative.is_final))
             print('Stability: {}'.format(alternative.stability))
