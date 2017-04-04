@@ -19,7 +19,7 @@ from oauth2client.client import GoogleCredentials
 import installed_app
 
 PROJECT = os.environ['GCLOUD_PROJECT']
-CLIENT_SECRETS = os.environ['CLIENT_SECRETS']
+CLIENT_SECRETS = os.environ['GOOGLE_CLIENT_SECRETS']
 
 
 class Namespace(object):
