@@ -11,15 +11,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 import load_data_from_gcs
 
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 DATASET_ID = 'test_dataset'
 TABLE_ID = 'test_import_table'
 
 
-def test_load_table(cloud_config, capsys):
-    cloud_storage_input_uri = 'gs://{}/data.csv'.format(
-        cloud_config.storage_bucket)
+def test_load_table(capsys):
+    cloud_storage_input_uri = 'gs://{}/data.csv'.format(BUCKET)
 
     load_data_from_gcs.load_data_from_gcs(
         DATASET_ID,

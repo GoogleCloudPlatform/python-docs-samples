@@ -15,7 +15,7 @@
 from sync_query import sync_query
 
 
-def test_sync_query(cloud_config, capsys):
+def test_sync_query(capsys):
     query = (
         'SELECT corpus FROM `publicdata.samples.shakespeare` '
         'GROUP BY corpus;')

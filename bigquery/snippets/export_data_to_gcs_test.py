@@ -11,19 +11,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 import export_data_to_gcs
 
-
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 DATASET_ID = 'test_dataset'
 TABLE_ID = 'test_table'
 
 
-def test_export_data_to_gcs(cloud_config, capsys):
+def test_export_data_to_gcs(capsys):
     export_data_to_gcs.export_data_to_gcs(
         DATASET_ID,
         TABLE_ID,
-        'gs://{}/test-export-data-to-gcs.csv'.format(
-            cloud_config.storage_bucket))
+        'gs://{}/test-export-data-to-gcs.csv'.format(BUCKET))
 
     out, _ = capsys.readouterr()
 
