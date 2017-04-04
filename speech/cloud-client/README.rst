@@ -136,6 +136,31 @@ To run this sample:
       -h, --help  show this help message and exit
 
 
+Transcribe Streaming
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python transcribe_streaming.py
+
+    usage: transcribe_streaming.py [-h] stream
+    
+    Google Cloud Speech API sample application using the streaming API.
+    
+    Example usage:
+        python transcribe_streaming.py resources/audio.raw
+    
+    positional arguments:
+      stream      File to stream to the API
+    
+    optional arguments:
+      -h, --help  show this help message and exit
+
+
 
 
 The client library
