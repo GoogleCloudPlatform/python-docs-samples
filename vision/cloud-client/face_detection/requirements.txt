@@ -1,2 +1,2 @@
-google-cloud-vision==0.23.3
+google-cloud-vision==0.24.0
 Pillow==4.0.0
