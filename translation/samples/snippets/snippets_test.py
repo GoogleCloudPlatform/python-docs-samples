@@ -18,25 +18,25 @@
 import snippets
 
 
-def test_detect_language(cloud_config, capsys):
+def test_detect_language(capsys):
     snippets.detect_language('Hæ sæta')
     out, _ = capsys.readouterr()
     assert 'is' in out
 
 
-def test_list_languages(cloud_config, capsys):
+def test_list_languages(capsys):
     snippets.list_languages()
     out, _ = capsys.readouterr()
     assert 'Icelandic (is)' in out
 
 
-def test_list_languages_with_target(cloud_config, capsys):
+def test_list_languages_with_target(capsys):
     snippets.list_languages_with_target('is')
     out, _ = capsys.readouterr()
     assert u'íslenska (is)' in out
 
 
-def test_translate_text(cloud_config, capsys):
+def test_translate_text(capsys):
     snippets.translate_text('is', 'Hello world')
     out, _ = capsys.readouterr()
     assert u'Halló heimur' in out
