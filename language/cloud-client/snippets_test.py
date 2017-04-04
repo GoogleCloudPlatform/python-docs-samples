@@ -12,49 +12,47 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 
 import snippets
 
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+TEST_FILE_URL = 'gs://{}/text.txt'.format(BUCKET)
 
-def test_sentiment_text(cloud_config, capsys):
+
+def test_sentiment_text(capsys):
     snippets.sentiment_text('President Obama is speaking at the White House.')
     out, _ = capsys.readouterr()
     assert 'Score: 0.2' in out
 
 
-def test_sentiment_file(cloud_config, capsys):
-    cloud_storage_input_uri = 'gs://{}/text.txt'.format(
-        cloud_config.storage_bucket)
-    snippets.sentiment_file(cloud_storage_input_uri)
+def test_sentiment_file(capsys):
+    snippets.sentiment_file(TEST_FILE_URL)
     out, _ = capsys.readouterr()
     assert 'Score: 0.2' in out
 
 
-def test_entities_text(cloud_config, capsys):
+def test_entities_text(capsys):
     snippets.entities_text('President Obama is speaking at the White House.')
     out, _ = capsys.readouterr()
     assert 'name' in out
     assert ': Obama' in out
 
 
-def test_entities_file(cloud_config, capsys):
-    cloud_storage_input_uri = 'gs://{}/text.txt'.format(
-        cloud_config.storage_bucket)
-    snippets.entities_file(cloud_storage_input_uri)
+def test_entities_file(capsys):
+    snippets.entities_file(TEST_FILE_URL)
     out, _ = capsys.readouterr()
     assert 'name' in out
     assert ': Obama' in out
 
 
-def test_syntax_text(cloud_config, capsys):
+def test_syntax_text(capsys):
     snippets.syntax_text('President Obama is speaking at the White House.')
     out, _ = capsys.readouterr()
     assert 'NOUN: President' in out
 
 
-def test_syntax_file(cloud_config, capsys):
-    cloud_storage_input_uri = 'gs://{}/text.txt'.format(
-        cloud_config.storage_bucket)
-    snippets.syntax_file(cloud_storage_input_uri)
+def test_syntax_file(capsys):
+    snippets.syntax_file(TEST_FILE_URL)
     out, _ = capsys.readouterr()
     assert 'NOUN: President' in out

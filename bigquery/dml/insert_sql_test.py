@@ -12,18 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import os.path
 
 from insert_sql import insert_sql
 
+PROJECT = os.environ['GCLOUD_PROJECT']
 
-def test_insert_sql(cloud_config, capsys):
+
+def test_insert_sql(capsys):
     sql_path = os.path.join(
         os.path.dirname(__file__),
         'resources',
         'insert_sql_test.sql')
 
-    insert_sql(cloud_config.project, 'test_dataset', sql_path)
+    insert_sql(PROJECT, 'test_dataset', sql_path)
 
     out, _ = capsys.readouterr()
 

@@ -11,11 +11,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 from gcp.testing.flaky import flaky
 
 from wiki import main
 
+PROJECT = os.environ['GCLOUD_PROJECT']
+
 
 @flaky
-def test_main(cloud_config):
-    main(cloud_config.project)
+def test_main():
+    main(PROJECT)

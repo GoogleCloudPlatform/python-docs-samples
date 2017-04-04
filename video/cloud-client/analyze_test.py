@@ -14,35 +14,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 import pytest
 
 import analyze
 
-
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 LABELS_FILE_PATH = '/video/cat.mp4'
 FACES_FILE_PATH = '/video/googlework.mp4'
 SHOTS_FILE_PATH = '/video/gbikes_dinosaur.mp4'
 
 
 @pytest.mark.slow
-def test_cat_video_shots(capsys, cloud_config):
+def test_cat_video_shots(capsys):
     analyze.analyze_shots(
-        'gs://{}{}'.format(cloud_config.storage_bucket, SHOTS_FILE_PATH))
+        'gs://{}{}'.format(BUCKET, SHOTS_FILE_PATH))
     out, _ = capsys.readouterr()
     assert 'Scene 1:' in out
 
 
 @pytest.mark.slow
-def test_work_video_faces(capsys, cloud_config):
+def test_work_video_faces(capsys):
     analyze.analyze_faces(
-        'gs://{}{}'.format(cloud_config.storage_bucket, FACES_FILE_PATH))
+        'gs://{}{}'.format(BUCKET, FACES_FILE_PATH))
     out, _ = capsys.readouterr()
     assert 'Thumbnail' in out
 
 
 @pytest.mark.slow
-def test_dino_video_labels(capsys, cloud_config):
+def test_dino_video_labels(capsys):
     analyze.analyze_labels(
-        'gs://{}{}'.format(cloud_config.storage_bucket, LABELS_FILE_PATH))
+        'gs://{}{}'.format(BUCKET, LABELS_FILE_PATH))
     out, _ = capsys.readouterr()
     assert 'Whiskers' in out

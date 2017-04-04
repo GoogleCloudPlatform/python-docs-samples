@@ -12,13 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 import webtest
 
 import main
 
+PROJECT = os.environ['GCLOUD_PROJECT']
 
-def test_get(testbed, cloud_config):
-    main.BUCKET_NAME = cloud_config.project
+
+def test_get(testbed):
+    main.BUCKET_NAME = PROJECT
     app = webtest.TestApp(main.app)
 
     response = app.get('/')

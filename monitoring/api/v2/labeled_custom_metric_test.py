@@ -14,13 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import re
 
 import labeled_custom_metric
 
+PROJECT = os.environ['GCLOUD_PROJECT']
 
-def test_main(cloud_config, capsys):
-    labeled_custom_metric.main(cloud_config.project, "yellow", "large", "10")
+
+def test_main(capsys):
+    labeled_custom_metric.main(PROJECT, "yellow", "large", "10")
     output, _ = capsys.readouterr()
 
     assert re.search(
