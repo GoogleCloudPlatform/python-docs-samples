@@ -15,7 +15,7 @@
 from async_query import async_query
 
 
-def test_async_query(cloud_config, capsys):
+def test_async_query(capsys):
     query = (
         'SELECT corpus FROM `publicdata.samples.shakespeare` '
         'GROUP BY corpus;')

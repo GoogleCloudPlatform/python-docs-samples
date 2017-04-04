@@ -31,7 +31,7 @@ REFLECT_SERVICE_HOSTNAME = 'gcp-devrel-iap-reflect.appspot.com'
 
 
 @flaky
-def test_main(cloud_config, capsys):
+def test_main(capsys):
     # JWTs are obtained by IAP-protected applications whenever an
     # end-user makes a request.  We've set up an app that echoes back
     # the JWT in order to expose it to this test.  Thus, this test

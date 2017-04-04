@@ -11,13 +11,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import re
 
 import auth
 
+PROJECT = os.environ['GCLOUD_PROJECT']
 
-def test_main(cloud_config, capsys):
-    auth.list_timeseries(cloud_config.project)
+
+def test_main(capsys):
+    auth.list_timeseries(PROJECT)
     output, _ = capsys.readouterr()
 
     assert re.search(

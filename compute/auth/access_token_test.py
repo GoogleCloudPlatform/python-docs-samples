@@ -11,13 +11,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 import mock
 
 import access_token
 
+PROJECT = os.environ['GCLOUD_PROJECT']
+
 
 @mock.patch('access_token.requests')
-def test_main(requests_mock, cloud_config):
+def test_main(requests_mock):
     metadata_response = mock.Mock()
     metadata_response.status_code = 200
     metadata_response.json.return_value = {
@@ -30,6 +34,6 @@ def test_main(requests_mock, cloud_config):
     requests_mock.get.side_effect = [
         metadata_response, bucket_response]
 
-    access_token.main(cloud_config.project)
+    access_token.main(PROJECT)
 
     assert requests_mock.get.call_count == 2

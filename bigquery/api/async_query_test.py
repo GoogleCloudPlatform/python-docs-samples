@@ -12,17 +12,20 @@
 # limitations under the License.
 
 import json
+import os
 
 from async_query import main
 
+PROJECT = os.environ['GCLOUD_PROJECT']
 
-def test_async_query(cloud_config, capsys):
+
+def test_async_query(capsys):
     query = (
         'SELECT corpus FROM publicdata:samples.shakespeare '
         'GROUP BY corpus;')
 
     main(
-        project_id=cloud_config.project,
+        project_id=PROJECT,
         query_string=query,
         batch=False,
         num_retries=5,
@@ -35,11 +38,11 @@ def test_async_query(cloud_config, capsys):
     assert json.loads(value) is not None
 
 
-def test_async_query_standard_sql(cloud_config, capsys):
+def test_async_query_standard_sql(capsys):
     query = 'SELECT [1, 2, 3] AS arr;'  # Only valid in standard SQL
 
     main(
-        project_id=cloud_config.project,
+        project_id=PROJECT,
         query_string=query,
         batch=False,
         num_retries=5,

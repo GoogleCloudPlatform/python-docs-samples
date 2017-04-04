@@ -18,22 +18,8 @@ import mock
 import pytest
 import requests
 
-
-class Namespace(object):
-    def __init__(self, **kwargs):
-        self.__dict__.update(kwargs)
-
-
-@pytest.fixture(scope='session')
-def cloud_config():
-    """Provides a configuration object as a proxy to environment variables."""
-    return Namespace(
-        project=os.environ.get('GCLOUD_PROJECT'),
-        storage_bucket=os.environ.get('CLOUD_STORAGE_BUCKET'),
-        client_secrets=os.environ.get('GOOGLE_CLIENT_SECRETS'),
-        bigtable_instance=os.environ.get('BIGTABLE_CLUSTER'),
-        spanner_instance=os.environ.get('SPANNER_INSTANCE'),
-        api_key=os.environ.get('API_KEY'))
+PROJECT = os.environ['GCLOUD_PROJECT']
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 
 def get_resource_path(resource, local_path):
@@ -65,26 +51,26 @@ def fetch_gcs_resource(resource, tmpdir, _chunk_size=1024):
 
 
 @pytest.fixture(scope='module')
-def remote_resource(cloud_config):
+def remote_resource():
     """Provides a function that downloads the given resource from Cloud
     Storage, returning the path to the downloaded resource."""
     remote_uri = 'http://storage.googleapis.com/{}/'.format(
-        cloud_config.storage_bucket)
+        BUCKET)
 
     return lambda path, tmpdir: fetch_gcs_resource(
         remote_uri + path.strip('/'), tmpdir)
 
 
 @pytest.fixture
-def api_client_inject_project_id(cloud_config):
+def api_client_inject_project_id():
     """Patches all googleapiclient requests to replace 'YOUR_PROJECT_ID' with
-    the project ID from cloud_config."""
+    the project ID."""
     import googleapiclient.http
 
     old_execute = googleapiclient.http.HttpRequest.execute
 
     def new_execute(self, http=None, num_retries=0):
-        self.uri = self.uri.replace('YOUR_PROJECT_ID', cloud_config.project)
+        self.uri = self.uri.replace('YOUR_PROJECT_ID', PROJECT)
         return old_execute(self, http=http, num_retries=num_retries)
 
     with mock.patch(

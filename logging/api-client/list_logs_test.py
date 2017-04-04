@@ -11,12 +11,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import re
 
 import list_logs
 
+PROJECT = os.environ['GCLOUD_PROJECT']
 
-def test_main(cloud_config, capsys):
-    list_logs.main(cloud_config.project)
+
+def test_main(capsys):
+    list_logs.main(PROJECT)
     out, _ = capsys.readouterr()
     assert re.search(re.compile(r'.*', re.S), out)

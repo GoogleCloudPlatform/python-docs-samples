@@ -11,18 +11,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import re
 
 from gcp.testing.flaky import flaky
 
 from create_instance import main
 
+PROJECT = os.environ['GCLOUD_PROJECT']
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+
 
 @flaky
-def test_main(cloud_config, capsys):
+def test_main(capsys):
     main(
-        cloud_config.project,
-        cloud_config.storage_bucket,
+        PROJECT,
+        BUCKET,
         'us-central1-f',
         'test-instance',
         wait=False)

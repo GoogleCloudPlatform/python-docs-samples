@@ -11,11 +11,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import re
 
 from oauth2client.client import GoogleCredentials
 
 import installed_app
+
+PROJECT = os.environ['GCLOUD_PROJECT']
+CLIENT_SECRETS = os.environ['GOOGLE_CLIENT_SECRETS']
 
 
 class Namespace(object):
@@ -23,8 +27,8 @@ class Namespace(object):
         self.__dict__.update(kwargs)
 
 
-def test_main(cloud_config, monkeypatch, capsys):
-    installed_app.CLIENT_SECRETS = cloud_config.client_secrets
+def test_main(monkeypatch, capsys):
+    installed_app.CLIENT_SECRETS = CLIENT_SECRETS
 
     # Replace the user credentials flow with Application Default Credentials.
     # Unfortunately, there's no easy way to fully test the user flow.
@@ -34,7 +38,7 @@ def test_main(cloud_config, monkeypatch, capsys):
     monkeypatch.setattr(installed_app.tools, 'run_flow', mock_run_flow)
 
     args = Namespace(
-        project_id=cloud_config.project,
+        project_id=PROJECT,
         logging_level='INFO',
         noauth_local_webserver=True)
 
