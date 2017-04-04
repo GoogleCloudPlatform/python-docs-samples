@@ -15,7 +15,7 @@
 import sync_query_params
 
 
-def test_sync_query_named_params(cloud_config, capsys):
+def test_sync_query_named_params(capsys):
     sync_query_params.sync_query_named_params(
         corpus='romeoandjuliet',
         min_word_count=100)
@@ -23,7 +23,7 @@ def test_sync_query_named_params(cloud_config, capsys):
     assert 'love' in out
 
 
-def test_sync_query_positional_params(cloud_config, capsys):
+def test_sync_query_positional_params(capsys):
     sync_query_params.sync_query_positional_params(
         corpus='romeoandjuliet',
         min_word_count=100)

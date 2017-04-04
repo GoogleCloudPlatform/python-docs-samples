@@ -11,22 +11,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 from gcp.testing.flaky import flaky
 
 from load_data_from_csv import main
 
+PROJECT = os.environ['GCLOUD_PROJECT']
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 DATASET_ID = 'test_dataset'
 TABLE_ID = 'test_import_table'
 
 
 @flaky
-def test_load_table(cloud_config, resource):
-    cloud_storage_input_uri = 'gs://{}/data.csv'.format(
-        cloud_config.storage_bucket)
+def test_load_table(resource):
+    cloud_storage_input_uri = 'gs://{}/data.csv'.format(BUCKET)
     schema_file = resource('schema.json')
 
     main(
-        cloud_config.project,
+        PROJECT,
         DATASET_ID,
         TABLE_ID,
         schema_file=schema_file,

@@ -12,22 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import random
 
 from main import main
 
+PROJECT = os.environ['GCLOUD_PROJECT']
+BIGTABLE_CLUSTER = os.environ['BIGTABLE_CLUSTER']
 TABLE_NAME_FORMAT = 'hello-bigtable-system-tests-{}'
 TABLE_NAME_RANGE = 10000
 
 
-def test_main(cloud_config, capsys):
+def test_main(capsys):
     table_name = TABLE_NAME_FORMAT.format(
         random.randrange(TABLE_NAME_RANGE))
 
-    main(
-        cloud_config.project,
-        cloud_config.bigtable_instance,
-        table_name)
+    main(PROJECT, BIGTABLE_CLUSTER, table_name)
 
     out, _ = capsys.readouterr()
     assert 'Creating the {} table.'.format(table_name) in out

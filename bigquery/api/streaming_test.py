@@ -12,22 +12,23 @@
 # limitations under the License.
 
 import json
+import os
 
 import streaming
 
-
+PROJECT = os.environ['GCLOUD_PROJECT']
 DATASET_ID = 'test_dataset'
 TABLE_ID = 'test_table'
 
 
-def test_stream_row_to_bigquery(cloud_config, resource, capsys):
+def test_stream_row_to_bigquery(resource, capsys):
     with open(resource('streamrows.json'), 'r') as rows_file:
         rows = json.load(rows_file)
 
     streaming.get_rows = lambda: rows
 
     streaming.main(
-        cloud_config.project,
+        PROJECT,
         DATASET_ID,
         TABLE_ID,
         num_retries=5)

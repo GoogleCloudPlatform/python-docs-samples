@@ -13,15 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Tests for main."""
-
+import os
 import re
 import zipfile
 
 import main
 
-
-_TEST_IMAGE_URI = 'gs://{}/language/image8.png'
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+TEST_IMAGE_URI = 'gs://{}/language/image8.png'.format(BUCKET)
 
 
 def test_batch_empty():
@@ -36,10 +35,10 @@ def test_batch_single():
         assert batched == ((1,),)
 
 
-def test_single_image_returns_text(cloud_config):
+def test_single_image_returns_text():
     vision_api_client = main.VisionApi()
 
-    image_path = _TEST_IMAGE_URI.format(cloud_config.storage_bucket)
+    image_path = TEST_IMAGE_URI
     texts = vision_api_client.detect_text([image_path])
 
     assert image_path in texts
@@ -66,9 +65,9 @@ def test_text_returns_entities():
     assert wurl == 'http://en.wikipedia.org/wiki/Sherlock_Holmes'
 
 
-def test_entities_list(cloud_config):
+def test_entities_list():
     vision_api_client = main.VisionApi()
-    image_path = _TEST_IMAGE_URI.format(cloud_config.storage_bucket)
+    image_path = TEST_IMAGE_URI
     texts = vision_api_client.detect_text([image_path])
     locale, document = main.extract_description(texts[image_path])
     text_analyzer = main.TextAnalyzer()

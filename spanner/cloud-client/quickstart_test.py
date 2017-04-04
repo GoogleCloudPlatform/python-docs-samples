@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 from google.cloud import spanner
 import google.cloud.exceptions
 import google.cloud.spanner.client
@@ -20,13 +22,15 @@ import pytest
 
 import quickstart
 
+SPANNER_INSTANCE = os.environ['SPANNER_INSTANCE']
+
 
 @pytest.fixture
-def patch_instance(cloud_config):
+def patch_instance():
     original_instance = google.cloud.spanner.client.Client.instance
 
     def new_instance(self, unused_instance_name):
-        return original_instance(self, cloud_config.spanner_instance)
+        return original_instance(self, SPANNER_INSTANCE)
 
     instance_patch = mock.patch(
         'google.cloud.spanner.client.Client.instance',
@@ -38,9 +42,9 @@ def patch_instance(cloud_config):
 
 
 @pytest.fixture
-def example_database(cloud_config):
+def example_database():
     spanner_client = spanner.Client()
-    instance = spanner_client.instance(cloud_config.spanner_instance)
+    instance = spanner_client.instance(SPANNER_INSTANCE)
     database = instance.database('my-database-id')
 
     if not database.exists():
