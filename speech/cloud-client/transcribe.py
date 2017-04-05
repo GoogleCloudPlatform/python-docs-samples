@@ -57,7 +57,7 @@ def transcribe_gcs(gcs_uri):
         encoding='FLAC',
         sample_rate_hertz=16000)
 
-    alternatives = audio_sample.recognize(audio_sample, 'en-US')
+    alternatives = audio_sample.recognize('en-US')
     for alternative in alternatives:
         print('Transcript: {}'.format(alternative.transcript))
 
