@@ -31,7 +31,6 @@ def transcribe_file(speech_file):
     """Transcribe the given audio file asynchronously."""
     from google.cloud import speech
     speech_client = speech.Client()
-    speech_api = speech_client.speech_api
 
     with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
@@ -41,7 +40,7 @@ def transcribe_file(speech_file):
             encoding='LINEAR16',
             sample_rate_hertz=16000)
 
-    operation = speech_api.long_running_recognize(audio_sample, 'en-US')
+    operation = audio_sample.long_running_recognize(audio_sample, 'en-US')
 
     retry_count = 100
     while retry_count > 0 and not operation.complete:
@@ -64,7 +63,6 @@ def transcribe_gcs(gcs_uri):
     """Asynchronously transcribes the audio file specified by the gcs_uri."""
     from google.cloud import speech
     speech_client = speech.Client()
-    speech_api = speech_client.speech_api
 
     audio_sample = speech_client.sample(
         content=None,
@@ -72,7 +70,7 @@ def transcribe_gcs(gcs_uri):
         encoding='FLAC',
         sample_rate_hertz=16000)
 
-    operation = speech_api.long_running_recognize(audio_sample, 'en-US')
+    operation = audio_sample.long_running_recognize(audio_sample, 'en-US')
 
     retry_count = 100
     while retry_count > 0 and not operation.complete:

@@ -42,7 +42,7 @@ def run_quickstart():
             sample_rate_hertz=16000)
 
     # Detects speech in the audio file
-    alternatives = speech_client.speech_api.recognize(sample, 'en-US')
+    alternatives = sample.recognize('en-US')
 
     for alternative in alternatives:
         print('Transcript: {}'.format(alternative.transcript))
