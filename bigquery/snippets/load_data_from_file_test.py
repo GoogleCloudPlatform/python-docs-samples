@@ -11,14 +11,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 import load_data_from_file
 
+RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 DATASET_ID = 'test_dataset'
 TABLE_ID = 'test_import_table'
 
 
-def test_load_table(resource, capsys):
-    data_path = resource('data.csv')
+def test_load_table(capsys):
+    data_path = os.path.join(RESOURCES, 'data.csv')
 
     load_data_from_file.load_data_from_file(
         DATASET_ID,
