@@ -12,9 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import re
 
 import main
+
+RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 
 
 def test_dependents():
@@ -41,8 +44,8 @@ def test_find_triples():
         assert (1, 2, 5) == triple
 
 
-def test_obama_example(resource, capsys):
-    main.main(resource('obama_wikipedia.txt'))
+def test_obama_example(capsys):
+    main.main(os.path.join(RESOURCES, 'obama_wikipedia.txt'))
     stdout, _ = capsys.readouterr()
     lines = stdout.split('\n')
     assert re.match(

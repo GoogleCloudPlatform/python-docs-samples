@@ -22,6 +22,7 @@ import webtest
 
 import main
 
+RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 PROJECT = os.environ['GCLOUD_PROJECT']
 
 
@@ -49,11 +50,11 @@ def test_loggedin(app, login):
     assert re.search(r'.*oauth2.*', response.headers['Location'])
 
 
-def test_oauthed(resource, app, login):
+def test_oauthed(app, login):
     login()
 
     mock_http = HttpMock(
-        resource('datasets-list.json'),
+        os.path.join(RESOURCES, 'datasets-list.json'),
         {'status': '200'})
 
     with mock.patch.object(main.decorator, 'http', return_value=mock_http):

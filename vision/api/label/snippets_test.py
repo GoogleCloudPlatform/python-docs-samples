@@ -14,21 +14,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import json
+import os
 
 import snippets
 
+RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 
-def test_crop_hint_response_count(capsys, resource):
-    snippets.crop_hint(resource('cat.jpg'))
+
+def test_crop_hint_response_count(capsys):
+    snippets.crop_hint(os.path.join(RESOURCES, 'cat.jpg'))
     stdout, _ = capsys.readouterr()
     result = json.loads(stdout)
     assert len(result['responses']) == 1
 
 
-def test_crop_hint_response_dim(capsys, resource):
-    snippets.crop_hint(resource('cat.jpg'))
+def test_crop_hint_response_dim(capsys):
+    snippets.crop_hint(os.path.join(RESOURCES, 'cat.jpg'))
     stdout, _ = capsys.readouterr()
     result = json.loads(stdout)
     crop_hint = result['responses'][0]
@@ -38,8 +40,8 @@ def test_crop_hint_response_dim(capsys, resource):
     assert 0.5 < confidence < 0.9
 
 
-def test_web_annotations(capsys, resource):
-    snippets.web_annotation(resource('cat.jpg'))
+def test_web_annotations(capsys):
+    snippets.web_annotation(os.path.join(RESOURCES, 'cat.jpg'))
     stdout, _ = capsys.readouterr()
     result = json.loads(stdout)
     web_annotation = result['responses'][0]['webDetection']

@@ -17,6 +17,7 @@ from gcp.testing.flaky import flaky
 
 from load_data_from_csv import main
 
+RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 PROJECT = os.environ['GCLOUD_PROJECT']
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 DATASET_ID = 'test_dataset'
@@ -24,9 +25,9 @@ TABLE_ID = 'test_import_table'
 
 
 @flaky
-def test_load_table(resource):
+def test_load_table():
     cloud_storage_input_uri = 'gs://{}/data.csv'.format(BUCKET)
-    schema_file = resource('schema.json')
+    schema_file = os.path.join(RESOURCES, 'schema.json')
 
     main(
         PROJECT,
