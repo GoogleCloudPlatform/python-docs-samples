@@ -18,15 +18,16 @@ from gcp.testing.flaky import flaky
 
 from load_data_by_post import load_data
 
+RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 PROJECT = os.environ['GCLOUD_PROJECT']
 DATASET_ID = 'ephemeral_test_dataset'
 TABLE_ID = 'load_data_by_post'
 
 
 @flaky
-def test_load_csv_data(resource, capsys):
-    schema_path = resource('schema.json')
-    data_path = resource('data.csv')
+def test_load_csv_data(capsys):
+    schema_path = os.path.join(RESOURCES, 'schema.json')
+    data_path = os.path.join(RESOURCES, 'data.csv')
 
     load_data(
         schema_path,
@@ -43,9 +44,9 @@ def test_load_csv_data(resource, capsys):
 
 
 @flaky
-def test_load_json_data(resource, capsys):
-    schema_path = resource('schema.json')
-    data_path = resource('data.json')
+def test_load_json_data(capsys):
+    schema_path = os.path.join(RESOURCES, 'schema.json')
+    data_path = os.path.join(RESOURCES, 'data.json')
 
     load_data(
         schema_path,

@@ -32,14 +32,6 @@ def get_resource_path(resource, local_path):
             os.path.join(*resource)))
 
 
-@pytest.fixture(scope='module')
-def resource(request):
-    """Provides a function that returns the full path to a local or global
-    testing resource"""
-    local_path = os.path.dirname(request.module.__file__)
-    return lambda *args: get_resource_path(args, local_path)
-
-
 def fetch_gcs_resource(resource, tmpdir, _chunk_size=1024):
     resp = requests.get(resource, stream=True)
     dest_file = str(tmpdir.join(os.path.basename(resource)))

@@ -15,13 +15,14 @@ import os
 
 from compose_objects import main
 
+RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 
-def test_main(resource):
+def test_main():
     main(
         BUCKET,
         'dest.txt',
-        [resource('file1.txt'),
-         resource('file2.txt')]
+        [os.path.join(RESOURCES, 'file1.txt'),
+         os.path.join(RESOURCES, 'file2.txt')]
     )
