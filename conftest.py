@@ -16,49 +16,8 @@ import os
 
 import mock
 import pytest
-import requests
 
 PROJECT = os.environ['GCLOUD_PROJECT']
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-
-
-def get_resource_path(resource, local_path):
-    local_resource_path = os.path.join(local_path, 'resources', *resource)
-
-    if os.path.exists(local_resource_path):
-        return local_resource_path
-    else:
-        raise EnvironmentError('Resource {} not found.'.format(
-            os.path.join(*resource)))
-
-
-@pytest.fixture(scope='module')
-def resource(request):
-    """Provides a function that returns the full path to a local or global
-    testing resource"""
-    local_path = os.path.dirname(request.module.__file__)
-    return lambda *args: get_resource_path(args, local_path)
-
-
-def fetch_gcs_resource(resource, tmpdir, _chunk_size=1024):
-    resp = requests.get(resource, stream=True)
-    dest_file = str(tmpdir.join(os.path.basename(resource)))
-    with open(dest_file, 'wb') as f:
-        for chunk in resp.iter_content(_chunk_size):
-            f.write(chunk)
-
-    return dest_file
-
-
-@pytest.fixture(scope='module')
-def remote_resource():
-    """Provides a function that downloads the given resource from Cloud
-    Storage, returning the path to the downloaded resource."""
-    remote_uri = 'http://storage.googleapis.com/{}/'.format(
-        BUCKET)
-
-    return lambda path, tmpdir: fetch_gcs_resource(
-        remote_uri + path.strip('/'), tmpdir)
 
 
 @pytest.fixture

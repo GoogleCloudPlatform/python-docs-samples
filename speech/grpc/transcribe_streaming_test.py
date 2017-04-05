@@ -11,11 +11,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import re
 import threading
 import time
 
 import transcribe_streaming
+
+RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 
 
 class MockPyAudio(object):
@@ -55,10 +58,10 @@ class MockPyAudio(object):
                 callback(chunk, None, None, None)
 
 
-def test_main(resource, monkeypatch, capsys):
+def test_main(monkeypatch, capsys):
     monkeypatch.setattr(
         transcribe_streaming.pyaudio, 'PyAudio',
-        MockPyAudio(resource('quit.raw')))
+        MockPyAudio(os.path.join(RESOURCES, 'quit.raw')))
 
     transcribe_streaming.main()
     out, err = capsys.readouterr()

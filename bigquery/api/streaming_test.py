@@ -16,13 +16,14 @@ import os
 
 import streaming
 
+RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 PROJECT = os.environ['GCLOUD_PROJECT']
 DATASET_ID = 'test_dataset'
 TABLE_ID = 'test_table'
 
 
-def test_stream_row_to_bigquery(resource, capsys):
-    with open(resource('streamrows.json'), 'r') as rows_file:
+def test_stream_row_to_bigquery(capsys):
+    with open(os.path.join(RESOURCES, 'streamrows.json'), 'r') as rows_file:
         rows = json.load(rows_file)
 
     streaming.get_rows = lambda: rows

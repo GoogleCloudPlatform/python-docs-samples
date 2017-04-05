@@ -19,8 +19,7 @@ from transcribe import main
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 
-def test_main(resource, capsys):
-
+def test_main(capsys):
     # Run the transcribe sample on audio.raw, verify correct results
     storage_uri = 'gs://{}/speech/audio.raw'.format(BUCKET)
     main(storage_uri, 'LINEAR16', 16000)
