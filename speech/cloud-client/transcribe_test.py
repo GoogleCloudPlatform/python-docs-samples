@@ -25,7 +25,7 @@ def test_transcribe_file(resource, capsys):
 
 def test_transcribe_gcs(resource, capsys):
     transcribe.transcribe_gcs(
-        'gs://python-docs-samples-tests/speech/audio.raw')
+        'gs://python-docs-samples-tests/speech/audio.flac')
     out, err = capsys.readouterr()
 
     assert re.search(r'how old is the Brooklyn Bridge', out, re.DOTALL | re.I)
