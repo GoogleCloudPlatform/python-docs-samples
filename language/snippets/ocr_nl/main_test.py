@@ -17,10 +17,14 @@ import os
 import re
 import zipfile
 
+import requests
+
 import main
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 TEST_IMAGE_URI = 'gs://{}/language/image8.png'.format(BUCKET)
+OCR_IMAGES_URI = 'http://storage.googleapis.com/{}/{}'.format(
+    BUCKET, 'language/ocr_nl-images-small.zip')
 
 
 def test_batch_empty():
@@ -79,14 +83,16 @@ def test_entities_list():
     assert wurl == 'http://en.wikipedia.org/wiki/Mr_Bennet'
 
 
-def test_main(remote_resource, tmpdir, capsys):
+def test_main(tmpdir, capsys):
     images_path = str(tmpdir.mkdir('images'))
 
     # First, pull down some test data
-    zip_path = remote_resource('language/ocr_nl-images-small.zip', tmpdir)
+    response = requests.get(OCR_IMAGES_URI)
+    images_file = tmpdir.join('images.zip')
+    images_file.write_binary(response.content)
 
     # Extract it to the image directory
-    with zipfile.ZipFile(zip_path) as zfile:
+    with zipfile.ZipFile(str(images_file)) as zfile:
         zfile.extractall(images_path)
 
     main.main(images_path, str(tmpdir.join('ocr_nl.db')))
