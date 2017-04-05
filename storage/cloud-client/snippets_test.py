@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import tempfile
 
 from google.cloud import storage
@@ -21,74 +22,76 @@ import requests
 
 import snippets
 
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+
 
 @pytest.fixture
-def test_blob(cloud_config):
+def test_blob():
     """Provides a pre-existing blob in the test bucket."""
-    bucket = storage.Client().bucket(cloud_config.storage_bucket)
+    bucket = storage.Client().bucket(BUCKET)
     blob = bucket.blob('storage_snippets_test_sigil')
     blob.upload_from_string('Hello, is it me you\'re looking for?')
     return blob
 
 
-def test_list_blobs(test_blob, cloud_config, capsys):
-    snippets.list_blobs(cloud_config.storage_bucket)
+def test_list_blobs(test_blob, capsys):
+    snippets.list_blobs(BUCKET)
     out, _ = capsys.readouterr()
     assert test_blob.name in out
 
 
-def test_list_blobs_with_prefix(test_blob, cloud_config, capsys):
+def test_list_blobs_with_prefix(test_blob, capsys):
     snippets.list_blobs_with_prefix(
-        cloud_config.storage_bucket,
+        BUCKET,
         prefix='storage_snippets')
     out, _ = capsys.readouterr()
     assert test_blob.name in out
 
 
-def test_upload_blob(cloud_config):
+def test_upload_blob():
     with tempfile.NamedTemporaryFile() as source_file:
         source_file.write(b'test')
 
         snippets.upload_blob(
-            cloud_config.storage_bucket,
+            BUCKET,
             source_file.name,
             'test_upload_blob')
 
 
-def test_download_blob(test_blob, cloud_config):
+def test_download_blob(test_blob):
     with tempfile.NamedTemporaryFile() as dest_file:
         snippets.download_blob(
-            cloud_config.storage_bucket,
+            BUCKET,
             test_blob.name,
             dest_file.name)
 
         assert dest_file.read()
 
 
-def test_blob_metadata(test_blob, cloud_config, capsys):
-    snippets.blob_metadata(cloud_config.storage_bucket, test_blob.name)
+def test_blob_metadata(test_blob, capsys):
+    snippets.blob_metadata(BUCKET, test_blob.name)
     out, _ = capsys.readouterr()
     assert test_blob.name in out
 
 
-def test_delete_blob(test_blob, cloud_config):
+def test_delete_blob(test_blob):
     snippets.delete_blob(
-        cloud_config.storage_bucket,
+        BUCKET,
         test_blob.name)
 
 
-def test_make_blob_public(test_blob, cloud_config):
+def test_make_blob_public(test_blob):
     snippets.make_blob_public(
-        cloud_config.storage_bucket,
+        BUCKET,
         test_blob.name)
 
     r = requests.get(test_blob.public_url)
     assert r.text == 'Hello, is it me you\'re looking for?'
 
 
-def test_generate_signed_url(test_blob, cloud_config, capsys):
+def test_generate_signed_url(test_blob, capsys):
     snippets.generate_signed_url(
-        cloud_config.storage_bucket,
+        BUCKET,
         test_blob.name)
 
     out, _ = capsys.readouterr()
@@ -98,8 +101,8 @@ def test_generate_signed_url(test_blob, cloud_config, capsys):
     assert r.text == 'Hello, is it me you\'re looking for?'
 
 
-def test_rename_blob(test_blob, cloud_config):
-    bucket = storage.Client().bucket(cloud_config.storage_bucket)
+def test_rename_blob(test_blob):
+    bucket = storage.Client().bucket(BUCKET)
 
     try:
         bucket.delete_blob('test_rename_blob')
@@ -112,8 +115,8 @@ def test_rename_blob(test_blob, cloud_config):
     assert bucket.get_blob(test_blob.name) is None
 
 
-def test_copy_blob(test_blob, cloud_config):
-    bucket = storage.Client().bucket(cloud_config.storage_bucket)
+def test_copy_blob(test_blob):
+    bucket = storage.Client().bucket(BUCKET)
 
     try:
         bucket.delete_blob('test_copy_blob')

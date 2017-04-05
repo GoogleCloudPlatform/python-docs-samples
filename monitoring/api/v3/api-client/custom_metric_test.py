@@ -20,6 +20,7 @@ Currently the TEST_PROJECT_ID is hard-coded to run using the project created
 for this test, but it could be changed to a different project.
 """
 
+import os
 import random
 import time
 
@@ -33,6 +34,8 @@ from custom_metric import delete_metric_descriptor
 from custom_metric import get_custom_metric
 from custom_metric import read_timeseries
 from custom_metric import write_timeseries_value
+
+PROJECT = os.environ['GCLOUD_PROJECT']
 
 """ Custom metric domain for all custom metrics"""
 CUSTOM_METRIC_DOMAIN = "custom.googleapis.com"
@@ -50,8 +53,8 @@ def client():
 
 
 @flaky
-def test_custom_metric(cloud_config, client):
-    PROJECT_RESOURCE = "projects/{}".format(cloud_config.project)
+def test_custom_metric(client):
+    PROJECT_RESOURCE = "projects/{}".format(PROJECT)
     # Use a constant seed so psuedo random number is known ahead of time
     random.seed(1)
     pseudo_random_value = random.randint(0, 10)

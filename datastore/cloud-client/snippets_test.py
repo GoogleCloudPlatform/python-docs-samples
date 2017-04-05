@@ -11,12 +11,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 from gcp.testing import eventually_consistent
 from gcp.testing.flaky import flaky
 from google.cloud import datastore
 import pytest
 
 import snippets
+
+PROJECT = os.environ['GCLOUD_PROJECT']
 
 
 class CleanupClient(datastore.Client):
@@ -33,8 +37,8 @@ class CleanupClient(datastore.Client):
 
 
 @pytest.yield_fixture
-def client(cloud_config):
-    client = CleanupClient(cloud_config.project)
+def client():
+    client = CleanupClient(PROJECT)
     yield client
     client.cleanup()
 

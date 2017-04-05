@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import random
 import string
 
@@ -21,6 +22,7 @@ import pytest
 
 import export
 
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 TEST_SINK_NAME_TMPL = 'example_sink_{}'
 TEST_SINK_FILTER = 'severity>=CRITICAL'
 
@@ -32,14 +34,13 @@ def _random_id():
 
 
 @pytest.yield_fixture
-def example_sink(cloud_config):
+def example_sink():
     client = logging.Client()
 
     sink = client.sink(
         TEST_SINK_NAME_TMPL.format(_random_id()),
         TEST_SINK_FILTER,
-        'storage.googleapis.com/{bucket}'.format(
-            bucket=cloud_config.storage_bucket))
+        'storage.googleapis.com/{bucket}'.format(bucket=BUCKET))
 
     sink.create()
 
@@ -59,13 +60,13 @@ def test_list(example_sink, capsys):
         assert example_sink.name in out
 
 
-def test_create(cloud_config, capsys):
+def test_create(capsys):
     sink_name = TEST_SINK_NAME_TMPL.format(_random_id())
 
     try:
         export.create_sink(
             sink_name,
-            cloud_config.storage_bucket,
+            BUCKET,
             TEST_SINK_FILTER)
     # Clean-up the temporary sink.
     finally:

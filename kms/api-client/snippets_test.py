@@ -13,6 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+import os
 import random
 import string
 
@@ -20,6 +21,7 @@ import googleapiclient.discovery
 
 import snippets
 
+PROJECT = os.environ['GCLOUD_PROJECT']
 
 # Your Google Cloud Platform Key Location
 LOCATION = 'global'
@@ -42,25 +44,25 @@ MEMBER = 'user:ryanmats@google.com'
 ROLE = 'roles/owner'
 
 
-def test_create_keyring(capsys, cloud_config):
-    snippets.create_keyring(cloud_config.project, LOCATION, KEYRING)
+def test_create_keyring(capsys):
+    snippets.create_keyring(PROJECT, LOCATION, KEYRING)
     out, _ = capsys.readouterr()
     expected = 'Created KeyRing projects/{}/locations/{}/keyRings/{}.'.format(
-        cloud_config.project, LOCATION, KEYRING)
+        PROJECT, LOCATION, KEYRING)
     assert expected in out
 
 
-def test_create_cryptokey(capsys, cloud_config):
+def test_create_cryptokey(capsys):
     snippets.create_cryptokey(
-        cloud_config.project, LOCATION, KEYRING, CRYPTOKEY)
+        PROJECT, LOCATION, KEYRING, CRYPTOKEY)
     out, _ = capsys.readouterr()
     expected = (
         'Created CryptoKey projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}.'
-        .format(cloud_config.project, LOCATION, KEYRING, CRYPTOKEY))
+        .format(PROJECT, LOCATION, KEYRING, CRYPTOKEY))
     assert expected in out
 
 
-def test_encrypt_decrypt(capsys, cloud_config, tmpdir):
+def test_encrypt_decrypt(capsys, tmpdir):
     # Write to a plaintext file.
     tmpdir.join('in.txt').write('SampleText')
 
@@ -71,10 +73,10 @@ def test_encrypt_decrypt(capsys, cloud_config, tmpdir):
 
     # Encrypt text and then decrypt it.
     snippets.encrypt(
-        cloud_config.project, LOCATION, KEYRING, CRYPTOKEY,
+        PROJECT, LOCATION, KEYRING, CRYPTOKEY,
         str(plaintext_file), str(encrypted_file))
     snippets.decrypt(
-        cloud_config.project, LOCATION, KEYRING, CRYPTOKEY,
+        PROJECT, LOCATION, KEYRING, CRYPTOKEY,
         str(encrypted_file), str(decrypted_file))
 
     # Make sure the decrypted text matches the original text.
@@ -87,35 +89,35 @@ def test_encrypt_decrypt(capsys, cloud_config, tmpdir):
     assert 'Saved decrypted text to {}.'.format(str(decrypted_file)) in out
 
 
-def test_disable_cryptokey_version(capsys, cloud_config):
+def test_disable_cryptokey_version(capsys):
     snippets.disable_cryptokey_version(
-        cloud_config.project, LOCATION, KEYRING, CRYPTOKEY, VERSION)
+        PROJECT, LOCATION, KEYRING, CRYPTOKEY, VERSION)
     out, _ = capsys.readouterr()
     expected = (
         'CryptoKeyVersion projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}/'
         'cryptoKeyVersions/{}\'s state has been set to {}.'
         .format(
-            cloud_config.project, LOCATION, KEYRING, CRYPTOKEY, VERSION,
+            PROJECT, LOCATION, KEYRING, CRYPTOKEY, VERSION,
             'DISABLED'))
     assert expected in out
 
 
-def test_destroy_cryptokey_version(capsys, cloud_config):
+def test_destroy_cryptokey_version(capsys):
     snippets.destroy_cryptokey_version(
-        cloud_config.project, LOCATION, KEYRING, CRYPTOKEY, VERSION)
+        PROJECT, LOCATION, KEYRING, CRYPTOKEY, VERSION)
     out, _ = capsys.readouterr()
     expected = (
         'CryptoKeyVersion projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}/'
         'cryptoKeyVersions/{}\'s state has been set to {}.'
         .format(
-            cloud_config.project, LOCATION, KEYRING, CRYPTOKEY, VERSION,
+            PROJECT, LOCATION, KEYRING, CRYPTOKEY, VERSION,
             'DESTROY_SCHEDULED'))
     assert expected in out
 
 
-def test_add_member_to_cryptokey_policy(capsys, cloud_config):
+def test_add_member_to_cryptokey_policy(capsys):
     snippets.add_member_to_cryptokey_policy(
-        cloud_config.project, LOCATION, KEYRING, CRYPTOKEY, MEMBER, ROLE)
+        PROJECT, LOCATION, KEYRING, CRYPTOKEY, MEMBER, ROLE)
     out, _ = capsys.readouterr()
     expected = (
         'Member {} added with role {} to policy for CryptoKey {} in KeyRing {}'
@@ -124,7 +126,7 @@ def test_add_member_to_cryptokey_policy(capsys, cloud_config):
 
     kms_client = googleapiclient.discovery.build('cloudkms', 'v1')
     parent = 'projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}'.format(
-        cloud_config.project, LOCATION, KEYRING, CRYPTOKEY)
+        PROJECT, LOCATION, KEYRING, CRYPTOKEY)
     cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
     policy_request = cryptokeys.getIamPolicy(resource=parent)
     policy_response = policy_request.execute()
@@ -139,8 +141,8 @@ def test_add_member_to_cryptokey_policy(capsys, cloud_config):
     assert found_member_role_pair
 
 
-def test_get_keyring_policy(capsys, cloud_config):
-    project_id = cloud_config.project
+def test_get_keyring_policy(capsys):
+    project_id = PROJECT
     snippets.get_keyring_policy(project_id, LOCATION, KEYRING)
     out, _ = capsys.readouterr()
     expected_roles_exist = (

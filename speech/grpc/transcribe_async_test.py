@@ -11,16 +11,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import re
 
 from transcribe_async import main
 
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
-def test_main(resource, capsys, cloud_config):
+
+def test_main(resource, capsys):
 
     # Run the transcribe sample on audio.raw, verify correct results
-    storage_uri = 'gs://{}/speech/audio.raw'.format(
-        cloud_config.storage_bucket)
+    storage_uri = 'gs://{}/speech/audio.raw'.format(BUCKET)
     main(storage_uri, 'LINEAR16', 16000)
     out, err = capsys.readouterr()
     assert re.search(r'how old is the Brooklyn Bridge', out, re.DOTALL | re.I)

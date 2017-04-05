@@ -11,15 +11,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 from labels import label_dataset, label_table
 
+PROJECT = os.environ['GCLOUD_PROJECT']
 
-def test_label_dataset(cloud_config, capsys):
+
+def test_label_dataset(capsys):
     label_dataset(
         'test_dataset',
         'environment',
         'test',
-        project_id=cloud_config.project)
+        project_id=PROJECT)
 
     out, _ = capsys.readouterr()
     result = out.split('\n')[0]
@@ -27,13 +31,13 @@ def test_label_dataset(cloud_config, capsys):
     assert 'Updated label "environment" with value "test"' in result
 
 
-def test_label_table(cloud_config, capsys):
+def test_label_table(capsys):
     label_table(
         'test_dataset',
         'test_table',
         'data-owner',
         'my-team',
-        project_id=cloud_config.project)
+        project_id=PROJECT)
 
     out, _ = capsys.readouterr()
     result = out.split('\n')[0]

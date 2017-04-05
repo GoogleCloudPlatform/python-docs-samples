@@ -20,6 +20,7 @@ Currently the TEST_PROJECT_ID is hard-coded to run using the project created
 for this test, but it could be changed to a different project.
 """
 
+import os
 import re
 
 from gcp.testing.flaky import flaky
@@ -28,6 +29,7 @@ import pytest
 
 import list_resources
 
+PROJECT = os.environ['GCLOUD_PROJECT']
 METRIC = 'compute.googleapis.com/instance/cpu/usage_time'
 
 
@@ -37,8 +39,8 @@ def client():
 
 
 @flaky
-def test_list_monitored_resources(cloud_config, client, capsys):
-    PROJECT_RESOURCE = "projects/{}".format(cloud_config.project)
+def test_list_monitored_resources(client, capsys):
+    PROJECT_RESOURCE = "projects/{}".format(PROJECT)
     list_resources.list_monitored_resource_descriptors(
         client, PROJECT_RESOURCE)
     stdout, _ = capsys.readouterr()
@@ -48,8 +50,8 @@ def test_list_monitored_resources(cloud_config, client, capsys):
 
 
 @flaky
-def test_list_metrics(cloud_config, client, capsys):
-    PROJECT_RESOURCE = "projects/{}".format(cloud_config.project)
+def test_list_metrics(client, capsys):
+    PROJECT_RESOURCE = "projects/{}".format(PROJECT)
     list_resources.list_metric_descriptors(
         client, PROJECT_RESOURCE, METRIC)
     stdout, _ = capsys.readouterr()
@@ -59,8 +61,8 @@ def test_list_metrics(cloud_config, client, capsys):
 
 
 @flaky
-def test_list_timeseries(cloud_config, client, capsys):
-    PROJECT_RESOURCE = "projects/{}".format(cloud_config.project)
+def test_list_timeseries(client, capsys):
+    PROJECT_RESOURCE = "projects/{}".format(PROJECT)
     list_resources.list_timeseries(
         client, PROJECT_RESOURCE, METRIC)
     stdout, _ = capsys.readouterr()

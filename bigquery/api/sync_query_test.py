@@ -12,17 +12,20 @@
 # limitations under the License.
 
 import json
+import os
 
 from sync_query import main
 
+PROJECT = os.environ['GCLOUD_PROJECT']
 
-def test_sync_query(cloud_config, capsys):
+
+def test_sync_query(capsys):
     query = (
         'SELECT corpus FROM publicdata:samples.shakespeare '
         'GROUP BY corpus;')
 
     main(
-        project_id=cloud_config.project,
+        project_id=PROJECT,
         query=query,
         timeout=30,
         num_retries=5,
@@ -34,11 +37,11 @@ def test_sync_query(cloud_config, capsys):
     assert json.loads(result) is not None
 
 
-def test_sync_query_standard_sql(cloud_config, capsys):
+def test_sync_query_standard_sql(capsys):
     query = 'SELECT [1, 2, 3] AS arr;'  # Only valid in standard SQL
 
     main(
-        project_id=cloud_config.project,
+        project_id=PROJECT,
         query=query,
         timeout=30,
         num_retries=5,

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import re
 
 from googleapiclient.http import HttpMock
@@ -21,10 +22,12 @@ import webtest
 
 import main
 
+PROJECT = os.environ['GCLOUD_PROJECT']
+
 
 @pytest.fixture
-def app(cloud_config, testbed):
-    main.PROJECTID = cloud_config.project
+def app(testbed):
+    main.PROJECTID = PROJECT
     return webtest.TestApp(main.app)
 
 
