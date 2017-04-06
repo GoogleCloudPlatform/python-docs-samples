@@ -13,11 +13,16 @@
 # limitations under the License.
 
 import snippets
+from gcp.testing import eventually_consistent
 
 
 def test_create_get_delete_metric_descriptor(capsys):
     snippets.create_metric_descriptor()
-    snippets.get_metric_descriptor('custom.googleapis.com/my_metric')
+
+    @eventually_consistent.call
+    def __():
+        snippets.get_metric_descriptor('custom.googleapis.com/my_metric')
+
     out, _ = capsys.readouterr()
     assert 'DOUBLE' in out
     snippets.delete_metric_descriptor('custom.googleapis.com/my_metric')
