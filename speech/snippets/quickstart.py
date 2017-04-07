@@ -35,14 +35,14 @@ def run_quickstart():
     # Loads the audio into memory
     with io.open(file_name, 'rb') as audio_file:
         content = audio_file.read()
-        audio_sample = speech_client.sample(
+        sample = speech_client.sample(
             content,
             source_uri=None,
             encoding='LINEAR16',
-            sample_rate=16000)
+            sample_rate_hertz=16000)
 
     # Detects speech in the audio file
-    alternatives = speech_client.speech_api.sync_recognize(audio_sample)
+    alternatives = sample.recognize('en-US')
 
     for alternative in alternatives:
         print('Transcript: {}'.format(alternative.transcript))
