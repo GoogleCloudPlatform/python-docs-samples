@@ -39,9 +39,9 @@ def transcribe_file(speech_file):
             content=content,
             source_uri=None,
             encoding='LINEAR16',
-            sample_rate=16000)
+            sample_rate_hertz=16000)
 
-    alternatives = speech_client.speech_api.sync_recognize(audio_sample)
+    alternatives = audio_sample.recognize('en-US')
     for alternative in alternatives:
         print('Transcript: {}'.format(alternative.transcript))
 
@@ -55,9 +55,9 @@ def transcribe_gcs(gcs_uri):
         content=None,
         source_uri=gcs_uri,
         encoding='FLAC',
-        sample_rate=16000)
+        sample_rate_hertz=16000)
 
-    alternatives = speech_client.speech_api.sync_recognize(audio_sample)
+    alternatives = audio_sample.recognize('en-US')
     for alternative in alternatives:
         print('Transcript: {}'.format(alternative.transcript))
 
