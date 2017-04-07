@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import snippets
 from gcp.testing import eventually_consistent
+
+import snippets
 
 
 def test_create_get_delete_metric_descriptor(capsys):
