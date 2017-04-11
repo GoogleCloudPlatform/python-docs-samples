@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # [START dbconfig]
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'polls',
         'USER': '<your-database-user>',
         'PASSWORD': '<your-database-password>',
@@ -116,7 +116,7 @@ USE_TZ = True
 # [START staticurl]
 # Fill in your cloud bucket and switch which one of the following 2 lines
 # is commented to serve static content from GCS
-# STATIC_URL = 'https://storage.googleapis.com/<your-gcs-bucket>/static/'
+#STATIC_URL = 'https://storage.googleapis.com/<your-gcs-bucket>/static/'
 STATIC_URL = '/static/'
 # [END staticurl]
 
