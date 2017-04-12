@@ -19,7 +19,7 @@ batch processing.
 
 Example usage:
     python transcribe_async.py resources/audio.raw
-    python transcribe_async.py gs://cloud-samples-tests/speech/brooklyn.flac
+    python transcribe_async.py gs://cloud-samples-tests/speech/brooklyn.raw
 """
 
 import argparse
@@ -38,9 +38,9 @@ def transcribe_file(speech_file):
             content,
             source_uri=None,
             encoding='LINEAR16',
-            sample_rate=16000)
+            sample_rate_hertz=16000)
 
-    operation = speech_client.speech_api.async_recognize(audio_sample)
+    operation = audio_sample.long_running_recognize('en-US')
 
     retry_count = 100
     while retry_count > 0 and not operation.complete:
@@ -67,10 +67,10 @@ def transcribe_gcs(gcs_uri):
     audio_sample = speech_client.sample(
         content=None,
         source_uri=gcs_uri,
-        encoding='FLAC',
-        sample_rate=16000)
+        encoding='LINEAR16',
+        sample_rate_hertz=16000)
 
-    operation = speech_client.speech_api.async_recognize(audio_sample)
+    operation = audio_sample.long_running_recognize('en-US')
 
     retry_count = 100
     while retry_count > 0 and not operation.complete:

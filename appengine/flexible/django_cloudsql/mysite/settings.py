@@ -81,7 +81,9 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # [START dbconfig]
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        # If you are using Cloud SQL for MySQL rather than PostgreSQL, set
+        # 'ENGINE': 'django.db.backends.mysql' instead of the following.
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'polls',
         'USER': '<your-database-user>',
         'PASSWORD': '<your-database-password>',

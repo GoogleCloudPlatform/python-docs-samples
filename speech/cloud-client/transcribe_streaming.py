@@ -35,8 +35,8 @@ def transcribe_streaming(stream_file):
         audio_sample = speech_client.sample(
             stream=audio_file,
             encoding=speech.encoding.Encoding.LINEAR16,
-            sample_rate=16000)
-        alternatives = audio_sample.streaming_recognize()
+            sample_rate_hertz=16000)
+        alternatives = audio_sample.streaming_recognize('en-US')
 
         for alternative in alternatives:
             print('Finished: {}'.format(alternative.is_final))
