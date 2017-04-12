@@ -127,10 +127,35 @@ To run this sample:
     
     Example usage:
         python transcribe_async.py resources/audio.raw
-        python transcribe_async.py gs://cloud-samples-tests/speech/brooklyn.flac
+        python transcribe_async.py gs://cloud-samples-tests/speech/brooklyn.raw
     
     positional arguments:
       path        File or GCS path for audio file to be recognized
+    
+    optional arguments:
+      -h, --help  show this help message and exit
+
+
+Transcribe Streaming
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python transcribe_streaming.py
+
+    usage: transcribe_streaming.py [-h] stream
+    
+    Google Cloud Speech API sample application using the streaming API.
+    
+    Example usage:
+        python transcribe_streaming.py resources/audio.raw
+    
+    positional arguments:
+      stream      File to stream to the API
     
     optional arguments:
       -h, --help  show this help message and exit
