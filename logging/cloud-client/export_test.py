@@ -16,7 +16,7 @@ import os
 import random
 import string
 
-from gcp.testing import eventually_consistent
+from gcp_devrel.testing import eventually_consistent
 from google.cloud import logging
 import pytest
 
