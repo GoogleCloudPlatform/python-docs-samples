@@ -13,7 +13,7 @@
 
 import os
 
-from gcp.testing.flaky import flaky
+from gcp_devrel.testing.flaky import flaky
 from google.cloud import dns
 import pytest
 

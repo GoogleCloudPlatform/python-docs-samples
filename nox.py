@@ -116,6 +116,7 @@ def _determine_local_import_names(start_dir):
 # App Engine specific helpers
 #
 
+
 _GAE_ROOT = os.environ.get('GAE_ROOT')
 if _GAE_ROOT is None:
     _GAE_ROOT = tempfile.mkdtemp()
@@ -142,10 +143,6 @@ FLAKE8_COMMON_ARGS = [
     '--import-order-style', 'google',
     '--exclude', '.nox,.cache,env,lib,generated_pb2,*_pb2.py,*_pb2_grpc.py',
 ]
-
-# Location of our common testing utilities. This isn't published to PyPI.
-GCP_REPO_TOOLS_REQ =\
-    'git+https://github.com/GoogleCloudPlatform/python-repo-tools.git'
 
 
 # Collect sample directories.
@@ -177,7 +174,6 @@ if CHANGED_FILES is not None:
 def _session_tests(session, sample):
     """Runs py.test for a particular sample."""
     session.install('-r', 'testing/requirements.txt')
-    session.install(GCP_REPO_TOOLS_REQ)
 
     session.chdir(sample)
 
@@ -197,7 +193,6 @@ def _session_tests(session, sample):
 def session_gae(session, sample):
     """Runs py.test for an App Engine standard sample."""
     session.interpreter = 'python2.7'
-    session.install(GCP_REPO_TOOLS_REQ)
     _setup_appengine_sdk(session)
 
     # Create a lib directory if needed, otherwise the App Engine vendor library
@@ -271,7 +266,7 @@ def session_check_requirements(session):
     This is intentionally not parametric, as it's desired to never have two
     samples with differing versions of dependencies.
     """
-    session.install(GCP_REPO_TOOLS_REQ)
+    session.install('-r', 'testing/requirements.txt')
 
     if 'update' in session.posargs:
         command = 'update-requirements'
@@ -281,4 +276,4 @@ def session_check_requirements(session):
     reqfiles = list(_list_files('.', 'requirements*.txt'))
 
     for reqfile in reqfiles:
-        session.run('gcprepotools', command, reqfile)
+        session.run('gcp-devrel-py-tools check-requirements', command, reqfile)

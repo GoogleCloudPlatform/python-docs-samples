@@ -23,7 +23,7 @@ for this test, but it could be changed to a different project.
 import os
 import re
 
-from gcp.testing.flaky import flaky
+from gcp_devrel.testing.flaky import flaky
 import googleapiclient.discovery
 import pytest
 

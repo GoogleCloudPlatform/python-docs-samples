@@ -18,7 +18,7 @@ the output logs from Cloud Storage and verifies the expected output."""
 
 import os
 
-from gcp.testing.flaky import flaky
+from gcp_devrel.testing.flaky import flaky
 
 import create_cluster_and_submit_job
 

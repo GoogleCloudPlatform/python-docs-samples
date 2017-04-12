@@ -13,8 +13,8 @@
 
 import os
 
-from gcp.testing import eventually_consistent
-from gcp.testing.flaky import flaky
+from gcp_devrel.testing import eventually_consistent
+from gcp_devrel.testing.flaky import flaky
 from google.cloud import datastore
 import pytest
 
