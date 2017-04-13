@@ -1,1 +1,1 @@
-google-cloud-speech==0.25.0
+google-cloud-speech==0.25.1
