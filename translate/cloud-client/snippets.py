@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# -*- coding: iso-8859-15 -*-
+
 
 # Copyright 2016 Google, Inc.
 #
@@ -22,6 +24,8 @@ https://cloud.google.com/translate/docs.
 """
 
 import argparse
+import os
+import sys
 
 from google.cloud import translate
 
@@ -97,7 +101,7 @@ def translate_text(target, text):
     # Text can also be a sequence of strings, in which case this method
     # will return a sequence of results for each text.
     result = translate_client.translate(
-        text,
+        unicode(text, 'utf8'),
         target_language=target)
 
     print(u'Text: {}'.format(result['input']))
