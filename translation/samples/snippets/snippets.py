@@ -24,9 +24,6 @@ https://cloud.google.com/translate/docs.
 """
 
 import argparse
-import os
-import sys
-
 
 from google.cloud import translate
 
