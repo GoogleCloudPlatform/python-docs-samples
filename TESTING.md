@@ -24,12 +24,6 @@ For example, to install portaudio:
 
 If you have trouble installing a necessary system library, try filing an issue.
 
-### Troubleshooting
-
-#### PortAudio on OS X
-
-See [speech/api/README.md](speech/api/README.md).
-
 ## Preparing a project for testing
 
 Most tests require you to have an active, billing-enabled project on the
