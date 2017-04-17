@@ -27,6 +27,7 @@ import argparse
 
 
 from google.cloud import translate
+from six import python_2_unicode_compatible
 
 
 def detect_language(text):
@@ -89,6 +90,7 @@ def translate_text_with_model(target, text, model=translate.NMT):
         result['detectedSourceLanguage']))
 
 
+@python_2_unicode_compatible
 def translate_text(target, text):
     """Translates text into the target language.
 
