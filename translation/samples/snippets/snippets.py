@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: iso-8859-15 -*-
-
 
 # Copyright 2016 Google, Inc.
 #
@@ -27,7 +25,6 @@ import argparse
 
 
 from google.cloud import translate
-from six import python_2_unicode_compatible
 
 
 def detect_language(text):
@@ -80,7 +77,7 @@ def translate_text_with_model(target, text, model=translate.NMT):
     # Text can also be a sequence of strings, in which case this method
     # will return a sequence of results for each text.
     result = translate_client.translate(
-        text,
+        text.decode('utf-8'),
         target_language=target,
         model=model)
 
@@ -90,7 +87,6 @@ def translate_text_with_model(target, text, model=translate.NMT):
         result['detectedSourceLanguage']))
 
 
-@python_2_unicode_compatible
 def translate_text(target, text):
     """Translates text into the target language.
 
@@ -102,7 +98,7 @@ def translate_text(target, text):
     # Text can also be a sequence of strings, in which case this method
     # will return a sequence of results for each text.
     result = translate_client.translate(
-        unicode(text, 'utf8'),
+        text.decode('utf-8'),
         target_language=target)
 
     print(u'Text: {}'.format(result['input']))
