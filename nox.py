@@ -125,7 +125,7 @@ if _GAE_ROOT is None:
 def _setup_appengine_sdk(session):
     """Installs the App Engine SDK, if needed."""
     session.env['GAE_SDK_PATH'] = os.path.join(_GAE_ROOT, 'google_appengine')
-    session.run('gcprepotools', 'download-appengine-sdk', _GAE_ROOT)
+    session.run('gcp-devrel-py-tools', 'download-appengine-sdk', _GAE_ROOT)
 
 
 #
