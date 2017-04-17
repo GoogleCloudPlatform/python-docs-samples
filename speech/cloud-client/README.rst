@@ -127,7 +127,7 @@ To run this sample:
     
     Example usage:
         python transcribe_async.py resources/audio.raw
-        python transcribe_async.py gs://cloud-samples-tests/speech/brooklyn.raw
+        python transcribe_async.py gs://cloud-samples-tests/speech/vr.flac
     
     positional arguments:
       path        File or GCS path for audio file to be recognized
