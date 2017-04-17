@@ -82,6 +82,43 @@ To run this sample:
     $ python quickstart.py
 
 
+Snippets
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python snippets.py
+
+    usage: snippets.py [-h]
+                       {sentiment-text,sentiment-file,entities-text,entities-file,syntax-text,syntax-file}
+                       ...
+    
+    This application demonstrates how to perform basic operations with the
+    Google Cloud Natural Language API
+    
+    For more information, the documentation at
+    https://cloud.google.com/natural-language/docs.
+    
+    positional arguments:
+      {sentiment-text,sentiment-file,entities-text,entities-file,syntax-text,syntax-file}
+        sentiment-text      Detects sentiment in the text.
+        sentiment-file      Detects sentiment in the file located in Google Cloud
+                            Storage.
+        entities-text       Detects entities in the text.
+        entities-file       Detects entities in the file located in Google Cloud
+                            Storage.
+        syntax-text         Detects syntax in the text.
+        syntax-file         Detects syntax in the file located in Google Cloud
+                            Storage.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
 
 
 The client library
