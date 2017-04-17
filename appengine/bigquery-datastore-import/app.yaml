@@ -1,0 +1,12 @@
+application: your_app_id
+version: codelab
+runtime: python27
+api_version: 1
+threadsafe: false
+
+handlers:
+- url: /mapreduce(/.*)?
+  script: mapreduce/main.py
+
+- url: /.*
+  script: main.py
