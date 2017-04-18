@@ -13,9 +13,9 @@ See our [Django on Container Engine](https://cloud.google.com/python/django/cont
 
 ## Contributing changes
 
-* See [CONTRIBUTING.md](CONTRIBUTING.md)
+* See [CONTRIBUTING.md](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/CONTRIBUTING.md)
 
 
 ## Licensing
 
-* See [LICENSE](LICENSE)
+* See [LICENSE](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/LICENSE)
