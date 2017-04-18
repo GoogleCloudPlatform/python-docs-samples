@@ -23,8 +23,8 @@ https://cloud.google.com/translate/docs.
 
 import argparse
 
-
 from google.cloud import translate
+import six
 
 
 def detect_language(text):
@@ -74,12 +74,13 @@ def translate_text_with_model(target, text, model=translate.NMT):
     """
     translate_client = translate.Client()
 
+    if isinstance(text, six.binary_type):
+        text = text.decode('utf-8')
+
     # Text can also be a sequence of strings, in which case this method
     # will return a sequence of results for each text.
     result = translate_client.translate(
-        text.decode('utf-8'),
-        target_language=target,
-        model=model)
+        text, target_language=target, model=model)
 
     print(u'Text: {}'.format(result['input']))
     print(u'Translation: {}'.format(result['translatedText']))
@@ -95,11 +96,13 @@ def translate_text(target, text):
     """
     translate_client = translate.Client()
 
+    if isinstance(text, six.binary_type):
+        text = text.decode('utf-8')
+
     # Text can also be a sequence of strings, in which case this method
     # will return a sequence of results for each text.
     result = translate_client.translate(
-        text.decode('utf-8'),
-        target_language=target)
+        text, target_language=target)
 
     print(u'Text: {}'.format(result['input']))
     print(u'Translation: {}'.format(result['translatedText']))
