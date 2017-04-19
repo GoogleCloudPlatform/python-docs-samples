@@ -46,7 +46,7 @@ def sentiment_text(text):
 
 def sentiment_file(gcs_uri):
     """Detects sentiment in the file located in Google Cloud Storage."""
-    language_client = language.Client()
+    language_client = language.Client(api_version='v1beta2')
 
     # Instantiates a plain text document.
     document = language_client.document_from_url(gcs_uri)
@@ -61,7 +61,7 @@ def sentiment_file(gcs_uri):
 
 def entities_text(text):
     """Detects entities in the text."""
-    language_client = language.Client()
+    language_client = language.Client(api_version='v1beta2')
 
     # Instantiates a plain text document.
     document = language_client.document_from_text(text)
@@ -82,7 +82,7 @@ def entities_text(text):
 
 def entities_file(gcs_uri):
     """Detects entities in the file located in Google Cloud Storage."""
-    language_client = language.Client()
+    language_client = language.Client(api_version='v1beta2')
 
     # Instantiates a plain text document.
     document = language_client.document_from_url(gcs_uri)
@@ -103,7 +103,7 @@ def entities_file(gcs_uri):
 
 def syntax_text(text):
     """Detects syntax in the text."""
-    language_client = language.Client()
+    language_client = language.Client(api_version='v1beta2')
 
     # Instantiates a plain text document.
     document = language_client.document_from_text(text)
@@ -118,7 +118,7 @@ def syntax_text(text):
 
 def syntax_file(gcs_uri):
     """Detects syntax in the file located in Google Cloud Storage."""
-    language_client = language.Client()
+    language_client = language.Client(api_version='v1beta2')
 
     # Instantiates a plain text document.
     document = language_client.document_from_url(gcs_uri)
