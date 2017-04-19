@@ -29,7 +29,7 @@ def test_sentiment_text(capsys):
 def test_sentiment_file(capsys):
     snippets.sentiment_file(TEST_FILE_URL)
     out, _ = capsys.readouterr()
-    assert 'Score: 0.2' in out
+    assert 'Score: 0' in out
 
 
 def test_entities_text(capsys):
