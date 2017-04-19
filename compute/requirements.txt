@@ -1,0 +1,4 @@
+google-api-python-client==1.5.1
+iso8601==0.1.11
+rfc3339==5
+pytz==2014.7
