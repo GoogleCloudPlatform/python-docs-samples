@@ -1,0 +1,25 @@
+runtime: python27
+threadsafe: true
+api_version: 1
+
+handlers:
+# The endpoints handler must be mapped to /_ah/api.
+- url: /_ah/api/.*
+  script: main.api
+
+libraries:
+- name: pycrypto
+  version: 2.6
+- name: ssl
+  version: latest
+
+# Endpoints Frameworks 2.0 uses background threads for caching and reporting to
+# service management and service control.
+manual_scaling:
+  instances: 1
+
+env_variables:
+  # Replace with your endpoints service name.
+  ENDPOINTS_SERVICE_NAME: my-service.appspot.com
+  # Replace with the version Id of your uploaded Endpoints service.
+  ENDPOINTS_SERVICE_VERSION: 2016-08-01r0
