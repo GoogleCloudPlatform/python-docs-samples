@@ -3,12 +3,12 @@
 Google Translate API Python Samples
 ===============================================================================
 
-This directory contains samples for Google Translate API. With `Google Translate API`, you can dynamically translate text between thousands of language pairs.
+This directory contains samples for Google Translation API. With `Google Translation API`, you can dynamically translate text between thousands of language pairs.
 
 
 
 
-.. _Google Translate API: https://cloud.google.com/translate/docs 
+.. _Google Translation API: https://cloud.google.com/translate/docs 
 
 Setup
 -------------------------------------------------------------------------------
@@ -98,7 +98,7 @@ To run this sample:
                        ...
     
     This application demonstrates how to perform basic operations with the
-    Google Cloud Translate API
+    Google Cloud Translation API
     
     For more information, the documentation at
     https://cloud.google.com/translate/docs.
