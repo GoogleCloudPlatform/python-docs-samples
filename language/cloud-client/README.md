@@ -5,4 +5,4 @@ using the Google Cloud Client library. The samples are organized by API
 version:
 
 * [v1](v1)
-* [v1beta1](v1beta1)
+* [v1beta2](v1beta2)
