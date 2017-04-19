@@ -1,0 +1,2 @@
+gapic-google-cloud-language-v1beta2==0.15.3
+google-cloud-language==0.24.1
