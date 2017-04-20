@@ -1,11 +1,11 @@
 # This file is used to generate README.rst
 
 product:
-  name: Google Translate API
-  short_name: Translate API
+  name: Google Translation API
+  short_name: Translation API
   url: https://cloud.google.com/translate/docs
   description: >
-    With `Google Translate API`, you can dynamically translate text between
+    With `Google Translation API`, you can dynamically translate text between
     thousands of language pairs.
 
 setup:
