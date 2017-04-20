@@ -276,4 +276,4 @@ def session_check_requirements(session):
     reqfiles = list(_list_files('.', 'requirements*.txt'))
 
     for reqfile in reqfiles:
-        session.run('gcp-devrel-py-tools check-requirements', command, reqfile)
+        session.run('gcp-devrel-py-tools', command, reqfile)
