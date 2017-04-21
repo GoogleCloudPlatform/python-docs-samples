@@ -29,7 +29,7 @@ def test_sentiment_text(capsys):
 
 def test_sentiment_utf(capsys):
     snippets.sentiment_text(
-        u'1er site d\'information. Les articles du journal et toute l\''+
+        u'1er site d\'information. Les articles du journal et toute l\'' +
         u'actualité en continu : International, France, Société, Economie, ' +
         u'Culture, Environnement')
     out, _ = capsys.readouterr()
