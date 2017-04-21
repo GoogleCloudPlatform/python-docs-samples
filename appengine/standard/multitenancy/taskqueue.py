@@ -14,7 +14,7 @@
 
 """
 Sample App Engine application demonstrating how to use the Namespace Manager
-API with Memcache.
+API with Task Queue.
 
 For more information, see README.md.
 """
