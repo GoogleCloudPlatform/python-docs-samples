@@ -27,11 +27,15 @@ from google.cloud import language
 from google.cloud.gapic.language.v1beta2 import enums
 from google.cloud.gapic.language.v1beta2 import language_service_client
 from google.cloud.proto.language.v1beta2 import language_service_pb2
+import six
 
 
 def sentiment_text(text):
     """Detects sentiment in the text."""
     language_client = language.Client(api_version='v1beta2')
+
+    if isinstance(text, six.binary_type):
+        text = text.decode('utf-8')
 
     # Instantiates a plain text document.
     document = language_client.document_from_text(text)
@@ -40,8 +44,8 @@ def sentiment_text(text):
     #   document.doc_type == language.Document.HTML
     sentiment = document.analyze_sentiment().sentiment
 
-    print('Score: {}'.format(sentiment.score))
-    print('Magnitude: {}'.format(sentiment.magnitude))
+    print(u'Score: {}'.format(sentiment.score))
+    print(u'Magnitude: {}'.format(sentiment.magnitude))
 
 
 def sentiment_file(gcs_uri):
@@ -55,13 +59,16 @@ def sentiment_file(gcs_uri):
     #   document.doc_type == language.Document.HTML
     sentiment = document.analyze_sentiment().sentiment
 
-    print('Score: {}'.format(sentiment.score))
-    print('Magnitude: {}'.format(sentiment.magnitude))
+    print(u'Score: {}'.format(sentiment.score))
+    print(u'Magnitude: {}'.format(sentiment.magnitude))
 
 
 def entities_text(text):
     """Detects entities in the text."""
     language_client = language.Client(api_version='v1beta2')
+
+    if isinstance(text, six.binary_type):
+        text = text.decode('utf-8')
 
     # Instantiates a plain text document.
     document = language_client.document_from_text(text)
@@ -71,12 +78,12 @@ def entities_text(text):
     entities = document.analyze_entities().entities
 
     for entity in entities:
-        print('=' * 20)
-        print('{:<16}: {}'.format('name', entity.name))
-        print('{:<16}: {}'.format('type', entity.entity_type))
-        print('{:<16}: {}'.format('metadata', entity.metadata))
-        print('{:<16}: {}'.format('salience', entity.salience))
-        print('{:<16}: {}'.format('wikipedia_url',
+        print(u'=' * 20)
+        print(u'{:<16}: {}'.format('name', entity.name))
+        print(u'{:<16}: {}'.format('type', entity.entity_type))
+        print(u'{:<16}: {}'.format('metadata', entity.metadata))
+        print(u'{:<16}: {}'.format('salience', entity.salience))
+        print(u'{:<16}: {}'.format('wikipedia_url',
               entity.metadata.get('wikipedia_url', '-')))
 
 
@@ -105,6 +112,9 @@ def syntax_text(text):
     """Detects syntax in the text."""
     language_client = language.Client(api_version='v1beta2')
 
+    if isinstance(text, six.binary_type):
+        text = text.decode('utf-8')
+
     # Instantiates a plain text document.
     document = language_client.document_from_text(text)
 
@@ -113,7 +123,7 @@ def syntax_text(text):
     tokens = document.analyze_syntax().tokens
 
     for token in tokens:
-        print('{}: {}'.format(token.part_of_speech, token.text_content))
+        print(u'{}: {}'.format(token.part_of_speech, token.text_content))
 
 
 def syntax_file(gcs_uri):
@@ -128,13 +138,16 @@ def syntax_file(gcs_uri):
     tokens = document.analyze_syntax().tokens
 
     for token in tokens:
-        print('{}: {}'.format(token.part_of_speech, token.text_content))
+        print(u'{}: {}'.format(token.part_of_speech, token.text_content))
 
 
 def entity_sentiment_text(text):
     """Detects entity sentiment in the provided text."""
     language_client = language_service_client.LanguageServiceClient()
     document = language_service_pb2.Document()
+
+    if isinstance(text, six.binary_type):
+        text = text.decode('utf-8')
 
     document.content = text.encode('utf-8')
     document.type = enums.Document.Type.PLAIN_TEXT
@@ -144,15 +157,15 @@ def entity_sentiment_text(text):
 
     for entity in result.entities:
         print('Mentions: ')
-        print('Name: "{}"'.format(entity.name))
+        print(u'Name: "{}"'.format(entity.name))
         for mention in entity.mentions:
-            print('  Begin Offset : {}'.format(mention.text.begin_offset))
-            print('  Content : {}'.format(mention.text.content))
-            print('  Magnitude : {}'.format(mention.sentiment.magnitude))
-            print('  Sentiment : {}'.format(mention.sentiment.score))
-            print('  Type : {}'.format(mention.type))
-        print('Salience: {}'.format(entity.salience))
-        print('Sentiment: {}\n'.format(entity.sentiment))
+            print(u'  Begin Offset : {}'.format(mention.text.begin_offset))
+            print(u'  Content : {}'.format(mention.text.content))
+            print(u'  Magnitude : {}'.format(mention.sentiment.magnitude))
+            print(u'  Sentiment : {}'.format(mention.sentiment.score))
+            print(u'  Type : {}'.format(mention.type))
+        print(u'Salience: {}'.format(entity.salience))
+        print(u'Sentiment: {}\n'.format(entity.sentiment))
 
 
 def entity_sentiment_file(gcs_uri):
@@ -167,15 +180,15 @@ def entity_sentiment_file(gcs_uri):
       document, enums.EncodingType.UTF8)
 
     for entity in result.entities:
-        print('Name: "{}"'.format(entity.name))
+        print(u'Name: "{}"'.format(entity.name))
         for mention in entity.mentions:
-            print('  Begin Offset : {}'.format(mention.text.begin_offset))
-            print('  Content : {}'.format(mention.text.content))
-            print('  Magnitude : {}'.format(mention.sentiment.magnitude))
-            print('  Sentiment : {}'.format(mention.sentiment.score))
-            print('  Type : {}'.format(mention.type))
-        print('Salience: {}'.format(entity.salience))
-        print('Sentiment: {}\n'.format(entity.sentiment))
+            print(u'  Begin Offset : {}'.format(mention.text.begin_offset))
+            print(u'  Content : {}'.format(mention.text.content))
+            print(u'  Magnitude : {}'.format(mention.sentiment.magnitude))
+            print(u'  Sentiment : {}'.format(mention.sentiment.score))
+            print(u'  Type : {}'.format(mention.type))
+        print(u'Salience: {}'.format(entity.salience))
+        print(u'Sentiment: {}\n'.format(entity.sentiment))
 
 
 if __name__ == '__main__':

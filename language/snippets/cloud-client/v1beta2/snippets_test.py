@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2017 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +23,15 @@ TEST_FILE_URL = 'gs://{}/text.txt'.format(BUCKET)
 
 def test_sentiment_text(capsys):
     snippets.sentiment_text('President Obama is speaking at the White House.')
+    out, _ = capsys.readouterr()
+    assert 'Score: 0' in out
+
+
+def test_sentiment_utf(capsys):
+    snippets.sentiment_text(
+        u'1er site d\'information. Les articles du journal et toute l\'' +
+        u'actualité en continu : International, France, Société, Economie, ' +
+        u'Culture, Environnement')
     out, _ = capsys.readouterr()
     assert 'Score: 0' in out
 

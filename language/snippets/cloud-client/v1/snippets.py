@@ -24,11 +24,15 @@ https://cloud.google.com/natural-language/docs.
 import argparse
 
 from google.cloud import language
+import six
 
 
 def sentiment_text(text):
     """Detects sentiment in the text."""
     language_client = language.Client()
+
+    if isinstance(text, six.binary_type):
+        text = text.decode('utf-8')
 
     # Instantiates a plain text document.
     document = language_client.document_from_text(text)
@@ -60,6 +64,9 @@ def entities_text(text):
     """Detects entities in the text."""
     language_client = language.Client()
 
+    if isinstance(text, six.binary_type):
+        text = text.decode('utf-8')
+
     # Instantiates a plain text document.
     document = language_client.document_from_text(text)
 
@@ -69,11 +76,11 @@ def entities_text(text):
 
     for entity in entities:
         print('=' * 20)
-        print('{:<16}: {}'.format('name', entity.name))
-        print('{:<16}: {}'.format('type', entity.entity_type))
-        print('{:<16}: {}'.format('metadata', entity.metadata))
-        print('{:<16}: {}'.format('salience', entity.salience))
-        print('{:<16}: {}'.format('wikipedia_url',
+        print(u'{:<16}: {}'.format('name', entity.name))
+        print(u'{:<16}: {}'.format('type', entity.entity_type))
+        print(u'{:<16}: {}'.format('metadata', entity.metadata))
+        print(u'{:<16}: {}'.format('salience', entity.salience))
+        print(u'{:<16}: {}'.format('wikipedia_url',
               entity.metadata.get('wikipedia_url', '-')))
 
 
@@ -90,17 +97,20 @@ def entities_file(gcs_uri):
 
     for entity in entities:
         print('=' * 20)
-        print('{:<16}: {}'.format('name', entity.name))
-        print('{:<16}: {}'.format('type', entity.entity_type))
-        print('{:<16}: {}'.format('metadata', entity.metadata))
-        print('{:<16}: {}'.format('salience', entity.salience))
-        print('{:<16}: {}'.format('wikipedia_url',
+        print(u'{:<16}: {}'.format('name', entity.name))
+        print(u'{:<16}: {}'.format('type', entity.entity_type))
+        print(u'{:<16}: {}'.format('metadata', entity.metadata))
+        print(u'{:<16}: {}'.format('salience', entity.salience))
+        print(u'{:<16}: {}'.format('wikipedia_url',
               entity.metadata.get('wikipedia_url', '-')))
 
 
 def syntax_text(text):
     """Detects syntax in the text."""
     language_client = language.Client()
+
+    if isinstance(text, six.binary_type):
+        text = text.decode('utf-8')
 
     # Instantiates a plain text document.
     document = language_client.document_from_text(text)
@@ -110,7 +120,7 @@ def syntax_text(text):
     tokens = document.analyze_syntax().tokens
 
     for token in tokens:
-        print('{}: {}'.format(token.part_of_speech, token.text_content))
+        print(u'{}: {}'.format(token.part_of_speech, token.text_content))
 
 
 def syntax_file(gcs_uri):
@@ -125,7 +135,7 @@ def syntax_file(gcs_uri):
     tokens = document.analyze_syntax().tokens
 
     for token in tokens:
-        print('{}: {}'.format(token.part_of_speech, token.text_content))
+        print(u'{}: {}'.format(token.part_of_speech, token.text_content))
 
 
 if __name__ == '__main__':
