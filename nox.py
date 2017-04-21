@@ -136,7 +136,8 @@ def _setup_appengine_sdk(session):
 PYTEST_COMMON_ARGS = [
     '--cov',
     '--cov-config', os.path.abspath('.coveragerc'),
-    '--cov-report', 'term']
+    '--cov-report', 'term',
+    '--no-success-flaky-report']
 
 FLAKE8_COMMON_ARGS = [
     '--show-source', '--builtin', 'gettext', '--max-complexity', '20',
@@ -171,7 +172,7 @@ if CHANGED_FILES is not None:
         NON_GAE_STANDARD_SAMPLES, CHANGED_FILES)
 
 
-def _session_tests(session, sample, post_install):
+def _session_tests(session, sample, post_install=None):
     """Runs py.test for a particular sample."""
     session.install('-r', 'testing/requirements.txt')
 

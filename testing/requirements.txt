@@ -14,4 +14,4 @@ WebTest==2.0.25
 webapp2==2.5.2
 google-api-python-client==1.6.2
 google-cloud-core==0.23.0
-gcp-devrel-py-tools==0.0.1
+gcp-devrel-py-tools==0.0.4
