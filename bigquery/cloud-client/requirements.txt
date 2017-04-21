@@ -1,2 +1,2 @@
-google-cloud-bigquery==0.22.1
+google-cloud-bigquery==0.24.0
 pytz==2016.10
