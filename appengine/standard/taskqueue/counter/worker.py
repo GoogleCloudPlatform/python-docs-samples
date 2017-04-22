@@ -15,14 +15,11 @@
 # [START all]
 
 from google.appengine.ext import ndb
+from application import Counter
 import webapp2
 
 
 COUNTER_KEY = 'default counter'
-
-
-class Counter(ndb.Model):
-    count = ndb.IntegerProperty(indexed=False)
 
 
 class UpdateCounterHandler(webapp2.RequestHandler):
