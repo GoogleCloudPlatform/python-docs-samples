@@ -1,0 +1,6 @@
+runtime: python
+env: flex
+entrypoint: gunicorn -b :$PORT main:app
+
+env_variables:
+    SPARKPOST_API_KEY: your-sparkpost-api-key

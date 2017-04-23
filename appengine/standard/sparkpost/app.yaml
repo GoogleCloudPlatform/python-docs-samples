@@ -1,0 +1,9 @@
+runtime: python27
+threadsafe: yes
+api_version: 1
+
+handlers:
+- url: .*
+  script: main.app
+env_variables:
+    SPARKPOST_API_KEY: your-sparkpost-api-key

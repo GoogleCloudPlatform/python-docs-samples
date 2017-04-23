@@ -1,0 +1,3 @@
+Flask==0.12
+gunicorn==19.7.1
+sparkpost==1.3.5
