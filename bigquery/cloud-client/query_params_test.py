@@ -12,20 +12,41 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sync_query_params
+import query_params
 
 
-def test_sync_query_named_params(capsys):
-    sync_query_params.sync_query_named_params(
+def test_query_array_params(capsys):
+    query_params.query_array_params(
+        gender='M',
+        states=['WA', 'WI', 'WV', 'WY'])
+    out, _ = capsys.readouterr()
+    assert 'James' in out
+
+
+def test_query_named_params(capsys):
+    query_params.query_named_params(
         corpus='romeoandjuliet',
         min_word_count=100)
     out, _ = capsys.readouterr()
     assert 'love' in out
 
 
-def test_sync_query_positional_params(capsys):
-    sync_query_params.sync_query_positional_params(
+def test_query_positional_params(capsys):
+    query_params.query_positional_params(
         corpus='romeoandjuliet',
         min_word_count=100)
     out, _ = capsys.readouterr()
     assert 'love' in out
+
+
+def test_query_struct_params(capsys):
+    query_params.query_struct_params(765, "hello world")
+    out, _ = capsys.readouterr()
+    assert '765' in out
+    assert 'hello world' in out
+
+
+def test_query_timestamp_params(capsys):
+    query_params.query_timestamp_params(2016, 12, 7, 8, 0)
+    out, _ = capsys.readouterr()
+    assert '2016, 12, 7, 9, 0' in out
