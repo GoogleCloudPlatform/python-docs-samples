@@ -31,13 +31,13 @@ gcloud alpha bigtable clusters create bigtable-test \
     --zone=us-central1-c
 
 echo "Creating bigquery resources."
-gcloud alpha bigquery datasets create test_dataset
-gcloud alpha bigquery datasets create ephemeral_test_dataset
+bq mk test_dataset
+bq mk ephemeral_test_dataset
 gsutil cp bigquery/api/resources/data.csv gs://$GCLOUD_PROJECT/data.csv
-gcloud alpha bigquery import \
+bq load \
+    test_dataset.test_table \
     gs://$GCLOUD_PROJECT/data.csv \
-    test_dataset/test_table \
-    --schema-file bigquery/api/resources/schema.json
+    bigquery/api/resources/schema.json
 
 echo "Creating datastore indexes."
 gcloud app deploy -q datastore/api/index.yaml
