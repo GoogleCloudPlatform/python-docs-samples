@@ -60,12 +60,13 @@ def print_results(query_results):
 
 def query_positional_params(corpus, min_word_count):
     client = bigquery.Client()
-    query = """SELECT word, word_count
-    FROM `bigquery-public-data.samples.shakespeare`
-    WHERE corpus = ?
-    AND word_count >= ?
-    ORDER BY word_count DESC;
-    """
+    query = """
+        SELECT word, word_count
+        FROM `bigquery-public-data.samples.shakespeare`
+        WHERE corpus = ?
+        AND word_count >= ?
+        ORDER BY word_count DESC;
+        """
     query_job = client.run_async_query(
         str(uuid.uuid4()),
         query,
@@ -74,9 +75,7 @@ def query_positional_params(corpus, min_word_count):
                 # Set the name to None to use positional parameters (? symbol
                 # in the query).  Note that you cannot mix named and positional
                 # parameters.
-                None,
-                'STRING',
-                corpus),
+                None, 'STRING', corpus),
             bigquery.ScalarQueryParameter(None, 'INT64', min_word_count)))
 
     # Only standard SQL syntax supports parameters in queries.
@@ -91,21 +90,20 @@ def query_positional_params(corpus, min_word_count):
 
 def query_named_params(corpus, min_word_count):
     client = bigquery.Client()
-    query = """SELECT word, word_count
-    FROM `bigquery-public-data.samples.shakespeare`
-    WHERE corpus = @corpus
-    AND word_count >= @min_word_count
-    ORDER BY word_count DESC;
-    """
+    query = """
+        SELECT word, word_count
+        FROM `bigquery-public-data.samples.shakespeare`
+        WHERE corpus = @corpus
+        AND word_count >= @min_word_count
+        ORDER BY word_count DESC;
+        """
     query_job = client.run_async_query(
         str(uuid.uuid4()),
         query,
         query_parameters=(
             bigquery.ScalarQueryParameter('corpus', 'STRING', corpus),
             bigquery.ScalarQueryParameter(
-                'min_word_count',
-                'INT64',
-                min_word_count)))
+                'min_word_count', 'INT64', min_word_count)))
     query_job.use_legacy_sql = False
 
     # Start the query and wait for the job to complete.
@@ -116,14 +114,15 @@ def query_named_params(corpus, min_word_count):
 
 def query_array_params(gender, states):
     client = bigquery.Client()
-    query = """SELECT name, sum(number) as count
-    FROM `bigquery-public-data.usa_names.usa_1910_2013`
-    WHERE gender = @gender
-    AND state IN UNNEST(@states)
-    GROUP BY name
-    ORDER BY count DESC
-    LIMIT 10;
-    """
+    query = """
+        SELECT name, sum(number) as count
+        FROM `bigquery-public-data.usa_names.usa_1910_2013`
+        WHERE gender = @gender
+        AND state IN UNNEST(@states)
+        GROUP BY name
+        ORDER BY count DESC
+        LIMIT 10;
+        """
     query_job = client.run_async_query(
         str(uuid.uuid4()),
         query,
