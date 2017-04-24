@@ -171,7 +171,7 @@ if CHANGED_FILES is not None:
         NON_GAE_STANDARD_SAMPLES, CHANGED_FILES)
 
 
-def _session_tests(session, sample):
+def _session_tests(session, sample, post_install=None):
     """Runs py.test for a particular sample."""
     session.install('-r', 'testing/requirements.txt')
 
@@ -179,6 +179,9 @@ def _session_tests(session, sample):
 
     if os.path.exists(os.path.join(sample, 'requirements.txt')):
         session.install('-r', 'requirements.txt')
+
+    if post_install:
+        post_install(session)
 
     session.run(
         'pytest',
@@ -193,14 +196,13 @@ def _session_tests(session, sample):
 def session_gae(session, sample):
     """Runs py.test for an App Engine standard sample."""
     session.interpreter = 'python2.7'
-    _setup_appengine_sdk(session)
 
     # Create a lib directory if needed, otherwise the App Engine vendor library
     # will complain.
     if not os.path.isdir(os.path.join(sample, 'lib')):
         os.mkdir(os.path.join(sample, 'lib'))
 
-    _session_tests(session, sample)
+    _session_tests(session, sample, _setup_appengine_sdk)
 
 
 @nox.parametrize('sample', NON_GAE_STANDARD_SAMPLES)
