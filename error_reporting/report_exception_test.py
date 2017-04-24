@@ -16,6 +16,7 @@ import pytest
 
 import report_exception
 
+
 @pytest.mark.xfail(
     strict=True,
     reason='GoogleCloudPlatform/google-cloud-python#3263')
