@@ -12,8 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
+
 import report_exception
 
 
+@pytest.mark.xfail(
+    strict=True,
+    reason='GoogleCloudPlatform/google-cloud-python#3263')
 def test_error_sends():
     report_exception.simulate_error()
