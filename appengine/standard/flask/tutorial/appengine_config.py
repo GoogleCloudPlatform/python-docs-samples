@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START vendor]
 from google.appengine.ext import vendor
 
 # Add any libraries installed in the "lib" folder.
 vendor.add('lib')
+# [END vendor]
