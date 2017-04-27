@@ -80,7 +80,7 @@ def predict_examples(project,
         Mapping[str: any]: dictionary of prediction results defined by the
             model.
     """
-    service = googleapiclient.discovery.build('ml', 'v1beta1')
+    service = googleapiclient.discovery.build('ml', 'v1')
     name = 'projects/{}/models/{}'.format(project, model)
 
     if version is not None:
