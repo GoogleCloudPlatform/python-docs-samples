@@ -26,7 +26,7 @@ authentication:
 
     .. code-block:: bash
 
-        gcloud beta auth application-default login
+        gcloud auth application-default login
 
 
 #. When running on App Engine or Compute Engine, credentials are already
@@ -81,9 +81,9 @@ To run this sample:
 
     $ python snippets.py
 
-    usage: snippets.py [-h] [--database-name DATABASE_NAME]
-                       instance_name
-                       {insert_data,query_data,read_data,update_data,read_write_transaction,query_data_with_index,read_data_with_index,read_data_with_storing_index}
+    usage: snippets.py [-h] [--database-id DATABASE_ID]
+                       instance_id
+                       {create_database,insert_data,query_data,read_data,add_column,update_data,query_data_with_new_column,read_write_transaction,read_only_transaction,add_index,query_data_with_index,read_data_with_index,add_storing_index,read_data_with_storing_index}
                        ...
     
     This application demonstrates how to do basic operations using Cloud
@@ -92,26 +92,42 @@ To run this sample:
     For more information, see the README.rst under /spanner.
     
     positional arguments:
-      instance_name         Your Cloud Spanner instance name.
-      {insert_data,query_data,read_data,update_data,read_write_transaction,query_data_with_index,read_data_with_index,read_data_with_storing_index}
+      instance_id           Your Cloud Spanner instance ID.
+      {create_database,insert_data,query_data,read_data,add_column,update_data,query_data_with_new_column,read_write_transaction,read_only_transaction,add_index,query_data_with_index,read_data_with_index,add_storing_index,read_data_with_storing_index}
+        create_database     Creates a database and tables for sample data.
         insert_data         Inserts sample data into the given database. The
                             database and table must already exist and can be
                             created using `create_database`.
         query_data          Queries sample data from the database using SQL.
         read_data           Reads sample data from the database.
+        add_column          Adds a new column to the Albums table in the example
+                            database.
         update_data         Updates sample data in the database. This updates the
                             `MarketingBudget` column which must be created before
-                            running this sample. Run the following query on your
-                            database to create the column: ALTER TABLE Albums ADD
-                            COLUMN MarketingBudget INT64
+                            running this sample. You can add the column by running
+                            the `add_column` sample or by running this DDL
+                            statement against your database: ALTER TABLE Albums
+                            ADD COLUMN MarketingBudget INT64
+        query_data_with_new_column
+                            Queries sample data from the database using SQL. This
+                            sample uses the `MarketingBudget` column. You can add
+                            the column by running the `add_column` sample or by
+                            running this DDL statement against your database:
+                            ALTER TABLE Albums ADD COLUMN MarketingBudget INT64
         read_write_transaction
                             Performs a read-write transaction to update two sample
                             records in the database. This will transfer 200,000
-                            from the `MarketingBudget` field for the first Album
-                            to the second Album. If the `MarketingBudget` is too
+                            from the `MarketingBudget` field for the second Album
+                            to the first Album. If the `MarketingBudget` is too
                             low, it will raise an exception. Before running this
                             sample, you will need to run the `update_data` sample
                             to populate the fields.
+        read_only_transaction
+                            Reads data inside of a read-only transaction. Within
+                            the read-only transaction, or "snapshot", the
+                            application sees consistent view of the database at a
+                            particular timestamp.
+        add_index           Adds a simple index to the example database.
         query_data_with_index
                             Inserts sample data into the given database. The
                             database and table must already exist and can be
@@ -120,6 +136,7 @@ To run this sample:
                             Inserts sample data into the given database. The
                             database and table must already exist and can be
                             created using `create_database`.
+        add_storing_index   Adds an storing index to the example database.
         read_data_with_storing_index
                             Inserts sample data into the given database. The
                             database and table must already exist and can be
@@ -127,8 +144,8 @@ To run this sample:
     
     optional arguments:
       -h, --help            show this help message and exit
-      --database-name DATABASE_NAME
-                            Your Cloud Spanner database name.
+      --database-id DATABASE_ID
+                            Your Cloud Spanner database ID.
 
 
 

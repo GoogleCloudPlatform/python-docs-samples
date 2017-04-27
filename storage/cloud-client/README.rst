@@ -26,7 +26,7 @@ authentication:
 
     .. code-block:: bash
 
-        gcloud beta auth application-default login
+        gcloud auth application-default login
 
 
 #. When running on App Engine or Compute Engine, credentials are already
@@ -243,7 +243,7 @@ To run this sample:
 
     $ python notification_polling.py
 
-    usage: notification_polling.py [-h] [--project PROJECT] subscription
+    usage: notification_polling.py [-h] subscription
     
     This application demonstrates how to poll for GCS notifications from a Cloud
     Pub/Sub subscription, parse the incoming message, and acknowledge the
@@ -263,12 +263,10 @@ To run this sample:
     changes scroll by in the app.
     
     positional arguments:
-      subscription       The ID of the Pub/Sub subscription
+      subscription  The ID of the Pub/Sub subscription
     
     optional arguments:
-      -h, --help         show this help message and exit
-      --project PROJECT  The project of the subscription, if not in your default
-                         project
+      -h, --help    show this help message and exit
 
 
 

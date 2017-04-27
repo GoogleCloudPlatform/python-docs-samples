@@ -3,7 +3,7 @@
 Google Cloud Vision API Python Samples
 ===============================================================================
 
-This directory contains samples for Google Cloud Vision API. `Google Cloud Vision API`_ allows developers to easily integrate vision detection features within applications, including image labeling, face and landmark detection, optical character recognition (OCR), and tagging of explicit content
+This directory contains samples for Google Cloud Vision API. `Google Cloud Vision API`_ allows developers to easily integrate vision detection features within applications, including image labeling, face and landmark detection, optical character recognition (OCR), and tagging of explicit content.
 
 
 
@@ -26,7 +26,7 @@ authentication:
 
     .. code-block:: bash
 
-        gcloud beta auth application-default login
+        gcloud auth application-default login
 
 
 #. When running on App Engine or Compute Engine, credentials are already
@@ -81,13 +81,14 @@ To run this sample:
 
     $ python doctext.py
 
-    usage: doctext.py [-h] image_file
+    usage: doctext.py [-h] [-out_file OUT_FILE] detect_file
     
     positional arguments:
-      image_file  The image for text detection.
+      detect_file         The image for text detection.
     
     optional arguments:
-      -h, --help  show this help message and exit
+      -h, --help          show this help message and exit
+      -out_file OUT_FILE  Optional output file
 
 
 
