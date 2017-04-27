@@ -26,7 +26,7 @@ authentication:
 
     .. code-block:: bash
 
-        gcloud beta auth application-default login
+        gcloud auth application-default login
 
 
 #. When running on App Engine or Compute Engine, credentials are already
