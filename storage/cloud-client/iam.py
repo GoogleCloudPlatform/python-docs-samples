@@ -22,8 +22,6 @@ https://cloud.google.com/storage/docs/access-control/using-iam-permissions.
 """
 
 import argparse
-import base64
-import os
 
 from google.cloud import storage
 
@@ -50,7 +48,7 @@ def add_bucket_iam_member(bucket_name, role, member):
     bucket.set_iam_policy(policy)
 
     print('Added {} with role {} to {}.'.format(
-        role, member, bucket_name))
+         member, role, bucket_name))
 
 
 def remove_bucket_iam_member(bucket_name, role, member):
@@ -64,7 +62,7 @@ def remove_bucket_iam_member(bucket_name, role, member):
     bucket.set_iam_policy(policy)
 
     print('Removed {} with role {} from {}.'.format(
-        role, member, bucket_name))
+        member, role, bucket_name))
 
 
 if __name__ == '__main__':
