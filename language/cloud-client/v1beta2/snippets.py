@@ -22,6 +22,7 @@ https://cloud.google.com/natural-language/docs.
 """
 
 import argparse
+import sys
 
 from google.cloud import language
 from google.cloud.gapic.language.v1beta2 import enums
@@ -29,6 +30,12 @@ from google.cloud.gapic.language.v1beta2 import language_service_client
 from google.cloud.proto.language.v1beta2 import language_service_pb2
 import six
 
+def get_native_encoding_type():
+    """Returns the encoding type that matches Python's native strings."""
+    if sys.maxunicode == 65535:
+        return 'UTF16'
+    else:
+        return 'UTF32'
 
 def sentiment_text(text):
     """Detects sentiment in the text."""
@@ -153,7 +160,7 @@ def entity_sentiment_text(text):
     document.type = enums.Document.Type.PLAIN_TEXT
 
     result = language_client.analyze_entity_sentiment(
-        document, enums.EncodingType.UTF8)
+        document, get_native_encoding_type())
 
     for entity in result.entities:
         print('Mentions: ')
@@ -177,7 +184,7 @@ def entity_sentiment_file(gcs_uri):
     document.type = enums.Document.Type.PLAIN_TEXT
 
     result = language_client.analyze_entity_sentiment(
-      document, enums.EncodingType.UTF8)
+      document, get_native_encoding_type())
 
     for entity in result.entities:
         print(u'Name: "{}"'.format(entity.name))
