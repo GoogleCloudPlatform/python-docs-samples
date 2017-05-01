@@ -41,7 +41,7 @@ def analyze_faces(path):
     while not operation.done():
         sys.stdout.write('.')
         sys.stdout.flush()
-        time.sleep(1)
+        time.sleep(20)
 
     print('\nFinished processing.')
 
@@ -70,7 +70,7 @@ def analyze_labels(path):
     while not operation.done():
         sys.stdout.write('.')
         sys.stdout.flush()
-        time.sleep(1)
+        time.sleep(20)
 
     print('\nFinished processing.')
 
@@ -99,7 +99,7 @@ def analyze_shots(path):
     while not operation.done():
         sys.stdout.write('.')
         sys.stdout.flush()
-        time.sleep(1)
+        time.sleep(20)
 
     print('\nFinished processing.')
 
