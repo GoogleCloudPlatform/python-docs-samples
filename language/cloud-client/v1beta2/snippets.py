@@ -30,12 +30,14 @@ from google.cloud.gapic.language.v1beta2 import language_service_client
 from google.cloud.proto.language.v1beta2 import language_service_pb2
 import six
 
+
 def get_native_encoding_type():
     """Returns the encoding type that matches Python's native strings."""
     if sys.maxunicode == 65535:
         return 'UTF16'
     else:
         return 'UTF32'
+
 
 def sentiment_text(text):
     """Detects sentiment in the text."""
