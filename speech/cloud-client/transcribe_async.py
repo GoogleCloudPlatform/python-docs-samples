@@ -23,40 +23,7 @@ Example usage:
 """
 
 import argparse
-import io
 import time
-
-
-def transcribe_file(speech_file):
-    """Transcribe the given audio file asynchronously."""
-    from google.cloud import speech
-    speech_client = speech.Client()
-
-    with io.open(speech_file, 'rb') as audio_file:
-        content = audio_file.read()
-        audio_sample = speech_client.sample(
-            content,
-            source_uri=None,
-            encoding='LINEAR16',
-            sample_rate_hertz=16000)
-
-    operation = audio_sample.long_running_recognize('en-US')
-
-    retry_count = 100
-    while retry_count > 0 and not operation.complete:
-        retry_count -= 1
-        time.sleep(2)
-        operation.poll()
-
-    if not operation.complete:
-        print('Operation not complete and retry limit reached.')
-        return
-
-    alternatives = operation.results
-    for alternative in alternatives:
-        print('Transcript: {}'.format(alternative.transcript))
-        print('Confidence: {}'.format(alternative.confidence))
-    # [END send_request]
 
 
 def transcribe_gcs(gcs_uri):
@@ -98,5 +65,3 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.path.startswith('gs://'):
         transcribe_gcs(args.path)
-    else:
-        transcribe_file(args.path)
