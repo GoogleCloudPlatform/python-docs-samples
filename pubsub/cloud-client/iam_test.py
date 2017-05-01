@@ -67,7 +67,7 @@ def test_set_topic_policy(test_topic):
 
     policy = test_topic.get_iam_policy()
     assert policy.viewers
-    assert policy.editors
+    assert policy['roles/pubsub.publisher']
 
 
 def test_set_subscription_policy(test_subscription):

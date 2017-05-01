@@ -1,2 +1,2 @@
-grpcio==1.2.1
+grpcio==1.3.0
 google-auth==1.0.0
