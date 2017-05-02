@@ -24,8 +24,8 @@ import argparse
 import time
 import uuid
 
-from google_auth_oauthlib import flow
 from google.cloud import bigquery
+from google_auth_oauthlib import flow
 
 
 def wait_for_job(job):
@@ -62,10 +62,10 @@ def run_query(credentials, project, query):
             break
 
 
-def auth_query(project, query, launch_browser=True):
+def authenticate_and_query(project, query, launch_browser=True):
     appflow = flow.InstalledAppFlow.from_client_secrets_file(
-            'client_secrets.json',
-            scopes=['https://www.googleapis.com/auth/bigquery'])
+        'client_secrets.json',
+        scopes=['https://www.googleapis.com/auth/bigquery'])
 
     if launch_browser:
         appflow.run_local_server()
@@ -88,5 +88,5 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    auth_query(args.project, args.query, launch_browser=args.launch_browser)
-
+    authenticate_and_query(
+        args.project, args.query, launch_browser=args.launch_browser)
