@@ -152,7 +152,8 @@ def add_index(instance_id, database_id):
     print('Added the AlbumsByAlbumTitle index.')
 
 
-def query_data_with_index(instance_id, database_id):
+def query_data_with_index(
+        instance_id, database_id, start_title='Aardvark', end_title='Goo'):
     """Queries sample data from the database using SQL and an index.
 
     The index must exist before running this sample. You can add the index
@@ -168,14 +169,25 @@ def query_data_with_index(instance_id, database_id):
         ALTER TABLE Albums ADD COLUMN MarketingBudget INT64
 
     """
+    from google.cloud.proto.spanner.v1 import type_pb2
+
     spanner_client = spanner.Client()
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
+    params = {
+        'start_title': start_title,
+        'end_title': end_title
+    }
+    param_types = {
+        'start_title': type_pb2.Type(code=type_pb2.STRING),
+        'end_title': type_pb2.Type(code=type_pb2.STRING)
+    }
     results = database.execute_sql(
         "SELECT AlbumId, AlbumTitle, MarketingBudget "
         "FROM Albums@{FORCE_INDEX=AlbumsByAlbumTitle} "
-        "WHERE AlbumTitle >= 'Ardvark' AND AlbumTitle < 'Goo'")
+        "WHERE AlbumTitle >= @start_title AND AlbumTitle < @end_title",
+        params=params, param_types=param_types)
 
     for row in results:
         print(
@@ -413,7 +425,12 @@ if __name__ == '__main__':
     subparsers.add_parser(
         'read_only_transaction', help=read_only_transaction.__doc__)
     subparsers.add_parser('add_index', help=add_index.__doc__)
-    subparsers.add_parser('query_data_with_index', help=insert_data.__doc__)
+    query_data_with_index_parser = subparsers.add_parser(
+        'query_data_with_index', help=query_data_with_index.__doc__)
+    query_data_with_index_parser.add_argument(
+        'start_title', default='Aardvark')
+    query_data_with_index_parser.add_argument(
+        'end_title', default='Goo')
     subparsers.add_parser('read_data_with_index', help=insert_data.__doc__)
     subparsers.add_parser('add_storing_index', help=add_storing_index.__doc__)
     subparsers.add_parser(
@@ -442,7 +459,9 @@ if __name__ == '__main__':
     elif args.command == 'add_index':
         add_index(args.instance_id, args.database_id)
     elif args.command == 'query_data_with_index':
-        query_data_with_index(args.instance_id, args.database_id)
+        query_data_with_index(
+            args.instance_id, args.database_id,
+            args.start_title, args.end_title)
     elif args.command == 'read_data_with_index':
         read_data_with_index(args.instance_id, args.database_id)
     elif args.command == 'add_storing_index':
