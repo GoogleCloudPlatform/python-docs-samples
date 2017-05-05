@@ -77,7 +77,7 @@ def analyze_labels(path):
     # first result is retrieved because a single video was processed
     results = operation.result().annotation_results[0]
 
-    for i, label in enumerate(results.label_annotations):
+    for label in results.label_annotations:
         print('Label description: {}'.format(label.description))
         print('Locations:')
 
