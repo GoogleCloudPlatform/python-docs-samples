@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This application demonstrates how to perform basic operations with the
+"""This application demonstrates how to perform shot change detection with the
 Google Cloud Video Intelligence API.
 
 For more information, check out the documentation at
@@ -33,15 +33,15 @@ from google.cloud.gapic.videointelligence.v1beta1 import (
 # [END imports]
 
 
-def analyze_shots(path):
-    """ Detects camera shot changes. """
+def analyze_faces(path):
     # [START construct_request]
+    """ Detects faces given a GCS path. """
     video_client = (video_intelligence_service_client.
                     VideoIntelligenceServiceClient())
-    features = [enums.Feature.SHOT_CHANGE_DETECTION]
+    features = [enums.Feature.FACE_DETECTION]
     operation = video_client.annotate_video(path, features)
     # [END construct_request]
-    print('\nProcessing video for shot change annotations:')
+    print('\nProcessing video for face annotations:')
 
     # [START check_operation]
     while not operation.done():
@@ -53,13 +53,18 @@ def analyze_shots(path):
     # [END check_operation]
 
     # [START parse_response]
-    shots = operation.result().annotation_results[0]
+    # first result is retrieved because a single video was processed
+    face_annotations = (operation.result().annotation_results[0].
+                        face_annotations)
 
-    for note, shot in enumerate(shots.shot_annotations):
-        print('Scene {}: {} to {}'.format(
-            note,
-            shot.start_time_offset,
-            shot.end_time_offset))
+    for face_id, face in enumerate(face_annotations):
+        print('Thumbnail size: {}'.format(len(face.thumbnail)))
+
+        for segment_id, segment in enumerate(face.segments):
+            print('Track {}: {} to {}'.format(
+                segment_id,
+                segment.start_time_offset,
+                segment.end_time_offset))
     # [END parse_response]
 
 
@@ -68,9 +73,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('path', help='GCS path for shot change detection.')
+    parser.add_argument('path', help='GCS file path for face detection.')
     args = parser.parse_args()
 
-    analyze_shots(args.path)
+    analyze_faces(args.path)
     # [END running_app]
 # [END full_tutorial]

@@ -1,6 +1,6 @@
 # Google Cloud Video Intelligence
 
-Demonstrates shot change detection using the Google Cloud Video Intelligence API.
+Demonstrates face detection using the Google Cloud Video Intelligence API.
 
 ## Setup
 Please follow the [Set Up Your Project](https://cloud.google.com/video-intelligence/docs/getting-started#set_up_your_project)
@@ -25,5 +25,5 @@ $ pip install -r requirements.txt
 
 Run the sample, for example:
 ```
-python shotchange.py gs://cloudmleap/video/googlework.mp4
+python faces.py gs://cloudmleap/video/googlework.mp4
 ```
