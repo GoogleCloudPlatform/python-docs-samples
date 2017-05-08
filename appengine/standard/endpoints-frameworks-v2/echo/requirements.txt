@@ -1,1 +1,1 @@
-google-endpoints==2.0.4
+google-endpoints==2.0.5
