@@ -6,6 +6,9 @@ info:
   version: "1.0.0"
 host: "echo-api.endpoints.YOUR-PROJECT-ID.cloud.goog"
 # [END swagger]
+# For App Engine deployments, delete the above "host:" line and remove the "# "
+# from the following line. Then change YOUR-PROJECT-ID to your project id.
+# host: "YOUR-PROJECT-ID.appspot.com"
 basePath: "/"
 consumes:
 - "application/json"
