@@ -98,7 +98,7 @@ To run this sample:
                        ...
     
     This application demonstrates how to perform basic operations with the
-    Google Cloud Translate API
+    Google Cloud Translation API
     
     For more information, the documentation at
     https://cloud.google.com/translate/docs.
