@@ -2,5 +2,5 @@ Flask==0.12.1
 pyjwt==1.5.0
 flask-cors==3.0.2
 google-auth==1.0.1
-requests==2.13.0
+requests==2.14.1
 requests-toolbelt==0.7.1
