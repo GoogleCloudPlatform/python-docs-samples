@@ -3,4 +3,4 @@ flask-cors==3.0.2
 gunicorn==19.7.1
 six==1.10.0
 pyyaml==3.12
-requests==2.14.1
+requests==2.14.2
