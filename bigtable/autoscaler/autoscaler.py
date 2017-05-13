@@ -103,7 +103,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Scales Bigtable clusters based on CPU usage.')
     parser.add_argument(
-        'instance_id', help='ID of the Cloud Bigtable instance to connect to.')
+        'bigtable_instance', help='ID of the Cloud Bigtable instance to '
+                                  'connect to.')
     parser.add_argument(
         '--high_cpu_threshold',
         help='If Bigtable CPU usages is above this threshold, scale up',
