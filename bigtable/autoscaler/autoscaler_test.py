@@ -81,10 +81,3 @@ def test_main(scale_bigtable, get_cpu_load, sleep):
     scale_bigtable.assert_called_once_with(BIGTABLE_INSTANCE, False)
 
     scale_bigtable.reset_mock()
-
-
-
-
-
-
-
