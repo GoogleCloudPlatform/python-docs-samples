@@ -126,7 +126,6 @@ if __name__ == '__main__':
 
     while True:
         main(
-            args.project_id,
             args.bigtable_instance,
             float(args.high_cpu_threshold),
             float(args.low_cpu_threshold),
