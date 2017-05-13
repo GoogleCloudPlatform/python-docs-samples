@@ -28,7 +28,11 @@ CPU_METRIC = 'bigtable.googleapis.com/cluster/cpu_load'
 
 
 def get_cpu_load():
-    """Returns the most recent Bigtable CPU load measurement."""
+    """Returns the most recent Bigtable CPU load measurement.
+
+    Returns:
+          float: The most recent Bigtable CPU usage metric
+    """
     client = monitoring.Client()
     query = client.query(CPU_METRIC, minutes=5)
     return list(query)[0].points[0].value
