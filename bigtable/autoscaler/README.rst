@@ -87,10 +87,13 @@ To run this sample:
 
     usage: autoscaler.py [-h] [--high_cpu_threshold HIGH_CPU_THRESHOLD]
                          [--low_cpu_threshold LOW_CPU_THRESHOLD]
-                         [--high_latency_threshold HIGH_LATENCY_THRESHOLD]
                          [--short_sleep SHORT_SLEEP] [--long_sleep LONG_SLEEP]
+                         instance_id
     
     Scales Bigtable clusters based on CPU usage.
+    
+    positional arguments:
+      instance_id           ID of the Cloud Bigtable instance to connect to.
     
     optional arguments:
       -h, --help            show this help message and exit
@@ -98,9 +101,6 @@ To run this sample:
                             If Bigtable CPU usages is above this threshold, scale
                             up
       --low_cpu_threshold LOW_CPU_THRESHOLD
-                            If Bigtable CPU usages is above this threshold, scale
-                            up
-      --high_latency_threshold HIGH_LATENCY_THRESHOLD
                             If Bigtable CPU usages is above this threshold, scale
                             up
       --short_sleep SHORT_SLEEP
