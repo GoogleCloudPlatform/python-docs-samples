@@ -19,6 +19,11 @@ Google Cloud Video Intelligence API.
 
 For more information, check out the documentation at
 https://cloud.google.com/videointelligence/docs.
+
+Usage Example:
+
+    python faces.py gs://cloudmleap/video/googlework.mp4
+
 """
 
 # [START full_tutorial]
