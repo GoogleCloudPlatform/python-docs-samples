@@ -83,7 +83,7 @@ def test_faces_uri(capsys):
 
 def test_faces_http(capsys):
     uri = ('https://storage-download.googleapis.com/{}/vision/' +
-            'face_no_surprise.jpg')
+           'face_no_surprise.jpg')
     detect.detect_faces_uri(uri.format(BUCKET))
     out, _ = capsys.readouterr()
     assert 'Likelihood.POSSIBLE' in out
