@@ -37,12 +37,17 @@ def get_cpu_load():
     return recent_time_series.points[0].value
 
 
-def scale_bigtable(bigtable_instance, up):
+def scale_bigtable(bigtable_instance, scale_up):
     """Scales the number of Bigtable nodes up or down.
+
+    Edits the number of nodes in the Bigtable cluster to be increased
+    or decreased, depending on the `scale_up` boolean argument. Currently
+    the `incremental` strategy from `strategies.py` is used.
+
 
     Args:
            bigtable_instance (str): Cloud Bigtable instance id to scale
-           up (bool): If true, scale up, otherwise scale down
+           scale_up (bool): If true, scale up, otherwise scale down
     """
     bigtable_client = bigtable.Client(admin=True)
     instance = bigtable_client.instance(bigtable_instance)
@@ -53,11 +58,11 @@ def scale_bigtable(bigtable_instance, up):
 
     current_node_count = cluster.serve_nodes
 
-    if current_node_count <= 3 and not up:
+    if current_node_count <= 3 and not scale_up:
         # Can't downscale lower than 3 nodes
         return
 
-    if up:
+    if scale_up:
         strategies_dict = strategies.UPSCALE_STRATEGIES
     else:
         strategies_dict = strategies.DOWNSCALE_STRATEGIES

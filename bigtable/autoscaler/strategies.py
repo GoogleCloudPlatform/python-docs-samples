@@ -39,6 +39,7 @@ def _downscale_incremental_strategy(current_nodes):
         return 3
     return new_nodes
 
+
 DOWNSCALE_STRATEGIES = {
     'incremental': _downscale_incremental_strategy
 }
