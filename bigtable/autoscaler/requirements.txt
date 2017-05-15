@@ -1,3 +1,2 @@
-google-cloud-core==0.24.1
 google-cloud-bigtable==0.23.1
 google-cloud-monitoring==0.24.0
