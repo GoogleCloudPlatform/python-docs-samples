@@ -29,6 +29,7 @@ Usage Examples:
 
 import argparse
 import base64
+import io
 import sys
 import time
 
@@ -48,7 +49,7 @@ def analyze_safe_search(path):
     while not operation.done():
         sys.stdout.write('.')
         sys.stdout.flush()
-        time.sleep(1)
+        time.sleep(15)
 
     print('\nFinished processing.')
 
@@ -79,7 +80,7 @@ def analyze_faces(path):
     while not operation.done():
         sys.stdout.write('.')
         sys.stdout.flush()
-        time.sleep(1)
+        time.sleep(15)
 
     print('\nFinished processing.')
 
@@ -114,7 +115,7 @@ def analyze_labels(path):
     while not operation.done():
         sys.stdout.write('.')
         sys.stdout.flush()
-        time.sleep(1)
+        time.sleep(15)
 
     print('\nFinished processing.')
 
@@ -143,17 +144,17 @@ def analyze_labels_file(path):
                     VideoIntelligenceServiceClient())
     features = [enums.Feature.LABEL_DETECTION]
 
-    with open(path, "rb") as movie:
+    with io.open(path, "rb") as movie:
         content_base64 = base64.b64encode(movie.read())
 
-    operation = video_client.annotate_video('', features,
-                                            input_content=content_base64)
+    operation = video_client.annotate_video(
+        '', features, input_content=content_base64)
     print('\nProcessing video for label annotations:')
 
     while not operation.done():
         sys.stdout.write('.')
         sys.stdout.flush()
-        time.sleep(1)
+        time.sleep(15)
 
     print('\nFinished processing.')
 
@@ -187,7 +188,7 @@ def analyze_shots(path):
     while not operation.done():
         sys.stdout.write('.')
         sys.stdout.flush()
-        time.sleep(1)
+        time.sleep(15)
 
     print('\nFinished processing.')
 

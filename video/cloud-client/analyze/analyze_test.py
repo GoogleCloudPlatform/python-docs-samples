@@ -17,7 +17,9 @@
 import os
 
 import analyze
+
 import pytest
+
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 LABELS_FILE_PATH = '/video/cat.mp4'
