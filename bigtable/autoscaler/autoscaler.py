@@ -32,7 +32,7 @@ def get_cpu_load():
     """
     client = monitoring.Client()
     query = client.query('bigtable.googleapis.com/cluster/cpu_load', minutes=5)
-    time_series = list(query)[0]
+    time_series = list(query)
     recent_time_series = time_series[0]
     return recent_time_series.points[0].value
 
