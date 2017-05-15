@@ -16,15 +16,12 @@
 autoscale Google Cloud Bigtable."""
 
 import argparse
-import os
 import time
 
 from google.cloud import bigtable
 from google.cloud import monitoring
 
 import strategies
-
-CPU_METRIC = 'bigtable.googleapis.com/cluster/cpu_load'
 
 
 def get_cpu_load():
@@ -34,8 +31,10 @@ def get_cpu_load():
           float: The most recent Bigtable CPU usage metric
     """
     client = monitoring.Client()
-    query = client.query(CPU_METRIC, minutes=5)
-    return list(query)[0].points[0].value
+    query = client.query('bigtable.googleapis.com/cluster/cpu_load', minutes=5)
+    time_series = list(query)[0]
+    recent_time_series = time_series[0]
+    return recent_time_series.points[0].value
 
 
 def scale_bigtable(bigtable_instance, up):
@@ -98,6 +97,7 @@ def main(
     else:
         print('CPU within threshold, sleeping.')
         time.sleep(short_sleep)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
