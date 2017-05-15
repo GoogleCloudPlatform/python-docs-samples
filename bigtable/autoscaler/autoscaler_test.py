@@ -24,6 +24,7 @@ from autoscaler import get_cpu_load
 from autoscaler import main
 from autoscaler import scale_bigtable
 
+# tests assume instance and cluster have the same ID
 BIGTABLE_INSTANCE = os.environ['BIGTABLE_CLUSTER']
 
 # System tests to verify API calls succeed
@@ -38,7 +39,7 @@ def test_scale_bigtable():
     instance = bigtable_client.instance(BIGTABLE_INSTANCE)
     instance.reload()
 
-    cluster = instance.cluster('{}-cluster'.format(BIGTABLE_INSTANCE))
+    cluster = instance.cluster(BIGTABLE_INSTANCE)
     cluster.reload()
     original_node_count = cluster.serve_nodes
 
@@ -50,7 +51,7 @@ def test_scale_bigtable():
     new_node_count = cluster.serve_nodes
     assert (new_node_count == (original_node_count + 2))
 
-    scale_bigtable(BIGTABLE_INSTANCE, False)
+    scale_bigtable(BIGTABLE_INSTANCE, BIGTABLE_INSTANCE, False)
     time.sleep(3)
     cluster.reload()
     final_node_count = cluster.serve_nodes

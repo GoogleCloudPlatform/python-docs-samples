@@ -37,7 +37,7 @@ def get_cpu_load():
     return recent_time_series.points[0].value
 
 
-def scale_bigtable(bigtable_instance, scale_up):
+def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
     """Scales the number of Bigtable nodes up or down.
 
     Edits the number of nodes in the Bigtable cluster to be increased
@@ -47,13 +47,14 @@ def scale_bigtable(bigtable_instance, scale_up):
 
     Args:
            bigtable_instance (str): Cloud Bigtable instance id to scale
+           bigtable_cluster (str): Cloud Bigtable cluster id to scale
            scale_up (bool): If true, scale up, otherwise scale down
     """
     bigtable_client = bigtable.Client(admin=True)
     instance = bigtable_client.instance(bigtable_instance)
     instance.reload()
 
-    cluster = instance.cluster('{}-cluster'.format(bigtable_instance))
+    cluster = instance.cluster(bigtable_cluster)
     cluster.reload()
 
     current_node_count = cluster.serve_nodes
@@ -77,6 +78,7 @@ def scale_bigtable(bigtable_instance, scale_up):
 
 def main(
         bigtable_instance,
+        bigtable_cluster,
         high_cpu_threshold,
         low_cpu_threshold,
         short_sleep,
@@ -94,10 +96,10 @@ def main(
     cluster_cpu = get_cpu_load()
     print('Detected cpu of {}'.format(cluster_cpu))
     if cluster_cpu > high_cpu_threshold:
-        scale_bigtable(bigtable_instance, True)
+        scale_bigtable(bigtable_instance, bigtable_cluster, True)
         time.sleep(long_sleep)
     elif cluster_cpu < low_cpu_threshold:
-        scale_bigtable(bigtable_instance, False)
+        scale_bigtable(bigtable_instance, bigtable_cluster, False)
         time.sleep(short_sleep)
     else:
         print('CPU within threshold, sleeping.')
@@ -109,6 +111,9 @@ if __name__ == '__main__':
         description='Scales Bigtable clusters based on CPU usage.')
     parser.add_argument(
         'bigtable_instance', help='ID of the Cloud Bigtable instance to '
+                                  'connect to.')
+    parser.add_argument(
+        'bigtable_cluster', help='ID of the Cloud Bigtable cluster to '
                                   'connect to.')
     parser.add_argument(
         '--high_cpu_threshold',
@@ -133,6 +138,7 @@ if __name__ == '__main__':
     while True:
         main(
             args.bigtable_instance,
+            args.bigtable_cluster,
             float(args.high_cpu_threshold),
             float(args.low_cpu_threshold),
             int(args.short_sleep),
