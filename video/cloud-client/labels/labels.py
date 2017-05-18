@@ -19,6 +19,11 @@ Google Cloud Video Intelligence API.
 
 For more information, check out the documentation at
 https://cloud.google.com/videointelligence/docs.
+
+Usage Example:
+
+    python labels.py gs://cloud-ml-sandbox/video/chicago.mp4
+
 """
 
 # [START full_tutorial]
