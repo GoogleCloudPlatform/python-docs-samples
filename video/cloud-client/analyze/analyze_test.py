@@ -16,9 +16,9 @@
 
 import os
 
-import analyze
-
 import pytest
+
+import analyze
 
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
