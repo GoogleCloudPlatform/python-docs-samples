@@ -8,7 +8,7 @@ This directory contains samples for Google Cloud Video Intelligence API. `Google
 
 
 
-.. _Google Cloud Video Intelligence API: https://cloud.google.com/video-intelligence/docs
+.. _Google Cloud Video Intelligence API: https://cloud.google.com/video-intelligence/docs 
 
 Setup
 -------------------------------------------------------------------------------
@@ -82,18 +82,18 @@ To run this sample:
     $ python analyze.py
 
     usage: analyze.py [-h] {faces,labels,labels_file,safe_search,shots} ...
-
+    
     This application demonstrates face detection, label detection, safe search,
     and shot change detection using the Google Cloud API.
-
+    
     Usage Examples:
-
-        python analyze.py faces gs://demomaker/volleyball_court.mp4
-        python analyze.py labels gs://demomaker/cat.mp4
-        python analyze.py labels_file resources/cat.mp4
-        python analyze.py shots gs://demomaker/gbikes_dinosaur.mp4
-        python analyze.py safe_search gs://demomaker/cat.mp4
-
+    
+        python analyze.py faces gs://cloudmleap/video/next/volleyball_court.mp4
+        python analyze.py labels gs://cloudmleap/video/next/fox-snatched.mp4
+        python analyze.py labels_file resources/fox-snatched.mp4
+        python analyze.py shots gs://cloudmleap/video/next/gbikes_dinosaur.mp4
+        python analyze.py safe_search gs://cloudmleap/video/next/animals.mp4
+    
     positional arguments:
       {faces,labels,labels_file,safe_search,shots}
         faces               Detects faces given a GCS path.
@@ -101,7 +101,7 @@ To run this sample:
         labels_file         Detects labels given a file path.
         safe_search         Detects safe search features the GCS path to a video.
         shots               Detects camera shot changes.
-
+    
     optional arguments:
       -h, --help            show this help message and exit
 

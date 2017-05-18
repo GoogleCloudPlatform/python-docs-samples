@@ -19,11 +19,11 @@ and shot change detection using the Google Cloud API.
 
 Usage Examples:
 
-    python analyze.py faces gs://demomaker/volleyball_court.mp4
-    python analyze.py labels gs://demomaker/cat.mp4
-    python analyze.py labels_file resources/cat.mp4
-    python analyze.py shots gs://demomaker/gbikes_dinosaur.mp4
-    python analyze.py safe_search gs://demomaker/cat.mp4
+    python analyze.py faces gs://cloudmleap/video/next/volleyball_court.mp4
+    python analyze.py labels gs://cloudmleap/video/next/fox-snatched.mp4
+    python analyze.py labels_file resources/fox-snatched.mp4
+    python analyze.py shots gs://cloudmleap/video/next/gbikes_dinosaur.mp4
+    python analyze.py safe_search gs://cloudmleap/video/next/animals.mp4
 
 """
 
