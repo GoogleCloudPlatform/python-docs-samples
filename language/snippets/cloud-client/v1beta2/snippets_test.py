@@ -79,3 +79,10 @@ def test_sentiment_entities_file(capsys):
     snippets.entity_sentiment_file(TEST_FILE_URL)
     out, _ = capsys.readouterr()
     assert 'Content : White House' in out
+
+
+def test_sentiment_entities_utf(capsys):
+    snippets.entity_sentiment_text(
+        'foo→bar')
+    out, _ = capsys.readouterr()
+    assert 'Begin Offset : 4' in out
