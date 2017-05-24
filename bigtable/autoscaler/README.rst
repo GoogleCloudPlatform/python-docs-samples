@@ -9,7 +9,7 @@ This directory contains samples for Google Cloud Bigtable. `Google Cloud Bigtabl
 This sample demonstrates using `Stackdriver monitoring`_,
 to scale Cloud Bigtable based on CPU usage.
 
-.. Stackdriver Monitoring: http://cloud.google.com/monitoring/docs
+.. _Stackdriver Monitoring: http://cloud.google.com/monitoring/docs
 
 
 .. _Google Cloud Bigtable: https://cloud.google.com/bigtable/docs 
@@ -88,12 +88,13 @@ To run this sample:
     usage: autoscaler.py [-h] [--high_cpu_threshold HIGH_CPU_THRESHOLD]
                          [--low_cpu_threshold LOW_CPU_THRESHOLD]
                          [--short_sleep SHORT_SLEEP] [--long_sleep LONG_SLEEP]
-                         instance_id
+                         bigtable_instance bigtable_cluster
     
     Scales Bigtable clusters based on CPU usage.
     
     positional arguments:
-      instance_id           ID of the Cloud Bigtable instance to connect to.
+      bigtable_instance     ID of the Cloud Bigtable instance to connect to.
+      bigtable_cluster      ID of the Cloud Bigtable cluster to connect to.
     
     optional arguments:
       -h, --help            show this help message and exit
@@ -120,11 +121,11 @@ This sample uses the `Google Cloud Client Library for Python`_.
 You can read the documentation for more details on API usage and use GitHub
 to `browse the source`_ and  `report issues`_.
 
-.. Google Cloud Client Library for Python:
+.. _Google Cloud Client Library for Python:
     https://googlecloudplatform.github.io/google-cloud-python/
-.. browse the source:
+.. _browse the source:
     https://github.com/GoogleCloudPlatform/google-cloud-python
-.. report issues:
+.. _report issues:
     https://github.com/GoogleCloudPlatform/google-cloud-python/issues
 
 

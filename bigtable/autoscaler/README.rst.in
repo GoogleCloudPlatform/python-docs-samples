@@ -13,7 +13,7 @@ description: |
     This sample demonstrates using `Stackdriver monitoring`_,
     to scale Cloud Bigtable based on CPU usage.
 
-    .. Stackdriver Monitoring: http://cloud.google.com/monitoring/docs
+    .. _Stackdriver Monitoring: http://cloud.google.com/monitoring/docs
 
 setup:
 - auth
