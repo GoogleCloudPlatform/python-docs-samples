@@ -22,7 +22,7 @@ https://cloud.google.com/videointelligence/docs.
 
 Usage Example:
 
-    python faces.py gs://cloudmleap/video/googlework.mp4
+    python faces.py gs://demomaker/google_gmail.mp4
 
 """
 
