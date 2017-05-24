@@ -22,6 +22,7 @@ https://cloud.google.com/natural-language/docs.
 """
 
 import argparse
+import sys
 
 from google.cloud import language
 from google.cloud.gapic.language.v1beta2 import enums
@@ -53,7 +54,7 @@ def sentiment_file(gcs_uri):
     language_client = language.Client(api_version='v1beta2')
 
     # Instantiates a plain text document.
-    document = language_client.document_from_url(gcs_uri)
+    document = language_client.document_from_gcs_url(gcs_uri)
 
     # Detects sentiment in the document. You can also analyze HTML with:
     #   document.doc_type == language.Document.HTML
@@ -92,7 +93,7 @@ def entities_file(gcs_uri):
     language_client = language.Client(api_version='v1beta2')
 
     # Instantiates a plain text document.
-    document = language_client.document_from_url(gcs_uri)
+    document = language_client.document_from_gcs_url(gcs_uri)
 
     # Detects sentiment in the document. You can also analyze HTML with:
     #   document.doc_type == language.Document.HTML
@@ -131,7 +132,7 @@ def syntax_file(gcs_uri):
     language_client = language.Client(api_version='v1beta2')
 
     # Instantiates a plain text document.
-    document = language_client.document_from_url(gcs_uri)
+    document = language_client.document_from_gcs_url(gcs_uri)
 
     # Detects syntax in the document. You can also analyze HTML with:
     #   document.doc_type == language.Document.HTML
@@ -152,8 +153,12 @@ def entity_sentiment_text(text):
     document.content = text.encode('utf-8')
     document.type = enums.Document.Type.PLAIN_TEXT
 
+    encoding = enums.EncodingType.UTF32
+    if sys.maxunicode == 65535:
+        encoding = enums.EncodingType.UTF16
+
     result = language_client.analyze_entity_sentiment(
-        document, enums.EncodingType.UTF8)
+        document, encoding)
 
     for entity in result.entities:
         print('Mentions: ')
@@ -176,8 +181,12 @@ def entity_sentiment_file(gcs_uri):
     document.gcs_content_uri = gcs_uri
     document.type = enums.Document.Type.PLAIN_TEXT
 
+    encoding = enums.EncodingType.UTF32
+    if sys.maxunicode == 65535:
+        encoding = enums.EncodingType.UTF16
+
     result = language_client.analyze_entity_sentiment(
-      document, enums.EncodingType.UTF8)
+      document, encoding)
 
     for entity in result.entities:
         print(u'Name: "{}"'.format(entity.name))
