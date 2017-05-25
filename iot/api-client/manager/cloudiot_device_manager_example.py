@@ -48,12 +48,12 @@ import argparse
 import sys
 import time
 
+from google.oauth2 import service_account
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
-from oauth2client.service_account import ServiceAccountCredentials
 
 API_SCOPES = ['https://www.googleapis.com/auth/cloud-platform']
-API_VERSION = 'v1alpha1'
+API_VERSION = 'v1beta1'
 DISCOVERY_API = 'https://cloudiot.googleapis.com/$discovery/rest'
 SERVICE_NAME = 'cloudiot'
 
@@ -73,8 +73,9 @@ class DeviceRegistry(object):
         self.parent = 'projects/{}/locations/{}'.format(
                 project_id, cloud_region)
         self.full_name = '{}/registries/{}'.format(self.parent, registry_id)
-        credentials = ServiceAccountCredentials.from_json_keyfile_name(
-            service_account_json, API_SCOPES)
+        credentials = service_account.Credentials.from_service_account_file(
+                        service_account_json)
+        scoped_credentials = credentials.with_scopes(API_SCOPES)
 
         if not credentials:
             sys.exit(
@@ -85,19 +86,20 @@ class DeviceRegistry(object):
                 SERVICE_NAME,
                 API_VERSION,
                 discoveryServiceUrl=discovery_url(api_key),
-                credentials=credentials)
+                credentials=scoped_credentials)
 
         # Lookup or create the device registry. Here we bind the registry to
         # the given Cloud Pub/Sub topic. All devices within a registry will
         # have their telemetry data published to this topic, using attributes
         # to indicate which device the data originated from.
-        registry_info = {
+        body = {
             'eventNotificationConfig': {
                 'pubsubTopicName': pubsub_topic
-            }
+            },
+            'id': registry_id
         }
         request = self._service.projects().locations().registries().create(
-            parent=self.parent, body=registry_info, id=registry_id)
+            parent=self.parent, body=body)
 
         try:
             response = request.execute()
@@ -129,7 +131,7 @@ class DeviceRegistry(object):
         response = request.execute()
         return response.get('devices', [])
 
-    def _create_device(self, device_id, device_template):
+    def _create_device(self, device_template):
         request = self._service.projects().locations().registries().devices(
         ).create(parent=self.full_name, body=device_template, id=device_id)
         return request.execute()
@@ -143,6 +145,7 @@ class DeviceRegistry(object):
         # Create a device with the given certificate. Note that you can have
         # multiple credentials associated with a device.
         device_template = {
+            'id': device_id,
             'credentials': [{
                 'publicKey': {
                     'format': 'RSA_X509_PEM',
@@ -150,7 +153,7 @@ class DeviceRegistry(object):
                 }
             }]
         }
-        return self._create_device(device_id, device_template)
+        return self._create_device(device_template)
 
     def create_device_with_es256(self, device_id, public_key_file):
         """Create a new device with the given id, using ES256 for
