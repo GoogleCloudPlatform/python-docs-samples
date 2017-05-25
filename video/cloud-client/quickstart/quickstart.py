@@ -20,16 +20,16 @@ Usage:
     python quickstart.py
 """
 
-# [START videointelligence_quickstart]
-import sys
-import time
-
-from google.cloud.gapic.videointelligence.v1beta1 import enums
-from google.cloud.gapic.videointelligence.v1beta1 import (
-    video_intelligence_service_client)
-
 
 def run_quickstart():
+    # [START videointelligence_quickstart]
+    import sys
+    import time
+
+    from google.cloud.gapic.videointelligence.v1beta1 import enums
+    from google.cloud.gapic.videointelligence.v1beta1 import (
+        video_intelligence_service_client)
+
     video_client = (video_intelligence_service_client.
                     VideoIntelligenceServiceClient())
     features = [enums.Feature.LABEL_DETECTION]
@@ -46,7 +46,7 @@ def run_quickstart():
     # first result is retrieved because a single video was processed
     results = operation.result().annotation_results[0]
 
-    for i, label in enumerate(results.label_annotations):
+    for label in results.label_annotations:
         print('Label description: {}'.format(label.description))
         print('Locations:')
 
@@ -60,8 +60,8 @@ def run_quickstart():
             print('\t{}: {}'.format(l, positions))
 
         print('\n')
+    # [END videointelligence_quickstart]
 
 
 if __name__ == '__main__':
     run_quickstart()
-# [END videointelligence_quickstart]
