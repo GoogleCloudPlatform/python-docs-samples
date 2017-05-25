@@ -48,7 +48,7 @@ def create_subscription(topic_name, subscription_name):
 
 
 def delete_subscription(topic_name, subscription_name):
-    """Deletes an existing Pub/Sub topic."""
+    """Deletes an existing subscription on the given topic."""
     pubsub_client = pubsub.Client()
     topic = pubsub_client.topic(topic_name)
     subscription = topic.subscription(subscription_name)
