@@ -133,7 +133,7 @@ class DeviceRegistry(object):
 
     def _create_device(self, device_template):
         request = self._service.projects().locations().registries().devices(
-        ).create(parent=self.full_name, body=device_template, id=device_id)
+        ).create(parent=self.full_name, body=device_template)
         return request.execute()
 
     def create_device_with_rs256(self, device_id, certificate_file):
@@ -164,6 +164,7 @@ class DeviceRegistry(object):
         # Create a device with the given public key. Note that you can have
         # multiple credentials associated with a device.
         device_template = {
+            'id': device_id,
             'credentials': [{
                 'publicKey': {
                     'format': 'ES256_PEM',
@@ -171,11 +172,14 @@ class DeviceRegistry(object):
                 }
             }]
         }
-        return self._create_device(device_id, device_template)
+        return self._create_device(device_template)
 
     def create_device_with_no_auth(self, device_id):
         """Create a new device with no authentication."""
-        return self._create_device(device_id, {})
+        device_template = {
+            'id': device_id,
+        }
+        return self._create_device(device_template)
 
     def patch_es256_for_auth(self, device_id, public_key_file):
         """Patch the device to add an ES256 public key to the device."""
