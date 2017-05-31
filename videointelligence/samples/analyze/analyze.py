@@ -21,7 +21,7 @@ Usage Examples:
 
     python analyze.py faces gs://demomaker/google_gmail.mp4
     python analyze.py labels gs:/cloud-ml-sandbox/video/chicago.mp4
-    python analyze.py labels_file resources/fox-snatched.mp4
+    python analyze.py labels_file resources/cat.mp4
     python analyze.py shots gs://demomaker/gbikes_dinosaur.mp4
     python analyze.py safe_search gs://demomaker/gbikes_dinosaur.mp4
 
