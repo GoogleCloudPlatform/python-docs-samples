@@ -91,7 +91,7 @@ To run this sample:
     
     Usage Example:
     
-        python faces.py gs://cloudmleap/video/googlework.mp4
+        python faces.py gs://demomaker/google_gmail.mp4
     
     positional arguments:
       path        GCS file path for face detection.
