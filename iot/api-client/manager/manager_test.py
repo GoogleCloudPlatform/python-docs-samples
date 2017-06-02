@@ -15,9 +15,9 @@
 import os
 import time
 
-import pytest
-
 import manager
+
+import pytest
 
 
 # TODO: Pull from environment
