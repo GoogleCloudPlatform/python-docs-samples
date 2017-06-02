@@ -32,6 +32,7 @@ Usage example:
 """
 
 import argparse
+import io
 import sys
 import time
 
@@ -63,26 +64,21 @@ def get_client(service_account_json, api_key):
     provided API key and creating a service object using the service account
     credentials JSON."""
     # [START authorize]
-    API_SCOPES = ['https://www.googleapis.com/auth/cloud-platform']
-    API_VERSION = 'v1beta1'
-    DISCOVERY_API = 'https://cloudiot.googleapis.com/$discovery/rest'
-    SERVICE_NAME = 'cloudiotcore'
+    api_scopes = ['https://www.googleapis.com/auth/cloud-platform']
+    api_version = 'v1beta1'
+    discovery_api = 'https://cloudiot.googleapis.com/$discovery/rest'
+    service_name = 'cloudiotcore'
 
     credentials = service_account.Credentials.from_service_account_file(
             service_account_json)
-    scoped_credentials = credentials.with_scopes(API_SCOPES)
-
-    if not credentials:
-        sys.exit(
-                'Could not load service account credential from {}'
-                .format(service_account_json))
+    scoped_credentials = credentials.with_scopes(api_scopes)
 
     discovery_url = '{}?version={}&key={}'.format(
-            DISCOVERY_API, API_VERSION, api_key)
+            discovery_api, api_version, api_key)
 
     return discovery.build(
-            SERVICE_NAME,
-            API_VERSION,
+            service_name,
+            api_version,
             discoveryServiceUrl=discovery_url,
             credentials=scoped_credentials)
     # [END authorize]
@@ -98,7 +94,7 @@ def create_rs256_device(
             project_id, cloud_region, registry_id)
 
     client = get_client(service_account_json, api_key)
-    with open(certificate_file) as f:
+    with io.open(certificate_file) as f:
         certificate = f.read()
 
     # Note: You can have multiple credentials associated with a device.
@@ -112,8 +108,8 @@ def create_rs256_device(
         }]
     }
 
-    return client.projects().locations().registries().devices(
-    ).create(parent=registry_name, body=device_template).execute()
+    devices = client.projects().locations().registries().devices()
+    return devices.create(parent=registry_name, body=device_template).execute()
     # [END create_rs256_device]
 
 
@@ -127,7 +123,7 @@ def create_es256_device(
             project_id, cloud_region, registry_id)
 
     client = get_client(service_account_json, api_key)
-    with open(public_key_file) as f:
+    with io.open(public_key_file) as f:
         public_key = f.read()
 
     # Note: You can have multiple credentials associated with a device.
@@ -141,8 +137,8 @@ def create_es256_device(
         }]
     }
 
-    return client.projects().locations().registries().devices(
-    ).create(parent=registry_name, body=device_template).execute()
+    devices = client.projects().locations().registries().devices()
+    return devices.create(parent=registry_name, body=device_template).execute()
     # [END create_rs256_device]
 
 
@@ -159,8 +155,8 @@ def create_unauth_device(
         'id': device_id,
     }
 
-    return client.projects().locations().registries().devices(
-    ).create(parent=registry_name, body=device_template).execute()
+    devices = client.projects().locations().registries().devices()
+    return devices.create(parent=registry_name, body=device_template).execute()
     # [END create_noauth_device]
 
 
@@ -176,8 +172,8 @@ def delete_device(
 
     device_name = '{}/devices/{}'.format(registry_name, device_id)
 
-    return client.projects().locations().registries().devices(
-    ).delete(name=device_name).execute()
+    devices = client.projects().locations().registries().devices()
+    return devices.delete(name=device_name).execute()
     # [END delete_device]
 
 
@@ -190,8 +186,8 @@ def delete_registry(
     registry_name = 'projects/{}/locations/{}/registries/{}'.format(
             project_id, cloud_region, registry_id)
 
-    return client.projects().locations().registries().delete(
-            name=registry_name).execute()
+    registries = client.projects().locations().registries()
+    return registries.delete(name=registry_name).execute()
     # [END delete_registry]
 
 
@@ -206,8 +202,8 @@ def get_device(
             project_id, cloud_region, registry_id)
 
     device_name = '{}/devices/{}'.format(registry_name, device_id)
-    device = client.projects().locations().registries().devices(
-            ).get(name=device_name).execute()
+    devices = client.projects().locations().registries().devices()
+    device = devices.get(name=device_name).execute()
 
     print('Id : {}'.format(device.get('id')))
     print('Name : {}'.format(device.get('name')))
@@ -293,7 +289,7 @@ def patch_es256_auth(
     registry_path = 'projects/{}/locations/{}/registries/{}'.format(
             project_id, cloud_region, registry_id)
 
-    with open(public_key_file) as f:
+    with io.open(public_key_file) as f:
         public_key = f.read()
 
     patch = {
@@ -320,7 +316,7 @@ def patch_rsa256_auth(
     registry_path = 'projects/{}/locations/{}/registries/{}'.format(
             project_id, cloud_region, registry_id)
 
-    with open(public_key_file) as f:
+    with io.open(public_key_file) as f:
         public_key = f.read()
 
     patch = {
