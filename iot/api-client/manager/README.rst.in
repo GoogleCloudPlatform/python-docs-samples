@@ -1,0 +1,21 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud IoT Core API
+  short_name: Cloud IoT Core
+  url: https://cloud.google.com/vision/docs
+  description: >
+    `Google Cloud IoT Core`_ allows developers to easily integrate Publish and
+    Subscribe functionality with devices and programmatically manage device
+    authorization.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Manager
+  file: manager.py
+  show_help: True
+
+cloud_client_library: false
