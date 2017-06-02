@@ -15,16 +15,16 @@
 import os
 import time
 
-import manager
-
 import pytest
+
+import manager
 
 
 # TODO: Pull from environment
 CLOUD_REGION = 'us-central1'
 DEVICE_ID_TEMPLATE = 'test-device-{}'
-ES_CERT_PATH = '../ec_public.pem'
-RSA_CERT_PATH = '../rsa_cert.pem'
+ES_CERT_PATH = 'resources/ec_public.pem'
+RSA_CERT_PATH = 'resources/rsa_cert.pem'
 TOPIC_ID = 'test-device-events-{}'.format(int(time.time()))
 
 API_KEY = os.environ['API_KEY']
