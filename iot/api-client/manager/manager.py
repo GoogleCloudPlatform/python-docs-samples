@@ -209,8 +209,8 @@ def get_device(
     device = client.projects().locations().registries().devices(
             ).get(name=device_name).execute()
 
-    print 'Id : {}'.format(device.get('id'))
-    print 'Name : {}'.format(device.get('name'))
+    print('Id : {}'.format(device.get('id')))
+    print('Name : {}'.format(device.get('name')))
     print('Credentials:')
     if device.get('credentials') is not None:
         for credential in device.get('credentials'):
