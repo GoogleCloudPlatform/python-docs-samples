@@ -30,23 +30,6 @@ from google.appengine.ext import ndb
 import webapp2
 
 
-# Template for the MainPage response
-# params: blockquotes, sign, guestbook_name
-RESPONSE_TEMPLATE = textwrap.dedent("""\
-<html>
-  <body>
-    {blockquotes}
-    <form action="/sign?{sign}" method="post">
-      <div><textarea name="content" rows="3" cols="60"></textarea></div>
-      <div><input type="submit" value="Sign Guestbook"></div>
-    </form>
-    <hr>
-    <form>Guestbook name: <input value="{guestbook_name}" name="guestbook_name">
-    <input type="submit" value="switch"></form>
-  </body>
-</html>""")
-
-
 # [START greeting]
 class Greeting(ndb.Model):
     """Models an individual Guestbook entry with content and date."""
@@ -72,8 +55,27 @@ class MainPage(webapp2.RequestHandler):
             greeting_blockquotes.append(
                 '<blockquote>%s</blockquote>' % cgi.escape(greeting.content))
 
-        self.response.out.write(
-            RESPONSE_TEMPLATE.format(
+        self.response.out.write(textwrap.dedent("""\
+            <html>
+              <body>
+                {blockquotes}
+                <form action="/sign?{sign}" method="post">
+                  <div>
+                    <textarea name="content" rows="3" cols="60">
+                    </textarea>
+                  </div>
+                  <div>
+                    <input type="submit" value="Sign Guestbook">
+                  </div>
+                </form>
+                <hr>
+                <form>
+                  Guestbook name:
+                    <input value="{guestbook_name}" name="guestbook_name">
+                    <input type="submit" value="switch">
+                </form>
+              </body>
+            </html>""").format(
                 blockquotes='\n'.join(greeting_blockquotes),
                 sign=urllib.urlencode({'guestbook_name': guestbook_name}),
                 guestbook_name=cgi.escape(guestbook_name)))
