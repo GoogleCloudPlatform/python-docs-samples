@@ -42,6 +42,7 @@ class Greeting(ndb.Model):
     def query_book(cls, ancestor_key):
         return cls.query(ancestor=ancestor_key).order(-cls.date)
 
+
 class MainPage(webapp2.RequestHandler):
     def get(self):
         self.response.out.write('<html><body>')
