@@ -30,11 +30,13 @@ def get_cpu_load():
     Returns:
           float: The most recent Bigtable CPU usage metric
     """
+    # [START bigtable_cpu]
     client = monitoring.Client()
     query = client.query('bigtable.googleapis.com/cluster/cpu_load', minutes=5)
     time_series = list(query)
     recent_time_series = time_series[0]
     return recent_time_series.points[0].value
+    # [END bigtable_cpu]
 
 
 def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
@@ -50,6 +52,7 @@ def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
            bigtable_cluster (str): Cloud Bigtable cluster id to scale
            scale_up (bool): If true, scale up, otherwise scale down
     """
+    # [START bigtable_scale]
     bigtable_client = bigtable.Client(admin=True)
     instance = bigtable_client.instance(bigtable_instance)
     instance.reload()
@@ -74,6 +77,7 @@ def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
     cluster.update()
     print('Scaled from {} up to {} nodes.'.format(
         current_node_count, new_node_count))
+    # [END bigtable_scale]
 
 
 def main(
