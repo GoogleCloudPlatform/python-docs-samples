@@ -80,7 +80,6 @@ def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
     # [END bigtable_scale]
 
 
-
 def main(
         bigtable_instance,
         bigtable_cluster,
