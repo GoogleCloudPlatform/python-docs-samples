@@ -30,34 +30,49 @@ import io
 
 def transcribe_file(speech_file):
     """Transcribe the given audio file."""
-    from google.cloud import speech
-    speech_client = speech.Client()
+    from google.cloud.gapic.speech.v1 import speech_client
+    from google.cloud.gapic.speech.v1 import enums
+    from google.cloud.proto.speech.v1 import cloud_speech_pb2
+    client = speech_client.SpeechClient()
 
     with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
-        audio_sample = speech_client.sample(
-            content=content,
-            source_uri=None,
-            encoding='LINEAR16',
-            sample_rate_hertz=16000)
+        audio = cloud_speech_pb2.RecognitionAudio(content=content)
 
-    alternatives = audio_sample.recognize('en-US')
+        encoding = enums.RecognitionConfig.AudioEncoding.LINEAR16
+        sample_rate_hertz = 16000
+        language_code = 'en-US'
+        config = cloud_speech_pb2.RecognitionConfig(
+            encoding=encoding,
+            sample_rate_hertz=sample_rate_hertz,
+            language_code=language_code)
+
+    response = client.recognize(config, audio)
+    alternatives = response.results[0].alternatives
+
     for alternative in alternatives:
         print('Transcript: {}'.format(alternative.transcript))
 
 
 def transcribe_gcs(gcs_uri):
     """Transcribes the audio file specified by the gcs_uri."""
-    from google.cloud import speech
-    speech_client = speech.Client()
+    from google.cloud.gapic.speech.v1 import speech_client
+    from google.cloud.gapic.speech.v1 import enums
+    from google.cloud.proto.speech.v1 import cloud_speech_pb2
+    client = speech_client.SpeechClient()
+    audio = cloud_speech_pb2.RecognitionAudio(uri=gcs_uri)
 
-    audio_sample = speech_client.sample(
-        content=None,
-        source_uri=gcs_uri,
-        encoding='FLAC',
-        sample_rate_hertz=16000)
+    encoding = enums.RecognitionConfig.AudioEncoding.FLAC
+    sample_rate_hertz = 16000
+    language_code = 'en-US'
+    config = cloud_speech_pb2.RecognitionConfig(
+        encoding=encoding,
+        sample_rate_hertz=sample_rate_hertz,
+        language_code=language_code)
 
-    alternatives = audio_sample.recognize('en-US')
+    response = client.recognize(config, audio)
+    alternatives = response.results[0].alternatives
+
     for alternative in alternatives:
         print('Transcript: {}'.format(alternative.transcript))
 
