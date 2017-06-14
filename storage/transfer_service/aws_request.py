@@ -32,7 +32,7 @@ import googleapiclient.discovery
 
 
 # [START main]
-def main(description, project_id, day, month, year, hours, minutes,
+def main(description, project_id, year, month, day, hours, minutes,
          source_bucket, access_key, secret_access_key, sink_bucket):
     """Create a one-off transfer from Amazon S3 to Google Cloud Storage."""
     storagetransfer = googleapiclient.discovery.build('storagetransfer', 'v1')
