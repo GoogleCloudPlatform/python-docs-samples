@@ -1,0 +1,22 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud IoT Core
+  short_name: Cloud IoT Core
+  url: https://cloud.google.com/iot/
+  description: >
+    `Google Cloud IoT Core`_ is a fully-managed, globally distributed solution
+    for managing devices and sending / receiving messages from devices. Set the
+    `GOOGLE_CLOUD_PROJECT` environment variable and call the script with your
+    topic ID.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: PubSub helper
+  file: iam.py
+  show_help: true
+
+cloud_client_library: true

@@ -129,9 +129,16 @@ To run this sample:
                             particular timestamp.
         add_index           Adds a simple index to the example database.
         query_data_with_index
-                            Inserts sample data into the given database. The
-                            database and table must already exist and can be
-                            created using `create_database`.
+                            Queries sample data from the database using SQL and an
+                            index. The index must exist before running this
+                            sample. You can add the index by running the
+                            `add_index` sample or by running this DDL statement
+                            against your database: CREATE INDEX AlbumsByAlbumTitle
+                            ON Albums(AlbumTitle) This sample also uses the
+                            `MarketingBudget` column. You can add the column by
+                            running the `add_column` sample or by running this DDL
+                            statement against your database: ALTER TABLE Albums
+                            ADD COLUMN MarketingBudget INT64
         read_data_with_index
                             Inserts sample data into the given database. The
                             database and table must already exist and can be
@@ -157,11 +164,11 @@ This sample uses the `Google Cloud Client Library for Python`_.
 You can read the documentation for more details on API usage and use GitHub
 to `browse the source`_ and  `report issues`_.
 
-.. Google Cloud Client Library for Python:
+.. _Google Cloud Client Library for Python:
     https://googlecloudplatform.github.io/google-cloud-python/
-.. browse the source:
+.. _browse the source:
     https://github.com/GoogleCloudPlatform/google-cloud-python
-.. report issues:
+.. _report issues:
     https://github.com/GoogleCloudPlatform/google-cloud-python/issues
 
 

@@ -22,6 +22,7 @@ For more information, see README.md
 
 # [START all]
 import cgi
+import textwrap
 import urllib
 
 from google.appengine.ext import ndb
@@ -48,23 +49,37 @@ class MainPage(webapp2.RequestHandler):
         guestbook_name = self.request.get('guestbook_name')
         ancestor_key = ndb.Key("Book", guestbook_name or "*notitle*")
         greetings = Greeting.query_book(ancestor_key).fetch(20)
-
-        for greeting in greetings:
-            self.response.out.write('<blockquote>%s</blockquote>' %
-                                    cgi.escape(greeting.content))
 # [END query]
 
-        self.response.out.write("""
-          <form action="/sign?%s" method="post">
-            <div><textarea name="content" rows="3" cols="60"></textarea></div>
-            <div><input type="submit" value="Sign Guestbook"></div>
-          </form>
-          <hr>
-          <form>Guestbook name: <input value="%s" name="guestbook_name">
-          <input type="submit" value="switch"></form>
-        </body>
-      </html>""" % (urllib.urlencode({'guestbook_name': guestbook_name}),
-                    cgi.escape(guestbook_name)))
+        greeting_blockquotes = []
+        for greeting in greetings:
+            greeting_blockquotes.append(
+                '<blockquote>%s</blockquote>' % cgi.escape(greeting.content))
+
+        self.response.out.write(textwrap.dedent("""\
+            <html>
+              <body>
+                {blockquotes}
+                <form action="/sign?{sign}" method="post">
+                  <div>
+                    <textarea name="content" rows="3" cols="60">
+                    </textarea>
+                  </div>
+                  <div>
+                    <input type="submit" value="Sign Guestbook">
+                  </div>
+                </form>
+                <hr>
+                <form>
+                  Guestbook name:
+                    <input value="{guestbook_name}" name="guestbook_name">
+                    <input type="submit" value="switch">
+                </form>
+              </body>
+            </html>""").format(
+                blockquotes='\n'.join(greeting_blockquotes),
+                sign=urllib.urlencode({'guestbook_name': guestbook_name}),
+                guestbook_name=cgi.escape(guestbook_name)))
 
 
 # [START submit]

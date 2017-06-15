@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Example of generateing a JWT signed from a service account file."""
+"""Example of generating a JWT signed from a service account file."""
 
 import argparse
 import json
@@ -32,7 +32,7 @@ def generate_jwt(service_account_file, issuer, audiences):
     with open(service_account_file, 'r') as fh:
         service_account_info = json.load(fh)
 
-    signer = google.auth.crypt.Signer.from_string(
+    signer = google.auth.crypt.RSASigner.from_string(
         service_account_info['private_key'],
         service_account_info['private_key_id'])
 
