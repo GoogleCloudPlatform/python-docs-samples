@@ -31,7 +31,7 @@ import googleapiclient.discovery
 
 
 # [START main]
-def main(description, project_id, day, month, year, hours, minutes,
+def main(description, project_id, year, month, day, hours, minutes,
          source_bucket, sink_bucket):
     """Create a transfer from the Google Cloud Storage Standard class to the
     Nearline Storage class."""
