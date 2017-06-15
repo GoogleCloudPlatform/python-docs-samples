@@ -158,15 +158,7 @@ def main():
                 language_code=language_code, interim_results=True)
 
         # Now, put the transcription responses to use.
-        try:
-            listen_print_loop(results_gen)
-
-            results_gen.close()
-        except grpc.RpcError as e:
-            code = e.code()
-            # CANCELLED is caused by the interrupt handler, which is expected.
-            if code is not code.CANCELLED:
-                raise
+        listen_print_loop(results_gen)
 
 
 if __name__ == '__main__':
