@@ -59,13 +59,16 @@ def make_request(host, api_key, signed_jwt, use_query_string_auth=False):
     if use_query_string_auth:
       params = {
           'key': api_key,
-          'access_token': signed_jwt}
+          'access_token': signed_jwt
+      }
       headers = None
     else:
       params = {
-          'key': api_key}
+          'key': api_key
+      }
       headers = {
-          'Authorization': 'Bearer {}'.format(signed_jwt)}
+          'Authorization': 'Bearer {}'.format(signed_jwt)
+      }
 
     response = requests.get(url, params=params, headers=headers)
 
