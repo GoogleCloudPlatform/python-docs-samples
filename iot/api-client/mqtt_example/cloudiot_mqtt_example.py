@@ -92,17 +92,17 @@ def error_str(rc):
 
 def on_connect(unused_client, unused_userdata, unused_flags, rc):
     """Callback for when a device connects."""
-    print 'on_connect', error_str(rc)
+    print('on_connect', error_str(rc))
 
 
 def on_disconnect(unused_client, unused_userdata, rc):
     """Paho callback for when a device disconnects."""
-    print 'on_disconnect', error_str(rc)
+    print('on_disconnect', error_str(rc))
 
 
 def on_publish(unused_client, unused_userdata, unused_mid):
     """Paho callback when a message is sent to the broker."""
-    print 'on_publish'
+    print('on_publish')
 
 
 def parse_command_line_args():
