@@ -53,15 +53,19 @@ def generate_jwt(service_account_file):
     return signed_jwt
 
 
-def make_request(host, api_key, signed_jwt):
+def make_request(host, api_key, signed_jwt, use_query_string_auth=False):
     """Makes a request to the auth info endpoint for Google JWTs."""
     url = urllib.parse.urljoin(host, '/auth/info/googlejwt')
-    params = {
-        'key': api_key
-    }
-    headers = {
-        'Authorization': 'Bearer {}'.format(signed_jwt)
-    }
+    if use_query_string_auth:
+      params = {
+          'key': api_key,
+          'access_token': signed_jwt}
+      headers = None
+    else:
+      params = {
+          'key': api_key}
+      headers = {
+          'Authorization': 'Bearer {}'.format(signed_jwt)}
 
     response = requests.get(url, params=params, headers=headers)
 
@@ -71,6 +75,7 @@ def make_request(host, api_key, signed_jwt):
 
 def main(host, api_key, service_account_file):
     signed_jwt = generate_jwt(service_account_file)
+    # To use query string authentication, add use_query_string_auth=True.
     response = make_request(host, api_key, signed_jwt)
     print(response)
 
