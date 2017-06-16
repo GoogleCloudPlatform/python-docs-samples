@@ -3,17 +3,17 @@
 product:
   name: Google Cloud Bigtable
   short_name: Cloud Bigtable
-  url: https://cloud.google.com/bigtable/docs
+  url: https://cloud.google.com/bigtable/docs/
   description: >
     `Google Cloud Bigtable`_ is Google's NoSQL Big Data database service. It's
     the same database that powers many core Google services, including Search,
     Analytics, Maps, and Gmail.
 
 description: |
-    This sample demonstrates using `Stackdriver monitoring`_,
+    This sample demonstrates how to use `Stackdriver Monitoring`_
     to scale Cloud Bigtable based on CPU usage.
 
-    .. _Stackdriver Monitoring: http://cloud.google.com/monitoring/docs
+    .. _Stackdriver Monitoring: http://cloud.google.com/monitoring/docs/
 
 setup:
 - auth

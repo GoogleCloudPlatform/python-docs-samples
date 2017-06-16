@@ -6,13 +6,13 @@ Google Cloud Bigtable Python Samples
 This directory contains samples for Google Cloud Bigtable. `Google Cloud Bigtable`_ is Google's NoSQL Big Data database service. It's the same database that powers many core Google services, including Search, Analytics, Maps, and Gmail.
 
 
-This sample demonstrates using `Stackdriver monitoring`_,
+This sample demonstrates how to use `Stackdriver Monitoring`_
 to scale Cloud Bigtable based on CPU usage.
 
-.. _Stackdriver Monitoring: http://cloud.google.com/monitoring/docs
+.. _Stackdriver Monitoring: http://cloud.google.com/monitoring/docs/
 
 
-.. _Google Cloud Bigtable: https://cloud.google.com/bigtable/docs 
+.. _Google Cloud Bigtable: https://cloud.google.com/bigtable/docs/ 
 
 Setup
 -------------------------------------------------------------------------------
@@ -90,7 +90,7 @@ To run this sample:
                          [--short_sleep SHORT_SLEEP] [--long_sleep LONG_SLEEP]
                          bigtable_instance bigtable_cluster
     
-    Scales Bigtable clusters based on CPU usage.
+    Scales Cloud Bigtable clusters based on CPU usage.
     
     positional arguments:
       bigtable_instance     ID of the Cloud Bigtable instance to connect to.
@@ -99,11 +99,11 @@ To run this sample:
     optional arguments:
       -h, --help            show this help message and exit
       --high_cpu_threshold HIGH_CPU_THRESHOLD
-                            If Bigtable CPU usages is above this threshold, scale
-                            up
+                            If Cloud Bigtable CPU usage is above this threshold,
+                            scale up
       --low_cpu_threshold LOW_CPU_THRESHOLD
-                            If Bigtable CPU usages is above this threshold, scale
-                            up
+                            If Cloud Bigtable CPU usage is below this threshold,
+                            scale down
       --short_sleep SHORT_SLEEP
                             How long to sleep in seconds between checking metrics
                             after no scale operation
