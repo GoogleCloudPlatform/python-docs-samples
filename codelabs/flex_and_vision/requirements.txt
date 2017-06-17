@@ -1,4 +1,4 @@
-Flask==0.12.1
+Flask==0.12.2
 gunicorn==19.7.1
 google-cloud-vision==0.24.0
 google-cloud-storage==1.1.1
