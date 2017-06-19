@@ -61,12 +61,12 @@ def analyze_safe_search(path):
                      "Likely", "Very likely")
 
     for note in safe_annotations:
-        print('Time: {}s').format(note.time_offset / 1000000.0)
-        print('\tadult: {}').format(likely_string[note.adult])
-        print('\tspoof: {}').format(likely_string[note.spoof])
-        print('\tmedical: {}').format(likely_string[note.medical])
-        print('\tracy: {}').format(likely_string[note.racy])
-        print('\tviolent: {}\n').format(likely_string[note.violent])
+        print('Time: {}s'.format(note.time_offset / 1000000.0))
+        print('\tadult: {}'.format(likely_string[note.adult]))
+        print('\tspoof: {}'.format(likely_string[note.spoof]))
+        print('\tmedical: {}'.format(likely_string[note.medical]))
+        print('\tracy: {}'.format(likely_string[note.racy]))
+        print('\tviolent: {}\n'.format(likely_string[note.violent]))
 
 
 def analyze_faces(path):
