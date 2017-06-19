@@ -1,0 +1,18 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Container Engine
+  short_name: Container Engine
+  url: https://cloud.google.com/container-engine/docs/
+  description: > 
+    `Google Container Engine`_ runs Docker containers on Google Cloud Platform,
+    powered by Kubernetes.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Snippets
+  file: snippets.py
+  show_help: true
