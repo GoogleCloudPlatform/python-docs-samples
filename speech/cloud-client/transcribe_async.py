@@ -61,7 +61,6 @@ def transcribe_file(speech_file):
     for alternative in alternatives:
         print('Transcript: {}'.format(alternative.transcript))
         print('Confidence: {}'.format(alternative.confidence))
-    # [END send_request]
 
 
 def transcribe_gcs(gcs_uri):
@@ -95,7 +94,6 @@ def transcribe_gcs(gcs_uri):
     for alternative in alternatives:
         print('Transcript: {}'.format(alternative.transcript))
         print('Confidence: {}'.format(alternative.confidence))
-    # [END send_request_gcs]
 
 
 if __name__ == '__main__':
