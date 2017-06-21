@@ -61,7 +61,7 @@ def transcribe_streaming(stream_file):
                 print('Transcript: {}'.format(alternative.transcript))
 
 
-if __name__ == '__main__' and False:
+if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
