@@ -1,1 +1,2 @@
 tensorflow==1.2.0
+google-api-python-client==1.6.2
