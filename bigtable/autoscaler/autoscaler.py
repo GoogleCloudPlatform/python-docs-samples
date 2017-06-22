@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Sample that demonstrates how to use Bigtable Stackdriver metrics to
-autoscale Google Cloud Bigtable."""
+"""Sample that demonstrates how to use Stackdriver Monitoring metrics to
+programmatically scale a Google Cloud Bigtable cluster."""
 
 import argparse
 import time
@@ -25,31 +25,34 @@ import strategies
 
 
 def get_cpu_load():
-    """Returns the most recent Bigtable CPU load measurement.
+    """Returns the most recent Cloud Bigtable CPU load measurement.
 
     Returns:
-          float: The most recent Bigtable CPU usage metric
+          float: The most recent Cloud Bigtable CPU usage metric
     """
+    # [START bigtable_cpu]
     client = monitoring.Client()
     query = client.query('bigtable.googleapis.com/cluster/cpu_load', minutes=5)
     time_series = list(query)
     recent_time_series = time_series[0]
     return recent_time_series.points[0].value
+    # [END bigtable_cpu]
 
 
 def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
-    """Scales the number of Bigtable nodes up or down.
+    """Scales the number of Cloud Bigtable nodes up or down.
 
-    Edits the number of nodes in the Bigtable cluster to be increased
+    Edits the number of nodes in the Cloud Bigtable cluster to be increased
     or decreased, depending on the `scale_up` boolean argument. Currently
     the `incremental` strategy from `strategies.py` is used.
 
 
     Args:
-           bigtable_instance (str): Cloud Bigtable instance id to scale
-           bigtable_cluster (str): Cloud Bigtable cluster id to scale
+           bigtable_instance (str): Cloud Bigtable instance ID to scale
+           bigtable_cluster (str): Cloud Bigtable cluster ID to scale
            scale_up (bool): If true, scale up, otherwise scale down
     """
+    # [START bigtable_scale]
     bigtable_client = bigtable.Client(admin=True)
     instance = bigtable_client.instance(bigtable_instance)
     instance.reload()
@@ -74,6 +77,7 @@ def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
     cluster.update()
     print('Scaled from {} up to {} nodes.'.format(
         current_node_count, new_node_count))
+    # [END bigtable_scale]
 
 
 def main(
@@ -83,14 +87,14 @@ def main(
         low_cpu_threshold,
         short_sleep,
         long_sleep):
-    """Main loop runner that autoscales Bigtable.
+    """Main loop runner that autoscales Cloud Bigtable.
 
     Args:
-          bigtable_instance (str): Cloud Bigtable instance id to autoscale
+          bigtable_instance (str): Cloud Bigtable instance ID to autoscale
           high_cpu_threshold (float): If CPU is higher than this, scale up.
-          low_cpu_threshold (float): If CPU is higher than this, scale down.
+          low_cpu_threshold (float): If CPU is lower than this, scale down.
           short_sleep (int): How long to sleep after no operation
-          long_sleep (int): How long to sleep after the cluster nodes are
+          long_sleep (int): How long to sleep after the number of nodes is
                             changed
     """
     cluster_cpu = get_cpu_load()
@@ -108,7 +112,7 @@ def main(
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='Scales Bigtable clusters based on CPU usage.')
+        description='Scales Cloud Bigtable clusters based on CPU usage.')
     parser.add_argument(
         'bigtable_instance',
         help='ID of the Cloud Bigtable instance to connect to.')
@@ -117,11 +121,11 @@ if __name__ == '__main__':
         help='ID of the Cloud Bigtable cluster to connect to.')
     parser.add_argument(
         '--high_cpu_threshold',
-        help='If Bigtable CPU usages is above this threshold, scale up',
+        help='If Cloud Bigtable CPU usage is above this threshold, scale up',
         default=0.6)
     parser.add_argument(
         '--low_cpu_threshold',
-        help='If Bigtable CPU usages is above this threshold, scale up',
+        help='If Cloud Bigtable CPU usage is below this threshold, scale down',
         default=0.2)
     parser.add_argument(
         '--short_sleep',

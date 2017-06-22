@@ -20,7 +20,7 @@ and shot change detection using the Google Cloud API.
 Usage Examples:
 
     python analyze.py faces gs://demomaker/google_gmail.mp4
-    python analyze.py labels gs:/cloud-ml-sandbox/video/chicago.mp4
+    python analyze.py labels gs://cloud-ml-sandbox/video/chicago.mp4
     python analyze.py labels_file resources/cat.mp4
     python analyze.py shots gs://demomaker/gbikes_dinosaur.mp4
     python analyze.py safe_search gs://demomaker/gbikes_dinosaur.mp4
@@ -61,12 +61,12 @@ def analyze_safe_search(path):
                      "Likely", "Very likely")
 
     for note in safe_annotations:
-        print('Time: {}s').format(note.time_offset / 1000000.0)
-        print('\tadult: {}').format(likely_string[note.adult])
-        print('\tspoof: {}').format(likely_string[note.spoof])
-        print('\tmedical: {}').format(likely_string[note.medical])
-        print('\tracy: {}').format(likely_string[note.racy])
-        print('\tviolent: {}\n').format(likely_string[note.violent])
+        print('Time: {}s'.format(note.time_offset / 1000000.0))
+        print('\tadult: {}'.format(likely_string[note.adult]))
+        print('\tspoof: {}'.format(likely_string[note.spoof]))
+        print('\tmedical: {}'.format(likely_string[note.medical]))
+        print('\tracy: {}'.format(likely_string[note.racy]))
+        print('\tviolent: {}\n'.format(likely_string[note.violent]))
 
 
 def analyze_faces(path):
