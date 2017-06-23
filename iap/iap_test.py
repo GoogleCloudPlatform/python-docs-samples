@@ -28,6 +28,8 @@ import validate_jwt
 # The project must have the service account used by this test added as a
 # member of the project.
 REFLECT_SERVICE_HOSTNAME = 'gcp-devrel-iap-reflect.appspot.com'
+IAP_CLIENT_ID = ('320431926067-ldm6839p8l2sei41nlsfc632l4d0v2u1'
+                 '.apps.googleusercontent.com')
 
 
 @flaky
@@ -37,7 +39,8 @@ def test_main(capsys):
     # the JWT in order to expose it to this test.  Thus, this test
     # exercises both make_iap_request and validate_jwt.
     iap_jwt = make_iap_request.make_iap_request(
-        'https://{}/'.format(REFLECT_SERVICE_HOSTNAME))
+        'https://{}/'.format(REFLECT_SERVICE_HOSTNAME),
+        IAP_CLIENT_ID)
     iap_jwt = iap_jwt.split(': ').pop()
     jwt_validation_result = validate_jwt.validate_iap_jwt(
         'https://{}'.format(REFLECT_SERVICE_HOSTNAME), iap_jwt)

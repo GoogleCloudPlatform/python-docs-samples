@@ -24,30 +24,22 @@ import google.oauth2.credentials
 import google.oauth2.service_account
 import requests
 import requests_toolbelt.adapters.appengine
-from six.moves import urllib_parse as urlparse
 
 
 IAM_SCOPE = 'https://www.googleapis.com/auth/iam'
 OAUTH_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 
 
-def make_iap_request(url):
+def make_iap_request(url, client_id):
     """Makes a request to an application protected by Identity-Aware Proxy.
 
     Args:
       url: The Identity-Aware Proxy-protected URL to fetch.
+      client_id: The client ID used by Identity-Aware Proxy.
 
     Returns:
       The page body, or raises an exception if the page couldn't be retrieved.
     """
-    # Take the input URL and remove everything except the protocol, domain,
-    # and port. Examples:
-    #   https://foo.example.com/ => https://foo.example.com
-    #   https://example.com:8443/foo/bar?quuz=quux#lorem =>
-    #       https://example.com:8443
-    base_url = urlparse.urlunparse(
-        urlparse.urlparse(url)._replace(path='', query='', fragment=''))
-
     # Figure out what environment we're running in and get some preliminary
     # information about the service account.
     bootstrap_credentials, _ = google.auth.default(
@@ -90,7 +82,7 @@ def make_iap_request(url):
     # and email acquired from the bootstrap credentials.
     service_account_credentials = google.oauth2.service_account.Credentials(
         signer, signer_email, token_uri=OAUTH_TOKEN_URI, additional_claims={
-            'target_audience': base_url
+            'target_audience': client_id
         })
 
     # service_account_credentials gives us a JWT signed by the service
