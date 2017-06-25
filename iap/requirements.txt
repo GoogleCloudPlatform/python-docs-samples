@@ -1,4 +1,4 @@
-PyJWT==1.5.0
+PyJWT==1.5.2
 cryptography==1.9
 google-auth==1.0.1
 requests==2.18.1
