@@ -74,7 +74,7 @@ Install Dependencies
 Samples
 -------------------------------------------------------------------------------
 
-Autoscaling example
+Metricscaling example
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -83,12 +83,12 @@ To run this sample:
 
 .. code-block:: bash
 
-    $ python autoscaler.py
+    $ python metricscaler.py
 
-    usage: autoscaler.py [-h] [--high_cpu_threshold HIGH_CPU_THRESHOLD]
-                         [--low_cpu_threshold LOW_CPU_THRESHOLD]
-                         [--short_sleep SHORT_SLEEP] [--long_sleep LONG_SLEEP]
-                         bigtable_instance bigtable_cluster
+    usage: metricscaler.py [-h] [--high_cpu_threshold HIGH_CPU_THRESHOLD]
+                           [--low_cpu_threshold LOW_CPU_THRESHOLD]
+                           [--short_sleep SHORT_SLEEP] [--long_sleep LONG_SLEEP]
+                           bigtable_instance bigtable_cluster
     
     Scales Cloud Bigtable clusters based on CPU usage.
     
