@@ -25,7 +25,7 @@ from six.moves import urllib
 
 
 def get_id_token(client_secrets_file, extra_args):
-    """Obtains credentials form the user using OAuth 2.0 and then returns the
+    """Obtains credentials from the user using OAuth 2.0 and then returns the
     ID token from those credentials."""
 
     flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
