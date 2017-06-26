@@ -49,12 +49,12 @@ def generate_jwt():
         "email": DEFAULT_SERVICE_ACCOUNT
     })
 
-    headerAndPayload = '{}.{}'.format(
+    header_and_payload = '{}.{}'.format(
         base64.urlsafe_b64encode(header_json),
         base64.urlsafe_b64encode(payload_json))
-    (key_name, signature) = app_identity.sign_blob(headerAndPayload)
+    (key_name, signature) = app_identity.sign_blob(header_and_payload)
     signed_jwt = '{}.{}'.format(
-        headerAndPayload,
+        header_and_payload,
         base64.urlsafe_b64encode(signature))
 
     return signed_jwt
