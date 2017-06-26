@@ -21,12 +21,12 @@ def run_quickstart():
     import os
 
     # Imports the Google Cloud client library
-    from google.cloud.gapic.speech.v1 import speech_client
-    from google.cloud.gapic.speech.v1 import enums
-    from google.cloud.proto.speech.v1 import cloud_speech_pb2
+    from google.cloud.speech import SpeechClient
+    from google.cloud.speech import enums
+    from google.cloud.speech import types
 
     # Instantiates a client
-    client = speech_client.SpeechClient()
+    client = SpeechClient()
 
     # The name of the audio file to transcribe
     file_name = os.path.join(
@@ -37,12 +37,12 @@ def run_quickstart():
     # Loads the audio into memory
     with io.open(file_name, 'rb') as audio_file:
         content = audio_file.read()
-        audio = cloud_speech_pb2.RecognitionAudio(content=content)
+        audio = types.RecognitionAudio(content=content)
 
         encoding = enums.RecognitionConfig.AudioEncoding.LINEAR16
         sample_rate_hertz = 16000
         language_code = 'en-US'
-        config = cloud_speech_pb2.RecognitionConfig(
+        config = types.RecognitionConfig(
             encoding=encoding,
             sample_rate_hertz=sample_rate_hertz,
             language_code=language_code)
