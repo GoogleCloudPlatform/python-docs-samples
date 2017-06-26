@@ -31,20 +31,6 @@ be able to accept your pull requests.
 1. Ensure that your code has an appropriate set of unit tests which all pass.
 1. Submit a pull request.
 
-## Style
+## Authoring, testing, and contributing samples
 
-Samples in this repository follow [PEP
-8](https://www.python.org/dev/peps/pep-0008/) and the [Google Python Style
-Guide](https://google.github.io/styleguide/pyguide.html). This is enforced using
-the [flake8](https://pypi.python.org/pypi/flake8) tool.
-
-To use the same flake8 configuration as is used in the automated test suite,
-install [nox](https://nox.readthedocs.io/en/latest/) and run
-
-```shell
-nox -s lint -- path/to/sample
-```
-
-## Testing
-
-See [TESTING.md](TESTING.md).
+See [AUTHORING_GUIDE.md](AUTHORING_GUIDE.md).
