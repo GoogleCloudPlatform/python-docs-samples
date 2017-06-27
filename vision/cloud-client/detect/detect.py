@@ -31,25 +31,27 @@ https://cloud.google.com/vision/docs.
 import argparse
 import io
 
-from google.cloud import vision
+from google.cloud.vision import ImageAnnotatorClient
+from google.cloud.vision import types
 
 
 def detect_faces(path):
     """Detects faces in an image."""
-    vision_client = vision.Client()
+    client = ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
-    image = vision_client.image(content=content)
+    image = types.Image(content=content)
 
-    faces = image.detect_faces()
+    response = client.detect_faces(image=image)
+    faces = response.face_annotations
     print('Faces:')
 
     for face in faces:
-        print('anger: {}'.format(face.emotions.anger))
-        print('joy: {}'.format(face.emotions.joy))
-        print('surprise: {}'.format(face.emotions.surprise))
+        print('anger: {}'.format(face.anger_likelihood))
+        print('joy: {}'.format(face.joy_likelihood))
+        print('surprise: {}'.format(face.surprise_likelihood))
 
         vertices = (['({},{})'.format(bound.x_coordinate, bound.y_coordinate)
                     for bound in face.bounds.vertices])
@@ -59,8 +61,9 @@ def detect_faces(path):
 
 def detect_faces_uri(uri):
     """Detects faces in the file located in Google Cloud Storage or the web."""
-    vision_client = vision.Client()
-    image = vision_client.image(source_uri=uri)
+    client = ImageAnnotatorClient()
+    image = types.Image()
+    image.source.image_uri = uri
 
     faces = image.detect_faces()
     print('Faces:')
@@ -78,12 +81,12 @@ def detect_faces_uri(uri):
 
 def detect_labels(path):
     """Detects labels in the file."""
-    vision_client = vision.Client()
+    client = ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
-    image = vision_client.image(content=content)
+    image = types.Image(content=content)
 
     labels = image.detect_labels()
     print('Labels:')
@@ -95,8 +98,8 @@ def detect_labels(path):
 def detect_labels_uri(uri):
     """Detects labels in the file located in Google Cloud Storage or on the
     Web."""
-    vision_client = vision.Client()
-    image = vision_client.image(source_uri=uri)
+    client = ImageAnnotatorClient()
+    image = types.Image(source_uri=uri)
 
     labels = image.detect_labels()
     print('Labels:')
@@ -107,12 +110,12 @@ def detect_labels_uri(uri):
 
 def detect_landmarks(path):
     """Detects landmarks in the file."""
-    vision_client = vision.Client()
+    client = ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
-    image = vision_client.image(content=content)
+    image = types.Image(content=content)
 
     landmarks = image.detect_landmarks()
     print('Landmarks:')
@@ -124,8 +127,8 @@ def detect_landmarks(path):
 def detect_landmarks_uri(uri):
     """Detects landmarks in the file located in Google Cloud Storage or on the
     Web."""
-    vision_client = vision.Client()
-    image = vision_client.image(source_uri=uri)
+    client = ImageAnnotatorClient()
+    image = types.Image(source_uri=uri)
 
     landmarks = image.detect_landmarks()
     print('Landmarks:')
@@ -136,12 +139,12 @@ def detect_landmarks_uri(uri):
 
 def detect_logos(path):
     """Detects logos in the file."""
-    vision_client = vision.Client()
+    client = ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
-    image = vision_client.image(content=content)
+    image = types.Image(content=content)
 
     logos = image.detect_logos()
     print('Logos:')
@@ -153,8 +156,8 @@ def detect_logos(path):
 def detect_logos_uri(uri):
     """Detects logos in the file located in Google Cloud Storage or on the Web.
     """
-    vision_client = vision.Client()
-    image = vision_client.image(source_uri=uri)
+    client = ImageAnnotatorClient()
+    image = types.Image(source_uri=uri)
 
     logos = image.detect_logos()
     print('Logos:')
@@ -165,12 +168,12 @@ def detect_logos_uri(uri):
 
 def detect_safe_search(path):
     """Detects unsafe features in the file."""
-    vision_client = vision.Client()
+    client = ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
-    image = vision_client.image(content=content)
+    image = types.Image(content=content)
 
     safe = image.detect_safe_search()
     print('Safe search:')
@@ -183,8 +186,8 @@ def detect_safe_search(path):
 def detect_safe_search_uri(uri):
     """Detects unsafe features in the file located in Google Cloud Storage or
     on the Web."""
-    vision_client = vision.Client()
-    image = vision_client.image(source_uri=uri)
+    client = ImageAnnotatorClient()
+    image = types.Image(source_uri=uri)
 
     safe = image.detect_safe_search()
     print('adult: {}'.format(safe.adult))
@@ -195,12 +198,12 @@ def detect_safe_search_uri(uri):
 
 def detect_text(path):
     """Detects text in the file."""
-    vision_client = vision.Client()
+    client = ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
-    image = vision_client.image(content=content)
+    image = types.Image(content=content)
 
     texts = image.detect_text()
     print('Texts:')
@@ -217,8 +220,8 @@ def detect_text(path):
 def detect_text_uri(uri):
     """Detects text in the file located in Google Cloud Storage or on the Web.
     """
-    vision_client = vision.Client()
-    image = vision_client.image(source_uri=uri)
+    client = ImageAnnotatorClient()
+    image = types.Image(source_uri=uri)
 
     texts = image.detect_text()
     print('Texts:')
@@ -234,12 +237,12 @@ def detect_text_uri(uri):
 
 def detect_properties(path):
     """Detects image properties in the file."""
-    vision_client = vision.Client()
+    client = ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
-    image = vision_client.image(content=content)
+    image = types.Image(content=content)
 
     props = image.detect_properties()
     print('Properties:')
@@ -255,8 +258,8 @@ def detect_properties(path):
 def detect_properties_uri(uri):
     """Detects image properties in the file located in Google Cloud Storage or
     on the Web."""
-    vision_client = vision.Client()
-    image = vision_client.image(source_uri=uri)
+    client = ImageAnnotatorClient()
+    image = types.Image(source_uri=uri)
 
     props = image.detect_properties()
     print('Properties:')
@@ -271,12 +274,12 @@ def detect_properties_uri(uri):
 
 def detect_web(path):
     """Detects web annotations given an image."""
-    vision_client = vision.Client()
+    client = ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
-    image = vision_client.image(content=content)
+    image = types.Image(content=content)
 
     notes = image.detect_web()
 
@@ -313,8 +316,8 @@ def detect_web(path):
 
 def detect_web_uri(uri):
     """Detects web annotations in the file located in Google Cloud Storage."""
-    vision_client = vision.Client()
-    image = vision_client.image(source_uri=uri)
+    client = ImageAnnotatorClient()
+    image = types.Image(source_uri=uri)
 
     notes = image.detect_web()
 
@@ -351,10 +354,10 @@ def detect_web_uri(uri):
 
 def detect_crop_hints(path):
     """Detects crop hints in an image."""
-    vision_client = vision.Client()
+    client = ImageAnnotatorClient()
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
-    image = vision_client.image(content=content)
+    image = types.Image(content=content)
 
     hints = image.detect_crop_hints({1.77})
 
@@ -369,8 +372,8 @@ def detect_crop_hints(path):
 
 def detect_crop_hints_uri(uri):
     """Detects crop hints in the file located in Google Cloud Storage."""
-    vision_client = vision.Client()
-    image = vision_client.image(source_uri=uri)
+    client = ImageAnnotatorClient()
+    image = types.Image(source_uri=uri)
 
     hints = image.detect_crop_hints({1.77})
     for n, hint in enumerate(hints):
@@ -384,12 +387,12 @@ def detect_crop_hints_uri(uri):
 
 def detect_document(path):
     """Detects document features in an image."""
-    vision_client = vision.Client()
+    client = ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
-    image = vision_client.image(content=content)
+    image = types.Image(content=content)
 
     document = image.detect_full_text()
 
@@ -414,8 +417,8 @@ def detect_document(path):
 def detect_document_uri(uri):
     """Detects document features in the file located in Google Cloud
     Storage."""
-    vision_client = vision.Client()
-    image = vision_client.image(source_uri=uri)
+    client = ImageAnnotatorClient()
+    image = types.Image(source_uri=uri)
 
     document = image.detect_full_text()
 
