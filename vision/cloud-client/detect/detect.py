@@ -156,7 +156,8 @@ def detect_logos(path):
 
     image = types.Image(content=content)
 
-    logos = image.detect_logos()
+    response = client.logo_detection(image=image)
+    logos = response.logo_annotations
     print('Logos:')
 
     for logo in logos:
@@ -167,9 +168,11 @@ def detect_logos_uri(uri):
     """Detects logos in the file located in Google Cloud Storage or on the Web.
     """
     client = ImageAnnotatorClient()
-    image = types.Image(source_uri=uri)
+    image = types.Image()
+    image.source.image_uri = uri
 
-    logos = image.detect_logos()
+    response = client.logo_detection(image=image)
+    logos = response.logo_annotations
     print('Logos:')
 
     for logo in logos:
