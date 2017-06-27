@@ -21,8 +21,8 @@ def run_quickstart():
     import os
 
     # Imports the Google Cloud client library
-    from google.cloud.speech import SpeechClient
     from google.cloud.speech import enums
+    from google.cloud.speech import SpeechClient
     from google.cloud.speech import types
 
     # Instantiates a client

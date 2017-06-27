@@ -28,8 +28,8 @@ import io
 
 def transcribe_streaming(stream_file):
     """Streams transcription of the given audio file."""
-    from google.cloud.speech import SpeechClient
     from google.cloud.speech import enums
+    from google.cloud.speech import SpeechClient
     from google.cloud.speech import types
     client = SpeechClient()
 
