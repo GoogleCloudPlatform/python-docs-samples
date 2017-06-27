@@ -92,7 +92,8 @@ def detect_labels(path):
 
     image = types.Image(content=content)
 
-    labels = image.detect_labels()
+    response = client.label_detection(image=image)
+    labels = response.label_annotations
     print('Labels:')
 
     for label in labels:
@@ -103,9 +104,11 @@ def detect_labels_uri(uri):
     """Detects labels in the file located in Google Cloud Storage or on the
     Web."""
     client = ImageAnnotatorClient()
-    image = types.Image(source_uri=uri)
+    image = types.Image()
+    image.source.image_uri = uri
 
-    labels = image.detect_labels()
+    response = client.label_detection(image=image)
+    labels = response.label_annotations
     print('Labels:')
 
     for label in labels:
