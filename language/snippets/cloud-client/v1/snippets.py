@@ -120,7 +120,7 @@ def syntax_text(text):
     tokens = document.analyze_syntax().tokens
 
     for token in tokens:
-        print(u'{}: {}'.format(token.part_of_speech, token.text_content))
+        print(u'{}: {}'.format(token.part_of_speech.tag, token.text_content))
 
 
 def syntax_file(gcs_uri):
@@ -135,7 +135,7 @@ def syntax_file(gcs_uri):
     tokens = document.analyze_syntax().tokens
 
     for token in tokens:
-        print(u'{}: {}'.format(token.part_of_speech, token.text_content))
+        print(u'{}: {}'.format(token.part_of_speech.tag, token.text_content))
 
 
 if __name__ == '__main__':
