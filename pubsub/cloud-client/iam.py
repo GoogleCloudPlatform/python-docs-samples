@@ -70,7 +70,7 @@ def set_topic_policy(topic_name):
     policy['roles/pubsub.viewer'] = [policy.all_users()]
     # Add a group as publisherss.
     publishers = policy.get('roles/pubsub.publisher', [])
-    publishers.append(policy.group('cloud-logs@google.com'))
+    publishers.add(policy.group('cloud-logs@google.com'))
     policy['roles/pubsub.publisher'] = publishers
 
     # Set the policy
@@ -90,7 +90,7 @@ def set_subscription_policy(topic_name, subscription_name):
     policy['roles/viewer'] = [policy.all_users()]
     # # Add a group as editors.
     editors = policy.get('roles/editor', [])
-    editors.append(policy.group('cloud-logs@google.com'))
+    editors.add(policy.group('cloud-logs@google.com'))
     policy['roles/editor'] = editors
 
     # Set the policy
