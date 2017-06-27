@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Unit and system tests for autoscaler.py"""
+"""Unit and system tests for metricscaler.py"""
 
 import os
 import time
@@ -20,9 +20,10 @@ import time
 from google.cloud import bigtable
 from mock import patch
 
-from autoscaler import get_cpu_load
-from autoscaler import main
-from autoscaler import scale_bigtable
+from metricscaler import _SIZE_CHANGE_STEP
+from metricscaler import get_cpu_load
+from metricscaler import main
+from metricscaler import scale_bigtable
 
 # tests assume instance and cluster have the same ID
 BIGTABLE_INSTANCE = os.environ['BIGTABLE_CLUSTER']
@@ -49,7 +50,7 @@ def test_scale_bigtable():
     cluster.reload()
 
     new_node_count = cluster.serve_nodes
-    assert (new_node_count == (original_node_count + 2))
+    assert (new_node_count == (original_node_count + _SIZE_CHANGE_STEP))
 
     scale_bigtable(BIGTABLE_INSTANCE, BIGTABLE_INSTANCE, False)
     time.sleep(3)
@@ -59,10 +60,9 @@ def test_scale_bigtable():
 
 
 # Unit test for logic
-
 @patch('time.sleep')
-@patch('autoscaler.get_cpu_load')
-@patch('autoscaler.scale_bigtable')
+@patch('metricscaler.get_cpu_load')
+@patch('metricscaler.scale_bigtable')
 def test_main(scale_bigtable, get_cpu_load, sleep):
     SHORT_SLEEP = 5
     LONG_SLEEP = 10

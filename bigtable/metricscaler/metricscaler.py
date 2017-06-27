@@ -21,7 +21,6 @@ import time
 from google.cloud import bigtable
 from google.cloud import monitoring
 
-import strategies
 
 
 def get_cpu_load():
@@ -52,6 +51,23 @@ def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
            bigtable_cluster (str): Cloud Bigtable cluster ID to scale
            scale_up (bool): If true, scale up, otherwise scale down
     """
+    _MIN_NODE_COUNT = 3
+    """
+    The minimum number of nodes to use. The default minimum is 3. If you have a
+    lot of data, the rule of thumb is to not go below 2.5 TB per node for SSD
+    clusters, and 8 TB for HDD. The bigtable.googleapis.com/disk/bytes_used
+    metric is useful in figuring out the minimum number of nodes.
+    """
+
+    _MAX_NODE_COUNT = 30
+    """
+    The maximum number of nodes to use. The default maximum is 30 nodes per zone.
+    If you need more quota, you can request more by following the instructions
+    <a href="https://cloud.google.com/bigtable/quota">here</a>.
+    """
+
+    _SIZE_CHANGE_STEP = 3
+    """The number of nodes to change the cluster by."""
     # [START bigtable_scale]
     bigtable_client = bigtable.Client(admin=True)
     instance = bigtable_client.instance(bigtable_instance)
@@ -62,21 +78,21 @@ def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
 
     current_node_count = cluster.serve_nodes
 
-    if current_node_count <= 3 and not scale_up:
-        # Can't downscale lower than 3 nodes
-        return
-
     if scale_up:
-        strategies_dict = strategies.UPSCALE_STRATEGIES
+        if current_node_count < _MAX_NODE_COUNT:
+            new_node_count = min(current_node_count + 3, _MAX_NODE_COUNT)
+            cluster.serve_nodes = new_node_count
+            cluster.update()
+            print('Scaled up from {} to {} nodes.'.format(
+                current_node_count, new_node_count))
     else:
-        strategies_dict = strategies.DOWNSCALE_STRATEGIES
-
-    strategy = strategies_dict['incremental']
-    new_node_count = strategy(cluster.serve_nodes)
-    cluster.serve_nodes = new_node_count
-    cluster.update()
-    print('Scaled from {} up to {} nodes.'.format(
-        current_node_count, new_node_count))
+        if current_node_count > _MIN_NODE_COUNT:
+            new_node_count = max(
+                current_node_count - _SIZE_CHANGE_STEP, _MIN_NODE_COUNT)
+            cluster.serve_nodes = new_node_count
+            cluster.update()
+            print('Scaled down from {} to {} nodes.'.format(
+                current_node_count, new_node_count))
     # [END bigtable_scale]
 
 
@@ -104,7 +120,7 @@ def main(
         time.sleep(long_sleep)
     elif cluster_cpu < low_cpu_threshold:
         scale_bigtable(bigtable_instance, bigtable_cluster, False)
-        time.sleep(short_sleep)
+        time.sleep(long_sleep)
     else:
         print('CPU within threshold, sleeping.')
         time.sleep(short_sleep)
