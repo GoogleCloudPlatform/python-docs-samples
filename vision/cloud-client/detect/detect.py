@@ -188,25 +188,29 @@ def detect_safe_search(path):
 
     image = types.Image(content=content)
 
-    safe = image.detect_safe_search()
+    response = client.safe_search_detection(image=image)
+    safe = response.safe_search_annotation
     print('Safe search:')
-    print('adult: {}'.format(safe.adult))
-    print('medical: {}'.format(safe.medical))
-    print('spoofed: {}'.format(safe.spoof))
-    print('violence: {}'.format(safe.violence))
+    print('adult: {}'.format(likelihood_name[safe.adult]))
+    print('medical: {}'.format(likelihood_name[safe.medical]))
+    print('spoofed: {}'.format(likelihood_name[safe.spoof]))
+    print('violence: {}'.format(likelihood_name[safe.violence]))
 
 
 def detect_safe_search_uri(uri):
     """Detects unsafe features in the file located in Google Cloud Storage or
     on the Web."""
     client = ImageAnnotatorClient()
-    image = types.Image(source_uri=uri)
+    image = types.Image()
+    image.source.image_uri = uri
 
-    safe = image.detect_safe_search()
-    print('adult: {}'.format(safe.adult))
-    print('medical: {}'.format(safe.medical))
-    print('spoofed: {}'.format(safe.spoof))
-    print('violence: {}'.format(safe.violence))
+    response = client.safe_search_detection(image=image)
+    safe = response.safe_search_annotation
+    print('Safe search:')
+    print('adult: {}'.format(likelihood_name[safe.adult]))
+    print('medical: {}'.format(likelihood_name[safe.medical]))
+    print('spoofed: {}'.format(likelihood_name[safe.spoof]))
+    print('violence: {}'.format(likelihood_name[safe.violence]))
 
 
 def detect_text(path):
