@@ -124,7 +124,8 @@ def detect_landmarks(path):
 
     image = types.Image(content=content)
 
-    landmarks = image.detect_landmarks()
+    response = client.landmark_detection(image=image)
+    landmarks = response.landmark_annotations
     print('Landmarks:')
 
     for landmark in landmarks:
@@ -135,9 +136,11 @@ def detect_landmarks_uri(uri):
     """Detects landmarks in the file located in Google Cloud Storage or on the
     Web."""
     client = ImageAnnotatorClient()
-    image = types.Image(source_uri=uri)
+    image = types.Image()
+    image.source.image_uri = uri
 
-    landmarks = image.detect_landmarks()
+    response = client.landmark_detection(image=image)
+    landmarks = response.landmark_annotations
     print('Landmarks:')
 
     for landmark in landmarks:
