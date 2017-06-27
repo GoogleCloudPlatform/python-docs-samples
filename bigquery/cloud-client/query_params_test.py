@@ -28,7 +28,7 @@ def test_query_named_params(capsys):
         corpus='romeoandjuliet',
         min_word_count=100)
     out, _ = capsys.readouterr()
-    assert 'love' in out
+    assert 'the' in out
 
 
 def test_query_positional_params(capsys):
@@ -36,7 +36,7 @@ def test_query_positional_params(capsys):
         corpus='romeoandjuliet',
         min_word_count=100)
     out, _ = capsys.readouterr()
-    assert 'love' in out
+    assert 'the' in out
 
 
 def test_query_struct_params(capsys):

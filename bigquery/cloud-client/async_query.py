@@ -48,20 +48,9 @@ def async_query(query):
 
     wait_for_job(query_job)
 
-    # Drain the query results by requesting a page at a time.
-    query_results = query_job.results()
-    page_token = None
-
-    while True:
-        rows, total_rows, page_token = query_results.fetch_data(
-            max_results=10,
-            page_token=page_token)
-
-        for row in rows:
-            print(row)
-
-        if not page_token:
-            break
+    rows = query_job.results().fetch_data(max_results=10)
+    for row in rows:
+        print(row)
 
 
 if __name__ == '__main__':
