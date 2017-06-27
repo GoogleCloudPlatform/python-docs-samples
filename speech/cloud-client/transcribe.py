@@ -30,19 +30,19 @@ import io
 
 def transcribe_file(speech_file):
     """Transcribe the given audio file."""
-    from google.cloud.gapic.speech.v1 import speech_client
-    from google.cloud.gapic.speech.v1 import enums
-    from google.cloud.proto.speech.v1 import cloud_speech_pb2
-    client = speech_client.SpeechClient()
+    from google.cloud.speech import SpeechClient
+    from google.cloud.speech import enums
+    from google.cloud.speech import types
+    client = SpeechClient()
 
     with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
-        audio = cloud_speech_pb2.RecognitionAudio(content=content)
+        audio = types.RecognitionAudio(content=content)
 
         encoding = enums.RecognitionConfig.AudioEncoding.LINEAR16
         sample_rate_hertz = 16000
         language_code = 'en-US'
-        config = cloud_speech_pb2.RecognitionConfig(
+        config = types.RecognitionConfig(
             encoding=encoding,
             sample_rate_hertz=sample_rate_hertz,
             language_code=language_code)
@@ -56,16 +56,16 @@ def transcribe_file(speech_file):
 
 def transcribe_gcs(gcs_uri):
     """Transcribes the audio file specified by the gcs_uri."""
-    from google.cloud.gapic.speech.v1 import speech_client
-    from google.cloud.gapic.speech.v1 import enums
-    from google.cloud.proto.speech.v1 import cloud_speech_pb2
-    client = speech_client.SpeechClient()
-    audio = cloud_speech_pb2.RecognitionAudio(uri=gcs_uri)
+    from google.cloud.speech import SpeechClient
+    from google.cloud.speech import enums
+    from google.cloud.speech import types
+    client = SpeechClient()
+    audio = types.RecognitionAudio(uri=gcs_uri)
 
     encoding = enums.RecognitionConfig.AudioEncoding.FLAC
     sample_rate_hertz = 16000
     language_code = 'en-US'
-    config = cloud_speech_pb2.RecognitionConfig(
+    config = types.RecognitionConfig(
         encoding=encoding,
         sample_rate_hertz=sample_rate_hertz,
         language_code=language_code)

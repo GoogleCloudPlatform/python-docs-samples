@@ -28,30 +28,29 @@ import io
 
 def transcribe_streaming(stream_file):
     """Streams transcription of the given audio file."""
-    from google.cloud.gapic.speech.v1 import speech_client
-    from google.cloud.gapic.speech.v1 import enums
-    from google.cloud.proto.speech.v1 import cloud_speech_pb2
-    client = speech_client.SpeechClient()
+    from google.cloud.speech import SpeechClient
+    from google.cloud.speech import enums
+    from google.cloud.speech import types
+    client = SpeechClient()
 
     with io.open(stream_file, 'rb') as audio_file:
         content = audio_file.read()
-        audio = cloud_speech_pb2.RecognitionAudio(content=content)
-        content_request = cloud_speech_pb2.StreamingRecognizeRequest(audio_content=content)
+        audio = types.RecognitionAudio(content=content)
+        request = types.StreamingRecognizeRequest(audio_content=content)
 
         encoding = enums.RecognitionConfig.AudioEncoding.LINEAR16
         sample_rate_hertz = 16000
         language_code = 'en-US'
-        config = cloud_speech_pb2.RecognitionConfig(
+        config = types.RecognitionConfig(
               encoding=encoding,
               sample_rate_hertz=sample_rate_hertz,
               language_code=language_code)
 
-        streaming_config = cloud_speech_pb2.StreamingRecognitionConfig(config=config)
-        config_request = cloud_speech_pb2.StreamingRecognizeRequest(streaming_config=streaming_config)
+        config = types.StreamingRecognitionConfig(config=config)
 
-        requests = (r for r in [config_request, content_request])
+        requests = [request]
 
-        for response in client.streaming_recognize(requests):
+        for response in client.streaming_recognize(config, requests):
             for result in response.results:
                 print('Finished: {}'.format(result.is_final))
                 print('Stability: {}'.format(result.stability))
