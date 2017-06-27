@@ -222,14 +222,15 @@ def detect_text(path):
 
     image = types.Image(content=content)
 
-    texts = image.detect_text()
+    response = client.text_detection(image=image)
+    texts = response.text_annotations
     print('Texts:')
 
     for text in texts:
         print('\n"{}"'.format(text.description))
 
-        vertices = (['({},{})'.format(bound.x_coordinate, bound.y_coordinate)
-                    for bound in text.bounds.vertices])
+        vertices = (['({},{})'.format(bound.x, bound.y)
+                    for bound in text.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
 
@@ -238,16 +239,18 @@ def detect_text_uri(uri):
     """Detects text in the file located in Google Cloud Storage or on the Web.
     """
     client = ImageAnnotatorClient()
-    image = types.Image(source_uri=uri)
+    image = types.Image()
+    image.source.image_uri = uri
 
-    texts = image.detect_text()
+    response = client.text_detection(image=image)
+    texts = response.text_annotations
     print('Texts:')
 
     for text in texts:
         print('\n"{}"'.format(text.description))
 
-        vertices = (['({},{})'.format(bound.x_coordinate, bound.y_coordinate)
-                    for bound in text.bounds.vertices])
+        vertices = (['({},{})'.format(bound.x, bound.y)
+                    for bound in text.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
 
