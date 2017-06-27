@@ -35,8 +35,7 @@ def run_quickstart():
     # Loads the image into memory
     with io.open(file_name, 'rb') as image_file:
         content = image_file.read()
-        image = types.Image(
-            content=content)
+        image = types.Image(content=content)
 
     # Performs label detection on the image file
     response = client.label_detection(image=image)
