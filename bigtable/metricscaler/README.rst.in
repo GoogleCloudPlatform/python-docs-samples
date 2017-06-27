@@ -20,8 +20,8 @@ setup:
 - install_deps
 
 samples:
-- name: Autoscaling example
-  file: autoscaler.py
+- name: Metricscaling example
+  file: metricscaler.py
   show_help: true
 
 cloud_client_library: true
