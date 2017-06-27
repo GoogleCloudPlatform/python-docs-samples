@@ -304,7 +304,8 @@ def detect_web(path):
 
     image = types.Image(content=content)
 
-    notes = image.detect_web()
+    response = client.web_detection(image=image)
+    notes = response.web_detection
 
     if notes.pages_with_matching_images:
         print('\n{} Pages with matching images retrieved')
@@ -340,9 +341,11 @@ def detect_web(path):
 def detect_web_uri(uri):
     """Detects web annotations in the file located in Google Cloud Storage."""
     client = ImageAnnotatorClient()
-    image = types.Image(source_uri=uri)
+    image = types.Image()
+    image.source.image_uri = uri
 
-    notes = image.detect_web()
+    response = client.web_detection(image=image)
+    notes = response.web_detection
 
     if notes.pages_with_matching_images:
         print('\n{} Pages with matching images retrieved')
