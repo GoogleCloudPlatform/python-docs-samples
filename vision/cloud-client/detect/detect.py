@@ -33,7 +33,10 @@ import io
 
 from google.cloud.vision import ImageAnnotatorClient
 from google.cloud.vision import types
+from google.cloud.vision import enums
 
+likelihood_name = {value : name for name, value in \
+vars(enums.Likelihood).iteritems() if not name.startswith('__')}
 
 def detect_faces(path):
     """Detects faces in an image."""
@@ -44,17 +47,17 @@ def detect_faces(path):
 
     image = types.Image(content=content)
 
-    response = client.detect_faces(image=image)
+    response = client.face_detection(image=image)
     faces = response.face_annotations
     print('Faces:')
 
     for face in faces:
-        print('anger: {}'.format(face.anger_likelihood))
-        print('joy: {}'.format(face.joy_likelihood))
-        print('surprise: {}'.format(face.surprise_likelihood))
+        print('anger: {}'.format(likelihood_name[face.anger_likelihood]))
+        print('joy: {}'.format(likelihood_name[face.joy_likelihood]))
+        print('surprise: {}'.format(likelihood_name[face.surprise_likelihood]))
 
-        vertices = (['({},{})'.format(bound.x_coordinate, bound.y_coordinate)
-                    for bound in face.bounds.vertices])
+        vertices = (['({},{})'.format(bound.x, bound.y)
+                    for bound in face.bounding_poly.vertices])
 
         print('face bounds: {}'.format(','.join(vertices)))
 
@@ -65,16 +68,17 @@ def detect_faces_uri(uri):
     image = types.Image()
     image.source.image_uri = uri
 
-    faces = image.detect_faces()
+    response = client.face_detection(image=image)
+    faces = response.face_annotations
     print('Faces:')
 
     for face in faces:
-        print('anger: {}'.format(face.emotions.anger))
-        print('joy: {}'.format(face.emotions.joy))
-        print('surprise: {}'.format(face.emotions.surprise))
+        print('anger: {}'.format(likelihood_name[face.anger_likelihood]))
+        print('joy: {}'.format(likelihood_name[face.joy_likelihood]))
+        print('surprise: {}'.format(likelihood_name[face.surprise_likelihood]))
 
-        vertices = (['({},{})'.format(bound.x_coordinate, bound.y_coordinate)
-                    for bound in face.bounds.vertices])
+        vertices = (['({},{})'.format(bound.x, bound.y)
+                    for bound in face.bounding_poly.vertices])
 
         print('face bounds: {}'.format(','.join(vertices)))
 

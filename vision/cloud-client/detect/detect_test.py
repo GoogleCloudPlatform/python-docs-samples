@@ -71,14 +71,14 @@ def test_faces(capsys):
         'resources/face_no_surprise.jpg')
     detect.detect_faces(file_name)
     out, _ = capsys.readouterr()
-    assert 'Likelihood.POSSIBLE' in out
+    assert 'POSSIBLE' in out
 
 
 def test_faces_uri(capsys):
     file_name = 'gs://{}/vision/face_no_surprise.jpg'.format(BUCKET)
     detect.detect_faces_uri(file_name)
     out, _ = capsys.readouterr()
-    assert 'Likelihood.POSSIBLE' in out
+    assert 'POSSIBLE' in out
 
 
 def test_faces_http(capsys):
