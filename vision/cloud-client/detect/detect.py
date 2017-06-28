@@ -385,13 +385,17 @@ def detect_crop_hints(path):
         content = image_file.read()
     image = types.Image(content=content)
 
-    hints = image.detect_crop_hints({1.77})
+    crop_hints_params = types.CropHintsParams(aspect_ratios=[1.77])
+    image_context = types.ImageContext(crop_hints_params=crop_hints_params)
+
+    response = client.crop_hints(image=image, image_context=image_context)
+    hints = response.crop_hints_annotation.crop_hints
 
     for n, hint in enumerate(hints):
         print('\nCrop Hint: {}'.format(n))
 
-        vertices = (['({},{})'.format(bound.x_coordinate, bound.y_coordinate)
-                    for bound in hint.bounds.vertices])
+        vertices = (['({},{})'.format(bound.x, bound.y)
+                    for bound in hint.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
 
@@ -399,14 +403,20 @@ def detect_crop_hints(path):
 def detect_crop_hints_uri(uri):
     """Detects crop hints in the file located in Google Cloud Storage."""
     client = ImageAnnotatorClient()
-    image = types.Image(source_uri=uri)
+    image = types.Image()
+    image.source.image_uri = uri
 
-    hints = image.detect_crop_hints({1.77})
+    crop_hints_params = types.CropHintsParams(aspect_ratios=[1.77])
+    image_context = types.ImageContext(crop_hints_params=crop_hints_params)
+
+    response = client.crop_hints(image=image, image_context=image_context)
+    hints = response.crop_hints_annotation.crop_hints
+
     for n, hint in enumerate(hints):
         print('\nCrop Hint: {}'.format(n))
 
-        vertices = (['({},{})'.format(bound.x_coordinate, bound.y_coordinate)
-                    for bound in hint.bounds.vertices])
+        vertices = (['({},{})'.format(bound.x, bound.y)
+                    for bound in hint.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
 
