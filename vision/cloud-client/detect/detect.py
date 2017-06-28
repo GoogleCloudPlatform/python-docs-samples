@@ -33,17 +33,17 @@ import io
 
 from google.cloud.vision import ImageAnnotatorClient
 from google.cloud.vision import types
-from google.cloud.vision import enums
 
 # Names of likelihood from google.cloud.vision.enums
 likelihood_name = ('UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE',
                    'LIKELY', 'VERY_LIKELY')
 
+
 def detect_faces(path):
     """Detects faces in an image."""
     # Names of likelihood from google.cloud.vision.enums
     likelihood_name = ('UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE',
-                   'LIKELY', 'VERY_LIKELY')
+                       'LIKELY', 'VERY_LIKELY')
 
     client = ImageAnnotatorClient()
 
@@ -71,7 +71,7 @@ def detect_faces_uri(uri):
     """Detects faces in the file located in Google Cloud Storage or the web."""
     # Names of likelihood from google.cloud.vision.enums
     likelihood_name = ('UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE',
-                   'LIKELY', 'VERY_LIKELY')
+                       'LIKELY', 'VERY_LIKELY')
 
     client = ImageAnnotatorClient()
     image = types.Image()
@@ -192,7 +192,7 @@ def detect_safe_search(path):
     """Detects unsafe features in the file."""
     # Names of likelihood from google.cloud.vision.enums
     likelihood_name = ('UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE',
-                   'LIKELY', 'VERY_LIKELY')
+                       'LIKELY', 'VERY_LIKELY')
 
     client = ImageAnnotatorClient()
 
@@ -215,7 +215,7 @@ def detect_safe_search_uri(uri):
     on the Web."""
     # Names of likelihood from google.cloud.vision.enums
     likelihood_name = ('UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE',
-                   'LIKELY', 'VERY_LIKELY')
+                       'LIKELY', 'VERY_LIKELY')
 
     client = ImageAnnotatorClient()
     image = types.Image()
