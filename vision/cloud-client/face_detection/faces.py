@@ -18,7 +18,8 @@
 
 import argparse
 
-from google.cloud import vision
+from google.cloud.vision import ImageAnnotatorClient
+from google.cloud.vision import types
 from PIL import Image, ImageDraw
 
 
@@ -31,12 +32,14 @@ def detect_face(face_file, max_results=4):
     Returns:
         An array of Face objects with information about the picture.
     """
+    client = ImageAnnotatorClient()
+
     content = face_file.read()
     # [START get_vision_service]
-    image = vision.Client().image(content=content)
+    image = types.Image(content=content)
     # [END get_vision_service]
 
-    return image.detect_faces()
+    return client.face_detection(image=image).face_annotations
 
 
 def highlight_faces(image, faces, output_filename):
@@ -53,8 +56,8 @@ def highlight_faces(image, faces, output_filename):
     draw = ImageDraw.Draw(im)
 
     for face in faces:
-        box = [(bound.x_coordinate, bound.y_coordinate)
-               for bound in face.bounds.vertices]
+        box = [(bound.x, bound.y)
+               for bound in face.bounding_poly.vertices]
         draw.line(box + [box[0]], width=5, fill='#00ff00')
 
     im.save(output_filename)
