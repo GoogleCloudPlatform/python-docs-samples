@@ -26,26 +26,27 @@ Example usage:
 import argparse
 import io
 
-from google.cloud import vision
+from google.cloud.vision import ImageAnnotatorClient
+from google.cloud.vision import types
 # [END imports]
 
 
 def annotate(path):
     """Returns web annotations given the path to an image."""
     # [START get_annotations]
-    image = None
-    vision_client = vision.Client()
+    client = ImageAnnotatorClient()
 
     if path.startswith('http') or path.startswith('gs:'):
-        image = vision_client.image(source_uri=path)
+        image = types.Image()
+        image.source.image_uri = path
 
     else:
         with io.open(path, 'rb') as image_file:
             content = image_file.read()
 
-        image = vision_client.image(content=content)
+        image = types.Image(content=content)
 
-    return image.detect_web()
+    return client.web_detection(image=image).web_detection
     # [END get_annotations]
 
 
