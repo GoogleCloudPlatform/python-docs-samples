@@ -35,8 +35,9 @@ from google.cloud.vision import ImageAnnotatorClient
 from google.cloud.vision import types
 from google.cloud.vision import enums
 
-likelihood_name = {value : name for name, value in \
-vars(enums.Likelihood).iteritems() if not name.startswith('__')}
+# Names of likelihood from google.cloud.vision.enums
+likelihood_name = ('UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE',
+                   'LIKELY', 'VERY_LIKELY')
 
 def detect_faces(path):
     """Detects faces in an image."""
