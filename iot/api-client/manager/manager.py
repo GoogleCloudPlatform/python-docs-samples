@@ -51,7 +51,7 @@ def create_iot_topic(topic_name):
     topic = pubsub_client.topic(topic_name)
     policy = topic.get_iam_policy()
     publishers = policy.get('roles/pubsub.publisher', [])
-    publishers.append(policy.service_account(
+    publishers.add(policy.service_account(
             'cloud-iot@system.gserviceaccount.com'))
     policy['roles/pubsub.publisher'] = publishers
     topic.set_iam_policy(policy)
