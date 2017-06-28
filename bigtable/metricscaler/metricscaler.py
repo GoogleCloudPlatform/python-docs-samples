@@ -22,7 +22,6 @@ from google.cloud import bigtable
 from google.cloud import monitoring
 
 
-
 def get_cpu_load():
     """Returns the most recent Cloud Bigtable CPU load measurement.
 
@@ -51,23 +50,22 @@ def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
            bigtable_cluster (str): Cloud Bigtable cluster ID to scale
            scale_up (bool): If true, scale up, otherwise scale down
     """
-    _MIN_NODE_COUNT = 3
-    """
-    The minimum number of nodes to use. The default minimum is 3. If you have a
-    lot of data, the rule of thumb is to not go below 2.5 TB per node for SSD
-    clusters, and 8 TB for HDD. The bigtable.googleapis.com/disk/bytes_used
-    metric is useful in figuring out the minimum number of nodes.
-    """
 
-    _MAX_NODE_COUNT = 30
-    """
-    The maximum number of nodes to use. The default maximum is 30 nodes per zone.
-    If you need more quota, you can request more by following the instructions
-    <a href="https://cloud.google.com/bigtable/quota">here</a>.
-    """
+    # The minimum number of nodes to use. The default minimum is 3. If you have
+    # a lot of data, the rule of thumb is to not go below 2.5 TB per node for
+    # SSD lusters, and 8 TB for HDD. The
+    # "bigtable.googleapis.com/disk/bytes_used" metric is useful in figuring
+    # out the minimum number of nodes.
+    min_node_count = 3
 
-    _SIZE_CHANGE_STEP = 3
-    """The number of nodes to change the cluster by."""
+    # The maximum number of nodes to use. The default maximum is 30 nodes per
+    # zone. If you need more quota, you can request more by following the
+    # instructions at https://cloud.google.com/bigtable/quota.
+    max_node_count = 30
+
+    # The number of nodes to change the cluster by.
+    size_change_step = 3
+
     # [START bigtable_scale]
     bigtable_client = bigtable.Client(admin=True)
     instance = bigtable_client.instance(bigtable_instance)
@@ -79,16 +77,16 @@ def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
     current_node_count = cluster.serve_nodes
 
     if scale_up:
-        if current_node_count < _MAX_NODE_COUNT:
-            new_node_count = min(current_node_count + 3, _MAX_NODE_COUNT)
+        if current_node_count < max_node_count:
+            new_node_count = min(current_node_count + 3, max_node_count)
             cluster.serve_nodes = new_node_count
             cluster.update()
             print('Scaled up from {} to {} nodes.'.format(
                 current_node_count, new_node_count))
     else:
-        if current_node_count > _MIN_NODE_COUNT:
+        if current_node_count > min_node_count:
             new_node_count = max(
-                current_node_count - _SIZE_CHANGE_STEP, _MIN_NODE_COUNT)
+                current_node_count - size_change_step, min_node_count)
             cluster.serve_nodes = new_node_count
             cluster.update()
             print('Scaled down from {} to {} nodes.'.format(
