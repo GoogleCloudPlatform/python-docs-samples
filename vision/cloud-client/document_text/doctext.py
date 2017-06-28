@@ -25,7 +25,8 @@ import argparse
 from enum import Enum
 import io
 
-from google.cloud import vision
+from google.cloud.vision import ImageAnnotatorClient
+from google.cloud.vision import types
 from PIL import Image, ImageDraw
 # [END imports]
 
@@ -56,15 +57,17 @@ def draw_boxes(image, blocks, color):
 def get_document_bounds(image_file, feature):
     # [START detect_bounds]
     """Returns document bounds given an image."""
-    vision_client = vision.Client()
+    client = ImageAnnotatorClient()
 
     bounds = []
 
     with io.open(image_file, 'rb') as image_file:
         content = image_file.read()
 
-    image = vision_client.image(content=content)
-    document = image.detect_full_text()
+    image = types.Image(content=content)
+
+    response = client.document_text_detection(image=image)
+    document = response.full_text_annotation
 
     # Collect specified feature bounds by enumerating all document features
     for page in document.pages:
