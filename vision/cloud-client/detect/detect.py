@@ -430,7 +430,8 @@ def detect_document(path):
 
     image = types.Image(content=content)
 
-    document = image.detect_full_text()
+    response = client.document_text_detection(image=image)
+    document = response.full_text_annotation
 
     for page in document.pages:
         for block in page.blocks:
@@ -454,9 +455,11 @@ def detect_document_uri(uri):
     """Detects document features in the file located in Google Cloud
     Storage."""
     client = ImageAnnotatorClient()
-    image = types.Image(source_uri=uri)
+    image = types.Image()
+    image.source.image_uri = uri
 
-    document = image.detect_full_text()
+    response = client.document_text_detection(image=image)
+    document = response.full_text_annotation
 
     for page in document.pages:
         for block in page.blocks:
