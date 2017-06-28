@@ -20,13 +20,13 @@ import time
 from google.cloud import bigtable
 from mock import patch
 
-from metricscaler import _SIZE_CHANGE_STEP
 from metricscaler import get_cpu_load
 from metricscaler import main
 from metricscaler import scale_bigtable
 
 # tests assume instance and cluster have the same ID
 BIGTABLE_INSTANCE = os.environ['BIGTABLE_CLUSTER']
+SIZE_CHANGE_STEP = 3
 
 # System tests to verify API calls succeed
 
@@ -50,7 +50,7 @@ def test_scale_bigtable():
     cluster.reload()
 
     new_node_count = cluster.serve_nodes
-    assert (new_node_count == (original_node_count + _SIZE_CHANGE_STEP))
+    assert (new_node_count == (original_node_count + SIZE_CHANGE_STEP))
 
     scale_bigtable(BIGTABLE_INSTANCE, BIGTABLE_INSTANCE, False)
     time.sleep(3)
