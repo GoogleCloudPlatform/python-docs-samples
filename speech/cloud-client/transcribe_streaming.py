@@ -35,7 +35,6 @@ def transcribe_streaming(stream_file):
 
     with io.open(stream_file, 'rb') as audio_file:
         content = audio_file.read()
-        audio = types.RecognitionAudio(content=content)
         request = types.StreamingRecognizeRequest(audio_content=content)
 
         encoding = enums.RecognitionConfig.AudioEncoding.LINEAR16
