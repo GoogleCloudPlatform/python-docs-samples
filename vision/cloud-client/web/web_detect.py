@@ -58,7 +58,6 @@ def report(annotations):
             len(annotations.pages_with_matching_images)))
 
         for page in annotations.pages_with_matching_images:
-            print('Score : {}'.format(page.score))
             print('Url   : {}'.format(page.url))
 
     if annotations.full_matching_images:
@@ -66,7 +65,6 @@ def report(annotations):
                len(annotations.full_matching_images)))
 
         for image in annotations.full_matching_images:
-            print('Score:  {}'.format(image.score))
             print('Url  : {}'.format(image.url))
 
     if annotations.partial_matching_images:
@@ -74,7 +72,6 @@ def report(annotations):
                len(annotations.partial_matching_images)))
 
         for image in annotations.partial_matching_images:
-            print('Score: {}'.format(image.score))
             print('Url  : {}'.format(image.url))
 
     if annotations.web_entities:

@@ -328,7 +328,6 @@ def detect_web(path):
         print('\n{} Pages with matching images retrieved')
 
         for page in notes.pages_with_matching_images:
-            print('Score : {}'.format(page.score))
             print('Url   : {}'.format(page.url))
 
     if notes.full_matching_images:
@@ -336,7 +335,6 @@ def detect_web(path):
                len(notes.full_matching_images)))
 
         for image in notes.full_matching_images:
-            print('Score:  {}'.format(image.score))
             print('Url  : {}'.format(image.url))
 
     if notes.partial_matching_images:
@@ -344,7 +342,6 @@ def detect_web(path):
                len(notes.partial_matching_images)))
 
         for image in notes.partial_matching_images:
-            print('Score: {}'.format(image.score))
             print('Url  : {}'.format(image.url))
 
     if notes.web_entities:
@@ -368,7 +365,6 @@ def detect_web_uri(uri):
         print('\n{} Pages with matching images retrieved')
 
         for page in notes.pages_with_matching_images:
-            print('Score : {}'.format(page.score))
             print('Url   : {}'.format(page.url))
 
     if notes.full_matching_images:
@@ -376,7 +372,6 @@ def detect_web_uri(uri):
                len(notes.full_matching_images)))
 
         for image in notes.full_matching_images:
-            print('Score:  {}'.format(image.score))
             print('Url  : {}'.format(image.url))
 
     if notes.partial_matching_images:
@@ -384,7 +379,6 @@ def detect_web_uri(uri):
                len(notes.partial_matching_images)))
 
         for image in notes.partial_matching_images:
-            print('Score: {}'.format(image.score))
             print('Url  : {}'.format(image.url))
 
     if notes.web_entities:
