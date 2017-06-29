@@ -54,7 +54,8 @@ def report(annotations):
     """Prints detected features in the provided web annotations."""
     # [START print_annotations]
     if annotations.pages_with_matching_images:
-        print('\n{} Pages with matching images retrieved')
+        print('\n{} Pages with matching images retrieved'.format(
+            len(annotations.pages_with_matching_images)))
 
         for page in annotations.pages_with_matching_images:
             print('Score : {}'.format(page.score))
