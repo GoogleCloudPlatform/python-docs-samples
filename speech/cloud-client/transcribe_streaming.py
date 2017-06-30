@@ -36,26 +36,22 @@ def transcribe_streaming(stream_file):
         content = audio_file.read()
         request = types.StreamingRecognizeRequest(audio_content=content)
 
-        encoding = 'LINEAR16'
-        sample_rate_hertz = 16000
-        language_code = 'en-US'
-        config = types.RecognitionConfig(
-              encoding=encoding,
-              sample_rate_hertz=sample_rate_hertz,
-              language_code=language_code)
+    config = types.RecognitionConfig(
+        encoding='LINEAR16',
+        sample_rate_hertz=16000,
+        language_code='en-US')
 
-        config = types.StreamingRecognitionConfig(config=config)
+    requests = [request]
+    streaming_config = types.StreamingRecognitionConfig(config=config)
 
-        requests = [request]
-
-        for response in client.streaming_recognize(config, requests):
-            for result in response.results:
-                print('Finished: {}'.format(result.is_final))
-                print('Stability: {}'.format(result.stability))
-                alternatives = result.alternatives
-            for alternative in alternatives:
-                print('Confidence: {}'.format(alternative.confidence))
-                print('Transcript: {}'.format(alternative.transcript))
+    for response in client.streaming_recognize(streaming_config, requests):
+        for result in response.results:
+            print('Finished: {}'.format(result.is_final))
+            print('Stability: {}'.format(result.stability))
+            alternatives = result.alternatives
+        for alternative in alternatives:
+            print('Confidence: {}'.format(alternative.confidence))
+            print('Transcript: {}'.format(alternative.transcript))
 
 
 if __name__ == '__main__':

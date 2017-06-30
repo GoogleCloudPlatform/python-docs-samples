@@ -38,13 +38,10 @@ def run_quickstart():
         content = audio_file.read()
         audio = types.RecognitionAudio(content=content)
 
-        encoding = 'LINEAR16'
-        sample_rate_hertz = 16000
-        language_code = 'en-US'
-        config = types.RecognitionConfig(
-            encoding=encoding,
-            sample_rate_hertz=sample_rate_hertz,
-            language_code=language_code)
+    config = types.RecognitionConfig(
+        encoding='LINEAR16',
+        sample_rate_hertz=16000,
+        language_code='en-US')
 
     # Detects speech in the audio file
     response = client.recognize(config, audio)

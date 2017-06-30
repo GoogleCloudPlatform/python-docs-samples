@@ -37,13 +37,10 @@ def transcribe_file(speech_file):
         content = audio_file.read()
         audio = types.RecognitionAudio(content=content)
 
-        encoding = 'LINEAR16'
-        sample_rate_hertz = 16000
-        language_code = 'en-US'
-        config = types.RecognitionConfig(
-              encoding=encoding,
-              sample_rate_hertz=sample_rate_hertz,
-              language_code=language_code)
+    config = types.RecognitionConfig(
+        encoding='LINEAR16',
+        sample_rate_hertz=16000,
+        language_code='en-US')
 
     operation = client.long_running_recognize(config, audio)
 
@@ -69,13 +66,10 @@ def transcribe_gcs(gcs_uri):
     client = SpeechClient()
     audio = types.RecognitionAudio(uri=gcs_uri)
 
-    encoding = 'FLAC'
-    sample_rate_hertz = 16000
-    language_code = 'en-US'
     config = types.RecognitionConfig(
-          encoding=encoding,
-          sample_rate_hertz=sample_rate_hertz,
-          language_code=language_code)
+        encoding='FLAC',
+        sample_rate_hertz=16000,
+        language_code='en-US')
 
     operation = client.long_running_recognize(config, audio)
 
