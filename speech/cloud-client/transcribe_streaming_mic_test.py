@@ -11,11 +11,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import mock
 import os
 import re
 import threading
 import time
+
+import mock
 
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 

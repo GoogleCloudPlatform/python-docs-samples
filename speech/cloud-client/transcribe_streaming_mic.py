@@ -28,13 +28,10 @@ Example usage:
 # [START import_libraries]
 from __future__ import division
 
-import logging
 import re
-import signal
 import sys
 
 from google.cloud import speech
-import grpc
 import pyaudio
 from six.moves import queue
 # [END import_libraries]
@@ -42,6 +39,7 @@ from six.moves import queue
 # Audio recording parameters
 RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
+
 
 class MicAsFile(object):
     """Opens a recording stream as a file-like object."""
