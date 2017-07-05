@@ -47,9 +47,11 @@ def get_crop_hint(path):
     response = client.crop_hints(image=image, image_context=image_context)
     hints = response.crop_hints_annotation.crop_hints
 
-    # Return bounds for the first crop hint using an aspect ratio of 1.77.
-    return hints[0].bounding_poly.vertices
+    # Get bounds for the first crop hint using an aspect ratio of 1.77.
+    vertices = hints[0].bounding_poly.vertices
     # [END get_crop_hint]
+
+    return vertices
 
 
 def draw_hint(image_file):
