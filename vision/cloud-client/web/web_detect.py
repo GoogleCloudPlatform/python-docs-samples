@@ -46,8 +46,10 @@ def annotate(path):
 
         image = types.Image(content=content)
 
-    return client.web_detection(image=image).web_detection
+    web_detection = client.web_detection(image=image).web_detection
     # [END get_annotations]
+
+    return web_detection    
 
 
 def report(annotations):

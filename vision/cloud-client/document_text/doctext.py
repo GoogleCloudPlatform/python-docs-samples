@@ -39,17 +39,17 @@ class FeatureType(Enum):
     SYMBOL = 5
 
 
-def draw_boxes(image, blocks, color):
+def draw_boxes(image, bounds, color):
     """Draw a border around the image using the hints in the vector list."""
     # [START draw_blocks]
     draw = ImageDraw.Draw(image)
 
-    for block in blocks:
+    for bound in bounds:
         draw.polygon([
-            block.vertices[0].x, block.vertices[0].y,
-            block.vertices[1].x, block.vertices[1].y,
-            block.vertices[2].x, block.vertices[2].y,
-            block.vertices[3].x, block.vertices[3].y], None, color)
+            bound.vertices[0].x, bound.vertices[0].y,
+            bound.vertices[1].x, bound.vertices[1].y,
+            bound.vertices[2].x, bound.vertices[2].y,
+            bound.vertices[3].x, bound.vertices[3].y], None, color)
     return image
     # [END draw_blocks]
 
@@ -90,8 +90,9 @@ def get_document_bounds(image_file, feature):
         if (feature == FeatureType.PAGE):
             bounds.append(block.bounding_box)
 
-    return bounds
+    # The list `bounds` contains the coordinates of the bounding boxes.
     # [END detect_bounds]
+    return bounds
 
 
 def render_doc_text(filein, fileout):
@@ -112,7 +113,7 @@ def render_doc_text(filein, fileout):
 
 
 if __name__ == '__main__':
-    # [START run_crop]
+    # [START run_doc_text]
     parser = argparse.ArgumentParser()
     parser.add_argument('detect_file', help='The image for text detection.')
     parser.add_argument('-out_file', help='Optional output file', default=0)
@@ -120,5 +121,5 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     render_doc_text(args.detect_file, args.out_file)
-    # [END run_crop]
+    # [END run_doc_text]
 # [END full_tutorial]
