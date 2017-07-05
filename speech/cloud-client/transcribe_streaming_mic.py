@@ -16,8 +16,13 @@
 
 """Google Cloud Speech API sample application using the streaming API.
 
+NOTE: This module requires the additional dependency `pyaudio`. To install
+using pip:
+
+    pip install pyaudio
+
 Example usage:
-    python transcribe_streaming.py resources/audio.raw
+    python transcribe_streaming_mic.py
 """
 
 # [START import_libraries]
@@ -153,7 +158,7 @@ def main():
             sample_rate_hertz=RATE)
         # See http://g.co/cloud/speech/docs/languages
         # for a list of supported languages.
-        language_code = 'cmn-Hant-TW'  # a BCP-47 language tag
+        language_code = 'en-US'  # a BCP-47 language tag
         results_gen = audio_sample.streaming_recognize(
                 language_code=language_code, interim_results=True)
 
