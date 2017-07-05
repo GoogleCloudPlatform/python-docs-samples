@@ -18,7 +18,9 @@
 
 import argparse
 
+# [START import_client_library]
 from google.cloud.vision import ImageAnnotatorClient
+# [START import_client_library]
 from google.cloud.vision import types
 from PIL import Image, ImageDraw
 
@@ -32,12 +34,12 @@ def detect_face(face_file, max_results=4):
     Returns:
         An array of Face objects with information about the picture.
     """
+    # [START get_vision_service]
     client = ImageAnnotatorClient()
+    # [END get_vision_service]
 
     content = face_file.read()
-    # [START get_vision_service]
     image = types.Image(content=content)
-    # [END get_vision_service]
 
     return client.face_detection(image=image).face_annotations
 
