@@ -41,6 +41,7 @@ def transcribe_streaming(stream_file):
         sample_rate_hertz=16000,
         language_code='en-US')
 
+    # In practice requests should be a generator yielding chunks of audio data.
     requests = [request]
     streaming_config = types.StreamingRecognitionConfig(config=config)
 
