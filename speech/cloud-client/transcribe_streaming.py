@@ -28,9 +28,9 @@ import io
 
 def transcribe_streaming(stream_file):
     """Streams transcription of the given audio file."""
-    from google.cloud.speech import SpeechClient
+    from google.cloud import speech
     from google.cloud.speech import types
-    client = SpeechClient()
+    client = speech.SpeechClient()
 
     with io.open(stream_file, 'rb') as audio_file:
         content = audio_file.read()

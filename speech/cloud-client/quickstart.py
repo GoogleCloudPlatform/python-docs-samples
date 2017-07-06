@@ -21,11 +21,11 @@ def run_quickstart():
     import os
 
     # Imports the Google Cloud client library
-    from google.cloud.speech import SpeechClient
+    from google.cloud import speech
     from google.cloud.speech import types
-
+    
     # Instantiates a client
-    client = SpeechClient()
+    client = speech.SpeechClient()
 
     # The name of the audio file to transcribe
     file_name = os.path.join(
