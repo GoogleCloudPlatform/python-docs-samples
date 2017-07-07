@@ -58,8 +58,8 @@ def highlight_faces(image, faces, output_filename):
     draw = ImageDraw.Draw(im)
 
     for face in faces:
-        box = [(bound.x, bound.y)
-               for bound in face.bounding_poly.vertices]
+        box = [(vertex.x, vertex.y)
+               for vertex in face.bounding_poly.vertices]
         draw.line(box + [box[0]], width=5, fill='#00ff00')
 
     im.save(output_filename)

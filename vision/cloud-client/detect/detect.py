@@ -61,8 +61,8 @@ def detect_faces(path):
         print('joy: {}'.format(likelihood_name[face.joy_likelihood]))
         print('surprise: {}'.format(likelihood_name[face.surprise_likelihood]))
 
-        vertices = (['({},{})'.format(bound.x, bound.y)
-                    for bound in face.bounding_poly.vertices])
+        vertices = (['({},{})'.format(vertex.x, vertex.y)
+                    for vertex in face.bounding_poly.vertices])
 
         print('face bounds: {}'.format(','.join(vertices)))
 
@@ -86,8 +86,8 @@ def detect_faces_uri(uri):
         print('joy: {}'.format(likelihood_name[face.joy_likelihood]))
         print('surprise: {}'.format(likelihood_name[face.surprise_likelihood]))
 
-        vertices = (['({},{})'.format(bound.x, bound.y)
-                    for bound in face.bounding_poly.vertices])
+        vertices = (['({},{})'.format(vertex.x, vertex.y)
+                    for vertex in face.bounding_poly.vertices])
 
         print('face bounds: {}'.format(','.join(vertices)))
 
@@ -246,8 +246,8 @@ def detect_text(path):
     for text in texts:
         print('\n"{}"'.format(text.description))
 
-        vertices = (['({},{})'.format(bound.x, bound.y)
-                    for bound in text.bounding_poly.vertices])
+        vertices = (['({},{})'.format(vertex.x, vertex.y)
+                    for vertex in text.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
 
@@ -266,8 +266,8 @@ def detect_text_uri(uri):
     for text in texts:
         print('\n"{}"'.format(text.description))
 
-        vertices = (['({},{})'.format(bound.x, bound.y)
-                    for bound in text.bounding_poly.vertices])
+        vertices = (['({},{})'.format(vertex.x, vertex.y)
+                    for vertex in text.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
 
@@ -405,8 +405,8 @@ def detect_crop_hints(path):
     for n, hint in enumerate(hints):
         print('\nCrop Hint: {}'.format(n))
 
-        vertices = (['({},{})'.format(bound.x, bound.y)
-                    for bound in hint.bounding_poly.vertices])
+        vertices = (['({},{})'.format(vertex.x, vertex.y)
+                    for vertex in hint.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
 
@@ -426,8 +426,8 @@ def detect_crop_hints_uri(uri):
     for n, hint in enumerate(hints):
         print('\nCrop Hint: {}'.format(n))
 
-        vertices = (['({},{})'.format(bound.x, bound.y)
-                    for bound in hint.bounding_poly.vertices])
+        vertices = (['({},{})'.format(vertex.x, vertex.y)
+                    for vertex in hint.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
 
