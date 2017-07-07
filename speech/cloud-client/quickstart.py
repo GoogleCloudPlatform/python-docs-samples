@@ -23,7 +23,7 @@ def run_quickstart():
     # Imports the Google Cloud client library
     from google.cloud import speech
     from google.cloud.speech import types
-    
+
     # Instantiates a client
     client = speech.SpeechClient()
 
