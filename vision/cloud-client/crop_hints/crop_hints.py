@@ -25,7 +25,7 @@ Examples:
 import argparse
 import io
 
-from google.cloud.vision import ImageAnnotatorClient
+from google.cloud import vision
 from google.cloud.vision import types
 from PIL import Image, ImageDraw
 # [END imports]

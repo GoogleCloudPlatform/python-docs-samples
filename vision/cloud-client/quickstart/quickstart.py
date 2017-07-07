@@ -21,7 +21,7 @@ def run_quickstart():
     import os
 
     # Imports the Google Cloud client library
-    from google.cloud.vision import ImageAnnotatorClient
+    from google.cloud import vision
     from google.cloud.vision import types
 
     # Instantiates a client

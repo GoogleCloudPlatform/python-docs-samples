@@ -31,7 +31,7 @@ https://cloud.google.com/vision/docs.
 import argparse
 import io
 
-from google.cloud.vision import ImageAnnotatorClient
+from google.cloud import vision
 from google.cloud.vision import types
 
 # Names of likelihood from google.cloud.vision.enums

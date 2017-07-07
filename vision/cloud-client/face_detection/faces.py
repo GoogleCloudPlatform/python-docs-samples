@@ -19,7 +19,7 @@
 import argparse
 
 # [START import_client_library]
-from google.cloud.vision import ImageAnnotatorClient
+from google.cloud import vision
 # [END import_client_library]
 from google.cloud.vision import types
 from PIL import Image, ImageDraw

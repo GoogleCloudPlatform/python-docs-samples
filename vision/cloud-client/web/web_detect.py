@@ -26,7 +26,7 @@ Example usage:
 import argparse
 import io
 
-from google.cloud.vision import ImageAnnotatorClient
+from google.cloud import vision
 from google.cloud.vision import types
 # [END imports]
 
@@ -49,7 +49,7 @@ def annotate(path):
     web_detection = client.web_detection(image=image).web_detection
     # [END get_annotations]
 
-    return web_detection    
+    return web_detection
 
 
 def report(annotations):
