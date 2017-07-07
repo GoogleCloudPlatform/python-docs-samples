@@ -45,7 +45,7 @@ def detect_faces(path):
     likelihood_name = ('UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE',
                        'LIKELY', 'VERY_LIKELY')
 
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
@@ -73,7 +73,7 @@ def detect_faces_uri(uri):
     likelihood_name = ('UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE',
                        'LIKELY', 'VERY_LIKELY')
 
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
     image = types.Image()
     image.source.image_uri = uri
 
@@ -94,7 +94,7 @@ def detect_faces_uri(uri):
 
 def detect_labels(path):
     """Detects labels in the file."""
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
@@ -112,7 +112,7 @@ def detect_labels(path):
 def detect_labels_uri(uri):
     """Detects labels in the file located in Google Cloud Storage or on the
     Web."""
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
     image = types.Image()
     image.source.image_uri = uri
 
@@ -126,7 +126,7 @@ def detect_labels_uri(uri):
 
 def detect_landmarks(path):
     """Detects landmarks in the file."""
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
@@ -144,7 +144,7 @@ def detect_landmarks(path):
 def detect_landmarks_uri(uri):
     """Detects landmarks in the file located in Google Cloud Storage or on the
     Web."""
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
     image = types.Image()
     image.source.image_uri = uri
 
@@ -158,7 +158,7 @@ def detect_landmarks_uri(uri):
 
 def detect_logos(path):
     """Detects logos in the file."""
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
@@ -176,7 +176,7 @@ def detect_logos(path):
 def detect_logos_uri(uri):
     """Detects logos in the file located in Google Cloud Storage or on the Web.
     """
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
     image = types.Image()
     image.source.image_uri = uri
 
@@ -194,7 +194,7 @@ def detect_safe_search(path):
     likelihood_name = ('UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE',
                        'LIKELY', 'VERY_LIKELY')
 
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
@@ -217,7 +217,7 @@ def detect_safe_search_uri(uri):
     likelihood_name = ('UNKNOWN', 'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE',
                        'LIKELY', 'VERY_LIKELY')
 
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
     image = types.Image()
     image.source.image_uri = uri
 
@@ -232,7 +232,7 @@ def detect_safe_search_uri(uri):
 
 def detect_text(path):
     """Detects text in the file."""
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
@@ -255,7 +255,7 @@ def detect_text(path):
 def detect_text_uri(uri):
     """Detects text in the file located in Google Cloud Storage or on the Web.
     """
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
     image = types.Image()
     image.source.image_uri = uri
 
@@ -274,7 +274,7 @@ def detect_text_uri(uri):
 
 def detect_properties(path):
     """Detects image properties in the file."""
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
@@ -296,7 +296,7 @@ def detect_properties(path):
 def detect_properties_uri(uri):
     """Detects image properties in the file located in Google Cloud Storage or
     on the Web."""
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
     image = types.Image()
     image.source.image_uri = uri
 
@@ -314,7 +314,7 @@ def detect_properties_uri(uri):
 
 def detect_web(path):
     """Detects web annotations given an image."""
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
@@ -354,7 +354,7 @@ def detect_web(path):
 
 def detect_web_uri(uri):
     """Detects web annotations in the file located in Google Cloud Storage."""
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
     image = types.Image()
     image.source.image_uri = uri
 
@@ -391,7 +391,7 @@ def detect_web_uri(uri):
 
 def detect_crop_hints(path):
     """Detects crop hints in an image."""
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
     image = types.Image(content=content)
@@ -413,7 +413,7 @@ def detect_crop_hints(path):
 
 def detect_crop_hints_uri(uri):
     """Detects crop hints in the file located in Google Cloud Storage."""
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
     image = types.Image()
     image.source.image_uri = uri
 
@@ -434,7 +434,7 @@ def detect_crop_hints_uri(uri):
 
 def detect_document(path):
     """Detects document features in an image."""
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
@@ -465,7 +465,7 @@ def detect_document(path):
 def detect_document_uri(uri):
     """Detects document features in the file located in Google Cloud
     Storage."""
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
     image = types.Image()
     image.source.image_uri = uri
 

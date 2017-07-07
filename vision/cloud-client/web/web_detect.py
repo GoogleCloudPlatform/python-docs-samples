@@ -34,7 +34,7 @@ from google.cloud.vision import types
 def annotate(path):
     """Returns web annotations given the path to an image."""
     # [START get_annotations]
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
 
     if path.startswith('http') or path.startswith('gs:'):
         image = types.Image()

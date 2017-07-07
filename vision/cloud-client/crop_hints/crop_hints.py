@@ -34,7 +34,7 @@ from PIL import Image, ImageDraw
 def get_crop_hint(path):
     # [START get_crop_hint]
     """Detect crop hints on a single image and return the first result."""
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()

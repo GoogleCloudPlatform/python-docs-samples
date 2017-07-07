@@ -35,7 +35,7 @@ def detect_face(face_file, max_results=4):
         An array of Face objects with information about the picture.
     """
     # [START get_vision_service]
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
     # [END get_vision_service]
 
     content = face_file.read()

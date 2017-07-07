@@ -25,7 +25,7 @@ def run_quickstart():
     from google.cloud.vision import types
 
     # Instantiates a client
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
 
     # The name of the image file to annotate
     file_name = os.path.join(

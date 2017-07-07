@@ -57,7 +57,7 @@ def draw_boxes(image, bounds, color):
 def get_document_bounds(image_file, feature):
     # [START detect_bounds]
     """Returns document bounds given an image."""
-    client = ImageAnnotatorClient()
+    client = vision.ImageAnnotatorClient()
 
     bounds = []
 
