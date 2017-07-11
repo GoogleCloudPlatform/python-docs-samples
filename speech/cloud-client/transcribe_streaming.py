@@ -50,9 +50,9 @@ def transcribe_streaming(stream_file):
             print('Finished: {}'.format(result.is_final))
             print('Stability: {}'.format(result.stability))
             alternatives = result.alternatives
-        for alternative in alternatives:
-            print('Confidence: {}'.format(alternative.confidence))
-            print('Transcript: {}'.format(alternative.transcript))
+            for alternative in alternatives:
+                print('Confidence: {}'.format(alternative.confidence))
+                print('Transcript: {}'.format(alternative.transcript))
 
 
 if __name__ == '__main__':
