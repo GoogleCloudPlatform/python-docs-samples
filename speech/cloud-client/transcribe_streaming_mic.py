@@ -42,7 +42,7 @@ RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
 
 
-class MicAsGenerator(object):
+class MicrophoneStream(object):
     """Opens a recording stream as a generator yielding the audio chunks."""
     def __init__(self, rate, chunk):
         self._rate = rate
@@ -84,7 +84,7 @@ class MicAsGenerator(object):
         return None, pyaudio.paContinue
 
     def generator(self):
-        while True:
+        while not self.closed:
             yield self._buff.get()
 # [END audio_stream]
 
@@ -110,7 +110,7 @@ def listen_print_loop(responses):
         if not result.alternatives:
             continue
 
-        # Display the top transcription of the top alternative.
+        # Display the transcription of the top alternative.
         transcript = result.alternatives[0].transcript
 
         # Display interim results, but with a carriage return at the end of the
@@ -118,7 +118,7 @@ def listen_print_loop(responses):
         #
         # If the previous result was longer than this one, we need to print
         # some extra spaces to overwrite the previous result
-        overwrite_chars = ' ' * max(0, num_chars_printed - len(transcript))
+        overwrite_chars = ' ' * (num_chars_printed - len(transcript))
 
         if not result.is_final:
             sys.stdout.write(transcript + overwrite_chars + '\r')
@@ -150,9 +150,10 @@ def main():
         language_code=language_code)
     streaming_config = types.StreamingRecognitionConfig(config=config, interim_results=True)
 
-    with MicAsGenerator(RATE, CHUNK) as stream:
+    with MicrophoneStream(RATE, CHUNK) as stream:
         audio_generator = stream.generator()
-        requests = (types.StreamingRecognizeRequest(audio_content=content) for content in audio_generator)
+        requests = (types.StreamingRecognizeRequest(audio_content=content)
+                    for content in audio_generator)
 
         responses = client.streaming_recognize(streaming_config, requests)
 
