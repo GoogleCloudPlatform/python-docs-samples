@@ -125,7 +125,8 @@ def syntax_text(text):
     tokens = client.analyze_syntax(document).tokens
 
     for token in tokens:
-        print(u'{}: {}'.format(POS_TAG[token.part_of_speech.tag], token.text.content))
+        print(u'{}: {}'.format(POS_TAG[token.part_of_speech.tag],
+                               token.text.content))
 
 
 def syntax_file(gcs_uri):
@@ -140,7 +141,8 @@ def syntax_file(gcs_uri):
     tokens = client.analyze_syntax(document).tokens
 
     for token in tokens:
-        print(u'{}: {}'.format(POS_TAG[token.part_of_speech.tag], token.text.content))
+        print(u'{}: {}'.format(POS_TAG[token.part_of_speech.tag],
+                               token.text.content))
 
 
 if __name__ == '__main__':
