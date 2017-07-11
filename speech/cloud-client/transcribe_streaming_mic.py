@@ -74,7 +74,8 @@ class MicrophoneStream(object):
         self._audio_stream.stop_stream()
         self._audio_stream.close()
         self.closed = True
-        # Flush out the read, just in case
+        # Signal the generator to terminate so that the client's
+        # streaming_recognize method will not block the process termination.
         self._buff.put(None)
         self._audio_interface.terminate()
 
@@ -85,7 +86,25 @@ class MicrophoneStream(object):
 
     def generator(self):
         while not self.closed:
-            yield self._buff.get()
+            # Use a blocking get() to ensure there's at least one chunk of data.
+            # Stop iteration if the chunk is None, indicating the end of the
+            # audio stream.
+            chunk = self._buff.get()
+            if chunk is None:
+                return
+            data = [chunk]
+
+            # Now consume whatever other data's still buffered.
+            while True:
+                try:
+                    chunk = self._buff.get(block=False)
+                    if chunk is None:
+                        return
+                    data.append(chunk)
+                except queue.Empty:
+                    break
+
+            yield b''.join(data)
 # [END audio_stream]
 
 
