@@ -111,8 +111,12 @@ class MicrophoneStream(object):
 def listen_print_loop(responses):
     """Iterates through server responses and prints them.
 
-    The results_gen passed is a generator that will block until a response
-    is provided by the server. When the transcription response comes, print it.
+    The responses passed is a generator that will block until a response
+    is provided by the server.
+
+    Each response may contain multiple results, and each result may contain
+    multiple alternatives; for details, see https://goo.gl/tjCPAU.  Here we
+    print only the transcription for the top alternative of the top result.
 
     In this case, responses are provided for interim results as well. If the
     response is an interim one, print a line feed at the end of it, to allow

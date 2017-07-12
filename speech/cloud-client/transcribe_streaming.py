@@ -34,7 +34,6 @@ def transcribe_streaming(stream_file):
 
     with io.open(stream_file, 'rb') as audio_file:
         content = audio_file.read()
-        request = types.StreamingRecognizeRequest(audio_content=content)
 
     config = types.RecognitionConfig(
         encoding='LINEAR16',
@@ -42,7 +41,8 @@ def transcribe_streaming(stream_file):
         language_code='en-US')
 
     # In practice requests should be a generator yielding chunks of audio data.
-    requests = [request]
+    requests = (types.StreamingRecognizeRequest(audio_content=c)
+                for c in [content])
     streaming_config = types.StreamingRecognitionConfig(config=config)
 
     for response in client.streaming_recognize(streaming_config, requests):
