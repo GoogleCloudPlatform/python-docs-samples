@@ -86,9 +86,9 @@ class MicrophoneStream(object):
 
     def generator(self):
         while not self.closed:
-            # Use a blocking get() to ensure there's at least one chunk of data.
-            # Stop iteration if the chunk is None, indicating the end of the
-            # audio stream.
+            # Use a blocking get() to ensure there's at least one chunk of
+            # data, and stop iteration if the chunk is None, indicating the
+            # end of the audio stream.
             chunk = self._buff.get()
             if chunk is None:
                 return
@@ -167,7 +167,8 @@ def main():
         encoding='LINEAR16',
         sample_rate_hertz=RATE,
         language_code=language_code)
-    streaming_config = types.StreamingRecognitionConfig(config=config, interim_results=True)
+    streaming_config = types.StreamingRecognitionConfig(config=config,
+                                                        interim_results=True)
 
     with MicrophoneStream(RATE, CHUNK) as stream:
         audio_generator = stream.generator()
