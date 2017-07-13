@@ -9,6 +9,8 @@ product:
     recognition technologies into developer applications. Send audio and receive
     a text transcription from the Cloud Speech API service.
 
+    See the [migration guide](/docs/python-client-migration) for information about migrating to Python client library v0.27.
+
 setup:
 - auth
 - install_deps

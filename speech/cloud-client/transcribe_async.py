@@ -33,17 +33,21 @@ def transcribe_file(speech_file):
     from google.cloud.speech import types
     client = speech.SpeechClient()
 
+    # [START migration_async_request]
     with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
-        audio = types.RecognitionAudio(content=content)
 
+    audio = types.RecognitionAudio(content=content)
     config = types.RecognitionConfig(
         encoding='LINEAR16',
         sample_rate_hertz=16000,
         language_code='en-US')
 
+    # [START migration_async_response]
     operation = client.long_running_recognize(config, audio)
+    # [END migration_async_request]
 
+    # Sleep and poll the operation.done()
     retry_count = 100
     while retry_count > 0 and not operation.done():
         retry_count -= 1
@@ -57,6 +61,7 @@ def transcribe_file(speech_file):
     for alternative in alternatives:
         print('Transcript: {}'.format(alternative.transcript))
         print('Confidence: {}'.format(alternative.confidence))
+    # [END migration_async_response]
 
 
 def transcribe_gcs(gcs_uri):
@@ -66,7 +71,6 @@ def transcribe_gcs(gcs_uri):
     client = speech.SpeechClient()
 
     audio = types.RecognitionAudio(uri=gcs_uri)
-
     config = types.RecognitionConfig(
         encoding='FLAC',
         sample_rate_hertz=16000,
