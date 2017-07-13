@@ -70,7 +70,7 @@ def validate_iap_jwt(cloud_project_number, iap_jwt,
         decoded_jwt = jwt.decode(
             iap_jwt, key,
             algorithms=['ES256'],
-            audience=base_url)
+            audience=expected_audience)
         return (decoded_jwt['sub'], decoded_jwt['email'], '')
     except (jwt.exceptions.InvalidTokenError,
             requests.exceptions.RequestException) as e:
