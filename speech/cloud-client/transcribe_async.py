@@ -48,7 +48,7 @@ def transcribe_file(speech_file):
     operation = client.long_running_recognize(config, audio)
     # [END migration_async_request]
 
-    # Sleep and poll the operation.done()
+    # Sleep and poll operation.done()
     retry_count = 100
     while retry_count > 0 and not operation.done():
         retry_count -= 1
