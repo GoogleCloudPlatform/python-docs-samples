@@ -171,8 +171,9 @@ def main():
         encoding='LINEAR16',
         sample_rate_hertz=RATE,
         language_code=language_code)
-    streaming_config = types.StreamingRecognitionConfig(config=config,
-                                                        interim_results=True)
+    streaming_config = types.StreamingRecognitionConfig(
+        config=config,
+        interim_results=True)
 
     with MicrophoneStream(RATE, CHUNK) as stream:
         audio_generator = stream.generator()

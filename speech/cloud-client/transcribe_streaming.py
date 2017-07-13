@@ -38,8 +38,8 @@ def transcribe_streaming(stream_file):
 
     # In practice, stream should be a generator yielding chunks of audio data.
     stream = [content]
-    requests = (types.StreamingRecognizeRequest(audio_content=c)
-                for c in stream)
+    requests = (types.StreamingRecognizeRequest(audio_content=chunk)
+                for chunk in stream)
 
     config = types.RecognitionConfig(
         encoding='LINEAR16',
