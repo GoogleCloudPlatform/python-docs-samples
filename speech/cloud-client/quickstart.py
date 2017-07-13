@@ -23,6 +23,7 @@ def run_quickstart():
     # Imports the Google Cloud client library
     # [START migration_import]
     from google.cloud import speech
+    from google.cloud.speech import enums
     from google.cloud.speech import types
     # [END migration_import]
 
@@ -43,7 +44,7 @@ def run_quickstart():
         audio = types.RecognitionAudio(content=content)
 
     config = types.RecognitionConfig(
-        encoding='LINEAR16',
+        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
         language_code='en-US')
 

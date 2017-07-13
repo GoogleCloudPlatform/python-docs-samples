@@ -29,6 +29,7 @@ import io
 def transcribe_streaming(stream_file):
     """Streams transcription of the given audio file."""
     from google.cloud import speech
+    from google.cloud.speech import enums
     from google.cloud.speech import types
     client = speech.SpeechClient()
 
@@ -42,7 +43,7 @@ def transcribe_streaming(stream_file):
                 for chunk in stream)
 
     config = types.RecognitionConfig(
-        encoding='LINEAR16',
+        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
         language_code='en-US')
     streaming_config = types.StreamingRecognitionConfig(config=config)

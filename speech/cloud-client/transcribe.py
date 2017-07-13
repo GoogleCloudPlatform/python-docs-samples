@@ -31,6 +31,7 @@ import io
 def transcribe_file(speech_file):
     """Transcribe the given audio file."""
     from google.cloud import speech
+    from google.cloud.speech import enums
     from google.cloud.speech import types
     client = speech.SpeechClient()
 
@@ -41,7 +42,7 @@ def transcribe_file(speech_file):
 
     audio = types.RecognitionAudio(content=content)
     config = types.RecognitionConfig(
-        encoding='LINEAR16',
+        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
         language_code='en-US')
     # [END migration_audio_config_file]
@@ -59,13 +60,14 @@ def transcribe_file(speech_file):
 def transcribe_gcs(gcs_uri):
     """Transcribes the audio file specified by the gcs_uri."""
     from google.cloud import speech
+    from google.cloud.speech import enums
     from google.cloud.speech import types
     client = speech.SpeechClient()
 
     # [START migration_audio_config_gcs]
     audio = types.RecognitionAudio(uri=gcs_uri)
     config = types.RecognitionConfig(
-        encoding='FLAC',
+        encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
         sample_rate_hertz=16000,
         language_code='en-US')
     # [END migration_audio_config_gcs]

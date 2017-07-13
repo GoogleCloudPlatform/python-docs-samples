@@ -32,6 +32,7 @@ import re
 import sys
 
 from google.cloud import speech
+from google.cloud.speech import enums
 from google.cloud.speech import types
 import pyaudio
 from six.moves import queue
@@ -168,7 +169,7 @@ def main():
 
     client = speech.SpeechClient()
     config = types.RecognitionConfig(
-        encoding='LINEAR16',
+        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=RATE,
         language_code=language_code)
     streaming_config = types.StreamingRecognitionConfig(
