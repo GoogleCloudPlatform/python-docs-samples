@@ -10,7 +10,7 @@ product:
     a text transcription from the Cloud Speech API service.
 
 
-    See the `migration guide`_ for information about migrating to Python client library v0.27.
+    - See the `migration guide`_ for information about migrating to Python client library v0.27.
 
 
     .. _migration guide: https://cloud.google.com/speech/docs/python-client-migration
