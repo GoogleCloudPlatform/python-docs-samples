@@ -44,11 +44,11 @@ def validate_iap_jwt_from_app_engine(iap_jwt, cloud_project_number,
     expected_audience = '/projects/{}/apps/{}'.format(
         cloud_project_number, cloud_project_id)
     return _validate_iwp_jwt(iap_jwt, expected_audience)
-    
+
 
 def validate_iap_jwt_from_compute_engine(iwp_jwt, cloud_project_number,
                                          backend_service_id):
-    """Validate an Identity-Aware Proxy JWT for your (Compute|Container) Engine service.
+    """Validate an IAP JWT for your (Compute|Container) Engine service.
 
     Args:
       iap_jwt: The contents of the X-Goog-IAP-JWT-Assertion header.
@@ -56,7 +56,8 @@ def validate_iap_jwt_from_compute_engine(iwp_jwt, cloud_project_number,
           This is returned by 'gcloud projects describe $PROJECT_ID', or
           in the Project Info card in Cloud Console.
       backend_service_id: The ID of the backend service used to access the
-          application. See https://cloud.google.com/iap/docs/signed-headers-howto
+          application. See
+          https://cloud.google.com/iap/docs/signed-headers-howto
           for details on how to get this value.
 
     Returns:
