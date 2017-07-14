@@ -1,4 +1,4 @@
-module: tictactoe
+service: tictactoe
 runtime: python27
 version: 1
 api_version: 1
