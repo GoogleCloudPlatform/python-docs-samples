@@ -21,10 +21,16 @@ def run_quickstart():
     import os
 
     # Imports the Google Cloud client library
+    # [START migration_import]
     from google.cloud import speech
+    from google.cloud.speech import enums
+    from google.cloud.speech import types
+    # [END migration_import]
 
     # Instantiates a client
-    speech_client = speech.Client()
+    # [START migration_client]
+    client = speech.SpeechClient()
+    # [END migration_client]
 
     # The name of the audio file to transcribe
     file_name = os.path.join(
@@ -35,14 +41,16 @@ def run_quickstart():
     # Loads the audio into memory
     with io.open(file_name, 'rb') as audio_file:
         content = audio_file.read()
-        sample = speech_client.sample(
-            content,
-            source_uri=None,
-            encoding='LINEAR16',
-            sample_rate_hertz=16000)
+        audio = types.RecognitionAudio(content=content)
+
+    config = types.RecognitionConfig(
+        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=16000,
+        language_code='en-US')
 
     # Detects speech in the audio file
-    alternatives = sample.recognize('en-US')
+    response = client.recognize(config, audio)
+    alternatives = response.results[0].alternatives
 
     for alternative in alternatives:
         print('Transcript: {}'.format(alternative.transcript))
