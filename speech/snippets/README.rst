@@ -5,6 +5,10 @@ Google Cloud Speech API Python Samples
 
 This directory contains samples for Google Cloud Speech API. The `Google Cloud Speech API`_ enables easy integration of Google speech recognition technologies into developer applications. Send audio and receive a text transcription from the Cloud Speech API service.
 
+- See the `migration guide`_ for information about migrating to Python client library v0.27.
+
+.. _migration guide: https://cloud.google.com/speech/docs/python-client-migration
+
 
 
 

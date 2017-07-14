@@ -32,6 +32,8 @@ import re
 import sys
 
 from google.cloud import speech
+from google.cloud.speech import enums
+from google.cloud.speech import types
 import pyaudio
 from six.moves import queue
 # [END import_libraries]
@@ -41,8 +43,8 @@ RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
 
 
-class MicAsFile(object):
-    """Opens a recording stream as a file-like object."""
+class MicrophoneStream(object):
+    """Opens a recording stream as a generator yielding the audio chunks."""
     def __init__(self, rate, chunk):
         self._rate = rate
         self._chunk = chunk
@@ -73,7 +75,8 @@ class MicAsFile(object):
         self._audio_stream.stop_stream()
         self._audio_stream.close()
         self.closed = True
-        # Flush out the read, just in case
+        # Signal the generator to terminate so that the client's
+        # streaming_recognize method will not block the process termination.
         self._buff.put(None)
         self._audio_interface.terminate()
 
@@ -82,31 +85,39 @@ class MicAsFile(object):
         self._buff.put(in_data)
         return None, pyaudio.paContinue
 
-    def read(self, chunk_size):
-        if self.closed:
-            return
+    def generator(self):
+        while not self.closed:
+            # Use a blocking get() to ensure there's at least one chunk of
+            # data, and stop iteration if the chunk is None, indicating the
+            # end of the audio stream.
+            chunk = self._buff.get()
+            if chunk is None:
+                return
+            data = [chunk]
 
-        # Use a blocking get() to ensure there's at least one chunk of data.
-        data = [self._buff.get()]
+            # Now consume whatever other data's still buffered.
+            while True:
+                try:
+                    chunk = self._buff.get(block=False)
+                    if chunk is None:
+                        return
+                    data.append(chunk)
+                except queue.Empty:
+                    break
 
-        # Now consume whatever other data's still buffered.
-        while True:
-            try:
-                data.append(self._buff.get(block=False))
-            except queue.Empty:
-                break
-
-        if self.closed:
-            return
-        return b''.join(data)
+            yield b''.join(data)
 # [END audio_stream]
 
 
-def listen_print_loop(results_gen):
+def listen_print_loop(responses):
     """Iterates through server responses and prints them.
 
-    The results_gen passed is a generator that will block until a response
-    is provided by the server. When the transcription response comes, print it.
+    The responses passed is a generator that will block until a response
+    is provided by the server.
+
+    Each response may contain multiple results, and each result may contain
+    multiple alternatives; for details, see https://goo.gl/tjCPAU.  Here we
+    print only the transcription for the top alternative of the top result.
 
     In this case, responses are provided for interim results as well. If the
     response is an interim one, print a line feed at the end of it, to allow
@@ -114,19 +125,24 @@ def listen_print_loop(results_gen):
     final one, print a newline to preserve the finalized transcription.
     """
     num_chars_printed = 0
-    for result in results_gen:
+    for response in responses:
+        if not response.results:
+            continue
+
+        # There could be multiple results in each response.
+        result = response.results[0]
         if not result.alternatives:
             continue
 
-        # Display the top transcription
-        transcript = result.transcript
+        # Display the transcription of the top alternative.
+        transcript = result.alternatives[0].transcript
 
         # Display interim results, but with a carriage return at the end of the
         # line, so subsequent lines will overwrite them.
         #
         # If the previous result was longer than this one, we need to print
         # some extra spaces to overwrite the previous result
-        overwrite_chars = ' ' * max(0, num_chars_printed - len(transcript))
+        overwrite_chars = ' ' * (num_chars_printed - len(transcript))
 
         if not result.is_final:
             sys.stdout.write(transcript + overwrite_chars + '\r')
@@ -147,21 +163,28 @@ def listen_print_loop(results_gen):
 
 
 def main():
-    speech_client = speech.Client()
+    # See http://g.co/cloud/speech/docs/languages
+    # for a list of supported languages.
+    language_code = 'en-US'  # a BCP-47 language tag
 
-    with MicAsFile(RATE, CHUNK) as stream:
-        audio_sample = speech_client.sample(
-            stream=stream,
-            encoding=speech.encoding.Encoding.LINEAR16,
-            sample_rate_hertz=RATE)
-        # See http://g.co/cloud/speech/docs/languages
-        # for a list of supported languages.
-        language_code = 'en-US'  # a BCP-47 language tag
-        results_gen = audio_sample.streaming_recognize(
-                language_code=language_code, interim_results=True)
+    client = speech.SpeechClient()
+    config = types.RecognitionConfig(
+        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=RATE,
+        language_code=language_code)
+    streaming_config = types.StreamingRecognitionConfig(
+        config=config,
+        interim_results=True)
+
+    with MicrophoneStream(RATE, CHUNK) as stream:
+        audio_generator = stream.generator()
+        requests = (types.StreamingRecognizeRequest(audio_content=content)
+                    for content in audio_generator)
+
+        responses = client.streaming_recognize(streaming_config, requests)
 
         # Now, put the transcription responses to use.
-        listen_print_loop(results_gen)
+        listen_print_loop(responses)
 
 
 if __name__ == '__main__':
