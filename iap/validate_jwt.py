@@ -46,8 +46,8 @@ def validate_iap_jwt_from_app_engine(iap_jwt, cloud_project_number,
     return _validate_iwp_jwt(iap_jwt, expected_audience)
     
 
-def validate_iap_jwt_from_app_engine(iwp_jwt, cloud_project_number,
-                                     backend_service_id):
+def validate_iap_jwt_from_compute_engine(iwp_jwt, cloud_project_number,
+                                         backend_service_id):
     """Validate an Identity-Aware Proxy JWT for your (Compute|Container) Engine service.
 
     Args:
