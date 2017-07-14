@@ -43,10 +43,10 @@ def validate_iap_jwt_from_app_engine(iap_jwt, cloud_project_number,
     """
     expected_audience = '/projects/{}/apps/{}'.format(
         cloud_project_number, cloud_project_id)
-    return _validate_iwp_jwt(iap_jwt, expected_audience)
+    return _validate_iap_jwt(iap_jwt, expected_audience)
 
 
-def validate_iap_jwt_from_compute_engine(iwp_jwt, cloud_project_number,
+def validate_iap_jwt_from_compute_engine(iap_jwt, cloud_project_number,
                                          backend_service_id):
     """Validate an IAP JWT for your (Compute|Container) Engine service.
 
