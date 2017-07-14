@@ -36,7 +36,7 @@ app = flask.Flask(__name__)
 @app.route('/')
 def echo_jwt():
     return 'x-goog-authenticated-user-jwt: {}'.format(
-        flask.request.headers.get('x-goog-authenticated-user-jwt'))
+        flask.request.headers.get('x-goog-iap-jwt-assertion'))
 
 
 @app.route('/identity')
