@@ -31,33 +31,50 @@ import io
 def transcribe_file(speech_file):
     """Transcribe the given audio file."""
     from google.cloud import speech
-    speech_client = speech.Client()
+    from google.cloud.speech import enums
+    from google.cloud.speech import types
+    client = speech.SpeechClient()
 
+    # [START migration_sync_request]
+    # [START migration_audio_config_file]
     with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
-        audio_sample = speech_client.sample(
-            content=content,
-            source_uri=None,
-            encoding='LINEAR16',
-            sample_rate_hertz=16000)
 
-    alternatives = audio_sample.recognize('en-US')
+    audio = types.RecognitionAudio(content=content)
+    config = types.RecognitionConfig(
+        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=16000,
+        language_code='en-US')
+    # [END migration_audio_config_file]
+
+    # [START migration_sync_response]
+    response = client.recognize(config, audio)
+    # [END migration_sync_request]
+    alternatives = response.results[0].alternatives
+
     for alternative in alternatives:
         print('Transcript: {}'.format(alternative.transcript))
+    # [END migration_sync_response]
 
 
 def transcribe_gcs(gcs_uri):
     """Transcribes the audio file specified by the gcs_uri."""
     from google.cloud import speech
-    speech_client = speech.Client()
+    from google.cloud.speech import enums
+    from google.cloud.speech import types
+    client = speech.SpeechClient()
 
-    audio_sample = speech_client.sample(
-        content=None,
-        source_uri=gcs_uri,
-        encoding='FLAC',
-        sample_rate_hertz=16000)
+    # [START migration_audio_config_gcs]
+    audio = types.RecognitionAudio(uri=gcs_uri)
+    config = types.RecognitionConfig(
+        encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
+        sample_rate_hertz=16000,
+        language_code='en-US')
+    # [END migration_audio_config_gcs]
 
-    alternatives = audio_sample.recognize('en-US')
+    response = client.recognize(config, audio)
+    alternatives = response.results[0].alternatives
+
     for alternative in alternatives:
         print('Transcript: {}'.format(alternative.transcript))
 
