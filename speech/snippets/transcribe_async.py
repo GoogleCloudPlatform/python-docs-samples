@@ -27,6 +27,7 @@ import io
 import time
 
 
+# [START def_transcribe_file]
 def transcribe_file(speech_file):
     """Transcribe the given audio file asynchronously."""
     from google.cloud import speech
@@ -63,8 +64,10 @@ def transcribe_file(speech_file):
         print('Transcript: {}'.format(alternative.transcript))
         print('Confidence: {}'.format(alternative.confidence))
     # [END migration_async_response]
+# [END def_transcribe_file]
 
 
+# [START def_transcribe_gcs]
 def transcribe_gcs(gcs_uri):
     """Asynchronously transcribes the audio file specified by the gcs_uri."""
     from google.cloud import speech
@@ -93,6 +96,7 @@ def transcribe_gcs(gcs_uri):
     for alternative in alternatives:
         print('Transcript: {}'.format(alternative.transcript))
         print('Confidence: {}'.format(alternative.confidence))
+# [END def_transcribe_gcs]
 
 
 if __name__ == '__main__':
