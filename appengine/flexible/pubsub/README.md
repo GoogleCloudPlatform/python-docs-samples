@@ -10,8 +10,8 @@ Before you can run or deploy the sample, you will need to do the following:
 
 2. Create a topic and subscription.
 
-        $ gcloud alpha pubsub topics create [your-topic-name]
-        $ gcloud alpha pubsub subscriptions create [your-subscription-name] \
+        $ gcloud beta pubsub topics create [your-topic-name]
+        $ gcloud beta pubsub subscriptions create [your-subscription-name] \
             --topic [your-topic-name] \
             --push-endpoint \
                 https://[your-app-id].appspot.com/pubsub/push?token=[your-token] \
