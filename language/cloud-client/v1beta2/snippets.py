@@ -29,10 +29,6 @@ from google.cloud.language_v1beta2 import enums
 from google.cloud.language_v1beta2 import types
 import six
 
-# part-of-speech tags from google.cloud.language.enums.PartOfSpeech.Tag
-POS_TAG = ('UNKNOWN', 'ADJ', 'ADP', 'ADV', 'CONJ', 'DET', 'NOUN', 'NUM',
-           'PRON', 'PRT', 'PUNCT', 'VERB', 'X', 'AFFIX')
-
 
 def sentiment_text(text):
     """Detects sentiment in the text."""
@@ -136,8 +132,12 @@ def syntax_text(text):
     #   document.type == enums.Document.Type.HTML
     tokens = client.analyze_syntax(document).tokens
 
+    # part-of-speech tags from google.cloud.language.enums.PartOfSpeech.Tag
+    pos_tag = ('UNKNOWN', 'ADJ', 'ADP', 'ADV', 'CONJ', 'DET', 'NOUN', 'NUM',
+               'PRON', 'PRT', 'PUNCT', 'VERB', 'X', 'AFFIX')
+
     for token in tokens:
-        print(u'{}: {}'.format(POS_TAG[token.part_of_speech.tag],
+        print(u'{}: {}'.format(pos_tag[token.part_of_speech.tag],
                                token.text.content))
 
 
@@ -154,8 +154,12 @@ def syntax_file(gcs_uri):
     #   document.type == enums.Document.Type.HTML
     tokens = client.analyze_syntax(document).tokens
 
+    # part-of-speech tags from google.cloud.language.enums.PartOfSpeech.Tag
+    pos_tag = ('UNKNOWN', 'ADJ', 'ADP', 'ADV', 'CONJ', 'DET', 'NOUN', 'NUM',
+               'PRON', 'PRT', 'PUNCT', 'VERB', 'X', 'AFFIX')
+
     for token in tokens:
-        print(u'{}: {}'.format(POS_TAG[token.part_of_speech.tag],
+        print(u'{}: {}'.format(pos_tag[token.part_of_speech.tag],
                                token.text.content))
 
 
