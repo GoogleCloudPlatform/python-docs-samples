@@ -19,6 +19,7 @@ def run_quickstart():
     # [START language_quickstart]
     # Imports the Google Cloud client library
     from google.cloud import language_v1beta2
+    from google.cloud.language_v1beta2 import enums
     from google.cloud.language_v1beta2 import types
 
     # Instantiates a client with they v1beta2 version

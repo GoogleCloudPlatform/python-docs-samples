@@ -18,6 +18,7 @@
 import argparse
 
 from google.cloud import language
+from google.cloud.language import enums
 from google.cloud.language import types
 # [END sentiment_tutorial_import]
 
@@ -35,10 +36,6 @@ def print_result(annotations):
     print('Overall Sentiment: score of {} with magnitude of {}'.format(
         score, magnitude))
     return 0
-
-    print('Sentiment: score of {} with magnitude of {}'.format(
-        score, magnitude))
-    return 0
 # [END def_print_result]
 
 
@@ -51,7 +48,7 @@ def analyze(movie_review_filename):
         # Instantiates a plain text document.
         content = review_file.read()
 
-    document = types.Document(content=content, type='PLAIN_TEXT')
+    document = types.Document(content=content, type=enums.Document.Type.PLAIN_TEXT)
     annotations = client.analyze_sentiment(document=document)
 
     # Print the results

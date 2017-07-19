@@ -25,6 +25,7 @@ import argparse
 import sys
 
 from google.cloud import language_v1beta2
+from google.cloud.language_v1beta2 import enums
 from google.cloud.language_v1beta2 import types
 import six
 
@@ -41,7 +42,7 @@ def sentiment_text(text):
         text = text.decode('utf-8')
 
     # Instantiates a plain text document.
-    document = types.Document(content=text, type='PLAIN_TEXT')
+    document = types.Document(content=text, type=enums.Document.Type.PLAIN_TEXT)
 
     # Detects sentiment in the document. You can also analyze HTML with:
     #   document.doc_type == language.Document.HTML
@@ -56,7 +57,7 @@ def sentiment_file(gcs_uri):
     client = language_v1beta2.LanguageServiceClient()
 
     # Instantiates a plain text document.
-    document = types.Document(gcs_content_uri=gcs_uri, type='PLAIN_TEXT')
+    document = types.Document(gcs_content_uri=gcs_uri, type=enums.Document.Type.PLAIN_TEXT)
 
     # Detects sentiment in the document. You can also analyze HTML with:
     #   document.doc_type == language.Document.HTML
@@ -74,7 +75,7 @@ def entities_text(text):
         text = text.decode('utf-8')
 
     # Instantiates a plain text document.
-    document = types.Document(content=text, type='PLAIN_TEXT')
+    document = types.Document(content=text, type=enums.Document.Type.PLAIN_TEXT)
 
     # Detects entities in the document. You can also analyze HTML with:
     #   document.doc_type == language.Document.HTML
@@ -95,7 +96,7 @@ def entities_file(gcs_uri):
     client = language_v1beta2.LanguageServiceClient()
 
     # Instantiates a plain text document.
-    document = types.Document(gcs_content_uri=gcs_uri, type='PLAIN_TEXT')
+    document = types.Document(gcs_content_uri=gcs_uri, type=enums.Document.Type.PLAIN_TEXT)
 
     # Detects sentiment in the document. You can also analyze HTML with:
     #   document.doc_type == language.Document.HTML
@@ -119,7 +120,7 @@ def syntax_text(text):
         text = text.decode('utf-8')
 
     # Instantiates a plain text document.
-    document = types.Document(content=text, type='PLAIN_TEXT')
+    document = types.Document(content=text, type=enums.Document.Type.PLAIN_TEXT)
 
     # Detects syntax in the document. You can also analyze HTML with:
     #   document.doc_type == language.Document.HTML
@@ -135,7 +136,7 @@ def syntax_file(gcs_uri):
     client = language_v1beta2.LanguageServiceClient()
 
     # Instantiates a plain text document.
-    document = types.Document(gcs_content_uri=gcs_uri, type='PLAIN_TEXT')
+    document = types.Document(gcs_content_uri=gcs_uri, type=enums.Document.Type.PLAIN_TEXT)
 
     # Detects syntax in the document. You can also analyze HTML with:
     #   document.doc_type == language.Document.HTML
@@ -154,7 +155,7 @@ def entity_sentiment_text(text):
     if isinstance(text, six.binary_type):
         text = text.decode('utf-8')
 
-    document = types.Document(content=text.encode('utf-8'), type='PLAIN_TEXT')
+    document = types.Document(content=text.encode('utf-8'), type=enums.Document.Type.PLAIN_TEXT)
 
     encoding = 'UTF32'
     if sys.maxunicode == 65535:
@@ -181,7 +182,7 @@ def entity_sentiment_file(gcs_uri):
     """Detects entity sentiment in a Google Cloud Storage file."""
     client = language_v1beta2.LanguageServiceClient()
 
-    document = types.Document(gcs_content_uri=gcs_uri, type='PLAIN_TEXT')
+    document = types.Document(gcs_content_uri=gcs_uri, type=enums.Document.Type.PLAIN_TEXT)
 
     encoding = 'UTF32'
     if sys.maxunicode == 65535:
