@@ -132,7 +132,7 @@ def syntax_text(text):
     #   document.type == enums.Document.Type.HTML
     tokens = client.analyze_syntax(document).tokens
 
-    # part-of-speech tags from google.cloud.language.enums.PartOfSpeech.Tag
+    # part-of-speech tags from enums.PartOfSpeech.Tag
     pos_tag = ('UNKNOWN', 'ADJ', 'ADP', 'ADV', 'CONJ', 'DET', 'NOUN', 'NUM',
                'PRON', 'PRT', 'PUNCT', 'VERB', 'X', 'AFFIX')
 
@@ -154,7 +154,7 @@ def syntax_file(gcs_uri):
     #   document.type == enums.Document.Type.HTML
     tokens = client.analyze_syntax(document).tokens
 
-    # part-of-speech tags from google.cloud.language.enums.PartOfSpeech.Tag
+    # part-of-speech tags from enums.PartOfSpeech.Tag
     pos_tag = ('UNKNOWN', 'ADJ', 'ADP', 'ADV', 'CONJ', 'DET', 'NOUN', 'NUM',
                'PRON', 'PRT', 'PUNCT', 'VERB', 'X', 'AFFIX')
 
