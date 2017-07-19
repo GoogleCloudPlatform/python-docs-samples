@@ -48,7 +48,9 @@ def analyze(movie_review_filename):
         # Instantiates a plain text document.
         content = review_file.read()
 
-    document = types.Document(content=content, type=enums.Document.Type.PLAIN_TEXT)
+    document = types.Document(
+        content=content,
+        type=enums.Document.Type.PLAIN_TEXT)
     annotations = client.analyze_sentiment(document=document)
 
     # Print the results

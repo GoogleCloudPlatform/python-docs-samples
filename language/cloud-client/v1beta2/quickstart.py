@@ -27,7 +27,10 @@ def run_quickstart():
 
     # The text to analyze
     text = u'Hallo Welt!'
-    document = types.Document(content=text, type='PLAIN_TEXT', language='de')
+    document = types.Document(
+        content=text,
+        type=enums.Document.Type.PLAIN_TEXT,
+        language='de')
     # Detects the sentiment of the text
     sentiment = client.analyze_sentiment(document).document_sentiment
 
