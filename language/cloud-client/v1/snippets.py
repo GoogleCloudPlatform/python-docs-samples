@@ -32,6 +32,7 @@ POS_TAG = ('UNKNOWN', 'ADJ', 'ADP', 'ADV', 'CONJ', 'DET', 'NOUN', 'NUM',
            'PRON', 'PRT', 'PUNCT', 'VERB', 'X', 'AFFIX')
 
 
+# [START def_sentiment_text]
 def sentiment_text(text):
     """Detects sentiment in the text."""
     client = language.LanguageServiceClient()
@@ -48,8 +49,10 @@ def sentiment_text(text):
 
     print('Score: {}'.format(sentiment.score))
     print('Magnitude: {}'.format(sentiment.magnitude))
+# [END def_sentiment_text]
 
 
+# [START def_sentiment_file]
 def sentiment_file(gcs_uri):
     """Detects sentiment in the file located in Google Cloud Storage."""
     client = language.LanguageServiceClient()
@@ -63,8 +66,10 @@ def sentiment_file(gcs_uri):
 
     print('Score: {}'.format(sentiment.score))
     print('Magnitude: {}'.format(sentiment.magnitude))
+# [END def_sentiment_file]
 
 
+# [START def_entities_text]
 def entities_text(text):
     """Detects entities in the text."""
     client = language.LanguageServiceClient()
@@ -87,8 +92,10 @@ def entities_text(text):
         print(u'{:<16}: {}'.format('salience', entity.salience))
         print(u'{:<16}: {}'.format('wikipedia_url',
               entity.metadata.get('wikipedia_url', '-')))
+# [END def_entities_text]
 
 
+# [START def_entities_file]
 def entities_file(gcs_uri):
     """Detects entities in the file located in Google Cloud Storage."""
     client = language.LanguageServiceClient()
@@ -108,8 +115,10 @@ def entities_file(gcs_uri):
         print(u'{:<16}: {}'.format('salience', entity.salience))
         print(u'{:<16}: {}'.format('wikipedia_url',
               entity.metadata.get('wikipedia_url', '-')))
+# [END def_entities_file]
 
 
+# [START def_syntax_text]
 def syntax_text(text):
     """Detects syntax in the text."""
     client = language.LanguageServiceClient()
@@ -127,8 +136,10 @@ def syntax_text(text):
     for token in tokens:
         print(u'{}: {}'.format(POS_TAG[token.part_of_speech.tag],
                                token.text.content))
+# [END def_syntax_text]
 
 
+# [START def_syntax_file]
 def syntax_file(gcs_uri):
     """Detects syntax in the file located in Google Cloud Storage."""
     client = language.LanguageServiceClient()
@@ -143,6 +154,7 @@ def syntax_file(gcs_uri):
     for token in tokens:
         print(u'{}: {}'.format(POS_TAG[token.part_of_speech.tag],
                                token.text.content))
+# [END def_syntax_file]
 
 
 if __name__ == '__main__':

@@ -146,6 +146,7 @@ def syntax_file(gcs_uri):
                                token.text.content))
 
 
+# [START def_entity_sentiment_text]
 def entity_sentiment_text(text):
     """Detects entity sentiment in the provided text."""
     client = language_v1beta2.LanguageServiceClient()
@@ -173,6 +174,7 @@ def entity_sentiment_text(text):
             print(u'  Type : {}'.format(mention.type))
         print(u'Salience: {}'.format(entity.salience))
         print(u'Sentiment: {}\n'.format(entity.sentiment))
+# [END def_entity_sentiment_text]
 
 
 def entity_sentiment_file(gcs_uri):
