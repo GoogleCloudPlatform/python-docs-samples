@@ -175,9 +175,9 @@ def entity_sentiment_text(text):
         content=text.encode('utf-8'),
         type=enums.Document.Type.PLAIN_TEXT)
 
-    encoding = 'UTF32'
+    encoding = enums.EncodingType.UTF32
     if sys.maxunicode == 65535:
-        encoding = 'UTF16'
+        encoding = enums.EncodingType.UTF16
 
     result = client.analyze_entity_sentiment(
         document, encoding)
@@ -204,9 +204,9 @@ def entity_sentiment_file(gcs_uri):
         gcs_content_uri=gcs_uri,
         type=enums.Document.Type.PLAIN_TEXT)
 
-    encoding = 'UTF32'
+    encoding = enums.EncodingType.UTF32
     if sys.maxunicode == 65535:
-        encoding = 'UTF16'
+        encoding = enums.EncodingType.UTF16
 
     result = client.analyze_entity_sentiment(
       document, encoding)
