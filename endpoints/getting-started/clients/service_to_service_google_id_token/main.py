@@ -74,16 +74,11 @@ def get_id_token():
     return res['id_token']
 
 
-def make_request(signed_jwt, use_query_string_auth=False):
-    """Makes a request to the auth info endpoint for Google ID signed_jwt."""
-    if use_query_string_auth:
-      headers = None
-      url = '/auth/info/googleidsigned_jwt?access_token={}'.format(signed_jwt)
-    else:
-      headers = {'Authorization': 'Bearer {}'.format(signed_jwt)}
-      url = '/auth/info/googleidsigned_jwt'
+def make_request(token):
+    """Makes a request to the auth info endpoint for Google ID token."""
+    headers = {'Authorization': 'Bearer {}'.format(token)}
     conn = httplib.HTTPSConnection(HOST)
-    conn.request("GET", url, None, headers)
+    conn.request("GET", '/auth/info/googleidtoken', None, headers)
     res = conn.getresponse()
     conn.close()
     return res.read()
@@ -92,9 +87,8 @@ def make_request(signed_jwt, use_query_string_auth=False):
 class MainPage(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/plain'
-        signed_jwt = get_id_signed_jwt()
-        # To use query string authentication, add use_query_string_auth=True.
-        res = make_request(signed_jwt)
+        token = get_id_token()
+        res = make_request(token)
         self.response.write(res)
 
 
