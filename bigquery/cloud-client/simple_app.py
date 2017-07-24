@@ -38,19 +38,10 @@ def query_shakespeare():
     # [END run_query]
 
     # [START print_results]
-    # Drain the query results by requesting a page at a time.
-    page_token = None
+    rows = query_results.fetch_data(max_results=10)
 
-    while True:
-        rows, total_rows, page_token = query_results.fetch_data(
-            max_results=10,
-            page_token=page_token)
-
-        for row in rows:
-            print(row)
-
-        if not page_token:
-            break
+    for row in rows:
+        print(row)
     # [END print_results]
 
 

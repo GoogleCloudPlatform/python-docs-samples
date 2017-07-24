@@ -27,18 +27,48 @@ import jwt
 import requests
 
 
-def validate_iap_jwt(base_url, iap_jwt):
-    """Validate a JWT passed to your application by Identity-Aware Proxy.
+def validate_iap_jwt_from_app_engine(iap_jwt, cloud_project_number,
+                                     cloud_project_id):
+    """Validate a JWT passed to your App Engine app by Identity-Aware Proxy.
 
     Args:
-      base_url: The URL from the incoming request, minus any path, query, etc.
-                For instance: "https://example.com:8443" or
-                "https://example.appspot.com" .
-      iap_jwt: The contents of the X-Goog-Authenticated-User-JWT header.
+      iap_jwt: The contents of the X-Goog-IAP-JWT-Assertion header.
+      cloud_project_number: The project *number* for your Google Cloud project.
+          This is returned by 'gcloud projects describe $PROJECT_ID', or
+          in the Project Info card in Cloud Console.
+      cloud_project_id: The project *ID* for your Google Cloud project.
 
     Returns:
       (user_id, user_email, error_str).
     """
+    expected_audience = '/projects/{}/apps/{}'.format(
+        cloud_project_number, cloud_project_id)
+    return _validate_iap_jwt(iap_jwt, expected_audience)
+
+
+def validate_iap_jwt_from_compute_engine(iap_jwt, cloud_project_number,
+                                         backend_service_id):
+    """Validate an IAP JWT for your (Compute|Container) Engine service.
+
+    Args:
+      iap_jwt: The contents of the X-Goog-IAP-JWT-Assertion header.
+      cloud_project_number: The project *number* for your Google Cloud project.
+          This is returned by 'gcloud projects describe $PROJECT_ID', or
+          in the Project Info card in Cloud Console.
+      backend_service_id: The ID of the backend service used to access the
+          application. See
+          https://cloud.google.com/iap/docs/signed-headers-howto
+          for details on how to get this value.
+
+    Returns:
+      (user_id, user_email, error_str).
+    """
+    expected_audience = '/projects/{}/global/backendServices/{}'.format(
+        cloud_project_number, backend_service_id)
+    return _validate_iap_jwt(iap_jwt, expected_audience)
+
+
+def _validate_iap_jwt(iap_jwt, expected_audience):
     try:
         key_id = jwt.get_unverified_header(iap_jwt).get('kid')
         if not key_id:
@@ -47,7 +77,7 @@ def validate_iap_jwt(base_url, iap_jwt):
         decoded_jwt = jwt.decode(
             iap_jwt, key,
             algorithms=['ES256'],
-            audience=base_url)
+            audience=expected_audience)
         return (decoded_jwt['sub'], decoded_jwt['email'], '')
     except (jwt.exceptions.InvalidTokenError,
             requests.exceptions.RequestException) as e:

@@ -32,7 +32,7 @@ Create local credentials by running the following command and following the oaut
 
 To run list_clusters.py:
 
-    python list_clusters.py --project_id=<YOUR-PROJECT-ID>  --zone=us-central1-b
+    python list_clusters.py <YOUR-PROJECT-ID> --region=us-central1
 
 
 To run create_cluster_and_submit_job, first create a GCS bucket, from the Cloud Console or with

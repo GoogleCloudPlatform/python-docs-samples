@@ -43,19 +43,10 @@ def wait_for_job(job):
 
 
 def print_results(query_results):
-    """Print the query results by requesting a page at a time."""
-    page_token = None
-
-    while True:
-        rows, total_rows, page_token = query_results.fetch_data(
-            max_results=10,
-            page_token=page_token)
-
-        for row in rows:
-            print(row)
-
-        if not page_token:
-            break
+    """Print the rows in the query's results."""
+    rows = query_results.fetch_data(max_results=10)
+    for row in rows:
+        print(row)
 
 
 def query_positional_params(corpus, min_word_count):

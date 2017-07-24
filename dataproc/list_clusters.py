@@ -18,15 +18,12 @@ import argparse
 
 import googleapiclient.discovery
 
-# Currently only the "global" region is supported
-REGION = 'global'
-
 
 # [START list_clusters]
-def list_clusters(dataproc, project):
+def list_clusters(dataproc, project, region):
     result = dataproc.projects().regions().clusters().list(
         projectId=project,
-        region=REGION).execute()
+        region=region).execute()
     return result
 # [END list_clusters]
 
@@ -39,9 +36,9 @@ def get_client():
 # [END get_client]
 
 
-def main(project_id, zone):
+def main(project_id, region):
     dataproc = get_client()
-    result = list_clusters(dataproc, project_id)
+    result = list_clusters(dataproc, project_id, region)
     print(result)
 
 
@@ -52,8 +49,10 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         'project_id', help='Project ID you want to access.'),
+    # Sets the region to "global" if it's not provided
+    # Note: sub-regions (e.g.: us-central1-a/b) are currently not supported
     parser.add_argument(
-        'zone', help='Region to create clusters in')
+        '--region', default='global', help='Region to create clusters in')
 
     args = parser.parse_args()
-    main(args.project_id, args.zone)
+    main(args.project_id, args.region)

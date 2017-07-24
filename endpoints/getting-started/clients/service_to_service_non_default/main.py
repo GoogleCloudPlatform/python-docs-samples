@@ -20,9 +20,8 @@ import httplib
 import json
 import time
 
+import google.auth.app_engine
 import googleapiclient.discovery
-import httplib2
-from oauth2client.contrib.appengine import AppAssertionCredentials
 import webapp2
 
 SERVICE_ACCOUNT_EMAIL = "YOUR-SERVICE-ACCOUNT-EMAIL"
@@ -33,11 +32,10 @@ SERVICE_ACCOUNT = \
 
 def generate_jwt():
     """Generates a signed JSON Web Token using a service account."""
-    credentials = AppAssertionCredentials(
-        'https://www.googleapis.com/auth/iam')
-    http_auth = credentials.authorize(httplib2.Http())
+    credentials = google.auth.app_engine.Credentials(
+        scopes=['https://www.googleapis.com/auth/iam'])
     service = googleapiclient.discovery.build(
-        serviceName='iam', version='v1', http=http_auth)
+        serviceName='iam', version='v1', credentials=credentials)
 
     now = int(time.time())
 
@@ -58,16 +56,16 @@ def generate_jwt():
         "email": SERVICE_ACCOUNT_EMAIL
     })
 
-    headerAndPayload = '{}.{}'.format(
+    header_and_payload = '{}.{}'.format(
         base64.urlsafe_b64encode(header_json),
         base64.urlsafe_b64encode(payload_json))
     slist = service.projects().serviceAccounts().signBlob(
         name=SERVICE_ACCOUNT,
-        body={'bytesToSign': base64.b64encode(headerAndPayload)})
+        body={'bytesToSign': base64.b64encode(header_and_payload)})
     res = slist.execute()
     signature = base64.urlsafe_b64encode(
         base64.decodestring(res['signature']))
-    signed_jwt = '{}.{}'.format(headerAndPayload, signature)
+    signed_jwt = '{}.{}'.format(header_and_payload, signature)
 
     return signed_jwt
 

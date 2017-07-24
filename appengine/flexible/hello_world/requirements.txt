@@ -1,2 +1,2 @@
-Flask==0.12.1
+Flask==0.12.2
 gunicorn==19.7.1

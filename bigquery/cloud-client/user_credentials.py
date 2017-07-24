@@ -46,20 +46,11 @@ def run_query(credentials, project, query):
 
     wait_for_job(query_job)
 
-    # Drain the query results by requesting a page at a time.
     query_results = query_job.results()
-    page_token = None
+    rows = query_results.fetch_data(max_results=10)
 
-    while True:
-        rows, total_rows, page_token = query_results.fetch_data(
-            max_results=10,
-            page_token=page_token)
-
-        for row in rows:
-            print(row)
-
-        if not page_token:
-            break
+    for row in rows:
+        print(row)
 
 
 def authenticate_and_query(project, query, launch_browser=True):

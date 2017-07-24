@@ -1,4 +1,5 @@
-# Copyright 2017 Google Inc.
+#! /usr/bin/env python
+# Copyright 2015 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,19 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Tests for autoscaler.py"""
+# [START all]
 
-from strategies import DOWNSCALE_STRATEGIES
-from strategies import UPSCALE_STRATEGIES
-
-
-def test_downscale():
-    downscale_strategy = DOWNSCALE_STRATEGIES['incremental']
-    assert downscale_strategy(5) == 3
-    assert downscale_strategy(4) == 3
-    assert downscale_strategy(3) == 3
+from main import db
 
 
-def test_upscale():
-    upscale_strategy = UPSCALE_STRATEGIES['incremental']
-    assert upscale_strategy(3) == 5
+if __name__ == '__main__':
+    print('Creating all database tables...')
+    db.create_all()
+    print('Done!')
+# [END all]
