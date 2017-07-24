@@ -22,6 +22,7 @@ https://cloud.google.com/natural-language/docs.
 """
 
 import argparse
+import sys
 
 from google.cloud import language_v1beta2
 from google.cloud.language_v1beta2 import enums
@@ -174,7 +175,12 @@ def entity_sentiment_text(text):
         content=text.encode('utf-8'),
         type=enums.Document.Type.PLAIN_TEXT)
 
-    result = client.analyze_entity_sentiment(document)
+    # Pass in encoding type to get useful offsets in the response.
+    encoding = enums.EncodingType.UTF32
+    if sys.maxunicode == 65535:
+        encoding = enums.EncodingType.UTF16
+
+    result = client.analyze_entity_sentiment(document, encoding)
 
     for entity in result.entities:
         print('Mentions: ')
@@ -198,7 +204,12 @@ def entity_sentiment_file(gcs_uri):
         gcs_content_uri=gcs_uri,
         type=enums.Document.Type.PLAIN_TEXT)
 
-    result = client.analyze_entity_sentiment(document)
+    # Pass in encoding type to get useful offsets in the response.
+    encoding = enums.EncodingType.UTF32
+    if sys.maxunicode == 65535:
+        encoding = enums.EncodingType.UTF16
+
+    result = client.analyze_entity_sentiment(document, encoding)
 
     for entity in result.entities:
         print(u'Name: "{}"'.format(entity.name))
