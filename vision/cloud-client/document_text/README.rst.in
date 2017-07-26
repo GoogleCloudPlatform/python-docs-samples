@@ -11,7 +11,7 @@ product:
     explicit content.
 
 
-    - See the `migration guide`_ for information about migrating to Python client library v0.26.
+    - See the `migration guide`_ for information about migrating to Python client library v0.25.1.
 
 
     .. _migration guide: https://cloud.google.com/vision/docs/python-client-migration
