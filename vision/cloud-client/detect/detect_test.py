@@ -71,14 +71,14 @@ def test_faces(capsys):
         'resources/face_no_surprise.jpg')
     detect.detect_faces(file_name)
     out, _ = capsys.readouterr()
-    assert 'Likelihood.POSSIBLE' in out
+    assert 'POSSIBLE' in out
 
 
 def test_faces_uri(capsys):
     file_name = 'gs://{}/vision/face_no_surprise.jpg'.format(BUCKET)
     detect.detect_faces_uri(file_name)
     out, _ = capsys.readouterr()
-    assert 'Likelihood.POSSIBLE' in out
+    assert 'POSSIBLE' in out
 
 
 def test_faces_http(capsys):
@@ -86,7 +86,7 @@ def test_faces_http(capsys):
            'face_no_surprise.jpg')
     detect.detect_faces_uri(uri.format(BUCKET))
     out, _ = capsys.readouterr()
-    assert 'Likelihood.POSSIBLE' in out
+    assert 'POSSIBLE' in out
 
 
 def test_logos(capsys):
@@ -118,21 +118,21 @@ def test_safe_search(capsys):
         'resources/wakeupcat.jpg')
     detect.detect_safe_search(file_name)
     out, _ = capsys.readouterr()
-    assert 'Likelihood.VERY_LIKELY' in out
+    assert 'VERY_LIKELY' in out
 
 
 def test_safe_search_uri(capsys):
     file_name = 'gs://{}/vision/wakeupcat.jpg'.format(BUCKET)
     detect.detect_safe_search_uri(file_name)
     out, _ = capsys.readouterr()
-    assert 'Likelihood.VERY_LIKELY' in out
+    assert 'VERY_LIKELY' in out
 
 
 def test_safe_search_http(capsys):
     uri = 'https://storage-download.googleapis.com/{}/vision/wakeupcat.jpg'
     detect.detect_safe_search_uri(uri.format(BUCKET))
     out, _ = capsys.readouterr()
-    assert 'Likelihood.VERY_LIKELY' in out
+    assert 'VERY_LIKELY' in out
 
 
 def test_detect_text(capsys):

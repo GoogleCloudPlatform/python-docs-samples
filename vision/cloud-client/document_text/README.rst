@@ -5,6 +5,10 @@ Google Cloud Vision API Python Samples
 
 This directory contains samples for Google Cloud Vision API. `Google Cloud Vision API`_ allows developers to easily integrate vision detection features within applications, including image labeling, face and landmark detection, optical character recognition (OCR), and tagging of explicit content.
 
+- See the `migration guide`_ for information about migrating to Python client library v0.25.1.
+
+.. _migration guide: https://cloud.google.com/vision/docs/python-client-migration
+
 
 
 
