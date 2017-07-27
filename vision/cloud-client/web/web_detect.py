@@ -27,36 +27,39 @@ import argparse
 import io
 
 from google.cloud import vision
+from google.cloud.vision import types
 # [END imports]
 
 
 def annotate(path):
     """Returns web annotations given the path to an image."""
     # [START get_annotations]
-    image = None
-    vision_client = vision.Client()
+    client = vision.ImageAnnotatorClient()
 
     if path.startswith('http') or path.startswith('gs:'):
-        image = vision_client.image(source_uri=path)
+        image = types.Image()
+        image.source.image_uri = path
 
     else:
         with io.open(path, 'rb') as image_file:
             content = image_file.read()
 
-        image = vision_client.image(content=content)
+        image = types.Image(content=content)
 
-    return image.detect_web()
+    web_detection = client.web_detection(image=image).web_detection
     # [END get_annotations]
+
+    return web_detection
 
 
 def report(annotations):
     """Prints detected features in the provided web annotations."""
     # [START print_annotations]
     if annotations.pages_with_matching_images:
-        print('\n{} Pages with matching images retrieved')
+        print('\n{} Pages with matching images retrieved'.format(
+            len(annotations.pages_with_matching_images)))
 
         for page in annotations.pages_with_matching_images:
-            print('Score : {}'.format(page.score))
             print('Url   : {}'.format(page.url))
 
     if annotations.full_matching_images:
@@ -64,7 +67,6 @@ def report(annotations):
                len(annotations.full_matching_images)))
 
         for image in annotations.full_matching_images:
-            print('Score:  {}'.format(image.score))
             print('Url  : {}'.format(image.url))
 
     if annotations.partial_matching_images:
@@ -72,7 +74,6 @@ def report(annotations):
                len(annotations.partial_matching_images)))
 
         for image in annotations.partial_matching_images:
-            print('Score: {}'.format(image.score))
             print('Url  : {}'.format(image.url))
 
     if annotations.web_entities:

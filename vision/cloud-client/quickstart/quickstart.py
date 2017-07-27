@@ -21,10 +21,15 @@ def run_quickstart():
     import os
 
     # Imports the Google Cloud client library
+    # [START migration_import]
     from google.cloud import vision
+    from google.cloud.vision import types
+    # [END migration_import]
 
     # Instantiates a client
-    vision_client = vision.Client()
+    # [START migration_client]
+    client = vision.ImageAnnotatorClient()
+    # [END migration_client]
 
     # The name of the image file to annotate
     file_name = os.path.join(
@@ -34,11 +39,12 @@ def run_quickstart():
     # Loads the image into memory
     with io.open(file_name, 'rb') as image_file:
         content = image_file.read()
-        image = vision_client.image(
-            content=content)
+
+    image = types.Image(content=content)
 
     # Performs label detection on the image file
-    labels = image.detect_labels()
+    response = client.label_detection(image=image)
+    labels = response.label_annotations
 
     print('Labels:')
     for label in labels:
