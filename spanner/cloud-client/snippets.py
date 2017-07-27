@@ -79,8 +79,8 @@ def insert_data(instance_id, database_id):
             table='Albums',
             columns=('SingerId', 'AlbumId', 'AlbumTitle',),
             values=[
-                (1, 1, u'Go, Go, Go'),
-                (1, 2, u'Total Junk'),
+                (1, 1, u'Total Junk'),
+                (1, 2, u'Go, Go, Go'),
                 (2, 1, u'Green'),
                 (2, 2, u'Forever Hold Your Peace'),
                 (2, 3, u'Terrified')])
