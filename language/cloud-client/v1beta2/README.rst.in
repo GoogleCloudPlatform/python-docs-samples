@@ -11,7 +11,7 @@ product:
     Cloud Machine Learning API.
 
 
-    - See the `migration guide`_ for information about migrating to Python client library v0.26.
+    - See the `migration guide`_ for information about migrating to Python client library v0.26.1.
 
 
     .. _migration guide: https://cloud.google.com/natural-language/docs/python-client-migration
