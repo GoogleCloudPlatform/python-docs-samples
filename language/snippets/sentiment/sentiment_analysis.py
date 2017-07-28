@@ -18,12 +18,15 @@
 import argparse
 
 from google.cloud import language
+from google.cloud.language import enums
+from google.cloud.language import types
 # [END sentiment_tutorial_import]
 
 
+# [START def_print_result]
 def print_result(annotations):
-    score = annotations.sentiment.score
-    magnitude = annotations.sentiment.magnitude
+    score = annotations.document_sentiment.score
+    magnitude = annotations.document_sentiment.magnitude
 
     for index, sentence in enumerate(annotations.sentences):
         sentence_sentiment = sentence.sentiment.score
@@ -33,27 +36,26 @@ def print_result(annotations):
     print('Overall Sentiment: score of {} with magnitude of {}'.format(
         score, magnitude))
     return 0
-
-    print('Sentiment: score of {} with magnitude of {}'.format(
-        score, magnitude))
-    return 0
+# [END def_print_result]
 
 
+# [START def_analyze]
 def analyze(movie_review_filename):
     """Run a sentiment analysis request on text within a passed filename."""
-    language_client = language.Client()
+    client = language.LanguageServiceClient()
 
     with open(movie_review_filename, 'r') as review_file:
         # Instantiates a plain text document.
-        document = language_client.document_from_html(review_file.read())
+        content = review_file.read()
 
-        # Detects sentiment in the document.
-        annotations = document.annotate_text(include_sentiment=True,
-                                             include_syntax=False,
-                                             include_entities=False)
+    document = types.Document(
+        content=content,
+        type=enums.Document.Type.PLAIN_TEXT)
+    annotations = client.analyze_sentiment(document=document)
 
-        # Print the results
-        print_result(annotations)
+    # Print the results
+    print_result(annotations)
+# [END def_analyze]
 
 
 if __name__ == '__main__':
