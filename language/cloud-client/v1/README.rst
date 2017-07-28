@@ -5,6 +5,10 @@ Google Cloud Natural Language API Python Samples
 
 This directory contains samples for Google Cloud Natural Language API. The `Google Cloud Natural Language API`_ provides natural language understanding technologies to developers, including sentiment analysis, entity recognition, and syntax analysis. This API is part of the larger Cloud Machine Learning API.
 
+- See the `migration guide`_ for information about migrating to Python client library v0.26.1.
+
+.. _migration guide: https://cloud.google.com/natural-language/docs/python-client-migration
+
 
 
 
