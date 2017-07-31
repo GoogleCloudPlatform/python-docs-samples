@@ -33,3 +33,14 @@ def test_transcribe_gcs(capsys):
     out, err = capsys.readouterr()
 
     assert re.search(r'how old is the Brooklyn Bridge', out, re.DOTALL | re.I)
+
+
+def test_transcribe_gcs_word_time_offsets(capsys):
+    transcribe_async.transcribe_gcs(
+        'gs://python-docs-samples-tests/speech/audio.flac')
+    out, err = capsys.readouterr()
+
+    match = re.search(r'Bridge, start_time: ([0-9.]+)', out, re.DOTALL | re.I)
+    time = float(match.group(1))
+
+    assert time > 0
