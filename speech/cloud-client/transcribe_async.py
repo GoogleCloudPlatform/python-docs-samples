@@ -79,7 +79,8 @@ def transcribe_gcs(gcs_uri):
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
         sample_rate_hertz=16000,
-        language_code='en-US')
+        language_code='en-US',
+        enable_word_time_offsets=True)
 
     operation = client.long_running_recognize(config, audio)
 
@@ -96,6 +97,12 @@ def transcribe_gcs(gcs_uri):
     for alternative in alternatives:
         print('Transcript: {}'.format(alternative.transcript))
         print('Confidence: {}'.format(alternative.confidence))
+
+        for word_info in alternative.words:
+            print('Word: {}, start_time: {}, end_time: {}'.format(
+                word_info.word,
+                word_info.start_time.seconds + word_info.start_time.nanos * 1e-9,
+                word_info.end_time.seconds + word_info.end_time.nanos * 1e-9))
 # [END def_transcribe_gcs]
 
 
