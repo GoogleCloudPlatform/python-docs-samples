@@ -99,10 +99,13 @@ def transcribe_gcs(gcs_uri):
         print('Confidence: {}'.format(alternative.confidence))
 
         for word_info in alternative.words:
+            word = word_info.word
+            start_time = word_info.start_time
+            end_time = word_info.end_time
             print('Word: {}, start_time: {}, end_time: {}'.format(
-                word_info.word,
-                word_info.start_time.seconds + word_info.start_time.nanos * 1e-9,
-                word_info.end_time.seconds + word_info.end_time.nanos * 1e-9))
+                word,
+                start_time.seconds + start_time.nanos * 1e-9,
+                end_time.seconds + end_time.nanos * 1e-9))
 # [END def_transcribe_gcs]
 
 

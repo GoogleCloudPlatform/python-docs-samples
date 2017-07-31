@@ -40,6 +40,7 @@ def test_transcribe_gcs_word_time_offsets(capsys):
         'gs://python-docs-samples-tests/speech/audio.flac')
     out, err = capsys.readouterr()
 
-    time = float(re.search(r'Bridge, start_time: ([0-9.]+)', out, re.DOTALL | re.I).group(1))
+    match = re.search(r'Bridge, start_time: ([0-9.]+)', out, re.DOTALL | re.I)
+    time = float(match.group(1))
 
-    assert  time > 0
+    assert time > 0
