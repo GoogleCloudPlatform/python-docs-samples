@@ -16,12 +16,13 @@ from sync_query import sync_query
 
 
 def test_sync_query(capsys):
+    # Query only outputs the first 10 rows, sort results to avoid randomness
     query = (
         'SELECT corpus FROM `publicdata.samples.shakespeare` '
-        'GROUP BY corpus;')
+        'GROUP BY corpus ORDER BY corpus')
 
     sync_query(query)
 
     out, _ = capsys.readouterr()
 
-    assert 'romeoandjuliet' in out
+    assert 'antonyandcleopatra' in out
