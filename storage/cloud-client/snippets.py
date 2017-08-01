@@ -23,6 +23,7 @@ at https://cloud.google.com/storage/docs.
 
 import argparse
 import datetime
+import pprint
 
 from google.cloud import storage
 
@@ -40,6 +41,45 @@ def delete_bucket(bucket_name):
     bucket = storage_client.get_bucket(bucket_name)
     bucket.delete()
     print('Bucket {} deleted'.format(bucket.name))
+
+
+def get_bucket_labels(bucket_name):
+    """Prints out a bucket's labels."""
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+    labels = bucket.labels
+    pprint.pprint(labels)
+
+
+def add_bucket_label(bucket_name):
+    """Add a label to a bucket."""
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+
+    labels = bucket.labels
+    labels['example'] = 'label'
+    bucket.labels = labels
+    bucket.patch()
+
+    print('Updated labels on {}.'.format(bucket.name))
+    pprint.pprint(bucket.labels)
+
+
+def remove_bucket_label(bucket_name):
+    """Remove a label from a bucket."""
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+
+    labels = bucket.labels
+
+    if 'example' in labels:
+        del labels['example']
+
+    bucket.labels = labels
+    bucket.patch()
+
+    print('Updated labels on {}.'.format(bucket.name))
+    pprint.pprint(bucket.labels)
 
 
 def list_blobs(bucket_name):
@@ -222,6 +262,10 @@ if __name__ == '__main__':
     subparsers = parser.add_subparsers(dest='command')
     subparsers.add_parser('create-bucket', help=create_bucket.__doc__)
     subparsers.add_parser('delete-bucket', help=delete_bucket.__doc__)
+    subparsers.add_parser('get-bucket-labels', help=get_bucket_labels.__doc__)
+    subparsers.add_parser('add-bucket-label', help=add_bucket_label.__doc__)
+    subparsers.add_parser(
+        'remove-bucket-label', help=remove_bucket_label.__doc__)
     subparsers.add_parser('list', help=list_blobs.__doc__)
 
     list_with_prefix_parser = subparsers.add_parser(
@@ -268,6 +312,12 @@ if __name__ == '__main__':
         create_bucket(args.bucket_name)
     elif args.command == 'delete-bucket':
         delete_bucket(args.bucket_name)
+    if args.command == 'get-bucket-labels':
+        get_bucket_labels(args.bucket_name)
+    if args.command == 'add-bucket-label':
+        add_bucket_label(args.bucket_name)
+    if args.command == 'remove-bucket-label':
+        remove_bucket_label(args.bucket_name)
     elif args.command == 'list':
         list_blobs(args.bucket_name)
     elif args.command == 'list-with-prefix':
