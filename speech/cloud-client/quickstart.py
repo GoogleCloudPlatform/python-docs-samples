@@ -46,7 +46,8 @@ def run_quickstart():
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
-        language_code='en-US')
+        language_code='en-US',
+        enable_word_time_offsets=False)
 
     # Detects speech in the audio file
     response = client.recognize(config, audio)
