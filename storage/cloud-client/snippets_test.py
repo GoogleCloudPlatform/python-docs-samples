@@ -25,6 +25,27 @@ import snippets
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 
+def test_get_bucket_labels():
+    snippets.get_bucket_labels(BUCKET)
+
+
+def test_add_bucket_label(capsys):
+    snippets.add_bucket_label(BUCKET)
+    out, _ = capsys.readouterr()
+    assert 'example' in out
+
+
+@pytest.mark.xfail(
+    reason=(
+        'https://github.com/GoogleCloudPlatform'
+        '/google-cloud-python/issues/3711'))
+def test_remove_bucket_label(capsys):
+    snippets.add_bucket_label(BUCKET)
+    snippets.remove_bucket_label(BUCKET)
+    out, _ = capsys.readouterr()
+    assert '{}' in out
+
+
 @pytest.fixture
 def test_blob():
     """Provides a pre-existing blob in the test bucket."""
