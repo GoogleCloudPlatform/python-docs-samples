@@ -1,5 +1,5 @@
 PyJWT==1.5.2
 cryptography==2.0.2
-google-auth==1.0.1
+google-auth==1.0.2
 requests==2.18.2
 requests_toolbelt==0.8.0
