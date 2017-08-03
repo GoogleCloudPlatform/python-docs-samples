@@ -18,16 +18,12 @@
 def run_quickstart():
     # [START language_quickstart]
     # Imports the Google Cloud client library
-    # [START beta_import_client]
-    # [START beta_import]
     from google.cloud import language_v1beta2
     from google.cloud.language_v1beta2 import enums
     from google.cloud.language_v1beta2 import types
-    # [END beta_import]
 
     # Instantiates a client with the v1beta2 version
     client = language_v1beta2.LanguageServiceClient()
-    # [END beta_import_client]
 
     # The text to analyze
     text = u'Hallo Welt!'

@@ -24,9 +24,11 @@ https://cloud.google.com/natural-language/docs.
 import argparse
 import sys
 
+# [START beta_import]
 from google.cloud import language_v1beta2
 from google.cloud.language_v1beta2 import enums
 from google.cloud.language_v1beta2 import types
+# [END beta_import]
 import six
 
 
@@ -166,7 +168,9 @@ def syntax_file(gcs_uri):
 # [START def_entity_sentiment_text]
 def entity_sentiment_text(text):
     """Detects entity sentiment in the provided text."""
+    # [START beta_client]
     client = language_v1beta2.LanguageServiceClient()
+    # [END beta_client]
 
     if isinstance(text, six.binary_type):
         text = text.decode('utf-8')
