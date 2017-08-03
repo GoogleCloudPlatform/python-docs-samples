@@ -28,6 +28,9 @@ samples:
 - name: Transcribe async
   file: transcribe_async.py
   show_help: true
+- name: Transcribe with word time offsets
+  file: transcribe_word_time_offsets.py
+  show_help: true
 - name: Transcribe Streaming
   file: transcribe_streaming.py
   show_help: true
