@@ -14,27 +14,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Google Cloud Speech API sample application using the REST API for async
-batch processing.
+"""Google Cloud Speech API sample that demonstrates word time offsets.
 
 Example usage:
-    python transcribe_async.py resources/audio.raw
-    python transcribe_async.py gs://cloud-samples-tests/speech/vr.flac
+    python transcribe_word_time_offsets.py resources/audio.raw
+    python transcribe_word_time_offsets.py \
+        gs://cloud-samples-tests/speech/vr.flac
 """
 
 import argparse
 import io
 
 
-# [START def_transcribe_file]
-def transcribe_file(speech_file):
-    """Transcribe the given audio file asynchronously."""
+def transcribe_file_with_word_time_offsets(speech_file):
+    """Transcribe the given audio file synchronously and output the word time
+    offsets."""
     from google.cloud import speech
     from google.cloud.speech import enums
     from google.cloud.speech import types
     client = speech.SpeechClient()
 
-    # [START migration_async_request]
     with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
 
@@ -42,26 +41,30 @@ def transcribe_file(speech_file):
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
-        language_code='en-US')
+        language_code='en-US',
+        enable_word_time_offsets=True)
 
-    # [START migration_async_response]
-    operation = client.long_running_recognize(config, audio)
-    # [END migration_async_request]
+    response = client.recognize(config, audio)
 
-    print('Waiting for operation to complete...')
-    result = operation.result(timeout=90)
+    alternatives = response.results[0].alternatives
 
-    alternatives = result.results[0].alternatives
     for alternative in alternatives:
         print('Transcript: {}'.format(alternative.transcript))
-        print('Confidence: {}'.format(alternative.confidence))
-    # [END migration_async_response]
-# [END def_transcribe_file]
+
+        for word_info in alternative.words:
+            word = word_info.word
+            start_time = word_info.start_time
+            end_time = word_info.end_time
+            print('Word: {}, start_time: {}, end_time: {}'.format(
+                word,
+                start_time.seconds + start_time.nanos * 1e-9,
+                end_time.seconds + end_time.nanos * 1e-9))
 
 
 # [START def_transcribe_gcs]
-def transcribe_gcs(gcs_uri):
-    """Asynchronously transcribes the audio file specified by the gcs_uri."""
+def transcribe_gcs_with_word_time_offsets(gcs_uri):
+    """Transcribe the given audio file asynchronously and output the word time
+    offsets."""
     from google.cloud import speech
     from google.cloud.speech import enums
     from google.cloud.speech import types
@@ -83,6 +86,15 @@ def transcribe_gcs(gcs_uri):
     for alternative in alternatives:
         print('Transcript: {}'.format(alternative.transcript))
         print('Confidence: {}'.format(alternative.confidence))
+
+        for word_info in alternative.words:
+            word = word_info.word
+            start_time = word_info.start_time
+            end_time = word_info.end_time
+            print('Word: {}, start_time: {}, end_time: {}'.format(
+                word,
+                start_time.seconds + start_time.nanos * 1e-9,
+                end_time.seconds + end_time.nanos * 1e-9))
 # [END def_transcribe_gcs]
 
 
@@ -94,6 +106,6 @@ if __name__ == '__main__':
         'path', help='File or GCS path for audio file to be recognized')
     args = parser.parse_args()
     if args.path.startswith('gs://'):
-        transcribe_gcs(args.path)
+        transcribe_gcs_with_word_time_offsets(args.path)
     else:
-        transcribe_file(args.path)
+        transcribe_file_with_word_time_offsets(args.path)
