@@ -140,6 +140,32 @@ To run this sample:
       -h, --help  show this help message and exit
 
 
+Transcribe with word time offsets
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python transcribe_word_time_offsets.py
+
+    usage: transcribe_word_time_offsets.py [-h] path
+    
+    Google Cloud Speech API sample that demonstrates word time offsets.
+    
+    Example usage:
+        python transcribe_word_time_offsets.py resources/audio.raw
+        python transcribe_word_time_offsets.py         gs://cloud-samples-tests/speech/vr.flac
+    
+    positional arguments:
+      path        File or GCS path for audio file to be recognized
+    
+    optional arguments:
+      -h, --help  show this help message and exit
+
+
 Transcribe Streaming
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
