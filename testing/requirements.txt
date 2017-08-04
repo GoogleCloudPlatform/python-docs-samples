@@ -9,7 +9,7 @@ pytest-cov==2.5.1
 pytest==3.2.0
 pytest-capturelog==0.7
 pyyaml==3.12
-responses==0.6.0
+responses==0.6.1
 WebTest==2.0.28
 webapp2==2.5.2
 google-api-python-client==1.6.2
