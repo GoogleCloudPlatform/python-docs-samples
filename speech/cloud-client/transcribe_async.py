@@ -42,7 +42,8 @@ def transcribe_file(speech_file):
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
-        language_code='en-US')
+        language_code='en-US',
+        enable_word_time_offsets=True)
 
     # [START migration_async_response]
     operation = client.long_running_recognize(config, audio)
@@ -55,6 +56,15 @@ def transcribe_file(speech_file):
     for alternative in alternatives:
         print('Transcript: {}'.format(alternative.transcript))
         print('Confidence: {}'.format(alternative.confidence))
+
+    for word_info in alternative.words:
+            word = word_info.word
+            start_time = word_info.start_time
+            end_time = word_info.end_time
+            print('Word: {}, start_time: {}, end_time: {}'.format(
+                word,
+                start_time.seconds + start_time.nanos * 1e-9,
+                end_time.seconds + end_time.nanos * 1e-9))
     # [END migration_async_response]
 # [END def_transcribe_file]
 
