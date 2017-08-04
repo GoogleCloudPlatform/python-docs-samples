@@ -20,7 +20,7 @@ import os
 
 from gcp_devrel.testing.flaky import flaky
 
-import create_cluster_and_submit_job
+import submit_job_to_cluster
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
@@ -30,6 +30,6 @@ ZONE = 'us-central1-b'
 
 @flaky
 def test_e2e():
-    output = create_cluster_and_submit_job.main(
+    output = submit_job_to_cluster.main(
         PROJECT, ZONE, CLUSTER_NAME, BUCKET)
     assert b"['Hello,', 'dog', 'elephant', 'panther', 'world!']" in output
