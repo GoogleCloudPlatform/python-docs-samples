@@ -49,6 +49,8 @@ def sentiment_text(text):
     #   document.type == enums.Document.Type.HTML
     sentiment = client.analyze_sentiment(document).document_sentiment
 
+    import pdb; pdb.set_trace()
+
     print('Score: {}'.format(sentiment.score))
     print('Magnitude: {}'.format(sentiment.magnitude))
     # [END migration_analyze_sentiment]
