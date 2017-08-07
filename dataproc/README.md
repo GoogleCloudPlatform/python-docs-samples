@@ -35,14 +35,19 @@ To run list_clusters.py:
     python list_clusters.py <YOUR-PROJECT-ID> --region=us-central1
 
 
-To run create_cluster_and_submit_job, first create a GCS bucket, from the Cloud Console or with
+To run submit_job_to_cluster.py, first create a GCS bucket, from the Cloud Console or with
 gsutil:
 
     gsutil mb gs://<your-input-bucket-name>
     
-Then run:
+Then, if you want to rely on an existing cluster, run:
     
-    python create_cluster_and_submit_job.py --project_id=<your-project-id> --zone=us-central1-b --cluster_name=testcluster --gcs_bucket=<your-input-bucket-name>
+    python submit_job_to_cluster.py --project_id=<your-project-id> --zone=us-central1-b --cluster_name=testcluster --gcs_bucket=<your-input-bucket-name>
+    
+Otherwise, if you want the script to create a new cluster for you:
+
+    python submit_job_to_cluster.py --project_id=<your-project-id> --zone=us-central1-b --cluster_name=testcluster --gcs_bucket=<your-input-bucket-name> --create_new_cluster
+
 
 This will setup a cluster, upload the PySpark file, submit the job, print the result, then
 delete the cluster.
