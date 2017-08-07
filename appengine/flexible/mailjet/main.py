@@ -36,18 +36,18 @@ def send_message(to):
     data = {
   'Messages': [
                 {
-                "From": {
-                        "Email": MAILJET_SENDER,
-                        "Name": 'App Engine Flex Mailjet Sample'
-                },
-                "To": [
-                        {
-                        "Email": to
-                        }
-                ],
-                "Subject": 'Example email.',
-                "TextPart": 'This is an example email.',
-                "HTMLPart": 'This is an <i>example</i> email.'
+                        "From": {
+                                "Email": MAILJET_SENDER,
+                                "Name": 'App Engine Flex Mailjet Sample'
+                        },
+                        "To": [
+                                {
+                                        "Email": to
+                                }
+                        ],
+                        "Subject": 'Example email.',
+                        "TextPart": 'This is an example email.',
+                        "HTMLPart": 'This is an <i>example</i> email.'
                 }
         ]
 }
