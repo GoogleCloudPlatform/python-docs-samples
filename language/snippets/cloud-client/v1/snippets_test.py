@@ -21,15 +21,15 @@ TEST_FILE_URL = 'gs://{}/text.txt'.format(BUCKET)
 
 
 def test_sentiment_text(capsys):
-    snippets.sentiment_text('President Obama is speaking at the White House.')
+    snippets.sentiment_text('No! God please, no!')
     out, _ = capsys.readouterr()
-    assert 'Score: 0.2' in out
+    assert 'Score: ' in out
 
 
 def test_sentiment_file(capsys):
     snippets.sentiment_file(TEST_FILE_URL)
     out, _ = capsys.readouterr()
-    assert 'Score: 0.2' in out
+    assert 'Score: ' in out
 
 
 def test_entities_text(capsys):
