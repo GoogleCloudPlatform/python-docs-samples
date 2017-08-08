@@ -29,14 +29,14 @@ def create_metric_descriptor():
     # [END create_metric_descriptor]
 
 
-def delete_metric_descriptor(descriptor):
+def delete_metric_descriptor(descriptor_name):
     # [START delete_metric_descriptor]
     client = monitoring.Client()
-    descriptor = client.metric_descriptor(
-        descriptor
-    )
+
+    descriptor = client.metric_descriptor(descriptor_name)
     descriptor.delete()
-    print('Deleted metric descriptor.')
+
+    print('Deleted metric descriptor {}.'.format(descriptor_name))
     # [END delete_metric_descriptor]
 
 
@@ -119,17 +119,17 @@ def list_monitored_resources():
     # [END list_monitored_resources]
 
 
-def get_monitored_resource_descriptor(type_):
+def get_monitored_resource_descriptor(resource_type_name):
     # [START get_monitored_resources]
     client = monitoring.Client()
-    print(client.fetch_resource_descriptor(type_))
+    print(client.fetch_resource_descriptor(resource_type_name))
     # [END get_monitored_resources]
 
 
-def get_metric_descriptor(type_):
+def get_metric_descriptor(metric_type_name):
     # [START get_metric_descriptor]
     client = monitoring.Client()
-    print(client.fetch_metric_descriptor(type_))
+    print(client.fetch_metric_descriptor(metric_type_name))
     # [END get_metric_descriptor]
 
 
@@ -155,7 +155,7 @@ if __name__ == '__main__':
     )
 
     get_metric_descriptor_parser.add_argument(
-        '--metric',
+        '--metric-type-name',
         help='The metric type of the metric descriptor to see details about.',
         required=True
     )
@@ -166,7 +166,7 @@ if __name__ == '__main__':
     )
 
     delete_metric_descriptor_parser.add_argument(
-        '--metric',
+        '--metric-descriptor-name',
         help='Metric descriptor to delete',
         required=True
     )
@@ -182,7 +182,7 @@ if __name__ == '__main__':
     )
 
     get_resource_parser.add_argument(
-        '--resource',
+        '--resource-type-name',
         help='Monitored resource to view more information about.',
         required=True
     )
@@ -219,13 +219,13 @@ if __name__ == '__main__':
     if args.command == 'list-metric-descriptors':
         list_metric_descriptors()
     if args.command == 'get-metric-descriptor':
-        get_metric_descriptor(args.metric)
+        get_metric_descriptor(args.metric_type_name)
     if args.command == 'delete-metric-descriptor':
-        delete_metric_descriptor(args.metric)
+        delete_metric_descriptor(args.metric_descriptor_name)
     if args.command == 'list-resources':
         list_monitored_resources()
     if args.command == 'get-resource':
-        get_monitored_resource_descriptor(args.resource)
+        get_monitored_resource_descriptor(args.resource_type_name)
     if args.command == 'write-time-series':
         write_time_series()
     if args.command == 'list-time-series':
