@@ -16,7 +16,7 @@
 
 """Command-line application to perform synchronous queries in BigQuery.
 
-For more information, see the README.md under /bigquery.
+For more information, see the README.rst.
 
 Example invocation:
     $ python sync_query.py \\

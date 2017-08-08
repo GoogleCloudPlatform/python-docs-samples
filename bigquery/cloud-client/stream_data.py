@@ -16,7 +16,7 @@
 
 """Loads a single row of data directly into BigQuery.
 
-For more information, see the README.md under /bigquery.
+For more information, see the README.rst.
 
 Example invocation:
     $ python stream_data.py example_dataset example_table \

@@ -16,7 +16,7 @@
 
 """Exports data from BigQuery to an object in Google Cloud Storage.
 
-For more information, see the README.md under /bigquery.
+For more information, see the README.rst.
 
 Example invocation:
     $ python export_data_to_gcs.py example_dataset example_table \
