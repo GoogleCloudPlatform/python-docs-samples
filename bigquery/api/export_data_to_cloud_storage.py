@@ -20,7 +20,7 @@ This sample is used on this page:
 
     https://cloud.google.com/bigquery/exporting-data-from-bigquery
 
-For more information, see the README.md under /bigquery.
+For more information, see the README.rst.
 """
 
 import argparse

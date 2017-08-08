@@ -15,7 +15,7 @@
 
 """Command-line application to perform an asynchronous query in BigQuery.
 
-For more information, see the README.md under /bigquery.
+For more information, see the README.rst.
 """
 
 import argparse
