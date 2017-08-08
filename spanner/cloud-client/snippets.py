@@ -378,7 +378,7 @@ def read_only_transaction(instance_id, database_id):
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    with database.snapshot() as snapshot:
+    with database.snapshot(mutli_use=True) as snapshot:
         # Read using SQL.
         results = snapshot.execute_sql(
             'SELECT SingerId, AlbumId, AlbumTitle FROM Albums')
