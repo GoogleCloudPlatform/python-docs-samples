@@ -32,6 +32,7 @@ gcloud alpha bigtable clusters create bigtable-test \
 
 echo "Creating bigquery resources."
 bq mk test_dataset
+bq mk --schema bigquery/api/resources/schema.json test_dataset.test_import_table
 bq mk ephemeral_test_dataset
 gsutil cp bigquery/api/resources/data.csv gs://$GCLOUD_PROJECT/data.csv
 bq load \
