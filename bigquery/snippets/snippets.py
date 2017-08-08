@@ -16,7 +16,7 @@
 
 """Samples that demonstrate basic operations in the BigQuery API.
 
-For more information, see the README.md under /bigquery.
+For more information, see the README.rst.
 
 Example invocation:
     $ python snippets.py list-datasets

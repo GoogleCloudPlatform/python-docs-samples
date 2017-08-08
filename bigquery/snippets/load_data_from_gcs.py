@@ -16,7 +16,7 @@
 
 """Loads data into BigQuery from an object in Google Cloud Storage.
 
-For more information, see the README.md under /bigquery.
+For more information, see the README.rst.
 
 Example invocation:
     $ python load_data_from_gcs.py example_dataset example_table \

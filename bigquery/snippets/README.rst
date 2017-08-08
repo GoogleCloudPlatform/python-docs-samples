@@ -97,7 +97,7 @@ To run this sample:
     
     Command-line application to perform synchronous queries in BigQuery.
     
-    For more information, see the README.md under /bigquery.
+    For more information, see the README.rst.
     
     Example invocation:
         $ python sync_query.py \
@@ -125,7 +125,7 @@ To run this sample:
     
     Command-line application to perform asynchronous queries in BigQuery.
     
-    For more information, see the README.md under /bigquery.
+    For more information, see the README.rst.
     
     Example invocation:
         $ python async_query.py \
@@ -155,7 +155,7 @@ To run this sample:
     
     Samples that demonstrate basic operations in the BigQuery API.
     
-    For more information, see the README.md under /bigquery.
+    For more information, see the README.rst.
     
     Example invocation:
         $ python snippets.py list-datasets
@@ -206,7 +206,7 @@ To run this sample:
     
     Loads data into BigQuery from a local file.
     
-    For more information, see the README.md under /bigquery.
+    For more information, see the README.rst.
     
     Example invocation:
         $ python load_data_from_file.py example_dataset example_table         example-data.csv
@@ -237,7 +237,7 @@ To run this sample:
     
     Loads data into BigQuery from an object in Google Cloud Storage.
     
-    For more information, see the README.md under /bigquery.
+    For more information, see the README.rst.
     
     Example invocation:
         $ python load_data_from_gcs.py example_dataset example_table         gs://example-bucket/example-data.csv
@@ -269,7 +269,7 @@ To run this sample:
     
     Loads a single row of data directly into BigQuery.
     
-    For more information, see the README.md under /bigquery.
+    For more information, see the README.rst.
     
     Example invocation:
         $ python stream_data.py example_dataset example_table         '["Gandalf", 2000]'
@@ -300,7 +300,7 @@ To run this sample:
     
     Exports data from BigQuery to an object in Google Cloud Storage.
     
-    For more information, see the README.md under /bigquery.
+    For more information, see the README.rst.
     
     Example invocation:
         $ python export_data_to_gcs.py example_dataset example_table         gs://example-bucket/example-data.csv

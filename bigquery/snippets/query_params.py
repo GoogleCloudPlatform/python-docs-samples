@@ -16,7 +16,7 @@
 
 """Command-line app to perform queries with parameters in BigQuery.
 
-For more information, see the README.md under /bigquery.
+For more information, see the README.rst.
 
 Example invocation:
     $ python query_params.py --use-named-params 'romeoandjuliet' 100

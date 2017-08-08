@@ -16,7 +16,7 @@
 
 """Loads data into BigQuery from a local file.
 
-For more information, see the README.md under /bigquery.
+For more information, see the README.rst.
 
 Example invocation:
     $ python load_data_from_file.py example_dataset example_table \
