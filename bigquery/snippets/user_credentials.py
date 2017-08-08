@@ -21,35 +21,23 @@ your application.
 """
 
 import argparse
-import time
 import uuid
 
 from google.cloud import bigquery
 from google_auth_oauthlib import flow
 
 
-def wait_for_job(job):
-    while True:
-        job.reload()  # Refreshes the state via a GET request.
-        if job.state == 'DONE':
-            if job.error_result:
-                raise RuntimeError(job.errors)
-            return
-        time.sleep(1)
-
-
 def run_query(credentials, project, query):
     client = bigquery.Client(project=project, credentials=credentials)
     query_job = client.run_async_query(str(uuid.uuid4()), query)
-    query_job.use_legacy_sql = False
+
     query_job.begin()
+    query_job.result()  # Wait for the job to complete.
 
-    wait_for_job(query_job)
-
-    query_results = query_job.results()
-    rows = query_results.fetch_data(max_results=10)
-
-    for row in rows:
+    # Print the results.
+    destination_table = query_job.destination
+    destination_table.reload()
+    for row in destination_table.fetch_data():
         print(row)
 
 

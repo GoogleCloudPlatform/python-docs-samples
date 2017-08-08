@@ -26,7 +26,6 @@ The dataset and table should already exist.
 """
 
 import argparse
-import time
 import uuid
 
 from google.cloud import bigquery
@@ -42,21 +41,10 @@ def load_data_from_gcs(dataset_name, table_name, source):
         job_name, table, source)
 
     job.begin()
-
-    wait_for_job(job)
+    job.result()  # Wait for job to complete
 
     print('Loaded {} rows into {}:{}.'.format(
         job.output_rows, dataset_name, table_name))
-
-
-def wait_for_job(job):
-    while True:
-        job.reload()
-        if job.state == 'DONE':
-            if job.error_result:
-                raise RuntimeError(job.errors)
-            return
-        time.sleep(1)
 
 
 if __name__ == '__main__':

@@ -25,7 +25,6 @@ The dataset and table should already exist.
 """
 
 import argparse
-import time
 import uuid
 
 from google.cloud import bigquery
@@ -165,24 +164,11 @@ def copy_table(dataset_name, table_name, new_table_name, project=None):
     job.create_disposition = (
         google.cloud.bigquery.job.CreateDisposition.CREATE_IF_NEEDED)
 
-    # Start the job.
-    job.begin()
-
-    # Wait for the the job to finish.
+    job.begin()  # Start the job.
     print('Waiting for job to finish...')
-    wait_for_job(job)
+    job.result()
 
     print('Table {} copied to {}.'.format(table_name, new_table_name))
-
-
-def wait_for_job(job):
-    while True:
-        job.reload()  # Refreshes the state via a GET request.
-        if job.state == 'DONE':
-            if job.error_result:
-                raise RuntimeError(job.errors)
-            return
-        time.sleep(1)
 
 
 def delete_table(dataset_name, table_name, project=None):

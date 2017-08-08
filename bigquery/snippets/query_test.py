@@ -12,16 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from async_query import async_query
+import query
 
 
-def test_async_query(capsys):
+def test_query(capsys):
     # Query only outputs the first 10 rows, sort results to avoid randomness
-    query = (
-        'SELECT corpus FROM `publicdata.samples.shakespeare` '
-        'GROUP BY corpus ORDER BY corpus')
+    query_string = '''#standardSQL
+          SELECT corpus
+          FROM `publicdata.samples.shakespeare`
+          GROUP BY corpus
+          ORDER BY corpus
+          LIMIT 10;'''
 
-    async_query(query)
+    query.query(query_string)
+
+    out, _ = capsys.readouterr()
+
+    assert 'antonyandcleopatra' in out
+
+
+def test_query_standard_sql(capsys):
+    # Query only outputs the first 10 rows, sort results to avoid randomness
+    query_string = '''SELECT corpus
+          FROM `publicdata.samples.shakespeare`
+          GROUP BY corpus
+          ORDER BY corpus
+          LIMIT 10;'''
+
+    query.query_standard_sql(query_string)
 
     out, _ = capsys.readouterr()
 
