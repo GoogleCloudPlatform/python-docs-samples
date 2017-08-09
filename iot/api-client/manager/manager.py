@@ -33,6 +33,7 @@ Usage example:
 
 import argparse
 import io
+import os
 import sys
 import time
 
@@ -345,15 +346,20 @@ def parse_command_line_args():
 
     # Required arguments
     parser.add_argument(
-            '--project_id', required=True, help='GCP cloud project name.')
-    parser.add_argument(
             '--pubsub_topic',
             required=True,
             help=('Google Cloud Pub/Sub topic. '
                   'Format is projects/project_id/topics/topic-id'))
-    parser.add_argument('--api_key', required=True, help='Your API key.')
 
     # Optional arguments
+    parser.add_argument(
+            '--api_key',
+            default=os.environ.get("API_KEY"),
+            help='Your API key.')
+    parser.add_argument(
+            '--project_id',
+            default=os.environ.get("GOOGLE_CLOUD_PROJECT"),
+            help='GCP cloud project name.')
     parser.add_argument(
             '--ec_public_key_file',
             default=None,
@@ -366,7 +372,7 @@ def parse_command_line_args():
             '--cloud_region', default='us-central1', help='GCP cloud region')
     parser.add_argument(
             '--service_account_json',
-            default='service_account.json',
+            default=os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"),
             help='Path to service account json file.')
     parser.add_argument(
             '--registry_id',
