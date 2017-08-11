@@ -87,6 +87,9 @@ DATABASES = {
         'NAME': 'polls',
         'USER': '<your-database-user>',
         'PASSWORD': '<your-database-password>',
+        # For MySQL, set 'PORT': '3306' instead of the following. Any Cloud
+        # SQL Proxy instances running locally must also be set to tcp:3306.
+        'PORT': '5432',
     }
 }
 # In the flexible environment, you connect to CloudSQL using a unix socket.
