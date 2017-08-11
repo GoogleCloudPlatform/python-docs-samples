@@ -1,0 +1,3 @@
+queue:
+- name: my-pull-queue
+  mode: pull

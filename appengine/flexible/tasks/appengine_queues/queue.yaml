@@ -1,0 +1,4 @@
+queue:
+- name: my-appengine-queue
+  target: default
+  rate: 1/s
