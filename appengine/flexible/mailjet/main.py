@@ -31,15 +31,21 @@ app = Flask(__name__)
 # [START send_message]
 def send_message(to):
     client = mailjet_rest.Client(
-        auth=(MAILJET_API_KEY, MAILJET_API_SECRET))
+        auth=(MAILJET_API_KEY, MAILJET_API_SECRET), version='v3.1')
 
     data = {
-        'FromEmail': MAILJET_SENDER,
-        'FromName': 'App Engine Flex Mailjet Sample',
-        'Subject': 'Example email.',
-        'Text-part': 'This is an example email.',
-        'Html-part': 'This is an <i>example</i> email.',
-        'Recipients': [{'Email': to}]
+        'Messages': [{
+            "From": {
+                    "Email": MAILJET_SENDER,
+                    "Name": 'App Engine Flex Mailjet Sample'
+            },
+            "To": [{
+                "Email": to
+            }],
+            "Subject": 'Example email.',
+            "TextPart": 'This is an example email.',
+            "HTMLPart": 'This is an <i>example</i> email.'
+        }]
     }
 
     result = client.send.create(data=data)
