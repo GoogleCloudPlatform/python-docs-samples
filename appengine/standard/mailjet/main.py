@@ -39,23 +39,19 @@ def send_message(to):
         auth=(MAILJET_API_KEY, MAILJET_API_SECRET), version='v3.1')
 
     data = {
-          'Messages': [
-                        {
-                            "From": {
-                                    "Email": MAILJET_SENDER,
-                                    "Name": 'App Engine Flex Mailjet Sample'
-                            },
-                            "To": [
-                                    {
-                                            "Email": to
-                                    }
-                            ],
-                            "Subject": 'Example email.',
-                            "TextPart": 'This is an example email.',
-                            "HTMLPart": 'This is an <i>example</i> email.'
-                        }
-                    ]
-            }
+        'Messages': [{
+            "From": {
+                "Email": MAILJET_SENDER,
+                "Name": 'App Engine Standard Mailjet Sample'
+            },
+            "To": [{
+                "Email": to
+            }],
+            "Subject": 'Example email.',
+            "TextPart": 'This is an example email.',
+            "HTMLPart": 'This is an <i>example</i> email.'
+        }]
+    }
 
     result = client.send.create(data=data)
 
