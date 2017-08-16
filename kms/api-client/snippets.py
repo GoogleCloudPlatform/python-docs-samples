@@ -77,17 +77,18 @@ def encrypt(project_id, location, keyring, cryptokey, plaintext_file_name,
     # Read text from the input file.
     with io.open(plaintext_file_name, 'rb') as plaintext_file:
         plaintext = plaintext_file.read()
-    encoded_text = base64.b64encode(plaintext)
 
     # Use the KMS API to encrypt the text.
     cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
     request = cryptokeys.encrypt(
-        name=name, body={'plaintext': encoded_text.decode('utf-8')})
+        name=name,
+        body={'plaintext': base64.b64encode(plaintext).decode('ascii')})
     response = request.execute()
+    ciphertext = base64.b64decode(response['ciphertext'].encode('ascii'))
 
     # Write the encrypted text to a file.
     with io.open(encrypted_file_name, 'wb') as encrypted_file:
-        encrypted_file.write(response['ciphertext'].encode('utf-8'))
+        encrypted_file.write(ciphertext)
 
     print('Saved encrypted text to {}.'.format(encrypted_file_name))
 # [END kms_encrypt]
@@ -109,19 +110,19 @@ def decrypt(project_id, location, keyring, cryptokey, encrypted_file_name,
 
     # Read cipher text from the input file.
     with io.open(encrypted_file_name, 'rb') as encrypted_file:
-        cipher_text = encrypted_file.read()
+        ciphertext = encrypted_file.read()
 
     # Use the KMS API to decrypt the text.
     cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
     request = cryptokeys.decrypt(
-        name=name, body={'ciphertext': cipher_text.decode('utf-8')})
+        name=name,
+        body={'ciphertext': base64.b64encode(ciphertext).decode('ascii')})
     response = request.execute()
+    plaintext = base64.b64decode(response['plaintext'].encode('ascii'))
 
     # Write the plain text to a file.
     with io.open(decrypted_file_name, 'wb') as decrypted_file:
-        plaintext_encoded = response['plaintext']
-        plaintext_decoded = base64.b64decode(plaintext_encoded)
-        decrypted_file.write(plaintext_decoded)
+        decrypted_file.write(plaintext)
 
     print('Saved decrypted text to {}.'.format(decrypted_file_name))
 # [END kms_decrypt]
