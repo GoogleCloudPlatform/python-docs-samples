@@ -70,18 +70,18 @@ def test_process_movie_reviews():
     entities = [json.loads(entity) for entity in entities]
 
     # assert sentiments
-    assert sentiments[0].get('sentiment') == 0.9
+    assert sentiments[0].get('sentiment') > 0
     assert sentiments[0].get('label') == 1
 
-    assert sentiments[1].get('sentiment') == 0.9
+    assert sentiments[1].get('sentiment') > 0
     assert sentiments[1].get('label') == 1
 
     # assert entities
     assert len(entities) == 1
     assert entities[0].get('name') == 'Tom Cruise'
     assert (entities[0].get('wiki_url') ==
-            'http://en.wikipedia.org/wiki/Tom_Cruise')
-    assert entities[0].get('sentiment') == 1.8
+            'https://en.wikipedia.org/wiki/Tom_Cruise')
+    assert entities[0].get('sentiment') > 0
 
 
 def test_rank_positive_entities(capsys):
