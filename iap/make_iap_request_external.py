@@ -15,6 +15,7 @@
 """Example use of a service account with user-managed keys
    to authenticate to Identity-Aware Proxy."""
 
+# [START iap_make_request_external]
 import google.auth
 from google.auth.transport.requests import Request
 from google.oauth2.service_account import Credentials
@@ -118,3 +119,5 @@ def get_token_endpoint():
     response = requests.get(
       "https://accounts.google.com/.well-known/openid-configuration")
     return json.loads(response.text)["token_endpoint"]
+
+# [END iap_make_request_external]
