@@ -15,6 +15,7 @@
 """Example use of a service account to authenticate to Identity-Aware Proxy."""
 
 # [START iap_make_request]
+import json
 import google.auth
 import google.auth.app_engine
 import google.auth.compute_engine.credentials
@@ -27,7 +28,6 @@ import requests_toolbelt.adapters.appengine
 
 
 IAM_SCOPE = 'https://www.googleapis.com/auth/iam'
-OAUTH_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 
 
 def make_iap_request(url, client_id):
@@ -81,7 +81,8 @@ def make_iap_request(url, client_id):
     # Construct OAuth 2.0 service account credentials using the signer
     # and email acquired from the bootstrap credentials.
     service_account_credentials = google.oauth2.service_account.Credentials(
-        signer, signer_email, token_uri=OAUTH_TOKEN_URI, additional_claims={
+        signer, signer_email, token_uri=get_token_endpoint(),
+        additional_claims={
             'target_audience': client_id
         })
 
@@ -118,7 +119,7 @@ def get_google_open_id_connect_token(service_account_credentials):
       1. Generates a JWT signed with the service account's private key
          containing a special "target_audience" claim.
 
-      2. Sends it to the OAUTH_TOKEN_URI endpoint. Because the JWT in #1
+      2. Sends it to the oauth token uri endpoint. Because the JWT in #1
          has a target_audience claim, that endpoint will respond with
          an OpenID Connect token for the service account -- in other words,
          a JWT signed by *Google*. The aud claim in this JWT will be
@@ -134,13 +135,23 @@ def get_google_open_id_connect_token(service_account_credentials):
 
     service_account_jwt = (
         service_account_credentials._make_authorization_grant_assertion())
-    request = google.auth.transport.requests.Request()
+    request = Request()
     body = {
         'assertion': service_account_jwt,
         'grant_type': google.oauth2._client._JWT_GRANT_TYPE,
     }
     token_response = google.oauth2._client._token_endpoint_request(
-        request, OAUTH_TOKEN_URI, body)
+        request, get_token_endpoint(), body)
     return token_response['id_token']
+
+
+def get_token_endpoint():
+    """Makes a request to Google's openid endpoint and returns
+    the oauth token uri. This function eliminates the need to
+    hardcode the oauth token uri which is subject to future changes.
+    """
+    response = requests.get(
+      "https://accounts.google.com/.well-known/openid-configuration")
+    return json.loads(response.text)["token_endpoint"]
 
 # [END iap_make_request]
