@@ -113,3 +113,4 @@ def get_token_endpoint():
   """
   response = requests.get("https://accounts.google.com/.well-known/openid-configuration")
   return json.loads(response.text)["token_endpoint"]
+  
