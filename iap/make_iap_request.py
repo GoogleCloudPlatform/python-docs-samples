@@ -15,6 +15,7 @@
 """Example use of a service account to authenticate to Identity-Aware Proxy."""
 
 # [START iap_make_request]
+import json
 import google.auth
 import google.auth.app_engine
 import google.auth.compute_engine.credentials
@@ -24,7 +25,6 @@ import google.oauth2.credentials
 import google.oauth2.service_account
 import requests
 import requests_toolbelt.adapters.appengine
-import json
 
 
 IAM_SCOPE = 'https://www.googleapis.com/auth/iam'
@@ -143,6 +143,7 @@ def get_google_open_id_connect_token(service_account_credentials):
     token_response = google.oauth2._client._token_endpoint_request(
         request, get_token_endpoint(), body)
     return token_response['id_token']
+
 
 def get_token_endpoint():
     """Makes a request to Google's openid endpoint and returns

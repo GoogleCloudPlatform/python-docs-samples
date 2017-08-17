@@ -16,11 +16,11 @@
    to authenticate to Identity-Aware Proxy."""
 
 # [START iap_make_request_external]
+import json
 import google.auth
 from google.auth.transport.requests import Request
 from google.oauth2.service_account import Credentials
 import requests
-import json
 
 
 def make_iap_request(url, client_id, json_private_key):
@@ -57,6 +57,7 @@ def make_iap_request(url, client_id, json_private_key):
         verify=False)
     return resp.text
 
+
 def get_service_account_credentials(iap_client_id, json_private_key):
     """Create Service Account credential from downloaded JSON private key file.
 
@@ -70,13 +71,14 @@ def get_service_account_credentials(iap_client_id, json_private_key):
     # Create Service Account credential from downloaded JSON private key file.
     # Note: Additional claim of 'target_audience' is required and must be
     # set to the clientId of the IAP Service Account
-    credentials = Credentials.from_service_account_file(json_private_key
-                 ).with_claims({'target_audience': iap_client_id})
+    credentials = Credentials.from_service_account_file(
+      json_private_key).with_claims({'target_audience': iap_client_id})
     # Must change credential's token uri to point to Google's
     # OpenId token endpoint instead of Google's authorization endpoint
     credentials._token_uri = get_token_endpoint()
     # Generate and return OAuth 2.0 signed JWT-based access token (JWT-bAT)
     return credentials
+
 
 def get_google_open_id_connect_token(service_account_credentials):
     """Get an OpenID Connect token issued by Google for the service account.
@@ -110,6 +112,7 @@ def get_google_open_id_connect_token(service_account_credentials):
     token_response = google.oauth2._client._token_endpoint_request(
         request, get_token_endpoint(), body)
     return token_response['id_token']
+
 
 def get_token_endpoint():
     """Makes a request to Google's openid endpoint and returns
