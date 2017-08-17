@@ -135,7 +135,7 @@ def get_google_open_id_connect_token(service_account_credentials):
 
     service_account_jwt = (
         service_account_credentials._make_authorization_grant_assertion())
-    request = google.auth.transport.requests.Request()
+    request = Request()
     body = {
         'assertion': service_account_jwt,
         'grant_type': google.oauth2._client._JWT_GRANT_TYPE,
