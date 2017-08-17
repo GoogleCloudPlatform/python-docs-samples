@@ -150,7 +150,8 @@ def get_token_endpoint():
     oauth token uri. This function eliminates the need to hardcode
     the oauth token uri which is subject to future changes.
     """
-    response = requests.get("https://accounts.google.com/.well-known/openid-configuration")
+    response = requests.get(
+        "https://accounts.google.com/.well-known/openid-configuration")
     return json.loads(response.text)["token_endpoint"]
 
 # [END iap_make_request]
