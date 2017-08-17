@@ -86,3 +86,16 @@ def test_sentiment_entities_utf(capsys):
         'foo→bar')
     out, _ = capsys.readouterr()
     assert 'Begin Offset : 4' in out
+
+
+def test_classify_text(capsys):
+    snippets.classify_text(
+        'Android is a mobile operating system developed by Google.')
+    out, _ = capsys.readouterr()
+    assert 'name' in out
+
+
+def test_classify_file(capsys):
+    snippets.classify_file(TEST_FILE_URL)
+    out, _ = capsys.readouterr()
+    assert 'name' in out
