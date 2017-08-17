@@ -24,6 +24,7 @@ import google.oauth2.credentials
 import google.oauth2.service_account
 import requests
 import requests_toolbelt.adapters.appengine
+import json
 
 
 IAM_SCOPE = 'https://www.googleapis.com/auth/iam'
@@ -80,7 +81,8 @@ def make_iap_request(url, client_id):
     # Construct OAuth 2.0 service account credentials using the signer
     # and email acquired from the bootstrap credentials.
     service_account_credentials = google.oauth2.service_account.Credentials(
-        signer, signer_email, token_uri=OAUTH_TOKEN_URI, additional_claims={
+        signer, signer_email, token_uri=get_token_endpoint(),
+        additional_claims={
             'target_audience': client_id
         })
 
@@ -143,11 +145,12 @@ def get_google_open_id_connect_token(service_account_credentials):
     return token_response['id_token']
 
 def get_token_endpoint():
-  """Makes a request to Google's openid endpoint and returns the oauth token uri
-  This function eliminates the need to hardcode the oauth token uri which is subject
-  to future changes. 
-  """
-  response = requests.get("https://accounts.google.com/.well-known/openid-configuration")
-  return json.loads(response.text)["token_endpoint"]
+    """Makes a request to Google's openid endpoint and returns
+    the oauth token uri. This function eliminates the need to
+    hardcode the oauth token uri which is subject to future changes.
+    """
+    response = requests.get(
+      "https://accounts.google.com/.well-known/openid-configuration")
+    return json.loads(response.text)["token_endpoint"]
 
 # [END iap_make_request]
