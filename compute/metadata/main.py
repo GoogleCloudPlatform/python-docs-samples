@@ -38,15 +38,15 @@ def wait_for_maintenance(callback):
 
     while True:
         try:
-          r = requests.get(
-              url,
-              params={'last_etag': last_etag, 'wait_for_change': True},
-              headers=METADATA_HEADERS)
+            r = requests.get(
+                url,
+                params={'last_etag': last_etag, 'wait_for_change': True},
+                headers=METADATA_HEADERS)
         except requests.ConnectionError as e:
-          # Network connection may be reset during maintenance.
-          print('Network error: {0}.  Retrying...'.format(e))
-          time.sleep(1)
-          continue
+            # Network connection may be reset during maintenance.
+            print('Network error: {0}.  Retrying...'.format(e))
+            time.sleep(1)
+            continue
 
         # During maintenance the service can return a 503, so these should
         # be retried.
