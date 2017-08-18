@@ -19,24 +19,31 @@ import main
 
 @mock.patch('main.requests')
 def test_wait_for_maintenance(requests_mock):
-    # Response 1 is a host maintenance event.
-    response1_mock = mock.Mock()
-    response1_mock.status_code = 200
-    response1_mock.text = 'MIGRATE_ON_HOST_MAINTENANCE'
-    response1_mock.headers = {'etag': 1}
-    # Response 2 is the end of the event.
-    response2_mock = mock.Mock()
-    response2_mock.status_code = 200
-    response2_mock.text = 'NONE'
-    response2_mock.headers = {'etag': 2}
-    # Response 3 is a 503
-    response3_mock = mock.Mock()
-    response3_mock.status_code = 503
+    # Host maintenance event start.
+    event_start_mock = mock.Mock()
+    event_start_mock.status_code = 200
+    event_start_mock.text = 'MIGRATE_ON_HOST_MAINTENANCE'
+    event_start_mock.headers = {'etag': 1}
+
+    # Host maintenance event end.
+    event_end_mock = mock.Mock()
+    event_end_mock.status_code = 200
+    event_end_mock.text = 'NONE'
+    event_end_mock.headers = {'etag': 2}
+
+    # Server unavailable (HTTP 503)
+    server_unavailable_mock = mock.Mock()
+    server_unavailable_mock.status_code = 503
+
+    # Network error
+    requests_mock.ConnectionError = requests.ConnectionError
+    network_error = requests_mock.ConnectionError('connection reset by peer')
 
     requests_mock.codes.ok = requests.codes.ok
     requests_mock.get.side_effect = [
-        response1_mock, response2_mock, response3_mock, response2_mock,
-        StopIteration()]
+        network_error, event_start_mock, network_error, event_end_mock,
+        network_error, server_unavailable_mock, network_error, event_end_mock,
+        network_error, StopIteration()]
 
     callback_mock = mock.Mock()
 
