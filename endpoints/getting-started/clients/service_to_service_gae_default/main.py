@@ -44,7 +44,7 @@ def generate_jwt():
         'iss': DEFAULT_SERVICE_ACCOUNT,
         'sub': DEFAULT_SERVICE_ACCOUNT,
         # aud must match 'audience' in the security configuration in your
-        # swagger spec.It can be any string.
+        # OpenAPI spec.It can be any string.
         'aud': 'echo.endpoints.sample.google.com',
         "email": DEFAULT_SERVICE_ACCOUNT
     })
