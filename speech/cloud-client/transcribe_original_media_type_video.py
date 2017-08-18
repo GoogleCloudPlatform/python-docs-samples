@@ -40,13 +40,15 @@ def transcribe_file_original_media_type_video(speech_file):
         content = audio_file.read()
 
     audio = types.RecognitionAudio(content=content)
+
+    # Use RecognitionMetadata to provide information about the audio.
     metadata = types.RecognitionMetadata(
         original_media_type=enums.RecognitionMetadata.OriginalMediaType.VIDEO)
+
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=44100,
+        sample_rate_hertz=16000,
         language_code='en-US',
-        enable_automatic_punctuation=True,
         metadata=metadata)
 
     response = client.recognize(config, audio)
@@ -68,13 +70,15 @@ def transcribe_gcs_original_media_type_video(gcs_uri):
     client = speech_v1_1beta1.SpeechClient()
 
     audio = types.RecognitionAudio(uri=gcs_uri)
+
+    # Use RecognitionMetadata to provide information about the audio.
     metadata = types.RecognitionMetadata(
         original_media_type=enums.RecognitionMetadata.OriginalMediaType.VIDEO)
+
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=44100,
+        sample_rate_hertz=16000,
         language_code='en-US',
-        enable_automatic_punctuation=True,
         metadata=metadata)
 
     operation = client.long_running_recognize(config, audio)

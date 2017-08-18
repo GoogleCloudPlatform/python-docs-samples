@@ -1,4 +1,4 @@
-# Copyright 2016, Google, Inc.
+# Copyright 2017, Google, Inc.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -18,19 +18,19 @@ import transcribe_original_media_type_video
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 
 
-def test_transcribe_file_with_automatic_punctuation(capsys):
+def test_transcribe_file_original_media_type_video(capsys):
     transcribe_original_media_type_video.transcribe_file_original_media_type_video(
         os.path.join(RESOURCES, 'Google_Gnome.wav'))
     out, _ = capsys.readouterr()
 
-    assert 'you do keep doing that.' in out
-    assert 'organic matter and will return.' in out
+    assert 'you do keep doing that' in out
+    assert 'organic matter and will return' in out
 
 
-def test_transcribe_gcs_with_automatic_punctuation(capsys):
+def test_transcribe_gcs_original_media_type_video(capsys):
     transcribe_original_media_type_video.transcribe_gcs_original_media_type_video(
         'gs://python-docs-samples-tests/speech/Google_Gnome.wav')
     out, _ = capsys.readouterr()
 
-    assert 'you do keep doing that.' in out
-    assert 'organic matter and will return.' in out
+    assert 'you do keep doing that' in out
+    assert 'organic matter and will return' in out

@@ -1,4 +1,4 @@
-# Copyright 2016, Google, Inc.
+# Copyright 2017, Google, Inc.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -24,7 +24,6 @@ def test_transcribe_file_with_word_time_offsets(capsys):
         os.path.join(RESOURCES, 'audio.raw'))
     out, _ = capsys.readouterr()
 
-    print(out)
     match = re.search(r'Bridge, start_time: ([0-9.]+)', out, re.DOTALL | re.I)
     time = float(match.group(1))
 
@@ -36,7 +35,6 @@ def test_transcribe_gcs_with_word_time_offsets(capsys):
         'gs://python-docs-samples-tests/speech/audio.flac')
     out, _ = capsys.readouterr()
 
-    print(out)
     match = re.search(r'Bridge, start_time: ([0-9.]+)', out, re.DOTALL | re.I)
     time = float(match.group(1))
 
