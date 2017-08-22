@@ -125,9 +125,8 @@ def list_rows(dataset_name, table_name, project=None):
     # Reload the table so that the schema is available.
     table.reload()
 
-    # Load at most 25 results per page. You can change the max_results
-    # argument to load more rows from BigQuery at a time.
-    rows = list(itertools.islice(table.fetch_data(max_results=25), 25))
+    # Load at most 25 results.
+    rows = list(itertools.islice(table.fetch_data(), 25))
 
     # Use format to create a simple table.
     format_string = '{!s:<16} ' * len(table.schema)
