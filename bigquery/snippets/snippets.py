@@ -126,7 +126,7 @@ def list_rows(dataset_name, table_name, project=None):
     table.reload()
 
     # Load at most 25 results.
-    rows = list(itertools.islice(table.fetch_data(), 25))
+    rows = itertools.islice(table.fetch_data(), 25)
 
     # Use format to create a simple table.
     format_string = '{!s:<16} ' * len(table.schema)
