@@ -25,6 +25,7 @@ The dataset and table should already exist.
 """
 
 import argparse
+import itertools
 import uuid
 
 from google.cloud import bigquery
@@ -124,10 +125,8 @@ def list_rows(dataset_name, table_name, project=None):
     # Reload the table so that the schema is available.
     table.reload()
 
-    # Load at most 25 results. You can change the max_results argument to load
-    # more rows from BigQuery, but note that this can take some time. It's
-    # preferred to use a query.
-    rows = list(table.fetch_data(max_results=25))
+    # Load at most 25 results.
+    rows = itertools.islice(table.fetch_data(), 25)
 
     # Use format to create a simple table.
     format_string = '{!s:<16} ' * len(table.schema)
