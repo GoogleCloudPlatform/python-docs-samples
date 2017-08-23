@@ -48,3 +48,7 @@ gRPC libraries and tools are installed, run:
 
     python -m grpc.tools.protoc --python_out=generated_pb2 \
         --grpc_python_out=generated_pb2 --proto_path=. bookstore.proto
+
+## Running the server with gRPC <-> HTTP/JSON Transcoding
+
+Follow the instructions for [Deploying a service using transcoding](https://cloud.google.com/endpoints/docs/transcoding#deploying_a_service_using_transcoding).
