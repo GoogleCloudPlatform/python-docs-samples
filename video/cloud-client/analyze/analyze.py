@@ -33,18 +33,17 @@ import io
 import sys
 import time
 
-from google.cloud.gapic.videointelligence.v1beta1 import enums
-from google.cloud.gapic.videointelligence.v1beta1 import (
-    video_intelligence_service_client)
-
+from google.cloud import videointelligence_v1beta2
+from google.cloud.videointelligence_v1beta2 import enums
+from google.cloud.videointelligence_v1beta2 import types
 
 def analyze_safe_search(path):
-    """ Detects safe search features the GCS path to a video. """
-    video_client = (video_intelligence_service_client.
-                    VideoIntelligenceServiceClient())
-    features = [enums.Feature.SAFE_SEARCH_DETECTION]
+    """ Detects explicit content from the GCS path to a video. """
+    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
+    features = [enums.Feature.EXPLICIT_CONTENT_DETECTION]
+
     operation = video_client.annotate_video(path, features)
-    print('\nProcessing video for safe search annotations:')
+    print('\nProcessing video for explicit content annotations:')
 
     while not operation.done():
         sys.stdout.write('.')
@@ -54,19 +53,16 @@ def analyze_safe_search(path):
     print('\nFinished processing.')
 
     # first result is retrieved because a single video was processed
-    safe_annotations = (operation.result().annotation_results[0].
-                        safe_search_annotations)
+    explicit_annotation = (operation.result().annotation_results[0].
+                        explicit_annotation)
 
     likely_string = ("Unknown", "Very unlikely", "Unlikely", "Possible",
                      "Likely", "Very likely")
 
-    for note in safe_annotations:
-        print('Time: {}s'.format(note.time_offset / 1000000.0))
-        print('\tadult: {}'.format(likely_string[note.adult]))
-        print('\tspoof: {}'.format(likely_string[note.spoof]))
-        print('\tmedical: {}'.format(likely_string[note.medical]))
-        print('\tracy: {}'.format(likely_string[note.racy]))
-        print('\tviolent: {}\n'.format(likely_string[note.violent]))
+    for frame in explicit_annotation.frames:
+        frame_time = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
+        print('Time: {}s'.format(frame_time))
+        print('\tadult: {}'.format(likely_string[frame.pornography_likelihood]))
 
 
 def analyze_faces(path):
