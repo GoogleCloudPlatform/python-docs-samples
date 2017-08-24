@@ -175,8 +175,7 @@ def analyze_labels_file(path):
 
 def analyze_shots(path):
     """ Detects camera shot changes. """
-    video_client = (video_intelligence_service_client.
-                    VideoIntelligenceServiceClient())
+    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
     features = [enums.Feature.SHOT_CHANGE_DETECTION]
     operation = video_client.annotate_video(path, features)
     print('\nProcessing video for shot change annotations:')
@@ -189,13 +188,12 @@ def analyze_shots(path):
     print('\nFinished processing.')
 
     # first result is retrieved because a single video was processed
-    shots = operation.result().annotation_results[0]
+    shots = operation.result().annotation_results[0].shot_annotations
 
-    for note, shot in enumerate(shots.shot_annotations):
-        print('\tScene {}: {} to {}'.format(
-            note,
-            shot.start_time_offset / 1000000.0,
-            shot.end_time_offset / 1000000.0))
+    for i, shot in enumerate(shots):
+        start_time = shot.start_time_offset.seconds + shot.end_time_offset.nanos / 1e9
+        end_time = shot.end_time_offset.seconds + shot.end_time_offset.nanos / 1e9
+        print('\tScene {}: {} to {}'.format(i, start_time, end_time))
 
 
 if __name__ == '__main__':
