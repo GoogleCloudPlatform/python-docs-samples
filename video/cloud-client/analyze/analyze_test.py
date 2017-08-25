@@ -24,7 +24,7 @@ import analyze
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 LABELS_FILE_PATH = '/video/cat.mp4'
 FACES_FILE_PATH = '/video/googlework.mp4'
-SAFE_SEARCH_FILE_PATH = '/video/cat.mp4'
+EXPLiCIT_CONTENT_FILE_PATH = '/video/cat.mp4'
 SHOTS_FILE_PATH = '/video/gbikes_dinosaur.mp4'
 
 
@@ -53,8 +53,8 @@ def test_dino_video_labels(capsys):
 
 
 @pytest.mark.slow
-def test_cat_safe_search(capsys):
-    analyze.analyze_safe_search(
-        'gs://{}{}'.format(BUCKET, SAFE_SEARCH_FILE_PATH))
+def test_cat_explicit_content(capsys):
+    analyze.analyze_explicit_content(
+        'gs://{}{}'.format(BUCKET, EXPLiCIT_CONTENT_FILE_PATH))
     out, _ = capsys.readouterr()
-    assert 'medical' in out
+    assert 'pornography' in out

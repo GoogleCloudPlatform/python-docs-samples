@@ -23,7 +23,7 @@ Usage Examples:
     python analyze.py labels gs://cloud-ml-sandbox/video/chicago.mp4
     python analyze.py labels_file resources/cat.mp4
     python analyze.py shots gs://demomaker/gbikes_dinosaur.mp4
-    python analyze.py safe_search gs://demomaker/gbikes_dinosaur.mp4
+    python analyze.py explicit_content gs://demomaker/gbikes_dinosaur.mp4
 
 """
 
@@ -37,7 +37,7 @@ from google.cloud import videointelligence_v1beta2
 from google.cloud.videointelligence_v1beta2 import enums
 from google.cloud.videointelligence_v1beta2 import types
 
-def analyze_safe_search(path):
+def analyze_explicit_content(path):
     """ Detects explicit content from the GCS path to a video. """
     video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
     features = [enums.Feature.EXPLICIT_CONTENT_DETECTION]
@@ -62,7 +62,7 @@ def analyze_safe_search(path):
     for frame in explicit_annotation.frames:
         frame_time = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
         print('Time: {}s'.format(frame_time))
-        print('\tadult: {}'.format(likely_string[frame.pornography_likelihood]))
+        print('\tpornography: {}'.format(likely_string[frame.pornography_likelihood]))
 
 
 def analyze_faces(path):
@@ -210,9 +210,9 @@ if __name__ == '__main__':
     analyze_labels_file_parser = subparsers.add_parser(
         'labels_file', help=analyze_labels_file.__doc__)
     analyze_labels_file_parser.add_argument('path')
-    analyze_safe_search_parser = subparsers.add_parser(
-        'safe_search', help=analyze_safe_search.__doc__)
-    analyze_safe_search_parser.add_argument('path')
+    analyze_explicit_content_parser = subparsers.add_parser(
+        'explicit_content', help=analyze_explicit_content.__doc__)
+    analyze_explicit_content_parser.add_argument('path')
     analyze_shots_parser = subparsers.add_parser(
         'shots', help=analyze_shots.__doc__)
     analyze_shots_parser.add_argument('path')
@@ -227,5 +227,5 @@ if __name__ == '__main__':
         analyze_labels_file(args.path)
     if args.command == 'shots':
         analyze_shots(args.path)
-    if args.command == 'safe_search':
-        analyze_safe_search(args.path)
+    if args.command == 'explicit_content':
+        analyze_explicit_content(args.path)
