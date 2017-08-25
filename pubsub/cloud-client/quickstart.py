@@ -18,21 +18,20 @@
 def run_quickstart():
     # [START pubsub_quickstart]
     # Imports the Google Cloud client library
-    from google.cloud import pubsub
+    from google.cloud import pubsub_v1
 
     # Instantiates a client
-    pubsub_client = pubsub.Client()
+    publisher = pubsub_v1.PublisherClient()
 
-    # The name for the new topic
-    topic_name = 'my-new-topic'
+    # The resource path for the new topic contains the project ID
+    # and the topic name.
+    topic_path = publisher.topic_path(
+        'my-project', 'my-new-topic')
 
-    # Prepares the new topic
-    topic = pubsub_client.topic(topic_name)
+    # Create the topic.
+    topic = publisher.create_topic(topic_path)
 
-    # Creates the new topic
-    topic.create()
-
-    print('Topic {} created.'.format(topic.name))
+    print('Topic created: {}'.format(topic))
     # [END pubsub_quickstart]
 
 

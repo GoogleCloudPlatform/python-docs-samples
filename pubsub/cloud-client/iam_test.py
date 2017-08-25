@@ -12,94 +12,100 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.cloud import pubsub
+import os
+
+from google.cloud import pubsub_v1
 import pytest
 
 import iam
 
-TEST_TOPIC = 'iam-test-topic'
-TEST_SUBSCRIPTION = 'iam-test-subscription'
+PROJECT = os.environ['GCLOUD_PROJECT']
+TOPIC = 'iam-test-topic'
+SUBSCRIPTION = 'iam-test-subscription'
 
 
 @pytest.fixture(scope='module')
-def test_topic():
-    client = pubsub.Client()
-    topic = client.topic(TEST_TOPIC)
+def publisher_client():
+    yield pubsub_v1.PublisherClient()
 
-    if not topic.exists():
-        topic.create()
 
-    yield topic
+@pytest.fixture(scope='module')
+def topic(publisher_client):
+    topic_path = publisher_client.topic_path(PROJECT, TOPIC)
 
-    if topic.exists():
-        topic.delete()
+    try:
+        publisher_client.delete_topic(topic_path)
+    except:
+        pass
+
+    publisher_client.create_topic(topic_path)
+
+    yield topic_path
+
+
+@pytest.fixture(scope='module')
+def subscriber_client():
+    yield pubsub_v1.SubscriberClient()
 
 
 @pytest.fixture
-def test_subscription(test_topic):
-    subscription = test_topic.subscription(TEST_SUBSCRIPTION)
-    yield subscription
-    if subscription.exists():
-        subscription.delete()
+def subscription(subscriber_client, topic):
+    subscription_path = subscriber_client.subscription_path(
+        PROJECT, SUBSCRIPTION)
+
+    try:
+        subscriber_client.delete_subscription(subscription_path)
+    except:
+        pass
+
+    subscriber_client.create_subscription(subscription_path, topic=topic)
+
+    yield subscription_path
 
 
-def test_get_topic_policy(test_topic, capsys):
-    iam.get_topic_policy(test_topic.name)
-
-    out, _ = capsys.readouterr()
-    assert test_topic.name in out
-
-
-def test_get_subscription_policy(test_subscription, capsys):
-    test_subscription.create()
-
-    iam.get_subscription_policy(
-        test_subscription.topic.name,
-        test_subscription.name)
+def test_get_topic_policy(topic, capsys):
+    iam.get_topic_policy(PROJECT, TOPIC)
 
     out, _ = capsys.readouterr()
-    assert test_subscription.topic.name in out
-    assert test_subscription.name in out
+    assert topic in out
 
 
-def test_set_topic_policy(test_topic):
-    iam.set_topic_policy(test_topic.name)
+def test_get_subscription_policy(subscription, capsys):
+    iam.get_subscription_policy(PROJECT, SUBSCRIPTION)
 
-    policy = test_topic.get_iam_policy()
-    assert policy.viewers
-    assert policy['roles/pubsub.publisher']
-
-
-def test_set_subscription_policy(test_subscription):
-    test_subscription.create()
-
-    iam.set_subscription_policy(
-        test_subscription.topic.name,
-        test_subscription.name)
-
-    policy = test_subscription.get_iam_policy()
-    assert policy.viewers
-    assert policy.editors
+    out, _ = capsys.readouterr()
+    assert subscription in out
 
 
-def test_check_topic_permissions(test_topic, capsys):
-    iam.check_topic_permissions(test_topic.name)
+def test_set_topic_policy(publisher_client, topic):
+    iam.set_topic_policy(PROJECT, TOPIC)
+
+    policy = publisher_client.get_iam_policy(topic)
+    assert 'roles/pubsub.publisher' in str(policy)
+    assert 'allUsers' in str(policy)
+
+
+def test_set_subscription_policy(subscriber_client, subscription):
+    iam.set_subscription_policy(PROJECT, SUBSCRIPTION)
+
+    policy = subscriber_client.get_iam_policy(subscription)
+    assert 'roles/pubsub.viewer' in str(policy)
+    assert 'allUsers' in str(policy)
+
+
+def test_check_topic_permissions(topic, capsys):
+    iam.check_topic_permissions(PROJECT, TOPIC)
 
     out, _ = capsys.readouterr()
 
-    assert test_topic.name in out
+    assert topic in out
     assert 'pubsub.topics.publish' in out
 
 
-def test_check_subscription_permissions(test_subscription, capsys):
-    test_subscription.create()
-
-    iam.check_subscription_permissions(
-        test_subscription.topic.name,
-        test_subscription.name)
+def test_check_subscription_permissions(subscription, capsys):
+    iam.check_subscription_permissions(PROJECT, SUBSCRIPTION)
 
     out, _ = capsys.readouterr()
 
-    assert test_subscription.topic.name in out
-    assert test_subscription.name in out
+    assert subscription in out
     assert 'pubsub.subscriptions.consume' in out
