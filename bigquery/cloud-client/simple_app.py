@@ -17,6 +17,8 @@
 """Simple application that performs a query with BigQuery."""
 # [START all]
 # [START create_client]
+import uuid
+
 from google.cloud import bigquery
 
 
@@ -24,23 +26,22 @@ def query_shakespeare():
     client = bigquery.Client()
     # [END create_client]
     # [START run_query]
-    query_results = client.run_sync_query("""
-        SELECT
-            APPROX_TOP_COUNT(corpus, 10) as title,
-            COUNT(*) as unique_words
-        FROM `publicdata.samples.shakespeare`;""")
+    query_job = client.run_async_query(str(uuid.uuid4()), """
+        #standardSQL
+        SELECT corpus AS title, COUNT(*) AS unique_words
+        FROM `publicdata.samples.shakespeare`
+        GROUP BY title
+        ORDER BY unique_words DESC
+        LIMIT 10""")
 
-    # Use standard SQL syntax for queries.
-    # See: https://cloud.google.com/bigquery/sql-reference/
-    query_results.use_legacy_sql = False
-
-    query_results.run()
+    query_job.begin()
+    query_job.result()  # Wait for job to complete.
     # [END run_query]
 
     # [START print_results]
-    rows = query_results.fetch_data(max_results=10)
-
-    for row in rows:
+    destination_table = query_job.destination
+    destination_table.reload()
+    for row in destination_table.fetch_data():
         print(row)
     # [END print_results]
 

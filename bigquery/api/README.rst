@@ -92,7 +92,7 @@ To run this sample:
     
         https://cloud.google.com/bigquery/bigquery-api-quickstart
     
-    For more information, see the README.md under /bigquery.
+    For more information, see the README.rst.
     
     positional arguments:
       project_id  Your Google Cloud Project ID.
@@ -117,7 +117,7 @@ To run this sample:
     
     Command-line application to perform an synchronous query in BigQuery.
     
-    For more information, see the README.md under /bigquery.
+    For more information, see the README.rst.
     
     positional arguments:
       project_id            Your Google Cloud project ID.
@@ -151,7 +151,7 @@ To run this sample:
     
     Command-line application to perform an asynchronous query in BigQuery.
     
-    For more information, see the README.md under /bigquery.
+    For more information, see the README.rst.
     
     positional arguments:
       project_id            Your Google Cloud project ID.
@@ -188,7 +188,7 @@ To run this sample:
     
         https://cloud.google.com/bigquery/docs/managing_jobs_datasets_projects
     
-    For more information, see the README.md under /bigquery.
+    For more information, see the README.rst.
     
     positional arguments:
       project_id  the project id to list.
@@ -218,7 +218,7 @@ To run this sample:
     
         https://cloud.google.com/bigquery/loading-data-into-bigquery
     
-    For more information, see the README.md under /bigquery.
+    For more information, see the README.rst.
     
     positional arguments:
       project_id   Your Google Cloud project ID.
@@ -253,7 +253,7 @@ To run this sample:
     
         https://cloud.google.com/bigquery/loading-data-into-bigquery#loaddatagcs
     
-    For more information, see the README.md under /bigquery.
+    For more information, see the README.rst.
     
     positional arguments:
       project_id            Your Google Cloud project ID.
@@ -291,7 +291,7 @@ To run this sample:
     
         https://cloud.google.com/bigquery/streaming-data-into-bigquery
     
-    For more information, see the README.md under /bigquery.
+    For more information, see the README.rst.
     
     positional arguments:
       project_id            Your Google Cloud project ID.
@@ -329,7 +329,7 @@ To run this sample:
     
         https://cloud.google.com/bigquery/exporting-data-from-bigquery
     
-    For more information, see the README.md under /bigquery.
+    For more information, see the README.rst.
     
     positional arguments:
       project_id            Your Google Cloud project ID.
@@ -373,7 +373,7 @@ To run this sample:
     
         https://cloud.google.com/bigquery/authentication
     
-    For more information, see the README.md under /bigquery.
+    For more information, see the README.rst.
     
     positional arguments:
       project_id            Your Google Cloud Project ID.

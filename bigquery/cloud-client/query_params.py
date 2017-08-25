@@ -16,7 +16,7 @@
 
 """Command-line app to perform queries with parameters in BigQuery.
 
-For more information, see the README.md under /bigquery.
+For more information, see the README.rst.
 
 Example invocation:
     $ python query_params.py --use-named-params 'romeoandjuliet' 100
@@ -25,28 +25,10 @@ Example invocation:
 
 import argparse
 import datetime
-import time
 import uuid
 
 from google.cloud import bigquery
 import pytz
-
-
-def wait_for_job(job):
-    while True:
-        job.reload()  # Refreshes the state via a GET request.
-        if job.state == 'DONE':
-            if job.error_result:
-                raise RuntimeError(job.errors)
-            return
-        time.sleep(1)
-
-
-def print_results(query_results):
-    """Print the rows in the query's results."""
-    rows = query_results.fetch_data(max_results=10)
-    for row in rows:
-        print(row)
 
 
 def query_positional_params(corpus, min_word_count):
@@ -73,10 +55,14 @@ def query_positional_params(corpus, min_word_count):
     # See: https://cloud.google.com/bigquery/sql-reference/
     query_job.use_legacy_sql = False
 
-    # Start the query and wait for the job to complete.
     query_job.begin()
-    wait_for_job(query_job)
-    print_results(query_job.results())
+    query_job.result()  # Wait for job to complete
+
+    # Print the results.
+    destination_table = query_job.destination
+    destination_table.reload()
+    for row in destination_table.fetch_data():
+        print(row)
 
 
 def query_named_params(corpus, min_word_count):
@@ -97,10 +83,14 @@ def query_named_params(corpus, min_word_count):
                 'min_word_count', 'INT64', min_word_count)))
     query_job.use_legacy_sql = False
 
-    # Start the query and wait for the job to complete.
     query_job.begin()
-    wait_for_job(query_job)
-    print_results(query_job.results())
+    query_job.result()  # Wait for job to complete
+
+    # Print the results.
+    destination_table = query_job.destination
+    destination_table.reload()
+    for row in destination_table.fetch_data():
+        print(row)
 
 
 def query_array_params(gender, states):
@@ -122,10 +112,14 @@ def query_array_params(gender, states):
             bigquery.ArrayQueryParameter('states', 'STRING', states)))
     query_job.use_legacy_sql = False
 
-    # Start the query and wait for the job to complete.
     query_job.begin()
-    wait_for_job(query_job)
-    print_results(query_job.results())
+    query_job.result()  # Wait for job to complete
+
+    # Print the results.
+    destination_table = query_job.destination
+    destination_table.reload()
+    for row in destination_table.fetch_data():
+        print(row)
 
 
 def query_timestamp_params(year, month, day, hour, minute):
@@ -142,10 +136,14 @@ def query_timestamp_params(year, month, day, hour, minute):
                     year, month, day, hour, minute, tzinfo=pytz.UTC))])
     query_job.use_legacy_sql = False
 
-    # Start the query and wait for the job to complete.
     query_job.begin()
-    wait_for_job(query_job)
-    print_results(query_job.results())
+    query_job.result()  # Wait for job to complete
+
+    # Print the results.
+    destination_table = query_job.destination
+    destination_table.reload()
+    for row in destination_table.fetch_data():
+        print(row)
 
 
 def query_struct_params(x, y):
@@ -161,10 +159,14 @@ def query_struct_params(x, y):
                 bigquery.ScalarQueryParameter('y', 'STRING', y))])
     query_job.use_legacy_sql = False
 
-    # Start the query and wait for the job to complete.
     query_job.begin()
-    wait_for_job(query_job)
-    print_results(query_job.results())
+    query_job.result()  # Wait for job to complete
+
+    # Print the results.
+    destination_table = query_job.destination
+    destination_table.reload()
+    for row in destination_table.fetch_data():
+        print(row)
 
 
 if __name__ == '__main__':

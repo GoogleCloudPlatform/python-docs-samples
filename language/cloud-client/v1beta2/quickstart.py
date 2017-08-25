@@ -18,17 +18,21 @@
 def run_quickstart():
     # [START language_quickstart]
     # Imports the Google Cloud client library
-    from google.cloud import language
+    from google.cloud import language_v1beta2
+    from google.cloud.language_v1beta2 import enums
+    from google.cloud.language_v1beta2 import types
 
-    # Instantiates a client with they v1beta2 version
-    language_client = language.Client(api_version='v1beta2')
+    # Instantiates a client with the v1beta2 version
+    client = language_v1beta2.LanguageServiceClient()
 
     # The text to analyze
-    text = 'Hallo Welt!'
-    document = language_client.document_from_text(text, language='DE')
-
+    text = u'Hallo Welt!'
+    document = types.Document(
+        content=text,
+        type=enums.Document.Type.PLAIN_TEXT,
+        language='de')
     # Detects the sentiment of the text
-    sentiment = document.analyze_sentiment().sentiment
+    sentiment = client.analyze_sentiment(document).document_sentiment
 
     print('Text: {}'.format(text))
     print('Sentiment: {}, {}'.format(sentiment.score, sentiment.magnitude))

@@ -79,8 +79,8 @@ def insert_data(instance_id, database_id):
             table='Albums',
             columns=('SingerId', 'AlbumId', 'AlbumTitle',),
             values=[
-                (1, 1, u'Go, Go, Go'),
-                (1, 2, u'Total Junk'),
+                (1, 1, u'Total Junk'),
+                (1, 2, u'Go, Go, Go'),
                 (2, 1, u'Green'),
                 (2, 2, u'Forever Hold Your Peace'),
                 (2, 3, u'Terrified')])
@@ -378,7 +378,7 @@ def read_only_transaction(instance_id, database_id):
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    with database.snapshot() as snapshot:
+    with database.snapshot(multi_use=True) as snapshot:
         # Read using SQL.
         results = snapshot.execute_sql(
             'SELECT SingerId, AlbumId, AlbumTitle FROM Albums')

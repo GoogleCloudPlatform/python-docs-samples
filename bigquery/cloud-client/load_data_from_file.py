@@ -16,7 +16,7 @@
 
 """Loads data into BigQuery from a local file.
 
-For more information, see the README.md under /bigquery.
+For more information, see the README.rst.
 
 Example invocation:
     $ python load_data_from_file.py example_dataset example_table \
@@ -26,7 +26,6 @@ The dataset and table should already exist.
 """
 
 import argparse
-import time
 
 from google.cloud import bigquery
 
@@ -45,20 +44,10 @@ def load_data_from_file(dataset_name, table_name, source_file_name):
         job = table.upload_from_file(
             source_file, source_format='text/csv')
 
-    wait_for_job(job)
+    job.result()  # Wait for job to complete
 
     print('Loaded {} rows into {}:{}.'.format(
         job.output_rows, dataset_name, table_name))
-
-
-def wait_for_job(job):
-    while True:
-        job.reload()
-        if job.state == 'DONE':
-            if job.error_result:
-                raise RuntimeError(job.errors)
-            return
-        time.sleep(1)
 
 
 if __name__ == '__main__':

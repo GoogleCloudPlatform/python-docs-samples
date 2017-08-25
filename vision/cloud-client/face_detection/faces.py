@@ -18,10 +18,14 @@
 
 import argparse
 
+# [START import_client_library]
 from google.cloud import vision
+# [END import_client_library]
+from google.cloud.vision import types
 from PIL import Image, ImageDraw
 
 
+# [START def_detect_face]
 def detect_face(face_file, max_results=4):
     """Uses the Vision API to detect faces in the given file.
 
@@ -31,14 +35,18 @@ def detect_face(face_file, max_results=4):
     Returns:
         An array of Face objects with information about the picture.
     """
-    content = face_file.read()
     # [START get_vision_service]
-    image = vision.Client().image(content=content)
+    client = vision.ImageAnnotatorClient()
     # [END get_vision_service]
 
-    return image.detect_faces()
+    content = face_file.read()
+    image = types.Image(content=content)
+
+    return client.face_detection(image=image).face_annotations
+# [END def_detect_face]
 
 
+# [START def_highlight_faces]
 def highlight_faces(image, faces, output_filename):
     """Draws a polygon around the faces, then saves to output_filename.
 
@@ -53,13 +61,15 @@ def highlight_faces(image, faces, output_filename):
     draw = ImageDraw.Draw(im)
 
     for face in faces:
-        box = [(bound.x_coordinate, bound.y_coordinate)
-               for bound in face.bounds.vertices]
+        box = [(vertex.x, vertex.y)
+               for vertex in face.bounding_poly.vertices]
         draw.line(box + [box[0]], width=5, fill='#00ff00')
 
     im.save(output_filename)
+# [END def_highlight_faces]
 
 
+# [START def_main]
 def main(input_filename, output_filename, max_results):
     with open(input_filename, 'rb') as image:
         faces = detect_face(image, max_results)
@@ -70,6 +80,7 @@ def main(input_filename, output_filename, max_results):
         # Reset the file pointer, so we can read the file again
         image.seek(0)
         highlight_faces(image, faces, output_filename)
+# [END def_main]
 
 
 if __name__ == '__main__':

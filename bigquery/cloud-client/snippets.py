@@ -16,7 +16,7 @@
 
 """Samples that demonstrate basic operations in the BigQuery API.
 
-For more information, see the README.md under /bigquery.
+For more information, see the README.rst.
 
 Example invocation:
     $ python snippets.py list-datasets
@@ -25,7 +25,7 @@ The dataset and table should already exist.
 """
 
 import argparse
-import time
+import itertools
 import uuid
 
 from google.cloud import bigquery
@@ -125,10 +125,8 @@ def list_rows(dataset_name, table_name, project=None):
     # Reload the table so that the schema is available.
     table.reload()
 
-    # Load at most 25 results. You can change the max_results argument to load
-    # more rows from BigQuery, but note that this can take some time. It's
-    # preferred to use a query.
-    rows = list(table.fetch_data(max_results=25))
+    # Load at most 25 results.
+    rows = itertools.islice(table.fetch_data(), 25)
 
     # Use format to create a simple table.
     format_string = '{!s:<16} ' * len(table.schema)
@@ -165,24 +163,11 @@ def copy_table(dataset_name, table_name, new_table_name, project=None):
     job.create_disposition = (
         google.cloud.bigquery.job.CreateDisposition.CREATE_IF_NEEDED)
 
-    # Start the job.
-    job.begin()
-
-    # Wait for the the job to finish.
+    job.begin()  # Start the job.
     print('Waiting for job to finish...')
-    wait_for_job(job)
+    job.result()
 
     print('Table {} copied to {}.'.format(table_name, new_table_name))
-
-
-def wait_for_job(job):
-    while True:
-        job.reload()  # Refreshes the state via a GET request.
-        if job.state == 'DONE':
-            if job.error_result:
-                raise RuntimeError(job.errors)
-            return
-        time.sleep(1)
 
 
 def delete_table(dataset_name, table_name, project=None):

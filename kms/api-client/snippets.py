@@ -21,18 +21,18 @@ import googleapiclient.discovery
 
 
 # [START kms_create_keyring]
-def create_keyring(project_id, location, keyring):
+def create_key_ring(project_id, location_id, key_ring_id):
     """Creates a KeyRing in the given location (e.g. global)."""
 
     # Creates an API client for the KMS API.
     kms_client = googleapiclient.discovery.build('cloudkms', 'v1')
 
     # The resource name of the location associated with the KeyRing.
-    parent = 'projects/{}/locations/{}'.format(project_id, location)
+    parent = 'projects/{}/locations/{}'.format(project_id, location_id)
 
     # Create KeyRing
     request = kms_client.projects().locations().keyRings().create(
-        parent=parent, body={}, keyRingId=keyring)
+        parent=parent, body={}, keyRingId=key_ring_id)
     response = request.execute()
 
     print('Created KeyRing {}.'.format(response['name']))
@@ -40,7 +40,7 @@ def create_keyring(project_id, location, keyring):
 
 
 # [START kms_create_cryptokey]
-def create_cryptokey(project_id, location, keyring, cryptokey):
+def create_crypto_key(project_id, location_id, key_ring_id, crypto_key_id):
     """Creates a CryptoKey within a KeyRing in the given location."""
 
     # Creates an API client for the KMS API.
@@ -48,12 +48,12 @@ def create_cryptokey(project_id, location, keyring, cryptokey):
 
     # The resource name of the KeyRing associated with the CryptoKey.
     parent = 'projects/{}/locations/{}/keyRings/{}'.format(
-        project_id, location, keyring)
+        project_id, location_id, key_ring_id)
 
     # Create a CryptoKey for the given KeyRing.
     request = kms_client.projects().locations().keyRings().cryptoKeys().create(
         parent=parent, body={'purpose': 'ENCRYPT_DECRYPT'},
-        cryptoKeyId=cryptokey)
+        cryptoKeyId=crypto_key_id)
     response = request.execute()
 
     print('Created CryptoKey {}.'.format(response['name']))
@@ -61,75 +61,76 @@ def create_cryptokey(project_id, location, keyring, cryptokey):
 
 
 # [START kms_encrypt]
-def encrypt(project_id, location, keyring, cryptokey, plaintext_file_name,
-            encrypted_file_name):
-    """Encrypts data from a plaintext_file_name using the provided CryptoKey
-    and saves it to an encrypted_file_name so it can only be recovered with a
-    call to decrypt."""
+def encrypt(project_id, location_id, key_ring_id, crypto_key_id,
+            plaintext_file_name, ciphertext_file_name):
+    """Encrypts data from plaintext_file_name using the provided CryptoKey and
+    saves it to ciphertext_file_name so it can only be recovered with a call to
+    decrypt.
+    """
 
     # Creates an API client for the KMS API.
     kms_client = googleapiclient.discovery.build('cloudkms', 'v1')
 
     # The resource name of the CryptoKey.
     name = 'projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}'.format(
-        project_id, location, keyring, cryptokey)
+        project_id, location_id, key_ring_id, crypto_key_id)
 
-    # Read text from the input file.
+    # Read data from the input file.
     with io.open(plaintext_file_name, 'rb') as plaintext_file:
         plaintext = plaintext_file.read()
-    encoded_text = base64.b64encode(plaintext)
 
-    # Use the KMS API to encrypt the text.
-    cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
-    request = cryptokeys.encrypt(
-        name=name, body={'plaintext': encoded_text.decode('utf-8')})
+    # Use the KMS API to encrypt the data.
+    crypto_keys = kms_client.projects().locations().keyRings().cryptoKeys()
+    request = crypto_keys.encrypt(
+        name=name,
+        body={'plaintext': base64.b64encode(plaintext).decode('ascii')})
     response = request.execute()
+    ciphertext = base64.b64decode(response['ciphertext'].encode('ascii'))
 
-    # Write the encrypted text to a file.
-    with io.open(encrypted_file_name, 'wb') as encrypted_file:
-        encrypted_file.write(response['ciphertext'].encode('utf-8'))
+    # Write the encrypted data to a file.
+    with io.open(ciphertext_file_name, 'wb') as ciphertext_file:
+        ciphertext_file.write(ciphertext)
 
-    print('Saved encrypted text to {}.'.format(encrypted_file_name))
+    print('Saved ciphertext to {}.'.format(ciphertext_file_name))
 # [END kms_encrypt]
 
 
 # [START kms_decrypt]
-def decrypt(project_id, location, keyring, cryptokey, encrypted_file_name,
-            decrypted_file_name):
-    """Decrypts data from encrypted_file_name that was previously encrypted
-    using the CryptoKey with a call to encrypt. Outputs decrypted data to
-    decrpyted_file_name."""
+def decrypt(project_id, location_id, key_ring_id, crypto_key_id,
+            ciphertext_file_name, plaintext_file_name):
+    """Decrypts data from ciphertext_file_name that was previously encrypted
+    using the provided CryptoKey and saves it to plaintext_file_name."""
 
     # Creates an API client for the KMS API.
     kms_client = googleapiclient.discovery.build('cloudkms', 'v1')
 
     # The resource name of the CryptoKey.
     name = 'projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}'.format(
-        project_id, location, keyring, cryptokey)
+        project_id, location_id, key_ring_id, crypto_key_id)
 
-    # Read cipher text from the input file.
-    with io.open(encrypted_file_name, 'rb') as encrypted_file:
-        cipher_text = encrypted_file.read()
+    # Read encrypted data from the input file.
+    with io.open(ciphertext_file_name, 'rb') as ciphertext_file:
+        ciphertext = ciphertext_file.read()
 
-    # Use the KMS API to decrypt the text.
-    cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
-    request = cryptokeys.decrypt(
-        name=name, body={'ciphertext': cipher_text.decode('utf-8')})
+    # Use the KMS API to decrypt the data.
+    crypto_keys = kms_client.projects().locations().keyRings().cryptoKeys()
+    request = crypto_keys.decrypt(
+        name=name,
+        body={'ciphertext': base64.b64encode(ciphertext).decode('ascii')})
     response = request.execute()
+    plaintext = base64.b64decode(response['plaintext'].encode('ascii'))
 
-    # Write the plain text to a file.
-    with io.open(decrypted_file_name, 'wb') as decrypted_file:
-        plaintext_encoded = response['plaintext']
-        plaintext_decoded = base64.b64decode(plaintext_encoded)
-        decrypted_file.write(plaintext_decoded)
+    # Write the decrypted data to a file.
+    with io.open(plaintext_file_name, 'wb') as plaintext_file:
+        plaintext_file.write(plaintext)
 
-    print('Saved decrypted text to {}.'.format(decrypted_file_name))
+    print('Saved plaintext to {}.'.format(plaintext_file_name))
 # [END kms_decrypt]
 
 
 # [START kms_disable_cryptokey_version]
-def disable_cryptokey_version(project_id, location, keyring, cryptokey,
-                              version):
+def disable_crypto_key_version(project_id, location_id, key_ring_id,
+                               crypto_key_id, version_id):
     """Disables a CryptoKeyVersion associated with a given CryptoKey and
     KeyRing."""
 
@@ -140,11 +141,12 @@ def disable_cryptokey_version(project_id, location, keyring, cryptokey,
     name = (
         'projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}/'
         'cryptoKeyVersions/{}'
-        .format(project_id, location, keyring, cryptokey, version))
+        .format(
+            project_id, location_id, key_ring_id, crypto_key_id, version_id))
 
     # Use the KMS API to disable the CryptoKeyVersion.
-    cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
-    request = cryptokeys.cryptoKeyVersions().patch(
+    crypto_keys = kms_client.projects().locations().keyRings().cryptoKeys()
+    request = crypto_keys.cryptoKeyVersions().patch(
         name=name, body={'state': 'DISABLED'}, updateMask='state')
     response = request.execute()
 
@@ -154,8 +156,8 @@ def disable_cryptokey_version(project_id, location, keyring, cryptokey,
 
 
 # [START kms_destroy_cryptokey_version]
-def destroy_cryptokey_version(
-        project_id, location, keyring, cryptokey, version):
+def destroy_crypto_key_version(
+        project_id, location_id, key_ring_id, crypto_key_id, version_id):
     """Schedules a CryptoKeyVersion associated with a given CryptoKey and
     KeyRing for destruction 24 hours in the future."""
 
@@ -166,11 +168,12 @@ def destroy_cryptokey_version(
     name = (
         'projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}/'
         'cryptoKeyVersions/{}'
-        .format(project_id, location, keyring, cryptokey, version))
+        .format(
+            project_id, location_id, key_ring_id, crypto_key_id, version_id))
 
     # Use the KMS API to schedule the CryptoKeyVersion for destruction.
-    cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
-    request = cryptokeys.cryptoKeyVersions().destroy(name=name, body={})
+    crypto_keys = kms_client.projects().locations().keyRings().cryptoKeys()
+    request = crypto_keys.cryptoKeyVersions().destroy(name=name, body={})
     response = request.execute()
 
     print('CryptoKeyVersion {}\'s state has been set to {}.'.format(
@@ -179,8 +182,8 @@ def destroy_cryptokey_version(
 
 
 # [START kms_add_member_to_cryptokey_policy]
-def add_member_to_cryptokey_policy(
-        project_id, location, keyring, cryptokey, member, role):
+def add_member_to_crypto_key_policy(
+        project_id, location_id, key_ring_id, crypto_key_id, member, role):
     """Adds a member with a given role to the Identity and Access Management
     (IAM) policy for a given CryptoKey associated with a KeyRing."""
 
@@ -189,11 +192,11 @@ def add_member_to_cryptokey_policy(
 
     # The resource name of the CryptoKey.
     parent = 'projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}'.format(
-        project_id, location, keyring, cryptokey)
+        project_id, location_id, key_ring_id, crypto_key_id)
 
     # Get the current IAM policy and add the new member to it.
-    cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
-    policy_request = cryptokeys.getIamPolicy(resource=parent)
+    crypto_keys = kms_client.projects().locations().keyRings().cryptoKeys()
+    policy_request = crypto_keys.getIamPolicy(resource=parent)
     policy_response = policy_request.execute()
     bindings = []
     if 'bindings' in policy_response.keys():
@@ -207,20 +210,20 @@ def add_member_to_cryptokey_policy(
     policy_response['bindings'] = bindings
 
     # Set the new IAM Policy.
-    cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
-    request = cryptokeys.setIamPolicy(
+    crypto_keys = kms_client.projects().locations().keyRings().cryptoKeys()
+    request = crypto_keys.setIamPolicy(
         resource=parent, body={'policy': policy_response})
     request.execute()
 
     print_msg = (
         'Member {} added with role {} to policy for CryptoKey {} in KeyRing {}'
-        .format(member, role, cryptokey, keyring))
+        .format(member, role, crypto_key_id, key_ring_id))
     print(print_msg)
 # [END kms_add_member_to_cryptokey_policy]
 
 
 # [START kms_get_keyring_policy]
-def get_keyring_policy(project_id, location, keyring):
+def get_key_ring_policy(project_id, location_id, key_ring_id):
     """Gets the Identity and Access Management (IAM) policy for a given KeyRing
     and prints out roles and the members assigned to those roles."""
 
@@ -229,7 +232,7 @@ def get_keyring_policy(project_id, location, keyring):
 
     # The resource name of the KeyRing.
     parent = 'projects/{}/locations/{}/keyRings/{}'.format(
-        project_id, location, keyring)
+        project_id, location_id, key_ring_id)
 
     # Get the current IAM policy.
     request = kms_client.projects().locations().keyRings().getIamPolicy(
@@ -256,116 +259,116 @@ if __name__ == '__main__':
         formatter_class=argparse.RawDescriptionHelpFormatter)
     subparsers = parser.add_subparsers(dest='command')
 
-    create_keyring_parser = subparsers.add_parser('create_keyring')
-    create_keyring_parser.add_argument('project_id')
-    create_keyring_parser.add_argument('location')
-    create_keyring_parser.add_argument('keyring')
+    create_key_ring_parser = subparsers.add_parser('create_key_ring')
+    create_key_ring_parser.add_argument('project')
+    create_key_ring_parser.add_argument('location')
+    create_key_ring_parser.add_argument('key_ring')
 
-    create_cryptokey_parser = subparsers.add_parser('create_cryptokey')
-    create_cryptokey_parser.add_argument('project_id')
-    create_cryptokey_parser.add_argument('location')
-    create_cryptokey_parser.add_argument('keyring')
-    create_cryptokey_parser.add_argument('cryptokey')
+    create_crypto_key_parser = subparsers.add_parser('create_crypto_key')
+    create_crypto_key_parser.add_argument('project')
+    create_crypto_key_parser.add_argument('location')
+    create_crypto_key_parser.add_argument('key_ring')
+    create_crypto_key_parser.add_argument('crypto_key')
 
     encrypt_parser = subparsers.add_parser('encrypt')
-    encrypt_parser.add_argument('project_id')
+    encrypt_parser.add_argument('project')
     encrypt_parser.add_argument('location')
-    encrypt_parser.add_argument('keyring')
-    encrypt_parser.add_argument('cryptokey')
+    encrypt_parser.add_argument('key_ring')
+    encrypt_parser.add_argument('crypto_key')
     encrypt_parser.add_argument('infile')
     encrypt_parser.add_argument('outfile')
 
     decrypt_parser = subparsers.add_parser('decrypt')
-    decrypt_parser.add_argument('project_id')
+    decrypt_parser.add_argument('project')
     decrypt_parser.add_argument('location')
-    decrypt_parser.add_argument('keyring')
-    decrypt_parser.add_argument('cryptokey')
+    decrypt_parser.add_argument('key_ring')
+    decrypt_parser.add_argument('crypto_key')
     decrypt_parser.add_argument('infile')
     decrypt_parser.add_argument('outfile')
 
-    disable_cryptokey_version_parser = subparsers.add_parser(
-        'disable_cryptokey_version')
-    disable_cryptokey_version_parser.add_argument('project_id')
-    disable_cryptokey_version_parser.add_argument('location')
-    disable_cryptokey_version_parser.add_argument('keyring')
-    disable_cryptokey_version_parser.add_argument('cryptokey')
-    disable_cryptokey_version_parser.add_argument('version')
+    disable_crypto_key_version_parser = subparsers.add_parser(
+        'disable_crypto_key_version')
+    disable_crypto_key_version_parser.add_argument('project')
+    disable_crypto_key_version_parser.add_argument('location')
+    disable_crypto_key_version_parser.add_argument('key_ring')
+    disable_crypto_key_version_parser.add_argument('crypto_key')
+    disable_crypto_key_version_parser.add_argument('version')
 
-    destroy_cryptokey_version_parser = subparsers.add_parser(
-        'destroy_cryptokey_version')
-    destroy_cryptokey_version_parser.add_argument('project_id')
-    destroy_cryptokey_version_parser.add_argument('location')
-    destroy_cryptokey_version_parser.add_argument('keyring')
-    destroy_cryptokey_version_parser.add_argument('cryptokey')
-    destroy_cryptokey_version_parser.add_argument('version')
+    destroy_crypto_key_version_parser = subparsers.add_parser(
+        'destroy_crypto_key_version')
+    destroy_crypto_key_version_parser.add_argument('project')
+    destroy_crypto_key_version_parser.add_argument('location')
+    destroy_crypto_key_version_parser.add_argument('key_ring')
+    destroy_crypto_key_version_parser.add_argument('crypto_key')
+    destroy_crypto_key_version_parser.add_argument('version')
 
-    add_member_to_cryptokey_policy_parser = subparsers.add_parser(
-        'add_member_to_cryptokey_policy')
-    add_member_to_cryptokey_policy_parser.add_argument('project_id')
-    add_member_to_cryptokey_policy_parser.add_argument('location')
-    add_member_to_cryptokey_policy_parser.add_argument('keyring')
-    add_member_to_cryptokey_policy_parser.add_argument('cryptokey')
-    add_member_to_cryptokey_policy_parser.add_argument('member')
-    add_member_to_cryptokey_policy_parser.add_argument('role')
+    add_member_to_crypto_key_policy_parser = subparsers.add_parser(
+        'add_member_to_crypto_key_policy')
+    add_member_to_crypto_key_policy_parser.add_argument('project')
+    add_member_to_crypto_key_policy_parser.add_argument('location')
+    add_member_to_crypto_key_policy_parser.add_argument('key_ring')
+    add_member_to_crypto_key_policy_parser.add_argument('crypto_key')
+    add_member_to_crypto_key_policy_parser.add_argument('member')
+    add_member_to_crypto_key_policy_parser.add_argument('role')
 
-    get_keyring_policy_parser = subparsers.add_parser('get_keyring_policy')
-    get_keyring_policy_parser.add_argument('project_id')
-    get_keyring_policy_parser.add_argument('location')
-    get_keyring_policy_parser.add_argument('keyring')
+    get_key_ring_policy_parser = subparsers.add_parser('get_key_ring_policy')
+    get_key_ring_policy_parser.add_argument('project')
+    get_key_ring_policy_parser.add_argument('location')
+    get_key_ring_policy_parser.add_argument('key_ring')
 
     args = parser.parse_args()
 
-    if args.command == 'create_keyring':
-        create_keyring(
-            args.project_id,
+    if args.command == 'create_key_ring':
+        create_key_ring(
+            args.project,
             args.location,
-            args.keyring)
-    elif args.command == 'create_cryptokey':
-        create_cryptokey(
-            args.project_id,
+            args.key_ring)
+    elif args.command == 'create_crypto_key':
+        create_crypto_key(
+            args.project,
             args.location,
-            args.keyring,
-            args.cryptokey)
+            args.key_ring,
+            args.crypto_key)
     elif args.command == 'encrypt':
         encrypt(
-            args.project_id,
+            args.project,
             args.location,
-            args.keyring,
-            args.cryptokey,
+            args.key_ring,
+            args.crypto_key,
             args.infile,
             args.outfile)
     elif args.command == 'decrypt':
         decrypt(
-            args.project_id,
+            args.project,
             args.location,
-            args.keyring,
-            args.cryptokey,
+            args.key_ring,
+            args.crypto_key,
             args.infile,
             args.outfile)
-    elif args.command == 'disable_cryptokey_version':
-        disable_cryptokey_version(
-            args.project_id,
+    elif args.command == 'disable_crypto_key_version':
+        disable_crypto_key_version(
+            args.project,
             args.location,
-            args.keyring,
-            args.cryptokey,
+            args.key_ring,
+            args.crypto_key,
             args.version)
-    elif args.command == 'destroy_cryptokey_version':
-        destroy_cryptokey_version(
-            args.project_id,
+    elif args.command == 'destroy_crypto_key_version':
+        destroy_crypto_key_version(
+            args.project,
             args.location,
-            args.keyring,
-            args.cryptokey,
+            args.key_ring,
+            args.crypto_key,
             args.version)
-    elif args.command == 'add_member_to_cryptokey_policy':
-        add_member_to_cryptokey_policy(
-            args.project_id,
+    elif args.command == 'add_member_to_crypto_key_policy':
+        add_member_to_crypto_key_policy(
+            args.project,
             args.location,
-            args.keyring,
-            args.cryptokey,
+            args.key_ring,
+            args.crypto_key,
             args.member,
             args.role)
-    elif args.command == 'get_keyring_policy':
-        get_keyring_policy(
-            args.project_id,
+    elif args.command == 'get_key_ring_policy':
+        get_key_ring_policy(
+            args.project,
             args.location,
-            args.keyring)
+            args.key_ring)

@@ -24,118 +24,172 @@ https://cloud.google.com/natural-language/docs.
 import argparse
 
 from google.cloud import language
+from google.cloud.language import enums
+from google.cloud.language import types
 import six
 
 
+# [START def_sentiment_text]
 def sentiment_text(text):
     """Detects sentiment in the text."""
-    language_client = language.Client()
+    client = language.LanguageServiceClient()
 
     if isinstance(text, six.binary_type):
         text = text.decode('utf-8')
 
     # Instantiates a plain text document.
-    document = language_client.document_from_text(text)
+    # [START migration_document_text]
+    # [START migration_analyze_sentiment]
+    document = types.Document(
+        content=text,
+        type=enums.Document.Type.PLAIN_TEXT)
+    # [END migration_document_text]
 
     # Detects sentiment in the document. You can also analyze HTML with:
-    #   document.doc_type == language.Document.HTML
-    sentiment = document.analyze_sentiment().sentiment
+    #   document.type == enums.Document.Type.HTML
+    sentiment = client.analyze_sentiment(document).document_sentiment
 
     print('Score: {}'.format(sentiment.score))
     print('Magnitude: {}'.format(sentiment.magnitude))
+    # [END migration_analyze_sentiment]
+# [END def_sentiment_text]
 
 
+# [START def_sentiment_file]
 def sentiment_file(gcs_uri):
     """Detects sentiment in the file located in Google Cloud Storage."""
-    language_client = language.Client()
+    client = language.LanguageServiceClient()
 
     # Instantiates a plain text document.
-    document = language_client.document_from_url(gcs_uri)
+    # [START migration_document_gcs_uri]
+    document = types.Document(
+        gcs_content_uri=gcs_uri,
+        type=enums.Document.Type.PLAIN_TEXT)
+    # [END migration_document_gcs_uri]
 
     # Detects sentiment in the document. You can also analyze HTML with:
-    #   document.doc_type == language.Document.HTML
-    sentiment = document.analyze_sentiment().sentiment
+    #   document.type == enums.Document.Type.HTML
+    sentiment = client.analyze_sentiment(document).document_sentiment
 
     print('Score: {}'.format(sentiment.score))
     print('Magnitude: {}'.format(sentiment.magnitude))
+# [END def_sentiment_file]
 
 
+# [START def_entities_text]
 def entities_text(text):
     """Detects entities in the text."""
-    language_client = language.Client()
+    client = language.LanguageServiceClient()
 
     if isinstance(text, six.binary_type):
         text = text.decode('utf-8')
 
     # Instantiates a plain text document.
-    document = language_client.document_from_text(text)
+    # [START migration_analyze_entities]
+    document = types.Document(
+        content=text,
+        type=enums.Document.Type.PLAIN_TEXT)
 
     # Detects entities in the document. You can also analyze HTML with:
-    #   document.doc_type == language.Document.HTML
-    entities = document.analyze_entities().entities
+    #   document.type == enums.Document.Type.HTML
+    entities = client.analyze_entities(document).entities
+
+    # entity types from enums.Entity.Type
+    entity_type = ('UNKNOWN', 'PERSON', 'LOCATION', 'ORGANIZATION',
+                   'EVENT', 'WORK_OF_ART', 'CONSUMER_GOOD', 'OTHER')
 
     for entity in entities:
         print('=' * 20)
         print(u'{:<16}: {}'.format('name', entity.name))
-        print(u'{:<16}: {}'.format('type', entity.entity_type))
+        print(u'{:<16}: {}'.format('type', entity_type[entity.type]))
         print(u'{:<16}: {}'.format('metadata', entity.metadata))
         print(u'{:<16}: {}'.format('salience', entity.salience))
         print(u'{:<16}: {}'.format('wikipedia_url',
               entity.metadata.get('wikipedia_url', '-')))
+    # [END migration_analyze_entities]
+# [END def_entities_text]
 
 
+# [START def_entities_file]
 def entities_file(gcs_uri):
     """Detects entities in the file located in Google Cloud Storage."""
-    language_client = language.Client()
+    client = language.LanguageServiceClient()
 
     # Instantiates a plain text document.
-    document = language_client.document_from_url(gcs_uri)
+    document = types.Document(
+        gcs_content_uri=gcs_uri,
+        type=enums.Document.Type.PLAIN_TEXT)
 
     # Detects sentiment in the document. You can also analyze HTML with:
-    #   document.doc_type == language.Document.HTML
-    entities = document.analyze_entities().entities
+    #   document.type == enums.Document.Type.HTML
+    entities = client.analyze_entities(document).entities
+
+    # entity types from enums.Entity.Type
+    entity_type = ('UNKNOWN', 'PERSON', 'LOCATION', 'ORGANIZATION',
+                   'EVENT', 'WORK_OF_ART', 'CONSUMER_GOOD', 'OTHER')
 
     for entity in entities:
         print('=' * 20)
         print(u'{:<16}: {}'.format('name', entity.name))
-        print(u'{:<16}: {}'.format('type', entity.entity_type))
+        print(u'{:<16}: {}'.format('type', entity_type[entity.type]))
         print(u'{:<16}: {}'.format('metadata', entity.metadata))
         print(u'{:<16}: {}'.format('salience', entity.salience))
         print(u'{:<16}: {}'.format('wikipedia_url',
               entity.metadata.get('wikipedia_url', '-')))
+# [END def_entities_file]
 
 
+# [START def_syntax_text]
 def syntax_text(text):
     """Detects syntax in the text."""
-    language_client = language.Client()
+    client = language.LanguageServiceClient()
 
     if isinstance(text, six.binary_type):
         text = text.decode('utf-8')
 
     # Instantiates a plain text document.
-    document = language_client.document_from_text(text)
+    # [START migration_analyze_syntax]
+    document = types.Document(
+        content=text,
+        type=enums.Document.Type.PLAIN_TEXT)
 
     # Detects syntax in the document. You can also analyze HTML with:
-    #   document.doc_type == language.Document.HTML
-    tokens = document.analyze_syntax().tokens
+    #   document.type == enums.Document.Type.HTML
+    tokens = client.analyze_syntax(document).tokens
+
+    # part-of-speech tags from enums.PartOfSpeech.Tag
+    pos_tag = ('UNKNOWN', 'ADJ', 'ADP', 'ADV', 'CONJ', 'DET', 'NOUN', 'NUM',
+               'PRON', 'PRT', 'PUNCT', 'VERB', 'X', 'AFFIX')
 
     for token in tokens:
-        print(u'{}: {}'.format(token.part_of_speech.tag, token.text_content))
+        print(u'{}: {}'.format(pos_tag[token.part_of_speech.tag],
+                               token.text.content))
+    # [END migration_analyze_syntax]
+# [END def_syntax_text]
 
 
+# [START def_syntax_file]
 def syntax_file(gcs_uri):
     """Detects syntax in the file located in Google Cloud Storage."""
-    language_client = language.Client()
+    client = language.LanguageServiceClient()
 
     # Instantiates a plain text document.
-    document = language_client.document_from_url(gcs_uri)
+    document = types.Document(
+        gcs_content_uri=gcs_uri,
+        type=enums.Document.Type.PLAIN_TEXT)
 
     # Detects syntax in the document. You can also analyze HTML with:
-    #   document.doc_type == language.Document.HTML
-    tokens = document.analyze_syntax().tokens
+    #   document.type == enums.Document.Type.HTML
+    tokens = client.analyze_syntax(document).tokens
+
+    # part-of-speech tags from enums.PartOfSpeech.Tag
+    pos_tag = ('UNKNOWN', 'ADJ', 'ADP', 'ADV', 'CONJ', 'DET', 'NOUN', 'NUM',
+               'PRON', 'PRT', 'PUNCT', 'VERB', 'X', 'AFFIX')
 
     for token in tokens:
-        print(u'{}: {}'.format(token.part_of_speech.tag, token.text_content))
+        print(u'{}: {}'.format(pos_tag[token.part_of_speech.tag],
+                               token.text.content))
+# [END def_syntax_file]
 
 
 if __name__ == '__main__':

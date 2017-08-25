@@ -1,5 +1,0 @@
-flake8==3.3.0
-google-cloud-bigquery==0.25.0
-PyMySQL==0.7.11
-six==1.10.0
-SQLAlchemy==1.1.11
