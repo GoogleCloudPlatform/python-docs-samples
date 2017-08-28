@@ -142,7 +142,7 @@ if __name__ == '__main__':
         delete_subscription(
             args.project, args.subscription_name)
     elif args.command == 'receive':
-        receive_messages(args.project, args.topic_name, args.subscription_name)
+        receive_messages(args.project, args.subscription_name)
     elif args.command == 'receive-flow-control':
         receive_messages_with_flow_control(
-            args.project, args.topic_name, args.subscription_name)
+            args.project, args.subscription_name)
