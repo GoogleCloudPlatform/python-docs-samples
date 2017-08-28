@@ -12,56 +12,84 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 from gcp_devrel.testing import eventually_consistent
-from google.cloud import pubsub
+from google.cloud import pubsub_v1
 import pytest
 
 import publisher
 
-TEST_TOPIC = 'publisher-test-topic'
+PROJECT = os.environ['GCLOUD_PROJECT']
+TOPIC = 'publisher-test-topic'
 
 
 @pytest.fixture
-def test_topic():
-    client = pubsub.Client()
-    topic = client.topic(TEST_TOPIC)
-    yield topic
-    if topic.exists():
-        topic.delete()
+def client():
+    yield pubsub_v1.PublisherClient()
 
 
-def test_list(test_topic, capsys):
-    test_topic.create()
+@pytest.fixture
+def topic(client):
+    topic_path = client.topic_path(PROJECT, TOPIC)
 
+    try:
+        client.delete_topic(topic_path)
+    except:
+        pass
+
+    client.create_topic(topic_path)
+
+    yield topic_path
+
+
+def test_list(client, topic, capsys):
     @eventually_consistent.call
     def _():
-        publisher.list_topics()
+        publisher.list_topics(PROJECT)
         out, _ = capsys.readouterr()
-        assert test_topic.name in out
+        assert topic in out
 
 
-def test_create(test_topic):
-    publisher.create_topic(test_topic.name)
+def test_create(client):
+    topic_path = client.topic_path(PROJECT, TOPIC)
+    try:
+        client.delete_topic(topic_path)
+    except:
+        pass
 
-    @eventually_consistent.call
-    def _():
-        assert test_topic.exists()
-
-
-def test_delete(test_topic):
-    test_topic.create()
-
-    publisher.delete_topic(test_topic.name)
+    publisher.create_topic(PROJECT, TOPIC)
 
     @eventually_consistent.call
     def _():
-        assert not test_topic.exists()
+        assert client.get_topic(topic_path)
 
 
-def test_publish(test_topic, capsys):
-    test_topic.create()
+def test_delete(client, topic):
+    publisher.delete_topic(PROJECT, TOPIC)
 
-    publisher.publish_message(test_topic.name, 'hello')
+    @eventually_consistent.call
+    def _():
+        with pytest.raises(Exception):
+            client.get_topic(client.topic_path(PROJECT, TOPIC))
+
+
+def test_publish(topic, capsys):
+    publisher.publish_messages(PROJECT, TOPIC)
 
     out, _ = capsys.readouterr()
-    assert 'published' in out
+    assert 'Published' in out
+
+
+def test_publish_with_batch_settings(topic, capsys):
+    publisher.publish_messages_with_batch_settings(PROJECT, TOPIC)
+
+    out, _ = capsys.readouterr()
+    assert 'Published' in out
+
+
+def test_publish_with_futures(topic, capsys):
+    publisher.publish_messages_with_futures(PROJECT, TOPIC)
+
+    out, _ = capsys.readouterr()
+    assert 'Published' in out
