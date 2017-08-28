@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This application demonstrates face detection, label detection, safe search,
-and shot change detection using the Google Cloud API.
+"""This application demonstrates face detection, label detection,
+explicit content, and shot change detection using the Google Cloud API.
 
 Usage Examples:
 
