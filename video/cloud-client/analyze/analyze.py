@@ -67,10 +67,13 @@ def analyze_explicit_content(path):
 
 def analyze_faces(path):
     """ Detects faces given a GCS path. """
-    video_client = (video_intelligence_service_client.
-                    VideoIntelligenceServiceClient())
+    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
     features = [enums.Feature.FACE_DETECTION]
-    operation = video_client.annotate_video(path, features)
+
+    config = types.FaceDetectionConfig(include_bounding_boxes=True)
+    context = types.VideoContext(face_detection_config=config)
+
+    operation = video_client.annotate_video(path, features, video_context=context)
     print('\nProcessing video for face annotations:')
 
     while not operation.done():
@@ -85,27 +88,39 @@ def analyze_faces(path):
                         face_annotations)
 
     for face_id, face in enumerate(face_annotations):
+        print('Face {}'.format(face_id))
         print('Thumbnail size: {}'.format(len(face.thumbnail)))
 
         for segment_id, segment in enumerate(face.segments):
-            positions = 'Entire video'
-            if (segment.start_time_offset != -1 or
-                    segment.end_time_offset != -1):
-                positions = '{}s to {}s'.format(
-                    segment.start_time_offset / 1000000.0,
-                    segment.end_time_offset / 1000000.0)
+            start_time = segment.segment.start_time_offset.seconds + segment.segment.end_time_offset.nanos / 1e9
+            end_time = segment.segment.end_time_offset.seconds + segment.segment.end_time_offset.nanos / 1e9
+            positions = '{}s to {}s'.format(start_time, end_time)
+            print('\tSegment {}: {}'.format(segment_id, positions))
 
-            print('\tTrack {}: {}'.format(segment_id, positions))
-
+        # There are typically many frames for each face,
+        # here we print information on only the first frame.
+        frame = face.frames[0]
+        time_offset = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
+        box = frame.normalized_bounding_boxes[0]
+        print('First frame time offset: {}s'.format(time_offset))
+        print('First frame normalized bounding box:')
+        print('\tleft: {}'.format(box.left))
+        print('\ttop: {}'.format(box.top))
+        print('\tright: {}'.format(box.right))
+        print('\tbottom: {}'.format(box.bottom))
         print('\n')
 
 
 def analyze_labels(path):
     """ Detects labels given a GCS path. """
-    video_client = (video_intelligence_service_client.
-                    VideoIntelligenceServiceClient())
+    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
     features = [enums.Feature.LABEL_DETECTION]
-    operation = video_client.annotate_video(path, features)
+
+    config = types.LabelDetectionConfig(
+        label_detection_mode=enums.LabelDetectionMode.FRAME_MODE)
+    context = types.VideoContext(label_detection_config=config)
+
+    operation = video_client.annotate_video(path, features, video_context=context)
     print('\nProcessing video for label annotations:')
 
     while not operation.done():
@@ -136,8 +151,7 @@ def analyze_labels(path):
 
 def analyze_labels_file(path):
     """ Detects labels given a file path. """
-    video_client = (video_intelligence_service_client.
-                    VideoIntelligenceServiceClient())
+    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
     features = [enums.Feature.LABEL_DETECTION]
 
     with io.open(path, "rb") as movie:
@@ -193,7 +207,7 @@ def analyze_shots(path):
     for i, shot in enumerate(shots):
         start_time = shot.start_time_offset.seconds + shot.end_time_offset.nanos / 1e9
         end_time = shot.end_time_offset.seconds + shot.end_time_offset.nanos / 1e9
-        print('\tScene {}: {} to {}'.format(i, start_time, end_time))
+        print('\tShot {}: {} to {}'.format(i, start_time, end_time))
 
 
 if __name__ == '__main__':
