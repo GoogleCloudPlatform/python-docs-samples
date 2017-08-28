@@ -88,6 +88,7 @@ def publish_messages_with_futures(project, topic_name):
 
     print('Published message IDs:')
     for future in futures:
+        # result() blocks until the message is published.
         print(future.result())
 
 
