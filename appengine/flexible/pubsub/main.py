@@ -19,7 +19,7 @@ import logging
 import os
 
 from flask import current_app, Flask, render_template, request
-from google.cloud import pubsub
+from google.cloud import pubsub_v1
 
 
 app = Flask(__name__)
@@ -30,6 +30,7 @@ app = Flask(__name__)
 app.config['PUBSUB_VERIFICATION_TOKEN'] = \
     os.environ['PUBSUB_VERIFICATION_TOKEN']
 app.config['PUBSUB_TOPIC'] = os.environ['PUBSUB_TOPIC']
+app.config['PROJECT'] = os.environ['GCLOUD_PROJECT']
 
 
 # Global list to storage messages received by this instance.
@@ -42,11 +43,14 @@ def index():
     if request.method == 'GET':
         return render_template('index.html', messages=MESSAGES)
 
-    ps = pubsub.Client()
-    topic = ps.topic(current_app.config['PUBSUB_TOPIC'])
+    data = request.form.get('payload', 'Example payload').encode('utf-8')
 
-    topic.publish(
-        request.form.get('payload', 'Example payload').encode('utf-8'))
+    publisher = pubsub_v1.PublisherClient()
+    topic_path = publisher.topic_path(
+        current_app.config['PROJECT'],
+        current_app.config['PUBSUB_TOPIC'])
+
+    publisher.publish(topic_path, data=data)
 
     return 'OK', 200
 # [END index]
