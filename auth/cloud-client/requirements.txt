@@ -1,1 +1,1 @@
-google-cloud-storage==1.3.2
+google-cloud-storage==1.4.0

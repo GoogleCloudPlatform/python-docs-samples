@@ -13,5 +13,5 @@ responses==0.7.0
 WebTest==2.0.28
 webapp2==2.5.2
 google-api-python-client==1.6.2
-google-cloud-core==0.26.0
+google-cloud-core==0.27.0
 gcp-devrel-py-tools==0.0.11
