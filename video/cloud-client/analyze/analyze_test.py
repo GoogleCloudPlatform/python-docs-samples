@@ -29,15 +29,15 @@ SHOTS_FILE_PATH = '/video/gbikes_dinosaur.mp4'
 
 
 @pytest.mark.slow
-def test_cat_video_shots(capsys):
+def test_analyze_shots(capsys):
     analyze.analyze_shots(
         'gs://{}{}'.format(BUCKET, SHOTS_FILE_PATH))
     out, _ = capsys.readouterr()
-    assert 'Scene 1:' in out
+    assert 'Shot 1:' in out
 
 
 @pytest.mark.slow
-def test_work_video_faces(capsys):
+def test_analyze_faces(capsys):
     analyze.analyze_faces(
         'gs://{}{}'.format(BUCKET, FACES_FILE_PATH))
     out, _ = capsys.readouterr()
@@ -45,15 +45,15 @@ def test_work_video_faces(capsys):
 
 
 @pytest.mark.slow
-def test_dino_video_labels(capsys):
+def test_analyze_labels(capsys):
     analyze.analyze_labels(
         'gs://{}{}'.format(BUCKET, LABELS_FILE_PATH))
     out, _ = capsys.readouterr()
-    assert 'Whiskers' in out
+    assert 'label description: cat' in out
 
 
 @pytest.mark.slow
-def test_cat_explicit_content(capsys):
+def test_analyze_explicit_content(capsys):
     analyze.analyze_explicit_content(
         'gs://{}{}'.format(BUCKET, EXPLiCIT_CONTENT_FILE_PATH))
     out, _ = capsys.readouterr()
