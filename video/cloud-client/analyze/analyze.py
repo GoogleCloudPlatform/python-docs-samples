@@ -37,6 +37,7 @@ from google.cloud import videointelligence_v1beta2
 from google.cloud.videointelligence_v1beta2 import enums
 from google.cloud.videointelligence_v1beta2 import types
 
+
 def analyze_explicit_content(path):
     """ Detects explicit content from the GCS path to a video. """
     video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
@@ -54,7 +55,7 @@ def analyze_explicit_content(path):
 
     # first result is retrieved because a single video was processed
     explicit_annotation = (operation.result().annotation_results[0].
-                        explicit_annotation)
+                           explicit_annotation)
 
     likely_string = ("Unknown", "Very unlikely", "Unlikely", "Possible",
                      "Likely", "Very likely")
@@ -62,7 +63,8 @@ def analyze_explicit_content(path):
     for frame in explicit_annotation.frames:
         frame_time = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
         print('Time: {}s'.format(frame_time))
-        print('\tpornography: {}'.format(likely_string[frame.pornography_likelihood]))
+        print('\tpornography: {}'.format(
+            likely_string[frame.pornography_likelihood]))
 
 
 def analyze_faces(path):
@@ -73,7 +75,8 @@ def analyze_faces(path):
     config = types.FaceDetectionConfig(include_bounding_boxes=True)
     context = types.VideoContext(face_detection_config=config)
 
-    operation = video_client.annotate_video(path, features, video_context=context)
+    operation = video_client.annotate_video(
+        path, features, video_context=context)
     print('\nProcessing video for face annotations:')
 
     while not operation.done():
@@ -92,15 +95,18 @@ def analyze_faces(path):
         print('Thumbnail size: {}'.format(len(face.thumbnail)))
 
         for segment_id, segment in enumerate(face.segments):
-            start_time = segment.segment.start_time_offset.seconds + segment.segment.end_time_offset.nanos / 1e9
-            end_time = segment.segment.end_time_offset.seconds + segment.segment.end_time_offset.nanos / 1e9
+            start_time = (segment.segment.start_time_offset.seconds +
+                          segment.segment.end_time_offset.nanos / 1e9)
+            end_time = (segment.segment.end_time_offset.seconds +
+                        segment.segment.end_time_offset.nanos / 1e9)
             positions = '{}s to {}s'.format(start_time, end_time)
             print('\tSegment {}: {}'.format(segment_id, positions))
 
         # There are typically many frames for each face,
         # here we print information on only the first frame.
         frame = face.frames[0]
-        time_offset = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
+        time_offset = (frame.time_offset.seconds +
+                       frame.time_offset.nanos / 1e9)
         box = frame.normalized_bounding_boxes[0]
         print('First frame time offset: {}s'.format(time_offset))
         print('First frame normalized bounding box:')
@@ -120,7 +126,8 @@ def analyze_labels(path):
         label_detection_mode=enums.LabelDetectionMode.SHOT_AND_FRAME_MODE)
     context = types.VideoContext(label_detection_config=config)
 
-    operation = video_client.annotate_video(path, features, video_context=context)
+    operation = video_client.annotate_video(
+        path, features, video_context=context)
     print('\nProcessing video for label annotations:')
 
     while not operation.done():
@@ -135,13 +142,17 @@ def analyze_labels(path):
 
     # Process video/segment level label annotations
     for i, segment_label in enumerate(results.segment_label_annotations):
-        print('Video label description: {}'.format(segment_label.entity.description))
+        print('Video label description: {}'.format(
+            segment_label.entity.description))
         for category_entity in segment_label.category_entities:
-            print('\tLabel category description: {}'.format(category_entity.description))
+            print('\tLabel category description: {}'.format(
+                category_entity.description))
 
         for i, segment in enumerate(segment_label.segments):
-            start_time = segment.segment.start_time_offset.seconds + segment.segment.end_time_offset.nanos / 1e9
-            end_time = segment.segment.end_time_offset.seconds + segment.segment.end_time_offset.nanos / 1e9
+            start_time = (segment.segment.start_time_offset.seconds +
+                          segment.segment.end_time_offset.nanos / 1e9)
+            end_time = (segment.segment.end_time_offset.seconds +
+                        segment.segment.end_time_offset.nanos / 1e9)
             positions = '{}s to {}s'.format(start_time, end_time)
             confidence = segment.confidence
             print('\tSegment {}: {}'.format(i, positions))
@@ -150,13 +161,17 @@ def analyze_labels(path):
 
     # Process shot level label annotations
     for i, shot_label in enumerate(results.shot_label_annotations):
-        print('Shot label description: {}'.format(shot_label.entity.description))
+        print('Shot label description: {}'.format(
+            shot_label.entity.description))
         for category_entity in shot_label.category_entities:
-            print('\tLabel category description: {}'.format(category_entity.description))
+            print('\tLabel category description: {}'.format(
+                category_entity.description))
 
         for i, shot in enumerate(shot_label.segments):
-            start_time = shot.segment.start_time_offset.seconds + shot.segment.end_time_offset.nanos / 1e9
-            end_time = shot.segment.end_time_offset.seconds + shot.segment.end_time_offset.nanos / 1e9
+            start_time = (shot.segment.start_time_offset.seconds +
+                          shot.segment.end_time_offset.nanos / 1e9)
+            end_time = (shot.segment.end_time_offset.seconds +
+                        shot.segment.end_time_offset.nanos / 1e9)
             positions = '{}s to {}s'.format(start_time, end_time)
             confidence = shot.confidence
             print('\tSegment {}: {}'.format(i, positions))
@@ -165,14 +180,17 @@ def analyze_labels(path):
 
     # Process frame level label annotations
     for i, frame_label in enumerate(results.frame_label_annotations):
-        print('Frame label description: {}'.format(frame_label.entity.description))
+        print('Frame label description: {}'.format(
+            frame_label.entity.description))
         for category_entity in frame_label.category_entities:
-            print('\tLabel category description: {}'.format(category_entity.description))
+            print('\tLabel category description: {}'.format(
+                category_entity.description))
 
         # Each frame_label_annotation has many frames,
         # here we print information only about the first frame.
         frame = frame_label.frames[0]
-        time_offset = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
+        time_offset = (frame.time_offset.seconds +
+                       frame.time_offset.nanos / 1e9)
         print('\tFirst frame time offset: {}s'.format(time_offset))
         print('\tFirst frame confidence: {}'.format(frame.confidence))
         print('\n')
@@ -202,13 +220,17 @@ def analyze_labels_file(path):
 
     # Process video/segment level label annotations
     for i, segment_label in enumerate(results.segment_label_annotations):
-        print('Video label description: {}'.format(segment_label.entity.description))
+        print('Video label description: {}'.format(
+            segment_label.entity.description))
         for category_entity in segment_label.category_entities:
-            print('\tLabel category description: {}'.format(category_entity.description))
+            print('\tLabel category description: {}'.format(
+                category_entity.description))
 
         for i, segment in enumerate(segment_label.segments):
-            start_time = segment.segment.start_time_offset.seconds + segment.segment.end_time_offset.nanos / 1e9
-            end_time = segment.segment.end_time_offset.seconds + segment.segment.end_time_offset.nanos / 1e9
+            start_time = (segment.segment.start_time_offset.seconds +
+                          segment.segment.end_time_offset.nanos / 1e9)
+            end_time = (segment.segment.end_time_offset.seconds +
+                        segment.segment.end_time_offset.nanos / 1e9)
             positions = '{}s to {}s'.format(start_time, end_time)
             confidence = segment.confidence
             print('\tSegment {}: {}'.format(i, positions))
@@ -217,13 +239,17 @@ def analyze_labels_file(path):
 
     # Process shot level label annotations
     for i, shot_label in enumerate(results.shot_label_annotations):
-        print('Shot label description: {}'.format(shot_label.entity.description))
+        print('Shot label description: {}'.format(
+            shot_label.entity.description))
         for category_entity in shot_label.category_entities:
-            print('\tLabel category description: {}'.format(category_entity.description))
+            print('\tLabel category description: {}'.format(
+                category_entity.description))
 
         for i, shot in enumerate(shot_label.segments):
-            start_time = shot.segment.start_time_offset.seconds + shot.segment.end_time_offset.nanos / 1e9
-            end_time = shot.segment.end_time_offset.seconds + shot.segment.end_time_offset.nanos / 1e9
+            start_time = (shot.segment.start_time_offset.seconds +
+                          shot.segment.end_time_offset.nanos / 1e9)
+            end_time = (shot.segment.end_time_offset.seconds +
+                        shot.segment.end_time_offset.nanos / 1e9)
             positions = '{}s to {}s'.format(start_time, end_time)
             confidence = shot.confidence
             print('\tSegment {}: {}'.format(i, positions))
@@ -232,9 +258,11 @@ def analyze_labels_file(path):
 
     # Process frame level label annotations
     for i, frame_label in enumerate(results.frame_label_annotations):
-        print('Frame label description: {}'.format(frame_label.entity.description))
+        print('Frame label description: {}'.format(
+            frame_label.entity.description))
         for category_entity in frame_label.category_entities:
-            print('\tLabel category description: {}'.format(category_entity.description))
+            print('\tLabel category description: {}'.format(
+                category_entity.description))
 
         # Each frame_label_annotation has many frames,
         # here we print information only about the first frame.
@@ -263,8 +291,10 @@ def analyze_shots(path):
     shots = operation.result().annotation_results[0].shot_annotations
 
     for i, shot in enumerate(shots):
-        start_time = shot.start_time_offset.seconds + shot.end_time_offset.nanos / 1e9
-        end_time = shot.end_time_offset.seconds + shot.end_time_offset.nanos / 1e9
+        start_time = (shot.start_time_offset.seconds +
+                      shot.end_time_offset.nanos / 1e9)
+        end_time = (shot.end_time_offset.seconds +
+                    shot.end_time_offset.nanos / 1e9)
         print('\tShot {}: {} to {}'.format(i, start_time, end_time))
 
 

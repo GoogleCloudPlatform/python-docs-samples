@@ -15,10 +15,8 @@
 # limitations under the License.
 
 import os
-
-import pytest
-
 import analyze
+import pytest
 
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
