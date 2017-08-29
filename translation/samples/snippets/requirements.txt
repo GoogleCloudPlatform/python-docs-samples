@@ -1,1 +1,1 @@
-google-cloud-translate==1.1.0
+google-cloud-translate==1.2.0
