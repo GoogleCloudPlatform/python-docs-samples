@@ -34,7 +34,6 @@ import time
 
 from google.cloud import videointelligence_v1beta2
 from google.cloud.videointelligence_v1beta2 import enums
-from google.cloud.videointelligence_v1beta2 import types
 # [END imports]
 
 
