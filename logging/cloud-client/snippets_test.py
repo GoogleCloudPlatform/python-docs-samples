@@ -42,5 +42,5 @@ def test_write():
     snippets.write_entry(TEST_LOGGER_NAME)
 
 
-def test_delete():
+def test_delete(example_log):
     snippets.delete_logger(TEST_LOGGER_NAME)
