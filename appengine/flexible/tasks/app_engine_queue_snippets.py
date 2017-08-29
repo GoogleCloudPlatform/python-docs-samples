@@ -12,16 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import print_function
+
 import argparse
 import base64
 import datetime
+import pprint
 
 from googleapiclient import discovery
 
 
 def format_rfc3339(datetime_instance):
     """Format a datetime per RFC 3339."""
-    return datetime_instance.isoformat("T") + "Z"
+    return datetime_instance.isoformat('T') + 'Z'
 
 
 def get_seconds_from_now_rfc3339(seconds):
@@ -47,7 +50,7 @@ def list_queues(api_key, project_id, location_id):
     print('Listing queues for location {}'.format(location_id))
 
     for queue in response['queues']:
-        print queue['name']
+        print(queue['name'])
     return response
 
 
@@ -56,7 +59,7 @@ def create_task(api_key, queue_name, payload=None, in_seconds=None):
     client = get_client(api_key)
 
     url = '/set_payload'
-    task = {
+    body = {
         'task': {
             'app_engine_task_target': {
                 'http_method': 'POST',
@@ -66,17 +69,17 @@ def create_task(api_key, queue_name, payload=None, in_seconds=None):
     }
 
     if payload is not None:
-        task['task']['app_engine_task_target']['payload'] = base64.b64encode(
+        body['task']['app_engine_task_target']['payload'] = base64.b64encode(
             payload)
 
     if in_seconds is not None:
-        scheduled_time = get_seconds_from_now_rfc3339(int(in_seconds))
-        task['task']['schedule_time'] = scheduled_time
+        scheduled_time = get_seconds_from_now_rfc3339(in_seconds)
+        body['task']['schedule_time'] = scheduled_time
 
-    print('Sending task {}'.format(task))
+    print('Sending task {}'.format(pprint.pformat(body)))
 
     response = client.projects().locations().queues().tasks().create(
-        parent=queue_name, body=task).execute()
+        parent=queue_name, body=body).execute()
 
     # By default CreateTaskRequest.responseView is BASIC, so not all
     # information is retrieved by default because some data, such as payloads,

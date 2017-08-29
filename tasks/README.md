@@ -12,18 +12,7 @@ such as on Google App Engine or Google Compute Engine.
 
 ## Prerequisites to run locally:
 
-The samples require a Python environment with [pip](https://pypi.python.org/pypi/pip) installed.
-[virtualenv](https://virtualenv.readthedocs.org/en/latest/) is also recommended.
-
-All samples require a Google Cloud Project whitelisted for the Cloud Tasks API. The Cloud Tasks
-API must also be enabled. To create a project and enable the API, go to the [Google Developers
-Console](https://console.developer.google.com). You must also create an API key. This can be
-done under API Manager -> Credentials.
-
-To install the Python application dependencies, run the following commands:
-
-    * pip install -r requirements.txt
-
+Please refer to [Setting Up a Python Development Environment](https://cloud.google.com/python/setup).
 
 ## Authentication
 
@@ -77,18 +66,3 @@ Pull and acknowledge a task:
     python pull_queue_snippets.py --api_key=$API_KEY pull-and-ack-task --queue_name=$QUEUE_NAME
 
 Note that usually, there would be a processing step in between pulling a task and acknowledging it.
-
-## Testing the Samples
-
-Install pytest:
-
-    pip install pytest
-
-Set the `GOOGLE_CLOUD_PROJECT` and `API_KEY` environment variable to your project ID.
-
-    export GOOGLE_CLOUD_PROJECT=my-project-id
-    export API_KEY=my-api-key
-
-Run pytest:
-
-    pytest

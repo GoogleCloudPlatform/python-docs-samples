@@ -16,8 +16,6 @@
 
 """Sample command-line program for interacting with the Cloud Tasks API.
 
-Please note that Cloud Tasks is currently in alpha.
-
 See README.md for instructions on setting up your development environment
 and running the scripts.
 """
@@ -100,8 +98,9 @@ def get_client(api_key):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description=__doc__,
-                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
 
     subparsers = parser.add_subparsers(dest='command')
     parser.add_argument('--api_key', help='API Key', required=True)
@@ -114,20 +113,24 @@ if __name__ == '__main__':
         '--project_id',
         help='Project ID you want to access.',
         required=True)
-    list_queues_parser.add_argument('--location_id',
-                                    help='Location of the queues.',
-                                    required=True)
+    list_queues_parser.add_argument(
+        '--location_id',
+        help='Location of the queues.',
+        required=True)
 
-    create_task_parser = subparsers.add_parser('create-task',
-                                               help=create_task.__doc__)
+    create_task_parser = subparsers.add_parser(
+        'create-task',
+        help=create_task.__doc__)
     create_task_parser.add_argument(
         '--queue_name',
         help='Fully qualified name of the queue to add the task to.')
 
-    pull_and_ack_parser = subparsers.add_parser('pull-and-ack-task',
-                                                help=create_task.__doc__)
-    pull_and_ack_parser.add_argument('--queue_name',
-                                     help='Fully qualified name of the queue to add the task to.')
+    pull_and_ack_parser = subparsers.add_parser(
+        'pull-and-ack-task',
+        help=create_task.__doc__)
+    pull_and_ack_parser.add_argument(
+        '--queue_name',
+        help='Fully qualified name of the queue to add the task to.')
 
     args = parser.parse_args()
 

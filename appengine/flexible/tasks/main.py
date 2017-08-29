@@ -20,9 +20,12 @@ from flask import Flask, request
 app = Flask(__name__)
 client = datastore.Client()
 
+PAYLOAD_KEY_NAME = 'Payload'
+COUNTER_KEY_NAME = 'Counter'
+
 
 def get_payload_from_datastore():
-    payload_key = client.key('Payload', 1)
+    payload_key = client.key(PAYLOAD_KEY_NAME, 1)
     payload_entity = client.get(payload_key)
     if payload_entity is None:
         return None
@@ -30,7 +33,7 @@ def get_payload_from_datastore():
 
 
 def get_counter_from_datastore():
-    counter_key = client.key('Counter', 1)
+    counter_key = client.key(COUNTER_KEY_NAME, 1)
     counter_entity = client.get(counter_key)
     if counter_entity is None:
         return 0
@@ -39,7 +42,7 @@ def get_counter_from_datastore():
 
 def update_payload(request_data):
     """Sets the payload value entity in Cloud Datastore."""
-    payload_key = client.key('Payload', 1)
+    payload_key = client.key(PAYLOAD_KEY_NAME, 1)
     payload_entity = datastore.Entity(payload_key)
 
     if request_data:
@@ -52,7 +55,7 @@ def update_payload(request_data):
 
 def increment_counter():
     """Increments a counter value in Cloud Datastore."""
-    counter_key = client.key('Counter', 1)
+    counter_key = client.key(COUNTER_KEY_NAME, 1)
     counter_entity = client.get(counter_key)
     if counter_entity is None:
         counter_entity = datastore.Entity(counter_key)
