@@ -43,4 +43,6 @@ def test_write():
 
 
 def test_delete(example_log):
-    snippets.delete_logger(TEST_LOGGER_NAME)
+    @eventually_consistent.call
+    def _():
+        snippets.delete_logger(TEST_LOGGER_NAME)
