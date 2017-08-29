@@ -29,4 +29,4 @@ def test_shots_dino(capsys):
     shotchange.analyze_shots(
         'gs://{}{}'.format(BUCKET, SHOTS_FILE_PATH))
     out, _ = capsys.readouterr()
-    assert 'Scene 1:' in out
+    assert 'Shot 1:' in out
