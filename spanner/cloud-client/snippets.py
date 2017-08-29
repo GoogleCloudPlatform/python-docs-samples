@@ -94,11 +94,12 @@ def query_data(instance_id, database_id):
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    results = database.execute_sql(
-        'SELECT SingerId, AlbumId, AlbumTitle FROM Albums')
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            'SELECT SingerId, AlbumId, AlbumTitle FROM Albums')
 
-    for row in results:
-        print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
+        for row in results:
+            print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
 
 
 def read_data(instance_id, database_id):
@@ -107,14 +108,15 @@ def read_data(instance_id, database_id):
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    keyset = spanner.KeySet(all_=True)
-    results = database.read(
-        table='Albums',
-        columns=('SingerId', 'AlbumId', 'AlbumTitle',),
-        keyset=keyset,)
+    with database.snapshot() as snapshot:
+        keyset = spanner.KeySet(all_=True)
+        results = snapshot.read(
+            table='Albums',
+            columns=('SingerId', 'AlbumId', 'AlbumTitle',),
+            keyset=keyset,)
 
-    for row in results:
-        print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
+        for row in results:
+            print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
 
 
 def query_data_with_new_column(instance_id, database_id):
@@ -130,11 +132,13 @@ def query_data_with_new_column(instance_id, database_id):
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    results = database.execute_sql(
-        'SELECT SingerId, AlbumId, MarketingBudget FROM Albums')
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            'SELECT SingerId, AlbumId, MarketingBudget FROM Albums')
 
-    for row in results:
-        print(u'SingerId: {}, AlbumId: {}, MarketingBudget: {}'.format(*row))
+        for row in results:
+            print(
+                u'SingerId: {}, AlbumId: {}, MarketingBudget: {}'.format(*row))
 
 
 def add_index(instance_id, database_id):
@@ -183,16 +187,18 @@ def query_data_with_index(
         'start_title': type_pb2.Type(code=type_pb2.STRING),
         'end_title': type_pb2.Type(code=type_pb2.STRING)
     }
-    results = database.execute_sql(
-        "SELECT AlbumId, AlbumTitle, MarketingBudget "
-        "FROM Albums@{FORCE_INDEX=AlbumsByAlbumTitle} "
-        "WHERE AlbumTitle >= @start_title AND AlbumTitle < @end_title",
-        params=params, param_types=param_types)
 
-    for row in results:
-        print(
-            u'AlbumId: {}, AlbumTitle: {}, '
-            'MarketingBudget: {}'.format(*row))
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            "SELECT AlbumId, AlbumTitle, MarketingBudget "
+            "FROM Albums@{FORCE_INDEX=AlbumsByAlbumTitle} "
+            "WHERE AlbumTitle >= @start_title AND AlbumTitle < @end_title",
+            params=params, param_types=param_types)
+
+        for row in results:
+            print(
+                u'AlbumId: {}, AlbumTitle: {}, '
+                'MarketingBudget: {}'.format(*row))
 
 
 def read_data_with_index(instance_id, database_id):
@@ -209,15 +215,16 @@ def read_data_with_index(instance_id, database_id):
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    keyset = spanner.KeySet(all_=True)
-    results = database.read(
-        table='Albums',
-        columns=('AlbumId', 'AlbumTitle'),
-        keyset=keyset,
-        index='AlbumsByAlbumTitle')
+    with database.snapshot() as snapshot:
+        keyset = spanner.KeySet(all_=True)
+        results = snapshot.read(
+            table='Albums',
+            columns=('AlbumId', 'AlbumTitle'),
+            keyset=keyset,
+            index='AlbumsByAlbumTitle')
 
-    for row in results:
-        print('AlbumId: {}, AlbumTitle: {}'.format(*row))
+        for row in results:
+            print('AlbumId: {}, AlbumTitle: {}'.format(*row))
 
 
 def add_storing_index(instance_id, database_id):
@@ -252,17 +259,18 @@ def read_data_with_storing_index(instance_id, database_id):
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    keyset = spanner.KeySet(all_=True)
-    results = database.read(
-        table='Albums',
-        columns=('AlbumId', 'AlbumTitle', 'MarketingBudget'),
-        keyset=keyset,
-        index='AlbumsByAlbumTitle2')
+    with database.snapshot() as snapshot:
+        keyset = spanner.KeySet(all_=True)
+        results = snapshot.read(
+            table='Albums',
+            columns=('AlbumId', 'AlbumTitle', 'MarketingBudget'),
+            keyset=keyset,
+            index='AlbumsByAlbumTitle2')
 
-    for row in results:
-        print(
-            u'AlbumId: {}, AlbumTitle: {}, '
-            'MarketingBudget: {}'.format(*row))
+        for row in results:
+            print(
+                u'AlbumId: {}, AlbumTitle: {}, '
+                'MarketingBudget: {}'.format(*row))
 
 
 def add_column(instance_id, database_id):

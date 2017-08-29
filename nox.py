@@ -133,10 +133,7 @@ def _setup_appengine_sdk(session):
 #
 
 
-PYTEST_COMMON_ARGS = [
-    '--cov',
-    '--cov-config', os.path.abspath('.coveragerc'),
-    '--cov-report', 'term']
+PYTEST_COMMON_ARGS = []
 
 FLAKE8_COMMON_ARGS = [
     '--show-source', '--builtin', 'gettext', '--max-complexity', '20',

@@ -46,14 +46,14 @@ below:
 
 import argparse
 import json
-import sys
+import time
 
-from google.cloud import pubsub
+from google.cloud import pubsub_v1
 
 
 def summarize(message):
     # [START parse_message]
-    data = message.data
+    data = message.data.decode('utf-8')
     attributes = message.attributes
 
     event_type = attributes['eventType']
@@ -87,24 +87,24 @@ def summarize(message):
     # [END parse_message]
 
 
-def poll_notifications(subscription_id):
+def poll_notifications(project, subscription_name):
     """Polls a Cloud Pub/Sub subscription for new GCS events for display."""
     # [BEGIN poll_notifications]
-    client = pubsub.Client()
-    subscription = pubsub.subscription.Subscription(
-        subscription_id, client=client)
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_path = subscriber.subscription_path(
+        project, subscription_name)
 
-    if not subscription.exists():
-        sys.stderr.write('Cannot find subscription {0}\n'.format(sys.argv[1]))
-        return
+    def callback(message):
+        print('Received message:\n{1}'.format(summarize(message)))
+        message.ack()
 
-    print('Polling for messages. Press ctrl+c to exit.')
+    subscriber.subscribe(subscription_path, callback=callback)
+
+    # The subscriber is non-blocking, so we must keep the main thread from
+    # exiting to allow it to process messages in the background.
+    print('Listening for messages on {}'.format(subscription_path))
     while True:
-        pulled = subscription.pull(max_messages=100)
-        for ack_id, message in pulled:
-            print('Received message {0}:\n{1}'.format(
-                message.message_id, summarize(message)))
-            subscription.acknowledge([ack_id])
+        time.sleep(60)
     # [END poll_notifications]
 
 
