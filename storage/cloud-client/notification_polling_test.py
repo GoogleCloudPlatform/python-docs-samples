@@ -13,7 +13,8 @@
 # limitations under the License.
 
 
-from google.cloud.pubsub.message import Message
+from google.cloud.pubsub_v1.subscriber.message import Message
+import mock
 
 from notification_polling import summarize
 
@@ -31,12 +32,15 @@ def test_parse_json_message():
         'notificationConfig': ('projects/_/buckets/mybucket/'
                                'notificationConfigs/5'),
         'payloadFormat': 'JSON_API_V1'}
-    data = ('{'
-            '  "size": 12345,'
-            '  "contentType": "text/html",'
-            '  "metageneration": 1'
-            '}')
-    message = Message(data, MESSAGE_ID, attributes=attributes)
+    data = (b'{'
+            b'  "size": 12345,'
+            b'  "contentType": "text/html",'
+            b'  "metageneration": 1'
+            b'}')
+    message = Message(
+        mock.Mock(data=data, attributes=attributes),
+        MESSAGE_ID,
+        mock.Mock())
     assert summarize(message) == (
         '\tEvent type: OBJECT_FINALIZE\n'
         '\tBucket ID: mybucket\n'
