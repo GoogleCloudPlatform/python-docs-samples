@@ -66,7 +66,6 @@ def test_text_returns_entities():
     etype, ename, salience, wurl = text_analyzer.extract_entity_info(
         entities[0])
     assert ename == 'holmes'
-    assert wurl == 'http://en.wikipedia.org/wiki/Sherlock_Holmes'
 
 
 def test_entities_list():
@@ -80,7 +79,6 @@ def test_entities_list():
     etype, ename, salience, wurl = text_analyzer.extract_entity_info(
         entities[0])
     assert ename == 'bennet'
-    assert wurl == 'http://en.wikipedia.org/wiki/Mr_Bennet'
 
 
 def test_main(tmpdir, capsys):
