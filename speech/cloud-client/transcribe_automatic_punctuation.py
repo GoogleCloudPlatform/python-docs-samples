@@ -23,7 +23,6 @@ Example usage:
 """
 
 import argparse
-import io
 
 
 # [START def_transcribe_file_with_automatic_punctuation]
@@ -35,7 +34,7 @@ def transcribe_file_with_automatic_punctuation(speech_file):
     from google.cloud.speech_v1_1beta1 import enums
     client = speech_v1_1beta1.SpeechClient()
 
-    with io.open(speech_file, 'rb') as audio_file:
+    with open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
 
     audio = types.RecognitionAudio(content=content)

@@ -15,19 +15,19 @@
 # limitations under the License.
 
 """Google Cloud Speech API sample that demonstrates how to set audio
-metadata parameters with video as the original media type.
+metadata parameters.
 
 Example usage:
-    python transcribe_original_media_type_video.py resources/Google_Gnome.wav
-    python transcribe_original_media_type_video.py \
+    python transcribe_with_metadata.py resources/Google_Gnome.wav
+    python transcribe_with_metadata.py \
         gs://cloud-samples-tests/speech/Google_Gnome.wav
 """
 
 import argparse
 
 
-# [START def_transcribe_file_original_media_type_video]
-def transcribe_file_original_media_type_video(speech_file):
+# [START def_transcribe_file_with_metadata]
+def transcribe_file_with_metadata(speech_file):
     """Transcribe the given audio file synchronously with
     video as the original media type."""
     from google.cloud import speech_v1_1beta1
@@ -40,9 +40,19 @@ def transcribe_file_original_media_type_video(speech_file):
 
     audio = types.RecognitionAudio(content=content)
 
-    # Use RecognitionMetadata to provide information about the audio.
+    # This shows some available metadata parameters.
     metadata = types.RecognitionMetadata(
-        original_media_type=enums.RecognitionMetadata.OriginalMediaType.VIDEO)
+        audio_topic='electronics',
+        interaction_type=(enums.RecognitionMetadata.
+                          InteractionType.DISCUSSION),
+        microphone_distance=(enums.RecognitionMetadata.
+                             MicrophoneDistance.MIDFIELD),
+        number_of_speakers=(enums.RecognitionMetadata.
+                            NumberOfSpeakers.MULTIPLE_SPEAKERS),
+        original_media_type=(enums.RecognitionMetadata.
+                             OriginalMediaType.VIDEO),
+        recording_device_type=(enums.RecognitionMetadata.
+                               RecordingDeviceType.OTHER_OUTDOOR_DEVICE))
 
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
@@ -57,10 +67,10 @@ def transcribe_file_original_media_type_video(speech_file):
         print('-' * 20)
         print('First alternative of result {}'.format(i))
         print('Transcript: {}'.format(alternative.transcript))
-# [END def_transcribe_file_original_media_type_video]
+# [END def_transcribe_file_with_metadata]
 
 
-def transcribe_gcs_original_media_type_video(gcs_uri):
+def transcribe_gcs_with_metadata(gcs_uri):
     """Transcribe the given audio file asynchronously with
     video as the original media type."""
     from google.cloud import speech_v1_1beta1
@@ -70,9 +80,19 @@ def transcribe_gcs_original_media_type_video(gcs_uri):
 
     audio = types.RecognitionAudio(uri=gcs_uri)
 
-    # Use RecognitionMetadata to provide information about the audio.
+    # This shows some available metadata parameters.
     metadata = types.RecognitionMetadata(
-        original_media_type=enums.RecognitionMetadata.OriginalMediaType.VIDEO)
+        audio_topic='electronics',
+        interaction_type=(enums.RecognitionMetadata.
+                          InteractionType.DISCUSSION),
+        microphone_distance=(enums.RecognitionMetadata.
+                             MicrophoneDistance.MIDFIELD),
+        number_of_speakers=(enums.RecognitionMetadata.
+                            NumberOfSpeakers.MULTIPLE_SPEAKERS),
+        original_media_type=(enums.RecognitionMetadata.
+                             OriginalMediaType.VIDEO),
+        recording_device_type=(enums.RecognitionMetadata.
+                               RecordingDeviceType.OTHER_OUTDOOR_DEVICE))
 
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
@@ -100,6 +120,6 @@ if __name__ == '__main__':
         'path', help='File or GCS path for audio file to be recognized')
     args = parser.parse_args()
     if args.path.startswith('gs://'):
-        transcribe_gcs_original_media_type_video(args.path)
+        transcribe_gcs_with_metadata(args.path)
     else:
-        transcribe_file_original_media_type_video(args.path)
+        transcribe_file_with_metadata(args.path)
