@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2016 Google, Inc.
+# Copyright 2017 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ from google.cloud import language
 from google.cloud.language import enums
 from google.cloud.language import types
 import six
+import sys
 
 
 # [START def_sentiment_text]
@@ -192,11 +193,79 @@ def syntax_file(gcs_uri):
 # [END def_syntax_file]
 
 
+# [START def_entity_sentiment_text]
+def entity_sentiment_text(text):
+    """Detects entity sentiment in the provided text."""
+    client = language.LanguageServiceClient()
+
+    if isinstance(text, six.binary_type):
+        text = text.decode('utf-8')
+
+    document = types.Document(
+        content=text.encode('utf-8'),
+        type=enums.Document.Type.PLAIN_TEXT)
+
+    # Detect and send native Python encoding to receive correct word offsets.
+    encoding = enums.EncodingType.UTF32
+    if sys.maxunicode == 65535:
+        encoding = enums.EncodingType.UTF16
+
+    result = client.analyze_entity_sentiment(document, encoding)
+
+    for entity in result.entities:
+        print('Mentions: ')
+        print(u'Name: "{}"'.format(entity.name))
+        for mention in entity.mentions:
+            print(u'  Begin Offset : {}'.format(mention.text.begin_offset))
+            print(u'  Content : {}'.format(mention.text.content))
+            print(u'  Magnitude : {}'.format(mention.sentiment.magnitude))
+            print(u'  Sentiment : {}'.format(mention.sentiment.score))
+            print(u'  Type : {}'.format(mention.type))
+        print(u'Salience: {}'.format(entity.salience))
+        print(u'Sentiment: {}\n'.format(entity.sentiment))
+# [END def_entity_sentiment_text]
+
+
+def entity_sentiment_file(gcs_uri):
+    """Detects entity sentiment in a Google Cloud Storage file."""
+    client = language.LanguageServiceClient()
+
+    document = types.Document(
+        gcs_content_uri=gcs_uri,
+        type=enums.Document.Type.PLAIN_TEXT)
+
+    # Detect and send native Python encoding to receive correct word offsets.
+    encoding = enums.EncodingType.UTF32
+    if sys.maxunicode == 65535:
+        encoding = enums.EncodingType.UTF16
+
+    result = client.analyze_entity_sentiment(document, encoding)
+
+    for entity in result.entities:
+        print(u'Name: "{}"'.format(entity.name))
+        for mention in entity.mentions:
+            print(u'  Begin Offset : {}'.format(mention.text.begin_offset))
+            print(u'  Content : {}'.format(mention.text.content))
+            print(u'  Magnitude : {}'.format(mention.sentiment.magnitude))
+            print(u'  Sentiment : {}'.format(mention.sentiment.score))
+            print(u'  Type : {}'.format(mention.type))
+        print(u'Salience: {}'.format(entity.salience))
+        print(u'Sentiment: {}\n'.format(entity.sentiment))
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
     subparsers = parser.add_subparsers(dest='command')
+
+    sentiment_entities_text_parser = subparsers.add_parser(
+        'sentiment-entities-text', help=entity_sentiment_text.__doc__)
+    sentiment_entities_text_parser.add_argument('text')
+
+    sentiment_entities_file_parser = subparsers.add_parser(
+        'sentiment-entities-file', help=entity_sentiment_file.__doc__)
+    sentiment_entities_file_parser.add_argument('gcs_uri')
 
     sentiment_text_parser = subparsers.add_parser(
         'sentiment-text', help=sentiment_text.__doc__)
@@ -236,3 +305,7 @@ if __name__ == '__main__':
         syntax_text(args.text)
     elif args.command == 'syntax-file':
         syntax_file(args.gcs_uri)
+    elif args.command == 'sentiment-entities-text':
+        entity_sentiment_text(args.text)
+    elif args.command == 'sentiment-entities-file':
+        entity_sentiment_file(args.gcs_uri)

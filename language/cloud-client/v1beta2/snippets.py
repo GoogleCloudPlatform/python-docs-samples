@@ -173,72 +173,12 @@ def syntax_file(gcs_uri):
                                token.text.content))
 
 
-# [START def_entity_sentiment_text]
-def entity_sentiment_text(text):
-    """Detects entity sentiment in the provided text."""
-    # [START beta_client]
-    client = language_v1beta2.LanguageServiceClient()
-    # [END beta_client]
-
-    if isinstance(text, six.binary_type):
-        text = text.decode('utf-8')
-
-    document = types.Document(
-        content=text.encode('utf-8'),
-        type=enums.Document.Type.PLAIN_TEXT)
-
-    # Pass in encoding type to get useful offsets in the response.
-    encoding = enums.EncodingType.UTF32
-    if sys.maxunicode == 65535:
-        encoding = enums.EncodingType.UTF16
-
-    result = client.analyze_entity_sentiment(document, encoding)
-
-    for entity in result.entities:
-        print('Mentions: ')
-        print(u'Name: "{}"'.format(entity.name))
-        for mention in entity.mentions:
-            print(u'  Begin Offset : {}'.format(mention.text.begin_offset))
-            print(u'  Content : {}'.format(mention.text.content))
-            print(u'  Magnitude : {}'.format(mention.sentiment.magnitude))
-            print(u'  Sentiment : {}'.format(mention.sentiment.score))
-            print(u'  Type : {}'.format(mention.type))
-        print(u'Salience: {}'.format(entity.salience))
-        print(u'Sentiment: {}\n'.format(entity.sentiment))
-# [END def_entity_sentiment_text]
-
-
-def entity_sentiment_file(gcs_uri):
-    """Detects entity sentiment in a Google Cloud Storage file."""
-    client = language_v1beta2.LanguageServiceClient()
-
-    document = types.Document(
-        gcs_content_uri=gcs_uri,
-        type=enums.Document.Type.PLAIN_TEXT)
-
-    # Pass in encoding type to get useful offsets in the response.
-    encoding = enums.EncodingType.UTF32
-    if sys.maxunicode == 65535:
-        encoding = enums.EncodingType.UTF16
-
-    result = client.analyze_entity_sentiment(document, encoding)
-
-    for entity in result.entities:
-        print(u'Name: "{}"'.format(entity.name))
-        for mention in entity.mentions:
-            print(u'  Begin Offset : {}'.format(mention.text.begin_offset))
-            print(u'  Content : {}'.format(mention.text.content))
-            print(u'  Magnitude : {}'.format(mention.sentiment.magnitude))
-            print(u'  Sentiment : {}'.format(mention.sentiment.score))
-            print(u'  Type : {}'.format(mention.type))
-        print(u'Salience: {}'.format(entity.salience))
-        print(u'Sentiment: {}\n'.format(entity.sentiment))
-
-
 # [START def_classify_text]
 def classify_text(text):
     """Classifies the provided text."""
+    # [START beta_client]
     client = language_v1beta2.LanguageServiceClient()
+    # [END beta_client]
 
     if isinstance(text, six.binary_type):
         text = text.decode('utf-8')
@@ -288,14 +228,6 @@ if __name__ == '__main__':
         'classify-file', help=classify_file.__doc__)
     classify_text_parser.add_argument('gcs_uri')
 
-    sentiment_entities_text_parser = subparsers.add_parser(
-        'sentiment-entities-text', help=entity_sentiment_text.__doc__)
-    sentiment_entities_text_parser.add_argument('text')
-
-    sentiment_entities_file_parser = subparsers.add_parser(
-        'sentiment-entities-file', help=entity_sentiment_file.__doc__)
-    sentiment_entities_file_parser.add_argument('gcs_uri')
-
     sentiment_text_parser = subparsers.add_parser(
         'sentiment-text', help=sentiment_text.__doc__)
     sentiment_text_parser.add_argument('text')
@@ -334,10 +266,6 @@ if __name__ == '__main__':
         syntax_text(args.text)
     elif args.command == 'syntax-file':
         syntax_file(args.gcs_uri)
-    elif args.command == 'sentiment-entities-text':
-        entity_sentiment_text(args.text)
-    elif args.command == 'sentiment-entities-file':
-        entity_sentiment_file(args.gcs_uri)
     elif args.command == 'classify-text':
         classify_text(args.text)
     elif args.command == 'classify-file':
