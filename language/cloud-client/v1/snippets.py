@@ -22,12 +22,13 @@ https://cloud.google.com/natural-language/docs.
 """
 
 import argparse
+import sys
 
 from google.cloud import language
 from google.cloud.language import enums
 from google.cloud.language import types
+
 import six
-import sys
 
 
 # [START def_sentiment_text]

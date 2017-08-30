@@ -22,7 +22,6 @@ https://cloud.google.com/natural-language/docs.
 """
 
 import argparse
-import sys
 
 # [START beta_import]
 from google.cloud import language_v1beta2
