@@ -19,8 +19,9 @@ RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 
 
 def test_transcribe_file_original_media_type_video(capsys):
-    transcribe_original_media_type_video.transcribe_file_original_media_type_video(
-        os.path.join(RESOURCES, 'Google_Gnome.wav'))
+    (transcribe_original_media_type_video.
+     transcribe_file_original_media_type_video(
+        os.path.join(RESOURCES, 'Google_Gnome.wav')))
     out, _ = capsys.readouterr()
 
     assert 'you do keep doing that' in out
@@ -28,8 +29,9 @@ def test_transcribe_file_original_media_type_video(capsys):
 
 
 def test_transcribe_gcs_original_media_type_video(capsys):
-    transcribe_original_media_type_video.transcribe_gcs_original_media_type_video(
-        'gs://python-docs-samples-tests/speech/Google_Gnome.wav')
+    (transcribe_original_media_type_video.
+     transcribe_gcs_original_media_type_video(
+        'gs://python-docs-samples-tests/speech/Google_Gnome.wav'))
     out, _ = capsys.readouterr()
 
     assert 'you do keep doing that' in out

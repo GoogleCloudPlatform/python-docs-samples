@@ -19,8 +19,9 @@ RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 
 
 def test_transcribe_file_with_automatic_punctuation(capsys):
-    transcribe_automatic_punctuation.transcribe_file_with_automatic_punctuation(
-        os.path.join(RESOURCES, 'audio.raw'))
+    (transcribe_automatic_punctuation.
+     transcribe_file_with_automatic_punctuation(
+        os.path.join(RESOURCES, 'audio.raw')))
     out, _ = capsys.readouterr()
 
     assert 'How' in out
