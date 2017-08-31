@@ -14,77 +14,19 @@
 
 """App Engine app to serve as an endpoint for App Engine queue samples."""
 
-from google.cloud import datastore
+import logging
+
 from flask import Flask, request
 
 app = Flask(__name__)
-client = datastore.Client()
-
-PAYLOAD_KEY_NAME = 'Payload'
-COUNTER_KEY_NAME = 'Counter'
 
 
-def get_payload_from_datastore():
-    payload_key = client.key(PAYLOAD_KEY_NAME, 1)
-    payload_entity = client.get(payload_key)
-    if payload_entity is None:
-        return None
-    return payload_entity['value']
-
-
-def get_counter_from_datastore():
-    counter_key = client.key(COUNTER_KEY_NAME, 1)
-    counter_entity = client.get(counter_key)
-    if counter_entity is None:
-        return 0
-    return counter_entity['counter']
-
-
-def update_payload(request_data):
-    """Sets the payload value entity in Cloud Datastore."""
-    payload_key = client.key(PAYLOAD_KEY_NAME, 1)
-    payload_entity = datastore.Entity(payload_key)
-
-    if request_data:
-        payload_entity['value'] = request_data
-        client.put(payload_entity)
-
-    payload_entity = client.get(payload_key)
-    return payload_entity['value']
-
-
-def increment_counter():
-    """Increments a counter value in Cloud Datastore."""
-    counter_key = client.key(COUNTER_KEY_NAME, 1)
-    counter_entity = client.get(counter_key)
-    if counter_entity is None:
-        counter_entity = datastore.Entity(counter_key)
-        counter_entity['counter'] = 0
-        client.put(counter_entity)
-
-    counter_entity['counter'] += 1
-    client.put(counter_entity)
-    return counter_entity['counter']
-
-
-@app.route('/set_payload', methods=['POST'])
-def set_payload():
-    """Main endpoint to demonstrate Cloud Tasks App Engine queue features."""
-    counter = increment_counter()
-    payload = update_payload(request.data)
-
-    return 'Counter value is now {}, payload value is now {}'.format(
-        counter, payload)
-
-
-@app.route('/get_payload')
-def get_payload():
-    """Main endpoint to demonstrate Cloud Tasks App Engine queue features."""
-    counter = get_counter_from_datastore()
-    payload = get_payload_from_datastore()
-
-    return 'Counter value is now {}, payload value is now {}'.format(
-        counter, payload)
+@app.route('/log_payload', methods=['POST'])
+def log_payload():
+    """Log the request payload."""
+    payload = request.data or "empty payload"
+    logging.warn(payload)
+    return 'Logged request payload: {}'.format(payload)
 
 
 @app.route('/')

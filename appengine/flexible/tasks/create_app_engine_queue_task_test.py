@@ -14,33 +14,19 @@
 
 import mock
 
-import app_engine_queue_snippets
+import create_app_engine_queue_task
 
-TEST_PROJECT_ID = 'mock-project'
+TEST_PROJECT = 'mock-project'
 TEST_LOCATION = 'us-central1'
-API_KEY = 'mock-api-key'
-TEST_QUEUE_NAME = 'projects/{}/locations/{}/queues/{}'.format(
-    TEST_PROJECT_ID, TEST_LOCATION, 'my-push-queue')
+TEST_QUEUE = 'my-appengine-queue'
 
 
-@mock.patch('app_engine_queue_snippets.get_client')
-def test_list_queues(get_client):
-    locations = get_client.return_value.projects.return_value.locations
-    queues = locations.return_value.queues
-    execute_function = queues.return_value.list.return_value.execute
-    execute_function.return_value = {'name': 'task_name', 'queues': []}
-    app_engine_queue_snippets.list_queues(API_KEY, TEST_PROJECT_ID,
-                                          TEST_LOCATION)
-    assert execute_function.called
-
-
-@mock.patch('app_engine_queue_snippets.get_client')
+@mock.patch('create_app_engine_queue_task.get_client')
 def test_create_task(get_client):
     projects = get_client.return_value.projects.return_value
     locations = projects.locations.return_value
     create_function = locations.queues.return_value.tasks.return_value.create
     execute_function = create_function.return_value.execute
     execute_function.return_value = {'name': 'task_name'}
-    app_engine_queue_snippets.create_task(API_KEY, TEST_QUEUE_NAME)
+    create_app_engine_queue_task.create_task(TEST_PROJECT, TEST_QUEUE, TEST_LOCATION)
     assert execute_function.called
-

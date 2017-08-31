@@ -28,16 +28,19 @@ def test_index(app):
     assert r.status_code == 200
 
 
-@mock.patch('main.update_payload')
-@mock.patch('main.increment_counter')
-def test_set_payload(increment_counter, update_payload, app):
+@mock.patch('logging.warn')
+def test_log_payload(logging_mock, app):
     payload = 'hello'
 
-    r = app.post('/set_payload', payload)
+    r = app.post('/log_payload', payload)
     assert r.status_code == 200
 
-    assert increment_counter.called
-    assert update_payload.called
+    assert logging_mock.called
 
-    r = app.get('/get_payload')
+
+@mock.patch('logging.warn')
+def test_empty_payload(logging_mock, app):
+    r = app.post('/log_payload')
     assert r.status_code == 200
+
+    assert logging_mock.called

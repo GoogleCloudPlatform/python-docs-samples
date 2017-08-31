@@ -33,7 +33,7 @@ On Compute Engine and Container Engine, authentication credentials will be
 automatically detected, but the instances must have been created with the
 necessary scopes.
 
-In any other environment, for example Compute Engine instance without the
+In any other environment, for example a Compute Engine instance without the
 necessary scopes, you should set `GOOGLE_APPLICATION_CREDENTIALS` environment
 variable to a JSON key file for a service account.
 
@@ -42,17 +42,18 @@ for more information.
 
 ## Creating a queue
 
-To create a queue using the Cloud SDK, use the provided queue.yaml:
+To create a queue using the Cloud SDK, use the following gcloud command:
 
-    gcloud app deploy queue.yaml
+    gcloud alpha tasks queues create-app-engine-queue "my-appengine-queue"
+
+Note: A newly created queue will route to the default App Engine service and
+version unless configured to do otherwise. Read the online help for the
+`create-app-engine-queue` or the `update-app-engine-queue` commands to learn
+about routing overrides for App Engine queues.
 
 ## Deploying the App Engine app
 
-First, vendor the dependencies into the project:
-
-    pip install -r requirements.txt
-
-Next, deploy the App Engine app
+Deploy the App Engine app with gcloud:
 
     gcloud app deploy
 
@@ -61,47 +62,44 @@ Verify the index page is serving:
     gcloud app browse
 
 The App Engine app serves as a target for the push requests. It has an
-endpoint `/set_payload` that that stores the payload from the HTTP POST data in
-Cloud Datastore. The payload can be accessed in your browser at the
- `/get_payload` endpoint with a GET request.
+endpoint `/log_payload` that reads the payload (i.e., the request body) of the
+HTTP POST request and logs it. The log output can be viewed with:
+
+    gcloud app logs read
 
 ## Running the Samples
 
 The project ID must be specified either as a command line argument using
 `--project-id`, or by editing `DEFAULT_PROJECT_ID` within `task_snippets.py`.
 
-Set the environment variables:
+Set environment variables:
+
+First, your project ID:
 
     export PROJECT_ID=my-project-id
+
+Then the queue ID, as specified at queue creation time. Queue IDs already
+created can be listed with `gcloud alpha tasks queue list`.
+
+    export QUEUE_ID=my-appengine-queue
+
+And finally the location ID, which can be discovered with
+`gcloud alpha tasks queue describe $QUEUE_ID`, with the location embedded in the
+"name" value (for instance, if the name is
+"projects/my-project/locations/us-central1/queues/my-appengine-queue", then the
+location is "us-central1").
+
     export LOCATION_ID=us-central1
-    export QUEUE_ID=my-appengine-queue # From queue.yaml
-
-View all queues:
-
-     python app_engine_queue_snippets.py --api_key=$API_KEY list-queues --project_id=$PROJECT_ID --location_id=$LOCATION_ID
-
-Set the queue name as an environment variable:
-
-    export QUEUE_NAME=projects/$PROJECT_ID/locations/$LOCATION_ID/queues/$QUEUE_ID
 
 Create a task, targeted at the `set_payload` endpoint with a payload specified:
 
-   python app_engine_queue_snippets.py --api_key=$API_KEY create-task --queue_name=$QUEUE_NAME --payload=hello
+   python create_app_engine_queue_task.py --project=$PROJECT_ID --queue=QUEUE_ID --location=LOCATION_ID --payload=hello
 
-Now view that the payload was received and verify the count and payload:
+Now view that the payload was received and verify the payload:
 
-    http://your-app-id.appspot.com/get_payload
+    gcloud app logs read
 
-Create a task that will be scheduled for a few seconds in the future using
-the `--in_seconds` flag:
+Create a task that will be scheduled for a time in the future using the
+`--in_seconds` flag:
 
-    python app_engine_queue_snippets.py --api_key=$API_KEY create-task --queue_name=$QUEUE_NAME --payload=hello --in_seconds=30
-
-Since `--in_seconds` was set to 30, it will take 30 seconds for the new
-payload to be pushed to the `/get_payload` endpoint, which can then be viewed at:
-
-    http://your-app-id.appspot.com/get_payload
-
-It might also be helpful to view the request logs of your App Engine app:
-
-    https://console.cloud.google.com/logs
+    python create_app_engine_queue_task.py --project=$PROJECT_ID --queue=QUEUE_ID --location=LOCATION_ID --payload=hello --in_seconds=30
