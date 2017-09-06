@@ -68,7 +68,7 @@ python classify_text_tutorial.py query-category index.json "/Internet & Telecom/
 
 ## Query with text
 
-The indexed text files can be queried with another text that might not have been indexec.
+The indexed text files can be queried with another text that might not have been indexed.
 
 ```
 python classify_text_tutorial.py query index.json "$(cat resources/query_text.txt)"

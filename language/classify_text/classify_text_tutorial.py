@@ -18,11 +18,12 @@
 import argparse
 import json
 import os
-import numpy as np
 
 from google.cloud import language_v1beta2
-from google.cloud.language_v1beta2 import types
 from google.cloud.language_v1beta2 import enums
+from google.cloud.language_v1beta2 import types
+
+import numpy as np
 # [END classify_text_tutorial_import]
 
 
@@ -40,10 +41,14 @@ def classify(text, verbose=True):
     result = {}
 
     for category in categories:
-        # Turn the categories into a dictionary.
+        # Turn the categories into a dictionary of the form:
+        # {category.name: category.confidence}, so that they can
+        # be treated as a sparse vector.
         result[category.name] = category.confidence
 
-        if verbose:
+    if verbose:
+        print(text)
+        for category in categories:
             print(u'=' * 20)
             print(u'{:<16}: {}'.format('category', category.name))
             print(u'{:<16}: {}'.format('confidence', category.confidence))
@@ -55,7 +60,8 @@ def classify(text, verbose=True):
 # [START def_index]
 def index(path, index_file):
     """Classify each text file in the directory and write
-    the results to the index_file. """
+    the results to the index_file.
+    """
 
     result = {}
     for filename in os.listdir(path):
@@ -81,7 +87,8 @@ def index(path, index_file):
 # [START def_query]
 def query(index_file, text, n_top=3):
     """Find the indexed files that are the most similar to
-    the query text. """
+    the query text.
+    """
 
     with open(index_file, 'r') as f:
         index = json.load(f)
@@ -91,7 +98,8 @@ def query(index_file, text, n_top=3):
 
     similarities = []
     for filename, categories in index.iteritems():
-        similarities.append((filename, similarity(query_categories, categories)))
+        similarities.append(
+            (filename, similarity(query_categories, categories)))
 
     similarities = sorted(similarities, key=lambda p: p[1], reverse=True)
 
@@ -109,23 +117,75 @@ def query(index_file, text, n_top=3):
 # [END def_query]
 
 
+# [START def_similarity]
+def similarity(categories1, categories2):
+    """Cosine similarity of the categories treated as sparse vectors."""
+
+    def split_labels(categories):
+        """The category labels are of the form "/a/b/c" up to three levels,
+        for example "/Computers & Electronics/Software", and these labels
+        are used as keys in the categories dictionary, whose values are
+        confidence scores.
+
+        The split_labels function splits the keys into individual levels
+        while duplicating the confidence score, which allows a natural
+        boost in how we calculate similarity when more levels are in common.
+
+        Example:
+        If we have
+
+        x = {"/a/b/c": 0.5}
+        y = {"/a/b": 0.5}
+        z = {"/a": 0.5}
+
+        Then x and y are considered more similar than y and z.
+        """
+        _categories = {}
+        for name, confidence in categories.iteritems():
+            labels = [label for label in name.split('/') if label]
+            for label in labels:
+                _categories[label] = confidence
+
+        return _categories
+
+    categories1 = split_labels(categories1)
+    categories2 = split_labels(categories2)
+
+    norm1 = np.linalg.norm(categories1.values())
+    norm2 = np.linalg.norm(categories2.values())
+
+    # Return the smallest possible similarity if either categories is empty.
+    if norm1 == 0 or norm2 == 0:
+        return 0.0
+
+    dot = 0.0
+    for label, confidence in categories1.iteritems():
+        dot += confidence * categories2.get(label, 0.0)
+
+    return dot / (norm1 * norm2)
+# [END def_similarity]
+
+
 # [START def_query_category]
 def query_category(index_file, category_string, n_top=3):
     """Find the indexed files that are the most similar to
     the query label.
 
     The list of all available labels:
-    https://cloud.google.com/natural-language/docs/categories"""
+    https://cloud.google.com/natural-language/docs/categories
+    """
 
     with open(index_file, 'r') as f:
         index = json.load(f)
 
-    # Make the category_string into a dict
+    # Make the category_string into a dictionary so that it is
+    # of the same format as what we get by calling classify.
     query_categories = {category_string: 1.0}
 
     similarities = []
     for filename, categories in index.iteritems():
-        similarities.append((filename, similarity(query_categories, categories)))
+        similarities.append(
+            (filename, similarity(query_categories, categories)))
 
     similarities = sorted(similarities, key=lambda p: p[1], reverse=True)
 
@@ -139,42 +199,6 @@ def query_category(index_file, category_string, n_top=3):
 
     return similarities
 # [END def_query_category]
-
-
-# [START def_similarity]
-def similarity(categories1, categories2):
-    """Cosine similarity of the categories treated as sparse vectors."""
-
-    def split_labels(categories):
-        _categories = {}
-        for name, confidence in categories.iteritems():
-            labels = [label for label in name.split('/') if label]
-            for label in labels:
-                _categories[label] = confidence
-
-        return _categories
-
-    def norm(categories):
-        if len(categories) == 0:
-            return 0.0
-        return np.linalg.norm(categories.values())
-
-    categories1 = split_labels(categories1)
-    categories2 = split_labels(categories2)
-
-    norm1 = norm(categories1)
-    norm2 = norm(categories2)
-
-    # Return the smallest possible similarity if either categories is empty.
-    if norm1 == 0 or norm2 == 0:
-        return 0.0
-
-    dot = 0.0
-    for label, confidence in categories1.iteritems():
-        dot += confidence * categories2.get(label, 0.0)
-
-    return dot / (norm1 * norm2)
-# [END def_similarity]
 
 
 if __name__ == '__main__':

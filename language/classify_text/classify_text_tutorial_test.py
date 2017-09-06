@@ -12,8 +12,6 @@
 # limitations under the License.
 
 import os
-import pytest
-import re
 
 from classify_text_tutorial import classify
 from classify_text_tutorial import similarity
