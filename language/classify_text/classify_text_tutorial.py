@@ -1,0 +1,221 @@
+# Copyright 2017, Google, Inc.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# [START classify_text_tutorial]
+"""Demonstrates how to use the classify_text method."""
+
+# [START classify_text_tutorial_import]
+import argparse
+import json
+import os
+import numpy as np
+
+from google.cloud import language_v1beta2
+from google.cloud.language_v1beta2 import types
+from google.cloud.language_v1beta2 import enums
+# [END classify_text_tutorial_import]
+
+
+# [START def_classify]
+def classify(text, verbose=True):
+    """Classify the input text into categories. """
+
+    language_client = language_v1beta2.LanguageServiceClient()
+
+    document = types.Document(
+        content=text,
+        type=enums.Document.Type.HTML)
+    categories = language_client.classify_text(document).categories
+
+    result = {}
+
+    for category in categories:
+        # Turn the categories into a dictionary.
+        result[category.name] = category.confidence
+
+        if verbose:
+            print(u'=' * 20)
+            print(u'{:<16}: {}'.format('category', category.name))
+            print(u'{:<16}: {}'.format('confidence', category.confidence))
+
+    return result
+# [END def_classify]
+
+
+# [START def_index]
+def index(path, index_file):
+    """Classify each text file in the directory and write
+    the results to the index_file. """
+
+    result = {}
+    for filename in os.listdir(path):
+        file_path = os.path.join(path, filename)
+
+        if not os.path.isfile(file_path):
+            continue
+
+        with open(file_path, 'r') as f:
+            text = f.read()
+            categories = classify(text, verbose=False)
+
+            result[filename] = categories
+
+    with open(index_file, 'w') as f:
+        json.dump(result, f)
+
+    print('Texts indexed in file: {}'.format(index_file))
+    return result
+# [END def_index]
+
+
+# [START def_query]
+def query(index_file, text, n_top=3):
+    """Find the indexed files that are the most similar to
+    the query text. """
+
+    with open(index_file, 'r') as f:
+        index = json.load(f)
+
+    # Get the categories of the query text.
+    query_categories = classify(text, verbose=False)
+
+    similarities = []
+    for filename, categories in index.iteritems():
+        similarities.append((filename, similarity(query_categories, categories)))
+
+    similarities = sorted(similarities, key=lambda p: p[1], reverse=True)
+
+    print('=' * 20)
+    print('Query: {}\n'.format(text))
+    for category, confidence in query_categories.iteritems():
+        print('\tCategory: {}, confidence: {}'.format(category, confidence))
+    print('\nMost similar {} indexed texts:'.format(n_top))
+    for filename, sim in similarities[:n_top]:
+        print('\tFilename: {}'.format(filename))
+        print('\tSimilarity: {}'.format(sim))
+        print('\n')
+
+    return similarities
+# [END def_query]
+
+
+# [START def_query_category]
+def query_category(index_file, category_string, n_top=3):
+    """Find the indexed files that are the most similar to
+    the query label.
+
+    The list of all available labels:
+    https://cloud.google.com/natural-language/docs/categories"""
+
+    with open(index_file, 'r') as f:
+        index = json.load(f)
+
+    # Make the category_string into a dict
+    query_categories = {category_string: 1.0}
+
+    similarities = []
+    for filename, categories in index.iteritems():
+        similarities.append((filename, similarity(query_categories, categories)))
+
+    similarities = sorted(similarities, key=lambda p: p[1], reverse=True)
+
+    print('=' * 20)
+    print('Query: {}\n'.format(category_string))
+    print('\nMost similar {} indexed texts:'.format(n_top))
+    for filename, sim in similarities[:n_top]:
+        print('\tFilename: {}'.format(filename))
+        print('\tSimilarity: {}'.format(sim))
+        print('\n')
+
+    return similarities
+# [END def_query_category]
+
+
+# [START def_similarity]
+def similarity(categories1, categories2):
+    """Cosine similarity of the categories treated as sparse vectors."""
+
+    def split_labels(categories):
+        _categories = {}
+        for name, confidence in categories.iteritems():
+            labels = [label for label in name.split('/') if label]
+            for label in labels:
+                _categories[label] = confidence
+
+        return _categories
+
+    def norm(categories):
+        if len(categories) == 0:
+            return 0.0
+        return np.linalg.norm(categories.values())
+
+    categories1 = split_labels(categories1)
+    categories2 = split_labels(categories2)
+
+    norm1 = norm(categories1)
+    norm2 = norm(categories2)
+
+    # Return the smallest possible similarity if either categories is empty.
+    if norm1 == 0 or norm2 == 0:
+        return 0.0
+
+    dot = 0.0
+    for label, confidence in categories1.iteritems():
+        dot += confidence * categories2.get(label, 0.0)
+
+    return dot / (norm1 * norm2)
+# [END def_similarity]
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
+    subparsers = parser.add_subparsers(dest='command')
+    classify_parser = subparsers.add_parser(
+        'classify', help=classify.__doc__)
+    classify_parser.add_argument(
+        'text', help='The text to be classified. '
+        'The text needs to have at least 20 tokens.')
+    index_parser = subparsers.add_parser(
+        'index', help=index.__doc__)
+    index_parser.add_argument(
+        'path', help='The directory that contains '
+        'text files to be indexed.')
+    index_parser.add_argument(
+        '--index_file', help='Filename for the output JSON.',
+        default='index.json')
+    query_parser = subparsers.add_parser(
+        'query', help=query.__doc__)
+    query_parser.add_argument(
+        'index_file', help='Path to the index JSON file.')
+    query_parser.add_argument(
+        'text', help='Query text.')
+    query_category_parser = subparsers.add_parser(
+        'query-category', help=query_category.__doc__)
+    query_category_parser.add_argument(
+        'index_file', help='Path to the index JSON file.')
+    query_category_parser.add_argument(
+        'category', help='Query category.')
+
+    args = parser.parse_args()
+
+    if args.command == 'classify':
+        classify(args.text)
+    if args.command == 'index':
+        index(args.path, args.index_file)
+    if args.command == 'query':
+        query(args.index_file, args.text)
+    if args.command == 'query-category':
+        query_category(args.index_file, args.category)
+# [END classify_text_tutorial]
