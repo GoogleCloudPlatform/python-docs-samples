@@ -22,63 +22,83 @@ at https://cloud.google.com/pubsub/docs.
 """
 
 import argparse
+import time
 
-from google.cloud import pubsub
+from google.cloud import pubsub_v1
 
 
-def list_subscriptions(topic_name):
+def list_subscriptions(project, topic_name):
     """Lists all subscriptions for a given topic."""
-    pubsub_client = pubsub.Client()
-    topic = pubsub_client.topic(topic_name)
+    subscriber = pubsub_v1.SubscriberClient()
+    topic_path = subscriber.topic_path(project, topic_name)
 
-    for subscription in topic.list_subscriptions():
+    for subscription in subscriber.list_subscriptions(topic_path):
         print(subscription.name)
 
 
-def create_subscription(topic_name, subscription_name):
+def create_subscription(project, topic_name, subscription_name):
     """Create a new pull subscription on the given topic."""
-    pubsub_client = pubsub.Client()
-    topic = pubsub_client.topic(topic_name)
+    subscriber = pubsub_v1.SubscriberClient()
+    topic_path = subscriber.topic_path(project, topic_name)
+    subscription_path = subscriber.subscription_path(
+        project, subscription_name)
 
-    subscription = topic.subscription(subscription_name)
-    subscription.create()
+    subscription = subscriber.create_subscription(
+        subscription_path, topic_path)
 
-    print('Subscription {} created on topic {}.'.format(
-        subscription.name, topic.name))
+    print('Subscription created: {}'.format(subscription))
 
 
-def delete_subscription(topic_name, subscription_name):
+def delete_subscription(project, subscription_name):
     """Deletes an existing Pub/Sub topic."""
-    pubsub_client = pubsub.Client()
-    topic = pubsub_client.topic(topic_name)
-    subscription = topic.subscription(subscription_name)
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_path = subscriber.subscription_path(
+        project, subscription_name)
 
-    subscription.delete()
+    subscriber.delete_subscription(subscription_path)
 
-    print('Subscription {} deleted on topic {}.'.format(
-        subscription.name, topic.name))
+    print('Subscription deleted: {}'.format(subscription_path))
 
 
-def receive_message(topic_name, subscription_name):
-    """Receives a message from a pull subscription."""
-    pubsub_client = pubsub.Client()
-    topic = pubsub_client.topic(topic_name)
-    subscription = topic.subscription(subscription_name)
+def receive_messages(project, subscription_name):
+    """Receives messages from a pull subscription."""
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_path = subscriber.subscription_path(
+        project, subscription_name)
 
-    # Change return_immediately=False to block until messages are
-    # received.
-    results = subscription.pull(return_immediately=True)
+    def callback(message):
+        print('Received message: {}'.format(message))
+        message.ack()
 
-    print('Received {} messages.'.format(len(results)))
+    subscriber.subscribe(subscription_path, callback=callback)
 
-    for ack_id, message in results:
-        print('* {}: {}, {}'.format(
-            message.message_id, message.data, message.attributes))
+    # The subscriber is non-blocking, so we must keep the main thread from
+    # exiting to allow it to process messages in the background.
+    print('Listening for messages on {}'.format(subscription_path))
+    while True:
+        time.sleep(60)
 
-    # Acknowledge received messages. If you do not acknowledge, Pub/Sub will
-    # redeliver the message.
-    if results:
-        subscription.acknowledge([ack_id for ack_id, message in results])
+
+def receive_messages_with_flow_control(project, subscription_name):
+    """Receives messages from a pull subscription with flow control."""
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_path = subscriber.subscription_path(
+        project, subscription_name)
+
+    def callback(message):
+        print('Received message: {}'.format(message))
+        message.ack()
+
+    # Limit the subscriber to only have ten outstanding messages at a time.
+    flow_control = pubsub_v1.types.FlowControl(max_messages=10)
+    subscriber.subscribe(
+        subscription_path, callback=callback, flow_control=flow_control)
+
+    # The subscriber is non-blocking, so we must keep the main thread from
+    # exiting to allow it to process messages in the background.
+    print('Listening for messages on {}'.format(subscription_path))
+    while True:
+        time.sleep(60)
 
 
 if __name__ == '__main__':
@@ -86,6 +106,7 @@ if __name__ == '__main__':
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
+    parser.add_argument('project', help='Your Google Cloud project ID')
 
     subparsers = parser.add_subparsers(dest='command')
     list_parser = subparsers.add_parser(
@@ -99,21 +120,29 @@ if __name__ == '__main__':
 
     delete_parser = subparsers.add_parser(
         'delete', help=delete_subscription.__doc__)
-    delete_parser.add_argument('topic_name')
     delete_parser.add_argument('subscription_name')
 
     receive_parser = subparsers.add_parser(
-        'receive', help=receive_message.__doc__)
-    receive_parser.add_argument('topic_name')
+        'receive', help=receive_messages.__doc__)
     receive_parser.add_argument('subscription_name')
+
+    receive_with_flow_control_parser = subparsers.add_parser(
+        'receive-flow-control',
+        help=receive_messages_with_flow_control.__doc__)
+    receive_with_flow_control_parser.add_argument('subscription_name')
 
     args = parser.parse_args()
 
     if args.command == 'list':
-        list_subscriptions(args.topic_name)
+        list_subscriptions(args.project, args.topic_name)
     elif args.command == 'create':
-        create_subscription(args.topic_name, args.subscription_name)
+        create_subscription(
+            args.project, args.topic_name, args.subscription_name)
     elif args.command == 'delete':
-        delete_subscription(args.topic_name, args.subscription_name)
+        delete_subscription(
+            args.project, args.subscription_name)
     elif args.command == 'receive':
-        receive_message(args.topic_name, args.subscription_name)
+        receive_messages(args.project, args.subscription_name)
+    elif args.command == 'receive-flow-control':
+        receive_messages_with_flow_control(
+            args.project, args.subscription_name)

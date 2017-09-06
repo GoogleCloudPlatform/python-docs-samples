@@ -12,34 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.cloud import pubsub
+import os
+
+from google.cloud import pubsub_v1
+import mock
 import pytest
 
 import quickstart
 
-
-# Must match the dataset listed in quickstart.py (there's no easy way to
-# extract this).
+PROJECT = os.environ['GCLOUD_PROJECT']
+# Must match the dataset listed in quickstart.py
 TOPIC_NAME = 'my-new-topic'
+TOPIC_PATH = 'projects/{}/topics/{}'.format(PROJECT, TOPIC_NAME)
 
 
 @pytest.fixture
 def temporary_topic():
-    """Fixture that ensures the test dataset does not exist before or
-    after a test."""
-    pubsub_client = pubsub.Client()
-    topic = pubsub_client.topic(TOPIC_NAME)
+    """Fixture that ensures the test topic does not exist before the test."""
+    publisher = pubsub_v1.PublisherClient()
 
-    if topic.exists():
-        topic.delete()
+    try:
+        publisher.delete_topic(TOPIC_PATH)
+    except:
+        pass
 
     yield
 
-    if topic.exists():
-        topic.delete()
 
-
-def test_quickstart(capsys, temporary_topic):
+@mock.patch.object(
+    pubsub_v1.PublisherClient, 'topic_path', return_value=TOPIC_PATH)
+def test_quickstart(unused_topic_path, temporary_topic, capsys):
     quickstart.run_quickstart()
     out, _ = capsys.readouterr()
     assert TOPIC_NAME in out
