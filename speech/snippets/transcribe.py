@@ -51,10 +51,9 @@ def transcribe_file(speech_file):
     # [START migration_sync_response]
     response = client.recognize(config, audio)
     # [END migration_sync_request]
-    alternatives = response.results[0].alternatives
-
-    for alternative in alternatives:
-        print('Transcript: {}'.format(alternative.transcript))
+    # Print the first alternative of all the consecutive results.
+    for result in response.results:
+        print('Transcript: {}'.format(result.alternatives[0].transcript))
     # [END migration_sync_response]
 # [END def_transcribe_file]
 
@@ -76,10 +75,9 @@ def transcribe_gcs(gcs_uri):
     # [END migration_audio_config_gcs]
 
     response = client.recognize(config, audio)
-    alternatives = response.results[0].alternatives
-
-    for alternative in alternatives:
-        print('Transcript: {}'.format(alternative.transcript))
+    # Print the first alternative of all the consecutive results.
+    for result in response.results:
+        print('Transcript: {}'.format(result.alternatives[0].transcript))
 # [END def_transcribe_gcs]
 
 
