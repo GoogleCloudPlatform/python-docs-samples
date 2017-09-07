@@ -4,7 +4,9 @@ BACKEND_SERVICE_ID = 'YOUR_BACKEND_SERVICE_ID'
 from flask import Flask
 from flask import request
 
-import validate_jwt
+import platform
+
+from validate_jwt import validate_iap_jwt_from_compute_engine
 
 app = Flask(__name__)
 
@@ -13,12 +15,12 @@ def root():
     jwt = request.headers.get('x-goog-iap-jwt-assertion')
     if jwt is None:
         return 'Unauthorized request.', 401
-    user_id, user_email, error_str = validate_jwt.validate_iap_jwt_from_compute_engine(
+    user_id, user_email, error_str = validate_iap_jwt_from_compute_engine(
             jwt, CLOUD_PROJECT_ID, BACKEND_SERVICE_ID)
     if error_str:
         return "Error: %s" % error_str
     else:
-        return "Hi, %s" % user_email
+      return "Hi, {}. I am {}.".format(user_email, platform.node())
 
 @app.route('/healthz')
 def health():
