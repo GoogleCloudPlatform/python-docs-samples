@@ -129,7 +129,9 @@ def listen_print_loop(responses):
         if not response.results:
             continue
 
-        # There could be multiple results in each response.
+        # The `results` list is consecutive. For streaming, we only care about
+        # the first result being considered, since once it's `is_final`, it
+        # moves on to considering the next utterance.
         result = response.results[0]
         if not result.alternatives:
             continue

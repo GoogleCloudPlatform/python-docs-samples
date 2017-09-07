@@ -46,9 +46,8 @@ def transcribe_file_with_word_time_offsets(speech_file):
 
     response = client.recognize(config, audio)
 
-    alternatives = response.results[0].alternatives
-
-    for alternative in alternatives:
+    for result in response.results:
+        alternative = result.alternatives[0]
         print('Transcript: {}'.format(alternative.transcript))
 
         for word_info in alternative.words:
@@ -82,8 +81,8 @@ def transcribe_gcs_with_word_time_offsets(gcs_uri):
     print('Waiting for operation to complete...')
     result = operation.result(timeout=90)
 
-    alternatives = result.results[0].alternatives
-    for alternative in alternatives:
+    for result in result.results:
+        alternative = result.alternatives[0]
         print('Transcript: {}'.format(alternative.transcript))
         print('Confidence: {}'.format(alternative.confidence))
 
