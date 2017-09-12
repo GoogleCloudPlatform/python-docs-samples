@@ -1,6 +1,7 @@
 PyJWT==1.5.2
 cryptography==2.0.3
-flask
+flask==0.12.2
 google-auth==1.0.2
+gunicorn==19.7.1
 requests==2.18.4
 requests_toolbelt==0.8.0
