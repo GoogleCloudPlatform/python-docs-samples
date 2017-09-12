@@ -52,8 +52,12 @@ def create_iot_topic(topic_name):
     topic = pubsub_client.topic(topic_name)
     policy = topic.get_iam_policy()
     publishers = policy.get('roles/pubsub.publisher', [])
-    publishers.add(policy.service_account(
-            'cloud-iot@system.gserviceaccount.com'))
+    if hasattr(publishers, "append"):
+        publishers.append(policy.service_account(
+                'cloud-iot@system.gserviceaccount.com'))
+    else:
+        publishers.add(policy.service_account(
+                'cloud-iot@system.gserviceaccount.com'))
     policy['roles/pubsub.publisher'] = publishers
     topic.set_iam_policy(policy)
 
@@ -64,7 +68,6 @@ def get_client(service_account_json, api_key):
     """Returns an authorized API client by discovering the IoT API using the
     provided API key and creating a service object using the service account
     credentials JSON."""
-    # [START authorize]
     api_scopes = ['https://www.googleapis.com/auth/cloud-platform']
     api_version = 'v1beta1'
     discovery_api = 'https://cloudiot.googleapis.com/$discovery/rest'
@@ -82,7 +85,6 @@ def get_client(service_account_json, api_key):
             api_version,
             discoveryServiceUrl=discovery_url,
             credentials=scoped_credentials)
-    # [END authorize]
 
 
 def create_rs256_device(
@@ -90,7 +92,6 @@ def create_rs256_device(
         device_id, certificate_file):
     """Create a new device with the given id, using RS256 for
     authentication."""
-    # [START create_rs256_device]
     registry_name = 'projects/{}/locations/{}/registries/{}'.format(
             project_id, cloud_region, registry_id)
 
@@ -111,7 +112,6 @@ def create_rs256_device(
 
     devices = client.projects().locations().registries().devices()
     return devices.create(parent=registry_name, body=device_template).execute()
-    # [END create_rs256_device]
 
 
 def create_es256_device(
@@ -119,7 +119,6 @@ def create_es256_device(
         device_id, public_key_file):
     """Create a new device with the given id, using ES256 for
     authentication."""
-    # [START create_rs256_device]
     registry_name = 'projects/{}/locations/{}/registries/{}'.format(
             project_id, cloud_region, registry_id)
 
@@ -140,14 +139,12 @@ def create_es256_device(
 
     devices = client.projects().locations().registries().devices()
     return devices.create(parent=registry_name, body=device_template).execute()
-    # [END create_rs256_device]
 
 
 def create_unauth_device(
         service_account_json, api_key, project_id, cloud_region, registry_id,
         device_id):
     """Create a new device without authentication."""
-    # [START create_noauth_device]
     registry_name = 'projects/{}/locations/{}/registries/{}'.format(
             project_id, cloud_region, registry_id)
 
@@ -158,14 +155,12 @@ def create_unauth_device(
 
     devices = client.projects().locations().registries().devices()
     return devices.create(parent=registry_name, body=device_template).execute()
-    # [END create_noauth_device]
 
 
 def delete_device(
         service_account_json, api_key, project_id, cloud_region, registry_id,
         device_id):
     """Delete the device with the given id."""
-    # [START delete_device]
     print('Delete device')
     client = get_client(service_account_json, api_key)
     registry_name = 'projects/{}/locations/{}/registries/{}'.format(
@@ -175,13 +170,11 @@ def delete_device(
 
     devices = client.projects().locations().registries().devices()
     return devices.delete(name=device_name).execute()
-    # [END delete_device]
 
 
 def delete_registry(
         service_account_json, api_key, project_id, cloud_region, registry_id):
     """Deletes the specified registry."""
-    # [START delete_registry]
     print('Delete registry')
     client = get_client(service_account_json, api_key)
     registry_name = 'projects/{}/locations/{}/registries/{}'.format(
@@ -189,14 +182,12 @@ def delete_registry(
 
     registries = client.projects().locations().registries()
     return registries.delete(name=registry_name).execute()
-    # [END delete_registry]
 
 
 def get_device(
         service_account_json, api_key, project_id, cloud_region, registry_id,
         device_id):
     """Retrieve the device with the given id."""
-    # [START delete_device]
     print('Getting device')
     client = get_client(service_account_json, api_key)
     registry_name = 'projects/{}/locations/{}/registries/{}'.format(
@@ -223,13 +214,11 @@ def get_device(
             'cloudUpdateTime')))
 
     return device
-    # [END delete_device]
 
 
 def list_devices(
         service_account_json, api_key, project_id, cloud_region, registry_id):
     """List all devices in the registry."""
-    # [START list_devices]
     print('Listing devices')
     registry_path = 'projects/{}/locations/{}/registries/{}'.format(
             project_id, cloud_region, registry_id)
@@ -243,14 +232,30 @@ def list_devices(
                     device.get('id')))
 
     return devices
-    # [list_devices]
 
 
-def open_registry(
+def list_registries(service_account_json, api_key, project_id, cloud_region):
+    """List all registries in the project."""
+    print('Listing Registries')
+    registry_path = 'projects/{}/locations/{}'.format(
+            project_id, cloud_region)
+    client = get_client(service_account_json, api_key)
+    registries = client.projects().locations().registries().list(
+        parent=registry_path).execute().get('deviceRegistries', [])
+
+    for registry in registries:
+            print('id: {}\n\tname: {}'.format(
+                    registry.get('id'),
+                    registry.get('name')))
+
+    return registries
+
+
+def create_registry(
         service_account_json, api_key, project_id, cloud_region, pubsub_topic,
         registry_id):
-    """Gets or creates a device registry."""
-    print('Creating registry')
+    """ Creates a registry and returns the result. Returns an empty result if
+    the registry already exists."""
     client = get_client(service_account_json, api_key)
     registry_parent = 'projects/{}/locations/{}'.format(
             project_id,
@@ -266,19 +271,45 @@ def open_registry(
 
     try:
         response = request.execute()
-        print('Created registry', registry_id)
-        print(response)
-    except HttpError as e:
-        if e.resp.status == 409:
-            # Device registry already exists
-            print(
-                    'Registry', registry_id,
-                    'already exists - looking it up instead.')
-            topic_name = '{}/registries/{}'.format(
-                    registry_parent, registry_id)
-            request = client.projects().locations().registries(
-                    ).get(name=topic_name)
-            request.execute()
+        print('Created registry')
+        return response
+    except HttpError:
+        return ""
+
+
+def get_registry(
+        service_account_json, api_key, project_id, cloud_region, registry_id):
+    """ Retrieves a device registry."""
+    client = get_client(service_account_json, api_key)
+    registry_parent = 'projects/{}/locations/{}'.format(
+            project_id,
+            cloud_region)
+    topic_name = '{}/registries/{}'.format(registry_parent, registry_id)
+    request = client.projects().locations().registries().get(name=topic_name)
+    return request.execute()
+
+
+def open_registry(
+        service_account_json, api_key, project_id, cloud_region, pubsub_topic,
+        registry_id):
+    """Gets or creates a device registry."""
+    print('Creating registry')
+
+    response = create_registry(
+        service_account_json, api_key, project_id, cloud_region,
+        pubsub_topic, registry_id)
+
+    if (response is ""):
+        # Device registry already exists
+        print(
+            'Registry {} already exists - looking it up instead.'.format(
+                registry_id))
+        response = get_registry(
+            service_account_json, api_key, project_id, cloud_region,
+            registry_id)
+
+    print('Registry {} opened: '.format(response.get('name')))
+    print(response)
 
 
 def patch_es256_auth(
@@ -394,7 +425,9 @@ def parse_command_line_args():
     command.add_parser('delete-device', help=delete_device.__doc__)
     command.add_parser('delete-registry', help=delete_registry.__doc__)
     command.add_parser('get', help=get_device.__doc__)
+    command.add_parser('get-registry', help=get_device.__doc__)
     command.add_parser('list', help=list_devices.__doc__)
+    command.add_parser('list-registries', help=list_registries.__doc__)
     command.add_parser('patch-es256', help=patch_es256_auth.__doc__)
     command.add_parser('patch-rs256', help=patch_rsa256_auth.__doc__)
 
@@ -447,6 +480,16 @@ def run_command(args):
         list_devices(
                 args.service_account_json, args.api_key, args.project_id,
                 args.cloud_region, args.registry_id)
+
+    elif args.command == 'get-registry':
+        print(get_registry(
+                args.service_account_json, args.api_key, args.project_id,
+                args.cloud_region, args.registry_id))
+
+    elif args.command == 'list-registries':
+        list_registries(
+                args.service_account_json, args.api_key, args.project_id,
+                args.cloud_region)
 
     elif args.command == 'patch-es256':
         if (args.ec_public_key_file is None):
