@@ -35,7 +35,7 @@ def list_queues(api_key, project_id, location_id):
 
     while True:
         response = client.projects().locations(
-            ).queues().list(parent=parent,pageToken=next_page_token).execute()
+            ).queues().list(parent=parent, pageToken=next_page_token).execute()
         queues += response['queues']
         if next_page_token is None:
             break
@@ -90,10 +90,13 @@ def acknowledge_task(api_key, task):
 
 def get_client(api_key):
     """Build an authenticated http client."""
-    DISCOVERY_URL = 'https://cloudtasks.googleapis.com/$discovery/rest?version=v2beta2&key={}'.format(
-        api_key)
+    discovery_url = (
+        'https://cloudtasks.googleapis.com/'
+        '$discovery/rest?version=v2beta2&key={}'.format(
+            api_key)
+        )
     client = discovery.build('cloudtasks', 'v2beta2',
-                             discoveryServiceUrl=DISCOVERY_URL)
+                             discoveryServiceUrl=discovery_url)
     return client
 
 

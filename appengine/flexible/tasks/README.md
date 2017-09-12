@@ -44,7 +44,7 @@ for more information.
 
 To create a queue using the Cloud SDK, use the following gcloud command:
 
-    gcloud alpha tasks queues create-app-engine-queue "my-appengine-queue"
+    gcloud alpha tasks queues create-app-engine-queue my-appengine-queue
 
 Note: A newly created queue will route to the default App Engine service and
 version unless configured to do otherwise. Read the online help for the
@@ -79,21 +79,21 @@ First, your project ID:
     export PROJECT_ID=my-project-id
 
 Then the queue ID, as specified at queue creation time. Queue IDs already
-created can be listed with `gcloud alpha tasks queue list`.
+created can be listed with `gcloud alpha tasks queues list`.
 
     export QUEUE_ID=my-appengine-queue
 
 And finally the location ID, which can be discovered with
-`gcloud alpha tasks queue describe $QUEUE_ID`, with the location embedded in the
-"name" value (for instance, if the name is
+`gcloud alpha tasks queues describe $QUEUE_ID`, with the location embedded in
+the "name" value (for instance, if the name is
 "projects/my-project/locations/us-central1/queues/my-appengine-queue", then the
 location is "us-central1").
 
     export LOCATION_ID=us-central1
 
-Create a task, targeted at the `set_payload` endpoint with a payload specified:
+Create a task, targeted at the `log_payload` endpoint, with a payload specified:
 
-   python create_app_engine_queue_task.py --project=$PROJECT_ID --queue=QUEUE_ID --location=LOCATION_ID --payload=hello
+   python create_app_engine_queue_task.py --project=$PROJECT_ID --queue=$QUEUE_ID --location=$LOCATION_ID --payload=hello
 
 Now view that the payload was received and verify the payload:
 
@@ -102,4 +102,4 @@ Now view that the payload was received and verify the payload:
 Create a task that will be scheduled for a time in the future using the
 `--in_seconds` flag:
 
-    python create_app_engine_queue_task.py --project=$PROJECT_ID --queue=QUEUE_ID --location=LOCATION_ID --payload=hello --in_seconds=30
+    python create_app_engine_queue_task.py --project=$PROJECT_ID --queue=$QUEUE_ID --location=$LOCATION_ID --payload=hello --in_seconds=30

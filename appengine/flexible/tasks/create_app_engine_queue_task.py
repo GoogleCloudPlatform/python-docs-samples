@@ -17,7 +17,7 @@ from __future__ import print_function
 import argparse
 import base64
 import datetime
-import pprint
+import json
 
 from googleapiclient import discovery
 
@@ -30,7 +30,12 @@ def seconds_from_now_to_rfc3339_datetime(seconds):
 
 def create_task(project, queue, location, payload=None, in_seconds=None):
     """Create a task for a given queue with an arbitrary payload."""
-    client = get_client()
+
+    # Create a client.
+    DISCOVERY_URL = (
+        'https://cloudtasks.googleapis.com/$discovery/rest?version=v2beta2')
+    client = discovery.build(
+        'cloudtasks', 'v2beta2', discoveryServiceUrl=DISCOVERY_URL)
 
     url = '/log_payload'
     body = {
@@ -54,7 +59,7 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
     queue_name = 'projects/{}/locations/{}/queues/{}'.format(
         project, location, queue)
 
-    print('Sending task {}'.format(pprint.pformat(body)))
+    print('Sending task {}'.format(json.dumps(body)))
 
     response = client.projects().locations().queues().tasks().create(
         parent=queue_name, body=body).execute()
@@ -65,14 +70,6 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
     # or because of the sensitivity of data that it contains.
     print('Created task {}'.format(response['name']))
     return response
-
-
-def get_client():
-    """Build an http client."""
-    DISCOVERY_URL = 'https://cloudtasks.googleapis.com/$discovery/rest?version=v2beta2'
-    client = discovery.build('cloudtasks', 'v2beta2',
-                             discoveryServiceUrl=DISCOVERY_URL)
-    return client
 
 
 if __name__ == '__main__':

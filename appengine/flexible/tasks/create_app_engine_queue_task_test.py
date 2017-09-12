@@ -21,9 +21,9 @@ TEST_LOCATION = 'us-central1'
 TEST_QUEUE = 'my-appengine-queue'
 
 
-@mock.patch('create_app_engine_queue_task.get_client')
-def test_create_task(get_client):
-    projects = get_client.return_value.projects.return_value
+@mock.patch('googleapiclient.discovery.build')
+def test_create_task(build):
+    projects = build.return_value.projects.return_value
     locations = projects.locations.return_value
     create_function = locations.queues.return_value.tasks.return_value.create
     execute_function = create_function.return_value.execute
