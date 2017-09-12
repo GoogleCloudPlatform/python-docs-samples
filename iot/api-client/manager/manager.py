@@ -236,7 +236,7 @@ def list_registries(service_account_json, api_key, project_id, cloud_region):
     registry_path = 'projects/{}/locations/{}'.format(
             project_id, cloud_region)
     client = get_client(service_account_json, api_key)
-    registries= client.projects().locations().registries().list(
+    registries = client.projects().locations().registries().list(
         parent=registry_path).execute().get('deviceRegistries', [])
 
     for registry in registries:
@@ -271,8 +271,9 @@ def create_registry(
         response = request.execute()
         print('Created registry')
         return response
-    except HttpError as e:
+    except HttpError:
         return ""
+
 
 def get_registry(
         service_account_json, api_key, project_id, cloud_region, registry_id):
@@ -284,6 +285,7 @@ def get_registry(
     topic_name = '{}/registries/{}'.format(registry_parent, registry_id)
     request = client.projects().locations().registries().get(name=topic_name)
     return request.execute()
+
 
 def open_registry(
         service_account_json, api_key, project_id, cloud_region, pubsub_topic,
@@ -306,7 +308,6 @@ def open_registry(
 
     print('Registry {} opened: '.format(response.get('name')))
     print(response)
-
 
 
 def patch_es256_auth(
