@@ -73,6 +73,17 @@ def test_read_data(temporary_database, capsys):
     assert 'Total Junk' in out
 
 
+def test_read_stale_data(temporary_database, capsys):
+    snippets.read_stale_data(SPANNER_INSTANCE, temporary_database.database_id)
+
+    out, _ = capsys.readouterr()
+
+    # It shouldn't be in the output because it was *just* inserted by the
+    # temporary database fixture and this sample reads 10 seconds into the
+    # past.
+    assert 'Total Junk' not in out
+
+
 @pytest.fixture(scope='module')
 def temporary_database_with_column(temporary_database):
     snippets.add_column(SPANNER_INSTANCE, temporary_database.database_id)
