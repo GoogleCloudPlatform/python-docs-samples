@@ -52,8 +52,12 @@ def create_iot_topic(topic_name):
     topic = pubsub_client.topic(topic_name)
     policy = topic.get_iam_policy()
     publishers = policy.get('roles/pubsub.publisher', [])
-    publishers.append(policy.service_account(
-            'cloud-iot@system.gserviceaccount.com'))
+    if hasattr(publishers, "append"):
+        publishers.append(policy.service_account(
+                'cloud-iot@system.gserviceaccount.com'))
+    else:
+        publishers.add(policy.service_account(
+                'cloud-iot@system.gserviceaccount.com'))
     policy['roles/pubsub.publisher'] = publishers
     topic.set_iam_policy(policy)
 
@@ -264,8 +268,6 @@ def create_registry(
     }
     request = client.projects().locations().registries().create(
         parent=registry_parent, body=body)
-
-    print (request)
 
     try:
         response = request.execute()
