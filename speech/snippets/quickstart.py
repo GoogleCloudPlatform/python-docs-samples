@@ -50,10 +50,9 @@ def run_quickstart():
 
     # Detects speech in the audio file
     response = client.recognize(config, audio)
-    alternatives = response.results[0].alternatives
 
-    for alternative in alternatives:
-        print('Transcript: {}'.format(alternative.transcript))
+    for result in response.results:
+        print('Transcript: {}'.format(result.alternatives[0].transcript))
     # [END speech_quickstart]
 
 
