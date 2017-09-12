@@ -6,7 +6,7 @@ mock==2.0.0
 mysql-python==1.2.5; python_version < "3.0"
 PyCrypto==2.6.1
 pytest-cov==2.5.1
-pytest==3.2.1
+pytest==3.2.2
 pytest-capturelog==0.7
 pyyaml==3.12
 responses==0.7.0
