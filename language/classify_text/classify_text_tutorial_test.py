@@ -15,16 +15,23 @@ import os
 
 from classify_text_tutorial import classify
 from classify_text_tutorial import similarity
+from classify_text_tutorial import split_labels
 
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 
 
 def test_classify(capsys):
-    with open(os.path.join(RESOURCES, 'query_text.txt'), 'r') as f:
+    with open(os.path.join(RESOURCES, 'query_text1.txt'), 'r') as f:
         text = f.read()
     classify(text)
     out, err = capsys.readouterr()
     assert 'category' in out
+
+
+def test_split_labels():
+    categories = {'/a/b/c': 1.0}
+    split_categories = {'a': 1.0, 'b': 1.0, 'c': 1.0}
+    assert split_labels(categories) == split_categories
 
 
 def test_similarity():

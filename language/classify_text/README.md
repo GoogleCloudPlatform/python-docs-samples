@@ -71,7 +71,7 @@ python classify_text_tutorial.py query-category index.json "/Internet & Telecom/
 The indexed text files can be queried with another text that might not have been indexed.
 
 ```
-python classify_text_tutorial.py query index.json "$(cat resources/query_text.txt)"
+python classify_text_tutorial.py query index.json "$(cat resources/query_text1.txt)"
 ```
 
 
