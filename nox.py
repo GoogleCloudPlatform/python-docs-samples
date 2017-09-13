@@ -210,9 +210,9 @@ def session_py27(session, sample):
 
 
 @nox.parametrize('sample', NON_GAE_STANDARD_SAMPLES)
-def session_py35(session, sample):
-    """Runs py.test for a sample using Python 3.5"""
-    session.interpreter = 'python3.5'
+def session_py36(session, sample):
+    """Runs py.test for a sample using Python 3.6"""
+    session.interpreter = 'python3.6'
     _session_tests(session, sample)
 
 
