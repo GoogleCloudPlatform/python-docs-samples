@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-CLOUD_PROJECT_ID = 'YOUR_PROJECT_ID'
-BACKEND_SERVICE_ID = 'YOUR_BACKEND_SERVICE_ID'
-
 import platform
 
 import flask
 
 import validate_jwt
+
+CLOUD_PROJECT_ID = 'YOUR_PROJECT_ID'
+BACKEND_SERVICE_ID = 'YOUR_BACKEND_SERVICE_ID'
 
 app = flask.Flask(__name__)
 
@@ -28,18 +28,13 @@ app = flask.Flask(__name__)
 def root():
     jwt = flask.request.headers.get('x-goog-iap-jwt-assertion')
     if jwt is None:
-        return 'Unauthorized request.', 401
+        return 'Unauthorized request.'
     user_id, user_email, error_str = validate_jwt.validate_iap_jwt_from_compute_engine(
         jwt, CLOUD_PROJECT_ID, BACKEND_SERVICE_ID)
     if error_str:
         return 'Error: {}'.format(error_str)
     else:
         return 'Hi, {}. I am {}.'.format(user_email, platform.node())
-
-
-@app.route('/healthz')
-def health():
-    return 'OK', 200
 
 
 if __name__ == '__main__':
