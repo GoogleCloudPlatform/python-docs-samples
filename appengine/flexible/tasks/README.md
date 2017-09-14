@@ -54,9 +54,6 @@ HTTP POST request and logs it. The log output can be viewed with:
 
 ## Running the Samples
 
-The project ID must be specified either as a command line argument using
-`--project-id`, or by editing `DEFAULT_PROJECT_ID` within `task_snippets.py`.
-
 Set environment variables:
 
 First, your project ID:

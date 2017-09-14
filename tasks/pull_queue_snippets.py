@@ -26,37 +26,14 @@ import base64
 from googleapiclient import discovery
 
 
-def list_queues(project_id, location_id):
-    """List the queues in the location."""
-    DISCOVERY_URL = (
-        'https://cloudtasks.googleapis.com/$discovery/rest?version=v2beta2')
-    client = discovery.build('cloudtasks', 'v2beta2',
-                             discoveryServiceUrl=discovery_url)
-    parent = 'projects/{}/locations/{}'.format(project_id, location_id)
-    queues = []
-    next_page_token = None
-
-    while True:
-        queues_api = client.projects().locations().queues()
-        response = queues_api.list(
-            parent=parent, pageToken=next_page_token).execute()
-        queues += response['queues']
-        if next_page_token is None:
-            break
-
-    print('Listing queues for location {}'.format(location_id))
-
-    for queue in response['queues']:
-        print queue['name']
-    return response
-
-
-def create_task(queue_name):
+def create_task(project, queue, location):
     """Create a task for a given queue with an arbitrary payload."""
+
     DISCOVERY_URL = (
         'https://cloudtasks.googleapis.com/$discovery/rest?version=v2beta2')
-    client = discovery.build('cloudtasks', 'v2beta2',
-                             discoveryServiceUrl=discovery_url)
+    client = discovery.build(
+        'cloudtasks', 'v2beta2', discoveryServiceUrl=DISCOVERY_URL)
+
     payload = 'a message for the recipient'
     task = {
         'task': {
@@ -65,39 +42,54 @@ def create_task(queue_name):
             }
         }
     }
+
+    queue_name = 'projects/{}/locations/{}/queues/{}'.format(
+        project, location, queue)
+
     response = client.projects().locations().queues().tasks().create(
         parent=queue_name, body=task).execute()
+
     print('Created task {}'.format(response['name']))
     return response
 
 
-def pull_task(queue_name):
+def pull_task(project, queue, location):
     """Pull a single task from a given queue and lease it for 10 minutes."""
+
     DISCOVERY_URL = (
         'https://cloudtasks.googleapis.com/$discovery/rest?version=v2beta2')
-    client = discovery.build('cloudtasks', 'v2beta2',
-                             discoveryServiceUrl=discovery_url)
+    client = discovery.build(
+        'cloudtasks', 'v2beta2', discoveryServiceUrl=DISCOVERY_URL)
+
     duration_seconds = '600s'
     pull_options = {
         'max_tasks': 1,
         'leaseDuration': duration_seconds,
         'responseView': 'FULL'
     }
+
+    queue_name = 'projects/{}/locations/{}/queues/{}'.format(
+        project, location, queue)
+
     response = client.projects().locations().queues().tasks().pull(
         name=queue_name, body=pull_options).execute()
+
     print('Pulled task {}'.format(response))
     return response['tasks'][0]
 
 
 def acknowledge_task(task):
     """Acknowledge a given task."""
+
     DISCOVERY_URL = (
         'https://cloudtasks.googleapis.com/$discovery/rest?version=v2beta2')
-    client = discovery.build('cloudtasks', 'v2beta2',
-                             discoveryServiceUrl=discovery_url)
+    client = discovery.build(
+        'cloudtasks', 'v2beta2', discoveryServiceUrl=DISCOVERY_URL)
+
     body = {'scheduleTime': task['scheduleTime']}
     client.projects().locations().queues().tasks().acknowledge(
         name=task['name'], body=body).execute()
+
     print('Acknowledged task {}'.format(task['name']))
 
 
@@ -108,39 +100,42 @@ if __name__ == '__main__':
 
     subparsers = parser.add_subparsers(dest='command')
 
-    list_queues_parser = subparsers.add_parser(
-        'list-queues',
-        help=list_queues.__doc__)
-
-    list_queues_parser.add_argument(
-        '--project_id',
-        help='Project ID you want to access.',
-        required=True)
-    list_queues_parser.add_argument(
-        '--location_id',
-        help='Location of the queues.',
-        required=True)
-
     create_task_parser = subparsers.add_parser(
         'create-task',
         help=create_task.__doc__)
     create_task_parser.add_argument(
-        '--queue_name',
-        help='Fully qualified name of the queue to add the task to.')
+        '--project',
+        help='Project of the queue to add the task to.'
+    )
+    create_task_parser.add_argument(
+        '--queue',
+        help='ID (short name) of the queue to add the task to.'
+    )
+    create_task_parser.add_argument(
+        '--location',
+        help='Location of the queue to add the task to.'
+    )
 
     pull_and_ack_parser = subparsers.add_parser(
         'pull-and-ack-task',
         help=create_task.__doc__)
     pull_and_ack_parser.add_argument(
-        '--queue_name',
-        help='Fully qualified name of the queue to add the task to.')
+        '--project',
+        help='Project of the queue to pull the task from.'
+    )
+    pull_and_ack_parser.add_argument(
+        '--queue',
+        help='ID (short name) of the queue to pull the task from.'
+    )
+    pull_and_ack_parser.add_argument(
+        '--location',
+        help='Location of the queue to pull the task from.'
+    )
 
     args = parser.parse_args()
 
-    if args.command == 'list-queues':
-        list_queues(args.project_id, args.location_id)
     if args.command == 'create-task':
-        create_task(args.queue_name)
+        create_task(args.project, args.queue, args.location)
     if args.command == 'pull-and-ack-task':
-        task = pull_task(args.queue_name)
+        task = pull_task(args.project, args.queue, args.location)
         acknowledge_task(task)

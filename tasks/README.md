@@ -21,34 +21,39 @@ To set up authentication, please refer to our
 
 ## Creating a queue
 
-Queues can not currently be created by the API. To create the queue using the Cloud SDK, use
-the provided queue.yaml:
+To create a queue using the Cloud SDK, use the following gcloud command:
 
-    gcloud app deploy queue.yaml
+    gcloud alpha tasks queues create-pull-queue my-pull-queue
 
 ## Running the Samples
 
-The project ID must be specified either as a command line argument using `--project-id`, or by
-editing `DEFAULT_PROJECT_ID` within `task_snippets.py`.
-
 Set the environment variables:
 
-    export API_KEY=your-api-key
+Set environment variables:
+
+First, your project ID:
+
     export PROJECT_ID=my-project-id
+
+Then the queue ID, as specified at queue creation time. Queue IDs already
+created can be listed with `gcloud alpha tasks queues list`.
+
+    export QUEUE_ID=my-pull-queue
+
+And finally the location ID, which can be discovered with
+`gcloud alpha tasks queues describe $QUEUE_ID`, with the location embedded in
+the "name" value (for instance, if the name is
+"projects/my-project/locations/us-central1/queues/my-pull-queue", then the
+location is "us-central1").
+
     export LOCATION_ID=us-central1
-    export QUEUE_ID=my-pull-queue # From queue.yaml
-    export QUEUE_NAME=projects/$PROJECT_ID/locations/$LOCATION_ID/queues/$QUEUE_ID
-
-View all queues:
-
-     python pull_queue_snippets.py --api_key=$API_KEY list-queues --project_id=$PROJECT_ID --location_id=$LOCATION_ID
 
 Create a task for a queue:
 
-    python pull_queue_snippets.py --api_key=$API_KEY create-task --queue_name=$QUEUE_NAME
+    python pull_queue_snippets.py create-task --project=$PROJECT_ID --queue=$QUEUE_ID --location=$LOCATION_ID
 
 Pull and acknowledge a task:
 
-    python pull_queue_snippets.py --api_key=$API_KEY pull-and-ack-task --queue_name=$QUEUE_NAME
+    python pull_queue_snippets.py pull-and-ack-task --project=$PROJECT_ID --queue=$QUEUE_ID --location=$LOCATION_ID
 
 Note that usually, there would be a processing step in between pulling a task and acknowledging it.
