@@ -38,7 +38,7 @@ def create_task(project, queue, location):
     task = {
         'task': {
             'pull_task_target': {
-                'payload': base64.b64encode(payload)
+                'payload': base64.b64encode(payload.encode()).decode()
             }
         }
     }
