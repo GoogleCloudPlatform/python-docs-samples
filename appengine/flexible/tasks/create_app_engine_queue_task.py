@@ -48,7 +48,8 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
     }
 
     if payload is not None:
-        # Payload is a string (unicode), so 
+        # Payload is a string (unicode), and must be encoded for base64.
+        # The finished request body is JSON, which requires unicode.
         body['task']['app_engine_task_target']['payload'] = base64.b64encode(
             payload.encode()).decode()
 

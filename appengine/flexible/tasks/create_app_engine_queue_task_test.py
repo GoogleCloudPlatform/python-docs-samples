@@ -28,5 +28,6 @@ def test_create_task(build):
     create_function = locations.queues.return_value.tasks.return_value.create
     execute_function = create_function.return_value.execute
     execute_function.return_value = {'name': 'task_name'}
-    create_app_engine_queue_task.create_task(TEST_PROJECT, TEST_QUEUE, TEST_LOCATION)
+    create_app_engine_queue_task.create_task(
+        TEST_PROJECT, TEST_QUEUE, TEST_LOCATION)
     assert execute_function.called
