@@ -32,7 +32,7 @@ def test_index(app):
 def test_log_payload(logging_mock, app):
     payload = 'hello'
 
-    r = app.post('/log_payload', payload)
+    r = app.post('/log_payload', data=payload)
     assert r.status_code == 200
 
     assert logging_mock.called

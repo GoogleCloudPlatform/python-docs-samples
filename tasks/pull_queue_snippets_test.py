@@ -18,7 +18,7 @@ import pull_queue_snippets
 
 TEST_PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 TEST_LOCATION = os.getenv('TEST_QUEUE_LOCATION', 'us-central1')
-TEST_QUEUE_NAME = os.getenv('TEST_QUEUE_NAME', 'test-queue')
+TEST_QUEUE_NAME = os.getenv('TEST_QUEUE_NAME', 'my-pull-queue')
 
 
 def test_create_task():
