@@ -16,22 +16,8 @@ Please refer to [Setting Up a Python Development Environment](https://cloud.goog
 
 ## Authentication
 
-To set up authentication locally, download the [Cloud SDK](https://cloud.google.com/sdk), and run
-
-    gcloud auth application-default login
-
-On App Engine, authentication credentials will be automatically detected.
-
-On Compute Engine and Container Engine, authentication credentials will be
-automatically detected, but the instances must have been created with the
-necessary scopes.
-
-In any other environment, for example Compute Engine instance without the
-necessary scopes, you should set `GOOGLE_APPLICATION_CREDENTIALS` environment
-variable to a JSON key file for a service account.
-
-See the [authentication guide](https://cloud.google.com/docs/authentication)
-for more information.
+To set up authentication, please refer to our
+[authentication getting started guide](https://cloud.google.com/docs/authentication/getting-started).
 
 ## Creating a queue
 

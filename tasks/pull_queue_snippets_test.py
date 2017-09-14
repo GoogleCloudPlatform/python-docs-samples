@@ -18,28 +18,26 @@ import pull_queue_snippets
 
 TEST_PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 TEST_LOCATION = 'us-central1'
-API_KEY = os.getenv('API_KEY')
 
 
 def test_list_queues():
     result = pull_queue_snippets.list_queues(
-        API_KEY, TEST_PROJECT_ID, TEST_LOCATION)
+        TEST_PROJECT_ID, TEST_LOCATION)
     assert len(result['queues']) > 0
 
 
 def test_create_task():
     result = pull_queue_snippets.list_queues(
-        API_KEY, TEST_PROJECT_ID, TEST_LOCATION)
+        TEST_PROJECT_ID, TEST_LOCATION)
     queue_name = result['queues'][0]['name']
-    result = pull_queue_snippets.create_task(API_KEY, queue_name)
+    result = pull_queue_snippets.create_task(queue_name)
     assert queue_name in result['name']
 
 
 def test_pull_and_ack_task():
     result = pull_queue_snippets.list_queues(
-        API_KEY, TEST_PROJECT_ID, TEST_LOCATION)
+        TEST_PROJECT_ID, TEST_LOCATION)
     queue_name = result['queues'][0]['name']
-    pull_queue_snippets.create_task(API_KEY, queue_name)
-    task = pull_queue_snippets.pull_task(API_KEY, queue_name)
-    pull_queue_snippets.acknowledge_task(API_KEY, task)
-
+    pull_queue_snippets.create_task(queue_name)
+    task = pull_queue_snippets.pull_task(queue_name)
+    pull_queue_snippets.acknowledge_task(task)

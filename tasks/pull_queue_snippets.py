@@ -26,16 +26,20 @@ import base64
 from googleapiclient import discovery
 
 
-def list_queues(api_key, project_id, location_id):
+def list_queues(project_id, location_id):
     """List the queues in the location."""
-    client = get_client(api_key)
+    DISCOVERY_URL = (
+        'https://cloudtasks.googleapis.com/$discovery/rest?version=v2beta2')
+    client = discovery.build('cloudtasks', 'v2beta2',
+                             discoveryServiceUrl=discovery_url)
     parent = 'projects/{}/locations/{}'.format(project_id, location_id)
     queues = []
     next_page_token = None
 
     while True:
-        response = client.projects().locations(
-            ).queues().list(parent=parent, pageToken=next_page_token).execute()
+        queues_api = client.projects().locations().queues()
+        response = queues_api.list(
+            parent=parent, pageToken=next_page_token).execute()
         queues += response['queues']
         if next_page_token is None:
             break
@@ -47,9 +51,12 @@ def list_queues(api_key, project_id, location_id):
     return response
 
 
-def create_task(api_key, queue_name):
+def create_task(queue_name):
     """Create a task for a given queue with an arbitrary payload."""
-    client = get_client(api_key)
+    DISCOVERY_URL = (
+        'https://cloudtasks.googleapis.com/$discovery/rest?version=v2beta2')
+    client = discovery.build('cloudtasks', 'v2beta2',
+                             discoveryServiceUrl=discovery_url)
     payload = 'a message for the recipient'
     task = {
         'task': {
@@ -64,9 +71,12 @@ def create_task(api_key, queue_name):
     return response
 
 
-def pull_task(api_key, queue_name):
+def pull_task(queue_name):
     """Pull a single task from a given queue and lease it for 10 minutes."""
-    client = get_client(api_key)
+    DISCOVERY_URL = (
+        'https://cloudtasks.googleapis.com/$discovery/rest?version=v2beta2')
+    client = discovery.build('cloudtasks', 'v2beta2',
+                             discoveryServiceUrl=discovery_url)
     duration_seconds = '600s'
     pull_options = {
         'max_tasks': 1,
@@ -79,25 +89,16 @@ def pull_task(api_key, queue_name):
     return response['tasks'][0]
 
 
-def acknowledge_task(api_key, task):
+def acknowledge_task(task):
     """Acknowledge a given task."""
-    client = get_client(api_key)
+    DISCOVERY_URL = (
+        'https://cloudtasks.googleapis.com/$discovery/rest?version=v2beta2')
+    client = discovery.build('cloudtasks', 'v2beta2',
+                             discoveryServiceUrl=discovery_url)
     body = {'scheduleTime': task['scheduleTime']}
     client.projects().locations().queues().tasks().acknowledge(
         name=task['name'], body=body).execute()
     print('Acknowledged task {}'.format(task['name']))
-
-
-def get_client(api_key):
-    """Build an authenticated http client."""
-    discovery_url = (
-        'https://cloudtasks.googleapis.com/'
-        '$discovery/rest?version=v2beta2&key={}'.format(
-            api_key)
-        )
-    client = discovery.build('cloudtasks', 'v2beta2',
-                             discoveryServiceUrl=discovery_url)
-    return client
 
 
 if __name__ == '__main__':
@@ -106,7 +107,6 @@ if __name__ == '__main__':
         formatter_class=argparse.RawDescriptionHelpFormatter)
 
     subparsers = parser.add_subparsers(dest='command')
-    parser.add_argument('--api_key', help='API Key', required=True)
 
     list_queues_parser = subparsers.add_parser(
         'list-queues',
@@ -138,9 +138,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.command == 'list-queues':
-        list_queues(args.api_key, args.project_id, args.location_id)
+        list_queues(args.project_id, args.location_id)
     if args.command == 'create-task':
-        create_task(args.api_key, args.queue_name)
+        create_task(args.queue_name)
     if args.command == 'pull-and-ack-task':
-        task = pull_task(args.api_key, args.queue_name)
-        acknowledge_task(args.api_key, task)
+        task = pull_task(args.queue_name)
+        acknowledge_task(task)
