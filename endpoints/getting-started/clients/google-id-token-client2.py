@@ -40,7 +40,8 @@ params = {
     'assertion': signed_jwt
 }
 headers = {"Content-Type": "application/x-www-form-urlencoded"}
-response = requests.post('https://www.googleapis.com/oauth2/v4/token', data=params, headers=headers)
+response = requests.post('https://www.googleapis.com/oauth2/v4/token',
+                         data=params, headers=headers)
 res = response.json()
 
 pprint(res)
@@ -48,7 +49,8 @@ pprint(res)
 # request
 
 headers = {'Authorization': 'Bearer {}'.format(res['id_token'])}
-response = requests.get('https://YOUR-SERVICE-URL', headers=headers, verify=False)
+response = requests.get('https://YOUR-SERVICE-URL',
+                        headers=headers, verify=False)
 response.raise_for_status()
 print("-- got response --")
 print(response.json())
