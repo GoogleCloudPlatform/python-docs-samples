@@ -19,6 +19,7 @@ import snippets
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 TEST_FILE_URL = 'gs://{}/text.txt'.format(BUCKET)
+LONG_TEST_FILE_URL = 'gs://{}/android_text.txt'.format(BUCKET)
 
 
 def test_sentiment_text(capsys):
@@ -68,21 +69,18 @@ def test_syntax_file(capsys):
     assert 'NOUN: President' in out
 
 
-def test_sentiment_entities_text(capsys):
-    snippets.entity_sentiment_text(
-        'President Obama is speaking at the White House.')
+def test_classify_text(capsys):
+    snippets.classify_text(
+        'Android is a mobile operating system developed by Google, '
+        'based on the Linux kernel and designed primarily for touchscreen '
+        'mobile devices such as smartphones and tablets.')
     out, _ = capsys.readouterr()
-    assert 'Content : White House' in out
+    assert 'name' in out
+    assert '/Computers & Electronics' in out
 
 
-def test_sentiment_entities_file(capsys):
-    snippets.entity_sentiment_file(TEST_FILE_URL)
+def test_classify_file(capsys):
+    snippets.classify_file(LONG_TEST_FILE_URL)
     out, _ = capsys.readouterr()
-    assert 'Content : White House' in out
-
-
-def test_sentiment_entities_utf(capsys):
-    snippets.entity_sentiment_text(
-        'foo→bar')
-    out, _ = capsys.readouterr()
-    assert 'Begin Offset : 4' in out
+    assert 'name' in out
+    assert '/Computers & Electronics' in out
