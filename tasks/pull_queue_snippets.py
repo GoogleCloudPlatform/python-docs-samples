@@ -105,15 +105,18 @@ if __name__ == '__main__':
         help=create_task.__doc__)
     create_task_parser.add_argument(
         '--project',
-        help='Project of the queue to add the task to.'
+        help='Project of the queue to add the task to.',
+        required=True,
     )
     create_task_parser.add_argument(
         '--queue',
-        help='ID (short name) of the queue to add the task to.'
+        help='ID (short name) of the queue to add the task to.',
+        required=True,
     )
     create_task_parser.add_argument(
         '--location',
-        help='Location of the queue to add the task to.'
+        help='Location of the queue to add the task to.',
+        required=True,
     )
 
     pull_and_ack_parser = subparsers.add_parser(
@@ -121,15 +124,18 @@ if __name__ == '__main__':
         help=create_task.__doc__)
     pull_and_ack_parser.add_argument(
         '--project',
-        help='Project of the queue to pull the task from.'
+        help='Project of the queue to pull the task from.',
+        required=True,
     )
     pull_and_ack_parser.add_argument(
         '--queue',
-        help='ID (short name) of the queue to pull the task from.'
+        help='ID (short name) of the queue to pull the task from.',
+        required=True,
     )
     pull_and_ack_parser.add_argument(
         '--location',
-        help='Location of the queue to pull the task from.'
+        help='Location of the queue to pull the task from.',
+        required=True,
     )
 
     args = parser.parse_args()
