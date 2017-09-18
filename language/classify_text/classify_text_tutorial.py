@@ -26,12 +26,13 @@ import argparse
 import io
 import json
 import os
-import numpy
-import six
 
 from google.cloud import language_v1beta2
 from google.cloud.language_v1beta2 import enums
 from google.cloud.language_v1beta2 import types
+
+import numpy
+import six
 # [END classify_text_tutorial_import]
 
 
