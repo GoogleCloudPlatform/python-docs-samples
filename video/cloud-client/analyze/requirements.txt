@@ -1,1 +1,1 @@
-google-cloud-videointelligence==0.26.0
+google-cloud-videointelligence==0.27.1
