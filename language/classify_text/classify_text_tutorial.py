@@ -23,14 +23,15 @@ https://cloud.google.com/natural-language/docs/classify-text-tutorial.
 
 # [START classify_text_tutorial_import]
 import argparse
+import io
 import json
 import os
+import numpy
+import six
 
 from google.cloud import language_v1beta2
 from google.cloud.language_v1beta2 import enums
 from google.cloud.language_v1beta2 import types
-
-import numpy as np
 # [END classify_text_tutorial_import]
 
 
@@ -43,7 +44,8 @@ def classify(text, verbose=True):
     document = types.Document(
         content=text,
         type=enums.Document.Type.PLAIN_TEXT)
-    categories = language_client.classify_text(document).categories
+    response = language_client.classify_text(document)
+    categories = response.categories
 
     result = {}
 
@@ -78,7 +80,7 @@ def index(path, index_file):
             continue
 
         try:
-            with open(file_path, 'r') as f:
+            with io.open(file_path, 'r') as f:
                 text = f.read()
                 categories = classify(text, verbose=False)
 
@@ -86,8 +88,8 @@ def index(path, index_file):
         except:
             print('Failed to process {}'.format(file_path))
 
-    with open(index_file, 'w') as f:
-        json.dump(result, f)
+    with io.open(index_file, 'w') as f:
+        f.write(unicode(json.dumps(result)))
 
     print('Texts indexed in file: {}'.format(index_file))
     return result
@@ -115,7 +117,7 @@ def split_labels(categories):
     Then x and y are considered more similar than y and z.
     """
     _categories = {}
-    for name, confidence in categories.iteritems():
+    for name, confidence in six.iteritems(categories):
         labels = [label for label in name.split('/') if label]
         for label in labels:
             _categories[label] = confidence
@@ -130,8 +132,8 @@ def similarity(categories1, categories2):
     categories1 = split_labels(categories1)
     categories2 = split_labels(categories2)
 
-    norm1 = np.linalg.norm(categories1.values())
-    norm2 = np.linalg.norm(categories2.values())
+    norm1 = numpy.linalg.norm(categories1.values())
+    norm2 = numpy.linalg.norm(categories2.values())
 
     # Return the smallest possible similarity if either categories is empty.
     if norm1 == 0 or norm2 == 0:
@@ -139,7 +141,7 @@ def similarity(categories1, categories2):
 
     # Compute the cosine similarity.
     dot = 0.0
-    for label, confidence in categories1.iteritems():
+    for label, confidence in six.iteritems(categories1):
         dot += confidence * categories2.get(label, 0.0)
 
     return dot / (norm1 * norm2)
@@ -152,14 +154,14 @@ def query(index_file, text, n_top=3):
     the query text.
     """
 
-    with open(index_file, 'r') as f:
+    with io.open(index_file, 'r') as f:
         index = json.load(f)
 
     # Get the categories of the query text.
     query_categories = classify(text, verbose=False)
 
     similarities = []
-    for filename, categories in index.iteritems():
+    for filename, categories in six.iteritems(index):
         similarities.append(
             (filename, similarity(query_categories, categories)))
 
@@ -167,7 +169,7 @@ def query(index_file, text, n_top=3):
 
     print('=' * 20)
     print('Query: {}\n'.format(text))
-    for category, confidence in query_categories.iteritems():
+    for category, confidence in six.iteritems(query_categories):
         print('\tCategory: {}, confidence: {}'.format(category, confidence))
     print('\nMost similar {} indexed texts:'.format(n_top))
     for filename, sim in similarities[:n_top]:
@@ -188,7 +190,7 @@ def query_category(index_file, category_string, n_top=3):
     https://cloud.google.com/natural-language/docs/categories
     """
 
-    with open(index_file, 'r') as f:
+    with io.open(index_file, 'r') as f:
         index = json.load(f)
 
     # Make the category_string into a dictionary so that it is
@@ -196,7 +198,7 @@ def query_category(index_file, category_string, n_top=3):
     query_categories = {category_string: 1.0}
 
     similarities = []
-    for filename, categories in index.iteritems():
+    for filename, categories in six.iteritems(index):
         similarities.append(
             (filename, similarity(query_categories, categories)))
 
