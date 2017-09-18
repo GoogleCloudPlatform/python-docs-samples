@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Copyright 2017, Google, Inc.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +14,12 @@
 # limitations under the License.
 
 # [START classify_text_tutorial]
-"""Using the classify_text method to cluster texts."""
+"""Using the classify_text method to find content categories of text files,
+Then use the content category labels to compare text similarity.
+
+For more information, see the tutorial page at
+https://cloud.google.com/natural-language/docs/classify-text-tutorial.
+"""
 
 # [START classify_text_tutorial_import]
 import argparse
@@ -59,7 +66,7 @@ def classify(text, verbose=True):
 
 # [START def_index]
 def index(path, index_file):
-    """Classify each text file in the directory and write
+    """Classify each text file in a directory and write
     the results to the index_file.
     """
 
