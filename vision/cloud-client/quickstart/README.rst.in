@@ -23,6 +23,5 @@ setup:
 samples:
 - name: Quickstart
   file: quickstart.py
-  show_help: True
 
 cloud_client_library: true
