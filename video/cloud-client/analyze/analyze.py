@@ -96,7 +96,7 @@ def analyze_faces(path):
 
         for segment_id, segment in enumerate(face.segments):
             start_time = (segment.segment.start_time_offset.seconds +
-                          segment.segment.end_time_offset.nanos / 1e9)
+                          segment.segment.start_time_offset.nanos / 1e9)
             end_time = (segment.segment.end_time_offset.seconds +
                         segment.segment.end_time_offset.nanos / 1e9)
             positions = '{}s to {}s'.format(start_time, end_time)
@@ -150,7 +150,7 @@ def analyze_labels(path):
 
         for i, segment in enumerate(segment_label.segments):
             start_time = (segment.segment.start_time_offset.seconds +
-                          segment.segment.end_time_offset.nanos / 1e9)
+                          segment.segment.start_time_offset.nanos / 1e9)
             end_time = (segment.segment.end_time_offset.seconds +
                         segment.segment.end_time_offset.nanos / 1e9)
             positions = '{}s to {}s'.format(start_time, end_time)
@@ -169,7 +169,7 @@ def analyze_labels(path):
 
         for i, shot in enumerate(shot_label.segments):
             start_time = (shot.segment.start_time_offset.seconds +
-                          shot.segment.end_time_offset.nanos / 1e9)
+                          shot.segment.start_time_offset.nanos / 1e9)
             end_time = (shot.segment.end_time_offset.seconds +
                         shot.segment.end_time_offset.nanos / 1e9)
             positions = '{}s to {}s'.format(start_time, end_time)
@@ -228,7 +228,7 @@ def analyze_labels_file(path):
 
         for i, segment in enumerate(segment_label.segments):
             start_time = (segment.segment.start_time_offset.seconds +
-                          segment.segment.end_time_offset.nanos / 1e9)
+                          segment.segment.start_time_offset.nanos / 1e9)
             end_time = (segment.segment.end_time_offset.seconds +
                         segment.segment.end_time_offset.nanos / 1e9)
             positions = '{}s to {}s'.format(start_time, end_time)
@@ -247,7 +247,7 @@ def analyze_labels_file(path):
 
         for i, shot in enumerate(shot_label.segments):
             start_time = (shot.segment.start_time_offset.seconds +
-                          shot.segment.end_time_offset.nanos / 1e9)
+                          shot.segment.start_time_offset.nanos / 1e9)
             end_time = (shot.segment.end_time_offset.seconds +
                         shot.segment.end_time_offset.nanos / 1e9)
             positions = '{}s to {}s'.format(start_time, end_time)
@@ -292,7 +292,7 @@ def analyze_shots(path):
 
     for i, shot in enumerate(shots):
         start_time = (shot.start_time_offset.seconds +
-                      shot.end_time_offset.nanos / 1e9)
+                      shot.start_time_offset.nanos / 1e9)
         end_time = (shot.end_time_offset.seconds +
                     shot.end_time_offset.nanos / 1e9)
         print('\tShot {}: {} to {}'.format(i, start_time, end_time))

@@ -65,7 +65,7 @@ def analyze_faces(path):
 
         for segment_id, segment in enumerate(face.segments):
             start_time = (segment.segment.start_time_offset.seconds +
-                          segment.segment.end_time_offset.nanos / 1e9)
+                          segment.segment.start_time_offset.nanos / 1e9)
             end_time = (segment.segment.end_time_offset.seconds +
                         segment.segment.end_time_offset.nanos / 1e9)
             positions = '{}s to {}s'.format(start_time, end_time)

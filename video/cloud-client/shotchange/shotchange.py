@@ -60,7 +60,7 @@ def analyze_shots(path):
 
     for i, shot in enumerate(shots):
         start_time = (shot.start_time_offset.seconds +
-                      shot.end_time_offset.nanos / 1e9)
+                      shot.start_time_offset.nanos / 1e9)
         end_time = (shot.end_time_offset.seconds +
                     shot.end_time_offset.nanos / 1e9)
         print('\tShot {}: {} to {}'.format(i, start_time, end_time))

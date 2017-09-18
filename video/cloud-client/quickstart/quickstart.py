@@ -53,7 +53,7 @@ def run_quickstart():
 
         for i, segment in enumerate(segment_label.segments):
             start_time = (segment.segment.start_time_offset.seconds +
-                          segment.segment.end_time_offset.nanos / 1e9)
+                          segment.segment.start_time_offset.nanos / 1e9)
             end_time = (segment.segment.end_time_offset.seconds +
                         segment.segment.end_time_offset.nanos / 1e9)
             positions = '{}s to {}s'.format(start_time, end_time)
