@@ -17,34 +17,12 @@ Setup
 Authentication
 ++++++++++++++
 
-Authentication is typically done through `Application Default Credentials`_,
-which means you do not have to change the code to authenticate as long as
-your environment has credentials. You have a few options for setting up
-authentication:
+This sample requires you to have authentication setup. Refer to the
+`Authentication Getting Started Guide`_ for instructions on setting up
+credentials for applications.
 
-#. When running locally, use the `Google Cloud SDK`_
-
-    .. code-block:: bash
-
-        gcloud auth application-default login
-
-
-#. When running on App Engine or Compute Engine, credentials are already
-   set-up. However, you may need to configure your Compute Engine instance
-   with `additional scopes`_.
-
-#. You can create a `Service Account key file`_. This file can be used to
-   authenticate to Google Cloud Platform services from any environment. To use
-   the file, set the ``GOOGLE_APPLICATION_CREDENTIALS`` environment variable to
-   the path to the key file, for example:
-
-    .. code-block:: bash
-
-        export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
-
-.. _Application Default Credentials: https://cloud.google.com/docs/authentication#getting_credentials_for_server-centric_flow
-.. _additional scopes: https://cloud.google.com/compute/docs/authentication#using
-.. _Service Account key file: https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount
+.. _Authentication Getting Started Guide:
+    https://cloud.google.com/docs/authentication/getting-started
 
 Install Dependencies
 ++++++++++++++++++++
@@ -93,7 +71,10 @@ To run this sample:
 
     $ python publisher.py
 
-    usage: publisher.py [-h] {list,create,delete,publish} ...
+    usage: publisher.py [-h]
+                        project
+                        {list,create,delete,publish,publish-with-futures,publish-with-batch-settings}
+                        ...
     
     This application demonstrates how to perform basic operations on topics
     with the Cloud Pub/Sub API.
@@ -102,12 +83,18 @@ To run this sample:
     at https://cloud.google.com/pubsub/docs.
     
     positional arguments:
-      {list,create,delete,publish}
-        list                Lists all Pub/Sub topics in the current project.
+      project               Your Google Cloud project ID
+      {list,create,delete,publish,publish-with-futures,publish-with-batch-settings}
+        list                Lists all Pub/Sub topics in the given project.
         create              Create a new Pub/Sub topic.
         delete              Deletes an existing Pub/Sub topic.
-        publish             Publishes a message to a Pub/Sub topic with the given
-                            data.
+        publish             Publishes multiple messages to a Pub/Sub topic.
+        publish-with-futures
+                            Publishes multiple messages to a Pub/Sub topic and
+                            prints their message IDs.
+        publish-with-batch-settings
+                            Publishes multiple messages to a Pub/Sub topic with
+                            batch settings.
     
     optional arguments:
       -h, --help            show this help message and exit
@@ -124,7 +111,9 @@ To run this sample:
 
     $ python subscriber.py
 
-    usage: subscriber.py [-h] {list,create,delete,receive} ...
+    usage: subscriber.py [-h]
+                         project {list,create,delete,receive,receive-flow-control}
+                         ...
     
     This application demonstrates how to perform basic operations on
     subscriptions with the Cloud Pub/Sub API.
@@ -133,11 +122,15 @@ To run this sample:
     at https://cloud.google.com/pubsub/docs.
     
     positional arguments:
-      {list,create,delete,receive}
+      project               Your Google Cloud project ID
+      {list,create,delete,receive,receive-flow-control}
         list                Lists all subscriptions for a given topic.
         create              Create a new pull subscription on the given topic.
         delete              Deletes an existing Pub/Sub topic.
-        receive             Receives a message from a pull subscription.
+        receive             Receives messages from a pull subscription.
+        receive-flow-control
+                            Receives messages from a pull subscription with flow
+                            control.
     
     optional arguments:
       -h, --help            show this help message and exit
@@ -155,6 +148,7 @@ To run this sample:
     $ python iam.py
 
     usage: iam.py [-h]
+                  project
                   {get-topic-policy,get-subscription-policy,set-topic-policy,set-subscription-policy,check-topic-permissions,check-subscription-permissions}
                   ...
     
@@ -165,6 +159,7 @@ To run this sample:
     at https://cloud.google.com/pubsub/docs.
     
     positional arguments:
+      project               Your Google Cloud project ID
       {get-topic-policy,get-subscription-policy,set-topic-policy,set-subscription-policy,check-topic-permissions,check-subscription-permissions}
         get-topic-policy    Prints the IAM policy for the given topic.
         get-subscription-policy
