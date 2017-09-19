@@ -1,0 +1,2 @@
+google-cloud-language==0.29.0
+numpy==1.13.1
