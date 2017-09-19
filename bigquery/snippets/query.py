@@ -63,6 +63,30 @@ def query_standard_sql(query):
         print(row)
 
 
+def query_destination_table(query, dest_dataset_id, dest_table_id):
+    client = bigquery.Client()
+    query_job = client.run_async_query(str(uuid.uuid4()), query)
+
+    # Allow for query results larger than the maximum response size.
+    query_job.allow_large_results = True
+
+    # When large results are allowed, a destination table must be set.
+    dest_dataset = client.dataset(dest_dataset_id)
+    dest_table = dest_dataset.table(dest_table_id)
+    query_job.destination = dest_table
+
+    # Allow the results table to be overwritten.
+    query_job.write_disposition = 'WRITE_TRUNCATE'
+
+    query_job.begin()
+    query_job.result()  # Wait for job to complete.
+
+    # Verify that the results were written to the destination table.
+    dest_table.reload()  # Get the table metadata, such as the schema.
+    for row in dest_table.fetch_data():
+        print(row)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -72,10 +96,19 @@ if __name__ == '__main__':
         '--use_standard_sql',
         action='store_true',
         help='Use standard SQL syntax.')
+    parser.add_argument(
+        '--destination_table',
+        type=str,
+        help=(
+            'Destination table to use for results. '
+            'Example: my_dataset.my_table'))
 
     args = parser.parse_args()
 
     if args.use_standard_sql:
         query_standard_sql(args.query)
+    elif args.destination_table:
+        dataset, table = args.destination_table.split('.')
+        query_destination_table(args.query, dataset, table)
     else:
         query(args.query)

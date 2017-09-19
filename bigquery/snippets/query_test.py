@@ -15,6 +15,10 @@
 import query
 
 
+DATASET_ID = 'test_dataset'
+TABLE_ID = 'test_destination_table'
+
+
 def test_query(capsys):
     # Query only outputs the first 10 rows, sort results to avoid randomness
     query_string = '''#standardSQL
@@ -40,6 +44,22 @@ def test_query_standard_sql(capsys):
           LIMIT 10;'''
 
     query.query_standard_sql(query_string)
+
+    out, _ = capsys.readouterr()
+
+    assert 'antonyandcleopatra' in out
+
+
+def test_query_destination_table(capsys):
+    # Query only outputs the first 10 rows, sort results to avoid randomness
+    query_string = '''#standardSQL
+          SELECT corpus
+          FROM `publicdata.samples.shakespeare`
+          GROUP BY corpus
+          ORDER BY corpus
+          LIMIT 10;'''
+
+    query.query_destination_table(query_string, DATASET_ID, TABLE_ID)
 
     out, _ = capsys.readouterr()
 
