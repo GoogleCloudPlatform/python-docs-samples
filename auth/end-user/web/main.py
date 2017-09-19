@@ -18,9 +18,9 @@ an end user."""
 import os
 
 import flask
-import google.auth.transport.requests
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
+import googleapiclient.discovery
 
 # The path to the client-secrets.json file obtained from the Google API
 # Console. You must set this before running this application.
@@ -45,15 +45,13 @@ def index():
     credentials = google.oauth2.credentials.Credentials(
         **flask.session['credentials'])
 
-    # Get the basic user info from the Google OAuth2.0 API. This
-    # sample uses the Requests library to make a direct HTTP request to
-    # a Google API, but you can also pass the credentials into the Google
-    # API Client Library and Google Cloud Client Library.
-    session = google.auth.transport.requests.AuthorizedSession(credentials)
+    # Get the basic user info from the Google OAuth2.0 API.
+    client = googleapiclient.discovery.build(
+        'oauth2', 'v2', credentials=credentials)
 
-    response = session.get('https://www.googleapis.com/oauth2/v2/userinfo')
+    response = client.userinfo().v2().me().get().execute()
 
-    return response.text
+    return str(response)
 
 
 @app.route('/authorize')
