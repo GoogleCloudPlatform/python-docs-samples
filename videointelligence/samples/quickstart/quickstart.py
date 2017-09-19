@@ -26,12 +26,10 @@ def run_quickstart():
     import sys
     import time
 
-    from google.cloud.gapic.videointelligence.v1beta1 import enums
-    from google.cloud.gapic.videointelligence.v1beta1 import (
-        video_intelligence_service_client)
+    from google.cloud import videointelligence_v1beta2
+    from google.cloud.videointelligence_v1beta2 import enums
 
-    video_client = (video_intelligence_service_client.
-                    VideoIntelligenceServiceClient())
+    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
     features = [enums.Feature.LABEL_DETECTION]
     operation = video_client.annotate_video('gs://demomaker/cat.mp4', features)
     print('\nProcessing video for label annotations:')
@@ -46,19 +44,22 @@ def run_quickstart():
     # first result is retrieved because a single video was processed
     results = operation.result().annotation_results[0]
 
-    for label in results.label_annotations:
-        print('Label description: {}'.format(label.description))
-        print('Locations:')
+    for i, segment_label in enumerate(results.segment_label_annotations):
+        print('Video label description: {}'.format(
+            segment_label.entity.description))
+        for category_entity in segment_label.category_entities:
+            print('\tLabel category description: {}'.format(
+                category_entity.description))
 
-        for l, location in enumerate(label.locations):
-            positions = 'Entire video'
-            if (location.segment.start_time_offset != -1 or
-                    location.segment.end_time_offset != -1):
-                positions = '{} to {}'.format(
-                    location.segment.start_time_offset / 1000000.0,
-                    location.segment.end_time_offset / 1000000.0)
-            print('\t{}: {}'.format(l, positions))
-
+        for i, segment in enumerate(segment_label.segments):
+            start_time = (segment.segment.start_time_offset.seconds +
+                          segment.segment.start_time_offset.nanos / 1e9)
+            end_time = (segment.segment.end_time_offset.seconds +
+                        segment.segment.end_time_offset.nanos / 1e9)
+            positions = '{}s to {}s'.format(start_time, end_time)
+            confidence = segment.confidence
+            print('\tSegment {}: {}'.format(i, positions))
+            print('\tConfidence: {}'.format(confidence))
         print('\n')
     # [END videointelligence_quickstart]
 
