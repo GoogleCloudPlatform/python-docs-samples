@@ -174,7 +174,7 @@ def syntax_file(gcs_uri):
 
 # [START def_classify_text]
 def classify_text(text):
-    """Classifies the provided text."""
+    """Classifies content categories of the provided text."""
     # [START beta_client]
     client = language_v1beta2.LanguageServiceClient()
     # [END beta_client]
@@ -197,7 +197,9 @@ def classify_text(text):
 
 # [START def_classify_file]
 def classify_file(gcs_uri):
-    """Classifies the text in a Google Cloud Storage file."""
+    """Classifies content categories of the text in a Google Cloud Storage
+    file.
+    """
     client = language_v1beta2.LanguageServiceClient()
 
     document = types.Document(
