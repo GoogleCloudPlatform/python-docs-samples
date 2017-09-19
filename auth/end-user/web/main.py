@@ -13,7 +13,15 @@
 # limitations under the License.
 
 """An example web application that obtains authorization and credentials from
-an end user."""
+an end user.
+
+This sample is used on
+https://developers.google.com/identity/protocols/OAuth2WebServer. Please
+refer to that page for instructions on using this sample.
+
+Notably, you'll need to obtain a OAuth2.0 client secrets file and set the
+``GOOGLE_CLIENT_SECRETS`` environment variable to point to that file.
+"""
 
 import os
 
@@ -26,14 +34,14 @@ import googleapiclient.discovery
 # Console. You must set this before running this application.
 CLIENT_SECRETS_FILENAME = os.environ['GOOGLE_CLIENT_SECRETS']
 # The OAuth 2.0 scopes that this application will ask the user for. In this
-# case, we're asking for basic profile information.
+# case the application will ask for basic profile information.
 SCOPES = ['email', 'profile']
 
 app = flask.Flask(__name__)
-# Note: A secret key is included in the sample so that it works, but if you
+# TODO: A secret key is included in the sample so that it works but if you
 # use this code in your application please replace this with a truly secret
 # key. See http://flask.pocoo.org/docs/0.12/quickstart/#sessions.
-app.secret_key = 'example key, please replace.'
+app.secret_key = 'TODO: replace with a secret value'
 
 
 @app.route('/')
@@ -104,7 +112,9 @@ def oauth2callback():
 
 
 if __name__ == '__main__':
-    # When running locally, disable OAuthlib's HTTPs verification. When
-    # running in production *do not* leave this option enabled.
+    # When running locally with Flask's development server this disables
+    # OAuthlib's HTTPs verification. When running in production with a WSGI
+    # server such as gunicorn this option will not be set and your application
+    # *must* use HTTPS.
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     app.run('localhost', 8080, debug=True)
