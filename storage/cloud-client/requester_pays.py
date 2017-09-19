@@ -68,6 +68,7 @@ def download_file_requester_pays(
         source_blob_name,
         destination_file_name))
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
