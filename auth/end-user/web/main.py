@@ -71,13 +71,13 @@ def authorize():
     flow.redirect_uri = flask.url_for('oauth2callback', _external=True)
     authorization_url, state = flow.authorization_url(
         # This parameter enables offline access which gives your application
-        # both an access and refresh token.
+        # an access token and a refresh token for the user's credentials.
         access_type='offline',
         # This parameter enables incremental auth.
         include_granted_scopes='true')
 
-    # Store the state in the session so that the callback can verify that
-    # the authorization server response.
+    # Store the state in the session so that the callback can verify the
+    # authorization server response.
     flask.session['state'] = state
 
     return flask.redirect(authorization_url)
