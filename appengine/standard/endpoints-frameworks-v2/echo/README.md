@@ -24,7 +24,7 @@ The command returns several lines of information, including a line similar to th
 
    Service Configuration [2016-08-01r0] uploaded for service "echo-api.endpoints.[YOUR-PROJECT-ID].cloud.goog"
 
-Open the `app.yaml` file and in the `env_variables` section, replace [YOUR-PROJECT-ID] in `echo-api.endpoints.[YOUR-PROJECT-ID].cloud.goog` with your project ID. This is your Endpoints service name. Then replace `2016-08-01r0` with your uploaded service management configuration.
+Open the `app.yaml` file and in the `env_variables` section, replace [YOUR-PROJECT-ID] in `[YOUR-PROJECT-ID].appspot.com` with your project ID. This is your Endpoints service name. Then replace `2016-08-01r0` with your uploaded service management configuration.
 
 Then, deploy the sample using `gcloud`:
 
