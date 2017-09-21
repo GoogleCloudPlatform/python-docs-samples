@@ -239,6 +239,7 @@ def detect_safe_search(path):
     print('medical: {}'.format(likelihood_name[safe.medical]))
     print('spoofed: {}'.format(likelihood_name[safe.spoof]))
     print('violence: {}'.format(likelihood_name[safe.violence]))
+    print('racy: {}'.format(likelihood_name[safe.racy]))
     # [END migration_safe_search_detection]
 # [END def_detect_safe_search]
 
@@ -263,6 +264,7 @@ def detect_safe_search_uri(uri):
     print('medical: {}'.format(likelihood_name[safe.medical]))
     print('spoofed: {}'.format(likelihood_name[safe.spoof]))
     print('violence: {}'.format(likelihood_name[safe.violence]))
+    print('racy: {}'.format(likelihood_name[safe.racy]))
 # [END def_detect_safe_search_uri]
 
 
