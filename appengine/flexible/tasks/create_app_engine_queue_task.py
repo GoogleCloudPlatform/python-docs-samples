@@ -31,16 +31,16 @@ def seconds_from_now_to_rfc3339_datetime(seconds):
 def create_task(project, queue, location, payload=None, in_seconds=None):
     """Create a task for a given queue with an arbitrary payload."""
 
+    from googleapiclient import discovery
+
     # Create a client.
-    DISCOVERY_URL = (
-        'https://cloudtasks.googleapis.com/$discovery/rest?version=v2beta2')
     client = discovery.build(
-        'cloudtasks', 'v2beta2', discoveryServiceUrl=DISCOVERY_URL)
+        'cloudtasks', 'v2beta2')
 
     url = '/log_payload'
     body = {
         'task': {
-            'app_engine_task_target': {
+            'app_engine_http_request': {
                 'http_method': 'POST',
                 'relative_url': url
             }
@@ -50,7 +50,7 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
     if payload is not None:
         # Payload is a string (unicode), and must be encoded for base64.
         # The finished request body is JSON, which requires unicode.
-        body['task']['app_engine_task_target']['payload'] = base64.b64encode(
+        body['task']['app_engine_http_request']['payload'] = base64.b64encode(
             payload.encode()).decode()
 
     if in_seconds is not None:
@@ -65,10 +65,6 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
     response = client.projects().locations().queues().tasks().create(
         parent=queue_name, body=body).execute()
 
-    # By default CreateTaskRequest.responseView is BASIC, so not all
-    # information is retrieved by default because some data, such as payloads,
-    # might be desirable to return only when needed because of its large size
-    # or because of the sensitivity of data that it contains.
     print('Created task {}'.format(response['name']))
     return response
 

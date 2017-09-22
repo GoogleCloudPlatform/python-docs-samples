@@ -23,21 +23,19 @@ and running the scripts.
 import argparse
 import base64
 
-from googleapiclient import discovery
-
 
 def create_task(project, queue, location):
     """Create a task for a given queue with an arbitrary payload."""
 
-    DISCOVERY_URL = (
-        'https://cloudtasks.googleapis.com/$discovery/rest?version=v2beta2')
+    # Create a client.
+    from googleapiclient import discovery
     client = discovery.build(
-        'cloudtasks', 'v2beta2', discoveryServiceUrl=DISCOVERY_URL)
+        'cloudtasks', 'v2beta2')
 
     payload = 'a message for the recipient'
     task = {
         'task': {
-            'pull_task_target': {
+            'pull_message': {
                 'payload': base64.b64encode(payload.encode()).decode()
             }
         }
@@ -56,10 +54,10 @@ def create_task(project, queue, location):
 def pull_task(project, queue, location):
     """Pull a single task from a given queue and lease it for 10 minutes."""
 
-    DISCOVERY_URL = (
-        'https://cloudtasks.googleapis.com/$discovery/rest?version=v2beta2')
+    # Create a client.
+    from googleapiclient import discovery
     client = discovery.build(
-        'cloudtasks', 'v2beta2', discoveryServiceUrl=DISCOVERY_URL)
+        'cloudtasks', 'v2beta2')
 
     duration_seconds = '600s'
     pull_options = {
@@ -81,10 +79,10 @@ def pull_task(project, queue, location):
 def acknowledge_task(task):
     """Acknowledge a given task."""
 
-    DISCOVERY_URL = (
-        'https://cloudtasks.googleapis.com/$discovery/rest?version=v2beta2')
+    # Create a client.
+    from googleapiclient import discovery
     client = discovery.build(
-        'cloudtasks', 'v2beta2', discoveryServiceUrl=DISCOVERY_URL)
+        'cloudtasks', 'v2beta2')
 
     body = {'scheduleTime': task['scheduleTime']}
     client.projects().locations().queues().tasks().acknowledge(

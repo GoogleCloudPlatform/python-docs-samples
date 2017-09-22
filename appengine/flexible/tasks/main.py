@@ -24,9 +24,9 @@ app = Flask(__name__)
 @app.route('/log_payload', methods=['POST'])
 def log_payload():
     """Log the request payload."""
-    payload = request.data or "empty payload"
-    logging.warn(payload)
-    return 'Logged request payload: {}'.format(payload)
+    payload = request.get_data(as_text=True) or '(empty payload)'
+    print('Received task with payload: {}'.format(payload))
+    return 'Printed task payload: {}'.format(payload)
 
 
 @app.route('/')
