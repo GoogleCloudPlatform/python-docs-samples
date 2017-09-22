@@ -116,8 +116,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('project',
-                        help='The ID of the project that owns the subscription')
+    parser.add_argument(
+        'project',
+        help='The ID of the project that owns the subscription')
     parser.add_argument('subscription',
                         help='The ID of the Pub/Sub subscription')
     args = parser.parse_args()
