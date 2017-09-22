@@ -101,6 +101,10 @@ def test_add_delete_rs256_device(test_topic, capsys):
             service_account_json, api_key, project_id, cloud_region,
             registry_id, device_id)
 
+    manager.get_state(
+            service_account_json, api_key, project_id, cloud_region,
+            registry_id, device_id)
+
     manager.delete_device(
             service_account_json, api_key, project_id, cloud_region,
             registry_id, device_id)
@@ -111,6 +115,7 @@ def test_add_delete_rs256_device(test_topic, capsys):
 
     out, _ = capsys.readouterr()
     assert 'format : RSA_X509_PEM' in out
+    assert 'State : {}' in out
 
 
 def test_add_delete_es256_device(test_topic, capsys):
@@ -127,6 +132,10 @@ def test_add_delete_es256_device(test_topic, capsys):
             service_account_json, api_key, project_id, cloud_region,
             registry_id, device_id)
 
+    manager.get_state(
+            service_account_json, api_key, project_id, cloud_region,
+            registry_id, device_id)
+
     manager.delete_device(
             service_account_json, api_key, project_id, cloud_region,
             registry_id, device_id)
@@ -137,6 +146,7 @@ def test_add_delete_es256_device(test_topic, capsys):
 
     out, _ = capsys.readouterr()
     assert 'format : ES256_PEM' in out
+    assert 'State : {}' in out
 
 
 def test_add_patch_delete_rs256(test_topic, capsys):
