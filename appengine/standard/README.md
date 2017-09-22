@@ -25,9 +25,9 @@ Some samples may require additional setup. Refer to individual sample READMEs.
 
         pip install -t lib -r requirements.txt
 
-3. Use `appcfg.py` to deploy the sample, you will need to specify your Project ID and a version number:
+3. Use `gcloud` to deploy the sample, you will need to specify your Project ID and a version number:
 
-        appcfg.py update -A your-app-id -V your-version app.yaml
+        gcloud app deploy --project your-app-id -v your-version
 
 4. Visit `https://your-app-id.appost.com` to view your application.
 

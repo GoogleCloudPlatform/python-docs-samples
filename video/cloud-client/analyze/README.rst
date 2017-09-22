@@ -17,34 +17,12 @@ Setup
 Authentication
 ++++++++++++++
 
-Authentication is typically done through `Application Default Credentials`_,
-which means you do not have to change the code to authenticate as long as
-your environment has credentials. You have a few options for setting up
-authentication:
+This sample requires you to have authentication setup. Refer to the
+`Authentication Getting Started Guide`_ for instructions on setting up
+credentials for applications.
 
-#. When running locally, use the `Google Cloud SDK`_
-
-    .. code-block:: bash
-
-        gcloud auth application-default login
-
-
-#. When running on App Engine or Compute Engine, credentials are already
-   set-up. However, you may need to configure your Compute Engine instance
-   with `additional scopes`_.
-
-#. You can create a `Service Account key file`_. This file can be used to
-   authenticate to Google Cloud Platform services from any environment. To use
-   the file, set the ``GOOGLE_APPLICATION_CREDENTIALS`` environment variable to
-   the path to the key file, for example:
-
-    .. code-block:: bash
-
-        export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
-
-.. _Application Default Credentials: https://cloud.google.com/docs/authentication#getting_credentials_for_server-centric_flow
-.. _additional scopes: https://cloud.google.com/compute/docs/authentication#using
-.. _Service Account key file: https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount
+.. _Authentication Getting Started Guide:
+    https://cloud.google.com/docs/authentication/getting-started
 
 Install Dependencies
 ++++++++++++++++++++
@@ -81,10 +59,10 @@ To run this sample:
 
     $ python analyze.py
 
-    usage: analyze.py [-h] {faces,labels,labels_file,safe_search,shots} ...
+    usage: analyze.py [-h] {faces,labels,labels_file,explicit_content,shots} ...
     
-    This application demonstrates face detection, label detection, safe search,
-    and shot change detection using the Google Cloud API.
+    This application demonstrates face detection, label detection,
+    explicit content, and shot change detection using the Google Cloud API.
     
     Usage Examples:
     
@@ -92,14 +70,14 @@ To run this sample:
         python analyze.py labels gs://cloud-ml-sandbox/video/chicago.mp4
         python analyze.py labels_file resources/cat.mp4
         python analyze.py shots gs://demomaker/gbikes_dinosaur.mp4
-        python analyze.py safe_search gs://demomaker/gbikes_dinosaur.mp4
+        python analyze.py explicit_content gs://demomaker/gbikes_dinosaur.mp4
     
     positional arguments:
-      {faces,labels,labels_file,safe_search,shots}
+      {faces,labels,labels_file,explicit_content,shots}
         faces               Detects faces given a GCS path.
         labels              Detects labels given a GCS path.
         labels_file         Detects labels given a file path.
-        safe_search         Detects safe search features the GCS path to a video.
+        explicit_content    Detects explicit content from the GCS path to a video.
         shots               Detects camera shot changes.
     
     optional arguments:
