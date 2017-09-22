@@ -28,38 +28,57 @@ import io
 # [END import_libraries]
 
 
+# [START def_transcribe_file]
 def transcribe_file(speech_file):
     """Transcribe the given audio file."""
     from google.cloud import speech
-    speech_client = speech.Client()
+    from google.cloud.speech import enums
+    from google.cloud.speech import types
+    client = speech.SpeechClient()
 
+    # [START migration_sync_request]
+    # [START migration_audio_config_file]
     with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
-        audio_sample = speech_client.sample(
-            content=content,
-            source_uri=None,
-            encoding='LINEAR16',
-            sample_rate=16000)
 
-    alternatives = speech_client.speech_api.sync_recognize(audio_sample)
-    for alternative in alternatives:
-        print('Transcript: {}'.format(alternative.transcript))
+    audio = types.RecognitionAudio(content=content)
+    config = types.RecognitionConfig(
+        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=16000,
+        language_code='en-US')
+    # [END migration_audio_config_file]
+
+    # [START migration_sync_response]
+    response = client.recognize(config, audio)
+    # [END migration_sync_request]
+    # Print the first alternative of all the consecutive results.
+    for result in response.results:
+        print('Transcript: {}'.format(result.alternatives[0].transcript))
+    # [END migration_sync_response]
+# [END def_transcribe_file]
 
 
+# [START def_transcribe_gcs]
 def transcribe_gcs(gcs_uri):
     """Transcribes the audio file specified by the gcs_uri."""
     from google.cloud import speech
-    speech_client = speech.Client()
+    from google.cloud.speech import enums
+    from google.cloud.speech import types
+    client = speech.SpeechClient()
 
-    audio_sample = speech_client.sample(
-        content=None,
-        source_uri=gcs_uri,
-        encoding='FLAC',
-        sample_rate=16000)
+    # [START migration_audio_config_gcs]
+    audio = types.RecognitionAudio(uri=gcs_uri)
+    config = types.RecognitionConfig(
+        encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
+        sample_rate_hertz=16000,
+        language_code='en-US')
+    # [END migration_audio_config_gcs]
 
-    alternatives = speech_client.speech_api.sync_recognize(audio_sample)
-    for alternative in alternatives:
-        print('Transcript: {}'.format(alternative.transcript))
+    response = client.recognize(config, audio)
+    # Print the first alternative of all the consecutive results.
+    for result in response.results:
+        print('Transcript: {}'.format(result.alternatives[0].transcript))
+# [END def_transcribe_gcs]
 
 
 if __name__ == '__main__':

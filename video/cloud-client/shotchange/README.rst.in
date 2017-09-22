@@ -1,0 +1,20 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Video Intelligence API
+  short_name: Cloud Video Intelligence API
+  url: https://cloud.google.com/video-intelligence/docs
+  description: >
+    `Google Cloud Video Intelligence API`_ allows developers to easily
+    integrate feature detection in video.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Shot Change Detection
+  file: shotchange.py
+  show_help: True
+
+cloud_client_library: true

@@ -13,15 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Tests for main."""
-
+import os
 import re
 import zipfile
 
+import requests
+
 import main
 
-
-_TEST_IMAGE_URI = 'gs://{}/language/image8.png'
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+TEST_IMAGE_URI = 'gs://{}/language/image8.png'.format(BUCKET)
+OCR_IMAGES_URI = 'http://storage.googleapis.com/{}/{}'.format(
+    BUCKET, 'language/ocr_nl-images-small.zip')
 
 
 def test_batch_empty():
@@ -36,10 +39,10 @@ def test_batch_single():
         assert batched == ((1,),)
 
 
-def test_single_image_returns_text(cloud_config):
+def test_single_image_returns_text():
     vision_api_client = main.VisionApi()
 
-    image_path = _TEST_IMAGE_URI.format(cloud_config.storage_bucket)
+    image_path = TEST_IMAGE_URI
     texts = vision_api_client.detect_text([image_path])
 
     assert image_path in texts
@@ -63,12 +66,11 @@ def test_text_returns_entities():
     etype, ename, salience, wurl = text_analyzer.extract_entity_info(
         entities[0])
     assert ename == 'holmes'
-    assert wurl == 'http://en.wikipedia.org/wiki/Sherlock_Holmes'
 
 
-def test_entities_list(cloud_config):
+def test_entities_list():
     vision_api_client = main.VisionApi()
-    image_path = _TEST_IMAGE_URI.format(cloud_config.storage_bucket)
+    image_path = TEST_IMAGE_URI
     texts = vision_api_client.detect_text([image_path])
     locale, document = main.extract_description(texts[image_path])
     text_analyzer = main.TextAnalyzer()
@@ -77,17 +79,18 @@ def test_entities_list(cloud_config):
     etype, ename, salience, wurl = text_analyzer.extract_entity_info(
         entities[0])
     assert ename == 'bennet'
-    assert wurl == 'http://en.wikipedia.org/wiki/Mr_Bennet'
 
 
-def test_main(remote_resource, tmpdir, capsys):
+def test_main(tmpdir, capsys):
     images_path = str(tmpdir.mkdir('images'))
 
     # First, pull down some test data
-    zip_path = remote_resource('language/ocr_nl-images-small.zip', tmpdir)
+    response = requests.get(OCR_IMAGES_URI)
+    images_file = tmpdir.join('images.zip')
+    images_file.write_binary(response.content)
 
     # Extract it to the image directory
-    with zipfile.ZipFile(zip_path) as zfile:
+    with zipfile.ZipFile(str(images_file)) as zfile:
         zfile.extractall(images_path)
 
     main.main(images_path, str(tmpdir.join('ocr_nl.db')))

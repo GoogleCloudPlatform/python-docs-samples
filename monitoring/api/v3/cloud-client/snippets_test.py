@@ -12,12 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from gcp_devrel.testing import eventually_consistent
+
 import snippets
 
 
 def test_create_get_delete_metric_descriptor(capsys):
     snippets.create_metric_descriptor()
-    snippets.get_metric_descriptor('custom.googleapis.com/my_metric')
+
+    @eventually_consistent.call
+    def __():
+        snippets.get_metric_descriptor('custom.googleapis.com/my_metric')
+
     out, _ = capsys.readouterr()
     assert 'DOUBLE' in out
     snippets.delete_metric_descriptor('custom.googleapis.com/my_metric')
@@ -37,7 +43,7 @@ def test_list_resources(capsys):
     assert 'pubsub_topic' in out
 
 
-def test_get_resource(capsys):
+def test_get_resources(capsys):
     snippets.get_monitored_resource_descriptor('pubsub_topic')
     out, _ = capsys.readouterr()
     assert 'A topic in Google Cloud Pub/Sub' in out

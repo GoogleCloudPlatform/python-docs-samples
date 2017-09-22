@@ -43,7 +43,7 @@ def predict_json(project, model, instances, version=None):
     # Create the ML Engine service object.
     # To authenticate set the environment variable
     # GOOGLE_APPLICATION_CREDENTIALS=<path_to_service_account_file>
-    service = googleapiclient.discovery.build('ml', 'v1beta1')
+    service = googleapiclient.discovery.build('ml', 'v1')
     name = 'projects/{}/models/{}'.format(project, model)
 
     if version is not None:
@@ -80,7 +80,7 @@ def predict_examples(project,
         Mapping[str: any]: dictionary of prediction results defined by the
             model.
     """
-    service = googleapiclient.discovery.build('ml', 'v1beta1')
+    service = googleapiclient.discovery.build('ml', 'v1')
     name = 'projects/{}/models/{}'.format(project, model)
 
     if version is not None:
@@ -89,7 +89,7 @@ def predict_examples(project,
     response = service.projects().predict(
         name=name,
         body={'instances': [
-            {'b64': base64.b64encode(example_bytes)}
+            {'b64': base64.b64encode(example_bytes).decode('utf-8')}
             for example_bytes in example_bytes_list
         ]}
     ).execute()

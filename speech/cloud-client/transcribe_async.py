@@ -19,74 +19,70 @@ batch processing.
 
 Example usage:
     python transcribe_async.py resources/audio.raw
-    python transcribe_async.py gs://cloud-samples-tests/speech/brooklyn.flac
+    python transcribe_async.py gs://cloud-samples-tests/speech/vr.flac
 """
 
 import argparse
 import io
-import time
 
 
+# [START def_transcribe_file]
 def transcribe_file(speech_file):
     """Transcribe the given audio file asynchronously."""
     from google.cloud import speech
-    speech_client = speech.Client()
+    from google.cloud.speech import enums
+    from google.cloud.speech import types
+    client = speech.SpeechClient()
 
+    # [START migration_async_request]
     with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
-        audio_sample = speech_client.sample(
-            content,
-            source_uri=None,
-            encoding='LINEAR16',
-            sample_rate=16000)
 
-    operation = speech_client.speech_api.async_recognize(audio_sample)
+    audio = types.RecognitionAudio(content=content)
+    config = types.RecognitionConfig(
+        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=16000,
+        language_code='en-US')
 
-    retry_count = 100
-    while retry_count > 0 and not operation.complete:
-        retry_count -= 1
-        time.sleep(2)
-        operation.poll()
+    # [START migration_async_response]
+    operation = client.long_running_recognize(config, audio)
+    # [END migration_async_request]
 
-    if not operation.complete:
-        print('Operation not complete and retry limit reached.')
-        return
+    print('Waiting for operation to complete...')
+    response = operation.result(timeout=90)
 
-    alternatives = operation.results
-    for alternative in alternatives:
-        print('Transcript: {}'.format(alternative.transcript))
-        print('Confidence: {}'.format(alternative.confidence))
-    # [END send_request]
+    # Print the first alternative of all the consecutive results.
+    for result in response.results:
+        print('Transcript: {}'.format(result.alternatives[0].transcript))
+        print('Confidence: {}'.format(result.alternatives[0].confidence))
+    # [END migration_async_response]
+# [END def_transcribe_file]
 
 
+# [START def_transcribe_gcs]
 def transcribe_gcs(gcs_uri):
     """Asynchronously transcribes the audio file specified by the gcs_uri."""
     from google.cloud import speech
-    speech_client = speech.Client()
+    from google.cloud.speech import enums
+    from google.cloud.speech import types
+    client = speech.SpeechClient()
 
-    audio_sample = speech_client.sample(
-        content=None,
-        source_uri=gcs_uri,
-        encoding='FLAC',
-        sample_rate=16000)
+    audio = types.RecognitionAudio(uri=gcs_uri)
+    config = types.RecognitionConfig(
+        encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
+        sample_rate_hertz=16000,
+        language_code='en-US')
 
-    operation = speech_client.speech_api.async_recognize(audio_sample)
+    operation = client.long_running_recognize(config, audio)
 
-    retry_count = 100
-    while retry_count > 0 and not operation.complete:
-        retry_count -= 1
-        time.sleep(2)
-        operation.poll()
+    print('Waiting for operation to complete...')
+    response = operation.result(timeout=90)
 
-    if not operation.complete:
-        print('Operation not complete and retry limit reached.')
-        return
-
-    alternatives = operation.results
-    for alternative in alternatives:
-        print('Transcript: {}'.format(alternative.transcript))
-        print('Confidence: {}'.format(alternative.confidence))
-    # [END send_request_gcs]
+    # Print the first alternative of all the consecutive results.
+    for result in response.results:
+        print('Transcript: {}'.format(result.alternatives[0].transcript))
+        print('Confidence: {}'.format(result.alternatives[0].confidence))
+# [END def_transcribe_gcs]
 
 
 if __name__ == '__main__':

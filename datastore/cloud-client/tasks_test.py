@@ -11,17 +11,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from gcp.testing import eventually_consistent
-from gcp.testing.flaky import flaky
+import os
+
+from gcp_devrel.testing import eventually_consistent
+from gcp_devrel.testing.flaky import flaky
 from google.cloud import datastore
 import pytest
 
 import tasks
 
+PROJECT = os.environ['GCLOUD_PROJECT']
+
 
 @pytest.yield_fixture
-def client(cloud_config):
-    client = datastore.Client(cloud_config.project)
+def client():
+    client = datastore.Client(PROJECT)
 
     yield client
 
@@ -32,8 +36,8 @@ def client(cloud_config):
 
 
 @flaky
-def test_create_client(cloud_config):
-    tasks.create_client(cloud_config.project)
+def test_create_client():
+    tasks.create_client(PROJECT)
 
 
 @flaky

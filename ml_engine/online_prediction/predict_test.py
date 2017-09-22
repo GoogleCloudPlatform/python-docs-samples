@@ -12,61 +12,60 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Tests for predict.py ."""
+import json
+import socket
 
-import base64
-
+from gcp_devrel.testing.flaky import flaky
 import pytest
 
 import predict
-
 
 MODEL = 'census'
 JSON_VERSION = 'v1json'
 EXAMPLES_VERSION = 'v1example'
 PROJECT = 'python-docs-samples-tests'
-JSON = {
-    'age': 25,
-    'workclass': ' Private',
-    'education': ' 11th',
-    'education_num': 7,
-    'marital_status': ' Never-married',
-    'occupation': ' Machine-op-inspct',
-    'relationship': ' Own-child',
-    'race': ' Black',
-    'gender': ' Male',
-    'capital_gain': 0,
-    'capital_loss': 0,
-    'hours_per_week': 40,
-    'native_country': ' United-States'
-}
 EXPECTED_OUTPUT = {
     u'confidence': 0.7760371565818787,
     u'predictions': u' <=50K'
 }
 
+# Raise the socket timeout. The requests involved in the sample can take
+# a long time to complete.
+socket.setdefaulttimeout(60)
 
+
+with open('resources/census_test_data.json') as f:
+    JSON = json.load(f)
+
+
+with open('resources/census_example_bytes.pb', 'rb') as f:
+    BYTESTRING = f.read()
+
+
+@flaky
 def test_predict_json():
     result = predict.predict_json(
         PROJECT, MODEL, [JSON, JSON], version=JSON_VERSION)
     assert [EXPECTED_OUTPUT, EXPECTED_OUTPUT] == result
 
 
+@flaky
 def test_predict_json_error():
     with pytest.raises(RuntimeError):
         predict.predict_json(
             PROJECT, MODEL, [{"foo": "bar"}], version=JSON_VERSION)
 
 
-@pytest.mark.slow
+@flaky
 def test_census_example_to_bytes():
+    import tensorflow as tf
     b = predict.census_to_example_bytes(JSON)
-    assert base64.b64encode(b) is not None
+    assert tf.train.Example.FromString(b) == tf.train.Example.FromString(
+        BYTESTRING)
 
 
-@pytest.mark.slow
+@flaky(max_runs=6)
 def test_predict_examples():
-    b = predict.census_to_example_bytes(JSON)
     result = predict.predict_examples(
-        PROJECT, MODEL, [b, b], version=EXAMPLES_VERSION)
+        PROJECT, MODEL, [BYTESTRING, BYTESTRING], version=EXAMPLES_VERSION)
     assert [EXPECTED_OUTPUT, EXPECTED_OUTPUT] == result

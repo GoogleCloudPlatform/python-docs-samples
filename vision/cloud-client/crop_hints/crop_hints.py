@@ -26,6 +26,7 @@ import argparse
 import io
 
 from google.cloud import vision
+from google.cloud.vision import types
 from PIL import Image, ImageDraw
 # [END imports]
 
@@ -33,16 +34,24 @@ from PIL import Image, ImageDraw
 def get_crop_hint(path):
     # [START get_crop_hint]
     """Detect crop hints on a single image and return the first result."""
-    vision_client = vision.Client()
+    client = vision.ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
-    image = vision_client.image(content=content)
+    image = types.Image(content=content)
 
-    # Return bounds for the first crop hint using an aspect ratio of 1.77.
-    return image.detect_crop_hints({1.77})[0].bounds.vertices
+    crop_hints_params = types.CropHintsParams(aspect_ratios=[1.77])
+    image_context = types.ImageContext(crop_hints_params=crop_hints_params)
+
+    response = client.crop_hints(image=image, image_context=image_context)
+    hints = response.crop_hints_annotation.crop_hints
+
+    # Get bounds for the first crop hint using an aspect ratio of 1.77.
+    vertices = hints[0].bounding_poly.vertices
     # [END get_crop_hint]
+
+    return vertices
 
 
 def draw_hint(image_file):
@@ -53,10 +62,10 @@ def draw_hint(image_file):
     im = Image.open(image_file)
     draw = ImageDraw.Draw(im)
     draw.polygon([
-        vects[0].x_coordinate, vects[0].y_coordinate,
-        vects[1].x_coordinate, vects[1].y_coordinate,
-        vects[2].x_coordinate, vects[2].y_coordinate,
-        vects[3].x_coordinate, vects[3].y_coordinate], None, 'red')
+        vects[0].x, vects[0].y,
+        vects[1].x, vects[1].y,
+        vects[2].x, vects[2].y,
+        vects[3].x, vects[3].y], None, 'red')
     im.save('output-hint.jpg', 'JPEG')
     # [END draw_hint]
 
@@ -67,8 +76,8 @@ def crop_to_hint(image_file):
     vects = get_crop_hint(image_file)
 
     im = Image.open(image_file)
-    im2 = im.crop([vects[0].x_coordinate, vects[0].y_coordinate,
-                  vects[2].x_coordinate - 1, vects[2].y_coordinate - 1])
+    im2 = im.crop([vects[0].x, vects[0].y,
+                  vects[2].x - 1, vects[2].y - 1])
     im2.save('output-crop.jpg', 'JPEG')
     # [END crop_to_hint]
 

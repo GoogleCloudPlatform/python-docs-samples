@@ -116,6 +116,7 @@ def _determine_local_import_names(start_dir):
 # App Engine specific helpers
 #
 
+
 _GAE_ROOT = os.environ.get('GAE_ROOT')
 if _GAE_ROOT is None:
     _GAE_ROOT = tempfile.mkdtemp()
@@ -124,7 +125,7 @@ if _GAE_ROOT is None:
 def _setup_appengine_sdk(session):
     """Installs the App Engine SDK, if needed."""
     session.env['GAE_SDK_PATH'] = os.path.join(_GAE_ROOT, 'google_appengine')
-    session.run('gcprepotools', 'download-appengine-sdk', _GAE_ROOT)
+    session.run('gcp-devrel-py-tools', 'download-appengine-sdk', _GAE_ROOT)
 
 
 #
@@ -132,20 +133,13 @@ def _setup_appengine_sdk(session):
 #
 
 
-PYTEST_COMMON_ARGS = [
-    '--cov',
-    '--cov-config', os.path.abspath('.coveragerc'),
-    '--cov-report', 'term']
+PYTEST_COMMON_ARGS = []
 
 FLAKE8_COMMON_ARGS = [
     '--show-source', '--builtin', 'gettext', '--max-complexity', '20',
     '--import-order-style', 'google',
     '--exclude', '.nox,.cache,env,lib,generated_pb2,*_pb2.py,*_pb2_grpc.py',
 ]
-
-# Location of our common testing utilities. This isn't published to PyPI.
-GCP_REPO_TOOLS_REQ =\
-    'git+https://github.com/GoogleCloudPlatform/python-repo-tools.git'
 
 
 # Collect sample directories.
@@ -174,15 +168,17 @@ if CHANGED_FILES is not None:
         NON_GAE_STANDARD_SAMPLES, CHANGED_FILES)
 
 
-def _session_tests(session, sample):
+def _session_tests(session, sample, post_install=None):
     """Runs py.test for a particular sample."""
     session.install('-r', 'testing/requirements.txt')
-    session.install(GCP_REPO_TOOLS_REQ)
 
     session.chdir(sample)
 
     if os.path.exists(os.path.join(sample, 'requirements.txt')):
         session.install('-r', 'requirements.txt')
+
+    if post_install:
+        post_install(session)
 
     session.run(
         'pytest',
@@ -197,15 +193,13 @@ def _session_tests(session, sample):
 def session_gae(session, sample):
     """Runs py.test for an App Engine standard sample."""
     session.interpreter = 'python2.7'
-    session.install(GCP_REPO_TOOLS_REQ)
-    _setup_appengine_sdk(session)
 
     # Create a lib directory if needed, otherwise the App Engine vendor library
     # will complain.
     if not os.path.isdir(os.path.join(sample, 'lib')):
         os.mkdir(os.path.join(sample, 'lib'))
 
-    _session_tests(session, sample)
+    _session_tests(session, sample, _setup_appengine_sdk)
 
 
 @nox.parametrize('sample', NON_GAE_STANDARD_SAMPLES)
@@ -216,9 +210,9 @@ def session_py27(session, sample):
 
 
 @nox.parametrize('sample', NON_GAE_STANDARD_SAMPLES)
-def session_py35(session, sample):
-    """Runs py.test for a sample using Python 3.5"""
-    session.interpreter = 'python3.5'
+def session_py36(session, sample):
+    """Runs py.test for a sample using Python 3.6"""
+    session.interpreter = 'python3.6'
     _session_tests(session, sample)
 
 
@@ -271,7 +265,7 @@ def session_check_requirements(session):
     This is intentionally not parametric, as it's desired to never have two
     samples with differing versions of dependencies.
     """
-    session.install(GCP_REPO_TOOLS_REQ)
+    session.install('-r', 'testing/requirements.txt')
 
     if 'update' in session.posargs:
         command = 'update-requirements'
@@ -281,4 +275,4 @@ def session_check_requirements(session):
     reqfiles = list(_list_files('.', 'requirements*.txt'))
 
     for reqfile in reqfiles:
-        session.run('gcprepotools', command, reqfile)
+        session.run('gcp-devrel-py-tools', command, reqfile)

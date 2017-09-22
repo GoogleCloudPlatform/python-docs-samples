@@ -11,13 +11,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import re
 
 from label import main
 
+RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 
-def test_main(resource, capsys):
-    in_file = resource('cat.jpg')
+
+def test_main(capsys):
+    in_file = os.path.join(RESOURCES, 'cat.jpg')
 
     main(in_file)
 

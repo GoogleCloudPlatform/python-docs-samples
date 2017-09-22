@@ -14,7 +14,7 @@
 
 """Test script for Identity-Aware Proxy code samples."""
 
-from gcp.testing.flaky import flaky
+from gcp_devrel.testing.flaky import flaky
 
 import make_iap_request
 import validate_jwt
@@ -28,19 +28,24 @@ import validate_jwt
 # The project must have the service account used by this test added as a
 # member of the project.
 REFLECT_SERVICE_HOSTNAME = 'gcp-devrel-iap-reflect.appspot.com'
+IAP_CLIENT_ID = ('320431926067-ldm6839p8l2sei41nlsfc632l4d0v2u1'
+                 '.apps.googleusercontent.com')
+IAP_APP_ID = 'gcp-devrel-iap-reflect'
+IAP_PROJECT_NUMBER = '320431926067'
 
 
 @flaky
-def test_main(cloud_config, capsys):
+def test_main(capsys):
     # JWTs are obtained by IAP-protected applications whenever an
     # end-user makes a request.  We've set up an app that echoes back
     # the JWT in order to expose it to this test.  Thus, this test
     # exercises both make_iap_request and validate_jwt.
     iap_jwt = make_iap_request.make_iap_request(
-        'https://{}/'.format(REFLECT_SERVICE_HOSTNAME))
+        'https://{}/'.format(REFLECT_SERVICE_HOSTNAME),
+        IAP_CLIENT_ID)
     iap_jwt = iap_jwt.split(': ').pop()
-    jwt_validation_result = validate_jwt.validate_iap_jwt(
-        'https://{}'.format(REFLECT_SERVICE_HOSTNAME), iap_jwt)
+    jwt_validation_result = validate_jwt.validate_iap_jwt_from_app_engine(
+        iap_jwt, IAP_PROJECT_NUMBER, IAP_APP_ID)
 
     assert jwt_validation_result[0]
     assert jwt_validation_result[1]

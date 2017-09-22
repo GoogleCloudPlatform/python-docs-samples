@@ -36,10 +36,11 @@ def run_quickstart():
     database = instance.database(database_id)
 
     # Execute a simple SQL statement.
-    results = database.execute_sql('SELECT 1')
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql('SELECT 1')
 
-    for row in results:
-        print(row)
+        for row in results:
+            print(row)
     # [END spanner_quickstart]
 
 

@@ -79,8 +79,8 @@ def insert_data(instance_id, database_id):
             table='Albums',
             columns=('SingerId', 'AlbumId', 'AlbumTitle',),
             values=[
-                (1, 1, u'Go, Go, Go'),
-                (1, 2, u'Total Junk'),
+                (1, 1, u'Total Junk'),
+                (1, 2, u'Go, Go, Go'),
                 (2, 1, u'Green'),
                 (2, 2, u'Forever Hold Your Peace'),
                 (2, 3, u'Terrified')])
@@ -94,11 +94,12 @@ def query_data(instance_id, database_id):
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    results = database.execute_sql(
-        'SELECT SingerId, AlbumId, AlbumTitle FROM Albums')
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            'SELECT SingerId, AlbumId, AlbumTitle FROM Albums')
 
-    for row in results:
-        print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
+        for row in results:
+            print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
 
 
 def read_data(instance_id, database_id):
@@ -107,14 +108,36 @@ def read_data(instance_id, database_id):
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    keyset = spanner.KeySet(all_=True)
-    results = database.read(
-        table='Albums',
-        columns=('SingerId', 'AlbumId', 'AlbumTitle',),
-        keyset=keyset,)
+    with database.snapshot() as snapshot:
+        keyset = spanner.KeySet(all_=True)
+        results = snapshot.read(
+            table='Albums',
+            columns=('SingerId', 'AlbumId', 'AlbumTitle',),
+            keyset=keyset,)
 
-    for row in results:
-        print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
+        for row in results:
+            print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
+
+
+def read_stale_data(instance_id, database_id):
+    """Reads sample data from the database. The data is exactly 10 seconds
+    stale."""
+    import datetime
+
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+    staleness = datetime.timedelta(seconds=10)
+
+    with database.snapshot(exact_staleness=staleness) as snapshot:
+        keyset = spanner.KeySet(all_=True)
+        results = snapshot.read(
+            table='Albums',
+            columns=('SingerId', 'AlbumId', 'AlbumTitle',),
+            keyset=keyset)
+
+        for row in results:
+            print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
 
 
 def query_data_with_new_column(instance_id, database_id):
@@ -130,11 +153,13 @@ def query_data_with_new_column(instance_id, database_id):
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    results = database.execute_sql(
-        'SELECT SingerId, AlbumId, MarketingBudget FROM Albums')
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            'SELECT SingerId, AlbumId, MarketingBudget FROM Albums')
 
-    for row in results:
-        print(u'SingerId: {}, AlbumId: {}, MarketingBudget: {}'.format(*row))
+        for row in results:
+            print(
+                u'SingerId: {}, AlbumId: {}, MarketingBudget: {}'.format(*row))
 
 
 def add_index(instance_id, database_id):
@@ -152,7 +177,8 @@ def add_index(instance_id, database_id):
     print('Added the AlbumsByAlbumTitle index.')
 
 
-def query_data_with_index(instance_id, database_id):
+def query_data_with_index(
+        instance_id, database_id, start_title='Aardvark', end_title='Goo'):
     """Queries sample data from the database using SQL and an index.
 
     The index must exist before running this sample. You can add the index
@@ -168,19 +194,32 @@ def query_data_with_index(instance_id, database_id):
         ALTER TABLE Albums ADD COLUMN MarketingBudget INT64
 
     """
+    from google.cloud.proto.spanner.v1 import type_pb2
+
     spanner_client = spanner.Client()
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    results = database.execute_sql(
-        "SELECT AlbumId, AlbumTitle, MarketingBudget "
-        "FROM Albums@{FORCE_INDEX=AlbumsByAlbumTitle} "
-        "WHERE AlbumTitle >= 'Ardvark' AND AlbumTitle < 'Goo'")
+    params = {
+        'start_title': start_title,
+        'end_title': end_title
+    }
+    param_types = {
+        'start_title': type_pb2.Type(code=type_pb2.STRING),
+        'end_title': type_pb2.Type(code=type_pb2.STRING)
+    }
 
-    for row in results:
-        print(
-            u'AlbumId: {}, AlbumTitle: {}, '
-            'MarketingBudget: {}'.format(*row))
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            "SELECT AlbumId, AlbumTitle, MarketingBudget "
+            "FROM Albums@{FORCE_INDEX=AlbumsByAlbumTitle} "
+            "WHERE AlbumTitle >= @start_title AND AlbumTitle < @end_title",
+            params=params, param_types=param_types)
+
+        for row in results:
+            print(
+                u'AlbumId: {}, AlbumTitle: {}, '
+                'MarketingBudget: {}'.format(*row))
 
 
 def read_data_with_index(instance_id, database_id):
@@ -197,15 +236,16 @@ def read_data_with_index(instance_id, database_id):
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    keyset = spanner.KeySet(all_=True)
-    results = database.read(
-        table='Albums',
-        columns=('AlbumId', 'AlbumTitle'),
-        keyset=keyset,
-        index='AlbumsByAlbumTitle')
+    with database.snapshot() as snapshot:
+        keyset = spanner.KeySet(all_=True)
+        results = snapshot.read(
+            table='Albums',
+            columns=('AlbumId', 'AlbumTitle'),
+            keyset=keyset,
+            index='AlbumsByAlbumTitle')
 
-    for row in results:
-        print('AlbumId: {}, AlbumTitle: {}'.format(*row))
+        for row in results:
+            print('AlbumId: {}, AlbumTitle: {}'.format(*row))
 
 
 def add_storing_index(instance_id, database_id):
@@ -240,17 +280,18 @@ def read_data_with_storing_index(instance_id, database_id):
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    keyset = spanner.KeySet(all_=True)
-    results = database.read(
-        table='Albums',
-        columns=('AlbumId', 'AlbumTitle', 'MarketingBudget'),
-        keyset=keyset,
-        index='AlbumsByAlbumTitle2')
+    with database.snapshot() as snapshot:
+        keyset = spanner.KeySet(all_=True)
+        results = snapshot.read(
+            table='Albums',
+            columns=('AlbumId', 'AlbumTitle', 'MarketingBudget'),
+            keyset=keyset,
+            index='AlbumsByAlbumTitle2')
 
-    for row in results:
-        print(
-            u'AlbumId: {}, AlbumTitle: {}, '
-            'MarketingBudget: {}'.format(*row))
+        for row in results:
+            print(
+                u'AlbumId: {}, AlbumTitle: {}, '
+                'MarketingBudget: {}'.format(*row))
 
 
 def add_column(instance_id, database_id):
@@ -366,7 +407,7 @@ def read_only_transaction(instance_id, database_id):
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    with database.snapshot() as snapshot:
+    with database.snapshot(multi_use=True) as snapshot:
         # Read using SQL.
         results = snapshot.execute_sql(
             'SELECT SingerId, AlbumId, AlbumTitle FROM Albums')
@@ -404,6 +445,7 @@ if __name__ == '__main__':
     subparsers.add_parser('insert_data', help=insert_data.__doc__)
     subparsers.add_parser('query_data', help=query_data.__doc__)
     subparsers.add_parser('read_data', help=read_data.__doc__)
+    subparsers.add_parser('read_stale_data', help=read_stale_data.__doc__)
     subparsers.add_parser('add_column', help=add_column.__doc__)
     subparsers.add_parser('update_data', help=update_data.__doc__)
     subparsers.add_parser(
@@ -413,7 +455,12 @@ if __name__ == '__main__':
     subparsers.add_parser(
         'read_only_transaction', help=read_only_transaction.__doc__)
     subparsers.add_parser('add_index', help=add_index.__doc__)
-    subparsers.add_parser('query_data_with_index', help=insert_data.__doc__)
+    query_data_with_index_parser = subparsers.add_parser(
+        'query_data_with_index', help=query_data_with_index.__doc__)
+    query_data_with_index_parser.add_argument(
+        '--start_title', default='Aardvark')
+    query_data_with_index_parser.add_argument(
+        '--end_title', default='Goo')
     subparsers.add_parser('read_data_with_index', help=insert_data.__doc__)
     subparsers.add_parser('add_storing_index', help=add_storing_index.__doc__)
     subparsers.add_parser(
@@ -429,6 +476,8 @@ if __name__ == '__main__':
         query_data(args.instance_id, args.database_id)
     elif args.command == 'read_data':
         read_data(args.instance_id, args.database_id)
+    elif args.command == 'read_stale_data':
+        read_stale_data(args.instance_id, args.database_id)
     elif args.command == 'add_column':
         add_column(args.instance_id, args.database_id)
     elif args.command == 'update_data':
@@ -442,7 +491,9 @@ if __name__ == '__main__':
     elif args.command == 'add_index':
         add_index(args.instance_id, args.database_id)
     elif args.command == 'query_data_with_index':
-        query_data_with_index(args.instance_id, args.database_id)
+        query_data_with_index(
+            args.instance_id, args.database_id,
+            args.start_title, args.end_title)
     elif args.command == 'read_data_with_index':
         read_data_with_index(args.instance_id, args.database_id)
     elif args.command == 'add_storing_index':

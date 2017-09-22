@@ -17,34 +17,12 @@ Setup
 Authentication
 ++++++++++++++
 
-Authentication is typically done through `Application Default Credentials`_,
-which means you do not have to change the code to authenticate as long as
-your environment has credentials. You have a few options for setting up
-authentication:
+This sample requires you to have authentication setup. Refer to the
+`Authentication Getting Started Guide`_ for instructions on setting up
+credentials for applications.
 
-#. When running locally, use the `Google Cloud SDK`_
-
-    .. code-block:: bash
-
-        gcloud beta auth application-default login
-
-
-#. When running on App Engine or Compute Engine, credentials are already
-   set-up. However, you may need to configure your Compute Engine instance
-   with `additional scopes`_.
-
-#. You can create a `Service Account key file`_. This file can be used to
-   authenticate to Google Cloud Platform services from any environment. To use
-   the file, set the ``GOOGLE_APPLICATION_CREDENTIALS`` environment variable to
-   the path to the key file, for example:
-
-    .. code-block:: bash
-
-        export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
-
-.. _Application Default Credentials: https://cloud.google.com/docs/authentication#getting_credentials_for_server-centric_flow
-.. _additional scopes: https://cloud.google.com/compute/docs/authentication#using
-.. _Service Account key file: https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount
+.. _Authentication Getting Started Guide:
+    https://cloud.google.com/docs/authentication/getting-started
 
 Install Dependencies
 ++++++++++++++++++++
@@ -81,9 +59,9 @@ To run this sample:
 
     $ python snippets.py
 
-    usage: snippets.py [-h] [--database-name DATABASE_NAME]
-                       instance_name
-                       {insert_data,query_data,read_data,update_data,read_write_transaction,query_data_with_index,read_data_with_index,read_data_with_storing_index}
+    usage: snippets.py [-h] [--database-id DATABASE_ID]
+                       instance_id
+                       {create_database,insert_data,query_data,read_data,read_stale_data,add_column,update_data,query_data_with_new_column,read_write_transaction,read_only_transaction,add_index,query_data_with_index,read_data_with_index,add_storing_index,read_data_with_storing_index}
                        ...
     
     This application demonstrates how to do basic operations using Cloud
@@ -92,34 +70,60 @@ To run this sample:
     For more information, see the README.rst under /spanner.
     
     positional arguments:
-      instance_name         Your Cloud Spanner instance name.
-      {insert_data,query_data,read_data,update_data,read_write_transaction,query_data_with_index,read_data_with_index,read_data_with_storing_index}
+      instance_id           Your Cloud Spanner instance ID.
+      {create_database,insert_data,query_data,read_data,read_stale_data,add_column,update_data,query_data_with_new_column,read_write_transaction,read_only_transaction,add_index,query_data_with_index,read_data_with_index,add_storing_index,read_data_with_storing_index}
+        create_database     Creates a database and tables for sample data.
         insert_data         Inserts sample data into the given database. The
                             database and table must already exist and can be
                             created using `create_database`.
         query_data          Queries sample data from the database using SQL.
         read_data           Reads sample data from the database.
+        read_stale_data     Reads sample data from the database. The data is
+                            exactly 10 seconds stale.
+        add_column          Adds a new column to the Albums table in the example
+                            database.
         update_data         Updates sample data in the database. This updates the
                             `MarketingBudget` column which must be created before
-                            running this sample. Run the following query on your
-                            database to create the column: ALTER TABLE Albums ADD
-                            COLUMN MarketingBudget INT64
+                            running this sample. You can add the column by running
+                            the `add_column` sample or by running this DDL
+                            statement against your database: ALTER TABLE Albums
+                            ADD COLUMN MarketingBudget INT64
+        query_data_with_new_column
+                            Queries sample data from the database using SQL. This
+                            sample uses the `MarketingBudget` column. You can add
+                            the column by running the `add_column` sample or by
+                            running this DDL statement against your database:
+                            ALTER TABLE Albums ADD COLUMN MarketingBudget INT64
         read_write_transaction
                             Performs a read-write transaction to update two sample
                             records in the database. This will transfer 200,000
-                            from the `MarketingBudget` field for the first Album
-                            to the second Album. If the `MarketingBudget` is too
+                            from the `MarketingBudget` field for the second Album
+                            to the first Album. If the `MarketingBudget` is too
                             low, it will raise an exception. Before running this
                             sample, you will need to run the `update_data` sample
                             to populate the fields.
+        read_only_transaction
+                            Reads data inside of a read-only transaction. Within
+                            the read-only transaction, or "snapshot", the
+                            application sees consistent view of the database at a
+                            particular timestamp.
+        add_index           Adds a simple index to the example database.
         query_data_with_index
-                            Inserts sample data into the given database. The
-                            database and table must already exist and can be
-                            created using `create_database`.
+                            Queries sample data from the database using SQL and an
+                            index. The index must exist before running this
+                            sample. You can add the index by running the
+                            `add_index` sample or by running this DDL statement
+                            against your database: CREATE INDEX AlbumsByAlbumTitle
+                            ON Albums(AlbumTitle) This sample also uses the
+                            `MarketingBudget` column. You can add the column by
+                            running the `add_column` sample or by running this DDL
+                            statement against your database: ALTER TABLE Albums
+                            ADD COLUMN MarketingBudget INT64
         read_data_with_index
                             Inserts sample data into the given database. The
                             database and table must already exist and can be
                             created using `create_database`.
+        add_storing_index   Adds an storing index to the example database.
         read_data_with_storing_index
                             Inserts sample data into the given database. The
                             database and table must already exist and can be
@@ -127,8 +131,8 @@ To run this sample:
     
     optional arguments:
       -h, --help            show this help message and exit
-      --database-name DATABASE_NAME
-                            Your Cloud Spanner database name.
+      --database-id DATABASE_ID
+                            Your Cloud Spanner database ID.
 
 
 
@@ -140,11 +144,11 @@ This sample uses the `Google Cloud Client Library for Python`_.
 You can read the documentation for more details on API usage and use GitHub
 to `browse the source`_ and  `report issues`_.
 
-.. Google Cloud Client Library for Python:
+.. _Google Cloud Client Library for Python:
     https://googlecloudplatform.github.io/google-cloud-python/
-.. browse the source:
+.. _browse the source:
     https://github.com/GoogleCloudPlatform/google-cloud-python
-.. report issues:
+.. _report issues:
     https://github.com/GoogleCloudPlatform/google-cloud-python/issues
 
 

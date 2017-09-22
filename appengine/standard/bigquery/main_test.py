@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import re
 
 from googleapiclient.http import HttpMock
@@ -21,10 +22,13 @@ import webtest
 
 import main
 
+RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
+PROJECT = os.environ['GCLOUD_PROJECT']
+
 
 @pytest.fixture
-def app(cloud_config, testbed):
-    main.PROJECTID = cloud_config.project
+def app(testbed):
+    main.PROJECTID = PROJECT
     return webtest.TestApp(main.app)
 
 
@@ -46,11 +50,11 @@ def test_loggedin(app, login):
     assert re.search(r'.*oauth2.*', response.headers['Location'])
 
 
-def test_oauthed(resource, app, login):
+def test_oauthed(app, login):
     login()
 
     mock_http = HttpMock(
-        resource('datasets-list.json'),
+        os.path.join(RESOURCES, 'datasets-list.json'),
         {'status': '200'})
 
     with mock.patch.object(main.decorator, 'http', return_value=mock_http):

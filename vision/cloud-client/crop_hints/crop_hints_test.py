@@ -17,7 +17,7 @@ import os
 import crop_hints
 
 
-def test_crop(cloud_config, capsys):
+def test_crop(capsys):
     """Checks the output image for cropping the image is created."""
     file_name = os.path.join(
         os.path.dirname(__file__),
@@ -27,7 +27,7 @@ def test_crop(cloud_config, capsys):
     assert os.path.isfile('output-crop.jpg')
 
 
-def test_draw(cloud_config, capsys):
+def test_draw(capsys):
     """Checks the output image for drawing the crop hint is created."""
     file_name = os.path.join(
         os.path.dirname(__file__),

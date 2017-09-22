@@ -1,1 +1,0 @@
-https://storage.googleapis.com/videointelligence-alpha/videointelligence-python.zip

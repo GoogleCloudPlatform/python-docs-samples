@@ -12,25 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 import web_detect
 
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
-def test_detect_file(cloud_config, capsys):
+
+def test_detect_file(capsys):
     file_name = ('../detect/resources/landmark.jpg')
     web_detect.report(web_detect.annotate(file_name))
     out, _ = capsys.readouterr()
     assert 'Description: Palace of Fine Arts Theatre' in out
 
 
-def test_detect_web_gsuri(cloud_config, capsys):
+def test_detect_web_gsuri(capsys):
     file_name = ('gs://{}/vision/landmark.jpg'.format(
-                 cloud_config.storage_bucket))
+                 BUCKET))
     web_detect.report(web_detect.annotate(file_name))
     out, _ = capsys.readouterr()
     assert 'Description: Palace of Fine Arts Theatre' in out
 
 
-def test_detect_web_http(cloud_config, capsys):
+def test_detect_web_http(capsys):
     web_detect.report(web_detect.annotate('https://goo.gl/X4qcB6'))
     out, _ = capsys.readouterr()
     assert 'https://cloud.google.com/vision/' in out

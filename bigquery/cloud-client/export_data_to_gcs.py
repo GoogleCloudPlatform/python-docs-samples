@@ -16,7 +16,7 @@
 
 """Exports data from BigQuery to an object in Google Cloud Storage.
 
-For more information, see the README.md under /bigquery.
+For more information, see the README.rst.
 
 Example invocation:
     $ python export_data_to_gcs.py example_dataset example_table \
@@ -26,7 +26,6 @@ The dataset and table should already exist.
 """
 
 import argparse
-import time
 import uuid
 
 from google.cloud import bigquery
@@ -42,21 +41,10 @@ def export_data_to_gcs(dataset_name, table_name, destination):
         job_name, table, destination)
 
     job.begin()
-
-    wait_for_job(job)
+    job.result()  # Wait for job to complete
 
     print('Exported {}:{} to {}'.format(
         dataset_name, table_name, destination))
-
-
-def wait_for_job(job):
-    while True:
-        job.reload()
-        if job.state == 'DONE':
-            if job.error_result:
-                raise RuntimeError(job.errors)
-            return
-        time.sleep(1)
 
 
 if __name__ == '__main__':

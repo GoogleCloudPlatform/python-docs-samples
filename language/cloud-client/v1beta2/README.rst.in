@@ -1,0 +1,30 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Natural Language API
+  short_name: Cloud Natural Language API
+  url: https://cloud.google.com/natural-language/docs/
+  description: >
+    The `Google Cloud Natural Language API`_ provides natural language
+    understanding technologies to developers, including sentiment analysis,
+    entity recognition, and syntax analysis. This API is part of the larger
+    Cloud Machine Learning API.
+
+
+    - See the `migration guide`_ for information about migrating to Python client library v0.26.1.
+
+
+    .. _migration guide: https://cloud.google.com/natural-language/docs/python-client-migration
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Quickstart
+  file: quickstart.py
+- name: Snippets
+  file: snippets.py
+  show_help: true
+
+cloud_client_library: true
