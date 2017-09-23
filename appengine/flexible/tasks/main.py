@@ -14,8 +14,6 @@
 
 """App Engine app to serve as an endpoint for App Engine queue samples."""
 
-import logging
-
 from flask import Flask, request
 
 app = Flask(__name__)
