@@ -19,8 +19,6 @@ import base64
 import datetime
 import json
 
-from googleapiclient import discovery
-
 
 def seconds_from_now_to_rfc3339_datetime(seconds):
     """Return an RFC 3339 datetime string for a number of seconds from now."""
