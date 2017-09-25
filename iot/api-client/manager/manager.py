@@ -456,8 +456,8 @@ def parse_command_line_args():
 def run_command(args):
     """Calls the program using the specified command."""
     if args.project_id is None:
-      print ("You must specify a project ID or set the environment variable.")
-      return
+        print('You must specify a project ID or set the environment variable.')
+        return
 
     if args.command == 'create-rsa256':
         create_rs256_device(
