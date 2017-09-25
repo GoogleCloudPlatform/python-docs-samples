@@ -46,7 +46,8 @@ def annotate(path):
 
         image = types.Image(content=content)
 
-    web_detection = client.web_detection(image=image).web_detection
+    response = client.web_detection(image=image)
+    web_detection = response.web_detection
     # [END get_annotations]
 
     return web_detection
@@ -55,34 +56,46 @@ def annotate(path):
 def report(annotations):
     """Prints detected features in the provided web annotations."""
     # [START print_annotations]
+    if annotations.best_guess_labels:
+        for label in annotations.best_guess_labels:
+            print('\nBest guess label: {}'.format(label.label))
+
     if annotations.pages_with_matching_images:
-        print('\n{} Pages with matching images retrieved'.format(
+        print('\n{} Pages with matching images found:'.format(
             len(annotations.pages_with_matching_images)))
 
         for page in annotations.pages_with_matching_images:
-            print('Url   : {}'.format(page.url))
+            #print('\tTitle : {}'.format(page.page_title))
+            print('\n\tPage url   : {}'.format(page.url))
 
-    if annotations.full_matching_images:
-        print ('\n{} Full Matches found: '.format(
-               len(annotations.full_matching_images)))
+            if page.full_matching_images:
+                print('\t{} Full Matches found: '.format(
+                       len(page.full_matching_images)))
 
-        for image in annotations.full_matching_images:
-            print('Url  : {}'.format(image.url))
+                for image in page.full_matching_images:
+                    print('\t\tImage url  : {}'.format(image.url))
 
-    if annotations.partial_matching_images:
-        print ('\n{} Partial Matches found: '.format(
-               len(annotations.partial_matching_images)))
+            if page.partial_matching_images:
+                print('\t{} Partial Matches found: '.format(
+                       len(page.partial_matching_images)))
 
-        for image in annotations.partial_matching_images:
-            print('Url  : {}'.format(image.url))
+                for image in page.partial_matching_images:
+                    print('\t\tImage url  : {}'.format(image.url))
 
     if annotations.web_entities:
-        print ('\n{} Web entities found: '.format(
+        print('\n{} Web entities found: '.format(
             len(annotations.web_entities)))
 
         for entity in annotations.web_entities:
-            print('Score      : {}'.format(entity.score))
-            print('Description: {}'.format(entity.description))
+            print('\n\tScore      : {}'.format(entity.score))
+            print('\tDescription: {}'.format(entity.description))
+
+    if annotations.visually_similar_images:
+        print('\n{} visually similar images found:\n'.format(
+            len(annotations.visually_similar_images)))
+
+        for image in annotations.visually_similar_images:
+            print('\tImage url    : {}'.format(image.url))
     # [END print_annotations]
 
 
