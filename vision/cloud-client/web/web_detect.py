@@ -65,7 +65,6 @@ def report(annotations):
             len(annotations.pages_with_matching_images)))
 
         for page in annotations.pages_with_matching_images:
-            #print('\tTitle : {}'.format(page.page_title))
             print('\n\tPage url   : {}'.format(page.url))
 
             if page.full_matching_images:
