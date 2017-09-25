@@ -173,7 +173,7 @@ def delete_device(
 
 
 def delete_registry(
-        service_account_json, api_key, project_id, cloud_region, registry_id):
+       service_account_json, api_key, project_id, cloud_region, registry_id):
     """Deletes the specified registry."""
     print('Delete registry')
     client = get_client(service_account_json, api_key)
@@ -278,9 +278,9 @@ def create_registry(
             project_id,
             cloud_region)
     body = {
-        'eventNotificationConfig': {
+        'eventNotificationConfigs': [{
             'pubsubTopicName': pubsub_topic
-        },
+        }],
         'id': registry_id
     }
     request = client.projects().locations().registries().create(
@@ -291,8 +291,7 @@ def create_registry(
         print('Created registry')
         return response
     except HttpError:
-        print(dir(HttpError))
-        print('Error {}'.format(HttpError))
+        print('Error {}'.format(HttpError.message))
         return ""
 
 

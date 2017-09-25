@@ -115,7 +115,7 @@ def test_add_delete_rs256_device(test_topic, capsys):
 
     out, _ = capsys.readouterr()
     assert 'format : RSA_X509_PEM' in out
-    assert 'State : {}' in out
+    assert 'State: {' in out
 
 
 def test_add_delete_es256_device(test_topic, capsys):
@@ -146,7 +146,7 @@ def test_add_delete_es256_device(test_topic, capsys):
 
     out, _ = capsys.readouterr()
     assert 'format : ES256_PEM' in out
-    assert 'State : {}' in out
+    assert 'State: {' in out
 
 
 def test_add_patch_delete_rs256(test_topic, capsys):
