@@ -29,11 +29,10 @@ def seconds_from_now_to_rfc3339_datetime(seconds):
 def create_task(project, queue, location, payload=None, in_seconds=None):
     """Create a task for a given queue with an arbitrary payload."""
 
-    from googleapiclient import discovery
+    import googleapiclient.discovery
 
     # Create a client.
-    client = discovery.build(
-        'cloudtasks', 'v2beta2')
+    client = googleapiclient.discovery.build('cloudtasks', 'v2beta2')
 
     url = '/log_payload'
     body = {
