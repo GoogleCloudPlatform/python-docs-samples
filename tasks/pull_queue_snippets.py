@@ -27,10 +27,10 @@ import base64
 def create_task(project, queue, location):
     """Create a task for a given queue with an arbitrary payload."""
 
+    import googleapiclient.discovery
+
     # Create a client.
-    from googleapiclient import discovery
-    client = discovery.build(
-        'cloudtasks', 'v2beta2')
+    client = googleapiclient.discovery.build('cloudtasks', 'v2beta2')
 
     payload = 'a message for the recipient'
     task = {
@@ -54,10 +54,10 @@ def create_task(project, queue, location):
 def pull_task(project, queue, location):
     """Pull a single task from a given queue and lease it for 10 minutes."""
 
+    import googleapiclient.discovery
+
     # Create a client.
-    from googleapiclient import discovery
-    client = discovery.build(
-        'cloudtasks', 'v2beta2')
+    client = googleapiclient.discovery.build('cloudtasks', 'v2beta2')
 
     duration_seconds = '600s'
     pull_options = {
@@ -79,10 +79,10 @@ def pull_task(project, queue, location):
 def acknowledge_task(task):
     """Acknowledge a given task."""
 
+    import googleapiclient.discovery
+
     # Create a client.
-    from googleapiclient import discovery
-    client = discovery.build(
-        'cloudtasks', 'v2beta2')
+    client = googleapiclient.discovery.build('cloudtasks', 'v2beta2')
 
     body = {'scheduleTime': task['scheduleTime']}
     client.projects().locations().queues().tasks().acknowledge(
