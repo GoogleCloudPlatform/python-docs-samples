@@ -291,7 +291,7 @@ def create_registry(
         print('Created registry')
         return response
     except HttpError:
-        print('Error {}'.format(HttpError.message))
+        print('Error, registry not created')
         return ""
 
 
