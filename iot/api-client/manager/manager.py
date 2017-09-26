@@ -69,7 +69,7 @@ def get_client(service_account_json, api_key):
     provided API key and creating a service object using the service account
     credentials JSON."""
     api_scopes = ['https://www.googleapis.com/auth/cloud-platform']
-    api_version = 'v1beta1'
+    api_version = 'v1'
     discovery_api = 'https://cloudiot.googleapis.com/$discovery/rest'
     service_name = 'cloudiotcore'
 
@@ -173,7 +173,7 @@ def delete_device(
 
 
 def delete_registry(
-        service_account_json, api_key, project_id, cloud_region, registry_id):
+       service_account_json, api_key, project_id, cloud_region, registry_id):
     """Deletes the specified registry."""
     print('Delete registry')
     client = get_client(service_account_json, api_key)
@@ -214,6 +214,23 @@ def get_device(
             'cloudUpdateTime')))
 
     return device
+
+
+def get_state(
+        service_account_json, api_key, project_id, cloud_region, registry_id,
+        device_id):
+    """Retrieve a device's state blobs."""
+    client = get_client(service_account_json, api_key)
+    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
+            project_id, cloud_region, registry_id)
+
+    device_name = '{}/devices/{}'.format(registry_name, device_id)
+    devices = client.projects().locations().registries().devices()
+    state = devices.states().list(name=device_name, numStates=5).execute()
+
+    print('State: {}\n'.format(state))
+
+    return state
 
 
 def list_devices(
@@ -261,9 +278,9 @@ def create_registry(
             project_id,
             cloud_region)
     body = {
-        'eventNotificationConfig': {
+        'eventNotificationConfigs': [{
             'pubsubTopicName': pubsub_topic
-        },
+        }],
         'id': registry_id
     }
     request = client.projects().locations().registries().create(
@@ -274,6 +291,7 @@ def create_registry(
         print('Created registry')
         return response
     except HttpError:
+        print('Error, registry not created')
         return ""
 
 
@@ -425,7 +443,8 @@ def parse_command_line_args():
     command.add_parser('delete-device', help=delete_device.__doc__)
     command.add_parser('delete-registry', help=delete_registry.__doc__)
     command.add_parser('get', help=get_device.__doc__)
-    command.add_parser('get-registry', help=get_device.__doc__)
+    command.add_parser('get-registry', help=get_registry.__doc__)
+    command.add_parser('get-state', help=get_state.__doc__)
     command.add_parser('list', help=list_devices.__doc__)
     command.add_parser('list-registries', help=list_registries.__doc__)
     command.add_parser('patch-es256', help=patch_es256_auth.__doc__)
@@ -436,6 +455,10 @@ def parse_command_line_args():
 
 def run_command(args):
     """Calls the program using the specified command."""
+    if args.project_id is None:
+        print('You must specify a project ID or set the environment variable.')
+        return
+
     if args.command == 'create-rsa256':
         create_rs256_device(
                 args.service_account_json, args.api_key, args.project_id,
@@ -473,6 +496,11 @@ def run_command(args):
 
     elif args.command == 'get':
         get_device(
+                args.service_account_json, args.api_key, args.project_id,
+                args.cloud_region, args.registry_id, args.device_id)
+
+    elif args.command == 'get-state':
+        get_state(
                 args.service_account_json, args.api_key, args.project_id,
                 args.cloud_region, args.registry_id, args.device_id)
 
