@@ -41,7 +41,7 @@ below:
    $ gcloud beta pubsub subscriptions create testsubscription --topic=testtopic
 
 6. Run this program:
-   $ python notification_polling my-project-id testsubscription
+   $ python notification_polling.py my-project-id testsubscription
 
 7. While the program is running, upload and delete some files in the testbucket
    bucket (you could use the console or gsutil) and watch as changes scroll by
@@ -64,6 +64,8 @@ def summarize(message):
     bucket_id = attributes['bucketId']
     object_id = attributes['objectId']
     generation = attributes['objectGeneration']
+    overwroteGeneration = attributes['overwroteGeneration']
+    overwrittenByGeneration = attributes['overwrittenByGeneration']
     description = (
         '\tEvent type: {event_type}\n'
         '\tBucket ID: {bucket_id}\n'
@@ -73,6 +75,12 @@ def summarize(message):
             bucket_id=bucket_id,
             object_id=object_id,
             generation=generation)
+
+    if overwroteGeneration:
+      description += '\tOverwrote generation: %s\n' % overwroteGeneration
+    if overwrittenByGeneration:
+      description += '\tOverwritten by generation: %s\n' % (
+          overwrittenByGeneration)
 
     payload_format = attributes['payloadFormat']
     if payload_format == 'JSON_API_V1':
@@ -99,7 +107,7 @@ def poll_notifications(project, subscription_name):
         project, subscription_name)
 
     def callback(message):
-        print('Received message:\n{1}'.format(summarize(message)))
+        print('Received message:\n{}'.format(summarize(message)))
         message.ack()
 
     subscriber.subscribe(subscription_path, callback=callback)
