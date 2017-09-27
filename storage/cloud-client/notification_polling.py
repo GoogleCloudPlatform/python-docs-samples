@@ -64,8 +64,6 @@ def summarize(message):
     bucket_id = attributes['bucketId']
     object_id = attributes['objectId']
     generation = attributes['objectGeneration']
-    overwrote_generation = attributes['overwroteGeneration']
-    overwritten_by_generation = attributes['overwrittenByGeneration']
     description = (
         '\tEvent type: {event_type}\n'
         '\tBucket ID: {bucket_id}\n'
@@ -76,11 +74,12 @@ def summarize(message):
             object_id=object_id,
             generation=generation)
 
-    if overwrote_generation:
-        description += '\tOverwrote generation: %s\n' % overwrote_generation
-    if overwritten_by_generation:
+    if 'overwroteGeneration' in attributes:
+        description += '\tOverwrote generation: %s\n' % (
+            attributes['overwroteGeneration'])
+    if 'overwrittenByGeneration' in attributes:
         description += '\tOverwritten by generation: %s\n' % (
-            overwritten_by_generation)
+            attributes['ovewrittenByGeneration'])
 
     payload_format = attributes['payloadFormat']
     if payload_format == 'JSON_API_V1':
