@@ -59,14 +59,13 @@ To run this sample:
 
     $ python manager.py
 
-    usage: manager.py [-h] --pubsub_topic PUBSUB_TOPIC [--api_key API_KEY]
-                      [--project_id PROJECT_ID]
+    usage: manager.py [-h] --pubsub_topic PUBSUB_TOPIC [--project_id PROJECT_ID]
                       [--ec_public_key_file EC_PUBLIC_KEY_FILE]
                       [--rsa_certificate_file RSA_CERTIFICATE_FILE]
                       [--cloud_region CLOUD_REGION]
                       [--service_account_json SERVICE_ACCOUNT_JSON]
                       [--registry_id REGISTRY_ID] [--device_id DEVICE_ID]
-                      {create-es256,create-registry,create-rsa256,create-topic,create-unauth,delete-device,delete-registry,get,get-registry,list,list-registries,patch-es256,patch-rs256}
+                      {create-es256,create-registry,create-rsa256,create-topic,create-unauth,delete-device,delete-registry,get,get-registry,get-state,list,list-registries,patch-es256,patch-rs256}
                       ...
     
     Example of using the Google Cloud IoT Core device manager to administer
@@ -77,14 +76,13 @@ To run this sample:
         python manager.py \
           --project_id=my-project-id \
           --pubsub_topic=projects/my-project-id/topics/my-topic-id \
-          --api_key=YOUR_API_KEY \
           --ec_public_key_file=../ec_public.pem \
           --rsa_certificate_file=../rsa_cert.pem \
           --service_account_json=$HOME/service_account.json
           list
     
     positional arguments:
-      {create-es256,create-registry,create-rsa256,create-topic,create-unauth,delete-device,delete-registry,get,get-registry,list,list-registries,patch-es256,patch-rs256}
+      {create-es256,create-registry,create-rsa256,create-topic,create-unauth,delete-device,delete-registry,get,get-registry,get-state,list,list-registries,patch-es256,patch-rs256}
         create-es256        Create a new device with the given id, using ES256 for
                             authentication.
         create-registry     Gets or creates a device registry.
@@ -96,7 +94,8 @@ To run this sample:
         delete-device       Delete the device with the given id.
         delete-registry     Deletes the specified registry.
         get                 Retrieve the device with the given id.
-        get-registry        Retrieve the device with the given id.
+        get-registry        Retrieves a device registry.
+        get-state           Retrieve a device's state blobs.
         list                List all devices in the registry.
         list-registries     List all registries in the project.
         patch-es256         Patch the device to add an ES256 public key to the
@@ -109,7 +108,6 @@ To run this sample:
       --pubsub_topic PUBSUB_TOPIC
                             Google Cloud Pub/Sub topic. Format is
                             projects/project_id/topics/topic-id
-      --api_key API_KEY     Your API key.
       --project_id PROJECT_ID
                             GCP cloud project name.
       --ec_public_key_file EC_PUBLIC_KEY_FILE
