@@ -127,7 +127,10 @@ def parse_command_line_args():
             default='mqtt.googleapis.com',
             help='MQTT bridge hostname.')
     parser.add_argument(
-            '--mqtt_bridge_port', default=8883, help='MQTT bridge port.')
+            '--mqtt_bridge_port',
+            default=8883,
+            type=int,
+            help='MQTT bridge port.')
 
     return parser.parse_args()
 
