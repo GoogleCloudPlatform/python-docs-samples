@@ -17,34 +17,12 @@ Setup
 Authentication
 ++++++++++++++
 
-Authentication is typically done through `Application Default Credentials`_,
-which means you do not have to change the code to authenticate as long as
-your environment has credentials. You have a few options for setting up
-authentication:
+This sample requires you to have authentication setup. Refer to the
+`Authentication Getting Started Guide`_ for instructions on setting up
+credentials for applications.
 
-#. When running locally, use the `Google Cloud SDK`_
-
-    .. code-block:: bash
-
-        gcloud auth application-default login
-
-
-#. When running on App Engine or Compute Engine, credentials are already
-   set-up. However, you may need to configure your Compute Engine instance
-   with `additional scopes`_.
-
-#. You can create a `Service Account key file`_. This file can be used to
-   authenticate to Google Cloud Platform services from any environment. To use
-   the file, set the ``GOOGLE_APPLICATION_CREDENTIALS`` environment variable to
-   the path to the key file, for example:
-
-    .. code-block:: bash
-
-        export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
-
-.. _Application Default Credentials: https://cloud.google.com/docs/authentication#getting_credentials_for_server-centric_flow
-.. _additional scopes: https://cloud.google.com/compute/docs/authentication#using
-.. _Service Account key file: https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount
+.. _Authentication Getting Started Guide:
+    https://cloud.google.com/docs/authentication/getting-started
 
 Install Dependencies
 ++++++++++++++++++++
@@ -95,7 +73,7 @@ To run this sample:
 
     usage: snippets.py [-h]
                        bucket_name
-                       {create-bucket,delete-bucket,list,list-with-prefix,upload,download,delete,metadata,make-public,signed-url,rename,copy}
+                       {create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,download,delete,metadata,make-public,signed-url,rename,copy}
                        ...
     
     This application demonstrates how to perform basic operations on blobs
@@ -106,9 +84,13 @@ To run this sample:
     
     positional arguments:
       bucket_name           Your cloud storage bucket.
-      {create-bucket,delete-bucket,list,list-with-prefix,upload,download,delete,metadata,make-public,signed-url,rename,copy}
+      {create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,download,delete,metadata,make-public,signed-url,rename,copy}
         create-bucket       Creates a new bucket.
         delete-bucket       Deletes a bucket. The bucket must be empty.
+        get-bucket-labels   Prints out a bucket's labels.
+        add-bucket-label    Add a label to a bucket.
+        remove-bucket-label
+                            Remove a label from a bucket.
         list                Lists all the blobs in the bucket.
         list-with-prefix    Lists all the blobs in the bucket that begin with the
                             prefix. This can be used to list all blobs in a
@@ -243,26 +225,43 @@ To run this sample:
 
     $ python notification_polling.py
 
-    usage: notification_polling.py [-h] subscription
+    usage: notification_polling.py [-h] project subscription
     
-    This application demonstrates how to poll for GCS notifications from a Cloud
-    Pub/Sub subscription, parse the incoming message, and acknowledge the
-    successful processing of the message. This application will work with any
-    subscription configured for pull rather than push notifications. If you do not
-    already have notifications configured, you may consult the docs at
+    This application demonstrates how to poll for GCS notifications from a
+    Cloud Pub/Sub subscription, parse the incoming message, and acknowledge the
+    successful processing of the message.
+    
+    This application will work with any subscription configured for pull rather
+    than push notifications. If you do not already have notifications configured,
+    you may consult the docs at
     https://cloud.google.com/storage/docs/reporting-changes or follow the steps
-    below: 1. Activate the Google Cloud Pub/Sub API, if you have not already done
-    so. https://console.cloud.google.com/flows/enableapi?apiid=pubsub 2. Create a
-    Google Cloud Storage bucket: $ gsutil mb gs://testbucket 3. Create a Cloud
-    Pub/Sub topic and publish bucket notifications there: $ gsutil notification
-    create -f json -t testtopic gs://testbucket 4. Create a subscription for your
-    new topic: $ gcloud beta pubsub subscriptions create testsubscription
-    --topic=testtopic 5. Run this program: $ python notification_polling
-    testsubscription 6. While the program is running, upload and delete some files
-    in the testbucket bucket (you could use the console or gsutil) and watch as
-    changes scroll by in the app.
+    below:
+    
+    1. First, follow the common setup steps for these snippets, specically
+       configuring auth and installing dependencies. See the README's "Setup"
+       section.
+    
+    2. Activate the Google Cloud Pub/Sub API, if you have not already done so.
+       https://console.cloud.google.com/flows/enableapi?apiid=pubsub
+    
+    3. Create a Google Cloud Storage bucket:
+       $ gsutil mb gs://testbucket
+    
+    4. Create a Cloud Pub/Sub topic and publish bucket notifications there:
+       $ gsutil notification create -f json -t testtopic gs://testbucket
+    
+    5. Create a subscription for your new topic:
+       $ gcloud beta pubsub subscriptions create testsubscription --topic=testtopic
+    
+    6. Run this program:
+       $ python notification_polling my-project-id testsubscription
+    
+    7. While the program is running, upload and delete some files in the testbucket
+       bucket (you could use the console or gsutil) and watch as changes scroll by
+       in the app.
     
     positional arguments:
+      project       The ID of the project that owns the subscription
       subscription  The ID of the Pub/Sub subscription
     
     optional arguments:
