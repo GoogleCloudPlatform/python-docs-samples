@@ -114,7 +114,8 @@ def test_update_multiple():
     snippets.update_multiple()
 
 
-def test_update_server_timestamp():
+def test_update_server_timestamp(db):
+    db.collection(u'objects').document(u'some-id').set({'timestamp': 0})
     snippets.update_server_timestamp()
 
 
