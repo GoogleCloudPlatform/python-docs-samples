@@ -16,13 +16,15 @@ Cloud Dataproc.
 
 Note this file is not intended to be run directly, but run inside a PySpark
 environment.
+
+This file demonstrates how to read from a GCS bucket. See README.md for more
+information.
 """
 
 # [START pyspark]
 import pyspark
 
 sc = pyspark.SparkContext()
-rdd = sc.parallelize(['Hello,', 'world!', 'dog', 'elephant', 'panther'])
-words = sorted(rdd.collect())
-print(words)
+rdd = sc.textFile('gs://path-to-your-GCS-file')
+print(sorted(rdd.collect()))
 # [END pyspark]
