@@ -78,7 +78,8 @@ def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
 
     if scale_up:
         if current_node_count < max_node_count:
-            new_node_count = min(current_node_count + 3, max_node_count)
+            new_node_count = min(
+                current_node_count + size_change_step, max_node_count)
             cluster.serve_nodes = new_node_count
             cluster.update()
             print('Scaled up from {} to {} nodes.'.format(
