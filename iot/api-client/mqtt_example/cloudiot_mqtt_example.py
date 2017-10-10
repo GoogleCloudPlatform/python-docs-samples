@@ -71,7 +71,7 @@ def error_str(rc):
 
 def on_connect(unused_client, unused_userdata, unused_flags, rc):
     """Callback for when a device connects."""
-    print('on_connect', error_str(rc))
+    print('on_connect', mqtt.connack_string(rc))
 
 
 def on_disconnect(unused_client, unused_userdata, rc):
