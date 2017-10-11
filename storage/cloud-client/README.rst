@@ -27,7 +27,10 @@ credentials for applications.
 Install Dependencies
 ++++++++++++++++++++
 
-#. Install `pip`_ and `virtualenv`_ if you do not already have them.
+#. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
+
+ .. _Python Development Environment Setup Guide:
+     https://cloud.google.com/python/setup
 
 #. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
 
@@ -254,7 +257,7 @@ To run this sample:
        $ gcloud beta pubsub subscriptions create testsubscription --topic=testtopic
     
     6. Run this program:
-       $ python notification_polling my-project-id testsubscription
+       $ python notification_polling.py my-project-id testsubscription
     
     7. While the program is running, upload and delete some files in the testbucket
        bucket (you could use the console or gsutil) and watch as changes scroll by
