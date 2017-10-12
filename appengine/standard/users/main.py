@@ -26,6 +26,7 @@ import webapp2
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
+        # [START user_details]
         user = users.get_current_user()
         if user:
             nickname = user.nickname()
@@ -35,7 +36,7 @@ class MainPage(webapp2.RequestHandler):
         else:
             login_url = users.create_login_url('/')
             greeting = '<a href="{}">Sign in</a>'.format(login_url)
-
+        # [END user_details]
         self.response.write(
             '<html><body>{}</body></html>'.format(greeting))
 
