@@ -14,10 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This application demonstrates label detection using the Google Cloud API.
+"""This application demonstrates label detection on a demo video using
+the Google Cloud API.
 
 Usage:
     python quickstart.py
+
 """
 
 
