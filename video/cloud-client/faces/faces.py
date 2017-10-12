@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This application demonstrates how to perform shot change detection with the
-Google Cloud Video Intelligence API.
+"""This application demonstrates how to perform face
+detection with the Google Cloud Video Intelligence API.
 
 For more information, check out the documentation at
 https://cloud.google.com/videointelligence/docs.
