@@ -14,8 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This application demonstrates how to perform basic operations with the
-Google Cloud Video Intelligence API.
+"""This application demonstrates how to detect labels from a video
+based on the image content with the Google Cloud Video Intelligence
+API.
 
 For more information, check out the documentation at
 https://cloud.google.com/videointelligence/docs.
