@@ -15,8 +15,8 @@
 # limitations under the License.
 
 import os
-import faces
 import pytest
+import faces
 
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
