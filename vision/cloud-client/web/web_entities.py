@@ -18,13 +18,13 @@
 
 This sample prints only web_entities allowing the user to specify
 whether to include geo_results, which are based on GPS information
-included in the image.  Use the "--include_geo_results" flag to turn on
+included in the image.  Use the "--include-geo-results" flag to turn on
 the geo entities feature.
 
 Example usage:
-  python web_entities.py https://goo.gl/X4qcB6 --include_geo_results
-  python web_entities.py ../detect/resources/city.jpg --include_geo_results
-  python web_entities.py gs://your-bucket/image.png --include_geo_results
+  python web_entities.py https://goo.gl/X4qcB6 --include-geo-results
+  python web_entities.py ../detect/resources/city.jpg --include-geo-results
+  python web_entities.py gs://your-bucket/image.png --include-geo-results
 """
 # [START imports]
 import argparse
@@ -74,7 +74,7 @@ if __name__ == '__main__':
                     'Google Cloud Storage, or path to local file.')
     parser.add_argument('image_url', help=path_help)
     parser.add_argument(
-        '--include_geo_results', action='store_true', default=False,
+        '--include-geo-results', action='store_true', default=False,
         help='Use GPS signal in image to find geo entities.')
     args = parser.parse_args()
 

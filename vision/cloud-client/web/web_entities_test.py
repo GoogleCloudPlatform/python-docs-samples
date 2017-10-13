@@ -21,11 +21,11 @@ def test_detect_file_with_geo(capsys):
     file_name = ('../detect/resources/city.jpg')
     web_entities.annotate_web_entities(file_name, True)
     out, _ = capsys.readouterr()
-    assert 'Description: Jaffa' in out
+    assert 'Zepra' in out
 
 
 def test_detect_file_without_geo(capsys):
     file_name = ('../detect/resources/city.jpg')
     web_entities.annotate_web_entities(file_name, False)
     out, _ = capsys.readouterr()
-    assert 'Description: Jaffa' not in out
+    assert 'Zepra' not in out
