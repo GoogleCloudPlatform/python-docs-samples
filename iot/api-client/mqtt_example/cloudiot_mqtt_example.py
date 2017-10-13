@@ -119,7 +119,6 @@ def parse_command_line_args():
             '--message_type',
             choices=('event', 'state'),
             default='event',
-            required=True,
             help=('Indicates whether the message to be published is a '
                   'telemetry event or a device state message.'))
     parser.add_argument(
@@ -128,6 +127,7 @@ def parse_command_line_args():
             help='MQTT bridge hostname.')
     parser.add_argument(
             '--mqtt_bridge_port',
+            choices=(8883, 443),
             default=8883,
             type=int,
             help='MQTT bridge port.')
