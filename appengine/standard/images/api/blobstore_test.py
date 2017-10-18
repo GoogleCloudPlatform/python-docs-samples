@@ -50,7 +50,7 @@ def test_url_redirect(app):
     with mock.patch('blobstore.images') as mock_images:
         with mock.patch('blobstore.blobstore') as mock_blobstore:
             mock_blobstore.get.return_value = b'123'
-            mock_images.get_serving_url.return_value = 'http://lh3.ggpht.com/asdf'
+            mock_images.get_serving_url.return_value = 'http://lh3.ggpht.com/X'
 
             response = app.get('/redirect?blob_key=123')
 
