@@ -65,4 +65,3 @@ def test_url_redirect_missing(app):
 def test_url_redirect_no_key(app):
     # No blob_key, should get error
     app.get('/redirect', status=404)
-
