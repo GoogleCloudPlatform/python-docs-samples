@@ -48,5 +48,26 @@ class Thumbnailer(webapp2.RequestHandler):
 # [END thumbnailer]
 
 
-app = webapp2.WSGIApplication([('/img', Thumbnailer)], debug=True)
+class ServingUrlRedirect(webapp2.RequestHandler):
+    def get(self):
+        blob_key = self.request.get("blob_key")
+
+        if blob_key:
+            blob_info = blobstore.get(blob_key)
+
+            if blob_info:
+                # [START get_serving_url]
+                url = images.get_serving_url(
+                    blob_key, size=150, crop=True, secure_url=True)
+                # [END get_serving_url]
+                return webapp2.redirect(url)
+
+        # Either "blob_key" wasn't provided, or there was no value with that ID
+        # in the Blobstore.
+        self.error(404)
+
+
+app = webapp2.WSGIApplication(
+    [('/img', Thumbnailer),
+     ('/redirect', ServingUrlRedirect)], debug=True)
 # [END all]
