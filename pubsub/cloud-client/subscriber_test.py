@@ -66,10 +66,18 @@ def subscription(subscriber_client, topic):
     yield subscription_path
 
 
-def test_list(subscription, capsys):
+def test_list_in_topic(subscription, capsys):
     @eventually_consistent.call
     def _():
-        subscriber.list_subscriptions(PROJECT, TOPIC)
+        subscriber.list_subscriptions_in_topic(PROJECT, TOPIC)
+        out, _ = capsys.readouterr()
+        assert subscription in out
+
+
+def test_list_in_project(subscription, capsys):
+    @eventually_consistent.call
+    def _():
+        subscriber.list_subscriptions_in_project(PROJECT)
         out, _ = capsys.readouterr()
         assert subscription in out
 
