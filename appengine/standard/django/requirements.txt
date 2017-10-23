@@ -1,2 +1,2 @@
-MySQL-python==1.2.5
+PyMySQL==0.7.11
 Django==1.11.6
