@@ -1,5 +1,5 @@
 PyJWT==1.5.3
-cryptography==2.0.3
+cryptography==2.1.1
 flask==0.12.2
 google-auth==1.1.1
 gunicorn==19.7.1
