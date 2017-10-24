@@ -128,7 +128,7 @@ def get_wiki_title(wiki_url):
     try:
         content = requests.get(wiki_url).text
         return content.split('title')[1].split('-')[0].split('>')[1].strip()
-    except:
+    except KeyError:
         return os.path.basename(wiki_url).replace('_', ' ')
 
 
