@@ -86,11 +86,11 @@ def index(path, index_file):
                 categories = classify(text, verbose=False)
 
                 result[filename] = categories
-        except:
+        except Exception:
             print('Failed to process {}'.format(file_path))
 
     with io.open(index_file, 'w') as f:
-        f.write(unicode(json.dumps(result)))
+        f.write(json.dumps(result).encode('utf-8'))
 
     print('Texts indexed in file: {}'.format(index_file))
     return result
