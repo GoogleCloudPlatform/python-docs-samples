@@ -38,7 +38,7 @@ def topic(publisher_client):
 
     try:
         publisher_client.delete_topic(topic_path)
-    except:
+    except Exception:
         pass
 
     publisher_client.create_topic(topic_path)
@@ -58,7 +58,7 @@ def subscription(subscriber_client, topic):
 
     try:
         subscriber_client.delete_subscription(subscription_path)
-    except:
+    except Exception:
         pass
 
     subscriber_client.create_subscription(subscription_path, topic=topic)
@@ -79,7 +79,7 @@ def test_create(subscriber_client):
         PROJECT, SUBSCRIPTION)
     try:
         subscriber_client.delete_subscription(subscription_path)
-    except:
+    except Exception:
         pass
 
     subscriber.create_subscription(PROJECT, TOPIC, SUBSCRIPTION)
