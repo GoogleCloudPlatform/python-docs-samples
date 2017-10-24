@@ -48,7 +48,7 @@ def example_sink():
 
     try:
         sink.delete()
-    except:
+    except Exception:
         pass
 
 
@@ -72,7 +72,7 @@ def test_create(capsys):
     finally:
         try:
             logging.Client().sink(sink_name).delete()
-        except:
+        except Exception:
             pass
 
     out, _ = capsys.readouterr()
