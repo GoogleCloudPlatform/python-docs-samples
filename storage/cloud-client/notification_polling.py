@@ -24,22 +24,26 @@ you may consult the docs at
 https://cloud.google.com/storage/docs/reporting-changes or follow the steps
 below:
 
-1. Activate the Google Cloud Pub/Sub API, if you have not already done so.
+1. First, follow the common setup steps for these snippets, specically
+   configuring auth and installing dependencies. See the README's "Setup"
+   section.
+
+2. Activate the Google Cloud Pub/Sub API, if you have not already done so.
    https://console.cloud.google.com/flows/enableapi?apiid=pubsub
 
-2. Create a Google Cloud Storage bucket:
+3. Create a Google Cloud Storage bucket:
    $ gsutil mb gs://testbucket
 
-3. Create a Cloud Pub/Sub topic and publish bucket notifications there:
+4. Create a Cloud Pub/Sub topic and publish bucket notifications there:
    $ gsutil notification create -f json -t testtopic gs://testbucket
 
-4. Create a subscription for your new topic:
+5. Create a subscription for your new topic:
    $ gcloud beta pubsub subscriptions create testsubscription --topic=testtopic
 
-5. Run this program:
-   $ python notification_polling testsubscription
+6. Run this program:
+   $ python notification_polling.py my-project-id testsubscription
 
-6. While the program is running, upload and delete some files in the testbucket
+7. While the program is running, upload and delete some files in the testbucket
    bucket (you could use the console or gsutil) and watch as changes scroll by
    in the app.
 """
@@ -70,6 +74,13 @@ def summarize(message):
             object_id=object_id,
             generation=generation)
 
+    if 'overwroteGeneration' in attributes:
+        description += '\tOverwrote generation: %s\n' % (
+            attributes['overwroteGeneration'])
+    if 'overwrittenByGeneration' in attributes:
+        description += '\tOverwritten by generation: %s\n' % (
+            attributes['ovewrittenByGeneration'])
+
     payload_format = attributes['payloadFormat']
     if payload_format == 'JSON_API_V1':
         object_metadata = json.loads(data)
@@ -95,7 +106,7 @@ def poll_notifications(project, subscription_name):
         project, subscription_name)
 
     def callback(message):
-        print('Received message:\n{1}'.format(summarize(message)))
+        print('Received message:\n{}'.format(summarize(message)))
         message.ack()
 
     subscriber.subscribe(subscription_path, callback=callback)
@@ -110,8 +121,12 @@ def poll_notifications(project, subscription_name):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description=__doc__)
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument(
+        'project',
+        help='The ID of the project that owns the subscription')
     parser.add_argument('subscription',
                         help='The ID of the Pub/Sub subscription')
     args = parser.parse_args()
-    poll_notifications(args.subscription)
+    poll_notifications(args.project, args.subscription)

@@ -15,10 +15,9 @@
 # limitations under the License.
 
 import os
-
 import pytest
-
 import faces
+
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 FACES_FILE_PATH = '/video/googlework.mp4'

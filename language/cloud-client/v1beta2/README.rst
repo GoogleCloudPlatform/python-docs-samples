@@ -31,7 +31,10 @@ credentials for applications.
 Install Dependencies
 ++++++++++++++++++++
 
-#. Install `pip`_ and `virtualenv`_ if you do not already have them.
+#. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
+
+ .. _Python Development Environment Setup Guide:
+     https://cloud.google.com/python/setup
 
 #. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
 
@@ -76,7 +79,7 @@ To run this sample:
     $ python snippets.py
 
     usage: snippets.py [-h]
-                       {sentiment-entities-text,sentiment-entities-file,sentiment-text,sentiment-file,entities-text,entities-file,syntax-text,syntax-file}
+                       {classify-text,classify-file,sentiment-entities-text,sentiment-entities-file,sentiment-text,sentiment-file,entities-text,entities-file,syntax-text,syntax-file}
                        ...
     
     This application demonstrates how to perform basic operations with the
@@ -86,7 +89,10 @@ To run this sample:
     https://cloud.google.com/natural-language/docs.
     
     positional arguments:
-      {sentiment-entities-text,sentiment-entities-file,sentiment-text,sentiment-file,entities-text,entities-file,syntax-text,syntax-file}
+      {classify-text,classify-file,sentiment-entities-text,sentiment-entities-file,sentiment-text,sentiment-file,entities-text,entities-file,syntax-text,syntax-file}
+        classify-text       Classifies content categories of the provided text.
+        classify-file       Classifies content categories of the text in a Google
+                            Cloud Storage file.
         sentiment-entities-text
                             Detects entity sentiment in the provided text.
         sentiment-entities-file

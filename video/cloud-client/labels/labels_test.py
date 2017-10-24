@@ -15,10 +15,9 @@
 # limitations under the License.
 
 import os
-
 import pytest
-
 import labels
+
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 LABELS_FILE_PATH = '/video/cat.mp4'
@@ -29,4 +28,4 @@ def test_feline_video_labels(capsys):
     labels.analyze_labels(
         'gs://{}{}'.format(BUCKET, LABELS_FILE_PATH))
     out, _ = capsys.readouterr()
-    assert 'Whiskers' in out
+    assert 'Video label description: cat' in out

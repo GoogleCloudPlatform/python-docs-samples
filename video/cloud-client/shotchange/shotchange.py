@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This application demonstrates how to perform basic operations with the
-Google Cloud Video Intelligence API.
+"""This application demonstrates how to identify all different shots
+in a video using the Google Cloud Video Intelligence API.
 
 For more information, check out the documentation at
 https://cloud.google.com/videointelligence/docs.
@@ -32,17 +32,15 @@ import argparse
 import sys
 import time
 
-from google.cloud.gapic.videointelligence.v1beta1 import enums
-from google.cloud.gapic.videointelligence.v1beta1 import (
-    video_intelligence_service_client)
+from google.cloud import videointelligence_v1beta2
+from google.cloud.videointelligence_v1beta2 import enums
 # [END imports]
 
 
 def analyze_shots(path):
     """ Detects camera shot changes. """
     # [START construct_request]
-    video_client = (video_intelligence_service_client.
-                    VideoIntelligenceServiceClient())
+    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
     features = [enums.Feature.SHOT_CHANGE_DETECTION]
     operation = video_client.annotate_video(path, features)
     # [END construct_request]
@@ -58,13 +56,14 @@ def analyze_shots(path):
     # [END check_operation]
 
     # [START parse_response]
-    shots = operation.result().annotation_results[0]
+    shots = operation.result().annotation_results[0].shot_annotations
 
-    for note, shot in enumerate(shots.shot_annotations):
-        print('Scene {}: {} to {}'.format(
-            note,
-            shot.start_time_offset,
-            shot.end_time_offset))
+    for i, shot in enumerate(shots):
+        start_time = (shot.start_time_offset.seconds +
+                      shot.start_time_offset.nanos / 1e9)
+        end_time = (shot.end_time_offset.seconds +
+                    shot.end_time_offset.nanos / 1e9)
+        print('\tShot {}: {} to {}'.format(i, start_time, end_time))
     # [END parse_response]
 
 
