@@ -25,7 +25,7 @@ https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/compute/
 try:
     import BaseHTTPServer
     import SocketServer
-except:
+except ImportError:
     import http.server as BaseHTTPServer
     import socketserver as SocketServer
 
