@@ -27,7 +27,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
 export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
 
 # Run tests
-pip install --user --upgrade pip
+pip install --user --upgrade pip setuptools
 ~/.local/bin/pip install --user --upgrade nox-automation
 ~/.local/bin/nox -k "${NOX_SESSION}" || ret_code=$?
 
