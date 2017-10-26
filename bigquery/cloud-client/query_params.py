@@ -25,7 +25,6 @@ Example invocation:
 
 import argparse
 import datetime
-import uuid
 
 from google.cloud import bigquery
 import pytz
@@ -49,8 +48,7 @@ def query_positional_params(corpus, min_word_count):
     ]
     job_config = bigquery.QueryJobConfig()
     job_config.query_parameters = query_params
-    job_id = str(uuid.uuid4())
-    query_job = client.query(query, job_config=job_config, job_id=job_id)
+    query_job = client.query(query, job_config=job_config)
 
     query_job.result()  # Wait for job to complete
 
@@ -77,8 +75,7 @@ def query_named_params(corpus, min_word_count):
     ]
     job_config = bigquery.QueryJobConfig()
     job_config.query_parameters = query_params
-    job_id = str(uuid.uuid4())
-    query_job = client.query(query, job_config=job_config, job_id=job_id)
+    query_job = client.query(query, job_config=job_config)
 
     query_job.result()  # Wait for job to complete
 
@@ -106,8 +103,7 @@ def query_array_params(gender, states):
     ]
     job_config = bigquery.QueryJobConfig()
     job_config.query_parameters = query_params
-    job_id = str(uuid.uuid4())
-    query_job = client.query(query, job_config=job_config, job_id=job_id)
+    query_job = client.query(query, job_config=job_config)
 
     query_job.result()  # Wait for job to complete
 
@@ -127,10 +123,9 @@ def query_timestamp_params(year, month, day, hour, minute):
             'TIMESTAMP',
             datetime.datetime(year, month, day, hour, minute, tzinfo=pytz.UTC))
     ]
-    job_id = str(uuid.uuid4())
     job_config = bigquery.QueryJobConfig()
     job_config.query_parameters = query_params
-    query_job = client.query(query, job_config=job_config, job_id=job_id)
+    query_job = client.query(query, job_config=job_config)
 
     query_job.result()  # Waits for job to complete
 
@@ -151,10 +146,9 @@ def query_struct_params(x, y):
             bigquery.ScalarQueryParameter('y', 'STRING', y)
         )
     ]
-    job_id = str(uuid.uuid4())
     job_config = bigquery.QueryJobConfig()
     job_config.query_parameters = query_params
-    query_job = client.query(query, job_config=job_config, job_id=job_id)
+    query_job = client.query(query, job_config=job_config)
 
     query_job.result()  # Waits for job to complete
 

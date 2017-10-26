@@ -26,7 +26,6 @@ The dataset and table should already exist.
 """
 
 import argparse
-import uuid
 
 from google.cloud import bigquery
 
@@ -35,9 +34,8 @@ def export_data_to_gcs(dataset_id, table_id, destination):
     bigquery_client = bigquery.Client()
     dataset_ref = bigquery_client.dataset(dataset_id)
     table_ref = dataset_ref.table(table_id)
-    job_id = str(uuid.uuid4())
 
-    job = bigquery_client.extract_table(table_ref, destination, job_id=job_id)
+    job = bigquery_client.extract_table(table_ref, destination)
 
     job.result()  # Waits for job to complete
 
