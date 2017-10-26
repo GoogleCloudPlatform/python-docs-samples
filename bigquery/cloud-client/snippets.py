@@ -25,7 +25,6 @@ The dataset and table should already exist.
 """
 
 import argparse
-import itertools
 
 from google.cloud import bigquery
 
@@ -113,7 +112,7 @@ def list_rows(dataset_id, table_id, project=None):
     table = bigquery_client.get_table(table_ref)
 
     # Load at most 25 results.
-    rows = itertools.islice(bigquery_client.list_rows(table), 25)
+    rows = bigquery_client.list_rows(table, max_results=25)
 
     # Use format to create a simple table.
     format_string = '{!s:<16} ' * len(table.schema)
