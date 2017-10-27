@@ -27,7 +27,7 @@ def query_shakespeare():
     query_job = client.query("""
         #standardSQL
         SELECT corpus AS title, COUNT(*) AS unique_words
-        FROM `publicdata.samples.shakespeare`
+        FROM `bigquery-public-data.samples.shakespeare`
         GROUP BY title
         ORDER BY unique_words DESC
         LIMIT 10""")

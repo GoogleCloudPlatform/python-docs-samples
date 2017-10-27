@@ -101,7 +101,7 @@ To run this sample:
     
     Example invocation:
         $ python sync_query.py \
-              'SELECT corpus FROM `publicdata.samples.shakespeare` GROUP BY corpus'
+              'SELECT corpus FROM `bigquery-public-data.samples.shakespeare` GROUP BY corpus'
     
     positional arguments:
       query       BigQuery SQL Query.
@@ -129,7 +129,7 @@ To run this sample:
     
     Example invocation:
         $ python async_query.py \
-              'SELECT corpus FROM `publicdata.samples.shakespeare` GROUP BY corpus'
+              'SELECT corpus FROM `bigquery-public-data.samples.shakespeare` GROUP BY corpus'
     
     positional arguments:
       query       BigQuery SQL Query.

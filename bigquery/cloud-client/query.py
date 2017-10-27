@@ -21,7 +21,7 @@ For more information, see the README.rst.
 Example invocation:
     $ python query.py '#standardSQL
           SELECT corpus
-          FROM `publicdata.samples.shakespeare`
+          FROM `bigquery-public-data.samples.shakespeare`
           GROUP BY corpus
           ORDER BY corpus'
 """
