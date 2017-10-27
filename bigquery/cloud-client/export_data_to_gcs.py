@@ -19,7 +19,7 @@
 For more information, see the README.rst.
 
 Example invocation:
-    $ python export_data_to_gcs.py example_dataset example_table \
+    $ python export_data_to_gcs.py example_dataset example_table \\
         gs://example-bucket/example-data.csv
 
 The dataset and table should already exist.
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     parser.add_argument('dataset_id')
     parser.add_argument('table_id')
     parser.add_argument(
-        'destination', help='The desintation Google Cloud Storage object.'
+        'destination', help='The destination Google Cloud Storage object. '
         'Must be in the format gs://bucket_name/object_name')
 
     args = parser.parse_args()

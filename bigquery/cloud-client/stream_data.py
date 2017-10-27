@@ -19,7 +19,7 @@
 For more information, see the README.rst.
 
 Example invocation:
-    $ python stream_data.py example_dataset example_table \
+    $ python stream_data.py example_dataset example_table \\
         '["Gandalf", 2000]'
 
 The dataset and table should already exist.

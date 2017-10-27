@@ -19,7 +19,7 @@
 For more information, see the README.rst.
 
 Example invocation:
-    $ python load_data_from_gcs.py example_dataset example_table \
+    $ python load_data_from_gcs.py example_dataset example_table \\
         gs://example-bucket/example-data.csv
 
 The dataset and table should already exist.

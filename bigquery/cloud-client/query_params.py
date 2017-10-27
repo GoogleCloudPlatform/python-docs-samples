@@ -19,8 +19,8 @@
 For more information, see the README.rst.
 
 Example invocation:
-    $ python query_params.py --use-named-params 'romeoandjuliet' 100
-    $ python query_params.py --use-positional-params 'romeoandjuliet' 100
+    $ python query_params.py named 'romeoandjuliet' 100
+    $ python query_params.py positional 'romeoandjuliet' 100
 """
 
 import argparse
