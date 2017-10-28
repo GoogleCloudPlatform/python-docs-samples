@@ -35,7 +35,7 @@ def topic(client):
 
     try:
         client.delete_topic(topic_path)
-    except:
+    except Exception:
         pass
 
     client.create_topic(topic_path)
@@ -55,7 +55,7 @@ def test_create(client):
     topic_path = client.topic_path(PROJECT, TOPIC)
     try:
         client.delete_topic(topic_path)
-    except:
+    except Exception:
         pass
 
     publisher.create_topic(PROJECT, TOPIC)

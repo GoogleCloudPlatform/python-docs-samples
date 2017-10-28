@@ -44,3 +44,24 @@ def test_img_missing(app):
 def test_no_img_id(app):
     # No blob_key, should get error
     app.get('/img', status=404)
+
+
+def test_url_redirect(app):
+    with mock.patch('blobstore.images') as mock_images:
+        with mock.patch('blobstore.blobstore') as mock_blobstore:
+            mock_blobstore.get.return_value = b'123'
+            mock_images.get_serving_url.return_value = 'http://lh3.ggpht.com/X'
+
+            response = app.get('/redirect?blob_key=123')
+
+            assert response.status_int == 302
+
+
+def test_url_redirect_missing(app):
+    # Bogus blob_key, should get error
+    app.get('/redirect?blob_key=123', status=404)
+
+
+def test_url_redirect_no_key(app):
+    # No blob_key, should get error
+    app.get('/redirect', status=404)

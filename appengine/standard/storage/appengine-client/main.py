@@ -47,7 +47,7 @@ class MainPage(webapp2.RequestHandler):
         self.response.write(
             'Demo GCS Application running from Version: {}\n'.format(
                 os.environ['CURRENT_VERSION_ID']))
-        self.response.write('Using bucket name: \n\n'.format(bucket_name))
+        self.response.write('Using bucket name: {}\n\n'.format(bucket_name))
 # [END get_default_bucket]
 
         bucket = '/' + bucket_name

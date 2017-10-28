@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This application demonstrates how to perform shot change detection with the
-Google Cloud Video Intelligence API.
+"""This application demonstrates how to perform face
+detection with the Google Cloud Video Intelligence API.
 
 For more information, check out the documentation at
 https://cloud.google.com/videointelligence/docs.
@@ -32,17 +32,15 @@ import argparse
 import sys
 import time
 
-from google.cloud.gapic.videointelligence.v1beta1 import enums
-from google.cloud.gapic.videointelligence.v1beta1 import (
-    video_intelligence_service_client)
+from google.cloud import videointelligence_v1beta2
+from google.cloud.videointelligence_v1beta2 import enums
 # [END imports]
 
 
 def analyze_faces(path):
     # [START construct_request]
     """ Detects faces given a GCS path. """
-    video_client = (video_intelligence_service_client.
-                    VideoIntelligenceServiceClient())
+    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
     features = [enums.Feature.FACE_DETECTION]
     operation = video_client.annotate_video(path, features)
     # [END construct_request]
@@ -66,10 +64,12 @@ def analyze_faces(path):
         print('Thumbnail size: {}'.format(len(face.thumbnail)))
 
         for segment_id, segment in enumerate(face.segments):
-            print('Track {}: {} to {}'.format(
-                segment_id,
-                segment.start_time_offset,
-                segment.end_time_offset))
+            start_time = (segment.segment.start_time_offset.seconds +
+                          segment.segment.start_time_offset.nanos / 1e9)
+            end_time = (segment.segment.end_time_offset.seconds +
+                        segment.segment.end_time_offset.nanos / 1e9)
+            positions = '{}s to {}s'.format(start_time, end_time)
+            print('\tSegment {}: {}'.format(segment_id, positions))
     # [END parse_response]
 
 

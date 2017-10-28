@@ -14,8 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This application demonstrates how to perform basic operations with the
-Google Cloud Video Intelligence API.
+"""This application demonstrates how to detect labels from a video
+based on the image content with the Google Cloud Video Intelligence
+API.
 
 For more information, check out the documentation at
 https://cloud.google.com/videointelligence/docs.
@@ -32,17 +33,15 @@ import argparse
 import sys
 import time
 
-from google.cloud.gapic.videointelligence.v1beta1 import enums
-from google.cloud.gapic.videointelligence.v1beta1 import (
-    video_intelligence_service_client)
+from google.cloud import videointelligence_v1beta2
+from google.cloud.videointelligence_v1beta2 import enums
 # [END imports]
 
 
 def analyze_labels(path):
     """ Detects labels given a GCS path. """
     # [START construct_request]
-    video_client = (video_intelligence_service_client.
-                    VideoIntelligenceServiceClient())
+    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
     features = [enums.Feature.LABEL_DETECTION]
     operation = video_client.annotate_video(path, features)
     # [END construct_request]
@@ -60,15 +59,23 @@ def analyze_labels(path):
     # [START parse_response]
     results = operation.result().annotation_results[0]
 
-    for label in results.label_annotations:
-        print('Label description: {}'.format(label.description))
-        print('Locations:')
+    for i, segment_label in enumerate(results.segment_label_annotations):
+        print('Video label description: {}'.format(
+            segment_label.entity.description))
+        for category_entity in segment_label.category_entities:
+            print('\tLabel category description: {}'.format(
+                category_entity.description))
 
-        for l, location in enumerate(label.locations):
-            print('\t{}: {} to {}'.format(
-                l,
-                location.segment.start_time_offset,
-                location.segment.end_time_offset))
+        for i, segment in enumerate(segment_label.segments):
+            start_time = (segment.segment.start_time_offset.seconds +
+                          segment.segment.start_time_offset.nanos / 1e9)
+            end_time = (segment.segment.end_time_offset.seconds +
+                        segment.segment.end_time_offset.nanos / 1e9)
+            positions = '{}s to {}s'.format(start_time, end_time)
+            confidence = segment.confidence
+            print('\tSegment {}: {}'.format(i, positions))
+            print('\tConfidence: {}'.format(confidence))
+        print('\n')
     # [END parse_response]
 
 
