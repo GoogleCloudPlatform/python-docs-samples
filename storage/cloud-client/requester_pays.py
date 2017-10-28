@@ -60,7 +60,7 @@ def download_file_requester_pays(
     """Download file using specified project as the requester"""
     storage_client = storage.Client()
     user_project = project_id
-    bucket = storage_client.get_bucket(bucket_name, user_project)
+    bucket = storage_client.bucket(bucket_name, user_project)
     blob = bucket.blob(source_blob_name)
     blob.download_to_filename(destination_file_name)
 
