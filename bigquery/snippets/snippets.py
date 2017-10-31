@@ -25,11 +25,8 @@ The dataset and table should already exist.
 """
 
 import argparse
-import itertools
-import uuid
 
 from google.cloud import bigquery
-import google.cloud.bigquery.job
 
 
 def list_projects():
@@ -47,52 +44,45 @@ def list_datasets(project=None):
     bigquery_client = bigquery.Client(project=project)
 
     for dataset in bigquery_client.list_datasets():
-        print(dataset.name)
+        print(dataset.dataset_id)
 
 
-def create_dataset(dataset_name, project=None):
+def create_dataset(dataset_id, project=None):
     """Craetes a dataset in a given project.
 
     If no project is specified, then the currently active project is used.
     """
     bigquery_client = bigquery.Client(project=project)
 
-    dataset = bigquery_client.dataset(dataset_name)
+    dataset_ref = bigquery_client.dataset(dataset_id)
 
-    dataset.create()
+    dataset = bigquery_client.create_dataset(bigquery.Dataset(dataset_ref))
 
-    print('Created dataset {}.'.format(dataset_name))
+    print('Created dataset {}.'.format(dataset.dataset_id))
 
 
-def list_tables(dataset_name, project=None):
+def list_tables(dataset_id, project=None):
     """Lists all of the tables in a given dataset.
 
     If no project is specified, then the currently active project is used.
     """
     bigquery_client = bigquery.Client(project=project)
-    dataset = bigquery_client.dataset(dataset_name)
+    dataset_ref = bigquery_client.dataset(dataset_id)
 
-    if not dataset.exists():
-        print('Dataset {} does not exist.'.format(dataset_name))
-        return
-
-    for table in dataset.list_tables():
-        print(table.name)
+    for table in bigquery_client.list_dataset_tables(dataset_ref):
+        print(table.table_id)
 
 
-def create_table(dataset_name, table_name, project=None):
+def create_table(dataset_id, table_id, project=None):
     """Creates a simple table in the given dataset.
 
     If no project is specified, then the currently active project is used.
     """
     bigquery_client = bigquery.Client(project=project)
-    dataset = bigquery_client.dataset(dataset_name)
+    dataset_ref = bigquery_client.dataset(dataset_id)
 
-    if not dataset.exists():
-        print('Dataset {} does not exist.'.format(dataset_name))
-        return
-
-    table = dataset.table(table_name)
+    table_ref = dataset_ref.table(table_id)
+    table = bigquery.Table(table_ref)
 
     # Set the table schema
     table.schema = (
@@ -101,12 +91,12 @@ def create_table(dataset_name, table_name, project=None):
         bigquery.SchemaField('Weight', 'FLOAT'),
     )
 
-    table.create()
+    table = bigquery_client.create_table(table)
 
-    print('Created table {} in dataset {}.'.format(table_name, dataset_name))
+    print('Created table {} in dataset {}.'.format(table_id, dataset_id))
 
 
-def list_rows(dataset_name, table_name, project=None):
+def list_rows(dataset_id, table_id, project=None):
     """Prints rows in the given table.
 
     Will print 25 rows at most for brevity as tables can contain large amounts
@@ -115,18 +105,14 @@ def list_rows(dataset_name, table_name, project=None):
     If no project is specified, then the currently active project is used.
     """
     bigquery_client = bigquery.Client(project=project)
-    dataset = bigquery_client.dataset(dataset_name)
-    table = dataset.table(table_name)
+    dataset_ref = bigquery_client.dataset(dataset_id)
+    table_ref = dataset_ref.table(table_id)
 
-    if not table.exists():
-        print('Table {}:{} does not exist.'.format(dataset_name, table_name))
-        return
-
-    # Reload the table so that the schema is available.
-    table.reload()
+    # Get the table from the API so that the schema is available.
+    table = bigquery_client.get_table(table_ref)
 
     # Load at most 25 results.
-    rows = itertools.islice(table.fetch_data(), 25)
+    rows = bigquery_client.list_rows(table, max_results=25)
 
     # Use format to create a simple table.
     format_string = '{!s:<16} ' * len(table.schema)
@@ -139,49 +125,50 @@ def list_rows(dataset_name, table_name, project=None):
         print(format_string.format(*row))
 
 
-def copy_table(dataset_name, table_name, new_table_name, project=None):
+def copy_table(dataset_id, table_id, new_table_id, project=None):
     """Copies a table.
 
     If no project is specified, then the currently active project is used.
     """
     bigquery_client = bigquery.Client(project=project)
-    dataset = bigquery_client.dataset(dataset_name)
-    table = dataset.table(table_name)
+    dataset_ref = bigquery_client.dataset(dataset_id)
+    table_ref = dataset_ref.table(table_id)
 
     # This sample shows the destination table in the same dataset and project,
     # however, it's possible to copy across datasets and projects. You can
-    # also copy muliple source tables into a single destination table by
+    # also copy multiple source tables into a single destination table by
     # providing addtional arguments to `copy_table`.
-    destination_table = dataset.table(new_table_name)
+    destination_table_ref = dataset_ref.table(new_table_id)
 
     # Create a job to copy the table to the destination table.
-    job_id = str(uuid.uuid4())
-    job = bigquery_client.copy_table(
-        job_id, destination_table, table)
+    # Start by creating a job configuration
+    job_config = bigquery.CopyJobConfig()
 
-    # Create the table if it doesn't exist.
-    job.create_disposition = (
-        google.cloud.bigquery.job.CreateDisposition.CREATE_IF_NEEDED)
+    # Configure the job to create the table if it doesn't exist.
+    job_config.create_disposition = (
+        bigquery.job.CreateDisposition.CREATE_IF_NEEDED)
 
-    job.begin()  # Start the job.
+    copy_job = bigquery_client.copy_table(
+        table_ref, destination_table_ref, job_config=job_config)
+
     print('Waiting for job to finish...')
-    job.result()
+    copy_job.result()
 
-    print('Table {} copied to {}.'.format(table_name, new_table_name))
+    print('Table {} copied to {}.'.format(table_id, new_table_id))
 
 
-def delete_table(dataset_name, table_name, project=None):
+def delete_table(dataset_id, table_id, project=None):
     """Deletes a table in a given dataset.
 
     If no project is specified, then the currently active project is used.
     """
     bigquery_client = bigquery.Client(project=project)
-    dataset = bigquery_client.dataset(dataset_name)
-    table = dataset.table(table_name)
+    dataset_ref = bigquery_client.dataset(dataset_id)
+    table_ref = dataset_ref.table(table_id)
 
-    table.delete()
+    bigquery_client.delete_table(table_ref)
 
-    print('Table {}:{} deleted.'.format(dataset_name, table_name))
+    print('Table {}:{} deleted.'.format(dataset_id, table_id))
 
 
 if __name__ == '__main__':
@@ -200,32 +187,32 @@ if __name__ == '__main__':
 
     create_dataset_parser = subparsers.add_parser(
         'list-datasets', help=list_datasets.__doc__)
-    create_dataset_parser.add_argument('dataset_name')
+    create_dataset_parser.add_argument('dataset_id')
 
     list_tables_parser = subparsers.add_parser(
         'list-tables', help=list_tables.__doc__)
-    list_tables_parser.add_argument('dataset_name')
+    list_tables_parser.add_argument('dataset_id')
 
     create_table_parser = subparsers.add_parser(
         'create-table', help=create_table.__doc__)
-    create_table_parser.add_argument('dataset_name')
-    create_table_parser.add_argument('table_name')
+    create_table_parser.add_argument('dataset_id')
+    create_table_parser.add_argument('table_id')
 
     list_rows_parser = subparsers.add_parser(
         'list-rows', help=list_rows.__doc__)
-    list_rows_parser.add_argument('dataset_name')
-    list_rows_parser.add_argument('table_name')
+    list_rows_parser.add_argument('dataset_id')
+    list_rows_parser.add_argument('table_id')
 
     copy_table_parser = subparsers.add_parser(
         'copy-table', help=copy_table.__doc__)
-    copy_table_parser.add_argument('dataset_name')
-    copy_table_parser.add_argument('table_name')
-    copy_table_parser.add_argument('new_table_name')
+    copy_table_parser.add_argument('dataset_id')
+    copy_table_parser.add_argument('table_id')
+    copy_table_parser.add_argument('new_table_id')
 
     delete_table_parser = subparsers.add_parser(
         'delete-table', help=delete_table.__doc__)
-    delete_table_parser.add_argument('dataset_name')
-    delete_table_parser.add_argument('table_name')
+    delete_table_parser.add_argument('dataset_id')
+    delete_table_parser.add_argument('table_id')
 
     args = parser.parse_args()
 
@@ -234,14 +221,14 @@ if __name__ == '__main__':
     elif args.command == 'list-datasets':
         list_datasets(args.project)
     elif args.command == 'create-dataset':
-        create_dataset(args.dataset_name, args.project)
+        create_dataset(args.dataset_id, args.project)
     elif args.command == 'list-tables':
-        list_tables(args.dataset_name, args.project)
+        list_tables(args.dataset_id, args.project)
     elif args.command == 'create-table':
-        create_table(args.dataset_name, args.table_name, args.project)
+        create_table(args.dataset_id, args.table_id, args.project)
     elif args.command == 'list-rows':
-        list_rows(args.dataset_name, args.table_name, args.project)
+        list_rows(args.dataset_id, args.table_id, args.project)
     elif args.command == 'copy-table':
-        copy_table(args.dataset_name, args.table_name, args.new_table_name)
+        copy_table(args.dataset_id, args.table_id, args.new_table_id)
     elif args.command == 'delete-table':
-        delete_table(args.dataset_name, args.table_name, args.project)
+        delete_table(args.dataset_id, args.table_id, args.project)

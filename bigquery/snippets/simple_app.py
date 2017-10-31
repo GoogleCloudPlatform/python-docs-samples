@@ -17,8 +17,6 @@
 """Simple application that performs a query with BigQuery."""
 # [START all]
 # [START create_client]
-import uuid
-
 from google.cloud import bigquery
 
 
@@ -26,23 +24,20 @@ def query_shakespeare():
     client = bigquery.Client()
     # [END create_client]
     # [START run_query]
-    query_job = client.run_async_query(str(uuid.uuid4()), """
+    query_job = client.query("""
         #standardSQL
         SELECT corpus AS title, COUNT(*) AS unique_words
-        FROM `publicdata.samples.shakespeare`
+        FROM `bigquery-public-data.samples.shakespeare`
         GROUP BY title
         ORDER BY unique_words DESC
         LIMIT 10""")
 
-    query_job.begin()
-    query_job.result()  # Wait for job to complete.
+    results = query_job.result()  # Waits for job to complete.
     # [END run_query]
 
     # [START print_results]
-    destination_table = query_job.destination
-    destination_table.reload()
-    for row in destination_table.fetch_data():
-        print(row)
+    for row in results:
+        print("{}: {}".format(row.title, row.unique_words))
     # [END print_results]
 
 

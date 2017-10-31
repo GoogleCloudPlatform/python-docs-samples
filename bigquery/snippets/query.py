@@ -21,69 +21,58 @@ For more information, see the README.rst.
 Example invocation:
     $ python query.py '#standardSQL
           SELECT corpus
-          FROM `publicdata.samples.shakespeare`
+          FROM `bigquery-public-data.samples.shakespeare`
           GROUP BY corpus
           ORDER BY corpus'
 """
 
 import argparse
-import uuid
 
 from google.cloud import bigquery
 
 
 def query(query):
     client = bigquery.Client()
-    query_job = client.run_async_query(str(uuid.uuid4()), query)
-
-    query_job.begin()
-    query_job.result()  # Wait for job to complete.
+    query_job = client.query(query)
 
     # Print the results.
-    destination_table = query_job.destination
-    destination_table.reload()
-    for row in destination_table.fetch_data():
+    for row in query_job.result():  # Waits for job to complete.
         print(row)
 
 
 def query_standard_sql(query):
     client = bigquery.Client()
-    query_job = client.run_async_query(str(uuid.uuid4()), query)
-    # Set use_legacy_sql to False to use standard SQL syntax. See:
-    # https://cloud.google.com/bigquery/docs/reference/standard-sql/enabling-standard-sql
-    query_job.use_legacy_sql = False
+    job_config = bigquery.QueryJobConfig()
 
-    query_job.begin()
-    query_job.result()  # Wait for job to complete.
+    # Set use_legacy_sql to False to use standard SQL syntax.
+    # Note that queries are treated as standard SQL by default.
+    job_config.use_legacy_sql = False
+    query_job = client.query(query, job_config=job_config)
 
     # Print the results.
-    destination_table = query_job.destination
-    destination_table.reload()
-    for row in destination_table.fetch_data():
+    for row in query_job.result():  # Waits for job to complete.
         print(row)
 
 
 def query_destination_table(query, dest_dataset_id, dest_table_id):
     client = bigquery.Client()
-    query_job = client.run_async_query(str(uuid.uuid4()), query)
+    job_config = bigquery.QueryJobConfig()
 
     # Allow for query results larger than the maximum response size.
-    query_job.allow_large_results = True
+    job_config.allow_large_results = True
 
     # When large results are allowed, a destination table must be set.
-    dest_dataset = client.dataset(dest_dataset_id)
-    dest_table = dest_dataset.table(dest_table_id)
-    query_job.destination = dest_table
+    dest_dataset_ref = client.dataset(dest_dataset_id)
+    dest_table_ref = dest_dataset_ref.table(dest_table_id)
+    job_config.destination = dest_table_ref
 
     # Allow the results table to be overwritten.
-    query_job.write_disposition = 'WRITE_TRUNCATE'
+    job_config.write_disposition = 'WRITE_TRUNCATE'
 
-    query_job.begin()
-    query_job.result()  # Wait for job to complete.
+    query_job = client.query(query, job_config=job_config)
 
-    # Verify that the results were written to the destination table.
-    dest_table.reload()  # Get the table metadata, such as the schema.
-    for row in dest_table.fetch_data():
+    # Print the results.
+    for row in query_job.result():  # Waits for job to complete.
         print(row)
 
 
