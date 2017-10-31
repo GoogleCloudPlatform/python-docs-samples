@@ -19,47 +19,43 @@
 For more information, see the README.rst.
 
 Example invocation:
-    $ python export_data_to_gcs.py example_dataset example_table \
+    $ python export_data_to_gcs.py example_dataset example_table \\
         gs://example-bucket/example-data.csv
 
 The dataset and table should already exist.
 """
 
 import argparse
-import uuid
 
 from google.cloud import bigquery
 
 
-def export_data_to_gcs(dataset_name, table_name, destination):
+def export_data_to_gcs(dataset_id, table_id, destination):
     bigquery_client = bigquery.Client()
-    dataset = bigquery_client.dataset(dataset_name)
-    table = dataset.table(table_name)
-    job_name = str(uuid.uuid4())
+    dataset_ref = bigquery_client.dataset(dataset_id)
+    table_ref = dataset_ref.table(table_id)
 
-    job = bigquery_client.extract_table_to_storage(
-        job_name, table, destination)
+    job = bigquery_client.extract_table(table_ref, destination)
 
-    job.begin()
-    job.result()  # Wait for job to complete
+    job.result()  # Waits for job to complete
 
     print('Exported {}:{} to {}'.format(
-        dataset_name, table_name, destination))
+        dataset_id, table_id, destination))
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('dataset_name')
-    parser.add_argument('table_name')
+    parser.add_argument('dataset_id')
+    parser.add_argument('table_id')
     parser.add_argument(
-        'destination', help='The desintation Google Cloud Storage object.'
+        'destination', help='The destination Google Cloud Storage object. '
         'Must be in the format gs://bucket_name/object_name')
 
     args = parser.parse_args()
 
     export_data_to_gcs(
-        args.dataset_name,
-        args.table_name,
+        args.dataset_id,
+        args.table_id,
         args.destination)
