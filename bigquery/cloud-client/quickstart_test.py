@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from google.cloud import bigquery
+from google.cloud.exceptions import NotFound
 import pytest
 
 import quickstart
@@ -28,15 +29,23 @@ def temporary_dataset():
     """Fixture that ensures the test dataset does not exist before or
     after a test."""
     bigquery_client = bigquery.Client()
-    dataset = bigquery_client.dataset(DATASET_ID)
+    dataset_ref = bigquery_client.dataset(DATASET_ID)
 
-    if dataset.exists():
-        dataset.delete()
+    if dataset_exists(dataset_ref, bigquery_client):
+        bigquery_client.delete_dataset(dataset_ref)
 
     yield
 
-    if dataset.exists():
-        dataset.delete()
+    if dataset_exists(dataset_ref, bigquery_client):
+        bigquery_client.delete_dataset(dataset_ref)
+
+
+def dataset_exists(dataset, client):
+    try:
+        client.get_dataset(dataset)
+        return True
+    except NotFound:
+        return False
 
 
 def test_quickstart(capsys, temporary_dataset):

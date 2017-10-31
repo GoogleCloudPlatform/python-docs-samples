@@ -13,8 +13,9 @@
 
 import os
 
-import classify_text_tutorial
 import pytest
+
+import classify_text_tutorial
 
 
 OUTPUT = 'index.json'

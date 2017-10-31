@@ -53,17 +53,13 @@ class PhotoUploadFormHandler(webapp2.RequestHandler):
 # [START upload_handler]
 class PhotoUploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
-        try:
-            upload = self.get_uploads()[0]
-            user_photo = UserPhoto(
-                user=users.get_current_user().user_id(),
-                blob_key=upload.key())
-            user_photo.put()
+        upload = self.get_uploads()[0]
+        user_photo = UserPhoto(
+            user=users.get_current_user().user_id(),
+            blob_key=upload.key())
+        user_photo.put()
 
-            self.redirect('/view_photo/%s' % upload.key())
-
-        except:
-            self.error(500)
+        self.redirect('/view_photo/%s' % upload.key())
 # [END upload_handler]
 
 

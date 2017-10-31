@@ -16,13 +16,15 @@ setup:
 - install_deps
 
 samples:
+- name: Simple Application
+  file: simple_app.py
 - name: Quickstart
   file: quickstart.py
-- name: Sync query
-  file: sync_query.py
+- name: Query
+  file: query.py
   show_help: true
-- name: Async query
-  file: async_query.py
+- name: Parameterized Query
+  file: query_params.py
   show_help: true
 - name: Snippets
   file: snippets.py

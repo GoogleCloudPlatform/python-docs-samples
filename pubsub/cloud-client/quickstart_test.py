@@ -33,7 +33,7 @@ def temporary_topic():
 
     try:
         publisher.delete_topic(TOPIC_PATH)
-    except:
+    except Exception:
         pass
 
     yield

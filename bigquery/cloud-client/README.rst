@@ -70,6 +70,18 @@ Install Dependencies
 Samples
 -------------------------------------------------------------------------------
 
+Simple Application
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python simple_app.py
+
+
 Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -82,7 +94,7 @@ To run this sample:
     $ python quickstart.py
 
 
-Sync query
+Query
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -91,26 +103,35 @@ To run this sample:
 
 .. code-block:: bash
 
-    $ python sync_query.py
+    $ python query.py
 
-    usage: sync_query.py [-h] query
+    usage: query.py [-h] [--use_standard_sql]
+                [--destination_table DESTINATION_TABLE]
+                query
     
-    Command-line application to perform synchronous queries in BigQuery.
+    Command-line application to perform queries in BigQuery.
     
     For more information, see the README.rst.
     
     Example invocation:
-        $ python sync_query.py \
-              'SELECT corpus FROM `publicdata.samples.shakespeare` GROUP BY corpus'
+        $ python query.py '#standardSQL
+              SELECT corpus
+              FROM `bigquery-public-data.samples.shakespeare`
+              GROUP BY corpus
+              ORDER BY corpus'
     
     positional arguments:
-      query       BigQuery SQL Query.
+      query                 BigQuery SQL Query.
     
     optional arguments:
-      -h, --help  show this help message and exit
+      -h, --help            show this help message and exit
+      --use_standard_sql    Use standard SQL syntax.
+      --destination_table DESTINATION_TABLE
+                            Destination table to use for results. Example:
+                            my_dataset.my_table
 
 
-Async query
+Parameterized Query
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -119,23 +140,29 @@ To run this sample:
 
 .. code-block:: bash
 
-    $ python async_query.py
+    $ python query_params.py
 
-    usage: async_query.py [-h] query
+    usage: query_params.py [-h] {named,positional,array,timestamp,struct} ...
     
-    Command-line application to perform asynchronous queries in BigQuery.
+    Command-line app to perform queries with parameters in BigQuery.
     
     For more information, see the README.rst.
     
     Example invocation:
-        $ python async_query.py \
-              'SELECT corpus FROM `publicdata.samples.shakespeare` GROUP BY corpus'
+        $ python query_params.py named 'romeoandjuliet' 100
+        $ python query_params.py positional 'romeoandjuliet' 100
     
     positional arguments:
-      query       BigQuery SQL Query.
+      {named,positional,array,timestamp,struct}
+                            samples
+        named               Run a query with named parameters.
+        positional          Run a query with positional parameters.
+        array               Run a query with an array parameter.
+        timestamp           Run a query with a timestamp parameter.
+        struct              Run a query with a struct parameter.
     
     optional arguments:
-      -h, --help  show this help message and exit
+      -h, --help            show this help message and exit
 
 
 Snippets
@@ -202,20 +229,21 @@ To run this sample:
 
     $ python load_data_from_file.py
 
-    usage: load_data_from_file.py [-h] dataset_name table_name source_file_name
+    usage: load_data_from_file.py [-h] dataset_id table_id source_file_name
     
     Loads data into BigQuery from a local file.
     
     For more information, see the README.rst.
     
     Example invocation:
-        $ python load_data_from_file.py example_dataset example_table         example-data.csv
+        $ python load_data_from_file.py example_dataset example_table \
+            example-data.csv
     
     The dataset and table should already exist.
     
     positional arguments:
-      dataset_name
-      table_name
+      dataset_id
+      table_id
       source_file_name  Path to a .csv file to upload.
     
     optional arguments:
@@ -233,25 +261,26 @@ To run this sample:
 
     $ python load_data_from_gcs.py
 
-    usage: load_data_from_gcs.py [-h] dataset_name table_name source
+    usage: load_data_from_gcs.py [-h] dataset_id table_id source
     
     Loads data into BigQuery from an object in Google Cloud Storage.
     
     For more information, see the README.rst.
     
     Example invocation:
-        $ python load_data_from_gcs.py example_dataset example_table         gs://example-bucket/example-data.csv
+        $ python load_data_from_gcs.py example_dataset example_table \
+            gs://example-bucket/example-data.csv
     
     The dataset and table should already exist.
     
     positional arguments:
-      dataset_name
-      table_name
-      source        The Google Cloud Storage object to load. Must be in the format
-                    gs://bucket_name/object_name
+      dataset_id
+      table_id
+      source      The Google Cloud Storage object to load. Must be in the format
+                  gs://bucket_name/object_name
     
     optional arguments:
-      -h, --help    show this help message and exit
+      -h, --help  show this help message and exit
 
 
 Load streaming data
@@ -265,24 +294,25 @@ To run this sample:
 
     $ python stream_data.py
 
-    usage: stream_data.py [-h] dataset_name table_name json_data
+    usage: stream_data.py [-h] dataset_id table_id json_data
     
     Loads a single row of data directly into BigQuery.
     
     For more information, see the README.rst.
     
     Example invocation:
-        $ python stream_data.py example_dataset example_table         '["Gandalf", 2000]'
+        $ python stream_data.py example_dataset example_table \
+            '["Gandalf", 2000]'
     
     The dataset and table should already exist.
     
     positional arguments:
-      dataset_name
-      table_name
-      json_data     The row to load into BigQuery as an array in JSON format.
+      dataset_id
+      table_id
+      json_data   The row to load into BigQuery as an array in JSON format.
     
     optional arguments:
-      -h, --help    show this help message and exit
+      -h, --help  show this help message and exit
 
 
 Export data to Cloud Storage
@@ -296,25 +326,26 @@ To run this sample:
 
     $ python export_data_to_gcs.py
 
-    usage: export_data_to_gcs.py [-h] dataset_name table_name destination
+    usage: export_data_to_gcs.py [-h] dataset_id table_id destination
     
     Exports data from BigQuery to an object in Google Cloud Storage.
     
     For more information, see the README.rst.
     
     Example invocation:
-        $ python export_data_to_gcs.py example_dataset example_table         gs://example-bucket/example-data.csv
+        $ python export_data_to_gcs.py example_dataset example_table \
+            gs://example-bucket/example-data.csv
     
     The dataset and table should already exist.
     
     positional arguments:
-      dataset_name
-      table_name
-      destination   The desintation Google Cloud Storage object.Must be in the
-                    format gs://bucket_name/object_name
+      dataset_id
+      table_id
+      destination  The destination Google Cloud Storage object. Must be in the
+                   format gs://bucket_name/object_name
     
     optional arguments:
-      -h, --help    show this help message and exit
+      -h, --help   show this help message and exit
 
 
 
