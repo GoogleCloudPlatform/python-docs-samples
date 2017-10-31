@@ -23,7 +23,7 @@ def test_query(capsys):
     # Query only outputs the first 10 rows, sort results to avoid randomness
     query_string = '''#standardSQL
           SELECT corpus
-          FROM `publicdata.samples.shakespeare`
+          FROM `bigquery-public-data.samples.shakespeare`
           GROUP BY corpus
           ORDER BY corpus
           LIMIT 10;'''
@@ -38,7 +38,7 @@ def test_query(capsys):
 def test_query_standard_sql(capsys):
     # Query only outputs the first 10 rows, sort results to avoid randomness
     query_string = '''SELECT corpus
-          FROM `publicdata.samples.shakespeare`
+          FROM `bigquery-public-data.samples.shakespeare`
           GROUP BY corpus
           ORDER BY corpus
           LIMIT 10;'''
@@ -54,7 +54,7 @@ def test_query_destination_table(capsys):
     # Query only outputs the first 10 rows, sort results to avoid randomness
     query_string = '''#standardSQL
           SELECT corpus
-          FROM `publicdata.samples.shakespeare`
+          FROM `bigquery-public-data.samples.shakespeare`
           GROUP BY corpus
           ORDER BY corpus
           LIMIT 10;'''

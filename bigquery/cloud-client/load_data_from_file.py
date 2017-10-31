@@ -19,7 +19,7 @@
 For more information, see the README.rst.
 
 Example invocation:
-    $ python load_data_from_file.py example_dataset example_table \
+    $ python load_data_from_file.py example_dataset example_table \\
         example-data.csv
 
 The dataset and table should already exist.
@@ -30,38 +30,37 @@ import argparse
 from google.cloud import bigquery
 
 
-def load_data_from_file(dataset_name, table_name, source_file_name):
+def load_data_from_file(dataset_id, table_id, source_file_name):
     bigquery_client = bigquery.Client()
-    dataset = bigquery_client.dataset(dataset_name)
-    table = dataset.table(table_name)
-
-    # Reload the table to get the schema.
-    table.reload()
+    dataset_ref = bigquery_client.dataset(dataset_id)
+    table_ref = dataset_ref.table(table_id)
 
     with open(source_file_name, 'rb') as source_file:
         # This example uses CSV, but you can use other formats.
         # See https://cloud.google.com/bigquery/loading-data
-        job = table.upload_from_file(
-            source_file, source_format='text/csv')
+        job_config = bigquery.LoadJobConfig()
+        job_config.source_format = 'text/csv'
+        job = bigquery_client.load_table_from_file(
+            source_file, table_ref, job_config=job_config)
 
-    job.result()  # Wait for job to complete
+    job.result()  # Waits for job to complete
 
     print('Loaded {} rows into {}:{}.'.format(
-        job.output_rows, dataset_name, table_name))
+        job.output_rows, dataset_id, table_id))
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('dataset_name')
-    parser.add_argument('table_name')
+    parser.add_argument('dataset_id')
+    parser.add_argument('table_id')
     parser.add_argument(
         'source_file_name', help='Path to a .csv file to upload.')
 
     args = parser.parse_args()
 
     load_data_from_file(
-        args.dataset_name,
-        args.table_name,
+        args.dataset_id,
+        args.table_id,
         args.source_file_name)

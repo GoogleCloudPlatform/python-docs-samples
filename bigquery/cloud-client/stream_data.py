@@ -19,7 +19,7 @@
 For more information, see the README.rst.
 
 Example invocation:
-    $ python stream_data.py example_dataset example_table \
+    $ python stream_data.py example_dataset example_table \\
         '["Gandalf", 2000]'
 
 The dataset and table should already exist.
@@ -32,20 +32,20 @@ from pprint import pprint
 from google.cloud import bigquery
 
 
-def stream_data(dataset_name, table_name, json_data):
+def stream_data(dataset_id, table_id, json_data):
     bigquery_client = bigquery.Client()
-    dataset = bigquery_client.dataset(dataset_name)
-    table = dataset.table(table_name)
+    dataset_ref = bigquery_client.dataset(dataset_id)
+    table_ref = dataset_ref.table(table_id)
     data = json.loads(json_data)
 
-    # Reload the table to get the schema.
-    table.reload()
+    # Get the table from the API so that the schema is available.
+    table = bigquery_client.get_table(table_ref)
 
     rows = [data]
-    errors = table.insert_data(rows)
+    errors = bigquery_client.create_rows(table, rows)
 
     if not errors:
-        print('Loaded 1 row into {}:{}'.format(dataset_name, table_name))
+        print('Loaded 1 row into {}:{}'.format(dataset_id, table_id))
     else:
         print('Errors:')
         pprint(errors)
@@ -55,8 +55,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('dataset_name')
-    parser.add_argument('table_name')
+    parser.add_argument('dataset_id')
+    parser.add_argument('table_id')
     parser.add_argument(
         'json_data',
         help='The row to load into BigQuery as an array in JSON format.')
@@ -64,6 +64,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     stream_data(
-        args.dataset_name,
-        args.table_name,
+        args.dataset_id,
+        args.table_id,
         args.json_data)

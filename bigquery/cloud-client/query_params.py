@@ -19,13 +19,12 @@
 For more information, see the README.rst.
 
 Example invocation:
-    $ python query_params.py --use-named-params 'romeoandjuliet' 100
-    $ python query_params.py --use-positional-params 'romeoandjuliet' 100
+    $ python query_params.py named 'romeoandjuliet' 100
+    $ python query_params.py positional 'romeoandjuliet' 100
 """
 
 import argparse
 import datetime
-import uuid
 
 from google.cloud import bigquery
 import pytz
@@ -40,28 +39,23 @@ def query_positional_params(corpus, min_word_count):
         AND word_count >= ?
         ORDER BY word_count DESC;
         """
-    query_job = client.run_async_query(
-        str(uuid.uuid4()),
-        query,
-        query_parameters=(
-            bigquery.ScalarQueryParameter(
-                # Set the name to None to use positional parameters (? symbol
-                # in the query).  Note that you cannot mix named and positional
-                # parameters.
-                None, 'STRING', corpus),
-            bigquery.ScalarQueryParameter(None, 'INT64', min_word_count)))
+    # Set the name to None to use positional parameters (? symbol in the
+    # query).  Note that you cannot mix named and positional parameters.
+    # See: https://cloud.google.com/bigquery/docs/parameterized-queries/
+    query_params = [
+        bigquery.ScalarQueryParameter(None, 'STRING', corpus),
+        bigquery.ScalarQueryParameter(None, 'INT64', min_word_count)
+    ]
+    job_config = bigquery.QueryJobConfig()
+    job_config.query_parameters = query_params
+    query_job = client.query(query, job_config=job_config)
 
-    # Only standard SQL syntax supports parameters in queries.
-    # See: https://cloud.google.com/bigquery/sql-reference/
-    query_job.use_legacy_sql = False
-
-    query_job.begin()
     query_job.result()  # Wait for job to complete
 
     # Print the results.
-    destination_table = query_job.destination
-    destination_table.reload()
-    for row in destination_table.fetch_data():
+    destination_table_ref = query_job.destination
+    table = client.get_table(destination_table_ref)
+    for row in client.list_rows(table):
         print(row)
 
 
@@ -74,22 +68,21 @@ def query_named_params(corpus, min_word_count):
         AND word_count >= @min_word_count
         ORDER BY word_count DESC;
         """
-    query_job = client.run_async_query(
-        str(uuid.uuid4()),
-        query,
-        query_parameters=(
-            bigquery.ScalarQueryParameter('corpus', 'STRING', corpus),
-            bigquery.ScalarQueryParameter(
-                'min_word_count', 'INT64', min_word_count)))
-    query_job.use_legacy_sql = False
+    query_params = [
+        bigquery.ScalarQueryParameter('corpus', 'STRING', corpus),
+        bigquery.ScalarQueryParameter(
+            'min_word_count', 'INT64', min_word_count)
+    ]
+    job_config = bigquery.QueryJobConfig()
+    job_config.query_parameters = query_params
+    query_job = client.query(query, job_config=job_config)
 
-    query_job.begin()
     query_job.result()  # Wait for job to complete
 
     # Print the results.
-    destination_table = query_job.destination
-    destination_table.reload()
-    for row in destination_table.fetch_data():
+    destination_table_ref = query_job.destination
+    table = client.get_table(destination_table_ref)
+    for row in client.list_rows(table):
         print(row)
 
 
@@ -104,68 +97,65 @@ def query_array_params(gender, states):
         ORDER BY count DESC
         LIMIT 10;
         """
-    query_job = client.run_async_query(
-        str(uuid.uuid4()),
-        query,
-        query_parameters=(
-            bigquery.ScalarQueryParameter('gender', 'STRING', gender),
-            bigquery.ArrayQueryParameter('states', 'STRING', states)))
-    query_job.use_legacy_sql = False
+    query_params = [
+        bigquery.ScalarQueryParameter('gender', 'STRING', gender),
+        bigquery.ArrayQueryParameter('states', 'STRING', states)
+    ]
+    job_config = bigquery.QueryJobConfig()
+    job_config.query_parameters = query_params
+    query_job = client.query(query, job_config=job_config)
 
-    query_job.begin()
     query_job.result()  # Wait for job to complete
 
     # Print the results.
-    destination_table = query_job.destination
-    destination_table.reload()
-    for row in destination_table.fetch_data():
+    destination_table_ref = query_job.destination
+    table = client.get_table(destination_table_ref)
+    for row in client.list_rows(table):
         print(row)
 
 
 def query_timestamp_params(year, month, day, hour, minute):
     client = bigquery.Client()
     query = 'SELECT TIMESTAMP_ADD(@ts_value, INTERVAL 1 HOUR);'
-    query_job = client.run_async_query(
-        str(uuid.uuid4()),
-        query,
-        query_parameters=[
-            bigquery.ScalarQueryParameter(
-                'ts_value',
-                'TIMESTAMP',
-                datetime.datetime(
-                    year, month, day, hour, minute, tzinfo=pytz.UTC))])
-    query_job.use_legacy_sql = False
+    query_params = [
+        bigquery.ScalarQueryParameter(
+            'ts_value',
+            'TIMESTAMP',
+            datetime.datetime(year, month, day, hour, minute, tzinfo=pytz.UTC))
+    ]
+    job_config = bigquery.QueryJobConfig()
+    job_config.query_parameters = query_params
+    query_job = client.query(query, job_config=job_config)
 
-    query_job.begin()
-    query_job.result()  # Wait for job to complete
+    query_job.result()  # Waits for job to complete
 
     # Print the results.
-    destination_table = query_job.destination
-    destination_table.reload()
-    for row in destination_table.fetch_data():
+    destination_table_ref = query_job.destination
+    table = client.get_table(destination_table_ref)
+    for row in client.list_rows(table):
         print(row)
 
 
 def query_struct_params(x, y):
     client = bigquery.Client()
     query = 'SELECT @struct_value AS s;'
-    query_job = client.run_async_query(
-        str(uuid.uuid4()),
-        query,
-        query_parameters=[
-            bigquery.StructQueryParameter(
-                'struct_value',
-                bigquery.ScalarQueryParameter('x', 'INT64', x),
-                bigquery.ScalarQueryParameter('y', 'STRING', y))])
-    query_job.use_legacy_sql = False
+    query_params = [
+        bigquery.StructQueryParameter(
+            'struct_value',
+            bigquery.ScalarQueryParameter('x', 'INT64', x),
+            bigquery.ScalarQueryParameter('y', 'STRING', y)
+        )
+    ]
+    job_config = bigquery.QueryJobConfig()
+    job_config.query_parameters = query_params
+    query_job = client.query(query, job_config=job_config)
 
-    query_job.begin()
-    query_job.result()  # Wait for job to complete
+    query_job.result()  # Waits for job to complete
 
     # Print the results.
-    destination_table = query_job.destination
-    destination_table.reload()
-    for row in destination_table.fetch_data():
+    destination_table_ref = query_job.destination
+    table = client.get_table(destination_table_ref)
+    for row in client.list_rows(table):
         print(row)
 
 

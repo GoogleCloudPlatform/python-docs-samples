@@ -21,7 +21,6 @@ your application.
 """
 
 import argparse
-import uuid
 
 from google.cloud import bigquery
 from google_auth_oauthlib import flow
@@ -29,15 +28,10 @@ from google_auth_oauthlib import flow
 
 def run_query(credentials, project, query):
     client = bigquery.Client(project=project, credentials=credentials)
-    query_job = client.run_async_query(str(uuid.uuid4()), query)
-
-    query_job.begin()
-    query_job.result()  # Wait for the job to complete.
+    query_job = client.query(query)
 
     # Print the results.
-    destination_table = query_job.destination
-    destination_table.reload()
-    for row in destination_table.fetch_data():
+    for row in query_job.result():  # Wait for the job to complete.
         print(row)
 
 
