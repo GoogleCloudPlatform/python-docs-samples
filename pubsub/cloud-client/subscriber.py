@@ -27,12 +27,21 @@ import time
 from google.cloud import pubsub_v1
 
 
-def list_subscriptions(project, topic_name):
+def list_subscriptions_in_topic(project, topic_name):
     """Lists all subscriptions for a given topic."""
     subscriber = pubsub_v1.SubscriberClient()
     topic_path = subscriber.topic_path(project, topic_name)
 
     for subscription in subscriber.list_subscriptions(topic_path):
+        print(subscription.name)
+
+
+def list_subscriptions_in_project(project):
+    """Lists all subscriptions in the current project."""
+    subscriber = pubsub_v1.SubscriberClient()
+    project_path = subscriber.project_path(project)
+
+    for subscription in subscriber.list_subscriptions(project_path):
         print(subscription.name)
 
 
@@ -109,9 +118,12 @@ if __name__ == '__main__':
     parser.add_argument('project', help='Your Google Cloud project ID')
 
     subparsers = parser.add_subparsers(dest='command')
-    list_parser = subparsers.add_parser(
-        'list', help=list_subscriptions.__doc__)
-    list_parser.add_argument('topic_name')
+    list_in_topic_parser = subparsers.add_parser(
+        'list_in_topic', help=list_subscriptions_in_topic.__doc__)
+    list_in_topic_parser.add_argument('topic_name')
+
+    list_in_project_parser = subparsers.add_parser(
+        'list_in_project', help=list_subscriptions_in_project.__doc__)
 
     create_parser = subparsers.add_parser(
         'create', help=create_subscription.__doc__)
@@ -133,8 +145,10 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    if args.command == 'list':
-        list_subscriptions(args.project, args.topic_name)
+    if args.command == 'list_in_topic':
+        list_subscriptions_in_topic(args.project, args.topic_name)
+    elif args.command == 'list_in_project':
+        list_subscriptions_in_project(args.project)
     elif args.command == 'create':
         create_subscription(
             args.project, args.topic_name, args.subscription_name)
