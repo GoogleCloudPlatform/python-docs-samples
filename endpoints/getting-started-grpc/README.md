@@ -42,14 +42,14 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
 1. Deploy your service config to Service Management:
 
     ```bash
-    gcloud service-management deploy out.pb api_config.yaml
+    gcloud endpoints services deploy out.pb api_config.yaml
     # The Config ID should be printed out, looks like: 2017-02-01r0, remember this
 
     # Set your project ID as a variable to make commands easier:
     GCLOUD_PROJECT=<Your Project ID>
 
     # Print out your Config ID again, in case you missed it:
-    gcloud service-management configs list --service hellogrpc.endpoints.${GCLOUD_PROJECT}.cloud.goog
+    gcloud endpoints configs list --service hellogrpc.endpoints.${GCLOUD_PROJECT}.cloud.goog
     ```
 
 1. Also get an API key from the Console's API Manager for use in the
@@ -58,7 +58,7 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
 1. Enable the Cloud Build API:
 
     ```bash
-    gcloud service-management enable cloudbuild.googleapis.com
+    gcloud services enable cloudbuild.googleapis.com
     ```
 
 1. Build a docker image for your gRPC server, and store it in your Registry:
@@ -74,7 +74,7 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
 1. Enable the Compute Engine API:
 
     ```bash
-    gcloud service-management enable compute-component.googleapis.com
+    gcloud services enable compute-component.googleapis.com
     ```
 
 1. Create your instance and ssh in:
@@ -150,7 +150,7 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
    GCLOUD_PROJECT with your project ID.
 
    ```bash
-   gcloud service-management configs list --service hellogrpc.endpoints.GCLOUD_PROJECT.cloud.goog
+   gcloud endpoints configs list --service hellogrpc.endpoints.GCLOUD_PROJECT.cloud.goog
    ```
 
 1. Deploy to GKE:
