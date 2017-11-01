@@ -18,7 +18,7 @@ Remember to replace [YOUR-PROJECT-ID] with your project ID.
 
 To set up OAuth2, replace `your-oauth-client-id.com` under `audiences` in the annotation for `get_user_email` with your OAuth2 client ID. If you want to use Google OAuth2 Playground, use `407408718192.apps.googleusercontent.com` as your audience. To generate a JWT, go to the following address: `https://developers.google.com/oauthplayground`.
 
-Deploy the generated swagger spec to Google Cloud Service Management: `gcloud alpha service-management deploy echo-v1_swagger.json`
+Deploy the generated swagger spec to Google Cloud Service Management: `gcloud endpoints services deploy echo-v1_swagger.json`
 
 The command returns several lines of information, including a line similar to the following:
 
