@@ -40,9 +40,9 @@ Change directory to the sample code location:
 
 Enable the APIs:
 
-    gcloud service-management enable vision.googleapis.com
-    gcloud service-management enable storage-component.googleapis.com
-    gcloud service-management enable datastore.googleapis.com
+    gcloud services enable vision.googleapis.com
+    gcloud services enable storage-component.googleapis.com
+    gcloud services enable datastore.googleapis.com
 
 Create a Service Account to access the Google Cloud APIs when testing locally:
 
