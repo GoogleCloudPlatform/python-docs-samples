@@ -42,10 +42,10 @@ spec:
       - name: esp
         image: gcr.io/endpoints-release/endpoints-runtime:1
         args: [
-          "-p", "8081",
-          "-a", "127.0.0.1:8080",
-          "-s", "SERVICE_NAME",
-          "-v", "SERVICE_CONFIG_ID",
+          "--http_port=8081",
+          "--backend=127.0.0.1:8080",
+          "--service=SERVICE_NAME",
+          "--version=SERVICE_CONFIG_ID",
         ]
       # [END esp]
         ports:

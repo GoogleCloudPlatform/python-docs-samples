@@ -28,13 +28,14 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
    just wish to regenerate these files, run:
 
     ```bash
-    python -m grpc_tools.protoc -I protos --python_out=. --grpc_python_out=. protos/helloworld.proto
-    ```
-
-1. Generate the `out.pb` from the proto file:
-
-    ```bash
-    python -m grpc_tools.protoc --include_imports --include_source_info -I protos protos/helloworld.proto --descriptor_set_out out.pb
+    python -m grpc.tools.protoc \
+        --include_imports \
+        --include_source_info \
+        --proto_path=protos \
+        --python_out=. \
+        --grpc_python_out=. \
+        --descriptor_set_out=api_descriptor.pb \
+        helloworld.proto
     ```
 
 1. Edit, `api_config.yaml`. Replace `MY_PROJECT_ID` with your project id.
@@ -42,7 +43,7 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
 1. Deploy your service config to Service Management:
 
     ```bash
-    gcloud endpoints services deploy out.pb api_config.yaml
+    gcloud endpoints services deploy api_descriptor.pb api_config.yaml
     # The Config ID should be printed out, looks like: 2017-02-01r0, remember this
 
     # Set your project ID as a variable to make commands easier:
@@ -97,20 +98,20 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
 
     ```bash
     /usr/share/google/dockercfg_update.sh
-    docker run -d --name=grpc-hello gcr.io/${GCLOUD_PROJECT}/python-grpc-hello:1.0
+    docker run --detach --name=grpc-hello gcr.io/${GCLOUD_PROJECT}/python-grpc-hello:1.0
     ```
 
 1. Run the Endpoints proxy:
 
     ```bash
     docker run --detach --name=esp \
-        -p 80:9000 \
+        --publish=80:9000 \
         --link=grpc-hello:grpc-hello \
         gcr.io/endpoints-release/endpoints-runtime:1 \
-        -s ${SERVICE_NAME} \
-        -v ${SERVICE_CONFIG_ID} \
-        -P 9000 \
-        -a grpc://grpc-hello:50051
+        --service=${SERVICE_NAME} \
+        --version=${SERVICE_CONFIG_ID} \
+        --http2_port=9000 \
+        --backend=grpc://grpc-hello:50051
     ```
 
 1. Back on your local machine, get the external IP of your GCE instance:
