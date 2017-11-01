@@ -133,8 +133,8 @@ def similarity(categories1, categories2):
     categories1 = split_labels(categories1)
     categories2 = split_labels(categories2)
 
-    norm1 = numpy.linalg.norm(categories1.values())
-    norm2 = numpy.linalg.norm(categories2.values())
+    norm1 = numpy.linalg.norm(list(categories1.values()))
+    norm2 = numpy.linalg.norm(list(categories2.values()))
 
     # Return the smallest possible similarity if either categories is empty.
     if norm1 == 0 or norm2 == 0:
