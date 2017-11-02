@@ -35,21 +35,6 @@ _BASE_URL = 'https://cloudiot-device.googleapis.com/v1beta1'
 
 
 def create_jwt(project_id, private_key_file, algorithm):
-    """Creates a JWT (https://jwt.io) to authenticate this device.
-    Args:
-     project_id: The cloud project ID this device belongs to
-     private_key_file: A path to a file containing either an RSA256 or
-     ES256 private key.
-     algorithm: The encryption algorithm to use. Either 'RS256' or
-     'ES256'
-    Returns:
-        A JWT generated from the given project_id and private key, which
-        expires in 20 minutes. After 20 minutes, your client will be
-        disconnected, and a new JWT will have to be generated.
-    Raises:
-        ValueError: If the private_key_file does not contain a known key.
-    """
-
     token = {
             # The time the token was issued.
             'iat': datetime.datetime.utcnow(),
@@ -141,6 +126,11 @@ def parse_command_line_args():
             '--base_url',
             default=_BASE_URL,
             help=('Base URL for the Cloud IoT Core Device Service API'))
+    parser.add_argument(
+            '--jwt_expires_minutes',
+            default=20,
+            type=int,
+            help=('Expiration time, in minutes, for JWT tokens.'))
 
     return parser.parse_args()
 
@@ -150,9 +140,18 @@ def main():
 
     jwt_token = create_jwt(
             args.project_id, args.private_key_file, args.algorithm)
+    jwt_iat = datetime.datetime.utcnow()
+    jwt_exp_mins = args.jwt_expires_minutes
 
     # Publish num_messages mesages to the HTTP bridge once per second.
     for i in range(1, args.num_messages + 1):
+        seconds_since_issue = (datetime.datetime.utcnow() - jwt_iat).seconds
+        if seconds_since_issue > 60 * jwt_exp_mins:
+            print('Refreshing token after {}s').format(seconds_since_issue)
+            jwt_token = create_jwt(
+                    args.project_id, args.private_key_file, args.algorithm)
+            jwt_iat = datetime.datetime.utcnow()
+
         payload = '{}/{}-payload-{}'.format(
                 args.registry_id, args.device_id, i)
 
