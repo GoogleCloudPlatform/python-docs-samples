@@ -42,10 +42,10 @@ spec:
       - name: esp
         image: gcr.io/endpoints-release/endpoints-runtime:1
         args: [
-          "-P", "9000",
-          "-s", "SERVICE_NAME",
-          "-v", "SERVICE_CONFIG_ID",
-          "-a", "grpc://127.0.0.1:8000"
+          "--http2_port=9000",
+          "--service=SERVICE_NAME",
+          "--version=SERVICE_CONFIG_ID",
+          "--backend=grpc://127.0.0.1:8000"
         ]
         ports:
           - containerPort: 9000
