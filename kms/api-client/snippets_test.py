@@ -101,6 +101,18 @@ def test_disable_crypto_key_version(capsys):
             'DISABLED'))
     assert expected in out
 
+def test_enable_crypto_key_version(capsys):
+    snippets.enable_crypto_key_version(
+        PROJECT, LOCATION, KEY_RING, CRYPTO_KEY, VERSION)
+    out, _ = capsys.readouterr()
+    expected = (
+        'CryptoKeyVersion projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}/'
+        'cryptoKeyVersions/{}\'s state has been set to {}.'
+        .format(
+            PROJECT, LOCATION, KEY_RING, CRYPTO_KEY, VERSION,
+            'ENABLED'))
+    assert expected in out
+
 
 def test_destroy_crypto_key_version(capsys):
     snippets.destroy_crypto_key_version(
@@ -114,6 +126,17 @@ def test_destroy_crypto_key_version(capsys):
             'DESTROY_SCHEDULED'))
     assert expected in out
 
+def test_restore_crypto_key_version(capsys):
+    snippets.restore_crypto_key_version(
+        PROJECT, LOCATION, KEY_RING, CRYPTO_KEY, VERSION)
+    out, _ = capsys.readouterr()
+    expected = (
+        'CryptoKeyVersion projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}/'
+        'cryptoKeyVersions/{}\'s state has been set to {}.'
+        .format(
+            PROJECT, LOCATION, KEY_RING, CRYPTO_KEY, VERSION,
+            'DISABLED'))
+    assert expected in out
 
 def test_add_member_to_crypto_key_policy(capsys):
     snippets.add_member_to_crypto_key_policy(
