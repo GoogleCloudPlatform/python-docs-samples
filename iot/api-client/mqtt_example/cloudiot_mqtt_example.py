@@ -29,6 +29,7 @@ import time
 import jwt
 import paho.mqtt.client as mqtt
 
+
 # [START iot_mqtt_jwt]
 def create_jwt(project_id, private_key_file, algorithm):
     """Creates a JWT (https://jwt.io) to establish an MQTT connection.
