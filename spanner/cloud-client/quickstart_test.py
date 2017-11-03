@@ -15,7 +15,6 @@
 import os
 
 from google.cloud import spanner
-import google.cloud.exceptions
 import mock
 import pytest
 
