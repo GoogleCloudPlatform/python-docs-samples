@@ -29,7 +29,7 @@ import time
 import jwt
 import paho.mqtt.client as mqtt
 
-
+# [START iot_mqtt_jwt]
 def create_jwt(project_id, private_key_file, algorithm):
     """Creates a JWT (https://jwt.io) to establish an MQTT connection.
         Args:
@@ -62,7 +62,7 @@ def create_jwt(project_id, private_key_file, algorithm):
             algorithm, private_key_file))
 
     return jwt.encode(token, private_key, algorithm=algorithm)
-
+# [END iot_mqtt_jwt]
 
 def error_str(rc):
     """Convert a Paho error to a human readable string."""
