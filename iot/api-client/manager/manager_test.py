@@ -16,8 +16,8 @@ import os
 import time
 
 from google.cloud import pubsub
-import manager
 import pytest
+import manager
 
 cloud_region = 'us-central1'
 device_id_template = 'test-device-{}'
