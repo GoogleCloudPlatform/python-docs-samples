@@ -194,7 +194,7 @@ def query_data_with_index(
         ALTER TABLE Albums ADD COLUMN MarketingBudget INT64
 
     """
-    from google.cloud.proto.spanner.v1 import type_pb2
+    from google.cloud.spanner_v1.proto import type_pb2
 
     spanner_client = spanner.Client()
     instance = spanner_client.instance(instance_id)
