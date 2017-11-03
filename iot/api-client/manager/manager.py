@@ -42,23 +42,19 @@ from googleapiclient import discovery
 from googleapiclient.errors import HttpError
 
 
-def create_iot_topic(topic_name):
+def create_iot_topic(project, topic_name):
     """Creates a PubSub Topic and grants access to Cloud IoT Core."""
-    pubsub_client = pubsub.Client()
-    topic = pubsub_client.topic(topic_name)
-    topic.create()
+    pubsub_client = pubsub.PublisherClient()
+    topic_path = pubsub_client.topic_path(project, topic_name)
 
-    topic = pubsub_client.topic(topic_name)
-    policy = topic.get_iam_policy()
-    publishers = policy.get('roles/pubsub.publisher', [])
-    if hasattr(publishers, "append"):
-        publishers.append(policy.service_account(
-                'cloud-iot@system.gserviceaccount.com'))
-    else:
-        publishers.add(policy.service_account(
-                'cloud-iot@system.gserviceaccount.com'))
-    policy['roles/pubsub.publisher'] = publishers
-    topic.set_iam_policy(policy)
+    topic = pubsub_client.create_topic(topic_path)
+    policy = pubsub_client.get_iam_policy(topic_path)
+
+    policy.bindings.add(
+        role='roles/pubsub.publisher',
+        members=['serviceAccount:cloud-iot@system.gserviceaccount.com'])
+
+    pubsub_client.set_iam_policy(topic_path, policy)
 
     return topic
 
@@ -476,7 +472,7 @@ def run_command(args):
                 args.cloud_region, args.pubsub_topic, args.registry_id)
 
     elif args.command == 'create-topic':
-        create_iot_topic(args.pubsub_topic)
+        create_iot_topic(args.project_id, args.pubsub_topic)
 
     elif args.command == 'delete-device':
         delete_device(

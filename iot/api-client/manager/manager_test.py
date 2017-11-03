@@ -15,10 +15,9 @@
 import os
 import time
 
+from google.cloud import pubsub
 import pytest
-
 import manager
-
 
 cloud_region = 'us-central1'
 device_id_template = 'test-device-{}'
@@ -35,12 +34,13 @@ registry_id = 'test-registry-{}'.format(int(time.time()))
 
 @pytest.fixture(scope='module')
 def test_topic():
-    topic = manager.create_iot_topic(topic_id)
+    topic = manager.create_iot_topic(project_id, topic_id)
 
     yield topic
 
-    if topic.exists():
-        topic.delete()
+    pubsub_client = pubsub.PublisherClient()
+    topic_path = pubsub_client.topic_path(project_id, topic_id)
+    pubsub_client.delete_topic(topic_path)
 
 
 def test_create_delete_registry(test_topic, capsys):
