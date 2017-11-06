@@ -12,19 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START error_reporting]
-from google.cloud import error_reporting
+import report_exception
 
 
-def simulate_error():
-    client = error_reporting.Client()
-    try:
-        # simulate calling a method that's not defined
-        raise NameError
-    except Exception:
-        client.report_exception()
-# [END error_reporting]
+def test_error_sends():
+    report_exception.simulate_error()
 
 
-if __name__ == '__main__':
-    simulate_error()
+def test_manual_error_sends():
+    report_exception.report_manual_error()

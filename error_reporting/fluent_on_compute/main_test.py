@@ -12,13 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
+import mock
 
-import report_exception
+import main
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason='GoogleCloudPlatform/google-cloud-python#3263')
-def test_error_sends():
-    report_exception.simulate_error()
+@mock.patch("fluent.event")
+def test_error_sends(event_mock):
+    main.simulate_error()
+    event_mock.Event.assert_called_once_with(mock.ANY, mock.ANY)
