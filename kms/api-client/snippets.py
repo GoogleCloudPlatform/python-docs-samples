@@ -154,9 +154,10 @@ def disable_crypto_key_version(project_id, location_id, key_ring_id,
         name, response['state']))
 # [END kms_disable_cryptokey_version]
 
+
 # [START kms_enable_cryptokey_version]
 def enable_crypto_key_version(project_id, location_id, key_ring_id,
-                               crypto_key_id, version_id):
+                              crypto_key_id, version_id):
     """Enables a CryptoKeyVersion associated with a given CryptoKey and
     KeyRing."""
 
@@ -206,6 +207,7 @@ def destroy_crypto_key_version(
         name, response['state']))
 # [END kms_destroy_cryptokey_version]
 
+
 # [START kms_restore_cryptokey_version]
 def restore_crypto_key_version(
         project_id, location_id, key_ring_id, crypto_key_id, version_id):
@@ -229,6 +231,7 @@ def restore_crypto_key_version(
     print('CryptoKeyVersion {}\'s state has been set to {}.'.format(
         name, response['state']))
 # [END kms_restore_cryptokey_version]
+
 
 # [START kms_add_member_to_cryptokey_policy]
 def add_member_to_crypto_key_policy(
