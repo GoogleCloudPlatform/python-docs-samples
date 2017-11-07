@@ -155,6 +155,33 @@ def disable_crypto_key_version(project_id, location_id, key_ring_id,
 # [END kms_disable_cryptokey_version]
 
 
+# [START kms_enable_cryptokey_version]
+def enable_crypto_key_version(project_id, location_id, key_ring_id,
+                              crypto_key_id, version_id):
+    """Enables a CryptoKeyVersion associated with a given CryptoKey and
+    KeyRing."""
+
+    # Creates an API client for the KMS API.
+    kms_client = googleapiclient.discovery.build('cloudkms', 'v1')
+
+    # Construct the resource name of the CryptoKeyVersion.
+    name = (
+        'projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}/'
+        'cryptoKeyVersions/{}'
+        .format(
+            project_id, location_id, key_ring_id, crypto_key_id, version_id))
+
+    # Use the KMS API to enable the CryptoKeyVersion.
+    crypto_keys = kms_client.projects().locations().keyRings().cryptoKeys()
+    request = crypto_keys.cryptoKeyVersions().patch(
+        name=name, body={'state': 'ENABLED'}, updateMask='state')
+    response = request.execute()
+
+    print('CryptoKeyVersion {}\'s state has been set to {}.'.format(
+        name, response['state']))
+# [END kms_enable_cryptokey_version]
+
+
 # [START kms_destroy_cryptokey_version]
 def destroy_crypto_key_version(
         project_id, location_id, key_ring_id, crypto_key_id, version_id):
@@ -179,6 +206,31 @@ def destroy_crypto_key_version(
     print('CryptoKeyVersion {}\'s state has been set to {}.'.format(
         name, response['state']))
 # [END kms_destroy_cryptokey_version]
+
+
+# [START kms_restore_cryptokey_version]
+def restore_crypto_key_version(
+        project_id, location_id, key_ring_id, crypto_key_id, version_id):
+    """Restores a CryptoKeyVersion that is scheduled for destruction."""
+
+    # Creates an API client for the KMS API.
+    kms_client = googleapiclient.discovery.build('cloudkms', 'v1')
+
+    # Construct the resource name of the CryptoKeyVersion.
+    name = (
+        'projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}/'
+        'cryptoKeyVersions/{}'
+        .format(
+            project_id, location_id, key_ring_id, crypto_key_id, version_id))
+
+    # Use the KMS API to restore the CryptoKeyVersion.
+    crypto_keys = kms_client.projects().locations().keyRings().cryptoKeys()
+    request = crypto_keys.cryptoKeyVersions().restore(name=name, body={})
+    response = request.execute()
+
+    print('CryptoKeyVersion {}\'s state has been set to {}.'.format(
+        name, response['state']))
+# [END kms_restore_cryptokey_version]
 
 
 # [START kms_add_member_to_cryptokey_policy]
@@ -294,6 +346,14 @@ if __name__ == '__main__':
     disable_crypto_key_version_parser.add_argument('crypto_key')
     disable_crypto_key_version_parser.add_argument('version')
 
+    enable_crypto_key_version_parser = subparsers.add_parser(
+        'enable_crypto_key_version')
+    enable_crypto_key_version_parser.add_argument('project')
+    enable_crypto_key_version_parser.add_argument('location')
+    enable_crypto_key_version_parser.add_argument('key_ring')
+    enable_crypto_key_version_parser.add_argument('crypto_key')
+    enable_crypto_key_version_parser.add_argument('version')
+
     destroy_crypto_key_version_parser = subparsers.add_parser(
         'destroy_crypto_key_version')
     destroy_crypto_key_version_parser.add_argument('project')
@@ -301,6 +361,14 @@ if __name__ == '__main__':
     destroy_crypto_key_version_parser.add_argument('key_ring')
     destroy_crypto_key_version_parser.add_argument('crypto_key')
     destroy_crypto_key_version_parser.add_argument('version')
+
+    restore_crypto_key_version_parser = subparsers.add_parser(
+        'restore_crypto_key_version')
+    restore_crypto_key_version_parser.add_argument('project')
+    restore_crypto_key_version_parser.add_argument('location')
+    restore_crypto_key_version_parser.add_argument('key_ring')
+    restore_crypto_key_version_parser.add_argument('crypto_key')
+    restore_crypto_key_version_parser.add_argument('version')
 
     add_member_to_crypto_key_policy_parser = subparsers.add_parser(
         'add_member_to_crypto_key_policy')
@@ -352,8 +420,22 @@ if __name__ == '__main__':
             args.key_ring,
             args.crypto_key,
             args.version)
+    elif args.command == 'enable_crypto_key_version':
+        enable_crypto_key_version(
+            args.project,
+            args.location,
+            args.key_ring,
+            args.crypto_key,
+            args.version)
     elif args.command == 'destroy_crypto_key_version':
         destroy_crypto_key_version(
+            args.project,
+            args.location,
+            args.key_ring,
+            args.crypto_key,
+            args.version)
+    elif args.command == 'restore_crypto_key_version':
+        restore_crypto_key_version(
             args.project,
             args.location,
             args.key_ring,
