@@ -82,7 +82,7 @@ def create_cluster(dataproc, project, zone, region, cluster_name):
                 'machineTypeUri': 'n1-standard-1'
             },
             'workerConfig': {
-                'numInstances' : 2,
+                'numInstances': 2,
                 'machineTypeUri': 'n1-standard-1'
             }
         }
