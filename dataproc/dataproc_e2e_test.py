@@ -18,9 +18,9 @@ the output logs from Cloud Storage and verifies the expected output."""
 
 import os
 
-import submit_job_to_cluster
-
 from gcp_devrel.testing.flaky import flaky
+
+import submit_job_to_cluster
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
