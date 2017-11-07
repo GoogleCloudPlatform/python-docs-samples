@@ -18,8 +18,6 @@ the output logs from Cloud Storage and verifies the expected output."""
 
 import os
 
-from gcp_devrel.testing.flaky import flaky
-
 import submit_job_to_cluster
 
 PROJECT = os.environ['GCLOUD_PROJECT']
@@ -27,7 +25,7 @@ BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 CLUSTER_NAME = 'testcluster3'
 ZONE = 'us-central1-b'
 
-@flaky
+
 def test_e2e():
     output = submit_job_to_cluster.main(
         PROJECT, ZONE, CLUSTER_NAME, BUCKET)
