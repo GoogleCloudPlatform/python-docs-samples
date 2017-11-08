@@ -25,7 +25,6 @@ BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 CLUSTER_NAME = 'testcluster3'
 ZONE = 'us-central1-b'
 
-
 def test_e2e():
     output = submit_job_to_cluster.main(
         PROJECT, ZONE, CLUSTER_NAME, BUCKET)
