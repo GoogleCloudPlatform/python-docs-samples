@@ -5,8 +5,3 @@ threadsafe: true
 handlers:
 - url: /.*
   script: main.app
-
-# Using flask as a built-in third-party library
-libraries:
-- name: flask
-  version: latest
