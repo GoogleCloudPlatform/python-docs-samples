@@ -8,4 +8,4 @@ handlers:
 
 libraries:
 - name: flask
-  version: latest
+  version: 0.12
