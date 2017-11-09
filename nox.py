@@ -136,12 +136,14 @@ def _setup_appengine_sdk(session):
 PYTEST_COMMON_ARGS = []
 
 # Ignore I202 "Additional newline in a section of imports." to accommodate
-# region tags in import blocks.
+# region tags in import blocks. Since we specify an explicit ignore, we also
+# have to explicitly ignore the list of default ignores:
+# `E121,E123,E126,E226,E24,E704,W503,W504` as shown by `flake8 --help`.
 FLAKE8_COMMON_ARGS = [
     '--show-source', '--builtin', 'gettext', '--max-complexity', '20',
-    '--import-order-style', 'google', '--exclude',
-    '.nox,.cache,env,lib,generated_pb2,*_pb2.py,*_pb2_grpc.py',
-    '--ignore=I202',
+    '--import-order-style', 'google',
+    '--exclude', '.nox,.cache,env,lib,generated_pb2,*_pb2.py,*_pb2_grpc.py',
+    '--ignore=E121,E123,E126,E226,E24,E704,W503,W504,I202',
 ]
 
 
