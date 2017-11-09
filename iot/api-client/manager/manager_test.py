@@ -17,6 +17,7 @@ import time
 
 from google.cloud import pubsub
 import pytest
+
 import manager
 
 cloud_region = 'us-central1'
