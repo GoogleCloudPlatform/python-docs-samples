@@ -135,10 +135,13 @@ def _setup_appengine_sdk(session):
 
 PYTEST_COMMON_ARGS = []
 
+# Ignore I202 "Additional newline in a section of imports." to accommodate
+# region tags in import blocks.
 FLAKE8_COMMON_ARGS = [
     '--show-source', '--builtin', 'gettext', '--max-complexity', '20',
-    '--import-order-style', 'google',
-    '--exclude', '.nox,.cache,env,lib,generated_pb2,*_pb2.py,*_pb2_grpc.py',
+    '--import-order-style', 'google', '--exclude',
+    '.nox,.cache,env,lib,generated_pb2,*_pb2.py,*_pb2_grpc.py',
+    '--ignore=I202',
 ]
 
 
