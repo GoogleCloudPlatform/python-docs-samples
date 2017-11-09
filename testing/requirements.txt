@@ -15,4 +15,4 @@ webapp2==2.5.2
 google-api-python-client==1.6.4
 google-cloud-core==0.28.0
 gcp-devrel-py-tools==0.0.11
-flask==0.12
+flask==0.12.2
