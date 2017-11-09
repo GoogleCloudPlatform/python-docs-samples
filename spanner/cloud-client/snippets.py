@@ -120,14 +120,14 @@ def read_data(instance_id, database_id):
 
 
 def read_stale_data(instance_id, database_id):
-    """Reads sample data from the database. The data is exactly 10 seconds
+    """Reads sample data from the database. The data is exactly 15 seconds
     stale."""
     import datetime
 
     spanner_client = spanner.Client()
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
-    staleness = datetime.timedelta(seconds=10)
+    staleness = datetime.timedelta(seconds=15)
 
     with database.snapshot(exact_staleness=staleness) as snapshot:
         keyset = spanner.KeySet(all_=True)

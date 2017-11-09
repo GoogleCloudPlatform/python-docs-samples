@@ -79,7 +79,7 @@ def test_read_stale_data(temporary_database, capsys):
     out, _ = capsys.readouterr()
 
     # It shouldn't be in the output because it was *just* inserted by the
-    # temporary database fixture and this sample reads 10 seconds into the
+    # temporary database fixture and this sample reads 15 seconds into the
     # past.
     assert 'Total Junk' not in out
 
