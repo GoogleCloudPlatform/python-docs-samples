@@ -14,18 +14,34 @@
 
 import os
 
-import web_entities
+from web_entities import web_entities_file
+from web_entities_include_geo_results import (
+    web_entities_include_geo_results_file,
+    web_entities_include_geo_results_uri)
+
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 
-def test_detect_file_with_geo(capsys):
-    file_name = ('../detect/resources/city.jpg')
-    web_entities.annotate_web_entities(file_name, True)
+def test_file_with_geo(capsys):
+    image_file_path = ('../detect/resources/city.jpg')
+    web_entities_include_geo_results_file(image_file_path)
     out, _ = capsys.readouterr()
+
     assert 'Zepra' in out
 
 
-def test_detect_file_without_geo(capsys):
-    file_name = ('../detect/resources/city.jpg')
-    web_entities.annotate_web_entities(file_name, False)
+def test_gcsuri_with_geo(capsys):
+    image_uri = ('gs://{}/vision/landmark.jpg'.format(
+                 BUCKET))
+    web_entities_include_geo_results_uri(image_uri)
     out, _ = capsys.readouterr()
+
+    assert 'Description: Palace of Fine Arts Theatre' in out
+
+
+def test_file_without_geo(capsys):
+    image_file_path = ('../detect/resources/city.jpg')
+    web_entities_file(image_file_path)
+    out, _ = capsys.readouterr()
+
     assert 'Zepra' not in out
