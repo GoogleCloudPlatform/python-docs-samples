@@ -14,6 +14,8 @@
 
 """App Engine app to serve as an endpoint for App Engine queue samples."""
 
+import logging
+
 from flask import Flask, request
 
 app = Flask(__name__)
@@ -23,7 +25,8 @@ app = Flask(__name__)
 def log_payload():
     """Log the request payload."""
     payload = request.get_data(as_text=True) or '(empty payload)'
-    print('Received task with payload: {}'.format(payload))
+    # Send our test logging message as a "warn" to ensure visibility.
+    logging.warn('Received task with payload: {}'.format(payload))
     return 'Printed task payload: {}'.format(payload)
 
 
