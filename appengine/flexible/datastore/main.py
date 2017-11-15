@@ -21,7 +21,7 @@ from google.cloud import datastore
 
 
 app = Flask(__name__)
-
+ds = datastore.Client()
 
 def is_ipv6(addr):
     """Checks if a given address is an IPv6 address."""
@@ -35,8 +35,6 @@ def is_ipv6(addr):
 # [START example]
 @app.route('/')
 def index():
-    ds = datastore.Client()
-
     user_ip = request.remote_addr
 
     # Keep only the first two octets of the IP address.
