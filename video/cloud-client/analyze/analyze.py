@@ -33,17 +33,15 @@ import io
 import sys
 import time
 
-from google.cloud import videointelligence_v1beta2
-from google.cloud.videointelligence_v1beta2 import enums
-from google.cloud.videointelligence_v1beta2 import types
+from google.cloud import videointelligence
 
 
 def analyze_explicit_content(path):
     """ Detects explicit content from the GCS path to a video. """
-    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
-    features = [enums.Feature.EXPLICIT_CONTENT_DETECTION]
+    video_client = videointelligence.VideoIntelligenceServiceClient()
+    features = [videointelligence.enums.Feature.EXPLICIT_CONTENT_DETECTION]
 
-    operation = video_client.annotate_video(path, features)
+    operation = video_client.annotate_video(path, features=features)
     print('\nProcessing video for explicit content annotations:')
 
     while not operation.done():
@@ -69,14 +67,16 @@ def analyze_explicit_content(path):
 
 def analyze_faces(path):
     """ Detects faces given a GCS path. """
-    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
-    features = [enums.Feature.FACE_DETECTION]
+    video_client = videointelligence.VideoIntelligenceServiceClient()
+    features = [videointelligence.enums.Feature.FACE_DETECTION]
 
-    config = types.FaceDetectionConfig(include_bounding_boxes=True)
-    context = types.VideoContext(face_detection_config=config)
+    config = videointelligence.types.FaceDetectionConfig(
+        include_bounding_boxes=True)
+    context = videointelligence.types.VideoContext(
+        face_detection_config=config)
 
     operation = video_client.annotate_video(
-        path, features, video_context=context)
+        path, features=features, video_context=context)
     print('\nProcessing video for face annotations:')
 
     while not operation.done():
@@ -119,15 +119,17 @@ def analyze_faces(path):
 
 def analyze_labels(path):
     """ Detects labels given a GCS path. """
-    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
-    features = [enums.Feature.LABEL_DETECTION]
+    video_client = videointelligence.VideoIntelligenceServiceClient()
+    features = [videointelligence.enums.Feature.LABEL_DETECTION]
 
-    config = types.LabelDetectionConfig(
-        label_detection_mode=enums.LabelDetectionMode.SHOT_AND_FRAME_MODE)
-    context = types.VideoContext(label_detection_config=config)
+    config = videointelligence.types.LabelDetectionConfig(
+        label_detection_mode=(videointelligence.enums.LabelDetectionMode.
+                              SHOT_AND_FRAME_MODE))
+    context = videointelligence.types.VideoContext(
+        label_detection_config=config)
 
     operation = video_client.annotate_video(
-        path, features, video_context=context)
+        path, features=features, video_context=context)
     print('\nProcessing video for label annotations:')
 
     while not operation.done():
@@ -198,14 +200,14 @@ def analyze_labels(path):
 
 def analyze_labels_file(path):
     """ Detects labels given a file path. """
-    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
-    features = [enums.Feature.LABEL_DETECTION]
+    video_client = videointelligence.VideoIntelligenceServiceClient()
+    features = [videointelligence.enums.Feature.LABEL_DETECTION]
 
     with io.open(path, "rb") as movie:
         content_base64 = base64.b64encode(movie.read())
 
     operation = video_client.annotate_video(
-        '', features, input_content=content_base64)
+        '', features=features, input_content=content_base64)
     print('\nProcessing video for label annotations:')
 
     while not operation.done():
@@ -275,9 +277,9 @@ def analyze_labels_file(path):
 
 def analyze_shots(path):
     """ Detects camera shot changes. """
-    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
-    features = [enums.Feature.SHOT_CHANGE_DETECTION]
-    operation = video_client.annotate_video(path, features)
+    video_client = videointelligence.VideoIntelligenceServiceClient()
+    features = [videointelligence.enums.Feature.SHOT_CHANGE_DETECTION]
+    operation = video_client.annotate_video(path, features=features)
     print('\nProcessing video for shot change annotations:')
 
     while not operation.done():

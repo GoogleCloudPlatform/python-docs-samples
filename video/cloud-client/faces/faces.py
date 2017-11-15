@@ -32,17 +32,16 @@ import argparse
 import sys
 import time
 
-from google.cloud import videointelligence_v1beta2
-from google.cloud.videointelligence_v1beta2 import enums
+from google.cloud import videointelligence
 # [END imports]
 
 
 def analyze_faces(path):
     # [START construct_request]
     """ Detects faces given a GCS path. """
-    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
-    features = [enums.Feature.FACE_DETECTION]
-    operation = video_client.annotate_video(path, features)
+    video_client = videointelligence.VideoIntelligenceServiceClient()
+    features = [videointelligence.enums.Feature.FACE_DETECTION]
+    operation = video_client.annotate_video(path, features=features)
     # [END construct_request]
     print('\nProcessing video for face annotations:')
 

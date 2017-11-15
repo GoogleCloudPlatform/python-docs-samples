@@ -33,17 +33,16 @@ import argparse
 import sys
 import time
 
-from google.cloud import videointelligence_v1beta2
-from google.cloud.videointelligence_v1beta2 import enums
+from google.cloud import videointelligence
 # [END imports]
 
 
 def analyze_labels(path):
     """ Detects labels given a GCS path. """
     # [START construct_request]
-    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
-    features = [enums.Feature.LABEL_DETECTION]
-    operation = video_client.annotate_video(path, features)
+    video_client = videointelligence.VideoIntelligenceServiceClient()
+    features = [videointelligence.enums.Feature.LABEL_DETECTION]
+    operation = video_client.annotate_video(path, features=features)
     # [END construct_request]
     print('\nProcessing video for label annotations:')
 
