@@ -32,9 +32,7 @@ To create a queue using the Cloud SDK, use the following gcloud command:
     gcloud alpha tasks queues create-app-engine-queue my-appengine-queue
 
 Note: A newly created queue will route to the default App Engine service and
-version unless configured to do otherwise. Read the online help for the
-`create-app-engine-queue` or the `update-app-engine-queue` commands to learn
-about routing overrides for App Engine queues.
+version unless configured to do otherwise.
 
 ## Deploying the App Engine app
 
