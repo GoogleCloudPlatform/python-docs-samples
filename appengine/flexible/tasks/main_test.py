@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import mock
 import pytest
 
 
@@ -28,19 +27,19 @@ def test_index(app):
     assert r.status_code == 200
 
 
-@mock.patch('logging.warn')
-def test_log_payload(logging_mock, app):
-    payload = 'hello'
+def test_log_payload(capsys, app):
+    payload = 'test_payload'
 
     r = app.post('/log_payload', data=payload)
     assert r.status_code == 200
 
-    assert logging_mock.called
+    out, _ = capsys.readouterr()
+    assert payload in out
 
 
-@mock.patch('logging.warn')
-def test_empty_payload(logging_mock, app):
+def test_empty_payload(capsys, app):
     r = app.post('/log_payload')
     assert r.status_code == 200
 
-    assert logging_mock.called
+    out, _ = capsys.readouterr()
+    assert 'empty payload' in out
