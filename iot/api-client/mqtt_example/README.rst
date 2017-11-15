@@ -4,6 +4,7 @@ Google Cloud IoT Core API Python Samples
 ===============================================================================
 
 This directory contains samples for Google Cloud IoT Core API. `Google Cloud IoT Core`_ allows developers to easily integrate Publish and Subscribe functionality with devices and programmatically manage device authorization.
+Before you run the sample, you must retrieve the Google root certificate. For example, `wget https://pki.goog/roots.pem` or `curl https://pki.goog/roots.pem > roots.pem`.
 The following example runs the sample using the project ID `blue-jet-123` and the device name `my-python-device`:
 
     python cloudiot_mqtt_example.py \
@@ -71,9 +72,9 @@ To run this sample:
                                     [--mqtt_bridge_hostname MQTT_BRIDGE_HOSTNAME]
                                     [--mqtt_bridge_port {8883,443}]
                                     [--jwt_expires_minutes JWT_EXPIRES_MINUTES]
-    
+
     Example Google Cloud IoT Core MQTT device connection code.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
       --project_id PROJECT_ID
@@ -100,6 +101,7 @@ To run this sample:
                             MQTT bridge port.
       --jwt_expires_minutes JWT_EXPIRES_MINUTES
                             Expiration time, in minutes, for JWT tokens.
+
 
 
 
