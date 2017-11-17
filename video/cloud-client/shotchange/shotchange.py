@@ -29,8 +29,6 @@ Example Usage:
 # [START full_tutorial]
 # [START imports]
 import argparse
-import sys
-import time
 
 from google.cloud import videointelligence
 # [END imports]
@@ -46,18 +44,12 @@ def analyze_shots(path):
     print('\nProcessing video for shot change annotations:')
 
     # [START check_operation]
-    while not operation.done():
-        sys.stdout.write('.')
-        sys.stdout.flush()
-        time.sleep(20)
-
+    result = operation.result(timeout=90)
     print('\nFinished processing.')
     # [END check_operation]
 
     # [START parse_response]
-    shots = operation.result().annotation_results[0].shot_annotations
-
-    for i, shot in enumerate(shots):
+    for i, shot in enumerate(result.annotation_results[0].shot_annotations):
         start_time = (shot.start_time_offset.seconds +
                       shot.start_time_offset.nanos / 1e9)
         end_time = (shot.end_time_offset.seconds +

@@ -29,8 +29,6 @@ Usage Example:
 # [START full_tutorial]
 # [START imports]
 import argparse
-import sys
-import time
 
 from google.cloud import videointelligence
 # [END imports]
@@ -46,20 +44,14 @@ def analyze_faces(path):
     print('\nProcessing video for face annotations:')
 
     # [START check_operation]
-    while not operation.done():
-        sys.stdout.write('.')
-        sys.stdout.flush()
-        time.sleep(20)
-
+    result = operation.result(timeout=600)
     print('\nFinished processing.')
     # [END check_operation]
 
     # [START parse_response]
     # first result is retrieved because a single video was processed
-    face_annotations = (operation.result().annotation_results[0].
-                        face_annotations)
-
-    for face_id, face in enumerate(face_annotations):
+    for face_id, face in enumerate(result.annotation_results[0].
+                                   face_annotations):
         print('Thumbnail size: {}'.format(len(face.thumbnail)))
 
         for segment_id, segment in enumerate(face.segments):
