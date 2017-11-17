@@ -50,8 +50,8 @@ def analyze_faces(path):
 
     # [START parse_response]
     # first result is retrieved because a single video was processed
-    for face_id, face in enumerate(result.annotation_results[0].
-                                   face_annotations):
+    faces = result.annotation_results[0].face_annotations
+    for face_id, face in enumerate(faces):
         print('Thumbnail size: {}'.format(len(face.thumbnail)))
 
         for segment_id, segment in enumerate(face.segments):

@@ -74,8 +74,8 @@ def analyze_faces(path):
     print('\nFinished processing.')
 
     # first result is retrieved because a single video was processed
-    for face_id, face in enumerate(result.annotation_results[0].
-                                   face_annotations):
+    faces = result.annotation_results[0].face_annotations
+    for face_id, face in enumerate(faces):
         print('Face {}'.format(face_id))
         print('Thumbnail size: {}'.format(len(face.thumbnail)))
 
@@ -107,9 +107,9 @@ def analyze_labels(path):
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.enums.Feature.LABEL_DETECTION]
 
+    mode = videointelligence.enums.LabelDetectionMode.SHOT_AND_FRAME_MODE
     config = videointelligence.types.LabelDetectionConfig(
-        label_detection_mode=(videointelligence.enums.LabelDetectionMode.
-                              SHOT_AND_FRAME_MODE))
+        label_detection_mode=mode)
     context = videointelligence.types.VideoContext(
         label_detection_config=config)
 
@@ -121,8 +121,8 @@ def analyze_labels(path):
     print('\nFinished processing.')
 
     # Process video/segment level label annotations
-    for i, segment_label in enumerate(result.annotation_results[0].
-                                      segment_label_annotations):
+    segment_labels = result.annotation_results[0].segment_label_annotations
+    for i, segment_label in enumerate(segment_labels):
         print('Video label description: {}'.format(
             segment_label.entity.description))
         for category_entity in segment_label.category_entities:
@@ -141,8 +141,8 @@ def analyze_labels(path):
         print('\n')
 
     # Process shot level label annotations
-    for i, shot_label in enumerate(result.annotation_results[0].
-                                   shot_label_annotations):
+    shot_labels = result.annotation_results[0].shot_label_annotations
+    for i, shot_label in enumerate(shot_labels):
         print('Shot label description: {}'.format(
             shot_label.entity.description))
         for category_entity in shot_label.category_entities:
@@ -161,8 +161,8 @@ def analyze_labels(path):
         print('\n')
 
     # Process frame level label annotations
-    for i, frame_label in enumerate(result.annotation_results[0].
-                                    frame_label_annotations):
+    frame_labels = result.annotation_results[0].frame_label_annotations
+    for i, frame_label in enumerate(frame_labels):
         print('Frame label description: {}'.format(
             frame_label.entity.description))
         for category_entity in frame_label.category_entities:
@@ -195,8 +195,8 @@ def analyze_labels_file(path):
     print('\nFinished processing.')
 
     # Process video/segment level label annotations
-    for i, segment_label in enumerate(result.annotation_results[0].
-                                      segment_label_annotations):
+    segment_labels = result.annotation_results[0].segment_label_annotations
+    for i, segment_label in enumerate(segment_labels):
         print('Video label description: {}'.format(
             segment_label.entity.description))
         for category_entity in segment_label.category_entities:
@@ -215,8 +215,8 @@ def analyze_labels_file(path):
         print('\n')
 
     # Process shot level label annotations
-    for i, shot_label in enumerate(result.annotation_results[0].
-                                   shot_label_annotations):
+    shot_labels = result.annotation_results[0].shot_label_annotations
+    for i, shot_label in enumerate(shot_labels):
         print('Shot label description: {}'.format(
             shot_label.entity.description))
         for category_entity in shot_label.category_entities:
@@ -235,8 +235,8 @@ def analyze_labels_file(path):
         print('\n')
 
     # Process frame level label annotations
-    for i, frame_label in enumerate(result.annotation_results[0].
-                                    frame_label_annotations):
+    frame_labels = result.annotation_results[0].frame_label_annotations
+    for i, frame_label in enumerate(frame_labels):
         print('Frame label description: {}'.format(
             frame_label.entity.description))
         for category_entity in frame_label.category_entities:

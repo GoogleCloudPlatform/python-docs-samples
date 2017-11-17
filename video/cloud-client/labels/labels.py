@@ -50,8 +50,8 @@ def analyze_labels(path):
     # [END check_operation]
 
     # [START parse_response]
-    for i, segment_label in enumerate(result.annotation_results[0].
-                                      segment_label_annotations):
+    segment_labels = result.annotation_results[0].segment_label_annotations
+    for i, segment_label in enumerate(segment_labels):
         print('Video label description: {}'.format(
             segment_label.entity.description))
         for category_entity in segment_label.category_entities:

@@ -37,8 +37,8 @@ def run_quickstart():
     print('\nFinished processing.')
 
     # first result is retrieved because a single video was processed
-    for i, segment_label in enumerate(result.annotation_results[0].
-                                      segment_label_annotations):
+    segment_labels = result.annotation_results[0].segment_label_annotations
+    for i, segment_label in enumerate(segment_labels):
         print('Video label description: {}'.format(
             segment_label.entity.description))
         for category_entity in segment_label.category_entities:
