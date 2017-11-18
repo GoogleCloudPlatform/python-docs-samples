@@ -1,0 +1,1 @@
+google-cloud-vision==0.27.0
