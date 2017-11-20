@@ -21,8 +21,14 @@ setup:
 - install_deps
 
 samples:
-- name: Web
-  file: web_detect.py
+- name: Detect
+  file: detect.py
+  show_help: True
+- name: Web Entities
+  file: web_entities.py
+  show_help: True
+- name: Web Entities Include Geo Results
+  file: web_entities_include_geo_results.py
   show_help: True
 
 cloud_client_library: true

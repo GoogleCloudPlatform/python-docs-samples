@@ -52,7 +52,7 @@ Install Dependencies
 Samples
 -------------------------------------------------------------------------------
 
-Web
+Detect
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -61,23 +61,124 @@ To run this sample:
 
 .. code-block:: bash
 
-    $ python web_detect.py
+    $ python detect.py
 
-    usage: web_detect.py [-h] image_url
+    usage: detect.py [-h]
+                     {faces,faces-uri,labels,labels-uri,landmarks,landmarks-uri,text,text-uri,logos,logos-uri,safe-search,safe-search-uri,properties,properties-uri,web,web-uri,crophints,crophints-uri,document,document-uri}
+                     ...
+    
+    This application demonstrates how to perform basic operations with the
+    Google Cloud Vision API.
+    
+    Example Usage:
+    python detect.py text ./resources/wakeupcat.jpg
+    python detect.py labels ./resources/landmark.jpg
+    python detect.py web ./resources/landmark.jpg
+    python detect.py web-uri http://wheresgus.com/dog.JPG
+    python detect.py faces-uri gs://your-bucket/file.jpg
+    
+    For more information, the documentation at
+    https://cloud.google.com/vision/docs.
+    
+    positional arguments:
+      {faces,faces-uri,labels,labels-uri,landmarks,landmarks-uri,text,text-uri,logos,logos-uri,safe-search,safe-search-uri,properties,properties-uri,web,web-uri,crophints,crophints-uri,document,document-uri}
+        faces               Detects faces in an image.
+        faces-uri           Detects faces in the file located in Google Cloud
+                            Storage or the web.
+        labels              Detects labels in the file.
+        labels-uri          Detects labels in the file located in Google Cloud
+                            Storage or on the Web.
+        landmarks           Detects landmarks in the file.
+        landmarks-uri       Detects landmarks in the file located in Google Cloud
+                            Storage or on the Web.
+        text                Detects text in the file.
+        text-uri            Detects text in the file located in Google Cloud
+                            Storage or on the Web.
+        logos               Detects logos in the file.
+        logos-uri           Detects logos in the file located in Google Cloud
+                            Storage or on the Web.
+        safe-search         Detects unsafe features in the file.
+        safe-search-uri     Detects unsafe features in the file located in Google
+                            Cloud Storage or on the Web.
+        properties          Detects image properties in the file.
+        properties-uri      Detects image properties in the file located in Google
+                            Cloud Storage or on the Web.
+        web                 Detects web annotations given an image.
+        web-uri             Detects web annotations in the file located in Google
+                            Cloud Storage.
+        crophints           Detects crop hints in an image.
+        crophints-uri       Detects crop hints in the file located in Google Cloud
+                            Storage.
+        document            Detects document features in an image.
+        document-uri        Detects document features in the file located in
+                            Google Cloud Storage.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
+Web Entities
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python web_entities.py
+
+    usage: web_entities.py [-h]
+                           (--image-uri IMAGE_URI | --image-file-path IMAGE_FILE_PATH)
     
     Demonstrates web detection using the Google Cloud Vision API.
     
-    Example usage:
-      python web_detect.py https://goo.gl/X4qcB6
-      python web_detect.py ../detect/resources/landmark.jpg
-      python web_detect.py gs://your-bucket/image.png
+    This sample prints web_entities detected with `include geo_results`
+    turned off.
     
-    positional arguments:
-      image_url   The image to detect, can be web URI, Google Cloud Storage, or
-                  path to local file.
+    Example usage:
+      python web_entities.py   --image-uri https://goo.gl/X4qcB6
+      python web_entities.py   --image-uri gs://your-bucket/image.png
+      python web_entities.py   --image-file-path ../detect/resources/city.jpg
     
     optional arguments:
-      -h, --help  show this help message and exit
+      -h, --help            show this help message and exit
+      --image-uri IMAGE_URI
+                            Web URI or Google Cloud Storage URI.
+      --image-file-path IMAGE_FILE_PATH
+                            Path to local image file.
+
+
+Web Entities Include Geo Results
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python web_entities_include_geo_results.py
+
+    usage: web_entities_include_geo_results.py [-h]
+                                               (--image-uri IMAGE_URI | --image-file-path IMAGE_FILE_PATH)
+    
+    Demonstrates web detection using the Google Cloud Vision API.
+    
+    This sample prints web_entities detected with `include geo_results`
+    turned on.  This features uses GPS information included in the image.
+    
+    Example usage:
+      python web_entities_include_geo_results.py   --image-uri https://goo.gl/X4qcB6
+      python web_entities_include_geo_results.py   --image-uri gs://your-bucket/image.png
+      python web_entities_include_geo_results.py   --image-file-path ../detect/resources/city.jpg
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --image-uri IMAGE_URI
+                            Web URI or Google Cloud Storage URI.
+      --image-file-path IMAGE_FILE_PATH
+                            Path to local image file.
 
 
 
