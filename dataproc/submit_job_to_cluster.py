@@ -25,12 +25,12 @@ DEFAULT_FILENAME = 'pyspark_sort.py'
 def get_default_pyspark_file():
     """Gets the PySpark file from this directory"""
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    f = open(os.path.join(current_dir, DEFAULT_FILENAME), 'r')
+    f = open(os.path.join(current_dir, DEFAULT_FILENAME), 'rb')
     return f, DEFAULT_FILENAME
 
 
 def get_pyspark_file(filename):
-    f = open(filename, 'r')
+    f = open(filename, 'rb')
     return f, os.path.basename(filename)
 
 
@@ -76,6 +76,14 @@ def create_cluster(dataproc, project, zone, region, cluster_name):
         'config': {
             'gceClusterConfig': {
                 'zoneUri': zone_uri
+            },
+            'masterConfig': {
+                'numInstances': 1,
+                'machineTypeUri': 'n1-standard-1'
+            },
+            'workerConfig': {
+                'numInstances': 2,
+                'machineTypeUri': 'n1-standard-1'
             }
         }
     }

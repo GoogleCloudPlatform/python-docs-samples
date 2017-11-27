@@ -11,24 +11,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 r"""Sample server that pushes configuration to Google Cloud IoT devices.
-
 This example represents a server that consumes telemetry data from multiple
 Cloud IoT devices. The devices report telemetry data, which the server consumes
 from a Cloud Pub/Sub topic. The server then decides whether to turn on or off
 individual devices fans.
-
 This example requires the Google Cloud Pub/Sub client library. Install it with
-
   $ pip install --upgrade google-cloud-pubsub
-
 If you are running this example from a Compute Engine VM, you will have to
 enable the Cloud Pub/Sub API for your project, which you can do from the Cloud
 Console. Create a pubsub topic, for example
 projects/my-project-id/topics/my-topic-name, and a subscription, for example
 projects/my-project-id/subscriptions/my-topic-subscription.
-
 You can then run the example with
-
   $ python cloudiot_pubsub_example_server.py \
     --project_id=my-project-id \
     --pubsub_subscription=my-topic-subscription \

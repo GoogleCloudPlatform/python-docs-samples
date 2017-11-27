@@ -15,8 +15,6 @@
 import os
 
 from google.cloud import spanner
-import google.cloud.exceptions
-import google.cloud.spanner.client
 import mock
 import pytest
 
@@ -27,13 +25,13 @@ SPANNER_INSTANCE = os.environ['SPANNER_INSTANCE']
 
 @pytest.fixture
 def patch_instance():
-    original_instance = google.cloud.spanner.client.Client.instance
+    original_instance = spanner.Client.instance
 
     def new_instance(self, unused_instance_name):
         return original_instance(self, SPANNER_INSTANCE)
 
     instance_patch = mock.patch(
-        'google.cloud.spanner.client.Client.instance',
+        'google.cloud.spanner.Client.instance',
         side_effect=new_instance,
         autospec=True)
 

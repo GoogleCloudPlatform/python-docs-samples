@@ -9,30 +9,9 @@ product:
     Subscribe functionality with devices and programmatically manage device
     authorization.
 
-
     Before you run the sample, you must retrieve the Google root certificate.
     For example, `wget https://pki.goog/roots.pem` or
     `curl https://pki.goog/roots.pem > roots.pem`.
-
-
-    The sample shows a simple but complete IoT system. The devices in this
-    system publish temperature data on their telemetry feeds, and a server
-    consumes the telemetry data from a Cloud Pub/Sub topic. The server then
-    decides whether to turn on or off the individual devices' fans, via a
-    Cloud IoT Core configuration update.
-
-
-    Run the server code, followed by the device code. You should then see the
-    devices publishing their temperature data, and the server instructing the
-    devices to turn on and off their fans. Try running many instances of
-    cloudiot_pubsub_example_mqtt_device.py at the same time, using different
-    devices. If you rerun the code with the same device, the first device will
-    be disconnected.
-
-
-    For more information, see the the page for this sample in the
-    Google Cloud IoT Core documentation:
-    https://cloud.google.com/iot/docs/samples/end-to-end-sample
 
 setup:
 - auth

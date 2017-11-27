@@ -12,13 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
 
-import report_exception
+# [START error_reporting]
+def simulate_error():
+    from google.cloud import error_reporting
+
+    client = error_reporting.Client()
+    try:
+        # simulate calling a method that's not defined
+        raise NameError
+    except Exception:
+        client.report_exception()
+# [END error_reporting]
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason='GoogleCloudPlatform/google-cloud-python#3263')
-def test_error_sends():
-    report_exception.simulate_error()
+# [START error_reporting_manual]
+def report_manual_error():
+    from google.cloud import error_reporting
+
+    client = error_reporting.Client()
+    client.report("An error has occurred.")
+# [END error_reporting_manual]
+
+
+if __name__ == '__main__':
+    simulate_error()
+    report_manual_error()

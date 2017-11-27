@@ -1,5 +1,5 @@
 beautifulsoup4==4.6.0
-coverage==4.4.1
+coverage==4.4.2
 flaky==3.4.0
 funcsigs==1.0.2
 mock==2.0.0
@@ -15,3 +15,4 @@ webapp2==2.5.2
 google-api-python-client==1.6.4
 google-cloud-core==0.28.0
 gcp-devrel-py-tools==0.0.11
+flask==0.12.2
