@@ -32,12 +32,12 @@ You can then run the example with
   $ python cloudiot_pubsub_example_server.py \
     --project_id=my-project-id \
     --pubsub_subscription=my-topic-subscription \
-    --api_key=YOUR_API_KEY
 """
 
 import argparse
 import base64
 import json
+import os
 import sys
 from threading import Lock
 import time
@@ -47,165 +47,165 @@ from googleapiclient.errors import HttpError
 from oauth2client.service_account import ServiceAccountCredentials
 from google.cloud import pubsub_v1
 
-
 API_SCOPES = ['https://www.googleapis.com/auth/cloud-platform']
-API_VERSION = 'v1beta1'
+API_VERSION = 'v1'
 DISCOVERY_API = 'https://cloudiot.googleapis.com/$discovery/rest'
-SERVICE_NAME = 'cloudiot'
-
-
-def discovery_url(api_key):
-  """Construct the discovery url for the given api key."""
-  return '{}?version={}&key={}'.format(DISCOVERY_API, API_VERSION, api_key)
+SERVICE_NAME = 'cloudiotcore'
 
 
 class Server(object):
-  """Represents the state of the server."""
+    """Represents the state of the server."""
 
-  def __init__(self, service_account_json, api_key):
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(
-        service_account_json, API_SCOPES)
-    if not credentials:
-      sys.exit('Could not load service account credential from {}'.format(
-          service_account_json))
+    def __init__(self, service_account_json):
+        credentials = ServiceAccountCredentials.from_json_keyfile_name(
+            service_account_json, API_SCOPES)
+        if not credentials:
+            sys.exit('Could not load service account credential: {}'.format(
+                service_account_json))
+        discovery_url = '{}?version={}'.format(DISCOVERY_API, API_VERSION)
+        self._service = discovery.build(
+            SERVICE_NAME,
+            API_VERSION,
+            discoveryServiceUrl=discovery_url,
+            credentials=credentials)
 
-    self._service = discovery.build(
-        SERVICE_NAME,
-        API_VERSION,
-        discoveryServiceUrl=discovery_url(api_key),
-        credentials=credentials)
+        # Used to serialize the calls to the
+        # modifyCloudToDeviceConfig REST method. This is needed
+        # because the google-api-python-client library is built on top
+        # of the httplib2 library, which is not thread-safe. For more
+        # details, see: https://developers.google.com/
+        #     api-client-library/python/guide/thread_safety
+        self._update_config_mutex = Lock()
 
-    # Used to serialize the calls to the
-    # modifyCloudToDeviceConfig REST method. This is needed
-    # because the google-api-python-client library is built on top
-    # of the httplib2 library, which is not thread-safe. For more
-    # details, see: https://developers.google.com/
-    #     api-client-library/python/guide/thread_safety
-    self._update_config_mutex = Lock()
+    def _update_device_config(self, project_id, region, registry_id, device_id,
+                              data):
+        """Push the data to the given device as configuration."""
+        config_data = None
+        print 'Device ({}) has a temperature of:(}'.format(device_id,
+                                                           data['temperature'])
+        if data['temperature'] < 0:
+            # Turn off the fan.
+            config_data = {'fan_on': False}
+            print 'Setting fan state for device', device_id, 'to off.'
+        elif data['temperature'] > 10:
+            # Turn on the fan
+            config_data = {'fan_on': True}
+            print 'Setting fan state for device', device_id, 'to on.'
+        else:
+            # Temperature is OK, don't need to push a new config.
+            return
 
-  def _update_device_config(self, project_id, region, registry_id, device_id,
-                            data):
-    """Push the data to the given device as configuration."""
-    config_data = None
-    print 'The device ({}) has a temperature of: {}'.format(device_id,
-                                                            data['temperature'])
-    if data['temperature'] < 0:
-      # Turn off the fan.
-      config_data = {'fan_on': False}
-      print 'Setting fan state for device', device_id, 'to off.'
-    elif data['temperature'] > 10:
-      # Turn on the fan
-      config_data = {'fan_on': True}
-      print 'Setting fan state for device', device_id, 'to on.'
-    else:
-      # Temperature is OK, don't need to push a new config.
-      return
-
-    config_data_json = json.dumps(config_data)
-    body = {
-        # The device configuration specifies a version to update, which can be
-        # used to avoid having configuration updates race. In this case, we
-        # use the special value of 0, which tells Cloud IoT to always update the
-        # config.
-        'version_to_update': 0,
-        'data': {
-            # The data is passed as raw bytes, so we encode it as base64. Note
-            # that the device will receive the decoded string, and so you do not
-            # need to base64 decode the string on the device.
-            'binary_data': base64.b64encode(config_data_json)
+        config_data_json = json.dumps(config_data)
+        body = {
+            # The device configuration specifies a version to update, which can
+            # be used to avoid having configuration updates race. In this case,
+            # you use the special value of 0, which tells Cloud IoT to always
+            # update the config.
+            'version_to_update': 0,
+            'data': {
+                # The data is passed as raw bytes, so we encode it as base64.
+                # Note that the device will receive the decoded string,
+                # so you do not need to base64 decode the string on the device.
+                'binary_data': base64.b64encode(config_data_json)
+            }
         }
-    }
 
-    device_name = 'projects/{}/locations/{}/registries/{}/devices/{}'.format(
-        project_id, region, registry_id, device_id)
+        device_name = ('projects/{}/locations/{}/registries/{}/'
+                       'devices/{}'.format(project_id, region, registry_id,
+                                           device_id))
 
-    request = self._service.projects().locations().registries().devices(
-    ).modifyCloudToDeviceConfig(
-        name=device_name, body=body)
+        request = self._service.projects().locations().registries().devices(
+        ).modifyCloudToDeviceConfig(
+            name=device_name, body=body)
 
-    # The http call for the device config change is thread-locked so that we
-    # don't have competing threads simultaneously using the httplib2 library,
-    # which is not thread-safe.
-    self._update_config_mutex.acquire()
-    try:
-      request.execute()
-    except HttpError, e:
-      # If the server responds with a HtppError, we log it here, but continue
-      # so that the message does not stay NACK'ed on the pubsub channel.
-      print 'Error executing ModifyCloudToDeviceConfig: {}'.format(e)
-    finally:
-      self._update_config_mutex.release()
+        # The http call for the device config change is thread-locked so that
+        # you don't have competing threads simultaneously using the
+        # httplib2 library, which is not thread-safe.
+        self._update_config_mutex.acquire()
+        try:
+            request.execute()
+        except HttpError as e:
+            # If the server responds with a HtppError, we log it here, but
+            # continue so that the message does not stay NACK'ed on the
+            # Pub/Sub channel.
+            print 'Error executing ModifyCloudToDeviceConfig: {}'.format(e)
+        finally:
+            self._update_config_mutex.release()
 
-  def run(self, project_id, pubsub_subscription):
-    """The main loop. Consumes messages from the Pub/Sub subscription."""
+    def run(self, project_id, pubsub_subscription):
+        """The main loop. Consumes messages from the Pub/Sub subscription."""
 
-    subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(project_id,
-                                                     pubsub_subscription)
+        subscriber = pubsub_v1.SubscriberClient()
+        subscription_path = subscriber.subscription_path(project_id,
+                                                         pubsub_subscription)
 
-    def callback(message):
-      """Logic executed when a message is received from subscribed topic."""
-      try:
-        data = json.loads(message.data)
-      except ValueError, e:
-        print 'Loading Payload ({}) threw an Exception: {}.'.format(
-            message.data, e)
-        message.ack()
-        return
+        def callback(message):
+            """Logic executed when a message is received from subscribed
+            topic."""
+            try:
+                data = json.loads(message.data)
+            except ValueError as e:
+                print 'Loading Payload ({}) threw an Exception: {}.'.format(
+                    message.data, e)
+                message.ack()
+                return
 
-      # Get the registry id and device id from the attributes. These are
-      # automatically supplied by IoT, and allow the server to determine which
-      # device sent the event.
-      device_project_id = message.attributes['projectId']
-      device_registry_id = message.attributes['deviceRegistryId']
-      device_id = message.attributes['deviceId']
-      device_region = message.attributes['deviceRegistryLocation']
+            # Get the registry id and device id from the attributes. These are
+            # automatically supplied by IoT, and allow the server to determine
+            # which device sent the event.
+            device_project_id = message.attributes['projectId']
+            device_registry_id = message.attributes['deviceRegistryId']
+            device_id = message.attributes['deviceId']
+            device_region = message.attributes['deviceRegistryLocation']
 
-      # Send the config to the device.
-      self._update_device_config(device_project_id, device_region,
-                                 device_registry_id, device_id, data)
+            # Send the config to the device.
+            self._update_device_config(device_project_id, device_region,
+                                       device_registry_id, device_id, data)
 
-      # Acknowledge the consumed message. This will ensure that they are not
-      # redelivered to this subscription.
-      message.ack()
+            # Acknowledge the consumed message. This will ensure that
+            # they are not redelivered to this subscription.
+            message.ack()
 
-    print 'Listening for messages on {}'.format(subscription_path)
-    subscriber.subscribe(subscription_path, callback=callback)
+        print 'Listening for messages on {}'.format(subscription_path)
+        subscriber.subscribe(subscription_path, callback=callback)
 
-    # The subscriber is non-blocking, so we must keep the main thread from
-    # exiting to allow it to process messages in the background.
-    while True:
-      time.sleep(60)
+        # The subscriber is non-blocking, so we must keep the main thread from
+        # exiting to allow it to process messages in the background.
+        while True:
+            time.sleep(60)
 
 
 def parse_command_line_args():
-  """Parse command line arguments."""
-  parser = argparse.ArgumentParser(
-      description='Example of Google Cloud IoT registry and device management.')
-  # Required arguments
-  parser.add_argument(
-      '--project_id', required=True, help='GCP cloud project name.')
-  parser.add_argument(
-      '--pubsub_subscription',
-      required=True,
-      help='Google Cloud Pub/Sub subscription name.')
-  parser.add_argument('--api_key', required=True, help='Your API key.')
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(
+        description='Example of Google Cloud IoT registry and device'
+                    ' management.')
+    # Required arguments
+    parser.add_argument(
+        '--project_id',
+        default=os.environ.get("GOOGLE_CLOUD_PROJECT"),
+        required=True,
+        help='GCP cloud project name.')
+    parser.add_argument(
+        '--pubsub_subscription',
+        required=True,
+        help='Google Cloud Pub/Sub subscription name.')
 
-  # Optional arguments
-  parser.add_argument(
-      '--service_account_json',
-      default='service_account.json',
-      help='Path to service account json file.')
+    # Optional arguments
+    parser.add_argument(
+        '--service_account_json',
+        default=os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"),
+        help='Path to service account json file.')
 
-  return parser.parse_args()
+    return parser.parse_args()
 
 
 def main():
-  args = parse_command_line_args()
+    args = parse_command_line_args()
 
-  server = Server(args.service_account_json, args.api_key)
-  server.run(args.project_id, args.pubsub_subscription)
+    server = Server(args.service_account_json)
+    server.run(args.project_id, args.pubsub_subscription)
 
 
 if __name__ == '__main__':
-  main()
+    main()
