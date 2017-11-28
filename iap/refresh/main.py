@@ -17,13 +17,10 @@ Sample application that demonstrates refreshing a session when using
 Identity Aware Proxy. This application is for App Engine Standard.
 """
 
-import os
-
-from flask import Flask
+import flask
 from google.appengine.api import users
-import jinja2
 
-app = Flask(__name__)
+app = flask.Flask(__name__)
 
 
 @app.route('/')
@@ -47,15 +44,10 @@ def index():
         'login_url': login_url,
     }
 
-    template = jinja_environment.get_template('index.html')
-    return template.render(template_values)
+    return flask.render_template('index.html', **template_values)
 
 
 # Fake status
 @app.route('/status')
 def status():
     return 'Success'
-
-
-jinja_environment = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
