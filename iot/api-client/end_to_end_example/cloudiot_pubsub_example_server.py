@@ -32,7 +32,6 @@ You can then run the example with
   $ python cloudiot_pubsub_example_server.py \
     --project_id=my-project-id \
     --pubsub_subscription=my-topic-subscription \
-    --api_key=YOUR_API_KEY
 """
 
 import argparse
@@ -90,11 +89,11 @@ class Server(object):
         if data['temperature'] < 0:
             # Turn off the fan.
             config_data = {'fan_on': False}
-            print 'Setting fan state for device', device_id, 'to off.'
+            print('Setting fan state for device', device_id, 'to off.')
         elif data['temperature'] > 10:
             # Turn on the fan
             config_data = {'fan_on': True}
-            print 'Setting fan state for device', device_id, 'to on.'
+            print('Setting fan state for device', device_id, 'to on.')
         else:
             # Temperature is OK, don't need to push a new config.
             return
@@ -122,8 +121,7 @@ class Server(object):
                            device_id))
 
         request = self._service.projects().locations().registries().devices(
-        ).modifyCloudToDeviceConfig(
-            name=device_name, body=body)
+        ).modifyCloudToDeviceConfig(name=device_name, body=body)
 
         # The http call for the device config change is thread-locked so
         # that there aren't competing threads simultaneously using the
@@ -135,7 +133,7 @@ class Server(object):
             # If the server responds with a HtppError, log it here, but
             # continue so that the message does not stay NACK'ed on the
             # pubsub channel.
-            print 'Error executing ModifyCloudToDeviceConfig: {}'.format(e)
+            print('Error executing ModifyCloudToDeviceConfig: {}'.format(e))
         finally:
             self._update_config_mutex.release()
 
@@ -145,8 +143,9 @@ class Server(object):
         """
 
         subscriber = pubsub.SubscriberClient()
-        subscription_path = subscriber.subscription_path(project_id,
-                                                         pubsub_subscription)
+        subscription_path = subscriber.subscription_path(
+                              project_id,
+                              pubsub_subscription)
 
         def callback(message):
             """Logic executed when a message is received from
@@ -155,8 +154,8 @@ class Server(object):
             try:
                 data = json.loads(message.data)
             except ValueError as e:
-                print 'Loading Payload ({}) threw an Exception: {}.'.format(
-                    message.data, e)
+                print('Loading Payload ({}) threw an Exception: {}.'.format(
+                    message.data, e))
                 message.ack()
                 return
 
@@ -169,17 +168,21 @@ class Server(object):
             device_region = message.attributes['deviceRegistryLocation']
 
             # Send the config to the device.
-            self._update_device_config(device_project_id, device_region,
-                                       device_registry_id, device_id, data)
+            self._update_device_config(
+              device_project_id,
+              device_region,
+              device_registry_id,
+              device_id,
+              data)
 
             # Acknowledge the consumed message. This will ensure that they
             # are not redelivered to this subscription.
             message.ack()
 
-        print 'Listening for messages on {}'.format(subscription_path)
+        print('Listening for messages on {}'.format(subscription_path))
         subscriber.subscribe(subscription_path, callback=callback)
 
-        # The subscriber is non-blocking, so we must keep the main thread from
+        # The subscriber is non-blocking, so keep the main thread from
         # exiting to allow it to process messages in the background.
         while True:
             time.sleep(60)
@@ -219,3 +222,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

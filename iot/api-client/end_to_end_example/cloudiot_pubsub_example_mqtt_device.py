@@ -15,6 +15,7 @@ This example represents a simple device with a temperature sensor and a fan
 (simulated with software). When the device's fan is turned on, its temperature
 decreases by one degree per second, and when the device's fan is turned off,
 its temperature increases by one degree per second.
+
 Every second, the device publishes its temperature reading to Google Cloud IoT
 Core. The server meanwhile receives these temperature readings, and decides
 whether to re-configure the device to turn its fan on or off. The server will
@@ -23,15 +24,18 @@ degrees, and to turn it off when the device's temperature is less than 0
 degrees. In a real system, one could use the cloud to compute the optimal
 thresholds for turning on and off the fan, but for illustrative purposes we use
 a simple threshold model.
+
 To connect the device you must have downloaded Google's CA root certificates,
 and a copy of your private key file. See cloud.google.com/iot for instructions
 on how to do this. Run this script with the corresponding algorithm flag.
+
   $ python cloudiot_pubsub_example_mqtt_device.py \
       --project_id=my-project-id \
       --registry_id=example-my-registry-id \
       --device_id=my-device-id \
       --private_key_file=rsa_private.pem \
       --algorithm=RS256
+
 With a single server, you can run multiple instances of the device with
 different device ids, and the server will distinguish them. Try creating a few
 devices and running them all at the same time.
@@ -56,8 +60,8 @@ def create_jwt(project_id, private_key_file, algorithm):
     }
     with open(private_key_file, 'r') as f:
         private_key = f.read()
-    print 'Creating JWT using {} from private key file {}'.format(
-        algorithm, private_key_file)
+    print('Creating JWT using {} from private key file {}'.format(
+        algorithm, private_key_file))
     return jwt.encode(token, private_key, algorithm=algorithm)
 
 
@@ -96,30 +100,30 @@ class Device(object):
 
     def on_connect(self, unused_client, unused_userdata, unused_flags, rc):
         """Callback for when a device connects."""
-        print 'Connection Result:', error_str(rc)
+        print('Connection Result:', error_str(rc))
         self.connected = True
 
     def on_disconnect(self, unused_client, unused_userdata, rc):
         """Callback for when a device disconnects."""
-        print 'Disconnected:', error_str(rc)
+        print('Disconnected:', error_str(rc))
         self.connected = False
 
     def on_publish(self, unused_client, unused_userdata, unused_mid):
         """Callback when the device receives a PUBACK from the MQTT bridge."""
-        print 'Published message acked.'
+        print('Published message acked.')
 
     def on_subscribe(self, unused_client, unused_userdata, unused_mid,
                      granted_qos):
         """Callback when the device receives a SUBACK from the MQTT bridge."""
-        print 'Subscribed: ', granted_qos
+        print('Subscribed: ', granted_qos)
         if granted_qos[0] == 128:
-            print 'Subscription failed.'
+            print('Subscription failed.')
 
     def on_message(self, unused_client, unused_userdata, message):
         """Callback when the device receives a message on a subscription."""
         payload = str(message.payload)
-        print "Received message '{}' on topic '{}' with Qos {}".format(
-            payload, message.topic, str(message.qos))
+        print('Received message \'{}\' on topic \'{}\' with Qos {}'.format(
+            payload, message.topic, str(message.qos)))
 
         # The device will receive its latest config when it subscribes to the
         # config topic. If there is no configuration for the device, the device
@@ -131,13 +135,13 @@ class Device(object):
         # the server sends a serialized JSON string.
         data = json.loads(payload)
         if data['fan_on'] != self.fan_on:
-            # If we're changing the state of the fan, print a message and
+            # If changing the state of the fan, print a message and
             # update the internal state.
             self.fan_on = data['fan_on']
             if self.fan_on:
-                print 'Fan turned on.'
+                print('Fan turned on.')
             else:
-                print 'Fan turned off.'
+                print('Fan turned off.')
 
 
 def parse_command_line_args():
@@ -186,7 +190,7 @@ def parse_command_line_args():
 def main():
     args = parse_command_line_args()
 
-    # Create our MQTT client and connect to Cloud IoT.
+    # Create the MQTT client and connect to Cloud IoT.
     client = mqtt.Client(
         client_id='projects/{}/locations/{}/registries/{}/devices/{}'.format(
             args.project_id,
@@ -195,8 +199,10 @@ def main():
             args.device_id))
     client.username_pw_set(
         username='unused',
-        password=create_jwt(args.project_id, args.private_key_file,
-                            args.algorithm))
+        password=create_jwt(
+            args.project_id,
+            args.private_key_file,
+            args.algorithm))
     client.tls_set(ca_certs=args.ca_certs)
 
     device = Device()
@@ -233,14 +239,15 @@ def main():
         # Report the device's temperature to the server by serializing it
         # as a JSON string.
         payload = json.dumps({'temperature': device.temperature})
-        print 'Publishing payload', payload
+        print('Publishing payload', payload)
         client.publish(mqtt_telemetry_topic, payload, qos=1)
         time.sleep(1)
 
     client.disconnect()
     client.loop_stop()
-    print 'Finished loop successfully. Goodbye!'
+    print('Finished loop successfully. Goodbye!')
 
 
 if __name__ == '__main__':
     main()
+
