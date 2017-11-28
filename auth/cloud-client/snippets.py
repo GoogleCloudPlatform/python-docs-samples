@@ -34,9 +34,7 @@ def explicit():
     from google.cloud import storage
 
     # Explicitly use service account credentials by specifying the private key
-    # file. All clients in google-cloud-python have this helper, see
-    # https://google-cloud-python.readthedocs.io/en/latest/core/modules.html
-    #   #google.cloud.client.Client.from_service_account_json
+    # file.
     storage_client = storage.Client.from_service_account_json(
         'service_account.json')
 
