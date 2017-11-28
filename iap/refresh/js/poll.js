@@ -12,57 +12,58 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-(function poll() {
-  setTimeout(function() {
-    var statusText = document.getElementById('status');
-    statusText.innerHTML = 'Polling';
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/status');
-    xhr.onload = function(){
-      if (xhr.status === 200) {
-        statusText.innerHTML = xhr.response;
-      } else
-      // [START handle_error]
-      if (xhr.status === 401) {
-        statusText.innerHTML = 'Login stale. <input type="button" value="Refresh" onclick="session_refresh_clicked();"/>';
-      }
-      // [END handle_error]
-      else {
-        statusText.innerHTML = xhr.statusText;
-      }
-      poll();
-    };
-    xhr.send(null);
-  }, 10000);
-})();
+"use strict";
+
+function getStatus() {
+  var statusElm = document.getElementById('status');
+  statusElm.innerHTML = 'Polling';
+  fetch('/status').then(function(response) {
+    if (response.ok) {
+      return response.text();
+    }
+    // [START handle_error]
+    if (response.status === 401) {
+      statusElm.innerHTML = 'Login stale. <input type="button" value="Refresh" onclick="sessionRefreshClicked();"/>';
+    }
+    // [END handle_error]
+    else {
+      statusElm.innerHTML = response.statusText;
+    }
+    throw new Error (response.statusText);
+  })
+  .then(function(text) {
+    statusElm.innerHTML = text;
+  })
+  .catch(function(statusText) {
+  });
+}
+
+getStatus();
+setInterval(getStatus, 10000); // 10 seconds
 
 // [START refresh_session]
-var iap_session_refresh_window = null;
+var iapSessionRefreshWindow = null;
 
-function session_refresh_clicked() {
-  if (iap_session_refresh_window == null) {
-    iap_session_refresh_window = window.open("/_gcp_iap/do_session_refresh");
-    window.setTimeout(check_session_refresh, 500);
+function sessionRefreshClicked() {
+  if (iapSessionRefreshWindow == null) {
+    iapSessionRefreshWindow = window.open("/_gcp_iap/do_session_refresh");
+    window.setTimeout(checkSessionRefresh, 500);
   }
   return false;
 }
 
-function check_session_refresh() {
-  if (iap_session_refresh_window != null && !iap_session_refresh_window.closed) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/favicon.ico');
-    xhr.onload = function(){
-      if (xhr.status === 401) {
-        // Session is still stale.
-        window.setTimeout(check_session_refresh, 500);
+function checkSessionRefresh() {
+  if (iapSessionRefreshWindow != null && !iapSessionRefreshWindow.closed) {
+    fetch('/favicon.ico').then(function(response) {
+      if (response.status === 401) {
+        window.setTimeout(checkSessionRefresh, 500);
       } else {
-        iap_session_refresh_window.close();
-        iap_session_refresh_window = null;
+        iapSessionRefreshWindow.close();
+        iapSessionRefreshWindow = null;
       }
-    };
-    xhr.send(null);
+    });
   } else {
-    iap_session_refresh_window = null;
+    iapSessionRefreshWindow = null;
   }
 }
 // [END refresh_session]
