@@ -63,6 +63,18 @@ To run this sample:
     $ python quickstart.py
 
 
+Handler
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python handler.py
+
+
 Snippets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
