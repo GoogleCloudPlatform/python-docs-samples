@@ -25,28 +25,20 @@ Usage:
 
 def run_quickstart():
     # [START videointelligence_quickstart]
-    import sys
-    import time
+    from google.cloud import videointelligence
 
-    from google.cloud import videointelligence_v1beta2
-    from google.cloud.videointelligence_v1beta2 import enums
-
-    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
-    features = [enums.Feature.LABEL_DETECTION]
-    operation = video_client.annotate_video('gs://demomaker/cat.mp4', features)
+    video_client = videointelligence.VideoIntelligenceServiceClient()
+    features = [videointelligence.enums.Feature.LABEL_DETECTION]
+    operation = video_client.annotate_video(
+        'gs://demomaker/cat.mp4', features=features)
     print('\nProcessing video for label annotations:')
 
-    while not operation.done():
-        sys.stdout.write('.')
-        sys.stdout.flush()
-        time.sleep(15)
-
+    result = operation.result(timeout=90)
     print('\nFinished processing.')
 
     # first result is retrieved because a single video was processed
-    results = operation.result().annotation_results[0]
-
-    for i, segment_label in enumerate(results.segment_label_annotations):
+    segment_labels = result.annotation_results[0].segment_label_annotations
+    for i, segment_label in enumerate(segment_labels):
         print('Video label description: {}'.format(
             segment_label.entity.description))
         for category_entity in segment_label.category_entities:
