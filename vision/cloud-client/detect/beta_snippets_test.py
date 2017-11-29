@@ -15,13 +15,13 @@
 import os
 
 from beta_snippets import (
-    web_entities_file,
-    web_entities_include_geo_results_file,
-    web_entities_include_geo_results_uri,
+    annotate,
     detect_document,
     detect_safe_search,
-    annotate,
     report,
+    web_entities_file,
+    web_entities_include_geo_results_file,
+    web_entities_include_geo_results_uri
 )
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
