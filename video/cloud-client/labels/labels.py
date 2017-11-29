@@ -30,36 +30,28 @@ Usage Example:
 # [START full_tutorial]
 # [START imports]
 import argparse
-import sys
-import time
 
-from google.cloud import videointelligence_v1beta2
-from google.cloud.videointelligence_v1beta2 import enums
+from google.cloud import videointelligence
 # [END imports]
 
 
 def analyze_labels(path):
     """ Detects labels given a GCS path. """
     # [START construct_request]
-    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
-    features = [enums.Feature.LABEL_DETECTION]
-    operation = video_client.annotate_video(path, features)
+    video_client = videointelligence.VideoIntelligenceServiceClient()
+    features = [videointelligence.enums.Feature.LABEL_DETECTION]
+    operation = video_client.annotate_video(path, features=features)
     # [END construct_request]
     print('\nProcessing video for label annotations:')
 
     # [START check_operation]
-    while not operation.done():
-        sys.stdout.write('.')
-        sys.stdout.flush()
-        time.sleep(20)
-
+    result = operation.result(timeout=90)
     print('\nFinished processing.')
     # [END check_operation]
 
     # [START parse_response]
-    results = operation.result().annotation_results[0]
-
-    for i, segment_label in enumerate(results.segment_label_annotations):
+    segment_labels = result.annotation_results[0].segment_label_annotations
+    for i, segment_label in enumerate(segment_labels):
         print('Video label description: {}'.format(
             segment_label.entity.description))
         for category_entity in segment_label.category_entities:
