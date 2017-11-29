@@ -30,37 +30,26 @@ Usage Examples:
 import argparse
 import base64
 import io
-import sys
-import time
 
-from google.cloud import videointelligence_v1beta2
-from google.cloud.videointelligence_v1beta2 import enums
-from google.cloud.videointelligence_v1beta2 import types
+from google.cloud import videointelligence
 
 
 def analyze_explicit_content(path):
     """ Detects explicit content from the GCS path to a video. """
-    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
-    features = [enums.Feature.EXPLICIT_CONTENT_DETECTION]
+    video_client = videointelligence.VideoIntelligenceServiceClient()
+    features = [videointelligence.enums.Feature.EXPLICIT_CONTENT_DETECTION]
 
-    operation = video_client.annotate_video(path, features)
+    operation = video_client.annotate_video(path, features=features)
     print('\nProcessing video for explicit content annotations:')
 
-    while not operation.done():
-        sys.stdout.write('.')
-        sys.stdout.flush()
-        time.sleep(15)
-
+    result = operation.result(timeout=90)
     print('\nFinished processing.')
-
-    # first result is retrieved because a single video was processed
-    explicit_annotation = (operation.result().annotation_results[0].
-                           explicit_annotation)
 
     likely_string = ("Unknown", "Very unlikely", "Unlikely", "Possible",
                      "Likely", "Very likely")
 
-    for frame in explicit_annotation.frames:
+    # first result is retrieved because a single video was processed
+    for frame in result.annotation_results[0].explicit_annotation.frames:
         frame_time = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
         print('Time: {}s'.format(frame_time))
         print('\tpornography: {}'.format(
@@ -69,28 +58,24 @@ def analyze_explicit_content(path):
 
 def analyze_faces(path):
     """ Detects faces given a GCS path. """
-    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
-    features = [enums.Feature.FACE_DETECTION]
+    video_client = videointelligence.VideoIntelligenceServiceClient()
+    features = [videointelligence.enums.Feature.FACE_DETECTION]
 
-    config = types.FaceDetectionConfig(include_bounding_boxes=True)
-    context = types.VideoContext(face_detection_config=config)
+    config = videointelligence.types.FaceDetectionConfig(
+        include_bounding_boxes=True)
+    context = videointelligence.types.VideoContext(
+        face_detection_config=config)
 
     operation = video_client.annotate_video(
-        path, features, video_context=context)
+        path, features=features, video_context=context)
     print('\nProcessing video for face annotations:')
 
-    while not operation.done():
-        sys.stdout.write('.')
-        sys.stdout.flush()
-        time.sleep(15)
-
+    result = operation.result(timeout=600)
     print('\nFinished processing.')
 
     # first result is retrieved because a single video was processed
-    face_annotations = (operation.result().annotation_results[0].
-                        face_annotations)
-
-    for face_id, face in enumerate(face_annotations):
+    faces = result.annotation_results[0].face_annotations
+    for face_id, face in enumerate(faces):
         print('Face {}'.format(face_id))
         print('Thumbnail size: {}'.format(len(face.thumbnail)))
 
@@ -119,29 +104,25 @@ def analyze_faces(path):
 
 def analyze_labels(path):
     """ Detects labels given a GCS path. """
-    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
-    features = [enums.Feature.LABEL_DETECTION]
+    video_client = videointelligence.VideoIntelligenceServiceClient()
+    features = [videointelligence.enums.Feature.LABEL_DETECTION]
 
-    config = types.LabelDetectionConfig(
-        label_detection_mode=enums.LabelDetectionMode.SHOT_AND_FRAME_MODE)
-    context = types.VideoContext(label_detection_config=config)
+    mode = videointelligence.enums.LabelDetectionMode.SHOT_AND_FRAME_MODE
+    config = videointelligence.types.LabelDetectionConfig(
+        label_detection_mode=mode)
+    context = videointelligence.types.VideoContext(
+        label_detection_config=config)
 
     operation = video_client.annotate_video(
-        path, features, video_context=context)
+        path, features=features, video_context=context)
     print('\nProcessing video for label annotations:')
 
-    while not operation.done():
-        sys.stdout.write('.')
-        sys.stdout.flush()
-        time.sleep(15)
-
+    result = operation.result(timeout=90)
     print('\nFinished processing.')
 
-    # first result is retrieved because a single video was processed
-    results = operation.result().annotation_results[0]
-
     # Process video/segment level label annotations
-    for i, segment_label in enumerate(results.segment_label_annotations):
+    segment_labels = result.annotation_results[0].segment_label_annotations
+    for i, segment_label in enumerate(segment_labels):
         print('Video label description: {}'.format(
             segment_label.entity.description))
         for category_entity in segment_label.category_entities:
@@ -160,7 +141,8 @@ def analyze_labels(path):
         print('\n')
 
     # Process shot level label annotations
-    for i, shot_label in enumerate(results.shot_label_annotations):
+    shot_labels = result.annotation_results[0].shot_label_annotations
+    for i, shot_label in enumerate(shot_labels):
         print('Shot label description: {}'.format(
             shot_label.entity.description))
         for category_entity in shot_label.category_entities:
@@ -179,7 +161,8 @@ def analyze_labels(path):
         print('\n')
 
     # Process frame level label annotations
-    for i, frame_label in enumerate(results.frame_label_annotations):
+    frame_labels = result.annotation_results[0].frame_label_annotations
+    for i, frame_label in enumerate(frame_labels):
         print('Frame label description: {}'.format(
             frame_label.entity.description))
         for category_entity in frame_label.category_entities:
@@ -198,28 +181,22 @@ def analyze_labels(path):
 
 def analyze_labels_file(path):
     """ Detects labels given a file path. """
-    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
-    features = [enums.Feature.LABEL_DETECTION]
+    video_client = videointelligence.VideoIntelligenceServiceClient()
+    features = [videointelligence.enums.Feature.LABEL_DETECTION]
 
     with io.open(path, "rb") as movie:
         content_base64 = base64.b64encode(movie.read())
 
     operation = video_client.annotate_video(
-        '', features, input_content=content_base64)
+        '', features=features, input_content=content_base64)
     print('\nProcessing video for label annotations:')
 
-    while not operation.done():
-        sys.stdout.write('.')
-        sys.stdout.flush()
-        time.sleep(15)
-
+    result = operation.result(timeout=90)
     print('\nFinished processing.')
 
-    # first result is retrieved because a single video was processed
-    results = operation.result().annotation_results[0]
-
     # Process video/segment level label annotations
-    for i, segment_label in enumerate(results.segment_label_annotations):
+    segment_labels = result.annotation_results[0].segment_label_annotations
+    for i, segment_label in enumerate(segment_labels):
         print('Video label description: {}'.format(
             segment_label.entity.description))
         for category_entity in segment_label.category_entities:
@@ -238,7 +215,8 @@ def analyze_labels_file(path):
         print('\n')
 
     # Process shot level label annotations
-    for i, shot_label in enumerate(results.shot_label_annotations):
+    shot_labels = result.annotation_results[0].shot_label_annotations
+    for i, shot_label in enumerate(shot_labels):
         print('Shot label description: {}'.format(
             shot_label.entity.description))
         for category_entity in shot_label.category_entities:
@@ -257,7 +235,8 @@ def analyze_labels_file(path):
         print('\n')
 
     # Process frame level label annotations
-    for i, frame_label in enumerate(results.frame_label_annotations):
+    frame_labels = result.annotation_results[0].frame_label_annotations
+    for i, frame_label in enumerate(frame_labels):
         print('Frame label description: {}'.format(
             frame_label.entity.description))
         for category_entity in frame_label.category_entities:
@@ -275,22 +254,16 @@ def analyze_labels_file(path):
 
 def analyze_shots(path):
     """ Detects camera shot changes. """
-    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
-    features = [enums.Feature.SHOT_CHANGE_DETECTION]
-    operation = video_client.annotate_video(path, features)
+    video_client = videointelligence.VideoIntelligenceServiceClient()
+    features = [videointelligence.enums.Feature.SHOT_CHANGE_DETECTION]
+    operation = video_client.annotate_video(path, features=features)
     print('\nProcessing video for shot change annotations:')
 
-    while not operation.done():
-        sys.stdout.write('.')
-        sys.stdout.flush()
-        time.sleep(15)
-
+    result = operation.result(timeout=90)
     print('\nFinished processing.')
 
     # first result is retrieved because a single video was processed
-    shots = operation.result().annotation_results[0].shot_annotations
-
-    for i, shot in enumerate(shots):
+    for i, shot in enumerate(result.annotation_results[0].shot_annotations):
         start_time = (shot.start_time_offset.seconds +
                       shot.start_time_offset.nanos / 1e9)
         end_time = (shot.end_time_offset.seconds +
