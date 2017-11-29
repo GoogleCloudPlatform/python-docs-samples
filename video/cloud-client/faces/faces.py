@@ -29,38 +29,29 @@ Usage Example:
 # [START full_tutorial]
 # [START imports]
 import argparse
-import sys
-import time
 
-from google.cloud import videointelligence_v1beta2
-from google.cloud.videointelligence_v1beta2 import enums
+from google.cloud import videointelligence
 # [END imports]
 
 
 def analyze_faces(path):
     # [START construct_request]
     """ Detects faces given a GCS path. """
-    video_client = videointelligence_v1beta2.VideoIntelligenceServiceClient()
-    features = [enums.Feature.FACE_DETECTION]
-    operation = video_client.annotate_video(path, features)
+    video_client = videointelligence.VideoIntelligenceServiceClient()
+    features = [videointelligence.enums.Feature.FACE_DETECTION]
+    operation = video_client.annotate_video(path, features=features)
     # [END construct_request]
     print('\nProcessing video for face annotations:')
 
     # [START check_operation]
-    while not operation.done():
-        sys.stdout.write('.')
-        sys.stdout.flush()
-        time.sleep(20)
-
+    result = operation.result(timeout=600)
     print('\nFinished processing.')
     # [END check_operation]
 
     # [START parse_response]
     # first result is retrieved because a single video was processed
-    face_annotations = (operation.result().annotation_results[0].
-                        face_annotations)
-
-    for face_id, face in enumerate(face_annotations):
+    faces = result.annotation_results[0].face_annotations
+    for face_id, face in enumerate(faces):
         print('Thumbnail size: {}'.format(len(face.thumbnail)))
 
         for segment_id, segment in enumerate(face.segments):
