@@ -1,3 +1,4 @@
+apt-get -y update
 apt-get -y install git
 apt-get -y install virtualenv
 git clone https://github.com/GoogleCloudPlatform/python-docs-samples
