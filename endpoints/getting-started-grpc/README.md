@@ -104,13 +104,15 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
 
     ```bash
     docker run --detach --name=esp \
-        -p 80:9000 \
+        --publish=8000:8000 \
+        --publish=9000:9000 \
         --link=grpc-hello:grpc-hello \
         gcr.io/endpoints-release/endpoints-runtime:1 \
-        -s ${SERVICE_NAME} \
-        -v ${SERVICE_CONFIG_ID} \
-        -P 9000 \
-        -a grpc://grpc-hello:50051
+        --service ${SERVICE_NAME} \
+        --version ${SERVICE_CONFIG_ID} \
+        --http_port=8000 \
+        --http2_port=9000 \
+        --backend=grpc://grpc-hello:50051
     ```
 
 1. Back on your local machine, get the external IP of your GCE instance:
