@@ -41,8 +41,8 @@ def explicit():
         'service_account.json')
 
     # Make an authenticated API request
-    buckets = list(bigquery_client.list_datasets())
-    print(buckets)
+    datasets = list(bigquery_client.list_datasets())
+    print(datasets)
 
 
 if __name__ == '__main__':
