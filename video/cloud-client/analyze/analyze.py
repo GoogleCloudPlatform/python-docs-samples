@@ -28,7 +28,6 @@ Usage Examples:
 """
 
 import argparse
-import base64
 import io
 
 from google.cloud import videointelligence
@@ -180,15 +179,15 @@ def analyze_labels(path):
 
 
 def analyze_labels_file(path):
-    """ Detects labels given a file path. """
+    """Detect labels given a file path."""
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.enums.Feature.LABEL_DETECTION]
 
-    with io.open(path, "rb") as movie:
-        content_base64 = base64.b64encode(movie.read())
+    with io.open(path, 'rb') as movie:
+        input_content = movie.read()
 
     operation = video_client.annotate_video(
-        '', features=features, input_content=content_base64)
+        '', features=features, input_content=input_content)
     print('\nProcessing video for label annotations:')
 
     result = operation.result(timeout=90)
