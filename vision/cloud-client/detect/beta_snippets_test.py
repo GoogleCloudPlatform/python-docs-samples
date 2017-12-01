@@ -15,12 +15,11 @@
 import os
 
 from beta_snippets import (
-    annotate,
     detect_document,
     detect_safe_search,
-    report,
-    web_entities_file,
-    web_entities_include_geo_results_file,
+    detect_web,
+    web_entities,
+    web_entities_include_geo_results,
     web_entities_include_geo_results_uri
 )
 
@@ -29,7 +28,7 @@ BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 def test_file_with_geo(capsys):
     path = 'resources/city.jpg'
-    web_entities_include_geo_results_file(path)
+    web_entities_include_geo_results(path)
     out, _ = capsys.readouterr()
 
     assert 'Zepra' in out
@@ -45,7 +44,7 @@ def test_gcsuri_with_geo(capsys):
 
 def test_file_without_geo(capsys):
     path = 'resources/city.jpg'
-    web_entities_file(path)
+    web_entities(path)
     out, _ = capsys.readouterr()
 
     assert 'Zepra' not in out
@@ -70,7 +69,7 @@ def test_safe_search(capsys):
 
 def test_detect_file(capsys):
     path = 'resources/landmark.jpg'
-    report(annotate(path))
+    detect_web(path)
     out, _ = capsys.readouterr()
 
     assert 'Description: Palace of Fine Arts Theatre' in out
