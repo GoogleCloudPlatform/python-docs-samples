@@ -362,7 +362,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.command == 'web-entities':
-        web_entities_include_geo_results_file(args.path)
+        web_entities_include_geo_results(args.path)
     elif args.command == 'web-entities-uri':
         web_entities_include_geo_results_uri(args.uri)
     elif args.command == 'detect-document':
