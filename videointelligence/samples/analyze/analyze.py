@@ -187,7 +187,7 @@ def analyze_labels_file(path):
         input_content = movie.read()
 
     operation = video_client.annotate_video(
-        '', features=features, input_content=input_content)
+        features=features, input_content=input_content)
     print('\nProcessing video for label annotations:')
 
     result = operation.result(timeout=90)
