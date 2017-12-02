@@ -15,7 +15,7 @@
 import simple_app
 
 
-def test_query_shakespeare(capsys):
-    simple_app.query_shakespeare()
+def test_query_stackoverflow(capsys):
+    simple_app.query_stackoverflow()
     out, _ = capsys.readouterr()
-    assert 'hamlet' in out
+    assert 'views' in out
