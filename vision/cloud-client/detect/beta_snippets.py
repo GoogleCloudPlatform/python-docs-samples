@@ -57,7 +57,7 @@ def detect_document(path):
                 block_symbols.extend(word.symbols)
                 word_text = ''
                 for symbol in word.symbols:
-                    word_text = unicode(word_text) + unicode(symbol.text)
+                    word_text = word_text + symbol.text
                     print(u'\tSymbol text: {} (confidence: {})'.format(
                         symbol.text, symbol.confidence))
                 print(u'Word text: {} (confidence: {})\n'.format(
@@ -94,7 +94,7 @@ def detect_document_uri(uri):
                 block_symbols.extend(word.symbols)
                 word_text = ''
                 for symbol in word.symbols:
-                    word_text = unicode(word_text) + unicode(symbol.text)
+                    word_text = word_text + symbol.text
                     print(u'\tSymbol text: {} (confidence: {})'.format(
                         symbol.text, symbol.confidence))
                 print(u'Word text: {} (confidence: {})\n'.format(
