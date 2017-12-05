@@ -70,7 +70,8 @@ class Server(object):
             SERVICE_NAME,
             API_VERSION,
             discoveryServiceUrl=discovery_url,
-            credentials=credentials)
+            credentials=credentials,
+            cache_discovery=False)
 
         # Used to serialize the calls to the
         # modifyCloudToDeviceConfig REST method. This is needed

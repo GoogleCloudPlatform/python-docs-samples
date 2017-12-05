@@ -152,7 +152,7 @@ def parse_command_line_args():
         '--project_id',
         default=os.environ.get("GOOGLE_CLOUD_PROJECT"),
         required=True,
-        help='GCP cloud project name')
+        help='GCP cloud project name.')
     parser.add_argument(
         '--registry_id', required=True, help='Cloud IoT registry id')
     parser.add_argument(
@@ -183,6 +183,11 @@ def parse_command_line_args():
         help='MQTT bridge hostname.')
     parser.add_argument(
         '--mqtt_bridge_port', default=8883, help='MQTT bridge port.')
+    parser.add_argument(
+        '--message_type', choices=('event', 'state'),
+        default='event',
+        help=('Indicates whether the message to be published is a '
+              'telemetry event or a device state message.'))
 
     return parser.parse_args()
 
@@ -224,11 +229,16 @@ def main():
     # This is the topic that the device will receive configuration updates on.
     mqtt_config_topic = '/devices/{}/config'.format(args.device_id)
 
+    # This is the topic that the device will send its state to.
+    mqtt_state_topic = '/devices/{}/state'.format(args.device_id)
+
     # Wait up to 5 seconds for the device to connect.
     device.wait_for_connection(5)
 
     # Subscribe to the config topic.
     client.subscribe(mqtt_config_topic, qos=1)
+
+    client.publish(mqtt_state_topic, 'received config!')
 
     # Update and publish temperature readings at a rate of one per second.
     for _ in range(args.num_messages):
@@ -241,6 +251,7 @@ def main():
         payload = json.dumps({'temperature': device.temperature})
         print('Publishing payload', payload)
         client.publish(mqtt_telemetry_topic, payload, qos=1)
+        # Send events every second.
         time.sleep(1)
 
     client.disconnect()
