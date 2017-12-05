@@ -87,6 +87,13 @@ def on_publish(unused_client, unused_userdata, unused_mid):
     print('on_publish')
 
 
+def on_message(unused_client, unused_userdata, message):
+    """Callback when the device receives a message on a subscription."""
+    payload = str(message.payload)
+    print('Received message \'{}\' on topic \'{}\' with Qos {}'.format(
+            payload, message.topic, str(message.qos)))
+
+
 def get_client(
         project_id, cloud_region, registry_id, device_id, private_key_file,
         algorithm, ca_certs, mqtt_bridge_hostname, mqtt_bridge_port):
@@ -116,9 +123,16 @@ def get_client(
     client.on_connect = on_connect
     client.on_publish = on_publish
     client.on_disconnect = on_disconnect
+    client.on_message = on_message
 
     # Connect to the Google MQTT bridge.
     client.connect(mqtt_bridge_hostname, mqtt_bridge_port)
+
+    # This is the topic that the device will receive configuration updates on.
+    mqtt_config_topic = '/devices/{}/config'.format(device_id)
+
+    # Subscribe to the config topic.
+    client.subscribe(mqtt_config_topic, qos=1)
 
     # Start the network loop.
     client.loop_start()
