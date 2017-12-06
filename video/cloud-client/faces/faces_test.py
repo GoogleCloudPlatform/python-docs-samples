@@ -24,13 +24,10 @@ import faces
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 FACES_FILE_PATH = '/video/googlework.mp4'
 
-
+@pytest.mark.xfail
 @pytest.mark.slow
 def test_work_video_faces(capsys):
-    try:
-        faces.analyze_faces(
-            'gs://{}{}'.format(BUCKET, FACES_FILE_PATH))
-        out, _ = capsys.readouterr()
-        assert 'Thumbnail' in out
-    except:
-        pytest.xfail('Feature FACE_DETECTION may not have been enabled in the project.')
+    faces.analyze_faces(
+        'gs://{}{}'.format(BUCKET, FACES_FILE_PATH))
+    out, _ = capsys.readouterr()
+    assert 'Thumbnail' in out
