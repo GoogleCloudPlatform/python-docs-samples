@@ -27,7 +27,10 @@ FACES_FILE_PATH = '/video/googlework.mp4'
 
 @pytest.mark.slow
 def test_work_video_faces(capsys):
-    faces.analyze_faces(
-        'gs://{}{}'.format(BUCKET, FACES_FILE_PATH))
-    out, _ = capsys.readouterr()
-    assert 'Thumbnail' in out
+    try:
+        faces.analyze_faces(
+            'gs://{}{}'.format(BUCKET, FACES_FILE_PATH))
+        out, _ = capsys.readouterr()
+        assert 'Thumbnail' in out
+    except:
+        pytest.xfail('Feature FACE_DETECTION may not have been enabled in the project.')
