@@ -24,6 +24,7 @@ import faces
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 FACES_FILE_PATH = '/video/googlework.mp4'
 
+
 @pytest.mark.xfail
 @pytest.mark.slow
 def test_work_video_faces(capsys):
