@@ -97,4 +97,4 @@ def test_main(tmpdir, capsys):
 
     stdout, _ = capsys.readouterr()
 
-    assert re.search(r'google was found with count', stdout)
+    assert re.search(r'.* found with count', stdout)
