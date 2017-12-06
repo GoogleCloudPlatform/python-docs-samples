@@ -25,7 +25,7 @@ BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 FACES_FILE_PATH = '/video/googlework.mp4'
 
 
-@pytest.mark.xfail
+@pytest.mark.xfail(reason = 'Feature FACE_DETECTION is currently only visible to some projects.')
 @pytest.mark.slow
 def test_work_video_faces(capsys):
     faces.analyze_faces(
