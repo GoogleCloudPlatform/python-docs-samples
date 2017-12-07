@@ -17,10 +17,9 @@ import time
 
 import cloudiot_http_example
 from google.cloud import pubsub
-import pytest
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager')) #noqa
 import manager
-
+import pytest
 
 cloud_region = 'us-central1'
 device_id_template = 'test-device-{}'
