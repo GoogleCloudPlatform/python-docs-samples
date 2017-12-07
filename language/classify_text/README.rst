@@ -3,6 +3,10 @@
 Google Cloud Natural Language API Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=language/classify_text/README.rst
+
+
 This directory contains samples for Google Cloud Natural Language API. The `Google Cloud Natural Language API`_ provides natural language understanding technologies to developers.
 
 This tutorial demostrates how to use the `classify_text` method to classify content category of text files, and use the result to compare texts by their similarity to each other.  See the `tutorial page`_ for details about this sample.
@@ -21,39 +25,20 @@ Setup
 Authentication
 ++++++++++++++
 
-Authentication is typically done through `Application Default Credentials`_,
-which means you do not have to change the code to authenticate as long as
-your environment has credentials. You have a few options for setting up
-authentication:
+This sample requires you to have authentication setup. Refer to the
+`Authentication Getting Started Guide`_ for instructions on setting up
+credentials for applications.
 
-#. When running locally, use the `Google Cloud SDK`_
-
-    .. code-block:: bash
-
-        gcloud auth application-default login
-
-
-#. When running on App Engine or Compute Engine, credentials are already
-   set-up. However, you may need to configure your Compute Engine instance
-   with `additional scopes`_.
-
-#. You can create a `Service Account key file`_. This file can be used to
-   authenticate to Google Cloud Platform services from any environment. To use
-   the file, set the ``GOOGLE_APPLICATION_CREDENTIALS`` environment variable to
-   the path to the key file, for example:
-
-    .. code-block:: bash
-
-        export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
-
-.. _Application Default Credentials: https://cloud.google.com/docs/authentication#getting_credentials_for_server-centric_flow
-.. _additional scopes: https://cloud.google.com/compute/docs/authentication#using
-.. _Service Account key file: https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount
+.. _Authentication Getting Started Guide:
+    https://cloud.google.com/docs/authentication/getting-started
 
 Install Dependencies
 ++++++++++++++++++++
 
-#. Install `pip`_ and `virtualenv`_ if you do not already have them.
+#. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
+
+ .. _Python Development Environment Setup Guide:
+     https://cloud.google.com/python/setup
 
 #. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
 
@@ -77,6 +62,10 @@ Samples
 Classify Text Tutorial
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=language/classify_text/classify_text_tutorial.py;language/classify_text/README.rst
+
+
 
 
 To run this sample:
@@ -87,9 +76,13 @@ To run this sample:
 
     usage: classify_text_tutorial.py [-h]
                                      {classify,index,query,query-category} ...
-    
-    Using the classify_text method to cluster texts.
-    
+
+    Using the classify_text method to find content categories of text files,
+    Then use the content category labels to compare text similarity.
+
+    For more information, see the tutorial page at
+    https://cloud.google.com/natural-language/docs/classify-text-tutorial.
+
     positional arguments:
       {classify,index,query,query-category}
         classify            Classify the input text into categories.
@@ -101,9 +94,10 @@ To run this sample:
                             the query label. The list of all available labels:
                             https://cloud.google.com/natural-
                             language/docs/categories
-    
+
     optional arguments:
       -h, --help            show this help message and exit
+
 
 
 

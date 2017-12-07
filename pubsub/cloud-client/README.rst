@@ -3,6 +3,10 @@
 Google Cloud Pub/Sub Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=pubsub/cloud-client/README.rst
+
+
 This directory contains samples for Google Cloud Pub/Sub. `Google Cloud Pub/Sub`_ is a fully-managed real-time messaging service that allows you to send and receive messages between independent applications.
 
 
@@ -54,6 +58,10 @@ Samples
 Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=pubsub/cloud-client/quickstart.py;pubsub/cloud-client/README.rst
+
+
 
 
 To run this sample:
@@ -65,6 +73,10 @@ To run this sample:
 
 Publisher
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=pubsub/cloud-client/publisher.py;pubsub/cloud-client/README.rst
+
 
 
 
@@ -78,13 +90,13 @@ To run this sample:
                         project
                         {list,create,delete,publish,publish-with-futures,publish-with-batch-settings}
                         ...
-    
+
     This application demonstrates how to perform basic operations on topics
     with the Cloud Pub/Sub API.
-    
+
     For more information, see the README.md under /pubsub and the documentation
     at https://cloud.google.com/pubsub/docs.
-    
+
     positional arguments:
       project               Your Google Cloud project ID
       {list,create,delete,publish,publish-with-futures,publish-with-batch-settings}
@@ -98,13 +110,18 @@ To run this sample:
         publish-with-batch-settings
                             Publishes multiple messages to a Pub/Sub topic with
                             batch settings.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
 
 
+
 Subscribers
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=pubsub/cloud-client/subscriber.py;pubsub/cloud-client/README.rst
+
 
 
 
@@ -115,32 +132,39 @@ To run this sample:
     $ python subscriber.py
 
     usage: subscriber.py [-h]
-                         project {list,create,delete,receive,receive-flow-control}
+                         project
+                         {list_in_topic,list_in_project,create,delete,receive,receive-flow-control}
                          ...
-    
+
     This application demonstrates how to perform basic operations on
     subscriptions with the Cloud Pub/Sub API.
-    
+
     For more information, see the README.md under /pubsub and the documentation
     at https://cloud.google.com/pubsub/docs.
-    
+
     positional arguments:
       project               Your Google Cloud project ID
-      {list,create,delete,receive,receive-flow-control}
-        list                Lists all subscriptions for a given topic.
+      {list_in_topic,list_in_project,create,delete,receive,receive-flow-control}
+        list_in_topic       Lists all subscriptions for a given topic.
+        list_in_project     Lists all subscriptions in the current project.
         create              Create a new pull subscription on the given topic.
         delete              Deletes an existing Pub/Sub topic.
         receive             Receives messages from a pull subscription.
         receive-flow-control
                             Receives messages from a pull subscription with flow
                             control.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
 
 
+
 Identity and Access Management
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=pubsub/cloud-client/iam.py;pubsub/cloud-client/README.rst
+
 
 
 
@@ -154,13 +178,13 @@ To run this sample:
                   project
                   {get-topic-policy,get-subscription-policy,set-topic-policy,set-subscription-policy,check-topic-permissions,check-subscription-permissions}
                   ...
-    
+
     This application demonstrates how to perform basic operations on IAM
     policies with the Cloud Pub/Sub API.
-    
+
     For more information, see the README.md under /pubsub and the documentation
     at https://cloud.google.com/pubsub/docs.
-    
+
     positional arguments:
       project               Your Google Cloud project ID
       {get-topic-policy,get-subscription-policy,set-topic-policy,set-subscription-policy,check-topic-permissions,check-subscription-permissions}
@@ -176,9 +200,10 @@ To run this sample:
         check-subscription-permissions
                             Checks to which permissions are available on the given
                             subscription.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
+
 
 
 

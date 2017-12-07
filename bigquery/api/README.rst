@@ -3,6 +3,10 @@
 Google BigQuery Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/api/README.rst
+
+
 This directory contains samples for Google BigQuery. `Google BigQuery`_ is Google's fully managed, petabyte scale, low cost analytics data warehouse. BigQuery is NoOps—there is no infrastructure to manage and you don't need a database administrator—so you can focus on analyzing data to find meaningful insights, use familiar SQL, and take advantage of our pay-as-you-go model.
 
 
@@ -54,6 +58,10 @@ Samples
 Getting started
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/api/getting_started.py;bigquery/api/README.rst
+
+
 
 
 To run this sample:
@@ -63,27 +71,32 @@ To run this sample:
     $ python getting_started.py
 
     usage: getting_started.py [-h] project_id
-    
+
     Command-line application that demonstrates basic BigQuery API usage.
-    
+
     This sample queries a public shakespeare dataset and displays the 10 of
     Shakespeare's works with the greatest number of distinct words.
-    
+
     This sample is used on this page:
-    
+
         https://cloud.google.com/bigquery/bigquery-api-quickstart
-    
+
     For more information, see the README.rst.
-    
+
     positional arguments:
       project_id  Your Google Cloud Project ID.
-    
+
     optional arguments:
       -h, --help  show this help message and exit
 
 
+
 Sync query
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/api/sync_query.py;bigquery/api/README.rst
+
 
 
 
@@ -95,15 +108,15 @@ To run this sample:
 
     usage: sync_query.py [-h] [-t TIMEOUT] [-r NUM_RETRIES] [-l USE_LEGACY_SQL]
                          project_id query
-    
+
     Command-line application to perform an synchronous query in BigQuery.
-    
+
     For more information, see the README.rst.
-    
+
     positional arguments:
       project_id            Your Google Cloud project ID.
       query                 BigQuery SQL Query.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
       -t TIMEOUT, --timeout TIMEOUT
@@ -115,8 +128,13 @@ To run this sample:
                             syntax.
 
 
+
 Async query
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/api/async_query.py;bigquery/api/README.rst
+
 
 
 
@@ -129,15 +147,15 @@ To run this sample:
     usage: async_query.py [-h] [-b] [-r NUM_RETRIES] [-p POLL_INTERVAL]
                           [-l USE_LEGACY_SQL]
                           project_id query
-    
+
     Command-line application to perform an asynchronous query in BigQuery.
-    
+
     For more information, see the README.rst.
-    
+
     positional arguments:
       project_id            Your Google Cloud project ID.
       query                 BigQuery SQL Query.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
       -b, --batch           Run query in batch mode.
@@ -150,8 +168,13 @@ To run this sample:
                             syntax.
 
 
+
 Listing datasets and projects
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/api/list_datasets_projects.py;bigquery/api/README.rst
+
 
 
 
@@ -162,24 +185,29 @@ To run this sample:
     $ python list_datasets_projects.py
 
     usage: list_datasets_projects.py [-h] project_id
-    
+
     Command-line application to list all projects and datasets in BigQuery.
-    
+
     This sample is used on this page:
-    
+
         https://cloud.google.com/bigquery/docs/managing_jobs_datasets_projects
-    
+
     For more information, see the README.rst.
-    
+
     positional arguments:
       project_id  the project id to list.
-    
+
     optional arguments:
       -h, --help  show this help message and exit
 
 
+
 Load data by POST
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/api/load_data_by_post.py;bigquery/api/README.rst
+
 
 
 
@@ -192,28 +220,33 @@ To run this sample:
     usage: load_data_by_post.py [-h]
                                 project_id dataset_id table_name schema_file
                                 data_file
-    
+
     Command-line application that loads data into BigQuery via HTTP POST.
-    
+
     This sample is used on this page:
-    
+
         https://cloud.google.com/bigquery/loading-data-into-bigquery
-    
+
     For more information, see the README.rst.
-    
+
     positional arguments:
       project_id   Your Google Cloud project ID.
       dataset_id   A BigQuery dataset ID.
       table_name   Name of the table to load data into.
       schema_file  Path to a schema file describing the table schema.
       data_file    Path to the data file.
-    
+
     optional arguments:
       -h, --help   show this help message and exit
 
 
+
 Load data from CSV
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/api/load_data_from_csv.py;bigquery/api/README.rst
+
 
 
 
@@ -226,16 +259,16 @@ To run this sample:
     usage: load_data_from_csv.py [-h] [-p POLL_INTERVAL] [-r NUM_RETRIES]
                                  project_id dataset_id table_name schema_file
                                  data_path
-    
+
     Command-line application that loads data into BigQuery from a CSV file in
     Google Cloud Storage.
-    
+
     This sample is used on this page:
-    
+
         https://cloud.google.com/bigquery/loading-data-into-bigquery#loaddatagcs
-    
+
     For more information, see the README.rst.
-    
+
     positional arguments:
       project_id            Your Google Cloud project ID.
       dataset_id            A BigQuery dataset ID.
@@ -243,7 +276,7 @@ To run this sample:
       schema_file           Path to a schema file describing the table schema.
       data_path             Google Cloud Storage path to the CSV data, for
                             example: gs://mybucket/in.csv
-    
+
     optional arguments:
       -h, --help            show this help message and exit
       -p POLL_INTERVAL, --poll_interval POLL_INTERVAL
@@ -252,8 +285,13 @@ To run this sample:
                             Number of times to retry in case of 500 error.
 
 
+
 Load streaming data
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/api/streaming.py;bigquery/api/README.rst
+
 
 
 
@@ -265,20 +303,20 @@ To run this sample:
 
     usage: streaming.py [-h] [-p POLL_INTERVAL] [-r NUM_RETRIES]
                         project_id dataset_id table_name
-    
+
     Command-line application that streams data into BigQuery.
-    
+
     This sample is used on this page:
-    
+
         https://cloud.google.com/bigquery/streaming-data-into-bigquery
-    
+
     For more information, see the README.rst.
-    
+
     positional arguments:
       project_id            Your Google Cloud project ID.
       dataset_id            A BigQuery dataset ID.
       table_name            Name of the table to load data into.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
       -p POLL_INTERVAL, --poll_interval POLL_INTERVAL
@@ -287,8 +325,13 @@ To run this sample:
                             Number of times to retry in case of 500 error.
 
 
+
 Export data to Cloud Storage
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/api/export_data_to_cloud_storage.py;bigquery/api/README.rst
+
 
 
 
@@ -302,23 +345,23 @@ To run this sample:
                                            [-r NUM_RETRIES] [-z]
                                            [-f {CSV,NEWLINE_DELIMITED_JSON,AVRO}]
                                            project_id dataset_id table_id gcs_path
-    
+
     Command-line application to export a table from BigQuery to Google Cloud
     Storage.
-    
+
     This sample is used on this page:
-    
+
         https://cloud.google.com/bigquery/exporting-data-from-bigquery
-    
+
     For more information, see the README.rst.
-    
+
     positional arguments:
       project_id            Your Google Cloud project ID.
       dataset_id            BigQuery dataset to export.
       table_id              BigQuery table to export.
       gcs_path              Google Cloud Storage path to store the exported data.
                             For example, gs://mybucket/mydata.csv
-    
+
     optional arguments:
       -h, --help            show this help message and exit
       -p POLL_INTERVAL, --poll_interval POLL_INTERVAL
@@ -330,8 +373,13 @@ To run this sample:
                             output file format
 
 
+
 User auth with an installed app
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/api/installed_app.py;bigquery/api/README.rst
+
 
 
 
@@ -346,19 +394,19 @@ To run this sample:
                             [--auth_host_port [AUTH_HOST_PORT [AUTH_HOST_PORT ...]]]
                             [--logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                             project_id
-    
+
     Command-line application that demonstrates using BigQuery with credentials
     obtained from an installed app.
-    
+
     This sample is used on this page:
-    
+
         https://cloud.google.com/bigquery/authentication
-    
+
     For more information, see the README.rst.
-    
+
     positional arguments:
       project_id            Your Google Cloud Project ID.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
       --auth_host_name AUTH_HOST_NAME
@@ -369,6 +417,7 @@ To run this sample:
                             Port web server should listen on.
       --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                             Set the logging level of detail.
+
 
 
 

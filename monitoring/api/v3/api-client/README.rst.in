@@ -23,3 +23,5 @@ samples:
 - name: Custom metrics
   file: custom_metric.py
   show_help: true
+
+folder: monitoring/api/v3/api-client

@@ -3,6 +3,10 @@
 Google Cloud Vision API Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=vision/cloud-client/detect/README.rst
+
+
 This directory contains samples for Google Cloud Vision API. `Google Cloud Vision API`_ allows developers to easily integrate vision detection features within applications, including image labeling, face and landmark detection, optical character recognition (OCR), and tagging of explicit content.
 
 - See the `migration guide`_ for information about migrating to Python client library v0.25.1.
@@ -58,6 +62,10 @@ Samples
 Detect
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=vision/cloud-client/detect/detect.py;vision/cloud-client/detect/README.rst
+
+
 
 
 To run this sample:
@@ -69,20 +77,20 @@ To run this sample:
     usage: detect.py [-h]
                      {faces,faces-uri,labels,labels-uri,landmarks,landmarks-uri,text,text-uri,logos,logos-uri,safe-search,safe-search-uri,properties,properties-uri,web,web-uri,crophints,crophints-uri,document,document-uri}
                      ...
-    
+
     This application demonstrates how to perform basic operations with the
     Google Cloud Vision API.
-    
+
     Example Usage:
     python detect.py text ./resources/wakeupcat.jpg
     python detect.py labels ./resources/landmark.jpg
     python detect.py web ./resources/landmark.jpg
     python detect.py web-uri http://wheresgus.com/dog.JPG
     python detect.py faces-uri gs://your-bucket/file.jpg
-    
+
     For more information, the documentation at
     https://cloud.google.com/vision/docs.
-    
+
     positional arguments:
       {faces,faces-uri,labels,labels-uri,landmarks,landmarks-uri,text,text-uri,logos,logos-uri,safe-search,safe-search-uri,properties,properties-uri,web,web-uri,crophints,crophints-uri,document,document-uri}
         faces               Detects faces in an image.
@@ -115,9 +123,10 @@ To run this sample:
         document            Detects document features in an image.
         document-uri        Detects document features in the file located in
                             Google Cloud Storage.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
+
 
 
 

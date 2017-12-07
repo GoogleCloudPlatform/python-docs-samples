@@ -29,3 +29,5 @@ samples:
   show_help: True
 
 cloud_client_library: false
+
+folder: iot/api-client/http_example

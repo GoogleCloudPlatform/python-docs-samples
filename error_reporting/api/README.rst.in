@@ -17,3 +17,5 @@ samples:
   file: report_exception.py
 
 cloud_client_library: true
+
+folder: error_reporting/api

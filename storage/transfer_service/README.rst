@@ -3,6 +3,10 @@
 Google Cloud Storage Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/transfer_service/README.rst
+
+
 This directory contains samples for Google Cloud Storage. `Google Cloud Storage`_ allows world-wide storage and retrieval of any amount of data at any time.
 
 
@@ -55,6 +59,10 @@ Samples
 Transfer to GCS Nearline
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/transfer_service/nearline_request.py;storage/transfer_service/README.rst
+
+
 
 
 To run this sample:
@@ -66,16 +74,16 @@ To run this sample:
     usage: nearline_request.py [-h]
                                description project_id date time source_bucket
                                sink_bucket
-    
+
     Command-line sample that creates a one-time transfer from Google Cloud
     Storage standard class to the Nearline storage class."
-    
+
     This sample is used on this page:
-    
+
         https://cloud.google.com/storage/transfer/create-transfer
-    
+
     For more information, see README.md.
-    
+
     positional arguments:
       description    Transfer description.
       project_id     Your Google Cloud project ID.
@@ -83,13 +91,18 @@ To run this sample:
       time           Time (24hr) HH:MM.
       source_bucket  Source bucket name.
       sink_bucket    Sink bucket name.
-    
+
     optional arguments:
       -h, --help     show this help message and exit
 
 
+
 Transfer from AWS
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/transfer_service/aws_request.py;storage/transfer_service/README.rst
+
 
 
 
@@ -102,16 +115,16 @@ To run this sample:
     usage: aws_request.py [-h]
                           description project_id date time source_bucket
                           access_key secret_access_key sink_bucket
-    
+
     Command-line sample that creates a one-time transfer from Amazon S3 to
     Google Cloud Storage.
-    
+
     This sample is used on this page:
-    
+
         https://cloud.google.com/storage/transfer/create-transfer
-    
+
     For more information, see README.md.
-    
+
     positional arguments:
       description        Transfer description.
       project_id         Your Google Cloud project ID.
@@ -121,13 +134,18 @@ To run this sample:
       access_key         Your AWS access key id.
       secret_access_key  Your AWS secret access key.
       sink_bucket        Sink bucket name.
-    
+
     optional arguments:
       -h, --help         show this help message and exit
 
 
+
 Check transfer status
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/transfer_service/transfer_check.py;storage/transfer_service/README.rst
+
 
 
 
@@ -138,21 +156,22 @@ To run this sample:
     $ python transfer_check.py
 
     usage: transfer_check.py [-h] project_id job_name
-    
+
     Command-line sample that checks the status of an in-process transfer.
-    
+
     This sample is used on this page:
-    
+
         https://cloud.google.com/storage/transfer/create-transfer
-    
+
     For more information, see README.md.
-    
+
     positional arguments:
       project_id  Your Google Cloud project ID.
       job_name    Your job name.
-    
+
     optional arguments:
       -h, --help  show this help message and exit
+
 
 
 

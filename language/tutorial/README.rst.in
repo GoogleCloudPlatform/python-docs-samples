@@ -18,3 +18,5 @@ samples:
 - name: Language tutorial
   file: tutorial.py
   show_help: true
+
+folder: language/tutorial

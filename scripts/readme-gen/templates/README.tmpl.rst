@@ -5,6 +5,10 @@
 {{product.name}} Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor={{folder}}/README.rst
+
+
 This directory contains samples for {{product.name}}. {{product.description}}
 
 {{description}}
@@ -29,6 +33,10 @@ Samples
 {% for sample in samples %}
 {{sample.name}}
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor={{folder}}/{{sample.file}};{{folder}}/README.rst
+
 
 {{sample.description}}
 

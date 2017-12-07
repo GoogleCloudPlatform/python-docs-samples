@@ -3,6 +3,10 @@
 Google Cloud IoT Core API Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=iot/api-client/mqtt_example/README.rst
+
+
 This directory contains samples for Google Cloud IoT Core API. `Google Cloud IoT Core`_ allows developers to easily integrate Publish and Subscribe functionality with devices and programmatically manage device authorization.
 Before you run the sample, you must retrieve the Google root certificate. For example, `wget https://pki.goog/roots.pem` or `curl https://pki.goog/roots.pem > roots.pem`.
 The following example runs the sample using the project ID `blue-jet-123` and the device name `my-python-device`:
@@ -52,6 +56,10 @@ Samples
 
 MQTT Device Client Example
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=iot/api-client/mqtt_example/cloudiot_mqtt_example.py;iot/api-client/mqtt_example/README.rst
+
 
 
 

@@ -3,6 +3,10 @@
 Google Cloud Bigtable Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigtable/hello_happybase/README.rst
+
+
 This directory contains samples for Google Cloud Bigtable. `Google Cloud Bigtable`_ is Google's NoSQL Big Data database service. It's the same database that powers many core Google services, including Search, Analytics, Maps, and Gmail.
 
 
@@ -61,6 +65,10 @@ Samples
 Basic example
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigtable/hello_happybase/main.py;bigtable/hello_happybase/README.rst
+
+
 
 
 To run this sample:
@@ -70,21 +78,22 @@ To run this sample:
     $ python main.py
 
     usage: main.py [-h] [--table TABLE] project_id instance_id
-    
+
     Demonstrates how to connect to Cloud Bigtable and run some basic operations.
     Prerequisites: - Create a Cloud Bigtable cluster.
     https://cloud.google.com/bigtable/docs/creating-cluster - Set your Google
     Application Default Credentials.
     https://developers.google.com/identity/protocols/application-default-
     credentials
-    
+
     positional arguments:
       project_id     Your Cloud Platform project ID.
       instance_id    ID of the Cloud Bigtable instance to connect to.
-    
+
     optional arguments:
       -h, --help     show this help message and exit
       --table TABLE  Table to create and destroy. (default: Hello-Bigtable)
+
 
 
 
