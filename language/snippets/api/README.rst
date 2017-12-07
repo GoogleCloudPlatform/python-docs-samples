@@ -3,6 +3,10 @@
 Google Cloud Natural Language API Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=language/api/README.rst
+
+
 This directory contains samples for Google Cloud Natural Language API. The `Google Cloud Natural Language API`_ provides natural language understanding technologies to developers, including sentiment analysis, entity recognition, and syntax analysis. This API is part of the larger Cloud Machine Learning API.
 
 
@@ -54,6 +58,10 @@ Samples
 Analyze syntax
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=language/api/analyze.py;language/api/README.rst
+
+
 
 
 To run this sample:
@@ -63,15 +71,16 @@ To run this sample:
     $ python analyze.py
 
     usage: analyze.py [-h] {entities,sentiment,syntax} text
-    
+
     Analyzes text using the Google Cloud Natural Language API.
-    
+
     positional arguments:
       {entities,sentiment,syntax}
       text
-    
+
     optional arguments:
       -h, --help            show this help message and exit
+
 
 
 
