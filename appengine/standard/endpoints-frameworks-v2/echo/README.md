@@ -1,5 +1,10 @@
 ## Endpoints Frameworks v2 Python Sample
 
+[![Open in Cloud Shell][shell_img]][shell_link]
+
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/standard/endpoints-frameworks-v2/echo/README.md
+
 This demonstrates how to use Google Cloud Endpoints Frameworks v2 on Google App Engine Standard Environment using Python.
 
 ## Setup

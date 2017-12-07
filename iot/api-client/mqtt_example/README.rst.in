@@ -32,3 +32,5 @@ samples:
   show_help: True
 
 cloud_client_library: false
+
+folder: iot/api-client/mqtt_example

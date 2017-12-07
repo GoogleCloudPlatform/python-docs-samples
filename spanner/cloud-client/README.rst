@@ -3,6 +3,10 @@
 Google Cloud Spanner Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=spanner/cloud-client/README.rst
+
+
 This directory contains samples for Google Cloud Spanner. `Google Cloud Spanner`_ is a highly scalable, transactional, managed, NewSQL database service. Cloud Spanner solves the need for a horizontally-scaling database with consistent global transactions and SQL semantics.
 
 
@@ -54,6 +58,10 @@ Samples
 Snippets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=spanner/cloud-client/snippets.py;spanner/cloud-client/README.rst
+
+
 
 
 To run this sample:
@@ -66,12 +74,12 @@ To run this sample:
                        instance_id
                        {create_database,insert_data,query_data,read_data,read_stale_data,add_column,update_data,query_data_with_new_column,read_write_transaction,read_only_transaction,add_index,query_data_with_index,read_data_with_index,add_storing_index,read_data_with_storing_index}
                        ...
-    
+
     This application demonstrates how to do basic operations using Cloud
     Spanner.
-    
+
     For more information, see the README.rst under /spanner.
-    
+
     positional arguments:
       instance_id           Your Cloud Spanner instance ID.
       {create_database,insert_data,query_data,read_data,read_stale_data,add_column,update_data,query_data_with_new_column,read_write_transaction,read_only_transaction,add_index,query_data_with_index,read_data_with_index,add_storing_index,read_data_with_storing_index}
@@ -82,7 +90,7 @@ To run this sample:
         query_data          Queries sample data from the database using SQL.
         read_data           Reads sample data from the database.
         read_stale_data     Reads sample data from the database. The data is
-                            exactly 10 seconds stale.
+                            exactly 15 seconds stale.
         add_column          Adds a new column to the Albums table in the example
                             database.
         update_data         Updates sample data in the database. This updates the
@@ -131,11 +139,12 @@ To run this sample:
                             Inserts sample data into the given database. The
                             database and table must already exist and can be
                             created using `create_database`.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
       --database-id DATABASE_ID
                             Your Cloud Spanner database ID.
+
 
 
 

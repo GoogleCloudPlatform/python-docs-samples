@@ -22,3 +22,5 @@ samples:
 - name: Label detection
   file: label.py
   show_help: true
+
+folder: vision/api/label

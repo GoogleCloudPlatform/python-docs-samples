@@ -44,3 +44,5 @@ samples:
   file: installed_app.py
   show_help: true
 
+
+folder: bigquery/api

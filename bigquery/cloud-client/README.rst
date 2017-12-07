@@ -3,6 +3,10 @@
 Google BigQuery Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/README.rst
+
+
 This directory contains samples for Google BigQuery. `Google BigQuery`_ is Google's fully managed, petabyte scale, low cost analytics data warehouse. BigQuery is NoOps—there is no infrastructure to manage and you don't need a database administrator—so you can focus on analyzing data to find meaningful insights, use familiar SQL, and take advantage of our pay-as-you-go model.
 
 
@@ -17,39 +21,20 @@ Setup
 Authentication
 ++++++++++++++
 
-Authentication is typically done through `Application Default Credentials`_,
-which means you do not have to change the code to authenticate as long as
-your environment has credentials. You have a few options for setting up
-authentication:
+This sample requires you to have authentication setup. Refer to the
+`Authentication Getting Started Guide`_ for instructions on setting up
+credentials for applications.
 
-#. When running locally, use the `Google Cloud SDK`_
-
-    .. code-block:: bash
-
-        gcloud auth application-default login
-
-
-#. When running on App Engine or Compute Engine, credentials are already
-   set-up. However, you may need to configure your Compute Engine instance
-   with `additional scopes`_.
-
-#. You can create a `Service Account key file`_. This file can be used to
-   authenticate to Google Cloud Platform services from any environment. To use
-   the file, set the ``GOOGLE_APPLICATION_CREDENTIALS`` environment variable to
-   the path to the key file, for example:
-
-    .. code-block:: bash
-
-        export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
-
-.. _Application Default Credentials: https://cloud.google.com/docs/authentication#getting_credentials_for_server-centric_flow
-.. _additional scopes: https://cloud.google.com/compute/docs/authentication#using
-.. _Service Account key file: https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount
+.. _Authentication Getting Started Guide:
+    https://cloud.google.com/docs/authentication/getting-started
 
 Install Dependencies
 ++++++++++++++++++++
 
-#. Install `pip`_ and `virtualenv`_ if you do not already have them.
+#. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
+
+ .. _Python Development Environment Setup Guide:
+     https://cloud.google.com/python/setup
 
 #. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
 
@@ -73,6 +58,10 @@ Samples
 Simple Application
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/simple_app.py;bigquery/cloud-client/README.rst
+
+
 
 
 To run this sample:
@@ -84,6 +73,10 @@ To run this sample:
 
 Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/quickstart.py;bigquery/cloud-client/README.rst
+
 
 
 
@@ -97,6 +90,10 @@ To run this sample:
 Query
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/query.py;bigquery/cloud-client/README.rst
+
+
 
 
 To run this sample:
@@ -106,23 +103,23 @@ To run this sample:
     $ python query.py
 
     usage: query.py [-h] [--use_standard_sql]
-                [--destination_table DESTINATION_TABLE]
-                query
-    
+                    [--destination_table DESTINATION_TABLE]
+                    query
+
     Command-line application to perform queries in BigQuery.
-    
+
     For more information, see the README.rst.
-    
+
     Example invocation:
         $ python query.py '#standardSQL
               SELECT corpus
               FROM `bigquery-public-data.samples.shakespeare`
               GROUP BY corpus
               ORDER BY corpus'
-    
+
     positional arguments:
       query                 BigQuery SQL Query.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
       --use_standard_sql    Use standard SQL syntax.
@@ -131,8 +128,13 @@ To run this sample:
                             my_dataset.my_table
 
 
+
 Parameterized Query
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/query_params.py;bigquery/cloud-client/README.rst
+
 
 
 
@@ -143,15 +145,15 @@ To run this sample:
     $ python query_params.py
 
     usage: query_params.py [-h] {named,positional,array,timestamp,struct} ...
-    
+
     Command-line app to perform queries with parameters in BigQuery.
-    
+
     For more information, see the README.rst.
-    
+
     Example invocation:
         $ python query_params.py named 'romeoandjuliet' 100
         $ python query_params.py positional 'romeoandjuliet' 100
-    
+
     positional arguments:
       {named,positional,array,timestamp,struct}
                             samples
@@ -160,13 +162,18 @@ To run this sample:
         array               Run a query with an array parameter.
         timestamp           Run a query with a timestamp parameter.
         struct              Run a query with a struct parameter.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
 
 
+
 Snippets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/snippets.py;bigquery/cloud-client/README.rst
+
 
 
 
@@ -179,16 +186,16 @@ To run this sample:
     usage: snippets.py [-h] [--project PROJECT]
                        {list-projects,list-datasets,list-tables,create-table,list-rows,copy-table,delete-table}
                        ...
-    
+
     Samples that demonstrate basic operations in the BigQuery API.
-    
+
     For more information, see the README.rst.
-    
+
     Example invocation:
         $ python snippets.py list-datasets
-    
+
     The dataset and table should already exist.
-    
+
     positional arguments:
       {list-projects,list-datasets,list-tables,create-table,list-rows,copy-table,delete-table}
         list-projects
@@ -212,14 +219,19 @@ To run this sample:
                             currently active project is used.
         delete-table        Deletes a table in a given dataset. If no project is
                             specified, then the currently active project is used.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
       --project PROJECT
 
 
+
 Load data from a file
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/load_data_from_file.py;bigquery/cloud-client/README.rst
+
 
 
 
@@ -230,28 +242,33 @@ To run this sample:
     $ python load_data_from_file.py
 
     usage: load_data_from_file.py [-h] dataset_id table_id source_file_name
-    
+
     Loads data into BigQuery from a local file.
-    
+
     For more information, see the README.rst.
-    
+
     Example invocation:
         $ python load_data_from_file.py example_dataset example_table \
             example-data.csv
-    
+
     The dataset and table should already exist.
-    
+
     positional arguments:
       dataset_id
       table_id
       source_file_name  Path to a .csv file to upload.
-    
+
     optional arguments:
       -h, --help        show this help message and exit
 
 
+
 Load data from Cloud Storage
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/load_data_from_gcs.py;bigquery/cloud-client/README.rst
+
 
 
 
@@ -262,29 +279,34 @@ To run this sample:
     $ python load_data_from_gcs.py
 
     usage: load_data_from_gcs.py [-h] dataset_id table_id source
-    
+
     Loads data into BigQuery from an object in Google Cloud Storage.
-    
+
     For more information, see the README.rst.
-    
+
     Example invocation:
         $ python load_data_from_gcs.py example_dataset example_table \
             gs://example-bucket/example-data.csv
-    
+
     The dataset and table should already exist.
-    
+
     positional arguments:
       dataset_id
       table_id
       source      The Google Cloud Storage object to load. Must be in the format
                   gs://bucket_name/object_name
-    
+
     optional arguments:
       -h, --help  show this help message and exit
 
 
+
 Load streaming data
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/stream_data.py;bigquery/cloud-client/README.rst
+
 
 
 
@@ -295,28 +317,33 @@ To run this sample:
     $ python stream_data.py
 
     usage: stream_data.py [-h] dataset_id table_id json_data
-    
+
     Loads a single row of data directly into BigQuery.
-    
+
     For more information, see the README.rst.
-    
+
     Example invocation:
         $ python stream_data.py example_dataset example_table \
             '["Gandalf", 2000]'
-    
+
     The dataset and table should already exist.
-    
+
     positional arguments:
       dataset_id
       table_id
       json_data   The row to load into BigQuery as an array in JSON format.
-    
+
     optional arguments:
       -h, --help  show this help message and exit
 
 
+
 Export data to Cloud Storage
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/export_data_to_gcs.py;bigquery/cloud-client/README.rst
+
 
 
 
@@ -327,25 +354,26 @@ To run this sample:
     $ python export_data_to_gcs.py
 
     usage: export_data_to_gcs.py [-h] dataset_id table_id destination
-    
+
     Exports data from BigQuery to an object in Google Cloud Storage.
-    
+
     For more information, see the README.rst.
-    
+
     Example invocation:
         $ python export_data_to_gcs.py example_dataset example_table \
             gs://example-bucket/example-data.csv
-    
+
     The dataset and table should already exist.
-    
+
     positional arguments:
       dataset_id
       table_id
       destination  The destination Google Cloud Storage object. Must be in the
                    format gs://bucket_name/object_name
-    
+
     optional arguments:
       -h, --help   show this help message and exit
+
 
 
 
