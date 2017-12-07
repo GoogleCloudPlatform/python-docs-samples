@@ -3,6 +3,10 @@
 Google Cloud Datastore Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=datastore/cloud-client/README.rst
+
+
 This directory contains samples for Google Cloud Datastore. `Google Cloud Datastore`_ is a NoSQL document database built for automatic scaling, high performance, and ease of application development.
 
 
@@ -59,6 +63,7 @@ Quickstart
 
 
 
+
 To run this sample:
 
 .. code-block:: bash
@@ -74,6 +79,7 @@ Tasks example app
 
 
 
+
 To run this sample:
 
 .. code-block:: bash
@@ -86,6 +92,7 @@ Snippets
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=datastore/cloud-client/snippets.py;datastore/cloud-client/README.rst
+
 
 
 

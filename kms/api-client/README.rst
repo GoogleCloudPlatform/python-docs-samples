@@ -3,6 +3,10 @@
 Google Cloud KMS API Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=kms/api-client/README.rst
+
+
 This directory contains samples for Google Cloud KMS API. The `Google Cloud KMS API`_ is a service that allows you to keep encryption keys centrally in the cloud, for direct use by cloud services.
 
 
@@ -59,6 +63,7 @@ Quickstart
 
 
 
+
 To run this sample:
 
 .. code-block:: bash
@@ -71,6 +76,7 @@ Snippets
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=kms/api-client/snippets.py;kms/api-client/README.rst
+
 
 
 

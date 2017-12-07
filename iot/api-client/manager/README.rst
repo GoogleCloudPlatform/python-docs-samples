@@ -3,6 +3,10 @@
 Google Cloud IoT Core API Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=iot/api-client/manager/README.rst
+
+
 This directory contains samples for Google Cloud IoT Core API. `Google Cloud IoT Core`_ allows developers to easily integrate Publish and Subscribe functionality with devices and programmatically manage device authorization.
 
 
@@ -56,6 +60,7 @@ Manager
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=iot/api-client/manager/manager.py;iot/api-client/manager/README.rst
+
 
 
 

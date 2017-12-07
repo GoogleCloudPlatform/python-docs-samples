@@ -3,6 +3,10 @@
 Google Cloud Storage Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/api/README.rst
+
+
 This directory contains samples for Google Cloud Storage. `Google Cloud Storage`_ allows world-wide storage and retrieval of any amount of data at any time.
 
 
@@ -59,6 +63,7 @@ List Objects
 
 
 
+
 To run this sample:
 
 .. code-block:: bash
@@ -89,6 +94,7 @@ CRUD Objects
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/api/crud_object.py;storage/api/README.rst
+
 
 
 
@@ -124,6 +130,7 @@ Compose objects
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/api/compose_objects.py;storage/api/README.rst
+
 
 
 
@@ -166,6 +173,7 @@ Customer-Supplied Encryption
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/api/customer_supplied_keys.py;storage/api/README.rst
+
 
 
 

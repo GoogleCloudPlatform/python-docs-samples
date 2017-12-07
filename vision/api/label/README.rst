@@ -3,6 +3,10 @@
 Google Cloud Vision API Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=vision/api/label/README.rst
+
+
 This directory contains samples for Google Cloud Vision API. `Google Cloud Vision API`_ allows developers to easily integrate vision detection features within applications, including image labeling, face and landmark detection, optical character recognition (OCR), and tagging of explicit content
 
 
@@ -57,6 +61,7 @@ Label detection
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=vision/api/label/label.py;vision/api/label/README.rst
+
 
 
 
