@@ -3,6 +3,10 @@
 Google Cloud KMS API Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=kms/api-client/README.rst
+
+
 This directory contains samples for Google Cloud KMS API. The `Google Cloud KMS API`_ is a service that allows you to keep encryption keys centrally in the cloud, for direct use by cloud services.
 
 
@@ -54,6 +58,10 @@ Samples
 Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=kms/api-client/quickstart.py;kms/api-client/README.rst
+
+
 
 
 To run this sample:
@@ -66,6 +74,10 @@ To run this sample:
 Snippets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=kms/api-client/snippets.py;kms/api-client/README.rst
+
+
 
 
 To run this sample:
@@ -75,14 +87,15 @@ To run this sample:
     $ python snippets.py
 
     usage: snippets.py [-h]
-                       {create_key_ring,create_crypto_key,encrypt,decrypt,disable_crypto_key_version,destroy_crypto_key_version,add_member_to_crypto_key_policy,get_key_ring_policy}
+                       {create_key_ring,create_crypto_key,encrypt,decrypt,disable_crypto_key_version,enable_crypto_key_version,destroy_crypto_key_version,restore_crypto_key_version,add_member_to_crypto_key_policy,get_key_ring_policy}
                        ...
-    
+
     positional arguments:
-      {create_key_ring,create_crypto_key,encrypt,decrypt,disable_crypto_key_version,destroy_crypto_key_version,add_member_to_crypto_key_policy,get_key_ring_policy}
-    
+      {create_key_ring,create_crypto_key,encrypt,decrypt,disable_crypto_key_version,enable_crypto_key_version,destroy_crypto_key_version,restore_crypto_key_version,add_member_to_crypto_key_policy,get_key_ring_policy}
+
     optional arguments:
       -h, --help            show this help message and exit
+
 
 
 

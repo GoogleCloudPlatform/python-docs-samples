@@ -18,3 +18,5 @@ samples:
 - name: Snippets
   file: snippets.py
   show_help: True
+
+folder: kms/api-client
