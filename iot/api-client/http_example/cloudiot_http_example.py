@@ -85,6 +85,25 @@ def publish_message(
     return resp
 
 
+def get_config(
+        version, message_type, base_url, project_id, cloud_region, registry_id,
+        device_id, jwt_token):
+    headers = {
+            'authorization': 'Bearer {}'.format(jwt_token),
+            'content-type': 'application/json',
+            'cache-control': 'no-cache'
+    }
+
+    basepath = '{}/projects/{}/locations/{}/registries/{}/devices/{}/'
+    template = basepath + 'config?local_version={}'
+    config_url = template.format(
+        base_url, project_id, cloud_region, registry_id, device_id, version)
+
+    resp = requests.get(config_url, headers=headers)
+
+    return resp
+
+
 def parse_command_line_args():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description=(
@@ -142,6 +161,10 @@ def main():
             args.project_id, args.private_key_file, args.algorithm)
     jwt_iat = datetime.datetime.utcnow()
     jwt_exp_mins = args.jwt_expires_minutes
+
+    print('Latest configuration: {}'.format(get_config(
+        '0', args.message_type, args.base_url, args.project_id,
+        args.cloud_region, args.registry_id, args.device_id, jwt_token).text))
 
     # Publish num_messages mesages to the HTTP bridge once per second.
     for i in range(1, args.num_messages + 1):
