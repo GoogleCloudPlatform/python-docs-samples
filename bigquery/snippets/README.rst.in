@@ -43,3 +43,5 @@ samples:
   show_help: true
 
 cloud_client_library: true
+
+folder: bigquery/cloud-client
