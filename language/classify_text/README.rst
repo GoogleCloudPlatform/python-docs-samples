@@ -3,6 +3,10 @@
 Google Cloud Natural Language API Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=language/classify_text/README.rst
+
+
 This directory contains samples for Google Cloud Natural Language API. The `Google Cloud Natural Language API`_ provides natural language understanding technologies to developers.
 
 This tutorial demostrates how to use the `classify_text` method to classify content category of text files, and use the result to compare texts by their similarity to each other.  See the `tutorial page`_ for details about this sample.
@@ -60,6 +64,7 @@ Classify Text Tutorial
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=language/classify_text/classify_text_tutorial.py;language/classify_text/README.rst
+
 
 
 

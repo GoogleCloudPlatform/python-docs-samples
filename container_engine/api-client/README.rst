@@ -3,6 +3,10 @@
 Google Container Engine Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=container_engine/api-client/README.rst
+
+
 This directory contains samples for Google Container Engine. `Google Container Engine`_ runs Docker containers on Google Cloud Platform, powered by Kubernetes.
 
 
@@ -56,6 +60,7 @@ Snippets
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=container_engine/api-client/snippets.py;container_engine/api-client/README.rst
+
 
 
 

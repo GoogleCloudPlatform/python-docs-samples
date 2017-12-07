@@ -3,6 +3,10 @@
 Google Cloud Natural Language API Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=language/cloud-client/v1/README.rst
+
+
 This directory contains samples for Google Cloud Natural Language API. The `Google Cloud Natural Language API`_ provides natural language understanding technologies to developers, including sentiment analysis, entity recognition, and syntax analysis. This API is part of the larger Cloud Machine Learning API.
 
 - See the `migration guide`_ for information about migrating to Python client library v0.26.1.
@@ -63,6 +67,7 @@ Quickstart
 
 
 
+
 To run this sample:
 
 .. code-block:: bash
@@ -75,6 +80,7 @@ Snippets
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=language/cloud-client/v1/snippets.py;language/cloud-client/v1/README.rst
+
 
 
 

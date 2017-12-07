@@ -3,6 +3,10 @@
 Google BigQuery Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/api/README.rst
+
+
 This directory contains samples for Google BigQuery. `Google BigQuery`_ is Google's fully managed, petabyte scale, low cost analytics data warehouse. BigQuery is NoOps—there is no infrastructure to manage and you don't need a database administrator—so you can focus on analyzing data to find meaningful insights, use familiar SQL, and take advantage of our pay-as-you-go model.
 
 
@@ -59,6 +63,7 @@ Getting started
 
 
 
+
 To run this sample:
 
 .. code-block:: bash
@@ -91,6 +96,7 @@ Sync query
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/api/sync_query.py;bigquery/api/README.rst
+
 
 
 
@@ -128,6 +134,7 @@ Async query
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/api/async_query.py;bigquery/api/README.rst
+
 
 
 
@@ -170,6 +177,7 @@ Listing datasets and projects
 
 
 
+
 To run this sample:
 
 .. code-block:: bash
@@ -199,6 +207,7 @@ Load data by POST
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/api/load_data_by_post.py;bigquery/api/README.rst
+
 
 
 
@@ -237,6 +246,7 @@ Load data from CSV
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/api/load_data_from_csv.py;bigquery/api/README.rst
+
 
 
 
@@ -284,6 +294,7 @@ Load streaming data
 
 
 
+
 To run this sample:
 
 .. code-block:: bash
@@ -320,6 +331,7 @@ Export data to Cloud Storage
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/api/export_data_to_cloud_storage.py;bigquery/api/README.rst
+
 
 
 
@@ -367,6 +379,7 @@ User auth with an installed app
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/api/installed_app.py;bigquery/api/README.rst
+
 
 
 

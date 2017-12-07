@@ -3,6 +3,10 @@
 Google Cloud Storage Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/transfer_service/README.rst
+
+
 This directory contains samples for Google Cloud Storage. `Google Cloud Storage`_ allows world-wide storage and retrieval of any amount of data at any time.
 
 
@@ -60,6 +64,7 @@ Transfer to GCS Nearline
 
 
 
+
 To run this sample:
 
 .. code-block:: bash
@@ -97,6 +102,7 @@ Transfer from AWS
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/transfer_service/aws_request.py;storage/transfer_service/README.rst
+
 
 
 
@@ -139,6 +145,7 @@ Check transfer status
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/transfer_service/transfer_check.py;storage/transfer_service/README.rst
+
 
 
 

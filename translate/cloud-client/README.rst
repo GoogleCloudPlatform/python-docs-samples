@@ -3,6 +3,10 @@
 Google Translation API Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=translate/cloud-client/README.rst
+
+
 This directory contains samples for Google Translation API. With `Google Translation API`, you can dynamically translate text between thousands of language pairs.
 
 
@@ -59,6 +63,7 @@ Quickstart
 
 
 
+
 To run this sample:
 
 .. code-block:: bash
@@ -71,6 +76,7 @@ Snippets
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=translate/cloud-client/snippets.py;translate/cloud-client/README.rst
+
 
 
 

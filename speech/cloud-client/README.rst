@@ -3,6 +3,10 @@
 Google Cloud Speech API Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=speech/cloud-client/README.rst
+
+
 This directory contains samples for Google Cloud Speech API. The `Google Cloud Speech API`_ enables easy integration of Google speech recognition technologies into developer applications. Send audio and receive a text transcription from the Cloud Speech API service.
 
 - See the `migration guide`_ for information about migrating to Python client library v0.27.
@@ -63,6 +67,7 @@ Quickstart
 
 
 
+
 To run this sample:
 
 .. code-block:: bash
@@ -75,6 +80,7 @@ Transcribe
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=speech/cloud-client/transcribe.py;speech/cloud-client/README.rst
+
 
 
 
@@ -109,6 +115,7 @@ Transcribe async
 
 
 
+
 To run this sample:
 
 .. code-block:: bash
@@ -140,6 +147,7 @@ Transcribe with word time offsets
 
 
 
+
 To run this sample:
 
 .. code-block:: bash
@@ -167,6 +175,7 @@ Transcribe Streaming
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=speech/cloud-client/transcribe_streaming.py;speech/cloud-client/README.rst
+
 
 
 

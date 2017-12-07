@@ -3,6 +3,10 @@
 Google Cloud Storage Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/README.rst
+
+
 This directory contains samples for Google Cloud Storage. `Google Cloud Storage`_ allows world-wide storage and retrieval of any amount of data at any time.
 
 
@@ -59,6 +63,7 @@ Quickstart
 
 
 
+
 To run this sample:
 
 .. code-block:: bash
@@ -71,6 +76,7 @@ Snippets
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/snippets.py;storage/cloud-client/README.rst
+
 
 
 
@@ -137,6 +143,7 @@ Access Control Lists
 
 
 
+
 To run this sample:
 
 .. code-block:: bash
@@ -189,6 +196,7 @@ Customer-Supplied Encryption
 
 
 
+
 To run this sample:
 
 .. code-block:: bash
@@ -237,6 +245,7 @@ Notification Polling
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/notification_polling.py;storage/cloud-client/README.rst
+
 
 
 

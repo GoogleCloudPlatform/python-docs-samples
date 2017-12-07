@@ -3,6 +3,10 @@
 Google Cloud Natural Language Tutorial Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=language/tutorial/README.rst
+
+
 This directory contains samples for Google Cloud Natural Language Tutorial. The `Google Cloud Natural Language API`_ provides natural language understanding technologies to developers, including sentiment analysis, entity recognition, and syntax analysis. This API is part of the larger Cloud Machine Learning API.
 
 
@@ -56,6 +60,7 @@ Language tutorial
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=language/tutorial/tutorial.py;language/tutorial/README.rst
+
 
 
 

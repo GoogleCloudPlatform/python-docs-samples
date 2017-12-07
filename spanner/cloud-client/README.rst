@@ -3,6 +3,10 @@
 Google Cloud Spanner Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=spanner/cloud-client/README.rst
+
+
 This directory contains samples for Google Cloud Spanner. `Google Cloud Spanner`_ is a highly scalable, transactional, managed, NewSQL database service. Cloud Spanner solves the need for a horizontally-scaling database with consistent global transactions and SQL semantics.
 
 
@@ -56,6 +60,7 @@ Snippets
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=spanner/cloud-client/snippets.py;spanner/cloud-client/README.rst
+
 
 
 
