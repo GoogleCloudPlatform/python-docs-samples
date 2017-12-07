@@ -68,9 +68,9 @@ def test_event(test_topic, capsys):
     jwt_token = cloudiot_http_example.create_jwt(
             project_id, 'resources/rsa_private.pem', 'RS256')
 
-    print cloudiot_http_example.publish_message(
+    print(cloudiot_http_example.publish_message(
             'hello', 'event', _BASE_URL, project_id, cloud_region,
-            registry_id, device_id, jwt_token)
+            registry_id, device_id, jwt_token))
 
     manager.get_state(
             service_account_json, project_id, cloud_region, registry_id,
@@ -106,9 +106,9 @@ def test_state(test_topic, capsys):
     jwt_token = cloudiot_http_example.create_jwt(
             project_id, 'resources/rsa_private.pem', 'RS256')
 
-    print cloudiot_http_example.publish_message(
+    print(cloudiot_http_example.publish_message(
             'hello', 'state', _BASE_URL, project_id, cloud_region,
-            registry_id, device_id, jwt_token)
+            registry_id, device_id, jwt_token))
 
     manager.get_state(
             service_account_json, project_id, cloud_region, registry_id,
@@ -145,9 +145,9 @@ def test_config(test_topic, capsys):
     jwt_token = cloudiot_http_example.create_jwt(
             project_id, 'resources/rsa_private.pem', 'RS256')
 
-    print cloudiot_http_example.get_config(
+    print(cloudiot_http_example.get_config(
             '0', 'state', _BASE_URL, project_id, cloud_region,
-            registry_id, device_id, jwt_token).text
+            registry_id, device_id, jwt_token).text)
 
     manager.get_state(
             service_account_json, project_id, cloud_region, registry_id,
