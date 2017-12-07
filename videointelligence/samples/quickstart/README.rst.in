@@ -17,3 +17,5 @@ samples:
   file: quickstart.py
 
 cloud_client_library: true
+
+folder: video/cloud-client/quickstart
