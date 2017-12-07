@@ -54,6 +54,9 @@ Samples
 faces
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=video/cloud-client/faces/faces.py;video/cloud-client/faces/README.rst
+
 
 
 To run this sample:
@@ -63,22 +66,23 @@ To run this sample:
     $ python faces.py
 
     usage: faces.py [-h] path
-    
-    This application demonstrates how to perform shot change detection with the
-    Google Cloud Video Intelligence API.
-    
+
+    This application demonstrates how to perform face
+    detection with the Google Cloud Video Intelligence API.
+
     For more information, check out the documentation at
     https://cloud.google.com/videointelligence/docs.
-    
+
     Usage Example:
-    
+
         python faces.py gs://demomaker/google_gmail.mp4
-    
+
     positional arguments:
       path        GCS file path for face detection.
-    
+
     optional arguments:
       -h, --help  show this help message and exit
+
 
 
 

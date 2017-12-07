@@ -58,6 +58,9 @@ Samples
 Web
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=vision/cloud-client/web/web_detect.py;vision/cloud-client/web/README.rst
+
 
 
 To run this sample:
@@ -67,20 +70,21 @@ To run this sample:
     $ python web_detect.py
 
     usage: web_detect.py [-h] image_url
-    
+
     Demonstrates web detection using the Google Cloud Vision API.
-    
+
     Example usage:
       python web_detect.py https://goo.gl/X4qcB6
       python web_detect.py ../detect/resources/landmark.jpg
       python web_detect.py gs://your-bucket/image.png
-    
+
     positional arguments:
       image_url   The image to detect, can be web URI, Google Cloud Storage, or
                   path to local file.
-    
+
     optional arguments:
       -h, --help  show this help message and exit
+
 
 
 

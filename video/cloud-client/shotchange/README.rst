@@ -54,6 +54,9 @@ Samples
 Shot Change Detection
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=video/cloud-client/shotchange/shotchange.py;video/cloud-client/shotchange/README.rst
+
 
 
 To run this sample:
@@ -63,22 +66,23 @@ To run this sample:
     $ python shotchange.py
 
     usage: shotchange.py [-h] path
-    
-    This application demonstrates how to perform basic operations with the
-    Google Cloud Video Intelligence API.
-    
+
+    This application demonstrates how to identify all different shots
+    in a video using the Google Cloud Video Intelligence API.
+
     For more information, check out the documentation at
     https://cloud.google.com/videointelligence/docs.
-    
+
     Example Usage:
-    
+
         python shotchange.py gs://demomaker/gbikes_dinosaur.mp4
-    
+
     positional arguments:
       path        GCS path for shot change detection.
-    
+
     optional arguments:
       -h, --help  show this help message and exit
+
 
 
 

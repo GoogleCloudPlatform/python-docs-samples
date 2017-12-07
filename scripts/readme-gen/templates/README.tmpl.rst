@@ -30,6 +30,9 @@ Samples
 {{sample.name}}
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor={{folder}}/{{sample.file}};{{folder}}/README.rst
+
 {{sample.description}}
 
 To run this sample:

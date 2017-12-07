@@ -54,6 +54,9 @@ Samples
 Language tutorial
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=language/tutorial/tutorial.py;language/tutorial/README.rst
+
 
 
 To run this sample:
@@ -63,14 +66,15 @@ To run this sample:
     $ python tutorial.py
 
     usage: tutorial.py [-h] movie_review_filename
-    
+
     positional arguments:
       movie_review_filename
                             The filename of the movie review you'd like to
                             analyze.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
+
 
 
 

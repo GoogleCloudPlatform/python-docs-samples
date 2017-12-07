@@ -59,6 +59,9 @@ Samples
 Face detection
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=vision/cloud-client/face_detection/faces.py;vision/cloud-client/face_detection/README.rst
+
 
 
 To run this sample:
@@ -68,17 +71,18 @@ To run this sample:
     $ python faces.py
 
     usage: faces.py [-h] [--out OUTPUT] [--max-results MAX_RESULTS] input_image
-    
+
     Detects faces in the given image.
-    
+
     positional arguments:
       input_image           the image you'd like to detect faces in.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
       --out OUTPUT          the name of the output file.
       --max-results MAX_RESULTS
                             the max results of face detection.
+
 
 
 

@@ -1,5 +1,10 @@
 # Google Cloud Tasks App Engine Queue Samples
 
+[![Open in Cloud Shell][shell_img]][shell_link]
+
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/tasks/README.md
+
 Sample command-line program for interacting with the Cloud Tasks API
 using App Engine queues.
 

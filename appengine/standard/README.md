@@ -1,5 +1,10 @@
 # Google App Engine Samples
 
+[![Open in Cloud Shell][shell_img]][shell_link]
+
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/standard/README.md
+
 This section contains samples for [Google App Engine](https://cloud.google.com/appengine). Most of these samples have associated documentation that is linked
 within the docstring of the sample itself.
 

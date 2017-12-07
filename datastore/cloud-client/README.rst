@@ -54,6 +54,9 @@ Samples
 Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=datastore/cloud-client/quickstart.py;datastore/cloud-client/README.rst
+
 
 
 To run this sample:
@@ -65,6 +68,9 @@ To run this sample:
 
 Tasks example app
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=datastore/cloud-client/tasks.py;datastore/cloud-client/README.rst
 
 
 
@@ -78,6 +84,9 @@ To run this sample:
 Snippets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=datastore/cloud-client/snippets.py;datastore/cloud-client/README.rst
+
 
 
 To run this sample:
@@ -87,14 +96,15 @@ To run this sample:
     $ python snippets.py
 
     usage: snippets.py [-h] project_id
-    
+
     Demonstrates datastore API operations.
-    
+
     positional arguments:
       project_id  Your cloud project ID.
-    
+
     optional arguments:
       -h, --help  show this help message and exit
+
 
 
 

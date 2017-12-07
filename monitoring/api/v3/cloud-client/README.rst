@@ -56,6 +56,9 @@ Samples
 Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=monitoring/api/v3/cloud-client/quickstart.py;monitoring/api/v3/cloud-client/README.rst
+
 
 
 To run this sample:
@@ -68,6 +71,9 @@ To run this sample:
 Snippets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=monitoring/api/v3/cloud-client/snippets.py;monitoring/api/v3/cloud-client/README.rst
+
 
 
 To run this sample:
@@ -79,9 +85,9 @@ To run this sample:
     usage: snippets.py [-h]
                        {create-metric-descriptor,list-metric-descriptors,get-metric-descriptor,delete-metric-descriptor,list-resources,get-resource,write-time-series,list-time-series,list-time-series-header,list-time-series-reduce,list-time-series-aggregate}
                        ...
-    
+
     Demonstrates Monitoring API operations.
-    
+
     positional arguments:
       {create-metric-descriptor,list-metric-descriptors,get-metric-descriptor,delete-metric-descriptor,list-resources,get-resource,write-time-series,list-time-series,list-time-series-header,list-time-series-reduce,list-time-series-aggregate}
         create-metric-descriptor
@@ -95,9 +101,10 @@ To run this sample:
         list-time-series-header
         list-time-series-reduce
         list-time-series-aggregate
-    
+
     optional arguments:
       -h, --help            show this help message and exit
+
 
 
 

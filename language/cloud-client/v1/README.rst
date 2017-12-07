@@ -58,6 +58,9 @@ Samples
 Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=language/cloud-client/v1/quickstart.py;language/cloud-client/v1/README.rst
+
 
 
 To run this sample:
@@ -70,6 +73,9 @@ To run this sample:
 Snippets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=language/cloud-client/v1/snippets.py;language/cloud-client/v1/README.rst
+
 
 
 To run this sample:
@@ -79,17 +85,20 @@ To run this sample:
     $ python snippets.py
 
     usage: snippets.py [-h]
-                       {sentiment-entities-text,sentiment-entities-file,sentiment-text,sentiment-file,entities-text,entities-file,syntax-text,syntax-file}
+                       {classify-text,classify-file,sentiment-entities-text,sentiment-entities-file,sentiment-text,sentiment-file,entities-text,entities-file,syntax-text,syntax-file}
                        ...
-    
+
     This application demonstrates how to perform basic operations with the
     Google Cloud Natural Language API
-    
+
     For more information, the documentation at
     https://cloud.google.com/natural-language/docs.
-    
+
     positional arguments:
-      {sentiment-entities-text,sentiment-entities-file,sentiment-text,sentiment-file,entities-text,entities-file,syntax-text,syntax-file}
+      {classify-text,classify-file,sentiment-entities-text,sentiment-entities-file,sentiment-text,sentiment-file,entities-text,entities-file,syntax-text,syntax-file}
+        classify-text       Classifies content categories of the provided text.
+        classify-file       Classifies content categories of the text in a Google
+                            Cloud Storage file.
         sentiment-entities-text
                             Detects entity sentiment in the provided text.
         sentiment-entities-file
@@ -104,9 +113,10 @@ To run this sample:
         syntax-text         Detects syntax in the text.
         syntax-file         Detects syntax in the file located in Google Cloud
                             Storage.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
+
 
 
 

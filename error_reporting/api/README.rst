@@ -55,6 +55,9 @@ Samples
 Report Exception
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=error_reporting/api/report_exception.py;error_reporting/api/README.rst
+
 
 
 To run this sample:

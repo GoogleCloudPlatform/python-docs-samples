@@ -1,5 +1,10 @@
 # Endpoints Getting Started with gRPC & Python Quickstart
 
+[![Open in Cloud Shell][shell_img]][shell_link]
+
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=endpoints/getting-started-grpc/README.md
+
 It is assumed that you have a working Python environment and a Google
 Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
 

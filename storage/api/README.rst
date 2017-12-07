@@ -54,6 +54,9 @@ Samples
 List Objects
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/api/list_objects.py;storage/api/README.rst
+
 
 
 To run this sample:
@@ -63,25 +66,29 @@ To run this sample:
     $ python list_objects.py
 
     usage: list_objects.py [-h] bucket
-    
+
     Command-line sample application for listing all objects in a bucket using
     the Cloud Storage API.
-    
+
     This sample is used on this page:
-    
+
         https://cloud.google.com/storage/docs/json_api/v1/json-api-python-samples
-    
+
     For more information, see the README.md under /storage.
-    
+
     positional arguments:
       bucket      Your Cloud Storage bucket.
-    
+
     optional arguments:
       -h, --help  show this help message and exit
 
 
+
 CRUD Objects
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/api/crud_object.py;storage/api/README.rst
 
 
 
@@ -92,27 +99,31 @@ To run this sample:
     $ python crud_object.py
 
     usage: crud_object.py [-h] [--reader READER] [--owner OWNER] filename bucket
-    
+
     Application for uploading an object using the Cloud Storage API.
-    
+
     This sample is used on this page:
-    
+
         https://cloud.google.com/storage/docs/json_api/v1/json-api-python-samples
-    
+
     For more information, see the README.md under /storage.
-    
+
     positional arguments:
       filename         The name of the file to upload
       bucket           Your Cloud Storage bucket.
-    
+
     optional arguments:
       -h, --help       show this help message and exit
       --reader READER  Your Cloud Storage bucket.
       --owner OWNER    Your Cloud Storage bucket.
 
 
+
 Compose objects
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/api/compose_objects.py;storage/api/README.rst
 
 
 
@@ -123,34 +134,38 @@ To run this sample:
     $ python compose_objects.py
 
     usage: compose_objects.py [-h] bucket destination sources [sources ...]
-    
+
     Command-line sample application for composing objects using the Cloud
     Storage API.
-    
+
     This sample is used on this page:
-    
+
         https://cloud.google.com/storage/docs/json_api/v1/json-api-python-samples
-    
+
     For more information, see the README.md under /storage.
-    
+
     To run, create a least two sample files:
         $ echo "File 1" > file1.txt
         $ echo "File 2" > file2.txt
-    
+
     Example invocation:
         $ python compose_objects.py my-bucket destination.txt file1.txt file2.txt
-    
+
     positional arguments:
       bucket       Your Cloud Storage bucket.
       destination  Destination file name.
       sources      Source files to compose.
-    
+
     optional arguments:
       -h, --help   show this help message and exit
 
 
+
 Customer-Supplied Encryption
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/api/customer_supplied_keys.py;storage/api/README.rst
 
 
 
@@ -161,25 +176,26 @@ To run this sample:
     $ python customer_supplied_keys.py
 
     usage: customer_supplied_keys.py [-h] bucket filename
-    
+
     Command-line sample app demonstrating customer-supplied encryption keys.
-    
+
     This sample demonstrates uploading an object while supplying an encryption key,
     retrieving that object's contents, and finally rotating that key to a new
     value.
-    
+
     This sample is used on this page:
-    
+
         https://cloud.google.com/storage/docs/json_api/v1/json-api-python-samples
-    
+
     For more information, see the README.md under /storage.
-    
+
     positional arguments:
       bucket      Your Cloud Storage bucket.
       filename    A file to upload and download.
-    
+
     optional arguments:
       -h, --help  show this help message and exit
+
 
 
 

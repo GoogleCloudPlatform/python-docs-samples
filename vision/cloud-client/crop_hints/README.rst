@@ -58,6 +58,9 @@ Samples
 Crop Hints Tutorial
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=vision/cloud-client/crop_hints/crop_hints.py;vision/cloud-client/crop_hints/README.rst
+
 
 
 To run this sample:
@@ -67,13 +70,14 @@ To run this sample:
     $ python crop_hints.py
 
     usage: crop_hints.py [-h] image_file mode
-    
+
     positional arguments:
       image_file  The image you'd like to crop.
       mode        Set to "crop" or "draw".
-    
+
     optional arguments:
       -h, --help  show this help message and exit
+
 
 
 

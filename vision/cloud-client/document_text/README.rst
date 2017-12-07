@@ -58,6 +58,9 @@ Samples
 Document Text tutorial
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=vision/cloud-client/document_text/doctext.py;vision/cloud-client/document_text/README.rst
+
 
 
 To run this sample:
@@ -67,13 +70,14 @@ To run this sample:
     $ python doctext.py
 
     usage: doctext.py [-h] [-out_file OUT_FILE] detect_file
-    
+
     positional arguments:
       detect_file         The image for text detection.
-    
+
     optional arguments:
       -h, --help          show this help message and exit
       -out_file OUT_FILE  Optional output file
+
 
 
 

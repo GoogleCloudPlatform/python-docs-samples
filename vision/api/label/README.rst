@@ -55,6 +55,9 @@ Samples
 Label detection
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=vision/api/label/label.py;vision/api/label/README.rst
+
 
 
 To run this sample:
@@ -64,12 +67,13 @@ To run this sample:
     $ python label.py
 
     usage: label.py [-h] image_file
-    
+
     positional arguments:
       image_file  The image you'd like to label.
-    
+
     optional arguments:
       -h, --help  show this help message and exit
+
 
 
 

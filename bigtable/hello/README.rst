@@ -54,6 +54,9 @@ Samples
 Basic example
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigtable/hello/main.py;bigtable/hello/README.rst
+
 
 
 To run this sample:
@@ -63,21 +66,22 @@ To run this sample:
     $ python main.py
 
     usage: main.py [-h] [--table TABLE] project_id instance_id
-    
+
     Demonstrates how to connect to Cloud Bigtable and run some basic operations.
     Prerequisites: - Create a Cloud Bigtable cluster.
     https://cloud.google.com/bigtable/docs/creating-cluster - Set your Google
     Application Default Credentials.
     https://developers.google.com/identity/protocols/application-default-
     credentials
-    
+
     positional arguments:
       project_id     Your Cloud Platform project ID.
       instance_id    ID of the Cloud Bigtable instance to connect to.
-    
+
     optional arguments:
       -h, --help     show this help message and exit
       --table TABLE  Table to create and destroy. (default: Hello-Bigtable)
+
 
 
 

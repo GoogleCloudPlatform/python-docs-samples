@@ -54,6 +54,9 @@ Samples
 Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=translate/cloud-client/quickstart.py;translate/cloud-client/README.rst
+
 
 
 To run this sample:
@@ -66,6 +69,9 @@ To run this sample:
 Snippets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=translate/cloud-client/snippets.py;translate/cloud-client/README.rst
+
 
 
 To run this sample:
@@ -77,13 +83,13 @@ To run this sample:
     usage: snippets.py [-h]
                        {detect-language,list-languages,list-languages-with-target,translate-text}
                        ...
-    
+
     This application demonstrates how to perform basic operations with the
     Google Cloud Translate API
-    
+
     For more information, the documentation at
     https://cloud.google.com/translate/docs.
-    
+
     positional arguments:
       {detect-language,list-languages,list-languages-with-target,translate-text}
         detect-language     Detects the text's language.
@@ -97,9 +103,10 @@ To run this sample:
                             be an ISO 639-1 language code. See
                             https://g.co/cloud/translate/v2/translate-
                             reference#supported_languages
-    
+
     optional arguments:
       -h, --help            show this help message and exit
+
 
 
 

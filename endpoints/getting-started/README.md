@@ -1,5 +1,10 @@
 # Google Cloud Endpoints & Python
 
+[![Open in Cloud Shell][shell_img]][shell_link]
+
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=endpoints/getting-started/README.md
+
 This sample demonstrates how to use Google Cloud Endpoints using Python.
 
 For a complete walkthrough showing how to run this sample in different

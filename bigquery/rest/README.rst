@@ -54,6 +54,9 @@ Samples
 Label a dataset or table
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/rest/labels.py;bigquery/rest/README.rst
+
 
 
 To run this sample:
@@ -64,14 +67,14 @@ To run this sample:
 
     usage: labels.py [-h] [--project_id PROJECT_ID] [--table_id TABLE_ID]
                      dataset_id label_key label_value
-    
+
     Application to add or modify a label on a BigQuery dataset or table.
-    
+
     positional arguments:
       dataset_id            BigQuery dataset ID.
       label_key             Key for new/modified label.
       label_value           Value for new/modified label.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
       --project_id PROJECT_ID
@@ -79,6 +82,7 @@ To run this sample:
                             value from the environment.
       --table_id TABLE_ID   BigQuery table ID. If present, a label is added to the
                             specified table instead of the dataset.
+
 
 
 

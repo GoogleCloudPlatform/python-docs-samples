@@ -21,3 +21,5 @@ samples:
   file: labels.py
 
 cloud_client_library: false
+
+folder: bigquery/rest

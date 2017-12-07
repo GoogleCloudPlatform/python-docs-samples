@@ -54,6 +54,9 @@ Samples
 Snippets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=container_engine/api-client/snippets.py;container_engine/api-client/README.rst
+
 
 
 To run this sample:
@@ -63,14 +66,15 @@ To run this sample:
     $ python snippets.py
 
     usage: snippets.py [-h] {list_clusters_and_nodepools} ...
-    
+
     positional arguments:
       {list_clusters_and_nodepools}
         list_clusters_and_nodepools
                             Lists all clusters and associated node pools.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
+
 
 
 
