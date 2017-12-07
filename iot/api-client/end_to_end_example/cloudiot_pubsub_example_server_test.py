@@ -14,10 +14,6 @@
 
 import os
 import time
-import pytest
-import requests
-
-from google.cloud import pubsub
 
 import cloudiot_pubsub_example_server as example_server
 
@@ -31,20 +27,22 @@ service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
 registry_id = 'test-registry-{}'.format(int(time.time()))
 
+
 def test_config_turn_on(capsys):
     max_temp = 11
     data = {"temperature": max_temp}
 
     Server = example_server.Server(service_account_json)
     Server._update_device_config(
-                                 project_id,
-                                 cloud_region,
-                                 registry_id,
-                                 device_id_template,
-                                 data)
+        project_id,
+        cloud_region,
+        registry_id,
+        device_id_template,
+        data)
 
     stdout, _ = capsys.readouterr()
     assert 'on' in stdout
+
 
 def test_config_turn_off(capsys):
     min_temp = -1
@@ -52,12 +50,11 @@ def test_config_turn_off(capsys):
 
     Server = example_server.Server(service_account_json)
     Server._update_device_config(
-                                 project_id,
-                                 cloud_region,
-                                 registry_id,
-                                 device_id_template,
-                                 data)
+        project_id,
+        cloud_region,
+        registry_id,
+        device_id_template,
+        data)
 
     stdout, _ = capsys.readouterr()
     assert 'off' in stdout
-
