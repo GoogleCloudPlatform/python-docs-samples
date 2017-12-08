@@ -229,16 +229,11 @@ def main():
     # This is the topic that the device will receive configuration updates on.
     mqtt_config_topic = '/devices/{}/config'.format(args.device_id)
 
-    # This is the topic that the device will send its state to.
-    mqtt_state_topic = '/devices/{}/state'.format(args.device_id)
-
     # Wait up to 5 seconds for the device to connect.
     device.wait_for_connection(5)
 
     # Subscribe to the config topic.
     client.subscribe(mqtt_config_topic, qos=1)
-
-    client.publish(mqtt_state_topic, 'received config!')
 
     # Update and publish temperature readings at a rate of one per second.
     for _ in range(args.num_messages):
