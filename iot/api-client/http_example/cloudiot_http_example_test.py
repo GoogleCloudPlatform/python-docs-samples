@@ -15,14 +15,15 @@ import os
 import sys
 import time
 
-from google.cloud import pubsub
-
+import cloudiot_http_example
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
-import manager
+
+from google.cloud import pubsub
 
 import pytest
 
-import cloudiot_http_example
+import manager
+
 
 cloud_region = 'us-central1'
 device_id_template = 'test-device-{}'

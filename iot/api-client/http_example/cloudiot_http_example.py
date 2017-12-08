@@ -51,7 +51,7 @@ def create_jwt(project_id, private_key_file, algorithm):
     print('Creating JWT using {} from private key file {}'.format(
             algorithm, private_key_file))
 
-    return jwt.encode(token, private_key, algorithm=algorithm)
+    return jwt.encode(token, private_key, algorithm=algorithm).decode('ascii')
 
 
 def publish_message(
@@ -72,11 +72,12 @@ def publish_message(
             url_suffix)
 
     body = None
+    msg_bytes = base64.urlsafe_b64encode(message.encode('utf-8'))
     if message_type == 'event':
-        body = {'binary_data': base64.urlsafe_b64encode(message)}
+        body = {'binary_data': msg_bytes.decode('ascii')}
     else:
         body = {
-          'state': {'binary_data': base64.urlsafe_b64encode(message)}
+          'state': {'binary_data': msg_bytes.decode('ascii')}
         }
 
     resp = requests.post(
