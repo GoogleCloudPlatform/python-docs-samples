@@ -1,1 +1,4 @@
 Flask==0.12.2
+# v0.13 uses tempfile.SpooledTemporaryFile which is not supported in the app
+# engine sandbox. See https://cloud.google.com/appengine/docs/standard/python/runtime#customized-libraries-in-python-version-27
+Werkzeug<=0.13
