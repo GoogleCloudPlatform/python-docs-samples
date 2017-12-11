@@ -30,7 +30,7 @@ registry_id = 'test-registry-{}'.format(int(time.time()))
 
 def test_config_turn_on(capsys):
     max_temp = 11
-    data = {b'temperature': max_temp}
+    data = {u'temperature': max_temp}
 
     Server = example_server.Server(service_account_json)
     Server._update_device_config(
@@ -48,7 +48,7 @@ def test_config_turn_on(capsys):
 
 def test_config_turn_off(capsys):
     min_temp = -1
-    data = {b'temperature': min_temp}
+    data = {u'temperature': min_temp}
 
     Server = example_server.Server(service_account_json)
     Server._update_device_config(
