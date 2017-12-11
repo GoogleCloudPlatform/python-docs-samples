@@ -1,1 +1,2 @@
+Werkzeug==0.12.2
 Flask==0.12.2
