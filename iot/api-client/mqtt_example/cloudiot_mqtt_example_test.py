@@ -16,7 +16,6 @@ import os
 import sys
 import time
 
-import cloudiot_mqtt_example
 from google.cloud import pubsub
 
 # Add manager for bootstrapping device registry / device for testing
@@ -24,6 +23,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noq
 import manager
 
 import pytest
+
+import cloudiot_mqtt_example
 
 
 cloud_region = 'us-central1'
