@@ -1,5 +1,3 @@
-# [START bigquery_simple_app_pkgs]
 google-cloud-bigquery==0.28.0
-# [END bigquery_simple_app_pkgs]
 google-auth-oauthlib==0.2.0
 pytz==2017.3
