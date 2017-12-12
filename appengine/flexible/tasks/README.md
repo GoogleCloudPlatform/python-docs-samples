@@ -12,8 +12,8 @@ App Engine queues push tasks to an App Engine HTTP target. This directory
 contains both the App Engine app to deploy, as well as the snippets to run
 locally to push tasks to it, which could also be called on App Engine.
 
-`app_engine_queue_snippets.py` is a simple command-line program to create tasks
-to be pushed to the App Engine app.
+`create_app_engine_queue_task.py` is a simple command-line program to create
+tasks to be pushed to the App Engine app.
 
 `main.py` is the main App Engine app. This app serves as an endpoint to receive
 App Engine task attempts.
