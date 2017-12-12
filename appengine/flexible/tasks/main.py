@@ -14,6 +14,7 @@
 
 """App Engine app to serve as an endpoint for App Engine queue samples."""
 
+# [START cloud_tasks_appengine_quickstart]
 from flask import Flask, request
 
 app = Flask(__name__)
@@ -25,6 +26,7 @@ def log_payload():
     payload = request.get_data(as_text=True) or '(empty payload)'
     print('Received task with payload: {}'.format(payload))
     return 'Printed task payload: {}'.format(payload)
+# [END cloud_tasks_appengine_quickstart]
 
 
 @app.route('/')

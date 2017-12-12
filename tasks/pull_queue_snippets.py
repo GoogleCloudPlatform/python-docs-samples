@@ -24,6 +24,7 @@ import argparse
 import base64
 
 
+# [START cloud_tasks_create_task]
 def create_task(project, queue, location):
     """Create a task for a given queue with an arbitrary payload."""
 
@@ -32,25 +33,40 @@ def create_task(project, queue, location):
     # Create a client.
     client = googleapiclient.discovery.build('cloudtasks', 'v2beta2')
 
+    # Prepare the payload.
     payload = 'a message for the recipient'
+
+    # The API expects base64 encoding of the payload, so encode the unicode
+    # `payload` object into a byte string and base64 encode it.
+    base64_encoded_payload = base64.b64encode(payload.encode())
+
+    # The request body object will be emitted in JSON, which requires
+    # unicode objects, so convert the byte string to unicode (still base64).
+    converted_payload = base64_encoded_payload.decode()
+
+    # Construct the request body.
     task = {
         'task': {
             'pull_message': {
-                'payload': base64.b64encode(payload.encode()).decode()
+                'payload': converted_payload
             }
         }
     }
 
+    # Construct the fully qualified queue name.
     queue_name = 'projects/{}/locations/{}/queues/{}'.format(
         project, location, queue)
 
+    # Use the client to build and send the task.
     response = client.projects().locations().queues().tasks().create(
         parent=queue_name, body=task).execute()
 
     print('Created task {}'.format(response['name']))
     return response
+# [END cloud_tasks_create_task]
 
 
+# [START cloud_tasks_pull_task]
 def pull_task(project, queue, location):
     """Pull a single task from a given queue and lease it for 10 minutes."""
 
@@ -74,6 +90,7 @@ def pull_task(project, queue, location):
 
     print('Pulled task {}'.format(response))
     return response['tasks'][0]
+# [END cloud_tasks_pull_task]
 
 
 def acknowledge_task(task):
