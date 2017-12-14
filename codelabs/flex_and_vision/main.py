@@ -63,22 +63,24 @@ def upload_photo():
     blob.make_public()
 
     # Create a Cloud Vision client.
-    vision_client = vision.Client()
+    vision_client = vision.ImageAnnotatorClient()
 
     # Use the Cloud Vision client to detect a face for our image.
     source_uri = 'gs://{}/{}'.format(CLOUD_STORAGE_BUCKET, blob.name)
-    image = vision_client.image(source_uri=source_uri)
-    faces = image.detect_faces(limit=1)
+    image = vision.types.Image(
+        source=vision.types.ImageSource(gcs_image_uri=source_uri))
+    faces = vision_client.face_detection(image).face_annotations
 
     # If a face is detected, save to Datastore the likelihood that the face
     # displays 'joy,' as determined by Google's Machine Learning algorithm.
     if len(faces) > 0:
         face = faces[0]
 
-        # Convert the face.emotions.joy enum type to a string, which will be
-        # something like 'Likelihood.VERY_LIKELY'. Parse that string by the
-        # period to extract only the 'VERY_LIKELY' portion.
-        face_joy = str(face.emotions.joy).split('.')[1]
+        # Convert the likelihood string.
+        likelihoods = [
+            'Unknown', 'Very Unlikely', 'Unlikely', 'Possible', 'Likely',
+            'Very Likely']
+        face_joy = likelihoods[face.joy_likelihood]
     else:
         face_joy = 'Unknown'
 
