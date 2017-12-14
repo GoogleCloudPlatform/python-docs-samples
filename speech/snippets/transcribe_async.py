@@ -51,8 +51,10 @@ def transcribe_file(speech_file):
     print('Waiting for operation to complete...')
     response = operation.result(timeout=90)
 
-    # Print the first alternative of all the consecutive results.
+    # Each result is for a consecutive portion of the audio. Iterate through
+    # them to get the transcripts for the entire audio file.
     for result in response.results:
+        # The first alternative is the most likely one for this portion.
         print('Transcript: {}'.format(result.alternatives[0].transcript))
         print('Confidence: {}'.format(result.alternatives[0].confidence))
     # [END migration_async_response]
@@ -78,8 +80,10 @@ def transcribe_gcs(gcs_uri):
     print('Waiting for operation to complete...')
     response = operation.result(timeout=90)
 
-    # Print the first alternative of all the consecutive results.
+    # Each result is for a consecutive portion of the audio. Iterate through
+    # them to get the transcripts for the entire audio file.
     for result in response.results:
+        # The first alternative is the most likely one for this portion.
         print('Transcript: {}'.format(result.alternatives[0].transcript))
         print('Confidence: {}'.format(result.alternatives[0].confidence))
 # [END def_transcribe_gcs]
