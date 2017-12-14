@@ -31,6 +31,7 @@ Usage example:
 """
 
 import argparse
+import base64
 import io
 import os
 import sys
@@ -378,6 +379,26 @@ def patch_rsa256_auth(
             name=device_name, updateMask='credentials', body=patch).execute()
 
 
+def set_config(
+        service_account_json, project_id, cloud_region, registry_id, device_id,
+        version, config):
+    print('Set device configuration')
+    client = get_client(service_account_json)
+    device_path = 'projects/{}/locations/{}/registries/{}/devices/{}'.format(
+            project_id, cloud_region, registry_id, device_id)
+
+    config_body = {
+        'versionToUpdate': version,
+        'binaryData': base64.urlsafe_b64encode(
+                config.encode('utf-8')).decode('ascii')
+    }
+
+    return client.projects(
+        ).locations().registries(
+        ).devices().modifyCloudToDeviceConfig(
+        name=device_path, body=config_body).execute()
+
+
 def parse_command_line_args():
     """Parse command line arguments."""
     default_registry = 'cloudiot_device_manager_example_registry_{}'.format(
@@ -396,31 +417,39 @@ def parse_command_line_args():
 
     # Optional arguments
     parser.add_argument(
-            '--project_id',
-            default=os.environ.get("GOOGLE_CLOUD_PROJECT"),
-            help='GCP cloud project name.')
+            '--cloud_region', default='us-central1', help='GCP cloud region')
+    parser.add_argument(
+            '--config',
+            default=None,
+            help='Configuration sent to a device.')
+    parser.add_argument(
+            '--device_id',
+            default=None,
+            help='Device id.')
     parser.add_argument(
             '--ec_public_key_file',
             default=None,
             help='Path to public ES256 key file.')
     parser.add_argument(
-            '--rsa_certificate_file',
-            default=None,
-            help='Path to RS256 certificate file.')
-    parser.add_argument(
-            '--cloud_region', default='us-central1', help='GCP cloud region')
-    parser.add_argument(
-            '--service_account_json',
-            default=os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"),
-            help='Path to service account json file.')
+            '--project_id',
+            default=os.environ.get("GOOGLE_CLOUD_PROJECT"),
+            help='GCP cloud project name.')
     parser.add_argument(
             '--registry_id',
             default=default_registry,
             help='Registry id. If not set, a name will be generated.')
     parser.add_argument(
-            '--device_id',
+            '--rsa_certificate_file',
             default=None,
-            help='Device id.')
+            help='Path to RS256 certificate file.')
+    parser.add_argument(
+            '--service_account_json',
+            default=os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"),
+            help='Path to service account json file.')
+    parser.add_argument(
+            '--version',
+            default=None,
+            help='Version number for setting device configuration.')
 
     # Command subparser
     command = parser.add_subparsers(dest='command')
@@ -439,16 +468,13 @@ def parse_command_line_args():
     command.add_parser('list-registries', help=list_registries.__doc__)
     command.add_parser('patch-es256', help=patch_es256_auth.__doc__)
     command.add_parser('patch-rs256', help=patch_rsa256_auth.__doc__)
+    command.add_parser('set-config', help=patch_rsa256_auth.__doc__)
 
     return parser.parse_args()
 
 
-def run_command(args):
-    """Calls the program using the specified command."""
-    if args.project_id is None:
-        print('You must specify a project ID or set the environment variable.')
-        return
-
+def run_create(args):
+    """Handles commands that create devices, registries, or topics."""
     if args.command == 'create-rsa256':
         create_rs256_device(
                 args.service_account_json, args.project_id,
@@ -474,6 +500,16 @@ def run_command(args):
     elif args.command == 'create-topic':
         create_iot_topic(args.project_id, args.pubsub_topic)
 
+
+def run_command(args):
+    """Calls the program using the specified command."""
+    if args.project_id is None:
+        print('You must specify a project ID or set the environment variable.')
+        return
+
+    if args.command.startswith('create'):
+        run_create(args)
+
     elif args.command == 'delete-device':
         delete_device(
                 args.service_account_json, args.project_id,
@@ -494,15 +530,15 @@ def run_command(args):
                 args.service_account_json, args.project_id,
                 args.cloud_region, args.registry_id, args.device_id)
 
-    elif args.command == 'list':
-        list_devices(
-                args.service_account_json, args.project_id,
-                args.cloud_region, args.registry_id)
-
     elif args.command == 'get-registry':
         print(get_registry(
                 args.service_account_json, args.project_id,
                 args.cloud_region, args.registry_id))
+
+    elif args.command == 'list':
+        list_devices(
+                args.service_account_json, args.project_id,
+                args.cloud_region, args.registry_id)
 
     elif args.command == 'list-registries':
         list_registries(
@@ -524,6 +560,16 @@ def run_command(args):
                 args.service_account_json, args.project_id,
                 args.cloud_region, args.registry_id, args.device_id,
                 args.rsa_certificate_file)
+
+    elif args.command == 'set-config':
+        if (args.config is None):
+            sys.exit('Error: specify --config')
+        if (args.version is None):
+            sys.exit('Error: specify --version')
+        set_config(
+                args.service_account_json, args.project_id,
+                args.cloud_region, args.registry_id, args.device_id,
+                args.version, args.config)
 
 
 def main():
