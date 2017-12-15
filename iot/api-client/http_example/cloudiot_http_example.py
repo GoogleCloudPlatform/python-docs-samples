@@ -28,12 +28,11 @@ import json
 import time
 
 from google.api_core import retry
-
 import jwt
 import requests
 
 _BASE_URL = 'https://cloudiot-device.googleapis.com/v1beta1'
-_BACKOFF_DURATION = 10
+_BACKOFF_DURATION = 60
 
 
 def create_jwt(project_id, private_key_file, algorithm):
