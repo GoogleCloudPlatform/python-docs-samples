@@ -27,11 +27,12 @@ import datetime
 import json
 import time
 
+from google.api_core import retry
 import jwt
 import requests
 
-
 _BASE_URL = 'https://cloudiot-device.googleapis.com/v1beta1'
+_BACKOFF_DURATION = 60
 
 
 def create_jwt(project_id, private_key_file, algorithm):
@@ -54,6 +55,9 @@ def create_jwt(project_id, private_key_file, algorithm):
     return jwt.encode(token, private_key, algorithm=algorithm).decode('ascii')
 
 
+@retry.Retry(
+    predicate=retry.if_exception_type(AssertionError),
+    deadline=_BACKOFF_DURATION)
 def publish_message(
         message, message_type, base_url, project_id, cloud_region, registry_id,
         device_id, jwt_token):
@@ -83,9 +87,16 @@ def publish_message(
     resp = requests.post(
             publish_url, data=json.dumps(body), headers=headers)
 
+    if (resp.status_code != 200):
+        print('Response came back {}, retrying'.format(resp.status_code))
+        raise AssertionError('Not OK response: {}'.format(resp.status_code))
+
     return resp
 
 
+@retry.Retry(
+    predicate=retry.if_exception_type(AssertionError),
+    deadline=_BACKOFF_DURATION)
 def get_config(
         version, message_type, base_url, project_id, cloud_region, registry_id,
         device_id, jwt_token):
@@ -101,6 +112,10 @@ def get_config(
         base_url, project_id, cloud_region, registry_id, device_id, version)
 
     resp = requests.get(config_url, headers=headers)
+
+    if (resp.status_code != 200):
+        print('Error getting config: {}, retrying'.format(resp.status_code))
+        raise AssertionError('Not OK response: {}'.format(resp.status_code))
 
     return resp
 
