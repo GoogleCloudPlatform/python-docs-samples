@@ -20,8 +20,8 @@ from flask import Flask, request
 app = Flask(__name__)
 
 
-@app.route('/log_payload', methods=['POST'])
-def log_payload():
+@app.route('/example_task_handler', methods=['POST'])
+def example_task_handler():
     """Log the request payload."""
     payload = request.get_data(as_text=True) or '(empty payload)'
     print('Received task with payload: {}'.format(payload))

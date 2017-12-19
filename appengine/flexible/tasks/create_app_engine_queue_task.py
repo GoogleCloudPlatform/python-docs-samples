@@ -30,12 +30,12 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
     client = googleapiclient.discovery.build('cloudtasks', 'v2beta2')
 
     # Construct the request body.
-    url = '/log_payload'
+    url = '/example_task_handler'
     body = {
         'task': {
-            'app_engine_http_request': {  # Specify the type of request.
-                'http_method': 'POST',
-                'relative_url': url
+            'appEngineHttpRequest': {  # Specify the type of request.
+                'httpMethod': 'POST',
+                'relativeUrl': url
             }
         }
     }
@@ -50,7 +50,7 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
         converted_payload = base64_encoded_payload.decode()
 
         # Add the payload to the request.
-        body['task']['app_engine_http_request']['payload'] = converted_payload
+        body['task']['appEngineHttpRequest']['payload'] = converted_payload
 
     if in_seconds is not None:
         # Convert "seconds from now" into an rfc3339 datetime string.
@@ -58,7 +58,7 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
         scheduled_time = d.isoformat('T') + 'Z'
 
         # Add the rfc3339 datetime string to the request.
-        body['task']['schedule_time'] = scheduled_time
+        body['task']['scheduleTime'] = scheduled_time
 
     # Construct the fully qualified queue name.
     queue_name = 'projects/{}/locations/{}/queues/{}'.format(
@@ -104,7 +104,7 @@ if __name__ == '__main__':
     )
 
     parser.add_argument(
-        '--in_seconds',
+        '--in_seconds', type=int,
         help='The number of seconds from now to schedule task attempt.'
     )
 
