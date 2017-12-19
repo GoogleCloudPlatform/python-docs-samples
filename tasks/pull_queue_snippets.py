@@ -47,7 +47,7 @@ def create_task(project, queue, location):
     # Construct the request body.
     task = {
         'task': {
-            'pull_message': {
+            'pullMessage': {
                 'payload': converted_payload
             }
         }
@@ -77,7 +77,7 @@ def pull_task(project, queue, location):
 
     duration_seconds = '600s'
     pull_options = {
-        'max_tasks': 1,
+        'maxTasks': 1,
         'leaseDuration': duration_seconds,
         'responseView': 'FULL'
     }
