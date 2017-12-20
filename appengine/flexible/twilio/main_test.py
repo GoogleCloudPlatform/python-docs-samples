@@ -11,13 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-import json
-
-import responses
-import requests
 import re
+
 import pytest
+import responses
+
 
 @pytest.fixture
 def app(monkeypatch):
@@ -40,24 +38,24 @@ def test_receive_call(app):
 def test_send_sms(app, monkeypatch):
     sample_response = {
         "sid": "sid",
-        "date_created": "Wed, 20 Dec 2017 19:32:14 +0000", 
-        "date_updated": "Wed, 20 Dec 2017 19:32:14 +0000", 
-        "date_sent": None, 
-        "account_sid": "account_sid", 
-        "to": "+1234567890", 
-        "from": "+9876543210", 
-        "messaging_service_sid": None, 
-        "body": "Hello from Twilio!", 
-        "status": "queued", 
-        "num_segments": "1", 
-        "num_media": "0", 
-        "direction": "outbound-api", 
-        "api_version": "2010-04-01", 
-        "price": None, 
-        "price_unit": "USD", 
-        "error_code": None, 
-        "error_message": None, 
-        "uri": "/2010-04-01/Accounts/sample.json", 
+        "date_created": "Wed, 20 Dec 2017 19:32:14 +0000",
+        "date_updated": "Wed, 20 Dec 2017 19:32:14 +0000",
+        "date_sent": None,
+        "account_sid": "account_sid",
+        "to": "+1234567890",
+        "from": "+9876543210",
+        "messaging_service_sid": None,
+        "body": "Hello from Twilio!",
+        "status": "queued",
+        "num_segments": "1",
+        "num_media": "0",
+        "direction": "outbound-api",
+        "api_version": "2010-04-01",
+        "price": None,
+        "price_unit": "USD",
+        "error_code": None,
+        "error_message": None,
+        "uri": "/2010-04-01/Accounts/sample.json",
         "subresource_uris": {
             "media": "/2010-04-01/Accounts/sample/Media.json"
         }

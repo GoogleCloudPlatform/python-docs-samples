@@ -17,9 +17,9 @@ import logging
 import os
 
 from flask import Flask, request
-from twilio.twiml.voice_response import VoiceResponse
-from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
+from twilio.twiml.messaging_response import MessagingResponse
+from twilio.twiml.voice_response import VoiceResponse
 
 
 # [START configuration]
