@@ -30,7 +30,7 @@ def test_index(app):
 def test_log_payload(capsys, app):
     payload = 'test_payload'
 
-    r = app.post('/log_payload', data=payload)
+    r = app.post('/example_task_handler', data=payload)
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()
@@ -38,7 +38,7 @@ def test_log_payload(capsys, app):
 
 
 def test_empty_payload(capsys, app):
-    r = app.post('/log_payload')
+    r = app.post('/example_task_handler')
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()

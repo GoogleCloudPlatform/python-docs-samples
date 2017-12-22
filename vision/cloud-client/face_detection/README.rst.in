@@ -27,3 +27,5 @@ samples:
 - name: Face detection
   file: faces.py
   show_help: true
+
+folder: vision/cloud-client/face_detection

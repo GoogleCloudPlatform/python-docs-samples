@@ -20,12 +20,7 @@ import datetime
 import json
 
 
-def seconds_from_now_to_rfc3339_datetime(seconds):
-    """Return an RFC 3339 datetime string for a number of seconds from now."""
-    d = datetime.datetime.utcnow() + datetime.timedelta(seconds=seconds)
-    return d.isoformat('T') + 'Z'
-
-
+# [START cloud_tasks_appengine_create_task]
 def create_task(project, queue, location, payload=None, in_seconds=None):
     """Create a task for a given queue with an arbitrary payload."""
 
@@ -34,36 +29,50 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
     # Create a client.
     client = googleapiclient.discovery.build('cloudtasks', 'v2beta2')
 
-    url = '/log_payload'
+    # Construct the request body.
+    url = '/example_task_handler'
     body = {
         'task': {
-            'app_engine_http_request': {
-                'http_method': 'POST',
-                'relative_url': url
+            'appEngineHttpRequest': {  # Specify the type of request.
+                'httpMethod': 'POST',
+                'relativeUrl': url
             }
         }
     }
 
     if payload is not None:
-        # Payload is a string (unicode), and must be encoded for base64.
-        # The finished request body is JSON, which requires unicode.
-        body['task']['app_engine_http_request']['payload'] = base64.b64encode(
-            payload.encode()).decode()
+        # The API expects base64 encoding of the payload, so encode the unicode
+        # `payload` object into a byte string and base64 encode it.
+        base64_encoded_payload = base64.b64encode(payload.encode())
+
+        # The request body object will be emitted in JSON, which requires
+        # unicode objects, so convert the byte string to unicode, still base64.
+        converted_payload = base64_encoded_payload.decode()
+
+        # Add the payload to the request.
+        body['task']['appEngineHttpRequest']['payload'] = converted_payload
 
     if in_seconds is not None:
-        scheduled_time = seconds_from_now_to_rfc3339_datetime(in_seconds)
-        body['task']['schedule_time'] = scheduled_time
+        # Convert "seconds from now" into an rfc3339 datetime string.
+        d = datetime.datetime.utcnow() + datetime.timedelta(seconds=in_seconds)
+        scheduled_time = d.isoformat('T') + 'Z'
 
+        # Add the rfc3339 datetime string to the request.
+        body['task']['scheduleTime'] = scheduled_time
+
+    # Construct the fully qualified queue name.
     queue_name = 'projects/{}/locations/{}/queues/{}'.format(
         project, location, queue)
 
     print('Sending task {}'.format(json.dumps(body)))
 
+    # Use the client to build and send the task.
     response = client.projects().locations().queues().tasks().create(
         parent=queue_name, body=body).execute()
 
     print('Created task {}'.format(response['name']))
     return response
+# [END cloud_tasks_appengine_create_task]
 
 
 if __name__ == '__main__':
@@ -95,7 +104,7 @@ if __name__ == '__main__':
     )
 
     parser.add_argument(
-        '--in_seconds',
+        '--in_seconds', type=int,
         help='The number of seconds from now to schedule task attempt.'
     )
 

@@ -3,6 +3,10 @@
 Google Cloud IoT Core API Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=iot/api-client/http_example/README.rst
+
+
 This directory contains samples for Google Cloud IoT Core API. `Google Cloud IoT Core`_ allows developers to easily integrate Publish and Subscribe functionality with devices and programmatically manage device authorization.
 The following example runs the sample using the project ID `blue-jet-123` and the device name `my-python-device`:
 
@@ -53,6 +57,10 @@ Samples
 HTTP Device Client Example
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=iot/api-client/http_example/cloudiot_http_example.py;iot/api-client/http_example/README.rst
+
+
 
 
 To run this sample:
@@ -70,9 +78,9 @@ To run this sample:
                                     [--num_messages NUM_MESSAGES] --message_type
                                     {event,state} [--base_url BASE_URL]
                                     [--jwt_expires_minutes JWT_EXPIRES_MINUTES]
-    
+
     Example Google Cloud IoT Core HTTP device connection code.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
       --project_id PROJECT_ID
@@ -96,6 +104,7 @@ To run this sample:
       --base_url BASE_URL   Base URL for the Cloud IoT Core Device Service API
       --jwt_expires_minutes JWT_EXPIRES_MINUTES
                             Expiration time, in minutes, for JWT tokens.
+
 
 
 

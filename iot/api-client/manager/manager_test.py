@@ -85,6 +85,34 @@ def test_add_delete_unauth_device(test_topic, capsys):
     assert 'UNAUTH' in out
 
 
+def test_add_config_unauth_device(test_topic, capsys):
+    device_id = device_id_template.format('UNAUTH')
+    manager.open_registry(
+            service_account_json, project_id, cloud_region, pubsub_topic,
+            registry_id)
+
+    manager.create_unauth_device(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id)
+
+    manager.set_config(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id, 0, 'test')
+
+    manager.get_device(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id)
+
+    manager.delete_device(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id)
+
+    out, _ = capsys.readouterr()
+    assert 'Set device configuration' in out
+    assert 'UNAUTH' in out
+    assert 'version: 2' in out
+
+
 def test_add_delete_rs256_device(test_topic, capsys):
     device_id = device_id_template.format('RSA256')
     manager.open_registry(

@@ -27,11 +27,12 @@ import datetime
 import json
 import time
 
+from google.api_core import retry
 import jwt
 import requests
 
-
 _BASE_URL = 'https://cloudiot-device.googleapis.com/v1beta1'
+_BACKOFF_DURATION = 60
 
 
 def create_jwt(project_id, private_key_file, algorithm):
@@ -51,9 +52,12 @@ def create_jwt(project_id, private_key_file, algorithm):
     print('Creating JWT using {} from private key file {}'.format(
             algorithm, private_key_file))
 
-    return jwt.encode(token, private_key, algorithm=algorithm)
+    return jwt.encode(token, private_key, algorithm=algorithm).decode('ascii')
 
 
+@retry.Retry(
+    predicate=retry.if_exception_type(AssertionError),
+    deadline=_BACKOFF_DURATION)
 def publish_message(
         message, message_type, base_url, project_id, cloud_region, registry_id,
         device_id, jwt_token):
@@ -72,15 +76,46 @@ def publish_message(
             url_suffix)
 
     body = None
+    msg_bytes = base64.urlsafe_b64encode(message.encode('utf-8'))
     if message_type == 'event':
-        body = {'binary_data': base64.urlsafe_b64encode(message)}
+        body = {'binary_data': msg_bytes.decode('ascii')}
     else:
         body = {
-          'state': {'binary_data': base64.urlsafe_b64encode(message)}
+          'state': {'binary_data': msg_bytes.decode('ascii')}
         }
 
     resp = requests.post(
             publish_url, data=json.dumps(body), headers=headers)
+
+    if (resp.status_code != 200):
+        print('Response came back {}, retrying'.format(resp.status_code))
+        raise AssertionError('Not OK response: {}'.format(resp.status_code))
+
+    return resp
+
+
+@retry.Retry(
+    predicate=retry.if_exception_type(AssertionError),
+    deadline=_BACKOFF_DURATION)
+def get_config(
+        version, message_type, base_url, project_id, cloud_region, registry_id,
+        device_id, jwt_token):
+    headers = {
+            'authorization': 'Bearer {}'.format(jwt_token),
+            'content-type': 'application/json',
+            'cache-control': 'no-cache'
+    }
+
+    basepath = '{}/projects/{}/locations/{}/registries/{}/devices/{}/'
+    template = basepath + 'config?local_version={}'
+    config_url = template.format(
+        base_url, project_id, cloud_region, registry_id, device_id, version)
+
+    resp = requests.get(config_url, headers=headers)
+
+    if (resp.status_code != 200):
+        print('Error getting config: {}, retrying'.format(resp.status_code))
+        raise AssertionError('Not OK response: {}'.format(resp.status_code))
 
     return resp
 
@@ -142,6 +177,10 @@ def main():
             args.project_id, args.private_key_file, args.algorithm)
     jwt_iat = datetime.datetime.utcnow()
     jwt_exp_mins = args.jwt_expires_minutes
+
+    print('Latest configuration: {}'.format(get_config(
+        '0', args.message_type, args.base_url, args.project_id,
+        args.cloud_region, args.registry_id, args.device_id, jwt_token).text))
 
     # Publish num_messages mesages to the HTTP bridge once per second.
     for i in range(1, args.num_messages + 1):

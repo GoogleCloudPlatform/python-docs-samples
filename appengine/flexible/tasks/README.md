@@ -1,5 +1,10 @@
 # Google Cloud Tasks App Engine Queue Samples
 
+[![Open in Cloud Shell][shell_img]][shell_link]
+
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/tasks/README.md
+
 Sample command-line program for interacting with the Cloud Tasks API
 using App Engine queues.
 
@@ -7,8 +12,8 @@ App Engine queues push tasks to an App Engine HTTP target. This directory
 contains both the App Engine app to deploy, as well as the snippets to run
 locally to push tasks to it, which could also be called on App Engine.
 
-`app_engine_queue_snippets.py` is a simple command-line program to create tasks
-to be pushed to the App Engine app.
+`create_app_engine_queue_task.py` is a simple command-line program to create
+tasks to be pushed to the App Engine app.
 
 `main.py` is the main App Engine app. This app serves as an endpoint to receive
 App Engine task attempts.

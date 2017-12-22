@@ -22,11 +22,10 @@ your application.
 
 import argparse
 
-from google.cloud import bigquery
-from google_auth_oauthlib import flow
-
 
 def run_query(credentials, project, query):
+    from google.cloud import bigquery
+
     client = bigquery.Client(project=project, credentials=credentials)
     query_job = client.query(query)
 
@@ -36,6 +35,8 @@ def run_query(credentials, project, query):
 
 
 def authenticate_and_query(project, query, launch_browser=True):
+    from google_auth_oauthlib import flow
+
     appflow = flow.InstalledAppFlow.from_client_secrets_file(
         'client_secrets.json',
         scopes=['https://www.googleapis.com/auth/bigquery'])

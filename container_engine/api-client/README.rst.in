@@ -16,3 +16,5 @@ samples:
 - name: Snippets
   file: snippets.py
   show_help: true
+
+folder: container_engine/api-client

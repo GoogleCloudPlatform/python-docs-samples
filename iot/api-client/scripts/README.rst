@@ -3,6 +3,10 @@
 Google Cloud IoT Core Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=iot/api-client/scripts/README.rst
+
+
 This directory contains samples for Google Cloud IoT Core. `Google Cloud IoT Core`_ is a fully-managed, globally distributed solution for managing devices and sending / receiving messages from devices. Set the `GOOGLE_CLOUD_PROJECT` environment variable and call the script with your topic ID.
 
 
@@ -54,6 +58,10 @@ Samples
 PubSub helper
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=iot/api-client/scripts/iam.py;iot/api-client/scripts/README.rst
+
+
 
 
 To run this sample:
@@ -63,17 +71,18 @@ To run this sample:
     $ python iam.py
 
     usage: iam.py [-h] topic_name
-    
+
     This application demonstrates how programatically grant access to the
     Cloud IoT Core service account on a given PubSub topic.
-    
+
     For more information, see https://cloud.google.com/iot.
-    
+
     positional arguments:
       topic_name  The PubSub topic to grant Cloud IoT Core access to
-    
+
     optional arguments:
       -h, --help  show this help message and exit
+
 
 
 

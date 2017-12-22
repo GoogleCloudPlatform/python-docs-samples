@@ -3,6 +3,10 @@
 Google Cloud Bigtable Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigtable/metricscaler/README.rst
+
+
 This directory contains samples for Google Cloud Bigtable. `Google Cloud Bigtable`_ is Google's NoSQL Big Data database service. It's the same database that powers many core Google services, including Search, Analytics, Maps, and Gmail.
 
 
@@ -58,6 +62,10 @@ Samples
 Metricscaling example
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigtable/metricscaler/metricscaler.py;bigtable/metricscaler/README.rst
+
+
 
 
 To run this sample:
@@ -70,13 +78,13 @@ To run this sample:
                            [--low_cpu_threshold LOW_CPU_THRESHOLD]
                            [--short_sleep SHORT_SLEEP] [--long_sleep LONG_SLEEP]
                            bigtable_instance bigtable_cluster
-    
+
     Scales Cloud Bigtable clusters based on CPU usage.
-    
+
     positional arguments:
       bigtable_instance     ID of the Cloud Bigtable instance to connect to.
       bigtable_cluster      ID of the Cloud Bigtable cluster to connect to.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
       --high_cpu_threshold HIGH_CPU_THRESHOLD
@@ -91,6 +99,7 @@ To run this sample:
       --long_sleep LONG_SLEEP
                             How long to sleep in seconds between checking metrics
                             after a scaling operation
+
 
 
 

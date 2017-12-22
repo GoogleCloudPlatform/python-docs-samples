@@ -1,4 +1,9 @@
 # Introduction
+
+[![Open in Cloud Shell][shell_img]][shell_link]
+
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=language/movie_nl/README.md
 This sample is an application of the Google Cloud Platform Natural Language API.
 It uses the [imdb movie reviews data set](https://www.cs.cornell.edu/people/pabo/movie-review-data/) 
 from [Cornell University](http://www.cs.cornell.edu/) and performs sentiment & entity

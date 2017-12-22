@@ -1,5 +1,10 @@
 # Endpoints Getting Started with gRPC & Python Quickstart
 
+[![Open in Cloud Shell][shell_img]][shell_link]
+
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=endpoints/getting-started-grpc/README.md
+
 It is assumed that you have a working Python environment and a Google
 Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
 
@@ -141,7 +146,7 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
     gcloud container clusters create my-cluster --zone=us-central1-a
     ```
 
-1. Edit `container-engine.yaml`. Replace `SERVICE_NAME`, `SERVICE_CONFIG_ID`,
+1. Edit `deployment.yaml`. Replace `SERVICE_NAME`, `SERVICE_CONFIG_ID`,
    and `GCLOUD_PROJECT` with your values:
 
    `SERVICE_NAME` is equal to hellogrpc.endpoints.GCLOUD_PROJECT.cloud.goog,
@@ -157,7 +162,7 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
 1. Deploy to GKE:
 
     ```bash
-    kubectl create -f ./container-engine.yaml
+    kubectl create -f ./deployment.yaml
     ```
 
 1. Get IP of load balancer, run until you see an External IP:

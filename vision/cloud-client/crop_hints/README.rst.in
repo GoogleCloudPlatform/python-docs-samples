@@ -26,3 +26,5 @@ samples:
   show_help: True
 
 cloud_client_library: true
+
+folder: vision/cloud-client/crop_hints
