@@ -38,4 +38,5 @@ def mock_project_path():
 def test_quickstart(capsys, mock_project_path):
     quickstart.run_quickstart()
     out, _ = capsys.readouterr()
-    assert 'projects/{}/dataSources/dcm_dt'.format(PROJECT) in out
+    assert 'dataSources/dcm_dt' in out
+
