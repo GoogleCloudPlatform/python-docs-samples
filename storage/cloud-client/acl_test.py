@@ -23,7 +23,9 @@ import acl
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 # Typically we'd use a @example.com address, but GCS requires a real Google
 # account.
-TEST_EMAIL = 'jonwayne@google.com'
+TEST_EMAIL = (
+    'google-auth-system-tests'
+    '@python-docs-samples-tests.iam.gserviceaccount.com')
 
 
 @pytest.fixture
