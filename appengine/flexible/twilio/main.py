@@ -17,9 +17,7 @@ import logging
 import os
 
 from flask import Flask, request
-from twilio.rest import Client
-from twilio.twiml.messaging_response import MessagingResponse
-from twilio.twiml.voice_response import VoiceResponse
+import twilio
 
 
 # [START configuration]
@@ -36,7 +34,7 @@ app = Flask(__name__)
 @app.route('/call/receive', methods=['POST'])
 def receive_call():
     """Answers a call and replies with a simple greeting."""
-    response = VoiceResponse()
+    response = twilio.twiml.voice_response.VoiceResponse()
     response.say('Hello from Twilio!')
     return str(response), 200, {'Content-Type': 'application/xml'}
 # [END receive_call]
@@ -51,7 +49,7 @@ def send_sms():
         return ('Please provide the number to message in the "to" query string'
                 ' parameter.'), 400
 
-    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+    client = twilio.rest.Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
     rv = client.messages.create(
         to=to,
         from_=TWILIO_NUMBER,
@@ -70,7 +68,7 @@ def receive_sms():
 
     message = 'Hello, {}, you said: {}'.format(sender, body)
 
-    response = MessagingResponse()
+    response = twilio.twiml.messaging_response.MessagingResponse()
     response.message(message)
     return str(response), 200, {'Content-Type': 'application/xml'}
 # [END receive_sms]
