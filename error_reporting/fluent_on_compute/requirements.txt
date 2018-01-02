@@ -1,1 +1,1 @@
-fluent-logger==0.8.0
+fluent-logger==0.9.0

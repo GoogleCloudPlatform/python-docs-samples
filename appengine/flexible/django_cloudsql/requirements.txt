@@ -1,4 +1,4 @@
-Django==2.0
+Django==2.0.1
 mysqlclient==1.3.12
 wheel==0.30.0
 gunicorn==19.7.1
