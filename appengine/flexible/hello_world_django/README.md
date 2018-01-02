@@ -45,7 +45,7 @@ In order to deploy to Google App Engine, we created a simple
 
 This sample project uses Django's default sqlite database. This isn't suitable
 for production as your application can run multiple instances and each will
-have a different sqlite database. Additionally, instance disks are emphemmeral,
+have a different sqlite database. Additionally, instance disks are ephemeral,
 so data will not survive restarts.
 
 For production applications running on Google Cloud Platform, you have
