@@ -97,7 +97,7 @@ def publish_message(
 @retry.Retry(
     predicate=retry.if_exception_type(AssertionError),
     deadline=_BACKOFF_DURATION)
-# [START iot_http_get_config]
+# [START iot_http_getconfig]
 def get_config(
         version, message_type, base_url, project_id, cloud_region, registry_id,
         device_id, jwt_token):
@@ -119,7 +119,7 @@ def get_config(
         raise AssertionError('Not OK response: {}'.format(resp.status_code))
 
     return resp
-# [END iot_http_get_config]
+# [END iot_http_getconfig]
 
 def parse_command_line_args():
     """Parse command line arguments."""
