@@ -1,9 +1,9 @@
 # This file is used to generate README.rst
 
 product:
-  name: Google Cloud IoT Core API
+  name: Google Cloud IoT Core
   short_name: Cloud IoT Core
-  url: https://cloud.google.com/vision/docs
+  url: https://cloud.google.com/iot/docs
   description: >
     `Google Cloud IoT Core`_ allows developers to easily integrate Publish and
     Subscribe functionality with devices and programmatically manage device
