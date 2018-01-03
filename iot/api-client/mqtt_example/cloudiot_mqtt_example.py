@@ -219,6 +219,7 @@ def main():
                 args.registry_id, args.device_id, i)
         print('Publishing message {}/{}: \'{}\''.format(
                 i, args.num_messages, payload))
+        # [START iot_mqtt_jwt_refresh]
         seconds_since_issue = (datetime.datetime.utcnow() - jwt_iat).seconds
         if seconds_since_issue > 60 * jwt_exp_mins:
             print('Refreshing token after {}s').format(seconds_since_issue)
@@ -229,7 +230,7 @@ def main():
                 args.registry_id, args.device_id, args.private_key_file,
                 args.algorithm, args.ca_certs, args.mqtt_bridge_hostname,
                 args.mqtt_bridge_port)
-
+        # [END iot_mqtt_jwt_refresh]
         # Publish "payload" to the MQTT topic. qos=1 means at least once
         # delivery. Cloud IoT Core also supports qos=0 for at most once
         # delivery.
