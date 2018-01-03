@@ -80,3 +80,4 @@ def inspect_string(item, info_types=None, min_likelihood=None,
 
 if __name__ == '__main__':
     inspect_string("I'm Gary and my email is gary@example.com", ["EMAIL_ADDRESS", "US_MALE_NAME", "US_FEMALE_NAME"])
+    # DO NOT SUBMIT

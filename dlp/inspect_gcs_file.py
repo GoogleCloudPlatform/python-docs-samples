@@ -89,4 +89,5 @@ def inspect_gcs_file(bucket, filename, info_types=None, min_likelihood=None,
 # [END inspect_gcs_file]
 
 if __name__ == '__main__':
-    inspect_gcs_file('andrewsg-test', 'wQOVLom8Gsa.png', ["EMAIL_ADDRESS", "US_MALE_NAME", "US_FEMALE_NAME"])
+#    inspect_gcs_file('andrewsg-test', 'wQOVLom8Gsa.png', ["EMAIL_ADDRESS", "US_MALE_NAME", "US_FEMALE_NAME"])
+    inspect_gcs_file('nodejs-docs-samples-dlp', 'test.txt', ["EMAIL_ADDRESS", "PHONE_NUMBER"])
