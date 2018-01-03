@@ -121,6 +121,7 @@ def get_config(
     return resp
 # [END iot_http_getconfig]
 
+
 def parse_command_line_args():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description=(
