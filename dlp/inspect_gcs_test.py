@@ -49,6 +49,7 @@ def bucket(request):
     # Yield the object to the test code; lines after this execute as a teardown.
     yield bucket
 
+    # Delete the files.
     for blob in blobs:
         blob.delete()
 

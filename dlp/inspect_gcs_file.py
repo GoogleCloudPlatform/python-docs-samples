@@ -12,7 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Sample app that uses the Data Loss Prevent API to inspect a file on Google
+Cloud Storage."""
+
+
 from __future__ import print_function
+
+import argparse
 
 
 # [START inspect_gcs_file]
@@ -88,6 +94,35 @@ def inspect_gcs_file(bucket, filename, info_types=None, min_likelihood=None,
         print('No findings.')
 # [END inspect_gcs_file]
 
+
 if __name__ == '__main__':
-#    inspect_gcs_file('andrewsg-test', 'wQOVLom8Gsa.png', ["EMAIL_ADDRESS", "US_MALE_NAME", "US_FEMALE_NAME"])
-    inspect_gcs_file('nodejs-docs-samples-dlp', 'test.txt', ["EMAIL_ADDRESS", "PHONE_NUMBER"])
+    parser = argparse.ArgumentParser(
+        description=__doc__)
+    parser.add_argument('bucket',
+        help='The name of the GCS bucket containing the file.')
+    parser.add_argument('filename',
+        help='The name of the file in the bucket, including the path, e.g. '
+        '"images/myfile.png".')
+    parser.add_argument('--info_types', action='append',
+        help='Strings representing info types to look for. A full list of info '
+             'categories and types is available from the API. Examples '
+             'include "US_MALE_NAME", "US_FEMALE_NAME", "EMAIL_ADDRESS", '
+             '"CANADA_SOCIAL_INSURANCE_NUMBER", "JAPAN_PASSPORT". If omitted, '
+             'the API will use a limited default set. Specify this flag '
+             'multiple times to specify multiple info types.')
+    parser.add_argument('--min_likelihood',
+        choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
+                 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'],
+        help='A string representing the minimum likelihood threshold that '
+             'constitutes a match.')
+    parser.add_argument('--max_findings', type=int,
+        help='The maximum number of findings to report; 0 = no maximum.')
+    parser.add_argument('--include_quote', type=bool,
+        help='A boolean for whether to display a quote of the detected '
+             'information in the results.')
+
+    args = parser.parse_args()
+
+    inspect_gcs_file(
+        args.bucket, args.filename, info_types=args.info_types,
+        min_likelihood=args.min_likelihood, include_quote=args.include_quote)
