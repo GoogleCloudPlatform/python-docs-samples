@@ -216,13 +216,8 @@ def inspect_gcs_file(bucket, filename, info_types=None, min_likelihood=None,
 
     response = dlp.list_inspect_findings(operation_result.name)
 
-    # TODO DO NOT SUBMIT: haven't successfully gotten results object so not sure this is correct
     if response.result.findings:
         for finding in response.result.findings:
-            try:
-                print('Quote: {}'.format(finding.quote))
-            except AttributeError:
-                pass
             print('Info type: {}'.format(finding.info_type.name))
             print('Likelihood: {}'.format(finding.likelihood))
     else:
