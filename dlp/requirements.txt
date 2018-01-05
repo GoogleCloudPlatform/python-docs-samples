@@ -1,3 +1,4 @@
 # DO NOT SUBMIT
-/usr/local/google/home/gorcester/src/google-cloud-python/dlp
 google-cloud-storage
+/Users/gorcester/src/google-cloud-python/dlp
+

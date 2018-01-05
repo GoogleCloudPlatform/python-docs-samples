@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Sample app that uses the Data Loss Prevent API to inspect a string, a
+"""Sample app that uses the Data Loss Prevention API to inspect a string, a
 local file or a file on Google Cloud Storage."""
 
 from __future__ import print_function
@@ -49,7 +49,7 @@ def inspect_string(item, info_types=None, min_likelihood=None,
     # Instantiate a client.
     dlp = google.cloud.dlp.DlpServiceClient()
 
-    # Prepare info_type by converting the list of strings into a list of
+    # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted).
     if info_types is not None:
         info_types = [{'name': info_type} for info_type in info_types]
@@ -116,7 +116,7 @@ def inspect_file(filename, info_types=None, min_likelihood=None,
     # Instantiate a client.
     dlp = google.cloud.dlp.DlpServiceClient()
 
-    # Prepare info_type by converting the list of strings into a list of
+    # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted).
     if info_types is not None:
         info_types = [{'name': info_type} for info_type in info_types]
@@ -135,7 +135,8 @@ def inspect_file(filename, info_types=None, min_likelihood=None,
         mime_guess = mimetypes.MimeTypes().guess_type(filename)
         mime_type = mime_guess[0] or 'application/octet-stream'
 
-    # Construct the items list by reading the file as a binary string.
+    # Construct the items list (in this case, only one item, containing the
+    # file's byte data).
     with open(filename, mode='rb') as f:
         items = [{'type': mime_type, 'data': f.read()}]
 
@@ -185,7 +186,7 @@ def inspect_gcs_file(bucket, filename, info_types=None, min_likelihood=None,
     # Instantiate a client.
     dlp = google.cloud.dlp.DlpServiceClient()
 
-    # Prepare info_type by converting the list of strings into a list of
+    # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted).
     if info_types is not None:
         info_types = [{'name': info_type} for info_type in info_types]

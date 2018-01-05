@@ -12,7 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import tempfile
+import shutil
+import os
+
+import pytest
+
 import redact
+
+RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), 'resources')
+
+
+@pytest.fixture(scope='module')
+def tempdir():
+    tempdir = tempfile.mkdtemp()
+    yield tempdir
+#    shutil.rmtree(tempdir) # DO NOT SUBMIT
 
 def test_redact_string(capsys):
     test_string = 'I am Gary and my email is gary@example.com'
@@ -21,6 +36,7 @@ def test_redact_string(capsys):
 
     out, _ = capsys.readouterr()
     assert 'REDACTED' in out
+
 
 def test_redact_string_with_info_types(capsys):
     test_string = 'My email is gary@example.com and my number is 206-555-5555'
@@ -32,6 +48,7 @@ def test_redact_string_with_info_types(capsys):
     assert 'REDACTED' in out
     assert out.count('REDACTED') == 1
 
+
 def test_redact_string_no_findings(capsys):
     test_string = 'Nothing to see here'
 
@@ -39,3 +56,22 @@ def test_redact_string_no_findings(capsys):
 
     out, _ = capsys.readouterr()
     assert 'REDACTED' not in out
+
+def test_redact_image_file(tempdir, capsys):
+    test_filepath = os.path.join(RESOURCE_DIRECTORY, 'test.png')
+    output_filepath = os.path.join(tempdir, 'redacted.png')
+
+    redact.redact_image(test_filepath, output_filepath)
+
+    out, _ = capsys.readouterr()
+    assert output_filepath in out
+
+def test_redact_image_file_with_infotype(tempdir, capsys):
+    test_filepath = os.path.join(RESOURCE_DIRECTORY, 'test.png')
+    output_filepath = os.path.join(tempdir, 'redacted_with_infotype.png')
+
+    redact.redact_image(test_filepath, output_filepath,
+        info_types=['EMAIL_ADDRESS', 'US_MALE_NAME'])
+
+    out, _ = capsys.readouterr()
+    assert output_filepath in out
