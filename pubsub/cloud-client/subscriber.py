@@ -110,6 +110,34 @@ def receive_messages_with_flow_control(project, subscription_name):
         time.sleep(60)
 
 
+def listen_for_errors(project, subscription_name):
+    """Receives messages and catches errors from a pull subscription."""
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_path = subscriber.subscription_path(
+        project, subscription_name)
+
+    def callback(message):
+        try:
+            print('Received message: {}'.format(message))
+            message.ack()
+            future.result()
+        except Exception as e:
+            print(
+                'Listening for messages on {} threw an Exception: {}.'.format(
+                    subscription_name, e))
+            subscription.close()
+        raise
+
+    subscription = subscriber.subscribe(subscription_path, callback=callback)
+    future = subscription.open(callback)
+
+    # The subscriber is non-blocking, so we must keep the main thread from
+    # exiting to allow it to process messages in the background.
+    print('Listening for messages and errors on {}'.format(subscription_path))
+    while True:
+        time.sleep(60)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -143,6 +171,10 @@ if __name__ == '__main__':
         help=receive_messages_with_flow_control.__doc__)
     receive_with_flow_control_parser.add_argument('subscription_name')
 
+    listen_for_errors_parser = subparsers.add_parser(
+        'listen_for_errors', help=listen_for_errors.__doc__)
+    listen_for_errors_parser.add_argument('subscription_name')
+
     args = parser.parse_args()
 
     if args.command == 'list_in_topic':
@@ -160,3 +192,5 @@ if __name__ == '__main__':
     elif args.command == 'receive-flow-control':
         receive_messages_with_flow_control(
             args.project, args.subscription_name)
+    elif args.command == 'listen_for_errors':
+        listen_for_errors(args.project, args.subscription_name)
