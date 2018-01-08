@@ -131,8 +131,7 @@ def listen_for_errors(project, subscription_name):
         print(
             'Listening for messages on {} threw an Exception: {}.'.format(
                 subscription_name, e))
-        subscription.close()
-    raise
+        raise
 
 
 if __name__ == '__main__':
