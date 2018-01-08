@@ -160,7 +160,7 @@ def inspect_file(filename, info_types=None, min_likelihood=None,
 # [START inspect_gcs_file]
 def inspect_gcs_file(bucket, filename, info_types=None, min_likelihood=None,
                  max_findings=None):
-    """Uses the Data Loss Prevention API to analyze a string for protected data.
+    """Uses the Data Loss Prevention API to analyze a file on GCS.
     Args:
         bucket: The name of the GCS bucket containing the file, as a string.
         filename: The name of the file in the bucket, including the path, as a

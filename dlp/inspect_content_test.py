@@ -161,7 +161,7 @@ def test_inspect_gcs_image_file(bucket, capsys):
     assert 'Info type: EMAIL_ADDRESS' in out
 
 
-def test_inspect_gcs_multiple_file(bucket, capsys):
+def test_inspect_gcs_multiple_files(bucket, capsys):
     inspect_content.inspect_gcs_file(bucket.name, '*')
 
     out, _ = capsys.readouterr()

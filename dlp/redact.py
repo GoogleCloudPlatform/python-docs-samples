@@ -87,7 +87,7 @@ def redact_string(item, replace_string, info_types=None, min_likelihood=None):
 # [START redact_image]
 def redact_image(filename, output_filename,
                  info_types=None, min_likelihood=None, mime_type=None):
-    """Uses the Data Loss Prevention API to redact protected data in a string.
+    """Uses the Data Loss Prevention API to redact protected data in an image.
     Args:
         filename: The path to the file to inspect.
         output_filename: The path to which the redacted image will be written.
