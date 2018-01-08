@@ -117,25 +117,22 @@ def listen_for_errors(project, subscription_name):
         project, subscription_name)
 
     def callback(message):
-        try:
-            print('Received message: {}'.format(message))
-            message.ack()
-            future.result()
-        except Exception as e:
-            print(
-                'Listening for messages on {} threw an Exception: {}.'.format(
-                    subscription_name, e))
-            subscription.close()
-        raise
+        print('Received message: {}'.format(message))
+        message.ack()
 
     subscription = subscriber.subscribe(subscription_path, callback=callback)
-    future = subscription.open(callback)
 
-    # The subscriber is non-blocking, so we must keep the main thread from
-    # exiting to allow it to process messages in the background.
-    print('Listening for messages and errors on {}'.format(subscription_path))
-    while True:
-        time.sleep(60)
+    # Blocks the thread while messages are coming in through the stream. Any
+    # exceptions that crop up on the thread will be set on the future.
+    future = subscription.open(callback)
+    try:
+        future.result()
+    except Exception as e:
+        print(
+            'Listening for messages on {} threw an Exception: {}.'.format(
+                subscription_name, e))
+        subscription.close()
+    raise
 
 
 if __name__ == '__main__':
