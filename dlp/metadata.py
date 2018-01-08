@@ -73,19 +73,22 @@ def list_categories(language_code='en-US'):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    subparsers = parser.add_subparsers(dest='metadata',
-        help='Select which type of metadata to view.')
+    subparsers = parser.add_subparsers(
+        dest='metadata', help='Select which type of metadata to view.')
 
-    parser_categories = subparsers.add_parser('categories',
-        help='Fetch the list of info type categories.')
-    parser_categories.add_argument('--language_code',
+    parser_categories = subparsers.add_parser(
+        'categories', help='Fetch the list of info type categories.')
+    parser_categories.add_argument(
+        '--language_code',
         help='The BCP-47 language code to use, e.g. \'en-US\'.')
 
-    parser_info_types = subparsers.add_parser('info_types',
+    parser_info_types = subparsers.add_parser(
+        'info_types',
         help='Fetch the list of info types in a specified category.')
-    parser_info_types.add_argument('category',
-        help='The category of info types to list; e.g. \'PII\'.')
-    parser_info_types.add_argument('--language_code',
+    parser_info_types.add_argument(
+        'category', help='The category of info types to list; e.g. \'PII\'.')
+    parser_categories.add_argument(
+        '--language_code',
         help='The BCP-47 language code to use, e.g. \'en-US\'.')
 
     args = parser.parse_args()

@@ -23,16 +23,12 @@ import argparse
 # [START inspect_string]
 def inspect_string(item, info_types=None, min_likelihood=None,
                    max_findings=None, include_quote=True):
-    """Uses the Data Loss Prevention API to analyze a string for protected data.
+    """Uses the Data Loss Prevention API to analyze strings for protected data.
     Args:
         item: The string to inspect.
         info_types: A list of strings representing info types to look for.
-            A full list of info type categories can be fetched from the API with
-            the .list_root_categories(language_code) client method, and a list
-            of types in a category with .list_info_types(category,
-            language_code). Examples include 'US_MALE_NAME', 'US_FEMALE_NAME',
-            'EMAIL_ADDRESS', 'CANADA_SOCIAL_INSURANCE_NUMBER', 'JAPAN_PASSPORT'.
-            If info_types is omitted, the API will use a limited default set.
+            A full list of info type categories can be fetched from the API. If
+            info_types is omitted, the API will use a limited default set.
         min_likelihood: A string representing the minimum likelihood threshold
             that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
             'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
@@ -90,12 +86,8 @@ def inspect_file(filename, info_types=None, min_likelihood=None,
     Args:
         filename: The path to the file to inspect.
         info_types: A list of strings representing info types to look for.
-            A full list of info type categories can be fetched from the API with
-            the .list_root_categories(language_code) client method, and a list
-            of types in a category with .list_info_types(category,
-            language_code). Examples include 'US_MALE_NAME', 'US_FEMALE_NAME',
-            'EMAIL_ADDRESS', 'CANADA_SOCIAL_INSURANCE_NUMBER', 'JAPAN_PASSPORT'.
-            If info_types is omitted, the API will use a limited default set.
+            A full list of info type categories can be fetched from the API. If
+            info_types is omitted, the API will use a limited default set.
         min_likelihood: A string representing the minimum likelihood threshold
             that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
             'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
@@ -159,19 +151,15 @@ def inspect_file(filename, info_types=None, min_likelihood=None,
 
 # [START inspect_gcs_file]
 def inspect_gcs_file(bucket, filename, info_types=None, min_likelihood=None,
-                 max_findings=None):
+                     max_findings=None):
     """Uses the Data Loss Prevention API to analyze a file on GCS.
     Args:
         bucket: The name of the GCS bucket containing the file, as a string.
         filename: The name of the file in the bucket, including the path, as a
             string; e.g. 'images/myfile.png'.
         info_types: A list of strings representing info types to look for.
-            A full list of info type categories can be fetched from the API with
-            the .list_root_categories(language_code) client method, and a list
-            of types in a category with .list_info_types(category,
-            language_code). Examples include 'US_MALE_NAME', 'US_FEMALE_NAME',
-            'EMAIL_ADDRESS', 'CANADA_SOCIAL_INSURANCE_NUMBER', 'JAPAN_PASSPORT'.
-            If info_types is omitted, the API will use a limited default set.
+            A full list of info type categories can be fetched from the API. If
+            info_types is omitted, the API will use a limited default set.
         min_likelihood: A string representing the minimum likelihood threshold
             that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
             'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
@@ -201,11 +189,11 @@ def inspect_gcs_file(bucket, filename, info_types=None, min_likelihood=None,
 
     # Construct a cloud_storage_options dictionary with the file's URL.
     url = 'gs://{}/{}'.format(bucket, filename)
-    storage_config = {'cloud_storage_options':
-                         {'file_set':
-                             {'url': url}
-                         }
-                     }
+    storage_config = {
+        'cloud_storage_options': {
+            'file_set': {'url': url}
+            }
+        }
 
     operation = dlp.create_inspect_operation(inspect_config, storage_config,
                                              None)
@@ -228,73 +216,86 @@ def inspect_gcs_file(bucket, filename, info_types=None, min_likelihood=None,
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    subparsers = parser.add_subparsers(dest='content',
-        help='Select how to submit content to the API.')
+    subparsers = parser.add_subparsers(
+        dest='content', help='Select how to submit content to the API.')
 
     parser_string = subparsers.add_parser('string', help='Inspect a string.')
     parser_string.add_argument('item', help='The string to inspect.')
-    parser_string.add_argument('--info_types', action='append',
+    parser_string.add_argument(
+        '--info_types', action='append',
         help='Strings representing info types to look for. A full list of '
              'info categories and types is available from the API. Examples '
              'include "US_MALE_NAME", "US_FEMALE_NAME", "EMAIL_ADDRESS", '
              '"CANADA_SOCIAL_INSURANCE_NUMBER", "JAPAN_PASSPORT". If omitted, '
              'the API will use a limited default set. Specify this flag '
              'multiple times to specify multiple info types.')
-    parser_string.add_argument('--min_likelihood',
+    parser_string.add_argument(
+        '--min_likelihood',
         choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
                  'POSSIBLE', 'LIKELY', 'VERY_LIKELY'],
         help='A string representing the minimum likelihood threshold that '
              'constitutes a match.')
-    parser_string.add_argument('--max_findings', type=int,
+    parser_string.add_argument(
+        '--max_findings', type=int,
         help='The maximum number of findings to report; 0 = no maximum.')
-    parser_string.add_argument('--include_quote', type=bool,
+    parser_string.add_argument(
+        '--include_quote', type=bool,
         help='A boolean for whether to display a quote of the detected '
              'information in the results.')
 
     parser_file = subparsers.add_parser('file', help='Inspect a local file.')
-    parser_file.add_argument('filename',
-        help='The path to the file to inspect.')
-    parser_file.add_argument('--info_types', action='append',
+    parser_file.add_argument(
+        'filename', help='The path to the file to inspect.')
+    parser_file.add_argument(
+        '--info_types', action='append',
         help='Strings representing info types to look for. A full list of '
              'info categories and types is available from the API. Examples '
              'include "US_MALE_NAME", "US_FEMALE_NAME", "EMAIL_ADDRESS", '
              '"CANADA_SOCIAL_INSURANCE_NUMBER", "JAPAN_PASSPORT". If omitted, '
              'the API will use a limited default set. Specify this flag '
              'multiple times to specify multiple info types.')
-    parser_file.add_argument('--min_likelihood',
+    parser_file.add_argument(
+        '--min_likelihood',
         choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
                  'POSSIBLE', 'LIKELY', 'VERY_LIKELY'],
         help='A string representing the minimum likelihood threshold that '
              'constitutes a match.')
-    parser_file.add_argument('--max_findings', type=int,
+    parser_file.add_argument(
+        '--max_findings', type=int,
         help='The maximum number of findings to report; 0 = no maximum.')
-    parser_file.add_argument('--include_quote', type=bool,
+    parser_file.add_argument(
+        '--include_quote', type=bool,
         help='A boolean for whether to display a quote of the detected '
              'information in the results.')
-    parser_file.add_argument('--mime_type',
+    parser_file.add_argument(
+        '--mime_type',
         help='The MIME type of the file. If not specified, the type is '
              'inferred via the Python standard library\'s mimetypes module.')
 
-    parser_gcs = subparsers.add_parser('gcs',
-        help='Inspect files on Google Cloud Storage.')
-    parser_gcs.add_argument('bucket',
-        help='The name of the GCS bucket containing the file.')
-    parser_gcs.add_argument('filename',
+    parser_gcs = subparsers.add_parser(
+        'gcs', help='Inspect files on Google Cloud Storage.')
+    parser_gcs.add_argument(
+        'bucket', help='The name of the GCS bucket containing the file.')
+    parser_gcs.add_argument(
+        'filename',
         help='The name of the file in the bucket, including the path, e.g. '
         '"images/myfile.png". Wildcards are permitted.')
-    parser_gcs.add_argument('--info_types', action='append',
+    parser_gcs.add_argument(
+        '--info_types', action='append',
         help='Strings representing info types to look for. A full list of '
              'info categories and types is available from the API. Examples '
              'include "US_MALE_NAME", "US_FEMALE_NAME", "EMAIL_ADDRESS", '
              '"CANADA_SOCIAL_INSURANCE_NUMBER", "JAPAN_PASSPORT". If omitted, '
              'the API will use a limited default set. Specify this flag '
              'multiple times to specify multiple info types.')
-    parser_gcs.add_argument('--min_likelihood',
+    parser_gcs.add_argument(
+        '--min_likelihood',
         choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
                  'POSSIBLE', 'LIKELY', 'VERY_LIKELY'],
         help='A string representing the minimum likelihood threshold that '
              'constitutes a match.')
-    parser_gcs.add_argument('--max_findings', type=int,
+    parser_gcs.add_argument(
+        '--max_findings', type=int,
         help='The maximum number of findings to report; 0 = no maximum.')
 
     args = parser.parse_args()
@@ -302,11 +303,13 @@ if __name__ == '__main__':
     if args.content == 'string':
         inspect_string(
             args.item, info_types=args.info_types,
-            min_likelihood=args.min_likelihood, include_quote=args.include_quote)
+            min_likelihood=args.min_likelihood,
+            include_quote=args.include_quote)
     elif args.content == 'file':
         inspect_file(
             args.filename, info_types=args.info_types,
-            min_likelihood=args.min_likelihood, include_quote=args.include_quote,
+            min_likelihood=args.min_likelihood,
+            include_quote=args.include_quote,
             mime_type=args.mime_type)
     elif args.content == 'gcs':
         inspect_gcs_file(

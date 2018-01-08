@@ -14,10 +14,10 @@
 
 import os
 
-import pytest
-
 import google.cloud.exceptions
 import google.cloud.storage
+
+import pytest
 
 import inspect_content
 
@@ -47,7 +47,7 @@ def bucket(request):
         blob.upload_from_filename(path)
         blobs.append(blob)
 
-    # Yield the object to the test code; lines after this execute as a teardown.
+    # Yield the object to the test; lines after this execute as a teardown.
     yield bucket
 
     # Delete the files.

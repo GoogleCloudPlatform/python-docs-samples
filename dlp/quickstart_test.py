@@ -14,6 +14,7 @@
 
 import quickstart
 
+
 def test_quickstart(capsys):
     quickstart.quickstart()
 

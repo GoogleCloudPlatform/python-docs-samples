@@ -20,6 +20,7 @@ from __future__ import print_function
 import argparse
 import mimetypes
 
+
 # [START redact_string]
 def redact_string(item, replace_string, info_types=None, min_likelihood=None):
     """Uses the Data Loss Prevention API to redact protected data in a string.
@@ -28,12 +29,8 @@ def redact_string(item, replace_string, info_types=None, min_likelihood=None):
         replace_string: The string to use to replace protected data; for
             instance, '***' or 'REDACTED'. An empty string is permitted.
         info_types: A list of strings representing info types to look for.
-            A full list of info type categories can be fetched from the API with
-            the .list_root_categories(language_code) client method, and a list
-            of types in a category with .list_info_types(category,
-            language_code). Examples include 'US_MALE_NAME', 'US_FEMALE_NAME',
-            'EMAIL_ADDRESS', 'CANADA_SOCIAL_INSURANCE_NUMBER', 'JAPAN_PASSPORT'.
-            If info_types is omitted, the API will use a limited default set.
+            A full list of info type categories can be fetched from the API. If
+            info_types is omitted, the API will use a limited default set.
         min_likelihood: A string representing the minimum likelihood threshold
             that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
             'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
@@ -84,6 +81,7 @@ def redact_string(item, replace_string, info_types=None, min_likelihood=None):
     print(response.items[0].value)
 # [END redact_string]
 
+
 # [START redact_image]
 def redact_image(filename, output_filename,
                  info_types=None, min_likelihood=None, mime_type=None):
@@ -92,12 +90,8 @@ def redact_image(filename, output_filename,
         filename: The path to the file to inspect.
         output_filename: The path to which the redacted image will be written.
         info_types: A list of strings representing info types to look for.
-            A full list of info type categories can be fetched from the API with
-            the .list_root_categories(language_code) client method, and a list
-            of types in a category with .list_info_types(category,
-            language_code). Examples include 'US_MALE_NAME', 'US_FEMALE_NAME',
-            'EMAIL_ADDRESS', 'CANADA_SOCIAL_INSURANCE_NUMBER', 'JAPAN_PASSPORT'.
-            If info_types is omitted, the API will use a limited default set.
+            A full list of info type categories can be fetched from the API. If
+            info_types is omitted, the API will use a limited default set.
         min_likelihood: A string representing the minimum likelihood threshold
             that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
             'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
@@ -118,7 +112,6 @@ def redact_image(filename, output_filename,
     # image_redaction_configs.
     if info_types is not None:
         info_types = [{'name': info_type} for info_type in info_types]
-
 
     # Prepare image_redaction_configs, a list of dictionaries. Each dictionary
     # contains an info_type and optionally the color used for the replacement.
@@ -146,7 +139,8 @@ def redact_image(filename, output_filename,
         items = [{'type': mime_type, 'data': f.read()}]
 
     # Call the API.
-    response = dlp.redact_content(redact_config, items, None,
+    response = dlp.redact_content(
+        redact_config, items, None,
         image_redaction_configs=image_redaction_configs)
 
     # Write out the results.
@@ -156,46 +150,55 @@ def redact_image(filename, output_filename,
         byte_count=len(response.items[0].data), filename=output_filename))
 # [END redact_string]
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    subparsers = parser.add_subparsers(dest='content',
-        help='Select how to submit content to the API.')
+    subparsers = parser.add_subparsers(
+        dest='content', help='Select how to submit content to the API.')
 
     parser_string = subparsers.add_parser('string', help='Inspect a string.')
     parser_string.add_argument('item', help='The string to inspect.')
-    parser_string.add_argument('replace_string', help='The string to use to '
-        'replace protected data; for instance, "***" or "REDACTED".')
-    parser_string.add_argument('--info_types', action='append',
+    parser_string.add_argument(
+        'replace_string',
+        help='The string to use to replace protected data; for instance, '
+             '"***" or "REDACTED".')
+    parser_string.add_argument(
+        '--info_types', action='append',
         help='Strings representing info types to look for. A full list of '
              'info categories and types is available from the API. Examples '
              'include "US_MALE_NAME", "US_FEMALE_NAME", "EMAIL_ADDRESS", '
              '"CANADA_SOCIAL_INSURANCE_NUMBER", "JAPAN_PASSPORT". If omitted, '
              'the API will use a limited default set. Specify this flag '
              'multiple times to specify multiple info types.')
-    parser_string.add_argument('--min_likelihood',
+    parser_string.add_argument(
+        '--min_likelihood',
         choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
                  'POSSIBLE', 'LIKELY', 'VERY_LIKELY'],
         help='A string representing the minimum likelihood threshold that '
              'constitutes a match.')
 
     parser_file = subparsers.add_parser('image', help='Inspect an image file.')
-    parser_file.add_argument('filename',
-        help='The path to the file to inspect.')
-    parser_file.add_argument('output_filename',
+    parser_file.add_argument(
+        'filename', help='The path to the file to inspect.')
+    parser_file.add_argument(
+        'output_filename',
         help='The path to which the redacted image will be written.')
-    parser_file.add_argument('--info_types', action='append',
+    parser_file.add_argument(
+        '--info_types', action='append',
         help='Strings representing info types to look for. A full list of '
              'info categories and types is available from the API. Examples '
              'include "US_MALE_NAME", "US_FEMALE_NAME", "EMAIL_ADDRESS", '
              '"CANADA_SOCIAL_INSURANCE_NUMBER", "JAPAN_PASSPORT". If omitted, '
              'the API will use a limited default set. Specify this flag '
              'multiple times to specify multiple info types.')
-    parser_file.add_argument('--min_likelihood',
+    parser_file.add_argument(
+        '--min_likelihood',
         choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
                  'POSSIBLE', 'LIKELY', 'VERY_LIKELY'],
         help='A string representing the minimum likelihood threshold that '
              'constitutes a match.')
-    parser_file.add_argument('--mime_type',
+    parser_file.add_argument(
+        '--mime_type',
         help='The MIME type of the file. If not specified, the type is '
              'inferred via the Python standard library\'s mimetypes module.')
 

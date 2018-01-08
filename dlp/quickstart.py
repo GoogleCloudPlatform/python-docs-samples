@@ -17,6 +17,7 @@ categories and info types."""
 
 from __future__ import print_function
 
+
 def quickstart():
     """Demonstrates use of the Data Loss Prevention API client library."""
 
@@ -69,6 +70,7 @@ def quickstart():
     else:
         print('No findings.')
     # [END quickstart]
+
 
 if __name__ == '__main__':
     quickstart()
