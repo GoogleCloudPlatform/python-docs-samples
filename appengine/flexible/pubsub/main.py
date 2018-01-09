@@ -30,7 +30,7 @@ app = Flask(__name__)
 app.config['PUBSUB_VERIFICATION_TOKEN'] = \
     os.environ['PUBSUB_VERIFICATION_TOKEN']
 app.config['PUBSUB_TOPIC'] = os.environ['PUBSUB_TOPIC']
-app.config['PROJECT'] = os.environ['GCLOUD_PROJECT']
+app.config['PROJECT'] = os.environ['GOOGLE_CLOUD_PROJECT']
 
 
 # Global list to storage messages received by this instance.
