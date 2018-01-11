@@ -399,6 +399,29 @@ def set_config(
         name=device_path, body=config_body).execute()
 
 
+def get_config_versions(
+        service_account_json, project_id, cloud_region, registry_id,
+        device_id):
+    """Lists versions of a device config in descending order (newest first)."""
+    client = get_client(service_account_json)
+    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
+        project_id, cloud_region, registry_id)
+
+    device_name = '{}/devices/{}'.format(registry_name, device_id)
+    devices = client.projects().locations().registries().devices()
+    configs = devices.configVersions().list(
+        name=device_name).execute().get(
+        'deviceConfigs', [])
+
+    for config in configs:
+        print('version: {}\n\tcloudUpdateTime: {}\n\t binaryData: {}'.format(
+            config.get('version'),
+            config.get('cloudUpdateTime'),
+            config.get('binaryData')))
+
+    return configs
+
+
 def parse_command_line_args():
     """Parse command line arguments."""
     default_registry = 'cloudiot_device_manager_example_registry_{}'.format(
@@ -469,6 +492,7 @@ def parse_command_line_args():
     command.add_parser('patch-es256', help=patch_es256_auth.__doc__)
     command.add_parser('patch-rs256', help=patch_rsa256_auth.__doc__)
     command.add_parser('set-config', help=patch_rsa256_auth.__doc__)
+    command.add_parser('get-config-versions', help=get_config_versions.__doc__)
 
     return parser.parse_args()
 
@@ -570,6 +594,11 @@ def run_command(args):
                 args.service_account_json, args.project_id,
                 args.cloud_region, args.registry_id, args.device_id,
                 args.version, args.config)
+
+    elif args.command == 'get-config-versions':
+        get_device(
+                args.service_account_json, args.project_id,
+                args.cloud_region, args.registry_id, args.device_id)
 
 
 def main():
