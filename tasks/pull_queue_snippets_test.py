@@ -27,9 +27,9 @@ def test_create_task():
     assert TEST_QUEUE_NAME in result['name']
 
 
-def test_pull_and_ack_task():
+def test_lease_and_ack_task():
     pull_queue_snippets.create_task(
         TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION)
-    task = pull_queue_snippets.pull_task(
+    task = pull_queue_snippets.lease_task(
         TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION)
     pull_queue_snippets.acknowledge_task(task)

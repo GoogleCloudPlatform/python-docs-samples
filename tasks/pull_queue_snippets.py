@@ -67,7 +67,7 @@ def create_task(project, queue, location):
 
 
 # [START cloud_tasks_pull_task]
-def pull_task(project, queue, location):
+def lease_task(project, queue, location):
     """Lease a single task from a given queue for 10 minutes."""
 
     import googleapiclient.discovery
@@ -135,20 +135,20 @@ if __name__ == '__main__':
         required=True,
     )
 
-    pull_and_ack_parser = subparsers.add_parser(
-        'pull-and-ack-task',
+    lease_and_ack_parser = subparsers.add_parser(
+        'lease-and-ack-task',
         help=create_task.__doc__)
-    pull_and_ack_parser.add_argument(
+    lease_and_ack_parser.add_argument(
         '--project',
         help='Project of the queue from which to pull the task.',
         required=True,
     )
-    pull_and_ack_parser.add_argument(
+    lease_and_ack_parser.add_argument(
         '--queue',
         help='ID (short name) of the queue from which to pull the task.',
         required=True,
     )
-    pull_and_ack_parser.add_argument(
+    lease_and_ack_parser.add_argument(
         '--location',
         help='Location of the queue from which to pull the task, e.g. '
              '\'us-central1\'.',
@@ -159,6 +159,6 @@ if __name__ == '__main__':
 
     if args.command == 'create-task':
         create_task(args.project, args.queue, args.location)
-    if args.command == 'pull-and-ack-task':
-        task = pull_task(args.project, args.queue, args.location)
+    if args.command == 'lease-and-ack-task':
+        task = lease_task(args.project, args.queue, args.location)
         acknowledge_task(task)
