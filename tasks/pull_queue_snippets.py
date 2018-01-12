@@ -67,8 +67,8 @@ def create_task(project, queue, location):
 
 
 # [START cloud_tasks_pull_task]
-def pull_task(project, queue, location):
-    """Pull a single task from a given queue and lease it for 10 minutes."""
+def lease_task(project, queue, location):
+    """Lease a single task from a given queue for 10 minutes."""
 
     import googleapiclient.discovery
 
@@ -76,7 +76,7 @@ def pull_task(project, queue, location):
     client = googleapiclient.discovery.build('cloudtasks', 'v2beta2')
 
     duration_seconds = '600s'
-    pull_options = {
+    lease_options = {
         'maxTasks': 1,
         'leaseDuration': duration_seconds,
         'responseView': 'FULL'
@@ -85,10 +85,10 @@ def pull_task(project, queue, location):
     queue_name = 'projects/{}/locations/{}/queues/{}'.format(
         project, location, queue)
 
-    response = client.projects().locations().queues().tasks().pull(
-        name=queue_name, body=pull_options).execute()
+    response = client.projects().locations().queues().tasks().lease(
+        parent=queue_name, body=lease_options).execute()
 
-    print('Pulled task {}'.format(response))
+    print('Leased task {}'.format(response))
     return response['tasks'][0]
 # [END cloud_tasks_pull_task]
 
@@ -120,36 +120,36 @@ if __name__ == '__main__':
         help=create_task.__doc__)
     create_task_parser.add_argument(
         '--project',
-        help='Project of the queue to add the task to.',
+        help='Project ID.',
         required=True,
     )
     create_task_parser.add_argument(
         '--queue',
-        help='ID (short name) of the queue to add the task to.',
+        help='Queue ID (short name).',
         required=True,
     )
     create_task_parser.add_argument(
         '--location',
-        help='Location of the queue to add the task to.',
+        help='Location of the queue, e.g. \'us-central1\'.',
         required=True,
     )
 
-    pull_and_ack_parser = subparsers.add_parser(
-        'pull-and-ack-task',
+    lease_and_ack_parser = subparsers.add_parser(
+        'lease-and-ack-task',
         help=create_task.__doc__)
-    pull_and_ack_parser.add_argument(
+    lease_and_ack_parser.add_argument(
         '--project',
-        help='Project of the queue to pull the task from.',
+        help='Project ID.',
         required=True,
     )
-    pull_and_ack_parser.add_argument(
+    lease_and_ack_parser.add_argument(
         '--queue',
-        help='ID (short name) of the queue to pull the task from.',
+        help='Queue ID (short name).',
         required=True,
     )
-    pull_and_ack_parser.add_argument(
+    lease_and_ack_parser.add_argument(
         '--location',
-        help='Location of the queue to pull the task from.',
+        help='Location of the queue, e.g. \'us-central1\'.',
         required=True,
     )
 
@@ -157,6 +157,6 @@ if __name__ == '__main__':
 
     if args.command == 'create-task':
         create_task(args.project, args.queue, args.location)
-    if args.command == 'pull-and-ack-task':
-        task = pull_task(args.project, args.queue, args.location)
+    if args.command == 'lease-and-ack-task':
+        task = lease_task(args.project, args.queue, args.location)
         acknowledge_task(task)
