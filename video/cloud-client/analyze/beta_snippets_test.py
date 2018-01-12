@@ -26,7 +26,7 @@ FACES_SHORT_FILE_PATH = '/video/googlework_short.mp4'
 
 
 @pytest.mark.slow
-def test_analyze_shots(capsys):
+def test_face_bounding_boxes(capsys):
     beta_snippets.face_bounding_boxes(
         'gs://{}{}'.format(BUCKET, FACES_SHORT_FILE_PATH))
     out, _ = capsys.readouterr()
@@ -34,7 +34,7 @@ def test_analyze_shots(capsys):
 
 
 @pytest.mark.slow
-def test_analyze_explicit_content(capsys):
+def test_face_emotions(capsys):
     beta_snippets.face_emotions(
         'gs://{}{}'.format(BUCKET, FACES_SHORT_FILE_PATH))
     out, _ = capsys.readouterr()
