@@ -120,18 +120,17 @@ if __name__ == '__main__':
         help=create_task.__doc__)
     create_task_parser.add_argument(
         '--project',
-        help='Project of the queue to which to add the task.',
+        help='Project ID.',
         required=True,
     )
     create_task_parser.add_argument(
         '--queue',
-        help='ID (short name) of the queue to which to add the task.',
+        help='Queue ID (short name).',
         required=True,
     )
     create_task_parser.add_argument(
         '--location',
-        help='Location of the queue to which to add the task, e.g. '
-             '\'us-central1\'.',
+        help='Location of the queue, e.g. \'us-central1\'.',
         required=True,
     )
 
@@ -140,18 +139,17 @@ if __name__ == '__main__':
         help=create_task.__doc__)
     lease_and_ack_parser.add_argument(
         '--project',
-        help='Project of the queue from which to pull the task.',
+        help='Project ID.',
         required=True,
     )
     lease_and_ack_parser.add_argument(
         '--queue',
-        help='ID (short name) of the queue from which to pull the task.',
+        help='Queue ID (short name).',
         required=True,
     )
     lease_and_ack_parser.add_argument(
         '--location',
-        help='Location of the queue from which to pull the task, e.g. '
-             '\'us-central1\'.',
+        help='Location of the queue, e.g. \'us-central1\'.',
         required=True,
     )
 
