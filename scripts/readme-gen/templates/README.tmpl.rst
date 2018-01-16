@@ -13,7 +13,7 @@ This directory contains samples for {{product.name}}. {{product.description}}
 
 {{description}}
 
-.. _{{product.name}}: {{product.url}} 
+.. _{{product.name}}: {{product.url}}
 
 {% if setup %}
 Setup
