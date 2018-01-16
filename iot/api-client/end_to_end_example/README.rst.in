@@ -1,7 +1,7 @@
 # This file is used to generate README.rst
 
 product:
-  name: Google Cloud IoT Core API
+  name: Google Cloud IoT Core
   short_name: Cloud IoT Core
   url: https://cloud.google.com/iot/docs
   description: >
@@ -10,8 +10,8 @@ product:
     authorization.
 
     Before you run the sample, you must retrieve the Google root certificate.
-    For example, `wget https://pki.goog/roots.pem` or
-    `curl https://pki.goog/roots.pem > roots.pem`.
+    For example, ``wget https://pki.goog/roots.pem`` or
+    ``curl https://pki.goog/roots.pem > roots.pem``.
 
 setup:
 - auth
