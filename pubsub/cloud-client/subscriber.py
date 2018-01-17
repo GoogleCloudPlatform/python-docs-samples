@@ -120,11 +120,11 @@ def listen_for_errors(project, subscription_name):
         print('Received message: {}'.format(message))
         message.ack()
 
-    subscription = subscriber.subscribe(subscription_path, callback=callback)
+    subscription = client.subscribe(subscription_path, callback=callback)
 
     # Blocks the thread while messages are coming in through the stream. Any
     # exceptions that crop up on the thread will be set on the future.
-    future = subscription.future(callback)
+    future = subscription.open(callback)
     try:
         future.result()
     except Exception as e:
