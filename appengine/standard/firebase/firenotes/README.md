@@ -49,7 +49,7 @@ server with the following command:
 
         dev_appserver.py frontend/app.yaml backend/app.yaml
 
-1. Visit [http://locahost:8080/](http://locahost:8080/) in a web browser.
+1. Visit [http://localhost:8080/](http://localhost:8080/) in a web browser.
 
 ## Deploy
 1. Change the backend host URL in `main.js` to
