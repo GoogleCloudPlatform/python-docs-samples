@@ -124,7 +124,7 @@ def listen_for_errors(project, subscription_name):
 
     # Blocks the thread while messages are coming in through the stream. Any
     # exceptions that crop up on the thread will be set on the future.
-    future = subscription.open(callback)
+    future = subscription.future(callback)
     try:
         future.result()
     except Exception as e:
