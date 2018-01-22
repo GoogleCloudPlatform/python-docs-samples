@@ -17,17 +17,17 @@ Install the Endpoints Frameworks v2 library:
 
 ## Deploying to Google App Engine
 
-Generate a swagger file by running: `python lib/endpoints/endpointscfg.py get_swagger_spec main.EchoApi --hostname echo-api.endpoints.[YOUR-PROJECT-ID].cloud.goog`
+Generate an OpenAPI file by running: `python lib/endpoints/endpointscfg.py get_openapi_spec main.EchoApi --hostname [YOUR-PROJECT-ID].appspot.com`
 
 Remember to replace [YOUR-PROJECT-ID] with your project ID.
 
 To set up OAuth2, replace `your-oauth-client-id.com` under `audiences` in the annotation for `get_user_email` with your OAuth2 client ID. If you want to use Google OAuth2 Playground, use `407408718192.apps.googleusercontent.com` as your audience. To generate a JWT, go to the following address: `https://developers.google.com/oauthplayground`.
 
-Deploy the generated swagger spec to Google Cloud Service Management: `gcloud endpoints services deploy echo-v1_swagger.json`
+Deploy the generated service spec to Google Cloud Service Management: `gcloud endpoints services deploy echov1openapi.json`
 
 The command returns several lines of information, including a line similar to the following:
 
-   Service Configuration [2016-08-01r0] uploaded for service "echo-api.endpoints.[YOUR-PROJECT-ID].cloud.goog"
+   Service Configuration [2016-08-01r0] uploaded for service "[YOUR-PROJECT-ID].appspot.com"
 
 Open the `app.yaml` file and in the `env_variables` section, replace [YOUR-PROJECT-ID] in `[YOUR-PROJECT-ID].appspot.com` with your project ID. This is your Endpoints service name. Then replace `2016-08-01r0` with your uploaded service management configuration.
 
