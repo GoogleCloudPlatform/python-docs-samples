@@ -66,7 +66,7 @@ def create_task(project, queue, location):
 # [END cloud_tasks_create_task]
 
 
-# [START cloud_tasks_pull_task]
+# [START cloud_tasks_lease_and_acknowledge_task]
 def lease_task(project, queue, location):
     """Lease a single task from a given queue for 10 minutes."""
 
@@ -90,7 +90,6 @@ def lease_task(project, queue, location):
 
     print('Leased task {}'.format(response))
     return response['tasks'][0]
-# [END cloud_tasks_pull_task]
 
 
 def acknowledge_task(task):
@@ -106,6 +105,7 @@ def acknowledge_task(task):
         name=task['name'], body=body).execute()
 
     print('Acknowledged task {}'.format(task['name']))
+    # [END cloud_tasks_lease_and_acknowledge_task]
 
 
 if __name__ == '__main__':
