@@ -91,6 +91,7 @@ def lease_task(project, queue, location):
     print('Leased task {}'.format(response))
     return response['tasks'][0]
 
+
 def acknowledge_task(task):
     """Acknowledge a given task."""
 
