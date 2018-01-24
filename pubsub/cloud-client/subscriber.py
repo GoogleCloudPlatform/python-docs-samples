@@ -58,6 +58,26 @@ def create_subscription(project, topic_name, subscription_name):
     print('Subscription created: {}'.format(subscription))
 
 
+def create_push_subscription(project,
+                             topic_name,
+                             subscription_name,
+                             endpoint):
+    """Create a new push subscription on the given topic."""
+    subscriber = pubsub_v1.SubscriberClient()
+    topic_path = subscriber.topic_path(project, topic_name)
+    subscription_path = subscriber.subscription_path(
+        project, subscription_name)
+
+    push_config = pubsub_v1.types.PushConfig(
+        push_endpoint=endpoint)
+
+    subscription = subscriber.create_subscription(
+        subscription_path, topic_path, push_config)
+
+    print('Push subscription created: {}'.format(subscription))
+    print('Endpoint for subscription is: {}'.format(endpoint))
+
+
 def delete_subscription(project, subscription_name):
     """Deletes an existing Pub/Sub topic."""
     subscriber = pubsub_v1.SubscriberClient()
@@ -153,6 +173,12 @@ if __name__ == '__main__':
     create_parser.add_argument('topic_name')
     create_parser.add_argument('subscription_name')
 
+    create_push_parser = subparsers.add_parser(
+        'create-push', help=create_push_subscription.__doc__)
+    create_push_parser.add_argument('topic_name')
+    create_push_parser.add_argument('subscription_name')
+    create_push_parser.add_argument('endpoint')
+
     delete_parser = subparsers.add_parser(
         'delete', help=delete_subscription.__doc__)
     delete_parser.add_argument('subscription_name')
@@ -179,6 +205,12 @@ if __name__ == '__main__':
     elif args.command == 'create':
         create_subscription(
             args.project, args.topic_name, args.subscription_name)
+    elif args.command == 'create-push':
+        create_push_subscription(
+            args.project,
+            args.topic_name,
+            args.subscription_name,
+            args.endpoint)
     elif args.command == 'delete':
         delete_subscription(
             args.project, args.subscription_name)
