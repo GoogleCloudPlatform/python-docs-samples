@@ -25,6 +25,7 @@ import subscriber
 PROJECT = os.environ['GCLOUD_PROJECT']
 TOPIC = 'subscription-test-topic'
 SUBSCRIPTION = 'subscription-test-subscription'
+ENDPOINT = 'https://{}.appspot.com/push'.format(PROJECT)
 
 
 @pytest.fixture(scope='module')
@@ -91,6 +92,21 @@ def test_create(subscriber_client):
         pass
 
     subscriber.create_subscription(PROJECT, TOPIC, SUBSCRIPTION)
+
+    @eventually_consistent.call
+    def _():
+        assert subscriber_client.get_subscription(subscription_path)
+
+
+def test_create_push(subscriber_client):
+    subscription_path = subscriber_client.subscription_path(
+        PROJECT, SUBSCRIPTION)
+    try:
+        subscriber_client.delete_subscription(subscription_path)
+    except Exception:
+        pass
+
+    subscriber.create_push_subscription(PROJECT, TOPIC, SUBSCRIPTION, ENDPOINT)
 
     @eventually_consistent.call
     def _():
