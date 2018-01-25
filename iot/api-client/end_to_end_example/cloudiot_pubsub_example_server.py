@@ -49,7 +49,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 
 API_SCOPES = ['https://www.googleapis.com/auth/cloud-platform']
-API_VERSION = 'v1beta1'
+API_VERSION = 'v1'
 DISCOVERY_API = 'https://cloudiot.googleapis.com/$discovery/rest'
 SERVICE_NAME = 'cloudiot'
 
@@ -106,13 +106,11 @@ class Server(object):
             # case, you use the special value of 0, which tells Cloud IoT to
             # always update the config.
             'version_to_update': 0,
-            'data': {
-                # The data is passed as raw bytes, so you encode it as base64.
-                # Note that the device will receive the decoded string, so you
-                # do not need to base64 decode the string on the device.
-                'binary_data': base64.b64encode(
-                        config_data_json.encode('utf-8')).decode('ascii')
-            }
+            # The data is passed as raw bytes, so you encode it as base64.
+            # Note that the device will receive the decoded string, so you
+            # do not need to base64 decode the string on the device.
+            'binary_data': base64.b64encode(
+                    config_data_json.encode('utf-8')).decode('ascii')
         }
 
         device_name = ('projects/{}/locations/{}/registries/{}/'
