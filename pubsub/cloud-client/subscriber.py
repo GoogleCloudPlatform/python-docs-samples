@@ -99,10 +99,9 @@ def update_subscription(project, subscription_name, ack_deadline_seconds):
     subscription_path = subscriber.subscription_path(
         project, subscription_name)
 
-    subscription = {
-        'name': subscription_path,
-        'ack_deadline_seconds': ack_deadline_seconds,
-    }
+    subscription = pubsub_v1.types.Subscription(
+        name = subscription_path,
+        ack_deadline_seconds = ack_deadline_seconds)
 
     update_mask = {
         'paths': {
