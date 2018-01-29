@@ -100,8 +100,8 @@ def update_subscription(project, subscription_name, ack_deadline_seconds):
         project, subscription_name)
 
     subscription = pubsub_v1.types.Subscription(
-        name = subscription_path,
-        ack_deadline_seconds = ack_deadline_seconds)
+        name=subscription_path,
+        ack_deadline_seconds=ack_deadline_seconds)
 
     update_mask = {
         'paths': {
@@ -206,7 +206,6 @@ if __name__ == '__main__':
     create_push_parser.add_argument('topic_name')
     create_push_parser.add_argument('subscription_name')
     create_push_parser.add_argument('endpoint')
-
 
     delete_parser = subparsers.add_parser(
         'delete', help=delete_subscription.__doc__)
