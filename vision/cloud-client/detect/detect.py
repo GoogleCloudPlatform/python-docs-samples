@@ -22,6 +22,7 @@ python detect.py text ./resources/wakeupcat.jpg
 python detect.py labels ./resources/landmark.jpg
 python detect.py web ./resources/landmark.jpg
 python detect.py web-uri http://wheresgus.com/dog.JPG
+python detect.py web-geo ./resources/city.jpg
 python detect.py faces-uri gs://your-bucket/file.jpg
 
 For more information, the documentation at
@@ -472,9 +473,8 @@ def detect_web_uri(uri):
 
 # [START vision_web_entities_include_geo_results]
 def web_entities_include_geo_results(path):
-    """Detects web annotations given an image in the file located in
-    Google Cloud Storage., using the geotag metadata in the iamge to
-    detect web entities."""
+    """Detects web annotations given an image, using the geotag metadata
+    in the iamge to detect web entities."""
     client = vision.ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
@@ -497,8 +497,9 @@ def web_entities_include_geo_results(path):
 
 # [START vision_web_entities_include_geo_results_uri]
 def web_entities_include_geo_results_uri(uri):
-    """Detects web annotations given an image, using the geotag metadata
-    in the iamge to detect web entities."""
+    """Detects web annotations given an image in the file located in
+    Google Cloud Storage., using the geotag metadata in the iamge to
+    detect web entities."""
     client = vision.ImageAnnotatorClient()
 
     image = vision.types.Image()
@@ -667,6 +668,8 @@ def run_local(args):
         detect_crop_hints(args.path)
     elif args.command == 'document':
         detect_document(args.path)
+    elif args.command == 'web-geo':
+        web_entities_include_geo_results(args.path)
 
 
 def run_uri(args):
@@ -690,6 +693,8 @@ def run_uri(args):
         detect_crop_hints_uri(args.uri)
     elif args.command == 'document-uri':
         detect_document_uri(args.uri)
+    elif args.command == 'web-geo-uri':
+        web_entities_include_geo_results_uri(args.uri)
 
 
 if __name__ == '__main__':
@@ -765,6 +770,15 @@ if __name__ == '__main__':
         'web-uri',
         help=detect_web_uri.__doc__)
     web_uri_parser.add_argument('uri')
+
+    web_geo_parser = subparsers.add_parser(
+        'web-geo', help=web_entities_include_geo_results.__doc__)
+    web_geo_parser.add_argument('path')
+
+    web_geo_uri_parser = subparsers.add_parser(
+        'web-geo-uri',
+        help=web_entities_include_geo_results_uri.__doc__)
+    web_geo_uri_parser.add_argument('uri')
 
     crop_hints_parser = subparsers.add_parser(
         'crophints', help=detect_crop_hints.__doc__)
