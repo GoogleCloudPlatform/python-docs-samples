@@ -28,6 +28,8 @@ Example usage:
 # [START import_libraries]
 from __future__ import division
 
+from datetime import datetime
+from datetime import timedelta
 import re
 import sys
 
@@ -86,7 +88,11 @@ class MicrophoneStream(object):
         return None, pyaudio.paContinue
 
     def generator(self):
+        # limit generator to 20 seconds
+        time = datetime.now()
         while not self.closed:
+            if datetime.now() - time > timedelta(seconds=20):
+                break
             # Use a blocking get() to ensure there's at least one chunk of
             # data, and stop iteration if the chunk is None, indicating the
             # end of the audio stream.
