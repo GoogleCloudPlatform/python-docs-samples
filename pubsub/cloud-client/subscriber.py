@@ -89,6 +89,34 @@ def delete_subscription(project, subscription_name):
     print('Subscription deleted: {}'.format(subscription_path))
 
 
+def update_subscription(project, subscription_name, ack_deadline_seconds):
+    """
+    Updates an existing Pub/Sub subscription's ackDeadlineSeconds
+    from 10 seconds (default). Note that certain properties of a
+    subscription, such as its topic, are not modifiable.
+    """
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_path = subscriber.subscription_path(
+        project, subscription_name)
+
+    subscription = pubsub_v1.types.Subscription(
+        name=subscription_path,
+        ack_deadline_seconds=ack_deadline_seconds)
+
+    update_mask = {
+        'paths': {
+            'ack_deadline_seconds',
+        }
+    }
+
+    subscriber.update_subscription(subscription, update_mask)
+    result = subscriber.get_subscription(subscription_path)
+
+    print('Subscription updated: {}'.format(subscription_path))
+    print('New ack_deadline_seconds value is: {}'.format(
+        result.ack_deadline_seconds))
+
+
 def receive_messages(project, subscription_name):
     """Receives messages from a pull subscription."""
     subscriber = pubsub_v1.SubscriberClient()
@@ -183,6 +211,11 @@ if __name__ == '__main__':
         'delete', help=delete_subscription.__doc__)
     delete_parser.add_argument('subscription_name')
 
+    update_parser = subparsers.add_parser(
+        'update', help=update_subscription.__doc__)
+    update_parser.add_argument('subscription_name')
+    update_parser.add_argument('ack_deadline_seconds', type=int)
+
     receive_parser = subparsers.add_parser(
         'receive', help=receive_messages.__doc__)
     receive_parser.add_argument('subscription_name')
@@ -214,6 +247,9 @@ if __name__ == '__main__':
     elif args.command == 'delete':
         delete_subscription(
             args.project, args.subscription_name)
+    elif args.command == 'update':
+        update_subscription(
+            args.project, args.subscription_name, args.ack_deadline_seconds)
     elif args.command == 'receive':
         receive_messages(args.project, args.subscription_name)
     elif args.command == 'receive-flow-control':
