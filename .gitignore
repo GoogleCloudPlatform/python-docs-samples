@@ -2,6 +2,7 @@
 *.pyc
 .coverage
 .tox
+.pytest_cache
 coverage.xml
 python-docs-samples.json
 service-account.json
