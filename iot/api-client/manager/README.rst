@@ -77,8 +77,8 @@ To run this sample:
                       [--project_id PROJECT_ID] [--registry_id REGISTRY_ID]
                       [--rsa_certificate_file RSA_CERTIFICATE_FILE]
                       [--service_account_json SERVICE_ACCOUNT_JSON]
-                      [--version VERSION]
-                      {create-es256,create-registry,create-rsa256,create-topic,create-unauth,delete-device,delete-registry,get,get-registry,get-state,list,list-registries,patch-es256,patch-rs256,set-config}
+                      [--version VERSION] [--member MEMBER] [--role ROLE]
+                      {create-es256,create-registry,create-rsa256,create-topic,create-unauth,delete-device,delete-registry,get,get-config-versions,get-iam-permissions,get-registry,get-state,list,list-registries,patch-es256,patch-rs256,set-config,set-iam-permissions}
                       ...
 
     Example of using the Google Cloud IoT Core device manager to administer
@@ -95,7 +95,7 @@ To run this sample:
           list
 
     positional arguments:
-      {create-es256,create-registry,create-rsa256,create-topic,create-unauth,delete-device,delete-registry,get,get-registry,get-state,list,list-registries,patch-es256,patch-rs256,set-config}
+      {create-es256,create-registry,create-rsa256,create-topic,create-unauth,delete-device,delete-registry,get,get-config-versions,get-iam-permissions,get-registry,get-state,list,list-registries,patch-es256,patch-rs256,set-config,set-iam-permissions}
         create-es256        Create a new device with the given id, using ES256 for
                             authentication.
         create-registry     Gets or creates a device registry.
@@ -107,6 +107,11 @@ To run this sample:
         delete-device       Delete the device with the given id.
         delete-registry     Deletes the specified registry.
         get                 Retrieve the device with the given id.
+        get-config-versions
+                            Lists versions of a device config in descending order
+                            (newest first).
+        get-iam-permissions
+                            Retrieves IAM permissions for the given registry.
         get-registry        Retrieves a device registry.
         get-state           Retrieve a device's state blobs.
         list                List all devices in the registry.
@@ -117,6 +122,9 @@ To run this sample:
                             device.
         set-config          Patch the device to add an RSA256 public key to the
                             device.
+        set-iam-permissions
+                            Sets IAM permissions for the given registry to a
+                            single role/member.
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -139,6 +147,8 @@ To run this sample:
       --service_account_json SERVICE_ACCOUNT_JSON
                             Path to service account json file.
       --version VERSION     Version number for setting device configuration.
+      --member MEMBER       Member used for IAM commands.
+      --role ROLE           Role used for IAM commands.
 
 
 
