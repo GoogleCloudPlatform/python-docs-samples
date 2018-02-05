@@ -48,7 +48,7 @@ def generate_jwt(service_account_file, issuer, audiences):
         # swagger spec. It can be any string.
         'iss': issuer,
         # sub and email are mapped to the user id and email respectively.
-        'sub': '12345678',
+        'sub': issuer,
         'email': 'user@example.com'
     }
 
