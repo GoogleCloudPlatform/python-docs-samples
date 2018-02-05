@@ -62,7 +62,10 @@ def create_push_subscription(project,
                              topic_name,
                              subscription_name,
                              endpoint):
-    """Create a new push subscription on the given topic."""
+    """Create a new push subscription on the given topic.
+    For example, endpoint is
+    "https://my-test-project.appspot.com/push".
+    """
     subscriber = pubsub_v1.SubscriberClient()
     topic_path = subscriber.topic_path(project, topic_name)
     subscription_path = subscriber.subscription_path(
@@ -89,23 +92,27 @@ def delete_subscription(project, subscription_name):
     print('Subscription deleted: {}'.format(subscription_path))
 
 
-def update_subscription(project, subscription_name, ack_deadline_seconds):
+def update_subscription(project, subscription_name, endpoint):
     """
-    Updates an existing Pub/Sub subscription's ackDeadlineSeconds
-    from 10 seconds (default). Note that certain properties of a
-    subscription, such as its topic, are not modifiable.
+    Updates an existing Pub/Sub subscription's push endpoint URL.
+    Note that certain properties of a subscription, such as
+    its topic, are not modifiable. For example, endpoint is
+    "https://my-test-project.appspot.com/push".
     """
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_name)
 
+    push_config = pubsub_v1.types.PushConfig(
+        push_endpoint=endpoint)
+
     subscription = pubsub_v1.types.Subscription(
         name=subscription_path,
-        ack_deadline_seconds=ack_deadline_seconds)
+        push_config=push_config)
 
     update_mask = {
         'paths': {
-            'ack_deadline_seconds',
+            'push_config',
         }
     }
 
@@ -113,8 +120,8 @@ def update_subscription(project, subscription_name, ack_deadline_seconds):
     result = subscriber.get_subscription(subscription_path)
 
     print('Subscription updated: {}'.format(subscription_path))
-    print('New ack_deadline_seconds value is: {}'.format(
-        result.ack_deadline_seconds))
+    print('New endpoint for subscription is: {}'.format(
+        result.push_config))
 
 
 def receive_messages(project, subscription_name):
@@ -214,7 +221,7 @@ if __name__ == '__main__':
     update_parser = subparsers.add_parser(
         'update', help=update_subscription.__doc__)
     update_parser.add_argument('subscription_name')
-    update_parser.add_argument('ack_deadline_seconds', type=int)
+    update_parser.add_argument('endpoint')
 
     receive_parser = subparsers.add_parser(
         'receive', help=receive_messages.__doc__)
@@ -249,7 +256,7 @@ if __name__ == '__main__':
             args.project, args.subscription_name)
     elif args.command == 'update':
         update_subscription(
-            args.project, args.subscription_name, args.ack_deadline_seconds)
+            args.project, args.subscription_name, args.endpoint)
     elif args.command == 'receive':
         receive_messages(args.project, args.subscription_name)
     elif args.command == 'receive-flow-control':
