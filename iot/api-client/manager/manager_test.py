@@ -63,6 +63,37 @@ def test_create_delete_registry(test_topic, capsys):
             service_account_json, project_id, cloud_region, registry_id)
 
 
+def test_get_iam_permissions(test_topic, capsys):
+    manager.open_registry(
+            service_account_json, project_id, cloud_region, pubsub_topic,
+            registry_id)
+
+    manager.list_devices(
+            service_account_json, project_id, cloud_region, registry_id)
+
+    # Test getting IAM permissions
+    print(manager.get_iam_permissions(
+            service_account_json, project_id, cloud_region, registry_id))
+
+    # Test setting IAM permissions
+    MEMBER = "group:dpebot@google.com"
+    ROLE = "roles/viewer"
+    print(manager.set_iam_permissions(
+            service_account_json, project_id, cloud_region, registry_id,
+            ROLE, MEMBER))
+
+    out, _ = capsys.readouterr()
+
+    # Check that create / list worked
+    assert 'Created registry' in out
+    assert 'eventNotificationConfig' in out
+    assert 'etag' in out
+
+    # Clean up
+    manager.delete_registry(
+            service_account_json, project_id, cloud_region, registry_id)
+
+
 def test_add_delete_unauth_device(test_topic, capsys):
     device_id = device_id_template.format('UNAUTH')
     manager.open_registry(

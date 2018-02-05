@@ -422,6 +422,42 @@ def get_config_versions(
     return configs
 
 
+def get_iam_permissions(
+        service_account_json, project_id, cloud_region, registry_id):
+    """Retrieves IAM permissions for the given registry."""
+    client = get_client(service_account_json)
+    registry_path = 'projects/{}/locations/{}/registries/{}'.format(
+        project_id, cloud_region, registry_id)
+
+    policy = client.projects().locations().registries().getIamPolicy(
+            resource=registry_path, body={}).execute()
+
+    return policy
+
+
+def set_iam_permissions(
+        service_account_json, project_id, cloud_region, registry_id, role,
+        member):
+    """Retrieves IAM permissions for the given registry."""
+    client = get_client(service_account_json)
+
+    registry_path = 'projects/{}/locations/{}/registries/{}'.format(
+        project_id, cloud_region, registry_id)
+    body = {
+        "policy":
+        {
+            "bindings":
+            [{
+                "members": [member],
+                "role": role
+            }]
+        }
+    }
+
+    return client.projects().locations().registries().setIamPolicy(
+            resource=registry_path, body=body).execute()
+
+
 def parse_command_line_args():
     """Parse command line arguments."""
     default_registry = 'cloudiot_device_manager_example_registry_{}'.format(
@@ -473,6 +509,14 @@ def parse_command_line_args():
             '--version',
             default=None,
             help='Version number for setting device configuration.')
+    parser.add_argument(
+            '--member',
+            default=None,
+            help='Member used for IAM commands.')
+    parser.add_argument(
+            '--role',
+            default=None,
+            help='Role used for IAM commands.')
 
     # Command subparser
     command = parser.add_subparsers(dest='command')
@@ -485,6 +529,8 @@ def parse_command_line_args():
     command.add_parser('delete-device', help=delete_device.__doc__)
     command.add_parser('delete-registry', help=delete_registry.__doc__)
     command.add_parser('get', help=get_device.__doc__)
+    command.add_parser('get-config-versions', help=get_config_versions.__doc__)
+    command.add_parser('get-iam-permissions', help=get_iam_permissions.__doc__)
     command.add_parser('get-registry', help=get_registry.__doc__)
     command.add_parser('get-state', help=get_state.__doc__)
     command.add_parser('list', help=list_devices.__doc__)
@@ -492,7 +538,7 @@ def parse_command_line_args():
     command.add_parser('patch-es256', help=patch_es256_auth.__doc__)
     command.add_parser('patch-rs256', help=patch_rsa256_auth.__doc__)
     command.add_parser('set-config', help=patch_rsa256_auth.__doc__)
-    command.add_parser('get-config-versions', help=get_config_versions.__doc__)
+    command.add_parser('set-iam-permissions', help=set_iam_permissions.__doc__)
 
     return parser.parse_args()
 
@@ -525,14 +571,44 @@ def run_create(args):
         create_iot_topic(args.project_id, args.pubsub_topic)
 
 
+def run_get(args):
+    if args.command == 'get':
+        get_device(
+                args.service_account_json, args.project_id,
+                args.cloud_region, args.registry_id, args.device_id)
+
+    elif args.command == 'get-config-versions':
+        get_device(
+                args.service_account_json, args.project_id,
+                args.cloud_region, args.registry_id, args.device_id)
+
+    elif args.command == 'get-state':
+        get_state(
+                args.service_account_json, args.project_id,
+                args.cloud_region, args.registry_id, args.device_id)
+
+    elif args.command == 'get-iam-permissions':
+        print(get_iam_permissions(
+                args.service_account_json, args.project_id,
+                args.cloud_region, args.registry_id))
+
+    elif args.command == 'get-registry':
+        print(get_registry(
+                args.service_account_json, args.project_id,
+                args.cloud_region, args.registry_id))
+
+
 def run_command(args):
     """Calls the program using the specified command."""
     if args.project_id is None:
         print('You must specify a project ID or set the environment variable.')
         return
 
-    if args.command.startswith('create'):
+    elif args.command.startswith('create'):
         run_create(args)
+
+    elif args.command.startswith('get'):
+        run_get(args)
 
     elif args.command == 'delete-device':
         delete_device(
@@ -543,21 +619,6 @@ def run_command(args):
         delete_registry(
                 args.service_account_json, args.project_id,
                 args.cloud_region, args.registry_id)
-
-    elif args.command == 'get':
-        get_device(
-                args.service_account_json, args.project_id,
-                args.cloud_region, args.registry_id, args.device_id)
-
-    elif args.command == 'get-state':
-        get_state(
-                args.service_account_json, args.project_id,
-                args.cloud_region, args.registry_id, args.device_id)
-
-    elif args.command == 'get-registry':
-        print(get_registry(
-                args.service_account_json, args.project_id,
-                args.cloud_region, args.registry_id))
 
     elif args.command == 'list':
         list_devices(
@@ -585,6 +646,15 @@ def run_command(args):
                 args.cloud_region, args.registry_id, args.device_id,
                 args.rsa_certificate_file)
 
+    elif args.command == 'set-iam-permissions':
+        if (args.member is None):
+            sys.exit('Error: specify --member')
+        if (args.role is None):
+            sys.exit('Error: specify --role')
+        set_iam_permissions(
+                args.service_account_json, args.project_id,
+                args.cloud_region, args.registry_id, args.role, args.member)
+
     elif args.command == 'set-config':
         if (args.config is None):
             sys.exit('Error: specify --config')
@@ -594,11 +664,6 @@ def run_command(args):
                 args.service_account_json, args.project_id,
                 args.cloud_region, args.registry_id, args.device_id,
                 args.version, args.config)
-
-    elif args.command == 'get-config-versions':
-        get_device(
-                args.service_account_json, args.project_id,
-                args.cloud_region, args.registry_id, args.device_id)
 
 
 def main():
