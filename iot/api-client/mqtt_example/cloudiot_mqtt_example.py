@@ -40,6 +40,7 @@ MAXIMUM_BACKOFF_TIME = 32
 # Whether to wait with exponential backoff before publishing.
 should_backoff = False
 
+
 # [START iot_mqtt_jwt]
 def create_jwt(project_id, private_key_file, algorithm):
     """Creates a JWT (https://jwt.io) to establish an MQTT connection.
@@ -247,7 +248,7 @@ def main():
 
             # Otherwise, wait and connect again.
             delay = minimum_backoff_time + random.randint(0, 1000) / 1000.0
-            print('Waiting for ', str(delay), ' before reconnecting.')
+            print('Waiting for {} before reconnecting.'.format(delay))
             time.sleep(delay)
             minimum_backoff_time *= 2
             client.connect(args.mqtt_bridge_hostname, args.mqtt_bridge_port)
