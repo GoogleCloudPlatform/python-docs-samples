@@ -438,7 +438,7 @@ def get_iam_permissions(
 def set_iam_permissions(
         service_account_json, project_id, cloud_region, registry_id, role,
         member):
-    """Retrieves IAM permissions for the given registry."""
+    """Sets IAM permissions for the given registry to a single role/member."""
     client = get_client(service_account_json)
 
     registry_path = 'projects/{}/locations/{}/registries/{}'.format(
