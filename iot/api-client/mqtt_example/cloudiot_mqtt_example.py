@@ -24,10 +24,21 @@ for this sample.
 import argparse
 import datetime
 import os
+import random
 import time
 
 import jwt
 import paho.mqtt.client as mqtt
+
+
+# The initial backoff time after a disconnection occurs, in seconds.
+minimum_backoff_time = 1
+
+# The maximum backoff time before giving up, in seconds.
+MAXIMUM_BACKOFF_TIME = 32
+
+# Whether to wait with exponential backoff before publishing.
+should_backoff = False
 
 
 # [START iot_mqtt_jwt]
@@ -76,10 +87,21 @@ def on_connect(unused_client, unused_userdata, unused_flags, rc):
     """Callback for when a device connects."""
     print('on_connect', mqtt.connack_string(rc))
 
+    # After a successful connect, reset backoff time and stop backing off.
+    global should_backoff
+    global minimum_backoff_time
+    should_backoff = False
+    minimum_backoff_time = 1
+
 
 def on_disconnect(unused_client, unused_userdata, rc):
     """Paho callback for when a device disconnects."""
     print('on_disconnect', error_str(rc))
+
+    # Since a disconnect occurred, the next loop iteration will wait with
+    # exponential backoff.
+    global should_backoff
+    should_backoff = True
 
 
 def on_publish(unused_client, unused_userdata, unused_mid):
@@ -133,9 +155,6 @@ def get_client(
 
     # Subscribe to the config topic.
     client.subscribe(mqtt_config_topic, qos=1)
-
-    # Start the network loop.
-    client.loop_start()
 
     return client
 # [END iot_mqtt_config]
@@ -199,6 +218,8 @@ def parse_command_line_args():
 
 # [START iot_mqtt_run]
 def main():
+    global minimum_backoff_time
+
     args = parse_command_line_args()
 
     # Publish to the events or state topic based on the flag.
@@ -215,6 +236,23 @@ def main():
 
     # Publish num_messages mesages to the MQTT bridge once per second.
     for i in range(1, args.num_messages + 1):
+        # Process network events.
+        client.loop()
+
+        # Wait if backoff is required.
+        if should_backoff:
+            # If backoff time is too large, give up.
+            if minimum_backoff_time > MAXIMUM_BACKOFF_TIME:
+                print('Exceeded maximum backoff time. Giving up.')
+                break
+
+            # Otherwise, wait and connect again.
+            delay = minimum_backoff_time + random.randint(0, 1000) / 1000.0
+            print('Waiting for {} before reconnecting.'.format(delay))
+            time.sleep(delay)
+            minimum_backoff_time *= 2
+            client.connect(args.mqtt_bridge_hostname, args.mqtt_bridge_port)
+
         payload = '{}/{}-payload-{}'.format(
                 args.registry_id, args.device_id, i)
         print('Publishing message {}/{}: \'{}\''.format(
@@ -223,7 +261,6 @@ def main():
         seconds_since_issue = (datetime.datetime.utcnow() - jwt_iat).seconds
         if seconds_since_issue > 60 * jwt_exp_mins:
             print('Refreshing token after {}s').format(seconds_since_issue)
-            client.loop_stop()
             jwt_iat = datetime.datetime.utcnow()
             client = get_client(
                 args.project_id, args.cloud_region,
@@ -239,8 +276,6 @@ def main():
         # Send events every second. State should not be updated as often
         time.sleep(1 if args.message_type == 'event' else 5)
 
-    # End the network loop and finish.
-    client.loop_stop()
     print('Finished.')
 # [END iot_mqtt_run]
 

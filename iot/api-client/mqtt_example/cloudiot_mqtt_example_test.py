@@ -74,6 +74,7 @@ def test_event(test_topic, capsys):
         rsa_private_path, 'RS256', ca_cert_path,
         'mqtt.googleapis.com', 443)
 
+    client.loop_start()
     client.publish(mqtt_topic, 'just test', qos=1)
     time.sleep(2)
     client.loop_stop()
@@ -115,7 +116,10 @@ def test_state(test_topic, capsys):
         rsa_private_path, 'RS256', ca_cert_path,
         'mqtt.googleapis.com', 443)
     client.publish(mqtt_topic, 'state test', qos=1)
+    client.loop_start()
+
     time.sleep(3)
+
     client.loop_stop()
 
     manager.get_state(
@@ -152,7 +156,10 @@ def test_config(test_topic, capsys):
         project_id, cloud_region, registry_id, device_id,
         rsa_private_path, 'RS256', ca_cert_path,
         'mqtt.googleapis.com', 443)
+    client.loop_start()
+
     time.sleep(5)
+
     client.loop_stop()
 
     manager.get_state(
