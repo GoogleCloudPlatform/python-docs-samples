@@ -554,7 +554,8 @@ def detect_crop_hints_uri(uri):
     image.source.image_uri = uri
 
     crop_hints_params = vision.types.CropHintsParams(aspect_ratios=[1.77])
-    image_context = vision.types.ImageContext(crop_hints_params=crop_hints_params)
+    image_context = vision.types.ImageContext(
+        crop_hints_params=crop_hints_params)
 
     response = client.crop_hints(image=image, image_context=image_context)
     hints = response.crop_hints_annotation.crop_hints
