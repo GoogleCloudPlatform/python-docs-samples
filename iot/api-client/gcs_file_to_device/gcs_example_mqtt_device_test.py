@@ -13,11 +13,10 @@
 # limitations under the License.
 
 import os
-import pytest
-
-from google.cloud import storage
 
 import gcs_example_mqtt_device as device
+from google.cloud import storage
+import pytest
 
 gcs_bucket = os.environ['CLOUD_STORAGE_BUCKET']
 cloud_region = 'us-central1'
