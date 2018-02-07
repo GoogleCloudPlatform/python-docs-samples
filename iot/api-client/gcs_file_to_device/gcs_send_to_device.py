@@ -1,4 +1,4 @@
-# Copyright 2017 Google Inc. All rights reserved.
+# Copyright 2018 Google Inc. All rights reserved.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -10,16 +10,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-r"""Sample script that pushes a large (~1MB) file to Google Cloud IoT
-devices. One use case for this is to send a configuration update to a device.
-The maximum size config you can send directly to a device is 64 KB, so to
-send larger configs, you can instead send the location (URL) of a config to a
-device, have the device download it, and then have the device do something like
-install the file.
+r"""Sample script that pushes a large file to Google Cloud IoT Core devices.
 This script, when run, creates a Cloud Storage bucket (if necessary), uploads
 a file from the local file system to GCS, makes the file world-readable, and
-then sends the bucket and file information to a device. An example ~1 MB binary
-file is included for you to test with.
+then sends the bucket and file information to a device.
 
 If you are running this example from a Compute Engine VM, you will have to
 enable the Cloud Pub/Sub API for your project, which you can do from the Cloud
@@ -35,7 +29,7 @@ Make sure that you have a device that is accepting messages on
     --bucket_name=bucket-name \
     --gcs_file_name=gcs-file-name \
     --service_account_json=service_account.json \
-    --source_file_name=resources/source_file.bin
+    --source_file_name=source-file-name
 
 """
 
@@ -77,7 +71,7 @@ def create_bucket(bucket_name):
     storage_client = storage.Client()
 
     try:
-        bucket = storage_client.create_bucket(bucket_name)
+        storage_client.create_bucket(bucket_name)
         print('Bucket {} created'.format(bucket_name))
     except BaseException:
         # If the bucket already exists, ignore the 409 HTTP error and
