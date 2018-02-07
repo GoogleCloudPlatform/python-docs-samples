@@ -14,9 +14,11 @@
 
 import os
 
-import gcs_example_mqtt_device as device
 from google.cloud import storage
+
 import pytest
+
+import gcs_example_mqtt_device as device
 
 gcs_bucket = os.environ['CLOUD_STORAGE_BUCKET']
 cloud_region = 'us-central1'
