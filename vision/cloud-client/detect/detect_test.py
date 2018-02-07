@@ -119,7 +119,6 @@ def test_safe_search(capsys):
     detect.detect_safe_search(file_name)
     out, _ = capsys.readouterr()
     assert 'VERY_LIKELY' in out
-    assert 'racy: ' in out
 
 
 def test_safe_search_uri(capsys):
@@ -127,7 +126,6 @@ def test_safe_search_uri(capsys):
     detect.detect_safe_search_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'VERY_LIKELY' in out
-    assert 'racy: ' in out
 
 
 def test_safe_search_http(capsys):
@@ -135,7 +133,6 @@ def test_safe_search_http(capsys):
     detect.detect_safe_search_uri(uri.format(BUCKET))
     out, _ = capsys.readouterr()
     assert 'VERY_LIKELY' in out
-    assert 'racy: ' in out
 
 
 def test_detect_text(capsys):
@@ -192,7 +189,6 @@ def test_detect_web(capsys):
     detect.detect_web(file_name)
     out, _ = capsys.readouterr()
     assert 'Description: Palace of Fine Arts Theatre' in out
-    assert 'Best guess label: palace of fine arts' in out
 
 
 def test_detect_web_uri(capsys):
@@ -200,7 +196,6 @@ def test_detect_web_uri(capsys):
     detect.detect_web_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'Description: Palace of Fine Arts Theatre' in out
-    assert 'Best guess label: palace of fine arts' in out
 
 
 def test_detect_web_http(capsys):
@@ -208,23 +203,6 @@ def test_detect_web_http(capsys):
     detect.detect_web_uri(uri.format(BUCKET))
     out, _ = capsys.readouterr()
     assert 'Description: Palace of Fine Arts Theatre' in out
-    assert 'Best guess label: palace of fine arts' in out
-
-
-def test_detect_web_with_geo(capsys):
-    file_name = os.path.join(
-        os.path.dirname(__file__),
-        'resources/city.jpg')
-    detect.web_entities_include_geo_results(file_name)
-    out, _ = capsys.readouterr()
-    assert 'Zepra' in out
-
-
-def test_detect_web_with_geo_uri(capsys):
-    file_name = 'gs://{}/vision/city.jpg'.format(BUCKET)
-    detect.web_entities_include_geo_results_uri(file_name)
-    out, _ = capsys.readouterr()
-    assert 'Zepra' in out
 
 
 def test_detect_document(capsys):
@@ -233,21 +211,21 @@ def test_detect_document(capsys):
         'resources/text.jpg')
     detect.detect_document(file_name)
     out, _ = capsys.readouterr()
-    assert 'class' in out
+    assert '37%' in out
 
 
 def test_detect_document_uri(capsys):
     file_name = 'gs://{}/vision/text.jpg'.format(BUCKET)
     detect.detect_document_uri(file_name)
     out, _ = capsys.readouterr()
-    assert 'class' in out
+    assert '37%' in out
 
 
 def test_detect_document_http(capsys):
     uri = 'https://storage-download.googleapis.com/{}/vision/text.jpg'
     detect.detect_document_uri(uri.format(BUCKET))
     out, _ = capsys.readouterr()
-    assert 'class' in out
+    assert '37%' in out
 
 
 def test_detect_crop_hints(capsys):
