@@ -12,22 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import mock
 import os
-import pytest
-import requests
 import sys
-import time
 import tempfile
+import time
 
+import gcs_send_to_device as gcs_to_device
+from google.cloud import pubsub
+from google.cloud import storage
 # Add manager for bootstrapping device registry / device for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
 import manager
-
-from google.cloud import pubsub
-from google.cloud import storage
-
-import gcs_send_to_device as gcs_to_device
+import mock
+import pytest
+import requests
 
 gcs_bucket = os.environ['CLOUD_STORAGE_BUCKET']
 project_id = os.environ['GCLOUD_PROJECT']
