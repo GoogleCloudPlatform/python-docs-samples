@@ -6,8 +6,8 @@ product:
   url: https://cloud.google.com/iot/docs
   description: >
     `Google Cloud IoT Core`_ allows developers to easily integrate Publish and
-    Subscribe functionality with devices and programmatically manage device
-    authorization.
+    Subscribe functionality with devices and programmatically authorize
+    devices.
 
     Before you run the sample, you must retrieve the Google root certificate.
     For example, ``wget https://pki.goog/roots.pem`` or
