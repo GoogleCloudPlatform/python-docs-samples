@@ -41,9 +41,9 @@ import os
 import threading
 import time
 
+from google.cloud import storage
 import jwt
 import paho.mqtt.client as mqtt
-from google.cloud import storage
 
 
 # [START create_jwt]
