@@ -12,30 +12,26 @@
 # limitations under the License.
 
 import os
-import re
 
-import transcribe_word_time_offsets
+import transcribe_automatic_punctuation
 
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 
 
-def test_transcribe_file_with_word_time_offsets(capsys):
-    transcribe_word_time_offsets.transcribe_file_with_word_time_offsets(
-        os.path.join(RESOURCES, 'audio.raw'))
+def test_transcribe_file_with_automatic_punctuation(capsys):
+    (transcribe_automatic_punctuation.
+     transcribe_file_with_automatic_punctuation(
+        os.path.join(RESOURCES, 'audio.raw')))
     out, _ = capsys.readouterr()
 
-    match = re.search(r'Bridge, start_time: ([0-9.]+)', out, re.DOTALL | re.I)
-    time = float(match.group(1))
-
-    assert time > 0
+    assert 'How' in out
+    assert 'Bridge?' in out
 
 
-def test_transcribe_gcs_with_word_time_offsets(capsys):
-    transcribe_word_time_offsets.transcribe_gcs_with_word_time_offsets(
+def test_transcribe_gcs_with_automatic_punctuation(capsys):
+    transcribe_automatic_punctuation.transcribe_gcs_with_automatic_punctuation(
         'gs://python-docs-samples-tests/speech/audio.flac')
     out, _ = capsys.readouterr()
 
-    match = re.search(r'Bridge, start_time: ([0-9.]+)', out, re.DOTALL | re.I)
-    time = float(match.group(1))
-
-    assert time > 0
+    assert 'How' in out
+    assert 'Bridge?' in out

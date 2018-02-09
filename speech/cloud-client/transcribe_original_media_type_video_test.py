@@ -12,30 +12,27 @@
 # limitations under the License.
 
 import os
-import re
 
-import transcribe_word_time_offsets
+import transcribe_original_media_type_video
 
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 
 
-def test_transcribe_file_with_word_time_offsets(capsys):
-    transcribe_word_time_offsets.transcribe_file_with_word_time_offsets(
-        os.path.join(RESOURCES, 'audio.raw'))
+def test_transcribe_file_original_media_type_video(capsys):
+    (transcribe_original_media_type_video.
+     transcribe_file_original_media_type_video(
+        os.path.join(RESOURCES, 'Google_Gnome.wav')))
     out, _ = capsys.readouterr()
 
-    match = re.search(r'Bridge, start_time: ([0-9.]+)', out, re.DOTALL | re.I)
-    time = float(match.group(1))
-
-    assert time > 0
+    assert 'you do keep doing that' in out
+    assert 'organic matter and will return' in out
 
 
-def test_transcribe_gcs_with_word_time_offsets(capsys):
-    transcribe_word_time_offsets.transcribe_gcs_with_word_time_offsets(
-        'gs://python-docs-samples-tests/speech/audio.flac')
+def test_transcribe_gcs_original_media_type_video(capsys):
+    (transcribe_original_media_type_video.
+     transcribe_gcs_original_media_type_video(
+        'gs://python-docs-samples-tests/speech/Google_Gnome.wav'))
     out, _ = capsys.readouterr()
 
-    match = re.search(r'Bridge, start_time: ([0-9.]+)', out, re.DOTALL | re.I)
-    time = float(match.group(1))
-
-    assert time > 0
+    assert 'you do keep doing that' in out
+    assert 'organic matter and will return' in out
