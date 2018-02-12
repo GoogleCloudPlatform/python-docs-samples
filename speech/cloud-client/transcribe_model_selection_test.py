@@ -21,7 +21,7 @@ RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 
 def test_transcribe_model_selection_file(capsys):
     transcribe_model_selection.transcribe_model_selection(
-    	os.path.join(RESOURCES, 'Google_Gnome.wav'), 'video')
+        os.path.join(RESOURCES, 'Google_Gnome.wav'), 'video')
     out, err = capsys.readouterr()
 
     assert re.search(r'the weather outside is sunny', out, re.DOTALL | re.I)
