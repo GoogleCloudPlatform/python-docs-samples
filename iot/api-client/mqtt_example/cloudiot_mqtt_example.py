@@ -25,6 +25,7 @@ import argparse
 import datetime
 import os
 import random
+import ssl
 import time
 
 import jwt
@@ -137,7 +138,7 @@ def get_client(
                     project_id, private_key_file, algorithm))
 
     # Enable SSL/TLS support.
-    client.tls_set(ca_certs=ca_certs)
+    client.tls_set(ca_certs=ca_certs, tls_version=ssl.PROTOCOL_TLSv1_2)
 
     # Register message callbacks. https://eclipse.org/paho/clients/python/docs/
     # describes additional callbacks that Paho supports. In this example, the
