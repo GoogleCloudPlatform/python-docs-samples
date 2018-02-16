@@ -31,7 +31,7 @@ from google.api_core import retry
 import jwt
 import requests
 
-_BASE_URL = 'https://cloudiot-device.googleapis.com/v1beta1'
+_BASE_URL = 'https://cloudiotdevice.googleapis.com/v1'
 _BACKOFF_DURATION = 60
 
 
