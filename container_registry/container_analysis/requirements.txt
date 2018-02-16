@@ -1,0 +1,2 @@
+google-cloud-pubsub == 0.30.0
+./google_cloud_containeranalysis-0.1.0-py2.py3-none-any.whl
