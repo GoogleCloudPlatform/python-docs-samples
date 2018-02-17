@@ -125,7 +125,7 @@ class Device(object):
         print('Received new config.')
         bucket_name = data['bucket_name']
         print('Bucket name is: \'{}\''.format(bucket_name))
-        config_name = data['config_name']
+        config_name = data['gcs_file_name']
         print('Config name is: \'{}\''.format(config_name))
         # Destination file name is a byte literal because it's a file
         # name.
