@@ -5,7 +5,7 @@ FROM gcr.io/google_appengine/python
 
 # Create a virtualenv for dependencies. This isolates these packages from
 # system-level packages.
-RUN virtualenv -p python3.5 /env
+RUN virtualenv -p python3.6 /env
 
 # Setting these environment variables are the same as running
 # source /env/bin/activate.
