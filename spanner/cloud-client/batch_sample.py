@@ -1,4 +1,3 @@
-#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -18,18 +17,16 @@ For more information, see the README.rst under /spanner.
 """
 
 import argparse
-import multiprocessing
 from multiprocessing.pool import ThreadPool
 import time
 
 from google.cloud import spanner
 
 
+# [START spanner_batch_client]
 def run_batch_query(instance_id, database_id):
     """Runs an example batch query."""
 
-    # [START spanner_batch_client]
-    #
     # CREATE TABLE Singers (
     #   SingerId   INT64 NOT NULL,
     #   FirstName  STRING(1024),
@@ -53,7 +50,7 @@ def run_batch_query(instance_id, database_id):
     pool = ThreadPool()
     results = []
     start = time.time()
-    print('reached this point')
+
     for partition in partitions:
         print('Starting partition.')
         results.append(
@@ -61,19 +58,27 @@ def run_batch_query(instance_id, database_id):
 
     # Print results
     for result in results:
+        print(result)
         finish, row_ct = result.get(timeout=3600)
         elapsed = finish - start
         print(u'Completed {} rows in {} seconds'.format(row_ct, elapsed))
+
+    # Clean up
+    batch_transaction.session.delete()
 
 
 def process_partition(transaction, partition):
     """Processes the requests of a query in an separate process."""
     print('Process started.')
-    row_ct = 0
-    for row in transaction.process_read_batch(partition):
-        print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
-        row_ct += 1
-    return time.time(), row_ct
+    try:
+        row_ct = 0
+        for row in transaction.process_read_batch(partition):
+            print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
+            row_ct += 1
+        return time.time(), row_ct
+    except Exception as e:
+        print(e.message)
+# [END spanner_batch_client]
 
 
 if __name__ == '__main__':
