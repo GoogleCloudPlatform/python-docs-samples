@@ -87,7 +87,7 @@ if __name__ == '__main__':
         help='Fetch the list of info types in a specified category.')
     parser_info_types.add_argument(
         'category', help='The category of info types to list; e.g. \'PII\'.')
-    parser_categories.add_argument(
+    parser_info_types.add_argument(
         '--language_code',
         help='The BCP-47 language code to use, e.g. \'en-US\'.')
 
