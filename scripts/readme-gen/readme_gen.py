@@ -34,7 +34,7 @@ README_TMPL = jinja_env.get_template('README.tmpl.rst')
 
 
 def get_help(file):
-    return subprocess.check_output(['python', file, '--help'])
+    return subprocess.check_output(['python', file, '--help']).decode()
 
 
 def main():
