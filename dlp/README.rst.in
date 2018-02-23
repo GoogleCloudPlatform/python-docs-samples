@@ -8,6 +8,7 @@ product:
     `Google Data Loss Prevention`_ provides programmatic access to a powerful
     detection engine for personally identifiable information and other
     privacy-sensitive data in unstructured data streams.
+    **This api is currently in beta**.
 
 setup:
 - auth

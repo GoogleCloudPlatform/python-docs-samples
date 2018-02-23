@@ -7,7 +7,7 @@ Google Data Loss Prevention Python Samples
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/README.rst
 
 
-This directory contains samples for Google Data Loss Prevention. `Google Data Loss Prevention`_ provides programmatic access to a powerful detection engine for personally identifiable information and other privacy-sensitive data in unstructured data streams.
+This directory contains samples for Google Data Loss Prevention. `Google Data Loss Prevention`_ provides programmatic access to a powerful detection engine for personally identifiable information and other privacy-sensitive data in unstructured data streams. **This api is currently in beta**.
 
 
 
