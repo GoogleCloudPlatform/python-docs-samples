@@ -57,8 +57,6 @@ def bucket(request):
     # Attempt to delete the bucket; this will only work if it is empty.
     bucket.delete()
 
-    print('teardown complete')
-
 
 def test_inspect_string(capsys):
     test_string = 'I am Gary and my email is gary@example.com'

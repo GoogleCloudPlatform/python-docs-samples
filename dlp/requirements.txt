@@ -1,4 +1,2 @@
-# DO NOT SUBMIT
-google-cloud-storage
-/Users/gorcester/src/google-cloud-python/dlp
-
+google-cloud-dlp==0.1.0
+google-cloud-storage==1.7.0
