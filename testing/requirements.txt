@@ -1,12 +1,12 @@
 beautifulsoup4==4.6.0
-coverage==4.5
+coverage==4.5.1
 flaky==3.4.0
 funcsigs==1.0.2
 mock==2.0.0
 mysql-python==1.2.5; python_version < "3.0"
 PyCrypto==2.6.1
 pytest-cov==2.5.1
-pytest==3.4.0
+pytest==3.4.1
 pyyaml==3.12
 responses==0.8.1
 WebTest==2.0.29
