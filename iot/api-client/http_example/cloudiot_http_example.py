@@ -21,6 +21,7 @@ Before you run the sample, you must register your device as described in the
 README in the parent folder.
 """
 
+# [START iot_http_includes]
 import argparse
 import base64
 import datetime
@@ -30,11 +31,13 @@ import time
 from google.api_core import retry
 import jwt
 import requests
+# [END iot_http_includes]
 
 _BASE_URL = 'https://cloudiotdevice.googleapis.com/v1'
 _BACKOFF_DURATION = 60
 
 
+# [START iot_http_jwt]
 def create_jwt(project_id, private_key_file, algorithm):
     token = {
             # The time the token was issued.
@@ -53,11 +56,13 @@ def create_jwt(project_id, private_key_file, algorithm):
             algorithm, private_key_file))
 
     return jwt.encode(token, private_key, algorithm=algorithm).decode('ascii')
+# [END iot_http_jwt]
 
 
 @retry.Retry(
     predicate=retry.if_exception_type(AssertionError),
     deadline=_BACKOFF_DURATION)
+# [START iot_http_publish]
 def publish_message(
         message, message_type, base_url, project_id, cloud_region, registry_id,
         device_id, jwt_token):
@@ -92,6 +97,7 @@ def publish_message(
         raise AssertionError('Not OK response: {}'.format(resp.status_code))
 
     return resp
+# [END iot_http_publish]
 
 
 @retry.Retry(
@@ -172,6 +178,7 @@ def parse_command_line_args():
     return parser.parse_args()
 
 
+# [START iot_http_run]
 def main():
     args = parse_command_line_args()
 
@@ -208,6 +215,7 @@ def main():
         # Send events every second. State should not be updated as often
         time.sleep(1 if args.message_type == 'event' else 5)
     print('Finished.')
+# [END iot_http_run]
 
 
 if __name__ == '__main__':
