@@ -82,6 +82,7 @@ def get_client(service_account_json):
             credentials=scoped_credentials)
 
 
+# [START iot_create_rsa_device]
 def create_rs256_device(
         service_account_json, project_id, cloud_region, registry_id, device_id,
         certificate_file):
@@ -107,8 +108,10 @@ def create_rs256_device(
 
     devices = client.projects().locations().registries().devices()
     return devices.create(parent=registry_name, body=device_template).execute()
+# [END iot_create_rsa_device]
 
 
+# [START iot_create_es_device]
 def create_es256_device(
         service_account_json, project_id, cloud_region, registry_id,
         device_id, public_key_file):
@@ -134,8 +137,10 @@ def create_es256_device(
 
     devices = client.projects().locations().registries().devices()
     return devices.create(parent=registry_name, body=device_template).execute()
+# [END iot_create_es_device]
 
 
+# [START iot_create_unauth_device]
 def create_unauth_device(
         service_account_json, project_id, cloud_region, registry_id,
         device_id):
@@ -150,8 +155,10 @@ def create_unauth_device(
 
     devices = client.projects().locations().registries().devices()
     return devices.create(parent=registry_name, body=device_template).execute()
+# [END iot_create_unauth_device]
 
 
+# [START iot_delete_device]
 def delete_device(
         service_account_json, project_id, cloud_region, registry_id,
         device_id):
@@ -165,8 +172,10 @@ def delete_device(
 
     devices = client.projects().locations().registries().devices()
     return devices.delete(name=device_name).execute()
+# [END iot_delete_device]
 
 
+# [START iot_delete_registry]
 def delete_registry(
        service_account_json, project_id, cloud_region, registry_id):
     """Deletes the specified registry."""
@@ -177,8 +186,10 @@ def delete_registry(
 
     registries = client.projects().locations().registries()
     return registries.delete(name=registry_name).execute()
+# [END iot_delete_registry]
 
 
+# [START iot_get_device]
 def get_device(
         service_account_json, project_id, cloud_region, registry_id,
         device_id):
@@ -209,8 +220,10 @@ def get_device(
             'cloudUpdateTime')))
 
     return device
+# [END iot_get_device]
 
 
+# [START iot_get_device_state]
 def get_state(
         service_account_json, project_id, cloud_region, registry_id,
         device_id):
@@ -226,8 +239,10 @@ def get_state(
     print('State: {}\n'.format(state))
 
     return state
+# [END iot_get_device_state]
 
 
+# [START iot_list_devices]
 def list_devices(
         service_account_json, project_id, cloud_region, registry_id):
     """List all devices in the registry."""
@@ -244,8 +259,10 @@ def list_devices(
                     device.get('id')))
 
     return devices
+# [END iot_list_devices]
 
 
+# [START iot_list_registries]
 def list_registries(service_account_json, project_id, cloud_region):
     """List all registries in the project."""
     print('Listing Registries')
@@ -261,8 +278,10 @@ def list_registries(service_account_json, project_id, cloud_region):
                     registry.get('name')))
 
     return registries
+# [END iot_list_devices]
 
 
+# [START iot_create_registry]
 def create_registry(
         service_account_json, project_id, cloud_region, pubsub_topic,
         registry_id):
@@ -288,8 +307,10 @@ def create_registry(
     except HttpError:
         print('Error, registry not created')
         return ""
+# [END iot_create_registry]
 
 
+# [START iot_get_registry]
 def get_registry(
         service_account_json, project_id, cloud_region, registry_id):
     """ Retrieves a device registry."""
@@ -300,6 +321,7 @@ def get_registry(
     topic_name = '{}/registries/{}'.format(registry_parent, registry_id)
     request = client.projects().locations().registries().get(name=topic_name)
     return request.execute()
+# [END iot_get_registry]
 
 
 def open_registry(
@@ -325,6 +347,7 @@ def open_registry(
     print(response)
 
 
+# [START iot_patch_es]
 def patch_es256_auth(
         service_account_json, project_id, cloud_region, registry_id,
         device_id, public_key_file):
@@ -350,8 +373,10 @@ def patch_es256_auth(
 
     return client.projects().locations().registries().devices().patch(
             name=device_name, updateMask='credentials', body=patch).execute()
+# [END iot_patch_es]
 
 
+# [START iot_patch_rsa]
 def patch_rsa256_auth(
         service_account_json, project_id, cloud_region, registry_id, device_id,
         public_key_file):
@@ -377,8 +402,10 @@ def patch_rsa256_auth(
 
     return client.projects().locations().registries().devices().patch(
             name=device_name, updateMask='credentials', body=patch).execute()
+# [END iot_patch_rsa]
 
 
+# [START iot_set_device_config]
 def set_config(
         service_account_json, project_id, cloud_region, registry_id, device_id,
         version, config):
@@ -397,8 +424,10 @@ def set_config(
         ).locations().registries(
         ).devices().modifyCloudToDeviceConfig(
         name=device_path, body=config_body).execute()
+# [END iot_set_device_config]
 
 
+# [START iot_get_device_configs]
 def get_config_versions(
         service_account_json, project_id, cloud_region, registry_id,
         device_id):
@@ -420,8 +449,10 @@ def get_config_versions(
             config.get('binaryData')))
 
     return configs
+# [END iot_get_device_configs]
 
 
+# [START iot_get_iam_policy]
 def get_iam_permissions(
         service_account_json, project_id, cloud_region, registry_id):
     """Retrieves IAM permissions for the given registry."""
@@ -433,8 +464,10 @@ def get_iam_permissions(
             resource=registry_path, body={}).execute()
 
     return policy
+# [END iot_get_iam_policy]
 
 
+# [START iot_set_iam_policy]
 def set_iam_permissions(
         service_account_json, project_id, cloud_region, registry_id, role,
         member):
@@ -456,6 +489,7 @@ def set_iam_permissions(
 
     return client.projects().locations().registries().setIamPolicy(
             resource=registry_path, body=body).execute()
+# [END iot_set_iam_policy]
 
 
 def parse_command_line_args():

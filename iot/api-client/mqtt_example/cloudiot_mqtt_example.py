@@ -21,6 +21,7 @@ Before you run the sample, you must follow the instructions in the README
 for this sample.
 """
 
+# [START iot_mqtt_includes]
 import argparse
 import datetime
 import os
@@ -30,7 +31,7 @@ import time
 
 import jwt
 import paho.mqtt.client as mqtt
-
+# [END iot_mqtt_includes]
 
 # The initial backoff time after a disconnection occurs, in seconds.
 minimum_backoff_time = 1
