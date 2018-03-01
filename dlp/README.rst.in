@@ -1,0 +1,32 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Data Loss Prevention
+  short_name: Data Loss Prevention
+  url: https://cloud.google.com/dlp/docs/
+  description: > 
+    `Google Data Loss Prevention`_ provides programmatic access to a powerful
+    detection engine for personally identifiable information and other
+    privacy-sensitive data in unstructured data streams.
+    **This api is currently in beta**.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Quickstart
+  file: quickstart.py
+- name: Inspect Content
+  file: inspect_content.py
+  show_help: true
+- name: Redact Content
+  file: redact.py
+  show_help: true
+- name: Display Metadata
+  file: metadata.py
+  show_help: true
+
+cloud_client_library: true
+
+folder: dlp
