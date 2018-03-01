@@ -25,6 +25,7 @@ import argparse
 from google.cloud import spanner
 
 
+# [START spanner_create_database]
 def create_database(instance_id, database_id):
     """Creates a database and tables for sample data."""
     spanner_client = spanner.Client()
@@ -52,8 +53,10 @@ def create_database(instance_id, database_id):
 
     print('Created database {} on instance {}'.format(
         database_id, instance_id))
+# [END spanner_create_database]
 
 
+# [START spanner_insert_data]
 def insert_data(instance_id, database_id):
     """Inserts sample data into the given database.
 
@@ -86,8 +89,10 @@ def insert_data(instance_id, database_id):
                 (2, 3, u'Terrified')])
 
     print('Inserted data.')
+# [END spanner_insert_data]
 
 
+# [START spanner_query_data]
 def query_data(instance_id, database_id):
     """Queries sample data from the database using SQL."""
     spanner_client = spanner.Client()
@@ -100,8 +105,10 @@ def query_data(instance_id, database_id):
 
         for row in results:
             print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
+# [END spanner_query_data]
 
 
+# [START spanner_read_data]
 def read_data(instance_id, database_id):
     """Reads sample data from the database."""
     spanner_client = spanner.Client()
@@ -117,8 +124,10 @@ def read_data(instance_id, database_id):
 
         for row in results:
             print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
+# [END spanner_read_data]
 
 
+# [START spanner_read_stale_data]
 def read_stale_data(instance_id, database_id):
     """Reads sample data from the database. The data is exactly 15 seconds
     stale."""
@@ -138,8 +147,10 @@ def read_stale_data(instance_id, database_id):
 
         for row in results:
             print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
+# [END spanner_read_stale_data]
 
 
+# [START spanner_query_data_with_new_column]
 def query_data_with_new_column(instance_id, database_id):
     """Queries sample data from the database using SQL.
 
@@ -160,8 +171,10 @@ def query_data_with_new_column(instance_id, database_id):
         for row in results:
             print(
                 u'SingerId: {}, AlbumId: {}, MarketingBudget: {}'.format(*row))
+# [END spanner_query_data_with_new_column]
 
 
+# [START spanner_create_index]
 def add_index(instance_id, database_id):
     """Adds a simple index to the example database."""
     spanner_client = spanner.Client()
@@ -175,8 +188,10 @@ def add_index(instance_id, database_id):
     operation.result()
 
     print('Added the AlbumsByAlbumTitle index.')
+# [END spanner_create_index]
 
 
+# [START spanner_query_data_with_index]
 def query_data_with_index(
         instance_id, database_id, start_title='Aardvark', end_title='Goo'):
     """Queries sample data from the database using SQL and an index.
@@ -220,8 +235,10 @@ def query_data_with_index(
             print(
                 u'AlbumId: {}, AlbumTitle: {}, '
                 'MarketingBudget: {}'.format(*row))
+# [END spanner_query_data_with_index]
 
 
+# [START spanner_read_data_with_index]
 def read_data_with_index(instance_id, database_id):
     """Reads sample data from the database using an index.
 
@@ -246,8 +263,10 @@ def read_data_with_index(instance_id, database_id):
 
         for row in results:
             print('AlbumId: {}, AlbumTitle: {}'.format(*row))
+# [END spanner_read_data_with_index]
 
 
+# [START spanner_create_storing_index]
 def add_storing_index(instance_id, database_id):
     """Adds an storing index to the example database."""
     spanner_client = spanner.Client()
@@ -262,8 +281,10 @@ def add_storing_index(instance_id, database_id):
     operation.result()
 
     print('Added the AlbumsByAlbumTitle2 index.')
+# [END spanner_create_storing_index]
 
 
+# [START spanner_read_data_with_storing_index]
 def read_data_with_storing_index(instance_id, database_id):
     """Reads sample data from the database using an index with a storing
     clause.
@@ -292,8 +313,10 @@ def read_data_with_storing_index(instance_id, database_id):
             print(
                 u'AlbumId: {}, AlbumTitle: {}, '
                 'MarketingBudget: {}'.format(*row))
+# [END spanner_read_data_with_storing_index]
 
 
+# [START spanner_add_column]
 def add_column(instance_id, database_id):
     """Adds a new column to the Albums table in the example database."""
     spanner_client = spanner.Client()
@@ -307,8 +330,10 @@ def add_column(instance_id, database_id):
     operation.result()
 
     print('Added the MarketingBudget column.')
+# [END spanner_add_column]
 
 
+# [START spanner_update_data]
 def update_data(instance_id, database_id):
     """Updates sample data in the database.
 
@@ -333,8 +358,10 @@ def update_data(instance_id, database_id):
                 (2, 2, 500000)])
 
     print('Updated data.')
+# [END spanner_update_data]
 
 
+# [START spanner_read_write_transaction]
 def read_write_transaction(instance_id, database_id):
     """Performs a read-write transaction to update two sample records in the
     database.
@@ -395,8 +422,10 @@ def read_write_transaction(instance_id, database_id):
     database.run_in_transaction(update_albums)
 
     print('Transaction complete.')
+# [END spanner_read_write_transaction]
 
 
+# [START spanner_read_only_transaction]
 def read_only_transaction(instance_id, database_id):
     """Reads data inside of a read-only transaction.
 
@@ -428,6 +457,7 @@ def read_only_transaction(instance_id, database_id):
         print('Results from second read:')
         for row in results:
             print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
+# [END spanner_read_only_transaction]
 
 
 if __name__ == '__main__':
