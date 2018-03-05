@@ -1,5 +1,21 @@
+#!/usr/bin/env python
+#
+# Copyright 2017 Google, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """This application demonstrates how to perform operations on data (content)
-when using the Google Cloud CDN (Content Delivery Network).
+when using Google Cloud CDN (Content Delivery Network).
 
 For more information, see the README.md under /cdn and the documentation
 at https://cloud.google.com/cdn/docs.
@@ -7,20 +23,20 @@ at https://cloud.google.com/cdn/docs.
 
 import argparse
 import base64
-<<<<<<< HEAD
 import datetime
 import hashlib
 import hmac
 import urlparse
 
-def sign_url(url, key_name, key, expiration_time):
+# [BEGIN sign_url]
+def sign_url(url, key_name, decoded_base64_key, expiration_datetime):
     """Gets the Signed URL string for the specified URL and configuration.
 
     Args:
         url: The URL to sign.
-        key_name: Signed URL key name to use for the 'KeyName=' query parameter.
-        key: The 16-byte unencoded secret key value to use for signing.
-        expiration_time: expiration time expressed as a UTC datetime object.
+        key_name: key name for the authorization secret key.
+        decoded_base64_key: base64 decoded secret key value to sign the url.
+        expiration_datetime: expiration time as a UTC datetime object.
 
     Returns:
         Returns the Signed URL appended with the query parameters based on the
@@ -32,7 +48,7 @@ def sign_url(url, key_name, key, expiration_time):
     parsed_url = urlparse.urlsplit(stripped_url)
     query_params = urlparse.parse_qs(parsed_url.query, keep_blank_values=True)
     epoch = datetime.datetime.utcfromtimestamp(0)
-    expiration_timestamp = (expiration_time - epoch).total_seconds()
+    expiration_timestamp = int((expiration_datetime - epoch).total_seconds())
 
     url_to_sign = '{url}{separator}Expires={expires}&KeyName={key_name}'.format(
             url=stripped_url,
@@ -41,11 +57,11 @@ def sign_url(url, key_name, key, expiration_time):
             key_name=key_name)
 
     signature = base64.urlsafe_b64encode(
-            hmac.new(key, url_to_sign, hashlib.sha1).digest())
+            hmac.new(decoded_base64_key, url_to_sign, hashlib.sha1).digest())
 
     return '{url}&Signature={signature}'.format(
             url=url_to_sign, signature=signature)
-
+# [END sign_url]
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -53,25 +69,27 @@ if __name__ == '__main__':
             formatter_class=argparse.RawDescriptionHelpFormatter)
 
     subparsers = parser.add_subparsers(dest='command')
-    subparsers.add_parser('sign-url', help=sign_url.__doc__)
 
-    sign_url_parser = subparsers.add_parser('sign-url', help=sign_url.__doc__)
-    sign_url_parser.add_argument('url',
-            help="The URL to sign.")
-    sign_url_parser.add_argument('key_name',
-            help="Signed URL key name to use for the 'KeyName=' query parameter.")
-    sign_url_parser.add_argument('key',
-            help="The 16-byte unencoded secret key value to use for signing.")
-    sign_url_parser.add_argument('expiration_timestamp',
-            help="Expiration time expessed as seconds since the epoch.")
+    sign_url_parser = subparsers.add_parser(
+            'sign-url',
+            help="Sign a URL to grant temporary authorized access.")
+    sign_url_parser.add_argument(
+            'url', help='The URL to sign')
+    sign_url_parser.add_argument(
+            'key_name',
+            help='Key name for the authorization secret key.')
+    sign_url_parser.add_argument(
+            'encoded_base64_key',
+            help='The base64 encoded secret key value to use for signing.')
+    sign_url_parser.add_argument(
+            'expiration_timestamp',
+            help='Expiration time expessed as seconds since the epoch.')
 
     args = parser.parse_args()
 
-    args.url = "http://35.186.234.33/index.html"
-    args.key_name = "my-key"
-    args.key = base64.urlsafe_b64decode("nZtRohdNF9m3cKM24IcK4w==")
-
     if args.command == 'sign-url':
-        expiration_time = datetime.datetime.fromtimestamp(float(args.expiration_timestamp))
-        print sign_url(args.url, args.key_name, args.key, expiration_time)
+        expiration_datetime = datetime.datetime.utcfromtimestamp(
+                float(args.expiration_timestamp))
+        decoded_key = base64.urlsafe_b64decode(args.encoded_base64_key)
+        print(sign_url(args.url, args.key_name, decoded_key, expiration_datetime))
 
