@@ -6,7 +6,6 @@ info:
   version: "1.0.0"
 host: "echo-api.endpoints.YOUR-PROJECT-ID.cloud.goog"
 # [END swagger]
-basePath: "/"
 consumes:
 - "application/json"
 produces:
