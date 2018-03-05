@@ -1,2 +1,2 @@
-google-cloud-dlp==0.1.0
-google-cloud-storage==1.7.0
+google-cloud-dlp==0.1.1
+google-cloud-storage==1.8.0
