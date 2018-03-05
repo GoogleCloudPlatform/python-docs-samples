@@ -1,0 +1,16 @@
+# Used to generate README.rst
+
+product:
+  name: Google Cloud CDN
+  short_name: Cloud CDN
+  url: https://cloud.google.com/cdn/docs
+  description: >
+    'Google Cloud CDN'_ enables low-latency, low-cost content delivery using
+    Google's global network
+
+samples:
+  - name: Snippets
+    file: snippets.py
+    show_help: true
+
+folder: cdn
