@@ -1,4 +1,4 @@
-PyJWT==1.5.3
+PyJWT==1.6.0
 cryptography==2.1.4
 flask==0.12.2
 google-auth==1.4.1
