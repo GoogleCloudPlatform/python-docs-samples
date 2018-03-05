@@ -7,6 +7,7 @@ at https://cloud.google.com/cdn/docs.
 
 import argparse
 import base64
+<<<<<<< HEAD
 import datetime
 import hashlib
 import hmac
