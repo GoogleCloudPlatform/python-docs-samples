@@ -31,13 +31,13 @@ from six.moves import urllib
 
 
 # [BEGIN sign_url]
-def sign_url(url, key_name, key, expiration_time):
+def sign_url(url, key_name, base64_key, expiration_time):
     """Gets the Signed URL string for the specified URL and configuration.
 
     Args:
         url: URL to sign as a string.
         key_name: name of the signing key as a string.
-        key: signing key as a urlsafe base64 encoded string.
+        base64_key: signing key as a base64 encoded string.
         expiration_time: expiration time as a UTC datetime object.
 
     Returns:
@@ -52,7 +52,7 @@ def sign_url(url, key_name, key, expiration_time):
         parsed_url.query, keep_blank_values=True)
     epoch = datetime.datetime.utcfromtimestamp(0)
     expiration_timestamp = int((expiration_time - epoch).total_seconds())
-    decoded_key = base64.urlsafe_b64decode(key)
+    decoded_key = base64.urlsafe_b64decode(base64_key)
 
     url_pattern = u'{url}{separator}Expires={expires}&KeyName={key_name}'
 
@@ -84,13 +84,13 @@ if __name__ == '__main__':
             'sign-url',
             help="Sign a URL to grant temporary authorized access.")
     sign_url_parser.add_argument(
-            'url', help='The URL to sign')
+            'url', help='The URL to sign.')
     sign_url_parser.add_argument(
             'key_name',
-            help='Key name for the authorization secret key.')
+            help='Key name for the signing key.')
     sign_url_parser.add_argument(
-            'key',
-            help='The base64 encoded secret key value to use for signing.')
+            'base64_key',
+            help='The base64 encoded signing key.')
     sign_url_parser.add_argument(
             'expiration_time',
             type=lambda d: datetime.datetime.utcfromtimestamp(float(d)),
@@ -99,4 +99,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.command == 'sign-url':
-        sign_url(args.url, args.key_name, args.key, args.expiration_time)
+        sign_url(
+            args.url, args.key_name, args.base64_key, args.expiration_time)
