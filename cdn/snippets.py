@@ -27,11 +27,8 @@ import datetime
 import hashlib
 import hmac
 
-# Python 2 & 3 compatibility
-try:
-    from urllib.parse import urlsplit, parse_qs
-except ImportError:
-    from urlparse import urlsplit, parse_qs
+from six.moves import urllib
+
 
 # [BEGIN sign_url]
 def sign_url(url, key_name, key, expiration_time):
@@ -50,24 +47,31 @@ def sign_url(url, key_name, key, expiration_time):
 
     """
     stripped_url = url.strip()
-    parsed_url = urlsplit(stripped_url)
-    query_params = parse_qs(parsed_url.query, keep_blank_values=True)
+    parsed_url = urllib.parse.urlsplit(stripped_url)
+    query_params = urllib.parse.parse_qs(
+        parsed_url.query, keep_blank_values=True)
     epoch = datetime.datetime.utcfromtimestamp(0)
     expiration_timestamp = int((expiration_time - epoch).total_seconds())
     decoded_key = base64.urlsafe_b64decode(key)
 
-    url_to_sign = '{url}{separator}Expires={expires}&KeyName={key_name}'.format(
+    url_pattern = u'{url}{separator}Expires={expires}&KeyName={key_name}'
+
+    url_to_sign = url_pattern.format(
             url=stripped_url,
             separator='&' if query_params else '?',
             expires=expiration_timestamp,
             key_name=key_name)
 
-    signature = base64.urlsafe_b64encode(
-            hmac.new(decoded_key, url_to_sign, hashlib.sha1).digest())
+    digest = hmac.new(
+        decoded_key, url_to_sign.encode('utf-8'), hashlib.sha1).digest()
+    signature = base64.urlsafe_b64encode(digest)
 
-    return '{url}&Signature={signature}'.format(
+    signed_url = u'{url}&Signature={signature}'.format(
             url=url_to_sign, signature=signature)
+
+    print(signed_url)
 # [END sign_url]
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -95,5 +99,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.command == 'sign-url':
-        print(sign_url(args.url, args.key_name, args.key, args.expiration_time))
-
+        sign_url(args.url, args.key_name, args.key, args.expiration_time)
