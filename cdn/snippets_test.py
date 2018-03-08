@@ -41,7 +41,6 @@ def test_sign_url(capsys):
     out, _ = capsys.readouterr()
 
     results = out.splitlines()
-    print(results)
     assert results[0] == (
         'http://35.186.234.33/index.html?Expires=1549751401&KeyName=my-key&'
         'Signature=CRFqQnVfFyiUyR63OQf-HRUpIwc=')
