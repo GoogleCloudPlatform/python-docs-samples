@@ -95,7 +95,6 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
     ```bash
     GCLOUD_PROJECT=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google")
     SERVICE_NAME=hellogrpc.endpoints.${GCLOUD_PROJECT}.cloud.goog
-    SERVICE_CONFIG_ID=<Your Config ID>
     ```
 
 1. Pull your credentials to access Container Registry, and run your gRPC server
@@ -114,7 +113,7 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
         --link=grpc-hello:grpc-hello \
         gcr.io/endpoints-release/endpoints-runtime:1 \
         --service=${SERVICE_NAME} \
-        --version=${SERVICE_CONFIG_ID} \
+        --rollout_strategy=managed \
         --http2_port=9000 \
         --backend=grpc://grpc-hello:50051
     ```
@@ -146,18 +145,10 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
     gcloud container clusters create my-cluster --zone=us-central1-a
     ```
 
-1. Edit `deployment.yaml`. Replace `SERVICE_NAME`, `SERVICE_CONFIG_ID`,
-   and `GCLOUD_PROJECT` with your values:
+1. Edit `deployment.yaml`. Replace `SERVICE_NAME` and `GCLOUD_PROJECT` with your values:
 
    `SERVICE_NAME` is equal to hellogrpc.endpoints.GCLOUD_PROJECT.cloud.goog,
    replacing GCLOUD_PROJECT with your project ID.
-
-   `SERVICE_CONFIG_ID` can be found by running the following command, replacing
-   GCLOUD_PROJECT with your project ID.
-
-   ```bash
-   gcloud endpoints configs list --service hellogrpc.endpoints.GCLOUD_PROJECT.cloud.goog
-   ```
 
 1. Deploy to GKE:
 
