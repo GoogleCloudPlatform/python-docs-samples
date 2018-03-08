@@ -29,11 +29,11 @@ from google.cloud import pubsub_v1
 
 def list_subscriptions_in_topic(project, topic_name):
     """Lists all subscriptions for a given topic."""
-    subscriber = pubsub_v1.SubscriberClient()
+    subscriber = pubsub_v1.PublisherClient()
     topic_path = subscriber.topic_path(project, topic_name)
 
-    for subscription in subscriber.list_subscriptions(topic_path):
-        print(subscription.name)
+    for subscription in subscriber.list_topic_subscriptions(topic_path):
+        print(subscription)
 
 
 def list_subscriptions_in_project(project):
