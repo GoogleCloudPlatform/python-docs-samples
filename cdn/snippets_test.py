@@ -22,11 +22,32 @@ import snippets
 
 
 def test_sign_url(capsys):
-
     snippets.sign_url(
-        'http://www.example.com/', 'my-key', 'd9hoKw==', datetime.datetime.max)
+        'http://35.186.234.33/index.html',
+        'my-key',
+        'nZtRohdNF9m3cKM24IcK4w==',
+        datetime.datetime.utcfromtimestamp(1549751401))
+    snippets.sign_url(
+        'http://www.example.com/',
+        'my-key',
+        'nZtRohdNF9m3cKM24IcK4w==',
+        datetime.datetime.utcfromtimestamp(1549751401))
+    snippets.sign_url(
+        'http://www.example.com/some/path?some=query&another=param',
+        'my-key',
+        'nZtRohdNF9m3cKM24IcK4w==',
+        datetime.datetime.utcfromtimestamp(1549751401))
 
     out, _ = capsys.readouterr()
 
-    assert out == ('http://www.example.com/?Expires=253402300800&'
-                   'KeyName=my-key&Signature=w5FrhnkzGIrEabLP9HNxETNmS9U=')
+    results = out.splitlines()
+    print(results)
+    assert results[0] == (
+        'http://35.186.234.33/index.html?Expires=1549751401&KeyName=my-key&'
+        'Signature=CRFqQnVfFyiUyR63OQf-HRUpIwc=')
+    assert results[1] == (
+        'http://www.example.com/?Expires=1549751401&KeyName=my-key&'
+        'Signature=OqDUFfHpN5Vxga6r80bhsgxKves=')
+    assert results[2] == (
+        'http://www.example.com/some/path?some=query&another=param&Expires='
+        '1549751401&KeyName=my-key&Signature=9Q9TCxSju8-W5nUkk5CuTrun2_o=')

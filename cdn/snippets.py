@@ -42,9 +42,7 @@ def sign_url(url, key_name, base64_key, expiration_time):
 
     Returns:
         Returns the Signed URL appended with the query parameters based on the
-        specified configuration.  Roughly of the form:
-        {url}{separator}Expires={expiration}&KeyName={key_name}&Signature={signature}
-
+        specified configuration.
     """
     stripped_url = url.strip()
     parsed_url = urllib.parse.urlsplit(stripped_url)
@@ -64,7 +62,7 @@ def sign_url(url, key_name, base64_key, expiration_time):
 
     digest = hmac.new(
         decoded_key, url_to_sign.encode('utf-8'), hashlib.sha1).digest()
-    signature = base64.urlsafe_b64encode(digest)
+    signature = base64.urlsafe_b64encode(digest).decode('utf-8')
 
     signed_url = u'{url}&Signature={signature}'.format(
             url=url_to_sign, signature=signature)
