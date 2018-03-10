@@ -98,7 +98,7 @@ def list_timeseries(client, project_resource, metric):
 def get_client():
     client = googleapiclient.discovery.build('monitoring', 'v3')
     return client
-    
+
 
 def main(project_id):
     client = googleapiclient.discovery.build('monitoring', 'v3')
