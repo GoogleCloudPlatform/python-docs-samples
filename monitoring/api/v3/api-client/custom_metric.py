@@ -36,8 +36,6 @@ import time
 
 import googleapiclient.discovery
 
-import list_resources
-
 
 def format_rfc3339(datetime_instance=None):
     """Formats a datetime per RFC 3339.
