@@ -34,8 +34,9 @@ import pprint
 import random
 import time
 
-import list_resources
 import googleapiclient.discovery
+
+import list_resources
 
 
 def format_rfc3339(datetime_instance=None):
