@@ -45,6 +45,7 @@ import argparse
 import datetime
 import json
 import os
+import ssl
 import time
 
 import jwt
@@ -208,7 +209,7 @@ def main():
             args.project_id,
             args.private_key_file,
             args.algorithm))
-    client.tls_set(ca_certs=args.ca_certs)
+    client.tls_set(ca_certs=args.ca_certs, tls_version=ssl.PROTOCOL_TLSv1_2)
 
     device = Device()
 
