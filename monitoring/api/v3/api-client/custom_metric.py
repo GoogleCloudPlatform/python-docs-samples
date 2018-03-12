@@ -35,6 +35,7 @@ import random
 import time
 
 import list_resources
+import googleapiclient.discovery
 
 
 def format_rfc3339(datetime_instance=None):
@@ -173,7 +174,7 @@ def main(project_id):
     METRIC_KIND = "GAUGE"
 
     project_resource = "projects/{0}".format(project_id)
-    client = list_resources.get_client()
+    client = googleapiclient.discovery.build('monitoring', 'v3')
     create_custom_metric(client, project_resource,
                          CUSTOM_METRIC_TYPE, METRIC_KIND)
     custom_metric = None
