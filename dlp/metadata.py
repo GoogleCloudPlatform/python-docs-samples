@@ -30,10 +30,10 @@ def list_info_types(category, language_code='en-US'):
         None; the response from the API is printed to the terminal.
     """
     # Import the client library
-    import google.cloud.dlp
+    import google.cloud.dlp_v2beta1
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2beta1.DlpServiceClient()
 
     # Make the API call.
     response = dlp.list_info_types(category, language_code)
@@ -55,10 +55,10 @@ def list_categories(language_code='en-US'):
         None; the response from the API is printed to the terminal.
     """
     # Import the client library
-    import google.cloud.dlp
+    import google.cloud.dlp_v2beta1
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2beta1.DlpServiceClient()
 
     # Make the API call.
     response = dlp.list_root_categories(language_code)

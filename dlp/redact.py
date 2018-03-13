@@ -38,10 +38,10 @@ def redact_string(item, replace_string, info_types=None, min_likelihood=None):
         None; the response from the API is printed to the terminal.
     """
     # Import the client library
-    import google.cloud.dlp
+    import google.cloud.dlp_v2beta1
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2beta1.DlpServiceClient()
 
     # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted).
@@ -101,10 +101,10 @@ def redact_image(filename, output_filename,
         None; the response from the API is printed to the terminal.
     """
     # Import the client library
-    import google.cloud.dlp
+    import google.cloud.dlp_v2beta1
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2beta1.DlpServiceClient()
 
     # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted). The info_types are not submitted
