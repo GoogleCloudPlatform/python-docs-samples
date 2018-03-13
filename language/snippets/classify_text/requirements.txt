@@ -1,2 +1,2 @@
 google-cloud-language==1.0.1
-numpy==1.14.1
+numpy==1.14.2
