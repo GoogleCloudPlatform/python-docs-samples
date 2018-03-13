@@ -19,6 +19,7 @@ from __future__ import print_function
 
 import argparse
 import mimetypes
+import os
 
 
 # [START redact_string]
@@ -164,11 +165,14 @@ def redact_image(project, filename, output_filename,
 
 
 if __name__ == '__main__':
+    default_project = os.environ.get('GCLOUD_PROJECT')
+
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(
         dest='content', help='Select how to submit content to the API.')
+    subparsers.required = True
 
-    parser_string = subparsers.add_parser('string', help='Inspect a string.')
+    parser_string = subparsers.add_parser('string', help='Redact a string.')
     parser_string.add_argument('item', help='The string to inspect.')
     parser_string.add_argument(
         'replace_string',
@@ -189,20 +193,23 @@ if __name__ == '__main__':
         help='A string representing the minimum likelihood threshold that '
              'constitutes a match.')
 
-    parser_file = subparsers.add_parser('image', help='Inspect an image file.')
+    parser_file = subparsers.add_parser('image', help='Redact an image file.')
     parser_file.add_argument(
         'filename', help='The path to the file to inspect.')
     parser_file.add_argument(
         'output_filename',
         help='The path to which the redacted image will be written.')
     parser_file.add_argument(
+        '--project',
+        help='The Google Cloud project id to use as a parent resource.',
+        default=default_project)
+    parser_file.add_argument(
         '--info_types', action='append',
         help='Strings representing info types to look for. A full list of '
              'info categories and types is available from the API. Examples '
-             'include "US_MALE_NAME", "US_FEMALE_NAME", "EMAIL_ADDRESS", '
-             '"CANADA_SOCIAL_INSURANCE_NUMBER", "JAPAN_PASSPORT". If omitted, '
-             'the API will use a limited default set. Specify this flag '
-             'multiple times to specify multiple info types.')
+             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+             'If unspecified, the three above examples will be used.',
+        default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
     parser_file.add_argument(
         '--min_likelihood',
         choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
@@ -222,5 +229,6 @@ if __name__ == '__main__':
             min_likelihood=args.min_likelihood)
     elif args.content == 'image':
         redact_image(
-            args.filename, args.output_filename, info_types=args.info_types,
-            min_likelihood=args.min_likelihood, mime_type=args.mime_type)
+            args.project, args.filename, args.output_filename,
+            args.info_types, min_likelihood=args.min_likelihood,
+            mime_type=args.mime_type)
