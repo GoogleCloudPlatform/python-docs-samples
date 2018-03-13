@@ -19,6 +19,7 @@ from __future__ import print_function
 
 import argparse
 import mimetypes
+import os
 
 
 # [START redact_string]
@@ -83,8 +84,8 @@ def redact_string(item, replace_string, info_types=None, min_likelihood=None):
 
 
 # [START redact_image]
-def redact_image(filename, output_filename,
-                 info_types=None, min_likelihood=None, mime_type=None):
+def redact_image(project, filename, output_filename,
+                 info_types, min_likelihood=None, mime_type=None):
     """Uses the Data Loss Prevention API to redact protected data in an image.
     Args:
         filename: The path to the file to inspect.
@@ -101,17 +102,14 @@ def redact_image(filename, output_filename,
         None; the response from the API is printed to the terminal.
     """
     # Import the client library
-    import google.cloud.dlp_v2beta1
+    import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp_v2beta1.DlpServiceClient()
+    dlp = google.cloud.dlp.DlpServiceClient()
 
     # Prepare info_types by converting the list of strings into a list of
-    # dictionaries (protos are also accepted). The info_types are not submitted
-    # directly in this example, but are used in the construction of
-    # image_redaction_configs.
-    if info_types is not None:
-        info_types = [{'name': info_type} for info_type in info_types]
+    # dictionaries (protos are also accepted).
+    info_types = [{'name': info_type} for info_type in info_types]
 
     # Prepare image_redaction_configs, a list of dictionaries. Each dictionary
     # contains an info_type and optionally the color used for the replacement.
@@ -124,8 +122,9 @@ def redact_image(filename, output_filename,
 
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
-    redact_config = {
+    inspect_config = {
         'min_likelihood': min_likelihood,
+        'info_types': info_types,
     }
 
     # If mime_type is not specified, guess it from the filename.
@@ -133,30 +132,47 @@ def redact_image(filename, output_filename,
         mime_guess = mimetypes.MimeTypes().guess_type(filename)
         mime_type = mime_guess[0] or 'application/octet-stream'
 
-    # Construct the items list (in this case, only one item, containing the
-    # image file's byte data).
+    # Select the content type index from the list of supported types.
+    supported_content_types = {
+        None: 0,  # "Unspecified"
+        'image/jpeg': 1,
+        'image/bmp': 2,
+        'image/png': 3,
+        'image/svg': 4,
+        'text/plain': 5,
+    }
+    content_type_index = supported_content_types.get(mime_type, 0)
+
+    # Construct the byte_item, containing the file's byte data.
     with open(filename, mode='rb') as f:
-        items = [{'type': mime_type, 'data': f.read()}]
+        byte_item = {'type': content_type_index, 'data': f.read()}
+
+    # Convert the project id into a full resource id.
+    parent = dlp.project_path(project)
 
     # Call the API.
-    response = dlp.redact_content(
-        redact_config, items, None,
-        image_redaction_configs=image_redaction_configs)
+    response = dlp.redact_image(
+        parent, inspect_config=inspect_config,
+        image_redaction_configs=image_redaction_configs,
+        byte_item=byte_item)
 
     # Write out the results.
     with open(output_filename, mode='wb') as f:
-        f.write(response.items[0].data)
+        f.write(response.redacted_image)
     print("Wrote {byte_count} to {filename}".format(
-        byte_count=len(response.items[0].data), filename=output_filename))
+        byte_count=len(response.redacted_image), filename=output_filename))
 # [END redact_string]
 
 
 if __name__ == '__main__':
+    default_project = os.environ.get('GCLOUD_PROJECT')
+
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(
         dest='content', help='Select how to submit content to the API.')
+    subparsers.required = True
 
-    parser_string = subparsers.add_parser('string', help='Inspect a string.')
+    parser_string = subparsers.add_parser('string', help='Redact a string.')
     parser_string.add_argument('item', help='The string to inspect.')
     parser_string.add_argument(
         'replace_string',
@@ -177,20 +193,23 @@ if __name__ == '__main__':
         help='A string representing the minimum likelihood threshold that '
              'constitutes a match.')
 
-    parser_file = subparsers.add_parser('image', help='Inspect an image file.')
+    parser_file = subparsers.add_parser('image', help='Redact an image file.')
     parser_file.add_argument(
         'filename', help='The path to the file to inspect.')
     parser_file.add_argument(
         'output_filename',
         help='The path to which the redacted image will be written.')
     parser_file.add_argument(
+        '--project',
+        help='The Google Cloud project id to use as a parent resource.',
+        default=default_project)
+    parser_file.add_argument(
         '--info_types', action='append',
         help='Strings representing info types to look for. A full list of '
              'info categories and types is available from the API. Examples '
-             'include "US_MALE_NAME", "US_FEMALE_NAME", "EMAIL_ADDRESS", '
-             '"CANADA_SOCIAL_INSURANCE_NUMBER", "JAPAN_PASSPORT". If omitted, '
-             'the API will use a limited default set. Specify this flag '
-             'multiple times to specify multiple info types.')
+             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+             'If unspecified, the three above examples will be used.',
+        default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
     parser_file.add_argument(
         '--min_likelihood',
         choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
@@ -210,5 +229,6 @@ if __name__ == '__main__':
             min_likelihood=args.min_likelihood)
     elif args.content == 'image':
         redact_image(
-            args.filename, args.output_filename, info_types=args.info_types,
-            min_likelihood=args.min_likelihood, mime_type=args.mime_type)
+            args.project, args.filename, args.output_filename,
+            args.info_types, min_likelihood=args.min_likelihood,
+            mime_type=args.mime_type)
