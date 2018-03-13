@@ -22,22 +22,14 @@ def quickstart():
     """Demonstrates use of the Data Loss Prevention API client library."""
 
     # [START quickstart]
-    import os
-    import sys
-
     # Import the client library
     import google.cloud.dlp
 
+    # Edit this with your Google Cloud Project ID.
+    project = 'your-project'
+
     # Instantiate a client.
     dlp = google.cloud.dlp.DlpServiceClient()
-
-    # Pull the project ID from an environment variable.
-    try:
-        project = os.environ['GCLOUD_PROJECT']
-    except KeyError:
-        print('Please specify a project ID in the GCLOUD_PROJECT environment '
-              'variable.')
-        sys.exit(1)
 
     # The string to inspect
     content = 'Robert Frost'
