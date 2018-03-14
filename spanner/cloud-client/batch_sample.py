@@ -1,8 +1,10 @@
+# Copyright 2018 Google Inc. All Rights Reserved.
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -54,7 +56,8 @@ def run_batch_query(instance_id, database_id):
     for partition in partitions:
         print('Starting partition.')
         results.append(
-            pool.apply_async(process_partition, (batch_transaction, partition)))
+            pool.apply_async(
+                process_partition, (batch_transaction, partition)))
 
     # Print results
     for result in results:
