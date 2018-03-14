@@ -19,7 +19,7 @@ For more information, see the README.rst under /spanner.
 """
 
 import argparse
-from multiprocessing.pool import ThreadPool
+from concurrent.futures import ThreadPoolExecutor
 import time
 
 from google.cloud import spanner
@@ -48,8 +48,8 @@ def run_batch_query(instance_id, database_id):
         keyset=spanner.KeySet(all_=True)
     )
 
-    # pool = multiprocessing.Pool()
-    pool = ThreadPool()
+    # Create a pool of workers for the tasks
+    pool = ThreadPoolExecutor()
     results = []
     start = time.time()
 
