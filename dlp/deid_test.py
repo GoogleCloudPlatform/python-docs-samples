@@ -23,8 +23,8 @@ import deid
 HARMFUL_STRING = 'My SSN is 372819127'
 HARMLESS_STRING = 'My favorite color is blue'
 GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
-WRAPPED_KEY = os.environ['DLP_DEID_WRAPPED_KEY']
-KEY_NAME = os.environ['DLP_DEID_KEY_NAME']
+WRAPPED_KEY = os.getenv('DLP_DEID_WRAPPED_KEY')
+KEY_NAME = os.getenv('DLP_DEID_KEY_NAME')
 SURROGATE_TYPE = 'SSN_TOKEN'
 CSV_FILE = os.path.join(os.path.dirname(__file__), 'resources/dates.csv')
 DATE_SHIFTED_AMOUNT = 30

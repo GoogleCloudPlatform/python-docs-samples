@@ -12,16 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Usages of the Data Loss Prevention API for deidentifying sensitive data."""
+"""Uses of the Data Loss Prevention API for deidentifying sensitive data."""
 
 from __future__ import print_function
 
 import argparse
-import os
 
 
-# [START deidentify_with_mask]
-def deidentify_with_mask(parent, string, masking_character=None,
+def deidentify_with_mask(project, string, masking_character=None,
                          number_to_mask=0):
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string by masking it with a character.
@@ -42,7 +40,7 @@ def deidentify_with_mask(parent, string, masking_character=None,
     dlp = google.cloud.dlp.DlpServiceClient()
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(parent)
+    parent = dlp.project_path(project)
 
     # Construct deidentify configuration dictionary
     deidentify_config = {
@@ -52,8 +50,7 @@ def deidentify_with_mask(parent, string, masking_character=None,
                     'primitive_transformation': {
                         'character_mask_config': {
                             'masking_character': masking_character,
-                            'number_to_mask': number_to_mask if
-                            number_to_mask >= 0 else 0
+                            'number_to_mask': number_to_mask
                         }
                     }
                 }
@@ -70,17 +67,14 @@ def deidentify_with_mask(parent, string, masking_character=None,
 
     # Print out the results.
     print(response.item.value)
-# [END deidentify_with_mask]
 
 
-# [START deidentify_with_fpe]
-def deidentify_with_fpe(parent, string, alphabet=None,
+def deidentify_with_fpe(project, string, alphabet=None,
                         surrogate_type=None, key_name=None, wrapped_key=None):
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string using Format Preserving Encryption (FPE).
     Args:
         item: The string to deidentify (will be treated as text).
-            Example: string = 'My SSN is 372819127'
         alphabet: The set of characters to replace sensitive ones with. For
             more information, see https://cloud.google.com/dlp/docs/reference/
             rest/v2beta2/organizations.deidentifyTemplates#ffxcommonnativealphabet
@@ -104,9 +98,10 @@ def deidentify_with_fpe(parent, string, alphabet=None,
     dlp = google.cloud.dlp.DlpServiceClient()
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(parent)
+    parent = dlp.project_path(project)
 
-    # Wrapped key can not be base64 encoded
+    # The wrapped key is base64-encoded, but the library expects a binary
+    # string, so decode it here.
     import base64
     wrapped_key = base64.b64decode(wrapped_key)
 
@@ -150,11 +145,9 @@ def deidentify_with_fpe(parent, string, alphabet=None,
 
     # Print results
     print(response.item.value)
-# [END deidentify_with_fpe]
 
 
-# [START reidentify_with_fpe]
-def reidentify_with_fpe(parent, string, alphabet=None,
+def reidentify_with_fpe(project, string, alphabet=None,
                         surrogate_type=None, key_name=None, wrapped_key=None):
     """Uses the Data Loss Prevention API to reidentify sensitive data in a
     string that was encrypted by Format Preserving Encryption (FPE).
@@ -181,9 +174,10 @@ def reidentify_with_fpe(parent, string, alphabet=None,
     dlp = google.cloud.dlp.DlpServiceClient()
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(parent)
+    parent = dlp.project_path(project)
 
-    # Wrapped key can not be base64 encoded
+    # The wrapped key is base64-encoded, but the library expects a binary
+    # string, so decode it here.
     import base64
     wrapped_key = base64.b64decode(wrapped_key)
 
@@ -235,11 +229,9 @@ def reidentify_with_fpe(parent, string, alphabet=None,
 
     # Print results
     print(response.item.value)
-# [END reidentify_with_fpe]
 
 
-# [START deidentify_with_date_shift]
-def deidentify_with_date_shift(parent, input_csv_file=None,
+def deidentify_with_date_shift(project, input_csv_file=None,
                                output_csv_file=None, date_fields=None,
                                lower_bound_days=None, upper_bound_days=None,
                                context_field_id=None, wrapped_key=None,
@@ -277,7 +269,7 @@ def deidentify_with_date_shift(parent, input_csv_file=None,
     dlp = google.cloud.dlp.DlpServiceClient()
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(parent)
+    parent = dlp.project_path(project)
 
     # Convert date field list to Protobuf type
     def map_fields(field):
@@ -317,6 +309,8 @@ def deidentify_with_date_shift(parent, input_csv_file=None,
     def map_rows(row):
         return {'values': map(map_data, row)}
 
+    # Using the helper functions, convert CSV rows to protobuf-compatible
+    # dictionaries.
     csv_headers = map(map_headers, f[0])
     csv_rows = map(map_rows, f[1:])
 
@@ -334,7 +328,9 @@ def deidentify_with_date_shift(parent, input_csv_file=None,
         'upper_bound_days': upper_bound_days
     }
 
-    # If using Cloud KMS key
+    # If using a Cloud KMS key, add it to the date_shift_config.
+    # The wrapped key is base64-encoded, but the library expects a binary
+    # string, so decode it here.
     if context_field_id and key_name and wrapped_key:
         import base64
         date_shift_config['context'] = {'name': context_field_id}
@@ -345,7 +341,7 @@ def deidentify_with_date_shift(parent, input_csv_file=None,
             }
         }
     elif context_field_id or key_name or wrapped_key:
-        raise StandardError("""You must set either ALL or NONE of
+        raise ValueError("""You must set either ALL or NONE of
         [context_field_id, key_name, wrapped_key]!""")
 
     # Construct Deidentify Config
@@ -384,34 +380,40 @@ def deidentify_with_date_shift(parent, input_csv_file=None,
     # Print status
     print('Successfully saved date-shift output to {}'.format(
                 output_csv_file))
-# [END deidentify_with_date_shift]
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(
         dest='content', help='Select how to submit content to the API.')
+    subparsers.required = True
 
     mask_parser = subparsers.add_parser(
         'deid_mask',
         help='Deidentify sensitive data in a string by masking it with a '
              'character.')
+    mask_parser.add_argument(
+        'project',
+        help='The Google Cloud project id to use as a parent resource.')
     mask_parser.add_argument('item', help='The string to deidentify.')
     mask_parser.add_argument(
-        '-n', '--number_to_mask', type=int,
+        '-n', '--number_to_mask',
+        type=int,
+        default=0,
         help='The maximum number of sensitive characters to mask in a match. '
         'If omitted the request or set to 0, the API will mask any mathcing '
         'characters.')
     mask_parser.add_argument(
         '-m', '--masking_character',
         help='The character to mask matching sensitive data with.')
-    mask_parser.add_argument(
-        '-p', '--project', default=os.environ['GCLOUD_PROJECT'])
 
     fpe_parser = subparsers.add_parser(
         'deid_fpe',
         help='Deidentify sensitive data in a string using Format Preserving '
              'Encryption (FPE).')
+    fpe_parser.add_argument(
+         'project',
+         help='The Google Cloud project id to use as a parent resource.')
     fpe_parser.add_argument(
         'item',
         help='The string to deidentify. '
@@ -438,13 +440,14 @@ if __name__ == '__main__':
         'necessary if you want to reverse the deidentification process. Can '
         'be essentially any arbitrary string, as long as it doesn\'t appear '
         'in your dataset otherwise.')
-    fpe_parser.add_argument(
-        '-p', '--project', default=os.environ['GCLOUD_PROJECT'])
 
     reid_parser = subparsers.add_parser(
         'reid_fpe',
         help='Reidentify sensitive data in a string using Format Preserving '
              'Encryption (FPE).')
+    reid_parser.add_argument(
+        'project',
+        help='The Google Cloud project id to use as a parent resource.')
     reid_parser.add_argument(
         'item',
         help='The string to deidentify. '
@@ -471,12 +474,13 @@ if __name__ == '__main__':
         'used subsets of the alphabet include "NUMERIC", "HEXADECIMAL", '
         '"UPPER_CASE_ALPHA_NUMERIC", "ALPHA_NUMERIC", '
         '"FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED"')
-    reid_parser.add_argument(
-        '-p', '--project', default=os.environ['GCLOUD_PROJECT'])
 
     date_shift_parser = subparsers.add_parser(
         'deid_date_shift',
         help='Deidentify dates in a CSV file by pseudorandomly shifting them.')
+    date_shift_parser.add_argument(
+        'project',
+        help='The Google Cloud project id to use as a parent resource.')
     date_shift_parser.add_argument(
         'input_csv_file',
         help='The path to the CSV file to deidentify. The first row of the '
@@ -512,8 +516,6 @@ if __name__ == '__main__':
         help='(Optional) The encrypted (\'wrapped\') AES-256 key to use. This '
         'key should be encrypted using the Cloud KMS key specified by'
         'key_name.')
-    date_shift_parser.add_argument(
-        '-p', '--project', default=os.environ['GCLOUD_PROJECT'])
 
     args = parser.parse_args()
 
