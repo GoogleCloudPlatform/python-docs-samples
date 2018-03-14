@@ -12,13 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Sample app that uses the Data Loss Prevention API for deidentifying
-sensitive data."""
+"""Usages of the Data Loss Prevention API for deidentifying sensitive data."""
 
 from __future__ import print_function
 
 import argparse
-
 import os
 
 
@@ -31,8 +29,8 @@ def deidentify_with_mask(parent, string, masking_character=None,
         item: The string to deidentify (will be treated as text).
         masking_character: The character to mask matching sensitive data with.
         number_to_mask: The maximum number of sensitive characters to mask in
-            a match. If omitted the request or set to 0, the API will mask any
-            mathcing characters.
+            a match. If omitted or set to zero, the API will default to no
+            maximum.
     Returns:
         None; the response from the API is printed to the terminal.
     """
@@ -41,10 +39,9 @@ def deidentify_with_mask(parent, string, masking_character=None,
     import google.cloud.dlp
 
     # Instantiate a client
-    google.cloud.dlp.DlpServiceClient.SERVICE_ADDRESS = 'autopush-dlp.sandbox.googleapis.com' # DO NOT SUBMIT
     dlp = google.cloud.dlp.DlpServiceClient()
 
-    # Add parent
+    # Convert the project id into a full resource id.
     parent = dlp.project_path(parent)
 
     # Construct deidentify configuration dictionary
@@ -68,9 +65,8 @@ def deidentify_with_mask(parent, string, masking_character=None,
     item = {'value': string}
 
     # Call the API
-    response = dlp.deidentify_content(parent,
-                                      deidentify_config=deidentify_config,
-                                      item=item)
+    response = dlp.deidentify_content(
+        parent, deidentify_config=deidentify_config, item=item)
 
     # Print out the results.
     print(response.item.value)
@@ -105,10 +101,9 @@ def deidentify_with_fpe(parent, string, alphabet=None,
     import google.cloud.dlp
 
     # Instantiate a client
-    google.cloud.dlp.DlpServiceClient.SERVICE_ADDRESS = 'autopush-dlp.sandbox.googleapis.com' # DO NOT SUBMIT
     dlp = google.cloud.dlp.DlpServiceClient()
 
-    # Add parent
+    # Convert the project id into a full resource id.
     parent = dlp.project_path(parent)
 
     # Wrapped key can not be base64 encoded
@@ -150,9 +145,9 @@ def deidentify_with_fpe(parent, string, alphabet=None,
     item = {'value': string}
 
     # Call the API
-    response = dlp.deidentify_content(parent,
-                                      deidentify_config=deidentify_config,
-                                      item=item)
+    response = dlp.deidentify_content(
+        parent, deidentify_config=deidentify_config, item=item)
+
     # Print results
     print(response.item.value)
 # [END deidentify_with_fpe]
@@ -183,10 +178,9 @@ def reidentify_with_fpe(parent, string, alphabet=None,
     import google.cloud.dlp
 
     # Instantiate a client
-    google.cloud.dlp.DlpServiceClient.SERVICE_ADDRESS = 'autopush-dlp.sandbox.googleapis.com'
     dlp = google.cloud.dlp.DlpServiceClient()
 
-    # Add parent
+    # Convert the project id into a full resource id.
     parent = dlp.project_path(parent)
 
     # Wrapped key can not be base64 encoded
@@ -233,10 +227,12 @@ def reidentify_with_fpe(parent, string, alphabet=None,
     item = {'value': string}
 
     # Call the API
-    response = dlp.reidentify_content(parent,
-                                      inspect_config=inspect_config,
-                                      reidentify_config=reidentify_config,
-                                      item=item)
+    response = dlp.reidentify_content(
+        parent,
+        inspect_config=inspect_config,
+        reidentify_config=reidentify_config,
+        item=item)
+
     # Print results
     print(response.item.value)
 # [END reidentify_with_fpe]
@@ -278,10 +274,9 @@ def deidentify_with_date_shift(parent, input_csv_file=None,
     import google.cloud.dlp
 
     # Instantiate a client
-    google.cloud.dlp.DlpServiceClient.SERVICE_ADDRESS = 'autopush-dlp.sandbox.googleapis.com' # DO NOT SUBMIT
     dlp = google.cloud.dlp.DlpServiceClient()
 
-    # Add parent
+    # Convert the project id into a full resource id.
     parent = dlp.project_path(parent)
 
     # Convert date field list to Protobuf type
@@ -296,11 +291,11 @@ def deidentify_with_date_shift(parent, input_csv_file=None,
     # Read and parse the CSV file
     import csv
     from datetime import datetime
-    file = []
+    f = []
     with open(input_csv_file, 'rb') as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
-            file.append(row)
+            f.append(row)
 
     #  Helper function for converting CSV rows to Protobuf types
     def map_headers(header):
@@ -322,8 +317,8 @@ def deidentify_with_date_shift(parent, input_csv_file=None,
     def map_rows(row):
         return {'values': map(map_data, row)}
 
-    csv_headers = map(map_headers, file[0])
-    csv_rows = map(map_rows, file[1:])
+    csv_headers = map(map_headers, f[0])
+    csv_rows = map(map_rows, f[1:])
 
     # Construct the table dict
     table_item = {
@@ -377,9 +372,9 @@ def deidentify_with_date_shift(parent, input_csv_file=None,
                                                   data.date_value.year)
 
     # Call the API
-    response = dlp.deidentify_content(parent,
-                                      deidentify_config=deidentify_config,
-                                      item=table_item)
+    response = dlp.deidentify_content(
+        parent, deidentify_config=deidentify_config, item=table_item)
+
     # Write results to CSV file
     with open(output_csv_file, 'wb') as csvfile:
         write_file = csv.writer(csvfile, delimiter=',')
