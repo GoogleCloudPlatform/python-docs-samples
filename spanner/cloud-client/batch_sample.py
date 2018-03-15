@@ -66,14 +66,11 @@ def run_batch_query(instance_id, database_id):
 def process(snapshot, partition):
     """Processes the requests of a query in an separate process."""
     print('Started processing partition.')
-    try:
-        row_ct = 0
-        for row in snapshot.process_read_batch(partition):
-            print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
-            row_ct += 1
-        return time.time(), row_ct
-    except Exception as e:
-        print(e.message)
+    row_ct = 0
+    for row in snapshot.process_read_batch(partition):
+        print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
+        row_ct += 1
+    return time.time(), row_ct
 # [END spanner_batch_client]
 
 
