@@ -24,6 +24,7 @@ def deidentify_with_mask(project, string, masking_character=None,
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string by masking it with a character.
     Args:
+        project: The Google Cloud project id to use as a parent resource.
         item: The string to deidentify (will be treated as text).
         masking_character: The character to mask matching sensitive data with.
         number_to_mask: The maximum number of sensitive characters to mask in
@@ -74,6 +75,7 @@ def deidentify_with_fpe(project, string, alphabet=None,
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string using Format Preserving Encryption (FPE).
     Args:
+        project: The Google Cloud project id to use as a parent resource.
         item: The string to deidentify (will be treated as text).
         alphabet: The set of characters to replace sensitive ones with. For
             more information, see https://cloud.google.com/dlp/docs/reference/
@@ -152,6 +154,7 @@ def reidentify_with_fpe(project, string, alphabet=None,
     """Uses the Data Loss Prevention API to reidentify sensitive data in a
     string that was encrypted by Format Preserving Encryption (FPE).
     Args:
+        project: The Google Cloud project id to use as a parent resource.
         item: The string to deidentify (will be treated as text).
         alphabet: The set of characters to replace sensitive ones with. For
             more information, see https://cloud.google.com/dlp/docs/reference/
@@ -239,6 +242,7 @@ def deidentify_with_date_shift(project, input_csv_file=None,
     """Uses the Data Loss Prevention API to deidentify dates in a CSV file by
         pseudorandomly shifting them.
     Args:
+        project: The Google Cloud project id to use as a parent resource.
         input_csv_file: The path to the CSV file to deidentify. The first row
             of the file must specify column names, and all other rows must
             contain valid values.
