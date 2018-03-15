@@ -19,4 +19,5 @@ def test_quickstart(capsys):
     quickstart.quickstart()
 
     out, _ = capsys.readouterr()
-    assert 'US_MALE_NAME' in out
+    assert 'FIRST_NAME' in out
+    assert 'LAST_NAME' in out
