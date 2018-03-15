@@ -19,7 +19,7 @@ For more information, see the README.rst under /spanner.
 """
 
 import argparse
-from concurrent.futures import ThreadPoolExecutor
+import concurrent.futures
 import time
 
 from google.cloud import spanner
@@ -41,41 +41,34 @@ def run_batch_query(instance_id, database_id):
     database = instance.database(database_id)
 
     # Create the batch transaction and generate partitions
-    batch_transaction = database.batch_transaction()
-    partitions = batch_transaction.generate_read_batches(
+    snapshot = database.batch_snapshot()
+    partitions = snapshot.generate_read_batches(
         table='Singers',
         columns=('SingerId', 'FirstName', 'LastName',),
         keyset=spanner.KeySet(all_=True)
     )
 
     # Create a pool of workers for the tasks
-    pool = ThreadPoolExecutor()
-    results = []
     start = time.time()
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        futures = [executor.submit(process, snapshot, p) for p in partitions]
 
-    for partition in partitions:
-        print('Starting partition.')
-        results.append(
-            pool.apply_async(
-                process_partition, (batch_transaction, partition)))
+        for future in futures:
+            finish, row_ct = future.result(timeout=3600)
 
-    # Print results
-    for result in results:
-        print(result)
-        finish, row_ct = result.get(timeout=3600)
-        elapsed = finish - start
-        print(u'Completed {} rows in {} seconds'.format(row_ct, elapsed))
+            elapsed = finish - start
+            print(u'Completed {} rows in {} seconds'.format(row_ct, elapsed))
 
     # Clean up
-    batch_transaction.session.delete()
+    snapshot.close()
 
 
-def process_partition(transaction, partition):
+def process(snapshot, partition):
     """Processes the requests of a query in an separate process."""
-    print('Process started.')
+    print('Started processing partition.')
     try:
         row_ct = 0
-        for row in transaction.process_read_batch(partition):
+        for row in snapshot.process_read_batch(partition):
             print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
             row_ct += 1
         return time.time(), row_ct
