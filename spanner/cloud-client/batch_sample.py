@@ -29,6 +29,7 @@ from google.cloud import spanner
 def run_batch_query(instance_id, database_id):
     """Runs an example batch query."""
 
+    # Expected Table Format:
     # CREATE TABLE Singers (
     #   SingerId   INT64 NOT NULL,
     #   FirstName  STRING(1024),
@@ -53,9 +54,8 @@ def run_batch_query(instance_id, database_id):
     with concurrent.futures.ThreadPoolExecutor() as executor:
         futures = [executor.submit(process, snapshot, p) for p in partitions]
 
-        for future in futures:
-            finish, row_ct = future.result(timeout=3600)
-
+        for future in concurrent.futures.as_completed(futures, timeout=3600):
+            finish, row_ct = future.result()
             elapsed = finish - start
             print(u'Completed {} rows in {} seconds'.format(row_ct, elapsed))
 
