@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Sample app that sets up Data Loss Prevention API automation triggers."""
+"""Sample app that sets up Data Loss Prevention API inspect templates."""
 
 from __future__ import print_function
 
@@ -21,27 +21,25 @@ import os
 import time
 
 
-# [START dlp_create_trigger]
-def create_trigger(project, bucket, scan_period_days, info_types,
-                   trigger_id=None, display_name=None, description=None,
-                   min_likelihood=None, max_findings=None):
-    """Creates a scheduled Data Loss Prevention API inspect_content trigger.
+# [START dlp_create_template]
+def create_inspect_template(project, info_types,
+                            template_id=None, display_name=None,
+                            min_likelihood=None, max_findings=None,
+                            include_quote=None):
+    """Creates a Data Loss Prevention API inspect template.
     Args:
         project: The Google Cloud project id to use as a parent resource.
-        bucket: The name of the GCS bucket to scan. This sample scans all
-            files in the bucket using a wildcard.
-        scan_period_days: How often to repeat the scan, in days.
-            The minimum is 1 day.
         info_types: A list of strings representing info types to look for.
             A full list of info type categories can be fetched from the API.
-        trigger_id: The id of the trigger. If omitted, an id will be randomly
+        template_id: The id of the template. If omitted, an id will be randomly
             generated.
-        display_name: The optional display name of the trigger.
-        description: The optional description of the trigger.
+        display_name: The optional display name of the template.
         min_likelihood: A string representing the minimum likelihood threshold
             that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
             'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
         max_findings: The maximum number of findings to report; 0 = no maximum.
+        include_quote: Boolean for whether to display a quote of the detected
+            information in the results.
     Returns:
         None; the response from the API is printed to the terminal.
     """
@@ -61,56 +59,30 @@ def create_trigger(project, bucket, scan_period_days, info_types,
     inspect_config = {
         'info_types': info_types,
         'min_likelihood': min_likelihood,
+        'include_quote': include_quote,
         'limits': {'max_findings_per_request': max_findings},
     }
 
-    # Construct a cloud_storage_options dictionary with the bucket's URL.
-    url = 'gs://{}/*'.format(bucket)
-    storage_config = {
-        'cloud_storage_options': {
-            'file_set': {'url': url}
-        }
-    }
-
-    # Construct the job definition.
-    job = {
+    inspect_template = {
         'inspect_config': inspect_config,
-        'storage_config': storage_config,
-    }
-
-    # Construct the schedule definition:
-    schedule = {
-        'recurrence_period_duration': {
-            'seconds': scan_period_days * 60 * 60 * 24,
-        }
-    }
-
-    # Construct the trigger definition.
-    job_trigger = {
-        'inspect_job': job,
         'display_name': display_name,
-        'description': description,
-        'triggers': [
-            {'schedule': schedule}
-        ],
-        'status': 'HEALTHY'
     }
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
 
     # Call the API.
-    response = dlp.create_job_trigger(
-        parent, job_trigger=job_trigger, trigger_id=trigger_id)
+    response = dlp.create_inspect_template(
+        parent, inspect_template=inspect_template, template_id=template_id)
 
-    print('Successfully created trigger {}'.format(response.name))
+    print('Successfully created template {}'.format(response.name))
 
-# [END dlp_create_trigger]
+# [END dlp_create_template]
 
 
-# [START dlp_list_triggers]
-def list_triggers(project):
-    """Lists all Data Loss Prevention API triggers.
+# [START dlp_list_templates]
+def list_inspect_templates(project):
+    """Lists all Data Loss Prevention API inspect templates.
     Args:
         project: The Google Cloud project id to use as a parent resource.
     Returns:
@@ -127,33 +99,40 @@ def list_triggers(project):
     parent = dlp.project_path(project)
 
     # Call the API.
-    response = dlp.list_job_triggers(parent)
+    response = dlp.list_inspect_templates(parent)
 
     # Define a helper function to convert the API's "seconds since the epoch"
     # time format into a human-readable string.
     def human_readable_time(timestamp):
         return str(time.localtime(timestamp.seconds))
 
-    for trigger in response:
-        print('Trigger {}:'.format(trigger.name))
-        print('  Created: {}'.format(human_readable_time(trigger.create_time)))
-        print('  Updated: {}'.format(human_readable_time(trigger.update_time)))
-        if trigger.display_name:
-            print('  Display Name: {}'.format(trigger.display_name))
-        if trigger.description:
-            print('  Description: {}'.format(trigger.discription))
-        print('  Status: {}'.format(trigger.status))
-        print('  Error count: {}'.format(len(trigger.errors)))
+    for template in response:
+        print('Template {}:'.format(template.name))
+        if template.display_name:
+            print('  Display Name: {}'.format(template.display_name))
+        print('  Created: {}'.format(
+            human_readable_time(template.create_time)))
+        print('  Updated: {}'.format(
+            human_readable_time(template.update_time)))
 
-# [END dlp_list_triggers]
+        config = template.inspect_config
+        print('  InfoTypes: {}'.format(', '.join(
+            [it.name for it in config.info_types]
+        )))
+        print('  Minimum likelihood: {}'.format(config.min_likelihood))
+        print('  Include quotes: {}'.format(config.include_quote))
+        print('  Max findings per request: {}'.format(
+            config.limits.max_findings_per_request))
+
+# [END dlp_list_templates]
 
 
-# [START dlp_delete_trigger]
-def delete_trigger(project, trigger_id):
-    """Deletes a Data Loss Prevention API trigger.
+# [START dlp_delete_template]
+def delete_inspect_template(project, template_id):
+    """Deletes a Data Loss Prevention API template.
     Args:
-        project: The id of the Google Cloud project which owns the trigger.
-        trigger_id: The id of the trigger to delete.
+        project: The id of the Google Cloud project which owns the template.
+        template_id: The id of the template to delete.
     Returns:
         None; the response from the API is printed to the terminal.
     """
@@ -167,15 +146,15 @@ def delete_trigger(project, trigger_id):
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
 
-    # Combine the trigger id with the parent id.
-    trigger_resource = '{}/jobTriggers/{}'.format(parent, trigger_id)
+    # Combine the template id with the parent id.
+    template_resource = '{}/inspectTemplates/{}'.format(parent, template_id)
 
     # Call the API.
-    dlp.delete_job_trigger(trigger_resource)
+    dlp.delete_inspect_template(template_resource)
 
-    print('Trigger {} successfully deleted.'.format(trigger_resource))
+    print('Template {} successfully deleted.'.format(template_resource))
 
-# [END dlp_delete_triggers]
+# [END dlp_delete_template]
 
 
 if __name__ == '__main__':
@@ -186,22 +165,14 @@ if __name__ == '__main__':
         dest='action', help='Select which action to perform.')
     subparsers.required = True
 
-    parser_create = subparsers.add_parser('create', help='Create a trigger.')
+    parser_create = subparsers.add_parser('create', help='Create a template.')
     parser_create.add_argument(
-        'bucket', help='The name of the GCS bucket containing the file.')
-    parser_create.add_argument(
-        'scan_period_days', type=int,
-        help='How often to repeat the scan, in days. The minimum is 1 day.')
-    parser_create.add_argument(
-        '--trigger_id',
-        help='The id of the trigger. If omitted, an id will be randomly '
+        '--template_id',
+        help='The id of the template. If omitted, an id will be randomly '
              'generated')
     parser_create.add_argument(
         '--display_name',
-        help='The optional display name of the trigger.')
-    parser_create.add_argument(
-        '--description',
-        help='The optional description of the trigger.')
+        help='The optional display name of the template.')
     parser_create.add_argument(
         '--project',
         help='The Google Cloud project id to use as a parent resource.',
@@ -222,17 +193,22 @@ if __name__ == '__main__':
     parser_create.add_argument(
         '--max_findings', type=int,
         help='The maximum number of findings to report; 0 = no maximum.')
+    parser_create.add_argument(
+        '--include_quote', type=bool,
+        help='A boolean for whether to display a quote of the detected '
+             'information in the results.',
+        default=True)
 
-    parser_list = subparsers.add_parser('list', help='List all triggers.')
+    parser_list = subparsers.add_parser('list', help='List all templates.')
     parser_list.add_argument(
         '--project',
         help='The Google Cloud project id to use as a parent resource.',
         default=default_project)
 
-    parser_delete = subparsers.add_parser('delete', help='Delete a trigger.')
+    parser_delete = subparsers.add_parser('delete', help='Delete a template.')
     parser_delete.add_argument(
-        'trigger_id',
-        help='The id of the trigger to delete.')
+        'template_id',
+        help='The id of the template to delete.')
     parser_delete.add_argument(
         '--project',
         help='The Google Cloud project id to use as a parent resource.',
@@ -241,13 +217,13 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.action == 'create':
-        create_trigger(
-            args.project, args.bucket, args.scan_period_days, args.info_types,
-            trigger_id=args.trigger_id, display_name=args.display_name,
-            description=args.description, min_likelihood=args.min_likelihood,
-            max_findings=args.max_findings,
+        create_inspect_template(
+            args.project, args.info_types,
+            template_id=args.template_id, display_name=args.display_name,
+            min_likelihood=args.min_likelihood,
+            max_findings=args.max_findings, include_quote=args.include_quote
         )
     elif args.action == 'list':
-        list_triggers(args.project)
+        list_inspect_templates(args.project)
     elif args.action == 'delete':
-        delete_trigger(args.project, args.trigger_id)
+        delete_inspect_template(args.project, args.template_id)
