@@ -69,7 +69,7 @@ def test_list_dlp_jobs_with_filter(capsys):
 
 
 def test_list_dlp_jobs_with_job_type(capsys):
-    jobs.list_dlp_jobs(GCLOUD_PROJECT, job_type='INSPECT')
+    jobs.list_dlp_jobs(GCLOUD_PROJECT, job_type='INSPECT_JOB')
 
     out, _ = capsys.readouterr()
     assert 'Job: projects/' in out

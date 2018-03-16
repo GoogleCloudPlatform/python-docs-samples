@@ -24,13 +24,31 @@ def list_dlp_jobs(project, filter_string=None, job_type=None):
         specified filter in the request.
     Args:
         project: The Google Cloud project id to use as a parent resource.
-        filter: (Optional) Filter expressions are made up of one or more
-            restrictions.
+        filter: (Optional) Allows filtering.
+            Supported syntax:
+            * Filter expressions are made up of one or more restrictions.
+            * Restrictions can be combined by 'AND' or 'OR' logical operators.
+            A sequence of restrictions implicitly uses 'AND'.
+            * A restriction has the form of '<field> <operator> <value>'.
+            * Supported fields/values for inspect jobs:
+                - `state` - PENDING|RUNNING|CANCELED|FINISHED|FAILED
+                - `inspected_storage` - DATASTORE|CLOUD_STORAGE|BIGQUERY
+                - `trigger_name` - The resource name of the trigger that
+                                   created job.
+            * Supported fields for risk analysis jobs:
+                - `state` - RUNNING|CANCELED|FINISHED|FAILED
+            * The operator must be '=' or '!='.
+            Examples:
+            * inspected_storage = cloud_storage AND state = done
+            * inspected_storage = cloud_storage OR inspected_storage = bigquery
+            * inspected_storage = cloud_storage AND
+                                  (state = done OR state = canceled)
         type: (Optional) The type of job. Defaults to 'INSPECT'.
             Choices:
             DLP_JOB_TYPE_UNSPECIFIED
-            INSPECT_JOB: The job inspected Google Cloud for sensitive data.
+            INSPECT_JOB: The job inspected content for sensitive data.
             RISK_ANALYSIS_JOB: The job executed a Risk Analysis computation.
+
     Returns:
         None; the response from the API is printed to the terminal.
     """
@@ -44,14 +62,15 @@ def list_dlp_jobs(project, filter_string=None, job_type=None):
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
 
-    # If job type is specified, convert job type to number through enums.
-    from google.cloud.dlp_v2 import enums
     # Job type dictionary
     job_type_to_int = {
-        'UNSPECIFIED': enums.DlpJobType.DLP_JOB_TYPE_UNSPECIFIED,
-        'INSPECT': enums.DlpJobType.INSPECT_JOB,
-        'RISK_ANALYSIS': enums.DlpJobType.RISK_ANALYSIS_JOB
+        'DLP_JOB_TYPE_UNSPECIFIED':
+            google.cloud.dlp.enums.DlpJobType.DLP_JOB_TYPE_UNSPECIFIED,
+        'INSPECT_JOB': google.cloud.dlp.enums.DlpJobType.INSPECT_JOB,
+        'RISK_ANALYSIS_JOB':
+            google.cloud.dlp.enums.DlpJobType.RISK_ANALYSIS_JOB
     }
+    # If job type is specified, convert job type to number through enums.
     if job_type:
         job_type = job_type_to_int[job_type]
 
@@ -64,14 +83,6 @@ def list_dlp_jobs(project, filter_string=None, job_type=None):
     # Iterate over results.
     for job in response:
         print('Job: %s; status: %s' % (job.name, job.JobState.Name(job.state)))
-        info_type_stats = job.inspect_details.result.info_type_stats
-        if len(info_type_stats) > 0:
-            for info_type_stat in info_type_stats:
-                print(
-                    '     Found %i instance(s) of info_type %s' %
-                    (info_type_stat.count, info_type_stat.info_type.name))
-        else:
-            print('     No findings.')
 
 
 def delete_dlp_job(project, job_name):
@@ -79,6 +90,7 @@ def delete_dlp_job(project, job_name):
     Args:
         project: The Google Cloud project id to use as a parent resource.
         job_name: The name of the DlpJob resource to be deleted.
+
     Returns:
         None; the response from the API is printed to the terminal.
     """
@@ -116,7 +128,7 @@ if __name__ == '__main__':
         help='Filter expressions are made up of one or more restrictions.')
     list_parser.add_argument(
         '-t', '--type',
-        choices=['UNSPECIFIED', 'INSPECT', 'RISK_ANALYSIS'],
+        choices=['DLP_JOB_TYPE_UNSPECIFIED', 'INSPECT_JOB', 'RISK_ANALYSIS_JOB'],
         help='The type of job. API defaults to "INSPECT"')
 
     delete_parser = subparsers.add_parser(
