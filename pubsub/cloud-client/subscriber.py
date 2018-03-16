@@ -143,6 +143,30 @@ def receive_messages(project, subscription_name):
         time.sleep(60)
 
 
+def receive_messages_with_custom_attributes(project, subscription_name):
+    """Receives messages from a pull subscription."""
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_path = subscriber.subscription_path(
+        project, subscription_name)
+
+    def callback(message):
+        print('Received message: {}'.format(message.data))
+        if message.attributes:
+            print('Attributes:')
+            for key in message.attributes:
+                value = message.attributes.get(key)
+                print('{}: {}'.format(key, value))
+        message.ack()
+
+    subscriber.subscribe(subscription_path, callback=callback)
+
+    # The subscriber is non-blocking, so we must keep the main thread from
+    # exiting to allow it to process messages in the background.
+    print('Listening for messages on {}'.format(subscription_path))
+    while True:
+        time.sleep(60)
+
+
 def receive_messages_with_flow_control(project, subscription_name):
     """Receives messages from a pull subscription with flow control."""
     subscriber = pubsub_v1.SubscriberClient()
@@ -227,6 +251,11 @@ if __name__ == '__main__':
         'receive', help=receive_messages.__doc__)
     receive_parser.add_argument('subscription_name')
 
+    receive_with_custom_attributes_parser = subparsers.add_parser(
+        'receive-custom-attributes',
+        help=receive_messages_with_custom_attributes.__doc__)
+    receive_with_custom_attributes_parser.add_argument('subscription_name')
+
     receive_with_flow_control_parser = subparsers.add_parser(
         'receive-flow-control',
         help=receive_messages_with_flow_control.__doc__)
@@ -259,6 +288,9 @@ if __name__ == '__main__':
             args.project, args.subscription_name, args.endpoint)
     elif args.command == 'receive':
         receive_messages(args.project, args.subscription_name)
+    elif args.command == 'receive-custom-attributes':
+        receive_messages_with_custom_attributes(
+            args.project, args.subscription_name)
     elif args.command == 'receive-flow-control':
         receive_messages_with_flow_control(
             args.project, args.subscription_name)

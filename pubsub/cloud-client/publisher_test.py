@@ -81,6 +81,13 @@ def test_publish(topic, capsys):
     assert 'Published' in out
 
 
+def test_publish_with_custom_attributes(topic, capsys):
+    publisher.publish_messages_with_custom_attributes(PROJECT, TOPIC)
+
+    out, _ = capsys.readouterr()
+    assert 'Published' in out
+
+
 def test_publish_with_batch_settings(topic, capsys):
     publisher.publish_messages_with_batch_settings(PROJECT, TOPIC)
 
