@@ -23,7 +23,7 @@ def list_dlp_jobs(project, filter_string=None, job_type=None):
     """Uses the Data Loss Prevention API to lists DLP jobs that match the
         specified filter in the request.
     Args:
-        project: The Google Cloud project id to use as a parent resource.
+        project: The project id to use as a parent resource.
         filter: (Optional) Allows filtering.
             Supported syntax:
             * Filter expressions are made up of one or more restrictions.
@@ -88,7 +88,7 @@ def list_dlp_jobs(project, filter_string=None, job_type=None):
 def delete_dlp_job(project, job_name):
     """Uses the Data Loss Prevention API to delete a long-running DLP job.
     Args:
-        project: The Google Cloud project id to use as a parent resource.
+        project: The project id to use as a parent resource.
         job_name: The name of the DlpJob resource to be deleted.
 
     Returns:
@@ -122,13 +122,14 @@ if __name__ == '__main__':
         'filter.')
     list_parser.add_argument(
         'project',
-        help='The Google Cloud project id to use as a parent resource.')
+        help='The project id to use as a parent resource.')
     list_parser.add_argument(
         '-f', '--filter',
         help='Filter expressions are made up of one or more restrictions.')
     list_parser.add_argument(
         '-t', '--type',
-        choices=['DLP_JOB_TYPE_UNSPECIFIED', 'INSPECT_JOB', 'RISK_ANALYSIS_JOB'],
+        choices=['DLP_JOB_TYPE_UNSPECIFIED', 'INSPECT_JOB',
+                 'RISK_ANALYSIS_JOB'],
         help='The type of job. API defaults to "INSPECT"')
 
     delete_parser = subparsers.add_parser(
@@ -136,7 +137,7 @@ if __name__ == '__main__':
         help='Delete results of a Data Loss Prevention API job.')
     delete_parser.add_argument(
         'project',
-        help='The Google Cloud project id to use as a parent resource.')
+        help='The project id to use as a parent resource.')
     delete_parser.add_argument(
         'job_name',
         help='The name of the DlpJob resource to be deleted. '

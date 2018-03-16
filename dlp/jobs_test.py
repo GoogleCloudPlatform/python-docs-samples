@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import jobs
+import os
 
 import pytest
-import os
+
+import jobs
 
 GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
 TEST_COLUMN_NAME = 'zip_code'
