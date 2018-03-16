@@ -129,6 +129,11 @@ def _publish_messages(publisher_client, topic):
             topic, data=data)
 
 
+def _publish_messages_with_custom_attributes(publisher_client, topic):
+    data = u'Test message'.encode('utf-8')
+    publisher_client.publish(topic, data=data, origin='python-sample')
+
+
 def _make_sleep_patch():
     real_sleep = time.sleep
 
@@ -153,6 +158,22 @@ def test_receive(publisher_client, topic, subscription, capsys):
     assert 'Listening' in out
     assert subscription in out
     assert 'Message 1' in out
+
+
+def test_receive_with_custom_attributes(
+        publisher_client, topic, subscription, capsys):
+    _publish_messages_with_custom_attributes(publisher_client, topic)
+
+    with _make_sleep_patch():
+        with pytest.raises(RuntimeError, match='sigil'):
+            subscriber.receive_messages_with_custom_attributes(
+                PROJECT, SUBSCRIPTION)
+
+    out, _ = capsys.readouterr()
+    assert 'Test message' in out
+    assert 'Attributes' in out
+    assert 'origin' in out
+    assert 'python-sample' in out
 
 
 def test_receive_with_flow_control(
