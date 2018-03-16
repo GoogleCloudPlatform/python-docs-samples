@@ -22,7 +22,7 @@ import mimetypes
 import os
 
 
-# [START redact_image]
+# [START dlp_redact_image]
 def redact_image(project, filename, output_filename,
                  info_types, min_likelihood=None, mime_type=None):
     """Uses the Data Loss Prevention API to redact protected data in an image.
@@ -100,7 +100,7 @@ def redact_image(project, filename, output_filename,
         f.write(response.redacted_image)
     print("Wrote {byte_count} to {filename}".format(
         byte_count=len(response.redacted_image), filename=output_filename))
-# [END redact_string]
+# [END dlp_redact_image]
 
 
 if __name__ == '__main__':
