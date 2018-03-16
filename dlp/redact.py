@@ -31,8 +31,7 @@ def redact_image(project, filename, output_filename,
         filename: The path to the file to inspect.
         output_filename: The path to which the redacted image will be written.
         info_types: A list of strings representing info types to look for.
-            A full list of info type categories can be fetched from the API. If
-            info_types is omitted, the API will use a limited default set.
+            A full list of info type categories can be fetched from the API.
         min_likelihood: A string representing the minimum likelihood threshold
             that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
             'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
