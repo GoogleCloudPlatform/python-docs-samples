@@ -27,6 +27,7 @@ def redact_image(project, filename, output_filename,
                  info_types, min_likelihood=None, mime_type=None):
     """Uses the Data Loss Prevention API to redact protected data in an image.
     Args:
+        project: The Google Cloud project id to use as a parent resource.
         filename: The path to the file to inspect.
         output_filename: The path to which the redacted image will be written.
         info_types: A list of strings representing info types to look for.
