@@ -48,7 +48,7 @@ def list_datasets(project=None):
 
 
 def create_dataset(dataset_id, project=None):
-    """Craetes a dataset in a given project.
+    """Creates a dataset in a given project.
 
     If no project is specified, then the currently active project is used.
     """
