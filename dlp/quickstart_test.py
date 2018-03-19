@@ -12,15 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import mock
 import os
 
 import google.cloud.dlp
+import mock
 
 import quickstart
 
 
 GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
+
 
 def test_quickstart(capsys):
     # Mock out project_path to use the test runner's project ID.

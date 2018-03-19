@@ -25,7 +25,7 @@ def list_info_types(language_code=None, result_filter=None):
     """List types of sensitive information within a category.
     Args:
         language_code: The BCP-47 language code to use, e.g. 'en-US'.
-        filter: An optional filter to only return info types supported by 
+        filter: An optional filter to only return info types supported by
                 certain parts of the API. Defaults to "supported_by=INSPECT".
     Returns:
         None; the response from the API is printed to the terminal.

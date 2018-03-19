@@ -192,7 +192,6 @@ def inspect_gcs_file(project, bucket, filename, topic_id, subscription_id,
         None; the response from the API is printed to the terminal.
     """
 
-
     # Import the client library.
     import google.cloud.dlp
 
