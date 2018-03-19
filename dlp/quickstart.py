@@ -72,7 +72,12 @@ def quickstart():
             except AttributeError:
                 pass
             print('Info type: {}'.format(finding.info_type.name))
-            print('Likelihood: {}'.format(finding.likelihood))
+            # Convert likelihood value to string respresentation.
+            likelihood = (google.cloud.dlp.types.Finding.DESCRIPTOR
+                          .fields_by_name['likelihood']
+                          .enum_type.values_by_number[finding.likelihood]
+                          .name)
+            print('Likelihood: {}'.format(likelihood))
     else:
         print('No findings.')
     # [END quickstart]
