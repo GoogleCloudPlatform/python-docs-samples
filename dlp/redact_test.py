@@ -31,35 +31,6 @@ def tempdir():
     shutil.rmtree(tempdir)
 
 
-def test_redact_string(capsys):
-    test_string = 'I am Gary and my email is gary@example.com'
-
-    redact.redact_string(test_string, 'REDACTED')
-
-    out, _ = capsys.readouterr()
-    assert 'REDACTED' in out
-
-
-def test_redact_string_with_info_types(capsys):
-    test_string = 'My email is gary@example.com and my number is 206-555-5555'
-
-    redact.redact_string(
-        test_string, 'REDACTED', info_types=['PHONE_NUMBER'])
-
-    out, _ = capsys.readouterr()
-    assert 'REDACTED' in out
-    assert out.count('REDACTED') == 1
-
-
-def test_redact_string_no_findings(capsys):
-    test_string = 'Nothing to see here'
-
-    redact.redact_string(test_string, 'REDACTED')
-
-    out, _ = capsys.readouterr()
-    assert 'REDACTED' not in out
-
-
 def test_redact_image_file(tempdir, capsys):
     test_filepath = os.path.join(RESOURCE_DIRECTORY, 'test.png')
     output_filepath = os.path.join(tempdir, 'redacted.png')

@@ -22,77 +22,16 @@ import mimetypes
 import os
 
 
-# [START redact_string]
-def redact_string(item, replace_string, info_types=None, min_likelihood=None):
-    """Uses the Data Loss Prevention API to redact protected data in a string.
-    Args:
-        item: The string to inspect.
-        replace_string: The string to use to replace protected data; for
-            instance, '***' or 'REDACTED'. An empty string is permitted.
-        info_types: A list of strings representing info types to look for.
-            A full list of info type categories can be fetched from the API. If
-            info_types is omitted, the API will use a limited default set.
-        min_likelihood: A string representing the minimum likelihood threshold
-            that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
-            'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
-    Returns:
-        None; the response from the API is printed to the terminal.
-    """
-    # Import the client library
-    import google.cloud.dlp_v2beta1
-
-    # Instantiate a client.
-    dlp = google.cloud.dlp_v2beta1.DlpServiceClient()
-
-    # Prepare info_types by converting the list of strings into a list of
-    # dictionaries (protos are also accepted).
-    if info_types is not None:
-        info_types = [{'name': info_type} for info_type in info_types]
-
-    # Prepare replace_configs, a list of dictionaries. Each dictionary contains
-    # an info_type and the string to which that info_type will be redacted upon
-    # detection. This sample uses the same "replace_string" for all info types,
-    # though the API supports using different ones for each type.
-    replace_configs = []
-
-    if info_types is not None:
-        for info_type in info_types:
-            replace_configs.append(
-                {'info_type': info_type,
-                 'replace_with': replace_string})
-    else:
-        # If no info_type is specified, prepare a single dictionary with only a
-        # replace_string as a catch-all.
-        replace_configs.append({'replace_with': replace_string})
-
-    # Construct the configuration dictionary. Keys which are None may
-    # optionally be omitted entirely.
-    redact_config = {
-        'info_types': info_types,
-        'min_likelihood': min_likelihood,
-    }
-
-    # Construct the items list (in this case, only one item, in string form).
-    items = [{'type': 'text/plain', 'value': item}]
-
-    # Call the API.
-    response = dlp.redact_content(redact_config, items, replace_configs)
-
-    # Print out the results.
-    print(response.items[0].value)
-# [END redact_string]
-
-
-# [START redact_image]
+# [START dlp_redact_image]
 def redact_image(project, filename, output_filename,
                  info_types, min_likelihood=None, mime_type=None):
     """Uses the Data Loss Prevention API to redact protected data in an image.
     Args:
+        project: The Google Cloud project id to use as a parent resource.
         filename: The path to the file to inspect.
         output_filename: The path to which the redacted image will be written.
         info_types: A list of strings representing info types to look for.
-            A full list of info type categories can be fetched from the API. If
-            info_types is omitted, the API will use a limited default set.
+            A full list of info type categories can be fetched from the API.
         min_likelihood: A string representing the minimum likelihood threshold
             that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
             'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
@@ -161,74 +100,44 @@ def redact_image(project, filename, output_filename,
         f.write(response.redacted_image)
     print("Wrote {byte_count} to {filename}".format(
         byte_count=len(response.redacted_image), filename=output_filename))
-# [END redact_string]
+# [END dlp_redact_image]
 
 
 if __name__ == '__main__':
     default_project = os.environ.get('GCLOUD_PROJECT')
 
     parser = argparse.ArgumentParser(description=__doc__)
-    subparsers = parser.add_subparsers(
-        dest='content', help='Select how to submit content to the API.')
-    subparsers.required = True
 
-    parser_string = subparsers.add_parser('string', help='Redact a string.')
-    parser_string.add_argument('item', help='The string to inspect.')
-    parser_string.add_argument(
-        'replace_string',
-        help='The string to use to replace protected data; for instance, '
-             '"***" or "REDACTED".')
-    parser_string.add_argument(
-        '--info_types', action='append',
-        help='Strings representing info types to look for. A full list of '
-             'info categories and types is available from the API. Examples '
-             'include "US_MALE_NAME", "US_FEMALE_NAME", "EMAIL_ADDRESS", '
-             '"CANADA_SOCIAL_INSURANCE_NUMBER", "JAPAN_PASSPORT". If omitted, '
-             'the API will use a limited default set. Specify this flag '
-             'multiple times to specify multiple info types.')
-    parser_string.add_argument(
-        '--min_likelihood',
-        choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
-                 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'],
-        help='A string representing the minimum likelihood threshold that '
-             'constitutes a match.')
-
-    parser_file = subparsers.add_parser('image', help='Redact an image file.')
-    parser_file.add_argument(
+    parser.add_argument(
         'filename', help='The path to the file to inspect.')
-    parser_file.add_argument(
+    parser.add_argument(
         'output_filename',
         help='The path to which the redacted image will be written.')
-    parser_file.add_argument(
+    parser.add_argument(
         '--project',
         help='The Google Cloud project id to use as a parent resource.',
         default=default_project)
-    parser_file.add_argument(
+    parser.add_argument(
         '--info_types', action='append',
         help='Strings representing info types to look for. A full list of '
              'info categories and types is available from the API. Examples '
              'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
              'If unspecified, the three above examples will be used.',
         default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
-    parser_file.add_argument(
+    parser.add_argument(
         '--min_likelihood',
         choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
                  'POSSIBLE', 'LIKELY', 'VERY_LIKELY'],
         help='A string representing the minimum likelihood threshold that '
              'constitutes a match.')
-    parser_file.add_argument(
+    parser.add_argument(
         '--mime_type',
         help='The MIME type of the file. If not specified, the type is '
              'inferred via the Python standard library\'s mimetypes module.')
 
     args = parser.parse_args()
 
-    if args.content == 'string':
-        redact_string(
-            args.item, args.replace_string, info_types=args.info_types,
-            min_likelihood=args.min_likelihood)
-    elif args.content == 'image':
-        redact_image(
-            args.project, args.filename, args.output_filename,
-            args.info_types, min_likelihood=args.min_likelihood,
-            mime_type=args.mime_type)
+    redact_image(
+        args.project, args.filename, args.output_filename,
+        args.info_types, min_likelihood=args.min_likelihood,
+        mime_type=args.mime_type)

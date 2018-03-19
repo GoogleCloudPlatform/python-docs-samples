@@ -15,6 +15,8 @@
 import os
 
 import google.api_core.exceptions
+import google.cloud.bigquery
+import google.cloud.datastore
 import google.cloud.exceptions
 import google.cloud.pubsub
 import google.cloud.storage
@@ -30,6 +32,9 @@ RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), 'resources')
 RESOURCE_FILE_NAMES = ['test.txt', 'test.png', 'harmless.txt', 'accounts.txt']
 TOPIC_ID = 'dlp-test'
 SUBSCRIPTION_ID = 'dlp-test-subscription'
+DATASTORE_KIND = 'DLP test kind'
+BIGQUERY_DATASET_ID = 'dlp_test_dataset'
+BIGQUERY_TABLE_ID = 'dlp_test_table'
 
 
 @pytest.fixture(scope='module')
@@ -92,6 +97,61 @@ def subscription_id(topic_id):
     yield SUBSCRIPTION_ID
 
     subscriber.delete_subscription(subscription_path)
+
+
+@pytest.fixture(scope='module')
+def datastore_project():
+    # Adds test Datastore data, yields the project ID and then tears down.
+    datastore_client = google.cloud.datastore.Client()
+
+    kind = DATASTORE_KIND
+    name = 'DLP test object'
+    key = datastore_client.key(kind, name)
+    item = google.cloud.datastore.Entity(key=key)
+    item['payload'] = 'My name is Gary Smith and my email is gary@example.com'
+
+    datastore_client.put(item)
+
+    yield GCLOUD_PROJECT
+
+    datastore_client.delete(key)
+
+
+@pytest.fixture(scope='module')
+def bigquery_project():
+    # Adds test Bigquery data, yields the project ID and then tears down.
+    bigquery_client = google.cloud.bigquery.Client()
+
+    dataset_ref = bigquery_client.dataset(BIGQUERY_DATASET_ID)
+    dataset = google.cloud.bigquery.Dataset(dataset_ref)
+    try:
+        dataset = bigquery_client.create_dataset(dataset)
+    except google.api_core.exceptions.Conflict:
+        dataset = bigquery_client.get_dataset(dataset)
+
+    table_ref = dataset_ref.table(BIGQUERY_TABLE_ID)
+    table = google.cloud.bigquery.Table(table_ref)
+
+    # DO NOT SUBMIT: trim this down once we find out what works
+    table.schema = (
+        google.cloud.bigquery.SchemaField('Name', 'STRING'),
+        google.cloud.bigquery.SchemaField('Comment', 'STRING'),
+    )
+
+    try:
+        table = bigquery_client.create_table(table)
+    except google.api_core.exceptions.Conflict:
+        table = bigquery_client.get_table(table)
+
+    rows_to_insert = [
+        (u'Gary Smith', u'My email is gary@example.com',)
+    ]
+
+    bigquery_client.insert_rows(table, rows_to_insert)
+
+    yield GCLOUD_PROJECT
+
+    bigquery_client.delete_dataset(dataset_ref, delete_contents=True)
 
 
 def test_inspect_string(capsys):
@@ -212,3 +272,46 @@ def test_inspect_gcs_multiple_files(bucket, topic_id, subscription_id, capsys):
     out, _ = capsys.readouterr()
     assert 'Info type: EMAIL_ADDRESS' in out
     assert 'Info type: PHONE_NUMBER' in out
+
+
+def test_inspect_datastore(
+        datastore_project, topic_id, subscription_id, capsys):
+    inspect_content.inspect_datastore(
+        GCLOUD_PROJECT,
+        datastore_project,
+        DATASTORE_KIND,
+        topic_id,
+        subscription_id,
+        ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'])
+
+    out, _ = capsys.readouterr()
+    assert 'Info type: EMAIL_ADDRESS' in out
+
+
+def test_inspect_datastore_no_results(
+        datastore_project, topic_id, subscription_id, capsys):
+    inspect_content.inspect_datastore(
+        GCLOUD_PROJECT,
+        datastore_project,
+        DATASTORE_KIND,
+        topic_id,
+        subscription_id,
+        ['PHONE_NUMBER'])
+
+    out, _ = capsys.readouterr()
+    assert 'No findings' in out
+
+
+def test_inspect_bigquery(
+        bigquery_project, topic_id, subscription_id, capsys):
+    inspect_content.inspect_bigquery(
+        GCLOUD_PROJECT,
+        bigquery_project,
+        BIGQUERY_DATASET_ID,
+        BIGQUERY_TABLE_ID,
+        topic_id,
+        subscription_id,
+        ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'])
+
+    out, _ = capsys.readouterr()
+    assert 'Info type: FIRST_NAME' in out
