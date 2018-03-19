@@ -88,11 +88,9 @@ To run this sample:
 
         python manager.py \
           --project_id=my-project-id \
-          --pubsub_topic=projects/my-project-id/topics/my-topic-id \
-          --ec_public_key_file=../ec_public.pem \
-          --rsa_certificate_file=../rsa_cert.pem \
-          --service_account_json=$HOME/service_account.json
-          list
+          --cloud_region=us-central1 \
+          --service_account_json=$HOME/service_account.json \
+          list-registries
 
     positional arguments:
       {create-es256,create-registry,create-rsa256,create-topic,create-unauth,delete-device,delete-registry,get,get-config-versions,get-iam-permissions,get-registry,get-state,list,list-registries,patch-es256,patch-rs256,set-config,set-iam-permissions}

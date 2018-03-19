@@ -23,11 +23,9 @@ Usage example:
 
     python manager.py \\
       --project_id=my-project-id \\
-      --pubsub_topic=projects/my-project-id/topics/my-topic-id \\
-      --ec_public_key_file=../ec_public.pem \\
-      --rsa_certificate_file=../rsa_cert.pem \\
-      --service_account_json=$HOME/service_account.json
-      list
+      --cloud_region=us-central1 \\
+      --service_account_json=$HOME/service_account.json \\
+      list-registries
 """
 
 import argparse
@@ -501,16 +499,13 @@ def parse_command_line_args():
             description=__doc__,
             formatter_class=argparse.RawDescriptionHelpFormatter)
 
-    # Required arguments
-    parser.add_argument(
-            '--pubsub_topic',
-            required=True,
-            help=('Google Cloud Pub/Sub topic. '
-                  'Format is projects/project_id/topics/topic-id'))
-
     # Optional arguments
     parser.add_argument(
             '--cloud_region', default='us-central1', help='GCP cloud region')
+    parser.add_argument(
+            '--pubsub_topic',
+            help=('Google Cloud Pub/Sub topic. '
+                  'Format is projects/project_id/topics/topic-id'))
     parser.add_argument(
             '--config',
             default=None,
@@ -597,11 +592,15 @@ def run_create(args):
                 args.cloud_region, args.registry_id, args.device_id)
 
     elif args.command == 'create-registry':
+        if (args.pubsub_topic is None):
+            sys.exit('Error: specify --pubsub_topic')
         open_registry(
                 args.service_account_json, args.project_id,
                 args.cloud_region, args.pubsub_topic, args.registry_id)
 
     elif args.command == 'create-topic':
+        if (args.pubsub_topic is None):
+            sys.exit('Error: specify --pubsub_topic')
         create_iot_topic(args.project_id, args.pubsub_topic)
 
 
