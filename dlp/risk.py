@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Sample app that uses the Data Loss Prevent API to """
+"""Sample app that uses the Data Loss Prevent API to perform risk anaylsis."""
 
 from __future__ import print_function
 
@@ -21,9 +21,9 @@ import argparse
 
 def numerical_risk_analysis(project, table_project_id, dataset_id, table_id,
                             column_name, topic_id, subscription_id,
-                            timeout=180):
-    """Uses the Data Loss Prevention API to computes risk metrics of a column
-       of numbers in a Google BigQuery table.
+                            timeout=300):
+    """Uses the Data Loss Prevention API to compute risk metrics of a column
+       of numerical data in a Google BigQuery table.
     Args:
         project: The Google Cloud project id to use as a parent resource.
         table_project_id: The Google Cloud project id where the BigQuery table
@@ -109,12 +109,13 @@ def numerical_risk_analysis(project, table_project_id, dataset_id, table_id,
                 print('Value Range: [{}, {}]'.format(
                     results.min_value.integer_value,
                     results.max_value.integer_value))
-                print('25% quantile value: {}\n'  # NOTE: change this to unique
-                      '50% quantile value: {}\n'
-                      '75% quantile value: {}\n'.format(
-                        results.quantile_values[25].integer_value,
-                        results.quantile_values[50].integer_value,
-                        results.quantile_values[75].integer_value))
+                prev_value = None
+                for percent, result in enumerate(results.quantile_values):
+                    value = result.integer_value
+                    if prev_value != value:
+                        print('Value at {}% quantile: {}'.format(
+                              percent, value))
+                        prev_value = value
                 # Signal to the main thread that we can exit.
                 job_done.set()
             else:
@@ -136,8 +137,8 @@ def numerical_risk_analysis(project, table_project_id, dataset_id, table_id,
 
 def categorical_risk_analysis(project, table_project_id, dataset_id, table_id,
                               column_name, topic_id, subscription_id,
-                              timeout=60):
-    """Uses the Data Loss Prevention API to computes risk metrics of a column
+                              timeout=300):
+    """Uses the Data Loss Prevention API to compute risk metrics of a column
        of categorical data in a Google BigQuery table.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -224,15 +225,15 @@ def categorical_risk_analysis(project, table_project_id, dataset_id, table_id,
                                         .categorical_stats_result
                                         .value_frequency_histogram_buckets)
                 # Print bucket stats
-                for i in range(len(histogram_buckets)):
+                for i, bucket in enumerate(histogram_buckets):
                     print('Bucket {}:'.format(i))
                     print('   Most common value occurs {} time(s)'.format(
-                        histogram_buckets[i].value_frequency_upper_bound))
+                        bucket.value_frequency_upper_bound))
                     print('   Least common value occurs {} time(s)'.format(
-                        histogram_buckets[i].value_frequency_lower_bound))
+                        bucket.value_frequency_lower_bound))
                     print('   {} unique values total.'.format(
-                        histogram_buckets[i].bucket_size))
-                    for value in histogram_buckets[i].bucket_values:
+                        bucket.bucket_size))
+                    for value in bucket.bucket_values:
                         print('   Value {} occurs {} time(s)'.format(
                             value.value.integer_value, value.count))
                 # Signal to the main thread that we can exit.
@@ -255,8 +256,8 @@ def categorical_risk_analysis(project, table_project_id, dataset_id, table_id,
 
 
 def k_anonymity_analysis(project, table_project_id, dataset_id, table_id,
-                         topic_id, subscription_id, quasi_ids, timeout=180):
-    """Uses the Data Loss Prevention API to computes the k-anonymity of a
+                         topic_id, subscription_id, quasi_ids, timeout=300):
+    """Uses the Data Loss Prevention API to compute the k-anonymity of a
         column set in a Google BigQuery table.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -350,15 +351,13 @@ def k_anonymity_analysis(project, table_project_id, dataset_id, table_id,
                                         .k_anonymity_result
                                         .equivalence_class_histogram_buckets)
                 # Print bucket stats
-                for i in range(len(histogram_buckets)):
+                for i, bucket in enumerate(histogram_buckets):
                     print('Bucket {}:'.format(i))
-                    if histogram_buckets[i].equivalence_class_size_lower_bound:
+                    if bucket.equivalence_class_size_lower_bound:
                         print('   Bucket size range: [{}, {}]'.format(
-                            (histogram_buckets[i]
-                                .equivalence_class_size_lower_bound),
-                            (histogram_buckets[i]
-                                .equivalence_class_size_upper_bound)))
-                        for value_bucket in histogram_buckets[i].bucket_values:
+                             bucket.equivalence_class_size_lower_bound,
+                             bucket.equivalence_class_size_upper_bound))
+                        for value_bucket in bucket.bucket_values:
                             print('   Quasi-ID values: {}'.format(
                                 map(get_values, value_bucket.quasi_ids_values)
                                 ))
@@ -385,8 +384,8 @@ def k_anonymity_analysis(project, table_project_id, dataset_id, table_id,
 
 def l_diversity_analysis(project, table_project_id, dataset_id, table_id,
                          topic_id, subscription_id, sensitive_attribute,
-                         quasi_ids, timeout=180):
-    """Uses the Data Loss Prevention API to computes the l-diversity of a
+                         quasi_ids, timeout=300):
+    """Uses the Data Loss Prevention API to compute the l-diversity of a
         column set in a Google BigQuery table.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -486,14 +485,12 @@ def l_diversity_analysis(project, table_project_id, dataset_id, table_id,
                        .l_diversity_result
                        .sensitive_value_frequency_histogram_buckets)
                 # Print bucket stats
-                for i in range(len(histogram_buckets)):
+                for i, bucket in enumerate(histogram_buckets):
                     print('Bucket {}:'.format(i))
                     print('   Bucket size range: [{}, {}]'.format(
-                        (histogram_buckets[i]
-                            .sensitive_value_frequency_lower_bound),
-                        (histogram_buckets[i]
-                            .sensitive_value_frequency_upper_bound)))
-                    for value_bucket in histogram_buckets[i].bucket_values:
+                         bucket.sensitive_value_frequency_lower_bound,
+                         bucket.sensitive_value_frequency_upper_bound))
+                    for value_bucket in bucket.bucket_values:
                         print('   Quasi-ID values: {}'.format(
                             map(get_values, value_bucket.quasi_ids_values)))
                         print('   Class size: {}'.format(
@@ -522,8 +519,8 @@ def l_diversity_analysis(project, table_project_id, dataset_id, table_id,
 
 def k_map_estimate_analysis(project, table_project_id, dataset_id, table_id,
                             topic_id, subscription_id, quasi_ids, info_types,
-                            region_code='USA', timeout=180):
-    """Uses the Data Loss Prevention API to computes the k-map risk estimation
+                            region_code='US', timeout=300):
+    """Uses the Data Loss Prevention API to compute the k-map risk estimation
         of a column set in a Google BigQuery table.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -631,14 +628,12 @@ def k_map_estimate_analysis(project, table_project_id, dataset_id, table_id,
                                         .k_map_estimation_result
                                         .k_map_estimation_histogram)
                 # Print bucket stats
-                for i in range(len(histogram_buckets)):
+                for i, bucket in enumerate(histogram_buckets):
                     print('Bucket {}:'.format(i))
                     print('   Anonymity range: [{}, {}]'.format(
-                        histogram_buckets[i].min_anonymity,
-                        histogram_buckets[i].max_anonymity))
-                    print('   Size: {}'.format(
-                        histogram_buckets[i].bucket_size))
-                    for value_bucket in histogram_buckets[i].bucket_values:
+                        bucket.min_anonymity, bucket.max_anonymity))
+                    print('   Size: {}'.format(bucket.bucket_size))
+                    for value_bucket in bucket.bucket_values:
                         print('   Values: {}'.format(
                             map(get_values, value_bucket.quasi_ids_values)))
                         print('   Estimated k-map anonymity: {}'.format(
@@ -821,7 +816,7 @@ if __name__ == '__main__':
              'statistical model of population.',
         required=True)
     k_map_parser.add_argument(
-        '-r', '--region-code',
+        '-r', '--region-code', default='US',
         help='The ISO 3166-1 region code that the data is representative of.')
     k_map_parser.add_argument(
         '--timeout', type=int,
