@@ -23,8 +23,11 @@ import deid
 HARMFUL_STRING = 'My SSN is 372819127'
 HARMLESS_STRING = 'My favorite color is blue'
 GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
-WRAPPED_KEY = os.getenv('DLP_DEID_WRAPPED_KEY')
-KEY_NAME = os.getenv('DLP_DEID_KEY_NAME')
+WRAPPED_KEY = ('CiQAaNd+NKZwUklWRkR/57xnFbkQX2YISRHDMpiOG4q92ISwuOkSQQASRgq4ht'
+               'mOs+LXldmKxRvmQ+8MQz3o8xq7zSjG4N0rQbcMgPG7hONPp+PhyKVVbLNds5gM'
+               'Kmx1jclPSTfQT+bH')
+KEY_NAME = ('projects/nodejs-docs-samples/locations/global/keyRings/'
+            'integration-tests-dlp/cryptoKeys/test-key')
 SURROGATE_TYPE = 'SSN_TOKEN'
 CSV_FILE = os.path.join(os.path.dirname(__file__), 'resources/dates.csv')
 DATE_SHIFTED_AMOUNT = 30

@@ -21,6 +21,7 @@ import pytest
 import risk
 
 GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
+TABLE_PROJECT = 'nodejs-docs-samples'
 TOPIC_ID = 'dlp-test'
 SUBSCRIPTION_ID = 'dlp-test-subscription'
 DATASET_ID = 'integration_tests_dlp'
@@ -66,7 +67,7 @@ def subscription_id(topic_id):
 def test_numerical_risk_analysis(topic_id, subscription_id, capsys):
     risk.numerical_risk_analysis(
         GCLOUD_PROJECT,
-        GCLOUD_PROJECT,
+        TABLE_PROJECT,
         DATASET_ID,
         'harmful',
         NUMERIC_FIELD,
@@ -81,7 +82,7 @@ def test_categorical_risk_analysis_on_string_field(
         topic_id, subscription_id, capsys):
     risk.categorical_risk_analysis(
         GCLOUD_PROJECT,
-        GCLOUD_PROJECT,
+        TABLE_PROJECT,
         DATASET_ID,
         'harmful',
         UNIQUE_FIELD,
@@ -94,10 +95,9 @@ def test_categorical_risk_analysis_on_string_field(
 
 def test_categorical_risk_analysis_on_number_field(
         topic_id, subscription_id, capsys):
-
     risk.categorical_risk_analysis(
         GCLOUD_PROJECT,
-        GCLOUD_PROJECT,
+        TABLE_PROJECT,
         DATASET_ID,
         'harmful',
         NUMERIC_FIELD,
@@ -111,7 +111,7 @@ def test_categorical_risk_analysis_on_number_field(
 def test_k_anonymity_analysis_single_field(topic_id, subscription_id, capsys):
     risk.k_anonymity_analysis(
         GCLOUD_PROJECT,
-        GCLOUD_PROJECT,
+        TABLE_PROJECT,
         DATASET_ID,
         'harmful',
         topic_id,
@@ -127,7 +127,7 @@ def test_k_anonymity_analysis_multiple_fields(topic_id, subscription_id,
                                               capsys):
     risk.k_anonymity_analysis(
         GCLOUD_PROJECT,
-        GCLOUD_PROJECT,
+        TABLE_PROJECT,
         DATASET_ID,
         'harmful',
         topic_id,
@@ -142,7 +142,7 @@ def test_k_anonymity_analysis_multiple_fields(topic_id, subscription_id,
 def test_l_diversity_analysis_single_field(topic_id, subscription_id, capsys):
     risk.l_diversity_analysis(
         GCLOUD_PROJECT,
-        GCLOUD_PROJECT,
+        TABLE_PROJECT,
         DATASET_ID,
         'harmful',
         topic_id,
@@ -160,7 +160,7 @@ def test_l_diversity_analysis_multiple_field(
         topic_id, subscription_id, capsys):
     risk.l_diversity_analysis(
         GCLOUD_PROJECT,
-        GCLOUD_PROJECT,
+        TABLE_PROJECT,
         DATASET_ID,
         'harmful',
         topic_id,
@@ -178,7 +178,7 @@ def test_k_map_estimate_analysis_single_field(
         topic_id, subscription_id, capsys):
     risk.k_map_estimate_analysis(
         GCLOUD_PROJECT,
-        GCLOUD_PROJECT,
+        TABLE_PROJECT,
         DATASET_ID,
         'harmful',
         topic_id,
@@ -196,7 +196,7 @@ def test_k_map_estimate_analysis_multiple_field(
         topic_id, subscription_id, capsys):
     risk.k_map_estimate_analysis(
         GCLOUD_PROJECT,
-        GCLOUD_PROJECT,
+        TABLE_PROJECT,
         DATASET_ID,
         'harmful',
         topic_id,
@@ -215,7 +215,7 @@ def test_k_map_estimate_analysis_quasi_ids_info_types_equal(
     with pytest.raises(ValueError):
         risk.k_map_estimate_analysis(
             GCLOUD_PROJECT,
-            GCLOUD_PROJECT,
+            TABLE_PROJECT,
             DATASET_ID,
             'harmful',
             topic_id,
