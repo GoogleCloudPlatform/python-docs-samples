@@ -12,7 +12,7 @@ This directory contains samples for Google Cloud Video Intelligence API. `Google
 
 
 
-.. _Google Cloud Video Intelligence API: https://cloud.google.com/video-intelligence/docs 
+.. _Google Cloud Video Intelligence API: https://cloud.google.com/video-intelligence/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -70,22 +70,20 @@ To run this sample:
 
     $ python analyze.py
 
-    usage: analyze.py [-h] {faces,labels,labels_file,explicit_content,shots} ...
+    usage: analyze.py [-h] {labels,labels_file,explicit_content,shots} ...
 
-    This application demonstrates face detection, label detection,
+    This application demonstrates label detection,
     explicit content, and shot change detection using the Google Cloud API.
 
     Usage Examples:
 
-        python analyze.py faces gs://demomaker/google_gmail.mp4
         python analyze.py labels gs://cloud-ml-sandbox/video/chicago.mp4
         python analyze.py labels_file resources/cat.mp4
         python analyze.py shots gs://demomaker/gbikes_dinosaur.mp4
         python analyze.py explicit_content gs://demomaker/gbikes_dinosaur.mp4
 
     positional arguments:
-      {faces,labels,labels_file,explicit_content,shots}
-        faces               Detects faces given a GCS path.
+      {labels,labels_file,explicit_content,shots}
         labels              Detects labels given a GCS path.
         labels_file         Detect labels given a file path.
         explicit_content    Detects explicit content from the GCS path to a video.
