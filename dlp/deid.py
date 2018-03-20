@@ -19,6 +19,7 @@ from __future__ import print_function
 import argparse
 
 
+# [START dlp_deidentify_masking]
 def deidentify_with_mask(project, string, masking_character=None,
                          number_to_mask=0):
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
@@ -68,8 +69,10 @@ def deidentify_with_mask(project, string, masking_character=None,
 
     # Print out the results.
     print(response.item.value)
+# [END dlp_deidentify_masking]
 
 
+# [START dlp_deidentify_fpe]
 def deidentify_with_fpe(project, string, alphabet=None,
                         surrogate_type=None, key_name=None, wrapped_key=None):
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
@@ -147,8 +150,10 @@ def deidentify_with_fpe(project, string, alphabet=None,
 
     # Print results
     print(response.item.value)
+# [END dlp_deidentify_fpe]
 
 
+# [START dlp_reidentify_fpe]
 def reidentify_with_fpe(project, string, alphabet=None,
                         surrogate_type=None, key_name=None, wrapped_key=None):
     """Uses the Data Loss Prevention API to reidentify sensitive data in a
@@ -232,8 +237,10 @@ def reidentify_with_fpe(project, string, alphabet=None,
 
     # Print results
     print(response.item.value)
+# [END dlp_reidentify_fpe]
 
 
+# [START dlp_deidentify_date_shift]
 def deidentify_with_date_shift(project, input_csv_file=None,
                                output_csv_file=None, date_fields=None,
                                lower_bound_days=None, upper_bound_days=None,
@@ -384,6 +391,7 @@ def deidentify_with_date_shift(project, input_csv_file=None,
     # Print status
     print('Successfully saved date-shift output to {}'.format(
                 output_csv_file))
+# [END dlp_deidentify_date_shift]
 
 
 if __name__ == '__main__':
