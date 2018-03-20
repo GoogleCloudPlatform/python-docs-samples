@@ -19,6 +19,7 @@ from __future__ import print_function
 import argparse
 
 
+# [START dlp_numerical_stats]
 def numerical_risk_analysis(project, table_project_id, dataset_id, table_id,
                             column_name, topic_id, subscription_id,
                             timeout=300):
@@ -133,8 +134,10 @@ def numerical_risk_analysis(project, table_project_id, dataset_id, table_id,
     if not finished:
         print('No event received before the timeout. Please verify that the '
               'subscription provided is subscribed to the topic provided.')
+# [END dlp_numerical_stats]
 
 
+# [START dlp_categorical_stats]
 def categorical_risk_analysis(project, table_project_id, dataset_id, table_id,
                               column_name, topic_id, subscription_id,
                               timeout=300):
@@ -253,8 +256,10 @@ def categorical_risk_analysis(project, table_project_id, dataset_id, table_id,
     if not finished:
         print('No event received before the timeout. Please verify that the '
               'subscription provided is subscribed to the topic provided.')
+# [END dlp_categorical_stats]
 
 
+# [START dlp_k_anonymity]
 def k_anonymity_analysis(project, table_project_id, dataset_id, table_id,
                          topic_id, subscription_id, quasi_ids, timeout=300):
     """Uses the Data Loss Prevention API to compute the k-anonymity of a
@@ -380,8 +385,10 @@ def k_anonymity_analysis(project, table_project_id, dataset_id, table_id,
     if not finished:
         print('No event received before the timeout. Please verify that the '
               'subscription provided is subscribed to the topic provided.')
+# [END dlp_k_anonymity]
 
 
+# [START dlp_l_diversity]
 def l_diversity_analysis(project, table_project_id, dataset_id, table_id,
                          topic_id, subscription_id, sensitive_attribute,
                          quasi_ids, timeout=300):
@@ -515,8 +522,10 @@ def l_diversity_analysis(project, table_project_id, dataset_id, table_id,
     if not finished:
         print('No event received before the timeout. Please verify that the '
               'subscription provided is subscribed to the topic provided.')
+# [END dlp_l_diversity]
 
 
+# [START dlp_k_map]
 def k_map_estimate_analysis(project, table_project_id, dataset_id, table_id,
                             topic_id, subscription_id, quasi_ids, info_types,
                             region_code='US', timeout=300):
@@ -655,6 +664,7 @@ def k_map_estimate_analysis(project, table_project_id, dataset_id, table_id,
     if not finished:
         print('No event received before the timeout. Please verify that the '
               'subscription provided is subscribed to the topic provided.')
+# [END dlp_k_map]
 
 
 if __name__ == '__main__':

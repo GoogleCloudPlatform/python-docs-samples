@@ -19,6 +19,7 @@ from __future__ import print_function
 import argparse
 
 
+# [START dlp_list_jobs]
 def list_dlp_jobs(project, filter_string=None, job_type=None):
     """Uses the Data Loss Prevention API to lists DLP jobs that match the
         specified filter in the request.
@@ -83,8 +84,10 @@ def list_dlp_jobs(project, filter_string=None, job_type=None):
     # Iterate over results.
     for job in response:
         print('Job: %s; status: %s' % (job.name, job.JobState.Name(job.state)))
+# [END dlp_list_jobs]
 
 
+# [START dlp_delete_job]
 def delete_dlp_job(project, job_name):
     """Uses the Data Loss Prevention API to delete a long-running DLP job.
     Args:
@@ -108,6 +111,7 @@ def delete_dlp_job(project, job_name):
     dlp.delete_dlp_job(name)
 
     print('Successfully deleted %s' % job_name)
+# [END dlp_delete_job]
 
 
 if __name__ == '__main__':
