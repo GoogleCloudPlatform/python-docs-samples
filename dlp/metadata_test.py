@@ -15,15 +15,8 @@
 import metadata
 
 
-def test_fetch_categories(capsys):
-    metadata.list_categories()
-
-    out, _ = capsys.readouterr()
-    assert 'PII' in out
-
-
 def test_fetch_info_types(capsys):
-    metadata.list_info_types('PII')
+    metadata.list_info_types()
 
     out, _ = capsys.readouterr()
     assert 'EMAIL_ADDRESS' in out
