@@ -22,13 +22,13 @@ import beta_snippets
 
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-FACES_SHORT_FILE_PATH = '/video/googlework_short.mp4'
+FACES_SHORT_FILE_PATH = 'video/googlework_short.mp4'
 
 
 @pytest.mark.slow
 def test_face_bounding_boxes(capsys):
     beta_snippets.face_bounding_boxes(
-        'gs://{}{}'.format(BUCKET, FACES_SHORT_FILE_PATH))
+        'gs://{}/{}'.format(BUCKET, FACES_SHORT_FILE_PATH))
     out, _ = capsys.readouterr()
     assert 'top   :' in out
 
@@ -36,6 +36,6 @@ def test_face_bounding_boxes(capsys):
 @pytest.mark.slow
 def test_face_emotions(capsys):
     beta_snippets.face_emotions(
-        'gs://{}{}'.format(BUCKET, FACES_SHORT_FILE_PATH))
+        'gs://{}/{}'.format(BUCKET, FACES_SHORT_FILE_PATH))
     out, _ = capsys.readouterr()
     assert 'CONCENTRATION' in out

@@ -27,7 +27,7 @@ Usage Examples:
 
 import argparse
 
-from google.cloud import videointelligence_v1beta2 as videointelligence
+from google.cloud import videointelligence_v1p1beta1 as videointelligence
 
 
 # [START video_face_bounding_boxes]
