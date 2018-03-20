@@ -148,12 +148,14 @@ def speech_transcription(input_uri):
         videointelligence.enums.Feature.SPEECH_TRANSCRIPTION
     ]
 
-    speech_transcription_config = videointelligence.types.SpeechTranscriptionConfig(
+    config = videointelligence.types.SpeechTranscriptionConfig(
         language_code='en-US')
-    video_context = videointelligence.types.VideoContext(speech_transcription_config=speech_transcription_config)
+    video_context = videointelligence.types.VideoContext(
+        speech_transcription_config=config)
 
-    operation = video_client.annotate_video(input_uri,
-        features=features, video_context=video_context)
+    operation = video_client.annotate_video(
+        input_uri, features=features,
+        video_context=video_context)
 
     print('\nProcessing video for speech transcription.')
 
