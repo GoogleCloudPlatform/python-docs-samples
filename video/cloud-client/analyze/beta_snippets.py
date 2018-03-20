@@ -23,6 +23,9 @@ Usage Examples:
 
     python beta_snippets.py \
     emotions gs://python-docs-samples-tests/video/googlework_short.mp4
+
+    python beta_snippets.py \
+    transcription gs://python-docs-samples-tests/video/googlework_short.mp4
 """
 
 import argparse
@@ -136,6 +139,45 @@ def face_emotions(path):
 # [END video_face_emotions]
 
 
+# [START video_speech_transcription]
+def speech_transcription(input_uri):
+    """Transcribe speech from a video stored on GCS."""
+    video_client = videointelligence.VideoIntelligenceServiceClient()
+
+    features = [
+        videointelligence.enums.Feature.SPEECH_TRANSCRIPTION
+    ]
+
+    speech_transcription_config = videointelligence.types.SpeechTranscriptionConfig(
+        language_code='en-US')
+    video_context = videointelligence.types.VideoContext(speech_transcription_config=speech_transcription_config)
+
+    operation = video_client.annotate_video(input_uri,
+        features=features, video_context=video_context)
+
+    print('\nProcessing video for speech transcription.')
+
+    result = operation.result(timeout=180)
+
+    annotation_results = result.annotation_results[0]
+    speech_transcription = annotation_results.speech_transcriptions[0]
+    alternative = speech_transcription.alternatives[0]
+
+    print('Transcript: {}'.format(alternative.transcript))
+    print('Confidence: {}\n'.format(alternative.confidence))
+
+    print('Word level information:')
+    for word_info in alternative.words:
+        word = word_info.word
+        start_time = word_info.start_time
+        end_time = word_info.end_time
+        print('\t{}s - {}s: {}'.format(
+            start_time.seconds + start_time.nanos * 1e-9,
+            end_time.seconds + end_time.nanos * 1e-9,
+            word))
+# [END video_speech_transcription]
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -149,9 +191,15 @@ if __name__ == '__main__':
         'emotions', help=face_emotions.__doc__)
     analyze_emotions_parser.add_argument('path')
 
+    speech_transcription_parser = subparsers.add_parser(
+        'transcription', help=speech_transcription.__doc__)
+    speech_transcription_parser.add_argument('path')
+
     args = parser.parse_args()
 
     if args.command == 'boxes':
         face_bounding_boxes(args.path)
     elif args.command == 'emotions':
         face_emotions(args.path)
+    elif args.command == 'transcription':
+        speech_transcription(args.path)

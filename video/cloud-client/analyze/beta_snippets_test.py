@@ -39,3 +39,11 @@ def test_face_emotions(capsys):
         'gs://{}/{}'.format(BUCKET, FACES_SHORT_FILE_PATH))
     out, _ = capsys.readouterr()
     assert 'CONCENTRATION' in out
+
+
+@pytest.mark.slow
+def test_speech_transcription(capsys):
+    beta_snippets.speech_transcription(
+        'gs://{}/{}'.format(BUCKET, FACES_SHORT_FILE_PATH))
+    out, _ = capsys.readouterr()
+    assert 'cultural' in out
