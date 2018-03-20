@@ -20,7 +20,7 @@ from __future__ import print_function
 import argparse
 
 
-# [START list_info_types]
+# [START dlp_list_info_types]
 def list_info_types(language_code=None, result_filter=None):
     """List types of sensitive information within a category.
     Args:
@@ -44,7 +44,7 @@ def list_info_types(language_code=None, result_filter=None):
     for info_type in response.info_types:
         print('{name}: {display_name}'.format(
             name=info_type.name, display_name=info_type.display_name))
-# [END list_info_types]
+# [END dlp_list_info_types]
 
 
 if __name__ == '__main__':

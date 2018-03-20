@@ -222,6 +222,7 @@ def test_inspect_image_file(capsys):
     assert 'Info type: PHONE_NUMBER' in out
 
 
+@flaky
 def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
     inspect_content.inspect_gcs_file(
         GCLOUD_PROJECT,
@@ -235,6 +236,7 @@ def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
     assert 'Info type: EMAIL_ADDRESS' in out
 
 
+@flaky
 def test_inspect_gcs_file_no_results(
         bucket, topic_id, subscription_id, capsys):
     inspect_content.inspect_gcs_file(
@@ -263,6 +265,7 @@ def test_inspect_gcs_image_file(bucket, topic_id, subscription_id, capsys):
     assert 'Info type: EMAIL_ADDRESS' in out
 
 
+@flaky
 def test_inspect_gcs_multiple_files(bucket, topic_id, subscription_id, capsys):
     inspect_content.inspect_gcs_file(
         GCLOUD_PROJECT,
@@ -294,6 +297,7 @@ def test_inspect_datastore(
         assert 'Info type: EMAIL_ADDRESS' in out
 
 
+@flaky
 def test_inspect_datastore_no_results(
         datastore_project, topic_id, subscription_id, capsys):
     inspect_content.inspect_datastore(

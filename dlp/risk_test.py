@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from gcp_devrel.testing.flaky import flaky
 import google.cloud.pubsub
 
 import pytest
@@ -62,6 +63,7 @@ def subscription_id(topic_id):
     subscriber.delete_subscription(subscription_path)
 
 
+@flaky
 def test_numerical_risk_analysis(topic_id, subscription_id, capsys):
     risk.numerical_risk_analysis(
         GCLOUD_PROJECT,
@@ -76,6 +78,7 @@ def test_numerical_risk_analysis(topic_id, subscription_id, capsys):
     assert 'Value Range:' in out
 
 
+@flaky
 def test_categorical_risk_analysis_on_string_field(
         topic_id, subscription_id, capsys):
     risk.categorical_risk_analysis(
@@ -91,6 +94,7 @@ def test_categorical_risk_analysis_on_string_field(
     assert 'Most common value occurs' in out
 
 
+@flaky
 def test_categorical_risk_analysis_on_number_field(
         topic_id, subscription_id, capsys):
     risk.categorical_risk_analysis(
@@ -106,6 +110,7 @@ def test_categorical_risk_analysis_on_number_field(
     assert 'Most common value occurs' in out
 
 
+@flaky
 def test_k_anonymity_analysis_single_field(topic_id, subscription_id, capsys):
     risk.k_anonymity_analysis(
         GCLOUD_PROJECT,
@@ -121,6 +126,7 @@ def test_k_anonymity_analysis_single_field(topic_id, subscription_id, capsys):
     assert 'Class size:' in out
 
 
+@flaky
 def test_k_anonymity_analysis_multiple_fields(topic_id, subscription_id,
                                               capsys):
     risk.k_anonymity_analysis(
@@ -137,6 +143,7 @@ def test_k_anonymity_analysis_multiple_fields(topic_id, subscription_id,
     assert 'Class size:' in out
 
 
+@flaky
 def test_l_diversity_analysis_single_field(topic_id, subscription_id, capsys):
     risk.l_diversity_analysis(
         GCLOUD_PROJECT,
@@ -154,6 +161,7 @@ def test_l_diversity_analysis_single_field(topic_id, subscription_id, capsys):
     assert 'Sensitive value' in out
 
 
+@flaky
 def test_l_diversity_analysis_multiple_field(
         topic_id, subscription_id, capsys):
     risk.l_diversity_analysis(
@@ -172,6 +180,7 @@ def test_l_diversity_analysis_multiple_field(
     assert 'Sensitive value' in out
 
 
+@flaky
 def test_k_map_estimate_analysis_single_field(
         topic_id, subscription_id, capsys):
     risk.k_map_estimate_analysis(
@@ -190,6 +199,7 @@ def test_k_map_estimate_analysis_single_field(
     assert 'Values' in out
 
 
+@flaky
 def test_k_map_estimate_analysis_multiple_field(
         topic_id, subscription_id, capsys):
     risk.k_map_estimate_analysis(
@@ -208,6 +218,7 @@ def test_k_map_estimate_analysis_multiple_field(
     assert 'Values' in out
 
 
+@flaky
 def test_k_map_estimate_analysis_quasi_ids_info_types_equal(
         topic_id, subscription_id):
     with pytest.raises(ValueError):

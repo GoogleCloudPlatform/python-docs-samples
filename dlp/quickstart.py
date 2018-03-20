@@ -21,7 +21,7 @@ from __future__ import print_function
 def quickstart():
     """Demonstrates use of the Data Loss Prevention API client library."""
 
-    # [START quickstart]
+    # [START dlp_quickstart]
     # Import the client library
     import google.cloud.dlp
 
@@ -80,7 +80,7 @@ def quickstart():
             print('Likelihood: {}'.format(likelihood))
     else:
         print('No findings.')
-    # [END quickstart]
+    # [END dlp_quickstart]
 
 
 if __name__ == '__main__':
