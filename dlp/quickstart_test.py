@@ -12,11 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
+import google.cloud.dlp
+import mock
+
 import quickstart
 
 
+GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
+
+
 def test_quickstart(capsys):
-    quickstart.quickstart()
+    # Mock out project_path to use the test runner's project ID.
+    with mock.patch.object(
+            google.cloud.dlp.DlpServiceClient,
+            'project_path',
+            return_value='projects/{}'.format(GCLOUD_PROJECT)):
+        quickstart.quickstart()
 
     out, _ = capsys.readouterr()
-    assert 'US_MALE_NAME' in out
+    assert 'FIRST_NAME' in out
+    assert 'LAST_NAME' in out

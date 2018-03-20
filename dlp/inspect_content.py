@@ -18,17 +18,18 @@ local file or a file on Google Cloud Storage."""
 from __future__ import print_function
 
 import argparse
+import os
 
 
-# [START inspect_string]
-def inspect_string(item, info_types=None, min_likelihood=None,
-                   max_findings=None, include_quote=True):
+# [START dlp_inspect_string]
+def inspect_string(project, content_string, info_types,
+                   min_likelihood=None, max_findings=None, include_quote=True):
     """Uses the Data Loss Prevention API to analyze strings for protected data.
     Args:
-        item: The string to inspect.
+        project: The Google Cloud project id to use as a parent resource.
+        content_string: The string to inspect.
         info_types: A list of strings representing info types to look for.
-            A full list of info type categories can be fetched from the API. If
-            info_types is omitted, the API will use a limited default set.
+            A full list of info type categories can be fetched from the API.
         min_likelihood: A string representing the minimum likelihood threshold
             that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
             'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
@@ -39,7 +40,7 @@ def inspect_string(item, info_types=None, min_likelihood=None,
         None; the response from the API is printed to the terminal.
     """
 
-    # Import the client library
+    # Import the client library.
     import google.cloud.dlp
 
     # Instantiate a client.
@@ -47,47 +48,50 @@ def inspect_string(item, info_types=None, min_likelihood=None,
 
     # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted).
-    if info_types is not None:
-        info_types = [{'name': info_type} for info_type in info_types]
+    info_types = [{'name': info_type} for info_type in info_types]
 
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
     inspect_config = {
         'info_types': info_types,
         'min_likelihood': min_likelihood,
-        'max_findings': max_findings,
         'include_quote': include_quote,
-    }
+        'limits': {'max_findings_per_request': max_findings},
+      }
 
-    # Construct the items list (in this case, only one item, in string form).
-    items = [{'type': 'text/plain', 'value': item}]
+    # Construct the `item`.
+    item = {'value': content_string}
+
+    # Convert the project id into a full resource id.
+    parent = dlp.project_path(project)
 
     # Call the API.
-    response = dlp.inspect_content(inspect_config, items)
+    response = dlp.inspect_content(parent, inspect_config, item)
 
     # Print out the results.
-    if response.results[0].findings:
-        for finding in response.results[0].findings:
+    if response.result.findings:
+        for finding in response.result.findings:
             try:
-                print('Quote: {}'.format(finding.quote))
+                if finding.quote:
+                    print('Quote: {}'.format(finding.quote))
             except AttributeError:
                 pass
             print('Info type: {}'.format(finding.info_type.name))
             print('Likelihood: {}'.format(finding.likelihood))
     else:
         print('No findings.')
-# [END inspect_string]
+# [END dlp_inspect_string]
 
 
-# [START inspect_file]
-def inspect_file(filename, info_types=None, min_likelihood=None,
+# [START dlp_inspect_file]
+def inspect_file(project, filename, info_types, min_likelihood=None,
                  max_findings=None, include_quote=True, mime_type=None):
     """Uses the Data Loss Prevention API to analyze a file for protected data.
     Args:
+        project: The Google Cloud project id to use as a parent resource.
         filename: The path to the file to inspect.
         info_types: A list of strings representing info types to look for.
-            A full list of info type categories can be fetched from the API. If
-            info_types is omitted, the API will use a limited default set.
+            A full list of info type categories can be fetched from the API.
         min_likelihood: A string representing the minimum likelihood threshold
             that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
             'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
@@ -102,7 +106,7 @@ def inspect_file(filename, info_types=None, min_likelihood=None,
 
     import mimetypes
 
-    # Import the client library
+    # Import the client library.
     import google.cloud.dlp
 
     # Instantiate a client.
@@ -110,34 +114,47 @@ def inspect_file(filename, info_types=None, min_likelihood=None,
 
     # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted).
-    if info_types is not None:
-        info_types = [{'name': info_type} for info_type in info_types]
+    if not info_types:
+        info_types = ['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS']
+    info_types = [{'name': info_type} for info_type in info_types]
 
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
     inspect_config = {
         'info_types': info_types,
         'min_likelihood': min_likelihood,
-        'max_findings': max_findings,
-        'include_quote': include_quote,
+        'limits': {'max_findings_per_request': max_findings},
     }
 
     # If mime_type is not specified, guess it from the filename.
     if mime_type is None:
         mime_guess = mimetypes.MimeTypes().guess_type(filename)
-        mime_type = mime_guess[0] or 'application/octet-stream'
+        mime_type = mime_guess[0]
 
-    # Construct the items list (in this case, only one item, containing the
-    # file's byte data).
+    # Select the content type index from the list of supported types.
+    supported_content_types = {
+        None: 0,  # "Unspecified"
+        'image/jpeg': 1,
+        'image/bmp': 2,
+        'image/png': 3,
+        'image/svg': 4,
+        'text/plain': 5,
+    }
+    content_type_index = supported_content_types.get(mime_type, 0)
+
+    # Construct the item, containing the file's byte data.
     with open(filename, mode='rb') as f:
-        items = [{'type': mime_type, 'data': f.read()}]
+        item = {'byte_item': {'type': content_type_index, 'data': f.read()}}
+
+    # Convert the project id into a full resource id.
+    parent = dlp.project_path(project)
 
     # Call the API.
-    response = dlp.inspect_content(inspect_config, items)
+    response = dlp.inspect_content(parent, inspect_config, item)
 
     # Print out the results.
-    if response.results[0].findings:
-        for finding in response.results[0].findings:
+    if response.result.findings:
+        for finding in response.result.findings:
             try:
                 print('Quote: {}'.format(finding.quote))
             except AttributeError:
@@ -146,48 +163,63 @@ def inspect_file(filename, info_types=None, min_likelihood=None,
             print('Likelihood: {}'.format(finding.likelihood))
     else:
         print('No findings.')
-# [END inspect_file]
+# [END dlp_inspect_file]
 
 
-# [START inspect_gcs_file]
-def inspect_gcs_file(bucket, filename, info_types=None, min_likelihood=None,
-                     max_findings=None):
+# [START dlp_inspect_gcs]
+def inspect_gcs_file(project, bucket, filename, topic_id, subscription_id,
+                     info_types, min_likelihood=None, max_findings=None,
+                     timeout=300):
     """Uses the Data Loss Prevention API to analyze a file on GCS.
     Args:
+        project: The Google Cloud project id to use as a parent resource.
         bucket: The name of the GCS bucket containing the file, as a string.
         filename: The name of the file in the bucket, including the path, as a
             string; e.g. 'images/myfile.png'.
+        topic_id: The id of the Cloud Pub/Sub topic to which the API will
+            broadcast job completion. The topic must already exist.
+        subscription_id: The id of the Cloud Pub/Sub subscription to listen on
+            while waiting for job completion. The subscription must already
+            exist and be subscribed to the topic.
         info_types: A list of strings representing info types to look for.
-            A full list of info type categories can be fetched from the API. If
-            info_types is omitted, the API will use a limited default set.
+            A full list of info type categories can be fetched from the API.
         min_likelihood: A string representing the minimum likelihood threshold
             that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
             'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
         max_findings: The maximum number of findings to report; 0 = no maximum.
+        timeout: The number of seconds to wait for a response from the API.
     Returns:
         None; the response from the API is printed to the terminal.
     """
 
-    # Import the client library
+    # Import the client library.
     import google.cloud.dlp
+
+    # This sample additionally uses Cloud Pub/Sub to receive results from
+    # potentially long-running operations.
+    import google.cloud.pubsub
+
+    # This sample also uses threading.Event() to wait for the job to finish.
+    import threading
 
     # Instantiate a client.
     dlp = google.cloud.dlp.DlpServiceClient()
 
     # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted).
-    if info_types is not None:
-        info_types = [{'name': info_type} for info_type in info_types]
+    if not info_types:
+        info_types = ['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS']
+    info_types = [{'name': info_type} for info_type in info_types]
 
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
     inspect_config = {
         'info_types': info_types,
         'min_likelihood': min_likelihood,
-        'max_findings': max_findings,
+        'limits': {'max_findings_per_request': max_findings},
     }
 
-    # Construct a cloud_storage_options dictionary with the file's URL.
+    # Construct a storage_config containing the file's URL.
     url = 'gs://{}/{}'.format(bucket, filename)
     storage_config = {
         'cloud_storage_options': {
@@ -195,40 +227,350 @@ def inspect_gcs_file(bucket, filename, info_types=None, min_likelihood=None,
             }
         }
 
-    operation = dlp.create_inspect_operation(inspect_config, storage_config,
-                                             None)
+    # Convert the project id into a full resource id.
+    parent = dlp.project_path(project)
 
-    # Get the operation result name, which can be used to look up the full
-    # results. This call blocks until the operation is complete; to avoid
-    # blocking, use operation.add_done_callback(fn) instead.
-    operation_result = operation.result()
+    # Tell the API where to send a notification when the job is complete.
+    actions = [{
+        'pub_sub': {'topic': '{}/topics/{}'.format(parent, topic_id)}
+    }]
 
-    response = dlp.list_inspect_findings(operation_result.name)
+    # Construct the inspect_job, which defines the entire inspect content task.
+    inspect_job = {
+        'inspect_config': inspect_config,
+        'storage_config': storage_config,
+        'actions': actions,
+    }
 
-    if response.result.findings:
-        for finding in response.result.findings:
-            print('Info type: {}'.format(finding.info_type.name))
-            print('Likelihood: {}'.format(finding.likelihood))
-    else:
-        print('No findings.')
-# [END inspect_gcs_file]
+    operation = dlp.create_dlp_job(parent, inspect_job=inspect_job)
+
+    # Create a Pub/Sub client and find the subscription. The subscription is
+    # expected to already be listening to the topic.
+    subscriber = google.cloud.pubsub.SubscriberClient()
+    subscription_path = subscriber.subscription_path(
+        project, subscription_id)
+    subscription = subscriber.subscribe(subscription_path)
+
+    # Set up a callback to acknowledge a message. This closes around an event
+    # so that it can signal that it is done and the main thread can continue.
+    job_done = threading.Event()
+
+    def callback(message):
+        try:
+            if (message.attributes['DlpJobName'] == operation.name):
+                # This is the message we're looking for, so acknowledge it.
+                message.ack()
+
+                # Now that the job is done, fetch the results and print them.
+                job = dlp.get_dlp_job(operation.name)
+                if job.inspect_details.result.info_type_stats:
+                    for finding in job.inspect_details.result.info_type_stats:
+                        print('Info type: {}; Count: {}'.format(
+                            finding.info_type.name, finding.count))
+                else:
+                    print('No findings.')
+
+                # Signal to the main thread that we can exit.
+                job_done.set()
+            else:
+                # This is not the message we're looking for.
+                message.drop()
+        except Exception as e:
+            # Because this is executing in a thread, an exception won't be
+            # noted unless we print it manually.
+            print(e)
+            raise
+
+    # Register the callback and wait on the event.
+    subscription.open(callback)
+    finished = job_done.wait(timeout=timeout)
+    if not finished:
+        print('No event received before the timeout. Please verify that the '
+              'subscription provided is subscribed to the topic provided.')
+
+# [END dlp_inspect_gcs]
+
+
+# [START dlp_inspect_datastore]
+def inspect_datastore(project, datastore_project, kind,
+                      topic_id, subscription_id, info_types, namespace_id=None,
+                      min_likelihood=None, max_findings=None, timeout=300):
+    """Uses the Data Loss Prevention API to analyze Datastore data.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        datastore_project: The Google Cloud project id of the target Datastore.
+        kind: The kind of the Datastore entity to inspect, e.g. 'Person'.
+        topic_id: The id of the Cloud Pub/Sub topic to which the API will
+            broadcast job completion. The topic must already exist.
+        subscription_id: The id of the Cloud Pub/Sub subscription to listen on
+            while waiting for job completion. The subscription must already
+            exist and be subscribed to the topic.
+        info_types: A list of strings representing info types to look for.
+            A full list of info type categories can be fetched from the API.
+        namespace_id: The namespace of the Datastore document, if applicable.
+        min_likelihood: A string representing the minimum likelihood threshold
+            that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
+            'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
+        max_findings: The maximum number of findings to report; 0 = no maximum.
+        timeout: The number of seconds to wait for a response from the API.
+    Returns:
+        None; the response from the API is printed to the terminal.
+    """
+
+    # Import the client library.
+    import google.cloud.dlp
+
+    # This sample additionally uses Cloud Pub/Sub to receive results from
+    # potentially long-running operations.
+    import google.cloud.pubsub
+
+    # This sample also uses threading.Event() to wait for the job to finish.
+    import threading
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp.DlpServiceClient()
+
+    # Prepare info_types by converting the list of strings into a list of
+    # dictionaries (protos are also accepted).
+    if not info_types:
+        info_types = ['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS']
+    info_types = [{'name': info_type} for info_type in info_types]
+
+    # Construct the configuration dictionary. Keys which are None may
+    # optionally be omitted entirely.
+    inspect_config = {
+        'info_types': info_types,
+        'min_likelihood': min_likelihood,
+        'limits': {'max_findings_per_request': max_findings},
+    }
+
+    # Construct a storage_config containing the target Datastore info.
+    storage_config = {
+        'datastore_options': {
+            'partition_id': {
+                'project_id': datastore_project,
+                'namespace_id': namespace_id,
+            },
+            'kind': {
+                'name': kind
+            },
+        }
+    }
+
+    # Convert the project id into a full resource id.
+    parent = dlp.project_path(project)
+
+    # Tell the API where to send a notification when the job is complete.
+    actions = [{
+        'pub_sub': {'topic': '{}/topics/{}'.format(parent, topic_id)}
+    }]
+
+    # Construct the inspect_job, which defines the entire inspect content task.
+    inspect_job = {
+        'inspect_config': inspect_config,
+        'storage_config': storage_config,
+        'actions': actions,
+    }
+
+    operation = dlp.create_dlp_job(parent, inspect_job=inspect_job)
+
+    # Create a Pub/Sub client and find the subscription. The subscription is
+    # expected to already be listening to the topic.
+    subscriber = google.cloud.pubsub.SubscriberClient()
+    subscription_path = subscriber.subscription_path(
+        project, subscription_id)
+    subscription = subscriber.subscribe(subscription_path)
+
+    # Set up a callback to acknowledge a message. This closes around an event
+    # so that it can signal that it is done and the main thread can continue.
+    job_done = threading.Event()
+
+    def callback(message):
+        try:
+            if (message.attributes['DlpJobName'] == operation.name):
+                # This is the message we're looking for, so acknowledge it.
+                message.ack()
+
+                # Now that the job is done, fetch the results and print them.
+                job = dlp.get_dlp_job(operation.name)
+                if job.inspect_details.result.info_type_stats:
+                    for finding in job.inspect_details.result.info_type_stats:
+                        print('Info type: {}; Count: {}'.format(
+                            finding.info_type.name, finding.count))
+                else:
+                    print('No findings.')
+
+                # Signal to the main thread that we can exit.
+                job_done.set()
+            else:
+                # This is not the message we're looking for.
+                message.drop()
+        except Exception as e:
+            # Because this is executing in a thread, an exception won't be
+            # noted unless we print it manually.
+            print(e)
+            raise
+
+    # Register the callback and wait on the event.
+    subscription.open(callback)
+    finished = job_done.wait(timeout=timeout)
+    if not finished:
+        print('No event received before the timeout. Please verify that the '
+              'subscription provided is subscribed to the topic provided.')
+
+# [END dlp_inspect_datastore]
+
+
+# [START dlp_inspect_bigquery]
+def inspect_bigquery(project, bigquery_project, dataset_id, table_id,
+                     topic_id, subscription_id, info_types,
+                     min_likelihood=None, max_findings=None, timeout=300):
+    """Uses the Data Loss Prevention API to analyze BigQuery data.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        bigquery_project: The Google Cloud project id of the target table.
+        dataset_id: The id of the target BigQuery dataset.
+        table_id: The id of the target BigQuery table.
+        topic_id: The id of the Cloud Pub/Sub topic to which the API will
+            broadcast job completion. The topic must already exist.
+        subscription_id: The id of the Cloud Pub/Sub subscription to listen on
+            while waiting for job completion. The subscription must already
+            exist and be subscribed to the topic.
+        info_types: A list of strings representing info types to look for.
+            A full list of info type categories can be fetched from the API.
+        namespace_id: The namespace of the Datastore document, if applicable.
+        min_likelihood: A string representing the minimum likelihood threshold
+            that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
+            'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
+        max_findings: The maximum number of findings to report; 0 = no maximum.
+        timeout: The number of seconds to wait for a response from the API.
+    Returns:
+        None; the response from the API is printed to the terminal.
+    """
+
+    # Import the client library.
+    import google.cloud.dlp
+
+    # This sample additionally uses Cloud Pub/Sub to receive results from
+    # potentially long-running operations.
+    import google.cloud.pubsub
+
+    # This sample also uses threading.Event() to wait for the job to finish.
+    import threading
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp.DlpServiceClient()
+
+    # Prepare info_types by converting the list of strings into a list of
+    # dictionaries (protos are also accepted).
+    if not info_types:
+        info_types = ['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS']
+    info_types = [{'name': info_type} for info_type in info_types]
+
+    # Construct the configuration dictionary. Keys which are None may
+    # optionally be omitted entirely.
+    inspect_config = {
+        'info_types': info_types,
+        'min_likelihood': min_likelihood,
+        'limits': {'max_findings_per_request': max_findings},
+    }
+
+    # Construct a storage_config containing the target Bigquery info.
+    storage_config = {
+        'big_query_options': {
+            'table_reference': {
+                'project_id': bigquery_project,
+                'dataset_id': dataset_id,
+                'table_id': table_id,
+            }
+        }
+    }
+
+    # Convert the project id into a full resource id.
+    parent = dlp.project_path(project)
+
+    # Tell the API where to send a notification when the job is complete.
+    actions = [{
+        'pub_sub': {'topic': '{}/topics/{}'.format(parent, topic_id)}
+    }]
+
+    # Construct the inspect_job, which defines the entire inspect content task.
+    inspect_job = {
+        'inspect_config': inspect_config,
+        'storage_config': storage_config,
+        'actions': actions,
+    }
+
+    operation = dlp.create_dlp_job(parent, inspect_job=inspect_job)
+
+    # Create a Pub/Sub client and find the subscription. The subscription is
+    # expected to already be listening to the topic.
+    subscriber = google.cloud.pubsub.SubscriberClient()
+    subscription_path = subscriber.subscription_path(
+        project, subscription_id)
+    subscription = subscriber.subscribe(subscription_path)
+
+    # Set up a callback to acknowledge a message. This closes around an event
+    # so that it can signal that it is done and the main thread can continue.
+    job_done = threading.Event()
+
+    def callback(message):
+        try:
+            if (message.attributes['DlpJobName'] == operation.name):
+                # This is the message we're looking for, so acknowledge it.
+                message.ack()
+
+                # Now that the job is done, fetch the results and print them.
+                job = dlp.get_dlp_job(operation.name)
+                if job.inspect_details.result.info_type_stats:
+                    for finding in job.inspect_details.result.info_type_stats:
+                        print('Info type: {}; Count: {}'.format(
+                            finding.info_type.name, finding.count))
+                else:
+                    print('No findings.')
+
+                # Signal to the main thread that we can exit.
+                job_done.set()
+            else:
+                # This is not the message we're looking for.
+                message.drop()
+        except Exception as e:
+            # Because this is executing in a thread, an exception won't be
+            # noted unless we print it manually.
+            print(e)
+            raise
+
+    # Register the callback and wait on the event.
+    subscription.open(callback)
+    finished = job_done.wait(timeout=timeout)
+    if not finished:
+        print('No event received before the timeout. Please verify that the '
+              'subscription provided is subscribed to the topic provided.')
+
+# [END dlp_inspect_bigquery]
 
 
 if __name__ == '__main__':
+    default_project = os.environ.get('GCLOUD_PROJECT')
+
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(
         dest='content', help='Select how to submit content to the API.')
+    subparsers.required = True
 
     parser_string = subparsers.add_parser('string', help='Inspect a string.')
     parser_string.add_argument('item', help='The string to inspect.')
     parser_string.add_argument(
+        '--project',
+        help='The Google Cloud project id to use as a parent resource.',
+        default=default_project)
+    parser_string.add_argument(
         '--info_types', action='append',
         help='Strings representing info types to look for. A full list of '
              'info categories and types is available from the API. Examples '
-             'include "US_MALE_NAME", "US_FEMALE_NAME", "EMAIL_ADDRESS", '
-             '"CANADA_SOCIAL_INSURANCE_NUMBER", "JAPAN_PASSPORT". If omitted, '
-             'the API will use a limited default set. Specify this flag '
-             'multiple times to specify multiple info types.')
+             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+             'If unspecified, the three above examples will be used.',
+        default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
     parser_string.add_argument(
         '--min_likelihood',
         choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
@@ -241,19 +583,23 @@ if __name__ == '__main__':
     parser_string.add_argument(
         '--include_quote', type=bool,
         help='A boolean for whether to display a quote of the detected '
-             'information in the results.')
+             'information in the results.',
+        default=True)
 
     parser_file = subparsers.add_parser('file', help='Inspect a local file.')
     parser_file.add_argument(
         'filename', help='The path to the file to inspect.')
     parser_file.add_argument(
+        '--project',
+        help='The Google Cloud project id to use as a parent resource.',
+        default=default_project)
+    parser_file.add_argument(
         '--info_types', action='append',
         help='Strings representing info types to look for. A full list of '
              'info categories and types is available from the API. Examples '
-             'include "US_MALE_NAME", "US_FEMALE_NAME", "EMAIL_ADDRESS", '
-             '"CANADA_SOCIAL_INSURANCE_NUMBER", "JAPAN_PASSPORT". If omitted, '
-             'the API will use a limited default set. Specify this flag '
-             'multiple times to specify multiple info types.')
+             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+             'If unspecified, the three above examples will be used.',
+        default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
     parser_file.add_argument(
         '--min_likelihood',
         choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
@@ -266,7 +612,8 @@ if __name__ == '__main__':
     parser_file.add_argument(
         '--include_quote', type=bool,
         help='A boolean for whether to display a quote of the detected '
-             'information in the results.')
+             'information in the results.',
+        default=True)
     parser_file.add_argument(
         '--mime_type',
         help='The MIME type of the file. If not specified, the type is '
@@ -281,13 +628,26 @@ if __name__ == '__main__':
         help='The name of the file in the bucket, including the path, e.g. '
         '"images/myfile.png". Wildcards are permitted.')
     parser_gcs.add_argument(
+        'topic_id',
+        help='The id of the Cloud Pub/Sub topic to use to report that the job '
+        'is complete, e.g. "dlp-sample-topic".')
+    parser_gcs.add_argument(
+        'subscription_id',
+        help='The id of the Cloud Pub/Sub subscription to monitor for job '
+        'completion, e.g. "dlp-sample-subscription". The subscription must '
+        'already be subscribed to the topic. See the test files or the Cloud '
+        'Pub/Sub sample files for examples on how to create the subscription.')
+    parser_gcs.add_argument(
+        '--project',
+        help='The Google Cloud project id to use as a parent resource.',
+        default=default_project)
+    parser_gcs.add_argument(
         '--info_types', action='append',
         help='Strings representing info types to look for. A full list of '
              'info categories and types is available from the API. Examples '
-             'include "US_MALE_NAME", "US_FEMALE_NAME", "EMAIL_ADDRESS", '
-             '"CANADA_SOCIAL_INSURANCE_NUMBER", "JAPAN_PASSPORT". If omitted, '
-             'the API will use a limited default set. Specify this flag '
-             'multiple times to specify multiple info types.')
+             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+             'If unspecified, the three above examples will be used.',
+        default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
     parser_gcs.add_argument(
         '--min_likelihood',
         choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
@@ -297,21 +657,143 @@ if __name__ == '__main__':
     parser_gcs.add_argument(
         '--max_findings', type=int,
         help='The maximum number of findings to report; 0 = no maximum.')
+    parser_gcs.add_argument(
+        '--timeout', type=int,
+        help='The maximum number of seconds to wait for a response from the '
+             'API. The default is 300 seconds.',
+        default=300)
+
+    parser_datastore = subparsers.add_parser(
+        'datastore', help='Inspect files on Google Datastore.')
+    parser_datastore.add_argument(
+        'datastore_project',
+        help='The Google Cloud project id of the target Datastore.')
+    parser_datastore.add_argument(
+        'kind',
+        help='The kind of the Datastore entity to inspect, e.g. "Person".')
+    parser_datastore.add_argument(
+        'topic_id',
+        help='The id of the Cloud Pub/Sub topic to use to report that the job '
+        'is complete, e.g. "dlp-sample-topic".')
+    parser_datastore.add_argument(
+        'subscription_id',
+        help='The id of the Cloud Pub/Sub subscription to monitor for job '
+        'completion, e.g. "dlp-sample-subscription". The subscription must '
+        'already be subscribed to the topic. See the test files or the Cloud '
+        'Pub/Sub sample files for examples on how to create the subscription.')
+    parser_datastore.add_argument(
+        '--project',
+        help='The Google Cloud project id to use as a parent resource.',
+        default=default_project)
+    parser_datastore.add_argument(
+        '--info_types', action='append',
+        help='Strings representing info types to look for. A full list of '
+             'info categories and types is available from the API. Examples '
+             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+             'If unspecified, the three above examples will be used.',
+        default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
+    parser_datastore.add_argument(
+        '--namespace_id',
+        help='The Datastore namespace to use, if applicable.')
+    parser_datastore.add_argument(
+        '--min_likelihood',
+        choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
+                 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'],
+        help='A string representing the minimum likelihood threshold that '
+             'constitutes a match.')
+    parser_datastore.add_argument(
+        '--max_findings', type=int,
+        help='The maximum number of findings to report; 0 = no maximum.')
+    parser_datastore.add_argument(
+        '--timeout', type=int,
+        help='The maximum number of seconds to wait for a response from the '
+             'API. The default is 300 seconds.',
+        default=300)
+
+    parser_bigquery = subparsers.add_parser(
+        'bigquery', help='Inspect files on Google BigQuery.')
+    parser_bigquery.add_argument(
+        'bigquery_project',
+        help='The Google Cloud project id of the target table.')
+    parser_bigquery.add_argument(
+        'dataset_id',
+        help='The ID of the target BigQuery dataset.')
+    parser_bigquery.add_argument(
+        'table_id',
+        help='The ID of the target BigQuery table.')
+    parser_bigquery.add_argument(
+        'topic_id',
+        help='The id of the Cloud Pub/Sub topic to use to report that the job '
+        'is complete, e.g. "dlp-sample-topic".')
+    parser_bigquery.add_argument(
+        'subscription_id',
+        help='The id of the Cloud Pub/Sub subscription to monitor for job '
+        'completion, e.g. "dlp-sample-subscription". The subscription must '
+        'already be subscribed to the topic. See the test files or the Cloud '
+        'Pub/Sub sample files for examples on how to create the subscription.')
+    parser_bigquery.add_argument(
+        '--project',
+        help='The Google Cloud project id to use as a parent resource.',
+        default=default_project)
+    parser_bigquery.add_argument(
+        '--info_types', action='append',
+        help='Strings representing info types to look for. A full list of '
+             'info categories and types is available from the API. Examples '
+             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+             'If unspecified, the three above examples will be used.',
+        default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
+    parser_bigquery.add_argument(
+        '--min_likelihood',
+        choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
+                 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'],
+        help='A string representing the minimum likelihood threshold that '
+             'constitutes a match.')
+    parser_bigquery.add_argument(
+        '--max_findings', type=int,
+        help='The maximum number of findings to report; 0 = no maximum.')
+    parser_bigquery.add_argument(
+        '--timeout', type=int,
+        help='The maximum number of seconds to wait for a response from the '
+             'API. The default is 300 seconds.',
+        default=300)
 
     args = parser.parse_args()
 
     if args.content == 'string':
         inspect_string(
-            args.item, info_types=args.info_types,
+            args.project, args.item, args.info_types,
             min_likelihood=args.min_likelihood,
+            max_findings=args.max_findings,
             include_quote=args.include_quote)
     elif args.content == 'file':
         inspect_file(
-            args.filename, info_types=args.info_types,
+            args.project, args.filename, args.info_types,
             min_likelihood=args.min_likelihood,
+            max_findings=args.max_findings,
             include_quote=args.include_quote,
             mime_type=args.mime_type)
     elif args.content == 'gcs':
         inspect_gcs_file(
-            args.bucket, args.filename, info_types=args.info_types,
-            min_likelihood=args.min_likelihood)
+            args.project, args.bucket, args.filename,
+            args.topic_id, args.subscription_id,
+            args.info_types,
+            min_likelihood=args.min_likelihood,
+            max_findings=args.max_findings,
+            timeout=args.timeout)
+    elif args.content == 'datastore':
+        inspect_datastore(
+            args.project, args.datastore_project, args.kind,
+            args.topic_id, args.subscription_id,
+            args.info_types,
+            namespace_id=args.namespace_id,
+            min_likelihood=args.min_likelihood,
+            max_findings=args.max_findings,
+            timeout=args.timeout)
+    elif args.content == 'bigquery':
+        inspect_bigquery(
+            args.project, args.bigquery_project, args.dataset_id,
+            args.table_id, args.topic_id, args.subscription_id,
+            args.info_types,
+            min_likelihood=args.min_likelihood,
+            max_findings=args.max_findings,
+            timeout=args.timeout)

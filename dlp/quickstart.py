@@ -25,17 +25,20 @@ def quickstart():
     # Import the client library
     import google.cloud.dlp
 
+    # Edit this with your Google Cloud Project ID.
+    project = 'your-project'
+
     # Instantiate a client.
     dlp = google.cloud.dlp.DlpServiceClient()
 
     # The string to inspect
     content = 'Robert Frost'
 
-    # Construct the list of content items to inspect; in this case, only one.
-    items = [{'type': 'text/plain', 'value': content}]
+    # Construct the item to inspect.
+    item = {'value': content}
 
-    # The info types to search for in the content.
-    info_types = [{'name': 'US_MALE_NAME'}, {'name': 'US_FEMALE_NAME'}]
+    # The info types to search for in the content. Required.
+    info_types = [{'name': 'FIRST_NAME'}, {'name': 'LAST_NAME'}]
 
     # The minimum likelihood to constitute a match. Optional.
     min_likelihood = 'LIKELIHOOD_UNSPECIFIED'
@@ -51,22 +54,30 @@ def quickstart():
     inspect_config = {
         'info_types': info_types,
         'min_likelihood': min_likelihood,
-        'max_findings': max_findings,
         'include_quote': include_quote,
+        'limits': {'max_findings_per_request': max_findings},
     }
 
+    # Convert the project id into a full resource id.
+    parent = dlp.project_path(project)
+
     # Call the API.
-    response = dlp.inspect_content(inspect_config, items)
+    response = dlp.inspect_content(parent, inspect_config, item)
 
     # Print out the results.
-    if response.results[0].findings:
-        for finding in response.results[0].findings:
+    if response.result.findings:
+        for finding in response.result.findings:
             try:
                 print('Quote: {}'.format(finding.quote))
             except AttributeError:
                 pass
             print('Info type: {}'.format(finding.info_type.name))
-            print('Likelihood: {}'.format(finding.likelihood))
+            # Convert likelihood value to string respresentation.
+            likelihood = (google.cloud.dlp.types.Finding.DESCRIPTOR
+                          .fields_by_name['likelihood']
+                          .enum_type.values_by_number[finding.likelihood]
+                          .name)
+            print('Likelihood: {}'.format(likelihood))
     else:
         print('No findings.')
     # [END quickstart]
