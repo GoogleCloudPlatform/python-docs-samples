@@ -23,11 +23,11 @@ import deid
 HARMFUL_STRING = 'My SSN is 372819127'
 HARMLESS_STRING = 'My favorite color is blue'
 GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
-WRAPPED_KEY = ('CiQAaNd+NKZwUklWRkR/57xnFbkQX2YISRHDMpiOG4q92ISwuOkSQQASRgq4ht'
-               'mOs+LXldmKxRvmQ+8MQz3o8xq7zSjG4N0rQbcMgPG7hONPp+PhyKVVbLNds5gM'
-               'Kmx1jclPSTfQT+bH')
-KEY_NAME = ('projects/nodejs-docs-samples/locations/global/keyRings/'
-            'integration-tests-dlp/cryptoKeys/test-key')
+WRAPPED_KEY = ('CiQAz0hX4+go8fJwn80Fr8pVImwx+tmZdqU7JL+7TN/S5JxBU9gSSQDhFHpFVy'
+               'uzJps0YH9ls480mU+JLG7jI/0lL04i6XJRWqmI6gUSZRUtECYcLH5gXK4SXHlL'
+               'rotx7Chxz/4z7SIpXFOBY61z0/U=')
+KEY_NAME = ('projects/python-docs-samples-tests/locations/global/keyRings/'
+            'dlp-test/cryptoKeys/dlp-test')
 SURROGATE_TYPE = 'SSN_TOKEN'
 CSV_FILE = os.path.join(os.path.dirname(__file__), 'resources/dates.csv')
 DATE_SHIFTED_AMOUNT = 30
@@ -147,21 +147,6 @@ def test_deidentify_with_date_shift_using_context_field(tempdir, capsys):
     assert 'Successful' in out
 
 
-def test_deidentify_with_date_shift_requires_all_fields(tempdir):
-    output_filepath = os.path.join(tempdir, 'dates-shifted.csv')
-
-    with pytest.raises(StandardError):
-        deid.deidentify_with_date_shift(
-            GCLOUD_PROJECT,
-            input_csv_file=CSV_FILE,
-            output_csv_file=output_filepath,
-            lower_bound_days=DATE_SHIFTED_AMOUNT,
-            upper_bound_days=DATE_SHIFTED_AMOUNT,
-            date_fields=DATE_FIELDS,
-            context_field_id=CSV_CONTEXT_FIELD,
-            key_name=KEY_NAME)
-
-
 def test_reidentify_with_fpe(capsys):
     labeled_fpe_string = 'My SSN is SSN_TOKEN(9):731997681'
 
@@ -175,4 +160,4 @@ def test_reidentify_with_fpe(capsys):
 
     out, _ = capsys.readouterr()
 
-    assert HARMFUL_STRING in out
+    assert '731997681' not in out

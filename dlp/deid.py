@@ -288,7 +288,7 @@ def deidentify_with_date_shift(project, input_csv_file=None,
     import csv
     from datetime import datetime
     f = []
-    with open(input_csv_file, 'rb') as csvfile:
+    with open(input_csv_file, 'r') as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
             f.append(row)
@@ -376,7 +376,7 @@ def deidentify_with_date_shift(project, input_csv_file=None,
         parent, deidentify_config=deidentify_config, item=table_item)
 
     # Write results to CSV file
-    with open(output_csv_file, 'wb') as csvfile:
+    with open(output_csv_file, 'w') as csvfile:
         write_file = csv.writer(csvfile, delimiter=',')
         write_file.writerow(map(write_header, response.item.table.headers))
         for row in response.item.table.rows:

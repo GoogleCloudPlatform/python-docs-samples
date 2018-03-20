@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import google.cloud.pubsub
 
 import pytest
 
 import risk
 
-GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
+GCLOUD_PROJECT = 'nodejs-docs-samples'
 TABLE_PROJECT = 'nodejs-docs-samples'
 TOPIC_ID = 'dlp-test'
 SUBSCRIPTION_ID = 'dlp-test-subscription'
