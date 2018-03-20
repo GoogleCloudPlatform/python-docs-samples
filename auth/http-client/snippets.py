@@ -18,6 +18,7 @@ Requests HTTP library."""
 import argparse
 
 
+# [START auth_http_implicit]
 def implicit():
     import google.auth
     from google.auth.transport import requests
@@ -36,8 +37,10 @@ def implicit():
     response.raise_for_status()
     buckets = response.json()
     print(buckets)
+# [END auth_http_implicit]
 
 
+# [START auth_http_explicit]
 def explicit(project):
     from google.auth.transport import requests
     from google.oauth2 import service_account
@@ -59,6 +62,7 @@ def explicit(project):
     response.raise_for_status()
     buckets = response.json()
     print(buckets)
+# [END auth_http_explicit]
 
 
 if __name__ == '__main__':
