@@ -18,6 +18,7 @@ the Google API Client."""
 import argparse
 
 
+# [START auth_api_implicit]
 def implicit(project):
     import googleapiclient.discovery
 
@@ -28,8 +29,10 @@ def implicit(project):
     # Make an authenticated API request
     buckets = storage_client.buckets().list(project=project).execute()
     print(buckets)
+# [END auth_api_implicit]
 
 
+# [START auth_api_explicit]
 def explicit(project):
     from google.oauth2 import service_account
     import googleapiclient.discovery
@@ -46,8 +49,10 @@ def explicit(project):
     # Make an authenticated API request
     buckets = storage_client.buckets().list(project=project).execute()
     print(buckets)
+# [END auth_api_explicit]
 
 
+# [START auth_api_explicit_compute_engine]
 def explicit_compute_engine(project):
     from google.auth import compute_engine
     import googleapiclient.discovery
@@ -63,8 +68,10 @@ def explicit_compute_engine(project):
     # Make an authenticated API request
     buckets = storage_client.buckets().list(project=project).execute()
     print(buckets)
+# [END auth_api_explicit_compute_engine]
 
 
+# [START auth_api_explicit_app_engine]
 def explicit_app_engine(project):
     from google.auth import app_engine
     import googleapiclient.discovery
@@ -80,6 +87,7 @@ def explicit_app_engine(project):
     # Make an authenticated API request
     buckets = storage_client.buckets().list(project=project).execute()
     print(buckets)
+# [END auth_api_explicit_app_engine]
 
 
 if __name__ == '__main__':
