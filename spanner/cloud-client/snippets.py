@@ -510,16 +510,16 @@ def insert_data_with_timestamp(instance_id, database_id):
 
 
 # [START spanner_add_timestamp_column]
-def add_timestamp_column(database_id, instance_id):
+def add_timestamp_column(instance_id, database_id):
     """Adds a new TIMESTAMP column to the Albums table in the example database."""
     spanner_client = spanner.Client()
     instance = spanner_client.instance(instance_id)
 
     database = instance.database(database_id)
 
-    operation = database.update_ddl(
+    operation = database.update_ddl([
         'ALTER TABLE Albums ADD COLUMN LastUpdateTime TIMESTAMP '
-        'OPTIONS(allow_commit_timestamp=true)')
+        'OPTIONS(allow_commit_timestamp=true)'])
 
     print('Waiting for operation to complete...')
     operation.result()
@@ -530,20 +530,20 @@ def add_timestamp_column(database_id, instance_id):
 
 
 # [START spanner_update_data_with_timestamp_column]
-def update_data_with_timestamp(database_id, instance_id):
+def update_data_with_timestamp(instance_id, database_id):
     """Updates Performances tables in the database with the COMMIT_TIMESTAMP column.
 
     This updates the `MarketingBudget` column which must be created before
     running this sample. You can add the column by running the `add_column`
     sample or by running this DDL statement against your database:
 
-        ALTER TABLE Performances ADD COLUMN MarketingBudget INT64
+        ALTER TABLE Albums ADD COLUMN MarketingBudget INT64
 
     In addition this update expects the LastUpdateTime column added by
     applying this DDL statement against your database:
 
-        ALTER TABLE Performances ADD COLUMN LastUpdateTime TIMESTAMP
-        OPTIONS (allow_commit_timestamp=true)
+        ALTER TABLE Albums ADD COLUMN LastUpdateTime TIMESTAMP
+        OPTIONS(allow_commit_timestamp=true)
     """
     spanner_client = spanner.Client()
     instance = spanner_client.instance(instance_id)
@@ -554,11 +554,11 @@ def update_data_with_timestamp(database_id, instance_id):
         batch.update(
             table='Albums',
             columns=(
-                'SingerId', 'AlbumId', 'MarketingBudget'),
+                'SingerId', 'AlbumId', 'MarketingBudget', 'LastUpdateTime'),
             values=[
-                (1, 4, "2017-10-05", 11000, spanner.COMMIT_TIMESTAMP),
-                (1, 19, "2017-11-02", 15000, spanner.COMMIT_TIMESTAMP),
-                (2, 42, "2017-12-23", 7000, spanner.COMMIT_TIMESTAMP)])
+                (1, 4, 11000, spanner.COMMIT_TIMESTAMP),
+                (1, 19, 15000, spanner.COMMIT_TIMESTAMP),
+                (2, 42, 7000, spanner.COMMIT_TIMESTAMP)])
 
     print('Updated data.')
 # [END spanner_update_data_with_timestamp_column]
@@ -584,8 +584,8 @@ def query_data_with_timestamp(instance_id, database_id):
 
     with database.snapshot() as snapshot:
         results = snapshot.execute_sql(
-            'SELECT SingerId, AlbumId, AlbumTitle FROM Albums'
-            'FROM Albums ORDER BY LastUpdateTime DESC')
+            'SELECT SingerId, AlbumId, AlbumTitle FROM Albums '
+            'ORDER BY LastUpdateTime DESC')
 
     for row in results:
         print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))

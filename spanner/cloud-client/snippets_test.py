@@ -265,5 +265,5 @@ def test_query_data_with_timestamp(temporary_database_with_timestamps_data, caps
 
         out, _ = capsys.readouterr()
 
-        assert 'Updated data.' in out
+        assert 'Go, Go, Go' in out
 
