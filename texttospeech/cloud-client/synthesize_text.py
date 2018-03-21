@@ -23,6 +23,7 @@ Example usage:
 
 import argparse
 
+
 # [START tts_synthesize_text]
 def synthesize_text(text):
     """Synthesizes speech from the input string of text."""

@@ -23,6 +23,7 @@ Example usage:
 
 import argparse
 
+
 # [START tts_synthesize_text_file]
 def synthesize_text_file(text_file):
     """Synthesizes speech from the input file of text."""
@@ -99,4 +100,3 @@ if __name__ == '__main__':
         synthesize_text_file(args.text)
     else:
         synthesize_ssml_file(args.ssml)
-

@@ -39,8 +39,8 @@ def list_voices():
             print('Supported language: {}'.format(language_code))
 
         # Names of SSML voice genders from google.cloud.texttospeech.enums
-        ssml_voice_genders = ['SSML_VOICE_GENDER_UNSPECIFIED', 'MALE', 'FEMALE',
-                              'NEUTRAL']
+        ssml_voice_genders = ['SSML_VOICE_GENDER_UNSPECIFIED', 'MALE',
+                              'FEMALE', 'NEUTRAL']
 
         # Display the supported SSML - gender for this voice. Example: FEMALE
         print('SSML gender: {}'.format(ssml_voice_genders[voice.ssml_gender]))
