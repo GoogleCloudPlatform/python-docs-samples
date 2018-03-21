@@ -16,7 +16,7 @@
 
 
 def run_quickstart():
-    # [START bigquery_datatransfer_quickstart]
+    # [START bigquerydatatransfer_quickstart]
     from google.cloud import bigquery_datatransfer
 
     client = bigquery_datatransfer.DataTransferServiceClient()
@@ -34,7 +34,7 @@ def run_quickstart():
         print('\tID: {}'.format(data_source.data_source_id))
         print('\tFull path: {}'.format(data_source.name))
         print('\tDescription: {}'.format(data_source.description))
-    # [END bigquery_datatransfer_quickstart]
+    # [END bigquerydatatransfer_quickstart]
 
 
 if __name__ == '__main__':
