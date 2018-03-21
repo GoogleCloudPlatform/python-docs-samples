@@ -31,9 +31,11 @@ from google.cloud import storage
 def create_bucket(bucket_name):
     """Creates a new bucket."""
     storage_client = storage.Client()
-    bucket = storage_client.create_bucket(bucket_name)
-    print('Bucket {} created'.format(bucket.name))
-
+    bucket = storage_client.bucket(bucket_name)
+    bucket.location = 'ASIA'
+    bucket.storage_class = 'COLDLINE'
+    bucket.create()
+    print('Bucket {} created.'.format(bucket.name))
 
 def delete_bucket(bucket_name):
     """Deletes a bucket. The bucket must be empty."""
