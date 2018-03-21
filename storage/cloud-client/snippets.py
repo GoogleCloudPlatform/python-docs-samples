@@ -37,6 +37,7 @@ def create_bucket(bucket_name):
     bucket.create()
     print('Bucket {} created.'.format(bucket.name))
 
+
 def delete_bucket(bucket_name):
     """Deletes a bucket. The bucket must be empty."""
     storage_client = storage.Client()
