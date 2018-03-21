@@ -518,8 +518,8 @@ def add_timestamp_column(database_id, instance_id):
     database = instance.database(database_id)
 
     operation = database.update_ddl(
-        "ALTER TABLE Albums ADD COLUMN LastUpdateTime TIMESTAMP"
-        "OPTIONS (allow_commit_timestamp=true)")
+        'ALTER TABLE Albums ADD COLUMN LastUpdateTime TIMESTAMP '
+        'OPTIONS(allow_commit_timestamp=true)')
 
     print('Waiting for operation to complete...')
     operation.result()
