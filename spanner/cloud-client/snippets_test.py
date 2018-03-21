@@ -180,3 +180,90 @@ def test_read_only_transaction(temporary_database, capsys):
         out, _ = capsys.readouterr()
 
         assert 'Forever Hold Your Peace' in out
+
+
+def test_create_table_with_timestamp(temporary_database, capsys):
+    snippets.create_table_with_timestamp(
+        SPANNER_INSTANCE,
+        temporary_database.database_id)
+
+    out, _ = capsys.readouterr()
+
+    assert 'Performances' in out
+
+
+def test_insert_data_with_timestamp(temporary_database, capsys):
+    snippets.create_table_with_timestamp(
+        SPANNER_INSTANCE,
+        temporary_database.database_id)
+    snippets.insert_data_with_timestamp(
+        SPANNER_INSTANCE,
+        temporary_database.database_id)
+
+    out, _ = capsys.readouterr()
+
+    assert 'Inserted data.' in out
+
+
+@pytest.fixture(scope='module')
+def temporary_database_with_timestamps(temporary_database):
+    snippets.create_table_with_timestamp(
+        SPANNER_INSTANCE,
+        temporary_database.database_id)
+    snippets.insert_data_with_timestamp(
+        SPANNER_INSTANCE,
+        temporary_database.database_id)
+
+    yield temporary_database
+
+
+def test_add_timestamp_column(temporary_database, capsys):
+    snippets.add_timestamp_column(
+        SPANNER_INSTANCE,
+        temporary_database_with_timestamps.database_id)
+
+    out, _ = capsys.readouterr()
+
+    assert 'Albums' in out
+
+
+@pytest.fixture(scope='module')
+def temporary_database_with_timestamps_column(temporary_database_with_timestamps):
+    snippets.add_timestamp_column(
+        SPANNER_INSTANCE,
+        temporary_database_with_timestamps.database_id)
+
+    yield temporary_database
+
+
+def test_update_data_with_timestamp(temporary_database_with_timestamps, capsys):
+    snippets.update_data_with_timestamp(
+        SPANNER_INSTANCE,
+        temporary_database_with_timestamps_column.database_id)
+
+    out, _ = capsys.readouterr()
+
+    assert 'Updated data.' in out
+
+
+@pytest.fixture(scope='module')
+def temporary_database_with_timestamps_data(temporary_database_with_timestamps):
+    snippets.add_timestamp_column(
+        SPANNER_INSTANCE,
+        temporary_database_with_timestamps.database_id)
+
+    yield temporary_database
+
+
+@pytest.mark.slow
+def test_query_data_with_timestamp(temporary_database_with_timestamps_data, capsys):
+    @eventually_consistent.call
+    def _():
+        snippets.query_data_with_timestamp(
+            SPANNER_INSTANCE,
+            temporary_database_with_timestamps_data.database_id)
+
+        out, _ = capsys.readouterr()
+
+        assert 'Updated data.' in out
+
