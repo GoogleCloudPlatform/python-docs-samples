@@ -506,7 +506,7 @@ def insert_data_with_timestamp(instance_id, database_id):
                 (2, 42, "2017-12-23", 7000, spanner.COMMIT_TIMESTAMP)])
 
     print('Inserted data.')
-# [END spanner_create_table_with_timestamp_column]
+# [END spanner_insert_data_with_timestamp_column]
 
 
 # [START spanner_add_timestamp_column]
