@@ -18,7 +18,9 @@ samples:
   file: list_voices.py
 - name: Synthesize text
   file: synthesize_text.py
+  show_help: True
 - name: Synthesize file
   file: synthesize_file.py
+  show_help: True
 
 cloud_client_library: true

@@ -102,6 +102,20 @@ To run this sample:
 
     $ python synthesize_text.py
 
+    usage: synthesize_text.py [-h] (--text TEXT | --ssml SSML)
+
+    Google Cloud Text-To-Speech API sample application .
+
+    Example usage:
+        python synthesize_text.py --text "hello" --output hello.mp3
+        python synthesize_text.py --ssml "<?xml..." --output hello.mp3
+
+    optional arguments:
+      -h, --help   show this help message and exit
+      --text TEXT  The text from which to synthesize speech.
+      --ssml SSML  The ssml string from which to synthesize speech.
+
+
 
 Synthesize file
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -117,6 +131,20 @@ To run this sample:
 .. code-block:: bash
 
     $ python synthesize_file.py
+
+    usage: synthesize_file.py [-h] (--text TEXT | --ssml SSML)
+
+    Google Cloud Text-To-Speech API sample application .
+
+    Example usage:
+        python synthesize_file.py --text_file resources/hello.txt
+        python synthesize_file.py --ssml_file resources/hello.ssml
+
+    optional arguments:
+      -h, --help   show this help message and exit
+      --text TEXT  The text file from which to synthesize speech.
+      --ssml SSML  The ssml file from which to synthesize speech.
+
 
 
 
