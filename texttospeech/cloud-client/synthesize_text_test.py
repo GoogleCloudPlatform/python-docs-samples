@@ -14,14 +14,7 @@
 import synthesize_text
 
 TEXT = 'Hello there.'
-SSML = """<?xml version="1.0"?>
- <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://www.w3.org/2001/10/synthesis
- http://www.w3.org/TR/speech-synthesis/synthesis.xsd" xml:lang="en-US">
- Hello there.
- </speak>
-"""
+SSML = '<speak>Hello there.</speak>'
 
 
 def test_synthesize_text(capsys):

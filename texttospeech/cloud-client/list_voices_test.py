@@ -19,5 +19,5 @@ def test_list_voices(capsys):
     out, err = capsys.readouterr()
 
     assert 'en-US' in out
-    assert 'SSML gender: MALE' in out
-    assert 'SSML gender: FEMALE' in out
+    assert 'SSML Voice Gender: MALE' in out
+    assert 'SSML Voice Gender: FEMALE' in out
