@@ -107,8 +107,8 @@ To run this sample:
     Google Cloud Text-To-Speech API sample application .
 
     Example usage:
-        python synthesize_text.py --text "hello" --output hello.mp3
-        python synthesize_text.py --ssml "<?xml..." --output hello.mp3
+        python synthesize_text.py --text "hello"
+        python synthesize_text.py --ssml "<speak>Hello there.</speak>"
 
     optional arguments:
       -h, --help   show this help message and exit
@@ -137,8 +137,8 @@ To run this sample:
     Google Cloud Text-To-Speech API sample application .
 
     Example usage:
-        python synthesize_file.py --text_file resources/hello.txt
-        python synthesize_file.py --ssml_file resources/hello.ssml
+        python synthesize_file.py --text resources/hello.txt
+        python synthesize_file.py --ssml resources/hello.ssml
 
     optional arguments:
       -h, --help   show this help message and exit

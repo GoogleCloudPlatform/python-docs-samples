@@ -17,8 +17,8 @@
 """Google Cloud Text-To-Speech API sample application .
 
 Example usage:
-    python synthesize_file.py --text_file resources/hello.txt
-    python synthesize_file.py --ssml_file resources/hello.ssml
+    python synthesize_file.py --text resources/hello.txt
+    python synthesize_file.py --ssml resources/hello.ssml
 """
 
 import argparse

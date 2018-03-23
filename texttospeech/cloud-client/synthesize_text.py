@@ -17,8 +17,8 @@
 """Google Cloud Text-To-Speech API sample application .
 
 Example usage:
-    python synthesize_text.py --text "hello" --output hello.mp3
-    python synthesize_text.py --ssml "<?xml..." --output hello.mp3
+    python synthesize_text.py --text "hello"
+    python synthesize_text.py --ssml "<speak>Hello there.</speak>"
 """
 
 import argparse
@@ -57,14 +57,7 @@ def synthesize_ssml(ssml):
     Note: ssml must be well-formed according to:
         https://www.w3.org/TR/speech-synthesis/
 
-    Example:
-        <?xml version="1.0"?>
-         <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://www.w3.org/2001/10/synthesis
-         http://www.w3.org/TR/speech-synthesis/synthesis.xsd" xml:lang="en-US">
-         Hello there.
-        </speak>
+    Example: <speak>Hello there.</speak>
     """
     from google.cloud import texttospeech
     client = texttospeech.TextToSpeechClient()
