@@ -12,6 +12,7 @@
 # limitations under the License.
 
 import os
+
 import synthesize_text
 
 TEXT = 'Hello there.'

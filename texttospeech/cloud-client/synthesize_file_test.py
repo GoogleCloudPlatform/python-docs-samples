@@ -12,6 +12,7 @@
 # limitations under the License.
 
 import os
+
 import synthesize_file
 
 TEXT_FILE = 'resources/hello.txt'
