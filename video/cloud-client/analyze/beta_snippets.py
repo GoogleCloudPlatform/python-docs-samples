@@ -108,10 +108,12 @@ def face_emotions(gcs_uri):
         print('Face {}'.format(i))
 
         frame_emotions = []
-        for frame in face.frames:
+        for j, frame in enumerate(face.frames):
             time_offset = (frame.time_offset.seconds +
                            frame.time_offset.nanos / 1e9)
             emotions = frame.attributes[0].emotions
+
+            print('Face {}, frame {}, time_offset {}\n'.format(i, j, time_offset))
 
             # from videointelligence.enums
             emotion_labels = (
@@ -121,19 +123,15 @@ def face_emotions(gcs_uri):
                 'EMBARRASSMENT', 'INTEREST', 'PRIDE', 'SADNESS',
                 'SURPRISE')
 
-            # every emotion gets a score, here we keep only
-            # the one that scores the highest.
-            most_likely_emotion = max(emotions,
-                key=lambda emotion: emotion.score)
-            score = most_likely_emotion.score
-            emotion_index = most_likely_emotion.emotion
-            emotion_label = emotion_labels[emotion_index]
+            for emotion in emotions:
+                emotion_index = emotion.emotion
+                emotion_label = emotion_labels[emotion_index]
+                emotion_score = emotion.score
 
-            frame_emotions.append((time_offset, emotion_label, score))
+                print('emotion: {} (confidence score: {})'.format(emotion_label, emotion_score))
 
-        for time_offset, emotion_label, score in frame_emotions:
-            print('\t{:04.2f}s: {:14}({:4.3f})'.format(
-                time_offset, emotion_label, score))
+            print('\n')
+
         print('\n')
 # [END video_face_emotions]
 
