@@ -34,7 +34,7 @@ from google.cloud import videointelligence_v1p1beta1 as videointelligence
 
 
 # [START video_face_bounding_boxes]
-def face_bounding_boxes(path):
+def face_bounding_boxes(gcs_uri):
     """ Detects faces' bounding boxes. """
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.enums.Feature.FACE_DETECTION]
@@ -45,7 +45,7 @@ def face_bounding_boxes(path):
         face_detection_config=config)
 
     operation = video_client.annotate_video(
-        path, features=features, video_context=context)
+        gcs_uri, features=features, video_context=context)
     print('\nProcessing video for face annotations:')
 
     result = operation.result(timeout=900)
@@ -85,7 +85,7 @@ def face_bounding_boxes(path):
 
 
 # [START video_face_emotions]
-def face_emotions(path):
+def face_emotions(gcs_uri):
     """ Analyze faces' emotions over frames. """
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.enums.Feature.FACE_DETECTION]
@@ -96,7 +96,7 @@ def face_emotions(path):
         face_detection_config=config)
 
     operation = video_client.annotate_video(
-        path, features=features, video_context=context)
+        gcs_uri, features=features, video_context=context)
     print('\nProcessing video for face annotations:')
 
     result = operation.result(timeout=600)
@@ -185,21 +185,21 @@ if __name__ == '__main__':
     subparsers = parser.add_subparsers(dest='command')
     analyze_faces_parser = subparsers.add_parser(
         'boxes', help=face_bounding_boxes.__doc__)
-    analyze_faces_parser.add_argument('path')
+    analyze_faces_parser.add_argument('gcs_uri')
 
     analyze_emotions_parser = subparsers.add_parser(
         'emotions', help=face_emotions.__doc__)
-    analyze_emotions_parser.add_argument('path')
+    analyze_emotions_parser.add_argument('gcs_uri')
 
     speech_transcription_parser = subparsers.add_parser(
         'transcription', help=speech_transcription.__doc__)
-    speech_transcription_parser.add_argument('path')
+    speech_transcription_parser.add_argument('gcs_uri')
 
     args = parser.parse_args()
 
     if args.command == 'boxes':
-        face_bounding_boxes(args.path)
+        face_bounding_boxes(args.gcs_uri)
     elif args.command == 'emotions':
-        face_emotions(args.path)
+        face_emotions(args.gcs_uri)
     elif args.command == 'transcription':
-        speech_transcription(args.path)
+        speech_transcription(args.gcs_uri)
