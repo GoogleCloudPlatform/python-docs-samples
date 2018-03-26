@@ -11,6 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import synthesize_text
 
 TEXT = 'Hello there.'
@@ -22,6 +23,8 @@ def test_synthesize_text(capsys):
     out, err = capsys.readouterr()
 
     assert 'Audio content written to file' in out
+    statinfo = os.stat('output.mp3')
+    assert statinfo.st_size > 0
 
 
 def test_synthesize_ssml(capsys):
@@ -29,3 +32,5 @@ def test_synthesize_ssml(capsys):
     out, err = capsys.readouterr()
 
     assert 'Audio content written to file' in out
+    statinfo = os.stat('output.mp3')
+    assert statinfo.st_size > 0
