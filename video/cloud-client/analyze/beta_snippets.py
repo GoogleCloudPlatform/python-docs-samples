@@ -105,15 +105,13 @@ def face_emotions(gcs_uri):
     # There is only one result because a single video was processed.
     faces = result.annotation_results[0].face_detection_annotations
     for i, face in enumerate(faces):
-        print('Face {}'.format(i))
-
-        frame_emotions = []
         for j, frame in enumerate(face.frames):
             time_offset = (frame.time_offset.seconds +
                            frame.time_offset.nanos / 1e9)
             emotions = frame.attributes[0].emotions
 
-            print('Face {}, frame {}, time_offset {}\n'.format(i, j, time_offset))
+            print('Face {}, frame {}, time_offset {}\n'.format(
+                i, j, time_offset))
 
             # from videointelligence.enums
             emotion_labels = (
@@ -128,7 +126,8 @@ def face_emotions(gcs_uri):
                 emotion_label = emotion_labels[emotion_index]
                 emotion_score = emotion.score
 
-                print('emotion: {} (confidence score: {})'.format(emotion_label, emotion_score))
+                print('emotion: {} (confidence score: {})'.format(
+                    emotion_label, emotion_score))
 
             print('\n')
 
