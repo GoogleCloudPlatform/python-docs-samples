@@ -121,6 +121,8 @@ def face_emotions(path):
                 'EMBARRASSMENT', 'INTEREST', 'PRIDE', 'SADNESS',
                 'SURPRISE')
 
+            # every emotion gets a score, here we sort them by
+            # scores and keep only the one that scores the highest.
             emotion, score = sorted(
                 [(em.emotion, em.score) for em in emotions],
                 key=lambda p: p[1])[-1]
