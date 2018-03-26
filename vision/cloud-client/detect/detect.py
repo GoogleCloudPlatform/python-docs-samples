@@ -155,8 +155,8 @@ def detect_landmarks(path):
         print(landmark.description)
         for location in landmark.locations:
             lat_lng = location.lat_lng
-            print('Latitude'.format(lat_lng.latitude))
-            print('Longitude'.format(lat_lng.longitude))
+            print('Latitude {}'.format(lat_lng.latitude))
+            print('Longitude {}'.format(lat_lng.longitude))
     # [END migration_landmark_detection]
 # [END def_detect_landmarks]
 
