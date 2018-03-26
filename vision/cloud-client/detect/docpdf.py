@@ -26,8 +26,8 @@ import argparse
 import json
 import re
 
-from google.cloud import vision_v1p2beta1 as vision
 from google.cloud import storage
+from google.cloud import vision_v1p2beta1 as vision
 from google.protobuf import json_format
 
 
