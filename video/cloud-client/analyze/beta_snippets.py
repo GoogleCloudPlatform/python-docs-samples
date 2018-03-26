@@ -123,7 +123,8 @@ def face_emotions(gcs_uri):
 
             # every emotion gets a score, here we sort them by
             # scores and keep only the one that scores the highest.
-            most_likely_emotion = sorted(emotions, key=lambda em: em.score)[-1]
+            most_likely_emotion = max(emotions,
+                key=lambda emotion: emotion.score)
             score = most_likely_emotion.score
             emotion_index = most_likely_emotion.emotion
             emotion_label = emotion_labels[emotion_index]
