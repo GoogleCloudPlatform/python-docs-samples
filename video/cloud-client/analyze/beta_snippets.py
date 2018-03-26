@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This application demonstrates face detection, label detection,
-explicit content, and shot change detection using the Google Cloud API.
+"""This application demonstrates face detection, face emotions
+and speech transcription using the Google Cloud API.
 
 Usage Examples:
     python beta_snippets.py boxes \
@@ -65,8 +65,8 @@ def face_bounding_boxes(path):
         positions = '{}s to {}s'.format(start_time, end_time)
         print('\tSegment: {}\n'.format(positions))
 
-        # There are typically many frames for each face,
-        # here we print information on only the first frame.
+        # Each detected may appear in many frames of the video.
+        # Here we process only the first frame.
         frame = face.frames[0]
 
         time_offset = (frame.time_offset.seconds +
@@ -90,10 +90,7 @@ def face_emotions(path):
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.enums.Feature.FACE_DETECTION]
 
-    # include_bounding_boxes must be set to True for include_emotions
-    # to work.
     config = videointelligence.types.FaceConfig(
-        include_bounding_boxes=True,
         include_emotions=True)
     context = videointelligence.types.VideoContext(
         face_detection_config=config)
@@ -131,7 +128,6 @@ def face_emotions(path):
 
             frame_emotions.append((time_offset, emotion_label, score))
 
-        frame_emotions = sorted(frame_emotions, key=lambda p: p[0])
         for time_offset, emotion_label, score in frame_emotions:
             print('\t{:04.2f}s: {:14}({:4.3f})'.format(
                 time_offset, emotion_label, score))
@@ -144,9 +140,7 @@ def speech_transcription(input_uri):
     """Transcribe speech from a video stored on GCS."""
     video_client = videointelligence.VideoIntelligenceServiceClient()
 
-    features = [
-        videointelligence.enums.Feature.SPEECH_TRANSCRIPTION
-    ]
+    features = [videointelligence.enums.Feature.SPEECH_TRANSCRIPTION]
 
     config = videointelligence.types.SpeechTranscriptionConfig(
         language_code='en-US')
@@ -161,6 +155,8 @@ def speech_transcription(input_uri):
 
     result = operation.result(timeout=180)
 
+    # There is only one annotation_result since only
+    # one video is processed.
     annotation_results = result.annotation_results[0]
     speech_transcription = annotation_results.speech_transcriptions[0]
     alternative = speech_transcription.alternatives[0]
