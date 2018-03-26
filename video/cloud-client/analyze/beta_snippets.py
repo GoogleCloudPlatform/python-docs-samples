@@ -65,7 +65,7 @@ def face_bounding_boxes(path):
         positions = '{}s to {}s'.format(start_time, end_time)
         print('\tSegment: {}\n'.format(positions))
 
-        # Each detected may appear in many frames of the video.
+        # Each detected face may appear in many frames of the video.
         # Here we process only the first frame.
         frame = face.frames[0]
 
