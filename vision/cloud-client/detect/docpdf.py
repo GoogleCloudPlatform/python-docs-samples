@@ -36,6 +36,7 @@ def async_detect_document(gcs_source_uri, gcs_destination_uri):
     mime_type = 'application/pdf'
 
     # How many pages should be grouped into each json output file.
+    # With a file of 5 pages
     batch_size = 2
 
     client = vision.ImageAnnotatorClient()
@@ -57,22 +58,29 @@ def async_detect_document(gcs_source_uri, gcs_destination_uri):
         requests=[async_request])
 
     print('Waiting for the operation to finish.')
-    result = operation.result(90)
+    result = operation.result(timeout=90)
 
-    # Retrieve the first output file from GCS
+    # Once the request has completed and the output has been
+    # written to GCS, we can list all the output files.
     storage_client = storage.Client()
 
     match = re.match(r'gs://([^/]+)/(.+)', gcs_destination_uri)
     bucket_name = match.group(1)
-    object_name = match.group(2) + 'output-1-to-2.json'
+    prefix = match.group(2)
 
     bucket = storage_client.get_bucket(bucket_name=bucket_name)
-    blob = bucket.blob(blob_name=object_name)
+
+    # List objects with the given prefix.
+    blob_list = list(bucket.list_blobs(prefix=prefix))
+    print(blob_list)
+
+    #Retrieve the first output file from GCS.
+    first_output = blob_list[0]
 
     # Print the full text from the first page.
     # The response additionally includes individual detected symbol's
     # confidence and bounding box.
-    json_string = blob.download_as_string()
+    json_string = first_output.download_as_string()
     response = json.loads(json_string)
 
     first_page = response['responses'][0]
