@@ -206,7 +206,7 @@ def test_insert_data_with_timestamp(temporary_database, capsys):
 
 
 @pytest.fixture(scope='module')
-def temporary_database_with_timestamps(temporary_database):
+def temp_database_with_timestamps(temporary_database):
     snippets.create_table_with_timestamp(
         SPANNER_INSTANCE,
         temporary_database.database_id)
@@ -217,10 +217,10 @@ def temporary_database_with_timestamps(temporary_database):
     yield temporary_database
 
 
-def test_add_timestamp_column(temporary_database, capsys):
+def test_add_timestamp_column(temp_database_with_timestamps, capsys):
     snippets.add_timestamp_column(
         SPANNER_INSTANCE,
-        temporary_database_with_timestamps.database_id)
+        temp_database_with_timestamps.database_id)
 
     out, _ = capsys.readouterr()
 
@@ -228,20 +228,19 @@ def test_add_timestamp_column(temporary_database, capsys):
 
 
 @pytest.fixture(scope='module')
-def temporary_database_with_timestamps_column(
-        temporary_database_with_timestamps):
+def temp_database_with_timestamps_column(temp_database_with_timestamps):
     snippets.add_timestamp_column(
         SPANNER_INSTANCE,
-        temporary_database_with_timestamps.database_id)
+        temp_database_with_timestamps.database_id)
 
     yield temporary_database
 
 
 def test_update_data_with_timestamp(
-        temporary_database_with_timestamps_column, capsys):
+        temp_database_with_timestamps_column, capsys):
     snippets.update_data_with_timestamp(
         SPANNER_INSTANCE,
-        temporary_database_with_timestamps_column.database_id)
+        temp_database_with_timestamps_column.database_id)
 
     out, _ = capsys.readouterr()
 
@@ -249,23 +248,21 @@ def test_update_data_with_timestamp(
 
 
 @pytest.fixture(scope='module')
-def temporary_database_with_timestamps_data(
-        temporary_database_with_timestamps):
-    snippets.add_timestamp_column(
+def temp_database_with_timestamps_data(temp_database_with_timestamps_column):
+    snippets.update_data_with_timestamp(
         SPANNER_INSTANCE,
-        temporary_database_with_timestamps.database_id)
+        temp_database_with_timestamps_column.database_id)
 
     yield temporary_database
 
 
 @pytest.mark.slow
-def test_query_data_with_timestamp(
-        temporary_database_with_timestamps_data, capsys):
+def test_query_data_with_timestamp(temp_database_with_timestamps_data, capsys):
     @eventually_consistent.call
     def _():
         snippets.query_data_with_timestamp(
             SPANNER_INSTANCE,
-            temporary_database_with_timestamps_data.database_id)
+            temp_database_with_timestamps_data.database_id)
 
         out, _ = capsys.readouterr()
 
