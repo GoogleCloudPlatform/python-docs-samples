@@ -46,7 +46,7 @@ def test_create_database(spanner_instance):
     database.drop()
 
 
-@pytest.fixture()
+@pytest.fixture(scope='module')
 def temporary_database(spanner_instance):
     database_id = unique_database_id()
     snippets.create_database(SPANNER_INSTANCE, database_id)
@@ -84,7 +84,7 @@ def test_read_stale_data(temporary_database, capsys):
     assert 'Total Junk' not in out
 
 
-@pytest.fixture()
+@pytest.fixture(scope='module')
 def temporary_database_with_column(temporary_database):
     snippets.add_column(SPANNER_INSTANCE, temporary_database.database_id)
     yield temporary_database
@@ -105,7 +105,7 @@ def test_query_data_with_new_column(temporary_database_with_column, capsys):
     assert 'MarketingBudget' in out
 
 
-@pytest.fixture()
+@pytest.fixture(scope='module')
 def temporary_database_with_indexes(temporary_database_with_column):
     snippets.add_index(
         SPANNER_INSTANCE,
@@ -193,9 +193,6 @@ def test_create_table_with_timestamp(temporary_database, capsys):
 
 
 def test_insert_data_with_timestamp(temporary_database, capsys):
-    snippets.create_table_with_timestamp(
-        SPANNER_INSTANCE,
-        temporary_database.database_id)
     snippets.insert_data_with_timestamp(
         SPANNER_INSTANCE,
         temporary_database.database_id)
@@ -205,64 +202,34 @@ def test_insert_data_with_timestamp(temporary_database, capsys):
     assert 'Inserted data.' in out
 
 
-@pytest.fixture()
-def temp_database_with_timestamps(temporary_database):
-    snippets.create_table_with_timestamp(
-        SPANNER_INSTANCE,
-        temporary_database.database_id)
-    snippets.insert_data_with_timestamp(
-        SPANNER_INSTANCE,
-        temporary_database.database_id)
-
-    yield temporary_database
-
-
-def test_add_timestamp_column(temp_database_with_timestamps, capsys):
+def test_add_timestamp_column(temporary_database, capsys):
     snippets.add_timestamp_column(
         SPANNER_INSTANCE,
-        temp_database_with_timestamps.database_id)
+        temporary_database.database_id)
 
     out, _ = capsys.readouterr()
 
     assert 'Albums' in out
 
 
-@pytest.fixture()
-def temp_database_with_timestamps_column(temp_database_with_timestamps):
-    snippets.add_timestamp_column(
-        SPANNER_INSTANCE,
-        temp_database_with_timestamps.database_id)
-
-    yield temporary_database
-
-
-def test_update_data_with_timestamp(
-        temp_database_with_timestamps_column, capsys):
+@pytest.mark.slow
+def test_update_data_with_timestamp(temporary_database, capsys):
     snippets.update_data_with_timestamp(
         SPANNER_INSTANCE,
-        temp_database_with_timestamps_column.database_id)
+        temporary_database.database_id)
 
     out, _ = capsys.readouterr()
 
     assert 'Updated data.' in out
 
 
-@pytest.fixture()
-def temp_database_with_timestamps_data(temp_database_with_timestamps_column):
-    snippets.update_data_with_timestamp(
-        SPANNER_INSTANCE,
-        temp_database_with_timestamps_column.database_id)
-
-    yield temporary_database
-
-
 @pytest.mark.slow
-def test_query_data_with_timestamp(temp_database_with_timestamps_data, capsys):
+def test_query_data_with_timestamp(temporary_database, capsys):
     @eventually_consistent.call
     def _():
         snippets.query_data_with_timestamp(
             SPANNER_INSTANCE,
-            temp_database_with_timestamps_data.database_id)
+            temporary_database.database_id)
 
         out, _ = capsys.readouterr()
 
