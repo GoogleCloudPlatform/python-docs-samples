@@ -473,8 +473,9 @@ def create_table_with_timestamp(instance_id, database_id):
             SingerId     INT64 NOT NULL,
             VenueId      INT64 NOT NULL,
             EventDate    Date,
-            Revenue     INT64, 
-            LastUpdateTime TIMESTAMP NOT NULL OPTIONS(allow_commit_timestamp=true)
+            Revenue      INT64,
+            LastUpdateTime TIMESTAMP NOT NULL
+            OPTIONS(allow_commit_timestamp=true)
         ) PRIMARY KEY (SingerId, VenueId, EventDate),
           INTERLEAVE IN PARENT Singers ON DELETE CASCADE"""
     ])
@@ -499,7 +500,9 @@ def insert_data_with_timestamp(instance_id, database_id):
     with database.batch() as batch:
         batch.insert(
             table='Performances',
-            columns=('SingerId', 'VenueId', 'EventDate', 'Revenue', 'LastUpdateTime',),
+            columns=(
+                'SingerId', 'VenueId', 'EventDate',
+                'Revenue', 'LastUpdateTime',),
             values=[
                 (1, 4, "2017-10-05", 11000, spanner.COMMIT_TIMESTAMP),
                 (1, 19, "2017-11-02", 15000, spanner.COMMIT_TIMESTAMP),
@@ -511,7 +514,9 @@ def insert_data_with_timestamp(instance_id, database_id):
 
 # [START spanner_add_timestamp_column]
 def add_timestamp_column(instance_id, database_id):
-    """Adds a new TIMESTAMP column to the Albums table in the example database."""
+    """
+    Adds a new TIMESTAMP column to the Albums table in the example database.
+    """
     spanner_client = spanner.Client()
     instance = spanner_client.instance(instance_id)
 
@@ -531,7 +536,8 @@ def add_timestamp_column(instance_id, database_id):
 
 # [START spanner_update_data_with_timestamp_column]
 def update_data_with_timestamp(instance_id, database_id):
-    """Updates Performances tables in the database with the COMMIT_TIMESTAMP column.
+    """Updates Performances tables in the database with the COMMIT_TIMESTAMP
+    column.
 
     This updates the `MarketingBudget` column which must be created before
     running this sample. You can add the column by running the `add_column`
@@ -592,7 +598,7 @@ def query_data_with_timestamp(instance_id, database_id):
 # [END spanner_query_data_with_timestamp_column]
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # noqa: C901
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -627,12 +633,17 @@ if __name__ == '__main__':
     subparsers.add_parser('add_storing_index', help=add_storing_index.__doc__)
     subparsers.add_parser(
         'read_data_with_storing_index', help=insert_data.__doc__)
-    subparsers.add_parser('create_table_with_timestamp', help=create_table_with_timestamp.__doc__)
-    subparsers.add_parser('insert_data_with_timestamp', help=insert_data_with_timestamp.__doc__)
-    subparsers.add_parser('add_timestamp_column', help=add_timestamp_column.__doc__)
-    subparsers.add_parser('update_data_with_timestamp', help=update_data_with_timestamp.__doc__)
-    subparsers.add_parser('query_data_with_timestamp', help=query_data_with_timestamp.__doc__)
-
+    subparsers.add_parser(
+        'create_table_with_timestamp',
+        help=create_table_with_timestamp.__doc__)
+    subparsers.add_parser(
+        'insert_data_with_timestamp', help=insert_data_with_timestamp.__doc__)
+    subparsers.add_parser(
+        'add_timestamp_column', help=add_timestamp_column.__doc__)
+    subparsers.add_parser(
+        'update_data_with_timestamp', help=update_data_with_timestamp.__doc__)
+    subparsers.add_parser(
+        'query_data_with_timestamp', help=query_data_with_timestamp.__doc__)
 
     args = parser.parse_args()
 

@@ -228,7 +228,8 @@ def test_add_timestamp_column(temporary_database, capsys):
 
 
 @pytest.fixture(scope='module')
-def temporary_database_with_timestamps_column(temporary_database_with_timestamps):
+def temporary_database_with_timestamps_column(
+        temporary_database_with_timestamps):
     snippets.add_timestamp_column(
         SPANNER_INSTANCE,
         temporary_database_with_timestamps.database_id)
@@ -236,7 +237,8 @@ def temporary_database_with_timestamps_column(temporary_database_with_timestamps
     yield temporary_database
 
 
-def test_update_data_with_timestamp(temporary_database_with_timestamps, capsys):
+def test_update_data_with_timestamp(
+        temporary_database_with_timestamps_column, capsys):
     snippets.update_data_with_timestamp(
         SPANNER_INSTANCE,
         temporary_database_with_timestamps_column.database_id)
@@ -247,7 +249,8 @@ def test_update_data_with_timestamp(temporary_database_with_timestamps, capsys):
 
 
 @pytest.fixture(scope='module')
-def temporary_database_with_timestamps_data(temporary_database_with_timestamps):
+def temporary_database_with_timestamps_data(
+        temporary_database_with_timestamps):
     snippets.add_timestamp_column(
         SPANNER_INSTANCE,
         temporary_database_with_timestamps.database_id)
@@ -256,7 +259,8 @@ def temporary_database_with_timestamps_data(temporary_database_with_timestamps):
 
 
 @pytest.mark.slow
-def test_query_data_with_timestamp(temporary_database_with_timestamps_data, capsys):
+def test_query_data_with_timestamp(
+        temporary_database_with_timestamps_data, capsys):
     @eventually_consistent.call
     def _():
         snippets.query_data_with_timestamp(
@@ -266,4 +270,3 @@ def test_query_data_with_timestamp(temporary_database_with_timestamps_data, caps
         out, _ = capsys.readouterr()
 
         assert 'Go, Go, Go' in out
-
