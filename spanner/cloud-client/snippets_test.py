@@ -180,3 +180,57 @@ def test_read_only_transaction(temporary_database, capsys):
         out, _ = capsys.readouterr()
 
         assert 'Forever Hold Your Peace' in out
+
+
+def test_create_table_with_timestamp(temporary_database, capsys):
+    snippets.create_table_with_timestamp(
+        SPANNER_INSTANCE,
+        temporary_database.database_id)
+
+    out, _ = capsys.readouterr()
+
+    assert 'Performances' in out
+
+
+def test_insert_data_with_timestamp(temporary_database, capsys):
+    snippets.insert_data_with_timestamp(
+        SPANNER_INSTANCE,
+        temporary_database.database_id)
+
+    out, _ = capsys.readouterr()
+
+    assert 'Inserted data.' in out
+
+
+def test_add_timestamp_column(temporary_database, capsys):
+    snippets.add_timestamp_column(
+        SPANNER_INSTANCE,
+        temporary_database.database_id)
+
+    out, _ = capsys.readouterr()
+
+    assert 'Albums' in out
+
+
+@pytest.mark.slow
+def test_update_data_with_timestamp(temporary_database, capsys):
+    snippets.update_data_with_timestamp(
+        SPANNER_INSTANCE,
+        temporary_database.database_id)
+
+    out, _ = capsys.readouterr()
+
+    assert 'Updated data.' in out
+
+
+@pytest.mark.slow
+def test_query_data_with_timestamp(temporary_database, capsys):
+    @eventually_consistent.call
+    def _():
+        snippets.query_data_with_timestamp(
+            SPANNER_INSTANCE,
+            temporary_database.database_id)
+
+        out, _ = capsys.readouterr()
+
+        assert 'Go, Go, Go' in out
