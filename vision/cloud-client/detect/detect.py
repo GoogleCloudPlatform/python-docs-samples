@@ -585,28 +585,22 @@ def detect_document(path):
 
     for page in response.full_text_annotation.pages:
         for block in page.blocks:
-            block_words = []
+            print('\nBlock confidence: {}\n'.format(block.confidence))
+
             for paragraph in block.paragraphs:
-                block_words.extend(paragraph.words)
-                print(u'Paragraph Confidence: {}\n'.format(
+                print('Paragraph confidence: {}'.format(
                     paragraph.confidence))
 
-            block_text = ''
-            block_symbols = []
-            for word in block_words:
-                block_symbols.extend(word.symbols)
-                word_text = ''
-                for symbol in word.symbols:
-                    word_text = word_text + symbol.text
-                    print(u'\tSymbol text: {} (confidence: {})'.format(
-                        symbol.text, symbol.confidence))
-                print(u'Word text: {} (confidence: {})\n'.format(
-                    word_text, word.confidence))
+                for word in paragraph.words:
+                    word_text = ''.join([
+                        symbol.text for symbol in word.symbols
+                    ])
+                    print('Word text: {} (confidence: {})'.format(
+                        word_text, word.confidence))
 
-                block_text += ' ' + word_text
-
-            print(u'Block Content: {}\n'.format(block_text))
-            print(u'Block Confidence:\n {}\n'.format(block.confidence))
+                    for symbol in word.symbols:
+                        print('\tSymbol: {} (confidence: {})'.format(
+                            symbol.text, symbol.confidence))
     # [END migration_document_text_detection]
 # [END def_detect_document]
 
@@ -623,28 +617,22 @@ def detect_document_uri(uri):
 
     for page in response.full_text_annotation.pages:
         for block in page.blocks:
-            block_words = []
+            print('\nBlock confidence: {}\n'.format(block.confidence))
+
             for paragraph in block.paragraphs:
-                block_words.extend(paragraph.words)
-                print(u'Paragraph Confidence: {}\n'.format(
+                print('Paragraph confidence: {}'.format(
                     paragraph.confidence))
 
-            block_text = ''
-            block_symbols = []
-            for word in block_words:
-                block_symbols.extend(word.symbols)
-                word_text = ''
-                for symbol in word.symbols:
-                    word_text = word_text + symbol.text
-                    print(u'\tSymbol text: {} (confidence: {})'.format(
-                        symbol.text, symbol.confidence))
-                print(u'Word text: {} (confidence: {})\n'.format(
-                    word_text, word.confidence))
+                for word in paragraph.words:
+                    word_text = ''.join([
+                        symbol.text for symbol in word.symbols
+                    ])
+                    print('Word text: {} (confidence: {})'.format(
+                        word_text, word.confidence))
 
-                block_text += ' ' + word_text
-
-            print(u'Block Content: {}\n'.format(block_text))
-            print(u'Block Confidence:\n {}\n'.format(block.confidence))
+                    for symbol in word.symbols:
+                        print('\tSymbol: {} (confidence: {})'.format(
+                            symbol.text, symbol.confidence))
 # [END def_detect_document_uri]
 
 
