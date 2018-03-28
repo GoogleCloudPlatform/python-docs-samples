@@ -49,13 +49,10 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
 
     ```bash
     gcloud endpoints services deploy api_descriptor.pb api_config.yaml
-    # The Config ID should be printed out, looks like: 2017-02-01r0, remember this
 
     # Set your project ID as a variable to make commands easier:
     GCLOUD_PROJECT=<Your Project ID>
 
-    # Print out your Config ID again, in case you missed it:
-    gcloud endpoints configs list --service hellogrpc.endpoints.${GCLOUD_PROJECT}.cloud.goog
     ```
 
 1. Also get an API key from the Console's API Manager for use in the
