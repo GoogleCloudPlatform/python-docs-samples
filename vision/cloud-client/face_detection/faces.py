@@ -22,7 +22,7 @@ import argparse
 from google.cloud import vision
 # [END import_client_library]
 from google.cloud.vision import types
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 
 # [START def_detect_face]
@@ -59,12 +59,22 @@ def highlight_faces(image, faces, output_filename):
     """
     im = Image.open(image)
     draw = ImageDraw.Draw(im)
-
+    
+    # Sepecify the font-family and the font-size
+    font = ImageFont.truetype("arial.ttf", 25)
+    
     for face in faces:
         box = [(vertex.x, vertex.y)
                for vertex in face.bounding_poly.vertices]
         draw.line(box + [box[0]], width=5, fill='#00ff00')
-
+        
+        # Place the confidence value/score of the detected faces above the 
+        # detection box in the output image
+        draw.text(((face.bounding_poly.vertices)[0].x,
+                   (face.bounding_poly.vertices)[0].y - 30),
+                  str(format(face.detection_confidence, '.3f')) + '%',
+                  font=font, fill='#FF0000')
+        
     im.save(output_filename)
 # [END def_highlight_faces]
 
