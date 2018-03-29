@@ -18,12 +18,12 @@
 """OCR with PDF/TIFF as source files on GCS
 
 Example:
-    python docpdf.py --gcs-source-uri gs://python-docs-samples-tests/HodgeConj.pdf \
+    python detect_pdf.py \
+    --gcs-source-uri gs://python-docs-samples-tests/HodgeConj.pdf \
     --gcs-destination-uri gs://BUCKET_NAME/OCR/
 """
 
 import argparse
-import json
 import re
 
 from google.cloud import storage
@@ -31,6 +31,7 @@ from google.cloud import vision_v1p2beta1 as vision
 from google.protobuf import json_format
 
 
+# [START vision_async_detect_document_ocr]
 def async_detect_document(gcs_source_uri, gcs_destination_uri):
     # Supported mime_types are: 'application/pdf' and 'image/tiff'
     mime_type = 'application/pdf'
@@ -49,16 +50,18 @@ def async_detect_document(gcs_source_uri, gcs_destination_uri):
         gcs_source=gcs_source, mime_type=mime_type)
 
     gcs_destination = vision.types.GcsDestination(uri=gcs_destination_uri)
-    output_config = vision.types.OutputConfig(gcs_destination=gcs_destination, batch_size=batch_size)
+    output_config = vision.types.OutputConfig(
+        gcs_destination=gcs_destination, batch_size=batch_size)
 
     async_request = vision.types.AsyncAnnotateFileRequest(
-        features=[feature], input_config=input_config, output_config=output_config)
+        features=[feature], input_config=input_config,
+        output_config=output_config)
 
     operation = client.async_batch_annotate_files(
         requests=[async_request])
 
     print('Waiting for the operation to finish.')
-    result = operation.result(timeout=90)
+    operation.result(timeout=90)
 
     # Once the request has completed and the output has been
     # written to GCS, we can list all the output files.
@@ -72,19 +75,29 @@ def async_detect_document(gcs_source_uri, gcs_destination_uri):
 
     # List objects with the given prefix.
     blob_list = list(bucket.list_blobs(prefix=prefix))
-    print(blob_list)
+    print('Output files:')
+    for blob in blob_list:
+        print(blob.name)
 
-    #Retrieve the first output file from GCS.
-    first_output = blob_list[0]
+    # Process the first output file from GCS.
+    # Since we specified batch_size=2, the first response contains
+    # the first two pages of the input file.
+    output = blob_list[0]
+
+    json_string = output.download_as_string()
+    response = json_format.Parse(
+        json_string, vision.types.AnnotateFileResponse())
+
+    # The actual response for the first page of the input file.
+    first_page_response = response.responses[0]
 
     # Print the full text from the first page.
     # The response additionally includes individual detected symbol's
     # confidence and bounding box.
-    json_string = first_output.download_as_string()
-    response = json.loads(json_string)
+    print(u'Full text:\n{}'.format(
+        first_page_response.full_text_annotation.text))
 
-    first_page = response['responses'][0]
-    print(first_page['fullTextAnnotation']['text'])
+# [END vision_async_detect_document_ocr]
 
 
 if __name__ == '__main__':
@@ -94,4 +107,3 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     async_detect_document(args.gcs_source_uri, args.gcs_destination_uri)
-
