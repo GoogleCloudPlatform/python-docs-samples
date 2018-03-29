@@ -186,7 +186,7 @@ if __name__ == '__main__':
         'list-datasets', help=list_datasets.__doc__)
 
     create_dataset_parser = subparsers.add_parser(
-        'list-datasets', help=list_datasets.__doc__)
+        'create_dataset', help=create_dataset.__doc__)
     create_dataset_parser.add_argument('dataset_id')
 
     list_tables_parser = subparsers.add_parser(
