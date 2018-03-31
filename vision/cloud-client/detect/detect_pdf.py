@@ -20,7 +20,7 @@
 Example:
     python detect_pdf.py \
     --gcs-source-uri gs://python-docs-samples-tests/HodgeConj.pdf \
-    --gcs-destination-uri gs://BUCKET_NAME/OCR/
+    --gcs-destination-uri gs://BUCKET_NAME/PREFIX/
 """
 
 import argparse
@@ -90,31 +90,14 @@ def async_detect_document(gcs_source_uri, gcs_destination_uri):
 
     # The actual response for the first page of the input file.
     first_page_response = response.responses[0]
+    annotation = first_page_response.full_text_annotation
 
-    # Print the full text from the first page.
+    # Here we print the full text from the first page.
+    # The response contains more information:
+    # annotation/pages/blocks/paragraphs/words/symbols
+    # including conficence score and bounding boxes
     print(u'Full text:\n{}'.format(
-        first_page_response.full_text_annotation.text))
-
-    # The response additionally includes individual detected symbol's
-    # confidence and bounding box.
-    for page in first_page_response.full_text_annotation.pages:
-        for block in page.blocks:
-            print('\nBlock confidence: {}\n'.format(block.confidence))
-
-            for paragraph in block.paragraphs:
-                print('Paragraph confidence: {}'.format(
-                    paragraph.confidence))
-
-                for word in paragraph.words:
-                    word_text = ''.join([
-                        symbol.text for symbol in word.symbols
-                    ])
-                    print(u'Word text: {} (confidence: {})'.format(
-                        word_text, word.confidence))
-
-                    for symbol in word.symbols:
-                        print(u'\tSymbol: {} (confidence: {})'.format(
-                            symbol.text, symbol.confidence))
+        annotation.text))
 # [END vision_async_detect_document_ocr]
 
 
