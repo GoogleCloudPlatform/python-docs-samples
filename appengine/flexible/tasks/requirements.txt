@@ -1,5 +1,5 @@
 Flask==0.12.2
-google-api-python-client==1.6.5
+google-api-python-client==1.6.6
 google-auth==1.4.1
 google-auth-httplib2==0.0.3
 google-cloud-datastore==1.6.0
