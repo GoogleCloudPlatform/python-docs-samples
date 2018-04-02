@@ -6,12 +6,12 @@ mock==2.0.0
 mysql-python==1.2.5; python_version < "3.0"
 PyCrypto==2.6.1
 pytest-cov==2.5.1
-pytest==3.4.2
+pytest==3.5.0
 pyyaml==3.12
 responses==0.8.1
 WebTest==2.0.29
 webapp2==2.5.2
-google-api-python-client==1.6.5
+google-api-python-client==1.6.6
 google-cloud-core==0.28.1
 gcp-devrel-py-tools==0.0.13
 flask==0.12.2
