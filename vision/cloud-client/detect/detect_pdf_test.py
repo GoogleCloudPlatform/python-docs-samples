@@ -26,7 +26,7 @@ GCS_DESTINATION_URI = 'gs://{}/{}/'.format(BUCKET, OUTPUT_PREFIX)
 
 def test_async_detect_document(capsys):
     async_detect_document(gcs_source_uri=GCS_SOURCE_URI,
-    	gcs_destination_uri=GCS_DESTINATION_URI)
+        gcs_destination_uri=GCS_DESTINATION_URI)
     out, _ = capsys.readouterr()
 
     assert 'Hodge conjecture' in out
@@ -34,4 +34,4 @@ def test_async_detect_document(capsys):
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(BUCKET)
     for blob in bucket.list_blobs(prefix=OUTPUT_PREFIX):
-    	blob.delete()
+        blob.delete()
