@@ -95,7 +95,7 @@ def async_detect_document(gcs_source_uri, gcs_destination_uri):
     # Here we print the full text from the first page.
     # The response contains more information:
     # annotation/pages/blocks/paragraphs/words/symbols
-    # including conficence score and bounding boxes
+    # including confidence scores and bounding boxes
     print(u'Full text:\n{}'.format(
         annotation.text))
 # [END vision_async_detect_document_ocr]
