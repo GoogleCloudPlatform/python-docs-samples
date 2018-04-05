@@ -12,20 +12,11 @@
 # limitations under the License.
 
 import os
-import re
 
-from beta_snippets import (transcribe_file_without_data_sharing,
+from beta_snippets import (
     transcribe_file_with_enhanced_model, transcribe_file_with_metadata)
 
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
-
-
-def test_transcribe_file_without_data_sharing(capsys):
-    transcribe_file_without_data_sharing(
-        os.path.join(RESOURCES, 'audio.raw'))
-    out, _ = capsys.readouterr()
-
-    assert 'Bridge' in out
 
 
 def test_transcribe_file_with_enhanced_model(capsys):
@@ -42,6 +33,3 @@ def test_transcribe_file_with_metadata(capsys):
     out, _ = capsys.readouterr()
 
     assert 'Chrome' in out
-
-
-

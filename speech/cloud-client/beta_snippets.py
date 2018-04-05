@@ -14,7 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Google Cloud Speech API sample that demonstrates enhanced models and recognition metadata.
+"""Google Cloud Speech API sample that demonstrates enhanced models
+and recognition metadata.
 
 Example usage:
     python beta_snippets.py enhanced-model resources/commercial_mono.wav
@@ -68,9 +69,12 @@ def transcribe_file_with_metadata(path):
     # Most metadata fields are specified as enums that can be found
     # in speech.enums.RecognitionMetadata
     metadata = speech.types.RecognitionMetadata()
-    metadata.interaction_type = speech.enums.RecognitionMetadata.InteractionType.DISCUSSION
-    metadata.microphone_distance = speech.enums.RecognitionMetadata.MicrophoneDistance.NEARFIELD
-    metadata.recording_device_type = speech.enums.RecognitionMetadata.RecordingDeviceType.SMARTPHONE
+    metadata.interaction_type = (
+        speech.enums.RecognitionMetadata.InteractionType.DISCUSSION)
+    metadata.microphone_distance = (
+        speech.enums.RecognitionMetadata.MicrophoneDistance.NEARFIELD)
+    metadata.recording_device_type = (
+        speech.enums.RecognitionMetadata.RecordingDeviceType.SMARTPHONE)
     # Some metadata fields are free form strings
     metadata.recording_device_name = "Pixel 2 XL"
     # And some are integers, for instance the 6 digit NAICS code
