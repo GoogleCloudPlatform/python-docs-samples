@@ -78,6 +78,7 @@ paths:
 
 definitions:
   echoMessage:
+    type: "object"
     properties:
       message:
         type: "string"
