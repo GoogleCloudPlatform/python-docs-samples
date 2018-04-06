@@ -14,7 +14,7 @@ This directory contains samples for Google Stackdriver Monitoring API. Stackdriv
 
 
 
-.. _Google Stackdriver Monitoring API: https://cloud.google.com/monitoring/docs/ 
+.. _Google Stackdriver Monitoring API: https://cloud.google.com/monitoring/docs/
 
 Setup
 -------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=monitoring/api/v3/cloud-client/quickstart.py;monitoring/api/v3/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=monitoring/api/v3/cloud-client/quickstart.py,monitoring/api/v3/cloud-client/README.rst
 
 
 
@@ -77,7 +77,7 @@ Snippets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=monitoring/api/v3/cloud-client/snippets.py;monitoring/api/v3/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=monitoring/api/v3/cloud-client/snippets.py,monitoring/api/v3/cloud-client/README.rst
 
 
 

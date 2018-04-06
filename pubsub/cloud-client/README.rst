@@ -12,7 +12,7 @@ This directory contains samples for Google Cloud Pub/Sub. `Google Cloud Pub/Sub`
 
 
 
-.. _Google Cloud Pub/Sub: https://cloud.google.com/pubsub/docs 
+.. _Google Cloud Pub/Sub: https://cloud.google.com/pubsub/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -59,7 +59,7 @@ Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=pubsub/cloud-client/quickstart.py;pubsub/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=pubsub/cloud-client/quickstart.py,pubsub/cloud-client/README.rst
 
 
 
@@ -75,7 +75,7 @@ Publisher
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=pubsub/cloud-client/publisher.py;pubsub/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=pubsub/cloud-client/publisher.py,pubsub/cloud-client/README.rst
 
 
 
@@ -88,7 +88,7 @@ To run this sample:
 
     usage: publisher.py [-h]
                         project
-                        {list,create,delete,publish,publish-with-futures,publish-with-batch-settings}
+                        {list,create,delete,publish,publish-with-custom-attributes,publish-with-futures,publish-with-batch-settings}
                         ...
 
     This application demonstrates how to perform basic operations on topics
@@ -99,11 +99,14 @@ To run this sample:
 
     positional arguments:
       project               Your Google Cloud project ID
-      {list,create,delete,publish,publish-with-futures,publish-with-batch-settings}
+      {list,create,delete,publish,publish-with-custom-attributes,publish-with-futures,publish-with-batch-settings}
         list                Lists all Pub/Sub topics in the given project.
         create              Create a new Pub/Sub topic.
         delete              Deletes an existing Pub/Sub topic.
         publish             Publishes multiple messages to a Pub/Sub topic.
+        publish-with-custom-attributes
+                            Publishes multiple messages with custom attributes to
+                            a Pub/Sub topic.
         publish-with-futures
                             Publishes multiple messages to a Pub/Sub topic and
                             prints their message IDs.
@@ -120,7 +123,7 @@ Subscribers
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=pubsub/cloud-client/subscriber.py;pubsub/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=pubsub/cloud-client/subscriber.py,pubsub/cloud-client/README.rst
 
 
 
@@ -133,7 +136,7 @@ To run this sample:
 
     usage: subscriber.py [-h]
                          project
-                         {list_in_topic,list_in_project,create,delete,receive,receive-flow-control}
+                         {list_in_topic,list_in_project,create,create-push,delete,update,receive,receive-custom-attributes,receive-flow-control,listen_for_errors}
                          ...
 
     This application demonstrates how to perform basic operations on
@@ -144,15 +147,27 @@ To run this sample:
 
     positional arguments:
       project               Your Google Cloud project ID
-      {list_in_topic,list_in_project,create,delete,receive,receive-flow-control}
+      {list_in_topic,list_in_project,create,create-push,delete,update,receive,receive-custom-attributes,receive-flow-control,listen_for_errors}
         list_in_topic       Lists all subscriptions for a given topic.
         list_in_project     Lists all subscriptions in the current project.
         create              Create a new pull subscription on the given topic.
+        create-push         Create a new push subscription on the given topic. For
+                            example, endpoint is "https://my-test-
+                            project.appspot.com/push".
         delete              Deletes an existing Pub/Sub topic.
+        update              Updates an existing Pub/Sub subscription's push
+                            endpoint URL. Note that certain properties of a
+                            subscription, such as its topic, are not modifiable.
+                            For example, endpoint is "https://my-test-
+                            project.appspot.com/push".
         receive             Receives messages from a pull subscription.
+        receive-custom-attributes
+                            Receives messages from a pull subscription.
         receive-flow-control
                             Receives messages from a pull subscription with flow
                             control.
+        listen_for_errors   Receives messages and catches errors from a pull
+                            subscription.
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -163,7 +178,7 @@ Identity and Access Management
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=pubsub/cloud-client/iam.py;pubsub/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=pubsub/cloud-client/iam.py,pubsub/cloud-client/README.rst
 
 
 
