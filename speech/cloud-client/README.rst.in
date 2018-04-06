@@ -34,6 +34,9 @@ samples:
 - name: Transcribe Streaming
   file: transcribe_streaming.py
   show_help: true
+- name: Beta Samples
+  file: beta_snippets.py
+  show_help: true
 
 cloud_client_library: true
 
