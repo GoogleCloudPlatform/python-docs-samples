@@ -17,8 +17,8 @@
 import os
 
 import beta_snippets
-import pytest
 
+import pytest
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 FILE_PATH = 'video/googlework_short.mp4'

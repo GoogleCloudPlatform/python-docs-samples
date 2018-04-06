@@ -14,7 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This application demonstrates speech transcription using the Google Cloud API.
+"""This application demonstrates speech transcription using the
+Google Cloud API.
 
 Usage Examples:
     python beta_snippets.py \
