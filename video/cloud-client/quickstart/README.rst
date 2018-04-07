@@ -12,7 +12,7 @@ This directory contains samples for Google Cloud Video Intelligence API. `Google
 
 
 
-.. _Google Cloud Video Intelligence API: https://cloud.google.com/video-intelligence/docs 
+.. _Google Cloud Video Intelligence API: https://cloud.google.com/video-intelligence/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -59,7 +59,7 @@ quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=video/cloud-client/quickstart/quickstart.py;video/cloud-client/quickstart/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=video/cloud-client/quickstart/quickstart.py,video/cloud-client/quickstart/README.rst
 
 
 

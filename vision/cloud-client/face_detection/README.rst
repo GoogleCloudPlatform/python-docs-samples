@@ -17,7 +17,7 @@ This directory contains samples for Google Cloud Vision API. `Google Cloud Visio
 This sample demonstrates how to use the Cloud Vision API to do face detection.
 
 
-.. _Google Cloud Vision API: https://cloud.google.com/vision/docs 
+.. _Google Cloud Vision API: https://cloud.google.com/vision/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -64,7 +64,7 @@ Face detection
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=vision/cloud-client/face_detection/faces.py;vision/cloud-client/face_detection/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=vision/cloud-client/face_detection/faces.py,vision/cloud-client/face_detection/README.rst
 
 
 

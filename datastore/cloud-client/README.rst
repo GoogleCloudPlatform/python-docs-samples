@@ -12,7 +12,7 @@ This directory contains samples for Google Cloud Datastore. `Google Cloud Datast
 
 
 
-.. _Google Cloud Datastore: https://cloud.google.com/datastore/docs 
+.. _Google Cloud Datastore: https://cloud.google.com/datastore/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -59,7 +59,7 @@ Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=datastore/cloud-client/quickstart.py;datastore/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=datastore/cloud-client/quickstart.py,datastore/cloud-client/README.rst
 
 
 
@@ -75,7 +75,7 @@ Tasks example app
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=datastore/cloud-client/tasks.py;datastore/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=datastore/cloud-client/tasks.py,datastore/cloud-client/README.rst
 
 
 
@@ -91,7 +91,7 @@ Snippets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=datastore/cloud-client/snippets.py;datastore/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=datastore/cloud-client/snippets.py,datastore/cloud-client/README.rst
 
 
 

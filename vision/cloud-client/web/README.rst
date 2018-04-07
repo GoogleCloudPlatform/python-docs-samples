@@ -16,7 +16,7 @@ This directory contains samples for Google Cloud Vision API. `Google Cloud Visio
 
 
 
-.. _Google Cloud Vision API: https://cloud.google.com/vision/docs 
+.. _Google Cloud Vision API: https://cloud.google.com/vision/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ Web
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=vision/cloud-client/web/web_detect.py;vision/cloud-client/web/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=vision/cloud-client/web/web_detect.py,vision/cloud-client/web/README.rst
 
 
 
