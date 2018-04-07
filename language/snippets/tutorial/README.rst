@@ -12,7 +12,7 @@ This directory contains samples for Google Cloud Natural Language Tutorial. The 
 
 
 
-.. _Google Cloud Natural Language Tutorial: https://cloud.google.com/natural-language/docs/ 
+.. _Google Cloud Natural Language Tutorial: https://cloud.google.com/natural-language/docs/
 
 Setup
 -------------------------------------------------------------------------------
@@ -59,7 +59,7 @@ Language tutorial
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=language/tutorial/tutorial.py;language/tutorial/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=language/tutorial/tutorial.py,language/tutorial/README.rst
 
 
 
