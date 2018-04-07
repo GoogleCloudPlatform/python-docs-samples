@@ -12,7 +12,7 @@ This directory contains samples for Google Translation API. With `Google Transla
 
 
 
-.. _Google Translation API: https://cloud.google.com/translate/docs 
+.. _Google Translation API: https://cloud.google.com/translate/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -59,7 +59,7 @@ Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=translate/cloud-client/quickstart.py;translate/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=translate/cloud-client/quickstart.py,translate/cloud-client/README.rst
 
 
 
@@ -75,7 +75,7 @@ Snippets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=translate/cloud-client/snippets.py;translate/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=translate/cloud-client/snippets.py,translate/cloud-client/README.rst
 
 
 
@@ -103,8 +103,9 @@ To run this sample:
         list-languages-with-target
                             Lists all available languages and localizes them to
                             the target language. Target must be an ISO 639-1
-                            language code. See https://g.co/cloud/translate/v2
-                            /translate-reference#supported_languages
+                            language code. See
+                            https://g.co/cloud/translate/v2/translate-
+                            reference#supported_languages
         translate-text      Translates text into the target language. Target must
                             be an ISO 639-1 language code. See
                             https://g.co/cloud/translate/v2/translate-
