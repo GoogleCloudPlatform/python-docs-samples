@@ -12,7 +12,7 @@ This directory contains samples for Google Data Loss Prevention. `Google Data Lo
 
 
 
-.. _Google Data Loss Prevention: https://cloud.google.com/dlp/docs/ 
+.. _Google Data Loss Prevention: https://cloud.google.com/dlp/docs/
 
 Setup
 -------------------------------------------------------------------------------
@@ -59,7 +59,7 @@ Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/quickstart.py;dlp/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/quickstart.py,dlp/README.rst
 
 
 
@@ -75,7 +75,7 @@ Inspect Content
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/inspect_content.py;dlp/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/inspect_content.py,dlp/README.rst
 
 
 
@@ -86,19 +86,22 @@ To run this sample:
 
     $ python inspect_content.py
 
-    usage: inspect_content.py [-h] {string,file,gcs} ...
+    usage: inspect_content.py [-h] {string,file,gcs,datastore,bigquery} ...
 
     Sample app that uses the Data Loss Prevention API to inspect a string, a local
     file or a file on Google Cloud Storage.
 
     positional arguments:
-      {string,file,gcs}  Select how to submit content to the API.
-        string           Inspect a string.
-        file             Inspect a local file.
-        gcs              Inspect files on Google Cloud Storage.
+      {string,file,gcs,datastore,bigquery}
+                            Select how to submit content to the API.
+        string              Inspect a string.
+        file                Inspect a local file.
+        gcs                 Inspect files on Google Cloud Storage.
+        datastore           Inspect files on Google Datastore.
+        bigquery            Inspect files on Google BigQuery.
 
     optional arguments:
-      -h, --help         show this help message and exit
+      -h, --help            show this help message and exit
 
 
 
@@ -106,7 +109,7 @@ Redact Content
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/redact.py;dlp/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/redact.py,dlp/README.rst
 
 
 
@@ -117,18 +120,35 @@ To run this sample:
 
     $ python redact.py
 
-    usage: redact.py [-h] {string,image} ...
+    usage: redact.py [-h] [--project PROJECT] [--info_types INFO_TYPES]
+                     [--min_likelihood {LIKELIHOOD_UNSPECIFIED,VERY_UNLIKELY,UNLIKELY,POSSIBLE,LIKELY,VERY_LIKELY}]
+                     [--mime_type MIME_TYPE]
+                     filename output_filename
 
     Sample app that uses the Data Loss Prevent API to redact the contents of a
     string or an image file.
 
     positional arguments:
-      {string,image}  Select how to submit content to the API.
-        string        Inspect a string.
-        image         Inspect an image file.
+      filename              The path to the file to inspect.
+      output_filename       The path to which the redacted image will be written.
 
     optional arguments:
-      -h, --help      show this help message and exit
+      -h, --help            show this help message and exit
+      --project PROJECT     The Google Cloud project id to use as a parent
+                            resource.
+      --info_types INFO_TYPES
+                            Strings representing info types to look for. A full
+                            list of info categories and types is available from
+                            the API. Examples include "FIRST_NAME", "LAST_NAME",
+                            "EMAIL_ADDRESS". If unspecified, the three above
+                            examples will be used.
+      --min_likelihood {LIKELIHOOD_UNSPECIFIED,VERY_UNLIKELY,UNLIKELY,POSSIBLE,LIKELY,VERY_LIKELY}
+                            A string representing the minimum likelihood threshold
+                            that constitutes a match.
+      --mime_type MIME_TYPE
+                            The MIME type of the file. If not specified, the type
+                            is inferred via the Python standard library's
+                            mimetypes module.
 
 
 
@@ -136,7 +156,7 @@ Display Metadata
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/metadata.py;dlp/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/metadata.py,dlp/README.rst
 
 
 
@@ -147,19 +167,18 @@ To run this sample:
 
     $ python metadata.py
 
-    usage: metadata.py [-h] {categories,info_types} ...
+    usage: metadata.py [-h] [--language_code LANGUAGE_CODE] [--filter FILTER]
 
     Sample app that queries the Data Loss Prevention API for supported categories
     and info types.
 
-    positional arguments:
-      {categories,info_types}
-                            Select which type of metadata to view.
-        categories          Fetch the list of info type categories.
-        info_types          Fetch the list of info types in a specified category.
-
     optional arguments:
       -h, --help            show this help message and exit
+      --language_code LANGUAGE_CODE
+                            The BCP-47 language code to use, e.g. 'en-US'.
+      --filter FILTER       An optional filter to only return info types supported
+                            by certain parts of the API. Defaults to
+                            "supported_by=INSPECT".
 
 
 

@@ -59,7 +59,7 @@ Manager
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=iot/api-client/manager/manager.py;iot/api-client/manager/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=iot/api-client/manager/manager.py,iot/api-client/manager/README.rst
 
 
 
@@ -70,8 +70,8 @@ To run this sample:
 
     $ python manager.py
 
-    usage: manager.py [-h] --pubsub_topic PUBSUB_TOPIC
-                      [--cloud_region CLOUD_REGION] [--config CONFIG]
+    usage: manager.py [-h] [--cloud_region CLOUD_REGION]
+                      [--pubsub_topic PUBSUB_TOPIC] [--config CONFIG]
                       [--device_id DEVICE_ID]
                       [--ec_public_key_file EC_PUBLIC_KEY_FILE]
                       [--project_id PROJECT_ID] [--registry_id REGISTRY_ID]
@@ -126,11 +126,11 @@ To run this sample:
 
     optional arguments:
       -h, --help            show this help message and exit
+      --cloud_region CLOUD_REGION
+                            GCP cloud region
       --pubsub_topic PUBSUB_TOPIC
                             Google Cloud Pub/Sub topic. Format is
                             projects/project_id/topics/topic-id
-      --cloud_region CLOUD_REGION
-                            GCP cloud region
       --config CONFIG       Configuration sent to a device.
       --device_id DEVICE_ID
                             Device id.

@@ -12,7 +12,7 @@ This directory contains samples for Google BigQuery. `Google BigQuery`_ is Googl
 
 
 
-.. _Google BigQuery: https://cloud.google.com/bigquery/docs 
+.. _Google BigQuery: https://cloud.google.com/bigquery/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -59,7 +59,7 @@ Label a dataset or table
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/rest/labels.py;bigquery/rest/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/rest/labels.py,bigquery/rest/README.rst
 
 
 

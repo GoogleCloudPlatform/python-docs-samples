@@ -12,7 +12,7 @@ This directory contains samples for Stackdriver Monitoring. `Stackdriver Monitor
 
 
 
-.. _Stackdriver Monitoring: https://cloud.google.com/monitoring/docs 
+.. _Stackdriver Monitoring: https://cloud.google.com/monitoring/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -59,7 +59,7 @@ List resources
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=monitoring/api/v3/api-client/list_resources.py;monitoring/api/v3/api-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=monitoring/api/v3/api-client/list_resources.py,monitoring/api/v3/api-client/README.rst
 
 
 
@@ -92,7 +92,7 @@ Custom metrics
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=monitoring/api/v3/api-client/custom_metric.py;monitoring/api/v3/api-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=monitoring/api/v3/api-client/custom_metric.py,monitoring/api/v3/api-client/README.rst
 
 
 
