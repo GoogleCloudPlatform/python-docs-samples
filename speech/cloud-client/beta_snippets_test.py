@@ -14,7 +14,8 @@
 import os
 
 from beta_snippets import (
-    transcribe_file_with_enhanced_model, transcribe_file_with_metadata)
+    transcribe_file_with_auto_punctuation, transcribe_file_with_enhanced_model,
+    transcribe_file_with_metadata)
 
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 
@@ -33,3 +34,11 @@ def test_transcribe_file_with_metadata(capsys):
     out, _ = capsys.readouterr()
 
     assert 'Chrome' in out
+
+
+def test_transcribe_file_with_auto_punctuation(capsys):
+    transcribe_file_with_auto_punctuation(
+        os.path.join(RESOURCES, 'commercial_mono.wav'))
+    out, _ = capsys.readouterr()
+
+    assert 'Okay. Sure.' in out
