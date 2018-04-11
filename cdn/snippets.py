@@ -30,7 +30,7 @@ import hmac
 from six.moves import urllib
 
 
-# [BEGIN sign_url]
+# [START sign_url]
 def sign_url(url, key_name, base64_key, expiration_time):
     """Gets the Signed URL string for the specified URL and configuration.
 
