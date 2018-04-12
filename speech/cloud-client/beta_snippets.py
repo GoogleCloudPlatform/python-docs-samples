@@ -102,7 +102,7 @@ def transcribe_file_with_metadata(path):
 
 # [START speech_transcribe_file_with_auto_punctuation]
 def transcribe_file_with_auto_punctuation(path):
-    """Transcribe the given audio file using an enhanced model."""
+    """Transcribe the given audio file with auto punctuation enabled."""
     client = speech.SpeechClient()
 
     with io.open(path, 'rb') as audio_file:
