@@ -83,6 +83,42 @@ def transcribe_model_selection_gcs(gcs_uri, model):
 # [END speech_transcribe_model_selection_gcs]
 
 
+# [START speech_transcribe_model_selection_streaming]
+def transcribe_model_selection_streaming(stream_file, model):
+    """Streams transcription with the selected model."""
+    from google.cloud import speech_v1p1beta1 as speech
+    client = speech.SpeechClient()
+
+    with open(stream_file, 'rb') as audio_file:
+        content = audio_file.read()
+
+    # In practice, stream should be a generator yielding chunks of audio data.
+    stream = [content]
+    requests = (speech.types.StreamingRecognizeRequest(audio_content=chunk)
+                for chunk in stream)
+
+    config = speech.types.RecognitionConfig(
+        encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=16000,
+        language_code='en-US',
+        model=model)
+    streaming_config = speech.types.StreamingRecognitionConfig(config=config)
+
+    # streaming_recognize returns a generator.
+    responses = client.streaming_recognize(streaming_config, requests)
+
+    for response in responses:
+        for result in response.results:
+            print('Finished: {}'.format(result.is_final))
+            print('Stability: {}'.format(result.stability))
+            alternatives = result.alternatives
+            # The alternatives are ordered from most likely to least.
+            for alternative in alternatives:
+                print('Confidence: {}'.format(alternative.confidence))
+                print('Transcript: {}'.format(alternative.transcript))
+# [END speech_transcribe_model_selection_steaming]
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,

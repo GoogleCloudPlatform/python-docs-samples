@@ -33,3 +33,11 @@ def test_transcribe_model_selection_gcs(capsys):
     out, err = capsys.readouterr()
 
     assert re.search(r'the weather outside is sunny', out, re.DOTALL | re.I)
+
+
+def test_transcribe_model_selection_streaming(capsys):
+    transcribe_model_selection.transcribe_model_selection_streaming(
+        os.path.join(RESOURCES, 'audio.raw'), 'default')
+    out, err = capsys.readouterr()
+
+    assert re.search(r'Brooklyn Bridge', out, re.DOTALL | re.I)
