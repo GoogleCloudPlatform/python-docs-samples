@@ -20,6 +20,7 @@ and recognition metadata.
 Example usage:
     python beta_snippets.py enhanced-model resources/commercial_mono.wav
     python beta_snippets.py metadata resources/commercial_mono.wav
+    python beta_snippets.py punctuation resources/commercial_mono.wav
 """
 
 import argparse
@@ -99,6 +100,32 @@ def transcribe_file_with_metadata(path):
 # [END speech_transcribe_file_with_metadata]
 
 
+# [START speech_transcribe_file_with_auto_punctuation]
+def transcribe_file_with_auto_punctuation(path):
+    """Transcribe the given audio file with auto punctuation enabled."""
+    client = speech.SpeechClient()
+
+    with io.open(path, 'rb') as audio_file:
+        content = audio_file.read()
+
+    audio = speech.types.RecognitionAudio(content=content)
+    config = speech.types.RecognitionConfig(
+        encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=8000,
+        language_code='en-US',
+        # Enable automatic punctuation
+        enable_automatic_punctuation=True)
+
+    response = client.recognize(config, audio)
+
+    for i, result in enumerate(response.results):
+        alternative = result.alternatives[0]
+        print('-' * 20)
+        print('First alternative of result {}'.format(i))
+        print('Transcript: {}'.format(alternative.transcript))
+# [END speech_transcribe_file_with_auto_punctuation]
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -113,3 +140,5 @@ if __name__ == '__main__':
         transcribe_file_with_enhanced_model(args.path)
     elif args.command == 'metadata':
         transcribe_file_with_metadata(args.path)
+    elif args.command == 'punctuation':
+        transcribe_file_with_auto_punctuation(args.path)
