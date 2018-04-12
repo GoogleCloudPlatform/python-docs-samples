@@ -276,7 +276,7 @@ def list_registries(service_account_json, project_id, cloud_region):
                     registry.get('name')))
 
     return registries
-# [END iot_list_devices]
+# [END iot_list_registries]
 
 
 # [START iot_create_registry]
