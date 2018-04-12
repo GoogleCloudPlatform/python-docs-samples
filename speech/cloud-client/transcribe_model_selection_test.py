@@ -37,7 +37,7 @@ def test_transcribe_model_selection_gcs(capsys):
 
 def test_transcribe_model_selection_streaming(capsys):
     transcribe_model_selection.transcribe_model_selection_streaming(
-        os.path.join(RESOURCES, 'audio.raw'), 'default')
+        os.path.join(RESOURCES, 'audio.raw'))
     out, err = capsys.readouterr()
 
     assert re.search(r'Brooklyn Bridge', out, re.DOTALL | re.I)

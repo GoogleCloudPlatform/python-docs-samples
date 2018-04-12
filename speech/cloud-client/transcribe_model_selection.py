@@ -84,7 +84,7 @@ def transcribe_model_selection_gcs(gcs_uri, model):
 
 
 # [START speech_transcribe_model_selection_streaming]
-def transcribe_model_selection_streaming(stream_file, model):
+def transcribe_model_selection_streaming(stream_file):
     """Streams transcription with the selected model."""
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
@@ -101,7 +101,7 @@ def transcribe_model_selection_streaming(stream_file, model):
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
         language_code='en-US',
-        model=model)
+        model='default')
     streaming_config = speech.types.StreamingRecognitionConfig(config=config)
 
     # streaming_recognize returns a generator.
