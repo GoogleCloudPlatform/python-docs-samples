@@ -16,7 +16,7 @@ This directory contains samples for Google Cloud Vision API. `Google Cloud Visio
 
 
 
-.. _Google Cloud Vision API: https://cloud.google.com/vision/docs 
+.. _Google Cloud Vision API: https://cloud.google.com/vision/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ Detect
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=vision/cloud-client/detect/detect.py;vision/cloud-client/detect/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=vision/cloud-client/detect/detect.py,vision/cloud-client/detect/README.rst
 
 
 
@@ -75,7 +75,7 @@ To run this sample:
     $ python detect.py
 
     usage: detect.py [-h]
-                     {faces,faces-uri,labels,labels-uri,landmarks,landmarks-uri,text,text-uri,logos,logos-uri,safe-search,safe-search-uri,properties,properties-uri,web,web-uri,crophints,crophints-uri,document,document-uri}
+                     {faces,faces-uri,labels,labels-uri,landmarks,landmarks-uri,text,text-uri,logos,logos-uri,safe-search,safe-search-uri,properties,properties-uri,web,web-uri,web-geo,web-geo-uri,crophints,crophints-uri,document,document-uri}
                      ...
 
     This application demonstrates how to perform basic operations with the
@@ -86,13 +86,14 @@ To run this sample:
     python detect.py labels ./resources/landmark.jpg
     python detect.py web ./resources/landmark.jpg
     python detect.py web-uri http://wheresgus.com/dog.JPG
+    python detect.py web-geo ./resources/city.jpg
     python detect.py faces-uri gs://your-bucket/file.jpg
 
     For more information, the documentation at
     https://cloud.google.com/vision/docs.
 
     positional arguments:
-      {faces,faces-uri,labels,labels-uri,landmarks,landmarks-uri,text,text-uri,logos,logos-uri,safe-search,safe-search-uri,properties,properties-uri,web,web-uri,crophints,crophints-uri,document,document-uri}
+      {faces,faces-uri,labels,labels-uri,landmarks,landmarks-uri,text,text-uri,logos,logos-uri,safe-search,safe-search-uri,properties,properties-uri,web,web-uri,web-geo,web-geo-uri,crophints,crophints-uri,document,document-uri}
         faces               Detects faces in an image.
         faces-uri           Detects faces in the file located in Google Cloud
                             Storage or the web.
@@ -117,6 +118,11 @@ To run this sample:
         web                 Detects web annotations given an image.
         web-uri             Detects web annotations in the file located in Google
                             Cloud Storage.
+        web-geo             Detects web annotations given an image, using the
+                            geotag metadata in the iamge to detect web entities.
+        web-geo-uri         Detects web annotations given an image in the file
+                            located in Google Cloud Storage., using the geotag
+                            metadata in the iamge to detect web entities.
         crophints           Detects crop hints in an image.
         crophints-uri       Detects crop hints in the file located in Google Cloud
                             Storage.

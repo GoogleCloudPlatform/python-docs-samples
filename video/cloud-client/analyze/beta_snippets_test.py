@@ -20,30 +20,13 @@ import pytest
 
 import beta_snippets
 
-
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-FACES_SHORT_FILE_PATH = 'video/googlework_short.mp4'
-
-
-@pytest.mark.slow
-def test_face_bounding_boxes(capsys):
-    beta_snippets.face_bounding_boxes(
-        'gs://{}/{}'.format(BUCKET, FACES_SHORT_FILE_PATH))
-    out, _ = capsys.readouterr()
-    assert 'top   :' in out
-
-
-@pytest.mark.slow
-def test_face_emotions(capsys):
-    beta_snippets.face_emotions(
-        'gs://{}/{}'.format(BUCKET, FACES_SHORT_FILE_PATH))
-    out, _ = capsys.readouterr()
-    assert 'CONCENTRATION' in out
+FILE_PATH = 'video/googlework_short.mp4'
 
 
 @pytest.mark.slow
 def test_speech_transcription(capsys):
     beta_snippets.speech_transcription(
-        'gs://{}/{}'.format(BUCKET, FACES_SHORT_FILE_PATH))
+        'gs://{}/{}'.format(BUCKET, FILE_PATH))
     out, _ = capsys.readouterr()
     assert 'cultural' in out

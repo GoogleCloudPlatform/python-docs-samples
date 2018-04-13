@@ -12,7 +12,7 @@ This directory contains samples for Google Cloud DNS. `Google Cloud DNS`_ allows
 
 
 
-.. _Google Cloud DNS: https://cloud.google.com/dns/docs 
+.. _Google Cloud DNS: https://cloud.google.com/dns/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -59,7 +59,7 @@ Snippets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dns/api/main.py;dns/api/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dns/api/main.py,dns/api/README.rst
 
 
 

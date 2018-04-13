@@ -13,7 +13,7 @@ This directory contains samples for Stackdriver Error Reporting. `Stackdriver Er
 
 
 
-.. _Stackdriver Error Reporting: https://cloud.google.com/error-reporting/docs/ 
+.. _Stackdriver Error Reporting: https://cloud.google.com/error-reporting/docs/
 
 Setup
 -------------------------------------------------------------------------------
@@ -60,7 +60,7 @@ Report Exception
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=error_reporting/api/report_exception.py;error_reporting/api/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=error_reporting/api/report_exception.py,error_reporting/api/README.rst
 
 
 

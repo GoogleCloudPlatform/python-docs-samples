@@ -44,7 +44,7 @@ spec:
           "--http2_port=9000",
           "--backend=grpc://127.0.0.1:50051",
           "--service=SERVICE_NAME",
-          "--version=SERVICE_CONFIG_ID",
+          "--rollout_strategy=managed",
         ]
         ports:
           - containerPort: 9000
