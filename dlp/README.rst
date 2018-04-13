@@ -7,7 +7,7 @@ Google Data Loss Prevention Python Samples
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/README.rst
 
 
-This directory contains samples for Google Data Loss Prevention. `Google Data Loss Prevention`_ provides programmatic access to a powerful detection engine for personally identifiable information and other privacy-sensitive data in unstructured data streams. **This api is currently in beta**.
+This directory contains samples for Google Data Loss Prevention. `Google Data Loss Prevention`_ provides programmatic access to a powerful detection engine for personally identifiable information and other privacy-sensitive data in unstructured data streams.
 
 
 
@@ -59,7 +59,7 @@ Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/quickstart.py,dlp/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/quickstart.py;dlp/README.rst
 
 
 
@@ -75,7 +75,7 @@ Inspect Content
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/inspect_content.py,dlp/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/inspect_content.py;dlp/README.rst
 
 
 
@@ -109,7 +109,7 @@ Redact Content
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/redact.py,dlp/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/redact.py;dlp/README.rst
 
 
 
@@ -152,11 +152,11 @@ To run this sample:
 
 
 
-Display Metadata
+Metadata
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/metadata.py,dlp/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/metadata.py;dlp/README.rst
 
 
 
@@ -179,6 +179,168 @@ To run this sample:
       --filter FILTER       An optional filter to only return info types supported
                             by certain parts of the API. Defaults to
                             "supported_by=INSPECT".
+
+
+
+Jobs
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/jobs.py;dlp/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python jobs.py
+
+    usage: jobs.py [-h] {list,delete} ...
+
+    Sample app to list and delete DLP jobs using the Data Loss Prevent API.
+
+    positional arguments:
+      {list,delete}  Select how to submit content to the API.
+        list         List Data Loss Prevention API jobs corresponding to a given
+                     filter.
+        delete       Delete results of a Data Loss Prevention API job.
+
+    optional arguments:
+      -h, --help     show this help message and exit
+
+
+
+Templates
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/templates.py;dlp/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python templates.py
+
+    usage: templates.py [-h] {create,list,delete} ...
+
+    Sample app that sets up Data Loss Prevention API inspect templates.
+
+    positional arguments:
+      {create,list,delete}  Select which action to perform.
+        create              Create a template.
+        list                List all templates.
+        delete              Delete a template.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
+
+Triggers
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/triggers.py;dlp/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python triggers.py
+
+    usage: triggers.py [-h] {create,list,delete} ...
+
+    Sample app that sets up Data Loss Prevention API automation triggers.
+
+    positional arguments:
+      {create,list,delete}  Select which action to perform.
+        create              Create a trigger.
+        list                List all triggers.
+        delete              Delete a trigger.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
+
+Risk Analysis
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/risk.py;dlp/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python risk.py
+
+    usage: risk.py [-h] {numerical,categorical,k_anonymity,l_diversity,k_map} ...
+
+    Sample app that uses the Data Loss Prevent API to perform risk anaylsis.
+
+    positional arguments:
+      {numerical,categorical,k_anonymity,l_diversity,k_map}
+                            Select how to submit content to the API.
+        numerical
+        categorical
+        k_anonymity         Computes the k-anonymity of a column set in a Google
+                            BigQuerytable.
+        l_diversity         Computes the l-diversity of a column set in a Google
+                            BigQuerytable.
+        k_map               Computes the k-map risk estimation of a column set in
+                            a GoogleBigQuery table.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
+
+DeID
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/deid.py;dlp/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python deid.py
+
+    usage: deid.py [-h] {deid_mask,deid_fpe,reid_fpe,deid_date_shift} ...
+
+    Uses of the Data Loss Prevention API for deidentifying sensitive data.
+
+    positional arguments:
+      {deid_mask,deid_fpe,reid_fpe,deid_date_shift}
+                            Select how to submit content to the API.
+        deid_mask           Deidentify sensitive data in a string by masking it
+                            with a character.
+        deid_fpe            Deidentify sensitive data in a string using Format
+                            Preserving Encryption (FPE).
+        reid_fpe            Reidentify sensitive data in a string using Format
+                            Preserving Encryption (FPE).
+        deid_date_shift     Deidentify dates in a CSV file by pseudorandomly
+                            shifting them.
+
+    optional arguments:
+      -h, --help            show this help message and exit
 
 
 
