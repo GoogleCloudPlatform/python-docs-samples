@@ -56,7 +56,7 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
     ```
 
 1. Also get an API key from the Console's API Manager for use in the
-   client later. (https://console.cloud.google.com/apis/credentials)
+   client later. [Get API Key](https://console.cloud.google.com/apis/credentials)
 
 1. Enable the Cloud Build API:
 
@@ -72,7 +72,7 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
 
 1. Either deploy to GCE (below) or GKE (further down).
 
-### GCE
+## Google Compute Engine
 
 1. Enable the Compute Engine API:
 
@@ -133,7 +133,7 @@ Cloud account and [SDK](https://cloud.google.com/sdk/) configured.
     gcloud compute instances delete grpc-host
     ```
 
-### GKE
+### Google Kubernetes Engine
 
 1. Create a cluster. You can specify a different zone than us-central1-a if you
    want:
