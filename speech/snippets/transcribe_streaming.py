@@ -65,7 +65,7 @@ def transcribe_streaming(stream_file):
             # The alternatives are ordered from most likely to least.
             for alternative in alternatives:
                 print('Confidence: {}'.format(alternative.confidence))
-                print('Transcript: {}'.format(alternative.transcript))
+                print(u'Transcript: {}'.format(alternative.transcript))
     # [END migration_streaming_response]
 # [END def_transcribe_streaming]
 
