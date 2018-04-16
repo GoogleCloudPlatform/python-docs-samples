@@ -133,7 +133,7 @@ def _setup_appengine_sdk(session):
 #
 
 
-PYTEST_COMMON_ARGS = []
+PYTEST_COMMON_ARGS = ['--junitxml=sponge_log.xml']
 
 # Ignore I202 "Additional newline in a section of imports." to accommodate
 # region tags in import blocks. Since we specify an explicit ignore, we also

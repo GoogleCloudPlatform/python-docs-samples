@@ -20,3 +20,4 @@ secrets.tar
 junit.xml
 credentials.dat
 .nox
+.vscode/
