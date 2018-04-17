@@ -6,7 +6,6 @@ info:
   version: "1.0.0"
 host: "YOUR-PROJECT-ID.appspot.com"
 # [END swagger]
-basePath: "/"
 consumes:
 - "application/json"
 produces:
