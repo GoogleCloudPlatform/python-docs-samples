@@ -15,17 +15,17 @@
 # limitations under the License.
 
 """Simple application that performs a query with BigQuery."""
-# [START all]
+# [START bigquery_simple_app_all]
 # [START bigquery_simple_app_deps]
 from google.cloud import bigquery
 # [END bigquery_simple_app_deps]
 
 
 def query_stackoverflow():
-    # [START create_client]
+    # [START bigquery_simple_app_client]
     client = bigquery.Client()
-    # [END create_client]
-    # [START run_query]
+    # [END bigquery_simple_app_client]
+    # [START bigquery_simple_app_query]
     query_job = client.query("""
         SELECT
           CONCAT(
@@ -38,14 +38,14 @@ def query_stackoverflow():
         LIMIT 10""")
 
     results = query_job.result()  # Waits for job to complete.
-    # [END run_query]
+    # [END bigquery_simple_app_query]
 
-    # [START print_results]
+    # [START bigquery_simple_app_print]
     for row in results:
         print("{} : {} views".format(row.url, row.view_count))
-    # [END print_results]
+    # [END bigquery_simple_app_print]
 
 
 if __name__ == '__main__':
     query_stackoverflow()
-# [END all]
+# [END bigquery_simple_app_all]
