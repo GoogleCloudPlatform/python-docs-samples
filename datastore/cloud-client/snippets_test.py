@@ -147,7 +147,6 @@ class TestDatastoreSnippets:
             assert len(page_one) == 5
             assert len(page_two)
             assert cursor_one
-            assert cursor_two
 
     @eventually_consistent.mark
     def test_property_filter(self, client):
