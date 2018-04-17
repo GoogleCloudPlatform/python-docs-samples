@@ -95,9 +95,9 @@ with models.DAG(
         # even if the Dataproc job fails.
         trigger_rule=trigger_rule.TriggerRule.ALL_DONE)
 
-    # [START composer_quickstart_schedule]
+    # [START composer_quickstart_steps]
     # Define DAG dependencies.
     create_dataproc_cluster >> run_dataproc_hadoop >> delete_dataproc_cluster
-    # [END composer_quickstart_schedule]
+    # [END composer_quickstart_steps]
 
 # [END composer_quickstart]
