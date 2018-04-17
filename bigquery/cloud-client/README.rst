@@ -55,22 +55,6 @@ Install Dependencies
 Samples
 -------------------------------------------------------------------------------
 
-Simple Application
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-.. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/simple_app.py,bigquery/cloud-client/README.rst
-
-
-
-
-To run this sample:
-
-.. code-block:: bash
-
-    $ python simple_app.py
-
-
 Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -87,11 +71,11 @@ To run this sample:
     $ python quickstart.py
 
 
-Query
+Simple Application
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/query.py,bigquery/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/simple_app.py,bigquery/cloud-client/README.rst
 
 
 
@@ -100,40 +84,14 @@ To run this sample:
 
 .. code-block:: bash
 
-    $ python query.py
-
-    usage: query.py [-h] [--use_standard_sql]
-                    [--destination_table DESTINATION_TABLE]
-                    query
-
-    Command-line application to perform queries in BigQuery.
-
-    For more information, see the README.rst.
-
-    Example invocation:
-        $ python query.py '#standardSQL
-              SELECT corpus
-              FROM `bigquery-public-data.samples.shakespeare`
-              GROUP BY corpus
-              ORDER BY corpus'
-
-    positional arguments:
-      query                 BigQuery SQL Query.
-
-    optional arguments:
-      -h, --help            show this help message and exit
-      --use_standard_sql    Use standard SQL syntax.
-      --destination_table DESTINATION_TABLE
-                            Destination table to use for results. Example:
-                            my_dataset.my_table
+    $ python simple_app.py
 
 
-
-Parameterized Query
+User Credentials
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/query_params.py,bigquery/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/user_credentials.py,bigquery/cloud-client/README.rst
 
 
 
@@ -142,237 +100,22 @@ To run this sample:
 
 .. code-block:: bash
 
-    $ python query_params.py
+    $ python user_credentials.py
 
-    usage: query_params.py [-h] {named,positional,array,timestamp,struct} ...
+    usage: user_credentials.py [-h] [--launch-browser] project query
 
-    Command-line app to perform queries with parameters in BigQuery.
+    Command-line application to run a query using user credentials.
 
-    For more information, see the README.rst.
-
-    Example invocation:
-        $ python query_params.py named 'romeoandjuliet' 100
-        $ python query_params.py positional 'romeoandjuliet' 100
+    You must supply a client secrets file, which would normally be bundled with
+    your application.
 
     positional arguments:
-      {named,positional,array,timestamp,struct}
-                            samples
-        named               Run a query with named parameters.
-        positional          Run a query with positional parameters.
-        array               Run a query with an array parameter.
-        timestamp           Run a query with a timestamp parameter.
-        struct              Run a query with a struct parameter.
-
-    optional arguments:
-      -h, --help            show this help message and exit
-
-
-
-Snippets
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-.. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/snippets.py,bigquery/cloud-client/README.rst
-
-
-
-
-To run this sample:
-
-.. code-block:: bash
-
-    $ python snippets.py
-
-    usage: snippets.py [-h] [--project PROJECT]
-                       {list-projects,list-datasets,list-tables,create-table,list-rows,copy-table,delete-table}
-                       ...
-
-    Samples that demonstrate basic operations in the BigQuery API.
-
-    For more information, see the README.rst.
-
-    Example invocation:
-        $ python snippets.py list-datasets
-
-    The dataset and table should already exist.
-
-    positional arguments:
-      {list-projects,list-datasets,list-tables,create-table,list-rows,copy-table,delete-table}
-        list-projects
-        list-datasets       Lists all datasets in a given project. If no project
-                            is specified, then the currently active project is
-                            used.
-        list-datasets       Lists all datasets in a given project. If no project
-                            is specified, then the currently active project is
-                            used.
-        list-tables         Lists all of the tables in a given dataset. If no
-                            project is specified, then the currently active
-                            project is used.
-        create-table        Creates a simple table in the given dataset. If no
-                            project is specified, then the currently active
-                            project is used.
-        list-rows           Prints rows in the given table. Will print 25 rows at
-                            most for brevity as tables can contain large amounts
-                            of rows. If no project is specified, then the
-                            currently active project is used.
-        copy-table          Copies a table. If no project is specified, then the
-                            currently active project is used.
-        delete-table        Deletes a table in a given dataset. If no project is
-                            specified, then the currently active project is used.
-
-    optional arguments:
-      -h, --help            show this help message and exit
-      --project PROJECT
-
-
-
-Load data from a file
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-.. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/load_data_from_file.py,bigquery/cloud-client/README.rst
-
-
-
-
-To run this sample:
-
-.. code-block:: bash
-
-    $ python load_data_from_file.py
-
-    usage: load_data_from_file.py [-h] dataset_id table_id source_file_name
-
-    Loads data into BigQuery from a local file.
-
-    For more information, see the README.rst.
-
-    Example invocation:
-        $ python load_data_from_file.py example_dataset example_table \
-            example-data.csv
-
-    The dataset and table should already exist.
-
-    positional arguments:
-      dataset_id
-      table_id
-      source_file_name  Path to a .csv file to upload.
+      project           Project to use for BigQuery billing.
+      query             BigQuery SQL Query.
 
     optional arguments:
       -h, --help        show this help message and exit
-
-
-
-Load data from Cloud Storage
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-.. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/load_data_from_gcs.py,bigquery/cloud-client/README.rst
-
-
-
-
-To run this sample:
-
-.. code-block:: bash
-
-    $ python load_data_from_gcs.py
-
-    usage: load_data_from_gcs.py [-h] dataset_id table_id source
-
-    Loads data into BigQuery from an object in Google Cloud Storage.
-
-    For more information, see the README.rst.
-
-    Example invocation:
-        $ python load_data_from_gcs.py example_dataset example_table \
-            gs://example-bucket/example-data.csv
-
-    The dataset and table should already exist.
-
-    positional arguments:
-      dataset_id
-      table_id
-      source      The Google Cloud Storage object to load. Must be in the format
-                  gs://bucket_name/object_name
-
-    optional arguments:
-      -h, --help  show this help message and exit
-
-
-
-Load streaming data
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-.. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/stream_data.py,bigquery/cloud-client/README.rst
-
-
-
-
-To run this sample:
-
-.. code-block:: bash
-
-    $ python stream_data.py
-
-    usage: stream_data.py [-h] dataset_id table_id json_data
-
-    Loads a single row of data directly into BigQuery.
-
-    For more information, see the README.rst.
-
-    Example invocation:
-        $ python stream_data.py example_dataset example_table \
-            '["Gandalf", 2000]'
-
-    The dataset and table should already exist.
-
-    positional arguments:
-      dataset_id
-      table_id
-      json_data   The row to load into BigQuery as an array in JSON format.
-
-    optional arguments:
-      -h, --help  show this help message and exit
-
-
-
-Export data to Cloud Storage
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-.. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigquery/cloud-client/export_data_to_gcs.py,bigquery/cloud-client/README.rst
-
-
-
-
-To run this sample:
-
-.. code-block:: bash
-
-    $ python export_data_to_gcs.py
-
-    usage: export_data_to_gcs.py [-h] dataset_id table_id destination
-
-    Exports data from BigQuery to an object in Google Cloud Storage.
-
-    For more information, see the README.rst.
-
-    Example invocation:
-        $ python export_data_to_gcs.py example_dataset example_table \
-            gs://example-bucket/example-data.csv
-
-    The dataset and table should already exist.
-
-    positional arguments:
-      dataset_id
-      table_id
-      destination  The destination Google Cloud Storage object. Must be in the
-                   format gs://bucket_name/object_name
-
-    optional arguments:
-      -h, --help   show this help message and exit
+      --launch-browser  Use a local server flow to authenticate.
 
 
 
