@@ -102,6 +102,22 @@ To run this sample:
 
     $ python user_credentials.py
 
+    usage: user_credentials.py [-h] [--launch-browser] project query
+
+    Command-line application to run a query using user credentials.
+
+    You must supply a client secrets file, which would normally be bundled with
+    your application.
+
+    positional arguments:
+      project           Project to use for BigQuery billing.
+      query             BigQuery SQL Query.
+
+    optional arguments:
+      -h, --help        show this help message and exit
+      --launch-browser  Use a local server flow to authenticate.
+
+
 
 
 

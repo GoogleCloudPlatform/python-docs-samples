@@ -22,6 +22,7 @@ samples:
   file: simple_app.py
 - name: User Credentials
   file: user_credentials.py
+  show_help: true
 
 cloud_client_library: true
 
