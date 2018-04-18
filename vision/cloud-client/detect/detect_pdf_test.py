@@ -35,6 +35,7 @@ def test_async_detect_document(capsys):
     out, _ = capsys.readouterr()
 
     assert 'Hodge conjecture' in out
+    assert len(list(bucket.list_blobs(prefix=OUTPUT_PREFIX))) == 3
 
     for blob in bucket.list_blobs(prefix=OUTPUT_PREFIX):
         blob.delete()
