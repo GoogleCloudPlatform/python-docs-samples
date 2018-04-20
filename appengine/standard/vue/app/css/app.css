@@ -1,0 +1,5 @@
+.status {
+  color: blue;
+  padding: 1em;
+  height: 1em;
+}
