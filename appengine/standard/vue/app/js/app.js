@@ -3,15 +3,28 @@
 var store = {
   debug:true,
   state: {
-    guests:[]
+    status:'',
+    guests:[],
   },
-  setGuests:function (guests) {
+  setStatus: function (status) {
+    this.state.status = status;
+  },
+  setGuests: function (guests) {
     if (this.debug) console.log('setGuests triggered with');
     this.state.guests = guests
   },
   insertGuest: function (guest) {
     if (this.debug) console.log('insertGuest triggered with', guest);
     this.state.guests.push(guest)
+  },
+  updateGuest: function(guest){
+    if (this.debug) console.log('deleteGuest triggered with', guest);
+    for (var i=0; i<this.state.guests.length; i++) {
+      if (this.state.guests[i].id == guest.id) {
+        this.state.guests[i] = guest;
+        break;
+      }
+    }
   },
   deleteGuest: function (guest) {
     if (this.debug) console.log('deleteGuest triggered with', guest);
@@ -41,6 +54,11 @@ const Main = {
       store: store
     }
   },
+  created () {
+    // fetch the data when the view is created and the data is
+    // already being observed
+    this.fetchData()
+  },
   computed:{
     guests:function (){
       return this.store.state.guests
@@ -52,6 +70,7 @@ const Main = {
       axios.get('rest/query')
           .then(function (response) {
             vm.store.setGuests(response.data);
+            vm.store.setStatus('');
           })
           .catch(function (error) {
             console.log(error)
@@ -59,16 +78,15 @@ const Main = {
           })
     },
     invite:function(){
-      window.location.href = '#/invite';
-      window.location.reload();
+      this.$router.push('/invite')
     },
     remove:function(guest){
       var vm = this;
-      //$rootScope.status = 'Deleting guest ' + guest.id + '...';
+      vm.store.setStatus('Deleting guest ' + guest.id + '...');
       axios.post('/rest/delete', {'id': guest.id})
           .then(function (response) {
-            //$rootScope.status = '';
             vm.store.deleteGuest(guest);
+            vm.store.setStatus('');
           })
           .catch(function (error) {
             console.log(error)
@@ -76,13 +94,25 @@ const Main = {
           });
     },
     update:function(guest){
-      window.location.href = '#/update/' + guest.id;
-      window.location.reload();
+      this.$router.push('/update/'+guest.id)
     },
-  },
-  mounted:function(){
-    var vm = this; 
-    vm.getList();
+    fetchData:function(response){
+      var vm = this; 
+      vm.store.setStatus('Retrieving data...');
+      if(vm.store.state.guests.length === 0){
+        axios.get('rest/query')
+          .then(function (response) {
+            vm.store.setGuests(response.data);
+            vm.store.setStatus('');
+          })
+          .catch(function (error) {
+            console.log(error)
+            debugger;
+          })
+      } else {
+        vm.store.setStatus('');
+      }
+    },
   },
 };
 
@@ -90,7 +120,7 @@ const Insert = {
   template: `
   <div>
     <h2>Invite another guest</h2>
-    <form @submit="submitInsert">
+    <form @submit.prevent="submitInsert">
       <p>
         <label>First:</label>
         <input type="text" v-model="first" autofocus="true" />
@@ -117,12 +147,13 @@ const Insert = {
         first : vm.first,
         last : vm.last, 
       };
-      //$rootScope.status = 'Creating...';
+     
+      vm.store.setStatus('Creating...');
       axios.post('/rest/insert', guest)
           .then(function (response) {
             vm.store.insertGuest(response.data);
-            window.location.href = '#/main';
-            window.location.reload();
+            vm.store.setStatus('');
+            vm.$router.push('/')
           })
           .catch(function (error) {
             console.log(error)
@@ -136,7 +167,7 @@ const Update = {
   template: `
   <div>
     <h2>Update guest information</h2>
-    <form @submit="submitUpdate">
+    <form @submit.prevent="submitUpdate">
       <p>
         <label>Id:</label>
         <input type="text" v-model="guest.id" disabled="true" />
@@ -158,80 +189,84 @@ const Update = {
       store: store
     }
   },
+  created () {
+    // fetch the data when the view is created and the data is
+    // already being observed
+    this.fetchData()
+  },
   computed:{
     guest:function (){
       var vm = this; 
       var guest='',id; 
+      id = this.$route.params.id; 
 
-      window.location.hash;
-
-      var url = window.location.hash.split('/'); 
-      if(url.length === 3 && url[1] === 'update'){
-        id = url[2];  
-        for (var i=0; i<vm.store.state.guests.length; i++) {
-          if (vm.store.state.guests[i].id == id) {
-            guest = vm.store.state.guests[i];
-          }
+      for (var i=0; i<vm.store.state.guests.length; i++) {
+        if (vm.store.state.guests[i].id == id) {
+          guest = vm.store.state.guests[i];
+          break;
         }
       }
-      
       return guest;
     }
   },
   methods: {
     submitUpdate:function() {
       var vm = this;
-      //$rootScope.status = 'Creating...';
+      vm.store.setStatus('Updating...');
       axios.post('/rest/update', vm.guest)
-          .then(function (response) {
-            window.location.href = '#/main';
-            window.location.reload();
-          })
-          .catch(function (error) {
-            console.log(error)
-            debugger;
-          });
-    }
-  },
-  beforeMount:function(){
-    if(this.store.state.guests.length == 0){
-      var vm = this
-      axios.get('rest/query')
         .then(function (response) {
-          vm.store.setGuests(response.data);
+          vm.store.updateGuest(vm.guest);
+          vm.store.setStatus('');
+          vm.$router.push('/')
         })
         .catch(function (error) {
           console.log(error)
           debugger;
-        })
-    }
+        });
+    }, 
+    fetchData:function(response){
+      var vm = this; 
+      vm.store.setStatus('Retrieving data...');
+      if(vm.store.state.guests.length === 0){
+        axios.get('rest/query')
+          .then(function (response) {
+            vm.store.setGuests(response.data);
+            vm.store.setStatus('');
+          })
+          .catch(function (error) {
+            console.log(error)
+            debugger;
+          })
+      } else {
+        vm.store.setStatus('');
+      }
+    },
   },
 };
 
-var routes = {
-  '': Main,
-  '#/': Main,
-  '#/main': Main,
-  '#/invite': Insert,
-  '#/update': Update,
-}
+const routes = [
+  { path: '/', component: Main },
+  { path: '/invite', component: Insert},
+  { path: '/update/:id', component: Update }
+]
+
+const router = new VueRouter({
+  routes // short for `routes: routes`
+})
 
 new Vue({
   el: '#app',
-  data: {
-    currentRoute: window.location.hash,
-  },
-  computed: {
-    ViewComponent () {
-      var url = this.currentRoute.split('/'); 
-      if(url.length === 3 && url[1] === 'update'){
-        this.currentRoute = '#/update';
-      }
-
-      return routes[this.currentRoute] || NotFound
+  router, // short for `router: router`
+  data: function () {
+    return {
+      store: store
     }
   },
-  render (h) { return h(this.ViewComponent) }
+  computed:{
+    status: function(){
+      return this.store.state.status;
+    }
+  }
 })
 
 
