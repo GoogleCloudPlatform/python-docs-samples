@@ -32,7 +32,7 @@ These samples are used on the following documentation pages:
 
 ### Google Compute Engine or Google Container Engine
 
-1. Enable the IAM API on your project.
+1. [Click here](https://console.cloud.google.com/flows/enableapi?apiid=iam.googleapis.com&showconfirmation=true) to visit Google Cloud Platform Console and enable the IAM API on your project.
 2. Create a VM with the IAM scope:
    ```
    gcloud compute instances create INSTANCE_NAME
