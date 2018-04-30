@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 """Example Airflow DAG that creates a BigQuery dataset, populates the dataset
 by performing a queries for recent popular StackOverflow questions against the
 public dataset `bigquery-public-data.stackoverflow.posts_questions`. The DAG
@@ -29,12 +30,20 @@ https://airflow.apache.org/concepts.html#variables
 
 import datetime
 
+# [START composer_notify_failure]
 from airflow import models
+# [END composer_notify_failure]
 from airflow.contrib.operators import bigquery_get_data
+# [START composer_bigquery]
 from airflow.contrib.operators import bigquery_operator
+# [END composer_bigquery]
 from airflow.contrib.operators import bigquery_to_gcs
+# [START composer_bash_bq]
 from airflow.operators import bash_operator
+# [END composer_bash_bq]
+# [START composer_email]
 from airflow.operators import email_operator
+# [END composer_email]
 from airflow.utils import trigger_rule
 
 
@@ -58,6 +67,7 @@ yesterday = datetime.datetime.combine(
     datetime.datetime.today() - datetime.timedelta(1),
     datetime.datetime.min.time())
 
+# [START composer_notify_failure]
 default_dag_args = {
     'start_date': yesterday,
     # Email whenever an Operator in the DAG fails.
@@ -73,7 +83,9 @@ with models.DAG(
         'bq_notify',
         schedule_interval=datetime.timedelta(weeks=4),
         default_args=default_dag_args) as dag:
+    # [END composer_notify_failure]
 
+    # [START composer_bash_bq]
     # Create BigQuery output dataset.
     make_bq_dataset = bash_operator.BashOperator(
         task_id='make_bq_dataset',
@@ -81,8 +93,10 @@ with models.DAG(
         # preinstalled in Cloud Composer.
         bash_command='bq ls {} || bq mk {}'.format(
             bq_dataset_name, bq_dataset_name))
+    # [END composer_bash_bq]
 
-    # Perform recent Stackoverflow questions query.
+    # [START composer_bigquery]
+    # Query recent StackOverflow questions.
     bq_recent_questions_query = bigquery_operator.BigQueryOperator(
         task_id='bq_recent_questions_query',
         bql="""
@@ -95,6 +109,7 @@ with models.DAG(
         """.format(max_date=max_query_date, min_date=min_query_date),
         use_legacy_sql=False,
         destination_dataset_table=bq_recent_questions_table_id)
+    # [END composer_bigquery]
 
     # Export query result to Cloud Storage.
     export_questions_to_gcs = bigquery_to_gcs.BigQueryToCloudStorageOperator(
@@ -125,6 +140,7 @@ with models.DAG(
         dataset_id=bq_dataset_name,
         table_id=BQ_MOST_POPULAR_TABLE_NAME)
 
+    # [START composer_email]
     # Send email confirmation
     email_summary = email_operator.EmailOperator(
         task_id='email_summary',
@@ -147,6 +163,7 @@ with models.DAG(
                 'key=\'return_value\')[0][1] }}'
             ),
             export_location=output_file))
+    # [END composer_email]
 
     # Delete BigQuery dataset
     # Delete the bq table
