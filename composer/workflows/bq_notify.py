@@ -44,6 +44,7 @@ BQ_MOST_POPULAR_TABLE_NAME = 'most_popular'
 bq_most_popular_table_id = bq_dataset_name + '.' + BQ_MOST_POPULAR_TABLE_NAME
 output_file = 'gs://{gcs_bucket}/recent_questionsS.csv'.format(
     gcs_bucket=models.Variable.get('gcs_bucket'))
+
 # Data from the month of January 2018
 # You may change the query dates to get data from a different time range. You
 # may also dynamically pick a date range based on DAG schedule date. Airflow
@@ -69,16 +70,17 @@ default_dag_args = {
 }
 
 with models.DAG(
-    'bq_notify',
-    schedule_interval=datetime.timedelta(weeks=4),
-    default_args=default_dag_args) as dag:
+        'bq_notify',
+        schedule_interval=datetime.timedelta(weeks=4),
+        default_args=default_dag_args) as dag:
 
     # Create BigQuery output dataset.
     make_bq_dataset = bash_operator.BashOperator(
         task_id='make_bq_dataset',
         # Executing 'bq' command requires Google Cloud SDK which comes
         # preinstalled in Cloud Composer.
-        bash_command='bq ls %s || bq mk %s' % (bq_dataset_name, bq_dataset_name))
+        bash_command='bq ls {} || bq mk {}'.format(
+            bq_dataset_name, bq_dataset_name))
 
     # Perform recent Stackoverflow questions query.
     bq_recent_questions_query = bigquery_operator.BigQueryOperator(
@@ -114,9 +116,9 @@ with models.DAG(
         destination_dataset_table=bq_most_popular_table_id)
 
     # Read most popular question from BigQuery to XCom output.
-    # XCom is the best way to communicate between operators, but can only transfer
-    # small amounts of data. For passing large amounts of data, store the data in
-    # Cloud Storage and pass the path to the data if necessary.
+    # XCom is the best way to communicate between operators, but can only
+    # transfer small amounts of data. For passing large amounts of data, store
+    # the data in Cloud Storage and pass the path to the data if necessary.
     # https://airflow.apache.org/concepts.html#xcoms
     bq_read_most_popular = bigquery_get_data.BigQueryGetDataOperator(
         task_id='bq_read_most_popular',
@@ -129,14 +131,21 @@ with models.DAG(
         to=models.Variable.get('email'),
         subject='Sample BigQuery notify data ready',
         html_content="""
-        Analyzed Stack Overflow posts data from {min_date} 12AM to {max_date} 12AM.
-        The most popular question was '{question_title}' with {view_count} views.
-        Top 100 questions asked are now available at: {export_location}.
+        Analyzed Stack Overflow posts data from {min_date} 12AM to {max_date}
+        12AM. The most popular question was '{question_title}' with
+        {view_count} views. Top 100 questions asked are now available at:
+        {export_location}.
         """.format(
             min_date=min_query_date,
             max_date=max_query_date,
-            question_title='{{ ti.xcom_pull(task_ids=\'bq_read_most_popular\', key=\'return_value\')[0][0] }}',
-            view_count='{{ ti.xcom_pull(task_ids=\'bq_read_most_popular\', key=\'return_value\')[0][1] }}',
+            question_title=(
+                '{{ ti.xcom_pull(task_ids=\'bq_read_most_popular\', '
+                'key=\'return_value\')[0][0] }}'
+            ),
+            view_count=(
+                '{{ ti.xcom_pull(task_ids=\'bq_read_most_popular\', '
+                'key=\'return_value\')[0][1] }}'
+            ),
             export_location=output_file))
 
     # Delete BigQuery dataset
@@ -147,8 +156,17 @@ with models.DAG(
         trigger_rule=trigger_rule.TriggerRule.ALL_DONE)
 
     # Define DAG dependencies.
-    make_bq_dataset >> bq_recent_questions_query >> export_questions_to_gcs >> delete_bq_dataset
-    bq_recent_questions_query >> bq_most_popular_query >> bq_read_most_popular >> delete_bq_dataset
+    (
+        make_bq_dataset
+        >> bq_recent_questions_query
+        >> export_questions_to_gcs
+        >> delete_bq_dataset
+    )
+    (
+        bq_recent_questions_query
+        >> bq_most_popular_query
+        >> bq_read_most_popular
+        >> delete_bq_dataset
+    )
     export_questions_to_gcs >> email_summary
     bq_read_most_popular >> email_summary
-

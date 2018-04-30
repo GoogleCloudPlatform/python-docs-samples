@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from airflow import models
-import pytest
+
 
 def test_dag_import():
     """Test that the DAG file can be successfully imported.
@@ -25,4 +25,4 @@ def test_dag_import():
     models.Variable.set('gcs_bucket', 'example_bucket')
     models.Variable.set('gcp_project', 'example-project')
     models.Variable.set('gce_zone', 'us-central1-f')
-    from . import quickstart
+    from . import quickstart  # noqa
