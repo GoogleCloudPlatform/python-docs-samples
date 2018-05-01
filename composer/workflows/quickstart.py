@@ -77,7 +77,9 @@ with models.DAG(
         # See https://airflow.apache.org/code.html#default-variables
         cluster_name='quickstart-cluster-{{ ds_nodash }}',
         num_workers=2,
-        zone=models.Variable.get('gce_zone'))
+        zone=models.Variable.get('gce_zone'),
+        master_machine_type='n1-standard-1',
+        worker_machine_type='n1-standard-1')
 
     # Run the Hadoop wordcount example installed on the Cloud Dataproc cluster
     # master node.
