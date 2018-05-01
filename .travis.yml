@@ -9,10 +9,10 @@ branches:
   - master
 cache:
   directories:
-  - $HOME/.cache
+  - "$HOME/.cache"
 env:
   global:
-    secure: RPClDmwFZnpBIKtMvlzjzZVam4flvJtSvxFD8mHCQVQ//KqyBbQxl970kqStOK7p0RXkOB3XuFDvVixqyuptoQ8wTdgSBEPAub4DwRpcmCc1exzErHIt9zep3cQhSUuzl8N/tNl3o6GG04NsZTeErORqxfDvk3WbqFa9593G358=
+    secure: fsBH64/WqTe7lRcn4awZU7q6+euS/LHgMq2Ee2ubaoxUei2GbK5jBgnGHxOKVL5sZ4KNfTc7d6NR5BB1ZouYr2v4q1ip7Il9kFG4g5qV4cIXzHusXkrjvIzQLupNpcD9JJZr1fmYh4AqXRs2kP/nZqb7xB6Jm/O+h+aeC1bhhBg=
 addons:
   apt:
     sources:
@@ -26,4 +26,4 @@ install:
 - pip install --upgrade nox-automation
 - pip install --upgrade git+https://github.com/dhermes/ci-diff-helper.git
 script:
-- ./scripts/travis.sh
+- "./scripts/travis.sh"
