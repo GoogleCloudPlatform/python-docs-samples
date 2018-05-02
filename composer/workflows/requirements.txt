@@ -1,1 +1,1 @@
-git+https://github.com/apache/incubator-airflow.git#egg=project[gcp_api]
+https://dist.apache.org/repos/dist/dev/incubator/airflow/1.10.0beta1/apache-airflow-1.10.0b1+incubating.tar.gz#egg=apache-airflow[gcp_api]
