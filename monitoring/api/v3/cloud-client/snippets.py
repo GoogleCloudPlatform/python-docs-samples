@@ -18,7 +18,7 @@ from google.cloud import monitoring
 
 
 def create_metric_descriptor():
-    # [START create_metric_descriptor]
+    # [START monitoring_create_metric]
     client = monitoring.Client()
     descriptor = client.metric_descriptor(
         'custom.googleapis.com/my_metric',
@@ -26,22 +26,22 @@ def create_metric_descriptor():
         value_type=monitoring.ValueType.DOUBLE,
         description='This is a simple example of a custom metric.')
     descriptor.create()
-    # [END create_metric_descriptor]
+    # [END monitoring_create_metric]
 
 
 def delete_metric_descriptor(descriptor_name):
-    # [START delete_metric_descriptor]
+    # [START monitoring_delete_metric]
     client = monitoring.Client()
 
     descriptor = client.metric_descriptor(descriptor_name)
     descriptor.delete()
 
     print('Deleted metric descriptor {}.'.format(descriptor_name))
-    # [END delete_metric_descriptor]
+    # [END monitoring_delete_metric]
 
 
 def write_time_series():
-    # [START write_time_series]
+    # [START monitoring_write_timeseries]
     client = monitoring.Client()
     resource = client.resource(
         'gce_instance',
@@ -57,42 +57,42 @@ def write_time_series():
         }
     )
     client.write_point(metric, resource, 3.14)
-    # [END write_time_series]
+    # [END monitoring_write_timeseries]
 
 
 def list_time_series():
-    # [START list_time_series]
+    # [START monitoring_read_timeseries_simple]
     client = monitoring.Client()
     metric = 'compute.googleapis.com/instance/cpu/utilization'
     query_results = client.query(metric, minutes=5)
     for result in query_results:
         print(result)
-    # [END list_time_series]
+    # [END monitoring_read_timeseries_simple]
 
 
 def list_time_series_header():
-    # [START list_time_series_header]
+    # [START monitoring_read_timeseries_fields]
     client = monitoring.Client()
     metric = 'compute.googleapis.com/instance/cpu/utilization'
     query_results = client.query(metric, minutes=5).iter(headers_only=True)
     for result in query_results:
         print(result)
-    # [END list_time_series_header]
+    # [END monitoring_read_timeseries_fields]
 
 
 def list_time_series_aggregate():
-    # [START list_time_series_aggregate]
+    # [START monitoring_read_timeseries_align]
     client = monitoring.Client()
     metric = 'compute.googleapis.com/instance/cpu/utilization'
     query_results = client.query(metric, hours=1).align(
         monitoring.Aligner.ALIGN_MEAN, minutes=5)
     for result in query_results:
         print(result)
-    # [END list_time_series_aggregate]
+    # [END monitoring_read_timeseries_align]
 
 
 def list_time_series_reduce():
-    # [START list_time_series_reduce]
+    # [START monitoring_read_timeseries_reduce]
     client = monitoring.Client()
     metric = 'compute.googleapis.com/instance/cpu/utilization'
     query_results = client.query(metric, hours=1).align(
@@ -100,37 +100,37 @@ def list_time_series_reduce():
         monitoring.Reducer.REDUCE_MEAN, 'resource.zone')
     for result in query_results:
         print(result)
-    # [END list_time_series_reduce]
+    # [END monitoring_read_timeseries_reduce]
 
 
 def list_metric_descriptors():
-    # [START list_metric_descriptors]
+    # [START monitoring_list_descriptors]
     client = monitoring.Client()
     for descriptor in client.list_metric_descriptors():
         print(descriptor.type)
-    # [END list_metric_descriptors]
+    # [END monitoring_list_descriptors]
 
 
 def list_monitored_resources():
-    # [START list_monitored_resources]
+    # [START monitoring_list_resources]
     client = monitoring.Client()
     for descriptor in client.list_resource_descriptors():
         print(descriptor.type)
-    # [END list_monitored_resources]
+    # [END monitoring_list_resources]
 
 
 def get_monitored_resource_descriptor(resource_type_name):
-    # [START get_monitored_resources]
+    # [START monitoring_get_resource]
     client = monitoring.Client()
     print(client.fetch_resource_descriptor(resource_type_name))
-    # [END get_monitored_resources]
+    # [END monitoring_get_resource]
 
 
 def get_metric_descriptor(metric_type_name):
-    # [START get_metric_descriptor]
+    # [START monitoring_get_descriptor]
     client = monitoring.Client()
     print(client.fetch_metric_descriptor(metric_type_name))
-    # [END get_metric_descriptor]
+    # [END monitoring_get_descriptor]
 
 
 if __name__ == '__main__':
