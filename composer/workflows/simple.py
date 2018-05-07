@@ -17,13 +17,18 @@
 # [START composer_simple]
 from __future__ import print_function
 
+# [START composer_simple_define_dag]
 import datetime
 
 from airflow import models
+# [END composer_simple_define_dag]
+# [START composer_simple_operators]
 from airflow.operators import bash_operator
 from airflow.operators import python_operator
+# [END composer_simple_operators]
 
 
+# [START composer_simple_define_dag]
 default_dag_args = {
     # The start_date describes when a DAG is valid / can be run. Set this to a
     # fixed point in time rather than dynamically, since it is evaluated every
@@ -38,6 +43,8 @@ default_dag_args = {
 with models.DAG(
         'simple_greeting',
         default_args=default_dag_args) as dag:
+    # [END composer_simple_define_dag]
+    # [START composer_simple_operators]
     def greeting():
         print('Hello World!')
 
@@ -51,8 +58,11 @@ with models.DAG(
     goodbye_bash = bash_operator.BashOperator(
         task_id='bye',
         bash_command='echo Goodbye.')
+    # [END composer_simple_operators]
 
+    # [START composer_simple_relationships]
     # Define the order in which the tasks complete by using the >> and <<
     # operators. In this example, hello_python executes before goodbye_bash.
     hello_python >> goodbye_bash
+    # [END composer_simple_relationships]
 # [END composer_simple]
