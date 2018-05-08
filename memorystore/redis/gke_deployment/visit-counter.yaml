@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: visit-counter
+  labels:
+    app: visit-counter
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: visit-counter
+    spec:
+      containers:
+      - name: visit-counter
+        image: "gcr.io/<PROJECT-ID>/visit-counter:v1"
+        env:
+        - name: REDISHOST
+          valueFrom:
+            configMapKeyRef:
+              name: redishost
+              key: REDISHOST
+        ports:
+        - name: http
+          containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: visit-counter
+spec:
+  type: LoadBalancer
+  selector:
+    app: visit-counter
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+
