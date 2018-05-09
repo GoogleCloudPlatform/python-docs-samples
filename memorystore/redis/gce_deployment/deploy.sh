@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# [START deploy_sh]
+# [START memorystore_deploy_sh]
 if [ -z "$REDISHOST" ]; then
   echo "Must set \$REDISHOST. For example: REDISHOST=127.0.0.1"
   exit 1
@@ -55,4 +55,4 @@ gcloud compute firewall-rules create allow-http-server-8080 \
     --source-ranges 0.0.0.0/0 \
     --target-tags http-server \
     --description "Allow port 8080 access to http-server"
-# [END deploy_sh]
+# [END memorystore_deploy_sh]

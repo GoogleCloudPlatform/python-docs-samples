@@ -10,8 +10,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# [START requirements]
+# [START memorystore_requirements]
 Flask==0.12.2
 gunicorn==19.7.1
 redis==2.10.5
-# [END requirements]
+# [END memorystore_requirements]

@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START app_yaml]
+# [START memorystore_app_yaml]
 runtime: python
 env: flex
 entrypoint: gunicorn -b :$PORT main:app
@@ -28,4 +28,4 @@ env_variables:
 network:
   name: default
 
-#[END app_yaml]
+#[END memorystore_app_yaml]

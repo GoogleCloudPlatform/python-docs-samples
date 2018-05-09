@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# [START startup_script_sh]
+# [START memorystore_startup_script_sh]
 set -v
 
 # Talk to the metadata server to get the project id and location of application binary.
@@ -62,4 +62,4 @@ EOF
 
 supervisorctl reread
 supervisorctl update
-# [END startup_script_sh]
+# [END memorystore_startup_script_sh]

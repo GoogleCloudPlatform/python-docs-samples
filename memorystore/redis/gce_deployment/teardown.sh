@@ -13,8 +13,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# [START teardown_sh]
+# [START memorystore_teardown_sh]
 gcloud compute instances delete my-instance
 
 gcloud compute firewall-rules delete allow-http-server-8080
-# [END teardown_sh]
+# [END memorystore_teardown_sh]
