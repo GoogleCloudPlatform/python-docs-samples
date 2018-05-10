@@ -1,4 +1,4 @@
-# Copyright 2017 Google Inc.
+# Copyright 2018 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,17 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import print_function
+
 import argparse
 import json
 import os
-import typing
 
 from google.cloud import monitoring_v3
 import google.protobuf.json_format
 import tabulate
 
 
-def list_alert_policies(project_name: str):
+def list_alert_policies(project_name):
     client = monitoring_v3.AlertPolicyServiceClient()
     policies = client.list_alert_policies(project_name)
     print(tabulate.tabulate(
@@ -31,7 +32,7 @@ def list_alert_policies(project_name: str):
 
 
 # [START monitoring_alert_list_channels]
-def list_notification_channels(project_name: str):
+def list_notification_channels(project_name):
     client = monitoring_v3.NotificationChannelServiceClient()
     channels = client.list_notification_channels(project_name)
     print(tabulate.tabulate(
@@ -41,7 +42,7 @@ def list_notification_channels(project_name: str):
 
 
 # [START monitoring_alert_enable_policies]
-def enable_alert_policies(project_name: str, enable, filter_: str = None):
+def enable_alert_policies(project_name, enable, filter_=None):
     client = monitoring_v3.AlertPolicyServiceClient()
     policies = client.list_alert_policies(project_name, filter_=filter_)
     for policy in policies:
@@ -58,8 +59,7 @@ def enable_alert_policies(project_name: str, enable, filter_: str = None):
 
 
 # [START monitoring_alert_replace_channels]
-def replace_notification_channels(project_name: str, alert_policy_id: str,
-                                  channel_ids: typing.Sequence[str]):
+def replace_notification_channels(project_name, alert_policy_id, channel_ids):
     _, project_id = project_name.split('/')
     alert_client = monitoring_v3.AlertPolicyServiceClient()
     channel_client = monitoring_v3.NotificationChannelServiceClient()
@@ -76,7 +76,7 @@ def replace_notification_channels(project_name: str, alert_policy_id: str,
 
 
 # [START monitoring_alert_backup_policies]
-def backup(project_name: str):
+def backup(project_name):
     alert_client = monitoring_v3.AlertPolicyServiceClient()
     channel_client = monitoring_v3.NotificationChannelServiceClient()
     record = {'project_name': project_name,
@@ -100,7 +100,7 @@ class ProtoEncoder(json.JSONEncoder):
 
 
 # [START monitoring_alert_restore_policies]
-def restore(project_name: str):
+def restore(project_name):
     print('Loading alert policies and notification channels from backup.json.')
     record = json.load(open('backup.json', 'rt'))
     is_same_project = project_name == record['project_name']
