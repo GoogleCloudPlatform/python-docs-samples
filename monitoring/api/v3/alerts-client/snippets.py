@@ -12,19 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.cloud import monitoring_v3
-from tabulate import tabulate
 import argparse
-import google.protobuf.json_format
 import json
 import os
 import typing
+
+from google.cloud import monitoring_v3
+import google.protobuf.json_format
+import tabulate
 
 
 def list_alert_policies(project_name: str):
     client = monitoring_v3.AlertPolicyServiceClient()
     policies = client.list_alert_policies(project_name)
-    print(tabulate([(policy.name, policy.display_name) for policy in policies],
+    print(tabulate.tabulate(
+        [(policy.name, policy.display_name) for policy in policies],
         ('name', 'display_name')))
 
 
@@ -32,7 +34,8 @@ def list_alert_policies(project_name: str):
 def list_notification_channels(project_name: str):
     client = monitoring_v3.NotificationChannelServiceClient()
     channels = client.list_notification_channels(project_name)
-    print(tabulate([(channel.name, channel.display_name) for channel in channels],
+    print(tabulate.tabulate(
+        [(channel.name, channel.display_name) for channel in channels],
         ('name', 'display_name')))
 # [END monitoring_alert_list_channels]
 
@@ -44,7 +47,7 @@ def enable_alert_policies(project_name: str, enable, filter_: str = None):
     for policy in policies:
         if bool(enable) == policy.enabled.value:
             print('Policy', policy.name, 'is already',
-                'enabled' if policy.enabled.value else 'disabled')
+                  'enabled' if policy.enabled.value else 'disabled')
         else:
             policy.enabled.value = bool(enable)
             mask = monitoring_v3.types.field_mask_pb2.FieldMask()
@@ -53,9 +56,10 @@ def enable_alert_policies(project_name: str, enable, filter_: str = None):
             print('Enabled' if enable else 'Disabled', policy.name)
 # [END monitoring_alert_enable_policies]
 
+
 # [START monitoring_alert_replace_channels]
 def replace_notification_channels(project_name: str, alert_policy_id: str,
-    channel_ids: typing.Sequence[str]):
+                                  channel_ids: typing.Sequence[str]):
     _, project_id = project_name.split('/')
     alert_client = monitoring_v3.AlertPolicyServiceClient()
     channel_client = monitoring_v3.NotificationChannelServiceClient()
@@ -77,7 +81,8 @@ def backup(project_name: str):
     channel_client = monitoring_v3.NotificationChannelServiceClient()
     record = {'project_name': project_name,
               'policies': list(alert_client.list_alert_policies(project_name)),
-              'channels': list(channel_client.list_notification_channels(project_name))}
+              'channels': list(channel_client.list_notification_channels(
+                  project_name))}
     json.dump(record, open('backup.json', 'wt'), cls=ProtoEncoder, indent=2)
     print('Backed up alert policies and notification channels to backup.json.')
 
@@ -86,12 +91,13 @@ class ProtoEncoder(json.JSONEncoder):
     """Uses google.protobuf.json_format to encode protobufs as json."""
     def default(self, obj):
         if type(obj) in (monitoring_v3.types.alert_pb2.AlertPolicy,
-            monitoring_v3.types.notification_pb2.NotificationChannel):
-            text = google.protobuf.json_format.MessageToJson(obj) 
+                         monitoring_v3.types.notification_pb2.
+                         NotificationChannel):
+            text = google.protobuf.json_format.MessageToJson(obj)
             return json.loads(text)
         return super(ProtoEncoder, self).default(obj)
 # [END monitoring_alert_backup_policies]
-    
+
 
 # [START monitoring_alert_restore_policies]
 def restore(project_name: str):
@@ -106,8 +112,8 @@ def restore(project_name: str):
     # Convert dicts to NotificationChannels
     channels_json = [json.dumps(channel) for channel in record['channels']]
     channels = [google.protobuf.json_format.Parse(
-        channel_json, monitoring_v3.types.notification_pb2.NotificationChannel())
-        for channel_json in channels_json]
+        channel_json, monitoring_v3.types.notification_pb2.
+        NotificationChannel()) for channel_json in channels_json]
 
     # Restore the channels.
     channel_client = monitoring_v3.NotificationChannelServiceClient()
@@ -118,7 +124,8 @@ def restore(project_name: str):
         # This field is immutable and it is illegal to specify a
         # non-default value (UNVERIFIED or VERIFIED) in the
         # Create() or Update() operations.
-        channel.verification_status = monitoring_v3.enums.NotificationChannel.VerificationStatus.VERIFICATION_STATUS_UNSPECIFIED
+        channel.verification_status = monitoring_v3.enums.NotificationChannel.\
+            VerificationStatus.VERIFICATION_STATUS_UNSPECIFIED
         if is_same_project:
             try:
                 channel_client.update_notification_channel(channel)
@@ -129,7 +136,8 @@ def restore(project_name: str):
             # The channel no longer exists.  Recreate it.
             old_name = channel.name
             channel.ClearField("name")
-            new_channel = channel_client.create_notification_channel(project_name, channel)
+            new_channel = channel_client.create_notification_channel(
+                project_name, channel)
             channel_name_map[old_name] = new_channel.name
 
     # Restore the alerts
@@ -160,7 +168,7 @@ def restore(project_name: str):
             for condition in policy.conditions:
                 condition.ClearField("name")
             policy = alert_client.create_alert_policy(project_name, policy)
-        print('Updated', policy.name)            
+        print('Updated', policy.name)
 # [END monitoring_alert_restore_policies]
 
 
@@ -170,16 +178,17 @@ class MissingProjectIdError(Exception):
 
 def project_id():
     """Retreieves the project id from the environment variable.
-    
+
     Raises:
         MissingProjectIdError -- When not set.
-    
+
     Returns:
         str -- the project name
     """
     project_id = os.environ['GCLOUD_PROJECT']
     if not project_id:
-        raise MissingProjectIdError('Set the environment variable ' +
+        raise MissingProjectIdError(
+            'Set the environment variable ' +
             'GCLOUD_PROJECT to your Google Cloud Project Id.')
     return project_id
 
@@ -227,7 +236,7 @@ if __name__ == '__main__':
     )
     replace_notification_channels_parser.add_argument(
         '-p', '--alert_policy_id',
-        required=True 
+        required=True
     )
     replace_notification_channels_parser.add_argument(
         '-c', '--notification_channel_id',
@@ -257,14 +266,15 @@ if __name__ == '__main__':
         enable_alert_policies(project_name(), enable=True, filter_=args.filter)
 
     elif args.command == 'disable-alert-policies':
-        enable_alert_policies(project_name(), enable=False, filter_=args.filter)
+        enable_alert_policies(project_name(), enable=False,
+                              filter_=args.filter)
 
     elif args.command == 'replace-notification-channels':
-        replace_notification_channels(project_name(), args.alert_policy_id, 
-            args.notification_channel_id)
+        replace_notification_channels(project_name(), args.alert_policy_id,
+                                      args.notification_channel_id)
 
     elif args.command == 'backup':
         backup(project_name())
-    
+
     elif args.command == 'restore':
         restore(project_name())

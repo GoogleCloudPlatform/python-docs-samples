@@ -12,17 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from gcp_devrel.testing import eventually_consistent
-
-import snippets
-import pytest
-from google.cloud import monitoring_v3
-import google.protobuf.json_format
 import random
 import string
 
+from google.cloud import monitoring_v3
+import google.protobuf.json_format
+import pytest
+
+import snippets
+
+
 def random_name(length):
-    return ''.join([random.choice(string.ascii_lowercase) for i in range(length)])
+    return ''.join(
+        [random.choice(string.ascii_lowercase) for i in range(length)])
+
 
 class PochanFixture:
     """A test fixture that creates an alert POlicy and a notification CHANnel,
@@ -35,7 +38,7 @@ class PochanFixture:
         self.alert_policy_client = monitoring_v3.AlertPolicyServiceClient()
         self.notification_channel_client = (
             monitoring_v3.NotificationChannelServiceClient())
-    
+
     def __enter__(self):
         # Create a policy.
         policy = monitoring_v3.types.alert_pb2.AlertPolicy()
@@ -72,7 +75,7 @@ def test_list_alert_policies(capsys, pochan: PochanFixture):
     snippets.list_alert_policies(pochan.project_name)
     out, _ = capsys.readouterr()
     assert pochan.alert_policy.display_name in out
-    
+
 
 def test_enable_alert_policies(capsys, pochan: PochanFixture):
     snippets.enable_alert_policies(pochan.project_name, False)
@@ -94,8 +97,8 @@ def test_enable_alert_policies(capsys, pochan: PochanFixture):
 def test_replace_channels(capsys, pochan: PochanFixture):
     alert_policy_id = pochan.alert_policy.name.split('/')[-1]
     notification_channel_id = pochan.notification_channel.name.split('/')[-1]
-    snippets.replace_notification_channels(pochan.project_name, alert_policy_id,
-        [notification_channel_id])
+    snippets.replace_notification_channels(
+        pochan.project_name, alert_policy_id, [notification_channel_id])
     out, _ = capsys.readouterr()
     assert "Updated {0}".format(pochan.alert_policy.name) in out
 
@@ -103,9 +106,9 @@ def test_replace_channels(capsys, pochan: PochanFixture):
 def test_backup_and_restore(capsys, pochan: PochanFixture):
     snippets.backup(pochan.project_name)
     out, _ = capsys.readouterr()
- 
+
     snippets.restore(pochan.project_name)
     out, _ = capsys.readouterr()
     assert "Updated {0}".format(pochan.alert_policy.name) in out
-    assert "Updating channel {0}".format(pochan.notification_channel.display_name) in out
-
+    assert "Updating channel {0}".format(
+        pochan.notification_channel.display_name) in out
