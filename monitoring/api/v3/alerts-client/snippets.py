@@ -131,7 +131,7 @@ def restore(project_name):
                 channel_client.update_notification_channel(channel)
                 updated = True
             except google.api_core.exceptions.NotFound:
-                pass
+                pass  # The channel was deleted.  Create it below.
         if not updated:
             # The channel no longer exists.  Recreate it.
             old_name = channel.name
@@ -158,9 +158,11 @@ def restore(project_name):
                 alert_client.update_alert_policy(policy)
                 updated = True
             except google.api_core.exceptions.NotFound:
-                pass
+                pass  # The policy was deleted.  Create it below.
             except google.api_core.exceptions.InvalidArgument:
-                pass
+                # Annoying that API throws InvalidArgument when the policy
+                # does not exist.  Seems like it should throw NotFound.
+                pass  # The policy was deleted.  Create it below.
         if not updated:
             # The policy no longer exists.  Recreate it.
             old_name = policy.name
