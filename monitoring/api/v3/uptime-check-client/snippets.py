@@ -22,6 +22,7 @@ from google.cloud import monitoring_v3
 import tabulate
 
 
+# [START monitoring_uptime_check_create]
 def create_uptime_check_config(project_name, host_name=None,
                                display_name=None):
     config = monitoring_v3.types.uptime_pb2.UptimeCheckConfig()
@@ -38,16 +39,20 @@ def create_uptime_check_config(project_name, host_name=None,
     new_config = client.create_uptime_check_config(project_name, config)
     pprint.pprint(new_config)
     return new_config
+# [END monitoring_uptime_check_create]
 
 
+# [START monitoring_uptime_check_list_configs]
 def list_uptime_check_configs(project_name):
     client = monitoring_v3.UptimeCheckServiceClient()
     configs = client.list_uptime_check_configs(project_name)
 
     for config in configs:
         pprint.pprint(config)
+# [END monitoring_uptime_check_list_configs]
 
 
+# [START monitoring_uptime_check_list_ips]
 def list_uptime_check_ips():
     client = monitoring_v3.UptimeCheckServiceClient()
     ips = client.list_uptime_check_ips()
@@ -55,18 +60,23 @@ def list_uptime_check_ips():
         [(ip.region, ip.location, ip.ip_address) for ip in ips],
         ('region', 'location', 'ip_address')
     ))
+# [END monitoring_uptime_check_list_ips]
 
 
+# [START monitoring_uptime_check_get]
 def get_uptime_check_config(config_name):
     client = monitoring_v3.UptimeCheckServiceClient()
     config = client.get_uptime_check_config(config_name)
     pprint.pprint(config)
+# [END monitoring_uptime_check_get]
 
 
+# [START monitoring_uptime_check_delete]
 def delete_uptime_check_config(config_name):
     client = monitoring_v3.UptimeCheckServiceClient()
     client.delete_uptime_check_config(config_name)
     print('Deleted ', config_name)
+# [END monitoring_uptime_check_delete]
 
 
 class MissingProjectIdError(Exception):
