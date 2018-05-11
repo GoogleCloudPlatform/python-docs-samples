@@ -1,4 +1,4 @@
-# Copyright 2018 Google Inc.
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -43,8 +43,22 @@ def list_notification_channels(project_name):
 
 # [START monitoring_alert_enable_policies]
 def enable_alert_policies(project_name, enable, filter_=None):
+    """Enable or disable alert policies in a project.
+
+    Arguments:
+        project_name {str}
+        enable {bool} -- Enable or disable the policies.
+
+    Keyword Arguments:
+        filter_ {str} --  Only enable/disable alert policies that match this
+            filter_.  See
+            https://cloud.google.com/monitoring/api/v3/sorting-and-filtering
+            (default: {None})
+    """
+
     client = monitoring_v3.AlertPolicyServiceClient()
     policies = client.list_alert_policies(project_name, filter_=filter_)
+
     for policy in policies:
         if bool(enable) == policy.enabled.value:
             print('Policy', policy.name, 'is already',
@@ -65,9 +79,11 @@ def replace_notification_channels(project_name, alert_policy_id, channel_ids):
     channel_client = monitoring_v3.NotificationChannelServiceClient()
     policy = monitoring_v3.types.alert_pb2.AlertPolicy()
     policy.name = alert_client.alert_policy_path(project_id, alert_policy_id)
+
     for channel_id in channel_ids:
         policy.notification_channels.append(
             channel_client.notification_channel_path(project_id, channel_id))
+
     mask = monitoring_v3.types.field_mask_pb2.FieldMask()
     mask.paths.append('notification_channels')
     updated_policy = alert_client.update_alert_policy(policy, mask)
@@ -118,6 +134,7 @@ def restore(project_name):
     # Restore the channels.
     channel_client = monitoring_v3.NotificationChannelServiceClient()
     channel_name_map = {}
+
     for channel in channels:
         updated = False
         print('Updating channel', channel.display_name)
@@ -126,12 +143,14 @@ def restore(project_name):
         # Create() or Update() operations.
         channel.verification_status = monitoring_v3.enums.NotificationChannel.\
             VerificationStatus.VERIFICATION_STATUS_UNSPECIFIED
+
         if is_same_project:
             try:
                 channel_client.update_notification_channel(channel)
                 updated = True
             except google.api_core.exceptions.NotFound:
                 pass  # The channel was deleted.  Create it below.
+
         if not updated:
             # The channel no longer exists.  Recreate it.
             old_name = channel.name
@@ -142,17 +161,21 @@ def restore(project_name):
 
     # Restore the alerts
     alert_client = monitoring_v3.AlertPolicyServiceClient()
+
     for policy in policies:
         print('Updating policy', policy.display_name)
         # These two fields cannot be set directly, so clear them.
         policy.ClearField('creation_record')
         policy.ClearField('mutation_record')
+
         # Update old channel names with new channel names.
         for i, channel in enumerate(policy.notification_channels):
             new_channel = channel_name_map.get(channel)
             if new_channel:
                 policy.notification_channels[i] = new_channel
+
         updated = False
+
         if is_same_project:
             try:
                 alert_client.update_alert_policy(policy)
@@ -163,6 +186,7 @@ def restore(project_name):
                 # Annoying that API throws InvalidArgument when the policy
                 # does not exist.  Seems like it should throw NotFound.
                 pass  # The policy was deleted.  Create it below.
+
         if not updated:
             # The policy no longer exists.  Recreate it.
             old_name = policy.name
@@ -188,6 +212,7 @@ def project_id():
         str -- the project name
     """
     project_id = os.environ['GCLOUD_PROJECT']
+
     if not project_id:
         raise MissingProjectIdError(
             'Set the environment variable ' +
