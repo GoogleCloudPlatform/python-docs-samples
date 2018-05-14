@@ -1,0 +1,26 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Stackdriver Uptime Checks API
+  short_name: Stackdriver Uptime Checks API
+  url: https://cloud.google.com/monitoring/uptime-checks/management
+  description: >
+      Stackdriver Monitoring collects metrics, events, and metadata from Google
+      Cloud Platform, Amazon Web Services (AWS), hosted uptime probes,
+      application instrumentation, and a variety of common application
+      components including Cassandra, Nginx, Apache Web Server, Elasticsearch
+      and many others. Stackdriver's Uptime Checks API allows you to create,
+      delete, and list your project's Uptime Checks.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Snippets
+  file: snippets.py
+  show_help: true
+
+cloud_client_library: true
+
+folder: monitoring/api/v3/uptime-check-client
