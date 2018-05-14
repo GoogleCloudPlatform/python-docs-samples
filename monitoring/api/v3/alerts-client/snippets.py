@@ -46,14 +46,11 @@ def enable_alert_policies(project_name, enable, filter_=None):
     """Enable or disable alert policies in a project.
 
     Arguments:
-        project_name {str}
-        enable {bool} -- Enable or disable the policies.
-
-    Keyword Arguments:
-        filter_ {str} --  Only enable/disable alert policies that match this
-            filter_.  See
+        project_name (str)
+        enable (bool): Enable or disable the policies.
+        filter_ (str, optional): Only enable/disable alert policies that match
+            this filter_.  See
             https://cloud.google.com/monitoring/api/v3/sorting-and-filtering
-            (default: {None})
     """
 
     client = monitoring_v3.AlertPolicyServiceClient()
