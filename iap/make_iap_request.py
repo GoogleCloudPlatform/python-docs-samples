@@ -38,8 +38,8 @@ def make_iap_request(url, client_id, method='GET', **kwargs):
       client_id: The client ID used by Identity-Aware Proxy.
       method: The request method to use
               ('GET', 'OPTIONS', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE')
-      **kwargs: Any of the parameters defined for the Request class:
-                https://github.com/requests/requests/blob/9616f82905f86173477fdb3bf24f2f7228eed3a0/requests/api.py#L16
+      **kwargs: Any of the parameters defined for the request function:
+                https://github.com/requests/requests/blob/master/requests/api.py
 
     Returns:
       The page body, or raises an exception if the page couldn't be retrieved.
