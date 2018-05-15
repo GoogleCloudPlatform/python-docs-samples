@@ -74,9 +74,11 @@ class EchoApi(remote.Service):
         EchoResponse,
         path='echo/getApiKey',
         http_method='GET',
-        name='echo_api_key')
+        name='echo_api_key',
+        api_key_required=True)
     def echo_api_key(self, request):
-        return EchoResponse(content=request.get_unrecognized_field_info('key'))
+        key, key_type = request.get_unrecognized_field_info('key')
+        return EchoResponse(content=key)
 
     @endpoints.method(
         # This method takes an empty request body.
