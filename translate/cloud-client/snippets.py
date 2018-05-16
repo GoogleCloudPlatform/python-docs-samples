@@ -41,6 +41,7 @@ def detect_language(text):
     print('Language: {}'.format(result['language']))
     # [END translate_detect_language]
 
+
 def list_languages():
     # [START translate_list_codes]
     """Lists all available languages."""
@@ -51,6 +52,7 @@ def list_languages():
     for language in results:
         print(u'{name} ({language})'.format(**language))
     # [END translate_list_codes]
+
 
 def list_languages_with_target(target):
     # [START translate_list_language_names]
@@ -66,6 +68,7 @@ def list_languages_with_target(target):
     for language in results:
         print(u'{name} ({language})'.format(**language))
     # [END translate_list_language_names]
+
 
 def translate_text_with_model(target, text, model=translate.NMT):
     # [START translate_text_with_model]
@@ -92,6 +95,7 @@ def translate_text_with_model(target, text, model=translate.NMT):
         result['detectedSourceLanguage']))
     # [END translate_text_with_model]
 
+
 def translate_text(target, text):
     # [START translate_translate_text]
     """Translates text into the target language.
@@ -114,6 +118,7 @@ def translate_text(target, text):
     print(u'Detected source language: {}'.format(
         result['detectedSourceLanguage']))
     # [END translate_translate_text]
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
