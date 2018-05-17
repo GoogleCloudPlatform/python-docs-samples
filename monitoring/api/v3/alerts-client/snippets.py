@@ -23,12 +23,14 @@ import google.protobuf.json_format
 import tabulate
 
 
+# [START monitoring_alert_list_policies]
 def list_alert_policies(project_name):
     client = monitoring_v3.AlertPolicyServiceClient()
     policies = client.list_alert_policies(project_name)
     print(tabulate.tabulate(
         [(policy.name, policy.display_name) for policy in policies],
         ('name', 'display_name')))
+# [END monitoring_alert_list_policies]
 
 
 # [START monitoring_alert_list_channels]
@@ -113,6 +115,9 @@ class ProtoEncoder(json.JSONEncoder):
 
 
 # [START monitoring_alert_restore_policies]
+# [START monitoring_alert_create_policy]
+# [START monitoring_alert_create_channel]
+# [START monitoring_alert_update_channel]
 def restore(project_name):
     print('Loading alert policies and notification channels from backup.json.')
     record = json.load(open('backup.json', 'rt'))
@@ -193,6 +198,9 @@ def restore(project_name):
             policy = alert_client.create_alert_policy(project_name, policy)
         print('Updated', policy.name)
 # [END monitoring_alert_restore_policies]
+# [END monitoring_alert_create_policy]
+# [END monitoring_alert_create_channel]
+# [END monitoring_alert_update_channel]
 
 
 class MissingProjectIdError(Exception):
