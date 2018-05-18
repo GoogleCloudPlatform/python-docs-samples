@@ -205,7 +205,7 @@ class MissingProjectIdError(Exception):
 
 
 def project_id():
-    """Retreieves the project id from the environment variable.
+    """Retreives the project id from the environment variable.
 
     Raises:
         MissingProjectIdError -- When not set.
