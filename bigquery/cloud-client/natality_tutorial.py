@@ -38,52 +38,43 @@ def run_natality_tutorial():
     # defaults.
     client = bigquery.Client()
 
-    # The name for the new dataset.
-    dataset_id = 'natality_regression'
-
-    # Prepare a reference to the new dataset.
-    dataset_ref = client.dataset(dataset_id)
+    # Prepare a reference to a new dataset for storing the query results.
+    dataset_ref = client.dataset('natality_regression')
     dataset = bigquery.Dataset(dataset_ref)
 
     # Create the new BigQuery dataset.
     dataset = client.create_dataset(dataset)
 
-    # In the new BigQuery dataset, create a new table.
+    # In the new BigQuery dataset, create a reference to a new table for
+    # storing the query results.
     table_ref = dataset.table('regression_input')
-    # The table needs a schema before it can be created and accept data.
-    # Create an ordered list of the columns using SchemaField objects.
-    schema = [
-        bigquery.SchemaField('weight_pounds', 'float'),
-        bigquery.SchemaField('mother_age', 'integer'),
-        bigquery.SchemaField('father_age', 'integer'),
-        bigquery.SchemaField('gestation_weeks', 'integer'),
-        bigquery.SchemaField('weight_gain_pounds', 'integer'),
-        bigquery.SchemaField('apgar_5min', 'integer'),
-    ]
 
-    # Assign the schema to the table and create the table in BigQuery.
-    table = bigquery.Table(table_ref, schema=schema)
-    table = client.create_table(table)
+    # Configure the query job.
+    job_config = bigquery.QueryJobConfig()
+
+    # Set the destination table to the table reference created above.
+    job_config.destination = table_ref
+
+    # BigQuery can auto-detect the schema based on the source table.
+    job_config.autodetect = True
 
     # Set up a query in Standard SQL, which is the default for the BigQuery
     # Python client library.
     # The query selects the fields of interest.
     query = """
-        SELECT weight_pounds, mother_age, father_age, gestation_weeks,
-        weight_gain_pounds, apgar_5min
-        FROM `bigquery-public-data.samples.natality`
-        WHERE weight_pounds is not null
-        and mother_age is not null and father_age is not null
-        and gestation_weeks is not null
-        and weight_gain_pounds is not null
-        and apgar_5min is not null
+        SELECT
+            weight_pounds, mother_age, father_age, gestation_weeks,
+            weight_gain_pounds, apgar_5min
+        FROM
+            `bigquery-public-data.samples.natality`
+        WHERE
+            weight_pounds IS NOT NULL
+            AND mother_age IS NOT NULL
+            AND father_age IS NOT NULL
+            AND gestation_weeks IS NOT NULL
+            AND weight_gain_pounds IS NOT NULL
+            AND apgar_5min IS NOT NULL
     """
-    # Configure the query job.
-    job_config = bigquery.QueryJobConfig()
-    # Set the output table to the table created above.
-    dest_dataset_ref = client.dataset('natality_regression')
-    dest_table_ref = dest_dataset_ref.table('regression_input')
-    job_config.destination = dest_table_ref
 
     # Run the query.
     query_job = client.query(query, job_config=job_config)

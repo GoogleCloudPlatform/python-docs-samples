@@ -34,4 +34,9 @@ def test_natality_tutorial():
     natality_tutorial.run_natality_tutorial()
 
     assert dataset_exists(dataset_ref, client)
+
+    table = client.get_table(
+        bigquery.Table(dataset_ref.table('regression_input')))
+    assert table.num_rows > 0
+
     client.delete_dataset(dataset_ref, delete_contents=True)
