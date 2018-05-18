@@ -53,9 +53,6 @@ def run_natality_tutorial():
     # Set the destination table to the table reference created above.
     job_config.destination = table_ref
 
-    # BigQuery can auto-detect the schema based on the source table.
-    job_config.autodetect = True
-
     # Set up a query in Standard SQL, which is the default for the BigQuery
     # Python client library.
     # The query selects the fields of interest.
