@@ -1,4 +1,4 @@
-# Copyright 2016 Google Inc.
+# Copyright 2018 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,8 +13,8 @@
 # limitations under the License
 
 # Use this file to deploy the container for the grpc-bookstore sample
-# and the container for the Extensible Service Proxy (ESP) to
-# Google Kubernetes Engine (GKE).
+# and the container for the Extensible Service Proxy (ESP) to a
+# Kubernetes cluster that is not on GCP.
 
 apiVersion: v1
 kind: Service
@@ -42,17 +42,32 @@ spec:
       labels:
         app: esp-grpc-bookstore
     spec:
+      # [START secret-1]
+      volumes:
+        - name: service-account-creds
+          secret:
+            secretName: service-account-creds
+      # [END secret-1]
+      # [START service]
       containers:
-      - name: esp
-        image: gcr.io/endpoints-release/endpoints-runtime:1
-        args: [
-          "--http2_port=9000",
-          "--service=SERVICE_NAME",
-          "--rollout_strategy=managed",
-          "--backend=grpc://127.0.0.1:8000"
-        ]
+        - name: esp
+          image: gcr.io/endpoints-release/endpoints-runtime:1
+          args: [
+            "--http2_port=9000",
+            "--service=SERVICE_NAME",
+            "--rollout_strategy=managed",
+            "--backend=grpc://127.0.0.1:8000",
+            "--service_account_key=/etc/nginx/creds/service-account-creds.json"
+          ]
+      # [END service]
         ports:
           - containerPort: 9000
+          # [START secret-2]
+          volumeMounts:
+            - mountPath: /etc/nginx/creds
+              name: service-account-creds
+              readOnly: true
+          # [END secret-2]
       - name: bookstore
         image: gcr.io/endpointsv2/python-grpc-bookstore-server:1
         ports:
