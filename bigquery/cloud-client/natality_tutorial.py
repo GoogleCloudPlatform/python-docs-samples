@@ -21,11 +21,9 @@ def run_natality_tutorial():
 
     In the code below, the following actions are taken:
     * A new dataset is created "natality_regression."
-    * A new table "regression_input" is created to hold the inputs for our
-        linear regression.
     * A query is run against the public dataset,
         bigquery-public-data.samples.natality, selecting only the data of
-        interest to the regression, the output of which is stored in the
+        interest to the regression, the output of which is stored in a new
         "regression_input" table.
     * The output table is moved over the wire to the user's default project via
         the built-in BigQuery Connector for Spark that bridges BigQuery and
