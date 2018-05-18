@@ -123,7 +123,7 @@ def publish_messages_with_error_handler(project, topic_name):
         exc = f.exception()
         if exc:
             print('Publishing message on {} threw an Exception {}.'.format(
-                topic_name, e))
+                topic_name, exc))
 
     for n in range(1, 10):
         data = u'Message number {}'.format(n)
