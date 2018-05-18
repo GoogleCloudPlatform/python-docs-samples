@@ -13,124 +13,214 @@
 # limitations under the License.
 
 import argparse
+import os
+import pprint
+import time
 
-from google.cloud import monitoring
+from google.cloud import monitoring_v3
 
 
-def create_metric_descriptor():
+def create_metric_descriptor(project_id):
     # [START monitoring_create_metric]
-    client = monitoring.Client()
-    descriptor = client.metric_descriptor(
-        'custom.googleapis.com/my_metric',
-        metric_kind=monitoring.MetricKind.GAUGE,
-        value_type=monitoring.ValueType.DOUBLE,
-        description='This is a simple example of a custom metric.')
-    descriptor.create()
+    client = monitoring_v3.MetricServiceClient()
+    project_name = client.project_path(project_id)
+    descriptor = monitoring_v3.types.MetricDescriptor()
+    descriptor.type = 'custom.googleapis.com/my_metric'
+    descriptor.metric_kind = (
+        monitoring_v3.enums.MetricDescriptor.MetricKind.GAUGE)
+    descriptor.value_type = (
+        monitoring_v3.enums.MetricDescriptor.ValueType.DOUBLE)
+    descriptor.description = 'This is a simple example of a custom metric.'
+    descriptor = client.create_metric_descriptor(project_name, descriptor)
+    print('Created {}.'.format(descriptor.name))
     # [END monitoring_create_metric]
 
 
 def delete_metric_descriptor(descriptor_name):
     # [START monitoring_delete_metric]
-    client = monitoring.Client()
-
-    descriptor = client.metric_descriptor(descriptor_name)
-    descriptor.delete()
-
+    client = monitoring_v3.MetricServiceClient()
+    client.delete_metric_descriptor(descriptor_name)
     print('Deleted metric descriptor {}.'.format(descriptor_name))
     # [END monitoring_delete_metric]
 
 
-def write_time_series():
+def write_time_series(project_id):
     # [START monitoring_write_timeseries]
-    client = monitoring.Client()
-    resource = client.resource(
-        'gce_instance',
-        labels={
-            'instance_id': '1234567890123456789',
-            'zone': 'us-central1-f',
-        }
-    )
+    client = monitoring_v3.MetricServiceClient()
+    project_name = client.project_path(project_id)
 
-    metric = client.metric(
-        type_='custom.googleapis.com/my_metric',
-        labels={
-        }
-    )
-    client.write_point(metric, resource, 3.14)
+    series = monitoring_v3.types.TimeSeries()
+    series.metric.type = 'custom.googleapis.com/my_metric'
+    series.resource.type = 'gce_instance'
+    series.resource.labels['instance_id'] = '1234567890123456789'
+    series.resource.labels['zone'] = 'us-central1-f'
+    point = series.points.add()
+    point.value.double_value = 3.14
+    now = time.time()
+    point.interval.end_time.seconds = int(now)
+    point.interval.end_time.nanos = int(
+        (now - point.interval.end_time.seconds) * 10**9)
+    client.create_time_series(project_name, [series])
     # [END monitoring_write_timeseries]
 
 
-def list_time_series():
+def list_time_series(project_id):
     # [START monitoring_read_timeseries_simple]
-    client = monitoring.Client()
-    metric = 'compute.googleapis.com/instance/cpu/utilization'
-    query_results = client.query(metric, minutes=5)
-    for result in query_results:
+    client = monitoring_v3.MetricServiceClient()
+    project_name = client.project_path(project_id)
+    interval = monitoring_v3.types.TimeInterval()
+    now = time.time()
+    interval.end_time.seconds = int(now)
+    interval.end_time.nanos = int(
+        (now - interval.end_time.seconds) * 10**9)
+    interval.start_time.seconds = int(now - 300)
+    interval.start_time.nanos = interval.end_time.nanos
+    results = client.list_time_series(
+        project_name,
+        'metric.type = "compute.googleapis.com/instance/cpu/utilization"',
+        interval,
+        monitoring_v3.enums.ListTimeSeriesRequest.TimeSeriesView.FULL)
+    for result in results:
         print(result)
     # [END monitoring_read_timeseries_simple]
 
 
-def list_time_series_header():
+def list_time_series_header(project_id):
     # [START monitoring_read_timeseries_fields]
-    client = monitoring.Client()
-    metric = 'compute.googleapis.com/instance/cpu/utilization'
-    query_results = client.query(metric, minutes=5).iter(headers_only=True)
-    for result in query_results:
+    client = monitoring_v3.MetricServiceClient()
+    project_name = client.project_path(project_id)
+    interval = monitoring_v3.types.TimeInterval()
+    now = time.time()
+    interval.end_time.seconds = int(now)
+    interval.end_time.nanos = int(
+        (now - interval.end_time.seconds) * 10**9)
+    interval.start_time.seconds = int(now - 300)
+    interval.start_time.nanos = interval.end_time.nanos
+    results = client.list_time_series(
+        project_name,
+        'metric.type = "compute.googleapis.com/instance/cpu/utilization"',
+        interval,
+        monitoring_v3.enums.ListTimeSeriesRequest.TimeSeriesView.HEADERS)
+    for result in results:
         print(result)
     # [END monitoring_read_timeseries_fields]
 
 
-def list_time_series_aggregate():
+def list_time_series_aggregate(project_id):
     # [START monitoring_read_timeseries_align]
-    client = monitoring.Client()
-    metric = 'compute.googleapis.com/instance/cpu/utilization'
-    query_results = client.query(metric, hours=1).align(
-        monitoring.Aligner.ALIGN_MEAN, minutes=5)
-    for result in query_results:
+    client = monitoring_v3.MetricServiceClient()
+    project_name = client.project_path(project_id)
+    interval = monitoring_v3.types.TimeInterval()
+    now = time.time()
+    interval.end_time.seconds = int(now)
+    interval.end_time.nanos = int(
+        (now - interval.end_time.seconds) * 10**9)
+    interval.start_time.seconds = int(now - 3600)
+    interval.start_time.nanos = interval.end_time.nanos
+    aggregation = monitoring_v3.types.Aggregation()
+    aggregation.alignment_period.seconds = 300  # 5 minutes
+    aggregation.per_series_aligner = (
+        monitoring_v3.enums.Aggregation.Aligner.ALIGN_MEAN)
+
+    results = client.list_time_series(
+        project_name,
+        'metric.type = "compute.googleapis.com/instance/cpu/utilization"',
+        interval,
+        monitoring_v3.enums.ListTimeSeriesRequest.TimeSeriesView.FULL,
+        aggregation)
+    for result in results:
         print(result)
     # [END monitoring_read_timeseries_align]
 
 
-def list_time_series_reduce():
+def list_time_series_reduce(project_id):
     # [START monitoring_read_timeseries_reduce]
-    client = monitoring.Client()
-    metric = 'compute.googleapis.com/instance/cpu/utilization'
-    query_results = client.query(metric, hours=1).align(
-        monitoring.Aligner.ALIGN_MEAN, minutes=5).reduce(
-        monitoring.Reducer.REDUCE_MEAN, 'resource.zone')
-    for result in query_results:
+    client = monitoring_v3.MetricServiceClient()
+    project_name = client.project_path(project_id)
+    interval = monitoring_v3.types.TimeInterval()
+    now = time.time()
+    interval.end_time.seconds = int(now)
+    interval.end_time.nanos = int(
+        (now - interval.end_time.seconds) * 10**9)
+    interval.start_time.seconds = int(now - 3600)
+    interval.start_time.nanos = interval.end_time.nanos
+    aggregation = monitoring_v3.types.Aggregation()
+    aggregation.alignment_period.seconds = 300  # 5 minutes
+    aggregation.per_series_aligner = (
+        monitoring_v3.enums.Aggregation.Aligner.ALIGN_MEAN)
+    aggregation.cross_series_reducer = (
+        monitoring_v3.enums.Aggregation.Reducer.REDUCE_MEAN)
+    aggregation.group_by_fields.append('resource.zone')
+
+    results = client.list_time_series(
+        project_name,
+        'metric.type = "compute.googleapis.com/instance/cpu/utilization"',
+        interval,
+        monitoring_v3.enums.ListTimeSeriesRequest.TimeSeriesView.FULL,
+        aggregation)
+    for result in results:
         print(result)
     # [END monitoring_read_timeseries_reduce]
 
 
-def list_metric_descriptors():
+def list_metric_descriptors(project_id):
     # [START monitoring_list_descriptors]
-    client = monitoring.Client()
-    for descriptor in client.list_metric_descriptors():
+    client = monitoring_v3.MetricServiceClient()
+    project_name = client.project_path(project_id)
+    for descriptor in client.list_metric_descriptors(project_name):
         print(descriptor.type)
     # [END monitoring_list_descriptors]
 
 
-def list_monitored_resources():
+def list_monitored_resources(project_id):
     # [START monitoring_list_resources]
-    client = monitoring.Client()
-    for descriptor in client.list_resource_descriptors():
+    client = monitoring_v3.MetricServiceClient()
+    project_name = client.project_path(project_id)
+    resource_descriptors = (
+        client.list_monitored_resource_descriptors(project_name))
+    for descriptor in resource_descriptors:
         print(descriptor.type)
     # [END monitoring_list_resources]
 
 
-def get_monitored_resource_descriptor(resource_type_name):
+def get_monitored_resource_descriptor(project_id, resource_type_name):
     # [START monitoring_get_resource]
-    client = monitoring.Client()
-    print(client.fetch_resource_descriptor(resource_type_name))
+    client = monitoring_v3.MetricServiceClient()
+    resource_path = client.monitored_resource_descriptor_path(
+        project_id, resource_type_name)
+    pprint.pprint(client.get_monitored_resource_descriptor(resource_path))
     # [END monitoring_get_resource]
 
 
-def get_metric_descriptor(metric_type_name):
+def get_metric_descriptor(metric_name):
     # [START monitoring_get_descriptor]
-    client = monitoring.Client()
-    print(client.fetch_metric_descriptor(metric_type_name))
+    client = monitoring_v3.MetricServiceClient()
+    descriptor = client.get_metric_descriptor(metric_name)
+    pprint.pprint(descriptor)
     # [END monitoring_get_descriptor]
+
+
+class MissingProjectIdError(Exception):
+    pass
+
+
+def project_id():
+    """Retreives the project id from the environment variable.
+
+    Raises:
+        MissingProjectIdError -- When not set.
+
+    Returns:
+        str -- the project name
+    """
+    project_id = (os.environ['GOOGLE_CLOUD_PROJECT'] or
+                  os.environ['GCLOUD_PROJECT'])
+
+    if not project_id:
+        raise MissingProjectIdError(
+            'Set the environment variable ' +
+            'GCLOUD_PROJECT to your Google Cloud Project Id.')
+    return project_id
 
 
 if __name__ == '__main__':
@@ -215,24 +305,25 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.command == 'create-metric-descriptor':
-        create_metric_descriptor()
+        create_metric_descriptor(project_id())
     if args.command == 'list-metric-descriptors':
-        list_metric_descriptors()
+        list_metric_descriptors(project_id())
     if args.command == 'get-metric-descriptor':
         get_metric_descriptor(args.metric_type_name)
     if args.command == 'delete-metric-descriptor':
         delete_metric_descriptor(args.metric_descriptor_name)
     if args.command == 'list-resources':
-        list_monitored_resources()
+        list_monitored_resources(project_id())
     if args.command == 'get-resource':
-        get_monitored_resource_descriptor(args.resource_type_name)
+        get_monitored_resource_descriptor(
+            project_id(), args.resource_type_name)
     if args.command == 'write-time-series':
-        write_time_series()
+        write_time_series(project_id())
     if args.command == 'list-time-series':
-        list_time_series()
+        list_time_series(project_id())
     if args.command == 'list-time-series-header':
-        list_time_series_header()
+        list_time_series_header(project_id())
     if args.command == 'list-time-series-reduce':
-        list_time_series_reduce()
+        list_time_series_reduce(project_id())
     if args.command == 'list-time-series-aggregate':
-        list_time_series_aggregate()
+        list_time_series_aggregate(project_id())
