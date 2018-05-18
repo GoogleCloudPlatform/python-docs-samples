@@ -120,8 +120,8 @@ def publish_messages_with_error_handler(project, topic_name):
     futures = []
 
     def callback(f):
-        e = f.exception()
-        if e:
+        exc = f.exception()
+        if exc:
             print('Publishing message on {} threw an Exception {}.'.format(
                 topic_name, e))
 
