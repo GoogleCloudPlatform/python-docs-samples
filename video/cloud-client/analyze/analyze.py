@@ -33,6 +33,7 @@ from google.cloud import videointelligence
 
 
 def analyze_explicit_content(path):
+    # [START video_analyze_explicit_content]
     """ Detects explicit content from the GCS path to a video. """
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.enums.Feature.EXPLICIT_CONTENT_DETECTION]
@@ -52,9 +53,11 @@ def analyze_explicit_content(path):
         print('Time: {}s'.format(frame_time))
         print('\tpornography: {}'.format(
             likely_string[frame.pornography_likelihood]))
+    # [END video_analyze_explicit_content]
 
 
 def analyze_labels(path):
+    # [START video_analyze_labels_gcs]
     """ Detects labels given a GCS path. """
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.enums.Feature.LABEL_DETECTION]
@@ -129,9 +132,11 @@ def analyze_labels(path):
         print('\tFirst frame time offset: {}s'.format(time_offset))
         print('\tFirst frame confidence: {}'.format(frame.confidence))
         print('\n')
+    # [END video_analyze_labels_gcs]
 
 
 def analyze_labels_file(path):
+    # [START video_analyze_labels_local]
     """Detect labels given a file path."""
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.enums.Feature.LABEL_DETECTION]
@@ -202,9 +207,11 @@ def analyze_labels_file(path):
         print('\tFirst frame time offset: {}s'.format(time_offset))
         print('\tFirst frame confidence: {}'.format(frame.confidence))
         print('\n')
+    # [END video_analyze_labels_local]
 
 
 def analyze_shots(path):
+    # [START video_analyze_shots]
     """ Detects camera shot changes. """
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.enums.Feature.SHOT_CHANGE_DETECTION]
@@ -221,6 +228,7 @@ def analyze_shots(path):
         end_time = (shot.end_time_offset.seconds +
                     shot.end_time_offset.nanos / 1e9)
         print('\tShot {}: {} to {}'.format(i, start_time, end_time))
+    # [END video_analyze_shots]
 
 
 if __name__ == '__main__':
