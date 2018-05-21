@@ -122,14 +122,6 @@ def main(project_id, instance_id, table_id):
     # [END deleting_a_table]
 
 
-if __name__ == '__main__':
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="E://workspace//qlogic//qlogic-test//QLogic-Test-Project.json"
-    project_id = 'grass-clump-479'
-    instance_id = 'mahesh-python'
-    table = 'Hello-Bigtable'
-    main(project_id, instance_id, table)
-
-
 if __name__ == '__main1__':
     parser = argparse.ArgumentParser(
         description=__doc__,
