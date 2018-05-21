@@ -16,7 +16,7 @@
 
 
 def run_quickstart():
-    # [START pubsub_quickstart]
+    # [START pubsub_quickstart_create_topic]
     # Imports the Google Cloud client library
     from google.cloud import pubsub_v1
 
@@ -32,7 +32,7 @@ def run_quickstart():
     topic = publisher.create_topic(topic_path)
 
     print('Topic created: {}'.format(topic))
-    # [END pubsub_quickstart]
+    # [END pubsub_quickstart_create_topic]
 
 
 if __name__ == '__main__':
