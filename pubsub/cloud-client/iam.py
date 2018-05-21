@@ -28,6 +28,7 @@ from google.cloud import pubsub_v1
 
 def get_topic_policy(project, topic_name):
     """Prints the IAM policy for the given topic."""
+    # [START pubsub_get_topic_policy]
     client = pubsub_v1.PublisherClient()
     topic_path = client.topic_path(project, topic_name)
 
@@ -36,10 +37,12 @@ def get_topic_policy(project, topic_name):
     print('Policy for topic {}:'.format(topic_path))
     for binding in policy.bindings:
         print('Role: {}, Members: {}'.format(binding.role, binding.members))
+    # [END pubsub_get_topic_policy]
 
 
 def get_subscription_policy(project, subscription_name):
     """Prints the IAM policy for the given subscription."""
+    # [START pubsub_get_subscription_policy]
     client = pubsub_v1.SubscriberClient()
     subscription_path = client.subscription_path(project, subscription_name)
 
@@ -48,10 +51,12 @@ def get_subscription_policy(project, subscription_name):
     print('Policy for subscription {}:'.format(subscription_path))
     for binding in policy.bindings:
         print('Role: {}, Members: {}'.format(binding.role, binding.members))
+    # [END pubsub_get_subscription_policy]
 
 
 def set_topic_policy(project, topic_name):
     """Sets the IAM policy for a topic."""
+    # [START pubsub_set_topic_policy]
     client = pubsub_v1.PublisherClient()
     topic_path = client.topic_path(project, topic_name)
 
@@ -72,10 +77,12 @@ def set_topic_policy(project, topic_name):
 
     print('IAM policy for topic {} set: {}'.format(
         topic_name, policy))
+    # [END pubsub_set_topic_policy]
 
 
 def set_subscription_policy(project, subscription_name):
     """Sets the IAM policy for a topic."""
+    # [START pubsub_set_subscription_policy]
     client = pubsub_v1.SubscriberClient()
     subscription_path = client.subscription_path(project, subscription_name)
 
@@ -96,10 +103,12 @@ def set_subscription_policy(project, subscription_name):
 
     print('IAM policy for subscription {} set: {}'.format(
         subscription_name, policy))
+    # [END pubsub_set_subscription_policy]
 
 
 def check_topic_permissions(project, topic_name):
     """Checks to which permissions are available on the given topic."""
+    # [START pubsub_test_topic_permissions]
     client = pubsub_v1.PublisherClient()
     topic_path = client.topic_path(project, topic_name)
 
@@ -113,10 +122,12 @@ def check_topic_permissions(project, topic_name):
 
     print('Allowed permissions for topic {}: {}'.format(
         topic_path, allowed_permissions))
+    # [END pubsub_test_topic_permissions]
 
 
 def check_subscription_permissions(project, subscription_name):
     """Checks to which permissions are available on the given subscription."""
+    # [START pubsub_test_subscription_permissions]
     client = pubsub_v1.SubscriberClient()
     subscription_path = client.subscription_path(project, subscription_name)
 
@@ -130,6 +141,7 @@ def check_subscription_permissions(project, subscription_name):
 
     print('Allowed permissions for subscription {}: {}'.format(
         subscription_path, allowed_permissions))
+    # [END pubsub_test_subscription_permissions]
 
 
 if __name__ == '__main__':
