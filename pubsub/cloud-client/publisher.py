@@ -64,6 +64,7 @@ def delete_topic(project, topic_name):
 def publish_messages(project, topic_name):
     """Publishes multiple messages to a Pub/Sub topic."""
     # [START pubsub_quickstart_publisher]
+    # [START pubsub_publish]
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(project, topic_name)
 
@@ -75,6 +76,7 @@ def publish_messages(project, topic_name):
 
     print('Published messages.')
     # [END pubsub_quickstart_publisher]
+    # [END pubsub_publish]
 
 
 def publish_messages_with_custom_attributes(project, topic_name):
