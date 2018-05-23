@@ -14,6 +14,8 @@
 
 import threading
 
+import six
+
 
 class ShelfInfo(object):
     """The contents of a single shelf."""
@@ -33,7 +35,7 @@ class Bookstore(object):
 
     def list_shelf(self):
         with self._lock:
-            return [s._shelf for (_, s) in self._shelves.iteritems()]
+            return [s._shelf for (_, s) in six.iteritems(self._shelves)]
 
     def create_shelf(self, shelf):
         with self._lock:
@@ -54,7 +56,7 @@ class Bookstore(object):
     def list_books(self, shelf_id):
         with self._lock:
             return [book for (
-                _, book) in self._shelves[shelf_id]._books.iteritems()]
+                _, book) in six.iteritems(self._shelves[shelf_id]._books)]
 
     def create_book(self, shelf_id, book):
         with self._lock:

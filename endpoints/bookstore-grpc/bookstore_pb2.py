@@ -23,7 +23,6 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   serialized_pb=_b('\n\x0f\x62ookstore.proto\x12\x1c\x65ndpoints.examples.bookstore\x1a\x1bgoogle/protobuf/empty.proto\"\"\n\x05Shelf\x12\n\n\x02id\x18\x01 \x01(\x03\x12\r\n\x05theme\x18\x02 \x01(\t\"1\n\x04\x42ook\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x0e\n\x06\x61uthor\x18\x02 \x01(\t\x12\r\n\x05title\x18\x03 \x01(\t\"K\n\x13ListShelvesResponse\x12\x34\n\x07shelves\x18\x01 \x03(\x0b\x32#.endpoints.examples.bookstore.Shelf\"H\n\x12\x43reateShelfRequest\x12\x32\n\x05shelf\x18\x01 \x01(\x0b\x32#.endpoints.examples.bookstore.Shelf\" \n\x0fGetShelfRequest\x12\r\n\x05shelf\x18\x01 \x01(\x03\"#\n\x12\x44\x65leteShelfRequest\x12\r\n\x05shelf\x18\x01 \x01(\x03\"!\n\x10ListBooksRequest\x12\r\n\x05shelf\x18\x01 \x01(\x03\"F\n\x11ListBooksResponse\x12\x31\n\x05\x62ooks\x18\x01 \x03(\x0b\x32\".endpoints.examples.bookstore.Book\"T\n\x11\x43reateBookRequest\x12\r\n\x05shelf\x18\x01 \x01(\x03\x12\x30\n\x04\x62ook\x18\x02 \x01(\x0b\x32\".endpoints.examples.bookstore.Book\"-\n\x0eGetBookRequest\x12\r\n\x05shelf\x18\x01 \x01(\x03\x12\x0c\n\x04\x62ook\x18\x02 \x01(\x03\"0\n\x11\x44\x65leteBookRequest\x12\r\n\x05shelf\x18\x01 \x01(\x03\x12\x0c\n\x04\x62ook\x18\x02 \x01(\x03\x32\x99\x06\n\tBookstore\x12Z\n\x0bListShelves\x12\x16.google.protobuf.Empty\x1a\x31.endpoints.examples.bookstore.ListShelvesResponse\"\x00\x12\x66\n\x0b\x43reateShelf\x12\x30.endpoints.examples.bookstore.CreateShelfRequest\x1a#.endpoints.examples.bookstore.Shelf\"\x00\x12`\n\x08GetShelf\x12-.endpoints.examples.bookstore.GetShelfRequest\x1a#.endpoints.examples.bookstore.Shelf\"\x00\x12Y\n\x0b\x44\x65leteShelf\x12\x30.endpoints.examples.bookstore.DeleteShelfRequest\x1a\x16.google.protobuf.Empty\"\x00\x12n\n\tListBooks\x12..endpoints.examples.bookstore.ListBooksRequest\x1a/.endpoints.examples.bookstore.ListBooksResponse\"\x00\x12\x63\n\nCreateBook\x12/.endpoints.examples.bookstore.CreateBookRequest\x1a\".endpoints.examples.bookstore.Book\"\x00\x12]\n\x07GetBook\x12,.endpoints.examples.bookstore.GetBookRequest\x1a\".endpoints.examples.bookstore.Book\"\x00\x12W\n\nDeleteBook\x12/.endpoints.examples.bookstore.DeleteBookRequest\x1a\x16.google.protobuf.Empty\"\x00\x42;\n\'com.google.endpoints.examples.bookstoreB\x0e\x42ookstoreProtoP\x01\x62\x06proto3')
   ,
   dependencies=[google_dot_protobuf_dot_empty__pb2.DESCRIPTOR,])
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 
 
@@ -41,14 +40,14 @@ _SHELF = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='theme', full_name='endpoints.examples.bookstore.Shelf.theme', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -79,21 +78,21 @@ _BOOK = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='author', full_name='endpoints.examples.bookstore.Book.author', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='title', full_name='endpoints.examples.bookstore.Book.title', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -124,7 +123,7 @@ _LISTSHELVESRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -155,7 +154,7 @@ _CREATESHELFREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -186,7 +185,7 @@ _GETSHELFREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -217,7 +216,7 @@ _DELETESHELFREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -248,7 +247,7 @@ _LISTBOOKSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -279,7 +278,7 @@ _LISTBOOKSRESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -310,14 +309,14 @@ _CREATEBOOKREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='book', full_name='endpoints.examples.bookstore.CreateBookRequest.book', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -348,14 +347,14 @@ _GETBOOKREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='book', full_name='endpoints.examples.bookstore.GetBookRequest.book', index=1,
       number=2, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -386,14 +385,14 @@ _DELETEBOOKREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='book', full_name='endpoints.examples.bookstore.DeleteBookRequest.book', index=1,
       number=2, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -425,6 +424,7 @@ DESCRIPTOR.message_types_by_name['ListBooksResponse'] = _LISTBOOKSRESPONSE
 DESCRIPTOR.message_types_by_name['CreateBookRequest'] = _CREATEBOOKREQUEST
 DESCRIPTOR.message_types_by_name['GetBookRequest'] = _GETBOOKREQUEST
 DESCRIPTOR.message_types_by_name['DeleteBookRequest'] = _DELETEBOOKREQUEST
+_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Shelf = _reflection.GeneratedProtocolMessageType('Shelf', (_message.Message,), dict(
   DESCRIPTOR = _SHELF,
@@ -506,350 +506,91 @@ _sym_db.RegisterMessage(DeleteBookRequest)
 
 DESCRIPTOR.has_options = True
 DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\'com.google.endpoints.examples.bookstoreB\016BookstoreProtoP\001'))
-import grpc
-from grpc.beta import implementations as beta_implementations
-from grpc.beta import interfaces as beta_interfaces
-from grpc.framework.common import cardinality
-from grpc.framework.interfaces.face import utilities as face_utilities
 
+_BOOKSTORE = _descriptor.ServiceDescriptor(
+  name='Bookstore',
+  full_name='endpoints.examples.bookstore.Bookstore',
+  file=DESCRIPTOR,
+  index=0,
+  options=None,
+  serialized_start=678,
+  serialized_end=1471,
+  methods=[
+  _descriptor.MethodDescriptor(
+    name='ListShelves',
+    full_name='endpoints.examples.bookstore.Bookstore.ListShelves',
+    index=0,
+    containing_service=None,
+    input_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
+    output_type=_LISTSHELVESRESPONSE,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='CreateShelf',
+    full_name='endpoints.examples.bookstore.Bookstore.CreateShelf',
+    index=1,
+    containing_service=None,
+    input_type=_CREATESHELFREQUEST,
+    output_type=_SHELF,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='GetShelf',
+    full_name='endpoints.examples.bookstore.Bookstore.GetShelf',
+    index=2,
+    containing_service=None,
+    input_type=_GETSHELFREQUEST,
+    output_type=_SHELF,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='DeleteShelf',
+    full_name='endpoints.examples.bookstore.Bookstore.DeleteShelf',
+    index=3,
+    containing_service=None,
+    input_type=_DELETESHELFREQUEST,
+    output_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='ListBooks',
+    full_name='endpoints.examples.bookstore.Bookstore.ListBooks',
+    index=4,
+    containing_service=None,
+    input_type=_LISTBOOKSREQUEST,
+    output_type=_LISTBOOKSRESPONSE,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='CreateBook',
+    full_name='endpoints.examples.bookstore.Bookstore.CreateBook',
+    index=5,
+    containing_service=None,
+    input_type=_CREATEBOOKREQUEST,
+    output_type=_BOOK,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='GetBook',
+    full_name='endpoints.examples.bookstore.Bookstore.GetBook',
+    index=6,
+    containing_service=None,
+    input_type=_GETBOOKREQUEST,
+    output_type=_BOOK,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='DeleteBook',
+    full_name='endpoints.examples.bookstore.Bookstore.DeleteBook',
+    index=7,
+    containing_service=None,
+    input_type=_DELETEBOOKREQUEST,
+    output_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
+    options=None,
+  ),
+])
+_sym_db.RegisterServiceDescriptor(_BOOKSTORE)
 
-class BookstoreStub(object):
-  """A simple Bookstore API.
+DESCRIPTOR.services_by_name['Bookstore'] = _BOOKSTORE
 
-  The API manages shelves and books resources. Shelves contain books.
-  """
-
-  def __init__(self, channel):
-    """Constructor.
-
-    Args:
-      channel: A grpc.Channel.
-    """
-    self.ListShelves = channel.unary_unary(
-        '/endpoints.examples.bookstore.Bookstore/ListShelves',
-        request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-        response_deserializer=ListShelvesResponse.FromString,
-        )
-    self.CreateShelf = channel.unary_unary(
-        '/endpoints.examples.bookstore.Bookstore/CreateShelf',
-        request_serializer=CreateShelfRequest.SerializeToString,
-        response_deserializer=Shelf.FromString,
-        )
-    self.GetShelf = channel.unary_unary(
-        '/endpoints.examples.bookstore.Bookstore/GetShelf',
-        request_serializer=GetShelfRequest.SerializeToString,
-        response_deserializer=Shelf.FromString,
-        )
-    self.DeleteShelf = channel.unary_unary(
-        '/endpoints.examples.bookstore.Bookstore/DeleteShelf',
-        request_serializer=DeleteShelfRequest.SerializeToString,
-        response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-        )
-    self.ListBooks = channel.unary_unary(
-        '/endpoints.examples.bookstore.Bookstore/ListBooks',
-        request_serializer=ListBooksRequest.SerializeToString,
-        response_deserializer=ListBooksResponse.FromString,
-        )
-    self.CreateBook = channel.unary_unary(
-        '/endpoints.examples.bookstore.Bookstore/CreateBook',
-        request_serializer=CreateBookRequest.SerializeToString,
-        response_deserializer=Book.FromString,
-        )
-    self.GetBook = channel.unary_unary(
-        '/endpoints.examples.bookstore.Bookstore/GetBook',
-        request_serializer=GetBookRequest.SerializeToString,
-        response_deserializer=Book.FromString,
-        )
-    self.DeleteBook = channel.unary_unary(
-        '/endpoints.examples.bookstore.Bookstore/DeleteBook',
-        request_serializer=DeleteBookRequest.SerializeToString,
-        response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-        )
-
-
-class BookstoreServicer(object):
-  """A simple Bookstore API.
-
-  The API manages shelves and books resources. Shelves contain books.
-  """
-
-  def ListShelves(self, request, context):
-    """Returns a list of all shelves in the bookstore.
-    """
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
-
-  def CreateShelf(self, request, context):
-    """Creates a new shelf in the bookstore.
-    """
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
-
-  def GetShelf(self, request, context):
-    """Returns a specific bookstore shelf.
-    """
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
-
-  def DeleteShelf(self, request, context):
-    """Deletes a shelf, including all books that are stored on the shelf.
-    """
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
-
-  def ListBooks(self, request, context):
-    """Returns a list of books on a shelf.
-    """
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
-
-  def CreateBook(self, request, context):
-    """Creates a new book.
-    """
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
-
-  def GetBook(self, request, context):
-    """Returns a specific book.
-    """
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
-
-  def DeleteBook(self, request, context):
-    """Deletes a book from a shelf.
-    """
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
-
-
-def add_BookstoreServicer_to_server(servicer, server):
-  rpc_method_handlers = {
-      'ListShelves': grpc.unary_unary_rpc_method_handler(
-          servicer.ListShelves,
-          request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-          response_serializer=ListShelvesResponse.SerializeToString,
-      ),
-      'CreateShelf': grpc.unary_unary_rpc_method_handler(
-          servicer.CreateShelf,
-          request_deserializer=CreateShelfRequest.FromString,
-          response_serializer=Shelf.SerializeToString,
-      ),
-      'GetShelf': grpc.unary_unary_rpc_method_handler(
-          servicer.GetShelf,
-          request_deserializer=GetShelfRequest.FromString,
-          response_serializer=Shelf.SerializeToString,
-      ),
-      'DeleteShelf': grpc.unary_unary_rpc_method_handler(
-          servicer.DeleteShelf,
-          request_deserializer=DeleteShelfRequest.FromString,
-          response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-      ),
-      'ListBooks': grpc.unary_unary_rpc_method_handler(
-          servicer.ListBooks,
-          request_deserializer=ListBooksRequest.FromString,
-          response_serializer=ListBooksResponse.SerializeToString,
-      ),
-      'CreateBook': grpc.unary_unary_rpc_method_handler(
-          servicer.CreateBook,
-          request_deserializer=CreateBookRequest.FromString,
-          response_serializer=Book.SerializeToString,
-      ),
-      'GetBook': grpc.unary_unary_rpc_method_handler(
-          servicer.GetBook,
-          request_deserializer=GetBookRequest.FromString,
-          response_serializer=Book.SerializeToString,
-      ),
-      'DeleteBook': grpc.unary_unary_rpc_method_handler(
-          servicer.DeleteBook,
-          request_deserializer=DeleteBookRequest.FromString,
-          response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-      ),
-  }
-  generic_handler = grpc.method_handlers_generic_handler(
-      'endpoints.examples.bookstore.Bookstore', rpc_method_handlers)
-  server.add_generic_rpc_handlers((generic_handler,))
-
-
-class BetaBookstoreServicer(object):
-  """The Beta API is deprecated for 0.15.0 and later.
-
-  It is recommended to use the GA API (classes and functions in this
-  file not marked beta) for all further purposes. This class was generated
-  only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
-  """A simple Bookstore API.
-
-  The API manages shelves and books resources. Shelves contain books.
-  """
-  def ListShelves(self, request, context):
-    """Returns a list of all shelves in the bookstore.
-    """
-    context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-  def CreateShelf(self, request, context):
-    """Creates a new shelf in the bookstore.
-    """
-    context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-  def GetShelf(self, request, context):
-    """Returns a specific bookstore shelf.
-    """
-    context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-  def DeleteShelf(self, request, context):
-    """Deletes a shelf, including all books that are stored on the shelf.
-    """
-    context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-  def ListBooks(self, request, context):
-    """Returns a list of books on a shelf.
-    """
-    context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-  def CreateBook(self, request, context):
-    """Creates a new book.
-    """
-    context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-  def GetBook(self, request, context):
-    """Returns a specific book.
-    """
-    context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-  def DeleteBook(self, request, context):
-    """Deletes a book from a shelf.
-    """
-    context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-
-
-class BetaBookstoreStub(object):
-  """The Beta API is deprecated for 0.15.0 and later.
-
-  It is recommended to use the GA API (classes and functions in this
-  file not marked beta) for all further purposes. This class was generated
-  only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
-  """A simple Bookstore API.
-
-  The API manages shelves and books resources. Shelves contain books.
-  """
-  def ListShelves(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
-    """Returns a list of all shelves in the bookstore.
-    """
-    raise NotImplementedError()
-  ListShelves.future = None
-  def CreateShelf(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
-    """Creates a new shelf in the bookstore.
-    """
-    raise NotImplementedError()
-  CreateShelf.future = None
-  def GetShelf(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
-    """Returns a specific bookstore shelf.
-    """
-    raise NotImplementedError()
-  GetShelf.future = None
-  def DeleteShelf(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
-    """Deletes a shelf, including all books that are stored on the shelf.
-    """
-    raise NotImplementedError()
-  DeleteShelf.future = None
-  def ListBooks(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
-    """Returns a list of books on a shelf.
-    """
-    raise NotImplementedError()
-  ListBooks.future = None
-  def CreateBook(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
-    """Creates a new book.
-    """
-    raise NotImplementedError()
-  CreateBook.future = None
-  def GetBook(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
-    """Returns a specific book.
-    """
-    raise NotImplementedError()
-  GetBook.future = None
-  def DeleteBook(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
-    """Deletes a book from a shelf.
-    """
-    raise NotImplementedError()
-  DeleteBook.future = None
-
-
-def beta_create_Bookstore_server(servicer, pool=None, pool_size=None, default_timeout=None, maximum_timeout=None):
-  """The Beta API is deprecated for 0.15.0 and later.
-
-  It is recommended to use the GA API (classes and functions in this
-  file not marked beta) for all further purposes. This function was
-  generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
-  request_deserializers = {
-    ('endpoints.examples.bookstore.Bookstore', 'CreateBook'): CreateBookRequest.FromString,
-    ('endpoints.examples.bookstore.Bookstore', 'CreateShelf'): CreateShelfRequest.FromString,
-    ('endpoints.examples.bookstore.Bookstore', 'DeleteBook'): DeleteBookRequest.FromString,
-    ('endpoints.examples.bookstore.Bookstore', 'DeleteShelf'): DeleteShelfRequest.FromString,
-    ('endpoints.examples.bookstore.Bookstore', 'GetBook'): GetBookRequest.FromString,
-    ('endpoints.examples.bookstore.Bookstore', 'GetShelf'): GetShelfRequest.FromString,
-    ('endpoints.examples.bookstore.Bookstore', 'ListBooks'): ListBooksRequest.FromString,
-    ('endpoints.examples.bookstore.Bookstore', 'ListShelves'): google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-  }
-  response_serializers = {
-    ('endpoints.examples.bookstore.Bookstore', 'CreateBook'): Book.SerializeToString,
-    ('endpoints.examples.bookstore.Bookstore', 'CreateShelf'): Shelf.SerializeToString,
-    ('endpoints.examples.bookstore.Bookstore', 'DeleteBook'): google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-    ('endpoints.examples.bookstore.Bookstore', 'DeleteShelf'): google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-    ('endpoints.examples.bookstore.Bookstore', 'GetBook'): Book.SerializeToString,
-    ('endpoints.examples.bookstore.Bookstore', 'GetShelf'): Shelf.SerializeToString,
-    ('endpoints.examples.bookstore.Bookstore', 'ListBooks'): ListBooksResponse.SerializeToString,
-    ('endpoints.examples.bookstore.Bookstore', 'ListShelves'): ListShelvesResponse.SerializeToString,
-  }
-  method_implementations = {
-    ('endpoints.examples.bookstore.Bookstore', 'CreateBook'): face_utilities.unary_unary_inline(servicer.CreateBook),
-    ('endpoints.examples.bookstore.Bookstore', 'CreateShelf'): face_utilities.unary_unary_inline(servicer.CreateShelf),
-    ('endpoints.examples.bookstore.Bookstore', 'DeleteBook'): face_utilities.unary_unary_inline(servicer.DeleteBook),
-    ('endpoints.examples.bookstore.Bookstore', 'DeleteShelf'): face_utilities.unary_unary_inline(servicer.DeleteShelf),
-    ('endpoints.examples.bookstore.Bookstore', 'GetBook'): face_utilities.unary_unary_inline(servicer.GetBook),
-    ('endpoints.examples.bookstore.Bookstore', 'GetShelf'): face_utilities.unary_unary_inline(servicer.GetShelf),
-    ('endpoints.examples.bookstore.Bookstore', 'ListBooks'): face_utilities.unary_unary_inline(servicer.ListBooks),
-    ('endpoints.examples.bookstore.Bookstore', 'ListShelves'): face_utilities.unary_unary_inline(servicer.ListShelves),
-  }
-  server_options = beta_implementations.server_options(request_deserializers=request_deserializers, response_serializers=response_serializers, thread_pool=pool, thread_pool_size=pool_size, default_timeout=default_timeout, maximum_timeout=maximum_timeout)
-  return beta_implementations.server(method_implementations, options=server_options)
-
-
-def beta_create_Bookstore_stub(channel, host=None, metadata_transformer=None, pool=None, pool_size=None):
-  """The Beta API is deprecated for 0.15.0 and later.
-
-  It is recommended to use the GA API (classes and functions in this
-  file not marked beta) for all further purposes. This function was
-  generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
-  request_serializers = {
-    ('endpoints.examples.bookstore.Bookstore', 'CreateBook'): CreateBookRequest.SerializeToString,
-    ('endpoints.examples.bookstore.Bookstore', 'CreateShelf'): CreateShelfRequest.SerializeToString,
-    ('endpoints.examples.bookstore.Bookstore', 'DeleteBook'): DeleteBookRequest.SerializeToString,
-    ('endpoints.examples.bookstore.Bookstore', 'DeleteShelf'): DeleteShelfRequest.SerializeToString,
-    ('endpoints.examples.bookstore.Bookstore', 'GetBook'): GetBookRequest.SerializeToString,
-    ('endpoints.examples.bookstore.Bookstore', 'GetShelf'): GetShelfRequest.SerializeToString,
-    ('endpoints.examples.bookstore.Bookstore', 'ListBooks'): ListBooksRequest.SerializeToString,
-    ('endpoints.examples.bookstore.Bookstore', 'ListShelves'): google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-  }
-  response_deserializers = {
-    ('endpoints.examples.bookstore.Bookstore', 'CreateBook'): Book.FromString,
-    ('endpoints.examples.bookstore.Bookstore', 'CreateShelf'): Shelf.FromString,
-    ('endpoints.examples.bookstore.Bookstore', 'DeleteBook'): google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-    ('endpoints.examples.bookstore.Bookstore', 'DeleteShelf'): google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-    ('endpoints.examples.bookstore.Bookstore', 'GetBook'): Book.FromString,
-    ('endpoints.examples.bookstore.Bookstore', 'GetShelf'): Shelf.FromString,
-    ('endpoints.examples.bookstore.Bookstore', 'ListBooks'): ListBooksResponse.FromString,
-    ('endpoints.examples.bookstore.Bookstore', 'ListShelves'): ListShelvesResponse.FromString,
-  }
-  cardinalities = {
-    'CreateBook': cardinality.Cardinality.UNARY_UNARY,
-    'CreateShelf': cardinality.Cardinality.UNARY_UNARY,
-    'DeleteBook': cardinality.Cardinality.UNARY_UNARY,
-    'DeleteShelf': cardinality.Cardinality.UNARY_UNARY,
-    'GetBook': cardinality.Cardinality.UNARY_UNARY,
-    'GetShelf': cardinality.Cardinality.UNARY_UNARY,
-    'ListBooks': cardinality.Cardinality.UNARY_UNARY,
-    'ListShelves': cardinality.Cardinality.UNARY_UNARY,
-  }
-  stub_options = beta_implementations.stub_options(host=host, metadata_transformer=metadata_transformer, request_serializers=request_serializers, response_deserializers=response_deserializers, thread_pool=pool, thread_pool_size=pool_size)
-  return beta_implementations.dynamic_stub(channel, 'endpoints.examples.bookstore.Bookstore', cardinalities, options=stub_options)
 # @@protoc_insertion_point(module_scope)
