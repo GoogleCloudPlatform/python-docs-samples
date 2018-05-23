@@ -15,18 +15,21 @@
 """The Python gRPC Bookstore Server Example."""
 
 import argparse
+from concurrent import futures
 import time
 
 from google.protobuf import struct_pb2
+import grpc
 
 import bookstore
-from generated_pb2 import bookstore_pb2
+import bookstore_pb2
+import bookstore_pb2_grpc
 import status
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
 
-class BookstoreServicer(bookstore_pb2.BetaBookstoreServicer):
+class BookstoreServicer(bookstore_pb2_grpc.BookstoreServicer):
     """Implements the bookstore API server."""
     def __init__(self, store):
         self._store = store
@@ -98,9 +101,11 @@ def create_sample_bookstore():
 
 def serve(port, shutdown_grace_duration):
     """Configures and runs the bookstore API server."""
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+
     store = create_sample_bookstore()
-    server = bookstore_pb2.beta_create_Bookstore_server(
-        BookstoreServicer(store))
+    bookstore_pb2_grpc.add_BookstoreServicer_to_server(
+        BookstoreServicer(store), server)
     server.add_insecure_port('[::]:{}'.format(port))
     server.start()
 
