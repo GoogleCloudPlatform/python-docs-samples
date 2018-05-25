@@ -13,16 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import os
-from google.cloud.bigtable.column_family import GarbageCollectionRule,\
-    MaxVersionsGCRule
-from google.cloud.bigtable.row_filters import RowFilter, ConditionalRowFilter,\
-    RowSampleFilter, ColumnRangeFilter, SinkFilter, RowKeyRegexFilter,\
-    TimestampRange, ApplyLabelFilter, ColumnQualifierRegexFilter,\
-    CellsRowLimitFilter, CellsColumnLimitFilter, _BoolFilter, ValueRangeFilter
-from datetime import datetime, timezone
-import pytz
-import re
+
 """Demonstrates how to connect to Cloud Bigtable and run some basic operations.
 
 Prerequisites:
@@ -30,17 +21,24 @@ Prerequisites:
 - Create a Cloud Bigtable cluster.
   https://cloud.google.com/bigtable/docs/creating-cluster
 - Set your Google Application Default Credentials.
-  https://developers.google.com/identity/protocols/application-default-credentials
+  https://cloud.google.com/docs/authentication/getting-started
 """
 
 import argparse
+from datetime import datetime, timezone
+import os
+import re
+
+from google.cloud.bigtable.column_family import GarbageCollectionRule, \
+    MaxVersionsGCRule
+from google.cloud.bigtable.row_filters import CellsRowLimitFilter
 
 from google.cloud import bigtable
 
 
 def main(project_id, instance_id, table_id):
     # [START connecting_to_bigtable]
-    # The client must be created with admin=True because it will create a
+    # Set admin=True to create an client that can perform admin tasks like creating a 
     # table.
     client = bigtable.Client(project=project_id, admin=True)
     instance = client.instance(instance_id)
@@ -50,6 +48,8 @@ def main(project_id, instance_id, table_id):
     print('Creating the {} table.'.format(table_id))
     table = instance.table(table_id)
     table.create()
+
+    print('Creating column family with GC Rule that retains only the most recent version')
     column_family_id = 'cf1'
     cf1 = table.column_family(column_family_id, MaxVersionsGCRule(max_num_versions=1))
     cf1.create()
@@ -63,8 +63,6 @@ def main(project_id, instance_id, table_id):
         'Hello Cloud Bigtable!',
         'Hello Python!',
     ]
-
-    local_timezone = datetime.now(timezone.utc).astimezone().tzinfo
 
     for i, value in enumerate(greetings):
         # Note: This example uses sequential numeric IDs for simplicity,
@@ -82,38 +80,48 @@ def main(project_id, instance_id, table_id):
         row.set_cell(
             column_family_id,
             column_id,
-            value.encode('utf-8'), timestamp=datetime.now(tz=pytz.timezone('UTC')))
+            value.encode('utf-8'))
         row.commit()
     # [END writing_rows]
+    
+    # [START getting_a_row]
+    print('Getting a single greeting by row key.')
+    key = 'greeting0'
+    row = table.read_row(key.encode('utf-8'))
+    value = row.cells[column_family_id][column_id][0].value
+    print('\t{}: {}'.format(key, value.decode('utf-8')))
+    # [END getting_a_row]
 
     # [START scanning_all_rows]
-    print('Getting a single greeting by row key.')
-    rows = table.yield_rows()
-    for row in rows:
+    print('Scanning for all greetings:')
+    partial_rows = table.read_rows()
+    partial_rows.consume_all()
+
+    for row_key, row in partial_rows.rows.items():
+        key = row_key.decode('utf-8')
         cell = row.cells[column_family_id][column_id][0]
         value = cell.value.decode('utf-8')
-        print('\t{}: {}'.format(row.row_key, value))
-        print('\t{}: {}'.format("Timestamp", cell.timestamp))
+        print('\t{}: {}'.format(key, value))
     # [END scanning_all_rows]
     
-    # [START scanning rows with limit number of rows]
-    print('Scanning for all greetings:')    
+    # [START scanning_rows_with_row_limit]
+    print('Scanning for a single greeting:')    
     partial_rows = table.yield_rows(limit=1)
     for row in partial_rows:
         cell = row.cells[column_family_id][column_id][0]
         value = cell.value.decode('utf-8')
         print('\t{}: {}'.format(row.row_key, value))
-    # [END scanning rows with limit number of rows]
+    # [END scanning_rows_with_row_limit]
 
-    # [START scanning rows with filter]
-    print('Scanning for all greetings:')
+    # [START scanning_rows_with_filter]
+    print('Scanning for greetings with filter:')
+    print('CellsRowLimitFilter limits cells in a row.')
     rows = table.yield_rows(filter_=CellsRowLimitFilter(1))
-    
     for row in rows:
         cell = row.cells[column_family_id][column_id][0]
         value = cell.value.decode('utf-8')
         print('\t{}: {}'.format(row.row_key, value))
-    # [END scanning rows with filter]
+    # [END scanning_rows_with_filter]
 
 
     # [START deleting_a_table]
