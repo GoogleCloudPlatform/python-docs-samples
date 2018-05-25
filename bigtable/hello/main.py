@@ -130,16 +130,16 @@ def main(project_id, instance_id, table_id):
     # [END deleting_a_table]
 
 
-if __name__ == '__main1__':
+if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('project_id', help='Your Cloud Platform project ID.')
     parser.add_argument(
-        'instance_id', help='ID of the Cloud Bigtable instance to connect to.')
+        'instance_id', help='Your Cloud Bigtable instance ID')
     parser.add_argument(
         '--table',
-        help='Table to create and destroy.',
+        help='Table to create and delete.',
         default='Hello-Bigtable')
 
     args = parser.parse_args()
