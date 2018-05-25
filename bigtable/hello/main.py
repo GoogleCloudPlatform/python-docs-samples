@@ -134,9 +134,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('project_id', help='Your Cloud Platform project ID.')
+    parser.add_argument('project_id', help='Your Google Cloud Platform project ID.')
     parser.add_argument(
-        'instance_id', help='Your Cloud Bigtable instance ID')
+        'instance_id', help='Your Google Cloud Bigtable instance ID')
     parser.add_argument(
         '--table',
         help='Table to create and delete.',
