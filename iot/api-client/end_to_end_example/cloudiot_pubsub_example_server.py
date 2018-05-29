@@ -56,10 +56,9 @@ SERVICE_NAME = 'cloudiot'
 
 class Server(object):
     """Represents the state of the server."""
-
-    def __init__(self, service_account_json):
-        credentials = ServiceAccountCredentials.from_json_keyfile_name(
-            service_account_json, API_SCOPES)
+def __init__(self, service_account_json):        
+        from google.auth import compute_engine
+        credentials = compute_engine.Credentials()
         if not credentials:
             sys.exit('Could not load service account credential '
                      'from {}'.format(service_account_json))
