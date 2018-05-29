@@ -79,7 +79,7 @@ def summarize(message):
             attributes['overwroteGeneration'])
     if 'overwrittenByGeneration' in attributes:
         description += '\tOverwritten by generation: %s\n' % (
-            attributes['ovewrittenByGeneration'])
+            attributes['overwrittenByGeneration'])
 
     payload_format = attributes['payloadFormat']
     if payload_format == 'JSON_API_V1':
