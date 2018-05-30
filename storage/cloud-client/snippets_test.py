@@ -23,6 +23,7 @@ import requests
 import snippets
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+KMS_KEY = os.environ['CLOUD_KMS_KEY']
 
 
 def test_get_bucket_labels():
@@ -77,6 +78,17 @@ def test_upload_blob():
             BUCKET,
             source_file.name,
             'test_upload_blob')
+
+
+def test_upload_blob_with_kms():
+    with tempfile.NamedTemporaryFile() as source_file:
+        source_file.write(b'test')
+
+        snippets.upload_blob_with_kms(
+            BUCKET,
+            source_file.name,
+            'test_upload_blob_encrypted',
+            KMS_KEY)
 
 
 def test_download_blob(test_blob):
