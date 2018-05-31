@@ -39,7 +39,6 @@ import time
 from google.cloud import speech
 from google.cloud.speech import enums
 from google.cloud.speech import types
-from google import gax
 import grpc
 import pyaudio
 from six.moves import queue
@@ -66,7 +65,7 @@ class ResumableMicrophoneStream(transcribe_streaming_mic.MicrophoneStream):
 
         self._bytes_per_chunk = (self._chunk_size * self._bytes_per_sample)
         self._chunks_per_second = (
-                self._bytes_per_second / self._bytes_per_chunk)
+                self._bytes_per_second // self._bytes_per_chunk)
         self._untranscribed = collections.deque(
                 maxlen=self._max_replay_secs * self._chunks_per_second)
 
