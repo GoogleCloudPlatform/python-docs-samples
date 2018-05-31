@@ -30,18 +30,13 @@ from __future__ import division
 
 import argparse
 import collections
-import itertools
-import re
-import sys
 import threading
 import time
 
 from google.cloud import speech
 from google.cloud.speech import enums
 from google.cloud.speech import types
-import grpc
-import pyaudio
-from six.moves import queue
+from google.api_core import exceptions
 import six
 
 import transcribe_streaming_mic
@@ -209,18 +204,10 @@ def main(sample_rate, audio_src):
                 # Now, put the transcription responses to use.
                 listen_print_loop(responses, stream)
                 break
-            except grpc.RpcError, e:
-                if e.code() not in (grpc.StatusCode.INVALID_ARGUMENT,
-                                    grpc.StatusCode.OUT_OF_RANGE):
+            except (exceptions.OutOfRange, exceptions.InvalidArgument) as e:
+                if not ('maximum allowed stream duration' in e.message or
+                        'deadline too short' in e.message):
                     raise
-                details = e.details()
-                if e.code() == grpc.StatusCode.INVALID_ARGUMENT:
-                    if 'deadline too short' not in details:
-                        raise
-                else:
-                    if 'maximum allowed stream duration' not in details:
-                        raise
-
                 print('Resuming..')
                 resume = True
 
