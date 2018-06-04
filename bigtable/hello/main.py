@@ -85,15 +85,15 @@ def main(project_id, instance_id, table_id):
     # [END writing_rows]
     
     # [START getting_a_row]
-    print('Getting a single greeting by row key.')
+    print('Getting a single greeting by row key:')
     key = 'greeting0'
-    row = table.read_row(key.encode('utf-8'))
+    row = table.read_row(key.encode('utf-8'), filter_=CellsRowLimitFilter(1))
     value = row.cells[column_family_id][column_id][0].value
     print('\t{}: {}'.format(key, value.decode('utf-8')))
     # [END getting_a_row]
 
-    # [START scanning_all_rows]
-    print('Scanning for all greetings:')
+    # [START getting_all_rows]
+    print('Getting all greetings:')
     partial_rows = table.read_rows()
     partial_rows.consume_all()
 
@@ -102,27 +102,17 @@ def main(project_id, instance_id, table_id):
         cell = row.cells[column_family_id][column_id][0]
         value = cell.value.decode('utf-8')
         print('\t{}: {}'.format(key, value))
-    # [END scanning_all_rows]
-    
-    # [START scanning_rows_with_row_limit]
-    print('Scanning for a single greeting:')    
-    partial_rows = table.yield_rows(limit=1)
-    for row in partial_rows:
-        cell = row.cells[column_family_id][column_id][0]
-        value = cell.value.decode('utf-8')
-        print('\t{}: {}'.format(row.row_key, value))
-    # [END scanning_rows_with_row_limit]
+    # [END getting_all_rows]
 
-    # [START scanning_rows_with_filter]
-    print('Scanning for greetings with filter:')
+    # [START scanning_all_rows]
+    print('Scanning for all greetings:')
     print('CellsRowLimitFilter limits cells in a row.')
     rows = table.yield_rows(filter_=CellsRowLimitFilter(1))
     for row in rows:
         cell = row.cells[column_family_id][column_id][0]
         value = cell.value.decode('utf-8')
         print('\t{}: {}'.format(row.row_key, value))
-    # [END scanning_rows_with_filter]
-
+    # [END scanning_all_rows]
 
     # [START deleting_a_table]
     print('Deleting the {} table.'.format(table_id))
