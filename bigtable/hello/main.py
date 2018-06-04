@@ -45,14 +45,22 @@ def main(project_id, instance_id, table_id):
     # [END connecting_to_bigtable]
 
     # [START creating_a_table]
-    print('Creating the {} table.'.format(table_id))
-    table = instance.table(table_id)
-    table.create()
-
-    print('Creating column family with GC Rule that retains only the most recent version')
     column_family_id = 'cf1'
-    cf1 = table.column_family(column_family_id, MaxVersionsGCRule(max_num_versions=1))
-    cf1.create()
+    try:
+        print('Creating the {} table.'.format(table_id))
+        table = instance.table(table_id)
+
+        if not check_table_already_exists(table_id, instance):   
+            table.create()
+        
+            print('Creating column family with GC Rule that retains only the most recent version')
+            cf1 = table.column_family(column_family_id, MaxVersionsGCRule(max_num_versions=1))
+            cf1.create()
+        else:
+            print("Table {} already exists, skipping table creation.".format(table_id))
+    except:
+        print("Error occurred while creating table")
+
     # [END creating_a_table]
 
     # [START writing_rows]
@@ -92,18 +100,6 @@ def main(project_id, instance_id, table_id):
     print('\t{}: {}'.format(key, value.decode('utf-8')))
     # [END getting_a_row]
 
-    # [START getting_all_rows]
-    print('Getting all greetings:')
-    partial_rows = table.read_rows()
-    partial_rows.consume_all()
-
-    for row_key, row in partial_rows.rows.items():
-        key = row_key.decode('utf-8')
-        cell = row.cells[column_family_id][column_id][0]
-        value = cell.value.decode('utf-8')
-        print('\t{}: {}'.format(key, value))
-    # [END getting_all_rows]
-
     # [START scanning_all_rows]
     print('Scanning for all greetings:')
     print('CellsRowLimitFilter limits cells in a row.')
@@ -118,6 +114,20 @@ def main(project_id, instance_id, table_id):
     print('Deleting the {} table.'.format(table_id))
     table.delete()
     # [END deleting_a_table]
+
+
+def check_table_already_exists(table_id, instance):
+    '''
+    Checks whether table with given table ID already exists or not on Google Cloud Bigtable Instance
+    :param table_id: Table ID
+    :param instance: Instance object associated with client
+    '''
+    print("Checks whether table is already exists.")
+    tables = instance.list_tables()
+    for table in tables:
+        if table_id in table.table_id:
+            return True
+    return False
 
 
 if __name__ == '__main__':
