@@ -19,15 +19,19 @@ $(function(){
   // backend's app.yaml file.
   var backendHostUrl = '<your-backend-url>';
 
+  // [START config]
+  // Obtain the following from the "Add Firebase to your web app" dialogue
   // Initialize Firebase
-  // TODO: Replace with your project's customized code snippet
   var config = {
     apiKey: "<API_KEY>",
     authDomain: "<PROJECT_ID>.firebaseapp.com",
     databaseURL: "https://<DATABASE_NAME>.firebaseio.com",
+    projectId: "<PROJECT_ID>",
     storageBucket: "<BUCKET>.appspot.com",
+    messagingSenderId: "<MESSAGING_SENDER_ID>"
   };
-
+  // [END config]
+  
   // This is passed into the backend to authenticate the user.
   var userIdToken = null;
 
