@@ -19,7 +19,7 @@ $(function(){
   // backend's app.yaml file.
   var backendHostUrl = '<your-backend-url>';
 
-  // [START config]
+  // [START gae_firenotes_config]
   // Obtain the following from the "Add Firebase to your web app" dialogue
   // Initialize Firebase
   var config = {
@@ -30,7 +30,7 @@ $(function(){
     storageBucket: "<BUCKET>.appspot.com",
     messagingSenderId: "<MESSAGING_SENDER_ID>"
   };
-  // [END config]
+  // [END gae_firenotes_config]
   
   // This is passed into the backend to authenticate the user.
   var userIdToken = null;
