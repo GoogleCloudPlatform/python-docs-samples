@@ -676,12 +676,12 @@ if __name__ == '__main__':
     parser_string.add_argument(
         '--custom_dictionaries', action='append',
         help='Strings representing comma-delimited lists of dictionary words'
-             ' to search for as custom info types.'
+             ' to search for as custom info types.',
         default=None)
     parser_string.add_argument(
         '--custom_regexes', action='append',
         help='Strings representing regex patterns to search for as custom '
-             ' info types.'
+             ' info types.',
         default=None)
     parser_string.add_argument(
         '--min_likelihood',
@@ -715,12 +715,12 @@ if __name__ == '__main__':
     parser_file.add_argument(
         '--custom_dictionaries', action='append',
         help='Strings representing comma-delimited lists of dictionary words'
-             ' to search for as custom info types.'
+             ' to search for as custom info types.',
         default=None)
     parser_file.add_argument(
         '--custom_regexes', action='append',
         help='Strings representing regex patterns to search for as custom '
-             ' info types.'
+             ' info types.',
         default=None)
     parser_file.add_argument(
         '--min_likelihood',
@@ -773,12 +773,12 @@ if __name__ == '__main__':
     parser_gcs.add_argument(
         '--custom_dictionaries', action='append',
         help='Strings representing comma-delimited lists of dictionary words'
-             ' to search for as custom info types.'
+             ' to search for as custom info types.',
         default=None)
     parser_gcs.add_argument(
         '--custom_regexes', action='append',
         help='Strings representing regex patterns to search for as custom '
-             ' info types.'
+             ' info types.',
         default=None)
     parser_gcs.add_argument(
         '--min_likelihood',
@@ -827,12 +827,12 @@ if __name__ == '__main__':
     parser_datastore.add_argument(
         '--custom_dictionaries', action='append',
         help='Strings representing comma-delimited lists of dictionary words'
-             ' to search for as custom info types.'
+             ' to search for as custom info types.',
         default=None)
     parser_datastore.add_argument(
         '--custom_regexes', action='append',
         help='Strings representing regex patterns to search for as custom '
-             ' info types.'
+             ' info types.',
         default=None)
     parser_datastore.add_argument(
         '--namespace_id',
@@ -887,12 +887,12 @@ if __name__ == '__main__':
     parser_bigquery.add_argument(
         '--custom_dictionaries', action='append',
         help='Strings representing comma-delimited lists of dictionary words'
-             ' to search for as custom info types.'
+             ' to search for as custom info types.',
         default=None)
     parser_bigquery.add_argument(
         '--custom_regexes', action='append',
         help='Strings representing regex patterns to search for as custom '
-             ' info types.'
+             ' info types.',
         default=None)
     parser_bigquery.add_argument(
         '--min_likelihood',
