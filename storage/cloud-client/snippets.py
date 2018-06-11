@@ -44,6 +44,7 @@ def delete_bucket(bucket_name):
 
 
 def enable_default_kms_key(bucket_name, kms_key_name):
+    # [START storage_set_bucket_default_kms_key]
     """Sets a bucket's default KMS key."""
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
@@ -53,6 +54,7 @@ def enable_default_kms_key(bucket_name, kms_key_name):
     print('Set default KMS key for bucket {} to {}.'.format(
         bucket.name,
         bucket.default_kms_key_name))
+    # [END storage_set_bucket_default_kms_key]
 
 
 def get_bucket_labels(bucket_name):
@@ -157,6 +159,7 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
 
 def upload_blob_with_kms(bucket_name, source_file_name, destination_blob_name,
                          kms_key_name):
+    # [START storage_upload_with_kms_key]
     """Uploads a file to the bucket, encrypting it with the given KMS key."""
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
@@ -167,6 +170,7 @@ def upload_blob_with_kms(bucket_name, source_file_name, destination_blob_name,
         source_file_name,
         destination_blob_name,
         kms_key_name))
+    # [END storage_upload_with_kms_key]
 
 
 def download_blob(bucket_name, source_blob_name, destination_file_name):
