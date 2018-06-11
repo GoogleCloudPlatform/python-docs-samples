@@ -25,6 +25,16 @@ import snippets
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 KMS_KEY = os.environ['CLOUD_KMS_KEY']
 
+def test_enable_default_kms_key():
+    snippets.enable_default_kms_key(
+        bucket_name=BUCKET,
+        kms_key_name=KMS_KEY)
+
+    bucket = storage.Client().bucket(BUCKET)
+    assert bucket.default_kms_key_name.startswith(KMS_KEY)
+    bucket.default_kms_key_name = null
+    bucket.patch()
+
 
 def test_get_bucket_labels():
     snippets.get_bucket_labels(BUCKET)
@@ -89,6 +99,10 @@ def test_upload_blob_with_kms():
             source_file.name,
             'test_upload_blob_encrypted',
             KMS_KEY)
+
+	bucket = storage.Client().bucket(BUCKET)
+        kms_blob = bucket.get_blob('test_upload_blob_encrypted')
+        assert kms_blob.kms_key_name.startwith(KMS_KEY)
 
 
 def test_download_blob(test_blob):
