@@ -94,7 +94,7 @@ To run this sample:
 
     usage: snippets.py [-h]
                        bucket_name
-                       {create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,download,delete,metadata,make-public,signed-url,rename,copy}
+                       {create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,rename,copy}
                        ...
 
     This application demonstrates how to perform basic operations on blobs
@@ -105,7 +105,7 @@ To run this sample:
 
     positional arguments:
       bucket_name           Your cloud storage bucket.
-      {create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,download,delete,metadata,make-public,signed-url,rename,copy}
+      {create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,rename,copy}
         create-bucket       Creates a new bucket.
         delete-bucket       Deletes a bucket. The bucket must be empty.
         get-bucket-labels   Prints out a bucket's labels.
@@ -124,6 +124,11 @@ To run this sample:
                             However, if you specify prefix='/a' and delimiter='/',
                             you'll get back: /a/1.txt
         upload              Uploads a file to the bucket.
+        enable-default-kms-key
+                            Sets a bucket's default KMS key.
+        upload-with-kms-key
+                            Uploads a file to the bucket, encrypting it with the
+                            given KMS key.
         download            Downloads a blob from the bucket.
         delete              Deletes a blob from the bucket.
         metadata            Prints out a blob's metadata.
