@@ -42,6 +42,22 @@ def create_uptime_check_config(project_name, host_name=None,
 # [END monitoring_uptime_check_create]
 
 
+# [START monitoring_uptime_check_update]
+def update_uptime_check_config(config_name, new_display_name=None,
+                               new_http_check_path=None):
+    client = monitoring_v3.UptimeCheckServiceClient()
+    config = client.get_uptime_check_config(config_name)
+    field_mask = monitoring_v3.types.FieldMask()
+    if new_display_name:
+        field_mask.paths.append('display_name')
+        config.display_name = new_display_name
+    if new_http_check_path:
+        field_mask.paths.append('http_check.path')
+        config.http_check.path = new_http_check_path
+    client.update_uptime_check_config(config, field_mask)
+# [END monitoring_uptime_check_update]
+
+
 # [START monitoring_uptime_check_list_configs]
 def list_uptime_check_configs(project_name):
     client = monitoring_v3.UptimeCheckServiceClient()
@@ -153,6 +169,23 @@ if __name__ == '__main__':
         required=True,
     )
 
+    update_uptime_check_config_parser = subparsers.add_parser(
+        'update-uptime-check-config',
+        help=update_uptime_check_config.__doc__
+    )
+    update_uptime_check_config_parser.add_argument(
+        '-m', '--name',
+        required=True,
+    )
+    update_uptime_check_config_parser.add_argument(
+        '-d', '--display_name',
+        required=False,
+    )
+    update_uptime_check_config_parser.add_argument(
+        '-p', '--uptime_check_path',
+        required=False,
+    )
+
     args = parser.parse_args()
 
     if args.command == 'list-uptime-check-configs':
@@ -170,3 +203,11 @@ if __name__ == '__main__':
 
     elif args.command == 'delete-uptime-check-config':
         delete_uptime_check_config(args.name)
+
+    elif args.command == 'update-uptime-check-config':
+        if not args.display_name and not args.uptime_check_path:
+            print('Nothing to update.  Pass --display_name or '
+                  '--uptime_check_path.')
+        else:
+            update_uptime_check_config(args.name, args.display_name,
+                                       args.uptime_check_path)
