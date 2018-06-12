@@ -235,6 +235,7 @@ def test_query_data_with_timestamp(temporary_database, capsys):
 
         assert 'Go, Go, Go' in out
 
+
 @pytest.mark.slow
 def test_query_data_with_struct(temporary_database, capsys):
     @eventually_consistent.call
@@ -248,6 +249,7 @@ def test_query_data_with_struct(temporary_database, capsys):
         out, _ = capsys.readouterr()
 
         assert 'SingerId: 6' in out
+
 
 @pytest.mark.slow
 def test_query_data_with_array_struct(temporary_database, capsys):
@@ -263,6 +265,7 @@ def test_query_data_with_array_struct(temporary_database, capsys):
 
         assert 'SingerId: 6\nSingerId: 7' in out
 
+
 @pytest.mark.slow
 def test_query_data_with_field_struct(temporary_database, capsys):
     @eventually_consistent.call
@@ -277,6 +280,7 @@ def test_query_data_with_field_struct(temporary_database, capsys):
 
         assert 'SingerId: 6' in out
 
+
 @pytest.mark.slow
 def test_query_data_with_nested_field_struct(temporary_database, capsys):
     @eventually_consistent.call
@@ -289,4 +293,6 @@ def test_query_data_with_nested_field_struct(temporary_database, capsys):
             temporary_database.database_id)
         out, _ = capsys.readouterr()
 
-        assert 'SingerId: 6 SongName: Imagination\nSingerId: 9 SongName: Imagination' in out
+        assert 'SingerId: 6 SongName: Imagination' in out
+        assert 'SingerId: 9 SongName: Imagination' in out
+

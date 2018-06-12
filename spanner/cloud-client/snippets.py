@@ -598,6 +598,7 @@ def query_data_with_timestamp(instance_id, database_id):
         print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
 # [END spanner_query_data_with_timestamp_column]
 
+
 # [START spanner_write_data_for_struct_queries]
 def write_struct_data(instance_id, database_id):
     """Inserts sample data that can be used to test STRUCT parameters in queries.
@@ -618,6 +619,7 @@ def write_struct_data(instance_id, database_id):
 
     print 'Inserted sample data for STRUCT queries'
 # [END spanner_write_data_for_struct_queries]
+
 
 def query_with_struct(instance_id, database_id):
     """
@@ -647,6 +649,7 @@ def query_with_struct(instance_id, database_id):
     for row in results:
             print(u'SingerId: {}'.format(*row))
     # [END spanner_query_data_with_struct]
+
 
 def query_with_array_of_struct(instance_id, database_id):
     """
@@ -804,7 +807,8 @@ if __name__ == '__main__':  # noqa: C901
     subparsers.add_parser('query_with_struct', help=query_with_struct.__doc__)
     subparsers.add_parser(
         'query_with_array_of_struct', help=query_with_array_of_struct.__doc__)
-    subparsers.add_parser('query_struct_field', help=query_struct_field.__doc__)
+    subparsers.add_parser(
+            'query_struct_field', help=query_struct_field.__doc__)
     subparsers.add_parser(
         'query_nested_struct_field', help=query_nested_struct_field.__doc__)
 
