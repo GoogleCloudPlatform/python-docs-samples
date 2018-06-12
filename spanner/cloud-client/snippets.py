@@ -617,7 +617,7 @@ def write_struct_data(instance_id, database_id):
                 (8, u'Benjamin', u'Martinez'),
                 (9, u'Hannah', u'Harris')])
 
-    print 'Inserted sample data for STRUCT queries'
+    print('Inserted sample data for STRUCT queries')
 # [END spanner_write_data_for_struct_queries]
 
 
