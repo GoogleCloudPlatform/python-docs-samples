@@ -295,4 +295,3 @@ def test_query_data_with_nested_field_struct(temporary_database, capsys):
 
         assert 'SingerId: 6 SongName: Imagination' in out
         assert 'SingerId: 9 SongName: Imagination' in out
-
