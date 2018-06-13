@@ -16,7 +16,6 @@
 local file or a file on Google Cloud Storage."""
 
 from __future__ import print_function
-from builtins import range
 
 import argparse
 import os
