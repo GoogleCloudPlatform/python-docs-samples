@@ -515,8 +515,7 @@ def insert_data_with_timestamp(instance_id, database_id):
 
 # [START spanner_add_timestamp_column]
 def add_timestamp_column(instance_id, database_id):
-    """
-    Adds a new TIMESTAMP column to the Albums table in the example database.
+    """ Adds a new TIMESTAMP column to the Albums table in the example database.
     """
     spanner_client = spanner.Client()
     instance = spanner_client.instance(instance_id)
@@ -601,7 +600,8 @@ def query_data_with_timestamp(instance_id, database_id):
 
 # [START spanner_write_data_for_struct_queries]
 def write_struct_data(instance_id, database_id):
-    """Inserts sample data that can be used to test STRUCT parameters in queries.
+    """Inserts sample data that can be used to test STRUCT parameters
+    in queries.
     """
     spanner_client = spanner.Client()
     instance = spanner_client.instance(instance_id)
@@ -622,9 +622,7 @@ def write_struct_data(instance_id, database_id):
 
 
 def query_with_struct(instance_id, database_id):
-    """
-       Query a table using STRUCT parameters.
-    """
+    """Query a table using STRUCT parameters. """
     # [START spanner_create_struct_with_data]
     record_type = param_types.Struct([
             param_types.StructField('FirstName', param_types.STRING),
@@ -652,9 +650,7 @@ def query_with_struct(instance_id, database_id):
 
 
 def query_with_array_of_struct(instance_id, database_id):
-    """
-       Query a table using an array of STRUCT parameters.
-    """
+    """Query a table using an array of STRUCT parameters. """
     # [START spanner_create_user_defined_struct]
     name_type = param_types.Struct([
         param_types.StructField('FirstName', param_types.STRING),
@@ -687,9 +683,7 @@ def query_with_array_of_struct(instance_id, database_id):
 
 # [START spanner_field_access_on_struct_parameters]
 def query_struct_field(instance_id, database_id):
-    """
-       Query a table using field access on a STRUCT parameter.
-    """
+    """Query a table using field access on a STRUCT parameter. """
     spanner_client = spanner.Client()
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
@@ -713,9 +707,7 @@ def query_struct_field(instance_id, database_id):
 
 # [START spanner_field_access_on_nested_struct_parameters]
 def query_nested_struct_field(instance_id, database_id):
-    """
-       Query a table using nested field access on a STRUCT parameter.
-    """
+    """Query a table using nested field access on a STRUCT parameter. """
     spanner_client = spanner.Client()
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
