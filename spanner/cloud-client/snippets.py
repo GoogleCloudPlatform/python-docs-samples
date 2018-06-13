@@ -647,7 +647,7 @@ def query_with_struct(instance_id, database_id):
             param_types={'name': record_type})
 
     for row in results:
-            print(u'SingerId: {}'.format(*row))
+        print(u'SingerId: {}'.format(*row))
     # [END spanner_query_data_with_struct]
 
 
@@ -658,8 +658,7 @@ def query_with_array_of_struct(instance_id, database_id):
     # [START spanner_create_user_defined_struct]
     name_type = param_types.Struct([
         param_types.StructField('FirstName', param_types.STRING),
-        param_types.StructField('LastName', param_types.STRING)
-        ])
+        param_types.StructField('LastName', param_types.STRING)])
     # [END spanner_create_user_defined_struct]
 
     # [START spanner_create_array_of_struct_with_data]
