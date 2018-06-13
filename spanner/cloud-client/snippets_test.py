@@ -234,3 +234,64 @@ def test_query_data_with_timestamp(temporary_database, capsys):
         out, _ = capsys.readouterr()
 
         assert 'Go, Go, Go' in out
+
+
+@pytest.mark.slow
+def test_query_data_with_struct(temporary_database, capsys):
+    @eventually_consistent.call
+    def _():
+        snippets.write_struct_data(
+            SPANNER_INSTANCE,
+            temporary_database.database_id)
+        snippets.query_with_struct(
+            SPANNER_INSTANCE,
+            temporary_database.database_id)
+        out, _ = capsys.readouterr()
+
+        assert 'SingerId: 6' in out
+
+
+@pytest.mark.slow
+def test_query_data_with_array_struct(temporary_database, capsys):
+    @eventually_consistent.call
+    def _():
+        snippets.write_struct_data(
+            SPANNER_INSTANCE,
+            temporary_database.database_id)
+        snippets.query_with_array_of_struct(
+            SPANNER_INSTANCE,
+            temporary_database.database_id)
+        out, _ = capsys.readouterr()
+
+        assert 'SingerId: 6\nSingerId: 7' in out
+
+
+@pytest.mark.slow
+def test_query_data_with_field_struct(temporary_database, capsys):
+    @eventually_consistent.call
+    def _():
+        snippets.write_struct_data(
+            SPANNER_INSTANCE,
+            temporary_database.database_id)
+        snippets.query_struct_field(
+            SPANNER_INSTANCE,
+            temporary_database.database_id)
+        out, _ = capsys.readouterr()
+
+        assert 'SingerId: 6' in out
+
+
+@pytest.mark.slow
+def test_query_data_with_nested_field_struct(temporary_database, capsys):
+    @eventually_consistent.call
+    def _():
+        snippets.write_struct_data(
+            SPANNER_INSTANCE,
+            temporary_database.database_id)
+        snippets.query_nested_struct_field(
+            SPANNER_INSTANCE,
+            temporary_database.database_id)
+        out, _ = capsys.readouterr()
+
+        assert 'SingerId: 6 SongName: Imagination' in out
+        assert 'SingerId: 9 SongName: Imagination' in out
