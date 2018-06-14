@@ -169,6 +169,7 @@ def test_inspect_string(capsys):
     assert 'Info type: FIRST_NAME' in out
     assert 'Info type: EMAIL_ADDRESS' in out
 
+
 def test_inspect_string_with_custom_info_types(capsys):
     test_string = 'My name is Gary Smith and my email is gary@example.com'
     dictionaries = ['Gary Smith']
@@ -211,6 +212,7 @@ def test_inspect_file(capsys):
 
     out, _ = capsys.readouterr()
     assert 'Info type: EMAIL_ADDRESS' in out
+
 
 def test_inspect_file_with_custom_info_types(capsys):
     test_filepath = os.path.join(RESOURCE_DIRECTORY, 'test.txt')
@@ -269,6 +271,7 @@ def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
     out, _ = capsys.readouterr()
     assert 'Info type: EMAIL_ADDRESS' in out
 
+
 @flaky
 def test_inspect_gcs_file_with_custom_info_types(bucket, topic_id, subscription_id, capsys):
     dictionaries = ['gary@somedomain.com']
@@ -287,6 +290,7 @@ def test_inspect_gcs_file_with_custom_info_types(bucket, topic_id, subscription_
     out, _ = capsys.readouterr()
     assert 'Info type: CUSTOM_DICTIONARY_0' in out
     assert 'Info type: CUSTOM_REGEX_0' in out
+
 
 @flaky
 def test_inspect_gcs_file_no_results(
