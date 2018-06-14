@@ -54,7 +54,7 @@ def inspect_string(project, content_string, info_types,
     # Prepare custom_info_types by parsing the dictionary word lists and
     # regex patterns.
     custom_info_types = build_custom_info_types(custom_dictionaries,
-                                                custom_info_types)
+                                                custom_regexes)
 
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
