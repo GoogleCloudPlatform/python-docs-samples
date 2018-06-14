@@ -54,7 +54,7 @@ def inspect_string(project, content_string, info_types,
     # Prepare custom_info_types by parsing the dictionary word lists and
     # regex patterns.
     if custom_dictionaries is None:
-      custom_dictionaries = []
+        custom_dictionaries = []
     dictionaries = [{
         'info_type': {'name': 'CUSTOM_DICTIONARY_{}'.format(i)},
         'dictionary': {
@@ -62,7 +62,7 @@ def inspect_string(project, content_string, info_types,
         }
     } for i in range(len(custom_dictionaries))]
     if custom_regexes is None:
-      custom_regexes = []
+        custom_regexes = []
     regexes = [{
         'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
         'regex': {'pattern': custom_regexes[i]}
@@ -142,7 +142,7 @@ def inspect_file(project, filename, info_types, min_likelihood=None,
     # Prepare custom_info_types by parsing the dictionary word lists and
     # regex patterns.
     if custom_dictionaries is None:
-      custom_dictionaries = []
+        custom_dictionaries = []
     dictionaries = [{
         'info_type': {'name': 'CUSTOM_DICTIONARY_{}'.format(i)},
         'dictionary': {
@@ -150,7 +150,7 @@ def inspect_file(project, filename, info_types, min_likelihood=None,
         }
     } for i in range(len(custom_dictionaries))]
     if custom_regexes is None:
-      custom_regexes = []
+        custom_regexes = []
     regexes = [{
         'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
         'regex': {'pattern': custom_regexes[i]}
@@ -255,7 +255,7 @@ def inspect_gcs_file(project, bucket, filename, topic_id, subscription_id,
     # Prepare custom_info_types by parsing the dictionary word lists and
     # regex patterns.
     if custom_dictionaries is None:
-      custom_dictionaries = []
+        custom_dictionaries = []
     dictionaries = [{
         'info_type': {'name': 'CUSTOM_DICTIONARY_{}'.format(i)},
         'dictionary': {
@@ -263,7 +263,7 @@ def inspect_gcs_file(project, bucket, filename, topic_id, subscription_id,
         }
     } for i in range(len(custom_dictionaries))]
     if custom_regexes is None:
-      custom_regexes = []
+        custom_regexes = []
     regexes = [{
         'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
         'regex': {'pattern': custom_regexes[i]}
@@ -401,7 +401,7 @@ def inspect_datastore(project, datastore_project, kind,
     # Prepare custom_info_types by parsing the dictionary word lists and
     # regex patterns.
     if custom_dictionaries is None:
-      custom_dictionaries = []
+        custom_dictionaries = []
     dictionaries = [{
         'info_type': {'name': 'CUSTOM_DICTIONARY_{}'.format(i)},
         'dictionary': {
@@ -409,7 +409,7 @@ def inspect_datastore(project, datastore_project, kind,
         }
     } for i in range(len(custom_dictionaries))]
     if custom_regexes is None:
-      custom_regexes = []
+        custom_regexes = []
     regexes = [{
         'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
         'regex': {'pattern': custom_regexes[i]}
@@ -552,7 +552,7 @@ def inspect_bigquery(project, bigquery_project, dataset_id, table_id,
     # Prepare custom_info_types by parsing the dictionary word lists and
     # regex patterns.
     if custom_dictionaries is None:
-      custom_dictionaries = []
+        custom_dictionaries = []
     dictionaries = [{
         'info_type': {'name': 'CUSTOM_DICTIONARY_{}'.format(i)},
         'dictionary': {
@@ -560,7 +560,7 @@ def inspect_bigquery(project, bigquery_project, dataset_id, table_id,
         }
     } for i in range(len(custom_dictionaries))]
     if custom_regexes is None:
-      custom_regexes = []
+        custom_regexes = []
     regexes = [{
         'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
         'regex': {'pattern': custom_regexes[i]}
