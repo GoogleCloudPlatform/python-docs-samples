@@ -273,7 +273,8 @@ def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
 
 
 @flaky
-def test_inspect_gcs_file_with_custom_info_types(bucket, topic_id, subscription_id, capsys):
+def test_inspect_gcs_file_with_custom_info_types(bucket, topic_id,
+                                                 subscription_id, capsys):
     dictionaries = ['gary@somedomain.com']
     regexes = ['\\(\\d{3}\\) \\d{3}-\\d{4}']
 
