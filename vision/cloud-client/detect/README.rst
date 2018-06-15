@@ -81,7 +81,7 @@ To run this sample:
     $ python detect.py
 
     usage: detect.py [-h]
-                     {faces,faces-uri,labels,labels-uri,landmarks,landmarks-uri,text,text-uri,logos,logos-uri,safe-search,safe-search-uri,properties,properties-uri,web,web-uri,web-geo,web-geo-uri,crophints,crophints-uri,document,document-uri}
+                     {faces,faces-uri,labels,labels-uri,landmarks,landmarks-uri,text,text-uri,logos,logos-uri,safe-search,safe-search-uri,properties,properties-uri,web,web-uri,web-geo,web-geo-uri,crophints,crophints-uri,document,document-uri,ocr-uri}
                      ...
 
     This application demonstrates how to perform basic operations with the
@@ -94,12 +94,13 @@ To run this sample:
     python detect.py web-uri http://wheresgus.com/dog.JPG
     python detect.py web-geo ./resources/city.jpg
     python detect.py faces-uri gs://your-bucket/file.jpg
+    python detect_pdf.py ocr-uri gs://python-docs-samples-tests/HodgeConj.pdf gs://BUCKET_NAME/PREFIX/
 
     For more information, the documentation at
     https://cloud.google.com/vision/docs.
 
     positional arguments:
-      {faces,faces-uri,labels,labels-uri,landmarks,landmarks-uri,text,text-uri,logos,logos-uri,safe-search,safe-search-uri,properties,properties-uri,web,web-uri,web-geo,web-geo-uri,crophints,crophints-uri,document,document-uri}
+      {faces,faces-uri,labels,labels-uri,landmarks,landmarks-uri,text,text-uri,logos,logos-uri,safe-search,safe-search-uri,properties,properties-uri,web,web-uri,web-geo,web-geo-uri,crophints,crophints-uri,document,document-uri,ocr-uri}
         faces               Detects faces in an image.
         faces-uri           Detects faces in the file located in Google Cloud
                             Storage or the web.
@@ -135,6 +136,7 @@ To run this sample:
         document            Detects document features in an image.
         document-uri        Detects document features in the file located in
                             Google Cloud Storage.
+        ocr-uri             OCR with PDF/TIFF as source files on GCS
 
     optional arguments:
       -h, --help            show this help message and exit

@@ -24,6 +24,8 @@ python detect.py web ./resources/landmark.jpg
 python detect.py web-uri http://wheresgus.com/dog.JPG
 python detect.py web-geo ./resources/city.jpg
 python detect.py faces-uri gs://your-bucket/file.jpg
+python detect_pdf.py ocr-uri gs://python-docs-samples-tests/HodgeConj.pdf \
+gs://BUCKET_NAME/PREFIX/
 
 For more information, the documentation at
 https://cloud.google.com/vision/docs.
@@ -31,8 +33,11 @@ https://cloud.google.com/vision/docs.
 
 import argparse
 import io
+import re
 
+from google.cloud import storage
 from google.cloud import vision
+from google.protobuf import json_format
 
 
 # [START def_detect_faces]
@@ -636,6 +641,76 @@ def detect_document_uri(uri):
 # [END def_detect_document_uri]
 
 
+# [START vision_async_detect_document_ocr]
+def async_detect_document(gcs_source_uri, gcs_destination_uri):
+    """OCR with PDF/TIFF as source files on GCS"""
+    # Supported mime_types are: 'application/pdf' and 'image/tiff'
+    mime_type = 'application/pdf'
+
+    # How many pages should be grouped into each json output file.
+    batch_size = 2
+
+    client = vision.ImageAnnotatorClient()
+
+    feature = vision.types.Feature(
+        type=vision.enums.Feature.Type.DOCUMENT_TEXT_DETECTION)
+
+    gcs_source = vision.types.GcsSource(uri=gcs_source_uri)
+    input_config = vision.types.InputConfig(
+        gcs_source=gcs_source, mime_type=mime_type)
+
+    gcs_destination = vision.types.GcsDestination(uri=gcs_destination_uri)
+    output_config = vision.types.OutputConfig(
+        gcs_destination=gcs_destination, batch_size=batch_size)
+
+    async_request = vision.types.AsyncAnnotateFileRequest(
+        features=[feature], input_config=input_config,
+        output_config=output_config)
+
+    operation = client.async_batch_annotate_files(
+        requests=[async_request])
+
+    print('Waiting for the operation to finish.')
+    operation.result(timeout=180)
+
+    # Once the request has completed and the output has been
+    # written to GCS, we can list all the output files.
+    storage_client = storage.Client()
+
+    match = re.match(r'gs://([^/]+)/(.+)', gcs_destination_uri)
+    bucket_name = match.group(1)
+    prefix = match.group(2)
+
+    bucket = storage_client.get_bucket(bucket_name=bucket_name)
+
+    # List objects with the given prefix.
+    blob_list = list(bucket.list_blobs(prefix=prefix))
+    print('Output files:')
+    for blob in blob_list:
+        print(blob.name)
+
+    # Process the first output file from GCS.
+    # Since we specified batch_size=2, the first response contains
+    # the first two pages of the input file.
+    output = blob_list[0]
+
+    json_string = output.download_as_string()
+    response = json_format.Parse(
+        json_string, vision.types.AnnotateFileResponse())
+
+    # The actual response for the first page of the input file.
+    first_page_response = response.responses[0]
+    annotation = first_page_response.full_text_annotation
+
+    # Here we print the full text from the first page.
+    # The response contains more information:
+    # annotation/pages/blocks/paragraphs/words/symbols
+    # including confidence scores and bounding boxes
+    print(u'Full text:\n{}'.format(
+        annotation.text))
+# [END vision_async_detect_document_ocr]
+
+
 def run_local(args):
     if args.command == 'faces':
         detect_faces(args.path)
@@ -684,6 +759,8 @@ def run_uri(args):
         detect_document_uri(args.uri)
     elif args.command == 'web-geo-uri':
         web_entities_include_geo_results_uri(args.uri)
+    elif args.command == 'ocr-uri':
+        async_detect_document(args.uri, args.destination_uri)
 
 
 if __name__ == '__main__':
@@ -785,9 +862,14 @@ if __name__ == '__main__':
         'document-uri', help=detect_document_uri.__doc__)
     document_uri_parser.add_argument('uri')
 
+    ocr_uri_parser = subparsers.add_parser(
+        'ocr-uri', help=async_detect_document.__doc__)
+    ocr_uri_parser.add_argument('uri')
+    ocr_uri_parser.add_argument('destination_uri')
+
     args = parser.parse_args()
 
-    if ('uri' in args.command):
+    if 'uri' in args.command:
         run_uri(args)
     else:
         run_local(args)
