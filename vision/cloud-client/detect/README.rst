@@ -94,7 +94,7 @@ To run this sample:
     python detect.py web-uri http://wheresgus.com/dog.JPG
     python detect.py web-geo ./resources/city.jpg
     python detect.py faces-uri gs://your-bucket/file.jpg
-    python detect_pdf.py ocr-uri gs://python-docs-samples-tests/HodgeConj.pdf     gs://BUCKET_NAME/PREFIX/
+    python detect_pdf.py ocr-uri gs://python-docs-samples-tests/HodgeConj.pdf gs://BUCKET_NAME/PREFIX/
 
     For more information, the documentation at
     https://cloud.google.com/vision/docs.

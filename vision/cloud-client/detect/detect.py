@@ -25,7 +25,7 @@ python detect.py web-uri http://wheresgus.com/dog.JPG
 python detect.py web-geo ./resources/city.jpg
 python detect.py faces-uri gs://your-bucket/file.jpg
 python detect_pdf.py ocr-uri gs://python-docs-samples-tests/HodgeConj.pdf \
-    gs://BUCKET_NAME/PREFIX/
+gs://BUCKET_NAME/PREFIX/
 
 For more information, the documentation at
 https://cloud.google.com/vision/docs.
@@ -648,7 +648,6 @@ def async_detect_document(gcs_source_uri, gcs_destination_uri):
     mime_type = 'application/pdf'
 
     # How many pages should be grouped into each json output file.
-    # With a file of 5 pages
     batch_size = 2
 
     client = vision.ImageAnnotatorClient()
