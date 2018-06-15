@@ -42,6 +42,7 @@ default_dag_args = {
 # DAG object.
 with models.DAG(
         'simple_greeting',
+        schedule_interval=datetime.timedelta(days=1),
         default_args=default_dag_args) as dag:
     # [END composer_simple_define_dag]
     # [START composer_simple_operators]
