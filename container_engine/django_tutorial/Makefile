@@ -11,7 +11,7 @@ create-cluster:
 .PHONY: create-bucket
 create-bucket:
 	gsutil mb gs://$(GCLOUD_PROJECT)
-    gsutil defacl set public-read gs://$(GCLOUD_PROJECT)
+	gsutil defacl set public-read gs://$(GCLOUD_PROJECT)
 
 .PHONY: build
 build:
@@ -19,7 +19,7 @@ build:
 
 .PHONY: push
 push: build
-	gcloud docker push gcr.io/$(GCLOUD_PROJECT)/polls
+	gcloud docker push -- gcr.io/$(GCLOUD_PROJECT)/polls
 
 .PHONY: template
 template:
@@ -31,7 +31,7 @@ deploy: push template
 
 .PHONY: update
 update:
-	kubectl rolling-update polls --image=gcr.io/${GCLOUD_PROJECT}/polls
+	kubectl patch deployment polls -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
 
 .PHONY: delete
 delete:
