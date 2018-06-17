@@ -6,7 +6,7 @@ all: deploy
 .PHONY: create-cluster
 create-cluster:
 	gcloud container clusters create polls \
-		--scope "https://www.googleapis.com/auth/userinfo.email","cloud-platform"
+		--scopes "https://www.googleapis.com/auth/userinfo.email","cloud-platform"
 
 .PHONY: create-bucket
 create-bucket:
