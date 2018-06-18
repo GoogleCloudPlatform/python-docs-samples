@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2017 Google Inc.
+# Copyright 2018 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,91 +21,75 @@ and running the scripts.
 """
 
 import argparse
-import base64
 
 
-# [START cloud_tasks_create_task]
 def create_task(project, queue, location):
+    # [START tasks_create_task]
     """Create a task for a given queue with an arbitrary payload."""
 
-    import googleapiclient.discovery
+    from google.cloud import tasks_v2beta2
 
     # Create a client.
-    client = googleapiclient.discovery.build('cloudtasks', 'v2beta2')
+    client = tasks_v2beta2.CloudTasksClient()
 
-    # Prepare the payload.
-    payload = 'a message for the recipient'
-
-    # The API expects base64 encoding of the payload, so encode the unicode
-    # `payload` object into a byte string and base64 encode it.
-    base64_encoded_payload = base64.b64encode(payload.encode())
-
-    # The request body object will be emitted in JSON, which requires
-    # unicode objects, so convert the byte string to unicode (still base64).
-    converted_payload = base64_encoded_payload.decode()
+    # Prepare the payload of type bytes.
+    payload = 'a message for the recipient'.encode()
 
     # Construct the request body.
     task = {
-        'task': {
-            'pullMessage': {
-                'payload': converted_payload
-            }
+        'pull_message': {
+            'payload': payload,
         }
     }
 
     # Construct the fully qualified queue name.
-    queue_name = 'projects/{}/locations/{}/queues/{}'.format(
-        project, location, queue)
+    parent = client.queue_path(project, location, queue)
 
     # Use the client to build and send the task.
-    response = client.projects().locations().queues().tasks().create(
-        parent=queue_name, body=task).execute()
+    response = client.create_task(parent, task)
 
-    print('Created task {}'.format(response['name']))
+    print('Created task: {}'.format(response.name))
     return response
-# [END cloud_tasks_create_task]
+    # [END tasks_create_task]
 
 
-# [START cloud_tasks_lease_and_acknowledge_task]
 def lease_task(project, queue, location):
+    # [START tasks_lease_and_acknowledge_task]
     """Lease a single task from a given queue for 10 minutes."""
 
-    import googleapiclient.discovery
+    from google.cloud import tasks_v2beta2
 
     # Create a client.
-    client = googleapiclient.discovery.build('cloudtasks', 'v2beta2')
+    client = tasks_v2beta2.CloudTasksClient()
 
-    duration_seconds = '600s'
-    lease_options = {
-        'maxTasks': 1,
-        'leaseDuration': duration_seconds,
-        'responseView': 'FULL'
-    }
+    # Construct the fully qualified queue name.
+    parent = client.queue_path(project, location, queue)
 
-    queue_name = 'projects/{}/locations/{}/queues/{}'.format(
-        project, location, queue)
+    lease_duration = {'seconds': 600}
 
-    response = client.projects().locations().queues().tasks().lease(
-        parent=queue_name, body=lease_options).execute()
+    # Send lease request to client.
+    response = client.lease_tasks(
+        parent, lease_duration, max_tasks=1, response_view='FULL')
 
-    print('Leased task {}'.format(response))
-    return response['tasks'][0]
+    task = response.tasks[0]
+
+    print('Leased task {}'.format(task.name))
+    return task
 
 
 def acknowledge_task(task):
     """Acknowledge a given task."""
 
-    import googleapiclient.discovery
+    from google.cloud import tasks_v2beta2
 
     # Create a client.
-    client = googleapiclient.discovery.build('cloudtasks', 'v2beta2')
+    client = tasks_v2beta2.CloudTasksClient()
 
-    body = {'scheduleTime': task['scheduleTime']}
-    client.projects().locations().queues().tasks().acknowledge(
-        name=task['name'], body=body).execute()
+    # Send request to client to acknowledge task.
+    client.acknowledge_task(task.name, task.schedule_time)
 
-    print('Acknowledged task {}'.format(task['name']))
-    # [END cloud_tasks_lease_and_acknowledge_task]
+    print('Acknowledged task {}'.format(task.name))
+    # [END tasks_lease_and_acknowledge_task]
 
 
 if __name__ == '__main__':
