@@ -23,7 +23,7 @@ and running the scripts.
 import argparse
 
 
-# [START cloud_tasks_create_task]
+# [START tasks_create_task]
 def create_task(project, queue, location):
     """Create a task for a given queue with an arbitrary payload."""
 
@@ -32,8 +32,8 @@ def create_task(project, queue, location):
     # Create a client.
     client = tasks_v2beta2.CloudTasksClient()
 
-    # Prepare the payload.
-    payload = 'a message for the recipient'
+    # Prepare the payload of type bytes.
+    payload = 'a message for the recipient'.encode()
 
     # Construct the request body.
     task = {
@@ -50,10 +50,10 @@ def create_task(project, queue, location):
 
     print('Created task: {}'.format(response.name))
     return response
-# [END cloud_tasks_create_task]
+# [END tasks_create_task]
 
 
-# [START cloud_tasks_lease_and_acknowledge_task]
+# [START tasks_lease_and_acknowledge_task]
 def lease_task(project, queue, location):
     """Lease a single task from a given queue for 10 minutes."""
 
@@ -67,6 +67,7 @@ def lease_task(project, queue, location):
 
     lease_duration = {'seconds': 600}
 
+    # Send lease request to client.
     response = client.lease_tasks(
         parent, lease_duration, max_tasks=1, response_view='FULL')
 
@@ -84,11 +85,11 @@ def acknowledge_task(task):
     # Create a client.
     client = tasks_v2beta2.CloudTasksClient()
 
-    # Send task to client to acknowledge.
+    # Send request to client to acknowledge task.
     client.acknowledge_task(task.name, task.schedule_time)
 
     print('Acknowledged task {}'.format(task.name))
-    # [END cloud_tasks_lease_and_acknowledge_task]
+    # [END tasks_lease_and_acknowledge_task]
 
 
 if __name__ == '__main__':

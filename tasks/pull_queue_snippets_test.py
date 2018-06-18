@@ -32,4 +32,5 @@ def test_lease_and_ack_task():
         TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION)
     task = pull_queue_snippets.lease_task(
         TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION)
+    assert TEST_QUEUE_NAME in task.name
     pull_queue_snippets.acknowledge_task(task)
