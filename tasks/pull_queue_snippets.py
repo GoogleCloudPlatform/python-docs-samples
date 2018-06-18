@@ -23,8 +23,8 @@ and running the scripts.
 import argparse
 
 
-# [START tasks_create_task]
 def create_task(project, queue, location):
+    # [START tasks_create_task]
     """Create a task for a given queue with an arbitrary payload."""
 
     from google.cloud import tasks_v2beta2
@@ -50,11 +50,11 @@ def create_task(project, queue, location):
 
     print('Created task: {}'.format(response.name))
     return response
-# [END tasks_create_task]
+    # [END tasks_create_task]
 
 
-# [START tasks_lease_and_acknowledge_task]
 def lease_task(project, queue, location):
+    # [START tasks_lease_and_acknowledge_task]
     """Lease a single task from a given queue for 10 minutes."""
 
     from google.cloud import tasks_v2beta2
