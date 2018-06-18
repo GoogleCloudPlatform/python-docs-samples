@@ -1,4 +1,4 @@
-# Copyright 2017 Google Inc.
+# Copyright 2018 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ TEST_QUEUE_NAME = os.getenv('TEST_QUEUE_NAME', 'my-pull-queue')
 def test_create_task():
     result = pull_queue_snippets.create_task(
         TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION)
-    assert TEST_QUEUE_NAME in result['name']
+    assert TEST_QUEUE_NAME in result.name
 
 
 def test_lease_and_ack_task():
@@ -32,4 +32,5 @@ def test_lease_and_ack_task():
         TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION)
     task = pull_queue_snippets.lease_task(
         TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION)
+    assert TEST_QUEUE_NAME in task.name
     pull_queue_snippets.acknowledge_task(task)
