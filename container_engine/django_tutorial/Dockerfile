@@ -20,7 +20,7 @@
 FROM gcr.io/google_appengine/python
 
 # Create a virtualenv for the application dependencies.
-# # If you want to use Python 2, remove the -p python3.6 flag.
+# # If you want to use Python 2, use the -p python2.7 flag.
 RUN virtualenv -p python3.6 /env
 ENV PATH /env/bin:$PATH
 
