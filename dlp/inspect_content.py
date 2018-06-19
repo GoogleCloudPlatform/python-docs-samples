@@ -53,8 +53,21 @@ def inspect_string(project, content_string, info_types,
 
     # Prepare custom_info_types by parsing the dictionary word lists and
     # regex patterns.
-    custom_info_types = build_custom_info_types(custom_dictionaries,
-                                                custom_info_types)
+    if custom_dictionaries is None:
+        custom_dictionaries = []
+    dictionaries = [{
+        'info_type': {'name': 'CUSTOM_DICTIONARY_{}'.format(i)},
+        'dictionary': {
+            'word_list': {'words': custom_dictionaries[i].split(',')}
+        }
+    } for i in range(len(custom_dictionaries))]
+    if custom_regexes is None:
+        custom_regexes = []
+    regexes = [{
+        'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
+        'regex': {'pattern': custom_regexes[i]}
+    } for i in range(len(custom_regexes))]
+    custom_info_types = dictionaries + regexes
 
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
@@ -128,8 +141,21 @@ def inspect_file(project, filename, info_types, min_likelihood=None,
 
     # Prepare custom_info_types by parsing the dictionary word lists and
     # regex patterns.
-    custom_info_types = build_custom_info_types(custom_dictionaries,
-                                                custom_regexes)
+    if custom_dictionaries is None:
+        custom_dictionaries = []
+    dictionaries = [{
+        'info_type': {'name': 'CUSTOM_DICTIONARY_{}'.format(i)},
+        'dictionary': {
+            'word_list': {'words': custom_dictionaries[i].split(',')}
+        }
+    } for i in range(len(custom_dictionaries))]
+    if custom_regexes is None:
+        custom_regexes = []
+    regexes = [{
+        'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
+        'regex': {'pattern': custom_regexes[i]}
+    } for i in range(len(custom_regexes))]
+    custom_info_types = dictionaries + regexes
 
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
@@ -228,8 +254,21 @@ def inspect_gcs_file(project, bucket, filename, topic_id, subscription_id,
 
     # Prepare custom_info_types by parsing the dictionary word lists and
     # regex patterns.
-    custom_info_types = build_custom_info_types(custom_dictionaries,
-                                                custom_regexes)
+    if custom_dictionaries is None:
+        custom_dictionaries = []
+    dictionaries = [{
+        'info_type': {'name': 'CUSTOM_DICTIONARY_{}'.format(i)},
+        'dictionary': {
+            'word_list': {'words': custom_dictionaries[i].split(',')}
+        }
+    } for i in range(len(custom_dictionaries))]
+    if custom_regexes is None:
+        custom_regexes = []
+    regexes = [{
+        'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
+        'regex': {'pattern': custom_regexes[i]}
+    } for i in range(len(custom_regexes))]
+    custom_info_types = dictionaries + regexes
 
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
@@ -361,8 +400,21 @@ def inspect_datastore(project, datastore_project, kind,
 
     # Prepare custom_info_types by parsing the dictionary word lists and
     # regex patterns.
-    custom_info_types = build_custom_info_types(custom_dictionaries,
-                                                custom_regexes)
+    if custom_dictionaries is None:
+        custom_dictionaries = []
+    dictionaries = [{
+        'info_type': {'name': 'CUSTOM_DICTIONARY_{}'.format(i)},
+        'dictionary': {
+            'word_list': {'words': custom_dictionaries[i].split(',')}
+        }
+    } for i in range(len(custom_dictionaries))]
+    if custom_regexes is None:
+        custom_regexes = []
+    regexes = [{
+        'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
+        'regex': {'pattern': custom_regexes[i]}
+    } for i in range(len(custom_regexes))]
+    custom_info_types = dictionaries + regexes
 
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
@@ -499,8 +551,21 @@ def inspect_bigquery(project, bigquery_project, dataset_id, table_id,
 
     # Prepare custom_info_types by parsing the dictionary word lists and
     # regex patterns.
-    custom_info_types = build_custom_info_types(custom_dictionaries,
-                                                custom_regexes)
+    if custom_dictionaries is None:
+        custom_dictionaries = []
+    dictionaries = [{
+        'info_type': {'name': 'CUSTOM_DICTIONARY_{}'.format(i)},
+        'dictionary': {
+            'word_list': {'words': custom_dictionaries[i].split(',')}
+        }
+    } for i in range(len(custom_dictionaries))]
+    if custom_regexes is None:
+        custom_regexes = []
+    regexes = [{
+        'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
+        'regex': {'pattern': custom_regexes[i]}
+    } for i in range(len(custom_regexes))]
+    custom_info_types = dictionaries + regexes
 
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
@@ -584,24 +649,6 @@ def inspect_bigquery(project, bigquery_project, dataset_id, table_id,
               'subscription provided is subscribed to the topic provided.')
 
 # [END dlp_inspect_bigquery]
-
-
-def build_custom_info_types(custom_dictionaries, custom_regexes):
-    if custom_dictionaries is None:
-        custom_dictionaries = []
-    dictionaries = [{
-        'info_type': {'name': 'CUSTOM_DICTIONARY_{}'.format(i)},
-        'dictionary': {
-            'word_list': {'words': custom_dictionaries[i].split(',')}
-        }
-    } for i in range(len(custom_dictionaries))]
-    if custom_regexes is None:
-        custom_regexes = []
-    regexes = [{
-        'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
-        'regex': {'pattern': custom_regexes[i]}
-    } for i in range(len(custom_regexes))]
-    return dictionaries + regexes
 
 
 if __name__ == '__main__':
