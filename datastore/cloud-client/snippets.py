@@ -467,25 +467,9 @@ def keys_only_query(client):
     query.keys_only()
     # [END datastore_keys_only_query]
 
-    # [START datastore_run_keys_only_query]
     keys = list([entity.key for entity in query.fetch(limit=10)])
-    # [END datastore_run_keys_only_query]
 
     return keys
-
-
-def distinct_query(client):
-    # Create the entity that we're going to query.
-    upsert(client)
-
-    # [START datastore_distinct_query]
-    query = client.query(kind='Task')
-    query.distinct_on = ['category', 'priority']
-    query.order = ['category', 'priority']
-    query.projection = ['category', 'priority']
-    # [END datastore_distinct_query]
-
-    return list(query.fetch())
 
 
 def distinct_on_query(client):
