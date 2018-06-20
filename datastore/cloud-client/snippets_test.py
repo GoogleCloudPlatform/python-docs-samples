@@ -192,12 +192,6 @@ class TestDatastoreSnippets:
         assert keys
 
     @eventually_consistent.mark
-    def test_distinct_query(self, client):
-        tasks = snippets.distinct_query(client)
-        client.entities_to_delete.extend(tasks)
-        assert tasks
-
-    @eventually_consistent.mark
     def test_distinct_on_query(self, client):
         tasks = snippets.distinct_on_query(client)
         client.entities_to_delete.extend(tasks)
