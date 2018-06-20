@@ -20,8 +20,7 @@
 FROM gcr.io/google_appengine/python
 
 # Create a virtualenv for the application dependencies.
-# # If you want to use Python 3, add the -p python3.4 flag.
-RUN virtualenv /env
+RUN virtualenv -p python3 /env
 ENV PATH /env/bin:$PATH
 
 ADD requirements.txt /app/requirements.txt
