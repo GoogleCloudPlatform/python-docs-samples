@@ -112,6 +112,7 @@ def publish_messages_with_futures(project, topic_name):
 
 def publish_messages_with_error_handler(project, topic_name):
     """Publishes multiple messages to a Pub/Sub topic with an error handler."""
+    # [START pubsub_publish_messages_error_handler]
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(project, topic_name)
 
@@ -138,6 +139,7 @@ def publish_messages_with_error_handler(project, topic_name):
     concurrent.futures.wait(futures)
 
     print('Published messages.')
+    # [END pubsub_publish_messages_error_handler]
 
 
 def publish_messages_with_batch_settings(project, topic_name):
