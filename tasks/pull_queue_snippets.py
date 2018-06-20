@@ -24,7 +24,7 @@ import argparse
 
 
 def create_task(project, queue, location):
-    # [START tasks_create_task]
+    # [START cloud_tasks_create_task]
     """Create a task for a given queue with an arbitrary payload."""
 
     from google.cloud import tasks_v2beta2
@@ -50,11 +50,11 @@ def create_task(project, queue, location):
 
     print('Created task: {}'.format(response.name))
     return response
-    # [END tasks_create_task]
+    # [END cloud_tasks_create_task]
 
 
 def lease_task(project, queue, location):
-    # [START tasks_lease_and_acknowledge_task]
+    # [START cloud_tasks_lease_and_acknowledge_task]
     """Lease a single task from a given queue for 10 minutes."""
 
     from google.cloud import tasks_v2beta2
@@ -89,7 +89,7 @@ def acknowledge_task(task):
     client.acknowledge_task(task.name, task.schedule_time)
 
     print('Acknowledged task {}'.format(task.name))
-    # [END tasks_lease_and_acknowledge_task]
+    # [END cloud_tasks_lease_and_acknowledge_task]
 
 
 if __name__ == '__main__':
