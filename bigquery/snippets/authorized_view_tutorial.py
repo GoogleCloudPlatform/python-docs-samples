@@ -99,7 +99,7 @@ def run_authorized_view_tutorial():
     source_dataset.access_entries = access_entries
     source_dataset = client.update_dataset(
         source_dataset, ['access_entries'])  # API request
-    # [START bigquery_avt_source_dataset_access]
+    # [END bigquery_avt_source_dataset_access]
     # [END bigquery_authorized_view_tutorial]
     return (source_dataset, shared_dataset)
 
