@@ -17,7 +17,8 @@
 """Google Cloud Text-To-Speech API sample application for audio profile feature.
 
 Example usage:
-    python audio_profile.py --text "hello" --effects_profile_id "telephony-class-application"
+    python audio_profile.py --text "hello" --effects_profile_id
+        "telephony-class-application"
 """
 
 import argparse
@@ -52,10 +53,15 @@ def synthesize_text(text, output, effects_profile_id):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--text', help='The text from which to synthesize speech.')
-    parser.add_argument('--output', help='The output mp3 file.')
-    parser.add_argument('--effects_profile_id', help='The audio effects profile id to be applied.')
+    parser = argparse.ArgumentParser(
+                    description=__doc__,
+                    formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('--text',
+                        help='The text from which to synthesize speech.')
+    parser.add_argument('--output',
+                        help='The output mp3 file.')
+    parser.add_argument('--effects_profile_id',
+                        help='The audio effects profile id to be applied.')
 
     args = parser.parse_args()
 
