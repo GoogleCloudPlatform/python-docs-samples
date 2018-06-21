@@ -1,0 +1,11 @@
+# Code owners file.
+# This file controls who is tagged for review for any given pull request.
+
+# Alix Hamilton is the primary maintainer of the BigQuery samples.
+bigquery/*                @alixhami
+
+# Tim Swast is the primary maintainer of the BigQuery Data Transfer samples.
+bigquery/transfer/*       @tswast
+
+# Tim Swast is the primary maintainer of the Composer samples.
+composer/*                @tswast
