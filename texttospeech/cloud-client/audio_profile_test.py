@@ -22,9 +22,11 @@ EFFECTS_PROFILE_ID = 'telephony-class-application'
 
 
 def test_audio_profile(capsys):
+    if os.path.exists(OUTOUT):
+        os.remove(OUTOUT)
+    assert not os.path.exists(OUTOUT)
     audio_profile.synthesize_text(TEXT, OUTOUT, EFFECTS_PROFILE_ID)
     out, err = capsys.readouterr()
 
-    print(str(out))
-    # assert ('Audio content written to "%s"' % OUTOUT) in out
+    assert ('Audio content written to file "%s"' % OUTOUT) in out
     assert os.path.exists(OUTOUT)
