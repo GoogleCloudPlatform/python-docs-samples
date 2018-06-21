@@ -13,13 +13,13 @@
 # limitations under the License.
 
 from django.conf import settings
-from django.conf.urls import include, url
 from django.contrib import admin
+from django.urls import include, path
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
-    url(r'^', include('polls.urls')),
-    url(r'^admin/', admin.site.urls)
+    path('admin/', admin.site.urls),
+    path('', include('polls.urls')),
 ]
 
 # Only serve static files from Django during development
