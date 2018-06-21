@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Google Cloud Text-To-Speech API sample application for audio profile feature.
+"""Google Cloud Text-To-Speech API sample application for audio profile.
 
 Example usage:
     python audio_profile.py --text "hello" --effects_profile_id
