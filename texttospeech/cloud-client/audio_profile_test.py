@@ -11,9 +11,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import audio_profile
 import os
 import os.path
+
+import audio_profile
 
 TEXT = 'hello'
 OUTOUT = 'output.mp3'
