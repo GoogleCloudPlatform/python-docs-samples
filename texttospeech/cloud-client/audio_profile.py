@@ -48,7 +48,7 @@ def synthesize_text(text, output, effects_profile_id):
     # The response's audio_content is binary.
     with open(output, 'wb') as out:
         out.write(response.audio_content)
-        print 'Audio content written to file "%s"' % output
+        print('Audio content written to file "%s"' % output)
 
 # [END tts_synthesize_text]
 
