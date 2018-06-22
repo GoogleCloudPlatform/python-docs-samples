@@ -1,4 +1,4 @@
-# Copyright 2017 Google Inc. All Rights Reserved.
+# Copyright 2018 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,11 +29,10 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
     client = tasks_v2beta2.CloudTasksClient()
 
     # Construct the request body.
-    url = '/example_task_handler'
     task = {
             'app_engine_http_request': {  # Specify the type of request.
                 'http_method': 'POST',
-                'relative_url': url
+                'relative_url': '/example_task_handler'
             }
     }
     if payload is not None:
