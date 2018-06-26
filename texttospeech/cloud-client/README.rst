@@ -7,7 +7,7 @@ Google Cloud Text-to-Speech API Python Samples
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=/README.rst
 
 
-This directory contains samples for Google Cloud Text-to-Speech API. The `Google Cloud Text To Speech API`_ enables you to generate and customize synthesized speech from text or SSML.
+This directory contains samples for Google Cloud Text-to-Speech API. The `Google Cloud Text-to-Speech API`_ enables you to generate and customize synthesized speech from text or SSML.
 
 
 
