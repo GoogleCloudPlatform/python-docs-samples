@@ -13,8 +13,8 @@
 # limitations under the License.
 
 import endpoints
+from endpoints import message_types
 import mock
-from protorpc import message_types
 import pytest
 
 import main
