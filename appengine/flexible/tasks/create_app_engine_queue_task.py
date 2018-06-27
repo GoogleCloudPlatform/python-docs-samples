@@ -1,4 +1,4 @@
-# Copyright 2017 Google Inc. All Rights Reserved.
+# Copyright 2018 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,62 +15,51 @@
 from __future__ import print_function
 
 import argparse
-import base64
 import datetime
-import json
 
 
 # [START cloud_tasks_appengine_create_task]
 def create_task(project, queue, location, payload=None, in_seconds=None):
     """Create a task for a given queue with an arbitrary payload."""
 
-    import googleapiclient.discovery
+    from google.cloud import tasks_v2beta2
+    from google.protobuf import timestamp_pb2
 
     # Create a client.
-    client = googleapiclient.discovery.build('cloudtasks', 'v2beta2')
+    client = tasks_v2beta2.CloudTasksClient()
 
     # Construct the request body.
-    url = '/example_task_handler'
-    body = {
-        'task': {
-            'appEngineHttpRequest': {  # Specify the type of request.
-                'httpMethod': 'POST',
-                'relativeUrl': url
+    task = {
+            'app_engine_http_request': {  # Specify the type of request.
+                'http_method': 'POST',
+                'relative_url': '/example_task_handler'
             }
-        }
     }
-
     if payload is not None:
-        # The API expects base64 encoding of the payload, so encode the unicode
-        # `payload` object into a byte string and base64 encode it.
-        base64_encoded_payload = base64.b64encode(payload.encode())
-
-        # The request body object will be emitted in JSON, which requires
-        # unicode objects, so convert the byte string to unicode, still base64.
-        converted_payload = base64_encoded_payload.decode()
+        # The API expects a payload of type bytes.
+        converted_payload = payload.encode()
 
         # Add the payload to the request.
-        body['task']['appEngineHttpRequest']['payload'] = converted_payload
+        task['app_engine_http_request']['payload'] = converted_payload
 
     if in_seconds is not None:
         # Convert "seconds from now" into an rfc3339 datetime string.
         d = datetime.datetime.utcnow() + datetime.timedelta(seconds=in_seconds)
-        scheduled_time = d.isoformat('T') + 'Z'
+
+        # Create Timestamp protobuf.
+        timestamp = timestamp_pb2.Timestamp()
+        timestamp.FromDatetime(d)
 
         # Add the rfc3339 datetime string to the request.
-        body['task']['scheduleTime'] = scheduled_time
+        task['schedule_time'] = timestamp
 
     # Construct the fully qualified queue name.
-    queue_name = 'projects/{}/locations/{}/queues/{}'.format(
-        project, location, queue)
-
-    print('Sending task {}'.format(json.dumps(body)))
+    parent = client.queue_path(project, location, queue)
 
     # Use the client to build and send the task.
-    response = client.projects().locations().queues().tasks().create(
-        parent=queue_name, body=body).execute()
+    response = client.create_task(parent, task)
 
-    print('Created task {}'.format(response['name']))
+    print('Created task {}'.format(response.name))
     return response
 # [END cloud_tasks_appengine_create_task]
 
