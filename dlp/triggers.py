@@ -24,7 +24,8 @@ import time
 # [START dlp_create_trigger]
 def create_trigger(project, bucket, scan_period_days, info_types,
                    trigger_id=None, display_name=None, description=None,
-                   min_likelihood=None, max_findings=None):
+                   min_likelihood=None, max_findings=None,
+                   auto_populate_timespan=False):
     """Creates a scheduled Data Loss Prevention API inspect_content trigger.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -42,6 +43,8 @@ def create_trigger(project, bucket, scan_period_days, info_types,
             that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
             'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
         max_findings: The maximum number of findings to report; 0 = no maximum.
+        auto_populate_timespan: Automatically populates time span config start
+            and end times in order to scan new content only.
     Returns:
         None; the response from the API is printed to the terminal.
     """
@@ -69,7 +72,13 @@ def create_trigger(project, bucket, scan_period_days, info_types,
     storage_config = {
         'cloud_storage_options': {
             'file_set': {'url': url}
-        }
+        },
+        # Time-based configuration for each storage object.
+        'timespan_config': {
+            # Auto-populate start and end times in order to scan new objects
+            # only.
+            'enable_auto_population_of_timespan_config': auto_populate_timespan
+        },
     }
 
     # Construct the job definition.
@@ -222,6 +231,9 @@ if __name__ == '__main__':
     parser_create.add_argument(
         '--max_findings', type=int,
         help='The maximum number of findings to report; 0 = no maximum.')
+    parser_create.add_argument(
+        '--auto_populate_timespan', type=bool,
+        help='Limit scan to new content only.')
 
     parser_list = subparsers.add_parser('list', help='List all triggers.')
     parser_list.add_argument(
@@ -246,6 +258,7 @@ if __name__ == '__main__':
             trigger_id=args.trigger_id, display_name=args.display_name,
             description=args.description, min_likelihood=args.min_likelihood,
             max_findings=args.max_findings,
+            auto_populate_timespan=args.auto_populate_timespan,
         )
     elif args.action == 'list':
         list_triggers(args.project)
