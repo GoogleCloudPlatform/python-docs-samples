@@ -222,14 +222,14 @@ def test_detect_web_with_geo(capsys):
         'resources/city.jpg')
     detect.web_entities_include_geo_results(file_name)
     out, _ = capsys.readouterr()
-    assert 'Zepra' in out
+    assert 'Zepra' in out or 'Electra Tower' in out
 
 
 def test_detect_web_with_geo_uri(capsys):
     file_name = 'gs://{}/vision/city.jpg'.format(BUCKET)
     detect.web_entities_include_geo_results_uri(file_name)
     out, _ = capsys.readouterr()
-    assert 'Zepra' in out
+    assert 'Zepra' in out or 'Electra Tower' in out
 
 
 def test_detect_document(capsys):
