@@ -34,7 +34,7 @@ Some samples may require additional setup. Refer to individual sample READMEs.
 
         gcloud app deploy --project your-app-id -v your-version
 
-4. Visit `https://your-app-id.appost.com` to view your application.
+4. Visit `https://your-app-id.appspot.com` to view your application.
 
 ## Additional resources
 
