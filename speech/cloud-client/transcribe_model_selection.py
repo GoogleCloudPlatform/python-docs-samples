@@ -51,7 +51,7 @@ def transcribe_model_selection(speech_file, model):
         alternative = result.alternatives[0]
         print('-' * 20)
         print('First alternative of result {}'.format(i))
-        print('Transcript: {}'.format(alternative.transcript))
+        print(u'Transcript: {}'.format(alternative.transcript))
 # [END speech_transcribe_model_selection]
 
 
@@ -79,7 +79,7 @@ def transcribe_model_selection_gcs(gcs_uri, model):
         alternative = result.alternatives[0]
         print('-' * 20)
         print('First alternative of result {}'.format(i))
-        print('Transcript: {}'.format(alternative.transcript))
+        print(u'Transcript: {}'.format(alternative.transcript))
 # [END speech_transcribe_model_selection_gcs]
 
 

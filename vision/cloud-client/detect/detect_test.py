@@ -14,9 +14,14 @@
 
 import os
 
+from google.cloud import storage
+
 import detect
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+OUTPUT_PREFIX = 'OCR_PDF_TEST_OUTPUT'
+GCS_SOURCE_URI = 'gs://{}/HodgeConj.pdf'.format(BUCKET)
+GCS_DESTINATION_URI = 'gs://{}/{}/'.format(BUCKET, OUTPUT_PREFIX)
 
 
 def test_labels(capsys):
@@ -217,14 +222,14 @@ def test_detect_web_with_geo(capsys):
         'resources/city.jpg')
     detect.web_entities_include_geo_results(file_name)
     out, _ = capsys.readouterr()
-    assert 'Zepra' in out
+    assert 'Zepra' in out or 'Electra Tower' in out
 
 
 def test_detect_web_with_geo_uri(capsys):
     file_name = 'gs://{}/vision/city.jpg'.format(BUCKET)
     detect.web_entities_include_geo_results_uri(file_name)
     out, _ = capsys.readouterr()
-    assert 'Zepra' in out
+    assert 'Zepra' in out or 'Electra Tower' in out
 
 
 def test_detect_document(capsys):
@@ -271,3 +276,20 @@ def test_detect_crop_hints_http(capsys):
     detect.detect_crop_hints_uri(uri.format(BUCKET))
     out, _ = capsys.readouterr()
     assert 'bounds: (0,0)' in out
+
+
+def test_async_detect_document(capsys):
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(BUCKET)
+    assert len(list(bucket.list_blobs(prefix=OUTPUT_PREFIX))) == 0
+
+    detect.async_detect_document(
+        gcs_source_uri=GCS_SOURCE_URI,
+        gcs_destination_uri=GCS_DESTINATION_URI)
+    out, _ = capsys.readouterr()
+
+    assert 'Hodge conjecture' in out
+    assert len(list(bucket.list_blobs(prefix=OUTPUT_PREFIX))) == 3
+
+    for blob in bucket.list_blobs(prefix=OUTPUT_PREFIX):
+        blob.delete()

@@ -16,7 +16,7 @@ This directory contains samples for Google Cloud Speech API. The `Google Cloud S
 
 
 
-.. _Google Cloud Speech API: https://cloud.google.com/speech/docs/ 
+.. _Google Cloud Speech API: https://cloud.google.com/speech/docs/
 
 Setup
 -------------------------------------------------------------------------------
@@ -35,10 +35,16 @@ credentials for applications.
 Install Dependencies
 ++++++++++++++++++++
 
+#. Clone python-docs-samples and change directory to the sample directory you want to use.
+
+    .. code-block:: bash
+
+        $ git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+
 #. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
 
- .. _Python Development Environment Setup Guide:
-     https://cloud.google.com/python/setup
+   .. _Python Development Environment Setup Guide:
+       https://cloud.google.com/python/setup
 
 #. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
 
@@ -63,7 +69,7 @@ Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=speech/cloud-client/quickstart.py;speech/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=speech/cloud-client/quickstart.py,speech/cloud-client/README.rst
 
 
 
@@ -79,7 +85,7 @@ Transcribe
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=speech/cloud-client/transcribe.py;speech/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=speech/cloud-client/transcribe.py,speech/cloud-client/README.rst
 
 
 
@@ -111,7 +117,7 @@ Transcribe async
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=speech/cloud-client/transcribe_async.py;speech/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=speech/cloud-client/transcribe_async.py,speech/cloud-client/README.rst
 
 
 
@@ -143,7 +149,7 @@ Transcribe with word time offsets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=speech/cloud-client/transcribe_word_time_offsets.py;speech/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=speech/cloud-client/transcribe_word_time_offsets.py,speech/cloud-client/README.rst
 
 
 
@@ -174,7 +180,7 @@ Transcribe Streaming
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=speech/cloud-client/transcribe_streaming.py;speech/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=speech/cloud-client/transcribe_streaming.py,speech/cloud-client/README.rst
 
 
 
@@ -194,6 +200,40 @@ To run this sample:
 
     positional arguments:
       stream      File to stream to the API
+
+    optional arguments:
+      -h, --help  show this help message and exit
+
+
+
+Beta Samples
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=speech/cloud-client/beta_snippets.py,speech/cloud-client/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python beta_snippets.py
+
+    usage: beta_snippets.py [-h] command path
+
+    Google Cloud Speech API sample that demonstrates enhanced models
+    and recognition metadata.
+
+    Example usage:
+        python beta_snippets.py enhanced-model resources/commercial_mono.wav
+        python beta_snippets.py metadata resources/commercial_mono.wav
+        python beta_snippets.py punctuation resources/commercial_mono.wav
+
+    positional arguments:
+      command
+      path        File for audio file to be recognized
 
     optional arguments:
       -h, --help  show this help message and exit

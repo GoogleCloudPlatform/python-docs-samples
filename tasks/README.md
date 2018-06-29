@@ -28,7 +28,7 @@ To set up authentication, please refer to our
 
 To create a queue using the Cloud SDK, use the following gcloud command:
 
-    gcloud alpha tasks queues create-pull-queue my-pull-queue
+    gcloud alpha tasks queues create pull my-pull-queue
 
 ## Running the Samples
 
