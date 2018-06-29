@@ -57,6 +57,7 @@ def temporary_database(spanner_instance):
     yield database
     database.drop()
 
+
 @pytest.fixture(scope='module')
 def temporary_database_with_all_columns(spanner_instance):
     database_id = unique_database_id()
