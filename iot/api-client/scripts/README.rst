@@ -7,12 +7,12 @@ Google Cloud IoT Core Python Samples
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=iot/api-client/scripts/README.rst
 
 
-This directory contains samples for Google Cloud IoT Core. `Google Cloud IoT Core`_ is a fully-managed, globally distributed solution for managing devices and sending / receiving messages from devices. Set the `GOOGLE_CLOUD_PROJECT` environment variable and call the script with your topic ID.
+This directory contains samples for Google Cloud IoT Core. `Google Cloud IoT Core`_ is a fully-managed, globally distributed solution for managing devices and sending / receiving messages from devices. Set the ``GOOGLE_CLOUD_PROJECT`` environment variable and call the script with your topic ID.
 
 
 
 
-.. _Google Cloud IoT Core: https://cloud.google.com/iot/ 
+.. _Google Cloud IoT Core: https://cloud.google.com/iot/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -31,10 +31,16 @@ credentials for applications.
 Install Dependencies
 ++++++++++++++++++++
 
+#. Clone python-docs-samples and change directory to the sample directory you want to use.
+
+    .. code-block:: bash
+
+        $ git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+
 #. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
 
- .. _Python Development Environment Setup Guide:
-     https://cloud.google.com/python/setup
+   .. _Python Development Environment Setup Guide:
+       https://cloud.google.com/python/setup
 
 #. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
 
@@ -59,7 +65,7 @@ PubSub helper
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=iot/api-client/scripts/iam.py;iot/api-client/scripts/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=iot/api-client/scripts/iam.py,iot/api-client/scripts/README.rst
 
 
 

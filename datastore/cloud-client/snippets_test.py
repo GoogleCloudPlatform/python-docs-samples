@@ -147,7 +147,6 @@ class TestDatastoreSnippets:
             assert len(page_one) == 5
             assert len(page_two)
             assert cursor_one
-            assert cursor_two
 
     @eventually_consistent.mark
     def test_property_filter(self, client):
@@ -191,12 +190,6 @@ class TestDatastoreSnippets:
         client.entities_to_delete.extend(
             client.query(kind='Task').fetch())
         assert keys
-
-    @eventually_consistent.mark
-    def test_distinct_query(self, client):
-        tasks = snippets.distinct_query(client)
-        client.entities_to_delete.extend(tasks)
-        assert tasks
 
     @eventually_consistent.mark
     def test_distinct_on_query(self, client):

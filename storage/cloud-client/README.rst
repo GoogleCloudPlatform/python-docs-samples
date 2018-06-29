@@ -12,7 +12,7 @@ This directory contains samples for Google Cloud Storage. `Google Cloud Storage`
 
 
 
-.. _Google Cloud Storage: https://cloud.google.com/storage/docs 
+.. _Google Cloud Storage: https://cloud.google.com/storage/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -31,10 +31,16 @@ credentials for applications.
 Install Dependencies
 ++++++++++++++++++++
 
+#. Clone python-docs-samples and change directory to the sample directory you want to use.
+
+    .. code-block:: bash
+
+        $ git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+
 #. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
 
- .. _Python Development Environment Setup Guide:
-     https://cloud.google.com/python/setup
+   .. _Python Development Environment Setup Guide:
+       https://cloud.google.com/python/setup
 
 #. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
 
@@ -59,7 +65,7 @@ Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/quickstart.py;storage/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/quickstart.py,storage/cloud-client/README.rst
 
 
 
@@ -75,7 +81,7 @@ Snippets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/snippets.py;storage/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/snippets.py,storage/cloud-client/README.rst
 
 
 
@@ -88,7 +94,7 @@ To run this sample:
 
     usage: snippets.py [-h]
                        bucket_name
-                       {create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,download,delete,metadata,make-public,signed-url,rename,copy}
+                       {create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,rename,copy}
                        ...
 
     This application demonstrates how to perform basic operations on blobs
@@ -99,7 +105,7 @@ To run this sample:
 
     positional arguments:
       bucket_name           Your cloud storage bucket.
-      {create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,download,delete,metadata,make-public,signed-url,rename,copy}
+      {create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,rename,copy}
         create-bucket       Creates a new bucket.
         delete-bucket       Deletes a bucket. The bucket must be empty.
         get-bucket-labels   Prints out a bucket's labels.
@@ -118,6 +124,11 @@ To run this sample:
                             However, if you specify prefix='/a' and delimiter='/',
                             you'll get back: /a/1.txt
         upload              Uploads a file to the bucket.
+        enable-default-kms-key
+                            Sets a bucket's default KMS key.
+        upload-with-kms-key
+                            Uploads a file to the bucket, encrypting it with the
+                            given KMS key.
         download            Downloads a blob from the bucket.
         delete              Deletes a blob from the bucket.
         metadata            Prints out a blob's metadata.
@@ -139,7 +150,7 @@ Access Control Lists
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/acl.py;storage/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/acl.py,storage/cloud-client/README.rst
 
 
 
@@ -192,7 +203,7 @@ Customer-Supplied Encryption
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/encryption.py;storage/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/encryption.py,storage/cloud-client/README.rst
 
 
 
@@ -244,7 +255,7 @@ Notification Polling
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/notification_polling.py;storage/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/notification_polling.py,storage/cloud-client/README.rst
 
 
 

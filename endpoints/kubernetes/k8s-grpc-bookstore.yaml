@@ -1,0 +1,74 @@
+# Copyright 2018 Google Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License
+
+# Use this file to deploy the container for the grpc-bookstore sample
+# and the container for the Extensible Service Proxy (ESP) to a
+# Kubernetes cluster that is not on GCP.
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: esp-grpc-bookstore
+spec:
+  ports:
+  # Port that accepts gRPC and JSON/HTTP2 requests over HTTP.
+  - port: 80
+    targetPort: 9000
+    protocol: TCP
+    name: http2
+  selector:
+    app: esp-grpc-bookstore
+  type: LoadBalancer
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: esp-grpc-bookstore
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: esp-grpc-bookstore
+    spec:
+      # [START secret-1]
+      volumes:
+        - name: service-account-creds
+          secret:
+            secretName: service-account-creds
+      # [END secret-1]
+      # [START service]
+      containers:
+        - name: esp
+          image: gcr.io/endpoints-release/endpoints-runtime:1
+          args: [
+            "--http2_port=9000",
+            "--service=SERVICE_NAME",
+            "--rollout_strategy=managed",
+            "--backend=grpc://127.0.0.1:8000",
+            "--service_account_key=/etc/nginx/creds/service-account-creds.json"
+          ]
+      # [END service]
+        ports:
+          - containerPort: 9000
+          # [START secret-2]
+          volumeMounts:
+            - mountPath: /etc/nginx/creds
+              name: service-account-creds
+              readOnly: true
+          # [END secret-2]
+      - name: bookstore
+        image: gcr.io/endpointsv2/python-grpc-bookstore-server:1
+        ports:
+          - containerPort: 8000
