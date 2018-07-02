@@ -30,3 +30,4 @@ def test_audio_profile(capsys):
 
     assert ('Audio content written to file "%s"' % OUTOUT) in out
     assert os.path.exists(OUTOUT)
+    os.remove(OUTOUT)
