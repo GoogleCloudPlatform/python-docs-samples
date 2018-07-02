@@ -675,7 +675,8 @@ if __name__ == '__main__':
     parser_string.add_argument(
         '--custom_dictionaries', action='append',
         help='Strings representing comma-delimited lists of dictionary words'
-             ' to search for as custom info types.',
+             ' to search for as custom info types. Each string is a comma '
+             'delimited list of words representing a distinct dictionary.',
         default=None)
     parser_string.add_argument(
         '--custom_regexes', action='append',
@@ -714,7 +715,8 @@ if __name__ == '__main__':
     parser_file.add_argument(
         '--custom_dictionaries', action='append',
         help='Strings representing comma-delimited lists of dictionary words'
-             ' to search for as custom info types.',
+             ' to search for as custom info types. Each string is a comma '
+             'delimited list of words representing a distinct dictionary.',
         default=None)
     parser_file.add_argument(
         '--custom_regexes', action='append',
@@ -772,7 +774,8 @@ if __name__ == '__main__':
     parser_gcs.add_argument(
         '--custom_dictionaries', action='append',
         help='Strings representing comma-delimited lists of dictionary words'
-             ' to search for as custom info types.',
+             ' to search for as custom info types. Each string is a comma '
+             'delimited list of words representing a distinct dictionary.',
         default=None)
     parser_gcs.add_argument(
         '--custom_regexes', action='append',
@@ -826,7 +829,8 @@ if __name__ == '__main__':
     parser_datastore.add_argument(
         '--custom_dictionaries', action='append',
         help='Strings representing comma-delimited lists of dictionary words'
-             ' to search for as custom info types.',
+             ' to search for as custom info types. Each string is a comma '
+             'delimited list of words representing a distinct dictionary.',
         default=None)
     parser_datastore.add_argument(
         '--custom_regexes', action='append',
@@ -886,7 +890,8 @@ if __name__ == '__main__':
     parser_bigquery.add_argument(
         '--custom_dictionaries', action='append',
         help='Strings representing comma-delimited lists of dictionary words'
-             ' to search for as custom info types.',
+             ' to search for as custom info types. Each string is a comma '
+             'delimited list of words representing a distinct dictionary.',
         default=None)
     parser_bigquery.add_argument(
         '--custom_regexes', action='append',
