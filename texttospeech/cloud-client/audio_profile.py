@@ -66,4 +66,5 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    synthesize_text_with_audio_profile(args.text, args.output, args.effects_profile_id)
+    synthesize_text_with_audio_profile(args.text, args.output,
+                                       args.effects_profile_id)
