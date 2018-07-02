@@ -23,12 +23,12 @@ Example usage:
 
 import argparse
 
-from google.cloud import texttospeech_v1beta1 as texttospeech
 
-
-# [START tts_synthesize_text]
-def synthesize_text(text, output, effects_profile_id):
+# [START tts_synthesize_text_with_audio_profile]
+def synthesize_text_with_audio_profile(text, output, effects_profile_id):
     """Synthesizes speech from the input string of text."""
+    from google.cloud import texttospeech_v1beta1 as texttospeech
+
     client = texttospeech.TextToSpeechClient()
 
     input_text = texttospeech.types.SynthesisInput(text=text)
@@ -50,7 +50,7 @@ def synthesize_text(text, output, effects_profile_id):
         out.write(response.audio_content)
         print('Audio content written to file "%s"' % output)
 
-# [END tts_synthesize_text]
+# [END tts_synthesize_text_with_audio_profile]
 
 
 if __name__ == '__main__':
@@ -66,4 +66,4 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    synthesize_text(args.text, args.output, args.effects_profile_id)
+    synthesize_text_with_audio_profile(args.text, args.output, args.effects_profile_id)
