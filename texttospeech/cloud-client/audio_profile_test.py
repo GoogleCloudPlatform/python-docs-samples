@@ -25,7 +25,7 @@ def test_audio_profile(capsys):
     if os.path.exists(OUTOUT):
         os.remove(OUTOUT)
     assert not os.path.exists(OUTOUT)
-    audio_profile.synthesize_text(TEXT, OUTOUT, EFFECTS_PROFILE_ID)
+    audio_profile.synthesize_text_with_audio_profile(TEXT, OUTOUT, EFFECTS_PROFILE_ID)
     out, err = capsys.readouterr()
 
     assert ('Audio content written to file "%s"' % OUTOUT) in out
