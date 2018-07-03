@@ -52,8 +52,6 @@ def speech_transcribe_word_level_conf(speech_file):
         print(u'Transcript: {}'.format(alternative.transcript))
         print(u'First Word and Confidence:{} {}'.format(
             alternative.words[0].word, alternative.words[0].confidence))
-
-
 # [END speech_transcribe_word_level_confidence]
 
 
@@ -82,9 +80,8 @@ def speech_transcribe_word_level_conf_gcs(gcs_uri):
         print(u'Transcript: {}'.format(alternative.transcript))
         print(u'First Word and Confidence:{} {}'.format(
             alternative.words[0].word, alternative.words[0].confidence))
-
-
 # [END speech_transcribe_word_level_confidence_gcs]
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -95,6 +92,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.path.startswith('gs://'):
-        speech_transcribe_word_level_confidence_gcs(args.path)
+        speech_transcribe_word_level_conf_gcs(args.path)
     else:
-        speech_transcribe_word_level_confidence(args.path)
+        speech_transcribe_word_level_conf(args.path)
