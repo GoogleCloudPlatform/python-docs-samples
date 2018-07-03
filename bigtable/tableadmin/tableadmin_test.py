@@ -15,10 +15,9 @@
 import os
 import random
 
-
+from _pytest.capture import capsys
 from tableadmin import run_table_operations
 from tableadmin import delete_table
-from _pytest.capture import capsys
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 BIGTABLE_CLUSTER = os.environ['BIGTABLE_CLUSTER']
@@ -33,45 +32,28 @@ def test_run_table_operations(capsys):
     run_table_operations(PROJECT, BIGTABLE_CLUSTER, table_name)
     out, _ = capsys.readouterr()
     assert 'Creating the {} table.'.format(table_name) in out
-    assert not 'Table {} already exists.'.format(table_name) in out
     assert 'Listing tables in current project.' in out
-    assert not 'Error creating table {}.'.format(table_name) in out
     assert 'Creating column family cf1 with with MaxAge GC Rule' in out
     assert 'Created MaxAge GC rule.' in out
-    assert not 'Error creating MaxAge GC Rule.' in out
     assert 'Created column family cf1 with MaxAge GC Rule.' in out
-    assert not 'Error creating column family with MaxAge GC Rule.' in out
     assert 'Created Max Versions GC Rule.' in out
-    assert not 'Error creating Max Versions GC Rule.' in out
     assert 'Created column family cf2 with Max Versions GC Rule.' in out
-    assert not 'Error creating column family with Max Versions GC Rule.' in out
     assert 'Created Union GC Rule.' in out
-    assert not 'Error creating Union GC Rule.' in out
     assert 'Created column family cf3 with Union GC rule' in out
-    assert not 'Error creating column family with Union GC rule' in out
     assert 'Created Intersection GC Rule.' in out
-    assert not 'Error creating Intersection GC Rule.' in out
     assert 'Created column family cf4 with Intersection GC rule.' in out
-    assert not 'Error creating column family with Intersection GC rule.' in out
     assert 'Created Nested GC Rule.' in out
-    assert not 'Error creating Nested GC Rule.' in out
     assert 'Created column family cf5 with a Nested GC rule.' in out
-    assert not 'Error creating column family with a Nested GC rule.' in out
     assert 'Printing Column Family and GC Rule for all column families.' in out
-    assert not 'Error Column Family and GC Rule.' in out
-    
+
+
+def test_delete_table(capsys):
+    table_name = TABLE_NAME_FORMAT.format(
+        random.randrange(TABLE_NAME_RANGE))
+
     delete_table(PROJECT, BIGTABLE_CLUSTER, table_name)
     out, _ = capsys.readouterr()
+
     assert 'Table {} exists.'.format(table_name) in out
     assert 'Deleting {} table.'.format(table_name) in out
     assert 'Deleted {} table.'.format(table_name) in out
-    assert not 'Table {} does not exists.'.format(table_name) in out
-    
-    
-    
-    
-    
-    
-    
-    
-    
