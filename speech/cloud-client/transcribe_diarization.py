@@ -28,30 +28,30 @@ import argparse
 
 # [START speech_transcribe_diarization]
 def speech_transcribe_diarization(speech_file):
-  """Transcribe the given audio file synchronously with
-    the selected model."""
-  from google.cloud import speech_v1p1beta1 as speech
-  client = speech.SpeechClient()
+    """Transcribe the given audio file synchronously with
+      the selected model."""
+    from google.cloud import speech_v1p1beta1 as speech
+    client = speech.SpeechClient()
 
-  with open(speech_file, 'rb') as audio_file:
-    content = audio_file.read()
+    with open(speech_file, 'rb') as audio_file:
+        content = audio_file.read()
 
-  audio = speech.types.RecognitionAudio(content=content)
+    audio = speech.types.RecognitionAudio(content=content)
 
-  config = speech.types.RecognitionConfig(
-      encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
-      sample_rate_hertz=8000,
-      language_code='en-US',
-      audio_channel_count=2,
-      enable_separate_recognition_per_channel=True,
-      enable_automatic_punctuation=True)
+    config = speech.types.RecognitionConfig(
+        encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=8000,
+        language_code='en-US',
+        audio_channel_count=2,
+        enable_separate_recognition_per_channel=True,
+        enable_automatic_punctuation=True)
 
-  response = client.recognize(config, audio)
+    response = client.recognize(config, audio)
 
-  for i, result in enumerate(response.results):
-    alternative = result.alternatives[0]
-    print('-' * 20)
-    print('First alternative of result {}'.format(i))
+    for i, result in enumerate(response.results):
+        alternative = result.alternatives[0]
+        print('-' * 20)
+        print('First alternative of result {}'.format(i))
 
 
 # [END speech_transcribe_diarization]
@@ -59,45 +59,45 @@ def speech_transcribe_diarization(speech_file):
 
 # [START speech_transcribe_diarization_gcs]
 def speech_transcribe_diarization_gcs(gcs_uri):
-  """Transcribe the given audio file asynchronously with
-    the selected model."""
-  from google.cloud import speech_v1p1beta1 as speech
-  client = speech.SpeechClient()
+    """Transcribe the given audio file asynchronously with
+      the selected model."""
+    from google.cloud import speech_v1p1beta1 as speech
+    client = speech.SpeechClient()
 
-  audio = speech.types.RecognitionAudio(uri=gcs_uri)
+    audio = speech.types.RecognitionAudio(uri=gcs_uri)
 
-  config = speech.types.RecognitionConfig(
-      encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
-      sample_rate_hertz=8000,
-      language_code='en-US',
-      enable_speaker_diarization=True,
-      diarization_speaker_count=2,
-      audio_channel_count=2,
-      enable_automatic_punctuation=True)
+    config = speech.types.RecognitionConfig(
+        encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=8000,
+        language_code='en-US',
+        enable_speaker_diarization=True,
+        diarization_speaker_count=2,
+        audio_channel_count=2,
+        enable_automatic_punctuation=True)
 
-  print('Waiting for operation to complete...')
-  response = client.recognize(config, audio)
+    print('Waiting for operation to complete...')
+    response = client.recognize(config, audio)
 
-  for i, result in enumerate(response.results):
-    alternative = result.alternatives[0]
-    print('-' * 20)
-    print('First alternative of result {}'.format(i))
-    print(u'Transcript: {}'.format(alternative.transcript))
-    print(u'First Word Speaker Tag: {}'.format(
-        alternative.words[0].speaker_tag))
+    for i, result in enumerate(response.results):
+        alternative = result.alternatives[0]
+        print('-' * 20)
+        print('First alternative of result {}'.format(i))
+        print(u'Transcript: {}'.format(alternative.transcript))
+        print(u'First Word Speaker Tag: {}'.format(
+            alternative.words[0].speaker_tag))
 
 
 # [END speech_transcribe_diarization_gcs]
 
 if __name__ == '__main__':
-  parser = argparse.ArgumentParser(
-      description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-  parser.add_argument(
-      'path', help='File or GCS path for audio file to be recognized')
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument(
+        'path', help='File or GCS path for audio file to be recognized')
 
-  args = parser.parse_args()
+    args = parser.parse_args()
 
-  if args.path.startswith('gs://'):
-    speech_transcribe_diarization_gcs(args.path)
-  else:
-    speech_transcribe_diarization(args.path)
+    if args.path.startswith('gs://'):
+        speech_transcribe_diarization_gcs(args.path)
+    else:
+        speech_transcribe_diarization(args.path)
