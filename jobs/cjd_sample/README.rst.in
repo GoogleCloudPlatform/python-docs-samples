@@ -16,7 +16,27 @@ setup:
 - install_deps
 
 samples:
+- name: AutoCompleteSample
+  file: auto_complete_sample.py
 - name: BaseCompanySample
   file: base_company_sample.py
+- name: BaseJobSample
+  file: base_job_sample.py
+- name: BatchOperationSample
+  file: batch_operation_sample.py
+- name: CommuteSearchSample
+  file: commute_search_sample.py
+- name: CustomAttributeSample
+  file: custom_attribute_sample.py
+- name: EmailAlertSearchSample
+  file: email_alert_search_sample.py
+- name: FeaturedJobSearchSample
+  file: featured_job_search_sample.py
+- name: GeneraSearchSample
+  file: general_search_sample.py
+- name: HistogramSample
+  file: histogram_sample.py
+- name: LocationSearchSample
+  file: location_search_sample.py
 
 folder: jobs/cjd_sample
