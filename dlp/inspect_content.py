@@ -66,7 +66,7 @@ def inspect_string(project, content_string, info_types,
     regexes = [{
         'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
         'regex': {'pattern': custom_regex}
-    } for i in enumerate(custom_regexes)]
+    } for i, custom_regex in enumerate(custom_regexes)]
     custom_info_types = dictionaries + regexes
 
     # Construct the configuration dictionary. Keys which are None may
@@ -154,7 +154,7 @@ def inspect_file(project, filename, info_types, min_likelihood=None,
     regexes = [{
         'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
         'regex': {'pattern': custom_regex}
-    } for i in enumerate(custom_regexes)]
+    } for i, custom_regex in enumerate(custom_regexes)]
     custom_info_types = dictionaries + regexes
 
     # Construct the configuration dictionary. Keys which are None may
@@ -267,7 +267,7 @@ def inspect_gcs_file(project, bucket, filename, topic_id, subscription_id,
     regexes = [{
         'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
         'regex': {'pattern': custom_regex}
-    } for i in enumerate(custom_regexes)]
+    } for i, custom_regex in enumerate(custom_regexes)]
     custom_info_types = dictionaries + regexes
 
     # Construct the configuration dictionary. Keys which are None may
@@ -413,7 +413,7 @@ def inspect_datastore(project, datastore_project, kind,
     regexes = [{
         'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
         'regex': {'pattern': custom_regex}
-    } for i in enumerate(custom_regexes)]
+    } for i, custom_regex in enumerate(custom_regexes)]
     custom_info_types = dictionaries + regexes
 
     # Construct the configuration dictionary. Keys which are None may
@@ -564,7 +564,7 @@ def inspect_bigquery(project, bigquery_project, dataset_id, table_id,
     regexes = [{
         'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
         'regex': {'pattern': custom_regex}
-    } for i in enumerate(custom_regexes)]
+    } for i, custom_regex in enumerate(custom_regexes)]
     custom_info_types = dictionaries + regexes
 
     # Construct the configuration dictionary. Keys which are None may
