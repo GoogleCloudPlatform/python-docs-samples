@@ -144,10 +144,8 @@ def run_sample():
   # Update a company with field mask
   update_company_with_field_mask(
       client_service, company_name, {
-          'displayName':
-              'changedTitle',
-          'distributorCompanyId':
-              company_created.get('distributorCompanyId')
+          'displayName': 'changedTitle',
+          'distributorCompanyId': company_created.get('distributorCompanyId')
       }, 'displayName')
 
   # Delete a company
