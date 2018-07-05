@@ -15,9 +15,8 @@
 import os
 import random
 
-from _pytest.capture import capsys
-from tableadmin import run_table_operations
 from tableadmin import delete_table
+from tableadmin import run_table_operations
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 BIGTABLE_CLUSTER = os.environ['BIGTABLE_CLUSTER']

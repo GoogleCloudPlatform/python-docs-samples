@@ -30,9 +30,11 @@ Operations performed:
 - Delete bigtable.
 """
 
-import datetime
 import argparse
+import datetime
+
 from google.cloud import bigtable
+
 
 def run_table_operations(project_id, instance_id, table_id):
     ''' Create bigtable and perform different operations on it.
@@ -76,7 +78,6 @@ def run_table_operations(project_id, instance_id, table_id):
     print 'Printing table metadata...'
     print table.name
 
-
     # [START bigtable_create_family_gc_max_age]
     print 'Creating column family cf1 with with MaxAge GC Rule...'
     # Create a column family with GC policy : maximum age
@@ -91,7 +92,6 @@ def run_table_operations(project_id, instance_id, table_id):
     cf1.create()
     print 'Created column family cf1 with MaxAge GC Rule.'
     # [END bigtable_create_family_gc_max_age]
-
 
     # [START bigtable_create_family_gc_max_versions]
     print 'Creating column family cf2 with max versions GC rule...'
@@ -108,10 +108,10 @@ def run_table_operations(project_id, instance_id, table_id):
     print 'Created column family cf2 with Max Versions GC Rule.'
     # [END bigtable_create_family_gc_max_versions]
 
-
     # [START bigtable_create_family_gc_union]
     print 'Creating column family cf3 with union GC rule...'
-    # Create a column family with GC policy to drop data that matches at least one condition.
+    # Create a column family with GC policy to drop data that matches
+    # at least one condition.
     column_family_id3 = 'cf3'
     # GC rule : Drop max age rule OR the most recent version rule.
     union = [max_age_rule, max_versions_rule]
@@ -123,12 +123,13 @@ def run_table_operations(project_id, instance_id, table_id):
     print 'Created column family cf3 with Union GC rule'
     # [END bigtable_create_family_gc_union]
 
-
     # [START bigtable_create_family_gc_intersection]
     print 'Creating column family cf4 with Intersection GC rule...'
-    # Create a column family with GC policy to drop data that matches all conditions
+    # Create a column family with GC policy to drop data that matches
+    # all conditions
     column_family_id4 = 'cf4'
-    # GC rule: Drop cells older than 5 days AND older than the most recent 2 versions
+    # GC rule: Drop cells older than 5 days AND older than the most
+    # recent 2 versions
     intersection = [max_age_rule, max_versions_rule]
     intersection_rule = table.gc_rule_intersection(union)
     print 'Created Intersection GC Rule.'
@@ -138,26 +139,28 @@ def run_table_operations(project_id, instance_id, table_id):
     print 'Created column family cf4 with Intersection GC rule.'
     # [END bigtable_create_family_gc_intersection]
 
-
     # [START bigtable_create_family_gc_nested]
     print 'Creating column family cf5 with a Nested GC rule...'
     # Create a column family with nested GC policys.
     # Create a nested GC rule:
     # Drop cells that are either older than the 10 recent versions
     # OR
-    # Drop cells that are older than a month AND older than the 2 recent versions
+    # Drop cells that are older than a month AND older than the
+    # 2 recent versions
     column_family_id5 = 'cf5'
     # Drop cells that are either older than the 10 recent versions
     max_versions_rule1 = table.max_versions_gc_rule(10)
 
-    # Drop cells that are older than a month AND older than the 2 recent versions
+    # Drop cells that are older than a month AND older than
+    # the 2 recent versions
     max_age = datetime.timedelta(days=30)
     max_age_rule = table.max_age_gc_rule(max_age)
     max_versions_rule2 = table.max_versions_gc_rule(2)
     intersection = [max_age_rule, max_versions_rule2]
     intersection_rule = table.gc_rule_intersection(intersection)
 
-    # This nesting is done with union rule since it is OR between the selected rules.
+    # This nesting is done with union rule since it is OR between
+    # the selected rules.
     nest = [max_versions_rule1, intersection_rule]
     nested_rule = table.gc_rule_union(nest)
     print 'Created Nested GC Rule.'
@@ -166,7 +169,6 @@ def run_table_operations(project_id, instance_id, table_id):
     cf5.create()
     print 'Created column family cf5 with a Nested GC rule.'
     # [END bigtable_create_family_gc_nested]
-
 
     # [START Printing Column Family and GC Rule for all column families.]
     print 'Printing Column Family and GC Rule for all column families...'
