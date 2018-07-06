@@ -27,6 +27,7 @@ client_service = build('jobs', 'v2')
 
 # [END instantiate]
 
+
 # [START basic_keyword_search]
 def basic_keyword_search(client_service, company_name, keyword):
   # Make sure to set the requestMetadata the same as the associated search request
@@ -46,7 +47,10 @@ def basic_keyword_search(client_service, company_name, keyword):
 
   response = client_service.jobs().search(body=request).execute()
   print('==========\n%s\n==========' % response)
+
+
 # [END basic_keyword_search]
+
 
 # [START category_filter]
 def category_search(client_service, company_name, categories):
@@ -67,7 +71,10 @@ def category_search(client_service, company_name, categories):
 
   response = client_service.jobs().search(body=request).execute()
   print('==========\n%s\n==========' % response)
+
+
 # [END category_filter]
+
 
 # [START employment_types_filter]
 def employment_types_search(client_service, company_name, employment_types):
@@ -88,7 +95,10 @@ def employment_types_search(client_service, company_name, employment_types):
 
   response = client_service.jobs().search(body=request).execute()
   print('==========\n%s\n==========' % response)
+
+
 # [END employment_types_filter]
+
 
 # [START date_range_filter]
 def date_range_search(client_service, company_name, date_range):
@@ -109,28 +119,10 @@ def date_range_search(client_service, company_name, date_range):
 
   response = client_service.jobs().search(body=request).execute()
   print('==========\n%s\n==========' % response)
+
+
 # [END date_range_filter]
 
-# [START tenant_jobs_filter]
-def tenant_jobs_search(client_service, company_name):
-  # Make sure to set the requestMetadata the same as the associated search request
-  request_metadata = {
-      'user_id': 'HashedUserId',
-      'session_id': 'HashedSessionId',
-      'domain': 'www.google.com'
-  }
-  job_query = {'tenant_job_only': True}
-  if company_name is not None:
-    job_query.update({'company_names': [company_name]})
-  request = {
-      'mode': 'JOB_SEARCH',
-      'request_metadata': request_metadata,
-      'query': job_query,
-  }
-
-  response = client_service.jobs().search(body=request).execute()
-  print('==========\n%s\n==========' % response)
-# [END tenant_jobs_filter]
 
 # [START language_code_filter]
 def language_code_search(client_service, company_name, language_codes):
@@ -151,10 +143,14 @@ def language_code_search(client_service, company_name, language_codes):
 
   response = client_service.jobs().search(body=request).execute()
   print('==========\n%s\n==========' % response)
+
+
 # [END language_code_filter]
 
+
 # [START company_display_name_filter]
-def company_display_name_search(client_service, company_name, company_display_names):
+def company_display_name_search(client_service, company_name,
+                                company_display_names):
   # Make sure to set the requestMetadata the same as the associated search request
   request_metadata = {
       'user_id': 'HashedUserId',
@@ -172,7 +168,10 @@ def company_display_name_search(client_service, company_name, company_display_na
 
   response = client_service.jobs().search(body=request).execute()
   print('==========\n%s\n==========' % response)
+
+
 # [END company_display_name_filter]
+
 
 # [START compensation_filter]
 def compensation_search(client_service, company_name):
@@ -182,8 +181,22 @@ def compensation_search(client_service, company_name):
       'session_id': 'HashedSessionId',
       'domain': 'www.google.com'
   }
-  compensation_range = {'max': {'currency_code': 'USD', 'units': 15}, 'min': {'currency_code': 'USD', 'units': 10, 'nanos': 500000000}}
-  compensation_filter = {'type': 'UNIT_AND_AMOUNT', 'units': ['HOURLY'], 'range': compensation_range}
+  compensation_range = {
+      'max': {
+          'currency_code': 'USD',
+          'units': 15
+      },
+      'min': {
+          'currency_code': 'USD',
+          'units': 10,
+          'nanos': 500000000
+      }
+  }
+  compensation_filter = {
+      'type': 'UNIT_AND_AMOUNT',
+      'units': ['HOURLY'],
+      'range': compensation_range
+  }
   job_query = {'compensation_filter': compensation_filter}
   if company_name is not None:
     job_query.update({'company_names': [company_name]})
@@ -195,6 +208,8 @@ def compensation_search(client_service, company_name):
 
   response = client_service.jobs().search(body=request).execute()
   print('==========\n%s\n==========' % response)
+
+
 # [END compensation_filter]
 
 
@@ -232,8 +247,8 @@ def run_sample():
   basic_keyword_search(client_service, company_name, 'Systems Administrator')
   category_search(client_service, company_name, ['COMPUTER_AND_IT'])
   date_range_search(client_service, company_name, 'PAST_24_HOURS')
-  employment_types_search(client_service, company_name, ['FULL_TIME', 'CONTRACTOR', 'PER_DIEM'])
-  tenant_jobs_search(client_service, company_name)
+  employment_types_search(client_service, company_name,
+                          ['FULL_TIME', 'CONTRACTOR', 'PER_DIEM'])
   company_display_name_search(client_service, company_name, ['Google'])
   compensation_search(client_service, company_name)
   language_code_search(client_service, company_name, ['pt-BR', 'en-US'])
