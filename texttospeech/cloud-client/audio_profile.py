@@ -57,10 +57,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
                     description=__doc__,
                     formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--text',
-                        help='The text from which to synthesize speech.')
     parser.add_argument('--output',
                         help='The output mp3 file.')
+    parser.add_argument('--text',
+                        help='The text from which to synthesize speech.')
     parser.add_argument('--effects_profile_id',
                         help='The audio effects profile id to be applied.')
 
