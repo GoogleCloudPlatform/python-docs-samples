@@ -1,10 +1,11 @@
-# Copyright 2016 Google Inc.
-#
+#!/usr/bin/env python
+
+# Copyright 2018, Google LLC
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -44,6 +45,13 @@ def test_run_table_operations(capsys):
     assert 'Created Nested GC Rule.' in out
     assert 'Created column family cf5 with a Nested GC rule.' in out
     assert 'Printing Column Family and GC Rule for all column families.' in out
+    assert 'Updating column family cf1 GC rule...' in out
+    assert 'Updated column family cf1 GC rule' in out
+    assert 'Print updated column family cf1 GC rule...' in out
+    assert 'Column Family: cf1' in out
+    assert 'max_num_versions: 1' in out
+    assert 'Delete a column family cf2...' in out
+    assert 'Column family cf2 deleted successfully.' in out
 
 
 def test_delete_table(capsys):

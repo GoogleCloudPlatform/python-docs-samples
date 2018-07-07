@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-# Copyright 2016 Google Inc.
-#
+# Copyright 2018, Google LLC
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,12 +22,12 @@ Prerequisites:
   https://developers.google.com/identity/protocols/application-default-credentials
 
 Operations performed:
-- Create bigtable.
-- List bigtables existing in current project, if any.
-- List metadata(Name) of created bigtable.
+- Create a Cloud Bigtable table.
+- List tables for a Cloud Bigtable instance.
+- Print metadata of the newly created table.
 - Create Column Families with different GC rules.
     - GC Rules like: MaxAge, MaxVersions, Union, Intersection and Nested.
-- Delete bigtable.
+- Delete a Bigtable table.
 """
 
 import argparse
@@ -38,6 +38,7 @@ from google.cloud import bigtable
 
 def run_table_operations(project_id, instance_id, table_id):
     ''' Create bigtable and perform different operations on it.
+    ''' Create a Bigtable table and perform basic table operations.
 
     :type project_id: str
     :param project_id: Project id of the client.
@@ -63,20 +64,19 @@ def run_table_operations(project_id, instance_id, table_id):
         table.create()
         print 'Created table {}.'.format(table_id)
 
-    tables = instance.list_tables()
-
     # [START List existing tables in the instance.]
+    tables = instance.list_tables()
     print 'Listing tables in current project...'
     if tables != []:
         for tbl in tables:
-            print tbl.name
+            print tbl.table_id
     else:
         print 'No table exists in current project...'
     # [END List existing tables in the instance.]
 
     # Display name of the table.
     print 'Printing table metadata...'
-    print table.name
+    print table.table_id
 
     # [START bigtable_create_family_gc_max_age]
     print 'Creating column family cf1 with with MaxAge GC Rule...'
@@ -170,21 +170,66 @@ def run_table_operations(project_id, instance_id, table_id):
     print 'Created column family cf5 with a Nested GC rule.'
     # [END bigtable_create_family_gc_nested]
 
-    # [START Printing Column Family and GC Rule for all column families.]
+    # [START bigtable_list_column_families]
     print 'Printing Column Family and GC Rule for all column families...'
     column_families = table.list_column_families()
     for column_family, gc_rule in sorted(column_families.items()):
         print "Column Family:", column_family
         print "GC Rule:"
         print gc_rule.to_pb()
-    # [END Printing Column Family and GC Rule for all column families.]
+        # Sample output:
+        #         Column Family: cf4
+        #         GC Rule:
+        #         gc_rule {
+        #           intersection {
+        #             rules {
+        #               max_age {
+        #                 seconds: 432000
+        #               }
+        #             }
+        #             rules {
+        #               max_num_versions: 2
+        #             }
+        #           }
+        #         }
+    # [END bigtable_list_column_families]
+
+    # [START bigtable_update_gc_rule]
+    print 'Updating column family cf1 GC rule...'
+    # Update the column family cf1 to update the GC rule
+    max_versions = 1
+    max_versions_rule = table.max_versions_gc_rule(max_versions)
+    # Create a reference to the column family with GC rule
+    cf1 = table.column_family(column_family_id1, max_versions_rule)
+    cf1.update()
+    print 'Updated column family cf1 GC rule'
+    # [END bigtable_update_gc_rule]
+
+    # [START bigtable_family_get_gc_rule]
+    print 'Print updated column family cf1 GC rule...'
+    print 'Column Family:', column_family_id1
+    print 'GC Rule:'
+    print cf1.to_pb()
+    # [END bigtable_family_get_gc_rule]
+
+    # [START bigtable_delete_family]
+    print 'Delete a column family cf2...'
+    # Delete a column family
+    cf2.delete()
+    print 'Column family cf2 deleted successfully.'
+    # [END bigtable_delete_family]
+
+    print 'execute command python tableadmin.py delete [project_id] \
+            [instance_id] --table [tableName] to delete the table.'
 
 
 def exists(instance_obj, table_id):
     """ Check whether table exists or not.
 
-        Note: This is temporary function as code for this is under development.
-        Once complete, this function would be removed.
+        .. note::
+
+            This is temporary function as code for this is under development.
+            Once complete, this function would be removed.
 
     :type instance_obj: Instance Class.
     :param instance_obj: Instance object.
