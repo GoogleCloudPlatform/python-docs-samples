@@ -37,8 +37,7 @@ from google.cloud import bigtable
 
 
 def run_table_operations(project_id, instance_id, table_id):
-    ''' Create bigtable and perform different operations on it.
-    ''' Create a Bigtable table and perform basic table operations.
+    ''' Create a Bigtable table and perform basic table operations
 
     :type project_id: str
     :param project_id: Project id of the client.
