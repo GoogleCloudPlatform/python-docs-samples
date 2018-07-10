@@ -20,7 +20,7 @@ RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 OUTPUT1 = r'OK Google stream stranger things from Netflix to my TV'
 
 
-def test_transcribe_model_selection_file(capsys):
+def test_transcribe_multichannel_file(capsys):
     transcribe_multichannel.speech_transcribe_multichannel(
         os.path.join(RESOURCES, 'Google_Gnome.wav'))
     out, err = capsys.readouterr()
@@ -28,7 +28,7 @@ def test_transcribe_model_selection_file(capsys):
     assert re.search(OUTPUT1, out, re.DOTALL | re.I)
 
 
-def test_transcribe_model_selection_gcs(capsys):
+def test_transcribe_multichannel_gcs(capsys):
     transcribe_multichannel.speech_transcribe_multichannel_gcs(
         'gs://cloud-samples-tests/speech/Google_Gnome.wav')
     out, err = capsys.readouterr()
