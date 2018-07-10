@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2017 Google Inc. All Rights Reserved.
+# Copyright 2017 Google LLC. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -50,8 +50,10 @@ def speech_transcribe_diarization(speech_file):
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print('-' * 20)
-        print('First alternative of result {}: {}'.format(i, alternative.transcript))
-        print('Speaker Tag for the first word: {}'.format(alternative.words[0].speaker_tag))
+        print('First alternative of result {}: {}'
+              .format(i, alternative.transcript))
+        print('Speaker Tag for the first word: {}'
+              .format(alternative.words[0].speaker_tag))
 # [END speech_transcribe_diarization]
 
 
@@ -76,14 +78,17 @@ def speech_transcribe_diarization_gcs(gcs_uri):
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print('-' * 20)
-        print('First alternative of result {}: {}'.format(i, alternative.transcript))
-        print('Speaker Tag for the first word: {}'.format(alternative.words[0].speaker_tag))
+        print('First alternative of result {}: {}'
+              .format(i, alternative.transcript))
+        print('Speaker Tag for the first word: {}'
+              .format(alternative.words[0].speaker_tag))
 # [END speech_transcribe_diarization_gcs]
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
         'path', help='File or GCS path for audio file to be recognized')
 
