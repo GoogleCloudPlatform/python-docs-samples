@@ -13,7 +13,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-r"""Google Cloud Speech API sample that demonstrates how to request word level confidence information.
+r"""Google Cloud Speech API sample that demonstrates how to request word
+level confidence information.
 
 Example usage:
     python transcribe_word_level_confidence.py \
@@ -85,7 +86,8 @@ def speech_transcribe_word_level_conf_gcs(gcs_uri):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
         'path', help='File or GCS path for audio file to be recognized')
 
