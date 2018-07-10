@@ -1,4 +1,4 @@
-# Copyright 2016, Google, Inc.
+# Copyright 2016, Google, LLC.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -17,6 +17,7 @@ import re
 import transcribe_multichannel
 
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
+OUTPUT1 = r'OK Google stream stranger things from Netflix to my TV'
 
 
 def test_transcribe_model_selection_file(capsys):
@@ -24,7 +25,7 @@ def test_transcribe_model_selection_file(capsys):
         os.path.join(RESOURCES, 'Google_Gnome.wav'))
     out, err = capsys.readouterr()
 
-    assert re.search(r'the weather outside is sunny', out, re.DOTALL | re.I)
+    assert re.search(OUTPUT1, out, re.DOTALL | re.I)
 
 
 def test_transcribe_model_selection_gcs(capsys):
@@ -32,4 +33,4 @@ def test_transcribe_model_selection_gcs(capsys):
         'gs://cloud-samples-tests/speech/Google_Gnome.wav')
     out, err = capsys.readouterr()
 
-    assert re.search(r'the weather outside is sunny', out, re.DOTALL | re.I)
+    assert re.search(OUTPUT1, out, re.DOTALL | re.I)

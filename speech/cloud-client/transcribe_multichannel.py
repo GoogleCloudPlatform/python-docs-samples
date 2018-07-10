@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2017 Google Inc. All Rights Reserved.
+# Copyright 2017 Google LLC. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-r"""Google Cloud Speech API sample that demonstrates how to use multiple audio channels.
+r"""Google Cloud Speech API sample that demonstrates how to use multiple
+audio channels.
 
 Example usage:
     python transcribe_multichannel.py \
@@ -39,11 +40,10 @@ def speech_transcribe_multichannel(speech_file):
 
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=8000,
+        sample_rate_hertz=16000,
         language_code='en-US',
-        audio_channel_count=2,
-        enable_separate_recognition_per_channel=True,
-        enable_automatic_punctuation=True)
+        audio_channel_count=1,
+        enable_separate_recognition_per_channel=True)
 
     response = client.recognize(config, audio)
 
@@ -53,8 +53,6 @@ def speech_transcribe_multichannel(speech_file):
         print('First alternative of result {}'.format(i))
         print(u'Transcript: {}'.format(alternative.transcript))
         print(u'Channel Tag: {}'.format(result.channel_tag))
-
-
 # [END speech_transcribe_multichannel]
 
 
@@ -69,11 +67,10 @@ def speech_transcribe_multichannel_gcs(gcs_uri):
 
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=8000,
+        sample_rate_hertz=16000,
         language_code='en-US',
-        audio_channel_count=2,
-        enable_separate_recognition_per_channel=True,
-        enable_automatic_punctuation=True)
+        audio_channel_count=1,
+        enable_separate_recognition_per_channel=True)
 
     print('Waiting for operation to complete...')
     response = client.recognize(config, audio)
@@ -84,13 +81,13 @@ def speech_transcribe_multichannel_gcs(gcs_uri):
         print('First alternative of result {}'.format(i))
         print(u'Transcript: {}'.format(alternative.transcript))
         print(u'Channel Tag: {}'.format(result.channel_tag))
-
-
 # [END speech_transcribe_multichannel_gcs]
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
         'path', help='File or GCS path for audio file to be recognized')
 
