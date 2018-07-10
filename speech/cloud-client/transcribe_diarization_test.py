@@ -19,17 +19,19 @@ import transcribe_diarization
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 
 
-def test_transcribe_model_selection_file(capsys):
+def test_transcribe_diarization(capsys):
     transcribe_diarization.speech_transcribe_diarization(
         os.path.join(RESOURCES, 'Google_Gnome.wav'))
     out, err = capsys.readouterr()
 
-    assert re.search(r'the weather outside is sunny', out, re.DOTALL | re.I)
+    assert re.search(r'OK Google stream stranger things from Netflix to my TV', out, re.DOTALL | re.I)
+    assert re.search(r'Speaker Tag', out, re.DOTALL | re.I)
 
 
-def test_transcribe_model_selection_gcs(capsys):
+def test_transcribe_diarization_gcs(capsys):
     transcribe_diarization.speech_transcribe_diarization_gcs(
         'gs://cloud-samples-tests/speech/Google_Gnome.wav')
     out, err = capsys.readouterr()
 
-    assert re.search(r'the weather outside is sunny', out, re.DOTALL | re.I)
+    assert re.search(r'OK Google stream stranger things from Netflix to my TV', out, re.DOTALL | re.I)
+    assert re.search(r'Speaker Tag', out, re.DOTALL | re.I)

@@ -39,17 +39,19 @@ def speech_transcribe_diarization(speech_file):
 
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=8000,
+        sample_rate_hertz=16000,
         language_code='en-US',
-        audio_channel_count=2,
-        enable_separate_recognition_per_channel=True)
+        enable_speaker_diarization=True,
+        diarization_speaker_count=2)
 
+    print('Waiting for operation to complete...')
     response = client.recognize(config, audio)
 
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print('-' * 20)
-        print('First alternative of result {}'.format(i))
+        print('First alternative of result {}: {}'.format(i, alternative.transcript))
+        print('Speaker Tag for the first word: {}'.format(alternative.words[0].speaker_tag))
 # [END speech_transcribe_diarization]
 
 
@@ -63,11 +65,10 @@ def speech_transcribe_diarization_gcs(gcs_uri):
 
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=8000,
+        sample_rate_hertz=16000,
         language_code='en-US',
         enable_speaker_diarization=True,
-        diarization_speaker_count=2,
-        audio_channel_count=2)
+        diarization_speaker_count=2)
 
     print('Waiting for operation to complete...')
     response = client.recognize(config, audio)
@@ -75,10 +76,8 @@ def speech_transcribe_diarization_gcs(gcs_uri):
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print('-' * 20)
-        print('First alternative of result {}'.format(i))
-        print(u'Transcript: {}'.format(alternative.transcript))
-        print(u'First Word Speaker Tag: {}'.format(
-            alternative.words[0].speaker_tag))
+        print('First alternative of result {}: {}'.format(i, alternative.transcript))
+        print('Speaker Tag for the first word: {}'.format(alternative.words[0].speaker_tag))
 # [END speech_transcribe_diarization_gcs]
 
 
