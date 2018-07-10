@@ -1,4 +1,4 @@
-# Copyright 2016, Google, LLC.
+# Copyright 2018, Google, LLC.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -17,8 +17,8 @@ import re
 import transcribe_diarization
 
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
-OUTPUT1 = r'OK Google stream stranger things from Netflix to my TV'
-OUTPUT2 = r'Speaker Tag'
+OUTPUT1 = 'OK Google stream stranger things from Netflix to my TV'
+OUTPUT2 = 'Speaker Tag'
 
 
 def test_transcribe_diarization(capsys):
