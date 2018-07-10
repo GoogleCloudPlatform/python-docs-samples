@@ -14,7 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-r"""Google Cloud Speech API sample that demonstrates how to request speaker diarization.
+r"""Google Cloud Speech API sample that demonstrates how to request
+speaker diarization.
 
 Example usage:
     python transcribe_diarization.py \
