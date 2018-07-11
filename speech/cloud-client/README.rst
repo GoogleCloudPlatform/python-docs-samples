@@ -240,40 +240,6 @@ To run this sample:
 
 
 
-Diarization
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-.. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=speech/cloud-client/transcribe_diarization.py,speech/cloud-client/README.rst
-
-
-
-
-To run this sample:
-
-.. code-block:: bash
-
-    $ python transcribe_diarization.py
-
-    usage: transcribe_diarization.py [-h] path
-
-    Google Cloud Speech API sample that demonstrates how to request
-    speaker diarization.
-
-    Example usage:
-        python transcribe_diarization.py \
-            resources/Google_Gnome.wav
-        python transcribe_diarization.py \
-            gs://cloud-ml-api-e2e-testing/speech/stereo_audio.wav
-
-    positional arguments:
-      path        File or GCS path for audio file to be recognized
-
-    optional arguments:
-      -h, --help  show this help message and exit
-
-
-
 
 
 The client library
