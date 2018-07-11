@@ -26,7 +26,6 @@ client_service = build('jobs', 'v2')
 
 # [START commute_search]
 def commute_search(client_service, company_name):
-    # Make sure to set the requestMetadata the same as the associated search request
     request_metadata = {
         'user_id': 'HashedUserId',
         'session_id': 'HashedSessionId',

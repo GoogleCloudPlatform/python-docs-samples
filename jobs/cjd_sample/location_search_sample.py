@@ -14,14 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json
-import httplib2
 import time
 import string
 
 # [START instantiate]
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 
 client_service = build('jobs', 'v2')
 
@@ -30,7 +27,6 @@ client_service = build('jobs', 'v2')
 
 # [START basic_location_search]
 def basic_location_search(client_service, company_name, location, distance):
-    # Make sure to set the requestMetadata the same as the associated search request
     request_metadata = {
         'user_id': 'HashedUserId',
         'session_id': 'HashedSessionId',
@@ -55,7 +51,6 @@ def basic_location_search(client_service, company_name, location, distance):
 # [START keyword_location_search]
 def keyword_location_search(client_service, company_name, location, distance,
                             keyword):
-    # Make sure to set the requestMetadata the same as the associated search request
     request_metadata = {
         'user_id': 'HashedUserId',
         'session_id': 'HashedSessionId',
@@ -79,7 +74,6 @@ def keyword_location_search(client_service, company_name, location, distance,
 
 # [START city_location_search]
 def city_location_search(client_service, company_name, location):
-    # Make sure to set the requestMetadata the same as the associated search request
     request_metadata = {
         'user_id': 'HashedUserId',
         'session_id': 'HashedSessionId',
@@ -104,7 +98,6 @@ def city_location_search(client_service, company_name, location):
 # [START multi_locations_search]
 def multi_locations_search(client_service, company_name, location1, distance1,
                            location2):
-    # Make sure to set the requestMetadata the same as the associated search request
     request_metadata = {
         'user_id': 'HashedUserId',
         'session_id': 'HashedSessionId',
@@ -129,7 +122,6 @@ def multi_locations_search(client_service, company_name, location1, distance1,
 
 # [START broadening_location_search]
 def broadening_location_search(client_service, company_name, location):
-    # Make sure to set the requestMetadata the same as the associated search request
     request_metadata = {
         'user_id': 'HashedUserId',
         'session_id': 'HashedSessionId',

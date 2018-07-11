@@ -14,14 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json
-import httplib2
 import time
 import string
 
 # [START instantiate]
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 
 client_service = build('jobs', 'v2')
 
@@ -30,7 +27,6 @@ client_service = build('jobs', 'v2')
 
 # [START histogram_search]
 def histogram_search(client_service, company_name):
-    # Make sure to set the requestMetadata the same as the associated search request
     request_metadata = {
         'user_id': 'HashedUserId',
         'session_id': 'HashedSessionId',

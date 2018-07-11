@@ -15,8 +15,8 @@
 # limitations under the License.
 
 import random
-import time
 import string
+import time
 
 # [START instantiate]
 from googleapiclient.discovery import build
@@ -68,7 +68,6 @@ def generate_job_with_custom_attributes(company_name):
 
 # [START custom_attribute_filter_string_value]
 def custom_attribute_filter_string_value(client_service):
-    # Make sure to set the requestMetadata the same as the associated search request
     request_metadata = {
         'user_id': 'HashedUserId',
         'session_id': 'HashedSessionId',
@@ -92,7 +91,6 @@ def custom_attribute_filter_string_value(client_service):
 
 # [START custom_attribute_filter_long_value]
 def custom_attribute_filter_long_value(client_service):
-    # Make sure to set the requestMetadata the same as the associated search request
     request_metadata = {
         'user_id': 'HashedUserId',
         'session_id': 'HashedSessionId',
@@ -117,7 +115,6 @@ def custom_attribute_filter_long_value(client_service):
 
 # [START custom_attribute_filter_multi_attributes]
 def custom_attribute_filter_multi_attributes(client_service):
-    # Make sure to set the requestMetadata the same as the associated search request
     request_metadata = {
         'user_id': 'HashedUserId',
         'session_id': 'HashedSessionId',

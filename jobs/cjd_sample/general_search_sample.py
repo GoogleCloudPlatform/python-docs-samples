@@ -14,14 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json
-import httplib2
 import time
-import string
 
 # [START instantiate]
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 
 client_service = build('jobs', 'v2')
 
@@ -30,7 +26,6 @@ client_service = build('jobs', 'v2')
 
 # [START basic_keyword_search]
 def basic_keyword_search(client_service, company_name, keyword):
-    # Make sure to set the requestMetadata the same as the associated search request
     request_metadata = {
         'user_id': 'HashedUserId',
         'session_id': 'HashedSessionId',
@@ -54,7 +49,6 @@ def basic_keyword_search(client_service, company_name, keyword):
 
 # [START category_filter]
 def category_search(client_service, company_name, categories):
-    # Make sure to set the requestMetadata the same as the associated search request
     request_metadata = {
         'user_id': 'HashedUserId',
         'session_id': 'HashedSessionId',
@@ -78,7 +72,6 @@ def category_search(client_service, company_name, categories):
 
 # [START employment_types_filter]
 def employment_types_search(client_service, company_name, employment_types):
-    # Make sure to set the requestMetadata the same as the associated search request
     request_metadata = {
         'user_id': 'HashedUserId',
         'session_id': 'HashedSessionId',
@@ -102,7 +95,6 @@ def employment_types_search(client_service, company_name, employment_types):
 
 # [START date_range_filter]
 def date_range_search(client_service, company_name, date_range):
-    # Make sure to set the requestMetadata the same as the associated search request
     request_metadata = {
         'user_id': 'HashedUserId',
         'session_id': 'HashedSessionId',
@@ -126,7 +118,6 @@ def date_range_search(client_service, company_name, date_range):
 
 # [START language_code_filter]
 def language_code_search(client_service, company_name, language_codes):
-    # Make sure to set the requestMetadata the same as the associated search request
     request_metadata = {
         'user_id': 'HashedUserId',
         'session_id': 'HashedSessionId',
@@ -151,7 +142,6 @@ def language_code_search(client_service, company_name, language_codes):
 # [START company_display_name_filter]
 def company_display_name_search(client_service, company_name,
                                 company_display_names):
-    # Make sure to set the requestMetadata the same as the associated search request
     request_metadata = {
         'user_id': 'HashedUserId',
         'session_id': 'HashedSessionId',
@@ -175,7 +165,6 @@ def company_display_name_search(client_service, company_name,
 
 # [START compensation_filter]
 def compensation_search(client_service, company_name):
-    # Make sure to set the requestMetadata the same as the associated search request
     request_metadata = {
         'user_id': 'HashedUserId',
         'session_id': 'HashedSessionId',

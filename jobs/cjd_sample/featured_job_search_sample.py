@@ -14,9 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import time
 import random
 import string
+import time
 
 # [START instantiate]
 from googleapiclient.discovery import build
@@ -55,7 +55,6 @@ def generate_featured_job(company_name):
 
 # [START search_featured_job]
 def search_featured_job(client_service, company_name):
-    # Make sure to set the requestMetadata the same as the associated search request
     request_metadata = {
         'user_id': 'HashedUserId',
         'session_id': 'HashedSessionId',
