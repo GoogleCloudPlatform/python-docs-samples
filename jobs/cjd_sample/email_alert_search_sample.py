@@ -26,7 +26,6 @@ client_service = build('jobs', 'v2')
 
 # [START search_for_alerts]
 def search_for_alerts(client_service, company_name):
-    # Make sure to set the requestMetadata the same as the associated search request
     request_metadata = {
         'user_id': 'HashedUserId',
         'session_id': 'HashedSessionId',

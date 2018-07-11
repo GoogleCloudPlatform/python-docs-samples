@@ -97,8 +97,8 @@ def custom_attribute_filter_long_value(client_service):
         'domain': 'www.google.com'
     }
 
-    custom_attribute_filter = ('(255 <= someFieldName2) AND (someFieldName2 <= '
-                               '257)')
+    custom_attribute_filter = ('(255 <= someFieldName2) AND' 
+                               ' (someFieldName2 <= 257)')
     job_query = {'custom_attribute_filter': custom_attribute_filter}
     request = {
         'request_metadata': request_metadata,

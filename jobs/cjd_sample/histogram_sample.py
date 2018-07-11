@@ -15,7 +15,6 @@
 # limitations under the License.
 
 import time
-import string
 
 # [START instantiate]
 from googleapiclient.discovery import build
@@ -64,8 +63,9 @@ def run_sample():
         client_service, company_to_be_created)
     company_name = company_created.get('name')
 
-    job_to_be_created = custom_attribute_sample.generate_job_with_custom_attributes(
-        company_name)
+    job_to_be_created = 
+        custom_attribute_sample.generate_job_with_custom_attributes(
+            company_name)
     job_name = base_job_sample.create_job(client_service,
                                           job_to_be_created).get('name')
 

@@ -15,7 +15,6 @@
 # limitations under the License.
 
 import time
-import string
 
 # [START instantiate]
 from googleapiclient.discovery import build
