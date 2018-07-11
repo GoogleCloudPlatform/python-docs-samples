@@ -174,5 +174,5 @@ if __name__ == '__main__':
     elif args.command == 'punctuation':
         transcribe_file_with_auto_punctuation(args.path)
     elif args.command == 'diarization':
-        speech_transcribe_diarization(args.path)
+        transcribe_file_with_diarization(args.path)
 

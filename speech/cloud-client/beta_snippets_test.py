@@ -15,9 +15,9 @@ import os
 
 from beta_snippets import (
     transcribe_file_with_auto_punctuation,
+    transcribe_file_with_diarization,
     transcribe_file_with_enhanced_model,
-    transcribe_file_with_metadata,
-    transcribe_file_with_diarization)
+    transcribe_file_with_metadata)
 
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 
