@@ -175,4 +175,3 @@ if __name__ == '__main__':
         transcribe_file_with_auto_punctuation(args.path)
     elif args.command == 'diarization':
         transcribe_file_with_diarization(args.path)
-
