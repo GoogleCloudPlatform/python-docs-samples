@@ -56,15 +56,14 @@ def histogram_search(client_service, company_name):
 def run_sample():
     import base_company_sample
     import base_job_sample
-    import custom_attribute_sample
+    import custom_attribute_sample as caa
 
     company_to_be_created = base_company_sample.generate_company()
     company_created = base_company_sample.create_company(
         client_service, company_to_be_created)
     company_name = company_created.get('name')
 
-    job_to_be_created = 
-        custom_attribute_sample.generate_job_with_custom_attributes(
+    job_to_be_created = caa.generate_job_with_custom_attributes(
             company_name)
     job_name = base_job_sample.create_job(client_service,
                                           job_to_be_created).get('name')
