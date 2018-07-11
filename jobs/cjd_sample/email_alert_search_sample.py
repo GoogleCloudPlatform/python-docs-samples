@@ -14,14 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json
-import httplib2
 import time
-import string
 
 # [START instantiate]
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 
 client_service = build('jobs', 'v2')
 
@@ -30,46 +26,46 @@ client_service = build('jobs', 'v2')
 
 # [START search_for_alerts]
 def search_for_alerts(client_service, company_name):
-  # Make sure to set the requestMetadata the same as the associated search request
-  request_metadata = {
-      'user_id': 'HashedUserId',
-      'session_id': 'HashedSessionId',
-      'domain': 'www.google.com'
-  }
-  request = {
-      'mode': 'JOB_SEARCH',
-      'request_metadata': request_metadata,
-  }
-  if company_name is not None:
-    request.update({'query': {'company_names': [company_name]}})
-  response = client_service.jobs().searchForAlert(body=request).execute()
-  print('==========\n%s\n==========' % response)
+    # Make sure to set the requestMetadata the same as the associated search request
+    request_metadata = {
+        'user_id': 'HashedUserId',
+        'session_id': 'HashedSessionId',
+        'domain': 'www.google.com'
+    }
+    request = {
+        'mode': 'JOB_SEARCH',
+        'request_metadata': request_metadata,
+    }
+    if company_name is not None:
+        request.update({'query': {'company_names': [company_name]}})
+    response = client_service.jobs().searchForAlert(body=request).execute()
+    print('==========\n%s\n==========' % response)
 
 
 # [END search_for_alerts]
 
 
 def run_sample():
-  import base_company_sample
-  import base_job_sample
+    import base_company_sample
+    import base_job_sample
 
-  company_to_be_created = base_company_sample.generate_company()
-  company_created = base_company_sample.create_company(client_service,
-                                                       company_to_be_created)
-  company_name = company_created.get('name')
+    company_to_be_created = base_company_sample.generate_company()
+    company_created = base_company_sample.create_company(
+        client_service, company_to_be_created)
+    company_name = company_created.get('name')
 
-  job_to_be_created = base_job_sample.generate_job_with_required_fields(
-      company_name)
-  job_name = base_job_sample.create_job(client_service,
-                                        job_to_be_created).get('name')
+    job_to_be_created = base_job_sample.generate_job_with_required_fields(
+        company_name)
+    job_name = base_job_sample.create_job(client_service,
+                                          job_to_be_created).get('name')
 
-  # Wait several seconds for post processing
-  time.sleep(10)
-  search_for_alerts(client_service, company_name)
+    # Wait several seconds for post processing
+    time.sleep(10)
+    search_for_alerts(client_service, company_name)
 
-  base_job_sample.delete_job(client_service, job_name)
-  base_company_sample.delete_company(client_service, company_name)
+    base_job_sample.delete_job(client_service, job_name)
+    base_company_sample.delete_company(client_service, company_name)
 
 
 if __name__ == '__main__':
-  run_sample()
+    run_sample()

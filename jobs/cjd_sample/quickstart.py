@@ -14,11 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json
-import httplib2
-import random
-import string
-
 # [START quickstart]
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -27,21 +22,21 @@ client_service = build('jobs', 'v2')
 
 
 def run_sample():
-  try:
-    list_companies_response = client_service.companies().list().execute()
-    print('==========\nRequest Id: %s\n==========' %
-          list_companies_response.get('metadata').get('requestId'))
-    print('==========\nCompanies:')
-    for company in list_companies_response.get('companies'):
-      print('%s' % company.get('name'))
-    print('==========')
+    try:
+        list_companies_response = client_service.companies().list().execute()
+        print('==========\nRequest Id: %s\n==========' %
+              list_companies_response.get('metadata').get('requestId'))
+        print('==========\nCompanies:')
+        for company in list_companies_response.get('companies'):
+            print('%s' % company.get('name'))
+        print('==========')
 
-  except HttpError as e:
-    print('Got exception while listing companies')
-    raise e
+    except HttpError as e:
+        print('Got exception while listing companies')
+        raise e
 
 
 # [END quickstart]
 
 if __name__ == '__main__':
-  run_sample()
+    run_sample()

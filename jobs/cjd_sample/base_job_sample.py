@@ -14,8 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json
-import httplib2
 import random
 import string
 
@@ -30,23 +28,25 @@ client_service = build('jobs', 'v2')
 
 # [START basic_job]
 def generate_job_with_required_fields(company_name):
-  # Requisition id should be a unique Id in your system.
-  requisition_id = 'job_with_required_fields:' + ''.join(
-      random.choice(string.ascii_uppercase + string.digits) for _ in range(16))
+    # Requisition id should be a unique Id in your system.
+    requisition_id = 'job_with_required_fields:' + ''.join(
+        random.choice(string.ascii_uppercase + string.digits)
+        for _ in range(16))
 
-  job_title = 'Software Engineer'
-  application_urls = ['http://careers.google.com']
-  description = 'Design, develop, test, deploy, maintain and improve software.'
+    job_title = 'Software Engineer'
+    application_urls = ['http://careers.google.com']
+    description = ('Design, develop, test, deploy, maintain and improve '
+                   'software.')
 
-  job = {
-      'requisition_id': requisition_id,
-      'job_title': job_title,
-      'application_urls': application_urls,
-      'description': description,
-      'company_name': company_name
-  }
-  print('==========\nJob generated: %s\n==========' % job)
-  return job
+    job = {
+        'requisition_id': requisition_id,
+        'job_title': job_title,
+        'application_urls': application_urls,
+        'description': description,
+        'company_name': company_name
+    }
+    print('==========\nJob generated: %s\n==========' % job)
+    return job
 
 
 # [END basic_job]
@@ -54,14 +54,14 @@ def generate_job_with_required_fields(company_name):
 
 # [START create_job]
 def create_job(client_service, job_to_be_created):
-  try:
-    request = {'job': job_to_be_created}
-    job_created = client_service.jobs().create(body=request).execute()
-    print('==========\nJob created: %s\n==========' % job_created)
-    return job_created
-  except HttpError as e:
-    print('Got exception while creating job')
-    raise e
+    try:
+        request = {'job': job_to_be_created}
+        job_created = client_service.jobs().create(body=request).execute()
+        print('==========\nJob created: %s\n==========' % job_created)
+        return job_created
+    except HttpError as e:
+        print('Got exception while creating job')
+        raise e
 
 
 # [END create_job]
@@ -69,13 +69,13 @@ def create_job(client_service, job_to_be_created):
 
 # [START get_job]
 def get_job(client_service, job_name):
-  try:
-    job_existed = client_service.jobs().get(name=job_name).execute()
-    print('==========\njob existed: %s\n==========' % job_existed)
-    return job_existed
-  except HttpError as e:
-    print('Got exception while getting job')
-    raise e
+    try:
+        job_existed = client_service.jobs().get(name=job_name).execute()
+        print('==========\njob existed: %s\n==========' % job_existed)
+        return job_existed
+    except HttpError as e:
+        print('Got exception while getting job')
+        raise e
 
 
 # [END get_job]
@@ -83,15 +83,15 @@ def get_job(client_service, job_name):
 
 # [START update_job]
 def update_job(client_service, job_name, job_to_be_updated):
-  try:
-    request = {'job': job_to_be_updated}
-    job_updated = client_service.jobs().patch(
-        name=job_name, body=request).execute()
-    print('==========\njob updated: %s\n==========' % job_updated)
-    return job_updated
-  except HttpError as e:
-    print('Got exception while updating job')
-    raise e
+    try:
+        request = {'job': job_to_be_updated}
+        job_updated = client_service.jobs().patch(
+            name=job_name, body=request).execute()
+        print('==========\njob updated: %s\n==========' % job_updated)
+        return job_updated
+    except HttpError as e:
+        print('Got exception while updating job')
+        raise e
 
 
 # [END update_job]
@@ -100,15 +100,15 @@ def update_job(client_service, job_name, job_to_be_updated):
 # [START update_job_with_field_mask]
 def update_job_with_field_mask(client_service, job_name, job_to_be_updated,
                                field_mask):
-  try:
-    request = {'job': job_to_be_updated, 'update_job_fields': field_mask}
-    job_updated = client_service.jobs().patch(
-        name=job_name, body=request).execute()
-    print('==========\njob updated: %s\n==========' % job_updated)
-    return job_updated
-  except HttpError as e:
-    print('Got exception while updating job with field mask')
-    raise e
+    try:
+        request = {'job': job_to_be_updated, 'update_job_fields': field_mask}
+        job_updated = client_service.jobs().patch(
+            name=job_name, body=request).execute()
+        print('==========\njob updated: %s\n==========' % job_updated)
+        return job_updated
+    except HttpError as e:
+        print('Got exception while updating job with field mask')
+        raise e
 
 
 # [END update_job_with_field_mask]
@@ -116,51 +116,51 @@ def update_job_with_field_mask(client_service, job_name, job_to_be_updated,
 
 # [START delete_job]
 def delete_job(client_service, job_name):
-  try:
-    client_service.jobs().delete(name=job_name).execute()
-    print('==========\njob deleted\n==========')
-  except HttpError as e:
-    print('Got exception while deleting job')
-    raise e
+    try:
+        client_service.jobs().delete(name=job_name).execute()
+        print('==========\njob deleted\n==========')
+    except HttpError as e:
+        print('Got exception while deleting job')
+        raise e
 
 
 # [END delete_job]
 
 
 def run_sample():
-  import base_company_sample
+    import base_company_sample
 
-  # Create a company before creating jobs
-  company_to_be_created = base_company_sample.generate_company()
-  company_created = base_company_sample.create_company(client_service,
-                                                       company_to_be_created)
-  company_name = company_created.get('name')
+    # Create a company before creating jobs
+    company_to_be_created = base_company_sample.generate_company()
+    company_created = base_company_sample.create_company(
+        client_service, company_to_be_created)
+    company_name = company_created.get('name')
 
-  # Construct a job
-  job_to_be_created = generate_job_with_required_fields(company_name)
+    # Construct a job
+    job_to_be_created = generate_job_with_required_fields(company_name)
 
-  # Create a job
-  job_created = create_job(client_service, job_to_be_created)
+    # Create a job
+    job_created = create_job(client_service, job_to_be_created)
 
-  # Get a job
-  job_name = job_created.get('name')
-  get_job(client_service, job_name)
+    # Get a job
+    job_name = job_created.get('name')
+    get_job(client_service, job_name)
 
-  # Update a job
-  job_to_be_updated = job_created
-  job_to_be_updated.update({'description': 'changedDescription'})
-  update_job(client_service, job_name, job_to_be_updated)
+    # Update a job
+    job_to_be_updated = job_created
+    job_to_be_updated.update({'description': 'changedDescription'})
+    update_job(client_service, job_name, job_to_be_updated)
 
-  # Update a job with field mask
-  update_job_with_field_mask(client_service, job_name,
-                             {'job_title': 'changedJobTitle'}, 'job_title')
+    # Update a job with field mask
+    update_job_with_field_mask(client_service, job_name,
+                               {'job_title': 'changedJobTitle'}, 'job_title')
 
-  # Delete a job
-  delete_job(client_service, job_name)
+    # Delete a job
+    delete_job(client_service, job_name)
 
-  # Delete company only after cleaning all jobs under this company
-  base_company_sample.delete_company(client_service, company_name)
+    # Delete company only after cleaning all jobs under this company
+    base_company_sample.delete_company(client_service, company_name)
 
 
 if __name__ == '__main__':
-  run_sample()
+    run_sample()

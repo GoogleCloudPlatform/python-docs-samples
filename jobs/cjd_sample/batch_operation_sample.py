@@ -14,14 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json
-import httplib2
-import random
-import string
-
 # [START instantiate]
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 
 client_service = build('jobs', 'v2')
 
@@ -30,33 +24,35 @@ client_service = build('jobs', 'v2')
 
 # [START batch_job_create]
 def batch_job_create(client_service, company_name):
-  import base_job_sample
-  created_jobs = []
+    import base_job_sample
+    created_jobs = []
 
-  def job_create_callback(request_id, response, exception):
-    if exception is not None:
-      print('Got exception while creating job: %s' % exception)
-      pass
-    else:
-      print('==========\nJob created: %s\n==========' % response)
-      created_jobs.append(response)
-      pass
+    def job_create_callback(request_id, response, exception):
+        if exception is not None:
+            print('Got exception while creating job: %s' % exception)
+            pass
+        else:
+            print('==========\nJob created: %s\n==========' % response)
+            created_jobs.append(response)
+            pass
 
-  batch = client_service.new_batch_http_request()
-  job_to_be_created1 = base_job_sample.generate_job_with_required_fields(
-      company_name)
-  request1 = {'job': job_to_be_created1}
-  batch.add(
-      client_service.jobs().create(body=request1), callback=job_create_callback)
+    batch = client_service.new_batch_http_request()
+    job_to_be_created1 = base_job_sample.generate_job_with_required_fields(
+        company_name)
+    request1 = {'job': job_to_be_created1}
+    batch.add(
+        client_service.jobs().create(body=request1),
+        callback=job_create_callback)
 
-  job_to_be_created2 = base_job_sample.generate_job_with_required_fields(
-      company_name)
-  request2 = {'job': job_to_be_created2}
-  batch.add(
-      client_service.jobs().create(body=request2), callback=job_create_callback)
-  batch.execute()
+    job_to_be_created2 = base_job_sample.generate_job_with_required_fields(
+        company_name)
+    request2 = {'job': job_to_be_created2}
+    batch.add(
+        client_service.jobs().create(body=request2),
+        callback=job_create_callback)
+    batch.execute()
 
-  return created_jobs
+    return created_jobs
 
 
 # [END batch_job_create]
@@ -64,37 +60,37 @@ def batch_job_create(client_service, company_name):
 
 # [START batch_job_update]
 def batch_job_update(client_service, jobs_to_be_updated):
-  updated_jobs = []
+    updated_jobs = []
 
-  def job_update_callback(request_id, response, exception):
-    if exception is not None:
-      print('Got exception while updating job: %s' % exception)
-      pass
-    else:
-      print('==========\nJob updated: %s\n==========' % response)
-      updated_jobs.append(response)
-      pass
+    def job_update_callback(request_id, response, exception):
+        if exception is not None:
+            print('Got exception while updating job: %s' % exception)
+            pass
+        else:
+            print('==========\nJob updated: %s\n==========' % response)
+            updated_jobs.append(response)
+            pass
 
-  batch = client_service.new_batch_http_request()
-  for index in range(0, len(jobs_to_be_updated)):
-    job_to_be_updated = jobs_to_be_updated[index]
-    job_to_be_updated.update({'job_title': 'Engineer in Mountain View'})
-    request = {'job': job_to_be_updated}
-    if index % 2 == 0:
-      batch.add(
-          client_service.jobs().patch(
-              name=job_to_be_updated.get('name'), body=request),
-          callback=job_update_callback)
-    else:
-      request.update({'update_job_fields': 'jobTitle'})
-      batch.add(
-          client_service.jobs().patch(
-              name=job_to_be_updated.get('name'), body=request),
-          callback=job_update_callback)
+    batch = client_service.new_batch_http_request()
+    for index in range(0, len(jobs_to_be_updated)):
+        job_to_be_updated = jobs_to_be_updated[index]
+        job_to_be_updated.update({'job_title': 'Engineer in Mountain View'})
+        request = {'job': job_to_be_updated}
+        if index % 2 == 0:
+            batch.add(
+                client_service.jobs().patch(
+                    name=job_to_be_updated.get('name'), body=request),
+                callback=job_update_callback)
+        else:
+            request.update({'update_job_fields': 'jobTitle'})
+            batch.add(
+                client_service.jobs().patch(
+                    name=job_to_be_updated.get('name'), body=request),
+                callback=job_update_callback)
 
-  batch.execute()
+    batch.execute()
 
-  return updated_jobs
+    return updated_jobs
 
 
 # [END batch_job_update]
@@ -103,42 +99,42 @@ def batch_job_update(client_service, jobs_to_be_updated):
 # [START batch_job_delete]
 def batch_job_delete(client_service, jobs_to_be_deleted):
 
-  def job_delete_callback(request_id, response, exception):
-    if exception is not None:
-      print('Got exception while deleting job: %s' % exception)
-      pass
-    else:
-      print('==========\nJob deleted\n==========')
-      pass
+    def job_delete_callback(request_id, response, exception):
+        if exception is not None:
+            print('Got exception while deleting job: %s' % exception)
+            pass
+        else:
+            print('==========\nJob deleted\n==========')
+            pass
 
-  batch = client_service.new_batch_http_request()
-  for index in range(0, len(jobs_to_be_deleted)):
-    job_to_be_deleted = jobs_to_be_deleted[index]
-    batch.add(
-        client_service.jobs().delete(name=job_to_be_deleted.get('name')),
-        callback=job_delete_callback)
+    batch = client_service.new_batch_http_request()
+    for index in range(0, len(jobs_to_be_deleted)):
+        job_to_be_deleted = jobs_to_be_deleted[index]
+        batch.add(
+            client_service.jobs().delete(name=job_to_be_deleted.get('name')),
+            callback=job_delete_callback)
 
-  batch.execute()
+    batch.execute()
 
 
 # [END batch_job_delete]
 
 
 def run_sample():
-  import base_company_sample
+    import base_company_sample
 
-  # Create a company before creating jobs
-  company_to_be_created = base_company_sample.generate_company()
-  company_created = base_company_sample.create_company(client_service,
-                                                       company_to_be_created)
-  company_name = company_created.get('name')
+    # Create a company before creating jobs
+    company_to_be_created = base_company_sample.generate_company()
+    company_created = base_company_sample.create_company(
+        client_service, company_to_be_created)
+    company_name = company_created.get('name')
 
-  created_jobs = batch_job_create(client_service, company_name)
-  updated_jobs = batch_job_update(client_service, created_jobs)
-  batch_job_delete(client_service, updated_jobs)
+    created_jobs = batch_job_create(client_service, company_name)
+    updated_jobs = batch_job_update(client_service, created_jobs)
+    batch_job_delete(client_service, updated_jobs)
 
-  base_company_sample.delete_company(client_service, company_name)
+    base_company_sample.delete_company(client_service, company_name)
 
 
 if __name__ == '__main__':
-  run_sample()
+    run_sample()
