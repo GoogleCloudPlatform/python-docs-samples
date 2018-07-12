@@ -21,6 +21,7 @@ Example usage:
     python beta_snippets.py enhanced-model resources/commercial_mono.wav
     python beta_snippets.py metadata resources/commercial_mono.wav
     python beta_snippets.py punctuation resources/commercial_mono.wav
+    python beta_snippets.py diarization resources/commercial_mono.wav
 """
 
 import argparse
@@ -126,6 +127,36 @@ def transcribe_file_with_auto_punctuation(path):
 # [END speech_transcribe_file_with_auto_punctuation]
 
 
+# [START speech_transcribe_diarization]
+def transcribe_file_with_diarization(path):
+    """Transcribe the given audio file synchronously with diarization."""
+    client = speech.SpeechClient()
+
+    with open(path, 'rb') as audio_file:
+        content = audio_file.read()
+
+    audio = speech.types.RecognitionAudio(content=content)
+
+    config = speech.types.RecognitionConfig(
+        encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=16000,
+        language_code='en-US',
+        enable_speaker_diarization=True,
+        diarization_speaker_count=2)
+
+    print('Waiting for operation to complete...')
+    response = client.recognize(config, audio)
+
+    for i, result in enumerate(response.results):
+        alternative = result.alternatives[0]
+        print('-' * 20)
+        print('First alternative of result {}: {}'
+              .format(i, alternative.transcript))
+        print('Speaker Tag for the first word: {}'
+              .format(alternative.words[0].speaker_tag))
+# [END speech_transcribe_diarization]
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -142,3 +173,5 @@ if __name__ == '__main__':
         transcribe_file_with_metadata(args.path)
     elif args.command == 'punctuation':
         transcribe_file_with_auto_punctuation(args.path)
+    elif args.command == 'diarization':
+        transcribe_file_with_diarization(args.path)
