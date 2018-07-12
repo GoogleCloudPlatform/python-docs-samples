@@ -7,7 +7,7 @@ Google Cloud Text-to-Speech API Python Samples
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=/README.rst
 
 
-This directory contains samples for Google Cloud Text-to-Speech API. The `Google Cloud Text-to-Speech API`_ enables you to generate and customize synthesized speech from text or SSML.
+This directory contains samples for Google Cloud Text-to-Speech API. The `Google Cloud Text To Speech API`_ enables you to generate and customize synthesized speech from text or SSML.
 
 
 
@@ -150,6 +150,39 @@ To run this sample:
       -h, --help   show this help message and exit
       --text TEXT  The text file from which to synthesize speech.
       --ssml SSML  The ssml file from which to synthesize speech.
+
+
+
+Audio profile
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=/audio_profile.py,/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python audio_profile.py
+
+    usage: audio_profile.py [-h] [--output OUTPUT] [--text TEXT]
+                            [--effects_profile_id EFFECTS_PROFILE_ID]
+
+    Google Cloud Text-To-Speech API sample application for audio profile.
+
+    Example usage:
+        python audio_profile.py --text "hello" --effects_profile_id
+            "telephony-class-application"
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      --output OUTPUT       The output mp3 file.
+      --text TEXT           The text from which to synthesize speech.
+      --effects_profile_id EFFECTS_PROFILE_ID
+                            The audio effects profile id to be applied.
 
 
 

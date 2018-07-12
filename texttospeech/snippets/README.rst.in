@@ -22,5 +22,8 @@ samples:
 - name: Synthesize file
   file: synthesize_file.py
   show_help: True
+- name: Audio profile
+  file: audio_profile.py
+  show_help: True
 
 cloud_client_library: true
