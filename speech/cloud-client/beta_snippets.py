@@ -22,6 +22,7 @@ Example usage:
     python beta_snippets.py metadata resources/commercial_mono.wav
     python beta_snippets.py punctuation resources/commercial_mono.wav
     python beta_snippets.py diarization resources/commercial_mono.wav
+    python beta_snippets.py multi-channel resources/commercial_mono.wav
 """
 
 import argparse
@@ -157,6 +158,35 @@ def transcribe_file_with_diarization(path):
 # [END speech_transcribe_diarization]
 
 
+# [START speech_transcribe_multichannel]
+def transcribe_file_with_multichannel(speech_file):
+    """Transcribe the given audio file synchronously with
+      multi channel."""
+    client = speech.SpeechClient()
+
+    with open(speech_file, 'rb') as audio_file:
+        content = audio_file.read()
+
+    audio = speech.types.RecognitionAudio(content=content)
+
+    config = speech.types.RecognitionConfig(
+        encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=16000,
+        language_code='en-US',
+        audio_channel_count=1,
+        enable_separate_recognition_per_channel=True)
+
+    response = client.recognize(config, audio)
+
+    for i, result in enumerate(response.results):
+        alternative = result.alternatives[0]
+        print('-' * 20)
+        print('First alternative of result {}'.format(i))
+        print(u'Transcript: {}'.format(alternative.transcript))
+        print(u'Channel Tag: {}'.format(result.channel_tag))
+# [END speech_transcribe_multichannel]
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -175,3 +205,5 @@ if __name__ == '__main__':
         transcribe_file_with_auto_punctuation(args.path)
     elif args.command == 'diarization':
         transcribe_file_with_diarization(args.path)
+    elif args.command == 'multi-channel':
+        transcribe_file_with_multichannel(args.path)
