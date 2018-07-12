@@ -230,6 +230,7 @@ To run this sample:
         python beta_snippets.py enhanced-model resources/commercial_mono.wav
         python beta_snippets.py metadata resources/commercial_mono.wav
         python beta_snippets.py punctuation resources/commercial_mono.wav
+        python beta_snippets.py diarization resources/commercial_mono.wav
 
     positional arguments:
       command
