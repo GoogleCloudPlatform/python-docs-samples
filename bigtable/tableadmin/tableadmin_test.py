@@ -31,23 +31,19 @@ def test_run_table_operations(capsys):
 
     run_table_operations(PROJECT, BIGTABLE_CLUSTER, table_name)
     out, _ = capsys.readouterr()
-    assert 'Creating the {} table.'.format(table_name) in out
+
+    assert 'Creating the ' + table_name + ' table.' in out
     assert 'Listing tables in current project.' in out
     assert 'Creating column family cf1 with with MaxAge GC Rule' in out
-    assert 'Created MaxAge GC rule.' in out
     assert 'Created column family cf1 with MaxAge GC Rule.' in out
-    assert 'Created Max Versions GC Rule.' in out
     assert 'Created column family cf2 with Max Versions GC Rule.' in out
-    assert 'Created Union GC Rule.' in out
     assert 'Created column family cf3 with Union GC rule' in out
-    assert 'Created Intersection GC Rule.' in out
     assert 'Created column family cf4 with Intersection GC rule.' in out
-    assert 'Created Nested GC Rule.' in out
     assert 'Created column family cf5 with a Nested GC rule.' in out
     assert 'Printing Column Family and GC Rule for all column families.' in out
     assert 'Updating column family cf1 GC rule...' in out
     assert 'Updated column family cf1 GC rule' in out
-    assert 'Print updated column family cf1 GC rule...' in out
+    assert 'Print column family cf1 GC rule after update...' in out
     assert 'Column Family: cf1' in out
     assert 'max_num_versions: 1' in out
     assert 'Delete a column family cf2...' in out
@@ -61,6 +57,6 @@ def test_delete_table(capsys):
     delete_table(PROJECT, BIGTABLE_CLUSTER, table_name)
     out, _ = capsys.readouterr()
 
-    assert 'Table {} exists.'.format(table_name) in out
-    assert 'Deleting {} table.'.format(table_name) in out
-    assert 'Deleted {} table.'.format(table_name) in out
+    assert 'Table ' + table_name + ' exists.' in out
+    assert 'Deleting ' + table_name + ' table.' in out
+    assert 'Deleted ' + table_name + ' table.' in out
