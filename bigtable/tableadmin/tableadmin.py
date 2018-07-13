@@ -63,15 +63,19 @@ def run_table_operations(project_id, instance_id, table_id):
         table.create()
         print 'Created table {}.'.format(table_id)
 
-    # [START bigtable_list_tables]
+    # [START List existing tables in the instance.]
     tables = instance.list_tables()
     print 'Listing tables in current project...'
     if tables != []:
         for tbl in tables:
-            print get_metadata(tbl), "\n"
+            print tbl.table_id
     else:
         print 'No table exists in current project...'
-    # [END bigtable_list_tables]
+    # [END List existing tables in the instance.]
+
+    # Display name of the table.
+    print 'Printing table metadata...'
+    print table.table_id
 
     # [START bigtable_create_family_gc_max_age]
     print 'Creating column family cf1 with with MaxAge GC Rule...'
@@ -217,23 +221,6 @@ def run_table_operations(project_id, instance_id, table_id):
     print 'execute command python tableadmin.py delete [project_id] \
             [instance_id] --table [tableName] to delete the table.'
 
-def get_metadata(table):
-    """ Get table metadata.
-
-        .. note::
-
-            This is temporary function as code for this is planned for\
-            development. Once complete, this function would be removed.
-
-    :type table: Table Class.
-    :param table: Table object.
-    Returns result dictionary of table metadata
-    """
-    result = {("Table ID ", table.table_id): {}}
-    column_families = table.list_column_families()
-    for column_family, gc_rule in sorted(column_families.items()):
-        result[("Table ID ", table.table_id)][("Column Family ", column_family)] = gc_rule.to_pb()
-    return result
 
 def exists(instance_obj, table_id):
     """ Check whether table exists or not.
@@ -247,7 +234,7 @@ def exists(instance_obj, table_id):
     :param instance_obj: Instance object.
 
     :type table_id: str
-    :param table_id: Table id to identify table.
+    :param table_id: Table id to create table.
     Returns bool
     """
     for table in instance_obj.list_tables():
@@ -272,8 +259,7 @@ def delete_table(project_id, instance_id, table_id):
     client = bigtable.Client(project=project_id, admin=True)
     instance = client.instance(instance_id)
     table = instance.table(table_id)
-    # [START bigtable_delete_table]
-    # Delete the entire table
+
     print 'Checking if table {} exists...'.format(table_id)
     if exists(instance, table_id):
         print 'Table {} exists.'.format(table_id)
@@ -282,7 +268,6 @@ def delete_table(project_id, instance_id, table_id):
         print 'Deleted {} table.'.format(table_id)
     else:
         print 'Table {} does not exists.'.format(table_id)
-    # [END bigtable_delete_table]
 
 
 if __name__ == '__main__':

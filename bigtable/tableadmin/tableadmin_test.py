@@ -31,8 +31,7 @@ def test_run_table_operations(capsys):
 
     run_table_operations(PROJECT, BIGTABLE_CLUSTER, table_name)
     out, _ = capsys.readouterr()
-    
-    assert 'Creating the ' + table_name + ' table.' in out
+    assert 'Creating the {} table.'.format(table_name) in out
     assert 'Listing tables in current project.' in out
     assert 'Creating column family cf1 with with MaxAge GC Rule' in out
     assert 'Created MaxAge GC rule.' in out
@@ -62,6 +61,6 @@ def test_delete_table(capsys):
     delete_table(PROJECT, BIGTABLE_CLUSTER, table_name)
     out, _ = capsys.readouterr()
 
-    assert 'Table ' + table_name + ' exists.' in out
-    assert 'Deleting ' + table_name + ' table.' in out
-    assert 'Deleted ' + table_name + ' table.' in out
+    assert 'Table {} exists.'.format(table_name) in out
+    assert 'Deleting {} table.'.format(table_name) in out
+    assert 'Deleted {} table.'.format(table_name) in out
