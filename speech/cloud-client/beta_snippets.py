@@ -23,7 +23,7 @@ Example usage:
     python beta_snippets.py punctuation resources/commercial_mono.wav
     python beta_snippets.py diarization resources/commercial_mono.wav
     python beta_snippets.py multi-channel resources/commercial_mono.wav
-    python beta_snippets.py multi-language resources/commercial_mono.wav en-US es
+    python beta_snippets.py multi-language resources/multi.wav en-US es
 """
 
 import argparse
@@ -206,7 +206,7 @@ def transcribe_file_with_multichannel(speech_file):
     # [END speech_transcribe_multichannel]
 
 
-def transcribe_file_with_multilanguage(speech_file, first_langauge, second_language):
+def transcribe_file_with_multilanguage(speech_file, first_lang, second_lang):
     """Transcribe the given audio file synchronously with
       multi language."""
     # [START speech_transcribe_multilanguage]
@@ -215,8 +215,8 @@ def transcribe_file_with_multilanguage(speech_file, first_langauge, second_langu
 
     # TODO(developer): Uncomment and set to a path to your audio file.
     # speech_file = 'path/to/file.wav'
-    # first_language = first language code, e,g, 'en-US'
-    # second_language = first language code, e,g, 'es'
+    # first_lang = first language code, e,g, 'en-US'
+    # second_lang = first language code, e,g, 'es'
 
     with open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
@@ -226,8 +226,8 @@ def transcribe_file_with_multilanguage(speech_file, first_langauge, second_langu
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
         audio_channel_count=2,
-        language_code=first_langauge,
-        alternative_language_codes=[second_language])
+        language_code=first_lang,
+        alternative_language_codes=[second_lang])
 
     print('Waiting for operation to complete...')
     response = client.recognize(config, audio)

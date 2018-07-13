@@ -66,7 +66,7 @@ def test_transcribe_multichannel_file(capsys):
 
 def test_transcribe_multilanguage_file(capsys):
     transcribe_file_with_multilanguage(
-        os.path.join(RESOURCES, 'English-Spanish.wav'), 'en-US', 'es')
+        os.path.join(RESOURCES, 'multi.wav'), 'en-US', 'es')
     out, err = capsys.readouterr()
 
     assert 'how are you doing estoy bien e tu' in out
