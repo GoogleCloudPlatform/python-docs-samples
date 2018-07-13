@@ -68,7 +68,7 @@ def run_table_operations(project_id, instance_id, table_id):
     print 'Listing tables in current project...'
     if tables != []:
         for tbl in tables:
-            print tbl.table_id
+            print get_metadata(tbl), "\n"
     else:
         print 'No table exists in current project...'
     # [END bigtable_list_tables]
@@ -77,11 +77,13 @@ def run_table_operations(project_id, instance_id, table_id):
     print 'Creating column family cf1 with with MaxAge GC Rule...'
     # Create a column family with GC policy : maximum age
     # where age = current time minus cell timestamp
-
+    column_family_id1 = 'cf1'
     # Define the GC rule to retain data with max age of 5 days
-    max_age_rule = table.max_age_gc_rule(datetime.timedelta(days=5))
+    max_age = datetime.timedelta(days=5)
+    max_age_rule = table.max_age_gc_rule(max_age)
+    print 'Created MaxAge GC rule.'
 
-    cf1 = table.column_family('cf1', max_age_rule)
+    cf1 = table.column_family(column_family_id1, max_age_rule)
     cf1.create()
     print 'Created column family cf1 with MaxAge GC Rule.'
     # [END bigtable_create_family_gc_max_age]
@@ -90,11 +92,13 @@ def run_table_operations(project_id, instance_id, table_id):
     print 'Creating column family cf2 with max versions GC rule...'
     # Create a column family with GC policy : most recent N versions
     # where 1 = most recent version
-
+    column_family_id2 = 'cf2'
     # Define the GC policy to retain only the most recent 2 versions
-    max_versions_rule = table.max_versions_gc_rule(2)
+    max_versions = 2
+    max_versions_rule = table.max_versions_gc_rule(max_versions)
+    print 'Created Max Versions GC Rule.'
 
-    cf2 = table.column_family('cf2', max_versions_rule)
+    cf2 = table.column_family(column_family_id2, max_versions_rule)
     cf2 .create()
     print 'Created column family cf2 with Max Versions GC Rule.'
     # [END bigtable_create_family_gc_max_versions]
@@ -103,13 +107,13 @@ def run_table_operations(project_id, instance_id, table_id):
     print 'Creating column family cf3 with union GC rule...'
     # Create a column family with GC policy to drop data that matches
     # at least one condition.
-    # Define a GC rule to drop cells older than 5 days or not the \
-    # most recent version
-    union_rule = table.gc_rule_union([ \
-                   table.max_age_gc_rule(datetime.timedelta(days=5)),\
-                   table.max_versions_gc_rule(2)])
+    column_family_id3 = 'cf3'
+    # GC rule : Drop max age rule OR the most recent version rule.
+    union = [max_age_rule, max_versions_rule]
+    union_rule = table.gc_rule_union(union)
+    print 'Created Union GC Rule.'
 
-    cf3 = table.column_family('cf3', union_rule)
+    cf3 = table.column_family(column_family_id3, union_rule)
     cf3.create()
     print 'Created column family cf3 with Union GC rule'
     # [END bigtable_create_family_gc_union]
@@ -118,33 +122,45 @@ def run_table_operations(project_id, instance_id, table_id):
     print 'Creating column family cf4 with Intersection GC rule...'
     # Create a column family with GC policy to drop data that matches
     # all conditions
+    column_family_id4 = 'cf4'
     # GC rule: Drop cells older than 5 days AND older than the most
     # recent 2 versions
-    intersection_rule = table.gc_rule_intersection([ \
-                   table.max_age_gc_rule(datetime.timedelta(days=5)),\
-                   table.max_versions_gc_rule(2)])
+    intersection = [max_age_rule, max_versions_rule]
+    intersection_rule = table.gc_rule_intersection(union)
+    print 'Created Intersection GC Rule.'
 
-    cf4 = table.column_family('cf4', intersection_rule)
+    cf4 = table.column_family(column_family_id4, intersection_rule)
     cf4.create()
     print 'Created column family cf4 with Intersection GC rule.'
     # [END bigtable_create_family_gc_intersection]
 
     # [START bigtable_create_family_gc_nested]
     print 'Creating column family cf5 with a Nested GC rule...'
-    # Create a column family with nested GC policies.
+    # Create a column family with nested GC policys.
     # Create a nested GC rule:
     # Drop cells that are either older than the 10 recent versions
     # OR
-    # Drop cells that are older than a month AND older than the 2 recent versions
-    rule1 = table.max_versions_gc_rule(10)
-    rule2 = table.gc_rule_intersection([ \
-                table.max_age_gc_rule(datetime.timedelta(days=30)), \
-                table.max_versions_gc_rule(2) \
-            ])
+    # Drop cells that are older than a month AND older than the
+    # 2 recent versions
+    column_family_id5 = 'cf5'
+    # Drop cells that are either older than the 10 recent versions
+    max_versions_rule1 = table.max_versions_gc_rule(10)
 
-    nested_rule = table.gc_rule_union([rule1, rule2])
+    # Drop cells that are older than a month AND older than
+    # the 2 recent versions
+    max_age = datetime.timedelta(days=30)
+    max_age_rule = table.max_age_gc_rule(max_age)
+    max_versions_rule2 = table.max_versions_gc_rule(2)
+    intersection = [max_age_rule, max_versions_rule2]
+    intersection_rule = table.gc_rule_intersection(intersection)
 
-    cf5 = table.column_family('cf5', nested_rule)
+    # This nesting is done with union rule since it is OR between
+    # the selected rules.
+    nest = [max_versions_rule1, intersection_rule]
+    nested_rule = table.gc_rule_union(nest)
+    print 'Created Nested GC Rule.'
+
+    cf5 = table.column_family(column_family_id5, nested_rule)
     cf5.create()
     print 'Created column family cf5 with a Nested GC rule.'
     # [END bigtable_create_family_gc_nested]
@@ -173,21 +189,23 @@ def run_table_operations(project_id, instance_id, table_id):
         #         }
     # [END bigtable_list_column_families]
 
-    print 'Print column family cf1 GC rule before update...'
-    print "Column Family: cf1"
-    print cf1.to_pb()
-
     # [START bigtable_update_gc_rule]
     print 'Updating column family cf1 GC rule...'
     # Update the column family cf1 to update the GC rule
-    cf1 = table.column_family('cf1', table.max_versions_gc_rule(1))
+    max_versions = 1
+    max_versions_rule = table.max_versions_gc_rule(max_versions)
+    # Create a reference to the column family with GC rule
+    cf1 = table.column_family(column_family_id1, max_versions_rule)
     cf1.update()
-    print 'Updated column family cf1 GC rule\n'
+    print 'Updated column family cf1 GC rule'
     # [END bigtable_update_gc_rule]
 
-    print 'Print column family cf1 GC rule after update...'
-    print "Column Family: cf1"
+    # [START bigtable_family_get_gc_rule]
+    print 'Print updated column family cf1 GC rule...'
+    print 'Column Family:', column_family_id1
+    print 'GC Rule:'
     print cf1.to_pb()
+    # [END bigtable_family_get_gc_rule]
 
     # [START bigtable_delete_family]
     print 'Delete a column family cf2...'
@@ -199,6 +217,23 @@ def run_table_operations(project_id, instance_id, table_id):
     print 'execute command python tableadmin.py delete [project_id] \
             [instance_id] --table [tableName] to delete the table.'
 
+def get_metadata(table):
+    """ Get table metadata.
+
+        .. note::
+
+            This is temporary function as code for this is planned for\
+            development. Once complete, this function would be removed.
+
+    :type table: Table Class.
+    :param table: Table object.
+    Returns result dictionary of table metadata
+    """
+    result = {("Table ID ", table.table_id): {}}
+    column_families = table.list_column_families()
+    for column_family, gc_rule in sorted(column_families.items()):
+        result[("Table ID ", table.table_id)][("Column Family ", column_family)] = gc_rule.to_pb()
+    return result
 
 def exists(instance_obj, table_id):
     """ Check whether table exists or not.
