@@ -59,6 +59,6 @@ Create a task for a queue:
 
 Pull and acknowledge a task:
 
-    python pull_queue_snippets.py pull-and-ack-task --project=$PROJECT_ID --queue=$QUEUE_ID --location=$LOCATION_ID
+    python pull_queue_snippets.py lease-and-ack-task --project=$PROJECT_ID --queue=$QUEUE_ID --location=$LOCATION_ID
 
 Note that usually, there would be a processing step in between pulling a task and acknowledging it.
