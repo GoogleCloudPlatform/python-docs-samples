@@ -103,11 +103,11 @@ def run_table_operations(project_id, instance_id, table_id):
     print 'Creating column family cf3 with union GC rule...'
     # Create a column family with GC policy to drop data that matches
     # at least one condition.
-    # Define a GC rule to drop cells older than 5 days or not the \
+    # Define a GC rule to drop cells older than 5 days or not the
     # most recent version
-    union_rule = table.gc_rule_union([ \
-                   table.max_age_gc_rule(datetime.timedelta(days=5)),\
-                   table.max_versions_gc_rule(2)])
+    union_rule = table.gc_rule_union([
+        table.max_age_gc_rule(datetime.timedelta(days=5)),
+        table.max_versions_gc_rule(2)])
 
     cf3 = table.column_family('cf3', union_rule)
     cf3.create()
@@ -120,9 +120,9 @@ def run_table_operations(project_id, instance_id, table_id):
     # all conditions
     # GC rule: Drop cells older than 5 days AND older than the most
     # recent 2 versions
-    intersection_rule = table.gc_rule_intersection([ \
-                   table.max_age_gc_rule(datetime.timedelta(days=5)),\
-                   table.max_versions_gc_rule(2)])
+    intersection_rule = table.gc_rule_intersection([
+        table.max_age_gc_rule(datetime.timedelta(days=5)),
+        table.max_versions_gc_rule(2)])
 
     cf4 = table.column_family('cf4', intersection_rule)
     cf4.create()
@@ -135,12 +135,12 @@ def run_table_operations(project_id, instance_id, table_id):
     # Create a nested GC rule:
     # Drop cells that are either older than the 10 recent versions
     # OR
-    # Drop cells that are older than a month AND older than the 2 recent versions
+    # Drop cells that are older than a month AND older than the
+    # 2 recent versions
     rule1 = table.max_versions_gc_rule(10)
-    rule2 = table.gc_rule_intersection([ \
-                table.max_age_gc_rule(datetime.timedelta(days=30)), \
-                table.max_versions_gc_rule(2) \
-            ])
+    rule2 = table.gc_rule_intersection([
+        table.max_age_gc_rule(datetime.timedelta(days=30)),
+        table.max_versions_gc_rule(2)])
 
     nested_rule = table.gc_rule_union([rule1, rule2])
 
