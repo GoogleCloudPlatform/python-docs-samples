@@ -43,7 +43,8 @@ def tempdir():
 
 
 def test_deidentify_with_mask(capsys):
-    deid.deidentify_with_mask(GCLOUD_PROJECT, HARMFUL_STRING)
+    deid.deidentify_with_mask(GCLOUD_PROJECT, HARMFUL_STRING,
+                              ['US_SOCIAL_SECURITY_NUMBER'])
 
     out, _ = capsys.readouterr()
     assert 'My SSN is *********' in out
@@ -60,6 +61,7 @@ def test_deidentify_with_mask_masking_character_specified(capsys):
     deid.deidentify_with_mask(
         GCLOUD_PROJECT,
         HARMFUL_STRING,
+        ['US_SOCIAL_SECURITY_NUMBER'],
         masking_character='#')
 
     out, _ = capsys.readouterr()
@@ -67,7 +69,9 @@ def test_deidentify_with_mask_masking_character_specified(capsys):
 
 
 def test_deidentify_with_mask_masking_number_specified(capsys):
-    deid.deidentify_with_mask(GCLOUD_PROJECT, HARMFUL_STRING, number_to_mask=7)
+    deid.deidentify_with_mask(GCLOUD_PROJECT, HARMFUL_STRING,
+                              ['US_SOCIAL_SECURITY_NUMBER'],
+                              number_to_mask=7)
 
     out, _ = capsys.readouterr()
     assert 'My SSN is *******27' in out
@@ -77,6 +81,7 @@ def test_deidentify_with_fpe(capsys):
     deid.deidentify_with_fpe(
         GCLOUD_PROJECT,
         HARMFUL_STRING,
+        ['US_SOCIAL_SECURITY_NUMBER'],
         alphabet='NUMERIC',
         wrapped_key=WRAPPED_KEY,
         key_name=KEY_NAME)
@@ -90,6 +95,7 @@ def test_deidentify_with_fpe_uses_surrogate_info_types(capsys):
     deid.deidentify_with_fpe(
         GCLOUD_PROJECT,
         HARMFUL_STRING,
+        ['US_SOCIAL_SECURITY_NUMBER'],
         alphabet='NUMERIC',
         wrapped_key=WRAPPED_KEY,
         key_name=KEY_NAME,
