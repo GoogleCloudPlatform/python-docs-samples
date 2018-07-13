@@ -133,6 +133,9 @@ def transcribe_file_with_diarization(path):
     """Transcribe the given audio file synchronously with diarization."""
     client = speech.SpeechClient()
 
+    # TODO(developer): Uncomment and set to a path to your audio file.
+    # speech_file = 'path/to/file.wav'
+
     with open(path, 'rb') as audio_file:
         content = audio_file.read()
 
@@ -163,6 +166,9 @@ def transcribe_file_with_multichannel(speech_file):
     """Transcribe the given audio file synchronously with
       multi channel."""
     client = speech.SpeechClient()
+
+    # TODO(developer): Uncomment and set to a path to your audio file.
+    # speech_file = 'path/to/file.wav'
 
     with open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
