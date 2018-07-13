@@ -22,20 +22,23 @@ Example usage:
     python beta_snippets.py metadata resources/commercial_mono.wav
     python beta_snippets.py punctuation resources/commercial_mono.wav
     python beta_snippets.py diarization resources/commercial_mono.wav
+    python beta_snippets.py multi-channel resources/commercial_mono.wav
 """
 
 import argparse
 import io
 
-from google.cloud import speech_v1p1beta1 as speech
 
-
-# [START speech_transcribe_file_with_enhanced_model]
-def transcribe_file_with_enhanced_model(path):
+def transcribe_file_with_enhanced_model(speech_file):
     """Transcribe the given audio file using an enhanced model."""
+    # [START speech_transcribe_file_with_enhanced_model]
+    from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
-    with io.open(path, 'rb') as audio_file:
+    # TODO(developer): Uncomment and set to a path to your audio file.
+    # speech_file = 'path/to/file.wav'
+
+    with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
 
     audio = speech.types.RecognitionAudio(content=content)
@@ -56,15 +59,19 @@ def transcribe_file_with_enhanced_model(path):
         print('-' * 20)
         print('First alternative of result {}'.format(i))
         print('Transcript: {}'.format(alternative.transcript))
-# [END speech_transcribe_file_with_enhanced_model]
+    # [END speech_transcribe_file_with_enhanced_model]
 
 
-# [START speech_transcribe_file_with_metadata]
-def transcribe_file_with_metadata(path):
+def transcribe_file_with_metadata(speech_file):
     """Send a request that includes recognition metadata."""
+    # [START speech_transcribe_file_with_metadata]
+    from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
-    with io.open(path, 'rb') as audio_file:
+    # TODO(developer): Uncomment and set to a path to your audio file.
+    # speech_file = 'path/to/file.wav'
+
+    with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
 
     # Here we construct a recognition metadata object.
@@ -98,15 +105,19 @@ def transcribe_file_with_metadata(path):
         print('-' * 20)
         print('First alternative of result {}'.format(i))
         print('Transcript: {}'.format(alternative.transcript))
-# [END speech_transcribe_file_with_metadata]
+    # [END speech_transcribe_file_with_metadata]
 
 
-# [START speech_transcribe_file_with_auto_punctuation]
-def transcribe_file_with_auto_punctuation(path):
+def transcribe_file_with_auto_punctuation(speech_file):
     """Transcribe the given audio file with auto punctuation enabled."""
+    # [START speech_transcribe_file_with_auto_punctuation]
+    from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
-    with io.open(path, 'rb') as audio_file:
+    # TODO(developer): Uncomment and set to a path to your audio file.
+    # speech_file = 'path/to/file.wav'
+
+    with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
 
     audio = speech.types.RecognitionAudio(content=content)
@@ -124,15 +135,19 @@ def transcribe_file_with_auto_punctuation(path):
         print('-' * 20)
         print('First alternative of result {}'.format(i))
         print('Transcript: {}'.format(alternative.transcript))
-# [END speech_transcribe_file_with_auto_punctuation]
+    # [END speech_transcribe_file_with_auto_punctuation]
 
 
-# [START speech_transcribe_diarization]
-def transcribe_file_with_diarization(path):
+def transcribe_file_with_diarization(speech_file):
     """Transcribe the given audio file synchronously with diarization."""
+    # [START speech_transcribe_diarization]
+    from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
-    with open(path, 'rb') as audio_file:
+    # TODO(developer): Uncomment and set to a path to your audio file.
+    # speech_file = 'path/to/file.wav'
+
+    with open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
 
     audio = speech.types.RecognitionAudio(content=content)
@@ -154,7 +169,40 @@ def transcribe_file_with_diarization(path):
               .format(i, alternative.transcript))
         print('Speaker Tag for the first word: {}'
               .format(alternative.words[0].speaker_tag))
-# [END speech_transcribe_diarization]
+    # [END speech_transcribe_diarization]
+
+
+def transcribe_file_with_multichannel(speech_file):
+    """Transcribe the given audio file synchronously with
+      multi channel."""
+    # [START speech_transcribe_multichannel]
+    from google.cloud import speech_v1p1beta1 as speech
+    client = speech.SpeechClient()
+
+    # TODO(developer): Uncomment and set to a path to your audio file.
+    # speech_file = 'path/to/file.wav'
+
+    with open(speech_file, 'rb') as audio_file:
+        content = audio_file.read()
+
+    audio = speech.types.RecognitionAudio(content=content)
+
+    config = speech.types.RecognitionConfig(
+        encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=16000,
+        language_code='en-US',
+        audio_channel_count=1,
+        enable_separate_recognition_per_channel=True)
+
+    response = client.recognize(config, audio)
+
+    for i, result in enumerate(response.results):
+        alternative = result.alternatives[0]
+        print('-' * 20)
+        print('First alternative of result {}'.format(i))
+        print(u'Transcript: {}'.format(alternative.transcript))
+        print(u'Channel Tag: {}'.format(result.channel_tag))
+    # [END speech_transcribe_multichannel]
 
 
 if __name__ == '__main__':
@@ -175,3 +223,5 @@ if __name__ == '__main__':
         transcribe_file_with_auto_punctuation(args.path)
     elif args.command == 'diarization':
         transcribe_file_with_diarization(args.path)
+    elif args.command == 'multi-channel':
+        transcribe_file_with_multichannel(args.path)
