@@ -108,7 +108,6 @@ def transcribe_file_with_metadata(path):
     # [END speech_transcribe_file_with_metadata]
 
 
-
 def transcribe_file_with_auto_punctuation(path):
     """Transcribe the given audio file with auto punctuation enabled."""
     # [START speech_transcribe_file_with_auto_punctuation]
