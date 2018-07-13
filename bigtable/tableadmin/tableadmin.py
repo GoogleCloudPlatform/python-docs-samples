@@ -63,7 +63,7 @@ def run_table_operations(project_id, instance_id, table_id):
         table.create()
         print 'Created table {}.'.format(table_id)
 
-    # [START bigtable_list_tables]
+    # [START bigtable_list_tables]  
     tables = instance.list_tables()
     print 'Listing tables in current project...'
     if tables != []:
@@ -213,6 +213,7 @@ def exists(instance_obj, table_id):
 
     :type table_id: str
     :param table_id: Table id to identify table.
+
     Returns bool
     """
     for table in instance_obj.list_tables():
@@ -237,8 +238,10 @@ def delete_table(project_id, instance_id, table_id):
     client = bigtable.Client(project=project_id, admin=True)
     instance = client.instance(instance_id)
     table = instance.table(table_id)
+
     # [START bigtable_delete_table]
     # Delete the entire table
+
     print 'Checking if table {} exists...'.format(table_id)
     if exists(instance, table_id):
         print 'Table {} exists.'.format(table_id)
