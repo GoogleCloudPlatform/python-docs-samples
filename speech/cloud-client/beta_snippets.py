@@ -29,7 +29,7 @@ import argparse
 import io
 
 
-def transcribe_file_with_enhanced_model(path):
+def transcribe_file_with_enhanced_model(speech_file):
     """Transcribe the given audio file using an enhanced model."""
     # [START speech_transcribe_file_with_enhanced_model]
     from google.cloud import speech_v1p1beta1 as speech
@@ -38,7 +38,7 @@ def transcribe_file_with_enhanced_model(path):
     # TODO(developer): Uncomment and set to a path to your audio file.
     # speech_file = 'path/to/file.wav'
 
-    with io.open(path, 'rb') as audio_file:
+    with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
 
     audio = speech.types.RecognitionAudio(content=content)
@@ -62,7 +62,7 @@ def transcribe_file_with_enhanced_model(path):
     # [END speech_transcribe_file_with_enhanced_model]
 
 
-def transcribe_file_with_metadata(path):
+def transcribe_file_with_metadata(speech_file):
     """Send a request that includes recognition metadata."""
     # [START speech_transcribe_file_with_metadata]
     from google.cloud import speech_v1p1beta1 as speech
@@ -71,7 +71,7 @@ def transcribe_file_with_metadata(path):
     # TODO(developer): Uncomment and set to a path to your audio file.
     # speech_file = 'path/to/file.wav'
 
-    with io.open(path, 'rb') as audio_file:
+    with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
 
     # Here we construct a recognition metadata object.
@@ -108,7 +108,7 @@ def transcribe_file_with_metadata(path):
     # [END speech_transcribe_file_with_metadata]
 
 
-def transcribe_file_with_auto_punctuation(path):
+def transcribe_file_with_auto_punctuation(speech_file):
     """Transcribe the given audio file with auto punctuation enabled."""
     # [START speech_transcribe_file_with_auto_punctuation]
     from google.cloud import speech_v1p1beta1 as speech
@@ -117,7 +117,7 @@ def transcribe_file_with_auto_punctuation(path):
     # TODO(developer): Uncomment and set to a path to your audio file.
     # speech_file = 'path/to/file.wav'
 
-    with io.open(path, 'rb') as audio_file:
+    with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
 
     audio = speech.types.RecognitionAudio(content=content)
@@ -138,7 +138,7 @@ def transcribe_file_with_auto_punctuation(path):
     # [END speech_transcribe_file_with_auto_punctuation]
 
 
-def transcribe_file_with_diarization(path):
+def transcribe_file_with_diarization(speech_file):
     """Transcribe the given audio file synchronously with diarization."""
     # [START speech_transcribe_diarization]
     from google.cloud import speech_v1p1beta1 as speech
@@ -147,7 +147,7 @@ def transcribe_file_with_diarization(path):
     # TODO(developer): Uncomment and set to a path to your audio file.
     # speech_file = 'path/to/file.wav'
 
-    with open(path, 'rb') as audio_file:
+    with open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
 
     audio = speech.types.RecognitionAudio(content=content)
