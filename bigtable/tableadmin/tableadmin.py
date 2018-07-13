@@ -63,7 +63,7 @@ def run_table_operations(project_id, instance_id, table_id):
         table.create()
         print 'Created table {}.'.format(table_id)
 
-    # [START bigtable_list_tables]  
+    # [START bigtable_list_tables]
     tables = instance.list_tables()
     print 'Listing tables in current project...'
     if tables != []:
