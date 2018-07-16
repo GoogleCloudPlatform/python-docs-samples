@@ -24,6 +24,7 @@ Example usage:
     python beta_snippets.py diarization resources/commercial_mono.wav
     python beta_snippets.py multi-channel resources/commercial_mono.wav
     python beta_snippets.py multi-language resources/multi.wav en-US es
+    python beta_snippets.py word-level-conf resources/commercial_mono.wav
 """
 
 import argparse
@@ -240,6 +241,39 @@ def transcribe_file_with_multilanguage(speech_file, first_lang, second_lang):
     # [END speech_transcribe_multilanguage]
 
 
+def transcribe_file_with_word_level_confidence(speech_file):
+    """Transcribe the given audio file synchronously with
+      word level confidence."""
+    # [START speech_transcribe_word_level_confidence]
+    from google.cloud import speech_v1p1beta1 as speech
+    client = speech.SpeechClient()
+
+    # TODO(developer): Uncomment and set to a path to your audio file.
+    # speech_file = 'path/to/file.wav'
+
+    with open(speech_file, 'rb') as audio_file:
+        content = audio_file.read()
+
+    audio = speech.types.RecognitionAudio(content=content)
+
+    config = speech.types.RecognitionConfig(
+        encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=16000,
+        language_code='en-US',
+        enable_word_confidence=True)
+
+    response = client.recognize(config, audio)
+
+    for i, result in enumerate(response.results):
+        alternative = result.alternatives[0]
+        print('-' * 20)
+        print('First alternative of result {}'.format(i))
+        print(u'Transcript: {}'.format(alternative.transcript))
+        print(u'First Word and Confidence: ({}, {})'.format(
+            alternative.words[0].word, alternative.words[0].confidence))
+    # [END speech_transcribe_word_level_confidence]
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -248,9 +282,11 @@ if __name__ == '__main__':
     parser.add_argument(
         'path', help='File for audio file to be recognized')
     parser.add_argument(
-        'first', help='First language in audio file to be recognized')
+        'first', help='First language in audio file to be recognized',
+        nargs='?')
     parser.add_argument(
-        'second', help='Second language in audio file to be recognized')
+        'second', help='Second language in audio file to be recognized',
+        nargs='?')
 
     args = parser.parse_args()
 
@@ -266,3 +302,5 @@ if __name__ == '__main__':
         transcribe_file_with_multichannel(args.path)
     elif args.command == 'multi-language':
         transcribe_file_with_multilanguage(args.path, args.first, args.second)
+    elif args.command == 'word-level-conf':
+        transcribe_file_with_word_level_confidence(args.path)
