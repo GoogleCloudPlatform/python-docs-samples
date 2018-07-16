@@ -14,8 +14,12 @@
 import os
 
 from beta_snippets import (
-    transcribe_file_with_auto_punctuation, transcribe_file_with_enhanced_model,
-    transcribe_file_with_metadata)
+    transcribe_file_with_auto_punctuation,
+    transcribe_file_with_diarization,
+    transcribe_file_with_enhanced_model,
+    transcribe_file_with_metadata,
+    transcribe_file_with_multichannel,
+    transcribe_file_with_multilanguage)
 
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 
@@ -42,3 +46,27 @@ def test_transcribe_file_with_auto_punctuation(capsys):
     out, _ = capsys.readouterr()
 
     assert 'Okay. Sure.' in out
+
+
+def test_transcribe_diarization(capsys):
+    transcribe_file_with_diarization(
+        os.path.join(RESOURCES, 'Google_Gnome.wav'))
+    out, err = capsys.readouterr()
+
+    assert 'OK Google stream stranger things from Netflix to my TV' in out
+
+
+def test_transcribe_multichannel_file(capsys):
+    transcribe_file_with_multichannel(
+        os.path.join(RESOURCES, 'Google_Gnome.wav'))
+    out, err = capsys.readouterr()
+
+    assert 'OK Google stream stranger things from Netflix to my TV' in out
+
+
+def test_transcribe_multilanguage_file(capsys):
+    transcribe_file_with_multilanguage(
+        os.path.join(RESOURCES, 'multi.wav'), 'en-US', 'es')
+    out, err = capsys.readouterr()
+
+    assert 'how are you doing estoy bien e tu' in out

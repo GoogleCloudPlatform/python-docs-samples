@@ -103,11 +103,11 @@ def run_table_operations(project_id, instance_id, table_id):
     print 'Creating column family cf3 with union GC rule...'
     # Create a column family with GC policy to drop data that matches
     # at least one condition.
-    # Define a GC rule to drop cells older than 5 days or not the \
+    # Define a GC rule to drop cells older than 5 days or not the
     # most recent version
-    union_rule = table.gc_rule_union([ \
-                   table.max_age_gc_rule(datetime.timedelta(days=5)),\
-                   table.max_versions_gc_rule(2)])
+    union_rule = table.gc_rule_union([
+        table.max_age_gc_rule(datetime.timedelta(days=5)),
+        table.max_versions_gc_rule(2)])
 
     cf3 = table.column_family('cf3', union_rule)
     cf3.create()
@@ -120,9 +120,9 @@ def run_table_operations(project_id, instance_id, table_id):
     # all conditions
     # GC rule: Drop cells older than 5 days AND older than the most
     # recent 2 versions
-    intersection_rule = table.gc_rule_intersection([ \
-                   table.max_age_gc_rule(datetime.timedelta(days=5)),\
-                   table.max_versions_gc_rule(2)])
+    intersection_rule = table.gc_rule_intersection([
+        table.max_age_gc_rule(datetime.timedelta(days=5)),
+        table.max_versions_gc_rule(2)])
 
     cf4 = table.column_family('cf4', intersection_rule)
     cf4.create()
@@ -135,12 +135,12 @@ def run_table_operations(project_id, instance_id, table_id):
     # Create a nested GC rule:
     # Drop cells that are either older than the 10 recent versions
     # OR
-    # Drop cells that are older than a month AND older than the 2 recent versions
+    # Drop cells that are older than a month AND older than the
+    # 2 recent versions
     rule1 = table.max_versions_gc_rule(10)
-    rule2 = table.gc_rule_intersection([ \
-                table.max_age_gc_rule(datetime.timedelta(days=30)), \
-                table.max_versions_gc_rule(2) \
-            ])
+    rule2 = table.gc_rule_intersection([
+        table.max_age_gc_rule(datetime.timedelta(days=30)),
+        table.max_versions_gc_rule(2)])
 
     nested_rule = table.gc_rule_union([rule1, rule2])
 
@@ -196,8 +196,8 @@ def run_table_operations(project_id, instance_id, table_id):
     print 'Column family cf2 deleted successfully.'
     # [END bigtable_delete_family]
 
-    print 'execute command python tableadmin.py delete [project_id] \
-            [instance_id] --table [tableName] to delete the table.'
+    print 'execute command "python tableadmin.py delete [project_id] \
+            [instance_id] --table [tableName]" to delete the table.'
 
 
 def exists(instance_obj, table_id):
@@ -213,6 +213,7 @@ def exists(instance_obj, table_id):
 
     :type table_id: str
     :param table_id: Table id to identify table.
+
     Returns bool
     """
     for table in instance_obj.list_tables():
@@ -237,8 +238,10 @@ def delete_table(project_id, instance_id, table_id):
     client = bigtable.Client(project=project_id, admin=True)
     instance = client.instance(instance_id)
     table = instance.table(table_id)
+
     # [START bigtable_delete_table]
     # Delete the entire table
+
     print 'Checking if table {} exists...'.format(table_id)
     if exists(instance, table_id):
         print 'Table {} exists.'.format(table_id)
