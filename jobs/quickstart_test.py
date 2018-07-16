@@ -13,7 +13,10 @@
 # limitations under the License.
 
 
-def test_quickstart():
+def test_quickstart(capsys):
     import quickstart
 
-    quickstart.run_quickstart()
+    quickstart.run_sample()
+    out, _ = capsys.readouterr()
+    expected = 'Request Id:'
+    assert expected in out
