@@ -221,7 +221,7 @@ To run this sample:
 
     $ python beta_snippets.py
 
-    usage: beta_snippets.py [-h] command path
+    usage: beta_snippets.py [-h] command path first second
 
     Google Cloud Speech API sample that demonstrates enhanced models
     and recognition metadata.
@@ -232,10 +232,13 @@ To run this sample:
         python beta_snippets.py punctuation resources/commercial_mono.wav
         python beta_snippets.py diarization resources/commercial_mono.wav
         python beta_snippets.py multi-channel resources/commercial_mono.wav
+        python beta_snippets.py multi-language resources/multi.wav en-US es
 
     positional arguments:
       command
       path        File for audio file to be recognized
+      first       First language in audio file to be recognized
+      second      Second language in audio file to be recognized
 
     optional arguments:
       -h, --help  show this help message and exit
