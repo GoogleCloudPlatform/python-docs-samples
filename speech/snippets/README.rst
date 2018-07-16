@@ -233,6 +233,7 @@ To run this sample:
         python beta_snippets.py diarization resources/commercial_mono.wav
         python beta_snippets.py multi-channel resources/commercial_mono.wav
         python beta_snippets.py multi-language resources/multi.wav en-US es
+        python beta_snippets.py word-level-conf resources/commercial_mono.wav
 
     positional arguments:
       command
