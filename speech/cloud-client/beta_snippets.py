@@ -266,7 +266,7 @@ def transcribe_file_with_word_level_confidence(speech_file):
         print('-' * 20)
         print('First alternative of result {}'.format(i))
         print(u'Transcript: {}'.format(alternative.transcript))
-        print(u'First Word and Confidence:{} {}'.format(
+        print(u'First Word and Confidence: ({}, {})'.format(
             alternative.words[0].word, alternative.words[0].confidence))
     # [END speech_transcribe_word_level_confidence]
 
@@ -279,9 +279,11 @@ if __name__ == '__main__':
     parser.add_argument(
         'path', help='File for audio file to be recognized')
     parser.add_argument(
-        'first', help='First language in audio file to be recognized')
+        'first', help='First language in audio file to be recognized',
+        nargs='?')
     parser.add_argument(
-        'second', help='Second language in audio file to be recognized')
+        'second', help='Second language in audio file to be recognized',
+        nargs='?')
 
     args = parser.parse_args()
 
