@@ -23,6 +23,7 @@ Example usage:
     python beta_snippets.py punctuation resources/commercial_mono.wav
     python beta_snippets.py diarization resources/commercial_mono.wav
     python beta_snippets.py multi-channel resources/commercial_mono.wav
+    python beta_snippets.py multi-language resources/multi.wav en-US es
 """
 
 import argparse
@@ -205,6 +206,40 @@ def transcribe_file_with_multichannel(speech_file):
     # [END speech_transcribe_multichannel]
 
 
+def transcribe_file_with_multilanguage(speech_file, first_lang, second_lang):
+    """Transcribe the given audio file synchronously with
+      multi language."""
+    # [START speech_transcribe_multilanguage]
+    from google.cloud import speech_v1p1beta1 as speech
+    client = speech.SpeechClient()
+
+    # TODO(developer): Uncomment and set to a path to your audio file.
+    # speech_file = 'path/to/file.wav'
+    # first_lang = first language code, e,g, 'en-US'
+    # second_lang = first language code, e,g, 'es'
+
+    with open(speech_file, 'rb') as audio_file:
+        content = audio_file.read()
+
+    audio = speech.types.RecognitionAudio(content=content)
+
+    config = speech.types.RecognitionConfig(
+        encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        audio_channel_count=2,
+        language_code=first_lang,
+        alternative_language_codes=[second_lang])
+
+    print('Waiting for operation to complete...')
+    response = client.recognize(config, audio)
+
+    for i, result in enumerate(response.results):
+        alternative = result.alternatives[0]
+        print('-' * 20)
+        print('First alternative of result {}: {}'.format(i, alternative))
+        print(u'Transcript: {}'.format(alternative.transcript))
+    # [END speech_transcribe_multilanguage]
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -212,6 +247,10 @@ if __name__ == '__main__':
     parser.add_argument('command')
     parser.add_argument(
         'path', help='File for audio file to be recognized')
+    parser.add_argument(
+        'first', help='First language in audio file to be recognized')
+    parser.add_argument(
+        'second', help='Second language in audio file to be recognized')
 
     args = parser.parse_args()
 
@@ -225,3 +264,5 @@ if __name__ == '__main__':
         transcribe_file_with_diarization(args.path)
     elif args.command == 'multi-channel':
         transcribe_file_with_multichannel(args.path)
+    elif args.command == 'multi-language':
+        transcribe_file_with_multilanguage(args.path, args.first, args.second)
