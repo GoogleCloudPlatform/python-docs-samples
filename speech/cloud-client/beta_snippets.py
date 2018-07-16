@@ -248,6 +248,9 @@ def transcribe_file_with_word_level_confidence(speech_file):
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
+    # TODO(developer): Uncomment and set to a path to your audio file.
+    # speech_file = 'path/to/file.wav'
+    
     with open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
 
