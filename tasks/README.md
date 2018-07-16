@@ -28,13 +28,11 @@ To set up authentication, please refer to our
 
 To create a queue using the Cloud SDK, use the following gcloud command:
 
-    gcloud beta tasks queues create pull my-pull-queue
+    gcloud beta tasks queues create-pull-queue my-pull-queue
 
 ## Running the Samples
 
 Set the environment variables:
-
-Set environment variables:
 
 First, your project ID:
 
