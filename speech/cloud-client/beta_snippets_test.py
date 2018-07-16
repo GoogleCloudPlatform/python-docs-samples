@@ -19,7 +19,8 @@ from beta_snippets import (
     transcribe_file_with_enhanced_model,
     transcribe_file_with_metadata,
     transcribe_file_with_multichannel,
-    transcribe_file_with_multilanguage)
+    transcribe_file_with_multilanguage,
+    transcribe_file_with_word_level_confidence)
 
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 
@@ -70,3 +71,11 @@ def test_transcribe_multilanguage_file(capsys):
     out, err = capsys.readouterr()
 
     assert 'how are you doing estoy bien e tu' in out
+
+
+def test_transcribe_word_level_confidence(capsys):
+    transcribe_file_with_word_level_confidence(
+        os.path.join(RESOURCES, 'Google_Gnome.wav'))
+    out, err = capsys.readouterr()
+
+    assert 'OK Google stream stranger things from Netflix to my TV' in out
