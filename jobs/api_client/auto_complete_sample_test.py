@@ -16,11 +16,14 @@
 def test_auto_complete_sample(capsys):
     import auto_complete_sample
     import re
-    
+
     auto_complete_sample.run_sample()
     out, _ = capsys.readouterr()
     expected = (
-        '.*completionResults.*suggestion.*Google.*type.*COMPANY_NAME.*\n'
+        '.*completionResults.*suggestion.*Google.*type.*COMPANY_NAME.*\n.*completionResults.*suggestion.*Software'
+        ' '
+        'Engineer.*type.*JOB_TITLE.*\n.*completionResults.*suggestion.*Software'
+        ' Engineer.*type.*JOB_TITLE.*\n'
         '.*completionResults.*suggestion.*Software Engineer.*type.*JOB_TITLE.*\n'
-        '.*completionResults.*suggestion.*Software Engineer.*type.*JOB_TITLE.*\n')
+    )
     assert re.search(expected, out)

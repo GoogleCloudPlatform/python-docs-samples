@@ -16,7 +16,7 @@
 def test_email_alert_search_sample(capsys):
     import email_alert_search_sample
     import re
-    
+
     email_alert_search_sample.run_sample()
     out, _ = capsys.readouterr()
     expected = ('.*matchingJobs.*')

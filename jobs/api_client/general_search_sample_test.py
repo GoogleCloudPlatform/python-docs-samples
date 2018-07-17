@@ -16,16 +16,14 @@
 def test_general_search_sample(capsys):
     import general_search_sample
     import re
-    
+
     general_search_sample.run_sample()
     out, _ = capsys.readouterr()
-    expected = (
-        '.*matchingJobs.*\n'
-        '.*matchingJobs.*\n'
-        '.*matchingJobs.*\n'
-        '.*matchingJobs.*\n'
-        '.*matchingJobs.*\n'
-        '.*matchingJobs.*\n'
-        '.*matchingJobs.*\n'
-        )
+    expected = ('.*matchingJobs.*\n'
+                '.*matchingJobs.*\n'
+                '.*matchingJobs.*\n'
+                '.*matchingJobs.*\n'
+                '.*matchingJobs.*\n'
+                '.*matchingJobs.*\n'
+                '.*matchingJobs.*\n')
     assert re.search(expected, out, re.DOTALL)

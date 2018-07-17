@@ -16,7 +16,7 @@
 def test_histogram_sample(capsys):
     import histogram_sample
     import re
-    
+
     histogram_sample.run_sample()
     out, _ = capsys.readouterr()
     assert re.search('COMPANY_ID', out)
