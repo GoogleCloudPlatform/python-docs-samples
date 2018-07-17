@@ -72,7 +72,7 @@ def transcribe_gcs(gcs_uri):
     audio = types.RecognitionAudio(uri=gcs_uri)
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
-        sample_rate_hertz=16000,
+        sample_rate_hertz=8000,
         language_code='en-US')
 
     operation = client.long_running_recognize(config, audio)
