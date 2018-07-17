@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import os
+
 import automl_natural_language_predict
 
 project_id = os.environ["GCLOUD_PROJECT"]

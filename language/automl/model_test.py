@@ -15,9 +15,11 @@
 # limitations under the License.
 
 import os
-import automl_natural_language_model
 import datetime
+
 from google.cloud import automl_v1beta1 as automl
+
+import automl_natural_language_model
 
 project_id = os.environ["GCLOUD_PROJECT"]
 compute_region = "us-central1"
