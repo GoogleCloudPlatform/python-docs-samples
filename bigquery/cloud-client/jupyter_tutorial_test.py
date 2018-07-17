@@ -139,11 +139,11 @@ def test_jupyter_tutorial(ipython):
     pivot_table.plot(kind='bar', stacked=True, figsize=(15, 7));
     # [END bigquery_jupyter_plot_plurality_by_year]
 
-    # [START bigquery_jupyter_query_weight_by_gestation]
+    # [START bigquery_jupyter_query_births_by_gestation]
     sql = """
     SELECT
         gestation_weeks,
-        AVG(weight_pounds) AS ave_weight
+        COUNT(1) AS count
     FROM
         `bigquery-public-data.samples.natality`
     WHERE
@@ -154,12 +154,11 @@ def test_jupyter_tutorial(ipython):
         gestation_weeks
     """
     df = client.query(sql).to_dataframe()
-    # [END bigquery_jupyter_query_weight_by_gestation]
+    # [END bigquery_jupyter_query_births_by_gestation]
 
-    # [START bigquery_jupyter_plot_weight_by_gestation]
-    ax = df.plot(
-        kind='bar', x='gestation_weeks', y='ave_weight', figsize=(15, 7))
-    ax.set_title('Average Weight by Gestation Weeks')
+    # [START bigquery_jupyter_plot_births_by_gestation]
+    ax = df.plot(kind='bar', x='gestation_weeks', y='count', figsize=(15,7))
+    ax.set_title('Count of Births by Gestation Weeks')
     ax.set_xlabel('Gestation Weeks')
-    ax.set_ylabel('Average Weight');
-    # [END bigquery_jupyter_plot_weight_by_gestation]
+    ax.set_ylabel('Count');
+    # [END bigquery_jupyter_plot_births_by_gestation]
