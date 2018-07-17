@@ -18,7 +18,6 @@
 from googleapiclient.discovery import build
 
 client_service = build('jobs', 'v2')
-
 # [END instantiate]
 
 
@@ -53,8 +52,6 @@ def batch_job_create(client_service, company_name):
     batch.execute()
 
     return created_jobs
-
-
 # [END batch_job_create]
 
 
@@ -91,8 +88,6 @@ def batch_job_update(client_service, jobs_to_be_updated):
     batch.execute()
 
     return updated_jobs
-
-
 # [END batch_job_update]
 
 
@@ -114,8 +109,6 @@ def batch_job_delete(client_service, jobs_to_be_deleted):
             callback=job_delete_callback)
 
     batch.execute()
-
-
 # [END batch_job_delete]
 
 

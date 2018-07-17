@@ -22,7 +22,6 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import Error
 
 client_service = build('jobs', 'v2')
-
 # [END instantiate]
 
 
@@ -47,8 +46,6 @@ def generate_job_with_required_fields(company_name):
     }
     print('Job generated: %s' % job)
     return job
-
-
 # [END basic_job]
 
 
@@ -62,8 +59,6 @@ def create_job(client_service, job_to_be_created):
     except Error as e:
         print('Got exception while creating job')
         raise e
-
-
 # [END create_job]
 
 
@@ -76,8 +71,6 @@ def get_job(client_service, job_name):
     except Error as e:
         print('Got exception while getting job')
         raise e
-
-
 # [END get_job]
 
 
@@ -92,8 +85,6 @@ def update_job(client_service, job_name, job_to_be_updated):
     except Error as e:
         print('Got exception while updating job')
         raise e
-
-
 # [END update_job]
 
 
@@ -109,8 +100,6 @@ def update_job_with_field_mask(client_service, job_name, job_to_be_updated,
     except Error as e:
         print('Got exception while updating job with field mask')
         raise e
-
-
 # [END update_job_with_field_mask]
 
 
@@ -122,8 +111,6 @@ def delete_job(client_service, job_name):
     except Error as e:
         print('Got exception while deleting job')
         raise e
-
-
 # [END delete_job]
 
 

@@ -20,7 +20,6 @@ import time
 from googleapiclient.discovery import build
 
 client_service = build('jobs', 'v2')
-
 # [END instantiate]
 
 
@@ -49,8 +48,6 @@ def commute_search(client_service, company_name):
     }
     response = client_service.jobs().search(body=request).execute()
     print(response)
-
-
 # [END commute_search]
 
 

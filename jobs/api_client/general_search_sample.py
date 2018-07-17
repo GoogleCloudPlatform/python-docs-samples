@@ -20,7 +20,6 @@ import time
 from googleapiclient.discovery import build
 
 client_service = build('jobs', 'v2')
-
 # [END instantiate]
 
 
@@ -42,8 +41,6 @@ def basic_keyword_search(client_service, company_name, keyword):
 
     response = client_service.jobs().search(body=request).execute()
     print(response)
-
-
 # [END basic_keyword_search]
 
 
@@ -65,8 +62,6 @@ def category_search(client_service, company_name, categories):
 
     response = client_service.jobs().search(body=request).execute()
     print(response)
-
-
 # [END category_filter]
 
 
@@ -88,8 +83,6 @@ def employment_types_search(client_service, company_name, employment_types):
 
     response = client_service.jobs().search(body=request).execute()
     print(response)
-
-
 # [END employment_types_filter]
 
 
@@ -111,8 +104,6 @@ def date_range_search(client_service, company_name, date_range):
 
     response = client_service.jobs().search(body=request).execute()
     print(response)
-
-
 # [END date_range_filter]
 
 
@@ -134,8 +125,6 @@ def language_code_search(client_service, company_name, language_codes):
 
     response = client_service.jobs().search(body=request).execute()
     print(response)
-
-
 # [END language_code_filter]
 
 
@@ -158,8 +147,6 @@ def company_display_name_search(client_service, company_name,
 
     response = client_service.jobs().search(body=request).execute()
     print(response)
-
-
 # [END company_display_name_filter]
 
 
@@ -197,8 +184,6 @@ def compensation_search(client_service, company_name):
 
     response = client_service.jobs().search(body=request).execute()
     print(response)
-
-
 # [END compensation_filter]
 
 

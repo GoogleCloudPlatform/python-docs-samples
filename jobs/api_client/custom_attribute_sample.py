@@ -22,7 +22,6 @@ import time
 from googleapiclient.discovery import build
 
 client_service = build('jobs', 'v2')
-
 # [END instantiate]
 
 
@@ -61,8 +60,6 @@ def generate_job_with_custom_attributes(company_name):
     }
     print('Job generated: %s' % job)
     return job
-
-
 # [END custom_attribute_job]
 
 
@@ -84,8 +81,6 @@ def custom_attribute_filter_string_value(client_service):
 
     response = client_service.jobs().search(body=request).execute()
     print(response)
-
-
 # [END custom_attribute_filter_string_value]
 
 
@@ -108,8 +103,6 @@ def custom_attribute_filter_long_value(client_service):
 
     response = client_service.jobs().search(body=request).execute()
     print(response)
-
-
 # [END custom_attribute_filter_long_value]
 
 
@@ -133,8 +126,6 @@ def custom_attribute_filter_multi_attributes(client_service):
 
     response = client_service.jobs().search(body=request).execute()
     print(response)
-
-
 # [END custom_attribute_filter_multi_attributes]
 
 

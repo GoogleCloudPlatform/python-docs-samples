@@ -22,7 +22,6 @@ import time
 from googleapiclient.discovery import build
 
 client_service = build('jobs', 'v2')
-
 # [END instantiate]
 
 
@@ -48,8 +47,6 @@ def generate_featured_job(company_name):
     }
     print('Job generated: %s' % job)
     return job
-
-
 # [END featured_job]
 
 
@@ -71,8 +68,6 @@ def search_featured_job(client_service, company_name):
 
     response = client_service.jobs().search(body=request).execute()
     print(response)
-
-
 # [END search_featured_job]
 
 

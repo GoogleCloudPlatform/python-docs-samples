@@ -20,7 +20,6 @@ import time
 from googleapiclient.discovery import build
 
 client_service = build('jobs', 'v2')
-
 # [END instantiate]
 
 
@@ -42,8 +41,6 @@ def basic_location_search(client_service, company_name, location, distance):
     }
     response = client_service.jobs().search(body=request).execute()
     print(response)
-
-
 # [END basic_location_search]
 
 
@@ -66,8 +63,6 @@ def keyword_location_search(client_service, company_name, location, distance,
     }
     response = client_service.jobs().search(body=request).execute()
     print(response)
-
-
 # [END keyword_location_search]
 
 
@@ -89,8 +84,6 @@ def city_location_search(client_service, company_name, location):
     }
     response = client_service.jobs().search(body=request).execute()
     print(response)
-
-
 # [END city_location_search]
 
 
@@ -114,8 +107,6 @@ def multi_locations_search(client_service, company_name, location1, distance1,
     }
     response = client_service.jobs().search(body=request).execute()
     print(response)
-
-
 # [END multi_locations_search]
 
 
@@ -138,8 +129,6 @@ def broadening_location_search(client_service, company_name, location):
     }
     response = client_service.jobs().search(body=request).execute()
     print(response)
-
-
 # [END broadening_location_search]
 
 

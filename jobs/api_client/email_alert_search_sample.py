@@ -20,7 +20,6 @@ import time
 from googleapiclient.discovery import build
 
 client_service = build('jobs', 'v2')
-
 # [END instantiate]
 
 
@@ -39,8 +38,6 @@ def search_for_alerts(client_service, company_name):
         request.update({'query': {'company_names': [company_name]}})
     response = client_service.jobs().searchForAlert(body=request).execute()
     print(response)
-
-
 # [END search_for_alerts]
 
 

@@ -35,8 +35,6 @@ def run_sample():
         print('Got exception while listing companies')
         raise e
 
-
-# [END quickstart]
-
 if __name__ == '__main__':
     run_sample()
+# [END quickstart]

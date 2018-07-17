@@ -20,7 +20,6 @@ import time
 from googleapiclient.discovery import build
 
 client_service = build('jobs', 'v2')
-
 # [END instantiate]
 
 
@@ -33,8 +32,6 @@ def job_title_auto_complete(client_service, query, company_name):
 
     results = complete.execute()
     print(results)
-
-
 # [END auto_complete_job_title]
 
 
@@ -47,8 +44,6 @@ def auto_complete_default(client_service, query, company_name):
 
     results = complete.execute()
     print(results)
-
-
 # [END auto_complete_default]
 
 
