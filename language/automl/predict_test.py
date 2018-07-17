@@ -17,12 +17,14 @@
 import os
 import automl_natural_language_predict
 
-project_id = os.environ['GCLOUD_PROJECT']
-compute_region = 'us-central1'
+project_id = os.environ["GCLOUD_PROJECT"]
+compute_region = "us-central1"
+
 
 def test_predict(capsys):
-    model_id = '3472481026502981088'
-    automl_natural_language_predict.predict(project_id, compute_region, model_id, 
-        'resources/test.txt')
+    model_id = "3472481026502981088"
+    automl_natural_language_predict.predict(
+        project_id, compute_region, model_id, "resources/test.txt"
+    )
     out, _ = capsys.readouterr()
-    assert 'Cheese' in out
+    assert "Cheese" in out

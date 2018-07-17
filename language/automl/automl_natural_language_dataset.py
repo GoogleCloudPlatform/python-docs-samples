@@ -26,6 +26,7 @@ import argparse
 import os
 
 from google.cloud import automl_v1beta1 as automl
+
 # [END automl_natural_language_import]
 
 
@@ -46,34 +47,34 @@ def create_dataset(project_id, compute_region, dataset_name, multilabel=False):
     project_location = client.location_path(project_id, compute_region)
 
     # Classification type is assigned based on multilabel value.
-    classification_type = 'MULTICLASS'
+    classification_type = "MULTICLASS"
     if multilabel:
-        classification_type = 'MULTILABEL'
+        classification_type = "MULTILABEL"
 
     # Specify the text classification type for the dataset.
-    dataset_metadata = {
-        'classification_type': classification_type
-    }
+    dataset_metadata = {"classification_type": classification_type}
 
     # Set dataset name and metadata.
     my_dataset = {
-        'display_name': dataset_name,
-        'text_classification_dataset_metadata': dataset_metadata
+        "display_name": dataset_name,
+        "text_classification_dataset_metadata": dataset_metadata,
     }
 
     # Create a dataset with the dataset metadata in the region.
     dataset = client.create_dataset(project_location, my_dataset)
 
     # Display the dataset information.
-    print('Dataset name: {}'.format(dataset.name))
-    print('Dataset id: {}'.format(dataset.name.split('/')[-1]))
-    print('Dataset display name: {}'.format(dataset.display_name))
-    print('Text classification dataset metadata:')
-    print('\t{}'.format(dataset.text_classification_dataset_metadata))
-    print('Dataset example count: {}'.format(dataset.example_count))
-    print('Dataset create time:')
-    print('\tseconds: {}'.format(dataset.create_time.seconds))
-    print('\tnanos: {}'.format(dataset.create_time.nanos))
+    print("Dataset name: {}".format(dataset.name))
+    print("Dataset id: {}".format(dataset.name.split("/")[-1]))
+    print("Dataset display name: {}".format(dataset.display_name))
+    print("Text classification dataset metadata:")
+    print("\t{}".format(dataset.text_classification_dataset_metadata))
+    print("Dataset example count: {}".format(dataset.example_count))
+    print("Dataset create time:")
+    print("\tseconds: {}".format(dataset.create_time.seconds))
+    print("\tnanos: {}".format(dataset.create_time.nanos))
+
+
 # [END automl_natural_language_create_dataset]
 
 
@@ -93,18 +94,20 @@ def list_datasets(project_id, compute_region, filter_):
     # List all the datasets available in the region by applying filter.
     response = client.list_datasets(project_location, filter_)
 
-    print('List of datasets:')
+    print("List of datasets:")
     for dataset in response:
         # Display the dataset information.
-        print('Dataset name: {}'.format(dataset.name))
-        print('Dataset id: {}'.format(dataset.name.split('/')[-1]))
-        print('Dataset display name: {}'.format(dataset.display_name))
-        print('Text classification dataset metadata:')
-        print('\t{}'.format(dataset.text_classification_dataset_metadata))
-        print('Dataset example count: {}'.format(dataset.example_count))
-        print('Dataset create time:')
-        print('\tseconds: {}'.format(dataset.create_time.seconds))
-        print('\tnanos: {}'.format(dataset.create_time.nanos))
+        print("Dataset name: {}".format(dataset.name))
+        print("Dataset id: {}".format(dataset.name.split("/")[-1]))
+        print("Dataset display name: {}".format(dataset.display_name))
+        print("Text classification dataset metadata:")
+        print("\t{}".format(dataset.text_classification_dataset_metadata))
+        print("Dataset example count: {}".format(dataset.example_count))
+        print("Dataset create time:")
+        print("\tseconds: {}".format(dataset.create_time.seconds))
+        print("\tnanos: {}".format(dataset.create_time.nanos))
+
+
 # [END automl_natural_language_list_datasets]
 
 
@@ -119,22 +122,23 @@ def get_dataset(project_id, compute_region, dataset_id):
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset
-    dataset_full_id = client.dataset_path(
-        project_id, compute_region, dataset_id)
+    dataset_full_id = client.dataset_path(project_id, compute_region, dataset_id)
 
     # Get complete detail of the dataset.
     dataset = client.get_dataset(dataset_full_id)
 
     # Display the dataset information.
-    print('Dataset name: {}'.format(dataset.name))
-    print('Dataset id: {}'.format(dataset.name.split('/')[-1]))
-    print('Dataset display name: {}'.format(dataset.display_name))
-    print('Text classification dataset metadata:')
-    print('\t{}'.format(dataset.text_classification_dataset_metadata))
-    print('Dataset example count: {}'.format(dataset.example_count))
-    print('Dataset create time:')
-    print('\tseconds: {}'.format(dataset.create_time.seconds))
-    print('\tnanos: {}'.format(dataset.create_time.nanos))
+    print("Dataset name: {}".format(dataset.name))
+    print("Dataset id: {}".format(dataset.name.split("/")[-1]))
+    print("Dataset display name: {}".format(dataset.display_name))
+    print("Text classification dataset metadata:")
+    print("\t{}".format(dataset.text_classification_dataset_metadata))
+    print("Dataset example count: {}".format(dataset.example_count))
+    print("Dataset create time:")
+    print("\tseconds: {}".format(dataset.create_time.seconds))
+    print("\tnanos: {}".format(dataset.create_time.nanos))
+
+
 # [END automl_natural_language_get_dataset]
 
 
@@ -152,21 +156,20 @@ def import_data(project_id, compute_region, dataset_id, path):
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset.
-    dataset_full_id = client.dataset_path(
-        project_id, compute_region, dataset_id)
+    dataset_full_id = client.dataset_path(project_id, compute_region, dataset_id)
 
     # Get the multiple Google Cloud Storage URIs.
-    input_uris = path.split(',')
-    input_config = {'gcs_source': {
-        'input_uris': input_uris
-    }}
+    input_uris = path.split(",")
+    input_config = {"gcs_source": {"input_uris": input_uris}}
 
     # Import the dataset from the input URI.
     response = client.import_data(dataset_full_id, input_config)
 
-    print('Processing import...')
+    print("Processing import...")
     # synchronous check of operation status.
-    print('Data imported. {}'.format(response.result()))
+    print("Data imported. {}".format(response.result()))
+
+
 # [END automl_natural_language_import_data]
 
 
@@ -182,20 +185,19 @@ def export_data(project_id, compute_region, dataset_id, output_uri):
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset.
-    dataset_full_id = client.dataset_path(
-        project_id, compute_region, dataset_id)
+    dataset_full_id = client.dataset_path(project_id, compute_region, dataset_id)
 
     # Set the output URI
-    output_config = {'gcs_destination': {
-        'output_uri_prefix': output_uri
-        }}
+    output_config = {"gcs_destination": {"output_uri_prefix": output_uri}}
 
     # Export the data to the output URI.
     response = client.export_data(dataset_full_id, output_config)
 
-    print('Processing export...')
+    print("Processing export...")
     # synchronous check of operation status.
-    print('Data exported. {}'.format(response.result()))
+    print("Data exported. {}".format(response.result()))
+
+
 # [END automl_natural_language_export_data]
 
 
@@ -210,69 +212,70 @@ def delete_dataset(project_id, compute_region, dataset_id):
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset.
-    dataset_full_id = client.dataset_path(
-        project_id, compute_region, dataset_id)
+    dataset_full_id = client.dataset_path(project_id, compute_region, dataset_id)
 
     # Delete a dataset.
     response = client.delete_dataset(dataset_full_id)
 
     # synchronous check of operation status.
-    print('Dataset deleted. {}'.format(response.result()))
+    print("Dataset deleted. {}".format(response.result()))
+
+
 # [END automl_natural_language_delete_dataset]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    subparsers = parser.add_subparsers(dest='command')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    subparsers = parser.add_subparsers(dest="command")
 
     create_dataset_parser = subparsers.add_parser(
-        'create_dataset', help=create_dataset.__doc__)
-    create_dataset_parser.add_argument('dataset_name')
+        "create_dataset", help=create_dataset.__doc__
+    )
+    create_dataset_parser.add_argument("dataset_name")
     create_dataset_parser.add_argument(
-        'multilabel', nargs='?', choices=['False', 'True'], default='False')
+        "multilabel", nargs="?", choices=["False", "True"], default="False"
+    )
 
     list_datasets_parser = subparsers.add_parser(
-        'list_datasets', help=list_datasets.__doc__)
+        "list_datasets", help=list_datasets.__doc__
+    )
     list_datasets_parser.add_argument(
-        'filter_', nargs='?', default='text_classification_dataset_metadata:*')
+        "filter_", nargs="?", default="text_classification_dataset_metadata:*"
+    )
 
-    get_dataset_parser = subparsers.add_parser(
-        'get_dataset', help=get_dataset.__doc__)
-    get_dataset_parser.add_argument('dataset_id')
+    get_dataset_parser = subparsers.add_parser("get_dataset", help=get_dataset.__doc__)
+    get_dataset_parser.add_argument("dataset_id")
 
-    import_data_parser = subparsers.add_parser(
-        'import_data', help=import_data.__doc__)
-    import_data_parser.add_argument('dataset_id')
-    import_data_parser.add_argument('path')
+    import_data_parser = subparsers.add_parser("import_data", help=import_data.__doc__)
+    import_data_parser.add_argument("dataset_id")
+    import_data_parser.add_argument("path")
 
-    export_data_parser = subparsers.add_parser(
-        'export_data', help=export_data.__doc__)
-    export_data_parser.add_argument('dataset_id')
-    export_data_parser.add_argument('output_uri')
+    export_data_parser = subparsers.add_parser("export_data", help=export_data.__doc__)
+    export_data_parser.add_argument("dataset_id")
+    export_data_parser.add_argument("output_uri")
 
     delete_dataset_parser = subparsers.add_parser(
-        'delete_dataset', help=delete_dataset.__doc__)
-    delete_dataset_parser.add_argument('dataset_id')
+        "delete_dataset", help=delete_dataset.__doc__
+    )
+    delete_dataset_parser.add_argument("dataset_id")
 
-    project_id = os.environ['PROJECT_ID']
-    compute_region = os.environ['REGION_NAME']
+    project_id = os.environ["PROJECT_ID"]
+    compute_region = os.environ["REGION_NAME"]
 
     args = parser.parse_args()
 
-    if args.command == 'create_dataset':
-        multilabel = True if args.multilabel == 'True' else False
-        create_dataset(
-            project_id, compute_region, args.dataset_name, multilabel)
-    if args.command == 'list_datasets':
+    if args.command == "create_dataset":
+        multilabel = True if args.multilabel == "True" else False
+        create_dataset(project_id, compute_region, args.dataset_name, multilabel)
+    if args.command == "list_datasets":
         list_datasets(project_id, compute_region, args.filter_)
-    if args.command == 'get_dataset':
+    if args.command == "get_dataset":
         get_dataset(project_id, compute_region, args.dataset_id)
-    if args.command == 'import_data':
+    if args.command == "import_data":
         import_data(project_id, compute_region, args.dataset_id, args.path)
-    if args.command == 'export_data':
-        export_data(
-            project_id, compute_region, args.dataset_id, args.output_uri)
-    if args.command == 'delete_dataset':
+    if args.command == "export_data":
+        export_data(project_id, compute_region, args.dataset_id, args.output_uri)
+    if args.command == "delete_dataset":
         delete_dataset(project_id, compute_region, args.dataset_id)

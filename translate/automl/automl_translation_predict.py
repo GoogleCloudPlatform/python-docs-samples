@@ -26,13 +26,14 @@ import argparse
 import os
 
 from google.cloud import automl_v1beta1 as automl
+
 # [END automl_translation_import]
 
 
 # [START automl_translation_predict]
 def predict(
-        project_id, compute_region, model_id, file_path,
-        translation_allow_fallback=False):
+    project_id, compute_region, model_id, file_path, translation_allow_fallback=False
+):
     """Translate the content.
     Args:
         project_id: Id of the project.
@@ -50,56 +51,60 @@ def predict(
     prediction_client = automl.PredictionServiceClient()
 
     # Get the full path of the model.
-    model_full_id = automl_client.model_path(
-        project_id, compute_region, model_id)
+    model_full_id = automl_client.model_path(project_id, compute_region, model_id)
 
     # Read the file content for translation.
-    with open(file_path, 'rb') as content_file:
+    with open(file_path, "rb") as content_file:
         content = content_file.read()
-    content.decode('utf-8')
+    content.decode("utf-8")
 
     # Set the payload by giving the content of the file.
-    payload = {
-        'text_snippet': {
-            'content': content
-        }
-    }
+    payload = {"text_snippet": {"content": content}}
 
     # params is additional domain-specific parameters.
     # translation_allow_fallback allows to use Google translation model.
     params = {}
-    if(translation_allow_fallback):
-        params = {'translation_allow_fallback': 'True'}
+    if translation_allow_fallback:
+        params = {"translation_allow_fallback": "True"}
 
     response = prediction_client.predict(model_full_id, payload, params)
     translated_content = response.payload[0].translation.translated_content
 
-    print(u'Translated content: {}'.format(translated_content.content))
+    print(u"Translated content: {}".format(translated_content.content))
+
+
 # [END automl_translation_predict]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    subparsers = parser.add_subparsers(dest='command')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    subparsers = parser.add_subparsers(dest="command")
 
-    predict_parser = subparsers.add_parser(
-        'predict', help=predict.__doc__)
-    predict_parser.add_argument('model_id')
-    predict_parser.add_argument('file_path')
+    predict_parser = subparsers.add_parser("predict", help=predict.__doc__)
+    predict_parser.add_argument("model_id")
+    predict_parser.add_argument("file_path")
     predict_parser.add_argument(
-        'translation_allow_fallback', nargs='?', choices=['False', 'True'],
-        default='False')
+        "translation_allow_fallback",
+        nargs="?",
+        choices=["False", "True"],
+        default="False",
+    )
 
-    project_id = os.environ['PROJECT_ID']
-    compute_region = os.environ['REGION_NAME']
+    project_id = os.environ["PROJECT_ID"]
+    compute_region = os.environ["REGION_NAME"]
 
     args = parser.parse_args()
 
-    if args.command == 'predict':
+    if args.command == "predict":
         translation_allow_fallback = (
-            True if args.translation_allow_fallback == 'True' else False)
+            True if args.translation_allow_fallback == "True" else False
+        )
         predict(
-            project_id, compute_region, args.model_id, args.file_path,
-            translation_allow_fallback)
+            project_id,
+            compute_region,
+            args.model_id,
+            args.file_path,
+            translation_allow_fallback,
+        )

@@ -19,18 +19,19 @@ import automl_vision_model
 import datetime
 from google.cloud import automl_v1beta1 as automl
 
-project_id = os.environ['GCLOUD_PROJECT']
-compute_region = 'us-central1'
+project_id = os.environ["GCLOUD_PROJECT"]
+compute_region = "us-central1"
+
 
 def test_model_create_status_delete(capsys):
     # create model
     client = automl.AutoMlClient()
-    model_name = 'test_' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    model_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     project_location = client.location_path(project_id, compute_region)
     my_model = {
-        'display_name': model_name,
-        'dataset_id': '3946265060617537378',
-        'image_classification_model_metadata': {}
+        "display_name": model_name,
+        "dataset_id": "3946265060617537378",
+        "image_classification_model_metadata": {},
     }
     response = client.create_model(project_location, my_model)
     operation_name = response.operation.name
@@ -39,34 +40,35 @@ def test_model_create_status_delete(capsys):
     # get operation status
     automl_vision_model.get_operation_status(operation_name)
     out, _ = capsys.readouterr()
-    assert 'Operation status: ' in out
+    assert "Operation status: " in out
 
     # cancel operation
     response.cancel()
 
+
 def test_model_list_get_evaluate(capsys):
     # list models
-    automl_vision_model.list_models(project_id, compute_region, '')
+    automl_vision_model.list_models(project_id, compute_region, "")
     out, _ = capsys.readouterr()
     list_models_output = out.splitlines()
-    assert 'Model id: ' in list_models_output[2]
+    assert "Model id: " in list_models_output[2]
 
     # get model
     model_id = list_models_output[2].split()[2]
     automl_vision_model.get_model(project_id, compute_region, model_id)
     out, _ = capsys.readouterr()
-    assert 'Model name: ' in out
+    assert "Model name: " in out
 
     # list model evaluations
-    automl_vision_model.list_model_evaluations(project_id, compute_region, 
-        model_id, '')
+    automl_vision_model.list_model_evaluations(project_id, compute_region, model_id, "")
     out, _ = capsys.readouterr()
     list_evals_output = out.splitlines()
-    assert 'name: ' in list_evals_output[1]
+    assert "name: " in list_evals_output[1]
 
     # get model evaluation
-    model_evaluation_id = list_evals_output[1].split('/')[-1][:-1]
-    automl_vision_model.get_model_evaluation(project_id, compute_region, 
-        model_id, model_evaluation_id)
+    model_evaluation_id = list_evals_output[1].split("/")[-1][:-1]
+    automl_vision_model.get_model_evaluation(
+        project_id, compute_region, model_id, model_evaluation_id
+    )
     out, _ = capsys.readouterr()
-    assert 'evaluation_metric' in out
+    assert "evaluation_metric" in out
