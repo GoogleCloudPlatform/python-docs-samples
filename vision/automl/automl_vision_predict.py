@@ -31,7 +31,9 @@ from google.cloud import automl_v1beta1 as automl
 
 
 # [START automl_vision_predict]
-def predict(project_id, compute_region, model_id, file_path, score_threshold=""):
+def predict(
+    project_id, compute_region, model_id, file_path, score_threshold=""
+):
     """Make a prediction for an image.
     Args:
         project_id: Id of the project.
@@ -46,7 +48,9 @@ def predict(project_id, compute_region, model_id, file_path, score_threshold="")
     automl_client = automl.AutoMlClient()
 
     # Get the full path of the model.
-    model_full_id = automl_client.model_path(project_id, compute_region, model_id)
+    model_full_id = automl_client.model_path(
+        project_id, compute_region, model_id
+    )
 
     # Create client for prediction service.
     prediction_client = automl.PredictionServiceClient()
@@ -75,7 +79,8 @@ def predict(project_id, compute_region, model_id, file_path, score_threshold="")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     subparsers = parser.add_subparsers(dest="command")
 

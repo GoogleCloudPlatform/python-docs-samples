@@ -46,7 +46,10 @@ def create_dataset(project_id, compute_region, dataset_name, source, target):
     project_location = client.location_path(project_id, compute_region)
 
     # Specify the source and target language.
-    dataset_metadata = {"source_language_code": source, "target_language_code": target}
+    dataset_metadata = {
+        "source_language_code": source,
+        "target_language_code": target,
+    }
     # Set dataset name and dataset metadata
     my_dataset = {
         "display_name": dataset_name,
@@ -131,7 +134,9 @@ def get_dataset(project_id, compute_region, dataset_id):
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset
-    dataset_full_id = client.dataset_path(project_id, compute_region, dataset_id)
+    dataset_full_id = client.dataset_path(
+        project_id, compute_region, dataset_id
+    )
 
     # Get complete detail of the dataset.
     dataset = client.get_dataset(dataset_full_id)
@@ -172,7 +177,9 @@ def import_data(project_id, compute_region, dataset_id, path):
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset.
-    dataset_full_id = client.dataset_path(project_id, compute_region, dataset_id)
+    dataset_full_id = client.dataset_path(
+        project_id, compute_region, dataset_id
+    )
 
     # Get the multiple Google Cloud Storage URIs
     input_uris = path.split(",")
@@ -200,7 +207,9 @@ def delete_dataset(project_id, compute_region, dataset_id):
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset.
-    dataset_full_id = client.dataset_path(project_id, compute_region, dataset_id)
+    dataset_full_id = client.dataset_path(
+        project_id, compute_region, dataset_id
+    )
 
     # Delete a dataset.
     response = client.delete_dataset(dataset_full_id)
@@ -214,7 +223,8 @@ def delete_dataset(project_id, compute_region, dataset_id):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     subparsers = parser.add_subparsers(dest="command")
 
@@ -230,7 +240,9 @@ if __name__ == "__main__":
     )
     list_datasets_parser.add_argument("filter", nargs="?", default="")
 
-    import_data_parser = subparsers.add_parser("import_data", help=import_data.__doc__)
+    import_data_parser = subparsers.add_parser(
+        "import_data", help=import_data.__doc__
+    )
     import_data_parser.add_argument("dataset_id")
     import_data_parser.add_argument("path")
 
@@ -239,7 +251,9 @@ if __name__ == "__main__":
     )
     delete_dataset_parser.add_argument("dataset_id")
 
-    get_dataset_parser = subparsers.add_parser("get_dataset", help=get_dataset.__doc__)
+    get_dataset_parser = subparsers.add_parser(
+        "get_dataset", help=get_dataset.__doc__
+    )
     get_dataset_parser.add_argument("dataset_id")
 
     project_id = os.environ["PROJECT_ID"]
@@ -249,7 +263,11 @@ if __name__ == "__main__":
 
     if args.command == "create_dataset":
         create_dataset(
-            project_id, compute_region, args.dataset_name, args.source, args.target
+            project_id,
+            compute_region,
+            args.dataset_name,
+            args.source,
+            args.target,
         )
     if args.command == "list_datasets":
         list_datasets(project_id, compute_region, args.filter)

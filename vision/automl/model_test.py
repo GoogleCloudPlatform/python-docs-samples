@@ -60,7 +60,9 @@ def test_model_list_get_evaluate(capsys):
     assert "Model name: " in out
 
     # list model evaluations
-    automl_vision_model.list_model_evaluations(project_id, compute_region, model_id, "")
+    automl_vision_model.list_model_evaluations(
+        project_id, compute_region, model_id, ""
+    )
     out, _ = capsys.readouterr()
     list_evals_output = out.splitlines()
     assert "name: " in list_evals_output[1]

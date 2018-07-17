@@ -156,7 +156,9 @@ def list_model_evaluations(project_id, compute_region, model_id, filter_):
 
 
 # [START automl_translation_get_model_evaluation]
-def get_model_evaluation(project_id, compute_region, model_id, model_evaluation_id):
+def get_model_evaluation(
+    project_id, compute_region, model_id, model_evaluation_id
+):
     """Get model evaluation.
     Args:
         project_id: Id of the project.
@@ -224,7 +226,8 @@ def get_operation_status(operation_full_id):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     subparsers = parser.add_subparsers(dest="command")
 
@@ -246,7 +249,9 @@ if __name__ == "__main__":
     get_model_evaluation_parser.add_argument("model_id")
     get_model_evaluation_parser.add_argument("model_evaluation_id")
 
-    get_model_parser = subparsers.add_parser("get_model", help=get_model.__doc__)
+    get_model_parser = subparsers.add_parser(
+        "get_model", help=get_model.__doc__
+    )
     get_model_parser.add_argument("model_id")
 
     get_operation_status_parser = subparsers.add_parser(
@@ -254,7 +259,9 @@ if __name__ == "__main__":
     )
     get_operation_status_parser.add_argument("operation_full_id")
 
-    list_models_parser = subparsers.add_parser("list_models", help=list_models.__doc__)
+    list_models_parser = subparsers.add_parser(
+        "list_models", help=list_models.__doc__
+    )
     list_models_parser.add_argument("filter", nargs="?", default="")
 
     delete_model_parser = subparsers.add_parser(
@@ -268,13 +275,17 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.command == "create_model":
-        create_model(project_id, compute_region, args.dataset_id, args.model_name)
+        create_model(
+            project_id, compute_region, args.dataset_id, args.model_name
+        )
     if args.command == "list_models":
         list_models(project_id, compute_region, args.filter)
     if args.command == "get_model":
         get_model(project_id, compute_region, args.model_id)
     if args.command == "list_model_evaluations":
-        list_model_evaluations(project_id, compute_region, args.model_id, args.filter)
+        list_model_evaluations(
+            project_id, compute_region, args.model_id, args.filter
+        )
     if args.command == "get_model_evaluation":
         get_model_evaluation(
             project_id, compute_region, args.model_id, args.model_evaluation_id

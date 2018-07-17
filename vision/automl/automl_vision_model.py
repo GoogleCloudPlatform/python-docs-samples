@@ -32,7 +32,9 @@ from google.cloud import automl_v1beta1 as automl
 
 
 # [START automl_vision_create_model]
-def create_model(project_id, compute_region, dataset_id, model_name, train_budget=0):
+def create_model(
+    project_id, compute_region, dataset_id, model_name, train_budget=0
+):
     """Create a model.
     Args:
         project_id: Id of the project.
@@ -80,10 +82,14 @@ def create_model(project_id, compute_region, dataset_id, model_name, train_budge
         )
     )
     print(
-        "Training cost: {}".format(model.image_classification_model_metadata.train_cost)
+        "Training cost: {}".format(
+            model.image_classification_model_metadata.train_cost
+        )
     )
     print(
-        "Stop reason: {}".format(model.image_classification_model_metadata.stop_reason)
+        "Stop reason: {}".format(
+            model.image_classification_model_metadata.stop_reason
+        )
     )
     print(
         "Base model id: {}".format(
@@ -209,10 +215,14 @@ def get_model(project_id, compute_region, model_id):
         )
     )
     print(
-        "Training cost: {}".format(model.image_classification_model_metadata.train_cost)
+        "Training cost: {}".format(
+            model.image_classification_model_metadata.train_cost
+        )
     )
     print(
-        "Stop reason: {}".format(model.image_classification_model_metadata.stop_reason)
+        "Stop reason: {}".format(
+            model.image_classification_model_metadata.stop_reason
+        )
     )
     print(
         "Base model id: {}".format(
@@ -254,7 +264,9 @@ def list_model_evaluations(project_id, compute_region, model_id, filter_):
 
 
 # [START automl_vision_get_model_evaluation]
-def get_model_evaluation(project_id, compute_region, model_id, model_evaluation_id):
+def get_model_evaluation(
+    project_id, compute_region, model_id, model_evaluation_id
+):
     """Get model evaluation.
     Args:
         project_id: Id of the project.
@@ -377,7 +389,8 @@ def delete_model(project_id, compute_region, model_id):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     subparsers = parser.add_subparsers(dest="command")
 
@@ -386,24 +399,32 @@ if __name__ == "__main__":
     )
     create_model_parser.add_argument("dataset_id")
     create_model_parser.add_argument("model_name")
-    create_model_parser.add_argument("train_budget", type=int, nargs="?", default=0)
+    create_model_parser.add_argument(
+        "train_budget", type=int, nargs="?", default=0
+    )
 
     get_operation_status_parser = subparsers.add_parser(
         "get_operation_status", help=get_operation_status.__doc__
     )
     get_operation_status_parser.add_argument("operation_full_id")
 
-    list_models_parser = subparsers.add_parser("list_models", help=list_models.__doc__)
+    list_models_parser = subparsers.add_parser(
+        "list_models", help=list_models.__doc__
+    )
     list_models_parser.add_argument("filter_")
 
-    get_model_parser = subparsers.add_parser("get_model", help=get_model.__doc__)
+    get_model_parser = subparsers.add_parser(
+        "get_model", help=get_model.__doc__
+    )
     get_model_parser.add_argument("model_id")
 
     list_model_evaluations_parser = subparsers.add_parser(
         "list_model_evaluations", help=list_model_evaluations.__doc__
     )
     list_model_evaluations_parser.add_argument("model_id")
-    list_model_evaluations_parser.add_argument("filter_", nargs="?", default="")
+    list_model_evaluations_parser.add_argument(
+        "filter_", nargs="?", default=""
+    )
 
     get_model_evaluation_parser = subparsers.add_parser(
         "get_model_evaluation", help=get_model_evaluation.__doc__
@@ -442,12 +463,16 @@ if __name__ == "__main__":
     if args.command == "get_model":
         get_model(project_id, compute_region, args.model_id)
     if args.command == "list_model_evaluations":
-        list_model_evaluations(project_id, compute_region, args.model_id, args.filter_)
+        list_model_evaluations(
+            project_id, compute_region, args.model_id, args.filter_
+        )
     if args.command == "get_model_evaluation":
         get_model_evaluation(
             project_id, compute_region, args.model_id, args.model_evaluation_id
         )
     if args.command == "display_evaluation":
-        display_evaluation(project_id, compute_region, args.model_id, args.filter_)
+        display_evaluation(
+            project_id, compute_region, args.model_id, args.filter_
+        )
     if args.command == "delete_model":
         delete_model(project_id, compute_region, args.model_id)
