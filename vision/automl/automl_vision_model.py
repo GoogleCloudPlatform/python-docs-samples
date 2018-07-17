@@ -25,8 +25,8 @@ https://cloud.google.com/vision/automl/docs.
 import argparse
 import os
 
-from google.cloud.automl_v1beta1 import enums
 from google.cloud import automl_v1beta1 as automl
+from google.cloud.automl_v1beta1 import enums
 
 # [END automl_vision_tutorial_import]
 
