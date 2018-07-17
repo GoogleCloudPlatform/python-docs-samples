@@ -55,7 +55,7 @@ def create_company(client_service, company_to_be_created):
             body=company_to_be_created).execute()
         print('Company created: %s' % company_created)
         return company_created
-    except googleapiclient.errors.Error as e:
+    except Error as e:
         print('Got exception while creating company')
         raise e
 
