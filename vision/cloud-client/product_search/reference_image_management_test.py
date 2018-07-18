@@ -15,9 +15,10 @@
 import os
 
 from product_management import create_product, delete_product
+import pytest
 from reference_image_management import (
     create_reference_image, delete_reference_image, list_reference_images)
-import pytest
+
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 LOCATION = 'us-west1'
@@ -27,7 +28,7 @@ PRODUCT_CATEGORY = 'homegoods'
 PRODUCT_ID = 'fake_product_id_for_testing'
 
 REFERENCE_IMAGE_ID = 'fake_reference_image_id_for_testing'
-GCS_URI = 'gs://{}/test.jpg'.format(os.getenv('CLOUD_STORAGE_BUCKET'))
+GCS_URI = 'gs://python-docs-samples-tests/product_search/test.jpg'
 
 
 @pytest.fixture

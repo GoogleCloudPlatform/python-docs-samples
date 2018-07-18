@@ -150,10 +150,10 @@ if __name__ == '__main__':
         add_product_to_product_set(
             args.project_id, args.location, args.product_id,
             args.product_set_id)
-    if args.command == 'list_products_in_product_set':
+    elif args.command == 'list_products_in_product_set':
         list_products_in_product_set(
             args.project_id, args.location, args.product_set_id)
-    if args.command == 'remove_product_from_product_set':
+    elif args.command == 'remove_product_from_product_set':
         remove_product_from_product_set(
             args.project_id, args.location, args.product_id,
             args.product_set_id)
