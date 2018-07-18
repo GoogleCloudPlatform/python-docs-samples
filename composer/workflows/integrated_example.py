@@ -98,7 +98,6 @@ with DAG('integrated_example', default_args=DEFAULT_ARGS) as dag:
       }
   )
 
-
   # After the Dataflow process completes, you should see an `hourly-team-score`
   # table within the `example-dataset`. We now want to filter the entries by
   # running a query on this table using the BigQuery operator below. This query
