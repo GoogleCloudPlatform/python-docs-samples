@@ -14,10 +14,9 @@
 
 import os
 
-from product_management import (
-    create_product, delete_product, get_product, list_products,
-    update_product_labels)
-
+from product_management import create_product, delete_product
+from reference_image_management import (
+    create_reference_image, delete_reference_image, list_reference_images)
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 LOCATION = 'us-west1'
@@ -25,54 +24,46 @@ LOCATION = 'us-west1'
 PRODUCT_DISPLAY_NAME = 'fake_product_display_name_for_testing'
 PRODUCT_CATEGORY = 'homegoods'
 PRODUCT_ID = 'fake_product_id_for_testing'
-KEY = 'fake_key_for_testing'
-VALUE = 'fake_value_for_testing'
+
+REFERENCE_IMAGE_ID = 'fake_reference_image_id_for_testing'
+GCS_URI = 'gs://{}/test.jpg'.format(os.getenv('CLOUD_STORAGE_BUCKET'))
 
 
-def test_create_product(capsys):
-    list_products(PROJECT_ID, LOCATION)
-    out, _ = capsys.readouterr()
-    assert PRODUCT_ID not in out
-
+def test_create_reference_image(capsys):
     create_product(
         PROJECT_ID, LOCATION, PRODUCT_ID,
         PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY)
-    list_products(PROJECT_ID, LOCATION)
+
+    list_reference_images(PROJECT_ID, LOCATION, PRODUCT_ID)
     out, _ = capsys.readouterr()
-    assert PRODUCT_ID in out
+    assert REFERENCE_IMAGE_ID not in out
+
+    create_reference_image(
+        PROJECT_ID, LOCATION, PRODUCT_ID, REFERENCE_IMAGE_ID,
+        GCS_URI)
+    list_reference_images(PROJECT_ID, LOCATION, PRODUCT_ID)
+    out, _ = capsys.readouterr()
+    assert REFERENCE_IMAGE_ID in out
 
     delete_product(PROJECT_ID, LOCATION, PRODUCT_ID)
 
 
-def test_delete_product(capsys):
+def test_delete_reference_image(capsys):
     create_product(
         PROJECT_ID, LOCATION, PRODUCT_ID,
         PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY)
 
-    list_products(PROJECT_ID, LOCATION)
+    create_reference_image(
+        PROJECT_ID, LOCATION, PRODUCT_ID, REFERENCE_IMAGE_ID,
+        GCS_URI)
+    list_reference_images(PROJECT_ID, LOCATION, PRODUCT_ID)
     out, _ = capsys.readouterr()
-    assert PRODUCT_ID in out
+    assert REFERENCE_IMAGE_ID in out
 
-    delete_product(PROJECT_ID, LOCATION, PRODUCT_ID)
-
-    list_products(PROJECT_ID, LOCATION)
+    delete_reference_image(
+        PROJECT_ID, LOCATION, PRODUCT_ID, REFERENCE_IMAGE_ID)
+    list_reference_images(PROJECT_ID, LOCATION, PRODUCT_ID)
     out, _ = capsys.readouterr()
-    assert PRODUCT_ID not in out
-
-
-def test_update_product_labels(capsys):
-    create_product(
-        PROJECT_ID, LOCATION, PRODUCT_ID,
-        PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY)
-
-    get_product(PROJECT_ID, LOCATION, PRODUCT_ID)
-    out, _ = capsys.readouterr()
-    assert KEY not in out
-    assert VALUE not in out
-
-    update_product_labels(PROJECT_ID, LOCATION, PRODUCT_ID, KEY, VALUE)
-    out, _ = capsys.readouterr()
-    assert KEY in out
-    assert VALUE in out
+    assert REFERENCE_IMAGE_ID not in out
 
     delete_product(PROJECT_ID, LOCATION, PRODUCT_ID)
