@@ -16,6 +16,7 @@ import os
 
 from product_set_management import (
     create_product_set, delete_product_set, list_product_sets)
+import pytest
 
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
@@ -23,6 +24,18 @@ LOCATION = 'us-west1'
 
 PRODUCT_SET_DISPLAY_NAME = 'fake_product_set_display_name_for_testing'
 PRODUCT_SET_ID = 'fake_product_set_id_for_testing'
+
+
+@pytest.fixture
+def product_set():
+    # set up
+    create_product_set(
+        PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_SET_DISPLAY_NAME)
+
+    yield None
+
+    # tear down
+    delete_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
 
 
 def test_create_product_set(capsys):
@@ -40,11 +53,7 @@ def test_create_product_set(capsys):
     delete_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
 
 
-def test_delete_product_set(capsys):
-    create_product_set(
-        PROJECT_ID, LOCATION, PRODUCT_SET_ID,
-        PRODUCT_SET_DISPLAY_NAME)
-
+def test_delete_product_set(capsys, product_set):
     list_product_sets(PROJECT_ID, LOCATION)
     out, _ = capsys.readouterr()
     assert PRODUCT_SET_ID in out

@@ -17,6 +17,7 @@ import os
 from product_management import create_product, delete_product
 from reference_image_management import (
     create_reference_image, delete_reference_image, list_reference_images)
+import pytest
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 LOCATION = 'us-west1'
@@ -29,11 +30,20 @@ REFERENCE_IMAGE_ID = 'fake_reference_image_id_for_testing'
 GCS_URI = 'gs://{}/test.jpg'.format(os.getenv('CLOUD_STORAGE_BUCKET'))
 
 
-def test_create_reference_image(capsys):
+@pytest.fixture
+def product():
+    # set up
     create_product(
         PROJECT_ID, LOCATION, PRODUCT_ID,
         PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY)
 
+    yield None
+
+    # tear down
+    delete_product(PROJECT_ID, LOCATION, PRODUCT_ID)
+
+
+def test_create_reference_image(capsys, product):
     list_reference_images(PROJECT_ID, LOCATION, PRODUCT_ID)
     out, _ = capsys.readouterr()
     assert REFERENCE_IMAGE_ID not in out
@@ -48,11 +58,7 @@ def test_create_reference_image(capsys):
     delete_product(PROJECT_ID, LOCATION, PRODUCT_ID)
 
 
-def test_delete_reference_image(capsys):
-    create_product(
-        PROJECT_ID, LOCATION, PRODUCT_ID,
-        PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY)
-
+def test_delete_reference_image(capsys, product):
     create_reference_image(
         PROJECT_ID, LOCATION, PRODUCT_ID, REFERENCE_IMAGE_ID,
         GCS_URI)

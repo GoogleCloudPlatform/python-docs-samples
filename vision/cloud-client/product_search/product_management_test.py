@@ -17,6 +17,7 @@ import os
 from product_management import (
     create_product, delete_product, get_product, list_products,
     update_product_labels)
+import pytest
 
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
@@ -27,6 +28,19 @@ PRODUCT_CATEGORY = 'homegoods'
 PRODUCT_ID = 'fake_product_id_for_testing'
 KEY = 'fake_key_for_testing'
 VALUE = 'fake_value_for_testing'
+
+
+@pytest.fixture
+def product():
+    # set up
+    create_product(
+        PROJECT_ID, LOCATION, PRODUCT_ID,
+        PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY)
+
+    yield None
+
+    # tear down
+    delete_product(PROJECT_ID, LOCATION, PRODUCT_ID)
 
 
 def test_create_product(capsys):
@@ -44,11 +58,7 @@ def test_create_product(capsys):
     delete_product(PROJECT_ID, LOCATION, PRODUCT_ID)
 
 
-def test_delete_product(capsys):
-    create_product(
-        PROJECT_ID, LOCATION, PRODUCT_ID,
-        PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY)
-
+def test_delete_product(capsys, product):
     list_products(PROJECT_ID, LOCATION)
     out, _ = capsys.readouterr()
     assert PRODUCT_ID in out
@@ -60,11 +70,7 @@ def test_delete_product(capsys):
     assert PRODUCT_ID not in out
 
 
-def test_update_product_labels(capsys):
-    create_product(
-        PROJECT_ID, LOCATION, PRODUCT_ID,
-        PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY)
-
+def test_update_product_labels(capsys, product):
     get_product(PROJECT_ID, LOCATION, PRODUCT_ID)
     out, _ = capsys.readouterr()
     assert KEY not in out
