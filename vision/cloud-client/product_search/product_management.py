@@ -216,13 +216,13 @@ if __name__ == '__main__':
         create_product(
             args.project_id, args.location, args.product_id,
             args.product_display_name, args.product_category)
-    if args.command == 'list_products':
+    elif args.command == 'list_products':
         list_products(args.project_id, args.location)
-    if args.command == 'get_product':
+    elif args.command == 'get_product':
         get_product(args.project_id, args.location, args.product_id)
-    if args.command == 'update_product_labels':
+    elif args.command == 'update_product_labels':
         update_product_labels(
             args.project_id, args.location, args.product_id,
             args.key, args.value)
-    if args.command == 'delete_product':
+    elif args.command == 'delete_product':
         delete_product(args.project_id, args.location, args.product_id)

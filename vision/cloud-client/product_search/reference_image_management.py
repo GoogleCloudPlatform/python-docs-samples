@@ -180,14 +180,14 @@ if __name__ == '__main__':
         create_reference_image(
             args.project_id, args.location, args.product_id,
             args.reference_image_id, args.gcs_uri)
-    if args.command == 'list_reference_images':
+    elif args.command == 'list_reference_images':
         list_reference_images(
             args.project_id, args.location, args.product_id)
-    if args.command == 'get_reference_image':
+    elif args.command == 'get_reference_image':
         get_reference_image(
             args.project_id, args.location, args.product_id,
             args.reference_image_id)
-    if args.command == 'delete_reference_image':
+    elif args.command == 'delete_reference_image':
         delete_reference_image(
             args.project_id, args.location, args.product_id,
             args.reference_image_id)
