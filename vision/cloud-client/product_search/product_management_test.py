@@ -13,9 +13,10 @@
 # limitations under the License.
 
 import os
+
 from product_management import (
-    create_product, list_products, get_product, update_product_labels,
-    delete_product)
+    create_product, delete_product, get_product, list_products,
+    update_product_labels)
 
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
@@ -32,7 +33,8 @@ def test_create_product(capsys):
     out, _ = capsys.readouterr()
     assert PRODUCT_ID not in out
 
-    create_product(PROJECT_ID, LOCATION, PRODUCT_ID,
+    create_product(
+        PROJECT_ID, LOCATION, PRODUCT_ID,
         PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY)
     list_products(PROJECT_ID, LOCATION)
     out, _ = capsys.readouterr()
@@ -42,7 +44,8 @@ def test_create_product(capsys):
 
 
 def test_delete_product(capsys):
-    create_product(PROJECT_ID, LOCATION, PRODUCT_ID,
+    create_product(
+        PROJECT_ID, LOCATION, PRODUCT_ID,
         PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY)
 
     list_products(PROJECT_ID, LOCATION)
@@ -57,7 +60,8 @@ def test_delete_product(capsys):
 
 
 def test_update_product_labels(capsys):
-    create_product(PROJECT_ID, LOCATION, PRODUCT_ID,
+    create_product(
+        PROJECT_ID, LOCATION, PRODUCT_ID,
         PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY)
 
     get_product(PROJECT_ID, LOCATION, PRODUCT_ID)

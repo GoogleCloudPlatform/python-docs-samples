@@ -23,7 +23,6 @@ https://cloud.google.com/vision/product-search/docs/
 
 # [START product_search_import]
 import argparse
-import os
 
 from google.cloud import vision_v1p3beta1 as vision
 # [END product_search_import]
@@ -31,8 +30,8 @@ from google.cloud import vision_v1p3beta1 as vision
 
 # [START product_search_create_product]
 def create_product(
-    project_id, location, product_id, product_display_name,
-    product_category):
+        project_id, location, product_id, product_display_name,
+        product_category):
     """Create one product.
     Args:
         project_id: Id of the project.
