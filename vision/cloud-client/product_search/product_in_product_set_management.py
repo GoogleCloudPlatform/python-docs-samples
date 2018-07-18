@@ -155,4 +155,5 @@ if __name__ == '__main__':
             args.project_id, args.location, args.product_set_id)
     if args.command == 'remove_product_from_product_set':
         remove_product_from_product_set(
-            args.project_id, args.ocation, args.product_id, args.product_set_id)
+            args.project_id, args.location, args.product_id,
+            args.product_set_id)
