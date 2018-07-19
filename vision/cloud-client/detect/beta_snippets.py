@@ -51,10 +51,10 @@ def localize_objects(path):
         image=image).localized_object_annotations
 
     print('Number of objects found: {}'.format(len(objects)))
-    for object in objects:
-        print('\n{} (confidence: {})'.format(object.name, object.score))
+    for object_ in objects:
+        print('\n{} (confidence: {})'.format(object_.name, object_.score))
         print('Normalized bounding polygon vertices: ')
-        for vertex in object.bounding_poly.normalized_vertices:
+        for vertex in object_.bounding_poly.normalized_vertices:
             print(' - ({}, {})'.format(vertex.x, vertex.y))
 # [END vision_localize_objects]
 
@@ -76,10 +76,10 @@ def localize_objects_uri(uri):
         image=image).localized_object_annotations
 
     print('Number of objects found: {}'.format(len(objects)))
-    for object in objects:
-        print('\n{} (confidence: {})'.format(object.name, object.score))
+    for object_ in objects:
+        print('\n{} (confidence: {})'.format(object_.name, object_.score))
         print('Normalized bounding polygon vertices: ')
-        for vertex in object.bounding_poly.normalized_vertices:
+        for vertex in object_.bounding_poly.normalized_vertices:
             print(' - ({}, {})'.format(vertex.x, vertex.y))
 # [END vision_localize_objects_uri]
 
