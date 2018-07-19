@@ -157,6 +157,7 @@ def listen_print_loop(responses):
 
 
 def main():
+    print("Listening...")
     # [START speech_transcribe_diarization_streaming]
 
     # See http://g.co/cloud/speech/docs/languages
@@ -178,7 +179,7 @@ def main():
     streaming_config = types.StreamingRecognitionConfig(
         config=config,
         interim_results=True)
-    # [START speech_transcribe_diarization_streaming]
+    
     
     with MicrophoneStream(RATE, CHUNK) as stream:
         audio_generator = stream.generator()
@@ -186,8 +187,10 @@ def main():
                     for content in audio_generator)
 
         responses = client.streaming_recognize(streaming_config, requests)
-
+  
         listen_print_loop(responses)
+    # [START speech_transcribe_diarization_streaming]
+
 
 if __name__ == '__main__':
     main()
