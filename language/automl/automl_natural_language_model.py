@@ -54,27 +54,8 @@ def create_model(project_id, compute_region, dataset_id, model_name):
 
     # Create a model with the model metadata in the region.
     response = client.create_model(project_location, my_model)
-
     print("Training operation name: {}".format(response.operation.name))
     print("Training started...")
-
-    # synchronous check of operation status.
-    model = response.result()
-
-    # Retrieve deployment state.
-    if model.deployment_state == enums.Model.DeploymentState.DEPLOYED:
-        deployment_state = "deployed"
-    else:
-        deployment_state = "undeployed"
-
-    # Display the model information.
-    print("Model name: {}".format(model.name))
-    print("Model id: {}".format(model.name.split("/")[-1]))
-    print("Model display name: {}".format(model.display_name))
-    print("Model create time:")
-    print("\tseconds: {}".format(model.create_time.seconds))
-    print("\tnanos: {}".format(model.create_time.nanos))
-    print("Model deployment state: {}".format(deployment_state))
 
 
 # [END automl_natural_language_create_model]
@@ -91,7 +72,9 @@ def get_operation_status(operation_full_id):
     client = automl.AutoMlClient()
 
     # Get the latest state of a long-running operation.
-    response = client._operations_client.get_operation(operation_full_id)
+    response = client.transport._operations_client.get_operation(
+        operation_full_id
+    )
 
     print("Operation status: {}".format(response))
 
