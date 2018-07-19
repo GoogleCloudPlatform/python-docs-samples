@@ -14,8 +14,9 @@
 
 import os
 
-from product_management import create_product, delete_product
 import pytest
+
+from product_management import create_product, delete_product
 from reference_image_management import (
     create_reference_image, delete_reference_image, list_reference_images)
 

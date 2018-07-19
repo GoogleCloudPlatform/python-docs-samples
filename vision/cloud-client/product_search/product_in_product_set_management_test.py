@@ -14,13 +14,14 @@
 
 import os
 
+import pytest
+
 from product_in_product_set_management import (
     add_product_to_product_set, list_products_in_product_set,
     remove_product_from_product_set)
 from product_management import create_product, delete_product
 from product_set_management import (
     create_product_set, delete_product_set)
-import pytest
 
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')

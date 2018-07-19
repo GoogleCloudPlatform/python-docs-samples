@@ -14,10 +14,11 @@
 
 import os
 
+import pytest
+
 from product_management import (
     create_product, delete_product, get_product, list_products,
     update_product_labels)
-import pytest
 
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
