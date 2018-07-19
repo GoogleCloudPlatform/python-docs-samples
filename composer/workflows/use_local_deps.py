@@ -20,7 +20,7 @@ import airflow
 from airflow.operators import bash_operator
 
 # [START composer_dag_local_deps]
-from .dependencies import coin_module
+from dependencies import coin_module
 # [END composer_dag_local_deps]
 
 default_args = {
