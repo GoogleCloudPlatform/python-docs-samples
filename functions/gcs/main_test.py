@@ -11,11 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import mock
+
 import main
-
-
-class Context(object):
-        pass
 
 
 class TestGCFPyGCSSample(object):
@@ -27,7 +25,7 @@ class TestGCFPyGCSSample(object):
             'timeCreated': '0',
             'updated': '0'
         }
-        context = Context()
+        context = mock.MagicMock()
         context.event_id = 'some-id'
         context.event_type = 'gcs-event'
 

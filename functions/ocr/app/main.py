@@ -36,23 +36,23 @@ config = json.loads(data)
 
 # [START functions_ocr_detect]
 def detect_text(bucket, filename):
-    print(f'Looking for text in image {filename}')
+    print('Looking for text in image {}'.format(filename))
 
     futures = []
 
     text_detection_response = vision_client.text_detection({
-        'source': {'image_uri': f'gs://{bucket}/{filename}'}
+        'source': {'image_uri': 'gs://{}/{}'.format(bucket, filename)}
     })
     annotations = text_detection_response.text_annotations
     if len(annotations) > 0:
         text = annotations[0].description
     else:
         text = ''
-    print(f'Extracted text {text} from image ({len(text)} chars).')
+    print('Extracted text {} from image ({} chars).'.format(text, len(text)))
 
     detect_language_response = translate_client.detect_language(text)
     src_lang = detect_language_response['language']
-    print(f'Detected language {src_lang} for text {text}.')
+    print('Detected language {} for text {}.'.format(src_lang, text))
 
     # Submit a message to the bus for each target language
     for target_lang in config.get('TO_LANG', []):
@@ -78,8 +78,8 @@ def detect_text(bucket, filename):
 def validate_message(message, param):
     var = message.get(param)
     if not var:
-        raise ValueError(f'{param} is not provided. Make sure you have \
-                           property {param} in the request')
+        raise ValueError('{} is not provided. Make sure you have \
+                          property {} in the request'.format(param, param))
     return var
 # [END message_validatation_helper]
 
@@ -99,7 +99,7 @@ def process_image(file, context):
 
     detect_text(bucket, name)
 
-    print(f'File {file["name"]} processed.')
+    print('File {} processed.'.format(file['name']))
 # [END functions_ocr_process]
 
 
@@ -116,7 +116,7 @@ def translate_text(event, context):
     target_lang = validate_message(message, 'target_lang')
     src_lang = validate_message(message, 'src_lang')
 
-    print(f'Translating text into {target_lang}.')
+    print('Translating text into {}.'.format(target_lang))
     translated_text = translate_client.translate(text,
                                                  target_language=target_lang,
                                                  source_language=src_lang)
@@ -145,16 +145,17 @@ def save_result(event, context):
     filename = validate_message(message, 'filename')
     lang = validate_message(message, 'lang')
 
-    print(f'Received request to save file {filename}.')
+    print('Received request to save file {}.'.format(filename))
 
     bucket_name = config['RESULT_BUCKET']
-    result_filename = f'{filename}_{lang}.txt'
+    result_filename = '{}_{}.txt'.format(filename, lang)
     bucket = storage_client.get_bucket(bucket_name)
     blob = bucket.blob(result_filename)
 
-    print(f'Saving result to {result_filename} in bucket {bucket_name}.')
+    print('Saving result to {} in bucket {}.'.format(result_filename,
+                                                     bucket_name))
 
     blob.upload_from_string(text)
 
-    print(f'File saved.')
+    print('File saved.')
 # [END functions_ocr_save]

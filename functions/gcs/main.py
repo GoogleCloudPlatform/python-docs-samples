@@ -11,6 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 # [START functions_helloworld_storage_generic]
 def hello_gcs_generic(data, context):
     """Background Cloud Function to be triggered by Cloud Storage.
@@ -23,11 +24,11 @@ def hello_gcs_generic(data, context):
         None; the output is written to Stackdriver Logging
     """
 
-    print(f'Event ID: {context.event_id}')
-    print(f'Event type: {context.event_type}')
-    print(f'Bucket: {data["bucket"]}')
-    print(f'File: {data["name"]}')
-    print(f'Metageneration: {data["metageneration"]}')
-    print(f'Created: {data["timeCreated"]}')
-    print(f'Updated: {data["updated"]}')
+    print('Event ID: {}'.format(context.event_id))
+    print('Event type: {}'.format(context.event_type))
+    print('Bucket: {}'.format(data['bucket']))
+    print('File: {}'.format(data['name']))
+    print('Metageneration: {}'.format(data['metageneration']))
+    print('Created: {}'.format(data['timeCreated']))
+    print('Updated: {}'.format(data['updated']))
 # [END functions_helloworld_storage_generic]

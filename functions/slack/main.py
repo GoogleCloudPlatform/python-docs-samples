@@ -42,7 +42,7 @@ def format_slack_message(query, response):
 
     message = {
         'response_type': 'in_channel',
-        'text': f'Query: {query}',
+        'text': 'Query: {}'.format(query),
         'attachments': []
     }
 
@@ -57,7 +57,8 @@ def format_slack_message(query, response):
 
         attachment['color'] = '#3367d6'
         if name and description:
-            attachment['title'] = f'{entity["name"]}: {entity["description"]}'
+            attachment['title'] = '{}: {}'.format(entity["name"],
+                                                  entity["description"])
         elif name:
             attachment['title'] = name
         if url:
@@ -76,25 +77,19 @@ def format_slack_message(query, response):
 
 # [START functions_slack_request]
 def make_search_request(query):
-    try:
-        req = kgsearch.entities().search(query=query, limit=1)
-        res = req.execute()
-        print(res)
-        return format_slack_message(query, res)
-    except apiclient.errors.Error as err:
-        raise ValueError(str(err))
+    req = kgsearch.entities().search(query=query, limit=1)
+    res = req.execute()
+    print(res)
+    return format_slack_message(query, res)
 # [END functions_slack_request]
 
 
 # [START functions_slack_search]
 def kg_search(request):
     if request.method != 'POST':
-        return 'Only POST requests are accepted', 400
-    try:
-        verify_web_hook(request.form)
-        kg_search_response = make_search_request(request.form['text'])
-        return jsonify(kg_search_response)
-    except ValueError as err:
-        print(err)
-        return "An error has occurred.", 500
+        return 'Only POST requests are accepted', 405
+
+    verify_web_hook(request.form)
+    kg_search_response = make_search_request(request.form['text'])
+    return jsonify(kg_search_response)
 # [END functions_slack_search]
