@@ -1,0 +1,2 @@
+google-api-python-client==1.7.3
+flask==1.0.2
