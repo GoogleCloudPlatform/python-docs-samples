@@ -19,7 +19,9 @@ import datetime
 import airflow
 from airflow.operators import bash_operator
 
+# [START composer_dag_local_deps]
 from .dependencies import coin_package
+# [END composer_dag_local_deps]
 
 default_args = {
     'start_date':
