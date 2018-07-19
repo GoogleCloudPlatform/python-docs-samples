@@ -1,1 +1,3 @@
-https://dist.apache.org/repos/dist/dev/incubator/airflow/1.10.0beta1/apache-airflow-1.10.0b1+incubating.tar.gz#egg=apache-airflow[gcp_api]
+https://dist.apache.org/repos/dist/dev/incubator/airflow/1.10.0rc2/apache-airflow-1.10.0rc2+incubating-bin.tar.gz#egg=apache-airflow[gcp_api]
+scipy==1.1.0
+numpy==1.14.2
