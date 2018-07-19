@@ -20,7 +20,7 @@ import airflow
 from airflow.operators import bash_operator
 
 # [START composer_dag_local_deps]
-from .dependencies import coin_package
+from .dependencies import coin_module
 # [END composer_dag_local_deps]
 
 default_args = {
@@ -33,5 +33,5 @@ default_args = {
 with airflow.DAG('dependencies_dag', default_args=default_args) as dag:
     t1 = bash_operator.BashOperator(
         task_id='print_coin_result',
-        bash_command='echo "{0}"'.format(coin_package.flip_coin()),
+        bash_command='echo "{0}"'.format(coin_module.flip_coin()),
         dag=dag)
