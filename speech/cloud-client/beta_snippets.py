@@ -167,7 +167,7 @@ def transcribe_file_with_diarization(speech_file):
     words_info = result.alternatives[0].words
     pieces = ['%s (%s)' % (word_info.word, word_info.speaker_tag)
               for word_info in words_info]
-    print ' '.join(pieces)
+    print(' '.join(pieces))
     # [END speech_transcribe_diarization]
 
 
