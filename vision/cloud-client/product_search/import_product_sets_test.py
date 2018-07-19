@@ -91,4 +91,3 @@ def test_import_product_sets(capsys, teardown):
     list_reference_images(PROJECT_ID, LOCATION, PRODUCT_ID_2)
     out, _ = capsys.readouterr()
     assert IMAGE_URI_2 in out
-
