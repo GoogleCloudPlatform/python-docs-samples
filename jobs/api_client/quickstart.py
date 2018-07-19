@@ -15,15 +15,36 @@
 # limitations under the License.
 
 # [START quickstart]
-from googleapiclient.discovery import build
+# from googleapiclient.discovery import build
 from googleapiclient.errors import Error
 
-client_service = build('jobs', 'v2')
+# client_service = build('jobs', 'v2')
 
+import pprint
+import json
+import httplib2
+
+from apiclient.discovery import build_from_document
+from apiclient.http import build_http
+from oauth2client.service_account import ServiceAccountCredentials
+import os
+
+scopes = ['https://www.googleapis.com/auth/jobs']
+credential_path = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+credentials = ServiceAccountCredentials.from_json_keyfile_name(
+    credential_path, scopes)
+
+http = httplib2.Http(".cache", disable_ssl_certificate_validation=True)
+http = credentials.authorize(http=build_http())
+content = open("/usr/local/google/home/xinyunh/discovery/talent_public_discovery_v3_distrib.json",'r').read()
+discovery = json.loads(content)
+
+client_service = build_from_document(discovery, 'talent', 'v3', http=http)
 
 def run_sample():
     try:
-        list_companies_response = client_service.companies().list().execute()
+        project_id = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
+        list_companies_response = client_service.projects().companies().list(parent = project_id).execute()
         print('Request Id: %s' %
               list_companies_response.get('metadata').get('requestId'))
         print('Companies:')
