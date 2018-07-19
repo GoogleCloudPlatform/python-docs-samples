@@ -25,7 +25,7 @@ using pip:
     pip install pyaudio
 
 Example usage:
-    python transcribe_streaming_mic.py
+    python beta_streaming_mic.py
 """
 
 from __future__ import division
@@ -159,6 +159,7 @@ def listen_print_loop(responses):
 def main():
     print("Listening...")
     # [START speech_transcribe_diarization_streaming]
+    # [START speech_transcribe_multilanguage_streaming]
 
     # See http://g.co/cloud/speech/docs/languages
     # for a list of supported languages.
@@ -189,8 +190,8 @@ def main():
         responses = client.streaming_recognize(streaming_config, requests)
   
         listen_print_loop(responses)
-    # [START speech_transcribe_diarization_streaming]
-
+    # [END speech_transcribe_diarization_streaming]
+    # [END speech_transcribe_multilanguage_streaming]
 
 if __name__ == '__main__':
     main()
