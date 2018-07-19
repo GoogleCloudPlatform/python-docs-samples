@@ -51,10 +51,10 @@ def test_transcribe_file_with_auto_punctuation(capsys):
 
 def test_transcribe_diarization(capsys):
     transcribe_file_with_diarization(
-        os.path.join(RESOURCES, 'Google_Gnome.wav'))
+        os.path.join(RESOURCES, 'commercial_mono.wav'))
     out, err = capsys.readouterr()
 
-    assert 'OK Google stream stranger things from Netflix to my TV' in out
+    assert "I'm (1) here (1) hi (2)" in out
 
 
 def test_transcribe_multichannel_file(capsys):

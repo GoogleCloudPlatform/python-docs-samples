@@ -156,7 +156,6 @@ def transcribe_file_with_diarization(speech_file):
 
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=16000,
         language_code='en-US',
         enable_speaker_diarization=True,
         diarization_speaker_count=2)
@@ -164,13 +163,11 @@ def transcribe_file_with_diarization(speech_file):
     print('Waiting for operation to complete...')
     response = client.recognize(config, audio)
 
-    for i, result in enumerate(response.results):
-        alternative = result.alternatives[0]
-        print('-' * 20)
-        print('First alternative of result {}: {}'
-              .format(i, alternative.transcript))
-        print('Speaker Tag for the first word: {}'
-              .format(alternative.words[0].speaker_tag))
+    result = response.results[-1]
+    words_info = result.alternatives[0].words
+    pieces = ['%s (%s)' % (word_info.word, word_info.speaker_tag)
+              for word_info in words_info]
+    print ' '.join(pieces)
     # [END speech_transcribe_diarization]
 
 

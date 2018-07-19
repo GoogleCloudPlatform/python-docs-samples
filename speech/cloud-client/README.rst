@@ -221,7 +221,7 @@ To run this sample:
 
     $ python beta_snippets.py
 
-    usage: beta_snippets.py [-h] command path first second
+    usage: beta_snippets.py [-h] command path [first] [second]
 
     Google Cloud Speech API sample that demonstrates enhanced models
     and recognition metadata.
