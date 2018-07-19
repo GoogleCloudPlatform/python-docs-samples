@@ -13,11 +13,11 @@
 # limitations under the License.
 
 
-def test_local_dependencies_import():
+def test_dag_import():
     """Test that the DAG file can be successfully imported.
 
     This tests that the DAG can be parsed, but does not run it in an Airflow
     environment. This is a recommended sanity check by the official Airflow
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
-    from . import local_dependencies # noqa
+    from . import use_local_deps # noqa
