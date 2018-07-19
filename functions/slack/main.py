@@ -68,7 +68,7 @@ def format_slack_message(query, response):
         if image_url:
             attachment['image_url'] = image_url
     else:
-        attachment['text']: 'No results match your query.'
+        attachment['text'] = 'No results match your query.'
     message['attachments'].append(attachment)
 
     return message
