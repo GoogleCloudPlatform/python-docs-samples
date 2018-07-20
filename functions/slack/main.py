@@ -79,7 +79,6 @@ def format_slack_message(query, response):
 def make_search_request(query):
     req = kgsearch.entities().search(query=query, limit=1)
     res = req.execute()
-    print(res)
     return format_slack_message(query, res)
 # [END functions_slack_request]
 

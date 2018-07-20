@@ -76,7 +76,9 @@ class TestGCFPySlackSample(object):
                 'token': config['SLACK_TOKEN'],
                 'text': 'lion'
             }
-            response = main.kg_search(request)
+
+            with mock.patch('main.jsonify', side_effect = json.dumps):
+                response = main.kg_search(request)
 
         assert 'lion' in response
         assert 'color' in response
