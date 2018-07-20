@@ -88,14 +88,14 @@ def hello_pubsub(data, context):
 
 
 # [START functions_helloworld_storage]
-def hello_gcs(event, context):
+def hello_gcs(data, context):
     """Background Cloud Function to be triggered by Cloud Storage.
     Args:
-         event (dict): The dictionary with data specific to this type of event.
+         data (dict): The dictionary with data specific to this type of event.
          context (google.cloud.functions.Context): The Cloud Functions
          event context.
     """
-    print("File: {}.".format(event['objectId']))
+    print("File: {}.".format(data['objectId']))
 # [END functions_helloworld_storage]
 
 
