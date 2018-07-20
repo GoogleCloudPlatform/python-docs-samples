@@ -18,7 +18,7 @@
 
 Example usage:
     python audio_profile.py --text "hello" --effects_profile_id
-        "telephony-class-application"
+        "telephony-class-application" --output "output.mp3"
 """
 
 import argparse
