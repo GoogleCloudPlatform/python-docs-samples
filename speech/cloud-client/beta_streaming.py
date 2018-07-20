@@ -21,8 +21,8 @@ Example usage:
 """
 
 import argparse
-import io
 from collections import deque
+import io
 
 # [START speech_transcribe_diarization_streaming]
 def transcribe_streaming_with_speaker_diarization(stream_file):
@@ -70,6 +70,7 @@ def transcribe_streaming_with_speaker_diarization(stream_file):
 
         print(final_transcript)
 # [END speech_transcribe_diarization_streaming]
+
 
 
 if __name__ == '__main__':
