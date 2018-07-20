@@ -132,20 +132,9 @@ def listen_print_loop(responses):
             num_chars_printed = len(transcript)
 
         else:
-            words = result.alternatives[0].words
             language_code = result.language_code
-            current_speaker = words[0].speaker_tag
-            final_transcript = 'Detected language: {}\n'.format(language_code)
-            final_transcript += 'Speaker {}:'.format(str(current_speaker))
-
-            for word in words:
-                if word.speaker_tag is not current_speaker:
-                    current_speaker = word.speaker_tag
-                    final_transcript += '\nspeaker {}: '.format(str(current_speaker))
-
-                final_transcript += ' ' + word.word
-
-            print(final_transcript + overwrite_chars)
+            print('Detected language: {}\n'.format(language_code))
+            print(transcript + overwrite_chars)
 
             # Exit recognition if any of the transcribed phrases could be
             # one of our keywords.
@@ -158,7 +147,7 @@ def listen_print_loop(responses):
 
 def main():
     print("Listening...")
-    # [START speech_transcribe_diarization_streaming]
+
     # [START speech_transcribe_multilanguage_streaming]
 
     # See http://g.co/cloud/speech/docs/languages
@@ -175,23 +164,21 @@ def main():
         sample_rate_hertz=RATE,
         language_code=language_code,
         alternative_language_codes=alternative_language_codes,
-        enable_speaker_diarization=True,
-        diarization_speaker_count=2)
+        model='command_and_search')
     streaming_config = types.StreamingRecognitionConfig(
         config=config,
         interim_results=True)
-    
-    
+
     with MicrophoneStream(RATE, CHUNK) as stream:
         audio_generator = stream.generator()
         requests = (types.StreamingRecognizeRequest(audio_content=content)
                     for content in audio_generator)
 
         responses = client.streaming_recognize(streaming_config, requests)
-  
+
         listen_print_loop(responses)
-    # [END speech_transcribe_diarization_streaming]
     # [END speech_transcribe_multilanguage_streaming]
 
 if __name__ == '__main__':
     main()
+
