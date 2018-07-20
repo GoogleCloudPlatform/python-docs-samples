@@ -170,16 +170,17 @@ def transcribe_file_with_diarization():
     words_info = result.alternatives[0].words
 
     # Separating the words by who said what:
-    speakers_words = []
+    speakers = []
+    words = []
     for word_info in words_info:
-        if speakers_words and speakers_words[-1][0] == word_info.speaker_tag:
-            speakers_words[-1][1].append(word_info.word)
-        else:
-            speakers_words.append((word_info.speaker_tag, [word_info.word, ]))
+        if (not speakers) or speakers[-1] != word_info.speaker_tag:
+            speakers.append(word_info.speaker_tag)
+            words.append([])
+        words[-1].append(word_info.word)
 
     # Printing the output based on who said what:
-    for speaker_tag, words in speakers_words:
-        print('Speaker #{}: {}'.format(speaker_tag, ' '.join(words)))
+    for speaker, words in zip(speakers, words):
+        print('Speaker #{}: {}'.format(speaker, ' '.join(words)))
     # [END speech_transcribe_diarization]
 
 
