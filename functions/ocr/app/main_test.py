@@ -14,7 +14,6 @@
 import base64
 import concurrent.futures
 import json
-import os
 
 import mock
 
@@ -30,9 +29,9 @@ class TestGCFPyOCRSample():
         mock_annotation = mock.MagicMock()
         mock_annotation.description = 'sample text'
         mock_annotations = mock.MagicMock()
-        mock_annotations.text_annotations = [ mock_annotation ]
+        mock_annotations.text_annotations = [mock_annotation]
         mock_vision_client.text_detection.return_value = mock_annotations
-        
+
         mock_translate_client.detect_language.return_value = {'language': 'en'}
 
         mock_future = concurrent.futures.Future()
