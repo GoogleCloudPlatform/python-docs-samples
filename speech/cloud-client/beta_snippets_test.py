@@ -50,7 +50,7 @@ def test_transcribe_diarization(capsys):
     transcribe_file_with_diarization()
     out, err = capsys.readouterr()
 
-    assert "Speaker #1: I'm here" in out
+    assert "word: 'here', speaker_tag: 1" in out
 
 
 def test_transcribe_multichannel_file(capsys):

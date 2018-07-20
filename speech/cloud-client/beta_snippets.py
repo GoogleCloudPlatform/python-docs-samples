@@ -161,26 +161,16 @@ def transcribe_file_with_diarization():
     response = client.recognize(config, audio)
 
     # The transcript within each result is separate and sequential per result.
-    # However, the words list within an alternative (for whatever reason)
-    # includes all the words from all the results thus far. Thus, to get all
-    # the words with speaker tags, you only have to take the words list from
-    # the last result:
+    # However, the words list within an alternative includes all the words
+    # from all the results thus far. Thus, to get all the words with speaker
+    # tags, you only have to take the words list from the last result:
     result = response.results[-1]
 
     words_info = result.alternatives[0].words
 
-    # Separating the words by who said what:
-    speakers = []
-    words = []
+    # Printing out the output:
     for word_info in words_info:
-        if (not speakers) or speakers[-1] != word_info.speaker_tag:
-            speakers.append(word_info.speaker_tag)
-            words.append([])
-        words[-1].append(word_info.word)
-
-    # Printing the output based on who said what:
-    for speaker, words in zip(speakers, words):
-        print('Speaker #{}: {}'.format(speaker, ' '.join(words)))
+        print("word: '{}', speaker_tag: {}".format(word_info.word, word_info.speaker_tag))
     # [END speech_transcribe_diarization]
 
 
