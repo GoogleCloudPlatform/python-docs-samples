@@ -20,4 +20,4 @@ def test_dag_import():
     environment. This is a recommended sanity check by the official Airflow
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
-    from . import kubernetes-example #noqa
+    from . import kubernetes_pod_operator_sample  # noqa
