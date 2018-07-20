@@ -157,15 +157,14 @@ def hello_error_1(request):
 
 def hello_error_2(request):
     # [START functions_helloworld_error]
-    # WILL NOT be reported to Stackdriver Error Reporting, but will show up
-    # in logs
+    # This WILL NOT be reported to Stackdriver Error Reporting,
+    # but will show up in logs
     print(RuntimeError('I failed you (print to stdout)'))
     logging.warn(RuntimeError('I failed you (logging.warn)'))
     logging.error(RuntimeError('I failed you (logging.error)'))
     sys.stderr.write('I failed you (sys.stderr.write)\n')
 
-    # WILL NOT be reported to Stackdriver Error Reporting, but will show up
-    # in request logs (as a 500 response)
+    # This WILL be reported to Stackdriver Error Reporting
     from flask import abort
     return abort(500)
     # [END functions_helloworld_error]
