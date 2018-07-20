@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,24 +21,21 @@ For more information, see the tutorial page at
 https://cloud.google.com/natural-language/automl/docs/
 """
 
-# [START automl_natural_language_import]
 import argparse
 import os
 
-from google.cloud import automl_v1beta1 as automl
 
-# [END automl_natural_language_import]
-
-
-# [START automl_natural_language_predict]
 def predict(project_id, compute_region, model_id, file_path):
-    """Classify the content.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        model_id: Id of the model which will be used for text classification.
-        file_path: Local text file path of the content to be classified.
-    """
+    """Classify the content."""
+    # [START automl_natural_language_predict]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # model_id = 'MODEL_ID_HERE'
+    # file_path = '/local/path/to/file'
+
+    from google.cloud import automl_v1beta1 as automl
+
     automl_client = automl.AutoMlClient()
 
     # Create client for prediction service.
@@ -65,8 +62,7 @@ def predict(project_id, compute_region, model_id, file_path):
         print("Predicted class name: {}".format(result.display_name))
         print("Predicted class score: {}".format(result.classification.score))
 
-
-# [END automl_natural_language_predict]
+    # [END automl_natural_language_predict]
 
 
 if __name__ == "__main__":

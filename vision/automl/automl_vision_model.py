@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,28 +21,24 @@ For more information, the documentation at
 https://cloud.google.com/vision/automl/docs.
 """
 
-# [START automl_vision_tutorial_import]
 import argparse
 import os
 
-from google.cloud import automl_v1beta1 as automl
-from google.cloud.automl_v1beta1 import enums
 
-# [END automl_vision_tutorial_import]
-
-
-# [START automl_vision_create_model]
 def create_model(
-    project_id, compute_region, dataset_id, model_name, train_budget=0
+    project_id, compute_region, dataset_id, model_name, train_budget=24
 ):
-    """Create a model.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        dataset_id: Id of the dataset.
-        model_name: Name of the model.
-        train_budget: Budget for training the model.
-    """
+    """Create a model."""
+    # [START automl_vision_create_model]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # dataset_id = 'DATASET_ID_HERE'
+    # model_name = 'MODEL_NAME_HERE'
+    # train_budget = integer amount for maximum cost of model
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # A resource that represents Google Cloud Platform location.
@@ -63,18 +59,18 @@ def create_model(
     print("Training operation name: {}".format(response.operation.name))
     print("Training started...")
 
+    # [END automl_vision_create_model]
 
-# [END automl_vision_create_model]
 
-
-# [START automl_vision_get_operation_status]
 def get_operation_status(operation_full_id):
-    """Get operation status.
-    Args:
-        operation_full_id: Full name of a operation.
-            For example, the name of your operation is
-            projects/<projectId>/locations/us-central1/operations/<operationId>.
-    """
+    """Get operation status."""
+    # [START automl_vision_get_operation_status]
+    # TODO(developer): Uncomment and set the following variables
+    # operation_full_id =
+    #   'projects/<projectId>/locations/<region>/operations/<operationId>'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # Get the latest state of a long-running operation.
@@ -84,18 +80,20 @@ def get_operation_status(operation_full_id):
 
     print("Operation status: {}".format(response))
 
+    # [END automl_vision_get_operation_status]
 
-# [END automl_vision_get_operation_status]
 
-
-# [START automl_vision_list_models]
 def list_models(project_id, compute_region, filter_):
-    """List all models.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        filter_: Filter expression.
-    """
+    """List all models."""
+    # [START automl_vision_list_models]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # filter_ = 'DATASET_ID_HERE'
+
+    from google.cloud import automl_v1beta1 as automl
+    from google.cloud.automl_v1beta1 import enums
+
     client = automl.AutoMlClient()
 
     # A resource that represents Google Cloud Platform location.
@@ -142,18 +140,20 @@ def list_models(project_id, compute_region, filter_):
         print("\tnanos: {}".format(model.create_time.nanos))
         print("Model deployment state: {}".format(deployment_state))
 
+    # [END automl_vision_list_models]
 
-# [END automl_vision_list_models]
 
-
-# [START automl_vision_get_model]
 def get_model(project_id, compute_region, model_id):
-    """Get model details.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        model_id: Id of the model.
-    """
+    """Get model details."""
+    # [START automl_vision_get_model]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # model_id = 'MODEL_ID_HERE'
+
+    from google.cloud import automl_v1beta1 as automl
+    from google.cloud.automl_v1beta1 import enums
+
     client = automl.AutoMlClient()
 
     # Get the full path of the model.
@@ -198,19 +198,20 @@ def get_model(project_id, compute_region, model_id):
     print("\tnanos: {}".format(model.create_time.nanos))
     print("Model deployment state: {}".format(deployment_state))
 
+    # [END automl_vision_get_model]
 
-# [END automl_vision_get_model]
 
-
-# [START automl_vision_list_model_evaluations]
 def list_model_evaluations(project_id, compute_region, model_id, filter_):
-    """List model evaluations.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        model_id: Id of the model.
-        filter_: Filter expression.
-    """
+    """List model evaluations."""
+    # [START automl_vision_list_model_evaluations]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # model_id = 'MODEL_ID_HERE'
+    # filter_ = 'filter expression here'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # Get the full path of the model.
@@ -223,21 +224,22 @@ def list_model_evaluations(project_id, compute_region, model_id, filter_):
     for element in response:
         print(element)
 
+    # [END automl_vision_list_model_evaluations]
 
-# [END automl_vision_list_model_evaluations]
 
-
-# [START automl_vision_get_model_evaluation]
 def get_model_evaluation(
     project_id, compute_region, model_id, model_evaluation_id
 ):
-    """Get model evaluation.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        model_id: Id of the model.
-        model_evaluation_id: Id of your model evaluation.
-    """
+    """Get model evaluation."""
+    # [START automl_vision_get_model_evaluation]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # model_id = 'MODEL_ID_HERE'
+    # model_evaluation_id = 'MODEL_EVALUATION_ID_HERE'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # Get the full path of the model evaluation.
@@ -250,19 +252,20 @@ def get_model_evaluation(
 
     print(response)
 
+    # [END automl_vision_get_model_evaluation]
 
-# [END automl_vision_get_model_evaluation]
 
-
-# [START automl_vision_display_evaluation]
 def display_evaluation(project_id, compute_region, model_id, filter_):
-    """Display evaluation.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        model_id: Id of the model.
-        filter_: Filter expression.
-    """
+    """Display evaluation."""
+    # [START automl_vision_display_evaluation]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # model_id = 'MODEL_ID_HERE'
+    # filter_ = 'filter expression here'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # Get the full path of the model.
@@ -324,18 +327,19 @@ def display_evaluation(project_id, compute_region, model_id, filter_):
                 )
             )
 
+    # [END automl_vision_display_evaluation]
 
-# [END automl_vision_display_evaluation]
 
-
-# [START automl_vision_delete_model]
 def delete_model(project_id, compute_region, model_id):
-    """Delete a model.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        model_id: Id of the model.
-    """
+    """Delete a model."""
+    # [START automl_vision_delete_model]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # model_id = 'MODEL_ID_HERE'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # Get the full path of the model.
@@ -347,8 +351,7 @@ def delete_model(project_id, compute_region, model_id):
     # synchronous check of operation status.
     print("Model deleted. {}".format(response.result()))
 
-
-# [END automl_vision_delete_model]
+    # [END automl_vision_delete_model]
 
 
 if __name__ == "__main__":

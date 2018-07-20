@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,16 +21,10 @@ For more information, see the documentation at
 https://cloud.google.com/translate/automl/docs
 """
 
-# [START automl_translation_import]
 import argparse
 import os
 
-from google.cloud import automl_v1beta1 as automl
 
-# [END automl_translation_import]
-
-
-# [START automl_translation_predict]
 def predict(
     project_id,
     compute_region,
@@ -38,17 +32,16 @@ def predict(
     file_path,
     translation_allow_fallback=False,
 ):
-    """Translate the content.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        model_id: Id of the model which translation needs to use.
-        file_path: Input file path of the content to be translated.
-        translation_allow_fallback: Use true if AutoML will fall-back
-            to use a Google translation model for translation requests
-            if the specified AutoML translation model cannot serve the request.
-            Use false to not use Google translation model.
-    """
+    """Translate the content."""
+    # [START automl_translation_predict]
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # model_id = 'MODEL_ID_HERE'
+    # file_path = '/local/path/to/file'
+    # translation_allow_fallback = True allows fallback to Google Translate
+
+    from google.cloud import automl_v1beta1 as automl
+
     automl_client = automl.AutoMlClient()
 
     # Create client for prediction service.
@@ -78,8 +71,7 @@ def predict(
 
     print(u"Translated content: {}".format(translated_content.content))
 
-
-# [END automl_translation_predict]
+    # [END automl_translation_predict]
 
 
 if __name__ == "__main__":

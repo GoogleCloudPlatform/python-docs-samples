@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,26 +20,23 @@ with the Google AutoML Translation API.
 For more information, see the documentation at
 https://cloud.google.com/translate/automl/docs
 """
-# [START automl_translation_import]
 
 import argparse
 import os
 
-from google.cloud import automl_v1beta1 as automl
 
-# [END automl_translation_import]
-
-
-# [START automl_translation_create_dataset]
 def create_dataset(project_id, compute_region, dataset_name, source, target):
-    """Create a dataset.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        dataset_name: Name of the dataset.
-        source: Source language code.
-        target: Target language code.
-    """
+    """Create a dataset."""
+    # [START automl_translation_create_dataset]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # dataset_name = 'DATASET_NAME_HERE'
+    # source = 'LANGUAGE_CODE_OF_SOURCE_LANGUAGE'
+    # target = 'LANGUAGE_CODE_OF_TARGET_LANGUAGE'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # A resource that represents Google Cloud Platform location.
@@ -78,18 +75,19 @@ def create_dataset(project_id, compute_region, dataset_name, source, target):
     print("\tseconds: {}".format(dataset.create_time.seconds))
     print("\tnanos: {}".format(dataset.create_time.nanos))
 
+    # [END automl_translation_create_dataset]
 
-# [END automl_translation_create_dataset]
 
-
-# [START automl_translation_list_datasets]
 def list_datasets(project_id, compute_region, filter_):
-    """List Datasets.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        filter_: Filter expression.
-    """
+    """List Datasets."""
+    # [START automl_translation_list_datasets]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # filter_ = 'filter expression here'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # A resource that represents Google Cloud Platform location.
@@ -119,18 +117,19 @@ def list_datasets(project_id, compute_region, filter_):
         print("\tseconds: {}".format(dataset.create_time.seconds))
         print("\tnanos: {}".format(dataset.create_time.nanos))
 
+    # [END automl_translation_list_datasets]
 
-# [END automl_translation_list_datasets]
 
-
-# [START automl_translation_get_dataset]
 def get_dataset(project_id, compute_region, dataset_id):
-    """Get the dataset.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        dataset_id: Id of the dataset.
-    """
+    """Get the dataset."""
+    # [START automl_translation_get_dataset]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # dataset_id = 'DATASET_ID_HERE'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset
@@ -160,20 +159,20 @@ def get_dataset(project_id, compute_region, dataset_id):
     print("\tseconds: {}".format(dataset.create_time.seconds))
     print("\tnanos: {}".format(dataset.create_time.nanos))
 
+    # [END automl_translation_get_dataset]
 
-# [END automl_translation_get_dataset]
 
-
-# [START automl_translation_import_data]
 def import_data(project_id, compute_region, dataset_id, path):
-    """Import sentence pairs to the dataset.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        dataset_id: Id of the dataset to which the
-            training data will be imported.
-        path: Path of the training data csv file.
-    """
+    """Import sentence pairs to the dataset."""
+    # [START automl_translation_import_data]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # dataset_id = 'DATASET_ID_HERE'
+    # path = 'gs://path/to/file.csv'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset.
@@ -192,18 +191,19 @@ def import_data(project_id, compute_region, dataset_id, path):
     # synchronous check of operation status
     print("Data imported. {}".format(response.result()))
 
+    # [END automl_translation_import_data]
 
-# [END automl_translation_import_data]
 
-
-# [START automl_translation_delete_dataset]
 def delete_dataset(project_id, compute_region, dataset_id):
-    """Delete a dataset.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        dataset_id: Id of the dataset.
-    """
+    """Delete a dataset."""
+    # [START automl_translation_delete_dataset]]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # dataset_id = 'DATASET_ID_HERE'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset.
@@ -217,8 +217,7 @@ def delete_dataset(project_id, compute_region, dataset_id):
     # synchronous check of operation status
     print("Dataset deleted. {}".format(response.result()))
 
-
-# [END automl_translation_delete_dataset]
+    # [END automl_translation_delete_dataset]
 
 
 if __name__ == "__main__":

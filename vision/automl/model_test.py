@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google, Inc
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ def test_model_create_status_delete(capsys):
     my_model = {
         "display_name": model_name,
         "dataset_id": "3946265060617537378",
-        "image_classification_model_metadata": {},
+        "image_classification_model_metadata": {"train_budget": 24},
     }
     response = client.create_model(project_location, my_model)
     operation_name = response.operation.name

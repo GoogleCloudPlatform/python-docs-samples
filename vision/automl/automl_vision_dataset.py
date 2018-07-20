@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,26 +21,21 @@ For more information, the documentation at
 https://cloud.google.com/vision/automl/docs.
 """
 
-# [START automl_vision_tutorial_import]
 import argparse
 import os
 
-from google.cloud import automl_v1beta1 as automl
 
-# [END automl_vision_tutorial_import]
-
-
-# [START automl_vision_create_dataset]
 def create_dataset(project_id, compute_region, dataset_name, multilabel=False):
-    """Create a dataset.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        dataset_name: Name of the dataset.
-        multilabel: Type of the classification problem.
-            False - MULTICLASS, True - MULTILABEL
-            Default is False.
-    """
+    """Create a dataset."""
+    # [START automl_vision_create_dataset]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # dataset_name = 'DATASET_NAME_HERE'
+    # multilabel = True for multilabel or False for multiclass
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # A resource that represents Google Cloud Platform location.
@@ -73,18 +68,19 @@ def create_dataset(project_id, compute_region, dataset_name, multilabel=False):
     print("\tseconds: {}".format(dataset.create_time.seconds))
     print("\tnanos: {}".format(dataset.create_time.nanos))
 
+    # [END automl_vision_create_dataset]
 
-# [END automl_vision_create_dataset]
 
-
-# [START automl_vision_list_datasets]
 def list_datasets(project_id, compute_region, filter_):
-    """List all datasets.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        filter: Filter expression.
-    """
+    """List all datasets."""
+    # [START automl_vision_list_datasets]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # filter_ = 'filter expression here'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # A resource that represents Google Cloud Platform location.
@@ -106,18 +102,19 @@ def list_datasets(project_id, compute_region, filter_):
         print("\tseconds: {}".format(dataset.create_time.seconds))
         print("\tnanos: {}".format(dataset.create_time.nanos))
 
+    # [END automl_vision_list_datasets]
 
-# [END automl_vision_list_datasets]
 
-
-# [START automl_vision_get_dataset]
 def get_dataset(project_id, compute_region, dataset_id):
-    """Get the dataset.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        dataset_id: Id of the dataset.
-    """
+    """Get the dataset."""
+    # [START automl_vision_get_dataset]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # dataset_id = 'DATASET_ID_HERE'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset.
@@ -139,21 +136,20 @@ def get_dataset(project_id, compute_region, dataset_id):
     print("\tseconds: {}".format(dataset.create_time.seconds))
     print("\tnanos: {}".format(dataset.create_time.nanos))
 
+    # [START automl_vision_get_dataset]
 
-# [START automl_vision_get_dataset]
 
-
-# [START automl_vision_import_data]
 def import_data(project_id, compute_region, dataset_id, path):
-    """Import labeled images.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        dataset_id: Id of the dataset to which the
-            training data will be imported.
-        path: Google Cloud Storage URIs.
-           Target files must be in AutoML vision CSV format.
-    """
+    """Import labeled images."""
+    # [START automl_vision_import_data]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # dataset_id = 'DATASET_ID_HERE'
+    # path = 'gs://path/to/file.csv'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset.
@@ -172,19 +168,20 @@ def import_data(project_id, compute_region, dataset_id, path):
     # synchronous check of operation status.
     print("Data imported. {}".format(response.result()))
 
+    # [END automl_vision_import_data]
 
-# [END automl_vision_import_data]
 
-
-# [START automl_vision_export_data]
 def export_data(project_id, compute_region, dataset_id, gcs_uri):
-    """Export a dataset to a Google Cloud Storage bucket.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        dataset_id: Id of the dataset to be exported.
-        gcs_uri: Destination URI (Google Cloud Storage)
-    """
+    """Export a dataset to a Google Cloud Storage bucket."""
+    # [START automl_vision_export_data]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # dataset_id = 'DATASET_ID_HERE'
+    # output_uri: 'gs://location/to/export/data'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset.
@@ -202,18 +199,19 @@ def export_data(project_id, compute_region, dataset_id, gcs_uri):
     # synchronous check of operation status.
     print("Data exported. {}".format(response.result()))
 
+    # [END automl_vision_export_data]
 
-# [END automl_vision_export_data]
 
-
-# [START automl_vision_delete_dataset]
 def delete_dataset(project_id, compute_region, dataset_id):
-    """Delete a dataset
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        dataset_id: Id of the dataset.
-    """
+    """Delete a dataset"""
+    # [START automl_vision_delete_dataset]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # dataset_id = 'DATASET_ID_HERE'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset.
@@ -227,8 +225,7 @@ def delete_dataset(project_id, compute_region, dataset_id):
     # synchronous check of operation status.
     print("Dataset deleted. {}".format(response.result()))
 
-
-# [END automl_visionl_delete_dataset]
+    # [END automl_visionl_delete_dataset]
 
 
 if __name__ == "__main__":

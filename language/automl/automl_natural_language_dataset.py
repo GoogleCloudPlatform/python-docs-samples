@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,26 +21,21 @@ For more information, see the tutorial page at
 https://cloud.google.com/natural-language/automl/docs/
 """
 
-# [START automl_natural_language_import]
 import argparse
 import os
 
-from google.cloud import automl_v1beta1 as automl
 
-# [END automl_natural_language_import]
-
-
-# [START automl_natural_language_create_dataset]
 def create_dataset(project_id, compute_region, dataset_name, multilabel=False):
-    """Create a dataset.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        dataset_name: Name of the dataset.
-        multilabel: Type of the classification problem.
-            False - MULTICLASS, True - MULTILABEL.
-            Default is False.
-    """
+    """Create a dataset."""
+    # [START automl_natural_language_create_dataset]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # dataset_name = 'DATASET_NAME_HERE'
+    # multilabel = True for multilabel or False for multiclass
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # A resource that represents Google Cloud Platform location.
@@ -74,18 +69,19 @@ def create_dataset(project_id, compute_region, dataset_name, multilabel=False):
     print("\tseconds: {}".format(dataset.create_time.seconds))
     print("\tnanos: {}".format(dataset.create_time.nanos))
 
+    # [END automl_natural_language_create_dataset]
 
-# [END automl_natural_language_create_dataset]
 
-
-# [START automl_natural_language_list_datasets]
 def list_datasets(project_id, compute_region, filter_):
-    """List all datasets.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        filter_: Filter expression.
-    """
+    """List all datasets."""
+    # [START automl_natural_language_list_datasets]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # filter_ = 'filter expression here'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # A resource that represents Google Cloud Platform location.
@@ -107,18 +103,19 @@ def list_datasets(project_id, compute_region, filter_):
         print("\tseconds: {}".format(dataset.create_time.seconds))
         print("\tnanos: {}".format(dataset.create_time.nanos))
 
+    # [END automl_natural_language_list_datasets]
 
-# [END automl_natural_language_list_datasets]
 
-
-# [START automl_natural_language_get_dataset]
 def get_dataset(project_id, compute_region, dataset_id):
-    """Get the dataset.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        dataset_id: Id of the dataset.
-    """
+    """Get the dataset."""
+    # [START automl_natural_language_get_dataset]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # dataset_id = 'DATASET_ID_HERE'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset
@@ -140,21 +137,20 @@ def get_dataset(project_id, compute_region, dataset_id):
     print("\tseconds: {}".format(dataset.create_time.seconds))
     print("\tnanos: {}".format(dataset.create_time.nanos))
 
+    # [END automl_natural_language_get_dataset]
 
-# [END automl_natural_language_get_dataset]
 
-
-# [START automl_natural_language_import_data]
 def import_data(project_id, compute_region, dataset_id, path):
-    """Import labeled items.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        dataset_id: ID of the dataset into which the training content are to
-                    be imported.
-        path: Google Cloud Storage URIs.
-              Target files must be in AutoML Natural Language CSV format.
-    """
+    """Import labelled items."""
+    # [START automl_natural_language_import_data]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # dataset_id = 'DATASET_ID_HERE'
+    # path = 'gs://path/to/file.csv'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset.
@@ -173,19 +169,20 @@ def import_data(project_id, compute_region, dataset_id, path):
     # synchronous check of operation status.
     print("Data imported. {}".format(response.result()))
 
+    # [END automl_natural_language_import_data]
 
-# [END automl_natural_language_import_data]
 
-
-# [START automl_natural_language_export_data]
 def export_data(project_id, compute_region, dataset_id, output_uri):
-    """Export a dataset to a Google Cloud Storage bucket.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        dataset_id: Id of the dataset to which will be exported.
-        output_uri: Google Cloud Storage URI for the export directory.
-    """
+    """Export a dataset to a Google Cloud Storage bucket."""
+    # [START automl_natural_language_export_data]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # dataset_id = 'DATASET_ID_HERE'
+    # output_uri: 'gs://location/to/export/data'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset.
@@ -203,18 +200,19 @@ def export_data(project_id, compute_region, dataset_id, output_uri):
     # synchronous check of operation status.
     print("Data exported. {}".format(response.result()))
 
+    # [END automl_natural_language_export_data]
 
-# [END automl_natural_language_export_data]
 
-
-# [START automl_natural_language_delete_dataset]
 def delete_dataset(project_id, compute_region, dataset_id):
-    """Delete a dataset.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        dataset_id: Id of the dataset.
-    """
+    """Delete a dataset."""
+    # [START automl_natural_language_delete_dataset]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # dataset_id = 'DATASET_ID_HERE'
+
+    from google.cloud import automl_v1beta1 as automl
+
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset.
@@ -228,8 +226,7 @@ def delete_dataset(project_id, compute_region, dataset_id):
     # synchronous check of operation status.
     print("Dataset deleted. {}".format(response.result()))
 
-
-# [END automl_natural_language_delete_dataset]
+    # [END automl_natural_language_delete_dataset]
 
 
 if __name__ == "__main__":

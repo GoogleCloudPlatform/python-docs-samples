@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,30 +21,24 @@ For more information, the documentation at
 https://cloud.google.com/vision/automl/docs.
 """
 
-# [START automl_vision_tutorial_import]
 import argparse
 import os
 
-from google.cloud import automl_v1beta1 as automl
 
-# [END automl_vision_tutorial_import]
-
-
-# [START automl_vision_predict]
 def predict(
     project_id, compute_region, model_id, file_path, score_threshold=""
 ):
-    """Make a prediction for an image.
-    Args:
-        project_id: Id of the project.
-        compute_region: Region name.
-        model_id: Id of the model which will be used for image classification.
-        file_path: File path of the input image.
-        score_threshold: A value from 0.0 to 1.0. When the model
-            makes predictions for an image, it will only produce
-            results that have at least this confidence score threshold.
-            The default is 0.5.
-    """
+    """Make a prediction for an image."""
+    # [START automl_vision_predict]
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # model_id = 'MODEL_ID_HERE'
+    # file_path = '/local/path/to/file'
+    # score_threshold = 'value from 0.0 to 0.5'
+
+    from google.cloud import automl_v1beta1 as automl
+
     automl_client = automl.AutoMlClient()
 
     # Get the full path of the model.
@@ -73,8 +67,7 @@ def predict(
         print("Predicted class name: {}".format(result.display_name))
         print("Predicted class score: {}".format(result.classification.score))
 
-
-# [END automl_vision_predict]
+    # [END automl_vision_predict]
 
 
 if __name__ == "__main__":
