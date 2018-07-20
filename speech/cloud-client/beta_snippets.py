@@ -160,11 +160,23 @@ def transcribe_file_with_diarization(speech_file):
     print('Waiting for operation to complete...')
     response = client.recognize(config, audio)
 
+    # response.results contains partial results with the last item
+    # containing the entire result:
     result = response.results[-1]
+
     words_info = result.alternatives[0].words
-    pieces = ['%s (%s)' % (word_info.word, word_info.speaker_tag)
-              for word_info in words_info]
-    print(' '.join(pieces))
+
+    # Separating the words by who said what:
+    speakers_words = []
+    for word_info in words_info:
+        if speakers_words and speakers_words[-1][0] == word_info.speaker_tag:
+            speakers_words[-1][1].append(word_info.word)
+        else:
+            speakers_words.append((word_info.speaker_tag, [word_info.word, ]))
+
+    # Printing the output based on who said what:
+    for speaker_tag, words in speakers_words:
+        print('Speaker #{}: {}'.format(speaker_tag, ' '.join(words)))
     # [END speech_transcribe_diarization]
 
 

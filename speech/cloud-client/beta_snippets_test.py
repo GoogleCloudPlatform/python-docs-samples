@@ -54,7 +54,7 @@ def test_transcribe_diarization(capsys):
         os.path.join(RESOURCES, 'commercial_mono.wav'))
     out, err = capsys.readouterr()
 
-    assert "I'm (1) here (1) hi (2)" in out
+    assert "Speaker #1: I'm here" in out
 
 
 def test_transcribe_multichannel_file(capsys):
