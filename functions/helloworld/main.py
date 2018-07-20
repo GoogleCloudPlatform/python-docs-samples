@@ -37,9 +37,8 @@ def hello_get(request):
 def hello_background(data, context):
     """Background Cloud Function.
     Args:
-         event (dict): The dictionary with data specific to the given event.
-         context (google.cloud.functions.Context): The Cloud Functions event
-         context.
+         data (dict): The dictionary with data specific to the given event.
+         context (google.cloud.functions.Context): The event metadata.
     """
     if data and 'name' in data:
         name = data['name']
@@ -70,15 +69,14 @@ def hello_http(request):
 
 
 # [START functions_helloworld_pubsub]
+import base64
+
 def hello_pubsub(data, context):
     """Background Cloud Function to be triggered by Pub/Sub.
     Args:
-         event (dict): The dictionary with data specific to this type of event.
-         context (google.cloud.functions.Context): The Cloud Functions event
-         context.
+         data (dict): The dictionary with data specific to this type of event.
+         context (google.cloud.functions.Context): The event metadata.
     """
-    import base64
-
     if 'data' in data:
         name = base64.b64decode(data['data']).decode('utf-8')
     else:
@@ -92,8 +90,7 @@ def hello_gcs(data, context):
     """Background Cloud Function to be triggered by Cloud Storage.
     Args:
          data (dict): The dictionary with data specific to this type of event.
-         context (google.cloud.functions.Context): The Cloud Functions
-         event context.
+         context (google.cloud.functions.Context): The event metadata.
     """
     print("File: {}.".format(data['objectId']))
 # [END functions_helloworld_storage]
