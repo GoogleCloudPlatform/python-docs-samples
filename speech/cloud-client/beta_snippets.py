@@ -18,27 +18,26 @@
 and recognition metadata.
 
 Example usage:
-    python beta_snippets.py enhanced-model resources/commercial_mono.wav
-    python beta_snippets.py metadata resources/commercial_mono.wav
-    python beta_snippets.py punctuation resources/commercial_mono.wav
-    python beta_snippets.py diarization resources/commercial_mono.wav
-    python beta_snippets.py multi-channel resources/commercial_mono.wav
-    python beta_snippets.py multi-language resources/multi.wav en-US es
-    python beta_snippets.py word-level-conf resources/commercial_mono.wav
+    python beta_snippets.py enhanced-model
+    python beta_snippets.py metadata
+    python beta_snippets.py punctuation
+    python beta_snippets.py diarization
+    python beta_snippets.py multi-channel
+    python beta_snippets.py multi-language
+    python beta_snippets.py word-level-conf
 """
 
 import argparse
 import io
 
 
-def transcribe_file_with_enhanced_model(speech_file):
+def transcribe_file_with_enhanced_model():
     """Transcribe the given audio file using an enhanced model."""
     # [START speech_transcribe_file_with_enhanced_model]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
-    # TODO(developer): Uncomment and set to a path to your audio file.
-    # speech_file = 'path/to/file.wav'
+    speech_file = 'resources/commercial_mono.wav'
 
     with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
@@ -46,6 +45,7 @@ def transcribe_file_with_enhanced_model(speech_file):
     audio = speech.types.RecognitionAudio(content=content)
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=8000,
         language_code='en-US',
         # Enhanced models are only available to projects that
         # opt in for audio data collection.
@@ -63,14 +63,13 @@ def transcribe_file_with_enhanced_model(speech_file):
     # [END speech_transcribe_file_with_enhanced_model]
 
 
-def transcribe_file_with_metadata(speech_file):
+def transcribe_file_with_metadata():
     """Send a request that includes recognition metadata."""
     # [START speech_transcribe_file_with_metadata]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
-    # TODO(developer): Uncomment and set to a path to your audio file.
-    # speech_file = 'path/to/file.wav'
+    speech_file = 'resources/commercial_mono.wav'
 
     with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
@@ -94,6 +93,7 @@ def transcribe_file_with_metadata(speech_file):
     audio = speech.types.RecognitionAudio(content=content)
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=8000,
         language_code='en-US',
         # Add this in the request to send metadata.
         metadata=metadata)
@@ -108,14 +108,13 @@ def transcribe_file_with_metadata(speech_file):
     # [END speech_transcribe_file_with_metadata]
 
 
-def transcribe_file_with_auto_punctuation(speech_file):
+def transcribe_file_with_auto_punctuation():
     """Transcribe the given audio file with auto punctuation enabled."""
     # [START speech_transcribe_file_with_auto_punctuation]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
-    # TODO(developer): Uncomment and set to a path to your audio file.
-    # speech_file = 'path/to/file.wav'
+    speech_file = 'resources/commercial_mono.wav'
 
     with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
@@ -123,6 +122,7 @@ def transcribe_file_with_auto_punctuation(speech_file):
     audio = speech.types.RecognitionAudio(content=content)
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=8000,
         language_code='en-US',
         # Enable automatic punctuation
         enable_automatic_punctuation=True)
@@ -137,14 +137,13 @@ def transcribe_file_with_auto_punctuation(speech_file):
     # [END speech_transcribe_file_with_auto_punctuation]
 
 
-def transcribe_file_with_diarization(speech_file):
+def transcribe_file_with_diarization():
     """Transcribe the given audio file synchronously with diarization."""
     # [START speech_transcribe_diarization]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
-    # TODO(developer): Uncomment and set to a path to your audio file.
-    # speech_file = 'path/to/file.wav'
+    speech_file = 'resources/commercial_mono.wav'
 
     with open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
@@ -153,6 +152,7 @@ def transcribe_file_with_diarization(speech_file):
 
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=8000,
         language_code='en-US',
         enable_speaker_diarization=True,
         diarization_speaker_count=2)
@@ -180,15 +180,14 @@ def transcribe_file_with_diarization(speech_file):
     # [END speech_transcribe_diarization]
 
 
-def transcribe_file_with_multichannel(speech_file):
+def transcribe_file_with_multichannel():
     """Transcribe the given audio file synchronously with
       multi channel."""
     # [START speech_transcribe_multichannel]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
-    # TODO(developer): Uncomment and set to a path to your audio file.
-    # speech_file = 'path/to/file.wav'
+    speech_file = 'resources/Google_Gnome.wav'
 
     with open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
@@ -213,17 +212,16 @@ def transcribe_file_with_multichannel(speech_file):
     # [END speech_transcribe_multichannel]
 
 
-def transcribe_file_with_multilanguage(speech_file, first_lang, second_lang):
+def transcribe_file_with_multilanguage():
     """Transcribe the given audio file synchronously with
       multi language."""
     # [START speech_transcribe_multilanguage]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
-    # TODO(developer): Uncomment and set to a path to your audio file.
-    # speech_file = 'path/to/file.wav'
-    # first_lang = first language code, e,g, 'en-US'
-    # second_lang = first language code, e,g, 'es'
+    speech_file = 'resources/multi.wav'
+    first_lang = 'en-US'
+    second_lang = 'es'
 
     with open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
@@ -232,6 +230,7 @@ def transcribe_file_with_multilanguage(speech_file, first_lang, second_lang):
 
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=44100,
         audio_channel_count=2,
         language_code=first_lang,
         alternative_language_codes=[second_lang])
@@ -247,15 +246,14 @@ def transcribe_file_with_multilanguage(speech_file, first_lang, second_lang):
     # [END speech_transcribe_multilanguage]
 
 
-def transcribe_file_with_word_level_confidence(speech_file):
+def transcribe_file_with_word_level_confidence():
     """Transcribe the given audio file synchronously with
       word level confidence."""
     # [START speech_transcribe_word_level_confidence]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
-    # TODO(developer): Uncomment and set to a path to your audio file.
-    # speech_file = 'path/to/file.wav'
+    speech_file = 'resources/Google_Gnome.wav'
 
     with open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
@@ -297,16 +295,16 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.command == 'enhanced-model':
-        transcribe_file_with_enhanced_model(args.path)
+        transcribe_file_with_enhanced_model()
     elif args.command == 'metadata':
-        transcribe_file_with_metadata(args.path)
+        transcribe_file_with_metadata()
     elif args.command == 'punctuation':
-        transcribe_file_with_auto_punctuation(args.path)
+        transcribe_file_with_auto_punctuation()
     elif args.command == 'diarization':
-        transcribe_file_with_diarization(args.path)
+        transcribe_file_with_diarization()
     elif args.command == 'multi-channel':
-        transcribe_file_with_multichannel(args.path)
+        transcribe_file_with_multichannel()
     elif args.command == 'multi-language':
-        transcribe_file_with_multilanguage(args.path, args.first, args.second)
+        transcribe_file_with_multilanguage()
     elif args.command == 'word-level-conf':
-        transcribe_file_with_word_level_confidence(args.path)
+        transcribe_file_with_word_level_confidence()
