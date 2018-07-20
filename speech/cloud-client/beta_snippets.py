@@ -46,7 +46,6 @@ def transcribe_file_with_enhanced_model(speech_file):
     audio = speech.types.RecognitionAudio(content=content)
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=8000,
         language_code='en-US',
         # Enhanced models are only available to projects that
         # opt in for audio data collection.
@@ -95,7 +94,6 @@ def transcribe_file_with_metadata(speech_file):
     audio = speech.types.RecognitionAudio(content=content)
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=8000,
         language_code='en-US',
         # Add this in the request to send metadata.
         metadata=metadata)
@@ -125,7 +123,6 @@ def transcribe_file_with_auto_punctuation(speech_file):
     audio = speech.types.RecognitionAudio(content=content)
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=8000,
         language_code='en-US',
         # Enable automatic punctuation
         enable_automatic_punctuation=True)
