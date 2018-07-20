@@ -283,14 +283,6 @@ if __name__ == '__main__':
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('command')
-    parser.add_argument(
-        'path', help='File for audio file to be recognized')
-    parser.add_argument(
-        'first', help='First language in audio file to be recognized',
-        nargs='?')
-    parser.add_argument(
-        'second', help='Second language in audio file to be recognized',
-        nargs='?')
 
     args = parser.parse_args()
 
