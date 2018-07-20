@@ -170,7 +170,8 @@ def transcribe_file_with_diarization():
 
     # Printing out the output:
     for word_info in words_info:
-        print("word: '{}', speaker_tag: {}".format(word_info.word, word_info.speaker_tag))
+        print("word: '{}', speaker_tag: {}".format(word_info.word,
+                                                   word_info.speaker_tag))
     # [END speech_transcribe_diarization]
 
 
