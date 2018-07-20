@@ -160,8 +160,11 @@ def transcribe_file_with_diarization():
     print('Waiting for operation to complete...')
     response = client.recognize(config, audio)
 
-    # response.results contains partial results with the last item
-    # containing the entire result:
+    # The transcript within each result is separate and sequential per result.
+    # However, the words list within an alternative (for whatever reason)
+    # includes all the words from all the results thus far. Thus, to get all
+    # the words with speaker tags, you only have to take the words list from
+    # the last result:
     result = response.results[-1]
 
     words_info = result.alternatives[0].words
