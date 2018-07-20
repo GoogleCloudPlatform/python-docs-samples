@@ -221,7 +221,7 @@ To run this sample:
 
     $ python beta_snippets.py
 
-    usage: beta_snippets.py [-h] command path [first] [second]
+    usage: beta_snippets.py [-h] command
 
     Google Cloud Speech API sample that demonstrates enhanced models
     and recognition metadata.
@@ -237,9 +237,6 @@ To run this sample:
 
     positional arguments:
       command
-      path        File for audio file to be recognized
-      first       First language in audio file to be recognized
-      second      Second language in audio file to be recognized
 
     optional arguments:
       -h, --help  show this help message and exit
