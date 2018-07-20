@@ -221,25 +221,22 @@ To run this sample:
 
     $ python beta_snippets.py
 
-    usage: beta_snippets.py [-h] command path first second
+    usage: beta_snippets.py [-h] command
 
     Google Cloud Speech API sample that demonstrates enhanced models
     and recognition metadata.
 
     Example usage:
-        python beta_snippets.py enhanced-model resources/commercial_mono.wav
-        python beta_snippets.py metadata resources/commercial_mono.wav
-        python beta_snippets.py punctuation resources/commercial_mono.wav
-        python beta_snippets.py diarization resources/commercial_mono.wav
-        python beta_snippets.py multi-channel resources/commercial_mono.wav
-        python beta_snippets.py multi-language resources/multi.wav en-US es
-        python beta_snippets.py word-level-conf resources/commercial_mono.wav
+        python beta_snippets.py enhanced-model
+        python beta_snippets.py metadata
+        python beta_snippets.py punctuation
+        python beta_snippets.py diarization
+        python beta_snippets.py multi-channel
+        python beta_snippets.py multi-language
+        python beta_snippets.py word-level-conf
 
     positional arguments:
       command
-      path        File for audio file to be recognized
-      first       First language in audio file to be recognized
-      second      Second language in audio file to be recognized
 
     optional arguments:
       -h, --help  show this help message and exit

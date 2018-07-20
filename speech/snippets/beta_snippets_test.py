@@ -26,56 +26,49 @@ RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 
 
 def test_transcribe_file_with_enhanced_model(capsys):
-    transcribe_file_with_enhanced_model(
-        os.path.join(RESOURCES, 'commercial_mono.wav'))
+    transcribe_file_with_enhanced_model()
     out, _ = capsys.readouterr()
 
     assert 'Chrome' in out
 
 
 def test_transcribe_file_with_metadata(capsys):
-    transcribe_file_with_metadata(
-        os.path.join(RESOURCES, 'commercial_mono.wav'))
+    transcribe_file_with_metadata()
     out, _ = capsys.readouterr()
 
     assert 'Chrome' in out
 
 
 def test_transcribe_file_with_auto_punctuation(capsys):
-    transcribe_file_with_auto_punctuation(
-        os.path.join(RESOURCES, 'commercial_mono.wav'))
+    transcribe_file_with_auto_punctuation()
     out, _ = capsys.readouterr()
 
     assert 'Okay. Sure.' in out
 
 
 def test_transcribe_diarization(capsys):
-    transcribe_file_with_diarization(
-        os.path.join(RESOURCES, 'Google_Gnome.wav'))
+    transcribe_file_with_diarization()
     out, err = capsys.readouterr()
 
-    assert 'OK Google stream stranger things from Netflix to my TV' in out
+    assert "word: 'here', speaker_tag: 1" in out
 
 
 def test_transcribe_multichannel_file(capsys):
-    transcribe_file_with_multichannel(
-        os.path.join(RESOURCES, 'Google_Gnome.wav'))
+    transcribe_file_with_multichannel()
     out, err = capsys.readouterr()
 
     assert 'OK Google stream stranger things from Netflix to my TV' in out
 
 
 def test_transcribe_multilanguage_file(capsys):
-    transcribe_file_with_multilanguage(
-        os.path.join(RESOURCES, 'multi.wav'), 'en-US', 'es')
+    transcribe_file_with_multilanguage()
     out, err = capsys.readouterr()
 
     assert 'how are you doing estoy bien e tu' in out
 
 
 def test_transcribe_word_level_confidence(capsys):
-    transcribe_file_with_word_level_confidence(
-        os.path.join(RESOURCES, 'Google_Gnome.wav'))
+    transcribe_file_with_word_level_confidence()
     out, err = capsys.readouterr()
 
     assert 'OK Google stream stranger things from Netflix to my TV' in out
