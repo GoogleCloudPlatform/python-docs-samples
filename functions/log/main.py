@@ -15,6 +15,7 @@
 # [START functions_log_helloworld]
 import logging
 
+
 def hello_world(data, context):
     """Background Cloud Function.
     Args:
