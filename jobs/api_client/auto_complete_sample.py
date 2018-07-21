@@ -17,16 +17,36 @@
 import time
 
 # [START instantiate]
-from googleapiclient.discovery import build
+from googleapiclient.errors import Error
 
-client_service = build('jobs', 'v2')
+import pprint
+import json
+import httplib2
+
+from apiclient.discovery import build_from_document
+from apiclient.http import build_http
+from oauth2client.service_account import ServiceAccountCredentials
+import os
+
+scopes = ['https://www.googleapis.com/auth/jobs']
+credential_path = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+credentials = ServiceAccountCredentials.from_json_keyfile_name(
+    credential_path, scopes)
+
+http = httplib2.Http(".cache", disable_ssl_certificate_validation=True)
+http = credentials.authorize(http=build_http())
+content = open("/usr/local/google/home/zhenhu/Desktop/cjd lib/20180702/talent_public_discovery_v3_distrib.json",'r').read()
+discovery = json.loads(content)
+
+client_service = build_from_document(discovery, 'talent', 'v3', http=http)
+name = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
 # [END instantiate]
 
 
 # [START auto_complete_job_title]
 def job_title_auto_complete(client_service, query, company_name):
-    complete = client_service.v2().complete(
-        query=query, languageCode='en-US', type='JOB_TITLE', pageSize=10)
+    complete = client_service.projects().complete(
+        name=name, query=query, languageCode='en-US', type='JOB_TITLE', pageSize=10)
     if company_name is not None:
         complete.companyName = company_name
 
@@ -37,8 +57,8 @@ def job_title_auto_complete(client_service, query, company_name):
 
 # [START auto_complete_default]
 def auto_complete_default(client_service, query, company_name):
-    complete = client_service.v2().complete(
-        query=query, languageCode='en-US', pageSize=10)
+    complete = client_service.projects().complete(
+        name=name, query=query, languageCode='en-US', pageSize=10)
     if company_name is not None:
         complete.companyName = company_name
 
@@ -58,7 +78,7 @@ def run_sample():
 
     job_to_be_created = base_job_sample.generate_job_with_required_fields(
         company_name)
-    job_to_be_created.update({'job_title': 'Software engineer'})
+    job_to_be_created.update({'title': 'Software engineer'})
     job_name = base_job_sample.create_job(client_service,
                                           job_to_be_created).get('name')
 

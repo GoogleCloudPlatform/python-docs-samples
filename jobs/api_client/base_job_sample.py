@@ -18,10 +18,29 @@ import random
 import string
 
 # [START instantiate]
-from googleapiclient.discovery import build
 from googleapiclient.errors import Error
 
-client_service = build('jobs', 'v2')
+import pprint
+import json
+import httplib2
+
+from apiclient.discovery import build_from_document
+from apiclient.http import build_http
+from oauth2client.service_account import ServiceAccountCredentials
+import os
+
+scopes = ['https://www.googleapis.com/auth/jobs']
+credential_path = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+credentials = ServiceAccountCredentials.from_json_keyfile_name(
+    credential_path, scopes)
+
+http = httplib2.Http(".cache", disable_ssl_certificate_validation=True)
+http = credentials.authorize(http=build_http())
+content = open("/usr/local/google/home/zhenhu/Desktop/cjd lib/20180702/talent_public_discovery_v3_distrib.json",'r').read()
+discovery = json.loads(content)
+
+client_service = build_from_document(discovery, 'talent', 'v3', http=http)
+parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
 # [END instantiate]
 
 
@@ -33,14 +52,14 @@ def generate_job_with_required_fields(company_name):
         for _ in range(16))
 
     job_title = 'Software Engineer'
-    application_urls = ['http://careers.google.com']
+    application_uris = ['http://careers.google.com']
     description = ('Design, develop, test, deploy, maintain and improve '
                    'software.')
 
     job = {
         'requisition_id': requisition_id,
-        'job_title': job_title,
-        'application_urls': application_urls,
+        'title': job_title,
+        'application_info': {'uris' : application_uris},
         'description': description,
         'company_name': company_name
     }
@@ -53,7 +72,8 @@ def generate_job_with_required_fields(company_name):
 def create_job(client_service, job_to_be_created):
     try:
         request = {'job': job_to_be_created}
-        job_created = client_service.jobs().create(body=request).execute()
+        job_created = client_service.projects().jobs().create(
+            parent=parent, body=request).execute()
         print('Job created: %s' % job_created)
         return job_created
     except Error as e:
@@ -65,7 +85,7 @@ def create_job(client_service, job_to_be_created):
 # [START get_job]
 def get_job(client_service, job_name):
     try:
-        job_existed = client_service.jobs().get(name=job_name).execute()
+        job_existed = client_service.projects().jobs().get(name=job_name).execute()
         print('Job existed: %s' % job_existed)
         return job_existed
     except Error as e:
@@ -78,7 +98,7 @@ def get_job(client_service, job_name):
 def update_job(client_service, job_name, job_to_be_updated):
     try:
         request = {'job': job_to_be_updated}
-        job_updated = client_service.jobs().patch(
+        job_updated = client_service.projects().jobs().patch(
             name=job_name, body=request).execute()
         print('Job updated: %s' % job_updated)
         return job_updated
@@ -92,8 +112,8 @@ def update_job(client_service, job_name, job_to_be_updated):
 def update_job_with_field_mask(client_service, job_name, job_to_be_updated,
                                field_mask):
     try:
-        request = {'job': job_to_be_updated, 'update_job_fields': field_mask}
-        job_updated = client_service.jobs().patch(
+        request = {'job': job_to_be_updated, 'update_mask': field_mask}
+        job_updated = client_service.projects().jobs().patch(
             name=job_name, body=request).execute()
         print('Job updated: %s' % job_updated)
         return job_updated
@@ -106,7 +126,7 @@ def update_job_with_field_mask(client_service, job_name, job_to_be_updated,
 # [START delete_job]
 def delete_job(client_service, job_name):
     try:
-        client_service.jobs().delete(name=job_name).execute()
+        client_service.projects().jobs().delete(name=job_name).execute()
         print('Job deleted')
     except Error as e:
         print('Got exception while deleting job')
@@ -140,7 +160,7 @@ def run_sample():
 
     # Update a job with field mask
     update_job_with_field_mask(client_service, job_name,
-                               {'job_title': 'changedJobTitle'}, 'job_title')
+                               {'title': 'changedJobTitle'}, 'title')
 
     # Delete a job
     delete_job(client_service, job_name)
