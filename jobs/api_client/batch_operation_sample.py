@@ -15,9 +15,29 @@
 # limitations under the License.
 
 # [START instantiate]
-from googleapiclient.discovery import build
+from googleapiclient.errors import Error
 
-client_service = build('jobs', 'v2')
+import pprint
+import json
+import httplib2
+
+from apiclient.discovery import build_from_document
+from apiclient.http import build_http
+from oauth2client.service_account import ServiceAccountCredentials
+import os
+
+scopes = ['https://www.googleapis.com/auth/jobs']
+credential_path = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+credentials = ServiceAccountCredentials.from_json_keyfile_name(
+    credential_path, scopes)
+
+http = httplib2.Http(".cache", disable_ssl_certificate_validation=True)
+http = credentials.authorize(http=build_http())
+content = open("/usr/local/google/home/zhenhu/Desktop/cjd lib/20180702/talent_public_discovery_v3_distrib.json",'r').read()
+discovery = json.loads(content)
+
+client_service = build_from_document(discovery, 'talent', 'v3', http=http)
+parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
 # [END instantiate]
 
 
@@ -40,14 +60,14 @@ def batch_job_create(client_service, company_name):
         company_name)
     request1 = {'job': job_to_be_created1}
     batch.add(
-        client_service.jobs().create(body=request1),
+        client_service.projects().jobs().create(parent=parent, body=request1),
         callback=job_create_callback)
 
     job_to_be_created2 = base_job_sample.generate_job_with_required_fields(
         company_name)
     request2 = {'job': job_to_be_created2}
     batch.add(
-        client_service.jobs().create(body=request2),
+        client_service.projects().jobs().create(parent=parent, body=request2),
         callback=job_create_callback)
     batch.execute()
 
@@ -71,17 +91,17 @@ def batch_job_update(client_service, jobs_to_be_updated):
     batch = client_service.new_batch_http_request()
     for index in range(0, len(jobs_to_be_updated)):
         job_to_be_updated = jobs_to_be_updated[index]
-        job_to_be_updated.update({'job_title': 'Engineer in Mountain View'})
+        job_to_be_updated.update({'title': 'Engineer in Mountain View'})
         request = {'job': job_to_be_updated}
         if index % 2 == 0:
             batch.add(
-                client_service.jobs().patch(
+                client_service.projects().jobs().patch(
                     name=job_to_be_updated.get('name'), body=request),
                 callback=job_update_callback)
         else:
-            request.update({'update_job_fields': 'jobTitle'})
+            request.update({'update_mask': 'title'})
             batch.add(
-                client_service.jobs().patch(
+                client_service.projects().jobs().patch(
                     name=job_to_be_updated.get('name'), body=request),
                 callback=job_update_callback)
 
@@ -105,7 +125,7 @@ def batch_job_delete(client_service, jobs_to_be_deleted):
     batch = client_service.new_batch_http_request()
     for job_to_be_deleted in jobs_to_be_deleted:
         batch.add(
-            client_service.jobs().delete(name=job_to_be_deleted.get('name')),
+            client_service.projects().jobs().delete(name=job_to_be_deleted.get('name')),
             callback=job_delete_callback)
 
     batch.execute()
