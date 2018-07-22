@@ -17,9 +17,29 @@
 import time
 
 # [START instantiate]
-from googleapiclient.discovery import build
+from googleapiclient.errors import Error
 
-client_service = build('jobs', 'v2')
+import pprint
+import json
+import httplib2
+
+from apiclient.discovery import build_from_document
+from apiclient.http import build_http
+from oauth2client.service_account import ServiceAccountCredentials
+import os
+
+scopes = ['https://www.googleapis.com/auth/jobs']
+credential_path = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+credentials = ServiceAccountCredentials.from_json_keyfile_name(
+    credential_path, scopes)
+
+http = httplib2.Http(".cache", disable_ssl_certificate_validation=True)
+http = credentials.authorize(http=build_http())
+content = open("/usr/local/google/home/xinyunh/discovery/talent_public_discovery_v3_distrib.json",'r').read()
+discovery = json.loads(content)
+
+client_service = build_from_document(discovery, 'talent', 'v3', http=http)
+parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
 # [END instantiate]
 
 
@@ -39,13 +59,13 @@ def histogram_search(client_service, company_name):
         'custom_attribute_histogram_facets': [custom_attribute_histogram_facet]
     }
     request = {
-        'mode': 'JOB_SEARCH',
+        'search_mode': 'JOB_SEARCH',
         'request_metadata': request_metadata,
         'histogram_facets': histogram_facets
     }
     if company_name is not None:
-        request.update({'query': {'company_names': [company_name]}})
-    response = client_service.jobs().search(body=request).execute()
+        request.update({'job_query': {'company_names': [company_name]}})
+    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
     print(response)
 # [END histogram_search]
 

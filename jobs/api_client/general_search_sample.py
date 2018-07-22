@@ -17,9 +17,29 @@
 import time
 
 # [START instantiate]
-from googleapiclient.discovery import build
+from googleapiclient.errors import Error
 
-client_service = build('jobs', 'v2')
+import pprint
+import json
+import httplib2
+
+from apiclient.discovery import build_from_document
+from apiclient.http import build_http
+from oauth2client.service_account import ServiceAccountCredentials
+import os
+
+scopes = ['https://www.googleapis.com/auth/jobs']
+credential_path = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+credentials = ServiceAccountCredentials.from_json_keyfile_name(
+    credential_path, scopes)
+
+http = httplib2.Http(".cache", disable_ssl_certificate_validation=True)
+http = credentials.authorize(http=build_http())
+content = open("/usr/local/google/home/xinyunh/discovery/talent_public_discovery_v3_distrib.json",'r').read()
+discovery = json.loads(content)
+
+client_service = build_from_document(discovery, 'talent', 'v3', http=http)
+parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
 # [END instantiate]
 
 
@@ -34,12 +54,12 @@ def basic_keyword_search(client_service, company_name, keyword):
     if company_name is not None:
         job_query.update({'company_names': [company_name]})
     request = {
-        'mode': 'JOB_SEARCH',
+        'search_mode': 'JOB_SEARCH',
         'request_metadata': request_metadata,
-        'query': job_query,
+        'job_query': job_query,
     }
 
-    response = client_service.jobs().search(body=request).execute()
+    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
     print(response)
 # [END basic_keyword_search]
 
@@ -51,16 +71,16 @@ def category_search(client_service, company_name, categories):
         'session_id': 'HashedSessionId',
         'domain': 'www.google.com'
     }
-    job_query = {'categories': categories}
+    job_query = {'job_categories': categories}
     if company_name is not None:
         job_query.update({'company_names': [company_name]})
     request = {
-        'mode': 'JOB_SEARCH',
+        'search_mode': 'JOB_SEARCH',
         'request_metadata': request_metadata,
-        'query': job_query,
+        'job_query': job_query,
     }
 
-    response = client_service.jobs().search(body=request).execute()
+    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
     print(response)
 # [END category_filter]
 
@@ -76,12 +96,12 @@ def employment_types_search(client_service, company_name, employment_types):
     if company_name is not None:
         job_query.update({'company_names': [company_name]})
     request = {
-        'mode': 'JOB_SEARCH',
+        'search_mode': 'JOB_SEARCH',
         'request_metadata': request_metadata,
-        'query': job_query,
+        'job_query': job_query,
     }
 
-    response = client_service.jobs().search(body=request).execute()
+    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
     print(response)
 # [END employment_types_filter]
 
@@ -93,16 +113,16 @@ def date_range_search(client_service, company_name, date_range):
         'session_id': 'HashedSessionId',
         'domain': 'www.google.com'
     }
-    job_query = {'publish_date_range': date_range}
+    job_query = {'publish_time_range': date_range}
     if company_name is not None:
         job_query.update({'company_names': [company_name]})
     request = {
-        'mode': 'JOB_SEARCH',
+        'search_mode': 'JOB_SEARCH',
         'request_metadata': request_metadata,
-        'query': job_query,
+        'job_query': job_query,
     }
 
-    response = client_service.jobs().search(body=request).execute()
+    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
     print(response)
 # [END date_range_filter]
 
@@ -118,12 +138,12 @@ def language_code_search(client_service, company_name, language_codes):
     if company_name is not None:
         job_query.update({'company_names': [company_name]})
     request = {
-        'mode': 'JOB_SEARCH',
+        'search_mode': 'JOB_SEARCH',
         'request_metadata': request_metadata,
-        'query': job_query,
+        'job_query': job_query,
     }
 
-    response = client_service.jobs().search(body=request).execute()
+    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
     print(response)
 # [END language_code_filter]
 
@@ -140,12 +160,12 @@ def company_display_name_search(client_service, company_name,
     if company_name is not None:
         job_query.update({'company_names': [company_name]})
     request = {
-        'mode': 'JOB_SEARCH',
+        'search_mode': 'JOB_SEARCH',
         'request_metadata': request_metadata,
-        'query': job_query,
+        'job_query': job_query,
     }
 
-    response = client_service.jobs().search(body=request).execute()
+    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
     print(response)
 # [END company_display_name_filter]
 
@@ -158,11 +178,11 @@ def compensation_search(client_service, company_name):
         'domain': 'www.google.com'
     }
     compensation_range = {
-        'max': {
+        'max_compensation': {
             'currency_code': 'USD',
             'units': 15
         },
-        'min': {
+        'min_compensation': {
             'currency_code': 'USD',
             'units': 10,
             'nanos': 500000000
@@ -177,12 +197,12 @@ def compensation_search(client_service, company_name):
     if company_name is not None:
         job_query.update({'company_names': [company_name]})
     request = {
-        'mode': 'JOB_SEARCH',
+        'search_mode': 'JOB_SEARCH',
         'request_metadata': request_metadata,
-        'query': job_query,
+        'job_query': job_query,
     }
 
-    response = client_service.jobs().search(body=request).execute()
+    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
     print(response)
 # [END compensation_filter]
 
@@ -208,7 +228,7 @@ def run_sample():
         }]
     }
     job_to_be_created.update({
-        'job_title': 'Systems Administrator',
+        'title': 'Systems Administrator',
         'employment_types': 'FULL_TIME',
         'language_code': 'en-US',
         'compensation_info': compensation_info
@@ -220,7 +240,8 @@ def run_sample():
     time.sleep(10)
     basic_keyword_search(client_service, company_name, 'Systems Administrator')
     category_search(client_service, company_name, ['COMPUTER_AND_IT'])
-    date_range_search(client_service, company_name, 'PAST_24_HOURS')
+    date_range = {'start_time': '2018-07-01T00:00:00Z'}
+    date_range_search(client_service, company_name, date_range)
     employment_types_search(client_service, company_name,
                             ['FULL_TIME', 'CONTRACTOR', 'PER_DIEM'])
     company_display_name_search(client_service, company_name, ['Google'])

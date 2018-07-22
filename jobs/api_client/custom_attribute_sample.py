@@ -19,9 +19,29 @@ import string
 import time
 
 # [START instantiate]
-from googleapiclient.discovery import build
+from googleapiclient.errors import Error
 
-client_service = build('jobs', 'v2')
+import pprint
+import json
+import httplib2
+
+from apiclient.discovery import build_from_document
+from apiclient.http import build_http
+from oauth2client.service_account import ServiceAccountCredentials
+import os
+
+scopes = ['https://www.googleapis.com/auth/jobs']
+credential_path = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+credentials = ServiceAccountCredentials.from_json_keyfile_name(
+    credential_path, scopes)
+
+http = httplib2.Http(".cache", disable_ssl_certificate_validation=True)
+http = credentials.authorize(http=build_http())
+content = open("/usr/local/google/home/xinyunh/discovery/talent_public_discovery_v3_distrib.json",'r').read()
+discovery = json.loads(content)
+
+client_service = build_from_document(discovery, 'talent', 'v3', http=http)
+parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
 # [END instantiate]
 
 
@@ -39,13 +59,11 @@ def generate_job_with_custom_attributes(company_name):
 
     custom_attributes = {
         'someFieldName1': {
-            'string_values': {
-                'values': ['value1']
-            },
+            'string_values': ['value1'],
             'filterable': True
         },
         'someFieldName2': {
-            'long_value': 256,
+            'long_values': [256],
             'filterable': True
         }
     }
@@ -53,8 +71,8 @@ def generate_job_with_custom_attributes(company_name):
     job = {
         'company_name': company_name,
         'requisition_id': requisition_id,
-        'job_title': job_title,
-        'application_urls': application_urls,
+        'title': job_title,
+        'application_info': { 'uris': application_urls },
         'description': description,
         'custom_attributes': custom_attributes
     }
@@ -75,11 +93,11 @@ def custom_attribute_filter_string_value(client_service):
     job_query = {'custom_attribute_filter': custom_attribute_filter}
     request = {
         'request_metadata': request_metadata,
-        'query': job_query,
-        'job_view': 'FULL'
+        'job_query': job_query,
+        'job_view': 'JOB_VIEW_FULL'
     }
 
-    response = client_service.jobs().search(body=request).execute()
+    response = client_service.projects().jobs().search(parent=parent, body=request).execute()
     print(response)
 # [END custom_attribute_filter_string_value]
 
@@ -97,11 +115,11 @@ def custom_attribute_filter_long_value(client_service):
     job_query = {'custom_attribute_filter': custom_attribute_filter}
     request = {
         'request_metadata': request_metadata,
-        'query': job_query,
-        'job_view': 'FULL'
+        'job_query': job_query,
+        'job_view': 'JOB_VIEW_FULL'
     }
 
-    response = client_service.jobs().search(body=request).execute()
+    response = client_service.projects().jobs().search(parent=parent, body=request).execute()
     print(response)
 # [END custom_attribute_filter_long_value]
 
@@ -120,11 +138,11 @@ def custom_attribute_filter_multi_attributes(client_service):
     job_query = {'custom_attribute_filter': custom_attribute_filter}
     request = {
         'request_metadata': request_metadata,
-        'query': job_query,
-        'job_view': 'FULL'
+        'job_query': job_query,
+        'job_view': 'JOB_VIEW_FULL'
     }
 
-    response = client_service.jobs().search(body=request).execute()
+    response = client_service.projects().jobs().search(parent=parent, body=request).execute()
     print(response)
 # [END custom_attribute_filter_multi_attributes]
 

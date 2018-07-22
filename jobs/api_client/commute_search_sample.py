@@ -17,9 +17,29 @@
 import time
 
 # [START instantiate]
-from googleapiclient.discovery import build
+from googleapiclient.errors import Error
 
-client_service = build('jobs', 'v2')
+import pprint
+import json
+import httplib2
+
+from apiclient.discovery import build_from_document
+from apiclient.http import build_http
+from oauth2client.service_account import ServiceAccountCredentials
+import os
+
+scopes = ['https://www.googleapis.com/auth/jobs']
+credential_path = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+credentials = ServiceAccountCredentials.from_json_keyfile_name(
+    credential_path, scopes)
+
+http = httplib2.Http(".cache", disable_ssl_certificate_validation=True)
+http = credentials.authorize(http=build_http())
+content = open("/usr/local/google/home/xinyunh/discovery/talent_public_discovery_v3_distrib.json",'r').read()
+discovery = json.loads(content)
+
+client_service = build_from_document(discovery, 'talent', 'v3', http=http)
+parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
 # [END instantiate]
 
 
@@ -33,20 +53,20 @@ def commute_search(client_service, company_name):
     start_location = {'latitude': 37.422408, 'longitude': -122.085609}
     commute_preference = {
         'road_traffic': 'TRAFFIC_FREE',
-        'method': 'TRANSIT',
-        'travel_time': '1000s',
-        'start_location': start_location
+        'commute_method': 'TRANSIT',
+        'travel_duration': '1000s',
+        'start_coordinates': start_location
     }
     job_query = {'commute_filter': commute_preference}
     if company_name is not None:
         job_query.update({'company_names': [company_name]})
     request = {
-        'query': job_query,
+        'job_query': job_query,
         'request_metadata': request_metadata,
-        'job_view': 'FULL',
-        'enable_precise_result_size': True
+        'job_view': 'JOB_VIEW_FULL',
+        'require_precise_result_size': True
     }
-    response = client_service.jobs().search(body=request).execute()
+    response = client_service.projects().jobs().search(parent=parent, body=request).execute()
     print(response)
 # [END commute_search]
 
@@ -63,7 +83,7 @@ def run_sample():
     job_to_be_created = base_job_sample.generate_job_with_required_fields(
         company_name)
     job_to_be_created.update({
-        'locations': ['1600 Amphitheatre Pkwy, Mountain View, CA 94043']
+        'addresses': ['1600 Amphitheatre Pkwy, Mountain View, CA 94043']
     })
     job_name = base_job_sample.create_job(client_service,
                                           job_to_be_created).get('name')

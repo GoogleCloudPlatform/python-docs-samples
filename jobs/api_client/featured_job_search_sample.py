@@ -19,9 +19,29 @@ import string
 import time
 
 # [START instantiate]
-from googleapiclient.discovery import build
+from googleapiclient.errors import Error
 
-client_service = build('jobs', 'v2')
+import pprint
+import json
+import httplib2
+
+from apiclient.discovery import build_from_document
+from apiclient.http import build_http
+from oauth2client.service_account import ServiceAccountCredentials
+import os
+
+scopes = ['https://www.googleapis.com/auth/jobs']
+credential_path = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+credentials = ServiceAccountCredentials.from_json_keyfile_name(
+    credential_path, scopes)
+
+http = httplib2.Http(".cache", disable_ssl_certificate_validation=True)
+http = credentials.authorize(http=build_http())
+content = open("/usr/local/google/home/xinyunh/discovery/talent_public_discovery_v3_distrib.json",'r').read()
+discovery = json.loads(content)
+
+client_service = build_from_document(discovery, 'talent', 'v3', http=http)
+parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
 # [END instantiate]
 
 
@@ -33,14 +53,14 @@ def generate_featured_job(company_name):
         for _ in range(16))
 
     job_title = 'Software Engineer'
-    application_urls = ['http://careers.google.com']
+    application_uris = ['http://careers.google.com']
     description = ('Design, develop, test, deploy, maintain and improve '
                    'software.')
 
     job = {
         'requisition_id': requisition_id,
-        'job_title': job_title,
-        'application_urls': application_urls,
+        'title': job_title,
+        'application_info': {'uris' : application_uris},
         'description': description,
         'company_name': company_name,
         'promotion_value': 2
@@ -61,12 +81,12 @@ def search_featured_job(client_service, company_name):
     if company_name is not None:
         job_query.update({'company_names': [company_name]})
     request = {
-        'mode': 'FEATURED_JOB_SEARCH',
+        'search_mode': 'FEATURED_JOB_SEARCH',
         'request_metadata': request_metadata,
-        'query': job_query
+        'job_query': job_query
     }
 
-    response = client_service.jobs().search(body=request).execute()
+    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
     print(response)
 # [END search_featured_job]
 

@@ -35,7 +35,7 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name(
 
 http = httplib2.Http(".cache", disable_ssl_certificate_validation=True)
 http = credentials.authorize(http=build_http())
-content = open("/usr/local/google/home/zhenhu/Desktop/cjd lib/20180702/talent_public_discovery_v3_distrib.json",'r').read()
+content = open("/usr/local/google/home/xinyunh/discovery/talent_public_discovery_v3_distrib.json",'r').read()
 discovery = json.loads(content)
 
 client_service = build_from_document(discovery, 'talent', 'v3', http=http)

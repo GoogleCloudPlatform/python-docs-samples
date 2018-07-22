@@ -17,9 +17,29 @@
 import time
 
 # [START instantiate]
-from googleapiclient.discovery import build
+from googleapiclient.errors import Error
 
-client_service = build('jobs', 'v2')
+import pprint
+import json
+import httplib2
+
+from apiclient.discovery import build_from_document
+from apiclient.http import build_http
+from oauth2client.service_account import ServiceAccountCredentials
+import os
+
+scopes = ['https://www.googleapis.com/auth/jobs']
+credential_path = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+credentials = ServiceAccountCredentials.from_json_keyfile_name(
+    credential_path, scopes)
+
+http = httplib2.Http(".cache", disable_ssl_certificate_validation=True)
+http = credentials.authorize(http=build_http())
+content = open("/usr/local/google/home/xinyunh/discovery/talent_public_discovery_v3_distrib.json",'r').read()
+discovery = json.loads(content)
+
+client_service = build_from_document(discovery, 'talent', 'v3', http=http)
+parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
 # [END instantiate]
 
 
@@ -30,16 +50,16 @@ def basic_location_search(client_service, company_name, location, distance):
         'session_id': 'HashedSessionId',
         'domain': 'www.google.com'
     }
-    location_filter = {'name': location, 'distance_in_miles': distance}
+    location_filter = {'address': location, 'distance_in_miles': distance}
     job_query = {'location_filters': [location_filter]}
     if company_name is not None:
         job_query.update({'company_names': [company_name]})
     request = {
-        'query': job_query,
+        'job_query': job_query,
         'request_metadata': request_metadata,
-        'mode': 'JOB_SEARCH',
+        'search_mode': 'JOB_SEARCH',
     }
-    response = client_service.jobs().search(body=request).execute()
+    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
     print(response)
 # [END basic_location_search]
 
@@ -52,16 +72,16 @@ def keyword_location_search(client_service, company_name, location, distance,
         'session_id': 'HashedSessionId',
         'domain': 'www.google.com'
     }
-    location_filter = {'name': location, 'distance_in_miles': distance}
+    location_filter = {'address': location, 'distance_in_miles': distance}
     job_query = {'location_filters': [location_filter], 'query': keyword}
     if company_name is not None:
         job_query.update({'company_names': [company_name]})
     request = {
-        'query': job_query,
+        'job_query': job_query,
         'request_metadata': request_metadata,
-        'mode': 'JOB_SEARCH',
+        'search_mode': 'JOB_SEARCH',
     }
-    response = client_service.jobs().search(body=request).execute()
+    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
     print(response)
 # [END keyword_location_search]
 
@@ -73,16 +93,16 @@ def city_location_search(client_service, company_name, location):
         'session_id': 'HashedSessionId',
         'domain': 'www.google.com'
     }
-    location_filter = {'name': location}
+    location_filter = {'address': location}
     job_query = {'location_filters': [location_filter]}
     if company_name is not None:
         job_query.update({'company_names': [company_name]})
     request = {
-        'query': job_query,
+        'job_query': job_query,
         'request_metadata': request_metadata,
-        'mode': 'JOB_SEARCH',
+        'search_mode': 'JOB_SEARCH',
     }
-    response = client_service.jobs().search(body=request).execute()
+    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
     print(response)
 # [END city_location_search]
 
@@ -95,17 +115,17 @@ def multi_locations_search(client_service, company_name, location1, distance1,
         'session_id': 'HashedSessionId',
         'domain': 'www.google.com'
     }
-    location_filter1 = {'name': location1, 'distance_in_miles': distance1}
-    location_filter2 = {'name': location2}
+    location_filter1 = {'address': location1, 'distance_in_miles': distance1}
+    location_filter2 = {'address': location2}
     job_query = {'location_filters': [location_filter1, location_filter2]}
     if company_name is not None:
         job_query.update({'company_names': [company_name]})
     request = {
-        'query': job_query,
+        'job_query': job_query,
         'request_metadata': request_metadata,
-        'mode': 'JOB_SEARCH',
+        'search_mode': 'JOB_SEARCH',
     }
-    response = client_service.jobs().search(body=request).execute()
+    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
     print(response)
 # [END multi_locations_search]
 
@@ -117,17 +137,17 @@ def broadening_location_search(client_service, company_name, location):
         'session_id': 'HashedSessionId',
         'domain': 'www.google.com'
     }
-    location_filter = {'name': location}
+    location_filter = {'address': location}
     job_query = {'location_filters': [location_filter]}
     if company_name is not None:
         job_query.update({'company_names': [company_name]})
     request = {
-        'query': job_query,
+        'job_query': job_query,
         'request_metadata': request_metadata,
-        'mode': 'JOB_SEARCH',
+        'search_mode': 'JOB_SEARCH',
         'enable_broadening': True
     }
-    response = client_service.jobs().search(body=request).execute()
+    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
     print(response)
 # [END broadening_location_search]
 
@@ -148,13 +168,13 @@ def run_sample():
 
     job_to_be_created = base_job_sample.generate_job_with_required_fields(
         company_name)
-    job_to_be_created.update({'locations': [location], 'job_title': keyword})
+    job_to_be_created.update({'addresses': [location], 'title': keyword})
     job_name = base_job_sample.create_job(client_service,
                                           job_to_be_created).get('name')
 
     job_to_be_created2 = base_job_sample.generate_job_with_required_fields(
         company_name)
-    job_to_be_created2.update({'locations': [location2], 'job_title': keyword})
+    job_to_be_created2.update({'addresses': [location2], 'title': keyword})
     job_name2 = base_job_sample.create_job(client_service,
                                            job_to_be_created2).get('name')
 
