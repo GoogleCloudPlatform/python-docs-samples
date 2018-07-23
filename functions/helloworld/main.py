@@ -12,9 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START functions_helloworld_error]
-import logging
-# [END functions_helloworld_error]
 import sys
 
 
@@ -159,6 +156,7 @@ def hello_error_2(request):
     # [START functions_helloworld_error]
     # WILL NOT be reported to Stackdriver Error Reporting, but will show up
     # in logs
+    import logging
     print(RuntimeError('I failed you (print to stdout)'))
     logging.warn(RuntimeError('I failed you (logging.warn)'))
     logging.error(RuntimeError('I failed you (logging.error)'))
