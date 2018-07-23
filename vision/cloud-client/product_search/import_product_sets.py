@@ -57,7 +57,6 @@ def import_product_sets(project_id, location, gcs_uri):
     # synchronous check of operation status
     result = response.result()
     print('Processing done.')
-    print('Results of the processing:')
 
     for i, status in enumerate(result.statuses):
         print('Status of processing line {} of the csv: {}'.format(
