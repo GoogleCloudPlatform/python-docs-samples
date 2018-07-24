@@ -25,20 +25,13 @@ import argparse
 import os
 
 
-def predict(
-    project_id,
-    compute_region,
-    model_id,
-    file_path,
-    translation_allow_fallback=False,
-):
+def predict(project_id, compute_region, model_id, file_path):
     """Translate the content."""
     # [START automl_translation_predict]
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
     # model_id = 'MODEL_ID_HERE'
     # file_path = '/local/path/to/file'
-    # translation_allow_fallback = True allows fallback to Google Translate
 
     from google.cloud import automl_v1beta1 as automl
 
@@ -61,10 +54,7 @@ def predict(
     payload = {"text_snippet": {"content": content}}
 
     # params is additional domain-specific parameters.
-    # translation_allow_fallback allows to use Google translation model.
     params = {}
-    if translation_allow_fallback:
-        params = {"translation_allow_fallback": "True"}
 
     response = prediction_client.predict(model_full_id, payload, params)
     translated_content = response.payload[0].translation.translated_content
@@ -84,12 +74,6 @@ if __name__ == "__main__":
     predict_parser = subparsers.add_parser("predict", help=predict.__doc__)
     predict_parser.add_argument("model_id")
     predict_parser.add_argument("file_path")
-    predict_parser.add_argument(
-        "translation_allow_fallback",
-        nargs="?",
-        choices=["False", "True"],
-        default="False",
-    )
 
     project_id = os.environ["PROJECT_ID"]
     compute_region = os.environ["REGION_NAME"]
@@ -97,13 +81,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.command == "predict":
-        translation_allow_fallback = (
-            True if args.translation_allow_fallback == "True" else False
-        )
-        predict(
-            project_id,
-            compute_region,
-            args.model_id,
-            args.file_path,
-            translation_allow_fallback,
-        )
+        predict(project_id, compute_region, args.model_id, args.file_path)
