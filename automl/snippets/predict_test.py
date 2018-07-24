@@ -25,7 +25,7 @@ compute_region = "us-central1"
 def test_predict(capsys):
     model_id = "3128559826197068699"
     automl_translation_predict.predict(
-        project_id, compute_region, model_id, "resources/input.txt", False
+        project_id, compute_region, model_id, "resources/input.txt"
     )
     out, _ = capsys.readouterr()
     assert "Translated content: " in out
