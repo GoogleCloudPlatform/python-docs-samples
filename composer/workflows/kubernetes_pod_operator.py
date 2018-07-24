@@ -53,9 +53,9 @@ secret_env = secret.Secret(
     secret='airflow-secrets',
     key='sql_alchemy_conn')
 
+# [START composer_kubernetespodoperator]
 YESTERDAY = datetime.datetime.now() - datetime.timedelta(days=1)
 
-# [START composer_kubernetespodoperator]
 # If a Pod fails to launch, or has an error occur in the container, Airflow
 # will show the task as failed, as well as contain all of the task logs
 # required to debug.
