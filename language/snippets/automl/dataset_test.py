@@ -38,7 +38,7 @@ def test_dataset_create_import_delete(capsys):
 
     # import data
     dataset_id = create_dataset_output[1].split()[2]
-    data = "gs://{}-vcm/happiness.csv".format(project_id)
+    data = "gs://{}-lcm/happiness.csv".format(project_id)
     automl_natural_language_dataset.import_data(
         project_id, compute_region, dataset_id, data
     )
