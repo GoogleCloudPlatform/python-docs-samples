@@ -160,8 +160,8 @@ with models.DAG(
                             # The label key's value that pods can be scheduled
                             # on.
                             'values': [
-                                'nodepool-label-value',
-                                'nodepool-label-value2',
+                                'node-pool-name-1',
+                                'node-pool-name-2',
                             ]
                         }]
                     }]
