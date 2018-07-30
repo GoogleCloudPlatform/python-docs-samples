@@ -143,6 +143,58 @@ To run this sample:
 
 
 
+Beta Detect
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=vision/cloud-client/detect/beta_snippets.py,vision/cloud-client/detect/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python beta_snippets.py
+
+    usage: beta_snippets.py [-h]
+                            {object-localization,object-localization-uri,handwritten-ocr,handwritten-ocr-uri}
+                            ...
+
+    Google Cloud Vision API Python Beta Snippets
+
+    Example Usage:
+    python beta_snippets.py -h
+    python beta_snippets.py object-localizer INPUT_IMAGE
+    python beta_snippets.py object-localizer-uri gs://...
+    python beta_snippets.py handwritten-ocr INPUT_IMAGE
+    python beta_snippets.py handwritten-ocr-uri gs://...
+
+    For more information, the documentation at
+    https://cloud.google.com/vision/docs.
+
+    positional arguments:
+      {object-localization,object-localization-uri,handwritten-ocr,handwritten-ocr-uri}
+        object-localization
+                            Localize objects in the local image. Args: path: The
+                            path to the local file.
+        object-localization-uri
+                            Localize objects in the image on Google Cloud Storage
+                            Args: uri: The path to the file in Google Cloud
+                            Storage (gs://...)
+        handwritten-ocr     Detects handwritten characters in a local image. Args:
+                            path: The path to the local file.
+        handwritten-ocr-uri
+                            Detects handwritten characters in the file located in
+                            Google Cloud Storage. Args: uri: The path to the file
+                            in Google Cloud Storage (gs://...)
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
+
 
 
 The client library

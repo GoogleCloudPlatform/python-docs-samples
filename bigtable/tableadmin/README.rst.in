@@ -1,0 +1,23 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Bigtable and run some basic operations.
+  short_name: Cloud Bigtable
+  url: https://cloud.google.com/bigtable/docs
+  description: > 
+    `Google Cloud Bigtable`_ is Google's NoSQL Big Data database service. It's
+    the same database that powers many core Google services, including Search,
+    Analytics, Maps, and Gmail.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Basic example with Bigtable Column family and GC rules.
+  file: tableadmin.py
+  show_help: true
+
+cloud_client_library: true
+
+folder: bigtable/tableadmin
