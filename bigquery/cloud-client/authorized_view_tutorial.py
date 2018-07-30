@@ -101,7 +101,6 @@ def run_authorized_view_tutorial():
         source_dataset, ['access_entries'])  # API request
     # [END bigquery_avt_source_dataset_access]
     # [END bigquery_authorized_view_tutorial]
-    return (source_dataset, shared_dataset)
 
 
 if __name__ == '__main__':

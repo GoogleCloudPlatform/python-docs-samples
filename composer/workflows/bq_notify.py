@@ -80,7 +80,7 @@ default_dag_args = {
 }
 
 with models.DAG(
-        'bq_notify',
+        'composer_sample_bq_notify',
         schedule_interval=datetime.timedelta(weeks=4),
         default_args=default_dag_args) as dag:
     # [END composer_notify_failure]

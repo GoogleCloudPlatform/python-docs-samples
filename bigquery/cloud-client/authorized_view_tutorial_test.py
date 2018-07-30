@@ -37,10 +37,14 @@ def to_delete(client):
 
 
 def test_authorized_view_tutorial(client, to_delete):
-    source_dataset, shared_dataset = (
-        authorized_view_tutorial.run_authorized_view_tutorial())
-    to_delete.extend([source_dataset, shared_dataset])
+    source_dataset_ref = client.dataset('github_source_data')
+    shared_dataset_ref = client.dataset('shared_views')
+    to_delete.extend([source_dataset_ref, shared_dataset_ref])
 
+    authorized_view_tutorial.run_authorized_view_tutorial()
+
+    source_dataset = client.get_dataset(source_dataset_ref)
+    shared_dataset = client.get_dataset(shared_dataset_ref)
     analyst_email = 'example-analyst-group@google.com'
     analyst_entries = [entry for entry in shared_dataset.access_entries
                        if entry.entity_id == analyst_email]
