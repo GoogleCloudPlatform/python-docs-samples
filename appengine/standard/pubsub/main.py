@@ -1,4 +1,4 @@
-# Copyright 2017 Google, Inc.
+# Copyright 2018 Google, LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -47,15 +47,14 @@ def index():
 
     service = build('pubsub', 'v1')
     topic_path = 'projects/{project_id}/topics/{topic}'.format(
-        project_id=app.config['PROJECT'],
+        project_id=app.config['GCLOUD_PROJECT'],
         topic=app.config['PUBSUB_TOPIC']
     )
     service.projects().topics().publish(
         topic=topic_path, body={
-          "messages":
-            [{
+          "messages": [{
               "data": base64.b64encode(data)
-            }]
+          }]
         }).execute()
 
     return 'OK', 200
