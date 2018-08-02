@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START functions_http_unit_test]
-from unittest.mock import Mock
+from mock import Mock
 
 import main
 
