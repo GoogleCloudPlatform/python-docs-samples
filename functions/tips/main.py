@@ -17,9 +17,7 @@ from datetime import datetime
 # [END functions_tips_infinite_retries]
 
 # [START functions_tips_gcp_apis]
-# [START functions_log_retrieve]
 import os
-# [END functions_log_retrieve]
 # [END functions_tips_gcp_apis]
 
 # [START functions_tips_infinite_retries]
@@ -31,10 +29,6 @@ from dateutil import parser
 # [START functions_tips_retry]
 from google.cloud import error_reporting
 # [END functions_tips_retry]
-
-# [START functions_logs_retrieve]
-from google.cloud import logging
-# [END functions_logs_retrieve]
 
 # [START functions_tips_gcp_apis]
 from google.cloud import pubsub_v1
@@ -198,33 +192,3 @@ def retry_or_not(data, context):
         else:
             pass   # Swallow the exception and don't retry
 # [END functions_tips_retry]
-
-
-# [START functions_log_retrieve]
-logging_client = logging.Client()
-log_name = 'cloudfunctions.googleapis.com%2Fcloud-functions'
-logger = logging_client.logger(log_name.format(os.getenv('GCP_PROJECT')))
-
-
-def get_log_entries(request):
-    """
-    HTTP Cloud Function that displays log entries from Cloud Functions.
-    Args:
-        request (flask.Request): The request object.
-    Returns:
-        The response text, or any set of values that can be turned into a
-        Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
-    """
-    """"""
-
-    all_entries = logger.list_entries(page_size=10)
-    entries = next(all_entries.pages)
-
-    for entry in entries:
-        timestamp = entry.timestamp.isoformat()
-        print('* {}: {}'.format
-              (timestamp, entry.payload))
-
-    return 'Done!'
-# [END functions_log_retrieve]
