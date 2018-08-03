@@ -14,15 +14,30 @@
 
 # [START functions_tips_infinite_retries]
 from datetime import datetime
+# [END functions_tips_infinite_retries]
 
+# [START functions_tips_gcp_apis]
+# [START functions_log_retrieve]
+import os
+# [END functions_log_retrieve]
+# [END functions_tips_gcp_apis]
+
+# [START functions_tips_infinite_retries]
 # The 'python-dateutil' package must be included in requirements.txt.
 from dateutil import parser
 
 # [END functions_tips_infinite_retries]
 
+# [START functions_tips_retry]
+from google.cloud import error_reporting
+# [END functions_tips_retry]
+
+# [START functions_logs_retrieve]
+from google.cloud import logging
+# [END functions_logs_retrieve]
+
 # [START functions_tips_gcp_apis]
 from google.cloud import pubsub_v1
-
 # [END functions_tips_gcp_apis]
 
 # [START functions_tips_connection_pooling]
@@ -111,9 +126,7 @@ def gcp_api_call(request):
         Response object using `make_response`
         <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
     """
-    global publisher
 
-    import os
     project = os.getenv('GCP_PROJECT')
     request_json = request.get_json()
 
@@ -158,6 +171,9 @@ def avoid_infinite_retries(data, context):
 
 
 # [START functions_tips_retry]
+error_client = error_reporting.Client()
+
+
 def retry_or_not(data, context):
     """Background Cloud Function that demonstrates how to toggle retries.
 
@@ -167,9 +183,6 @@ def retry_or_not(data, context):
     Returns:
         None; output is written to Stackdriver Logging
     """
-
-    from google import cloud
-    error_client = cloud.error_reporting.Client()
 
     if data.data.get('retry'):
         try_again = True
@@ -185,3 +198,33 @@ def retry_or_not(data, context):
         else:
             pass   # Swallow the exception and don't retry
 # [END functions_tips_retry]
+
+
+# [START functions_log_retrieve]
+logging_client = logging.Client()
+log_name = 'cloudfunctions.googleapis.com%2Fcloud-functions'
+logger = logging_client.logger(log_name.format(os.getenv('GCP_PROJECT')))
+
+
+def get_log_entries(request):
+    """
+    HTTP Cloud Function that displays log entries from Cloud Functions.
+    Args:
+        request (flask.Request): The request object.
+    Returns:
+        The response text, or any set of values that can be turned into a
+        Response object using `make_response`
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+    """
+    """"""
+
+    all_entries = logger.list_entries(page_size=10)
+    entries = next(all_entries.pages)
+
+    for entry in entries:
+        timestamp = entry.timestamp.isoformat()
+        print('* {}: {}'.format
+              (timestamp, entry.payload))
+
+    return 'Done!'
+# [END functions_log_retrieve]
