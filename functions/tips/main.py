@@ -19,6 +19,12 @@ from datetime import datetime
 from dateutil import parser
 
 # [END functions_tips_infinite_retries]
+
+# [START functions_tips_gcp_apis]
+from google.cloud import pubsub_v1
+
+# [END functions_tips_gcp_apis]
+
 # [START functions_tips_connection_pooling]
 import requests
 
@@ -87,6 +93,39 @@ def connection_pooling(request):
     response.raise_for_status()
     return 'Success!'
 # [END functions_tips_connection_pooling]
+
+
+# [START functions_tips_gcp_apis]
+# Create a global Pub/Sub client to avoid unneeded network activity
+publisher = pubsub_v1.PublisherClient()
+
+
+def gcp_api_call(request):
+    """
+    HTTP Cloud Function that uses a cached client library instance to
+    reduce the number of connections required per function invocation.
+    Args:
+        request (flask.Request): The request object.
+    Returns:
+        The response text, or any set of values that can be turned into a
+        Response object using `make_response`
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+    """
+    global publisher
+
+    import os
+    project = os.getenv('GCP_PROJECT')
+    request_json = request.get_json()
+
+    topic_name = request_json['topic']
+    topic_path = publisher.topic_path(project, topic_name)
+
+    # Process the request
+    data = 'Test message'.encode('utf-8')
+    publisher.publish(topic_path, data=data)
+
+    return '1 message published'
+# [END functions_tips_gcp_apis]
 
 
 # [START functions_tips_infinite_retries]
