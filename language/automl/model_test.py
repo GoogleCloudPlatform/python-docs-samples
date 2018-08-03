@@ -18,6 +18,7 @@ import datetime
 import os
 
 from google.cloud import automl_v1beta1 as automl
+import pytest
 
 import automl_natural_language_model
 
@@ -25,6 +26,7 @@ project_id = os.environ["GCLOUD_PROJECT"]
 compute_region = "us-central1"
 
 
+@pytest.mark.skip(reason="creates too many models")
 def test_model_create_status_delete(capsys):
     # create model
     client = automl.AutoMlClient()
