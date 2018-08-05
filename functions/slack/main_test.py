@@ -20,13 +20,12 @@ import pytest
 
 import main
 
-API_KEY = os.environ['API_KEY']
-
 with open('config.json', 'r') as f:
     data = f.read()
 config = json.loads(data)
 
-kg_search = apiclient.discovery.build('kgsearch', 'v1', developerKey=API_KEY)
+kg_search = apiclient.discovery.build('kgsearch', 'v1',
+                                      developerKey=config['KG_API_KEY'])
 example_response = kg_search.entities().search(query='lion', limit=1).execute()
 
 
@@ -50,8 +49,8 @@ class TestGCFPySlackSample(object):
     def test_format_slack_message(self):
         message = main.format_slack_message('lion', example_response)
 
-        assert 'lion' in message['text']
-        assert 'lion' in message['attachments'][0]['title']
+        assert 'lion' in message['text'].lower()
+        assert 'lion' in message['attachments'][0]['title'].lower()
         assert message['attachments'][0]['color'] == '#3367d6'
 
     def test_make_search_request(self):
@@ -61,8 +60,8 @@ class TestGCFPySlackSample(object):
             search.execute.return_value = example_response
             message = main.make_search_request('lion')
 
-        assert 'lion' in message['text']
-        assert 'lion' in message['attachments'][0]['title']
+        assert 'lion' in message['text'].lower()
+        assert 'lion' in message['attachments'][0]['title'].lower()
         assert message['attachments'][0]['color'] == '#3367d6'
 
     def test_kg_search(self):
