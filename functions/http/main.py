@@ -33,6 +33,14 @@ import xmltodict
 # [START functions_http_xml]
 
 def parse_xml(request):
+    """ Parses a document of type 'text/xml'
+    Args:
+        request (flask.Request): The request object.
+    Returns:
+        The response text, or any set of values that can be turned into a
+         Response object using `make_response`
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+    """
     data = xmltodict.parse(request.data)
     return json.dumps(data, indent=2)
 # [END functions_http_xml]
@@ -49,6 +57,15 @@ def get_file_path(filename):
 
 
 def parse_multipart(request):
+    """ Parses a 'multipart/form-data' upload request
+    Args:
+        request (flask.Request): The request object.
+    Returns:
+        The response text, or any set of values that can be turned into a
+         Response object using `make_response`
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+    """
+
     # This code will process each non-file field in the form
     fields = {}
     data = request.form.to_dict()
