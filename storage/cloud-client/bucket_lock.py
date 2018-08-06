@@ -32,6 +32,19 @@ def set_retention_policy(bucket_name, retention_period):
     # [END storage_set_retention_policy]
 
 
+def remove_retention_policy(bucket_name):
+    """Defines a retention policy on a given bucket"""
+    # [START storage_remove_retention_policy]
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+
+    bucket.retention_period = None
+    print('Bucket {} retention period set for {} seconds'.format(
+        bucket.name,
+        bucket.retention_period))
+    # [END storage_remove_retention_policy]
+
+
 def lock_retention_policy(bucket_name):
     # [START storage_lock_retention_policy]
     storage_client = storage.Client()
@@ -39,12 +52,34 @@ def lock_retention_policy(bucket_name):
 
     # Warning: Once a retention policy is locked it cannot be unlocked
     # and retention period can only be increased.
-    bucket.lock_retention_policy()
+    bucket.retention_policy_locked = True
 
     print('Retention policy for {} is now locked'.format(bucket_name))
     print('Retention policy Effective as of {}'.format(
-        bucket.retention_effective_at))
+        bucket.retention_policy_effective_time))
     # [END storage_lock_retention_policy]
+
+
+def set_temporary_hold(bucket_name, blob_name):
+    # [START storage_set_temporary_hold]
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+
+    blob.temporary_hold = True
+    print("Temporary hold was set for #{blob_name}")
+    # [END storage_set_temporary_hold]
+
+
+def release_temporary_hold(bucket_name, blob_name):
+    # [START storage_release_temporary_hold]
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+
+    blob.temporary_hold = False
+    print("Temporary hold was release for #{blob_name}")
+    # [END storage_release_temporary_hold]
 
 
 def enable_default_event_based_hold(bucket_name):
@@ -56,6 +91,17 @@ def enable_default_event_based_hold(bucket_name):
 
     print('Default event based hold was enabled for {}'.format(bucket_name))
     # [END storage_enable_default_event_based_hold]
+
+
+def disable_default_event_based_hold(bucket_name):
+    # [START storage_disable_default_event_based_hold]
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+
+    bucket.default_event_based_hold = False
+
+    print("Default event based hold was disabled for {}".format(bucket_name))
+    # [END storage_disable_default_event_based_hold]
 
 
 if __name__ == '__main__':
@@ -70,20 +116,48 @@ if __name__ == '__main__':
     set_retention_policy_parser.add_argument('bucket_name')
     set_retention_policy_parser.add_argument('retention_period')
 
+    remove_retention_policy_parser = subparsers.add_parser(
+        'remove-retention-policy', help=remove_retention_policy.__doc__)
+    remove_retention_policy_parser.add_argument('bucket_name')
+    remove_retention_policy_parser.add_argument('retention_period')
+
     lock_retention_policy_parser = subparsers.add_parser(
         'lock-retention-policy', help=lock_retention_policy.__doc__)
     lock_retention_policy_parser.add_argument('bucket_name')
+
+    set_temporary_hold_parser = subparsers.add_parser(
+        'set-temporary-hold', help=set_temporary_hold.__doc__)
+    set_temporary_hold_parser.add_argument('bucket_name')
+    set_temporary_hold_parser.add_argument('retention_period')
+
+    release_temporary_hold_parser = subparsers.add_parser(
+        'release-temporary-hold', help=release_temporary_hold.__doc__)
+    release_temporary_hold_parser.add_argument('bucket_name')
+    release_temporary_hold_parser.add_argument('retention_period')
 
     enable_default_event_based_hold_parser = subparsers.add_parser(
         'enable-default-event-based-hold',
         help=enable_default_event_based_hold.__doc__)
     enable_default_event_based_hold_parser.add_argument('bucket_name')
 
+    disable_default_event_based_hold_parser = subparsers.add_parser(
+        'disable-default-event-based-hold',
+        help=disable_default_event_based_hold.__doc__)
+    disable_default_event_based_hold_parser.add_argument('bucket_name')
+
     args = parser.parse_args()
 
     if args.command == 'set-retention-policy':
         set_retention_policy(args.bucket_name, args.retention_period)
+    elif args.command == 'remove-retention-policy':
+        remove_retention_policy(args.bucket_name)
     elif args.command == 'lock-retention-policy':
         lock_retention_policy(args.bucket_name)
+    elif args.command == 'set-temporary-hold':
+        set_temporary_hold(args.bucket_name)
+    elif args.command == 'release-temporary-hold':
+        release_temporary_hold(args.bucket_name)
     elif args.command == 'enable-default-event-based-hold':
         enable_default_event_based_hold(args.bucket_name)
+    elif args.command == 'disable-default-event-based-hold':
+        disable_default_event_based_hold(args.bucket_name)
