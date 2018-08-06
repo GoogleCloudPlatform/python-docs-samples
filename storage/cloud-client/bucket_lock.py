@@ -26,6 +26,8 @@ def set_retention_policy(bucket_name, retention_period):
     bucket = storage_client.bucket(bucket_name)
 
     bucket.retention_period = retention_period
+    bucket.patch()
+
     print('Bucket {} retention period set for {} seconds'.format(
         bucket.name,
         bucket.retention_period))
@@ -39,6 +41,8 @@ def remove_retention_policy(bucket_name):
     bucket = storage_client.bucket(bucket_name)
 
     bucket.retention_period = None
+    bucket.patch()
+
     print('Bucket {} retention period set for {} seconds'.format(
         bucket.name,
         bucket.retention_period))
@@ -52,7 +56,7 @@ def lock_retention_policy(bucket_name):
 
     # Warning: Once a retention policy is locked it cannot be unlocked
     # and retention period can only be increased.
-    bucket.retention_policy_locked = True
+    bucket.lock_retention_policy()
 
     print('Retention policy for {} is now locked'.format(bucket_name))
     print('Retention policy Effective as of {}'.format(
@@ -67,6 +71,8 @@ def set_temporary_hold(bucket_name, blob_name):
     blob = bucket.blob(blob_name)
 
     blob.temporary_hold = True
+    blob.patch()
+
     print("Temporary hold was set for #{blob_name}")
     # [END storage_set_temporary_hold]
 
@@ -78,6 +84,8 @@ def release_temporary_hold(bucket_name, blob_name):
     blob = bucket.blob(blob_name)
 
     blob.temporary_hold = False
+    blob.patch()
+
     print("Temporary hold was release for #{blob_name}")
     # [END storage_release_temporary_hold]
 
@@ -89,6 +97,7 @@ def set_event_based_hold(bucket_name, blob_name):
     blob = bucket.blob(blob_name)
 
     blob.event_based_hold = True
+    blob.patch()
 
     print('Event based hold was set for {}'.format(blob_name))
     # [END storage_set_event_based_hold]
@@ -101,6 +110,7 @@ def release_event_based_hold(bucket_name, blob_name):
     blob = bucket.blob(blob_name)
 
     blob.event_based_hold = False
+    blob.patch()
 
     print('Event based hold was released for {}'.format(blob_name))
     # [END storage_release_event_based_hold]
@@ -112,6 +122,7 @@ def enable_default_event_based_hold(bucket_name):
     bucket = storage_client.bucket(bucket_name)
 
     bucket.default_event_based_hold = True
+    bucket.patch()
 
     print('Default event based hold was enabled for {}'.format(bucket_name))
     # [END storage_enable_default_event_based_hold]
@@ -123,6 +134,7 @@ def disable_default_event_based_hold(bucket_name):
     bucket = storage_client.bucket(bucket_name)
 
     bucket.default_event_based_hold = False
+    bucket.patch()
 
     print("Default event based hold was disabled for {}".format(bucket_name))
     # [END storage_disable_default_event_based_hold]
