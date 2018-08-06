@@ -82,6 +82,30 @@ def release_temporary_hold(bucket_name, blob_name):
     # [END storage_release_temporary_hold]
 
 
+def set_event_based_hold(bucket_name, blob_name):
+    # [START storage_set_event_based_hold]
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+
+    blob.event_based_hold = True
+
+    print('Event based hold was set for {}'.format(blob_name))
+    # [END storage_set_event_based_hold]
+
+
+def release_event_based_hold(bucket_name, blob_name):
+    # [START storage_release_event_based_hold]
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+
+    blob.event_based_hold = False
+
+    print('Event based hold was released for {}'.format(blob_name))
+    # [END storage_release_event_based_hold]
+
+
 def enable_default_event_based_hold(bucket_name):
     # [START storage_enable_default_event_based_hold]
     storage_client = storage.Client()
@@ -133,7 +157,17 @@ if __name__ == '__main__':
     release_temporary_hold_parser = subparsers.add_parser(
         'release-temporary-hold', help=release_temporary_hold.__doc__)
     release_temporary_hold_parser.add_argument('bucket_name')
-    release_temporary_hold_parser.add_argument('retention_period')
+    release_temporary_hold_parser.add_argument('blob_name')
+
+    set_event_based_hold_parser = subparsers.add_parser(
+        'set-event_based-hold', help=set_event_based_hold.__doc__)
+    set_event_based_hold_parser.add_argument('bucket_name')
+    set_event_based_hold_parser.add_argument('blob_name')
+
+    release_event_based_hold_parser = subparsers.add_parser(
+        'release-event_based-hold', help=release_event_based_hold.__doc__)
+    release_event_based_hold_parser.add_argument('bucket_name')
+    release_event_based_hold_parser.add_argument('blob_name')
 
     enable_default_event_based_hold_parser = subparsers.add_parser(
         'enable-default-event-based-hold',
@@ -157,6 +191,10 @@ if __name__ == '__main__':
         set_temporary_hold(args.bucket_name)
     elif args.command == 'release-temporary-hold':
         release_temporary_hold(args.bucket_name)
+    elif args.command == 'set-event-based-hold':
+        set_event_based_hold(args.bucket_name)
+    elif args.command == 'release-event-based-hold':
+        release_event_based_hold(args.bucket_name)
     elif args.command == 'enable-default-event-based-hold':
         enable_default_event_based_hold(args.bucket_name)
     elif args.command == 'disable-default-event-based-hold':

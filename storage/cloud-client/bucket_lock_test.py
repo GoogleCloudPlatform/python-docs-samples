@@ -60,6 +60,17 @@ def test_release_temporary_hold(capsys):
     out, _ = capsys.readouterr()
     assert out
 
+def test_set_event_based_hold(capsys):
+    bucket_lock.set_event_based_hold(BUCKET, 'storage_snippets_test_sigil')
+    out, _ = capsys.readouterr()
+    assert out
+
+
+def test_release_event_based_hold(capsys):
+    bucket_lock.release_event_based_hold(BUCKET, 'storage_snippets_test_sigil')
+    out, _ = capsys.readouterr()
+    assert out
+
 
 def test_enable_default_event_based_hold(capsys):
     bucket_lock.enable_default_event_based_hold(BUCKET)
