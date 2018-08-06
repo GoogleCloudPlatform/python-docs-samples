@@ -21,6 +21,7 @@ BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 # Retention policy for one week
 RETENTION_POLICY = 60 * 60 * 24 * 7
 
+
 @pytest.fixture
 def test_blob():
     """Provides a pre-existing blob in the test bucket."""
