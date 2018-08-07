@@ -1,4 +1,4 @@
-Django==1.11.13
+Django<=1.11.13
 wheel==0.31.0
 gunicorn==19.7.1
 psycopg2==2.7.4
