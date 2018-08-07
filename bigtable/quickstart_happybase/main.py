@@ -13,11 +13,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# [START bigtable_quickstart]
+# [START bigtable_quickstart_happybase]
 import argparse
 import json
 
+from google.cloud import happybase
 from google.cloud import bigtable
 
 
@@ -28,18 +28,20 @@ def main(project_id, instance_id, table_id):
     # Connect to an existing instance:my-bigtable-instance
     instance = client.instance(instance_id)
 
-    # Connect to an existing table:my-table
-    table = instance.table(table_id)
+    connection = happybase.Connection(instance=instance)
 
-    column_family_id = 'cf1'
-    column_id = 'c1'
-    key = 'r1'
+    try:
+        # Connect to an existing table:my-table
+        table = connection.table(table_id)
 
-    row = table.read_row(key.encode('utf-8'))
-    value = row.cells
-    # value = row.cells[column_family_id][column_id][0].value.decode('utf-8')
-    print('Row key: {}\nData: {}'.format(key, value))
+        key = 'r1'
+        row = table.row(key.encode('utf-8'))
+        value = row
+        print('Row key: {}\nData: {}'.format(key, json.dumps(value, indent=4,
+                                                             sort_keys=True)))
 
+    finally:
+        connection.close()
 
 
 if __name__ == '__main__':
@@ -56,4 +58,4 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     main(args.project_id, args.instance_id, args.table)
-# [END bigtable_quickstart]
+# [END bigtable_quickstart_happybase]
