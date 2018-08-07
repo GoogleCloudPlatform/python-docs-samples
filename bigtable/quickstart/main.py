@@ -16,7 +16,6 @@
 
 # [START bigtable_quickstart]
 import argparse
-import json
 
 from google.cloud import bigtable
 
@@ -36,10 +35,8 @@ def main(project_id, instance_id, table_id):
     key = 'r1'
 
     row = table.read_row(key.encode('utf-8'))
-    value = row.cells
-    # value = row.cells[column_family_id][column_id][0].value.decode('utf-8')
+    value = row.cells[column_family_id][column_id][0].value.decode('utf-8')
     print('Row key: {}\nData: {}'.format(key, value))
-
 
 
 if __name__ == '__main__':

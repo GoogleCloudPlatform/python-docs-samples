@@ -17,8 +17,8 @@
 import argparse
 import json
 
-from google.cloud import happybase
 from google.cloud import bigtable
+from google.cloud import happybase
 
 
 def main(project_id, instance_id, table_id):
