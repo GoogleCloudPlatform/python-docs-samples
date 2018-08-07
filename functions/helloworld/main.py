@@ -12,9 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START functions_helloworld_error]
-import logging
-# [END functions_helloworld_error]
 import sys
 
 
@@ -95,7 +92,7 @@ def hello_gcs(data, context):
          context (google.cloud.functions.Context): The Cloud Functions
          event metadata.
     """
-    print("File: {}.".format(event['objectId']))
+    print("File: {}.".format(data['objectId']))
 # [END functions_helloworld_storage]
 
 
@@ -157,8 +154,9 @@ def hello_error_1(request):
 
 def hello_error_2(request):
     # [START functions_helloworld_error]
-    # This WILL NOT be reported to Stackdriver Error Reporting,
-    # but will show up in logs
+    # WILL NOT be reported to Stackdriver Error Reporting, but will show up
+    # in logs
+    import logging
     print(RuntimeError('I failed you (print to stdout)'))
     logging.warn(RuntimeError('I failed you (logging.warn)'))
     logging.error(RuntimeError('I failed you (logging.error)'))

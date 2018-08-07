@@ -30,7 +30,9 @@ default_args = {
             datetime.datetime.min.time()),
 }
 
-with airflow.DAG('dependencies_dag', default_args=default_args) as dag:
+with airflow.DAG(
+        'composer_sample_dependencies_dag',
+        default_args=default_args) as dag:
     t1 = bash_operator.BashOperator(
         task_id='print_coin_result',
         bash_command='echo "{0}"'.format(coin_module.flip_coin()),
