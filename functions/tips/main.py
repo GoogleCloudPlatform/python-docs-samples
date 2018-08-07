@@ -105,8 +105,9 @@ def connection_pooling(request):
 
 
 # [START functions_tips_gcp_apis]
+
 # Create a global Pub/Sub client to avoid unneeded network activity
-publisher = pubsub_v1.PublisherClient()
+pubsub = pubsub_v1.PublisherClient()
 
 
 def gcp_api_call(request):
@@ -125,11 +126,11 @@ def gcp_api_call(request):
     request_json = request.get_json()
 
     topic_name = request_json['topic']
-    topic_path = publisher.topic_path(project, topic_name)
+    topic_path = pubsub.topic_path(project, topic_name)
 
     # Process the request
     data = 'Test message'.encode('utf-8')
-    publisher.publish(topic_path, data=data)
+    pubsub.publish(topic_path, data=data)
 
     return '1 message published'
 # [END functions_tips_gcp_apis]
