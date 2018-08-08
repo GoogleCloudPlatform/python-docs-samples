@@ -46,15 +46,15 @@ multiple Python versions, managed by [pyenv](https://github.com/pyenv/pyenv).
     pyenv install --list
     ```
 
-   The python versions are at the top of the long list.
+    The python versions are at the top of the long list.
 
-   If the Python version you want isn't listed, you may need to upgrade
-   your pyenv with homebrew.
+    If the Python version you want isn't listed, you may need to upgrade
+    your pyenv with homebrew.
 
-   ```
-   brew update
-   brew upgrade pyenv
-   ```
+    ```
+    brew update
+    brew upgrade pyenv
+    ```
 
 1.  Compile the necessary Python versions with pyenv.
 
