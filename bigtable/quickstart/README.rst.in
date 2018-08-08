@@ -14,7 +14,7 @@ setup:
 - install_deps
 
 samples:
-- name: Basic example
+- name: Quickstart
   file: main.py
   show_help: true
 

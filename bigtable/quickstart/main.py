@@ -13,7 +13,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 # [START bigtable_quickstart]
 import argparse
 
@@ -30,12 +29,13 @@ def main(project_id, instance_id, table_id):
     # Connect to an existing table:my-table
     table = instance.table(table_id)
 
+    key = 'r1'
+    row = table.read_row(key.encode('utf-8'))
+
     column_family_id = 'cf1'
     column_id = 'c1'
-    key = 'r1'
-
-    row = table.read_row(key.encode('utf-8'))
     value = row.cells[column_family_id][column_id][0].value.decode('utf-8')
+
     print('Row key: {}\nData: {}'.format(key, value))
 
 

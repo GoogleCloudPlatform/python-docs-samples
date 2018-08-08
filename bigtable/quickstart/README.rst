@@ -61,7 +61,7 @@ Install Dependencies
 Samples
 -------------------------------------------------------------------------------
 
-Basic example
+Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
