@@ -3,6 +3,11 @@
 In this guide, you'll set up a local Python development environment with
 multiple Python versions, managed by [pyenv](https://github.com/pyenv/pyenv).
 
+This guide differs from the [Google Cloud Python development
+instructions](https://cloud.google.com/python/setup) because developers of
+samples and libraries need to be able to use multiple versions of Python to
+test their code.
+
 ## Before you begin
 
 1.  [Optional] Install [homebrew](https://brew.sh/).
@@ -46,10 +51,9 @@ multiple Python versions, managed by [pyenv](https://github.com/pyenv/pyenv).
     pyenv install --list
     ```
 
-    The python versions are at the top of the long list.
-
-    If the Python version you want isn't listed, you may need to upgrade
-    your pyenv with homebrew.
+    The Python versions are at the top of the long list. If the Python
+    version you want isn't listed, you may need to upgrade your pyenv with
+    homebrew.
 
     ```
     brew update
