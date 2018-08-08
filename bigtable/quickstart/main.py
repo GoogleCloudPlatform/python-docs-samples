@@ -33,7 +33,7 @@ def main(project_id, instance_id, table_id):
     row = table.read_row(key.encode('utf-8'))
 
     column_family_id = 'cf1'
-    column_id = 'c1'
+    column_id = 'c1'.encode('utf-8')
     value = row.cells[column_family_id][column_id][0].value.decode('utf-8')
 
     print('Row key: {}\nData: {}'.format(key, value))

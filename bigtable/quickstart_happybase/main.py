@@ -36,7 +36,7 @@ def main(project_id, instance_id, table_id):
 
         key = 'r1'
         row = table.row(key.encode('utf-8'))
-        value = row
+        value = {k.decode("utf-8"): v.decode("utf-8") for k, v in row.items()}
         print('Row key: {}\nData: {}'.format(key, json.dumps(value, indent=4,
                                                              sort_keys=True)))
 
