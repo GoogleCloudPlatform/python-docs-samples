@@ -15,14 +15,12 @@
 
 'use strict';
 
-// [START gae_python37_auth_sign_out]
+// [START gae_python37_auth_javascript]
 window.addEventListener('load', function () {
   document.getElementById('sign-out').onclick = function () {
     firebase.auth().signOut();
   };
-// [END gae_python37_auth_sign_out]
 
-  // [START gae_python37_auth_UIconfig_variable]
   // FirebaseUI config.
   var uiConfig = {
     signInSuccessUrl: '/',
@@ -40,9 +38,7 @@ window.addEventListener('load', function () {
     // Terms of service url.
     tosUrl: '<your-tos-url>'
   };
-  // [END gae_python37_auth_UIconfig_variable]
 
-  // [START gae_python37_auth_request]
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       // User is signed in, so display the "sign out" button and login info.
@@ -73,5 +69,5 @@ window.addEventListener('load', function () {
     console.log(error);
     alert('Unable to log in: ' + error)
   });
-  // [END gae_python37_auth_request]
 });
+// [END gae_python37_auth_javascript]
