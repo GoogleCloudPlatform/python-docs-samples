@@ -91,7 +91,7 @@ def connection_pooling(request):
 def avoid_infinite_retries(data, context):
     """Background Cloud Function that only executes within a certain
     time period after the triggering event.
-    
+
     Args:
         data (dict): The event payload.
         context (google.cloud.functions.Context): The event metadata.
