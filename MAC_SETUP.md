@@ -26,14 +26,24 @@ test their code.
 1.  Install the [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv)
     plugin.
 
-1.  Add
+    ```
+    brew install pyenv-virtualenv
+    ```
+
+1.  Append the following to your `~/.bashrc`:
 
     ```
     eval "$(pyenv init -)"
     eval "$(pyenv virtualenv-init -)"`
     ```
 
-    to your shell RC file, such as `~/.bashrc`, and reload your shell.
+    Note that this also works with ZSH.
+
+1.  Reload your shell.
+
+    ```
+    source ~/.bashrc
+    ```
 
 1.  Verify that you are now using the pyenv Python shim.
 
@@ -88,6 +98,7 @@ test their code.
 1.  Set the local Python version(s) with `pyenv local`
 
     ```
+    # pyenv local [name of virtualenv] [list of python versions to use]
     pyenv local python-docs-samples 3.6.4 3.7.0 3.5.4 2.715
     ```
 
