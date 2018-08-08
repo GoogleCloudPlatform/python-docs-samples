@@ -100,7 +100,7 @@ test their code.
 
     ```
     # pyenv local [name of virtualenv] [list of python versions to use]
-    pyenv local python-docs-samples 3.6.4 3.7.0 3.5.4 2.715
+    pyenv local python-docs-samples 3.6.4 3.7.0 3.5.4 2.7.15
     ```
 
 1.  Now when you `cd` into the source directory or a subdirectory within it,
