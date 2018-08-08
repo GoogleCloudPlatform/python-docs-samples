@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import datetime
-from mock import MagicMock, Mock, patch
+from unittest.mock import MagicMock, Mock, patch
 
 import flask
 import pytest
