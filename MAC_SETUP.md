@@ -70,14 +70,15 @@ test their code.
     brew upgrade pyenv
     ```
 
-1.  Compile the necessary Python versions with pyenv.
+1. Compile the necessary Python versions with pyenv. Use the latest release
+   of the versions you wish to test against.
 
     As of August 8, 2018 my (tswast@) Python versions are:
 
-    *  2.7.15
-    *  3.5.4
-    *  3.6.4
-    *  3.7.0
+    *  2.7.15 (latest 2.7.x release)
+    *  3.5.4 (latest 3.5.x release)
+    *  3.6.4 (latest 3.6.x release)
+    *  3.7.0 (latest 3.7.x release)
 
 ## Using pyenv and pyenv-virtualenv to manage your Python versions
 
