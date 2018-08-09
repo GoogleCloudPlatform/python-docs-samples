@@ -103,11 +103,11 @@ test their code.
     pyenv local python-docs-samples 3.6.4 3.7.0 3.5.4 2.7.15
     ```
 
-1.  Now when you `cd` into the source directory or a subdirectory within it,
+1.  Now, when you `cd` into the source directory or a subdirectory within it,
     pyenv will make your virtualenv the default Python. Since you specified
     more than one version, it will also add binaries like `python36` and
     `python27` to your PATH, which nox uses when picking Python interpreters.
 
-1.  Since we don't want to add the pyenv configuration to git, add
-    `.python-version` to your [global gitignore
-    file](https://help.github.com/articles/ignoring-files/#create-a-global-gitignore).
+1.  Add `.python-version` to your [global gitignore
+    file](https://help.github.com/articles/ignoring-files/#create-a-global-gitignore),
+    so it wont be committed into the repository.
