@@ -21,7 +21,8 @@ from google.cloud import bigtable
 from google.cloud import happybase
 
 
-def main(project_id, instance_id, table_id):
+def main(project_id="project-id", instance_id="instance-id",
+    table_id="my-table"):
     # Creates a Bigtable client
     client = bigtable.Client(project=project_id)
 
