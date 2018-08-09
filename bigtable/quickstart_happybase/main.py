@@ -22,7 +22,7 @@ from google.cloud import happybase
 
 
 def main(project_id="project-id", instance_id="instance-id",
-    table_id="my-table"):
+         table_id="my-table"):
     # Creates a Bigtable client
     client = bigtable.Client(project=project_id)
 
