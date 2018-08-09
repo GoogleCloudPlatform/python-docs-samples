@@ -36,7 +36,7 @@ def hello_background(data, context):
     Args:
          data (dict): The dictionary with data specific to the given event.
          context (google.cloud.functions.Context): The Cloud Functions event
-         context.
+         metadata.
     """
     if data and 'name' in data:
         name = data['name']
@@ -72,7 +72,7 @@ def hello_pubsub(data, context):
     Args:
          data (dict): The dictionary with data specific to this type of event.
          context (google.cloud.functions.Context): The Cloud Functions event
-         context.
+         metadata.
     """
     import base64
 
@@ -90,7 +90,7 @@ def hello_gcs(data, context):
     Args:
          data (dict): The dictionary with data specific to this type of event.
          context (google.cloud.functions.Context): The Cloud Functions
-         event context.
+         event metadata.
     """
     print("File: {}.".format(data['objectId']))
 # [END functions_helloworld_storage]
@@ -162,8 +162,7 @@ def hello_error_2(request):
     logging.error(RuntimeError('I failed you (logging.error)'))
     sys.stderr.write('I failed you (sys.stderr.write)\n')
 
-    # WILL NOT be reported to Stackdriver Error Reporting, but will show up
-    # in request logs (as a 500 response)
+    # This WILL be reported to Stackdriver Error Reporting
     from flask import abort
     return abort(500)
     # [END functions_helloworld_error]
