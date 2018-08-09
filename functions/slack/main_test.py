@@ -50,8 +50,8 @@ class TestGCFPySlackSample(object):
     def test_format_slack_message(self):
         message = main.format_slack_message('lion', example_response)
 
-        assert 'lion' in message['text']
-        assert 'lion' in message['attachments'][0]['title']
+        assert 'lion' in message['text'].lower()
+        assert 'lion' in message['attachments'][0]['title'].lower()
         assert message['attachments'][0]['color'] == '#3367d6'
 
     def test_make_search_request(self):
@@ -61,8 +61,8 @@ class TestGCFPySlackSample(object):
             search.execute.return_value = example_response
             message = main.make_search_request('lion')
 
-        assert 'lion' in message['text']
-        assert 'lion' in message['attachments'][0]['title']
+        assert 'lion' in message['text'].lower()
+        assert 'lion' in message['attachments'][0]['title'].lower()
         assert message['attachments'][0]['color'] == '#3367d6'
 
     def test_kg_search(self):
@@ -80,5 +80,5 @@ class TestGCFPySlackSample(object):
             with mock.patch('main.jsonify', side_effect=json.dumps):
                 response = main.kg_search(request)
 
-        assert 'lion' in response
-        assert 'color' in response
+        assert 'lion' in response.lower()
+        assert 'color' in response.lower()
