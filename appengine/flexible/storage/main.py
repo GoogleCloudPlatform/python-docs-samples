@@ -12,23 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START app]
+# [START gae_flex_storage_app]
 import logging
 import os
 
 from flask import Flask, request
 from google.cloud import storage
 
-# [start config]
 app = Flask(__name__)
-
 
 # Configure this environment variable via app.yaml
 CLOUD_STORAGE_BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-# [end config]
 
 
-# [START form]
 @app.route('/')
 def index():
     return """
@@ -37,10 +33,8 @@ def index():
     <input type="submit">
 </form>
 """
-# [END form]
 
 
-# [START upload]
 @app.route('/upload', methods=['POST'])
 def upload():
     """Process the uploaded file and upload it to Google Cloud Storage."""
@@ -65,7 +59,6 @@ def upload():
 
     # The public URL can be used to directly access the uploaded file via HTTP.
     return blob.public_url
-# [END upload]
 
 
 @app.errorhandler(500)
@@ -81,4 +74,4 @@ if __name__ == '__main__':
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
     app.run(host='127.0.0.1', port=8080, debug=True)
-# [END app]
+# [END gae_flex_storage_app]
