@@ -22,7 +22,7 @@ import uuid
 from google.cloud import pubsub_v1
 import pytest
 
-PROJECT = getenv('GCLOUD_PROJECT')
+PROJECT = getenv('GCP_PROJECT')
 TOPIC = getenv('TOPIC')
 
 assert PROJECT is not None
