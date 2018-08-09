@@ -88,8 +88,18 @@ def connection_pooling(request):
 
 
 # [START functions_tips_infinite_retries]
-def avoid_infinite_retries(event, context):
-    timestamp = event.timestamp
+def avoid_infinite_retries(data, context):
+    """Background Cloud Function that only executes within a certain
+    time period after the triggering event.
+
+    Args:
+        data (dict): The event payload.
+        context (google.cloud.functions.Context): The event metadata.
+    Returns:
+        None; output is written to Stackdriver Logging
+    """
+
+    timestamp = data.timestamp
 
     event_time = parser.parse(timestamp)
     event_age = (datetime.now() - event_time).total_seconds() * 1000
@@ -106,11 +116,20 @@ def avoid_infinite_retries(event, context):
 
 
 # [START functions_tips_retry]
-def retry_or_not(event, context):
+def retry_or_not(data, context):
+    """Background Cloud Function that demonstrates how to toggle retries.
+
+    Args:
+        data (dict): The event payload.
+        context (google.cloud.functions.Context): The event metadata.
+    Returns:
+        None; output is written to Stackdriver Logging
+    """
+
     from google import cloud
     error_client = cloud.error_reporting.Client()
 
-    if event.data.get('retry'):
+    if data.data.get('retry'):
         try_again = True
     else:
         try_again = False
