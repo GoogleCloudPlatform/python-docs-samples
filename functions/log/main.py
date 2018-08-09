@@ -16,12 +16,11 @@
 import logging
 
 
-def hello_world(event, context):
+def hello_world(data, context):
     """Background Cloud Function.
     Args:
-         event (dict): The dictionary with data specific to the given event.
-         context (google.cloud.functions.Context): The Cloud Functions event
-         context.
+         data (dict): The dictionary with data specific to the given event.
+         context (google.cloud.functions.Context): The event metadata.
     """
     print('Hello, stdout!')
     logging.warn('Hello, logging handler!')
