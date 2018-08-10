@@ -183,7 +183,7 @@ def detect_landmarks_uri(uri):
 # [END vision_landmark_detection_gcs]
 
 
-# [START def_detect_logos]
+# [START vision_logo_detection]
 def detect_logos(path):
     """Detects logos in the file."""
     client = vision.ImageAnnotatorClient()
@@ -201,10 +201,10 @@ def detect_logos(path):
     for logo in logos:
         print(logo.description)
     # [END migration_logo_detection]
-# [END def_detect_logos]
+# [END vision_logo_detection]
 
 
-# [START def_detect_logos_uri]
+# [START vision_logo_detection_gcs]
 def detect_logos_uri(uri):
     """Detects logos in the file located in Google Cloud Storage or on the Web.
     """
@@ -218,7 +218,7 @@ def detect_logos_uri(uri):
 
     for logo in logos:
         print(logo.description)
-# [END def_detect_logos_uri]
+# [END vision_logo_detection_gcs]
 
 
 # [START def_detect_safe_search]
