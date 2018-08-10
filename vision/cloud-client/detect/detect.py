@@ -40,7 +40,7 @@ from google.cloud import vision
 from google.protobuf import json_format
 
 
-# [START def_detect_faces]
+# [START vision_face_detection]
 def detect_faces(path):
     """Detects faces in an image."""
     client = vision.ImageAnnotatorClient()
@@ -71,10 +71,10 @@ def detect_faces(path):
 
         print('face bounds: {}'.format(','.join(vertices)))
     # [END migration_face_detection]
-# [END def_detect_faces]
+# [END vision_face_detection]
 
 
-# [START def_detect_faces_uri]
+# [START vision_face_detection_gcs]
 def detect_faces_uri(uri):
     """Detects faces in the file located in Google Cloud Storage or the web."""
     client = vision.ImageAnnotatorClient()
@@ -100,7 +100,7 @@ def detect_faces_uri(uri):
                     for vertex in face.bounding_poly.vertices])
 
         print('face bounds: {}'.format(','.join(vertices)))
-# [END def_detect_faces_uri]
+# [END vision_face_detection_gcs]
 
 
 # [START def_detect_labels]
