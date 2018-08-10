@@ -321,7 +321,7 @@ def detect_text_uri(uri):
 # [END def_detect_text_uri]
 
 
-# [START def_detect_properties]
+# [START vision_image_property_detection]
 def detect_properties(path):
     """Detects image properties in the file."""
     client = vision.ImageAnnotatorClient()
@@ -343,10 +343,10 @@ def detect_properties(path):
         print('\tb: {}'.format(color.color.blue))
         print('\ta: {}'.format(color.color.alpha))
     # [END migration_image_properties]
-# [END def_detect_properties]
+# [END vision_image_property_detection]
 
 
-# [START def_detect_properties_uri]
+# [START vision_image_property_detection_gcs]
 def detect_properties_uri(uri):
     """Detects image properties in the file located in Google Cloud Storage or
     on the Web."""
@@ -364,7 +364,7 @@ def detect_properties_uri(uri):
         print('\tg: {}'.format(color.color.green))
         print('\tb: {}'.format(color.color.blue))
         print('\ta: {}'.format(color.color.alpha))
-# [END def_detect_properties_uri]
+# [END vision_image_property_detection_gcs]
 
 
 # [START def_detect_web]
