@@ -103,7 +103,7 @@ def detect_faces_uri(uri):
 # [END vision_face_detection_gcs]
 
 
-# [START def_detect_labels]
+# [START vision_label_detection]
 def detect_labels(path):
     """Detects labels in the file."""
     client = vision.ImageAnnotatorClient()
@@ -121,10 +121,10 @@ def detect_labels(path):
     for label in labels:
         print(label.description)
     # [END migration_label_detection]
-# [END def_detect_labels]
+# [END vision_label_detection]
 
 
-# [START def_detect_labels_uri]
+# [START vision_label_detection_gcs]
 def detect_labels_uri(uri):
     """Detects labels in the file located in Google Cloud Storage or on the
     Web."""
@@ -138,7 +138,7 @@ def detect_labels_uri(uri):
 
     for label in labels:
         print(label.description)
-# [END def_detect_labels_uri]
+# [END vision_label_detection_gcs]
 
 
 # [START def_detect_landmarks]
