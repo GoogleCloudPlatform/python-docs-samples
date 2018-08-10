@@ -40,10 +40,12 @@ def statelessness(request):
 # [END functions_concepts_stateless]
 
 
+# Placeholder
 def heavy_computation():
     return time.time()
 
 
+# Placeholder
 def light_computation():
     return time.time()
 
@@ -101,7 +103,8 @@ def timeout(request):
     time.sleep(120)
 
     # May not execute if function's timeout is <2 minutes
-    return 'Done!'
+    print('Function completed!')
+    return 'Function completed!'
 # [END functions_concepts_after_timeout]
 
 
