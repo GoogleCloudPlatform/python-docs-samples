@@ -33,7 +33,7 @@ apt-get install -yq \
 curl -s "https://storage.googleapis.com/signals-agents/logging/google-fluentd-install.sh" | bash
 service google-fluentd restart &
 
-gsutil cp $GCS_APP_LOCATION /app.tar
+gsutil cp "$GCS_APP_LOCATION"** /
 mkdir -p /app
 tar -x -f /app.tar -C /app
 cd /app
