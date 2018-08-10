@@ -13,9 +13,11 @@
 # limitations under the License.
 
 import os
+import time
 
 from gcp_devrel.testing import eventually_consistent
 from google.cloud import pubsub_v1
+import mock
 import pytest
 
 import publisher
@@ -41,6 +43,19 @@ def topic(client):
     client.create_topic(topic_path)
 
     yield topic_path
+
+
+def _make_sleep_patch():
+    real_sleep = time.sleep
+
+    def new_sleep(period):
+        if period == 60:
+            real_sleep(5)
+            raise RuntimeError('sigil')
+        else:
+            real_sleep(period)
+
+    return mock.patch('time.sleep', new=new_sleep)
 
 
 def test_list(client, topic, capsys):
@@ -96,7 +111,11 @@ def test_publish_with_batch_settings(topic, capsys):
 
 
 def test_publish_with_error_handler(topic, capsys):
-    publisher.publish_messages_with_error_handler(PROJECT, TOPIC)
+
+    with _make_sleep_patch():
+        with pytest.raises(RuntimeError, match='sigil'):
+            publisher.publish_messages_with_error_handler(
+                PROJECT, TOPIC)
 
     out, _ = capsys.readouterr()
     assert 'Published' in out
