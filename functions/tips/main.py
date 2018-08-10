@@ -25,12 +25,14 @@ import requests
 # [END functions_tips_connection_pooling]
 
 
+# Placeholder
 def file_wide_computation():
-    return sum(range(10))
+    return 1
 
 
+# Placeholder
 def function_specific_computation():
-    return sum(range(10))
+    return 1
 
 
 # [START functions_tips_lazy_globals]
@@ -105,7 +107,8 @@ def avoid_infinite_retries(data, context):
     event_age = (datetime.now() - event_time).total_seconds() * 1000
 
     # Ignore events that are too old
-    if event_age > 10000:
+    max_age_ms = 10000
+    if event_age > max_age_ms:
         print('Dropped {} (age {}ms)'.format(context.event_id, event_age))
         return 'Timeout'
 
@@ -135,11 +138,11 @@ def retry_or_not(data, context):
         try_again = False
 
     try:
-        raise Exception('I failed you')
-    except Exception as e:
+        raise RuntimeError('I failed you')
+    except RuntimeError:
         error_client.report_exception()
         if try_again:
-            raise e  # Raise the exception and try again
+            raise  # Raise the exception and try again
         else:
-            return  # Swallow the exception and don't retry
+            pass   # Swallow the exception and don't retry
 # [END functions_tips_retry]
