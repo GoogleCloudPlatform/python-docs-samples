@@ -523,7 +523,7 @@ def web_entities_include_geo_results_uri(uri):
 # [END vision_web_entities_include_geo_results_uri]
 
 
-# [START def_detect_crop_hints]
+# [START vision_crop_hint_detection]
 def detect_crop_hints(path):
     """Detects crop hints in an image."""
     client = vision.ImageAnnotatorClient()
@@ -548,10 +548,10 @@ def detect_crop_hints(path):
 
         print('bounds: {}'.format(','.join(vertices)))
     # [END migration_crop_hints]
-# [END def_detect_crop_hints]
+# [END vision_crop_hint_detection]
 
 
-# [START def_detect_crop_hints_uri]
+# [START vision_crop_hint_detection_gcs]
 def detect_crop_hints_uri(uri):
     """Detects crop hints in the file located in Google Cloud Storage."""
     client = vision.ImageAnnotatorClient()
@@ -572,7 +572,7 @@ def detect_crop_hints_uri(uri):
                     for vertex in hint.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
-# [END def_detect_crop_hints_uri]
+# [END vision_crop_hint_detection_gcs]
 
 
 # [START def_detect_document]
