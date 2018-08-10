@@ -41,7 +41,7 @@ gsutil cp app.tar $GCS_APP_LOCATION
 
 # Create an instance
 gcloud compute instances create my-instance \
-    --image-family=debian-8 \
+    --image-family=debian-9 \
     --image-project=debian-cloud \
     --machine-type=g1-small \
     --scopes cloud-platform \
