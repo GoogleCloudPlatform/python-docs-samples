@@ -221,7 +221,7 @@ def detect_logos_uri(uri):
 # [END vision_logo_detection_gcs]
 
 
-# [START def_detect_safe_search]
+# [START vision_safe_search_detection]
 def detect_safe_search(path):
     """Detects unsafe features in the file."""
     client = vision.ImageAnnotatorClient()
@@ -246,10 +246,10 @@ def detect_safe_search(path):
     print('violence: {}'.format(likelihood_name[safe.violence]))
     print('racy: {}'.format(likelihood_name[safe.racy]))
     # [END migration_safe_search_detection]
-# [END def_detect_safe_search]
+# [END vision_safe_search_detection]
 
 
-# [START def_detect_safe_search_uri]
+# [START vision_safe_search_detection_gcs]
 def detect_safe_search_uri(uri):
     """Detects unsafe features in the file located in Google Cloud Storage or
     on the Web."""
@@ -270,7 +270,7 @@ def detect_safe_search_uri(uri):
     print('spoofed: {}'.format(likelihood_name[safe.spoof]))
     print('violence: {}'.format(likelihood_name[safe.violence]))
     print('racy: {}'.format(likelihood_name[safe.racy]))
-# [END def_detect_safe_search_uri]
+# [END vision_safe_search_detection_gcs]
 
 
 # [START def_detect_text]
