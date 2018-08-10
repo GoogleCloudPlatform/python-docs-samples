@@ -141,7 +141,7 @@ def detect_labels_uri(uri):
 # [END vision_label_detection_gcs]
 
 
-# [START def_detect_landmarks]
+# [START vision_landmark_detection]
 def detect_landmarks(path):
     """Detects landmarks in the file."""
     client = vision.ImageAnnotatorClient()
@@ -163,10 +163,10 @@ def detect_landmarks(path):
             print('Latitude {}'.format(lat_lng.latitude))
             print('Longitude {}'.format(lat_lng.longitude))
     # [END migration_landmark_detection]
-# [END def_detect_landmarks]
+# [END vision_landmark_detection]
 
 
-# [START def_detect_landmarks_uri]
+# [START vision_landmark_detection_gcs]
 def detect_landmarks_uri(uri):
     """Detects landmarks in the file located in Google Cloud Storage or on the
     Web."""
@@ -180,7 +180,7 @@ def detect_landmarks_uri(uri):
 
     for landmark in landmarks:
         print(landmark.description)
-# [END def_detect_landmarks_uri]
+# [END vision_landmark_detection_gcs]
 
 
 # [START def_detect_logos]
