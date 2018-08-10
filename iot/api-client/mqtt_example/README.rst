@@ -36,11 +36,16 @@ Install Dependencies
     .. code-block:: bash
 
         $ git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+        $ cd python-docs-samples/iot/api-client/mqtt_example (or other sample directory)
 
 #. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
 
    .. _Python Development Environment Setup Guide:
        https://cloud.google.com/python/setup
+
+    .. code-block:: bash
+
+        $ sudo apt-get install python-pip virtualenv
 
 #. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
 
