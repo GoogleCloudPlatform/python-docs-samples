@@ -273,7 +273,7 @@ def detect_safe_search_uri(uri):
 # [END vision_safe_search_detection_gcs]
 
 
-# [START def_detect_text]
+# [START vision_text_detection]
 def detect_text(path):
     """Detects text in the file."""
     client = vision.ImageAnnotatorClient()
@@ -296,10 +296,10 @@ def detect_text(path):
 
         print('bounds: {}'.format(','.join(vertices)))
     # [END migration_text_detection]
-# [END def_detect_text]
+# [END vision_text_detection]
 
 
-# [START def_detect_text_uri]
+# [START vision_text_detection_gcs]
 def detect_text_uri(uri):
     """Detects text in the file located in Google Cloud Storage or on the Web.
     """
@@ -318,7 +318,7 @@ def detect_text_uri(uri):
                     for vertex in text.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
-# [END def_detect_text_uri]
+# [END vision_text_detection_gcs]
 
 
 # [START vision_image_property_detection]
