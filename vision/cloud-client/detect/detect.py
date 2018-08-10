@@ -367,7 +367,7 @@ def detect_properties_uri(uri):
 # [END vision_image_property_detection_gcs]
 
 
-# [START def_detect_web]
+# [START vision_web_detection]
 def detect_web(path):
     """Detects web annotations given an image."""
     client = vision.ImageAnnotatorClient()
@@ -421,10 +421,10 @@ def detect_web(path):
         for image in annotations.visually_similar_images:
             print('\tImage url    : {}'.format(image.url))
     # [END migration_web_detection]
-# [END def_detect_web]
+# [END vision_web_detection]
 
 
-# [START def_detect_web_uri]
+# [START vision_web_detection_gcs]
 def detect_web_uri(uri):
     """Detects web annotations in the file located in Google Cloud Storage."""
     client = vision.ImageAnnotatorClient()
@@ -473,10 +473,10 @@ def detect_web_uri(uri):
 
         for image in annotations.visually_similar_images:
             print('\tImage url    : {}'.format(image.url))
-# [END def_detect_web_uri]
+# [END vision_web_detection_gcs]
 
 
-# [START vision_web_entities_include_geo_results]
+# [START vision_web_detection_include_geo]
 def web_entities_include_geo_results(path):
     """Detects web annotations given an image, using the geotag metadata
     in the iamge to detect web entities."""
@@ -497,10 +497,10 @@ def web_entities_include_geo_results(path):
     for entity in response.web_detection.web_entities:
         print('\n\tScore      : {}'.format(entity.score))
         print(u'\tDescription: {}'.format(entity.description))
-# [END vision_web_entities_include_geo_results]
+# [END vision_web_detection_include_geo]
 
 
-# [START vision_web_entities_include_geo_results_uri]
+# [START vision_web_detection_include_geo_gcs]
 def web_entities_include_geo_results_uri(uri):
     """Detects web annotations given an image in the file located in
     Google Cloud Storage., using the geotag metadata in the iamge to
@@ -520,7 +520,7 @@ def web_entities_include_geo_results_uri(uri):
     for entity in response.web_detection.web_entities:
         print('\n\tScore      : {}'.format(entity.score))
         print(u'\tDescription: {}'.format(entity.description))
-# [END vision_web_entities_include_geo_results_uri]
+# [END vision_web_detection_include_geo_gcs]
 
 
 # [START vision_crop_hint_detection]
