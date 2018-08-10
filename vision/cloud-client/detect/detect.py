@@ -575,7 +575,7 @@ def detect_crop_hints_uri(uri):
 # [END vision_crop_hint_detection_gcs]
 
 
-# [START def_detect_document]
+# [START vision_fulltext_detection]
 def detect_document(path):
     """Detects document features in an image."""
     client = vision.ImageAnnotatorClient()
@@ -607,10 +607,10 @@ def detect_document(path):
                         print('\tSymbol: {} (confidence: {})'.format(
                             symbol.text, symbol.confidence))
     # [END migration_document_text_detection]
-# [END def_detect_document]
+# [END vision_fulltext_detection]
 
 
-# [START def_detect_document_uri]
+# [START vision_fulltext_detection_gcs]
 def detect_document_uri(uri):
     """Detects document features in the file located in Google Cloud
     Storage."""
@@ -638,7 +638,7 @@ def detect_document_uri(uri):
                     for symbol in word.symbols:
                         print('\tSymbol: {} (confidence: {})'.format(
                             symbol.text, symbol.confidence))
-# [END def_detect_document_uri]
+# [END vision_fulltext_detection_gcs]
 
 
 # [START vision_async_detect_document_ocr]
