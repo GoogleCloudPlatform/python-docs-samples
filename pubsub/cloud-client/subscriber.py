@@ -191,7 +191,7 @@ def receive_messages_with_flow_control(project, subscription_name):
         project, subscription_name)
 
     def callback(message):
-        print('Received message: {}'.format(message))
+        print('Received message: {}'.format(message.data))
         message.ack()
 
     # Limit the subscriber to only have ten outstanding messages at a time.
