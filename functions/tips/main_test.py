@@ -84,7 +84,7 @@ def test_retry_or_not():
         assert error_client.report_exception.call_count == 1
 
         event.data = {'retry': True}
-        with pytest.raises(Exception):
+        with pytest.raises(RuntimeError):
             main.retry_or_not(event, None)
 
         assert error_client.report_exception.call_count == 2
