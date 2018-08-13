@@ -41,7 +41,6 @@ class FeatureType(Enum):
 
 def draw_boxes(image, bounds, color):
     """Draw a border around the image using the hints in the vector list."""
-    # [START draw_blocks]
     draw = ImageDraw.Draw(image)
 
     for bound in bounds:
@@ -51,7 +50,6 @@ def draw_boxes(image, bounds, color):
             bound.vertices[2].x, bound.vertices[2].y,
             bound.vertices[3].x, bound.vertices[3].y], None, color)
     return image
-    # [END draw_blocks]
 
 
 def get_document_bounds(image_file, feature):
@@ -96,7 +94,6 @@ def get_document_bounds(image_file, feature):
 
 
 def render_doc_text(filein, fileout):
-    # [START render_doc_text]
     image = Image.open(filein)
     bounds = get_document_bounds(filein, FeatureType.PAGE)
     draw_boxes(image, bounds, 'blue')
@@ -109,7 +106,6 @@ def render_doc_text(filein, fileout):
         image.save(fileout)
     else:
         image.show()
-    # [END render_doc_text]
 
 
 if __name__ == '__main__':

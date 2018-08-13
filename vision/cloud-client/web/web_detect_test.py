@@ -35,6 +35,7 @@ def test_detect_web_gsuri(capsys):
 
 
 def test_detect_web_http(capsys):
-    web_detect.report(web_detect.annotate('https://goo.gl/X4qcB6'))
+    web_detect.report(web_detect.annotate(
+        'https://cloud.google.com/images/products/vision/extract-text.png'))
     out, _ = capsys.readouterr()
     assert 'https://cloud.google.com/vision/' in out

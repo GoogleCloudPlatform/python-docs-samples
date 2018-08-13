@@ -35,7 +35,7 @@ To set up authentication, please refer to our
 To create a queue using the Cloud SDK, use the following gcloud command:
 
 ```
-gcloud alpha tasks queues create app-engine my-appengine-queue
+gcloud beta tasks queues create-app-engine-queue my-appengine-queue
 ```
 
 Note: A newly created queue will route to the default App Engine service and
@@ -74,14 +74,14 @@ export PROJECT_ID=my-project-id
 ```
 
 Then the queue ID, as specified at queue creation time. Queue IDs already
-created can be listed with `gcloud alpha tasks queues list`.
+created can be listed with `gcloud beta tasks queues list`.
 
 ```
 export QUEUE_ID=my-appengine-queue
 ```
 
 And finally the location ID, which can be discovered with
-`gcloud alpha tasks queues describe $QUEUE_ID`, with the location embedded in
+`gcloud beta tasks queues describe $QUEUE_ID`, with the location embedded in
 the "name" value (for instance, if the name is
 "projects/my-project/locations/us-central1/queues/my-appengine-queue", then the
 location is "us-central1").

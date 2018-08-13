@@ -479,7 +479,7 @@ def detect_web_uri(uri):
 # [START vision_web_entities_include_geo_results]
 def web_entities_include_geo_results(path):
     """Detects web annotations given an image, using the geotag metadata
-    in the iamge to detect web entities."""
+    in the image to detect web entities."""
     client = vision.ImageAnnotatorClient()
 
     with io.open(path, 'rb') as image_file:
@@ -503,7 +503,7 @@ def web_entities_include_geo_results(path):
 # [START vision_web_entities_include_geo_results_uri]
 def web_entities_include_geo_results_uri(uri):
     """Detects web annotations given an image in the file located in
-    Google Cloud Storage., using the geotag metadata in the iamge to
+    Google Cloud Storage., using the geotag metadata in the image to
     detect web entities."""
     client = vision.ImageAnnotatorClient()
 

@@ -41,7 +41,7 @@ default_dag_args = {
 # Any task you create within the context manager is automatically added to the
 # DAG object.
 with models.DAG(
-        'simple_greeting',
+        'composer_sample_simple_greeting',
         schedule_interval=datetime.timedelta(days=1),
         default_args=default_dag_args) as dag:
     # [END composer_simple_define_dag]

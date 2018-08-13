@@ -35,7 +35,8 @@ def speech_transcription(input_uri):
     features = [videointelligence.enums.Feature.SPEECH_TRANSCRIPTION]
 
     config = videointelligence.types.SpeechTranscriptionConfig(
-        language_code='en-US')
+        language_code='en-US',
+        enable_automatic_punctuation=True)
     video_context = videointelligence.types.VideoContext(
         speech_transcription_config=config)
 
