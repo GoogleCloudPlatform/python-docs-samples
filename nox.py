@@ -40,8 +40,9 @@ def _list_files(folder, pattern):
 
 def _collect_dirs(
         start_dir,
-        blacklist=set(['conftest.py', 'nox.py']),
-        suffix='_test.py'):
+        blacklist=set(['conftest.py', 'nox.py', 'lib']),
+        suffix='_test.py',
+        recurse_further=False):
     """Recursively collects a list of dirs that contain a file matching the
     given suffix.
 
@@ -50,17 +51,20 @@ def _collect_dirs(
     """
     # Collect all the directories that have tests in them.
     for parent, subdirs, files in os.walk(start_dir):
-        if any(f for f in files if f.endswith(suffix) and f not in blacklist):
-            # Don't recurse further, since py.test will do that.
-            del subdirs[:]
-            # This dir has tests in it. yield it.
+        if './.' in parent:
+            continue # Skip top-level dotfiles
+        elif any(f for f in files if f.endswith(suffix) and f not in blacklist):
+            # Don't recurse further for tests, since py.test will do that.
+            if not recurse_further:
+                del subdirs[:]
+            # This dir has desired files in it. yield it.
             yield parent
         else:
             # Filter out dirs we don't want to recurse into
             subdirs[:] = [
                 s for s in subdirs
                 if s[0].isalpha() and
-                os.path.join(parent, s) not in blacklist]
+                s not in blacklist]
 
 
 def _get_changed_files():
@@ -149,7 +153,7 @@ FLAKE8_COMMON_ARGS = [
 
 # Collect sample directories.
 ALL_TESTED_SAMPLES = sorted(list(_collect_dirs('.')))
-ALL_SAMPLE_DIRECTORIES = sorted(list(_collect_dirs('.', suffix='.py')))
+ALL_SAMPLE_DIRECTORIES = sorted(list(_collect_dirs('.', suffix='.py', recurse_further=True)))
 GAE_STANDARD_SAMPLES = [
     sample for sample in ALL_TESTED_SAMPLES
     if sample.startswith('./appengine/standard/')]
