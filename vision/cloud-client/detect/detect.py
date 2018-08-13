@@ -641,7 +641,7 @@ def detect_document_uri(uri):
 # [END vision_fulltext_detection_gcs]
 
 
-# [START vision_async_detect_document_ocr]
+# [START vision_text_detection_pdf_gcs]
 def async_detect_document(gcs_source_uri, gcs_destination_uri):
     """OCR with PDF/TIFF as source files on GCS"""
     # Supported mime_types are: 'application/pdf' and 'image/tiff'
@@ -708,7 +708,7 @@ def async_detect_document(gcs_source_uri, gcs_destination_uri):
     # including confidence scores and bounding boxes
     print(u'Full text:\n{}'.format(
         annotation.text))
-# [END vision_async_detect_document_ocr]
+# [END vision_text_detection_pdf_gcs]
 
 
 def run_local(args):
