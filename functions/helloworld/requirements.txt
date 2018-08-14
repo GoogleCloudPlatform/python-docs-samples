@@ -1,6 +1,1 @@
-Flask==1.0.2
-google-cloud-pubsub==0.30.1
-google-cloud-storage==1.6.0
-mock==2.0.0
 pytest==3.6.0
-requests==2.18.4
