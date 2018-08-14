@@ -18,12 +18,11 @@
 
 import argparse
 
-# [START vision_face_detection_tutorial_client]
+# [START vision_face_detection_tutorial_imports]
 from google.cloud import vision
 from google.cloud.vision import types
 from PIL import Image, ImageDraw
-
-# [END vision_face_detection_tutorial_client]
+# [END vision_face_detection_tutorial_imports]
 
 # [START vision_face_detection_tutorial_send_request]
 def detect_face(face_file, max_results=4):
