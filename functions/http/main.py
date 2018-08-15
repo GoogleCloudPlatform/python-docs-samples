@@ -80,13 +80,13 @@ def parse_multipart(request):
     data = request.form.to_dict()
     for field in data:
         fields[field] = data[field]
-        print 'Processed field: %s' % field
+        print('Processed field: %s' % field)
 
     # This code will process each file uploaded
     files = request.files.to_dict()
-    for file_name, file in files.iteritems():
+    for file_name, file in files.items():
         file.save(get_file_path(file_name))
-        print 'Processed file: %s' % file_name
+        print('Processed file: %s' % file_name)
 
     # Clear temporary directory
     for file_name in files:
