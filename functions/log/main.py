@@ -22,7 +22,7 @@ import os
 # [END functions_log_retrieve]
 
 # [START functions_logs_retrieve]
-from google.cloud import logging as cloud_logging
+import google.cloud.logging as cloud_logging
 # [END functions_logs_retrieve]
 
 
