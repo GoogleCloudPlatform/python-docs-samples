@@ -19,6 +19,7 @@ import argparse
 from google.cloud import logging
 
 
+# [START logging_list_sinks]
 def list_sinks():
     """Lists all sinks."""
     logging_client = logging.Client()
@@ -30,8 +31,10 @@ def list_sinks():
 
     for sink in sinks:
         print('{}: {} -> {}'.format(sink.name, sink.filter_, sink.destination))
+# [END logging_list_sinks]
 
 
+# [START logging_create_sink]
 def create_sink(sink_name, destination_bucket, filter_):
     """Creates a sink to export logs to the given Cloud Storage bucket.
 
@@ -61,8 +64,10 @@ def create_sink(sink_name, destination_bucket, filter_):
 
     sink.create()
     print('Created sink {}'.format(sink.name))
+# [END logging_create_sink]
 
 
+# [START logging_update_sink]
 def update_sink(sink_name, filter_):
     """Changes a sink's filter.
 
@@ -80,9 +85,10 @@ def update_sink(sink_name, filter_):
     sink.filter_ = filter_
     print('Updated sink {}'.format(sink.name))
     sink.update()
-    # [END update]
+# [END logging_update_sink]
 
 
+# [START logging_delete_sink]
 def delete_sink(sink_name):
     """Deletes a sink."""
     logging_client = logging.Client()
@@ -91,6 +97,7 @@ def delete_sink(sink_name):
     sink.delete()
 
     print('Deleted sink {}'.format(sink.name))
+# [END logging_delete_sink]
 
 
 if __name__ == '__main__':
