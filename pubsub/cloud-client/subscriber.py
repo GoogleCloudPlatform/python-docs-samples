@@ -224,7 +224,7 @@ def listen_for_errors(project, subscription_name):
     # exceptions that crop up on the thread will be set on the future.
     try:
         # When timeout is unspecified, the result method waits indefinitely.
-        subscription.future.result(timeout=10)
+        subscription.future.result(timeout=30)
     except Exception as e:
         print(
             'Listening for messages on {} threw an Exception: {}.'.format(
