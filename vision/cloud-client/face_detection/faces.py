@@ -24,6 +24,7 @@ from google.cloud.vision import types
 from PIL import Image, ImageDraw
 # [END vision_face_detection_tutorial_imports]
 
+
 # [START vision_face_detection_tutorial_send_request]
 def detect_face(face_file, max_results=4):
     """Uses the Vision API to detect faces in the given file.

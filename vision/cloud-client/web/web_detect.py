@@ -63,22 +63,22 @@ def report(annotations):
             print('Url   : {}'.format(page.url))
 
     if annotations.full_matching_images:
-        print ('\n{} Full Matches found: '.format(
-               len(annotations.full_matching_images)))
+        print('\n{} Full Matches found: '.format(
+              len(annotations.full_matching_images)))
 
         for image in annotations.full_matching_images:
             print('Url  : {}'.format(image.url))
 
     if annotations.partial_matching_images:
-        print ('\n{} Partial Matches found: '.format(
-               len(annotations.partial_matching_images)))
+        print('\n{} Partial Matches found: '.format(
+              len(annotations.partial_matching_images)))
 
         for image in annotations.partial_matching_images:
             print('Url  : {}'.format(image.url))
 
     if annotations.web_entities:
-        print ('\n{} Web entities found: '.format(
-            len(annotations.web_entities)))
+        print('\n{} Web entities found: '.format(
+              len(annotations.web_entities)))
 
         for entity in annotations.web_entities:
             print('Score      : {}'.format(entity.score))
