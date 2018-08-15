@@ -223,12 +223,12 @@ def listen_for_errors(project, subscription_name):
     # Blocks the thread while messages are coming in through the stream. Any
     # exceptions that crop up on the thread will be set on the future.
     try:
-        subscription.future.result()
+        # When timeout is unspecified, the result method waits indefinitely.
+        subscription.future.result(timeout=30)
     except Exception as e:
         print(
             'Listening for messages on {} threw an Exception: {}.'.format(
                 subscription_name, e))
-        raise
     # [END pubsub_subscriber_error_listener]
 
 

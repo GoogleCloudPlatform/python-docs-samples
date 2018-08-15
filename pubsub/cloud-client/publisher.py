@@ -131,7 +131,8 @@ def publish_messages_with_error_handler(project, topic_name):
     topic_path = publisher.topic_path(project, topic_name)
 
     def callback(message_future):
-        if message_future.exception():
+        # When timeout is unspecified, the exception method waits indefinitely.
+        if message_future.exception(timeout=30):
             print('Publishing message on {} threw an Exception {}.'.format(
                 topic_name, message_future.exception()))
         else:
