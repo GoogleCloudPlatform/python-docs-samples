@@ -22,6 +22,7 @@ https://cloud.google.com/vision/product-search/docs/
 """
 
 import argparse
+
 # [START vision_product_search_create_reference_image]
 # [START vision_product_search_delete_reference_image]
 # [START vision_product_search_list_reference_images]

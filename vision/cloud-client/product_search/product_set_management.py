@@ -22,6 +22,7 @@ https://cloud.google.com/vision/product-search/docs/
 """
 
 import argparse
+
 # [START vision_product_search_delete_product_set]
 # [START vision_product_search_list_product_sets]
 # [START vision_product_search_get_product_set]
