@@ -84,7 +84,7 @@ def localize_objects_uri(uri):
 # [END vision_localize_objects_gcs]
 
 
-# [START vision_handwritten_ocr]
+# [START vision_handwritten_ocr_beta]
 def detect_handwritten_ocr(path):
     """Detects handwritten characters in a local image.
 
@@ -127,10 +127,10 @@ def detect_handwritten_ocr(path):
                     for symbol in word.symbols:
                         print('\tSymbol: {} (confidence: {})'.format(
                             symbol.text, symbol.confidence))
-# [END vision_handwritten_ocr]
+# [END vision_handwritten_ocr_beta]
 
 
-# [START vision_handwritten_ocr_gcs]
+# [START vision_handwritten_ocr_gcs_beta]
 def detect_handwritten_ocr_uri(uri):
     """Detects handwritten characters in the file located in Google Cloud
     Storage.
@@ -171,7 +171,7 @@ def detect_handwritten_ocr_uri(uri):
                     for symbol in word.symbols:
                         print('\tSymbol: {} (confidence: {})'.format(
                             symbol.text, symbol.confidence))
-# [END vision_handwritten_ocr_gcs]
+# [END vision_handwritten_ocr_gcs_beta]
 
 
 if __name__ == '__main__':
