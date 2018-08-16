@@ -27,7 +27,7 @@ import argparse
 from google.cloud import videointelligence_v1p1beta1 as videointelligence
 
 
-# [START video_speech_transcription]
+# [START video_speech_transcription_gcs_beta]
 def speech_transcription(input_uri):
     """Transcribe speech from a video stored on GCS."""
     video_client = videointelligence.VideoIntelligenceServiceClient()
@@ -66,7 +66,7 @@ def speech_transcription(input_uri):
             start_time.seconds + start_time.nanos * 1e-9,
             end_time.seconds + end_time.nanos * 1e-9,
             word))
-# [END video_speech_transcription]
+# [END video_speech_transcription_gcs_beta]
 
 
 if __name__ == '__main__':
