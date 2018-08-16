@@ -33,7 +33,7 @@ import argparse
 import io
 
 
-# [START vision_localize_objects]
+# [START vision_localize_objects_beta]
 def localize_objects(path):
     """Localize objects in the local image.
 
@@ -56,10 +56,10 @@ def localize_objects(path):
         print('Normalized bounding polygon vertices: ')
         for vertex in object_.bounding_poly.normalized_vertices:
             print(' - ({}, {})'.format(vertex.x, vertex.y))
-# [END vision_localize_objects]
+# [END vision_localize_objects_beta]
 
 
-# [START vision_localize_objects_gcs]
+# [START vision_localize_objects_gcs_beta]
 def localize_objects_uri(uri):
     """Localize objects in the image on Google Cloud Storage
 
@@ -81,7 +81,7 @@ def localize_objects_uri(uri):
         print('Normalized bounding polygon vertices: ')
         for vertex in object_.bounding_poly.normalized_vertices:
             print(' - ({}, {})'.format(vertex.x, vertex.y))
-# [END vision_localize_objects_gcs]
+# [END vision_localize_objects_gcs_beta]
 
 
 # [START vision_handwritten_ocr_beta]
