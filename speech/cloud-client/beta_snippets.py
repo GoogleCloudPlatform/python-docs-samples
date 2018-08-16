@@ -33,7 +33,7 @@ import io
 
 def transcribe_file_with_enhanced_model():
     """Transcribe the given audio file using an enhanced model."""
-    # [START speech_transcribe_file_with_enhanced_model]
+    # [START speech_transcribe_enhanced_model_beta]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
@@ -60,7 +60,7 @@ def transcribe_file_with_enhanced_model():
         print('-' * 20)
         print('First alternative of result {}'.format(i))
         print('Transcript: {}'.format(alternative.transcript))
-    # [END speech_transcribe_file_with_enhanced_model]
+    # [END speech_transcribe_enhanced_model_beta]
 
 
 def transcribe_file_with_metadata():
@@ -110,7 +110,7 @@ def transcribe_file_with_metadata():
 
 def transcribe_file_with_auto_punctuation():
     """Transcribe the given audio file with auto punctuation enabled."""
-    # [START speech_transcribe_file_with_auto_punctuation]
+    # [START speech_transcribe_auto_punctuation_beta]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
@@ -134,7 +134,7 @@ def transcribe_file_with_auto_punctuation():
         print('-' * 20)
         print('First alternative of result {}'.format(i))
         print('Transcript: {}'.format(alternative.transcript))
-    # [END speech_transcribe_file_with_auto_punctuation]
+    # [END speech_transcribe_auto_punctuation_beta]
 
 
 def transcribe_file_with_diarization():
