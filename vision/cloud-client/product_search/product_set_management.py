@@ -21,14 +21,21 @@ For more information, see the tutorial page at
 https://cloud.google.com/vision/product-search/docs/
 """
 
-# [START product_search_import]
 import argparse
 
+# [START vision_product_search_delete_product_set]
+# [START vision_product_search_list_product_sets]
+# [START vision_product_search_get_product_set]
+# [START vision_product_search_create_product_set]
 from google.cloud import vision_v1p3beta1 as vision
-# [END product_search_import]
+
+# [END vision_product_search_delete_product_set]
+# [END vision_product_search_list_product_sets]
+# [END vision_product_search_get_product_set]
+# [END vision_product_search_create_product_set]
 
 
-# [START product_search_create_product_set]
+# [START vision_product_search_create_product_set]
 def create_product_set(
         project_id, location, product_set_id, product_set_display_name):
     """Create a product set.
@@ -56,10 +63,10 @@ def create_product_set(
 
     # Display the product set information.
     print('Product set name: {}'.format(response.name))
-# [END product_search_create_product_set]
+# [END vision_product_search_create_product_set]
 
 
-# [START product_search_list_product_sets]
+# [START vision_product_search_list_product_sets]
 def list_product_sets(project_id, location):
     """List all product sets.
     Args:
@@ -83,10 +90,10 @@ def list_product_sets(project_id, location):
         print('Product set index time:')
         print('  seconds: {}'.format(product_set.index_time.seconds))
         print('  nanos: {}\n'.format(product_set.index_time.nanos))
-# [END product_search_list_product_sets]
+# [END vision_product_search_list_product_sets]
 
 
-# [START product_search_get_product_set]
+# [START vision_product_search_get_product_set]
 def get_product_set(project_id, location, product_set_id):
     """Get info about the product set.
     Args:
@@ -111,10 +118,10 @@ def get_product_set(project_id, location, product_set_id):
     print('Product set index time:')
     print('  seconds: {}'.format(product_set.index_time.seconds))
     print('  nanos: {}'.format(product_set.index_time.nanos))
-# [END product_search_get_product_set]
+# [END vision_product_search_get_product_set]
 
 
-# [START product_search_delete_product_set]
+# [START vision_product_search_delete_product_set]
 def delete_product_set(project_id, location, product_set_id):
     """Delete a product set.
     Args:
@@ -132,7 +139,7 @@ def delete_product_set(project_id, location, product_set_id):
     # Delete the product set.
     client.delete_product_set(name=product_set_path)
     print('Product set deleted.')
-# [END product_search_delete_product_set]
+# [END vision_product_search_delete_product_set]
 
 
 if __name__ == '__main__':

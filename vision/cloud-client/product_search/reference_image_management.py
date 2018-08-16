@@ -21,14 +21,21 @@ For more information, see the tutorial page at
 https://cloud.google.com/vision/product-search/docs/
 """
 
-# [START product_search_import]
 import argparse
 
+# [START vision_product_search_create_reference_image]
+# [START vision_product_search_delete_reference_image]
+# [START vision_product_search_list_reference_images]
+# [START vision_product_search_get_reference_image]
 from google.cloud import vision_v1p3beta1 as vision
-# [END product_search_import]
+
+# [END vision_product_search_create_reference_image]
+# [END vision_product_search_delete_reference_image]
+# [END vision_product_search_list_reference_images]
+# [END vision_product_search_get_reference_image]
 
 
-# [START product_search_create_reference_image]
+# [START vision_product_search_create_reference_image]
 def create_reference_image(
         project_id, location, product_id, reference_image_id, gcs_uri):
     """Create a reference image.
@@ -57,10 +64,10 @@ def create_reference_image(
     # Display the reference image information.
     print('Reference image name: {}'.format(image.name))
     print('Reference image uri: {}'.format(image.uri))
-# [END product_search_create_reference_image]
+# [END vision_product_search_create_reference_image]
 
 
-# [START product_search_list_reference_images]
+# [START vision_product_search_list_reference_images]
 def list_reference_images(
         project_id, location, product_id):
     """List all images in a product.
@@ -85,10 +92,10 @@ def list_reference_images(
         print('Reference image uri: {}'.format(image.uri))
         print('Reference image bounding polygons: {}'.format(
             image.bounding_polys))
-# [END product_search_list_reference_images]
+# [END vision_product_search_list_reference_images]
 
 
-# [START product_search_get_reference_image]
+# [START vision_product_search_get_reference_image]
 def get_reference_image(
         project_id, location, product_id, reference_image_id):
     """Get info about a reference image.
@@ -113,10 +120,10 @@ def get_reference_image(
     print('Reference image id: {}'.format(image.name.split('/')[-1]))
     print('Reference image uri: {}'.format(image.uri))
     print('Reference image bounding polygons: {}'.format(image.bounding_polys))
-# [END product_search_get_reference_image]
+# [END vision_product_search_get_reference_image]
 
 
-# [START product_search_delete_reference_image]
+# [START vision_product_search_delete_reference_image]
 def delete_reference_image(
         project_id, location, product_id, reference_image_id):
     """Delete a reference image.
@@ -136,7 +143,7 @@ def delete_reference_image(
     # Delete the reference image.
     client.delete_reference_image(name=reference_image_path)
     print('Reference image deleted from product.')
-# [END product_search_delete_reference_image]
+# [END vision_product_search_delete_reference_image]
 
 
 if __name__ == '__main__':

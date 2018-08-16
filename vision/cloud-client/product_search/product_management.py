@@ -21,14 +21,23 @@ For more information, see the tutorial page at
 https://cloud.google.com/vision/product-search/docs/
 """
 
-# [START product_search_import]
 import argparse
 
+# [START vision_product_search_create_product]
+# [START vision_product_search_delete_product]
+# [START vision_product_search_list_products]
+# [START vision_product_search_get_product]
+# [START vision_product_search_update_product_labels]
 from google.cloud import vision_v1p3beta1 as vision
-# [END product_search_import]
+
+# [END vision_product_search_create_product]
+# [END vision_product_search_delete_product]
+# [END vision_product_search_list_products]
+# [END vision_product_search_get_product]
+# [END vision_product_search_update_product_labels]
 
 
-# [START product_search_create_product]
+# [START vision_product_search_create_product]
 def create_product(
         project_id, location, product_id, product_display_name,
         product_category):
@@ -59,10 +68,10 @@ def create_product(
 
     # Display the product information.
     print('Product name: {}'.format(response.name))
-# [END product_search_create_product]
+# [END vision_product_search_create_product]
 
 
-# [START product_search_list_products]
+# [START vision_product_search_list_products]
 def list_products(project_id, location):
     """List all products.
     Args:
@@ -85,10 +94,10 @@ def list_products(project_id, location):
         print('Product description: {}'.format(product.description))
         print('Product category: {}'.format(product.product_category))
         print('Product labels: {}\n'.format(product.product_labels))
-# [END product_search_list_products]
+# [END vision_product_search_list_products]
 
 
-# [START product_search_get_product]
+# [START vision_product_search_get_product]
 def get_product(project_id, location, product_id):
     """Get information about a product.
     Args:
@@ -112,10 +121,10 @@ def get_product(project_id, location, product_id):
     print('Product description: {}'.format(product.description))
     print('Product category: {}'.format(product.product_category))
     print('Product labels: {}'.format(product.product_labels))
-# [END product_search_get_product]
+# [END vision_product_search_get_product]
 
 
-# [START product_search_update_product_labels]
+# [START vision_product_search_update_product_labels]
 def update_product_labels(
         project_id, location, product_id, key, value):
     """Update the product labels.
@@ -149,10 +158,10 @@ def update_product_labels(
     # Display the updated product information.
     print('Product name: {}'.format(updated_product.name))
     print('Updated product labels: {}'.format(product.product_labels))
-# [END product_search_update_product_labels]
+# [END vision_product_search_update_product_labels]
 
 
-# [START product_search_delete_product]
+# [START vision_product_search_delete_product]
 def delete_product(project_id, location, product_id):
     """Delete the product and all its reference images.
     Args:
@@ -169,7 +178,7 @@ def delete_product(project_id, location, product_id):
     # Delete a product.
     client.delete_product(name=product_path)
     print('Product deleted.')
-# [END product_search_delete_product]
+# [END vision_product_search_delete_product]
 
 
 if __name__ == '__main__':
