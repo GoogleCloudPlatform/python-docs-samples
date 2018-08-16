@@ -31,7 +31,7 @@ from google.cloud import vision_v1p2beta1 as vision
 from google.protobuf import json_format
 
 
-# [START vision_async_detect_document_ocr]
+# [START vision_text_detection_pdf_gcs]
 def async_detect_document(gcs_source_uri, gcs_destination_uri):
     # Supported mime_types are: 'application/pdf' and 'image/tiff'
     mime_type = 'application/pdf'
@@ -98,7 +98,7 @@ def async_detect_document(gcs_source_uri, gcs_destination_uri):
     # including confidence scores and bounding boxes
     print(u'Full text:\n{}'.format(
         annotation.text))
-# [END vision_async_detect_document_ocr]
+# [END vision_text_detection_pdf_gcs]
 
 
 if __name__ == '__main__':

@@ -21,14 +21,17 @@ For more information, see the tutorial page at
 https://cloud.google.com/vision/product-search/docs/
 """
 
-# [START product_search_import]
 import argparse
 
+# [START vision_product_search_add_product_to_product_set]
+# [START vision_product_search_remove_product_from_product_set]
 from google.cloud import vision_v1p3beta1 as vision
-# [END product_search_import]
+
+# [END vision_product_search_add_product_to_product_set]
+# [END vision_product_search_remove_product_from_product_set]
 
 
-# [START product_search_add_product_to_product_set]
+# [START vision_product_search_add_product_to_product_set]
 def add_product_to_product_set(
         project_id, location, product_id, product_set_id):
     """Add a product to a product set.
@@ -53,10 +56,10 @@ def add_product_to_product_set(
     client.add_product_to_product_set(
         name=product_set_path, product=product_path)
     print('Product added to product set.')
-# [END product_search_add_product_to_product_set]
+# [END vision_product_search_add_product_to_product_set]
 
 
-# [START product_search_list_products_in_product_set]
+# [START vision_product_search_list_products_in_product_set]
 def list_products_in_product_set(
         project_id, location, product_set_id):
     """List all products in a product set.
@@ -83,10 +86,10 @@ def list_products_in_product_set(
         print('Product description: {}'.format(product.description))
         print('Product category: {}'.format(product.product_category))
         print('Product labels: {}'.format(product.product_labels))
-# [END product_search_list_products_in_product_set]
+# [END vision_product_search_list_products_in_product_set]
 
 
-# [START product_search_remove_product_from_product_set]
+# [START vision_product_search_remove_product_from_product_set]
 def remove_product_from_product_set(
         project_id, location, product_id, product_set_id):
     """Remove a product from a product set.
@@ -111,7 +114,7 @@ def remove_product_from_product_set(
     client.remove_product_from_product_set(
         name=product_set_path, product=product_path)
     print('Product removed from product set.')
-# [END product_search_remove_product_from_product_set]
+# [END vision_product_search_remove_product_from_product_set]
 
 
 if __name__ == '__main__':

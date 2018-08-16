@@ -40,18 +40,18 @@ from google.cloud import vision
 from google.protobuf import json_format
 
 
-# [START def_detect_faces]
+# [START vision_face_detection]
 def detect_faces(path):
     """Detects faces in an image."""
     client = vision.ImageAnnotatorClient()
 
-    # [START migration_face_detection]
-    # [START migration_image_file]
+    # [START vision_python_migration_face_detection]
+    # [START vision_python_migration_image_file]
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
     image = vision.types.Image(content=content)
-    # [END migration_image_file]
+    # [END vision_python_migration_image_file]
 
     response = client.face_detection(image=image)
     faces = response.face_annotations
@@ -70,18 +70,18 @@ def detect_faces(path):
                     for vertex in face.bounding_poly.vertices])
 
         print('face bounds: {}'.format(','.join(vertices)))
-    # [END migration_face_detection]
-# [END def_detect_faces]
+    # [END vision_python_migration_face_detection]
+# [END vision_face_detection]
 
 
-# [START def_detect_faces_uri]
+# [START vision_face_detection_gcs]
 def detect_faces_uri(uri):
     """Detects faces in the file located in Google Cloud Storage or the web."""
     client = vision.ImageAnnotatorClient()
-    # [START migration_image_uri]
+    # [START vision_python_migration_image_uri]
     image = vision.types.Image()
     image.source.image_uri = uri
-    # [END migration_image_uri]
+    # [END vision_python_migration_image_uri]
 
     response = client.face_detection(image=image)
     faces = response.face_annotations
@@ -100,15 +100,15 @@ def detect_faces_uri(uri):
                     for vertex in face.bounding_poly.vertices])
 
         print('face bounds: {}'.format(','.join(vertices)))
-# [END def_detect_faces_uri]
+# [END vision_face_detection_gcs]
 
 
-# [START def_detect_labels]
+# [START vision_label_detection]
 def detect_labels(path):
     """Detects labels in the file."""
     client = vision.ImageAnnotatorClient()
 
-    # [START migration_label_detection]
+    # [START vision_python_migration_label_detection]
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
@@ -120,11 +120,11 @@ def detect_labels(path):
 
     for label in labels:
         print(label.description)
-    # [END migration_label_detection]
-# [END def_detect_labels]
+    # [END vision_python_migration_label_detection]
+# [END vision_label_detection]
 
 
-# [START def_detect_labels_uri]
+# [START vision_label_detection_gcs]
 def detect_labels_uri(uri):
     """Detects labels in the file located in Google Cloud Storage or on the
     Web."""
@@ -138,15 +138,15 @@ def detect_labels_uri(uri):
 
     for label in labels:
         print(label.description)
-# [END def_detect_labels_uri]
+# [END vision_label_detection_gcs]
 
 
-# [START def_detect_landmarks]
+# [START vision_landmark_detection]
 def detect_landmarks(path):
     """Detects landmarks in the file."""
     client = vision.ImageAnnotatorClient()
 
-    # [START migration_landmark_detection]
+    # [START vision_python_migration_landmark_detection]
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
@@ -162,11 +162,11 @@ def detect_landmarks(path):
             lat_lng = location.lat_lng
             print('Latitude {}'.format(lat_lng.latitude))
             print('Longitude {}'.format(lat_lng.longitude))
-    # [END migration_landmark_detection]
-# [END def_detect_landmarks]
+    # [END vision_python_migration_landmark_detection]
+# [END vision_landmark_detection]
 
 
-# [START def_detect_landmarks_uri]
+# [START vision_landmark_detection_gcs]
 def detect_landmarks_uri(uri):
     """Detects landmarks in the file located in Google Cloud Storage or on the
     Web."""
@@ -180,15 +180,15 @@ def detect_landmarks_uri(uri):
 
     for landmark in landmarks:
         print(landmark.description)
-# [END def_detect_landmarks_uri]
+# [END vision_landmark_detection_gcs]
 
 
-# [START def_detect_logos]
+# [START vision_logo_detection]
 def detect_logos(path):
     """Detects logos in the file."""
     client = vision.ImageAnnotatorClient()
 
-    # [START migration_logo_detection]
+    # [START vision_python_migration_logo_detection]
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
@@ -200,11 +200,11 @@ def detect_logos(path):
 
     for logo in logos:
         print(logo.description)
-    # [END migration_logo_detection]
-# [END def_detect_logos]
+    # [END vision_python_migration_logo_detection]
+# [END vision_logo_detection]
 
 
-# [START def_detect_logos_uri]
+# [START vision_logo_detection_gcs]
 def detect_logos_uri(uri):
     """Detects logos in the file located in Google Cloud Storage or on the Web.
     """
@@ -218,15 +218,15 @@ def detect_logos_uri(uri):
 
     for logo in logos:
         print(logo.description)
-# [END def_detect_logos_uri]
+# [END vision_logo_detection_gcs]
 
 
-# [START def_detect_safe_search]
+# [START vision_safe_search_detection]
 def detect_safe_search(path):
     """Detects unsafe features in the file."""
     client = vision.ImageAnnotatorClient()
 
-    # [START migration_safe_search_detection]
+    # [START vision_python_migration_safe_search_detection]
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
@@ -245,11 +245,11 @@ def detect_safe_search(path):
     print('spoofed: {}'.format(likelihood_name[safe.spoof]))
     print('violence: {}'.format(likelihood_name[safe.violence]))
     print('racy: {}'.format(likelihood_name[safe.racy]))
-    # [END migration_safe_search_detection]
-# [END def_detect_safe_search]
+    # [END vision_python_migration_safe_search_detection]
+# [END vision_safe_search_detection]
 
 
-# [START def_detect_safe_search_uri]
+# [START vision_safe_search_detection_gcs]
 def detect_safe_search_uri(uri):
     """Detects unsafe features in the file located in Google Cloud Storage or
     on the Web."""
@@ -270,15 +270,15 @@ def detect_safe_search_uri(uri):
     print('spoofed: {}'.format(likelihood_name[safe.spoof]))
     print('violence: {}'.format(likelihood_name[safe.violence]))
     print('racy: {}'.format(likelihood_name[safe.racy]))
-# [END def_detect_safe_search_uri]
+# [END vision_safe_search_detection_gcs]
 
 
-# [START def_detect_text]
+# [START vision_text_detection]
 def detect_text(path):
     """Detects text in the file."""
     client = vision.ImageAnnotatorClient()
 
-    # [START migration_text_detection]
+    # [START vision_python_migration_text_detection]
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
@@ -295,11 +295,11 @@ def detect_text(path):
                     for vertex in text.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
-    # [END migration_text_detection]
-# [END def_detect_text]
+    # [END vision_python_migration_text_detection]
+# [END vision_text_detection]
 
 
-# [START def_detect_text_uri]
+# [START vision_text_detection_gcs]
 def detect_text_uri(uri):
     """Detects text in the file located in Google Cloud Storage or on the Web.
     """
@@ -318,15 +318,15 @@ def detect_text_uri(uri):
                     for vertex in text.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
-# [END def_detect_text_uri]
+# [END vision_text_detection_gcs]
 
 
-# [START def_detect_properties]
+# [START vision_image_property_detection]
 def detect_properties(path):
     """Detects image properties in the file."""
     client = vision.ImageAnnotatorClient()
 
-    # [START migration_image_properties]
+    # [START vision_python_migration_image_properties]
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
@@ -342,11 +342,11 @@ def detect_properties(path):
         print('\tg: {}'.format(color.color.green))
         print('\tb: {}'.format(color.color.blue))
         print('\ta: {}'.format(color.color.alpha))
-    # [END migration_image_properties]
-# [END def_detect_properties]
+    # [END vision_python_migration_image_properties]
+# [END vision_image_property_detection]
 
 
-# [START def_detect_properties_uri]
+# [START vision_image_property_detection_gcs]
 def detect_properties_uri(uri):
     """Detects image properties in the file located in Google Cloud Storage or
     on the Web."""
@@ -364,15 +364,15 @@ def detect_properties_uri(uri):
         print('\tg: {}'.format(color.color.green))
         print('\tb: {}'.format(color.color.blue))
         print('\ta: {}'.format(color.color.alpha))
-# [END def_detect_properties_uri]
+# [END vision_image_property_detection_gcs]
 
 
-# [START def_detect_web]
+# [START vision_web_detection]
 def detect_web(path):
     """Detects web annotations given an image."""
     client = vision.ImageAnnotatorClient()
 
-    # [START migration_web_detection]
+    # [START vision_python_migration_web_detection]
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
@@ -420,11 +420,11 @@ def detect_web(path):
 
         for image in annotations.visually_similar_images:
             print('\tImage url    : {}'.format(image.url))
-    # [END migration_web_detection]
-# [END def_detect_web]
+    # [END vision_python_migration_web_detection]
+# [END vision_web_detection]
 
 
-# [START def_detect_web_uri]
+# [START vision_web_detection_gcs]
 def detect_web_uri(uri):
     """Detects web annotations in the file located in Google Cloud Storage."""
     client = vision.ImageAnnotatorClient()
@@ -473,10 +473,10 @@ def detect_web_uri(uri):
 
         for image in annotations.visually_similar_images:
             print('\tImage url    : {}'.format(image.url))
-# [END def_detect_web_uri]
+# [END vision_web_detection_gcs]
 
 
-# [START vision_web_entities_include_geo_results]
+# [START vision_web_detection_include_geo]
 def web_entities_include_geo_results(path):
     """Detects web annotations given an image, using the geotag metadata
     in the image to detect web entities."""
@@ -497,10 +497,10 @@ def web_entities_include_geo_results(path):
     for entity in response.web_detection.web_entities:
         print('\n\tScore      : {}'.format(entity.score))
         print(u'\tDescription: {}'.format(entity.description))
-# [END vision_web_entities_include_geo_results]
+# [END vision_web_detection_include_geo]
 
 
-# [START vision_web_entities_include_geo_results_uri]
+# [START vision_web_detection_include_geo_gcs]
 def web_entities_include_geo_results_uri(uri):
     """Detects web annotations given an image in the file located in
     Google Cloud Storage., using the geotag metadata in the image to
@@ -520,15 +520,15 @@ def web_entities_include_geo_results_uri(uri):
     for entity in response.web_detection.web_entities:
         print('\n\tScore      : {}'.format(entity.score))
         print(u'\tDescription: {}'.format(entity.description))
-# [END vision_web_entities_include_geo_results_uri]
+# [END vision_web_detection_include_geo_gcs]
 
 
-# [START def_detect_crop_hints]
+# [START vision_crop_hint_detection]
 def detect_crop_hints(path):
     """Detects crop hints in an image."""
     client = vision.ImageAnnotatorClient()
 
-    # [START migration_crop_hints]
+    # [START vision_python_migration_crop_hints]
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
     image = vision.types.Image(content=content)
@@ -547,11 +547,11 @@ def detect_crop_hints(path):
                     for vertex in hint.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
-    # [END migration_crop_hints]
-# [END def_detect_crop_hints]
+    # [END vision_python_migration_crop_hints]
+# [END vision_crop_hint_detection]
 
 
-# [START def_detect_crop_hints_uri]
+# [START vision_crop_hint_detection_gcs]
 def detect_crop_hints_uri(uri):
     """Detects crop hints in the file located in Google Cloud Storage."""
     client = vision.ImageAnnotatorClient()
@@ -572,15 +572,15 @@ def detect_crop_hints_uri(uri):
                     for vertex in hint.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
-# [END def_detect_crop_hints_uri]
+# [END vision_crop_hint_detection_gcs]
 
 
-# [START def_detect_document]
+# [START vision_fulltext_detection]
 def detect_document(path):
     """Detects document features in an image."""
     client = vision.ImageAnnotatorClient()
 
-    # [START migration_document_text_detection]
+    # [START vision_python_migration_document_text_detection]
     with io.open(path, 'rb') as image_file:
         content = image_file.read()
 
@@ -606,11 +606,11 @@ def detect_document(path):
                     for symbol in word.symbols:
                         print('\tSymbol: {} (confidence: {})'.format(
                             symbol.text, symbol.confidence))
-    # [END migration_document_text_detection]
-# [END def_detect_document]
+    # [END vision_python_migration_document_text_detection]
+# [END vision_fulltext_detection]
 
 
-# [START def_detect_document_uri]
+# [START vision_fulltext_detection_gcs]
 def detect_document_uri(uri):
     """Detects document features in the file located in Google Cloud
     Storage."""
@@ -638,10 +638,10 @@ def detect_document_uri(uri):
                     for symbol in word.symbols:
                         print('\tSymbol: {} (confidence: {})'.format(
                             symbol.text, symbol.confidence))
-# [END def_detect_document_uri]
+# [END vision_fulltext_detection_gcs]
 
 
-# [START vision_async_detect_document_ocr]
+# [START vision_text_detection_pdf_gcs]
 def async_detect_document(gcs_source_uri, gcs_destination_uri):
     """OCR with PDF/TIFF as source files on GCS"""
     # Supported mime_types are: 'application/pdf' and 'image/tiff'
@@ -708,7 +708,7 @@ def async_detect_document(gcs_source_uri, gcs_destination_uri):
     # including confidence scores and bounding boxes
     print(u'Full text:\n{}'.format(
         annotation.text))
-# [END vision_async_detect_document_ocr]
+# [END vision_text_detection_pdf_gcs]
 
 
 def run_local(args):

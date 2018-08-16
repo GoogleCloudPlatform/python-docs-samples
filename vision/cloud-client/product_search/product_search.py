@@ -22,14 +22,17 @@ For more information, see the tutorial page at
 https://cloud.google.com/vision/product-search/docs/
 """
 
-# [START product_search_import]
 import argparse
 
+# [START vision_product_search_get_similar_products]
+# [START vision_product_search_get_similar_products_gcs]
 from google.cloud import vision_v1p3beta1 as vision
-# [END product_search_import]
+
+# [END vision_product_search_get_similar_products]
+# [END vision_product_search_get_similar_products_gcs]
 
 
-# [START product_search_get_similar_products_file]
+# [START vision_product_search_get_similar_products]
 def get_similar_products_file(
         project_id, location, product_set_id, product_category,
         file_path, filter):
@@ -91,10 +94,10 @@ def get_similar_products_file(
             product.display_name))
         print('Product description: {}\n'.format(product.description))
         print('Product labels: {}\n'.format(product.product_labels))
-# [END product_search_get_similar_products_file]
+# [END vision_product_search_get_similar_products]
 
 
-# [START product_search_get_similar_products_uri]
+# [START vision_product_search_get_similar_products_gcs]
 def get_similar_products_uri(
         project_id, location, product_set_id, product_category,
         image_uri, filter):
@@ -153,7 +156,7 @@ def get_similar_products_uri(
             product.display_name))
         print('Product description: {}\n'.format(product.description))
         print('Product labels: {}\n'.format(product.product_labels))
-# [END product_search_get_similar_products_uri]
+# [END vision_product_search_get_similar_products_gcs]
 
 
 if __name__ == '__main__':

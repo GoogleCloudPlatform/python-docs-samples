@@ -19,8 +19,8 @@
 Example:
     python doctext.py resources/text_menu.jpg
 """
-# [START full_tutorial]
-# [START imports]
+# [START vision_document_text_tutorial]
+# [START vision_document_text_tutorial_imports]
 import argparse
 from enum import Enum
 import io
@@ -28,7 +28,7 @@ import io
 from google.cloud import vision
 from google.cloud.vision import types
 from PIL import Image, ImageDraw
-# [END imports]
+# [END vision_document_text_tutorial_imports]
 
 
 class FeatureType(Enum):
@@ -53,7 +53,7 @@ def draw_boxes(image, bounds, color):
 
 
 def get_document_bounds(image_file, feature):
-    # [START detect_bounds]
+    # [START vision_document_text_tutorial_detect_bounds]
     """Returns document bounds given an image."""
     client = vision.ImageAnnotatorClient()
 
@@ -89,7 +89,7 @@ def get_document_bounds(image_file, feature):
             bounds.append(block.bounding_box)
 
     # The list `bounds` contains the coordinates of the bounding boxes.
-    # [END detect_bounds]
+    # [END vision_document_text_tutorial_detect_bounds]
     return bounds
 
 
@@ -109,7 +109,7 @@ def render_doc_text(filein, fileout):
 
 
 if __name__ == '__main__':
-    # [START run_doc_text]
+    # [START vision_document_text_tutorial_run_application]
     parser = argparse.ArgumentParser()
     parser.add_argument('detect_file', help='The image for text detection.')
     parser.add_argument('-out_file', help='Optional output file', default=0)
@@ -117,5 +117,5 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     render_doc_text(args.detect_file, args.out_file)
-    # [END run_doc_text]
-# [END full_tutorial]
+    # [END vision_document_text_tutorial_run_application]
+# [END vision_document_text_tutorial]
