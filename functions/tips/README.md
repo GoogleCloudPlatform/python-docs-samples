@@ -2,10 +2,12 @@
 
 # Google Cloud Functions - Tips sample
 
+## Running locally
+Set the `GCP_PROJECT` variable to the ID of the GCP project to use.
+
+## More info
 See:
 
-* [Cloud Functions Tips tutorial][tutorial]
 * [Cloud Functions Tips sample source code][code]
 
-[tutorial]: https://cloud.google.com/functions/docs/bestpractices/tips
 [code]: main.py
