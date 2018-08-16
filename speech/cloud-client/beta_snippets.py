@@ -139,7 +139,7 @@ def transcribe_file_with_auto_punctuation():
 
 def transcribe_file_with_diarization():
     """Transcribe the given audio file synchronously with diarization."""
-    # [START speech_transcribe_diarization]
+    # [START speech_transcribe_diarization_beta]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
@@ -172,7 +172,7 @@ def transcribe_file_with_diarization():
     for word_info in words_info:
         print("word: '{}', speaker_tag: {}".format(word_info.word,
                                                    word_info.speaker_tag))
-    # [END speech_transcribe_diarization]
+    # [END speech_transcribe_diarization_beta]
 
 
 def transcribe_file_with_multichannel():
