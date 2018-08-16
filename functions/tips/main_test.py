@@ -72,19 +72,15 @@ def test_avoid_infinite_retries(capsys):
 
 
 def test_retry_or_not():
-    with patch('google.cloud') as cloud_mock:
-
-        error_client = MagicMock()
-
-        cloud_mock.error_reporting = MagicMock(
-            Client=MagicMock(return_value=error_client))
+    with patch('main.error_client') as error_client_mock:
+        error_client_mock.report_exception = MagicMock()
 
         event = Mock(data={})
         main.retry_or_not(event, None)
-        assert error_client.report_exception.call_count == 1
+        assert error_client_mock.report_exception.call_count == 1
 
         event.data = {'retry': True}
         with pytest.raises(RuntimeError):
             main.retry_or_not(event, None)
 
-        assert error_client.report_exception.call_count == 2
+        assert error_client_mock.report_exception.call_count == 2
