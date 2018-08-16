@@ -244,7 +244,7 @@ def transcribe_file_with_multilanguage():
 def transcribe_file_with_word_level_confidence():
     """Transcribe the given audio file synchronously with
       word level confidence."""
-    # [START speech_transcribe_word_level_confidence]
+    # [START speech_transcribe_word_level_confidence_beta]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
@@ -270,7 +270,7 @@ def transcribe_file_with_word_level_confidence():
         print(u'Transcript: {}'.format(alternative.transcript))
         print(u'First Word and Confidence: ({}, {})'.format(
             alternative.words[0].word, alternative.words[0].confidence))
-    # [END speech_transcribe_word_level_confidence]
+    # [END speech_transcribe_word_level_confidence_beta]
 
 
 if __name__ == '__main__':
