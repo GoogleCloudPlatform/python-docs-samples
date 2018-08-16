@@ -65,7 +65,7 @@ def transcribe_file_with_enhanced_model():
 
 def transcribe_file_with_metadata():
     """Send a request that includes recognition metadata."""
-    # [START speech_transcribe_file_with_metadata]
+    # [START speech_transcribe_recognition_metadata_beta]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
@@ -105,7 +105,7 @@ def transcribe_file_with_metadata():
         print('-' * 20)
         print('First alternative of result {}'.format(i))
         print('Transcript: {}'.format(alternative.transcript))
-    # [END speech_transcribe_file_with_metadata]
+    # [END speech_transcribe_recognition_metadata_beta]
 
 
 def transcribe_file_with_auto_punctuation():
