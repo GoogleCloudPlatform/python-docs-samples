@@ -61,7 +61,7 @@ def transcribe_file(speech_file):
 # [END def_transcribe_file]
 
 
-# [START def_transcribe_gcs]
+# [START speech_transcribe_async_gcs]
 def transcribe_gcs(gcs_uri):
     """Asynchronously transcribes the audio file specified by the gcs_uri."""
     from google.cloud import speech
@@ -86,7 +86,7 @@ def transcribe_gcs(gcs_uri):
         # The first alternative is the most likely one for this portion.
         print(u'Transcript: {}'.format(result.alternatives[0].transcript))
         print('Confidence: {}'.format(result.alternatives[0].confidence))
-# [END def_transcribe_gcs]
+# [END speech_transcribe_async_gcs]
 
 
 if __name__ == '__main__':
