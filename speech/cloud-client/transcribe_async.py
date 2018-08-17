@@ -26,7 +26,7 @@ import argparse
 import io
 
 
-# [START def_transcribe_file]
+# [START speech_transcribe_async]
 def transcribe_file(speech_file):
     """Transcribe the given audio file asynchronously."""
     from google.cloud import speech
@@ -58,7 +58,7 @@ def transcribe_file(speech_file):
         print(u'Transcript: {}'.format(result.alternatives[0].transcript))
         print('Confidence: {}'.format(result.alternatives[0].confidence))
     # [END migration_async_response]
-# [END def_transcribe_file]
+# [END speech_transcribe_async]
 
 
 # [START speech_transcribe_async_gcs]
