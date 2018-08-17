@@ -210,7 +210,7 @@ def transcribe_file_with_multichannel():
 def transcribe_file_with_multilanguage():
     """Transcribe the given audio file synchronously with
       multi language."""
-    # [START speech_transcribe_multilanguage]
+    # [START speech_transcribe_multilanguage_beta]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
@@ -238,7 +238,7 @@ def transcribe_file_with_multilanguage():
         print('-' * 20)
         print('First alternative of result {}: {}'.format(i, alternative))
         print(u'Transcript: {}'.format(alternative.transcript))
-    # [END speech_transcribe_multilanguage]
+    # [END speech_transcribe_multilanguage_beta]
 
 
 def transcribe_file_with_word_level_confidence():
