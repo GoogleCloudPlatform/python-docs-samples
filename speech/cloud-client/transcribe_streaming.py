@@ -26,7 +26,7 @@ import io
 # [END import_libraries]
 
 
-# [START def_transcribe_streaming]
+# [START speech_transcribe_streaming]
 def transcribe_streaming(stream_file):
     """Streams transcription of the given audio file."""
     from google.cloud import speech
@@ -67,7 +67,7 @@ def transcribe_streaming(stream_file):
                 print('Confidence: {}'.format(alternative.confidence))
                 print(u'Transcript: {}'.format(alternative.transcript))
     # [END migration_streaming_response]
-# [END def_transcribe_streaming]
+# [END speech_transcribe_streaming]
 
 
 if __name__ == '__main__':
