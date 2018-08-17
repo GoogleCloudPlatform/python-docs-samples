@@ -178,7 +178,7 @@ def transcribe_file_with_diarization():
 def transcribe_file_with_multichannel():
     """Transcribe the given audio file synchronously with
       multi channel."""
-    # [START speech_transcribe_multichannel]
+    # [START speech_transcribe_multichannel_beta]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
@@ -204,7 +204,7 @@ def transcribe_file_with_multichannel():
         print('First alternative of result {}'.format(i))
         print(u'Transcript: {}'.format(alternative.transcript))
         print(u'Channel Tag: {}'.format(result.channel_tag))
-    # [END speech_transcribe_multichannel]
+    # [END speech_transcribe_multichannel_beta]
 
 
 def transcribe_file_with_multilanguage():
