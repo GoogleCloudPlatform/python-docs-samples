@@ -28,7 +28,7 @@ import io
 # [END import_libraries]
 
 
-# [START def_transcribe_file]
+# [START speech_transcribe_sync]
 def transcribe_file(speech_file):
     """Transcribe the given audio file."""
     from google.cloud import speech
@@ -57,10 +57,10 @@ def transcribe_file(speech_file):
         # The first alternative is the most likely one for this portion.
         print(u'Transcript: {}'.format(result.alternatives[0].transcript))
     # [END migration_sync_response]
-# [END def_transcribe_file]
+# [END speech_transcribe_sync]
 
 
-# [START def_transcribe_gcs]
+# [START speech_transcribe_sync_gcs]
 def transcribe_gcs(gcs_uri):
     """Transcribes the audio file specified by the gcs_uri."""
     from google.cloud import speech
@@ -82,7 +82,7 @@ def transcribe_gcs(gcs_uri):
     for result in response.results:
         # The first alternative is the most likely one for this portion.
         print(u'Transcript: {}'.format(result.alternatives[0].transcript))
-# [END def_transcribe_gcs]
+# [END speech_transcribe_sync_gcs]
 
 
 if __name__ == '__main__':
