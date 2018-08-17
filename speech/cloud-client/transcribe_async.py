@@ -34,7 +34,7 @@ def transcribe_file(speech_file):
     from google.cloud.speech import types
     client = speech.SpeechClient()
 
-    # [START migration_async_request]
+    # [START speech_python_migration_async_request]
     with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
 
@@ -44,9 +44,9 @@ def transcribe_file(speech_file):
         sample_rate_hertz=16000,
         language_code='en-US')
 
-    # [START migration_async_response]
+    # [START speech_python_migration_async_response]
     operation = client.long_running_recognize(config, audio)
-    # [END migration_async_request]
+    # [END speech_python_migration_async_request]
 
     print('Waiting for operation to complete...')
     response = operation.result(timeout=90)
@@ -57,7 +57,7 @@ def transcribe_file(speech_file):
         # The first alternative is the most likely one for this portion.
         print(u'Transcript: {}'.format(result.alternatives[0].transcript))
         print('Confidence: {}'.format(result.alternatives[0].confidence))
-    # [END migration_async_response]
+    # [END speech_python_migration_async_response]
 # [END speech_transcribe_async]
 
 
