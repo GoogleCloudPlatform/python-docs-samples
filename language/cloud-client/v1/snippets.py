@@ -39,12 +39,12 @@ def sentiment_text(text):
         text = text.decode('utf-8')
 
     # Instantiates a plain text document.
-    # [START migration_document_text]
-    # [START migration_analyze_sentiment]
+    # [START language_python_migration_document_text]
+    # [START language_python_migration_analyze_sentiment]
     document = types.Document(
         content=text,
         type=enums.Document.Type.PLAIN_TEXT)
-    # [END migration_document_text]
+    # [END language_python_migration_document_text]
 
     # Detects sentiment in the document. You can also analyze HTML with:
     #   document.type == enums.Document.Type.HTML
@@ -52,7 +52,7 @@ def sentiment_text(text):
 
     print('Score: {}'.format(sentiment.score))
     print('Magnitude: {}'.format(sentiment.magnitude))
-    # [END migration_analyze_sentiment]
+    # [END language_python_migration_analyze_sentiment]
 # [END def_sentiment_text]
 
 
@@ -62,11 +62,11 @@ def sentiment_file(gcs_uri):
     client = language.LanguageServiceClient()
 
     # Instantiates a plain text document.
-    # [START migration_document_gcs_uri]
+    # [START language_python_migration_document_gcs_uri]
     document = types.Document(
         gcs_content_uri=gcs_uri,
         type=enums.Document.Type.PLAIN_TEXT)
-    # [END migration_document_gcs_uri]
+    # [END language_python_migration_document_gcs_uri]
 
     # Detects sentiment in the document. You can also analyze HTML with:
     #   document.type == enums.Document.Type.HTML
@@ -86,7 +86,7 @@ def entities_text(text):
         text = text.decode('utf-8')
 
     # Instantiates a plain text document.
-    # [START migration_analyze_entities]
+    # [START language_python_migration_analyze_entities]
     document = types.Document(
         content=text,
         type=enums.Document.Type.PLAIN_TEXT)
@@ -107,7 +107,7 @@ def entities_text(text):
         print(u'{:<16}: {}'.format('salience', entity.salience))
         print(u'{:<16}: {}'.format('wikipedia_url',
               entity.metadata.get('wikipedia_url', '-')))
-    # [END migration_analyze_entities]
+    # [END language_python_migration_analyze_entities]
 # [END def_entities_text]
 
 
@@ -149,7 +149,7 @@ def syntax_text(text):
         text = text.decode('utf-8')
 
     # Instantiates a plain text document.
-    # [START migration_analyze_syntax]
+    # [START language_python_migration_analyze_syntax]
     document = types.Document(
         content=text,
         type=enums.Document.Type.PLAIN_TEXT)
@@ -165,7 +165,7 @@ def syntax_text(text):
     for token in tokens:
         print(u'{}: {}'.format(pos_tag[token.part_of_speech.tag],
                                token.text.content))
-    # [END migration_analyze_syntax]
+    # [END language_python_migration_analyze_syntax]
 # [END def_syntax_text]
 
 
