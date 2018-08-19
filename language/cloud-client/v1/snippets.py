@@ -77,7 +77,7 @@ def sentiment_file(gcs_uri):
 # [END def_sentiment_file]
 
 
-# [START def_entities_text]
+# [START language_entities_text]
 def entities_text(text):
     """Detects entities in the text."""
     client = language.LanguageServiceClient()
@@ -108,10 +108,10 @@ def entities_text(text):
         print(u'{:<16}: {}'.format('wikipedia_url',
               entity.metadata.get('wikipedia_url', '-')))
     # [END language_python_migration_analyze_entities]
-# [END def_entities_text]
+# [END language_entities_text]
 
 
-# [START def_entities_file]
+# [START language_entities_file_gcs]
 def entities_file(gcs_uri):
     """Detects entities in the file located in Google Cloud Storage."""
     client = language.LanguageServiceClient()
@@ -137,7 +137,7 @@ def entities_file(gcs_uri):
         print(u'{:<16}: {}'.format('salience', entity.salience))
         print(u'{:<16}: {}'.format('wikipedia_url',
               entity.metadata.get('wikipedia_url', '-')))
-# [END def_entities_file]
+# [END language_entities_file_gcs]
 
 
 # [START def_syntax_text]
@@ -193,7 +193,7 @@ def syntax_file(gcs_uri):
 # [END def_syntax_file]
 
 
-# [START def_entity_sentiment_text]
+# [START language_entity_sentiment_text]
 def entity_sentiment_text(text):
     """Detects entity sentiment in the provided text."""
     client = language.LanguageServiceClient()
@@ -223,9 +223,10 @@ def entity_sentiment_text(text):
             print(u'  Type : {}'.format(mention.type))
         print(u'Salience: {}'.format(entity.salience))
         print(u'Sentiment: {}\n'.format(entity.sentiment))
-# [END def_entity_sentiment_text]
+# [END language_entity_sentiment_text]
 
 
+# [START language_entity_sentiment_file_gcs]
 def entity_sentiment_file(gcs_uri):
     """Detects entity sentiment in a Google Cloud Storage file."""
     client = language.LanguageServiceClient()
@@ -251,6 +252,7 @@ def entity_sentiment_file(gcs_uri):
             print(u'  Type : {}'.format(mention.type))
         print(u'Salience: {}'.format(entity.salience))
         print(u'Sentiment: {}\n'.format(entity.sentiment))
+# [END language_entity_sentiment_file_gcs]
 
 
 # [START def_classify_text]
