@@ -30,7 +30,7 @@ from google.cloud.language import types
 import six
 
 
-# [START def_sentiment_text]
+# [START language_sentiment_text]
 def sentiment_text(text):
     """Detects sentiment in the text."""
     client = language.LanguageServiceClient()
@@ -53,10 +53,10 @@ def sentiment_text(text):
     print('Score: {}'.format(sentiment.score))
     print('Magnitude: {}'.format(sentiment.magnitude))
     # [END language_python_migration_analyze_sentiment]
-# [END def_sentiment_text]
+# [END language_sentiment_text]
 
 
-# [START def_sentiment_file]
+# [START language_sentiment_file_gcs]
 def sentiment_file(gcs_uri):
     """Detects sentiment in the file located in Google Cloud Storage."""
     client = language.LanguageServiceClient()
@@ -74,7 +74,7 @@ def sentiment_file(gcs_uri):
 
     print('Score: {}'.format(sentiment.score))
     print('Magnitude: {}'.format(sentiment.magnitude))
-# [END def_sentiment_file]
+# [END language_sentiment_file_gcs]
 
 
 # [START language_entities_text]
