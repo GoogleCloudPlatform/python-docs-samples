@@ -255,7 +255,7 @@ def entity_sentiment_file(gcs_uri):
 # [END language_entity_sentiment_file_gcs]
 
 
-# [START def_classify_text]
+# [START language_classify_text]
 def classify_text(text):
     """Classifies content categories of the provided text."""
     client = language.LanguageServiceClient()
@@ -273,10 +273,10 @@ def classify_text(text):
         print(u'=' * 20)
         print(u'{:<16}: {}'.format('name', category.name))
         print(u'{:<16}: {}'.format('confidence', category.confidence))
-# [END def_classify_text]
+# [END language_classify_text]
 
 
-# [START def_classify_file]
+# [START language_classify_file_gcs]
 def classify_file(gcs_uri):
     """Classifies content categories of the text in a Google Cloud Storage
     file.
@@ -293,7 +293,7 @@ def classify_file(gcs_uri):
         print(u'=' * 20)
         print(u'{:<16}: {}'.format('name', category.name))
         print(u'{:<16}: {}'.format('confidence', category.confidence))
-# [END def_classify_file]
+# [END language_classify_file_gcs]
 
 
 if __name__ == '__main__':
