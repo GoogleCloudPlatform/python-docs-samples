@@ -40,7 +40,7 @@ def sentiment_text(text):
 
     # Instantiates a plain text document.
     # [START language_python_migration_document_text]
-    # [START language_python_migration_analyze_sentiment]
+    # [START language_python_migration_sentiment_text]
     document = types.Document(
         content=text,
         type=enums.Document.Type.PLAIN_TEXT)
@@ -52,7 +52,7 @@ def sentiment_text(text):
 
     print('Score: {}'.format(sentiment.score))
     print('Magnitude: {}'.format(sentiment.magnitude))
-    # [END language_python_migration_analyze_sentiment]
+    # [END language_python_migration_sentiment_text]
 # [END language_sentiment_text]
 
 
@@ -140,7 +140,7 @@ def entities_file(gcs_uri):
 # [END language_entities_file_gcs]
 
 
-# [START def_syntax_text]
+# [START language_syntax_text]
 def syntax_text(text):
     """Detects syntax in the text."""
     client = language.LanguageServiceClient()
@@ -149,7 +149,7 @@ def syntax_text(text):
         text = text.decode('utf-8')
 
     # Instantiates a plain text document.
-    # [START language_python_migration_analyze_syntax]
+    # [START language_python_migration_syntax_text]
     document = types.Document(
         content=text,
         type=enums.Document.Type.PLAIN_TEXT)
@@ -165,11 +165,11 @@ def syntax_text(text):
     for token in tokens:
         print(u'{}: {}'.format(pos_tag[token.part_of_speech.tag],
                                token.text.content))
-    # [END language_python_migration_analyze_syntax]
-# [END def_syntax_text]
+    # [END language_python_migration_syntax_text]
+# [END language_syntax_text]
 
 
-# [START def_syntax_file]
+# [START language_syntax_file_gcs]
 def syntax_file(gcs_uri):
     """Detects syntax in the file located in Google Cloud Storage."""
     client = language.LanguageServiceClient()
@@ -190,7 +190,7 @@ def syntax_file(gcs_uri):
     for token in tokens:
         print(u'{}: {}'.format(pos_tag[token.part_of_speech.tag],
                                token.text.content))
-# [END def_syntax_file]
+# [END language_syntax_file_gcs]
 
 
 # [START language_entity_sentiment_text]
