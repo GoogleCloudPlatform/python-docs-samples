@@ -62,11 +62,11 @@ def sentiment_file(gcs_uri):
     client = language.LanguageServiceClient()
 
     # Instantiates a plain text document.
-    # [START language_python_migration_document_gcs_uri]
+    # [START language_python_migration_document_gcs]
     document = types.Document(
         gcs_content_uri=gcs_uri,
         type=enums.Document.Type.PLAIN_TEXT)
-    # [END language_python_migration_document_gcs_uri]
+    # [END language_python_migration_document_gcs]
 
     # Detects sentiment in the document. You can also analyze HTML with:
     #   document.type == enums.Document.Type.HTML
@@ -86,7 +86,7 @@ def entities_text(text):
         text = text.decode('utf-8')
 
     # Instantiates a plain text document.
-    # [START language_python_migration_analyze_entities]
+    # [START language_python_migration_entities_text]
     document = types.Document(
         content=text,
         type=enums.Document.Type.PLAIN_TEXT)
@@ -107,7 +107,7 @@ def entities_text(text):
         print(u'{:<16}: {}'.format('salience', entity.salience))
         print(u'{:<16}: {}'.format('wikipedia_url',
               entity.metadata.get('wikipedia_url', '-')))
-    # [END language_python_migration_analyze_entities]
+    # [END language_python_migration_entities_text]
 # [END language_entities_text]
 
 
