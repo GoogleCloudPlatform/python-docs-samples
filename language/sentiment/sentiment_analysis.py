@@ -58,6 +58,7 @@ def analyze(movie_review_filename):
 # [END language_sentiment_tutorial_analyze_sentiment]
 
 
+# [START language_sentiment_tutorial_run_application]
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -68,4 +69,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     analyze(args.movie_review_filename)
+# [END language_sentiment_tutorial_run_application]
 # [END language_sentiment_tutorial]
