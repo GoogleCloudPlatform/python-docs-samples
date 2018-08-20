@@ -12,22 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START app]
 import logging
 import os
 
 from flask import Flask, render_template, request
 import requests
 
-# [START config]
 MAILGUN_DOMAIN_NAME = os.environ['MAILGUN_DOMAIN_NAME']
 MAILGUN_API_KEY = os.environ['MAILGUN_API_KEY']
-# [END config]
 
 app = Flask(__name__)
 
 
-# [START simple_message]
+# [START gae_flex_mailgun_simple_message]
 def send_simple_message(to):
     url = 'https://api.mailgun.net/v3/{}/messages'.format(MAILGUN_DOMAIN_NAME)
     auth = ('api', MAILGUN_API_KEY)
@@ -40,10 +37,10 @@ def send_simple_message(to):
 
     response = requests.post(url, auth=auth, data=data)
     response.raise_for_status()
-# [END simple_message]
+# [END gae_flex_mailgun_simple_message]
 
 
-# [START complex_message]
+# [START gae_flex_mailgun_complex_message]
 def send_complex_message(to):
     url = 'https://api.mailgun.net/v3/{}/messages'.format(MAILGUN_DOMAIN_NAME)
     auth = ('api', MAILGUN_API_KEY)
@@ -58,7 +55,7 @@ def send_complex_message(to):
 
     response = requests.post(url, auth=auth, data=data, files=files)
     response.raise_for_status()
-# [END complex_message]
+# [END gae_flex_mailgun_complex_message]
 
 
 @app.route('/')
@@ -92,4 +89,3 @@ if __name__ == '__main__':
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
     app.run(host='127.0.0.1', port=8080, debug=True)
-# [END app]

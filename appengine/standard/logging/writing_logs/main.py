@@ -18,7 +18,7 @@ Python logging package. Logs are automatically collected and available via
 the Google Cloud Console.
 """
 
-# [START all]
+# [START gae_python_logging_request]
 import logging
 
 import webapp2
@@ -44,4 +44,4 @@ app = webapp2.WSGIApplication([
     ('/', MainPage)
 ], debug=True)
 
-# [END all]
+# [END gae_python_logging_request]
