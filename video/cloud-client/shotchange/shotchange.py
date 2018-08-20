@@ -26,40 +26,40 @@ Example Usage:
 
 """
 
-# [START full_tutorial]
-# [START imports]
+# [START video_shot_tutorial]
+# [START video_shot_tutorial_imports]
 import argparse
 
 from google.cloud import videointelligence
-# [END imports]
+# [END video_shot_tutorial_imports]
 
 
 def analyze_shots(path):
     """ Detects camera shot changes. """
-    # [START construct_request]
+    # [START video_shot_tutorial_construct_request]
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.enums.Feature.SHOT_CHANGE_DETECTION]
     operation = video_client.annotate_video(path, features=features)
-    # [END construct_request]
+    # [END video_shot_tutorial_construct_request]
     print('\nProcessing video for shot change annotations:')
 
-    # [START check_operation]
+    # [START video_shot_tutorial_check_operation]
     result = operation.result(timeout=90)
     print('\nFinished processing.')
-    # [END check_operation]
+    # [END video_shot_tutorial_check_operation]
 
-    # [START parse_response]
+    # [START video_shot_tutorial_parse_response]
     for i, shot in enumerate(result.annotation_results[0].shot_annotations):
         start_time = (shot.start_time_offset.seconds +
                       shot.start_time_offset.nanos / 1e9)
         end_time = (shot.end_time_offset.seconds +
                     shot.end_time_offset.nanos / 1e9)
         print('\tShot {}: {} to {}'.format(i, start_time, end_time))
-    # [END parse_response]
+    # [END video_shot_tutorial_parse_response]
 
 
 if __name__ == '__main__':
-    # [START running_app]
+    # [START video_shot_tutorial_run_application]
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -67,5 +67,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     analyze_shots(args.path)
-    # [END running_app]
-# [END full_tutorial]
+    # [END video_shot_tutorial_run_application]
+# [END video_shot_tutorial]
