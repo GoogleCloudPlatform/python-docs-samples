@@ -29,7 +29,7 @@ app = Flask(__name__)
 GA_TRACKING_ID = os.environ['GA_TRACKING_ID']
 
 
-# [START track_event]
+# [START gae_analytics_track_event]
 def track_event(category, action, label=None, value=0):
     data = {
         'v': '1',  # API Version.
@@ -59,7 +59,7 @@ def track_example():
         category='Example',
         action='test action')
     return 'Event tracked.'
-# [END track_event]
+# [END gae_analytics_track_event]
 
 
 @app.errorhandler(500)
