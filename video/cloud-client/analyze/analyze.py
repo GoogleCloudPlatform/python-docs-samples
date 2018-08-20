@@ -136,7 +136,7 @@ def analyze_labels(path):
 
 
 def analyze_labels_file(path):
-    # [START video_analyze_labels_local]
+    # [START video_analyze_labels]
     """Detect labels given a file path."""
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.enums.Feature.LABEL_DETECTION]
@@ -207,7 +207,7 @@ def analyze_labels_file(path):
         print('\tFirst frame time offset: {}s'.format(time_offset))
         print('\tFirst frame confidence: {}'.format(frame.confidence))
         print('\n')
-    # [END video_analyze_labels_local]
+    # [END video_analyze_labels]
 
 
 def analyze_shots(path):
