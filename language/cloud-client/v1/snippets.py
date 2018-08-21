@@ -56,7 +56,7 @@ def sentiment_text(text):
 # [END language_sentiment_text]
 
 
-# [START language_sentiment_file_gcs]
+# [START language_sentiment_gcs]
 def sentiment_file(gcs_uri):
     """Detects sentiment in the file located in Google Cloud Storage."""
     client = language.LanguageServiceClient()
@@ -74,7 +74,7 @@ def sentiment_file(gcs_uri):
 
     print('Score: {}'.format(sentiment.score))
     print('Magnitude: {}'.format(sentiment.magnitude))
-# [END language_sentiment_file_gcs]
+# [END language_sentiment_gcs]
 
 
 # [START language_entities_text]
@@ -111,7 +111,7 @@ def entities_text(text):
 # [END language_entities_text]
 
 
-# [START language_entities_file_gcs]
+# [START language_entities_gcs]
 def entities_file(gcs_uri):
     """Detects entities in the file located in Google Cloud Storage."""
     client = language.LanguageServiceClient()
@@ -137,7 +137,7 @@ def entities_file(gcs_uri):
         print(u'{:<16}: {}'.format('salience', entity.salience))
         print(u'{:<16}: {}'.format('wikipedia_url',
               entity.metadata.get('wikipedia_url', '-')))
-# [END language_entities_file_gcs]
+# [END language_entities_gcs]
 
 
 # [START language_syntax_text]
@@ -169,7 +169,7 @@ def syntax_text(text):
 # [END language_syntax_text]
 
 
-# [START language_syntax_file_gcs]
+# [START language_syntax_gcs]
 def syntax_file(gcs_uri):
     """Detects syntax in the file located in Google Cloud Storage."""
     client = language.LanguageServiceClient()
@@ -190,7 +190,7 @@ def syntax_file(gcs_uri):
     for token in tokens:
         print(u'{}: {}'.format(pos_tag[token.part_of_speech.tag],
                                token.text.content))
-# [END language_syntax_file_gcs]
+# [END language_syntax_gcs]
 
 
 # [START language_entity_sentiment_text]
@@ -226,7 +226,7 @@ def entity_sentiment_text(text):
 # [END language_entity_sentiment_text]
 
 
-# [START language_entity_sentiment_file_gcs]
+# [START language_entity_sentiment_gcs]
 def entity_sentiment_file(gcs_uri):
     """Detects entity sentiment in a Google Cloud Storage file."""
     client = language.LanguageServiceClient()
@@ -252,7 +252,7 @@ def entity_sentiment_file(gcs_uri):
             print(u'  Type : {}'.format(mention.type))
         print(u'Salience: {}'.format(entity.salience))
         print(u'Sentiment: {}\n'.format(entity.sentiment))
-# [END language_entity_sentiment_file_gcs]
+# [END language_entity_sentiment_gcs]
 
 
 # [START language_classify_text]
@@ -276,7 +276,7 @@ def classify_text(text):
 # [END language_classify_text]
 
 
-# [START language_classify_file_gcs]
+# [START language_classify_gcs]
 def classify_file(gcs_uri):
     """Classifies content categories of the text in a Google Cloud Storage
     file.
@@ -293,7 +293,7 @@ def classify_file(gcs_uri):
         print(u'=' * 20)
         print(u'{:<16}: {}'.format('name', category.name))
         print(u'{:<16}: {}'.format('confidence', category.confidence))
-# [END language_classify_file_gcs]
+# [END language_classify_gcs]
 
 
 if __name__ == '__main__':
