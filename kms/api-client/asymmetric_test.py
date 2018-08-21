@@ -64,7 +64,7 @@ def setup_module(module):
     s2 = create_key_helper(t.rsaSignId, t.rsaSign, 'ASYMMETRIC_SIGN',
                            'RSA_SIGN_PSS_2048_SHA256', t)
     s3 = create_key_helper(t.ecSignId, t.ecSign, 'ASYMMETRIC_SIGN',
-                           'EC_SIGN_P224_SHA256', t)
+                           'EC_SIGN_P256_SHA256', t)
     if s1 or s2 or s3:
         # leave time for keys to initialize
         sleep(20)
