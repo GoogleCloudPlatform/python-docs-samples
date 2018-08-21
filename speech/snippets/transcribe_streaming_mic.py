@@ -25,7 +25,7 @@ Example usage:
     python transcribe_streaming_mic.py
 """
 
-# [START import_libraries]
+# [START speech_transcribe_streaming_mic]
 from __future__ import division
 
 import re
@@ -36,7 +36,6 @@ from google.cloud.speech import enums
 from google.cloud.speech import types
 import pyaudio
 from six.moves import queue
-# [END import_libraries]
 
 # Audio recording parameters
 RATE = 16000
@@ -106,7 +105,6 @@ class MicrophoneStream(object):
                     break
 
             yield b''.join(data)
-# [END audio_stream]
 
 
 def listen_print_loop(responses):
@@ -191,3 +189,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+# [END speech_transcribe_streaming_mic]
