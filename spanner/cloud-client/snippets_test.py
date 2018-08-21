@@ -15,298 +15,197 @@
 import os
 import random
 import string
+import time
 
-from gcp_devrel.testing import eventually_consistent
 from google.cloud import spanner
 import pytest
 
 import snippets
 
-SPANNER_INSTANCE = os.environ['SPANNER_INSTANCE']
+
+def unique_database_id():
+    """ Creates a unique id for the database. """
+    return 'test-db-{}'.format(''.join(random.choice(
+        string.ascii_lowercase + string.digits) for _ in range(5)))
+
+
+INSTANCE_ID = os.environ['SPANNER_INSTANCE']
+DATABASE_ID = unique_database_id()
 
 
 @pytest.fixture(scope='module')
 def spanner_instance():
     spanner_client = spanner.Client()
-    return spanner_client.instance(SPANNER_INSTANCE)
-
-
-def unique_database_id():
-    return 'test-db-{}'.format(''.join(random.choice(
-        string.ascii_lowercase + string.digits) for _ in range(5)))
-
-
-def test_create_database(spanner_instance):
-    database_id = unique_database_id()
-    print(SPANNER_INSTANCE, database_id)
-    snippets.create_database(SPANNER_INSTANCE, database_id)
-
-    database = spanner_instance.database(database_id)
-    database.reload()  # Will only succeed if the database exists.
-    database.drop()
+    return spanner_client.instance(INSTANCE_ID)
 
 
 @pytest.fixture(scope='module')
-def temporary_database(spanner_instance):
-    database_id = unique_database_id()
-    snippets.create_database(SPANNER_INSTANCE, database_id)
-    snippets.insert_data(SPANNER_INSTANCE, database_id)
-    snippets.write_struct_data(SPANNER_INSTANCE, database_id)
-    database = spanner_instance.database(database_id)
+def database(spanner_instance):
+    """ Creates a temporary database that is removed after testing. """
+    snippets.create_database(INSTANCE_ID, DATABASE_ID)
+    db = spanner_instance.database(DATABASE_ID)
+    yield db
+    db.drop()
+
+
+def test_create_database(database):
+    # Reload will only succeed if the database exists.
     database.reload()
-    yield database
-    database.drop()
 
 
-@pytest.fixture(scope='module')
-def temporary_database_with_all_columns(spanner_instance):
-    database_id = unique_database_id()
-    snippets.create_database(SPANNER_INSTANCE, database_id)
-    snippets.insert_data(SPANNER_INSTANCE, database_id)
-    snippets.add_column(SPANNER_INSTANCE, database_id)
-    snippets.add_timestamp_column(SPANNER_INSTANCE, database_id)
-    database = spanner_instance.database(database_id)
-    database.reload()
-    yield database
-    database.drop()
-
-
-def test_query_data(temporary_database, capsys):
-    snippets.query_data(SPANNER_INSTANCE, temporary_database.database_id)
-
+def test_insert_data(capsys):
+    snippets.insert_data(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
+    assert 'Inserted data' in out
 
-    assert 'Total Junk' in out
 
-
-def test_read_data(temporary_database, capsys):
-    snippets.read_data(SPANNER_INSTANCE, temporary_database.database_id)
-
+def test_query_data(capsys):
+    snippets.query_data(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
+    assert 'SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk' in out
 
-    assert 'Total Junk' in out
 
-
-def test_read_stale_data(temporary_database, capsys):
-    snippets.read_stale_data(SPANNER_INSTANCE, temporary_database.database_id)
-
+def test_add_column(capsys):
+    snippets.add_column(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-
-    # It shouldn't be in the output because it was *just* inserted by the
-    # temporary database fixture and this sample reads 15 seconds into the
-    # past.
-    assert 'Total Junk' not in out
+    assert 'Added the MarketingBudget column.' in out
 
 
-@pytest.fixture(scope='module')
-def temporary_database_with_column(temporary_database):
-    snippets.add_column(SPANNER_INSTANCE, temporary_database.database_id)
-    yield temporary_database
-
-
-def test_update_data(temporary_database_with_column):
-    snippets.update_data(
-        SPANNER_INSTANCE,
-        temporary_database_with_column.database_id)
-
-
-def test_query_data_with_new_column(temporary_database_with_column, capsys):
-    snippets.query_data_with_new_column(
-        SPANNER_INSTANCE,
-        temporary_database_with_column.database_id)
-
+def test_read_data(capsys):
+    snippets.read_data(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'MarketingBudget' in out
+    assert 'SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk' in out
 
 
-@pytest.fixture(scope='module')
-def temporary_database_with_indexes(temporary_database_with_column):
-    snippets.add_index(
-        SPANNER_INSTANCE,
-        temporary_database_with_column.database_id)
-    snippets.add_storing_index(
-        SPANNER_INSTANCE,
-        temporary_database_with_column.database_id)
+def test_update_data(capsys):
+    # Sleep for 15 seconds to ensure previous inserts will be
+    # 'stale' by the time test_read_stale_data is run.
+    time.sleep(15)
 
-    yield temporary_database_with_column
-
-
-@pytest.mark.slow
-def test_query_data_with_index(temporary_database_with_indexes, capsys):
-    @eventually_consistent.call
-    def _():
-        snippets.query_data_with_index(
-            SPANNER_INSTANCE,
-            temporary_database_with_indexes.database_id)
-
-        out, _ = capsys.readouterr()
-        assert 'Go, Go, Go' in out
-
-
-@pytest.mark.slow
-def test_read_data_with_index(temporary_database_with_indexes, capsys):
-    @eventually_consistent.call
-    def _():
-        snippets.read_data_with_index(
-            SPANNER_INSTANCE,
-            temporary_database_with_indexes.database_id)
-
-        out, _ = capsys.readouterr()
-        assert 'Go, Go, Go' in out
-
-
-@pytest.mark.slow
-def test_read_data_with_storing_index(temporary_database_with_indexes, capsys):
-    @eventually_consistent.call
-    def _():
-        snippets.read_data_with_storing_index(
-            SPANNER_INSTANCE,
-            temporary_database_with_indexes.database_id)
-
-        out, _ = capsys.readouterr()
-        assert 'Go, Go, Go' in out
-
-
-@pytest.mark.slow
-def test_read_write_transaction(temporary_database_with_column, capsys):
-    @eventually_consistent.call
-    def _():
-        snippets.update_data(
-            SPANNER_INSTANCE,
-            temporary_database_with_column.database_id)
-        snippets.read_write_transaction(
-            SPANNER_INSTANCE,
-            temporary_database_with_column.database_id)
-
-        out, _ = capsys.readouterr()
-
-        assert '300000' in out
-
-
-@pytest.mark.slow
-def test_read_only_transaction(temporary_database, capsys):
-    @eventually_consistent.call
-    def _():
-        snippets.read_only_transaction(
-            SPANNER_INSTANCE,
-            temporary_database.database_id)
-
-        out, _ = capsys.readouterr()
-
-        assert 'Forever Hold Your Peace' in out
-
-
-def test_create_table_with_timestamp(temporary_database, capsys):
-    snippets.create_table_with_timestamp(
-        SPANNER_INSTANCE,
-        temporary_database.database_id)
-
+    snippets.update_data(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-
-    assert 'Performances' in out
-
-
-def test_insert_data_with_timestamp(temporary_database, capsys):
-    snippets.insert_data_with_timestamp(
-        SPANNER_INSTANCE,
-        temporary_database.database_id)
-
-    out, _ = capsys.readouterr()
-
-    assert 'Inserted data.' in out
-
-
-def test_add_timestamp_column(temporary_database, capsys):
-    snippets.add_timestamp_column(
-        SPANNER_INSTANCE,
-        temporary_database.database_id)
-
-    out, _ = capsys.readouterr()
-
-    assert 'Albums' in out
-
-
-@pytest.mark.slow
-def test_update_data_with_timestamp(temporary_database_with_all_columns,
-                                    capsys):
-    snippets.update_data_with_timestamp(
-        SPANNER_INSTANCE,
-        temporary_database_with_all_columns.database_id)
-
-    out, _ = capsys.readouterr()
-
     assert 'Updated data.' in out
 
 
-@pytest.mark.slow
-def test_query_data_with_timestamp(temporary_database, capsys):
-    @eventually_consistent.call
-    def _():
-        snippets.query_data_with_timestamp(
-            SPANNER_INSTANCE,
-            temporary_database.database_id)
-
-        out, _ = capsys.readouterr()
-
-        assert 'Go, Go, Go' in out
+def test_read_stale_data(capsys):
+    # This snippet relies on test_update_data inserting data
+    # at least 15 seconds after the previous insert
+    snippets.read_stale_data(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'SingerId: 1, AlbumId: 1, MarketingBudget: None' in out
 
 
-@pytest.mark.slow
-def test_query_data_with_struct(temporary_database, capsys):
-    @eventually_consistent.call
-    def _():
-        snippets.write_struct_data(
-            SPANNER_INSTANCE,
-            temporary_database.database_id)
-        snippets.query_with_struct(
-            SPANNER_INSTANCE,
-            temporary_database.database_id)
-        out, _ = capsys.readouterr()
-
-        assert 'SingerId: 6' in out
+def test_read_write_transaction(capsys):
+    snippets.read_write_transaction(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'Transaction complete' in out
 
 
-@pytest.mark.slow
-def test_query_data_with_array_struct(temporary_database, capsys):
-    @eventually_consistent.call
-    def _():
-        snippets.write_struct_data(
-            SPANNER_INSTANCE,
-            temporary_database.database_id)
-        snippets.query_with_array_of_struct(
-            SPANNER_INSTANCE,
-            temporary_database.database_id)
-        out, _ = capsys.readouterr()
-
-        assert 'SingerId: 6\nSingerId: 7' in out
+def test_query_data_with_new_column(capsys):
+    snippets.query_data_with_new_column(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'SingerId: 1, AlbumId: 1, MarketingBudget: 300000' in out
+    assert 'SingerId: 2, AlbumId: 2, MarketingBudget: 300000' in out
 
 
-@pytest.mark.slow
-def test_query_data_with_field_struct(temporary_database, capsys):
-    @eventually_consistent.call
-    def _():
-        snippets.write_struct_data(
-            SPANNER_INSTANCE,
-            temporary_database.database_id)
-        snippets.query_struct_field(
-            SPANNER_INSTANCE,
-            temporary_database.database_id)
-        out, _ = capsys.readouterr()
-
-        assert 'SingerId: 6' in out
+def test_add_index(capsys):
+    snippets.add_index(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'Added the AlbumsByAlbumTitle index' in out
 
 
-@pytest.mark.slow
-def test_query_data_with_nested_field_struct(temporary_database, capsys):
-    @eventually_consistent.call
-    def _():
-        snippets.write_struct_data(
-            SPANNER_INSTANCE,
-            temporary_database.database_id)
-        snippets.query_nested_struct_field(
-            SPANNER_INSTANCE,
-            temporary_database.database_id)
-        out, _ = capsys.readouterr()
+def test_query_data_with_index(capsys):
+    snippets.query_data_with_index(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'Go, Go, Go' in out
+    assert 'Forever Hold Your Peace' in out
+    assert 'Green' not in out
 
-        assert 'SingerId: 6 SongName: Imagination' in out
-        assert 'SingerId: 9 SongName: Imagination' in out
+
+def test_read_data_with_index(capsys):
+    snippets.read_data_with_index(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'Go, Go, Go' in out
+    assert 'Forever Hold Your Peace' in out
+    assert 'Green' in out
+
+
+def test_add_storing_index(capsys):
+    snippets.add_storing_index(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'Added the AlbumsByAlbumTitle2 index.' in out
+
+
+def test_read_data_with_storing_index(capsys):
+    snippets.read_data_with_storing_index(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert '300000' in out
+
+
+def test_read_only_transaction(capsys):
+    snippets.read_only_transaction(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    # Snippet does two reads, so entry should be listed twice
+    assert out.count('SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk') == 2
+
+
+def test_add_timestamp_column(capsys):
+    snippets.add_timestamp_column(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'Altered table "Albums" on database ' in out
+
+
+def test_update_data_with_timestamp(capsys):
+    snippets.update_data_with_timestamp(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'Updated data' in out
+
+
+def test_query_data_with_timestamp(capsys):
+    snippets.query_data_with_timestamp(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'SingerId: 1, AlbumId: 1, MarketingBudget: 1000000' in out
+    assert 'SingerId: 2, AlbumId: 2, MarketingBudget: 750000' in out
+
+
+def test_create_table_with_timestamp(capsys):
+    snippets.create_table_with_timestamp(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'Created Performances table on database' in out
+
+
+def test_insert_data_with_timestamp(capsys):
+    snippets.insert_data_with_timestamp(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'Inserted data.' in out
+
+
+def test_write_struct_data(capsys):
+    snippets.write_struct_data(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'Inserted sample data for STRUCT queries'
+
+
+def test_query_with_struct(capsys):
+    snippets.query_with_struct(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'SingerId: Elena'
+
+
+def test_query_with_array_of_struct(capsys):
+    snippets.query_with_array_of_struct(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'SingerId: 6\nSingerId: 7' in out
+
+
+def test_query_struct_field(capsys):
+    snippets.query_struct_field(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'SingerId: 6' in out
+
+
+def test_query_nested_struct_field(capsys):
+    snippets.query_nested_struct_field(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'SingerId: 6 SongName: Imagination' in out
+    assert 'SingerId: 9 SongName: Imagination' in out
