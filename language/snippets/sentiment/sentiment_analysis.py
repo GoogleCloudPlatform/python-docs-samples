@@ -11,19 +11,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START sentiment_tutorial]
+# [START language_sentiment_tutorial]
 """Demonstrates how to make a simple call to the Natural Language API."""
 
-# [START sentiment_tutorial_import]
+# [START language_sentiment_tutorial_imports]
 import argparse
 
 from google.cloud import language
 from google.cloud.language import enums
 from google.cloud.language import types
-# [END sentiment_tutorial_import]
+# [END language_sentiment_tutorial_imports]
 
 
-# [START def_print_result]
+# [START language_sentiment_tutorial_print_result]
 def print_result(annotations):
     score = annotations.document_sentiment.score
     magnitude = annotations.document_sentiment.magnitude
@@ -36,10 +36,10 @@ def print_result(annotations):
     print('Overall Sentiment: score of {} with magnitude of {}'.format(
         score, magnitude))
     return 0
-# [END def_print_result]
+# [END language_sentiment_tutorial_print_result]
 
 
-# [START def_analyze]
+# [START language_sentiment_tutorial_analyze_sentiment]
 def analyze(movie_review_filename):
     """Run a sentiment analysis request on text within a passed filename."""
     client = language.LanguageServiceClient()
@@ -55,9 +55,10 @@ def analyze(movie_review_filename):
 
     # Print the results
     print_result(annotations)
-# [END def_analyze]
+# [END language_sentiment_tutorial_analyze_sentiment]
 
 
+# [START language_sentiment_tutorial_run_application]
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -68,4 +69,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     analyze(args.movie_review_filename)
-# [END sentiment_tutorial]
+# [END language_sentiment_tutorial_run_application]
+# [END language_sentiment_tutorial]
