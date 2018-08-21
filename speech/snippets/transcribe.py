@@ -22,13 +22,11 @@ Example usage:
     python transcribe.py gs://cloud-samples-tests/speech/brooklyn.flac
 """
 
-# [START import_libraries]
 import argparse
 import io
-# [END import_libraries]
 
 
-# [START def_transcribe_file]
+# [START speech_transcribe_sync]
 def transcribe_file(speech_file):
     """Transcribe the given audio file."""
     from google.cloud import speech
@@ -36,8 +34,8 @@ def transcribe_file(speech_file):
     from google.cloud.speech import types
     client = speech.SpeechClient()
 
-    # [START migration_sync_request]
-    # [START migration_audio_config_file]
+    # [START speech_python_migration_sync_request]
+    # [START speech_python_migration_config]
     with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
 
@@ -46,21 +44,21 @@ def transcribe_file(speech_file):
         encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
         language_code='en-US')
-    # [END migration_audio_config_file]
+    # [END speech_python_migration_config]
 
-    # [START migration_sync_response]
+    # [START speech_python_migration_sync_response]
     response = client.recognize(config, audio)
-    # [END migration_sync_request]
+    # [END speech_python_migration_sync_request]
     # Each result is for a consecutive portion of the audio. Iterate through
     # them to get the transcripts for the entire audio file.
     for result in response.results:
         # The first alternative is the most likely one for this portion.
         print(u'Transcript: {}'.format(result.alternatives[0].transcript))
-    # [END migration_sync_response]
-# [END def_transcribe_file]
+    # [END speech_python_migration_sync_response]
+# [END speech_transcribe_sync]
 
 
-# [START def_transcribe_gcs]
+# [START speech_transcribe_sync_gcs]
 def transcribe_gcs(gcs_uri):
     """Transcribes the audio file specified by the gcs_uri."""
     from google.cloud import speech
@@ -68,13 +66,13 @@ def transcribe_gcs(gcs_uri):
     from google.cloud.speech import types
     client = speech.SpeechClient()
 
-    # [START migration_audio_config_gcs]
+    # [START speech_python_migration_config_gcs]
     audio = types.RecognitionAudio(uri=gcs_uri)
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
         sample_rate_hertz=16000,
         language_code='en-US')
-    # [END migration_audio_config_gcs]
+    # [END speech_python_migration_config_gcs]
 
     response = client.recognize(config, audio)
     # Each result is for a consecutive portion of the audio. Iterate through
@@ -82,7 +80,7 @@ def transcribe_gcs(gcs_uri):
     for result in response.results:
         # The first alternative is the most likely one for this portion.
         print(u'Transcript: {}'.format(result.alternatives[0].transcript))
-# [END def_transcribe_gcs]
+# [END speech_transcribe_sync_gcs]
 
 
 if __name__ == '__main__':

@@ -33,7 +33,7 @@ import io
 
 def transcribe_file_with_enhanced_model():
     """Transcribe the given audio file using an enhanced model."""
-    # [START speech_transcribe_file_with_enhanced_model]
+    # [START speech_transcribe_enhanced_model_beta]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
@@ -60,12 +60,12 @@ def transcribe_file_with_enhanced_model():
         print('-' * 20)
         print('First alternative of result {}'.format(i))
         print('Transcript: {}'.format(alternative.transcript))
-    # [END speech_transcribe_file_with_enhanced_model]
+    # [END speech_transcribe_enhanced_model_beta]
 
 
 def transcribe_file_with_metadata():
     """Send a request that includes recognition metadata."""
-    # [START speech_transcribe_file_with_metadata]
+    # [START speech_transcribe_recognition_metadata_beta]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
@@ -105,12 +105,12 @@ def transcribe_file_with_metadata():
         print('-' * 20)
         print('First alternative of result {}'.format(i))
         print('Transcript: {}'.format(alternative.transcript))
-    # [END speech_transcribe_file_with_metadata]
+    # [END speech_transcribe_recognition_metadata_beta]
 
 
 def transcribe_file_with_auto_punctuation():
     """Transcribe the given audio file with auto punctuation enabled."""
-    # [START speech_transcribe_file_with_auto_punctuation]
+    # [START speech_transcribe_auto_punctuation_beta]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
@@ -134,12 +134,12 @@ def transcribe_file_with_auto_punctuation():
         print('-' * 20)
         print('First alternative of result {}'.format(i))
         print('Transcript: {}'.format(alternative.transcript))
-    # [END speech_transcribe_file_with_auto_punctuation]
+    # [END speech_transcribe_auto_punctuation_beta]
 
 
 def transcribe_file_with_diarization():
     """Transcribe the given audio file synchronously with diarization."""
-    # [START speech_transcribe_diarization]
+    # [START speech_transcribe_diarization_beta]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
@@ -172,13 +172,13 @@ def transcribe_file_with_diarization():
     for word_info in words_info:
         print("word: '{}', speaker_tag: {}".format(word_info.word,
                                                    word_info.speaker_tag))
-    # [END speech_transcribe_diarization]
+    # [END speech_transcribe_diarization_beta]
 
 
 def transcribe_file_with_multichannel():
     """Transcribe the given audio file synchronously with
       multi channel."""
-    # [START speech_transcribe_multichannel]
+    # [START speech_transcribe_multichannel_beta]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
@@ -204,13 +204,13 @@ def transcribe_file_with_multichannel():
         print('First alternative of result {}'.format(i))
         print(u'Transcript: {}'.format(alternative.transcript))
         print(u'Channel Tag: {}'.format(result.channel_tag))
-    # [END speech_transcribe_multichannel]
+    # [END speech_transcribe_multichannel_beta]
 
 
 def transcribe_file_with_multilanguage():
     """Transcribe the given audio file synchronously with
       multi language."""
-    # [START speech_transcribe_multilanguage]
+    # [START speech_transcribe_multilanguage_beta]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
@@ -238,13 +238,13 @@ def transcribe_file_with_multilanguage():
         print('-' * 20)
         print('First alternative of result {}: {}'.format(i, alternative))
         print(u'Transcript: {}'.format(alternative.transcript))
-    # [END speech_transcribe_multilanguage]
+    # [END speech_transcribe_multilanguage_beta]
 
 
 def transcribe_file_with_word_level_confidence():
     """Transcribe the given audio file synchronously with
       word level confidence."""
-    # [START speech_transcribe_word_level_confidence]
+    # [START speech_transcribe_word_level_confidence_beta]
     from google.cloud import speech_v1p1beta1 as speech
     client = speech.SpeechClient()
 
@@ -270,7 +270,7 @@ def transcribe_file_with_word_level_confidence():
         print(u'Transcript: {}'.format(alternative.transcript))
         print(u'First Word and Confidence: ({}, {})'.format(
             alternative.words[0].word, alternative.words[0].confidence))
-    # [END speech_transcribe_word_level_confidence]
+    # [END speech_transcribe_word_level_confidence_beta]
 
 
 if __name__ == '__main__':

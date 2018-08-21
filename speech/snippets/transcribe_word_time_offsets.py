@@ -60,7 +60,7 @@ def transcribe_file_with_word_time_offsets(speech_file):
                 end_time.seconds + end_time.nanos * 1e-9))
 
 
-# [START def_transcribe_gcs]
+# [START speech_transcribe_async_word_time_offsets_gcs]
 def transcribe_gcs_with_word_time_offsets(gcs_uri):
     """Transcribe the given audio file asynchronously and output the word time
     offsets."""
@@ -94,7 +94,7 @@ def transcribe_gcs_with_word_time_offsets(gcs_uri):
                 word,
                 start_time.seconds + start_time.nanos * 1e-9,
                 end_time.seconds + end_time.nanos * 1e-9))
-# [END def_transcribe_gcs]
+# [END speech_transcribe_async_word_time_offsets_gcs]
 
 
 if __name__ == '__main__':
