@@ -24,7 +24,8 @@ from cryptography.hazmat.primitives.asymmetric import ec, padding, utils
 
 # [START kms_get_asymmetric_public]
 def getAsymmetricPublicKey(client, key_path):
-    """Retrieves the public key from a saved asymmetric key pair on Cloud KMS
+    """
+    Retrieves the public key from a saved asymmetric key pair on Cloud KMS
     """
     request = client.projects() \
                     .locations() \
@@ -41,7 +42,9 @@ def getAsymmetricPublicKey(client, key_path):
 
 # [START kms_decrypt_rsa]
 def decryptRSA(ciphertext, client, key_path):
-    """Decrypt a given ciphertext using an RSA private key stored on Cloud KMS
+    """
+    Decrypt a given ciphertext using an 'RSA_DECRYPT_OAEP_2048_SHA256' private
+    key stored on Cloud KMS
     """
     request = client.projects() \
                     .locations() \
@@ -58,7 +61,9 @@ def decryptRSA(ciphertext, client, key_path):
 
 # [START kms_encrypt_rsa]
 def encryptRSA(message, client, key_path):
-    """Encrypt message locally using an RSA public key retrieved from Cloud KMS
+    """
+    Encrypt message locally using an 'RSA_DECRYPT_OAEP_2048_SHA256' public
+    key retrieved from Cloud KMS
     """
     public_key = getAsymmetricPublicKey(client, key_path)
     pad = padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()),
@@ -72,8 +77,11 @@ def encryptRSA(message, client, key_path):
 
 # [START kms_sign_asymmetric]
 def signAsymmetric(message, client, key_path):
-    """Create a signature for a message using a private key stored on Cloud KMS
     """
+    Create a signature for a message using a private key stored on Cloud KMS
+    """
+    # Note: some key algorithms will require a different hash function
+    # For example, EC_SIGN_P384_SHA384 requires SHA384
     digest_bytes = hashlib.sha256(message.encode('ascii')).digest()
     digest64 = base64.b64encode(digest_bytes)
 
@@ -92,8 +100,9 @@ def signAsymmetric(message, client, key_path):
 
 # [START kms_verify_signature_rsa]
 def verifySignatureRSA(signature, message, client, key_path):
-    """Verify the validity of an 'RSA_SIGN_PSS_2048_SHA256' signature
-    for the specified plaintext message
+    """
+    Verify the validity of an 'RSA_SIGN_PSS_2048_SHA256' signature for the
+    specified plaintext message
     """
     public_key = getAsymmetricPublicKey(client, key_path)
 
@@ -116,7 +125,8 @@ def verifySignatureRSA(signature, message, client, key_path):
 
 # [START kms_verify_signature_ec]
 def verifySignatureEC(signature, message, client, key_path):
-    """Verify the validity of an 'EC_SIGN_P224_SHA256' signature
+    """
+    Verify the validity of an 'EC_SIGN_P256_SHA256' signature
     for the specified plaintext message
     """
     public_key = getAsymmetricPublicKey(client, key_path)
