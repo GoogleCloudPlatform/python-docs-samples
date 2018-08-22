@@ -58,8 +58,8 @@ def hello_http(request):
         <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
     """
     request_json = request.get_json()
-    if request_json and 'message' in request_json:
-        name = request_json['message']
+    if request_json and 'name' in request_json:
+        name = request_json['name']
     else:
         name = 'World'
     return 'Hello, {}!'.format(name)

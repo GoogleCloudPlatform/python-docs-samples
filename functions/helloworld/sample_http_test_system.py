@@ -34,7 +34,7 @@ def test_args():
     name = str(uuid.uuid4())
     res = requests.post(
       '{}/hello_http'.format(BASE_URL),
-      json={'message': name}
+      json={'name': name}
     )
     assert res.text == 'Hello, {}!'.format(name)
 # [END functions_http_system_test]
