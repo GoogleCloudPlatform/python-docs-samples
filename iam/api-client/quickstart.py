@@ -16,7 +16,6 @@
 
 
 def quickstart():
-
     # [START iam_quickstart]
     import os
 

@@ -83,9 +83,8 @@ def rename_service_account(email, new_display_name):
     service_account = service.projects().serviceAccounts().update(
         name=resource, body=service_account).execute()
 
-    print(
-        'Updated display name for ' + service_account['email'] +
-        ' to: ' + service_account['displayName'])
+    print('Updated display name for {} to: {}'
+            .format(service_account['email'], service_account['displayName']))
     return service_account
 # [END iam_rename_service_account]
 
@@ -103,7 +102,6 @@ def delete_service_account(email):
 
 
 def main():
-
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)

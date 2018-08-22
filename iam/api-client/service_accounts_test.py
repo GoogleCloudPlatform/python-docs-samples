@@ -19,7 +19,6 @@ import service_accounts
 
 
 def test_service_accounts(capsys):
-
     project_id = os.environ['GCLOUD_PROJECT']
     rand = str(random.randint(0, 1000))
     name = 'python-test-' + rand

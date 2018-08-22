@@ -67,12 +67,11 @@ def delete_key(full_key_name):
     service.projects().serviceAccounts().keys().delete(
         name=full_key_name).execute()
 
-    print('Deleted service account: ' + full_key_name)
+    print('Deleted key: ' + full_key_name)
 # [END iam_delete_key]
 
 
 if __name__ == '__main__':
-
     parser = argparse.ArgumentParser(
     description=__doc__,
     formatter_class=argparse.RawDescriptionHelpFormatter)
