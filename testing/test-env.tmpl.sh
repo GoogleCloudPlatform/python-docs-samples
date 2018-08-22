@@ -5,6 +5,8 @@ export API_KEY=
 export BIGTABLE_CLUSTER=bigtable-test
 export BIGTABLE_ZONE=us-central1-c
 export SPANNER_INSTANCE=
+export COMPOSER_LOCATION=us-central1
+export COMPOSER_ENVIRONMENT=
 
 # Environment variables for App Engine Flexible system tests.
 export GA_TRACKING_ID=

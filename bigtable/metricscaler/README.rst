@@ -16,7 +16,7 @@ to scale Cloud Bigtable based on CPU usage.
 .. _Stackdriver Monitoring: http://cloud.google.com/monitoring/docs/
 
 
-.. _Google Cloud Bigtable: https://cloud.google.com/bigtable/docs/ 
+.. _Google Cloud Bigtable: https://cloud.google.com/bigtable/docs/
 
 Setup
 -------------------------------------------------------------------------------
@@ -35,10 +35,16 @@ credentials for applications.
 Install Dependencies
 ++++++++++++++++++++
 
+#. Clone python-docs-samples and change directory to the sample directory you want to use.
+
+    .. code-block:: bash
+
+        $ git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+
 #. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
 
- .. _Python Development Environment Setup Guide:
-     https://cloud.google.com/python/setup
+   .. _Python Development Environment Setup Guide:
+       https://cloud.google.com/python/setup
 
 #. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
 
@@ -63,7 +69,7 @@ Metricscaling example
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigtable/metricscaler/metricscaler.py;bigtable/metricscaler/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigtable/metricscaler/metricscaler.py,bigtable/metricscaler/README.rst
 
 
 

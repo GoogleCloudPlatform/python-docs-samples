@@ -43,6 +43,20 @@ def delete_bucket(bucket_name):
     print('Bucket {} deleted'.format(bucket.name))
 
 
+def enable_default_kms_key(bucket_name, kms_key_name):
+    # [START storage_set_bucket_default_kms_key]
+    """Sets a bucket's default KMS key."""
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+    bucket.default_kms_key_name = kms_key_name
+    bucket.patch()
+
+    print('Set default KMS key for bucket {} to {}.'.format(
+        bucket.name,
+        bucket.default_kms_key_name))
+    # [END storage_set_bucket_default_kms_key]
+
+
 def get_bucket_labels(bucket_name):
     """Prints out a bucket's labels."""
     storage_client = storage.Client()
@@ -141,6 +155,22 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
     print('File {} uploaded to {}.'.format(
         source_file_name,
         destination_blob_name))
+
+
+def upload_blob_with_kms(bucket_name, source_file_name, destination_blob_name,
+                         kms_key_name):
+    # [START storage_upload_with_kms_key]
+    """Uploads a file to the bucket, encrypting it with the given KMS key."""
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+    blob = bucket.blob(destination_blob_name, kms_key_name=kms_key_name)
+    blob.upload_from_filename(source_file_name)
+
+    print('File {} uploaded to {} with encryption key {}.'.format(
+        source_file_name,
+        destination_blob_name,
+        kms_key_name))
+    # [END storage_upload_with_kms_key]
 
 
 def download_blob(bucket_name, source_blob_name, destination_file_name):
@@ -277,6 +307,16 @@ if __name__ == '__main__':
     upload_parser.add_argument('source_file_name')
     upload_parser.add_argument('destination_blob_name')
 
+    enable_default_kms_parser = subparsers.add_parser(
+        'enable-default-kms-key', help=enable_default_kms_key.__doc__)
+    enable_default_kms_parser.add_argument('kms_key_name')
+
+    upload_kms_parser = subparsers.add_parser(
+        'upload-with-kms-key', help=upload_blob_with_kms.__doc__)
+    upload_kms_parser.add_argument('source_file_name')
+    upload_kms_parser.add_argument('destination_blob_name')
+    upload_kms_parser.add_argument('kms_key_name')
+
     download_parser = subparsers.add_parser(
         'download', help=download_blob.__doc__)
     download_parser.add_argument('source_blob_name')
@@ -310,6 +350,8 @@ if __name__ == '__main__':
 
     if args.command == 'create-bucket':
         create_bucket(args.bucket_name)
+    if args.command == 'enable-default-kms-key':
+        enable_default_kms_key(args.bucket_name, args.kms_key_name)
     elif args.command == 'delete-bucket':
         delete_bucket(args.bucket_name)
     if args.command == 'get-bucket-labels':
@@ -327,6 +369,12 @@ if __name__ == '__main__':
             args.bucket_name,
             args.source_file_name,
             args.destination_blob_name)
+    elif args.command == 'upload-with-kms-key':
+        upload_blob_with_kms(
+            args.bucket_name,
+            args.source_file_name,
+            args.destination_blob_name,
+            args.kms_key_name)
     elif args.command == 'download':
         download_blob(
             args.bucket_name,

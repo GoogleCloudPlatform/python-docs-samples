@@ -32,7 +32,7 @@ def is_ipv6(addr):
         return False
 
 
-# [START example]
+# [START gae_flex_datastore_app]
 @app.route('/')
 def index():
     ds = datastore.Client()
@@ -62,7 +62,7 @@ def index():
     output = 'Last 10 visits:\n{}'.format('\n'.join(results))
 
     return output, 200, {'Content-Type': 'text/plain; charset=utf-8'}
-# [END example]
+# [END gae_flex_datastore_app]
 
 
 @app.errorhandler(500)
