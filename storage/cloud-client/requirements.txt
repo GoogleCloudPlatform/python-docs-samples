@@ -1,2 +1,3 @@
-google-cloud-storage==1.10.0
 google-cloud-pubsub==0.33.0
+# DO NOT MERGE BELOW
+-e git+https://github.com/GoogleCloudPlatform/google-cloud-python.git@storage-retention_policy-wip#egg=google-cloud-storage&subdirectory=storage

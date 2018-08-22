@@ -52,14 +52,14 @@ def remove_retention_policy(bucket_name):
 def lock_retention_policy(bucket_name):
     # [START storage_lock_retention_policy]
     storage_client = storage.Client()
-    bucket = storage_client.bucket(bucket_name)
+    bucket = storage_client.get_bucket(bucket_name)
 
     # Warning: Once a retention policy is locked it cannot be unlocked
     # and retention period can only be increased.
     bucket.lock_retention_policy()
 
     print('Retention policy for {} is now locked'.format(bucket_name))
-    print('Retention policy Effective as of {}'.format(
+    print('Retention policy effective as of {}'.format(
         bucket.retention_policy_effective_time))
     # [END storage_lock_retention_policy]
 
