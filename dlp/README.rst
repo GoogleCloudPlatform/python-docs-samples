@@ -7,12 +7,12 @@ Google Data Loss Prevention Python Samples
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/README.rst
 
 
-This directory contains samples for Google Data Loss Prevention. `Google Data Loss Prevention`_ provides programmatic access to a powerful detection engine for personally identifiable information and other privacy-sensitive data in unstructured data streams. **This api is currently in beta**.
+This directory contains samples for Google Data Loss Prevention. `Google Data Loss Prevention`_ provides programmatic access to a powerful detection engine for personally identifiable information and other privacy-sensitive data in unstructured data streams.
 
 
 
 
-.. _Google Data Loss Prevention: https://cloud.google.com/dlp/docs/ 
+.. _Google Data Loss Prevention: https://cloud.google.com/dlp/docs/
 
 Setup
 -------------------------------------------------------------------------------
@@ -31,10 +31,16 @@ credentials for applications.
 Install Dependencies
 ++++++++++++++++++++
 
+#. Clone python-docs-samples and change directory to the sample directory you want to use.
+
+    .. code-block:: bash
+
+        $ git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+
 #. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
 
- .. _Python Development Environment Setup Guide:
-     https://cloud.google.com/python/setup
+   .. _Python Development Environment Setup Guide:
+       https://cloud.google.com/python/setup
 
 #. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
 
@@ -59,7 +65,7 @@ Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/quickstart.py;dlp/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/quickstart.py,dlp/README.rst
 
 
 
@@ -75,7 +81,7 @@ Inspect Content
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/inspect_content.py;dlp/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/inspect_content.py,dlp/README.rst
 
 
 
@@ -86,19 +92,22 @@ To run this sample:
 
     $ python inspect_content.py
 
-    usage: inspect_content.py [-h] {string,file,gcs} ...
+    usage: inspect_content.py [-h] {string,file,gcs,datastore,bigquery} ...
 
     Sample app that uses the Data Loss Prevention API to inspect a string, a local
     file or a file on Google Cloud Storage.
 
     positional arguments:
-      {string,file,gcs}  Select how to submit content to the API.
-        string           Inspect a string.
-        file             Inspect a local file.
-        gcs              Inspect files on Google Cloud Storage.
+      {string,file,gcs,datastore,bigquery}
+                            Select how to submit content to the API.
+        string              Inspect a string.
+        file                Inspect a local file.
+        gcs                 Inspect files on Google Cloud Storage.
+        datastore           Inspect files on Google Datastore.
+        bigquery            Inspect files on Google BigQuery.
 
     optional arguments:
-      -h, --help         show this help message and exit
+      -h, --help            show this help message and exit
 
 
 
@@ -106,7 +115,7 @@ Redact Content
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/redact.py;dlp/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/redact.py,dlp/README.rst
 
 
 
@@ -117,26 +126,43 @@ To run this sample:
 
     $ python redact.py
 
-    usage: redact.py [-h] {string,image} ...
+    usage: redact.py [-h] [--project PROJECT] [--info_types INFO_TYPES]
+                     [--min_likelihood {LIKELIHOOD_UNSPECIFIED,VERY_UNLIKELY,UNLIKELY,POSSIBLE,LIKELY,VERY_LIKELY}]
+                     [--mime_type MIME_TYPE]
+                     filename output_filename
 
     Sample app that uses the Data Loss Prevent API to redact the contents of a
     string or an image file.
 
     positional arguments:
-      {string,image}  Select how to submit content to the API.
-        string        Inspect a string.
-        image         Inspect an image file.
+      filename              The path to the file to inspect.
+      output_filename       The path to which the redacted image will be written.
 
     optional arguments:
-      -h, --help      show this help message and exit
+      -h, --help            show this help message and exit
+      --project PROJECT     The Google Cloud project id to use as a parent
+                            resource.
+      --info_types INFO_TYPES
+                            Strings representing info types to look for. A full
+                            list of info categories and types is available from
+                            the API. Examples include "FIRST_NAME", "LAST_NAME",
+                            "EMAIL_ADDRESS". If unspecified, the three above
+                            examples will be used.
+      --min_likelihood {LIKELIHOOD_UNSPECIFIED,VERY_UNLIKELY,UNLIKELY,POSSIBLE,LIKELY,VERY_LIKELY}
+                            A string representing the minimum likelihood threshold
+                            that constitutes a match.
+      --mime_type MIME_TYPE
+                            The MIME type of the file. If not specified, the type
+                            is inferred via the Python standard library's
+                            mimetypes module.
 
 
 
-Display Metadata
+Metadata
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/metadata.py;dlp/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/metadata.py,dlp/README.rst
 
 
 
@@ -147,16 +173,177 @@ To run this sample:
 
     $ python metadata.py
 
-    usage: metadata.py [-h] {categories,info_types} ...
+    usage: metadata.py [-h] [--language_code LANGUAGE_CODE] [--filter FILTER]
 
     Sample app that queries the Data Loss Prevention API for supported categories
     and info types.
 
+    optional arguments:
+      -h, --help            show this help message and exit
+      --language_code LANGUAGE_CODE
+                            The BCP-47 language code to use, e.g. 'en-US'.
+      --filter FILTER       An optional filter to only return info types supported
+                            by certain parts of the API. Defaults to
+                            "supported_by=INSPECT".
+
+
+
+Jobs
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/jobs.py,dlp/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python jobs.py
+
+    usage: jobs.py [-h] {list,delete} ...
+
+    Sample app to list and delete DLP jobs using the Data Loss Prevent API.
+
     positional arguments:
-      {categories,info_types}
-                            Select which type of metadata to view.
-        categories          Fetch the list of info type categories.
-        info_types          Fetch the list of info types in a specified category.
+      {list,delete}  Select how to submit content to the API.
+        list         List Data Loss Prevention API jobs corresponding to a given
+                     filter.
+        delete       Delete results of a Data Loss Prevention API job.
+
+    optional arguments:
+      -h, --help     show this help message and exit
+
+
+
+Templates
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/templates.py,dlp/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python templates.py
+
+    usage: templates.py [-h] {create,list,delete} ...
+
+    Sample app that sets up Data Loss Prevention API inspect templates.
+
+    positional arguments:
+      {create,list,delete}  Select which action to perform.
+        create              Create a template.
+        list                List all templates.
+        delete              Delete a template.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
+
+Triggers
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/triggers.py,dlp/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python triggers.py
+
+    usage: triggers.py [-h] {create,list,delete} ...
+
+    Sample app that sets up Data Loss Prevention API automation triggers.
+
+    positional arguments:
+      {create,list,delete}  Select which action to perform.
+        create              Create a trigger.
+        list                List all triggers.
+        delete              Delete a trigger.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
+
+Risk Analysis
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/risk.py,dlp/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python risk.py
+
+    usage: risk.py [-h] {numerical,categorical,k_anonymity,l_diversity,k_map} ...
+
+    Sample app that uses the Data Loss Prevent API to perform risk anaylsis.
+
+    positional arguments:
+      {numerical,categorical,k_anonymity,l_diversity,k_map}
+                            Select how to submit content to the API.
+        numerical
+        categorical
+        k_anonymity         Computes the k-anonymity of a column set in a Google
+                            BigQuerytable.
+        l_diversity         Computes the l-diversity of a column set in a Google
+                            BigQuerytable.
+        k_map               Computes the k-map risk estimation of a column set in
+                            a GoogleBigQuery table.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
+
+DeID
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dlp/deid.py,dlp/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python deid.py
+
+    usage: deid.py [-h] {deid_mask,deid_fpe,reid_fpe,deid_date_shift} ...
+
+    Uses of the Data Loss Prevention API for deidentifying sensitive data.
+
+    positional arguments:
+      {deid_mask,deid_fpe,reid_fpe,deid_date_shift}
+                            Select how to submit content to the API.
+        deid_mask           Deidentify sensitive data in a string by masking it
+                            with a character.
+        deid_fpe            Deidentify sensitive data in a string using Format
+                            Preserving Encryption (FPE).
+        reid_fpe            Reidentify sensitive data in a string using Format
+                            Preserving Encryption (FPE).
+        deid_date_shift     Deidentify dates in a CSV file by pseudorandomly
+                            shifting them.
 
     optional arguments:
       -h, --help            show this help message and exit

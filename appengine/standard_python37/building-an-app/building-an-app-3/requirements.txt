@@ -1,0 +1,4 @@
+Flask==1.0.2
+google-cloud-datastore==1.6.0
+google-auth==1.5.0
+requests==2.19.1

@@ -171,7 +171,6 @@ def test_receive_with_custom_attributes(
 
     out, _ = capsys.readouterr()
     assert 'Test message' in out
-    assert 'Attributes' in out
     assert 'origin' in out
     assert 'python-sample' in out
 

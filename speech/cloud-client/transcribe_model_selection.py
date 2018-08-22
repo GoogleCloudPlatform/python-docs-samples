@@ -27,7 +27,7 @@ Example usage:
 import argparse
 
 
-# [START speech_transcribe_model_selection]
+# [START speech_transcribe_model_selection_beta]
 def transcribe_model_selection(speech_file, model):
     """Transcribe the given audio file synchronously with
     the selected model."""
@@ -51,11 +51,11 @@ def transcribe_model_selection(speech_file, model):
         alternative = result.alternatives[0]
         print('-' * 20)
         print('First alternative of result {}'.format(i))
-        print('Transcript: {}'.format(alternative.transcript))
-# [END speech_transcribe_model_selection]
+        print(u'Transcript: {}'.format(alternative.transcript))
+# [END speech_transcribe_model_selection_beta]
 
 
-# [START speech_transcribe_model_selection_gcs]
+# [START speech_transcribe_model_selection_gcs_beta]
 def transcribe_model_selection_gcs(gcs_uri, model):
     """Transcribe the given audio file asynchronously with
     the selected model."""
@@ -79,8 +79,8 @@ def transcribe_model_selection_gcs(gcs_uri, model):
         alternative = result.alternatives[0]
         print('-' * 20)
         print('First alternative of result {}'.format(i))
-        print('Transcript: {}'.format(alternative.transcript))
-# [END speech_transcribe_model_selection_gcs]
+        print(u'Transcript: {}'.format(alternative.transcript))
+# [END speech_transcribe_model_selection_gcs_beta]
 
 
 if __name__ == '__main__':

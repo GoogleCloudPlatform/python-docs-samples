@@ -23,6 +23,7 @@ For more information, see the README.rst under /spanner.
 import argparse
 
 from google.cloud import spanner
+from google.cloud.spanner_v1 import param_types
 
 
 # [START spanner_create_database]
@@ -142,11 +143,12 @@ def read_stale_data(instance_id, database_id):
         keyset = spanner.KeySet(all_=True)
         results = snapshot.read(
             table='Albums',
-            columns=('SingerId', 'AlbumId', 'AlbumTitle',),
+            columns=('SingerId', 'AlbumId', 'MarketingBudget',),
             keyset=keyset)
 
         for row in results:
-            print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
+            print(u'SingerId: {}, AlbumId: {}, MarketingBudget: {}'.format(
+                *row))
 # [END spanner_read_stale_data]
 
 
@@ -514,8 +516,7 @@ def insert_data_with_timestamp(instance_id, database_id):
 
 # [START spanner_add_timestamp_column]
 def add_timestamp_column(instance_id, database_id):
-    """
-    Adds a new TIMESTAMP column to the Albums table in the example database.
+    """ Adds a new TIMESTAMP column to the Albums table in the example database.
     """
     spanner_client = spanner.Client()
     instance = spanner_client.instance(instance_id)
@@ -562,9 +563,8 @@ def update_data_with_timestamp(instance_id, database_id):
             columns=(
                 'SingerId', 'AlbumId', 'MarketingBudget', 'LastUpdateTime'),
             values=[
-                (1, 4, 11000, spanner.COMMIT_TIMESTAMP),
-                (1, 19, 15000, spanner.COMMIT_TIMESTAMP),
-                (2, 42, 7000, spanner.COMMIT_TIMESTAMP)])
+                (1, 1, 1000000, spanner.COMMIT_TIMESTAMP),
+                (2, 2, 750000, spanner.COMMIT_TIMESTAMP)])
 
     print('Updated data.')
 # [END spanner_update_data_with_timestamp_column]
@@ -590,12 +590,162 @@ def query_data_with_timestamp(instance_id, database_id):
 
     with database.snapshot() as snapshot:
         results = snapshot.execute_sql(
-            'SELECT SingerId, AlbumId, AlbumTitle FROM Albums '
+            'SELECT SingerId, AlbumId, MarketingBudget FROM Albums '
             'ORDER BY LastUpdateTime DESC')
 
     for row in results:
-        print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
+        print(u'SingerId: {}, AlbumId: {}, MarketingBudget: {}'.format(*row))
 # [END spanner_query_data_with_timestamp_column]
+
+
+# [START spanner_write_data_for_struct_queries]
+def write_struct_data(instance_id, database_id):
+    """Inserts sample data that can be used to test STRUCT parameters
+    in queries.
+    """
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    with database.batch() as batch:
+        batch.insert(
+            table='Singers',
+            columns=('SingerId', 'FirstName', 'LastName',),
+            values=[
+                (6, u'Elena', u'Campbell'),
+                (7, u'Gabriel', u'Wright'),
+                (8, u'Benjamin', u'Martinez'),
+                (9, u'Hannah', u'Harris')])
+
+    print('Inserted sample data for STRUCT queries')
+# [END spanner_write_data_for_struct_queries]
+
+
+def query_with_struct(instance_id, database_id):
+    """Query a table using STRUCT parameters. """
+    # [START spanner_create_struct_with_data]
+    record_type = param_types.Struct([
+            param_types.StructField('FirstName', param_types.STRING),
+            param_types.StructField('LastName', param_types.STRING)
+    ])
+    record_value = ('Elena', 'Campbell')
+    # [END spanner_create_struct_with_data]
+
+    # [START spanner_query_data_with_struct]
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+
+    database = instance.database(database_id)
+
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            "SELECT SingerId FROM Singers WHERE "
+            "(FirstName, LastName) = @name",
+            params={'name': record_value},
+            param_types={'name': record_type})
+
+    for row in results:
+        print(u'SingerId: {}'.format(*row))
+    # [END spanner_query_data_with_struct]
+
+
+def query_with_array_of_struct(instance_id, database_id):
+    """Query a table using an array of STRUCT parameters. """
+    # [START spanner_create_user_defined_struct]
+    name_type = param_types.Struct([
+        param_types.StructField('FirstName', param_types.STRING),
+        param_types.StructField('LastName', param_types.STRING)])
+    # [END spanner_create_user_defined_struct]
+
+    # [START spanner_create_array_of_struct_with_data]
+    band_members = [("Elena", "Campbell"),
+                    ("Gabriel", "Wright"),
+                    ("Benjamin", "Martinez")]
+    # [END spanner_create_array_of_struct_with_data]
+
+    # [START spanner_query_data_with_array_of_struct]
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            "SELECT SingerId FROM Singers WHERE "
+            "STRUCT<FirstName STRING, LastName STRING>"
+            "(FirstName, LastName) IN UNNEST(@names)",
+            params={'names': band_members},
+            param_types={'names': param_types.Array(name_type)})
+
+    for row in results:
+            print(u'SingerId: {}'.format(*row))
+    # [END spanner_query_data_with_array_of_struct]
+
+
+# [START spanner_field_access_on_struct_parameters]
+def query_struct_field(instance_id, database_id):
+    """Query a table using field access on a STRUCT parameter. """
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    name_type = param_types.Struct([
+        param_types.StructField('FirstName', param_types.STRING),
+        param_types.StructField('LastName', param_types.STRING)
+        ])
+
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            "SELECT SingerId FROM Singers "
+            "WHERE FirstName = @name.FirstName",
+            params={'name': ("Elena", "Campbell")},
+            param_types={'name': name_type})
+
+    for row in results:
+            print(u'SingerId: {}'.format(*row))
+# [START spanner_field_access_on_struct_parameters]
+
+
+# [START spanner_field_access_on_nested_struct_parameters]
+def query_nested_struct_field(instance_id, database_id):
+    """Query a table using nested field access on a STRUCT parameter. """
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    song_info_type = param_types.Struct([
+        param_types.StructField('SongName', param_types.STRING),
+        param_types.StructField(
+            'ArtistNames', param_types.Array(
+                param_types.Struct([
+                     param_types.StructField(
+                         'FirstName', param_types.STRING),
+                     param_types.StructField(
+                         'LastName', param_types.STRING)
+                ])
+            )
+        )
+    ])
+
+    song_info = ('Imagination', [('Elena', 'Campbell'), ('Hannah', 'Harris')])
+
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            "SELECT SingerId, @song_info.SongName "
+            "FROM Singers WHERE "
+            "STRUCT<FirstName STRING, LastName STRING>"
+            "(FirstName, LastName) "
+            "IN UNNEST(@song_info.ArtistNames)",
+            params={
+                'song_info': song_info
+                },
+            param_types={
+                'song_info': song_info_type
+                }
+        )
+
+    for row in results:
+            print(u'SingerId: {} SongName: {}'.format(*row))
+# [END spanner_field_access_on_nested_struct_parameters]
 
 
 if __name__ == '__main__':  # noqa: C901
@@ -644,6 +794,14 @@ if __name__ == '__main__':  # noqa: C901
         'update_data_with_timestamp', help=update_data_with_timestamp.__doc__)
     subparsers.add_parser(
         'query_data_with_timestamp', help=query_data_with_timestamp.__doc__)
+    subparsers.add_parser('write_struct_data', help=write_struct_data.__doc__)
+    subparsers.add_parser('query_with_struct', help=query_with_struct.__doc__)
+    subparsers.add_parser(
+        'query_with_array_of_struct', help=query_with_array_of_struct.__doc__)
+    subparsers.add_parser(
+            'query_struct_field', help=query_struct_field.__doc__)
+    subparsers.add_parser(
+        'query_nested_struct_field', help=query_nested_struct_field.__doc__)
 
     args = parser.parse_args()
 
@@ -689,3 +847,13 @@ if __name__ == '__main__':  # noqa: C901
         update_data_with_timestamp(args.instance_id, args.database_id)
     elif args.command == 'query_data_with_timestamp':
         query_data_with_timestamp(args.instance_id, args.database_id)
+    elif args.command == 'write_struct_data':
+        write_struct_data(args.instance_id, args.database_id)
+    elif args.command == 'query_with_struct':
+        query_with_struct(args.instance_id, args.database_id)
+    elif args.command == 'query_with_array_of_struct':
+        query_with_array_of_struct(args.instance_id, args.database_id)
+    elif args.command == 'query_struct_field':
+        query_struct_field(args.instance_id, args.database_id)
+    elif args.command == 'query_nested_struct_field':
+        query_nested_struct_field(args.instance_id, args.database_id)

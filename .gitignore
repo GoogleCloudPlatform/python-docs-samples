@@ -21,4 +21,5 @@ junit.xml
 credentials.dat
 .nox
 .vscode/
-
+*sponge_log.xml
+.DS_store

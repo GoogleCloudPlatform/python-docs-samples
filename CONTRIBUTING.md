@@ -29,6 +29,10 @@ be able to accept your pull requests.
 1. Ensure that your code has an appropriate set of unit tests which all pass.
 1. Submit a pull request.
 
+## Setting up a development environment
+
+* [Mac development environment guide](MAC_SETUP.md)
+
 ## Authoring, testing, and contributing samples
 
 See [AUTHORING_GUIDE.md](AUTHORING_GUIDE.md).
