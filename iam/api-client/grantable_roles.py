@@ -30,7 +30,7 @@ service = googleapiclient.discovery.build(
 # [START iam_view_grantable_roles]
 def view_grantable_roles(full_resource_name):
     roles = service.roles().queryGrantableRoles(body={
-        'fullResourceName': full_resource_name 
+        'fullResourceName': full_resource_name
     }).execute()
 
     for role in roles['roles']:
@@ -46,7 +46,6 @@ if __name__ == '__main__':
     parser.add_argument(
         'full_resource_name',
         help='The full name of the resource to query grantable roles for.')
-    
+
     args = parser.parse_args()
     view_grantable_roles(args.full_resource_name)
-

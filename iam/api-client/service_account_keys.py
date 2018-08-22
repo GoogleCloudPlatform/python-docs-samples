@@ -18,13 +18,13 @@
 service account keys.
 
 For more information, see the documentation at
-https://cloud.google.com/iam/docs/creating-managing-service-account-keys. 
+https://cloud.google.com/iam/docs/creating-managing-service-account-keys.
 """
 
+import argparse
 import os
 
 from google.oauth2 import service_account
-import argparse
 import googleapiclient.discovery
 
 credentials = service_account.Credentials.from_service_account_file(
@@ -32,6 +32,7 @@ credentials = service_account.Credentials.from_service_account_file(
     scopes=['https://www.googleapis.com/auth/cloud-platform'])
 service = googleapiclient.discovery.build(
     'iam', 'v1', credentials=credentials)
+
 
 # [START iam_create_key]
 def create_key(service_account_email):
@@ -73,18 +74,21 @@ def delete_key(full_key_name):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-    description=__doc__,
-    formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
 
     subparsers = parser.add_subparsers(dest='command')
 
-    create_key_parser = subparsers.add_parser('create', help=create_key.__doc__)
+    create_key_parser = subparsers.add_parser(
+        'create', help=create_key.__doc__)
     create_key_parser.add_argument('service_account_email')
 
-    list_keys_parser = subparsers.add_parser('list', help=list_keys.__doc__)
+    list_keys_parser = subparsers.add_parser(
+        'list', help=list_keys.__doc__)
     list_keys_parser.add_argument('service_account_email')
 
-    delete_key_parser = subparsers.add_parser('delete', help=delete_key.__doc__)
+    delete_key_parser = subparsers.add_parser(
+        'delete', help=delete_key.__doc__)
     delete_key_parser.add_argument('full_key_name')
 
     args = parser.parse_args()
@@ -95,4 +99,3 @@ if __name__ == '__main__':
         create_key(args.service_account_email)
     elif args.command == 'delete':
         delete_key(args.full_key_name)
-

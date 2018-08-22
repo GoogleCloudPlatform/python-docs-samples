@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 import grantable_roles
 
 
@@ -21,4 +23,3 @@ def test_service_accounts(capsys):
     grantable_roles.view_grantable_roles(resource)
     out, _ = capsys.readouterr()
     assert 'Title:' in out
-
