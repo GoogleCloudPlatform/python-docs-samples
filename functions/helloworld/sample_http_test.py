@@ -20,7 +20,7 @@ import main
 
 def test_print_name():
     name = 'test'
-    req = Mock(get_json=Mock(return_value={'message': name}))
+    req = Mock(get_json=Mock(return_value={'name': name}))
 
     # Call tested function
     assert main.hello_http(req) == 'Hello, {}!'.format(name)
