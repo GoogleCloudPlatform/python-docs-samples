@@ -21,3 +21,4 @@ def test_service_accounts(capsys):
     grantable_roles.view_grantable_roles(resource)
     out, _ = capsys.readouterr()
     assert 'Title:' in out
+

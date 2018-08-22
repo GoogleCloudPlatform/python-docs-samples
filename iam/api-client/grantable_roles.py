@@ -49,3 +49,4 @@ if __name__ == '__main__':
     
     args = parser.parse_args()
     view_grantable_roles(args.full_resource_name)
+

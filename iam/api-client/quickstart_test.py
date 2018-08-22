@@ -19,3 +19,4 @@ def test_quickstart(capsys):
     quickstart.quickstart()
     out, _ = capsys.readouterr()
     assert 'Title' in out
+
