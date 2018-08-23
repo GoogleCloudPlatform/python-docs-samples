@@ -25,8 +25,11 @@ Prerequisites:
 """
 
 import argparse
+import datetime
 
 from google.cloud import bigtable
+from google.cloud.bigtable import row_filters
+from google.cloud.bigtable import column_family
 
 
 def main(project_id, instance_id, table_id):
@@ -41,9 +44,14 @@ def main(project_id, instance_id, table_id):
     print('Creating the {} table.'.format(table_id))
     table = instance.table(table_id)
     table.create()
+    print 'Creating column family cf1 with Max Version GC rule...'
+    # Create a column family with GC policy : most recent N versions
+    # Define the GC policy to retain only the most recent 2 versions
+    max_versions_rule = column_family.MaxVersionsGCRule(2)
     column_family_id = 'cf1'
-    cf1 = table.column_family(column_family_id)
-    cf1.create()
+    column_family_name = table.column_family(column_family_id, 
+                                             max_versions_rule)
+    column_family_name.create()
     # [END creating_a_table]
 
     # [START writing_rows]
@@ -55,6 +63,7 @@ def main(project_id, instance_id, table_id):
         'Hello Python!',
     ]
 
+    rows = []
     for i, value in enumerate(greetings):
         # Note: This example uses sequential numeric IDs for simplicity,
         # but this can result in poor performance in a production
@@ -71,21 +80,25 @@ def main(project_id, instance_id, table_id):
         row.set_cell(
             column_family_id,
             column_id,
-            value.encode('utf-8'))
-        row.commit()
+            value,
+            timestamp=datetime.datetime.utcnow())
+        rows.append(row)
+    table.mutate_rows(rows)
     # [END writing_rows]
 
     # [START getting_a_row]
     print('Getting a single greeting by row key.')
     key = 'greeting0'
-    row = table.read_row(key.encode('utf-8'))
-    value = row.cells[column_family_id][column_id][0].value
-    print('\t{}: {}'.format(key, value.decode('utf-8')))
+    
+    # Only retrieve the most recent version of the cell.
+    row_filter = row_filters.CellsColumnLimitFilter(1)
+    row = table.read_row(key.encode('utf-8'), row_filter)
+    print row.cells[column_family_id][column_id][0].value
     # [END getting_a_row]
 
     # [START scanning_all_rows]
     print('Scanning for all greetings:')
-    partial_rows = table.read_rows()
+    partial_rows = table.read_rows(filter_=row_filter)
     partial_rows.consume_all()
 
     for row_key, row in partial_rows.rows.items():
