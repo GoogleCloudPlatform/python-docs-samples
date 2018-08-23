@@ -21,6 +21,7 @@ def hello_get(request):
     """HTTP Cloud Function.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
@@ -52,6 +53,7 @@ def hello_http(request):
     """HTTP Cloud Function.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
@@ -102,6 +104,7 @@ def hello_content(request):
     according to the "content-type" header.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
@@ -127,6 +130,7 @@ def hello_method(request):
     """ Responds to a GET request with "Hello world!". Forbids a PUT request.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
          Response object using `make_response`
