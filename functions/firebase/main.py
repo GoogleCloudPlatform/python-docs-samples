@@ -30,9 +30,9 @@ def hello_rtdb(data, context):
     """
     trigger_resource = context.resource
 
-    print(f'Function triggered by change to: {trigger_resource}')
-    print(f'Admin?: {data.get("admin", False)}')
-    print(f'Delta:')
+    print('Function triggered by change to: %s' % trigger_resource)
+    print('Admin?: %s' % data.get("admin", False))
+    print('Delta:')
     print(json.dumps(data["delta"]))
 # [END functions_firebase_rtdb]
 
@@ -46,7 +46,7 @@ def hello_firestore(data, context):
     """
     trigger_resource = context.resource
 
-    print(f'Function triggered by change to: {trigger_resource}')
+    print('Function triggered by change to: %s' % trigger_resource)
 
     print('\nOld value:')
     print(json.dumps(data["oldValue"]))
@@ -63,9 +63,9 @@ def hello_auth(data, context):
             data (dict): The event payload.
             context (google.cloud.functions.Context): Metadata for the event.
     """
-    print(f'Function triggered by creation or deletion of user: {data["uid"]}')
-    print(f'Created at: {data["metadata"]["createdAt"]}')
+    print('Function triggered by creation/deletion of user: %s' % data["uid"])
+    print('Created at: %s' % data["metadata"]["createdAt"])
 
     if 'email' in data:
-        print(f'Email: {data["email"]}')
+        print('Email: %s' % data["email"])
 # [END functions_firebase_auth]
