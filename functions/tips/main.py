@@ -63,6 +63,7 @@ def lazy_globals(request):
     HTTP Cloud Function that uses lazily-initialized globals.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
@@ -88,6 +89,7 @@ def connection_pooling(request):
     HTTP Cloud Function that uses a connection pool to make HTTP requests.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
