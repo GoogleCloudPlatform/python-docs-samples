@@ -38,6 +38,7 @@ def run_instance_operations(project_id, instance_id):
     client = bigtable.Client(project=project_id, admin=True)
     location_id = 'us-central1-f'
     serve_nodes = 3
+    # this should be emum ## remove this
     production = 1
     instance = client.instance(instance_id, instance_type=production)
 
@@ -52,6 +53,7 @@ def run_instance_operations(project_id, instance_id):
     if not instance.exists():
         print '\nCreating a Instance'
         # Create instance with given options
+        # pass a cluster while creating instance ## remove this
         instance.create(location_id=location_id, serve_nodes=serve_nodes)
         print '\nCreated instance: {}'.format(instance_id)
     # [END bigtable_create_prod_instance]
@@ -64,6 +66,7 @@ def run_instance_operations(project_id, instance_id):
 
     # [START bigtable_get_instance]
     print '\nName of instance: {}'.format(instance_id)
+    ## print also meta data of instance ## remove this
     # [END bigtable_get_instance]
 
     # [START bigtable_get_clusters]
@@ -91,7 +94,9 @@ def create_dev_instance(project_id, instance_id, cluster_id):
     print '\nCreating a DEVELOPMENT Instance'
     # Set options to create an Instance
     location_id = 'us-central1-f'
+    # this should be emum ## remove this
     development = 2
+    # labels and storage type
 
     # Create instance with given options
     instance = client.instance(instance_id, instance_type=development)
