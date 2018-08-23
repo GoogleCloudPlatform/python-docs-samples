@@ -209,3 +209,64 @@ def test_query_nested_struct_field(capsys):
     out, _ = capsys.readouterr()
     assert 'SingerId: 6 SongName: Imagination' in out
     assert 'SingerId: 9 SongName: Imagination' in out
+
+
+def test_insert_data_with_dml(capsys):
+    snippets.insert_data_with_dml(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert '1 record(s) inserted.' in out
+
+
+def test_update_data_with_dml(capsys):
+    snippets.update_data_with_dml(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert '1 record(s) updated.' in out
+
+
+def test_delete_data_with_dml(capsys):
+    snippets.delete_data_with_dml(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert '1 record(s) deleted.' in out
+
+
+def test_update_data_with_dml_timestamp(capsys):
+    snippets.update_data_with_dml_timestamp(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert '2 record(s) updated.' in out
+
+
+def test_dml_write_read_transaction(capsys):
+    snippets.dml_write_read_transaction(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert '1 record(s) inserted.' in out
+    assert 'FirstName: Timothy, LastName: Campbell' in out
+
+
+def test_update_data_with_dml_struct(capsys):
+    snippets.update_data_with_dml_struct(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert '1 record(s) updated' in out
+
+
+def test_insert_with_dml(capsys):
+    snippets.insert_with_dml(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert '4 record(s) inserted' in out
+
+
+def test_write_with_dml_transaction(capsys):
+    snippets.write_with_dml_transaction(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert "Transferred 300000 from Album1's budget to Album2's" in out
+
+
+def update_data_with_partitioned_dml(capsys):
+    snippets.update_data_with_partitioned_dml(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert "3 record(s) updated" in out
+
+
+def delete_data_with_partitioned_dml(capsys):
+    snippets.delete_data_with_partitioned_dml(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert "5 record(s) deleted" in out
