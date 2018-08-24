@@ -19,7 +19,7 @@ $(function(){
   // backend's app.yaml file.
   var backendHostUrl = '<your-backend-url>';
 
-  // [START gae_firenotes_config]
+  // [START gae_python_firenotes_config]
   // Obtain the following from the "Add Firebase to your web app" dialogue
   // Initialize Firebase
   var config = {
@@ -30,8 +30,8 @@ $(function(){
     storageBucket: "<BUCKET>.appspot.com",
     messagingSenderId: "<MESSAGING_SENDER_ID>"
   };
-  // [END gae_firenotes_config]
-  
+  // [END gae_python_firenotes_config]
+
   // This is passed into the backend to authenticate the user.
   var userIdToken = null;
 
@@ -40,7 +40,7 @@ $(function(){
 
     firebase.initializeApp(config);
 
-    // [START onAuthStateChanged]
+    // [START gae_python_state_change]
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         $('#logged-out').hide();
@@ -66,7 +66,7 @@ $(function(){
         $('#logged-out').show();
 
       }
-    // [END onAuthStateChanged]
+    // [END gae_python_state_change]
 
     });
 
@@ -92,9 +92,9 @@ $(function(){
     var ui = new firebaseui.auth.AuthUI(firebase.auth());
     ui.start('#firebaseui-auth-container', uiConfig);
   }
-  // [END configureFirebaseLoginWidget]
+  // [END gae_python_firebase_login]
 
-  // [START fetchNotes]
+  // [START gae_python_fetch_notes]
   // Fetch notes from the backend.
   function fetchNotes() {
     $.ajax(backendHostUrl + '/notes', {
@@ -111,9 +111,8 @@ $(function(){
       });
     });
   }
-  // [END fetchNotes]
+  // [END gae_python_fetch_notes]
 
-  // [START signOutBtn]
   // Sign out a user
   var signOutBtn =$('#sign-out');
   signOutBtn.click(function(event) {
@@ -125,9 +124,7 @@ $(function(){
       console.log(error);
     });
   });
-  // [END signOutBtn]
 
-  // [START saveNoteBtn]
   // Save a note to the backend
   var saveNoteBtn = $('#add-note');
   saveNoteBtn.click(function(event) {
@@ -152,7 +149,6 @@ $(function(){
     });
 
   });
-  // [END saveNoteBtn]
 
   configureFirebaseLogin();
   configureFirebaseLoginWidget();
