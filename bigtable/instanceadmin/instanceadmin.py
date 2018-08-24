@@ -31,16 +31,31 @@ Operations performed:
 """
 
 import argparse
+
 from google.cloud import bigtable
+from google.cloud.bigtable import enums
 
 
 def run_instance_operations(project_id, instance_id):
+    ''' Check Instance exists.
+        Creates a Production instance with default Cluster.
+        List instances in a project.
+        List cluster in an instance.
+
+    :type project_id: str
+    :param project_id: Project id of the client.
+
+    :type instance_id: str
+    :param instance_id: Instance of the client.
+    '''
     client = bigtable.Client(project=project_id, admin=True)
     location_id = 'us-central1-f'
     serve_nodes = 3
-    # this should be emum ## remove this
-    production = 1
-    instance = client.instance(instance_id, instance_type=production)
+    storage_type = enums.StorageType.SSD
+    production = enums.Instance.Type.PRODUCTION
+    labels = {'prod-label': 'prod-label'}
+    instance = client.instance(instance_id, instance_type=production,
+                               labels=labels)
 
     # [START bigtable_check_instance_exists]
     if not instance.exists():
@@ -50,11 +65,13 @@ def run_instance_operations(project_id, instance_id):
     # [END bigtable_check_instance_exists]
 
     # [START bigtable_create_prod_instance]
+    cluster = instance.cluster("ssd-cluster1", location_id=location_id,
+                               serve_nodes=serve_nodes,
+                               default_storage_type=storage_type)
     if not instance.exists():
         print '\nCreating a Instance'
         # Create instance with given options
-        # pass a cluster while creating instance ## remove this
-        instance.create(location_id=location_id, serve_nodes=serve_nodes)
+        instance.create(clusters=[cluster])
         print '\nCreated instance: {}'.format(instance_id)
     # [END bigtable_create_prod_instance]
 
@@ -65,8 +82,9 @@ def run_instance_operations(project_id, instance_id):
     # [END bigtable_list_instances]
 
     # [START bigtable_get_instance]
-    print '\nName of instance: {}'.format(instance_id)
-    ## print also meta data of instance ## remove this
+    print '\nName of instance: {}\nLabels: {}'.\
+            format(instance.display_name,
+                   instance.labels)
     # [END bigtable_get_instance]
 
     # [START bigtable_get_clusters]
@@ -94,13 +112,15 @@ def create_dev_instance(project_id, instance_id, cluster_id):
     print '\nCreating a DEVELOPMENT Instance'
     # Set options to create an Instance
     location_id = 'us-central1-f'
-    # this should be emum ## remove this
-    development = 2
-    # labels and storage type
+    development = enums.Instance.Type.DEVELOPMENT
+    storage_type = enums.StorageType.HDD
+    labels = {'dev-label': 'dev-label'}
 
     # Create instance with given options
-    instance = client.instance(instance_id, instance_type=development)
-    cluster = instance.cluster(cluster_id, location_id=location_id)
+    instance = client.instance(instance_id, instance_type=development,
+                               labels=labels)
+    cluster = instance.cluster(cluster_id, location_id=location_id,
+                               default_storage_type=storage_type)
 
     # Create development instance with given options
     if not instance.exists():
@@ -160,9 +180,11 @@ def add_cluster(project_id, instance_id, cluster_id):
         print '\nListing Clusters...'
         for cluster in instance.list_clusters()[0]:
             print cluster.cluster_id
-        cluster = instance.cluster(cluster_id, location_id=location_id, serve_nodes=serve_nodes)
+        cluster = instance.cluster(cluster_id, location_id=location_id,
+                                   serve_nodes=serve_nodes)
         if cluster.exists():
-            print '\nCluster not created, as {} already exists.'.format(cluster_id)
+            print '\nCluster not created, as {} already exists.'.\
+                    format(cluster_id)
         else:
             cluster.create()
             print '\nCluster created: {}'.format(cluster_id)
@@ -218,7 +240,8 @@ if __name__ == '__main__':
     if args.command.lower() == 'run':
         run_instance_operations(args.project_id, args.instance_id)
     elif args.command.lower() == 'dev-instance':
-        create_dev_instance(args.project_id, args.instance_id, args.cluster_id)
+        create_dev_instance(args.project_id, args.instance_id,
+                            args.cluster_id)
     elif args.command.lower() == 'del-instance':
         delete_instance(args.project_id, args.instance_id)
     elif args.command.lower() == 'add-cluster':
