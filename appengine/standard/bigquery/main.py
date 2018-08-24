@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START all]
 
 """
 Sample App Engine application that demonstrates authentication to BigQuery
@@ -65,4 +64,3 @@ app = webapp2.WSGIApplication([
     # Create the endpoint to receive oauth flow callbacks
     (decorator.callback_path, decorator.callback_handler())
 ], debug=True)
-# [END all]

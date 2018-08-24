@@ -18,7 +18,7 @@ Sample application that demonstrates how to use the App Engine Blobstore API.
 For more information, see README.md.
 """
 
-# [START all]
+# [START gae_blobstore_sample]
 from google.appengine.api import users
 from google.appengine.ext import blobstore
 from google.appengine.ext import ndb
@@ -34,10 +34,10 @@ class UserPhoto(ndb.Model):
 
 class PhotoUploadFormHandler(webapp2.RequestHandler):
     def get(self):
-        # [START upload_url]
+        # [START gae_blobstore_upload_url]
         upload_url = blobstore.create_upload_url('/upload_photo')
-        # [END upload_url]
-        # [START upload_form]
+        # [END gae_blobstore_upload_url]
+        # [START gae_blobstore_upload_form]
         # To upload files to the blobstore, the request method must be "POST"
         # and enctype must be set to "multipart/form-data".
         self.response.out.write("""
@@ -47,10 +47,10 @@ class PhotoUploadFormHandler(webapp2.RequestHandler):
   <input type="submit" name="submit" value="Submit">
 </form>
 </body></html>""".format(upload_url))
-        # [END upload_form]
+        # [END gae_blobstore_upload_form]
 
 
-# [START upload_handler]
+# [START gae_blobstore_upload_handler]
 class PhotoUploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
         upload = self.get_uploads()[0]
@@ -60,17 +60,17 @@ class PhotoUploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         user_photo.put()
 
         self.redirect('/view_photo/%s' % upload.key())
-# [END upload_handler]
+# [END gae_blobstore_upload_handler]
 
 
-# [START download_handler]
+# [START gae_blobstore_download_handler]
 class ViewPhotoHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, photo_key):
         if not blobstore.get(photo_key):
             self.error(404)
         else:
             self.send_blob(photo_key)
-# [END download_handler]
+# [END gae_blobstore_download_handler]
 
 
 app = webapp2.WSGIApplication([
@@ -78,4 +78,4 @@ app = webapp2.WSGIApplication([
     ('/upload_photo', PhotoUploadHandler),
     ('/view_photo/([^/]+)?', ViewPhotoHandler),
 ], debug=True)
-# [END all]
+# [END gae_blobstore_sample]
