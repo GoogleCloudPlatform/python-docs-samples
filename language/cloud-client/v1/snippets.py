@@ -39,12 +39,10 @@ def sentiment_text(text):
         text = text.decode('utf-8')
 
     # Instantiates a plain text document.
-    # [START language_python_migration_document_text]
     # [START language_python_migration_sentiment_text]
     document = types.Document(
         content=text,
         type=enums.Document.Type.PLAIN_TEXT)
-    # [END language_python_migration_document_text]
 
     # Detects sentiment in the document. You can also analyze HTML with:
     #   document.type == enums.Document.Type.HTML
@@ -87,9 +85,11 @@ def entities_text(text):
 
     # Instantiates a plain text document.
     # [START language_python_migration_entities_text]
+    # [START language_python_migration_document_text]
     document = types.Document(
         content=text,
         type=enums.Document.Type.PLAIN_TEXT)
+    # [END language_python_migration_document_text]
 
     # Detects entities in the document. You can also analyze HTML with:
     #   document.type == enums.Document.Type.HTML
