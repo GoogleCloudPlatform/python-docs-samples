@@ -149,6 +149,13 @@ def hello_method(request):
 
 def hello_error_1(request):
     # [START functions_helloworld_error]
+    # This WILL NOT be reported to Stackdriver Error
+    # Reporting, and WILL NOT show up in logs
+    try:
+        raise RuntimeError('I failed you')
+    except:
+        pass
+    
     # This WILL be reported to Stackdriver Error Reporting,
     # and WILL terminate the function
     raise RuntimeError('I failed you')
