@@ -93,6 +93,7 @@ def main(project_id, instance_id, table_id):
     # Only retrieve the most recent version of the cell.
     row_filter = row_filters.CellsColumnLimitFilter(1)
     row = table.read_row(key.encode('utf-8'), row_filter)
+    # use cell_value ## remove this.
     print row.cells[column_family_id][column_id][0].value
     # [END getting_a_row]
 
