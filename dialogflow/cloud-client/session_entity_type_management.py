@@ -32,6 +32,7 @@ Examples:
 import argparse
 
 
+# [START dialogflow_list_session_entity_types]
 def list_session_entity_types(project_id, session_id):
     import dialogflow_v2 as dialogflow
     session_entity_types_client = dialogflow.SessionEntityTypesClient()
@@ -48,6 +49,7 @@ def list_session_entity_types(project_id, session_id):
         print('\tSessionEntityType name: {}'.format(session_entity_type.name))
         print('\tNumber of entities: {}\n'.format(
             len(session_entity_type.entities)))
+# [END dialogflow_list_session_entity_types]
 
 
 # [START dialogflow_create_session_entity_type]

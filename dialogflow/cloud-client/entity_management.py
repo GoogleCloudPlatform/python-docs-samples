@@ -31,6 +31,7 @@ Examples:
 import argparse
 
 
+# [START dialogflow_list_entities]
 def list_entities(project_id, entity_type_id):
     import dialogflow_v2 as dialogflow
     entity_types_client = dialogflow.EntityTypesClient()
@@ -43,6 +44,7 @@ def list_entities(project_id, entity_type_id):
     for entity in entities:
         print('Entity value: {}'.format(entity.value))
         print('Entity synonyms: {}\n'.format(entity.synonyms))
+# [END dialogflow_list_entities]
 
 
 # [START dialogflow_create_entity]

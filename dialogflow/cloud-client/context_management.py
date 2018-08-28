@@ -30,6 +30,7 @@ Examples:
 import argparse
 
 
+# [START dialogflow_list_contexts]
 def list_contexts(project_id, session_id):
     import dialogflow_v2 as dialogflow
     contexts_client = dialogflow.ContextsClient()
@@ -46,6 +47,7 @@ def list_contexts(project_id, session_id):
         for field, value in context.parameters.fields.items():
             if value.string_value:
                 print('\t{}: {}'.format(field, value))
+# [END dialogflow_list_contexts]
 
 
 # [START dialogflow_create_context]
