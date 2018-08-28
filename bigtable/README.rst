@@ -10,7 +10,7 @@ Google Cloud Bigtable Python Samples
 This directory contains samples for Google Cloud Bigtable. `Google Cloud Bigtable`_ is Google's NoSQL Big Data database service. It's the same database that powers many core Google services, including Search, Analytics, Maps, and Gmail.
 
 
-This directory contains sample demonstrating using the 'Google Cloud Client Library for Python'
+This directory contains sample demonstrating using the Google Cloud Client Library for Python
 as well as the `Google Cloud Client Library HappyBase package`_ to connect to and interact with
 Cloud Bigtable.
 
