@@ -18,8 +18,8 @@
 
 Examples:
   python detect_intent_with_texttospeech_response_test.py -h
-  python detect_intent_with_texttospeech_response_test.py --project-id PROJECT_ID \
-  --session-id SESSION_ID "hello"
+  python detect_intent_with_texttospeech_response_test.py \
+  --project-id PROJECT_ID --session-id SESSION_ID "hello"
 """
 
 import argparse

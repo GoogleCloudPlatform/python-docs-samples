@@ -13,10 +13,11 @@
 # limitations under the License.
 
 from __future__ import absolute_import
+
 import os
 
-import entity_type_management
 import entity_management
+import entity_type_management
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 ENTITY_TYPE_DISPLAY_NAME = 'fake_entity_type_for_testing'

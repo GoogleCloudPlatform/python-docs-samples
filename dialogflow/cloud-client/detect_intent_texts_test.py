@@ -12,6 +12,7 @@
 # limitations under the License.
 
 from __future__ import absolute_import
+
 import os
 
 from detect_intent_texts import detect_intent_texts

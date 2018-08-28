@@ -13,11 +13,12 @@
 # limitations under the License.
 
 from __future__ import absolute_import
+
 import os
 
-import knowledge_base_management
-import document_management
 import detect_intent_knowledge
+import document_management
+import knowledge_base_management
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 SESSION_ID = 'fake_session_for_testing'

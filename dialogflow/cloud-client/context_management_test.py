@@ -13,10 +13,11 @@
 # limitations under the License.
 
 from __future__ import absolute_import
+
 import os
 
-import detect_intent_texts
 import context_management
+import detect_intent_texts
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 SESSION_ID = 'fake_session_for_testing'
