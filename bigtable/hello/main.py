@@ -43,20 +43,20 @@ def main(project_id, instance_id, table_id):
     # [START creating_a_table]
     print('Creating the {} table.'.format(table_id))
     table = instance.table(table_id)
-    table.create()
     print 'Creating column family cf1 with Max Version GC rule...'
     # Create a column family with GC policy : most recent N versions
     # Define the GC policy to retain only the most recent 2 versions
     max_versions_rule = column_family.MaxVersionsGCRule(2)
-    column_family_id = 'cf1'
-    column_family_name = table.column_family(column_family_id, 
-                                             max_versions_rule)
-    column_family_name.create()
+    column = 'greeting'
+    column_families = {column : max_versions_rule}
+    if not table.exists():
+        table.create(column_families=column_families)
+    else:
+        print "Table {} already exists.".format(table_id)
     # [END creating_a_table]
 
     # [START writing_rows]
     print('Writing some greetings to the table.')
-    column_id = 'greeting'.encode('utf-8')
     greetings = [
         'Hello World!',
         'Hello Cloud Bigtable!',
@@ -64,6 +64,7 @@ def main(project_id, instance_id, table_id):
     ]
 
     rows = []
+    column_family_id = 'cf1'
     for i, value in enumerate(greetings):
         # Note: This example uses sequential numeric IDs for simplicity,
         # but this can result in poor performance in a production
@@ -79,7 +80,7 @@ def main(project_id, instance_id, table_id):
         row = table.row(row_key)
         row.set_cell(
             column_family_id,
-            column_id,
+            column,
             value,
             timestamp=datetime.datetime.utcnow())
         rows.append(row)
@@ -91,20 +92,23 @@ def main(project_id, instance_id, table_id):
     key = 'greeting0'
     
     # Only retrieve the most recent version of the cell.
-    row_filter = row_filters.CellsColumnLimitFilter(1)
-    row = table.read_row(key.encode('utf-8'), row_filter)
+    #row_filter = row_filters.CellsColumnLimitFilter(1)
+    row = table.read_row(key.encode('utf-8')) #, row_filter)
     # use cell_value ## remove this.
-    print row.cells[column_family_id][column_id][0].value
+    print "-------"
+    print row
+    print "-------"
+    ##print row.cells[column_family_id][column][0].value
     # [END getting_a_row]
 
     # [START scanning_all_rows]
     print('Scanning for all greetings:')
-    partial_rows = table.read_rows(filter_=row_filter)
+    partial_rows = table.read_rows() #filter_=row_filter)
     partial_rows.consume_all()
 
     for row_key, row in partial_rows.rows.items():
         key = row_key.decode('utf-8')
-        cell = row.cells[column_family_id][column_id][0]
+        cell = row.cells[column_family_id][column][0]
         value = cell.value.decode('utf-8')
         print('\t{}: {}'.format(key, value))
     # [END scanning_all_rows]
