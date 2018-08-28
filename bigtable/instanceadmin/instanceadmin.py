@@ -83,8 +83,8 @@ def run_instance_operations(project_id, instance_id):
 
     # [START bigtable_get_instance]
     print '\nName of instance: {}\nLabels: {}'.\
-            format(instance.display_name,
-                   instance.labels)
+    format(instance.display_name,
+           instance.labels)
     # [END bigtable_get_instance]
 
     # [START bigtable_get_clusters]
@@ -92,6 +92,7 @@ def run_instance_operations(project_id, instance_id):
     for cluster in instance.list_clusters()[0]:
         print cluster.cluster_id
     # [END bigtable_get_clusters]
+
 
 def create_dev_instance(project_id, instance_id, cluster_id):
     ''' Creates a Development instance with the name "hdd-instance"
@@ -228,14 +229,16 @@ if __name__ == '__main__':
 
     parser.add_argument('command',
                         help='run, dev-instance, del-instance, \
-                            add-cluster or del-cluster. \
-                            Operation to perform on Instance.')
-    parser.add_argument('project_id', \
-                help='Your Cloud Platform project ID.')
-    parser.add_argument('instance_id', \
-                help='ID of the Cloud Bigtable instance to connect to.')
-    parser.add_argument('cluster_id', \
-                help='ID of the Cloud Bigtable cluster to connect to.')
+                        add-cluster or del-cluster. \
+                        Operation to perform on Instance.')
+    parser.add_argument('project_id',
+                        help='Your Cloud Platform project ID.')
+    parser.add_argument('instance_id',
+                        help='ID of the Cloud Bigtable instance to \
+                        connect to.')
+    parser.add_argument('cluster_id',
+                        help='ID of the Cloud Bigtable cluster to \
+                        connect to.')
 
     args = parser.parse_args()
 
