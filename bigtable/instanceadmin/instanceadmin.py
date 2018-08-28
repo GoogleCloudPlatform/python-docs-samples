@@ -147,7 +147,7 @@ def delete_instance(project_id, instance_id):
     # [START bigtable_delete_instance]
     print '\nDeleting Instance'
     if not instance.exists():
-        print 'Instance does not exists', instance_id
+        print 'Instance {} does not exists.'.format(instance_id)
     else:
         instance.delete()
         print 'Deleted Instance: {}'.format(instance_id)
@@ -171,9 +171,10 @@ def add_cluster(project_id, instance_id, cluster_id):
 
     location_id = 'us-central1-a'
     serve_nodes = 3
+    storage_type = enums.StorageType.SSD
 
     if not instance.exists():
-        print 'Instance does not exists.'
+        print 'Instance {} does not exists.'.format(instance_id)
     else:
         print '\nAdding Cluster to Instance {}'.format(instance_id)
         # [START bigtable_create_cluster]
@@ -181,7 +182,8 @@ def add_cluster(project_id, instance_id, cluster_id):
         for cluster in instance.list_clusters()[0]:
             print cluster.cluster_id
         cluster = instance.cluster(cluster_id, location_id=location_id,
-                                   serve_nodes=serve_nodes)
+                                   serve_nodes=serve_nodes,
+                                   default_storage_type=storage_type)
         if cluster.exists():
             print '\nCluster not created, as {} already exists.'.\
                     format(cluster_id)
