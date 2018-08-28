@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 google-cloud-automl==1.0.1
 google-cloud-storage==1.29.0
+=======
+google-cloud-automl==0.1.1
+>>>>>>> d89df5c (Auto-update dependencies. [(#1658)](https://github.com/GoogleCloudPlatform/python-docs-samples/issues/1658))
