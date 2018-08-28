@@ -18,11 +18,11 @@ import os
 import language_sentiment_text
 
 def test_analyze_sentiment_text_positive(capsys):
-    analyze_sentiment.sample_analyze_sentiment('Happy Happy Joy Joy')
+    language_sentiment_text.sample_analyze_sentiment('Happy Happy Joy Joy')
     out, _ = capsys.readouterr()
     assert 'Score: 0.' in out
 
 def test_analyze_sentiment_text_negative(capsys):
-    analyze_sentiment.sample_analyze_sentiment('Angry Angry Sad Sad')
+    language_sentiment_text.sample_analyze_sentiment('Angry Angry Sad Sad')
     out, _ = capsys.readouterr()
     assert 'Score: -0.' in out
