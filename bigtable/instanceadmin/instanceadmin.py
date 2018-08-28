@@ -82,9 +82,8 @@ def run_instance_operations(project_id, instance_id):
     # [END bigtable_list_instances]
 
     # [START bigtable_get_instance]
-    print '\nName of instance: {}\nLabels: {}'.\
-    format(instance.display_name,
-           instance.labels)
+    print '\nName of instance:{}\nLabels:{}'.format(instance.display_name,
+                                                     instance.labels)
     # [END bigtable_get_instance]
 
     # [START bigtable_get_clusters]
