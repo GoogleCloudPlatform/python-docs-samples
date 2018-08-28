@@ -15,7 +15,7 @@
 
 import os
 
-import analyze_sentiment
+import language_sentiment_text
 
 def test_analyze_sentiment_text_positive(capsys):
     analyze_sentiment.sample_analyze_sentiment('Happy Happy Joy Joy')
