@@ -21,8 +21,7 @@ env_vars = {
   'SQL_USER': os.getenv('POSTGRES_USER'),
   'SQL_PASSWORD': os.getenv('POSTGRES_PASSWORD'),
   'SQL_NAME': os.getenv('POSTGRES_NAME'),
-  'INSTANCE_CONNECTION_NAME':
-  os.getenv('INSTANCE_CONNECTION_PREFIX') + '-mysql'
+  'INSTANCE_CONNECTION_NAME': os.getenv('POSTGRES_INSTANCE')
 }
 
 date_regex = re.compile('\d{4}-\d{1,2}-\d{1,2}\s\d{1,2}:\d{1,2}:\d{1,2}')

@@ -21,8 +21,7 @@ env_vars = {
   'SQL_USER': os.getenv('MYSQL_USER'),
   'SQL_PASSWORD': os.getenv('MYSQL_PASSWORD'),
   'SQL_NAME': os.getenv('MYSQL_NAME'),
-  'INSTANCE_CONNECTION_NAME':
-  os.getenv('INSTANCE_CONNECTION_PREFIX')
+  'INSTANCE_CONNECTION_NAME': os.getenv('MYSQL_INSTANCE')
 }
 
 date_regex = re.compile('\d{4}-\d{1,2}-\d{1,2}\s\d{1,2}:\d{1,2}:\d{1,2}')
