@@ -251,6 +251,51 @@ To run this sample:
 
 
 
+Bucket Lock
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/bucket_lock.py,storage/cloud-client/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python bucket_lock.py
+
+    usage: bucket_lock.py [-h]
+                          {set-retention-policy,remove-retention-policy,lock-retention-policy,set-temporary-hold,release-temporary-hold,set-event_based-hold,release-event_based-hold,enable-default-event-based-hold,disable-default-event-based-hold}
+                          ...
+
+    positional arguments:
+      {set-retention-policy,remove-retention-policy,lock-retention-policy,set-temporary-hold,release-temporary-hold,set-event_based-hold,release-event_based-hold,enable-default-event-based-hold,disable-default-event-based-hold}
+        set-retention-policy
+                            Defines a retention policy on a given bucket
+        remove-retention-policy
+                            Removes the retention policy on a given bucket
+        lock-retention-policy
+                            Locks the retention policy on a given bucket
+        set-temporary-hold  Sets a temporary hold on a given blob
+        release-temporary-hold
+                            Releases the temporary hold on a given blob
+        set-event_based-hold
+                            Sets a event based hold on a given blob
+        release-event_based-hold
+                            Releases the event based hold on a given blob
+        enable-default-event-based-hold
+                            Enables the default event based hold on a given bucket
+        disable-default-event-based-hold
+                            Disables the default event based hold on a given
+                            bucket
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
+
 Notification Polling
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
