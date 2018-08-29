@@ -28,8 +28,8 @@ import argparse
 import datetime
 
 from google.cloud import bigtable
-from google.cloud.bigtable import row_filters
 from google.cloud.bigtable import column_family
+from google.cloud.bigtable import row_filters
 
 
 def main(project_id, instance_id, table_id):
@@ -48,7 +48,7 @@ def main(project_id, instance_id, table_id):
     # Define the GC policy to retain only the most recent 2 versions
     max_versions_rule = column_family.MaxVersionsGCRule(2)
     column_family_id = 'cf1'
-    column_families = {column_family_id : max_versions_rule}
+    column_families = {column_family_id: max_versions_rule}
     if not table.exists():
         table.create(column_families=column_families)
     else:
