@@ -14,10 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#### DO NOT EDIT! This is a generated sample ("Request",  "analyze_sentiment")
+# DO NOT EDIT! This is a generated sample ("Request",  "analyze_sentiment")
 
-# To run with the published packages, execute the following before running this code:
+# To install the latest published package dependency, execute the following:
 #   pip install google-cloud-language
+
+import sys
 
 # [START language_sentiment_text]
 
@@ -47,7 +49,7 @@ def sample_analyze_sentiment(content):
 
 
 def main():
-    import sys
+    # FIXME: Convert argv from strings to the correct types.
     sample_analyze_sentiment(*sys.argv[1:])
 
 
