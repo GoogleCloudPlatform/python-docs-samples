@@ -214,11 +214,13 @@ def receive_messages_synchronously(project, subscription_name):
     subscription_path = subscriber.subscription_path(
         project, subscription_name)
 
-    # Builds a pull request with a specified number of messages to return.
+    # Builds a pull request with a specific number of messages to return.
+    # `return_immediately` is set to False so that the system waits (for a
+    # bounded amount of time) until at lease one message is available.
     response = subscriber.pull(
         subscription_path,
         max_messages=3,
-        return_immediately=False) # Waits until three messages are available.
+        return_immediately=False)
 
     ack_ids = []
     for received_message in response.received_messages:
