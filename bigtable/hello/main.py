@@ -41,14 +41,14 @@ def main(project_id, instance_id, table_id):
     # [END connecting_to_bigtable]
 
     # [START creating_a_table]
-    print('Creating the {} table.'.format(table_id))
+    print 'Creating the {} table.'.format(table_id)
     table = instance.table(table_id)
     print 'Creating column family cf1 with Max Version GC rule...'
     # Create a column family with GC policy : most recent N versions
     # Define the GC policy to retain only the most recent 2 versions
     max_versions_rule = column_family.MaxVersionsGCRule(2)
-    column = 'greeting'
-    column_families = {column : max_versions_rule}
+    column_family_id = 'cf1'
+    column_families = {column_family_id : max_versions_rule}
     if not table.exists():
         table.create(column_families=column_families)
     else:
@@ -56,15 +56,10 @@ def main(project_id, instance_id, table_id):
     # [END creating_a_table]
 
     # [START writing_rows]
-    print('Writing some greetings to the table.')
-    greetings = [
-        'Hello World!',
-        'Hello Cloud Bigtable!',
-        'Hello Python!',
-    ]
-
+    print 'Writing some greetings to the table.'
+    greetings = ['Hello World!', 'Hello Cloud Bigtable!', 'Hello Python!']
     rows = []
-    column_family_id = 'cf1'
+    column = 'greeting'
     for i, value in enumerate(greetings):
         # Note: This example uses sequential numeric IDs for simplicity,
         # but this can result in poor performance in a production
@@ -78,43 +73,38 @@ def main(project_id, instance_id, table_id):
         #     https://cloud.google.com/bigtable/docs/schema-design
         row_key = 'greeting{}'.format(i)
         row = table.row(row_key)
-        row.set_cell(
-            column_family_id,
-            column,
-            value,
-            timestamp=datetime.datetime.utcnow())
+        row.set_cell(column_family_id,
+                     column,
+                     value,
+                     timestamp=datetime.datetime.utcnow())
         rows.append(row)
     table.mutate_rows(rows)
     # [END writing_rows]
 
     # [START getting_a_row]
-    print('Getting a single greeting by row key.')
+    print 'Getting a single greeting by row key.'
     key = 'greeting0'
-    
+
     # Only retrieve the most recent version of the cell.
-    #row_filter = row_filters.CellsColumnLimitFilter(1)
-    row = table.read_row(key.encode('utf-8')) #, row_filter)
-    # use cell_value ## remove this.
-    print "-------"
-    print row
-    print "-------"
-    ##print row.cells[column_family_id][column][0].value
+    row_filter = row_filters.CellsColumnLimitFilter(1)
+    row = table.read_row(key, row_filter)
+    print row.cell_value(column_family_id, column)
     # [END getting_a_row]
 
     # [START scanning_all_rows]
-    print('Scanning for all greetings:')
-    partial_rows = table.read_rows() #filter_=row_filter)
+    print 'Scanning for all greetings:'
+    partial_rows = table.read_rows(filter_=row_filter)
     partial_rows.consume_all()
 
     for row_key, row in partial_rows.rows.items():
         key = row_key.decode('utf-8')
         cell = row.cells[column_family_id][column][0]
         value = cell.value.decode('utf-8')
-        print('\t{}: {}'.format(key, value))
+        print '\t{}: {}'.format(key, value)
     # [END scanning_all_rows]
 
     # [START deleting_a_table]
-    print('Deleting the {} table.'.format(table_id))
+    print 'Deleting the {} table.'.format(table_id)
     table.delete()
     # [END deleting_a_table]
 
