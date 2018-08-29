@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START gae_python37_cloudsql_psql]
+# [START gae_python37_cloudsql_psql_pooling]
 import os
 
 from flask import Flask
@@ -59,7 +59,7 @@ def main():
     cnxpool.putconn(cnx)
 
     return str(current_time)
-# [END gae_python37_cloudsql_psql]
+# [END gae_python37_cloudsql_psql_pooling]
 
 
 if __name__ == '__main__':
