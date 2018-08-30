@@ -103,12 +103,12 @@ def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
 
 
 def main(
-    bigtable_instance,
-    bigtable_cluster,
-    high_cpu_threshold,
-    low_cpu_threshold,
-    short_sleep,
-    long_sleep):
+        bigtable_instance,
+        bigtable_cluster,
+        high_cpu_threshold,
+        low_cpu_threshold,
+        short_sleep,
+        long_sleep):
     """Main loop runner that autoscales Cloud Bigtable.
 
     Args:
