@@ -90,6 +90,8 @@ def create_push_subscription(project,
 def delete_subscription(project, subscription_name):
     """Deletes an existing Pub/Sub topic."""
     # [START pubsub_delete_subscription]
+    # project           = "Your Google Cloud Project ID"
+    # subscription_name = "Your Pubsub subscription name"
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_name)
@@ -138,6 +140,8 @@ def receive_messages(project, subscription_name):
     """Receives messages from a pull subscription."""
     # [START pubsub_subscriber_async_pull]
     # [START pubsub_quickstart_subscriber]
+    # project           = "Your Google Cloud Project ID"
+    # subscription_name = "Your Pubsub subscription name"
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_name)
@@ -160,6 +164,8 @@ def receive_messages(project, subscription_name):
 def receive_messages_with_custom_attributes(project, subscription_name):
     """Receives messages from a pull subscription."""
     # [START pubsub_subscriber_sync_pull_custom_attributes]
+    # project           = "Your Google Cloud Project ID"
+    # subscription_name = "Your Pubsub subscription name"
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_name)
@@ -186,6 +192,8 @@ def receive_messages_with_custom_attributes(project, subscription_name):
 def receive_messages_with_flow_control(project, subscription_name):
     """Receives messages from a pull subscription with flow control."""
     # [START pubsub_subscriber_flow_settings]
+    # project           = "Your Google Cloud Project ID"
+    # subscription_name = "Your Pubsub subscription name"
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_name)
@@ -210,6 +218,8 @@ def receive_messages_with_flow_control(project, subscription_name):
 def receive_messages_synchronously(project, subscription_name):
     """Pulling messages synchronously."""
     # [START pubsub_subscriber_sync_pull]
+    # project           = "Your Google Cloud Project ID"
+    # subscription_name = "Your Pubsub subscription name"
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_name)
@@ -235,6 +245,8 @@ def receive_messages_synchronously(project, subscription_name):
 def listen_for_errors(project, subscription_name):
     """Receives messages and catches errors from a pull subscription."""
     # [START pubsub_subscriber_error_listener]
+    # project           = "Your Google Cloud Project ID"
+    # subscription_name = "Your Pubsub subscription name"
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_name)
