@@ -90,6 +90,8 @@ def create_push_subscription(project,
 def delete_subscription(project, subscription_name):
     """Deletes an existing Pub/Sub topic."""
     # [START pubsub_delete_subscription]
+    # project           = "Your Google Cloud Project ID"
+    # subscription_name = "Your Pubsub subscription name"
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_name)
@@ -138,6 +140,8 @@ def receive_messages(project, subscription_name):
     """Receives messages from a pull subscription."""
     # [START pubsub_subscriber_async_pull]
     # [START pubsub_quickstart_subscriber]
+    # project           = "Your Google Cloud Project ID"
+    # subscription_name = "Your Pubsub subscription name"
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_name)
@@ -160,6 +164,8 @@ def receive_messages(project, subscription_name):
 def receive_messages_with_custom_attributes(project, subscription_name):
     """Receives messages from a pull subscription."""
     # [START pubsub_subscriber_sync_pull_custom_attributes]
+    # project           = "Your Google Cloud Project ID"
+    # subscription_name = "Your Pubsub subscription name"
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_name)
@@ -186,6 +192,8 @@ def receive_messages_with_custom_attributes(project, subscription_name):
 def receive_messages_with_flow_control(project, subscription_name):
     """Receives messages from a pull subscription with flow control."""
     # [START pubsub_subscriber_flow_settings]
+    # project           = "Your Google Cloud Project ID"
+    # subscription_name = "Your Pubsub subscription name"
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_name)
@@ -207,9 +215,38 @@ def receive_messages_with_flow_control(project, subscription_name):
     # [END pubsub_subscriber_flow_settings]
 
 
+def receive_messages_synchronously(project, subscription_name):
+    """Pulling messages synchronously."""
+    # [START pubsub_subscriber_sync_pull]
+    # project           = "Your Google Cloud Project ID"
+    # subscription_name = "Your Pubsub subscription name"
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_path = subscriber.subscription_path(
+        project, subscription_name)
+
+    # Builds a pull request with a specific number of messages to return.
+    # `return_immediately` is set to False so that the system waits (for a
+    # bounded amount of time) until at lease one message is available.
+    response = subscriber.pull(
+        subscription_path,
+        max_messages=3,
+        return_immediately=False)
+
+    ack_ids = []
+    for received_message in response.received_messages:
+        print("Received: {}".format(received_message.message.data))
+        ack_ids.append(received_message.ack_id)
+
+    # Acknowledges the received messages so they will not be sent again.
+    subscriber.acknowledge(subscription_path, ack_ids)
+    # [END pubsub_subscriber_sync_pull]
+
+
 def listen_for_errors(project, subscription_name):
     """Receives messages and catches errors from a pull subscription."""
     # [START pubsub_subscriber_error_listener]
+    # project           = "Your Google Cloud Project ID"
+    # subscription_name = "Your Pubsub subscription name"
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_name)
@@ -281,6 +318,11 @@ if __name__ == '__main__':
         help=receive_messages_with_flow_control.__doc__)
     receive_with_flow_control_parser.add_argument('subscription_name')
 
+    receive_messages_synchronously_parser = subparsers.add_parser(
+        'receive-synchronously',
+        help=receive_messages_synchronously.__doc__)
+    receive_messages_synchronously_parser.add_argument('subscription_name')
+
     listen_for_errors_parser = subparsers.add_parser(
         'listen_for_errors', help=listen_for_errors.__doc__)
     listen_for_errors_parser.add_argument('subscription_name')
@@ -313,6 +355,9 @@ if __name__ == '__main__':
             args.project, args.subscription_name)
     elif args.command == 'receive-flow-control':
         receive_messages_with_flow_control(
+            args.project, args.subscription_name)
+    elif args.command == 'receive-synchronously':
+        receive_messages_synchronously(
             args.project, args.subscription_name)
     elif args.command == 'listen_for_errors':
         listen_for_errors(args.project, args.subscription_name)
