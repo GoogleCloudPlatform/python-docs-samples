@@ -94,13 +94,10 @@ def main(project_id, instance_id, table_id):
     # [START scanning_all_rows]
     print 'Scanning for all greetings:'
     partial_rows = table.read_rows(filter_=row_filter)
-    partial_rows.consume_all()
 
-    for row_key, row in partial_rows.rows.items():
-        key = row_key.decode('utf-8')
+    for row in partial_rows:
         cell = row.cells[column_family_id][column][0]
-        value = cell.value.decode('utf-8')
-        print '\t{}: {}'.format(key, value)
+        print cell.value.decode('utf-8')
     # [END scanning_all_rows]
 
     # [START deleting_a_table]
