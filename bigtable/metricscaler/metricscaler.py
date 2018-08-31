@@ -21,7 +21,7 @@ import time
 
 from google.cloud import bigtable
 from google.cloud import monitoring_v3
-from google.cloud.monitoring_v3.query import Query
+from google.cloud.monitoring_v3 import query
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 
@@ -34,11 +34,12 @@ def get_cpu_load():
     """
     # [START bigtable_cpu]
     client = monitoring_v3.MetricServiceClient()
-    query = Query(client,
-                  project=PROJECT,
-                  metric_type='bigtable.googleapis.com/cluster/cpu_load',
-                  minutes=5)
-    time_series = list(query)
+    cpu_query = query.Query(client,
+                            project=PROJECT,
+                            metric_type='bigtable.googleapis.com/'
+                                        'cluster/cpu_load',
+                            minutes=5)
+    time_series = list(cpu_query)
     recent_time_series = time_series[0]
     return recent_time_series.points[0].value.double_value
     # [END bigtable_cpu]
