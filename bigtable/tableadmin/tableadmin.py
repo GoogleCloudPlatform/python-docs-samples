@@ -96,7 +96,7 @@ def run_table_operations(project_id, instance_id, table_id):
     max_versions_rule = column_family.MaxVersionsGCRule(2)
 
     column_family2 = table.column_family('cf2', max_versions_rule)
-    column_family2 .create()
+    column_family2.create()
     print 'Created column family cf2 with Max Versions GC Rule.'
     # [END bigtable_create_family_gc_max_versions]
 
