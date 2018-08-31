@@ -1,0 +1,84 @@
+# Copyright 2018 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the 'License');
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an 'AS IS' BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# [START functions_imagemagick_setup]
+import os
+import subprocess
+
+from google.cloud import storage, vision
+
+
+storage_client = storage.Client()
+vision_client = vision.ImageAnnotatorClient()
+# [END functions_imagemagick_setup]
+
+
+# [START functions_imagemagick_analyze]
+# Blurs uploaded images that are flagged as Adult or Violence.
+def blur_offensive_images(data, context):
+    blob = data
+
+    # Exit if this is a deletion or a deploy event.
+    if blob.resource_state == 'not_exists':
+        print('This is a deletion event.')
+        return
+    elif 'name' not in blob:
+        print('This is a deploy event.')
+        return
+
+    file_name = blob['name']
+    file = storage_client.bucket(blob.bucket).file(file_name)
+    file_path = 'gs://%s/%s' % (blob.bucket, file_name)
+
+    print('Analyzing %s' % file_name)
+
+    result = vision_client.safe_search_detection(file_path)
+    detected = result.safe_search_annotation
+
+    if detected.adult == 'VERY_LIKELY' or detected.violence == 'VERY_LIKELY':
+        print('The image %s was detected as inappropriate.' % file_name)
+        return blur_image(file)
+    else:
+        print('The image %s was detected as OK.' % file_name)
+# [END functions_imagemagick_analyze]
+
+
+# [START functions_imagemagick_blur]
+# Blurs the given file using ImageMagick.
+def blur_image(file):
+    file_name = file["name"]
+    temp_local_filename = '/tmp/%s' % os.path.basename(file_name)
+
+    # Download file from bucket.
+    file.download_to_filename(temp_local_filename)
+    print('Image %s was downloaded to %s.' % (file_name, temp_local_filename))
+
+    # Blur the image using ImageMagick.
+    subprocess.check_call([
+        'convert', temp_local_filename,
+        '-channel', 'RGBA',
+        '-blur', '0x24',
+        temp_local_filename
+    ])
+    print('Image %s was blurred.' % file_name)
+
+    # Upload the Blurred image back into the bucket.
+    blurred_file = file.blob(file_name)
+    blurred_file.upload_from_file(temp_local_filename)
+    print('Blurred image was uploaded to %s.' % file_name)
+
+    # Delete the temporary file.
+    os.remove(temp_local_filename)
+# [END functions_imagemagick_blur]
