@@ -18,7 +18,7 @@ set -v
 
 # Talk to the metadata server to get the project id and location of application binary.
 PROJECTID=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google")
-GCS_APP_LOCATION=$(curl -s "http://metadata.google.internal/computeMetadata/v1/instance/attributes/app-location" -H "Metadata-Flavor: Google")
+GCS_BUCKET_NAME=$(curl -s "http://metadata.google.internal/computeMetadata/v1/instance/attributes/gcs-bucket" -H "Metadata-Flavor: Google")
 REDISHOST=$(curl -s "http://metadata.google.internal/computeMetadata/v1/instance/attributes/redis-host" -H "Metadata-Flavor: Google")
 REDISPORT=$(curl -s "http://metadata.google.internal/computeMetadata/v1/instance/attributes/redis-port" -H "Metadata-Flavor: Google")
 
@@ -33,7 +33,7 @@ apt-get install -yq \
 curl -s "https://storage.googleapis.com/signals-agents/logging/google-fluentd-install.sh" | bash
 service google-fluentd restart &
 
-gsutil cp "$GCS_APP_LOCATION"** /
+gsutil cp gs://"$GCS_BUCKET_NAME"/gce/app.tar /app.tar
 mkdir -p /app
 tar -x -f /app.tar -C /app
 cd /app
