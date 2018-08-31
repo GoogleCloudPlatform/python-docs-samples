@@ -16,13 +16,12 @@ from airflow import models
 
 
 def test_dag_import():
-  """Test that the DAG file can be successfully imported.
+    """Test that the DAG file can be successfully imported.
 
-  This tests that the DAG can be parsed, but does not run it in an Airflow
-  environment. This is a recommended sanity check by the official Airflow
-  docs: https://airflow.incubator.apache.org/tutorial.html#testing
-  """
-  models.Variable.set('master_file_path', 'example_file_path')
-  models.Variable.set('gcs_source_bucket', 'example-project')
-  models.Variable.set('gcs_dest_bucket', 'us-central1-f')
-  from . import bq_copy_across_locations # noqa
+    This tests that the DAG can be parsed, but does not run it in an Airflow
+    environment. This is a recommended sanity check by the official Airflow
+    docs: https://airflow.incubator.apache.org/tutorial.html#testing
+    """
+    models.Variable.set('master_file_path', 'example_file_path')
+    models.Variable.set('gcs_source_bucket', 'example-project')
+    models.Variable.set('gcs_dest_bucket', 'us-central1-f')
