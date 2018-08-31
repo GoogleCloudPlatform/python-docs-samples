@@ -149,8 +149,9 @@ def hello_method(request):
 
 def hello_error_1(request):
     # [START functions_helloworld_error]
-    # This WILL NOT be reported to Stackdriver Error
-    # Reporting, and WILL NOT show up in logs
+    # This WILL be reported to Stackdriver Error
+    # Reporting, and WILL NOT show up in logs or
+    # terminate the function.
     from google.cloud import error_reporting
     client = error_reporting.Client()
 
