@@ -86,7 +86,8 @@ To run this sample:
 
     usage: instanceadmin.py [-h] [run] [dev-instance] [del-instance] [add-cluster] [del-cluster] project_id instance_id cluster_id
 
-    Demonstrates how to connect to Cloud Bigtable and get .
+    Demonstrates how to connect to Cloud Bigtable and run some basic operations
+    to create instance, create cluster, delete instance and delete cluster. 
     Prerequisites: - Create a Cloud Bigtable cluster.
     https://cloud.google.com/bigtable/docs/creating-cluster - Set your Google
     Application Default Credentials.

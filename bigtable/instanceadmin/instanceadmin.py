@@ -24,10 +24,10 @@ Prerequisites:
 Operations performed:
 - Create a Cloud Bigtable Instance.
 - List Instance for a Cloud Bigtable.
-- Delete a Bigtable Instance.
-- Create a Bigtable Cluster.
-- List Bigtable clusters.
-- Delete a Bigtable Cluster.
+- Delete a Cloud Bigtable Instance.
+- Create a Cloud Bigtable Cluster.
+- List Cloud Bigtable Clusters.
+- Delete a Cloud Bigtable Cluster.
 """
 
 import argparse
@@ -40,7 +40,7 @@ def run_instance_operations(project_id, instance_id):
     ''' Check Instance exists.
         Creates a Production instance with default Cluster.
         List instances in a project.
-        List cluster in an instance.
+        List clusters in an instance.
 
     :type project_id: str
     :param project_id: Project id of the client.
@@ -69,7 +69,7 @@ def run_instance_operations(project_id, instance_id):
                                serve_nodes=serve_nodes,
                                default_storage_type=storage_type)
     if not instance.exists():
-        print '\nCreating a Instance'
+        print '\nCreating an Instance'
         # Create instance with given options
         instance.create(clusters=[cluster])
         print '\nCreated instance: {}'.format(instance_id)
@@ -216,7 +216,7 @@ def delete_cluster(project_id, instance_id, cluster_id):
         cluster.delete()
         print 'Cluster deleted: {}'.format(cluster_id)
     else:
-        print '\nCluster {} does not exists.'.format(cluster_id)
+        print '\nCluster {} does not exist.'.format(cluster_id)
 
     # [END bigtable_delete_cluster]
 
