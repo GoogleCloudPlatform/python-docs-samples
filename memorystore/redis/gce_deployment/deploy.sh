@@ -24,8 +24,8 @@ if [ -z "$REDISPORT" ]; then
   exit 1
 fi
 
-if [ -z "$GCS_APP_LOCATION" ]; then
-  echo "Must set \$GCS_APP_LOCATION. For example: GCS_APP_LOCATION=gs://my-bucket/app"
+if [ -z "$GCS_BUCKET_NAME" ]; then
+  echo "Must set \$GCS_BUCKET_NAME. For example: GCS_BUCKET_NAME=my-bucket"
   exit 1
 fi
 
@@ -37,7 +37,7 @@ fi
 #Upload the tar to GCS
 tar -cvf app.tar -C .. requirements.txt main.py
 # Copy to GCS bucket
-gsutil cp app.tar $GCS_APP_LOCATION
+gsutil cp app.tar gs://"$GCS_BUCKET_NAME"/gce/
 
 # Create an instance
 gcloud compute instances create my-instance \
@@ -46,7 +46,7 @@ gcloud compute instances create my-instance \
     --machine-type=g1-small \
     --scopes cloud-platform \
     --metadata-from-file startup-script=startup-script.sh \
-    --metadata app-location=$GCS_APP_LOCATION,redis-host=$REDISHOST,redis-port=$REDISPORT \
+    --metadata gcs-bucket=$GCS_BUCKET_NAME,redis-host=$REDISHOST,redis-port=$REDISPORT \
     --zone $ZONE \
     --tags http-server
 
