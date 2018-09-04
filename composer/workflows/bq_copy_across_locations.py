@@ -164,25 +164,28 @@ with models.DAG('bq_copy_us_to_eu_01',
         table_dest = record['table_dest']
 
         BQ_to_GCS = BigQueryToCloudStorageOperator(
-            task_id='{}_BQ_to_GCS'.format(table_source),
+            # Replace ":" with valid character for Airflow task
+            task_id='{}_BQ_to_GCS'.format(table_source.replace(":", "_")),
             source_project_dataset_table=table_source,
-            destination_cloud_storage_uris=['{}.avro'.format(
+            destination_cloud_storage_uris=['{}-*.avro'.format(
                 'gs://' + source_bucket + '/' + table_source)],
             export_format='AVRO'
         )
 
         GCS_to_GCS = GoogleCloudStorageToGoogleCloudStorageOperator(
-            task_id='{}_GCS_to_GCS'.format(table_source),
+            # Replace ":" with valid character for Airflow task
+            task_id='{}_GCS_to_GCS'.format(table_source.replace(":", "_")),
             source_bucket=source_bucket,
-            source_object='{}.avro'.format(table_source),
+            source_object='{}-*.avro'.format(table_source),
             destination_bucket=dest_bucket,
-            destination_object='{}.avro'.format(table_dest)
+            # destination_object='{}-*.avro'.format(table_dest)
         )
 
         GCS_to_BQ = GoogleCloudStorageToBigQueryOperator(
-            task_id='{}_GCS_to_BQ'.format(table_dest),
+            # Replace ":" with valid character for Airflow task
+            task_id='{}_GCS_to_BQ'.format(table_dest.replace(":", "_")),
             bucket=dest_bucket,
-            source_objects=['{}.avro'.format(table_dest)],
+            source_objects=['{}-*.avro'.format(table_source)],
             destination_project_dataset_table=table_dest,
             source_format='AVRO',
             write_disposition='WRITE_TRUNCATE'
