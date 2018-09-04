@@ -31,25 +31,25 @@ def blur_offensive_images(data, context):
     blob = data
 
     # Exit if this is a deletion or a deploy event.
-    if blob.resource_state == 'not_exists':
-        print('This is a deletion event.')
-        return
-    elif 'name' not in blob:
+    if 'name' not in blob:
         print('This is a deploy event.')
+        return
+    elif blob['resource_state'] == 'not_exists':
+        print('This is a deletion event.')
         return
 
     file_name = blob['name']
-    file = storage_client.bucket(blob.bucket).file(file_name)
-    file_path = 'gs://%s/%s' % (blob.bucket, file_name)
+    file = storage_client.bucket(blob['bucket']).file(file_name)
+    file_path = 'gs://%s/%s' % (blob['bucket'], file_name)
 
-    print('Analyzing %s' % file_name)
+    print('Analyzing %s.' % file_name)
 
     result = vision_client.safe_search_detection(file_path)
     detected = result.safe_search_annotation
 
     if detected.adult == 'VERY_LIKELY' or detected.violence == 'VERY_LIKELY':
         print('The image %s was detected as inappropriate.' % file_name)
-        return blur_image(file)
+        return __blur_image(file)
     else:
         print('The image %s was detected as OK.' % file_name)
 # [END functions_imagemagick_analyze]
@@ -57,8 +57,8 @@ def blur_offensive_images(data, context):
 
 # [START functions_imagemagick_blur]
 # Blurs the given file using ImageMagick.
-def blur_image(file):
-    file_name = file["name"]
+def __blur_image(file):
+    file_name = file['name']
     temp_local_filename = '/tmp/%s' % os.path.basename(file_name)
 
     # Download file from bucket.
