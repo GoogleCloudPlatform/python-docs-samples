@@ -19,11 +19,11 @@ def test_location_search_sample(capsys):
 
     location_search_sample.run_sample()
     out, _ = capsys.readouterr()
-    expected = ('.*appliedJobLocationFilters.*\n'
-                '.*appliedJobLocationFilters.*\n'
-                '.*appliedJobLocationFilters.*\n'
-                '.*appliedJobLocationFilters.*\n'
-                '.*appliedJobLocationFilters.*\n')
+    expected = ('.*locationFilters.*\n'
+                '.*locationFilters.*\n'
+                '.*locationFilters.*\n'
+                '.*locationFilters.*\n'
+                '.*locationFilters.*\n')
     assert re.search(expected, out, re.DOTALL)
     expected = ('.*matchingJobs.*\n'
                 '.*matchingJobs.*\n'

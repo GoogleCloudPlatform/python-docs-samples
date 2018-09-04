@@ -19,6 +19,7 @@ import time
 # [START instantiate]
 from googleapiclient.discovery import build
 from googleapiclient.errors import Error
+import os
 
 client_service = build('jobs', 'v3')
 name = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
