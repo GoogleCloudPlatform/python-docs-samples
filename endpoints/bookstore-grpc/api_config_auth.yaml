@@ -51,7 +51,7 @@ authentication:
   - id: google_service_account
     # Replace SERVICE-ACCOUNT-ID with your service account's email address.
     issuer: SERVICE-ACCOUNT-ID
-    jwks_uri: https://www.googleapis.com/robot/v1/metadata/x509/SERVICE-ACCOUNT-ID
+    jwks_uri: https://www.googleapis.com/service_accounts/v1/jwk/{SERVICE-ACCOUNT-ID}
   rules:
   # This auth rule will apply to all methods.
   - selector: "*"
