@@ -104,6 +104,11 @@ class GoogleCloudStorageToGoogleCloudStorageOperator(BaseOperator):
                 move_object=True,
                 google_cloud_storage_conn_id=google_cloud_conn_id
             )
+    Note: The GCS hook must be downloaded from the Airflow repository
+    cd plugins/gcs_plugin/hook
+    wget https://raw.githubusercontent.com/apache/incubator-airflow/\
+    v1-10-stable/airflow/contrib/hooks/gcs_hook.py
+
     """
     template_fields = ('source_bucket', 'source_object', 'destination_bucket',
                        'destination_object',)
