@@ -59,8 +59,8 @@ def test_process_offensive_image(
   capsys):
     result = DictObject()
     result.safe_search_annotation = DictObject()
-    result.safe_search_annotation.adult = 'VERY_LIKELY'
-    result.safe_search_annotation.violence = 'VERY_LIKELY'
+    result.safe_search_annotation.adult = 5
+    result.safe_search_annotation.violence = 5
     vision_client.safe_search_detection = MagicMock(return_value=result)
 
     filename = str(uuid.uuid4())
@@ -88,8 +88,8 @@ def test_process_safe_image(
   capsys):
     result = DictObject()
     result.safe_search_annotation = DictObject()
-    result.safe_search_annotation.adult = 'VERY_UNLIKELY'
-    result.safe_search_annotation.violence = 'VERY_UNLIKELY'
+    result.safe_search_annotation.adult = 1
+    result.safe_search_annotation.violence = 1
     vision_client.safe_search_detection = MagicMock(return_value=result)
 
     filename = str(uuid.uuid4())
@@ -118,15 +118,12 @@ def test_blur_image(subprocess_mock, os_mock, capsys):
 
     subprocess_mock.check_call = MagicMock()
 
-    blob_mock = MagicMock()
-    blob_mock.upload_from_file = MagicMock()
+    blob = DictObject()
+    blob.name = filename
+    blob.download_to_filename = MagicMock()
+    blob.upload_from_filename = MagicMock()
 
-    file = DictObject()
-    file['name'] = filename
-    file.download_to_filename = MagicMock()
-    file.blob = MagicMock(return_value=blob_mock)
-
-    main.__blur_image(file)
+    main.__blur_image(blob)
 
     out, _ = capsys.readouterr()
 
