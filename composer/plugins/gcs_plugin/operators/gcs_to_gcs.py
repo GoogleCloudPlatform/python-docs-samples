@@ -25,8 +25,7 @@ class GoogleCloudStorageToGoogleCloudStorageOperator(BaseOperator):
          object is. (templated)
     :type source_bucket: string
     :param source_object: The source name of the object to copy in the
-    Google cloud
-        storage bucket. (templated)
+    Google cloud storage bucket. (templated)
         If wildcards are used in this argument:
             You can use only one wildcard for objects (filenames) within your
             bucket. The wildcard can appear inside the object name or at the
@@ -37,23 +36,19 @@ class GoogleCloudStorageToGoogleCloudStorageOperator(BaseOperator):
     where the object should be. (templated)
     :type destination_bucket: string
     :param destination_object: The destination name of the object in the
-        destination Google cloud storage bucket. (templated)
-        If a wildcard is supplied in the source_object argument, this is the
-        prefix that will be prepended to the final destination objects' paths.
+        destination Google cloud storage bucket. (templated) If a wildcard
+        is supplied in the source_object argument, this is the prefix that
+        will be prepended to the final destination objects' paths.
         Note that the source path's part before the wildcard will be removed;
         if it needs to be retained it should be appended to destination_object.
         For example, with prefix ``foo/*`` and destination_object `'blah/``,
-        the
-        file ``foo/baz`` will be copied to ``blah/baz``; to retain the
-        prefix write
-        the destination_object as e.g. ``blah/foo``, in which case the
-        copied file
-        will be named ``blah/foo/baz``.
+        the file ``foo/baz`` will be copied to ``blah/baz``; to retain the
+        prefix write the destination_object as e.g. ``blah/foo``, in which
+        case the copied file will be named ``blah/foo/baz``.
     :type destination_object: string
     :param move_object: When move object is True, the object is moved instead
-    of copied to the new location.
-                        This is the equivalent of a mv command as opposed to a
-                        cp command.
+        of copied to the new location. This is the equivalent of a mv
+        command as opposed to a cp command.
     :type move_object: bool
     :param google_cloud_storage_conn_id: The connection ID to use when
         connecting to Google cloud storage.
@@ -65,8 +60,7 @@ class GoogleCloudStorageToGoogleCloudStorageOperator(BaseOperator):
     **Examples**:
         The following Operator would copy a single file named
         ``sales/sales-2017/january.avro`` in the ``data`` bucket to the file
-        named
-        ``copied_sales/2017/january-backup.avro` in the ``data_backup``
+        named ``copied_sales/2017/january-backup.avro` in the ``data_backup``
         bucket ::
             copy_single_file = GoogleCloudStorageToGoogleCloudStorageOperator(
                 task_id='copy_single_file',
@@ -77,10 +71,9 @@ class GoogleCloudStorageToGoogleCloudStorageOperator(BaseOperator):
                 google_cloud_storage_conn_id=google_cloud_conn_id
             )
         The following Operator would copy all the Avro files from
-        ``sales/sales-2017``
-        folder (i.e. with names starting with that prefix) in ``data``
-        bucket to the
-        ``copied_sales/2017`` folder in the ``data_backup`` bucket. ::
+        ``sales/sales-2017`` folder (i.e. with names starting with that
+        prefix) in ``data`` bucket to the ``copied_sales/2017`` folder in
+        the ``data_backup`` bucket. ::
             copy_files = GoogleCloudStorageToGoogleCloudStorageOperator(
                 task_id='copy_files',
                 source_bucket='data',
@@ -90,12 +83,9 @@ class GoogleCloudStorageToGoogleCloudStorageOperator(BaseOperator):
                 google_cloud_storage_conn_id=google_cloud_conn_id
             )
         The following Operator would move all the Avro files from
-        ``sales/sales-2017``
-        folder (i.e. with names starting with that prefix) in ``data``
-        bucket to the
-        same folder in the ``data_backup`` bucket, deleting the original
-        files in the
-        process. ::
+        ``sales/sales-2017`` folder (i.e. with names starting with that
+        prefix) in ``data`` bucket to the same folder in the ``data_backup``
+        bucket, deleting the original files in the process. ::
             move_files = GoogleCloudStorageToGoogleCloudStorageOperator(
                 task_id='move_files',
                 source_bucket='data',
@@ -108,7 +98,6 @@ class GoogleCloudStorageToGoogleCloudStorageOperator(BaseOperator):
     cd plugins/gcs_plugin/hook
     wget https://raw.githubusercontent.com/apache/incubator-airflow/\
     v1-10-stable/airflow/contrib/hooks/gcs_hook.py
-
     """
     template_fields = ('source_bucket', 'source_object', 'destination_bucket',
                        'destination_object',)

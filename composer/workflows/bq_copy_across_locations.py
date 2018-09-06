@@ -13,25 +13,21 @@
 # limitations under the License.
 
 """Example Airflow DAG that performs an export from BQ tables listed in
-config file to GCS,
-copies GCS objects across locations (e.g., from US to EU) then imports from
-GCS to BQ. The DAG
-imports the gcs_to_gcs operator from plugins and dynamically builds the
-tasks based on the
-list of tables.
+config file to GCS, copies GCS objects across locations (e.g., from US to
+EU) then imports from GCS to BQ. The DAG imports the gcs_to_gcs operator
+from plugins and dynamically builds the tasks based on the list of tables.
 Lastly, the DAG defines a specific application logger to generate logs.
 
 This DAG relies on three Airflow variables
-https://airflow.apache.org/concepts.html#variables
+(https://airflow.apache.org/concepts.html#variables):
 * master_file_path - CSV file listing source and target tables, including
 Datasets.
 * gcs_source_bucket - Google Cloud Storage bucket to use for exporting
 BigQuery tables in source.
 * gcs_dest_bucket - Google Cloud Storage bucket to use for importing
-BigQuery tables in
-                    destination.
-  See https://cloud.google.com/storage/docs/creating-buckets for creating a
-  bucket.
+BigQuery tables in destination.
+See https://cloud.google.com/storage/docs/creating-buckets for creating a
+bucket.
 """
 
 # --------------------------------------------------------------------------------
@@ -108,10 +104,9 @@ def read_master_file(master_file):
     Reads the master CSV file that will help in creating Airflow tasks in
     the DAG dynamically.
     :param master_file: (String) The file location of the master file,
-                                  e.g. '/home/airflow/framework/master.csv'
+    e.g. '/home/airflow/framework/master.csv'
     :return master_record_all: (List) List of Python dictionaries containing
-    the information f
-                                      or a single row in master CSV file.
+    the information for a single row in master CSV file.
     """
     master_record_all = []
     logger.info('Reading master_file from : %s' % str(master_file))
