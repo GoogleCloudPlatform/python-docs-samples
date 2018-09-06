@@ -97,7 +97,7 @@ To run this sample:
     $ python snippets.py
 
     usage: snippets.py [-h]
-                       {classify-text,classify-file,sentiment-entities-text,sentiment-entities-file,sentiment-text,sentiment-file,entities-text,entities-file,syntax-text,syntax-file}
+                       {classify-text,classify-file,sentiment-text,sentiment-file,entities-text,entities-file,syntax-text,syntax-file}
                        ...
 
     This application demonstrates how to perform basic operations with the
@@ -107,15 +107,10 @@ To run this sample:
     https://cloud.google.com/natural-language/docs.
 
     positional arguments:
-      {classify-text,classify-file,sentiment-entities-text,sentiment-entities-file,sentiment-text,sentiment-file,entities-text,entities-file,syntax-text,syntax-file}
+      {classify-text,classify-file,sentiment-text,sentiment-file,entities-text,entities-file,syntax-text,syntax-file}
         classify-text       Classifies content categories of the provided text.
         classify-file       Classifies content categories of the text in a Google
                             Cloud Storage file.
-        sentiment-entities-text
-                            Detects entity sentiment in the provided text.
-        sentiment-entities-file
-                            Detects entity sentiment in a Google Cloud Storage
-                            file.
         sentiment-text      Detects sentiment in the text.
         sentiment-file      Detects sentiment in the file located in Google Cloud
                             Storage.
