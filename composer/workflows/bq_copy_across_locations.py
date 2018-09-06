@@ -40,15 +40,12 @@ from datetime import timedelta
 import logging
 
 from airflow import models
-from airflow.contrib.operators.bigquery_to_gcs import \
-    BigQueryToCloudStorageOperator
-from airflow.contrib.operators.gcs_to_bq import \
-    GoogleCloudStorageToBigQueryOperator
-from airflow.models import Variable
-from airflow.operators.dummy_operator import DummyOperator
+from airflow.contrib.operators import bigquery_to_gcs
+from airflow.contrib.operators import gcs_to_bq
+from airflow.operators import dummy_operator
 # Import operator from plugins
-from gcs_plugin.operators.gcs_to_gcs import \
-    GoogleCloudStorageToGoogleCloudStorageOperator
+from gcs_plugin.operators import gcs_to_gcs
+
 import google.cloud.logging
 
 
@@ -73,13 +70,13 @@ default_args = {
 
 # 'master_file_path': This variable will contain the location of the master
 # file.
-master_file_path = Variable.get('master_file_path')
+master_file_path = models.Variable.get('master_file_path')
 
 # Source Bucket
-source_bucket = Variable.get('gcs_source_bucket')
+source_bucket = models.Variable.get('gcs_source_bucket')
 
 # Destination Bucket
-dest_bucket = Variable.get('gcs_dest_bucket')
+dest_bucket = models.Variable.get('gcs_dest_bucket')
 
 # --------------------------------------------------------------------------------
 # Set GCP logging
@@ -136,12 +133,12 @@ def read_master_file(master_file):
 with models.DAG('bq_copy_us_to_eu_01',
                 default_args=default_args,
                 schedule_interval=None) as dag:
-    start = DummyOperator(
+    start = dummy_operator.DummyOperator(
         task_id='start',
         trigger_rule='all_success'
     )
 
-    end = DummyOperator(
+    end = dummy_operator.DummyOperator(
         task_id='end',
 
         trigger_rule='all_success'
@@ -158,7 +155,7 @@ with models.DAG('bq_copy_us_to_eu_01',
         table_source = record['table_source']
         table_dest = record['table_dest']
 
-        BQ_to_GCS = BigQueryToCloudStorageOperator(
+        BQ_to_GCS = bigquery_to_gcs.BigQueryToCloudStorageOperator(
             # Replace ":" with valid character for Airflow task
             task_id='{}_BQ_to_GCS'.format(table_source.replace(":", "_")),
             source_project_dataset_table=table_source,
@@ -167,7 +164,7 @@ with models.DAG('bq_copy_us_to_eu_01',
             export_format='AVRO'
         )
 
-        GCS_to_GCS = GoogleCloudStorageToGoogleCloudStorageOperator(
+        GCS_to_GCS = gcs_to_gcs.GoogleCloudStorageToGoogleCloudStorageOperator(
             # Replace ":" with valid character for Airflow task
             task_id='{}_GCS_to_GCS'.format(table_source.replace(":", "_")),
             source_bucket=source_bucket,
@@ -176,7 +173,7 @@ with models.DAG('bq_copy_us_to_eu_01',
             # destination_object='{}-*.avro'.format(table_dest)
         )
 
-        GCS_to_BQ = GoogleCloudStorageToBigQueryOperator(
+        GCS_to_BQ = gcs_to_bq.GoogleCloudStorageToBigQueryOperator(
             # Replace ":" with valid character for Airflow task
             task_id='{}_GCS_to_BQ'.format(table_dest.replace(":", "_")),
             bucket=dest_bucket,
