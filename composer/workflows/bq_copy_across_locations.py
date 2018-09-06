@@ -111,7 +111,8 @@ def read_table_list(table_list_file):
                 master_record_all.append(master_record)
             return master_record_all
     except IOError as e:
-        logger.error('Error opening table_list_file %s: ' % str(table_list_file), e)
+        logger.error('Error opening table_list_file %s: ' % str(
+            table_list_file), e)
 
 
 # --------------------------------------------------------------------------------
