@@ -196,7 +196,7 @@ def import_data(project_id, compute_region, dataset_id, path):
 
 def delete_dataset(project_id, compute_region, dataset_id):
     """Delete a dataset."""
-    # [START automl_translate_delete_dataset]]
+    # [START automl_translate_delete_dataset]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
