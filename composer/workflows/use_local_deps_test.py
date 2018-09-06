@@ -12,7 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import sys
 
+import pytest
+
+
+@pytest.mark.skipif(
+    sys.version_info >= (3, 0), reason="requires Python 2")
 def test_dag_import():
     """Test that the DAG file can be successfully imported.
 

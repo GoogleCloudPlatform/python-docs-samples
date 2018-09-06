@@ -157,9 +157,7 @@ ALL_SAMPLE_DIRECTORIES = sorted(list(_collect_dirs('.', suffix='.py', recurse_fu
 GAE_STANDARD_SAMPLES = [
     sample for sample in ALL_TESTED_SAMPLES
     if sample.startswith('./appengine/standard/')]
-PY2_ONLY_SAMPLES = GAE_STANDARD_SAMPLES + [
-    sample for sample in ALL_TESTED_SAMPLES
-    if sample.startswith('./composer/workflows')]
+PY2_ONLY_SAMPLES = GAE_STANDARD_SAMPLES
 PY3_ONLY_SAMPLES = [
     sample for sample in ALL_TESTED_SAMPLES
     if (sample.startswith('./appengine/standard_python37')
