@@ -46,8 +46,6 @@ from airflow.operators import dummy_operator
 # Import operator from plugins
 from gcs_plugin.operators import gcs_to_gcs
 
-import google.cloud.logging
-
 
 # --------------------------------------------------------------------------------
 # Set default arguments
@@ -81,13 +79,6 @@ dest_bucket = models.Variable.get('gcs_dest_bucket')
 # --------------------------------------------------------------------------------
 # Set GCP logging
 # --------------------------------------------------------------------------------
-
-# Instantiates a client
-client = google.cloud.logging.Client()
-
-# Connects the logger to the root logging handler; by default this captures
-# all logs at INFO level and higher
-client.setup_logging()
 
 logger = logging.getLogger('bq_copy_us_to_eu_01')
 
