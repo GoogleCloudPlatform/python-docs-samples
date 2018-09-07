@@ -26,9 +26,8 @@ client_service = build('jobs', 'v3')
 def run_sample():
     try:
         project_id = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
-        list_companies_response =
-        client_service.projects().companies().list(
-                parent=project_id).execute()
+        list_companies_response = client_service.projects()
+            .companies().list(parent=project_id).execute()
         print('Request Id: %s' %
               list_companies_response.get('metadata').get('requestId'))
         print('Companies:')
