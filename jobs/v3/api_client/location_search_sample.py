@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2018 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
 import time
 
 # [START instantiate]
-from googleapiclient.discovery import build
-from googleapiclient.errors import Error
 import os
+
+from googleapiclient.discovery import build
 
 client_service = build('jobs', 'v3')
 parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
@@ -42,7 +42,8 @@ def basic_location_search(client_service, company_name, location, distance):
         'request_metadata': request_metadata,
         'search_mode': 'JOB_SEARCH',
     }
-    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
+    response = client_service.projects().jobs().search(
+        parent=parent, body=request).execute()
     print(response)
 # [END basic_location_search]
 
@@ -64,7 +65,8 @@ def keyword_location_search(client_service, company_name, location, distance,
         'request_metadata': request_metadata,
         'search_mode': 'JOB_SEARCH',
     }
-    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
+    response = client_service.projects().jobs().search(
+        parent=parent, body=request).execute()
     print(response)
 # [END keyword_location_search]
 
@@ -85,7 +87,8 @@ def city_location_search(client_service, company_name, location):
         'request_metadata': request_metadata,
         'search_mode': 'JOB_SEARCH',
     }
-    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
+    response = client_service.projects().jobs().search(
+        parent=parent, body=request).execute()
     print(response)
 # [END city_location_search]
 
@@ -108,7 +111,8 @@ def multi_locations_search(client_service, company_name, location1, distance1,
         'request_metadata': request_metadata,
         'search_mode': 'JOB_SEARCH',
     }
-    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
+    response = client_service.projects().jobs().search(
+        parent=parent, body=request).execute()
     print(response)
 # [END multi_locations_search]
 
@@ -130,7 +134,8 @@ def broadening_location_search(client_service, company_name, location):
         'search_mode': 'JOB_SEARCH',
         'enable_broadening': True
     }
-    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
+    response = client_service.projects().jobs().search(
+        parent=parent, body=request).execute()
     print(response)
 # [END broadening_location_search]
 

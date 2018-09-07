@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2018 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
 # limitations under the License.
 
 # [START instantiate]
-from googleapiclient.discovery import build
-from googleapiclient.errors import Error
 import os
+
+from googleapiclient.discovery import build
 
 client_service = build('jobs', 'v3')
 parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
@@ -108,7 +108,8 @@ def batch_job_delete(client_service, jobs_to_be_deleted):
     batch = client_service.new_batch_http_request()
     for job_to_be_deleted in jobs_to_be_deleted:
         batch.add(
-            client_service.projects().jobs().delete(name=job_to_be_deleted.get('name')),
+            client_service.projects().jobs().delete(
+                name=job_to_be_deleted.get('name')),
             callback=job_delete_callback)
 
     batch.execute()

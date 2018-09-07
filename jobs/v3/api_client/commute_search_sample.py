@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2018 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
 import time
 
 # [START instantiate]
-from googleapiclient.discovery import build
-from googleapiclient.errors import Error
 import os
+
+from googleapiclient.discovery import build
 
 client_service = build('jobs', 'v3')
 parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
@@ -49,7 +49,8 @@ def commute_search(client_service, company_name):
         'job_view': 'JOB_VIEW_FULL',
         'require_precise_result_size': True
     }
-    response = client_service.projects().jobs().search(parent=parent, body=request).execute()
+    response = client_service.projects().jobs().search(
+        parent=parent, body=request).execute()
     print(response)
 # [END commute_search]
 

@@ -18,9 +18,10 @@ import random
 import string
 
 # [START jobs_instantiate]
+import os
+
 from googleapiclient.discovery import build
 from googleapiclient.errors import Error
-import os
 
 client_service = build('jobs', 'v3')
 parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
@@ -51,7 +52,7 @@ def generate_company():
 # [START jobs_create_company]
 def create_company(client_service, company_to_be_created):
     try:
-        request = {'company' : company_to_be_created}
+        request = {'company': company_to_be_created}
         company_created = client_service.projects().companies().create(
             parent=parent, body=request).execute()
         print('Company created: %s' % company_created)
@@ -78,7 +79,7 @@ def get_company(client_service, company_name):
 # [START jobs_update_company]
 def update_company(client_service, company_name, company_to_be_updated):
     try:
-        request = {'company' : company_to_be_updated}
+        request = {'company': company_to_be_updated}
         company_updated = client_service.projects().companies().patch(
             name=company_name, body=request).execute()
         print('Company updated: %s' % company_updated)
@@ -94,8 +95,8 @@ def update_company_with_field_mask(client_service, company_name,
                                    company_to_be_updated, field_mask):
     try:
         request = {
-        'company' : company_to_be_updated,
-        'update_mask' : field_mask
+        'company': company_to_be_updated,
+        'update_mask': field_mask
         }
         company_updated = client_service.projects().companies().patch(
             name=company_name,
@@ -111,7 +112,8 @@ def update_company_with_field_mask(client_service, company_name,
 # [START jobs_delete_company]
 def delete_company(client_service, company_name):
     try:
-        client_service.projects().companies().delete(name=company_name).execute()
+        client_service.projects().companies().delete(
+            name=company_name).execute()
         print('Company deleted')
     except Error as e:
         print('Got exception while deleting company')

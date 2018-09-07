@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2018 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ import string
 import time
 
 # [START instantiate]
-from googleapiclient.discovery import build
-from googleapiclient.errors import Error
 import os
+
+from googleapiclient.discovery import build
 
 client_service = build('jobs', 'v3')
 parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
@@ -55,7 +55,7 @@ def generate_job_with_custom_attributes(company_name):
         'company_name': company_name,
         'requisition_id': requisition_id,
         'title': job_title,
-        'application_info': { 'uris': application_urls },
+        'application_info': {'uris': application_urls},
         'description': description,
         'custom_attributes': custom_attributes
     }
@@ -80,7 +80,8 @@ def custom_attribute_filter_string_value(client_service):
         'job_view': 'JOB_VIEW_FULL'
     }
 
-    response = client_service.projects().jobs().search(parent=parent, body=request).execute()
+    response = client_service.projects().jobs().search(
+        parent=parent, body=request).execute()
     print(response)
 # [END custom_attribute_filter_string_value]
 
@@ -102,7 +103,8 @@ def custom_attribute_filter_long_value(client_service):
         'job_view': 'JOB_VIEW_FULL'
     }
 
-    response = client_service.projects().jobs().search(parent=parent, body=request).execute()
+    response = client_service.projects().jobs().search(
+        parent=parent, body=request).execute()
     print(response)
 # [END custom_attribute_filter_long_value]
 
@@ -125,7 +127,8 @@ def custom_attribute_filter_multi_attributes(client_service):
         'job_view': 'JOB_VIEW_FULL'
     }
 
-    response = client_service.projects().jobs().search(parent=parent, body=request).execute()
+    response = client_service.projects().jobs().search(
+        parent=parent, body=request).execute()
     print(response)
 # [END custom_attribute_filter_multi_attributes]
 

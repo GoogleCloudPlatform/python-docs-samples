@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2018 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
 import time
 
 # [START instantiate]
-from googleapiclient.discovery import build
-from googleapiclient.errors import Error
 import os
+
+from googleapiclient.discovery import build
 
 client_service = build('jobs', 'v3')
 parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
@@ -42,7 +42,8 @@ def basic_keyword_search(client_service, company_name, keyword):
         'job_query': job_query,
     }
 
-    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
+    response = client_service.projects().jobs().search(
+        parent=parent, body=request).execute()
     print(response)
 # [END basic_keyword_search]
 
@@ -63,7 +64,8 @@ def category_search(client_service, company_name, categories):
         'job_query': job_query,
     }
 
-    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
+    response = client_service.projects().jobs().search(
+        parent=parent, body=request).execute()
     print(response)
 # [END category_filter]
 
@@ -84,7 +86,8 @@ def employment_types_search(client_service, company_name, employment_types):
         'job_query': job_query,
     }
 
-    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
+    response = client_service.projects().jobs().search(
+        parent=parent, body=request).execute()
     print(response)
 # [END employment_types_filter]
 
@@ -105,7 +108,8 @@ def date_range_search(client_service, company_name, date_range):
         'job_query': job_query,
     }
 
-    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
+    response = client_service.projects().jobs().search(
+        parent=parent, body=request).execute()
     print(response)
 # [END date_range_filter]
 
@@ -126,7 +130,8 @@ def language_code_search(client_service, company_name, language_codes):
         'job_query': job_query,
     }
 
-    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
+    response = client_service.projects().jobs().search(
+        parent=parent, body=request).execute()
     print(response)
 # [END language_code_filter]
 
@@ -148,7 +153,8 @@ def company_display_name_search(client_service, company_name,
         'job_query': job_query,
     }
 
-    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
+    response = client_service.projects().jobs().search(
+        parent=parent, body=request).execute()
     print(response)
 # [END company_display_name_filter]
 
@@ -185,7 +191,8 @@ def compensation_search(client_service, company_name):
         'job_query': job_query,
     }
 
-    response = client_service.projects().jobs().search(parent=parent,body=request).execute()
+    response = client_service.projects().jobs().search(
+        parent=parent, body=request).execute()
     print(response)
 # [END compensation_filter]
 

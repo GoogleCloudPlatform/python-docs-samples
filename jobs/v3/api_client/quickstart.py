@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2018 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,9 +15,10 @@
 # limitations under the License.
 
 # [START quickstart]
+import os
+
 from googleapiclient.discovery import build
 from googleapiclient.errors import Error
-import os
 
 client_service = build('jobs', 'v3')
 
@@ -25,7 +26,9 @@ client_service = build('jobs', 'v3')
 def run_sample():
     try:
         project_id = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
-        list_companies_response = client_service.projects().companies().list(parent = project_id).execute()
+        list_companies_response = 
+            client_service.projects().companies().list(
+                parent = project_id).execute()
         print('Request Id: %s' %
               list_companies_response.get('metadata').get('requestId'))
         print('Companies:')

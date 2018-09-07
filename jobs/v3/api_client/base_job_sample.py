@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2018 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,9 +18,10 @@ import random
 import string
 
 # [START instantiate]
+import os
+
 from googleapiclient.discovery import build
 from googleapiclient.errors import Error
-import os
 
 client_service = build('jobs', 'v3')
 parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
@@ -42,7 +43,7 @@ def generate_job_with_required_fields(company_name):
     job = {
         'requisition_id': requisition_id,
         'title': job_title,
-        'application_info': {'uris' : application_uris},
+        'application_info': {'uris': application_uris},
         'description': description,
         'company_name': company_name
     }
@@ -68,7 +69,8 @@ def create_job(client_service, job_to_be_created):
 # [START get_job]
 def get_job(client_service, job_name):
     try:
-        job_existed = client_service.projects().jobs().get(name=job_name).execute()
+        job_existed = client_service.projects().jobs().get(
+            name=job_name).execute()
         print('Job existed: %s' % job_existed)
         return job_existed
     except Error as e:

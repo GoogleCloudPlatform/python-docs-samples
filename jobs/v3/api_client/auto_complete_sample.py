@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2018 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
 import time
 
 # [START instantiate]
-from googleapiclient.discovery import build
-from googleapiclient.errors import Error
 import os
+
+from googleapiclient.discovery import build
 
 client_service = build('jobs', 'v3')
 name = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
@@ -29,7 +29,8 @@ name = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
 # [START auto_complete_job_title]
 def job_title_auto_complete(client_service, query, company_name):
     complete = client_service.projects().complete(
-        name=name, query=query, languageCode='en-US', type='JOB_TITLE', pageSize=10)
+        name=name, query=query, 
+        languageCode='en-US', type='JOB_TITLE', pageSize=10)
     if company_name is not None:
         complete.companyName = company_name
 
