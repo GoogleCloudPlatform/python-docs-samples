@@ -35,8 +35,7 @@ bucket.
 # --------------------------------------------------------------------------------
 
 import csv
-from datetime import datetime
-from datetime import timedelta
+import datetime
 import logging
 
 from airflow import models
@@ -53,13 +52,13 @@ from gcs_plugin.operators import gcs_to_gcs
 
 default_args = {
     'owner': 'airflow',
-    'start_date': datetime.today(),
+    'start_date': datetime.datetime.today(),
     'depends_on_past': False,
     'email': [''],
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 1,
-    'retry_delay': timedelta(minutes=5),
+    'retry_delay': datetime.timedelta(minutes=5),
 }
 
 # --------------------------------------------------------------------------------
