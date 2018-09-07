@@ -21,7 +21,8 @@ from cryptography.hazmat.backends.openssl.ec import _EllipticCurvePublicKey
 from cryptography.hazmat.backends.openssl.rsa import _RSAPublicKey
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
-import sample
+
+import asymmetric as sample
 
 
 def create_key_helper(key_id, key_path, purpose, algorithm, t):
