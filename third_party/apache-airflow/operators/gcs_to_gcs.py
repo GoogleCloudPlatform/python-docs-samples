@@ -17,9 +17,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from gcs_plugin.hooks.gcs_hook import GoogleCloudStorageHook
 from airflow.models import BaseOperator
 from airflow.utils.decorators import apply_defaults
+from gcs_plugin.hooks.gcs_hook import GoogleCloudStorageHook
 
 
 class GoogleCloudStorageToGoogleCloudStorageOperator(BaseOperator):
