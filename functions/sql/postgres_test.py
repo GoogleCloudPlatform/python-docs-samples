@@ -24,11 +24,8 @@ env_vars = {
   'INSTANCE_CONNECTION_NAME': os.getenv('POSTGRES_INSTANCE')
 }
 
-date_regex = re.compile('\d{4}-\d{1,2}-\d{1,2}\s\d{1,2}:\d{1,2}:\d{1,2}')
-
 
 @mock.patch.dict(os.environ, env_vars)
 def test_postgres():
     import postgres_sample
-    results = postgres_sample.postgres_demo(None)
-    assert date_regex.match(results)
+    postgres_sample.postgres_demo(None)
