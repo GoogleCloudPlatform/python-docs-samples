@@ -36,6 +36,7 @@ bucket.
 
 import csv
 import datetime
+import io
 import logging
 
 from airflow import models
@@ -98,7 +99,7 @@ def read_table_list(table_list_file):
     table_list = []
     logger.info('Reading table_list_file from : %s' % str(table_list_file))
     try:
-        with open(table_list_file, 'rb') as csv_file:
+        with io.open(table_list_file, 'rt', encoding='utf-8') as csv_file:
             csv_reader = csv.reader(csv_file)
             next(csv_reader)  # skip the headers
             for row in csv_reader:

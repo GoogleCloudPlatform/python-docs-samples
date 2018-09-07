@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-    GCS Plugin
-    This plugin provides an interface to GCS operator from Airflow Master.
+"""GCS Plugin
+
+This plugin provides an interface to GCS operator from Airflow Master.
 """
 
 from airflow.plugins_manager import AirflowPlugin

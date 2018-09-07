@@ -11,9 +11,28 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 import os
+import os.path
+import sys
 
 from airflow import models
+import pytest
+
+
+@pytest.fixture(scope='module', autouse=True)
+def gcs_plugin():
+    plugins_dir = os.path.abspath(os.path.join(
+        os.path.dirname(__file__),
+        '..',
+        '..',
+        'third_party',
+        'apache-airflow',
+        'plugins',
+    ))
+    sys.path.append(plugins_dir)
+    yield
+    sys.path.remove(plugins_dir)
 
 
 def test_dag_import():
@@ -29,3 +48,4 @@ def test_dag_import():
     models.Variable.set('table_list_file_path', example_file_path)
     models.Variable.set('gcs_source_bucket', 'example-project')
     models.Variable.set('gcs_dest_bucket', 'us-central1-f')
+    from . import bq_copy_across_locations  # noqa
