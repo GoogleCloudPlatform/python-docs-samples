@@ -14,10 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import time
-
 # [START instantiate]
 import os
+import time
 
 from googleapiclient.discovery import build
 
@@ -29,7 +28,7 @@ name = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
 # [START auto_complete_job_title]
 def job_title_auto_complete(client_service, query, company_name):
     complete = client_service.projects().complete(
-        name=name, query=query, 
+        name=name, query=query,
         languageCode='en-US', type='JOB_TITLE', pageSize=10)
     if company_name is not None:
         complete.companyName = company_name

@@ -14,11 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import random
-import string
-
 # [START instantiate]
 import os
+import random
+import string
 
 from googleapiclient.discovery import build
 from googleapiclient.errors import Error

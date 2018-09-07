@@ -14,11 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import random
-import string
 
 # [START jobs_instantiate]
 import os
+import random
+import string
 
 from googleapiclient.discovery import build
 from googleapiclient.errors import Error
@@ -95,8 +95,8 @@ def update_company_with_field_mask(client_service, company_name,
                                    company_to_be_updated, field_mask):
     try:
         request = {
-        'company': company_to_be_updated,
-        'update_mask': field_mask
+            'company': company_to_be_updated,
+            'update_mask': field_mask
         }
         company_updated = client_service.projects().companies().patch(
             name=company_name,

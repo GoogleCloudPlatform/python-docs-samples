@@ -14,12 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START instantiate]
+import os
 import random
 import string
 import time
-
-# [START instantiate]
-import os
 
 from googleapiclient.discovery import build
 
@@ -70,7 +69,7 @@ def search_featured_job(client_service, company_name):
     }
 
     response = client_service.projects().jobs().search(
-        parent=parent,body=request).execute()
+        parent=parent, body=request).execute()
     print(response)
 # [END search_featured_job]
 

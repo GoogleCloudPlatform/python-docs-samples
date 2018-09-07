@@ -14,12 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import random
-import string
-import time
 
 # [START instantiate]
 import os
+import random
+import string
+import time
 
 from googleapiclient.discovery import build
 
