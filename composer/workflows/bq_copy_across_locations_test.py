@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from airflow import models
+import os
 
 
 def test_dag_import():
@@ -22,6 +23,9 @@ def test_dag_import():
     environment. This is a recommended sanity check by the official Airflow
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
-    models.Variable.set('master_file_path', 'example_file_path')
+    example_file_path = os.path.join(
+        os.path.abspath(os.path.dirname(__file__)),
+        'bq_copy_eu_to_us_sample.csv')
+    models.Variable.set('table_list_file_path', example_file_path)
     models.Variable.set('gcs_source_bucket', 'example-project')
     models.Variable.set('gcs_dest_bucket', 'us-central1-f')
