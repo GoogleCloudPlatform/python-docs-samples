@@ -40,7 +40,7 @@ def _list_files(folder, pattern):
 
 def _collect_dirs(
         start_dir,
-        blacklist=set(['conftest.py', 'nox.py', 'lib']),
+        blacklist=set(['conftest.py', 'nox.py', 'lib', 'third_party']),
         suffix='_test.py',
         recurse_further=False):
     """Recursively collects a list of dirs that contain a file matching the
