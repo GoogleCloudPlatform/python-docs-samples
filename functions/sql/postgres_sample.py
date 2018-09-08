@@ -15,7 +15,7 @@
 # [START functions_sql_postgres]
 from os import getenv
 
-import psycopg2
+from psycopg2.pool import SimpleConnectionPool
 
 is_production = getenv('SUPERVISOR_HOSTNAME') is not None
 
@@ -31,13 +31,14 @@ if is_production:
 else:
     pg_config['host'] = 'localhost'
 
-# Create SQL connection globally to enable reuse
-pg_connection = psycopg2.connect(**pg_config)
+pg_pool = SimpleConnectionPool(1, 1, **pg_config)
 
 
 def postgres_demo(request):
-    with pg_connection.cursor() as cursor:
+    with pg_pool.getconn().cursor() as cursor:
         cursor.execute('SELECT NOW() as now')
         results = cursor.fetchone()
         return str(results[0])
 # [END functions_sql_postgres]
+
+print(postgres_demo(None))
