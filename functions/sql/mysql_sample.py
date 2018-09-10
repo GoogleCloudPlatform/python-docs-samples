@@ -20,10 +20,17 @@ import pymysql
 is_production = getenv('SUPERVISOR_HOSTNAME') is not None
 
 # TODO(developer): specify SQL connection details
+CONNECTION_NAME = getenv(
+  'INSTANCE_CONNECTION_NAME',
+  '<YOUR INSTANCE CONNECTION NAME>')
+DB_USER = getenv('MYSQL_USER', '<YOUR DB USER>')
+DB_PASSWORD = getenv('MYSQL_PASSWORD', '<YOUR DB PASSWORD>')
+DB_NAME = getenv('MYSQL_DATABASE', '<YOUR DB NAME>')
+
 mysql_config = {
-  'user': getenv('MYSQL_USER'),
-  'password': getenv('MYSQL_PASSWORD'),
-  'db': getenv('MYSQL_DATABASE'),
+  'user': DB_USER,
+  'password': DB_PASSWORD,
+  'db': DB_NAME,
   'charset': 'utf8mb4',
   'cursorclass': pymysql.cursors.DictCursor,
   'autocommit': True
@@ -31,7 +38,7 @@ mysql_config = {
 
 if is_production:
     mysql_config['unix_socket'] = \
-      '/cloudsql/' + getenv('INSTANCE_CONNECTION_NAME')
+      '/cloudsql/' + CONNECTION_NAME
 
 # Create SQL connection globally to enable reuse
 # PyMySQL does not include support for connection pooling

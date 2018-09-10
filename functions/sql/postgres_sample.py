@@ -20,14 +20,21 @@ from psycopg2.pool import SimpleConnectionPool
 is_production = getenv('SUPERVISOR_HOSTNAME') is not None
 
 # TODO(developer): specify SQL connection details
+CONNECTION_NAME = getenv(
+  'INSTANCE_CONNECTION_NAME',
+  '<YOUR INSTANCE CONNECTION NAME>')
+DB_USER = getenv('POSTGRES_USER', '<YOUR DB USER>')
+DB_PASSWORD = getenv('POSTGRES_PASSWORD', '<YOUR DB PASSWORD>')
+DB_NAME = getenv('POSTGRES_DATABASE', '<YOUR DB NAME>')
+
 pg_config = {
-  'user': getenv('SQL_USER'),
-  'password': getenv('SQL_PASSWORD'),
-  'dbname': getenv('SQL_DATABASE'),
+  'user': DB_USER,
+  'password': DB_PASSWORD,
+  'dbname': DB_NAME,
 }
 
 if is_production:
-    pg_config['host'] = '/cloudsql/' + getenv('INSTANCE_CONNECTION_NAME')
+    pg_config['host'] = '/cloudsql/' + CONNECTION_NAME
 else:
     pg_config['host'] = 'localhost'
 
