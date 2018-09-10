@@ -31,10 +31,22 @@ if is_production:
 else:
     pg_config['host'] = 'localhost'
 
-pg_pool = SimpleConnectionPool(1, 1, **pg_config)
+# Connection pools reuse connections between invocations,
+# and handle dropped or expired connections automatically.
+pg_pool = None
 
 
 def postgres_demo(request):
+    global pg_pool
+
+    # Initialize the pool lazily, in case SQL access isn't needed for this
+    # GCF instance. Doing so minimizes the number of active SQL connections,
+    # which helps keep your GCF instances under SQL connection limits.
+    if not pg_pool:
+        pg_pool = SimpleConnectionPool(1, 1, **pg_config)
+
+    # Remember to close SQL resources declared while running this function.
+    # Keep any declared in global scope (e.g. pg_pool) for later reuse.
     with pg_pool.getconn().cursor() as cursor:
         cursor.execute('SELECT NOW() as now')
         results = cursor.fetchone()

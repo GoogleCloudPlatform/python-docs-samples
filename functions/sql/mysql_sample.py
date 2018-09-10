@@ -34,7 +34,8 @@ if is_production:
       '/cloudsql/' + getenv('INSTANCE_CONNECTION_NAME')
 
 # Create SQL connection globally to enable reuse
-mysql_connection = pymysql.connect(**mysql_config)
+# PyMySQL does not include support for connection pooling
+mysql_conn = pymysql.connect(**mysql_config)
 
 
 def __get_cursor():
@@ -44,13 +45,15 @@ def __get_cursor():
       so we must reconnect explicitly using ping()
     """
     try:
-        return mysql_connection.cursor()
+        return mysql_conn.cursor()
     except Exception:
-        mysql_connection.ping(reconnect=True)
-        return mysql_connection.cursor()
+        mysql_conn.ping(reconnect=True)
+        return mysql_conn.cursor()
 
 
 def mysql_demo(request):
+    # Remember to close SQL resources declared while running this function.
+    # Keep any declared in global scope (e.g. mysql_conn) for later reuse.
     with __get_cursor() as cursor:
         cursor.execute('SELECT NOW() as now')
         results = cursor.fetchone()
