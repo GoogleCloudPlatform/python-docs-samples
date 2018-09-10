@@ -21,9 +21,9 @@ is_production = getenv('SUPERVISOR_HOSTNAME') is not None
 
 # TODO(developer): specify SQL connection details
 mysql_config = {
-  'user': getenv('SQL_USER'),
-  'password': getenv('SQL_PASSWORD'),
-  'db': getenv('SQL_DATABASE'),
+  'user': getenv('MYSQL_USER'),
+  'password': getenv('MYSQL_PASSWORD'),
+  'db': getenv('MYSQL_DATABASE'),
   'charset': 'utf8mb4',
   'cursorclass': pymysql.cursors.DictCursor,
   'autocommit': True
@@ -45,9 +45,10 @@ def __get_cursor():
     """
     try:
         return mysql_connection.cursor()
-    except:
+    except Exception:
         mysql_connection.ping(reconnect=True)
         return mysql_connection.cursor()
+
 
 def mysql_demo(request):
     with __get_cursor() as cursor:

@@ -12,20 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import re
-
-import mock
-
-env_vars = {
-  'SQL_USER': os.getenv('POSTGRES_USER'),
-  'SQL_PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-  'SQL_NAME': os.getenv('POSTGRES_NAME'),
-  'INSTANCE_CONNECTION_NAME': os.getenv('POSTGRES_INSTANCE')
-}
+import postgres_sample
 
 
-@mock.patch.dict(os.environ, env_vars)
 def test_postgres():
-    import postgres_sample
     postgres_sample.postgres_demo(None)

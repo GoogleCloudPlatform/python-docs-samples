@@ -40,5 +40,3 @@ def postgres_demo(request):
         results = cursor.fetchone()
         return str(results[0])
 # [END functions_sql_postgres]
-
-print(postgres_demo(None))

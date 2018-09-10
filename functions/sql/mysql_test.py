@@ -12,20 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import re
-
-import mock
-
-env_vars = {
-  'SQL_USER': os.getenv('MYSQL_USER'),
-  'SQL_PASSWORD': os.getenv('MYSQL_PASSWORD'),
-  'SQL_NAME': os.getenv('MYSQL_NAME'),
-  'INSTANCE_CONNECTION_NAME': os.getenv('MYSQL_INSTANCE')
-}
+import mysql_sample
 
 
-@mock.patch.dict(os.environ, env_vars)
 def test_mysql():
-    import mysql_sample
     mysql_sample.mysql_demo(None)
