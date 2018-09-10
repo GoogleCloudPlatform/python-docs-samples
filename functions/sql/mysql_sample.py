@@ -37,8 +37,20 @@ if is_production:
 mysql_connection = pymysql.connect(**mysql_config)
 
 
+def __get_cursor():
+    """
+    Helper function to get a cursor
+      PyMySQL does NOT automatically reconnect,
+      so we must reconnect explicitly using ping()
+    """
+    try:
+        return mysql_connection.cursor()
+    except:
+        mysql_connection.ping(reconnect=True)
+        return mysql_connection.cursor()
+
 def mysql_demo(request):
-    with mysql_connection.cursor() as cursor:
+    with __get_cursor() as cursor:
         cursor.execute('SELECT NOW() as now')
         results = cursor.fetchone()
         return str(results['now'])
