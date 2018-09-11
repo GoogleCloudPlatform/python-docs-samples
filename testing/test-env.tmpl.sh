@@ -1,5 +1,6 @@
 # Environment variables for system tests.
 export GCLOUD_PROJECT=your-project-id
+export GOOGLE_CLOUD_PROJECT=$GCLOUD_PROJECT
 export CLOUD_STORAGE_BUCKET=$GCLOUD_PROJECT
 export API_KEY=
 export BIGTABLE_CLUSTER=bigtable-test

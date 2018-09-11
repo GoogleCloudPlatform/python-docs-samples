@@ -12,6 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os.path
+import sys
+
+import pytest
+
+
+@pytest.fixture(scope='module', autouse=True)
+def local_deps():
+    """Add local directory to the PYTHONPATH to allow absolute imports.
+
+    Relative imports do not work in Airflow workflow definitions.
+    """
+    workflows_dir = os.path.abspath(os.path.dirname(__file__))
+    sys.path.append(workflows_dir)
+    yield
+    sys.path.remove(workflows_dir)
+
 
 def test_dag_import():
     """Test that the DAG file can be successfully imported.
