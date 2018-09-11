@@ -27,7 +27,7 @@ import os
 
 def predict(project_id, compute_region, model_id, file_path):
     """Classify the content."""
-    # [START automl_natural_language_predict]
+    # [START automl_language_predict]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
@@ -62,7 +62,7 @@ def predict(project_id, compute_region, model_id, file_path):
         print("Predicted class name: {}".format(result.display_name))
         print("Predicted class score: {}".format(result.classification.score))
 
-    # [END automl_natural_language_predict]
+    # [END automl_language_predict]
 
 
 if __name__ == "__main__":

@@ -224,8 +224,7 @@ def delete_dataset(project_id, compute_region, dataset_id):
 
     # synchronous check of operation status.
     print("Dataset deleted. {}".format(response.result()))
-
-    # [END automl_visionl_delete_dataset]
+    # [END automl_vision_delete_dataset]
 
 
 if __name__ == "__main__":
