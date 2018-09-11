@@ -149,6 +149,17 @@ def hello_method(request):
 
 def hello_error_1(request):
     # [START functions_helloworld_error]
+    # This WILL be reported to Stackdriver Error
+    # Reporting, and WILL NOT show up in logs or
+    # terminate the function.
+    from google.cloud import error_reporting
+    client = error_reporting.Client()
+
+    try:
+        raise RuntimeError('I failed you')
+    except RuntimeError:
+        client.report_exception()
+
     # This WILL be reported to Stackdriver Error Reporting,
     # and WILL terminate the function
     raise RuntimeError('I failed you')
