@@ -21,8 +21,6 @@ setup:
 - install_deps
 
 samples:
-- name: Quickstart
-  file: quickstart.py
 - name: Snippets
   file: snippets.py
   show_help: true
