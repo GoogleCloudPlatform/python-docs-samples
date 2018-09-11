@@ -41,7 +41,7 @@ gcloud beta tasks queues create-app-engine-queue my-appengine-queue
 Note: A newly created queue will route to the default App Engine service and
 version unless configured to do otherwise.
 
-## Deploying the App Engine app
+## Deploying the App Engine App
 
 Deploy the App Engine app with gcloud:
 
@@ -56,14 +56,14 @@ gcloud app browse
 ```
 
 The App Engine app serves as a target for the push requests. It has an
-endpoint `/log_payload` that reads the payload (i.e., the request body) of the
-HTTP POST request and logs it. The log output can be viewed with:
+endpoint `/example_task_handler` that reads the payload (i.e., the request body)
+of the HTTP POST request and logs it. The log output can be viewed with:
 
 ```
 gcloud app logs read
 ```
 
-## Running the Samples
+## Run the Sample Using the Command Line
 
 Set environment variables:
 
@@ -90,7 +90,8 @@ location is "us-central1").
 export LOCATION_ID=us-central1
 ```
 
-Create a task, targeted at the `log_payload` endpoint, with a payload specified:
+Running the sample will create a task, targeted at the 'example_task_handler'
+endpoint, with a payload specified:
 
 ```
 python create_app_engine_queue_task.py --project=$PROJECT_ID --queue=$QUEUE_ID --location=$LOCATION_ID --payload=hello
