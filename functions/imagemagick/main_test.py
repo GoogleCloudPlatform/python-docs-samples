@@ -12,15 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from collections import UserDict
 import uuid
 
 from mock import MagicMock, patch
 
 import main
-
-
-class DictObject(dict):
-    pass
 
 
 @patch('main.__blur_image')
@@ -31,8 +28,8 @@ def test_process_offensive_image(
   vision_client,
   storage_client,
   capsys):
-    result = DictObject()
-    result.safe_search_annotation = DictObject()
+    result = UserDict()
+    result.safe_search_annotation = UserDict()
     result.safe_search_annotation.adult = 5
     result.safe_search_annotation.violence = 5
     vision_client.safe_search_detection = MagicMock(return_value=result)
@@ -59,8 +56,8 @@ def test_process_safe_image(
   vision_client,
   storage_client,
   capsys):
-    result = DictObject()
-    result.safe_search_annotation = DictObject()
+    result = UserDict()
+    result.safe_search_annotation = UserDict()
     result.safe_search_annotation.adult = 1
     result.safe_search_annotation.violence = 1
     vision_client.safe_search_detection = MagicMock(return_value=result)
@@ -91,7 +88,7 @@ def test_blur_image(image_mock, os_mock, capsys):
     image_mock.return_value = image_mock
     image_mock.__enter__.return_value = image_mock
 
-    blob = DictObject()
+    blob = UserDict()
     blob.name = filename
     blob.download_to_filename = MagicMock()
     blob.upload_from_filename = MagicMock()
