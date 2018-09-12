@@ -28,19 +28,11 @@ vision_client = vision.ImageAnnotatorClient()
 # [START functions_imagemagick_analyze]
 # Blurs uploaded images that are flagged as Adult or Violence.
 def blur_offensive_images(data, context):
-    file = data
+    file_data = data
 
-    # Exit if this is a deletion or a deploy event.
-    if 'name' not in file:
-        print('This is a deploy event.')
-        return
-    elif file.get('resource_state', None) == 'not_exists':
-        print('This is a deletion event.')
-        return
-
-    file_name = file['name']
-    blob = storage_client.bucket(file['bucket']).get_blob(file_name)
-    blob_uri = 'gs://%s/%s' % (file['bucket'], file_name)
+    file_name = file_data['name']
+    blob = storage_client.bucket(file_data['bucket']).get_blob(file_name)
+    blob_uri = 'gs://%s/%s' % (file_data['bucket'], file_name)
     blob_source = {'source': {'image_uri': blob_uri}}
 
     print('Analyzing %s.' % file_name)
@@ -59,8 +51,6 @@ def blur_offensive_images(data, context):
 # [START functions_imagemagick_blur]
 # Blurs the given file using ImageMagick.
 def __blur_image(blob):
-    print(blob)
-
     file_name = blob.name
     temp_local_filename = '/tmp/%s' % os.path.basename(file_name)
 
