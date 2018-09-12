@@ -26,7 +26,6 @@ import time
 import logging
 import random
 import multiprocessing
-from collections import defaultdict
 
 from google.cloud import pubsub_v1
 
@@ -277,19 +276,21 @@ def synchronous_pull_with_lease_management(project, subscription_name):
             time.strftime("%X", time.gmtime()), msg.message.data, RUN_TIME))
         time.sleep(RUN_TIME)
 
-    # `d` stores process as key and ack id and message as values.
-    d = defaultdict(lambda: (str, str))
-    for received_message in response.received_messages:
-        process = multiprocessing.Process(target=worker,
-            args=(received_message,))
-        d[process] = (received_message.ack_id, received_message.message.data)
+    # `processes` stores process as key and ack id and message as values.
+    processes = dict()
+    for message in response.received_messages:
+        process = multiprocessing.Process(target=worker, args=(message,))
+        processes[process] = (message.ack_id, message.message.data)
         process.start()
 
-    ACK_DEADLINE=60
+    ACK_DEADLINE=30
+    SLEEP_TIME=10
 
-    while d:
-        for process, (ack_id, msg_data) in d.items():
-            # If the process is still running, reset the ack deadline.
+    while processes:
+        for process, (ack_id, msg_data) in processes.items():
+            # If the process is still running, reset the ack deadline as
+            # specified by ACK_DEADLINE, and once every while as specified
+            # by SLEEP_TIME.
             if process.is_alive():
                 # `ack_deadline_seconds` must be between 10s to 600s.
                 subscriber.modify_ack_deadline(subscription_path,
@@ -302,11 +303,11 @@ def synchronous_pull_with_lease_management(project, subscription_name):
                 subscriber.acknowledge(subscription_path, [ack_id])
                 logger.info("{}: Acknowledged {}".format(
                     time.strftime("%X", time.gmtime()), msg_data))
-                d.pop(process)
+                processes.pop(process)
 
-        # Sleeps the thread for 10s to save resources.
-        if d:
-            time.sleep(10)
+        # Sleeps the thread to save resources.
+        if processes:
+            time.sleep(SLEEP_TIME)
 
     print("Received and acknowledged all messages. Done.")
     # [END pubsub_subscriber_sync_pull_with_lease]
