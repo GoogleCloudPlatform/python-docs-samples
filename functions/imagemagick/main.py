@@ -15,10 +15,9 @@
 
 # [START functions_imagemagick_setup]
 import os
-import subprocess
 
 from google.cloud import storage, vision
-
+from wand.image import Image
 
 storage_client = storage.Client()
 vision_client = vision.ImageAnnotatorClient()
@@ -59,12 +58,10 @@ def __blur_image(blob):
     print('Image %s was downloaded to %s.' % (file_name, temp_local_filename))
 
     # Blur the image using ImageMagick.
-    subprocess.check_call([
-        'convert', temp_local_filename,
-        '-channel', 'RGBA',
-        '-blur', '0x24',
-        temp_local_filename
-    ])
+    with Image(filename=temp_local_filename) as image:
+        image.resize(*image.size, blur=16, filter='hamming')
+        image.save(filename=temp_local_filename)
+
     print('Image %s was blurred.' % file_name)
 
     # Upload the Blurred image back into the bucket.

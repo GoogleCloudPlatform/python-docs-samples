@@ -24,32 +24,6 @@ class DictObject(dict):
 
 
 @patch('main.__blur_image')
-def test_do_nothing_on_delete(__blur_image, capsys):
-    __blur_image = MagicMock()
-    data = {
-      'resource_state': 'not_exists',
-      'name': ''
-    }
-
-    main.blur_offensive_images(data, None)
-
-    out, _ = capsys.readouterr()
-    assert 'This is a deletion event.' in out
-    assert __blur_image.called is False
-
-
-@patch('main.__blur_image')
-def test_do_nothing_on_deploy(__blur_image, capsys):
-    __blur_image = MagicMock()
-
-    main.blur_offensive_images({}, None)
-
-    out, _ = capsys.readouterr()
-    assert 'This is a deploy event.' in out
-    assert __blur_image.called is False
-
-
-@patch('main.__blur_image')
 @patch('main.vision_client')
 @patch('main.storage_client')
 def test_process_offensive_image(
@@ -65,7 +39,6 @@ def test_process_offensive_image(
 
     filename = str(uuid.uuid4())
     data = {
-      'resource_state': '',
       'bucket': 'my-bucket',
       'name': filename
     }
@@ -94,7 +67,6 @@ def test_process_safe_image(
 
     filename = str(uuid.uuid4())
     data = {
-      'resource_state': '',
       'bucket': 'my-bucket',
       'name': filename
     }
@@ -108,15 +80,16 @@ def test_process_safe_image(
 
 
 @patch('main.os')
-@patch('main.subprocess')
-def test_blur_image(subprocess_mock, os_mock, capsys):
+@patch('main.Image')
+def test_blur_image(image_mock, os_mock, capsys):
     filename = str(uuid.uuid4())
 
     os_mock.remove = MagicMock()
     os_mock.path = MagicMock()
     os_mock.path.basename = MagicMock(side_effect=(lambda x: x))
 
-    subprocess_mock.check_call = MagicMock()
+    image_mock.return_value = image_mock
+    image_mock.__enter__.return_value = image_mock
 
     blob = DictObject()
     blob.name = filename
@@ -131,4 +104,4 @@ def test_blur_image(subprocess_mock, os_mock, capsys):
     assert 'Image %s was blurred.' % filename in out
     assert 'Blurred image was uploaded to %s.' % filename in out
     assert os_mock.remove.called
-    assert subprocess_mock.check_call.called
+    assert image_mock.resize.called
