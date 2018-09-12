@@ -1,6 +1,8 @@
 # Environment variables for system tests.
 export GCLOUD_PROJECT=your-project-id
 export GOOGLE_CLOUD_PROJECT=$GCLOUD_PROJECT
+export FIRESTORE_PROJECT=
+
 export CLOUD_STORAGE_BUCKET=$GCLOUD_PROJECT
 export API_KEY=
 export BIGTABLE_CLUSTER=bigtable-test
@@ -8,6 +10,16 @@ export BIGTABLE_ZONE=us-central1-c
 export SPANNER_INSTANCE=
 export COMPOSER_LOCATION=us-central1
 export COMPOSER_ENVIRONMENT=
+export CLOUD_KMS_KEY=
+
+export MYSQL_INSTANCE=
+export MYSQL_USER=
+export MYSQL_PASSWORD=
+export MYSQL_DATABASE=
+export POSTGRES_INSTANCE=
+export POSTGRES_USER=
+export POSTGRES_PASSWORD=
+export POSTGRES_DATABASE=
 
 # Environment variables for App Engine Flexible system tests.
 export GA_TRACKING_ID=
