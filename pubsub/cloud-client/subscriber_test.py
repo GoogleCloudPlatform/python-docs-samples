@@ -160,6 +160,17 @@ def test_receive(publisher_client, topic, subscription, capsys):
     assert 'Message 1' in out
 
 
+def test_receive_synchronously(
+        publisher_client, topic, subscription, capsys):
+    _publish_messages(publisher_client, topic)
+
+    subscriber.receive_messages_synchronously(PROJECT, SUBSCRIPTION)
+    subscriber.synchronous_pull_with_lease_management(PROJECT, SUBSCRIPTION)
+
+    out, _ = capsys.readouterr()
+    assert 'Received and acknowledged all messages. Done.' in out
+
+
 def test_receive_with_custom_attributes(
         publisher_client, topic, subscription, capsys):
     _publish_messages_with_custom_attributes(publisher_client, topic)
@@ -188,18 +199,3 @@ def test_receive_with_flow_control(
     assert 'Listening' in out
     assert subscription in out
     assert 'Message 1' in out
-
-
-def test_receive_synchronously(
-        publisher_client, topic, subscription, capsys):
-    _publish_messages(publisher_client, topic)
-
-    with _make_sleep_patch():
-        with pytest.raises(RuntimeError, match='sigil'):
-            subscriber.receive_messages_with_flow_control(
-                PROJECT, SUBSCRIPTION)
-
-    out, _ = capsys.readouterr()
-    assert 'Message 1' in out
-    assert 'Message 2' in out
-    assert 'Message 3' in out

@@ -23,6 +23,10 @@ at https://cloud.google.com/pubsub/docs.
 
 import argparse
 import time
+import logging
+import random
+import multiprocessing
+from collections import defaultdict
 
 from google.cloud import pubsub_v1
 
@@ -239,7 +243,73 @@ def receive_messages_synchronously(project, subscription_name):
 
     # Acknowledges the received messages so they will not be sent again.
     subscriber.acknowledge(subscription_path, ack_ids)
+
+    print("Received and acknowledged all messages. Done.")
     # [END pubsub_subscriber_sync_pull]
+
+
+def synchronous_pull_with_lease_management(project, subscription_name):
+    """Pulling messages synchronously with lease management"""
+    # [START pubsub_subscriber_sync_pull_with_lease]
+    # project           = "Your Google Cloud Project ID"
+    # subscription_name = "Your Pubsub subscription name"
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_path = subscriber.subscription_path(
+        project, subscription_name)
+
+    NUM_MESSAGES = 2
+    # Builds a pull request with a specific number of messages to return.
+    # `return_immediately` is set to False so that the system waits (for a
+    # bounded amount of time) until at lease one message is available.
+    response = subscriber.pull(
+        subscription_path,
+        max_messages=NUM_MESSAGES,
+        return_immediately=False)
+
+    multiprocessing.log_to_stderr()
+    logger = multiprocessing.get_logger()
+    logger.setLevel(logging.INFO)
+
+    def worker(msg):
+        """Simulates a long-running process."""
+        RUN_TIME = random.randint(1,60)
+        logger.info('{}: Running {} for {}s'.format(
+            time.strftime("%X", time.gmtime()), msg.message.data, RUN_TIME))
+        time.sleep(RUN_TIME)
+
+    # `d` stores process as key and ack id and message as values.
+    d = defaultdict(lambda: (str, str))
+    for received_message in response.received_messages:
+        process = multiprocessing.Process(target=worker,
+            args=(received_message,))
+        d[process] = (received_message.ack_id, received_message.message.data)
+        process.start()
+
+    ACK_DEADLINE=60
+
+    while d:
+        for process, (ack_id, msg_data) in d.items():
+            # If the process is still running, reset the ack deadline.
+            if process.is_alive():
+                # `ack_deadline_seconds` must be between 10s to 600s.
+                subscriber.modify_ack_deadline(subscription_path,
+                    [ack_id], ack_deadline_seconds=ACK_DEADLINE)
+                logger.info('{}: Reset ack deadline for {} for {}s'.format(
+                    time.strftime("%X", time.gmtime()), msg_data, ACK_DEADLINE))
+
+            # Otherwise, acknowledges using `ack_id`.
+            else:
+                subscriber.acknowledge(subscription_path, [ack_id])
+                logger.info("{}: Acknowledged {}".format(
+                    time.strftime("%X", time.gmtime()), msg_data))
+                d.pop(process)
+
+        # Sleeps the thread for 10s to save resources.
+        if d:
+            time.sleep(10)
+
+    print("Received and acknowledged all messages. Done.")
+    # [END pubsub_subscriber_sync_pull_with_lease]
 
 
 def listen_for_errors(project, subscription_name):
@@ -323,6 +393,11 @@ if __name__ == '__main__':
         help=receive_messages_synchronously.__doc__)
     receive_messages_synchronously_parser.add_argument('subscription_name')
 
+    receive_messages_synchronously_with_lease_parser = subparsers.add_parser(
+        'receive-synchronously-with-lease',
+        help=synchronous_pull_with_lease_management.__doc__)
+    receive_messages_synchronously_with_lease_parser.add_argument('subscription_name')
+
     listen_for_errors_parser = subparsers.add_parser(
         'listen_for_errors', help=listen_for_errors.__doc__)
     listen_for_errors_parser.add_argument('subscription_name')
@@ -358,6 +433,9 @@ if __name__ == '__main__':
             args.project, args.subscription_name)
     elif args.command == 'receive-synchronously':
         receive_messages_synchronously(
+            args.project, args.subscription_name)
+    elif args.command == 'receive-synchronously-with-lease':
+        synchronous_pull_with_lease_management(
             args.project, args.subscription_name)
     elif args.command == 'listen_for_errors':
         listen_for_errors(args.project, args.subscription_name)
