@@ -17,7 +17,7 @@ from os import getenv
 
 import pymysql
 
-is_production = getenv('SUPERVISOR_HOSTNAME') is not None
+is_production = getenv('FUNCTION_REGION') is not None
 
 # TODO(developer): specify SQL connection details
 CONNECTION_NAME = getenv(
