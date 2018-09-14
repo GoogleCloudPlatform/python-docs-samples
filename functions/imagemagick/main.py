@@ -15,6 +15,7 @@
 
 # [START functions_imagemagick_setup]
 import os
+import tempfile
 
 from google.cloud import storage, vision
 from wand.image import Image
@@ -51,7 +52,7 @@ def blur_offensive_images(data, context):
 # Blurs the given file using ImageMagick.
 def __blur_image(blob):
     file_name = blob.name
-    temp_local_filename = '/tmp/%s' % os.path.basename(file_name)
+    _, temp_local_filename = tempfile.mkstemp()
 
     # Download file from bucket.
     blob.download_to_filename(temp_local_filename)
