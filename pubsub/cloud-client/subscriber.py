@@ -227,13 +227,15 @@ def receive_messages_synchronously(project, subscription_name):
     subscription_path = subscriber.subscription_path(
         project, subscription_name)
 
+    NUM_MESSAGES=3
     # Builds a pull request with a specific number of messages to return.
-    # `return_immediately` is set to False so that the system waits (for a
-    # bounded amount of time) until at lease one message is available.
+    # `return_immediately` is set to False so that the system waits until
+    # at lease one message is available before it times out.
     response = subscriber.pull(
         subscription_path,
-        max_messages=3,
-        return_immediately=False)
+        max_messages=NUM_MESSAGES,
+        return_immediately=False,
+        timeout=900)
 
     ack_ids = []
     for received_message in response.received_messages:
@@ -243,7 +245,7 @@ def receive_messages_synchronously(project, subscription_name):
     # Acknowledges the received messages so they will not be sent again.
     subscriber.acknowledge(subscription_path, ack_ids)
 
-    print("Received and acknowledged all messages. Done.")
+    print("Received and acknowledged {} messages. Done.".format(NUM_MESSAGES))
     # [END pubsub_subscriber_sync_pull]
 
 
@@ -256,14 +258,18 @@ def synchronous_pull_with_lease_management(project, subscription_name):
     subscription_path = subscriber.subscription_path(
         project, subscription_name)
 
-    NUM_MESSAGES = 2
+    NUM_MESSAGES=2
+    ACK_DEADLINE=30
+    SLEEP_TIME=10
+    
     # Builds a pull request with a specific number of messages to return.
-    # `return_immediately` is set to False so that the system waits (for a
-    # bounded amount of time) until at lease one message is available.
+    # `return_immediately` is set to False so that the system waits until
+    # at lease one message is available before it times out.
     response = subscriber.pull(
         subscription_path,
         max_messages=NUM_MESSAGES,
-        return_immediately=False)
+        return_immediately=False,
+        timeout=900)
 
     multiprocessing.log_to_stderr()
     logger = multiprocessing.get_logger()
@@ -282,9 +288,6 @@ def synchronous_pull_with_lease_management(project, subscription_name):
         process = multiprocessing.Process(target=worker, args=(message,))
         processes[process] = (message.ack_id, message.message.data)
         process.start()
-
-    ACK_DEADLINE=30
-    SLEEP_TIME=10
 
     while processes:
         for process, (ack_id, msg_data) in processes.items():
@@ -309,7 +312,7 @@ def synchronous_pull_with_lease_management(project, subscription_name):
         if processes:
             time.sleep(SLEEP_TIME)
 
-    print("Received and acknowledged all messages. Done.")
+    print("Received and acknowledged {} messages. Done.".format(NUM_MESSAGES))
     # [END pubsub_subscriber_sync_pull_with_lease]
 
 
