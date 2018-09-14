@@ -196,7 +196,7 @@ def test_receive_synchronously(
         publisher_client, topic, subscription_sync1, capsys):
     _publish_messages(publisher_client, topic)
 
-    subscriber.receive_messages_synchronously(PROJECT, SUBSCRIPTION_SYNC1)
+    subscriber.synchronous_pull(PROJECT, SUBSCRIPTION_SYNC1)
 
     out, _ = capsys.readouterr()
     assert 'Done.' in out

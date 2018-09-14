@@ -218,7 +218,7 @@ def receive_messages_with_flow_control(project, subscription_name):
     # [END pubsub_subscriber_flow_settings]
 
 
-def receive_messages_synchronously(project, subscription_name):
+def synchronous_pull(project, subscription_name):
     """Pulling messages synchronously."""
     # [START pubsub_subscriber_sync_pull]
     # project           = "Your Google Cloud Project ID"
@@ -228,14 +228,9 @@ def receive_messages_synchronously(project, subscription_name):
         project, subscription_name)
 
     NUM_MESSAGES=3
-    # Builds a pull request with a specific number of messages to return.
-    # `return_immediately` is set to False so that the system waits until
-    # at lease one message is available before it times out.
-    response = subscriber.pull(
-        subscription_path,
-        max_messages=NUM_MESSAGES,
-        return_immediately=False,
-        timeout=900)
+
+    # The subscriber pulls a specific number of messages.
+    response = subscriber.pull(subscription_path, max_messages=NUM_MESSAGES)
 
     ack_ids = []
     for received_message in response.received_messages:
@@ -261,15 +256,9 @@ def synchronous_pull_with_lease_management(project, subscription_name):
     NUM_MESSAGES=2
     ACK_DEADLINE=30
     SLEEP_TIME=10
-    
-    # Builds a pull request with a specific number of messages to return.
-    # `return_immediately` is set to False so that the system waits until
-    # at lease one message is available before it times out.
-    response = subscriber.pull(
-        subscription_path,
-        max_messages=NUM_MESSAGES,
-        return_immediately=False,
-        timeout=900)
+
+    # The subscriber pulls a specific number of messages.
+    response = subscriber.pull(subscription_path, max_messages=NUM_MESSAGES)
 
     multiprocessing.log_to_stderr()
     logger = multiprocessing.get_logger()
@@ -292,23 +281,23 @@ def synchronous_pull_with_lease_management(project, subscription_name):
     while processes:
         for process, (ack_id, msg_data) in processes.items():
             # If the process is still running, reset the ack deadline as
-            # specified by ACK_DEADLINE, and once every while as specified
+            # specified by ACK_DEADLINE once every while as specified
             # by SLEEP_TIME.
             if process.is_alive():
-                # `ack_deadline_seconds` must be between 10s to 600s.
+                # `ack_deadline_seconds` must be between 10 to 600.
                 subscriber.modify_ack_deadline(subscription_path,
                     [ack_id], ack_deadline_seconds=ACK_DEADLINE)
                 logger.info('{}: Reset ack deadline for {} for {}s'.format(
                     time.strftime("%X", time.gmtime()), msg_data, ACK_DEADLINE))
 
-            # Otherwise, acknowledges using `ack_id`.
+            # If the processs is finished, acknowledges using `ack_id`.
             else:
                 subscriber.acknowledge(subscription_path, [ack_id])
                 logger.info("{}: Acknowledged {}".format(
                     time.strftime("%X", time.gmtime()), msg_data))
                 processes.pop(process)
 
-        # Sleeps the thread to save resources.
+        # If there are still processes running, sleeps the thread.
         if processes:
             time.sleep(SLEEP_TIME)
 
@@ -392,15 +381,15 @@ if __name__ == '__main__':
         help=receive_messages_with_flow_control.__doc__)
     receive_with_flow_control_parser.add_argument('subscription_name')
 
-    receive_messages_synchronously_parser = subparsers.add_parser(
+    synchronous_pull_parser = subparsers.add_parser(
         'receive-synchronously',
-        help=receive_messages_synchronously.__doc__)
-    receive_messages_synchronously_parser.add_argument('subscription_name')
+        help=synchronous_pull.__doc__)
+    synchronous_pull_parser.add_argument('subscription_name')
 
-    receive_messages_synchronously_with_lease_parser = subparsers.add_parser(
+    synchronous_pull_with_lease_management_parser = subparsers.add_parser(
         'receive-synchronously-with-lease',
         help=synchronous_pull_with_lease_management.__doc__)
-    receive_messages_synchronously_with_lease_parser.add_argument('subscription_name')
+    synchronous_pull_with_lease_management_parser.add_argument('subscription_name')
 
     listen_for_errors_parser = subparsers.add_parser(
         'listen_for_errors', help=listen_for_errors.__doc__)
@@ -436,7 +425,7 @@ if __name__ == '__main__':
         receive_messages_with_flow_control(
             args.project, args.subscription_name)
     elif args.command == 'receive-synchronously':
-        receive_messages_synchronously(
+        synchronous_pull(
             args.project, args.subscription_name)
     elif args.command == 'receive-synchronously-with-lease':
         synchronous_pull_with_lease_management(
