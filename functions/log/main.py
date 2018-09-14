@@ -12,6 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START functions_log_bigquery_stackdriver]
+import base64
+import json
+
+# [END functions_log_bigquery_stackdriver]
+
 # [START functions_log_helloworld]
 import logging
 
@@ -66,3 +72,14 @@ def get_log_entries(request):
 
     return 'Done!'
 # [END functions_log_retrieve]
+
+
+# [START functions_log_bigquery_stackdriver]
+def process_bigquery_log_entry(data, context):
+    data_buffer = base64.b64decode(data['data'])
+    bq_data = json.loads(data_buffer)['protoPayload']
+
+    print(f"Method: {bq_data['methodName']}")
+    print(f"Resource: {bq_data['resourceName']}")
+    print(f"Initiator: {bq_data['authenticationInfo']['principalEmail']}")
+# [END functions_log_bigquery_stackdriver]
