@@ -34,14 +34,6 @@ def get_pyspark_file(filename):
     return f, os.path.basename(filename)
 
 
-def get_region_from_zone(zone):
-    try:
-        region_as_list = zone.split('-')[:-1]
-        return '-'.join(region_as_list)
-    except (AttributeError, IndexError, ValueError):
-        raise ValueError('Invalid zone provided, please check your input.')
-
-
 def upload_pyspark_file(project_id, bucket_name, filename, file):
     """Uploads the PySpark file in this directory to the configured
     input bucket."""
@@ -199,7 +191,7 @@ def get_client():
 def main(project_id, zone, cluster_name, bucket_name,
          pyspark_file=None, create_new_cluster=True):
     dataproc = get_client()
-    region = get_region_from_zone(zone)
+    region = 'global'
     try:
         if pyspark_file:
             spark_file, spark_filename = get_pyspark_file(pyspark_file)
