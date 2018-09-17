@@ -1,14 +1,14 @@
 # This file is used to generate README.rst
 
 product:
-  name: Google Cloud Job Discovery API
-  short_name: CJD
-  url: https://cloud.google.com/job-discovery/docs/
+  name: Google Cloud Talent Solution API
+  short_name: CTS
+  url: https://cloud.google.com/talent-solution/job-search/docs/
   description: > 
-    `Cloud Job Discovery` is a service that brings machine learning to your job
+    `Cloud Talent Solution` is a service that brings machine learning to your job
      search experience, returning high quality results to job seekers far beyond 
      the limitations of typical keyword-based methods. Once integrated with your 
-     job content, Cloud Job Discovery automatically detects and infers various 
+     job content, Cloud Talent Solution automatically detects and infers various 
      kinds of data, such as related titles, seniority, and industry.
 
 setup:
@@ -39,4 +39,4 @@ samples:
 - name: LocationSearchSample
   file: location_search_sample.py
 
-folder: jobs/cjd_sample
+folder: jobs/v2/api_client
