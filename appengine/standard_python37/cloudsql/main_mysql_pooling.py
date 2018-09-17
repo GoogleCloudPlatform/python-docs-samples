@@ -18,10 +18,10 @@ import os
 from flask import Flask
 import mysql.connector.pooling
 
-db_user = os.environ.get('CLOUDSQL_USERNAME')
-db_password = os.environ.get('CLOUDSQL_PASSWORD')
-db_name = os.environ.get('CLOUDSQL_DATABASE_NAME')
-db_connection_name = os.environ.get('CLOUDSQL_CONNECTION_NAME')
+db_user = os.environ.get('CLOUD_SQL_USERNAME')
+db_password = os.environ.get('CLOUD_SQL_PASSWORD')
+db_name = os.environ.get('CLOUD_SQL_DATABASE_NAME')
+db_connection_name = os.environ.get('CLOUD_SQL_CONNECTION_NAME')
 
 # When deployed to App Engine, the `GAE_ENV` environment variable will be
 # set to `standard`
