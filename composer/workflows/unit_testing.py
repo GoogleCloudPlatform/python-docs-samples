@@ -12,15 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from . import unit_testing
+"""Utilities for unit testing DAGs."""
+
+# [START composer_dag_unit_testing]
+from airflow import models
 
 
-def test_dag_import():
-    """Test that the DAG file can be successfully imported.
+def assert_has_valid_dag(module):
+    """Assert that a module contains a valid DAG."""
 
-    This tests that the DAG can be parsed, but does not run it in an Airflow
-    environment. This is a recommended sanity check by the official Airflow
-    docs: https://airflow.incubator.apache.org/tutorial.html#testing
-    """
-    from . import kubernetes_pod_operator as module
-    unit_testing.assert_has_valid_dag(module)
+    no_dag_found = True
+
+    for dag in vars(module).values():
+        if isinstance(dag, models.DAG):
+            no_dag_found = False
+            dag.test_cycle()  # Throws if a task cycle is found.
+
+    if no_dag_found:
+        raise AssertionError('module does not contain a valid DAG')
+# [END composer_dag_unit_testing]

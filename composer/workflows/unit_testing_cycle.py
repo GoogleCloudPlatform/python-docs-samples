@@ -12,15 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from . import unit_testing
+"""An example DAG demonstrating a cyle in the task IDs."""
+
+import datetime
+
+from airflow import models
+from airflow.operators import dummy_operator
 
 
-def test_dag_import():
-    """Test that the DAG file can be successfully imported.
+yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
 
-    This tests that the DAG can be parsed, but does not run it in an Airflow
-    environment. This is a recommended sanity check by the official Airflow
-    docs: https://airflow.incubator.apache.org/tutorial.html#testing
-    """
-    from . import kubernetes_pod_operator as module
-    unit_testing.assert_has_valid_dag(module)
+default_dag_args = {
+    'start_date': yesterday,
+}
+
+with models.DAG(
+        'composer_sample_cycle',
+        schedule_interval=datetime.timedelta(days=1),
+        default_args=default_dag_args) as dag:
+    start = dummy_operator.DummyOperator(task_id='oops_a_cycle')
+    end = dummy_operator.DummyOperator(task_id='oops_a_cycle')
+    start >> end
