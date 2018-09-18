@@ -16,6 +16,8 @@ import sys
 
 import pytest
 
+from . import unit_testing
+
 
 @pytest.mark.skipif(sys.version_info >= (3, 0), reason="requires Python 2")
 def test_dag_import():
@@ -25,4 +27,5 @@ def test_dag_import():
     environment. This is a recommended sanity check by the official Airflow
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
-    from . import pythonvirtualenvoperator_python2  # noqa
+    from . import pythonvirtualenvoperator_python2 as module
+    unit_testing.assert_has_valid_dag(module)
