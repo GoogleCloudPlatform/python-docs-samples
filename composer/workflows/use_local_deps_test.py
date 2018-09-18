@@ -17,6 +17,8 @@ import sys
 
 import pytest
 
+from . import unit_testing
+
 
 @pytest.fixture(scope='module', autouse=True)
 def local_deps():
@@ -37,4 +39,5 @@ def test_dag_import():
     environment. This is a recommended sanity check by the official Airflow
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
-    from . import use_local_deps # noqa
+    from . import use_local_deps as module
+    unit_testing.assert_has_valid_dag(module)
