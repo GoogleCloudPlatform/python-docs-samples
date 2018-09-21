@@ -34,6 +34,12 @@ samples:
 - name: Transcribe Streaming
   file: transcribe_streaming.py
   show_help: true
+- name: Transcribe Enhanced Models
+  file: transcribe_enhanced_model.py
+  show_help: true
+- name: Transcribe Automatic Punctuation
+  file: transcribe_auto_punctuation.py
+  show_help: true
 - name: Beta Samples
   file: beta_snippets.py
   show_help: true

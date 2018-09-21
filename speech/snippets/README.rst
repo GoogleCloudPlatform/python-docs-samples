@@ -206,6 +206,68 @@ To run this sample:
 
 
 
+Transcribe Enhanced Models
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=speech/cloud-client/transcribe_enhanced_model.py,speech/cloud-client/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python transcribe_enhanced_model.py
+
+    usage: transcribe_enhanced_model.py [-h] path
+
+    Google Cloud Speech API sample that demonstrates enhanced models
+    and recognition metadata.
+
+    Example usage:
+        python transcribe_enhanced_model.py resources/commercial_mono.wav
+
+    positional arguments:
+      path        File to stream to the API
+
+    optional arguments:
+      -h, --help  show this help message and exit
+
+
+
+Transcribe Automatic Punctuation
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=speech/cloud-client/transcribe_auto_punctuation.py,speech/cloud-client/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python transcribe_auto_punctuation.py
+
+    usage: transcribe_auto_punctuation.py [-h] path
+
+    Google Cloud Speech API sample that demonstrates auto punctuation
+    and recognition metadata.
+
+    Example usage:
+        python transcribe_auto_punctuation.py resources/commercial_mono.wav
+
+    positional arguments:
+      path        File to stream to the API
+
+    optional arguments:
+      -h, --help  show this help message and exit
+
+
+
 Beta Samples
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

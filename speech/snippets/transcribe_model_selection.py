@@ -27,11 +27,11 @@ Example usage:
 import argparse
 
 
-# [START speech_transcribe_model_selection_beta]
+# [START speech_transcribe_model_selection]
 def transcribe_model_selection(speech_file, model):
     """Transcribe the given audio file synchronously with
     the selected model."""
-    from google.cloud import speech_v1p1beta1 as speech
+    from google.cloud import speech
     client = speech.SpeechClient()
 
     with open(speech_file, 'rb') as audio_file:
@@ -52,14 +52,14 @@ def transcribe_model_selection(speech_file, model):
         print('-' * 20)
         print('First alternative of result {}'.format(i))
         print(u'Transcript: {}'.format(alternative.transcript))
-# [END speech_transcribe_model_selection_beta]
+# [END speech_transcribe_model_selection]
 
 
-# [START speech_transcribe_model_selection_gcs_beta]
+# [START speech_transcribe_model_selection_gcs]
 def transcribe_model_selection_gcs(gcs_uri, model):
     """Transcribe the given audio file asynchronously with
     the selected model."""
-    from google.cloud import speech_v1p1beta1 as speech
+    from google.cloud import speech
     client = speech.SpeechClient()
 
     audio = speech.types.RecognitionAudio(uri=gcs_uri)
@@ -80,7 +80,7 @@ def transcribe_model_selection_gcs(gcs_uri, model):
         print('-' * 20)
         print('First alternative of result {}'.format(i))
         print(u'Transcript: {}'.format(alternative.transcript))
-# [END speech_transcribe_model_selection_gcs_beta]
+# [END speech_transcribe_model_selection_gcs]
 
 
 if __name__ == '__main__':
