@@ -20,7 +20,7 @@ from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec, padding, utils
-
+# [END kms_asymmetric_imports]
 
 # [START kms_get_asymmetric_public]
 def getAsymmetricPublicKey(client, key_path):
