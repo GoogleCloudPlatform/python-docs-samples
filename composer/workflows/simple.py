@@ -41,13 +41,14 @@ default_dag_args = {
 # Any task you create within the context manager is automatically added to the
 # DAG object.
 with models.DAG(
-        'simple_greeting',
+        'composer_sample_simple_greeting',
         schedule_interval=datetime.timedelta(days=1),
         default_args=default_dag_args) as dag:
     # [END composer_simple_define_dag]
     # [START composer_simple_operators]
     def greeting():
-        print('Hello World!')
+        import logging
+        logging.info('Hello World!')
 
     # An instance of an operator is called a task. In this case, the
     # hello_python task calls the "greeting" Python function.

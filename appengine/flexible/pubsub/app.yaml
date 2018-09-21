@@ -5,10 +5,10 @@ entrypoint: gunicorn -b :$PORT main:app
 runtime_config:
   python_version: 3
 
-#[START env]
+# [START gae_flex_pubsub_env]
 env_variables:
     PUBSUB_TOPIC: your-topic
     # This token is used to verify that requests originate from your
     # application. It can be any sufficiently random string.
     PUBSUB_VERIFICATION_TOKEN: 1234abc
-#[END env]
+# [END gae_flex_pubsub_env]
