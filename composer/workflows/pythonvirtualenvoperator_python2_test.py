@@ -19,7 +19,6 @@ import pytest
 from . import unit_testing
 
 
-@pytest.mark.skipif(sys.version_info >= (3, 0), reason="requires Python 2")
 def test_dag_import():
     """Test that the DAG file can be successfully imported.
 
