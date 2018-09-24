@@ -24,6 +24,7 @@ import argparse
 from collections import deque
 import io
 
+
 # [START speech_transcribe_diarization_streaming]
 def transcribe_streaming_with_speaker_diarization(stream_file):
     """Streams transcription of the given audio file."""
@@ -64,7 +65,7 @@ def transcribe_streaming_with_speaker_diarization(stream_file):
             if word.speaker_tag is not current_speaker:
                 current_speaker = word.speaker_tag
                 final_transcript += ('\nSpeaker {}: '
-                    .format(str(current_speaker)))
+                                     .format(str(current_speaker)))
 
             final_transcript += ' ' + word.word
 
@@ -72,8 +73,8 @@ def transcribe_streaming_with_speaker_diarization(stream_file):
 # [END speech_transcribe_diarization_streaming]
 
 
-
 if __name__ == '__main__':
+
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)

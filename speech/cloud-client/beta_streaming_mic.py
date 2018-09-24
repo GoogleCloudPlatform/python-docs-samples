@@ -179,6 +179,7 @@ def main():
         listen_print_loop(responses)
     # [END speech_transcribe_multilanguage_streaming]
 
-if __name__ == '__main__':
-    main()
 
+if __name__ == '__main__':
+
+    main()
