@@ -63,7 +63,7 @@ def decryptRSA(ciphertext, client, key_path):
 
 
 # [START kms_encrypt_rsa]
-def encryptRSA(message, client, key_path):
+def encryptRSA(plaintext, client, key_path):
     """
     Encrypt message locally using an 'RSA_DECRYPT_OAEP_2048_SHA256' public
     key retrieved from Cloud KMS
@@ -72,7 +72,7 @@ def encryptRSA(message, client, key_path):
     pad = padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()),
                        algorithm=hashes.SHA256(),
                        label=None)
-    ciphertext = public_key.encrypt(message, pad)
+    ciphertext = public_key.encrypt(plaintext, pad)
     return base64.b64encode(ciphertext)
 # [END kms_encrypt_rsa]
 
