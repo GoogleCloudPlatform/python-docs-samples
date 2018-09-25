@@ -48,7 +48,7 @@ def decryptRSA(ciphertext, client, key_path):
     Decrypt a given ciphertext using an 'RSA_DECRYPT_OAEP_2048_SHA256' private
     key stored on Cloud KMS
     """
-    request_body = {'ciphertext': base64.b64encode(ciphertext).decode()}
+    request_body = {'ciphertext': ciphertext.decode()}
     request = client.projects() \
                     .locations() \
                     .keyRings() \
@@ -72,7 +72,8 @@ def encryptRSA(message, client, key_path):
     pad = padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()),
                        algorithm=hashes.SHA256(),
                        label=None)
-    return public_key.encrypt(message, pad)
+    ciphertext = public_key.encrypt(message, pad)
+    return base64.b64encode(ciphertext)
 # [END kms_encrypt_rsa]
 
 
