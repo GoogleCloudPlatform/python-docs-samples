@@ -1,5 +1,6 @@
 # Environment variables for system tests.
 export GCLOUD_PROJECT=your-project-id
+export GCP_PROJECT=$GCLOUD_PROJECT
 export GOOGLE_CLOUD_PROJECT=$GCLOUD_PROJECT
 export FIRESTORE_PROJECT=
 
