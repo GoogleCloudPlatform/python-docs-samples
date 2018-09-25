@@ -25,7 +25,7 @@ def test_hello_world(capsys):
     assert "Hello, stdout!" in out
 
 
-def test_process_bigquery_log_entry(capsys):
+def test_process_log_entry(capsys):
     inner_json = {
       'protoPayload': {
         'methodName': 'method',
@@ -40,7 +40,7 @@ def test_process_bigquery_log_entry(capsys):
       'data': base64.b64encode(json.dumps(inner_json).encode())
     }
 
-    main.process_bigquery_log_entry(data, None)
+    main.process_log_entry(data, None)
 
     out, _ = capsys.readouterr()
     assert 'Method: method' in out

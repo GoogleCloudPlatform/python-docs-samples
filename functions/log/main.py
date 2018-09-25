@@ -74,12 +74,12 @@ def get_log_entries(request):
 # [END functions_log_retrieve]
 
 
-# [START functions_log_bigquery_stackdriver]
-def process_bigquery_log_entry(data, context):
+# [START functions_log_stackdriver]
+def process_log_entry(data, context):
     data_buffer = base64.b64decode(data['data'])
-    bq_data = json.loads(data_buffer)['protoPayload']
+    log_entry = json.loads(data_buffer)['protoPayload']
 
-    print(f"Method: {bq_data['methodName']}")
-    print(f"Resource: {bq_data['resourceName']}")
-    print(f"Initiator: {bq_data['authenticationInfo']['principalEmail']}")
-# [END functions_log_bigquery_stackdriver]
+    print(f"Method: {log_entry['methodName']}")
+    print(f"Resource: {log_entry['resourceName']}")
+    print(f"Initiator: {log_entry['authenticationInfo']['principalEmail']}")
+# [END functions_log_stackdriver]
