@@ -82,7 +82,7 @@ def signAsymmetric(message, client, key_path):
     """
     # Note: some key algorithms will require a different hash function
     # For example, EC_SIGN_P384_SHA384 requires SHA384
-    digest_bytes = hashlib.sha256(message.encode('ascii')).digest()
+    digest_bytes = hashlib.sha256(message).digest()
     digest64 = base64.b64encode(digest_bytes)
 
     digest_JSON = {'sha256': digest64.decode('utf-8')}
@@ -106,7 +106,7 @@ def verifySignatureRSA(signature, message, client, key_path):
     """
     public_key = getAsymmetricPublicKey(client, key_path)
 
-    digest_bytes = hashlib.sha256(message.encode('ascii')).digest()
+    digest_bytes = hashlib.sha256(message).digest()
     sig_bytes = base64.b64decode(signature)
 
     try:
@@ -131,7 +131,7 @@ def verifySignatureEC(signature, message, client, key_path):
     """
     public_key = getAsymmetricPublicKey(client, key_path)
 
-    digest_bytes = hashlib.sha256(message.encode('ascii')).digest()
+    digest_bytes = hashlib.sha256(message).digest()
     sig_bytes = base64.b64decode(signature)
 
     try:

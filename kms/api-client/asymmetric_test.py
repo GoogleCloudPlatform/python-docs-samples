@@ -89,6 +89,7 @@ class TestKMSSamples:
              .format(parent, keyring, ecSignId)
 
     message = 'test message 123'
+    message_bytes = message.encode('utf-8')
 
     client = discovery.build('cloudkms', 'v1')
 
@@ -110,33 +111,35 @@ class TestKMSSamples:
         assert plaintext == self.message
 
     def test_rsa_sign_verify(self):
-        sig = sample.signAsymmetric(self.message, self.client, self.rsaSign)
+        sig = sample.signAsymmetric(self.message_bytes, self.client, self.rsaSign)
         # ciphertext should be 344 characters with base64 and RSA 2048
         assert len(sig) == 344, \
             'sig should be 344 chars; got {}'.format(len(sig))
         assert sig[-2:] == '==', 'sig should end with =='
         success = sample.verifySignatureRSA(sig,
-                                            self.message,
+                                            self.message_bytes,
                                             self.client,
                                             self.rsaSign)
         assert success is True, 'RSA verification failed'
+        changed_bytes = (self.message+".").encode('utf-8')
         success = sample.verifySignatureRSA(sig,
-                                            self.message+'.',
+                                            changed_bytes,
                                             self.client,
                                             self.rsaSign)
         assert success is False, 'verify should fail with modified message'
 
     def test_ec_sign_verify(self):
-        sig = sample.signAsymmetric(self.message, self.client, self.ecSign)
+        sig = sample.signAsymmetric(self.message_bytes, self.client, self.ecSign)
         assert len(sig) > 50 and len(sig) < 300, \
             'sig outside expected length range'
         success = sample.verifySignatureEC(sig,
-                                           self.message,
+                                           self.message_bytes,
                                            self.client,
                                            self.ecSign)
         assert success is True, 'EC verification failed'
+        changed_bytes = (self.message+".").encode('utf-8')
         success = sample.verifySignatureEC(sig,
-                                           self.message+'.',
+                                           changed_bytes,
                                            self.client,
                                            self.ecSign)
         assert success is False, 'verify should fail with modified message'
