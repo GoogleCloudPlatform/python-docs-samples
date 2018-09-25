@@ -45,7 +45,7 @@ def getAsymmetricPublicKey(client, key_path):
 # [START kms_decrypt_rsa]
 def decryptRSA(ciphertext, client, key_path):
     """
-    Decrypt a given ciphertext using an 'RSA_DECRYPT_OAEP_2048_SHA256' private
+    Decrypt the given ciphertext using an 'RSA_DECRYPT_OAEP_2048_SHA256' private
     key stored on Cloud KMS
     """
     request_body = {'ciphertext': ciphertext.decode()}
@@ -65,7 +65,7 @@ def decryptRSA(ciphertext, client, key_path):
 # [START kms_encrypt_rsa]
 def encryptRSA(plaintext, client, key_path):
     """
-    Encrypt message locally using an 'RSA_DECRYPT_OAEP_2048_SHA256' public
+    Encrypt data locally using an 'RSA_DECRYPT_OAEP_2048_SHA256' public
     key retrieved from Cloud KMS
     """
     public_key = getAsymmetricPublicKey(client, key_path)
@@ -104,7 +104,7 @@ def signAsymmetric(message, client, key_path):
 def verifySignatureRSA(signature, message, client, key_path):
     """
     Verify the validity of an 'RSA_SIGN_PSS_2048_SHA256' signature for the
-    specified plaintext message
+    specified message
     """
     public_key = getAsymmetricPublicKey(client, key_path)
 
@@ -129,7 +129,7 @@ def verifySignatureRSA(signature, message, client, key_path):
 def verifySignatureEC(signature, message, client, key_path):
     """
     Verify the validity of an 'EC_SIGN_P256_SHA256' signature
-    for the specified plaintext message
+    for the specified message
     """
     public_key = getAsymmetricPublicKey(client, key_path)
 
