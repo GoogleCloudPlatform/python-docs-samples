@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
+import base64
 from os import environ
 from time import sleep
 
@@ -100,18 +100,25 @@ class TestKMSSamples:
         assert isinstance(ec_key, _EllipticCurvePublicKey), 'expected EC key'
 
     def test_rsa_encrypt_decrypt(self):
-        ciphertext = sample.encryptRSA(self.message,
-                                       self.client,
-                                       self.rsaDecrypt)
+        ciphertext_bytes = sample.encryptRSA(self.message_bytes,
+                                             self.client,
+                                             self.rsaDecrypt)
+        ciphertext = base64.b64encode(ciphertext_bytes).decode('utf-8')
         # ciphertext should be 344 characters with base64 and RSA 2048
         assert len(ciphertext) == 344, \
             'ciphertext should be 344 chars; got {}'.format(len(ciphertext))
         assert ciphertext[-2:] == '==', 'cipher text should end with =='
-        plaintext = sample.decryptRSA(ciphertext, self.client, self.rsaDecrypt)
+        plaintext_bytes = sample.decryptRSA(ciphertext_bytes,
+                                            self.client,
+                                            self.rsaDecrypt)
+        assert plaintext_bytes == self.message_bytes
+        plaintext = plaintext_bytes.decode('utf-8')
         assert plaintext == self.message
 
     def test_rsa_sign_verify(self):
-        sig = sample.signAsymmetric(self.message_bytes, self.client, self.rsaSign)
+        sig = sample.signAsymmetric(self.message_bytes,
+                                    self.client,
+                                    self.rsaSign)
         # ciphertext should be 344 characters with base64 and RSA 2048
         assert len(sig) == 344, \
             'sig should be 344 chars; got {}'.format(len(sig))
@@ -129,7 +136,9 @@ class TestKMSSamples:
         assert success is False, 'verify should fail with modified message'
 
     def test_ec_sign_verify(self):
-        sig = sample.signAsymmetric(self.message_bytes, self.client, self.ecSign)
+        sig = sample.signAsymmetric(self.message_bytes,
+                                    self.client,
+                                    self.ecSign)
         assert len(sig) > 50 and len(sig) < 300, \
             'sig outside expected length range'
         success = sample.verifySignatureEC(sig,

@@ -16,6 +16,7 @@
 import base64
 import hashlib
 
+# [START kms_asymmetric_imports]
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
@@ -46,15 +47,16 @@ def decryptRSA(ciphertext, client, key_path):
     Decrypt a given ciphertext using an 'RSA_DECRYPT_OAEP_2048_SHA256' private
     key stored on Cloud KMS
     """
+    request_body={'ciphertext': base64.b64encode(ciphertext).decode()}
     request = client.projects() \
                     .locations() \
                     .keyRings() \
                     .cryptoKeys() \
                     .cryptoKeyVersions() \
                     .asymmetricDecrypt(name=key_path,
-                                       body={'ciphertext': ciphertext})
+                                       body=request_body)
     response = request.execute()
-    plaintext = base64.b64decode(response['plaintext']).decode('utf-8')
+    plaintext = base64.b64decode(response['plaintext'])
     return plaintext
 # [END kms_decrypt_rsa]
 
@@ -69,9 +71,7 @@ def encryptRSA(message, client, key_path):
     pad = padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()),
                        algorithm=hashes.SHA256(),
                        label=None)
-    ciphertext = public_key.encrypt(message.encode('ascii'), pad)
-    ciphertext = base64.b64encode(ciphertext).decode('utf-8')
-    return ciphertext
+    return public_key.encrypt(message, pad)
 # [END kms_encrypt_rsa]
 
 
