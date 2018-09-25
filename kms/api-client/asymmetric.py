@@ -13,15 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.rom googleapiclient import discovery
 
+# [START kms_asymmetric_imports]
 import base64
 import hashlib
 
-# [START kms_asymmetric_imports]
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec, padding, utils
 # [END kms_asymmetric_imports]
+
 
 # [START kms_get_asymmetric_public]
 def getAsymmetricPublicKey(client, key_path):
@@ -47,7 +48,7 @@ def decryptRSA(ciphertext, client, key_path):
     Decrypt a given ciphertext using an 'RSA_DECRYPT_OAEP_2048_SHA256' private
     key stored on Cloud KMS
     """
-    request_body={'ciphertext': base64.b64encode(ciphertext).decode()}
+    request_body = {'ciphertext': base64.b64encode(ciphertext).decode()}
     request = client.projects() \
                     .locations() \
                     .keyRings() \
