@@ -18,8 +18,6 @@ from os import getenv
 from psycopg2 import OperationalError
 from psycopg2.pool import SimpleConnectionPool
 
-is_production = getenv('FUNCTION_REGION') is not None
-
 # TODO(developer): specify SQL connection details
 CONNECTION_NAME = getenv(
   'INSTANCE_CONNECTION_NAME',
@@ -33,7 +31,6 @@ pg_config = {
   'password': DB_PASSWORD,
   'dbname': DB_NAME
 }
-
 
 # Connection pools reuse connections between invocations,
 # and handle dropped or expired connections automatically.
