@@ -14,23 +14,40 @@
 
 # [START functions_tips_infinite_retries]
 from datetime import datetime
+# [END functions_tips_infinite_retries]
 
+# [START functions_tips_gcp_apis]
+import os
+# [END functions_tips_gcp_apis]
+
+# [START functions_tips_infinite_retries]
 # The 'python-dateutil' package must be included in requirements.txt.
 from dateutil import parser
 
 # [END functions_tips_infinite_retries]
+
+# [START functions_tips_retry]
+from google.cloud import error_reporting
+# [END functions_tips_retry]
+
+# [START functions_tips_gcp_apis]
+from google.cloud import pubsub_v1
+# [END functions_tips_gcp_apis]
+
 # [START functions_tips_connection_pooling]
 import requests
 
 # [END functions_tips_connection_pooling]
 
 
+# Placeholder
 def file_wide_computation():
-    return sum(range(10))
+    return 1
 
 
+# Placeholder
 def function_specific_computation():
-    return sum(range(10))
+    return 1
 
 
 # [START functions_tips_lazy_globals]
@@ -46,6 +63,7 @@ def lazy_globals(request):
     HTTP Cloud Function that uses lazily-initialized globals.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
@@ -71,6 +89,7 @@ def connection_pooling(request):
     HTTP Cloud Function that uses a connection pool to make HTTP requests.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
@@ -87,15 +106,58 @@ def connection_pooling(request):
 # [END functions_tips_connection_pooling]
 
 
+# [START functions_tips_gcp_apis]
+
+# Create a global Pub/Sub client to avoid unneeded network activity
+pubsub = pubsub_v1.PublisherClient()
+
+
+def gcp_api_call(request):
+    """
+    HTTP Cloud Function that uses a cached client library instance to
+    reduce the number of connections required per function invocation.
+    Args:
+        request (flask.Request): The request object.
+    Returns:
+        The response text, or any set of values that can be turned into a
+        Response object using `make_response`
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+    """
+
+    project = os.getenv('GCP_PROJECT')
+    request_json = request.get_json()
+
+    topic_name = request_json['topic']
+    topic_path = pubsub.topic_path(project, topic_name)
+
+    # Process the request
+    data = 'Test message'.encode('utf-8')
+    pubsub.publish(topic_path, data=data)
+
+    return '1 message published'
+# [END functions_tips_gcp_apis]
+
+
 # [START functions_tips_infinite_retries]
-def avoid_infinite_retries(event, context):
-    timestamp = event.timestamp
+def avoid_infinite_retries(data, context):
+    """Background Cloud Function that only executes within a certain
+    time period after the triggering event.
+
+    Args:
+        data (dict): The event payload.
+        context (google.cloud.functions.Context): The event metadata.
+    Returns:
+        None; output is written to Stackdriver Logging
+    """
+
+    timestamp = data.timestamp
 
     event_time = parser.parse(timestamp)
     event_age = (datetime.now() - event_time).total_seconds() * 1000
 
     # Ignore events that are too old
-    if event_age > 10000:
+    max_age_ms = 10000
+    if event_age > max_age_ms:
         print('Dropped {} (age {}ms)'.format(context.event_id, event_age))
         return 'Timeout'
 
@@ -106,21 +168,30 @@ def avoid_infinite_retries(event, context):
 
 
 # [START functions_tips_retry]
-def retry_or_not(event, context):
-    from google import cloud
-    error_client = cloud.error_reporting.Client()
+error_client = error_reporting.Client()
 
-    if event.data.get('retry'):
+
+def retry_or_not(data, context):
+    """Background Cloud Function that demonstrates how to toggle retries.
+
+    Args:
+        data (dict): The event payload.
+        context (google.cloud.functions.Context): The event metadata.
+    Returns:
+        None; output is written to Stackdriver Logging
+    """
+
+    if data.data.get('retry'):
         try_again = True
     else:
         try_again = False
 
     try:
-        raise Exception('I failed you')
-    except Exception as e:
+        raise RuntimeError('I failed you')
+    except RuntimeError:
         error_client.report_exception()
         if try_again:
-            raise e  # Raise the exception and try again
+            raise  # Raise the exception and try again
         else:
-            return  # Swallow the exception and don't retry
+            pass   # Swallow the exception and don't retry
 # [END functions_tips_retry]

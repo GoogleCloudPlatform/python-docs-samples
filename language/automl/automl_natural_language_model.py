@@ -27,7 +27,7 @@ import os
 
 def create_model(project_id, compute_region, dataset_id, model_name):
     """Create a model."""
-    # [START automl_natural_language_create_model]
+    # [START automl_language_create_model]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
@@ -53,12 +53,12 @@ def create_model(project_id, compute_region, dataset_id, model_name):
     print("Training operation name: {}".format(response.operation.name))
     print("Training started...")
 
-    # [END automl_natural_language_create_model]
+    # [END automl_language_create_model]
 
 
 def get_operation_status(operation_full_id):
     """Get operation status."""
-    # [START automl_natural_language_get_operation_status]
+    # [START automl_language_get_operation_status]
     # TODO(developer): Uncomment and set the following variables
     # operation_full_id =
     #   'projects/<projectId>/locations/<region>/operations/<operationId>'
@@ -74,12 +74,12 @@ def get_operation_status(operation_full_id):
 
     print("Operation status: {}".format(response))
 
-    # [END automl_natural_language_get_operation_status]
+    # [END automl_language_get_operation_status]
 
 
 def list_models(project_id, compute_region, filter_):
     """List all models."""
-    # [START automl_natural_language_list_models]
+    # [START automl_language_list_models]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
@@ -114,12 +114,12 @@ def list_models(project_id, compute_region, filter_):
         print("\tnanos: {}".format(model.create_time.nanos))
         print("Model deployment state: {}".format(deployment_state))
 
-    # [END automl_natural_language_list_models]
+    # [END automl_language_list_models]
 
 
 def get_model(project_id, compute_region, model_id):
     """Get model details."""
-    # [START automl_natural_language_get_model]
+    # [START automl_language_get_model]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
@@ -152,12 +152,12 @@ def get_model(project_id, compute_region, model_id):
     print("\tnanos: {}".format(model.create_time.nanos))
     print("Model deployment state: {}".format(deployment_state))
 
-    # [END automl_natural_language_get_model]
+    # [END automl_language_get_model]
 
 
 def list_model_evaluations(project_id, compute_region, model_id, filter_):
     """List model evaluations."""
-    # [START automl_natural_language_list_model_evaluations]
+    # [START automl_language_list_model_evaluations]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
@@ -178,14 +178,14 @@ def list_model_evaluations(project_id, compute_region, model_id, filter_):
     for element in response:
         print(element)
 
-    # [END automl_natural_language_list_model_evaluations]
+    # [END automl_language_list_model_evaluations]
 
 
 def get_model_evaluation(
     project_id, compute_region, model_id, model_evaluation_id
 ):
     """Get model evaluation."""
-    # [START automl_natural_language_get_model_evaluation]
+    # [START automl_language_get_model_evaluation]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
@@ -206,12 +206,12 @@ def get_model_evaluation(
 
     print(response)
 
-    # [END automl_natural_language_get_model_evaluation]
+    # [END automl_language_get_model_evaluation]
 
 
 def display_evaluation(project_id, compute_region, model_id, filter_):
     """Display evaluation."""
-    # [START automl_natural_language_display_evaluation]
+    # [START automl_language_display_evaluation]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
@@ -281,12 +281,12 @@ def display_evaluation(project_id, compute_region, model_id, filter_):
                 )
             )
 
-    # [END automl_natural_language_display_evaluation]
+    # [END automl_language_display_evaluation]
 
 
 def delete_model(project_id, compute_region, model_id):
     """Delete a model."""
-    # [START automl_natural_language_delete_model]
+    # [START automl_language_delete_model]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
@@ -305,7 +305,7 @@ def delete_model(project_id, compute_region, model_id):
     # synchronous check of operation status.
     print("Model deleted. {}".format(response.result()))
 
-    # [END automl_natural_language_delete_model]
+    # [END automl_language_delete_model]
 
 
 if __name__ == "__main__":

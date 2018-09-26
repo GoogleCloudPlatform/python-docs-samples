@@ -39,10 +39,11 @@ ECHO_RESOURCE = endpoints.ResourceContainer(
 # [END messages]
 
 
-# [START echo_api]
+# [START echo_api_class]
 @endpoints.api(name='echo', version='v1')
 class EchoApi(remote.Service):
 
+    # [START echo_api_method]
     @endpoints.method(
         # This method takes a ResourceContainer defined above.
         ECHO_RESOURCE,
@@ -54,6 +55,7 @@ class EchoApi(remote.Service):
     def echo(self, request):
         output_content = ' '.join([request.content] * request.n)
         return EchoResponse(content=output_content)
+    # [END echo_api_method]
 
     @endpoints.method(
         # This method takes a ResourceContainer defined above.
@@ -98,7 +100,7 @@ class EchoApi(remote.Service):
         if not user:
             raise endpoints.UnauthorizedException
         return EchoResponse(content=user.email())
-# [END echo_api]
+# [END echo_api_class]
 
 
 # [START api_server]

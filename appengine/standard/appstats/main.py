@@ -18,7 +18,6 @@ Sample Google App Engine application that demonstrates using appstats.
 For more information about App Engine, see README.md under /appengine.
 """
 
-# [START all]
 from google.appengine.api import memcache
 import webapp2
 
@@ -34,4 +33,3 @@ class MainPage(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
     ('/', MainPage)
 ], debug=True)
-# [END all]

@@ -26,6 +26,7 @@ def statelessness(request):
     within a specific instance.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
@@ -40,10 +41,12 @@ def statelessness(request):
 # [END functions_concepts_stateless]
 
 
+# Placeholder
 def heavy_computation():
     return time.time()
 
 
+# Placeholder
 def light_computation():
     return time.time()
 
@@ -59,6 +62,7 @@ def scope_demo(request):
     HTTP Cloud Function that declares a variable.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
@@ -78,6 +82,7 @@ def make_request(request):
     HTTP Cloud Function that makes another HTTP request.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
@@ -101,7 +106,8 @@ def timeout(request):
     time.sleep(120)
 
     # May not execute if function's timeout is <2 minutes
-    return 'Done!'
+    print('Function completed!')
+    return 'Function completed!'
 # [END functions_concepts_after_timeout]
 
 

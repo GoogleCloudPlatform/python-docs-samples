@@ -143,11 +143,12 @@ def read_stale_data(instance_id, database_id):
         keyset = spanner.KeySet(all_=True)
         results = snapshot.read(
             table='Albums',
-            columns=('SingerId', 'AlbumId', 'AlbumTitle',),
+            columns=('SingerId', 'AlbumId', 'MarketingBudget',),
             keyset=keyset)
 
         for row in results:
-            print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
+            print(u'SingerId: {}, AlbumId: {}, MarketingBudget: {}'.format(
+                *row))
 # [END spanner_read_stale_data]
 
 
@@ -562,9 +563,8 @@ def update_data_with_timestamp(instance_id, database_id):
             columns=(
                 'SingerId', 'AlbumId', 'MarketingBudget', 'LastUpdateTime'),
             values=[
-                (1, 4, 11000, spanner.COMMIT_TIMESTAMP),
-                (1, 19, 15000, spanner.COMMIT_TIMESTAMP),
-                (2, 42, 7000, spanner.COMMIT_TIMESTAMP)])
+                (1, 1, 1000000, spanner.COMMIT_TIMESTAMP),
+                (2, 2, 750000, spanner.COMMIT_TIMESTAMP)])
 
     print('Updated data.')
 # [END spanner_update_data_with_timestamp_column]
@@ -590,11 +590,11 @@ def query_data_with_timestamp(instance_id, database_id):
 
     with database.snapshot() as snapshot:
         results = snapshot.execute_sql(
-            'SELECT SingerId, AlbumId, AlbumTitle FROM Albums '
+            'SELECT SingerId, AlbumId, MarketingBudget FROM Albums '
             'ORDER BY LastUpdateTime DESC')
 
     for row in results:
-        print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
+        print(u'SingerId: {}, AlbumId: {}, MarketingBudget: {}'.format(*row))
 # [END spanner_query_data_with_timestamp_column]
 
 

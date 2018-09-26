@@ -281,6 +281,10 @@ def test_detect_crop_hints_http(capsys):
 def test_async_detect_document(capsys):
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(BUCKET)
+    if len(list(bucket.list_blobs(prefix=OUTPUT_PREFIX))) > 0:
+        for blob in bucket.list_blobs(prefix=OUTPUT_PREFIX):
+            blob.delete()
+
     assert len(list(bucket.list_blobs(prefix=OUTPUT_PREFIX))) == 0
 
     detect.async_detect_document(
@@ -293,3 +297,21 @@ def test_async_detect_document(capsys):
 
     for blob in bucket.list_blobs(prefix=OUTPUT_PREFIX):
         blob.delete()
+
+    assert len(list(bucket.list_blobs(prefix=OUTPUT_PREFIX))) == 0
+
+
+def test_localize_objects(capsys):
+    detect.localize_objects('resources/puppies.jpg')
+
+    out, _ = capsys.readouterr()
+    assert 'Dog' in out
+
+
+def test_localize_objects_uri(capsys):
+    uri = 'gs://cloud-samples-data/vision/puppies.jpg'
+
+    detect.localize_objects_uri(uri)
+
+    out, _ = capsys.readouterr()
+    assert 'Dog' in out

@@ -37,7 +37,7 @@ def test_hello_http_no_args(app):
 
 
 def test_hello_http_args(app):
-    with app.test_request_context(json={'message': 'test'}):
+    with app.test_request_context(json={'name': 'test'}):
         res = main.hello_http(flask.request)
         assert 'Hello, test!' in res
 

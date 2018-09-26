@@ -12,9 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START functions_helloworld_error]
-import logging
-# [END functions_helloworld_error]
 import sys
 
 
@@ -24,6 +21,7 @@ def hello_get(request):
     """HTTP Cloud Function.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
@@ -37,9 +35,9 @@ def hello_get(request):
 def hello_background(data, context):
     """Background Cloud Function.
     Args:
-         event (dict): The dictionary with data specific to the given event.
+         data (dict): The dictionary with data specific to the given event.
          context (google.cloud.functions.Context): The Cloud Functions event
-         context.
+         metadata.
     """
     if data and 'name' in data:
         name = data['name']
@@ -55,14 +53,15 @@ def hello_http(request):
     """HTTP Cloud Function.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
         <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
     """
     request_json = request.get_json()
-    if request_json and 'message' in request_json:
-        name = request_json['message']
+    if request_json and 'name' in request_json:
+        name = request_json['name']
     else:
         name = 'World'
     return 'Hello, {}!'.format(name)
@@ -73,9 +72,9 @@ def hello_http(request):
 def hello_pubsub(data, context):
     """Background Cloud Function to be triggered by Pub/Sub.
     Args:
-         event (dict): The dictionary with data specific to this type of event.
+         data (dict): The dictionary with data specific to this type of event.
          context (google.cloud.functions.Context): The Cloud Functions event
-         context.
+         metadata.
     """
     import base64
 
@@ -93,7 +92,7 @@ def hello_gcs(data, context):
     Args:
          data (dict): The dictionary with data specific to this type of event.
          context (google.cloud.functions.Context): The Cloud Functions
-         event context.
+         event metadata.
     """
     print("File: {}.".format(data['objectId']))
 # [END functions_helloworld_storage]
@@ -105,6 +104,7 @@ def hello_content(request):
     according to the "content-type" header.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
@@ -130,6 +130,7 @@ def hello_method(request):
     """ Responds to a GET request with "Hello world!". Forbids a PUT request.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
          Response object using `make_response`
@@ -148,6 +149,17 @@ def hello_method(request):
 
 def hello_error_1(request):
     # [START functions_helloworld_error]
+    # This WILL be reported to Stackdriver Error
+    # Reporting, and WILL NOT show up in logs or
+    # terminate the function.
+    from google.cloud import error_reporting
+    client = error_reporting.Client()
+
+    try:
+        raise RuntimeError('I failed you')
+    except RuntimeError:
+        client.report_exception()
+
     # This WILL be reported to Stackdriver Error Reporting,
     # and WILL terminate the function
     raise RuntimeError('I failed you')
@@ -159,13 +171,13 @@ def hello_error_2(request):
     # [START functions_helloworld_error]
     # WILL NOT be reported to Stackdriver Error Reporting, but will show up
     # in logs
+    import logging
     print(RuntimeError('I failed you (print to stdout)'))
     logging.warn(RuntimeError('I failed you (logging.warn)'))
     logging.error(RuntimeError('I failed you (logging.error)'))
     sys.stderr.write('I failed you (sys.stderr.write)\n')
 
-    # WILL NOT be reported to Stackdriver Error Reporting, but will show up
-    # in request logs (as a 500 response)
+    # This WILL be reported to Stackdriver Error Reporting
     from flask import abort
     return abort(500)
     # [END functions_helloworld_error]
