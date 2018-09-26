@@ -24,9 +24,9 @@ import main
 @patch('main.vision_client')
 @patch('main.storage_client')
 def test_process_offensive_image(
-  __blur_image,
-  vision_client,
   storage_client,
+  vision_client,
+  __blur_image,
   capsys):
     result = UserDict()
     result.safe_search_annotation = UserDict()
@@ -52,9 +52,9 @@ def test_process_offensive_image(
 @patch('main.vision_client')
 @patch('main.storage_client')
 def test_process_safe_image(
-  __blur_image,
-  vision_client,
   storage_client,
+  vision_client,
+  __blur_image,
   capsys):
     result = UserDict()
     result.safe_search_annotation = UserDict()
@@ -71,6 +71,7 @@ def test_process_safe_image(
     main.blur_offensive_images(data, None)
 
     out, _ = capsys.readouterr()
+
     assert 'Analyzing %s.' % filename in out
     assert 'The image %s was detected as OK.' % filename in out
     assert __blur_image.called is False
@@ -90,6 +91,8 @@ def test_blur_image(image_mock, os_mock, capsys):
 
     blob = UserDict()
     blob.name = filename
+    blob.bucket = UserDict()
+    blob.bucket.blob = MagicMock(return_value=blob)
     blob.download_to_filename = MagicMock()
     blob.upload_from_filename = MagicMock()
 
@@ -97,8 +100,8 @@ def test_blur_image(image_mock, os_mock, capsys):
 
     out, _ = capsys.readouterr()
 
-    assert 'Image %s was downloaded to /tmp/%s.' % (filename, filename) in out
-    assert 'Image %s was blurred.' % filename in out
-    assert 'Blurred image was uploaded to %s.' % filename in out
+    assert f'Image {filename} was downloaded to' in out
+    assert f'Image {filename} was blurred.' in out
+    assert f'Blurred image was uploaded to blurred-{filename}.' in out
     assert os_mock.remove.called
     assert image_mock.resize.called

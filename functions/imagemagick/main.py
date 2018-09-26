@@ -31,43 +31,54 @@ def blur_offensive_images(data, context):
     file_data = data
 
     file_name = file_data['name']
-    blob = storage_client.bucket(file_data['bucket']).get_blob(file_name)
-    blob_uri = 'gs://%s/%s' % (file_data['bucket'], file_name)
+    bucket_name = file_data['bucket']
+
+    blob = storage_client.bucket(bucket_name).get_blob(file_name)
+    blob_uri = f'gs://{bucket_name}/{file_name}'
     blob_source = {'source': {'image_uri': blob_uri}}
 
-    print('Analyzing %s.' % file_name)
+    # Ignore already-blurred files
+    if file_name.startswith('blurred-'):
+        print(f'The image {file_name} is already blurred.')
+        return
+
+    print(f'Analyzing {file_name}.')
 
     result = vision_client.safe_search_detection(blob_source)
     detected = result.safe_search_annotation
 
+    # Process image
     if detected.adult == 5 or detected.violence == 5:
-        print('The image %s was detected as inappropriate.' % file_name)
+        print(f'The image {file_name} was detected as inappropriate.')
         return __blur_image(blob)
     else:
-        print('The image %s was detected as OK.' % file_name)
+        print(f'The image {file_name} was detected as OK.')
 # [END functions_imagemagick_analyze]
 
 
 # [START functions_imagemagick_blur]
 # Blurs the given file using ImageMagick.
-def __blur_image(blob):
-    file_name = blob.name
+def __blur_image(current_blob):
+    file_name = current_blob.name
     _, temp_local_filename = tempfile.mkstemp()
 
     # Download file from bucket.
-    blob.download_to_filename(temp_local_filename)
-    print('Image %s was downloaded to %s.' % (file_name, temp_local_filename))
+    current_blob.download_to_filename(temp_local_filename)
+    print(f'Image {file_name} was downloaded to {temp_local_filename}.')
 
     # Blur the image using ImageMagick.
     with Image(filename=temp_local_filename) as image:
         image.resize(*image.size, blur=16, filter='hamming')
         image.save(filename=temp_local_filename)
 
-    print('Image %s was blurred.' % file_name)
+    print(f'Image {file_name} was blurred.')
 
-    # Upload the Blurred image back into the bucket.
-    blob.upload_from_filename(temp_local_filename)
-    print('Blurred image was uploaded to %s.' % file_name)
+    # Send Blurred image back to the bucket (with a 'blurred-' prefix).
+    # The prefix is necessary to avoid re-invoking the function upon upload.
+    new_file_name = f'blurred-{file_name}'
+    new_blob = current_blob.bucket.blob(new_file_name)
+    new_blob.upload_from_filename(temp_local_filename)
+    print(f'Blurred image was uploaded to {new_file_name}.')
 
     # Delete the temporary file.
     os.remove(temp_local_filename)
