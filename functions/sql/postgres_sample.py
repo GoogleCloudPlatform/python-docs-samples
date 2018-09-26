@@ -15,6 +15,7 @@
 # [START functions_sql_postgres]
 from os import getenv
 
+from psycopg2 import OperationalError
 from psycopg2.pool import SimpleConnectionPool
 
 is_production = getenv('FUNCTION_REGION') is not None
@@ -30,17 +31,22 @@ DB_NAME = getenv('POSTGRES_DATABASE', '<YOUR DB NAME>')
 pg_config = {
   'user': DB_USER,
   'password': DB_PASSWORD,
-  'dbname': DB_NAME,
+  'dbname': DB_NAME
 }
 
-if is_production:
-    pg_config['host'] = '/cloudsql/' + CONNECTION_NAME
-else:
-    pg_config['host'] = 'localhost'
 
 # Connection pools reuse connections between invocations,
 # and handle dropped or expired connections automatically.
 pg_pool = None
+
+
+def __connect(host):
+    """
+    Helper function to connect to Postgres
+    """
+    global pg_pool
+    pg_config['host'] = host
+    pg_pool = SimpleConnectionPool(1, 1, **pg_config)
 
 
 def postgres_demo(request):
@@ -50,7 +56,11 @@ def postgres_demo(request):
     # GCF instance. Doing so minimizes the number of active SQL connections,
     # which helps keep your GCF instances under SQL connection limits.
     if not pg_pool:
-        pg_pool = SimpleConnectionPool(1, 1, **pg_config)
+        try:
+            __connect(f'/cloudsql/{CONNECTION_NAME}')
+        except OperationalError:
+            # If production settings fail, use local development ones
+            __connect('localhost')
 
     # Remember to close SQL resources declared while running this function.
     # Keep any declared in global scope (e.g. pg_pool) for later reuse.
