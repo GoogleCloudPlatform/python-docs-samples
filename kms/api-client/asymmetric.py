@@ -45,10 +45,10 @@ def getAsymmetricPublicKey(client, key_path):
 # [START kms_decrypt_rsa]
 def decryptRSA(ciphertext, client, key_path):
     """
-    Decrypt the given ciphertext using an 'RSA_DECRYPT_OAEP_2048_SHA256' private
-    key stored on Cloud KMS
+    Decrypt the input ciphertext (bytes) using an
+    'RSA_DECRYPT_OAEP_2048_SHA256' private key stored on Cloud KMS
     """
-    request_body = {'ciphertext': ciphertext.decode()}
+    request_body = {'ciphertext': base64.b64encode(ciphertext).decode()}
     request = client.projects() \
                     .locations() \
                     .keyRings() \
@@ -65,15 +65,14 @@ def decryptRSA(ciphertext, client, key_path):
 # [START kms_encrypt_rsa]
 def encryptRSA(plaintext, client, key_path):
     """
-    Encrypt data locally using an 'RSA_DECRYPT_OAEP_2048_SHA256' public
-    key retrieved from Cloud KMS
+    Encrypt the input plaintext (bytes) locally using an
+    'RSA_DECRYPT_OAEP_2048_SHA256' public key retrieved from Cloud KMS
     """
     public_key = getAsymmetricPublicKey(client, key_path)
     pad = padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()),
                        algorithm=hashes.SHA256(),
                        label=None)
-    ciphertext = public_key.encrypt(plaintext, pad)
-    return base64.b64encode(ciphertext)
+    return public_key.encrypt(plaintext, pad)
 # [END kms_encrypt_rsa]
 
 

@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import base64
 from os import environ
 from time import sleep
 
@@ -102,11 +103,10 @@ class TestKMSSamples:
         ciphertext_bytes = sample.encryptRSA(self.message_bytes,
                                              self.client,
                                              self.rsaDecrypt)
-        ciphertext = ciphertext_bytes.decode('utf-8')
+        ciphertext = base64.b64encode(ciphertext_bytes).decode()
         # ciphertext should be 344 characters with base64 and RSA 2048
         assert len(ciphertext) == 344, \
             'ciphertext should be 344 chars; got {}'.format(len(ciphertext))
-        assert ciphertext[-2:] == '==', 'cipher text should end with =='
         plaintext_bytes = sample.decryptRSA(ciphertext_bytes,
                                             self.client,
                                             self.rsaDecrypt)
@@ -127,7 +127,7 @@ class TestKMSSamples:
                                             self.client,
                                             self.rsaSign)
         assert success is True, 'RSA verification failed'
-        changed_bytes = (self.message+".").encode('utf-8')
+        changed_bytes = self.message_bytes + b'.'
         success = sample.verifySignatureRSA(sig,
                                             changed_bytes,
                                             self.client,
@@ -145,7 +145,7 @@ class TestKMSSamples:
                                            self.client,
                                            self.ecSign)
         assert success is True, 'EC verification failed'
-        changed_bytes = (self.message+".").encode('utf-8')
+        changed_bytes = self.message_bytes + b'.'
         success = sample.verifySignatureEC(sig,
                                            changed_bytes,
                                            self.client,
