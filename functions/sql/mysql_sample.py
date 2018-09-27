@@ -16,8 +16,7 @@
 from os import getenv
 
 import pymysql
-
-is_production = getenv('SUPERVISOR_HOSTNAME') is not None
+from pymysql.err import OperationalError
 
 # TODO(developer): specify SQL connection details
 CONNECTION_NAME = getenv(
@@ -36,13 +35,9 @@ mysql_config = {
   'autocommit': True
 }
 
-if is_production:
-    mysql_config['unix_socket'] = \
-      '/cloudsql/' + CONNECTION_NAME
-
 # Create SQL connection globally to enable reuse
 # PyMySQL does not include support for connection pooling
-mysql_conn = pymysql.connect(**mysql_config)
+mysql_conn = None
 
 
 def __get_cursor():
@@ -53,12 +48,25 @@ def __get_cursor():
     """
     try:
         return mysql_conn.cursor()
-    except Exception:
+    except OperationalError:
         mysql_conn.ping(reconnect=True)
         return mysql_conn.cursor()
 
 
 def mysql_demo(request):
+    global mysql_conn
+
+    # Initialize connections lazily, in case SQL access isn't needed for this
+    # GCF instance. Doing so minimizes the number of active SQL connections,
+    # which helps keep your GCF instances under SQL connection limits.
+    if not mysql_conn:
+        try:
+            mysql_conn = pymysql.connect(**mysql_config)
+        except OperationalError:
+            # If production settings fail, use local development ones
+            mysql_config['unix_socket'] = f'/cloudsql/{CONNECTION_NAME}'
+            mysql_conn = pymysql.connect(**mysql_config)
+
     # Remember to close SQL resources declared while running this function.
     # Keep any declared in global scope (e.g. mysql_conn) for later reuse.
     with __get_cursor() as cursor:
