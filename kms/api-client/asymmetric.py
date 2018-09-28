@@ -48,7 +48,7 @@ def decryptRSA(ciphertext, client, key_path):
     Decrypt the input ciphertext (bytes) using an
     'RSA_DECRYPT_OAEP_2048_SHA256' private key stored on Cloud KMS
     """
-    request_body = {'ciphertext': base64.b64encode(ciphertext).decode()}
+    request_body = {'ciphertext': base64.b64encode(ciphertext).decode('utf-8')}
     request = client.projects() \
                     .locations() \
                     .keyRings() \
