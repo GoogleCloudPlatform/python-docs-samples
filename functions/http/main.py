@@ -122,12 +122,14 @@ def get_signed_url(request):
 
 # [START functions_http_cors]
 def cors_enabled_function(request):
-    # Set CORS headers for the preflight request
-    # e.g. allows GETs from any origin with the Content-Type header
-    # and cache preflight response for an 3600s
+    # For more information about CORS and CORS preflight requests, see
+    # https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request
+    # for more information.
 
-    # Send response to OPTIONS requests and terminate the function execution
+    # Set CORS headers for the preflight request
     if request.method == 'OPTIONS':
+        # Allows GET requests from any origin with the Content-Type
+        # header and caches preflight response for an 3600s
         headers = {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'GET',
@@ -148,12 +150,14 @@ def cors_enabled_function(request):
 
 # [START functions_http_cors_auth]
 def cors_enabled_function_auth(request):
-    # Set CORS headers for preflight requests
-    # e.g. allows GETS from origin https://mydomain.com with Authorization
-    # header
+    # For more information about CORS and CORS preflight requests, see
+    # https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request
+    # for more information.
 
-    # Send response to OPTIONS requests and terminate the function execution
+    # Set CORS headers for preflight requests
     if request.method == 'OPTIONS':
+        # Allows GET requests from origin https://mydomain.com with
+        # Authorization header
         headers = {
             'Access-Control-Allow-Origin': 'https://mydomain.com',
             'Access-Control-Allow-Methods': 'GET',
