@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import base64
 from os import environ
 from time import sleep
 
@@ -100,14 +99,13 @@ class TestKMSSamples:
         assert isinstance(ec_key, _EllipticCurvePublicKey), 'expected EC key'
 
     def test_rsa_encrypt_decrypt(self):
-        ciphertext_bytes = sample.encryptRSA(self.message_bytes,
-                                             self.client,
-                                             self.rsaDecrypt)
-        ciphertext = base64.b64encode(ciphertext_bytes).decode()
-        # ciphertext should be 344 characters with base64 and RSA 2048
-        assert len(ciphertext) == 344, \
-            'ciphertext should be 344 chars; got {}'.format(len(ciphertext))
-        plaintext_bytes = sample.decryptRSA(ciphertext_bytes,
+        ciphertext = sample.encryptRSA(self.message_bytes,
+                                       self.client,
+                                       self.rsaDecrypt)
+        # ciphertext should be 256 characters with base64 and RSA 2048
+        assert len(ciphertext) == 256, \
+            'ciphertext should be 256 chars; got {}'.format(len(ciphertext))
+        plaintext_bytes = sample.decryptRSA(ciphertext,
                                             self.client,
                                             self.rsaDecrypt)
         assert plaintext_bytes == self.message_bytes
@@ -119,9 +117,8 @@ class TestKMSSamples:
                                     self.client,
                                     self.rsaSign)
         # ciphertext should be 344 characters with base64 and RSA 2048
-        assert len(sig) == 344, \
-            'sig should be 344 chars; got {}'.format(len(sig))
-        assert sig[-2:] == '==', 'sig should end with =='
+        assert len(sig) == 256, \
+            'sig should be 256 chars; got {}'.format(len(sig))
         success = sample.verifySignatureRSA(sig,
                                             self.message_bytes,
                                             self.client,

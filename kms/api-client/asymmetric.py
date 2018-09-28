@@ -95,7 +95,7 @@ def signAsymmetric(message, client, key_path):
                     .asymmetricSign(name=key_path,
                                     body={'digest': digest_JSON})
     response = request.execute()
-    return response.get('signature', None)
+    return base64.b64decode(response.get('signature', None))
 # [END kms_sign_asymmetric]
 
 
@@ -106,13 +106,11 @@ def verifySignatureRSA(signature, message, client, key_path):
     specified message
     """
     public_key = getAsymmetricPublicKey(client, key_path)
-
     digest_bytes = hashlib.sha256(message).digest()
-    sig_bytes = base64.b64decode(signature)
 
     try:
         # Attempt verification
-        public_key.verify(sig_bytes,
+        public_key.verify(signature,
                           digest_bytes,
                           padding.PSS(mgf=padding.MGF1(hashes.SHA256()),
                                       salt_length=32),
@@ -131,13 +129,11 @@ def verifySignatureEC(signature, message, client, key_path):
     for the specified message
     """
     public_key = getAsymmetricPublicKey(client, key_path)
-
     digest_bytes = hashlib.sha256(message).digest()
-    sig_bytes = base64.b64decode(signature)
 
     try:
         # Attempt verification
-        public_key.verify(sig_bytes,
+        public_key.verify(signature,
                           digest_bytes,
                           ec.ECDSA(utils.Prehashed(hashes.SHA256())))
         # No errors were thrown. Verification was successful
