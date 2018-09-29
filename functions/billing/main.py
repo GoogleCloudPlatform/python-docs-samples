@@ -24,6 +24,7 @@ import os
 # [START functions_billing_stop]
 from googleapiclient import discovery
 from oauth2client.client import GoogleCredentials
+
 # [END functions_billing_stop]
 # [END functions_billing_limit]
 
