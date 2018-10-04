@@ -71,6 +71,24 @@ def lock_retention_policy(bucket_name):
     # [END storage_lock_retention_policy]
 
 
+def get_retention_policy(bucket_name):
+    """Gets the retention policy on a given bucket"""
+    # [START storage_get_retention_policy]
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    bucket.reload()
+
+    print('Retention Policy for {}'.format(bucket_name))
+    print('Retention Period: {}'.format(bucket.retention_period))
+    if bucket.retention_policy_locked:
+        print('Retention Policy is locked')
+
+    if bucket.retention_policy_effective_time:
+        print('Effective Time: {}'
+              .format(bucket.retention_policy_effective_time))
+    # [END storage_get_retention_policy]
+
+
 def set_temporary_hold(bucket_name, blob_name):
     """Sets a temporary hold on a given blob"""
     # [START storage_set_temporary_hold]
@@ -153,6 +171,21 @@ def disable_default_event_based_hold(bucket_name):
     # [END storage_disable_default_event_based_hold]
 
 
+def get_default_event_based_hold(bucket_name):
+    """Gets the default event based hold on a given bucket"""
+    # [START storage_get_default_event_based_hold]
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    bucket.reload()
+
+    if bucket.default_event_based_hold:
+        print('Default event-based hold is enabled for {}'.format(bucket_name))
+    else:
+        print('Default event-based hold is not enabled for {}'
+              .format(bucket_name))
+    # [END storage_get_default_event_based_hold]
+
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(
@@ -172,6 +205,10 @@ if __name__ == '__main__':
     lock_retention_policy_parser = subparsers.add_parser(
         'lock-retention-policy', help=lock_retention_policy.__doc__)
     lock_retention_policy_parser.add_argument('bucket_name')
+
+    get_retention_policy_parser = subparsers.add_parser(
+        'get-retention-policy', help=get_retention_policy.__doc__)
+    get_retention_policy_parser.add_argument('bucket_name')
 
     set_temporary_hold_parser = subparsers.add_parser(
         'set-temporary-hold', help=set_temporary_hold.__doc__)
@@ -203,6 +240,11 @@ if __name__ == '__main__':
         help=disable_default_event_based_hold.__doc__)
     disable_default_event_based_hold_parser.add_argument('bucket_name')
 
+    get_default_event_based_hold_parser = subparsers.add_parser(
+        'get-default-event-based-hold',
+        help=get_default_event_based_hold.__doc__)
+    get_default_event_based_hold_parser.add_argument('bucket_name')
+
     args = parser.parse_args()
 
     if args.command == 'set-retention-policy':
@@ -211,6 +253,8 @@ if __name__ == '__main__':
         remove_retention_policy(args.bucket_name)
     elif args.command == 'lock-retention-policy':
         lock_retention_policy(args.bucket_name)
+    elif args.command == 'get-retention-policy':
+        get_retention_policy(args.bucket_name)
     elif args.command == 'set-temporary-hold':
         set_temporary_hold(args.bucket_name, args.blob_name)
     elif args.command == 'release-temporary-hold':
@@ -223,3 +267,5 @@ if __name__ == '__main__':
         enable_default_event_based_hold(args.bucket_name)
     elif args.command == 'disable-default-event-based-hold':
         disable_default_event_based_hold(args.bucket_name)
+    elif args.command == 'get-default-event-based-hold':
+        get_default_event_based_hold(args.bucket_name)

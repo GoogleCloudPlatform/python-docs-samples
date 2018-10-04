@@ -36,13 +36,20 @@ def bucket():
     bucket.delete(force=True)
 
 
-def test_retention_policy_no_lock(bucket):
+def test_retention_policy_no_lock(bucket, capsys):
     bucket_lock.set_retention_policy(bucket.name, RETENTION_POLICY)
     bucket.reload()
 
     assert bucket.retention_period is RETENTION_POLICY
     assert bucket.retention_policy_effective_time is not None
     assert bucket.retention_policy_locked is None
+
+    bucket_lock.get_retention_policy(bucket.name)
+    out, _ = capsys.readouterr()
+    assert 'Retention Policy for {}'.format(bucket.name) in out
+    assert 'Retention Period: 5' in out
+    assert 'Effective Time: ' in out
+    assert 'Retention Policy is locked' not in out
 
     blob = bucket.blob(BLOB_NAME)
     blob.upload_from_string(BLOB_CONTENT)
@@ -56,7 +63,7 @@ def test_retention_policy_no_lock(bucket):
     time.sleep(RETENTION_POLICY)
 
 
-def test_retention_policy_lock(bucket):
+def test_retention_policy_lock(bucket, capsys):
     bucket_lock.set_retention_policy(bucket.name, RETENTION_POLICY)
     bucket.reload()
     assert bucket.retention_policy_locked is None
@@ -65,12 +72,28 @@ def test_retention_policy_lock(bucket):
     bucket.reload()
     assert bucket.retention_policy_locked is True
 
+    bucket_lock.get_retention_policy(bucket.name)
+    out, _ = capsys.readouterr()
+    assert 'Retention Policy is locked' in out
 
-def test_enable_disable_bucket_default_event_based_hold(bucket):
+
+def test_enable_disable_bucket_default_event_based_hold(bucket, capsys):
+    bucket_lock.get_default_event_based_hold(bucket.name)
+    out, _ = capsys.readouterr()
+    assert 'Default event-based hold is not enabled for {}'.format(
+        bucket.name) in out
+    assert 'Default event-based hold is enabled for {}'.format(
+        bucket.name) not in out
+
     bucket_lock.enable_default_event_based_hold(bucket.name)
     bucket.reload()
 
     assert bucket.default_event_based_hold is True
+
+    bucket_lock.get_default_event_based_hold(bucket.name)
+    out, _ = capsys.readouterr()
+    assert 'Default event-based hold is enabled for {}'.format(
+        bucket.name) in out
 
     blob = bucket.blob(BLOB_NAME)
     blob.upload_from_string(BLOB_CONTENT)
