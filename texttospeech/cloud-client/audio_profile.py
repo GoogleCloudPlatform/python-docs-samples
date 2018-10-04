@@ -18,13 +18,13 @@
 
 Example usage:
     python audio_profile.py --text "hello" --effects_profile_id
-        "telephony-class-application"
+        "telephony-class-application" --output "output.mp3"
 """
 
 import argparse
 
 
-# [START tts_synthesize_text_with_audio_profile]
+# [START tts_synthesize_text_audio_profile_beta]
 def synthesize_text_with_audio_profile(text, output, effects_profile_id):
     """Synthesizes speech from the input string of text."""
     from google.cloud import texttospeech_v1beta1 as texttospeech
@@ -50,7 +50,7 @@ def synthesize_text_with_audio_profile(text, output, effects_profile_id):
         out.write(response.audio_content)
         print('Audio content written to file "%s"' % output)
 
-# [END tts_synthesize_text_with_audio_profile]
+# [END tts_synthesize_text_audio_profile_beta]
 
 
 if __name__ == '__main__':

@@ -6,7 +6,5 @@ handlers:
 - url: .*
   script: main.app
 
-#[START env]
 env_variables:
     GA_TRACKING_ID: your-tracking-id
-#[END env]

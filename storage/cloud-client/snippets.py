@@ -25,7 +25,10 @@ import argparse
 import datetime
 import pprint
 
+# [START storage_upload_file]
 from google.cloud import storage
+
+# [END storage_upload_file]
 
 
 def create_bucket(bucket_name):
@@ -144,6 +147,7 @@ def list_blobs_with_prefix(bucket_name, prefix, delimiter=None):
             print(prefix)
 
 
+# [START storage_upload_file]
 def upload_blob(bucket_name, source_file_name, destination_blob_name):
     """Uploads a file to the bucket."""
     storage_client = storage.Client()
@@ -155,6 +159,7 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
     print('File {} uploaded to {}.'.format(
         source_file_name,
         destination_blob_name))
+# [END storage_upload_file]
 
 
 def upload_blob_with_kms(bucket_name, source_file_name, destination_blob_name,
