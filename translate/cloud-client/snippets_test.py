@@ -15,35 +15,109 @@
 # limitations under the License.
 
 
-import snippets
-
-
 def test_detect_language(capsys):
-    snippets.detect_language('Hæ sæta')
+    # [START translate_detect_language]
+    from google.cloud import translate
+
+    translate_client = translate.Client()
+
+    # Text can also be a sequence of strings, in which case this method
+    # will return a sequence of results for each text.
+    text = 'Hæ sæta'
+    result = translate_client.detect_language(text)
+
+    print('Text: {}'.format(text))
+    print('Confidence: {}'.format(result['confidence']))
+    print('Language: {}'.format(result['language']))
+    # [END translate_detect_language]
+
     out, _ = capsys.readouterr()
     assert 'is' in out
 
 
 def test_list_languages(capsys):
-    snippets.list_languages()
+    # [START translate_list_codes]
+    from google.cloud import translate
+
+    translate_client = translate.Client()
+
+    results = translate_client.get_languages()
+
+    for language in results:
+        print(u'{name} ({language})'.format(**language))
+    # [END translate_list_codes]
+
     out, _ = capsys.readouterr()
     assert 'Icelandic (is)' in out
 
 
 def test_list_languages_with_target(capsys):
-    snippets.list_languages_with_target('is')
+    # [START translate_list_language_names]
+    from google.cloud import translate
+
+    translate_client = translate.Client()
+
+    target = 'is'  # Target must be an ISO 639-1 language code.
+    results = translate_client.get_languages(target_language=target)
+
+    for language in results:
+        print(u'{name} ({language})'.format(**language))
+    # [END translate_list_language_names]
+
     out, _ = capsys.readouterr()
     assert u'íslenska (is)' in out
 
 
 def test_translate_text(capsys):
-    snippets.translate_text('is', 'Hello world')
+    # [START translate_text_with_model]
+    import six
+    from google.cloud import translate
+
+    translate_client = translate.Client()
+
+    text = 'Hello world'
+    target = 'is'  # Target must be an ISO 639-1 language code.
+    model = translate.NMT
+    if isinstance(text, six.binary_type):
+        text = text.decode('utf-8')
+
+    # Text can also be a sequence of strings, in which case this method
+    # will return a sequence of results for each text.
+    result = translate_client.translate(
+        text, target_language=target, model=model)
+
+    print(u'Text: {}'.format(result['input']))
+    print(u'Translation: {}'.format(result['translatedText']))
+    print(u'Detected source language: {}'.format(
+        result['detectedSourceLanguage']))
+    # [END translate_text_with_model]
+
     out, _ = capsys.readouterr()
     assert u'Halló heimur' in out
 
 
 def test_translate_utf8(capsys):
+    # [START translate_translate_text]
+    import six
+    from google.cloud import translate
+
+    translate_client = translate.Client()
+
+    target = 'en'  # Target must be an ISO 639-1 language code.
     text = u'나는 파인애플을 좋아한다.'
-    snippets.translate_text('en', text)
+    if isinstance(text, six.binary_type):
+        text = text.decode('utf-8')
+
+    # Text can also be a sequence of strings, in which case this method
+    # will return a sequence of results for each text.
+    result = translate_client.translate(
+        text, target_language=target)
+
+    print(u'Text: {}'.format(result['input']))
+    print(u'Translation: {}'.format(result['translatedText']))
+    print(u'Detected source language: {}'.format(
+        result['detectedSourceLanguage']))
+    # [END translate_translate_text]
+
     out, _ = capsys.readouterr()
     assert u'I like pineapples.' in out
