@@ -24,7 +24,7 @@ def set_retention_policy(bucket_name, retention_period):
     # [START storage_set_retention_policy]
     # bucket_name = "my-bucket"
     # retention_period = 10
-    
+
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
 
@@ -41,7 +41,7 @@ def remove_retention_policy(bucket_name):
     """Removes the retention policy on a given bucket"""
     # [START storage_remove_retention_policy]
     # bucket_name = "my-bucket"
-    
+
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     bucket.reload()
@@ -120,7 +120,7 @@ def release_temporary_hold(bucket_name, blob_name):
     # [START storage_release_temporary_hold]
     # bucket_name = "my-bucket"
     # blob_name = "my-blob"
-    
+
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(blob_name)
@@ -137,7 +137,7 @@ def set_event_based_hold(bucket_name, blob_name):
     # [START storage_set_event_based_hold]
     # bucket_name = "my-bucket"
     # blob_name = "my-blob"
-    
+
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(blob_name)
@@ -154,7 +154,7 @@ def release_event_based_hold(bucket_name, blob_name):
     # [START storage_release_event_based_hold]
     # bucket_name = "my-bucket"
     # blob_name = "my-blob"
-    
+
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(blob_name)
@@ -170,7 +170,7 @@ def enable_default_event_based_hold(bucket_name):
     """Enables the default event based hold on a given bucket"""
     # [START storage_enable_default_event_based_hold]
     # bucket_name = "my-bucket"
-    
+
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
 
@@ -185,7 +185,7 @@ def disable_default_event_based_hold(bucket_name):
     """Disables the default event based hold on a given bucket"""
     # [START storage_disable_default_event_based_hold]
     # bucket_name = "my-bucket"
-    
+
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
 
@@ -200,7 +200,7 @@ def get_default_event_based_hold(bucket_name):
     """Gets the default event based hold on a given bucket"""
     # [START storage_get_default_event_based_hold]
     # bucket_name = "my-bucket"
-    
+
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     bucket.reload()
