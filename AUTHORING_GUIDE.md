@@ -489,8 +489,3 @@ The resources required by tests can usually be found in the `./resources`
 folder inside the sample directory. You can upload these resources to your
 own bucket to run the tests, e.g. using `gsutil`:  
 `gsutil cp ./resources/* gs://$CLOUD_STORAGE_BUCKET/`
-
-Many of these resources are already uploaded to a public read-only bucket.
-If your tests are failing because files are not found in your GCS bucket,
-you can try setting `CLOUD_STORAGE_BUCKET=cloud-samples-data` to use the
-public bucket.
