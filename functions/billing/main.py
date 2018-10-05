@@ -41,7 +41,9 @@ PROJECT_NAME = f'projects/{PROJECT_ID}'
 
 # [START functions_billing_slack]
 
+# See https://api.slack.com/docs/token-types#bot for more info
 BOT_ACCESS_TOKEN = 'xxxx-111111111111-abcdefghidklmnopq'
+
 CHANNEL = 'general'
 
 slack_client = SlackClient(BOT_ACCESS_TOKEN)
