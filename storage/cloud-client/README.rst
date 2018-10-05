@@ -267,11 +267,11 @@ To run this sample:
     $ python bucket_lock.py
 
     usage: bucket_lock.py [-h]
-                          {set-retention-policy,remove-retention-policy,lock-retention-policy,get-retention-policy,set-temporary-hold,release-temporary-hold,set-event_based-hold,release-event_based-hold,enable-default-event-based-hold,disable-default-event-based-hold,get-default-event-based-hold}
+                          {set-retention-policy,remove-retention-policy,lock-retention-policy,get-retention-policy,set-temporary-hold,release-temporary-hold,set-event-based-hold,release-event-based-hold,enable-default-event-based-hold,disable-default-event-based-hold,get-default-event-based-hold}
                           ...
 
     positional arguments:
-      {set-retention-policy,remove-retention-policy,lock-retention-policy,get-retention-policy,set-temporary-hold,release-temporary-hold,set-event_based-hold,release-event_based-hold,enable-default-event-based-hold,disable-default-event-based-hold,get-default-event-based-hold}
+      {set-retention-policy,remove-retention-policy,lock-retention-policy,get-retention-policy,set-temporary-hold,release-temporary-hold,set-event-based-hold,release-event-based-hold,enable-default-event-based-hold,disable-default-event-based-hold,get-default-event-based-hold}
         set-retention-policy
                             Defines a retention policy on a given bucket
         remove-retention-policy
@@ -283,9 +283,9 @@ To run this sample:
         set-temporary-hold  Sets a temporary hold on a given blob
         release-temporary-hold
                             Releases the temporary hold on a given blob
-        set-event_based-hold
+        set-event-based-hold
                             Sets a event based hold on a given blob
-        release-event_based-hold
+        release-event-based-hold
                             Releases the event based hold on a given blob
         enable-default-event-based-hold
                             Enables the default event based hold on a given bucket

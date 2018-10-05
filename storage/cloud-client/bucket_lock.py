@@ -22,6 +22,8 @@ from google.cloud import storage
 def set_retention_policy(bucket_name, retention_period):
     """Defines a retention policy on a given bucket"""
     # [START storage_set_retention_policy]
+    # bucket_name = "my-bucket"
+    # retention_period = 10
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
 
@@ -37,6 +39,7 @@ def set_retention_policy(bucket_name, retention_period):
 def remove_retention_policy(bucket_name):
     """Removes the retention policy on a given bucket"""
     # [START storage_remove_retention_policy]
+    # bucket_name = "my-bucket"
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     bucket.reload()
@@ -56,6 +59,7 @@ def remove_retention_policy(bucket_name):
 def lock_retention_policy(bucket_name):
     """Locks the retention policy on a given bucket"""
     # [START storage_lock_retention_policy]
+    # bucket_name = "my-bucket"
     storage_client = storage.Client()
     # get_bucket gets the current metageneration value for the bucket,
     # required by lock_retention_policy.
@@ -74,6 +78,7 @@ def lock_retention_policy(bucket_name):
 def get_retention_policy(bucket_name):
     """Gets the retention policy on a given bucket"""
     # [START storage_get_retention_policy]
+    # bucket_name = "my-bucket"
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     bucket.reload()
@@ -92,6 +97,8 @@ def get_retention_policy(bucket_name):
 def set_temporary_hold(bucket_name, blob_name):
     """Sets a temporary hold on a given blob"""
     # [START storage_set_temporary_hold]
+    # bucket_name = "my-bucket"
+    # blob_name = "my-blob"
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(blob_name)
@@ -106,6 +113,8 @@ def set_temporary_hold(bucket_name, blob_name):
 def release_temporary_hold(bucket_name, blob_name):
     """Releases the temporary hold on a given blob"""
     # [START storage_release_temporary_hold]
+    # bucket_name = "my-bucket"
+    # blob_name = "my-blob"
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(blob_name)
@@ -120,6 +129,8 @@ def release_temporary_hold(bucket_name, blob_name):
 def set_event_based_hold(bucket_name, blob_name):
     """Sets a event based hold on a given blob"""
     # [START storage_set_event_based_hold]
+    # bucket_name = "my-bucket"
+    # blob_name = "my-blob"
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(blob_name)
@@ -134,6 +145,8 @@ def set_event_based_hold(bucket_name, blob_name):
 def release_event_based_hold(bucket_name, blob_name):
     """Releases the event based hold on a given blob"""
     # [START storage_release_event_based_hold]
+    # bucket_name = "my-bucket"
+    # blob_name = "my-blob"
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(blob_name)
@@ -148,6 +161,7 @@ def release_event_based_hold(bucket_name, blob_name):
 def enable_default_event_based_hold(bucket_name):
     """Enables the default event based hold on a given bucket"""
     # [START storage_enable_default_event_based_hold]
+    # bucket_name = "my-bucket"
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
 
@@ -161,6 +175,7 @@ def enable_default_event_based_hold(bucket_name):
 def disable_default_event_based_hold(bucket_name):
     """Disables the default event based hold on a given bucket"""
     # [START storage_disable_default_event_based_hold]
+    # bucket_name = "my-bucket"
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
 
@@ -174,6 +189,7 @@ def disable_default_event_based_hold(bucket_name):
 def get_default_event_based_hold(bucket_name):
     """Gets the default event based hold on a given bucket"""
     # [START storage_get_default_event_based_hold]
+    # bucket_name = "my-bucket"
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     bucket.reload()
@@ -221,12 +237,12 @@ if __name__ == '__main__':
     release_temporary_hold_parser.add_argument('blob_name')
 
     set_event_based_hold_parser = subparsers.add_parser(
-        'set-event_based-hold', help=set_event_based_hold.__doc__)
+        'set-event-based-hold', help=set_event_based_hold.__doc__)
     set_event_based_hold_parser.add_argument('bucket_name')
     set_event_based_hold_parser.add_argument('blob_name')
 
     release_event_based_hold_parser = subparsers.add_parser(
-        'release-event_based-hold', help=release_event_based_hold.__doc__)
+        'release-event-based-hold', help=release_event_based_hold.__doc__)
     release_event_based_hold_parser.add_argument('bucket_name')
     release_event_based_hold_parser.add_argument('blob_name')
 
