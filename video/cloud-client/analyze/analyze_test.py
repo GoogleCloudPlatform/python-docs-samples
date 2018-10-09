@@ -22,9 +22,6 @@ import analyze
 
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-
-
-# Videos used for these tests can be found in the gs://demomaker/ public bucket
 LABELS_FILE_PATH = '/video/cat.mp4'
 EXPLICIT_CONTENT_FILE_PATH = '/video/cat.mp4'
 SHOTS_FILE_PATH = '/video/gbikes_dinosaur.mp4'
