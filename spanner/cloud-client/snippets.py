@@ -827,8 +827,8 @@ def update_data_with_dml_timestamp(instance_id, database_id):
     def update_albums(transaction):
         row_ct = transaction.execute_update(
             "UPDATE Albums "
-              "SET LastUpdateTime = PENDING_COMMIT_TIMESTAMP() "
-              "WHERE SingerId = 1"
+            "SET LastUpdateTime = PENDING_COMMIT_TIMESTAMP() "
+            "WHERE SingerId = 1"
         )
 
         print("{} record(s) updated.".format(row_ct))
@@ -851,7 +851,7 @@ def dml_write_read_transaction(instance_id, database_id):
         # Insert record.
         row_ct = transaction.execute_update(
             "INSERT Singers (SingerId, FirstName, LastName) "
-              " VALUES (11, 'Timothy', 'Campbell')"
+            " VALUES (11, 'Timothy', 'Campbell')"
         )
         print("{} record(s) inserted.".format(row_ct))
 
@@ -972,7 +972,7 @@ def write_with_dml_transaction(instance_id, database_id):
                 params={"AlbumBudget": second_album_budget},
                 param_types={"AlbumBudget": spanner.param_types.INT64}
             )
-        
+
             print("Transferred {} from Album1's budget to Album2's".format(
                     transfer_amount))
 
