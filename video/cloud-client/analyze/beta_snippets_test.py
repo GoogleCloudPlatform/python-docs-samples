@@ -14,19 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import pytest
 
 import beta_snippets
-
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-FILE_PATH = 'video/googlework_short.mp4'
 
 
 @pytest.mark.slow
 def test_speech_transcription(capsys):
     beta_snippets.speech_transcription(
-        'gs://{}/{}'.format(BUCKET, FILE_PATH))
+        'gs://python-docs-samples-tests/video/googlework_short.mp4')
     out, _ = capsys.readouterr()
     assert 'cultural' in out
