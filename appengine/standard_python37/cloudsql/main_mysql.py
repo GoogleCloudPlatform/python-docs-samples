@@ -32,7 +32,7 @@ def main():
     # set to `standard`
     if os.environ.get('GAE_ENV'):
         # If deployed, use the local socket interface for accessing Cloud SQL
-        host = f'/cloudsql/{db_connection_name}'
+        host = '/cloudsql/{}'.format(db_connection_name)
     else:
         # If running locally, use the TCP connections instead
         # Set up Cloud SQL Proxy (cloud.google.com/sql/docs/mysql/sql-proxy)
