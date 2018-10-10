@@ -22,6 +22,7 @@ import time
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'send'))  # noqa
 from google.cloud import pubsub
 import pytest
+
 import receive
 import send
 
