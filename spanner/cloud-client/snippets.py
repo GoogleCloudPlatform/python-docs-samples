@@ -748,6 +748,273 @@ def query_nested_struct_field(instance_id, database_id):
 # [END spanner_field_access_on_nested_struct_parameters]
 
 
+def insert_data_with_dml(instance_id, database_id):
+    """Inserts sample data into the given database using a DML statement. """
+    # [START spanner_dml_standard_insert]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    def insert_singers(transaction):
+        row_ct = transaction.execute_update(
+            "INSERT Singers (SingerId, FirstName, LastName) "
+            " VALUES (10, 'Virginia', 'Watson')"
+        )
+
+        print("{} record(s) inserted.".format(row_ct))
+
+    database.run_in_transaction(insert_singers)
+    # [END spanner_dml_standard_insert]
+
+
+def update_data_with_dml(instance_id, database_id):
+    """Updates sample data from the database using a DML statement. """
+    # [START spanner_dml_standard_update]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    def update_albums(transaction):
+        row_ct = transaction.execute_update(
+            "UPDATE Albums "
+            "SET MarketingBudget = MarketingBudget * 2 "
+            "WHERE SingerId = 1 and AlbumId = 1"
+        )
+
+        print("{} record(s) updated.".format(row_ct))
+
+    database.run_in_transaction(update_albums)
+    # [END spanner_dml_standard_update]
+
+
+def delete_data_with_dml(instance_id, database_id):
+    """Deletes sample data from the database using a DML statement. """
+    # [START spanner_dml_standard_delete]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    def delete_singers(transaction):
+        row_ct = transaction.execute_update(
+            "DELETE Singers WHERE FirstName = 'Alice'"
+        )
+
+        print("{} record(s) deleted.".format(row_ct))
+
+    database.run_in_transaction(delete_singers)
+    # [END spanner_dml_standard_delete]
+
+
+def update_data_with_dml_timestamp(instance_id, database_id):
+    """Updates data with Timestamp from the database using a DML statement. """
+    # [START spanner_dml_standard_update_with_timestamp]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    def update_albums(transaction):
+        row_ct = transaction.execute_update(
+            "UPDATE Albums "
+            "SET LastUpdateTime = PENDING_COMMIT_TIMESTAMP() "
+            "WHERE SingerId = 1"
+        )
+
+        print("{} record(s) updated.".format(row_ct))
+
+    database.run_in_transaction(update_albums)
+    # [END spanner_dml_standard_update_with_timestamp]
+
+
+def dml_write_read_transaction(instance_id, database_id):
+    """First inserts data then reads it from within a transaction using DML."""
+    # [START spanner_dml_write_then_read]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    def read_then_write(transaction):
+        # Insert record.
+        row_ct = transaction.execute_update(
+            "INSERT Singers (SingerId, FirstName, LastName) "
+            " VALUES (11, 'Timothy', 'Campbell')"
+        )
+        print("{} record(s) inserted.".format(row_ct))
+
+        # Read newly inserted record.
+        results = transaction.execute_sql(
+            "SELECT FirstName, LastName FROM Singers WHERE SingerId = 11"
+        )
+        for result in results:
+            print("FirstName: {}, LastName: {}".format(*result))
+
+    database.run_in_transaction(read_then_write)
+    # [END spanner_dml_write_then_read]
+
+
+def update_data_with_dml_struct(instance_id, database_id):
+    """Updates data with a DML statement and STRUCT parameters. """
+    # [START spanner_dml_structs]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    record_type = param_types.Struct([
+        param_types.StructField('FirstName', param_types.STRING),
+        param_types.StructField('LastName', param_types.STRING)
+    ])
+    record_value = ('Timothy', 'Campbell')
+
+    def write_with_struct(transaction):
+        row_ct = transaction.execute_update(
+            "UPDATE Singers SET LastName = 'Grant' "
+            "WHERE STRUCT<FirstName STRING, LastName STRING>"
+            "(FirstName, LastName) = @name",
+            params={'name': record_value},
+            param_types={'name': record_type}
+        )
+        print("{} record(s) updated.".format(row_ct))
+
+    database.run_in_transaction(write_with_struct)
+    # [END spanner_dml_structs]
+
+
+def insert_with_dml(instance_id, database_id):
+    """Inserts data with a DML statement into the database. """
+    # [START spanner_dml_getting_started_insert]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    def insert_singers(transaction):
+        row_ct = transaction.execute_update(
+            "INSERT Singers (SingerId, FirstName, LastName) VALUES "
+            "(12, 'Melissa', 'Garcia'), "
+            "(13, 'Russell', 'Morales'), "
+            "(14, 'Jacqueline', 'Long'), "
+            "(15, 'Dylan', 'Shaw')"
+        )
+        print("{} record(s) inserted.".format(row_ct))
+
+    database.run_in_transaction(insert_singers)
+    # [END spanner_dml_getting_started_insert]
+
+
+def write_with_dml_transaction(instance_id, database_id):
+    """ Transfers a marketing budget from one album to another. """
+    # [START spanner_dml_getting_started_update]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    def transfer_budget(transaction):
+        # Transfer marketing budget from one album to another. Performed in a
+        # single transaction to ensure that the transfer is atomic.
+        first_album_result = transaction.execute_sql(
+            "SELECT MarketingBudget from Albums "
+            "WHERE SingerId = 1 and AlbumId = 1"
+        )
+        first_album_row = list(first_album_result)[0]
+        first_album_budget = first_album_row[0]
+
+        transfer_amount = 300000
+
+        # Transaction will only be committed if this condition still holds at
+        # the time of commit. Otherwise it will be aborted and the callable
+        # will be rerun by the client library
+        if first_album_budget >= transfer_amount:
+            second_album_result = transaction.execute_sql(
+                "SELECT MarketingBudget from Albums "
+                "WHERE SingerId = 1 and AlbumId = 1"
+            )
+            second_album_row = list(second_album_result)[0]
+            second_album_budget = second_album_row[0]
+
+            first_album_budget -= transfer_amount
+            second_album_budget += transfer_amount
+
+            # Update first album
+            transaction.execute_update(
+                "UPDATE Albums "
+                "SET MarketingBudget = @AlbumBudget "
+                "WHERE SingerId = 1 and AlbumId = 1",
+                params={"AlbumBudget": first_album_budget},
+                param_types={"AlbumBudget": spanner.param_types.INT64}
+            )
+
+            # Update second album
+            transaction.execute_update(
+                "UPDATE Albums "
+                "SET MarketingBudget = @AlbumBudget "
+                "WHERE SingerId = 2 and AlbumId = 2",
+                params={"AlbumBudget": second_album_budget},
+                param_types={"AlbumBudget": spanner.param_types.INT64}
+            )
+
+            print("Transferred {} from Album1's budget to Album2's".format(
+                    transfer_amount))
+
+    database.run_in_transaction(transfer_budget)
+    # [END spanner_dml_getting_started_update]
+
+
+def update_data_with_partitioned_dml(instance_id, database_id):
+    """ Update sample data with a partitioned DML statement. """
+    # [START spanner_dml_partitioned_update]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    row_ct = database.execute_partitioned_dml(
+        "UPDATE Albums SET MarketingBudget = 100000 WHERE SingerId > 1"
+    )
+
+    print("{} records updated.".format(row_ct))
+    # [END spanner_dml_partitioned_update]
+
+
+def delete_data_with_partitioned_dml(instance_id, database_id):
+    """ Delete sample data with a partitioned DML statement. """
+    # [START spanner_dml_partitioned_delete]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    row_ct = database.execute_partitioned_dml(
+        "DELETE Singers WHERE SingerId > 10"
+    )
+
+    print("{} record(s) deleted.".format(row_ct))
+    # [END spanner_dml_partitioned_delete]
+
+
 if __name__ == '__main__':  # noqa: C901
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -802,6 +1069,30 @@ if __name__ == '__main__':  # noqa: C901
             'query_struct_field', help=query_struct_field.__doc__)
     subparsers.add_parser(
         'query_nested_struct_field', help=query_nested_struct_field.__doc__)
+    subparsers.add_parser(
+        'insert_data_with_dml', help=insert_data_with_dml.__doc__)
+    subparsers.add_parser(
+        'update_data_with_dml', help=update_data_with_dml.__doc__)
+    subparsers.add_parser(
+        'delete_data_with_dml', help=delete_data_with_dml.__doc__)
+    subparsers.add_parser(
+        'update_data_with_dml_timestamp',
+        help=update_data_with_dml_timestamp.__doc__)
+    subparsers.add_parser(
+        'dml_write_read_transaction',
+        help=dml_write_read_transaction.__doc__)
+    subparsers.add_parser(
+        'update_data_with_dml_struct',
+        help=update_data_with_dml_struct.__doc__)
+    subparsers.add_parser('insert_with_dml', help=insert_with_dml.__doc__)
+    subparsers.add_parser(
+        'write_with_dml_transaction', help=write_with_dml_transaction.__doc__)
+    subparsers.add_parser(
+        'update_data_with_partitioned_dml',
+        help=update_data_with_partitioned_dml.__doc__)
+    subparsers.add_parser(
+        'delete_data_with_partitioned_dml',
+        help=delete_data_with_partitioned_dml.__doc__)
 
     args = parser.parse_args()
 
@@ -857,3 +1148,23 @@ if __name__ == '__main__':  # noqa: C901
         query_struct_field(args.instance_id, args.database_id)
     elif args.command == 'query_nested_struct_field':
         query_nested_struct_field(args.instance_id, args.database_id)
+    elif args.command == 'insert_data_with_dml':
+        insert_data_with_dml(args.instance_id, args.database_id)
+    elif args.command == 'update_data_with_dml':
+        update_data_with_dml(args.instance_id, args.database_id)
+    elif args.command == 'delete_data_with_dml':
+        delete_data_with_dml(args.instance_id, args.database_id)
+    elif args.command == 'update_data_with_dml_timestamp':
+        update_data_with_dml_timestamp(args.instance_id, args.database_id)
+    elif args.command == 'dml_write_read_transaction':
+        dml_write_read_transaction(args.instance_id, args.database_id)
+    elif args.command == 'update_data_with_dml_struct':
+        update_data_with_dml_struct(args.instance_id, args.database_id)
+    elif args.command == 'insert_with_dml':
+        insert_with_dml(args.instance_id, args.database_id)
+    elif args.command == 'write_with_dml_transaction':
+        write_with_dml_transaction(args.instance_id, args.database_id)
+    elif args.command == 'update_data_with_partitioned_dml':
+        update_data_with_partitioned_dml(args.instance_id, args.database_id)
+    elif args.command == 'delete_data_with_partitioned_dml':
+        delete_data_with_partitioned_dml(args.instance_id, args.database_id)
