@@ -40,7 +40,7 @@ else:
 # information
 engine = sqlalchemy.create_engine('mysql+pymysql://{}:{}@{}/{}'.format(
     db_user, db_password, host, db_name
-), pool_size = 3)
+), pool_size=3)
 
 app = Flask(__name__)
 
