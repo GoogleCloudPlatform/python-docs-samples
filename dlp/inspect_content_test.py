@@ -156,20 +156,6 @@ def bigquery_project():
     bigquery_client.delete_dataset(dataset_ref, delete_contents=True)
 
 
-def test_inspect_string(capsys):
-    test_string = 'My name is Gary Smith and my email is gary@example.com'
-
-    inspect_content.inspect_string(
-        GCLOUD_PROJECT,
-        test_string,
-        ['FIRST_NAME', 'EMAIL_ADDRESS'],
-        include_quote=True)
-
-    out, _ = capsys.readouterr()
-    assert 'Info type: FIRST_NAME' in out
-    assert 'Info type: EMAIL_ADDRESS' in out
-
-
 def test_inspect_string_with_custom_info_types(capsys):
     test_string = 'My name is Gary Smith and my email is gary@example.com'
     dictionaries = ['Gary Smith']
@@ -199,19 +185,6 @@ def test_inspect_string_no_results(capsys):
 
     out, _ = capsys.readouterr()
     assert 'No findings' in out
-
-
-def test_inspect_file(capsys):
-    test_filepath = os.path.join(RESOURCE_DIRECTORY, 'test.txt')
-
-    inspect_content.inspect_file(
-        GCLOUD_PROJECT,
-        test_filepath,
-        ['FIRST_NAME', 'EMAIL_ADDRESS'],
-        include_quote=True)
-
-    out, _ = capsys.readouterr()
-    assert 'Info type: EMAIL_ADDRESS' in out
 
 
 def test_inspect_file_with_custom_info_types(capsys):
