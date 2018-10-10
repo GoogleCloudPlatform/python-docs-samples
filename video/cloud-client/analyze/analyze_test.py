@@ -14,38 +14,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import pytest
 
 import analyze
 
 
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-LABELS_FILE_PATH = '/video/cat.mp4'
-EXPLICIT_CONTENT_FILE_PATH = '/video/cat.mp4'
-SHOTS_FILE_PATH = '/video/gbikes_dinosaur.mp4'
-
-
 @pytest.mark.slow
 def test_analyze_shots(capsys):
-    analyze.analyze_shots(
-        'gs://{}{}'.format(BUCKET, SHOTS_FILE_PATH))
+    analyze.analyze_shots('gs://demomaker/gbikes_dinosaur.mp4')
     out, _ = capsys.readouterr()
     assert 'Shot 1:' in out
 
 
 @pytest.mark.slow
 def test_analyze_labels(capsys):
-    analyze.analyze_labels(
-        'gs://{}{}'.format(BUCKET, LABELS_FILE_PATH))
+    analyze.analyze_labels('gs://demomaker/cat.mp4')
     out, _ = capsys.readouterr()
     assert 'label description: cat' in out
 
 
 @pytest.mark.slow
 def test_analyze_explicit_content(capsys):
-    analyze.analyze_explicit_content(
-        'gs://{}{}'.format(BUCKET, EXPLICIT_CONTENT_FILE_PATH))
+    analyze.analyze_explicit_content('gs://demomaker/cat.mp4')
     out, _ = capsys.readouterr()
     assert 'pornography' in out
