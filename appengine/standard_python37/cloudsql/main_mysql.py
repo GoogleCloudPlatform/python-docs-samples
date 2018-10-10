@@ -16,7 +16,7 @@
 import os
 
 from flask import Flask
-import mysql.connector
+import pymysql
 
 db_user = os.environ.get('CLOUD_SQL_USERNAME')
 db_password = os.environ.get('CLOUD_SQL_PASSWORD')
@@ -40,13 +40,12 @@ def main():
         # Cloud SQL instance
         host = '127.0.0.1'
 
-    cnx = mysql.connector.connect(user=db_user, password=db_password,
-                                  host=host, database=db_name)
-    cursor = cnx.cursor()
-    cursor.execute('SELECT NOW() as now;')
-    result = cursor.fetchall()
-    current_time = result[0][0]
-    cursor.close()
+    cnx = pymysql.connect(user=db_user, password=db_password,
+                          host=host, db=db_name)
+    with cnx.cursor() as cursor:
+        cursor.execute('SELECT NOW() as now;')
+        result = cursor.fetchall()
+        current_time = result[0][0]
     cnx.close()
 
     return str(current_time)

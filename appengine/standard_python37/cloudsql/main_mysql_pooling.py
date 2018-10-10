@@ -16,7 +16,7 @@
 import os
 
 from flask import Flask
-import mysql.connector.pooling
+import sqlalchemy
 
 db_user = os.environ.get('CLOUD_SQL_USERNAME')
 db_password = os.environ.get('CLOUD_SQL_PASSWORD')
@@ -35,27 +35,22 @@ else:
     # Cloud SQL instance
     host = '127.0.0.1'
 
-db_config = {
-    'user': db_user,
-    'password': db_password,
-    'database': db_name,
-    'host': host
-}
-
-cnxpool = mysql.connector.pooling.MySQLConnectionPool(pool_name='cnxpool',
-                                                      pool_size=3, **db_config)
+# The Engine object returned by create_engine() has a QueuePool integrated
+# See https://docs.sqlalchemy.org/en/latest/core/pooling.html for more
+# information
+engine = sqlalchemy.create_engine('mysql+pymysql://{}:{}@{}/{}'.format(
+    db_user, db_password, host, db_name
+), pool_size = 3)
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def main():
-    cnx = cnxpool.get_connection()
-    cursor = cnx.cursor()
-    cursor.execute('SELECT NOW() as now;')
+    cnx = engine.connect()
+    cursor = cnx.execute('SELECT NOW() as now;')
     result = cursor.fetchall()
     current_time = result[0][0]
-    cursor.close()
     # If the connection comes from a pool, close() will send the connection
     # back to the pool instead of closing it
     cnx.close()

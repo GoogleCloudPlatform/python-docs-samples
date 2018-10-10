@@ -14,14 +14,14 @@
 
 from unittest.mock import MagicMock
 
-import mysql.connector.pooling
+import sqlalchemy
 import psycopg2.pool
 
 
 def test_main():
     import main_mysql
-    main_mysql.mysql.connector = MagicMock()
-    main_mysql.mysql.connector.connect().cursor().fetchall.return_value = [['0']]
+    main_mysql.pymysql = MagicMock()
+    main_mysql.pymysql.connect().cursor().__enter__().fetchall.return_value = [['0']]
 
     main_mysql.app.testing = True
     client = main_mysql.app.test_client()
@@ -32,12 +32,11 @@ def test_main():
 
 
 def test_main_pooling():
-    mysql.connector.pooling.MySQLConnectionPool = MagicMock()
+    sqlalchemy.create_engine = MagicMock()
 
     import main_mysql_pooling
 
-    mock_pool = main_mysql_pooling.mysql.connector.pooling.MySQLConnectionPool()
-    mock_pool.get_connection().cursor().fetchall.return_value = [['0']]
+    main_mysql_pooling.sqlalchemy.create_engine().connect().execute().fetchall.return_value = [['0']]
 
     main_mysql_pooling.app.testing = True
     client = main_mysql_pooling.app.test_client()
