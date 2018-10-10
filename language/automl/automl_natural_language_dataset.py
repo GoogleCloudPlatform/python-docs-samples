@@ -27,7 +27,7 @@ import os
 
 def create_dataset(project_id, compute_region, dataset_name, multilabel=False):
     """Create a dataset."""
-    # [START automl_natural_language_create_dataset]
+    # [START automl_language_create_dataset]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
@@ -69,12 +69,12 @@ def create_dataset(project_id, compute_region, dataset_name, multilabel=False):
     print("\tseconds: {}".format(dataset.create_time.seconds))
     print("\tnanos: {}".format(dataset.create_time.nanos))
 
-    # [END automl_natural_language_create_dataset]
+    # [END automl_language_create_dataset]
 
 
 def list_datasets(project_id, compute_region, filter_):
     """List all datasets."""
-    # [START automl_natural_language_list_datasets]
+    # [START automl_language_list_datasets]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
@@ -103,12 +103,12 @@ def list_datasets(project_id, compute_region, filter_):
         print("\tseconds: {}".format(dataset.create_time.seconds))
         print("\tnanos: {}".format(dataset.create_time.nanos))
 
-    # [END automl_natural_language_list_datasets]
+    # [END automl_language_list_datasets]
 
 
 def get_dataset(project_id, compute_region, dataset_id):
     """Get the dataset."""
-    # [START automl_natural_language_get_dataset]
+    # [START automl_language_get_dataset]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
@@ -137,12 +137,12 @@ def get_dataset(project_id, compute_region, dataset_id):
     print("\tseconds: {}".format(dataset.create_time.seconds))
     print("\tnanos: {}".format(dataset.create_time.nanos))
 
-    # [END automl_natural_language_get_dataset]
+    # [END automl_language_get_dataset]
 
 
 def import_data(project_id, compute_region, dataset_id, path):
     """Import labelled items."""
-    # [START automl_natural_language_import_data]
+    # [START automl_language_import_data]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
@@ -169,12 +169,12 @@ def import_data(project_id, compute_region, dataset_id, path):
     # synchronous check of operation status.
     print("Data imported. {}".format(response.result()))
 
-    # [END automl_natural_language_import_data]
+    # [END automl_language_import_data]
 
 
 def export_data(project_id, compute_region, dataset_id, output_uri):
     """Export a dataset to a Google Cloud Storage bucket."""
-    # [START automl_natural_language_export_data]
+    # [START automl_language_export_data]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
@@ -200,12 +200,12 @@ def export_data(project_id, compute_region, dataset_id, output_uri):
     # synchronous check of operation status.
     print("Data exported. {}".format(response.result()))
 
-    # [END automl_natural_language_export_data]
+    # [END automl_language_export_data]
 
 
 def delete_dataset(project_id, compute_region, dataset_id):
     """Delete a dataset."""
-    # [START automl_natural_language_delete_dataset]
+    # [START automl_language_delete_dataset]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
@@ -226,7 +226,7 @@ def delete_dataset(project_id, compute_region, dataset_id):
     # synchronous check of operation status.
     print("Dataset deleted. {}".format(response.result()))
 
-    # [END automl_natural_language_delete_dataset]
+    # [END automl_language_delete_dataset]
 
 
 if __name__ == "__main__":

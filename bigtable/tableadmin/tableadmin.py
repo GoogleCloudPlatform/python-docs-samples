@@ -34,6 +34,7 @@ import argparse
 import datetime
 
 from google.cloud import bigtable
+from google.cloud.bigtable import column_family
 
 
 def run_table_operations(project_id, instance_id, table_id):
@@ -56,7 +57,7 @@ def run_table_operations(project_id, instance_id, table_id):
     # Check whether table exists in an instance.
     # Create table if it does not exists.
     print 'Checking if table {} exists...'.format(table_id)
-    if exists(instance, table_id):
+    if table.exists():
         print 'Table {} already exists.'.format(table_id)
     else:
         print 'Creating the {} table.'.format(table_id)
@@ -79,10 +80,10 @@ def run_table_operations(project_id, instance_id, table_id):
     # where age = current time minus cell timestamp
 
     # Define the GC rule to retain data with max age of 5 days
-    max_age_rule = table.max_age_gc_rule(datetime.timedelta(days=5))
+    max_age_rule = column_family.MaxAgeGCRule(datetime.timedelta(days=5))
 
-    cf1 = table.column_family('cf1', max_age_rule)
-    cf1.create()
+    column_family1 = table.column_family('cf1', max_age_rule)
+    column_family1.create()
     print 'Created column family cf1 with MaxAge GC Rule.'
     # [END bigtable_create_family_gc_max_age]
 
@@ -92,10 +93,10 @@ def run_table_operations(project_id, instance_id, table_id):
     # where 1 = most recent version
 
     # Define the GC policy to retain only the most recent 2 versions
-    max_versions_rule = table.max_versions_gc_rule(2)
+    max_versions_rule = column_family.MaxVersionsGCRule(2)
 
-    cf2 = table.column_family('cf2', max_versions_rule)
-    cf2 .create()
+    column_family2 = table.column_family('cf2', max_versions_rule)
+    column_family2.create()
     print 'Created column family cf2 with Max Versions GC Rule.'
     # [END bigtable_create_family_gc_max_versions]
 
@@ -105,12 +106,12 @@ def run_table_operations(project_id, instance_id, table_id):
     # at least one condition.
     # Define a GC rule to drop cells older than 5 days or not the
     # most recent version
-    union_rule = table.gc_rule_union([
-        table.max_age_gc_rule(datetime.timedelta(days=5)),
-        table.max_versions_gc_rule(2)])
+    union_rule = column_family.GCRuleUnion([
+        column_family.MaxAgeGCRule(datetime.timedelta(days=5)),
+        column_family.MaxVersionsGCRule(2)])
 
-    cf3 = table.column_family('cf3', union_rule)
-    cf3.create()
+    column_family3 = table.column_family('cf3', union_rule)
+    column_family3.create()
     print 'Created column family cf3 with Union GC rule'
     # [END bigtable_create_family_gc_union]
 
@@ -120,12 +121,12 @@ def run_table_operations(project_id, instance_id, table_id):
     # all conditions
     # GC rule: Drop cells older than 5 days AND older than the most
     # recent 2 versions
-    intersection_rule = table.gc_rule_intersection([
-        table.max_age_gc_rule(datetime.timedelta(days=5)),
-        table.max_versions_gc_rule(2)])
+    intersection_rule = column_family.GCRuleIntersection([
+        column_family.MaxAgeGCRule(datetime.timedelta(days=5)),
+        column_family.MaxVersionsGCRule(2)])
 
-    cf4 = table.column_family('cf4', intersection_rule)
-    cf4.create()
+    column_family4 = table.column_family('cf4', intersection_rule)
+    column_family4.create()
     print 'Created column family cf4 with Intersection GC rule.'
     # [END bigtable_create_family_gc_intersection]
 
@@ -137,24 +138,24 @@ def run_table_operations(project_id, instance_id, table_id):
     # OR
     # Drop cells that are older than a month AND older than the
     # 2 recent versions
-    rule1 = table.max_versions_gc_rule(10)
-    rule2 = table.gc_rule_intersection([
-        table.max_age_gc_rule(datetime.timedelta(days=30)),
-        table.max_versions_gc_rule(2)])
+    rule1 = column_family.MaxVersionsGCRule(10)
+    rule2 = column_family.GCRuleIntersection([
+        column_family.MaxAgeGCRule(datetime.timedelta(days=30)),
+        column_family.MaxVersionsGCRule(2)])
 
-    nested_rule = table.gc_rule_union([rule1, rule2])
+    nested_rule = column_family.GCRuleUnion([rule1, rule2])
 
-    cf5 = table.column_family('cf5', nested_rule)
-    cf5.create()
+    column_family5 = table.column_family('cf5', nested_rule)
+    column_family5.create()
     print 'Created column family cf5 with a Nested GC rule.'
     # [END bigtable_create_family_gc_nested]
 
     # [START bigtable_list_column_families]
     print 'Printing Column Family and GC Rule for all column families...'
     column_families = table.list_column_families()
-    for column_family, gc_rule in sorted(column_families.items()):
-        print "Column Family:", column_family
-        print "GC Rule:"
+    for column_family_name, gc_rule in sorted(column_families.items()):
+        print 'Column Family:', column_family_name
+        print 'GC Rule:'
         print gc_rule.to_pb()
         # Sample output:
         #         Column Family: cf4
@@ -174,52 +175,32 @@ def run_table_operations(project_id, instance_id, table_id):
     # [END bigtable_list_column_families]
 
     print 'Print column family cf1 GC rule before update...'
-    print "Column Family: cf1"
-    print cf1.to_pb()
+    print 'Column Family: cf1'
+    print column_family1.to_pb()
 
     # [START bigtable_update_gc_rule]
     print 'Updating column family cf1 GC rule...'
     # Update the column family cf1 to update the GC rule
-    cf1 = table.column_family('cf1', table.max_versions_gc_rule(1))
-    cf1.update()
+    column_family1 = table.column_family(
+        'cf1',
+        column_family.MaxVersionsGCRule(1))
+    column_family1.update()
     print 'Updated column family cf1 GC rule\n'
     # [END bigtable_update_gc_rule]
 
     print 'Print column family cf1 GC rule after update...'
-    print "Column Family: cf1"
-    print cf1.to_pb()
+    print 'Column Family: cf1'
+    print column_family1.to_pb()
 
     # [START bigtable_delete_family]
     print 'Delete a column family cf2...'
     # Delete a column family
-    cf2.delete()
+    column_family2.delete()
     print 'Column family cf2 deleted successfully.'
     # [END bigtable_delete_family]
 
     print 'execute command "python tableadmin.py delete [project_id] \
             [instance_id] --table [tableName]" to delete the table.'
-
-
-def exists(instance_obj, table_id):
-    """ Check whether table exists or not.
-
-        .. note::
-
-            This is temporary function as code for this is under development.
-            Once complete, this function would be removed.
-
-    :type instance_obj: Instance Class.
-    :param instance_obj: Instance object.
-
-    :type table_id: str
-    :param table_id: Table id to identify table.
-
-    Returns bool
-    """
-    for table in instance_obj.list_tables():
-        if table_id == table.table_id:
-            return True
-    return False
 
 
 def delete_table(project_id, instance_id, table_id):
@@ -243,7 +224,7 @@ def delete_table(project_id, instance_id, table_id):
     # Delete the entire table
 
     print 'Checking if table {} exists...'.format(table_id)
-    if exists(instance, table_id):
+    if table.exists():
         print 'Table {} exists.'.format(table_id)
         print 'Deleting {} table.'.format(table_id)
         table.delete()
@@ -259,22 +240,26 @@ if __name__ == '__main__':
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument('command',
-                        help='run or delete. Operation to perform on table.')
+                        help='run or delete. \
+                        Operation to perform on table.')
     parser.add_argument(
         '--table',
         help='Cloud Bigtable Table name.',
         default='Hello-Bigtable')
 
-    parser.add_argument('project_id', help='Your Cloud Platform project ID.')
+    parser.add_argument('project_id',
+                        help='Your Cloud Platform project ID.')
     parser.add_argument(
-        'instance_id', help='ID of the Cloud Bigtable instance to connect to.')
+        'instance_id',
+        help='ID of the Cloud Bigtable instance to connect to.')
 
     args = parser.parse_args()
 
     if args.command.lower() == 'run':
-        run_table_operations(args.project_id, args.instance_id, args.table)
+        run_table_operations(args.project_id, args.instance_id,
+                             args.table)
     elif args.command.lower() == 'delete':
         delete_table(args.project_id, args.instance_id, args.table)
     else:
-        print 'Command should be either run or delete.\n Use argument -h, \
+        print 'Command should be either run or delete.\n Use argument -h,\
                --help to show help and exit.'

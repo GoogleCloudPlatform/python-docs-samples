@@ -40,7 +40,7 @@ def _list_files(folder, pattern):
 
 def _collect_dirs(
         start_dir,
-        blacklist=set(['conftest.py', 'nox.py', 'lib']),
+        blacklist=set(['conftest.py', 'nox.py', 'lib', 'third_party']),
         suffix='_test.py',
         recurse_further=False):
     """Recursively collects a list of dirs that contain a file matching the
@@ -157,9 +157,7 @@ ALL_SAMPLE_DIRECTORIES = sorted(list(_collect_dirs('.', suffix='.py', recurse_fu
 GAE_STANDARD_SAMPLES = [
     sample for sample in ALL_TESTED_SAMPLES
     if sample.startswith('./appengine/standard/')]
-PY2_ONLY_SAMPLES = GAE_STANDARD_SAMPLES + [
-    sample for sample in ALL_TESTED_SAMPLES
-    if sample.startswith('./composer/workflows')]
+PY2_ONLY_SAMPLES = GAE_STANDARD_SAMPLES
 PY3_ONLY_SAMPLES = [
     sample for sample in ALL_TESTED_SAMPLES
     if (sample.startswith('./appengine/standard_python37')

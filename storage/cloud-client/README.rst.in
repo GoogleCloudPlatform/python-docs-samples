@@ -24,6 +24,9 @@ samples:
 - name: Customer-Supplied Encryption
   file: encryption.py
   show_help: true
+- name: Bucket Lock
+  file: bucket_lock.py
+  show_help: true
 - name: Notification Polling
   file: notification_polling.py
   show_help: true
