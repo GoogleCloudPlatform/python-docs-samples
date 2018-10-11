@@ -95,7 +95,7 @@ if os.getenv('GAE_APPLICATION', None):
             'HOST': '/cloudsql/[YOUR-CONNECTION-NAME]',
             'USER': '[YOUR-USERNAME]',
             'PASSWORD': '[YOUR-PASSWORD]',
-            'NAME': 'polls',
+            'NAME': '[YOUR-DATABASE]',
         }
     }
 else:
