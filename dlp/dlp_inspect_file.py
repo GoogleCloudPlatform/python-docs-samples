@@ -30,15 +30,8 @@ def inspect_file():
             {'name': 'EMAIL_ADDRESS'},
             {'name': 'CREDIT_CARD_NUMBER'},
         ],
-        # The minimum likelihood required before returning a match
-        'min_likelihood': 'LIKELIHOOD_UNSPECIFIED',
         # Whether to include the matching string
         'include_quote': True,
-        'limits': {
-            # The maximum number of findings to report per request
-            # (0 = server maximum)
-            'max_findings_per_request': 0,
-        },
     }
 
     # Construct the item, containing the file's byte data.
