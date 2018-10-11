@@ -79,15 +79,11 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-# Check to see if MySQLdb is available; if not, have pymysql masquerade as
-# MySQLdb. This is a convenience feature for developers who cannot install
-# MySQLdb locally; when running in production on Google App Engine Standard
-# Environment, MySQLdb will be used.
-try:
-    import MySQLdb  # noqa: F401
-except ImportError:
-    import pymysql
-    pymysql.install_as_MySQLdb()
+# Install PyMySQL as mysqlclient/MySQLdb to use Django's mysqlclient adapter
+# See https://docs.djangoproject.com/en/2.1/ref/databases/#mysql-db-api-drivers for
+# more information
+import pymysql
+pymysql.install_as_MySQLdb()
 
 # [START db_setup]
 if os.getenv('GAE_APPLICATION', None):
