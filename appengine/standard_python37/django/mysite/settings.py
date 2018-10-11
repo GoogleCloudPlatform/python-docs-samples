@@ -93,6 +93,7 @@ if os.getenv('GAE_APPLICATION', None):
         'default': {
             'ENGINE': 'django.db.backends.mysql',
             'HOST': '/cloudsql/[YOUR-CONNECTION-NAME]',
+            'NAME': '[YOUR-DATABASE]',
             'USER': '[YOUR-USERNAME]',
             'PASSWORD': '[YOUR-PASSWORD]',
             'NAME': '[YOUR-DATABASE]',
