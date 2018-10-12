@@ -14,20 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import pytest
 
 import labels
 
 
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-LABELS_FILE_PATH = '/video/cat.mp4'
-
-
 @pytest.mark.slow
 def test_feline_video_labels(capsys):
-    labels.analyze_labels(
-        'gs://{}{}'.format(BUCKET, LABELS_FILE_PATH))
+    labels.analyze_labels('gs://demomaker/cat.mp4')
     out, _ = capsys.readouterr()
     assert 'Video label description: cat' in out

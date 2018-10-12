@@ -79,6 +79,12 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+# Install PyMySQL as mysqlclient/MySQLdb to use Django's mysqlclient adapter
+# See https://docs.djangoproject.com/en/2.1/ref/databases/#mysql-db-api-drivers for
+# more information
+import pymysql
+pymysql.install_as_MySQLdb()
+
 # [START db_setup]
 if os.getenv('GAE_APPLICATION', None):
     # Running on production App Engine, so connect to Google Cloud SQL using
@@ -89,6 +95,7 @@ if os.getenv('GAE_APPLICATION', None):
             'HOST': '/cloudsql/[YOUR-CONNECTION-NAME]',
             'USER': '[YOUR-USERNAME]',
             'PASSWORD': '[YOUR-PASSWORD]',
+            'NAME': '[YOUR-DATABASE]',
         }
     }
 else:
