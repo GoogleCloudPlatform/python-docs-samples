@@ -51,7 +51,7 @@ def create_jwt(project_id, private_key_file, algorithm):
                  ES256 private key.
          algorithm: The encryption algorithm to use. Either 'RS256' or 'ES256'
         Returns:
-            A str for the JWT from the given project_id and path to private key,
+            A str for the JWT from the given project id and private key path,
             set to expire in 60 minutes. After 60 minutes, your client will be
             disconnected, and a new JWT will have to be generated.
         Raises:
