@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START functions_firebase_analytics]
+from datetime import datetime
+# [END functions_firebase_analytics]
+
 # [START functions_firebase_rtdb]
 # [START functions_firebase_firestore]
 # [START functions_firebase_auth]
@@ -69,3 +73,29 @@ def hello_auth(data, context):
     if 'email' in data:
         print('Email: %s' % data["email"])
 # [END functions_firebase_auth]
+
+
+# [START functions_firebase_analytics]
+def hello_analytics(data, context):
+    print(data)
+    print(context)
+    """ Triggered by a Google Analytics for Firebase log event.
+     Args:
+            data (dict): The event payload.
+            context (google.cloud.functions.Context): Metadata for the event.
+    """
+    trigger_resource = context.resource
+    print(f'Function triggered by the following event: {trigger_resource}')
+
+    event = data["eventDim"][0]
+    print(f'Name: {event["name"]}')
+
+    event_timestamp = int(event["timestampMicros"][:-6])
+    print(f'Timestamp: {datetime.utcfromtimestamp(event_timestamp)}')
+
+    user_obj = data["userDim"]
+    print(f'Device Model: {user_obj["deviceInfo"]["deviceModel"]}')
+
+    geo_info = user_obj["geoInfo"]
+    print(f'Location: {geo_info["city"]}, {geo_info["country"]}')
+# [END functions_firebase_analytics]
