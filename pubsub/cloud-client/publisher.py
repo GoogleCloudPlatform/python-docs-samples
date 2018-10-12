@@ -87,7 +87,7 @@ def publish_messages(project_id, topic_name):
     # TODO topic_name = "Your Pub/Sub topic name"
 
     publisher = pubsub_v1.PublisherClient()
-    # The `topic_path` method creates a fully qualified identifier 
+    # The `topic_path` method creates a fully qualified identifier
     # in the form `projects/{project_id}/topics/{topic_name}`
     topic_path = publisher.topic_path(project_id, topic_name)
 
