@@ -13,14 +13,19 @@
 # limitations under the License.
 import sys
 
-# [START dlp_inspect_string]
+# [START dlp_inspect_text_file]
 # Import the Google Cloud Data Loss Prevention library
 import google.cloud.dlp
 
 
-def inspect_string(project_id='YOUR_PROJECT_ID'):
+def inspect_image_file(project_id='YOUR_PROJECT_ID',
+                       filepath='path/to/image.png'):
     # Instantiate a client
     dlp = google.cloud.dlp.DlpServiceClient()
+
+    # Get the bytes of the file
+    with open(filepath, mode='rb') as f:
+        item = {'byte_item': {'type': 'IMAGE', 'data': f.read()}}
 
     # Construct the configuration
     inspect_config = {
@@ -33,9 +38,6 @@ def inspect_string(project_id='YOUR_PROJECT_ID'):
         # Whether to include the matching string
         'include_quote': True,
     }
-
-    # Construct the `item`
-    item = {'value': 'My name is Gary Smith and my email is gary@example.com'}
 
     # Convert the project id into a full resource id
     parent = dlp.project_path(project_id)
@@ -55,8 +57,8 @@ def inspect_string(project_id='YOUR_PROJECT_ID'):
             print('Likelihood: {}'.format(finding.likelihood))
     else:
         print('No findings.')
-# [END dlp_inspect_string]
+# [END dlp_inspect_text_file]
 
 
 if __name__ == '__main__':
-    inspect_string(project_id=sys.argv[1])
+    inspect_image_file(project_id=sys.argv[1], filepath=sys.argv[2])

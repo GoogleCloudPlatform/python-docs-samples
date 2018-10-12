@@ -11,11 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+import subprocess
+import sys
 
 
-def test_inspect_file(capsys):
-    import dlp_inspect_file
+def test_inspect_image_file():
+    base_filepath = os.path.dirname(__file__)
+    snippet_filepath = os.path.join(base_filepath, 'dlp_inspect_image_file.py')
+    resource_filepath = os.path.join(base_filepath, 'resources', 'test.png')
+    project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
 
-    dlp_inspect_file.inspect_file()
-    out, _ = capsys.readouterr()
-    assert 'Info type: EMAIL_ADDRESS' in out
+    out = subprocess.check_output(
+        [sys.executable, snippet_filepath, project_id, resource_filepath])
+
+    assert 'Info type: EMAIL_ADDRESS' in str(out)

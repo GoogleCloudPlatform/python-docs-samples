@@ -11,18 +11,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import sys
 
-# [START dlp_inspect_string]
-import os
-
-# Import the client library.
+# [START dlp_inspect_text_file]
+# Import the Google Cloud Data Loss Prevention library
 import google.cloud.dlp
 
 
-def inspect_file():
-    # Instantiate a client.
+def inspect_text_file(project_id='YOUR_PROJECT_ID',
+                      filepath='path/to/file.txt'):
+    # Instantiate a client
     dlp = google.cloud.dlp.DlpServiceClient()
 
+    # Get the bytes of the file
+    with open(filepath, mode='rb') as f:
+        item = {'byte_item': {'type': 'TEXT_UTF8', 'data': f.read()}}
+
+    # Construct the configuration
     inspect_config = {
         # The infoTypes of information to match
         'info_types': [
@@ -34,23 +39,13 @@ def inspect_file():
         'include_quote': True,
     }
 
-    # Construct the item, containing the file's byte data.
-    # Before running this code, replace the filename with your filepath
-    filename = os.path.join(
-        os.path.dirname(__file__), 'resources', 'test.txt')
-    with open(filename, mode='rb') as f:
-        item = {'byte_item': {'type': 'TEXT_UTF8', 'data': f.read()}}
-
-    # Convert the project id into a full resource id.
-    # Before running this code, replace 'YOUR_PROJECT_ID' with your project ID
-    # or set the GOOGLE_CLOUD_PROJECT environment variable to your project ID.
-    project_id = os.getenv('GOOGLE_CLOUD_PROJECT') or 'YOUR_PROJECT_ID'
+    # Convert the project id into a full resource id
     parent = dlp.project_path(project_id)
 
-    # Call the API.
+    # Call the API
     response = dlp.inspect_content(parent, inspect_config, item)
 
-    # Print out the results.
+    # Print out the results
     if response.result.findings:
         for finding in response.result.findings:
             try:
@@ -62,8 +57,8 @@ def inspect_file():
             print('Likelihood: {}'.format(finding.likelihood))
     else:
         print('No findings.')
-# [END dlp_inspect_string]
+# [END dlp_inspect_text_file]
 
 
 if __name__ == '__main__':
-    inspect_file()
+    inspect_text_file(project_id=sys.argv[1], filepath=sys.argv[2])

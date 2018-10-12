@@ -16,12 +16,14 @@ import subprocess
 import sys
 
 
-def test_inspect_string():
-    snippet_filepath = os.path.join(
-        os.path.dirname(__file__), 'dlp_inspect_string.py')
+def test_inspect_text_file():
+    base_filepath = os.path.dirname(__file__)
+    snippet_filepath = os.path.join(base_filepath, 'dlp_inspect_text_file.py')
+    resource_filepath = os.path.join(base_filepath, 'resources', 'test.txt')
     project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
 
     out = subprocess.check_output(
-        [sys.executable, snippet_filepath, project_id])
+        [sys.executable, snippet_filepath, project_id, resource_filepath])
 
+    assert 'Info type: PHONE_NUMBER' in str(out)
     assert 'Info type: EMAIL_ADDRESS' in str(out)
