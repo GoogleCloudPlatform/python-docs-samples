@@ -271,7 +271,8 @@ if __name__ == '__main__':
     elif args.command == 'publish':
         publish_messages(args.project_id, args.topic_name)
     elif args.command == 'publish-with-custom-attributes':
-        publish_messages_with_custom_attributes(args.project_id, args.topic_name)
+        publish_messages_with_custom_attributes(
+            args.project_id, args.topic_name)
     elif args.command == 'publish-with-futures':
         publish_messages_with_futures(args.project_id, args.topic_name)
     elif args.command == 'publish-with-error-handler':
