@@ -25,7 +25,10 @@ def inspect_text_file(project_id='YOUR_PROJECT_ID',
 
     # Get the bytes of the file
     with open(filepath, mode='rb') as f:
-        item = {'byte_item': {'type': 'TEXT_UTF8', 'data': f.read()}}
+        file_bytes = f.read()
+
+    # Construct the item
+    item = {'byte_item': {'type': 'TEXT_UTF8', 'data': file_bytes}}
 
     # Construct the configuration
     inspect_config = {
