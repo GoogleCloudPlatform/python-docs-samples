@@ -52,7 +52,7 @@ def main(project_id, instance_id, table_id):
     if not table.exists():
         table.create(column_families=column_families)
     else:
-        print("Table {} already exists.")format(table_id))
+        print("Table {} already exists.".format(table_id))
     # [END creating_a_table]
 
     # [START writing_rows]
