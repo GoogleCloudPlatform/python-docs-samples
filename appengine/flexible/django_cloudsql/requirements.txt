@@ -1,5 +1,5 @@
-Django==2.1
+Django==2.1.2
 mysqlclient==1.3.13
-wheel==0.31.1
+wheel==0.32.1
 gunicorn==19.9.0
 psycopg2==2.7.5
