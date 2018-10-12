@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google Inc.
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -51,8 +51,8 @@ def create_jwt(project_id, private_key_file, algorithm):
                  ES256 private key.
          algorithm: The encryption algorithm to use. Either 'RS256' or 'ES256'
         Returns:
-            An MQTT generated from the given project_id and private key, which
-            expires in 20 minutes. After 20 minutes, your client will be
+            A str for the JWT from the given project_id and path to private key,
+            set to expire in 60 minutes. After 60 minutes, your client will be
             disconnected, and a new JWT will have to be generated.
         Raises:
             ValueError: If the private_key_file does not contain a known key.
@@ -158,7 +158,8 @@ def get_client(
 # [END iot_mqtt_config]
 
 
-def parse_command_line_args():
+if __name__ == '__main__':
+    # [START iot_mqtt_run]
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description=(
             'Example Google Cloud IoT Core MQTT device connection code.'))
@@ -200,14 +201,9 @@ def parse_command_line_args():
             type=int,
             help=('Expiration time, in minutes, for JWT tokens.'))
 
-    return parser.parse_args()
+    args = parser.parse_args()
 
-
-# [START iot_mqtt_run]
-def main():
     global minimum_backoff_time
-
-    args = parse_command_line_args()
 
     # Add any JWT refresh logic here
     client = get_client(
@@ -215,6 +211,7 @@ def main():
         args.private_key_file, args.algorithm, args.ca_certs,
         args.mqtt_bridge_hostname, args.mqtt_bridge_port)
 
+    # Wait two minutes for commands, for production you may want while True
     for i in range(1, 120):
         # Process network events.
         client.loop()
@@ -222,8 +219,4 @@ def main():
         time.sleep(1)
 
     print('Finished.')
-# [END iot_mqtt_run]
-
-
-if __name__ == '__main__':
-    main()
+    # [END iot_mqtt_run]

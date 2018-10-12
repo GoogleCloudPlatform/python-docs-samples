@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -86,7 +86,7 @@ def send_command(
     # [END send_command]
 
 
-def parse_command_line_args():
+if __name__ == '__main__':
     """Parse command line arguments."""
     default_registry = 'cloudiot_device_manager_example_registry_{}'.format(
             int(time.time()))
@@ -127,22 +127,10 @@ def parse_command_line_args():
 
     command.add_parser('send-command', help=send_command.__doc__)
 
-    return parser.parse_args()
+    args = parser.parse_args()
 
-
-def run_command(args):
-    """Calls the program using the specified command."""
     print(args.command)
     send_command(
             args.service_account_json, args.project_id,
             args.cloud_region, args.registry_id, args.device_id,
             args.send_command)
-
-
-def main():
-    args = parse_command_line_args()
-    run_command(args)
-
-
-if __name__ == '__main__':
-    main()

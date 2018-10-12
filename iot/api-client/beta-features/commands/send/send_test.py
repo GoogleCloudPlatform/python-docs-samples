@@ -1,4 +1,4 @@
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 
@@ -134,7 +134,7 @@ def delete_device(
 
 # Keep scaffolding from here
 @pytest.fixture(scope='module')
-def test_topic():
+def iot_topic():
     topic = create_iot_topic(project_id, topic_id)
 
     yield topic
@@ -144,7 +144,7 @@ def test_topic():
     pubsub_client.delete_topic(topic_path)
 
 
-def test_send(test_topic, capsys):
+def test_send(iot_topic, capsys):
     device_id = device_id_template.format('RSA256')
     create_registry(
             service_account_json, project_id, cloud_region, pubsub_topic,

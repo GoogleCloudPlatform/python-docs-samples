@@ -3,7 +3,7 @@ This folder contains Python samples that demonstrate an overview of the
 commands beta feature.
 
 ## Quickstart
-1. Install the gCloud CLI as described in [the device manager guide](https://cloud.google.com/iot/docs/device_manager_guide).
+1. Install the Cloud SDK as described in [the device manager guide](https://cloud.google.com/iot/docs/device_manager_guide).
 2. Create a PubSub topic:
 
     gcloud beta pubsub topics create projects/my-iot-project/topics/device-events
