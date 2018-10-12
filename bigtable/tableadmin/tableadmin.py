@@ -56,26 +56,26 @@ def run_table_operations(project_id, instance_id, table_id):
 
     # Check whether table exists in an instance.
     # Create table if it does not exists.
-    print 'Checking if table {} exists...'.format(table_id)
+    print('Checking if table {} exists...'.format(table_id))
     if table.exists():
-        print 'Table {} already exists.'.format(table_id)
+        print('Table {} already exists.'.format(table_id))
     else:
-        print 'Creating the {} table.'.format(table_id)
+        print('Creating the {} table.'.format(table_id))
         table.create()
-        print 'Created table {}.'.format(table_id)
+        print('Created table {}.'.format(table_id))
 
     # [START bigtable_list_tables]
     tables = instance.list_tables()
-    print 'Listing tables in current project...'
+    print('Listing tables in current project...')
     if tables != []:
         for tbl in tables:
-            print tbl.table_id
+            print(tbl.table_id)
     else:
-        print 'No table exists in current project...'
+        print('No table exists in current project...')
     # [END bigtable_list_tables]
 
     # [START bigtable_create_family_gc_max_age]
-    print 'Creating column family cf1 with with MaxAge GC Rule...'
+    print('Creating column family cf1 with with MaxAge GC Rule...')
     # Create a column family with GC policy : maximum age
     # where age = current time minus cell timestamp
 
@@ -84,11 +84,11 @@ def run_table_operations(project_id, instance_id, table_id):
 
     column_family1 = table.column_family('cf1', max_age_rule)
     column_family1.create()
-    print 'Created column family cf1 with MaxAge GC Rule.'
+    print('Created column family cf1 with MaxAge GC Rule.')
     # [END bigtable_create_family_gc_max_age]
 
     # [START bigtable_create_family_gc_max_versions]
-    print 'Creating column family cf2 with max versions GC rule...'
+    print('Creating column family cf2 with max versions GC rule...')
     # Create a column family with GC policy : most recent N versions
     # where 1 = most recent version
 
@@ -97,11 +97,11 @@ def run_table_operations(project_id, instance_id, table_id):
 
     column_family2 = table.column_family('cf2', max_versions_rule)
     column_family2.create()
-    print 'Created column family cf2 with Max Versions GC Rule.'
+    print('Created column family cf2 with Max Versions GC Rule.')
     # [END bigtable_create_family_gc_max_versions]
 
     # [START bigtable_create_family_gc_union]
-    print 'Creating column family cf3 with union GC rule...'
+    print('Creating column family cf3 with union GC rule...')
     # Create a column family with GC policy to drop data that matches
     # at least one condition.
     # Define a GC rule to drop cells older than 5 days or not the
@@ -112,11 +112,11 @@ def run_table_operations(project_id, instance_id, table_id):
 
     column_family3 = table.column_family('cf3', union_rule)
     column_family3.create()
-    print 'Created column family cf3 with Union GC rule'
+    print('Created column family cf3 with Union GC rule')
     # [END bigtable_create_family_gc_union]
 
     # [START bigtable_create_family_gc_intersection]
-    print 'Creating column family cf4 with Intersection GC rule...'
+    print('Creating column family cf4 with Intersection GC rule...')
     # Create a column family with GC policy to drop data that matches
     # all conditions
     # GC rule: Drop cells older than 5 days AND older than the most
@@ -127,11 +127,11 @@ def run_table_operations(project_id, instance_id, table_id):
 
     column_family4 = table.column_family('cf4', intersection_rule)
     column_family4.create()
-    print 'Created column family cf4 with Intersection GC rule.'
+    print('Created column family cf4 with Intersection GC rule.')
     # [END bigtable_create_family_gc_intersection]
 
     # [START bigtable_create_family_gc_nested]
-    print 'Creating column family cf5 with a Nested GC rule...'
+    print('Creating column family cf5 with a Nested GC rule...')
     # Create a column family with nested GC policies.
     # Create a nested GC rule:
     # Drop cells that are either older than the 10 recent versions
@@ -147,16 +147,16 @@ def run_table_operations(project_id, instance_id, table_id):
 
     column_family5 = table.column_family('cf5', nested_rule)
     column_family5.create()
-    print 'Created column family cf5 with a Nested GC rule.'
+    print('Created column family cf5 with a Nested GC rule.')
     # [END bigtable_create_family_gc_nested]
 
     # [START bigtable_list_column_families]
-    print 'Printing Column Family and GC Rule for all column families...'
+    print('Printing Column Family and GC Rule for all column families...')
     column_families = table.list_column_families()
     for column_family_name, gc_rule in sorted(column_families.items()):
-        print 'Column Family:', column_family_name
-        print 'GC Rule:'
-        print gc_rule.to_pb()
+        print('Column Family:', column_family_name)
+        print('GC Rule:')
+        print(gc_rule.to_pb())
         # Sample output:
         #         Column Family: cf4
         #         GC Rule:
@@ -174,33 +174,33 @@ def run_table_operations(project_id, instance_id, table_id):
         #         }
     # [END bigtable_list_column_families]
 
-    print 'Print column family cf1 GC rule before update...'
-    print 'Column Family: cf1'
-    print column_family1.to_pb()
+    print('Print column family cf1 GC rule before update...')
+    print('Column Family: cf1')
+    print(column_family1.to_pb())
 
     # [START bigtable_update_gc_rule]
-    print 'Updating column family cf1 GC rule...'
+    print('Updating column family cf1 GC rule...')
     # Update the column family cf1 to update the GC rule
     column_family1 = table.column_family(
         'cf1',
         column_family.MaxVersionsGCRule(1))
     column_family1.update()
-    print 'Updated column family cf1 GC rule\n'
+    print('Updated column family cf1 GC rule\n')
     # [END bigtable_update_gc_rule]
 
-    print 'Print column family cf1 GC rule after update...'
-    print 'Column Family: cf1'
-    print column_family1.to_pb()
+    print('Print column family cf1 GC rule after update...')
+    print('Column Family: cf1')
+    print(column_family1.to_pb())
 
     # [START bigtable_delete_family]
-    print 'Delete a column family cf2...'
+    print('Delete a column family cf2...')
     # Delete a column family
     column_family2.delete()
-    print 'Column family cf2 deleted successfully.'
+    print('Column family cf2 deleted successfully.')
     # [END bigtable_delete_family]
 
-    print 'execute command "python tableadmin.py delete [project_id] \
-            [instance_id] --table [tableName]" to delete the table.'
+    print('execute command "python tableadmin.py delete [project_id] \
+            [instance_id] --table [tableName]" to delete the table.')
 
 
 def delete_table(project_id, instance_id, table_id):
@@ -223,14 +223,14 @@ def delete_table(project_id, instance_id, table_id):
     # [START bigtable_delete_table]
     # Delete the entire table
 
-    print 'Checking if table {} exists...'.format(table_id)
+    print('Checking if table {} exists...'.format(table_id))
     if table.exists():
-        print 'Table {} exists.'.format(table_id)
-        print 'Deleting {} table.'.format(table_id)
+        print('Table {} exists.'.format(table_id))
+        print('Deleting {} table.'.format(table_id))
         table.delete()
-        print 'Deleted {} table.'.format(table_id)
+        print('Deleted {} table.'.format(table_id))
     else:
-        print 'Table {} does not exists.'.format(table_id)
+        print('Table {} does not exists.'.format(table_id))
     # [END bigtable_delete_table]
 
 
@@ -261,5 +261,5 @@ if __name__ == '__main__':
     elif args.command.lower() == 'delete':
         delete_table(args.project_id, args.instance_id, args.table)
     else:
-        print 'Command should be either run or delete.\n Use argument -h,\
-               --help to show help and exit.'
+        print('Command should be either run or delete.\n Use argument -h,\
+               --help to show help and exit.')
