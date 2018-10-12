@@ -22,12 +22,6 @@ at https://cloud.google.com/pubsub/docs.
 """
 
 import argparse
-import logging
-import multiprocessing
-import random
-import time
-
-from google.cloud import pubsub_v1
 
 
 def list_subscriptions_in_topic(project_id, topic_name):
@@ -238,7 +232,7 @@ def receive_messages_with_flow_control(project_id, subscription_name):
     """Receives messages from a pull subscription with flow control."""
     # [START pubsub_subscriber_flow_settings]
     import time
-    
+
     from google.cloud import pubsub_v1
 
     # TODO project_id = "Your Google Cloud Project ID"

@@ -22,9 +22,6 @@ at https://cloud.google.com/pubsub/docs.
 """
 
 import argparse
-import time
-
-from google.cloud import pubsub_v1
 
 
 def list_topics(project_id):
@@ -161,6 +158,8 @@ def publish_messages_with_futures(project_id, topic_name):
 def publish_messages_with_error_handler(project_id, topic_name):
     """Publishes multiple messages to a Pub/Sub topic with an error handler."""
     # [START pubsub_publish_messages_error_handler]
+    import time
+
     from google.cloud import pubsub_v1
 
     # TODO project_id = "Your Google Cloud Project ID"
