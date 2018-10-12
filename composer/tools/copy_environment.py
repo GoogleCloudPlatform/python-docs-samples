@@ -35,24 +35,21 @@ import json
 import os
 import re
 import shutil
-import six
 import subprocess
 import sys
 import tempfile
 import time
 import uuid
 
-import google.auth
 from cryptography import fernet
+import google.auth
 from google.cloud import storage
 from google.oauth2 import service_account
-from googleapiclient import discovery
-from googleapiclient import errors
-from kubernetes import client
-from kubernetes import config
+from googleapiclient import discovery, errors
+from kubernetes import client, config
 from mysql import connector
+import six
 from six.moves import configparser
-
 
 DEFAULT_SCOPES = ["https://www.googleapis.com/auth/cloud-platform"]
 
