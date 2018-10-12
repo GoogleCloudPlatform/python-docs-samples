@@ -185,4 +185,4 @@ def test_receive(test_topic, capsys):
 
     out, _ = capsys.readouterr()
     assert 'on_connect' in out  # Verify can connect
-    assert 'message \'me want cookies\'' in out  # Verify can receive command
+    assert '\'me want cookies\'' in out  # Verify can receive command
