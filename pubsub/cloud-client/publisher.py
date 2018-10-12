@@ -30,7 +30,6 @@ def list_topics(project_id):
     from google.cloud import pubsub_v1
 
     # TODO project_id = "Your Google Cloud Project ID"
-    # TODO topic_name = "Your Pub/Sub topic name"
 
     publisher = pubsub_v1.PublisherClient()
     project_path = publisher.project_path(project_id)

@@ -87,7 +87,7 @@ def create_push_subscription(project_id,
     # TODO project_id = "Your Google Cloud Project ID"
     # TODO topic_name = "Your Pub/Sub topic name"
     # TODO subscription_name = "Your Pub/Sub subscription name"
-    # TODO endpoint = (for example, "https://my-test-project.appspot.com/push")
+    # TODO endpoint = "https://my-test-project.appspot.com/push"
 
     subscriber = pubsub_v1.SubscriberClient()
     topic_path = subscriber.topic_path(project_id, topic_name)
@@ -135,7 +135,7 @@ def update_subscription(project_id, subscription_name, endpoint):
     # TODO project_id = "Your Google Cloud Project ID"
     # TODO topic_name = "Your Pub/Sub topic name"
     # TODO subscription_name = "Your Pub/Sub subscription name"
-    # TODO endpoint = (for example, "https://my-test-project.appspot.com/push")
+    # TODO endpoint = "https://my-test-project.appspot.com/push"
 
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
