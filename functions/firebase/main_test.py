@@ -15,8 +15,6 @@
 from datetime import datetime
 import json
 
-import uuid
-
 import main
 
 
@@ -25,61 +23,87 @@ class Context(object):
 
 
 def test_rtdb(capsys):
-    data_id = str(uuid.uuid4())
-    resource_id = str(uuid.uuid4())
-
     data = {
         'admin': True,
-        'delta': {'id': data_id}
+        'delta': {'id': 'my-data'}
     }
 
     context = Context()
-    context.resource = resource_id
+    context.resource = 'my-resource'
 
     main.hello_rtdb(data, context)
 
     out, _ = capsys.readouterr()
 
-    assert ('Function triggered by change to: %s' % resource_id) in out
+    assert 'Function triggered by change to: my-resource' in out
     assert 'Admin?: True' in out
-    assert data_id in out
+    assert 'my-data' in out
 
 
 def test_firestore(capsys):
-    resource_id = str(uuid.uuid4())
-
     context = Context()
-    context.resource = resource_id
+    context.resource = 'my-resource'
 
     data = {
-        'oldValue': {'uuid': str(uuid.uuid4())},
-        'value': {'uuid': str(uuid.uuid4())}
+        'oldValue': {'a': 1},
+        'value': {'b': 2}
     }
 
     main.hello_firestore(data, context)
 
     out, _ = capsys.readouterr()
 
-    assert ('Function triggered by change to: %s' % resource_id) in out
+    assert 'Function triggered by change to: my-resource' in out
     assert json.dumps(data['oldValue']) in out
     assert json.dumps(data['value']) in out
 
 
 def test_auth(capsys):
-    user_id = str(uuid.uuid4())
     date_string = datetime.now().isoformat()
-    email_string = '%s@%s.com' % (uuid.uuid4(), uuid.uuid4())
 
     data = {
-        'uid': user_id,
+        'uid': 'my-user',
         'metadata': {'createdAt': date_string},
-        'email': email_string
+        'email': 'me@example.com'
     }
 
     main.hello_auth(data, None)
 
     out, _ = capsys.readouterr()
 
-    assert user_id in out
+    assert 'Function triggered by creation/deletion of user: my-user' in out
     assert date_string in out
-    assert email_string in out
+    assert 'Email: me@example.com' in out
+
+
+def test_analytics(capsys):
+    timestamp = int(datetime.utcnow().timestamp())
+
+    data = {
+        'eventDim': [{
+            'name': 'my-event',
+            'timestampMicros': f'{str(timestamp)}000000'
+        }],
+        'userDim': {
+            'deviceInfo': {
+                'deviceModel': 'Pixel'
+            },
+            'geoInfo': {
+                'city': 'London',
+                'country': 'UK'
+            }
+        }
+    }
+
+    context = Context()
+    context.resource = 'my-resource'
+
+    main.hello_analytics(data, context)
+
+    out, _ = capsys.readouterr()
+
+    assert 'Function triggered by the following event: my-resource' in out
+    assert f'Timestamp: {datetime.utcfromtimestamp(timestamp)}' in out
+    assert 'Name: my-event' in out
+    assert 'Device Model: Pixel' in out
+    assert 'Location: London, UK' in out
