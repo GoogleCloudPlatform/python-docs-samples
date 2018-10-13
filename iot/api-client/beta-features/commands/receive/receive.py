@@ -203,8 +203,6 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    global minimum_backoff_time
-
     # Add any JWT refresh logic here
     client = get_client(
         args.project_id, args.cloud_region, args.registry_id, args.device_id,
