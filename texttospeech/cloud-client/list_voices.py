@@ -25,6 +25,7 @@ Example usage:
 def list_voices():
     """Lists the available voices."""
     from google.cloud import texttospeech
+    from google.cloud.texttospeech import enums
     client = texttospeech.TextToSpeechClient()
 
     # Performs the list voices request
@@ -38,13 +39,10 @@ def list_voices():
         for language_code in voice.language_codes:
             print('Supported language: {}'.format(language_code))
 
-        # SSML Voice Gender values from google.cloud.texttospeech.enums
-        ssml_voice_genders = ['SSML_VOICE_GENDER_UNSPECIFIED', 'MALE',
-                              'FEMALE', 'NEUTRAL']
+        ssml_gender = enums.SsmlVoiceGender(voice.ssml_gender)
 
         # Display the SSML Voice Gender
-        print('SSML Voice Gender: {}'.format(
-            ssml_voice_genders[voice.ssml_gender]))
+        print('SSML Voice Gender: {}'.format(ssml_gender.name))
 
         # Display the natural sample rate hertz for this voice. Example: 24000
         print('Natural Sample Rate Hertz: {}\n'.format(
