@@ -114,7 +114,7 @@ def test_make_upper_case(firestore_mock, capsys):
     assert 'Replacing value: foobar --> FOOBAR' in out
     firestore_mock.collection.assert_called_with('some_collection')
     firestore_mock.document.assert_called_with('path/some/path')
-    firestore_mock.set.assert_called_with({'original': 'FOOBAR'})   
+    firestore_mock.set.assert_called_with({'original': 'FOOBAR'})
 
 
 def test_analytics(capsys):
