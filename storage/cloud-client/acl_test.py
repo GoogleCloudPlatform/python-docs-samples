@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import time
 
 from google.cloud import storage
 import google.cloud.storage.acl
@@ -50,6 +51,7 @@ def test_blob():
     acl = google.cloud.storage.acl.ObjectACL(blob)
     acl.reload()
     yield blob
+    time.sleep(1)
     acl.save()
 
 
