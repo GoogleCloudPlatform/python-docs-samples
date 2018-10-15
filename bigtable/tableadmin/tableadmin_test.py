@@ -16,6 +16,7 @@
 import os
 import random
 
+from tableadmin import create_table
 from tableadmin import delete_table
 from tableadmin import run_table_operations
 
