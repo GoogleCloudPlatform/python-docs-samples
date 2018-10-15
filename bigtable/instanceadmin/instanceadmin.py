@@ -185,8 +185,10 @@ def add_cluster(project_id, instance_id, cluster_id):
                                    serve_nodes=serve_nodes,
                                    default_storage_type=storage_type)
         if cluster.exists():
-            print('\nCluster not created, as {} already exists.'.\
-                    format(cluster_id))
+            print(
+                '\nCluster not created, as {} already exists.'.
+                format(cluster_id)
+            )
         else:
             cluster.create()
             print('\nCluster created: {}'.format(cluster_id))
