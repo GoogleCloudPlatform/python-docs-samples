@@ -30,6 +30,7 @@ import argparse
 import io
 
 from google.cloud import videointelligence
+from google.cloud.videointelligence import enums
 
 
 def analyze_explicit_content(path):
@@ -44,15 +45,12 @@ def analyze_explicit_content(path):
     result = operation.result(timeout=90)
     print('\nFinished processing.')
 
-    likely_string = ("Unknown", "Very unlikely", "Unlikely", "Possible",
-                     "Likely", "Very likely")
-
     # first result is retrieved because a single video was processed
     for frame in result.annotation_results[0].explicit_annotation.frames:
+        likelihood = enums.Likelihood(frame.pornography_likelihood)
         frame_time = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
         print('Time: {}s'.format(frame_time))
-        print('\tpornography: {}'.format(
-            likely_string[frame.pornography_likelihood]))
+        print('\tpornography: {}'.format(likelihood.name))
     # [END video_analyze_explicit_content]
 
 
