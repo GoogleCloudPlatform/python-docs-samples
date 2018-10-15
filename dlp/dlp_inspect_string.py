@@ -46,11 +46,7 @@ def inspect_string(project_id='YOUR_PROJECT_ID'):
     # Print out the results
     if response.result.findings:
         for finding in response.result.findings:
-            try:
-                if finding.quote:
-                    print('Quote: {}'.format(finding.quote))
-            except AttributeError:
-                pass
+            print('Quote: {}'.format(finding.quote))
             print('Info type: {}'.format(finding.info_type.name))
             print('Likelihood: {}'.format(finding.likelihood))
     else:
