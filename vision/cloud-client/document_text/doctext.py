@@ -86,7 +86,7 @@ def get_document_bounds(image_file, feature):
                 bounds.append(block.bounding_box)
 
         if (feature == FeatureType.PAGE):
-            bounds.append(block.bounding_box)
+            bounds.append(page.bounding_box)
 
     # The list `bounds` contains the coordinates of the bounding boxes.
     # [END vision_document_text_tutorial_detect_bounds]
