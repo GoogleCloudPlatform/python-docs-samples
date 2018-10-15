@@ -27,10 +27,9 @@ def inspect_text_file(project_id='YOUR_PROJECT_ID',
     with open(filepath, mode='rb') as f:
         file_bytes = f.read()
 
-    # Construct the item
+    # Construct request
+    parent = dlp.project_path(project_id)
     item = {'byte_item': {'type': 'TEXT_UTF8', 'data': file_bytes}}
-
-    # Construct the configuration
     inspect_config = {
         # The infoTypes of information to match
         'info_types': [
@@ -42,13 +41,10 @@ def inspect_text_file(project_id='YOUR_PROJECT_ID',
         'include_quote': True,
     }
 
-    # Convert the project id into a full resource id
-    parent = dlp.project_path(project_id)
-
-    # Call the API
+    # Run request
     response = dlp.inspect_content(parent, inspect_config, item)
 
-    # Print out the results
+    # Print the results
     if response.result.findings:
         for finding in response.result.findings:
             print('Quote: {}'.format(finding.quote))

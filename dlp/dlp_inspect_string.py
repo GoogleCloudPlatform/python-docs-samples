@@ -22,7 +22,9 @@ def inspect_string(project_id='YOUR_PROJECT_ID'):
     # Instantiate a client
     dlp = google.cloud.dlp.DlpServiceClient()
 
-    # Construct the configuration
+    # Construct request
+    parent = dlp.project_path(project_id)
+    item = {'value': 'My name is Gary Smith and my email is gary@example.com'}
     inspect_config = {
         # The infoTypes of information to match
         'info_types': [
@@ -34,16 +36,10 @@ def inspect_string(project_id='YOUR_PROJECT_ID'):
         'include_quote': True,
     }
 
-    # Construct the `item`
-    item = {'value': 'My name is Gary Smith and my email is gary@example.com'}
-
-    # Convert the project id into a full resource id
-    parent = dlp.project_path(project_id)
-
-    # Call the API
+    # Run request
     response = dlp.inspect_content(parent, inspect_config, item)
 
-    # Print out the results
+    # Print the results
     if response.result.findings:
         for finding in response.result.findings:
             print('Quote: {}'.format(finding.quote))
