@@ -50,6 +50,7 @@ def test_blob():
     acl = google.cloud.storage.acl.ObjectACL(blob)
     acl.reload()
     yield blob
+    sleep 1
     acl.save()
 
 
