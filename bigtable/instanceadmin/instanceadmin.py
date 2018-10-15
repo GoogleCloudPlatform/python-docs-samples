@@ -59,9 +59,9 @@ def run_instance_operations(project_id, instance_id):
 
     # [START bigtable_check_instance_exists]
     if not instance.exists():
-        print 'Instance {} does not exists.'.format(instance_id)
+        print('Instance {} does not exists.'.format(instance_id))
     else:
-        print 'Instance {} already exists.'.format(instance_id)
+        print('Instance {} already exists.'.format(instance_id))
     # [END bigtable_check_instance_exists]
 
     # [START bigtable_create_prod_instance]
@@ -69,27 +69,27 @@ def run_instance_operations(project_id, instance_id):
                                serve_nodes=serve_nodes,
                                default_storage_type=storage_type)
     if not instance.exists():
-        print '\nCreating an Instance'
+        print('\nCreating an Instance')
         # Create instance with given options
         instance.create(clusters=[cluster])
-        print '\nCreated instance: {}'.format(instance_id)
+        print('\nCreated instance: {}'.format(instance_id))
     # [END bigtable_create_prod_instance]
 
     # [START bigtable_list_instances]
-    print '\nListing Instances:'
+    print('\nListing Instances:')
     for instance_local in client.list_instances()[0]:
-        print instance_local.instance_id
+        print(instance_local.instance_id)
     # [END bigtable_list_instances]
 
     # [START bigtable_get_instance]
-    print '\nName of instance:{}\nLabels:{}'.format(instance.display_name,
-                                                    instance.labels)
+    print('\nName of instance:{}\nLabels:{}'.format(instance.display_name,
+                                                    instance.labels))
     # [END bigtable_get_instance]
 
     # [START bigtable_get_clusters]
-    print '\nListing Clusters...'
+    print('\nListing Clusters...')
     for cluster in instance.list_clusters()[0]:
-        print cluster.cluster_id
+        print(cluster.cluster_id)
     # [END bigtable_get_clusters]
 
 
@@ -109,7 +109,7 @@ def create_dev_instance(project_id, instance_id, cluster_id):
     client = bigtable.Client(project=project_id, admin=True)
 
     # [START bigtable_create_dev_instance]
-    print '\nCreating a DEVELOPMENT Instance'
+    print('\nCreating a DEVELOPMENT Instance')
     # Set options to create an Instance
     location_id = 'us-central1-f'
     development = enums.Instance.Type.DEVELOPMENT
@@ -125,9 +125,9 @@ def create_dev_instance(project_id, instance_id, cluster_id):
     # Create development instance with given options
     if not instance.exists():
         instance.create(clusters=[cluster])
-        print 'Created development instance: {}'.format(instance_id)
+        print('Created development instance: {}'.format(instance_id))
     else:
-        print 'Instance {} already exists.'.format(instance_id)
+        print('Instance {} already exists.'.format(instance_id))
 
     # [END bigtable_create_dev_instance]
 
@@ -145,12 +145,12 @@ def delete_instance(project_id, instance_id):
     client = bigtable.Client(project=project_id, admin=True)
     instance = client.instance(instance_id)
     # [START bigtable_delete_instance]
-    print '\nDeleting Instance'
+    print('\nDeleting Instance')
     if not instance.exists():
-        print 'Instance {} does not exists.'.format(instance_id)
+        print('Instance {} does not exists.'.format(instance_id))
     else:
         instance.delete()
-        print 'Deleted Instance: {}'.format(instance_id)
+        print('Deleted Instance: {}'.format(instance_id))
     # [END bigtable_delete_instance]
 
 
@@ -174,22 +174,24 @@ def add_cluster(project_id, instance_id, cluster_id):
     storage_type = enums.StorageType.SSD
 
     if not instance.exists():
-        print 'Instance {} does not exists.'.format(instance_id)
+        print('Instance {} does not exists.'.format(instance_id))
     else:
-        print '\nAdding Cluster to Instance {}'.format(instance_id)
+        print('\nAdding Cluster to Instance {}'.format(instance_id))
         # [START bigtable_create_cluster]
-        print '\nListing Clusters...'
+        print('\nListing Clusters...')
         for cluster in instance.list_clusters()[0]:
-            print cluster.cluster_id
+            print(cluster.cluster_id)
         cluster = instance.cluster(cluster_id, location_id=location_id,
                                    serve_nodes=serve_nodes,
                                    default_storage_type=storage_type)
         if cluster.exists():
-            print '\nCluster not created, as {} already exists.'.\
-                    format(cluster_id)
+            print(
+                '\nCluster not created, as {} already exists.'.
+                format(cluster_id)
+            )
         else:
             cluster.create()
-            print '\nCluster created: {}'.format(cluster_id)
+            print('\nCluster created: {}'.format(cluster_id))
         # [END bigtable_create_cluster]
 
 
@@ -211,12 +213,12 @@ def delete_cluster(project_id, instance_id, cluster_id):
     cluster = instance.cluster(cluster_id)
 
     # [START bigtable_delete_cluster]
-    print '\nDeleting Cluster'
+    print('\nDeleting Cluster')
     if cluster.exists():
         cluster.delete()
-        print 'Cluster deleted: {}'.format(cluster_id)
+        print('Cluster deleted: {}'.format(cluster_id))
     else:
-        print '\nCluster {} does not exist.'.format(cluster_id)
+        print('\nCluster {} does not exist.'.format(cluster_id))
 
     # [END bigtable_delete_cluster]
 
@@ -253,5 +255,5 @@ if __name__ == '__main__':
     elif args.command.lower() == 'del-cluster':
         delete_cluster(args.project_id, args.instance_id, args.cluster_id)
     else:
-        print 'Command should be either run \n Use argument -h, \
-               --help to show help and exit.'
+        print('Command should be either run \n Use argument -h, \
+               --help to show help and exit.')
