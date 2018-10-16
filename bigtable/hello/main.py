@@ -59,7 +59,7 @@ def main(project_id, instance_id, table_id):
     print('Writing some greetings to the table.')
     greetings = ['Hello World!', 'Hello Cloud Bigtable!', 'Hello Python!']
     rows = []
-    column = 'greeting'
+    column = 'greeting'.encode()
     for i, value in enumerate(greetings):
         # Note: This example uses sequential numeric IDs for simplicity,
         # but this can result in poor performance in a production
@@ -71,7 +71,7 @@ def main(project_id, instance_id, table_id):
         # the best performance, see the documentation:
         #
         #     https://cloud.google.com/bigtable/docs/schema-design
-        row_key = 'greeting{}'.format(i)
+        row_key = 'greeting{}'.format(i).encode()
         row = table.row(row_key)
         row.set_cell(column_family_id,
                      column,
@@ -83,7 +83,7 @@ def main(project_id, instance_id, table_id):
 
     # [START getting_a_row]
     print('Getting a single greeting by row key.')
-    key = 'greeting0'
+    key = 'greeting0'.encode()
 
     # Only retrieve the most recent version of the cell.
     row_filter = row_filters.CellsColumnLimitFilter(1)
