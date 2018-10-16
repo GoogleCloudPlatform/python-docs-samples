@@ -193,7 +193,7 @@ def _session_tests(session, sample, post_install=None):
 
     session.chdir(sample)
 
-    if os.path.exists(os.path.join(sample, 'requirements.txt')):
+    if os.path.exists('requirements.txt'):
         session.install('-r', 'requirements.txt')
 
     if post_install:
@@ -208,10 +208,10 @@ def _session_tests(session, sample, post_install=None):
         success_codes=[0, 5])
 
 
+@nox.session(python='2.7')
 @nox.parametrize('sample', GAE_STANDARD_SAMPLES)
-def session_gae(session, sample):
+def gae(session, sample):
     """Runs py.test for an App Engine standard sample."""
-    session.interpreter = 'python2.7'
 
     # Create a lib directory if needed, otherwise the App Engine vendor library
     # will complain.
@@ -221,22 +221,23 @@ def session_gae(session, sample):
     _session_tests(session, sample, _setup_appengine_sdk)
 
 
+@nox.session(python='2.7')
 @nox.parametrize('sample', NON_GAE_STANDARD_SAMPLES_PY2)
-def session_py27(session, sample):
+def py27(session, sample):
     """Runs py.test for a sample using Python 2.7"""
-    session.interpreter = 'python2.7'
     _session_tests(session, sample)
 
 
+@nox.session(python='3.6')
 @nox.parametrize('sample', NON_GAE_STANDARD_SAMPLES_PY3)
-def session_py36(session, sample):
+def py36(session, sample):
     """Runs py.test for a sample using Python 3.6"""
-    session.interpreter = 'python3.6'
     _session_tests(session, sample)
 
 
+@nox.session
 @nox.parametrize('sample', ALL_SAMPLE_DIRECTORIES)
-def session_lint(session, sample):
+def lint(session, sample):
     """Runs flake8 on the sample."""
     session.install('flake8', 'flake8-import-order')
 
@@ -253,10 +254,9 @@ def session_lint(session, sample):
 # Utility sessions
 #
 
-
-def session_missing_tests(session):
+@nox.session
+def missing_tests(session):
     """Lists all sample directories that do not have tests."""
-    session.virtualenv = False
     print('The following samples do not have tests:')
     for sample in set(ALL_SAMPLE_DIRECTORIES) - set(ALL_TESTED_SAMPLES):
         print('* {}'.format(sample))
@@ -266,8 +266,9 @@ SAMPLES_WITH_GENERATED_READMES = sorted(
     list(_collect_dirs('.', suffix='.rst.in')))
 
 
+@nox.session
 @nox.parametrize('sample', SAMPLES_WITH_GENERATED_READMES)
-def session_readmegen(session, sample):
+def readmegen(session, sample):
     """(Re-)generates the readme for a sample."""
     session.install('jinja2', 'pyyaml')
 
@@ -278,7 +279,8 @@ def session_readmegen(session, sample):
     session.run('python', 'scripts/readme-gen/readme_gen.py', in_file)
 
 
-def session_check_requirements(session):
+@nox.session
+def check_requirements(session):
     """Checks for out of date requirements and optionally updates them.
 
     This is intentionally not parametric, as it's desired to never have two
