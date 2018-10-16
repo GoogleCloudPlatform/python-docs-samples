@@ -193,7 +193,7 @@ def _session_tests(session, sample, post_install=None):
 
     session.chdir(sample)
 
-    if os.path.exists(os.path.join(sample, 'requirements.txt')):
+    if os.path.exists('requirements.txt'):
         session.install('-r', 'requirements.txt')
 
     if post_install:
