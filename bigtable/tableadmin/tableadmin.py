@@ -37,8 +37,8 @@ from google.cloud import bigtable
 from google.cloud.bigtable import column_family
 
 
-def run_table_operations(project_id, instance_id, table_id):
-    ''' Create a Bigtable table and perform basic table operations
+def create_table(project_id, instance_id, table_id):
+    ''' Create a Bigtable table
 
     :type project_id: str
     :param project_id: Project id of the client.
@@ -63,6 +63,24 @@ def run_table_operations(project_id, instance_id, table_id):
         print('Creating the {} table.'.format(table_id))
         table.create()
         print('Created table {}.'.format(table_id))
+
+    return client, instance, table
+
+
+def run_table_operations(project_id, instance_id, table_id):
+    ''' Create a Bigtable table and perform basic operations on it
+
+    :type project_id: str
+    :param project_id: Project id of the client.
+
+    :type instance_id: str
+    :param instance_id: Instance of the client.
+
+    :type table_id: str
+    :param table_id: Table id to create table.
+    '''
+
+    client, instance, table = create_table(project_id, instance_id, table_id)
 
     # [START bigtable_list_tables]
     tables = instance.list_tables()
