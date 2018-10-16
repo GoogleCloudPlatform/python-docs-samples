@@ -149,15 +149,15 @@ FLAKE8_COMMON_ARGS = [
     '--show-source', '--builtin', 'gettext', '--max-complexity', '20',
     '--import-order-style', 'google',
     '--exclude', '.nox,.cache,env,lib,generated_pb2,*_pb2.py,*_pb2_grpc.py',
-    '--ignore=E121,E123,E126,E226,E24,E704,W503,W504,I202',
+    '--ignore=E121,E123,E126,E226,E24,E704,W503,W504,I100,I201,I202',
 ]
 
 
 # Collect sample directories.
 ALL_TESTED_SAMPLES = sorted(list(_collect_dirs('.')))
 ALL_SAMPLE_DIRECTORIES = sorted(list(_collect_dirs(
-    '.', 
-    suffix='.py', 
+    '.',
+    suffix='.py',
     recurse_further=True
 )))
 GAE_STANDARD_SAMPLES = [
@@ -169,10 +169,10 @@ PY3_ONLY_SAMPLES = [
     if (sample.startswith('./appengine/standard_python37')
         or sample.startswith('./functions/'))]
 NON_GAE_STANDARD_SAMPLES_PY2 = sorted(list((
-    set(ALL_TESTED_SAMPLES) - 
+    set(ALL_TESTED_SAMPLES) -
     set(GAE_STANDARD_SAMPLES)) -
-    set(PY3_ONLY_SAMPLES
-)))
+    set(PY3_ONLY_SAMPLES)
+))
 NON_GAE_STANDARD_SAMPLES_PY3 = sorted(
     list(set(ALL_TESTED_SAMPLES) - set(PY2_ONLY_SAMPLES)))
 
@@ -305,4 +305,3 @@ def check_requirements(session):
 
     for reqfile in reqfiles:
         session.run('gcp-devrel-py-tools', command, reqfile)
-        
