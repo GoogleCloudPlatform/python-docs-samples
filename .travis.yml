@@ -27,7 +27,7 @@ addons:
     - python3.6-dev
 install:
 - pip install --upgrade pip wheel virtualenv
-- pip install --upgrade nox-automation
+- pip install --upgrade nox
 - pip install --upgrade git+https://github.com/dhermes/ci-diff-helper.git
 script:
 - "./scripts/travis.sh"
