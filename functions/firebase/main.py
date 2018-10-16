@@ -24,6 +24,10 @@ import json
 # [END functions_firebase_firestore]
 # [END functions_firebase_auth]
 
+# [START functions_firebase_reactive]
+from google.cloud import firestore
+# [END functions_firebase_reactive]
+
 
 # [START functions_firebase_rtdb]
 def hello_rtdb(data, context):
@@ -73,6 +77,28 @@ def hello_auth(data, context):
     if 'email' in data:
         print('Email: %s' % data["email"])
 # [END functions_firebase_auth]
+
+
+# [START functions_firebase_reactive]
+client = firestore.Client()
+
+
+# Converts strings added to /messages/{pushId}/original to uppercase
+def make_upper_case(data, context):
+    path_parts = context.resource.split('/documents/')[1].split('/')
+    collection_path = path_parts[0]
+    document_path = '/'.join(path_parts[1:])
+
+    affected_doc = client.collection(collection_path).document(document_path)
+
+    cur_value = data["value"]["fields"]["original"]["stringValue"]
+    new_value = cur_value.upper()
+    print(f'Replacing value: {cur_value} --> {new_value}')
+
+    affected_doc.set({
+        u'original': new_value
+    })
+# [END functions_firebase_reactive]
 
 
 # [START functions_firebase_analytics]

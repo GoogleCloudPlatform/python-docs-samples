@@ -12,8 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from collections import UserDict
 from datetime import datetime
 import json
+import uuid
+
+from mock import MagicMock, patch
 
 import main
 
@@ -74,6 +78,43 @@ def test_auth(capsys):
     assert 'Function triggered by creation/deletion of user: my-user' in out
     assert date_string in out
     assert 'Email: me@example.com' in out
+
+
+@patch('main.client')
+def test_make_upper_case(firestore_mock, capsys):
+
+    firestore_mock.collection = MagicMock(return_value=firestore_mock)
+    firestore_mock.document = MagicMock(return_value=firestore_mock)
+    firestore_mock.set = MagicMock(return_value=firestore_mock)
+
+    user_id = str(uuid.uuid4())
+    date_string = datetime.now().isoformat()
+    email_string = '%s@%s.com' % (uuid.uuid4(), uuid.uuid4())
+
+    data = {
+        'uid': user_id,
+        'metadata': {'createdAt': date_string},
+        'email': email_string,
+        'value': {
+            'fields': {
+                'original': {
+                    'stringValue': 'foobar'
+                }
+            }
+        }
+    }
+
+    context = UserDict()
+    context.resource = '/documents/some_collection/path/some/path'
+
+    main.make_upper_case(data, context)
+
+    out, _ = capsys.readouterr()
+
+    assert 'Replacing value: foobar --> FOOBAR' in out
+    firestore_mock.collection.assert_called_with('some_collection')
+    firestore_mock.document.assert_called_with('path/some/path')
+    firestore_mock.set.assert_called_with({'original': 'FOOBAR'})
 
 
 def test_analytics(capsys):
