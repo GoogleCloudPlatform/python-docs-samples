@@ -43,6 +43,7 @@ def main(project_id, instance_id, table_id):
     # [START creating_a_table]
     print('Creating the {} table.'.format(table_id))
     table = instance.table(table_id)
+
     print('Creating column family cf1 with Max Version GC rule...')
     # Create a column family with GC policy : most recent N versions
     # Define the GC policy to retain only the most recent 2 versions
