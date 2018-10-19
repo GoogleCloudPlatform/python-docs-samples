@@ -24,6 +24,7 @@ from google.cloud import monitoring_v3
 # Avoid collisions with other runs
 RANDOM_SUFFIX = str(random.randint(1000, 9999))
 
+
 def create_metric_descriptor(project_id):
     # [START monitoring_create_metric]
     client = monitoring_v3.MetricServiceClient()
