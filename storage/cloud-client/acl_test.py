@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import time
 
 from google.cloud import storage
 import google.cloud.storage.acl
@@ -37,6 +38,7 @@ def test_bucket():
     acl.reload()
     object_default_acl.reload()
     yield bucket
+    time.sleep(1)  # Too frequent saves hit an API limit
     acl.save()
     object_default_acl.save()
 
@@ -50,6 +52,7 @@ def test_blob():
     acl = google.cloud.storage.acl.ObjectACL(blob)
     acl.reload()
     yield blob
+    time.sleep(1)  # Too frequent saves hit an API limit
     acl.save()
 
 
