@@ -195,6 +195,10 @@ def test_cursor_simple_end_at():
     snippets.cursor_simple_end_at()
 
 
+def test_snapshot_cursors():
+    snippets.snapshot_cursors()
+
+
 def test_cursor_paginate():
     snippets.cursor_paginate()
 
