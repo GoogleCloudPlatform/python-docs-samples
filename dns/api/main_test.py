@@ -52,7 +52,7 @@ def zone(client):
     if zone.exists():
         try:
             zone.delete()
-        except NotFound:  # May have been in process
+        except NotFound:  # May have been under way
             pass
 
 
