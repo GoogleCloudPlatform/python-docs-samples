@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START functions_tips_infinite_retries]
-from datetime import datetime
+from datetime import datetime, timezone
 # [END functions_tips_infinite_retries]
 
 # [START functions_tips_gcp_apis]
@@ -150,19 +150,20 @@ def avoid_infinite_retries(data, context):
         None; output is written to Stackdriver Logging
     """
 
-    timestamp = data.timestamp
+    timestamp = context.timestamp
 
     event_time = parser.parse(timestamp)
-    event_age = (datetime.now() - event_time).total_seconds() * 1000
+    event_age = (datetime.now(timezone.utc) - event_time).total_seconds()
+    event_age_ms = event_age * 1000
 
     # Ignore events that are too old
     max_age_ms = 10000
-    if event_age > max_age_ms:
-        print('Dropped {} (age {}ms)'.format(context.event_id, event_age))
+    if event_age_ms > max_age_ms:
+        print('Dropped {} (age {}ms)'.format(context.event_id, event_age_ms))
         return 'Timeout'
 
     # Do what the function is supposed to do
-    print('Processed {} (age {}ms)'.format(context.event_id, event_age))
+    print('Processed {} (age {}ms)'.format(context.event_id, event_age_ms))
     return
 # [END functions_tips_infinite_retries]
 
