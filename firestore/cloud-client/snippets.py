@@ -303,9 +303,9 @@ def update_create_if_missing():
     # [START update_create_if_missing]
     city_ref = db.collection(u'cities').document(u'BJ')
 
-    city_ref.update({
+    city_ref.set({
         u'capital': True
-    }, firestore.CreateIfMissingOption(True))
+    }, merge=True)
     # [END update_create_if_missing]
 
 
