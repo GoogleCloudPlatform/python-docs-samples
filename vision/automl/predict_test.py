@@ -23,7 +23,7 @@ compute_region = "us-central1"
 
 
 def test_predict(capsys):
-    model_id = "7383667271543079510"
+    model_id = "ICN7383667271543079510"
     automl_vision_predict.predict(
         project_id, compute_region, model_id, "resources/test.png"
     )
