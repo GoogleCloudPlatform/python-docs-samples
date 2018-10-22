@@ -20,9 +20,7 @@ from google.cloud import spanner
 def test_main():
     import main
 
-    spanner.Client = MagicMock()
-    snapshot_mock = main.spanner.Client().instance().database().snapshot()
-    snapshot_mock.__enter__().execute_sql.return_value = [[0]]
+    main.database_id = 'example-db'
 
     main.app.testing = True
     client = main.app.test_client()

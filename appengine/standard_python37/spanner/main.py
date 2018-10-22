@@ -21,8 +21,8 @@ from google.cloud import spanner
 app = Flask(__name__)
 spanner_client = spanner.Client()
 
-instance_id = os.environ.get('SPANNER_INSTANCE_ID')
-database_id = os.environ.get('SPANNER_DATABASE_ID')
+instance_id = os.environ.get('SPANNER_INSTANCE')
+database_id = os.environ.get('SPANNER_DATABASE')
 
 
 @app.route('/')
