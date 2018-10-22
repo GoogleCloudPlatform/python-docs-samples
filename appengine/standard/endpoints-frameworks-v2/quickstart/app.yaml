@@ -21,8 +21,10 @@ libraries:
 - name: ssl
   version: 2.7.11
 
+# [START env_vars]
 env_variables:
   # The following values are to be replaced by information from the output of
   # 'gcloud endpoints services deploy swagger.json' command.
-  ENDPOINTS_SERVICE_NAME: greeting-api.endpoints.[YOUR-PROJECT-ID].cloud.goog
+  ENDPOINTS_SERVICE_NAME: YOUR-PROJECT-ID.appspot.com
   ENDPOINTS_SERVICE_VERSION: 2016-08-01r0
+ # [END env_vars]
