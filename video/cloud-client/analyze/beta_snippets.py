@@ -179,7 +179,7 @@ def track_objects_gcs(gcs_uri):
         input_uri=gcs_uri, features=features, location_id='us-east1')
     print('\nProcessing video for object annotations.')
 
-    result = operation.result(timeout=600)
+    result = operation.result(timeout=300)
     print('\nFinished processing.\n')
 
     # The first result is retrieved because a single video was processed.
@@ -232,7 +232,7 @@ def track_objects(path):
         input_content=input_content, features=features, location_id='us-east1')
     print('\nProcessing video for object annotations.')
 
-    result = operation.result(timeout=600)
+    result = operation.result(timeout=300)
     print('\nFinished processing.\n')
 
     # The first result is retrieved because a single video was processed.
