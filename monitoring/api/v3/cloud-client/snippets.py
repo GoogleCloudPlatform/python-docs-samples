@@ -15,9 +15,14 @@
 import argparse
 import os
 import pprint
+import random
 import time
 
 from google.cloud import monitoring_v3
+
+
+# Avoid collisions with other runs
+RANDOM_SUFFIX = str(random.randint(1000, 9999))
 
 
 def create_metric_descriptor(project_id):
@@ -25,7 +30,7 @@ def create_metric_descriptor(project_id):
     client = monitoring_v3.MetricServiceClient()
     project_name = client.project_path(project_id)
     descriptor = monitoring_v3.types.MetricDescriptor()
-    descriptor.type = 'custom.googleapis.com/my_metric'
+    descriptor.type = 'custom.googleapis.com/my_metric' + RANDOM_SUFFIX
     descriptor.metric_kind = (
         monitoring_v3.enums.MetricDescriptor.MetricKind.GAUGE)
     descriptor.value_type = (
@@ -50,7 +55,7 @@ def write_time_series(project_id):
     project_name = client.project_path(project_id)
 
     series = monitoring_v3.types.TimeSeries()
-    series.metric.type = 'custom.googleapis.com/my_metric'
+    series.metric.type = 'custom.googleapis.com/my_metric' + RANDOM_SUFFIX
     series.resource.type = 'gce_instance'
     series.resource.labels['instance_id'] = '1234567890123456789'
     series.resource.labels['zone'] = 'us-central1-f'
