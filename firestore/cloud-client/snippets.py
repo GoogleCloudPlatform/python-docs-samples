@@ -565,9 +565,12 @@ def snapshot_cursors():
     snapshot = doc_ref.get()
     start_at_snapshot = db.collection(
         u'cities').order_by(u'population').start_at(snapshot)
-
-    return start_at_snapshot.limit(10).get()
     # [END fs_start_at_snapshot_query_cursor]
+    results = start_at_snapshot.limit(10).get()
+    for doc in results:
+        print('{}'.format(doc.id))
+
+    return results
 
 
 def cursor_paginate():
