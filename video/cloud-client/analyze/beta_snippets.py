@@ -171,8 +171,8 @@ def track_objects_gcs(gcs_uri):
     """Object Tracking."""
     from google.cloud import videointelligence_v1p2beta1 as videointelligence
 
-    # It is recommended to use location_id as 'us-east1' for the best latency due
-    # to different types of processors used in this region and others.
+    # It is recommended to use location_id as 'us-east1' for the best latency
+    # due to different types of processors used in this region and others.
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.enums.Feature.OBJECT_TRACKING]
     operation = video_client.annotate_video(
@@ -226,8 +226,8 @@ def track_objects(path):
     with io.open(path, 'rb') as file:
         input_content = file.read()
 
-    # It is recommended to use location_id as 'us-east1' for the best latency due
-    # to different types of processors used in this region and others.
+    # It is recommended to use location_id as 'us-east1' for the best latency
+    # due to different types of processors used in this region and others.
     operation = video_client.annotate_video(
         input_content=input_content, features=features, location_id='us-east1')
     print('\nProcessing video for object annotations.')
