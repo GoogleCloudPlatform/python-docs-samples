@@ -14,14 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import pytest
 
 import beta_snippets
 
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-FILE_PATH = 'video/googlework_short.mp4'
 POSSIBLE_TEXTS = ['Google', 'SUR', 'SUR', 'ROTO', 'Vice President', '58oo9',
                   'LONDRES', 'OMAR', 'PARIS', 'METRO', 'RUE', 'CARLO']
 
@@ -49,7 +45,7 @@ def test_detect_text():
 
 @pytest.mark.slow
 def test_detect_text_gcs():
-    in_file = 'gs://{}/video/googlework_short.mp4'.format(BUCKET)
+    in_file = 'gs://python-docs-samples-tests/video/googlework_short.mp4'
     text_annotations = beta_snippets.video_detect_text_gcs(in_file)
 
     text_exists = False
