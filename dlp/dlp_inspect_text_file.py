@@ -20,13 +20,13 @@ import google.cloud.dlp
 
 def inspect_text_file(
         project_id='YOUR_PROJECT_ID',
-        filepath='path/to/file.txt'):
+        file_path='path/to/file.txt'):
     # Instantiate a client
     dlp = google.cloud.dlp.DlpServiceClient()
 
     # Get the bytes of the file
-    with open(filepath, mode='rb') as f:
-        file_bytes = f.read()
+    with open(file_path, mode='rb') as fh:
+        file_bytes = fh.read()
 
     # Construct request
     parent = dlp.project_path(project_id)
@@ -57,4 +57,4 @@ def inspect_text_file(
 
 
 if __name__ == '__main__':
-    inspect_text_file(project_id=sys.argv[1], filepath=sys.argv[2])
+    inspect_text_file(project_id=sys.argv[1], file_path=sys.argv[2])
