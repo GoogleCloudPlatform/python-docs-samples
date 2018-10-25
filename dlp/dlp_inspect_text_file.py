@@ -18,8 +18,9 @@ import sys
 import google.cloud.dlp
 
 
-def inspect_text_file(project_id='YOUR_PROJECT_ID',
-                      filepath='path/to/file.txt'):
+def inspect_text_file(
+        project_id='YOUR_PROJECT_ID',
+        filepath='path/to/file.txt'):
     # Instantiate a client
     dlp = google.cloud.dlp.DlpServiceClient()
 

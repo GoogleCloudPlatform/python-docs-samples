@@ -18,8 +18,9 @@ import sys
 import google.cloud.dlp
 
 
-def inspect_image_file(project_id='YOUR_PROJECT_ID',
-                       filepath='path/to/image.png'):
+def inspect_image_file(
+        project_id='YOUR_PROJECT_ID',
+        filepath='path/to/image.png'):
     # Instantiate a client
     dlp = google.cloud.dlp.DlpServiceClient()
 
