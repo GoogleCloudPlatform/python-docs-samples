@@ -25,7 +25,7 @@ db_connection_name = os.environ.get('CLOUD_SQL_CONNECTION_NAME')
 
 # When deployed to App Engine, the `GAE_ENV` environment variable will be
 # set to `standard`
-if os.environ.get('GAE_ENV'):
+if os.environ.get('GAE_ENV') == 'standard':
     # If deployed, use the local socket interface for accessing Cloud SQL
     host = '/cloudsql/{}'.format(db_connection_name)
 else:
