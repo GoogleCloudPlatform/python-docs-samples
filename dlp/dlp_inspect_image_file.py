@@ -13,7 +13,7 @@
 # limitations under the License.
 import sys
 
-# [START dlp_inspect_text_file]
+# [START dlp_inspect_image_file]
 # Import the Google Cloud Data Loss Prevention library
 import google.cloud.dlp
 
@@ -53,7 +53,7 @@ def inspect_image_file(
             print('Likelihood: {}'.format(finding.likelihood))
     else:
         print('No findings.')
-# [END dlp_inspect_text_file]
+# [END dlp_inspect_image_file]
 
 
 if __name__ == '__main__':
