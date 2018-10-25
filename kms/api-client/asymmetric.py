@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.rom googleapiclient import discovery
 
-# [START kms_asymmetric_imports]
 import base64
 import hashlib
 
@@ -21,13 +20,16 @@ from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec, padding, utils
-# [END kms_asymmetric_imports]
 
 
 # [START kms_get_asymmetric_public]
 def getAsymmetricPublicKey(client, key_path):
     """
     Retrieves the public key from a saved asymmetric key pair on Cloud KMS
+
+    Requires:
+      cryptography.hazmat.backends.default_backend
+      cryptography.hazmat.primitives.serialization
     """
     request = client.projects() \
                     .locations() \
@@ -47,6 +49,9 @@ def decryptRSA(ciphertext, client, key_path):
     """
     Decrypt the input ciphertext (bytes) using an
     'RSA_DECRYPT_OAEP_2048_SHA256' private key stored on Cloud KMS
+
+    Requires:
+      base64
     """
     request_body = {'ciphertext': base64.b64encode(ciphertext).decode('utf-8')}
     request = client.projects() \
@@ -67,6 +72,10 @@ def encryptRSA(plaintext, client, key_path):
     """
     Encrypt the input plaintext (bytes) locally using an
     'RSA_DECRYPT_OAEP_2048_SHA256' public key retrieved from Cloud KMS
+
+    Requires:
+      cryptography.hazmat.primitives.asymmetric.padding
+      cryptography.hazmat.primitives.hashes
     """
     public_key = getAsymmetricPublicKey(client, key_path)
     pad = padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()),
@@ -80,6 +89,10 @@ def encryptRSA(plaintext, client, key_path):
 def signAsymmetric(message, client, key_path):
     """
     Create a signature for a message using a private key stored on Cloud KMS
+
+    Requires:
+      base64
+      hashlib
     """
     # Note: some key algorithms will require a different hash function
     # For example, EC_SIGN_P384_SHA384 requires SHA384
@@ -104,6 +117,13 @@ def verifySignatureRSA(signature, message, client, key_path):
     """
     Verify the validity of an 'RSA_SIGN_PSS_2048_SHA256' signature for the
     specified message
+
+    Requires:
+      cryptography.exceptions.InvalidSignature
+      cryptography.hazmat.primitives.asymmetric.padding
+      cryptography.hazmat.primitives.asymmetric.utils
+      cryptography.hazmat.primitives.hashes
+      hashlib
     """
     public_key = getAsymmetricPublicKey(client, key_path)
     digest_bytes = hashlib.sha256(message).digest()
@@ -127,6 +147,13 @@ def verifySignatureEC(signature, message, client, key_path):
     """
     Verify the validity of an 'EC_SIGN_P256_SHA256' signature
     for the specified message
+
+    Requires:
+      cryptography.exceptions.InvalidSignature
+      cryptography.hazmat.primitives.asymmetric.ec
+      cryptography.hazmat.primitives.asymmetric.utils
+      cryptography.hazmat.primitives.hashes
+      hashlib
     """
     public_key = getAsymmetricPublicKey(client, key_path)
     digest_bytes = hashlib.sha256(message).digest()
