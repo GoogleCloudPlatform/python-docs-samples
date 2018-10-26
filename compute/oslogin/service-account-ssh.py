@@ -29,14 +29,14 @@ import requests
 import googleapiclient.discovery
 
 #  Global variables
-project = 'my-project-id'
-instance = 'my-instance-name'
-zone = 'us-central1-a'
+PROJECT = 'my-project-id'
+INSTANCE = 'my-instance-name'
+ZONE = 'us-central1-a'
 SERVICE_ACCOUNT_METADATA_URL = (
     'http://metadata.google.internal/computeMetadata/v1/instance/'
     'service-accounts/default/email')
-headers = {'Metadata-Flavor': 'Google'}
-cmd = 'uname -a' # The command to run on the remote instance.
+HEADERS = {'Metadata-Flavor': 'Google'}
+CMD = 'uname -a' # The command to run on the remote instance.
 
 # [END imports_and_variables]
 
@@ -45,17 +45,17 @@ def execute(cmd, cwd=None, capture_output=False, env=None, raise_errors=True):
     """Execute an external command (wrapper for Python subprocess)."""
     logging.info('Executing command: %s' % str(cmd))
     stdout = subprocess.PIPE if capture_output else None
-    p = subprocess.Popen(cmd, cwd=cwd, env=env, stdout=stdout)
-    output = p.communicate()[0]
-    returncode = p.returncode
+    process = subprocess.Popen(cmd, cwd=cwd, env=env, stdout=stdout)
+    output = process.communicate()[0]
+    returncode = process.returncode
     if returncode != 0:
-      # Error
-      if raise_errors:
-        raise subprocess.CalledProcessError(returncode, cmd)
-      else:
-        logging.info('Command returned error status %d' % returncode)
+        # Error
+        if raise_errors:
+            raise subprocess.CalledProcessError(returncode, CMD)
+        else:
+            logging.info('Command returned error status %d' % returncode)
     if output:
-      logging.info(output)
+        logging.info(output)
     return returncode, output
 # [END run_command_local]
 
@@ -66,14 +66,14 @@ def create_ssh_key(oslogin, account, private_key_file=None, expire_time=300):
     execute(['ssh-keygen', '-t', 'rsa', '-N', '', '-f', private_key_file])
 
     with open(private_key_file + '.pub', 'r') as original:
-    public_key = original.read().strip()
+        public_key = original.read().strip()
 
     # Expiration time is in microseconds.
     expiration = int((time.time() + expire_time) * 1000000)
 
     body = {
-      'key': public_key,
-      'expirationTimeUsec': expiration
+        'key': public_key,
+        'expirationTimeUsec': expiration
     }
     oslogin.users().importSshPublicKey(parent=account, body=body).execute()
     return private_key_file
@@ -83,24 +83,25 @@ def create_ssh_key(oslogin, account, private_key_file=None, expire_time=300):
 def run_ssh(cmd, private_key_file, username, hostname):
     """Run a command on a remote system."""
     ssh_command = [
-      'ssh', '-i', private_key_file, '-o', 'StrictHostKeyChecking=no',
-      '%s@%s' % (username, hostname), cmd,
+        'ssh', '-i', private_key_file, '-o', 'StrictHostKeyChecking=no',
+        '%s@%s' % (username, hostname), cmd,
     ]
     ssh = subprocess.Popen(
         ssh_command, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     result = ssh.stdout.readlines()
     if result == []:
-      error = ssh.stderr.readlines()
-      print(error)
+        error = ssh.stderr.readlines()
+        print(error)
     else:
-      print(result[0].decode('utf-8'))
+        print(result[0].decode('utf-8'))
 # [END run_command_remote]
 
 # [START main]
 def main():
+    """Run a command on a remote system."""
 
     # Get the service account name from instance metadata values.
-    response = requests.get(SERVICE_ACCOUNT_METADATA_URL, headers=headers)
+    response = requests.get(SERVICE_ACCOUNT_METADATA_URL, headers=HEADERS)
     account = 'users/' + response.text
 
     # Create the OS Login API object.
@@ -118,10 +119,10 @@ def main():
     # the zone where the instance is located, and the project that owns the
     # instance.
     hostname = '{instance}.{zone}.c.{project}.internal'.format(
-        instance=instance, zone=zone, project=project)
+        instance=INSTANCE, zone=ZONE, project=PROJECT)
 
     # Run a command on the remote instance over SSH.
-    result = run_ssh(cmd, private_key_file, username, hostname)
+    run_ssh(CMD, private_key_file, username, hostname)
 
     # Shred the private key and delete the pair.
     execute(['shred', private_key_file])
