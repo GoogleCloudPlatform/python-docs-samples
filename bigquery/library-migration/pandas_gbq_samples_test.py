@@ -55,7 +55,7 @@ def test_query():
 
 
 def test_legacy_query():
-    # [START bigquery_client_library_query_legacy]
+    # [START bigquery_pandas_gbq_query_legacy]
     import pandas
 
     sql = """
@@ -66,7 +66,7 @@ def test_legacy_query():
     """
 
     df = pandas.read_gbq(sql, dialect='legacy')
-    # [END bigquery_client_library_query_legacy]
+    # [END bigquery_pandas_gbq_query_legacy]
     assert len(df) > 0
 
 
