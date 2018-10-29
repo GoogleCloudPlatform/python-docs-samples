@@ -18,7 +18,7 @@ import sys
 import time
 
 # Add datasets for bootstrapping datasets for testing
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'datasets'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'datasets')) # noqa
 import datasets
 import fhir_stores
 import fhir_resources
