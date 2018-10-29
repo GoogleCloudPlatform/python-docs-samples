@@ -87,7 +87,7 @@ def end_to_end(project_id, topic_name, subscription_name, num_messages):
             break
         else:
             # Sleeps the thread at 50Hz to save on resources.
-            time.sleep(1./50)
+            time.sleep(1. / 50)
     # [END pubsub_end_to_end]
 
 
