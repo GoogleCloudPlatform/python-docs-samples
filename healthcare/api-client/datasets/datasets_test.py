@@ -112,4 +112,3 @@ def test_deidentify_dataset(capsys):
 
     # Check that de-identify worked
     assert 'De-identified data written to' in out
-
