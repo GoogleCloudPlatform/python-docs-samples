@@ -82,8 +82,10 @@ def delete_fhir_store(
         fhir_store_id):
     """Deletes the specified FHIR store."""
     client = get_client(service_account_json, api_key)
-    fhir_store_name = 'projects/{}/locations/{}/datasets/{}/fhirStores/{}'.format(
-        project_id, cloud_region, dataset_id, fhir_store_id)
+    fhir_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
+        project_id, cloud_region, dataset_id)
+    fhir_store_name = '{}/fhirStores/{}'.format(
+        fhir_store_parent, fhir_store_id)
 
     request = client.projects().locations().datasets(
     ).fhirStores().delete(name=fhir_store_name)
@@ -108,8 +110,10 @@ def get_fhir_store(
         fhir_store_id):
     """Gets the specified FHIR store."""
     client = get_client(service_account_json, api_key)
-    fhir_store_name = 'projects/{}/locations/{}/datasets/{}/fhirStores/{}'.format(
-        project_id, cloud_region, dataset_id, fhir_store_id)
+    fhir_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
+        project_id, cloud_region, dataset_id)
+    fhir_store_name = '{}/fhirStores/{}'.format(
+        fhir_store_parent, fhir_store_id)
 
     fhir_stores = client.projects().locations().datasets().fhirStores()
     fhir_store = fhir_stores.get(name=fhir_store_name).execute()
@@ -336,7 +340,6 @@ def parse_command_line_args():
         help='URI for a Google Cloud Storage directory from which files'
         'should be imported (e.g., "bucket-id/path/to/destination/dir").')
 
-
     command = parser.add_subparsers(dest='command')
 
     command.add_parser('create-fhir-store', help=create_fhir_store.__doc__)
@@ -344,9 +347,13 @@ def parse_command_line_args():
     command.add_parser('get-fhir-store', help=get_fhir_store.__doc__)
     command.add_parser('list-fhir-stores', help=list_fhir_stores.__doc__)
     command.add_parser('patch-fhir-store', help=patch_fhir_store.__doc__)
-    command.add_parser('export-fhir-resource', help=import_fhir_resource.__doc__)
-    command.add_parser('import-fhir-resource', help=export_fhir_resource.__doc__)
-        
+    command.add_parser(
+        'export-fhir-resource',
+        help=import_fhir_resource.__doc__)
+    command.add_parser(
+        'import-fhir-resource',
+        help=export_fhir_resource.__doc__)
+
     return parser.parse_args()
 
 
