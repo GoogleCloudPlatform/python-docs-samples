@@ -327,8 +327,10 @@ def get_patient_everything(
     url = '{}/projects/{}/locations/{}'.format(base_url,
                                                project_id, cloud_region)
 
-    resource_path = '{}/datasets/{}/fhirStores/{}/resources/Patient/{}/$everything'.format(
-        url, dataset_id, fhir_store_id, resource_id)
+    resource_parent = '{}/datasets/{}/fhirStores/{}'.format(
+        url, dataset_id, fhir_store_id)
+    resource_path = '{}/resources/Patient/{}/$everything'.format(
+        resource_parent, resource_id)
 
     # Make an authenticated API request
     session = get_session(service_account_json)
