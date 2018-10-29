@@ -36,7 +36,7 @@ def use_logging_handler():
     text = 'Hello, world!'
 
     # Emits the data using the standard logging module
-    logging.warn(text)
+    logging.warning(text)
     # [END logging_handler_usage]
 
     print('Logged: {}'.format(text))
