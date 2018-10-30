@@ -41,6 +41,7 @@ def list_topics(project_id):
 
 def create_topic(project_id, topic_name):
     """Create a new Pub/Sub topic."""
+    # [START pubsub_quickstart_create_topic]
     # [START pubsub_create_topic]
     from google.cloud import pubsub_v1
 
@@ -53,6 +54,7 @@ def create_topic(project_id, topic_name):
     topic = publisher.create_topic(topic_path)
 
     print('Topic created: {}'.format(topic))
+    # [END pubsub_quickstart_create_topic]
     # [END pubsub_create_topic]
 
 
