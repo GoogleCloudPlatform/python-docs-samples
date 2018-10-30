@@ -55,21 +55,27 @@ def speech_transcription(input_uri):
     # There is only one annotation_result since only
     # one video is processed.
     annotation_results = result.annotation_results[0]
-    speech_transcription = annotation_results.speech_transcriptions[0]
-    alternative = speech_transcription.alternatives[0]
+    for speech_transcription in annotation_results.speech_transcriptions:
 
-    print('Transcript: {}'.format(alternative.transcript))
-    print('Confidence: {}\n'.format(alternative.confidence))
+        # The number of alternatives for each transcription is limited by
+        # SpeechTranscriptionConfig.max_alternatives.
+        # Each alternative is a different possible transcription
+        # and has its own confidence score.
+        for alternative in speech_transcription.alternatives:
+            print('Alternative level information:')
 
-    print('Word level information:')
-    for word_info in alternative.words:
-        word = word_info.word
-        start_time = word_info.start_time
-        end_time = word_info.end_time
-        print('\t{}s - {}s: {}'.format(
-            start_time.seconds + start_time.nanos * 1e-9,
-            end_time.seconds + end_time.nanos * 1e-9,
-            word))
+            print('Transcript: {}'.format(alternative.transcript))
+            print('Confidence: {}\n'.format(alternative.confidence))
+
+            print('Word level information:')
+            for word_info in alternative.words:
+                word = word_info.word
+                start_time = word_info.start_time
+                end_time = word_info.end_time
+                print('\t{}s - {}s: {}'.format(
+                    start_time.seconds + start_time.nanos * 1e-9,
+                    end_time.seconds + end_time.nanos * 1e-9,
+                    word))
     # [END video_speech_transcription_gcs_beta]
 
 
