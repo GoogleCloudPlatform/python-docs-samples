@@ -59,7 +59,8 @@ def speech_transcription(input_uri):
 
         # The number of alternatives for each transcription is limited by
         # SpeechTranscriptionConfig.max_alternatives.
-        # Each alternative has its own confidence score.
+        # Each alternative is a different possible transcription
+        # and has its own confidence score.
         for alternative in speech_transcription.alternatives:
             print('Alternative level information:')
 
