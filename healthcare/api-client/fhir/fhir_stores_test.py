@@ -30,7 +30,7 @@ service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 dataset_id = 'test_dataset_{}'.format(int(time.time()))
 fhir_store_id = 'test_fhir_store-{}'.format(int(time.time()))
 pubsub_topic = 'test_pubsub_topic-{}'.format(int(time.time()))
-resource_type = 'Patient'
+gcs_uri = os.environ['CLOUD_STORAGE_BUCKET']
 
 
 @pytest.fixture(scope='module')
@@ -124,3 +124,35 @@ def test_patch_fhir_store(test_dataset, capsys):
     out, _ = capsys.readouterr()
 
     assert 'Patched FHIR store' in out
+
+
+def test_export_fhir_store_gcs(test_dataset, capsys):
+    fhir_stores.create_fhir_store(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id)
+
+    fhir_stores.export_fhir_store_gcs(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        gcs_uri)
+
+    # Clean up
+    fhir_stores.delete_fhir_store(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id)
+
+    out, _ = capsys.readouterr()
+
+    assert 'Exported FHIR resources to bucket' in out
