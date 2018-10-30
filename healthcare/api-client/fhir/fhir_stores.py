@@ -202,15 +202,15 @@ def patch_fhir_store(
 # [END healthcare_patch_fhir_store]
 
 
-# [START healthcare_export_fhir_resource]
-def export_fhir_resource(
+# [START healthcare_export_fhir_store_gcs]
+def export_fhir_store_gcs(
         service_account_json,
         api_key,
         project_id,
         cloud_region,
         dataset_id,
         fhir_store_id,
-        uri_prefix):
+        gcs_uri):
     """Export resources to a Google Cloud Storage bucket by copying
     them from the FHIR store."""
     client = get_client(service_account_json, api_key)
@@ -220,12 +220,9 @@ def export_fhir_resource(
         fhir_store_parent, fhir_store_id)
 
     body = {
-        "outputConfig":
+        "gcsDestinationLocation":
         {
-            "gcsDestination":
-            {
-                "uriPrefix": 'gs://{}'.format(uri_prefix)
-            }
+            "gcsUri": 'gs://{}'.format(gcs_uri)
         }
     }
 
@@ -234,16 +231,16 @@ def export_fhir_resource(
 
     try:
         response = request.execute()
-        print('Exported FHIR resources to bucket: gs://{}'.format(uri_prefix))
+        print('Exported FHIR resources to bucket: gs://{}'.format(gcs_uri))
         return response
     except HttpError as e:
         print('Error, FHIR resources not exported: {}'.format(e))
         return ""
-# [END healthcare_export_fhir_resource]
+# [END healthcare_export_fhir_store_gcs]
 
 
-# [START healthcare_import_fhir_resource]
-def import_fhir_resource(
+# [START healthcare_import_fhir_store]
+def import_fhir_store(
         service_account_json,
         api_key,
         project_id,
@@ -282,7 +279,7 @@ def import_fhir_resource(
     except HttpError as e:
         print('Error, FHIR resources not imported: {}'.format(e))
         return ""
-# [END healthcare_import_fhir_resource]
+# [END healthcare_import_fhir_store]
 
 
 def parse_command_line_args():
@@ -329,7 +326,7 @@ def parse_command_line_args():
         'are published')
 
     parser.add_argument(
-        '--uri_prefix',
+        '--gcs_uri',
         default=None,
         help='URI for a Google Cloud Storage directory to which result files'
         'should be written (e.g., "bucket-id/path/to/destination/dir").')
@@ -348,11 +345,11 @@ def parse_command_line_args():
     command.add_parser('list-fhir-stores', help=list_fhir_stores.__doc__)
     command.add_parser('patch-fhir-store', help=patch_fhir_store.__doc__)
     command.add_parser(
-        'export-fhir-resource',
-        help=import_fhir_resource.__doc__)
+        'import-fhir-store',
+        help=export_fhir_store_gcs.__doc__)
     command.add_parser(
-        'import-fhir-resource',
-        help=export_fhir_resource.__doc__)
+        'export-fhir-store-gcs',
+        help=import_fhir_store.__doc__)
 
     return parser.parse_args()
 
@@ -409,18 +406,18 @@ def run_command(args):
             args.fhir_store_id,
             args.pubsub_topic)
 
-    elif args.command == 'export-fhir-resource':
-        patch_fhir_store(
+    elif args.command == 'export-fhir-store-gcs':
+        export_fhir_store_gcs(
             args.service_account_json,
             args.api_key,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
             args.fhir_store_id,
-            args.uri_prefix)
+            args.gcs_uri)
 
-    elif args.command == 'import-fhir-resource':
-        patch_fhir_store(
+    elif args.command == 'import-fhir-store':
+        import_fhir_store(
             args.service_account_json,
             args.api_key,
             args.project_id,
