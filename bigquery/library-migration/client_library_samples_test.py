@@ -23,7 +23,7 @@ def temp_dataset():
     from google.cloud import bigquery
 
     client = bigquery.Client()
-    dataset_id = "temp_dataset_{}".format(round(time.time() * 1000))
+    dataset_id = "temp_dataset_{}".format(int(time.time() * 1000))
     dataset_ref = bigquery.DatasetReference(client.project, dataset_id)
     dataset = client.create_dataset(bigquery.Dataset(dataset_ref))
     yield dataset
@@ -76,21 +76,24 @@ def test_legacy_query():
     assert len(df) > 0
 
 
-def test_query_with_config():
-    # [START bigquery_client_library_query_config]
+def test_query_with_parameters():
+    # [START bigquery_client_library_query_parameters]
     from google.cloud import bigquery
 
     client = bigquery.Client()
     sql = """
         SELECT name
         FROM `bigquery-public-data.usa_names.usa_1910_current`
-        WHERE state = 'TX'
-        LIMIT 100
+        WHERE state = @state
+        LIMIT @limit
     """
     query_config = bigquery.QueryJobConfig()
-    query_config.use_query_cache = False
+    query_config.query_parameters = [
+        bigquery.ScalarQueryParameter('state', 'STRING', 'TX'),
+        bigquery.ScalarQueryParameter('limit', 'INTEGER', 100)
+    ]
     df = client.query(sql, job_config=query_config).to_dataframe()
-    # [END bigquery_client_library_query_config]
+    # [END bigquery_client_library_query_parameters]
     assert len(df) > 0
 
 

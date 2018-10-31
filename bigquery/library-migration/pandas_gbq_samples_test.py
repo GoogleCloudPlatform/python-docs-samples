@@ -22,7 +22,7 @@ import pytest
 @pytest.fixture
 def temp_dataset():
     client = bigquery.Client()
-    dataset_id = "temp_dataset_{}".format(round(time.time() * 1000))
+    dataset_id = "temp_dataset_{}".format(int(time.time() * 1000))
     dataset_ref = bigquery.DatasetReference(client.project, dataset_id)
     dataset = client.create_dataset(bigquery.Dataset(dataset_ref))
     yield dataset
@@ -70,23 +70,35 @@ def test_legacy_query():
     assert len(df) > 0
 
 
-def test_query_with_config():
-    # [START bigquery_pandas_gbq_query_config]
+def test_query_with_parameters():
+    # [START bigquery_pandas_gbq_query_parameters]
     import pandas
 
     sql = """
         SELECT name
         FROM `bigquery-public-data.usa_names.usa_1910_current`
-        WHERE state = 'TX'
-        LIMIT 100
+        WHERE state = @state
+        LIMIT @limit
     """
     query_config = {
         'query': {
-            'useQueryCache': False
+            'parameterMode': 'NAMED',
+            'queryParameters': [
+                {
+                    'name': 'state',
+                    'parameterType': {'type': 'STRING'},
+                    'parameterValue': {'value': 'TX'}
+                },
+                {
+                    'name': 'limit',
+                    'parameterType': {'type': 'INTEGER'},
+                    'parameterValue': {'value': 100}
+                }
+            ]
         }
     }
     df = pandas.read_gbq(sql, configuration=query_config)
-    # [END bigquery_pandas_gbq_query_config]
+    # [END bigquery_pandas_gbq_query_parameters]
     assert len(df) > 0
 
 
