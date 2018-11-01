@@ -30,7 +30,7 @@ def temp_dataset():
 
 
 def test_query():
-    # [START bigquery_pandas_gbq_query]
+    # [START bigquery_migration_pandas_gbq_query]
     import pandas
 
     sql = """
@@ -45,17 +45,17 @@ def test_query():
 
     # Run a Standard SQL query with the project set explicitly
     project_id = 'your-project-id'
-    # [END bigquery_pandas_gbq_query]
+    # [END bigquery_migration_pandas_gbq_query]
     assert len(df) > 0
     project_id = os.environ['GCLOUD_PROJECT']
-    # [START bigquery_pandas_gbq_query]
+    # [START bigquery_migration_pandas_gbq_query]
     df = pandas.read_gbq(sql, project_id=project_id, dialect='standard')
-    # [END bigquery_pandas_gbq_query]
+    # [END bigquery_migration_pandas_gbq_query]
     assert len(df) > 0
 
 
 def test_legacy_query():
-    # [START bigquery_pandas_gbq_query_legacy]
+    # [START bigquery_migration_pandas_gbq_query_legacy]
     import pandas
 
     sql = """
@@ -66,12 +66,12 @@ def test_legacy_query():
     """
 
     df = pandas.read_gbq(sql, dialect='legacy')
-    # [END bigquery_pandas_gbq_query_legacy]
+    # [END bigquery_migration_pandas_gbq_query_legacy]
     assert len(df) > 0
 
 
 def test_query_with_parameters():
-    # [START bigquery_pandas_gbq_query_parameters]
+    # [START bigquery_migration_pandas_gbq_query_parameters]
     import pandas
 
     sql = """
@@ -98,12 +98,12 @@ def test_query_with_parameters():
         }
     }
     df = pandas.read_gbq(sql, configuration=query_config)
-    # [END bigquery_pandas_gbq_query_parameters]
+    # [END bigquery_migration_pandas_gbq_query_parameters]
     assert len(df) > 0
 
 
 def test_upload_from_dataframe(temp_dataset):
-    # [START bigquery_pandas_gbq_upload_from_dataframe]
+    # [START bigquery_migration_pandas_gbq_upload_from_dataframe]
     import pandas
 
     df = pandas.DataFrame(
@@ -115,13 +115,13 @@ def test_upload_from_dataframe(temp_dataset):
     )
     full_table_id = 'my_dataset.new_table'
     project_id = 'my-project-id'
-    # [END bigquery_pandas_gbq_upload_from_dataframe]
+    # [END bigquery_migration_pandas_gbq_upload_from_dataframe]
     table_id = 'new_table'
     full_table_id = '{}.{}'.format(temp_dataset.dataset_id, table_id)
     project_id = os.environ['GCLOUD_PROJECT']
-    # [START bigquery_pandas_gbq_upload_from_dataframe]
+    # [START bigquery_migration_pandas_gbq_upload_from_dataframe]
     df.to_gbq(full_table_id, project_id=project_id)
-    # [END bigquery_pandas_gbq_upload_from_dataframe]
+    # [END bigquery_migration_pandas_gbq_upload_from_dataframe]
     client = bigquery.Client()
     table = client.get_table(temp_dataset.table(table_id))
     assert table.num_rows == 3

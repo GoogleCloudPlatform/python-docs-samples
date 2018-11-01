@@ -1,3 +1,4 @@
-google-cloud-bigquery[pandas]==1.3.0
-pandas-gbq
-pyarrow
+# [START bigquery_migration_pandas_gbq_requirements]
+google-cloud-bigquery[pandas,pyarrow]==1.6.0
+pandas-gbq==0.7.0
+# [END bigquery_migration_pandas_gbq_requirements]

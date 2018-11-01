@@ -31,7 +31,7 @@ def temp_dataset():
 
 
 def test_query():
-    # [START bigquery_client_library_query]
+    # [START bigquery_migration_client_library_query]
     from google.cloud import bigquery
 
     client = bigquery.Client()
@@ -47,17 +47,17 @@ def test_query():
 
     # Run a Standard SQL query with the project set explicitly
     project_id = 'your-project-id'
-    # [END bigquery_client_library_query]
+    # [END bigquery_migration_client_library_query]
     assert len(df) > 0
     project_id = os.environ['GCLOUD_PROJECT']
-    # [START bigquery_client_library_query]
+    # [START bigquery_migration_client_library_query]
     df = client.query(sql, project=project_id).to_dataframe()
-    # [END bigquery_client_library_query]
+    # [END bigquery_migration_client_library_query]
     assert len(df) > 0
 
 
 def test_legacy_query():
-    # [START bigquery_client_library_query_legacy]
+    # [START bigquery_migration_client_library_query_legacy]
     from google.cloud import bigquery
 
     client = bigquery.Client()
@@ -72,12 +72,12 @@ def test_legacy_query():
 
     # Run a Standard SQL query using the environment's default project
     df = client.query(sql, job_config=query_config).to_dataframe()
-    # [END bigquery_client_library_query_legacy]
+    # [END bigquery_migration_client_library_query_legacy]
     assert len(df) > 0
 
 
 def test_query_with_parameters():
-    # [START bigquery_client_library_query_parameters]
+    # [START bigquery_migration_client_library_query_parameters]
     from google.cloud import bigquery
 
     client = bigquery.Client()
@@ -93,12 +93,12 @@ def test_query_with_parameters():
         bigquery.ScalarQueryParameter('limit', 'INTEGER', 100)
     ]
     df = client.query(sql, job_config=query_config).to_dataframe()
-    # [END bigquery_client_library_query_parameters]
+    # [END bigquery_migration_client_library_query_parameters]
     assert len(df) > 0
 
 
 def test_upload_from_dataframe(temp_dataset):
-    # [START bigquery_client_library_upload_from_dataframe]
+    # [START bigquery_migration_client_library_upload_from_dataframe]
     from google.cloud import bigquery
     import pandas
 
@@ -111,12 +111,12 @@ def test_upload_from_dataframe(temp_dataset):
     )
     client = bigquery.Client()
     dataset_ref = client.dataset('my_dataset')
-    # [END bigquery_client_library_upload_from_dataframe]
+    # [END bigquery_migration_client_library_upload_from_dataframe]
     dataset_ref = client.dataset(temp_dataset.dataset_id)
-    # [START bigquery_client_library_upload_from_dataframe]
+    # [START bigquery_migration_client_library_upload_from_dataframe]
     table_ref = dataset_ref.table('new_table')
     client.load_table_from_dataframe(df, table_ref).result()
-    # [END bigquery_client_library_upload_from_dataframe]
+    # [END bigquery_migration_client_library_upload_from_dataframe]
     client = bigquery.Client()
     table = client.get_table(table_ref)
     assert table.num_rows == 3
