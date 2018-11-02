@@ -18,6 +18,7 @@ import os
 
 import email
 from email import encoders
+from email import generator
 from email.mime import application
 from email.mime import multipart
 
