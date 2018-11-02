@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from . import unit_testing
+
 
 def test_dag_import():
     """Test that the DAG file can be successfully imported.
@@ -20,4 +22,5 @@ def test_dag_import():
     environment. This is a recommended sanity check by the official Airflow
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
-    from . import connections  # noqa
+    from . import connections as module
+    unit_testing.assert_has_valid_dag(module)
