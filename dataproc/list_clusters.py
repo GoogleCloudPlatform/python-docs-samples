@@ -16,7 +16,8 @@
 
 import argparse
 
-import googleapiclient.discovery
+from googleapiclient.discovery import build
+from oauth2client.client import GoogleCredentials
 
 
 # [START list_clusters]
@@ -31,7 +32,8 @@ def list_clusters(dataproc, project, region):
 # [START get_client]
 def get_client():
     """Builds a client to the dataproc API."""
-    dataproc = googleapiclient.discovery.build('dataproc', 'v1')
+    credentials = GoogleCredentials.get_application_default()
+    dataproc = build('dataproc', 'v1', credentials=credentials)
     return dataproc
 # [END get_client]
 
