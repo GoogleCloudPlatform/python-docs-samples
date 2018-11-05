@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import random
 
 from google.cloud import storage
 import google.cloud.storage.acl
@@ -23,10 +24,16 @@ import acl
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 # Typically we'd use a @example.com address, but GCS requires a real Google
 # account.
+BLOB = 'storage_acl_test_sigil' + str(random.randint(1000, 9999))
 TEST_EMAIL = (
     'google-auth-system-tests'
     '@python-docs-samples-tests.iam.gserviceaccount.com')
 
+
+def teardown_module():
+    bucket = storage.Client().bucket(BUCKET)
+    bucket.delete_blob(BLOB)
+    
 
 @pytest.fixture
 def test_bucket():
@@ -45,7 +52,7 @@ def test_bucket():
 def test_blob():
     """Yields a blob that resets its acl after the test completes."""
     bucket = storage.Client().bucket(BUCKET)
-    blob = bucket.blob('storage_acl_test_sigil')
+    blob = bucket.blob(BLOB)
     blob.upload_from_string('Hello, is it me you\'re looking for?')
     acl = google.cloud.storage.acl.ObjectACL(blob)
     acl.reload()
