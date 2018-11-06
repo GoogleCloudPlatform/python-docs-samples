@@ -61,7 +61,6 @@ def test_ncaa_tutorial(delete_dataset):
         CREATE OR REPLACE MODEL `bqml_tutorial.ncaa_model`
         OPTIONS (
             model_type='linear_reg',
-            data_split_eval_fraction=0.1,
             max_iteration=50 ) AS
         SELECT
             * EXCEPT (
