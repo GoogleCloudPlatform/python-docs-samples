@@ -92,10 +92,8 @@ def test_client_library_legacy_query():
         WHERE state = 'TX'
         LIMIT 100
     """
-    query_config = bigquery.QueryJobConfig()
-    query_config.use_legacy_sql = True
+    query_config = bigquery.QueryJobConfig(use_legacy_sql=True)
 
-    # Run a Standard SQL query using the environment's default project
     df = client.query(sql, job_config=query_config).to_dataframe()
     # [END bigquery_migration_client_library_query_legacy]
     assert len(df) > 0
@@ -128,11 +126,13 @@ def test_client_library_query_with_parameters():
         WHERE state = @state
         LIMIT @limit
     """
-    query_config = bigquery.QueryJobConfig()
-    query_config.query_parameters = [
-        bigquery.ScalarQueryParameter('state', 'STRING', 'TX'),
-        bigquery.ScalarQueryParameter('limit', 'INTEGER', 100)
-    ]
+    query_config = bigquery.QueryJobConfig(
+        query_parameters=[
+            bigquery.ScalarQueryParameter('state', 'STRING', 'TX'),
+            bigquery.ScalarQueryParameter('limit', 'INTEGER', 100)
+        ]
+    )
+
     df = client.query(sql, job_config=query_config).to_dataframe()
     # [END bigquery_migration_client_library_query_parameters]
     assert len(df) > 0
@@ -165,6 +165,7 @@ def test_pandas_gbq_query_with_parameters():
             ]
         }
     }
+
     df = pandas.read_gbq(sql, configuration=query_config)
     # [END bigquery_migration_pandas_gbq_query_parameters]
     assert len(df) > 0
@@ -188,6 +189,7 @@ def test_client_library_upload_from_dataframe(temp_dataset):
     dataset_ref = client.dataset(temp_dataset.dataset_id)
     # [START bigquery_migration_client_library_upload_from_dataframe]
     table_ref = dataset_ref.table('new_table')
+
     client.load_table_from_dataframe(df, table_ref).result()
     # [END bigquery_migration_client_library_upload_from_dataframe]
     client = bigquery.Client()
@@ -214,6 +216,7 @@ def test_pandas_gbq_upload_from_dataframe(temp_dataset):
     full_table_id = '{}.{}'.format(temp_dataset.dataset_id, table_id)
     project_id = os.environ['GCLOUD_PROJECT']
     # [START bigquery_migration_pandas_gbq_upload_from_dataframe]
+
     df.to_gbq(full_table_id, project_id=project_id)
     # [END bigquery_migration_pandas_gbq_upload_from_dataframe]
     client = bigquery.Client()
