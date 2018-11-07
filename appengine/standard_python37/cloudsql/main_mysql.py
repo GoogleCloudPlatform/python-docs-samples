@@ -34,7 +34,7 @@ def main():
         # If deployed, use the local socket interface for accessing Cloud SQL
         unix_socket = '/cloudsql/{}'.format(db_connection_name)
         cnx = pymysql.connect(user=db_user, password=db_password,
-                              host=unix_socket, db=db_name)
+                              unix_socket=unix_socket, db=db_name)
     else:
         # If running locally, use the TCP connections instead
         # Set up Cloud SQL Proxy (cloud.google.com/sql/docs/mysql/sql-proxy)
