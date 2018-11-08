@@ -115,7 +115,6 @@ if __name__ == '__main__':
     parser.add_argument('-out_file', help='Optional output file', default=0)
     args = parser.parse_args()
 
-    parser = argparse.ArgumentParser()
     render_doc_text(args.detect_file, args.out_file)
     # [END vision_document_text_tutorial_run_application]
 # [END vision_document_text_tutorial]
