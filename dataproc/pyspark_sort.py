@@ -18,11 +18,11 @@ Note this file is not intended to be run directly, but run inside a PySpark
 environment.
 """
 
-# [START pyspark]
+# [START dataproc_pyspark_sort]
 import pyspark
 
 sc = pyspark.SparkContext()
 rdd = sc.parallelize(['Hello,', 'world!', 'dog', 'elephant', 'panther'])
 words = sorted(rdd.collect())
 print(words)
-# [END pyspark]
+# [END dataproc_pyspark_sort]
