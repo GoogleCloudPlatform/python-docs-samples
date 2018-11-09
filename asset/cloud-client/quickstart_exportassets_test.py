@@ -42,7 +42,7 @@ def asset_bucket(storage_client):
     yield BUCKET
 
 
-def test_export_assets(asset_bucket):
+def test_export_assets(asset_bucket, capsys):
     dump_file_path = "gs://", asset_bucket, "/assets-dump.txt"
     quickstart_exportassets.export_assets(PROJECT, dump_file_path)
     out, _ = capsys.readouterr()
