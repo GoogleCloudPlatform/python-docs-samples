@@ -28,7 +28,7 @@ def create_signed_url(service_account_file, bucket_name, object_name,
 
     # [START storage_signed_url_canonical_datetime]
     datetime_now = datetime.datetime.utcnow()
-    request_date = datetime_now.strftime("%Y%m%dT%H%M%SZ")
+    request_timestamp = datetime_now.strftime("%Y%m%dT%H%M%SZ")
     datestamp = datetime_now.strftime("%Y%m%d")
     # [END storage_signed_url_canonical_datetime]
 
@@ -65,7 +65,7 @@ def create_signed_url(service_account_file, bucket_name, object_name,
     # [START storage_signed_url_canonical_query_parameters]
     query_parameters["X-Goog-Algorithm"] = "GOOG4-RSA-SHA256"
     query_parameters["X-Goog-Credential"] = credential
-    query_parameters["X-Goog-Date"] = request_date
+    query_parameters["X-Goog-Date"] = request_timestamp
     query_parameters["X-Goog-Expires"] = expiration
     query_parameters["X-Goog-SignedHeaders"] = signed_headers
 
@@ -93,7 +93,7 @@ def create_signed_url(service_account_file, bucket_name, object_name,
 
     # [START storage_signed_url_string_to_sign]
     string_to_sign = "\n".join(["GOOG4-RSA-SHA256",
-                      request_date,
+                      request_timestamp,
                       credential_scope,
                       canonical_request_hash])
     # [END storage_signed_url_string_to_sign]
