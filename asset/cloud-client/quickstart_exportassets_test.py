@@ -16,9 +16,9 @@
 
 import os
 
-from google.cloud import pubsub_v1
+from google.cloud import storage
 import pytest
-import quickstart
+import quickstart_exportassets
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 BUCKET = 'bucket-for-assets'
