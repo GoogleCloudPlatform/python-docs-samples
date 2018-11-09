@@ -64,7 +64,7 @@ def execute(cmd, cwd=None, capture_output=False, env=None, raise_errors=True):
 # [START create_key]
 def create_ssh_key(oslogin, account, private_key_file=None, expire_time=300):
     """Generate an SSH key pair and apply it to the specified account."""
-    private_key_file = private_key_file or '/tmp/ssh-key-%s' % str(uuid.uuid4())
+    private_key_file = private_key_file or '/tmp/key-%s' % str(uuid.uuid4())
     execute(['ssh-keygen', '-t', 'rsa', '-N', '', '-f', private_key_file])
 
     with open(private_key_file + '.pub', 'r') as original:
@@ -90,8 +90,8 @@ def run_ssh(cmd, private_key_file, username, hostname):
         '%s@%s' % (username, hostname), cmd,
     ]
     ssh = subprocess.Popen(
-        ssh_command, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-        )
+        ssh_command, shell=False, stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE)
     result = ssh.stdout.readlines()
     if result == []:
         error = ssh.stderr.readlines()
@@ -116,8 +116,8 @@ def main():
     # variable.
     private_key_file = create_ssh_key(oslogin, account)
 
-    # Using the OS Login API, get the POSIX user name from the login profile for
-    # the service account.
+    # Using the OS Login API, get the POSIX user name from the login profile
+    # for the service account.
     profile = oslogin.users().getLoginProfile(name=account).execute()
     username = profile.get('posixAccounts')[0].get('username')
 
