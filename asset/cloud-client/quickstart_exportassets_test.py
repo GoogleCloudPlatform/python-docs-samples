@@ -18,22 +18,22 @@ import os
 
 from google.cloud import storage
 import pytest
-import quickstart_exportassets
+import sys
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 BUCKET = 'bucket-for-assets'
 
 @pytest.fixture(scope='module')
 def storage_client():
-  yield storage.Client()
+    yield storage.Client()
 
 
 @pytest.fixture(scope='module')
 def asset_bucket(storage_client):
-    topic_path = storage_client.create_bucket(BUCKET)
+    storage_client.create_bucket(BUCKET)
 
     try:
-        stroage_client.delete_bucket(BUCKET)
+        storage_client.delete_bucket(BUCKET)
     except Exception:
         pass
 
