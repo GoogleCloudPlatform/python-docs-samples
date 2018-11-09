@@ -43,7 +43,8 @@ if __name__ == '__main__':
     )
     parser.add_argument('project_id', help='Your Google Cloud project ID')
     parser.add_argument('dump_file_path',
-                        help='The file ExportAssets API will dump assets to, e.g.: gs://<bucket-name>/asset_dump_file')
+                        help='The file ExportAssets API will dump assets to, '
+                        'e.g.: gs://<bucket-name>/asset_dump_file')
 
     args = parser.parse_args()
 
