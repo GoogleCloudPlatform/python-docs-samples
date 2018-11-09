@@ -24,7 +24,7 @@ def export_assets(project_id, dump_file_path):
     from google.cloud.asset_v1beta1.proto import asset_service_pb2
 
     # TODO project_id = "Your Google Cloud Project ID"
-    # TODO dump_file_path = "Your Pub/Sub topic name"
+    # TODO dump_file_path = "Your asset dump file path"
 
     client = asset_v1beta1.AssetServiceClient()
     parent = client.project_path(project_id)
