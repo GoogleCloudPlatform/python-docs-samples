@@ -36,9 +36,10 @@ SERVICE_ACCOUNT_METADATA_URL = (
     'http://metadata.google.internal/computeMetadata/v1/instance/'
     'service-accounts/default/email')
 HEADERS = {'Metadata-Flavor': 'Google'}
-CMD = 'uname -a' # The command to run on the remote instance.
+CMD = 'uname -a'  # The command to run on the remote instance.
 
 # [END imports_and_variables]
+
 
 # [START run_command_local]
 def execute(cmd, cwd=None, capture_output=False, env=None, raise_errors=True):
@@ -58,6 +59,7 @@ def execute(cmd, cwd=None, capture_output=False, env=None, raise_errors=True):
         logging.info(output)
     return returncode, output
 # [END run_command_local]
+
 
 # [START create_key]
 def create_ssh_key(oslogin, account, private_key_file=None, expire_time=300):
@@ -79,6 +81,7 @@ def create_ssh_key(oslogin, account, private_key_file=None, expire_time=300):
     return private_key_file
 # [END create_key]
 
+
 # [START run_command_remote]
 def run_ssh(cmd, private_key_file, username, hostname):
     """Run a command on a remote system."""
@@ -87,7 +90,8 @@ def run_ssh(cmd, private_key_file, username, hostname):
         '%s@%s' % (username, hostname), cmd,
     ]
     ssh = subprocess.Popen(
-        ssh_command, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        ssh_command, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
     result = ssh.stdout.readlines()
     if result == []:
         error = ssh.stderr.readlines()
@@ -95,6 +99,7 @@ def run_ssh(cmd, private_key_file, username, hostname):
     else:
         print(result[0].decode('utf-8'))
 # [END run_command_remote]
+
 
 # [START main]
 def main():
@@ -107,7 +112,8 @@ def main():
     # Create the OS Login API object.
     oslogin = googleapiclient.discovery.build('oslogin', 'v1')
 
-    # Create the SSH key pair and return the private key file path as a variable.
+    # Create the SSH key pair and return the private key file path as a
+    # variable.
     private_key_file = create_ssh_key(oslogin, account)
 
     # Using the OS Login API, get the POSIX user name from the login profile for
@@ -128,6 +134,7 @@ def main():
     execute(['shred', private_key_file])
     execute(['rm', private_key_file])
     execute(['rm', private_key_file + ".pub"])
+
 
 if __name__ == '__main__':
 
