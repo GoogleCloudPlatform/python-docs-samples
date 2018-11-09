@@ -21,42 +21,44 @@ def create_signed_url(service_account_file, bucket_name, object_name,
         print('Expiration time can\'t be longer than a week')
         sys.exit(1)
 
-    # [START storage_signed_url_datestamp]
-    datetime_now = datetime.datetime.utcnow()
-    goog_date = datetime_now.strftime("%Y%m%dT%H%M%SZ")
-    datestamp = datetime_now.strftime("%Y%m%d")
-    # [START storage_signed_url_datestamp]
-
     # [START storage_signed_url_canonical_uri]
     escaped_object_name = quote(object_name, safe='')
     canonical_uri = "/{}/{}".format(bucket_name, escaped_object_name)
     # [END storage_signed_url_canonical_uri]
 
-    # [START storage_signed_url_canonical_request]
-    # [START storage_signed_url_string_to_sign]
-    credentials = service_account.Credentials.from_service_account_file(service_account_file)
-    client_email = credentials.service_account_email
+    # [START storage_signed_url_canonical_datetime]
+    datetime_now = datetime.datetime.utcnow()
+    goog_date = datetime_now.strftime("%Y%m%dT%H%M%SZ")
+    datestamp = datetime_now.strftime("%Y%m%d")
+    # [END storage_signed_url_canonical_datetime]
+
+    # [START storage_signed_url_credentials]
+    google_credentials = service_account.Credentials.from_service_account_file(service_account_file)
+    client_email = google_credentials.service_account_email
     credential_scope = "{}/auto/gcs/goog4_request".format(datestamp)
     credential = "{}/{}".format(client_email, credential_scope)
-    # [END storage_signed_url_string_to_sign]
-    # [END storage_signed_url_canonical_request]
+    # [END storage_signed_url_credentials]
 
     if headers is None:
         headers = dict()
     # [START storage_signed_url_canonical_headers]
-    # Preapre headers
     headers['host'] = "storage.googleapis.com"
 
     canonical_headers = ""
-    signed_headers = ""
     ordered_headers = collections.OrderedDict(sorted(headers.items()))
     for k,v in ordered_headers.items():
         lower_k = str(k).lower()
         strip_v = str(v).lower()
         canonical_headers += "{}:{}\n".format(lower_k, strip_v)
+    # [END storage_signed_url_canonical_headers]
+
+    # [START storage_signed_url_signed_headers]
+    signed_headers = ""
+    for k,_ in ordered_headers.items():
+        lower_k = str(k).lower()
         signed_headers += "{};".format(lower_k)
     signed_headers = signed_headers[:-1] # remove trailing ';'
-    # [END storage_signed_url_canonical_headers]
+    # [END storage_signed_url_signed_headers]
 
     if query_parameters is None:
         query_parameters = dict()
@@ -97,7 +99,7 @@ def create_signed_url(service_account_file, bucket_name, object_name,
     # [END storage_signed_url_string_to_sign]
 
     # [START storage_signed_url_signer]
-    signature = credentials.signer.sign(string_to_sign).hex()
+    signature = google_credentials.signer.sign(string_to_sign).hex()
     # [END storage_signed_url_signer]
 
     # [START storage_signed_url_construction]
