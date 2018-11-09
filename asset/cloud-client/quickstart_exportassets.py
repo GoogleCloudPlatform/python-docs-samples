@@ -27,7 +27,6 @@ def export_assets(project_id, dump_file_path):
     # TODO dump_file_path = "Your Pub/Sub topic name"
 
     client = asset_v1beta1.AssetServiceClient()
-    # parent = client.project_path('346413489579')
     parent = client.project_path(project_id)
     output_config = asset_service_pb2.OutputConfig()
     output_config.gcs_destination.uri = dump_file_path
