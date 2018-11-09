@@ -20,8 +20,6 @@ import argparse
 
 def export_assets(project_id, dump_file_path):
     # [START asset_quickstart_exportassets]
-    import time
-
     from google.cloud import asset_v1beta1
     from google.cloud.asset_v1beta1.proto import asset_service_pb2
 

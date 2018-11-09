@@ -18,10 +18,12 @@ import os
 
 from google.cloud import storage
 import pytest
-import sys
+
+import quickstart_exportassets
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 BUCKET = 'bucket-for-assets'
+
 
 @pytest.fixture(scope='module')
 def storage_client():
@@ -39,10 +41,10 @@ def asset_bucket(storage_client):
 
     yield BUCKET
 
-def test_export_assets(asset_bucket):
 
+def test_export_assets(asset_bucket):
     dump_file_path = "gs://", asset_bucket, "/assets-dump.txt"
-    quickstart.end_to_end(PROJECT, dump_file_path)
+    quickstart_exportassets.export_assets(PROJECT, dump_file_path)
     out, _ = capsys.readouterr()
 
     assert "uri: \"gs://cai-prober-prod-for-assets/phython-test.txt\"" in out
