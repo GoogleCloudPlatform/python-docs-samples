@@ -42,6 +42,12 @@ def test_hello_http_args(app):
         assert 'Hello, test!' in res
 
 
+def test_hello_http_empty_json(app):
+    with app.test_request_context(json=''):
+        res = main.hello_http(flask.request)
+        assert 'Hello, World!' in res
+
+
 def test_hello_http_xss(app):
     with app.test_request_context(json={'name': '<script>alert(1)</script>'}):
         res = main.hello_http(flask.request)
@@ -52,6 +58,14 @@ def test_hello_content_json(app):
     with app.test_request_context(json={'name': 'test'}):
         res = main.hello_content(flask.request)
         assert 'Hello, test!' in res
+
+
+def test_hello_content_empty_json(app):
+    with app.test_request_context(json=''):
+        with pytest.raises(
+                ValueError,
+                message="JSON is invalid, or missing a 'name' property"):
+            main.hello_content(flask.request)
 
 
 def test_hello_content_urlencoded(app):
