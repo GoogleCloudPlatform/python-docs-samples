@@ -66,7 +66,7 @@ def hello_http(request):
         Response object using `make_response`
         <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
     """
-    request_json = request.get_json()
+    request_json = request.get_json(silent=True)
     if request_json and 'name' in request_json:
         name = escape(request_json['name'])
     else:
@@ -119,7 +119,11 @@ def hello_content(request):
     """
     content_type = request.headers['content-type']
     if content_type == 'application/json':
-        name = request.json.get('name')
+        request_json = request.get_json(silent=True)
+        if request_json and 'name' in request_json:
+            name = request_json['name']
+        else:
+            raise ValueError("JSON is invalid, or missing a 'name' property")
     elif content_type == 'application/octet-stream':
         name = request.data
     elif content_type == 'text/plain':
