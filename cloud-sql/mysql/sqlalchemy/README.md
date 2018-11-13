@@ -30,7 +30,7 @@ secure solution such as [Cloud KMS](https://cloud.google.com/kms/) to help keep 
 
 ## Running locally
 
-To run this application locally, download and install the cloud_sql_proxy by
+To run this application locally, download and install the `cloud_sql_proxy` by
 following the instructions [here](https://cloud.google.com/sql/docs/mysql/sql-proxy#install).
 
 Once the proxy is ready, use the following command to start the proxy in the
@@ -58,7 +58,7 @@ Navigate towards `http://127.0.0.1:8080` to verify your application is running c
 
 ## Google App Engine Standard
 
-To run on GAE-Standard, create an AppEngine project by following the setup for these 
+To run on GAE-Standard, create an App Engine project by following the setup for these 
 [instructions](https://cloud.google.com/appengine/docs/standard/python3/quickstart#before-you-begin).
 
 First, update `app.yaml` with the correct values to pass the environment 

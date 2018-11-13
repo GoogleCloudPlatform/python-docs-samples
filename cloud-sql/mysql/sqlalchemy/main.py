@@ -20,9 +20,8 @@ from flask import Flask, render_template, request, Response
 import sqlalchemy
 
 
-# Saving credentials in environment variables is convent, but not secure
-# - consider a more secure solution such as https://cloud.google.com/kms/ to
-# help keep secrets safe.
+# Remember - storing secrets in plaintext is potentially unsafe. Consider using
+# something like https://cloud.google.com/kms/ to help keep secrets secret.
 db_user = os.environ.get("DB_USER")
 db_pass = os.environ.get("DB_PASS")
 db_name = os.environ.get("DB_NAME")
