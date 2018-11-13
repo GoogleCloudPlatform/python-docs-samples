@@ -847,7 +847,7 @@ def dml_write_read_transaction(instance_id, database_id):
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    def read_then_write(transaction):
+    def write_then_read(transaction):
         # Insert record.
         row_ct = transaction.execute_update(
             "INSERT Singers (SingerId, FirstName, LastName) "
@@ -862,7 +862,7 @@ def dml_write_read_transaction(instance_id, database_id):
         for result in results:
             print("FirstName: {}, LastName: {}".format(*result))
 
-    database.run_in_transaction(read_then_write)
+    database.run_in_transaction(write_then_read)
     # [END spanner_dml_write_then_read]
 
 
