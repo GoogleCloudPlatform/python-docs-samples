@@ -44,7 +44,7 @@ def asset_bucket(storage_client):
 
 
 def test_export_assets(asset_bucket, capsys):
-  dump_file_path = 'gs://{}/assets-dump.txt'.format(asset_bucket)
+    dump_file_path = 'gs://{}/assets-dump.txt'.format(asset_bucket)
     quickstart_exportassets.export_assets(PROJECT, dump_file_path)
     out, _ = capsys.readouterr()
 
