@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This sample shows how to list buckets using the AWS S3 SDK with
-   Google Cloud Storage (GCS) interoperable XML API.
+"""This sample shows how to list Google Cloud Storage (GCS) buckets
+   using the AWS S3 SDK with the GCS interoperable XML API.
 
 GCS Credentials are passed in using the following environment variables:
 
