@@ -37,8 +37,9 @@ def asset_bucket(storage_client):
 
     try:
         storage_client.delete_bucket(BUCKET)
-    except Exception:
-        pass
+    except Exception as e:
+        print('Failed to delete bucket{}'.format(BUCKET))
+        raise e
 
     yield BUCKET
 
