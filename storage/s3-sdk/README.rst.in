@@ -8,7 +8,7 @@ product:
     `Google Cloud Storage`_ provides support for S3 API users through the
     GCS XML API.
 
-    Read more about migration from S3 to GCS at https://cloud.google.com/storage/docs/migrating.
+    Learn more about migrating data from S3 to GCS at https://cloud.google.com/storage/docs/migrating.
 
 setup:
 - auth

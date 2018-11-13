@@ -25,6 +25,7 @@ import snippets
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 KMS_KEY = os.environ['CLOUD_KMS_KEY']
 
+
 def test_enable_default_kms_key():
     snippets.enable_default_kms_key(
         bucket_name=BUCKET,
