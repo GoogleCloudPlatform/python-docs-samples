@@ -41,7 +41,7 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
                         headers=None):
 
     if expiration > 604800:
-        print('Expiration time can\'t be longer than a week')
+        print('Expiration Time can\'t be longer than 604800 seconds (7 days).')
         sys.exit(1)
 
     # [START storage_signed_url_canonical_uri]
