@@ -34,7 +34,7 @@ def hello_get(request):
         Response object using `make_response`
         <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
     """
-    return 'Hello, World!'
+    return 'Hello World!'
 # [END functions_helloworld_get]
 
 
@@ -50,7 +50,7 @@ def hello_background(data, context):
         name = data['name']
     else:
         name = 'World'
-    return 'Hello, {}!'.format(name)
+    return 'Hello {}!'.format(name)
 # [END functions_helloworld_background]
 # [END functions_tips_terminate]
 
@@ -67,11 +67,15 @@ def hello_http(request):
         <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
     """
     request_json = request.get_json(silent=True)
+    request_args = request.args
+
     if request_json and 'name' in request_json:
-        name = escape(request_json['name'])
+        name = request_json['name']
+    elif request_args and 'name' in request_args:
+        name = request_args['name']
     else:
         name = 'World'
-    return 'Hello, {}!'.format(name)
+    return 'Hello {}!'.format(escape(name))
 # [END functions_helloworld_http]
 
 
@@ -89,7 +93,7 @@ def hello_pubsub(data, context):
         name = base64.b64decode(data['data']).decode('utf-8')
     else:
         name = 'World'
-    print('Hello, {}!'.format(name))
+    print('Hello {}!'.format(name))
 # [END functions_helloworld_pubsub]
 
 
@@ -132,7 +136,7 @@ def hello_content(request):
         name = request.form.get('name')
     else:
         raise ValueError("Unknown content type: {}".format(content_type))
-    return 'Hello, {}!'.format(escape(name))
+    return 'Hello {}!'.format(escape(name))
 # [END functions_http_content]
 
 
@@ -150,7 +154,7 @@ def hello_method(request):
     from flask import abort
 
     if request.method == 'GET':
-        return 'Hello, World!'
+        return 'Hello World!'
     elif request.method == 'PUT':
         return abort(403)
     else:
