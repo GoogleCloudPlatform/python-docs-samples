@@ -33,11 +33,11 @@ import boto3
 def list_gcs_buckets():
     """Lists all GCS buckets using boto3 SDK"""
     # Change the endpoint_url to use the Google Cloud Storage XML API endpoint.
-    s3 = boto3.client('s3', region_name="auto",
-                      endpoint_url="https://storage.googleapis.com")
+    interop_client = boto3.client('s3', region_name="auto",
+                                  endpoint_url="https://storage.googleapis.com")
 
     # Call GCS to list current buckets
-    response = s3.list_buckets()
+    response = interop_client.list_buckets()
 
     # Print bucket names
     print("Buckets:")
