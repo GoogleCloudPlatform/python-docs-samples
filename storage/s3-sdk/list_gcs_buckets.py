@@ -26,7 +26,7 @@ Learn how to get GCS interoperable credentials at
 https://cloud.google.com/storage/docs/migrating#keys.
 """
 
-# [START gcs_s3_sdk_list_buckets]
+# [START storage_s3_sdk_list_buckets]
 import boto3
 
 
@@ -43,7 +43,7 @@ def list_gcs_buckets():
     print("Buckets:")
     for bucket in response["Buckets"]:
         print(bucket["Name"])
-# [END gcs_s3_sdk_list_buckets]
+# [END storage_s3_sdk_list_buckets]
 
 
 if __name__ == '__main__':
