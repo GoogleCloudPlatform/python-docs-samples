@@ -8,7 +8,7 @@ Google Cloud Storage Python Samples
 
 
 This directory contains samples for Google Cloud Storage. `Google Cloud Storage`_ provides support for S3 API users through the GCS XML API.
-Read more about migration from S3 to GCS at https://cloud.google.com/storage/docs/migrating.
+Learn more about migrating data from S3 to GCS at https://cloud.google.com/storage/docs/migrating.
 
 
 
@@ -18,16 +18,6 @@ Read more about migration from S3 to GCS at https://cloud.google.com/storage/doc
 Setup
 -------------------------------------------------------------------------------
 
-
-Authentication
-++++++++++++++
-
-This sample requires you to have authentication setup. Refer to the
-`Authentication Getting Started Guide`_ for instructions on setting up
-credentials for applications.
-
-.. _Authentication Getting Started Guide:
-    https://cloud.google.com/docs/authentication/getting-started
 
 Install Dependencies
 ++++++++++++++++++++
