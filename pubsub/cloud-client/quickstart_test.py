@@ -66,6 +66,6 @@ def test_end_to_end(topic, subscription, capsys):
     quickstart.end_to_end(PROJECT, topic, subscription, N)
     out, _ = capsys.readouterr()
 
-    assert "Received all messages" in out
+    assert "Received and acknowledged {} messages.".format(N) in out
     assert "Publish time lapsed" in out
     assert "Subscribe time lapsed" in out
