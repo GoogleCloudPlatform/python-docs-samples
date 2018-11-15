@@ -14,6 +14,7 @@
 
 
 # [START error_reporting]
+# [START error_reporting_quickstart]
 def simulate_error():
     from google.cloud import error_reporting
 
@@ -23,6 +24,7 @@ def simulate_error():
         raise NameError
     except Exception:
         client.report_exception()
+# [END error_reporting_quickstart]
 # [END error_reporting]
 
 
