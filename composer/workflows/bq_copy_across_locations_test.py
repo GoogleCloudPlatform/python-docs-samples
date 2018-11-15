@@ -19,6 +19,8 @@ import sys
 from airflow import models
 import pytest
 
+from . import unit_testing
+
 
 @pytest.fixture(scope='module', autouse=True)
 def gcs_plugin():
@@ -35,7 +37,7 @@ def gcs_plugin():
     sys.path.remove(plugins_dir)
 
 
-def test_dag_import():
+def test_dag():
     """Test that the DAG file can be successfully imported.
 
     This tests that the DAG can be parsed, but does not run it in an Airflow
@@ -48,4 +50,5 @@ def test_dag_import():
     models.Variable.set('table_list_file_path', example_file_path)
     models.Variable.set('gcs_source_bucket', 'example-project')
     models.Variable.set('gcs_dest_bucket', 'us-central1-f')
-    from . import bq_copy_across_locations  # noqa
+    from . import bq_copy_across_locations as module
+    unit_testing.assert_has_valid_dag(module)

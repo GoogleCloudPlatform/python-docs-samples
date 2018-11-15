@@ -26,8 +26,18 @@ source ./testing/test-env.sh
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
 export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
 
+# Run Cloud SQL proxy, if required
+if [ -n "${CLOUD_SQL_PROXY}" ]; then
+  cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306 &
+  cloud_sql_proxy -instances="${POSTGRES_INSTANCE}"=tcp:5432 &
+fi
+
 # Run tests
 nox -k "${NOX_SESSION}" || ret_code=$?
+
+if [ -n "${CLOUD_SQL_PROXY}" ]; then
+  killall cloud_sql_proxy || true
+fi
 
 # Workaround for Kokoro permissions issue: delete secrets
 rm testing/{test-env.sh,client-secrets.json,service-account.json}

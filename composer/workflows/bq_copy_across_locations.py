@@ -51,9 +51,11 @@ from gcs_plugin.operators import gcs_to_gcs
 # Set default arguments
 # --------------------------------------------------------------------------------
 
+yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
+
 default_args = {
     'owner': 'airflow',
-    'start_date': datetime.datetime.today(),
+    'start_date': yesterday,
     'depends_on_past': False,
     'email': [''],
     'email_on_failure': False,
@@ -122,9 +124,10 @@ def read_table_list(table_list_file):
 # Define a DAG (directed acyclic graph) of tasks.
 # Any task you create within the context manager is automatically added to the
 # DAG object.
-with models.DAG('bq_copy_us_to_eu_01',
-                default_args=default_args,
-                schedule_interval=None) as dag:
+with models.DAG(
+        'comoser_sample_bq_copy_across_locations',
+        default_args=default_args,
+        schedule_interval=None) as dag:
     start = dummy_operator.DummyOperator(
         task_id='start',
         trigger_rule='all_success'
@@ -132,7 +135,6 @@ with models.DAG('bq_copy_us_to_eu_01',
 
     end = dummy_operator.DummyOperator(
         task_id='end',
-
         trigger_rule='all_success'
     )
 

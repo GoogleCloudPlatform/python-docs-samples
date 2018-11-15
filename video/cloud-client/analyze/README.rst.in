@@ -16,6 +16,9 @@ samples:
 - name: analyze
   file: analyze.py
   show_help: True
+- name: beta samples
+  file: beta_snippets.py
+  show_help: True
 
 cloud_client_library: true
 

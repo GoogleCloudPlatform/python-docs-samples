@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
+from collections import UserDict
+from datetime import datetime, timedelta, timezone
 from unittest.mock import MagicMock, Mock, patch
 
 import flask
@@ -52,23 +53,26 @@ def test_connection_pooling_404(app):
 
 
 def test_avoid_infinite_retries(capsys):
-    now = datetime.datetime.now()
+    now = datetime.now(timezone.utc)
 
-    with patch('main.datetime', wraps=datetime.datetime) as datetime_mock:
+    with patch('main.datetime', wraps=datetime) as datetime_mock:
         datetime_mock.now = Mock(return_value=now)
-        old_event = Mock(
-            timestamp=(now - datetime.timedelta(seconds=15)).isoformat())
-        young_event = Mock(
-            timestamp=(now - datetime.timedelta(seconds=5)).isoformat())
-        context = Mock(event_id='fake_event_id')
 
-        main.avoid_infinite_retries(old_event, context)
-        out, _ = capsys.readouterr()
-        assert 'Dropped {} (age 15000.0ms)'.format(context.event_id) in out
+        old_context = UserDict()
+        old_context.timestamp = (now - timedelta(seconds=15)).isoformat()
+        old_context.event_id = 'old_event_id'
 
-        main.avoid_infinite_retries(young_event, context)
+        young_context = UserDict()
+        young_context.timestamp = (now - timedelta(seconds=5)).isoformat()
+        young_context.event_id = 'young_event_id'
+
+        main.avoid_infinite_retries(None, old_context)
         out, _ = capsys.readouterr()
-        assert 'Processed {} (age 5000.0ms)'.format(context.event_id) in out
+        assert f"Dropped {old_context.event_id} (age 15000.0ms)" in out
+
+        main.avoid_infinite_retries(None, young_context)
+        out, _ = capsys.readouterr()
+        assert f"Processed {young_context.event_id} (age 5000.0ms)" in out
 
 
 def test_retry_or_not():

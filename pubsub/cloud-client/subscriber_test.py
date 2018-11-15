@@ -25,6 +25,8 @@ import subscriber
 PROJECT = os.environ['GCLOUD_PROJECT']
 TOPIC = 'subscription-test-topic'
 SUBSCRIPTION = 'subscription-test-subscription'
+SUBSCRIPTION_SYNC1 = 'subscription-test-subscription-sync1'
+SUBSCRIPTION_SYNC2 = 'subscription-test-subscription-sync2'
 ENDPOINT = 'https://{}.appspot.com/push'.format(PROJECT)
 
 
@@ -65,6 +67,36 @@ def subscription(subscriber_client, topic):
     subscriber_client.create_subscription(subscription_path, topic=topic)
 
     yield subscription_path
+
+
+@pytest.fixture
+def subscription_sync1(subscriber_client, topic):
+    subscription_sync_path = subscriber_client.subscription_path(
+        PROJECT, SUBSCRIPTION_SYNC1)
+
+    try:
+        subscriber_client.delete_subscription(subscription_sync_path)
+    except Exception:
+        pass
+
+    subscriber_client.create_subscription(subscription_sync_path, topic=topic)
+
+    yield subscription_sync_path
+
+
+@pytest.fixture
+def subscription_sync2(subscriber_client, topic):
+    subscription_sync_path = subscriber_client.subscription_path(
+        PROJECT, SUBSCRIPTION_SYNC2)
+
+    try:
+        subscriber_client.delete_subscription(subscription_sync_path)
+    except Exception:
+        pass
+
+    subscriber_client.create_subscription(subscription_sync_path, topic=topic)
+
+    yield subscription_sync_path
 
 
 def test_list_in_topic(subscription, capsys):
@@ -160,6 +192,27 @@ def test_receive(publisher_client, topic, subscription, capsys):
     assert 'Message 1' in out
 
 
+def test_receive_synchronously(
+        publisher_client, topic, subscription_sync1, capsys):
+    _publish_messages(publisher_client, topic)
+
+    subscriber.synchronous_pull(PROJECT, SUBSCRIPTION_SYNC1)
+
+    out, _ = capsys.readouterr()
+    assert 'Done.' in out
+
+
+def test_receive_synchronously_with_lease(
+        publisher_client, topic, subscription_sync2, capsys):
+    _publish_messages(publisher_client, topic)
+
+    subscriber.synchronous_pull_with_lease_management(
+        PROJECT, SUBSCRIPTION_SYNC2)
+
+    out, _ = capsys.readouterr()
+    assert 'Done.' in out
+
+
 def test_receive_with_custom_attributes(
         publisher_client, topic, subscription, capsys):
     _publish_messages_with_custom_attributes(publisher_client, topic)
@@ -188,18 +241,3 @@ def test_receive_with_flow_control(
     assert 'Listening' in out
     assert subscription in out
     assert 'Message 1' in out
-
-
-def test_receive_synchronously(
-        publisher_client, topic, subscription, capsys):
-    _publish_messages(publisher_client, topic)
-
-    with _make_sleep_patch():
-        with pytest.raises(RuntimeError, match='sigil'):
-            subscriber.receive_messages_with_flow_control(
-                PROJECT, SUBSCRIPTION)
-
-    out, _ = capsys.readouterr()
-    assert 'Message 1' in out
-    assert 'Message 2' in out
-    assert 'Message 3' in out
