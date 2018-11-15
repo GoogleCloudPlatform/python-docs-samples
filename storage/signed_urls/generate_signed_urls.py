@@ -154,4 +154,6 @@ if __name__ == '__main__':
     signed_url = generate_signed_url(
         service_account_file=args.service_account_file,
         http_method=args.request_method, bucket_name=args.bucket_name,
-        object_name=args.object_name, expiration=args.expiration)
+        object_name=args.object_name, expiration=int(args.expiration))
+
+    print(signed_url)
