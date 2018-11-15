@@ -67,5 +67,5 @@ def test_end_to_end(topic, subscription, capsys):
     out, _ = capsys.readouterr()
 
     assert "Received and acknowledged {} messages.".format(N) in out
-    assert "Publish time lapsed" in out
-    assert "Subscribe time lapsed" in out
+    assert "Publish time" in out
+    assert "Subscribe time" in out
