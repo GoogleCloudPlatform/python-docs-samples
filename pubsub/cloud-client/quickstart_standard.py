@@ -93,10 +93,10 @@ def subscribe(args):
 def main():
     pool = mp.Pool(8)
 
-    # TODOs
-    PROJECT_ID = 'tz-playground-bigdata'
-    TOPIC_NAME = 'august'
-    SUBSCRIPTION_NAME = 'one'
+    # TODO
+    # PROJECT_ID = ''
+    # TOPIC_NAME = ''
+    # SUBSCRIPTION_NAME = ''
 
     # Create messages.
     pool.apply(create_messages, [()])
