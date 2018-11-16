@@ -33,15 +33,15 @@ def storage_client():
 
 @pytest.fixture(scope='module')
 def asset_bucket(storage_client):
-    storage_client.create_bucket(BUCKET)
+    bucket = storage_client.create_bucket(BUCKET)
+
+    yield BUCKET
 
     try:
-        storage_client.delete_bucket(BUCKET)
+        bucket.delete(force=True)
     except Exception as e:
         print('Failed to delete bucket{}'.format(BUCKET))
         raise e
-
-    yield BUCKET
 
 
 def test_export_assets(asset_bucket, capsys):
