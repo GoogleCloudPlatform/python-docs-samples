@@ -42,7 +42,7 @@ def test_analyze_explicit_content(capsys):
 
 @pytest.mark.slow
 def test_speech_transcription(capsys):
-    analyze.analyze_labels(
+    analyze.speech_transcription(
         'gs://python-docs-samples-tests/video/googlework_short.mp4')
     out, _ = capsys.readouterr()
     assert 'cultural' in out

@@ -298,9 +298,6 @@ if __name__ == '__main__':
     transcribe_speech_parser = subparsers.add_parser(
         'transcribe', help=speech_transcription.__doc__)
     transcribe_speech_parser.add_argument('path')
-    transcribe_speech_file_parser = subparsers.add_parser(
-        'transcribe_file', help=speech_transcription_file.__doc__)
-    transcribe_speech_file_parser.add_argument('path')
 
     args = parser.parse_args()
 
