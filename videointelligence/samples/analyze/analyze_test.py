@@ -38,3 +38,11 @@ def test_analyze_explicit_content(capsys):
     analyze.analyze_explicit_content('gs://demomaker/cat.mp4')
     out, _ = capsys.readouterr()
     assert 'pornography' in out
+
+
+@pytest.mark.slow
+def test_speech_transcription(capsys):
+    analyze.speech_transcription(
+        'gs://python-docs-samples-tests/video/googlework_short.mp4')
+    out, _ = capsys.readouterr()
+    assert 'cultural' in out
