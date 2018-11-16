@@ -47,7 +47,8 @@ def publish(args):
         while True:
             message = message_queue.get(True, 1)
             start_time = time.time()
-            future = publisher.publish(topic_path, str(message).encode('utf-8'))
+            future = publisher.publish(topic_path,
+                                       str(message).encode('utf-8'))
             # Calculate publish time.
             dur = (time.time() - start_time)
             futures.append((future, [dur]))

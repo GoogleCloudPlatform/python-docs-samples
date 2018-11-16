@@ -27,7 +27,6 @@ def end_to_end(project_id, topic_name, subscription_name, num_messages):
     from google.cloud import pubsub_v1
     from google.cloud.pubsub_v1 import types
 
-
     # TODO project_id = "Your Google Cloud Project ID"
     # TODO topic_name = "Your Pub/Sub topic name"
     # TODO subscription_name = "Your Pub/Sub subscription name"
@@ -50,17 +49,17 @@ def end_to_end(project_id, topic_name, subscription_name, num_messages):
     # Create the topic.
     try:
         topic = publisher.create_topic(topic_path)
-        print('\nTopic created: {}'.format(topic.name))
+        print('Topic created: {}'.format(topic.name))
     except AlreadyExists:
-        print('\nTopic \"{}\" already exists.'.format(topic_name))
+        print('Topic \"{}\" already exists.'.format(topic_name))
 
     # Create a subscription.
     try:
         subscription = subscriber.create_subscription(
           subscription_path, topic_path)
-        print('\nSubscription created: {}'.format(subscription.name))
+        print('Subscription created: {}'.format(subscription.name))
     except AlreadyExists:
-        print('\nSubscription \"{}\" already exists.'.format(subscription_name))
+        print('Subscription \"{}\" already exists.'.format(subscription_name))
 
     publish_time = []
     futures = []
@@ -104,8 +103,10 @@ def end_to_end(project_id, topic_name, subscription_name, num_messages):
 
     while True:
         if len(messages) == num_messages:
-            print("Received and acknowledged {} messages.".format(num_messages))
-            print("Each message is {:.0f}Kb.".format(sys.getsizeof(data)/1.0e3))
+            print("Received and acknowledged {} messages.".format(
+                num_messages))
+            print("Each message is {:.0f}Kb.".format(
+                sys.getsizeof(data) / 1.0e3))
             print("They are sent in a batch size of 1000.")
             print("Publish time: {:.6f}s.".format(
                 sum(publish_time)+sum(resolve_time)))
@@ -129,8 +130,10 @@ if __name__ == '__main__':
 
     basic_parser = subparsers.add_parser('basic', help=end_to_end.__doc__)
     basic_parser.add_argument('topic_name', help='Your topic name')
-    basic_parser.add_argument('subscription_name', help='Your subscription name')
-    basic_parser.add_argument('num_msgs', type=int, help='Number of test messages')
+    basic_parser.add_argument('subscription_name',
+                              help='Your subscription name')
+    basic_parser.add_argument('num_msgs', type=int,
+                              help='Number of test messages')
 
     args = parser.parse_args()
 
