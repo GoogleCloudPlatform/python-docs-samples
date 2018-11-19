@@ -161,7 +161,10 @@ def test_update(subscriber_client, subscription, capsys):
 
     out, _ = capsys.readouterr()
     assert subscription in out
-    assert '100' in outdef _publish_messages(publisher_client, topic):
+    assert '100' in out
+
+
+def _publish_messages(publisher_client, topic):
     for n in range(5):
         data = u'Message {}'.format(n).encode('utf-8')
         publisher_client.publish(
