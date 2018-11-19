@@ -1,5 +1,4 @@
 
-#!/bin/python
 # Copyright 2018 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,12 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Examples of using the Cloud ML Engine's online prediction service, modified for scikit-learn and XGBoost."""
-import argparse
-import base64
-import json
+"""Examples of using the Cloud ML Engine's online prediction service, 
+   modified for scikit-learn and XGBoost."""
+
 import googleapiclient.discovery
-import six
+
 
 # [START predict_json]
 def predict_json(project, model, instances, version=None):
