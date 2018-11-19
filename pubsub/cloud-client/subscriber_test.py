@@ -154,14 +154,19 @@ def test_delete(subscriber_client, subscription):
             subscriber_client.get_subscription(subscription)
 
 
-def test_update(subscriber_client, subscription, capsys):
-    ACK_DEADLINE_SECONDS = 100
+def test_update(subscriber_client, subscription):
+    ACK_DEADLINE_SECONDS = 20
+    
+    subscription.ack_deadline_seconds = ACK_DEADLINE_SECONDS
+    paths_element = 'ack_deadline_seconds'
+    paths = [paths_element]
+    update_mask = {'paths': paths}
+    
+    subscriber_client.update_subscription(subscription, update_mask)
 
-    subscriber.update_subscription(PROJECT, SUBSCRIPTION, ACK_DEADLINE_SECONDS)
-
-    out, _ = capsys.readouterr()
-    assert subscription in out
-    assert '100' in out
+    @eventually_consistent.call
+    def _():
+        assert subscriber_client.get_subscription(subscription)
 
 
 def _publish_messages(publisher_client, topic):
