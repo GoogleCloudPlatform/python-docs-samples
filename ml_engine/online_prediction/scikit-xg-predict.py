@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Examples of using the Cloud ML Engine's online prediction service, 
+"""Examples of using the Cloud ML Engine's online prediction service,
    modified for scikit-learn and XGBoost."""
 
 import googleapiclient.discovery
