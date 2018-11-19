@@ -45,7 +45,7 @@ def track_event(category, action, label=None, value=0):
     }
 
     response = requests.post(
-        'http://www.google-analytics.com/collect', data=data)
+        'https://www.google-analytics.com/collect', data=data)
 
     # If the request fails, this will raise a RequestException. Depending
     # on your application's needs, this may be a non-error and can be caught
