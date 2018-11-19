@@ -1,0 +1,6 @@
+runtime: python37
+
+env_variables:
+    REDIS_HOST: your-redis-host
+    REDIS_PORT: your-redis-port
+    REDIS_PASSWORD: your-redis-password

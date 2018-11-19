@@ -1,8 +1,8 @@
-Flask==0.12.2
-flask-cors==3.0.3
-gunicorn==19.7.1
+Flask==1.0.2
+flask-cors==3.0.6
+gunicorn==19.9.0
 six==1.11.0
-pyyaml==3.12
-requests==2.18.4
-google-auth==1.4.1
+pyyaml==3.13
+requests==2.19.1
+google-auth==1.5.1
 google-auth-oauthlib==0.2.0
