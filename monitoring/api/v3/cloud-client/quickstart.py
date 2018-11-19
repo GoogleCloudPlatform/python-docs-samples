@@ -15,25 +15,26 @@
 
 def run_quickstart():
     # [START monitoring_quickstart]
-    from google.cloud import monitoring
+    from google.cloud import monitoring_v3
 
-    client = monitoring.Client()
+    import time
 
-    resource = client.resource(
-        type_='gce_instance',
-        labels={
-            'instance_id': '1234567890123456789',
-            'zone': 'us-central1-f',
-        }
-    )
+    client = monitoring_v3.MetricServiceClient()
+    project = 'my-project'  # TODO: Update to your project ID.
+    project_name = client.project_path(project)
 
-    metric = client.metric(
-        type_='custom.googleapis.com/my_metric',
-        labels={}
-    )
-
-    # Default arguments use endtime datetime.utcnow()
-    client.write_point(metric, resource, 3.14)
+    series = monitoring_v3.types.TimeSeries()
+    series.metric.type = 'custom.googleapis.com/my_metric'
+    series.resource.type = 'gce_instance'
+    series.resource.labels['instance_id'] = '1234567890123456789'
+    series.resource.labels['zone'] = 'us-central1-f'
+    point = series.points.add()
+    point.value.double_value = 3.14
+    now = time.time()
+    point.interval.end_time.seconds = int(now)
+    point.interval.end_time.nanos = int(
+        (now - point.interval.end_time.seconds) * 10**9)
+    client.create_time_series(project_name, [series])
     print('Successfully wrote time series.')
     # [END monitoring_quickstart]
 

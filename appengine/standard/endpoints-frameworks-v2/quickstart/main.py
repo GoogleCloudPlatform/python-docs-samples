@@ -17,9 +17,9 @@ Endpoints."""
 
 # [START imports]
 import endpoints
-from protorpc import message_types
-from protorpc import messages
-from protorpc import remote
+from endpoints import message_types
+from endpoints import messages
+from endpoints import remote
 # [END imports]
 
 

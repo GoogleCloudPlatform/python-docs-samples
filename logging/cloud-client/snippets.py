@@ -26,6 +26,7 @@ import argparse
 from google.cloud import logging
 
 
+# [START logging_write_log_entry]
 def write_entry(logger_name):
     """Writes log entries to the given logger."""
     logging_client = logging.Client()
@@ -47,8 +48,10 @@ def write_entry(logger_name):
     })
 
     print('Wrote logs to {}.'.format(logger.name))
+# [END logging_write_log_entry]
 
 
+# [START logging_list_log_entries]
 def list_entries(logger_name):
     """Lists the most recent entries for a given logger."""
     logging_client = logging.Client()
@@ -60,8 +63,10 @@ def list_entries(logger_name):
         timestamp = entry.timestamp.isoformat()
         print('* {}: {}'.format
               (timestamp, entry.payload))
+# [END logging_list_log_entries]
 
 
+# [START logging_delete_log]
 def delete_logger(logger_name):
     """Deletes a logger and all its entries.
 
@@ -73,6 +78,7 @@ def delete_logger(logger_name):
     logger.delete()
 
     print('Deleted all logging entries for {}'.format(logger.name))
+# [END logging_delete_log]
 
 
 if __name__ == '__main__':

@@ -1,0 +1,7 @@
+indexes:
+
+- kind: visit
+  ancestor: yes
+  properties:
+  - name: timestamp
+    direction: desc

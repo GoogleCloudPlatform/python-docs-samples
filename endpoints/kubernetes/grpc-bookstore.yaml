@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
+# Use this file to deploy the container for the grpc-bookstore sample
+# and the container for the Extensible Service Proxy (ESP) to
+# Google Kubernetes Engine (GKE).
+
 apiVersion: v1
 kind: Service
 metadata:
