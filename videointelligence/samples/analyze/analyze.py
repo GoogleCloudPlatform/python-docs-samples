@@ -230,7 +230,7 @@ def analyze_shots(path):
 
 
 def speech_transcription(path):
-    # [START video_speech_transcription]
+    # [START video_speech_transcription_gcs]
     """Transcribe speech from a video stored on GCS."""
     from google.cloud import videointelligence
 
@@ -275,7 +275,7 @@ def speech_transcription(path):
                     start_time.seconds + start_time.nanos * 1e-9,
                     end_time.seconds + end_time.nanos * 1e-9,
                     word))
-    # [END video_speech_transcription]
+    # [END video_speech_transcription_gcs]
 
 
 if __name__ == '__main__':
