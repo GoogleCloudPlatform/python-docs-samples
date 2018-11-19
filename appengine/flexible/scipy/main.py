@@ -21,7 +21,6 @@ import scipy.misc
 app = Flask(__name__)
 
 
-# [START scipy]
 @app.route('/')
 def resize():
     """Demonstrates using scipy to resize an image."""
@@ -34,7 +33,6 @@ def resize():
     # Write the tinted image back to disk
     scipy.misc.imsave(output_image_path, img_tinted)
     return "Image resized."
-# [END scipy]
 
 
 @app.errorhandler(500)

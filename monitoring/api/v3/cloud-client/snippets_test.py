@@ -12,58 +12,71 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import re
+
 from gcp_devrel.testing import eventually_consistent
 
 import snippets
 
 
 def test_create_get_delete_metric_descriptor(capsys):
-    snippets.create_metric_descriptor()
-
-    @eventually_consistent.call
-    def __():
-        snippets.get_metric_descriptor('custom.googleapis.com/my_metric')
-
+    snippets.create_metric_descriptor(snippets.project_id())
     out, _ = capsys.readouterr()
-    assert 'DOUBLE' in out
-    snippets.delete_metric_descriptor('custom.googleapis.com/my_metric')
-    out, _ = capsys.readouterr()
+    match = re.search(r'Created (.*)\.', out)
+    metric_name = match.group(1)
+    try:
+        @eventually_consistent.call
+        def __():
+            snippets.get_metric_descriptor(metric_name)
+
+        out, _ = capsys.readouterr()
+        assert 'DOUBLE' in out
+    finally:
+        snippets.delete_metric_descriptor(metric_name)
+        out, _ = capsys.readouterr()
     assert 'Deleted metric' in out
 
 
 def test_list_metric_descriptors(capsys):
-    snippets.list_metric_descriptors()
+    snippets.list_metric_descriptors(snippets.project_id())
     out, _ = capsys.readouterr()
     assert 'logging.googleapis.com/byte_count' in out
 
 
 def test_list_resources(capsys):
-    snippets.list_monitored_resources()
+    snippets.list_monitored_resources(snippets.project_id())
     out, _ = capsys.readouterr()
     assert 'pubsub_topic' in out
 
 
 def test_get_resources(capsys):
-    snippets.get_monitored_resource_descriptor('pubsub_topic')
+    snippets.get_monitored_resource_descriptor(
+        snippets.project_id(), 'pubsub_topic')
     out, _ = capsys.readouterr()
     assert 'A topic in Google Cloud Pub/Sub' in out
 
 
 def test_time_series(capsys):
-    snippets.write_time_series()
+    snippets.write_time_series(snippets.project_id())
 
-    snippets.list_time_series()
+    snippets.list_time_series(snippets.project_id())
     out, _ = capsys.readouterr()
-    assert 'TimeSeries with' in out
+    assert 'gce_instance' in out
 
-    snippets.list_time_series_header()
+    snippets.list_time_series_header(snippets.project_id())
     out, _ = capsys.readouterr()
-    assert 'TimeSeries with' in out
+    assert 'gce_instance' in out
 
-    snippets.list_time_series_aggregate()
+    snippets.list_time_series_aggregate(snippets.project_id())
     out, _ = capsys.readouterr()
-    assert 'TimeSeries with' in out
+    assert 'points' in out
+    assert 'interval' in out
+    assert 'start_time' in out
+    assert 'end_time' in out
 
-    snippets.list_time_series_reduce()
+    snippets.list_time_series_reduce(snippets.project_id())
     out, _ = capsys.readouterr()
-    assert 'TimeSeries with' in out
+    assert 'points' in out
+    assert 'interval' in out
+    assert 'start_time' in out
+    assert 'end_time' in out

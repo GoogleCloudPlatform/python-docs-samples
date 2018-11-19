@@ -2,6 +2,7 @@
 *.pyc
 .coverage
 .tox
+.pytest_cache
 coverage.xml
 python-docs-samples.json
 service-account.json
@@ -19,3 +20,6 @@ secrets.tar
 junit.xml
 credentials.dat
 .nox
+.vscode/
+*sponge_log.xml
+.DS_store

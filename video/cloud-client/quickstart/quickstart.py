@@ -24,7 +24,7 @@ Usage:
 
 
 def run_quickstart():
-    # [START videointelligence_quickstart]
+    # [START video_quickstart]
     from google.cloud import videointelligence
 
     video_client = videointelligence.VideoIntelligenceServiceClient()
@@ -55,7 +55,7 @@ def run_quickstart():
             print('\tSegment {}: {}'.format(i, positions))
             print('\tConfidence: {}'.format(confidence))
         print('\n')
-    # [END videointelligence_quickstart]
+    # [END video_quickstart]
 
 
 if __name__ == '__main__':

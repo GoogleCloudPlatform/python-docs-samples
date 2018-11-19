@@ -39,7 +39,7 @@ service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
 registry_id = 'test-registry-{}'.format(int(time.time()))
 
-_BASE_URL = 'https://cloudiot-device.googleapis.com/v1beta1'
+_BASE_URL = 'https://cloudiotdevice.googleapis.com/v1'
 
 
 @pytest.fixture(scope='module')

@@ -31,10 +31,16 @@ credentials for applications.
 Install Dependencies
 ++++++++++++++++++++
 
+#. Clone python-docs-samples and change directory to the sample directory you want to use.
+
+    .. code-block:: bash
+
+        $ git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+
 #. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
 
- .. _Python Development Environment Setup Guide:
-     https://cloud.google.com/python/setup
+   .. _Python Development Environment Setup Guide:
+       https://cloud.google.com/python/setup
 
 #. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
 
@@ -59,7 +65,7 @@ Manager
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=iot/api-client/manager/manager.py;iot/api-client/manager/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=iot/api-client/manager/manager.py,iot/api-client/manager/README.rst
 
 
 
@@ -70,15 +76,15 @@ To run this sample:
 
     $ python manager.py
 
-    usage: manager.py [-h] --pubsub_topic PUBSUB_TOPIC
-                      [--cloud_region CLOUD_REGION] [--config CONFIG]
+    usage: manager.py [-h] [--cloud_region CLOUD_REGION]
+                      [--pubsub_topic PUBSUB_TOPIC] [--config CONFIG]
                       [--device_id DEVICE_ID]
                       [--ec_public_key_file EC_PUBLIC_KEY_FILE]
                       [--project_id PROJECT_ID] [--registry_id REGISTRY_ID]
                       [--rsa_certificate_file RSA_CERTIFICATE_FILE]
                       [--service_account_json SERVICE_ACCOUNT_JSON]
-                      [--version VERSION]
-                      {create-es256,create-registry,create-rsa256,create-topic,create-unauth,delete-device,delete-registry,get,get-registry,get-state,list,list-registries,patch-es256,patch-rs256,set-config}
+                      [--version VERSION] [--member MEMBER] [--role ROLE]
+                      {create-es256,create-registry,create-rsa256,create-topic,create-unauth,delete-device,delete-registry,get,get-config-versions,get-iam-permissions,get-registry,get-state,list,list-registries,patch-es256,patch-rs256,set-config,set-iam-permissions}
                       ...
 
     Example of using the Google Cloud IoT Core device manager to administer
@@ -88,14 +94,12 @@ To run this sample:
 
         python manager.py \
           --project_id=my-project-id \
-          --pubsub_topic=projects/my-project-id/topics/my-topic-id \
-          --ec_public_key_file=../ec_public.pem \
-          --rsa_certificate_file=../rsa_cert.pem \
-          --service_account_json=$HOME/service_account.json
-          list
+          --cloud_region=us-central1 \
+          --service_account_json=$HOME/service_account.json \
+          list-registries
 
     positional arguments:
-      {create-es256,create-registry,create-rsa256,create-topic,create-unauth,delete-device,delete-registry,get,get-registry,get-state,list,list-registries,patch-es256,patch-rs256,set-config}
+      {create-es256,create-registry,create-rsa256,create-topic,create-unauth,delete-device,delete-registry,get,get-config-versions,get-iam-permissions,get-registry,get-state,list,list-registries,patch-es256,patch-rs256,set-config,set-iam-permissions}
         create-es256        Create a new device with the given id, using ES256 for
                             authentication.
         create-registry     Gets or creates a device registry.
@@ -107,6 +111,11 @@ To run this sample:
         delete-device       Delete the device with the given id.
         delete-registry     Deletes the specified registry.
         get                 Retrieve the device with the given id.
+        get-config-versions
+                            Lists versions of a device config in descending order
+                            (newest first).
+        get-iam-permissions
+                            Retrieves IAM permissions for the given registry.
         get-registry        Retrieves a device registry.
         get-state           Retrieve a device's state blobs.
         list                List all devices in the registry.
@@ -117,14 +126,17 @@ To run this sample:
                             device.
         set-config          Patch the device to add an RSA256 public key to the
                             device.
+        set-iam-permissions
+                            Sets IAM permissions for the given registry to a
+                            single role/member.
 
     optional arguments:
       -h, --help            show this help message and exit
+      --cloud_region CLOUD_REGION
+                            GCP cloud region
       --pubsub_topic PUBSUB_TOPIC
                             Google Cloud Pub/Sub topic. Format is
                             projects/project_id/topics/topic-id
-      --cloud_region CLOUD_REGION
-                            GCP cloud region
       --config CONFIG       Configuration sent to a device.
       --device_id DEVICE_ID
                             Device id.
@@ -139,6 +151,8 @@ To run this sample:
       --service_account_json SERVICE_ACCOUNT_JSON
                             Path to service account json file.
       --version VERSION     Version number for setting device configuration.
+      --member MEMBER       Member used for IAM commands.
+      --role ROLE           Role used for IAM commands.
 
 
 

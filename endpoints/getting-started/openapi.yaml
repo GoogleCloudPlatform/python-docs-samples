@@ -6,13 +6,14 @@ info:
   version: "1.0.0"
 host: "echo-api.endpoints.YOUR-PROJECT-ID.cloud.goog"
 # [END swagger]
-basePath: "/"
 consumes:
 - "application/json"
 produces:
 - "application/json"
 schemes:
-- "https"
+# Uncomment the next line if you configure SSL for this API.
+#- "https"
+- "http"
 paths:
   "/echo":
     post:
@@ -78,6 +79,7 @@ paths:
 
 definitions:
   echoMessage:
+    type: "object"
     properties:
       message:
         type: "string"

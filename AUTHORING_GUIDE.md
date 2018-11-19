@@ -416,6 +416,13 @@ if __name__ == '__main__':
 
 ## Running tests and automated tools
 
+### Installing interpreters
+
+You need python 2.7 and 3.6, and the dev packages for each.
+
+For example, to install with apt you'd use:
+`apt-get install python2.7 python2.7-dev python3.6 python3.6-dev`
+
 ### Using nox
 
 The testing of `python-docs-samples` is managed by
@@ -471,11 +478,14 @@ need to set environment variables for the tests to be able to use your project
 and its resources. See `testing/test-env.tmpl.sh` for a list of all environment
 variables used by all tests. Not every test needs all of these variables.
 
+#### Google Cloud Storage resources
 
+Certain samples require integration with Google Cloud Storage (GCS),
+most commonly for APIs that read files from GCS. To run the tests for
+these samples, configure your GCS bucket name via the `CLOUD_STORAGE_BUCKET`
+environment variable.
 
-
-
-
-
-
-
+The resources required by tests can usually be found in the `./resources`
+folder inside the sample directory. You can upload these resources to your
+own bucket to run the tests, e.g. using `gsutil`:  
+`gsutil cp ./resources/* gs://$CLOUD_STORAGE_BUCKET/`

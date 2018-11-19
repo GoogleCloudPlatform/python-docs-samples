@@ -55,8 +55,8 @@ gRPC libraries and tools are installed, run:
         --include_imports \
         --include_source_info \
         --proto_path=. \
-        --python_out=generated_pb2 \
-        --grpc_python_out=generated_pb2 \
+        --python_out=. \
+        --grpc_python_out=. \
         --descriptor_set_out=api_descriptor.pb \
         bookstore.proto
 

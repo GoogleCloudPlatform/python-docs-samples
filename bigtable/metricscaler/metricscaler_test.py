@@ -32,7 +32,7 @@ SIZE_CHANGE_STEP = 3
 
 
 def test_get_cpu_load():
-    assert get_cpu_load() > 0.0
+    assert float(get_cpu_load()) > 0.0
 
 
 def test_scale_bigtable():
