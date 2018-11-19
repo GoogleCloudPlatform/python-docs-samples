@@ -195,6 +195,14 @@ def test_cursor_simple_end_at():
     snippets.cursor_simple_end_at()
 
 
+def test_snapshot_cursors(capsys):
+    snippets.snapshot_cursors()
+    out, _ = capsys.readouterr()
+    assert "SF" in out
+    assert "TOK" in out
+    assert "BJ" in out
+
+
 def test_cursor_paginate():
     snippets.cursor_paginate()
 

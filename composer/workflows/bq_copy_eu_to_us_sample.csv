@@ -1,0 +1,3 @@
+Source, Target
+nyc-tlc:green.trips_2014,nyc_tlc_EU.trips_2014
+nyc-tlc:green.trips_2015,nyc_tlc_EU.trips_2015

@@ -14,9 +14,14 @@
 
 import os
 
+from google.cloud import storage
+
 import detect
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+OUTPUT_PREFIX = 'OCR_PDF_TEST_OUTPUT'
+GCS_SOURCE_URI = 'gs://{}/HodgeConj.pdf'.format(BUCKET)
+GCS_DESTINATION_URI = 'gs://{}/{}/'.format(BUCKET, OUTPUT_PREFIX)
 
 
 def test_labels(capsys):
@@ -119,6 +124,7 @@ def test_safe_search(capsys):
     detect.detect_safe_search(file_name)
     out, _ = capsys.readouterr()
     assert 'VERY_LIKELY' in out
+    assert 'racy: ' in out
 
 
 def test_safe_search_uri(capsys):
@@ -126,6 +132,7 @@ def test_safe_search_uri(capsys):
     detect.detect_safe_search_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'VERY_LIKELY' in out
+    assert 'racy: ' in out
 
 
 def test_safe_search_http(capsys):
@@ -133,6 +140,7 @@ def test_safe_search_http(capsys):
     detect.detect_safe_search_uri(uri.format(BUCKET))
     out, _ = capsys.readouterr()
     assert 'VERY_LIKELY' in out
+    assert 'racy: ' in out
 
 
 def test_detect_text(capsys):
@@ -189,6 +197,7 @@ def test_detect_web(capsys):
     detect.detect_web(file_name)
     out, _ = capsys.readouterr()
     assert 'Description: Palace of Fine Arts Theatre' in out
+    assert 'Best guess label: palace of fine arts' in out
 
 
 def test_detect_web_uri(capsys):
@@ -196,6 +205,7 @@ def test_detect_web_uri(capsys):
     detect.detect_web_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'Description: Palace of Fine Arts Theatre' in out
+    assert 'Best guess label: palace of fine arts' in out
 
 
 def test_detect_web_http(capsys):
@@ -203,6 +213,23 @@ def test_detect_web_http(capsys):
     detect.detect_web_uri(uri.format(BUCKET))
     out, _ = capsys.readouterr()
     assert 'Description: Palace of Fine Arts Theatre' in out
+    assert 'Best guess label: palace of fine arts' in out
+
+
+def test_detect_web_with_geo(capsys):
+    file_name = os.path.join(
+        os.path.dirname(__file__),
+        'resources/city.jpg')
+    detect.web_entities_include_geo_results(file_name)
+    out, _ = capsys.readouterr()
+    assert 'Zepra' in out or 'Electra Tower' in out
+
+
+def test_detect_web_with_geo_uri(capsys):
+    file_name = 'gs://{}/vision/city.jpg'.format(BUCKET)
+    detect.web_entities_include_geo_results_uri(file_name)
+    out, _ = capsys.readouterr()
+    assert 'Zepra' in out or 'Electra Tower' in out
 
 
 def test_detect_document(capsys):
@@ -211,21 +238,21 @@ def test_detect_document(capsys):
         'resources/text.jpg')
     detect.detect_document(file_name)
     out, _ = capsys.readouterr()
-    assert '37%' in out
+    assert 'class' in out
 
 
 def test_detect_document_uri(capsys):
     file_name = 'gs://{}/vision/text.jpg'.format(BUCKET)
     detect.detect_document_uri(file_name)
     out, _ = capsys.readouterr()
-    assert '37%' in out
+    assert 'class' in out
 
 
 def test_detect_document_http(capsys):
     uri = 'https://storage-download.googleapis.com/{}/vision/text.jpg'
     detect.detect_document_uri(uri.format(BUCKET))
     out, _ = capsys.readouterr()
-    assert '37%' in out
+    assert 'class' in out
 
 
 def test_detect_crop_hints(capsys):
@@ -249,3 +276,42 @@ def test_detect_crop_hints_http(capsys):
     detect.detect_crop_hints_uri(uri.format(BUCKET))
     out, _ = capsys.readouterr()
     assert 'bounds: (0,0)' in out
+
+
+def test_async_detect_document(capsys):
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(BUCKET)
+    if len(list(bucket.list_blobs(prefix=OUTPUT_PREFIX))) > 0:
+        for blob in bucket.list_blobs(prefix=OUTPUT_PREFIX):
+            blob.delete()
+
+    assert len(list(bucket.list_blobs(prefix=OUTPUT_PREFIX))) == 0
+
+    detect.async_detect_document(
+        gcs_source_uri=GCS_SOURCE_URI,
+        gcs_destination_uri=GCS_DESTINATION_URI)
+    out, _ = capsys.readouterr()
+
+    assert 'Hodge conjecture' in out
+    assert len(list(bucket.list_blobs(prefix=OUTPUT_PREFIX))) == 3
+
+    for blob in bucket.list_blobs(prefix=OUTPUT_PREFIX):
+        blob.delete()
+
+    assert len(list(bucket.list_blobs(prefix=OUTPUT_PREFIX))) == 0
+
+
+def test_localize_objects(capsys):
+    detect.localize_objects('resources/puppies.jpg')
+
+    out, _ = capsys.readouterr()
+    assert 'Dog' in out
+
+
+def test_localize_objects_uri(capsys):
+    uri = 'gs://cloud-samples-data/vision/puppies.jpg'
+
+    detect.localize_objects_uri(uri)
+
+    out, _ = capsys.readouterr()
+    assert 'Dog' in out

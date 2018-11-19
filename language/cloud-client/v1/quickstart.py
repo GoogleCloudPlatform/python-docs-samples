@@ -18,16 +18,16 @@
 def run_quickstart():
     # [START language_quickstart]
     # Imports the Google Cloud client library
-    # [START migration_import]
+    # [START language_python_migration_imports]
     from google.cloud import language
     from google.cloud.language import enums
     from google.cloud.language import types
-    # [END migration_import]
+    # [END language_python_migration_imports]
 
     # Instantiates a client
-    # [START migration_client]
+    # [START language_python_migration_client]
     client = language.LanguageServiceClient()
-    # [END migration_client]
+    # [END language_python_migration_client]
 
     # The text to analyze
     text = u'Hello, world!'
