@@ -26,7 +26,7 @@ import argparse
 import io
 
 
-# [START def_transcribe_file]
+# [START speech_transcribe_async]
 def transcribe_file(speech_file):
     """Transcribe the given audio file asynchronously."""
     from google.cloud import speech
@@ -34,7 +34,7 @@ def transcribe_file(speech_file):
     from google.cloud.speech import types
     client = speech.SpeechClient()
 
-    # [START migration_async_request]
+    # [START speech_python_migration_async_request]
     with io.open(speech_file, 'rb') as audio_file:
         content = audio_file.read()
 
@@ -44,9 +44,9 @@ def transcribe_file(speech_file):
         sample_rate_hertz=16000,
         language_code='en-US')
 
-    # [START migration_async_response]
+    # [START speech_python_migration_async_response]
     operation = client.long_running_recognize(config, audio)
-    # [END migration_async_request]
+    # [END speech_python_migration_async_request]
 
     print('Waiting for operation to complete...')
     response = operation.result(timeout=90)
@@ -55,13 +55,13 @@ def transcribe_file(speech_file):
     # them to get the transcripts for the entire audio file.
     for result in response.results:
         # The first alternative is the most likely one for this portion.
-        print('Transcript: {}'.format(result.alternatives[0].transcript))
+        print(u'Transcript: {}'.format(result.alternatives[0].transcript))
         print('Confidence: {}'.format(result.alternatives[0].confidence))
-    # [END migration_async_response]
-# [END def_transcribe_file]
+    # [END speech_python_migration_async_response]
+# [END speech_transcribe_async]
 
 
-# [START def_transcribe_gcs]
+# [START speech_transcribe_async_gcs]
 def transcribe_gcs(gcs_uri):
     """Asynchronously transcribes the audio file specified by the gcs_uri."""
     from google.cloud import speech
@@ -84,9 +84,9 @@ def transcribe_gcs(gcs_uri):
     # them to get the transcripts for the entire audio file.
     for result in response.results:
         # The first alternative is the most likely one for this portion.
-        print('Transcript: {}'.format(result.alternatives[0].transcript))
+        print(u'Transcript: {}'.format(result.alternatives[0].transcript))
         print('Confidence: {}'.format(result.alternatives[0].confidence))
-# [END def_transcribe_gcs]
+# [END speech_transcribe_async_gcs]
 
 
 if __name__ == '__main__':

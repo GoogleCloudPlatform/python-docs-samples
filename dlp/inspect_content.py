@@ -23,6 +23,7 @@ import os
 
 # [START dlp_inspect_string]
 def inspect_string(project, content_string, info_types,
+                   custom_dictionaries=None, custom_regexes=None,
                    min_likelihood=None, max_findings=None, include_quote=True):
     """Uses the Data Loss Prevention API to analyze strings for protected data.
     Args:
@@ -50,10 +51,29 @@ def inspect_string(project, content_string, info_types,
     # dictionaries (protos are also accepted).
     info_types = [{'name': info_type} for info_type in info_types]
 
+    # Prepare custom_info_types by parsing the dictionary word lists and
+    # regex patterns.
+    if custom_dictionaries is None:
+        custom_dictionaries = []
+    dictionaries = [{
+        'info_type': {'name': 'CUSTOM_DICTIONARY_{}'.format(i)},
+        'dictionary': {
+            'word_list': {'words': custom_dict.split(',')}
+        }
+    } for i, custom_dict in enumerate(custom_dictionaries)]
+    if custom_regexes is None:
+        custom_regexes = []
+    regexes = [{
+        'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
+        'regex': {'pattern': custom_regex}
+    } for i, custom_regex in enumerate(custom_regexes)]
+    custom_info_types = dictionaries + regexes
+
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
     inspect_config = {
         'info_types': info_types,
+        'custom_info_types': custom_info_types,
         'min_likelihood': min_likelihood,
         'include_quote': include_quote,
         'limits': {'max_findings_per_request': max_findings},
@@ -85,6 +105,7 @@ def inspect_string(project, content_string, info_types,
 
 # [START dlp_inspect_file]
 def inspect_file(project, filename, info_types, min_likelihood=None,
+                 custom_dictionaries=None, custom_regexes=None,
                  max_findings=None, include_quote=True, mime_type=None):
     """Uses the Data Loss Prevention API to analyze a file for protected data.
     Args:
@@ -118,10 +139,29 @@ def inspect_file(project, filename, info_types, min_likelihood=None,
         info_types = ['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS']
     info_types = [{'name': info_type} for info_type in info_types]
 
+    # Prepare custom_info_types by parsing the dictionary word lists and
+    # regex patterns.
+    if custom_dictionaries is None:
+        custom_dictionaries = []
+    dictionaries = [{
+        'info_type': {'name': 'CUSTOM_DICTIONARY_{}'.format(i)},
+        'dictionary': {
+            'word_list': {'words': custom_dict.split(',')}
+        }
+    } for i, custom_dict in enumerate(custom_dictionaries)]
+    if custom_regexes is None:
+        custom_regexes = []
+    regexes = [{
+        'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
+        'regex': {'pattern': custom_regex}
+    } for i, custom_regex in enumerate(custom_regexes)]
+    custom_info_types = dictionaries + regexes
+
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
     inspect_config = {
         'info_types': info_types,
+        'custom_info_types': custom_info_types,
         'min_likelihood': min_likelihood,
         'limits': {'max_findings_per_request': max_findings},
     }
@@ -168,8 +208,9 @@ def inspect_file(project, filename, info_types, min_likelihood=None,
 
 # [START dlp_inspect_gcs]
 def inspect_gcs_file(project, bucket, filename, topic_id, subscription_id,
-                     info_types, min_likelihood=None, max_findings=None,
-                     timeout=300):
+                     info_types, custom_dictionaries=None,
+                     custom_regexes=None, min_likelihood=None,
+                     max_findings=None, timeout=300):
     """Uses the Data Loss Prevention API to analyze a file on GCS.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -211,10 +252,29 @@ def inspect_gcs_file(project, bucket, filename, topic_id, subscription_id,
         info_types = ['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS']
     info_types = [{'name': info_type} for info_type in info_types]
 
+    # Prepare custom_info_types by parsing the dictionary word lists and
+    # regex patterns.
+    if custom_dictionaries is None:
+        custom_dictionaries = []
+    dictionaries = [{
+        'info_type': {'name': 'CUSTOM_DICTIONARY_{}'.format(i)},
+        'dictionary': {
+            'word_list': {'words': custom_dict.split(',')}
+        }
+    } for i, custom_dict in enumerate(custom_dictionaries)]
+    if custom_regexes is None:
+        custom_regexes = []
+    regexes = [{
+        'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
+        'regex': {'pattern': custom_regex}
+    } for i, custom_regex in enumerate(custom_regexes)]
+    custom_info_types = dictionaries + regexes
+
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
     inspect_config = {
         'info_types': info_types,
+        'custom_info_types': custom_info_types,
         'min_likelihood': min_likelihood,
         'limits': {'max_findings_per_request': max_findings},
     }
@@ -293,8 +353,10 @@ def inspect_gcs_file(project, bucket, filename, topic_id, subscription_id,
 
 # [START dlp_inspect_datastore]
 def inspect_datastore(project, datastore_project, kind,
-                      topic_id, subscription_id, info_types, namespace_id=None,
-                      min_likelihood=None, max_findings=None, timeout=300):
+                      topic_id, subscription_id, info_types,
+                      custom_dictionaries=None, custom_regexes=None,
+                      namespace_id=None, min_likelihood=None,
+                      max_findings=None, timeout=300):
     """Uses the Data Loss Prevention API to analyze Datastore data.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -336,10 +398,29 @@ def inspect_datastore(project, datastore_project, kind,
         info_types = ['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS']
     info_types = [{'name': info_type} for info_type in info_types]
 
+    # Prepare custom_info_types by parsing the dictionary word lists and
+    # regex patterns.
+    if custom_dictionaries is None:
+        custom_dictionaries = []
+    dictionaries = [{
+        'info_type': {'name': 'CUSTOM_DICTIONARY_{}'.format(i)},
+        'dictionary': {
+            'word_list': {'words': custom_dict.split(',')}
+        }
+    } for i, custom_dict in enumerate(custom_dictionaries)]
+    if custom_regexes is None:
+        custom_regexes = []
+    regexes = [{
+        'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
+        'regex': {'pattern': custom_regex}
+    } for i, custom_regex in enumerate(custom_regexes)]
+    custom_info_types = dictionaries + regexes
+
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
     inspect_config = {
         'info_types': info_types,
+        'custom_info_types': custom_info_types,
         'min_likelihood': min_likelihood,
         'limits': {'max_findings_per_request': max_findings},
     }
@@ -424,6 +505,7 @@ def inspect_datastore(project, datastore_project, kind,
 # [START dlp_inspect_bigquery]
 def inspect_bigquery(project, bigquery_project, dataset_id, table_id,
                      topic_id, subscription_id, info_types,
+                     custom_dictionaries=None, custom_regexes=None,
                      min_likelihood=None, max_findings=None, timeout=300):
     """Uses the Data Loss Prevention API to analyze BigQuery data.
     Args:
@@ -467,10 +549,29 @@ def inspect_bigquery(project, bigquery_project, dataset_id, table_id,
         info_types = ['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS']
     info_types = [{'name': info_type} for info_type in info_types]
 
+    # Prepare custom_info_types by parsing the dictionary word lists and
+    # regex patterns.
+    if custom_dictionaries is None:
+        custom_dictionaries = []
+    dictionaries = [{
+        'info_type': {'name': 'CUSTOM_DICTIONARY_{}'.format(i)},
+        'dictionary': {
+            'word_list': {'words': custom_dict.split(',')}
+        }
+    } for i, custom_dict in enumerate(custom_dictionaries)]
+    if custom_regexes is None:
+        custom_regexes = []
+    regexes = [{
+        'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
+        'regex': {'pattern': custom_regex}
+    } for i, custom_regex in enumerate(custom_regexes)]
+    custom_info_types = dictionaries + regexes
+
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
     inspect_config = {
         'info_types': info_types,
+        'custom_info_types': custom_info_types,
         'min_likelihood': min_likelihood,
         'limits': {'max_findings_per_request': max_findings},
     }
@@ -572,6 +673,17 @@ if __name__ == '__main__':
              'If unspecified, the three above examples will be used.',
         default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
     parser_string.add_argument(
+        '--custom_dictionaries', action='append',
+        help='Strings representing comma-delimited lists of dictionary words'
+             ' to search for as custom info types. Each string is a comma '
+             'delimited list of words representing a distinct dictionary.',
+        default=None)
+    parser_string.add_argument(
+        '--custom_regexes', action='append',
+        help='Strings representing regex patterns to search for as custom '
+             ' info types.',
+        default=None)
+    parser_string.add_argument(
         '--min_likelihood',
         choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
                  'POSSIBLE', 'LIKELY', 'VERY_LIKELY'],
@@ -600,6 +712,17 @@ if __name__ == '__main__':
              'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
              'If unspecified, the three above examples will be used.',
         default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
+    parser_file.add_argument(
+        '--custom_dictionaries', action='append',
+        help='Strings representing comma-delimited lists of dictionary words'
+             ' to search for as custom info types. Each string is a comma '
+             'delimited list of words representing a distinct dictionary.',
+        default=None)
+    parser_file.add_argument(
+        '--custom_regexes', action='append',
+        help='Strings representing regex patterns to search for as custom '
+             ' info types.',
+        default=None)
     parser_file.add_argument(
         '--min_likelihood',
         choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
@@ -649,6 +772,17 @@ if __name__ == '__main__':
              'If unspecified, the three above examples will be used.',
         default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
     parser_gcs.add_argument(
+        '--custom_dictionaries', action='append',
+        help='Strings representing comma-delimited lists of dictionary words'
+             ' to search for as custom info types. Each string is a comma '
+             'delimited list of words representing a distinct dictionary.',
+        default=None)
+    parser_gcs.add_argument(
+        '--custom_regexes', action='append',
+        help='Strings representing regex patterns to search for as custom '
+             ' info types.',
+        default=None)
+    parser_gcs.add_argument(
         '--min_likelihood',
         choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
                  'POSSIBLE', 'LIKELY', 'VERY_LIKELY'],
@@ -692,6 +826,17 @@ if __name__ == '__main__':
              'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
              'If unspecified, the three above examples will be used.',
         default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
+    parser_datastore.add_argument(
+        '--custom_dictionaries', action='append',
+        help='Strings representing comma-delimited lists of dictionary words'
+             ' to search for as custom info types. Each string is a comma '
+             'delimited list of words representing a distinct dictionary.',
+        default=None)
+    parser_datastore.add_argument(
+        '--custom_regexes', action='append',
+        help='Strings representing regex patterns to search for as custom '
+             ' info types.',
+        default=None)
     parser_datastore.add_argument(
         '--namespace_id',
         help='The Datastore namespace to use, if applicable.')
@@ -743,6 +888,17 @@ if __name__ == '__main__':
              'If unspecified, the three above examples will be used.',
         default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
     parser_bigquery.add_argument(
+        '--custom_dictionaries', action='append',
+        help='Strings representing comma-delimited lists of dictionary words'
+             ' to search for as custom info types. Each string is a comma '
+             'delimited list of words representing a distinct dictionary.',
+        default=None)
+    parser_bigquery.add_argument(
+        '--custom_regexes', action='append',
+        help='Strings representing regex patterns to search for as custom '
+             ' info types.',
+        default=None)
+    parser_bigquery.add_argument(
         '--min_likelihood',
         choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
                  'POSSIBLE', 'LIKELY', 'VERY_LIKELY'],
@@ -762,12 +918,16 @@ if __name__ == '__main__':
     if args.content == 'string':
         inspect_string(
             args.project, args.item, args.info_types,
+            custom_dictionaries=args.custom_dictionaries,
+            custom_regexes=args.custom_regexes,
             min_likelihood=args.min_likelihood,
             max_findings=args.max_findings,
             include_quote=args.include_quote)
     elif args.content == 'file':
         inspect_file(
             args.project, args.filename, args.info_types,
+            custom_dictionaries=args.custom_dictionaries,
+            custom_regexes=args.custom_regexes,
             min_likelihood=args.min_likelihood,
             max_findings=args.max_findings,
             include_quote=args.include_quote,
@@ -777,6 +937,8 @@ if __name__ == '__main__':
             args.project, args.bucket, args.filename,
             args.topic_id, args.subscription_id,
             args.info_types,
+            custom_dictionaries=args.custom_dictionaries,
+            custom_regexes=args.custom_regexes,
             min_likelihood=args.min_likelihood,
             max_findings=args.max_findings,
             timeout=args.timeout)
@@ -785,6 +947,8 @@ if __name__ == '__main__':
             args.project, args.datastore_project, args.kind,
             args.topic_id, args.subscription_id,
             args.info_types,
+            custom_dictionaries=args.custom_dictionaries,
+            custom_regexes=args.custom_regexes,
             namespace_id=args.namespace_id,
             min_likelihood=args.min_likelihood,
             max_findings=args.max_findings,
@@ -794,6 +958,8 @@ if __name__ == '__main__':
             args.project, args.bigquery_project, args.dataset_id,
             args.table_id, args.topic_id, args.subscription_id,
             args.info_types,
+            custom_dictionaries=args.custom_dictionaries,
+            custom_regexes=args.custom_regexes,
             min_likelihood=args.min_likelihood,
             max_findings=args.max_findings,
             timeout=args.timeout)

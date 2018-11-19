@@ -31,10 +31,16 @@ credentials for applications.
 Install Dependencies
 ++++++++++++++++++++
 
+#. Clone python-docs-samples and change directory to the sample directory you want to use.
+
+    .. code-block:: bash
+
+        $ git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+
 #. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
 
- .. _Python Development Environment Setup Guide:
-     https://cloud.google.com/python/setup
+   .. _Python Development Environment Setup Guide:
+       https://cloud.google.com/python/setup
 
 #. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
 
@@ -88,6 +94,46 @@ To run this sample:
         labels_file         Detect labels given a file path.
         explicit_content    Detects explicit content from the GCS path to a video.
         shots               Detects camera shot changes.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
+
+beta samples
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=video/cloud-client/analyze/beta_snippets.py,video/cloud-client/analyze/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python beta_snippets.py
+
+    usage: beta_snippets.py [-h]
+                            {transcription,video-text-gcs,video-text,track-objects-gcs,track-objects}
+                            ...
+
+    This application demonstrates speech transcription using the
+    Google Cloud API.
+
+    Usage Examples:
+        python beta_snippets.py transcription         gs://python-docs-samples-tests/video/googlework_short.mp4
+        python beta_snippets.py video-text-gcs         gs://python-docs-samples-tests/video/googlework_short.mp4
+        python beta_snippets.py track-objects /resources/cat.mp4
+
+    positional arguments:
+      {transcription,video-text-gcs,video-text,track-objects-gcs,track-objects}
+        transcription       Transcribe speech from a video stored on GCS.
+        video-text-gcs      Detect text in a video stored on GCS.
+        video-text          Detect text in a local video.
+        track-objects-gcs   Object Tracking.
+        track-objects       Object Tracking.
 
     optional arguments:
       -h, --help            show this help message and exit
