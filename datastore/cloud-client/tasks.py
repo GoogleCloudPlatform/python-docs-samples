@@ -74,7 +74,6 @@ def delete_task(client, task_id):
 # [END datastore_delete_entity]
 
 
-# [START datastore_format_results]
 def format_tasks(tasks):
     lines = []
     for task in tasks:
@@ -87,7 +86,6 @@ def format_tasks(tasks):
             task.key.id, task['description'], status))
 
     return '\n'.join(lines)
-# [END datastore_format_results]
 
 
 def new_command(client, args):

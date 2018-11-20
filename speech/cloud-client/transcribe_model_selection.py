@@ -31,7 +31,7 @@ import argparse
 def transcribe_model_selection(speech_file, model):
     """Transcribe the given audio file synchronously with
     the selected model."""
-    from google.cloud import speech_v1p1beta1 as speech
+    from google.cloud import speech
     client = speech.SpeechClient()
 
     with open(speech_file, 'rb') as audio_file:
@@ -59,7 +59,7 @@ def transcribe_model_selection(speech_file, model):
 def transcribe_model_selection_gcs(gcs_uri, model):
     """Transcribe the given audio file asynchronously with
     the selected model."""
-    from google.cloud import speech_v1p1beta1 as speech
+    from google.cloud import speech
     client = speech.SpeechClient()
 
     audio = speech.types.RecognitionAudio(uri=gcs_uri)

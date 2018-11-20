@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START app]
 import logging
 import os
 
@@ -21,27 +20,25 @@ from twilio import rest
 from twilio.twiml import messaging_response, voice_response
 
 
-# [START configuration]
 TWILIO_ACCOUNT_SID = os.environ['TWILIO_ACCOUNT_SID']
 TWILIO_AUTH_TOKEN = os.environ['TWILIO_AUTH_TOKEN']
 TWILIO_NUMBER = os.environ['TWILIO_NUMBER']
-# [END configuration]
 
 
 app = Flask(__name__)
 
 
-# [START receive_call]
+# [START gae_flex_twilio_receive_call]
 @app.route('/call/receive', methods=['POST'])
 def receive_call():
     """Answers a call and replies with a simple greeting."""
     response = voice_response.VoiceResponse()
     response.say('Hello from Twilio!')
     return str(response), 200, {'Content-Type': 'application/xml'}
-# [END receive_call]
+# [END gae_flex_twilio_receive_call]
 
 
-# [START send_sms]
+# [START gae_flex_twilio_send_sms]
 @app.route('/sms/send')
 def send_sms():
     """Sends a simple SMS message."""
@@ -57,10 +54,10 @@ def send_sms():
         body='Hello from Twilio!'
     )
     return str(rv)
-# [END send_sms]
+# [END gae_flex_twilio_send_sms]
 
 
-# [START receive_sms]
+# [START gae_flex_twilio_receive_sms]
 @app.route('/sms/receive', methods=['POST'])
 def receive_sms():
     """Receives an SMS message and replies with a simple greeting."""
@@ -72,7 +69,7 @@ def receive_sms():
     response = messaging_response.MessagingResponse()
     response.message(message)
     return str(response), 200, {'Content-Type': 'application/xml'}
-# [END receive_sms]
+# [END gae_flex_twilio_receive_sms]
 
 
 @app.errorhandler(500)
@@ -88,4 +85,3 @@ if __name__ == '__main__':
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
     app.run(host='127.0.0.1', port=8080, debug=True)
-# [END app]

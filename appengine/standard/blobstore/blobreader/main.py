@@ -26,7 +26,7 @@ class BlobreaderHandler(webapp2.RequestHandler):
         blobstore_filename = '/gs{}'.format(filename)
         blob_key = blobstore.create_gs_key(blobstore_filename)
 
-        # [START blob_reader]
+        # [START gae_blobstore_reader]
         # Instantiate a BlobReader for a given Blobstore blob_key.
         blob_reader = blobstore.BlobReader(blob_key)
 
@@ -58,7 +58,7 @@ class BlobreaderHandler(webapp2.RequestHandler):
         blob_reader.seek(0)
         for line in blob_reader:
             self.response.write(line)
-        # [END blob_reader]
+        # [END gae_blobstore_reader]
 
         # Delete the file from Google Cloud Storage using the blob_key.
         blobstore.delete(blob_key)

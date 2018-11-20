@@ -19,7 +19,6 @@ simple tic-tac-toe game.
 For more information, see the README.md.
 """
 
-# [START all]
 import json
 import os
 import re
@@ -54,7 +53,6 @@ class Wins():
     o_wins = map(lambda s: re.compile(s), o_win_patterns)
 
 
-# [START validate_message_3]
 class GameUpdater():
     """Creates an object to store the game's state, and handles validating moves
   and broadcasting updates to the game."""
@@ -111,10 +109,8 @@ class GameUpdater():
                     self.game.put()
                     self.send_update()
                     return
-# [END validate_message_3]
 
 
-# [START validate_message_2]
 class GameFromRequest():
     game = None
 
@@ -126,10 +122,8 @@ class GameFromRequest():
 
     def get_game(self):
         return self.game
-# [END validate_message_2]
 
 
-# [START validate_message_1]
 class MovePage(webapp2.RequestHandler):
     def post(self):
         game = GameFromRequest(self.request).get_game()
@@ -137,7 +131,6 @@ class MovePage(webapp2.RequestHandler):
         if game and user:
             id = int(self.request.get('i'))
             GameUpdater(game).make_move(id, user)
-# [END validate_message_1]
 
 
 class OpenedPage(webapp2.RequestHandler):
@@ -146,7 +139,6 @@ class OpenedPage(webapp2.RequestHandler):
         GameUpdater(game).send_update()
 
 
-# [START create_channel_1]
 class MainPage(webapp2.RequestHandler):
     """The main UI page, renders the 'index.html' template."""
 
@@ -189,7 +181,6 @@ class MainPage(webapp2.RequestHandler):
                 self.response.out.write('No such game')
         else:
             self.redirect(users.create_login_url(self.request.uri))
-# [END create_channel_1]
 
 
 jinja_environment = jinja2.Environment(
@@ -200,5 +191,3 @@ app = webapp2.WSGIApplication([
     ('/opened', OpenedPage),
     ('/move', MovePage)
 ], debug=True)
-
-# [END all]
