@@ -34,6 +34,7 @@ from six.moves.urllib.parse import quote
 # [START storage_signed_url_signer]
 # pip install google-auth
 from google.oauth2 import service_account
+
 # [END storage_signed_url_signer]
 # [END storage_signed_url_dependencies]
 
