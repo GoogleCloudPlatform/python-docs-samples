@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import os
+import time
 
 from google.cloud import storage
 import pytest
@@ -22,7 +23,7 @@ import pytest
 import quickstart_exportassets
 
 PROJECT = os.environ['GCLOUD_PROJECT']
-BUCKET = 'bucket-for-assets'
+BUCKET = 'assets-{}'.format(int(time.time()))
 
 
 @pytest.fixture(scope='module')
@@ -32,19 +33,20 @@ def storage_client():
 
 @pytest.fixture(scope='module')
 def asset_bucket(storage_client):
-    storage_client.create_bucket(BUCKET)
-
-    try:
-        storage_client.delete_bucket(BUCKET)
-    except Exception:
-        pass
+    bucket = storage_client.create_bucket(BUCKET)
 
     yield BUCKET
 
+    try:
+        bucket.delete(force=True)
+    except Exception as e:
+        print('Failed to delete bucket{}'.format(BUCKET))
+        raise e
+
 
 def test_export_assets(asset_bucket, capsys):
-    dump_file_path = "gs://", asset_bucket, "/assets-dump.txt"
+    dump_file_path = 'gs://{}/assets-dump.txt'.format(asset_bucket)
     quickstart_exportassets.export_assets(PROJECT, dump_file_path)
     out, _ = capsys.readouterr()
 
-    assert "uri: \"gs://cai-prober-prod-for-assets/phython-test.txt\"" in out
+    assert dump_file_path in out

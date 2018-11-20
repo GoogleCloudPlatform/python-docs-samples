@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START functions_log_bigquery_stackdriver]
+# [START functions_log_stackdriver]
 import base64
 import json
 
-# [END functions_log_bigquery_stackdriver]
+# [END functions_log_stackdriver]
 
 # [START functions_log_helloworld]
 import logging
@@ -27,9 +27,9 @@ import logging
 import os
 # [END functions_log_retrieve]
 
-# [START functions_logs_retrieve]
+# [START functions_log_retrieve]
 import google.cloud.logging as cloud_logging
-# [END functions_logs_retrieve]
+# [END functions_log_retrieve]
 
 
 # [START functions_log_helloworld]
@@ -58,7 +58,7 @@ def get_log_entries(request):
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
     """"""
 
