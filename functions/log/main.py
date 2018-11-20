@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START functions_log_bigquery_stackdriver]
+# [START functions_log_stackdriver]
 import base64
 import json
 
-# [END functions_log_bigquery_stackdriver]
+# [END functions_log_stackdriver]
 
 # [START functions_log_helloworld]
 import logging
@@ -27,9 +27,9 @@ import logging
 import os
 # [END functions_log_retrieve]
 
-# [START functions_logs_retrieve]
+# [START functions_log_retrieve]
 import google.cloud.logging as cloud_logging
-# [END functions_logs_retrieve]
+# [END functions_log_retrieve]
 
 
 # [START functions_log_helloworld]
