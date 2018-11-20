@@ -1,9 +1,10 @@
-#!/usr/bin/env python
+# Copyright 2018 Google LLC
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -11,18 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-""" Sample pyspark script to be uploaded to Cloud Storage and run on
-Cloud Dataproc.
+runtime: python37
 
-Note this file is not intended to be run directly, but run inside a PySpark
-environment.
-"""
-
-# [START dataproc_pyspark_sort]
-import pyspark
-
-sc = pyspark.SparkContext()
-rdd = sc.parallelize(['Hello,', 'world!', 'dog', 'elephant', 'panther'])
-words = sorted(rdd.collect())
-print(words)
-# [END dataproc_pyspark_sort]
+# Remember - storing secrets in plaintext is potentially unsafe. Consider using
+# something like https://cloud.google.com/kms/ to help keep secrets secret.
+env_variables:
+  CLOUD_SQL_INSTANCE_NAME: <MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>
+  DB_USER: my-db-user
+  DB_PASS: my-db-pass
+  DB_NAME: my_db
