@@ -26,11 +26,11 @@ def statelessness(request):
     within a specific instance.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
     global count
     count += 1
@@ -62,11 +62,11 @@ def scope_demo(request):
     HTTP Cloud Function that declares a variable.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
 
     # Per-function scope
@@ -82,11 +82,11 @@ def make_request(request):
     HTTP Cloud Function that makes another HTTP request.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
     import requests
 
