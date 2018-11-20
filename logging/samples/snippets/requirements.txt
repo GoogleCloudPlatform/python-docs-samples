@@ -1,1 +1,1 @@
-google-cloud-logging==1.6.0
+google-cloud-logging==1.8.0
