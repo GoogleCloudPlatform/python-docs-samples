@@ -63,11 +63,11 @@ def lazy_globals(request):
     HTTP Cloud Function that uses lazily-initialized globals.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
     global lazy_global, non_lazy_global
 
@@ -89,11 +89,11 @@ def connection_pooling(request):
     HTTP Cloud Function that uses a connection pool to make HTTP requests.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
 
     # The URL to send the request to
@@ -121,7 +121,7 @@ def gcp_api_call(request):
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
 
     project = os.getenv('GCP_PROJECT')
