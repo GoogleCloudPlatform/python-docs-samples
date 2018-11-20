@@ -23,6 +23,7 @@ at https://cloud.google.com/storage/docs/access-control/signing-urls-manually.
 
 # [START storage_signed_url_all]
 # [START storage_signed_url_dependencies]
+import binascii
 import collections
 import datetime
 import hashlib
@@ -130,7 +131,7 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
     # [END storage_signed_url_string_to_sign]
 
     # [START storage_signed_url_signer]
-    signature = google_credentials.signer.sign(string_to_sign).hex()
+    signature = binascii.hexlify(google_credentials.signer.sign(string_to_sign)).decode()
     # [END storage_signed_url_signer]
 
     # [START storage_signed_url_construction]
