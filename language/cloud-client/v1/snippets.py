@@ -39,12 +39,10 @@ def sentiment_text(text):
         text = text.decode('utf-8')
 
     # Instantiates a plain text document.
-    # [START language_python_migration_document_text]
     # [START language_python_migration_sentiment_text]
     document = types.Document(
         content=text,
         type=enums.Document.Type.PLAIN_TEXT)
-    # [END language_python_migration_document_text]
 
     # Detects sentiment in the document. You can also analyze HTML with:
     #   document.type == enums.Document.Type.HTML
@@ -87,22 +85,21 @@ def entities_text(text):
 
     # Instantiates a plain text document.
     # [START language_python_migration_entities_text]
+    # [START language_python_migration_document_text]
     document = types.Document(
         content=text,
         type=enums.Document.Type.PLAIN_TEXT)
+    # [END language_python_migration_document_text]
 
     # Detects entities in the document. You can also analyze HTML with:
     #   document.type == enums.Document.Type.HTML
     entities = client.analyze_entities(document).entities
 
-    # entity types from enums.Entity.Type
-    entity_type = ('UNKNOWN', 'PERSON', 'LOCATION', 'ORGANIZATION',
-                   'EVENT', 'WORK_OF_ART', 'CONSUMER_GOOD', 'OTHER')
-
     for entity in entities:
+        entity_type = enums.Entity.Type(entity.type)
         print('=' * 20)
         print(u'{:<16}: {}'.format('name', entity.name))
-        print(u'{:<16}: {}'.format('type', entity_type[entity.type]))
+        print(u'{:<16}: {}'.format('type', entity_type.name))
         print(u'{:<16}: {}'.format('metadata', entity.metadata))
         print(u'{:<16}: {}'.format('salience', entity.salience))
         print(u'{:<16}: {}'.format('wikipedia_url',
@@ -125,14 +122,11 @@ def entities_file(gcs_uri):
     #   document.type == enums.Document.Type.HTML
     entities = client.analyze_entities(document).entities
 
-    # entity types from enums.Entity.Type
-    entity_type = ('UNKNOWN', 'PERSON', 'LOCATION', 'ORGANIZATION',
-                   'EVENT', 'WORK_OF_ART', 'CONSUMER_GOOD', 'OTHER')
-
     for entity in entities:
+        entity_type = enums.Entity.Type(entity.type)
         print('=' * 20)
         print(u'{:<16}: {}'.format('name', entity.name))
-        print(u'{:<16}: {}'.format('type', entity_type[entity.type]))
+        print(u'{:<16}: {}'.format('type', entity_type.name))
         print(u'{:<16}: {}'.format('metadata', entity.metadata))
         print(u'{:<16}: {}'.format('salience', entity.salience))
         print(u'{:<16}: {}'.format('wikipedia_url',
@@ -158,12 +152,9 @@ def syntax_text(text):
     #   document.type == enums.Document.Type.HTML
     tokens = client.analyze_syntax(document).tokens
 
-    # part-of-speech tags from enums.PartOfSpeech.Tag
-    pos_tag = ('UNKNOWN', 'ADJ', 'ADP', 'ADV', 'CONJ', 'DET', 'NOUN', 'NUM',
-               'PRON', 'PRT', 'PUNCT', 'VERB', 'X', 'AFFIX')
-
     for token in tokens:
-        print(u'{}: {}'.format(pos_tag[token.part_of_speech.tag],
+        part_of_speech_tag = enums.PartOfSpeech.Tag(token.part_of_speech.tag)
+        print(u'{}: {}'.format(part_of_speech_tag.name,
                                token.text.content))
     # [END language_python_migration_syntax_text]
 # [END language_syntax_text]
@@ -183,12 +174,9 @@ def syntax_file(gcs_uri):
     #   document.type == enums.Document.Type.HTML
     tokens = client.analyze_syntax(document).tokens
 
-    # part-of-speech tags from enums.PartOfSpeech.Tag
-    pos_tag = ('UNKNOWN', 'ADJ', 'ADP', 'ADV', 'CONJ', 'DET', 'NOUN', 'NUM',
-               'PRON', 'PRT', 'PUNCT', 'VERB', 'X', 'AFFIX')
-
     for token in tokens:
-        print(u'{}: {}'.format(pos_tag[token.part_of_speech.tag],
+        part_of_speech_tag = enums.PartOfSpeech.Tag(token.part_of_speech.tag)
+        print(u'{}: {}'.format(part_of_speech_tag.name,
                                token.text.content))
 # [END language_syntax_gcs]
 

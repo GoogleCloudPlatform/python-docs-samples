@@ -27,7 +27,7 @@ import os
 
 def predict(project_id, compute_region, model_id, file_path):
     """Translate the content."""
-    # [START automl_translation_predict]
+    # [START automl_translate_predict]
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
     # model_id = 'MODEL_ID_HERE'
@@ -61,7 +61,7 @@ def predict(project_id, compute_region, model_id, file_path):
 
     print(u"Translated content: {}".format(translated_content.content))
 
-    # [END automl_translation_predict]
+    # [END automl_translate_predict]
 
 
 if __name__ == "__main__":

@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import base64
+import json
 
 import main
 
@@ -21,3 +23,26 @@ def test_hello_world(capsys):
 
     out, _ = capsys.readouterr()
     assert "Hello, stdout!" in out
+
+
+def test_process_log_entry(capsys):
+    inner_json = {
+      'protoPayload': {
+        'methodName': 'method',
+        'resourceName': 'resource',
+        'authenticationInfo': {
+          'principalEmail': 'me@example.com'
+        }
+      }
+    }
+
+    data = {
+      'data': base64.b64encode(json.dumps(inner_json).encode())
+    }
+
+    main.process_log_entry(data, None)
+
+    out, _ = capsys.readouterr()
+    assert 'Method: method' in out
+    assert 'Resource: resource' in out
+    assert 'Initiator: me@example.com' in out
