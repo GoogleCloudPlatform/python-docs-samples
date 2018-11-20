@@ -118,6 +118,7 @@ class ProtoEncoder(json.JSONEncoder):
 # [START monitoring_alert_create_policy]
 # [START monitoring_alert_create_channel]
 # [START monitoring_alert_update_channel]
+# [START monitoring_alert_enable_channel]
 def restore(project_name):
     print('Loading alert policies and notification channels from backup.json.')
     record = json.load(open('backup.json', 'rt'))
@@ -197,6 +198,7 @@ def restore(project_name):
                 condition.ClearField("name")
             policy = alert_client.create_alert_policy(project_name, policy)
         print('Updated', policy.name)
+# [END monitoring_alert_enable_channel]
 # [END monitoring_alert_restore_policies]
 # [END monitoring_alert_create_policy]
 # [END monitoring_alert_create_channel]

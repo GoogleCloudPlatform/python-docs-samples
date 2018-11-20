@@ -23,7 +23,7 @@ compute_region = "us-central1"
 
 
 def test_predict(capsys):
-    model_id = "3128559826197068699"
+    model_id = "TRL3128559826197068699"
     automl_translation_predict.predict(
         project_id, compute_region, model_id, "resources/input.txt"
     )

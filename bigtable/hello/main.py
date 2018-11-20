@@ -41,9 +41,10 @@ def main(project_id, instance_id, table_id):
     # [END connecting_to_bigtable]
 
     # [START creating_a_table]
-    print 'Creating the {} table.'.format(table_id)
+    print('Creating the {} table.'.format(table_id))
     table = instance.table(table_id)
-    print 'Creating column family cf1 with Max Version GC rule...'
+
+    print('Creating column family cf1 with Max Version GC rule...')
     # Create a column family with GC policy : most recent N versions
     # Define the GC policy to retain only the most recent 2 versions
     max_versions_rule = column_family.MaxVersionsGCRule(2)
@@ -52,14 +53,14 @@ def main(project_id, instance_id, table_id):
     if not table.exists():
         table.create(column_families=column_families)
     else:
-        print "Table {} already exists.".format(table_id)
+        print("Table {} already exists.".format(table_id))
     # [END creating_a_table]
 
     # [START writing_rows]
-    print 'Writing some greetings to the table.'
+    print('Writing some greetings to the table.')
     greetings = ['Hello World!', 'Hello Cloud Bigtable!', 'Hello Python!']
     rows = []
-    column = 'greeting'
+    column = 'greeting'.encode()
     for i, value in enumerate(greetings):
         # Note: This example uses sequential numeric IDs for simplicity,
         # but this can result in poor performance in a production
@@ -71,7 +72,7 @@ def main(project_id, instance_id, table_id):
         # the best performance, see the documentation:
         #
         #     https://cloud.google.com/bigtable/docs/schema-design
-        row_key = 'greeting{}'.format(i)
+        row_key = 'greeting{}'.format(i).encode()
         row = table.row(row_key)
         row.set_cell(column_family_id,
                      column,
@@ -82,26 +83,26 @@ def main(project_id, instance_id, table_id):
     # [END writing_rows]
 
     # [START getting_a_row]
-    print 'Getting a single greeting by row key.'
-    key = 'greeting0'
+    print('Getting a single greeting by row key.')
+    key = 'greeting0'.encode()
 
     # Only retrieve the most recent version of the cell.
     row_filter = row_filters.CellsColumnLimitFilter(1)
     row = table.read_row(key, row_filter)
-    print row.cell_value(column_family_id, column)
+    print(row.cell_value(column_family_id, column))
     # [END getting_a_row]
 
     # [START scanning_all_rows]
-    print 'Scanning for all greetings:'
+    print('Scanning for all greetings:')
     partial_rows = table.read_rows(filter_=row_filter)
 
     for row in partial_rows:
         cell = row.cells[column_family_id][column][0]
-        print cell.value.decode('utf-8')
+        print(cell.value.decode('utf-8'))
     # [END scanning_all_rows]
 
     # [START deleting_a_table]
-    print 'Deleting the {} table.'.format(table_id)
+    print('Deleting the {} table.'.format(table_id))
     table.delete()
     # [END deleting_a_table]
 
