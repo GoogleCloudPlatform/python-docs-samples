@@ -131,7 +131,9 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
     # [END storage_signed_url_string_to_sign]
 
     # [START storage_signed_url_signer]
-    signature = binascii.hexlify(google_credentials.signer.sign(string_to_sign)).decode()
+    signature = binascii.hexlify(
+        google_credentials.signer.sign(string_to_sign)
+    ).decode()
     # [END storage_signed_url_signer]
 
     # [START storage_signed_url_construction]
