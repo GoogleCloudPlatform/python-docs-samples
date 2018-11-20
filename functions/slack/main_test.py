@@ -78,5 +78,5 @@ class TestGCFPySlackSample(object):
             with mock.patch('main.jsonify', side_effect=json.dumps):
                 response = main.kg_search(request)
 
-        assert 'lion' in response
-        assert 'color' in response
+        assert 'lion' in response.lower()
+        assert 'color' in response.lower()

@@ -21,14 +21,14 @@ For more information, see the tutorial page at
 https://cloud.google.com/vision/product-search/docs/
 """
 
-# [START product_search_import]
 import argparse
 
+# [START vision_product_search_tutorial_import]
 from google.cloud import vision_v1p3beta1 as vision
-# [END product_search_import]
+# [END vision_product_search_tutorial_import]
 
 
-# [START product_search_import_product_sets]
+# [START vision_product_search_import_product_images]
 def import_product_sets(project_id, location, gcs_uri):
     """Import images of different products in the product set.
     Args:
@@ -68,7 +68,7 @@ def import_product_sets(project_id, location, gcs_uri):
             print(reference_image)
         else:
             print('Status code not OK: {}'.format(status.message))
-# [END product_search_import_product_sets]
+# [END vision_product_search_import_product_images]
 
 
 if __name__ == '__main__':
