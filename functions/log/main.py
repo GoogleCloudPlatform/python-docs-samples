@@ -58,7 +58,7 @@ def get_log_entries(request):
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
     """"""
 
