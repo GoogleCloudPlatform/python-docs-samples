@@ -14,6 +14,13 @@
 
 import sys
 
+# [START functions_helloworld_http]
+# [START functions_http_content]
+from flask import escape
+
+# [END functions_helloworld_http]
+# [END functions_http_content]
+
 
 # [START functions_tips_terminate]
 # [START functions_helloworld_get]
@@ -61,7 +68,7 @@ def hello_http(request):
     """
     request_json = request.get_json()
     if request_json and 'name' in request_json:
-        name = request_json['name']
+        name = escape(request_json['name'])
     else:
         name = 'World'
     return 'Hello, {}!'.format(name)
@@ -121,7 +128,7 @@ def hello_content(request):
         name = request.form.get('name')
     else:
         raise ValueError("Unknown content type: {}".format(content_type))
-    return 'Hello, {}!'.format(name)
+    return 'Hello, {}!'.format(escape(name))
 # [END functions_http_content]
 
 
@@ -149,6 +156,17 @@ def hello_method(request):
 
 def hello_error_1(request):
     # [START functions_helloworld_error]
+    # This WILL be reported to Stackdriver Error
+    # Reporting, and WILL NOT show up in logs or
+    # terminate the function.
+    from google.cloud import error_reporting
+    client = error_reporting.Client()
+
+    try:
+        raise RuntimeError('I failed you')
+    except RuntimeError:
+        client.report_exception()
+
     # This WILL be reported to Stackdriver Error Reporting,
     # and WILL terminate the function
     raise RuntimeError('I failed you')
