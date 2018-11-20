@@ -28,11 +28,11 @@ def hello_get(request):
     """HTTP Cloud Function.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
     return 'Hello, World!'
 # [END functions_helloworld_get]
@@ -60,11 +60,11 @@ def hello_http(request):
     """HTTP Cloud Function.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
     request_json = request.get_json()
     if request_json and 'name' in request_json:
@@ -111,11 +111,11 @@ def hello_content(request):
     according to the "content-type" header.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
     content_type = request.headers['content-type']
     if content_type == 'application/json':
@@ -137,11 +137,11 @@ def hello_method(request):
     """ Responds to a GET request with "Hello world!". Forbids a PUT request.
     Args:
         request (flask.Request): The request object.
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Request>
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
          Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
     from flask import abort
 
