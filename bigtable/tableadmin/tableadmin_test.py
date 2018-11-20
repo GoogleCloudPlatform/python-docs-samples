@@ -16,6 +16,7 @@
 import os
 import random
 
+from tableadmin import create_table
 from tableadmin import delete_table
 from tableadmin import run_table_operations
 
@@ -53,6 +54,7 @@ def test_run_table_operations(capsys):
 def test_delete_table(capsys):
     table_name = TABLE_NAME_FORMAT.format(
         random.randrange(TABLE_NAME_RANGE))
+    create_table(PROJECT, BIGTABLE_CLUSTER, table_name)
 
     delete_table(PROJECT, BIGTABLE_CLUSTER, table_name)
     out, _ = capsys.readouterr()
