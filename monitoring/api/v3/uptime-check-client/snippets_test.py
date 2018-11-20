@@ -58,6 +58,20 @@ def test_create_and_delete(capsys):
         pass
 
 
+def test_update_uptime_config(capsys):
+    # create and delete happen in uptime fixture.
+    new_display_name = random_name(10)
+    new_uptime_check_path = '/' + random_name(10)
+    with UptimeFixture() as fixture:
+        snippets.update_uptime_check_config(
+            fixture.config.name, new_display_name, new_uptime_check_path)
+        out, _ = capsys.readouterr()
+        snippets.get_uptime_check_config(fixture.config.name)
+        out, _ = capsys.readouterr()
+        assert new_display_name in out
+        assert new_uptime_check_path in out
+
+
 def test_get_uptime_check_config(capsys, uptime):
     snippets.get_uptime_check_config(uptime.config.name)
     out, _ = capsys.readouterr()

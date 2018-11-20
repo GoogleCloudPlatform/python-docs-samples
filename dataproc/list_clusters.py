@@ -19,21 +19,21 @@ import argparse
 import googleapiclient.discovery
 
 
-# [START list_clusters]
+# [START dataproc_list_clusters]
 def list_clusters(dataproc, project, region):
     result = dataproc.projects().regions().clusters().list(
         projectId=project,
         region=region).execute()
     return result
-# [END list_clusters]
+# [END dataproc_list_clusters]
 
 
-# [START get_client]
+# [START dataproc_get_client]
 def get_client():
     """Builds a client to the dataproc API."""
     dataproc = googleapiclient.discovery.build('dataproc', 'v1')
     return dataproc
-# [END get_client]
+# [END dataproc_get_client]
 
 
 def main(project_id, region):

@@ -78,6 +78,7 @@ def test_create_list_and_delete_trigger(bucket, capsys):
             GCLOUD_PROJECT, bucket.name, 7,
             ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'],
             trigger_id=TEST_TRIGGER_ID,
+            auto_populate_timespan=True,
         )
 
     out, _ = capsys.readouterr()
