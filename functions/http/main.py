@@ -48,7 +48,7 @@ def parse_xml(request):
     Returns:
         The response text, or any set of values that can be turned into a
          Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
     data = xmltodict.parse(request.data)
     return json.dumps(data, indent=2)
@@ -72,7 +72,7 @@ def parse_multipart(request):
     Returns:
         The response text, or any set of values that can be turned into a
          Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
 
     # This code will process each non-file field in the form
