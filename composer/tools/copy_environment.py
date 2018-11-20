@@ -30,7 +30,9 @@ from __future__ import print_function
 import argparse
 import ast
 import base64
+import contextlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -39,12 +41,15 @@ import tempfile
 import time
 import uuid
 
+from cryptography import fernet
 import google.auth
 from google.cloud import storage
 from google.oauth2 import service_account
-from googleapiclient import discovery
-from googleapiclient import errors
-
+from googleapiclient import discovery, errors
+from kubernetes import client, config
+from mysql import connector
+import six
+from six.moves import configparser
 
 DEFAULT_SCOPES = ["https://www.googleapis.com/auth/cloud-platform"]
 
@@ -370,8 +375,112 @@ def export_data(sql_client, project, instance, gcs_bucket_name, filename):
     wait_sql_operation(sql_client, project, operation.get("name"))
 
 
+def get_fernet_key(composer_env):
+    print("Retrieving fernet key for Composer Environment {}.".format(
+        composer_env.get('name', '')))
+    gke_cluster_resource = composer_env.get("config", {}).get("gkeCluster")
+    project_zone_cluster = re.match(
+        "projects/([^/]*)/zones/([^/]*)/clusters/([^/]*)", gke_cluster_resource
+    ).groups()
+    tmp_dir_name = None
+    try:
+        print("Getting cluster credentials {} to retrieve fernet key.".format(
+            gke_cluster_resource))
+        tmp_dir_name = tempfile.mkdtemp()
+        kubeconfig_file = tmp_dir_name + "/config"
+        os.environ["KUBECONFIG"] = kubeconfig_file
+        if subprocess.call(
+            [
+                "gcloud",
+                "container",
+                "clusters",
+                "get-credentials",
+                project_zone_cluster[2],
+                "--zone",
+                project_zone_cluster[1],
+                "--project",
+                project_zone_cluster[0]
+            ]
+        ):
+            print("Failed to retrieve cluster credentials: {}.".format(
+                gke_cluster_resource))
+            sys.exit(1)
+
+        kubernetes_client = client.CoreV1Api(
+            api_client=config.new_client_from_config(
+                config_file=kubeconfig_file))
+        airflow_configmap = kubernetes_client.read_namespaced_config_map(
+            "airflow-configmap", "default")
+        config_str = airflow_configmap.data['airflow.cfg']
+        with contextlib.closing(six.StringIO(config_str)) as config_buffer:
+            config_parser = configparser.ConfigParser()
+            config_parser.readfp(config_buffer)
+            return config_parser.get("core", "fernet_key")
+    except Exception as exc:
+        print("Failed to get fernet key for cluster: {}.".format(str(exc)))
+        sys.exit(1)
+    finally:
+        if tmp_dir_name:
+            shutil.rmtree(tmp_dir_name)
+
+
+def reencrypt_variables_connections(old_fernet_key_str, new_fernet_key_str):
+    old_fernet_key = fernet.Fernet(old_fernet_key_str.encode("utf-8"))
+    new_fernet_key = fernet.Fernet(new_fernet_key_str.encode("utf-8"))
+    db = connector.connect(
+        host="127.0.0.1",
+        user="root",
+        database="airflow-db",
+    )
+    variable_cursor = db.cursor()
+    variable_cursor.execute("SELECT id, val, is_encrypted FROM variable")
+    rows = variable_cursor.fetchall()
+    for row in rows:
+        id = row[0]
+        val = row[1]
+        is_encrypted = row[2]
+        if is_encrypted:
+            updated_val = new_fernet_key.encrypt(
+                old_fernet_key.decrypt(bytes(val))).decode()
+            variable_cursor.execute(
+                "UPDATE variable SET val=%s WHERE id=%s", (updated_val, id))
+    db.commit()
+
+    conn_cursor = db.cursor()
+    conn_cursor.execute(
+        "SELECT id, password, extra, is_encrypted, is_extra_encrypted FROM "
+        "connection")
+    rows = conn_cursor.fetchall()
+    for row in rows:
+        id = row[0]
+        password = row[1]
+        extra = row[2]
+        is_encrypted = row[3]
+        is_extra_encrypted = row[4]
+        if is_encrypted:
+            updated_password = new_fernet_key.encrypt(
+                old_fernet_key.decrypt(bytes(password))).decode()
+            conn_cursor.execute(
+                "UPDATE connection SET password=%s WHERE id=%s",
+                (updated_password, id))
+        if is_extra_encrypted:
+            updated_extra = new_fernet_key.encrypt(
+                old_fernet_key.decrypt(bytes(extra))).decode()
+            conn_cursor.execute(
+                "UPDATE connection SET extra=%s WHERE id=%s",
+                (updated_extra, id))
+    db.commit()
+
+
 def import_data(
-    sql_client, service_account_key, project, instance, gcs_bucket, filename
+    sql_client,
+    service_account_key,
+    project,
+    instance,
+    gcs_bucket,
+    filename,
+    old_fernet_key,
+    new_fernet_key
 ):
     tmp_dir_name = None
     fuse_dir = None
@@ -383,7 +492,6 @@ def import_data(
         if subprocess.call(["mkdir", fuse_dir]):
             print("Failed to make temporary subdir {}.".format(fuse_dir))
             sys.exit(1)
-        print(str(["gcsfuse", gcs_bucket, fuse_dir]))
         if subprocess.call(["gcsfuse", gcs_bucket, fuse_dir]):
             print(
                 "Failed to fuse bucket {} with temp local directory {}".format(
@@ -424,9 +532,11 @@ def import_data(
         ):
             print("Failed to import database.")
             sys.exit(1)
+        print("Reencrypting variables and connections.")
+        reencrypt_variables_connections(old_fernet_key, new_fernet_key)
         print("Database import succeeded.")
-    except Exception:
-        print("Failed to copy database.")
+    except Exception as exc:
+        print("Failed to copy database: {}".format(str(exc)))
         sys.exit(1)
     finally:
         if proxy_subprocess:
@@ -522,6 +632,9 @@ def copy_database(project, existing_env, new_env, running_as_service_account):
             gcs_db_dump_bucket.name,
             "db_dump.sql",
         )
+        print("Obtaining fernet keys for Composer Environments.")
+        old_fernet_key = get_fernet_key(existing_env)
+        new_fernet_key = get_fernet_key(new_env)
         print("Preparing database import to new Environment.")
         import_data(
             sql_client,
@@ -530,6 +643,8 @@ def copy_database(project, existing_env, new_env, running_as_service_account):
             new_sql_instance,
             gcs_db_dump_bucket.name,
             "db_dump.sql",
+            old_fernet_key,
+            new_fernet_key,
         )
     finally:
         if gke_service_account_key:
@@ -542,7 +657,7 @@ def copy_database(project, existing_env, new_env, running_as_service_account):
             )
         if gcs_db_dump_bucket:
             print("Deleting temporary Cloud Storage bucket.")
-            # delete_bucket(gcs_db_dump_bucket)
+            delete_bucket(gcs_db_dump_bucket)
 
 
 def copy_gcs_bucket(existing_env, new_env):

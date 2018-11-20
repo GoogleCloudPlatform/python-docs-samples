@@ -14,19 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import pytest
 
 import shotchange
 
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-SHOTS_FILE_PATH = '/video/gbikes_dinosaur.mp4'
-
 
 @pytest.mark.slow
 def test_shots_dino(capsys):
-    shotchange.analyze_shots(
-        'gs://{}{}'.format(BUCKET, SHOTS_FILE_PATH))
+    shotchange.analyze_shots('gs://demomaker/gbikes_dinosaur.mp4')
     out, _ = capsys.readouterr()
     assert 'Shot 1:' in out

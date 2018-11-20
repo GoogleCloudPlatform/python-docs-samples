@@ -51,7 +51,8 @@ def test_deidentify_with_mask(capsys):
 
 
 def test_deidentify_with_mask_ignore_insensitive_data(capsys):
-    deid.deidentify_with_mask(GCLOUD_PROJECT, HARMLESS_STRING)
+    deid.deidentify_with_mask(GCLOUD_PROJECT, HARMLESS_STRING,
+                              ['US_SOCIAL_SECURITY_NUMBER'])
 
     out, _ = capsys.readouterr()
     assert HARMLESS_STRING in out
@@ -110,6 +111,7 @@ def test_deidentify_with_fpe_ignores_insensitive_data(capsys):
     deid.deidentify_with_fpe(
         GCLOUD_PROJECT,
         HARMLESS_STRING,
+        ['US_SOCIAL_SECURITY_NUMBER'],
         alphabet='NUMERIC',
         wrapped_key=WRAPPED_KEY,
         key_name=KEY_NAME)

@@ -61,7 +61,7 @@ spec:
         - containerPort: 8080
 
       # [START proxy_container]
-      - image: b.gcr.io/cloudsql-docker/gce-proxy:1.05
+      - image: gcr.io/cloudsql-docker/gce-proxy:1.05
         name: cloudsql-proxy
         command: ["/cloud_sql_proxy", "--dir=/cloudsql",
                   "-instances=<your-cloudsql-connection-string>=tcp:5432",
