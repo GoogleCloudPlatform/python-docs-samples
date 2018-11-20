@@ -1,0 +1,7 @@
+{
+  "RESULT_TOPIC": "[YOUR_RESULT_TOPIC_NAME]",
+  "RESULT_BUCKET": "[YOUR_TEXT_BUCKET_NAME]",
+  "TRANSLATE_TOPIC": "[YOUR_TRANSLATE_TOPIC_NAME]",
+  "TRANSLATE": true,
+  "TO_LANG": ["en", "fr", "es", "ja", "ru"]
+}

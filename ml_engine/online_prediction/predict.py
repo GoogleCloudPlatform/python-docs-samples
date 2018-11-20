@@ -141,7 +141,7 @@ def main(project, model, version=None, force_tfrecord=False):
     """Send user input to the prediction service."""
     while True:
         try:
-            user_input = json.loads(raw_input("Valid JSON >>>"))
+            user_input = json.loads(input("Valid JSON >>>"))
         except KeyboardInterrupt:
             return
 

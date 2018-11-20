@@ -18,21 +18,30 @@ import argparse
 import datetime
 
 
-# [START cloud_tasks_appengine_create_task]
 def create_task(project, queue, location, payload=None, in_seconds=None):
+    # [START cloud_tasks_appengine_create_task]
     """Create a task for a given queue with an arbitrary payload."""
 
-    from google.cloud import tasks_v2beta2
+    from google.cloud import tasks_v2beta3
     from google.protobuf import timestamp_pb2
 
     # Create a client.
-    client = tasks_v2beta2.CloudTasksClient()
+    client = tasks_v2beta3.CloudTasksClient()
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project = 'my-project-id'
+    # queue = 'my-appengine-queue'
+    # location = 'us-central1'
+    # payload = 'hello'
+
+    # Construct the fully qualified queue name.
+    parent = client.queue_path(project, location, queue)
 
     # Construct the request body.
     task = {
             'app_engine_http_request': {  # Specify the type of request.
                 'http_method': 'POST',
-                'relative_url': '/example_task_handler'
+                'relative_uri': '/example_task_handler'
             }
     }
     if payload is not None:
@@ -40,7 +49,7 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
         converted_payload = payload.encode()
 
         # Add the payload to the request.
-        task['app_engine_http_request']['payload'] = converted_payload
+        task['app_engine_http_request']['body'] = converted_payload
 
     if in_seconds is not None:
         # Convert "seconds from now" into an rfc3339 datetime string.
@@ -50,11 +59,8 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
         timestamp = timestamp_pb2.Timestamp()
         timestamp.FromDatetime(d)
 
-        # Add the rfc3339 datetime string to the request.
+        # Add the timestamp to the tasks.
         task['schedule_time'] = timestamp
-
-    # Construct the fully qualified queue name.
-    parent = client.queue_path(project, location, queue)
 
     # Use the client to build and send the task.
     response = client.create_task(parent, task)
