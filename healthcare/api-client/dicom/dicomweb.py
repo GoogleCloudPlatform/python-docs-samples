@@ -45,9 +45,8 @@ def get_session(service_account_json):
 
     return session
 
+
 # [START healthcare_dicomweb_store_instance]
-
-
 def dicomweb_store_instance(
         service_account_json,
         base_url,
