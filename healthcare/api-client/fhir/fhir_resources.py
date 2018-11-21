@@ -23,7 +23,7 @@ from google.oauth2 import service_account
 _BASE_URL = 'https://healthcare.googleapis.com/v1alpha'
 
 
-# [START healthcare_get_sessions]
+# [START healthcare_get_session]
 def get_session(service_account_json):
     """Returns an authorized Requests Session class using the service account
     credentials JSON. This class is used to perform requests to the
