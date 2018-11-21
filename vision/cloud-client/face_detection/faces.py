@@ -21,7 +21,7 @@ import argparse
 # [START vision_face_detection_tutorial_imports]
 from google.cloud import vision
 from google.cloud.vision import types
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 # [END vision_face_detection_tutorial_imports]
 
 
@@ -60,7 +60,6 @@ def highlight_faces(image, faces, output_filename):
     im = Image.open(image)
     draw = ImageDraw.Draw(im)
     # Sepecify the font-family and the font-size
-    font = ImageFont.truetype("arial.ttf", 25)
     for face in faces:
         box = [(vertex.x, vertex.y)
                for vertex in face.bounding_poly.vertices]
@@ -70,7 +69,7 @@ def highlight_faces(image, faces, output_filename):
         draw.text(((face.bounding_poly.vertices)[0].x,
                    (face.bounding_poly.vertices)[0].y - 30),
                   str(format(face.detection_confidence, '.3f')) + '%',
-                  font=font, fill='#FF0000')
+                  fill='#FF0000')
     im.save(output_filename)
 # [END vision_face_detection_tutorial_process_response]
 
