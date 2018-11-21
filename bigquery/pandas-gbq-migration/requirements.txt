@@ -1,2 +1,2 @@
 google-cloud-bigquery[pandas,pyarrow]==1.7.0
-pandas-gbq==0.7.0
+pandas-gbq==0.8.0
