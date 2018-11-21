@@ -27,7 +27,7 @@ import argparse
 # [START vision_product_search_delete_reference_image]
 # [START vision_product_search_list_reference_images]
 # [START vision_product_search_get_reference_image]
-from google.cloud import vision_v1p3beta1 as vision
+from google.cloud import vision
 
 # [END vision_product_search_create_reference_image]
 # [END vision_product_search_delete_reference_image]
@@ -108,9 +108,9 @@ def get_reference_image(
     client = vision.ProductSearchClient()
 
     # Get the full path of the reference image.
-    reference_image_path = client.reference_image_path(
+    reference_image_path = client.image_path(
         project=project_id, location=location, product=product_id,
-        reference_image=reference_image_id)
+        image=reference_image_id)
 
     # Get complete detail of the reference image.
     image = client.get_reference_image(name=reference_image_path)
@@ -136,9 +136,9 @@ def delete_reference_image(
     client = vision.ProductSearchClient()
 
     # Get the full path of the reference image.
-    reference_image_path = client.reference_image_path(
+    reference_image_path = client.image_path(
         project=project_id, location=location, product=product_id,
-        reference_image=reference_image_id)
+        image=reference_image_id)
 
     # Delete the reference image.
     client.delete_reference_image(name=reference_image_path)
