@@ -127,7 +127,7 @@ def hello_analytics(data, context):
 
 # [START functions_firebase_remote_config]
 def hello_remote_config(data, context):
-    """ Triggered by a Google Analytics for Firebase log event.
+    """ Triggered by a change to a Firebase Remote Config value.
      Args:
             data (dict): The event payload.
             context (google.cloud.functions.Context): Metadata for the event.
