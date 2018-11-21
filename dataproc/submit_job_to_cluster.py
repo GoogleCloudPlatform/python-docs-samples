@@ -34,14 +34,6 @@ def get_pyspark_file(filename):
     return f, os.path.basename(filename)
 
 
-def get_region_from_zone(zone):
-    try:
-        region_as_list = zone.split('-')[:-1]
-        return '-'.join(region_as_list)
-    except (AttributeError, IndexError, ValueError):
-        raise ValueError('Invalid zone provided, please check your input.')
-
-
 def upload_pyspark_file(project_id, bucket_name, filename, file):
     """Uploads the PySpark file in this directory to the configured
     input bucket."""
@@ -64,7 +56,7 @@ def download_output(project_id, cluster_id, output_bucket, job_id):
     return bucket.blob(output_blob).download_as_string()
 
 
-# [START create_cluster]
+# [START dataproc_create_cluster]
 def create_cluster(dataproc, project, zone, region, cluster_name):
     print('Creating cluster...')
     zone_uri = \
@@ -92,7 +84,7 @@ def create_cluster(dataproc, project, zone, region, cluster_name):
         region=region,
         body=cluster_data).execute()
     return result
-# [END create_cluster]
+# [END dataproc_create_cluster]
 
 
 def wait_for_cluster_creation(dataproc, project_id, region, cluster_name):
@@ -113,7 +105,7 @@ def wait_for_cluster_creation(dataproc, project_id, region, cluster_name):
             break
 
 
-# [START list_clusters_with_detail]
+# [START dataproc_list_clusters_with_detail]
 def list_clusters_with_details(dataproc, project, region):
     result = dataproc.projects().regions().clusters().list(
         projectId=project,
@@ -123,7 +115,7 @@ def list_clusters_with_details(dataproc, project, region):
         print("{} - {}"
               .format(cluster['clusterName'], cluster['status']['state']))
     return result
-# [END list_clusters_with_detail]
+# [END dataproc_list_clusters_with_detail]
 
 
 def get_cluster_id_by_name(cluster_list, cluster_name):
@@ -133,7 +125,7 @@ def get_cluster_id_by_name(cluster_list, cluster_name):
     return cluster['clusterUuid'], cluster['config']['configBucket']
 
 
-# [START submit_pyspark_job]
+# [START dataproc_submit_pyspark_job]
 def submit_pyspark_job(dataproc, project, region,
                        cluster_name, bucket_name, filename):
     """Submits the Pyspark job to the cluster, assuming `filename` has
@@ -156,10 +148,10 @@ def submit_pyspark_job(dataproc, project, region,
     job_id = result['reference']['jobId']
     print('Submitted job ID {}'.format(job_id))
     return job_id
-# [END submit_pyspark_job]
+# [END dataproc_submit_pyspark_job]
 
 
-# [START delete]
+# [START dataproc_delete]
 def delete_cluster(dataproc, project, region, cluster):
     print('Tearing down cluster')
     result = dataproc.projects().regions().clusters().delete(
@@ -167,10 +159,10 @@ def delete_cluster(dataproc, project, region, cluster):
         region=region,
         clusterName=cluster).execute()
     return result
-# [END delete]
+# [END dataproc_delete]
 
 
-# [START wait]
+# [START dataproc_wait]
 def wait_for_job(dataproc, project, region, job_id):
     print('Waiting for job to finish...')
     while True:
@@ -184,22 +176,22 @@ def wait_for_job(dataproc, project, region, job_id):
         elif result['status']['state'] == 'DONE':
             print('Job finished.')
             return result
-# [END wait]
+# [END dataproc_wait]
 
 
-# [START get_client]
+# [START dataproc_get_client]
 def get_client():
     """Builds an http client authenticated with the service account
     credentials."""
     dataproc = googleapiclient.discovery.build('dataproc', 'v1')
     return dataproc
-# [END get_client]
+# [END dataproc_get_client]
 
 
 def main(project_id, zone, cluster_name, bucket_name,
          pyspark_file=None, create_new_cluster=True):
     dataproc = get_client()
-    region = get_region_from_zone(zone)
+    region = 'global'
     try:
         if pyspark_file:
             spark_file, spark_filename = get_pyspark_file(pyspark_file)
@@ -221,11 +213,11 @@ def main(project_id, zone, cluster_name, bucket_name,
         (cluster_id, output_bucket) = (
             get_cluster_id_by_name(cluster_list, cluster_name))
 
-        # [START call_submit_pyspark_job]
+        # [START dataproc_call_submit_pyspark_job]
         job_id = submit_pyspark_job(
             dataproc, project_id, region,
             cluster_name, bucket_name, spark_filename)
-        # [END call_submit_pyspark_job]
+        # [END dataproc_call_submit_pyspark_job]
         wait_for_job(dataproc, project_id, region, job_id)
 
         output = download_output(project_id, cluster_id, output_bucket, job_id)

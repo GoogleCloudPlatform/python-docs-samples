@@ -21,10 +21,10 @@ This file demonstrates how to read from a GCS bucket. See README.md for more
 information.
 """
 
-# [START pyspark]
+# [START dataproc_pyspark_sort_gcs]
 import pyspark
 
 sc = pyspark.SparkContext()
 rdd = sc.textFile('gs://path-to-your-GCS-file')
 print(sorted(rdd.collect()))
-# [END pyspark]
+# [END dataproc_pyspark_sort_gcs]

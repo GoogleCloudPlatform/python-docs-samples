@@ -1,3 +1,3 @@
 Flask==1.0.2
 gunicorn==19.9.0
-pylibmc==1.5.2
+pylibmc==1.6.0
