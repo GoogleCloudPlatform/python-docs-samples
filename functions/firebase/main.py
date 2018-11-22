@@ -103,8 +103,6 @@ def make_upper_case(data, context):
 
 # [START functions_firebase_analytics]
 def hello_analytics(data, context):
-    print(data)
-    print(context)
     """ Triggered by a Google Analytics for Firebase log event.
      Args:
             data (dict): The event payload.
@@ -125,3 +123,16 @@ def hello_analytics(data, context):
     geo_info = user_obj["geoInfo"]
     print(f'Location: {geo_info["city"]}, {geo_info["country"]}')
 # [END functions_firebase_analytics]
+
+
+# [START functions_firebase_remote_config]
+def hello_remote_config(data, context):
+    """ Triggered by a change to a Firebase Remote Config value.
+     Args:
+            data (dict): The event payload.
+            context (google.cloud.functions.Context): Metadata for the event.
+    """
+    print(f'Update type: {data["updateType"]}')
+    print(f'Origin: {data["updateOrigin"]}')
+    print(f'Version: {data["versionNumber"]}')
+# [END functions_firebase_remote_config]
