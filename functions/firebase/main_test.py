@@ -148,3 +148,20 @@ def test_analytics(capsys):
     assert 'Name: my-event' in out
     assert 'Device Model: Pixel' in out
     assert 'Location: London, UK' in out
+
+
+def test_remote_config(capsys):
+    data = {
+        'updateOrigin': 'CONSOLE',
+        'updateType': 'INCREMENTAL_UPDATE',
+        'versionNumber': '1'
+    }
+    context = Context()
+
+    main.hello_remote_config(data, context)
+
+    out, _ = capsys.readouterr()
+
+    assert 'Update type: INCREMENTAL_UPDATE' in out
+    assert 'Origin: CONSOLE' in out
+    assert 'Version: 1' in out
