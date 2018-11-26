@@ -44,7 +44,7 @@ def analyze_shots(path):
     print('\nProcessing video for shot change annotations:')
 
     # [START video_shot_tutorial_check_operation]
-    result = operation.result(timeout=90)
+    result = operation.result(timeout=120)
     print('\nFinished processing.')
     # [END video_shot_tutorial_check_operation]
 
