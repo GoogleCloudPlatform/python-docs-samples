@@ -159,7 +159,7 @@ def test_send(iot_topic, capsys):
         rsa_private_path, 'RS256', ca_cert_path,
         'mqtt.googleapis.com', 443)
     client.loop_start()
-    out, _ = capsys.readouterr()
+    #out, _ = capsys.readouterr()
 
     # Pre-process commands
     for i in range(1, 3):
@@ -169,7 +169,7 @@ def test_send(iot_topic, capsys):
     send.send_command(
             service_account_json, project_id, cloud_region, registry_id,
             device_id, 'me want cookies')
-    out, _ = capsys.readouterr()
+    #out, _ = capsys.readouterr()
 
     # Process commands
     for i in range(1, 3):
