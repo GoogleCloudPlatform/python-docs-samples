@@ -82,7 +82,6 @@ def test_dicom_store():
         dicom_store_id)
 
 
-@pytest.mark.skip(reason='disable until have access to healthcare api')
 def test_dicomweb_store_instance(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
         service_account_json,
@@ -108,7 +107,6 @@ def test_dicomweb_store_instance(test_dataset, test_dicom_store, capsys):
         study_uid)
 
 
-@pytest.mark.skip(reason='disable until have access to healthcare api')
 def test_dicomweb_search_instance(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
         service_account_json,
@@ -142,7 +140,6 @@ def test_dicomweb_search_instance(test_dataset, test_dicom_store, capsys):
         study_uid)
 
 
-@pytest.mark.skip(reason='disable until have access to healthcare api')
 def test_dicomweb_retrieve_study(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
         service_account_json,
@@ -177,7 +174,6 @@ def test_dicomweb_retrieve_study(test_dataset, test_dicom_store, capsys):
         study_uid)
 
 
-@pytest.mark.skip(reason='disable until have access to healthcare api')
 def test_dicomweb_delete_study(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
         service_account_json,

@@ -60,7 +60,6 @@ def test_dataset():
         dataset_id)
 
 
-@pytest.mark.skip(reason='disable until API whitelisted / enabled')
 def test_CRUD_fhir_store(test_dataset, capsys):
     fhir_stores.create_fhir_store(
         service_account_json,
@@ -102,7 +101,6 @@ def test_CRUD_fhir_store(test_dataset, capsys):
     assert 'Deleted FHIR store' in out
 
 
-@pytest.mark.skip(reason='disable until API whitelisted / enabled')
 def test_patch_fhir_store(test_dataset, capsys):
     fhir_stores.create_fhir_store(
         service_account_json,
