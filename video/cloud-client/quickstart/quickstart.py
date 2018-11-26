@@ -33,7 +33,7 @@ def run_quickstart():
         'gs://demomaker/cat.mp4', features=features)
     print('\nProcessing video for label annotations:')
 
-    result = operation.result(timeout=90)
+    result = operation.result(timeout=120)
     print('\nFinished processing.')
 
     # first result is retrieved because a single video was processed
