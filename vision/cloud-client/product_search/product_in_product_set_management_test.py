@@ -54,13 +54,13 @@ def product_and_product_set():
 def test_add_product_to_product_set(capsys, product_and_product_set):
     list_products_in_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
     out, _ = capsys.readouterr()
-    assert PRODUCT_ID not in out
+    assert 'Product id: {}'.format(PRODUCT_ID) not in out
 
     add_product_to_product_set(
         PROJECT_ID, LOCATION, PRODUCT_ID, PRODUCT_SET_ID)
     list_products_in_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
     out, _ = capsys.readouterr()
-    assert PRODUCT_ID in out
+    assert 'Product id: {}'.format(PRODUCT_ID) in out
 
 
 def test_remove_product_from_product_set(capsys, product_and_product_set):
@@ -68,10 +68,10 @@ def test_remove_product_from_product_set(capsys, product_and_product_set):
         PROJECT_ID, LOCATION, PRODUCT_ID, PRODUCT_SET_ID)
     list_products_in_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
     out, _ = capsys.readouterr()
-    assert PRODUCT_ID in out
+    assert 'Product id: {}'.format(PRODUCT_ID) in out
 
     remove_product_from_product_set(
         PROJECT_ID, LOCATION, PRODUCT_ID, PRODUCT_SET_ID)
     list_products_in_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
     out, _ = capsys.readouterr()
-    assert PRODUCT_ID not in out
+    assert 'Product id: {}'.format(PRODUCT_ID) not in out

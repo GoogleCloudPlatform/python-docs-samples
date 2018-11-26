@@ -27,7 +27,7 @@ import argparse
 # [START vision_product_search_list_product_sets]
 # [START vision_product_search_get_product_set]
 # [START vision_product_search_create_product_set]
-from google.cloud import vision_v1p3beta1 as vision
+from google.cloud import vision
 
 # [END vision_product_search_delete_product_set]
 # [END vision_product_search_list_product_sets]
