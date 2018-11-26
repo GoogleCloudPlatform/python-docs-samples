@@ -44,7 +44,7 @@ PROJECT_NAME = f'projects/{PROJECT_ID}'
 # See https://api.slack.com/docs/token-types#bot for more info
 BOT_ACCESS_TOKEN = 'xxxx-111111111111-abcdefghidklmnopq'
 
-CHANNEL = 'general'
+CHANNEL_ID = 'C0XXXXXX'
 
 slack_client = SlackClient(BOT_ACCESS_TOKEN)
 
@@ -56,11 +56,10 @@ def notify_slack(data, context):
     notification_data = base64.b64decode(data['data']).decode('utf-8')
     budget_notification_text = f'{notification_attrs}, {notification_data}'
 
-    res = slack_client.api_call(
+    slack_client.api_call(
       'chat.postMessage',
-      channel=CHANNEL,
+      channel=CHANNEL_ID,
       text=budget_notification_text)
-    print(res)
 # [END functions_billing_slack]
 
 
