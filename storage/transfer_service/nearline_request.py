@@ -13,8 +13,8 @@
 
 # [START all]
 
-"""Command-line sample that creates a one-time transfer from Google Cloud
-Storage standard class to the Nearline storage class."
+"""Command-line sample that creates a daily transfer from a standard
+GCS bucket to a Nearline GCS bucket for objects untouched for 30 days.
 
 This sample is used on this page:
 
@@ -31,27 +31,26 @@ import googleapiclient.discovery
 
 
 # [START main]
-def main(description, project_id, year, month, day, hours, minutes,
-         source_bucket, sink_bucket):
-    """Create a transfer from the Google Cloud Storage Standard class to the
-    Nearline Storage class."""
+def main(description, project_id, start_date, start_time, source_bucket,
+         sink_bucket):
+    """Create a daily transfer from Standard to Nearline Storage class."""
     storagetransfer = googleapiclient.discovery.build('storagetransfer', 'v1')
 
     # Edit this template with desired parameters.
-    # Specify times below using US Pacific Time Zone.
     transfer_job = {
         'description': description,
         'status': 'ENABLED',
         'projectId': project_id,
         'schedule': {
             'scheduleStartDate': {
-                'day': day,
-                'month': month,
-                'year': year
+                'day': start_date.day,
+                'month': start_date.month,
+                'year': start_date.year
             },
             'startTimeOfDay': {
-                'hours': hours,
-                'minutes': minutes
+                'hours': start_time.hour,
+                'minutes': start_time.minute,
+                'seconds': start_time.second
             }
         },
         'transferSpec': {
@@ -62,7 +61,7 @@ def main(description, project_id, year, month, day, hours, minutes,
                 'bucketName': sink_bucket
             },
             'objectConditions': {
-                'minTimeElapsedSinceLastModification': '2592000s'
+                'minTimeElapsedSinceLastModification': '2592000s'  # 30 days
             },
             'transferOptions': {
                 'deleteObjectsFromSourceAfterTransfer': 'true'
@@ -82,23 +81,20 @@ if __name__ == '__main__':
         formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('description', help='Transfer description.')
     parser.add_argument('project_id', help='Your Google Cloud project ID.')
-    parser.add_argument('date', help='Date YYYY/MM/DD.')
-    parser.add_argument('time', help='Time (24hr) HH:MM.')
-    parser.add_argument('source_bucket', help='Source bucket name.')
-    parser.add_argument('sink_bucket', help='Sink bucket name.')
+    parser.add_argument('start_date', help='Date YYYY/MM/DD.')
+    parser.add_argument('start_time', help='UTC Time (24hr) HH:MM:SS.')
+    parser.add_argument('source_bucket', help='Standard GCS bucket name.')
+    parser.add_argument('sink_bucket', help='Nearline GCS bucket name.')
 
     args = parser.parse_args()
-    date = datetime.datetime.strptime(args.date, '%Y/%m/%d')
-    time = datetime.datetime.strptime(args.time, '%H:%M')
+    start_date = datetime.datetime.strptime(args.start_date, '%Y/%m/%d')
+    start_time = datetime.datetime.strptime(args.start_time, '%H:%M:%S')
 
     main(
         args.description,
         args.project_id,
-        date.year,
-        date.month,
-        date.day,
-        time.hour,
-        time.minute,
+        start_date,
+        start_time,
         args.source_bucket,
         args.sink_bucket)
 # [END all]

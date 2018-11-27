@@ -62,7 +62,7 @@ class TestGCFPyOCRSample():
         data = base64.b64encode(json.dumps({
             'text': 'menu',
             'filename': 'sample-file',
-            'target_lang': 'es',
+            'lang': 'es',
             'src_lang': 'en'
         }).encode('utf-8'))
         event = {

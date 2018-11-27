@@ -75,6 +75,7 @@ def test_fhir_store():
         fhir_store_id)
 
 
+@pytest.mark.skip(reason='Disable until API whitelisted.')
 def test_CRUD_search_resource(test_dataset, test_fhir_store, capsys):
     fhir_resources.create_resource(
         service_account_json,
@@ -148,6 +149,7 @@ def test_CRUD_search_resource(test_dataset, test_fhir_store, capsys):
     assert 'Deleted Resource' in out
 
 
+@pytest.mark.skip(reason='Disable until API whitelisted.')
 def test_get_patient_everything(test_dataset, test_fhir_store, capsys):
     fhir_resources.create_resource(
         service_account_json,
@@ -195,6 +197,7 @@ def test_get_patient_everything(test_dataset, test_fhir_store, capsys):
     assert 'id' in out
 
 
+@pytest.mark.skip(reason="no way of currently testing this")
 def test_get_metadata(test_dataset, test_fhir_store, capsys):
     fhir_resources.get_metadata(
         service_account_json,
