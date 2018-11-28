@@ -40,7 +40,6 @@ def batch_get_assets_history(project_id, asset_names):
 
 
 if __name__ == '__main__':
-
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter
