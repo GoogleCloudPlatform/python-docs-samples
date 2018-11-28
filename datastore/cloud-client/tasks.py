@@ -28,7 +28,7 @@ def add_task(client, description):
     key = client.key('Task')
 
     task = datastore.Entity(
-        key, exclude_from_indexes=['description'])
+        key, exclude_from_indexes=('description',))
 
     task.update({
         'created': datetime.datetime.utcnow(),
