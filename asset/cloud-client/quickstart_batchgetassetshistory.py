@@ -35,7 +35,7 @@ def batch_get_assets_history(project_id, asset_names):
     read_time_window.start_time.GetCurrentTime()
     response = client.batch_get_assets_history(
         parent, content_type, read_time_window, asset_names)
-    print('Member: {}'.format(response.member))
+    print('assets: {}'.format(response.assets))
     # [END asset_quickstart_batch_get_assets_history]
 
 
