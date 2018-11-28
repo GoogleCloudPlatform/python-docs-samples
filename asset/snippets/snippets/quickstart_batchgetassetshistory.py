@@ -18,35 +18,40 @@
 import argparse
 
 
-def export_assets(project_id, dump_file_path):
-    # [START asset_quickstart_export_assets]
+def batch_get_assets_history(project_id, asset_names):
+    # [START asset_quickstart_batch_get_assets_history]
     from google.cloud import asset_v1beta1
-    from google.cloud.asset_v1beta1.proto import asset_service_pb2
+    from google.cloud.asset_v1beta1.proto import assets_pb2
+    from google.cloud.asset_v1beta1 import enums
 
     # TODO project_id = 'Your Google Cloud Project ID'
-    # TODO dump_file_path = 'Your asset dump file path'
+    # TODO asset_names = 'Your asset names list, e.g.:
+    # ["//storage.googleapis.com/[BUCKET_NAME]",]'
 
     client = asset_v1beta1.AssetServiceClient()
     parent = client.project_path(project_id)
-    output_config = asset_service_pb2.OutputConfig()
-    output_config.gcs_destination.uri = dump_file_path
-    response = client.export_assets(parent, output_config)
-    print(response.result())
-    # [END asset_quickstart_export_assets]
+    content_type = enums.ContentType.RESOURCE
+    read_time_window = assets_pb2.TimeWindow()
+    read_time_window.start_time.GetCurrentTime()
+    response = client.batch_get_assets_history(
+        parent, content_type, read_time_window, asset_names)
+    print('assets: {}'.format(response.assets))
+    # [END asset_quickstart_batch_get_assets_history]
 
 
 if __name__ == '__main__':
-
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument('project_id', help='Your Google Cloud project ID')
     parser.add_argument(
-        'dump_file_path',
-        help='The file ExportAssets API will dump assets to, '
-        'e.g.: gs://<bucket-name>/asset_dump_file')
+        'asset_names',
+        help='The asset names for which history will be fetched, comma '
+        'delimited, e.g.: //storage.googleapis.com/[BUCKET_NAME]')
 
     args = parser.parse_args()
 
-    export_assets(args.project_id, args.dump_file_path)
+    asset_name_list = args.asset_names.split(',')
+
+    batch_get_assets_history(args.project_id, asset_name_list)
