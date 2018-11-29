@@ -310,11 +310,9 @@ def inspect_gcs_file(project, bucket, filename, topic_id, subscription_id,
     subscriber = google.cloud.pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_id)
-    subscription = subscriber.subscribe(subscription_path, callback)
 
     # Set up a callback to acknowledge a message. This closes around an event
     # so that it can signal that it is done and the main thread can continue.
-    job_done = threading.Event()
 
     def callback(message):
         try:
@@ -343,7 +341,8 @@ def inspect_gcs_file(project, bucket, filename, topic_id, subscription_id,
             raise
 
     # Register the callback and wait on the event.
-    subscription.open(callback)
+    subscription = subscriber.subscribe(subscription_path, callback)
+    job_done = threading.Event()
     finished = job_done.wait(timeout=timeout)
     if not finished:
         print('No event received before the timeout. Please verify that the '
