@@ -19,22 +19,19 @@ import argparse
 
 
 def end_to_end(project_id, topic_name, subscription_name, num_messages):
-    # [START pubsub_quickstart_basic]
+    # [START pubsub_quickstart_end2end_basic]
     import sys
     import time
 
-    from google.api_core.exceptions import AlreadyExists
     from google.cloud import pubsub_v1
-    from google.cloud.pubsub_v1 import types
 
     # TODO project_id = "Your Google Cloud Project ID"
     # TODO topic_name = "Your Pub/Sub topic name"
     # TODO subscription_name = "Your Pub/Sub subscription name"
     # TODO num_messages = number of messages to test end-to-end
 
-    # Instantiates a publisher and subscriber client
-    publisher = pubsub_v1.PublisherClient(
-        batch_settings=types.BatchSettings(max_messages=1000),)
+    # Instantiate a publisher and a subscriber client
+    publisher = pubsub_v1.PublisherClient()
     subscriber = pubsub_v1.SubscriberClient()
 
     # The `topic_path` method creates a fully qualified identifier
@@ -48,74 +45,81 @@ def end_to_end(project_id, topic_name, subscription_name, num_messages):
 
     # Create the topic.
     try:
+        publisher.delete_topic(topic_path)
+    except:
+        pass
+    finally:
         topic = publisher.create_topic(topic_path)
-        print('Topic created: {}'.format(topic.name))
-    except AlreadyExists:
-        print('Topic \"{}\" already exists.'.format(topic_name))
+        print('Topic created: \"{}\"'.format(topic.name))
 
     # Create a subscription.
     try:
+        subscriber.delete_subscription(subscription_path)
+    except:
+        pass
+    finally:
         subscription = subscriber.create_subscription(
-          subscription_path, topic_path)
-        print('Subscription created: {}'.format(subscription.name))
-    except AlreadyExists:
-        print('Subscription \"{}\" already exists.'.format(subscription_name))
+            subscription_path, topic_path)
+        print('Subscription created: \"{}\"'.format(subscription.name))
 
-    publish_time = []
-    futures = []
-
-    # `data` is roughly 10 Kb
+    # `data` is roughly 10 Kb.
     data = 'x' * 9600
-    # Data must be a bytestring
+    # `data` must be a bytestring.
     data = data.encode('utf-8')
+    # Initialize an empty dictionary to track messages.
+    tracker = dict()
+    pubsub_time = 0.0
 
     # Publish messages.
     for i in range(num_messages):
-        temp = time.time()
-        # When you publish a message, the client returns a future.
+        # When we publish a message, the client returns a future.
         future = publisher.publish(topic_path, data=data)
-        publish_time.append(time.time() - temp)
-        futures.append(future)
 
-    # Time for Pub/Sub to resolve the request and
-    # assign a message ID for each message
-    resolve_time = []
-    for f in futures:
-        temp = time.time()
-        # `f.result()` is blocking
-        f.result()
-        resolve_time.append(time.time() - temp)
+        tracker.update({i: {'index': i,
+                            'pubtime': time.time(),
+                            'subtime': None}})
 
-    messages = set()
-    subscribe_time = []
+        # `future.result()` blocks and returns a unique message ID per message.
+        tracker[future.result()] = tracker.pop(i)
+
+    print('\nPublished all messages.')
 
     def callback(message):
-        temp = time.time()
         # Unacknowledged messages will be sent again.
         message.ack()
-        subscribe_time.append(time.time() - temp)
-        messages.add(message)
+        # Populate message `subtime`.
+        tracker[message.message_id]['subtime'] = time.time()
 
     # Receive messages. The subscriber is nonblocking.
     subscriber.subscribe(subscription_path, callback=callback)
 
-    print('\nListening for messages on {}...\n'.format(subscription_path))
+    print('\nListening for messages...')
 
     while True:
-        if len(messages) == num_messages:
-            print("Received and acknowledged {} messages.".format(
-                num_messages))
-            print("Each message is {:.0f}Kb.".format(
-                sys.getsizeof(data) / 1.0e3))
-            print("They are sent in a batch size of 1000.")
-            print("Publish time: {:.6f}s.".format(
-                sum(publish_time)+sum(resolve_time)))
-            print("Subscribe time: {:.6f}s.".format(sum(subscribe_time)))
+        for msg_id in list(tracker):
+            pubtime = tracker[msg_id]['pubtime']
+            subtime = tracker[msg_id]['subtime']
+            if subtime is not None:
+                pubsub_time += subtime - pubtime
+                del tracker[msg_id]
+
+        # Exit if all the messages have been acknowledged.
+        if len(tracker) == 0:
+            print('\nTotal publish to subscribe time for {} messages: \
+                  {:.6f}s.'.format(num_messages, pubsub_time))
             break
         else:
-            # Sleeps the thread at 50Hz to save on resources.
-            time.sleep(1. / 50)
-    # [END pubsub_quickstart_basic]
+            print('Messages countdown: {}'.format(len(tracker)))
+            # Sleep the thread at 5Hz to save on resources.
+            time.sleep(1./5)
+    # [END pubsub_quickstart_end2end_basic]
+
+
+def end_to_end_standard(project_id, topic_name, subscription_name,
+                        num_messages):
+    # [START pubsub_quickstart_end2end_standard]
+    pass
+    # [END pubsub_quickstart_end2end_standard]
 
 
 if __name__ == '__main__':
@@ -132,11 +136,22 @@ if __name__ == '__main__':
     basic_parser.add_argument('topic_name', help='Your topic name')
     basic_parser.add_argument('subscription_name',
                               help='Your subscription name')
-    basic_parser.add_argument('num_msgs', type=int,
+    basic_parser.add_argument('num_messages', type=int,
                               help='Number of test messages')
+
+    standard_parser = subparsers.add_parser('standard',
+                                            help=end_to_end_standard.__doc__)
+    standard_parser.add_argument('topic_name', help='Your topic name')
+    standard_parser.add_argument('subscription_name',
+                                 help='Your subscription name')
+    standard_parser.add_argument('num_messages', type=int,
+                                 help='Number of test messages')
 
     args = parser.parse_args()
 
     if args.command == 'basic':
         end_to_end(args.project_id, args.topic_name, args.subscription_name,
-                   args.num_msgs)
+                   args.num_messages)
+    if args.command == 'standard':
+        end_to_end_standard(args.project_id, args.topic_name,
+                            args.subscription_name, args.num_messages)
