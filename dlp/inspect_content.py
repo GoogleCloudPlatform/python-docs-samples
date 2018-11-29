@@ -191,6 +191,7 @@ def inspect_file(project, filename, info_types, min_likelihood=None,
 
     # Call the API.
     response = dlp.inspect_content(parent, inspect_config, item)
+    print(str(response))  # TODO remove
 
     # Print out the results.
     if response.result.findings:
@@ -309,7 +310,7 @@ def inspect_gcs_file(project, bucket, filename, topic_id, subscription_id,
     subscriber = google.cloud.pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_id)
-    subscription = subscriber.subscribe(subscription_path)
+    subscription = subscriber.subscribe(subscription_path, callback)
 
     # Set up a callback to acknowledge a message. This closes around an event
     # so that it can signal that it is done and the main thread can continue.
