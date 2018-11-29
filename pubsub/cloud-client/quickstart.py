@@ -43,7 +43,7 @@ def end_to_end(project_id, topic_name, subscription_name, num_messages):
     subscription_path = subscriber.subscription_path(
         project_id, subscription_name)
 
-    # Create the topic.
+    # Create a topic.
     try:
         publisher.delete_topic(topic_path)
     except NotFound:
@@ -87,7 +87,7 @@ def end_to_end(project_id, topic_name, subscription_name, num_messages):
     def callback(message):
         # Unacknowledged messages will be sent again.
         message.ack()
-        # Populate message `subtime`.
+        # Update message `subtime`.
         tracker[message.message_id]['subtime'] = time.time()
 
     # Receive messages. The subscriber is nonblocking.
@@ -96,6 +96,8 @@ def end_to_end(project_id, topic_name, subscription_name, num_messages):
     print('\nListening for messages...')
 
     while True:
+        # Deplete messages in `tracker` every time we have complete info
+        # of a message.
         for msg_id in list(tracker):
             pubtime = tracker[msg_id]['pubtime']
             subtime = tracker[msg_id]['subtime']
@@ -103,7 +105,8 @@ def end_to_end(project_id, topic_name, subscription_name, num_messages):
                 pubsub_time += subtime - pubtime
                 del tracker[msg_id]
 
-        # Exit if all the messages have been acknowledged.
+        # Exit if `tracker` is empty i.e. all the messages' publish-subscribe
+        # time have been accounted for.
         if len(tracker) == 0:
             print('\nTotal publish to subscribe time for {} messages: \
                   {:.6f}s.'.format(num_messages, pubsub_time))
