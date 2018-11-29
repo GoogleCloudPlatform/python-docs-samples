@@ -460,11 +460,9 @@ def inspect_datastore(project, datastore_project, kind,
     subscriber = google.cloud.pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_id)
-    subscription = subscriber.subscribe(subscription_path)
 
     # Set up a callback to acknowledge a message. This closes around an event
     # so that it can signal that it is done and the main thread can continue.
-    job_done = threading.Event()
 
     def callback(message):
         try:
@@ -493,6 +491,9 @@ def inspect_datastore(project, datastore_project, kind,
             raise
 
     # Register the callback and wait on the event.
+    subscription = subscriber.subscribe(subscription_path, callback)
+    job_done = threading.Event()
+
     subscription.open(callback)
     finished = job_done.wait(timeout=timeout)
     if not finished:
@@ -609,12 +610,9 @@ def inspect_bigquery(project, bigquery_project, dataset_id, table_id,
     subscriber = google.cloud.pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_id)
-    subscription = subscriber.subscribe(subscription_path)
 
     # Set up a callback to acknowledge a message. This closes around an event
     # so that it can signal that it is done and the main thread can continue.
-    job_done = threading.Event()
-
     def callback(message):
         try:
             if (message.attributes['DlpJobName'] == operation.name):
@@ -642,6 +640,9 @@ def inspect_bigquery(project, bigquery_project, dataset_id, table_id,
             raise
 
     # Register the callback and wait on the event.
+    subscription = subscriber.subscribe(subscription_path, callback)
+    job_done = threading.Event()
+
     subscription.open(callback)
     finished = job_done.wait(timeout=timeout)
     if not finished:
