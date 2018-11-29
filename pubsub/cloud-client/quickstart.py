@@ -20,9 +20,9 @@ import argparse
 
 def end_to_end(project_id, topic_name, subscription_name, num_messages):
     # [START pubsub_quickstart_end2end_basic]
-    import sys
     import time
 
+    from google.api_core.exceptions import NotFound
     from google.cloud import pubsub_v1
 
     # TODO project_id = "Your Google Cloud Project ID"
@@ -46,7 +46,7 @@ def end_to_end(project_id, topic_name, subscription_name, num_messages):
     # Create the topic.
     try:
         publisher.delete_topic(topic_path)
-    except:
+    except NotFound:
         pass
     finally:
         topic = publisher.create_topic(topic_path)
@@ -55,7 +55,7 @@ def end_to_end(project_id, topic_name, subscription_name, num_messages):
     # Create a subscription.
     try:
         subscriber.delete_subscription(subscription_path)
-    except:
+    except NotFound:
         pass
     finally:
         subscription = subscriber.create_subscription(
