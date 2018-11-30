@@ -25,7 +25,6 @@ def end_to_end(project_id, topic_name, subscription_name):
     from google.api_core.exceptions import NotFound
     from google.cloud import pubsub_v1
 
-
     def create_topic_safely(publisher, topic_path):
         try:
             publisher.delete_topic(topic_path)
