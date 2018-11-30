@@ -63,7 +63,8 @@ def subscription(subscriber_client, topic):
 
 def test_end_to_end(topic, subscription, capsys):
 
-    quickstart.end_to_end(PROJECT, topic, subscription, N)
+    delivery_times = quickstart.end_to_end(PROJECT, topic, subscription)
     out, _ = capsys.readouterr()
 
-    assert "Total publish to subscribe time for {} messages".format(N) in out
+    assert "Delivery Statistics" in out
+    assert sum(delivery_times)/len(delivery_times) < 3.0

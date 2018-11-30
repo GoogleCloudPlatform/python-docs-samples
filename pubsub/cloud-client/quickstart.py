@@ -18,111 +18,101 @@
 import argparse
 
 
-def end_to_end(project_id, topic_name, subscription_name, num_messages):
-    # [START pubsub_quickstart_end2end_basic]
+def end_to_end(project_id, topic_name, subscription_name):
+    # [START pubsub_end_to_end]
     import time
 
     from google.api_core.exceptions import NotFound
     from google.cloud import pubsub_v1
 
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO topic_name = "Your Pub/Sub topic name"
-    # TODO subscription_name = "Your Pub/Sub subscription name"
-    # TODO num_messages = number of messages to test end-to-end
 
-    # Instantiate a publisher and a subscriber client
-    publisher = pubsub_v1.PublisherClient()
-    subscriber = pubsub_v1.SubscriberClient()
+    def create_topic_safely(publisher, topic_path):
+        try:
+            publisher.delete_topic(topic_path)
+        except NotFound:
+            pass
 
-    # The `topic_path` method creates a fully qualified identifier
-    # in the form `projects/{project_id}/topics/{topic_name}`
-    topic_path = publisher.topic_path(project_id, topic_name)
-
-    # The `subscription_path` method creates a fully qualified identifier
-    # in the form `projects/{project_id}/subscriptions/{subscription_name}`
-    subscription_path = subscriber.subscription_path(
-        project_id, subscription_name)
-
-    # Create a topic.
-    try:
-        publisher.delete_topic(topic_path)
-    except NotFound:
-        pass
-    finally:
         topic = publisher.create_topic(topic_path)
         print('Topic created: \"{}\"'.format(topic.name))
 
-    # Create a subscription.
-    try:
-        subscriber.delete_subscription(subscription_path)
-    except NotFound:
-        pass
-    finally:
+    def create_subscription_safely(subscriber, subscription_path):
+        try:
+            subscriber.delete_subscription(subscription_path)
+        except NotFound:
+            pass
+
         subscription = subscriber.create_subscription(
             subscription_path, topic_path)
         print('Subscription created: \"{}\"'.format(subscription.name))
 
-    # `data` is roughly 10 Kb.
-    data = 'x' * 9600
+    # TODO project_id = "Your Pub/Sub project id"
+    # TODO topic_name = "Your Pub/Sub topic name"
+    # TODO subscription_name = "Your Pub/Sub subscription name"
+
+    publisher = pubsub_v1.PublisherClient()
+    subscriber = pubsub_v1.SubscriberClient()
+    topic_path = publisher.topic_path(project_id, topic_name)
+    subscription_path = subscriber.subscription_path(
+        project_id, subscription_name)
+
+    create_topic_safely(publisher, topic_path)
+    create_subscription_safely(subscriber, subscription_path)
+
     # `data` must be a bytestring.
+    data = 'x' * 10000
     data = data.encode('utf-8')
     # Initialize an empty dictionary to track messages.
     tracker = dict()
-    pubsub_time = 0.0
+    delivery_times = []
+    num_messages = 10
 
     # Publish messages.
     for i in range(num_messages):
-        # When we publish a message, the client returns a future.
         future = publisher.publish(topic_path, data=data)
-
-        tracker.update({i: {'index': i,
-                            'pubtime': time.time(),
-                            'subtime': None}})
-
-        # `future.result()` blocks and returns a unique message ID per message.
-        tracker[future.result()] = tracker.pop(i)
+        tracker.update({future: {'pubtime': time.time(),
+                                 'subtime': None}})
+        # Update the old key, which is the publish future, with the unique
+        # identifier per message returned by the `result()` method.
+        tracker[future.result()] = tracker.pop(future)
 
     print('\nPublished all messages.')
 
-    def callback(message):
-        # Unacknowledged messages will be sent again.
+    def process_message_callback(message):
         message.ack()
-        # Update message `subtime`.
         tracker[message.message_id]['subtime'] = time.time()
 
-    # Receive messages. The subscriber is nonblocking.
-    subscriber.subscribe(subscription_path, callback=callback)
+    # Receive messages. `subscriber` is nonblocking.
+    subscriber.subscribe(subscription_path, callback=process_message_callback)
 
     print('\nListening for messages...')
 
     while True:
-        # Deplete messages in `tracker` every time we have complete info
-        # of a message.
-        for msg_id in list(tracker):
-            pubtime = tracker[msg_id]['pubtime']
-            subtime = tracker[msg_id]['subtime']
-            if subtime is not None:
-                pubsub_time += subtime - pubtime
-                del tracker[msg_id]
+        # Extract delivery times from `tracker` and deplete it over time.
+        for message_id in list(tracker):
+            if tracker[message_id]['subtime'] is not None:
+                delivery_times.append(tracker[message_id]['subtime'] -
+                                      tracker[message_id]['pubtime'])
+                del tracker[message_id]
 
-        # Exit if `tracker` is empty i.e. all the messages' publish-subscribe
-        # time have been accounted for.
+        # Exit if all the delivery times have been accounted for.
         if len(tracker) == 0:
-            print('\nTotal publish to subscribe time for {} messages: \
-                  {:.6f}s.'.format(num_messages, pubsub_time))
+            print('\nDelivery Statistics')
+            print('Average time: {:.6f}s'.format(
+                sum(delivery_times)/num_messages))
+            print('Best time: {:.6f}s'.format(min(delivery_times)))
             break
         else:
             print('Messages countdown: {}'.format(len(tracker)))
             # Sleep the thread at 5Hz to save on resources.
             time.sleep(1./5)
-    # [END pubsub_quickstart_end2end_basic]
+    # [END pubsub_end_to_end]
+    return delivery_times
 
 
-def end_to_end_standard(project_id, topic_name, subscription_name,
-                        num_messages):
-    # [START pubsub_quickstart_end2end_standard]
+def end_to_end_standard(project_id, topic_name, subscription_name):
+    # [START pubsub_end_to_end_standard]
     pass
-    # [END pubsub_quickstart_end2end_standard]
+    # [END pubsub_end_to_end_standard]
 
 
 if __name__ == '__main__':
@@ -139,22 +129,17 @@ if __name__ == '__main__':
     basic_parser.add_argument('topic_name', help='Your topic name')
     basic_parser.add_argument('subscription_name',
                               help='Your subscription name')
-    basic_parser.add_argument('num_messages', type=int,
-                              help='Number of test messages')
 
     standard_parser = subparsers.add_parser('standard',
                                             help=end_to_end_standard.__doc__)
     standard_parser.add_argument('topic_name', help='Your topic name')
     standard_parser.add_argument('subscription_name',
                                  help='Your subscription name')
-    standard_parser.add_argument('num_messages', type=int,
-                                 help='Number of test messages')
 
     args = parser.parse_args()
 
     if args.command == 'basic':
-        end_to_end(args.project_id, args.topic_name, args.subscription_name,
-                   args.num_messages)
+        end_to_end(args.project_id, args.topic_name, args.subscription_name)
     if args.command == 'standard':
         end_to_end_standard(args.project_id, args.topic_name,
-                            args.subscription_name, args.num_messages)
+                            args.subscription_name)
