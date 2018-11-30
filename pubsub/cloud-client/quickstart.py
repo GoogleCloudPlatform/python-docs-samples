@@ -66,14 +66,14 @@ def end_to_end(project_id, topic_name, subscription_name):
     num_messages = 10
 
     def resolve_future_callback(future):
-        # Resolve the future asynchronously and update key in `tracker`.
+        # Resolve the future and update `tracker` asynchronously.
+        tracker.update({future: {'pubtime': time.time(), 'subtime': None}})
         message_id = future.result()
         tracker[message_id] = tracker.pop(future)
 
     def publish_messages(publish_func, callback):
         for i in range(num_messages):
             future = publish_func(topic_path, data=data, index=str(i))
-            tracker.update({future: {'pubtime': time.time(), 'subtime': None}})
             callback(future)
 
     # Publish messages.
