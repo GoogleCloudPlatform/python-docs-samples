@@ -19,7 +19,7 @@ import argparse
 
 
 def export_assets(project_id, dump_file_path):
-    # [START asset_quickstart_exportassets]
+    # [START asset_quickstart_export_assets]
     from google.cloud import asset_v1beta1
     from google.cloud.asset_v1beta1.proto import asset_service_pb2
 
@@ -32,7 +32,7 @@ def export_assets(project_id, dump_file_path):
     output_config.gcs_destination.uri = dump_file_path
     response = client.export_assets(parent, output_config)
     print(response.result())
-    # [END asset_quickstart_exportassets]
+    # [END asset_quickstart_export_assets]
 
 
 if __name__ == '__main__':
