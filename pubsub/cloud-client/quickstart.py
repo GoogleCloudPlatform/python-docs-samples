@@ -65,24 +65,28 @@ def end_to_end(project_id, topic_name, subscription_name):
     delivery_times = []
     num_messages = 10
 
-    # Publish messages.
-    for i in range(num_messages):
-        future = publisher.publish(topic_path, data=data)
-        tracker.update({future: {'pubtime': time.time(),
-                                 'subtime': None}})
-        # Update the old key, which is the publish future, with the unique
-        # identifier per message returned by the `result()` method.
-        tracker[future.result()] = tracker.pop(future)
+    def resolve_future_callback(future):
+        # Resolve the future asynchronously and update key in `tracker`.
+        message_id = future.result()
+        tracker[message_id] = tracker.pop(future)
 
+    def publish_messages(publish_func, callback):
+        for i in range(num_messages):
+            future = publish_func(topic_path, data=data, index=str(i))
+            tracker.update({future: {'pubtime': time.time(), 'subtime': None}})
+            callback(future)
+
+    # Publish messages.
+    publish_messages(publisher.publish, resolve_future_callback)
     print('\nPublished all messages.')
 
     def process_message_callback(message):
         message.ack()
         tracker[message.message_id]['subtime'] = time.time()
+        print(message.attributes['index'])
 
-    # Receive messages. `subscriber` is nonblocking.
+    # Receive messages asynchronously.
     subscriber.subscribe(subscription_path, callback=process_message_callback)
-
     print('\nListening for messages...')
 
     while True:
@@ -97,13 +101,12 @@ def end_to_end(project_id, topic_name, subscription_name):
         if len(tracker) == 0:
             print('\nDelivery Statistics')
             print('Average time: {:.6f}s'.format(
-                sum(delivery_times)/num_messages))
+                sum(delivery_times)/len(delivery_times)))
             print('Best time: {:.6f}s'.format(min(delivery_times)))
             break
         else:
-            print('Messages countdown: {}'.format(len(tracker)))
             # Sleep the thread at 5Hz to save on resources.
-            time.sleep(1./5)
+            time.sleep(1.)
     # [END pubsub_end_to_end]
     return delivery_times
 
