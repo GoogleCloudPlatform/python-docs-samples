@@ -12,6 +12,7 @@
 # limitations under the License.
 
 import datetime
+from time import sleep
 
 from google.cloud import firestore
 import google.cloud.exceptions
@@ -608,8 +609,9 @@ def listen_document():
     # [START listen_document]
 
     # Create a callback on_snapshot function to capture changes
-    def on_snapshot(doc_snapshot):
-        print(u'Received doc snapshot: {}'.format(doc_snapshot.to_dict()))
+    def on_snapshot(doc_snapshot, changes, read_time):
+        for doc in doc_snapshot:
+            print(u'Received document snapshot: {}'.format(doc.id))
 
     doc_ref = db.collection(u'cities').document(u'SF')
 
@@ -617,7 +619,7 @@ def listen_document():
     doc_watch = doc_ref.on_snapshot(on_snapshot)
     # [END listen_document]
 
-    print(u'Creating document')
+    # Creating document
     data = {
         u'name': u'San Francisco',
         u'state': u'CA',
@@ -625,8 +627,8 @@ def listen_document():
         u'capital': False,
         u'population': 860000
     }
-    db.collection(u'cities').document(u'SF').set(data)
-
+    doc_ref.set(data)
+    sleep(1)
     # [START detach_listener]
     # Terminate watch on a document
     doc_watch.unsubscribe()
@@ -638,11 +640,11 @@ def listen_multiple():
     # [START listen_multiple]
 
     # Create a callback on_snapshot function to capture changes
-    def on_snapshot(col_snapshot):
+    def on_snapshot(col_snapshot, changes, read_time):
         print(u'Callback received query snapshot.')
-        print(u'Current cities in California: ')
-        for doc in col_snapshot.documents:
-            print(u'{} => {}'.format(doc.id))
+        print(u'Current cities in California:')
+        for doc in col_snapshot:
+            print(u'{}'.format(doc.id))
 
     col_query = db.collection(u'cities').where(u'state', u'==', u'CA')
 
@@ -650,53 +652,7 @@ def listen_multiple():
     query_watch = col_query.on_snapshot(on_snapshot)
 
     # [END listen_multiple]
-    mtv_document = db.collection(u'cities').document(u'MTV')
-    print(u'Creating document')
-    mtv_document.set({
-        u'name': u'Mountain View',
-        u'state': u'CA',
-        u'country': u'USA',
-        u'capital': False,
-        u'population': 80000
-    })
-
-    print(u'Modifying document')
-    mtv_document.update({
-        u'name': u'Mountain View',
-        u'state': u'CA',
-        u'country': u'USA',
-        u'capital': False,
-        u'population': 90000
-    })
-
-    print(u'Delete document')
-    mtv_document.delete()
-    query_watch.unsubscribe()
-
-
-def listen_for_changes():
-    db = firestore.Client()
-    # [START listen_for_changes]
-
-    # Create a callback on_snapshot function to capture changes
-    def on_snapshot(col_snapshot, changes):
-        print(u'Callback received query snapshot.')
-        print(u'Current cities in California: ')
-        for change in changes:
-            if change.type.name == "ADDED":
-                print(u'New city: {}'.format(change.document.data()))
-            elif change.type.name == "MODIFIED":
-                print(u'Modified city: {}'.format(change.document.data()))
-            elif change.type.name == "REMOVED":
-                print(u'Removed city: {}'.format(change.document.data()))
-
-    col_query = db.collection(u'cities').where(u'state', u'==', u'CA')
-
-    # Watch the collection query
-    query_watch = col_query.on_snapshot(on_snapshot)
-
-    # [END listen_for_changes]
-    print(u'Creating document')
+    # Creating document
     data = {
         u'name': u'San Francisco',
         u'state': u'CA',
@@ -705,7 +661,54 @@ def listen_for_changes():
         u'population': 860000
     }
     db.collection(u'cities').document(u'SF').set(data)
+    sleep(1)
+    query_watch.unsubscribe()
 
+
+def listen_for_changes():
+    db = firestore.Client()
+    # [START listen_for_changes]
+
+    # Create a callback on_snapshot function to capture changes
+    def on_snapshot(col_snapshot, changes, read_time):
+        print(u'Callback received query snapshot.')
+        print(u'Current cities in California: ')
+        for change in changes:
+            if change.type.name == "ADDED":
+                print(u'New city: {}'.format(change.document.id))
+            elif change.type.name == "MODIFIED":
+                print(u'Modified city: {}'.format(change.document.id))
+            elif change.type.name == "REMOVED":
+                print(u'Removed city: {}'.format(change.document.id))
+
+    col_query = db.collection(u'cities').where(u'state', u'==', u'CA')
+
+    # Watch the collection query
+    query_watch = col_query.on_snapshot(on_snapshot)
+
+    # [END listen_for_changes]
+    mtv_document = db.collection(u'cities').document(u'MTV')
+    # Creating document
+    mtv_document.set({
+        u'name': u'Mountain View',
+        u'state': u'CA',
+        u'country': u'USA',
+        u'capital': False,
+        u'population': 80000
+    })
+
+    # Modifying document
+    mtv_document.update({
+        u'name': u'Mountain View',
+        u'state': u'CA',
+        u'country': u'USA',
+        u'capital': False,
+        u'population': 90000
+    })
+
+    # Delete document
+    mtv_document.delete()
+    sleep(1)
     query_watch.unsubscribe()
 
 
