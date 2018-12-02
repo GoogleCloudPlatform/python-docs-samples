@@ -85,6 +85,8 @@ def main(project_id, instance_id, table_id):
     # [END writing_rows]
 
     # [START creating_a_filter]
+    # Create a filter to only retrieve the most recent version of the cell
+    # for each column accross entire row.
     row_filter = row_filters.CellsColumnLimitFilter(1)
     # [END creating_a_filter]
 
@@ -92,7 +94,6 @@ def main(project_id, instance_id, table_id):
     print('Getting a single greeting by row key.')
     key = 'greeting0'.encode()
 
-    # Only retrieve the most recent version of the cell.
     row = table.read_row(key, row_filter)
     cell = row.cells[column_family_id][column][0]
     print(cell.value.decode('utf-8'))
