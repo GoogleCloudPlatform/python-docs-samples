@@ -24,10 +24,6 @@ https://cloud.google.com/natural-language/docs.
 import argparse
 import sys
 
-from google.cloud import language
-from google.cloud.language import enums
-from google.cloud.language import types
-
 
 def sentiment_text(text):
     # [START language_sentiment_text]
