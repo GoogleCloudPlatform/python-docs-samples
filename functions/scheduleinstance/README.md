@@ -7,5 +7,5 @@ See:
 * [Cloud Functions Instance Scheduling tutorial][tutorial]
 * [Cloud Functions Instance Scheduling sample source code][code]
 
-[tutorial]: https://cloud.google.com/scheduler/docs/scheduling-instances-with-cloud-scheduler
+[tutorial]: https://cloud.google.com/scheduler/docs/start-and-stop-compute-engine-instances-on-a-schedule
 [code]: main.py
