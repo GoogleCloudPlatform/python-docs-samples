@@ -193,7 +193,7 @@ def syntax_file(gcs_uri):
     # [START language_syntax_gcs]
     from google.cloud import language
     from google.cloud.language import enums
-    from google.cloud.language import types    
+    from google.cloud.language import types
     """Detects syntax in the file located in Google Cloud Storage."""
     client = language.LanguageServiceClient()
 
@@ -221,12 +221,12 @@ def entity_sentiment_text(text):
     import six
     from google.cloud import language
     from google.cloud.language import enums
-    from google.cloud.language import types    
+    from google.cloud.language import types
     """Detects entity sentiment in the provided text."""
     client = language.LanguageServiceClient()
 
     # TODO(developer): Uncomment the following line to run this code.
-    # text = 'Your text to analyze, e.g. Hello, world!'    
+    # text = 'Your text to analyze, e.g. Hello, world!'
 
     if isinstance(text, six.binary_type):
         text = text.decode('utf-8')
@@ -260,12 +260,12 @@ def entity_sentiment_file(gcs_uri):
     # [START language_entity_sentiment_gcs]
     from google.cloud import language
     from google.cloud.language import enums
-    from google.cloud.language import types    
+    from google.cloud.language import types
     """Detects entity sentiment in a Google Cloud Storage file."""
     client = language.LanguageServiceClient()
 
     # TODO(developer): Uncomment the following line to run this code.
-    # gcs_uri = 'The gcs uri to your file, e.g. gs://my_bucket/my_file'    
+    # gcs_uri = 'The gcs uri to your file, e.g. gs://my_bucket/my_file'
 
     document = types.Document(
         gcs_content_uri=gcs_uri,
@@ -296,12 +296,12 @@ def classify_text(text):
     import six
     from google.cloud import language
     from google.cloud.language import enums
-    from google.cloud.language import types    
+    from google.cloud.language import types
     """Classifies content categories of the provided text."""
     client = language.LanguageServiceClient()
 
     # TODO(developer): Uncomment the following line to run this code.
-    # text = 'Your text to analyze, e.g. Hello, world!'    
+    # text = 'Your text to analyze, e.g. Hello, world!'
 
     if isinstance(text, six.binary_type):
         text = text.decode('utf-8')
@@ -323,7 +323,7 @@ def classify_file(gcs_uri):
     # [START language_classify_gcs]
     from google.cloud import language
     from google.cloud.language import enums
-    from google.cloud.language import types    
+    from google.cloud.language import types
     """Classifies content categories of the text in a Google Cloud Storage
     file.
     """
