@@ -33,7 +33,7 @@ def detect_intent_with_texttospeech_response(project_id, session_id, texts,
     the response in an audio format.
 
     Using the same `session_id` between requests allows continuation
-    of the conversaion."""
+    of the conversation."""
     import dialogflow_v2beta1 as dialogflow
     session_client = dialogflow.SessionsClient()
 
