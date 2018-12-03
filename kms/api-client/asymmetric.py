@@ -108,7 +108,7 @@ def signAsymmetric(message, client, key_path):
                     .asymmetricSign(name=key_path,
                                     body={'digest': digest_JSON})
     response = request.execute()
-    return base64.b64decode(response.get('signature', None))
+    return base64.b64decode(response['signature'])
 # [END kms_sign_asymmetric]
 
 
