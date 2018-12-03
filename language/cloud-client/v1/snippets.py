@@ -86,6 +86,7 @@ def sentiment_file(gcs_uri):
 
 def entities_text(text):
     # [START language_entities_text]
+    import six
     from google.cloud import language
     from google.cloud.language import enums
     from google.cloud.language import types
@@ -157,6 +158,7 @@ def entities_file(gcs_uri):
 
 def syntax_text(text):
     # [START language_syntax_text]
+    import six
     from google.cloud import language
     from google.cloud.language import enums
     from google.cloud.language import types
@@ -216,6 +218,7 @@ def syntax_file(gcs_uri):
 
 def entity_sentiment_text(text):
     # [START language_entity_sentiment_text]
+    import six
     from google.cloud import language
     from google.cloud.language import enums
     from google.cloud.language import types    
@@ -290,6 +293,7 @@ def entity_sentiment_file(gcs_uri):
 
 def classify_text(text):
     # [START language_classify_text]
+    import six
     from google.cloud import language
     from google.cloud.language import enums
     from google.cloud.language import types    
