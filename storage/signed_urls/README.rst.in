@@ -1,0 +1,22 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Storage
+  short_name: Cloud Storage
+  url: https://cloud.google.com/storage/docs
+  description: >
+    `Google Cloud Storage`_ allows world-wide storage and retrieval of any
+    amount of data at any time.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Generate Signed URLs in Python
+  file: generate_signed_urls.py
+  show_help: true
+
+cloud_client_library: false
+
+folder: storage/signed_urls

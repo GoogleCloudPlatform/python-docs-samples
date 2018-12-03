@@ -26,7 +26,7 @@ from reference_image_management import list_reference_images
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 LOCATION = 'us-west1'
 
-GCS_URI = 'gs://python-docs-samples-tests/product_search/product_sets.csv'
+GCS_URI = 'gs://cloud-samples-data/vision/product_search/product_sets.csv'
 PRODUCT_SET_DISPLAY_NAME = 'fake_product_set_display_name_for_testing'
 PRODUCT_SET_ID = 'fake_product_set_id_for_testing'
 PRODUCT_ID_1 = 'fake_product_id_for_testing_1'
