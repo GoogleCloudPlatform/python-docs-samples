@@ -296,7 +296,7 @@ def test_send_command(test_topic, capsys):
     out, _ = capsys.readouterr()
 
     # Pre-process commands
-    for i in range(1, 3):
+    for i in range(1, 5):
         client.loop()
         time.sleep(1)
 
@@ -306,7 +306,7 @@ def test_send_command(test_topic, capsys):
     out, _ = capsys.readouterr()
 
     # Process commands
-    for i in range(1, 3):
+    for i in range(1, 5):
         client.loop()
         time.sleep(1)
 
