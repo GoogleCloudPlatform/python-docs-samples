@@ -213,7 +213,7 @@ def parse_command_line_args():
     parser.add_argument(
             '--mqtt_bridge_port',
             choices=(8883, 443),
-            default=8883,
+            default=443,
             type=int,
             help='MQTT bridge port.')
     parser.add_argument(
