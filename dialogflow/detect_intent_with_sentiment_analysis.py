@@ -34,7 +34,7 @@ def detect_intent_with_sentiment_analysis(project_id, session_id, texts,
     sentiment of the query text.
 
     Using the same `session_id` between requests allows continuation
-    of the conversaion."""
+    of the conversation."""
     import dialogflow_v2beta1 as dialogflow
     session_client = dialogflow.SessionsClient()
 

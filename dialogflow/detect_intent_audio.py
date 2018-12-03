@@ -36,7 +36,7 @@ def detect_intent_audio(project_id, session_id, audio_file_path,
     """Returns the result of detect intent with an audio file as input.
 
     Using the same `session_id` between requests allows continuation
-    of the conversaion."""
+    of the conversation."""
     import dialogflow_v2 as dialogflow
 
     session_client = dialogflow.SessionsClient()
