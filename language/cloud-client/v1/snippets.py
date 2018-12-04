@@ -25,18 +25,16 @@ import argparse
 import sys
 
 
-def sentiment_text(text):
+def sentiment_text():
     # [START language_sentiment_text]
     import six
     from google.cloud import language
     from google.cloud.language import enums
     from google.cloud.language import types
 
-    """Detects sentiment in the text."""
-    client = language.LanguageServiceClient()
+    text = 'Hello, world!'
 
-    # TODO(developer): Uncomment the following line to run this code.
-    # text = 'Your text to analyze, e.g. Hello, world!'
+    client = language.LanguageServiceClient()
 
     if isinstance(text, six.binary_type):
         text = text.decode('utf-8')
@@ -57,16 +55,15 @@ def sentiment_text(text):
     # [END language_sentiment_text]
 
 
-def sentiment_file(gcs_uri):
+def sentiment_file():
     # [START language_sentiment_gcs]
     from google.cloud import language
     from google.cloud.language import enums
     from google.cloud.language import types
-    """Detects sentiment in the file located in Google Cloud Storage."""
-    client = language.LanguageServiceClient()
 
-    # TODO(developer): Uncomment the following line to run this code.
-    # gcs_uri = 'The gcs uri to your file, e.g. gs://my_bucket/my_file'
+    gcs_uri = 'gs://cloud-samples-data/language/hello.txt'
+
+    client = language.LanguageServiceClient()
 
     # Instantiates a plain text document.
     # [START language_python_migration_document_gcs]
@@ -84,17 +81,16 @@ def sentiment_file(gcs_uri):
     # [END language_sentiment_gcs]
 
 
-def entities_text(text):
+def entities_text():
     # [START language_entities_text]
     import six
     from google.cloud import language
     from google.cloud.language import enums
     from google.cloud.language import types
-    """Detects entities in the text."""
-    client = language.LanguageServiceClient()
 
-    # TODO(developer): Uncomment the following line to run this code.
-    # text = 'Your text to analyze, e.g. Hello, world!'
+    text = 'President Kennedy spoke at the White House.'
+
+    client = language.LanguageServiceClient()
 
     if isinstance(text, six.binary_type):
         text = text.decode('utf-8')
@@ -124,16 +120,15 @@ def entities_text(text):
     # [END language_entities_text]
 
 
-def entities_file(gcs_uri):
+def entities_file():
     # [START language_entities_gcs]
     from google.cloud import language
     from google.cloud.language import enums
     from google.cloud.language import types
-    """Detects entities in the file located in Google Cloud Storage."""
-    client = language.LanguageServiceClient()
 
-    # TODO(developer): Uncomment the following line to run this code.
-    # gcs_uri = 'The gcs uri to your file, e.g. gs://my_bucket/my_file'
+    gcs_uri = 'gs://cloud-samples-data/language/president.txt'
+
+    client = language.LanguageServiceClient()
 
     # Instantiates a plain text document.
     document = types.Document(
@@ -156,17 +151,16 @@ def entities_file(gcs_uri):
     # [END language_entities_gcs]
 
 
-def syntax_text(text):
+def syntax_text():
     # [START language_syntax_text]
     import six
     from google.cloud import language
     from google.cloud.language import enums
     from google.cloud.language import types
-    """Detects syntax in the text."""
-    client = language.LanguageServiceClient()
 
-    # TODO(developer): Uncomment the following line to run this code.
-    # text = 'Your text to analyze, e.g. Hello, world!'
+    text = 'President Kennedy spoke at the White House.'
+
+    client = language.LanguageServiceClient()
 
     if isinstance(text, six.binary_type):
         text = text.decode('utf-8')
@@ -189,16 +183,15 @@ def syntax_text(text):
     # [END language_syntax_text]
 
 
-def syntax_file(gcs_uri):
+def syntax_file():
     # [START language_syntax_gcs]
     from google.cloud import language
     from google.cloud.language import enums
     from google.cloud.language import types
-    """Detects syntax in the file located in Google Cloud Storage."""
-    client = language.LanguageServiceClient()
 
-    # TODO(developer): Uncomment the following line to run this code.
-    # gcs_uri = 'The gcs uri to your file, e.g. gs://my_bucket/my_file'
+    gcs_uri = 'gs://cloud-samples-data/language/president.txt'
+
+    client = language.LanguageServiceClient()
 
     # Instantiates a plain text document.
     document = types.Document(
@@ -216,17 +209,16 @@ def syntax_file(gcs_uri):
     # [END language_syntax_gcs]
 
 
-def entity_sentiment_text(text):
+def entity_sentiment_text():
     # [START language_entity_sentiment_text]
     import six
     from google.cloud import language
     from google.cloud.language import enums
     from google.cloud.language import types
-    """Detects entity sentiment in the provided text."""
-    client = language.LanguageServiceClient()
 
-    # TODO(developer): Uncomment the following line to run this code.
-    # text = 'Your text to analyze, e.g. Hello, world!'
+    text = 'President Kennedy spoke at the White House.'
+
+    client = language.LanguageServiceClient()
 
     if isinstance(text, six.binary_type):
         text = text.decode('utf-8')
@@ -256,16 +248,15 @@ def entity_sentiment_text(text):
     # [END language_entity_sentiment_text]
 
 
-def entity_sentiment_file(gcs_uri):
+def entity_sentiment_file():
     # [START language_entity_sentiment_gcs]
     from google.cloud import language
     from google.cloud.language import enums
     from google.cloud.language import types
-    """Detects entity sentiment in a Google Cloud Storage file."""
-    client = language.LanguageServiceClient()
 
-    # TODO(developer): Uncomment the following line to run this code.
-    # gcs_uri = 'The gcs uri to your file, e.g. gs://my_bucket/my_file'
+    gcs_uri = 'gs://cloud-samples-data/language/president.txt'
+
+    client = language.LanguageServiceClient()
 
     document = types.Document(
         gcs_content_uri=gcs_uri,
@@ -291,17 +282,18 @@ def entity_sentiment_file(gcs_uri):
     # [END language_entity_sentiment_gcs]
 
 
-def classify_text(text):
+def classify_text():
     # [START language_classify_text]
     import six
     from google.cloud import language
     from google.cloud.language import enums
     from google.cloud.language import types
-    """Classifies content categories of the provided text."""
-    client = language.LanguageServiceClient()
 
-    # TODO(developer): Uncomment the following line to run this code.
-    # text = 'Your text to analyze, e.g. Hello, world!'
+    text = 'Android is a mobile operating system developed by Google, ' + \
+           'based on the Linux kernel and designed primarily for ' + \
+           'touchscreen mobile devices such as smartphones and tablets.'
+
+    client = language.LanguageServiceClient()
 
     if isinstance(text, six.binary_type):
         text = text.decode('utf-8')
@@ -319,18 +311,16 @@ def classify_text(text):
     # [END language_classify_text]
 
 
-def classify_file(gcs_uri):
+def classify_file():
     # [START language_classify_gcs]
     from google.cloud import language
     from google.cloud.language import enums
     from google.cloud.language import types
-    """Classifies content categories of the text in a Google Cloud Storage
-    file.
-    """
+
+    gcs_uri = 'gs://cloud-samples-data/language/android.txt'
+    
     client = language.LanguageServiceClient()
 
-    # TODO(developer): Uncomment the following line to run this code.
-    # gcs_uri = 'The gcs uri to your file, e.g. gs://my_bucket/my_file'
 
     document = types.Document(
         gcs_content_uri=gcs_uri,
@@ -353,63 +343,53 @@ if __name__ == '__main__':
 
     classify_text_parser = subparsers.add_parser(
         'classify-text', help=classify_text.__doc__)
-    classify_text_parser.add_argument('text')
 
     classify_text_parser = subparsers.add_parser(
         'classify-file', help=classify_file.__doc__)
-    classify_text_parser.add_argument('gcs_uri')
 
     sentiment_entities_text_parser = subparsers.add_parser(
         'sentiment-entities-text', help=entity_sentiment_text.__doc__)
-    sentiment_entities_text_parser.add_argument('text')
 
     sentiment_entities_file_parser = subparsers.add_parser(
         'sentiment-entities-file', help=entity_sentiment_file.__doc__)
-    sentiment_entities_file_parser.add_argument('gcs_uri')
 
     sentiment_text_parser = subparsers.add_parser(
         'sentiment-text', help=sentiment_text.__doc__)
-    sentiment_text_parser.add_argument('text')
 
     sentiment_file_parser = subparsers.add_parser(
         'sentiment-file', help=sentiment_file.__doc__)
-    sentiment_file_parser.add_argument('gcs_uri')
 
     entities_text_parser = subparsers.add_parser(
         'entities-text', help=entities_text.__doc__)
-    entities_text_parser.add_argument('text')
 
     entities_file_parser = subparsers.add_parser(
         'entities-file', help=entities_file.__doc__)
-    entities_file_parser.add_argument('gcs_uri')
 
     syntax_text_parser = subparsers.add_parser(
         'syntax-text', help=syntax_text.__doc__)
-    syntax_text_parser.add_argument('text')
 
     syntax_file_parser = subparsers.add_parser(
         'syntax-file', help=syntax_file.__doc__)
-    syntax_file_parser.add_argument('gcs_uri')
 
     args = parser.parse_args()
 
     if args.command == 'sentiment-text':
-        sentiment_text(args.text)
+        sentiment_text()
     elif args.command == 'sentiment-file':
-        sentiment_file(args.gcs_uri)
+        sentiment_file()
     elif args.command == 'entities-text':
-        entities_text(args.text)
+        entities_text()
     elif args.command == 'entities-file':
-        entities_file(args.gcs_uri)
+        entities_file()
     elif args.command == 'syntax-text':
-        syntax_text(args.text)
+        syntax_text()
     elif args.command == 'syntax-file':
-        syntax_file(args.gcs_uri)
+        syntax_file()
     elif args.command == 'sentiment-entities-text':
-        entity_sentiment_text(args.text)
+        entity_sentiment_text()
     elif args.command == 'sentiment-entities-file':
-        entity_sentiment_file(args.gcs_uri)
+        entity_sentiment_file()
     elif args.command == 'classify-text':
-        classify_text(args.text)
+        classify_text()
     elif args.command == 'classify-file':
-        classify_file(args.gcs_uri)
+        classify_file()
