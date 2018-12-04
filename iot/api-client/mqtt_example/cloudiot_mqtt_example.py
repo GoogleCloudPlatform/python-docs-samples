@@ -158,6 +158,13 @@ def get_client(
     # Subscribe to the config topic.
     client.subscribe(mqtt_config_topic, qos=1)
 
+    # The topic that the device will receive commands on.
+    mqtt_command_topic = '/devices/{}/commands/#'.format(device_id)
+
+    # Subscribe to the commands topic, QoS 1 enables message acknowledgement.
+    print('Subscribing to {}'.format(mqtt_command_topic))
+    client.subscribe(mqtt_command_topic, qos=0)
+
     return client
 # [END iot_mqtt_config]
 
