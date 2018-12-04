@@ -13,17 +13,23 @@
 # limitations under the License.
 
 import os
+import sys
 import time
 
+# Add command receiver for bootstrapping device registry / device for testing
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'mqtt_example'))  # noqa
 from google.cloud import pubsub
 import pytest
 
 import manager
+import cloudiot_mqtt_example
 
 cloud_region = 'us-central1'
 device_id_template = 'test-device-{}'
+ca_cert_path = '../mqtt_example/resources/roots.pem'
 es_cert_path = 'resources/ec_public.pem'
 rsa_cert_path = 'resources/rsa_cert.pem'
+rsa_private_path = 'resources/rsa_private.pem'  # Must match rsa_cert
 topic_id = 'test-device-events-{}'.format(int(time.time()))
 
 project_id = os.environ['GCLOUD_PROJECT']
@@ -270,3 +276,46 @@ def test_add_patch_delete_es256(test_topic, capsys):
 
     manager.delete_registry(
             service_account_json, project_id, cloud_region, registry_id)
+
+
+def test_send_command(test_topic, capsys):
+    device_id = device_id_template.format('RSA256')
+    manager.create_registry(
+            service_account_json, project_id, cloud_region, pubsub_topic,
+            registry_id)
+    manager.create_rs256_device(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id, rsa_cert_path)
+
+    # Exercize the functionality
+    client = cloudiot_mqtt_example.get_client(
+        project_id, cloud_region, registry_id, device_id,
+        rsa_private_path, 'RS256', ca_cert_path,
+        'mqtt.googleapis.com', 443)
+    client.loop_start()
+    out, _ = capsys.readouterr()
+
+    # Pre-process commands
+    for i in range(1, 5):
+        client.loop()
+        time.sleep(1)
+
+    manager.send_command(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id, 'me want cookies')
+    out, _ = capsys.readouterr()
+
+    # Process commands
+    for i in range(1, 5):
+        client.loop()
+        time.sleep(1)
+
+    # Clean up
+    manager.delete_device(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id)
+    manager.delete_registry(
+            service_account_json, project_id, cloud_region, registry_id)
+
+    assert 'Sending command to device' in out
+    assert '400' not in out
