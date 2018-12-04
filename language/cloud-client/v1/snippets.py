@@ -289,8 +289,8 @@ def classify_text():
     from google.cloud.language import enums
     from google.cloud.language import types
 
-    text = 'Android is a mobile operating system developed by Google, ' + \
-           'based on the Linux kernel and designed primarily for ' + \
+    text = 'Android is a mobile operating system developed by Google, ' \
+           'based on the Linux kernel and designed primarily for ' \
            'touchscreen mobile devices such as smartphones and tablets.'
 
     client = language.LanguageServiceClient()
