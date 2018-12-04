@@ -1,0 +1,22 @@
+runtime: python
+env: flex
+
+# Use a special gunicorn worker class to support websockets.
+entrypoint: gunicorn -b :$PORT -k flask_sockets.worker main:app
+
+runtime_config:
+  python_version: 3
+
+# Use only a single instance, so that this local-memory-only chat app will work
+# consistently with multiple users. To work across multiple instances, an
+# extra-instance messaging system or data store would be needed.
+manual_scaling:
+  instances: 1
+
+
+# For applications which can take advantage of session affinity
+# (where the load balancer will attempt to route multiple connections from
+# the same user to the same App Engine instance), uncomment the folowing:
+
+# network:
+#   session_affinity: true
