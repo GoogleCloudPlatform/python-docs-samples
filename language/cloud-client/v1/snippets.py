@@ -321,7 +321,6 @@ def classify_file():
     
     client = language.LanguageServiceClient()
 
-
     document = types.Document(
         gcs_content_uri=gcs_uri,
         type=enums.Document.Type.PLAIN_TEXT)
