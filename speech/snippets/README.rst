@@ -268,6 +268,42 @@ To run this sample:
 
 
 
+Transcribe with Model Selection
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=speech/cloud-client/transcribe_auto_punctuation.py,speech/cloud-client/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python transcribe_model_selection.py
+    
+      usage: transcribe_model_selection.py [-h]
+                                           [--model {command_and_search,phone_call,video,default}]
+                                           path
+
+      Google Cloud Speech API sample that demonstrates how to select the model
+      used for speech recognition.
+
+      Example usage:
+          python transcribe_model_selection.py resources/Google_Gnome.wav --model video
+          python transcribe_model_selection.py gs://cloud-samples-tests/speech/Google_Gnome.wav --model video
+
+      positional arguments:
+        path                  File or GCS path for audio file to be recognized
+
+      optional arguments:
+        -h, --help            show this help message and exit
+        --model {command_and_search,phone_call,video,default}
+                              The speech recognition model to use
+
+
+
 Beta Samples
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
