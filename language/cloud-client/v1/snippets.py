@@ -100,10 +100,11 @@ def entities_text(text):
         print('=' * 20)
         print(u'{:<16}: {}'.format('name', entity.name))
         print(u'{:<16}: {}'.format('type', entity_type.name))
-        print(u'{:<16}: {}'.format('metadata', entity.metadata))
+        
         print(u'{:<16}: {}'.format('salience', entity.salience))
         print(u'{:<16}: {}'.format('wikipedia_url',
               entity.metadata.get('wikipedia_url', '-')))
+        print(u'{:<16}: {}'.format('mid', entity.metadata.get('mid', '-')))
     # [END language_python_migration_entities_text]
 # [END language_entities_text]
 
@@ -127,10 +128,10 @@ def entities_file(gcs_uri):
         print('=' * 20)
         print(u'{:<16}: {}'.format('name', entity.name))
         print(u'{:<16}: {}'.format('type', entity_type.name))
-        print(u'{:<16}: {}'.format('metadata', entity.metadata))
         print(u'{:<16}: {}'.format('salience', entity.salience))
         print(u'{:<16}: {}'.format('wikipedia_url',
               entity.metadata.get('wikipedia_url', '-')))
+        print(u'{:<16}: {}'.format('mid', entity.metadata.get('mid', '-')))
 # [END language_entities_gcs]
 
 
