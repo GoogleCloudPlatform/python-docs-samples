@@ -318,7 +318,7 @@ def classify_file():
     from google.cloud.language import types
 
     gcs_uri = 'gs://cloud-samples-data/language/android.txt'
-    
+
     client = language.LanguageServiceClient()
 
     document = types.Document(
