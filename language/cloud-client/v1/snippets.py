@@ -151,6 +151,7 @@ def entities_file():
         print(u'{:<16}: {}'.format('mid', entity.metadata.get('mid', '-')))
     # [END language_entities_gcs]
 
+
 def syntax_text():
     # [START language_syntax_text]
     import six
