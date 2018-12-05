@@ -216,5 +216,5 @@ class TestKMSSnippets:
                                                  cipher_bytes)
         assert plain_bytes == self.message_bytes
         assert cipher_bytes != self.message_bytes
-        plaintext = str(plain_bytes)
+        plaintext = plain_bytes.decode("utf-8")
         assert plaintext == self.message
