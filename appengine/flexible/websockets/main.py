@@ -1,4 +1,4 @@
-# Copyright 2017 Google Inc.
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 
 from __future__ import print_function
 
-# [START app]
+# [START gae_flex_websockets_app]
 from flask import Flask, render_template
 from flask_sockets import Sockets
 
@@ -35,7 +35,7 @@ def chat_socket(ws):
         clients = ws.handler.server.clients.values()
         for client in clients:
             client.ws.send(message)
-# [END app]
+# [END gae_flex_websockets_app]
 
 
 @app.route('/')

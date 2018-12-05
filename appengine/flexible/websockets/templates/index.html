@@ -1,5 +1,5 @@
 {#
-# Copyright 2015 Google Inc.
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #}
-{# [START index] #}
 <!doctype html>
 <html>
   <head>
@@ -22,7 +21,7 @@
   </head>
   <body>
 
-    <!-- [START form] -->
+    <!-- [START gae_flex_websockets_form] -->
     <p>Chat demo</p>
     <form id="chat-form">
       <textarea id="chat-text" placeholder="Enter some text..."></textarea>
@@ -38,11 +37,11 @@
       <p>Status:</p>
       <ul id="chat-status"></ul>
     </div>
-    <!-- [END form] -->
+    <!-- [END gae_flex_websockets_form] -->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script>
-    // [START js]
+    // [START gae_flex_websockets_js]
     $(function() {
       /* If the main page is served via https, the WebSocket must be served via
          "wss" (WebSocket Secure) */
@@ -91,8 +90,7 @@
         websocket.send(data);
       });
     });
-    // [END js]
+    // [END gae_flex_websockets_js]
     </script>
   </body>
 </html>
-{# [END index] #}
