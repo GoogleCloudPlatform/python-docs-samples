@@ -27,7 +27,6 @@ import sys
 
 def sentiment_text():
     # [START language_sentiment_text]
-    import six
     from google.cloud import language
     from google.cloud.language import enums
     from google.cloud.language import types
