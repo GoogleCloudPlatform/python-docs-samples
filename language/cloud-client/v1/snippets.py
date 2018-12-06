@@ -38,7 +38,7 @@ def sentiment_text():
 
     try:
         text = text.decode('utf-8')
-    except:
+    except AttributeError:
         pass
 
     # Instantiates a plain text document.
