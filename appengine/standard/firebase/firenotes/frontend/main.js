@@ -50,7 +50,7 @@ $(function(){
         personal welcome message. Otherwise, use the user's email. */
         var welcomeName = name ? name : user.email;
 
-        user.getToken().then(function(idToken) {
+        user.getIdToken().then(function(idToken) {
           userIdToken = idToken;
 
           /* Now that the user is authenicated, fetch the notes. */
