@@ -27,7 +27,6 @@ import sys
 
 def sentiment_text():
     # [START language_sentiment_text]
-    import six
     from google.cloud import language
     from google.cloud.language import enums
     from google.cloud.language import types
@@ -36,8 +35,10 @@ def sentiment_text():
 
     client = language.LanguageServiceClient()
 
-    if isinstance(text, six.binary_type):
+    try:
         text = text.decode('utf-8')
+    except AttributeError:
+        pass
 
     # Instantiates a plain text document.
     # [START language_python_migration_sentiment_text]
