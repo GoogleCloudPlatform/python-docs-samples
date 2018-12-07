@@ -307,7 +307,7 @@ def test_gateway_send_data_for_device(iot_topic, capsys):
                 service_account_json, project_id, cloud_region, registry_id,
                 device_id, gateway_id, num_messages, rsa_private_path,
                 'RS256', ca_cert_path, mqtt_bridge_hostname, mqtt_bridge_port,
-                jwt_exp_time, listen_time, None)
+                jwt_exp_time, listen_time)
 
     # Clean up
     gateway.unbind_device_from_gateway(
