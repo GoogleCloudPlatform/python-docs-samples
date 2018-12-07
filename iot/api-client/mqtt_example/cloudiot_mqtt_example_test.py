@@ -176,3 +176,45 @@ def test_config(test_topic, capsys):
     out, _ = capsys.readouterr()
     assert "Received message" in out
     assert '/devices/{}/config'.format(device_id) in out
+
+
+def test_receive_command(capsys):
+    device_id = device_id_template.format('RSA256')
+    manager.create_registry(
+            service_account_json, project_id, cloud_region, pubsub_topic,
+            registry_id)
+    manager.create_rs256_device(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id, rsa_cert_path)
+
+    # Exercize the functionality
+    client = cloudiot_mqtt_example.get_client(
+        project_id, cloud_region, registry_id, device_id,
+        rsa_private_path, 'RS256', ca_cert_path,
+        'mqtt.googleapis.com', 443)
+    client.loop_start()
+
+    # Pre-process commands
+    for i in range(1, 3):
+        client.loop()
+        time.sleep(1)
+
+    manager.send_command(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id, 'me want cookies')
+
+    # Process commands
+    for i in range(1, 3):
+        client.loop()
+        time.sleep(1)
+
+    # Clean up
+    manager.delete_device(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id)
+    manager.delete_registry(
+            service_account_json, project_id, cloud_region, registry_id)
+
+    out, _ = capsys.readouterr()
+    assert 'on_connect' in out  # Verify can connect
+    assert '\'me want cookies\'' in out  # Verify can receive command

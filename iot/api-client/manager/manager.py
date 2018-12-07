@@ -490,6 +490,28 @@ def set_iam_permissions(
 # [END iot_set_iam_policy]
 
 
+def send_command(
+        service_account_json, project_id, cloud_region, registry_id, device_id,
+        command):
+    """Send a command to a device."""
+    # [START iot_send_command]
+    print('Sending command to device')
+    client = get_client(service_account_json)
+    device_path = 'projects/{}/locations/{}/registries/{}/devices/{}'.format(
+            project_id, cloud_region, registry_id, device_id)
+
+    config_body = {
+        'binaryData': base64.urlsafe_b64encode(
+                command.encode('utf-8')).decode('ascii')
+    }
+
+    return client.projects(
+        ).locations().registries(
+        ).devices().sendCommandToDevice(
+        name=device_path, body=config_body).execute()
+    # [END iot_send_command]
+
+
 def parse_command_line_args():
     """Parse command line arguments."""
     default_registry = 'cloudiot_device_manager_example_registry_{}'.format(
@@ -546,6 +568,10 @@ def parse_command_line_args():
             '--role',
             default=None,
             help='Role used for IAM commands.')
+    parser.add_argument(
+            '--send_command',
+            default='1',
+            help='The command sent to the device')
 
     # Command subparser
     command = parser.add_subparsers(dest='command')
@@ -566,6 +592,7 @@ def parse_command_line_args():
     command.add_parser('list-registries', help=list_registries.__doc__)
     command.add_parser('patch-es256', help=patch_es256_auth.__doc__)
     command.add_parser('patch-rs256', help=patch_rsa256_auth.__doc__)
+    command.add_parser('send-command', help=send_command.__doc__)
     command.add_parser('set-config', help=patch_rsa256_auth.__doc__)
     command.add_parser('set-iam-permissions', help=set_iam_permissions.__doc__)
 
@@ -679,6 +706,12 @@ def run_command(args):
                 args.cloud_region, args.registry_id, args.device_id,
                 args.rsa_certificate_file)
 
+    elif args.command == 'send-command':
+        send_command(
+                args.service_account_json, args.project_id,
+                args.cloud_region, args.registry_id, args.device_id,
+                args.send_command)
+
     elif args.command == 'set-iam-permissions':
         if (args.member is None):
             sys.exit('Error: specify --member')
@@ -699,10 +732,6 @@ def run_command(args):
                 args.version, args.config)
 
 
-def main():
+if __name__ == '__main__':
     args = parse_command_line_args()
     run_command(args)
-
-
-if __name__ == '__main__':
-    main()
