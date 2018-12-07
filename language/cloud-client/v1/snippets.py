@@ -113,7 +113,6 @@ def entities_text():
         print('=' * 20)
         print(u'{:<16}: {}'.format('name', entity.name))
         print(u'{:<16}: {}'.format('type', entity_type.name))
-        
         print(u'{:<16}: {}'.format('salience', entity.salience))
         print(u'{:<16}: {}'.format('wikipedia_url',
               entity.metadata.get('wikipedia_url', '-')))
