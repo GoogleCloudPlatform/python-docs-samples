@@ -63,5 +63,5 @@ and enter `Y` when prompted.  Or to skip the check add `-q`.
 To deploy multiple services simultaneously just add the path to each `app.yaml`
 file as an argument to `gcloud app deploy `:
 ```Bash
-$ gcloud app deploy gateway/app.yaml static/app.yaml
+$ gcloud app deploy gateway-service/app.yaml static-service/app.yaml
 ```
