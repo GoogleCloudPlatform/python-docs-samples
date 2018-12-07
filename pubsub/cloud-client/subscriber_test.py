@@ -154,6 +154,16 @@ def test_delete(subscriber_client, subscription):
             subscriber_client.get_subscription(subscription)
 
 
+def test_update(subscriber_client, subscription, capsys):
+    ACK_DEADLINE_SECONDS = 100
+
+    subscriber.update_subscription(PROJECT, SUBSCRIPTION, ACK_DEADLINE_SECONDS)
+
+    out, _ = capsys.readouterr()
+    assert subscription in out
+    assert '100' in out
+
+
 def _publish_messages(publisher_client, topic):
     for n in range(5):
         data = u'Message {}'.format(n).encode('utf-8')
