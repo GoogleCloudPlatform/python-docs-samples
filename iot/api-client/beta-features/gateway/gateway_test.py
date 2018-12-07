@@ -254,8 +254,8 @@ def test_gateway_listen_for_bound_device_configs(iot_topic, capsys):
 
     # Setup for listening for config messages
     num_messages = 0
-    jwt_exp_time = 20
-    listen_time = 5
+    jwt_exp_time = 60
+    listen_time = 30
 
     # Connect the gateway
     gateway.listen_for_config_and_error_messages(
@@ -263,6 +263,7 @@ def test_gateway_listen_for_bound_device_configs(iot_topic, capsys):
                 device_id, gateway_id, num_messages, rsa_private_path,
                 'RS256', ca_cert_path, mqtt_bridge_hostname, mqtt_bridge_port,
                 jwt_exp_time, listen_time, None)
+
     # Clean up
     gateway.unbind_device_from_gateway(
             service_account_json, project_id, cloud_region, registry_id,
@@ -298,15 +299,15 @@ def test_gateway_send_data_for_device(iot_topic, capsys):
 
     # Setup for listening for config messages
     num_messages = 5
-    jwt_exp_time = 20
-    listen_time = 5
+    jwt_exp_time = 60
+    listen_time = 20
 
     # Connect the gateway
     gateway.send_data_from_bound_device(
                 service_account_json, project_id, cloud_region, registry_id,
                 device_id, gateway_id, num_messages, rsa_private_path,
                 'RS256', ca_cert_path, mqtt_bridge_hostname, mqtt_bridge_port,
-                jwt_exp_time, listen_time)
+                jwt_exp_time, listen_time, None)
 
     # Clean up
     gateway.unbind_device_from_gateway(
