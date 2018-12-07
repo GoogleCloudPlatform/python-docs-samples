@@ -37,9 +37,9 @@ import datetime
 import io
 import os
 import random
+import re
 import ssl
 import time
-import re
 
 from google.oauth2 import service_account
 from googleapiclient import discovery
@@ -309,11 +309,17 @@ def list_devices_for_gateway(
 
     registry_name = 'projects/{}/locations/{}/registries/{}'.format(
             project_id, cloud_region, registry_id)
-    gateway_name = '{}/devices/{}'.format(
-            registry_name, gateway_id)
 
     devices = client.projects().locations().registries().devices(
-            ).listDeviceIdsForGateway(gatewayName=gateway_name).execute()
+        ).list(
+                parent=registry_name,
+                gatewayListOptions_associationsGatewayId=gateway_id
+        ).execute()
+
+    for device in devices.get('devices', []):
+            print('Device: {} : {}'.format(
+                    device.get('numId'),
+                    device.get('id')))
 
     if devices.get('deviceNumIds') is not None:
         for device_id in devices.get('deviceNumIds'):
