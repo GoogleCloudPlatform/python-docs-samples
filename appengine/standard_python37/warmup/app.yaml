@@ -1,0 +1,6 @@
+# [START gae_python37_warmup_yaml]
+runtime: python37
+
+inbound_services:
+- warmup
+# [END gae_python37_warmup_yaml]
