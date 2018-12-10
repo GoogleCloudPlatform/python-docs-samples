@@ -100,8 +100,8 @@ def delete_notification_channels(project_name, channel_ids):
             print('Channel {} deleted').format(channel_name)
         except ValueError:
             print('The parameters are invalid')
-        except:
-            print('API call failed')
+        except Exception as e:
+            print('API call failed: {}'.format(e.message))
 # [END monitoring_alert_delete_channel]
 
 
