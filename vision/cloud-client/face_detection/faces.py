@@ -42,7 +42,7 @@ def detect_face(face_file, max_results=4):
     content = face_file.read()
     image = types.Image(content=content)
 
-    return client.face_detection(image=image).face_annotations
+    return client.face_detection(image=image, max_results=max_results).face_annotations
 # [END vision_face_detection_tutorial_send_request]
 
 
