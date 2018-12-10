@@ -123,4 +123,4 @@ def test_delete_channels(capsys, pochan):
         pochan.project_name, [notification_channel_id], force=True)
     out, _ = capsys.readouterr()
     assert "{0} deleted".format(notification_channel_id) in out
-    pochan.notification_channel.name = None  # So teardown is not tried
+    pochan.notification_channel.name = ''   # So teardown is not tried
