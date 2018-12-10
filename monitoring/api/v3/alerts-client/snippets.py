@@ -74,6 +74,7 @@ def enable_alert_policies(project_name, enable, filter_=None):
 # [START monitoring_alert_replace_channels]
 def replace_notification_channels(project_name, alert_policy_id, channel_ids):
     _, project_id = project_name.split('/')
+    alert_client = monitoring_v3.AlertPolicyServiceClient()
     channel_client = monitoring_v3.NotificationChannelServiceClient()
     policy = monitoring_v3.types.alert_pb2.AlertPolicy()
     policy.name = alert_client.alert_policy_path(project_id, alert_policy_id)
