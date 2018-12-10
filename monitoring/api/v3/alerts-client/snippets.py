@@ -91,12 +91,12 @@ def replace_notification_channels(project_name, alert_policy_id, channel_ids):
 
 
 # [START monitoring_alert_delete_channel]
-def delete_notification_channels(project_name, channel_ids):
+def delete_notification_channels(project_name, channel_ids, force=None):
     channel_client = monitoring_v3.NotificationChannelServiceClient()
     for channel_id in channel_ids:
         channel_name = '{}/notificationChannels/{}'.format(project_name, channel_id)
         try:
-            channel_client.delete_notification_channel(channel_name)
+            channel_client.delete_notification_channel(channel_name, force=force)
             print('Channel {} deleted').format(channel_name)
         except ValueError:
             print('The parameters are invalid')
