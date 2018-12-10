@@ -105,6 +105,14 @@ def test_replace_channels(capsys, pochan):
     assert "Updated {0}".format(pochan.alert_policy.name) in out
 
 
+def test_delete_channels(capsys, pochan):
+    notification_channel_id = pochan.notification_channel.name.split('/')[-1]
+    snippets.delete_notification_channels(
+        pochan.project_name, [notification_channel_id])
+    out, _ = capsys.readouterr()
+    assert "{0} deleted".format(notification_channel_id) in out
+
+
 def test_backup_and_restore(capsys, pochan):
     snippets.backup(pochan.project_name)
     out, _ = capsys.readouterr()

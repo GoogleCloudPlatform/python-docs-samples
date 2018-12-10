@@ -74,7 +74,6 @@ def enable_alert_policies(project_name, enable, filter_=None):
 # [START monitoring_alert_replace_channels]
 def replace_notification_channels(project_name, alert_policy_id, channel_ids):
     _, project_id = project_name.split('/')
-    alert_client = monitoring_v3.AlertPolicyServiceClient()
     channel_client = monitoring_v3.NotificationChannelServiceClient()
     policy = monitoring_v3.types.alert_pb2.AlertPolicy()
     policy.name = alert_client.alert_policy_path(project_id, alert_policy_id)
@@ -88,6 +87,21 @@ def replace_notification_channels(project_name, alert_policy_id, channel_ids):
     updated_policy = alert_client.update_alert_policy(policy, mask)
     print('Updated', updated_policy.name)
 # [END monitoring_alert_replace_channels]
+
+
+# [START monitoring_alert_delete_channel]
+def delete_notification_channels(project_name, channel_ids):
+    channel_client = monitoring_v3.NotificationChannelServiceClient()
+    for channel_id in channel_ids:
+        channel_name = '{}/notificationChannels/{}'.format(project_name, channel_id)
+        try:
+            channel_client.delete_notification_channel(channel_name)
+            print('Channel {} deleted').format(channel_name)
+        except ValueError:
+            print('The parameters are invalid')
+        except:
+            print('API call failed')
+# [END monitoring_alert_delete_channel]
 
 
 # [START monitoring_alert_backup_policies]
