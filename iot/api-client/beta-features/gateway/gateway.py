@@ -109,7 +109,6 @@ def get_client(service_account_json):
     api_scopes = ['https://www.googleapis.com/auth/cloud-platform']
     api_version = 'v1'
     discovery_api = 'https://cloudiot.googleapis.com/$discovery/rest'
-    labels = 'CLOUD_IOT_ALPHA'
 
     service_name = 'cloudiotcore'
     credentials = service_account.Credentials.from_service_account_file(
