@@ -66,10 +66,10 @@ def end_to_end(project_id, topic_name, subscription_name):
     num_messages = 10
 
     def resolve_future_callback(future):
-        # Resolve the future and update `tracker` asynchronously.
-        tracker.update({future: {'pubtime': time.time(), 'subtime': None}})
+        """Resolve the publish future and update `tracker` asynchronously."""
+        pubtime = time.time()
         message_id = future.result()
-        tracker[message_id] = tracker.pop(future)
+        tracker.update({message_id: {'pubtime': pubtime, 'subtime': None}})
 
     def publish_messages(publish_func, callback):
         for i in range(num_messages):
@@ -77,12 +77,13 @@ def end_to_end(project_id, topic_name, subscription_name):
             callback(future)
 
     # Publish messages.
-    publish_messages(publisher.publish, resolve_future_callback)
+    publish_messages(publisher.publish, callback=resolve_future_callback)
     print('\nPublished all messages.')
 
     def process_message_callback(message):
         message.ack()
-        tracker[message.message_id]['subtime'] = time.time()
+        subtime = time.time()
+        tracker[message.message_id]['subtime'] = subtime
         print(message.attributes['index'])
 
     # Receive messages asynchronously.
@@ -106,7 +107,7 @@ def end_to_end(project_id, topic_name, subscription_name):
             break
         else:
             # Sleep the thread at 5Hz to save on resources.
-            time.sleep(1.)
+            time.sleep(1./5)
     # [END pubsub_end_to_end]
     return delivery_times
 
