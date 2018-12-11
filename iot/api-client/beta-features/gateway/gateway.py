@@ -109,18 +109,12 @@ def get_client(service_account_json):
     api_scopes = ['https://www.googleapis.com/auth/cloud-platform']
     api_version = 'v1'
     discovery_api = 'https://cloudiot.googleapis.com/$discovery/rest'
-    labels = 'CLOUD_IOT_ALPHA'
 
-    # Used to authorize the request for the discovery document
-    # Generated from https://console.cloud.google.com/apis/credentials
-    # TODO(class) remove before publish
-    key = 'AIzaSyCE3D0dO5rO67-VbACI0IPS6KIg888MTzg'
     service_name = 'cloudiotcore'
     credentials = service_account.Credentials.from_service_account_file(
             service_account_json)
     scoped_credentials = credentials.with_scopes(api_scopes)
-    discovery_url = '{}?version={}&key={}&labels={}'.format(
-            discovery_api, api_version, key, labels)
+    discovery_url = '{}?version={}'.format(discovery_api, api_version)
 
     return discovery.build(
             service_name,
