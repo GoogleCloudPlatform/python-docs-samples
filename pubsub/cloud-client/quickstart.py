@@ -112,12 +112,6 @@ def end_to_end(project_id, topic_name, subscription_name):
     return delivery_times
 
 
-def end_to_end_standard(project_id, topic_name, subscription_name):
-    # [START pubsub_end_to_end_standard]
-    pass
-    # [END pubsub_end_to_end_standard]
-
-
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(
@@ -143,6 +137,3 @@ if __name__ == '__main__':
 
     if args.command == 'basic':
         end_to_end(args.project_id, args.topic_name, args.subscription_name)
-    if args.command == 'standard':
-        end_to_end_standard(args.project_id, args.topic_name,
-                            args.subscription_name)
