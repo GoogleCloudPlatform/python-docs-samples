@@ -155,13 +155,13 @@ def test_delete(subscriber_client, subscription):
 
 
 def test_update(subscriber_client, subscription, capsys):
-    ACK_DEADLINE_SECONDS = 100
+    new_endpoint = 'https://{}.appspot.com/push2'.format(PROJECT)
 
-    subscriber.update_subscription(PROJECT, SUBSCRIPTION, ACK_DEADLINE_SECONDS)
+    subscriber.update_subscription(PROJECT, SUBSCRIPTION, new_endpoint)
 
     out, _ = capsys.readouterr()
     assert subscription in out
-    assert '100' in out
+    assert new_endpoint in out
 
 
 def _publish_messages(publisher_client, topic):
