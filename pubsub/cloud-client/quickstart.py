@@ -71,13 +71,13 @@ def end_to_end(project_id, topic_name, subscription_name):
         message_id = future.result()
         tracker.update({message_id: {'pubtime': pubtime, 'subtime': None}})
 
-    def publish_messages(publish_func, callback):
+    def publish_messages(callback):
         for i in range(num_messages):
-            future = publish_func(topic_path, data=data, index=str(i))
+            future = publisher.publish(topic_path, data=data, index=str(i))
             callback(future)
 
     # Publish messages.
-    publish_messages(publisher.publish, callback=resolve_future_callback)
+    publish_messages(resolve_future_callback)
     print('\nPublished all messages.')
 
     def process_message_callback(message):
@@ -126,12 +126,6 @@ if __name__ == '__main__':
     basic_parser.add_argument('topic_name', help='Your topic name')
     basic_parser.add_argument('subscription_name',
                               help='Your subscription name')
-
-    standard_parser = subparsers.add_parser('standard',
-                                            help=end_to_end_standard.__doc__)
-    standard_parser.add_argument('topic_name', help='Your topic name')
-    standard_parser.add_argument('subscription_name',
-                                 help='Your subscription name')
 
     args = parser.parse_args()
 
