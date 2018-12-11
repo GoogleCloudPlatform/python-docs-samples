@@ -63,8 +63,9 @@ class PochanFixture:
     def __exit__(self, type, value, traceback):
         # Delete the policy and channel we created.
         self.alert_policy_client.delete_alert_policy(self.alert_policy.name)
-        self.notification_channel_client.delete_notification_channel(
-            self.notification_channel.name)
+        if self.notification_channel.name:
+            self.notification_channel_client.delete_notification_channel(
+                self.notification_channel.name)
 
 
 @pytest.fixture(scope='session')
@@ -114,3 +115,12 @@ def test_backup_and_restore(capsys, pochan):
     assert "Updated {0}".format(pochan.alert_policy.name) in out
     assert "Updating channel {0}".format(
         pochan.notification_channel.display_name) in out
+
+
+def test_delete_channels(capsys, pochan):
+    notification_channel_id = pochan.notification_channel.name.split('/')[-1]
+    snippets.delete_notification_channels(
+        pochan.project_name, [notification_channel_id], force=True)
+    out, _ = capsys.readouterr()
+    assert "{0} deleted".format(notification_channel_id) in out
+    pochan.notification_channel.name = ''   # So teardown is not tried
