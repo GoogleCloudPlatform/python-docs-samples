@@ -29,6 +29,7 @@ SUBSCRIPTION = 'subscription-test-subscription'
 SUBSCRIPTION_SYNC1 = 'subscription-test-subscription-sync1'
 SUBSCRIPTION_SYNC2 = 'subscription-test-subscription-sync2'
 ENDPOINT = 'https://{}.appspot.com/push'.format(PROJECT)
+NEW_ENDPOINT = 'https://{}.appspot.com/push2'.format(PROJECT)
 
 
 @pytest.fixture(scope='module')
@@ -159,7 +160,7 @@ def test_delete(subscriber_client, subscription):
 
 
 def test_update(subscriber_client, subscription, capsys):
-    subscriber.update_subscription(PROJECT, SUBSCRIPTION, ENDPOINT)
+    subscriber.update_subscription(PROJECT, SUBSCRIPTION, NEW_ENDPOINT)
 
     out, _ = capsys.readouterr()
     assert 'Subscription updated' in out
