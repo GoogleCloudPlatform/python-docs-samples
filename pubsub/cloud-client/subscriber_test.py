@@ -17,6 +17,7 @@ import time
 
 from gcp_devrel.testing import eventually_consistent
 from google.cloud import pubsub_v1
+import google.api_core.exceptions
 import mock
 import pytest
 
@@ -64,7 +65,10 @@ def subscription(subscriber_client, topic):
     except Exception:
         pass
 
-    subscriber_client.create_subscription(subscription_path, topic=topic)
+    try:
+        subscriber_client.create_subscription(subscription_path, topic=topic)
+    except google.api_core.exceptions.AlreadyExists:
+        pass
 
     yield subscription_path
 
