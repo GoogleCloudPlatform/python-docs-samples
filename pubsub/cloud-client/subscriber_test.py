@@ -155,9 +155,9 @@ def test_delete(subscriber_client, subscription):
 
 
 def test_update(subscriber_client, subscription, capsys):
-    ACK_DEADLINE_SECONDS = 100
+    ACK_DEADLINE_SECONDS = 100.0
 
-    subscriber.update_subscription(PROJECT, SUBSCRIPTION, ACK_DEADLINE_SECONDS)
+    subscriber.update_subscription(PROJECT, SUBSCRIPTION, timeout=ACK_DEADLINE_SECONDS)
 
     out, _ = capsys.readouterr()
     assert subscription in out
