@@ -41,21 +41,24 @@ def tempdir():
     yield tempdir
     shutil.rmtree(tempdir)
 
+
 def test_deidentify_with_replace_info_type(capsys):
     deid.deidentify_replace_with_info_type(
         GCLOUD_PROJECT,
         HARMFUL_STRING,
-        ['US_SOCIAL_SECURITY_NUMBER']);
+        ['US_SOCIAL_SECURITY_NUMBER'])
     out, _ = capsys.readouterr()
     assert 'My SSN is [US_SOCIAL_SECURITY_NUMBER]' in out
+
 
 def test_deidentify_with_replace_info_type_ignore_insensitive_data(capsys):
     deid.deidentify_replace_with_info_type(
         GCLOUD_PROJECT,
         HARMLESS_STRING,
-        ['US_SOCIAL_SECURITY_NUMBER']);
+        ['US_SOCIAL_SECURITY_NUMBER'])
     out, _ = capsys.readouterr()
     assert HARMLESS_STRING in out
+
 
 def test_deidentify_with_mask(capsys):
     deid.deidentify_with_mask(GCLOUD_PROJECT, HARMFUL_STRING,

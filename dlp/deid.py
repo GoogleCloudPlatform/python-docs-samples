@@ -18,6 +18,7 @@ from __future__ import print_function
 
 import argparse
 
+
 # [START dlp_deidentify_replace_with_info_type]
 def deidentify_replace_with_info_type(project, string, info_types):
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
@@ -67,6 +68,7 @@ def deidentify_replace_with_info_type(project, string, info_types):
     # Print out the results.
     print(response.item.value)
 # [END dlp_deidentify_replace_with_info_type]
+
 
 # [START dlp_deidentify_masking]
 def deidentify_with_mask(project, string, info_types, masking_character=None,
@@ -451,7 +453,7 @@ def deidentify_with_date_shift(project, input_csv_file=None,
             write_file.writerow(map(write_data, row.values))
     # Print status
     print('Successfully saved date-shift output to {}'.format(
-                output_csv_file))
+        output_csv_file))
 # [END dlp_deidentify_date_shift]
 
 
@@ -463,7 +465,7 @@ if __name__ == '__main__':
 
     replace_with_info_type_parser = subparsers.add_parser(
         'deid_replace_with_info_type',
-        help = 'Deidentify sensitive data in a string by replacing it with its '
+        help='Deidentify sensitive data in a string by replacing it with its '
              'info type.')
     replace_with_info_type_parser.add_argument(
         '--info_types', action='append',
@@ -518,8 +520,8 @@ if __name__ == '__main__':
              'If unspecified, the three above examples will be used.',
         default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
     fpe_parser.add_argument(
-         'project',
-         help='The Google Cloud project id to use as a parent resource.')
+        'project',
+        help='The Google Cloud project id to use as a parent resource.')
     fpe_parser.add_argument(
         'item',
         help='The string to deidentify. '
@@ -626,7 +628,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.content == 'deid_replace_with_info_type':
-        deidentify_replace_with_info_type(args.project, args.item, args.info_types)
+        deidentify_replace_with_info_type(args.project, args.item,
+                                          args.info_types)
     elif args.content == 'deid_mask':
         deidentify_with_mask(args.project, args.item, args.info_types,
                              masking_character=args.masking_character,
