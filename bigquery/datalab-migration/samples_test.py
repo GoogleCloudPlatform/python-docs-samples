@@ -12,10 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import time
 
-from google.cloud import bigquery
 import pytest
 try:
     import IPython
@@ -25,32 +23,12 @@ except ImportError:  # pragma: NO COVER
     IPython = None
 
 
-@pytest.fixture
-def temp_dataset():
-    client = bigquery.Client()
-    dataset_id = "temp_dataset_{}".format(int(time.time() * 1000))
-    dataset_ref = bigquery.DatasetReference(client.project, dataset_id)
-    dataset = client.create_dataset(bigquery.Dataset(dataset_ref))
-    yield dataset
-    client.delete_dataset(dataset, delete_contents=True)
-
-
 @pytest.fixture(scope='session')
 def ipython():
     config = tools.default_config()
     config.TerminalInteractiveShell.simple_prompt = True
     shell = interactiveshell.TerminalInteractiveShell.instance(config=config)
     return shell
-
-
-@pytest.fixture()
-def ipython_interactive(request, ipython):
-    """Activate IPython's builtin hooks
-
-    for the duration of the test scope.
-    """
-    with ipython.builtin_trap:
-        yield ipython
 
 
 @pytest.fixture
@@ -65,9 +43,9 @@ def to_delete():
         client.delete_dataset(dataset, delete_contents=True)
 
 
-def _set_up_ipython():
+def _set_up_ipython(extension):
     ip = IPython.get_ipython()
-    ip.extension_manager.load_extension('google.cloud.bigquery')
+    ip.extension_manager.load_extension(extension)
     return ip
 
 
@@ -84,11 +62,10 @@ def _run_magic_sample(sample, ip):
 
 
 @pytest.mark.skipif(IPython is None, reason="Requires `ipython`")
-def test_query_magic(ipython):
-    ip = _set_up_ipython()
+def test_datalab_query_magic(ipython):
+    ip = _set_up_ipython('google.datalab.kernel')
 
-    # Datalab sample
-    """
+    sample = """
     # [START bigquery_migration_datalab_query_magic]
     %%bq
     SELECT word, SUM(word_count) as count
@@ -97,6 +74,12 @@ def test_query_magic(ipython):
     ORDER BY count ASC
     # [END bigquery_migration_datalab_query_magic]
     """
+    _run_magic_sample(sample, ip)
+
+
+@pytest.mark.skipif(IPython is None, reason="Requires `ipython`")
+def test_client_library_query_magic(ipython):
+    ip = _set_up_ipython('google.cloud.bigquery')
 
     sample = """
     # [START bigquery_migration_client_library_query_magic]
@@ -111,11 +94,10 @@ def test_query_magic(ipython):
 
 
 @pytest.mark.skipif(IPython is None, reason="Requires `ipython`")
-def test_query_magic_results_variable(ipython):
-    ip = _set_up_ipython()
+def test_datalab_query_magic_results_variable(ipython):
+    ip = _set_up_ipython('google.datalab.kernel')
 
-    # Datalab sample
-    """
+    sample = """
     # [START bigquery_migration_datalab_query_magic_results_variable]
     %%bq --name my_variable
     SELECT word, SUM(word_count) as count
@@ -124,6 +106,12 @@ def test_query_magic_results_variable(ipython):
     ORDER BY count ASC
     # [END bigquery_migration_datalab_query_magic_results_variable]
     """
+    _run_magic_sample(sample, ip)
+
+
+@pytest.mark.skipif(IPython is None, reason="Requires `ipython`")
+def test_client_library_query_magic_results_variable(ipython):
+    ip = _set_up_ipython('google.cloud.bigquery')
 
     sample = """
     # [START bigquery_migration_client_library_query_magic_results_variable]
@@ -138,33 +126,41 @@ def test_query_magic_results_variable(ipython):
 
 
 @pytest.mark.skipif(IPython is None, reason="Requires `ipython`")
-def test_query_magic_parameterized_query(ipython):
-    ip = _set_up_ipython()
+def test_datalab_magic_parameterized_query(ipython):
+    ip = _set_up_ipython('google.datalab.kernel')
 
-    # Datalab samples
-    """
-    # [START bigquery_migration_datalab_magic_parameterized_query_define]
+    sample = """
+    # [START bigquery_migration_datalab_magic_define_parameterized_query]
     %%bq query -n my_variable
     SELECT word, SUM(word_count) as count
     FROM `bigquery-public-data.samples.shakespeare`
     WHERE corpus = @corpus_name
     GROUP BY word
     ORDER BY count ASC
-    # [END bigquery_migration_datalab_magic_parameterized_query_define]
+    # [END bigquery_migration_datalab_magic_define_parameterized_query]
+    """
+    _run_magic_sample(sample, ip)
 
-    # [START bigquery_migration_datalab_magic_parameterized_query_execute]
+    sample = """
+    # [START bigquery_migration_datalab_magic_execute_parameterized_query]
     %%bq execute -q endpoint_stats
     parameters:
     - name: corpus_name
       type: STRING
       value: hamlet
-    # [END bigquery_migration_datalab_magic_parameterized_query_execute]
+    # [END bigquery_migration_datalab_magic_execute_parameterized_query]
     """
+    _run_magic_sample(sample, ip)
+
+
+@pytest.mark.skipif(IPython is None, reason="Requires `ipython`")
+def test_query_magic_parameterized_query(ipython):
+    ip = _set_up_ipython('google.cloud.bigquery')
 
     sample = """
-    # [START bigquery_migration_client_library_magic_parameterized_query_define_parameter]
+    # [START bigquery_migration_client_library_magic_query_params]
     params = {"corpus_name": "hamlet"}
-    # [END bigquery_migration_client_library_magic_parameterized_query_define_parameter]
+    # [END bigquery_migration_client_library_magic_query_params]
     """
     _run_magic_sample(sample, ip)
 
@@ -182,20 +178,25 @@ def test_query_magic_parameterized_query(ipython):
 
 
 @pytest.mark.skipif(IPython is None, reason="Requires `ipython`")
-def test_command_line_interface(ipython):
-    ip = IPython.get_ipython()
+def test_datalab_list_tables_magic(ipython):
+    ip = _set_up_ipython('google.datalab.kernel')
 
-    # Datalab sample
-    """
+    sample = """
     # [START bigquery_migration_datalab_list_tables_magic]
     %bq tables list --dataset bigquery-public-data.samples
     # [END bigquery_migration_datalab_list_tables_magic]
     """
+    _run_magic_sample(sample, ip)
+
+
+@pytest.mark.skipif(IPython is None, reason="Requires `ipython`")
+def test_command_line_interface(ipython):
+    ip = IPython.get_ipython()
 
     sample = """
-    # [START bigquery_migration_datalab_list_tables_magic]
+    # [START bigquery_migration_command_line_list_tables]
     !bq ls bigquery-public-data:samples
-    # [END bigquery_migration_datalab_list_tables_magic]
+    # [END bigquery_migration_command_line_list_tables]
     """
     _run_magic_sample(sample, ip)
 
@@ -260,7 +261,7 @@ def test_datalab_load_table_from_gcs_csv(to_delete):
         'gs://cloud-samples-data/bigquery/us-states/us-states.csv',
         mode='append',
         source_format='csv',
-        csv_options=bq.CSVOptions(skip_leading_rows = 1)
+        csv_options=bq.CSVOptions(skip_leading_rows=1)
     )  # Waits for the job to complete
     # [END bigquery_migration_datalab_load_table_from_gcs_csv]
 
@@ -285,13 +286,13 @@ def test_client_library_load_table_from_gcs_csv(to_delete):
 
     # Create the table
     job_config = bigquery.LoadJobConfig(
-        schema = [
+        schema=[
             bigquery.SchemaField('name', 'STRING'),
             bigquery.SchemaField('post_abbr', 'STRING')
         ],
-        skip_leading_rows = 1,
+        skip_leading_rows=1,
         # The source format defaults to CSV, so the line below is optional.
-        source_format = bigquery.SourceFormat.CSV
+        source_format=bigquery.SourceFormat.CSV
     )
     load_job = client.load_table_from_uri(
         'gs://cloud-samples-data/bigquery/us-states/us-states.csv',
@@ -330,7 +331,8 @@ def test_datalab_load_table_from_dataframe(to_delete):
         },
     ])
     schema = bq.Schema.from_data(dataframe)
-    table = bq.Table('{}.monty_python'.format(dataset_id)).create(schema=schema)
+    table = bq.Table(
+        '{}.monty_python'.format(dataset_id)).create(schema=schema)
     table.insert(dataframe)  # Starts steaming insert of data
     # [END bigquery_migration_datalab_load_table_from_dataframe]
     # The Datalab library uses tabledata().insertAll() to load data from
@@ -338,7 +340,7 @@ def test_datalab_load_table_from_dataframe(to_delete):
     # to be available in the table, this test does not assert on the number of
     # rows in the destination table after the job is run. If errors are
     # encountered during the insertion, this test will fail.
-    # See https://cloud.google.com/bigquery/streaming-data-into-bigquery#dataavailability
+    # See https://cloud.google.com/bigquery/streaming-data-into-bigquery
 
 
 def test_client_library_load_table_from_dataframe(to_delete):
@@ -375,4 +377,3 @@ def test_client_library_load_table_from_dataframe(to_delete):
 
     table = client.get_table(dataset.table('monty_python'))
     assert table.num_rows == 4
-
