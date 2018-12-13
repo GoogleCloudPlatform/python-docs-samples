@@ -1,0 +1,3 @@
+google-cloud-bigquery[pandas,pyarrow]==1.7.0
+datalab==1.1.4
+ipython==7.2.0
