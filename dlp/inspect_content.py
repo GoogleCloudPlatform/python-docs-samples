@@ -221,7 +221,6 @@ def inspect_table(project, data, info_types,
         print('No findings.')
 # [END dlp_inspect_table]
 
-
 # [START dlp_inspect_file]
 def inspect_file(project, filename, info_types, min_likelihood=None,
                  custom_dictionaries=None, custom_regexes=None,
@@ -1078,7 +1077,7 @@ if __name__ == '__main__':
             min_likelihood=args.min_likelihood,
             max_findings=args.max_findings,
             include_quote=args.include_quote)
-    if args.content == 'table':
+    elif args.content == 'table':
         inspect_table(
             args.project, args.data, args.info_types,
             custom_dictionaries=args.custom_dictionaries,
