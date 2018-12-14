@@ -72,8 +72,8 @@ def test_create_list_and_delete_stored_info_type(bucket, capsys):
 
     except google.api_core.exceptions.InvalidArgument:
         # Stored infoType already exists, perhaps due to a previous test.
-        stored_info_types.delete_stored_info_type(GCLOUD_PROJECT,
-            TEST_STORED_INFO_TYPE_ID)
+        stored_info_types.delete_stored_info_type(
+            GCLOUD_PROJECT, TEST_STORED_INFO_TYPE_ID)
 
         out, _ = capsys.readouterr()
         assert TEST_STORED_INFO_TYPE_ID in out
@@ -92,8 +92,8 @@ def test_create_list_and_delete_stored_info_type(bucket, capsys):
     out, _ = capsys.readouterr()
     assert TEST_STORED_INFO_TYPE_ID in out
 
-    stored_info_types.delete_stored_info_type(GCLOUD_PROJECT,
-        TEST_STORED_INFO_TYPE_ID)
+    stored_info_types.delete_stored_info_type(
+        GCLOUD_PROJECT, TEST_STORED_INFO_TYPE_ID)
 
     out, _ = capsys.readouterr()
     assert TEST_STORED_INFO_TYPE_ID in out

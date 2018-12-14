@@ -22,9 +22,10 @@ import time
 
 
 # [START dlp_create_stored_info_type]
-def create_stored_info_type_from_gcs_files(project, gcs_input_file_path,
-                   gcs_output_path, stored_info_type_id=None,
-                   display_name=None, description=None):
+def create_stored_info_type_from_gcs_files(
+            project, gcs_input_file_path,
+            gcs_output_path, stored_info_type_id=None,
+            display_name=None, description=None):
     """Creates a scheduled Data Loss Prevention API stored infoType from a set
         of GCS files.
     Args:
@@ -46,15 +47,15 @@ def create_stored_info_type_from_gcs_files(project, gcs_input_file_path,
         'output_path': {'path': gcs_output_path},
         'cloud_storage_file_set': {'url': gcs_input_file_path},
     }
-    create_stored_info_type(project, dictionary_config,
-        stored_info_type_id=stored_info_type_id,
+    create_stored_info_type(
+        project, dictionary_config, stored_info_type_id=stored_info_type_id,
         display_name=display_name, description=description)
 
-def create_stored_info_type_from_bq_table(project, bq_input_project_id,
-                   bq_input_dataset_id, bq_input_table_id,
-                   bq_input_table_field, gcs_output_path,
-                   stored_info_type_id=None, display_name=None,
-                   description=None):
+
+def create_stored_info_type_from_bq_table(
+            project, bq_input_project_id, bq_input_dataset_id,
+            bq_input_table_id, bq_input_table_field, gcs_output_path,
+            stored_info_type_id=None, display_name=None, description=None):
     """Creates a scheduled Data Loss Prevention API stored infoType from a
         column of a BigQuery.
     Args:
@@ -88,12 +89,13 @@ def create_stored_info_type_from_bq_table(project, bq_input_project_id,
         }
     }
     create_stored_info_type(project, dictionary_config,
-        stored_info_type_id=stored_info_type_id,
-        display_name=display_name, description=description)
+                            stored_info_type_id=stored_info_type_id,
+                            display_name=display_name, description=description)
+
 
 def create_stored_info_type(project, dictionary_config,
-                   stored_info_type_id=None, display_name=None,
-                   description=None):
+                            stored_info_type_id=None, display_name=None,
+                            description=None):
     """Creates a scheduled Data Loss Prevention API stored infoType from a
         column of a BigQuery.
     Args:
@@ -220,8 +222,9 @@ if __name__ == '__main__':
         dest='action', help='Select which action to perform.')
     subparsers.required = True
 
-    parser_create = subparsers.add_parser('create',
-    help='Create a stored infoType.')
+    parser_create = subparsers.add_parser(
+        'create',
+        help='Create a stored infoType.')
     parser_create.add_argument(
         '--gcs_input_file_path',
         help='GCS path of the input files containing the dictionary words.')
@@ -256,14 +259,16 @@ if __name__ == '__main__':
         help='The Google Cloud project id to use as a parent resource.',
         default=default_project)
 
-    parser_list = subparsers.add_parser('list',
+    parser_list = subparsers.add_parser(
+        'list',
         help='List all stored infoTypes.')
     parser_list.add_argument(
         '--project',
         help='The Google Cloud project id to use as a parent resource.',
         default=default_project)
 
-    parser_delete = subparsers.add_parser('delete',
+    parser_delete = subparsers.add_parser(
+        'delete',
         help='Delete a stored infoType.')
     parser_delete.add_argument(
         'stored_info_type_id',
