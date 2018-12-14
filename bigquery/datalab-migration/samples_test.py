@@ -53,21 +53,31 @@ def _strip_region_tags(sample_text):
 
 
 def test_datalab_query_magic(ipython):
+    import google.datalab.bigquery as bq
+
     ip = _set_up_ipython('google.datalab.kernel')
 
     sample = """
     # [START bigquery_migration_datalab_query_magic]
-    %%bq
+    %%bq query
     SELECT word, SUM(word_count) as count
     FROM `bigquery-public-data.samples.shakespeare`
     GROUP BY word
     ORDER BY count ASC
+    LIMIT 100
     # [END bigquery_migration_datalab_query_magic]
     """
     ip.run_cell(_strip_region_tags(sample))
 
+    results = ip.user_ns["_"]  # Last returned object in notebook session
+    assert isinstance(results, bq.QueryResultsTable)
+    df = results.to_dataframe()
+    assert len(df) == 100
+
 
 def test_client_library_query_magic(ipython):
+    import pandas
+
     ip = _set_up_ipython('google.cloud.bigquery')
 
     sample = """
@@ -77,9 +87,14 @@ def test_client_library_query_magic(ipython):
     FROM `bigquery-public-data.samples.shakespeare`
     GROUP BY word
     ORDER BY count ASC
+    LIMIT 100
     # [END bigquery_migration_client_library_query_magic]
     """
     ip.run_cell(_strip_region_tags(sample))
+
+    df = ip.user_ns["_"]  # Last returned object in notebook session
+    assert isinstance(df, pandas.DataFrame)
+    assert len(df) == 100
 
 
 def test_datalab_query_magic_results_variable(ipython):
