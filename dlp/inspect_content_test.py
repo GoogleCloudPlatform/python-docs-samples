@@ -24,7 +24,6 @@ import google.cloud.pubsub
 import google.cloud.storage
 
 import pytest
-import json
 import inspect_content
 
 
@@ -171,13 +170,26 @@ def test_inspect_string(capsys):
 
 
 def test_inspect_table(capsys):
-    test_tabular_data = '{"header": ["email", "phone number"],
-    "rows": [["robertfrost@xyz.com", "4232342345"],
-    ["johndoe@pqr.com", "4253458383"]]}'
+    test_tabular_data = {
+        "header": [
+            "email",
+            "phone number"
+        ],
+        "rows": [
+            [
+                "robertfrost@xyz.com",
+                "4232342345"
+            ],
+            [
+                "johndoe@pqr.com",
+                "4253458383"
+            ]
+        ]
+    }
 
     inspect_content.inspect_table(
         GCLOUD_PROJECT,
-        json.loads(test_tabular_data),
+        test_tabular_data,
         ['PHONE_NUMBER', 'EMAIL_ADDRESS'],
         include_quote=True)
 

@@ -142,7 +142,7 @@ def inspect_table(project, data, info_types,
         }
 
         >> $ python inspect_content.py table \
-        '{"header": ["email", "phone number"], 
+        '{"header": ["email", "phone number"],
         "rows": [["robertfrost@xyz.com", "4232342345"],
         ["johndoe@pqr.com", "4253458383"]]}'
         >>  Quote: robertfrost@xyz.com
