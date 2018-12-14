@@ -85,7 +85,8 @@ def quickstart(project_id):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("project_id", help="Enter your GCP project id.", type=str)
+    parser.add_argument(
+        "project_id", help="Enter your GCP project id.", type=str)
     args = parser.parse_args()
     if len(sys.argv) == 1:
         parser.print_usage()

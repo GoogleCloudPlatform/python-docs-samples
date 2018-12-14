@@ -169,8 +169,11 @@ def test_inspect_string(capsys):
     assert 'Info type: FIRST_NAME' in out
     assert 'Info type: EMAIL_ADDRESS' in out
 
+
 def test_inspect_table(capsys):
-    test_tabular_data = '{"header": ["email", "phone number"], "rows": [["robertfrost@xyz.com", "4232342345"], ["johndoe@pqr.com", "4253458383"]]}'
+    test_tabular_data = '{"header": ["email", "phone number"],
+    "rows": [["robertfrost@xyz.com", "4232342345"],
+    ["johndoe@pqr.com", "4253458383"]]}'
 
     inspect_content.inspect_table(
         GCLOUD_PROJECT,

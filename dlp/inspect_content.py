@@ -78,7 +78,7 @@ def inspect_string(project, content_string, info_types,
         'min_likelihood': min_likelihood,
         'include_quote': include_quote,
         'limits': {'max_findings_per_request': max_findings},
-      }
+    }
 
     # Construct the `item`.
     item = {'value': content_string}
@@ -104,9 +104,11 @@ def inspect_string(project, content_string, info_types,
 # [END dlp_inspect_string]
 
 # [START dlp_inspect_table]
+
+
 def inspect_table(project, data, info_types,
-                   custom_dictionaries=None, custom_regexes=None,
-                   min_likelihood=None, max_findings=None, include_quote=True):
+                  custom_dictionaries=None, custom_regexes=None,
+                  min_likelihood=None, max_findings=None, include_quote=True):
     """Uses the Data Loss Prevention API to analyze strings for protected data.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -140,7 +142,8 @@ def inspect_table(project, data, info_types,
         }
 
         >> $ python inspect_content.py table \
-        '{"header": ["email", "phone number"], "rows": [["robertfrost@xyz.com", "4232342345"],
+        '{"header": ["email", "phone number"], 
+        "rows": [["robertfrost@xyz.com", "4232342345"],
         ["johndoe@pqr.com", "4253458383"]]}'
         >>  Quote: robertfrost@xyz.com
             Info type: EMAIL_ADDRESS
@@ -186,7 +189,7 @@ def inspect_table(project, data, info_types,
         'min_likelihood': min_likelihood,
         'include_quote': include_quote,
         'limits': {'max_findings_per_request': max_findings},
-      }
+    }
 
     # Construct the `table`. For more details on the table schema, please see
     # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Table
@@ -222,6 +225,8 @@ def inspect_table(project, data, info_types,
 # [END dlp_inspect_table]
 
 # [START dlp_inspect_file]
+
+
 def inspect_file(project, filename, info_types, min_likelihood=None,
                  custom_dictionaries=None, custom_regexes=None,
                  max_findings=None, include_quote=True, mime_type=None):
@@ -402,8 +407,8 @@ def inspect_gcs_file(project, bucket, filename, topic_id, subscription_id,
     storage_config = {
         'cloud_storage_options': {
             'file_set': {'url': url}
-            }
         }
+    }
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
@@ -814,7 +819,8 @@ if __name__ == '__main__':
         default=True)
 
     parser_table = subparsers.add_parser('table', help='Inspect a table.')
-    parser_table.add_argument('data', help='Json string representing a table.', type=json.loads)
+    parser_table.add_argument(
+        'data', help='Json string representing a table.', type=json.loads)
     parser_table.add_argument(
         '--project',
         help='The Google Cloud project id to use as a parent resource.',
