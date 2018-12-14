@@ -21,19 +21,19 @@ Example usage:
   python web_detect.py ../detect/resources/landmark.jpg
   python web_detect.py gs://your-bucket/image.png
 """
-# [START full_tutorial]
-# [START imports]
+# [START vision_web_detection_tutorial]
+# [START vision_web_detection_tutorial_imports]
 import argparse
 import io
 
 from google.cloud import vision
 from google.cloud.vision import types
-# [END imports]
+# [END vision_web_detection_tutorial_imports]
 
 
 def annotate(path):
     """Returns web annotations given the path to an image."""
-    # [START get_annotations]
+    # [START vision_web_detection_tutorial_annotate]
     client = vision.ImageAnnotatorClient()
 
     if path.startswith('http') or path.startswith('gs:'):
@@ -47,14 +47,14 @@ def annotate(path):
         image = types.Image(content=content)
 
     web_detection = client.web_detection(image=image).web_detection
-    # [END get_annotations]
+    # [END vision_web_detection_tutorial_annotate]
 
     return web_detection
 
 
 def report(annotations):
     """Prints detected features in the provided web annotations."""
-    # [START print_annotations]
+    # [START vision_web_detection_tutorial_print_annotations]
     if annotations.pages_with_matching_images:
         print('\n{} Pages with matching images retrieved'.format(
             len(annotations.pages_with_matching_images)))
@@ -63,31 +63,31 @@ def report(annotations):
             print('Url   : {}'.format(page.url))
 
     if annotations.full_matching_images:
-        print ('\n{} Full Matches found: '.format(
-               len(annotations.full_matching_images)))
+        print('\n{} Full Matches found: '.format(
+              len(annotations.full_matching_images)))
 
         for image in annotations.full_matching_images:
             print('Url  : {}'.format(image.url))
 
     if annotations.partial_matching_images:
-        print ('\n{} Partial Matches found: '.format(
-               len(annotations.partial_matching_images)))
+        print('\n{} Partial Matches found: '.format(
+              len(annotations.partial_matching_images)))
 
         for image in annotations.partial_matching_images:
             print('Url  : {}'.format(image.url))
 
     if annotations.web_entities:
-        print ('\n{} Web entities found: '.format(
-            len(annotations.web_entities)))
+        print('\n{} Web entities found: '.format(
+              len(annotations.web_entities)))
 
         for entity in annotations.web_entities:
             print('Score      : {}'.format(entity.score))
             print('Description: {}'.format(entity.description))
-    # [END print_annotations]
+    # [END vision_web_detection_tutorial_print_annotations]
 
 
 if __name__ == '__main__':
-    # [START run_web]
+    # [START vision_web_detection_tutorial_run_application]
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -97,5 +97,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     report(annotate(args.image_url))
-    # [END run_web]
-# [END full_tutorial]
+    # [END vision_web_detection_tutorial_run_application]
+# [END vision_web_detection_tutorial]

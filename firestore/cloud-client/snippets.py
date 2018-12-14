@@ -303,9 +303,9 @@ def update_create_if_missing():
     # [START update_create_if_missing]
     city_ref = db.collection(u'cities').document(u'BJ')
 
-    city_ref.update({
+    city_ref.set({
         u'capital': True
-    }, firestore.CreateIfMissingOption(True))
+    }, merge=True)
     # [END update_create_if_missing]
 
 
@@ -555,6 +555,22 @@ def cursor_simple_end_at():
     # [END cursor_simple_end_at]
 
     return query_end_at
+
+
+def snapshot_cursors():
+    db = firestore.Client()
+    # [START fs_start_at_snapshot_query_cursor]
+    doc_ref = db.collection(u'cities').document(u'SF')
+
+    snapshot = doc_ref.get()
+    start_at_snapshot = db.collection(
+        u'cities').order_by(u'population').start_at(snapshot)
+    # [END fs_start_at_snapshot_query_cursor]
+    results = start_at_snapshot.limit(10).get()
+    for doc in results:
+        print('{}'.format(doc.id))
+
+    return results
 
 
 def cursor_paginate():

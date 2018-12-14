@@ -19,7 +19,7 @@ identity API to sign bytes and verify signatures.
 For more information about App Engine, see README.md under /appengine.
 """
 
-# [START all]
+# [START gae_python_app_identity_signing]
 
 import base64
 
@@ -81,4 +81,4 @@ app = webapp2.WSGIApplication([
     ('/', MainPage)
 ], debug=True)
 
-# [END all]
+# [END gae_python_app_identity_signing]

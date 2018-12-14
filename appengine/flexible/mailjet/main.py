@@ -12,23 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START app]
 import logging
 import os
 
 from flask import Flask, render_template, request
-# [START config]
+# [START gae_flex_mailjet_config]
 import mailjet_rest
 
 MAILJET_API_KEY = os.environ['MAILJET_API_KEY']
 MAILJET_API_SECRET = os.environ['MAILJET_API_SECRET']
 MAILJET_SENDER = os.environ['MAILJET_SENDER']
-# [END config]
+# [END gae_flex_mailjet_config]
 
 app = Flask(__name__)
 
 
-# [START send_message]
+# [START gae_flex_mailjet_send_message]
 def send_message(to):
     client = mailjet_rest.Client(
         auth=(MAILJET_API_KEY, MAILJET_API_SECRET), version='v3.1')
@@ -51,7 +50,7 @@ def send_message(to):
     result = client.send.create(data=data)
 
     return result.json()
-# [END send_message]
+# [END gae_flex_mailjet_send_message]
 
 
 @app.route('/')
@@ -81,4 +80,3 @@ if __name__ == '__main__':
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
     app.run(host='127.0.0.1', port=8080, debug=True)
-# [END app]

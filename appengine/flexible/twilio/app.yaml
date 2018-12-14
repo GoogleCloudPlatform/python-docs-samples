@@ -5,9 +5,9 @@ entrypoint: gunicorn -b :$PORT main:app
 runtime_config:
   python_version: 3
 
-# [START env_variables]
+# [START gae_flex_twilio_env]
 env_variables:
     TWILIO_ACCOUNT_SID: your-account-sid
     TWILIO_AUTH_TOKEN: your-auth-token
     TWILIO_NUMBER: your-twilio-number
-# [END env_variables]
+# [END gae_flex_twilio_env]

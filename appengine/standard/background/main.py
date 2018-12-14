@@ -19,9 +19,9 @@ threads.
 app.yaml scaling must be set to manual or basic.
 """
 
-# [START background-imp]
+# [START gae_runtime_import]
 from google.appengine.api import background_thread
-# [END background-imp]
+# [END gae_runtime_import]
 
 import webapp2
 
@@ -58,7 +58,7 @@ class SetCatBackgroundHandler(webapp2.RequestHandler):
         """
         auto = self.request.get('auto')
 
-        # [START background-start]
+        # [START gae_runtime]
         # sample function to run in a background thread
         def change_val(arg):
             global val
@@ -72,7 +72,7 @@ class SetCatBackgroundHandler(webapp2.RequestHandler):
             t = background_thread.BackgroundThread(
                 target=change_val, args=['Cat'])
             t.start()
-        # [END background-start]
+        # [END gae_runtime]
 
         self.response.headers['Content-Type'] = 'text/plain'
         self.response.write('Done')
@@ -83,4 +83,3 @@ app = webapp2.WSGIApplication([
     ('/dog', SetDogHandler),
     ('/cat', SetCatBackgroundHandler),
 ], debug=True)
-# [END all]
