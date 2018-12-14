@@ -12,15 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import time
-
 import pytest
-try:
-    import IPython
-    from IPython.testing import tools
-    from IPython.terminal import interactiveshell
-except ImportError:  # pragma: NO COVER
-    IPython = None
+import IPython
+from IPython.testing import tools
+from IPython.terminal import interactiveshell
+import time
 
 
 @pytest.fixture(scope='session')
@@ -56,12 +52,6 @@ def _strip_region_tags(sample_text):
     return '\n'.join(magic_lines)
 
 
-def _run_magic_sample(sample, ip):
-    result = ip.run_cell(_strip_region_tags(sample))
-    result.raise_error()  # Throws an exception if the cell failed.
-
-
-@pytest.mark.skipif(IPython is None, reason="Requires `ipython`")
 def test_datalab_query_magic(ipython):
     ip = _set_up_ipython('google.datalab.kernel')
 
@@ -74,10 +64,9 @@ def test_datalab_query_magic(ipython):
     ORDER BY count ASC
     # [END bigquery_migration_datalab_query_magic]
     """
-    _run_magic_sample(sample, ip)
+    ip.run_cell(_strip_region_tags(sample))
 
 
-@pytest.mark.skipif(IPython is None, reason="Requires `ipython`")
 def test_client_library_query_magic(ipython):
     ip = _set_up_ipython('google.cloud.bigquery')
 
@@ -90,94 +79,132 @@ def test_client_library_query_magic(ipython):
     ORDER BY count ASC
     # [END bigquery_migration_client_library_query_magic]
     """
-    _run_magic_sample(sample, ip)
+    ip.run_cell(_strip_region_tags(sample))
 
 
-@pytest.mark.skipif(IPython is None, reason="Requires `ipython`")
 def test_datalab_query_magic_results_variable(ipython):
     ip = _set_up_ipython('google.datalab.kernel')
 
     sample = """
-    # [START bigquery_migration_datalab_query_magic_results_variable]
-    %%bq --name my_variable
-    SELECT word, SUM(word_count) as count
-    FROM `bigquery-public-data.samples.shakespeare`
-    GROUP BY word
-    ORDER BY count ASC
-    # [END bigquery_migration_datalab_query_magic_results_variable]
+    # [START bigquery_migration_datalab_query_magic_define_query]
+    %%bq query -n my_query
+    SELECT name FROM `bigquery-public-data.usa_names.usa_1910_current`
+    WHERE state = "TX"
+    LIMIT 100
+    # [END bigquery_migration_datalab_query_magic_define_query]
     """
-    _run_magic_sample(sample, ip)
+    ip.run_cell(_strip_region_tags(sample))
+
+    sample = """
+    # [START bigquery_migration_datalab_execute_query]
+    import google.datalab.bigquery as bq
+
+    my_variable = my_query.execute().result().to_dataframe()
+    # [END bigquery_migration_datalab_execute_query]
+    """
+    ip.run_cell(_strip_region_tags(sample))
+
+    variable_name = "my_variable"
+    assert variable_name in ip.user_ns  # verify that variable exists
+    my_variable = ip.user_ns[variable_name]
+    assert len(my_variable) == 100
+    ip.user_ns.pop(variable_name)  # clean up variable
 
 
-@pytest.mark.skipif(IPython is None, reason="Requires `ipython`")
 def test_client_library_query_magic_results_variable(ipython):
     ip = _set_up_ipython('google.cloud.bigquery')
 
     sample = """
     # [START bigquery_migration_client_library_query_magic_results_variable]
     %%bigquery my_variable
-    SELECT word, SUM(word_count) as count
-    FROM `bigquery-public-data.samples.shakespeare`
-    GROUP BY word
-    ORDER BY count ASC
+    SELECT name FROM `bigquery-public-data.usa_names.usa_1910_current`
+    WHERE state = "TX"
+    LIMIT 100
     # [END bigquery_migration_client_library_query_magic_results_variable]
     """
-    _run_magic_sample(sample, ip)
+    ip.run_cell(_strip_region_tags(sample))
+
+    variable_name = "my_variable"
+    assert variable_name in ip.user_ns  # verify that variable exists
+    my_variable = ip.user_ns[variable_name]
+    assert len(my_variable) == 100
+    ip.user_ns.pop(variable_name)  # clean up variable
 
 
-@pytest.mark.skipif(IPython is None, reason="Requires `ipython`")
 def test_datalab_magic_parameterized_query(ipython):
+    import pandas
+
     ip = _set_up_ipython('google.datalab.kernel')
 
     sample = """
     # [START bigquery_migration_datalab_magic_define_parameterized_query]
-    %%bq query -n my_variable
+    %%bq query -n my_query
     SELECT word, SUM(word_count) as count
     FROM `bigquery-public-data.samples.shakespeare`
     WHERE corpus = @corpus_name
     GROUP BY word
     ORDER BY count ASC
+    LIMIT @limit
     # [END bigquery_migration_datalab_magic_define_parameterized_query]
     """
-    _run_magic_sample(sample, ip)
+    ip.run_cell(_strip_region_tags(sample))
+
+    sample = """
+    # [START bigquery_migration_datalab_magic_query_params]
+    corpus_name = "hamlet"
+    limit = 10
+    # [END bigquery_migration_datalab_magic_query_params]
+    """
+    ip.run_cell(_strip_region_tags(sample))
 
     sample = """
     # [START bigquery_migration_datalab_magic_execute_parameterized_query]
-    %%bq execute -q endpoint_stats
+    %%bq execute -q my_query --to-dataframe
     parameters:
     - name: corpus_name
       type: STRING
-      value: hamlet
+      value: $corpus_name
+    - name: limit
+      type: INTEGER
+      value: $limit
     # [END bigquery_migration_datalab_magic_execute_parameterized_query]
     """
-    _run_magic_sample(sample, ip)
+    ip.run_cell(_strip_region_tags(sample))
+    df = ip.user_ns["_"]  # Retrieves last returned object in notebook session
+    assert isinstance(df, pandas.DataFrame)
+    assert len(df) == 10
 
 
-@pytest.mark.skipif(IPython is None, reason="Requires `ipython`")
-def test_query_magic_parameterized_query(ipython):
+def test_client_library_magic_parameterized_query(ipython):
+    import pandas
+
     ip = _set_up_ipython('google.cloud.bigquery')
 
     sample = """
     # [START bigquery_migration_client_library_magic_query_params]
-    params = {"corpus_name": "hamlet"}
+    params = {"corpus_name": "hamlet", "limit": 10}
     # [END bigquery_migration_client_library_magic_query_params]
     """
-    _run_magic_sample(sample, ip)
+    ip.run_cell(_strip_region_tags(sample))
 
     sample = """
     # [START bigquery_migration_client_library_magic_parameterized_query]
-    %%bigquery my_variable --params $params
+    %%bigquery --params $params
     SELECT word, SUM(word_count) as count
     FROM `bigquery-public-data.samples.shakespeare`
     WHERE corpus = @corpus_name
     GROUP BY word
     ORDER BY count ASC
+    LIMIT @limit
     # [END bigquery_migration_client_library_magic_parameterized_query]
     """
-    _run_magic_sample(sample, ip)
+    ip.run_cell(_strip_region_tags(sample))
+
+    df = ip.user_ns["_"]  # Retrieves last returned object in notebook session
+    assert isinstance(df, pandas.DataFrame)
+    assert len(df) == 10
 
 
-@pytest.mark.skipif(IPython is None, reason="Requires `ipython`")
 def test_datalab_list_tables_magic(ipython):
     ip = _set_up_ipython('google.datalab.kernel')
 
@@ -186,26 +213,11 @@ def test_datalab_list_tables_magic(ipython):
     %bq tables list --dataset bigquery-public-data.samples
     # [END bigquery_migration_datalab_list_tables_magic]
     """
-    _run_magic_sample(sample, ip)
+    ip.run_cell(_strip_region_tags(sample))
 
-
-@pytest.mark.skipif(IPython is None, reason="Requires `ipython`")
-def test_command_line_interface(ipython):
-    ip = IPython.get_ipython()
-
-    sample = """
-    # [START bigquery_migration_command_line_list_tables]
-    !bq ls bigquery-public-data:samples
-    # [END bigquery_migration_command_line_list_tables]
-    """
-    _run_magic_sample(sample, ip)
-
-    sample = """
-    # [START bigquery_migration_command_line_help]
-    !bq help
-    # [END bigquery_migration_command_line_help]
-    """
-    _run_magic_sample(sample, ip)
+    # Retrieves last returned object in notebook session
+    html_element = ip.user_ns["_"]
+    assert "shakespeare" in html_element.data
 
 
 def test_datalab_query():
