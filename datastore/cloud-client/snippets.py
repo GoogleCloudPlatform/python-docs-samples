@@ -780,10 +780,19 @@ def property_by_kind_run_query(client):
 
 
 def eventual_consistent_query(client):
+    task = datastore.Entity(
+        client.key('TaskList', 'default', 'Task'))
+    task.update({
+        'category': 'Personal',
+        'description': 'Learn Cloud Datastore',
+    })
+    client.put(task)
+
     # [START datastore_eventual_consistent_query]
-    # Read consistency cannot be specified in google-cloud-python.
+    ancestor = client.key('TaskList', 'default')
+    query = client.query(kind='Task', ancestor=ancestor)
+    return list(query.fetch(eventual=True))
     # [END datastore_eventual_consistent_query]
-    pass
 
 
 def main(project_id):
