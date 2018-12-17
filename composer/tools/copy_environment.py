@@ -543,7 +543,7 @@ def import_data(
         if proxy_subprocess:
             proxy_subprocess.kill()
         if fuse_dir:
-            if system.system().lower().startswith('darwin'):
+            if platform.system().lower().startswith('darwin'):
                 # Mac OSX does not have fusermount
                 subprocess.call(["umount", fuse_dir])
             else:
