@@ -16,12 +16,15 @@ import random
 import time
 
 from flask import Flask, redirect, url_for
-import opencensus.trace.exporters.stackdriver_exporter
+
+# [START trace-setup-python-configure]
+from opencensus.trace.exporters import stackdriver_exporter
 import opencensus.trace.tracer
 
-
-exporter = opencensus.trace.exporters.stackdriver_exporter.StackdriverExporter()
+exporter = stackdriver_exporter.StackdriverExporter()
 tracer = opencensus.trace.tracer.Tracer(exporter=exporter)
+# [END trace-setup-python-configure]
+
 app = Flask(__name__)
 
 
@@ -30,6 +33,7 @@ def root():
     return redirect(url_for('index'))
 
 
+# [START trace_setup_python_quickstart]
 @app.route('/index.html', methods=['GET'])
 def index():
     tracer.start_span(name='index')
@@ -40,3 +44,4 @@ def index():
 
     tracer.end_span()
     return result
+# [END trace_setup_python_quickstart]
