@@ -45,3 +45,7 @@ def index():
     tracer.end_span()
     return result
 # [END trace_setup_python_quickstart]
+
+
+if __name__ == '__main__':
+    app.run()
