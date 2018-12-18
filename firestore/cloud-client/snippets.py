@@ -15,6 +15,7 @@ import datetime
 from time import sleep
 
 from google.cloud import firestore
+from google.cloud.firestore import ArrayUnion, ArrayRemove
 import google.cloud.exceptions
 
 
@@ -232,6 +233,18 @@ def get_simple_query():
     # [END get_simple_query]
 
 
+def array_contains_filter():
+    db = firestore.Client()
+    # [START fs_array_contains_filter]
+    cities_ref = db.collection(u'cities')
+
+    query = cities_ref.where(u'regions', u'array_contains', 'west_coast')
+    # [END fs_array_contains_filter]
+    docs = query.get()
+    for doc in docs:
+        print(u'{} => {}'.format(doc.id, doc.to_dict()))
+
+
 def get_full_collection():
     db = firestore.Client()
     # [START get_full_collection]
@@ -284,6 +297,19 @@ def update_doc():
     # Set the capital field
     city_ref.update({u'capital': True})
     # [END update_doc]
+
+
+def update_doc_array():
+    db = firestore.Client()
+    # [START fs_update_doc_array]
+    city_ref = db.collection(u'cities').document(u'DC')
+
+    # Atomically add a new region to the 'regions' array field.
+    city_ref.update({u'regions': ArrayUnion([u'greater_virginia'])})
+
+    # // Atomically remove a region from the 'regions' array field.
+    city_ref.update({u'regions': ArrayRemove([u'east_coast'])})
+    # [END fs_update_doc_array]
 
 
 def update_multiple():

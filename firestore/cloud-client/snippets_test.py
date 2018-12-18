@@ -74,6 +74,10 @@ def test_get_simple_query():
     snippets.get_simple_query()
 
 
+def test_array_contains_filter():
+    snippets.array_contains_filter()
+
+
 def test_get_full_collection():
     snippets.get_full_collection()
 
@@ -108,6 +112,10 @@ def test_update_create_if_missing():
 
 def test_update_doc():
     snippets.update_doc()
+
+
+def test_update_doc_array():
+    snippets.update_doc_array()
 
 
 def test_update_multiple():
