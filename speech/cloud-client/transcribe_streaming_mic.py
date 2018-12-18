@@ -25,9 +25,9 @@ Example usage:
     python transcribe_streaming_mic.py
 """
 
+# [START speech_transcribe_streaming_mic]
 from __future__ import division
 
-import argparse
 import re
 import sys
 
@@ -37,34 +37,36 @@ from google.cloud.speech import types
 import pyaudio
 from six.moves import queue
 
+# Audio recording parameters
+RATE = 16000
+CHUNK = int(RATE / 10)  # 100ms
+
+
 class MicrophoneStream(object):
     """Opens a recording stream as a generator yielding the audio chunks."""
-    def __init__(self, rate, chunk_size):
+    def __init__(self, rate, chunk):
         self._rate = rate
-        self._chunk_size = chunk_size
+        self._chunk = chunk
 
         # Create a thread-safe buffer of audio data
         self._buff = queue.Queue()
         self.closed = True
 
-        # Some useful numbers
-        self._num_channels = 1  # API only supports mono for now
-
     def __enter__(self):
-        self.closed = False
-
         self._audio_interface = pyaudio.PyAudio()
         self._audio_stream = self._audio_interface.open(
             format=pyaudio.paInt16,
             # The API currently only supports 1-channel (mono) audio
             # https://goo.gl/z757pE
-            channels=self._num_channels, rate=self._rate,
-            input=True, frames_per_buffer=self._chunk_size,
+            channels=1, rate=self._rate,
+            input=True, frames_per_buffer=self._chunk,
             # Run the audio stream asynchronously to fill the buffer object.
             # This is necessary so that the input device's buffer doesn't
             # overflow while the calling thread makes network requests, etc.
             stream_callback=self._fill_buffer,
         )
+
+        self.closed = False
 
         return self
 
@@ -77,7 +79,7 @@ class MicrophoneStream(object):
         self._buff.put(None)
         self._audio_interface.terminate()
 
-    def _fill_buffer(self, in_data, *args, **kwargs):
+    def _fill_buffer(self, in_data, frame_count, time_info, status_flags):
         """Continuously collect data from the audio stream, into the buffer."""
         self._buff.put(in_data)
         return None, pyaudio.paContinue
@@ -133,8 +135,7 @@ def listen_print_loop(responses):
             continue
 
         # Display the transcription of the top alternative.
-        top_alternative = result.alternatives[0]
-        transcript = top_alternative.transcript
+        transcript = result.alternatives[0].transcript
 
         # Display interim results, but with a carriage return at the end of the
         # line, so subsequent lines will overwrite them.
@@ -161,7 +162,7 @@ def listen_print_loop(responses):
             num_chars_printed = 0
 
 
-def main(sample_rate):
+def main():
     # See http://g.co/cloud/speech/docs/languages
     # for a list of supported languages.
     language_code = 'en-US'  # a BCP-47 language tag
@@ -169,14 +170,13 @@ def main(sample_rate):
     client = speech.SpeechClient()
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=sample_rate,
-        language_code=language_code,
-        max_alternatives=1)
+        sample_rate_hertz=RATE,
+        language_code=language_code)
     streaming_config = types.StreamingRecognitionConfig(
         config=config,
         interim_results=True)
 
-    with MicrophoneStream(sample_rate, int(sample_rate / 10)) as stream:
+    with MicrophoneStream(RATE, CHUNK) as stream:
         audio_generator = stream.generator()
         requests = (types.StreamingRecognizeRequest(audio_content=content)
                     for content in audio_generator)
@@ -188,9 +188,5 @@ def main(sample_rate):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--rate', default=16000, help='Sample rate.', type=int)
-    args = parser.parse_args()
-    main(args.rate)
+    main()
+# [END speech_transcribe_streaming_mic]

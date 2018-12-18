@@ -34,7 +34,7 @@ def is_ipv6(addr):
         return False
 
 
-# [START example]
+# [START gae_flex_mysql_app]
 # Environment variables are defined in app.yaml.
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLALCHEMY_DATABASE_URI']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -79,7 +79,7 @@ def index():
     output = 'Last 10 visits:\n{}'.format('\n'.join(results))
 
     return output, 200, {'Content-Type': 'text/plain; charset=utf-8'}
-# [END example]
+# [END gae_flex_mysql_app]
 
 
 @app.errorhandler(500)

@@ -5,7 +5,7 @@ entrypoint: gunicorn -b :$PORT main:app
 runtime_config:
   python_version: 3
 
-#[START env]
+#[START gae_flex_storage_yaml]
 env_variables:
     CLOUD_STORAGE_BUCKET: your-bucket-name
-#[END env]
+#[END gae_flex_storage_yaml]

@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START app]
 import logging
 
 from flask import Flask
@@ -23,7 +22,7 @@ logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
 
 
-# [START metadata]
+# [START gae_flex_metadata]
 METADATA_NETWORK_INTERFACE_URL = \
     ('http://metadata/computeMetadata/v1/instance/network-interfaces/0/'
      'access-configs/0/external-ip')
@@ -43,7 +42,7 @@ def get_external_ip():
     except requests.RequestException:
         logging.info('Metadata server could not be reached, assuming local.')
         return 'localhost'
-# [END metadata]
+# [END gae_flex_metadata]
 
 
 @app.route('/')
@@ -52,7 +51,6 @@ def index():
     # external IP address of this instance is needed.
     external_ip = get_external_ip()
     return 'External IP: {}'.format(external_ip)
-# [END app]
 
 
 @app.errorhandler(500)

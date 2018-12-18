@@ -18,14 +18,14 @@
 
 import argparse
 
-# [START import_client_library]
+# [START vision_face_detection_tutorial_imports]
 from google.cloud import vision
-# [END import_client_library]
 from google.cloud.vision import types
 from PIL import Image, ImageDraw
+# [END vision_face_detection_tutorial_imports]
 
 
-# [START def_detect_face]
+# [START vision_face_detection_tutorial_send_request]
 def detect_face(face_file, max_results=4):
     """Uses the Vision API to detect faces in the given file.
 
@@ -35,18 +35,18 @@ def detect_face(face_file, max_results=4):
     Returns:
         An array of Face objects with information about the picture.
     """
-    # [START get_vision_service]
+    # [START vision_face_detection_tutorial_client]
     client = vision.ImageAnnotatorClient()
-    # [END get_vision_service]
+    # [END vision_face_detection_tutorial_client]
 
     content = face_file.read()
     image = types.Image(content=content)
 
-    return client.face_detection(image=image).face_annotations
-# [END def_detect_face]
+    return client.face_detection(image=image, max_results=max_results).face_annotations
+# [END vision_face_detection_tutorial_send_request]
 
 
-# [START def_highlight_faces]
+# [START vision_face_detection_tutorial_process_response]
 def highlight_faces(image, faces, output_filename):
     """Draws a polygon around the faces, then saves to output_filename.
 
@@ -59,17 +59,22 @@ def highlight_faces(image, faces, output_filename):
     """
     im = Image.open(image)
     draw = ImageDraw.Draw(im)
-
+    # Sepecify the font-family and the font-size
     for face in faces:
         box = [(vertex.x, vertex.y)
                for vertex in face.bounding_poly.vertices]
         draw.line(box + [box[0]], width=5, fill='#00ff00')
-
+        # Place the confidence value/score of the detected faces above the
+        # detection box in the output image
+        draw.text(((face.bounding_poly.vertices)[0].x,
+                   (face.bounding_poly.vertices)[0].y - 30),
+                  str(format(face.detection_confidence, '.3f')) + '%',
+                  fill='#FF0000')
     im.save(output_filename)
-# [END def_highlight_faces]
+# [END vision_face_detection_tutorial_process_response]
 
 
-# [START def_main]
+# [START vision_face_detection_tutorial_run_application]
 def main(input_filename, output_filename, max_results):
     with open(input_filename, 'rb') as image:
         faces = detect_face(image, max_results)
@@ -80,7 +85,7 @@ def main(input_filename, output_filename, max_results):
         # Reset the file pointer, so we can read the file again
         image.seek(0)
         highlight_faces(image, faces, output_filename)
-# [END def_main]
+# [END vision_face_detection_tutorial_run_application]
 
 
 if __name__ == '__main__':

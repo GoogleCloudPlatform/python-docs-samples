@@ -1,0 +1,96 @@
+#!/usr/bin/env python
+
+# Copyright 2016 Google Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import random
+import string
+import time
+
+# [START instantiate]
+from googleapiclient.discovery import build
+
+client_service = build('jobs', 'v2')
+# [END instantiate]
+
+
+# [START featured_job]
+def generate_featured_job(company_name):
+    # Requisition id should be a unique Id in your system.
+    requisition_id = 'job_with_required_fields:' + ''.join(
+        random.choice(string.ascii_uppercase + string.digits)
+        for _ in range(16))
+
+    job_title = 'Software Engineer'
+    application_urls = ['http://careers.google.com']
+    description = ('Design, develop, test, deploy, maintain and improve '
+                   'software.')
+
+    job = {
+        'requisition_id': requisition_id,
+        'job_title': job_title,
+        'application_urls': application_urls,
+        'description': description,
+        'company_name': company_name,
+        'promotion_value': 2
+    }
+    print('Job generated: %s' % job)
+    return job
+# [END featured_job]
+
+
+# [START search_featured_job]
+def search_featured_job(client_service, company_name):
+    request_metadata = {
+        'user_id': 'HashedUserId',
+        'session_id': 'HashedSessionId',
+        'domain': 'www.google.com'
+    }
+    job_query = {'query': 'Software Engineer'}
+    if company_name is not None:
+        job_query.update({'company_names': [company_name]})
+    request = {
+        'mode': 'FEATURED_JOB_SEARCH',
+        'request_metadata': request_metadata,
+        'query': job_query
+    }
+
+    response = client_service.jobs().search(body=request).execute()
+    print(response)
+# [END search_featured_job]
+
+
+def run_sample():
+    import base_company_sample
+    import base_job_sample
+
+    company_to_be_created = base_company_sample.generate_company()
+    company_created = base_company_sample.create_company(
+        client_service, company_to_be_created)
+    company_name = company_created.get('name')
+
+    job_to_be_created = generate_featured_job(company_name)
+    job_name = base_job_sample.create_job(client_service,
+                                          job_to_be_created).get('name')
+
+    # Wait several seconds for post processing
+    time.sleep(10)
+    search_featured_job(client_service, company_name)
+
+    base_job_sample.delete_job(client_service, job_name)
+    base_company_sample.delete_company(client_service, company_name)
+
+
+if __name__ == '__main__':
+    run_sample()
