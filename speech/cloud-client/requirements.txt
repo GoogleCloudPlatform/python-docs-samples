@@ -1,2 +1,3 @@
-google-cloud-speech==0.33.0
-google-api-core==1.2.0
+google-cloud-speech==0.36.0
+pyaudio==0.2.11
+six==1.12.0
