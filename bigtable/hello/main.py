@@ -25,11 +25,13 @@ Prerequisites:
 """
 
 import argparse
+# [START dependencies]
 import datetime
 
 from google.cloud import bigtable
 from google.cloud.bigtable import column_family
 from google.cloud.bigtable import row_filters
+# [END dependencies]
 
 
 def main(project_id, instance_id, table_id):
@@ -82,14 +84,19 @@ def main(project_id, instance_id, table_id):
     table.mutate_rows(rows)
     # [END writing_rows]
 
+    # [START creating_a_filter]
+    # Create a filter to only retrieve the most recent version of the cell
+    # for each column accross entire row.
+    row_filter = row_filters.CellsColumnLimitFilter(1)
+    # [END creating_a_filter]
+
     # [START getting_a_row]
     print('Getting a single greeting by row key.')
     key = 'greeting0'.encode()
 
-    # Only retrieve the most recent version of the cell.
-    row_filter = row_filters.CellsColumnLimitFilter(1)
     row = table.read_row(key, row_filter)
-    print(row.cell_value(column_family_id, column))
+    cell = row.cells[column_family_id][column][0]
+    print(cell.value.decode('utf-8'))
     # [END getting_a_row]
 
     # [START scanning_all_rows]
