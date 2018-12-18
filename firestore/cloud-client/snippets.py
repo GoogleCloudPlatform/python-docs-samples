@@ -628,7 +628,7 @@ def listen_document():
         u'population': 860000
     }
     doc_ref.set(data)
-    sleep(1)
+    sleep(3)
     # [START detach_listener]
     # Terminate watch on a document
     doc_watch.unsubscribe()
