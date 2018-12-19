@@ -53,9 +53,9 @@ def duration_to_secs(duration):
 
 class ResumableMicrophoneStream:
     """Opens a recording stream as a generator yielding the audio chunks."""
-    def __init__(self):
-        self._rate = SAMPLE_RATE
-        self._chunk_size = CHUNK_SIZE
+    def __init__(self, rate, chunk_size):
+        self._rate = rate
+        self._chunk_size = chunk_size
         self._num_channels = 1
         self._max_replay_secs = 5
 
@@ -201,7 +201,7 @@ def main():
         config=config,
         interim_results=True)
 
-    mic_manager = ResumableMicrophoneStream()
+    mic_manager = ResumableMicrophoneStream(SAMPLE_RATE, CHUNK_SIZE)
 
     print('Say "Quit" or "Exit" to terminate the program.')
 
