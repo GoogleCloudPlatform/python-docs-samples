@@ -325,7 +325,7 @@ def update_doc_array():
     city_ref.update({u'regions': ArrayRemove([u'east_coast'])})
     # [END fs_update_doc_array]
     city = city_ref.get()
-    print("Updated the regions field of the DC. {}".format(city.to_dict()))
+    print(u'Updated the regions field of the DC. {}'.format(city.to_dict()))
 
 
 def update_multiple():
@@ -611,7 +611,7 @@ def snapshot_cursors():
     # [END fs_start_at_snapshot_query_cursor]
     results = start_at_snapshot.limit(10).get()
     for doc in results:
-        print('{}'.format(doc.id))
+        print(u'{}'.format(doc.id))
 
     return results
 
@@ -716,11 +716,11 @@ def listen_for_changes():
         print(u'Callback received query snapshot.')
         print(u'Current cities in California: ')
         for change in changes:
-            if change.type.name == "ADDED":
+            if change.type.name == 'ADDED':
                 print(u'New city: {}'.format(change.document.id))
-            elif change.type.name == "MODIFIED":
+            elif change.type.name == 'MODIFIED':
                 print(u'Modified city: {}'.format(change.document.id))
-            elif change.type.name == "REMOVED":
+            elif change.type.name == 'REMOVED':
                 print(u'Removed city: {}'.format(change.document.id))
 
     col_query = db.collection(u'cities').where(u'state', u'==', u'CA')
