@@ -20,7 +20,7 @@ import argparse
 
 
 # [START dlp_deidentify_masking]
-def deidentify_with_mask(project, string, masking_character=None,
+def deidentify_with_mask(project, string, info_types, masking_character=None,
                          number_to_mask=0):
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string by masking it with a character.
@@ -44,6 +44,11 @@ def deidentify_with_mask(project, string, masking_character=None,
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
 
+    # Construct inspect configuration dictionary
+    inspect_config = {
+        'info_types': [{'name': info_type} for info_type in info_types]
+    }
+
     # Construct deidentify configuration dictionary
     deidentify_config = {
         'info_type_transformations': {
@@ -65,7 +70,8 @@ def deidentify_with_mask(project, string, masking_character=None,
 
     # Call the API
     response = dlp.deidentify_content(
-        parent, deidentify_config=deidentify_config, item=item)
+        parent, inspect_config=inspect_config,
+        deidentify_config=deidentify_config, item=item)
 
     # Print out the results.
     print(response.item.value)
@@ -73,7 +79,7 @@ def deidentify_with_mask(project, string, masking_character=None,
 
 
 # [START dlp_deidentify_fpe]
-def deidentify_with_fpe(project, string, alphabet=None,
+def deidentify_with_fpe(project, string, info_types, alphabet=None,
                         surrogate_type=None, key_name=None, wrapped_key=None):
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string using Format Preserving Encryption (FPE).
@@ -127,6 +133,11 @@ def deidentify_with_fpe(project, string, alphabet=None,
             'name': surrogate_type
         }
 
+    # Construct inspect configuration dictionary
+    inspect_config = {
+        'info_types': [{'name': info_type} for info_type in info_types]
+    }
+
     # Construct deidentify configuration dictionary
     deidentify_config = {
         'info_type_transformations': {
@@ -146,7 +157,8 @@ def deidentify_with_fpe(project, string, alphabet=None,
 
     # Call the API
     response = dlp.deidentify_content(
-        parent, deidentify_config=deidentify_config, item=item)
+        parent, inspect_config=inspect_config,
+        deidentify_config=deidentify_config, item=item)
 
     # Print results
     print(response.item.value)
@@ -405,6 +417,13 @@ if __name__ == '__main__':
         help='Deidentify sensitive data in a string by masking it with a '
              'character.')
     mask_parser.add_argument(
+        '--info_types', action='append',
+        help='Strings representing info types to look for. A full list of '
+             'info categories and types is available from the API. Examples '
+             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+             'If unspecified, the three above examples will be used.',
+        default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
+    mask_parser.add_argument(
         'project',
         help='The Google Cloud project id to use as a parent resource.')
     mask_parser.add_argument('item', help='The string to deidentify.')
@@ -423,6 +442,13 @@ if __name__ == '__main__':
         'deid_fpe',
         help='Deidentify sensitive data in a string using Format Preserving '
              'Encryption (FPE).')
+    fpe_parser.add_argument(
+        '--info_types', action='append',
+        help='Strings representing info types to look for. A full list of '
+             'info categories and types is available from the API. Examples '
+             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+             'If unspecified, the three above examples will be used.',
+        default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
     fpe_parser.add_argument(
          'project',
          help='The Google Cloud project id to use as a parent resource.')
@@ -532,11 +558,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.content == 'deid_mask':
-        deidentify_with_mask(args.project, args.item,
+        deidentify_with_mask(args.project, args.item, args.info_types,
                              masking_character=args.masking_character,
                              number_to_mask=args.number_to_mask)
     elif args.content == 'deid_fpe':
-        deidentify_with_fpe(args.project, args.item, alphabet=args.alphabet,
+        deidentify_with_fpe(args.project, args.item, args.info_types,
+                            alphabet=args.alphabet,
                             wrapped_key=args.wrapped_key,
                             key_name=args.key_name,
                             surrogate_type=args.surrogate_type)

@@ -100,6 +100,46 @@ To run this sample:
 
 
 
+beta samples
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=video/cloud-client/analyze/beta_snippets.py,video/cloud-client/analyze/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python beta_snippets.py
+
+    usage: beta_snippets.py [-h]
+                            {transcription,video-text-gcs,video-text,track-objects-gcs,track-objects}
+                            ...
+
+    This application demonstrates speech transcription using the
+    Google Cloud API.
+
+    Usage Examples:
+        python beta_snippets.py transcription         gs://python-docs-samples-tests/video/googlework_short.mp4
+        python beta_snippets.py video-text-gcs         gs://python-docs-samples-tests/video/googlework_short.mp4
+        python beta_snippets.py track-objects /resources/cat.mp4
+
+    positional arguments:
+      {transcription,video-text-gcs,video-text,track-objects-gcs,track-objects}
+        transcription       Transcribe speech from a video stored on GCS.
+        video-text-gcs      Detect text in a video stored on GCS.
+        video-text          Detect text in a local video.
+        track-objects-gcs   Object Tracking.
+        track-objects       Object Tracking.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
+
 
 
 The client library

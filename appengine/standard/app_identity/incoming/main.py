@@ -19,7 +19,7 @@ engine inbound app ID header.
 For more information about App Engine, see README.md under /appengine.
 """
 
-# [START all]
+# [START gae_python_app_identity_incoming]
 import webapp2
 
 
@@ -43,4 +43,4 @@ app = webapp2.WSGIApplication([
     ('/', MainPage)
 ], debug=True)
 
-# [END all]
+# [END gae_python_app_identity_incoming]

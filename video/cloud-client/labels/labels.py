@@ -27,29 +27,29 @@ Usage Example:
 
 """
 
-# [START full_tutorial]
-# [START imports]
+# [START video_label_tutorial]
+# [START video_label_tutorial_imports]
 import argparse
 
 from google.cloud import videointelligence
-# [END imports]
+# [END video_label_tutorial_imports]
 
 
 def analyze_labels(path):
     """ Detects labels given a GCS path. """
-    # [START construct_request]
+    # [START video_label_tutorial_construct_request]
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.enums.Feature.LABEL_DETECTION]
     operation = video_client.annotate_video(path, features=features)
-    # [END construct_request]
+    # [END video_label_tutorial_construct_request]
     print('\nProcessing video for label annotations:')
 
-    # [START check_operation]
+    # [START video_label_tutorial_check_operation]
     result = operation.result(timeout=90)
     print('\nFinished processing.')
-    # [END check_operation]
+    # [END video_label_tutorial_check_operation]
 
-    # [START parse_response]
+    # [START video_label_tutorial_parse_response]
     segment_labels = result.annotation_results[0].segment_label_annotations
     for i, segment_label in enumerate(segment_labels):
         print('Video label description: {}'.format(
@@ -68,11 +68,11 @@ def analyze_labels(path):
             print('\tSegment {}: {}'.format(i, positions))
             print('\tConfidence: {}'.format(confidence))
         print('\n')
-    # [END parse_response]
+    # [END video_label_tutorial_parse_response]
 
 
 if __name__ == '__main__':
-    # [START running_app]
+    # [START video_label_tutorial_run_application]
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -80,5 +80,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     analyze_labels(args.path)
-    # [END running_app]
-# [END full_tutorial]
+    # [END video_label_tutorial_run_application]
+# [END video_label_tutorial]

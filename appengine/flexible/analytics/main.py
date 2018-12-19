@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START app]
+# [START gae_flex_analytics_track_event]
 import logging
 import os
 
@@ -42,7 +42,7 @@ def track_event(category, action, label=None, value=0):
     }
 
     response = requests.post(
-        'http://www.google-analytics.com/collect', data=data)
+        'https://www.google-analytics.com/collect', data=data)
 
     # If the request fails, this will raise a RequestException. Depending
     # on your application's needs, this may be a non-error and can be caught
@@ -71,4 +71,4 @@ if __name__ == '__main__':
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
     app.run(host='127.0.0.1', port=8080, debug=True)
-# [END app]
+# [END gae_flex_analytics_track_event]

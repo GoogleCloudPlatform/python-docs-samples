@@ -1,0 +1,4 @@
+runtime: python37
+
+inbound_services:
+- warmup

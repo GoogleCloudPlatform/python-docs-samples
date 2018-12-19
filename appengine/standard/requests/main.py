@@ -23,7 +23,7 @@ import time
 import webapp2
 
 
-# [START request_timer]
+# [START gae_python_request_timer]
 class TimerHandler(webapp2.RequestHandler):
     def get(self):
         from google.appengine.runtime import DeadlineExceededError
@@ -36,27 +36,27 @@ class TimerHandler(webapp2.RequestHandler):
             self.response.set_status(500)
             self.response.out.write(
                 'The request did not complete in time.')
-# [END request_timer]
+# [END gae_python_request_timer]
 
 
-# [START environment]
+# [START gae_python_environment]
 class PrintEnvironmentHandler(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/plain'
         for key, value in os.environ.iteritems():
             self.response.out.write(
                 "{} = {}\n".format(key, value))
-# [END environment]
+# [END gae_python_environment]
 
 
-# [START request_ids]
+# [START gae_python_request_ids]
 class RequestIdHandler(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/plain'
         request_id = os.environ.get('REQUEST_LOG_ID')
         self.response.write(
             'REQUEST_LOG_ID={}'.format(request_id))
-# [END request_ids]
+# [END gae_python_request_ids]
 
 
 app = webapp2.WSGIApplication([

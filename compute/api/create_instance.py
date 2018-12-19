@@ -35,7 +35,7 @@ from six.moves import input
 # [START list_instances]
 def list_instances(compute, project, zone):
     result = compute.instances().list(project=project, zone=zone).execute()
-    return result['items']
+    return result['items'] if 'items' in result else None
 # [END list_instances]
 
 
@@ -43,7 +43,7 @@ def list_instances(compute, project, zone):
 def create_instance(compute, project, zone, name, bucket):
     # Get the latest Debian Jessie image.
     image_response = compute.images().getFromFamily(
-        project='debian-cloud', family='debian-8').execute()
+        project='debian-cloud', family='debian-9').execute()
     source_disk_image = image_response['selfLink']
 
     # Configure the machine

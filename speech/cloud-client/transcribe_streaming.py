@@ -20,13 +20,11 @@ Example usage:
     python transcribe_streaming.py resources/audio.raw
 """
 
-# [START import_libraries]
 import argparse
 import io
-# [END import_libraries]
 
 
-# [START def_transcribe_streaming]
+# [START speech_transcribe_streaming]
 def transcribe_streaming(stream_file):
     """Streams transcription of the given audio file."""
     from google.cloud import speech
@@ -34,7 +32,7 @@ def transcribe_streaming(stream_file):
     from google.cloud.speech import types
     client = speech.SpeechClient()
 
-    # [START migration_streaming_request]
+    # [START speech_python_migration_streaming_request]
     with io.open(stream_file, 'rb') as audio_file:
         content = audio_file.read()
 
@@ -50,9 +48,9 @@ def transcribe_streaming(stream_file):
     streaming_config = types.StreamingRecognitionConfig(config=config)
 
     # streaming_recognize returns a generator.
-    # [START migration_streaming_response]
+    # [START speech_python_migration_streaming_response]
     responses = client.streaming_recognize(streaming_config, requests)
-    # [END migration_streaming_request]
+    # [END speech_python_migration_streaming_request]
 
     for response in responses:
         # Once the transcription has settled, the first result will contain the
@@ -66,8 +64,8 @@ def transcribe_streaming(stream_file):
             for alternative in alternatives:
                 print('Confidence: {}'.format(alternative.confidence))
                 print(u'Transcript: {}'.format(alternative.transcript))
-    # [END migration_streaming_response]
-# [END def_transcribe_streaming]
+    # [END speech_python_migration_streaming_response]
+# [END speech_transcribe_streaming]
 
 
 if __name__ == '__main__':
