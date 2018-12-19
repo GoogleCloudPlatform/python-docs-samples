@@ -220,5 +220,26 @@ def test_delete_field(db):
     snippets.delete_field()
 
 
+def test_listen_document(capsys):
+    snippets.listen_document()
+    out, _ = capsys.readouterr()
+    assert "Received document snapshot: SF" in out
+
+
+def test_listen_multiple(capsys):
+    snippets.listen_multiple()
+    out, _ = capsys.readouterr()
+    assert "Current cities in California:" in out
+    assert "SF" in out
+
+
+def test_listen_for_changes(capsys):
+    snippets.listen_for_changes()
+    out, _ = capsys.readouterr()
+    assert "New city: MTV" in out
+    assert "Modified city: MTV" in out
+    assert "Removed city: MTV" in out
+
+
 def test_delete_full_collection():
     snippets.delete_full_collection()
