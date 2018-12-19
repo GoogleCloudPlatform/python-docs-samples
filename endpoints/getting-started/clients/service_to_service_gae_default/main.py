@@ -43,8 +43,9 @@ def generate_jwt():
         # iss is the Google App Engine default service account email.
         'iss': DEFAULT_SERVICE_ACCOUNT,
         'sub': DEFAULT_SERVICE_ACCOUNT,
-        # aud must match 'audience' in the security configuration in your
-        # OpenAPI spec.It can be any string.
+        # Typically, the audience is the hostname of your API. The aud
+        # defined here must match the audience in the security configuration
+        # in yourOpenAPI spec.
         'aud': 'echo.endpoints.sample.google.com',
         "email": DEFAULT_SERVICE_ACCOUNT
     })
