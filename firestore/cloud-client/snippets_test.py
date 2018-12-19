@@ -74,8 +74,10 @@ def test_get_simple_query():
     snippets.get_simple_query()
 
 
-def test_array_contains_filter():
+def test_array_contains_filter(capsys):
     snippets.array_contains_filter()
+    out, _ = capsys.readouterr()
+    assert "SF" in out
 
 
 def test_get_full_collection():
@@ -114,8 +116,10 @@ def test_update_doc():
     snippets.update_doc()
 
 
-def test_update_doc_array():
+def test_update_doc_array(capsys):
     snippets.update_doc_array()
+    out, _ = capsys.readouterr()
+    assert "greater_virginia" in out
 
 
 def test_update_multiple():

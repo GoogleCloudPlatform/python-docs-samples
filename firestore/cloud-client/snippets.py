@@ -15,7 +15,7 @@ import datetime
 from time import sleep
 
 from google.cloud import firestore
-from google.cloud.firestore import ArrayUnion, ArrayRemove
+from google.cloud.firestore_v1beta1 import ArrayRemove, ArrayUnion
 import google.cloud.exceptions
 
 
@@ -102,12 +102,14 @@ def add_data_types():
 
 # [START custom_class_def]
 class City(object):
-    def __init__(self, name, state, country, capital=False, population=0):
+    def __init__(self, name, state, country, capital=False, population=0,
+                 regions=[]):
         self.name = name
         self.state = state
         self.country = country
         self.capital = capital
         self.population = population
+        self.regions = regions
 
     @staticmethod
     def from_dict(source):
@@ -119,6 +121,9 @@ class City(object):
 
         if u'population' in source:
             city.population = source[u'population']
+
+        if u'regions' in source:
+            city.regions = source[u'regions']
 
         return city
         # [END_EXCLUDE]
@@ -137,12 +142,17 @@ class City(object):
         if self.population:
             dest[u'population'] = self.population
 
+        if self.regions:
+            dest[u'regions'] = self.regions
+
         return dest
         # [END_EXCLUDE]
 
     def __repr__(self):
-        return u'City(name={}, country={}, population={}, capital={})'.format(
-            self.name, self.country, self.population, self.capital)
+        return(
+            u'City(name={}, country={}, population={}, capital={}, regions={})'
+            .format(self.name, self.country, self.population, self.capital,
+                    self.regions))
 # [END custom_class_def]
 
 
@@ -151,15 +161,19 @@ def add_example_data():
     # [START add_example_data]
     cities_ref = db.collection(u'cities')
     cities_ref.document(u'SF').set(
-        City(u'San Francisco', u'CA', u'USA', False, 860000).to_dict())
+        City(u'San Francisco', u'CA', u'USA', False, 860000,
+             [u'west_coast', u'norcal']).to_dict())
     cities_ref.document(u'LA').set(
-        City(u'Los Angeles', u'CA', u'USA', False, 3900000).to_dict())
+        City(u'Los Angeles', u'CA', u'USA', False, 3900000,
+             [u'west_coast', u'socal']).to_dict())
     cities_ref.document(u'DC').set(
-        City(u'Washington D.C.', None, u'USA', True, 680000).to_dict())
+        City(u'Washington D.C.', None, u'USA', True, 680000,
+             [u'east_coast']).to_dict())
     cities_ref.document(u'TOK').set(
-        City(u'Tokyo', None, u'Japan', True, 9000000).to_dict())
+        City(u'Tokyo', None, u'Japan', True, 9000000,
+             [u'kanto', u'honshu']).to_dict())
     cities_ref.document(u'BJ').set(
-        City(u'Beijing', None, u'China', True, 21500000).to_dict())
+        City(u'Beijing', None, u'China', True, 21500000, [u'hebei']).to_dict())
     # [END add_example_data]
 
 
@@ -238,7 +252,7 @@ def array_contains_filter():
     # [START fs_array_contains_filter]
     cities_ref = db.collection(u'cities')
 
-    query = cities_ref.where(u'regions', u'array_contains', 'west_coast')
+    query = cities_ref.where(u'regions', u'array_contains', u'west_coast')
     # [END fs_array_contains_filter]
     docs = query.get()
     for doc in docs:
@@ -310,6 +324,8 @@ def update_doc_array():
     # // Atomically remove a region from the 'regions' array field.
     city_ref.update({u'regions': ArrayRemove([u'east_coast'])})
     # [END fs_update_doc_array]
+    city = city_ref.get()
+    print("Updated the regions field of the DC. {}".format(city.to_dict()))
 
 
 def update_multiple():
