@@ -28,7 +28,6 @@ Example usage:
 # [START speech_transcribe_infinite_streaming]
 from __future__ import division
 
-import collections
 import time
 import re
 import sys
@@ -72,8 +71,6 @@ class ResumableMicrophoneStream:
         self._bytes_per_chunk = (self._chunk_size * self._bytes_per_sample)
         self._chunks_per_second = (
                 self._bytes_per_second // self._bytes_per_chunk)
-        self._untranscribed = collections.deque(
-                maxlen=self._max_replay_secs * self._chunks_per_second)
 
     def __enter__(self):
         self.closed = False
@@ -107,11 +104,7 @@ class ResumableMicrophoneStream:
         self._buff.put(in_data)
         return None, pyaudio.paContinue
 
-    def on_transcribe(self, end_time):
-        while self._untranscribed and end_time > self._untranscribed[0][1]:
-            self._untranscribed.popleft()
-
-    def data_generator(self):
+    def generator(self):
         while not self.closed:
             if get_current_time() - self.start_time > STREAMING_LIMIT:
                 self.start_time = get_current_time()
@@ -136,42 +129,6 @@ class ResumableMicrophoneStream:
 
             yield b''.join(data)
 
-    def generator(self):
-        total_bytes_sent = 0
-
-        # Make a copy, in case on_transcribe is called while yielding them
-        catchup = list(self._untranscribed)
-        # Yield all the untranscribed chunks first
-        for chunk, _ in catchup:
-            yield chunk
-
-        for byte_data in self.data_generator():
-            # Populate the replay buffer of untranscribed audio bytes
-            total_bytes_sent += len(byte_data)
-            chunk_end_time = total_bytes_sent / self._bytes_per_second
-            self._untranscribed.append((byte_data, chunk_end_time))
-
-            yield byte_data
-
-
-def _record_keeper(responses, stream):
-    """Calls the stream's on_transcribe callback for each final response.
-
-    Args:
-        responses - a generator of responses. The responses must already be
-            filtered for ones with results and alternatives.
-        stream - a ResumableMicrophoneStream.
-    """
-    for r in responses:
-        result = r.results[0]
-        if result.is_final:
-            top_alternative = result.alternatives[0]
-            # Keep track of what transcripts we've received, so we can resume
-            # intelligently when we hit the deadline
-            stream.on_transcribe(duration_to_secs(
-                    top_alternative.words[-1].end_time))
-        yield r
-
 
 def listen_print_loop(responses, stream):
     """Iterates through server responses and prints them.
@@ -188,10 +145,8 @@ def listen_print_loop(responses, stream):
     the next result to overwrite it, until the response is a final one. For the
     final one, print a newline to preserve the finalized transcription.
     """
-    with_results = (r for r in responses if (
+    responses = (r for r in responses if (
             r.results and r.results[0].alternatives))
-
-    responses = _record_keeper(with_results, stream)
 
     num_chars_printed = 0
     for response in responses:
