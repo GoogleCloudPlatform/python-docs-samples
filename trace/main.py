@@ -17,13 +17,13 @@ import time
 
 from flask import Flask, redirect, url_for
 
-# [START trace-setup-python-configure]
+# [START trace_setup_python_configure]
 from opencensus.trace.exporters import stackdriver_exporter
 import opencensus.trace.tracer
 
 exporter = stackdriver_exporter.StackdriverExporter()
 tracer = opencensus.trace.tracer.Tracer(exporter=exporter)
-# [END trace-setup-python-configure]
+# [END trace_setup_python_configure]
 
 app = Flask(__name__)
 
