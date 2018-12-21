@@ -37,7 +37,7 @@ def create_asymmetric_key(project_id, location_id, key_ring_id, crypto_key_id):
     # Create the CryptoKey object template
     purpose = enums.CryptoKey.CryptoKeyPurpose.ASYMMETRIC_DECRYPT
     algorithm = enums.CryptoKeyVersion.CryptoKeyVersionAlgorithm.\
-        RSA_DECRYPT_OAEP_2048_SHA256,
+        RSA_DECRYPT_OAEP_2048_SHA256
     crypto_key = {'purpose': purpose,
                   'version_template': {'algorithm': algorithm}}
 
@@ -55,7 +55,8 @@ def get_asymmetric_public_key(key_name):
     Retrieves the public key from a saved asymmetric key pair on Cloud KMS
 
     Example key_name:
-      "projects/PROJECT_ID/locations/global/keyRings/RING_ID/cryptoKeys/KEY_ID"
+      "projects/PROJECT_ID/locations/global/keyRings/RING_ID/cryptoKeys\
+              /KEY_ID/cryptoKeyVersions/1"
 
     Requires:
       cryptography.hazmat.backends.default_backend
@@ -78,7 +79,8 @@ def decrypt_rsa(ciphertext, key_name):
     'RSA_DECRYPT_OAEP_2048_SHA256' private key stored on Cloud KMS
 
     Example key_name:
-      "projects/PROJECT_ID/locations/global/keyRings/RING_ID/cryptoKeys/KEY_ID"
+      "projects/PROJECT_ID/locations/global/keyRings/RING_ID/cryptoKeys\
+              /KEY_ID/cryptoKeyVersions/1"
     """
 
     client = kms_v1.KeyManagementServiceClient()
@@ -94,7 +96,8 @@ def encrypt_rsa(plaintext, key_name):
     'RSA_DECRYPT_OAEP_2048_SHA256' public key retrieved from Cloud KMS
 
     Example key_name:
-      "projects/PROJECT_ID/locations/global/keyRings/RING_ID/cryptoKeys/KEY_ID"
+      "projects/PROJECT_ID/locations/global/keyRings/RING_ID/cryptoKeys\
+              /KEY_ID/cryptoKeyVersions/1"
 
     Requires:
       cryptography.hazmat.primitives.asymmetric.padding
@@ -120,7 +123,8 @@ def sign_asymmetric(message, key_name):
     Create a signature for a message using a private key stored on Cloud KMS
 
     Example key_name:
-      "projects/PROJECT_ID/locations/global/keyRings/RING_ID/cryptoKeys/KEY_ID"
+      "projects/PROJECT_ID/locations/global/keyRings/RING_ID/cryptoKeys\
+              /KEY_ID/cryptoKeyVersions/1"
 
     Requires:
       hashlib
@@ -144,7 +148,8 @@ def verify_signature_rsa(signature, message, key_name):
     specified message
 
     Example key_name:
-      "projects/PROJECT_ID/locations/global/keyRings/RING_ID/cryptoKeys/KEY_ID"
+      "projects/PROJECT_ID/locations/global/keyRings/RING_ID/cryptoKeys\
+              /KEY_ID/cryptoKeyVersions/1"
 
     Requires:
       cryptography.exceptions.InvalidSignature
@@ -183,7 +188,8 @@ def verify_signature_ec(signature, message, key_name):
     for the specified message
 
     Example key_name:
-      "projects/PROJECT_ID/locations/global/keyRings/RING_ID/cryptoKeys/KEY_ID"
+      "projects/PROJECT_ID/locations/global/keyRings/RING_ID/cryptoKeys\
+              /KEY_ID/cryptoKeyVersions/1"
 
     Requires:
       cryptography.exceptions.InvalidSignature

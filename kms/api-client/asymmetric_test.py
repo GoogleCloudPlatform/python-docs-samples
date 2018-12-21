@@ -16,7 +16,7 @@
 from os import environ
 from time import sleep
 
-import asymmetric as sample
+import asymmetric
 
 from cryptography.hazmat.backends.openssl.ec import _EllipticCurvePublicKey
 from cryptography.hazmat.backends.openssl.rsa import _RSAPublicKey
@@ -82,50 +82,52 @@ class TestKMSAsymmetric:
     message_bytes = message.encode('utf-8')
 
     def test_get_public_key(self):
-        rsa_key = sample.get_asymmetric_public_key(self.rsaDecrypt)
+        rsa_key = asymmetric.get_asymmetric_public_key(self.rsaDecrypt)
         assert isinstance(rsa_key, _RSAPublicKey), 'expected RSA key'
-        ec_key = sample.get_asymmetric_public_key(self.ecSign)
+        rsa_key = asymmetric.get_asymmetric_public_key(self.rsaSign)
+        assert isinstance(rsa_key, _RSAPublicKey), 'expected RSA key'
+        ec_key = asymmetric.get_asymmetric_public_key(self.ecSign)
         assert isinstance(ec_key, _EllipticCurvePublicKey), 'expected EC key'
 
     def test_rsa_encrypt_decrypt(self):
-        ciphertext = sample.encrypt_rsa(self.message_bytes,
-                                        self.rsaDecrypt)
-        # ciphertext should be 256 characters with base64 and RSA 2048
+        ciphertext = asymmetric.encrypt_rsa(self.message_bytes,
+                                            self.rsaDecrypt)
+        # signature should be 256 bytes for RSA 2048
         assert len(ciphertext) == 256, \
             'ciphertext should be 256 chars; got {}'.format(len(ciphertext))
-        plaintext_bytes = sample.decrypt_rsa(ciphertext,
-                                             self.rsaDecrypt)
+        plaintext_bytes = asymmetric.decrypt_rsa(ciphertext,
+                                                 self.rsaDecrypt)
         assert plaintext_bytes == self.message_bytes
         plaintext = plaintext_bytes.decode('utf-8')
         assert plaintext == self.message
 
     def test_rsa_sign_verify(self):
-        sig = sample.sign_asymmetric(self.message_bytes,
-                                     self.rsaSign)
-        # ciphertext should be 344 characters with base64 and RSA 2048
+        sig = asymmetric.sign_asymmetric(self.message_bytes,
+                                         self.rsaSign)
+        # signature should be 256 bytes for RSA 2048
         assert len(sig) == 256, \
             'sig should be 256 chars; got {}'.format(len(sig))
-        success = sample.verify_signature_rsa(sig,
-                                              self.message_bytes,
-                                              self.rsaSign)
+        success = asymmetric.verify_signature_rsa(sig,
+                                                  self.message_bytes,
+                                                  self.rsaSign)
         assert success is True, 'RSA verification failed'
         changed_bytes = self.message_bytes + b'.'
-        success = sample.verify_signature_rsa(sig,
-                                              changed_bytes,
-                                              self.rsaSign)
+        success = asymmetric.verify_signature_rsa(sig,
+                                                  changed_bytes,
+                                                  self.rsaSign)
         assert success is False, 'verify should fail with modified message'
 
     def test_ec_sign_verify(self):
-        sig = sample.sign_asymmetric(self.message_bytes,
-                                     self.ecSign)
+        sig = asymmetric.sign_asymmetric(self.message_bytes,
+                                         self.ecSign)
         assert len(sig) > 50 and len(sig) < 300, \
             'sig outside expected length range'
-        success = sample.verify_signature_ec(sig,
-                                             self.message_bytes,
-                                             self.ecSign)
+        success = asymmetric.verify_signature_ec(sig,
+                                                 self.message_bytes,
+                                                 self.ecSign)
         assert success is True, 'EC verification failed'
         changed_bytes = self.message_bytes + b'.'
-        success = sample.verify_signature_ec(sig,
-                                             changed_bytes,
-                                             self.ecSign)
+        success = asymmetric.verify_signature_ec(sig,
+                                                 changed_bytes,
+                                                 self.ecSign)
         assert success is False, 'verify should fail with modified message'
