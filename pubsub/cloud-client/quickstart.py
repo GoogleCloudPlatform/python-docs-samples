@@ -61,29 +61,28 @@ def end_to_end(project_id, topic_name, subscription_name):
     data = 'x' * 10000
     data = data.encode('utf-8')
     # Initialize an empty dictionary to track messages.
-    tracker = dict()
-    delivery_times = []
+    pub_tracker = dict()
+    sub_tracker = dict()
+    delivery_ts = []
     num_messages = 10
 
     def resolve_future_callback(future):
         """Resolve the publish future and update `tracker` asynchronously."""
         pubtime = time.time()
         message_id = future.result()
-        tracker.update({message_id: {'pubtime': pubtime, 'subtime': None}})
+        pub_tracker.update({message_id: pubtime})
 
-    def publish_messages(callback):
-        for i in range(num_messages):
-            future = publisher.publish(topic_path, data=data, index=str(i))
-            callback(future)
 
-    # Publish messages.
-    publish_messages(resolve_future_callback)
+    for i in range(num_messages):
+        future = publisher.publish(topic_path, data=data, index=str(i))
+        future.add_done_callback(resolve_future_callback)
+
     print('\nPublished all messages.')
 
     def process_message_callback(message):
         message.ack()
         subtime = time.time()
-        tracker[message.message_id]['subtime'] = subtime
+        sub_tracker.update({message.message_id: subtime})
         print(message.attributes['index'])
 
     # Receive messages asynchronously.
@@ -91,25 +90,27 @@ def end_to_end(project_id, topic_name, subscription_name):
     print('\nListening for messages...')
 
     while True:
-        # Extract delivery times from `tracker` and deplete it over time.
-        for message_id in list(tracker):
-            if tracker[message_id]['subtime'] is not None:
-                delivery_times.append(tracker[message_id]['subtime'] -
-                                      tracker[message_id]['pubtime'])
-                del tracker[message_id]
+        # Populate delivery times.
+        keys_pub = set(pub_tracker.keys())
+        keys_sub = set(sub_tracker.keys())
+
+        for key in keys_pub & keys_sub:
+            delivery_ts.append(sub_tracker[key] - pub_tracker[key])
+            del pub_tracker[key]
+            del sub_tracker[key]
 
         # Exit if all the delivery times have been accounted for.
-        if len(tracker) == 0:
+        if len(pub_tracker) == len(sub_tracker) == 0 and len(delivery_ts) > 0:
             print('\nDelivery Statistics')
             print('Average time: {:.6f}s'.format(
-                sum(delivery_times)/len(delivery_times)))
-            print('Best time: {:.6f}s'.format(min(delivery_times)))
+                sum(delivery_ts)/len(delivery_ts)))
+            print('Best time: {:.6f}s'.format(min(delivery_ts)))
             break
         else:
             # Sleep the thread at 5Hz to save on resources.
             time.sleep(1./5)
     # [END pubsub_end_to_end]
-    return delivery_times
+    return delivery_ts
 
 
 if __name__ == '__main__':
