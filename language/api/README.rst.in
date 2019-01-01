@@ -18,3 +18,5 @@ samples:
 - name: Analyze syntax
   file: analyze.py
   show_help: true
+
+folder: language/api

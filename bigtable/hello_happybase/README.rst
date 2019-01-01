@@ -3,6 +3,10 @@
 Google Cloud Bigtable Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigtable/hello_happybase/README.rst
+
+
 This directory contains samples for Google Cloud Bigtable. `Google Cloud Bigtable`_ is Google's NoSQL Big Data database service. It's the same database that powers many core Google services, including Search, Analytics, Maps, and Gmail.
 
 
@@ -15,7 +19,7 @@ interact with Cloud Bigtable.
 .. _HappyBase API: http://happybase.readthedocs.io/en/stable/
 
 
-.. _Google Cloud Bigtable: https://cloud.google.com/bigtable/docs 
+.. _Google Cloud Bigtable: https://cloud.google.com/bigtable/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -24,39 +28,26 @@ Setup
 Authentication
 ++++++++++++++
 
-Authentication is typically done through `Application Default Credentials`_,
-which means you do not have to change the code to authenticate as long as
-your environment has credentials. You have a few options for setting up
-authentication:
+This sample requires you to have authentication setup. Refer to the
+`Authentication Getting Started Guide`_ for instructions on setting up
+credentials for applications.
 
-#. When running locally, use the `Google Cloud SDK`_
-
-    .. code-block:: bash
-
-        gcloud beta auth application-default login
-
-
-#. When running on App Engine or Compute Engine, credentials are already
-   set-up. However, you may need to configure your Compute Engine instance
-   with `additional scopes`_.
-
-#. You can create a `Service Account key file`_. This file can be used to
-   authenticate to Google Cloud Platform services from any environment. To use
-   the file, set the ``GOOGLE_APPLICATION_CREDENTIALS`` environment variable to
-   the path to the key file, for example:
-
-    .. code-block:: bash
-
-        export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
-
-.. _Application Default Credentials: https://cloud.google.com/docs/authentication#getting_credentials_for_server-centric_flow
-.. _additional scopes: https://cloud.google.com/compute/docs/authentication#using
-.. _Service Account key file: https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount
+.. _Authentication Getting Started Guide:
+    https://cloud.google.com/docs/authentication/getting-started
 
 Install Dependencies
 ++++++++++++++++++++
 
-#. Install `pip`_ and `virtualenv`_ if you do not already have them.
+#. Clone python-docs-samples and change directory to the sample directory you want to use.
+
+    .. code-block:: bash
+
+        $ git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+
+#. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
+
+   .. _Python Development Environment Setup Guide:
+       https://cloud.google.com/python/setup
 
 #. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
 
@@ -80,6 +71,10 @@ Samples
 Basic example
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=bigtable/hello_happybase/main.py,bigtable/hello_happybase/README.rst
+
+
 
 
 To run this sample:
@@ -89,21 +84,22 @@ To run this sample:
     $ python main.py
 
     usage: main.py [-h] [--table TABLE] project_id instance_id
-    
+
     Demonstrates how to connect to Cloud Bigtable and run some basic operations.
     Prerequisites: - Create a Cloud Bigtable cluster.
     https://cloud.google.com/bigtable/docs/creating-cluster - Set your Google
     Application Default Credentials.
     https://developers.google.com/identity/protocols/application-default-
     credentials
-    
+
     positional arguments:
       project_id     Your Cloud Platform project ID.
       instance_id    ID of the Cloud Bigtable instance to connect to.
-    
+
     optional arguments:
       -h, --help     show this help message and exit
       --table TABLE  Table to create and destroy. (default: Hello-Bigtable)
+
 
 
 
@@ -115,11 +111,11 @@ This sample uses the `Google Cloud Client Library for Python`_.
 You can read the documentation for more details on API usage and use GitHub
 to `browse the source`_ and  `report issues`_.
 
-.. Google Cloud Client Library for Python:
+.. _Google Cloud Client Library for Python:
     https://googlecloudplatform.github.io/google-cloud-python/
-.. browse the source:
+.. _browse the source:
     https://github.com/GoogleCloudPlatform/google-cloud-python
-.. report issues:
+.. _report issues:
     https://github.com/GoogleCloudPlatform/google-cloud-python/issues
 
 

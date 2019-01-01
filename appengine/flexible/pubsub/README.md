@@ -1,5 +1,10 @@
 # Python Google Cloud Pub/Sub sample for Google App Engine Flexible Environment
 
+[![Open in Cloud Shell][shell_img]][shell_link]
+
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/pubsub/README.md
+
 This demonstrates how to send and receive messages using [Google Cloud Pub/Sub](https://cloud.google.com/pubsub) on [Google App Engine Flexible Environment](https://cloud.google.com/appengine).
 
 ## Setup
@@ -10,8 +15,8 @@ Before you can run or deploy the sample, you will need to do the following:
 
 2. Create a topic and subscription.
 
-        $ gcloud alpha pubsub topics create [your-topic-name]
-        $ gcloud alpha pubsub subscriptions create [your-subscription-name] \
+        $ gcloud beta pubsub topics create [your-topic-name]
+        $ gcloud beta pubsub subscriptions create [your-subscription-name] \
             --topic [your-topic-name] \
             --push-endpoint \
                 https://[your-app-id].appspot.com/pubsub/push?token=[your-token] \

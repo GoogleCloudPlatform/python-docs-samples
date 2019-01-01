@@ -19,7 +19,7 @@ identity API to generate an auth token.
 For more information about App Engine, see README.md under /appengine.
 """
 
-# [START all]
+# [START gae_python_app_identity_asserting]
 import json
 import logging
 
@@ -59,4 +59,4 @@ app = webapp2.WSGIApplication([
     ('/', MainPage)
 ], debug=True)
 
-# [END all]
+# [END gae_python_app_identity_asserting]

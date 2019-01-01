@@ -3,12 +3,16 @@
 Google Cloud Storage Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/README.rst
+
+
 This directory contains samples for Google Cloud Storage. `Google Cloud Storage`_ allows world-wide storage and retrieval of any amount of data at any time.
 
 
 
 
-.. _Google Cloud Storage: https://cloud.google.com/storage/docs 
+.. _Google Cloud Storage: https://cloud.google.com/storage/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -17,39 +21,26 @@ Setup
 Authentication
 ++++++++++++++
 
-Authentication is typically done through `Application Default Credentials`_,
-which means you do not have to change the code to authenticate as long as
-your environment has credentials. You have a few options for setting up
-authentication:
+This sample requires you to have authentication setup. Refer to the
+`Authentication Getting Started Guide`_ for instructions on setting up
+credentials for applications.
 
-#. When running locally, use the `Google Cloud SDK`_
-
-    .. code-block:: bash
-
-        gcloud beta auth application-default login
-
-
-#. When running on App Engine or Compute Engine, credentials are already
-   set-up. However, you may need to configure your Compute Engine instance
-   with `additional scopes`_.
-
-#. You can create a `Service Account key file`_. This file can be used to
-   authenticate to Google Cloud Platform services from any environment. To use
-   the file, set the ``GOOGLE_APPLICATION_CREDENTIALS`` environment variable to
-   the path to the key file, for example:
-
-    .. code-block:: bash
-
-        export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
-
-.. _Application Default Credentials: https://cloud.google.com/docs/authentication#getting_credentials_for_server-centric_flow
-.. _additional scopes: https://cloud.google.com/compute/docs/authentication#using
-.. _Service Account key file: https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount
+.. _Authentication Getting Started Guide:
+    https://cloud.google.com/docs/authentication/getting-started
 
 Install Dependencies
 ++++++++++++++++++++
 
-#. Install `pip`_ and `virtualenv`_ if you do not already have them.
+#. Clone python-docs-samples and change directory to the sample directory you want to use.
+
+    .. code-block:: bash
+
+        $ git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+
+#. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
+
+   .. _Python Development Environment Setup Guide:
+       https://cloud.google.com/python/setup
 
 #. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
 
@@ -73,6 +64,10 @@ Samples
 Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/quickstart.py,storage/cloud-client/README.rst
+
+
 
 
 To run this sample:
@@ -85,6 +80,10 @@ To run this sample:
 Snippets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/snippets.py,storage/cloud-client/README.rst
+
+
 
 
 To run this sample:
@@ -95,20 +94,24 @@ To run this sample:
 
     usage: snippets.py [-h]
                        bucket_name
-                       {create-bucket,delete-bucket,list,list-with-prefix,upload,download,delete,metadata,make-public,signed-url,rename,copy}
+                       {create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,rename,copy}
                        ...
-    
+
     This application demonstrates how to perform basic operations on blobs
     (objects) in a Google Cloud Storage bucket.
-    
+
     For more information, see the README.md under /storage  and the documentation
     at https://cloud.google.com/storage/docs.
-    
+
     positional arguments:
       bucket_name           Your cloud storage bucket.
-      {create-bucket,delete-bucket,list,list-with-prefix,upload,download,delete,metadata,make-public,signed-url,rename,copy}
+      {create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,rename,copy}
         create-bucket       Creates a new bucket.
         delete-bucket       Deletes a bucket. The bucket must be empty.
+        get-bucket-labels   Prints out a bucket's labels.
+        add-bucket-label    Add a label to a bucket.
+        remove-bucket-label
+                            Remove a label from a bucket.
         list                Lists all the blobs in the bucket.
         list-with-prefix    Lists all the blobs in the bucket that begin with the
                             prefix. This can be used to list all blobs in a
@@ -121,6 +124,11 @@ To run this sample:
                             However, if you specify prefix='/a' and delimiter='/',
                             you'll get back: /a/1.txt
         upload              Uploads a file to the bucket.
+        enable-default-kms-key
+                            Sets a bucket's default KMS key.
+        upload-with-kms-key
+                            Uploads a file to the bucket, encrypting it with the
+                            given KMS key.
         download            Downloads a blob from the bucket.
         delete              Deletes a blob from the bucket.
         metadata            Prints out a blob's metadata.
@@ -132,13 +140,18 @@ To run this sample:
                             Google Cloud SDK.
         rename              Renames a blob.
         copy                Renames a blob.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
 
 
+
 Access Control Lists
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/acl.py,storage/cloud-client/README.rst
+
 
 
 
@@ -151,13 +164,13 @@ To run this sample:
     usage: acl.py [-h]
                   {print-bucket-acl,print-bucket-acl-for-user,add-bucket-owner,remove-bucket-owner,add-bucket-default-owner,remove-bucket-default-owner,print-blob-acl,print-blob-acl-for-user,add-blob-owner,remove-blob-owner}
                   ...
-    
+
     This application demonstrates how to manage access control lists (acls) in
     Google Cloud Storage.
-    
+
     For more information, see the README.md under /storage and the documentation
     at https://cloud.google.com/storage/docs/encryption.
-    
+
     positional arguments:
       {print-bucket-acl,print-bucket-acl-for-user,add-bucket-owner,remove-bucket-owner,add-bucket-default-owner,remove-bucket-default-owner,print-blob-acl,print-blob-acl-for-user,add-blob-owner,remove-blob-owner}
         print-bucket-acl    Prints out a bucket's access control list.
@@ -180,13 +193,18 @@ To run this sample:
         add-blob-owner      Adds a user as an owner on the given blob.
         remove-blob-owner   Removes a user from the access control list of the
                             given blob in the given bucket.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
 
 
+
 Customer-Supplied Encryption
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/encryption.py,storage/cloud-client/README.rst
+
 
 
 
@@ -197,19 +215,19 @@ To run this sample:
     $ python encryption.py
 
     usage: encryption.py [-h] {generate-encryption-key,upload,download,rotate} ...
-    
+
     This application demonstrates how to upload and download encrypted blobs
     (objects) in Google Cloud Storage.
-    
+
     Use `generate-encryption-key` to generate an example key:
-    
+
         python encryption.py generate-encryption-key
-    
+
     Then use the key to upload and download files encrypted with a custom key.
-    
+
     For more information, see the README.md under /storage and the documentation
     at https://cloud.google.com/storage/docs/encryption.
-    
+
     positional arguments:
       {generate-encryption-key,upload,download,rotate}
         generate-encryption-key
@@ -227,9 +245,118 @@ To run this sample:
                             same key provided when uploading the blob.
         rotate              Performs a key rotation by re-writing an encrypted
                             blob with a new encryption key.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
+
+
+
+Bucket Lock
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/bucket_lock.py,storage/cloud-client/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python bucket_lock.py
+
+    usage: bucket_lock.py [-h]
+                          {set-retention-policy,remove-retention-policy,lock-retention-policy,get-retention-policy,set-temporary-hold,release-temporary-hold,set-event-based-hold,release-event-based-hold,enable-default-event-based-hold,disable-default-event-based-hold,get-default-event-based-hold}
+                          ...
+
+    positional arguments:
+      {set-retention-policy,remove-retention-policy,lock-retention-policy,get-retention-policy,set-temporary-hold,release-temporary-hold,set-event-based-hold,release-event-based-hold,enable-default-event-based-hold,disable-default-event-based-hold,get-default-event-based-hold}
+        set-retention-policy
+                            Defines a retention policy on a given bucket
+        remove-retention-policy
+                            Removes the retention policy on a given bucket
+        lock-retention-policy
+                            Locks the retention policy on a given bucket
+        get-retention-policy
+                            Gets the retention policy on a given bucket
+        set-temporary-hold  Sets a temporary hold on a given blob
+        release-temporary-hold
+                            Releases the temporary hold on a given blob
+        set-event-based-hold
+                            Sets a event based hold on a given blob
+        release-event-based-hold
+                            Releases the event based hold on a given blob
+        enable-default-event-based-hold
+                            Enables the default event based hold on a given bucket
+        disable-default-event-based-hold
+                            Disables the default event based hold on a given
+                            bucket
+        get-default-event-based-hold
+                            Gets the default event based hold on a given bucket
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
+
+Notification Polling
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/notification_polling.py,storage/cloud-client/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python notification_polling.py
+
+    usage: notification_polling.py [-h] project subscription
+
+    This application demonstrates how to poll for GCS notifications from a
+    Cloud Pub/Sub subscription, parse the incoming message, and acknowledge the
+    successful processing of the message.
+
+    This application will work with any subscription configured for pull rather
+    than push notifications. If you do not already have notifications configured,
+    you may consult the docs at
+    https://cloud.google.com/storage/docs/reporting-changes or follow the steps
+    below:
+
+    1. First, follow the common setup steps for these snippets, specically
+       configuring auth and installing dependencies. See the README's "Setup"
+       section.
+
+    2. Activate the Google Cloud Pub/Sub API, if you have not already done so.
+       https://console.cloud.google.com/flows/enableapi?apiid=pubsub
+
+    3. Create a Google Cloud Storage bucket:
+       $ gsutil mb gs://testbucket
+
+    4. Create a Cloud Pub/Sub topic and publish bucket notifications there:
+       $ gsutil notification create -f json -t testtopic gs://testbucket
+
+    5. Create a subscription for your new topic:
+       $ gcloud beta pubsub subscriptions create testsubscription --topic=testtopic
+
+    6. Run this program:
+       $ python notification_polling.py my-project-id testsubscription
+
+    7. While the program is running, upload and delete some files in the testbucket
+       bucket (you could use the console or gsutil) and watch as changes scroll by
+       in the app.
+
+    positional arguments:
+      project       The ID of the project that owns the subscription
+      subscription  The ID of the Pub/Sub subscription
+
+    optional arguments:
+      -h, --help    show this help message and exit
+
 
 
 
@@ -241,11 +368,11 @@ This sample uses the `Google Cloud Client Library for Python`_.
 You can read the documentation for more details on API usage and use GitHub
 to `browse the source`_ and  `report issues`_.
 
-.. Google Cloud Client Library for Python:
+.. _Google Cloud Client Library for Python:
     https://googlecloudplatform.github.io/google-cloud-python/
-.. browse the source:
+.. _browse the source:
     https://github.com/GoogleCloudPlatform/google-cloud-python
-.. report issues:
+.. _report issues:
     https://github.com/GoogleCloudPlatform/google-cloud-python/issues
 
 

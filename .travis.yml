@@ -1,5 +1,7 @@
 sudo: false
 language: python
+python:
+- "3.6"
 services:
 - memcached
 - mysql
@@ -9,22 +11,25 @@ branches:
   - master
 cache:
   directories:
-  - $HOME/.cache
+  - "$HOME/.cache"
 env:
   global:
-    secure: V8kTaIK8NYMEUVzaekLoVgJzz5/9yA/KKL8CVgOmiPEjt1o1wAXy+ojyXCgjGmB16OOcTYKtXKvOBndDg99MxUzMc9uLrHF4ub2fJZy3ZoCfPaxHNOpIOTTAhB8J/nog/JpW5NnJOBGE8fAQ/TUy8nSvOwe27n4qKO5eWqTy5kA=
+    # Explicitly use choose unicode dependency to let the apache-airflow
+    # package installation continue. See:
+    # https://github.com/apache/incubator-airflow/pull/3660
+    - SLUGIFY_USES_TEXT_UNIDECODE=yes
+    - secure: fsBH64/WqTe7lRcn4awZU7q6+euS/LHgMq2Ee2ubaoxUei2GbK5jBgnGHxOKVL5sZ4KNfTc7d6NR5BB1ZouYr2v4q1ip7Il9kFG4g5qV4cIXzHusXkrjvIzQLupNpcD9JJZr1fmYh4AqXRs2kP/nZqb7xB6Jm/O+h+aeC1bhhBg=
 addons:
   apt:
     sources:
     - deadsnakes
     packages:
     - portaudio19-dev
-    - python3.5
-    - python3.5-dev
+    - python3.6
+    - python3.6-dev
 install:
 - pip install --upgrade pip wheel virtualenv
-- pip install --upgrade nox-automation coverage
-# Temporarily install this from source.
+- pip install --upgrade nox
 - pip install --upgrade git+https://github.com/dhermes/ci-diff-helper.git
 script:
-- ./scripts/travis.sh
+- "./scripts/travis.sh"

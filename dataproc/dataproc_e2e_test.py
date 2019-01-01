@@ -16,16 +16,17 @@ Creates a Dataproc cluster, uploads a pyspark file to Google Cloud Storage,
 submits a job to Dataproc that runs the pyspark file, then downloads
 the output logs from Cloud Storage and verifies the expected output."""
 
-from gcp.testing.flaky import flaky
+import os
 
-import create_cluster_and_submit_job
+import submit_job_to_cluster
 
-CLUSTER_NAME = 'testcluster2'
+PROJECT = os.environ['GCLOUD_PROJECT']
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+CLUSTER_NAME = 'testcluster3'
 ZONE = 'us-central1-b'
 
 
-@flaky
-def test_e2e(cloud_config):
-    output = create_cluster_and_submit_job.main(
-        cloud_config.project, ZONE, CLUSTER_NAME, cloud_config.storage_bucket)
+def test_e2e():
+    output = submit_job_to_cluster.main(
+        PROJECT, ZONE, CLUSTER_NAME, BUCKET)
     assert b"['Hello,', 'dog', 'elephant', 'panther', 'world!']" in output

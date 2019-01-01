@@ -19,25 +19,24 @@ using the Google OAuth2 flow."""
 
 import argparse
 
-import oauth2client.client
-import oauth2client.file
-import oauth2client.tools
+import google_auth_oauthlib.flow
 import requests
 from six.moves import urllib
 
 
 def get_id_token(client_secrets_file, extra_args):
-    storage = oauth2client.file.Storage('credentials.dat')
-    credentials = storage.get()
+    """Obtains credentials from the user using OAuth 2.0 and then returns the
+    ID token from those credentials."""
 
-    if not credentials or credentials.invalid:
-        flow = oauth2client.client.flow_from_clientsecrets(
-            client_secrets_file, scope='email')
-        credentials = oauth2client.tools.run_flow(
-            flow, storage, flags=extra_args)
+    flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
+        client_secrets_file, scopes=['openid', 'email', 'profile'])
 
-    # The ID token is used by Cloud Endpoints, not the access token.
-    id_token = credentials.token_response['id_token']
+    # Run the OAuth 2.0 flow to obtain credentials from the user.
+    flow.run_local_server()
+
+    # The credentials have both an access token and an ID token. Cloud
+    # Endpoints uses the ID Token.
+    id_token = flow.oauth2session.token['id_token']
 
     return id_token
 
@@ -67,8 +66,7 @@ def main(host, api_key, client_secrets_file, extra_args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        parents=[oauth2client.tools.argparser])
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
         'host', help='Your API host, e.g. https://your-project.appspot.com.')
     parser.add_argument(

@@ -3,12 +3,16 @@
 Stackdriver Logging Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=logging/cloud-client/README.rst
+
+
 This directory contains samples for Stackdriver Logging. `Stackdriver Logging`_ allows you to store, search, analyze, monitor, and alert on log data and events from Google Cloud Platform and Amazon Web Services.
 
 
 
 
-.. _Stackdriver Logging: https://cloud.google.com/logging/docs 
+.. _Stackdriver Logging: https://cloud.google.com/logging/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -17,39 +21,26 @@ Setup
 Authentication
 ++++++++++++++
 
-Authentication is typically done through `Application Default Credentials`_,
-which means you do not have to change the code to authenticate as long as
-your environment has credentials. You have a few options for setting up
-authentication:
+This sample requires you to have authentication setup. Refer to the
+`Authentication Getting Started Guide`_ for instructions on setting up
+credentials for applications.
 
-#. When running locally, use the `Google Cloud SDK`_
-
-    .. code-block:: bash
-
-        gcloud beta auth application-default login
-
-
-#. When running on App Engine or Compute Engine, credentials are already
-   set-up. However, you may need to configure your Compute Engine instance
-   with `additional scopes`_.
-
-#. You can create a `Service Account key file`_. This file can be used to
-   authenticate to Google Cloud Platform services from any environment. To use
-   the file, set the ``GOOGLE_APPLICATION_CREDENTIALS`` environment variable to
-   the path to the key file, for example:
-
-    .. code-block:: bash
-
-        export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
-
-.. _Application Default Credentials: https://cloud.google.com/docs/authentication#getting_credentials_for_server-centric_flow
-.. _additional scopes: https://cloud.google.com/compute/docs/authentication#using
-.. _Service Account key file: https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount
+.. _Authentication Getting Started Guide:
+    https://cloud.google.com/docs/authentication/getting-started
 
 Install Dependencies
 ++++++++++++++++++++
 
-#. Install `pip`_ and `virtualenv`_ if you do not already have them.
+#. Clone python-docs-samples and change directory to the sample directory you want to use.
+
+    .. code-block:: bash
+
+        $ git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+
+#. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
+
+   .. _Python Development Environment Setup Guide:
+       https://cloud.google.com/python/setup
 
 #. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
 
@@ -73,6 +64,10 @@ Samples
 Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=logging/cloud-client/quickstart.py,logging/cloud-client/README.rst
+
+
 
 
 To run this sample:
@@ -85,6 +80,10 @@ To run this sample:
 Snippets
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=logging/cloud-client/snippets.py,logging/cloud-client/README.rst
+
+
 
 
 To run this sample:
@@ -94,13 +93,13 @@ To run this sample:
     $ python snippets.py
 
     usage: snippets.py [-h] logger_name {list,write,delete} ...
-    
+
     This application demonstrates how to perform basic operations on logs and
     log entries with Stackdriver Logging.
-    
+
     For more information, see the README.md under /logging and the
     documentation at https://cloud.google.com/logging/docs.
-    
+
     positional arguments:
       logger_name          Logger name
       {list,write,delete}
@@ -108,13 +107,18 @@ To run this sample:
         write              Writes log entries to the given logger.
         delete             Deletes a logger and all its entries. Note that a
                            deletion can take several minutes to take effect.
-    
+
     optional arguments:
       -h, --help           show this help message and exit
 
 
+
 Export
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=logging/cloud-client/export.py,logging/cloud-client/README.rst
+
 
 
 
@@ -125,7 +129,7 @@ To run this sample:
     $ python export.py
 
     usage: export.py [-h] {list,create,update,delete} ...
-    
+
     positional arguments:
       {list,create,update,delete}
         list                Lists all sinks.
@@ -138,9 +142,10 @@ To run this sample:
                             om/logging/docs/view/advanced_filters for more filter
                             information.
         delete              Deletes a sink.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
+
 
 
 
@@ -152,11 +157,11 @@ This sample uses the `Google Cloud Client Library for Python`_.
 You can read the documentation for more details on API usage and use GitHub
 to `browse the source`_ and  `report issues`_.
 
-.. Google Cloud Client Library for Python:
+.. _Google Cloud Client Library for Python:
     https://googlecloudplatform.github.io/google-cloud-python/
-.. browse the source:
+.. _browse the source:
     https://github.com/GoogleCloudPlatform/google-cloud-python
-.. report issues:
+.. _report issues:
     https://github.com/GoogleCloudPlatform/google-cloud-python/issues
 
 

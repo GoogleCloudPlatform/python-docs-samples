@@ -26,3 +26,5 @@ samples:
 - name: Check transfer status
   file: transfer_check.py
   show_help: true
+
+folder: storage/transfer_service

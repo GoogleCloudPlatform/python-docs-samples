@@ -1,5 +1,10 @@
 # Wikibot example that can be run on Google Compute Engine
 
+[![Open in Cloud Shell][shell_img]][shell_link]
+
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=compute/xmpp_wikibot/README.md
+
 This sample shows how to use the [SleekXMPP](http://sleekxmpp.com/index.html)
 client and [Flask](http://flask.pocoo.org/) to build a simple chatbot that can
 be run on [Google Compute Engine](https://cloud.google.com/compute/). The

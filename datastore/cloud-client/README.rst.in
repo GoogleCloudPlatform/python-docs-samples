@@ -22,3 +22,5 @@ samples:
   show_help: true
 
 cloud_client_library: true
+
+folder: datastore/cloud-client

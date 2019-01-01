@@ -1,0 +1,59 @@
+# Copyright 2016 Google Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#
+# A Bookstore example API configuration.
+#
+# Below, replace MY_PROJECT_ID with your Google Cloud Project ID.
+#
+
+# The configuration schema is defined by service.proto file
+# https://github.com/googleapis/googleapis/blob/master/google/api/service.proto
+type: google.api.Service
+config_version: 3
+
+#
+# Name of the service configuration.
+#
+name: bookstore.endpoints.<MY_PROJECT_ID>.cloud.goog
+
+#
+# API title to appear in the user interface (Google Cloud Console).
+#
+title: Bookstore gRPC API
+apis:
+- name: endpoints.examples.bookstore.Bookstore
+
+#
+# API usage restrictions.
+#
+usage:
+  rules:
+  - selector: "*"
+    allow_unregistered_calls: true
+
+#
+# Request authentication.
+#
+authentication:
+  providers:
+  - id: google_service_account
+    # Replace SERVICE-ACCOUNT-ID with your service account's email address.
+    issuer: SERVICE-ACCOUNT-ID
+    jwks_uri: https://www.googleapis.com/robot/v1/metadata/x509/SERVICE-ACCOUNT-ID
+  rules:
+  # This auth rule will apply to all methods.
+  - selector: "*"
+    requirements:
+      - provider_id: google_service_account

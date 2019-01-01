@@ -19,7 +19,7 @@ using App Engine's native unix socket or using TCP when running locally.
 For more information, see the README.md.
 """
 
-# [START all]
+# [START gae_python_mysql_app]
 import os
 
 import MySQLdb
@@ -76,4 +76,4 @@ app = webapp2.WSGIApplication([
     ('/', MainPage),
 ], debug=True)
 
-# [END all]
+# [END gae_python_mysql_app]

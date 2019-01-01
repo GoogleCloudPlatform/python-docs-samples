@@ -25,3 +25,5 @@ samples:
 - name: Customer-Supplied Encryption
   file: customer_supplied_keys.py
   show_help: true
+
+folder: storage/api

@@ -11,12 +11,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from gcp.testing import eventually_consistent
-from gcp.testing.flaky import flaky
+import os
+
+from gcp_devrel.testing import eventually_consistent
+from gcp_devrel.testing.flaky import flaky
 from google.cloud import datastore
 import pytest
 
 import snippets
+
+PROJECT = os.environ['GCLOUD_PROJECT']
 
 
 class CleanupClient(datastore.Client):
@@ -33,8 +37,8 @@ class CleanupClient(datastore.Client):
 
 
 @pytest.yield_fixture
-def client(cloud_config):
-    client = CleanupClient(cloud_config.project)
+def client():
+    client = CleanupClient(PROJECT)
     yield client
     client.cleanup()
 
@@ -143,7 +147,6 @@ class TestDatastoreSnippets:
             assert len(page_one) == 5
             assert len(page_two)
             assert cursor_one
-            assert cursor_two
 
     @eventually_consistent.mark
     def test_property_filter(self, client):
@@ -187,12 +190,6 @@ class TestDatastoreSnippets:
         client.entities_to_delete.extend(
             client.query(kind='Task').fetch())
         assert keys
-
-    @eventually_consistent.mark
-    def test_distinct_query(self, client):
-        tasks = snippets.distinct_query(client)
-        client.entities_to_delete.extend(tasks)
-        assert tasks
 
     @eventually_consistent.mark
     def test_distinct_on_query(self, client):

@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
+# Use this file to deploy the container for the grpc-bookstore sample
+# and the container for the Extensible Service Proxy (ESP) to
+# Google Kubernetes Engine (GKE).
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -40,12 +44,12 @@ spec:
     spec:
       containers:
       - name: esp
-        image: b.gcr.io/endpoints/endpoints-runtime:1
+        image: gcr.io/endpoints-release/endpoints-runtime:1.16.0
         args: [
-          "-P", "9000",
-          "-s", "SERVICE_NAME",
-          "-v", "SERVICE_CONFIG_ID",
-          "-a", "grpc://127.0.0.1:8000"
+          "--http2_port=9000",
+          "--service=SERVICE_NAME",
+          "--rollout_strategy=managed",
+          "--backend=grpc://127.0.0.1:8000"
         ]
         ports:
           - containerPort: 9000

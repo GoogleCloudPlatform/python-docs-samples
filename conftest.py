@@ -14,60 +14,25 @@
 
 import os
 
+import mock
 import pytest
-import requests
+
+PROJECT = os.environ['GCLOUD_PROJECT']
 
 
-class Namespace(object):
-    def __init__(self, **kwargs):
-        self.__dict__.update(kwargs)
+@pytest.fixture
+def api_client_inject_project_id():
+    """Patches all googleapiclient requests to replace 'YOUR_PROJECT_ID' with
+    the project ID."""
+    import googleapiclient.http
 
+    old_execute = googleapiclient.http.HttpRequest.execute
 
-@pytest.fixture(scope='session')
-def cloud_config():
-    """Provides a configuration object as a proxy to environment variables."""
-    return Namespace(
-        project=os.environ.get('GCLOUD_PROJECT'),
-        storage_bucket=os.environ.get('CLOUD_STORAGE_BUCKET'),
-        client_secrets=os.environ.get('GOOGLE_CLIENT_SECRETS'),
-        bigtable_instance=os.environ.get('BIGTABLE_CLUSTER'),
-        api_key=os.environ.get('API_KEY'))
+    def new_execute(self, http=None, num_retries=0):
+        self.uri = self.uri.replace('YOUR_PROJECT_ID', PROJECT)
+        return old_execute(self, http=http, num_retries=num_retries)
 
-
-def get_resource_path(resource, local_path):
-    local_resource_path = os.path.join(local_path, 'resources', *resource)
-
-    if os.path.exists(local_resource_path):
-        return local_resource_path
-    else:
-        raise EnvironmentError('Resource {} not found.'.format(
-            os.path.join(*resource)))
-
-
-@pytest.fixture(scope='module')
-def resource(request):
-    """Provides a function that returns the full path to a local or global
-    testing resource"""
-    local_path = os.path.dirname(request.module.__file__)
-    return lambda *args: get_resource_path(args, local_path)
-
-
-def fetch_gcs_resource(resource, tmpdir, _chunk_size=1024):
-    resp = requests.get(resource, stream=True)
-    dest_file = str(tmpdir.join(os.path.basename(resource)))
-    with open(dest_file, 'wb') as f:
-        for chunk in resp.iter_content(_chunk_size):
-            f.write(chunk)
-
-    return dest_file
-
-
-@pytest.fixture(scope='module')
-def remote_resource(cloud_config):
-    """Provides a function that downloads the given resource from Cloud
-    Storage, returning the path to the downloaded resource."""
-    remote_uri = 'http://storage.googleapis.com/{}/'.format(
-        cloud_config.storage_bucket)
-
-    return lambda path, tmpdir: fetch_gcs_resource(
-        remote_uri + path.strip('/'), tmpdir)
+    with mock.patch(
+            'googleapiclient.http.HttpRequest.execute',
+            new=new_execute):
+        yield

@@ -9,11 +9,9 @@ Please fill out either the individual or corporate Contributor License
 Agreement (CLA).
 
   * If you are an individual writing original source code and you're sure you
-    own the intellectual property, then you'll need to sign an [individual CLA]
-    (https://developers.google.com/open-source/cla/individual).
+    own the intellectual property, then you'll need to sign an [individual CLA](https://developers.google.com/open-source/cla/individual).
   * If you work for a company that wants to allow you to contribute your work,
-    then you'll need to sign a [corporate CLA]
-    (https://developers.google.com/open-source/cla/corporate).
+    then you'll need to sign a [corporate CLA](https://developers.google.com/open-source/cla/corporate).
 
 Follow either of the two links above to access the appropriate CLA and
 instructions for how to sign and return it. Once we receive it, we'll
@@ -31,20 +29,10 @@ be able to accept your pull requests.
 1. Ensure that your code has an appropriate set of unit tests which all pass.
 1. Submit a pull request.
 
-## Style
+## Setting up a development environment
 
-Samples in this repository follow [PEP
-8](https://www.python.org/dev/peps/pep-0008/) and the [Google Python Style
-Guide](https://google.github.io/styleguide/pyguide.html). This is enforced using
-the [flake8](https://pypi.python.org/pypi/flake8) tool.
+* [Mac development environment guide](MAC_SETUP.md)
 
-To use the same flake8 configuration as is used in the automated test suite,
-install [nox](https://nox.readthedocs.io/en/latest/) and run
+## Authoring, testing, and contributing samples
 
-```shell
-nox -s lint -- path/to/sample
-```
-
-## Testing
-
-See [TESTING.md](TESTING.md).
+See [AUTHORING_GUIDE.md](AUTHORING_GUIDE.md).

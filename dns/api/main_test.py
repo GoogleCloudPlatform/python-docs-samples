@@ -11,30 +11,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from gcp.testing.flaky import flaky
+import os
+
+from gcp_devrel.testing.flaky import flaky
 from google.cloud import dns
+from google.cloud.exceptions import NotFound
+
 import pytest
 
 import main
 
+PROJECT = os.environ['GCLOUD_PROJECT']
 TEST_ZONE_NAME = 'test-zone'
 TEST_ZONE_DNS_NAME = 'theadora.is.'
 TEST_ZONE_DESCRIPTION = 'Test zone'
 
 
 @pytest.yield_fixture
-def client(cloud_config):
-    client = dns.Client(cloud_config.project)
+def client():
+    client = dns.Client(PROJECT)
 
     yield client
 
     # Delete anything created during the test.
     for zone in client.list_zones():
-        zone.delete()
+        try:
+            zone.delete()
+        except NotFound:  # May have been in process
+            pass
 
 
 @pytest.yield_fixture
-def zone(client, cloud_config):
+def zone(client):
     zone = client.zone(TEST_ZONE_NAME, TEST_ZONE_DNS_NAME)
     zone.description = TEST_ZONE_DESCRIPTION
     zone.create()
@@ -42,13 +50,16 @@ def zone(client, cloud_config):
     yield zone
 
     if zone.exists():
-        zone.delete()
+        try:
+            zone.delete()
+        except NotFound:  # May have been under way
+            pass
 
 
 @flaky
-def test_create_zone(client, cloud_config):
+def test_create_zone(client):
     zone = main.create_zone(
-        cloud_config.project,
+        PROJECT,
         TEST_ZONE_NAME,
         TEST_ZONE_DNS_NAME,
         TEST_ZONE_DESCRIPTION)
@@ -59,8 +70,8 @@ def test_create_zone(client, cloud_config):
 
 
 @flaky
-def test_get_zone(client, cloud_config, zone):
-    zone = main.get_zone(cloud_config.project, TEST_ZONE_NAME)
+def test_get_zone(client, zone):
+    zone = main.get_zone(PROJECT, TEST_ZONE_NAME)
 
     assert zone.name == TEST_ZONE_NAME
     assert zone.dns_name == TEST_ZONE_DNS_NAME
@@ -68,26 +79,26 @@ def test_get_zone(client, cloud_config, zone):
 
 
 @flaky
-def test_list_zones(client, cloud_config, zone):
-    zones = main.list_zones(cloud_config.project)
+def test_list_zones(client, zone):
+    zones = main.list_zones(PROJECT)
 
     assert TEST_ZONE_NAME in zones
 
 
 @flaky
-def test_delete_zone(client, cloud_config, zone):
-    main.delete_zone(cloud_config.project, TEST_ZONE_NAME)
-
-
-@flaky
-def test_list_resource_records(client, cloud_config, zone):
-    records = main.list_resource_records(cloud_config.project, TEST_ZONE_NAME)
+def test_list_resource_records(client, zone):
+    records = main.list_resource_records(PROJECT, TEST_ZONE_NAME)
 
     assert records
 
 
 @flaky
-def test_list_changes(client, cloud_config, zone):
-    changes = main.list_changes(cloud_config.project, TEST_ZONE_NAME)
+def test_list_changes(client, zone):
+    changes = main.list_changes(PROJECT, TEST_ZONE_NAME)
 
     assert changes
+
+
+@flaky
+def test_delete_zone(client, zone):
+    main.delete_zone(PROJECT, TEST_ZONE_NAME)

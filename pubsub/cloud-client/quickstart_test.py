@@ -1,4 +1,6 @@
-# Copyright 2016 Google Inc. All Rights Reserved.
+#!/usr/bin/env python
+
+# Copyright 2018 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,34 +14,58 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.cloud import pubsub
-import pytest
+import os
 
+from google.cloud import pubsub_v1
+import pytest
 import quickstart
 
-
-# Must match the dataset listed in quickstart.py (there's no easy way to
-# extract this).
-TOPIC_NAME = 'my-new-topic'
-
-
-@pytest.fixture
-def temporary_topic():
-    """Fixture that ensures the test dataset does not exist before or
-    after a test."""
-    pubsub_client = pubsub.Client()
-    topic = pubsub_client.topic(TOPIC_NAME)
-
-    if topic.exists():
-        topic.delete()
-
-    yield
-
-    if topic.exists():
-        topic.delete()
+PROJECT = os.environ['GCLOUD_PROJECT']
+TOPIC = 'end-to-end-test-topic'
+SUBSCRIPTION = 'end-to-end-test-topic-sub'
+N = 10
 
 
-def test_quickstart(capsys, temporary_topic):
-    quickstart.run_quickstart()
+@pytest.fixture(scope='module')
+def publisher_client():
+    yield pubsub_v1.PublisherClient()
+
+
+@pytest.fixture(scope='module')
+def topic(publisher_client):
+    topic_path = publisher_client.topic_path(PROJECT, TOPIC)
+
+    try:
+        publisher_client.delete_topic(topic_path)
+    except Exception:
+        pass
+
+    yield TOPIC
+
+
+@pytest.fixture(scope='module')
+def subscriber_client():
+    yield pubsub_v1.SubscriberClient()
+
+
+@pytest.fixture(scope='module')
+def subscription(subscriber_client, topic):
+    subscription_path = subscriber_client.subscription_path(
+        PROJECT, SUBSCRIPTION)
+
+    try:
+        subscriber_client.delete_subscription(subscription_path)
+    except Exception:
+        pass
+
+    yield SUBSCRIPTION
+
+
+def test_end_to_end(topic, subscription, capsys):
+
+    quickstart.end_to_end(PROJECT, topic, subscription, N)
     out, _ = capsys.readouterr()
-    assert TOPIC_NAME in out
+
+    assert "Received all messages" in out
+    assert "Publish time lapsed" in out
+    assert "Subscribe time lapsed" in out

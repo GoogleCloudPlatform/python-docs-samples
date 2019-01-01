@@ -14,16 +14,16 @@
 import argparse
 import datetime
 
-# [START build_service]
+# [START datastore_build_service]
 from google.cloud import datastore
 
 
 def create_client(project_id):
     return datastore.Client(project_id)
-# [END build_service]
+# [END datastore_build_service]
 
 
-# [START add_entity]
+# [START datastore_add_entity]
 def add_task(client, description):
     key = client.key('Task')
 
@@ -39,10 +39,10 @@ def add_task(client, description):
     client.put(task)
 
     return task.key
-# [END add_entity]
+# [END datastore_add_entity]
 
 
-# [START update_entity]
+# [START datastore_update_entity]
 def mark_done(client, task_id):
     with client.transaction():
         key = client.key('Task', task_id)
@@ -55,26 +55,25 @@ def mark_done(client, task_id):
         task['done'] = True
 
         client.put(task)
-# [END update_entity]
+# [END datastore_update_entity]
 
 
-# [START retrieve_entities]
+# [START datastore_retrieve_entities]
 def list_tasks(client):
     query = client.query(kind='Task')
     query.order = ['created']
 
     return list(query.fetch())
-# [END retrieve_entities]
+# [END datastore_retrieve_entities]
 
 
-# [START delete_entity]
+# [START datastore_delete_entity]
 def delete_task(client, task_id):
     key = client.key('Task', task_id)
     client.delete(key)
-# [END delete_entity]
+# [END datastore_delete_entity]
 
 
-# [START format_results]
 def format_tasks(tasks):
     lines = []
     for task in tasks:
@@ -87,7 +86,6 @@ def format_tasks(tasks):
             task.key.id, task['description'], status))
 
     return '\n'.join(lines)
-# [END format_results]
 
 
 def new_command(client, args):

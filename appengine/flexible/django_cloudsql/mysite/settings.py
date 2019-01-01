@@ -26,7 +26,11 @@ SECRET_KEY = 'pf-@jxtojga)z+4s*uwbgjrq$aep62-thd0q7f&o77xtpka!_m'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# SECURITY WARNING: App Engine's security features ensure that it is safe to
+# have ALLOWED_HOSTS = ['*'] when the app is deployed. If you deploy a Django
+# app not on App Engine, make sure to set an appropriate host here.
+# See https://docs.djangoproject.com/en/1.10/ref/settings/
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -40,15 +44,14 @@ INSTALLED_APPS = (
     'polls'
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
 )
 
 ROOT_URLCONF = 'mysite.urls'
@@ -77,17 +80,22 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # [START dbconfig]
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        # If you are using Cloud SQL for MySQL rather than PostgreSQL, set
+        # 'ENGINE': 'django.db.backends.mysql' instead of the following.
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'polls',
-        'USER': 'root',
-        'PASSWORD': '<your-root-password>',
+        'USER': '<your-database-user>',
+        'PASSWORD': '<your-database-password>',
+        # For MySQL, set 'PORT': '3306' instead of the following. Any Cloud
+        # SQL Proxy instances running locally must also be set to tcp:3306.
+        'PORT': '5432',
     }
 }
 # In the flexible environment, you connect to CloudSQL using a unix socket.
 # Locally, you can use the CloudSQL proxy to proxy a localhost connection
 # to the instance
 DATABASES['default']['HOST'] = '/cloudsql/<your-cloudsql-connection-string>'
-if os.getenv('GAE_APPENGINE_HOSTNAME'):
+if os.getenv('GAE_INSTANCE'):
     pass
 else:
     DATABASES['default']['HOST'] = '127.0.0.1'
@@ -112,7 +120,7 @@ USE_TZ = True
 # [START staticurl]
 # Fill in your cloud bucket and switch which one of the following 2 lines
 # is commented to serve static content from GCS
-# STATIC_URL = 'https://storage.googleapis.com/<your-cloud-bucket>/static/'
+# STATIC_URL = 'https://storage.googleapis.com/<your-gcs-bucket>/static/'
 STATIC_URL = '/static/'
 # [END staticurl]
 

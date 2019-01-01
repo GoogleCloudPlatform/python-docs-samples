@@ -24,19 +24,17 @@ For more information, see the README.md under /compute.
 
 import argparse
 
-from googleapiclient import discovery
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
 
 
 def create_service():
-    # Get the application default credentials. When running locally, these are
-    # available after running `gcloud auth`. When running on compute
-    # engine, these are available from the environment.
-    credentials = GoogleCredentials.get_application_default()
-
     # Construct the service object for interacting with the Cloud Storage API -
     # the 'storage' service, at version 'v1'.
-    return discovery.build('storage', 'v1', credentials=credentials)
+    # Authentication is provided by application default credentials.
+    # When running locally, these are available after running
+    # `gcloud auth application-default login`. When running on Compute
+    # Engine, these are available from the environment.
+    return googleapiclient.discovery.build('storage', 'v1')
 
 
 def list_buckets(service, project_id):

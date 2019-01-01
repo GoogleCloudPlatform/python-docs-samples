@@ -20,22 +20,30 @@ a Google API Service Account."""
 import argparse
 import time
 
-import oauth2client.crypt
-from oauth2client.service_account import ServiceAccountCredentials
+import google.auth.crypt
+import google.auth.jwt
 import requests
 from six.moves import urllib
 
 
 def generate_jwt(service_account_file):
     """Generates a signed JSON Web Token using a Google API Service Account."""
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(
+
+    # Note: this sample shows how to manually create the JWT for the purposes
+    # of showing how the authentication works, but you can use
+    # google.auth.jwt.Credentials to automatically create the JWT.
+    #   http://google-auth.readthedocs.io/en/latest/reference
+    #   /google.auth.jwt.html#google.auth.jwt.Credentials
+
+    signer = google.auth.crypt.RSASigner.from_service_account_file(
         service_account_file)
 
     now = int(time.time())
+    expires = now + 3600  # One hour in seconds
 
     payload = {
         'iat': now,
-        'exp': now + credentials.MAX_TOKEN_LIFETIME_SECS,
+        'exp': expires,
         # aud must match 'audience' in the security configuration in your
         # swagger spec. It can be any string.
         'aud': 'echo.endpoints.sample.google.com',
@@ -47,10 +55,9 @@ def generate_jwt(service_account_file):
         'email': 'user@example.com'
     }
 
-    signed_jwt = oauth2client.crypt.make_signed_jwt(
-        credentials._signer, payload, key_id=credentials._private_key_id)
+    jwt = google.auth.jwt.encode(signer, payload)
 
-    return signed_jwt
+    return jwt
 
 
 def make_request(host, api_key, signed_jwt):

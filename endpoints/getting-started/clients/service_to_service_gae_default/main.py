@@ -23,7 +23,7 @@ import time
 from google.appengine.api import app_identity
 import webapp2
 
-DEFAUTL_SERVICE_ACCOUNT = 'YOUR-CLIENT-PROJECT-ID@appspot.gserviceaccount.com'
+DEFAULT_SERVICE_ACCOUNT = 'YOUR-CLIENT-PROJECT-ID@appspot.gserviceaccount.com'
 HOST = "YOUR-SERVER-PROJECT-ID.appspot.com"
 
 
@@ -41,20 +41,21 @@ def generate_jwt():
         # expires after one hour.
         "exp": now + 3600,
         # iss is the Google App Engine default service account email.
-        'iss': DEFAUTL_SERVICE_ACCOUNT,
-        'sub': DEFAUTL_SERVICE_ACCOUNT,
-        # aud must match 'audience' in the security configuration in your
-        # swagger spec.It can be any string.
+        'iss': DEFAULT_SERVICE_ACCOUNT,
+        'sub': DEFAULT_SERVICE_ACCOUNT,
+        # Typically, the audience is the hostname of your API. The aud
+        # defined here must match the audience in the security configuration
+        # in yourOpenAPI spec.
         'aud': 'echo.endpoints.sample.google.com',
-        "email": DEFAUTL_SERVICE_ACCOUNT
+        "email": DEFAULT_SERVICE_ACCOUNT
     })
 
-    headerAndPayload = '{}.{}'.format(
+    header_and_payload = '{}.{}'.format(
         base64.urlsafe_b64encode(header_json),
         base64.urlsafe_b64encode(payload_json))
-    (key_name, signature) = app_identity.sign_blob(headerAndPayload)
+    (key_name, signature) = app_identity.sign_blob(header_and_payload)
     signed_jwt = '{}.{}'.format(
-        headerAndPayload,
+        header_and_payload,
         base64.urlsafe_b64encode(signature))
 
     return signed_jwt

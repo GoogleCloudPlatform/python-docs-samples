@@ -11,17 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import re
 
-import json
-
-from googleapiclient.http import HttpMockSequence
-import httplib2
 import pytest
-
-
-class HttpMockSequenceWithCredentials(HttpMockSequence):
-    def add_credentials(self, *args):
-        pass
+import responses
 
 
 @pytest.fixture
@@ -41,17 +34,34 @@ def test_receive_call(app):
     assert 'Hello from Twilio!' in r.data.decode('utf-8')
 
 
+@responses.activate
 def test_send_sms(app, monkeypatch):
-    httpmock = HttpMockSequenceWithCredentials([
-        ({'status': '200'}, json.dumps({
-            'sid': 'sid123'
-        }))
-    ])
-
-    def mock_http_ctor(*args, **kwargs):
-        return httpmock
-
-    monkeypatch.setattr(httplib2, 'Http', mock_http_ctor)
+    sample_response = {
+        "sid": "sid",
+        "date_created": "Wed, 20 Dec 2017 19:32:14 +0000",
+        "date_updated": "Wed, 20 Dec 2017 19:32:14 +0000",
+        "date_sent": None,
+        "account_sid": "account_sid",
+        "to": "+1234567890",
+        "from": "+9876543210",
+        "messaging_service_sid": None,
+        "body": "Hello from Twilio!",
+        "status": "queued",
+        "num_segments": "1",
+        "num_media": "0",
+        "direction": "outbound-api",
+        "api_version": "2010-04-01",
+        "price": None,
+        "price_unit": "USD",
+        "error_code": None,
+        "error_message": None,
+        "uri": "/2010-04-01/Accounts/sample.json",
+        "subresource_uris": {
+            "media": "/2010-04-01/Accounts/sample/Media.json"
+        }
+    }
+    responses.add(responses.POST, re.compile('.*'),
+                  json=sample_response, status=200)
 
     r = app.get('/sms/send')
     assert r.status_code == 400

@@ -1,7 +1,7 @@
 runtime: python27
 api_version: 1
 threadsafe: yes
-module: my-backend
+service: my-backend
 
 handlers:
 - url: .*

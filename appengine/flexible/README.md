@@ -1,5 +1,10 @@
 ## Google App Engine Flexible Environment Python Samples
 
+[![Open in Cloud Shell][shell_img]][shell_link]
+
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/README.md
+
 These are samples for using Python on Google App Engine Flexible Environment. These samples are typically referenced from the [docs](https://cloud.google.com/appengine/docs).
 
 See our other [Google Cloud Platform github repos](https://github.com/GoogleCloudPlatform) for sample applications and

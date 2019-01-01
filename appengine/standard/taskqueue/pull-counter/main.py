@@ -40,12 +40,14 @@ class CounterHandler(webapp2.RequestHandler):
         counter_template = JINJA_ENV.get_template('counter.html')
         self.response.out.write(counter_template.render(template_values))
 
+    # [START adding_task]
     def post(self):
         key = self.request.get('key')
         if key:
             queue = taskqueue.Queue('pullq')
             queue.add(taskqueue.Task(payload='', method='PULL', tag=key))
         self.redirect('/')
+    # [END adding_task]
 
 
 @ndb.transactional

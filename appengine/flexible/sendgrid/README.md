@@ -1,5 +1,10 @@
 # Python SendGrid email sample for Google App Engine Flexible
 
+[![Open in Cloud Shell][shell_img]][shell_link]
+
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/sendgrid/README.md
+
 This sample demonstrates how to use [SendGrid](https://www.sendgrid.com) on [Google App Engine Flexible](https://cloud.google.com/appengine).
 
 For more information about SendGrid, see their [documentation](https://sendgrid.com/docs/User_Guide/index.html).

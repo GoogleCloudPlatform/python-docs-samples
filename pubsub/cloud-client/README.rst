@@ -3,12 +3,16 @@
 Google Cloud Pub/Sub Python Samples
 ===============================================================================
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=pubsub/cloud-client/README.rst
+
+
 This directory contains samples for Google Cloud Pub/Sub. `Google Cloud Pub/Sub`_ is a fully-managed real-time messaging service that allows you to send and receive messages between independent applications.
 
 
 
 
-.. _Google Cloud Pub/Sub: https://cloud.google.com/pubsub/docs 
+.. _Google Cloud Pub/Sub: https://cloud.google.com/pubsub/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -17,39 +21,26 @@ Setup
 Authentication
 ++++++++++++++
 
-Authentication is typically done through `Application Default Credentials`_,
-which means you do not have to change the code to authenticate as long as
-your environment has credentials. You have a few options for setting up
-authentication:
+This sample requires you to have authentication setup. Refer to the
+`Authentication Getting Started Guide`_ for instructions on setting up
+credentials for applications.
 
-#. When running locally, use the `Google Cloud SDK`_
-
-    .. code-block:: bash
-
-        gcloud beta auth application-default login
-
-
-#. When running on App Engine or Compute Engine, credentials are already
-   set-up. However, you may need to configure your Compute Engine instance
-   with `additional scopes`_.
-
-#. You can create a `Service Account key file`_. This file can be used to
-   authenticate to Google Cloud Platform services from any environment. To use
-   the file, set the ``GOOGLE_APPLICATION_CREDENTIALS`` environment variable to
-   the path to the key file, for example:
-
-    .. code-block:: bash
-
-        export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
-
-.. _Application Default Credentials: https://cloud.google.com/docs/authentication#getting_credentials_for_server-centric_flow
-.. _additional scopes: https://cloud.google.com/compute/docs/authentication#using
-.. _Service Account key file: https://developers.google.com/identity/protocols/OAuth2ServiceAccount#creatinganaccount
+.. _Authentication Getting Started Guide:
+    https://cloud.google.com/docs/authentication/getting-started
 
 Install Dependencies
 ++++++++++++++++++++
 
-#. Install `pip`_ and `virtualenv`_ if you do not already have them.
+#. Clone python-docs-samples and change directory to the sample directory you want to use.
+
+    .. code-block:: bash
+
+        $ git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+
+#. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
+
+   .. _Python Development Environment Setup Guide:
+       https://cloud.google.com/python/setup
 
 #. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
 
@@ -73,6 +64,10 @@ Samples
 Quickstart
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=pubsub/cloud-client/quickstart.py,pubsub/cloud-client/README.rst
+
+
 
 
 To run this sample:
@@ -85,6 +80,10 @@ To run this sample:
 Publisher
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=pubsub/cloud-client/publisher.py,pubsub/cloud-client/README.rst
+
+
 
 
 To run this sample:
@@ -93,28 +92,45 @@ To run this sample:
 
     $ python publisher.py
 
-    usage: publisher.py [-h] {list,create,delete,publish} ...
-    
+    usage: publisher.py [-h]
+                        project
+                        {list,create,delete,publish,publish-with-custom-attributes,publish-with-futures,publish-with-batch-settings}
+                        ...
+
     This application demonstrates how to perform basic operations on topics
     with the Cloud Pub/Sub API.
-    
+
     For more information, see the README.md under /pubsub and the documentation
     at https://cloud.google.com/pubsub/docs.
-    
+
     positional arguments:
-      {list,create,delete,publish}
-        list                Lists all Pub/Sub topics in the current project.
+      project               Your Google Cloud project ID
+      {list,create,delete,publish,publish-with-custom-attributes,publish-with-futures,publish-with-batch-settings}
+        list                Lists all Pub/Sub topics in the given project.
         create              Create a new Pub/Sub topic.
         delete              Deletes an existing Pub/Sub topic.
-        publish             Publishes a message to a Pub/Sub topic with the given
-                            data.
-    
+        publish             Publishes multiple messages to a Pub/Sub topic.
+        publish-with-custom-attributes
+                            Publishes multiple messages with custom attributes to
+                            a Pub/Sub topic.
+        publish-with-futures
+                            Publishes multiple messages to a Pub/Sub topic and
+                            prints their message IDs.
+        publish-with-batch-settings
+                            Publishes multiple messages to a Pub/Sub topic with
+                            batch settings.
+
     optional arguments:
       -h, --help            show this help message and exit
 
 
+
 Subscribers
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=pubsub/cloud-client/subscriber.py,pubsub/cloud-client/README.rst
+
 
 
 
@@ -124,27 +140,52 @@ To run this sample:
 
     $ python subscriber.py
 
-    usage: subscriber.py [-h] {list,create,delete,receive} ...
-    
+    usage: subscriber.py [-h]
+                         project
+                         {list_in_topic,list_in_project,create,create-push,delete,update,receive,receive-custom-attributes,receive-flow-control,listen_for_errors}
+                         ...
+
     This application demonstrates how to perform basic operations on
     subscriptions with the Cloud Pub/Sub API.
-    
+
     For more information, see the README.md under /pubsub and the documentation
     at https://cloud.google.com/pubsub/docs.
-    
+
     positional arguments:
-      {list,create,delete,receive}
-        list                Lists all subscriptions for a given topic.
+      project               Your Google Cloud project ID
+      {list_in_topic,list_in_project,create,create-push,delete,update,receive,receive-custom-attributes,receive-flow-control,listen_for_errors}
+        list_in_topic       Lists all subscriptions for a given topic.
+        list_in_project     Lists all subscriptions in the current project.
         create              Create a new pull subscription on the given topic.
+        create-push         Create a new push subscription on the given topic. For
+                            example, endpoint is "https://my-test-
+                            project.appspot.com/push".
         delete              Deletes an existing Pub/Sub topic.
-        receive             Receives a message from a pull subscription.
-    
+        update              Updates an existing Pub/Sub subscription's push
+                            endpoint URL. Note that certain properties of a
+                            subscription, such as its topic, are not modifiable.
+                            For example, endpoint is "https://my-test-
+                            project.appspot.com/push".
+        receive             Receives messages from a pull subscription.
+        receive-custom-attributes
+                            Receives messages from a pull subscription.
+        receive-flow-control
+                            Receives messages from a pull subscription with flow
+                            control.
+        listen_for_errors   Receives messages and catches errors from a pull
+                            subscription.
+
     optional arguments:
       -h, --help            show this help message and exit
 
 
+
 Identity and Access Management
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=pubsub/cloud-client/iam.py,pubsub/cloud-client/README.rst
+
 
 
 
@@ -155,16 +196,18 @@ To run this sample:
     $ python iam.py
 
     usage: iam.py [-h]
+                  project
                   {get-topic-policy,get-subscription-policy,set-topic-policy,set-subscription-policy,check-topic-permissions,check-subscription-permissions}
                   ...
-    
+
     This application demonstrates how to perform basic operations on IAM
     policies with the Cloud Pub/Sub API.
-    
+
     For more information, see the README.md under /pubsub and the documentation
     at https://cloud.google.com/pubsub/docs.
-    
+
     positional arguments:
+      project               Your Google Cloud project ID
       {get-topic-policy,get-subscription-policy,set-topic-policy,set-subscription-policy,check-topic-permissions,check-subscription-permissions}
         get-topic-policy    Prints the IAM policy for the given topic.
         get-subscription-policy
@@ -178,9 +221,10 @@ To run this sample:
         check-subscription-permissions
                             Checks to which permissions are available on the given
                             subscription.
-    
+
     optional arguments:
       -h, --help            show this help message and exit
+
 
 
 
@@ -192,11 +236,11 @@ This sample uses the `Google Cloud Client Library for Python`_.
 You can read the documentation for more details on API usage and use GitHub
 to `browse the source`_ and  `report issues`_.
 
-.. Google Cloud Client Library for Python:
+.. _Google Cloud Client Library for Python:
     https://googlecloudplatform.github.io/google-cloud-python/
-.. browse the source:
+.. _browse the source:
     https://github.com/GoogleCloudPlatform/google-cloud-python
-.. report issues:
+.. _report issues:
     https://github.com/GoogleCloudPlatform/google-cloud-python/issues
 
 

@@ -11,8 +11,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 from application_default import main
 
+PROJECT = os.environ['GCLOUD_PROJECT']
 
-def test_main(cloud_config):
-    main(cloud_config.project)
+
+def test_main():
+    main(PROJECT)

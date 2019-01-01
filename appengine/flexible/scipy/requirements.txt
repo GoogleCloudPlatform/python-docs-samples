@@ -1,5 +1,5 @@
-Flask==0.11.1
-gunicorn==19.6.0
-numpy==1.12.0b1
-scipy==0.18.1
-Pillow==3.4.2
+Flask==1.0.2
+gunicorn==19.9.0
+numpy==1.15.4
+scipy==1.1.0
+Pillow==5.3.0

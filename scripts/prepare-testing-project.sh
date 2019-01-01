@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+set -e
+
 GCLOUD_PROJECT=$(gcloud config list project --format="value(core.project)" 2>/dev/null)
 
 echo "Configuring project $GCLOUD_PROJECT for system tests."
@@ -29,13 +31,14 @@ gcloud alpha bigtable clusters create bigtable-test \
     --zone=us-central1-c
 
 echo "Creating bigquery resources."
-gcloud alpha bigquery datasets create test_dataset
-gcloud alpha bigquery datasets create ephemeral_test_dataset
+bq mk test_dataset
+bq mk --schema bigquery/api/resources/schema.json test_dataset.test_import_table
+bq mk ephemeral_test_dataset
 gsutil cp bigquery/api/resources/data.csv gs://$GCLOUD_PROJECT/data.csv
-gcloud alpha bigquery import \
+bq load \
+    test_dataset.test_table \
     gs://$GCLOUD_PROJECT/data.csv \
-    test_dataset/test_table \
-    --schema-file bigquery/api/resources/schema.json
+    bigquery/api/resources/schema.json
 
 echo "Creating datastore indexes."
 gcloud app deploy -q datastore/api/index.yaml
@@ -44,7 +47,7 @@ echo "Creating pubsub resources."
 gcloud alpha pubsub topics create gae-mvm-pubsub-topic
 
 echo "Creating speech resources."
-gsutil cp speech/api/resources/audio.flac gs://$GCLOUD_PROJECT/speech/
+gsutil cp speech/api-client/resources/audio.raw gs://$GCLOUD_PROJECT/speech/
 
 echo "To finish setup, follow this link to enable APIs."
-echo "https://console.cloud.google.com/flows/enableapi?project=${GCLOUD_PROJECT}&apiid=bigtable.googleapis.com,bigtableadmin.googleapis.com,bigquery,cloudmonitoring,compute_component,datastore,datastore.googleapis.com,dataproc,dns,plus,pubsub,logging,storage_api,vision.googleapis.com"
+echo "https://console.cloud.google.com/flows/enableapi?project=${GCLOUD_PROJECT}&apiid=bigtable.googleapis.com,bigtableadmin.googleapis.com,bigquery,bigquerydatatransfer.googleapis.com,cloudmonitoring,compute_component,datastore,datastore.googleapis.com,dataproc,dns,plus,pubsub,logging,storage_api,texttospeech.googleapis.com,vision.googleapis.com"

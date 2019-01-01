@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import base64
+import os
 import tempfile
 
 from google.cloud import storage
@@ -21,6 +22,7 @@ import pytest
 
 import encryption
 
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 TEST_ENCRYPTION_KEY = 'brtJUWneL92g5q0N2gyDSnlPSYAiIVZ/cWgjyZNeMy0='
 TEST_ENCRYPTION_KEY_DECODED = base64.b64decode(TEST_ENCRYPTION_KEY)
@@ -37,21 +39,21 @@ def test_generate_encryption_key(capsys):
     assert len(key) == 32, 'Returned key should be 32 bytes'
 
 
-def test_upload_encrypted_blob(cloud_config):
+def test_upload_encrypted_blob():
     with tempfile.NamedTemporaryFile() as source_file:
         source_file.write(b'test')
 
         encryption.upload_encrypted_blob(
-            cloud_config.storage_bucket,
+            BUCKET,
             source_file.name,
             'test_encrypted_upload_blob',
             TEST_ENCRYPTION_KEY)
 
 
 @pytest.fixture
-def test_blob(cloud_config):
+def test_blob():
     """Provides a pre-existing blob in the test bucket."""
-    bucket = storage.Client().bucket(cloud_config.storage_bucket)
+    bucket = storage.Client().bucket(BUCKET)
     blob = Blob('encryption_test_sigil',
                 bucket, encryption_key=TEST_ENCRYPTION_KEY_DECODED)
     content = 'Hello, is it me you\'re looking for?'
@@ -59,11 +61,11 @@ def test_blob(cloud_config):
     return blob.name, content
 
 
-def test_download_blob(test_blob, cloud_config):
+def test_download_blob(test_blob):
     test_blob_name, test_blob_content = test_blob
     with tempfile.NamedTemporaryFile() as dest_file:
         encryption.download_encrypted_blob(
-            cloud_config.storage_bucket,
+            BUCKET,
             test_blob_name,
             dest_file.name,
             TEST_ENCRYPTION_KEY)
@@ -72,17 +74,17 @@ def test_download_blob(test_blob, cloud_config):
         assert downloaded_content == test_blob_content
 
 
-def test_rotate_encryption_key(test_blob, cloud_config):
+def test_rotate_encryption_key(test_blob):
     test_blob_name, test_blob_content = test_blob
     encryption.rotate_encryption_key(
-        cloud_config.storage_bucket,
+        BUCKET,
         test_blob_name,
         TEST_ENCRYPTION_KEY,
         TEST_ENCRYPTION_KEY_2)
 
     with tempfile.NamedTemporaryFile() as dest_file:
         encryption.download_encrypted_blob(
-            cloud_config.storage_bucket,
+            BUCKET,
             test_blob_name,
             dest_file.name,
             TEST_ENCRYPTION_KEY_2)

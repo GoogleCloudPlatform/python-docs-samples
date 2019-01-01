@@ -19,6 +19,7 @@ import socket
 
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
+import sqlalchemy
 
 
 app = Flask(__name__)
@@ -33,7 +34,7 @@ def is_ipv6(addr):
         return False
 
 
-# [START example]
+# [START gae_flex_mysql_app]
 # Environment variables are defined in app.yaml.
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLALCHEMY_DATABASE_URI']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -69,7 +70,7 @@ def index():
     db.session.add(visit)
     db.session.commit()
 
-    visits = Visit.query.order_by(-Visit.timestamp).limit(10)
+    visits = Visit.query.order_by(sqlalchemy.desc(Visit.timestamp)).limit(10)
 
     results = [
         'Time: {} Addr: {}'.format(x.timestamp, x.user_ip)
@@ -78,7 +79,7 @@ def index():
     output = 'Last 10 visits:\n{}'.format('\n'.join(results))
 
     return output, 200, {'Content-Type': 'text/plain; charset=utf-8'}
-# [END example]
+# [END gae_flex_mysql_app]
 
 
 @app.errorhandler(500)

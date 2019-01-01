@@ -1,3 +1,0 @@
-gunicorn==19.6.0
-oauth2client==4.0.0
-kinto==4.3.4

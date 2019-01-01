@@ -1,4 +1,3 @@
-Flask==0.11.1
-google-cloud-datastore==0.21.0
-gunicorn==19.6.0
-oauth2client==4.0.0
+Flask==1.0.2
+google-cloud-datastore==1.7.1
+gunicorn==19.9.0

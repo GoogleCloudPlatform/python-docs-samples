@@ -1,6 +1,11 @@
 # Python Mailjet email sample for Google App Engine Flexible
 
-This sample demonstrates how to use [Mailjet](https://www.mailgun.com) on [Google App Engine Flexible](https://cloud.google.com/appengine/docs/flexible/).
+[![Open in Cloud Shell][shell_img]][shell_link]
+
+[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/mailjet/README.md
+
+This sample demonstrates how to use [Mailjet](https://www.mailjet.com) on [Google App Engine Flexible](https://cloud.google.com/appengine/docs/flexible/).
 
 ## Setup
 
@@ -17,7 +22,7 @@ Refer to the [top-level README](../README.md) for instructions on running and de
 You can run the application locally and send emails from your local machine. You
 will need to set environment variables before starting your application:
 
-    $ export MAILGUN_API_KEY=[your-mailgun-api-key]
-    $ export MAILGUN_API_SECRET=[your-mailgun-secret]
-    $ export MAILGUN_SENDER=[your-sender-address]
+    $ export MAILJET_API_KEY=[your-mailjet-api-key]
+    $ export MAILJET_API_SECRET=[your-mailjet-secret]
+    $ export MAILJET_SENDER=[your-sender-address]
     $ python main.py
