@@ -81,25 +81,6 @@ class EchoApi(remote.Service):
     def echo_api_key(self, request):
         key, key_type = request.get_unrecognized_field_info('key')
         return EchoResponse(message=key)
-
-    @endpoints.method(
-        # This method takes an empty request body.
-        message_types.VoidMessage,
-        # This method returns an Echo message.
-        EchoResponse,
-        path='echo/email',
-        http_method='GET',
-        # Require auth tokens to have the following scopes to access this API.
-        scopes=[endpoints.EMAIL_SCOPE],
-        # OAuth2 audiences allowed in incoming tokens.
-        audiences=['your-oauth-client-id.com'])
-    def get_user_email(self, request):
-        user = endpoints.get_current_user()
-        # If there's no user defined, the request was unauthenticated, so we
-        # raise 401 Unauthorized.
-        if not user:
-            raise endpoints.UnauthorizedException
-        return EchoResponse(message=user.email())
 # [END echo_api_class]
 
 
