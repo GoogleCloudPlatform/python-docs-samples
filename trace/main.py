@@ -12,16 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import random
 import time
 
 from flask import Flask, redirect, url_for
 
+PROJECT_ID = (os.environ.get('GOOGLE_CLOUD_PROJECT', None) or
+              os.environ.get('GCLOUD_PROJECT', None))
+
+if not PROJECT_ID:
+    raise MissingProjectIdError(
+        'Set the environment variable ' +
+        'GCLOUD_PROJECT to your Google Cloud Project Id.')
+
+
 # [START trace_setup_python_configure]
 from opencensus.trace.exporters import stackdriver_exporter
 import opencensus.trace.tracer
 
-exporter = stackdriver_exporter.StackdriverExporter()
+exporter = stackdriver_exporter.StackdriverExporter(
+    project_id=PROJECT_ID)
 tracer = opencensus.trace.tracer.Tracer(exporter=exporter)
 # [END trace_setup_python_configure]
 
