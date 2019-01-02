@@ -23,19 +23,14 @@ your application.
 import argparse
 
 
-def run_query(credentials, project, query):
-    from google.cloud import bigquery
-
-    client = bigquery.Client(project=project, credentials=credentials)
-    query_job = client.query(query)
-
-    # Print the results.
-    for row in query_job.result():  # Wait for the job to complete.
-        print(row)
-
-
-def authenticate_and_query(project, query, launch_browser=True):
+def main(project, launch_browser=True):
+    # [START bigquery_auth_user_flow]
     from google_auth_oauthlib import flow
+
+    # TODO: Use a local server in the auth flow? This is recommended but does
+    #       not work if accessing the application remotely, such as over SSH or
+    #       from a remote Jupyter notebook.
+    # launch_browser = True
 
     appflow = flow.InstalledAppFlow.from_client_secrets_file(
         'client_secrets.json',
@@ -46,7 +41,31 @@ def authenticate_and_query(project, query, launch_browser=True):
     else:
         appflow.run_console()
 
-    run_query(appflow.credentials, project, query)
+    credentials = appflow.credentials
+    # [END bigquery_auth_user_flow]
+
+    # [START bigquery_auth_user_query]
+    from google.cloud import bigquery
+
+    # TODO: This project will be billed for the query processing. The user must
+    #       have the bigquery.jobs.create permission on this project to run a
+    #       query. See:
+    #       https://cloud.google.com/bigquery/docs/access-control#permissions
+    # project = 'user-project-id'
+
+    client = bigquery.Client(project=project, credentials=credentials)
+
+    query_string = """SELECT name, SUM(number) as total
+    FROM `bigquery-public-data.usa_names.usa_1910_current`
+    WHERE name = 'William'
+    GROUP BY name;
+    """
+    query_job = client.query(query_string)
+
+    # Print the results.
+    for row in query_job.result():  # Wait for the job to complete.
+        print("{}: {}".format(row['name'], row['total']))
+    # [END bigquery_auth_user_query]
 
 
 if __name__ == '__main__':
@@ -58,9 +77,8 @@ if __name__ == '__main__':
         help='Use a local server flow to authenticate. ',
         action='store_true')
     parser.add_argument('project', help='Project to use for BigQuery billing.')
-    parser.add_argument('query', help='BigQuery SQL Query.')
 
     args = parser.parse_args()
 
-    authenticate_and_query(
-        args.project, args.query, launch_browser=args.launch_browser)
+    main(
+        args.project, launch_browser=args.launch_browser)
