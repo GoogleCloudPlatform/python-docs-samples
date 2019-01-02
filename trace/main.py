@@ -22,7 +22,7 @@ PROJECT_ID = (os.environ.get('GOOGLE_CLOUD_PROJECT', None) or
               os.environ.get('GCLOUD_PROJECT', None))
 
 if not PROJECT_ID:
-    raise MissingProjectIdError(
+    raise Exception(
         'Set the environment variable ' +
         'GCLOUD_PROJECT to your Google Cloud Project Id.')
 
