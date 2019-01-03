@@ -22,8 +22,7 @@ from flask import Flask, redirect, url_for
 from opencensus.trace.exporters import stackdriver_exporter
 import opencensus.trace.tracer
 
-PROJECT_ID = (os.environ.get('GOOGLE_CLOUD_PROJECT', None) or
-              os.environ.get('GCLOUD_PROJECT', None))
+PROJECT_ID = os.environ.get['GCLOUD_PROJECT']
 
 exporter = stackdriver_exporter.StackdriverExporter(
     project_id=PROJECT_ID)
