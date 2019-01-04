@@ -22,10 +22,9 @@ from flask import Flask, redirect, url_for
 from opencensus.trace.exporters import stackdriver_exporter
 import opencensus.trace.tracer
 
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
-
 exporter = stackdriver_exporter.StackdriverExporter(
-    project_id=PROJECT_ID)
+    project_id='YOUR_PROJECT_ID')
+
 tracer = opencensus.trace.tracer.Tracer(exporter=exporter)
 # [END trace_setup_python_configure]
 
