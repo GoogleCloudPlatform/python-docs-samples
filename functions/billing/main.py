@@ -111,8 +111,6 @@ def __disable_billing_for_project(project_name, projects):
 
 
 # [START functions_billing_limit]
-ZONE = 'us-west1-b'
-
 
 def limit_use(data, context):
     pubsub_data = base64.b64decode(data['data']).decode('utf-8')
@@ -131,8 +129,16 @@ def limit_use(data, context):
     )
     instances = compute.instances()
 
-    instance_names = __list_running_instances(PROJECT_ID, ZONE, instances)
-    __stop_instances(PROJECT_ID, ZONE, instance_names, instances)
+    request = compute.zones().list(project=PROJECT_ID)
+    while request is not None:
+        response = request.execute()
+
+        for zone in response['items']:
+             instance_names = __list_running_instances(PROJECT_ID, zone['description'], instances)
+             if instance_names:
+                 __stop_instances(PROJECT_ID, zone['description'], instance_names, instances)
+
+        request = compute.zones().list_next(previous_request=request, previous_response=response)
 
 
 def __list_running_instances(project_id, zone, instances):
@@ -143,9 +149,12 @@ def __list_running_instances(project_id, zone, instances):
     """
     res = instances.list(project=project_id, zone=zone).execute()
 
-    items = res['items']
-    running_names = [i['name'] for i in items if i['status'] == 'RUNNING']
-    return running_names
+     if 'items' in res:
+        items = res['items']
+        running_names = [i['name'] for i in items if i['status'] == 'RUNNING']
+        return running_names
+    else:
+        return None
 
 
 def __stop_instances(project_id, zone, instance_names, instances):
