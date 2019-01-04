@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import random
 import time
 
@@ -22,7 +23,7 @@ from opencensus.trace.exporters import stackdriver_exporter
 import opencensus.trace.tracer
 
 exporter = stackdriver_exporter.StackdriverExporter(
-    project_id='YOUR_PROJECT_ID')
+    project_id=os.environ['GCLOUD_PROJECT'])
 
 tracer = opencensus.trace.tracer.Tracer(exporter=exporter)
 # [END trace_setup_python_configure]
