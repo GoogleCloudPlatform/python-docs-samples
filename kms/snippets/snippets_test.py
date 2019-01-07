@@ -13,167 +13,208 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
-import os
-import random
-import string
+import time
+from os import environ
 
-import googleapiclient.discovery
+from google.api_core.exceptions import GoogleAPICallError
+from google.cloud import kms_v1
+from google.cloud.kms_v1 import enums
+from google.iam.v1.policy_pb2 import Policy
+
+import pytest
 
 import snippets
 
-PROJECT = os.environ['GCLOUD_PROJECT']
 
-# Your Google Cloud Platform Key Location
-LOCATION = 'global'
+def create_key_helper(key_id, purpose, algorithm, t):
+    try:
+        client = kms_v1.KeyManagementServiceClient()
+        parent = client.key_ring_path(t.project_id, t.location, t.keyring_id)
 
-# Your Google Cloud Platform KeyRing name
-KEY_RING = ''.join(
-    random.choice(string.ascii_lowercase + string.digits) for _ in range(12))
-
-# Your Google Cloud Platform CryptoKey name
-CRYPTO_KEY = ''.join(
-    random.choice(string.ascii_lowercase + string.digits) for _ in range(12))
-
-# Your Google Cloud Platform CryptoKeyVersion name
-VERSION = 1
-
-# A member to add to our IAM policy
-MEMBER = 'user:ryanmats@google.com'
-
-# The role we want our new member to have for our IAM policy
-ROLE = 'roles/owner'
+        crypto_key = {'purpose': purpose,
+                      'version_template': {'algorithm': algorithm}}
+        client.create_crypto_key(parent, key_id, crypto_key)
+        return True
+    except GoogleAPICallError:
+        # key already exists
+        return False
 
 
-def test_create_key_ring(capsys):
-    snippets.create_key_ring(PROJECT, LOCATION, KEY_RING)
-    out, _ = capsys.readouterr()
-    expected = 'Created KeyRing projects/{}/locations/{}/keyRings/{}.'.format(
-        PROJECT, LOCATION, KEY_RING)
-    assert expected in out
+def setup_module(module):
+    """
+    Set up keys in project if needed
+    """
+    t = TestKMSSnippets()
+    try:
+        # create keyring
+        snippets.create_key_ring(t.project_id, t.location, t.keyring_id)
+    except GoogleAPICallError:
+        # keyring already exists
+        pass
+    s = create_key_helper(t.symId,
+                          enums.CryptoKey.CryptoKeyPurpose.ENCRYPT_DECRYPT,
+                          enums.CryptoKeyVersion.CryptoKeyVersionAlgorithm.
+                          GOOGLE_SYMMETRIC_ENCRYPTION,
+                          t)
+    if s:
+        # leave time for key to initialize
+        time.sleep(20)
 
 
-def test_create_crypto_key(capsys):
-    snippets.create_crypto_key(
-        PROJECT, LOCATION, KEY_RING, CRYPTO_KEY)
-    out, _ = capsys.readouterr()
-    expected = (
-        'Created CryptoKey projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}.'
-        .format(PROJECT, LOCATION, KEY_RING, CRYPTO_KEY))
-    assert expected in out
+class TestKMSSnippets:
+    project_id = environ['GCLOUD_PROJECT']
+    keyring_id = 'kms-samples'
+    location = 'global'
+    parent = 'projects/{}/locations/{}'.format(project_id, location)
+    keyring_path = '{}/keyRings/{}'.format(parent, keyring_id)
+    version = '1'
 
+    symId = 'symmetric'
 
-def test_encrypt_decrypt(capsys, tmpdir):
-    # Write to a plaintext file.
-    tmpdir.join('in.txt').write('SampleText')
+    sym = '{}/cryptoKeys/{}'.format(keyring_path, symId)
+    sym_version = '{}/cryptoKeyVersions/{}'.format(sym, version)
 
-    # Construct temporary files.
-    plaintext_file = tmpdir.join('in.txt')
-    encrypted_file = tmpdir.join('out.txt')
-    decrypted_file = tmpdir.join('out2.txt')
+    message = 'test message 123'
+    message_bytes = message.encode('utf-8')
 
-    # Encrypt text and then decrypt it.
-    snippets.encrypt(
-        PROJECT, LOCATION, KEY_RING, CRYPTO_KEY,
-        str(plaintext_file), str(encrypted_file))
-    snippets.decrypt(
-        PROJECT, LOCATION, KEY_RING, CRYPTO_KEY,
-        str(encrypted_file), str(decrypted_file))
+    member = 'group:test@google.com'
+    role = 'roles/viewer'
 
-    # Make sure the decrypted text matches the original text.
-    decrypted_text = decrypted_file.read()
-    assert decrypted_text == 'SampleText'
+    @pytest.mark.skip(reason="There's currently no method to delete keyrings, \
+                              so we should avoid creating resources")
+    def test_create_key_ring(self):
+        ring_id = self.keyring_id + '-testcreate' + str(int(time.time()))
+        snippets.create_key_ring(self.project_id, self.location, ring_id)
+        client = kms_v1.KeyManagementServiceClient()
+        result = client.get_key_ring(client.key_ring_path(self.project_id,
+                                                          self.location,
+                                                          ring_id))
+        assert ring_id in result.name
 
-    # Make sure other output is as expected.
-    out, _ = capsys.readouterr()
-    assert 'Saved ciphertext to {}.'.format(str(encrypted_file)) in out
-    assert 'Saved plaintext to {}.'.format(str(decrypted_file)) in out
+    @pytest.mark.skip(reason="Deleting keys isn't instant, so we should avoid \
+                              creating a large number of them in our tests")
+    def test_create_crypto_key(self):
+        key_id = self.symId + '-test' + str(int(time.time()))
+        snippets.create_crypto_key(self.project_id, self.location,
+                                   self.keyring_id, key_id)
+        c = kms_v1.KeyManagementServiceClient()
+        result = c.get_crypto_key(c.crypto_key_path(self.project_id,
+                                                    self.location,
+                                                    self.keyring_id,
+                                                    key_id))
+        assert key_id in result.name
 
+    # tests disable/enable/destroy/restore
+    def test_key_change_version_state(self):
+        client = kms_v1.KeyManagementServiceClient()
+        name = client.crypto_key_version_path(self.project_id, self.location,
+                                              self.keyring_id, self.symId,
+                                              self.version)
+        state_enum = enums.CryptoKeyVersion.CryptoKeyVersionState
+        # test disable
+        snippets.disable_crypto_key_version(self.project_id, self.location,
+                                            self.keyring_id, self.symId,
+                                            self.version)
+        response = client.get_crypto_key_version(name)
+        assert response.state == state_enum.DISABLED
+        # test destroy
+        snippets.destroy_crypto_key_version(self.project_id, self.location,
+                                            self.keyring_id, self.symId,
+                                            self.version)
+        response = client.get_crypto_key_version(name)
+        assert response.state == state_enum.DESTROY_SCHEDULED
+        # test restore
+        snippets.restore_crypto_key_version(self.project_id, self.location,
+                                            self.keyring_id, self.symId,
+                                            self.version)
+        response = client.get_crypto_key_version(name)
+        assert response.state == state_enum.DISABLED
+        # test re-enable
+        snippets.enable_crypto_key_version(self.project_id, self.location,
+                                           self.keyring_id, self.symId,
+                                           self.version)
+        response = client.get_crypto_key_version(name)
+        assert response.state == state_enum.ENABLED
 
-def test_disable_crypto_key_version(capsys):
-    snippets.disable_crypto_key_version(
-        PROJECT, LOCATION, KEY_RING, CRYPTO_KEY, VERSION)
-    out, _ = capsys.readouterr()
-    expected = (
-        'CryptoKeyVersion projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}/'
-        'cryptoKeyVersions/{}\'s state has been set to {}.'
-        .format(
-            PROJECT, LOCATION, KEY_RING, CRYPTO_KEY, VERSION,
-            'DISABLED'))
-    assert expected in out
+    def test_get_ring_policy(self):
+        policy = snippets.get_key_ring_policy(self.project_id,
+                                              self.location, self.keyring_id)
+        assert type(policy) is Policy
 
+    # tests get/add/remove policy members
+    def test_ring_policy(self):
+        # add member
+        snippets.add_member_to_key_ring_policy(self.project_id, self.location,
+                                               self.keyring_id, self.member,
+                                               self.role)
+        policy = snippets.get_key_ring_policy(self.project_id,
+                                              self.location, self.keyring_id)
+        found = False
+        for b in list(policy.bindings):
+            if b.role == self.role and self.member in b.members:
+                found = True
+        assert found
+        # remove member
+        snippets.remove_member_from_key_ring_policy(self.project_id,
+                                                    self.location,
+                                                    self.keyring_id,
+                                                    self.member,
+                                                    self.role)
+        policy = snippets.get_key_ring_policy(self.project_id,
+                                              self.location, self.keyring_id)
+        found = False
+        for b in list(policy.bindings):
+            if b.role == self.role and self.member in b.members:
+                found = True
+        assert not found
 
-def test_enable_crypto_key_version(capsys):
-    snippets.enable_crypto_key_version(
-        PROJECT, LOCATION, KEY_RING, CRYPTO_KEY, VERSION)
-    out, _ = capsys.readouterr()
-    expected = (
-        'CryptoKeyVersion projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}/'
-        'cryptoKeyVersions/{}\'s state has been set to {}.'
-        .format(
-            PROJECT, LOCATION, KEY_RING, CRYPTO_KEY, VERSION,
-            'ENABLED'))
-    assert expected in out
+    # tests get/add/remove policy members
+    def test_key_policy(self):
+        # add member
+        snippets.add_member_to_crypto_key_policy(self.project_id,
+                                                 self.location,
+                                                 self.keyring_id,
+                                                 self.symId,
+                                                 self.member,
+                                                 self.role)
+        policy = snippets.get_crypto_key_policy(self.project_id,
+                                                self.location,
+                                                self.keyring_id,
+                                                self.symId)
+        found = False
+        for b in list(policy.bindings):
+            if b.role == self.role and self.member in b.members:
+                found = True
+        assert found
+        # remove member
+        snippets.remove_member_from_crypto_key_policy(self.project_id,
+                                                      self.location,
+                                                      self.keyring_id,
+                                                      self.symId,
+                                                      self.member,
+                                                      self.role)
+        policy = snippets.get_crypto_key_policy(self.project_id,
+                                                self.location,
+                                                self.keyring_id,
+                                                self.symId)
+        found = False
+        for b in list(policy.bindings):
+            if b.role == self.role and self.member in b.members:
+                found = True
+        assert not found
 
-
-def test_destroy_crypto_key_version(capsys):
-    snippets.destroy_crypto_key_version(
-        PROJECT, LOCATION, KEY_RING, CRYPTO_KEY, VERSION)
-    out, _ = capsys.readouterr()
-    expected = (
-        'CryptoKeyVersion projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}/'
-        'cryptoKeyVersions/{}\'s state has been set to {}.'
-        .format(
-            PROJECT, LOCATION, KEY_RING, CRYPTO_KEY, VERSION,
-            'DESTROY_SCHEDULED'))
-    assert expected in out
-
-
-def test_restore_crypto_key_version(capsys):
-    snippets.restore_crypto_key_version(
-        PROJECT, LOCATION, KEY_RING, CRYPTO_KEY, VERSION)
-    out, _ = capsys.readouterr()
-    expected = (
-        'CryptoKeyVersion projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}/'
-        'cryptoKeyVersions/{}\'s state has been set to {}.'
-        .format(
-            PROJECT, LOCATION, KEY_RING, CRYPTO_KEY, VERSION,
-            'DISABLED'))
-    assert expected in out
-
-
-def test_add_member_to_crypto_key_policy(capsys):
-    snippets.add_member_to_crypto_key_policy(
-        PROJECT, LOCATION, KEY_RING, CRYPTO_KEY, MEMBER, ROLE)
-    out, _ = capsys.readouterr()
-    expected = (
-        'Member {} added with role {} to policy for CryptoKey {} in KeyRing {}'
-        .format(MEMBER, ROLE, CRYPTO_KEY, KEY_RING))
-    assert expected in out
-
-    kms_client = googleapiclient.discovery.build('cloudkms', 'v1')
-    parent = 'projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}'.format(
-        PROJECT, LOCATION, KEY_RING, CRYPTO_KEY)
-    crypto_keys = kms_client.projects().locations().keyRings().cryptoKeys()
-    policy_request = crypto_keys.getIamPolicy(resource=parent)
-    policy_response = policy_request.execute()
-    assert 'bindings' in policy_response.keys()
-    bindings = policy_response['bindings']
-    found_member_role_pair = False
-    for binding in bindings:
-        if binding['role'] == ROLE:
-            for user in binding['members']:
-                if user == MEMBER:
-                    found_member_role_pair = True
-    assert found_member_role_pair
-
-
-def test_get_key_ring_policy(capsys):
-    snippets.get_key_ring_policy(PROJECT, LOCATION, KEY_RING)
-    out, _ = capsys.readouterr()
-    expected_roles_exist = (
-        'Printing IAM policy for resource projects/{}/locations/{}/keyRings/{}'
-        ':'.format(PROJECT, LOCATION, KEY_RING))
-    expected_no_roles = (
-        'No roles found for resource projects/{}/locations/{}/keyRings/{}.'
-        .format(PROJECT, LOCATION, KEY_RING))
-    assert (expected_roles_exist in out) or (expected_no_roles in out)
+    def test_symmetric_encrypt_decrypt(self):
+        cipher_bytes = snippets.encrypt_symmetric(self.project_id,
+                                                  self.location,
+                                                  self.keyring_id,
+                                                  self.symId,
+                                                  self.message_bytes)
+        plain_bytes = snippets.decrypt_symmetric(self.project_id,
+                                                 self.location,
+                                                 self.keyring_id,
+                                                 self.symId,
+                                                 cipher_bytes)
+        assert plain_bytes == self.message_bytes
+        assert cipher_bytes != self.message_bytes
+        plaintext = plain_bytes.decode("utf-8")
+        assert plaintext == self.message
