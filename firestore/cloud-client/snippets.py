@@ -632,7 +632,7 @@ def listen_document():
     # [START detach_listener]
     # Terminate watch on a document
     doc_watch.unsubscribe()
-    # [START detach_listener]
+    # [END detach_listener]
 
 
 def listen_multiple():
