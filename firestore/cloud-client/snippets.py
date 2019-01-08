@@ -15,6 +15,7 @@ import datetime
 from time import sleep
 
 from google.cloud import firestore
+from google.cloud.firestore_v1beta1 import ArrayRemove, ArrayUnion
 import google.cloud.exceptions
 
 
@@ -101,12 +102,14 @@ def add_data_types():
 
 # [START custom_class_def]
 class City(object):
-    def __init__(self, name, state, country, capital=False, population=0):
+    def __init__(self, name, state, country, capital=False, population=0,
+                 regions=[]):
         self.name = name
         self.state = state
         self.country = country
         self.capital = capital
         self.population = population
+        self.regions = regions
 
     @staticmethod
     def from_dict(source):
@@ -118,6 +121,9 @@ class City(object):
 
         if u'population' in source:
             city.population = source[u'population']
+
+        if u'regions' in source:
+            city.regions = source[u'regions']
 
         return city
         # [END_EXCLUDE]
@@ -136,12 +142,17 @@ class City(object):
         if self.population:
             dest[u'population'] = self.population
 
+        if self.regions:
+            dest[u'regions'] = self.regions
+
         return dest
         # [END_EXCLUDE]
 
     def __repr__(self):
-        return u'City(name={}, country={}, population={}, capital={})'.format(
-            self.name, self.country, self.population, self.capital)
+        return(
+            u'City(name={}, country={}, population={}, capital={}, regions={})'
+            .format(self.name, self.country, self.population, self.capital,
+                    self.regions))
 # [END custom_class_def]
 
 
@@ -150,15 +161,19 @@ def add_example_data():
     # [START add_example_data]
     cities_ref = db.collection(u'cities')
     cities_ref.document(u'SF').set(
-        City(u'San Francisco', u'CA', u'USA', False, 860000).to_dict())
+        City(u'San Francisco', u'CA', u'USA', False, 860000,
+             [u'west_coast', u'norcal']).to_dict())
     cities_ref.document(u'LA').set(
-        City(u'Los Angeles', u'CA', u'USA', False, 3900000).to_dict())
+        City(u'Los Angeles', u'CA', u'USA', False, 3900000,
+             [u'west_coast', u'socal']).to_dict())
     cities_ref.document(u'DC').set(
-        City(u'Washington D.C.', None, u'USA', True, 680000).to_dict())
+        City(u'Washington D.C.', None, u'USA', True, 680000,
+             [u'east_coast']).to_dict())
     cities_ref.document(u'TOK').set(
-        City(u'Tokyo', None, u'Japan', True, 9000000).to_dict())
+        City(u'Tokyo', None, u'Japan', True, 9000000,
+             [u'kanto', u'honshu']).to_dict())
     cities_ref.document(u'BJ').set(
-        City(u'Beijing', None, u'China', True, 21500000).to_dict())
+        City(u'Beijing', None, u'China', True, 21500000, [u'hebei']).to_dict())
     # [END add_example_data]
 
 
@@ -232,6 +247,18 @@ def get_simple_query():
     # [END get_simple_query]
 
 
+def array_contains_filter():
+    db = firestore.Client()
+    # [START fs_array_contains_filter]
+    cities_ref = db.collection(u'cities')
+
+    query = cities_ref.where(u'regions', u'array_contains', u'west_coast')
+    # [END fs_array_contains_filter]
+    docs = query.get()
+    for doc in docs:
+        print(u'{} => {}'.format(doc.id, doc.to_dict()))
+
+
 def get_full_collection():
     db = firestore.Client()
     # [START get_full_collection]
@@ -284,6 +311,21 @@ def update_doc():
     # Set the capital field
     city_ref.update({u'capital': True})
     # [END update_doc]
+
+
+def update_doc_array():
+    db = firestore.Client()
+    # [START fs_update_doc_array]
+    city_ref = db.collection(u'cities').document(u'DC')
+
+    # Atomically add a new region to the 'regions' array field.
+    city_ref.update({u'regions': ArrayUnion([u'greater_virginia'])})
+
+    # // Atomically remove a region from the 'regions' array field.
+    city_ref.update({u'regions': ArrayRemove([u'east_coast'])})
+    # [END fs_update_doc_array]
+    city = city_ref.get()
+    print(u'Updated the regions field of the DC. {}'.format(city.to_dict()))
 
 
 def update_multiple():
@@ -569,7 +611,7 @@ def snapshot_cursors():
     # [END fs_start_at_snapshot_query_cursor]
     results = start_at_snapshot.limit(10).get()
     for doc in results:
-        print('{}'.format(doc.id))
+        print(u'{}'.format(doc.id))
 
     return results
 
@@ -674,11 +716,11 @@ def listen_for_changes():
         print(u'Callback received query snapshot.')
         print(u'Current cities in California: ')
         for change in changes:
-            if change.type.name == "ADDED":
+            if change.type.name == 'ADDED':
                 print(u'New city: {}'.format(change.document.id))
-            elif change.type.name == "MODIFIED":
+            elif change.type.name == 'MODIFIED':
                 print(u'Modified city: {}'.format(change.document.id))
-            elif change.type.name == "REMOVED":
+            elif change.type.name == 'REMOVED':
                 print(u'Removed city: {}'.format(change.document.id))
 
     col_query = db.collection(u'cities').where(u'state', u'==', u'CA')
