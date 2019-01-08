@@ -27,7 +27,7 @@ def main(project, launch_browser=True):
     # [START bigquery_auth_user_flow]
     from google_auth_oauthlib import flow
 
-    # TODO: Set the `launch_browser` variable.
+    # TODO: Uncomment the `launch_browser` variable below.
     #
     # The `launch_browser` boolean variable indicates if a local server in the
     # auth flow. A value of `True` is recommended, but a local server does not
@@ -51,7 +51,7 @@ def main(project, launch_browser=True):
     # [START bigquery_auth_user_query]
     from google.cloud import bigquery
 
-    # TODO: Set the `project` variable.
+    # TODO: Uncomment the `project` variable below.
     #
     # The `project` variable defines the project to be billed for query
     # processing. The user must have the bigquery.jobs.create permission on
