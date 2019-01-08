@@ -286,7 +286,6 @@ def test_send_command(test_topic, capsys):
             service_account_json, project_id, cloud_region, pubsub_topic,
             registry_id)
 
-
     exists = False
     devices = manager.list_devices(
             service_account_json, project_id, cloud_region, registry_id)
