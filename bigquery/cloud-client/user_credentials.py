@@ -27,9 +27,13 @@ def main(project, launch_browser=True):
     # [START bigquery_auth_user_flow]
     from google_auth_oauthlib import flow
 
-    # TODO: Use a local server in the auth flow? This is recommended but does
-    #       not work if accessing the application remotely, such as over SSH or
-    #       from a remote Jupyter notebook.
+    # TODO: Set the `launch_browser` variable.
+    #
+    # The `launch_browser` boolean variable indicates if a local server in the
+    # auth flow. A value of `True` is recommended, but a local server does not
+    # work if accessing the application remotely, such as over SSH or from a
+    # remote Jupyter notebook.
+    #
     # launch_browser = True
 
     appflow = flow.InstalledAppFlow.from_client_secrets_file(
@@ -47,10 +51,13 @@ def main(project, launch_browser=True):
     # [START bigquery_auth_user_query]
     from google.cloud import bigquery
 
-    # TODO: This project will be billed for the query processing. The user must
-    #       have the bigquery.jobs.create permission on this project to run a
-    #       query. See:
-    #       https://cloud.google.com/bigquery/docs/access-control#permissions
+    # TODO: Set the `project` variable.
+    #
+    # The `project` variable defines the project to be billed for query
+    # processing. The user must have the bigquery.jobs.create permission on
+    # this project to run a query. See:
+    # https://cloud.google.com/bigquery/docs/access-control#permissions
+    #
     # project = 'user-project-id'
 
     client = bigquery.Client(project=project, credentials=credentials)
