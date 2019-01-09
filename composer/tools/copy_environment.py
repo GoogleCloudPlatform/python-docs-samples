@@ -172,10 +172,12 @@ def wait_sql_operation(
             return operation
         time.sleep(5)
 
+
 def get_service_account(overrides, existing_node_config):
     if overrides["serviceAccount"] is not None:
         return overrides["serviceAccount"]
     return existing_node_config.get("serviceAccount", "")
+
 
 def create_composer_env_if_not_exist(
     composer_client, existing_env, project, location, new_env_name, overrides
