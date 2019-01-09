@@ -172,6 +172,10 @@ def wait_sql_operation(
             return operation
         time.sleep(5)
 
+def get_service_account(overrides, existing_node_config):
+    if overrides["serviceAccount"] is not None:
+        return overrides["serviceAccount"]
+    return existing_node_config.get("serviceAccount", "")
 
 def create_composer_env_if_not_exist(
     composer_client, existing_env, project, location, new_env_name, overrides
@@ -179,6 +183,7 @@ def create_composer_env_if_not_exist(
     existing_config = existing_env.get("config", {})
     existing_node_config = existing_config.get("nodeConfig", {})
     existing_software_config = existing_config.get("softwareConfig", {})
+    service_account = get_service_account(overrides, existing_config)
 
     expected_env = {
         "name": "projects/{}/locations/{}/environments/{}".format(
@@ -197,10 +202,7 @@ def create_composer_env_if_not_exist(
                 "diskSizeGb": overrides["diskSizeGb"]
                 or existing_node_config.get("diskSizeGb", 0),
                 "oauthScopes": existing_node_config.get("oauthScopes", []),
-                "serviceAccount": overrides["serviceAccount"] if overrides["serviceAccount"] is not None
-                else existing_node_config.get(
-                    "serviceAccount", ""
-                ),
+                "serviceAccount": service_account,
                 "tags": existing_node_config.get("tags", []),
             },
             "softwareConfig": {
