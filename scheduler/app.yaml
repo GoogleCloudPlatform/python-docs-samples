@@ -1,9 +1,7 @@
 runtime: python
+service: my-service
 env: flex
 entrypoint: gunicorn -b :$PORT main:app
 
 runtime_config:
   python_version: 3
-
-env_variables:
-  PYTHONUNBUFFERED: TRUE

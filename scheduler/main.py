@@ -14,7 +14,7 @@
 
 """App Engine app to serve as an endpoint for Cloud Scheduler samples."""
 
-# [START cloud_scheduler_quickstart]
+# [START cloud_scheduler_app]
 from flask import Flask, request
 
 app = Flask(__name__)
@@ -24,9 +24,9 @@ app = Flask(__name__)
 def example_task_handler():
     """Log the request payload."""
     payload = request.get_data(as_text=True) or '(empty payload)'
-    print('Received job with payload: {}'.format(payload), flush=True)
+    print('Received job with payload: {}'.format(payload))
     return 'Printed job payload: {}'.format(payload)
-# [END cloud_scheduler_quickstart]
+# [END cloud_scheduler_app]
 
 
 @app.route('/')
