@@ -185,7 +185,7 @@ def create_composer_env_if_not_exist(
     existing_config = existing_env.get("config", {})
     existing_node_config = existing_config.get("nodeConfig", {})
     existing_software_config = existing_config.get("softwareConfig", {})
-    service_account = get_service_account(overrides, existing_config)
+    service_account = get_service_account(overrides, existing_node_config)
 
     expected_env = {
         "name": "projects/{}/locations/{}/environments/{}".format(
