@@ -115,6 +115,12 @@ def parse_args():
         help="Optional. Overrides the service account used for Cloud Composer "
              "Environment.",
     )
+    parser.add_argument(
+        "--override_beta_api",
+        default=False,
+        help="Optional. Overrides the service API used for Cloud Composer "
+             "Environment. If true then Beta API will be used",
+    )
     return parser.parse_args()
 
 
@@ -173,19 +179,12 @@ def wait_sql_operation(
         time.sleep(5)
 
 
-def get_service_account(overrides, existing_node_config):
-    if overrides["serviceAccount"] is not None:
-        return overrides["serviceAccount"]
-    return existing_node_config.get("serviceAccount", "")
-
-
 def create_composer_env_if_not_exist(
     composer_client, existing_env, project, location, new_env_name, overrides
 ):
     existing_config = existing_env.get("config", {})
     existing_node_config = existing_config.get("nodeConfig", {})
     existing_software_config = existing_config.get("softwareConfig", {})
-    service_account = get_service_account(overrides, existing_node_config)
 
     expected_env = {
         "name": "projects/{}/locations/{}/environments/{}".format(
@@ -204,7 +203,8 @@ def create_composer_env_if_not_exist(
                 "diskSizeGb": overrides["diskSizeGb"]
                 or existing_node_config.get("diskSizeGb", 0),
                 "oauthScopes": existing_node_config.get("oauthScopes", []),
-                "serviceAccount": service_account,
+                "serviceAccount": overrides["serviceAccount"]
+                or existing_node_config.get("serviceAccount", ""),
                 "tags": existing_node_config.get("tags", []),
             },
             "softwareConfig": {
@@ -703,8 +703,14 @@ def clone_environment(
     overrides,
 ):
     default_credentials, _ = google.auth.default(scopes=DEFAULT_SCOPES)
+
+    composer_api_version = "v1"
+
+    if overrides["betaApi"]:
+        composer_api_version = "v1beta1"
+
     composer_client = discovery.build(
-        "composer", "v1", credentials=default_credentials
+        "composer", composer_api_version, credentials=default_credentials
     )
 
     existing_env = get_composer_env(
@@ -748,6 +754,7 @@ if __name__ == "__main__":
             "subnetwork": args.override_subnetwork,
             "diskSizeGb": args.override_disk_size_gb,
             "serviceAccount": args.override_service_account,
+            "betaApi": args.override_beta_api
         },
     )
 
