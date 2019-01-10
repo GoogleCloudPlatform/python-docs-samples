@@ -51,6 +51,9 @@ an explanation of how the code works.
    your project.
    * You can use the [Cloud Storage browser page](https://console.cloud.google.com/storage/browser)
    in Google Cloud Platform Console to view existing buckets in your project.
+
+   &nbsp;&nbsp;&nbsp;&nbsp;**OR**
+
    * To create a new bucket, run the following command. Your bucket name must be unique.
    ```bash
    gsutil mb -p {{project-id}} gs://your-bucket-name
@@ -100,6 +103,7 @@ an explanation of how the code works.
 1. Run `submit_job.py` with the `--create_new_cluster` flag
    to create a new cluster and submit the `pyspark_sort.py` job
    to the cluster.
+
     ```bash
     python submit_job_to_cluster.py \
     --project_id={{project-id}} \
@@ -114,7 +118,6 @@ an explanation of how the code works.
 Job output in Cloud Shell shows cluster creation, job submission,
     job completion, and then tear-down of the cluster.
 
-     ```bash
      ...
      Creating cluster...
      Cluster created.
@@ -143,8 +146,11 @@ Job output in Cloud Shell shows cluster creation, job submission,
 
 * **Delete resources used in the walkthrough.**
    The `submit_job.py` job deletes the cluster that it created for this
-   walkthrough. You can run the following command to delete the
-   Cloud Storage bucket used in this walkthrough (the bucket must be empty).
+   walkthrough.
+
+   If you created a bucket to use for this walkthrough,
+   you can run the following command to delete the
+   Cloud Storage bucket (the bucket must be empty).
    ```bash
    gsutil rb gs://$BUCKET
    ```
@@ -156,3 +162,4 @@ Job output in Cloud Shell shows cluster creation, job submission,
 
 * **For more information.** See the [Cloud Dataproc documentation](https://cloud.google.com/dataproc/docs/)
    for API reference and product feature information.
+   
