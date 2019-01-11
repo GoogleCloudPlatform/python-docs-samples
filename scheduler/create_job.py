@@ -71,6 +71,6 @@ def delete_scheduler_job(project_id, location_id, job_id):
     try:
         response = client.delete_job(job)
         print("Job deleted.")
-    except GoogleAPICallError:
-        print("Error when deleting job.")
+    except GoogleAPICallError as e:
+        print("Error: %s" % e)
     # [END cloud_scheduler_delete_job]
