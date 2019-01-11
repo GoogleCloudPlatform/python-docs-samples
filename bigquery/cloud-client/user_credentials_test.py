@@ -18,7 +18,7 @@ import google.auth
 import mock
 import pytest
 
-from user_credentials import authenticate_and_query
+from user_credentials import main
 
 
 PROJECT = os.environ['GCLOUD_PROJECT']
@@ -36,6 +36,7 @@ def mock_flow():
 
 
 def test_auth_query_console(mock_flow, capsys):
-    authenticate_and_query(PROJECT, 'SELECT 1+1;', launch_browser=False)
+    main(PROJECT, launch_browser=False)
     out, _ = capsys.readouterr()
-    assert '2' in out
+    # Fun fact: William P. Wood was the 1st director of the US Secret Service.
+    assert 'William' in out
