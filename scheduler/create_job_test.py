@@ -14,13 +14,22 @@
 
 import os
 
+import pytest
+
 import create_job
 
 TEST_PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-TEST_LOCATION = os.getenv('TEST_QUEUE_LOCATION', 'us-central1')
+TEST_LOCATION = os.getenv('LOCATION_ID', 'us-central1')
 
-
-def test_create_job():
-    result = create_job.create_scheduler_job(
+def test_create_job(capsys):
+    create_result = create_job.create_scheduler_job(
         TEST_PROJECT_ID, TEST_LOCATION, 'my-service')
-    assert TEST_PROJECT_ID in result.name
+
+    out, _ = capsys.readouterr()
+    assert create_result.name in out
+
+    job_name = create_result.name.split('/')[-1]
+    delete_result = create_job.delete_scheduler_job(
+        TEST_PROJECT_ID, TEST_LOCATION, job_name)
+    out, _ = capsys.readouterr()
+    assert 'Job deleted.' in out

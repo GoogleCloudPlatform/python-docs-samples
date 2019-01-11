@@ -19,10 +19,10 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
-
+# Define relative URI for job endpoint
 @app.route('/log_payload', methods=['POST'])
 def example_task_handler():
-    """Log the request payload."""
+    """Log the job payload."""
     payload = request.get_data(as_text=True) or '(empty payload)'
     print('Received job with payload: {}'.format(payload))
     return 'Printed job payload: {}'.format(payload)
