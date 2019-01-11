@@ -18,6 +18,7 @@ import time
 
 # Add command receiver for bootstrapping device registry / device for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'mqtt_example'))  # noqa
+from gcp_devrel.testing.flaky import flaky
 from google.cloud import pubsub
 import pytest
 
@@ -278,14 +279,24 @@ def test_add_patch_delete_es256(test_topic, capsys):
             service_account_json, project_id, cloud_region, registry_id)
 
 
+@flaky
 def test_send_command(test_topic, capsys):
     device_id = device_id_template.format('RSA256')
     manager.create_registry(
             service_account_json, project_id, cloud_region, pubsub_topic,
             registry_id)
-    manager.create_rs256_device(
-            service_account_json, project_id, cloud_region, registry_id,
-            device_id, rsa_cert_path)
+
+    exists = False
+    devices = manager.list_devices(
+            service_account_json, project_id, cloud_region, registry_id)
+    for device in devices:
+        if device.get('id') == device_id:
+            exists = True
+
+    if not exists:
+        manager.create_rs256_device(
+                service_account_json, project_id, cloud_region, registry_id,
+                device_id, rsa_cert_path)
 
     # Exercize the functionality
     client = cloudiot_mqtt_example.get_client(
