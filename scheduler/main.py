@@ -19,6 +19,7 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
+
 # Define relative URI for job endpoint
 @app.route('/log_payload', methods=['POST'])
 def example_task_handler():

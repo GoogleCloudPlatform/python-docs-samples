@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 def create_scheduler_job(project_id, location_id, service_id):
     """Create a job with an App Engine target via the Cloud Scheduler API"""
     # [START cloud_scheduler_create_job]
@@ -69,7 +70,7 @@ def delete_scheduler_job(project_id, location_id, job_id):
 
     # Use the client to send the job deletion request.
     try:
-        response = client.delete_job(job)
+        client.delete_job(job)
         print("Job deleted.")
     except GoogleAPICallError as e:
         print("Error: %s" % e)
