@@ -57,12 +57,12 @@ def detect_text(bucket, filename):
     # Submit a message to the bus for each target language
     for target_lang in config.get('TO_LANG', []):
         topic_name = config['TRANSLATE_TOPIC']
-        if src_lang == target_lang:
+        if src_lang == target_lang or src_lang == 'und':
             topic_name = config['RESULT_TOPIC']
         message = {
             'text': text,
             'filename': filename,
-            'target_lang': target_lang,
+            'lang': target_lang,
             'src_lang': src_lang
         }
         message_data = json.dumps(message).encode('utf-8')
@@ -113,7 +113,7 @@ def translate_text(event, context):
 
     text = validate_message(message, 'text')
     filename = validate_message(message, 'filename')
-    target_lang = validate_message(message, 'target_lang')
+    target_lang = validate_message(message, 'lang')
     src_lang = validate_message(message, 'src_lang')
 
     print('Translating text into {}.'.format(target_lang))

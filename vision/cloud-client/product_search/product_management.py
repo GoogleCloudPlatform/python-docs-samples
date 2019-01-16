@@ -28,7 +28,7 @@ import argparse
 # [START vision_product_search_list_products]
 # [START vision_product_search_get_product]
 # [START vision_product_search_update_product_labels]
-from google.cloud import vision_v1p3beta1 as vision
+from google.cloud import vision
 
 # [END vision_product_search_create_product]
 # [END vision_product_search_delete_product]
@@ -55,7 +55,7 @@ def create_product(
     location_path = client.location_path(project=project_id, location=location)
 
     # Create a product with the product specification in the region.
-    # Set product name and product display name.
+    # Set product display name and product category.
     product = vision.types.Product(
         display_name=product_display_name,
         product_category=product_category)

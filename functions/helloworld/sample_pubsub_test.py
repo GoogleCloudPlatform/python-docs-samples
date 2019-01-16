@@ -24,7 +24,7 @@ def test_print_hello_world(capsys):
     # Call tested function
     main.hello_pubsub(data, None)
     out, err = capsys.readouterr()
-    assert out == 'Hello, World!\n'
+    assert out == 'Hello World!\n'
 
 
 def test_print_name(capsys):
@@ -34,5 +34,5 @@ def test_print_name(capsys):
     # Call tested function
     main.hello_pubsub(data, None)
     out, err = capsys.readouterr()
-    assert out == 'Hello, {}!\n'.format(name)
+    assert out == 'Hello {}!\n'.format(name)
 # [END functions_pubsub_unit_test]
