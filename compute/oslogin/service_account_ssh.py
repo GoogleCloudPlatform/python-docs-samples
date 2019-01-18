@@ -19,6 +19,7 @@ account, and use that service account to execute commands on a remote
 instance over SSH. This example uses zonal DNS names to address instances
 on the same internal VPC network.
 """
+
 # [START imports_and_variables]
 import time
 import subprocess
@@ -95,6 +96,7 @@ def run_ssh(cmd, private_key_file, username, hostname):
     else:
         return result
 # [END run_command_remote]
+
 
 # [START main]
 def main(cmd, project, instance, zone):
