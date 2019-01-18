@@ -78,8 +78,8 @@ def test_main(capsys):
         body=config).execute()
 
     while compute.zoneOperations().get(
-            project=project, 
-            zone=zone, 
+            project=project,
+            zone=zone,
             operation=operation['name']).execute()['status'] != 'DONE':
         time.sleep(5)
 
