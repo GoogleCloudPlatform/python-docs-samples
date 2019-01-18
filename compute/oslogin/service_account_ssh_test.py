@@ -12,25 +12,96 @@
 # limitations under the License.
 
 import re
+import os
+import time
+import random
 from gcp_devrel.testing.flaky import flaky
+import googleapiclient.discovery
 from service_account_ssh import main
-
 
 @flaky
 def test_main(capsys):
 
+    compute = googleapiclient.discovery.build('compute', 'v1')
+
+    instance = 'oslogin-service-account-test-' + str(random.randint(0,100000))
+    project = os.environ['GCLOUD_PROJECT']
+    cmd = 'sudo apt install cowsay -y && cowsay "Test complete!"'
+    zone = 'us-central1-f'
+    hostname = '{instance}.{zone}.c.{project}.internal'.format(
+               instance=instance, zone=zone, project=project)
+    image_family = "projects/debian-cloud/global/images/family/debian-9"
+    machine_type = "zones/%s/machineTypes/f1-micro" % zone
+
+    config = {
+        'name': instance,
+        'machineType': machine_type,
+
+        # Specify the boot disk and the image to use as a source.
+        'disks': [
+            {
+                'boot': True,
+                'autoDelete': True,
+                'initializeParams': {
+                    'sourceImage': image_family,
+                }
+            }
+        ],
+
+        # Specify a network interface with NAT to access the public
+        # internet.
+        'networkInterfaces': [{
+            'network': 'global/networks/default',
+            'accessConfigs': [
+                {'type': 'ONE_TO_ONE_NAT', 'name': 'External NAT'}
+            ]
+        }],
+
+        # Allow the instance to access cloud storage and logging.
+        'serviceAccounts': [{
+            'email': 'default',
+            'scopes': [
+                'https://www.googleapis.com/auth/cloud-platform'
+            ]
+        }],
+
+        # Enable os-login in this instance's metadata.
+        'metadata': {
+            'items': [{
+                'key': 'enable-oslogin',
+                'value': 'TRUE'
+            }]
+        }
+    }
+
+    operation = compute.instances().insert(
+        project=project,
+        zone=zone,
+        body=config).execute()
+
+    while compute.zoneOperations().get(
+            project=project,
+            zone=zone,
+            operation=operation['name']).execute()['status'] != 'DONE':
+        time.sleep(5)
+
     # Run the main method from service_account_ssh
-    main()
+    main(cmd, project, instance, zone)
 
     # Capture the command line output
     out, _ = capsys.readouterr()
 
-    # Test the command line output. Expect a failed SSH connection to
-    # a non-existant instance. The attempt is what is important to test.
-    expected_output = re.compile(
-        (r'.*Could not resolve hostname '
-         'my-instance-name.us-central1-a.c.my-project-id.internal: '
-         'Name or service not known.*'),
-        re.DOTALL)
+    # Test the command line output to make sure the test command is successful.
+    assert '< Test complete! >' in out
 
-    assert re.search(expected_output, out)
+    # Delete the test instance.
+    operation = compute.instances().delete(
+            project=project,
+            zone=zone,
+            instance=instance).execute()
+
+    while compute.zoneOperations().get(
+            project=project,
+            zone=zone,
+            operation=operation['name']).execute()['status'] != 'DONE':
+        time.sleep(5)
