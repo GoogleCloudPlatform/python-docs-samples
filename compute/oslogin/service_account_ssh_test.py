@@ -11,13 +11,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import re
 import os
 import time
 import random
 from gcp_devrel.testing.flaky import flaky
 import googleapiclient.discovery
 from service_account_ssh import main
+
 
 @flaky
 def test_main(capsys):
@@ -28,8 +28,6 @@ def test_main(capsys):
     project = os.environ['GCLOUD_PROJECT']
     cmd = 'sudo apt install cowsay -y && cowsay "Test complete!"'
     zone = 'us-central1-f'
-    hostname = '{instance}.{zone}.c.{project}.internal'.format(
-               instance=instance, zone=zone, project=project)
     image_family = "projects/debian-cloud/global/images/family/debian-9"
     machine_type = "zones/%s/machineTypes/f1-micro" % zone
 
@@ -80,8 +78,8 @@ def test_main(capsys):
         body=config).execute()
 
     while compute.zoneOperations().get(
-            project=project,
-            zone=zone,
+            project=project, 
+            zone=zone, 
             operation=operation['name']).execute()['status'] != 'DONE':
         time.sleep(5)
 
