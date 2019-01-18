@@ -19,24 +19,20 @@ account, and use that service account to execute commands on a remote
 instance over SSH. This example uses zonal DNS names to address instances
 on the same internal VPC network.
 """
-
 # [START imports_and_variables]
 import time
 import subprocess
 import uuid
 import logging
 import requests
+import argparse
 import googleapiclient.discovery
 
-#  Global variables
-PROJECT = 'my-project-id'
-INSTANCE = 'my-instance-name'
-ZONE = 'us-central1-a'
+# Global variables
 SERVICE_ACCOUNT_METADATA_URL = (
     'http://metadata.google.internal/computeMetadata/v1/instance/'
     'service-accounts/default/email')
 HEADERS = {'Metadata-Flavor': 'Google'}
-CMD = 'uname -a'  # The command to run on the remote instance.
 
 # [END imports_and_variables]
 
@@ -52,7 +48,7 @@ def execute(cmd, cwd=None, capture_output=False, env=None, raise_errors=True):
     if returncode != 0:
         # Error
         if raise_errors:
-            raise subprocess.CalledProcessError(returncode, CMD)
+            raise subprocess.CalledProcessError(returncode, cmd)
         else:
             logging.info('Command returned error status %d' % returncode)
     if output:
@@ -95,14 +91,13 @@ def run_ssh(cmd, private_key_file, username, hostname):
     result = ssh.stdout.readlines()
     if result == []:
         error = ssh.stderr.readlines()
-        print(error)
+        return error
     else:
-        print(result[0].decode('utf-8'))
+        return result
 # [END run_command_remote]
 
-
 # [START main]
-def main():
+def main(cmd, project, instance, zone):
     """Run a command on a remote system."""
 
     # Get the service account name from instance metadata values.
@@ -125,10 +120,15 @@ def main():
     # the zone where the instance is located, and the project that owns the
     # instance.
     hostname = '{instance}.{zone}.c.{project}.internal'.format(
-        instance=INSTANCE, zone=ZONE, project=PROJECT)
+        instance=instance, zone=zone, project=project)
 
     # Run a command on the remote instance over SSH.
-    run_ssh(CMD, private_key_file, username, hostname)
+    result = run_ssh(cmd, private_key_file, username, hostname)
+
+    # Print the command line output from the remote instance.
+    # Use .rstrip() rather than end='' for Python 2 compatability.
+    for line in result:
+        print(line.decode('utf-8').rstrip("\n\r"))
 
     # Shred the private key and delete the pair.
     execute(['shred', private_key_file])
@@ -138,5 +138,24 @@ def main():
 
 if __name__ == '__main__':
 
-    main()
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument(
+        '--cmd', default='uname -a',
+        help='The command to run on the remote instance.')
+    parser.add_argument(
+        '--project', default='my-project-id',
+        help='Your Google Cloud project ID.')
+    parser.add_argument(
+        '--zone', default='us-central1-f',
+        help='The zone where the target instance is locted.')
+    parser.add_argument(
+        '--instance', default='my-instance-name',
+        help='The target instance for the ssh command.')
+
+    args = parser.parse_args()
+
+    main(args.cmd, args.project, args.instance, args.zone)
+
 # [END main]
