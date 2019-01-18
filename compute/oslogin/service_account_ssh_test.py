@@ -24,7 +24,7 @@ def test_main(capsys):
 
     compute = googleapiclient.discovery.build('compute', 'v1')
 
-    instance = 'oslogin-service-account-test-' + str(random.randint(0,100000))
+    instance = 'oslogin-service-account-test-' + str(random.randint(0, 100000))
     project = os.environ['GCLOUD_PROJECT']
     cmd = 'sudo apt install cowsay -y && cowsay "Test complete!"'
     zone = 'us-central1-f'
