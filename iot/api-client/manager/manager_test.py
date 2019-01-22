@@ -330,3 +330,90 @@ def test_send_command(test_topic, capsys):
 
     assert 'Sending command to device' in out
     assert '400' not in out
+
+
+def test_create_gateway(test_topic, capsys):
+    gateway_id = device_id_template.format('RS256')
+    manager.create_registry(
+            service_account_json, project_id, cloud_region, pubsub_topic,
+            registry_id)
+
+    # TODO: consider adding test for ES256
+    manager.create_gateway(
+            service_account_json, project_id, cloud_region, registry_id,
+            None, gateway_id, rsa_cert_path, 'RS256')
+
+    # Clean up
+    manager.delete_device(
+            service_account_json, project_id, cloud_region, registry_id,
+            gateway_id)
+    manager.delete_registry(
+            service_account_json, project_id, cloud_region, registry_id)
+
+    out, _ = capsys.readouterr()
+
+    assert 'Created gateway' in out
+
+
+def test_list_gateways(test_topic, capsys):
+    gateway_id = device_id_template.format('RS256')
+    manager.create_registry(
+            service_account_json, project_id, cloud_region, pubsub_topic,
+            registry_id)
+
+    # TODO: consider adding test for ES256
+    manager.create_gateway(
+            service_account_json, project_id, cloud_region, registry_id,
+            None, gateway_id, rsa_cert_path, 'RS256')
+
+    manager.list_gateways(
+        service_account_json, project_id, cloud_region, registry_id)
+
+    # Clean up
+    manager.delete_device(
+            service_account_json, project_id, cloud_region, registry_id,
+            gateway_id)
+    manager.delete_registry(
+            service_account_json, project_id, cloud_region, registry_id)
+
+    out, _ = capsys.readouterr()
+
+    assert 'Gateway ID: {}'.format(gateway_id) in out
+
+
+def test_bind_device_to_gateway_and_unbind(test_topic, capsys):
+    gateway_id = device_id_template.format('RS256')
+    device_id = device_id_template.format('noauthbind')
+    manager.create_registry(
+            service_account_json, project_id, cloud_region, pubsub_topic,
+            registry_id)
+    manager.create_gateway(
+            service_account_json, project_id, cloud_region, registry_id,
+            None, gateway_id, rsa_cert_path, 'RS256')
+
+    manager.create_device(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id)
+
+    manager.bind_device_to_gateway(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id, gateway_id)
+    manager.unbind_device_from_gateway(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id, gateway_id)
+
+    # Clean up
+    manager.delete_device(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id)
+    manager.delete_device(
+            service_account_json, project_id, cloud_region, registry_id,
+            gateway_id)
+    manager.delete_registry(
+            service_account_json, project_id, cloud_region, registry_id)
+
+    out, _ = capsys.readouterr()
+
+    assert 'Device Bound' in out
+    assert 'Device unbound' in out
+    assert 'HttpError 404' not in out
