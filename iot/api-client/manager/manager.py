@@ -558,8 +558,8 @@ def send_command(
 def create_gateway(
         service_account_json, project_id, cloud_region, registry_id, device_id,
         gateway_id, certificate_file, algorithm):
-    # [START create_gateway]
     """Create a gateway to bind devices to."""
+    # [START create_gateway]
     # Check that the gateway doesn't already exist
     exists = False
     client = get_client(service_account_json)
