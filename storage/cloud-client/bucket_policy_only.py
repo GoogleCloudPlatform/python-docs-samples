@@ -45,6 +45,8 @@ def disable_bucket_policy_only(bucket_name):
     bucket.iam_configuration.bucket_policy_only = True
     bucket.patch()
 
+    bucket.versioning_enabled = True
+
     print('Bucket Policy Only was disabled for {}.'.format(bucket.name))
     # [END storage_disable_bucket_policy_only]
 

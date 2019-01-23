@@ -34,7 +34,7 @@ def bucket():
 def test_get_bucket_policy_only(bucket, capsys):
     bucket_policy_only.get_bucket_policy_only(bucket.name)
     out, _ = capsys.readouterr()
-    assert 'Bucket Policy Only is enabled for {}.'.format(
+    assert 'Bucket Policy Only is disabled for {}.'.format(
         bucket.name) in out
 
 
