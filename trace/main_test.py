@@ -12,12 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import main
 
 
 def test_index():
+    project_id = os.environ['GCLOUD_PROJECT']
     main.app.testing = True
     client = main.app.test_client()
+    client.config['TRACER'] = main.initialize_tracer(project_id)
 
     resp = client.get('/index.html')
     assert resp.status_code == 200
@@ -25,8 +28,10 @@ def test_index():
 
 
 def test_redirect():
+    project_id = os.environ['GCLOUD_PROJECT']
     main.app.testing = True
     client = main.app.test_client()
+    client.config['TRACER'] = main.initialize_tracer(project_id)
 
     resp = client.get('/')
     assert resp.status_code == 302
