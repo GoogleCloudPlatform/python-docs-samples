@@ -65,7 +65,7 @@ if __name__ == '__main__':
         '--project_id', help='Project ID you want to access.', required=True)
     args = parser.parse_args()
 
-    tracer = initialize_tracer(project_id)
+    tracer = initialize_tracer(args.project_id)
     app.config['TRACER'] = tracer
 
     app.run()
