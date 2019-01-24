@@ -27,7 +27,7 @@ def enable_bucket_policy_only(bucket_name):
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
 
-    bucket.iam_configuration.bucket_policy_only = True
+    bucket.iam_configuration.bucket_policy_only_enabled = True
     bucket.patch()
 
     print('Bucket Policy Only was enabled for {}.'.format(bucket.name))
@@ -42,10 +42,8 @@ def disable_bucket_policy_only(bucket_name):
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
 
-    bucket.iam_configuration.bucket_policy_only = True
+    bucket.iam_configuration.bucket_policy_only_enabled = False
     bucket.patch()
-
-    bucket.versioning_enabled = True
 
     print('Bucket Policy Only was disabled for {}.'.format(bucket.name))
     # [END storage_disable_bucket_policy_only]
@@ -60,10 +58,10 @@ def get_bucket_policy_only(bucket_name):
     bucket = storage_client.get_bucket(bucket_name)
     iam_configuration = bucket.iam_configuration
 
-    if iam_configuration.bucket_policy_only:
+    if iam_configuration.bucket_policy_only_enabled:
         print('Bucket Policy Only is enabled for {}.'.format(bucket.name))
         print('Bucket will be locked on {}.'.format(
-            iam_configuration.locked_time))
+            iam_configuration.bucket_policy_only_locked_time))
     else:
         print('Bucket Policy Only is disabled for {}.'.format(bucket.name))
     # [END storage_get_bucket_policy_only]
