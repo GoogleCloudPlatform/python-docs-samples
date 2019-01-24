@@ -1,14 +1,4 @@
 
-
-```python
-%matplotlib inline
-```
-
-
-```python
-%load_ext google.cloud.bigquery
-```
-
 # Storage Commands
 
 The [Google Cloud SDK](https://cloud-dot-devsite.googleplex.com/sdk/docs/) provides a set of commands for working with data stored in Google Cloud Storage.
@@ -100,7 +90,7 @@ you specify a globally-unique name.
 
 ```python
 # Replace the string below with a unique name for the new bucket
-bucket_name = 'test-storage-bucket-1548268945185'
+bucket_name = 'your-new-bucket'
 ```
 
 NOTE: In the examples below, the variables are referenced in the command using `$` and `{}`. You may replace the interpolated variables with literal values if they are constant instead of creating and using variables.
@@ -110,7 +100,7 @@ NOTE: In the examples below, the variables are referenced in the command using `
 !gsutil mb gs://{bucket_name}/
 ```
 
-    Creating gs://test-storage-bucket-1548268945185/...
+    Creating gs://your-new-bucket/...
 
 
 ### List buckets in a project
@@ -119,14 +109,14 @@ Replace 'your-project-id' in the cell below with your project ID and run the cel
 
 
 ```python
-!gsutil ls -p ajhamilton-scratch
+!gsutil ls -p your-project-id
 ```
 
-    gs://ajhamilton-scratch/
+    gs://your-project-id/
     gs://my-new-bucket-1548180688764/
     gs://my-new-bucket-1548208228513/
     gs://test-storage-bucket-1548209987490/
-    gs://test-storage-bucket-1548268945185/
+    gs://your-new-bucket/
 
 
 ## Objects
@@ -153,7 +143,7 @@ There is no limit on the number of objects that you can create in a bucket.
 !gsutil ls -r gs://{bucket_name}/**
 ```
 
-    gs://test-storage-bucket-1548268945185/us-states.txt
+    gs://your-new-bucket/us-states.txt
 
 
 ### Get a blob and display metadata
@@ -164,17 +154,17 @@ See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metada
 !gsutil ls -L  gs://{bucket_name}/us-states.txt
 ```
 
-    gs://test-storage-bucket-1548268945185/us-states.txt:
-        Creation time:          Wed, 23 Jan 2019 18:42:37 GMT
-        Update time:            Wed, 23 Jan 2019 18:42:37 GMT
+    gs://your-new-bucket/us-states.txt:
+        Creation time:          Thu, 24 Jan 2019 16:40:54 GMT
+        Update time:            Thu, 24 Jan 2019 16:40:54 GMT
         Storage class:          STANDARD
         Content-Language:       en
         Content-Length:         637
         Content-Type:           text/plain
         Hash (crc32c):          AmYMRQ==
         Hash (md5):             NmfddAHdCzyvAHCifeGtwg==
-        ETag:                   CIKl+anHhOACEAE=
-        Generation:             1548268957749890
+        ETag:                   CO63hf7thuACEAE=
+        Generation:             1548348054133742
         Metageneration:         1
         ACL:                    [
       {
@@ -217,7 +207,7 @@ See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metada
 !gsutil cp gs://{bucket_name}/us-states.txt resources/downloaded-us-states.txt
 ```
 
-    Copying gs://test-storage-bucket-1548268945185/us-states.txt...
+    Copying gs://your-new-bucket/us-states.txt...
     
     Operation completed over 1 objects/637.0 B.                                      
 
@@ -231,7 +221,7 @@ See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metada
 !gsutil rm gs://{bucket_name}/us-states.txt
 ```
 
-    Removing gs://test-storage-bucket-1548268945185/us-states.txt...
+    Removing gs://your-new-bucket/us-states.txt...
     
     Operation completed over 1 objects.                                              
 
@@ -243,5 +233,5 @@ See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metada
 !gsutil rm -r gs://{bucket_name}/
 ```
 
-    Removing gs://test-storage-bucket-1548268945185/...
+    Removing gs://your-new-bucket/...
 

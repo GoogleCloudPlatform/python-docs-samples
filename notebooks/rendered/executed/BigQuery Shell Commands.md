@@ -1,14 +1,4 @@
 
-
-```python
-%matplotlib inline
-```
-
-
-```python
-%load_ext google.cloud.bigquery
-```
-
 # BigQuery command-line tool
 
 The BigQuery command-line tool is installed as part of the [Cloud SDK](https://cloud-dot-devsite.googleplex.com/sdk/docs/), and can be used to interact with BigQuery using shell commands instead of Python code. Note that shell commands in a notebook must be prepended with a `!`.
@@ -336,7 +326,7 @@ The example below creates a new dataset in the US named "your_new_dataset".
 !bq --location=US mk --dataset "your_dataset_id"
 ```
 
-    Dataset 'ajhamilton-scratch:your_dataset_id' successfully created.
+    Dataset 'your-project-id:your_dataset_id' successfully created.
 
 
 ## Load data from a local file to a table
@@ -609,7 +599,7 @@ The example below demonstrates how to load a local CSV file into a new or existi
 ```
 
     Upload complete.
-    Waiting on bqjob_r3fea50bb473556c6_000001687c0441ee_1 ... (2s) Current status: DONE   
+    Waiting on bqjob_r42e105decd46e2a1_0000016880baeb55_1 ... (0s) Current status: DONE   
 
 
 ## Load data from Google Cloud Storage to a table
@@ -621,7 +611,7 @@ The example below demonstrates how to load a local CSV file into a new or existi
 !bq --location=US load --autodetect --skip_leading_rows=1 --source_format=CSV your_dataset_id.us_states_gcs 'gs://cloud-samples-data/bigquery/us-states/us-states.csv'
 ```
 
-    Waiting on bqjob_r3c677e7ba7eb1551_000001687c045ffb_1 ... (1s) Current status: DONE   
+    Waiting on bqjob_r52ccf09d3eb8c617_0000016880bb0711_1 ... (2s) Current status: DONE   
 
 
 ## Run a query

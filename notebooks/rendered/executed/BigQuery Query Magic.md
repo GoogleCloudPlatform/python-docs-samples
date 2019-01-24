@@ -1,23 +1,13 @@
 
-
-```python
-%matplotlib inline
-```
-
-
-```python
-%load_ext google.cloud.bigquery
-```
-
 # BigQuery Query Magic
 
-Jupyter magics are notebook-specific shortcuts that allow you to run commands with minimal syntax. Jupyter notebooks come pre-loaded with many [built-in commands](https://ipython.readthedocs.io/en/stable/interactive/magics.html). The BigQuery client library, `google-cloud-bigquery`, provides a cell magic, `%%bigquery`, which runs a SQL query and returns the results as a Pandas DataFrame.
+Jupyter magics are notebook-specific shortcuts that allow you to run commands with minimal syntax. Jupyter notebooks come pre-loaded with many [built-in commands](https://ipython.readthedocs.io/en/stable/interactive/magics.html). The BigQuery client library, `google-cloud-bigquery`, provides a cell magic, `%%bigquery`, which runs a SQL query and returns the results as a pandas DataFrame.
 
 ## Run a query on a public dataset
 
 The following example queries the BigQuery `usa_names` public dataset, which is a Social Security Administration dataset that contains all names from Social Security card applications for births that occurred in the United States after 1879.
 
-The example below shows how to invoke the magic (`%%bigquery`) and pass in a Standard SQL query in the body of the code cell. The results are displayed below the input cell as a [Pandas DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html).
+The example below shows how to invoke the magic (`%%bigquery`) and pass in a Standard SQL query in the body of the code cell. The results are displayed below the input cell as a [pandas DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html).
 
 
 ```python
@@ -125,9 +115,9 @@ ORDER BY count DESC
 LIMIT 10
 ```
 
-    Executing query with job ID: 791c0804-adf8-432a-8618-dab212848f03
-    Query executing: 0.48s
-    Query complete after 0.93s
+    Executing query with job ID: 3f302a57-daa8-41ca-9e01-7fc364b69cae
+    Query executing: 2.44s
+    Query complete after 3.04s
 
 
 
@@ -218,12 +208,12 @@ By default, the `%%bigquery` magic command uses the project associated with your
 
 
 ```python
-project_id = 'my-project-id'
+project_id = 'your-project-id'
 ```
 
 
 ```python
-project_id = 'ajhamilton-scratch'
+project_id = 'your-project-id'
 ```
 
 

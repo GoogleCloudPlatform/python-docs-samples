@@ -1,25 +1,15 @@
 
-
-```python
-%matplotlib inline
-```
-
-
-```python
-%load_ext google.cloud.bigquery
-```
-
 # Vizualizing BigQuery Data in a Jupyter Notebook
 
 [BigQuery](https://cloud.google.com/bigquery/docs/) is a petabyte-scale analytics data warehouse that you can use to run SQL queries over vast amounts of data in near realtime.
 
-Data visualization tools can help you make sense of your BigQuery data and help you analyze the data interactively. You can use visualization tools to help you identify trends, respond to them, and make predictions using your data. In this tutorial, you use the BigQuery Python client library and Pandas in a Jupyter notebook to visualize data in the BigQuery natality sample table.
+Data visualization tools can help you make sense of your BigQuery data and help you analyze the data interactively. You can use visualization tools to help you identify trends, respond to them, and make predictions using your data. In this tutorial, you use the BigQuery Python client library and pandas in a Jupyter notebook to visualize data in the BigQuery natality sample table.
 
 ## Using Jupyter Magics to Query BigQuery Data
 
 The BigQuery Python client library provides a magic command that allows you to run queries with minimal code.
 
-The BigQuery client library provides a cell magic, `%%bigquery`, which runs a SQL query and returns the results as a Pandas DataFrame. The following cell executes a query of the BigQuery Natality Public dataset and returns the total births by year.
+The BigQuery client library provides a cell magic, `%%bigquery`, which runs a SQL query and returns the results as a pandas DataFrame. The following cell executes a query of the BigQuery Natality Public dataset and returns the total births by year.
 
 
 ```python
@@ -261,7 +251,7 @@ LIMIT 15
 
 
 
-The next cell uses the Pandas DataFrame.plot() method to visualize the query results as a bar chart. See the [Pandas documentation](https://pandas.pydata.org/pandas-docs/stable/visualization.html) to learn more about data visualization with Pandas.
+The next cell uses the pandas DataFrame.plot() method to visualize the query results as a bar chart. See the [pandas documentation](https://pandas.pydata.org/pandas-docs/stable/visualization.html) to learn more about data visualization with pandas.
 
 
 ```python
@@ -269,7 +259,7 @@ total_births.plot(kind='bar', x='year', y='birth_count');
 ```
 
 
-![png](Visualize%20BigQuery%20Public%20Data_output_files/Visualize%20BigQuery%20Public%20Data_output_8_0.png)
+![png](Visualize%20BigQuery%20Public%20Data_files/Visualize%20BigQuery%20Public%20Data_6_0.png)
 
 
 Run the following query to retrieve the number of births by weekday. Because the `wday` (weekday) field allows null values, the query excludes records where wday is null.
@@ -370,12 +360,12 @@ births_by_weekday.plot(x='wday');
 ```
 
 
-![png](Visualize%20BigQuery%20Public%20Data_output_files/Visualize%20BigQuery%20Public%20Data_output_12_0.png)
+![png](Visualize%20BigQuery%20Public%20Data_files/Visualize%20BigQuery%20Public%20Data_10_0.png)
 
 
 ## Using Python to Query BigQuery Data
 
-Magic commands allow you to use minimal syntax to interact with BigQuery. Behind the scenes, `%%bigquery` uses the BigQuery Python client library to run the given query, convert the results to a Pandas Dataframe, optionally save the results to a variable, and finally display the results. Using the BigQuery Python client library directly instead of through magic commands gives you more control over your queries and allows for more complex configurations. The library's integrations with Pandas enable you to combine the power of declarative SQL with imperative code (Python) to perform interesting data analysis, visualization, and transformation tasks.
+Magic commands allow you to use minimal syntax to interact with BigQuery. Behind the scenes, `%%bigquery` uses the BigQuery Python client library to run the given query, convert the results to a pandas Dataframe, optionally save the results to a variable, and finally display the results. Using the BigQuery Python client library directly instead of through magic commands gives you more control over your queries and allows for more complex configurations. The library's integrations with pandas enable you to combine the power of declarative SQL with imperative code (Python) to perform interesting data analysis, visualization, and transformation tasks.
 
 To use the BigQuery Python client library, start by importing the library and initializing a client. The BigQuery client is used to send and receive messages from the BigQuery API.
 
@@ -480,7 +470,7 @@ pivot_table.plot(kind='bar', stacked=True, figsize=(15, 7));
 ```
 
 
-![png](Visualize%20BigQuery%20Public%20Data_output_files/Visualize%20BigQuery%20Public%20Data_output_18_0.png)
+![png](Visualize%20BigQuery%20Public%20Data_files/Visualize%20BigQuery%20Public%20Data_16_0.png)
 
 
 Run the following query to retrieve the count of births by the number of gestation weeks.
@@ -514,7 +504,7 @@ ax.set_ylabel('Count');
 ```
 
 
-![png](Visualize%20BigQuery%20Public%20Data_output_files/Visualize%20BigQuery%20Public%20Data_output_22_0.png)
+![png](Visualize%20BigQuery%20Public%20Data_files/Visualize%20BigQuery%20Public%20Data_20_0.png)
 
 
 ### What's Next
