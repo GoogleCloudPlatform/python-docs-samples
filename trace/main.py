@@ -67,5 +67,5 @@ if __name__ == '__main__':
 
     tracer = initialize_tracer(project_id)
     app.config['TRACER'] = tracer
-    
+
     app.run()
