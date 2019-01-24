@@ -36,6 +36,7 @@ def initialize_tracer(project_id):
 
 app = Flask(__name__)
 
+
 @app.route('/', methods=['GET'])
 def root():
     return redirect(url_for('index'))
