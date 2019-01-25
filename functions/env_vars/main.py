@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+# [START functions_env_vars]
 import os
 
 
-# [START functions_env_vars]
 def env_vars(request):
     return os.environ.get('FOO', 'Specified environment variable is not set.')
 # [END functions_env_vars]
