@@ -297,6 +297,7 @@ def create_service_account_key(iam_client, project, service_account_name):
     )
     service_account_key_decoded = ast.literal_eval(
         base64.b64decode(service_account_key.get("privateKeyData", ""))
+              .decode("utf-8")
     )
     time.sleep(5)
     return service_account_key_decoded
