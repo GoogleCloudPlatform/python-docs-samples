@@ -28,12 +28,10 @@ To use:
 from __future__ import print_function
 
 import argparse
-import ast
 import base64
 import contextlib
 import json
 import os
-import platform
 import re
 import shutil
 import subprocess
@@ -41,6 +39,7 @@ import sys
 import tempfile
 import time
 import uuid
+from distutils.spawn import find_executable
 
 from cryptography import fernet
 import google.auth
@@ -53,6 +52,7 @@ import six
 from six.moves import configparser
 
 DEFAULT_SCOPES = ["https://www.googleapis.com/auth/cloud-platform"]
+EXECUTABLES = ['gcsfuse', 'cloud_sql_proxy', 'mysql', 'gcloud', 'gsutil']
 
 
 def parse_args():
@@ -295,7 +295,7 @@ def create_service_account_key(iam_client, project, service_account_name):
         )
         .execute()
     )
-    service_account_key_decoded = ast.literal_eval(
+    service_account_key_decoded = json.loads(
         base64.b64decode(service_account_key.get("privateKeyData", ""))
               .decode("utf-8")
     )
@@ -335,16 +335,10 @@ def get_sql_instance_service_account(sql_client, project, instance):
 
 
 def grant_rw_permissions(gcs_bucket, service_account):
-    if subprocess.call(
-        [
-            "gsutil",
-            "acl",
-            "ch",
-            "-u",
-            service_account + ":O",
-            "gs://" + gcs_bucket.name,
-        ]
-    ):
+    try:
+        gcs_bucket.acl.user(service_account).grant_owner()
+        gcs_bucket.acl.save()
+    except Exception:
         print(
             "Failed to set acls for service account {} on bucket {}.".format(
                 service_account, gcs_bucket.name
@@ -544,11 +538,10 @@ def import_data(
         if proxy_subprocess:
             proxy_subprocess.kill()
         if fuse_dir:
-            if platform.system().lower().startswith('darwin'):
-                # Mac OSX does not have fusermount
-                subprocess.call(["umount", fuse_dir])
-            else:
+            try:
                 subprocess.call(["fusermount", "-u", fuse_dir])
+            except OSError:
+                subprocess.call(["umount", fuse_dir])
         if tmp_dir_name:
             shutil.rmtree(tmp_dir_name)
 
@@ -577,7 +570,9 @@ def copy_database(project, existing_env, new_env, running_as_service_account):
     try:
         # create default creds clients
         default_credentials, _ = google.auth.default(scopes=DEFAULT_SCOPES)
-        storage_client = storage.Client(credentials=default_credentials)
+        storage_client = storage.Client(
+            project=project, credentials=default_credentials
+        )
         iam_client = discovery.build(
             "iam", "v1", credentials=default_credentials
         )
@@ -723,8 +718,19 @@ def clone_environment(
     )
 
 
+def check_executables():
+    not_found = [
+        executable for executable in EXECUTABLES
+        if not find_executable(executable)
+    ]
+    if not_found:
+        print('Required executables not found: {}'.format(' '.join(not_found)))
+        sys.exit(1)
+
+
 if __name__ == "__main__":
     args = parse_args()
+    check_executables()
     clone_environment(
         args.project,
         args.location,
