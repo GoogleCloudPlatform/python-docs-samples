@@ -22,6 +22,11 @@ type: google.api.Service
 config_version: 3
 
 #
+# Name of the service configuration.
+#
+name: bookstore.endpoints.<MY_PROJECT_ID>.cloud.goog
+
+#
 # HTTP rules define translation from HTTP/REST/JSON to gRPC. With these rules
 # HTTP/REST/JSON clients will be able to call the Bookstore service.
 #

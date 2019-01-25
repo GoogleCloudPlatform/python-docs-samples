@@ -1,3 +1,3 @@
-Flask==0.12.2
-google-cloud-datastore==1.6.0
-gunicorn==19.7.1
+Flask==1.0.2
+google-cloud-datastore==1.7.1
+gunicorn==19.9.0
