@@ -48,14 +48,15 @@ def generate_jwt(service_account_file):
         # swagger spec. It can be any string.
         'aud': 'echo.endpoints.sample.google.com',
         # iss must match 'issuer' in the security configuration in your
-        # swagger spec. It can be any string.
+        # swagger spec (e.g. service account email). It can be any string.
         'iss': 'jwt-client.endpoints.sample.google.com',
         # sub and email are mapped to the user id and email respectively.
-        'sub': '12345678',
+        # sub should match 'iss'
+        'sub': 'jwt-client.endpoints.sample.google.com',
         'email': 'user@example.com'
     }
 
-    jwt = google.auth.jwt.encode(signer, payload)
+    jwt = google.auth.jwt.encode(signer, payload).decode('UTF-8')
 
     return jwt
 
