@@ -157,7 +157,7 @@ To view the available commands for the BigQuery command-line tool, use the `--he
                bq ls --transfer_log --message_type='messageTypes:INFO,ERROR'
                projects/p/locations/l/transferConfigs/c/runs/r
     
-    mk         Create a dataset, table, view, or transfer configuration with this
+    
                name.
     
                See 'bq help load' for more information on specifying the schema.
@@ -319,7 +319,7 @@ To view the available commands for the BigQuery command-line tool, use the `--he
 
 A dataset is contained within a specific [project](https://cloud.google.com/bigquery/docs/projects). Datasets are top-level containers that are used to organize and control access to your [tables](https://cloud.google.com/bigquery/docs/tables) and [views](https://cloud.google.com/bigquery/docs/views). A table or view must belong to a dataset, so you need to create at least one dataset before [loading data into BigQuery](https://cloud.google.com/bigquery/loading-data-into-bigquery).
 
-The example below creates a new dataset in the US named "your_new_dataset".
+The command below creates a new dataset in the US named "your_new_dataset".
 
 
 ```python
@@ -329,269 +329,29 @@ The example below creates a new dataset in the US named "your_new_dataset".
     Dataset 'your-project-id:your_dataset_id' successfully created.
 
 
-## Load data from a local file to a table
+## List datasets
 
-The example below demonstrates how to load a local CSV file into a new or existing table. See [SourceFormat](https://googleapis.github.io/google-cloud-python/latest/bigquery/generated/google.cloud.bigquery.job.SourceFormat.html#google.cloud.bigquery.job.SourceFormat) in the Python client library documentation for a list of available source formats. For more information, see [Loading Data into BigQuery from a Local Data Source](https://cloud.google.com/bigquery/docs/loading-data-local) in the BigQuery documentation.
+The command below lists lists all datasets in your current project.
 
 
 ```python
-!bq load --help
+!bq ls
 ```
 
-    Python script for interacting with BigQuery.
-    
-    
-    USAGE: bq [--global_flags] <command> [--command_flags] [args]
-    
-    
-    load       Perform a load operation of source into destination_table.
-    
-               Usage:
-               load <destination_table> <source> [<schema>]
-    
-               The <destination_table> is the fully-qualified table name of table to
-               create, or append to if the table already exists.
-    
-               The <source> argument can be a path to a single local file, or a
-               comma-separated list of URIs.
-    
-               The <schema> argument should be either the name of a JSON file or a
-               text schema. This schema should be omitted if the table already has
-               one.
-    
-               In the case that the schema is provided in text form, it should be a
-               comma-separated list of entries of the form name[:type], where type
-               will default to string if not specified.
-    
-               In the case that <schema> is a filename, it should contain a single
-               array object, each entry of which should be an object with properties
-               'name', 'type', and (optionally) 'mode'. See the online documentation
-               for more detail:
-               https://developers.google.com/bigquery/preparing-data-for-bigquery
-    
-               Note: the case of a single-entry schema with no type specified is
-               ambiguous; one can use name:string to force interpretation as a
-               text schema.
-    
-               Examples:
-               bq load ds.new_tbl ./info.csv ./info_schema.json
-               bq load ds.new_tbl gs://mybucket/info.csv ./info_schema.json
-               bq load ds.small gs://mybucket/small.csv name:integer,value:string
-               bq load ds.small gs://mybucket/small.csv field1,field2,field3
-    
-               Arguments:
-               destination_table: Destination table name.
-               source: Name of local file to import, or a comma-separated list of
-               URI paths to data to import.
-               schema: Either a text schema or JSON file, as above.
-    
-               Flags for load:
-    
-    /Users/ajhamilton/google-cloud-sdk/platform/bq/bq.py:
-      --[no]allow_jagged_rows: Whether to allow missing trailing optional columns in
-        CSV import data.
-      --[no]allow_quoted_newlines: Whether to allow quoted newlines in CSV import
-        data.
-      --[no]autodetect: Enable auto detection of schema and options for formats that
-        are not self describing like CSV and JSON.
-      --clustering_fields: Comma separated field names. Can only be specified with
-        time based partitioning. Data will be first partitioned and subsequently
-        "clustered on these fields.
-      --destination_kms_key: Cloud KMS key for encryption of the destination table
-        data.
-      -E,--encoding: <UTF-8|ISO-8859-1>: The character encoding used by the input
-        file. Options include:
-        ISO-8859-1 (also known as Latin-1)
-        UTF-8
-      -F,--field_delimiter: The character that indicates the boundary between
-        columns in the input file. "\t" and "tab" are accepted names for tab.
-      --[no]ignore_unknown_values: Whether to allow and ignore extra, unrecognized
-        values in CSV or JSON import data.
-      --max_bad_records: Maximum number of bad records allowed before the entire job
-        fails.
-        (default: '0')
-        (an integer)
-      --null_marker: An optional custom string that will represent a NULL valuein
-        CSV import data.
-      --projection_fields: If sourceFormat is set to "DATASTORE_BACKUP", indicates
-        which entity properties to load into BigQuery from a Cloud Datastore backup.
-        Property names are case sensitive and must refer to top-level properties.
-        (default: '')
-        (a comma separated list)
-      --quote: Quote character to use to enclose records. Default is ". To indicate
-        no quote character at all, use an empty string.
-      --[no]replace: If true erase existing contents before loading new data.
-        (default: 'false')
-      --[no]require_partition_filter: Whether to require partition filter for
-        queries over this table. Only apply to partitioned table.
-      --schema: Either a filename or a comma-separated list of fields in the form
-        name[:type].
-      --schema_update_option: Can be specified when append to a table, or replace a
-        table partition. When specified, the schema of the destination table will be
-        updated with the schema of the new data. One or more of the following
-        options can be specified:
-        ALLOW_FIELD_ADDITION: allow new fields to be added
-        ALLOW_FIELD_RELAXATION: allow relaxing required fields to nullable;
-        repeat this option to specify a list of values
-      --skip_leading_rows: The number of rows at the beginning of the source file to
-        skip.
-        (an integer)
-      --source_format:
-        <CSV|NEWLINE_DELIMITED_JSON|DATASTORE_BACKUP|AVRO|PARQUET|ORC>: Format of
-        source data. Options include:
-        CSV
-        NEWLINE_DELIMITED_JSON
-        DATASTORE_BACKUP
-        AVRO
-        PARQUET
-        ORC (experimental)
-      --time_partitioning_expiration: Enables time based partitioning on the table
-        and sets the number of seconds for which to keep the storage for the
-        partitions in the table. The storage in a partition will have an expiration
-        time of its partition time plus this value. A negative number means no
-        expiration.
-        (an integer)
-      --time_partitioning_field: Enables time based partitioning on the table and
-        the table will be partitioned based on the value of this field. If time
-        based partitioning is enabled without this value, the table will be
-        partitioned based on the loading time.
-      --time_partitioning_type: Enables time based partitioning on the table and set
-        the type. The only type accepted is DAY, which will generate one partition
-        per day.
-    
-    gflags:
-      --flagfile: Insert flag definitions from the given file into the command line.
-        (default: '')
-      --undefok: comma-separated list of flag names that it is okay to specify on
-        the command line even if the program does not define a flag with that name.
-        IMPORTANT: flags in this list that have arguments MUST use the --flag=value
-        format.
-        (default: '')
-    
-    
-    Global flags:
-    
-    bq_auth_flags:
-      --application_default_credential_file: Only for the gcloud wrapper use.
-        (default: '')
-      --credential_file: Only for the gcloud wrapper use.
-        (default: '/Users/ajhamilton/.bigquery.v2.token')
-      --service_account: Only for the gcloud wrapper use.
-        (default: '')
-      --service_account_credential_file: Only for the gcloud wrapper use.
-      --service_account_private_key_file: Only for the gcloud wrapper use.
-        (default: '')
-      --service_account_private_key_password: Only for the gcloud wrapper use.
-        (default: 'notasecret')
-      --[no]use_gce_service_account: Only for the gcloud wrapper use.
-        (default: 'false')
-    
-    bq_flags:
-      --api: API endpoint to talk to.
-        (default: 'https://www.googleapis.com')
-      --api_version: API version to use.
-        (default: 'v2')
-      --apilog: Log all API requests and responses to the file specified by this
-        flag. Also accepts "stdout" and "stderr". Specifying the empty string will
-        direct to stdout.
-      --bigqueryrc: Path to configuration file. The configuration file specifies new
-        defaults for any flags, and can be overrridden by specifying the flag on the
-        command line. If the --bigqueryrc flag is not specified, the BIGQUERYRC
-        environment variable is used. If that is not specified, the path
-        "~/.bigqueryrc" is used.
-        (default: '/Users/ajhamilton/.bigqueryrc')
-      --ca_certificates_file: Location of CA certificates file.
-        (default: '')
-      --dataset_id: Default dataset reference to use for requests (Ignored when not
-        applicable.). Can be set as "project:dataset" or "dataset". If project is
-        missing, the value of the project_id flag will be used.
-        (default: '')
-      --[no]debug_mode: Show tracebacks on Python exceptions.
-        (default: 'false')
-      --[no]disable_ssl_validation: Disables HTTPS certificates validation. This is
-        off by default.
-        (default: 'false')
-      --discovery_file: Filename for JSON document to read for discovery.
-        (default: '')
-      --[no]enable_gdrive: When set to true, requests new OAuth token with GDrive
-        scope. When set to false, requests new OAuth token without GDrive scope.
-      --[no]fingerprint_job_id: Whether to use a job id that is derived from a
-        fingerprint of the job configuration. This will prevent the same job from
-        running multiple times accidentally.
-        (default: 'false')
-      --format: <none|json|prettyjson|csv|sparse|pretty>: Format for command output.
-        Options include:
-        pretty: formatted table output
-        sparse: simpler table output
-        prettyjson: easy-to-read JSON format
-        json: maximally compact JSON
-        csv: csv format with header
-        The first three are intended to be human-readable, and the latter three are
-        for passing to another program. If no format is selected, one will be chosen
-        based on the command run.
-      --[no]headless: Whether this bq session is running without user interaction.
-        This affects behavior that expects user interaction, like whether debug_mode
-        will break into the debugger and lowers the frequency of informational
-        printing.
-        (default: 'false')
-      --httplib2_debuglevel: Instruct httplib2 to print debugging messages by
-        setting debuglevel to the given value.
-      --job_id: A unique job_id to use for the request. If not specified, this
-        client will generate a job_id. Applies only to commands that launch jobs,
-        such as cp, extract, load, and query.
-      --job_property: Additional key-value pairs to include in the properties field
-        of the job configuration;
-        repeat this option to specify a list of values
-      --location: Default geographic location to use when creating datasets or
-        determining where jobs should run (Ignored when not applicable.)
-      --max_rows_per_request: Specifies the max number of rows to return per read.
-        (an integer)
-      --project_id: Default project to use for requests.
-        (default: '')
-      --proxy_address: The name or IP address of the proxy host to use for
-        connecting to GCP.
-        (default: '')
-      --proxy_password: The password to use when authenticating with proxy host.
-        (default: '')
-      --proxy_port: The port number to use to connect to the proxy host.
-        (default: '')
-      --proxy_username: The user name to use when authenticating with proxy host.
-        (default: '')
-      -q,--[no]quiet: If True, ignore status updates while jobs are running.
-        (default: 'false')
-      -sync,--[no]synchronous_mode: If True, wait for command completion before
-        returning, and use the job completion status for error codes. If False,
-        simply create the job, and use the success of job creation as the error
-        code.
-        (default: 'true')
-      --trace: A tracing token of the form "token:<token>" to include in api
-        requests.
-    
-    google.apputils.app:
-      -?,--[no]help: show this help
-      --[no]helpshort: show usage only for this module
-      --[no]helpxml: like --help, but generates XML output
-      --[no]run_with_pdb: Set to true for PDB debug mode
-        (default: 'false')
-      --[no]run_with_profiling: Set to true for profiling the script. Execution will
-        be slower, and the output format might change over time.
-        (default: 'false')
-      --[no]show_build_data: show build data and exit
-      --[no]use_cprofile_for_profiling: Use cProfile instead of the profile module
-        for profiling. This has no effect unless --run_with_profiling is set.
-        (default: 'true')
-    
-    gflags:
-      --flagfile: Insert flag definitions from the given file into the command line.
-        (default: '')
-      --undefok: comma-separated list of flag names that it is okay to specify on
-        the command line even if the program does not define a flag with that name.
-        IMPORTANT: flags in this list that have arguments MUST use the --flag=value
-        format.
-        (default: '')
-    
-    Run 'bq help' to see the list of available commands.
+               datasetId            
+     ------------------------------ 
+      coast                         
+      my_new_dataset_1548207931814  
+      test_dataset                  
+      test_dataset_1544925728787    
+      test_dataset_1544925753705    
+      your_dataset_id               
+      your_new_dataset              
 
+
+## Load data from a local file to a table
+
+The example below demonstrates how to load a local CSV file into a new or existing table. See [SourceFormat](https://googleapis.github.io/google-cloud-python/latest/bigquery/generated/google.cloud.bigquery.job.SourceFormat.html#google.cloud.bigquery.job.SourceFormat) in the Python client library documentation for a list of available source formats. For more information, see [Loading Data into BigQuery from a Local Data Source](https://cloud.google.com/bigquery/docs/loading-data-local) in the BigQuery documentation.
 
 
 ```python
@@ -599,7 +359,7 @@ The example below demonstrates how to load a local CSV file into a new or existi
 ```
 
     Upload complete.
-    Waiting on bqjob_r42e105decd46e2a1_0000016880baeb55_1 ... (0s) Current status: DONE   
+    Waiting on bqjob_ra9f2e0c7f522f31_0000016886cd0676_1 ... (1s) Current status: DONE   
 
 
 ## Load data from Google Cloud Storage to a table
@@ -611,7 +371,7 @@ The example below demonstrates how to load a local CSV file into a new or existi
 !bq --location=US load --autodetect --skip_leading_rows=1 --source_format=CSV your_dataset_id.us_states_gcs 'gs://cloud-samples-data/bigquery/us-states/us-states.csv'
 ```
 
-    Waiting on bqjob_r52ccf09d3eb8c617_0000016880bb0711_1 ... (2s) Current status: DONE   
+    Waiting on bqjob_r3b5763d92c082dc0_0000016886cd2014_1 ... (0s) Current status: DONE   
 
 
 ## Run a query

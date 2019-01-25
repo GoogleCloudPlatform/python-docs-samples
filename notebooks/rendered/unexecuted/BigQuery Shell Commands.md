@@ -16,21 +16,25 @@ To view the available commands for the BigQuery command-line tool, use the `--he
 
 A dataset is contained within a specific [project](https://cloud.google.com/bigquery/docs/projects). Datasets are top-level containers that are used to organize and control access to your [tables](https://cloud.google.com/bigquery/docs/tables) and [views](https://cloud.google.com/bigquery/docs/views). A table or view must belong to a dataset, so you need to create at least one dataset before [loading data into BigQuery](https://cloud.google.com/bigquery/loading-data-into-bigquery).
 
-The example below creates a new dataset in the US named "your_new_dataset".
+The command below creates a new dataset in the US named "your_new_dataset".
 
 
 ```python
 !bq --location=US mk --dataset "your_dataset_id"
 ```
 
-## Load data from a local file to a table
+## List datasets
 
-The example below demonstrates how to load a local CSV file into a new or existing table. See [SourceFormat](https://googleapis.github.io/google-cloud-python/latest/bigquery/generated/google.cloud.bigquery.job.SourceFormat.html#google.cloud.bigquery.job.SourceFormat) in the Python client library documentation for a list of available source formats. For more information, see [Loading Data into BigQuery from a Local Data Source](https://cloud.google.com/bigquery/docs/loading-data-local) in the BigQuery documentation.
+The command below lists lists all datasets in your current project.
 
 
 ```python
-!bq load --help
+!bq ls
 ```
+
+## Load data from a local file to a table
+
+The example below demonstrates how to load a local CSV file into a new or existing table. See [SourceFormat](https://googleapis.github.io/google-cloud-python/latest/bigquery/generated/google.cloud.bigquery.job.SourceFormat.html#google.cloud.bigquery.job.SourceFormat) in the Python client library documentation for a list of available source formats. For more information, see [Loading Data into BigQuery from a Local Data Source](https://cloud.google.com/bigquery/docs/loading-data-local) in the BigQuery documentation.
 
 
 ```python
