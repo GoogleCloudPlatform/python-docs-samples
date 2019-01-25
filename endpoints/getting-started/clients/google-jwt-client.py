@@ -44,16 +44,17 @@ def generate_jwt(service_account_file):
     payload = {
         'iat': now,
         'exp': expires,
-        # aud must match 'audience' in the security configuration in your
-        # swagger spec. It can be any string.
+        # aud must be either your Endpoints service name or match a value
+        # specified in 'x-google-audience' in the security configuration in your
+        # OpenAPI document.
         'aud': 'echo.endpoints.sample.google.com',
-        # iss must match 'issuer' in the security configuration in your
-        # swagger spec (e.g. service account email). It can be any string.
-        'iss': 'jwt-client.endpoints.sample.google.com',
-        # sub and email are mapped to the user id and email respectively.
-        # sub should match 'iss'
-        'sub': 'jwt-client.endpoints.sample.google.com',
-        'email': 'user@example.com'
+        # iss must be the service account email and it must match the value
+        # specified in 'x-google-issuer' in the security configuration in your
+        # OpenAPI document.
+        'iss': 'service-1@example-project-12345.iam.gserviceaccount.com',
+        # sub and email must match iss.
+        'sub': 'service-1@example-project-12345.iam.gserviceaccount.com',
+        'email': 'service-1@example-project-12345.iam.gserviceaccount.com'
     }
 
     jwt = google.auth.jwt.encode(signer, payload).decode('UTF-8')
