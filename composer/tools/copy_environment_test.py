@@ -22,7 +22,7 @@ import pytest
 
 def test_grant_rw_permissions_fails_gracefully(monkeypatch, capsys):
     mock_call = mock.Mock()
-    mock_call.return_value = 1
+    mock_call.side_effect = RuntimeError()
     monkeypatch.setattr(subprocess, 'call', mock_call)
     monkeypatch.setattr(time, 'sleep', lambda sec: None)
     from . import copy_environment
