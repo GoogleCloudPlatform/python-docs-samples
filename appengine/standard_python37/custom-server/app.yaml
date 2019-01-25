@@ -1,0 +1,4 @@
+# [START gae_python37_custom_runtime]
+runtime: python37
+entrypoint: uwsgi --http-socket :8080 --wsgi-file main.py --callable app --master --processes 1 --threads 2
+# [END gae_python37_custom_runtime]

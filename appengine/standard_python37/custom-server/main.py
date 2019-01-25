@@ -12,25 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START gae_python37_cloud_spanner]
-import os
-
 from flask import Flask
-from google.cloud import spanner
 
 app = Flask(__name__)
-spanner_client = spanner.Client()
-
-instance_id = os.environ.get('SPANNER_INSTANCE')
-database_id = os.environ.get('SPANNER_DATABASE')
 
 
 @app.route('/')
 def main():
-    database = spanner_client.instance(instance_id).database(database_id)
-    with database.snapshot() as snapshot:
-        cursor = snapshot.execute_sql('SELECT 1')
-    results = list(cursor)
+    return 'Hello, World!'
 
-    return 'Query Result: {}'.format(results[0][0])
-# [END gae_python37_cloud_spanner]
+
+if __name__ == '__main__':
+    app.run(debug=True)
