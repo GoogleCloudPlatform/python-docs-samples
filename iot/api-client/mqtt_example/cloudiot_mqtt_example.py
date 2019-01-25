@@ -174,20 +174,21 @@ def detach_device(client, device_id, mqtt_bridge_hostname, mqtt_bridge_port):
     # [START detach_device]
     detach_topic = '/devices/{}/detach'.format(device_id)
     print('Detaching: {}'.format(detach_topic))
-    client.loop()
     client.connect(mqtt_bridge_hostname, mqtt_bridge_port)
+    client.loop()
     client.publish(detach_topic, '{}', qos=1)
     time.sleep(5)  # wait for the server to respond / will trigger callback
     # [END detach_device]
 
 
-def attach_device(client, device_id, mqtt_bridge_hostname, mqtt_bridge_port):
+def attach_device(
+        client, device_id, mqtt_bridge_hostname, mqtt_bridge_port, auth):
     """Attach the device to the gateway."""
     # [START attach_device]
     attach_topic = '/devices/{}/attach'.format(device_id)
     print('Attaching: {}'.format(attach_topic))
-    # TODO {'authorization': '<JWT_TOKEN>'}
-    attach_payload = '{}'
+    attach_payload = '{{"authorization" : "{}"}}'.format(auth)
+    client.connect(mqtt_bridge_hostname, mqtt_bridge_port)
     client.loop()
     client.publish(attach_topic, attach_payload, qos=1)
     time.sleep(5)
@@ -200,7 +201,7 @@ def listen_for_messages(
         mqtt_bridge_hostname, mqtt_bridge_port, jwt_expires_minutes, duration,
         cb=None):
     """Listens for messages sent to the gateway and bound devices."""
-    # [START listen_for_config_messages]
+    # [START listen_for_messages]
     global minimum_backoff_time
 
     jwt_iat = datetime.datetime.utcnow()
@@ -211,7 +212,8 @@ def listen_for_messages(
         private_key_file, algorithm, ca_certs, mqtt_bridge_hostname,
         mqtt_bridge_port)
 
-    attach_device(client, device_id, mqtt_bridge_hostname, mqtt_bridge_port)
+    attach_device(
+        client, device_id, mqtt_bridge_hostname, mqtt_bridge_port, '')
     print('Waiting for device to attach.')
     time.sleep(5)
 
@@ -258,7 +260,7 @@ def listen_for_messages(
     detach_device(client, device_id, mqtt_bridge_hostname, mqtt_bridge_port)
 
     print('Finished.')
-    # [END listen_for_config_messages]
+    # [END listen_for_messages]
 
 
 def send_data_from_bound_device(
@@ -286,7 +288,7 @@ def send_data_from_bound_device(
     time.sleep(5)
 
     # Publish state to gateway topic
-    gateway_state = 'Starting HUB at: {}'.format(time.time())
+    gateway_state = 'Starting gateway at: {}'.format(time.time())
     print(gateway_state)
     client.publish(gateway_topic, gateway_state, qos=1)
 
@@ -482,12 +484,6 @@ def mqtt_device_demo(args):
 def main():
     args = parse_command_line_args()
 
-    def trigger_error(client):
-        attach_device(
-                client,
-                'invalid_device_id',
-                'mqtt.googleapis.com',
-                443)
     if args.command == 'gateway_listen':
         listen_for_messages(
                 args.service_account_json, args.project_id,
@@ -495,7 +491,7 @@ def main():
                 args.gateway_id, args.num_messages, args.private_key_file,
                 args.algorithm, args.ca_certs, args.mqtt_bridge_hostname,
                 args.mqtt_bridge_port, args.jwt_expires_minutes,
-                args.listen_dur, trigger_error)
+                args.listen_dur)
         return
     elif args.command == 'gateway_send':
         send_data_from_bound_device(
