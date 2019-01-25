@@ -19,6 +19,7 @@ from __future__ import print_function
 
 import argparse
 import os
+import json
 
 
 # [START dlp_inspect_string]
@@ -77,7 +78,7 @@ def inspect_string(project, content_string, info_types,
         'min_likelihood': min_likelihood,
         'include_quote': include_quote,
         'limits': {'max_findings_per_request': max_findings},
-      }
+    }
 
     # Construct the `item`.
     item = {'value': content_string}
@@ -102,8 +103,130 @@ def inspect_string(project, content_string, info_types,
         print('No findings.')
 # [END dlp_inspect_string]
 
+# [START dlp_inspect_table]
+
+
+def inspect_table(project, data, info_types,
+                  custom_dictionaries=None, custom_regexes=None,
+                  min_likelihood=None, max_findings=None, include_quote=True):
+    """Uses the Data Loss Prevention API to analyze strings for protected data.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        data: Json string representing table data.
+        info_types: A list of strings representing info types to look for.
+            A full list of info type categories can be fetched from the API.
+        min_likelihood: A string representing the minimum likelihood threshold
+            that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
+            'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
+        max_findings: The maximum number of findings to report; 0 = no maximum.
+        include_quote: Boolean for whether to display a quote of the detected
+            information in the results.
+    Returns:
+        None; the response from the API is printed to the terminal.
+    Example:
+        data = {
+            "header":[
+                "email",
+                "phone number"
+            ],
+            "rows":[
+                [
+                    "robertfrost@xyz.com",
+                    "4232342345"
+                ],
+                [
+                    "johndoe@pqr.com",
+                    "4253458383"
+                ]
+            ]
+        }
+
+        >> $ python inspect_content.py table \
+        '{"header": ["email", "phone number"],
+        "rows": [["robertfrost@xyz.com", "4232342345"],
+        ["johndoe@pqr.com", "4253458383"]]}'
+        >>  Quote: robertfrost@xyz.com
+            Info type: EMAIL_ADDRESS
+            Likelihood: 4
+            Quote: johndoe@pqr.com
+            Info type: EMAIL_ADDRESS
+            Likelihood: 4
+    """
+
+    # Import the client library.
+    import google.cloud.dlp
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp.DlpServiceClient()
+
+    # Prepare info_types by converting the list of strings into a list of
+    # dictionaries (protos are also accepted).
+    info_types = [{'name': info_type} for info_type in info_types]
+
+    # Prepare custom_info_types by parsing the dictionary word lists and
+    # regex patterns.
+    if custom_dictionaries is None:
+        custom_dictionaries = []
+    dictionaries = [{
+        'info_type': {'name': 'CUSTOM_DICTIONARY_{}'.format(i)},
+        'dictionary': {
+            'word_list': {'words': custom_dict.split(',')}
+        }
+    } for i, custom_dict in enumerate(custom_dictionaries)]
+    if custom_regexes is None:
+        custom_regexes = []
+    regexes = [{
+        'info_type': {'name': 'CUSTOM_REGEX_{}'.format(i)},
+        'regex': {'pattern': custom_regex}
+    } for i, custom_regex in enumerate(custom_regexes)]
+    custom_info_types = dictionaries + regexes
+
+    # Construct the configuration dictionary. Keys which are None may
+    # optionally be omitted entirely.
+    inspect_config = {
+        'info_types': info_types,
+        'custom_info_types': custom_info_types,
+        'min_likelihood': min_likelihood,
+        'include_quote': include_quote,
+        'limits': {'max_findings_per_request': max_findings},
+    }
+
+    # Construct the `table`. For more details on the table schema, please see
+    # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Table
+    headers = [{"name": val} for val in data["header"]]
+    rows = []
+    for row in data["rows"]:
+        rows.append({
+            "values": [{"string_value": cell_val} for cell_val in row]
+        })
+
+    table = {}
+    table["headers"] = headers
+    table["rows"] = rows
+    item = {"table": table}
+    # Convert the project id into a full resource id.
+    parent = dlp.project_path(project)
+
+    # Call the API.
+    response = dlp.inspect_content(parent, inspect_config, item)
+
+    # Print out the results.
+    if response.result.findings:
+        for finding in response.result.findings:
+            try:
+                if finding.quote:
+                    print('Quote: {}'.format(finding.quote))
+            except AttributeError:
+                pass
+            print('Info type: {}'.format(finding.info_type.name))
+            print('Likelihood: {}'.format(finding.likelihood))
+    else:
+        print('No findings.')
+# [END dlp_inspect_table]
 
 # [START dlp_inspect_file]
+
+
 def inspect_file(project, filename, info_types, min_likelihood=None,
                  custom_dictionaries=None, custom_regexes=None,
                  max_findings=None, include_quote=True, mime_type=None):
@@ -284,8 +407,8 @@ def inspect_gcs_file(project, bucket, filename, topic_id, subscription_id,
     storage_config = {
         'cloud_storage_options': {
             'file_set': {'url': url}
-            }
         }
+    }
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
@@ -309,7 +432,6 @@ def inspect_gcs_file(project, bucket, filename, topic_id, subscription_id,
     subscriber = google.cloud.pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_id)
-    subscription = subscriber.subscribe(subscription_path)
 
     # Set up a callback to acknowledge a message. This closes around an event
     # so that it can signal that it is done and the main thread can continue.
@@ -341,8 +463,7 @@ def inspect_gcs_file(project, bucket, filename, topic_id, subscription_id,
             print(e)
             raise
 
-    # Register the callback and wait on the event.
-    subscription.open(callback)
+    subscriber.subscribe(subscription_path, callback=callback)
     finished = job_done.wait(timeout=timeout)
     if not finished:
         print('No event received before the timeout. Please verify that the '
@@ -460,7 +581,6 @@ def inspect_datastore(project, datastore_project, kind,
     subscriber = google.cloud.pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_id)
-    subscription = subscriber.subscribe(subscription_path)
 
     # Set up a callback to acknowledge a message. This closes around an event
     # so that it can signal that it is done and the main thread can continue.
@@ -493,7 +613,8 @@ def inspect_datastore(project, datastore_project, kind,
             raise
 
     # Register the callback and wait on the event.
-    subscription.open(callback)
+    subscriber.subscribe(subscription_path, callback=callback)
+
     finished = job_done.wait(timeout=timeout)
     if not finished:
         print('No event received before the timeout. Please verify that the '
@@ -609,7 +730,6 @@ def inspect_bigquery(project, bigquery_project, dataset_id, table_id,
     subscriber = google.cloud.pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_id)
-    subscription = subscriber.subscribe(subscription_path)
 
     # Set up a callback to acknowledge a message. This closes around an event
     # so that it can signal that it is done and the main thread can continue.
@@ -642,7 +762,7 @@ def inspect_bigquery(project, bigquery_project, dataset_id, table_id,
             raise
 
     # Register the callback and wait on the event.
-    subscription.open(callback)
+    subscriber.subscribe(subscription_path, callback=callback)
     finished = job_done.wait(timeout=timeout)
     if not finished:
         print('No event received before the timeout. Please verify that the '
@@ -693,6 +813,46 @@ if __name__ == '__main__':
         '--max_findings', type=int,
         help='The maximum number of findings to report; 0 = no maximum.')
     parser_string.add_argument(
+        '--include_quote', type=bool,
+        help='A boolean for whether to display a quote of the detected '
+             'information in the results.',
+        default=True)
+
+    parser_table = subparsers.add_parser('table', help='Inspect a table.')
+    parser_table.add_argument(
+        'data', help='Json string representing a table.', type=json.loads)
+    parser_table.add_argument(
+        '--project',
+        help='The Google Cloud project id to use as a parent resource.',
+        default=default_project)
+    parser_table.add_argument(
+        '--info_types', action='append',
+        help='Strings representing info types to look for. A full list of '
+             'info categories and types is available from the API. Examples '
+             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+             'If unspecified, the three above examples will be used.',
+        default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
+    parser_table.add_argument(
+        '--custom_dictionaries', action='append',
+        help='Strings representing comma-delimited lists of dictionary words'
+             ' to search for as custom info types. Each string is a comma '
+             'delimited list of words representing a distinct dictionary.',
+        default=None)
+    parser_table.add_argument(
+        '--custom_regexes', action='append',
+        help='Strings representing regex patterns to search for as custom '
+             ' info types.',
+        default=None)
+    parser_table.add_argument(
+        '--min_likelihood',
+        choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
+                 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'],
+        help='A string representing the minimum likelihood threshold that '
+             'constitutes a match.')
+    parser_table.add_argument(
+        '--max_findings', type=int,
+        help='The maximum number of findings to report; 0 = no maximum.')
+    parser_table.add_argument(
         '--include_quote', type=bool,
         help='A boolean for whether to display a quote of the detected '
              'information in the results.',
@@ -918,6 +1078,14 @@ if __name__ == '__main__':
     if args.content == 'string':
         inspect_string(
             args.project, args.item, args.info_types,
+            custom_dictionaries=args.custom_dictionaries,
+            custom_regexes=args.custom_regexes,
+            min_likelihood=args.min_likelihood,
+            max_findings=args.max_findings,
+            include_quote=args.include_quote)
+    elif args.content == 'table':
+        inspect_table(
+            args.project, args.data, args.info_types,
             custom_dictionaries=args.custom_dictionaries,
             custom_regexes=args.custom_regexes,
             min_likelihood=args.min_likelihood,
