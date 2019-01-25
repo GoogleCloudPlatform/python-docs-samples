@@ -13,6 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 # [START bigtable_quickstart]
 import argparse
 
@@ -21,23 +22,23 @@ from google.cloud import bigtable
 
 def main(project_id="project-id", instance_id="instance-id",
          table_id="my-table"):
-    # Creates a Bigtable client
+    # Create a Cloud Bigtable client.
     client = bigtable.Client(project=project_id)
 
-    # Connect to an existing instance:my-bigtable-instance
+    # Connect to an existing Cloud Bigtable instance.
     instance = client.instance(instance_id)
 
-    # Connect to an existing table:my-table
+    # Open an existing table.
     table = instance.table(table_id)
 
-    key = 'r1'
-    row = table.read_row(key.encode('utf-8'))
+    row_key = 'r1'
+    row = table.read_row(row_key.encode('utf-8'))
 
     column_family_id = 'cf1'
     column_id = 'c1'.encode('utf-8')
     value = row.cells[column_family_id][column_id][0].value.decode('utf-8')
 
-    print('Row key: {}\nData: {}'.format(key, value))
+    print('Row key: {}\nData: {}'.format(row_key, value))
 
 
 if __name__ == '__main__':

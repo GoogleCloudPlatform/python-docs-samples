@@ -17,6 +17,7 @@ import time
 
 from gcp_devrel.testing import eventually_consistent
 from google.cloud import pubsub_v1
+import google.api_core.exceptions
 import mock
 import pytest
 
@@ -28,6 +29,7 @@ SUBSCRIPTION = 'subscription-test-subscription'
 SUBSCRIPTION_SYNC1 = 'subscription-test-subscription-sync1'
 SUBSCRIPTION_SYNC2 = 'subscription-test-subscription-sync2'
 ENDPOINT = 'https://{}.appspot.com/push'.format(PROJECT)
+NEW_ENDPOINT = 'https://{}.appspot.com/push2'.format(PROJECT)
 
 
 @pytest.fixture(scope='module')
@@ -64,7 +66,10 @@ def subscription(subscriber_client, topic):
     except Exception:
         pass
 
-    subscriber_client.create_subscription(subscription_path, topic=topic)
+    try:
+        subscriber_client.create_subscription(subscription_path, topic=topic)
+    except google.api_core.exceptions.AlreadyExists:
+        pass
 
     yield subscription_path
 
@@ -155,13 +160,10 @@ def test_delete(subscriber_client, subscription):
 
 
 def test_update(subscriber_client, subscription, capsys):
-    ACK_DEADLINE_SECONDS = 100
-
-    subscriber.update_subscription(PROJECT, SUBSCRIPTION, ACK_DEADLINE_SECONDS)
+    subscriber.update_subscription(PROJECT, SUBSCRIPTION, NEW_ENDPOINT)
 
     out, _ = capsys.readouterr()
-    assert subscription in out
-    assert '100' in out
+    assert 'Subscription updated' in out
 
 
 def _publish_messages(publisher_client, topic):
