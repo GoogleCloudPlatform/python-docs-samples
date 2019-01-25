@@ -14,6 +14,7 @@
 
 import os
 import tempfile
+import time
 
 from google.cloud import storage
 import google.cloud.exceptions
@@ -30,6 +31,7 @@ def test_enable_default_kms_key():
     snippets.enable_default_kms_key(
         bucket_name=BUCKET,
         kms_key_name=KMS_KEY)
+    time.sleep(2)  # Let change propagate as needed
     bucket = storage.Client().get_bucket(BUCKET)
     assert bucket.default_kms_key_name.startswith(KMS_KEY)
     bucket.default_kms_key_name = None
@@ -135,12 +137,9 @@ def test_make_blob_public(test_blob):
 
 
 def test_generate_signed_url(test_blob, capsys):
-    snippets.generate_signed_url(
+    url = snippets.generate_signed_url(
         BUCKET,
         test_blob.name)
-
-    out, _ = capsys.readouterr()
-    url = out.rsplit().pop()
 
     r = requests.get(url)
     assert r.text == 'Hello, is it me you\'re looking for?'

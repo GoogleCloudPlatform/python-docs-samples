@@ -26,7 +26,7 @@ PRODUCT_ID_1 = 'indexed_product_id_for_testing_1'
 PRODUCT_ID_2 = 'indexed_product_id_for_testing_2'
 
 FILE_PATH_1 = 'resources/shoes_1.jpg'
-IMAGE_URI_1 = 'gs://python-docs-samples-tests/product_search/shoes_1.jpg'
+IMAGE_URI_1 = 'gs://cloud-samples-data/vision/product_search/shoes_1.jpg'
 FILTER = 'style=womens'
 
 

@@ -59,6 +59,13 @@ def test_insert_data(capsys):
     assert 'Inserted data' in out
 
 
+def test_delete_data(capsys):
+    snippets.delete_data(INSTANCE_ID, DATABASE_ID)
+    snippets.insert_data(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'Deleted data' in out
+
+
 def test_query_data(capsys):
     snippets.query_data(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
