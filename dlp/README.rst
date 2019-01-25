@@ -58,6 +58,15 @@ Install Dependencies
 .. _pip: https://pip.pypa.io/
 .. _virtualenv: https://virtualenv.pypa.io/
 
+#. For running *_test.py files, install test dependencies
+
+    .. code-block:: bash
+
+        $ pip install -r requirements-test.txt
+        $ pytest inspect_content_test.py
+
+** *_test.py files are demo wrappers and make API calls. You may get rate limited for making high number of requests. **
+
 Samples
 -------------------------------------------------------------------------------
 
@@ -74,7 +83,7 @@ To run this sample:
 
 .. code-block:: bash
 
-    $ python quickstart.py
+    $ python quickstart.py <project-id>
 
 
 Inspect Content
