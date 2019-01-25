@@ -18,11 +18,14 @@ an image file."""
 from __future__ import print_function
 
 import argparse
+# [START dlp_redact_image]
 import mimetypes
+# [END dlp_redact_image]
 import os
 
 
 # [START dlp_redact_image]
+
 def redact_image(project, filename, output_filename,
                  info_types, min_likelihood=None, mime_type=None):
     """Uses the Data Loss Prevention API to redact protected data in an image.
