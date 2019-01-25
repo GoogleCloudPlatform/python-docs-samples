@@ -2,13 +2,11 @@ runtime: python27
 api_version: 1
 threadsafe: yes
 
-# [START bounce_service]
 # [START mail_service]
 inbound_services:
 - mail
+- mail_bounce # Handle bounced mail notifications
 # [END mail_service]
-- mail_bounce
-# [END bounce_service]
 
 handlers:
 - url: /user/.+
