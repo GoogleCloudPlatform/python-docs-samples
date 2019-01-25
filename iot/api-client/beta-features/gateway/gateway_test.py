@@ -168,7 +168,6 @@ def test_create_gateway(iot_topic, capsys):
     out, _ = capsys.readouterr()
 
     assert 'Created gateway' in out
-    assert '400' not in out
 
 
 def test_list_gateways(iot_topic, capsys):
@@ -195,7 +194,6 @@ def test_list_gateways(iot_topic, capsys):
     out, _ = capsys.readouterr()
 
     assert 'Gateway ID: {}'.format(gateway_id) in out
-    assert '400' not in out
 
 
 def test_bind_device_to_gateway_and_unbind(iot_topic, capsys):
@@ -233,7 +231,7 @@ def test_bind_device_to_gateway_and_unbind(iot_topic, capsys):
 
     assert 'Device Bound' in out
     assert 'Device unbound' in out
-    assert '400' not in out
+    assert 'HttpError 404' not in out
 
 
 def test_gateway_listen_for_bound_device_configs(iot_topic, capsys):

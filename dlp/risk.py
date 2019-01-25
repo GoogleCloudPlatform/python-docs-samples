@@ -360,12 +360,12 @@ def k_anonymity_analysis(project, table_project_id, dataset_id, table_id,
                     print('Bucket {}:'.format(i))
                     if bucket.equivalence_class_size_lower_bound:
                         print('   Bucket size range: [{}, {}]'.format(
-                             bucket.equivalence_class_size_lower_bound,
-                             bucket.equivalence_class_size_upper_bound))
+                            bucket.equivalence_class_size_lower_bound,
+                            bucket.equivalence_class_size_upper_bound))
                         for value_bucket in bucket.bucket_values:
                             print('   Quasi-ID values: {}'.format(
                                 map(get_values, value_bucket.quasi_ids_values)
-                                ))
+                            ))
                             print('   Class size: {}'.format(
                                 value_bucket.equivalence_class_size))
                 # Signal to the main thread that we can exit.
@@ -495,8 +495,8 @@ def l_diversity_analysis(project, table_project_id, dataset_id, table_id,
                 for i, bucket in enumerate(histogram_buckets):
                     print('Bucket {}:'.format(i))
                     print('   Bucket size range: [{}, {}]'.format(
-                         bucket.sensitive_value_frequency_lower_bound,
-                         bucket.sensitive_value_frequency_upper_bound))
+                        bucket.sensitive_value_frequency_lower_bound,
+                        bucket.sensitive_value_frequency_upper_bound))
                     for value_bucket in bucket.bucket_values:
                         print('   Quasi-ID values: {}'.format(
                             map(get_values, value_bucket.quasi_ids_values)))
