@@ -216,7 +216,7 @@ if __name__ == '__main__':
 
         client.on_message = log_on_message
 
-    gateway.listen_for_config_messages(
+    gateway.listen_for_config_and_error_messages(
                 service_account_json, project_id, cloud_region, registry_id,
                 device_id, gateway_id, num_messages, rsa_private_path, 'RS256',
                 ca_cert_path, mqtt_bridge_hostname, mqtt_bridge_port,
