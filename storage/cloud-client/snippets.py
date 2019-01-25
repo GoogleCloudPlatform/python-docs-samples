@@ -266,6 +266,7 @@ def generate_signed_url(bucket_name, blob_name):
         method='GET')
 
     print('The signed url for {} is {}'.format(blob.name, url))
+    return url
 
 
 def rename_blob(bucket_name, blob_name, new_name):
