@@ -16,135 +16,118 @@
 from os import environ
 from time import sleep
 
+import asymmetric
+
 from cryptography.hazmat.backends.openssl.ec import _EllipticCurvePublicKey
 from cryptography.hazmat.backends.openssl.rsa import _RSAPublicKey
-from googleapiclient import discovery
-from googleapiclient.errors import HttpError
 
-import asymmetric as sample
+from google.api_core.exceptions import GoogleAPICallError
+from google.cloud.kms_v1 import enums
 
+from snippets import create_key_ring
 
-def create_key_helper(key_id, key_path, purpose, algorithm, t):
-    try:
-        t.client.projects() \
-                .locations() \
-                .keyRings() \
-                .cryptoKeys() \
-                .create(parent='{}/keyRings/{}'.format(t.parent, t.keyring),
-                        body={'purpose': purpose,
-                              'versionTemplate': {
-                                  'algorithm': algorithm
-                                  }
-                              },
-                        cryptoKeyId=key_id) \
-                .execute()
-        return True
-    except HttpError:
-        # key already exists
-        return False
+from snippets_test import create_key_helper
 
 
 def setup_module(module):
     """
     Set up keys in project if needed
     """
-    t = TestKMSSamples()
+    t = TestKMSAsymmetric()
     try:
         # create keyring
-        t.client.projects() \
-                .locations() \
-                .keyRings() \
-                .create(parent=t.parent, body={}, keyRingId=t.keyring) \
-                .execute()
-    except HttpError:
+        create_key_ring(t.project_id, t.location, t.keyring_id)
+    except GoogleAPICallError:
         # keyring already exists
         pass
-    s1 = create_key_helper(t.rsaDecryptId, t.rsaDecrypt, 'ASYMMETRIC_DECRYPT',
-                           'RSA_DECRYPT_OAEP_2048_SHA256', t)
-    s2 = create_key_helper(t.rsaSignId, t.rsaSign, 'ASYMMETRIC_SIGN',
-                           'RSA_SIGN_PSS_2048_SHA256', t)
-    s3 = create_key_helper(t.ecSignId, t.ecSign, 'ASYMMETRIC_SIGN',
-                           'EC_SIGN_P256_SHA256', t)
+    s1 = create_key_helper(t.rsaDecryptId,
+                           enums.CryptoKey.CryptoKeyPurpose.ASYMMETRIC_DECRYPT,
+                           enums.CryptoKeyVersion.CryptoKeyVersionAlgorithm.
+                           RSA_DECRYPT_OAEP_2048_SHA256,
+                           t)
+    s2 = create_key_helper(t.rsaSignId,
+                           enums.CryptoKey.CryptoKeyPurpose.ASYMMETRIC_SIGN,
+                           enums.CryptoKeyVersion.CryptoKeyVersionAlgorithm.
+                           RSA_SIGN_PSS_2048_SHA256,
+                           t)
+    s3 = create_key_helper(t.ecSignId,
+                           enums.CryptoKey.CryptoKeyPurpose.ASYMMETRIC_SIGN,
+                           enums.CryptoKeyVersion.CryptoKeyVersionAlgorithm.
+                           EC_SIGN_P256_SHA256,
+                           t)
+
     if s1 or s2 or s3:
         # leave time for keys to initialize
         sleep(20)
 
 
-class TestKMSSamples:
-
+class TestKMSAsymmetric:
     project_id = environ['GCLOUD_PROJECT']
-    keyring = 'kms-asymmetric-samples4'
-    parent = 'projects/{}/locations/global'.format(project_id)
+    keyring_id = 'kms-samples'
+    location = 'global'
+    parent = 'projects/{}/locations/{}'.format(project_id, location)
 
     rsaSignId = 'rsa-sign'
     rsaDecryptId = 'rsa-decrypt'
     ecSignId = 'ec-sign'
 
     rsaSign = '{}/keyRings/{}/cryptoKeys/{}/cryptoKeyVersions/1' \
-              .format(parent, keyring, rsaSignId)
+              .format(parent, keyring_id, rsaSignId)
     rsaDecrypt = '{}/keyRings/{}/cryptoKeys/{}/cryptoKeyVersions/1' \
-                 .format(parent, keyring, rsaDecryptId)
+                 .format(parent, keyring_id, rsaDecryptId)
     ecSign = '{}/keyRings/{}/cryptoKeys/{}/cryptoKeyVersions/1' \
-             .format(parent, keyring, ecSignId)
+             .format(parent, keyring_id, ecSignId)
 
     message = 'test message 123'
     message_bytes = message.encode('utf-8')
 
-    client = discovery.build('cloudkms', 'v1')
-
     def test_get_public_key(self):
-        rsa_key = sample.getAsymmetricPublicKey(self.client, self.rsaDecrypt)
+        rsa_key = asymmetric.get_asymmetric_public_key(self.rsaDecrypt)
         assert isinstance(rsa_key, _RSAPublicKey), 'expected RSA key'
-        ec_key = sample.getAsymmetricPublicKey(self.client, self.ecSign)
+        rsa_key = asymmetric.get_asymmetric_public_key(self.rsaSign)
+        assert isinstance(rsa_key, _RSAPublicKey), 'expected RSA key'
+        ec_key = asymmetric.get_asymmetric_public_key(self.ecSign)
         assert isinstance(ec_key, _EllipticCurvePublicKey), 'expected EC key'
 
     def test_rsa_encrypt_decrypt(self):
-        ciphertext = sample.encryptRSA(self.message_bytes,
-                                       self.client,
-                                       self.rsaDecrypt)
-        # ciphertext should be 256 characters with base64 and RSA 2048
+        ciphertext = asymmetric.encrypt_rsa(self.message_bytes,
+                                            self.rsaDecrypt)
+        # signature should be 256 bytes for RSA 2048
         assert len(ciphertext) == 256, \
             'ciphertext should be 256 chars; got {}'.format(len(ciphertext))
-        plaintext_bytes = sample.decryptRSA(ciphertext,
-                                            self.client,
-                                            self.rsaDecrypt)
+        plaintext_bytes = asymmetric.decrypt_rsa(ciphertext,
+                                                 self.rsaDecrypt)
         assert plaintext_bytes == self.message_bytes
         plaintext = plaintext_bytes.decode('utf-8')
         assert plaintext == self.message
 
     def test_rsa_sign_verify(self):
-        sig = sample.signAsymmetric(self.message_bytes,
-                                    self.client,
-                                    self.rsaSign)
-        # ciphertext should be 344 characters with base64 and RSA 2048
+        sig = asymmetric.sign_asymmetric(self.message_bytes,
+                                         self.rsaSign)
+        # signature should be 256 bytes for RSA 2048
         assert len(sig) == 256, \
             'sig should be 256 chars; got {}'.format(len(sig))
-        success = sample.verifySignatureRSA(sig,
-                                            self.message_bytes,
-                                            self.client,
-                                            self.rsaSign)
+        success = asymmetric.verify_signature_rsa(sig,
+                                                  self.message_bytes,
+                                                  self.rsaSign)
         assert success is True, 'RSA verification failed'
         changed_bytes = self.message_bytes + b'.'
-        success = sample.verifySignatureRSA(sig,
-                                            changed_bytes,
-                                            self.client,
-                                            self.rsaSign)
+        success = asymmetric.verify_signature_rsa(sig,
+                                                  changed_bytes,
+                                                  self.rsaSign)
         assert success is False, 'verify should fail with modified message'
 
     def test_ec_sign_verify(self):
-        sig = sample.signAsymmetric(self.message_bytes,
-                                    self.client,
-                                    self.ecSign)
+        sig = asymmetric.sign_asymmetric(self.message_bytes,
+                                         self.ecSign)
         assert len(sig) > 50 and len(sig) < 300, \
             'sig outside expected length range'
-        success = sample.verifySignatureEC(sig,
-                                           self.message_bytes,
-                                           self.client,
-                                           self.ecSign)
+        success = asymmetric.verify_signature_ec(sig,
+                                                 self.message_bytes,
+                                                 self.ecSign)
         assert success is True, 'EC verification failed'
         changed_bytes = self.message_bytes + b'.'
-        success = sample.verifySignatureEC(sig,
-                                           changed_bytes,
-                                           self.client,
-                                           self.ecSign)
+        success = asymmetric.verify_signature_ec(sig,
+                                                 changed_bytes,
+                                                 self.ecSign)
         assert success is False, 'verify should fail with modified message'
