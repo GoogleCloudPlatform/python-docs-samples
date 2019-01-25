@@ -92,18 +92,5 @@ To run this sample:
 
     $ python snippets.py
 
-    usage: snippets.py [-h]
-                       {create_key_ring,create_crypto_key,encrypt,decrypt,disable_crypto_key_version,enable_crypto_key_version,destroy_crypto_key_version,restore_crypto_key_version,add_member_to_crypto_key_policy,get_key_ring_policy}
-                       ...
-
-    positional arguments:
-      {create_key_ring,create_crypto_key,encrypt,decrypt,disable_crypto_key_version,enable_crypto_key_version,destroy_crypto_key_version,restore_crypto_key_version,add_member_to_crypto_key_policy,get_key_ring_policy}
-
-    optional arguments:
-      -h, --help            show this help message and exit
-
-
-
-
 
 .. _Google Cloud SDK: https://cloud.google.com/sdk/
