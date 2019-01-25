@@ -20,6 +20,7 @@ from google.cloud import pubsub
 
 # Add manager for bootstrapping device registry / device for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
+from gcp_devrel.testing.flaky import flaky
 import manager
 
 import pytest
@@ -178,14 +179,24 @@ def test_config(test_topic, capsys):
     assert '/devices/{}/config'.format(device_id) in out
 
 
+@flaky
 def test_receive_command(capsys):
     device_id = device_id_template.format('RSA256')
     manager.create_registry(
             service_account_json, project_id, cloud_region, pubsub_topic,
             registry_id)
-    manager.create_rs256_device(
-            service_account_json, project_id, cloud_region, registry_id,
-            device_id, rsa_cert_path)
+
+    exists = False
+    devices = manager.list_devices(
+            service_account_json, project_id, cloud_region, registry_id)
+    for device in devices:
+        if device.get('id') == device_id:
+            exists = True
+
+    if not exists:
+        manager.create_rs256_device(
+                service_account_json, project_id, cloud_region, registry_id,
+                device_id, rsa_cert_path)
 
     # Exercize the functionality
     client = cloudiot_mqtt_example.get_client(
@@ -195,7 +206,7 @@ def test_receive_command(capsys):
     client.loop_start()
 
     # Pre-process commands
-    for i in range(1, 3):
+    for i in range(1, 5):
         client.loop()
         time.sleep(1)
 
@@ -204,7 +215,7 @@ def test_receive_command(capsys):
             device_id, 'me want cookies')
 
     # Process commands
-    for i in range(1, 3):
+    for i in range(1, 5):
         client.loop()
         time.sleep(1)
 
