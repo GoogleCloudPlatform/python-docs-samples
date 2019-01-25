@@ -27,7 +27,6 @@ import sys
 
 def sentiment_text():
     # [START language_sentiment_text]
-    import six
     from google.cloud import language
     from google.cloud.language import enums
     from google.cloud.language import types
@@ -36,8 +35,10 @@ def sentiment_text():
 
     client = language.LanguageServiceClient()
 
-    if isinstance(text, six.binary_type):
+    try:
         text = text.decode('utf-8')
+    except AttributeError:
+        pass
 
     # Instantiates a plain text document.
     # [START language_python_migration_sentiment_text]
@@ -112,10 +113,10 @@ def entities_text():
         print('=' * 20)
         print(u'{:<16}: {}'.format('name', entity.name))
         print(u'{:<16}: {}'.format('type', entity_type.name))
-        print(u'{:<16}: {}'.format('metadata', entity.metadata))
         print(u'{:<16}: {}'.format('salience', entity.salience))
         print(u'{:<16}: {}'.format('wikipedia_url',
               entity.metadata.get('wikipedia_url', '-')))
+        print(u'{:<16}: {}'.format('mid', entity.metadata.get('mid', '-')))
     # [END language_python_migration_entities_text]
     # [END language_entities_text]
 
@@ -144,10 +145,10 @@ def entities_file():
         print('=' * 20)
         print(u'{:<16}: {}'.format('name', entity.name))
         print(u'{:<16}: {}'.format('type', entity_type.name))
-        print(u'{:<16}: {}'.format('metadata', entity.metadata))
         print(u'{:<16}: {}'.format('salience', entity.salience))
         print(u'{:<16}: {}'.format('wikipedia_url',
               entity.metadata.get('wikipedia_url', '-')))
+        print(u'{:<16}: {}'.format('mid', entity.metadata.get('mid', '-')))
     # [END language_entities_gcs]
 
 
