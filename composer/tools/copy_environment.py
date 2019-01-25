@@ -33,6 +33,7 @@ import base64
 import contextlib
 import json
 import os
+import platform
 import re
 import shutil
 import subprocess
@@ -542,7 +543,11 @@ def import_data(
         if proxy_subprocess:
             proxy_subprocess.kill()
         if fuse_dir:
-            subprocess.call(["fusermount", "-u", fuse_dir])
+            if platform.system().lower().startswith('darwin'):
+                # Mac OSX does not have fusermount
+                subprocess.call(["umount", fuse_dir])
+            else:
+                subprocess.call(["fusermount", "-u", fuse_dir])
         if tmp_dir_name:
             shutil.rmtree(tmp_dir_name)
 
