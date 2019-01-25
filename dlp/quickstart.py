@@ -29,7 +29,7 @@ def quickstart():
     project = 'your-project'
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp_client = google.cloud.dlp.DlpServiceClient()
 
     # The string to inspect
     content = 'Robert Frost'
@@ -59,10 +59,10 @@ def quickstart():
     }
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = dlp_client.project_path(project)
 
     # Call the API.
-    response = dlp.inspect_content(parent, inspect_config, item)
+    response = dlp_client.inspect_content(parent, inspect_config, item)
 
     # Print out the results.
     if response.result.findings:
