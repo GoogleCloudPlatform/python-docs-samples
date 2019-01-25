@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START gae_python37_cloudsql_mysql]
+# [START gae_python37_cloud_spanner]
 import os
 
 from flask import Flask
@@ -33,3 +33,4 @@ def main():
     results = list(cursor)
 
     return 'Query Result: {}'.format(results[0][0])
+# [END gae_python37_cloud_spanner]
