@@ -1,7 +1,7 @@
-cryptography==2.4.2
-google-api-python-client==1.7.4
+cryptography==2.5
+google-api-python-client==1.7.7
 google-auth-httplib2==0.0.3
-google-auth==1.6.1
-google-cloud-pubsub==0.38.0
-pyjwt==1.6.4
-requests==2.20.1
+google-auth==1.6.2
+google-cloud-pubsub==0.39.1
+pyjwt==1.7.1
+requests==2.21.0

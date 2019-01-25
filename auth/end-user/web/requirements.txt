@@ -1,6 +1,6 @@
-google-auth==1.6.1
+google-auth==1.6.2
 google-auth-oauthlib==0.2.0
 google-auth-httplib2==0.0.3
-google-api-python-client==1.7.4
+google-api-python-client==1.7.7
 flask==1.0.2
-requests==2.20.1
+requests==2.21.0

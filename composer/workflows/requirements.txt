@@ -1,4 +1,4 @@
-apache-airflow[gcp_api]==1.10.1
-kubernetes==8.0.0
-scipy==1.1.0
-numpy==1.15.4
+apache-airflow[gcp_api]==1.10.2
+kubernetes==8.0.1
+scipy==1.2.0
+numpy==1.16.0
