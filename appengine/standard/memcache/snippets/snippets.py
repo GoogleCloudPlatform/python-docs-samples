@@ -12,9 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START import]
+# [START get_data]
+# [START add_values]
 from google.appengine.api import memcache
-# [END import]
+
+# [END get_data]
+# [END add_values]
 
 
 def query_for_data():
