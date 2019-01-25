@@ -44,11 +44,6 @@ project_id = 'your-project-id'
 
 
 ```python
-project_id = 'ajhamilton-scratch'
-```
-
-
-```python
 %%bigquery --project $project_id
 SELECT name, SUM(number) as count
 FROM `bigquery-public-data.usa_names.usa_1910_current`

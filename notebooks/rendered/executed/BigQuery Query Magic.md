@@ -115,9 +115,9 @@ ORDER BY count DESC
 LIMIT 10
 ```
 
-    Executing query with job ID: 3f302a57-daa8-41ca-9e01-7fc364b69cae
-    Query executing: 2.44s
-    Query complete after 3.04s
+    Executing query with job ID: 77a52d0b-6a50-409c-a4dc-cc0cb4f4317a
+    Query executing: 0.78s
+    Query complete after 1.30s
 
 
 
@@ -205,11 +205,6 @@ LIMIT 10
 ## Explicitly specify a project
 
 By default, the `%%bigquery` magic command uses the project associated with your credentials to run the query. You may also explicitly provide a project ID using the `--project` flag. Note that your credentials must have permissions to create query jobs in the project you specify.
-
-
-```python
-project_id = 'your-project-id'
-```
 
 
 ```python
