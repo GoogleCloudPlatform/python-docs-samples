@@ -283,7 +283,8 @@ def send_data_from_bound_device(
         private_key_file, algorithm, ca_certs, mqtt_bridge_hostname,
         mqtt_bridge_port)
 
-    attach_device(client, device_id, mqtt_bridge_hostname, mqtt_bridge_port)
+    attach_device(
+        client, device_id, mqtt_bridge_hostname, mqtt_bridge_port, '')
     print('Waiting for device to attach.')
     time.sleep(5)
 

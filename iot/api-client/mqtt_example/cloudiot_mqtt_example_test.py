@@ -353,7 +353,8 @@ def test_gateway_trigger_error_topic(test_topic, capsys):
                 client,
                 'invalid_device_id',
                 'mqtt.googleapis.com',
-                443)
+                443,
+                '')
 
     # Connect the gateway
     cloudiot_mqtt_example.listen_for_messages(
