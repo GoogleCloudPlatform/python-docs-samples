@@ -27,7 +27,7 @@ def test_main(capsys):
     instance = 'oslogin-service-account-test-' + str(random.randint(0, 100000))
     project = os.environ['GCLOUD_PROJECT']
     cmd = 'sudo apt install cowsay -y && cowsay "Test complete!"'
-    zone = 'us-central1-f'
+    zone = 'us-east1-d'
     image_family = "projects/debian-cloud/global/images/family/debian-9"
     machine_type = "zones/%s/machineTypes/f1-micro" % zone
 
@@ -93,7 +93,7 @@ def test_main(capsys):
     assert '< Test complete! >' in out
 
     # Delete the test instance.
-    operation = compute.instances().delete(
+    delete = compute.instances().delete(
             project=project,
             zone=zone,
             instance=instance).execute()
@@ -101,5 +101,5 @@ def test_main(capsys):
     while compute.zoneOperations().get(
             project=project,
             zone=zone,
-            operation=operation['name']).execute()['status'] != 'DONE':
+            operation=delete['name']).execute()['status'] != 'DONE':
         time.sleep(5)
