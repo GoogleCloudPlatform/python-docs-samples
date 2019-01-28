@@ -60,7 +60,7 @@ sql = """
     SELECT word, word_count
     FROM `bigquery-public-data.samples.shakespeare`
     WHERE corpus = @corpus
-    AND word_count >= @min_word_count
+    AND word_count &gt;= @min_word_count
     ORDER BY word_count DESC;
 """
 

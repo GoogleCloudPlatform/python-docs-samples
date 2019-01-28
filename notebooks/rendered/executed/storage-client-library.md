@@ -125,9 +125,9 @@ print('\tUpdated: {}'.format(blob.updated))
 ```
 
     Select metadata for blob us-states.txt:
-    	ID: your-new-bucket/us-states.txt/1548348088257223
+    	ID: your-new-bucket/us-states.txt/1548699437748619
     	Size: 637 bytes
-    	Updated: 2019-01-24 16:41:28.256000+00:00
+    	Updated: 2019-01-28 18:17:17.748000+00:00
 
 
 ### Download a blob to a local directory

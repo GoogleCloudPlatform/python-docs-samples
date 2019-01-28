@@ -23,6 +23,101 @@ ORDER BY year DESC
 LIMIT 15
 ```
 
+
+
+
+<div>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>year</th>
+<th>birth_count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>2008</td>
+<td>4255156</td>
+</tr>
+<tr>
+<th>1</th>
+<td>2007</td>
+<td>4324008</td>
+</tr>
+<tr>
+<th>2</th>
+<td>2006</td>
+<td>4273225</td>
+</tr>
+<tr>
+<th>3</th>
+<td>2005</td>
+<td>4145619</td>
+</tr>
+<tr>
+<th>4</th>
+<td>2004</td>
+<td>4118907</td>
+</tr>
+<tr>
+<th>5</th>
+<td>2003</td>
+<td>4096092</td>
+</tr>
+<tr>
+<th>6</th>
+<td>2002</td>
+<td>4027376</td>
+</tr>
+<tr>
+<th>7</th>
+<td>2001</td>
+<td>4031531</td>
+</tr>
+<tr>
+<th>8</th>
+<td>2000</td>
+<td>4063823</td>
+</tr>
+<tr>
+<th>9</th>
+<td>1999</td>
+<td>3963465</td>
+</tr>
+<tr>
+<th>10</th>
+<td>1998</td>
+<td>3945192</td>
+</tr>
+<tr>
+<th>11</th>
+<td>1997</td>
+<td>3884329</td>
+</tr>
+<tr>
+<th>12</th>
+<td>1996</td>
+<td>3894874</td>
+</tr>
+<tr>
+<th>13</th>
+<td>1995</td>
+<td>3903012</td>
+</tr>
+<tr>
+<th>14</th>
+<td>1994</td>
+<td>3956925</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+
 The following command to runs the same query, but this time save the results to a new variable `total_births`, which is given as an argument to the `%%bigquery`. The results can then be used for further analysis and visualization.
 
 
@@ -37,12 +132,111 @@ ORDER BY year DESC
 LIMIT 15
 ```
 
+
+
+
+<div>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>year</th>
+<th>birth_count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>2008</td>
+<td>4255156</td>
+</tr>
+<tr>
+<th>1</th>
+<td>2007</td>
+<td>4324008</td>
+</tr>
+<tr>
+<th>2</th>
+<td>2006</td>
+<td>4273225</td>
+</tr>
+<tr>
+<th>3</th>
+<td>2005</td>
+<td>4145619</td>
+</tr>
+<tr>
+<th>4</th>
+<td>2004</td>
+<td>4118907</td>
+</tr>
+<tr>
+<th>5</th>
+<td>2003</td>
+<td>4096092</td>
+</tr>
+<tr>
+<th>6</th>
+<td>2002</td>
+<td>4027376</td>
+</tr>
+<tr>
+<th>7</th>
+<td>2001</td>
+<td>4031531</td>
+</tr>
+<tr>
+<th>8</th>
+<td>2000</td>
+<td>4063823</td>
+</tr>
+<tr>
+<th>9</th>
+<td>1999</td>
+<td>3963465</td>
+</tr>
+<tr>
+<th>10</th>
+<td>1998</td>
+<td>3945192</td>
+</tr>
+<tr>
+<th>11</th>
+<td>1997</td>
+<td>3884329</td>
+</tr>
+<tr>
+<th>12</th>
+<td>1996</td>
+<td>3894874</td>
+</tr>
+<tr>
+<th>13</th>
+<td>1995</td>
+<td>3903012</td>
+</tr>
+<tr>
+<th>14</th>
+<td>1994</td>
+<td>3956925</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+
 The next cell uses the pandas DataFrame.plot() method to visualize the query results as a bar chart. See the [pandas documentation](https://pandas.pydata.org/pandas-docs/stable/visualization.html) to learn more about data visualization with pandas.
 
 
 ```python
 total_births.plot(kind='bar', x='year', y='birth_count');
 ```
+
+
+![png](visualize-bigquery-public-data-resources/visualize-bigquery-public-data_6_0.png)
+
 
 Run the following query to retrieve the number of births by weekday. Because the `wday` (weekday) field allows null values, the query excludes records where wday is null.
 
@@ -59,12 +253,79 @@ GROUP BY wday
 ORDER BY wday ASC
 ```
 
+
+
+
+<div>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>wday</th>
+<th>male_births</th>
+<th>female_births</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>1</td>
+<td>4293575</td>
+<td>4093357</td>
+</tr>
+<tr>
+<th>1</th>
+<td>2</td>
+<td>6095840</td>
+<td>5831111</td>
+</tr>
+<tr>
+<th>2</th>
+<td>3</td>
+<td>6727217</td>
+<td>6412155</td>
+</tr>
+<tr>
+<th>3</th>
+<td>4</td>
+<td>6618729</td>
+<td>6307782</td>
+</tr>
+<tr>
+<th>4</th>
+<td>5</td>
+<td>6583015</td>
+<td>6284434</td>
+</tr>
+<tr>
+<th>5</th>
+<td>6</td>
+<td>6518636</td>
+<td>6223584</td>
+</tr>
+<tr>
+<th>6</th>
+<td>7</td>
+<td>4761950</td>
+<td>4530052</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+
 Visualize the query results using a line chart.
 
 
 ```python
 births_by_weekday.plot(x='wday');
 ```
+
+
+![png](visualize-bigquery-public-data-resources/visualize-bigquery-public-data_10_0.png)
+
 
 ## Using Python to Query BigQuery Data
 
@@ -91,7 +352,7 @@ SELECT
 FROM
     `bigquery-public-data.samples.natality`
 WHERE
-    NOT IS_NAN(plurality) AND plurality > 1
+    NOT IS_NAN(plurality) AND plurality &gt; 1
 GROUP BY
     plurality, year
 ORDER BY
@@ -101,6 +362,57 @@ df = client.query(sql).to_dataframe()
 df.head()
 ```
 
+
+
+
+<div>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>plurality</th>
+<th>count</th>
+<th>year</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>2</td>
+<td>139209</td>
+<td>2007</td>
+</tr>
+<tr>
+<th>1</th>
+<td>2</td>
+<td>138866</td>
+<td>2008</td>
+</tr>
+<tr>
+<th>2</th>
+<td>2</td>
+<td>137239</td>
+<td>2006</td>
+</tr>
+<tr>
+<th>3</th>
+<td>2</td>
+<td>133285</td>
+<td>2005</td>
+</tr>
+<tr>
+<th>4</th>
+<td>2</td>
+<td>132344</td>
+<td>2004</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+
 To chart the query results in your DataFrame, run the following cell to pivot the data and create a stacked bar chart of the count of plural births over time.
 
 
@@ -108,6 +420,10 @@ To chart the query results in your DataFrame, run the following cell to pivot th
 pivot_table = df.pivot(index='year', columns='plurality', values='count')
 pivot_table.plot(kind='bar', stacked=True, figsize=(15, 7));
 ```
+
+
+![png](visualize-bigquery-public-data-resources/visualize-bigquery-public-data_16_0.png)
+
 
 Run the following query to retrieve the count of births by the number of gestation weeks.
 
@@ -120,7 +436,7 @@ SELECT
 FROM
     `bigquery-public-data.samples.natality`
 WHERE
-    NOT IS_NAN(gestation_weeks) AND gestation_weeks <> 99
+    NOT IS_NAN(gestation_weeks) AND gestation_weeks &lt;&gt; 99
 GROUP BY
     gestation_weeks
 ORDER BY
@@ -138,6 +454,10 @@ ax.set_title('Count of Births by Gestation Weeks')
 ax.set_xlabel('Gestation Weeks')
 ax.set_ylabel('Count');
 ```
+
+
+![png](visualize-bigquery-public-data-resources/visualize-bigquery-public-data_20_0.png)
+
 
 ### What's Next
 

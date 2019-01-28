@@ -49,68 +49,56 @@ df
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>name</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>Mary</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Ruby</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>Annie</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>Willie</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>Ruth</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>Gladys</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>Maria</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>Frances</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>Margaret</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>Helen</td>
-    </tr>
-  </tbody>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>Mary</td>
+</tr>
+<tr>
+<th>1</th>
+<td>Ruby</td>
+</tr>
+<tr>
+<th>2</th>
+<td>Annie</td>
+</tr>
+<tr>
+<th>3</th>
+<td>Willie</td>
+</tr>
+<tr>
+<th>4</th>
+<td>Ruth</td>
+</tr>
+<tr>
+<th>5</th>
+<td>Gladys</td>
+</tr>
+<tr>
+<th>6</th>
+<td>Maria</td>
+</tr>
+<tr>
+<th>7</th>
+<td>Frances</td>
+</tr>
+<tr>
+<th>8</th>
+<td>Margaret</td>
+</tr>
+<tr>
+<th>9</th>
+<td>Helen</td>
+</tr>
+</tbody>
 </table>
 </div>
 
@@ -131,7 +119,7 @@ sql = """
     SELECT word, word_count
     FROM `bigquery-public-data.samples.shakespeare`
     WHERE corpus = @corpus
-    AND word_count >= @min_word_count
+    AND word_count &gt;= @min_word_count
     ORDER BY word_count DESC;
 """
 
@@ -154,89 +142,77 @@ query_job.to_dataframe()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>word</th>
-      <th>word_count</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>the</td>
-      <td>614</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>I</td>
-      <td>577</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>and</td>
-      <td>490</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>to</td>
-      <td>486</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>a</td>
-      <td>407</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>of</td>
-      <td>367</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>my</td>
-      <td>314</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>is</td>
-      <td>307</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>in</td>
-      <td>291</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>you</td>
-      <td>271</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>that</td>
-      <td>270</td>
-    </tr>
-    <tr>
-      <th>11</th>
-      <td>me</td>
-      <td>263</td>
-    </tr>
-  </tbody>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>word</th>
+<th>word_count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>the</td>
+<td>614</td>
+</tr>
+<tr>
+<th>1</th>
+<td>I</td>
+<td>577</td>
+</tr>
+<tr>
+<th>2</th>
+<td>and</td>
+<td>490</td>
+</tr>
+<tr>
+<th>3</th>
+<td>to</td>
+<td>486</td>
+</tr>
+<tr>
+<th>4</th>
+<td>a</td>
+<td>407</td>
+</tr>
+<tr>
+<th>5</th>
+<td>of</td>
+<td>367</td>
+</tr>
+<tr>
+<th>6</th>
+<td>my</td>
+<td>314</td>
+</tr>
+<tr>
+<th>7</th>
+<td>is</td>
+<td>307</td>
+</tr>
+<tr>
+<th>8</th>
+<td>in</td>
+<td>291</td>
+</tr>
+<tr>
+<th>9</th>
+<td>you</td>
+<td>271</td>
+</tr>
+<tr>
+<th>10</th>
+<td>that</td>
+<td>270</td>
+</tr>
+<tr>
+<th>11</th>
+<td>me</td>
+<td>263</td>
+</tr>
+</tbody>
 </table>
 </div>
 
@@ -371,7 +347,7 @@ destination_table = client.get_table(table_ref)
 print('Loaded {} rows.'.format(destination_table.num_rows))
 ```
 
-    Starting job 4c081f09-7351-4d0a-a5bd-90b6ce36371b
+    Starting job ae46d9d4-5d55-45c5-b812-2c23250049b2
     Job finished.
     Loaded 50 rows.
 

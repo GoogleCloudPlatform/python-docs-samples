@@ -15,7 +15,7 @@ To view the available commands for the BigQuery command-line tool, use the `--he
     Python script for interacting with BigQuery.
     
     
-    USAGE: bq [--global_flags] <command> [--command_flags] [args]
+    USAGE: bq [--global_flags] <command/> [--command_flags] [args]
     
     
     Any of the following commands:
@@ -70,13 +70,13 @@ To view the available commands for the BigQuery command-line tool, use the `--he
                bq head -s 5 -n 10 dataset.table
     
     help       Help for all or selected command:
-                   bq help [<command>]
+                   bq help [<command/>]
     
                To retrieve help with global flags:
                    bq --help
     
                To retrieve help with flags only from the main module:
-                   bq --helpshort [<command>]
+                   bq --helpshort [<command/>]
     
     init       Authenticate and create a default .bigqueryrc file.
     
@@ -97,12 +97,12 @@ To view the available commands for the BigQuery command-line tool, use the `--he
     load       Perform a load operation of source into destination_table.
     
                Usage:
-               load <destination_table> <source> [<schema>]
+               load <destination_table> <source/> [<schema>]
     
                The <destination_table> is the fully-qualified table name of table to
                create, or append to if the table already exists.
     
-               The <source> argument can be a path to a single local file, or a
+               The <source/> argument can be a path to a single local file, or a
                comma-separated list of URIs.
     
                The <schema> argument should be either the name of a JSON file or a
@@ -157,7 +157,7 @@ To view the available commands for the BigQuery command-line tool, use the `--he
                bq ls --transfer_log --message_type='messageTypes:INFO,ERROR'
                projects/p/locations/l/transferConfigs/c/runs/r
     
-    
+    mk         Create a dataset, table, view, or transfer configuration with this
                name.
     
                See 'bq help load' for more information on specifying the schema.
@@ -212,9 +212,9 @@ To view the available commands for the BigQuery command-line tool, use the `--he
     partition  Copies source tables into partitioned tables.
     
                Usage: bq partition <source_table_prefix>
-               <destination_partitioned_table>
+<destination_partitioned_table>
     
-               Copies tables of the format <source_table_prefix><YYYYmmdd> to a
+               Copies tables of the format <source_table_prefix><yyyymmdd> to a
                destination partitioned table, with the date suffix of the source
                tables becoming the partition date of the destination table
                partitions.
@@ -308,11 +308,11 @@ To view the available commands for the BigQuery command-line tool, use the `--he
     
                Arguments:
                job_id: Job ID to wait on.
-               secs: Number of seconds to wait (must be >= 0).
+               secs: Number of seconds to wait (must be &gt;= 0).
     
     
     Run 'bq --help' to get help for global flags.
-    Run 'bq help <command>' to get help for <command>.
+    Run 'bq help <command/>' to get help for <command/>.
 
 
 ## Create a new dataset
@@ -359,7 +359,7 @@ The example below demonstrates how to load a local CSV file into a new or existi
 ```
 
     Upload complete.
-    Waiting on bqjob_ra9f2e0c7f522f31_0000016886cd0676_1 ... (1s) Current status: DONE   
+    Waiting on bqjob_r735032bbeffc13dd_0000016895acdf56_1 ... (1s) Current status: DONE   
 
 
 ## Load data from Google Cloud Storage to a table
@@ -371,7 +371,7 @@ The example below demonstrates how to load a local CSV file into a new or existi
 !bq --location=US load --autodetect --skip_leading_rows=1 --source_format=CSV your_dataset_id.us_states_gcs 'gs://cloud-samples-data/bigquery/us-states/us-states.csv'
 ```
 
-    Waiting on bqjob_r3b5763d92c082dc0_0000016886cd2014_1 ... (0s) Current status: DONE   
+    Waiting on bqjob_r4988ae2c001c168b_0000016895acf9e5_1 ... (1s) Current status: DONE   
 
 
 ## Run a query
@@ -386,3 +386,4 @@ The following code deletes the dataset created for this tutorial, including all 
 ```python
 !bq rm -r -f --dataset your_dataset_id
 ```
+</job_id></sql_query></yyyymmdd></source_table_prefix></destination_partitioned_table></source_table_prefix></schema></schema></schema></source_uris></schema></schema></destination_table></schema></destination_table></destination_uris></source_table>

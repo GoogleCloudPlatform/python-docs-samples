@@ -74,7 +74,7 @@ The `gsutil` command can be used to perform a wide array of tasks. Run the `help
       versions        Object Versioning and Concurrency Control
       wildcards       Wildcard Names
     
-    Use gsutil help <command or topic> for detailed help.
+    Use gsutil help <command or="" topic=""/> for detailed help.
 
 ## Buckets
 
@@ -155,16 +155,16 @@ See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metada
 ```
 
     gs://your-new-bucket/us-states.txt:
-        Creation time:          Thu, 24 Jan 2019 16:40:54 GMT
-        Update time:            Thu, 24 Jan 2019 16:40:54 GMT
+        Creation time:          Mon, 28 Jan 2019 18:17:01 GMT
+        Update time:            Mon, 28 Jan 2019 18:17:01 GMT
         Storage class:          STANDARD
         Content-Language:       en
         Content-Length:         637
         Content-Type:           text/plain
         Hash (crc32c):          AmYMRQ==
         Hash (md5):             NmfddAHdCzyvAHCifeGtwg==
-        ETag:                   CO63hf7thuACEAE=
-        Generation:             1548348054133742
+        ETag:                   CMnp7faKkeACEAE=
+        Generation:             1548699421078729
         Metageneration:         1
         ACL:                    [
       {
