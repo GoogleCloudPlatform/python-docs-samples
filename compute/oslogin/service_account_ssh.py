@@ -41,7 +41,7 @@ HEADERS = {'Metadata-Flavor': 'Google'}
 # [START run_command_local]
 def execute(cmd, cwd=None, capture_output=False, env=None, raise_errors=True):
     """Execute an external command (wrapper for Python subprocess)."""
-    logging.info('Executing command: %s' % str(cmd))
+    logging.info('Executing command: {cmd}'.format(cmd=str(cmd)))
     stdout = subprocess.PIPE if capture_output else None
     process = subprocess.Popen(cmd, cwd=cwd, env=env, stdout=stdout)
     output = process.communicate()[0]
@@ -51,7 +51,8 @@ def execute(cmd, cwd=None, capture_output=False, env=None, raise_errors=True):
         if raise_errors:
             raise subprocess.CalledProcessError(returncode, cmd)
         else:
-            logging.info('Command returned error status %d' % returncode)
+            logging.info('Command returned error status {returncode}'.format(
+                         returncode=returncode))
     if output:
         logging.info(output)
     return returncode, output
@@ -61,7 +62,8 @@ def execute(cmd, cwd=None, capture_output=False, env=None, raise_errors=True):
 # [START create_key]
 def create_ssh_key(oslogin, account, private_key_file=None, expire_time=300):
     """Generate an SSH key pair and apply it to the specified account."""
-    private_key_file = private_key_file or '/tmp/key-%s' % str(uuid.uuid4())
+    private_key_file = private_key_file or '/tmp/key-{uuid}'.format(
+                                            uuid=uuid.uuid4())
     execute(['ssh-keygen', '-t', 'rsa', '-N', '', '-f', private_key_file])
 
     with open(private_key_file + '.pub', 'r') as original:
@@ -84,7 +86,8 @@ def run_ssh(cmd, private_key_file, username, hostname):
     """Run a command on a remote system."""
     ssh_command = [
         'ssh', '-i', private_key_file, '-o', 'StrictHostKeyChecking=no',
-        '%s@%s' % (username, hostname), cmd,
+        '{username}@{hostname}'.format(username=username, hostname=hostname),
+        cmd,
     ]
     ssh = subprocess.Popen(
         ssh_command, shell=False, stdout=subprocess.PIPE,
