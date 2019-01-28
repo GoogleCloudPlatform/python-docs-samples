@@ -157,7 +157,7 @@ To view the available commands for the BigQuery command-line tool, use the `--he
                bq ls --transfer_log --message_type='messageTypes:INFO,ERROR'
                projects/p/locations/l/transferConfigs/c/runs/r
     
-    mk         Create a dataset, table, view, or transfer configuration with this
+    
                name.
     
                See 'bq help load' for more information on specifying the schema.
@@ -359,7 +359,7 @@ The example below demonstrates how to load a local CSV file into a new or existi
 ```
 
     Upload complete.
-    Waiting on bqjob_r735032bbeffc13dd_0000016895acdf56_1 ... (1s) Current status: DONE   
+    Waiting on bqjob_r79803249dee1436f_0000016896639904_1 ... (1s) Current status: DONE   
 
 
 ## Load data from Google Cloud Storage to a table
@@ -371,7 +371,7 @@ The example below demonstrates how to load a local CSV file into a new or existi
 !bq --location=US load --autodetect --skip_leading_rows=1 --source_format=CSV your_dataset_id.us_states_gcs 'gs://cloud-samples-data/bigquery/us-states/us-states.csv'
 ```
 
-    Waiting on bqjob_r4988ae2c001c168b_0000016895acf9e5_1 ... (1s) Current status: DONE   
+    Waiting on bqjob_r30641d9ed9788ca4_000001689663b441_1 ... (1s) Current status: DONE   
 
 
 ## Run a query

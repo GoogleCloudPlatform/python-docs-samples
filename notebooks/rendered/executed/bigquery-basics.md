@@ -15,11 +15,31 @@ import pandas
 
 To use the BigQuery Python client library, start by initializing a client. The BigQuery client is used to send and receive messages from the BigQuery API.
 
+### Client project
+The project used by the client will default to the project associated with the credentials file stored in the `GOOGLE_APPLICATION_CREDENTIALS` environment variable.
+
+See the [google-auth](https://google-auth.readthedocs.io/en/latest/reference/google.auth.html) for more information about Application Default Credentials.
+
+
+### Client location
 Locations are required for certain BigQuery operations such as creating a Dataset. If a location is provided to the client when it is initialized, it will be the default location for jobs, datasets, and tables.
+
+Run the following to create a client with your default project:
 
 
 ```python
 client = bigquery.Client(location="US")
+print("Client creating using default project: {}".format(client.project))
+```
+
+    Client creating using default project: your-project-id
+
+
+Alternatively, you can explicitly specify a project when constructing the client:
+
+
+```python
+client = bigquery.Client(location="US", project="your-project-id")
 ```
 
 ## Run a query on a public dataset
@@ -347,7 +367,7 @@ destination_table = client.get_table(table_ref)
 print('Loaded {} rows.'.format(destination_table.num_rows))
 ```
 
-    Starting job ae46d9d4-5d55-45c5-b812-2c23250049b2
+    Starting job a27afe96-d36b-458e-b72f-ba47f3d192dc
     Job finished.
     Loaded 50 rows.
 

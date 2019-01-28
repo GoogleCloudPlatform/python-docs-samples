@@ -1,9 +1,7 @@
 
 # Storage Commands
 
-The [Google Cloud SDK](https://cloud-dot-devsite.googleplex.com/sdk/docs/) provides a set of commands for working with data stored in Google Cloud Storage.
-
-This notebook introduces several `gsutil` commands for interacting with Cloud Storage.
+The [Google Cloud SDK](https://cloud-dot-devsite.googleplex.com/sdk/docs/) provides a set of commands for working with data stored in Google Cloud Storage. This notebook introduces several `gsutil` commands for interacting with Cloud Storage. Note that shell commands in a notebook must be prepended with a `!`.
 
 ## List available commands
 
@@ -155,16 +153,16 @@ See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metada
 ```
 
     gs://your-new-bucket/us-states.txt:
-        Creation time:          Mon, 28 Jan 2019 18:17:01 GMT
-        Update time:            Mon, 28 Jan 2019 18:17:01 GMT
+        Creation time:          Mon, 28 Jan 2019 21:36:30 GMT
+        Update time:            Mon, 28 Jan 2019 21:36:30 GMT
         Storage class:          STANDARD
         Content-Language:       en
         Content-Length:         637
         Content-Type:           text/plain
         Hash (crc32c):          AmYMRQ==
         Hash (md5):             NmfddAHdCzyvAHCifeGtwg==
-        ETag:                   CMnp7faKkeACEAE=
-        Generation:             1548699421078729
+        ETag:                   CL2ev8K3keACEAE=
+        Generation:             1548711390859069
         Metageneration:         1
         ACL:                    [
       {
@@ -227,6 +225,8 @@ See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metada
 
 
 ### Delete a bucket
+
+The following command deletes all objects in the bucket before deleting the bucket itself.
 
 
 ```python
