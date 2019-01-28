@@ -1,5 +1,5 @@
 cryptography==2.4.2
-flaky==3.4.0
+flaky==3.5.3
 gcp-devrel-py-tools==0.0.15
 google-api-python-client==1.7.5
 google-auth-httplib2==0.0.3
