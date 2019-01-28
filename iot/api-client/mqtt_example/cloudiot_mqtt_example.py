@@ -24,6 +24,7 @@ for this sample.
 # [START iot_mqtt_includes]
 import argparse
 import datetime
+import logging
 import os
 import random
 import ssl
@@ -32,6 +33,8 @@ import time
 import jwt
 import paho.mqtt.client as mqtt
 # [END iot_mqtt_includes]
+
+logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.CRITICAL)
 
 # The initial backoff time after a disconnection occurs, in seconds.
 minimum_backoff_time = 1
@@ -248,7 +251,7 @@ def listen_for_messages(
 
         time.sleep(1)
 
-    detach_device(client, device_id, mqtt_bridge_hostname, mqtt_bridge_port)
+    detach_device(client, device_id)
 
     print('Finished.')
     # [END listen_for_messages]
@@ -317,7 +320,7 @@ def send_data_from_bound_device(
 
         time.sleep(5)
 
-    detach_device(client, device_id, mqtt_bridge_hostname, mqtt_bridge_port)
+    detach_device(client, device_id)
 
     print('Finished.')
     # [END send_data_from_bound_device]
