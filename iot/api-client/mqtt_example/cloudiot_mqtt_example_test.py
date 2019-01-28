@@ -344,24 +344,17 @@ def test_gateway_trigger_error_topic(test_topic, capsys):
 
     # Setup for listening for config messages
     num_messages = 4
-    jwt_exp_time = 30
-    listen_time = 20
 
     # Hardcoded callback for causing an error
     def trigger_error(client):
-        cloudiot_mqtt_example.attach_device(
-                client,
-                'invalid_device_id',
-                'mqtt.googleapis.com',
-                443,
-                '')
+        cloudiot_mqtt_example.attach_device(client, 'invalid_device_id', '')
 
     # Connect the gateway
     cloudiot_mqtt_example.listen_for_messages(
                 service_account_json, project_id, cloud_region, registry_id,
                 device_id, gateway_id, num_messages, rsa_private_path,
-                'RS256', ca_cert_path, mqtt_bridge_hostname, mqtt_bridge_port,
-                jwt_exp_time, listen_time, trigger_error)
+                'RS256', ca_cert_path, 'mqtt.googleapis.com', 443,
+                20, 15, trigger_error)
 
     # Clean up
     manager.unbind_device_from_gateway(
@@ -378,4 +371,3 @@ def test_gateway_trigger_error_topic(test_topic, capsys):
 
     out, _ = capsys.readouterr()
     assert 'GATEWAY_ATTACHMENT_ERROR' in out
-    assert 'Out of memory' not in out  # Indicates could not connect

@@ -169,29 +169,21 @@ def get_client(
 # [END iot_mqtt_config]
 
 
-def detach_device(client, device_id, mqtt_bridge_hostname, mqtt_bridge_port):
+def detach_device(client, device_id):
     """Detach the device from the gateway."""
     # [START detach_device]
     detach_topic = '/devices/{}/detach'.format(device_id)
     print('Detaching: {}'.format(detach_topic))
-    client.connect(mqtt_bridge_hostname, mqtt_bridge_port)
-    client.loop()
     client.publish(detach_topic, '{}', qos=1)
-    time.sleep(5)  # wait for the server to respond / will trigger callback
     # [END detach_device]
 
 
-def attach_device(
-        client, device_id, mqtt_bridge_hostname, mqtt_bridge_port, auth):
+def attach_device(client, device_id, auth):
     """Attach the device to the gateway."""
     # [START attach_device]
     attach_topic = '/devices/{}/attach'.format(device_id)
-    print('Attaching: {}'.format(attach_topic))
     attach_payload = '{{"authorization" : "{}"}}'.format(auth)
-    client.connect(mqtt_bridge_hostname, mqtt_bridge_port)
-    client.loop()
     client.publish(attach_topic, attach_payload, qos=1)
-    time.sleep(5)
     # [END attach_device]
 
 
@@ -212,8 +204,7 @@ def listen_for_messages(
         private_key_file, algorithm, ca_certs, mqtt_bridge_hostname,
         mqtt_bridge_port)
 
-    attach_device(
-        client, device_id, mqtt_bridge_hostname, mqtt_bridge_port, '')
+    attach_device(client, device_id, '')
     print('Waiting for device to attach.')
     time.sleep(5)
 
@@ -283,8 +274,7 @@ def send_data_from_bound_device(
         private_key_file, algorithm, ca_certs, mqtt_bridge_hostname,
         mqtt_bridge_port)
 
-    attach_device(
-        client, device_id, mqtt_bridge_hostname, mqtt_bridge_port, '')
+    attach_device(client, device_id, '')
     print('Waiting for device to attach.')
     time.sleep(5)
 
