@@ -1,7 +1,7 @@
 
 # Google Cloud Storage
 
-This page shows how to get started with the [Google Cloud Storage Python client library](https://googleapis.github.io/google-cloud-python/latest/storage/index.html).
+This tutorial shows how to get started with the [Google Cloud Storage Python client library](https://googleapis.github.io/google-cloud-python/latest/storage/index.html).
 
 ## Create a storage bucket
 
@@ -23,20 +23,22 @@ Run the following to create a client with your default project:
 
 ```python
 client = storage.Client()
-print("Client creating using default project: {}".format(client.project))
+print("Client created using default project: {}".format(client.project))
 ```
 
-    Client creating using default project: your-project-id
+    Client created using default project: your-project-id
 
 
 Alternatively, you can explicitly specify a project when constructing the client:
 
 
 ```python
-client = storage.Client(project="your-project-id")
+# client = storage.Client(project='your-project-id')
 ```
 
 Finally, create a bucket with a globally unique name.
+
+For more information about naming buckets, see [Bucket name requirements](https://cloud.google.com/storage/docs/naming#requirements).
 
 
 ```python
@@ -52,9 +54,7 @@ print('Bucket {} created.'.format(bucket.name))
     Bucket your-new-bucket created.
 
 
-For more information, see [Creating Storage Buckets](https://cloud.google.com/storage/docs/creating-buckets) in the Cloud Storage documentation.
-
-### List buckets in a project
+## List buckets in a project
 
 
 ```python
@@ -73,24 +73,33 @@ for item in buckets:
     	your-new-bucket
 
 
-### Get bucket metadata
+## Get bucket metadata
+
+The next cell shows how get information on metadata of your Cloud Storage buckets.
+
+To learn more about specific bucket properties, see [Bucket Locations](https://cloud.google.com/storage/docs/locations) and [Storage Classes](https://cloud.google.com/storage/docs/storage-classes).
 
 
 ```python
 bucket = client.get_bucket(bucket_name)
+
+print('Bucket name: {}'.format(bucket.name))
+print('Bucket location: {}'.format(bucket.location))
+print('Bucket storage class: {}'.format(bucket.storage_class))
 ```
 
-## Objects
+    Bucket name: your-new-bucket
+    Bucket location: US
+    Bucket storage class: STANDARD
 
-Objects are the individual pieces of data that you store in Cloud Storage. There is no limit on the number of objects that you can create in a bucket.
+
+## Upload a local file to a bucket
+
+Objects are the individual pieces of data that you store in Cloud Storage. Objects are referred to as "blobs" in the Python client library. There is no limit on the number of objects that you can create in a bucket.
 
 An object's name is treated as a piece of object metadata in Cloud Storage. Object names can contain any combination of Unicode characters (UTF-8 encoded) and must be less than 1024 bytes in length.
 
-Though data in storage buckets is stored similar to a local file system, Google Cloud Storage is a key/value pair object store. A common character to include in object names to emulate directory structure is a slash (/). By using slashes, you can make objects appear as though they're stored in a hierarchical structure. For example, you could name one object `/europe/france/paris.jpg` and another object `/europe/france/cannes.jpg`. When you list these objects, they appear to be in a hierarchical directory structure based on location; however, Cloud Storage sees the objects as independent with no hierarchical relationship whatsoever.
-
-For more information, including how to rename an object, see the [object naming guidelines](https://cloud.google.com/storage/docs/naming#objectnames).
-
-### Upload a local file to a bucket
+For more information, including how to rename an object, see the [Object name requirements](https://cloud.google.com/storage/docs/naming#objectnames).
 
 
 ```python
@@ -106,7 +115,7 @@ print('File uploaded to {}.'.format(bucket.name))
     File uploaded to your-new-bucket.
 
 
-### List blobs in a bucket
+## List blobs in a bucket
 
 
 ```python
@@ -121,26 +130,27 @@ for item in blobs:
     	us-states.txt
 
 
-### Get a blob and display metadata
+## Get a blob and display metadata
+
 See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metadata) for more information about object metadata.
 
 
 ```python
 blob = bucket.get_blob(blob_name)
 
-print('Select metadata for blob {}:'.format(blob_name))
-print('\tID: {}'.format(blob.id))
-print('\tSize: {} bytes'.format(blob.size))
-print('\tUpdated: {}'.format(blob.updated))
+print('Name: {}'.format(blob.id))
+print('Size: {} bytes'.format(blob.size))
+print('Content type: {}'.format(blob.content_type))
+print('Public URL: {}'.format(blob.public_url))
 ```
 
-    Select metadata for blob us-states.txt:
-    	ID: your-new-bucket/us-states.txt/1548711406354410
-    	Size: 637 bytes
-    	Updated: 2019-01-28 21:36:46.354000+00:00
+    Name: your-new-bucket/us-states.txt/1548801913760895
+    Size: 637 bytes
+    Content type: text/plain
+    Public URL: https://storage.googleapis.com/your-new-bucket/us-states.txt
 
 
-### Download a blob to a local directory
+## Download a blob to a local directory
 
 
 ```python
@@ -170,6 +180,8 @@ print('Blob {} deleted.'.format(blob.name))
 
 ### Delete a bucket
 
+Note that the bucket must be empty before it can be deleted.
+
 
 ```python
 bucket = client.get_bucket(bucket_name)
@@ -180,3 +192,10 @@ print('Bucket {} deleted.'.format(bucket.name))
 
     Bucket your-new-bucket deleted.
 
+
+## Next Steps
+
+Read more about Google Cloud Storage in the documentation:
++ [Storage Key Terms](https://cloud.google.com/storage/docs/key-terms)
++ [How-To Guides](https://cloud.google.com/storage/docs/how-to)
++ [Pricing](https://cloud.google.com/storage/pricing)

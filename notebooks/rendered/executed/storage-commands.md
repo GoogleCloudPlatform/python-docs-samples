@@ -74,16 +74,13 @@ The `gsutil` command can be used to perform a wide array of tasks. Run the `help
     
     Use gsutil help <command or="" topic=""/> for detailed help.
 
-## Buckets
+## Create a storage bucket
 
-Buckets are the basic containers that hold your data. Everything that you
-store in Cloud Storage must be contained in a bucket. You can use buckets to
-organize your data and control access to your data.
+Buckets are the basic containers that hold your data. Everything that you store in Cloud Storage must be contained in a bucket. You can use buckets to organize your data and control access to your data.
 
-### Create a bucket
+Start by defining a globally unique name.
 
-When you [create a bucket](https://cloud.google.com/storage/docs/creating-buckets),
-you specify a globally-unique name.
+For more information about naming buckets, see [Bucket name requirements](https://cloud.google.com/storage/docs/naming#requirements).
 
 
 ```python
@@ -93,6 +90,8 @@ bucket_name = 'your-new-bucket'
 
 NOTE: In the examples below, the variables are referenced in the command using `$` and `{}`. You may replace the interpolated variables with literal values if they are constant instead of creating and using variables.
 
+Next, create the new bucket with the `gsutil mb` command:
+
 
 ```python
 !gsutil mb gs://{bucket_name}/
@@ -101,7 +100,7 @@ NOTE: In the examples below, the variables are referenced in the command using `
     Creating gs://your-new-bucket/...
 
 
-### List buckets in a project
+## List buckets in a project
 
 Replace 'your-project-id' in the cell below with your project ID and run the cell to list the storage buckets in your project.
 
@@ -117,12 +116,94 @@ Replace 'your-project-id' in the cell below with your project ID and run the cel
     gs://your-new-bucket/
 
 
-## Objects
+## Get bucket metadata
 
-Objects are the individual pieces of data that you store in Cloud Storage.
-There is no limit on the number of objects that you can create in a bucket.
+The next cell shows how get information on metadata of your Cloud Storage buckets.
 
-### Upload a local file to a bucket
+To learn more about specific bucket properties, see [Bucket Locations](https://cloud.google.com/storage/docs/locations) and [Storage Classes](https://cloud.google.com/storage/docs/storage-classes).
+
+
+```python
+!gsutil ls -L -b gs://{bucket_name}/
+```
+
+    gs://your-new-bucket/ :
+    	Storage class:			STANDARD
+    	Location constraint:		US
+    	Versioning enabled:		None
+    	Logging configuration:		None
+    	Website configuration:		None
+    	CORS configuration: 		None
+    	Lifecycle configuration:	None
+    	Requester Pays enabled:		None
+    	Labels:				None
+    	Default KMS key:		None
+    	Time created:			Tue, 29 Jan 2019 22:44:49 GMT
+    	Time updated:			Tue, 29 Jan 2019 22:44:49 GMT
+    	Metageneration:			1
+    	ACL:				
+    	  [
+    	    {
+    	      "entity": "project-owners-129776587519",
+    	      "projectTeam": {
+    	        "projectNumber": "129776587519",
+    	        "team": "owners"
+    	      },
+    	      "role": "OWNER"
+    	    },
+    	    {
+    	      "entity": "project-editors-129776587519",
+    	      "projectTeam": {
+    	        "projectNumber": "129776587519",
+    	        "team": "editors"
+    	      },
+    	      "role": "OWNER"
+    	    },
+    	    {
+    	      "entity": "project-viewers-129776587519",
+    	      "projectTeam": {
+    	        "projectNumber": "129776587519",
+    	        "team": "viewers"
+    	      },
+    	      "role": "READER"
+    	    }
+    	  ]
+    	Default ACL:			
+    	  [
+    	    {
+    	      "entity": "project-owners-129776587519",
+    	      "projectTeam": {
+    	        "projectNumber": "129776587519",
+    	        "team": "owners"
+    	      },
+    	      "role": "OWNER"
+    	    },
+    	    {
+    	      "entity": "project-editors-129776587519",
+    	      "projectTeam": {
+    	        "projectNumber": "129776587519",
+    	        "team": "editors"
+    	      },
+    	      "role": "OWNER"
+    	    },
+    	    {
+    	      "entity": "project-viewers-129776587519",
+    	      "projectTeam": {
+    	        "projectNumber": "129776587519",
+    	        "team": "viewers"
+    	      },
+    	      "role": "READER"
+    	    }
+    	  ]
+
+
+## Upload a local file to a bucket
+
+Objects are the individual pieces of data that you store in Cloud Storage. Objects are referred to as "blobs" in the Python client library. There is no limit on the number of objects that you can create in a bucket.
+
+An object's name is treated as a piece of object metadata in Cloud Storage. Object names can contain any combination of Unicode characters (UTF-8 encoded) and must be less than 1024 bytes in length.
+
+For more information, including how to rename an object, see the [Object name requirements](https://cloud.google.com/storage/docs/naming#objectnames).
 
 
 ```python
@@ -134,7 +215,7 @@ There is no limit on the number of objects that you can create in a bucket.
     Operation completed over 1 objects/637.0 B.                                      
 
 
-### List blobs in a bucket
+## List blobs in a bucket
 
 
 ```python
@@ -144,7 +225,8 @@ There is no limit on the number of objects that you can create in a bucket.
     gs://your-new-bucket/us-states.txt
 
 
-### Get a blob and display metadata
+## Get a blob and display metadata
+
 See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metadata) for more information about object metadata.
 
 
@@ -153,16 +235,16 @@ See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metada
 ```
 
     gs://your-new-bucket/us-states.txt:
-        Creation time:          Mon, 28 Jan 2019 21:36:30 GMT
-        Update time:            Mon, 28 Jan 2019 21:36:30 GMT
+        Creation time:          Tue, 29 Jan 2019 22:44:55 GMT
+        Update time:            Tue, 29 Jan 2019 22:44:55 GMT
         Storage class:          STANDARD
         Content-Language:       en
         Content-Length:         637
         Content-Type:           text/plain
         Hash (crc32c):          AmYMRQ==
         Hash (md5):             NmfddAHdCzyvAHCifeGtwg==
-        ETag:                   CL2ev8K3keACEAE=
-        Generation:             1548711390859069
+        ETag:                   CJ3Y0taIlOACEAE=
+        Generation:             1548801895869469
         Metageneration:         1
         ACL:                    [
       {
@@ -190,15 +272,15 @@ See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metada
         "role": "READER"
       },
       {
-        "email": "ajhamilton@google.com",
-        "entity": "user-ajhamilton@google.com",
+        "email": "user@example.com",
+        "entity": "user-user@example.com",
         "role": "OWNER"
       }
     ]
     TOTAL: 1 objects, 637 bytes (637 B)
 
 
-### Download a blob to a local directory
+## Download a blob to a local directory
 
 
 ```python
@@ -235,3 +317,10 @@ The following command deletes all objects in the bucket before deleting the buck
 
     Removing gs://your-new-bucket/...
 
+
+## Next Steps
+
+Read more about Google Cloud Storage in the documentation:
++ [Storage Key Terms](https://cloud.google.com/storage/docs/key-terms)
++ [How-To Guides](https://cloud.google.com/storage/docs/how-to)
++ [Pricing](https://cloud.google.com/storage/pricing)

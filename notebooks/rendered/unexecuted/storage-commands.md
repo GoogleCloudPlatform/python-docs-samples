@@ -12,16 +12,13 @@ The `gsutil` command can be used to perform a wide array of tasks. Run the `help
 !gsutil help
 ```
 
-## Buckets
+## Create a storage bucket
 
-Buckets are the basic containers that hold your data. Everything that you
-store in Cloud Storage must be contained in a bucket. You can use buckets to
-organize your data and control access to your data.
+Buckets are the basic containers that hold your data. Everything that you store in Cloud Storage must be contained in a bucket. You can use buckets to organize your data and control access to your data.
 
-### Create a bucket
+Start by defining a globally unique name.
 
-When you [create a bucket](https://cloud.google.com/storage/docs/creating-buckets),
-you specify a globally-unique name.
+For more information about naming buckets, see [Bucket name requirements](https://cloud.google.com/storage/docs/naming#requirements).
 
 
 ```python
@@ -31,12 +28,14 @@ bucket_name = 'your-new-bucket'
 
 NOTE: In the examples below, the variables are referenced in the command using `$` and `{}`. You may replace the interpolated variables with literal values if they are constant instead of creating and using variables.
 
+Next, create the new bucket with the `gsutil mb` command:
+
 
 ```python
 !gsutil mb gs://{bucket_name}/
 ```
 
-### List buckets in a project
+## List buckets in a project
 
 Replace 'your-project-id' in the cell below with your project ID and run the cell to list the storage buckets in your project.
 
@@ -45,26 +44,39 @@ Replace 'your-project-id' in the cell below with your project ID and run the cel
 !gsutil ls -p your-project-id
 ```
 
-## Objects
+## Get bucket metadata
 
-Objects are the individual pieces of data that you store in Cloud Storage.
-There is no limit on the number of objects that you can create in a bucket.
+The next cell shows how get information on metadata of your Cloud Storage buckets.
 
-### Upload a local file to a bucket
+To learn more about specific bucket properties, see [Bucket Locations](https://cloud.google.com/storage/docs/locations) and [Storage Classes](https://cloud.google.com/storage/docs/storage-classes).
+
+
+```python
+!gsutil ls -L -b gs://{bucket_name}/
+```
+
+## Upload a local file to a bucket
+
+Objects are the individual pieces of data that you store in Cloud Storage. Objects are referred to as "blobs" in the Python client library. There is no limit on the number of objects that you can create in a bucket.
+
+An object's name is treated as a piece of object metadata in Cloud Storage. Object names can contain any combination of Unicode characters (UTF-8 encoded) and must be less than 1024 bytes in length.
+
+For more information, including how to rename an object, see the [Object name requirements](https://cloud.google.com/storage/docs/naming#objectnames).
 
 
 ```python
 !gsutil cp resources/us-states.txt gs://{bucket_name}/
 ```
 
-### List blobs in a bucket
+## List blobs in a bucket
 
 
 ```python
 !gsutil ls -r gs://{bucket_name}/**
 ```
 
-### Get a blob and display metadata
+## Get a blob and display metadata
+
 See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metadata) for more information about object metadata.
 
 
@@ -72,7 +84,7 @@ See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metada
 !gsutil ls -L  gs://{bucket_name}/us-states.txt
 ```
 
-### Download a blob to a local directory
+## Download a blob to a local directory
 
 
 ```python
@@ -96,3 +108,10 @@ The following command deletes all objects in the bucket before deleting the buck
 ```python
 !gsutil rm -r gs://{bucket_name}/
 ```
+
+## Next Steps
+
+Read more about Google Cloud Storage in the documentation:
++ [Storage Key Terms](https://cloud.google.com/storage/docs/key-terms)
++ [How-To Guides](https://cloud.google.com/storage/docs/how-to)
++ [Pricing](https://cloud.google.com/storage/pricing)
