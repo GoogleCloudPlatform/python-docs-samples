@@ -15,13 +15,10 @@
 # [START iot_gateway_demo]
 import csv
 import datetime
-import io
 import logging
 import os
 import sys
 import time
-
-from google.cloud import pubsub
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
 
@@ -68,98 +65,6 @@ jwt_exp_time = 20
 listen_time = 30
 
 
-def create_iot_topic(project, topic_name):
-    """Creates a PubSub Topic and grants access to Cloud IoT Core."""
-    pubsub_client = pubsub.PublisherClient()
-    topic_path = pubsub_client.topic_path(project, topic_name)
-
-    topic = pubsub_client.create_topic(topic_path)
-    policy = pubsub_client.get_iam_policy(topic_path)
-
-    policy.bindings.add(
-        role='roles/pubsub.publisher',
-        members=['serviceAccount:cloud-iot@system.gserviceaccount.com'])
-
-    pubsub_client.set_iam_policy(topic_path, policy)
-
-    return topic
-
-
-def create_registry(
-        service_account_json, project_id, cloud_region, pubsub_topic,
-        registry_id):
-    """ Creates a registry and returns the result. Returns an empty result if
-    the registry already exists."""
-    client = manager.get_client(service_account_json)
-    registry_parent = 'projects/{}/locations/{}'.format(
-            project_id,
-            cloud_region)
-    body = {
-        'eventNotificationConfigs': [{
-            'pubsubTopicName': pubsub_topic
-        }],
-        'id': registry_id
-    }
-    request = client.projects().locations().registries().create(
-        parent=registry_parent, body=body)
-
-    response = request.execute()
-    print('Created registry')
-    return response
-
-
-def delete_registry(
-       service_account_json, project_id, cloud_region, registry_id):
-    """Deletes the specified registry."""
-    print('Delete registry')
-    client = manager.get_client(service_account_json)
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
-
-    registries = client.projects().locations().registries()
-    return registries.delete(name=registry_name).execute()
-
-
-def create_device(
-        service_account_json, project_id, cloud_region, registry_id,
-        device_id, certificate_file):
-    """Create a new device without authentication."""
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
-
-    with io.open(certificate_file) as f:
-        certificate = f.read()
-
-    client = manager.get_client(service_account_json)
-    device_template = {
-        'id': device_id,
-        'credentials': [{
-            'publicKey': {
-                'format': 'RSA_X509_PEM',
-                'key': certificate
-            }
-        }]
-    }
-
-    devices = client.projects().locations().registries().devices()
-    return devices.create(parent=registry_name, body=device_template).execute()
-
-
-def delete_device(
-        service_account_json, project_id, cloud_region, registry_id,
-        device_id):
-    """Delete the device with the given id."""
-    print('Delete device')
-    client = manager.get_client(service_account_json)
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
-
-    device_name = '{}/devices/{}'.format(registry_name, device_id)
-
-    devices = client.projects().locations().registries().devices()
-    return devices.delete(name=device_name).execute()
-
-
 if __name__ == '__main__':
     print("Running demo")
 
@@ -168,7 +73,7 @@ if __name__ == '__main__':
 
     # [START iot_gateway_demo_create_registry]
     print('Creating registry: {}'.format(registry_id))
-    create_registry(
+    manager.create_registry(
             service_account_json, project_id, cloud_region, pubsub_topic,
             registry_id)
     # [END iot_gateway_demo_create_registry]
