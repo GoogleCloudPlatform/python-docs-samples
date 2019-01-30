@@ -1,7 +1,7 @@
 
 # Storage Commands
 
-The [Google Cloud SDK](https://cloud-dot-devsite.googleplex.com/sdk/docs/) provides a set of commands for working with data stored in Google Cloud Storage. This notebook introduces several `gsutil` commands for interacting with Cloud Storage. Note that shell commands in a notebook must be prepended with a `!`.
+The [Google Cloud SDK](https://cloud-dot-devsite.googleplex.com/sdk/docs/) provides a set of commands for working with data stored in Cloud Storage. This notebook introduces several `gsutil` commands for interacting with Cloud Storage. Note that shell commands in a notebook must be prepended with a `!`.
 
 ## List available commands
 
@@ -26,7 +26,7 @@ For more information about naming buckets, see [Bucket name requirements](https:
 bucket_name = 'your-new-bucket'
 ```
 
-NOTE: In the examples below, the variables are referenced in the command using `$` and `{}`. You may replace the interpolated variables with literal values if they are constant instead of creating and using variables.
+NOTE: In the examples below, the `bucket_name`  and `project_id` variables are referenced in the commands using `{}` and `$`. If you want to avoid creating and using variables, replace these interpolated variables with literal values and remove the `{}` and `$` characters.
 
 Next, create the new bucket with the `gsutil mb` command:
 
@@ -41,12 +41,18 @@ Replace 'your-project-id' in the cell below with your project ID and run the cel
 
 
 ```python
-!gsutil ls -p your-project-id
+# Replace the string below with your project ID
+project_id = 'your-project-id'
+```
+
+
+```python
+!gsutil ls -p $project_id
 ```
 
 ## Get bucket metadata
 
-The next cell shows how get information on metadata of your Cloud Storage buckets.
+The next cell shows how to get information on metadata of your Cloud Storage buckets.
 
 To learn more about specific bucket properties, see [Bucket Locations](https://cloud.google.com/storage/docs/locations) and [Storage Classes](https://cloud.google.com/storage/docs/storage-classes).
 
@@ -111,7 +117,7 @@ The following command deletes all objects in the bucket before deleting the buck
 
 ## Next Steps
 
-Read more about Google Cloud Storage in the documentation:
+Read more about Cloud Storage in the documentation:
 + [Storage Key Terms](https://cloud.google.com/storage/docs/key-terms)
 + [How-To Guides](https://cloud.google.com/storage/docs/how-to)
 + [Pricing](https://cloud.google.com/storage/pricing)

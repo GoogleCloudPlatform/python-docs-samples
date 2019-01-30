@@ -1,7 +1,7 @@
 
 # Storage Commands
 
-The [Google Cloud SDK](https://cloud-dot-devsite.googleplex.com/sdk/docs/) provides a set of commands for working with data stored in Google Cloud Storage. This notebook introduces several `gsutil` commands for interacting with Cloud Storage. Note that shell commands in a notebook must be prepended with a `!`.
+The [Google Cloud SDK](https://cloud-dot-devsite.googleplex.com/sdk/docs/) provides a set of commands for working with data stored in Cloud Storage. This notebook introduces several `gsutil` commands for interacting with Cloud Storage. Note that shell commands in a notebook must be prepended with a `!`.
 
 ## List available commands
 
@@ -49,7 +49,7 @@ The `gsutil` command can be used to perform a wide array of tasks. Run the `help
       version         Print version info about gsutil
       versioning      Enable or suspend versioning for one or more buckets
       web             Set a main page and/or error page for one or more buckets
-    
+
     Additional help topics:
       acls            Working With Access Control Lists
       anon            Accessing Public Data Without Credentials
@@ -71,7 +71,7 @@ The `gsutil` command can be used to perform a wide array of tasks. Run the `help
       throttling      Throttling gsutil
       versions        Object Versioning and Concurrency Control
       wildcards       Wildcard Names
-    
+
     Use gsutil help <command or="" topic=""/> for detailed help.
 
 ## Create a storage bucket
@@ -88,7 +88,7 @@ For more information about naming buckets, see [Bucket name requirements](https:
 bucket_name = 'your-new-bucket'
 ```
 
-NOTE: In the examples below, the variables are referenced in the command using `$` and `{}`. You may replace the interpolated variables with literal values if they are constant instead of creating and using variables.
+NOTE: In the examples below, the `bucket_name`  and `project_id` variables are referenced in the commands using `{}` and `$`. If you want to avoid creating and using variables, replace these interpolated variables with literal values and remove the `{}` and `$` characters.
 
 Next, create the new bucket with the `gsutil mb` command:
 
@@ -106,19 +106,21 @@ Replace 'your-project-id' in the cell below with your project ID and run the cel
 
 
 ```python
-!gsutil ls -p your-project-id
+# Replace the string below with your project ID
+project_id = 'your-project-id'
 ```
 
-    gs://your-project-id/
-    gs://my-new-bucket-1548180688764/
-    gs://my-new-bucket-1548208228513/
-    gs://test-storage-bucket-1548209987490/
+
+```python
+!gsutil ls -p $project_id
+```
+
     gs://your-new-bucket/
 
 
 ## Get bucket metadata
 
-The next cell shows how get information on metadata of your Cloud Storage buckets.
+The next cell shows how to get information on metadata of your Cloud Storage buckets.
 
 To learn more about specific bucket properties, see [Bucket Locations](https://cloud.google.com/storage/docs/locations) and [Storage Classes](https://cloud.google.com/storage/docs/storage-classes).
 
@@ -138,10 +140,10 @@ To learn more about specific bucket properties, see [Bucket Locations](https://c
     	Requester Pays enabled:		None
     	Labels:				None
     	Default KMS key:		None
-    	Time created:			Tue, 29 Jan 2019 22:44:49 GMT
-    	Time updated:			Tue, 29 Jan 2019 22:44:49 GMT
+    	Time created:			Wed, 30 Jan 2019 23:23:59 GMT
+    	Time updated:			Wed, 30 Jan 2019 23:23:59 GMT
     	Metageneration:			1
-    	ACL:				
+    	ACL:
     	  [
     	    {
     	      "entity": "project-owners-129776587519",
@@ -168,7 +170,7 @@ To learn more about specific bucket properties, see [Bucket Locations](https://c
     	      "role": "READER"
     	    }
     	  ]
-    	Default ACL:			
+    	Default ACL:
     	  [
     	    {
     	      "entity": "project-owners-129776587519",
@@ -211,8 +213,8 @@ For more information, including how to rename an object, see the [Object name re
 ```
 
     Copying file://resources/us-states.txt [Content-Type=text/plain]...
-    
-    Operation completed over 1 objects/637.0 B.                                      
+
+    Operation completed over 1 objects/637.0 B.
 
 
 ## List blobs in a bucket
@@ -235,16 +237,16 @@ See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metada
 ```
 
     gs://your-new-bucket/us-states.txt:
-        Creation time:          Tue, 29 Jan 2019 22:44:55 GMT
-        Update time:            Tue, 29 Jan 2019 22:44:55 GMT
+        Creation time:          Wed, 30 Jan 2019 23:24:06 GMT
+        Update time:            Wed, 30 Jan 2019 23:24:06 GMT
         Storage class:          STANDARD
         Content-Language:       en
         Content-Length:         637
         Content-Type:           text/plain
         Hash (crc32c):          AmYMRQ==
         Hash (md5):             NmfddAHdCzyvAHCifeGtwg==
-        ETag:                   CJ3Y0taIlOACEAE=
-        Generation:             1548801895869469
+        ETag:                   CLCthKbTluACEAE=
+        Generation:             1548890646058672
         Metageneration:         1
         ACL:                    [
       {
@@ -288,8 +290,8 @@ See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metada
 ```
 
     Copying gs://your-new-bucket/us-states.txt...
-    
-    Operation completed over 1 objects/637.0 B.                                      
+
+    Operation completed over 1 objects/637.0 B.
 
 
 ## Cleaning up
@@ -302,8 +304,8 @@ See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metada
 ```
 
     Removing gs://your-new-bucket/us-states.txt...
-    
-    Operation completed over 1 objects.                                              
+
+    Operation completed over 1 objects.
 
 
 ### Delete a bucket
@@ -320,7 +322,7 @@ The following command deletes all objects in the bucket before deleting the buck
 
 ## Next Steps
 
-Read more about Google Cloud Storage in the documentation:
+Read more about Cloud Storage in the documentation:
 + [Storage Key Terms](https://cloud.google.com/storage/docs/key-terms)
 + [How-To Guides](https://cloud.google.com/storage/docs/how-to)
 + [Pricing](https://cloud.google.com/storage/pricing)
