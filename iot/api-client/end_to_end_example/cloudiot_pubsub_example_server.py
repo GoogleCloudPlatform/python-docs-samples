@@ -152,7 +152,7 @@ class Server(object):
             subscribed topic.
             """
             try:
-                data = json.loads(message.data)
+                data = json.loads(message.data.decode('utf-8'))
             except ValueError as e:
                 print('Loading Payload ({}) threw an Exception: {}.'.format(
                     message.data, e))
