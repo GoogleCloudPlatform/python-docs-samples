@@ -55,6 +55,7 @@ def generate_jwt(sa_keyfile,
     # sign with keyfile
     signer = google.auth.crypt.RSASigner.from_service_account_file(sa_keyfile)
     jwt = google.auth.jwt.encode(signer, payload)
+
     return jwt
 # [END endpoints_generate_jwt_sa]
 
