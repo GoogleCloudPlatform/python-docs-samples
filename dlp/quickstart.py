@@ -59,7 +59,7 @@ def quickstart(project_id):
     }
 
     # Convert the project id into a full resource id.
-    parent = dlp_client.project_path(project)
+    parent = dlp_client.project_path(project_id)
 
     # Call the API.
     response = dlp_client.inspect_content(parent, inspect_config, item)
