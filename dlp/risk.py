@@ -484,7 +484,7 @@ def l_diversity_analysis(project, table_project_id, dataset_id, table_id,
     subscriber = google.cloud.pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_id)
-    subscription = subscriber.subscribe(subscription_path)
+    subscription = subscriber.subscribe(subscription_path, callback)
 
     try:
         subscription.result(timeout=timeout)
@@ -619,7 +619,7 @@ def k_map_estimate_analysis(project, table_project_id, dataset_id, table_id,
     subscriber = google.cloud.pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_id)
-    subscription = subscriber.subscribe(subscription_path)
+    subscription = subscriber.subscribe(subscription_path, callback)
 
     try:
         subscription.result(timeout=timeout)
