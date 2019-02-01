@@ -46,13 +46,12 @@ def execute(cmd, cwd=None, capture_output=False, env=None, raise_errors=True):
     process = subprocess.Popen(cmd, cwd=cwd, env=env, stdout=stdout)
     output = process.communicate()[0]
     returncode = process.returncode
-    if returncode != 0:
+    if returncode:
         # Error
         if raise_errors:
             raise subprocess.CalledProcessError(returncode, cmd)
         else:
-            logging.info('Command returned error status {returncode}'.format(
-                         returncode=returncode))
+            logging.info('Command returned error status %s', returncode)
     if output:
         logging.info(output)
     return returncode, output
@@ -62,8 +61,7 @@ def execute(cmd, cwd=None, capture_output=False, env=None, raise_errors=True):
 # [START create_key]
 def create_ssh_key(oslogin, account, private_key_file=None, expire_time=300):
     """Generate an SSH key pair and apply it to the specified account."""
-    private_key_file = private_key_file or '/tmp/key-{uuid}'.format(
-                                            uuid=uuid.uuid4())
+    private_key_file = private_key_file or '/tmp/key-' + uuid.uuid4()
     execute(['ssh-keygen', '-t', 'rsa', '-N', '', '-f', private_key_file])
 
     with open(private_key_file + '.pub', 'r') as original:
