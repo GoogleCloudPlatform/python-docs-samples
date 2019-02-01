@@ -100,21 +100,21 @@ def test_logos(capsys):
         'resources/logos.png')
     detect.detect_logos(file_name)
     out, _ = capsys.readouterr()
-    assert 'Google' in out
+    assert 'google' in out
 
 
 def test_logos_uri(capsys):
     file_name = 'gs://{}/vision/logos.png'.format(BUCKET)
     detect.detect_logos_uri(file_name)
     out, _ = capsys.readouterr()
-    assert 'Google' in out
+    assert 'google' in out
 
 
 def test_logos_http(capsys):
     uri = 'https://storage-download.googleapis.com/{}/vision/logos.png'
     detect.detect_logos_uri(uri.format(BUCKET))
     out, _ = capsys.readouterr()
-    assert 'Google' in out
+    assert 'google' in out
 
 
 def test_safe_search(capsys):
@@ -196,7 +196,6 @@ def test_detect_web(capsys):
         'resources/landmark.jpg')
     detect.detect_web(file_name)
     out, _ = capsys.readouterr()
-    assert 'Description: Palace of Fine Arts Theatre' in out
     assert 'Best guess label: palace of fine arts' in out
 
 
@@ -204,7 +203,6 @@ def test_detect_web_uri(capsys):
     file_name = 'gs://{}/vision/landmark.jpg'.format(BUCKET)
     detect.detect_web_uri(file_name)
     out, _ = capsys.readouterr()
-    assert 'Description: Palace of Fine Arts Theatre' in out
     assert 'Best guess label: palace of fine arts' in out
 
 
@@ -212,7 +210,6 @@ def test_detect_web_http(capsys):
     uri = 'https://storage-download.googleapis.com/{}/vision/landmark.jpg'
     detect.detect_web_uri(uri.format(BUCKET))
     out, _ = capsys.readouterr()
-    assert 'Description: Palace of Fine Arts Theatre' in out
     assert 'Best guess label: palace of fine arts' in out
 
 
