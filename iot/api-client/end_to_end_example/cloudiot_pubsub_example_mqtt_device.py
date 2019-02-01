@@ -122,7 +122,7 @@ class Device(object):
 
     def on_message(self, unused_client, unused_userdata, message):
         """Callback when the device receives a message on a subscription."""
-        payload = message.payload
+        payload = message.payload.decode('utf-8')
         print('Received message \'{}\' on topic \'{}\' with Qos {}'.format(
             payload, message.topic, str(message.qos)))
 
