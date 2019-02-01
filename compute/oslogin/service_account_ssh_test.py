@@ -20,17 +20,17 @@ import googleapiclient.discovery
 from google.oauth2 import service_account
 from service_account_ssh import main
 
-# The service account that runs this test must have the following roles:
-#
-# - roles/compute.instanceAdmin.v1
-# - roles/compute.securityAdmin
-# - roles/iam.serviceAccountAdmin
-# - roles/iam.serviceAccountKeyAdmin
-# - roles/iam.serviceAccountUser
-#
-# The Project Editor legacy role is not sufficient because it does not grant
-# several necessary permissions.
+'''
+The service account that runs this test must have the following roles:
+- roles/compute.instanceAdmin.v1
+- roles/compute.securityAdmin
+- roles/iam.serviceAccountAdmin
+- roles/iam.serviceAccountKeyAdmin
+- roles/iam.serviceAccountUser
 
+The Project Editor legacy role is not sufficient because it does not grant
+several necessary permissions.
+'''
 
 def test_main(capsys):
 
@@ -39,7 +39,7 @@ def test_main(capsys):
     project = os.environ['GCLOUD_PROJECT']
     test_id = 'oslogin-test-{id}'.format(id=str(random.randint(0, 1000000)))
     zone = 'us-east1-d'
-    image_family = "projects/debian-cloud/global/images/family/debian-9"
+    image_family = 'projects/debian-cloud/global/images/family/debian-9'
     machine_type = 'zones/{zone}/machineTypes/f1-micro'.format(zone=zone)
     account_email = '{test_id}@{project}.iam.gserviceaccount.com'.format(
                                          test_id=test_id, project=project)
@@ -54,15 +54,15 @@ def test_main(capsys):
     # Create the necessary test resources and retrieve the service account
     # email and account key.
     try:
-        print("Creating test resources.")
+        print('Creating test resources.')
         service_account_key = setup_resources(compute, iam, project, test_id,
                                               zone, image_family, machine_type,
                                               account_email
                                               )
     except Exception:
-        print("Cleaning up partially created test resources.")
+        print('Cleaning up partially created test resources.')
         cleanup_resources(compute, iam, project, test_id, zone, account_email)
-        raise Exception("Could not set up the necessary test resources.")
+        raise Exception('Could not set up the necessary test resources.')
 
     # Get the target host name for the instance
     hostname = compute.instances().get(
