@@ -331,6 +331,8 @@ def ancestor_query(client):
     client.put(task)
 
     # [START datastore_ancestor_query]
+    # Query filters are omitted in this example as any ancestor queries with a
+    # non-key filter require a composite index.
     ancestor = client.key('TaskList', 'default')
     query = client.query(kind='Task', ancestor=ancestor)
     # [END datastore_ancestor_query]
@@ -407,6 +409,7 @@ def key_filter(client):
     # [START datastore_key_filter]
     query = client.query(kind='Task')
     first_key = client.key('Task', 'first_task')
+    # key_filter(key, op) translates to add_filter('__key__', op, key).
     query.key_filter(first_key, '>')
     # [END datastore_key_filter]
 

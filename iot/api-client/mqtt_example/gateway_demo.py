@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 
@@ -15,15 +15,15 @@
 # [START iot_gateway_demo]
 import csv
 import datetime
-import io
 import logging
 import os
+import sys
 import time
 
-from google.cloud import pubsub
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
 
-# import manager  # TODO(class) when feature exits beta, remove borrowed defs
-import gateway
+import cloudiot_mqtt_example
+import manager
 
 logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.CRITICAL)
 
@@ -65,98 +65,6 @@ jwt_exp_time = 20
 listen_time = 30
 
 
-def create_iot_topic(project, topic_name):
-    """Creates a PubSub Topic and grants access to Cloud IoT Core."""
-    pubsub_client = pubsub.PublisherClient()
-    topic_path = pubsub_client.topic_path(project, topic_name)
-
-    topic = pubsub_client.create_topic(topic_path)
-    policy = pubsub_client.get_iam_policy(topic_path)
-
-    policy.bindings.add(
-        role='roles/pubsub.publisher',
-        members=['serviceAccount:cloud-iot@system.gserviceaccount.com'])
-
-    pubsub_client.set_iam_policy(topic_path, policy)
-
-    return topic
-
-
-def create_registry(
-        service_account_json, project_id, cloud_region, pubsub_topic,
-        registry_id):
-    """ Creates a registry and returns the result. Returns an empty result if
-    the registry already exists."""
-    client = gateway.get_client(service_account_json)
-    registry_parent = 'projects/{}/locations/{}'.format(
-            project_id,
-            cloud_region)
-    body = {
-        'eventNotificationConfigs': [{
-            'pubsubTopicName': pubsub_topic
-        }],
-        'id': registry_id
-    }
-    request = client.projects().locations().registries().create(
-        parent=registry_parent, body=body)
-
-    response = request.execute()
-    print('Created registry')
-    return response
-
-
-def delete_registry(
-       service_account_json, project_id, cloud_region, registry_id):
-    """Deletes the specified registry."""
-    print('Delete registry')
-    client = gateway.get_client(service_account_json)
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
-
-    registries = client.projects().locations().registries()
-    return registries.delete(name=registry_name).execute()
-
-
-def create_device(
-        service_account_json, project_id, cloud_region, registry_id,
-        device_id, certificate_file):
-    """Create a new device without authentication."""
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
-
-    with io.open(certificate_file) as f:
-        certificate = f.read()
-
-    client = gateway.get_client(service_account_json)
-    device_template = {
-        'id': device_id,
-        'credentials': [{
-            'publicKey': {
-                'format': 'RSA_X509_PEM',
-                'key': certificate
-            }
-        }]
-    }
-
-    devices = client.projects().locations().registries().devices()
-    return devices.create(parent=registry_name, body=device_template).execute()
-
-
-def delete_device(
-        service_account_json, project_id, cloud_region, registry_id,
-        device_id):
-    """Delete the device with the given id."""
-    print('Delete device')
-    client = gateway.get_client(service_account_json)
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
-
-    device_name = '{}/devices/{}'.format(registry_name, device_id)
-
-    devices = client.projects().locations().registries().devices()
-    return devices.delete(name=device_name).execute()
-
-
 if __name__ == '__main__':
     print("Running demo")
 
@@ -165,28 +73,28 @@ if __name__ == '__main__':
 
     # [START iot_gateway_demo_create_registry]
     print('Creating registry: {}'.format(registry_id))
-    create_registry(
+    manager.create_registry(
             service_account_json, project_id, cloud_region, pubsub_topic,
             registry_id)
     # [END iot_gateway_demo_create_registry]
 
     # [START iot_gateway_demo_create_gateway]
     print('Creating gateway: {}'.format(gateway_id))
-    gateway.create_gateway(
+    manager.create_gateway(
             service_account_json, project_id, cloud_region, registry_id,
             None, gateway_id, rsa_cert_path, 'RS256')
     # [END iot_gateway_demo_create_gateway]
 
     # [START iot_gateway_demo_create_bound_device]
     print('Creating device to bind: {}'.format(device_id))
-    gateway.create_device(
+    manager.create_device(
             service_account_json, project_id, cloud_region, registry_id,
             device_id)
     # [END iot_gateway_demo_create_bound_device]
 
     # [START iot_gateway_demo_bind_device]
     print('Binding device')
-    gateway.bind_device_to_gateway(
+    manager.bind_device_to_gateway(
             service_account_json, project_id, cloud_region, registry_id,
             device_id, gateway_id)
     # [END iot_gateway_demo_bind_device]
@@ -216,7 +124,7 @@ if __name__ == '__main__':
 
         client.on_message = log_on_message
 
-    gateway.listen_for_config_and_error_messages(
+    cloudiot_mqtt_example.listen_for_messages(
                 service_account_json, project_id, cloud_region, registry_id,
                 device_id, gateway_id, num_messages, rsa_private_path, 'RS256',
                 ca_cert_path, mqtt_bridge_hostname, mqtt_bridge_port,
@@ -226,7 +134,7 @@ if __name__ == '__main__':
     # [START iot_gateway_demo_publish]
     print('Publishing messages demo')
     print('Publishing: {} messages'.format(num_messages))
-    gateway.send_data_from_bound_device(
+    cloudiot_mqtt_example.send_data_from_bound_device(
                 service_account_json, project_id, cloud_region, registry_id,
                 device_id, gateway_id, num_messages, rsa_private_path, 'RS256',
                 ca_cert_path, mqtt_bridge_hostname, mqtt_bridge_port,
@@ -243,16 +151,16 @@ if __name__ == '__main__':
 
     # [START iot_gateway_demo_cleanup]
     # Clean up
-    gateway.unbind_device_from_gateway(
+    manager.unbind_device_from_gateway(
             service_account_json, project_id, cloud_region, registry_id,
             device_id, gateway_id)
-    delete_device(
+    manager.delete_device(
             service_account_json, project_id, cloud_region, registry_id,
             device_id)
-    delete_device(
+    manager.delete_device(
             service_account_json, project_id, cloud_region, registry_id,
             gateway_id)
-    delete_registry(
+    manager.delete_registry(
             service_account_json, project_id, cloud_region, registry_id)
     # [END iot_gateway_demo_cleanup]
 
