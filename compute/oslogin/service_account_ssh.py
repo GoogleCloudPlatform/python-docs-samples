@@ -102,18 +102,18 @@ def run_ssh(cmd, private_key_file, username, hostname):
 
 
 # [START main]
-def main(cmd, project, instance, zone):
+def main(cmd, project, instance, zone, oslogin=None,
+         account=None, hostname=None):
     """Run a command on a remote system."""
 
-    # Get the service account name from instance metadata values.
-    response = requests.get(SERVICE_ACCOUNT_METADATA_URL, headers=HEADERS)
-    account = 'users/' + response.text
-
     # Create the OS Login API object.
-    oslogin = googleapiclient.discovery.build('oslogin', 'v1')
+    oslogin = oslogin or googleapiclient.discovery.build('oslogin', 'v1')
 
-    # Create the SSH key pair and return the private key file path as a
-    # variable.
+    # Identify the service account ID if it is not already provided.
+    account = account or 'users/' + requests.get(SERVICE_ACCOUNT_METADATA_URL,
+                                                 headers=HEADERS).text
+
+    # Create a new SSH key pair and associate it with the service account.
     private_key_file = create_ssh_key(oslogin, account)
 
     # Using the OS Login API, get the POSIX user name from the login profile
@@ -124,7 +124,7 @@ def main(cmd, project, instance, zone):
     # Create the hostname of the target instance using the instance name,
     # the zone where the instance is located, and the project that owns the
     # instance.
-    hostname = '{instance}.{zone}.c.{project}.internal'.format(
+    hostname = hostname or '{instance}.{zone}.c.{project}.internal'.format(
         instance=instance, zone=zone, project=project)
 
     # Run a command on the remote instance over SSH.
@@ -158,7 +158,6 @@ if __name__ == '__main__':
     parser.add_argument(
         '--instance', default='my-instance-name',
         help='The target instance for the ssh command.')
-
     args = parser.parse_args()
 
     main(args.cmd, args.project, args.instance, args.zone)
