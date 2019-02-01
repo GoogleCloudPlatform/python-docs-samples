@@ -52,7 +52,7 @@ if __name__ == '__main__':
     # Sets the region to "global" if it's not provided
     # Note: sub-regions (e.g.: us-central1-a/b) are currently not supported
     parser.add_argument(
-        '--region', default='global', help='Region to create clusters in')
+        '--region', default='global', help='Region to list clusters')
 
     args = parser.parse_args()
     main(args.project_id, args.region)
