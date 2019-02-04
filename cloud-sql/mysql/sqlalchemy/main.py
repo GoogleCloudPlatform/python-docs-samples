@@ -139,7 +139,7 @@ def save_vote():
             status=400
         )
 
-    # [START cloud_sql_mysql_sqlalchemy_connect]
+    # [START cloud_sql_mysql_sqlalchemy_connection]
     # Preparing a statement before hand can help protect against injections.
     stmt = sqlalchemy.text(
         "INSERT INTO votes (time_cast, candidate)"
@@ -161,7 +161,7 @@ def save_vote():
                      "application logs for more details."
         )
         # [END_EXCLUDE]
-    # [END cloud_sql_mysql_sqlalchemy_connect]
+    # [END cloud_sql_mysql_sqlalchemy_connection]
 
     return Response(
         status=200,
