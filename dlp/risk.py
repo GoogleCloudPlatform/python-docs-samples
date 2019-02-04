@@ -68,6 +68,7 @@ def numerical_risk_analysis(project, table_project_id, dataset_id, table_id,
                         print('Value at {}% quantile: {}'.format(
                               percent, value))
                         prev_value = value
+                subscription.cancel()
             else:
                 # This is not the message we're looking for.
                 message.drop()
@@ -109,15 +110,15 @@ def numerical_risk_analysis(project, table_project_id, dataset_id, table_id,
         'actions': actions
     }
 
-    # Call API to start risk analysis job
-    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
-
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
     subscriber = google.cloud.pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_id)
     subscription = subscriber.subscribe(subscription_path, callback)
+
+    # Call API to start risk analysis job
+    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     try:
         subscription.result(timeout=timeout)
@@ -183,6 +184,7 @@ def categorical_risk_analysis(project, table_project_id, dataset_id, table_id,
                     for value in bucket.bucket_values:
                         print('   Value {} occurs {} time(s)'.format(
                             value.value.integer_value, value.count))
+                subscription.cancel()
             else:
                 # This is not the message we're looking for.
                 message.drop()
@@ -224,15 +226,15 @@ def categorical_risk_analysis(project, table_project_id, dataset_id, table_id,
         'actions': actions
     }
 
-    # Call API to start risk analysis job
-    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
-
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
     subscriber = google.cloud.pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_id)
     subscription = subscriber.subscribe(subscription_path, callback)
+
+    # Call API to start risk analysis job
+    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     try:
         subscription.result(timeout=timeout)
@@ -302,6 +304,7 @@ def k_anonymity_analysis(project, table_project_id, dataset_id, table_id,
                             ))
                             print('   Class size: {}'.format(
                                 value_bucket.equivalence_class_size))
+                subscription.cancel()
             else:
                 # This is not the message we're looking for.
                 message.drop()
@@ -346,8 +349,6 @@ def k_anonymity_analysis(project, table_project_id, dataset_id, table_id,
         'source_table': source_table,
         'actions': actions
     }
-    # Call API to start risk analysis job
-    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
@@ -355,6 +356,9 @@ def k_anonymity_analysis(project, table_project_id, dataset_id, table_id,
     subscription_path = subscriber.subscription_path(
         project, subscription_id)
     subscription = subscriber.subscribe(subscription_path, callback)
+
+    # Call API to start risk analysis job
+    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     try:
         subscription.result(timeout=timeout)
@@ -428,6 +432,7 @@ def l_diversity_analysis(project, table_project_id, dataset_id, table_id,
                         for value in value_bucket.top_sensitive_values:
                             print(('   Sensitive value {} occurs {} time(s)'
                                    .format(value.value, value.count)))
+                subscription.cancel()
             else:
                 # This is not the message we're looking for.
                 message.drop()
@@ -476,15 +481,15 @@ def l_diversity_analysis(project, table_project_id, dataset_id, table_id,
         'actions': actions
     }
 
-    # Call API to start risk analysis job
-    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
-
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
     subscriber = google.cloud.pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_id)
-    subscription = subscriber.subscribe(subscription_path)
+    subscription = subscriber.subscribe(subscription_path, callback)
+
+    # Call API to start risk analysis job
+    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     try:
         subscription.result(timeout=timeout)
@@ -560,6 +565,7 @@ def k_map_estimate_analysis(project, table_project_id, dataset_id, table_id,
                             map(get_values, value_bucket.quasi_ids_values)))
                         print('   Estimated k-map anonymity: {}'.format(
                             value_bucket.estimated_anonymity))
+                subscription.cancel()
             else:
                 # This is not the message we're looking for.
                 message.drop()
@@ -611,15 +617,15 @@ def k_map_estimate_analysis(project, table_project_id, dataset_id, table_id,
         'actions': actions
     }
 
-    # Call API to start risk analysis job
-    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
-
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
     subscriber = google.cloud.pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(
         project, subscription_id)
-    subscription = subscriber.subscribe(subscription_path)
+    subscription = subscriber.subscribe(subscription_path, callback)
+
+    # Call API to start risk analysis job
+    operation = dlp.create_dlp_job(parent, risk_job=risk_job)
 
     try:
         subscription.result(timeout=timeout)
