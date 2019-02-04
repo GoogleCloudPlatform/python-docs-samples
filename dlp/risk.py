@@ -487,9 +487,12 @@ def l_diversity_analysis(project, table_project_id, dataset_id, table_id,
     subscription_path = subscriber.subscription_path(
         project, subscription_id)
     subscription = subscriber.subscribe(subscription_path, callback)
+<<<<<<< HEAD
 
     # Call API to start risk analysis job
     operation = dlp.create_dlp_job(parent, risk_job=risk_job)
+=======
+>>>>>>> 7138a549e46a45cdef6c970404aa5ee72c2ba491
 
     try:
         subscription.result(timeout=timeout)
@@ -623,9 +626,12 @@ def k_map_estimate_analysis(project, table_project_id, dataset_id, table_id,
     subscription_path = subscriber.subscription_path(
         project, subscription_id)
     subscription = subscriber.subscribe(subscription_path, callback)
+<<<<<<< HEAD
 
     # Call API to start risk analysis job
     operation = dlp.create_dlp_job(parent, risk_job=risk_job)
+=======
+>>>>>>> 7138a549e46a45cdef6c970404aa5ee72c2ba491
 
     try:
         subscription.result(timeout=timeout)
