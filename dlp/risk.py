@@ -68,7 +68,7 @@ def numerical_risk_analysis(project, table_project_id, dataset_id, table_id,
                         print('Value at {}% quantile: {}'.format(
                               percent, value))
                         prev_value = value
-                subscription.cancel()
+                subscription.set_result(None)
             else:
                 # This is not the message we're looking for.
                 message.drop()
@@ -126,8 +126,6 @@ def numerical_risk_analysis(project, table_project_id, dataset_id, table_id,
         print('No event received before the timeout. Please verify that the '
               'subscription provided is subscribed to the topic provided.')
         subscription.close()
-
-    subscription.cancel()
 # [END dlp_numerical_stats]
 
 
@@ -184,7 +182,7 @@ def categorical_risk_analysis(project, table_project_id, dataset_id, table_id,
                     for value in bucket.bucket_values:
                         print('   Value {} occurs {} time(s)'.format(
                             value.value.integer_value, value.count))
-                subscription.cancel()
+                subscription.set_result(None)
             else:
                 # This is not the message we're looking for.
                 message.drop()
@@ -242,8 +240,6 @@ def categorical_risk_analysis(project, table_project_id, dataset_id, table_id,
         print('No event received before the timeout. Please verify that the '
               'subscription provided is subscribed to the topic provided.')
         subscription.close()
-
-    subscription.cancel()
 # [END dlp_categorical_stats]
 
 
@@ -304,7 +300,7 @@ def k_anonymity_analysis(project, table_project_id, dataset_id, table_id,
                             ))
                             print('   Class size: {}'.format(
                                 value_bucket.equivalence_class_size))
-                subscription.cancel()
+                subscription.set_result(None)
             else:
                 # This is not the message we're looking for.
                 message.drop()
@@ -366,8 +362,6 @@ def k_anonymity_analysis(project, table_project_id, dataset_id, table_id,
         print('No event received before the timeout. Please verify that the '
               'subscription provided is subscribed to the topic provided.')
         subscription.close()
-
-    subscription.cancel()
 # [END dlp_k_anonymity]
 
 
@@ -432,7 +426,7 @@ def l_diversity_analysis(project, table_project_id, dataset_id, table_id,
                         for value in value_bucket.top_sensitive_values:
                             print(('   Sensitive value {} occurs {} time(s)'
                                    .format(value.value, value.count)))
-                subscription.cancel()
+                subscription.set_result(None)
             else:
                 # This is not the message we're looking for.
                 message.drop()
@@ -497,8 +491,6 @@ def l_diversity_analysis(project, table_project_id, dataset_id, table_id,
         print('No event received before the timeout. Please verify that the '
               'subscription provided is subscribed to the topic provided.')
         subscription.close()
-
-    subscription.cancel()
 # [END dlp_l_diversity]
 
 
@@ -565,7 +557,7 @@ def k_map_estimate_analysis(project, table_project_id, dataset_id, table_id,
                             map(get_values, value_bucket.quasi_ids_values)))
                         print('   Estimated k-map anonymity: {}'.format(
                             value_bucket.estimated_anonymity))
-                subscription.cancel()
+                subscription.set_result(None)
             else:
                 # This is not the message we're looking for.
                 message.drop()
@@ -633,8 +625,6 @@ def k_map_estimate_analysis(project, table_project_id, dataset_id, table_id,
         print('No event received before the timeout. Please verify that the '
               'subscription provided is subscribed to the topic provided.')
         subscription.close()
-
-    subscription.cancel()
 # [END dlp_k_map]
 
 
