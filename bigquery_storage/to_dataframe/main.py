@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
-
 
 def main(dataset_id="query_results"):
     print("Creating clients.")
@@ -49,9 +47,9 @@ def create_clients():
 
 
 def table_to_dataframe(bqclient, bqstorageclient):
+    # [START bigquerystorage_pandas_read_table]
     from google.cloud import bigquery
 
-    # [START bigquerystorage_pandas_read_table]
     # Download a table.
     table = bigquery.TableReference.from_string(
         "bigquery-public-data.utility_us.country_code_iso"
@@ -69,10 +67,10 @@ def table_to_dataframe(bqclient, bqstorageclient):
 
 
 def query_to_dataframe(bqclient, bqstorageclient, dataset_id):
-    from google.cloud import bigquery
-
     # [START bigquerystorage_pandas_read_query_results]
     import uuid
+
+    from google.cloud import bigquery
 
     # Due to a known issue in the BigQuery Storage API (TODO: link to
     # public issue), small query result sets cannot be downloaded. To
@@ -88,15 +86,15 @@ def query_to_dataframe(bqclient, bqstorageclient, dataset_id):
 
     # Download query results.
     query_string = """
-SELECT
-  CONCAT(
-    'https://stackoverflow.com/questions/',
-    CAST(id as STRING)) as url,
-  view_count
-FROM `bigquery-public-data.stackoverflow.posts_questions`
-WHERE tags like '%google-bigquery%'
-ORDER BY view_count DESC
-"""
+    SELECT
+    CONCAT(
+        'https://stackoverflow.com/questions/',
+        CAST(id as STRING)) as url,
+    view_count
+    FROM `bigquery-public-data.stackoverflow.posts_questions`
+    WHERE tags like '%google-bigquery%'
+    ORDER BY view_count DESC
+    """
     query_config = bigquery.QueryJobConfig(
         destination=table, write_disposition="WRITE_TRUNCATE"
     )
@@ -111,9 +109,9 @@ ORDER BY view_count DESC
 
 
 def session_to_dataframe(bqstorageclient, project_id):
+    # [START bigquerystorage_pandas_read_session]
     from google.cloud import bigquery_storage_v1beta1
 
-    # [START bigquerystorage_pandas_read_session]
     table = bigquery_storage_v1beta1.types.TableReference()
     table.project_id = "bigquery-public-data"
     table.dataset_id = "new_york_trees"
@@ -145,10 +143,3 @@ def session_to_dataframe(bqstorageclient, project_id):
     dataframe = reader.to_dataframe(session)
     print(dataframe.head())
     # [END bigquerystorage_pandas_read_session]
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("dataset_id")
-    args = parser.parse_args()
-    main(args.dataset_id)
