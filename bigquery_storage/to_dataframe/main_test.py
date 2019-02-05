@@ -12,12 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import uuid
+
+from google.cloud import bigquery
+import pytest
+
 from . import main
 
 
-def test_main(capsys):
-    main.main()
+@pytest.fixture
+def temporary_dataset():
+    client = bigquery.Client()
+    dataset_id = "bqstorage_to_dataset_{}".format(uuid.uuid4().hex)
+    dataset_ref = client.dataset(dataset_id)
+    client.create_dataset(dataset_ref)
+    yield dataset_id
+    client.delete_dataset(dataset_id, delete_contents=True)
+
+
+def test_main(capsys, temporary_dataset):
+    main.main(dataset_id=temporary_dataset)
     out, _ = capsys.readouterr()
-    assert 'country_name' in out
-    assert 'stackoverflow' in out
-    assert 'species_common_name' in out
+    assert "country_name" in out
+    assert "stackoverflow" in out
+    assert "species_common_name" in out

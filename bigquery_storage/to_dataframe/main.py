@@ -36,13 +36,14 @@ def create_clients():
     # credentials for both the BigQuery and BigQuery Storage clients, avoiding
     # unnecessary API calls to fetch duplicate authentication tokens.
     credentials, project_id = google.auth.default(
-        scopes=['https://www.googleapis.com/auth/cloud-platform']
+        scopes=["https://www.googleapis.com/auth/cloud-platform"]
     )
 
     # Make clients.
     bqclient = bigquery.Client(credentials=credentials, project=project_id)
     bqstorageclient = bigquery_storage_v1beta1.BigQueryStorageClient(
-        credentials=credentials)
+        credentials=credentials
+    )
     # [END bigquerystorage_pandas_create_client]
     return bqclient, bqstorageclient, project_id
 
@@ -60,7 +61,7 @@ def table_to_dataframe(bqclient, bqstorageclient):
         selected_fields=[
             bigquery.SchemaField("country_name", "STRING"),
             bigquery.SchemaField("fips_code", "STRING"),
-        ]
+        ],
     )
     dataframe = rows.to_dataframe(bqstorageclient)
     print(dataframe.head())
@@ -97,8 +98,7 @@ WHERE tags like '%google-bigquery%'
 ORDER BY view_count DESC
 """
     query_config = bigquery.QueryJobConfig(
-        destination=table,
-        write_disposition="WRITE_TRUNCATE"
+        destination=table, write_disposition="WRITE_TRUNCATE"
     )
 
     dataframe = (
@@ -127,9 +127,7 @@ def session_to_dataframe(bqstorageclient, project_id):
 
     parent = "projects/{}".format(project_id)
     session = bqstorageclient.create_read_session(
-        table,
-        parent,
-        read_options=read_options
+        table, parent, read_options=read_options
     )
 
     # Don't try to read from an empty table.
@@ -151,6 +149,6 @@ def session_to_dataframe(bqstorageclient, project_id):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('dataset_id')
+    parser.add_argument("dataset_id")
     args = parser.parse_args()
     main(args.dataset_id)
