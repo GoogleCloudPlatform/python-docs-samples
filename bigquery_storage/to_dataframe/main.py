@@ -12,8 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import argparse
+
 
 def main(dataset_id="query_results"):
+    print("Creating clients.")
+    bqclient, bqstorageclient, project_id = create_clients()
+    print("\n\nReading a table:")
+    table_to_dataframe(bqclient, bqstorageclient)
+    print("\n\nReading query results:")
+    query_to_dataframe(bqclient, bqstorageclient, dataset_id)
+    print("\n\nReading a table, using the BQ Storage API directly:")
+    session_to_dataframe(bqstorageclient, project_id)
+
+
+def create_clients():
     # [START bigquerystorage_pandas_create_client]
     import google.auth
     from google.cloud import bigquery
@@ -31,20 +44,47 @@ def main(dataset_id="query_results"):
     bqstorageclient = bigquery_storage_v1beta1.BigQueryStorageClient(
         credentials=credentials)
     # [END bigquerystorage_pandas_create_client]
+    return bqclient, bqstorageclient, project_id
+
+
+def table_to_dataframe(bqclient, bqstorageclient):
+    from google.cloud import bigquery
 
     # [START bigquerystorage_pandas_read_table]
     # Download a table.
-    table = bqclient.get_table(
+    table = bigquery.TableReference.from_string(
         "bigquery-public-data.utility_us.country_code_iso"
     )
-    rows = bqclient.list_rows(table)
+    rows = bqclient.list_rows(
+        table,
+        selected_fields=[
+            bigquery.SchemaField("country_name", "STRING"),
+            bigquery.SchemaField("fips_code", "STRING"),
+        ]
+    )
     dataframe = rows.to_dataframe(bqstorageclient)
     print(dataframe.head())
     # [END bigquerystorage_pandas_read_table]
 
-    dataset = bqclient.dataset(dataset_id)
+
+def query_to_dataframe(bqclient, bqstorageclient, dataset_id):
+    from google.cloud import bigquery
 
     # [START bigquerystorage_pandas_read_query_results]
+    import uuid
+
+    # Due to a known issue in the BigQuery Storage API (TODO: link to
+    # public issue), small query result sets cannot be downloaded. To
+    # workaround this issue, write results to a destination table.
+
+    # TODO: Set dataset_id to a dataset that will store temporary query
+    #       results. Set the default table expiration time to ensure data is
+    #       deleted after the results have been downloaded.
+    # dataset_id = "temporary_dataset_for_query_results"
+    dataset = bqclient.dataset(dataset_id)
+    table_id = "queryresults_" + uuid.uuid4().hex
+    table = dataset.table(table_id)
+
     # Download query results.
     query_string = """
 SELECT
@@ -57,10 +97,7 @@ WHERE tags like '%google-bigquery%'
 ORDER BY view_count DESC
 """
     query_config = bigquery.QueryJobConfig(
-        # Due to a known issue in the BigQuery Storage API (TODO: link to
-        # public issue), small result sets cannot be downloaded. To workaround
-        # this issue, write your results to a destination table.
-        destination=dataset.table('query_results_table'),
+        destination=table,
         write_disposition="WRITE_TRUNCATE"
     )
 
@@ -72,14 +109,28 @@ ORDER BY view_count DESC
     print(dataframe.head())
     # [END bigquerystorage_pandas_read_query_results]
 
+
+def session_to_dataframe(bqstorageclient, project_id):
+    from google.cloud import bigquery_storage_v1beta1
+
     # [START bigquerystorage_pandas_read_session]
     table = bigquery_storage_v1beta1.types.TableReference()
     table.project_id = "bigquery-public-data"
-    table.dataset_id = "utility_us"
-    table.table_id = "country_code_iso"
+    table.dataset_id = "new_york_trees"
+    table.table_id = "tree_species"
+
+    # Specify read options to select columns to read. If no read options are
+    # specified, the whole table is read.
+    read_options = bigquery_storage_v1beta1.types.TableReadOptions()
+    read_options.selected_fields.append("species_common_name")
+    read_options.selected_fields.append("fall_color")
 
     parent = "projects/{}".format(project_id)
-    session = bqstorageclient.create_read_session(table, parent)
+    session = bqstorageclient.create_read_session(
+        table,
+        parent,
+        read_options=read_options
+    )
 
     # Don't try to read from an empty table.
     if len(session.streams) == 0:
@@ -99,4 +150,7 @@ ORDER BY view_count DESC
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('dataset_id')
+    args = parser.parse_args()
+    main(args.dataset_id)
