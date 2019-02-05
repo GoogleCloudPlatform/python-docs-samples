@@ -12,15 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import time
+
 import pytest
 import IPython
 from IPython.testing import tools
 from IPython.terminal import interactiveshell
-import time
 
 
 @pytest.fixture(scope='session')
-def ipython():
+def ipython_interactive():
     config = tools.default_config()
     config.TerminalInteractiveShell.simple_prompt = True
     shell = interactiveshell.TerminalInteractiveShell.instance(config=config)
@@ -34,8 +35,7 @@ def to_delete():
     doomed = []
     yield doomed
     for dataset_id in doomed:
-        dataset = bigquery.Dataset.from_string(
-            '{}.{}'.format(client.project, dataset_id))
+        dataset = client.get_dataset(dataset_id)
         client.delete_dataset(dataset, delete_contents=True)
 
 
@@ -52,7 +52,7 @@ def _strip_region_tags(sample_text):
     return '\n'.join(magic_lines)
 
 
-def test_datalab_query_magic(ipython):
+def test_datalab_query_magic(ipython_interactive):
     import google.datalab.bigquery as bq
 
     ip = _set_up_ipython('google.datalab.kernel')
@@ -75,7 +75,7 @@ def test_datalab_query_magic(ipython):
     assert len(df) == 100
 
 
-def test_client_library_query_magic(ipython):
+def test_client_library_query_magic(ipython_interactive):
     import pandas
 
     ip = _set_up_ipython('google.cloud.bigquery')
@@ -97,7 +97,7 @@ def test_client_library_query_magic(ipython):
     assert len(df) == 100
 
 
-def test_datalab_query_magic_results_variable(ipython):
+def test_datalab_query_magic_results_variable(ipython_interactive):
     ip = _set_up_ipython('google.datalab.kernel')
 
     sample = """
@@ -126,7 +126,7 @@ def test_datalab_query_magic_results_variable(ipython):
     ip.user_ns.pop(variable_name)  # clean up variable
 
 
-def test_client_library_query_magic_results_variable(ipython):
+def test_client_library_query_magic_results_variable(ipython_interactive):
     ip = _set_up_ipython('google.cloud.bigquery')
 
     sample = """
@@ -146,7 +146,7 @@ def test_client_library_query_magic_results_variable(ipython):
     ip.user_ns.pop(variable_name)  # clean up variable
 
 
-def test_datalab_magic_parameterized_query(ipython):
+def test_datalab_magic_parameterized_query(ipython_interactive):
     import pandas
 
     ip = _set_up_ipython('google.datalab.kernel')
@@ -190,7 +190,7 @@ def test_datalab_magic_parameterized_query(ipython):
     assert len(df) == 10
 
 
-def test_client_library_magic_parameterized_query(ipython):
+def test_client_library_magic_parameterized_query(ipython_interactive):
     import pandas
 
     ip = _set_up_ipython('google.cloud.bigquery')
@@ -220,7 +220,7 @@ def test_client_library_magic_parameterized_query(ipython):
     assert len(df) == 10
 
 
-def test_datalab_list_tables_magic(ipython):
+def test_datalab_list_tables_magic(ipython_interactive):
     ip = _set_up_ipython('google.datalab.kernel')
 
     sample = """
@@ -238,6 +238,7 @@ def test_datalab_list_tables_magic(ipython):
 def test_datalab_query():
     # [START bigquery_migration_datalab_query]
     import google.datalab.bigquery as bq
+
     sql = """
         SELECT name FROM `bigquery-public-data.usa_names.usa_1910_current`
         WHERE state = "TX"
@@ -252,6 +253,7 @@ def test_datalab_query():
 def test_client_library_query():
     # [START bigquery_migration_client_library_query]
     from google.cloud import bigquery
+
     client = bigquery.Client()
     sql = """
         SELECT name FROM `bigquery-public-data.usa_names.usa_1910_current`
@@ -298,7 +300,8 @@ def test_datalab_load_table_from_gcs_csv(to_delete):
 def test_client_library_load_table_from_gcs_csv(to_delete):
     # [START bigquery_migration_client_library_load_table_from_gcs_csv]
     from google.cloud import bigquery
-    client = bigquery.Client()
+
+    client = bigquery.Client(location='US')
 
     # Create the dataset
     dataset_id = 'import_sample'
@@ -307,9 +310,7 @@ def test_client_library_load_table_from_gcs_csv(to_delete):
     dataset_id = 'test_dataset_{}'.format(int(time.time() * 1000))
     to_delete.append(dataset_id)
     # [START bigquery_migration_client_library_load_table_from_gcs_csv]
-    dataset = bigquery.Dataset(client.dataset(dataset_id))
-    dataset.location = 'US'
-    client.create_dataset(dataset)
+    dataset = client.create_dataset(dataset_id)
 
     # Create the table
     job_config = bigquery.LoadJobConfig(
@@ -375,7 +376,7 @@ def test_client_library_load_table_from_dataframe(to_delete):
     from google.cloud import bigquery
     import pandas
 
-    client = bigquery.Client()
+    client = bigquery.Client(location='US')
 
     dataset_id = 'import_sample'
     # [END bigquery_migration_client_library_load_table_from_dataframe]
@@ -383,9 +384,7 @@ def test_client_library_load_table_from_dataframe(to_delete):
     dataset_id = 'test_dataset_{}'.format(int(time.time() * 1000))
     to_delete.append(dataset_id)
     # [START bigquery_migration_client_library_load_table_from_dataframe]
-    dataset = bigquery.Dataset(client.dataset(dataset_id))
-    dataset.location = 'US'
-    client.create_dataset(dataset)
+    dataset = client.create_dataset(dataset_id)
 
     # Create the table and load the data
     dataframe = pandas.DataFrame([
@@ -397,10 +396,10 @@ def test_client_library_load_table_from_dataframe(to_delete):
             'release_year': 1971
         },
     ])
-    load_job = client.load_table_from_dataframe(
-        dataframe, dataset.table('monty_python'), location='US')
+    table_ref = dataset.table('monty_python')
+    load_job = client.load_table_from_dataframe(dataframe, table_ref)
     load_job.result()  # Waits for table load to complete.
     # [END bigquery_migration_client_library_load_table_from_dataframe]
 
-    table = client.get_table(dataset.table('monty_python'))
+    table = client.get_table(table_ref)
     assert table.num_rows == 4
