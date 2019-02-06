@@ -29,7 +29,7 @@ import requests
 # [START endpoints_generate_jwt_sa]
 def generate_jwt(sa_keyfile,
                  sa_email='account@project-id.iam.gserviceaccount.com',
-                 audience='https://project-id.appspot.com',
+                 audience='your-service-name',
                  expiry_length=3600):
 
     """Generates a signed JSON Web Token using a Google API Service Account."""
@@ -61,7 +61,7 @@ def generate_jwt(sa_keyfile,
 
 
 # [START endpoints_jwt_request]
-def make_jwt_request(signed_jwt, url='https://project-id.appspot.com'):
+def make_jwt_request(signed_jwt, url='https://your-endpoint.com'):
     """Makes an authorized request to the endpoint"""
     headers = {
         'Authorization': 'Bearer {}'.format(signed_jwt),
