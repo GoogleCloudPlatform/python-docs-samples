@@ -43,7 +43,8 @@ def test_labels_uri(capsys):
 
 
 def test_labels_http(capsys):
-    uri = 'https://storage-download.googleapis.com/{}/vision/label/wakeupcat.jpg'
+    uri = 'https://storage-download.googleapis.com/{}' \
+          '/vision/label/wakeupcat.jpg'
     detect.detect_labels_uri(uri.format(ASSET_BUCKET))
     out, _ = capsys.readouterr()
     assert 'Labels' in out
@@ -113,7 +114,8 @@ def test_logos_uri(capsys):
 
 
 def test_logos_http(capsys):
-    uri = 'https://storage-download.googleapis.com/{}/vision/logo/logo_google.png'
+    uri = 'https://storage-download.googleapis.com/{}' \
+          '/vision/logo/logo_google.png'
     detect.detect_logos_uri(uri.format(ASSET_BUCKET))
     out, _ = capsys.readouterr()
     assert 'google' in out.lower()
@@ -138,7 +140,8 @@ def test_safe_search_uri(capsys):
 
 
 def test_safe_search_http(capsys):
-    uri = 'https://storage-download.googleapis.com/{}/vision/label/wakeupcat.jpg'
+    uri = 'https://storage-download.googleapis.com/{}' \
+          '/vision/label/wakeupcat.jpg'
     detect.detect_safe_search_uri(uri.format(ASSET_BUCKET))
     out, _ = capsys.readouterr()
     assert 'VERY_LIKELY' in out
@@ -273,7 +276,8 @@ def test_detect_crop_hints_uri(capsys):
 
 
 def test_detect_crop_hints_http(capsys):
-    uri = 'https://storage-download.googleapis.com/{}/vision/label/wakeupcat.jpg'
+    uri = 'https://storage-download.googleapis.com/{}' \
+          '/vision/label/wakeupcat.jpg'
     detect.detect_crop_hints_uri(uri.format(ASSET_BUCKET))
     out, _ = capsys.readouterr()
     assert 'bounds: (0,0)' in out
