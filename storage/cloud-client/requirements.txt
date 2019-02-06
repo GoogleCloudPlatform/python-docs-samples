@@ -1,3 +1,2 @@
 google-cloud-pubsub==0.38.0
-#google-cloud-storage==1.13.2
-../google-cloud-python/storage
+google-cloud-storage==1.14.0
