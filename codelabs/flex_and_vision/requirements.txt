@@ -1,5 +1,5 @@
 Flask==1.0.2
 gunicorn==19.9.0
-google-cloud-vision==0.35.0
-google-cloud-storage==1.13.0
-google-cloud-datastore==1.7.1
+google-cloud-vision==0.35.2
+google-cloud-storage==1.13.2
+google-cloud-datastore==1.7.3

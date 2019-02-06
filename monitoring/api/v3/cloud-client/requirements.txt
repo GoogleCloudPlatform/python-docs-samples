@@ -1,1 +1,1 @@
-google-cloud-monitoring==0.30.1
+google-cloud-monitoring==0.31.1
