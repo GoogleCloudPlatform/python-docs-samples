@@ -15,3 +15,4 @@ google-api-python-client==1.7.4
 google-cloud-core==0.28.1
 gcp-devrel-py-tools==0.0.15
 flask==1.0.2
+websocket-client==0.54.0

@@ -34,7 +34,7 @@ api_collection = endpoints.api(name='library', version='v1.0')
 @api_collection.api_class(resource_name='shelves')
 class Shelves(remote.Service):
 
-    @endpoints.method(Request, Response, path='list')
+    @endpoints.method(Request, Response)
     def list(self, request):
         return Response()
 
@@ -44,7 +44,11 @@ class Shelves(remote.Service):
 class Books(remote.Service):
 
     @endpoints.method(Request, Response, path='bookmark')
-    def bookmark(self, request):
+    def get_bookmark(self, request):
+        return Response()
+
+    @endpoints.method(Request, Response)
+    def best_sellers_list(self, request):
         return Response()
 # [END books]
 # [END multiclass]
