@@ -167,12 +167,9 @@ def test_session_to_dataframe(capsys, clients):
         table, parent, read_options=read_options
     )
 
-    # Don't try to read from an empty table.
-    if len(session.streams) == 0:
-        return
-
     # This example reads from only a single stream. Read from multiple streams
-    # to fetch data faster.
+    # to fetch data faster. Note that the session may not contain any streams
+    # if there are no rows to read.
     stream = session.streams[0]
     position = bigquery_storage_v1beta1.types.StreamPosition(stream=stream)
     reader = bqstorageclient.read_rows(position)
