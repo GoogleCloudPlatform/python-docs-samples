@@ -1,1 +1,1 @@
-dialogflow==0.5.1
+dialogflow==0.5.2
