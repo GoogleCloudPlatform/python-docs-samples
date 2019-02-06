@@ -36,7 +36,7 @@ def generate_jwt(sa_keyfile,
 
     now = int(time.time())
 
-    # build pyload
+    # build payload
     payload = {
         'iat': now,
         # expires after 'expirary_length' seconds.
