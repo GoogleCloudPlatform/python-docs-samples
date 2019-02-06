@@ -1,4 +1,4 @@
-Flask==0.12.2
+Flask==1.0.2
 Flask-Sockets==0.2.1
-gunicorn==19.7.1
-requests==2.14.2
+gunicorn==19.9.0
+requests==2.21.0
