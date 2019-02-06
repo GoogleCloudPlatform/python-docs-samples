@@ -409,6 +409,7 @@ def key_filter(client):
     # [START datastore_key_filter]
     query = client.query(kind='Task')
     first_key = client.key('Task', 'first_task')
+    # key_filter(key, op) translates to add_filter('__key__', op, key).
     query.key_filter(first_key, '>')
     # [END datastore_key_filter]
 
