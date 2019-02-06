@@ -26,7 +26,7 @@ TEST_TABLE_ID = 'bikeshare_trips'
 
 
 @pytest.fixture(scope='session')
-def create_test_job():
+def test_job_name():
     import google.cloud.dlp
     dlp = google.cloud.dlp.DlpServiceClient()
 
@@ -76,6 +76,5 @@ def test_list_dlp_jobs_with_job_type(capsys):
     assert 'Job: projects/' in out
 
 
-def test_delete_dlp_job(capsys):
-    test_job_name = create_test_job()
+def test_delete_dlp_job(test_job_name, capsys):
     jobs.delete_dlp_job(GCLOUD_PROJECT, test_job_name)

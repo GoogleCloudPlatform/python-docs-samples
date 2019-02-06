@@ -409,6 +409,7 @@ def key_filter(client):
     # [START datastore_key_filter]
     query = client.query(kind='Task')
     first_key = client.key('Task', 'first_task')
+    # key_filter(key, op) translates to add_filter('__key__', op, key).
     query.key_filter(first_key, '>')
     # [END datastore_key_filter]
 
@@ -689,7 +690,7 @@ def transactional_single_entity_group_read_only(client):
     ])
 
     # [START datastore_transactional_single_entity_group_read_only]
-    with client.transaction():
+    with client.transaction(read_only=True):
         task_list_key = client.key('TaskList', 'default')
 
         task_list = client.get(task_list_key)
