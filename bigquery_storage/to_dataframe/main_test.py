@@ -42,6 +42,33 @@ def clients():
     return bqclient, bqstorageclient
 
 
+def test_table_to_dataframe(capsys, clients):
+    from google.cloud import bigquery
+
+    bqclient, bqstorageclient = clients
+
+    # [START bigquerystorage_pandas_tutorial_all]
+    # [START bigquerystorage_pandas_tutorial_read_table]
+    # Download a table.
+    table = bigquery.TableReference.from_string(
+        "bigquery-public-data.utility_us.country_code_iso"
+    )
+    rows = bqclient.list_rows(
+        table,
+        selected_fields=[
+            bigquery.SchemaField("country_name", "STRING"),
+            bigquery.SchemaField("fips_code", "STRING"),
+        ],
+    )
+    dataframe = rows.to_dataframe(bqstorage_client=bqstorageclient)
+    print(dataframe.head())
+    # [END bigquerystorage_pandas_tutorial_read_table]
+    # [END bigquerystorage_pandas_tutorial_all]
+
+    out, _ = capsys.readouterr()
+    assert "country_name" in out
+
+
 @pytest.fixture
 def temporary_dataset(clients):
     from google.cloud import bigquery
@@ -70,33 +97,6 @@ def temporary_dataset(clients):
     # [END bigquerystorage_pandas_tutorial_all]
     yield dataset_ref
     bqclient.delete_dataset(dataset_ref, delete_contents=True)
-
-
-def test_table_to_dataframe(capsys, clients):
-    from google.cloud import bigquery
-
-    bqclient, bqstorageclient = clients
-
-    # [START bigquerystorage_pandas_tutorial_all]
-    # [START bigquerystorage_pandas_tutorial_read_table]
-    # Download a table.
-    table = bigquery.TableReference.from_string(
-        "bigquery-public-data.utility_us.country_code_iso"
-    )
-    rows = bqclient.list_rows(
-        table,
-        selected_fields=[
-            bigquery.SchemaField("country_name", "STRING"),
-            bigquery.SchemaField("fips_code", "STRING"),
-        ],
-    )
-    dataframe = rows.to_dataframe(bqstorage_client=bqstorageclient)
-    print(dataframe.head())
-    # [END bigquerystorage_pandas_tutorial_read_table]
-    # [END bigquerystorage_pandas_tutorial_all]
-
-    out, _ = capsys.readouterr()
-    assert "country_name" in out
 
 
 def test_query_to_dataframe(capsys, clients, temporary_dataset):
