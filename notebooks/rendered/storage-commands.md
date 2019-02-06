@@ -49,7 +49,7 @@ The `gsutil` command can be used to perform a wide array of tasks. Run the `help
       version         Print version info about gsutil
       versioning      Enable or suspend versioning for one or more buckets
       web             Set a main page and/or error page for one or more buckets
-
+    
     Additional help topics:
       acls            Working With Access Control Lists
       anon            Accessing Public Data Without Credentials
@@ -71,7 +71,7 @@ The `gsutil` command can be used to perform a wide array of tasks. Run the `help
       throttling      Throttling gsutil
       versions        Object Versioning and Concurrency Control
       wildcards       Wildcard Names
-
+    
     Use gsutil help <command or="" topic=""/> for detailed help.
 
 ## Create a storage bucket
@@ -140,10 +140,10 @@ To learn more about specific bucket properties, see [Bucket Locations](https://c
     	Requester Pays enabled:		None
     	Labels:				None
     	Default KMS key:		None
-    	Time created:			Wed, 30 Jan 2019 23:23:59 GMT
-    	Time updated:			Wed, 30 Jan 2019 23:23:59 GMT
+    	Time created:			Wed, 06 Feb 2019 02:51:19 GMT
+    	Time updated:			Wed, 06 Feb 2019 02:51:19 GMT
     	Metageneration:			1
-    	ACL:
+    	ACL:				
     	  [
     	    {
     	      "entity": "project-owners-129776587519",
@@ -170,7 +170,7 @@ To learn more about specific bucket properties, see [Bucket Locations](https://c
     	      "role": "READER"
     	    }
     	  ]
-    	Default ACL:
+    	Default ACL:			
     	  [
     	    {
     	      "entity": "project-owners-129776587519",
@@ -213,8 +213,8 @@ For more information, including how to rename an object, see the [Object name re
 ```
 
     Copying file://resources/us-states.txt [Content-Type=text/plain]...
-
-    Operation completed over 1 objects/637.0 B.
+    
+    Operation completed over 1 objects/637.0 B.                                      
 
 
 ## List blobs in a bucket
@@ -237,16 +237,16 @@ See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metada
 ```
 
     gs://your-new-bucket/us-states.txt:
-        Creation time:          Wed, 30 Jan 2019 23:24:06 GMT
-        Update time:            Wed, 30 Jan 2019 23:24:06 GMT
+        Creation time:          Wed, 06 Feb 2019 02:51:25 GMT
+        Update time:            Wed, 06 Feb 2019 02:51:25 GMT
         Storage class:          STANDARD
         Content-Language:       en
         Content-Length:         637
         Content-Type:           text/plain
         Hash (crc32c):          AmYMRQ==
         Hash (md5):             NmfddAHdCzyvAHCifeGtwg==
-        ETag:                   CLCthKbTluACEAE=
-        Generation:             1548890646058672
+        ETag:                   CKeP/OmMpuACEAE=
+        Generation:             1549421485426599
         Metageneration:         1
         ACL:                    [
       {
@@ -290,8 +290,8 @@ See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metada
 ```
 
     Copying gs://your-new-bucket/us-states.txt...
-
-    Operation completed over 1 objects/637.0 B.
+    
+    Operation completed over 1 objects/637.0 B.                                      
 
 
 ## Cleaning up
@@ -304,8 +304,8 @@ See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metada
 ```
 
     Removing gs://your-new-bucket/us-states.txt...
-
-    Operation completed over 1 objects.
+    
+    Operation completed over 1 objects.                                              
 
 
 ### Delete a bucket

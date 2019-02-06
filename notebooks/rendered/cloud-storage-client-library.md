@@ -26,6 +26,9 @@ client = storage.Client()
 print("Client created using default project: {}".format(client.project))
 ```
 
+    Client created using default project: your-project-id
+
+
 Alternatively, you can explicitly specify a project when constructing the client:
 
 
@@ -48,6 +51,9 @@ bucket = client.create_bucket(bucket_name)
 print('Bucket {} created.'.format(bucket.name))
 ```
 
+    Bucket your-new-bucket created.
+
+
 ## List buckets in a project
 
 
@@ -58,6 +64,10 @@ print("Buckets in {}:".format(client.project))
 for item in buckets:
     print("\t" + item.name)
 ```
+
+    Buckets in your-project-id:
+    	your-new-bucket
+
 
 ## Get bucket metadata
 
@@ -73,6 +83,11 @@ print('Bucket name: {}'.format(bucket.name))
 print('Bucket location: {}'.format(bucket.location))
 print('Bucket storage class: {}'.format(bucket.storage_class))
 ```
+
+    Bucket name: your-new-bucket
+    Bucket location: US
+    Bucket storage class: STANDARD
+
 
 ## Upload a local file to a bucket
 
@@ -93,6 +108,9 @@ blob.upload_from_filename(source_file_name)
 print('File uploaded to {}.'.format(bucket.name))
 ```
 
+    File uploaded to your-new-bucket.
+
+
 ## List blobs in a bucket
 
 
@@ -103,6 +121,10 @@ print("Blobs in {}:".format(bucket.name))
 for item in blobs:
     print("\t" + item.name)
 ```
+
+    Blobs in your-new-bucket:
+    	us-states.txt
+
 
 ## Get a blob and display metadata
 
@@ -118,6 +140,12 @@ print('Content type: {}'.format(blob.content_type))
 print('Public URL: {}'.format(blob.public_url))
 ```
 
+    Name: your-new-bucket/us-states.txt/1549421467685211
+    Size: 637 bytes
+    Content type: text/plain
+    Public URL: https://storage.googleapis.com/your-new-bucket/us-states.txt
+
+
 ## Download a blob to a local directory
 
 
@@ -127,6 +155,9 @@ blob.download_to_filename(output_file_name)
 
 print('Downloaded blob {} to {}.'.format(blob.name, output_file_name))
 ```
+
+    Downloaded blob us-states.txt to resources/downloaded-us-states.txt.
+
 
 ## Cleaning up
 
@@ -140,6 +171,9 @@ blob.delete()
 print('Blob {} deleted.'.format(blob.name))
 ```
 
+    Blob us-states.txt deleted.
+
+
 ### Delete a bucket
 
 Note that the bucket must be empty before it can be deleted.
@@ -151,6 +185,9 @@ bucket.delete()
 
 print('Bucket {} deleted.'.format(bucket.name))
 ```
+
+    Bucket your-new-bucket deleted.
+
 
 ## Next Steps
 

@@ -157,7 +157,7 @@ To view the available commands for the BigQuery command-line tool, use the `--he
                bq ls --transfer_log --message_type='messageTypes:INFO,ERROR'
                projects/p/locations/l/transferConfigs/c/runs/r
     
-    
+    mk         Create a dataset, table, view, or transfer configuration with this
                name.
     
                See 'bq help load' for more information on specifying the schema.
@@ -235,7 +235,7 @@ To view the available commands for the BigQuery command-line tool, use the `--he
                echo 'select count(*) from publicdata:samples.shakespeare' | bq query
     
                Usage:
-               query [<sql_query>]
+    
     
     rm         Delete the dataset, table, or transfer config described by
                identifier.
@@ -319,14 +319,23 @@ To view the available commands for the BigQuery command-line tool, use the `--he
 
 A dataset is contained within a specific [project](https://cloud.google.com/bigquery/docs/projects). Datasets are top-level containers that are used to organize and control access to your [tables](https://cloud.google.com/bigquery/docs/tables) and [views](https://cloud.google.com/bigquery/docs/views). A table or view must belong to a dataset, so you need to create at least one dataset before [loading data into BigQuery](https://cloud.google.com/bigquery/loading-data-into-bigquery).
 
-The command below creates a new dataset in the US named "your_new_dataset".
+First, define a name for your new dataset:
 
 
 ```python
-!bq --location=US mk --dataset "your_dataset_id"
+dataset_id = "your_new_dataset"
 ```
 
-    Dataset 'your-project-id:your_dataset_id' successfully created.
+The command below creates a new dataset in the US using the ID defined above.
+
+NOTE: In the examples below, the `dataset_id` variable is referenced in the commands using `{}` and `$`. If you want to avoid creating and using variables, replace these interpolated variables with literal values and remove the `{}` and `$` characters.
+
+
+```python
+!bq --location=US mk --dataset $dataset_id
+```
+
+    Dataset 'your-project-id:your_new_dataset' successfully created.
 
 
 ## List datasets
@@ -340,12 +349,6 @@ The command below lists lists all datasets in your current project.
 
                datasetId            
      ------------------------------ 
-      coast                         
-      my_new_dataset_1548207931814  
-      test_dataset                  
-      test_dataset_1544925728787    
-      test_dataset_1544925753705    
-      your_dataset_id               
       your_new_dataset              
 
 
@@ -355,11 +358,11 @@ The example below demonstrates how to load a local CSV file into a new or existi
 
 
 ```python
-!bq --location=US load --autodetect --skip_leading_rows=1 --source_format=CSV your_dataset_id.us_states_local_file 'resources/us-states.csv'
+!bq --location=US load --autodetect --skip_leading_rows=1 --source_format=CSV {dataset_id}.us_states_local_file 'resources/us-states.csv'
 ```
 
     Upload complete.
-    Waiting on bqjob_r79803249dee1436f_0000016896639904_1 ... (1s) Current status: DONE   
+    Waiting on bqjob_r6e3244e44cef905c_00000168c0b8a070_1 ... (2s) Current status: DONE   
 
 
 ## Load data from Google Cloud Storage to a table
@@ -368,10 +371,10 @@ The example below demonstrates how to load a local CSV file into a new or existi
 
 
 ```python
-!bq --location=US load --autodetect --skip_leading_rows=1 --source_format=CSV your_dataset_id.us_states_gcs 'gs://cloud-samples-data/bigquery/us-states/us-states.csv'
+!bq --location=US load --autodetect --skip_leading_rows=1 --source_format=CSV {dataset_id}.us_states_gcs 'gs://cloud-samples-data/bigquery/us-states/us-states.csv'
 ```
 
-    Waiting on bqjob_r30641d9ed9788ca4_000001689663b441_1 ... (1s) Current status: DONE   
+    Waiting on bqjob_r262c33706835e862_00000168c0b8bf2b_1 ... (1s) Current status: DONE   
 
 
 ## Run a query
@@ -384,6 +387,6 @@ The following code deletes the dataset created for this tutorial, including all 
 
 
 ```python
-!bq rm -r -f --dataset your_dataset_id
+!bq rm -r -f --dataset $dataset_id
 ```
-</job_id></sql_query></yyyymmdd></source_table_prefix></destination_partitioned_table></source_table_prefix></schema></schema></schema></source_uris></schema></schema></destination_table></schema></destination_table></destination_uris></source_table>
+</job_id></yyyymmdd></source_table_prefix></destination_partitioned_table></source_table_prefix></schema></schema></schema></source_uris></schema></schema></destination_table></schema></destination_table></destination_uris></source_table>

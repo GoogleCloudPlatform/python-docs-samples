@@ -105,12 +105,12 @@ WHERE
 <tbody>
 <tr>
 <th>0</th>
-<td>0.454545</td>
-<td>0.111732</td>
-<td>0.985236</td>
-<td>0.179372</td>
-<td>0.047202</td>
-<td>0.9837</td>
+<td>0.461832</td>
+<td>0.112663</td>
+<td>0.985289</td>
+<td>0.181138</td>
+<td>0.046062</td>
+<td>0.98184</td>
 </tr>
 </tbody>
 </table>
@@ -122,9 +122,27 @@ If used with a linear regression model, the above query returns the following co
 
 Concretely, you'll recognize the `SELECT` and `FROM` portions of the query are identical to that used during training. The `WHERE` portion reflects the change in time frame and the `FROM` portion shows that we're calling `ml.EVALUATE`. You should see a table similar to this:
 
-| | precision  |  recall | accuracy | f1_score | log_loss | roc_auc |
-|---|---|---|---|---|---|---|
-| 1 | 0.437838 | 0.075419 | 0.985249 | 0.128674 | 0.047682 | 0.982956 |
+
+<table>
+<tr>
+<th></th>
+<th>precision</th>
+<th>recall</th>
+<th>accuracy</th>
+<th>f1_score</th>
+<th>log_loss</th>
+<th>roc_auc</th>
+</tr>
+<tr>
+<td>1</td>
+<td>0.437838</td>
+<td>0.075419</td>
+<td>0.985249</td>
+<td>0.128674</td>
+<td>0.047682</td>
+<td>0.982956</td>
+</tr>
+</table>
 
 ## Use the Model
 
@@ -171,17 +189,17 @@ LIMIT 10;
 <tr>
 <th>0</th>
 <td>United States</td>
-<td>221</td>
+<td>228</td>
 </tr>
 <tr>
 <th>1</th>
-<td>Taiwan</td>
-<td>11</td>
+<td>Canada</td>
+<td>7</td>
 </tr>
 <tr>
 <th>2</th>
-<td>Canada</td>
-<td>8</td>
+<td>Taiwan</td>
+<td>6</td>
 </tr>
 <tr>
 <th>3</th>
@@ -190,32 +208,32 @@ LIMIT 10;
 </tr>
 <tr>
 <th>4</th>
-<td>United Kingdom</td>
-<td>2</td>
-</tr>
-<tr>
-<th>5</th>
-<td>Singapore</td>
-<td>2</td>
-</tr>
-<tr>
-<th>6</th>
-<td>Japan</td>
-<td>2</td>
-</tr>
-<tr>
-<th>7</th>
 <td>Turkey</td>
 <td>2</td>
 </tr>
 <tr>
+<th>5</th>
+<td>Japan</td>
+<td>2</td>
+</tr>
+<tr>
+<th>6</th>
+<td>United Kingdom</td>
+<td>1</td>
+</tr>
+<tr>
+<th>7</th>
+<td>Vietnam</td>
+<td>1</td>
+</tr>
+<tr>
 <th>8</th>
-<td>Thailand</td>
+<td>El Salvador</td>
 <td>1</td>
 </tr>
 <tr>
 <th>9</th>
-<td>Guyana</td>
+<td>Serbia</td>
 <td>1</td>
 </tr>
 </tbody>
@@ -226,18 +244,19 @@ LIMIT 10;
 
 Notice this query is very similar to the evaluation query we demonstrated in the previous section. Instead of `ml.EVALUATE`, we use `ml.PREDICT` here and we wrap the BQML portion of the query with standard SQL commands. Concretely, we're interested in the country and the sum of purchases for each country, so that's what we `SELECT`, `GROUP BY` and `ORDER BY`. `LIMIT` is used here to ensure we only get the top 10 results. You should see a table similar to this:
 
-| | country  |  total_predicted_purchases |
-|---|---|---|---|
-| 0 | United States | 467 |
-| 1 | Canada | 8 |
-| 2 | Taiwan | 6 |
-| 3 | India | 5 |
-| 4 | United Kingdom | 3 |
-| 5 | Turkey | 3 |
-| 6 | Japan | 2 |
-| 7 | Germany | 2 |
-| 8 | Hong Kong | 2 |
-| 9 | Singapore | 2 |
+<table>
+<tr><th></th><th>country</th><th>total_predicted_purchases</th></tr>
+<tr><td>0</td><td>UnitedStates</td><td>467</td></tr>
+<tr><td>1</td><td>Canada</td><td>8</td></tr>
+<tr><td>2</td><td>Taiwan</td><td>6</td></tr>
+<tr><td>3</td><td>India</td><td>5</td></tr>
+<tr><td>4</td><td>UnitedKingdom</td><td>3</td></tr>
+<tr><td>5</td><td>Turkey</td><td>3</td></tr>
+<tr><td>6</td><td>Japan</td><td>2</td></tr>
+<tr><td>7</td><td>Germany</td><td>2</td></tr>
+<tr><td>8</td><td>HongKong</td><td>2</td></tr>
+<tr><td>9</td><td>Singapore</td><td>2</td></tr>
+</table>
 
 ### Predict purchases per user
 
@@ -287,8 +306,8 @@ LIMIT 10;
 </tr>
 <tr>
 <th>1</th>
-<td>8388931032955052746</td>
-<td>3</td>
+<td>2969418676126258798</td>
+<td>2</td>
 </tr>
 <tr>
 <th>2</th>
@@ -297,27 +316,27 @@ LIMIT 10;
 </tr>
 <tr>
 <th>3</th>
-<td>5073919761051630191</td>
-<td>2</td>
-</tr>
-<tr>
-<th>4</th>
-<td>1712066703099487652</td>
-<td>2</td>
-</tr>
-<tr>
-<th>5</th>
-<td>806992249032686650</td>
-<td>2</td>
-</tr>
-<tr>
-<th>6</th>
 <td>0376394056092189113</td>
 <td>2</td>
 </tr>
 <tr>
+<th>4</th>
+<td>806992249032686650</td>
+<td>2</td>
+</tr>
+<tr>
+<th>5</th>
+<td>1712066703099487652</td>
+<td>2</td>
+</tr>
+<tr>
+<th>6</th>
+<td>057693500927581077</td>
+<td>2</td>
+</tr>
+<tr>
 <th>7</th>
-<td>7420300501523012460</td>
+<td>8388931032955052746</td>
 <td>2</td>
 </tr>
 <tr>
@@ -338,18 +357,19 @@ LIMIT 10;
 
 You should see a table similar to this:
 
-|   | country  |  total_predicted_purchases |
-|---|---|---|---|
-| 0 | 9417857471295131045 | 3 |
-| 1 | 8388931032955052746 | 2 |
-| 2 | 7420300501523012460 | 2 |
-| 3 | 806992249032686650 | 2 |
-| 4 | 0376394056092189113 | 2 |
-| 5 | 2969418676126258798 | 2 |
-| 6 | 489038402765684003 | 2 |
-| 7 | 057693500927581077 | 2 |
-| 8 | 112288330928895942 | 2 |
-| 9 | 1280993661204347450 | 2 |
+<table>
+<tr><th></th><th>country</th><th>total_predicted_purchases</th></tr>
+<tr><td>0</td><td>9417857471295131045</td><td>3</td></tr>
+<tr><td>1</td><td>8388931032955052746</td><td>2</td></tr>
+<tr><td>2</td><td>7420300501523012460</td><td>2</td></tr>
+<tr><td>3</td><td>806992249032686650</td><td>2</td></tr>
+<tr><td>4</td><td>0376394056092189113</td><td>2</td></tr>
+<tr><td>5</td><td>2969418676126258798</td><td>2</td></tr>
+<tr><td>6</td><td>489038402765684003</td><td>2</td></tr>
+<tr><td>7</td><td>057693500927581077</td><td>2</td></tr>
+<tr><td>8</td><td>112288330928895942</td><td>2</td></tr>
+<tr><td>9</td><td>1280993661204347450</td><td>2</td></tr>
+</table>
 
 ## Congratulations!
 

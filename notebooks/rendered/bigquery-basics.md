@@ -39,7 +39,7 @@ Alternatively, you can explicitly specify a project when constructing the client
 
 
 ```python
-client = bigquery.Client(location="US", project="your-project-id")
+# client = bigquery.Client(location="US", project="your-project-id")
 ```
 
 ## Run a query on a public dataset
@@ -367,7 +367,7 @@ destination_table = client.get_table(table_ref)
 print('Loaded {} rows.'.format(destination_table.num_rows))
 ```
 
-    Starting job a27afe96-d36b-458e-b72f-ba47f3d192dc
+    Starting job 1c54e163-d785-4551-b4b7-7170ba07e00a
     Job finished.
     Loaded 50 rows.
 
