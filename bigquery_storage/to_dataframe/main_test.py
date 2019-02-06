@@ -33,7 +33,10 @@ def clients():
     )
 
     # Make clients.
-    bqclient = bigquery.Client(credentials=credentials, project=your_project_id)
+    bqclient = bigquery.Client(
+        credentials=credentials,
+        project=your_project_id
+    )
     bqstorageclient = bigquery_storage_v1beta1.BigQueryStorageClient(
         credentials=credentials
     )
