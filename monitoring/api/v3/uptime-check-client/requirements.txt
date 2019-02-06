@@ -1,2 +1,2 @@
-google-cloud-monitoring==0.30.1
-tabulate==0.8.2
+google-cloud-monitoring==0.31.1
+tabulate==0.8.3
