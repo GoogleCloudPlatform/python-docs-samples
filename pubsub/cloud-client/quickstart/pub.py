@@ -24,12 +24,15 @@ from google.cloud import pubsub_v1
 
 def get_callback(api_future, data):
     """Wraps message data in the context of the callback function."""
+
     def callback(api_future):
-        if api_future.exception():
-            print("There was a problem with message {}".format(data))
-        else:
+        try:
             print("Published message {} now has message ID {}".format(
                 data, api_future.result()))
+        except Exception:
+            print("A problem occurred when publishing {}: {}\n".format(
+                data, api_future.exception()))
+            raise
     return callback
 
 
@@ -53,8 +56,8 @@ def pub(project_id, topic_name):
 
     # Keeps the main thread from exiting to handle message processing
     # in the background.
-    while True:
-        time.sleep(60)
+    while api_future.running():
+        time.sleep(0.1)
 
 
 if __name__ == '__main__':

@@ -38,12 +38,14 @@ def sub(project_id, subscription_name):
             message, message.message_id))
         # Acknowledges the message. Unack'ed messages will be redelivered.
         message.ack()
+        print('Acknolwedged message of message ID {}\n'.format(
+            message.message_id))
 
     client.subscribe(subscription_path, callback=callback)
-    print('Listening for messages on {}'.format(subscription_path))
+    print('Listening for messages on {}..\n'.format(subscription_path))
 
-    # The subscriber is non-blocking. We must keep the main thread from
-    # exiting so it can process messages asynchronously in the background.
+    # The subscriber is non-blocking. We keep the main thread from exiting
+    # so it can process messages asynchronously in the background.
     while True:
         time.sleep(60)
 

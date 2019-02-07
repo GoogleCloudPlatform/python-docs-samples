@@ -14,10 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import mock
 import os
 import pytest
-import time
 
 from google.cloud import pubsub_v1
 
@@ -46,23 +44,8 @@ def topic(publisher_client):
     yield TOPIC
 
 
-def _make_sleep_patch():
-    real_sleep = time.sleep
-
-    def new_sleep(period):
-        if period == 60:
-            real_sleep(10)
-            raise RuntimeError('sigil')
-        else:
-            real_sleep(period)
-
-    return mock.patch('time.sleep', new=new_sleep)
-
-
 def test_pub(topic, capsys):
-    with _make_sleep_patch():
-        with pytest.raises(RuntimeError, match='sigil'):
-            pub.pub(PROJECT, topic)
+    pub.pub(PROJECT, topic)
 
     out, _ = capsys.readouterr()
 
