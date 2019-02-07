@@ -29,7 +29,7 @@ def test_quickstart(capsys):
             google.cloud.dlp.DlpServiceClient,
             'project_path',
             return_value='projects/{}'.format(GCLOUD_PROJECT)):
-        quickstart.quickstart()
+        quickstart.quickstart(GCLOUD_PROJECT)
 
     out, _ = capsys.readouterr()
     assert 'FIRST_NAME' in out
