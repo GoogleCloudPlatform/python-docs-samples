@@ -12,26 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import web_detect
 
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+ASSET_BUCKET = "cloud-samples-data"
 
 
 def test_detect_file(capsys):
     file_name = ('../detect/resources/landmark.jpg')
     web_detect.report(web_detect.annotate(file_name))
     out, _ = capsys.readouterr()
-    assert 'Description: Palace of Fine Arts Theatre' in out
+    print(out)
+    assert 'description: palace of fine arts' in out.lower()
 
 
 def test_detect_web_gsuri(capsys):
-    file_name = ('gs://{}/vision/landmark.jpg'.format(
-                 BUCKET))
+    file_name = ('gs://{}/vision/landmark/pofa.jpg'.format(
+                 ASSET_BUCKET))
     web_detect.report(web_detect.annotate(file_name))
     out, _ = capsys.readouterr()
-    assert 'Description: Palace of Fine Arts Theatre' in out
+    assert 'description: palace of fine arts' in out.lower()
 
 
 def test_detect_web_http(capsys):
