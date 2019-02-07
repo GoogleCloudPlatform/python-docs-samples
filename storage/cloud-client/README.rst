@@ -300,6 +300,39 @@ To run this sample:
 
 
 
+Bucket Policy Only
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/bucket_policy_only.py,storage/cloud-client/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python bucket_policy_only.py
+
+    usage: bucket_policy_only.py [-h]
+                                 {enable-bucket-policy-only,disable-bucket-policy-only,get-bucket-policy-only}
+                                 ...
+
+    positional arguments:
+      {enable-bucket-policy-only,disable-bucket-policy-only,get-bucket-policy-only}
+        enable-bucket-policy-only
+                            Enable Bucket Policy Only for a bucket
+        disable-bucket-policy-only
+                            Disable Bucket Policy Only for a bucket
+        get-bucket-policy-only
+                            Get Bucket Policy Only for a bucket
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
+
 Notification Polling
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
