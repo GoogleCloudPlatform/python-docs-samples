@@ -1,1 +1,1 @@
-google-cloud-error-reporting==0.30.0
+google-cloud-error-reporting==0.30.1
