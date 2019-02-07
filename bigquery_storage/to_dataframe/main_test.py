@@ -99,7 +99,9 @@ def temporary_dataset(clients):
     # [END bigquerystorage_pandas_tutorial_create_dataset]
     # [END bigquerystorage_pandas_tutorial_all]
     yield dataset_ref
+    # [START bigquerystorage_pandas_tutorial_cleanup]
     bqclient.delete_dataset(dataset_ref, delete_contents=True)
+    # [END bigquerystorage_pandas_tutorial_cleanup]
 
 
 def test_query_to_dataframe(capsys, clients, temporary_dataset):
