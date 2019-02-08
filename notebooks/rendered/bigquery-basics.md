@@ -1,5 +1,5 @@
 
-# BigQuery Basics
+# BigQuery basics
 
 [BigQuery](https://cloud.google.com/bigquery/docs/) is a petabyte-scale analytics data warehouse that you can use to run SQL queries over vast amounts of data in near realtime. This page shows you how to get started with the Google BigQuery API using the Python client library.
 
@@ -16,13 +16,11 @@ import pandas
 To use the BigQuery Python client library, start by initializing a client. The BigQuery client is used to send and receive messages from the BigQuery API.
 
 ### Client project
-The project used by the client will default to the project associated with the credentials file stored in the `GOOGLE_APPLICATION_CREDENTIALS` environment variable.
-
-See the [google-auth](https://google-auth.readthedocs.io/en/latest/reference/google.auth.html) for more information about Application Default Credentials.
+The `bigquery.Client` object uses your default project. Alternatively, you can specify a project in the `Client` constructor. For more information about how the default project is determined, see the [google-auth documentation](https://google-auth.readthedocs.io/en/latest/reference/google.auth.html).
 
 
 ### Client location
-Locations are required for certain BigQuery operations such as creating a Dataset. If a location is provided to the client when it is initialized, it will be the default location for jobs, datasets, and tables.
+Locations are required for certain BigQuery operations such as creating a dataset. If a location is provided to the client when it is initialized, it will be the default location for jobs, datasets, and tables.
 
 Run the following to create a client with your default project:
 
@@ -32,10 +30,7 @@ client = bigquery.Client(location="US")
 print("Client creating using default project: {}".format(client.project))
 ```
 
-    Client creating using default project: your-project-id
-
-
-Alternatively, you can explicitly specify a project when constructing the client:
+To explicitly specify a project when constructing the client, set the `project` parameter:
 
 
 ```python
@@ -44,15 +39,17 @@ Alternatively, you can explicitly specify a project when constructing the client
 
 ## Run a query on a public dataset
 
-The following example runs a query on the BigQuery `usa_names` public dataset, which is a Social Security Administration dataset that contains all names from Social Security card applications for births that occurred in the United States after 1879.
+The following example queries the BigQuery `usa_names` public dataset to find the 10 most popular names. `usa_names` is a Social Security Administration dataset that contains all names from Social Security card applications for births that occurred in the United States after 1879.
 
-Use the [Client.query()](https://googleapis.github.io/google-cloud-python/latest/bigquery/generated/google.cloud.bigquery.client.Client.html#google.cloud.bigquery.client.Client.query) method to run the query, and the [QueryJob.to_dataframe()](https://googleapis.github.io/google-cloud-python/latest/bigquery/generated/google.cloud.bigquery.job.QueryJob.html#google.cloud.bigquery.job.QueryJob.to_dataframe) method to return the results as a [pandas DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html).
+Use the [Client.query](https://googleapis.github.io/google-cloud-python/latest/bigquery/generated/google.cloud.bigquery.client.Client.html#google.cloud.bigquery.client.Client.query) method to run the query, and the [QueryJob.to_dataframe](https://googleapis.github.io/google-cloud-python/latest/bigquery/generated/google.cloud.bigquery.job.QueryJob.html#google.cloud.bigquery.job.QueryJob.to_dataframe) method to return the results as a pandas [`DataFrame`](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html).
 
 
 ```python
 query = """
-    SELECT name FROM `bigquery-public-data.usa_names.usa_1910_current`
-    WHERE state = "TX"
+    SELECT name, SUM(number) as total
+    FROM `bigquery-public-data.usa_names.usa_1910_current`
+    GROUP BY name
+    ORDER BY total DESC
     LIMIT 10
 """
 query_job = client.query(
@@ -65,72 +62,13 @@ df = query_job.to_dataframe()
 df
 ```
 
-
-
-
-<div>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th>name</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>0</th>
-<td>Mary</td>
-</tr>
-<tr>
-<th>1</th>
-<td>Ruby</td>
-</tr>
-<tr>
-<th>2</th>
-<td>Annie</td>
-</tr>
-<tr>
-<th>3</th>
-<td>Willie</td>
-</tr>
-<tr>
-<th>4</th>
-<td>Ruth</td>
-</tr>
-<tr>
-<th>5</th>
-<td>Gladys</td>
-</tr>
-<tr>
-<th>6</th>
-<td>Maria</td>
-</tr>
-<tr>
-<th>7</th>
-<td>Frances</td>
-</tr>
-<tr>
-<th>8</th>
-<td>Margaret</td>
-</tr>
-<tr>
-<th>9</th>
-<td>Helen</td>
-</tr>
-</tbody>
-</table>
-</div>
-
-
-
 ## Run a parameterized query
 
-BigQuery supports query parameters to help prevent [SQL injection](https://en.wikipedia.org/wiki/SQL_injection) when queries are constructed using user input. This feature is only available with [standard SQL syntax](https://cloud.google.com/bigquery/docs/reference/standard-sql/). Query parameters can be used as substitutes for arbitrary expressions. Parameters cannot be used as substitutes for identifiers, column names, table names, or other parts of the query.
+BigQuery supports query parameters to help prevent [SQL injection](https://en.wikipedia.org/wiki/SQL_injection) when you construct a query with user input. Query parameters are only available with [standard SQL syntax](https://cloud.google.com/bigquery/docs/reference/standard-sql/). Query parameters can be used as substitutes for arbitrary expressions. Parameters cannot be used as substitutes for identifiers, column names, table names, or other parts of the query.
 
-To specify a named parameter, use the `@` character followed by an [identifier](https://cloud.google.com/bigquery/docs/reference/standard-sql/lexical#identifiers), such as `@param_name`. For example, this query finds all the words in a specific Shakespeare corpus with counts that are at least the specified value.
+To specify a parameter, use the `@` character followed by an [identifier](https://cloud.google.com/bigquery/docs/reference/standard-sql/lexical#identifiers), such as `@param_name`. For example, the following query finds all the words in a specific Shakespeare corpus with counts that are at least the specified value.
 
-For more information, see [Running Parameterized Queries](https://cloud.google.com/bigquery/docs/parameterized-queries) in the BigQuery documentation.
+For more information, see [Running parameterized queries](https://cloud.google.com/bigquery/docs/parameterized-queries) in the BigQuery documentation.
 
 
 ```python
@@ -158,89 +96,9 @@ query_job = client.query(sql, location="US", job_config=job_config)
 query_job.to_dataframe()
 ```
 
-
-
-
-<div>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th>word</th>
-<th>word_count</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>0</th>
-<td>the</td>
-<td>614</td>
-</tr>
-<tr>
-<th>1</th>
-<td>I</td>
-<td>577</td>
-</tr>
-<tr>
-<th>2</th>
-<td>and</td>
-<td>490</td>
-</tr>
-<tr>
-<th>3</th>
-<td>to</td>
-<td>486</td>
-</tr>
-<tr>
-<th>4</th>
-<td>a</td>
-<td>407</td>
-</tr>
-<tr>
-<th>5</th>
-<td>of</td>
-<td>367</td>
-</tr>
-<tr>
-<th>6</th>
-<td>my</td>
-<td>314</td>
-</tr>
-<tr>
-<th>7</th>
-<td>is</td>
-<td>307</td>
-</tr>
-<tr>
-<th>8</th>
-<td>in</td>
-<td>291</td>
-</tr>
-<tr>
-<th>9</th>
-<td>you</td>
-<td>271</td>
-</tr>
-<tr>
-<th>10</th>
-<td>that</td>
-<td>270</td>
-</tr>
-<tr>
-<th>11</th>
-<td>me</td>
-<td>263</td>
-</tr>
-</tbody>
-</table>
-</div>
-
-
-
 ## Create a new dataset
 
-A dataset is contained within a specific [project](https://cloud.google.com/bigquery/docs/projects). Datasets are top-level containers that are used to organize and control access to your [tables](https://cloud.google.com/bigquery/docs/tables) and [views](https://cloud.google.com/bigquery/docs/views). A table or view must belong to a dataset, so you need to create at least one dataset before [loading data into BigQuery](https://cloud.google.com/bigquery/loading-data-into-bigquery).
+A dataset is contained within a specific [project](https://cloud.google.com/bigquery/docs/projects). Datasets are top-level containers that are used to organize and control access to your [tables](https://cloud.google.com/bigquery/docs/tables) and [views](https://cloud.google.com/bigquery/docs/views). A table or view must belong to a dataset. You need to create at least one dataset before [loading data into BigQuery](https://cloud.google.com/bigquery/loading-data-into-bigquery).
 
 
 ```python
@@ -253,7 +111,7 @@ dataset = client.create_dataset(dataset_id)  # API request
 
 ## Write query results to a destination table
 
-For more information, see [Writing Query Results](https://cloud.google.com/bigquery/docs/writing-results) in the BigQuery documentation.
+For more information, see [Writing query results](https://cloud.google.com/bigquery/docs/writing-results) in the BigQuery documentation.
 
 
 ```python
@@ -273,9 +131,6 @@ query_job = client.query(sql, location="US", job_config=job_config)
 query_job.result()  # Waits for the query to finish
 print("Query results loaded to table {}".format(table_ref.path))
 ```
-
-    Query results loaded to table /projects/your-project-id/datasets/your_new_dataset/tables/your_new_table_id
-
 
 ## Load data from a pandas DataFrame to a new table
 
@@ -301,12 +156,9 @@ job.result()  # Waits for table load to complete.
 print("Loaded dataframe to {}".format(table_ref.path))
 ```
 
-    Loaded dataframe to /projects/your-project-id/datasets/your_new_dataset/tables/monty_python
-
-
 ## Load data from a local file to a table
 
-The example below demonstrates how to load a local CSV file into a new or existing table. See [SourceFormat](https://googleapis.github.io/google-cloud-python/latest/bigquery/generated/google.cloud.bigquery.job.SourceFormat.html#google.cloud.bigquery.job.SourceFormat) in the Python client library documentation for a list of available source formats. For more information, see [Loading Data into BigQuery from a Local Data Source](https://cloud.google.com/bigquery/docs/loading-data-local) in the BigQuery documentation.
+The following example demonstrates how to load a local CSV file into a new table. See [SourceFormat](https://googleapis.github.io/google-cloud-python/latest/bigquery/generated/google.cloud.bigquery.job.SourceFormat.html#google.cloud.bigquery.job.SourceFormat) in the Python client library documentation for a list of available source formats. For more information, see [Loading Data into BigQuery from a local data source](https://cloud.google.com/bigquery/docs/loading-data-local) in the BigQuery documentation.
 
 
 ```python
@@ -332,12 +184,9 @@ print('Loaded {} rows into {}:{}.'.format(
     job.output_rows, dataset_id, table_ref.path))
 ```
 
-    Loaded 50 rows into your_new_dataset:/projects/your-project-id/datasets/your_new_dataset/tables/us_states_from_local_file.
+## Load data from Cloud Storage to a table
 
-
-## Load data from Google Cloud Storage to a table
-
-The example below demonstrates how to load a local CSV file into a new or existing table. See [SourceFormat](https://googleapis.github.io/google-cloud-python/latest/bigquery/generated/google.cloud.bigquery.job.SourceFormat.html#google.cloud.bigquery.job.SourceFormat) in the Python client library documentation for a list of available source formats. For more information, see [Introduction to Loading Data from Cloud Storage](https://cloud.google.com/bigquery/docs/loading-data-cloud-storage) in the BigQuery documentation.
+The following example demonstrates how to load a local CSV file into a new table. See [SourceFormat](https://googleapis.github.io/google-cloud-python/latest/bigquery/generated/google.cloud.bigquery.job.SourceFormat.html#google.cloud.bigquery.job.SourceFormat) in the Python client library documentation for a list of available source formats. For more information, see [Introduction to loading data from Cloud Storage](https://cloud.google.com/bigquery/docs/loading-data-cloud-storage) in the BigQuery documentation.
 
 
 ```python
@@ -348,7 +197,7 @@ job_config = bigquery.LoadJobConfig(
         bigquery.SchemaField('post_abbr', 'STRING')
     ],
     skip_leading_rows=1,
-    # The source format defaults to CSV, so the line below is optional.
+    # The source format defaults to CSV. The line below is optional.
     source_format=bigquery.SourceFormat.CSV
 )
 uri = 'gs://cloud-samples-data/bigquery/us-states/us-states.csv'
@@ -367,11 +216,6 @@ destination_table = client.get_table(table_ref)
 print('Loaded {} rows.'.format(destination_table.num_rows))
 ```
 
-    Starting job 1c54e163-d785-4551-b4b7-7170ba07e00a
-    Job finished.
-    Loaded 50 rows.
-
-
 ## Cleaning Up
 
 The following code deletes the dataset created for this tutorial, including all tables in the dataset.
@@ -386,6 +230,3 @@ client.delete_dataset(dataset, delete_contents=True)
 
 print('Deleted dataset: {}'.format(dataset.path))
 ```
-
-    Deleted dataset: /projects/your-project-id/datasets/your_new_dataset
-

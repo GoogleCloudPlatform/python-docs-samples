@@ -1,13 +1,13 @@
 
-# BigQuery Query Magic
+# BigQuery query magic
 
-Jupyter magics are notebook-specific shortcuts that allow you to run commands with minimal syntax. Jupyter notebooks come pre-loaded with many [built-in commands](https://ipython.readthedocs.io/en/stable/interactive/magics.html). The BigQuery client library, `google-cloud-bigquery`, provides a cell magic, `%%bigquery`, which runs a SQL query and returns the results as a pandas DataFrame.
+Jupyter magics are notebook-specific shortcuts that allow you to run commands with minimal syntax. Jupyter notebooks come with many [built-in commands](https://ipython.readthedocs.io/en/stable/interactive/magics.html). The BigQuery client library, `google-cloud-bigquery`, provides a cell magic, `%%bigquery`. The `%%bigquery` magic runs a SQL query and returns the results as a pandas `DataFrame`.
 
 ## Run a query on a public dataset
 
-The following example queries the BigQuery `usa_names` public dataset, which is a Social Security Administration dataset that contains all names from Social Security card applications for births that occurred in the United States after 1879.
+The following example queries the BigQuery `usa_names` public dataset. `usa_names` is a Social Security Administration dataset that contains all names from Social Security card applications for births that occurred in the United States after 1879.
 
-The example below shows how to invoke the magic (`%%bigquery`) and pass in a Standard SQL query in the body of the code cell. The results are displayed below the input cell as a [pandas DataFrame](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html).
+The following example shows how to invoke the magic (`%%bigquery`), and how to pass in a standard SQL query in the body of the code cell. The results are displayed below the input cell as a pandas [`DataFrame`](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html).
 
 
 ```python
@@ -18,76 +18,6 @@ GROUP BY name
 ORDER BY count DESC
 LIMIT 10
 ```
-
-
-
-
-<div>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th>name</th>
-<th>count</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>0</th>
-<td>James</td>
-<td>5001762</td>
-</tr>
-<tr>
-<th>1</th>
-<td>John</td>
-<td>4875934</td>
-</tr>
-<tr>
-<th>2</th>
-<td>Robert</td>
-<td>4743843</td>
-</tr>
-<tr>
-<th>3</th>
-<td>Michael</td>
-<td>4354622</td>
-</tr>
-<tr>
-<th>4</th>
-<td>William</td>
-<td>3886371</td>
-</tr>
-<tr>
-<th>5</th>
-<td>Mary</td>
-<td>3748377</td>
-</tr>
-<tr>
-<th>6</th>
-<td>David</td>
-<td>3595923</td>
-</tr>
-<tr>
-<th>7</th>
-<td>Richard</td>
-<td>2542659</td>
-</tr>
-<tr>
-<th>8</th>
-<td>Joseph</td>
-<td>2518578</td>
-</tr>
-<tr>
-<th>9</th>
-<td>Charles</td>
-<td>2273860</td>
-</tr>
-</tbody>
-</table>
-</div>
-
-
 
 ## Display verbose output
 
@@ -103,84 +33,9 @@ ORDER BY count DESC
 LIMIT 10
 ```
 
-    Executing query with job ID: 0e3ca180-c6e9-4298-bbc4-b68e7e6fdebd
-    Query executing: 0.52s
-    Query complete after 0.83s
-
-
-
-
-
-<div>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th>name</th>
-<th>count</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>0</th>
-<td>James</td>
-<td>5001762</td>
-</tr>
-<tr>
-<th>1</th>
-<td>John</td>
-<td>4875934</td>
-</tr>
-<tr>
-<th>2</th>
-<td>Robert</td>
-<td>4743843</td>
-</tr>
-<tr>
-<th>3</th>
-<td>Michael</td>
-<td>4354622</td>
-</tr>
-<tr>
-<th>4</th>
-<td>William</td>
-<td>3886371</td>
-</tr>
-<tr>
-<th>5</th>
-<td>Mary</td>
-<td>3748377</td>
-</tr>
-<tr>
-<th>6</th>
-<td>David</td>
-<td>3595923</td>
-</tr>
-<tr>
-<th>7</th>
-<td>Richard</td>
-<td>2542659</td>
-</tr>
-<tr>
-<th>8</th>
-<td>Joseph</td>
-<td>2518578</td>
-</tr>
-<tr>
-<th>9</th>
-<td>Charles</td>
-<td>2273860</td>
-</tr>
-</tbody>
-</table>
-</div>
-
-
-
 ## Explicitly specify a project
 
-By default, the `%%bigquery` magic command uses the project associated with your credentials to run the query. You may also explicitly provide a project ID using the `--project` flag. Note that your credentials must have permissions to create query jobs in the project you specify.
+By default, the `%%bigquery` magic command uses your default project to run the query. You may also explicitly provide a project ID using the `--project` flag. Note that your credentials must have permissions to create query jobs in the project you specify.
 
 
 ```python
@@ -197,79 +52,9 @@ ORDER BY count DESC
 LIMIT 10
 ```
 
-
-
-
-<div>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th>name</th>
-<th>count</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>0</th>
-<td>James</td>
-<td>5001762</td>
-</tr>
-<tr>
-<th>1</th>
-<td>John</td>
-<td>4875934</td>
-</tr>
-<tr>
-<th>2</th>
-<td>Robert</td>
-<td>4743843</td>
-</tr>
-<tr>
-<th>3</th>
-<td>Michael</td>
-<td>4354622</td>
-</tr>
-<tr>
-<th>4</th>
-<td>William</td>
-<td>3886371</td>
-</tr>
-<tr>
-<th>5</th>
-<td>Mary</td>
-<td>3748377</td>
-</tr>
-<tr>
-<th>6</th>
-<td>David</td>
-<td>3595923</td>
-</tr>
-<tr>
-<th>7</th>
-<td>Richard</td>
-<td>2542659</td>
-</tr>
-<tr>
-<th>8</th>
-<td>Joseph</td>
-<td>2518578</td>
-</tr>
-<tr>
-<th>9</th>
-<td>Charles</td>
-<td>2273860</td>
-</tr>
-</tbody>
-</table>
-</div>
-
-
-
 ## Assign the query results to a variable
 
-If you would like to save the results of your query to a variable, provide a variable name as a parameter to `%%bigquery`. The example below saves the results of the query to a variable named `df`. Note that when a variable is provided, the results are not displayed below the cell invoking the magic command.
+To save the results of your query to a variable, provide a variable name as a parameter to `%%bigquery`. The following example saves the results of the query to a variable named `df`. Note that when a variable is provided, the results are not displayed below the cell that invokes the magic command.
 
 
 ```python
@@ -282,153 +67,13 @@ LIMIT 10
 ```
 
 
-
-
-<div>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th>name</th>
-<th>count</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>0</th>
-<td>James</td>
-<td>5001762</td>
-</tr>
-<tr>
-<th>1</th>
-<td>John</td>
-<td>4875934</td>
-</tr>
-<tr>
-<th>2</th>
-<td>Robert</td>
-<td>4743843</td>
-</tr>
-<tr>
-<th>3</th>
-<td>Michael</td>
-<td>4354622</td>
-</tr>
-<tr>
-<th>4</th>
-<td>William</td>
-<td>3886371</td>
-</tr>
-<tr>
-<th>5</th>
-<td>Mary</td>
-<td>3748377</td>
-</tr>
-<tr>
-<th>6</th>
-<td>David</td>
-<td>3595923</td>
-</tr>
-<tr>
-<th>7</th>
-<td>Richard</td>
-<td>2542659</td>
-</tr>
-<tr>
-<th>8</th>
-<td>Joseph</td>
-<td>2518578</td>
-</tr>
-<tr>
-<th>9</th>
-<td>Charles</td>
-<td>2273860</td>
-</tr>
-</tbody>
-</table>
-</div>
-
-
-
-
 ```python
 df
 ```
 
-
-
-
-<div>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th>name</th>
-<th>count</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>0</th>
-<td>James</td>
-<td>5001762</td>
-</tr>
-<tr>
-<th>1</th>
-<td>John</td>
-<td>4875934</td>
-</tr>
-<tr>
-<th>2</th>
-<td>Robert</td>
-<td>4743843</td>
-</tr>
-<tr>
-<th>3</th>
-<td>Michael</td>
-<td>4354622</td>
-</tr>
-<tr>
-<th>4</th>
-<td>William</td>
-<td>3886371</td>
-</tr>
-<tr>
-<th>5</th>
-<td>Mary</td>
-<td>3748377</td>
-</tr>
-<tr>
-<th>6</th>
-<td>David</td>
-<td>3595923</td>
-</tr>
-<tr>
-<th>7</th>
-<td>Richard</td>
-<td>2542659</td>
-</tr>
-<tr>
-<th>8</th>
-<td>Joseph</td>
-<td>2518578</td>
-</tr>
-<tr>
-<th>9</th>
-<td>Charles</td>
-<td>2273860</td>
-</tr>
-</tbody>
-</table>
-</div>
-
-
-
 ## Run a parameterized query
 
-Parameterized queries are useful if you need to run a query with certain parameters calculated at run time. Note that the value types must be JSON serializable. The example below defines a parameters dictionary and passes it to the `--params` flag. The key of the dictionary is the name of the parameter, and the value of the dictionary is the value of the parameter.
+Parameterized queries are useful if you need to run a query with certain parameters that are calculated at run time. Note that the value types must be JSON serializable. The following example defines a parameters dictionary and passes it to the `--params` flag. The key of the dictionary is the name of the parameter, and the value of the dictionary is the value of the parameter.
 
 
 ```python
@@ -444,71 +89,3 @@ GROUP BY name
 ORDER BY count DESC
 LIMIT @limit
 ```
-
-
-
-
-<div>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th>name</th>
-<th>count</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>0</th>
-<td>James</td>
-<td>5001762</td>
-</tr>
-<tr>
-<th>1</th>
-<td>John</td>
-<td>4875934</td>
-</tr>
-<tr>
-<th>2</th>
-<td>Robert</td>
-<td>4743843</td>
-</tr>
-<tr>
-<th>3</th>
-<td>Michael</td>
-<td>4354622</td>
-</tr>
-<tr>
-<th>4</th>
-<td>William</td>
-<td>3886371</td>
-</tr>
-<tr>
-<th>5</th>
-<td>Mary</td>
-<td>3748377</td>
-</tr>
-<tr>
-<th>6</th>
-<td>David</td>
-<td>3595923</td>
-</tr>
-<tr>
-<th>7</th>
-<td>Richard</td>
-<td>2542659</td>
-</tr>
-<tr>
-<th>8</th>
-<td>Joseph</td>
-<td>2518578</td>
-</tr>
-<tr>
-<th>9</th>
-<td>Charles</td>
-<td>2273860</td>
-</tr>
-</tbody>
-</table>
-</div>

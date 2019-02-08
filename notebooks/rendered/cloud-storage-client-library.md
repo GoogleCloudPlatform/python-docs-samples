@@ -1,5 +1,5 @@
 
-# Cloud Storage Client Library
+# Cloud Storage client library
 
 This tutorial shows how to get started with the [Cloud Storage Python client library](https://googleapis.github.io/google-cloud-python/latest/storage/index.html).
 
@@ -23,11 +23,9 @@ Run the following to create a client with your default project:
 
 ```python
 client = storage.Client()
+
 print("Client created using default project: {}".format(client.project))
 ```
-
-    Client created using default project: your-project-id
-
 
 Alternatively, you can explicitly specify a project when constructing the client:
 
@@ -43,16 +41,13 @@ For more information about naming buckets, see [Bucket name requirements](https:
 
 ```python
 # Replace the string below with a unique name for the new bucket
-bucket_name = 'your-new-bucket'
+bucket_name = "your-new-bucket"
 
 # Creates the new bucket
 bucket = client.create_bucket(bucket_name)
 
-print('Bucket {} created.'.format(bucket.name))
+print("Bucket {} created.".format(bucket.name))
 ```
-
-    Bucket your-new-bucket created.
-
 
 ## List buckets in a project
 
@@ -65,10 +60,6 @@ for item in buckets:
     print("\t" + item.name)
 ```
 
-    Buckets in your-project-id:
-    	your-new-bucket
-
-
 ## Get bucket metadata
 
 The next cell shows how to get information on metadata of your Cloud Storage buckets.
@@ -79,15 +70,10 @@ To learn more about specific bucket properties, see [Bucket Locations](https://c
 ```python
 bucket = client.get_bucket(bucket_name)
 
-print('Bucket name: {}'.format(bucket.name))
-print('Bucket location: {}'.format(bucket.location))
-print('Bucket storage class: {}'.format(bucket.storage_class))
+print("Bucket name: {}".format(bucket.name))
+print("Bucket location: {}".format(bucket.location))
+print("Bucket storage class: {}".format(bucket.storage_class))
 ```
-
-    Bucket name: your-new-bucket
-    Bucket location: US
-    Bucket storage class: STANDARD
-
 
 ## Upload a local file to a bucket
 
@@ -99,17 +85,14 @@ For more information, including how to rename an object, see the [Object name re
 
 
 ```python
-blob_name = 'us-states.txt'
+blob_name = "us-states.txt"
 blob = bucket.blob(blob_name)
 
-source_file_name = 'resources/us-states.txt'
+source_file_name = "resources/us-states.txt"
 blob.upload_from_filename(source_file_name)
 
-print('File uploaded to {}.'.format(bucket.name))
+print("File uploaded to {}.".format(bucket.name))
 ```
-
-    File uploaded to your-new-bucket.
-
 
 ## List blobs in a bucket
 
@@ -122,10 +105,6 @@ for item in blobs:
     print("\t" + item.name)
 ```
 
-    Blobs in your-new-bucket:
-    	us-states.txt
-
-
 ## Get a blob and display metadata
 
 See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metadata) for more information about object metadata.
@@ -134,30 +113,21 @@ See [documentation](https://cloud.google.com/storage/docs/viewing-editing-metada
 ```python
 blob = bucket.get_blob(blob_name)
 
-print('Name: {}'.format(blob.id))
-print('Size: {} bytes'.format(blob.size))
-print('Content type: {}'.format(blob.content_type))
-print('Public URL: {}'.format(blob.public_url))
+print("Name: {}".format(blob.id))
+print("Size: {} bytes".format(blob.size))
+print("Content type: {}".format(blob.content_type))
+print("Public URL: {}".format(blob.public_url))
 ```
-
-    Name: your-new-bucket/us-states.txt/1549421467685211
-    Size: 637 bytes
-    Content type: text/plain
-    Public URL: https://storage.googleapis.com/your-new-bucket/us-states.txt
-
 
 ## Download a blob to a local directory
 
 
 ```python
-output_file_name = 'resources/downloaded-us-states.txt'
+output_file_name = "resources/downloaded-us-states.txt"
 blob.download_to_filename(output_file_name)
 
-print('Downloaded blob {} to {}.'.format(blob.name, output_file_name))
+print("Downloaded blob {} to {}.".format(blob.name, output_file_name))
 ```
-
-    Downloaded blob us-states.txt to resources/downloaded-us-states.txt.
-
 
 ## Cleaning up
 
@@ -168,11 +138,8 @@ print('Downloaded blob {} to {}.'.format(blob.name, output_file_name))
 blob = client.get_bucket(bucket_name).get_blob(blob_name)
 blob.delete()
 
-print('Blob {} deleted.'.format(blob.name))
+print("Blob {} deleted.".format(blob.name))
 ```
-
-    Blob us-states.txt deleted.
-
 
 ### Delete a bucket
 
@@ -183,11 +150,8 @@ Note that the bucket must be empty before it can be deleted.
 bucket = client.get_bucket(bucket_name)
 bucket.delete()
 
-print('Bucket {} deleted.'.format(bucket.name))
+print("Bucket {} deleted.".format(bucket.name))
 ```
-
-    Bucket your-new-bucket deleted.
-
 
 ## Next Steps
 
