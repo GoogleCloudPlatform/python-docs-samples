@@ -14,20 +14,17 @@ Start by importing the library:
 from google.cloud import storage
 ```
 
-Next, initialize a client object, which is used to interact with the Cloud Storage API. The project used by the client will default to the project associated with the credentials file stored in the `GOOGLE_APPLICATION_CREDENTIALS` environment variable.
-
-See the [google-auth](https://google-auth.readthedocs.io/en/latest/reference/google.auth.html) for more information about Application Default Credentials.
+The `storage.Client` object uses your default project. Alternatively, you can specify a project in the `Client` constructor. For more information about how the default project is determined, see the [google-auth documentation](https://google-auth.readthedocs.io/en/latest/reference/google.auth.html).
 
 Run the following to create a client with your default project:
 
 
 ```python
 client = storage.Client()
-
 print("Client created using default project: {}".format(client.project))
 ```
 
-Alternatively, you can explicitly specify a project when constructing the client:
+To explicitly specify a project when constructing the client, set the `project` parameter:
 
 
 ```python
@@ -64,7 +61,7 @@ for item in buckets:
 
 The next cell shows how to get information on metadata of your Cloud Storage buckets.
 
-To learn more about specific bucket properties, see [Bucket Locations](https://cloud.google.com/storage/docs/locations) and [Storage Classes](https://cloud.google.com/storage/docs/storage-classes).
+To learn more about specific bucket properties, see [Bucket locations](https://cloud.google.com/storage/docs/locations) and [Storage classes](https://cloud.google.com/storage/docs/storage-classes).
 
 
 ```python
@@ -156,6 +153,6 @@ print("Bucket {} deleted.".format(bucket.name))
 ## Next Steps
 
 Read more about Cloud Storage in the documentation:
-+ [Storage Key Terms](https://cloud.google.com/storage/docs/key-terms)
-+ [How-To Guides](https://cloud.google.com/storage/docs/how-to)
++ [Storage key terms](https://cloud.google.com/storage/docs/key-terms)
++ [How-to guides](https://cloud.google.com/storage/docs/how-to)
 + [Pricing](https://cloud.google.com/storage/pricing)

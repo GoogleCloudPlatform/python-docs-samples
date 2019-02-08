@@ -150,6 +150,6 @@ The following command deletes all objects in the bucket before deleting the buck
 ## Next Steps
 
 Read more about Cloud Storage in the documentation:
-+ [Storage Key Terms](https://cloud.google.com/storage/docs/key-terms)
-+ [How-To Guides](https://cloud.google.com/storage/docs/how-to)
++ [Storage key terms](https://cloud.google.com/storage/docs/key-terms)
++ [How-to guides](https://cloud.google.com/storage/docs/how-to)
 + [Pricing](https://cloud.google.com/storage/pricing)
