@@ -14,11 +14,19 @@
 
 import time
 
+import google.auth
+import google.datalab
 import pytest
 import IPython
 from IPython.testing import tools
 from IPython.terminal import interactiveshell
 
+
+# Get default project
+_, PROJECT_ID = google.auth.default()
+# Set Datalab project ID
+context = google.datalab.Context.default()
+context.set_project_id(PROJECT_ID)
 
 @pytest.fixture(scope='session')
 def ipython_interactive():
