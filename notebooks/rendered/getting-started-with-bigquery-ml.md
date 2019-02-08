@@ -1,29 +1,54 @@
 
-# Getting Started with BigQuery ML
+# Getting started with BigQuery ML
 
-BigQuery ML (BQML) enables users to create and execute machine learning models in BigQuery using SQL queries. The goal is to democratise machine learning by enabling SQL practitioners to build models using their existing tools and to increase development speed by eliminating the need for data movement.
+BigQuery ML enables users to create and execute machine learning models in BigQuery using SQL queries. The goal is to democratize machine learning by enabling SQL practitioners to build models using their existing tools and to increase development speed by eliminating the need for data movement.
 
-In this tutorial, you'll use the [sample Analytics 360 dataset](https://support.google.com/analytics/answer/3437719) to create a model that predicts whether a visitor will make a transaction.
+In this tutorial, you use the sample [Google Analytics sample dataset for BigQuery](https://support.google.com/analytics/answer/7586738?hl=en&amp;ref_topic=3416089) to create a model that predicts whether a website visitor will make a transaction. For information on the schema of the Analytics dataset, see [BigQuery export schema](https://support.google.com/analytics/answer/3437719) in the Google Analytics Help Center.
 
-## Create a dataset
+
+## Objectives
+In this tutorial, you use:
+
++ BigQuery ML to create a binary logistic regression model using the `CREATE MODEL` statement
++ The `ML.EVALUATE` function to evaluate the ML model
++ The `ML.PREDICT` function to make predictions using the ML model
+
+## Create your dataset
+
+Enter the following code to import the BigQuery Python client library and initialize a client. The BigQuery client is used to send and receive messages from the BigQuery API.
 
 
 ```python
 from google.cloud import bigquery
 
 client = bigquery.Client(location="US")
+```
+
+Next, you create a BigQuery dataset to store your ML model. Run the following to create your dataset:
+
+
+```python
 dataset = client.create_dataset("bqml_tutorial")
 ```
 
-## Create a Model
+## Create your model
 
-### Logistic regression for Analytics 360
-Now, let's move on to our task. Here is how you would create a model to predict whether a visitor will make a transaction.
+Next, you create a logistic regression model using the Google Analytics sample
+dataset for BigQuery. The model is used to predict whether a
+website visitor will make a transaction. The standard SQL query uses a
+`CREATE MODEL` statement to create and train the model. Standard SQL is the
+default query syntax for the BigQuery python client library.
+
+The BigQuery python client library provides a cell magic,
+`%%bigquery`, which runs a SQL query and returns the results as a Pandas
+`DataFrame`.
+
+To run the `CREATE MODEL` query to create and train your model:
 
 
 ```python
 %%bigquery
-CREATE OR REPLACE MODEL `bqml_tutorial.sample_model` 
+CREATE OR REPLACE MODEL `bqml_tutorial.sample_model`
 OPTIONS(model_type='logistic_reg') AS
 SELECT
   IF(totals.transactions IS NULL, 0, 1) AS label,
@@ -34,37 +59,34 @@ SELECT
 FROM
   `bigquery-public-data.google_analytics_sample.ga_sessions_*`
 WHERE
-  _TABLE_SUFFIX BETWEEN '20160801' AND '20170631'
-LIMIT 100000;
+  _TABLE_SUFFIX BETWEEN '20160801' AND '20170630'
 ```
 
+The query takes several minutes to complete. After the first iteration is
+complete, your model (`sample_model`) appears in the navigation panel of the
+BigQuery web UI. Because the query uses a `CREATE MODEL` statement to create a
+table, you do not see query results. The output is an empty `DataFrame`.
 
+## Get training statistics
 
+To see the results of the model training, you can use the
+[`ML.TRAINING_INFO`](/bigquery/docs/reference/standard-sql/bigqueryml-syntax-train)
+function, or you can view the statistics in the BigQuery web UI. This functionality
+is not currently available in the BigQuery Classic web UI.
+In this tutorial, you use the `ML.TRAINING_INFO` function.
 
-<div>
+A machine learning algorithm builds a model by examining many examples and
+attempting to find a model that minimizes loss. This process is called empirical
+risk minimization.
 
-<table>
-<thead>
-<tr>
-<th></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-</div>
+Loss is the penalty for a bad prediction — a number indicating
+how bad the model's prediction was on a single example. If the model's
+prediction is perfect, the loss is zero; otherwise, the loss is greater. The
+goal of training a model is to find a set of weights that have low
+loss, on average, across all examples.
 
-
-
-Here, we use the visitor's device's operating system, whether said device is a mobile device, the visitor's country and the number of page views as the criteria for whether a transaction has been made.
-
-In this case, "bqml_tutorial" is the name of the dataset and "sample_model" is the name of our model. The model type specified is binary logistic regression. In this case, `label` is what we're trying to fit to. Note that if you're only interested in 1 column, this is an alternative way to setting `input_label_cols`. We're also limiting our training data to those collected from 1 August 2016 to 31 June 2017. We're doing this to save the last month of data for "prediction". Furthermore, we're limiting to 100,000 data points to save us some time. Feel free to remove the last line if you're not in a rush.
-
-Running the CREATE MODEL command creates a Query Job that will run asynchronously so you can, for example, close or refresh the browser.
-
-When the job is complete, you will see an empty DataFrame returned below the cell (it may be rendered as a small box or line, depending upon your settings). This is expected because there are no query results returned from creating a model.
-
-## Evaluate the Model
+To see the model training statistics that were generated when you ran the
+`CREATE MODEL` query:
 
 
 ```python
@@ -72,83 +94,77 @@ When the job is complete, you will see an empty DataFrame returned below the cel
 SELECT
   *
 FROM
-  ml.EVALUATE(MODEL `bqml_tutorial.sample_model`, (
-SELECT
-  IF(totals.transactions IS NULL, 0, 1) AS label,
-  IFNULL(device.operatingSystem, "") AS os,
-  device.isMobile AS is_mobile,
-  IFNULL(geoNetwork.country, "") AS country,
-  IFNULL(totals.pageviews, 0) AS pageviews
-FROM
-  `bigquery-public-data.google_analytics_sample.ga_sessions_*`
-WHERE
-  _TABLE_SUFFIX BETWEEN '20170701' AND '20170801'));
+  ML.TRAINING_INFO(MODEL `bqml_tutorial.sample_model`)
 ```
 
+Note: Typically, it is not a best practice to use a `SELECT *` query. Because the model output is a small table, this query does not process a large amount of data. As a result, the cost is minimal.
+
+When the query is complete, the results appear below the query. The results should look like the following:
+![image.png](attachment:image.png)
+
+The `loss` column represents the loss metric calculated after the given iteration
+on the training dataset. Since you performed a logistic regression, this column
+is the [log loss](https://en.wikipedia.org/wiki/Cross_entropy#Cross-entropy_error_function_and_logistic_regression).
+The `eval_loss` column is the same loss metric calculated on
+the holdout dataset (data that is held back from training to validate the model).
+
+For more details on the `ML.TRAINING_INFO` function, see the
+[BigQuery ML syntax reference](/bigquery/docs/reference/standard-sql/bigqueryml-syntax-train).
+
+## Evaluate your model
+
+After creating your model, you evaluate the performance of the classifier using
+the [`ML.EVALUATE`](/bigquery/docs/reference/standard-sql/bigqueryml-syntax-evaluate)
+function. You can also use the [`ML.ROC_CURVE`](/bigquery/docs/reference/standard-sql/bigqueryml-syntax-roc)
+function for logistic regression specific metrics.
+
+A classifier is one of a set of enumerated target values for a label. For
+example, in this tutorial you are using a binary classification model that
+detects transactions. The two classes are the values in the `label` column:
+`0` (no transactions) and not `1` (transaction made).
+
+To run the `ML.EVALUATE` query that evaluates the model:
 
 
+```python
+%%bigquery
+SELECT
+  *
+FROM ML.EVALUATE(MODEL `bqml_tutorial.sample_model`, (
+  SELECT
+    IF(totals.transactions IS NULL, 0, 1) AS label,
+    IFNULL(device.operatingSystem, "") AS os,
+    device.isMobile AS is_mobile,
+    IFNULL(geoNetwork.country, "") AS country,
+    IFNULL(totals.pageviews, 0) AS pageviews
+  FROM
+    `bigquery-public-data.google_analytics_sample.ga_sessions_*`
+  WHERE
+    _TABLE_SUFFIX BETWEEN '20170701' AND '20170801'))
+```
 
-<div>
+When the query is complete, the results appear below the query. The
+results should look like the following:
+![image.png](attachment:image.png)
 
-<table>
-<thead>
-<tr>
-<th></th>
-<th>precision</th>
-<th>recall</th>
-<th>accuracy</th>
-<th>f1_score</th>
-<th>log_loss</th>
-<th>roc_auc</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>0</th>
-<td>0.461832</td>
-<td>0.112663</td>
-<td>0.985289</td>
-<td>0.181138</td>
-<td>0.046062</td>
-<td>0.98184</td>
-</tr>
-</tbody>
-</table>
-</div>
+Because you performed a logistic regression, the results include the following
+columns:
 
-
-
-If used with a linear regression model, the above query returns the following columns: `mean_absolute_error`, `mean_squared_error`, `mean_squared_log_error`, `median_absolute_error`, `r2_score`, `explained_variance`. If used with a logistic regression model, the above query returns the following columns: `precision`, `recall`, `accuracy`, `f1_score`, `log_loss`, `roc_auc`. Please consult the machine learning glossary or run a Google search to understand how each of these metrics are calculated and what they mean.
-
-Concretely, you'll recognize the `SELECT` and `FROM` portions of the query are identical to that used during training. The `WHERE` portion reflects the change in time frame and the `FROM` portion shows that we're calling `ml.EVALUATE`. You should see a table similar to this:
++ [`precision`](https://developers.google.com/machine-learning/glossary/#precision)
++ [`recall`](https://developers.google.com/machine-learning/glossary/#recall)
++ [`accuracy`](https://developers.google.com/machine-learning/glossary/#accuracy)
++ [`f1_score`](https://en.wikipedia.org/wiki/F1_score)
++ [`log_loss`](https://developers.google.com/machine-learning/glossary/#Log_Loss)
++ [`roc_auc`](https://developers.google.com/machine-learning/glossary/#AUC)
 
 
-<table>
-<tr>
-<th></th>
-<th>precision</th>
-<th>recall</th>
-<th>accuracy</th>
-<th>f1_score</th>
-<th>log_loss</th>
-<th>roc_auc</th>
-</tr>
-<tr>
-<td>1</td>
-<td>0.437838</td>
-<td>0.075419</td>
-<td>0.985249</td>
-<td>0.128674</td>
-<td>0.047682</td>
-<td>0.982956</td>
-</tr>
-</table>
+## Use your model to predict outcomes
 
-## Use the Model
+Now that you have evaluated your model, the next step is to use it to predict
+outcomes. You use your model to predict the number of transactions made by
+website visitors from each country. And you use it to predict purchases per user.
 
-### Predict purchases per country
-
-Here we try to predict the number of transactions made by visitors of each country, sort the results and select the top 10 countries by purchases.
+To run the query that uses the model to predict the number of transactions:
 
 
 ```python
@@ -156,111 +172,33 @@ Here we try to predict the number of transactions made by visitors of each count
 SELECT
   country,
   SUM(predicted_label) as total_predicted_purchases
-FROM
-  ml.PREDICT(MODEL `bqml_tutorial.sample_model`, (
-SELECT
-  IFNULL(device.operatingSystem, "") AS os,
-  device.isMobile AS is_mobile,
-  IFNULL(totals.pageviews, 0) AS pageviews,
-  IFNULL(geoNetwork.country, "") AS country
-FROM
-  `bigquery-public-data.google_analytics_sample.ga_sessions_*`
-WHERE
-  _TABLE_SUFFIX BETWEEN '20170701' AND '20170801'))
-GROUP BY country
-ORDER BY total_predicted_purchases DESC
-LIMIT 10;
+FROM ML.PREDICT(MODEL `bqml_tutorial.sample_model`, (
+  SELECT
+    IFNULL(device.operatingSystem, "") AS os,
+    device.isMobile AS is_mobile,
+    IFNULL(totals.pageviews, 0) AS pageviews,
+    IFNULL(geoNetwork.country, "") AS country
+  FROM
+    `bigquery-public-data.google_analytics_sample.ga_sessions_*`
+  WHERE
+    _TABLE_SUFFIX BETWEEN '20170701' AND '20170801'))
+  GROUP BY country
+  ORDER BY total_predicted_purchases DESC
+  LIMIT 10
 ```
 
+When the query is complete, the results appear below the query. The
+results should look like the following. Because model training is not
+deterministic, your results may differ.
 
+![image.png](attachment:image.png)
 
+In the next example, you try to predict the number of transactions each website
+visitor will make. This query is identical to the previous query except for the
+`GROUP BY` clause. Here the `GROUP BY` clause — `GROUP BY fullVisitorId`
+— is used to group the results by visitor ID.
 
-<div>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th>country</th>
-<th>total_predicted_purchases</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>0</th>
-<td>United States</td>
-<td>228</td>
-</tr>
-<tr>
-<th>1</th>
-<td>Canada</td>
-<td>7</td>
-</tr>
-<tr>
-<th>2</th>
-<td>Taiwan</td>
-<td>6</td>
-</tr>
-<tr>
-<th>3</th>
-<td>India</td>
-<td>3</td>
-</tr>
-<tr>
-<th>4</th>
-<td>Turkey</td>
-<td>2</td>
-</tr>
-<tr>
-<th>5</th>
-<td>Japan</td>
-<td>2</td>
-</tr>
-<tr>
-<th>6</th>
-<td>United Kingdom</td>
-<td>1</td>
-</tr>
-<tr>
-<th>7</th>
-<td>Vietnam</td>
-<td>1</td>
-</tr>
-<tr>
-<th>8</th>
-<td>El Salvador</td>
-<td>1</td>
-</tr>
-<tr>
-<th>9</th>
-<td>Serbia</td>
-<td>1</td>
-</tr>
-</tbody>
-</table>
-</div>
-
-
-
-Notice this query is very similar to the evaluation query we demonstrated in the previous section. Instead of `ml.EVALUATE`, we use `ml.PREDICT` here and we wrap the BQML portion of the query with standard SQL commands. Concretely, we're interested in the country and the sum of purchases for each country, so that's what we `SELECT`, `GROUP BY` and `ORDER BY`. `LIMIT` is used here to ensure we only get the top 10 results. You should see a table similar to this:
-
-<table>
-<tr><th></th><th>country</th><th>total_predicted_purchases</th></tr>
-<tr><td>0</td><td>UnitedStates</td><td>467</td></tr>
-<tr><td>1</td><td>Canada</td><td>8</td></tr>
-<tr><td>2</td><td>Taiwan</td><td>6</td></tr>
-<tr><td>3</td><td>India</td><td>5</td></tr>
-<tr><td>4</td><td>UnitedKingdom</td><td>3</td></tr>
-<tr><td>5</td><td>Turkey</td><td>3</td></tr>
-<tr><td>6</td><td>Japan</td><td>2</td></tr>
-<tr><td>7</td><td>Germany</td><td>2</td></tr>
-<tr><td>8</td><td>HongKong</td><td>2</td></tr>
-<tr><td>9</td><td>Singapore</td><td>2</td></tr>
-</table>
-
-### Predict purchases per user
-
-Here is another example. This time we try to predict the number of transactions each visitor makes, sort the results and select the top 10 visitors by transactions.
+To run the query that predicts purchases per user:
 
 
 ```python
@@ -268,117 +206,25 @@ Here is another example. This time we try to predict the number of transactions 
 SELECT
   fullVisitorId,
   SUM(predicted_label) as total_predicted_purchases
-FROM
-  ml.PREDICT(MODEL `bqml_tutorial.sample_model`, (
-SELECT
-  IFNULL(device.operatingSystem, "") AS os,
-  device.isMobile AS is_mobile,
-  IFNULL(totals.pageviews, 0) AS pageviews,
-  IFNULL(geoNetwork.country, "") AS country,
-  fullVisitorId
-FROM
-  `bigquery-public-data.google_analytics_sample.ga_sessions_*`
-WHERE
-  _TABLE_SUFFIX BETWEEN '20170701' AND '20170801'))
-GROUP BY fullVisitorId
-ORDER BY total_predicted_purchases DESC
-LIMIT 10;
+FROM ML.PREDICT(MODEL `bqml_tutorial.sample_model`, (
+  SELECT
+    IFNULL(device.operatingSystem, "") AS os,
+    device.isMobile AS is_mobile,
+    IFNULL(totals.pageviews, 0) AS pageviews,
+    IFNULL(geoNetwork.country, "") AS country,
+    fullVisitorId
+  FROM
+    `bigquery-public-data.google_analytics_sample.ga_sessions_*`
+  WHERE
+    _TABLE_SUFFIX BETWEEN '20170701' AND '20170801'))
+  GROUP BY fullVisitorId
+  ORDER BY total_predicted_purchases DESC
+  LIMIT 10
 ```
 
-
-
-
-<div>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th>fullVisitorId</th>
-<th>total_predicted_purchases</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>0</th>
-<td>9417857471295131045</td>
-<td>4</td>
-</tr>
-<tr>
-<th>1</th>
-<td>2969418676126258798</td>
-<td>2</td>
-</tr>
-<tr>
-<th>2</th>
-<td>1280993661204347450</td>
-<td>2</td>
-</tr>
-<tr>
-<th>3</th>
-<td>0376394056092189113</td>
-<td>2</td>
-</tr>
-<tr>
-<th>4</th>
-<td>806992249032686650</td>
-<td>2</td>
-</tr>
-<tr>
-<th>5</th>
-<td>1712066703099487652</td>
-<td>2</td>
-</tr>
-<tr>
-<th>6</th>
-<td>057693500927581077</td>
-<td>2</td>
-</tr>
-<tr>
-<th>7</th>
-<td>8388931032955052746</td>
-<td>2</td>
-</tr>
-<tr>
-<th>8</th>
-<td>8064625150033508396</td>
-<td>2</td>
-</tr>
-<tr>
-<th>9</th>
-<td>112288330928895942</td>
-<td>2</td>
-</tr>
-</tbody>
-</table>
-</div>
-
-
-
-You should see a table similar to this:
-
-<table>
-<tr><th></th><th>country</th><th>total_predicted_purchases</th></tr>
-<tr><td>0</td><td>9417857471295131045</td><td>3</td></tr>
-<tr><td>1</td><td>8388931032955052746</td><td>2</td></tr>
-<tr><td>2</td><td>7420300501523012460</td><td>2</td></tr>
-<tr><td>3</td><td>806992249032686650</td><td>2</td></tr>
-<tr><td>4</td><td>0376394056092189113</td><td>2</td></tr>
-<tr><td>5</td><td>2969418676126258798</td><td>2</td></tr>
-<tr><td>6</td><td>489038402765684003</td><td>2</td></tr>
-<tr><td>7</td><td>057693500927581077</td><td>2</td></tr>
-<tr><td>8</td><td>112288330928895942</td><td>2</td></tr>
-<tr><td>9</td><td>1280993661204347450</td><td>2</td></tr>
-</table>
-
-## Congratulations!
-
-You completed the tutorial. Looking for a challenge? Try making a linear regression model with BQML.
-
-What we've covered:
-+ Create a binary logistic regression model
-+ Evaluate the model
-+ Use model to make predictions
+When the query is complete, the results appear below the query. The
+results should look like the following:
+![image.png](attachment:image.png)
 
 ## Cleaning up
 
@@ -388,7 +234,3 @@ To delete the resources created by this tutorial, execute the following code to 
 ```python
 client.delete_dataset(dataset, delete_contents=True)
 ```
-
-## Next Steps
-
-For more information about BQML, please refer to the [documentation](https://cloud.google.com/bigquery/docs/bigqueryml-intro).
