@@ -129,7 +129,7 @@ def get_client(
     client_id = 'projects/{}/locations/{}/registries/{}/devices/{}'.format(
             project_id, cloud_region, registry_id, device_id)
     print('Device client_id is \'{}\''.format(client_id))
-    
+
     client = mqtt.Client(client_id=client_id)
 
     # With Google Cloud IoT Core, the username field is ignored, and the
