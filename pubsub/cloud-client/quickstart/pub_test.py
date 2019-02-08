@@ -17,6 +17,7 @@
 import os
 import pytest
 
+from google.api_core.exceptions import AlreadyExists
 from google.cloud import pubsub_v1
 
 import pub
@@ -35,18 +36,22 @@ def topic(publisher_client):
     topic_path = publisher_client.topic_path(PROJECT, TOPIC)
 
     try:
-        publisher_client.delete_topic(topic_path)
-    except Exception:
+        publisher_client.create_topic(topic_path)
+    except AlreadyExists:
         pass
-
-    publisher_client.create_topic(topic_path)
 
     yield TOPIC
 
 
-def test_pub(topic, capsys):
+def test_pub(publisher_client, topic, capsys):
     pub.pub(PROJECT, topic)
 
     out, _ = capsys.readouterr()
 
     assert "Published message b'Hello, World!'" in out
+
+    # Clean up.
+    publisher_client.delete_topic('projects/{}/topics/{}'.format(
+        PROJECT,
+        TOPIC
+    ))

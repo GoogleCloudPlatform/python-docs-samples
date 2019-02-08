@@ -25,10 +25,10 @@ from google.cloud import pubsub_v1
 def sub(project_id, subscription_name):
     """Receives messages from a Pub/Sub subscription."""
     # [START pubsub_quickstart_sub_client]
-    # Initializes the Subscriber client
+    # Initialize a Subscriber client
     client = pubsub_v1.SubscriberClient()
     # [END pubsub_quickstart_sub_client]
-    # Creates a fully qualified identifier in the form of
+    # Create a fully qualified identifier in the form of
     # `projects/{project_id}/subscriptions/{subscription_name}`
     subscription_path = client.subscription_path(
         project_id, subscription_name)
@@ -36,16 +36,16 @@ def sub(project_id, subscription_name):
     def callback(message):
         print('Received message {} of message ID {}'.format(
             message, message.message_id))
-        # Acknowledges the message. Unack'ed messages will be redelivered.
+        # Acknowledge the message. Unack'ed messages will be redelivered.
         message.ack()
-        print('Acknolwedged message of message ID {}\n'.format(
+        print('Acknowledged message of message ID {}\n'.format(
             message.message_id))
 
     client.subscribe(subscription_path, callback=callback)
     print('Listening for messages on {}..\n'.format(subscription_path))
 
-    # The subscriber is non-blocking. We keep the main thread from exiting
-    # so it can process messages asynchronously in the background.
+    # Keep the main thread from exiting so the subscriber can
+    # process messages in the background.
     while True:
         time.sleep(60)
 

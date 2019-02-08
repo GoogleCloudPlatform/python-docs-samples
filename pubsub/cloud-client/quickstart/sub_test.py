@@ -19,6 +19,7 @@ import os
 import pytest
 import time
 
+from google.api_core.exceptions import AlreadyExists
 from google.cloud import pubsub_v1
 
 import sub
@@ -35,15 +36,13 @@ def publisher_client():
 
 
 @pytest.fixture(scope='module')
-def topic(publisher_client):
+def topic_path(publisher_client):
     topic_path = publisher_client.topic_path(PROJECT, TOPIC)
 
     try:
-        publisher_client.delete_topic(topic_path)
-    except Exception:
+        publisher_client.create_topic(topic_path)
+    except AlreadyExists:
         pass
-
-    publisher_client.create_topic(topic_path)
 
     yield topic_path
 
@@ -54,23 +53,16 @@ def subscriber_client():
 
 
 @pytest.fixture(scope='module')
-def subscription(subscriber_client, topic):
+def subscription(subscriber_client, topic_path):
     subscription_path = subscriber_client.subscription_path(
         PROJECT, SUBSCRIPTION)
 
     try:
-        subscriber_client.delete_subscription(subscription_path)
-    except Exception:
+        subscriber_client.create_subscription(subscription_path, topic_path)
+    except AlreadyExists:
         pass
 
-    subscriber_client.create_subscription(subscription_path, topic=topic)
-
     yield SUBSCRIPTION
-
-
-def _publish_messages(publisher_client, topic):
-    data = u'Hello, World!'.encode('utf-8')
-    publisher_client.publish(topic, data=data)
 
 
 def _make_sleep_patch():
@@ -86,8 +78,13 @@ def _make_sleep_patch():
     return mock.patch('time.sleep', new=new_sleep)
 
 
-def test_sub(publisher_client, topic, subscription, capsys):
-    _publish_messages(publisher_client, topic)
+def test_sub(publisher_client,
+             topic_path,
+             subscriber_client,
+             subscription,
+             capsys):
+
+    publisher_client.publish(topic_path, data=b'Hello, World!')
 
     with _make_sleep_patch():
         with pytest.raises(RuntimeError, match='sigil'):
@@ -96,3 +93,10 @@ def test_sub(publisher_client, topic, subscription, capsys):
     out, _ = capsys.readouterr()
 
     assert "Received message" in out
+    assert "Acknowledged message" in out
+
+    # Clean up.
+    subscriber_client.delete_subscription(
+        'projects/{}/subscriptions/{}'.format(PROJECT, SUBSCRIPTION)
+    )
+    publisher_client.delete_topic(topic_path)
