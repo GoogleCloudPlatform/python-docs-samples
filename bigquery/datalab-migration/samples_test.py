@@ -28,6 +28,7 @@ _, PROJECT_ID = google.auth.default()
 context = google.datalab.Context.default()
 context.set_project_id(PROJECT_ID)
 
+
 @pytest.fixture(scope='session')
 def ipython_interactive():
     config = tools.default_config()
