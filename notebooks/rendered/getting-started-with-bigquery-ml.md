@@ -70,7 +70,7 @@ table, you do not see query results. The output is an empty `DataFrame`.
 ## Get training statistics
 
 To see the results of the model training, you can use the
-[`ML.TRAINING_INFO`](/bigquery/docs/reference/standard-sql/bigqueryml-syntax-train)
+[`ML.TRAINING_INFO`](https://cloud.google.com/bigquery/docs/reference/standard-sql/bigqueryml-syntax-train)
 function, or you can view the statistics in the BigQuery web UI. This functionality
 is not currently available in the BigQuery Classic web UI.
 In this tutorial, you use the `ML.TRAINING_INFO` function.
@@ -100,7 +100,8 @@ FROM
 Note: Typically, it is not a best practice to use a `SELECT *` query. Because the model output is a small table, this query does not process a large amount of data. As a result, the cost is minimal.
 
 When the query is complete, the results appear below the query. The results should look like the following:
-![image.png](attachment:image.png)
+
+![Training statistics table](../tutorials/bigquery/resources/training-statistics.png)
 
 The `loss` column represents the loss metric calculated after the given iteration
 on the training dataset. Since you performed a logistic regression, this column
@@ -109,13 +110,13 @@ The `eval_loss` column is the same loss metric calculated on
 the holdout dataset (data that is held back from training to validate the model).
 
 For more details on the `ML.TRAINING_INFO` function, see the
-[BigQuery ML syntax reference](/bigquery/docs/reference/standard-sql/bigqueryml-syntax-train).
+[BigQuery ML syntax reference](https://cloud.google.com/bigquery/docs/reference/standard-sql/bigqueryml-syntax-train).
 
 ## Evaluate your model
 
 After creating your model, you evaluate the performance of the classifier using
-the [`ML.EVALUATE`](/bigquery/docs/reference/standard-sql/bigqueryml-syntax-evaluate)
-function. You can also use the [`ML.ROC_CURVE`](/bigquery/docs/reference/standard-sql/bigqueryml-syntax-roc)
+the [`ML.EVALUATE`](https://cloud.google.com/bigquery/docs/reference/standard-sql/bigqueryml-syntax-evaluate)
+function. You can also use the [`ML.ROC_CURVE`](https://cloud.google.com/bigquery/docs/reference/standard-sql/bigqueryml-syntax-roc)
 function for logistic regression specific metrics.
 
 A classifier is one of a set of enumerated target values for a label. For
@@ -145,7 +146,8 @@ FROM ML.EVALUATE(MODEL `bqml_tutorial.sample_model`, (
 
 When the query is complete, the results appear below the query. The
 results should look like the following:
-![image.png](attachment:image.png)
+
+![Model evaluation results table](../tutorials/bigquery/resources/model-evaluation.png)
 
 Because you performed a logistic regression, the results include the following
 columns:
@@ -191,7 +193,7 @@ When the query is complete, the results appear below the query. The
 results should look like the following. Because model training is not
 deterministic, your results may differ.
 
-![image.png](attachment:image.png)
+![Model predictions table](../tutorials/bigquery/resources/model-predictions.png)
 
 In the next example, you try to predict the number of transactions each website
 visitor will make. This query is identical to the previous query except for the
@@ -224,7 +226,8 @@ FROM ML.PREDICT(MODEL `bqml_tutorial.sample_model`, (
 
 When the query is complete, the results appear below the query. The
 results should look like the following:
-![image.png](attachment:image.png)
+
+![Purchase predictions table](../tutorials/bigquery/resources/purchase-predictions.png)
 
 ## Cleaning up
 
