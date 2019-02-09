@@ -193,7 +193,7 @@ When the query is complete, the results appear below the query. The
 results should look like the following. Because model training is not
 deterministic, your results may differ.
 
-![Model predictions table](../tutorials/bigquery/resources/model-predictions.png)
+![Model predictions table](../tutorials/bigquery/resources/transaction-predictions.png)
 
 In the next example, you try to predict the number of transactions each website
 visitor will make. This query is identical to the previous query except for the
