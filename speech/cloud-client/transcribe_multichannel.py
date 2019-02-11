@@ -18,9 +18,9 @@
 and recognition metadata.
 
 Example usage:
-    python transcribe_multichannel.py resources/audio.raw
+    python transcribe_multichannel.py resources/multi.wav
     python transcribe_multichannel.py \
-        gs://cloud-samples-tests/speech/Google_Gnome.wav
+        gs://cloud-samples-tests/speech/multi.wav
 """
 
 import argparse
@@ -41,9 +41,9 @@ def transcribe_file_with_multichannel(speech_file):
 
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=16000,
+        sample_rate_hertz=44100,
         language_code='en-US',
-        audio_channel_count=1,
+        audio_channel_count=2,
         enable_separate_recognition_per_channel=True)
 
     response = client.recognize(config, audio)
@@ -68,9 +68,9 @@ def transcribe_gcs_with_multichannel(gcs_uri):
 
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=16000,
+        sample_rate_hertz=44100,
         language_code='en-US',
-        audio_channel_count=1,
+        audio_channel_count=2,
         enable_separate_recognition_per_channel=True)
 
     response = client.recognize(config, audio)

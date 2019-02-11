@@ -22,17 +22,17 @@ RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 
 def test_transcribe_multichannel_file(capsys):
     transcribe_file_with_multichannel(
-        os.path.join(RESOURCES, 'Google_Gnome.wav'))
+        os.path.join(RESOURCES, 'multi.wav'))
     out, err = capsys.readouterr()
 
-    assert 'OK Google stream stranger things from Netflix to my TV' in out
+    assert 'how are you doing' in out
 
 
 def test_transcribe_multichannel_gcs(capsys):
     transcribe_gcs_with_multichannel(
-        'gs://cloud-samples-tests/speech/Google_Gnome.wav')
+        'gs://cloud-samples-data/speech/multi.wav')
     out, err = capsys.readouterr()
 
-    assert 'OK Google stream stranger things from Netflix to my TV' in out
+    assert 'how are you doing' in out
 
 
