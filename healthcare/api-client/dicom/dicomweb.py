@@ -18,6 +18,7 @@ import os
 
 import email
 from email import encoders
+from email import generator
 from email.mime import application
 from email.mime import multipart
 
@@ -25,7 +26,7 @@ from google.auth.transport import requests
 from googleapiclient.errors import HttpError
 from google.oauth2 import service_account
 
-_BASE_URL = 'https://healthcare.googleapis.com/v1alpha'
+_BASE_URL = 'https://healthcare.googleapis.com/v1alpha2'
 
 
 def get_session(service_account_json):
