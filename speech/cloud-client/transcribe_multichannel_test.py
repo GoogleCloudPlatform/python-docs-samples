@@ -34,5 +34,3 @@ def test_transcribe_multichannel_gcs(capsys):
     out, err = capsys.readouterr()
 
     assert 'how are you doing' in out
-
-
