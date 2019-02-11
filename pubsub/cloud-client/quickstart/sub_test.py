@@ -65,6 +65,17 @@ def subscription(subscriber_client, topic_path):
     yield SUBSCRIPTION
 
 
+@pytest.fixture
+def to_delete(publisher_client, subscriber_client):
+    doomed = []
+    yield doomed
+    for client, item in doomed:
+        if 'topics' in item:
+            publisher_client.delete_topic(item)
+        if 'subscriptions' in item:
+            subscriber_client.delete_subscription(item)
+
+
 def _make_sleep_patch():
     real_sleep = time.sleep
 
@@ -82,21 +93,21 @@ def test_sub(publisher_client,
              topic_path,
              subscriber_client,
              subscription,
+             to_delete,
              capsys):
 
     publisher_client.publish(topic_path, data=b'Hello, World!')
+
+    to_delete.append((publisher_client, topic_path))
 
     with _make_sleep_patch():
         with pytest.raises(RuntimeError, match='sigil'):
             sub.sub(PROJECT, subscription)
 
-    out, _ = capsys.readouterr()
+    to_delete.append((subscriber_client,
+                      'projects/{}/subscriptions/{}'.format(PROJECT,
+                                                            SUBSCRIPTION)))
 
+    out, _ = capsys.readouterr()
     assert "Received message" in out
     assert "Acknowledged message" in out
-
-    # Clean up.
-    subscriber_client.delete_subscription(
-        'projects/{}/subscriptions/{}'.format(PROJECT, SUBSCRIPTION)
-    )
-    publisher_client.delete_topic(topic_path)

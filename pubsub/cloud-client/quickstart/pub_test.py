@@ -43,15 +43,19 @@ def topic(publisher_client):
     yield TOPIC
 
 
-def test_pub(publisher_client, topic, capsys):
+@pytest.fixture
+def to_delete(publisher_client):
+    doomed = []
+    yield doomed
+    for item in doomed:
+        publisher_client.delete_topic(item)
+
+
+def test_pub(publisher_client, topic, to_delete, capsys):
     pub.pub(PROJECT, topic)
+
+    to_delete.append('projects/{}/topics/{}'.format(PROJECT, TOPIC))
 
     out, _ = capsys.readouterr()
 
     assert "Published message b'Hello, World!'" in out
-
-    # Clean up.
-    publisher_client.delete_topic('projects/{}/topics/{}'.format(
-        PROJECT,
-        TOPIC
-    ))
