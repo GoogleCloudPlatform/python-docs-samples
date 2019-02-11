@@ -193,31 +193,31 @@ def deidentify_dataset(
 
     body = {
         'destinationDataset': destination_dataset,
-          'config': {
+        'config': {
             'dicom': {
-              'keepList': {
-                'tags': [
-                  'Columns',
-                  'NumberOfFrames',
-                  'PixelRepresentation',
-                  'MediaStorageSOPClassUID',
-                  'MediaStorageSOPInstanceUID',
-                  'Rows',
-                  'SamplesPerPixel',
-                  'BitsAllocated',
-                  'HighBit',
-                  'PhotometricInterpretation',
-                  'BitsStored',
-                  'PatientID',
-                  'TransferSyntaxUID',
-                  'SOPInstanceUID',
-                  'StudyInstanceUID',
-                  'SeriesInstanceUID',
-                  'PixelData'
-                ]
-              }
+                'keepList': {
+                    'tags': [
+                        'Columns',
+                        'NumberOfFrames',
+                        'PixelRepresentation',
+                        'MediaStorageSOPClassUID',
+                        'MediaStorageSOPInstanceUID',
+                        'Rows',
+                        'SamplesPerPixel',
+                        'BitsAllocated',
+                        'HighBit',
+                        'PhotometricInterpretation',
+                        'BitsStored',
+                        'PatientID',
+                        'TransferSyntaxUID',
+                        'SOPInstanceUID',
+                        'StudyInstanceUID',
+                        'SeriesInstanceUID',
+                        'PixelData'
+                    ]
+                }
             }
-          }
+        }
     }
 
     request = client.projects().locations().datasets().deidentify(
