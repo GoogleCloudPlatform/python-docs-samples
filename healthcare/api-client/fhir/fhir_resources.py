@@ -20,7 +20,7 @@ from google.auth.transport import requests
 from googleapiclient.errors import HttpError
 from google.oauth2 import service_account
 
-_BASE_URL = 'https://healthcare.googleapis.com/v1alpha'
+_BASE_URL = 'https://healthcare.googleapis.com/v1alpha2'
 
 
 # [START healthcare_get_session]
@@ -56,7 +56,7 @@ def create_resource(
     url = '{}/projects/{}/locations/{}'.format(base_url, project_id,
                                                cloud_region)
 
-    fhir_store_path = '{}/datasets/{}/fhirStores/{}/resources/{}'.format(
+    fhir_store_path = '{}/datasets/{}/fhirStores/{}/fhir/{}'.format(
         url, dataset_id, fhir_store_id, resource_type)
 
     # Make an authenticated API request
@@ -103,7 +103,7 @@ def delete_resource(
     url = '{}/projects/{}/locations/{}'.format(base_url,
                                                project_id, cloud_region)
 
-    resource_path = '{}/datasets/{}/fhirStores/{}/resources/{}/{}'.format(
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}/{}'.format(
         url, dataset_id, fhir_store_id, resource_type, resource_id)
 
     # Make an authenticated API request
@@ -139,7 +139,7 @@ def get_resource(
     url = '{}/projects/{}/locations/{}'.format(base_url,
                                                project_id, cloud_region)
 
-    resource_path = '{}/datasets/{}/fhirStores/{}/resources/{}/{}'.format(
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}/{}'.format(
         url, dataset_id, fhir_store_id, resource_type, resource_id)
 
     # Make an authenticated API request
@@ -174,7 +174,7 @@ def update_resource(
     url = '{}/projects/{}/locations/{}'.format(base_url,
                                                project_id, cloud_region)
 
-    resource_path = '{}/datasets/{}/fhirStores/{}/resources/{}/{}'.format(
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}/{}'.format(
         url, dataset_id, fhir_store_id, resource_type, resource_id)
 
     # Make an authenticated API request
@@ -215,7 +215,7 @@ def patch_resource(
     url = '{}/projects/{}/locations/{}'.format(base_url,
                                                project_id, cloud_region)
 
-    resource_path = '{}/datasets/{}/fhirStores/{}/resources/{}/{}'.format(
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}/{}'.format(
         url, dataset_id, fhir_store_id, resource_type, resource_id)
 
     # Make an authenticated API request
@@ -258,7 +258,7 @@ def search_resources_get(
     url = '{}/projects/{}/locations/{}'.format(base_url,
                                                project_id, cloud_region)
 
-    resource_path = '{}/datasets/{}/fhirStores/{}/resources/{}'.format(
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}'.format(
         url, dataset_id, fhir_store_id, resource_type)
 
     # Make an authenticated API request
@@ -293,7 +293,7 @@ def search_resources_post(
     url = '{}/projects/{}/locations/{}'.format(base_url,
                                                project_id, cloud_region)
 
-    resource_path = '{}/datasets/{}/fhirStores/{}/resources/{}/_search'.format(
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}/_search'.format(
         url, dataset_id, fhir_store_id, resource_type)
 
     # Make an authenticated API request
@@ -329,7 +329,7 @@ def get_patient_everything(
 
     resource_parent = '{}/datasets/{}/fhirStores/{}'.format(
         url, dataset_id, fhir_store_id)
-    resource_path = '{}/resources/Patient/{}/$everything'.format(
+    resource_path = '{}/fhir/Patient/{}/$everything'.format(
         resource_parent, resource_id)
 
     # Make an authenticated API request

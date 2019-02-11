@@ -25,7 +25,7 @@ def get_client(service_account_json, api_key):
     """Returns an authorized API client by discovering the Healthcare API and
     creating a service object using the service account credentials JSON."""
     api_scopes = ['https://www.googleapis.com/auth/cloud-platform']
-    api_version = 'v1alpha'
+    api_version = 'v1alpha2'
     discovery_api = 'https://healthcare.googleapis.com/$discovery/rest'
     service_name = 'healthcare'
 
@@ -220,9 +220,9 @@ def export_fhir_store_gcs(
         fhir_store_parent, fhir_store_id)
 
     body = {
-        "gcsDestinationLocation":
+        "gcsDestination":
         {
-            "gcsUri": 'gs://{}'.format(gcs_uri)
+            "uriPrefix": 'gs://{}'.format(gcs_uri)
         }
     }
 
@@ -258,13 +258,13 @@ def import_fhir_store(
         fhir_store_parent, fhir_store_id)
 
     body = {
-        "gcsSourceLocation":
+        "gcsSource":
         {
-            "gcsUri": 'gs://{}'.format(gcs_uri)
+            "uri": 'gs://{}'.format(gcs_uri)
         },
-        "gcsErrorLocation":
+        "gcsErrorDestination":
         {
-            "gcsUri": 'gs://{}/errors'.format(gcs_uri)
+            "uriPrefix": 'gs://{}/errors'.format(gcs_uri)
         }
     }
 
