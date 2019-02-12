@@ -23,7 +23,9 @@ import json
 import logging
 
 from flask import Flask, jsonify, request
+
 from flask_cors import cross_origin
+
 from six.moves import http_client
 
 
@@ -45,6 +47,7 @@ def echo():
     return jsonify({'message': message})
 
 
+# [START endpoints_auth_info_backend]
 def auth_info():
     """Retrieves the authenication information from Google Cloud Endpoints."""
     encoded_info = request.headers.get('X-Endpoint-API-UserInfo', None)
@@ -56,6 +59,7 @@ def auth_info():
         user_info = {'id': 'anonymous'}
 
     return jsonify(user_info)
+# [START endpoints_auth_info_backend]
 
 
 @app.route('/auth/info/googlejwt', methods=['GET'])

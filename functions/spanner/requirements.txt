@@ -1,1 +1,1 @@
-google-cloud-spanner==1.6.1
+google-cloud-spanner==1.7.1
