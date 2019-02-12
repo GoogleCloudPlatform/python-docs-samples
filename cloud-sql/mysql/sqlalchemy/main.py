@@ -25,13 +25,13 @@ import sqlalchemy
 db_user = os.environ.get("DB_USER")
 db_pass = os.environ.get("DB_PASS")
 db_name = os.environ.get("DB_NAME")
-cloud_sql_instance_name = os.environ.get("CLOUD_SQL_INSTANCE_NAME")
+cloud_sql_connection_name = os.environ.get("CLOUD_SQL_CONNECTION_NAME")
 
 app = Flask(__name__)
 
 logger = logging.getLogger()
 
-# [START cloud_sql_mysql_connection_pool]
+# [START cloud_sql_mysql_sqlalchemy_create]
 # The SQLAlchemy engine will help manage interactions, including automatically
 # managing a pool of connections to your database
 db = sqlalchemy.create_engine(
@@ -43,43 +43,43 @@ db = sqlalchemy.create_engine(
         password=db_pass,
         database=db_name,
         query={
-            'unix_socket': '/cloudsql/{}'.format(cloud_sql_instance_name)
+            'unix_socket': '/cloudsql/{}'.format(cloud_sql_connection_name)
         }
     ),
     # ... Specify additional properties here.
     # [START_EXCLUDE]
 
-    # [START cloud_sql_mysql_limit_connections]
+    # [START cloud_sql_mysql_sqlalchemy_limit]
     # Pool size is the maximum number of permanent connections to keep.
     pool_size=5,
     # Temporarily exceeds the set pool_size if no connections are available.
     max_overflow=2,
     # The total number of concurrent connections for your application will be
     # a total of pool_size and max_overflow.
-    # [END cloud_sql_mysql_limit_connections]
+    # [END cloud_sql_mysql_sqlalchemy_limit]
 
-    # [START cloud_sql_mysql_connection_backoff]
+    # [START cloud_sql_mysql_sqlalchemy_backoff]
     # SQLAlchemy automatically uses delays between failed connection attempts,
     # but provides no arguments for configuration.
-    # [END cloud_sql_mysql_connection_backoff]
+    # [END cloud_sql_mysql_sqlalchemy_backoff]
 
-    # [START cloud_sql_mysql_connection_timeout]
+    # [START cloud_sql_mysql_sqlalchemy_timeout]
     # 'pool_timeout' is the maximum number of seconds to wait when retrieving a
     # new connection from the pool. After the specified amount of time, an
     # exception will be thrown.
     pool_timeout=30,  # 30 seconds
-    # [END cloud_sql_mysql_connection_timeout]
+    # [END cloud_sql_mysql_sqlalchemy_timeout]
 
-    # [START cloud_sql_mysql_connection_lifetime]
+    # [START cloud_sql_mysql_sqlalchemy_lifetime]
     # 'pool_recycle' is the maximum number of seconds a connection can persist.
     # Connections that live longer than the specified amount of time will be
     # reestablished
     pool_recycle=1800,  # 30 minutes
-    # [END cloud_sql_mysql_connection_lifetime]
+    # [END cloud_sql_mysql_sqlalchemy_lifetime]
 
     # [END_EXCLUDE]
 )
-# [END cloud_sql_mysql_connection_pool]
+# [END cloud_sql_mysql_sqlalchemy_create]
 
 
 @app.before_first_request
@@ -139,7 +139,7 @@ def save_vote():
             status=400
         )
 
-    # [START cloud_sql_mysql_example_statement]
+    # [START cloud_sql_mysql_sqlalchemy_connection]
     # Preparing a statement before hand can help protect against injections.
     stmt = sqlalchemy.text(
         "INSERT INTO votes (time_cast, candidate)"
@@ -161,7 +161,7 @@ def save_vote():
                      "application logs for more details."
         )
         # [END_EXCLUDE]
-    # [END cloud_sql_mysql_example_statement]
+    # [END cloud_sql_mysql_sqlalchemy_connection]
 
     return Response(
         status=200,
