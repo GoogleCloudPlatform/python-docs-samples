@@ -137,7 +137,7 @@ def setup_resources(
             account_email
         ],
         'sourceRanges': [
-            "0.0.0.0/0"
+            '0.0.0.0/0'
         ],
         'allowed': [{
             'IPProtocol': 'tcp',
