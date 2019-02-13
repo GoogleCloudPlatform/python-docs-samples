@@ -101,16 +101,17 @@ def run_ssh(cmd, private_key_file, username, hostname):
 
 
 # [START main]
-def main(cmd, project, instance, zone, oslogin=None,
-         account=None, hostname=None):
+def main(
+        cmd, project, instance, zone, oslogin=None, account=None, hostname=None
+        ):
     """Run a command on a remote system."""
 
     # Create the OS Login API object.
     oslogin = oslogin or googleapiclient.discovery.build('oslogin', 'v1')
 
     # Identify the service account ID if it is not already provided.
-    account = account or 'users/' + requests.get(SERVICE_ACCOUNT_METADATA_URL,
-                                                 headers=HEADERS).text
+    account = account or 'users/' + requests.get(
+        SERVICE_ACCOUNT_METADATA_URL, headers=HEADERS).text
 
     # Create a new SSH key pair and associate it with the service account.
     private_key_file = create_ssh_key(oslogin, account)
