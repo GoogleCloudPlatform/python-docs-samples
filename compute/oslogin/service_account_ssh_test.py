@@ -42,23 +42,21 @@ def test_main(capsys):
     image_family = 'projects/debian-cloud/global/images/family/debian-9'
     machine_type = 'zones/{zone}/machineTypes/f1-micro'.format(zone=zone)
     account_email = '{test_id}@{project}.iam.gserviceaccount.com'.format(
-                                         test_id=test_id, project=project)
+        test_id=test_id, project=project)
 
     # Initialize the necessary APIs.
-    iam = googleapiclient.discovery.build('iam', 'v1',
-                                          cache_discovery=False)
-    compute = googleapiclient.discovery.build('compute', 'v1',
-                                              cache_discovery=False
-                                              )
+    iam = googleapiclient.discovery.build(
+        'iam', 'v1', cache_discovery=False)
+    compute = googleapiclient.discovery.build(
+        'compute', 'v1', cache_discovery=False)
 
     # Create the necessary test resources and retrieve the service account
     # email and account key.
     try:
         print('Creating test resources.')
-        service_account_key = setup_resources(compute, iam, project, test_id,
-                                              zone, image_family, machine_type,
-                                              account_email
-                                              )
+        service_account_key = setup_resources(
+            compute, iam, project, test_id, zone, image_family,
+            machine_type, account_email)
     except Exception:
         print('Cleaning up partially created test resources.')
         cleanup_resources(compute, iam, project, test_id, zone, account_email)
@@ -70,17 +68,15 @@ def test_main(capsys):
         zone=zone,
         instance=test_id,
         fields='networkInterfaces/accessConfigs/natIP'
-        ).execute()['networkInterfaces'][0]['accessConfigs'][0]['natIP']
+    ).execute()['networkInterfaces'][0]['accessConfigs'][0]['natIP']
 
     # Create a credentials object and use it to initialize the OS Login API.
     credentials = service_account.Credentials.from_service_account_info(
-                  json.loads(base64.b64decode(
-                             service_account_key['privateKeyData']
-                             ).decode('utf-8')))
+        json.loads(base64.b64decode(
+            service_account_key['privateKeyData']).decode('utf-8')))
 
-    oslogin = googleapiclient.discovery.build('oslogin', 'v1',
-                                              cache_discovery=False,
-                                              credentials=credentials)
+    oslogin = googleapiclient.discovery.build(
+        'oslogin', 'v1', cache_discovery=False, credentials=credentials)
     account = 'users/' + account_email
 
     # Give OS Login a little time to catch up.
@@ -99,8 +95,9 @@ def test_main(capsys):
         cleanup_resources(compute, iam, project, test_id, zone, account_email)
 
 
-def setup_resources(compute, iam, project, test_id, zone,
-                    image_family, machine_type, account_email):
+def setup_resources(
+        compute, iam, project, test_id, zone,
+        image_family, machine_type, account_email):
 
     # Create a temporary service account.
     iam.projects().serviceAccounts().create(
@@ -128,7 +125,8 @@ def setup_resources(compute, iam, project, test_id, zone,
     # Create a service account key.
     service_account_key = iam.projects().serviceAccounts().keys().create(
         name='projects/' + project + '/serviceAccounts/' + account_email,
-        body={}).execute()
+        body={}
+        ).execute()
 
     # Create a temporary firewall on the default network to allow SSH tests
     # only for instances with the temporary service account.
@@ -239,22 +237,19 @@ def cleanup_resources(compute, iam, project, test_id, zone, account_email):
     # Delete the test instance.
     try:
         delete = compute.instances().delete(
-                project=project,
-                zone=zone,
-                instance=test_id).execute()
+            project=project, zone=zone, instance=test_id).execute()
 
         while compute.zoneOperations().get(
-                project=project,
-                zone=zone,
-                operation=delete['name']).execute()['status'] != 'DONE':
+                project=project, zone=zone, operation=delete['name']
+                ).execute()['status'] != 'DONE':
             time.sleep(5)
     except Exception:
         pass
 
     # Delete the temporary service account and its associated keys.
     try:
-        iam.projects().serviceAccounts().delete(name='projects/' + project +
-                                                '/serviceAccounts/' +
-                                                account_email).execute()
+        iam.projects().serviceAccounts().delete(
+            name='projects/' + project + '/serviceAccounts/' + account_email
+            ).execute()
     except Exception:
         pass
