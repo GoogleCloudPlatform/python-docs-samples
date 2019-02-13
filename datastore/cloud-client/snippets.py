@@ -690,7 +690,7 @@ def transactional_single_entity_group_read_only(client):
     ])
 
     # [START datastore_transactional_single_entity_group_read_only]
-    with client.transaction():
+    with client.transaction(read_only=True):
         task_list_key = client.key('TaskList', 'default')
 
         task_list = client.get(task_list_key)
