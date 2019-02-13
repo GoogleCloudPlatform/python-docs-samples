@@ -32,6 +32,7 @@ The Project Editor legacy role is not sufficient because it does not grant
 several necessary permissions.
 '''
 
+
 def test_main(capsys):
 
     # Initialize variables.
