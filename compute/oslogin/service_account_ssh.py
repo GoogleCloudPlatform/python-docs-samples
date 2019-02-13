@@ -91,11 +91,7 @@ def run_ssh(cmd, private_key_file, username, hostname):
         ssh_command, shell=False, stdout=subprocess.PIPE,
         stderr=subprocess.PIPE)
     result = ssh.stdout.readlines()
-    if result:
-        return result
-    else:
-        error = ssh.stderr.readlines()
-        return error
+    return result if result else ssh.stderr.readlines()
 
 # [END run_command_remote]
 
@@ -133,12 +129,12 @@ def main(
     # Print the command line output from the remote instance.
     # Use .rstrip() rather than end='' for Python 2 compatability.
     for line in result:
-        print(line.decode('utf-8').rstrip("\n\r"))
+        print(line.decode('utf-8').rstrip('\n\r'))
 
     # Shred the private key and delete the pair.
     execute(['shred', private_key_file])
     execute(['rm', private_key_file])
-    execute(['rm', private_key_file + ".pub"])
+    execute(['rm', private_key_file + '.pub'])
 
 
 if __name__ == '__main__':
