@@ -27,7 +27,6 @@ The service account that runs this test must have the following roles:
 - roles/iam.serviceAccountAdmin
 - roles/iam.serviceAccountKeyAdmin
 - roles/iam.serviceAccountUser
-
 The Project Editor legacy role is not sufficient because it does not grant
 several necessary permissions.
 '''
