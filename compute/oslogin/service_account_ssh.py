@@ -72,7 +72,7 @@ def create_ssh_key(oslogin, account, private_key_file=None, expire_time=300):
 
     body = {
         'key': public_key,
-        'expirationTimeUsec': expiration
+        'expirationTimeUsec': expiration,
     }
     oslogin.users().importSshPublicKey(parent=account, body=body).execute()
     return private_key_file
@@ -91,11 +91,12 @@ def run_ssh(cmd, private_key_file, username, hostname):
         ssh_command, shell=False, stdout=subprocess.PIPE,
         stderr=subprocess.PIPE)
     result = ssh.stdout.readlines()
-    if result == []:
+    if result:
+        return result
+    else:
         error = ssh.stderr.readlines()
         return error
-    else:
-        return result
+
 # [END run_command_remote]
 
 
