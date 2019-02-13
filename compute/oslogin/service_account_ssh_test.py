@@ -79,8 +79,8 @@ def test_main(capsys):
         'oslogin', 'v1', cache_discovery=False, credentials=credentials)
     account = 'users/' + account_email
 
-    # Give OS Login a little time to catch up.
-    time.sleep(60)
+    # Give OS Login some time to catch up.
+    time.sleep(120)
 
     # Test SSH to the instance.
     try:
