@@ -28,7 +28,6 @@ import argparse
 # [START bigtable_hw_imports_happybase]
 from google.cloud import bigtable
 from google.cloud import happybase
-from google.cloud.bigtable import row_filters
 # [END bigtable_hw_imports_happybase]
 
 def main(project_id, instance_id, table_name):
@@ -76,25 +75,19 @@ def main(project_id, instance_id, table_name):
             table.put(row_key, {column_name: value})
         # [END bigtable_hw_write_rows_happybase]
 
-        # [START bigtable_hw_create_filter_happybase]
-        # Create a filter to only retrieve the most recent version of the cell
-        # for each column accross entire row.
-        row_filter = row_filters.CellsColumnLimitFilter(1)
-        # [END bigtable_hw_create_filter_happybase]
-
-            # [START bigtable_hw_get_with_filter_happybase]
+        # [START bigtable_hw_get_by_key_happybase]
         print('Getting a single greeting by row key.')
         key = 'greeting0'.encode('utf-8')
         row = table.row(key)
         print('\t{}: {}'.format(key, row[column_name.encode('utf-8')]))
-        # [END bigtable_hw_get_with_filter_happybase]
+        # [END bigtable_hw_get_by_key_happybase]
 
-        # [START bigtable_hw_scan_with_filter_happybase]
+        # [START bigtable_hw_scan_all_happybase]
         print('Scanning for all greetings:')
 
         for key, row in table.scan():
             print('\t{}: {}'.format(key, row[column_name.encode('utf-8')]))
-        # [END bigtable_hw_scan_with_filter_happybase]
+        # [END bigtable_hw_scan_all_happybase]
 
         # [START bigtable_hw_delete_table_happybase]
         print('Deleting the {} table.'.format(table_name))
