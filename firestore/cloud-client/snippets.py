@@ -529,7 +529,7 @@ def order_simple_limit_desc():
     # [START order_simple_limit_desc]
     cities_ref = db.collection(u'cities')
     query = cities_ref.order_by(
-        u'name', direction=firestore.Query.DESCENDING).limit(3)
+        u'name', direction=db.Query.DESCENDING).limit(3)
     results = query.get()
     # [END order_simple_limit_desc]
     print(results)
@@ -540,7 +540,7 @@ def order_multiple():
     # [START order_multiple]
     cities_ref = db.collection(u'cities')
     cities_ref.order_by(u'state').order_by(
-        u'population', direction=firestore.Query.DESCENDING)
+        u'population', direction=db.Query.DESCENDING)
     # [END order_multiple]
 
 
