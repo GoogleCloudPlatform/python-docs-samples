@@ -27,7 +27,7 @@ import argparse
 # [START vision_product_search_delete_reference_image]
 # [START vision_product_search_list_reference_images]
 # [START vision_product_search_get_reference_image]
-from google.cloud import vision_v1p3beta1 as vision
+from google.cloud import vision
 
 # [END vision_product_search_create_reference_image]
 # [END vision_product_search_delete_reference_image]

@@ -17,19 +17,19 @@ categories and info types."""
 
 from __future__ import print_function
 
+import sys
+import argparse
 
-def quickstart():
+
+def quickstart(project_id):
     """Demonstrates use of the Data Loss Prevention API client library."""
 
     # [START dlp_quickstart]
     # Import the client library
     import google.cloud.dlp
 
-    # Edit this with your Google Cloud Project ID.
-    project = 'your-project'
-
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp_client = google.cloud.dlp.DlpServiceClient()
 
     # The string to inspect
     content = 'Robert Frost'
@@ -59,10 +59,10 @@ def quickstart():
     }
 
     # Convert the project id into a full resource id.
-    parent = dlp.project_path(project)
+    parent = dlp_client.project_path(project_id)
 
     # Call the API.
-    response = dlp.inspect_content(parent, inspect_config, item)
+    response = dlp_client.inspect_content(parent, inspect_config, item)
 
     # Print out the results.
     if response.result.findings:
@@ -84,4 +84,11 @@ def quickstart():
 
 
 if __name__ == '__main__':
-    quickstart()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "project_id", help="Enter your GCP project id.", type=str)
+    args = parser.parse_args()
+    if len(sys.argv) == 1:
+        parser.print_usage()
+        sys.exit(1)
+    quickstart(args.project_id)

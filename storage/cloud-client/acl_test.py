@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import time
 
 from google.cloud import storage
 import google.cloud.storage.acl
@@ -36,7 +37,9 @@ def test_bucket():
     object_default_acl = google.cloud.storage.acl.DefaultObjectACL(bucket)
     acl.reload()
     object_default_acl.reload()
+    time.sleep(1)  # bucket ops rate limited 1 update per second
     yield bucket
+    time.sleep(1)  # bucket ops rate limited 1 update per second
     acl.save()
     object_default_acl.save()
 
@@ -48,8 +51,10 @@ def test_blob():
     blob = bucket.blob('storage_acl_test_sigil')
     blob.upload_from_string('Hello, is it me you\'re looking for?')
     acl = google.cloud.storage.acl.ObjectACL(blob)
-    acl.reload()
-    yield blob
+    acl.reload()  # bucket ops rate limited 1 update per second
+    time.sleep(1)
+    yield blob  # bucket ops rate limited 1 update per second
+    time.sleep(1)
     acl.save()
 
 

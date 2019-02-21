@@ -93,6 +93,30 @@ def insert_data(instance_id, database_id):
 # [END spanner_insert_data]
 
 
+# [START spanner_delete_data]
+def delete_data(instance_id, database_id):
+    """Deletes sample data from the given database.
+
+    The database, table, and data must already exist and can be created using
+    `create_database` and `insert_data`.
+    """
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    singers_to_delete = spanner.KeySet(
+        keys=[[1], [2], [3], [4], [5]])
+    albums_to_delete = spanner.KeySet(
+        keys=[[1, 1], [1, 2], [2, 1], [2, 2], [2, 3]])
+
+    with database.batch() as batch:
+        batch.delete('Albums', albums_to_delete)
+        batch.delete('Singers', singers_to_delete)
+
+    print('Deleted data.')
+# [END spanner_delete_data]
+
+
 # [START spanner_query_data]
 def query_data(instance_id, database_id):
     """Queries sample data from the database using SQL."""
@@ -847,7 +871,7 @@ def dml_write_read_transaction(instance_id, database_id):
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    def read_then_write(transaction):
+    def write_then_read(transaction):
         # Insert record.
         row_ct = transaction.execute_update(
             "INSERT Singers (SingerId, FirstName, LastName) "
@@ -862,7 +886,7 @@ def dml_write_read_transaction(instance_id, database_id):
         for result in results:
             print("FirstName: {}, LastName: {}".format(*result))
 
-    database.run_in_transaction(read_then_write)
+    database.run_in_transaction(write_then_read)
     # [END spanner_dml_write_then_read]
 
 
@@ -1027,6 +1051,7 @@ if __name__ == '__main__':  # noqa: C901
 
     subparsers = parser.add_subparsers(dest='command')
     subparsers.add_parser('create_database', help=create_database.__doc__)
+    subparsers.add_parser('delete_data', help=delete_data.__doc__)
     subparsers.add_parser('insert_data', help=insert_data.__doc__)
     subparsers.add_parser('query_data', help=query_data.__doc__)
     subparsers.add_parser('read_data', help=read_data.__doc__)
@@ -1100,6 +1125,8 @@ if __name__ == '__main__':  # noqa: C901
         create_database(args.instance_id, args.database_id)
     elif args.command == 'insert_data':
         insert_data(args.instance_id, args.database_id)
+    elif args.command == 'delete_data':
+        delete_data(args.instance_id, args.database_id)
     elif args.command == 'query_data':
         query_data(args.instance_id, args.database_id)
     elif args.command == 'read_data':

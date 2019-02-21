@@ -44,7 +44,7 @@ spec:
     spec:
       containers:
       - name: esp
-        image: gcr.io/endpoints-release/endpoints-runtime:1
+        image: gcr.io/endpoints-release/endpoints-runtime:1.16.0
         args: [
           "--http2_port=9000",
           "--service=SERVICE_NAME",

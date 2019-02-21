@@ -1,0 +1,2 @@
+google-cloud-storage==1.13.2
+google-cloud-asset==0.1.2

@@ -29,7 +29,7 @@ PRODUCT_CATEGORY = 'homegoods'
 PRODUCT_ID = 'fake_product_id_for_testing'
 
 REFERENCE_IMAGE_ID = 'fake_reference_image_id_for_testing'
-GCS_URI = 'gs://python-docs-samples-tests/product_search/shoes_1.jpg'
+GCS_URI = 'gs://cloud-samples-data/vision/product_search/shoes_1.jpg'
 
 
 @pytest.fixture

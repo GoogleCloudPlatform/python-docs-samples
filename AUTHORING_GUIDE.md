@@ -432,7 +432,7 @@ generation.
 
 To use nox, install it globally with `pip`:
 
-    $ pip install nox-automation
+    $ pip install nox
 
 Nox automatically discovers all samples in the repository and generates three
 types of sessions for *each* sample in this repository:

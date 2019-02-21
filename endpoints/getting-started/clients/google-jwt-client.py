@@ -22,64 +22,56 @@ import time
 
 import google.auth.crypt
 import google.auth.jwt
+
 import requests
-from six.moves import urllib
 
 
-def generate_jwt(service_account_file):
+# [START endpoints_generate_jwt_sa]
+def generate_jwt(sa_keyfile,
+                 sa_email='account@project-id.iam.gserviceaccount.com',
+                 audience='your-service-name',
+                 expiry_length=3600):
+
     """Generates a signed JSON Web Token using a Google API Service Account."""
 
-    # Note: this sample shows how to manually create the JWT for the purposes
-    # of showing how the authentication works, but you can use
-    # google.auth.jwt.Credentials to automatically create the JWT.
-    #   http://google-auth.readthedocs.io/en/latest/reference
-    #   /google.auth.jwt.html#google.auth.jwt.Credentials
-
-    signer = google.auth.crypt.RSASigner.from_service_account_file(
-        service_account_file)
-
     now = int(time.time())
-    expires = now + 3600  # One hour in seconds
 
+    # build payload
     payload = {
         'iat': now,
-        'exp': expires,
-        # aud must match 'audience' in the security configuration in your
-        # swagger spec. It can be any string.
-        'aud': 'echo.endpoints.sample.google.com',
+        # expires after 'expirary_length' seconds.
+        "exp": now + expiry_length,
         # iss must match 'issuer' in the security configuration in your
-        # swagger spec. It can be any string.
-        'iss': 'jwt-client.endpoints.sample.google.com',
-        # sub and email are mapped to the user id and email respectively.
-        'sub': '12345678',
-        'email': 'user@example.com'
+        # swagger spec (e.g. service account email). It can be any string.
+        'iss': sa_email,
+        # aud must be either your Endpoints service name, or match the value
+        # specified as the 'x-google-audience' in the OpenAPI document.
+        'aud':  audience,
+        # sub and email should match the service account's email address
+        'sub': sa_email,
+        'email': sa_email
     }
 
+    # sign with keyfile
+    signer = google.auth.crypt.RSASigner.from_service_account_file(sa_keyfile)
     jwt = google.auth.jwt.encode(signer, payload)
 
     return jwt
+# [END endpoints_generate_jwt_sa]
 
 
-def make_request(host, api_key, signed_jwt):
-    """Makes a request to the auth info endpoint for Google JWTs."""
-    url = urllib.parse.urljoin(host, '/auth/info/googlejwt')
-    params = {
-        'key': api_key
-    }
+# [START endpoints_jwt_request]
+def make_jwt_request(signed_jwt, url='https://your-endpoint.com'):
+    """Makes an authorized request to the endpoint"""
     headers = {
-        'Authorization': 'Bearer {}'.format(signed_jwt)
+        'Authorization': 'Bearer {}'.format(signed_jwt),
+        'content-type': 'application/json'
     }
-
-    response = requests.get(url, params=params, headers=headers)
+    response = requests.get(url, headers=headers)
 
     response.raise_for_status()
     return response.text
-
-
-def main(host, api_key, service_account_file):
-    signed_jwt = generate_jwt(service_account_file)
-    response = make_request(host, api_key, signed_jwt)
-    print(response)
+# [END endpoints_jwt_request]
 
 
 if __name__ == '__main__':
@@ -89,11 +81,19 @@ if __name__ == '__main__':
     parser.add_argument(
         'host', help='Your API host, e.g. https://your-project.appspot.com.')
     parser.add_argument(
-        'api_key', help='Your API key.')
+        'audience', help='The aud entry for the JWT')
     parser.add_argument(
-        'service_account_file',
+        'sa_path',
         help='The path to your service account json file.')
+    parser.add_argument(
+        'sa_email',
+        help='The email address for the service account.')
 
     args = parser.parse_args()
 
-    main(args.host, args.api_key, args.service_account_file)
+    expiry_length = 3600
+    keyfile_jwt = generate_jwt(args.sa_path,
+                               args.sa_email,
+                               args.audience,
+                               expiry_length)
+    print(make_jwt_request(keyfile_jwt, args.host))

@@ -3,6 +3,8 @@
 .coverage
 .tox
 .pytest_cache
+.ipynb_checkpoints
+.executed_notebooks
 coverage.xml
 python-docs-samples.json
 service-account.json
