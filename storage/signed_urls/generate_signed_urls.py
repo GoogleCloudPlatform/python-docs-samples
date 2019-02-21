@@ -65,7 +65,7 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
         service_account_file)
     # [END storage_signed_url_signer]
     client_email = google_credentials.service_account_email
-    credential_scope = '{}/auto/gcs/goog4_request'.format(datestamp)
+    credential_scope = '{}/auto/storage/goog4_request'.format(datestamp)
     credential = '{}/{}'.format(client_email, credential_scope)
     # [END storage_signed_url_credentials]
 
