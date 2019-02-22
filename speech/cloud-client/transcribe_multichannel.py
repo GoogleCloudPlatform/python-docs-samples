@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Google Cloud Speech API sample that demonstrates enhanced models
-and recognition metadata.
+"""Google Cloud Speech API sample that demonstrates multichannel recognition.
 
 Example usage:
     python transcribe_multichannel.py resources/multi.wav
