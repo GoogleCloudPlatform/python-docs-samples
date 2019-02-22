@@ -1,1 +1,1 @@
-google-cloud-texttospeech==0.3.0
+google-cloud-texttospeech==0.4.0
