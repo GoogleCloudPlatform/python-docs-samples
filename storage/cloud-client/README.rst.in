@@ -4,7 +4,7 @@ product:
   name: Google Cloud Storage
   short_name: Cloud Storage
   url: https://cloud.google.com/storage/docs
-  description: > 
+  description: >
     `Google Cloud Storage`_ allows world-wide storage and retrieval of any
     amount of data at any time.
 
@@ -26,6 +26,9 @@ samples:
   show_help: true
 - name: Bucket Lock
   file: bucket_lock.py
+  show_help: true
+- name: Bucket Policy Only
+  file: bucket_policy_only.py
   show_help: true
 - name: Notification Polling
   file: notification_polling.py
