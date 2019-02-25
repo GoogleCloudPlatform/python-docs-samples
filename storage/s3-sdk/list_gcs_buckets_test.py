@@ -16,7 +16,7 @@ import os
 
 import list_gcs_buckets
 
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+BUCKET = os.environ["CLOUD_CLOUD_PROJECT_S3_SDK"]
 
 
 def test_list_blobs(capsys):
