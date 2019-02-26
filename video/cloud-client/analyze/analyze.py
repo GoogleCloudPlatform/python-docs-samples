@@ -303,7 +303,7 @@ def video_detect_text_gcs(input_uri):
 
     for text_annotation in annotation_result.text_annotations:
         print('\nText: {}'.format(text_annotation.text))
-        continue
+
         # Get the first text segment
         text_segment = text_annotation.segments[0]
         start_time = text_segment.segment.start_time_offset
