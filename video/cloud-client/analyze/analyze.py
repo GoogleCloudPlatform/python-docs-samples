@@ -19,10 +19,11 @@ explicit content, and shot change detection using the Google Cloud API.
 
 Usage Examples:
 
-    python analyze.py labels gs://cloud-ml-sandbox/video/chicago.mp4
+    python analyze.py labels gs://cloud-samples-data/video/chicago.mp4
     python analyze.py labels_file resources/cat.mp4
-    python analyze.py shots gs://demomaker/gbikes_dinosaur.mp4
-    python analyze.py explicit_content gs://demomaker/gbikes_dinosaur.mp4
+    python analyze.py shots gs://cloud-samples-data/video/gbikes_dinosaur.mp4
+    python analyze.py explicit_content \
+    gs://cloud-samples-data/video/gbikes_dinosaur.mp4
     python analyze.py text_gcs \
     gs://cloud-samples-data/video/googlework_short.mp4
     python analyze.py text_file resources/googlework_short.mp4
