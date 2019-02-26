@@ -46,3 +46,19 @@ def test_speech_transcription(capsys):
         'gs://cloud-samples-data/video/googlework_short.mp4')
     out, _ = capsys.readouterr()
     assert 'cultural' in out
+
+
+@pytest.mark.slow
+def test_detect_text_gcs(capsys):
+    analyze.video_detect_text_gcs(
+        'gs://cloud-samples-data/video/googlework_short.mp4')
+    out, _ = capsys.readouterr()
+    assert 'GOOGLE' in out
+
+
+@pytest.mark.slow
+def test_track_objects_gcs(capsys):
+    analyze.track_objects_gcs(
+        'gs://cloud-samples-data/video/cat.mp4')
+    out, _ = capsys.readouterr()
+    assert 'cat' in out
