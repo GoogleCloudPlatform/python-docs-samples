@@ -2,6 +2,8 @@ runtime: python
 env: flex
 entrypoint: gunicorn -b :$PORT main:app
 
+# App Engine flexible Python 3 runtime uses Python 3.7.x, which supports both
+# CPU and Wall profiling.
 runtime_config:
   python_version: 3
 

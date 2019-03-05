@@ -33,7 +33,7 @@ def main():
             # project_id='my-project-id',
         )
     except (ValueError, NotImplementedError) as exc:
-        print(exc)  # Handles errors here
+        print(exc)  # Handle errors here
 # [END profiler_python_quickstart]
     busyloop()
 

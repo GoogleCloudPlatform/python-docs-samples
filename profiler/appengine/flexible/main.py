@@ -25,7 +25,7 @@ try:
     # on GCP.
     googlecloudprofiler.start(verbose=3)
 except (ValueError, NotImplementedError) as exc:
-    print(exc)  # Handles errors here
+    print(exc)  # Handle errors here
 
 # [END profiler_python_appengine_flex]
 
