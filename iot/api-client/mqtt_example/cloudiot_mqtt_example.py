@@ -55,7 +55,7 @@ def create_jwt(project_id, private_key_file, algorithm):
                  ES256 private key.
          algorithm: The encryption algorithm to use. Either 'RS256' or 'ES256'
         Returns:
-            An MQTT generated from the given project_id and private key, which
+            A JWT generated from the given project_id and private key, which
             expires in 20 minutes. After 20 minutes, your client will be
             disconnected, and a new JWT will have to be generated.
         Raises:
