@@ -18,11 +18,6 @@ import json
 
 # [END functions_log_stackdriver]
 
-# [START functions_log_helloworld]
-import logging
-
-# [END functions_log_helloworld]
-
 # [START functions_log_retrieve]
 import os
 # [END functions_log_retrieve]
@@ -40,7 +35,6 @@ def hello_world(data, context):
          context (google.cloud.functions.Context): The event metadata.
     """
     print('Hello, stdout!')
-    logging.warn('Hello, logging handler!')
 # [END functions_log_helloworld]
 
 
