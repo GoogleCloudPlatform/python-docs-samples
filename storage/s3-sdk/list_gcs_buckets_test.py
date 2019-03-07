@@ -1,4 +1,4 @@
-# Copyright 2018 Google, Inc.
+# Copyright 2019 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,10 +16,13 @@ import os
 
 import list_gcs_buckets
 
-BUCKET = os.environ["CLOUD_CLOUD_PROJECT_S3_SDK"]
+BUCKET = os.environ["GOOGLE_CLOUD_PROJECT_S3_SDK"]
+KEY_ID = os.environ["STORAGE_HMAC_ACCESS_KEY_ID"]
+SECRET_KEY = os.environ["STORAGE_HMAC_ACCESS_SECRET_KEY"]
 
 
 def test_list_blobs(capsys):
-    list_gcs_buckets.list_gcs_buckets()
+    list_gcs_buckets.list_gcs_buckets(google_access_key_id=KEY_ID,
+                                      google_access_key_secret=SECRET_KEY)
     out, _ = capsys.readouterr()
     assert BUCKET in out

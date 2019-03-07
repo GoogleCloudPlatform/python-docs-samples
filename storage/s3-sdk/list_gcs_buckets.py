@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google, Inc.
+# Copyright 2019 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,27 +14,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This sample shows how to list Google Cloud Storage (GCS) buckets
-   using the AWS S3 SDK with the GCS interoperable XML API.
-
-GCS Credentials are passed in using the following environment variables:
-
-    * AWS_ACCESS_KEY_ID
-    * AWS_SECRET_ACCESS_KEY
-
-Learn how to get GCS interoperable credentials at
-https://cloud.google.com/storage/docs/migrating#keys.
-"""
-
 # [START storage_s3_sdk_list_buckets]
 import boto3
 
 
-def list_gcs_buckets():
+def list_gcs_buckets(google_access_key_id, google_access_key_secret):
     """Lists all GCS buckets using boto3 SDK"""
-    # Change the endpoint_url to use the Google Cloud Storage XML API endpoint.
+    # Create a new client and do the following:
+    # 1. Change the endpoint URL to use the Google Cloud Storage XML API endpoint.
+    # 2. Use Cloud Storage HMAC Credentials.
     interop_client = boto3.client("s3", region_name="auto",
-                                  endpoint_url="https://storage.googleapis.com")
+                                  endpoint_url="https://storage.googleapis.com",
+                                  aws_access_key_id=google_access_key_id,
+                                  aws_secret_access_key=google_access_key_secret)
 
     # Call GCS to list current buckets
     response = interop_client.list_buckets()
@@ -47,4 +39,13 @@ def list_gcs_buckets():
 
 
 if __name__ == "__main__":
-    list_gcs_buckets()
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("google_access_key_id", help="Your Cloud Storage HMAC Access Key ID.")
+    parser.add_argument("google_access_key_secret", help="Your Cloud Storage HMAC Access Key Secret.")
+
+    args = parser.parse_args()
+
+    list_gcs_buckets(google_access_key_id=args.google_access_key_id,
+                     google_access_key_secret=args.google_access_key_secret)
