@@ -138,7 +138,7 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
 
     # [START storage_signed_url_construction]
     host_name = 'https://storage.googleapis.com'
-    signed_url = '{}{}?{}&x-goog-signature={}'.format(host_name, canonical_uri,
+    signed_url = '{}{}?{}&X-Goog-Signature={}'.format(host_name, canonical_uri,
                                                       canonical_query_string,
                                                       signature)
     # [END storage_signed_url_construction]
