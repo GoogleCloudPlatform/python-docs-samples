@@ -22,15 +22,16 @@ import boto3
 def list_gcs_buckets(google_access_key_id, google_access_key_secret):
     """Lists all GCS buckets using boto3 SDK"""
     # Create a new client and do the following:
-    # 1. Change the endpoint URL to use the Google Cloud Storage XML API endpoint.
+    # 1. Change the endpoint URL to use the
+    #    Google Cloud Storage XML API endpoint.
     # 2. Use Cloud Storage HMAC Credentials.
-    interop_client = boto3.client("s3", region_name="auto",
-                                  endpoint_url="https://storage.googleapis.com",
-                                  aws_access_key_id=google_access_key_id,
-                                  aws_secret_access_key=google_access_key_secret)
+    client = boto3.client("s3", region_name="auto",
+                          endpoint_url="https://storage.googleapis.com",
+                          aws_access_key_id=google_access_key_id,
+                          aws_secret_access_key=google_access_key_secret)
 
     # Call GCS to list current buckets
-    response = interop_client.list_buckets()
+    response = client.list_buckets()
 
     # Print bucket names
     print("Buckets:")
@@ -43,8 +44,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("google_access_key_id", help="Your Cloud Storage HMAC Access Key ID.")
-    parser.add_argument("google_access_key_secret", help="Your Cloud Storage HMAC Access Key Secret.")
+    parser.add_argument("google_access_key_id",
+                        help="Your Cloud Storage HMAC Access Key ID.")
+    parser.add_argument("google_access_key_secret",
+                        help="Your Cloud Storage HMAC Access Key Secret.")
 
     args = parser.parse_args()
 
