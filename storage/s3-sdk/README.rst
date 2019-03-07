@@ -67,6 +67,17 @@ To run this sample:
 
     $ python list_gcs_buckets.py
 
+    usage: list_gcs_buckets.py [-h] google_access_key_id google_access_key_secret
+
+    positional arguments:
+      google_access_key_id  Your Cloud Storage HMAC Access Key ID.
+      google_access_key_secret
+                            Your Cloud Storage HMAC Access Key Secret.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
 
 
 
