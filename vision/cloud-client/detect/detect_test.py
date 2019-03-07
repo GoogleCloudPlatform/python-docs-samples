@@ -252,6 +252,25 @@ def test_detect_document_uri(capsys):
     assert 'class' in out
 
 
+def test_detect_pdf_document(capsys):
+    file_name = os.path.join(
+        os.path.dirname(__file__),
+        'resources/metamorphosis.pdf')
+    detect.detect_pdf_document(file_name)
+    out, _ = capsys.readouterr()
+    assert 'Symbol' in out
+    assert 'Word text' in out
+
+
+def test_detect_pdf_document_from_gcs(capsys):
+    gcs_uri = 'gs://{}/vision/document_understanding/metamorphosis.pdf' \
+        .format(ASSET_BUCKET)
+    detect.detect_pdf_document_from_gcs(gcs_uri)
+    out, _ = capsys.readouterr()
+    assert 'Symbol' in out
+    assert 'Word text' in out
+
+
 def test_detect_document_http(capsys):
     uri = 'https://storage-download.googleapis.com/{}/vision/text/screen.jpg'
     detect.detect_document_uri(uri.format(ASSET_BUCKET))

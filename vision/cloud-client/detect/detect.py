@@ -661,6 +661,95 @@ def detect_document_uri(uri):
 # [END vision_fulltext_detection_gcs]
 
 
+# [START vision_fulltext_detection_pdf]
+def detect_pdf_document(path):
+    """Detects document features in a PDF/TIFF/GIF file."""
+    from google.cloud import vision_v1p4beta1 as vision
+    client = vision.ImageAnnotatorClient()
+
+    with io.open(path, 'rb') as pdf_file:
+        content = pdf_file.read()
+
+    # Can be other like 'image/tiff' or 'image/gif'
+    mime_type = 'application/pdf'
+    file_bytes_input_config = vision.types.InputConfig(
+        content=content, mime_type=mime_type)
+
+    feature = vision.types.Feature(
+        type=vision.enums.Feature.Type.DOCUMENT_TEXT_DETECTION)
+    image_context = vision.types.ImageContext()
+    # Annotate the first two pages and the last one (max 5 pages)
+    # First page starts at 1, and not 0. Last page is -1.
+    pages = [1, 2, -1]
+
+    online_one_request = vision.types.AnnotateFileRequest(
+        input_config=file_bytes_input_config,
+        features=[feature],
+        image_context=image_context,
+        pages=pages)
+
+    response = client.batch_annotate_files(requests=[online_one_request])
+
+    for image_response in response.responses[0].responses:
+        for page in image_response.full_text_annotation.pages:
+            for block in page.blocks:
+                print('\nBlock confidence: {}\n'.format(block.confidence))
+                for par in block.paragraphs:
+                    print('\tParagraph confidence: {}'.format(par.confidence))
+                    for word in par.words:
+                        symbol_texts = [symbol.text for symbol in word.symbols]
+                        word_text = ''.join(symbol_texts)
+                        print('\t\tWord text: {} (confidence: {})'.format(
+                            word_text, word.confidence))
+                        for symbol in word.symbols:
+                            print('\t\t\tSymbol: {} (confidence: {})'.format(
+                                symbol.text, symbol.confidence))
+# [END vision_fulltext_detection_pdf]
+
+
+# [START vision_fulltext_detection_pdf_gcs]
+def detect_pdf_document_from_gcs(gcs_uri):
+    """Detects document features in a PDF/TIFF/GIF  file."""
+    from google.cloud import vision_v1p4beta1 as vision
+    client = vision.ImageAnnotatorClient()
+
+    # Can be other like 'image/tiff' or 'image/gif'
+    mime_type = 'application/pdf'
+    file_bytes_input_config = vision.types.InputConfig(
+        gcs_source=vision.types.GcsSource(uri=gcs_uri), mime_type=mime_type)
+
+    feature = vision.types.Feature(
+        type=vision.enums.Feature.Type.DOCUMENT_TEXT_DETECTION)
+    image_context = vision.types.ImageContext()
+    # Annotate the first two pages and the last one (max 5 pages)
+    # First page starts at 1, and not 0. Last page is -1.
+    pages = [1, 2, -1]
+
+    online_one_request = vision.types.AnnotateFileRequest(
+        input_config=file_bytes_input_config,
+        features=[feature],
+        image_context=image_context,
+        pages=pages)
+
+    response = client.batch_annotate_files(requests=[online_one_request])
+
+    for image_response in response.responses[0].responses:
+        for page in image_response.full_text_annotation.pages:
+            for block in page.blocks:
+                print('\nBlock confidence: {}\n'.format(block.confidence))
+                for par in block.paragraphs:
+                    print('\tParagraph confidence: {}'.format(par.confidence))
+                    for word in par.words:
+                        symbol_texts = [symbol.text for symbol in word.symbols]
+                        word_text = ''.join(symbol_texts)
+                        print('\t\tWord text: {} (confidence: {})'.format(
+                            word_text, word.confidence))
+                        for symbol in word.symbols:
+                            print('\t\t\tSymbol: {} (confidence: {})'.format(
+                                symbol.text, symbol.confidence))
+# [END vision_fulltext_detection_pdf_gcs]
+
+
 # [START vision_text_detection_pdf_gcs]
 def async_detect_document(gcs_source_uri, gcs_destination_uri):
     """OCR with PDF/TIFF as source files on GCS"""
