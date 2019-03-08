@@ -289,13 +289,13 @@ if __name__ == '__main__':
         'handwritten-ocr-uri', help=detect_handwritten_ocr_uri.__doc__)
     handwritten_uri_parser.add_argument('uri')
 
-    handwritten_parser = subparsers.add_parser(
+    doc_features_parser = subparsers.add_parser(
         'doc-features', help=detect_document_features.__doc__)
-    handwritten_parser.add_argument('path')
+    doc_features_parser.add_argument('path')
 
-    handwritten_uri_parser = subparsers.add_parser(
+    doc_features_uri_parser = subparsers.add_parser(
         'doc-features-uri', help=detect_document_features_uri.__doc__)
-    handwritten_uri_parser.add_argument('uri')
+    doc_features_uri_parser.add_argument('uri')
 
     args = parser.parse_args()
 
