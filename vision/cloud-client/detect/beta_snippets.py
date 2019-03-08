@@ -312,4 +312,4 @@ if __name__ == '__main__':
         elif 'handwritten-ocr' in args.command:
             detect_handwritten_ocr(args.path)
         elif 'doc-features' in args.command:
-            detect_handwritten_ocr(args.uri)
+            detect_handwritten_ocr(args.path)
