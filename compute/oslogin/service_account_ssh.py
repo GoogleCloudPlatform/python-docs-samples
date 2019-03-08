@@ -97,17 +97,17 @@ def run_ssh(cmd, private_key_file, username, hostname):
 
 
 # [START main]
-def main(
-        cmd, project, instance, zone, oslogin=None, account=None, hostname=None
-        ):
+def main(cmd, project, instance=None, zone=None,
+         oslogin=None, account=None, hostname=None):
     """Run a command on a remote system."""
 
     # Create the OS Login API object.
     oslogin = oslogin or googleapiclient.discovery.build('oslogin', 'v1')
 
     # Identify the service account ID if it is not already provided.
-    account = account or 'users/' + requests.get(
+    account = account or requests.get(
         SERVICE_ACCOUNT_METADATA_URL, headers=HEADERS).text
+    account = 'users/' + account
 
     # Create a new SSH key pair and associate it with the service account.
     private_key_file = create_ssh_key(oslogin, account)
@@ -146,16 +146,23 @@ if __name__ == '__main__':
         '--cmd', default='uname -a',
         help='The command to run on the remote instance.')
     parser.add_argument(
-        '--project', default='my-project-id',
+        '--project',
         help='Your Google Cloud project ID.')
     parser.add_argument(
-        '--zone', default='us-central1-f',
+        '--zone',
         help='The zone where the target instance is locted.')
     parser.add_argument(
-        '--instance', default='my-instance-name',
+        '--instance',
         help='The target instance for the ssh command.')
+    parser.add_argument(
+        '--account',
+        help='The service account email.')
+    parser.add_argument(
+        '--hostname',
+        help='The external IP address or hostname for the target instance.')
     args = parser.parse_args()
 
-    main(args.cmd, args.project, args.instance, args.zone)
+    main(args.cmd, args.project, instance=args.instance, zone=args.zone,
+         account=args.account, hostname=args.hostname)
 
 # [END main]
