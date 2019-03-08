@@ -198,12 +198,12 @@ def detect_document_features(path):
     # First page starts at 1, and not 0. Last page is -1.
     pages = [1, 2, -1]
 
-    online_one_request = vision.types.AnnotateFileRequest(
+    request = vision.types.AnnotateFileRequest(
         input_config=input_config,
         features=[feature],
         pages=pages)
 
-    response = client.batch_annotate_files(requests=[online_one_request])
+    response = client.batch_annotate_files(requests=[request])
 
     for image_response in response.responses[0].responses:
         for page in image_response.full_text_annotation.pages:
@@ -243,12 +243,12 @@ def detect_document_features_uri(gcs_uri):
     # First page starts at 1, and not 0. Last page is -1.
     pages = [1, 2, -1]
 
-    online_one_request = vision.types.AnnotateFileRequest(
+    request = vision.types.AnnotateFileRequest(
         input_config=input_config,
         features=[feature],
         pages=pages)
 
-    response = client.batch_annotate_files(requests=[online_one_request])
+    response = client.batch_annotate_files(requests=[request])
 
     for image_response in response.responses[0].responses:
         for page in image_response.full_text_annotation.pages:
