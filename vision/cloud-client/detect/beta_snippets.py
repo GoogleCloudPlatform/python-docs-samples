@@ -184,7 +184,7 @@ def detect_document_features(path):
     from google.cloud import vision_v1p4beta1 as vision
     client = vision.ImageAnnotatorClient()
 
-    with io.open(path, 'rb') as pdf_file:
+    with open(path, 'rb') as pdf_file:
         content = pdf_file.read()
 
     # Other supported mime_types: image/tiff' or 'image/gif'
