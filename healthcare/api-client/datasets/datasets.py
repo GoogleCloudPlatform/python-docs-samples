@@ -25,7 +25,7 @@ def get_client(service_account_json, api_key):
     """Returns an authorized API client by discovering the Healthcare API and
     creating a service object using the service account credentials JSON."""
     api_scopes = ['https://www.googleapis.com/auth/cloud-platform']
-    api_version = 'v1alpha'
+    api_version = 'v1alpha2'
     discovery_api = 'https://healthcare.googleapis.com/$discovery/rest'
     service_name = 'healthcare'
 
@@ -181,7 +181,7 @@ def deidentify_dataset(
         cloud_region,
         dataset_id,
         destination_dataset_id,
-        whitelist_tags):
+        keeplist_tags):
     """Creates a new dataset containing de-identified data
     from the source dataset.
     """
@@ -195,7 +195,27 @@ def deidentify_dataset(
         'destinationDataset': destination_dataset,
         'config': {
             'dicom': {
-                'whitelistTags': whitelist_tags
+                'keepList': {
+                    'tags': [
+                        'Columns',
+                        'NumberOfFrames',
+                        'PixelRepresentation',
+                        'MediaStorageSOPClassUID',
+                        'MediaStorageSOPInstanceUID',
+                        'Rows',
+                        'SamplesPerPixel',
+                        'BitsAllocated',
+                        'HighBit',
+                        'PhotometricInterpretation',
+                        'BitsStored',
+                        'PatientID',
+                        'TransferSyntaxUID',
+                        'SOPInstanceUID',
+                        'StudyInstanceUID',
+                        'SeriesInstanceUID',
+                        'PixelData'
+                    ]
+                }
             }
         }
     }
@@ -261,9 +281,9 @@ def parse_command_line_args():
         'will be written')
 
     parser.add_argument(
-        '--whitelist_tags',
+        '--keeplist_tags',
         default=None,
-        help='The data to whitelist, for example "PatientID" '
+        help='The data to keeplist, for example "PatientID" '
         'or "StudyInstanceUID"')
 
     command = parser.add_subparsers(dest='command')
@@ -334,7 +354,7 @@ def run_command(args):
             args.cloud_region,
             args.dataset_id,
             args.destination_dataset_id,
-            args.whitelist_tags)
+            args.keeplist_tags)
 
 
 def main():
