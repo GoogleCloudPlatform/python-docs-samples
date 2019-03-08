@@ -16,6 +16,7 @@ import os
 import beta_snippets
 
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
+BUCKET = 'gs://cloud-samples-data/'
 
 
 def test_localize_objects(capsys):
@@ -28,7 +29,7 @@ def test_localize_objects(capsys):
 
 
 def test_localize_objects_uri(capsys):
-    uri = 'gs://cloud-samples-data/vision/puppies.jpg'
+    uri = BUCKET + 'vision/puppies.jpg'
 
     beta_snippets.localize_objects_uri(uri)
 
@@ -46,7 +47,7 @@ def test_handwritten_ocr(capsys):
 
 
 def test_handwritten_ocr_uri(capsys):
-    uri = 'gs://cloud-samples-data/vision/handwritten.jpg'
+    uri = BUCKET + 'vision/handwritten.jpg'
 
     beta_snippets.detect_handwritten_ocr_uri(uri)
 
@@ -55,9 +56,7 @@ def test_handwritten_ocr_uri(capsys):
 
 
 def test_detect_pdf_document(capsys):
-    file_name = os.path.join(
-        os.path.dirname(__file__),
-        'resources/metamorphosis.pdf')
+    file_name = os.path.join(RESOURCES, 'kafka.pdf')
     beta_snippets.detect_document_features(file_name)
     out, _ = capsys.readouterr()
     assert 'Symbol' in out
@@ -65,7 +64,7 @@ def test_detect_pdf_document(capsys):
 
 
 def test_detect_pdf_document_from_gcs(capsys):
-    gcs_uri = 'gs://cloud-samples-data/vision/document_understanding/metamorphosis.pdf'
+    gcs_uri = BUCKET + 'vision/document_understanding/kafka.pdf'
     beta_snippets.detect_document_features_uri(gcs_uri)
     out, _ = capsys.readouterr()
     assert 'Symbol' in out
