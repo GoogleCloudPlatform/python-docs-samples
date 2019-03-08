@@ -162,7 +162,7 @@ if __name__ == '__main__':
         help='The external IP address or hostname for the target instance.')
     args = parser.parse_args()
 
-    main(args.cmd, args.project, args.instance, args.zone,
+    main(args.cmd, args.project, instance=args.instance, zone=args.zone,
          account=args.account, hostname=args.hostname)
 
 # [END main]
