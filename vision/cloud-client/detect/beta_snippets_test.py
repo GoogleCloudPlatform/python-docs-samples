@@ -52,3 +52,21 @@ def test_handwritten_ocr_uri(capsys):
 
     out, _ = capsys.readouterr()
     assert 'Cloud Vision API' in out
+
+
+def test_detect_pdf_document(capsys):
+    file_name = os.path.join(
+        os.path.dirname(__file__),
+        'resources/metamorphosis.pdf')
+    beta_snippets.detect_document_features(file_name)
+    out, _ = capsys.readouterr()
+    assert 'Symbol' in out
+    assert 'Word text' in out
+
+
+def test_detect_pdf_document_from_gcs(capsys):
+    gcs_uri = 'gs://cloud-samples-data/vision/document_understanding/metamorphosis.pdf'
+    beta_snippets.detect_document_features_uri(gcs_uri)
+    out, _ = capsys.readouterr()
+    assert 'Symbol' in out
+    assert 'Word text' in out
