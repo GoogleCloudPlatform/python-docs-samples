@@ -180,6 +180,9 @@ def detect_handwritten_ocr_uri(uri):
 def detect_document_features(path):
     """Detects document features in a PDF/TIFF/GIF file.
 
+    While your PDF file may have several pages,
+    this API can process up to 5 pages only.
+
     Args:
     path: The path to the local file.
     """
@@ -227,6 +230,9 @@ def detect_document_features(path):
 # [START vision_fulltext_detection_pdf_gcs_beta]
 def detect_document_features_uri(gcs_uri):
     """Detects document features in a PDF/TIFF/GIF  file.
+
+    While your PDF file may have several pages,
+    this API can process up to 5 pages only.
 
     Args:
     uri: The path to the file in Google Cloud Storage (gs://...)
