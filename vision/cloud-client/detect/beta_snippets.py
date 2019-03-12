@@ -23,6 +23,8 @@ python beta_snippets.py object-localization INPUT_IMAGE
 python beta_snippets.py object-localization-uri gs://...
 python beta_snippets.py handwritten-ocr INPUT_IMAGE
 python beta_snippets.py handwritten-ocr-uri gs://...
+python beta_snippets.py doc-features INPUT_PDF
+python beta_snippets.py doc-features_uri gs://...
 
 
 For more information, the documentation at
@@ -174,6 +176,105 @@ def detect_handwritten_ocr_uri(uri):
 # [END vision_handwritten_ocr_gcs_beta]
 
 
+# [START vision_fulltext_detection_pdf_beta]
+def detect_document_features(path):
+    """Detects document features in a PDF/TIFF/GIF file.
+
+    While your PDF file may have several pages,
+    this API can process up to 5 pages only.
+
+    Args:
+    path: The path to the local file.
+    """
+    from google.cloud import vision_v1p4beta1 as vision
+    client = vision.ImageAnnotatorClient()
+
+    with open(path, 'rb') as pdf_file:
+        content = pdf_file.read()
+
+    # Other supported mime_types: image/tiff' or 'image/gif'
+    mime_type = 'application/pdf'
+    input_config = vision.types.InputConfig(
+        content=content, mime_type=mime_type)
+
+    feature = vision.types.Feature(
+        type=vision.enums.Feature.Type.DOCUMENT_TEXT_DETECTION)
+    # Annotate the first two pages and the last one (max 5 pages)
+    # First page starts at 1, and not 0. Last page is -1.
+    pages = [1, 2, -1]
+
+    request = vision.types.AnnotateFileRequest(
+        input_config=input_config,
+        features=[feature],
+        pages=pages)
+
+    response = client.batch_annotate_files(requests=[request])
+
+    for image_response in response.responses[0].responses:
+        for page in image_response.full_text_annotation.pages:
+            for block in page.blocks:
+                print('\nBlock confidence: {}\n'.format(block.confidence))
+                for par in block.paragraphs:
+                    print('\tParagraph confidence: {}'.format(par.confidence))
+                    for word in par.words:
+                        symbol_texts = [symbol.text for symbol in word.symbols]
+                        word_text = ''.join(symbol_texts)
+                        print('\t\tWord text: {} (confidence: {})'.format(
+                            word_text, word.confidence))
+                        for symbol in word.symbols:
+                            print('\t\t\tSymbol: {} (confidence: {})'.format(
+                                symbol.text, symbol.confidence))
+# [END vision_fulltext_detection_pdf_beta]
+
+
+# [START vision_fulltext_detection_pdf_gcs_beta]
+def detect_document_features_uri(gcs_uri):
+    """Detects document features in a PDF/TIFF/GIF  file.
+
+    While your PDF file may have several pages,
+    this API can process up to 5 pages only.
+
+    Args:
+    uri: The path to the file in Google Cloud Storage (gs://...)
+    """
+    from google.cloud import vision_v1p4beta1 as vision
+    client = vision.ImageAnnotatorClient()
+
+    # Other supported mime_types: image/tiff' or 'image/gif'
+    mime_type = 'application/pdf'
+    input_config = vision.types.InputConfig(
+        gcs_source=vision.types.GcsSource(uri=gcs_uri), mime_type=mime_type)
+
+    feature = vision.types.Feature(
+        type=vision.enums.Feature.Type.DOCUMENT_TEXT_DETECTION)
+    # Annotate the first two pages and the last one (max 5 pages)
+    # First page starts at 1, and not 0. Last page is -1.
+    pages = [1, 2, -1]
+
+    request = vision.types.AnnotateFileRequest(
+        input_config=input_config,
+        features=[feature],
+        pages=pages)
+
+    response = client.batch_annotate_files(requests=[request])
+
+    for image_response in response.responses[0].responses:
+        for page in image_response.full_text_annotation.pages:
+            for block in page.blocks:
+                print('\nBlock confidence: {}\n'.format(block.confidence))
+                for par in block.paragraphs:
+                    print('\tParagraph confidence: {}'.format(par.confidence))
+                    for word in par.words:
+                        symbol_texts = [symbol.text for symbol in word.symbols]
+                        word_text = ''.join(symbol_texts)
+                        print('\t\tWord text: {} (confidence: {})'.format(
+                            word_text, word.confidence))
+                        for symbol in word.symbols:
+                            print('\t\t\tSymbol: {} (confidence: {})'.format(
+                                symbol.text, symbol.confidence))
+# [END vision_fulltext_detection_pdf_gcs_beta]
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -196,6 +297,14 @@ if __name__ == '__main__':
         'handwritten-ocr-uri', help=detect_handwritten_ocr_uri.__doc__)
     handwritten_uri_parser.add_argument('uri')
 
+    doc_features_parser = subparsers.add_parser(
+        'doc-features', help=detect_document_features.__doc__)
+    doc_features_parser.add_argument('path')
+
+    doc_features_uri_parser = subparsers.add_parser(
+        'doc-features-uri', help=detect_document_features_uri.__doc__)
+    doc_features_uri_parser.add_argument('uri')
+
     args = parser.parse_args()
 
     if 'uri' in args.command:
@@ -203,8 +312,12 @@ if __name__ == '__main__':
             localize_objects_uri(args.uri)
         elif 'handwritten-ocr-uri' in args.command:
             detect_handwritten_ocr_uri(args.uri)
+        elif 'doc-features' in args.command:
+            detect_handwritten_ocr_uri(args.uri)
     else:
         if 'object-localization' in args.command:
             localize_objects(args.path)
         elif 'handwritten-ocr' in args.command:
+            detect_handwritten_ocr(args.path)
+        elif 'doc-features' in args.command:
             detect_handwritten_ocr(args.path)
