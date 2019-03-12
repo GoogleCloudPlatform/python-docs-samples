@@ -59,8 +59,8 @@ def test_detect_pdf_document(capsys):
     file_name = os.path.join(RESOURCES, 'kafka.pdf')
     beta_snippets.detect_document_features(file_name)
     out, _ = capsys.readouterr()
-    assert 'Symbol' in out
-    assert 'Word text' in out
+    assert 'Symbol: a' in out
+    assert 'Word text: evenings' in out
 
 
 def test_detect_pdf_document_from_gcs(capsys):
