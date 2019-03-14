@@ -19,7 +19,9 @@ import argparse
 import boto3
 from botocore.handlers import set_list_objects_encoding_type_url
 
-def list_gcs_objects(google_access_key_id, google_access_key_secret, bucket_name):
+
+def list_gcs_objects(google_access_key_id, google_access_key_secret,
+                     bucket_name):
     """Lists GCS objects using boto3 SDK"""
     # Create a new client and do the following:
     # 1. Change the endpoint URL to use the
@@ -32,7 +34,7 @@ def list_gcs_objects(google_access_key_id, google_access_key_secret, bucket_name
                           aws_secret_access_key=google_access_key_secret)
 
     # Cloud Storage does not support encoding-type and must be removed
-    # from ListObjects made by the client. 
+    # from ListObjects made by the client.
     # The following class removes encoding-type and is used whenever
     # the list_objects() is called using boto3 S3 SDK.
     client.meta.events.unregister('before-parameter-build.s3.ListObjects',
