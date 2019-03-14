@@ -32,9 +32,9 @@ def list_gcs_objects(google_access_key_id, google_access_key_secret, bucket_name
                           aws_secret_access_key=google_access_key_secret)
 
     # Cloud Storage does not support encoding-type and must be removed
-    # from a ListObjectsRequest made by the client. 
+    # from ListObjects made by the client. 
     # The following class removes encoding-type and is used whenever
-    # the listObjects() is called using S3 SDK.
+    # the list_objects() is called using boto3 S3 SDK.
     client.meta.events.unregister('before-parameter-build.s3.ListObjects',
                                   set_list_objects_encoding_type_url)
 
