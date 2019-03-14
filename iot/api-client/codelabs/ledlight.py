@@ -20,6 +20,11 @@ from colors import bcolors
 ADDR = ''
 PORT = 10000
 BUFF_SIZE = 4096
+device_id = None
+server_address = (ADDR, PORT)
+# Create a UDP socket
+client_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
 
 def send_command(sock, message):
     sock.sendto(message.encode(), server_address)
@@ -44,26 +49,17 @@ def run_action(action, data=''):
     if not message:
         return
     print('Send message: {}'.format(message))
+
     event_response = send_command(client_sock, message).decode('utf-8')
     print('Received response: {}'.format(event_response))
 
 
-if __name__ == '__main__':
-    main()
-
 def main():
-# Create a UDP socket
-    client_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-    server_address = (ADDR, PORT)
-
     device_id = sys.argv[1]
     if not device_id:
         sys.exit('The device id must be specified.')
 
     print('Bringing up device {}'.format(device_id))
-
-
     try:
         run_action('detach')
         run_action('attach')
@@ -89,3 +85,5 @@ def main():
         client_sock.close()
 
 
+if __name__ == '__main__':
+    main()

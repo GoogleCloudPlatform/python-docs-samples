@@ -11,9 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import paho.mqtt.client as mqtt
-
-import colors
+from colors import bcolors
 import gateway
 import ledlight
 import lightsensor
@@ -22,10 +20,9 @@ import thermostat
 
 # Check colors exist
 def test_check_colors(capsys):
-    print (gateway.error_str(1))
-    print (gateway.error_str(2))
-    print (gateway.error_str(3))
-    print (gateway.error_str(4))
+    assert(bcolors.OKBLUE is not None)
+    assert(bcolors.FAIL is not None)
+    assert(bcolors.CEND is not None)
 
 
 # Check error code returns reasonable justifications
@@ -45,7 +42,7 @@ def test_gateway_error_string(capsys):
 # Check gateway state is init to reasonable defaults
 def test_gateway_state(capsys):
     assert (gateway.GatewayState.mqtt_config_topic == '')
-    assert (gateway.GatewayState.connected == False)
+    assert (gateway.GatewayState.connected is False)
     assert (gateway.GatewayState.pending_responses == {})
     assert (gateway.GatewayState.pending_subscribes == {})
     assert (gateway.GatewayState.mqtt_bridge_port == 8883 or

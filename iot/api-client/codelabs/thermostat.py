@@ -83,16 +83,15 @@ def main():
             sys.stdout.flush()
 
             message = make_message(
-                    device_id, 'event', 'temperature={}, humidity={}'.format(t, h)
-                    ).encode()
+                device_id, 'event', 'temperature={}, humidity={}'.format(t, h)
+                ).encode()
 
             send_command(client_sock, message, False)
             time.sleep(2)
-
-
     finally:
         print('Closing socket')
         client_sock.close()
+
 
 if __name__ == "__main__":
     main()
