@@ -27,10 +27,10 @@ def test_check_colors(capsys):
 
 # Check error code returns reasonable justifications
 def test_gateway_error_string(capsys):
-    print (gateway.error_str(1))
-    print (gateway.error_str(2))
-    print (gateway.error_str(3))
-    print (gateway.error_str(4))
+    print(gateway.error_str(1))
+    print(gateway.error_str(2))
+    print(gateway.error_str(3))
+    print(gateway.error_str(4))
     out, _ = capsys.readouterr()
 
     assert 'memory' in out
