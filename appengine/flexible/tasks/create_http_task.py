@@ -37,6 +37,7 @@ def create_http_task(project,
     # project = 'my-project-id'
     # queue = 'my-appengine-queue'
     # location = 'us-central1'
+    # url = 'https://<project-id>.appspot.com/example_task_handler'
     # payload = 'hello'
 
     # Construct the fully qualified queue name.
@@ -46,7 +47,7 @@ def create_http_task(project,
     task = {
             'http_request': {  # Specify the type of request.
                 'http_method': 'POST',
-                'url': url
+                'url': url # The full url path that the task will be sent to.
             }
     }
     if payload is not None:

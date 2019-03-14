@@ -5,8 +5,8 @@
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
 [shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/tasks/README.md
 
-Sample command-line program for interacting with the Cloud Tasks API
-using App Engine queues.
+Sample command-line programs for interacting with the Cloud Tasks API
+.
 
 App Engine queues push tasks to an App Engine HTTP target. This directory
 contains both the App Engine app to deploy, as well as the snippets to run
@@ -94,12 +94,27 @@ location is "us-central1").
 ```
 export LOCATION_ID=us-central1
 ```
-
-Running the sample will create a task, targeted at the 'example_task_handler'
+### Using App Engine Queues
+Running the sample will create a task, targeted at the `/example_task_handler`
 endpoint, with a payload specified:
 
 ```
 python create_app_engine_queue_task.py --project=$PROJECT_ID --queue=$QUEUE_ID --location=$LOCATION_ID --payload=hello
+```
+
+### Using HTTP Push Queues
+
+Set an environment variable for the endpoint to your task handler. This is an
+example url to send requests to the App Engine task handler:
+```
+export URL=https://<project_id>.appspot.com/example_task_handler
+```
+
+Running the sample will create a task and send the task to the specific URL
+endpoint, with a payload specified:
+
+```
+python create_http_task.py --project=$PROJECT_ID --queue=$QUEUE_ID --location=$LOCATION_ID --url=$URL --payload=hello
 ```
 
 Now view that the payload was received and verify the payload:
