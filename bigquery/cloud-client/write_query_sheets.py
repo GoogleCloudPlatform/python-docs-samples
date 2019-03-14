@@ -57,13 +57,12 @@ def query_sample():
 
 
 def write_to_sheets(df):
-    creds = None
-
     # End-User Authentication
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
     # Change PATH_TO_CLIENT_SECRETS.JSON to Client_Secrets.json path
+    creds = None
     if os.path.exists('token.pickle'):
         with open('token.pickle', 'rb') as token:
             creds = pickle.load(token)
