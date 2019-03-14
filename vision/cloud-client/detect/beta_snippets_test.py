@@ -77,7 +77,7 @@ def test_detect_batch_annotate_files_uri(capsys):
 
 def test_async_batch_annotate_images(capsys):
     gcs_uri = GCS_ROOT + 'landmark/eiffel_tower.jpg'
-    beta_snippets.async_batch_annotate_images(gcs_uri, GCS_DESTINATION_URI)
+    beta_snippets.async_batch_annotate_images_uri(gcs_uri, GCS_DESTINATION_URI)
     out, _ = capsys.readouterr()
     assert 'language_code: "en"' in out
     assert 'description: "Tower"' in out
