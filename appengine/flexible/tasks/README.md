@@ -1,4 +1,4 @@
-# Google Cloud Tasks App Engine Queue Samples
+# Google Cloud Tasks Samples
 
 [![Open in Cloud Shell][shell_img]][shell_link]
 
@@ -45,9 +45,14 @@ version unless configured to do otherwise.
 
 Deploy the App Engine app with gcloud:
 
-```
-gcloud app deploy
-```
+* To deploy to the Standard environment:
+  ```
+  gcloud app deploy app.yaml
+  ```
+* To deploy to the Flexible environment:
+  ```
+  gcloud app deploy app.flexible.yaml
+  ```
 
 Verify the index page is serving:
 
