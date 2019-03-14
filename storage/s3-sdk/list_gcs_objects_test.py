@@ -14,7 +14,7 @@
 
 import os
 
-import list_gcs_buckets
+import list_gcs_objects
 
 BUCKET = os.environ["GOOGLE_CLOUD_PROJECT_S3_SDK"]
 KEY_ID = os.environ["STORAGE_HMAC_ACCESS_KEY_ID"]
@@ -22,7 +22,8 @@ SECRET_KEY = os.environ["STORAGE_HMAC_ACCESS_SECRET_KEY"]
 
 
 def test_list_blobs(capsys):
-    list_gcs_buckets.list_gcs_buckets(google_access_key_id=KEY_ID,
-                                      google_access_key_secret=SECRET_KEY)
+    list_gcs_objects.list_gcs_objects(google_access_key_id=KEY_ID,
+                                      google_access_key_secret=SECRET_KEY,
+                                      bucket_name=BUCKET)
     out, _ = capsys.readouterr()
-    assert BUCKET in out
+    assert "Objects:" in out

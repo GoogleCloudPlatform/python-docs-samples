@@ -18,10 +18,9 @@ import argparse
 # [START storage_s3_sdk_list_objects]
 import boto3
 from botocore.handlers import set_list_objects_encoding_type_url
-boto3.set_stream_logger(name='botocore')
 
-def list_gcs_buckets(google_access_key_id, google_access_key_secret, bucket_name):
-    """Lists all GCS buckets using boto3 SDK"""
+def list_gcs_objects(google_access_key_id, google_access_key_secret, bucket_name):
+    """Lists GCS objects using boto3 SDK"""
     # Create a new client and do the following:
     # 1. Change the endpoint URL to use the
     #    Google Cloud Storage XML API endpoint.
@@ -63,6 +62,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    list_gcs_buckets(google_access_key_id=args.google_access_key_id,
+    list_gcs_objects(google_access_key_id=args.google_access_key_id,
                      google_access_key_secret=args.google_access_key_secret,
                      bucket_name=args.bucket_name)
