@@ -25,7 +25,7 @@ def get_client(service_account_json, api_key):
     """Returns an authorized API client by discovering the Healthcare API and
     creating a service object using the service account credentials JSON."""
     api_scopes = ['https://www.googleapis.com/auth/cloud-platform']
-    api_version = 'v1alpha'
+    api_version = 'v1beta1'
     discovery_api = 'https://healthcare.googleapis.com/$discovery/rest'
     service_name = 'healthcare'
 
@@ -33,14 +33,15 @@ def get_client(service_account_json, api_key):
         service_account_json)
     scoped_credentials = credentials.with_scopes(api_scopes)
 
-    discovery_url = '{}?labels=CHC_ALPHA&version={}&key={}'.format(
+    discovery_url = '{}?labels=CHC_BETA&version={}&key={}'.format(
         discovery_api, api_version, api_key)
 
     return discovery.build(
         service_name,
         api_version,
         discoveryServiceUrl=discovery_url,
-        credentials=scoped_credentials)
+        credentials=scoped_credentials,
+        cache_discovery=False)
 # [END healthcare_get_client]
 
 
@@ -212,12 +213,8 @@ def export_dicom_instance(
         dicom_store_parent, dicom_store_id)
 
     body = {
-        "outputConfig":
-        {
-            "gcsDestination":
-            {
-                "uriPrefix": 'gs://{}'.format(uri_prefix)
-            }
+        "gcsDestination": {
+            "uriPrefix": 'gs://{}'.format(uri_prefix)
         }
     }
 
@@ -253,12 +250,8 @@ def import_dicom_instance(
         dicom_store_parent, dicom_store_id)
 
     body = {
-        "inputConfig":
-        {
-            "gcsSource":
-            {
-                "contentUri": 'gs://{}'.format(content_uri)
-            }
+        "gcsSource": {
+            "uri": 'gs://{}'.format(content_uri)
         }
     }
 
