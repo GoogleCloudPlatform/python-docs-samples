@@ -148,7 +148,7 @@ def on_subscribe(unused_client, unused_userdata, mid, granted_qos):
         client_addr, response = gateway_state.pending_subscribes[mid]
         udpSerSock.sendto(response.encode(), client_addr)
     except KeyError:
-        print('Unable to find key {}'.format(mid))
+        print('Unable to find mid: {}'.format(mid))
 
 
 def on_message(unused_client, unused_userdata, message):
