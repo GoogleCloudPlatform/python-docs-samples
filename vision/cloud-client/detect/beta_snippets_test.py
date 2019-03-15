@@ -18,6 +18,10 @@ import beta_snippets
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 GCS_ROOT = 'gs://cloud-samples-data/vision/'
 
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+OUTPUT_PREFIX = 'OCR_PDF_TEST_OUTPUT'
+GCS_DESTINATION_URI = 'gs://{}/{}/'.format(BUCKET, OUTPUT_PREFIX)
+
 
 def test_localize_objects(capsys):
     path = os.path.join(RESOURCES, 'puppies.jpg')
@@ -55,17 +59,25 @@ def test_handwritten_ocr_uri(capsys):
     assert 'Cloud Vision API' in out
 
 
-def test_detect_pdf_document(capsys):
+def test_detect_batch_annotate_files(capsys):
     file_name = os.path.join(RESOURCES, 'kafka.pdf')
-    beta_snippets.detect_document_features(file_name)
+    beta_snippets.detect_batch_annotate_files(file_name)
     out, _ = capsys.readouterr()
     assert 'Symbol: a' in out
     assert 'Word text: evenings' in out
 
 
-def test_detect_pdf_document_from_gcs(capsys):
+def test_detect_batch_annotate_files_uri(capsys):
     gcs_uri = GCS_ROOT + 'document_understanding/kafka.pdf'
-    beta_snippets.detect_document_features_uri(gcs_uri)
+    beta_snippets.detect_batch_annotate_files_uri(gcs_uri)
     out, _ = capsys.readouterr()
     assert 'Symbol' in out
     assert 'Word text' in out
+
+
+def test_async_batch_annotate_images(capsys):
+    gcs_uri = GCS_ROOT + 'landmark/eiffel_tower.jpg'
+    beta_snippets.async_batch_annotate_images_uri(gcs_uri, GCS_DESTINATION_URI)
+    out, _ = capsys.readouterr()
+    assert 'language_code: "en"' in out
+    assert 'description: "Tower"' in out

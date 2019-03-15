@@ -23,8 +23,9 @@ python beta_snippets.py object-localization INPUT_IMAGE
 python beta_snippets.py object-localization-uri gs://...
 python beta_snippets.py handwritten-ocr INPUT_IMAGE
 python beta_snippets.py handwritten-ocr-uri gs://...
-python beta_snippets.py doc-features INPUT_PDF
-python beta_snippets.py doc-features_uri gs://...
+python beta_snippets.py batch-annotate-files INPUT_PDF
+python beta_snippets.py batch-annotate-files-uri gs://...
+python beta_snippets.py batch-annotate-images-uri gs://... gs://...
 
 
 For more information, the documentation at
@@ -176,8 +177,8 @@ def detect_handwritten_ocr_uri(uri):
 # [END vision_handwritten_ocr_gcs_beta]
 
 
-# [START vision_fulltext_detection_pdf_beta]
-def detect_document_features(path):
+# [START vision_batch_annotate_files_beta]
+def detect_batch_annotate_files(path):
     """Detects document features in a PDF/TIFF/GIF file.
 
     While your PDF file may have several pages,
@@ -224,12 +225,12 @@ def detect_document_features(path):
                         for symbol in word.symbols:
                             print('\t\t\tSymbol: {} (confidence: {})'.format(
                                 symbol.text, symbol.confidence))
-# [END vision_fulltext_detection_pdf_beta]
+# [END vision_batch_annotate_files_beta]
 
 
-# [START vision_fulltext_detection_pdf_gcs_beta]
-def detect_document_features_uri(gcs_uri):
-    """Detects document features in a PDF/TIFF/GIF  file.
+# [START vision_batch_annotate_files_gcs_beta]
+def detect_batch_annotate_files_uri(gcs_uri):
+    """Detects document features in a PDF/TIFF/GIF file.
 
     While your PDF file may have several pages,
     this API can process up to 5 pages only.
@@ -272,7 +273,75 @@ def detect_document_features_uri(gcs_uri):
                         for symbol in word.symbols:
                             print('\t\t\tSymbol: {} (confidence: {})'.format(
                                 symbol.text, symbol.confidence))
-# [END vision_fulltext_detection_pdf_gcs_beta]
+# [END vision_batch_annotate_files_gcs_beta]
+
+
+# [START vision_async_batch_annotate_images_beta]
+def async_batch_annotate_images_uri(input_image_uri, output_uri):
+    """Batch annotation of images on Google Cloud Storage asynchronously.
+
+    Args:
+    input_image_uri: The path to the image in Google Cloud Storage (gs://...)
+    output_uri: The path to the output path in Google Cloud Storage (gs://...)
+    """
+    import re
+
+    from google.cloud import storage
+    from google.protobuf import json_format
+    from google.cloud import vision_v1p4beta1 as vision
+    client = vision.ImageAnnotatorClient()
+
+    # Construct the request for the image(s) to be annotated:
+    image_source = vision.types.ImageSource(image_uri=input_image_uri)
+    image = vision.types.Image(source=image_source)
+    features = [
+        vision.types.Feature(type=vision.enums.Feature.Type.LABEL_DETECTION),
+        vision.types.Feature(type=vision.enums.Feature.Type.TEXT_DETECTION),
+        vision.types.Feature(type=vision.enums.Feature.Type.IMAGE_PROPERTIES),
+    ]
+    requests = [
+        vision.types.AnnotateImageRequest(image=image, features=features),
+    ]
+
+    gcs_destination = vision.types.GcsDestination(uri=output_uri)
+    output_config = vision.types.OutputConfig(
+        gcs_destination=gcs_destination, batch_size=2)
+
+    operation = client.async_batch_annotate_images(
+        requests=requests, output_config=output_config)
+
+    print('Waiting for the operation to finish.')
+    operation.result(timeout=10000)
+
+    # Once the request has completed and the output has been
+    # written to Google Cloud Storage, we can list all the output files.
+    storage_client = storage.Client()
+
+    match = re.match(r'gs://([^/]+)/(.+)', output_uri)
+    bucket_name = match.group(1)
+    prefix = match.group(2)
+
+    bucket = storage_client.get_bucket(bucket_name=bucket_name)
+
+    # Lists objects with the given prefix.
+    blob_list = list(bucket.list_blobs(prefix=prefix))
+    print('Output files:')
+    for blob in blob_list:
+        print(blob.name)
+
+    # Processes the first output file from Google Cloud Storage.
+    # Since we specified batch_size=2, the first response contains
+    # annotations for the first two annotate image requests.
+    output = blob_list[0]
+
+    json_string = output.download_as_string()
+    response = json_format.Parse(json_string,
+                                 vision.types.BatchAnnotateImagesResponse())
+
+    # Prints the actual response for the first annotate image request.
+    print(u'The annotation response for the first request: {}'.format(
+        response.responses[0]))
+# [END vision_async_batch_annotate_images_beta]
 
 
 if __name__ == '__main__':
@@ -297,13 +366,20 @@ if __name__ == '__main__':
         'handwritten-ocr-uri', help=detect_handwritten_ocr_uri.__doc__)
     handwritten_uri_parser.add_argument('uri')
 
-    doc_features_parser = subparsers.add_parser(
-        'doc-features', help=detect_document_features.__doc__)
-    doc_features_parser.add_argument('path')
+    batch_annotate_parser = subparsers.add_parser(
+        'batch-annotate-files', help=detect_batch_annotate_files.__doc__)
+    batch_annotate_parser.add_argument('path')
 
-    doc_features_uri_parser = subparsers.add_parser(
-        'doc-features-uri', help=detect_document_features_uri.__doc__)
-    doc_features_uri_parser.add_argument('uri')
+    batch_annotate_uri_parser = subparsers.add_parser(
+        'batch-annotate-files-uri',
+        help=detect_batch_annotate_files_uri.__doc__)
+    batch_annotate_uri_parser.add_argument('uri')
+
+    batch_annotate__image_uri_parser = subparsers.add_parser(
+        'batch-annotate-images-uri',
+        help=async_batch_annotate_images_uri.__doc__)
+    batch_annotate__image_uri_parser.add_argument('uri')
+    batch_annotate__image_uri_parser.add_argument('output')
 
     args = parser.parse_args()
 
@@ -312,12 +388,14 @@ if __name__ == '__main__':
             localize_objects_uri(args.uri)
         elif 'handwritten-ocr-uri' in args.command:
             detect_handwritten_ocr_uri(args.uri)
-        elif 'doc-features' in args.command:
-            detect_handwritten_ocr_uri(args.uri)
+        elif 'batch-annotate-files' in args.command:
+            detect_batch_annotate_files_uri(args.uri)
+        elif 'batch-annotate-images' in args.command:
+            async_batch_annotate_images_uri(args.uri, args.output)
     else:
         if 'object-localization' in args.command:
             localize_objects(args.path)
         elif 'handwritten-ocr' in args.command:
             detect_handwritten_ocr(args.path)
-        elif 'doc-features' in args.command:
-            detect_handwritten_ocr(args.path)
+        elif 'batch-annotate-files' in args.command:
+            detect_batch_annotate_files(args.path)
