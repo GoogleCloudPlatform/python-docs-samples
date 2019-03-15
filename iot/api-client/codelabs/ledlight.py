@@ -44,7 +44,7 @@ def make_message(device_id, action, data=''):
         return '{{ "device" : "{}", "action":"{}" }}'.format(device_id, action)
 
 
-def run_action(action, data=''):
+def run_action(device_id, action, data=''):
     message = make_message(device_id, action, data)
     if not message:
         return
@@ -61,10 +61,10 @@ def main():
 
     print('Bringing up device {}'.format(device_id))
     try:
-        run_action('detach')
-        run_action('attach')
-        run_action('event', 'LED is online')
-        run_action('subscribe')
+        run_action(device_id, 'detach')
+        run_action(device_id, 'attach')
+        run_action(device_id, 'event', 'LED is online')
+        run_action(device_id, 'subscribe')
 
         while True:
             response = client_sock.recv(BUFF_SIZE)
