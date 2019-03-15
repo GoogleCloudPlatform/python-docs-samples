@@ -177,7 +177,7 @@ def detect_handwritten_ocr_uri(uri):
 # [END vision_handwritten_ocr_gcs_beta]
 
 
-# [START detect_batch_annotate_files_beta]
+# [START vision_batch_annotate_files_beta]
 def detect_batch_annotate_files(path):
     """Detects document features in a PDF/TIFF/GIF file.
 
@@ -225,10 +225,10 @@ def detect_batch_annotate_files(path):
                         for symbol in word.symbols:
                             print('\t\t\tSymbol: {} (confidence: {})'.format(
                                 symbol.text, symbol.confidence))
-# [END detect_batch_annotate_files_beta]
+# [END vision_batch_annotate_files_beta]
 
 
-# [START detect_batch_annotate_files_gcs_beta]
+# [START vision_batch_annotate_files_gcs_beta]
 def detect_batch_annotate_files_uri(gcs_uri):
     """Detects document features in a PDF/TIFF/GIF file.
 
@@ -273,16 +273,16 @@ def detect_batch_annotate_files_uri(gcs_uri):
                         for symbol in word.symbols:
                             print('\t\t\tSymbol: {} (confidence: {})'.format(
                                 symbol.text, symbol.confidence))
-# [END detect_batch_annotate_files_gcs_beta]
+# [END vision_batch_annotate_files_gcs_beta]
 
 
-# [START detect_async_batch_annotate_images_beta]
-def async_batch_annotate_images_uri(image_uri, gcs_uri):
+# [START vision_async_batch_annotate_images_beta]
+def async_batch_annotate_images_uri(input_image_uri, output_uri):
     """Batch annotation of images on Google Cloud Storage asynchronously.
 
     Args:
-    image_uri: The path to the image in Google Cloud Storage (gs://...)
-    gcs_uri: The path to the output path in Google Cloud Storage (gs://...)
+    input_image_uri: The path to the image in Google Cloud Storage (gs://...)
+    output_uri: The path to the output path in Google Cloud Storage (gs://...)
     """
     import re
 
@@ -292,7 +292,7 @@ def async_batch_annotate_images_uri(image_uri, gcs_uri):
     client = vision.ImageAnnotatorClient()
 
     # Construct the request for the image(s) to be annotated:
-    image_source = vision.types.ImageSource(image_uri=image_uri)
+    image_source = vision.types.ImageSource(image_uri=input_image_uri)
     image = vision.types.Image(source=image_source)
     features = [
         vision.types.Feature(type=vision.enums.Feature.Type.LABEL_DETECTION),
@@ -303,7 +303,7 @@ def async_batch_annotate_images_uri(image_uri, gcs_uri):
         vision.types.AnnotateImageRequest(image=image, features=features),
     ]
 
-    gcs_destination = vision.types.GcsDestination(uri=gcs_uri)
+    gcs_destination = vision.types.GcsDestination(uri=output_uri)
     output_config = vision.types.OutputConfig(
         gcs_destination=gcs_destination, batch_size=2)
 
@@ -317,7 +317,7 @@ def async_batch_annotate_images_uri(image_uri, gcs_uri):
     # written to Google Cloud Storage, we can list all the output files.
     storage_client = storage.Client()
 
-    match = re.match(r'gs://([^/]+)/(.+)', gcs_uri)
+    match = re.match(r'gs://([^/]+)/(.+)', output_uri)
     bucket_name = match.group(1)
     prefix = match.group(2)
 
@@ -341,7 +341,7 @@ def async_batch_annotate_images_uri(image_uri, gcs_uri):
     # Prints the actual response for the first annotate image request.
     print(u'The annotation response for the first request: {}'.format(
         response.responses[0]))
-# [END detect_async_batch_annotate_images_beta]
+# [END vision_async_batch_annotate_images_beta]
 
 
 if __name__ == '__main__':
@@ -379,7 +379,7 @@ if __name__ == '__main__':
         'batch-annotate-images-uri',
         help=async_batch_annotate_images_uri.__doc__)
     batch_annotate__image_uri_parser.add_argument('uri')
-    batch_annotate__image_uri_parser.add_argument('destination')
+    batch_annotate__image_uri_parser.add_argument('output')
 
     args = parser.parse_args()
 
@@ -391,7 +391,7 @@ if __name__ == '__main__':
         elif 'batch-annotate-files' in args.command:
             detect_batch_annotate_files_uri(args.uri)
         elif 'batch-annotate-images' in args.command:
-            async_batch_annotate_images_uri(args.uri, args.destination)
+            async_batch_annotate_images_uri(args.uri, args.output)
     else:
         if 'object-localization' in args.command:
             localize_objects(args.path)
