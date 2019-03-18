@@ -463,22 +463,21 @@ def track_objects_streaming(path):
             # track_id tracks the same object in the video.
             track_id = annotation.track_id
 
-            print '\tEntity description: {}'.format(description)
-            print '\tTrack Id: {}'.format(track_id)
+            print('\tEntity description: {}'.format(description))
+            print('\tTrack Id: {}'.format(track_id))
             if annotation.entity.entity_id:
-                print '\tEntity id: {}'.format(annotation.entity.entity_id)
+                print('\tEntity id: {}'.format(annotation.entity.entity_id))
 
-            print '\tConfidence: {}'.format(confidence)
+            print('\tConfidence: {}'.format(confidence))
 
             # Every annotation has only one frame
             frame = annotation.frames[0]
             box = frame.normalized_bounding_box
-            print '\tBounding box position:'
-            print '\tleft  : {}'.format(box.left)
-            print '\ttop   : {}'.format(box.top)
-            print '\tright : {}'.format(box.right)
-            print '\tbottom: {}'.format(box.bottom)
-            print '\n'
+            print('\tBounding box position:')
+            print('\tleft  : {}'.format(box.left))
+            print('\ttop   : {}'.format(box.top))
+            print('\tright : {}'.format(box.right))
+            print('\tbottom: {}\n'.format(box.bottom))
     # [END video_streaming_object_tracking_beta]
 
 
