@@ -61,8 +61,10 @@ def postgres_demo(request):
 
     # Remember to close SQL resources declared while running this function.
     # Keep any declared in global scope (e.g. pg_pool) for later reuse.
-    with pg_pool.getconn().cursor() as cursor:
+    with pg_pool.getconn() as conn:
+        cursor = conn.cursor()
         cursor.execute('SELECT NOW() as now')
         results = cursor.fetchone()
+        pg_pool.putconn(conn)
         return str(results[0])
 # [END functions_sql_postgres]
