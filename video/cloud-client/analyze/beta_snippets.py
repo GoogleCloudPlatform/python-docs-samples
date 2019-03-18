@@ -292,6 +292,8 @@ def detect_labels_streaming(path):
     # [START video_streaming_label_detection_beta]
     from google.cloud import videointelligence_v1p3beta1 as videointelligence
 
+    # path = 'path_to_file'
+
     client = videointelligence.StreamingVideoIntelligenceServiceClient()
 
     # Set streaming config.
@@ -344,8 +346,10 @@ def detect_labels_streaming(path):
 
 
 def detect_shot_change_streaming(path):
-    # [START video_detect_shot_change_streaming_beta]
+    # [START video_streaming_shot_change_detection_beta]
     from google.cloud import videointelligence_v1p3beta1 as videointelligence
+
+    # path = 'path_to_file'
 
     client = videointelligence.StreamingVideoIntelligenceServiceClient()
 
@@ -386,17 +390,18 @@ def detect_shot_change_streaming(path):
             break
 
         for annotation in response.annotation_results.shot_annotations:
-
             start = annotation.start_time_offset.seconds + annotation.start_time_offset.nanos / 1e9
             end = annotation.end_time_offset.seconds + annotation.end_time_offset.nanos / 1e9
 
             print('Shot: {}s to {}s'.format(start, end))
-    # [END video_detect_shot_change_streaming_beta]
+    # [END video_streaming_shot_change_detection_beta]
 
 
 def track_objects_streaming(path):
     # [START video_streaming_object_tracking_beta]
     from google.cloud import videointelligence_v1p3beta1 as videointelligence
+
+    # path = 'path_to_file'
 
     client = videointelligence.StreamingVideoIntelligenceServiceClient()
 
@@ -442,7 +447,6 @@ def track_objects_streaming(path):
         print('{}s:'.format(time_offset))
 
         for annotation in response.annotation_results.object_annotations:
-
             description = annotation.entity.description
             confidence = annotation.confidence
 
@@ -471,6 +475,8 @@ def track_objects_streaming(path):
 def detect_explicit_content_streaming(path):
     # [START video_streaming_explicit_content_detection_beta]
     from google.cloud import videointelligence_v1p3beta1 as videointelligence
+
+    # path = 'path_to_file'
 
     client = videointelligence.StreamingVideoIntelligenceServiceClient()
 
@@ -511,7 +517,6 @@ def detect_explicit_content_streaming(path):
             break
 
         for frame in response.annotation_results.explicit_annotation.frames:
-
             time_offset = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
             pornography_likelihood = videointelligence.enums.Likelihood(frame.pornography_likelihood).name
 
@@ -523,6 +528,9 @@ def detect_explicit_content_streaming(path):
 def annotation_to_storage_streaming(path, output_uri):
     # [START video_streaming_annotation_to_storage_beta]
     from google.cloud import videointelligence_v1p3beta1 as videointelligence
+
+    # path = 'path_to_file'
+    # output_uri = 'gs://path_to_output'
 
     client = videointelligence.StreamingVideoIntelligenceServiceClient()
 
