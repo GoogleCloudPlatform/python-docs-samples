@@ -14,14 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
 import time
 import urllib2
 import uuid
 
-from google.cloud import storage
-
 import beta_snippets
+from google.cloud import storage
+import pytest
+
 
 POSSIBLE_TEXTS = ['Google', 'SUR', 'SUR', 'ROTO', 'Vice President', '58oo9',
                   'LONDRES', 'OMAR', 'PARIS', 'METRO', 'RUE', 'CARLO']
@@ -29,7 +29,8 @@ POSSIBLE_TEXTS = ['Google', 'SUR', 'SUR', 'ROTO', 'Vice President', '58oo9',
 
 @pytest.fixture(scope='session')
 def video_path(tmpdir_factory):
-    file = urllib2.urlopen('http://storage.googleapis.com/cloud-samples-data/video/cat.mp4')
+    file = urllib2.urlopen(
+        'http://storage.googleapis.com/cloud-samples-data/video/cat.mp4')
     path = tmpdir_factory.mktemp('video').join('file.mp4')
     with open(str(path), 'wb') as f:
         f.write(file.read())

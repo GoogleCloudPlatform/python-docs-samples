@@ -20,23 +20,22 @@ Google Cloud API.
 Usage Examples:
     python beta_snippets.py transcription \
         gs://python-docs-samples-tests/video/googlework_short.mp4
-    
+
     python beta_snippets.py video-text-gcs \
         gs://python-docs-samples-tests/video/googlework_short.mp4
-    
+
     python beta_snippets.py track-objects resources/cat.mp4
-    
+
     python beta_snippets.py streaming-labels resources/cat.mp4
-    
+
     python beta_snippets.py streaming-shot-change resources/cat.mp4
-    
+
     python beta_snippets.py streaming-objects resources/cat.mp4
-    
+
     python beta_snippets.py streaming-explicit-content resources/cat.mp4
-    
+
     python beta_snippets.py streaming-annotation-storage resources/cat.mp4 \
     gs://mybucket/myfolder
-
 """
 
 import argparse
@@ -298,10 +297,12 @@ def detect_labels_streaming(path):
 
     # Set streaming config.
     config = videointelligence.types.StreamingVideoConfig(
-        feature=videointelligence.enums.StreamingFeature.STREAMING_LABEL_DETECTION)
+        feature=(videointelligence.enums.
+                 StreamingFeature.STREAMING_LABEL_DETECTION))
 
     # config_request should be the first in the stream of requests.
-    config_request = videointelligence.types.StreamingAnnotateVideoRequest(video_config=config)
+    config_request = videointelligence.types.StreamingAnnotateVideoRequest(
+        video_config=config)
 
     # Set the chunk size to 5MB (recommended less than 10MB).
     chunk_size = 5 * 1024 * 1024
@@ -318,7 +319,8 @@ def detect_labels_streaming(path):
     def stream_generator():
         yield config_request
         for chunk in stream:
-            yield videointelligence.types.StreamingAnnotateVideoRequest(input_content=chunk)
+            yield videointelligence.types.StreamingAnnotateVideoRequest(
+                input_content=chunk)
 
     requests = stream_generator()
 
@@ -355,10 +357,12 @@ def detect_shot_change_streaming(path):
 
     # Set streaming config.
     config = videointelligence.types.StreamingVideoConfig(
-        feature=videointelligence.enums.StreamingFeature.STREAMING_SHOT_CHANGE_DETECTION)
+        feature=(videointelligence.enums.StreamingFeature.
+                 STREAMING_SHOT_CHANGE_DETECTION))
 
     # config_request should be the first in the stream of requests.
-    config_request = videointelligence.types.StreamingAnnotateVideoRequest(video_config=config)
+    config_request = videointelligence.types.StreamingAnnotateVideoRequest(
+        video_config=config)
 
     # Set the chunk size to 5MB (recommended less than 10MB).
     chunk_size = 5 * 1024 * 1024
@@ -375,7 +379,8 @@ def detect_shot_change_streaming(path):
     def stream_generator():
         yield config_request
         for chunk in stream:
-            yield videointelligence.types.StreamingAnnotateVideoRequest(input_content=chunk)
+            yield videointelligence.types.StreamingAnnotateVideoRequest(
+                input_content=chunk)
 
     requests = stream_generator()
 
@@ -390,8 +395,10 @@ def detect_shot_change_streaming(path):
             break
 
         for annotation in response.annotation_results.shot_annotations:
-            start = annotation.start_time_offset.seconds + annotation.start_time_offset.nanos / 1e9
-            end = annotation.end_time_offset.seconds + annotation.end_time_offset.nanos / 1e9
+            start = (annotation.start_time_offset.seconds +
+                     annotation.start_time_offset.nanos / 1e9)
+            end = (annotation.end_time_offset.seconds +
+                   annotation.end_time_offset.nanos / 1e9)
 
             print('Shot: {}s to {}s'.format(start, end))
     # [END video_streaming_shot_change_detection_beta]
@@ -407,10 +414,12 @@ def track_objects_streaming(path):
 
     # Set streaming config.
     config = videointelligence.types.StreamingVideoConfig(
-        feature=videointelligence.enums.StreamingFeature.STREAMING_OBJECT_TRACKING)
+        feature=(videointelligence.enums.
+                 StreamingFeature.STREAMING_OBJECT_TRACKING))
 
     # config_request should be the first in the stream of requests.
-    config_request = videointelligence.types.StreamingAnnotateVideoRequest(video_config=config)
+    config_request = videointelligence.types.StreamingAnnotateVideoRequest(
+        video_config=config)
 
     # Set the chunk size to 5MB (recommended less than 10MB).
     chunk_size = 5 * 1024 * 1024
@@ -427,7 +436,8 @@ def track_objects_streaming(path):
     def stream_generator():
         yield config_request
         for chunk in stream:
-            yield videointelligence.types.StreamingAnnotateVideoRequest(input_content=chunk)
+            yield videointelligence.types.StreamingAnnotateVideoRequest(
+                input_content=chunk)
 
     requests = stream_generator()
 
@@ -456,7 +466,7 @@ def track_objects_streaming(path):
             print '\tEntity description: {}'.format(description)
             print '\tTrack Id: {}'.format(track_id)
             if annotation.entity.entity_id:
-              print '\tEntity id: {}'.format(annotation.entity.entity_id)
+                print '\tEntity id: {}'.format(annotation.entity.entity_id)
 
             print '\tConfidence: {}'.format(confidence)
 
@@ -482,10 +492,12 @@ def detect_explicit_content_streaming(path):
 
     # Set streaming config.
     config = videointelligence.types.StreamingVideoConfig(
-        feature=videointelligence.enums.StreamingFeature.STREAMING_EXPLICIT_CONTENT_DETECTION)
+        feature=(videointelligence.enums.StreamingFeature.
+                 STREAMING_EXPLICIT_CONTENT_DETECTION))
 
     # config_request should be the first in the stream of requests.
-    config_request = videointelligence.types.StreamingAnnotateVideoRequest(video_config=config)
+    config_request = videointelligence.types.StreamingAnnotateVideoRequest(
+        video_config=config)
 
     # Set the chunk size to 5MB (recommended less than 10MB).
     chunk_size = 5 * 1024 * 1024
@@ -502,7 +514,8 @@ def detect_explicit_content_streaming(path):
     def stream_generator():
         yield config_request
         for chunk in stream:
-            yield videointelligence.types.StreamingAnnotateVideoRequest(input_content=chunk)
+            yield videointelligence.types.StreamingAnnotateVideoRequest(
+                input_content=chunk)
 
     requests = stream_generator()
 
@@ -517,11 +530,13 @@ def detect_explicit_content_streaming(path):
             break
 
         for frame in response.annotation_results.explicit_annotation.frames:
-            time_offset = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
-            pornography_likelihood = videointelligence.enums.Likelihood(frame.pornography_likelihood).name
+            time_offset = (frame.time_offset.seconds +
+                           frame.time_offset.nanos / 1e9)
+            pornography_likelihood = videointelligence.enums.Likelihood(
+                frame.pornography_likelihood)
 
             print('Time: {}s'.format(time_offset))
-            print('\tpornogaphy: {}'.format(pornography_likelihood))
+            print('\tpornogaphy: {}'.format(pornography_likelihood.name))
     # [END video_streaming_explicit_content_detection_beta]
 
 
@@ -542,11 +557,13 @@ def annotation_to_storage_streaming(path, output_uri):
     # Here we use label detection as an example.
     # All features support output to GCS.
     config = videointelligence.types.StreamingVideoConfig(
-        feature=videointelligence.enums.StreamingFeature.STREAMING_LABEL_DETECTION,
+        feature=(videointelligence.enums.
+                 StreamingFeature.STREAMING_LABEL_DETECTION),
         storage_config=storage_config)
 
     # config_request should be the first in the stream of requests.
-    config_request = videointelligence.types.StreamingAnnotateVideoRequest(video_config=config)
+    config_request = videointelligence.types.StreamingAnnotateVideoRequest(
+        video_config=config)
 
     # Set the chunk size to 5MB (recommended less than 10MB).
     chunk_size = 5 * 1024 * 1024
@@ -563,7 +580,8 @@ def annotation_to_storage_streaming(path, output_uri):
     def stream_generator():
         yield config_request
         for chunk in stream:
-            yield videointelligence.types.StreamingAnnotateVideoRequest(input_content=chunk)
+            yield videointelligence.types.StreamingAnnotateVideoRequest(
+                input_content=chunk)
 
     requests = stream_generator()
 
@@ -619,11 +637,13 @@ if __name__ == '__main__':
     video_streaming_objects_parser.add_argument('path')
 
     video_streaming_explicit_content_parser = subparsers.add_parser(
-        'streaming-explicit-content', help=detect_explicit_content_streaming.__doc__)
+        'streaming-explicit-content',
+        help=detect_explicit_content_streaming.__doc__)
     video_streaming_explicit_content_parser.add_argument('path')
 
     video_streaming_annotation_to_storage_parser = subparsers.add_parser(
-        'streaming-annotation-storage', help=annotation_to_storage_streaming.__doc__)
+        'streaming-annotation-storage',
+        help=annotation_to_storage_streaming.__doc__)
     video_streaming_annotation_to_storage_parser.add_argument('path')
     video_streaming_annotation_to_storage_parser.add_argument('output_uri')
 
