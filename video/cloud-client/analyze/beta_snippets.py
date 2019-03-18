@@ -343,7 +343,7 @@ def detect_labels_streaming(path):
             description = annotation.entity.description
             # Every annotation has only one frame
             confidence = annotation.frames[0].confidence
-            print '\t{} (confidence: {})'.format(description, confidence)
+            print('\t{} (confidence: {})'.format(description, confidence))
     # [END video_streaming_label_detection_beta]
 
 
