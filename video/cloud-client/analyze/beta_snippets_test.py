@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from six.moves.urllib.request import urlopen
 import time
-from urllib.request import urlopen
 import uuid
 
 import beta_snippets
