@@ -72,8 +72,10 @@ def main(project_id, instance_id, table_name):
             #
             #     https://cloud.google.com/bigtable/docs/schema-design
             row_key = 'greeting{}'.format(i)
-            table.put(row_key, {column_name.encode('utf-8'): value.encode('utf-8')})
-        # [END writing_rows]
+            table.put(
+                row_key, {column_name.encode'utf-8'): value.encode('utf-8')}
+            )
+            # [END writing_rows]
 
         # [START getting_a_row]
         print('Getting a single greeting by row key.')
