@@ -101,7 +101,9 @@ def print_sensor_state():
                 LightSensor.power, LightSensor.interval))
     else:
         print(
-            '\nSensor is {}. Send a configuration update to turn on'.format(LightSensor.power))
+            '\nSensor is {}. Send a configuration update to turn on'.format(
+                LightSensor.power))
+
 
 def process_message(message):
     """Parse messages received from the gateway socket."""
