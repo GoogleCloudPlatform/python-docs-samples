@@ -23,5 +23,5 @@ def test_shelves(testbed):
 
 def test_books(testbed):
     api = main.Books()
-    response = api.bookmark(main.Request())
+    response = api.get_bookmark(main.Request())
     assert response
