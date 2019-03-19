@@ -14,12 +14,41 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
+import time
+import urllib2
+import uuid
 
 import beta_snippets
+from google.cloud import storage
+import pytest
+
 
 POSSIBLE_TEXTS = ['Google', 'SUR', 'SUR', 'ROTO', 'Vice President', '58oo9',
                   'LONDRES', 'OMAR', 'PARIS', 'METRO', 'RUE', 'CARLO']
+
+
+@pytest.fixture(scope='session')
+def video_path(tmpdir_factory):
+    file = urllib2.urlopen(
+        'http://storage.googleapis.com/cloud-samples-data/video/cat.mp4')
+    path = tmpdir_factory.mktemp('video').join('file.mp4')
+    with open(str(path), 'wb') as f:
+        f.write(file.read())
+
+    return str(path)
+
+
+@pytest.fixture(scope='function')
+def bucket():
+    # Create a temporaty bucket to store annotation output.
+    bucket_name = str(uuid.uuid1())
+    storage_client = storage.Client()
+    bucket = storage_client.create_bucket(bucket_name)
+
+    yield bucket
+
+    # Teardown.
+    bucket.delete(force=True)
 
 
 @pytest.mark.slow
@@ -28,6 +57,55 @@ def test_speech_transcription(capsys):
         'gs://python-docs-samples-tests/video/googlework_short.mp4')
     out, _ = capsys.readouterr()
     assert 'cultural' in out
+
+
+@pytest.mark.slow
+def test_detect_labels_streaming(capsys, video_path):
+    beta_snippets.detect_labels_streaming(video_path)
+
+    out, _ = capsys.readouterr()
+    assert 'cat' in out
+
+
+@pytest.mark.slow
+def test_detect_shot_change_streaming(capsys, video_path):
+    beta_snippets.detect_shot_change_streaming(video_path)
+
+    out, _ = capsys.readouterr()
+    assert 'Shot' in out
+
+
+@pytest.mark.slow
+def test_track_objects_streaming(capsys, video_path):
+    beta_snippets.track_objects_streaming(video_path)
+
+    out, _ = capsys.readouterr()
+    assert 'cat' in out
+
+
+@pytest.mark.slow
+def test_detect_explicit_content_streaming(capsys, video_path):
+    beta_snippets.detect_explicit_content_streaming(video_path)
+
+    out, _ = capsys.readouterr()
+    assert 'Time' in out
+
+
+@pytest.mark.slow
+def test_annotation_to_storage_streaming(capsys, video_path, bucket):
+    output_uri = 'gs://{}'.format(bucket.name)
+    beta_snippets.annotation_to_storage_streaming(video_path, output_uri)
+
+    out, _ = capsys.readouterr()
+    assert 'Storage' in out
+
+    # It takes a few seconds before the results show up on GCS.
+    time.sleep(3)
+
+    # Confirm that one output blob had been written to GCS.
+    blobs_iterator = bucket.list_blobs()
+    blobs = [blob for blob in blobs_iterator]
+    assert len(blobs) == 1
 
 
 @pytest.mark.slow
