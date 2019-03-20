@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from six.moves.urllib.request import urlopen
 import time
-import urllib2
 import uuid
 
 import beta_snippets
@@ -29,7 +29,7 @@ POSSIBLE_TEXTS = ['Google', 'SUR', 'SUR', 'ROTO', 'Vice President', '58oo9',
 
 @pytest.fixture(scope='session')
 def video_path(tmpdir_factory):
-    file = urllib2.urlopen(
+    file = urlopen(
         'http://storage.googleapis.com/cloud-samples-data/video/cat.mp4')
     path = tmpdir_factory.mktemp('video').join('file.mp4')
     with open(str(path), 'wb') as f:
