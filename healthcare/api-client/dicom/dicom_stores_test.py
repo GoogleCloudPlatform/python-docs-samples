@@ -197,3 +197,47 @@ def test_export_dicom_instance(test_dataset, capsys):
     out, _ = capsys.readouterr()
 
     assert 'Exported DICOM instance' in out
+
+def test_get_set_dicom_store_iam_policy(test_dataset, capsys):
+    dicom_stores.create_dicom_store(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        dicom_store_id)
+
+    get_response = dicom_stores.get_dicom_store_iam_policy(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        dicom_store_id)
+
+    set_response = dicom_stores.set_dicom_store_iam_policy(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        dicom_store_id,
+        'serviceAccount:python-docs-samples-tests@appspot.gserviceaccount.com',
+        'roles/viewer')
+
+    # Clean up
+    dicom_stores.delete_dicom_store(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        dicom_store_id)
+
+    out, _ = capsys.readouterr()
+
+    assert 'etag' in get_response
+    assert 'bindings' in set_response
+    assert len(set_response['bindings']) == 1
+    assert 'python-docs-samples-tests' in str(set_response['bindings'])
+    assert 'roles/viewer' in str(set_response['bindings'])

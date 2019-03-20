@@ -334,8 +334,8 @@ def parse_command_line_args():
     command.add_parser('get-hl7v2-store', help=get_hl7v2_store.__doc__)
     command.add_parser('list-hl7v2-stores', help=list_hl7v2_stores.__doc__)
     command.add_parser('patch-hl7v2-store', help=patch_hl7v2_store.__doc__)
-    command.add_parser('get_iam_policy', help=get_iam_policy.__doc__)
-    command.add_parser('set_iam_policy', help=set_iam_policy.__doc__)
+    command.add_parser('get_iam_policy', help=get_hl7v2_store_iam_policy.__doc__)
+    command.add_parser('set_iam_policy', help=set_hl7v2_store_iam_policy.__doc__)
 
     return parser.parse_args()
 
@@ -393,7 +393,7 @@ def run_command(args):
             args.pubsub_topic)
 
     elif args.command == 'get_hl7v2_store_iam_policy':
-        get_iam_policy(
+        get_hl7v2_store_iam_policy(
             args.service_account_json,
             args.api_key,
             args.project_id,
@@ -402,7 +402,7 @@ def run_command(args):
             args.fhir_store_id)
 
     elif args.command == 'set_hl7v2_store_iam_policy':
-        set_iam_policy(
+        set_hl7v2_store_iam_policy(
             args.service_account_json,
             args.api_key,
             args.project_id,
