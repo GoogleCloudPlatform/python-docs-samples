@@ -75,7 +75,7 @@ def analyze_labels(path):
         path, features=features, video_context=context)
     print('\nProcessing video for label annotations:')
 
-    result = operation.result(timeout=90)
+    result = operation.result(timeout=180)
     print('\nFinished processing.')
 
     # Process video/segment level label annotations
