@@ -144,11 +144,11 @@ def test_import_fhir_store_gcs(test_dataset, capsys):
         dataset_id,
         fhir_store_id)
 
-    #storage_client = storage.Client()
-    #bucket = storage_client.get_bucket(gcs_uri)
-    #blob = bucket.blob(source_file_name)
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(gcs_uri)
+    blob = bucket.blob(source_file_name)
 
-    #blob.upload_from_filename(resource_file)
+    blob.upload_from_filename(resource_file)
 
     fhir_stores.import_fhir_store(
         service_account_json,
@@ -160,7 +160,7 @@ def test_import_fhir_store_gcs(test_dataset, capsys):
         import_object)
 
     # Clean up
-    #blob.delete()
+    blob.delete()
 
     fhir_stores.delete_fhir_store(
         service_account_json,

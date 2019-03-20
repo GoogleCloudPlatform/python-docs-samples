@@ -326,10 +326,6 @@ def set_fhir_store_iam_policy(
 
         A role can be any IAM role, such as 'roles/viewer', 'roles/owner',
         or 'roles/editor'
-
-        If etag is None, the existing policy will be replaced with the new one.
-        Otherwise, if the existing policy matches the etag if will be updated,
-        otherwise no change will occur.
     """
     client = get_client(service_account_json, api_key)
     fhir_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
