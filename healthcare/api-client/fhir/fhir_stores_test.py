@@ -135,6 +135,7 @@ def test_patch_fhir_store(test_dataset, capsys):
     assert 'Patched FHIR store' in out
 
 
+@pytest.mark.skip(reason='disable until API whitelisted / enabled')
 def test_import_fhir_store_gcs(test_dataset, capsys):
     fhir_stores.create_fhir_store(
         service_account_json,
@@ -175,6 +176,7 @@ def test_import_fhir_store_gcs(test_dataset, capsys):
     assert 'Imported FHIR resources' in out
 
 
+@pytest.mark.skip(reason='disable until API whitelisted / enabled')
 def test_export_fhir_store_gcs(test_dataset, capsys):
     fhir_stores.create_fhir_store(
         service_account_json,

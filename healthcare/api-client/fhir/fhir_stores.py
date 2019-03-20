@@ -407,6 +407,16 @@ def parse_command_line_args():
         'should be import or to which result files'
         'should be written (e.g., "bucket-id/path/to/destination/dir").')
 
+    parser.add_argument(
+        '--member',
+        default=None,
+        help='Member to add to IAM policy (e.g. "domain:example.com")')
+
+    parser.add_argument(
+        '--role',
+        default=None,
+        help='IAM Role to give to member (e.g. "roles/viewer")')
+
     command = parser.add_subparsers(dest='command')
 
     command.add_parser('create-fhir-store', help=create_fhir_store.__doc__)
@@ -420,6 +430,8 @@ def parse_command_line_args():
     command.add_parser(
         'export-fhir-store-gcs',
         help=export_fhir_store_gcs.__doc__)
+    command.add_parser('get_iam_policy', help=get_iam_policy.__doc__)
+    command.add_parser('set_iam_policy', help=set_iam_policy.__doc__)
 
     return parser.parse_args()
 
@@ -495,6 +507,26 @@ def run_command(args):
             args.dataset_id,
             args.fhir_store_id,
             args.gcs_uri)
+
+    elif args.command == 'get_iam_policy':
+        get_iam_policy(
+            args.service_account_json,
+            args.api_key,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id)
+
+    elif args.command == 'set_iam_policy':
+        set_iam_policy(
+            args.service_account_json,
+            args.api_key,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            args.member,
+            args.role)
 
 
 def main():
