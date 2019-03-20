@@ -84,7 +84,7 @@ def detect_light(device_id, sock):
     lux = "{:.3f}".format(LightSensor.lux)
 
     sys.stdout.write(
-            '\r>> ' + bcolors.CGREEN + bcolors.CBLINK + 'Lux: {}'.format(lux) +
+            '\r>> ' + bcolors.CGREEN + bcolors.CBOLD + 'Lux: {}'.format(lux) +
             bcolors.ENDC + ' <<')
     sys.stdout.flush()
 
@@ -95,9 +95,14 @@ def detect_light(device_id, sock):
 
 
 def print_sensor_state():
-    print(
-        '\nSensor is {}, reporting lux every {} seconds.'.format(
-            LightSensor.power, LightSensor.interval))
+    if LightSensor.power == 'on':
+        print(
+            '\nSensor is {}, reporting lux every {} seconds.'.format(
+                LightSensor.power, LightSensor.interval))
+    else:
+        print(
+            '\nSensor is {}. Send a configuration update to turn on'.format(
+                LightSensor.power))
 
 
 def process_message(message):
@@ -172,11 +177,13 @@ def main():
                     sys.exit(1)
             else:
                 # Received data from the socket, so process the message.
-                message = json.loads(data.decode("utf-8"))
-                if not message:
-                    print('invalid json: {}'.format(data.decode("utf-8")))
-                    continue
-                process_message(message)
+                decode = data.decode("utf-8")
+                if decode != '':
+                    message = json.loads(decode)
+                    if not message:
+                        print('invalid json: {}'.format(data.decode("utf-8")))
+                        continue
+                    process_message(message)
     finally:
         print('Closing socket')
         sock.close()
