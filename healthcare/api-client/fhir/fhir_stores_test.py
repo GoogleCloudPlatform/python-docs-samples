@@ -144,11 +144,11 @@ def test_import_fhir_store_gcs(test_dataset, capsys):
         dataset_id,
         fhir_store_id)
 
-    storage_client = storage.Client()
-    bucket = storage_client.get_bucket(gcs_uri)
-    blob = bucket.blob(source_file_name)
+    #storage_client = storage.Client()
+    #bucket = storage_client.get_bucket(gcs_uri)
+    #blob = bucket.blob(source_file_name)
 
-    blob.upload_from_filename(resource_file)
+    #blob.upload_from_filename(resource_file)
 
     fhir_stores.import_fhir_store(
         service_account_json,
@@ -160,7 +160,7 @@ def test_import_fhir_store_gcs(test_dataset, capsys):
         import_object)
 
     # Clean up
-    blob.delete()
+    #blob.delete()
 
     fhir_stores.delete_fhir_store(
         service_account_json,
@@ -205,3 +205,48 @@ def test_export_fhir_store_gcs(test_dataset, capsys):
     out, _ = capsys.readouterr()
 
     assert 'Exported FHIR resources to bucket' in out
+
+
+def test_get_set_fhir_store_iam_policy(test_dataset, capsys):
+    fhir_stores.create_fhir_store(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id)
+
+    get_response = fhir_stores.get_fhir_store_iam_policy(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id)
+
+    set_response = fhir_stores.set_fhir_store_iam_policy(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        'serviceAccount:python-docs-samples-tests@appspot.gserviceaccount.com',
+        'roles/viewer')
+
+    # Clean up
+    fhir_stores.delete_fhir_store(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id)
+
+    out, _ = capsys.readouterr()
+
+    assert 'etag' in get_response
+    assert 'bindings' in set_response
+    assert len(set_response['bindings']) == 1
+    assert 'python-docs-samples-tests' in str(set_response['bindings'])
+    assert 'roles/viewer' in str(set_response['bindings'])
