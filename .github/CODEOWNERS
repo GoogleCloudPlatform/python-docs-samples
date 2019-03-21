@@ -9,3 +9,6 @@ bigquery/transfer/*       @tswast
 
 # Tim Swast is the primary maintainer of the Composer samples.
 composer/*                @tswast
+
+# Alix Hamilton is the primary maintainer of the Jupyter notebook samples
+notebooks/*               @alixhami

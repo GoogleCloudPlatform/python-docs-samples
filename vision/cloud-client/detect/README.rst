@@ -165,7 +165,7 @@ To run this sample:
     $ python beta_snippets.py
 
     usage: beta_snippets.py [-h]
-                            {object-localization,object-localization-uri,handwritten-ocr,handwritten-ocr-uri}
+                            {object-localization,object-localization-uri,handwritten-ocr,handwritten-ocr-uri,batch-annotate-files,batch-annotate-files-uri,batch-annotate-images-uri}
                             ...
 
     Google Cloud Vision API Python Beta Snippets
@@ -176,12 +176,15 @@ To run this sample:
     python beta_snippets.py object-localization-uri gs://...
     python beta_snippets.py handwritten-ocr INPUT_IMAGE
     python beta_snippets.py handwritten-ocr-uri gs://...
+    python beta_snippets.py batch-annotate-files INPUT_PDF
+    python beta_snippets.py batch-annotate-files-uri gs://...
+    python beta_snippets.py batch-annotate-images-uri gs://... gs://...
 
     For more information, the documentation at
     https://cloud.google.com/vision/docs.
 
     positional arguments:
-      {object-localization,object-localization-uri,handwritten-ocr,handwritten-ocr-uri}
+      {object-localization,object-localization-uri,handwritten-ocr,handwritten-ocr-uri,batch-annotate-files,batch-annotate-files-uri,batch-annotate-images-uri}
         object-localization
                             Localize objects in the local image. Args: path: The
                             path to the local file.
@@ -195,6 +198,21 @@ To run this sample:
                             Detects handwritten characters in the file located in
                             Google Cloud Storage. Args: uri: The path to the file
                             in Google Cloud Storage (gs://...)
+        batch-annotate-files
+                            Detects document features in a PDF/TIFF/GIF file.
+                            While your PDF file may have several pages, this API
+                            can process up to 5 pages only. Args: path: The path
+                            to the local file.
+        batch-annotate-files-uri
+                            Detects document features in a PDF/TIFF/GIF file.
+                            While your PDF file may have several pages, this API
+                            can process up to 5 pages only. Args: uri: The path to
+                            the file in Google Cloud Storage (gs://...)
+        batch-annotate-images-uri
+                            Batch annotation of images on Google Cloud Storage
+                            asynchronously. Args: image_uri: The path to the image
+                            in Google Cloud Storage (gs://...) gcs_uri: The path
+                            to the output path in Google Cloud Storage (gs://...)
 
     optional arguments:
       -h, --help            show this help message and exit
