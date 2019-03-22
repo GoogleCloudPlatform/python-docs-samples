@@ -25,7 +25,7 @@ import dicomweb
 
 cloud_region = 'us-central1'
 api_key = os.environ['API_KEY']
-base_url = 'https://healthcare.googleapis.com/v1alpha'
+base_url = 'https://healthcare.googleapis.com/v1beta1'
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
@@ -82,7 +82,7 @@ def test_dicom_store():
         dicom_store_id)
 
 
-@pytest.mark.skip(reason='disable until have access to healthcare api')
+#@pytest.mark.skip(reason='disable until have access to healthcare api')
 def test_dicomweb_store_instance(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
         service_account_json,
@@ -108,7 +108,7 @@ def test_dicomweb_store_instance(test_dataset, test_dicom_store, capsys):
         study_uid)
 
 
-@pytest.mark.skip(reason='disable until have access to healthcare api')
+#@pytest.mark.skip(reason='disable until have access to healthcare api')
 def test_dicomweb_search_instance(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
         service_account_json,
@@ -142,7 +142,7 @@ def test_dicomweb_search_instance(test_dataset, test_dicom_store, capsys):
         study_uid)
 
 
-@pytest.mark.skip(reason='disable until have access to healthcare api')
+#@pytest.mark.skip(reason='disable until have access to healthcare api')
 def test_dicomweb_retrieve_study(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
         service_account_json,
@@ -177,7 +177,7 @@ def test_dicomweb_retrieve_study(test_dataset, test_dicom_store, capsys):
         study_uid)
 
 
-@pytest.mark.skip(reason='disable until have access to healthcare api')
+#@pytest.mark.skip(reason='disable until have access to healthcare api')
 def test_dicomweb_delete_study(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
         service_account_json,

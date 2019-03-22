@@ -25,7 +25,7 @@ from google.auth.transport import requests
 from googleapiclient.errors import HttpError
 from google.oauth2 import service_account
 
-_BASE_URL = 'https://healthcare.googleapis.com/v1alpha'
+_BASE_URL = 'https://healthcare.googleapis.com/v1beta1'
 
 
 def get_session(service_account_json):
@@ -65,7 +65,7 @@ def dicomweb_store_instance(
     # Make an authenticated API request
     session = get_session(service_account_json)
 
-    with open(dcm_file) as dcm:
+    with open(dcm_file, 'rb') as dcm:
         dcm_content = dcm.read()
 
     # All requests to store an instance are multipart messages, as designated
