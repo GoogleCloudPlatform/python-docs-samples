@@ -349,6 +349,35 @@ def conditional_update_resource(
 # [END healthcare_conditional_update_resource]
 
 
+# [START healthcare_conditional_delete_resource]
+def conditional_delete_resource(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        resource_type,
+        resource_id):
+    """Deletes an existing resource specified by search criteria."""
+    url = '{}/projects/{}/locations/{}'.format(base_url,
+                                               project_id, cloud_region)
+
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}'.format(
+        url, dataset_id, fhir_store_id, resource_type)
+
+    # Make an authenticated API request
+    session = get_session(service_account_json)
+
+    response = session.delete(resource_path, headers=headers)
+    response.raise_for_status()
+
+    print('Conditionally deleted. Status = {}'.format(response.status_code))
+
+    return response
+# [END healthcare_conditional_delete_resource]
+
+
 # [START healthcare_patch_resource]
 def patch_resource(
         service_account_json,
@@ -583,6 +612,8 @@ def parse_command_line_args():
 
     command.add_parser('create-resource', help=create_resource.__doc__)
     command.add_parser('delete-resource', help=create_resource.__doc__)
+    command.add_parser('conditional_delete-resource',
+        help=conditional_delete_resource.__doc__)
     command.add_parser('get-resource', help=get_resource.__doc__)
     command.add_parser('list_resource_history',
         help=list_resource_history.__doc__)
@@ -627,6 +658,17 @@ def run_command(args):
 
     elif args.command == 'delete-resource':
         delete_resource(
+            args.service_account_json,
+            args.base_url,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            args.resource_type,
+            args.resource_id)
+
+    elif args.command == 'conditional-delete-resource':
+        conditional_delete_resource(
             args.service_account_json,
             args.base_url,
             args.project_id,
