@@ -421,6 +421,48 @@ def patch_resource(
 # [END healthcare_patch_resource]
 
 
+# [START healthcare_conditional_patch_resource]
+def conditional_patch_resource(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        resource_type):
+    """Updates part of an existing resource.."""
+    url = '{}/projects/{}/locations/{}'.format(base_url,
+                                               project_id, cloud_region)
+
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}'.format(
+        url, dataset_id, fhir_store_id, resource_type)
+
+    # Make an authenticated API request
+    session = get_session(service_account_json)
+
+    headers = {
+        'Content-Type': 'application/json-patch+json'
+    }
+
+    body = json.dumps([
+        {
+            'op': 'replace',
+            'path': '/active',
+            'value': False
+        }
+    ])
+
+    response = session.patch(resource_path, headers=headers, data=body)
+    response.raise_for_status()
+
+    resource = response.json()
+
+    print(json.dumps(resource, indent=2))
+
+    return resource
+# [END healthcare_conditional_patch_resource]
+
+
 # [START healthcare_search_resources_get]
 def search_resources_get(
         service_account_json,
@@ -625,6 +667,8 @@ def parse_command_line_args():
     command.add_parser('conditional_update-resource',
         help=conditional_update_resource.__doc__)
     command.add_parser('patch-resource', help=patch_resource.__doc__)
+    command.add_parser('conditional_patch-resource',
+        help=conditional_patch_resource.__doc__)
     command.add_parser(
         'search-resources-get',
         help=search_resources_get.__doc__)
@@ -755,6 +799,16 @@ def run_command(args):
             args.fhir_store_id,
             args.resource_type,
             args.resource_id)
+
+    elif args.command == 'conditional_patch-resource':
+        conditional_patch_resource(
+            args.service_account_json,
+            args.base_url,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            args.resource_type)
 
     elif args.command == 'search-resources-get':
         search_resources_get(
