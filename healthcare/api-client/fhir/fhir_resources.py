@@ -681,6 +681,40 @@ def get_metadata(
 # [END healthcare_get_metadata]
 
 
+# [START healthcare_fhir_execute_bundle]
+def execute_bundle(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        bundle):
+    """Executes the operations in the given bundle."""
+    url = '{}/projects/{}/locations/{}'.format(base_url,
+                                               project_id, cloud_region)
+
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir'.format(
+        url, dataset_id, fhir_store_id)
+
+    # Make an authenticated API request
+    session = get_session(service_account_json)
+
+    headers = {
+        'Content-Type': 'application/fhir+json;charset=utf-8'
+    }
+
+    response = session.post(resource_path, headers=headers, json=bundle)
+    response.raise_for_status()
+
+    resource = response.json()
+
+    print(json.dumps(resource, indent=2))
+
+    return resource
+# [END healthcare_fhir_execute_bundle]
+
+
 def parse_command_line_args():
     """Parses command line arguments."""
 
@@ -742,20 +776,26 @@ def parse_command_line_args():
 
     command.add_parser('create-resource', help=create_resource.__doc__)
     command.add_parser('delete-resource', help=create_resource.__doc__)
-    command.add_parser('conditional_delete-resource',
+    command.add_parser('conditional-delete-resource',
         help=conditional_delete_resource.__doc__)
     command.add_parser('get-resource', help=get_resource.__doc__)
-    command.add_parser('list_resource_history',
+    command.add_parser('list-resource-history',
         help=list_resource_history.__doc__)
-    command.add_parser('get_resource_history',
+    command.add_parser('export-resources',
+        help=export_resources.__doc__)
+    command.add_parser('export-resources',
+        help=export_resources.__doc__)
+    command.add_parser('execute_bundle',
+        help=execute_bundle.__doc__)
+    command.add_parser('get-resource-history',
         help=get_resource_history.__doc__)
-    command.add_parser('delete_resource_purge',
+    command.add_parser('delete-resource-purge',
         help=delete_resource_purge.__doc__)
     command.add_parser('update-resource', help=update_resource.__doc__)
-    command.add_parser('conditional_update-resource',
+    command.add_parser('conditional-update-resource',
         help=conditional_update_resource.__doc__)
     command.add_parser('patch-resource', help=patch_resource.__doc__)
-    command.add_parser('conditional_patch-resource',
+    command.add_parser('conditional-patch-resource',
         help=conditional_patch_resource.__doc__)
     command.add_parser(
         'search-resources-get',
@@ -821,7 +861,17 @@ def run_command(args):
             args.resource_type,
             args.resource_id)
 
-    elif args.command == 'list_resource_history':
+    elif args.command == 'execute_bundle':
+        get_resource(
+            args.service_account_json,
+            args.base_url,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            bundle)
+
+    elif args.command == 'list-resource-history':
         list_resource_history(
             args.service_account_json,
             args.base_url,
@@ -832,7 +882,7 @@ def run_command(args):
             args.resource_type,
             args.resource_id)
 
-    elif args.command == 'get_resource_history':
+    elif args.command == 'get-resource-history':
         get_resource_history(
             args.service_account_json,
             args.base_url,
@@ -844,7 +894,7 @@ def run_command(args):
             args.resource_id,
             args.version_id)
 
-    elif args.command == 'delete_resource_purge':
+    elif args.command == 'delete-resource-purge':
         delete_resource_purge(
             args.service_account_json,
             args.base_url,
@@ -866,7 +916,7 @@ def run_command(args):
             args.resource_type,
             args.resource_id)
 
-    elif args.command == 'conditional_update-resource':
+    elif args.command == 'conditional-update-resource':
         conditional_update_resource(
             args.service_account_json,
             args.base_url,
@@ -888,7 +938,7 @@ def run_command(args):
             args.resource_type,
             args.resource_id)
 
-    elif args.command == 'conditional_patch-resource':
+    elif args.command == 'conditional-patch-resource':
         conditional_patch_resource(
             args.service_account_json,
             args.base_url,
