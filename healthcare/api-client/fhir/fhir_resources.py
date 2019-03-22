@@ -232,6 +232,41 @@ def get_resource_history(
 # [END healthcare_get_resource_history]
 
 
+# [START healthcare_delete_resource_purge]
+def delete_resource_purge(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        resource_type,
+        resource_id):
+    """Deletes versions of a resource (excluding current version)."""
+    url = '{}/projects/{}/locations/{}'.format(base_url,
+                                               project_id, cloud_region)
+
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}/{}'.format(
+        url, dataset_id, fhir_store_id, resource_type, resource_id)
+    resource_path += '/$purge'
+
+    # Make an authenticated API request
+    session = get_session(service_account_json)
+
+    headers = {
+        'Content-Type': 'application/fhir+json;charset=utf-8'
+    }
+
+    response = session.delete(resource_path, headers=headers)
+    response.raise_for_status()
+
+    if response.status_code < 400:
+        print('{} deleted'.format(response.status_code))
+
+    return response
+# [END healthcare_delete_resource_purge]
+
+
 # [START healthcare_update_resource]
 def update_resource(
         service_account_json,
@@ -512,6 +547,8 @@ def parse_command_line_args():
         help=list_resource_history.__doc__)
     command.add_parser('get_resource_history',
         help=get_resource_history.__doc__)
+    command.add_parser('delete_resource_purge',
+        help=delete_resource_purge.__doc__)
     command.add_parser('update-resource', help=update_resource.__doc__)
     command.add_parser('patch-resource', help=patch_resource.__doc__)
     command.add_parser(
@@ -589,6 +626,17 @@ def run_command(args):
             args.resource_type,
             args.resource_id,
             args.version_id)
+
+    elif args.command == 'delete_resource_purge':
+        delete_resource_purge(
+            args.service_account_json,
+            args.base_url,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            args.resource_type,
+            args.resource_id)
 
     elif args.command == 'update-resource':
         update_resource(
