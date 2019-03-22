@@ -232,6 +232,89 @@ def get_resource_history(
 # [END healthcare_get_resource_history]
 
 
+# [START healthcare_export_fhir_resources]
+def export_resources(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        gcs_destination):
+    """Exports resources in a FHIR store."""
+    url = '{}/projects/{}/locations/{}'.format(base_url,
+                                               project_id, cloud_region)
+
+    resource_path = '{}/datasets/{}/fhirStores/{}'.format(
+        url, dataset_id, fhir_store_id)
+
+    # Make an authenticated API request
+    session = get_session(service_account_json)
+
+    headers = {
+        'Content-Type': 'application/fhir+json;charset=utf-8'
+    }
+
+    body = {
+        'gcsDestination': {
+            'uriPrefix': gcs_destination
+        }
+    }
+
+    response = session.post(resource_path + ':export', headers=headers, json=body)
+    response.raise_for_status()
+
+    resource = response.json()
+
+    print(json.dumps(resource, indent=2))
+
+    return resource
+# [END healthcare_export_fhir_resources]
+
+
+# [START healthcare_import_fhir_resources]
+def import_resources(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        gcs_source):
+    """Exports resources in a FHIR store."""
+    url = '{}/projects/{}/locations/{}'.format(base_url,
+                                               project_id, cloud_region)
+
+    resource_path = '{}/datasets/{}/fhirStores/{}'.format(
+        url, dataset_id, fhir_store_id)
+
+    # Make an authenticated API request
+    session = get_session(service_account_json)
+
+    headers = {
+        'Content-Type': 'application/fhir+json;charset=utf-8'
+    }
+
+    body = {
+        'gcsSource': {
+            'uriPrefix': gcs_source
+        },
+        'gcsErrorDestination': {
+            'uriPrefix': gcs_source + '_errors'
+        }
+    }
+
+    response = session.post(resource_path + ':import', headers=headers, json=body)
+    response.raise_for_status()
+
+    resource = response.json()
+
+    print(json.dumps(resource, indent=2))
+
+    return resource
+# [END healthcare_import_fhir_resources]
+
+
 # [START healthcare_delete_resource_purge]
 def delete_resource_purge(
         service_account_json,
@@ -646,6 +729,11 @@ def parse_command_line_args():
         help='Name of a FHIR resource')
 
     parser.add_argument(
+        '--uri_prefix',
+        default=None,
+        help='Prefix of gs:// URIs for import and export')
+
+    parser.add_argument(
         '--version_id',
         default=None,
         help='Version of a FHIR resource')
@@ -819,6 +907,26 @@ def run_command(args):
             args.dataset_id,
             args.fhir_store_id,
             args.resource_type)
+
+    elif args.command == 'export-resources':
+        export_resources(
+            args.service_account_json,
+            args.base_url,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            args.uri_prefix)
+
+    elif args.command == 'import-resources':
+        import_resources(
+            args.service_account_json,
+            args.base_url,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            args.uri_prefix)
 
     elif args.command == 'search-resources-post':
         search_resources_post(
