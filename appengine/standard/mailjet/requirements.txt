@@ -1,4 +1,4 @@
 Flask==1.0.2
-requests==2.20.1
-requests-toolbelt==0.8.0
+requests==2.21.0
+requests-toolbelt==0.9.1
 mailjet-rest==1.3.0

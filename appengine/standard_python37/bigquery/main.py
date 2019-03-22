@@ -13,8 +13,11 @@
 # limitations under the License.
 
 # [START gae_python37_bigquery]
+import concurrent.futures
+
 from flask import Flask, render_template
 from google.cloud import bigquery
+
 
 app = Flask(__name__)
 bigquery_client = bigquery.Client()
@@ -34,10 +37,18 @@ def main():
         LIMIT 10
     """)
 
-    results = query_job.result()
+    try:
+        # Set a timeout because queries could take longer than one minute.
+        results = query_job.result(timeout=30)
+    except concurrent.futures.TimeoutError:
+        return render_template('timeout.html', job_id=query_job.job_id)
+
     return render_template('query_result.html', results=results)
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # This is used when running locally only. When deploying to Google App
+    # Engine, a webserver process such as Gunicorn will serve the app. This
+    # can be configured by adding an `entrypoint` to app.yaml.
+    app.run(host='127.0.0.1', port=8080, debug=True)
 # [END gae_python37_bigquery]

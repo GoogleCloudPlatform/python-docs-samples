@@ -125,7 +125,7 @@ def read_table_list(table_list_file):
 # Any task you create within the context manager is automatically added to the
 # DAG object.
 with models.DAG(
-        'comoser_sample_bq_copy_across_locations',
+        'composer_sample_bq_copy_across_locations',
         default_args=default_args,
         schedule_interval=None) as dag:
     start = dummy_operator.DummyOperator(

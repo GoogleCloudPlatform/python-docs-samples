@@ -12,7 +12,6 @@
 # limitations under the License.
 
 import json
-import os
 
 import apiclient
 import mock
@@ -20,13 +19,12 @@ import pytest
 
 import main
 
-API_KEY = os.environ['API_KEY']
-
 with open('config.json', 'r') as f:
     data = f.read()
 config = json.loads(data)
 
-kg_search = apiclient.discovery.build('kgsearch', 'v1', developerKey=API_KEY)
+kg_search = apiclient.discovery.build('kgsearch', 'v1',
+                                      developerKey=config['KG_API_KEY'])
 example_response = kg_search.entities().search(query='lion', limit=1).execute()
 
 

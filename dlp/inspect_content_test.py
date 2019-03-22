@@ -24,7 +24,6 @@ import google.cloud.pubsub
 import google.cloud.storage
 
 import pytest
-
 import inspect_content
 
 
@@ -167,6 +166,35 @@ def test_inspect_string(capsys):
 
     out, _ = capsys.readouterr()
     assert 'Info type: FIRST_NAME' in out
+    assert 'Info type: EMAIL_ADDRESS' in out
+
+
+def test_inspect_table(capsys):
+    test_tabular_data = {
+        "header": [
+            "email",
+            "phone number"
+        ],
+        "rows": [
+            [
+                "robertfrost@xyz.com",
+                "4232342345"
+            ],
+            [
+                "johndoe@pqr.com",
+                "4253458383"
+            ]
+        ]
+    }
+
+    inspect_content.inspect_table(
+        GCLOUD_PROJECT,
+        test_tabular_data,
+        ['PHONE_NUMBER', 'EMAIL_ADDRESS'],
+        include_quote=True)
+
+    out, _ = capsys.readouterr()
+    assert 'Info type: PHONE_NUMBER' in out
     assert 'Info type: EMAIL_ADDRESS' in out
 
 
