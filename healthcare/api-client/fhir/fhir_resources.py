@@ -20,7 +20,7 @@ from google.auth.transport import requests
 from googleapiclient.errors import HttpError
 from google.oauth2 import service_account
 
-_BASE_URL = 'https://healthcare.googleapis.com/v1alpha'
+_BASE_URL = 'https://healthcare.googleapis.com/v1beta1'
 
 
 # [START healthcare_get_session]
@@ -56,7 +56,7 @@ def create_resource(
     url = '{}/projects/{}/locations/{}'.format(base_url, project_id,
                                                cloud_region)
 
-    fhir_store_path = '{}/datasets/{}/fhirStores/{}/resources/{}'.format(
+    fhir_store_path = '{}/datasets/{}/fhirStores/{}/fhir/{}'.format(
         url, dataset_id, fhir_store_id, resource_type)
 
     # Make an authenticated API request
@@ -158,6 +158,41 @@ def get_resource(
 
     return resource
 # [END healthcare_get_resource]
+
+
+# [START healthcare_list_resource_history]
+def list_resource_history(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        resource_type,
+        resource_id):
+    """Gets the history of a resource."""
+    url = '{}/projects/{}/locations/{}'.format(base_url,
+                                               project_id, cloud_region)
+
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}/{}'.format(
+        url, dataset_id, fhir_store_id, resource_type, resource_id)
+
+    # Make an authenticated API request
+    session = get_session(service_account_json)
+
+    headers = {
+        'Content-Type': 'application/fhir+json;charset=utf-8'
+    }
+
+    response = session.get(resource_path + '/_history', headers=headers)
+    response.raise_for_status()
+
+    resource = response.json()
+
+    print(json.dumps(resource, indent=2))
+
+    return resource['link']
+# [END healthcare_list_resource_history]
 
 
 # [START healthcare_update_resource]
@@ -431,6 +466,8 @@ def parse_command_line_args():
     command.add_parser('create-resource', help=create_resource.__doc__)
     command.add_parser('delete-resource', help=create_resource.__doc__)
     command.add_parser('get-resource', help=get_resource.__doc__)
+    command.add_parser('list_resource_history',
+        help=list_resource_history.__doc__)
     command.add_parser('update-resource', help=update_resource.__doc__)
     command.add_parser('patch-resource', help=patch_resource.__doc__)
     command.add_parser(
@@ -477,6 +514,17 @@ def run_command(args):
 
     elif args.command == 'get-resource':
         get_resource(
+            args.service_account_json,
+            args.base_url,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            args.resource_type,
+            args.resource_id)
+
+    elif args.command == 'list_resource_history':
+        list_resource_history(
             args.service_account_json,
             args.base_url,
             args.project_id,

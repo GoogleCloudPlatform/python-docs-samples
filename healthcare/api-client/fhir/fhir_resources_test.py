@@ -25,7 +25,7 @@ import fhir_resources
 
 cloud_region = 'us-central1'
 api_key = os.environ['API_KEY']
-base_url = 'https://healthcare.googleapis.com/v1alpha'
+base_url = 'https://healthcare.googleapis.com/v1beta1'
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
@@ -129,6 +129,16 @@ def test_CRUD_search_resource(test_dataset, test_fhir_store, capsys):
         resource_type,
         resource_id)
 
+    fhir_resources.list_resource_history(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        resource_type,
+        resource_id)
+
     fhir_resources.delete_resource(
         service_account_json,
         base_url,
@@ -145,6 +155,7 @@ def test_CRUD_search_resource(test_dataset, test_fhir_store, capsys):
     assert 'Created Resource' in out
     assert 'id' in out
     assert 'search' in out
+    assert 'link' in out
     assert resource_id in out
     assert 'Deleted Resource' in out
 
