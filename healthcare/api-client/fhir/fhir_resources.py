@@ -191,8 +191,45 @@ def list_resource_history(
 
     print(json.dumps(resource, indent=2))
 
-    return resource['link']
+    return resource
 # [END healthcare_list_resource_history]
+
+
+# [START healthcare_get_resource_history]
+def get_resource_history(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        resource_type,
+        resource_id,
+        version_id):
+    """Gets a version resource."""
+    url = '{}/projects/{}/locations/{}'.format(base_url,
+                                               project_id, cloud_region)
+
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}/{}'.format(
+        url, dataset_id, fhir_store_id, resource_type, resource_id)
+    resource_path += '/_history/{}'.format(version_id)
+
+    # Make an authenticated API request
+    session = get_session(service_account_json)
+
+    headers = {
+        'Content-Type': 'application/fhir+json;charset=utf-8'
+    }
+
+    response = session.get(resource_path, headers=headers)
+    response.raise_for_status()
+
+    resource = response.json()
+
+    print(json.dumps(resource, indent=2))
+
+    return resource
+# [END healthcare_get_resource_history]
 
 
 # [START healthcare_update_resource]
@@ -461,6 +498,11 @@ def parse_command_line_args():
         default=None,
         help='Name of a FHIR resource')
 
+    parser.add_argument(
+        '--version_id',
+        default=None,
+        help='Version of a FHIR resource')
+
     command = parser.add_subparsers(dest='command')
 
     command.add_parser('create-resource', help=create_resource.__doc__)
@@ -468,6 +510,8 @@ def parse_command_line_args():
     command.add_parser('get-resource', help=get_resource.__doc__)
     command.add_parser('list_resource_history',
         help=list_resource_history.__doc__)
+    command.add_parser('get_resource_history',
+        help=get_resource_history.__doc__)
     command.add_parser('update-resource', help=update_resource.__doc__)
     command.add_parser('patch-resource', help=patch_resource.__doc__)
     command.add_parser(
@@ -533,6 +577,18 @@ def run_command(args):
             args.fhir_store_id,
             args.resource_type,
             args.resource_id)
+
+    elif args.command == 'get_resource_history':
+        get_resource_history(
+            args.service_account_json,
+            args.base_url,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            args.resource_type,
+            args.resource_id,
+            args.version_id)
 
     elif args.command == 'update-resource':
         update_resource(

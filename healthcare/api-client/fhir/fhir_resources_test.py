@@ -129,7 +129,7 @@ def test_CRUD_search_resource(test_dataset, test_fhir_store, capsys):
         resource_type,
         resource_id)
 
-    fhir_resources.list_resource_history(
+    history = fhir_resources.list_resource_history(
         service_account_json,
         base_url,
         project_id,
@@ -138,6 +138,17 @@ def test_CRUD_search_resource(test_dataset, test_fhir_store, capsys):
         fhir_store_id,
         resource_type,
         resource_id)
+
+    history = fhir_resources.get_resource_history(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        resource_type,
+        resource_id,
+        history['entry']['resource']['meta']['version_id'])
 
     fhir_resources.delete_resource(
         service_account_json,
