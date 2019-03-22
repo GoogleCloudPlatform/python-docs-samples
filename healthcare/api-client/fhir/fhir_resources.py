@@ -281,7 +281,7 @@ def update_resource(
     url = '{}/projects/{}/locations/{}'.format(base_url,
                                                project_id, cloud_region)
 
-    resource_path = '{}/datasets/{}/fhirStores/{}/resources/{}/{}'.format(
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}/{}'.format(
         url, dataset_id, fhir_store_id, resource_type, resource_id)
 
     # Make an authenticated API request
@@ -306,6 +306,47 @@ def update_resource(
 
     return resource
 # [END healthcare_update_resource]
+
+
+# [START healthcare_conditional_update_resource]
+def conditional_update_resource(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        resource_type,
+        resource_id):
+    """Updates an existing resource specified by search criteria."""
+    url = '{}/projects/{}/locations/{}'.format(base_url,
+                                               project_id, cloud_region)
+
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}'.format(
+        url, dataset_id, fhir_store_id, resource_type)
+
+    # Make an authenticated API request
+    session = get_session(service_account_json)
+
+    headers = {
+        'Content-Type': 'application/fhir+json;charset=utf-8'
+    }
+
+    body = {
+        'resourceType': resource_type,
+        'active': True,
+        'id': resource_id,
+    }
+
+    response = session.put(resource_path, headers=headers, json=body)
+    response.raise_for_status()
+    resource = response.json()
+
+    print('Conditionally updated')
+    print(json.dumps(resource, indent=2))
+
+    return resource
+# [END healthcare_conditional_update_resource]
 
 
 # [START healthcare_patch_resource]
@@ -550,6 +591,8 @@ def parse_command_line_args():
     command.add_parser('delete_resource_purge',
         help=delete_resource_purge.__doc__)
     command.add_parser('update-resource', help=update_resource.__doc__)
+    command.add_parser('conditional_update-resource',
+        help=conditional_update_resource.__doc__)
     command.add_parser('patch-resource', help=patch_resource.__doc__)
     command.add_parser(
         'search-resources-get',
@@ -640,6 +683,17 @@ def run_command(args):
 
     elif args.command == 'update-resource':
         update_resource(
+            args.service_account_json,
+            args.base_url,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            args.resource_type,
+            args.resource_id)
+
+    elif args.command == 'conditional_update-resource':
+        conditional_update_resource(
             args.service_account_json,
             args.base_url,
             args.project_id,
