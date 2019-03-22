@@ -15,17 +15,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 #}
 <meta charset="utf-8" />
-<title>Query Result</title>
+<title>Query Timeout</title>
 
-<table>
-    <tr>
-        <th>URL</th>
-        <th>View Count</th>
-    </tr>
-    {% for result in results %}
-    <tr>
-        <td>{{ result[0] }}</td>
-        <td>{{ result[1] }}</td>
-    </tr>
-    {% endfor %}
-</table>
+<p>Query job {{ job_id }} timed out. 
