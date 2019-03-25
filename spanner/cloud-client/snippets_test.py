@@ -283,3 +283,4 @@ def update_with_batch_dml(capsys):
     snippets.update_with_batch_dml(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
     assert "Executed 2 SQL statements using Batch DML" in out
+    

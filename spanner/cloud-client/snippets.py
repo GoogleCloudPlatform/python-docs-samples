@@ -701,7 +701,7 @@ def query_with_array_of_struct(instance_id, database_id):
             param_types={'names': param_types.Array(name_type)})
 
     for row in results:
-            print(u'SingerId: {}'.format(*row))
+        print(u'SingerId: {}'.format(*row))
     # [END spanner_query_data_with_array_of_struct]
 
 
@@ -725,7 +725,7 @@ def query_struct_field(instance_id, database_id):
             param_types={'name': name_type})
 
     for row in results:
-            print(u'SingerId: {}'.format(*row))
+        print(u'SingerId: {}'.format(*row))
 # [START spanner_field_access_on_struct_parameters]
 
 
@@ -768,7 +768,7 @@ def query_nested_struct_field(instance_id, database_id):
         )
 
     for row in results:
-            print(u'SingerId: {} SongName: {}'.format(*row))
+        print(u'SingerId: {} SongName: {}'.format(*row))
 # [END spanner_field_access_on_nested_struct_parameters]
 
 
@@ -998,7 +998,7 @@ def write_with_dml_transaction(instance_id, database_id):
             )
 
             print("Transferred {} from Album1's budget to Album2's".format(
-                    transfer_amount))
+                transfer_amount))
 
     database.run_in_transaction(transfer_budget)
     # [END spanner_dml_getting_started_update]
@@ -1067,7 +1067,8 @@ def update_with_batch_dml(instance_id, database_id):
             update_statement,
         ])
 
-        print("Executed {} SQL statements using Batch DML.".format(len(row_cts)))
+        print("Executed {} SQL statements using Batch DML.".format(
+            len(row_cts)))
 
     database.run_in_transaction(update_albums)
     # [END spanner_dml_batch_update]
@@ -1154,7 +1155,7 @@ if __name__ == '__main__':  # noqa: C901
         help=delete_data_with_partitioned_dml.__doc__)
     subparsers.add_parser(
         'update_with_batch_dml',
-        help=update_with_batch_dml.__doc__)  
+        help=update_with_batch_dml.__doc__)
 
     args = parser.parse_args()
 
