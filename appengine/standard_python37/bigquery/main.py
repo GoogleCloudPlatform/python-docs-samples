@@ -13,8 +13,11 @@
 # limitations under the License.
 
 # [START gae_python37_bigquery]
+import concurrent.futures
+
 from flask import Flask, render_template
 from google.cloud import bigquery
+
 
 app = Flask(__name__)
 bigquery_client = bigquery.Client()
@@ -34,7 +37,12 @@ def main():
         LIMIT 10
     """)
 
-    results = query_job.result()
+    try:
+        # Set a timeout because queries could take longer than one minute.
+        results = query_job.result(timeout=30)
+    except concurrent.futures.TimeoutError:
+        return render_template('timeout.html', job_id=query_job.job_id)
+
     return render_template('query_result.html', results=results)
 
 

@@ -1,0 +1,3 @@
+cryptography==2.6.1
+paho-mqtt==1.4.0
+pyjwt==1.7.1
