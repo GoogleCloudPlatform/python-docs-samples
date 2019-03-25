@@ -701,7 +701,7 @@ def query_with_array_of_struct(instance_id, database_id):
             param_types={'names': param_types.Array(name_type)})
 
     for row in results:
-            print(u'SingerId: {}'.format(*row))
+        print(u'SingerId: {}'.format(*row))
     # [END spanner_query_data_with_array_of_struct]
 
 
@@ -725,7 +725,7 @@ def query_struct_field(instance_id, database_id):
             param_types={'name': name_type})
 
     for row in results:
-            print(u'SingerId: {}'.format(*row))
+        print(u'SingerId: {}'.format(*row))
 # [START spanner_field_access_on_struct_parameters]
 
 
@@ -768,7 +768,7 @@ def query_nested_struct_field(instance_id, database_id):
         )
 
     for row in results:
-            print(u'SingerId: {} SongName: {}'.format(*row))
+        print(u'SingerId: {} SongName: {}'.format(*row))
 # [END spanner_field_access_on_nested_struct_parameters]
 
 
@@ -998,7 +998,7 @@ def write_with_dml_transaction(instance_id, database_id):
             )
 
             print("Transferred {} from Album1's budget to Album2's".format(
-                    transfer_amount))
+                transfer_amount))
 
     database.run_in_transaction(transfer_budget)
     # [END spanner_dml_getting_started_update]
@@ -1037,6 +1037,41 @@ def delete_data_with_partitioned_dml(instance_id, database_id):
 
     print("{} record(s) deleted.".format(row_ct))
     # [END spanner_dml_partitioned_delete]
+
+
+def update_with_batch_dml(instance_id, database_id):
+    """Updates sample data in the database using Batch DML. """
+    # [START spanner_dml_batch_update]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    insert_statement = (
+        "INSERT INTO Albums "
+        "(SingerId, AlbumId, AlbumTitle, MarketingBudget) "
+        "VALUES (1, 3, 'Test Album Title', 10000)"
+    )
+
+    update_statement = (
+        "UPDATE Albums "
+        "SET MarketingBudget = MarketingBudget * 2 "
+        "WHERE SingerId = 1 and AlbumId = 3"
+    )
+
+    def update_albums(transaction):
+        row_cts = transaction.batch_update([
+            insert_statement,
+            update_statement,
+        ])
+
+        print("Executed {} SQL statements using Batch DML.".format(
+            len(row_cts)))
+
+    database.run_in_transaction(update_albums)
+    # [END spanner_dml_batch_update]
 
 
 if __name__ == '__main__':  # noqa: C901
@@ -1118,6 +1153,9 @@ if __name__ == '__main__':  # noqa: C901
     subparsers.add_parser(
         'delete_data_with_partitioned_dml',
         help=delete_data_with_partitioned_dml.__doc__)
+    subparsers.add_parser(
+        'update_with_batch_dml',
+        help=update_with_batch_dml.__doc__)
 
     args = parser.parse_args()
 
@@ -1195,3 +1233,5 @@ if __name__ == '__main__':  # noqa: C901
         update_data_with_partitioned_dml(args.instance_id, args.database_id)
     elif args.command == 'delete_data_with_partitioned_dml':
         delete_data_with_partitioned_dml(args.instance_id, args.database_id)
+    elif args.command == 'update_with_batch_dml':
+        update_with_batch_dml(args.instance_id, args.database_id)
