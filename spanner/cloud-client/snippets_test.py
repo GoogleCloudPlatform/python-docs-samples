@@ -196,7 +196,7 @@ def test_write_struct_data(capsys):
 def test_query_with_struct(capsys):
     snippets.query_with_struct(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'SingerId: Elena' in out
+    assert 'SingerId: 6' in out
 
 
 def test_query_with_array_of_struct(capsys):
