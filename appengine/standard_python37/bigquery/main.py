@@ -14,12 +14,12 @@
 
 # [START gae_python37_bigquery]
 import concurrent.futures
+import flask
 
-from flask import Flask, render_template
 from google.cloud import bigquery
 
 
-app = Flask(__name__)
+app = flask.Flask(__name__)
 bigquery_client = bigquery.Client()
 
 
@@ -37,13 +37,27 @@ def main():
         LIMIT 10
     """)
 
+    return flask.redirect(flask.url_for('results', project_id=query_job.project,
+                                        job_id=query_job.job_id,
+                                        location=query_job.location))
+
+
+@app.route('/results')
+def results():
+    project_id = flask.request.args.get('project_id')
+    job_id = flask.request.args.get('job_id')
+    location = flask.request.args.get('location')
+
+    bigquery_client = bigquery.Client(project=project_id, location=location)
+    job = bigquery_client.get_job(job_id)
+
     try:
         # Set a timeout because queries could take longer than one minute.
-        results = query_job.result(timeout=30)
+        results = job.result(timeout=30)
     except concurrent.futures.TimeoutError:
-        return render_template('timeout.html', job_id=query_job.job_id)
+        return flask.render_template('timeout.html', job_id=query_job.job_id)
 
-    return render_template('query_result.html', results=results)
+    return flask.render_template('query_result.html', results=results)
 
 
 if __name__ == '__main__':
