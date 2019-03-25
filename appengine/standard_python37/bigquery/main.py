@@ -14,8 +14,8 @@
 
 # [START gae_python37_bigquery]
 import concurrent.futures
-import flask
 
+import flask
 from google.cloud import bigquery
 
 

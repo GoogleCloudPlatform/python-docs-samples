@@ -77,7 +77,7 @@ def main():
             humidity = "{:.3f}".format(h)
             temperature = "{:.3f}".format(temperature_f)
             sys.stdout.write(
-                '\r >>' + bcolors.CGREEN + bcolors.CBOLD +
+                '\r>> ' + bcolors.CGREEN + bcolors.CBOLD +
                 'Temp: {} F, Hum: {}%'.format(temperature, humidity) +
                 bcolors.ENDC + ' <<')
             sys.stdout.flush()

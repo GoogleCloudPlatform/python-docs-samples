@@ -48,6 +48,7 @@ def test_main_timeout(flask_client, monkeypatch):
     assert r.status_code == 200
     assert 'Query Timeout' in r.data.decode('utf-8')
 
+
 def test_results(flask_client):
     r = flask_client.get('/')
     assert r.status_code == 200
