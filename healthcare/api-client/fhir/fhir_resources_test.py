@@ -75,7 +75,7 @@ def test_fhir_store():
         fhir_store_id)
 
 
-@pytest.mark.skip(reason='Disable until API whitelisted.')
+#@pytest.mark.skip(reason='Disable until API whitelisted.')
 def test_CRUD_search_resource(test_dataset, test_fhir_store, capsys):
     fhir_resources.create_resource(
         service_account_json,
@@ -139,6 +139,7 @@ def test_CRUD_search_resource(test_dataset, test_fhir_store, capsys):
         resource_type,
         resource_id)
 
+    #fhir_resources.patch_resource(
     fhir_resources.conditional_patch_resource(
         service_account_json,
         base_url,
@@ -146,7 +147,8 @@ def test_CRUD_search_resource(test_dataset, test_fhir_store, capsys):
         cloud_region,
         dataset_id,
         fhir_store_id,
-        resource_type)
+        resource_type,
+        resource_id)
 
     history = fhir_resources.list_resource_history(
         service_account_json,
@@ -167,7 +169,7 @@ def test_CRUD_search_resource(test_dataset, test_fhir_store, capsys):
         fhir_store_id,
         resource_type,
         resource_id,
-        history['entry']['resource']['meta']['version_id'])
+        history['entry'][-1]['resource']['meta']['versionId'])
 
     fhir_resources.delete_resource_purge(
         service_account_json,
@@ -204,7 +206,7 @@ def test_CRUD_search_resource(test_dataset, test_fhir_store, capsys):
     # Check that create/search worked
     assert 'Created Resource' in out
     assert 'id' in out
-    assert 'Conditionally updated' in
+    assert 'Conditionally updated' in out
     assert 'search' in out
     assert 'link' in out
     assert ' deleted' in out

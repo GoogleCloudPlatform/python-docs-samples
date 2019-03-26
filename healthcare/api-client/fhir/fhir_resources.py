@@ -139,7 +139,7 @@ def get_resource(
     url = '{}/projects/{}/locations/{}'.format(base_url,
                                                project_id, cloud_region)
 
-    resource_path = '{}/datasets/{}/fhirStores/{}/resources/{}/{}'.format(
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}/{}'.format(
         url, dataset_id, fhir_store_id, resource_type, resource_id)
 
     # Make an authenticated API request
@@ -448,11 +448,12 @@ def conditional_delete_resource(
 
     resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}'.format(
         url, dataset_id, fhir_store_id, resource_type)
+    resource_path += 'id={}'.format(resource_id)
 
     # Make an authenticated API request
     session = get_session(service_account_json)
 
-    response = session.delete(resource_path, headers=headers)
+    response = session.delete(resource_path)
     response.raise_for_status()
 
     print('Conditionally deleted. Status = {}'.format(response.status_code))
@@ -475,7 +476,7 @@ def patch_resource(
     url = '{}/projects/{}/locations/{}'.format(base_url,
                                                project_id, cloud_region)
 
-    resource_path = '{}/datasets/{}/fhirStores/{}/resources/{}/{}'.format(
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}/{}'.format(
         url, dataset_id, fhir_store_id, resource_type, resource_id)
 
     # Make an authenticated API request
@@ -512,13 +513,15 @@ def conditional_patch_resource(
         cloud_region,
         dataset_id,
         fhir_store_id,
-        resource_type):
+        resource_type,
+        resource_id):
     """Updates part of an existing resource.."""
     url = '{}/projects/{}/locations/{}'.format(base_url,
                                                project_id, cloud_region)
 
     resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}'.format(
         url, dataset_id, fhir_store_id, resource_type)
+    resource_path += 'id={}'.format(resource_id)
 
     # Make an authenticated API request
     session = get_session(service_account_json)
@@ -560,7 +563,7 @@ def search_resources_get(
     url = '{}/projects/{}/locations/{}'.format(base_url,
                                                project_id, cloud_region)
 
-    resource_path = '{}/datasets/{}/fhirStores/{}/resources/{}'.format(
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}'.format(
         url, dataset_id, fhir_store_id, resource_type)
 
     # Make an authenticated API request
