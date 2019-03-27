@@ -12,13 +12,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import concurrent.futures
+from unittest import mock
 
-def test_main():
+from google.cloud import bigquery
+import pytest
+
+
+@pytest.fixture
+def flask_client():
     import main
 
     main.app.testing = True
-    client = main.app.test_client()
+    return main.app.test_client()
 
-    r = client.get('/')
+
+def test_main(flask_client):
+    r = flask_client.get('/')
     assert r.status_code == 200
     assert 'Query Result' in r.data.decode('utf-8')
+
+
+def test_main_timeout(flask_client, monkeypatch):
+    import main
+
+    fake_job = mock.create_autospec(bigquery.QueryJob)
+    fake_job.result.side_effect = concurrent.futures.TimeoutError()
+
+    def fake_query(query):
+        return fake_job
+
+    monkeypatch.setattr(main.bigquery_client, 'query', fake_query)
+
+    r = flask_client.get('/')
+    assert r.status_code == 200
+    assert 'Query Timeout' in r.data.decode('utf-8')

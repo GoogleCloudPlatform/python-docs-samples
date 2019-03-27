@@ -190,13 +190,13 @@ def test_insert_data_with_timestamp(capsys):
 def test_write_struct_data(capsys):
     snippets.write_struct_data(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'Inserted sample data for STRUCT queries'
+    assert 'Inserted sample data for STRUCT queries' in out
 
 
 def test_query_with_struct(capsys):
     snippets.query_with_struct(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'SingerId: Elena'
+    assert 'SingerId: 6' in out
 
 
 def test_query_with_array_of_struct(capsys):
@@ -277,3 +277,9 @@ def delete_data_with_partitioned_dml(capsys):
     snippets.delete_data_with_partitioned_dml(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
     assert "5 record(s) deleted" in out
+
+
+def update_with_batch_dml(capsys):
+    snippets.update_with_batch_dml(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert "Executed 2 SQL statements using Batch DML" in out
