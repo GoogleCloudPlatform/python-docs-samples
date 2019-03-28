@@ -57,11 +57,13 @@ def index():
 # [START push]
 @app.route('/_ah/push-handlers/receive_messages', methods=['POST'])
 def receive_messages_handler():
-    # Verify that the request originates from the application. 
+    # Verify that the request originates from the application.
     if (request.args.get('token', '') !=
             current_app.config['PUBSUB_VERIFICATION_TOKEN']):
         return 'Invalid request', 400
+
     # TODO: I need add some code to verify the bearer token too.
+
 
     envelope = json.loads(request.data.decode('utf-8'))
     payload = base64.b64decode(envelope['message']['data'])
