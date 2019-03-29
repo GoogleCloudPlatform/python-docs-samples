@@ -1,7 +1,7 @@
-#!/usr/bin/python
-from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
+#!/usr/bin/python3
+from http.server import BaseHTTPRequestHandler,HTTPServer
 import os, socket, requests, re, random
-from SocketServer import ThreadingMixIn
+from socketserver import ThreadingMixIn
 from multiprocessing import Process
 
 PORT_NUMBER = 80
