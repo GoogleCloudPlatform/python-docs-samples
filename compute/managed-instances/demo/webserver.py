@@ -19,7 +19,7 @@ class myHandler(BaseHTTPRequestHandler):
                 'computeMetadata/v1/instance/zone',
                 headers={'Metadata-Flavor': 'Google'})
         if r.status_code == 200:
-            return sub(r'.+zones/(.+)', r'\1', r.text.encode('utf-8'))
+            return sub(r'.+zones/(.+)', r'\1', r.text)
         else:
             return ''
 
@@ -28,8 +28,7 @@ class myHandler(BaseHTTPRequestHandler):
                 'computeMetadata/v1/instance/attributes/instance-template',
                 headers={'Metadata-Flavor': 'Google'})
         if r.status_code == 200:
-            return sub(r'.+instanceTemplates/(.+)', r'\1',
-                       r.text.encode('utf-8'))
+            return sub(r'.+instanceTemplates/(.+)', r'\1', r.text)
         else:
             return ''
 
@@ -89,14 +88,14 @@ class myHandler(BaseHTTPRequestHandler):
                 self.wfile.close()
             return
 
-        HOSTNAME = gethostname().encode('utf-8')
+        HOSTNAME = gethostname()
         ZONE = self.get_zone()
         TEMPLATE = self.get_template()
 
         self.send_response(200 if HEALTHY else 500)
         self.send_header('Content-type', 'text/html')
         self.end_headers()
-        self.wfile.write('''
+        html = '''
 <html>
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
@@ -140,7 +139,8 @@ class myHandler(BaseHTTPRequestHandler):
     </table>
 </body>
 </html>
-''')
+'''
+        self.wfile.write(html.encode('UTF-8'))
         self.wfile.close()
 
 
