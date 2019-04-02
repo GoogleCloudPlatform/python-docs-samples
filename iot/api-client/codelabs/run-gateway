@@ -1,10 +1,12 @@
-# Copyright 2016 Google Inc. All rights reserved.
+#!/bin/bash
+
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#     https://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,16 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import main
-
-
-def test_shelves(testbed):
-    api = main.Shelves()
-    response = api.list(main.Request())
-    assert response
-
-
-def test_books(testbed):
-    api = main.Books()
-    response = api.get_bookmark(main.Request())
-    assert response
+python ./gateway.py \
+  --registry_id=gateway-registry \
+  --gateway_id=test-gateway \
+  --cloud_region=us-central1 \
+  --private_key_file=rsa_private.pem \
+  --algorithm=RS256 \
+  --ca_certs=roots.pem \
+  --mqtt_bridge_hostname=mqtt.googleapis.com \
+  --mqtt_bridge_port=8883 \
+  --jwt_expires_minutes=1200
