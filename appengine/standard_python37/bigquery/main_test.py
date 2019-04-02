@@ -40,14 +40,12 @@ def test_results(flask_client, monkeypatch):
     fake_rows = [("example1.com", "42"), ("example2.com", "38")]
     fake_job.result.return_value = fake_rows
 
-    def fake_get_job(self, job_id):
+    def fake_get_job(self, job_id, **kwargs):
         return fake_job
 
     monkeypatch.setattr(main.bigquery.Client, "get_job", fake_get_job)
 
-    r = flask_client.get(
-        "/results?project_id=123&job_id=456&location=my_location"
-    )
+    r = flask_client.get("/results?project_id=123&job_id=456&location=my_location")
     response_body = r.data.decode("utf-8")
 
     assert r.status_code == 200
@@ -62,7 +60,7 @@ def test_results_timeout(flask_client, monkeypatch):
     fake_job = mock.create_autospec(bigquery.QueryJob)
     fake_job.result.side_effect = concurrent.futures.TimeoutError()
 
-    def fake_get_job(self, job_id):
+    def fake_get_job(self, job_id, **kwargs):
         return fake_job
 
     monkeypatch.setattr(main.bigquery.Client, "get_job", fake_get_job)
