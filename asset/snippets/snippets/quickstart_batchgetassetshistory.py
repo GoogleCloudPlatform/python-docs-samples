@@ -20,19 +20,18 @@ import argparse
 
 def batch_get_assets_history(project_id, asset_names):
     # [START asset_quickstart_batch_get_assets_history]
-    from google.cloud import asset_v1beta1
-    from google.cloud.asset_v1beta1.proto import assets_pb2
-    from google.cloud.asset_v1beta1 import enums
+    from google.cloud import asset_v1
+    from google.cloud.asset_v1.proto import assets_pb2
+    from google.cloud.asset_v1 import enums
 
     # TODO project_id = 'Your Google Cloud Project ID'
     # TODO asset_names = 'Your asset names list, e.g.:
     # ["//storage.googleapis.com/[BUCKET_NAME]",]'
 
-    client = asset_v1beta1.AssetServiceClient()
+    client = asset_v1.AssetServiceClient()
     parent = client.project_path(project_id)
     content_type = enums.ContentType.RESOURCE
     read_time_window = assets_pb2.TimeWindow()
-    read_time_window.start_time.GetCurrentTime()
     response = client.batch_get_assets_history(
         parent, content_type, read_time_window, asset_names)
     print('assets: {}'.format(response.assets))

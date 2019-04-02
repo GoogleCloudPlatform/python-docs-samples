@@ -20,13 +20,13 @@ import argparse
 
 def export_assets(project_id, dump_file_path):
     # [START asset_quickstart_export_assets]
-    from google.cloud import asset_v1beta1
-    from google.cloud.asset_v1beta1.proto import asset_service_pb2
+    from google.cloud import asset_v1
+    from google.cloud.asset_v1.proto import asset_service_pb2
 
     # TODO project_id = 'Your Google Cloud Project ID'
     # TODO dump_file_path = 'Your asset dump file path'
 
-    client = asset_v1beta1.AssetServiceClient()
+    client = asset_v1.AssetServiceClient()
     parent = client.project_path(project_id)
     output_config = asset_service_pb2.OutputConfig()
     output_config.gcs_destination.uri = dump_file_path
