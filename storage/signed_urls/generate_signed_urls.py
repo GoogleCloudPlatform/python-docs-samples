@@ -78,10 +78,8 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
     ordered_headers = collections.OrderedDict(sorted(headers.items()))
     for k, v in ordered_headers.items():
         lower_k = str(k).lower()
-        strip_v = v
+        strip_v = str(v).lower()
         canonical_headers += '{}:{}\n'.format(lower_k, strip_v)
-    canonical_headers = "host:storage.googleapis.com\nx-goog-encryption-algorithm:AES56\n" # "x-goog-encryption-key:AAryxNglNkXQY0Wa+h9+7BLSFMhCzPo22MtXUWjOBbI=\nx-goog-encryption-key-sha256:QlCdVONb17U1aCTAjrFvMbnxW/Oul8VAvnG1875WJ3k=\n"
-    print(canonical_headers)
     # [END storage_signed_url_canonical_headers]
 
     # [START storage_signed_url_signed_headers]
@@ -90,7 +88,6 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
         lower_k = str(k).lower()
         signed_headers += '{};'.format(lower_k)
     signed_headers = signed_headers[:-1]  # remove trailing ';'
-    signed_headers = 'host;x-goog-encryption-algorithm' #;x-goog-encryption-key;x-goog-encryption-key-sha256'
     # [END storage_signed_url_signed_headers]
 
     if query_parameters is None:
@@ -108,7 +105,7 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
     for k, v in ordered_query_parameters.items():
         encoded_k = quote(str(k), safe='')
         encoded_v = quote(str(v), safe='')
-        canonical_query_string += '{}={}&amp;'.format(encoded_k, encoded_v)
+        canonical_query_string += '{}={}&'.format(encoded_k, encoded_v)
     canonical_query_string = canonical_query_string[:-1]  # remove trailing ';'
     # [END storage_signed_url_canonical_query_parameters]
 
@@ -120,7 +117,7 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
                                    signed_headers,
                                    'UNSIGNED-PAYLOAD'])
     # [END storage_signed_url_canonical_request]
-    print(canonical_request)
+
     # [START storage_signed_url_hash]
     canonical_request_hash = hashlib.sha256(
         canonical_request.encode()).hexdigest()
@@ -131,8 +128,6 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
                                 request_timestamp,
                                 credential_scope,
                                 canonical_request_hash])
-    print(string_to_sign)
-    print("\n\n\n")
     # [END storage_signed_url_string_to_sign]
 
     # [START storage_signed_url_signer]
@@ -164,21 +159,9 @@ if __name__ == '__main__':
     parser.add_argument('expiration', help='Expiration Time.')
 
     args = parser.parse_args()
-    headers = {'X-Goog-Encryption-Key': 'AAryxNglNkXQY0Wa+h9+7BLSFMhCzPo22MtXUWjOBbI=',
-               'X-Goog-Encryption-Key-Sha256': 'QlCdVONb17U1aCTAjrFvMbnxW/Oul8VAvnG1875WJ3k=',
-               'X-Goog-Encryption-Algorithm': 'AES256'}
-
-    no_key_headers = {'X-Goog-Encryption-Algorithm': 'AES256'}
     signed_url = generate_signed_url(
         service_account_file=args.service_account_file,
         http_method=args.request_method, bucket_name=args.bucket_name,
-        object_name=args.object_name, expiration=int(args.expiration),
-        headers=headers)
-    
-    # importing the requests library 
-    import requests 
-    
-    # sending get request and saving the response as response object 
-    r = requests.get(url = signed_url, headers=headers)
-    print(r.text) 
+        object_name=args.object_name, expiration=int(args.expiration))
+
     print(signed_url)
