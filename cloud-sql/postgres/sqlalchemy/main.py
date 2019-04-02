@@ -89,7 +89,7 @@ def create_tables():
         conn.execute(
             "CREATE TABLE IF NOT EXISTS votes "
             "( vote_id SERIAL NOT NULL, time_cast timestamp NOT NULL, "
-            "candidate CHAR(6) NOT NULL, PRIMARY KEY (vote_id) );"
+            "candidate VARCHAR(6) NOT NULL, PRIMARY KEY (vote_id) );"
         )
 
 
