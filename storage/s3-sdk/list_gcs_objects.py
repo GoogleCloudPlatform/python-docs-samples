@@ -37,8 +37,8 @@ def list_gcs_objects(google_access_key_id, google_access_key_secret,
 
     # Print object names
     print("Objects:")
-    for bucket in response["Contents"]:
-        print(bucket["Key"])
+    for blob in response["Contents"]:
+        print(blob["Key"])
 # [END storage_s3_sdk_list_objects]
 
 
