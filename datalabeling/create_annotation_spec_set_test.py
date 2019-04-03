@@ -17,6 +17,7 @@
 import os
 import pytest
 
+from google.cloud import datalabeling_v1beta1 as datalabeling
 import create_annotation_spec_set
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
@@ -24,12 +25,11 @@ PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 
 @pytest.mark.slow
 def test_create_annotation_spec_set(capsys):
-    create_annotation_spec_set.create_annotation_spec_set(PROJECT_ID)
+    response = create_annotation_spec_set.create_annotation_spec_set(PROJECT_ID)
     out, _ = capsys.readouterr()
     assert 'The annotation_spec_set resource name:' in out
 
-    # Deletes the created annotation spec set.
-    annotation_spec_set_name = out.splitlines()[0].split()[4]
-    from google.cloud import datalabeling_v1beta1 as datalabeling
+    # Delete the created annotation spec set.
+    annotation_spec_set_name = response.name
     client = datalabeling.DataLabelingServiceClient()
     client.delete_annotation_spec_set(annotation_spec_set_name)

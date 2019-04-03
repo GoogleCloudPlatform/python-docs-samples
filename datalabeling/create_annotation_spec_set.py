@@ -24,29 +24,38 @@ def create_annotation_spec_set(project_id):
     from google.cloud import datalabeling_v1beta1 as datalabeling
     client = datalabeling.DataLabelingServiceClient()
 
-    formatted_project_name = client.project_path(project_id)
+    project_path = client.project_path(project_id)
 
     annotation_spec_1 = datalabeling.types.AnnotationSpec(
-            display_name='label_1', description='label_description_1')
+        display_name='label_1',
+        description='label_description_1'
+    )
 
     annotation_spec_2 = datalabeling.types.AnnotationSpec(
-            display_name='label_2', description='label_description_2')
+        display_name='label_2',
+        description='label_description_2'
+    )
 
     annotation_spec_set = datalabeling.types.AnnotationSpecSet(
-            display_name='YOUR_ANNOTATION_SPEC_SET_DISPLAY_NAME',
-            description='YOUR_DESCRIPTION',
-            annotation_specs=[annotation_spec_1, annotation_spec_2])
+        display_name='YOUR_ANNOTATION_SPEC_SET_DISPLAY_NAME',
+        description='YOUR_DESCRIPTION',
+        annotation_specs=[annotation_spec_1, annotation_spec_2]
+    )
 
-    response = client.create_annotation_spec_set(formatted_project_name, annotation_spec_set)
+    response = client.create_annotation_spec_set(
+        project_path, annotation_spec_set)
 
     # The format of the resource name:
     # project_id/{project_id}/annotationSpecSets/{annotationSpecSets_id}
     print('The annotation_spec_set resource name: {}'.format(response.name))
     print('Display name: {}'.format(response.display_name))
     print('Description: {}'.format(response.description))
+    print('Annotation specs:')
     for annotation_spec in response.annotation_specs:
         print('\tDisplay name: {}'.format(annotation_spec.display_name))
         print('\tDescription: {}\n'.format(annotation_spec.description))
+
+    return response
 # [END datalabeling_create_annotation_spec_set_beta]
 
 if __name__ == '__main__':
