@@ -79,6 +79,36 @@ To run this sample:
 
 
 
+List GCS Objects using S3 SDK
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/s3-sdk/list_gcs_objects.py,storage/s3-sdk/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python list_gcs_objects.py
+
+    usage: list_gcs_objects.py [-h]
+                               google_access_key_id google_access_key_secret
+                               bucket_name
+
+    positional arguments:
+      google_access_key_id  Your Cloud Storage HMAC Access Key ID.
+      google_access_key_secret
+                            Your Cloud Storage HMAC Access Key Secret.
+      bucket_name           Your Cloud Storage bucket name
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
+
 
 
 .. _Google Cloud SDK: https://cloud.google.com/sdk/
