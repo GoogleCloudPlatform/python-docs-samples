@@ -29,7 +29,6 @@ whitelist_tags = 'PatientID'
 time_zone = 'UTC'
 
 
-#@pytest.mark.skip(reason='disable until API whitelisted / enabled')
 def test_CRUD_dataset(capsys):
     datasets.create_dataset(
         service_account_json,
@@ -57,7 +56,6 @@ def test_CRUD_dataset(capsys):
     assert 'Deleted dataset' in out
 
 
-#@pytest.mark.skip(reason='disable until API whitelisted / enabled')
 def test_patch_dataset(capsys):
     datasets.create_dataset(
         service_account_json,
@@ -84,7 +82,6 @@ def test_patch_dataset(capsys):
     assert 'UTC' in out
 
 
-#@pytest.mark.skip(reason='disable until API whitelisted / enabled')
 def test_deidentify_dataset(capsys):
     datasets.create_dataset(
         service_account_json,
