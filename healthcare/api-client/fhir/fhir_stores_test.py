@@ -60,7 +60,6 @@ def test_dataset():
         dataset_id)
 
 
-@pytest.mark.skip(reason='disable until API whitelisted / enabled')
 def test_CRUD_fhir_store(test_dataset, capsys):
     fhir_stores.create_fhir_store(
         service_account_json,
@@ -102,7 +101,6 @@ def test_CRUD_fhir_store(test_dataset, capsys):
     assert 'Deleted FHIR store' in out
 
 
-@pytest.mark.skip(reason='disable until API whitelisted / enabled')
 def test_patch_fhir_store(test_dataset, capsys):
     fhir_stores.create_fhir_store(
         service_account_json,
@@ -135,7 +133,6 @@ def test_patch_fhir_store(test_dataset, capsys):
     assert 'Patched FHIR store' in out
 
 
-@pytest.mark.skip(reason='disable until API whitelisted / enabled')
 def test_import_fhir_store_gcs(test_dataset, capsys):
     fhir_stores.create_fhir_store(
         service_account_json,
@@ -151,6 +148,7 @@ def test_import_fhir_store_gcs(test_dataset, capsys):
 
     blob.upload_from_filename(resource_file)
 
+    time.sleep(5)   # Give new blob time to propagate
     fhir_stores.import_fhir_store(
         service_account_json,
         api_key,
@@ -176,7 +174,6 @@ def test_import_fhir_store_gcs(test_dataset, capsys):
     assert 'Imported FHIR resources' in out
 
 
-@pytest.mark.skip(reason='disable until API whitelisted / enabled')
 def test_export_fhir_store_gcs(test_dataset, capsys):
     fhir_stores.create_fhir_store(
         service_account_json,

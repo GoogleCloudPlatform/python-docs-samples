@@ -75,9 +75,8 @@ def test_fhir_store():
         fhir_store_id)
 
 
-#@pytest.mark.skip(reason='Disable until API whitelisted.')
 def test_CRUD_search_resource(test_dataset, test_fhir_store, capsys):
-    fhir_resources.create_resource(
+    response = fhir_resources.create_resource(
         service_account_json,
         base_url,
         project_id,
@@ -86,7 +85,10 @@ def test_CRUD_search_resource(test_dataset, test_fhir_store, capsys):
         fhir_store_id,
         resource_type)
 
-    resource = fhir_resources.search_resources_get(
+    # Save the resource_id because you need to pass it into later tests
+    resource_id = response.json()['id']
+
+    fhir_resources.search_resources_get(
         service_account_json,
         base_url,
         project_id,
@@ -95,9 +97,6 @@ def test_CRUD_search_resource(test_dataset, test_fhir_store, capsys):
         fhir_store_id,
         resource_type)
 
-    # Save the resource_id from the object returned by search_resources()
-    # because you need to pass it into get_resource() and delete_resource()
-    resource_id = resource["entry"][0]["resource"]["id"]
 
     fhir_resources.get_resource(
         service_account_json,
@@ -214,9 +213,8 @@ def test_CRUD_search_resource(test_dataset, test_fhir_store, capsys):
     assert 'Deleted Resource' in out
 
 
-@pytest.mark.skip(reason='Disable until API whitelisted.')
 def test_get_patient_everything(test_dataset, test_fhir_store, capsys):
-    fhir_resources.create_resource(
+    response = fhir_resources.create_resource(
         service_account_json,
         base_url,
         project_id,
@@ -225,7 +223,10 @@ def test_get_patient_everything(test_dataset, test_fhir_store, capsys):
         fhir_store_id,
         resource_type)
 
-    resource = fhir_resources.search_resources_get(
+    # Save the resource_id because you need to pass it into later tests
+    resource_id = response.json()['id']
+
+    fhir_resources.search_resources_get(
         service_account_json,
         base_url,
         project_id,
@@ -233,10 +234,6 @@ def test_get_patient_everything(test_dataset, test_fhir_store, capsys):
         dataset_id,
         fhir_store_id,
         resource_type)
-
-    # Save the resource_id from the object returned by search_resources()
-    # because you need to pass it into get_resource() and delete_resource()
-    resource_id = resource["entry"][0]["resource"]["id"]
 
     fhir_resources.get_patient_everything(
         service_account_json,
@@ -262,7 +259,6 @@ def test_get_patient_everything(test_dataset, test_fhir_store, capsys):
     assert 'id' in out
 
 
-@pytest.mark.skip(reason="no way of currently testing this")
 def test_get_metadata(test_dataset, test_fhir_store, capsys):
     fhir_resources.get_metadata(
         service_account_json,

@@ -115,7 +115,8 @@ def delete_resource(
 
     try:
         response = session.delete(resource_path, headers=headers)
-        response.raise_for_status()
+        if response.status_code != 404:  # Don't consider missing to be error
+            response.raise_for_status()
         print(response)
         print('Deleted Resource: {}'.format(resource_id))
         return response
@@ -448,13 +449,14 @@ def conditional_delete_resource(
 
     resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}'.format(
         url, dataset_id, fhir_store_id, resource_type)
-    resource_path += 'id={}'.format(resource_id)
+    resource_path += '?id={}'.format(resource_id)
 
     # Make an authenticated API request
     session = get_session(service_account_json)
 
     response = session.delete(resource_path)
-    response.raise_for_status()
+    if response.status_code != 404:  # Don't consider missing to be error
+        response.raise_for_status()
 
     print('Conditionally deleted. Status = {}'.format(response.status_code))
 
@@ -521,7 +523,7 @@ def conditional_patch_resource(
 
     resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}'.format(
         url, dataset_id, fhir_store_id, resource_type)
-    resource_path += 'id={}'.format(resource_id)
+    resource_path += '?id={}'.format(resource_id)
 
     # Make an authenticated API request
     session = get_session(service_account_json)
@@ -534,7 +536,7 @@ def conditional_patch_resource(
         {
             'op': 'replace',
             'path': '/active',
-            'value': False
+            'value': True
         }
     ])
 
@@ -632,10 +634,9 @@ def get_patient_everything(
     url = '{}/projects/{}/locations/{}'.format(base_url,
                                                project_id, cloud_region)
 
-    resource_parent = '{}/datasets/{}/fhirStores/{}'.format(
-        url, dataset_id, fhir_store_id)
-    resource_path = '{}/resources/Patient/{}/$everything'.format(
-        resource_parent, resource_id)
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}/{}'.format(
+        url, dataset_id, fhir_store_id, 'Patient', resource_id)
+    resource_path += '/$everything'
 
     # Make an authenticated API request
     session = get_session(service_account_json)
@@ -667,7 +668,7 @@ def get_metadata(
     url = '{}/projects/{}/locations/{}'.format(base_url,
                                                project_id, cloud_region)
 
-    fhir_store_path = '{}/datasets/{}/fhirStores/{}/metadata'.format(
+    fhir_store_path = '{}/datasets/{}/fhirStores/{}/fhir/metadata'.format(
         url, dataset_id, fhir_store_id)
 
     # Make an authenticated API request

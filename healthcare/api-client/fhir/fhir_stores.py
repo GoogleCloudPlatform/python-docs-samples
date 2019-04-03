@@ -35,8 +35,6 @@ def get_client(service_account_json, api_key):
 
     discovery_url = '{}?labels=CHC_BETA&version={}&key={}'.format(
         discovery_api, api_version, api_key)
-    # TODO - remove this workaround discovery_url below
-    discovery_url = 'http://localhost:3000/healthcare_google_rest_v1beta1.json'
 
     return discovery.build(
         service_name,
@@ -222,9 +220,8 @@ def export_fhir_store_gcs(
         fhir_store_parent, fhir_store_id)
 
     body = {
-        "gcsDestinationLocation":
-        {
-            "gcsUri": 'gs://{}'.format(gcs_uri)
+        "gcsDestination": {
+            "uriPrefix": 'gs://{}/fhir_export'.format(gcs_uri)
         }
     }
 
@@ -260,7 +257,10 @@ def import_fhir_store(
         fhir_store_parent, fhir_store_id)
 
     body = {
-        "gcsSource": 'gs://{}'.format(gcs_uri)
+        "contentStructure": "CONTENT_STRUCTURE_UNSPECIFIED",
+        "gcsSource": {
+            "uri": 'gs://{}'.format(gcs_uri)
+        }
     }
 
     # Escape "import()" method keyword because "import"
