@@ -20,28 +20,24 @@ from google.cloud import storage
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 
-storage_client = storage.Client()
-bucket = None
+@pytest.fixture(scope='function')
+def bucket():
+    # Create a temporaty bucket to store annotation output.
+    bucket_name = str(uuid.uuid1())
+    storage_client = storage.Client()
+    bucket = storage_client.create_bucket(bucket_name)
 
+    yield bucket
 
-@pytest.fixture
-def setup():
-    # Create a bucket for the tests to use
-    bucket = storage_client.create_bucket(uuid.uuid4())
-
-    yield None
-
-    # Delete the bucket (must delete files in it first)
-    for blob in bucket.list_blobs():
-        blob.delete()
-    bucket.delete()
+    # Teardown.
+    bucket.delete(force=True)
 
 def test_translate_text(capsys):
     beta_snippets.translate_text(PROJECT_ID, 'Hello world')
     out, _ = capsys.readouterr()
     assert 'Zdravo svet' in out
 
-def test_batch_translate_text(capsys):
+def test_batch_translate_text(capsys, bucket):
     beta_snippets.batch_translate_text(
         PROJECT_ID,
         'gs://cloud-samples-data/translation/text.txt',
