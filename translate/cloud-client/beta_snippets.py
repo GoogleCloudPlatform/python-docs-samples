@@ -46,7 +46,7 @@ def batch_translate_text(project_id, input_uri, output_uri):
     # project_id = YOUR_PROJECT_ID
     # input_uri = 'gs://cloud-samples-data/translation/text.txt'
     # output_uri = 'gs://YOUR_BUCKET_ID/path_to_store_results/'
-    location = 'global'
+    location = 'us-central1'
 
     parent = client.location_path(project_id, location)
 
