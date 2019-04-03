@@ -20,6 +20,7 @@ from google.cloud import storage
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 
+
 @pytest.fixture(scope='function')
 def bucket():
     # Create a temporaty bucket to store annotation output.
@@ -32,10 +33,12 @@ def bucket():
     # Teardown.
     bucket.delete(force=True)
 
+
 def test_translate_text(capsys):
     beta_snippets.translate_text(PROJECT_ID, 'Hello world')
     out, _ = capsys.readouterr()
     assert 'Zdravo svet' in out
+
 
 def test_batch_translate_text(capsys, bucket):
     beta_snippets.batch_translate_text(
@@ -46,7 +49,6 @@ def test_batch_translate_text(capsys, bucket):
     assert 'Total Characters: 13' in out
     assert 'Translated Characters: 13' in out
 
-    blobs = bucket.list_blobs(prefix='translation/BATCH_TRANSLATION_OUTPUT')
 
 def test_detect_language(capsys):
     beta_snippets.detect_language(PROJECT_ID, 'Hæ sæta')
