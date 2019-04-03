@@ -18,20 +18,20 @@ import os
 import pytest
 
 import create_instruction
+from google.cloud import datalabeling_v1beta1 as datalabeling
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+INSTRUCTION_GCS_URI = 'gs://cloud-samples-data/datalabeling/instruction/test.pdf'
 
 
 @pytest.mark.slow
 def test_create_instruction(capsys):
-    create_instruction.create_instruction(
-            PROJECT_ID, 'IMAGE',
-            'gs://cloud-samples-data/datalabeling/instruction/test.pdf')
+    result = create_instruction.create_instruction(PROJECT_ID, 'IMAGE',
+        INSTRUCTION_GCS_URI)
     out, _ = capsys.readouterr()
     assert 'The instruction resource name: ' in out
 
-    # Deletes the created instruction.
-    instruction_name = out.splitlines()[0].split()[4]
-    from google.cloud import datalabeling_v1beta1 as datalabeling
+    # Delete the created instruction.
+    instruction_name = result.name
     client = datalabeling.DataLabelingServiceClient()
     client.delete_instruction(instruction_name)

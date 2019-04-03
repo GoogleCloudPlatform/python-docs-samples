@@ -60,10 +60,15 @@ def create_annotation_spec_set(project_id):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-            description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
 
     parser.add_argument(
-            '--project-id', help='Project ID. Required.', required=True)
+        '--project-id',
+        help='Project ID. Required.',
+        required=True
+    )
 
     args = parser.parse_args()
 
