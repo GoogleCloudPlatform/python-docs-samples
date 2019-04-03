@@ -33,7 +33,7 @@ pubsub_topic = 'test_pubsub_topic_{}'.format(int(time.time()))
 
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 bucket = os.environ['CLOUD_STORAGE_BUCKET']
-dcm_file_name = 'IM-0002-0001-JPEG-BASELINE.dcm'
+dcm_file_name = 'dicom_00000001_000.dcm'
 content_uri = bucket + '/' + dcm_file_name
 dcm_file = os.path.join(RESOURCES, dcm_file_name)
 
@@ -58,7 +58,6 @@ def test_dataset():
         dataset_id)
 
 
-@pytest.mark.skip(reason='disable until have access to healthcare api')
 def test_CRUD_dicom_store(test_dataset, capsys):
     dicom_stores.create_dicom_store(
         service_account_json,
@@ -100,7 +99,6 @@ def test_CRUD_dicom_store(test_dataset, capsys):
     assert 'Deleted DICOM store' in out
 
 
-@pytest.mark.skip(reason='disable until have access to healthcare api')
 def test_patch_dicom_store(test_dataset, capsys):
     dicom_stores.create_dicom_store(
         service_account_json,
@@ -133,7 +131,6 @@ def test_patch_dicom_store(test_dataset, capsys):
     assert 'Patched DICOM store' in out
 
 
-@pytest.mark.skip(reason='disable until have access to healthcare api')
 def test_import_dicom_instance(test_dataset, capsys):
     dicom_stores.create_dicom_store(
         service_account_json,
@@ -166,7 +163,6 @@ def test_import_dicom_instance(test_dataset, capsys):
     assert 'Imported DICOM instance' in out
 
 
-@pytest.mark.skip(reason='disable until have access to healthcare api')
 def test_export_dicom_instance(test_dataset, capsys):
     dicom_stores.create_dicom_store(
         service_account_json,
