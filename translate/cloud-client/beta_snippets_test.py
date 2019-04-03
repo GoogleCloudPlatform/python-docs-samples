@@ -13,35 +13,44 @@
 # limitations under the License.
 
 import os
+import pytest
+import uuid
 import beta_snippets
 from google.cloud import storage
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 
+storage_client = storage.Client()
+bucket = None
+
+
+@pytest.fixture
+def setup():
+    # Create a bucket for the tests to use
+    bucket = storage_client.create_bucket(uuid.uuid4())
+
+    yield None
+
+    # Delete the bucket (must delete files in it first)
+    for blob in bucket.list_blobs():
+        blob.delete()
+    bucket.delete()
 
 def test_translate_text(capsys):
     beta_snippets.translate_text(PROJECT_ID, 'Hello world')
     out, _ = capsys.readouterr()
     assert 'Zdravo svet' in out
 
-
 def test_batch_translate_text(capsys):
     beta_snippets.batch_translate_text(
         PROJECT_ID,
         'gs://cloud-samples-data/translation/text.txt',
-        'gs://{}/translation/BATCH_TRANSLATION_OUTPUT/'.format(PROJECT_ID))
+        'gs://{}/translation/BATCH_TRANSLATION_OUTPUT/'.format(bucket.name))
     out, _ = capsys.readouterr()
     assert 'Total Characters: 13' in out
     assert 'Translated Characters: 13' in out
 
-    storage_client = storage.Client()
-    bucket = storage_client.get_bucket(PROJECT_ID)
-
     blobs = bucket.list_blobs(prefix='translation/BATCH_TRANSLATION_OUTPUT')
-
-    for blob in blobs:
-        blob.delete()
-
 
 def test_detect_language(capsys):
     beta_snippets.detect_language(PROJECT_ID, 'Hæ sæta')
@@ -63,7 +72,7 @@ def test_list_languages_with_target(capsys):
 
 
 def test_create_glossary(capsys):
-    beta_snippets.create_glossary(PROJECT_ID)
+    beta_snippets.create_glossary(PROJECT_ID, 'glossary')
     out, _ = capsys.readouterr()
     assert 'gs://cloud-samples-data/translation/glossary.csv' in out
 

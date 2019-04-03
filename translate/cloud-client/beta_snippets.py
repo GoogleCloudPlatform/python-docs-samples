@@ -139,18 +139,19 @@ def list_languages_with_target(project_id, display_language_code):
     # [END translate_list_language_names_beta]
 
 
-def create_glossary(project_id):
+def create_glossary(project_id, glossary_id):
     # [START translate_create_glossary_beta]
     from google.cloud import translate_v3beta1 as translate
     client = translate.TranslationServiceClient()
 
     # project_id = 'YOUR_PROJECT_ID'
+    # glossary_id = 'glossary-id'
     location = 'us-central1'  # The location of the glossary
 
     name = client.glossary_path(
         project_id,
         location,
-        'glossary')  # The name of your glossary
+        glossary_id)
 
     language_codes_set = translate.types.Glossary.LanguageCodesSet(
         language_codes=['en', 'es'])
