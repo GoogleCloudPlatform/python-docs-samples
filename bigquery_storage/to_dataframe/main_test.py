@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import uuid
-
 import pytest
 
 
@@ -73,14 +71,10 @@ def test_table_to_dataframe(capsys, clients):
 
 
 def test_query_to_dataframe(capsys, clients):
-    from google.cloud import bigquery
-
     bqclient, bqstorageclient = clients
 
     # [START bigquerystorage_pandas_tutorial_all]
     # [START bigquerystorage_pandas_tutorial_read_query_results]
-    import uuid
-
     # Download query results.
     query_string = """
     SELECT
