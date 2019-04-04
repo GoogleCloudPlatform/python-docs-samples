@@ -126,13 +126,11 @@ def get_client(
         algorithm, ca_certs, mqtt_bridge_hostname, mqtt_bridge_port):
     """Create our MQTT client. The client_id is a unique string that identifies
     this device. For Google Cloud IoT Core, it must be in the format below."""
-    client = mqtt.Client(
-            client_id=('projects/{}/locations/{}/registries/{}/devices/{}'
-                       .format(
-                               project_id,
-                               cloud_region,
-                               registry_id,
-                               device_id)))
+    client_id = 'projects/{}/locations/{}/registries/{}/devices/{}'.format(
+            project_id, cloud_region, registry_id, device_id)
+    print('Device client_id is \'{}\''.format(client_id))
+
+    client = mqtt.Client(client_id=client_id)
 
     # With Google Cloud IoT Core, the username field is ignored, and the
     # password field is used to transmit a JWT to authorize the device.
