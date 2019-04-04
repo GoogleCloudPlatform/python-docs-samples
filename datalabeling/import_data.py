@@ -24,35 +24,44 @@ def import_data(dataset_resource_name, data_type, input_gcs_uri):
     client = datalabeling.DataLabelingServiceClient()
 
     gcs_source = datalabeling.types.GcsSource(
-            input_uri=input_gcs_uri, mime_type='text/csv')
+        input_uri=input_gcs_uri, mime_type='text/csv')
 
     image_csv_input_config = datalabeling.types.InputConfig(
-            data_type=data_type, gcs_source=gcs_source)
+        data_type=data_type, gcs_source=gcs_source)
 
     response = client.import_data(dataset_resource_name, image_csv_input_config)
 
+    result = response.result()
+
     # The format of resource name: project_id/{project_id}/datasets/{dataset_id}
-    print('Dataset resource name: {}\n'.format(response.result().dataset))
+    print('Dataset resource name: {}\n'.format(result.dataset))
+
+    return result
 # [END datalabeling_import_data_beta]
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-            description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
 
     parser.add_argument(
-            '--dataset-resource-name',
-            help='Dataset resource name. Required.',
-            required=True)
+        '--dataset-resource-name',
+        help='Dataset resource name. Required.',
+        required=True
+    )
 
     parser.add_argument(
-            '--data-type',
-            help='Data type. Only support IMAGE, VIDEO, TEXT and AUDIO. Required.',
-            required=True)
+        '--data-type',
+        help='Data type. Only support IMAGE, VIDEO, TEXT and AUDIO. Required.',
+        required=True
+    )
 
     parser.add_argument(
-            '--input-gcs-uri',
-            help='The GCS URI of the input dataset. Required.',
-            required=True)
+        '--input-gcs-uri',
+        help='The GCS URI of the input dataset. Required.',
+        required=True
+    )
 
     args = parser.parse_args()
 

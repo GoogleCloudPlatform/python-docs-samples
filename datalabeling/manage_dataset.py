@@ -38,6 +38,8 @@ def create_dataset(project_id):
     print('Create time:')
     print('\tseconds: {}'.format(response.create_time.seconds))
     print('\tnanos: {}'.format(response.create_time.nanos))
+
+    return response
 # [END datalabeling_create_dataset_beta]
 
 

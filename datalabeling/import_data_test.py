@@ -21,22 +21,22 @@ import import_data
 import manage_dataset
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/image/image_dataset.csv'
+
+
+@pytest.fixture(scope='function')
+def dataset():
+    # create a temporary dataset
+    dataset = manage_dataset.create_dataset(PROJECT_ID)
+
+    yield dataset
+
+    # tear down
+    manage_dataset.delete_dataset(dataset.name)
 
 
 @pytest.mark.slow
-def test_import_data(capsys):
-    # Generates a dataset_resource_name.
-    manage_dataset.create_dataset(PROJECT_ID)
-    out, _ = capsys.readouterr()
-    create_dataset_output = out.splitlines()
-    dataset_resource_name = create_dataset_output[0].split()[4]
-
-    # Starts to test the import_data.
-    import_data.import_data(
-            dataset_resource_name, 'IMAGE',
-            'gs://cloud-samples-data/datalabeling/image/image_dataset.csv')
+def test_import_data(capsys, dataset):
+    import_data.import_data(dataset.name, 'IMAGE', INPUT_GCS_URI)
     out, _ = capsys.readouterr()
     assert 'Dataset resource name: ' in out
-
-    # Deletes the created dataset.
-    manage_dataset.delete_dataset(dataset_resource_name)
