@@ -1,5 +1,5 @@
 # Copyright 2018 Google LLC All Rights Reserved.
-#
+#new_healthcare
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -432,11 +432,12 @@ def parse_command_line_args():
     command.add_parser('get-dicom-store', help=get_dicom_store.__doc__)
     command.add_parser('list-dicom-stores', help=list_dicom_stores.__doc__)
     command.add_parser('patch-dicom-store', help=patch_dicom_store.__doc__)
-    command.add_parser('get_iam_policy',
+    command.add_parser(
+        'get_iam_policy',
         help=get_dicom_store_iam_policy.__doc__)
-    command.add_parser('set_iam_policy',
+    command.add_parser(
+        'set_iam_policy',
         help=set_dicom_store_iam_policy.__doc__)
-
     command.add_parser(
         'export-dicom-store',
         help=export_dicom_instance.__doc__)
