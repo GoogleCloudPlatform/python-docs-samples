@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 import IPython
 from IPython.terminal import interactiveshell
 from IPython.testing import tools
@@ -21,7 +23,7 @@ import pytest
 # flake8: noqa E703
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def ipython():
     config = tools.default_config()
     config.TerminalInteractiveShell.simple_prompt = True
@@ -41,14 +43,15 @@ def ipython_interactive(request, ipython):
 
 def _strip_region_tags(sample_text):
     """Remove blank lines and region tags from sample text"""
-    magic_lines = [line for line in sample_text.split('\n')
-                   if len(line) > 0 and '# [' not in line]
-    return '\n'.join(magic_lines)
+    magic_lines = [
+        line for line in sample_text.split("\n") if len(line) > 0 and "# [" not in line
+    ]
+    return "\n".join(magic_lines)
 
 
 def test_jupyter_small_query(ipython):
     ip = IPython.get_ipython()
-    ip.extension_manager.load_extension('google.cloud.bigquery')
+    ip.extension_manager.load_extension("google.cloud.bigquery")
 
     # Include a small query to demonstrate that it falls back to the
     # tabledata.list API when the BQ Storage API cannot be used.
@@ -69,12 +72,15 @@ def test_jupyter_small_query(ipython):
 
     result = ip.run_cell(_strip_region_tags(sample))
     result.raise_error()  # Throws an exception if the cell failed.
-    assert 'stackoverflow' in ip.user_ns  # verify that variable exists
+    assert "stackoverflow" in ip.user_ns  # verify that variable exists
 
 
+@pytest.mark.skipif(
+    "TRAVIS" in os.environ, reason="Not running long-running queries on Travis"
+)
 def test_jupyter_tutorial(ipython):
     ip = IPython.get_ipython()
-    ip.extension_manager.load_extension('google.cloud.bigquery')
+    ip.extension_manager.load_extension("google.cloud.bigquery")
 
     # This code sample intentionally queries a lot of data to demonstrate the
     # speed-up of using the BigQuery Storage API to download the results.
@@ -102,8 +108,8 @@ def test_jupyter_tutorial(ipython):
     result = ip.run_cell(_strip_region_tags(sample))
     result.raise_error()  # Throws an exception if the cell failed.
 
-    assert 'nodejs_deps' in ip.user_ns  # verify that variable exists
-    nodejs_deps = ip.user_ns['nodejs_deps']
+    assert "nodejs_deps" in ip.user_ns  # verify that variable exists
+    nodejs_deps = ip.user_ns["nodejs_deps"]
 
     # [START bigquerystorage_jupyter_tutorial_results]
     nodejs_deps.head()
@@ -139,4 +145,4 @@ def test_jupyter_tutorial(ipython):
     result = ip.run_cell(_strip_region_tags(sample))
     result.raise_error()  # Throws an exception if the cell failed.
 
-    assert 'java_deps' in ip.user_ns  # verify that variable exists
+    assert "java_deps" in ip.user_ns  # verify that variable exists
