@@ -35,7 +35,7 @@ def get_client(service_account_json, api_key):
 
     discovery_url = '{}?labels=CHC_BETA&version={}&key={}'.format(
         discovery_api, api_version, api_key)
-    
+
     return discovery.build(
         service_name,
         api_version,
