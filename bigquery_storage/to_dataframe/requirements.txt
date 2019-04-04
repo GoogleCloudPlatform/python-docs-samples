@@ -2,4 +2,5 @@ google-auth==1.6.2
 google-cloud-bigquery-storage==0.2.0
 google-cloud-bigquery==1.8.1
 fastavro==0.21.17
+ipython==7.2.0
 pandas==0.24.0
