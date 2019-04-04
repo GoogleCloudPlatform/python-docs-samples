@@ -21,8 +21,8 @@ from google.cloud import datalabeling_v1beta1 as datalabeling
 import pytest
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-INSTRUCTION_GCS_URI = 'gs://cloud-samples-data/datalabeling',\
-                      '/instruction/test.pdf'
+INSTRUCTION_GCS_URI = ('gs://cloud-samples-data/datalabeling'
+                       '/instruction/test.pdf')
 
 
 @pytest.mark.slow
