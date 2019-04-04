@@ -22,26 +22,42 @@ import manage_dataset
 PROJECT_ID = os.getenv("GCLOUD_PROJECT")
 
 
-@pytest.mark.slow
-def test_manage_dataset(capsys):
-    # Creates a dataset.
-    manage_dataset.create_dataset(PROJECT_ID)
+@pytest.fixture(scope='function')
+def dataset():
+    # create a temporary dataset
+    dataset = manage_dataset.create_dataset(PROJECT_ID)
+
+    yield dataset
+
+    # tear down
+    manage_dataset.delete_dataset(dataset.name)
+
+
+def test_create_dataset(capsys):
+    response = manage_dataset.create_dataset(PROJECT_ID)
     out, _ = capsys.readouterr()
     assert "The dataset resource name:" in out
-    create_dataset_output = out.splitlines()
-    created_dataset_resource_name = create_dataset_output[0].split()[4]
 
-    # Lists the datasets
+    # clean up
+    manage_dataset.delete_dataset(response.name)
+
+
+def test_list_dataset(capsys, dataset):
     manage_dataset.list_datasets(PROJECT_ID)
     out, _ = capsys.readouterr()
-    assert "The dataset resource name:" in out
+    assert dataset.name in out
 
-    # Gets the dataset.
-    manage_dataset.get_dataset(created_dataset_resource_name)
+
+def test_get_dataset(capsys, dataset):
+    manage_dataset.get_dataset(dataset.name)
     out, _ = capsys.readouterr()
     assert "The dataset resource name:" in out
 
-    # Deletes the dataset.
-    manage_dataset.delete_dataset(created_dataset_resource_name)
+
+def test_delete_dataset(capsys):
+    # Creates a dataset.
+    response = manage_dataset.create_dataset(PROJECT_ID)
+
+    manage_dataset.delete_dataset(response.name)
     out, _ = capsys.readouterr()
     assert "Dataset deleted." in out

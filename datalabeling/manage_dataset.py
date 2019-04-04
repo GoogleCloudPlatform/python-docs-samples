@@ -26,8 +26,9 @@ def create_dataset(project_id):
     formatted_project_name = client.project_path(project_id)
 
     dataset = datalabeling.types.Dataset(
-            display_name='YOUR_ANNOTATION_SPEC_SET_DISPLAY_NAME',
-            description='YOUR_DESCRIPTION')
+        display_name='YOUR_ANNOTATION_SPEC_SET_DISPLAY_NAME',
+        description='YOUR_DESCRIPTION'
+    )
 
     response = client.create_dataset(formatted_project_name, dataset)
 
@@ -93,31 +94,41 @@ def delete_dataset(dataset_resource_name):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-            description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
 
     subparsers = parser.add_subparsers(dest='command')
 
     create_parser = subparsers.add_parser('create', help='Create a new dataset.')
     create_parser.add_argument(
-            '--project-id', help='Project ID. Required.', required=True)
+        '--project-id',
+        help='Project ID. Required.',
+        required=True
+    )
 
     list_parser = subparsers.add_parser('list', help='List all datasets.')
     list_parser.add_argument(
-            '--project-id', help='Project ID. Required.', required=True)
+        '--project-id',
+        help='Project ID. Required.',
+        required=True
+    )
 
-    get_parser = subparsers.add_parser(
-            'get', help='Get a dataset by the dataset resource name.')
+    get_parser = subparsers.add_parser('get', 
+        help='Get a dataset by the dataset resource name.')
     get_parser.add_argument(
-            '--dataset-resource-name',
-            help='The dataset resource name. Used in the get or delete operation.',
-            required=True)
+        '--dataset-resource-name',
+        help='The dataset resource name. Used in the get or delete operation.',
+        required=True
+    )
 
-    delete_parser = subparsers.add_parser(
-            'delete', help='Delete a dataset by the dataset resource name.')
+    delete_parser = subparsers.add_parser('delete',
+        help='Delete a dataset by the dataset resource name.')
     delete_parser.add_argument(
-            '--dataset-resource-name',
-            help='The dataset resource name. Used in the get or delete operation.',
-            required=True)
+        '--dataset-resource-name',
+        help='The dataset resource name. Used in the get or delete operation.',
+        required=True
+    )
 
     args = parser.parse_args()
 
