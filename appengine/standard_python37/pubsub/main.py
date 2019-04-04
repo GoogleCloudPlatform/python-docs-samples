@@ -40,20 +40,21 @@ MESSAGES = []
 TOKENS = []
 HEADERS = []
 CLAIMS = []
+REQUEST_HEADERS = []
 
 # [START index]
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'GET':
-        return render_template('index.html', messages=MESSAGES, tokens=TOKENS, headers=HEADERS, claims=CLAIMS)
+        return render_template('index.html', messages=MESSAGES, tokens=TOKENS, headers=HEADERS, claims=CLAIMS, request_headers=REQUEST_HEADERS)
 
     data = request.form.get('payload', 'Example payload').encode('utf-8')
 
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(app.config['GCLOUD_PROJECT'],
                                       app.config['PUBSUB_TOPIC'])
-    publisher.publish(topic_path, data)
-
+    future = publisher.publish(topic_path, data)
+    future.result()
     return 'OK', 200
 # [END index]
 
@@ -65,6 +66,8 @@ def receive_messages_handler():
     if (request.args.get('token', '') !=
             current_app.config['PUBSUB_VERIFICATION_TOKEN']):
         return 'Invalid request', 400
+
+    REQUEST_HEADERS.append(request.headers)
 
     # Verify the push request originates from Cloud Pub/Sub.
     try:
