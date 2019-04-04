@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import uuid
-
 import pytest
 
 
@@ -72,48 +70,11 @@ def test_table_to_dataframe(capsys, clients):
     assert "country_name" in out
 
 
-@pytest.fixture
-def temporary_dataset(clients):
-    from google.cloud import bigquery
-
-    bqclient, _ = clients
-
-    # [START bigquerystorage_pandas_tutorial_all]
-    # [START bigquerystorage_pandas_tutorial_create_dataset]
-    # Set the dataset_id to the dataset used to store temporary results.
-    dataset_id = "query_results_dataset"
-    # [END bigquerystorage_pandas_tutorial_create_dataset]
-    # [END bigquerystorage_pandas_tutorial_all]
-
-    dataset_id = "bqstorage_to_dataset_{}".format(uuid.uuid4().hex)
-
-    # [START bigquerystorage_pandas_tutorial_all]
-    # [START bigquerystorage_pandas_tutorial_create_dataset]
-    dataset_ref = bqclient.dataset(dataset_id)
-    dataset = bigquery.Dataset(dataset_ref)
-
-    # Remove tables after 24 hours.
-    dataset.default_table_expiration_ms = 1000 * 60 * 60 * 24
-
-    bqclient.create_dataset(dataset)  # API request.
-    # [END bigquerystorage_pandas_tutorial_create_dataset]
-    # [END bigquerystorage_pandas_tutorial_all]
-    yield dataset_ref
-    # [START bigquerystorage_pandas_tutorial_cleanup]
-    bqclient.delete_dataset(dataset_ref, delete_contents=True)
-    # [END bigquerystorage_pandas_tutorial_cleanup]
-
-
-def test_query_to_dataframe(capsys, clients, temporary_dataset):
-    from google.cloud import bigquery
-
+def test_query_to_dataframe(capsys, clients):
     bqclient, bqstorageclient = clients
-    dataset_ref = temporary_dataset
 
     # [START bigquerystorage_pandas_tutorial_all]
     # [START bigquerystorage_pandas_tutorial_read_query_results]
-    import uuid
-
     # Download query results.
     query_string = """
     SELECT
@@ -125,19 +86,15 @@ def test_query_to_dataframe(capsys, clients, temporary_dataset):
     WHERE tags like '%google-bigquery%'
     ORDER BY view_count DESC
     """
-    # Use a random table name to avoid overwriting existing tables.
-    table_id = "queryresults_" + uuid.uuid4().hex
-    table = dataset_ref.table(table_id)
-    query_config = bigquery.QueryJobConfig(
-        # Due to a known issue in the BigQuery Storage API, small query result
-        # sets cannot be downloaded. To workaround this issue, write results to
-        # a destination table.
-        destination=table
-    )
 
     dataframe = (
-        bqclient.query(query_string, job_config=query_config)
+        bqclient.query(query_string)
         .result()
+
+        # Note: The BigQuery Storage API cannot be used to download small query
+        # results, but as of google-cloud-bigquery version 1.11.1, the
+        # to_dataframe method will fallback to the tabledata.list API when the
+        # BigQuery Storage API fails to read the query results.
         .to_dataframe(bqstorage_client=bqstorageclient)
     )
     print(dataframe.head())

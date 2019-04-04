@@ -34,7 +34,7 @@ test their code.
 
     ```
     eval "$(pyenv init -)"
-    eval "$(pyenv virtualenv-init -)"`
+    eval "$(pyenv virtualenv-init -)"
     ```
 
     Note that this also works with ZSH.
