@@ -194,6 +194,7 @@ def test_export_dicom_instance(test_dataset, capsys):
 
     assert 'Exported DICOM instance' in out
 
+
 def test_get_set_dicom_store_iam_policy(test_dataset, capsys):
     dicom_stores.create_dicom_store(
         service_account_json,

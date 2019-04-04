@@ -304,11 +304,11 @@ def set_dicom_store_iam_policy(
         dicom_store_id,
         member,
         role,
-        etag = None):
+        etag=None):
     """Sets the IAM policy for the specified dicom store.
 
         A single member will be assigned a single role. A member can be any of:
-        
+
         - allUsers, that is, anyone
         - allAuthenticatedUsers, anyone authenticated with a Google account
         - user:email, as in 'user:somebody@example.com'
@@ -432,8 +432,10 @@ def parse_command_line_args():
     command.add_parser('get-dicom-store', help=get_dicom_store.__doc__)
     command.add_parser('list-dicom-stores', help=list_dicom_stores.__doc__)
     command.add_parser('patch-dicom-store', help=patch_dicom_store.__doc__)
-    command.add_parser('get_iam_policy', help=get_dicom_store_iam_policy.__doc__)
-    command.add_parser('set_iam_policy', help=set_dicom_store_iam_policy.__doc__)
+    command.add_parser('get_iam_policy',
+        help=get_dicom_store_iam_policy.__doc__)
+    command.add_parser('set_iam_policy',
+        help=set_dicom_store_iam_policy.__doc__)
 
     command.add_parser(
         'export-dicom-store',

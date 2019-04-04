@@ -39,6 +39,7 @@ dcm_file = os.path.join(RESOURCES, dcm_file_name)
 # metadata of dcm_file
 study_uid = '1.3.6.1.4.1.11129.5.5.111396399361969898205364400549799252857604'
 
+
 @pytest.fixture(scope='module')
 def test_dataset():
     dataset = datasets.create_dataset(
