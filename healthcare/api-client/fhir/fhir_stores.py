@@ -293,7 +293,8 @@ def get_fhir_store_iam_policy(
     fhir_store_name = '{}/fhirStores/{}'.format(
         fhir_store_parent, fhir_store_id)
 
-    request = client.projects().locations().datasets().fhirStores().getIamPolicy(resource=fhir_store_name)
+    request = client.projects().locations().datasets().fhirStores(
+        ).getIamPolicy(resource=fhir_store_name)
     response = request.execute()
 
     print('etag: {}'.format(response.get('name')))
@@ -311,11 +312,11 @@ def set_fhir_store_iam_policy(
         fhir_store_id,
         member,
         role,
-        etag = None):
+        etag=None):
     """Sets the IAM policy for the specified FHIR store.
 
         A single member will be assigned a single role. A member can be any of:
-        
+
         - allUsers, that is, anyone
         - allAuthenticatedUsers, anyone authenticated with a Google account
         - user:email, as in 'user:somebody@example.com'
@@ -347,8 +348,8 @@ def set_fhir_store_iam_policy(
     if etag is not None:
         policy['etag'] = etag
 
-    request = client.projects().locations().datasets().fhirStores().setIamPolicy(
-        resource=fhir_store_name, body={'policy': policy})
+    request = client.projects().locations().datasets().fhirStores(
+        ).setIamPolicy(resource=fhir_store_name, body={'policy': policy})
     response = request.execute()
 
     print('etag: {}'.format(response.get('name')))
@@ -430,8 +431,12 @@ def parse_command_line_args():
     command.add_parser(
         'export-fhir-store-gcs',
         help=export_fhir_store_gcs.__doc__)
-    command.add_parser('get_iam_policy', help=get_iam_policy.__doc__)
-    command.add_parser('set_iam_policy', help=set_iam_policy.__doc__)
+    command.add_parser(
+        'get_iam_policy',
+        help=get_fhir_store_iam_policy.__doc__)
+    command.add_parser(
+        'set_iam_policy',
+        help=set_fhir_store_iam_policy.__doc__)
 
     return parser.parse_args()
 
@@ -509,7 +514,7 @@ def run_command(args):
             args.gcs_uri)
 
     elif args.command == 'get_iam_policy':
-        get_iam_policy(
+        get_fhir_store_iam_policy(
             args.service_account_json,
             args.api_key,
             args.project_id,
@@ -518,7 +523,7 @@ def run_command(args):
             args.fhir_store_id)
 
     elif args.command == 'set_iam_policy':
-        set_iam_policy(
+        set_fhir_store_iam_policy(
             args.service_account_json,
             args.api_key,
             args.project_id,

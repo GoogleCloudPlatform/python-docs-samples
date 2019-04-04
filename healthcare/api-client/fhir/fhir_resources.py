@@ -262,7 +262,8 @@ def export_resources(
         }
     }
 
-    response = session.post(resource_path + ':export', headers=headers, json=body)
+    response = session.post(
+        resource_path + ':export', headers=headers, json=body)
     response.raise_for_status()
 
     resource = response.json()
@@ -305,7 +306,8 @@ def import_resources(
         }
     }
 
-    response = session.post(resource_path + ':import', headers=headers, json=body)
+    response = session.post(
+        resource_path + ':import', headers=headers, json=body)
     response.raise_for_status()
 
     resource = response.json()
@@ -767,6 +769,11 @@ def parse_command_line_args():
         help='Name of a FHIR resource')
 
     parser.add_argument(
+        '--bundle',
+        default=None,
+        help='Name of file containing bundle of operations to execute')
+
+    parser.add_argument(
         '--uri_prefix',
         default=None,
         help='Prefix of gs:// URIs for import and export')
@@ -780,26 +787,35 @@ def parse_command_line_args():
 
     command.add_parser('create-resource', help=create_resource.__doc__)
     command.add_parser('delete-resource', help=create_resource.__doc__)
-    command.add_parser('conditional-delete-resource',
+    command.add_parser(
+        'conditional-delete-resource',
         help=conditional_delete_resource.__doc__)
     command.add_parser('get-resource', help=get_resource.__doc__)
-    command.add_parser('list-resource-history',
+    command.add_parser(
+        'list-resource-history',
         help=list_resource_history.__doc__)
-    command.add_parser('export-resources',
+    command.add_parser(
+        'export-resources',
         help=export_resources.__doc__)
-    command.add_parser('export-resources',
+    command.add_parser(
+        'export-resources',
         help=export_resources.__doc__)
-    command.add_parser('execute_bundle',
+    command.add_parser(
+        'execute_bundle',
         help=execute_bundle.__doc__)
-    command.add_parser('get-resource-history',
+    command.add_parser(
+        'get-resource-history',
         help=get_resource_history.__doc__)
-    command.add_parser('delete-resource-purge',
+    command.add_parser(
+        'delete-resource-purge',
         help=delete_resource_purge.__doc__)
     command.add_parser('update-resource', help=update_resource.__doc__)
-    command.add_parser('conditional-update-resource',
+    command.add_parser(
+        'conditional-update-resource',
         help=conditional_update_resource.__doc__)
     command.add_parser('patch-resource', help=patch_resource.__doc__)
-    command.add_parser('conditional-patch-resource',
+    command.add_parser(
+        'conditional-patch-resource',
         help=conditional_patch_resource.__doc__)
     command.add_parser(
         'search-resources-get',
@@ -873,7 +889,7 @@ def run_command(args):
             args.cloud_region,
             args.dataset_id,
             args.fhir_store_id,
-            bundle)
+            args.bundle)
 
     elif args.command == 'list-resource-history':
         list_resource_history(

@@ -228,11 +228,11 @@ def set_hl7v2_store_iam_policy(
         hl7v2_store_id,
         member,
         role,
-        etag = None):
+        etag=None):
     """Sets the IAM policy for the specified hl7v2 store.
 
         A single member will be assigned a single role. A member can be any of:
-        
+
         - allUsers, that is, anyone
         - allAuthenticatedUsers, anyone authenticated with a Google account
         - user:email, as in 'user:somebody@example.com'
@@ -334,8 +334,12 @@ def parse_command_line_args():
     command.add_parser('get-hl7v2-store', help=get_hl7v2_store.__doc__)
     command.add_parser('list-hl7v2-stores', help=list_hl7v2_stores.__doc__)
     command.add_parser('patch-hl7v2-store', help=patch_hl7v2_store.__doc__)
-    command.add_parser('get_iam_policy', help=get_hl7v2_store_iam_policy.__doc__)
-    command.add_parser('set_iam_policy', help=set_hl7v2_store_iam_policy.__doc__)
+    command.add_parser(
+        'get_iam_policy',
+        help=get_hl7v2_store_iam_policy.__doc__)
+    command.add_parser(
+        'set_iam_policy',
+        help=set_hl7v2_store_iam_policy.__doc__)
 
     return parser.parse_args()
 

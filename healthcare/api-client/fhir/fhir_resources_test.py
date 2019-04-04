@@ -97,7 +97,6 @@ def test_CRUD_search_resource(test_dataset, test_fhir_store, capsys):
         fhir_store_id,
         resource_type)
 
-
     fhir_resources.get_resource(
         service_account_json,
         base_url,
@@ -138,7 +137,6 @@ def test_CRUD_search_resource(test_dataset, test_fhir_store, capsys):
         resource_type,
         resource_id)
 
-    #fhir_resources.patch_resource(
     fhir_resources.conditional_patch_resource(
         service_account_json,
         base_url,

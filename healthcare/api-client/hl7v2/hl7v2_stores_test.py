@@ -124,6 +124,7 @@ def test_patch_hl7v2_store(test_dataset, capsys):
 
     assert 'Patched HL7v2 store' in out
 
+
 def test_get_set_hl7v2_store_iam_policy(test_dataset, capsys):
     hl7v2_stores.create_hl7v2_store(
         service_account_json,
