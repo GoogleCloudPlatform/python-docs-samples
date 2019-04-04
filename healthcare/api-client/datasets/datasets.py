@@ -267,11 +267,11 @@ def set_dataset_iam_policy(
         dataset_id,
         member,
         role,
-        etag = None):
+        etag=None):
     """Sets the IAM policy for the specified dataset.
 
         A single member will be assigned a single role. A member can be any of:
-        
+
         - allUsers, that is, anyone
         - allAuthenticatedUsers, anyone authenticated with a Google account
         - user:email, as in 'user:somebody@example.com'
@@ -369,7 +369,6 @@ def parse_command_line_args():
         '--role',
         default=None,
         help='IAM Role to give to member (e.g. "roles/viewer")')
-
 
     command = parser.add_subparsers(dest='command')
 
