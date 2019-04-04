@@ -14,12 +14,15 @@
 
 # [START app]
 import base64
+from flask import current_app, Flask, render_template, request
 import json
 import logging
 import os
 
-from flask import current_app, Flask, render_template, request
+from google.auth import jwt
+from google.auth.transport import requests
 from google.cloud import pubsub_v1
+from google.oauth2 import id_token
 
 
 app = Flask(__name__)
@@ -32,16 +35,17 @@ app.config['PUBSUB_VERIFICATION_TOKEN'] = \
 app.config['PUBSUB_TOPIC'] = os.environ['PUBSUB_TOPIC']
 app.config['GCLOUD_PROJECT'] = os.environ['GOOGLE_CLOUD_PROJECT']
 
-
-# Global list to storage messages received by this instance.
+# Global list to store messages, tokens, etc. received by this instance.
 MESSAGES = []
-
+TOKENS = []
+HEADERS = []
+CLAIMS = []
 
 # [START index]
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'GET':
-        return render_template('index.html', messages=MESSAGES)
+        return render_template('index.html', messages=MESSAGES, tokens=TOKENS, headers=HEADERS, claims=CLAIMS)
 
     data = request.form.get('payload', 'Example payload').encode('utf-8')
 
@@ -57,13 +61,31 @@ def index():
 # [START push]
 @app.route('/_ah/push-handlers/receive_messages', methods=['POST'])
 def receive_messages_handler():
-    # Verify that the request originates from the application.
+    # Verify the request originates from the application.
     if (request.args.get('token', '') !=
             current_app.config['PUBSUB_VERIFICATION_TOKEN']):
         return 'Invalid request', 400
 
-    # TODO: I need add some code to verify the bearer token too.
+    # Verify the push request originates from Cloud Pub/Sub.
+    try:
+        # Get the OpenIDConnect JWT in the "Authorization" header
+        # attached to the push request by Cloud Pub/Sub.
+        bearer_token = request.headers.get('Authorization')
+        token = bearer_token.split(' ')[1]
+        TOKENS.append(token)
 
+        header = jwt.decode_header(token)
+        HEADERS.append(header)
+
+        # Verify and decode the token. Underneath it checks the signature
+        # with the signed section using Google's public certs at
+        # https://www.googleapis.com/oauth2/v1/certs
+        req = requests.Request()
+        claim = id_token.verify_oauth2_token(token, req)
+        CLAIMS.append(claim)
+    except Exception as e:
+        CLAIMS.append(e)
+        return 'Unable to verify: ' + e, 400
 
     envelope = json.loads(request.data.decode('utf-8'))
     payload = base64.b64decode(envelope['message']['data'])
