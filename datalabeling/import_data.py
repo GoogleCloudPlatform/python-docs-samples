@@ -33,11 +33,13 @@ def import_data(dataset_resource_name, data_type, input_gcs_uri):
 
     result = response.result()
 
-    # The format of resource name: project_id/{project_id}/datasets/{dataset_id}
+    # The format of resource name:
+    # project_id/{project_id}/datasets/{dataset_id}
     print('Dataset resource name: {}\n'.format(result.dataset))
 
     return result
 # [END datalabeling_import_data_beta]
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(

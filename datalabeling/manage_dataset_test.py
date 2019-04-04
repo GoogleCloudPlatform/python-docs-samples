@@ -15,9 +15,9 @@
 # limitations under the License.
 
 import os
-import pytest
 
 import manage_dataset
+import pytest
 
 PROJECT_ID = os.getenv("GCLOUD_PROJECT")
 

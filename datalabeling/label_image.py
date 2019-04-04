@@ -18,7 +18,8 @@ import argparse
 
 
 # [START datalabeling_label_image_beta]
-def label_image(dataset_resource_name, instruction_resource_name, annotation_spec_set_resource_name):
+def label_image(dataset_resource_name, instruction_resource_name,
+                annotation_spec_set_resource_name):
     """Labels an image dataset."""
     from google.cloud import datalabeling_v1beta1 as datalabeling
     client = datalabeling.DataLabelingServiceClient()
@@ -32,7 +33,7 @@ def label_image(dataset_resource_name, instruction_resource_name, annotation_spe
 
     feature = datalabeling.enums.LabelImageRequest.Feature.CLASSIFICATION
 
-    image_classification_config = datalabeling.types.ImageClassificationConfig(
+    config = datalabeling.types.ImageClassificationConfig(
         annotation_spec_set=annotation_spec_set_resource_name,
         allow_multi_label=False,
         answer_aggregation_type=datalabeling.enums.StringAggregationType
@@ -43,12 +44,13 @@ def label_image(dataset_resource_name, instruction_resource_name, annotation_spe
         dataset_resource_name,
         basic_config,
         feature,
-        image_classification_config=image_classification_config
+        image_classification_config=config
     )
 
     print('Label_image operation name: {}'.format(response.operation.name))
     return response
 # [END datalabeling_label_image_beta]
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -76,5 +78,8 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    label_image(args.dataset_resource_name, args.instruction_resource_name,
-        args.annotation_spec_set_resource_name)
+    label_image(
+        args.dataset_resource_name,
+        args.instruction_resource_name,
+        args.annotation_spec_set_resource_name
+    )

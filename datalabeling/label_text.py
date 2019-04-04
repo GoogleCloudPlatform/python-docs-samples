@@ -18,7 +18,8 @@ import argparse
 
 
 # [START datalabeling_label_text_beta]
-def label_text(dataset_resource_name, instruction_resource_name, annotation_spec_set_resource_name):
+def label_text(dataset_resource_name, instruction_resource_name,
+               annotation_spec_set_resource_name):
     """Labels a text dataset."""
     from google.cloud import datalabeling_v1beta1 as datalabeling
     client = datalabeling.DataLabelingServiceClient()
@@ -30,21 +31,23 @@ def label_text(dataset_resource_name, instruction_resource_name, annotation_spec
         replica_count=1
     )
 
-    feature = datalabeling.enums.LabelTextRequest.Feature.TEXT_ENTITY_EXTRACTION
+    feature = (datalabeling.enums.LabelTextRequest.
+               Feature.TEXT_ENTITY_EXTRACTION)
 
-    text_entity_extraction_config = datalabeling.types.TextEntityExtractionConfig(
+    config = datalabeling.types.TextEntityExtractionConfig(
         annotation_spec_set=annotation_spec_set_resource_name)
 
     response = client.label_text(
         dataset_resource_name,
         basic_config,
         feature,
-        text_entity_extraction_config=text_entity_extraction_config
+        text_entity_extraction_config=config
     )
 
     print('Label_text operation name: {}'.format(response.operation.name))
     return response
 # [END datalabeling_label_text_beta]
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -72,4 +75,8 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    label_text(args.dataset_resource_name, args.instruction_resource_name, args.annotation_spec_set_resource_name)
+    label_text(
+        args.dataset_resource_name,
+        args.instruction_resource_name,
+        args.annotation_spec_set_resource_name
+    )

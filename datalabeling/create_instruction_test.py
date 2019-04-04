@@ -15,19 +15,23 @@
 # limitations under the License.
 
 import os
-import pytest
 
 import create_instruction
 from google.cloud import datalabeling_v1beta1 as datalabeling
+import pytest
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-INSTRUCTION_GCS_URI = 'gs://cloud-samples-data/datalabeling/instruction/test.pdf'
+INSTRUCTION_GCS_URI = 'gs://cloud-samples-data/datalabeling',\
+                      '/instruction/test.pdf'
 
 
 @pytest.mark.slow
 def test_create_instruction(capsys):
-    result = create_instruction.create_instruction(PROJECT_ID, 'IMAGE',
-        INSTRUCTION_GCS_URI)
+    result = create_instruction.create_instruction(
+        PROJECT_ID,
+        'IMAGE',
+        INSTRUCTION_GCS_URI
+    )
     out, _ = capsys.readouterr()
     assert 'The instruction resource name: ' in out
 

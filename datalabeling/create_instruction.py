@@ -20,7 +20,8 @@ import argparse
 # [START datalabeling_create_instruction_beta]
 def create_instruction(project_id, data_type, instruction_gcs_uri):
     """ Creates a data labeling PDF instruction for the given Google Cloud
-    project. The PDF file should be uploaded to the project in Google Cloud Storage.
+    project. The PDF file should be uploaded to the project in
+    Google Cloud Storage.
     """
     from google.cloud import datalabeling_v1beta1 as datalabeling
     client = datalabeling.DataLabelingServiceClient()
@@ -58,6 +59,7 @@ def create_instruction(project_id, data_type, instruction_gcs_uri):
     return result
 # [END datalabeling_create_instruction_beta]
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -66,7 +68,7 @@ if __name__ == '__main__':
 
     parser.add_argument(
         '--project-id',
-        help='Project ID. Required.', 
+        help='Project ID. Required.',
         required=True
     )
 
@@ -84,4 +86,8 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    create_instruction(args.project_id, args.data_type, args.instruction_gcs_uri)
+    create_instruction(
+        args.project_id,
+        args.data_type,
+        args.instruction_gcs_uri
+    )

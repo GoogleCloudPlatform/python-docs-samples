@@ -19,7 +19,7 @@ import argparse
 
 # [START datalabeling_export_data_beta]
 def export_data(dataset_resource_name, annotated_dataset_resource_name,
-        export_gcs_uri):
+                export_gcs_uri):
     """Exports a dataset from the given Google Cloud project."""
     from google.cloud import datalabeling_v1beta1 as datalabeling
     client = datalabeling.DataLabelingServiceClient()
@@ -30,7 +30,11 @@ def export_data(dataset_resource_name, annotated_dataset_resource_name,
     output_config = datalabeling.types.OutputConfig(
         gcs_destination=gcs_destination)
 
-    response = client.export_data(dataset_resource_name, annotated_dataset_resource_name, output_config)
+    response = client.export_data(
+        dataset_resource_name,
+        annotated_dataset_resource_name,
+        output_config
+    )
 
     print('Dataset ID: {}\n'.format(response.result().dataset))
     print('Output config:')
@@ -38,6 +42,7 @@ def export_data(dataset_resource_name, annotated_dataset_resource_name,
     print('\t\tOutput URI: {}\n'.format(
         response.result().output_config.gcs_destination.output_uri))
 # [END datalabeling_export_data_beta]
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -65,5 +70,8 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    export_data(args.dataset_resource_name,
-        args.annotated_dataset_resource_name, args.export_gcs_uri)
+    export_data(
+        args.dataset_resource_name,
+        args.annotated_dataset_resource_name,
+        args.export_gcs_uri
+    )

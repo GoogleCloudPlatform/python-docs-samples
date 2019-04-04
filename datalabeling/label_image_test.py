@@ -15,16 +15,17 @@
 # limitations under the License.
 
 import os
-import pytest
 
-from google.cloud import datalabeling_v1beta1 as datalabeling
 import create_annotation_spec_set
 import create_instruction
+from google.cloud import datalabeling_v1beta1 as datalabeling
 import import_data
 import label_image
 import manage_dataset
+import pytest
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
+INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/image/image_dataset.csv'
 
 
 @pytest.fixture(scope='function')
@@ -33,8 +34,7 @@ def dataset():
     dataset = manage_dataset.create_dataset(PROJECT_ID)
 
     # import some data to it
-    import_data.import_data(dataset.name, 'IMAGE',
-        'gs://cloud-samples-data/datalabeling/image/image_dataset.csv')
+    import_data.import_data(dataset.name, 'IMAGE', INPUT_GCS_URI)
 
     yield dataset
 
@@ -45,13 +45,14 @@ def dataset():
 @pytest.fixture(scope='function')
 def annotation_spec_set():
     # create a temporary annotation_spec_set
-    annotation_spec_set = create_annotation_spec_set.create_annotation_spec_set(PROJECT_ID)
+    response = create_annotation_spec_set.create_annotation_spec_set(
+        PROJECT_ID)
 
-    yield annotation_spec_set
+    yield response
 
     # tear down
     client = datalabeling.DataLabelingServiceClient()
-    client.delete_annotation_spec_set(annotation_spec_set.name)
+    client.delete_annotation_spec_set(response.name)
 
 
 @pytest.fixture(scope='function')
@@ -68,20 +69,25 @@ def instruction():
     client.delete_instruction(instruction.name)
 
 
-# Passing in dataset as the last argument in test_label_image since it needs to be deleted before the annotation_spec_set can be deleted.
+# Passing in dataset as the last argument in test_label_image since it needs
+# to be deleted before the annotation_spec_set can be deleted.
 @pytest.mark.slow
 def test_label_image(capsys, annotation_spec_set, instruction, dataset):
 
     # Start labeling.
-    response = label_image.label_image(dataset.name, instruction.name, annotation_spec_set.name)
+    response = label_image.label_image(
+        dataset.name,
+        instruction.name,
+        annotation_spec_set.name
+    )
     out, _ = capsys.readouterr()
     assert 'Label_image operation name: ' in out
     operation_name = response.operation.name
 
     # Cancels the labeling operation.
     response.cancel()
-    assert response.cancelled() == True
+    assert response.cancelled() is True
 
     client = datalabeling.DataLabelingServiceClient()
-    cancel_response = client.transport._operations_client.cancel_operation(
+    client.transport._operations_client.cancel_operation(
             operation_name)

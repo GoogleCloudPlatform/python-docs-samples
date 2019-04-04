@@ -19,7 +19,8 @@ import argparse
 
 # [START datalabeling_create_annotation_spec_set_beta]
 def create_annotation_spec_set(project_id):
-    """Creates a data labeling annotation spec set for the given Google Cloud project.
+    """Creates a data labeling annotation spec set for the given
+    Google Cloud project.
     """
     from google.cloud import datalabeling_v1beta1 as datalabeling
     client = datalabeling.DataLabelingServiceClient()
@@ -57,6 +58,7 @@ def create_annotation_spec_set(project_id):
 
     return response
 # [END datalabeling_create_annotation_spec_set_beta]
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
