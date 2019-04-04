@@ -26,10 +26,10 @@ def import_data(dataset_resource_name, data_type, input_gcs_uri):
     gcs_source = datalabeling.types.GcsSource(
         input_uri=input_gcs_uri, mime_type='text/csv')
 
-    image_csv_input_config = datalabeling.types.InputConfig(
+    csv_input_config = datalabeling.types.InputConfig(
         data_type=data_type, gcs_source=gcs_source)
 
-    response = client.import_data(dataset_resource_name, image_csv_input_config)
+    response = client.import_data(dataset_resource_name, csv_input_config)
 
     result = response.result()
 
