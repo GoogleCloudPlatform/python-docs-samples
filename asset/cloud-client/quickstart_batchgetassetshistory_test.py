@@ -47,6 +47,9 @@ def asset_bucket(storage_client):
 def test_batch_get_assets_history(asset_bucket, capsys):
     bucket_asset_name = '//storage.googleapis.com/{}'.format(BUCKET)
     asset_names = [bucket_asset_name, ]
+    # There's some delay between bucket creation and when it's reflected in the
+    # backend.
+    time.sleep(15)
     quickstart_batchgetassetshistory.batch_get_assets_history(
         PROJECT, asset_names)
     out, _ = capsys.readouterr()
