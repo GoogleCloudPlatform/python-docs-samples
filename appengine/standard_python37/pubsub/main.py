@@ -40,7 +40,6 @@ MESSAGES = []
 TOKENS = []
 HEADERS = []
 CLAIMS = []
-R = []
 
 # [START index]
 @app.route('/', methods=['GET', 'POST'])
