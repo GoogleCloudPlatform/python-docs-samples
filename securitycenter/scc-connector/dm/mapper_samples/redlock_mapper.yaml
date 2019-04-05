@@ -1,0 +1,36 @@
+type: json
+org_name: organizations/0
+root_element: null
+mapped_ips: {"REDLOCK-FIREWALL-RULE-BINDING":"REPLACE_WITH_A_VALID_FIXED_FIREWALL_ID_IN_YOUR_ORGANIZATION",
+"REDLOCK-BUCKET-BINDING-":"REPLACE_WITH_A_VALID_FIXED_BUCKET_ID_IN_YOUR_ORGANIZATION",
+"REDLOCK-PROJECT-BINDING":"REPLACE_WITH_A_VALID_FIXED_PROJECT_ID_IN_YOUR_ORGANIZATION"}
+fixed_fields:
+  sourceId: REDLOCK  
+api_to_fields:
+  assetIds:
+    transform: mapped_value
+    path: resourceName
+  url: callbackUrl
+  id: 
+    transform: concat_organization_id
+    path: alertId
+  category: policyName
+  eventTime:
+    transform: time_already_in_millis
+    path: alertTs
+  properties:
+    severity: severity
+    policyLabels: policyLabels      
+    accountID: accountId
+    accountName: accountName
+    resourceRegionId: resourceRegionId    
+    riskRating: riskRating
+    resourceRegion: resourceRegion
+    policyRecommendation: policyRecommendation
+    resourceType: resourceType
+    alertRemediationCli: alertRemediationCli
+    policyDescription: policyDescription
+    resourceConfig: resourceConfig
+    cloudType: cloudType
+    alertTs: alertTs
+    alertAttribution: alertAttribution

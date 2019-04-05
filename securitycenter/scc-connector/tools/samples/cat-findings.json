@@ -1,0 +1,17 @@
+[
+  {
+    "id": "REPLACE_WITH_A_VALID_POLICY_VIOLATION_IN_YOUR_ORGANIZATION",
+    "sourceId": "GOOGLE_ANOMALY_DETECTION",
+    "category": "ACCOUNT_HIJACKED",
+    "assetIds": [
+      "REPLACE_WITH_A_VALID_PROJECT_ID_IN_YOUR_ORGANIZATION"
+    ],
+    "eventTime": 1521237064290434,
+    "customSummary": "Unauthorized use of account to attempt to create project(s) or content.",
+    "properties": {
+      "action": "FLAGGED",
+      "serviceAccount": "000000000000-compute@developer.gserviceaccount.com",
+      "product": "compute_engine"
+    }
+  }
+]

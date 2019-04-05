@@ -1,0 +1,31 @@
+type: json
+org_name: organizations/0000000000000
+service_path: securitycenter.googleapis.com
+root_element: null
+deep_levels: !!seq [ assetIds ]
+fixed_fields:
+  sourceId: STACKROX
+api_to_fields:
+  id: 
+    transform: concat_organization_id
+    path: id
+  category: category
+  assetIds:
+    transform: to_array_asset_ids
+    path: assetIds
+  eventTime:
+    transform: time_to_millis
+    unit: 1000
+    path: eventTime
+  URL: URL
+  properties:
+    container: properties.container
+    containerId: properties.containerId
+    enforcementActions: properties.enforcementActions
+    sccCategory: properties.sccCategory
+    sccSeverity: properties.sccSeverity
+    sccSourceStatus: properties.sccSourceStatus
+    sccStatus: properties.sccStatus
+    service: properties.service
+    summary: properties.summary
+    url: properties.url

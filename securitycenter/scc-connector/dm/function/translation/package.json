@@ -1,0 +1,14 @@
+{
+    "name": "translation",
+    "version": "3.3.0",
+    "dependencies": {
+        "@google-cloud/storage": "1.5.2",
+        "JSONStream": "1.3.2",
+        "csv-parse": "2.0.2",
+        "get-value": "3.0.0",
+        "js-yaml": "3.10.0",
+        "moment": "2.21.0",
+        "async": "2.6.1",
+        "securitycenter": "file:./securitycenter-v1alpha3"
+    }
+}

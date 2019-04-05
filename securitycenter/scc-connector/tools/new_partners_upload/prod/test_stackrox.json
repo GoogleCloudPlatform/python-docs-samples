@@ -1,0 +1,24 @@
+[
+  {
+    "id": "stackrox-0111/cloud/gke-cluster-sec-demo-tar-default-pool-96217320-grp/policy_violation/LATERAL_MOVEMENT",
+    "category": "LATERAL_MOVEMENT",
+    "assetIds": [
+      "gke-cluster-sec-demo-tar-default-pool-96217320-grp"
+    ],
+    "sourceId": "STACKROX",
+    "eventTime": 1532107566000000,
+    "URL": "https://www.stackrox.com/",
+    "properties": {
+      "container": "k8s_server_demo-server-77f6d77958-2ngc9_default_46b4a067-4e57-11e8-bc96-42010a8a0fd7_0",
+      "containerId": "c2a8a768bc24",
+      "enforcementActions": [{"action": "ALERT", "timestamp": {}}],
+      "sccCategory": "Lateral Movement",
+      "sccSeverity": "high",
+      "sccSourceStatus": "malicious",
+      "sccStatus": "ACTIVE",
+      "service": "demo-server",
+      "summary": "Lateral movement between services, followed by payload drop and execution. Phase 'Communication Between Containers' included the following events: Anomalous Client Contacted (Server): 9983e0aa7c66. Additional Context -- Server - [Service: demo-ser.... Phase 'Copy to New Container' included the following events: Write of sensitive file path /bin/rshell.sh. Phase 'Execute on New Container' included the following events: Anomalous Process Launch (via Execve): root executes sleep 2. Additional Context -- Process Name - s...; Anomalous Process Launch (via Clone): root executes sh /bin/rshell.sh in directory /. Additional Con...; Anomalous IP Socket Activity: nc. Additional Context -- Process Name - nc. Operations - [SOCKET]..",
+      "url": "https://www.stackrox.com/"
+    }
+  }
+]

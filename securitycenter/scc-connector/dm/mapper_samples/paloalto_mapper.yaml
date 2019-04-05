@@ -1,0 +1,33 @@
+type: csv
+org_name: organizations/0
+delimiter: ","
+mapped_ips: {"https://YOUR_EXTERNAL_IP_1":"REPLACE_WITH_A_VALID_FIXED_INSTANCE_ID_IN_YOUR_ORGANIZATION_1"
+        ,"https://YOUR_EXTERNAL_IP_2":"REPLACE_WITH_A_VALID_FIXED_INSTANCE_ID_IN_YOUR_ORGANIZATION_2"
+        ,"https://YOUR_EXTERNAL_IP_3":"REPLACE_WITH_A_VALID_FIXED_INSTANCE_ID_IN_YOUR_ORGANIZATION_3"}
+fixed_fields:
+  sourceId: PALO_ALTO_NETWORKS
+  url: https://www.paloaltonetworks.com/login
+api_to_columns:
+  category: finding_category
+  id: 
+    transform: concat_organization_id
+    path: finding_id
+  assetIds:
+    transform: mapped_value
+    path: finding_asset_ids
+  eventTime: 
+    transform: parse_date
+    format: YYYY/MM/DDHH:mm:ss
+    path: finding_time_event
+  properties:
+    SessionID: SessionID
+    Receive_Time: Receive_Time
+    Threat_ContentType: Threat_ContentType
+    Threat_Content_Name: Threat_Content_Name
+    Source_Address: Source_Address
+    Dest_Address: Dest_Address
+    Application: Application
+    Action: Action
+    Severity: Severity
+    Source_Country: Source_Country
+    Destination_Country: Destination_Country    

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "sysdig-0111/cloud/project_id/afm-dns-control/policy_violation/TERMINAL_SHELL_IN_CONTAINER",
+    "category": "TERMINAL_SHELL_IN_CONTAINER",
+    "assetIds": [
+      "afm-dns-control/instance/2067762069297266258"
+    ],
+    "sourceId": "SYSDIG",
+    "eventTime": 1532111489000000,
+    "URL": "https://secure.sysdig.com/#/login",
+    "properties": {
+      "agent": "securedev",
+      "container": "k8s_wordpress_wordpress-7984c4d898-rfrwl_wp-demo_35b5c3ff-3d9e-11e8-9249-42010a9c0071_0",
+      "kubernetes": "wordpress-7984c4d898-rfrwl",
+      "rule": "RULE_TYPE_FALCO",
+      "severity": "5",
+      "summary": "A shell was spawned in a container with an attached terminal (user=root k8s_wordpress_wordpress-7984c4d898-rfrwl_wp-demo_35b5c3ff-3d9e-11e8-9249-42010a9c0071_0 (id=60a3478041e2) shell=bash parent=runc:[0:PARENT] cmdline=bash terminal=34817)",
+      "sccStatus": "ACTIVE",
+      "url": "https://secure.sysdig.com/#/events/f:1524121869,t:1524121929/*/*?viewAs=list"
+    }
+  }
+]

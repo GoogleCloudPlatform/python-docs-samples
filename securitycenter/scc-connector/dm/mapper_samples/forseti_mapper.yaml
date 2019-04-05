@@ -1,0 +1,26 @@
+type: json
+org_name: organizations/0
+root_element: null
+fixed_fields:
+  sourceId: FORSETI
+api_to_fields:
+  url: finding_callback_url
+  assetIds:
+    transform: to_array_asset_ids
+    path: finding_asset_ids
+  id: 
+    transform: concat_organization_id
+    path: finding_id
+  category: finding_category
+  eventTime:
+    transform: parse_date
+    format: YYYY-MM-DDTHH:mm:ssZ
+    path: finding_time_event
+  properties:
+    summary: finding_summary
+    resource_type: finding_properties.resource_type
+    rule_index: finding_properties.rule_index
+    resource_id: finding_properties.resource_id
+    inventory_index_id: finding_properties.inventory_index_id
+    violation_data: finding_properties.violation_data
+    inventory_data: finding_properties.inventory_data

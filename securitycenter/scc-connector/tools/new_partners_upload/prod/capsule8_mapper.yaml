@@ -1,0 +1,32 @@
+type: json
+org_name: organizations/0000000000000
+service_path: securitycenter.googleapis.com
+root_element: null
+deep_levels: !!seq [ assetIds ]
+fixed_fields:
+  sourceId: CAPSULE8
+api_to_fields:
+  id: 
+    transform: concat_organization_id
+    path: id
+  category: category
+  assetIds:
+    transform: to_array_asset_ids
+    path: assetIds
+  eventTime:
+    transform: time_to_millis
+    unit: 1000
+    path: eventTime
+  URL: URL
+  properties:
+    confidence: properties.confidence
+    description: properties.description
+    location: properties.location
+    priority: properties.priority
+    processInfo: properties.processInfo
+    publishedAt: properties.publishedAt
+    scope: properties.scope
+    strategyName: properties.strategyName
+    sccStatus: properties.sccStatus
+    url: properties.url
+    uuid: properties.uuid

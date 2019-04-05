@@ -1,0 +1,29 @@
+type: json
+org_name: organizations/0000000000000
+service_path: securitycenter.googleapis.com
+root_element: null
+deep_levels: !!seq [ assetIds ]
+fixed_fields:
+  sourceId: SYSDIG
+api_to_fields:
+  id: 
+    transform: concat_organization_id
+    path: id
+  category: category
+  assetIds:
+    transform: to_array_asset_ids
+    path: assetIds
+  eventTime:
+    transform: time_to_millis
+    unit: 1000
+    path: eventTime
+  URL: URL
+  properties:
+    agent: properties.agent
+    container: properties.container
+    kubernetes: properties.kubernetes
+    rule: properties.rule
+    severity: properties.severity
+    summary: properties.summary
+    sccStatus: properties.sccStatus
+    url: properties.url

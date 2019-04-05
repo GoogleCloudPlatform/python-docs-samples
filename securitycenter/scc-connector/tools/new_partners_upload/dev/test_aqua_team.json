@@ -1,0 +1,22 @@
+[
+  {
+    "id": "aqua-security-0111/cloud/project_id/tsrclsecteamcom-dns-control/policy_violation/RUNTIME_VIOLATIONS",
+    "category": "RUNTIME_VIOLATIONS",
+    "assetIds": [
+      "tsrclsecteamcom-dns-control/instance/2040913365446952823"
+    ],
+    "sourceId": "AQUA_SECURITY",
+    "eventTime": 1532107566000000,
+    "URL": "https://www.aquasec.com/",
+    "properties": {
+      "action": "Block",
+      "container": "k8s_aqua-protect-shell_aqua-protect-shell_default_69c41dc9-48b6-11e8-a727-42010a9c016c_3",
+      "host": "gke-cluster-kubecon-default-pool-cf66bf77-q54c.c.container-project-aquasecurity.internal",
+      "image": "gcr.io/container-project-aquasecurity/shellshock:latest",
+      "policy": "Aqua default runtime policy",
+      "reason": "Container k8s_aqua-protect-shell_aqua-protect-shell_default_69c41dc9-48b6-11e8-a727-42010a9c016c_3 performed 'file exec' on gke-cluster-kubecon-default-pool-cf66bf77-q54c.c.container-project-aquasecurity.internal",
+      "sccStatus": "ACTIVE",
+      "url": "https://www.aquasec.com/"
+    }
+  }
+]

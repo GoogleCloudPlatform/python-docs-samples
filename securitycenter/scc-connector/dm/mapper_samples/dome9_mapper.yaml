@@ -1,0 +1,37 @@
+type: json
+org_name: organizations/0
+root_element: openFindings
+mapped_ips: {"https://www.googleapis.com/compute/beta/projects/REPLACE_WITH_A_VALID_FIXED_NETWORK_ID_IN_YOUR_ORGANIZATION1":"REPLACE_WITH_A_VALID_FIXED_NETWORK_ID_IN_YOUR_ORGANIZATION1"
+        ,"https://www.googleapis.com/compute/beta/projects/REPLACE_WITH_A_VALID_FIXED_NETWORK_ID_IN_YOUR_ORGANIZATION2":"REPLACE_WITH_A_VALID_FIXED_NETWORK_ID_IN_YOUR_ORGANIZATION2"
+        ,"https://www.googleapis.com/compute/beta/projects/REPLACE_WITH_A_VALID_FIXED_INSTANCE_ID_IN_YOUR_ORGANIZATION":"REPLACE_WITH_A_VALID_FIXED_INSTANCE_ID_IN_YOUR_ORGANIZATION"}
+fixed_fields:
+  sourceId: DOME9
+api_to_fields:
+  id: 
+    transform: concat_organization_id
+    path: findingId
+  category: rule.name
+  assetIds:
+    transform: mapped_value
+    path: entityId
+  eventTime:
+    transform: parse_date
+    format: YYYY-MM-DDTHH:mm:ssZ
+    path: assessmentTimeStamp
+  url: callbackURL
+  properties:
+    bundleName: bundleName
+    bundleDescription: bundleDescription
+    name: rule.name
+    severity: rule.severity
+    logic: rule.logic
+    complianceTag: rule.complianceTag
+    remediation: rule.remediation
+    callbackURL: callbackURL
+    description: bundleDescription
+    dome9Id: dome9Id
+    entityType: entityType
+    assessmentId: assessmentId
+    project: project
+    triggeredBy: triggeredBy
+    findingSourceId: findingSourceId

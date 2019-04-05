@@ -1,0 +1,18 @@
+imports:
+- path: cloud_function.py
+# The function code will be defined for the files in function/
+- path: function/index.js
+- path: function/package.json
+
+resources:
+- name: function
+  type: cloud_function.py
+  properties:
+    sourceArchiveUrl: gs://sondrago-blue_cloudbuild/function.zip
+    location: us-central1
+    timeout: 60s
+    availableMemoryMb: 256
+    entryPoint: handler
+outputs:
+- name: function-output
+  value: $(ref.function.response)

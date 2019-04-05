@@ -1,0 +1,26 @@
+type: json
+org_name: organizations/0
+root_element: VulnerabilitiesJson
+fixed_fields:
+  sourceId: QUALYS
+  url: https://qualysguard.qualys.com/qglogin/index.html
+api_to_fields:
+  assetIds:
+    transform: to_array_asset_ids 
+    path: asset_id
+  id: 
+    transform: concat_organization_id
+    path: id
+  eventTime: 
+    transform: parse_date
+    format: YYYY-MM-DDTHH:mm:ssZ
+    path: Detected Date
+  category: Vulnerability Name
+  properties:
+    Vulnerability ID: Vulnerability ID
+    Description: Description
+    CVE: CVE
+    CVSS: CVSS
+    Severity: Severity
+    Status: Status
+    Solution: Solution

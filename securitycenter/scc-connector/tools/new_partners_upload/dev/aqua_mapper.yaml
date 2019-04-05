@@ -1,0 +1,29 @@
+type: json
+org_name: organizations/0000000000000
+service_path: securitycenter.googleapis.com
+root_element: null
+deep_levels: !!seq [ assetIds ]
+fixed_fields:
+  sourceId: AQUA_SECURITY
+api_to_fields:
+  id: 
+    transform: concat_organization_id
+    path: id
+  category: category
+  assetIds:
+    transform: to_array_asset_ids
+    path: assetIds
+  eventTime:
+    transform: time_to_millis
+    unit: 1000
+    path: eventTime
+  URL: URL
+  properties:
+    action: properties.action
+    container: properties.container
+    host: properties.host
+    image: properties.image
+    policy: properties.policy
+    reason: properties.reason
+    sccStatus: properties.sccStatus
+    url: properties.url

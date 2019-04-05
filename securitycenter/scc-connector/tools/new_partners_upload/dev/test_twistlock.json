@@ -1,0 +1,24 @@
+[
+  {
+    "id": "twistlock-0111/cloud/project_id/tsrclsecteamcom-dns-control/policy_violation/CONTAINER_RUNTIME_ANOMALY-HIGH_RISK_IP",
+    "category": "CONTAINER_RUNTIME_ANOMALY-HIGH_RISK_IP",
+    "assetIds": [
+      "tsrclsecteamcom-dns-control/instance/2040913365446952823"
+    ],
+    "sourceId": "TWISTLOCK",
+    "eventTime": 1532111489000000,
+    "URL": "http://35.197.45.209:8081/#!/login",
+    "properties": {
+      "container": "/nifty_poincare",
+      "host": "liron-srv",
+      "image": "alpine:3.7",
+      "msg": "Connection to high risk IP 54.88.32.27:80, which is explicitly blocked in the runtime rule",
+      "rule": "Default - alert on suspicious runtime behavior",
+      "sccCategory": "Container Runtime Anomaly - High Risk IP",
+      "sccSeverity": "high",
+      "sccStat": "info​",
+      "sccStatus": "ACTIVE",
+      "url": "http://35.197.45.209:8081/#!/login"
+    }
+  }
+]

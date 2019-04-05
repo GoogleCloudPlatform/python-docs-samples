@@ -1,0 +1,20 @@
+{
+    "name": "cleanup",
+    "version": "1.0.0",
+    "dependencies": {
+        "@google-cloud/pubsub": "0.16.2",
+        "securitycenter": "file:./securitycenter-v1alpha3"
+    },
+    "scripts": {
+        "test": "mocha"
+    },
+    "devDependencies": {
+        "JSONStream": "1.3.2",
+        "chai": "4.1.2",
+        "chai-as-promised": "7.1.1",
+        "expect.js": "0.3.1",
+        "js-yaml": "3.10.0",
+        "mocha": "5.0.1",
+        "moment": "2.21.0"
+    }
+}

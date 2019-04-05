@@ -1,0 +1,44 @@
+{
+  "repository": "GoogleCloudPlatform/google-cloud-node",
+  "name": "securitycenter",
+  "version": "0.1.0",
+  "author": "Google LLC",
+  "description": "Cloud Security Command Center API client for Node.js",
+  "main": "src/index.js",
+  "files": [
+    "protos",
+    "src",
+    "AUTHORS",
+    "COPYING"
+  ],
+  "keywords": [
+    "google apis client",
+    "google api client",
+    "google apis",
+    "google api",
+    "google",
+    "google cloud platform",
+    "google cloud",
+    "cloud",
+    "google securitycenter",
+    "securitycenter",
+    "Cloud Security Command Center API"
+  ],
+  "dependencies": {
+    "google-gax": "^0.14.2",
+    "lodash.merge": "^4.6.0"
+  },
+  "devDependencies": {
+    "mocha": "^3.2.0",
+    "through2": "^2.0.3"
+  },
+  "scripts": {
+    "publish-module": "node ../../scripts/publish.js securitycenter",
+    "smoke-test": "mocha smoke-test/*.js --timeout 5000",
+    "test": "mocha test/*.js"
+  },
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=4.0.0"
+  }
+}

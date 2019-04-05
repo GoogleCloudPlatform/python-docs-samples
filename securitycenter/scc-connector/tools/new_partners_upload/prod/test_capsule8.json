@@ -1,0 +1,49 @@
+[
+    {
+        "id": "capsule8-0111/cloud/project_id/gke-cluster-sec-demo-tar-default-pool-0dfce3bb-whzz/policy_violation/INTERACTIVE_SHELL_EXECUTED",
+        "category": "Interactive Shell Executed",
+        "assetIds": [
+            "gke-cluster-sec-demo-tar-default-pool-0dfce3bb-whzz"
+        ],
+        "sourceId": "CAPSULE8",
+        "eventTime": 1532107566000000,
+        "URL": "https://capsule8.com/",
+        "properties": {
+            "confidence": "0.8",
+            "description": "Interactive Shell Executed",
+            "location": {
+                "image_id": "4e954d3d61c40480606777b8cf7a08972306816af9981dee7c7d3afc589d83e8",
+                "sensor_id": "214d2176e20a1e7c1bfd94bd9c0d4bd055934b14a93d0325fc89fe0629348174",
+                "image_name": "us.gcr.io/container-project-c8/capsule8-shell@sha256:f4a43a04fcd41374aaa3225062da3eb350098a7c80556a1cb72f9ae4c80988e7",
+                "container_id": "1e047ebebf49853d7b1492c0ca7dee45dbaeba402e70bc0f454a5083a57af409",
+                "container_name": "/k8s_capsule8-shell_capsule8-shell-5bb5946896-6ghvv_default_fe829568-418e-11e8-98cc-42010a8000ae_0"
+            },
+            "priority": "HIGH",
+            "processInfo": {
+                "gid": 0,
+                "pid": 19550,
+                "uid": 0,
+                "args": [
+                    "sh"
+                ],
+                "egid": 1000,
+                "euid": 1000,
+                "name": "/bin/sh",
+                "ppid": 0,
+                "sgid": 1000,
+                "suid": 1131636068,
+                "fsgid": 1000,
+                "fsuid": 1000,
+                "parents": null,
+                "children": null,
+                "pid_uuid": "06926ea0761911e75cf0876f9202537f829decc7951ac56f4d696620e5e4378f"
+            },
+            "publishedAt": "1524353178964569258",
+            "scope": "CONTAINER",
+            "strategyName": "Interactive Shell Strategy",
+            "sccStatus": "ACTIVE",
+            "url": "https://capsule8.com/",
+            "uuid": "13a02519-8a73-4252-b014-480920e9fedd"
+        }
+    }
+]

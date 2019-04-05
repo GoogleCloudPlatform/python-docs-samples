@@ -1,0 +1,33 @@
+type: json
+org_name: organizations/0
+root_element: null
+fixed_fields:
+  sourceId: CLOUDFLARE
+  assetIds: [ REPLACE_WITH_A_VALID_FIXED_GAE_APPLICATION_ID_IN_YOUR_ORGANIZATION ]
+  url: https://www.cloudflare.com/a/login
+api_to_fields:
+  id: 
+    transform: concat_organization_id
+    path: id
+  category:
+    transform: cloudflare_category
+    path: rule_message
+  eventTime:
+    transform: parse_date
+    format: YYYY-MM-DDTHH:mm:ssZ
+    path: occurred_at
+  properties:
+    type: type
+    trigged_rule_ids: triggered_rule_ids
+    country: country
+    host: host
+    cloudflare_location: cloudflare_location
+    action: action
+    rule_detail: rule_detail
+    id: id
+    ip: ip
+    protocol: protocol
+    user_agent: user_agent
+    request_duration: request_duration
+    occurred_at: occurred_at
+    rule_id: rule_id

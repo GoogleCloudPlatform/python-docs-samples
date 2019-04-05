@@ -1,0 +1,56 @@
+type: json
+org_name: organizations/0
+root_element: resources
+deep_levels: !!seq [ behaviors ]
+mapped_ips: {"REPLACE_WITH_A_VALID_FIXED_INSTANCE_NAME_IN_YOUR_ORGANIZATION":"REPLACE_WITH_A_VALID_FIXED_INSTANCE_ID_IN_YOUR_ORGANIZATION"}
+fixed_fields:
+  sourceId: CROWDSTRIKE
+  url: https://falcon.crowdstrike.com/login/
+api_to_fields:
+  assetIds:
+    transform: mapped_value
+    path: device.hostname
+  id: 
+    transform: combined
+    paths: !!seq [ device_id, triggering_process_graph_id ]
+  category: scenario
+  eventTime:
+    transform: parse_date
+    format: YYYY-MM-DDTHH:mm:ssZ
+    path: timestamp
+  properties:
+    severity: severity
+    confidence: confidence
+    ioc_type: ioc_type
+    ioc_value: ioc_value
+    ioc_source: ioc_source
+    ioc_description: ioc_description
+    behavior_id: behavior_id
+    filetype: filetype
+    alleged_filetype: alleged_filetype
+    cmdline: cmdline
+    device_id: device.device_id
+    cid: device.cid
+    agent_load_flags: device.agent_load_flags
+    agent_local_time: device.agent_local_time
+    agent_version: device.agent_version
+    bios_manufacturer: device.bios_manufacturer
+    bios_version: device.bios_version
+    config_id_base: device.config_id_base
+    config_id_build: device.config_id_build
+    config_id_platform: device.config_id_platform
+    external_ip: device.external_ip
+    hostname: device.hostname
+    parent_details: parent_details
+    user_id: user_id
+    technique: technique
+    filename: filename
+    pattern_disposition: pattern_disposition
+    tactic: tactic
+    objective: objective
+    sha256: sha256
+    user_name: user_name
+    control_graph_id: control_graph_id
+    md5: md5
+    pattern_disposition_details: pattern_disposition_details
+

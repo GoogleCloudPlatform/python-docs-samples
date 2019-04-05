@@ -1,0 +1,25 @@
+type: json
+org_name: organizations/0
+service_path: securitycenter.googleapis.com
+root_element: null
+deep_levels: !!seq [ assetIds ]
+fixed_fields:
+  sourceId: GOOGLE_ANOMALY_DETECTION
+api_to_fields:
+  id: 
+    transform: concat_organization_id
+    path: id
+  category: category
+  assetIds:
+    transform: to_array_asset_ids
+    path: assetIds
+  eventTime:
+    transform: time_to_millis
+    unit: 1000
+    path: eventTime
+  properties:
+    action: properties.action
+    serviceAccount: properties.serviceAccount
+    storageBucket: properties.storageBucket
+    product: properties.product
+    summary: customSummary
