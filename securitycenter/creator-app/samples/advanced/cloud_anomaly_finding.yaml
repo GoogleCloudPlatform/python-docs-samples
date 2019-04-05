@@ -1,0 +1,15 @@
+---
+- name: "Cloud Anomaly Findings involved in coin mining"
+  joins:
+    - field: resourceName
+      kind: FINDING
+      order: 1
+      type: SINGLE
+  steps:
+    - kind: FINDING
+      order: 1
+      where: "parent : \"organizations/000000000000/sources/111111111111\" AND category = \"resource_involved_in_coin_mining\""
+  threshold:
+    operator: gt
+    value: 0
+  topic: "projects/<project-id>/topics/<topic-name>"

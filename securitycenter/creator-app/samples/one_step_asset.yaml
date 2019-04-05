@@ -1,0 +1,14 @@
+--- 
+- name: "find Assets of type PROJECT."
+  joins:
+    - field: securityCenterProperties.resourceName
+      kind: ASSET
+      order: 1
+      type: SINGLE
+  steps:
+    - kind: ASSET
+      order: 1
+      where: "securityCenterProperties.resourceType = \"google.cloud.resourcemanager.Project\""
+  threshold: 
+    operator: gt
+    value: 0

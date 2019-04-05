@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+google-cloud-pubsub = "==0.35.4"
+google-cloud-datastore = "==1.7.2"
+jsonpickle = "==0.9.6"
+colorama = "==0.3.9"
+PyYAML = ">=3.12"
+
+[dev-packages]
+pylint = "*"
+
+[requires]
+python_version = "3.5"

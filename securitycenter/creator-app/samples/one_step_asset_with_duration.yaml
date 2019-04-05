@@ -1,0 +1,16 @@
+--- 
+- name: "find Assets of type PROJECT in the last hour."
+  joins:
+    - field: securityCenterProperties.resourceName
+      kind: ASSET
+      order: 1
+      type: SINGLE
+  steps:
+    - kind: ASSET
+      order: 1
+      duration: 60m
+      where: "securityCenterProperties.resourceType = \"google.cloud.resourcemanager.Project\""
+  threshold: 
+    operator: gt
+    value: 0
+  topic: "publish_processing"

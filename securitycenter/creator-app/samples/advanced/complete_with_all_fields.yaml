@@ -1,0 +1,29 @@
+--- 
+- name: "Find FORSETI findings on projects owned by dandrade"
+  joins:
+    - field: securityCenterProperties.resourceName
+      kind: ASSET
+      order: 1
+      type: SINGLE
+    - field: resourceName
+      kind: FINDING
+      order: 2
+      type: MULTI
+  steps:
+    - duration: 43w
+      kind: ASSET
+      order: 1
+      referenceTime: 
+        type: timestamp
+        value: "2018-02-28T10:30:42+0400"
+      where: "securityCenterProperties.resourceType = \"google.cloud.resourcemanager.Project\" AND securityCenterProperties.resourceOwners : \"dandrade\""
+    - kind: FINDING
+      order: 2
+      referenceTime: 
+        type: from_now
+        value: 1d+7h+20m
+      where: "parent : \"organizations/000000000000/sources/0000000000000000000\""
+  threshold: 
+    operator: gt
+    value: 2
+  topic: "publish_processing"

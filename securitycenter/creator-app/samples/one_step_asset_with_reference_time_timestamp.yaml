@@ -1,0 +1,17 @@
+--- 
+- name: "find Assets of type PROJECT at fixed time of 2018-07-04T10:30:42+0400."
+  joins:
+    - field: securityCenterProperties.resourceName
+      kind: ASSET
+      order: 1
+      type: SINGLE
+  steps:
+    - kind: ASSET
+      order: 1
+      referenceTime:
+        type: timestamp
+        value: "2018-07-04T10:30:42+0400"
+      where: "securityCenterProperties.resourceType = \"google.cloud.resourcemanager.Project\""
+  threshold: 
+    operator: gt
+    value: 0

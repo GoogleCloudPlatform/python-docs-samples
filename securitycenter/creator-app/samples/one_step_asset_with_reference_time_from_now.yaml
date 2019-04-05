@@ -1,0 +1,17 @@
+--- 
+- name: "find Assets of type PROJECT with reference time one hour ago."
+  joins:
+    - field: securityCenterProperties.resourceName
+      kind: ASSET
+      order: 1
+      type: SINGLE
+  steps:
+    - kind: ASSET
+      order: 1
+      referenceTime:
+        type: from_now
+        value: 1h
+      where: "securityCenterProperties.resourceType = \"google.cloud.resourcemanager.Project\""
+  threshold: 
+    operator: gt
+    value: 0

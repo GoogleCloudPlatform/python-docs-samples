@@ -1,0 +1,16 @@
+--- 
+- name: "find Coin Maining findings with fromLastJobExecution"
+  joins:
+    - field: category
+      kind: FINDING
+      order: 1
+      type: SINGLE
+  steps:
+    - kind: FINDING
+      order: 1
+      fromLastJobExecution: "true"
+      where: "category = \"resource_involved_in_coin_mining\""
+  threshold: 
+    operator: gt
+    value: 0
+  topic: "publish_processing"
