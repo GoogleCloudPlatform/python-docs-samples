@@ -1,0 +1,35 @@
+{
+    "name": "number_1",
+    "uuid": "087d49d1-5296-4270-997c-9074d9079a5a",
+    "owner":"dandrade@ciandt.com",
+    "topic": "topic",
+    "description": "some description for first query",
+    "sendNotification": true,
+    "lastExecution": {
+        "date":"2019-01-14T10:34:55",
+        "result": 8,
+        "status": "SUCCESS"
+    },
+    "steps": 
+        [
+                {
+                    "kind": "ASSET",
+                    "order": 1,
+                    "outJoin": "attribute.parent_id",
+                    "filter" :"attribute.asset_type = \"Firewall\" AND property.allowed : \"0-65535\"",
+                    "readTime":{"type":"TIMESTAMP", "zone":null, "value":"1w"},
+                    "threshold":{"operator":"ge", "value":"15"},
+                    "lastExecution":{"status":"fail","result":5}
+                },
+                {
+                    "inJoin": "attribute.parent_id ",
+                    "order": 2,
+                    "kind": "ASSET",
+                    "filter" : "attribute.asset_type = \"Instance\"" ,
+                    "compareDuration":"1w",
+                    "outJoin": "attribute.id",
+                    "threshold":{"operator":"le", "value":"10"},
+                    "lastExecution":{"status":"not executed", "result":null}
+                }
+        ]
+}

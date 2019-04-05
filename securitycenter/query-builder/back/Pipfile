@@ -1,0 +1,27 @@
+[[source]]
+verify_ssl = true
+url = "https://pypi.org/simple"
+name = "pypi"
+
+[packages]
+google-cloud-pubsub = "==0.34.0"
+Flask = "==0.12.2"
+PyMySQL = '==0.8.1'
+peewee = "==3.4.0"
+flask-cors = "==3.0.4"
+"d73f729" = {path = "./../../scc-client"}
+"b1eb468" = {path = "./../../scc-client/v1alpha3/python/securitycenter-v1alpha3"}
+croniter = "==0.3.23"
+jsonpickle = "==0.9.6"
+gunicorn = "==19.7.1"
+google-api-python-client = "*"
+
+[requires]
+python_version = "3.6"
+
+[dev-packages]
+pytest = "==3.5.1"
+pytest-mock = "==1.10.0"
+pytest-flask = "==0.10.0"
+coverage = "*"
+click = "*"

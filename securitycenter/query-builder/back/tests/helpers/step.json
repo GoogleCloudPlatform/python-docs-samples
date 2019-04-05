@@ -1,0 +1,11 @@
+{
+    "order": 1,
+    "kind": "ASSET",
+    "filter" :"attribute.asset_type = \"Firewall\" AND property.allowed : \"0-65535\"",
+    "outJoin": "attribute.parent_id",
+    "threshold":{"operator":"ge", "value":"15"},
+    "readTime":{"type":"TIMESTAMP",
+        "value":"1w",
+        "zone":null},
+    "lastExecution":{"status":"fail", "result": 5}
+}
