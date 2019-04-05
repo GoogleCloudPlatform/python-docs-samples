@@ -25,7 +25,7 @@ def get_client(service_account_json, api_key):
     """Returns an authorized API client by discovering the Healthcare API and
     creating a service object using the service account credentials JSON."""
     api_scopes = ['https://www.googleapis.com/auth/cloud-platform']
-    api_version = 'v1alpha'
+    api_version = 'v1beta1'
     discovery_api = 'https://healthcare.googleapis.com/$discovery/rest'
     service_name = 'healthcare'
 
@@ -33,7 +33,7 @@ def get_client(service_account_json, api_key):
         service_account_json)
     scoped_credentials = credentials.with_scopes(api_scopes)
 
-    discovery_url = '{}?labels=CHC_ALPHA&version={}&key={}'.format(
+    discovery_url = '{}?labels=CHC_BETA&version={}&key={}'.format(
         discovery_api, api_version, api_key)
 
     return discovery.build(
@@ -220,9 +220,8 @@ def export_fhir_store_gcs(
         fhir_store_parent, fhir_store_id)
 
     body = {
-        "gcsDestinationLocation":
-        {
-            "gcsUri": 'gs://{}'.format(gcs_uri)
+        "gcsDestination": {
+            "uriPrefix": 'gs://{}/fhir_export'.format(gcs_uri)
         }
     }
 
@@ -258,13 +257,9 @@ def import_fhir_store(
         fhir_store_parent, fhir_store_id)
 
     body = {
-        "gcsSourceLocation":
-        {
-            "gcsUri": 'gs://{}'.format(gcs_uri)
-        },
-        "gcsErrorLocation":
-        {
-            "gcsUri": 'gs://{}/errors'.format(gcs_uri)
+        "contentStructure": "CONTENT_STRUCTURE_UNSPECIFIED",
+        "gcsSource": {
+            "uri": 'gs://{}'.format(gcs_uri)
         }
     }
 
@@ -281,6 +276,86 @@ def import_fhir_store(
         print('Error, FHIR resources not imported: {}'.format(e))
         return ""
 # [END healthcare_import_fhir_store]
+
+
+# [START healthcare_get_iam_policy]
+def get_fhir_store_iam_policy(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id):
+    """Gets the IAM policy for the specified FHIR store."""
+    client = get_client(service_account_json, api_key)
+    fhir_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
+        project_id, cloud_region, dataset_id)
+    fhir_store_name = '{}/fhirStores/{}'.format(
+        fhir_store_parent, fhir_store_id)
+
+    request = client.projects().locations().datasets().fhirStores(
+        ).getIamPolicy(resource=fhir_store_name)
+    response = request.execute()
+
+    print('etag: {}'.format(response.get('name')))
+    return response
+# [END healthcare_get_iam_policy]
+
+
+# [START healthcare_set_iam_policy]
+def set_fhir_store_iam_policy(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        member,
+        role,
+        etag=None):
+    """Sets the IAM policy for the specified FHIR store.
+
+        A single member will be assigned a single role. A member can be any of:
+
+        - allUsers, that is, anyone
+        - allAuthenticatedUsers, anyone authenticated with a Google account
+        - user:email, as in 'user:somebody@example.com'
+        - group:email, as in 'group:admins@example.com'
+        - domain:domainname, as in 'domain:example.com'
+        - serviceAccount:email,
+            as in 'serviceAccount:my-other-app@appspot.gserviceaccount.com'
+
+        A role can be any IAM role, such as 'roles/viewer', 'roles/owner',
+        or 'roles/editor'
+    """
+    client = get_client(service_account_json, api_key)
+    fhir_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
+        project_id, cloud_region, dataset_id)
+    fhir_store_name = '{}/fhirStores/{}'.format(
+        fhir_store_parent, fhir_store_id)
+
+    policy = {
+        "bindings": [
+            {
+              "role": role,
+              "members": [
+                member
+              ]
+            }
+        ]
+    }
+
+    if etag is not None:
+        policy['etag'] = etag
+
+    request = client.projects().locations().datasets().fhirStores(
+        ).setIamPolicy(resource=fhir_store_name, body={'policy': policy})
+    response = request.execute()
+
+    print('etag: {}'.format(response.get('name')))
+    print('bindings: {}'.format(response.get('bindings')))
+    return response
+# [END healthcare_set_iam_policy]
 
 
 def parse_command_line_args():
@@ -333,6 +408,16 @@ def parse_command_line_args():
         'should be import or to which result files'
         'should be written (e.g., "bucket-id/path/to/destination/dir").')
 
+    parser.add_argument(
+        '--member',
+        default=None,
+        help='Member to add to IAM policy (e.g. "domain:example.com")')
+
+    parser.add_argument(
+        '--role',
+        default=None,
+        help='IAM Role to give to member (e.g. "roles/viewer")')
+
     command = parser.add_subparsers(dest='command')
 
     command.add_parser('create-fhir-store', help=create_fhir_store.__doc__)
@@ -346,6 +431,12 @@ def parse_command_line_args():
     command.add_parser(
         'export-fhir-store-gcs',
         help=export_fhir_store_gcs.__doc__)
+    command.add_parser(
+        'get_iam_policy',
+        help=get_fhir_store_iam_policy.__doc__)
+    command.add_parser(
+        'set_iam_policy',
+        help=set_fhir_store_iam_policy.__doc__)
 
     return parser.parse_args()
 
@@ -421,6 +512,26 @@ def run_command(args):
             args.dataset_id,
             args.fhir_store_id,
             args.gcs_uri)
+
+    elif args.command == 'get_iam_policy':
+        get_fhir_store_iam_policy(
+            args.service_account_json,
+            args.api_key,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id)
+
+    elif args.command == 'set_iam_policy':
+        set_fhir_store_iam_policy(
+            args.service_account_json,
+            args.api_key,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            args.member,
+            args.role)
 
 
 def main():

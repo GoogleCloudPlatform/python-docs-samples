@@ -52,7 +52,6 @@ def test_dataset():
         dataset_id)
 
 
-@pytest.mark.skip(reason='disable until have access to healthcare api')
 def test_CRUD_hl7v2_store(test_dataset, capsys):
     hl7v2_stores.create_hl7v2_store(
         service_account_json,
@@ -94,7 +93,6 @@ def test_CRUD_hl7v2_store(test_dataset, capsys):
     assert 'Deleted HL7v2 store' in out
 
 
-@pytest.mark.skip(reason='disable until have access to healthcare api')
 def test_patch_hl7v2_store(test_dataset, capsys):
     hl7v2_stores.create_hl7v2_store(
         service_account_json,
@@ -125,3 +123,48 @@ def test_patch_hl7v2_store(test_dataset, capsys):
     out, _ = capsys.readouterr()
 
     assert 'Patched HL7v2 store' in out
+
+
+def test_get_set_hl7v2_store_iam_policy(test_dataset, capsys):
+    hl7v2_stores.create_hl7v2_store(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        hl7v2_store_id)
+
+    get_response = hl7v2_stores.get_hl7v2_store_iam_policy(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        hl7v2_store_id)
+
+    set_response = hl7v2_stores.set_hl7v2_store_iam_policy(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        hl7v2_store_id,
+        'serviceAccount:python-docs-samples-tests@appspot.gserviceaccount.com',
+        'roles/viewer')
+
+    # Clean up
+    hl7v2_stores.delete_hl7v2_store(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        hl7v2_store_id)
+
+    out, _ = capsys.readouterr()
+
+    assert 'etag' in get_response
+    assert 'bindings' in set_response
+    assert len(set_response['bindings']) == 1
+    assert 'python-docs-samples-tests' in str(set_response['bindings'])
+    assert 'roles/viewer' in str(set_response['bindings'])

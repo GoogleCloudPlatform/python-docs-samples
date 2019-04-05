@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import os
-import pytest
 import time
 
 import datasets
@@ -29,7 +28,6 @@ whitelist_tags = 'PatientID'
 time_zone = 'UTC'
 
 
-@pytest.mark.skip(reason='disable until API whitelisted / enabled')
 def test_CRUD_dataset(capsys):
     datasets.create_dataset(
         service_account_json,
@@ -57,7 +55,6 @@ def test_CRUD_dataset(capsys):
     assert 'Deleted dataset' in out
 
 
-@pytest.mark.skip(reason='disable until API whitelisted / enabled')
 def test_patch_dataset(capsys):
     datasets.create_dataset(
         service_account_json,
@@ -84,7 +81,6 @@ def test_patch_dataset(capsys):
     assert 'UTC' in out
 
 
-@pytest.mark.skip(reason='disable until API whitelisted / enabled')
 def test_deidentify_dataset(capsys):
     datasets.create_dataset(
         service_account_json,
@@ -116,3 +112,44 @@ def test_deidentify_dataset(capsys):
 
     # Check that de-identify worked
     assert 'De-identified data written to' in out
+
+
+def test_get_set_dataset_iam_policy(capsys):
+    datasets.create_dataset(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id)
+
+    get_response = datasets.get_dataset_iam_policy(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id)
+
+    set_response = datasets.set_dataset_iam_policy(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        'serviceAccount:python-docs-samples-tests@appspot.gserviceaccount.com',
+        'roles/viewer')
+
+    # Clean up
+    datasets.delete_dataset(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id)
+
+    out, _ = capsys.readouterr()
+
+    assert 'etag' in get_response
+    assert 'bindings' in set_response
+    assert len(set_response['bindings']) == 1
+    assert 'python-docs-samples-tests' in str(set_response['bindings'])
+    assert 'roles/viewer' in str(set_response['bindings'])
