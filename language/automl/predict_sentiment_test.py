@@ -23,9 +23,9 @@ compute_region = "us-central1"
 
 
 def test_predict(capsys):
-    model_id = "TST1437557839962943837"
+    model_id = "TST8532792392862639819"
     automl_natural_language_predict.predict(
         project_id, compute_region, model_id, "resources/test_sentiment.txt"
     )
     out, _ = capsys.readouterr()
-    assert "2" in out
+    assert "0.0" in out
