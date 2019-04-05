@@ -78,14 +78,12 @@ def receive_messages_handler():
         header = jwt.decode_header(token)
         HEADERS.append(header)
 
-        # Verify and decode the JWT. Underneath it checks the signature
-        # with the signed section using Google's public certs at
-        # https://www.googleapis.com/oauth2/v1/certs
-        req = requests.Request()
-        claim = id_token.verify_oauth2_token(token, req)
+        # Verify and decode the JWT. Underneath it checks the signature against
+        # Google's public certs at https://www.googleapis.com/oauth2/v1/certs
+        claim = id_token.verify_oauth2_token(token, requests.Request())
         CLAIMS.append(claim)
     except Exception as e:
-        return 'Unable to verify: {}'.format(e), 400
+        return 'Invalid token: {}'.format(e), 400
 
     envelope = json.loads(request.data.decode('utf-8'))
     payload = base64.b64decode(envelope['message']['data'])

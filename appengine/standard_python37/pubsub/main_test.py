@@ -54,8 +54,8 @@ def fake_token(signer):
         'azp': '1234567890',
         'email': 'pubsub@example.iam.gserviceaccount.com',
         'email_verified': True,
-        'exp': now + 3600,
         'iat': now,
+        'exp': now + 3600,
         'iss': 'https://accounts.google.com',
         'sub': '1234567890'
     }
