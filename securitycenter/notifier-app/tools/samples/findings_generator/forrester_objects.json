@@ -1,0 +1,8 @@
+[
+    {"project":"forrester-company-hr-demo", "instance":{"name":"forrester-hr", "id":"forrester-company-hr-demo/instance/9018378558617300790"}},
+    {"project":"forrester-company-eng-demo", "instance":{"name":"forrester-eng", "id":"forrester-company-eng-demo/instance/1627726082656580007"}},
+    {"project":"forrester-company-it-demo", "instance":{"name":"forrester-it", "id":"forrester-company-it-demo/instance/7050441053444386298"}},
+    {"project":"forrester-company-sales-demo", "instance":{"name":"forrester-sales", "id":"forrester-company-sales-demo/instance/9154977760083630146"}},
+    {"project":"forrester-company-finance-demo", "instance":{"name":"forrester-finance", "id":"forrester-company-finance-demo/instance/8430956873680869424"}},
+    {"project":"forrester-company-mkt-demo", "instance":{"name":"forrester-mkt", "id":"forrester-company-mkt-demo/instance/619328496688311775"}}
+]

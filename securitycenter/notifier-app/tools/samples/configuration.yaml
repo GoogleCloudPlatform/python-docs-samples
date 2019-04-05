@@ -1,0 +1,26 @@
+---
+configuration:
+- item: 'SMS'
+  properties:
+  - ACCOUNT_SID: 'ACCOUNT_SID'
+  - AUTH_TOKEN: 'AUTH_TOKEN'
+  - FROM_NUMBER: 'FROM_NUMBER'
+- item: 'SENDGRID'
+  properties:
+  - API_KEY: 'API_KEY'
+  - FROM_EMAIL: 'FROM_EMAIL'
+  - REPLYTO_EMAIL: 'REPLYTO_EMAIL'
+- item: 'GAE_EMAIL'
+  properties:
+  - FROM_EMAIL: 'FROM_EMAIL'
+- item: 'JIRA'
+  properties:
+  - URL: 'URL'
+  - PROJECT_KEY: 'PROJECT_KEY'
+  - ISSUE_TYPE_NAME: 'ISSUE_TYPE_NAME'
+  - USER_NAME: 'USER_NAME'
+  - API_TOKEN: 'API_TOKEN'
+- item: 'CLOUD_FUNCTION'
+  properties:
+  - URL: 'YOUR_CLOUD_FUNCTION_URL'
+  - CLIENT_KEY: 'YOUR_CLIENT_KEY_TO_VALIDATE_ACCESS_TO_YOUR_CLOUD_FUNCTION'

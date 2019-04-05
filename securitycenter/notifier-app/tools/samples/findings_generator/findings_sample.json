@@ -1,0 +1,74 @@
+[
+    {
+        "id": "/cloud/project_id/{project_id}/policy_violation/ACCOUNT_HIJACKED-{sequential_id}---",
+        "sourceId": "GOOGLE_ANOMALY_DETECTION",
+        "category": "ACCOUNT_HIJACKED",
+        "assetIds": [
+          "{project_id}"
+        ],
+        "eventTime": 1521837064290434,
+        "customSummary": "Unauthorized use of account to attempt to create project(s) or content.",
+        "properties": {
+            "action": "FLAGGED",
+            "serviceAccount": "859932653097-compute@developer.gserviceaccount.com",
+            "product": "compute_engine"
+        }
+    },
+    {
+        "id": "/cloud/project_id/{project_id}/policy_violation/DOS-{sequential_id}---",
+        "sourceId": "GOOGLE_ANOMALY_DETECTION",
+        "category": "DOS",
+        "assetIds": [
+          "{project_id}"
+        ],
+        "eventTime": 1521837581410147,
+        "customSummary": "The asset is being leveraged to make a server or a network resource unavailable to users, usually by temporarily interrupting or suspending the services of a host connected to the Internet.",
+        "properties": {
+            "action": "FLAGGED",
+            "product": "compute_engine"
+        }
+    },
+    {
+        "id": "/cloud/project_id/{project_id}/policy_violation/INTRUSION_ATTEMPT-{sequential_id}---",
+        "sourceId": "GOOGLE_ANOMALY_DETECTION",
+        "category": "INTRUSION_ATTEMPT",
+        "assetIds": [
+          "{instance_id}"
+        ],
+        "eventTime": 1521837435238478,
+        "customSummary": "The asset is being leveraged with intent to perform intrusion activities to break in or compromise a target system.",
+        "properties": {
+            "action": "RESTRICT_RESOURCES",
+            "product": "compute_engine"
+        }
+    },
+    {
+        "id": "/cloud/project_id/{project_id}/policy_violation/DATA_EXFILTRATION_RISK-{sequential_id}---",
+        "sourceId": "GOOGLE_ANOMALY_DETECTION",
+        "category": "DATA_EXFILTRATION_RISK",
+        "assetIds": [
+            "{project_id}"
+        ],
+        "eventTime": 1521880995000000,
+        "customSummary": "The asset is being leveraged to egress large volume of data.",
+        "properties": {
+            "action": "FLAGGED",
+            "storageBucket": "htmldocs",
+            "product": "cloud_storage"
+        }
+    },
+    {
+        "id": "/cloud/project_id/{project_id}/policy_violation/COIN_MINING-{sequential_id}---",
+        "sourceId": "GOOGLE_ANOMALY_DETECTION",
+        "category": "COIN_MINING",
+        "assetIds": [
+            "{instance_id}"
+        ],
+        "eventTime": 1521237200966691,
+        "customSummary": "Some description of the abuse category.",
+        "properties": {
+            "action": "RESTRICT_RESOURCES",
+            "product": "compute_engine"
+        }
+    }
+]

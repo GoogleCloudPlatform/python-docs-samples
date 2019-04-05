@@ -1,0 +1,37 @@
+[
+    {
+        "project": "company-hr-demo",
+        "instance": {
+            "name": "company-hr",
+            "id": "company-hr-demo/instance/2294880764541720695"
+        }
+    },
+    {
+        "project": "company-it-demo",
+        "instance": {
+            "name": "company-it",
+            "id": "company-it-demo/instance/3119958868459968933"
+        }
+    },
+    {
+        "project": "company-sales-demo",
+        "instance": {
+            "name": "company-sales",
+            "id": "company-sales-demo/instance/678204303518869742"
+        }
+    },
+    {
+        "project": "company-finance-demo",
+        "instance": {
+            "name": "company-finance",
+            "id": "company-finance-demo/instance/1670489452820224837"
+        }
+    },
+    {
+        "project": "company-mkt-demo",
+        "instance": {
+            "name": "company-mkt",
+            "id": "company-mkt-demo/instance/5514819206641756981"
+        }
+    }
+]

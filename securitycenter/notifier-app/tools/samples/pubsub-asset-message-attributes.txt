@@ -1,0 +1,9 @@
+Asset-Id=default
+Asset-Type=NETWORK
+Count=1
+Event-Type=CREATED
+Last-Updated-Time-Ms=1495747800458
+Notification-Type=ASSETS
+Organization-Id=252600681248
+Project-Id=rd-project-725348--384
+Asset-Hash=09876abcdef

@@ -1,0 +1,15 @@
+rules:
+- type: ASSETS
+  actions:
+  - type: ANY-DELETED
+  - type: ANY-CREATED
+  - type: ANY-ACTIVE
+  - type: ALL
+- type: SCAN-CONFIGURATIONS
+  actions:
+  - type: ALL
+- type: FINDINGS
+  actions:
+  - type: ANY-OPENED
+  - type: ANY-RESOLVED
+  - type: ALL

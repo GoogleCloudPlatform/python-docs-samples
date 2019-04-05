@@ -1,0 +1,12 @@
+Count=1
+Event-Type=OPENED
+Notification-Type=FINDINGS
+Organization-Id=252600681248
+Project-Id=rd-project-725348--384
+Asset-Id=example/4324
+Finding-Hash=tuw5489thj54oih
+Source-Id=GOOGLE_ANOMALY_DETECTION
+Category=ACCOUNT_HIJACKED
+Update-Time-Sec=1523382412
+Update-Time-Nano=0
+Finding-Id=examplefind/9478590348

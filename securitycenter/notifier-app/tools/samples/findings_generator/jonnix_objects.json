@@ -1,0 +1,8 @@
+[
+    {"project":"sec-demo-company-hr-demo", "instance":{"name":"sec-demo-hr", "id":"sec-demo-company-hr-demo/instance/3333572219432480078"}},
+    {"project":"sec-demo-company-eng-demo", "instance":{"name":"sec-demo-eng", "id":"sec-demo-company-eng-demo/instance/2332230427212918391"}},
+    {"project":"sec-demo-company-it-demo", "instance":{"name":"sec-demo-it", "id":"sec-demo-company-it-demo/instance/7469362830532291873"}},
+    {"project":"sec-demo-company-sales-demo", "instance":{"name":"sec-demo-sales", "id":"sec-demo-company-sales-demo/instance/1477459191447825693"}},
+    {"project":"sec-demo-company-finance-demo", "instance":{"name":"sec-demo-finance", "id":"sec-demo-company-finance-demo/instance/453052123473652546"}},
+    {"project":"sec-demo-company-mkt-demo", "instance":{"name":"sec-demo-mkt", "id":"sec-demo-company-mkt-demo/instance/6768143384338116273"}}
+]
