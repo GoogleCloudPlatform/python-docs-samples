@@ -1,0 +1,43 @@
+{{#getResource}}
+Organization: {{getOrganizationName}} - {{getOrganizationId}}
+
+Query:  {{getQueryName}} {{#getQueryDescription}}- {{getQueryDescription}}{{/getQueryDescription}}
+
+Last execution:
+ Number of results: {{getQueryResult}}
+ Execution date: {{getQueryDate}}
+{{/getResource}}
+
+{{#getSearchMark}}Search Mark: {{getSearchMark}}{{/getSearchMark}}
+Link: https://console.cloud.google.com/security/command-center/dashboard?organizationId={{getOrganizationId}}
+{{#getResource}}
+
+Security Marks:
+
+{{#getMarks}}
+{{getOriginalKey}} - {{{getValue}}}
+{{/getMarks}}
+
+Security Center Properties:
+
+{{#getAttributes}}
+{{getOriginalKey}} - {{{getValue}}}
+{{/getAttributes}}
+
+{{#isAsset}}
+Resource Properties:
+{{/isAsset}}
+{{#isFinding}}
+Source Properties:
+{{/isFinding}}
+
+{{#getProperties}}
+{{getOriginalKey}} - {{{getValue}}}
+{{/getProperties}}
+{{/getResource}}
+{{#getCloudFunctionResponse}}
+
+{{getCloudFunctionResponse}}{{/getCloudFunctionResponse}}
+{{#getExtraInfo}}
+
+{{getExtraInfo}}{{/getExtraInfo}}
