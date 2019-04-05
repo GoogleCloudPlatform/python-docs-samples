@@ -28,7 +28,7 @@ sentiment_max = 4
 @pytest.mark.slow
 def test_dataset_create_import_delete(capsys):
     # create sentiment dataset
-    dataset_name = "test_" + datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+    dataset_name = "test_" + datetime.datetime.now().strftime("%Y_%m_%dT%H_%M_%SZ")
     automl_natural_language_dataset.create_dataset(
         project_id, compute_region, dataset_name, 10
     )
@@ -38,7 +38,7 @@ def test_dataset_create_import_delete(capsys):
 
     # import data
     dataset_id = create_dataset_output[1].split()[2]
-    data = "gs://{}-lcm/crowdflower.csv".format(project_id)
+    data = "gs://python-docs-samples-tests-lcm/crowdflower.csv"
     automl_natural_language_dataset.import_data(
         project_id, compute_region, dataset_id, data
     )
