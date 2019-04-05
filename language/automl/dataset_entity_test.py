@@ -37,7 +37,7 @@ def test_dataset_create_import_delete(capsys):
 
     # import data
     dataset_id = create_dataset_output[1].split()[2]
-    data = "gs://python-docs-samples-tests-lcm/bank-marketing.csv".format(project_id)
+    data = "gs://python-docs-samples-tests-lcm/entity_dataset.csv"
     automl_natural_language_dataset.import_data(
         project_id, compute_region, dataset_id, data
     )
