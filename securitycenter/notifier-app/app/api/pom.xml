@@ -1,0 +1,154 @@
+<!--
+ Copyright 2016 Google Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>com.google.developers.codelabs</groupId>
+        <artifactId>notification</artifactId>
+        <version>3.3.0</version>
+        <relativePath>..</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>war</packaging>
+
+    <artifactId>notification-api</artifactId>
+
+    <properties>
+        <endpoints.project.id>${env.NOTIFY_GCP_PROJECT_ID}</endpoints.project.id>
+        <endpoints.service.prefix>${env.ENDPOINTS_SERVICE_PREFIX}</endpoints.service.prefix>
+        <notification.namespace>${env.NOTIFICATION_NAMESPACE}</notification.namespace>
+    </properties>
+
+    <dependencies>
+        <!-- DEPENDENCIES specific for this module -->
+        <dependency>
+            <groupId>com.google.endpoints</groupId>
+            <artifactId>endpoints-framework-guice</artifactId>
+            <version>${endpoints.framework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.developers.codelabs</groupId>
+            <artifactId>notification-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- DEPENDENCIES from core -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.endpoints</groupId>
+            <artifactId>endpoints-framework</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.endpoints</groupId>
+            <artifactId>endpoints-management-control-appengine-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.objectify</groupId>
+            <artifactId>objectify</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-servlet</artifactId>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>GetOpenApiDoc</id>
+            <activation>
+                <property>
+                    <name>GetOpenApiDoc</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <configuration>
+                            <includePluginDependencies>true</includePluginDependencies>
+                            <mainClass>com.google.api.server.spi.tools.EndpointsTool</mainClass>
+                            <arguments>
+                                <argument>get-openapi-doc</argument>
+                                <argument>--hostname=${endpoints.service.prefix}.endpoints.${endpoints.project.id}.cloud.goog</argument>
+                                <argument>--war=${project.build.directory}/${project.build.finalName}</argument>
+                                <argument>com.google.developers.codelabs.notification.api.Notification</argument>
+                            </arguments>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.google.endpoints</groupId>
+                                <artifactId>endpoints-framework-tools</artifactId>
+                                <version>${endpoints.framework.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>com.google.appengine</groupId>
+                                <artifactId>appengine-api-1.0-sdk</artifactId>
+                                <version>${appengine-sdk.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <webResources>
+                        <resource>
+                            <directory>${basedir}/src/main/webapp/WEB-INF</directory>
+                            <filtering>true</filtering>
+                            <targetPath>WEB-INF</targetPath>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+                <version>${appengine.maven.plugin.tools.version}</version>
+                <configuration>
+                    <stage.enableJarSplitting>true</stage.enableJarSplitting>
+                    <deploy.stopPreviousVersion>false</deploy.stopPreviousVersion>
+                    <app.deploy.promote>false</app.deploy.promote>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
