@@ -1,0 +1,33 @@
+# This YAML config is an example containing all possible parameters.
+# Parameters can be set in this config, or through the command line.
+
+# Required parameters.
+project: my_project
+dataset_display_name: my_dataset
+dataset_input_path: bq://project.dataset.table
+label_column: my_label_column
+model_display_name: my_model
+
+# Optional parameters.
+build_dataset: true
+build_model: true
+make_prediction: true
+location: us-central1
+weight_column: my_weight_column
+split_column: my_split_column
+time_column: my_time_column
+columns_nullable:
+  my_non_nullable_column: false
+  my_nullable_column: true
+columns_dtype:
+  my_categorical_column: CATEGORY
+  my_numerical_column: FLOAT64
+train_hours: 1.5
+optimization_objective: MINIMIZE_RMSE
+ignore_columns:
+  - my_id_column_1
+  - my_id_column_2
+
+# Required if make_prediction is true.
+predict_input_path: bq://project.dataset.table
+predict_output_path: bq://project
