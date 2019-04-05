@@ -1,0 +1,315 @@
+.edit-container {
+
+  .last-execution-container {
+    font-family: Roboto, "Helvetica Neue", sans-serif !important;
+    display: flex;
+    color: #757575;
+    margin-bottom: 5%;
+    flex-wrap: wrap;
+
+    span {
+      &:first-of-type{
+        width: 60%;
+      }
+      &:last-child {
+        width: 25%;
+      }
+      width: 15%;
+      margin-bottom: 4px;
+    }
+    .span-value {
+      font-style: italic;
+      margin-left: 5px;
+
+      &.span-status {
+        color: red;
+      }
+      &.success {
+        color: green !important;
+      }
+    }
+    p {
+      width: 100%;
+      font-weight: 800 !important;
+    }
+  }
+
+  padding: 20px 40px 20px 40px;
+  display: flex;
+
+  .topic-input {
+    color: #757575
+  }
+
+  .scheduler-toggle {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-weight: 800;
+    color: #757575;
+  }
+
+  .schedule-container {
+    margin-top: 10px;
+    padding-left: 26px;
+    transition: ease-in-out .5s;
+    overflow: hidden;
+    &.collapse {
+      max-height: 0;
+    }
+    &.expand {
+      max-height: 300px;
+    }
+  }
+
+  .run-result {
+    padding-left: 22px;
+    margin-top: 16px;
+    display: flex;
+    .result-error-message {
+      width: 70%;
+      span {
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+        margin-right: 20px;
+      }
+    }
+    .result-error-button {
+      width: 30%;
+      text-align: end;
+    }
+  }
+
+  .run-error {
+    padding-left: 22px;
+    margin-top: 26px;
+    color: #EB5757;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    .span-error {
+      margin-top: 6px;
+      margin-right: 20px;
+    }
+    .span-error-code {
+      font-weight: bold;
+      margin-top: 16px;
+      margin-right: 20px;
+    }
+  }
+
+  .main-container {
+    width: 40%;
+    margin-right: 3%;
+    mat-form-field {
+      width: 100%;
+      margin-bottom: 5%;
+    }
+    .save-button {
+      margin-top: 5%;
+      text-align: right;
+    }
+
+    .notification-toggle {
+      margin-top: 16px;
+    }
+
+    .scheduler-toggle {
+      margin-top: 26px;
+      display: block;
+    }
+  }
+
+  .steps-container {
+    width: 60%;
+    mat-card {
+      padding: 0px;
+      .header {
+        display: flex;
+        padding: 16px 24px 16px;
+        padding-right: 36px;
+        border-bottom: 1px solid #E0E0E0;
+        div:first-of-type {
+          width: 90%
+        }
+        span {
+          font-size: 22px;
+          font-weight: 800;
+          vertical-align: -webkit-baseline-middle;
+        }
+        .edit-button {
+          mat-icon {
+            margin-right: 10px;
+          }
+        }
+      }
+
+      .content {
+        .content-action {
+          text-align: right;
+          padding: 16px 24px 16px;
+          border-top: 1px solid #E0E0E0;
+          button {
+            text-align: -webkit-center;
+          }
+          mat-slide-toggle {
+            left: 20px;
+            position: absolute;
+            margin-top: 5px;
+          }
+          mat-progress-spinner {
+            margin-top: 8px;
+            margin-bottom: 8px;
+          }
+        }
+        .step-title {
+          margin-left: -16px;
+          display: flex;
+          div {
+            width: 90%;
+            text-align: right;
+          }
+          div:first-of-type {
+            width: 10%;
+            text-align: left;
+          }
+        }
+        .query-content {
+          border-top: 1px solid #E0E0E0;
+          padding: 16px 24px 16px;
+          .step-field {
+            div:first-of-type {
+              margin-right: 12px;
+            }
+          }
+        }
+        .step-content {
+          padding: 16px 36px 16px;
+          border-left: 5px solid #f3b300;
+
+          .sub-title {
+            font-weight: 800;
+            color: #757575;
+          }
+        }
+        .step-field {
+          display: flex;
+          div:first-of-type {
+            font-weight: 800;
+            color: #757575;
+            margin-top: 20px;
+            width: 22%;
+          }
+          div:last-child {
+            width: 50%;
+          }
+          .vertical-separator {
+            border-right: 1px solid black;
+            height: 30px;
+            margin-top: 12px;
+            margin-right: 40px;
+          }
+
+          .inherit-field {
+            font-weight: initial !important;
+          }
+          .input-form-field {
+            width: 100%;
+          }
+        }
+        .step-field-group {
+          margin-top: -12px;
+        }
+        .step-session {
+          font-size: 18px;
+          font-weight: 800;
+        }
+        .sub-step {
+          div:first-of-type {
+            padding-left: 2%;
+            width: 20%;
+          }
+        }
+      }
+    }
+  }
+
+  .step-join {
+    .step-field {
+      div:first-of-type {
+        margin-right: 8px;
+      }
+    }
+    .out-join-step {
+      background-color: #E9E9E9;
+      border-left: 5px solid #f3b300;
+      padding-left: 20px;
+    }
+    .type-join {
+      background-color: #E0E0E0;
+      border-left: 5px solid #E0E0E0;
+      padding-left: 20px;
+    }
+    .join-icon {
+      position: absolute;
+      transform: rotate(-90deg);
+      right: 35px;
+      mat-icon {
+        font-size: 35px !important;
+      }
+    }
+    .in-join-step {
+      background-color: #E9E9E9;
+      border-left: 5px solid #f3b300;
+      padding-left: 20px;
+    }
+  }
+
+  .odd-color {
+    border-left: 5px solid #F2994A !important;
+  }
+}
+
+.warn-message {
+  color: #f44336;
+  font-size: 75%;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  position: absolute;
+  margin-top: 10px;
+  display: block;
+  transition: all ease-in-out 3s;
+  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+
+.slider {
+	overflow-y: hidden;
+	max-height: 20px;
+}
+
+.slider.closed {
+	max-height: 0;
+}
+
+.run-report {
+  position: absolute;
+  right: -16px;
+  margin-top: 60px;
+  background-color: white;
+  z-index: 9999;
+  mat-icon {
+    margin-top: -6px;
+  }
+  &.success {
+    border: 3px solid #009688;
+    mat-icon {
+      color: #009688;
+    }
+  }
+  &.failed {
+    border: 3px solid #EB575A;
+    mat-icon {
+      color: #EB575A;
+    }
+  }
+  &.not_executed {
+    border: 3px solid #979797;
+    mat-icon {
+      color: #979797;
+    }
+  }
+}

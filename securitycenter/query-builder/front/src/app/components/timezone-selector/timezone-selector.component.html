@@ -1,0 +1,14 @@
+<form #timezoneForm="ngForm" name="timezone">
+  <mat-form-field [floatLabel]="'never'">
+    <input matInput [disabled]="disabled" placeholder={{placeholderText}} #timeZoneSelector="ngModel" aria-label="TimeZones" [matAutocomplete]="auto" (focusout)="onFocusOut(timezoneForm)" name="timeZoneSelector" [(ngModel)]="tzModel" (ngModelChange)="filterTimeZones(tzModel)">
+    <mat-autocomplete (optionSelected)="optionSelected()" #auto="matAutocomplete">
+      <mat-option *ngFor="let timeZone of filteredTimeZones" [value]="timeZone">
+        <span>{{ timeZone }}</span>
+      </mat-option>
+    </mat-autocomplete>
+    <span *ngIf="forceValidSelection" class="warn-message slider" [ngClass]="{'closed': !invalidSelection}">
+      <mat-icon>warning</mat-icon>
+      Select some valid option
+    </span>
+  </mat-form-field>
+</form>

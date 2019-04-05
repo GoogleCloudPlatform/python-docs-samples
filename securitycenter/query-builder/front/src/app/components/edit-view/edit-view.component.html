@@ -1,0 +1,299 @@
+<form *ngIf="query" #queryForm="ngForm" (ngSubmit)="saveQuery(queryForm)" class="edit-container" [ngClass]="{'view-mode-form': fieldsReadOnly}">
+
+  <div class="main-container">
+    <mat-form-field>
+      <input maxlength="50" [(ngModel)]="query.name" name="queryName" required #name="ngModel" [disabled]="fieldsReadOnly" matInput placeholder="Query name">
+      <mat-error *ngIf="name.errors && name.errors.required">
+        Name is required
+      </mat-error>
+      <mat-hint align="end">{{query.name.length}} / 50</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <textarea maxlength="150" [(ngModel)]="query.description" required #description="ngModel" [disabled]="fieldsReadOnly" name="queryDescription" matInput placeholder="Query description"></textarea>
+      <mat-error *ngIf="description.errors && description.errors.required">
+        Description is required.
+      </mat-error>
+      <mat-hint align="end">{{query.description.length}} / 150</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field class="input-form-field">
+      <input [(ngModel)]="query.topic" maxlength="350" [disabled]="fieldsReadOnly" name="queryTopic" matInput placeholder="Topic">
+      <mat-icon class="topic-input" matSuffix matTooltip="The topic name format can be the full path as 'projects/{project-id}/topics/{topic-name}' or the short way like '{topic-name}'">help</mat-icon>
+      <mat-hint align="end">{{query.topic.length}} / 350</mat-hint>
+    </mat-form-field>
+
+    <div class="last-execution-container" *ngIf=" query.lastExecution && query.lastExecution.date">
+      <p>Last Execution</p>
+      <span>
+        <strong>Date:</strong>
+        <span class="span-value">{{userExecutionTz}}</span>
+      </span>
+      <span>
+        <strong>Result:</strong>
+        <span class="span-value">{{query.lastExecution.result}}</span>
+      </span>
+      <span>
+        <strong>Status:</strong>
+        <span class="span-value span-status" [ngClass]="{'success': query.lastExecution.status == 'SUCCESS'}">{{query.lastExecution.status}}</span>
+      </span>
+    </div>
+
+    <mat-slide-toggle class="notification-toggle" [disabled]="fieldsReadOnly" [(ngModel)]="query.sendNotification" name="query-notification" color="primary">Send notifications</mat-slide-toggle>
+
+    <mat-slide-toggle class="scheduler-toggle" [disabled]="fieldsReadOnly" [(ngModel)]="scheduleQuery" name="query-schedule" color="primary">Schedule query</mat-slide-toggle>
+    <div class="schedule-container collapse" [ngClass]="{'expand': scheduleQuery}">
+      <qb-cron-generator [readOnly]="fieldsReadOnly" [(ngModel)]="query.schedule" name="querySchedule"></qb-cron-generator>
+    </div>
+
+    <div class="save-button">
+      <button type="submit" [disabled]="queryForm.form.invalid || fieldsReadOnly" mat-raised-button color="primary">SAVE</button>
+    </div>
+  </div>
+
+  <div class="steps-container" >
+    <mat-card>
+
+      <div class="header">
+        <div>
+          <span>Steps</span>
+        </div>
+        <div>
+          <button type="button" *ngIf="!fieldsReadOnly" (click)="addNewStep(query.steps.length + 1)" [disabled]="fieldsReadOnly" mat-button color="accent">ADD NEW STEP</button>
+          <button type="button" class="edit-button" *ngIf="fieldsReadOnly" (click)="fieldsReadOnly = false" mat-button color="primary">
+            <mat-icon>edit</mat-icon>
+            EDIT QUERY
+          </button>
+        </div>
+      </div>
+
+      <div class="content">
+        <ng-container *ngFor="let step of query.steps; let i = index; let isOdd = 'odd'" [attr.data-index]="i">
+          <div class="step-content" [ngClass]="{'odd-color': isOdd}">
+            <div class="step-title">
+              <div>
+                <span class="step-session">Step {{i + 1}}</span>
+              </div>
+              <div>
+                <button type="button" *ngIf="i != 0" (click)="deleteStep(i)" [disabled]="fieldsReadOnly" mat-button color="warn">REMOVE STEP</button>
+              </div>
+            </div>
+            <div class="step-field">
+              <div>
+                <span>Kind</span>
+              </div>
+              <div class="vertical-separator"></div>
+              <div>
+                <mat-form-field [floatLabel]="'never'">
+                  <mat-select [(ngModel)]="step.kind" [disabled]="fieldsReadOnly" name="{{'kind' + (i + 1)}}" #stepKind="ngModel" required placeholder="Select the kind">
+                    <mat-option *ngFor="let kind of kinds" [value]="kind.value">
+                      {{ kind.displayName }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="stepKind.errors && stepKind.errors.required">
+                    Kind is required.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div *ngIf="step.kind == 'ASSET'" class="step-field step-field-group">
+              <div class="step-field">
+                <span>Compare duration</span>
+              </div>
+              <div class="vertical-separator"></div>
+              <div>
+                <mat-form-field class="input-form-field" [floatLabel]="'never'">
+                  <input [(ngModel)]="step.compareDuration" #compareDuration="ngModel" [disabled]="fieldsReadOnly" name="{{'compareDuration' + (i + 1)}}" matInput placeholder="Set compare duration">
+                  <mat-error *ngIf="compareDuration.errors && compareDuration.errors.runError">
+                    {{compareDuration.errors.runErrorMessage}}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <span class="sub-title">Read time</span>
+            <div class="step-field sub-step">
+              <div class="inherit-field">
+                <span>Type</span>
+              </div>
+              <div class="vertical-separator"></div>
+              <div>
+                <mat-form-field [floatLabel]="'never'">
+                  <mat-select [(ngModel)]="step.readTime.type" [disabled]="fieldsReadOnly" name="{{'readTimeType' + (i + 1)}}" placeholder="Select the type">
+                    <mat-option *ngFor="let types of readTimeTypes" [value]="types.value">
+                      {{ types.displayName }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div *ngIf="step.readTime.type == 'FROM_NOW'" class="step-field step-field-group sub-step">
+              <div class="inherit-field">
+                <span>Offset</span>
+              </div>
+              <div class="vertical-separator"></div>
+              <div>
+                <mat-form-field class="input-form-field" [floatLabel]="'never'">
+                  <input [(ngModel)]="step.readTime.value" #readTimeValue="ngModel" [disabled]="fieldsReadOnly" name="{{'readTimeValue' + (i + 1)}}" matInput placeholder="Set compare duration">
+                  <span class="warn-message slider" [ngClass]="{'closed': !readTimeValue.errors}">
+                    {{readTimeValue.errors && readTimeValue.errors.runError ? readTimeValue.errors.runErrorMessage : '' }}
+                  </span>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div *ngIf="step.readTime.type == 'TIMESTAMP'" class="step-field step-field-group sub-step">
+              <div class="inherit-field">
+                <span>Date / Time</span>
+              </div>
+              <div class="vertical-separator"></div>
+              <div>
+                <mat-form-field class="input-form-field" [floatLabel]="'never'">
+                  <input (dateTimeChange)="dateSelected(step.readTime, readTimeValue)" [owlDateTime]="dt1" matInput #readTimeValue="ngModel" [(ngModel)]="step.readTime.momentValue" [disabled]="fieldsReadOnly" name="{{'readTimeValue' + (i + 1)}}" [owlDateTimeTrigger]="dt1" placeholder="Select date and time">
+                  <owl-date-time showSecondsTimer="true" #dt1></owl-date-time>
+                  <span class="warn-message slider" [ngClass]="{'closed': !readTimeValue.errors}">
+                    {{readTimeValue.errors && readTimeValue.errors.runError ? readTimeValue.errors.runErrorMessage : '' }}
+                  </span>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div *ngIf="step.readTime.type == 'TIMESTAMP'" class="step-field step-field-group sub-step">
+              <div class="inherit-field">
+                <span>Time zone</span>
+              </div>
+              <div class="vertical-separator"></div>
+              <div>
+                <qb-timezone-selector setDefaultTz="true" model={{step.readTime.timeZone}} placeholderText="Select the timezone" [disabled]="fieldsReadOnly" [forceValidSelection]="true" (tzSelected)="onTimezoneSelect($event, step.readTime)"></qb-timezone-selector>
+              </div>
+            </div>
+
+            <div class="step-field">
+              <div>
+                <span>Filter</span>
+              </div>
+              <div class="vertical-separator"></div>
+              <div>
+                <mat-form-field class="input-form-field" [floatLabel]="'never'">
+                  <textarea [(ngModel)]="step.filter" [disabled]="fieldsReadOnly" name="{{'filter' + (i + 1)}}" #stepFilter="ngModel" matInput placeholder="Set your filter clause"></textarea>
+                  <span class="warn-message slider" [ngClass]="{'closed': !stepFilter.errors}">
+                    {{stepFilter.errors && stepFilter.errors.runError ? stepFilter.errors.runErrorMessage : '' }}
+                  </span>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div *ngIf="runResult">
+              <mat-menu class="{{'run-report-menu ' + runResult.stepResult[step.order].status.toLowerCase()}}" #menu="matMenu" xPosition="before">
+                <span *ngIf="runResult && runResult.stepResult[step.order].status != 'NOT_EXECUTED'" class="text-message">Found {{runResult.stepResult[step.order].responseSize}} items</span>
+                <span *ngIf="runResult && runResult.stepResult[step.order].status == 'NOT_EXECUTED'" class="text-message">Not executed</span>
+              </mat-menu>
+              <button type="button" (mouseenter)="stepResultMouseEnter(menuTrigger)" (mouseleave)="stepResultMouseLeave(menuTrigger, $event)" #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="menu" class="run-report" [ngClass]="runResult.stepResult[step.order].status.toLowerCase()" mat-mini-fab>
+                <mat-icon *ngIf="runResult.stepResult[step.order].status == 'FAILED'">clear</mat-icon>
+                <mat-icon *ngIf="runResult.stepResult[step.order].status == 'SUCCESS'">done</mat-icon>
+                <mat-icon *ngIf="runResult.stepResult[step.order].status == 'NOT_EXECUTED'">remove</mat-icon>
+              </button>
+            </div>
+
+            <span class="sub-title">Threshold</span>
+            <div class="step-field sub-step">
+              <div class="inherit-field">
+                <span>Operator</span>
+              </div>
+              <div class="vertical-separator"></div>
+              <div>
+                <mat-form-field [floatLabel]="'never'">
+                  <mat-select [(ngModel)]="step.threshold.operator" [disabled]="fieldsReadOnly" name="{{'thresholdOperator' + (i + 1)}}" #thresholdOperator="ngModel" required placeholder="Select the operator">
+                    <mat-option *ngFor="let operator of operators" [value]="operator.value">
+                      {{ operator.displayName }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="thresholdOperator.errors && thresholdOperator.errors.required">
+                    Threshold operator is required.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="step-field step-field-group sub-step">
+              <div class="inherit-field">
+                <span>Value</span>
+              </div>
+              <div class="vertical-separator"></div>
+              <div>
+                <mat-form-field [floatLabel]="'never'">
+                  <input [(ngModel)]="step.threshold.value" [disabled]="fieldsReadOnly" name="{{'thresholdValue' + (i + 1)}}" #thresholdValue="ngModel" required matInput placeholder="Value">
+                  <mat-error *ngIf="thresholdValue.errors && thresholdValue.errors.required">
+                    Threshold value is required.
+                  </mat-error>
+                  <mat-error *ngIf="thresholdValue.errors && thresholdValue.errors.runError">
+                    {{thresholdValue.errors.runErrorMessage}}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+          </div>
+
+          <div *ngIf="query.steps.length > i+1" class="step-join">
+            <div class="out-join-step" [ngClass]="{'odd-color': isOdd}">
+              <div class="step-field">
+                <div>
+                  <span>Out join</span>
+                </div>
+                <div class="vertical-separator"></div>
+                <div>
+                  <mat-form-field class="input-form-field" [floatLabel]="'never'">
+                    <input [(ngModel)]="step.outJoin" [disabled]="fieldsReadOnly" name="{{'outJoin' + (i + 1)}}" #stepOutJoin="ngModel" required matInput placeholder="Select a field for out join">
+                    <mat-error *ngIf="stepOutJoin.errors && stepOutJoin.errors.required">
+                      Out join is required.
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="join-icon">
+              <mat-icon>compare_arrows</mat-icon>
+            </div>
+            <div class="in-join-step" [ngClass]="{'odd-color': !isOdd}">
+              <div class="step-field">
+                <div>
+                  <span>In join</span>
+                </div>
+                <div class="vertical-separator"></div>
+                <div>
+                  <mat-form-field class="input-form-field" [floatLabel]="'never'">
+                    <input [(ngModel)]="query.steps[i+1].inJoin" [disabled]="fieldsReadOnly" name="{{'inJoin' + (i + 1)}}" #stepInJoin="ngModel" required matInput placeholder="Select a field for in join">
+                    <mat-error *ngIf="stepInJoin.errors && stepInJoin.errors.required">
+                      In join is required.
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <div class="content-action">
+          <button (click)="runQuery(queryForm)" [disabled]="disableRunButton() || queryRunning" type="button" mat-raised-button color="accent">
+            <mat-progress-spinner *ngIf="queryRunning" diameter="24" color="primary" mode="indeterminate"></mat-progress-spinner>
+            <span *ngIf="!queryRunning">RUN</span>
+          </button>
+        </div>
+      </div>
+
+    </mat-card>
+
+    <div class="run-result" *ngIf="resultMessage">
+      <div class="result-error-message">
+        <span>{{resultMessage}}</span>
+      </div>
+      <div *ngIf="sccLink" class="result-error-button">
+        <button type="button" (click)="viewResultsOnConsole()" mat-button color="accent">VIEW RESULTS ON CONSOLE</button>
+      </div>
+    </div>
+  </div>
+
+</form>

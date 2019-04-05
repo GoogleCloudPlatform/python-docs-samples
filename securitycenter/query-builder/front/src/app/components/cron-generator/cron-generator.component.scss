@@ -1,0 +1,52 @@
+.generator-container {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-weight: 800;
+  color: #757575;
+  .kind-container {
+    span {
+      margin-right: 10px;
+    }
+    mat-form-field {
+      width: 15%;
+    }
+  }
+
+  .cron-options-container {
+    span {
+      margin-right: 10px;
+    }
+    mat-form-field {
+      margin-right: 10px;
+      width: 10%;
+      &.day-of-week-field {
+        width: 25%;
+      }
+    }
+  }
+
+  .executions-result {
+    display: flex;
+    overflow: hidden;
+    .action-container {
+      button {
+        min-height: 57px;
+        width: 100%;
+      }
+      width: 25%;
+      background: #f3f3f3;
+      display: grid;
+    }
+    .next-execution-container {
+      font-size: 14px;
+      display: grid;
+      text-align: end;
+      width: 75%;
+      margin-left: 0px;
+      z-index: -1;
+      transition: ease-in-out .5s;
+      &.hide {
+        margin-left: -600px;
+      }
+    }
+  }
+}

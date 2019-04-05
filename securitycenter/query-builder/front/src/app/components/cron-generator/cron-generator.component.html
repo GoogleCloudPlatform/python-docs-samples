@@ -1,0 +1,86 @@
+<div class="generator-container">
+  <div class="kind-container">
+    <span>Schedule by </span>
+    <mat-form-field [floatLabel]="'never'">
+      <mat-select [disabled]="readOnly" (selectionChange)="kindChange()" [(ngModel)]="kind" name="schedule-kind">
+        <mat-option *ngFor="let kindItem of kinds" [value]="kindItem">
+          {{ kindItem.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="kind.name == 'Hour'" class="cron-options-container">
+    <span> Each </span>
+    <mat-form-field [floatLabel]="'never'">
+      <input [disabled]="readOnly" (change)="updateExpression()" [(ngModel)]="cron.hour" min="1" name="schedule-hour" matInput type="number">
+    </mat-form-field>
+    <span> {{ cron.hour > 1 ? 'hours' : 'hour' }} at minute </span>
+    <mat-form-field [floatLabel]="'never'">
+      <mat-select [disabled]="readOnly" (selectionChange)="updateExpression()" [(ngModel)]="cron.minute" name="schedule-minute">
+        <mat-option *ngFor="let minute of minutes" [value]="minute">
+          {{ minute }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="kind.name == 'Day'" class="cron-options-container">
+    <span> Each </span>
+    <mat-form-field [floatLabel]="'never'">
+      <input [disabled]="readOnly" (change)="updateExpression()" [(ngModel)]="cron.dayOfMonth" min="1" name="schedule-hour" matInput type="number">
+    </mat-form-field>
+    <span> {{cron.dayOfMonth > 1 ? 'days' : 'day'}} at </span>
+    <mat-form-field [floatLabel]="'never'">
+      <mat-select [disabled]="readOnly" (selectionChange)="updateExpression()" [(ngModel)]="cron.hour" name="schedule-minute">
+        <mat-option *ngFor="let hour of hours" [value]="hour">
+          {{ hour }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <span>:</span>
+    <mat-form-field [floatLabel]="'never'">
+      <mat-select [disabled]="readOnly" (selectionChange)="updateExpression()" [(ngModel)]="cron.minute" name="schedule-minute">
+        <mat-option *ngFor="let minute of minutes" [value]="minute">
+          {{ minute }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="kind.name == 'Week'" class="cron-options-container">
+    <span> Each </span>
+    <mat-form-field class="day-of-week-field" [floatLabel]="'never'">
+      <mat-select [disabled]="readOnly" (selectionChange)="updateExpression()" matTooltip={{selectedWeekDays()}} [(ngModel)]="cron.dayOfWeek" name="schedule-week" multiple>
+        <mat-option *ngFor="let day of days" [value]="day.value">
+          {{ day.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <span> at </span>
+    <mat-form-field [floatLabel]="'never'">
+      <mat-select [disabled]="readOnly" (selectionChange)="updateExpression()" [(ngModel)]="cron.hour" name="schedule-minute">
+        <mat-option *ngFor="let hour of hours" [value]="hour">
+          {{ hour }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <span>:</span>
+    <mat-form-field [floatLabel]="'never'">
+      <mat-select [disabled]="readOnly" (selectionChange)="updateExpression()" [(ngModel)]="cron.minute" name="schedule-minute">
+        <mat-option *ngFor="let minute of minutes" [value]="minute">
+          {{ minute }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="executions-result">
+    <div class="action-container">
+      <button type="button" (click)="showNextExecutions = !showNextExecutions; generateNextExecutions()" mat-button color="accent">{{showNextExecutions ? 'HIDE' : 'SHOW'}} NEXT EXECUTIONS</button>
+    </div>
+    <div class="next-execution-container" [ngClass]="{'hide': !showNextExecutions}">
+      <span *ngFor="let day of nextExecutions">{{day}}<br></span>
+    </div>
+  </div>
+</div>

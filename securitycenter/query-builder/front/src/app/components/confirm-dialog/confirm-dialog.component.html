@@ -1,0 +1,8 @@
+<div class="title">
+  <h2>{{ data.confirmTitle || 'Oops...' }}</h2>
+  <p [innerHTML]="data.confirmMessage || 'Are you sure?'"></p>
+</div>
+<div class="actions">
+  <button (click)="onCancel()" mat-button>{{ data.cancelButtonText || 'NO, CANCEL' }}</button>
+  <button (click)="onConfirm()" mat-raised-button color="primary">{{ data.confirmButtonText || 'YES, GO ON' }}</button>
+</div>

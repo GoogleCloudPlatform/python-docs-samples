@@ -1,0 +1,128 @@
+/deep/ snack-bar-container {
+  word-break: break-all;
+}
+mat-card {
+  box-shadow: none !important;
+  background: none;
+  width: 82%;
+  margin: 0 auto;
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 6px;
+  mat-paginator {
+    background: none;
+  }
+  mat-expansion-panel {
+    mat-expansion-panel-header {
+      min-height: 70px;
+      mat-panel-title {
+        width: 20%;
+        align-items: center;
+      }
+      mat-panel-description {
+        width: 65%;
+        div {
+          align-content: center;
+          display: grid;
+        }
+        .query-column-description {
+          width: 70%;
+        }
+        .query-column-owner {
+          width: 30%;
+        }
+        .toggle-container {
+          margin-right: 10px;
+        }
+      }
+    }
+    .query-details {
+      border-top: dotted lightgray 1px;
+      display: flex;
+      flex-wrap: wrap;
+      span {
+        margin-right: 5px;
+        color: rgba(0, 0, 0, 0.54);
+        font-style: italic;
+        &.detail-description {
+          font-weight: bold;
+          font-style: initial;
+        }
+      }
+      .query-details-last-execution {
+        margin-top: 16px;
+        span {
+          vertical-align: -webkit-baseline-middle;
+        }
+        width: 60%;
+      }
+      .query-details-last-execution-result {
+        margin-top: 16px;
+        span {
+          vertical-align: -webkit-baseline-middle;
+        }
+        width: 40%;
+      }
+
+      .query-details-timestamp {
+        margin-top: 5px;
+        span {
+          vertical-align: -webkit-baseline-middle;
+        }
+        width: 60%;
+      }
+      .query-details-next-execution {
+        margin-top: 5px;
+        span {
+          vertical-align: -webkit-baseline-middle;
+        }
+        width: 40%;
+      }
+      .query-details-mark {
+        margin-top: 10px;
+        width: 100%;
+      }
+    }
+  }
+  mat-card-header {
+    padding-right: 20px;
+    padding-left: 20px;
+    margin-bottom: 5px;
+    .header-title {
+      width: 80%;
+      font-size: 22px;
+    }
+    .header-search-input {
+      width: 20%;
+      text-align: right;
+      margin-top: -10px;
+      font-size: 15px;
+      overflow: hidden;
+
+      mat-form-field {
+        transition: all ease-in-out .3s;
+        width: 100%;
+        &.collapse {
+          margin-right: -300px;
+        }
+      }
+    }
+    .header-search {
+      text-align: right;
+      button {
+        vertical-align: sub;
+        margin-top: -10px;
+      }
+    }
+  }
+}
+
+.mat-list .mat-list-item, .mat-nav-list .mat-list-item, .mat-selection-list .mat-list-item {
+  font-size: 15px;
+}
+
+.action-fab {
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
+}

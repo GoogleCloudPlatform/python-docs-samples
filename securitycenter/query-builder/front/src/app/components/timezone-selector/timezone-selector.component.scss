@@ -1,0 +1,29 @@
+mat-form-field {
+  width: 100%;
+}
+
+.warn-message {
+  color: #f5aa33;
+  font-size: 75%;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  position: absolute;
+  margin-top: 10px;
+  display: block;
+  mat-icon {
+    font-size: 15px;
+    vertical-align: bottom;
+    height: 16px;
+    width: 16px;
+  }
+  transition: all ease-in-out 1s;
+  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+
+.slider {
+	overflow-y: hidden;
+	max-height: 20px;
+}
+
+.slider.closed {
+	max-height: 0;
+}

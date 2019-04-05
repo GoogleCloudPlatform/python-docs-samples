@@ -1,0 +1,22 @@
+[[source]]
+verify_ssl = true
+url = "https://pypi.org/simple"
+name = "pypi"
+
+[packages]
+google-cloud-pubsub = "==0.34.0"
+"d73f729" = {path = "./../../scc-client"}
+"b1eb468" = {path = "./../../scc-client/v1alpha3/python/securitycenter-v1alpha3"}
+apscheduler = "==v3.5.1"
+croniter = "==0.3.23"
+jsonpickle = "==0.9.6"
+google-api-python-client = "*"
+
+[requires]
+python_version = "3.6"
+
+[dev-packages]
+pytest = "==3.5.1"
+pytest-mock = "==1.10.0"
+pytest-flask = "==0.10.0"
+coverage = "*"

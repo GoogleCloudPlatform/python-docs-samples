@@ -1,0 +1,15 @@
+.example-button-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+mat-toolbar {
+  mat-toolbar-row {
+    color: white;
+    span {
+      font-weight: 400;
+    }
+  }
+  margin-bottom: 1%;
+}

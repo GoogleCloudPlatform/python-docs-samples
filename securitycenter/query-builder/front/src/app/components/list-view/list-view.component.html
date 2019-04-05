@@ -1,0 +1,92 @@
+<mat-card>
+  <mat-card-header>
+    <div class="header-title">
+      Query
+    </div>
+    <div class="header-search-input">
+      <form (ngSubmit)="getQueries()" class="example-form" >
+        <mat-form-field [floatLabel]="'never'" [ngClass]="{'collapse': !showInput}">
+          <input #searchInput matInput placeholder="Type a search" name="textSearch" [formControl]="textSearchControl">
+        </mat-form-field>
+      </form>
+    </div>
+    <div class="header-search">
+      <button (click)="searchClickAction()" mat-icon-button>
+        <mat-icon *ngIf="!showInput">search</mat-icon>
+        <mat-icon *ngIf="showInput">clear</mat-icon>
+      </button>
+    </div>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-card-content>
+    <mat-accordion>
+      <mat-expansion-panel #matExpansionPanel *ngFor="let query of queriesResult.queries; let i = index; let last = last">
+        <mat-expansion-panel-header (click)="expandPanelControl(matExpansionPanel, $event)">
+          <mat-panel-title class="expansion-indicator">
+            {{ query.name }}
+          </mat-panel-title>
+          <mat-panel-description>
+            <div class="query-column-description expansion-indicator">
+              {{ query.description }}
+            </div>
+            <div class="query-column-owner expansion-indicator">
+              {{ query.owner }}
+            </div>
+            <div class="toggle-container">
+              <mat-slide-toggle class="notification-toggle" matTooltip="{{query.sendNotification?'Disable notifications':'Enable notifications'}}" [disabled]="toggleRunning" (change)="toggleNotification(query)" [(ngModel)]="query.sendNotification" name="query-notification" color="primary"></mat-slide-toggle>
+            </div>
+            <div class="open-menu-action">
+              <button matTooltip="Query actions" (click)="menuTrigger.openMenu()" #menuTrigger="matMenuTrigger" [disabled]="queryRunning!=null" mat-icon-button [matMenuTriggerFor]="menu1">
+                <mat-progress-spinner *ngIf="queryRunning==i" diameter="24" color="primary" mode="indeterminate"></mat-progress-spinner>
+                <mat-icon *ngIf="queryRunning!=i" aria-label="More actions button">more_vert</mat-icon>
+              </button>
+              <mat-menu #menu1="matMenu" xPosition="before">
+                <button (click)="runQuery(query.uuid, i)" mat-menu-item>
+                  <mat-icon>play_arrow</mat-icon>
+                  <span>Run query</span>
+                </button>
+                <button mat-menu-item [routerLink]="'/query/' + query.uuid" routerLinkActive="active">
+                  <mat-icon>visibility</mat-icon>
+                  <span>View</span>
+                </button>
+                <button mat-menu-item (click)="openDialog(query.uuid, query.name)">
+                  <mat-icon>delete</mat-icon>
+                  <span>Delete</span>
+                </button>
+              </mat-menu>
+            </div>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div class="query-details">
+          <div class="query-details-last-execution">
+            <span class="detail-description">Last execution date:</span>
+            <span>{{query.lastExecution.date || '-'}}</span>
+          </div>
+          <div class="query-details-last-execution-result">
+            <span class="detail-description">Last execution result:</span>
+            <span>{{query.lastExecution.result == null ? '-' : query.lastExecution.result}}</span>
+          </div>
+          <div class="query-details-timestamp">
+            <span class="detail-description">Last updated:</span>
+            <span>{{ query.timestamp }}</span>
+          </div>
+          <div class="query-details-next-execution">
+            <span class="detail-description">Next execution date:</span>
+            <span>{{query.nextRun || '-'}}</span>
+          </div>
+          <div class="query-details-mark">
+            <span class="detail-description">Mark:</span>
+            <span>{{query.mark || '-'}}</span>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card-content>
+  <mat-paginator *ngIf="showPaginator" [length]="paginatorObj.resultSize" [pageSize]="paginatorObj.pageSize" [pageSizeOptions]="paginatorObj.pageSizeOptions" (page)="onPageEvent($event)">
+  </mat-paginator>
+</mat-card>
+
+<button class="action-fab" matTooltip="Create new query" [routerLink]="'/query'" routerLinkActive="active" mat-fab color="primary">
+  <mat-icon aria-label="Action fab button">add</mat-icon>
+</button>

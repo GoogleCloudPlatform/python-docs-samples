@@ -1,0 +1,113 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "~ng-pick-datetime/assets/style/picker.min.css";
+
+/*
+ * CUSTOM THEME FOR ANGULAR MATERIAL
+ **/
+ @import '~@angular/material/theming';
+ // Plus imports for other components in your app.
+
+ // Include the common styles for Angular Material. We include this here so that you only
+ // have to load a single css file for Angular Material in your app.
+ // Be sure that you only ever include this mixin once!
+ @include mat-core();
+
+ // Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue.
+
+$qb-gblue: (
+    50 : #e7effc,
+    100 : #c4d6f8,
+    200 : #9dbbf4,
+    300 : #76a0ef,
+    400 : #588beb,
+    500 : #3b77e8,
+    600 : #356fe5,
+    700 : #2d64e2,
+    800 : #265ade,
+    900 : #1947d8,
+    A100 : #ffffff,
+    A200 : #d8e0ff,
+    A400 : #a5b8ff,
+    A700 : #8ba4ff,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #000000,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
+
+$qb-app-primary: mat-palette($qb-gblue);
+$qb-app-accent:  mat-palette($mat-orange);
+$qb-app-warn:    mat-palette($mat-red);
+
+$qb-btn-primary: mat-palette($mat-blue);
+$qb-btn-accent:  mat-palette($mat-orange, A200, A100, A400);
+$qb-btn-warn:    mat-palette($mat-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$qb-app-theme: mat-light-theme($qb-app-primary, $qb-app-accent, $qb-app-warn);
+$qb-btn-theme: mat-light-theme($qb-btn-primary, $qb-btn-accent, $qb-btn-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($qb-app-theme);
+@include mat-button-theme($qb-btn-theme);
+
+body {
+  margin: 0;
+  background-color: #f3f3f3;
+}
+
+.edit-container.view-mode-form {
+  .steps-container {
+    .mat-form-field-appearance-legacy .mat-form-field-label {
+      color: rgba(0, 0, 0, 0.18);
+    }
+    .owl-dt-container-disabled, .owl-dt-trigger-disabled {
+      opacity: inherit;
+    }
+  }
+}
+
+.notification-toggle, .scheduler-toggle {
+  span {
+    font-family: Roboto, "Helvetica Neue", sans-serif !important;
+    font-weight: 800 !important;
+    color: #757575;
+  }
+}
+
+.run-report-menu {
+  margin-right: 60px;
+  border-right: solid 5px;
+  min-width: 160px !important;
+  text-align: center;
+  &.not_executed {
+    border-right-color: #979797;
+  }
+  &.success {
+    border-right-color: #009688;
+  }
+  &.failed {
+    border-right-color: #EB575A;
+  }
+  span.text-message {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    padding: 16px;
+  }
+}

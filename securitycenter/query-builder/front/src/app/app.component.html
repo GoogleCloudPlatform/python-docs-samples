@@ -1,0 +1,10 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <button *ngIf="getToolbarInfo() && getToolbarInfo().route!=undefined" [routerLink]=getToolbarInfo().route routerLinkActive="active" mat-icon-button>
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span>{{getToolbarInfo() ? getToolbarInfo().title : ''}}</span>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<router-outlet></router-outlet>
