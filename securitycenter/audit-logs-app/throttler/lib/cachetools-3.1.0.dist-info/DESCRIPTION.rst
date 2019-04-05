@@ -1,0 +1,97 @@
+cachetools
+========================================================================
+
+This module provides various memoizing collections and decorators,
+including variants of the Python 3 Standard Library `@lru_cache`_
+function decorator.
+
+.. code-block:: python
+
+   from cachetools import cached, LRUCache, TTLCache
+
+   # speed up calculating Fibonacci numbers with dynamic programming
+   @cached(cache={})
+   def fib(n):
+       return n if n < 2 else fib(n - 1) + fib(n - 2)
+
+   # cache least recently used Python Enhancement Proposals
+   @cached(cache=LRUCache(maxsize=32))
+   def get_pep(num):
+       url = 'http://www.python.org/dev/peps/pep-%04d/' % num
+       with urllib.request.urlopen(url) as s:
+           return s.read()
+
+   # cache weather data for no longer than ten minutes
+   @cached(cache=TTLCache(maxsize=1024, ttl=600))
+   def get_weather(place):
+       return owm.weather_at_place(place).get_weather()
+
+For the purpose of this module, a *cache* is a mutable_ mapping_ of a
+fixed maximum size.  When the cache is full, i.e. by adding another
+item the cache would exceed its maximum size, the cache must choose
+which item(s) to discard based on a suitable `cache algorithm`_.  In
+general, a cache's size is the total size of its items, and an item's
+size is a property or function of its value, e.g. the result of
+``sys.getsizeof(value)``.  For the trivial but common case that each
+item counts as ``1``, a cache's size is equal to the number of its
+items, or ``len(cache)``.
+
+Multiple cache classes based on different caching algorithms are
+implemented, and decorators for easily memoizing function and method
+calls are provided, too.
+
+For more information, please refer to the online documentation_.
+
+
+Installation
+------------------------------------------------------------------------
+
+Install cachetools using pip::
+
+    pip install cachetools
+
+
+Project Resources
+------------------------------------------------------------------------
+
+.. image:: http://img.shields.io/pypi/v/cachetools.svg?style=flat
+   :target: https://pypi.python.org/pypi/cachetools/
+   :alt: Latest PyPI version
+
+.. image:: http://img.shields.io/travis/tkem/cachetools/master.svg?style=flat
+   :target: https://travis-ci.org/tkem/cachetools/
+   :alt: Travis CI build status
+
+.. image:: http://img.shields.io/coveralls/tkem/cachetools/master.svg?style=flat
+   :target: https://coveralls.io/r/tkem/cachetools
+   :alt: Test coverage
+
+.. image:: https://readthedocs.org/projects/cachetools/badge/?version=latest&style=flat
+   :target: http://cachetools.readthedocs.io/en/latest/
+   :alt: Documentation Status
+
+- `Issue Tracker`_
+- `Source Code`_
+- `Change Log`_
+
+
+License
+------------------------------------------------------------------------
+
+Copyright (c) 2014-2019 Thomas Kemmer.
+
+Licensed under the `MIT License`_.
+
+
+.. _@lru_cache: http://docs.python.org/3/library/functools.html#functools.lru_cache
+.. _mutable: http://docs.python.org/dev/glossary.html#term-mutable
+.. _mapping: http://docs.python.org/dev/glossary.html#term-mapping
+.. _cache algorithm: http://en.wikipedia.org/wiki/Cache_algorithms
+
+.. _Documentation: http://cachetools.readthedocs.io/en/latest/
+.. _Issue Tracker: https://github.com/tkem/cachetools/issues/
+.. _Source Code: https://github.com/tkem/cachetools/
+.. _Change Log: https://github.com/tkem/cachetools/blob/master/CHANGES.rst
+.. _MIT License: http://raw.github.com/tkem/cachetools/master/LICENSE
+
+
