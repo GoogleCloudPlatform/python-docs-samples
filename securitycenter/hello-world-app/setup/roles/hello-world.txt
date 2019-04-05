@@ -1,0 +1,5 @@
+roles/storage.admin
+roles/storage.objectAdmin
+roles/pubsub.admin
+roles/cloudfunctions.developer
+roles/iam.serviceAccountUser
