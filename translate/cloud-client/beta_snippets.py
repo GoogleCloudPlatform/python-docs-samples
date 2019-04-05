@@ -189,27 +189,26 @@ def list_glossaries(project_id):
 
     for glossary in client.list_glossaries(parent):
         print('Name: {}'.format(glossary.name))
-        print('Language Pair:')
-        print('\tSource Language Code: {}'.format(
-            glossary.language_pair.source_language_code))
-        print('\tTarget Language Code: {}'.format(
-            glossary.language_pair.target_language_code))
-        print('Input Uri: {}'.format(
+        print('Entry count: {}'.format(glossary.entry_count))
+        print('Input uri: {}'.format(
             glossary.input_config.gcs_source.input_uri))
+        for language_code in glossary.language_codes_set.language_codes:
+            print('Language code: {}'.format(language_code))
     # [END translate_list_glossary_beta]
 
 
-def get_glossary(project_id):
+def get_glossary(project_id, glossary_id):
     # [START translate_get_glossary_beta]
     from google.cloud import translate_v3beta1 as translate
     client = translate.TranslationServiceClient()
 
     # project_id = 'YOUR_PROJECT_ID'
+    # glossary_id = 'GLOSSARY_ID'
 
     parent = client.glossary_path(
         project_id,
         'us-central1',  # The location of the glossary
-        'glossary')  # The name of your glossary
+        glossary_id)
 
     response = client.get_glossary(parent)
     print('Name: {}'.format(response.name))
@@ -223,17 +222,18 @@ def get_glossary(project_id):
     # [END translate_get_glossary_beta]
 
 
-def delete_glossary(project_id):
+def delete_glossary(project_id, glossary_id):
     # [START translate_delete_glossary_beta]
     from google.cloud import translate_v3beta1 as translate
     client = translate.TranslationServiceClient()
 
     # project_id = 'YOUR_PROJECT_ID'
+    # glossary_id = 'GLOSSARY_ID'
 
     parent = client.glossary_path(
         project_id,
         'us-central1',  # The location of the glossary
-        'glossary')  # The name of your glossary
+        glossary_id)
 
     operation = client.delete_glossary(parent)
     result = operation.result(timeout=90)
@@ -241,19 +241,20 @@ def delete_glossary(project_id):
     # [END translate_delete_glossary_beta]
 
 
-def translate_text_with_glossary(project_id, text):
+def translate_text_with_glossary(project_id, glossary_id, text):
     # [START translate_translate_text_with_glossary_beta]
     from google.cloud import translate_v3beta1 as translate
     client = translate.TranslationServiceClient()
 
     # project_id = 'YOUR_PROJECT_ID'
+    # glossary_id = 'GLOSSARY_ID'
     # text = 'Text you wish to translate'
     location = 'us-central1'  # The location of the glossary
 
     glossary = client.glossary_path(
         project_id,
-        location,
-        'glossary')  # The name of your glossary
+        'us-central1',  # The location of the glossary
+        glossary_id)
 
     glossary_config = translate.types.TranslateTextGlossaryConfig(
         glossary=glossary)
@@ -308,10 +309,12 @@ if __name__ == '__main__':
     create_glossary_parser = subparsers.add_parser(
         'create-glossary', help=create_glossary.__doc__)
     create_glossary_parser.add_argument('project_id')
+    create_glossary_parser.add_argument('glossary_id')
 
     get_glossary_parser = subparsers.add_parser(
         'get-glossary', help=get_glossary.__doc__)
     get_glossary_parser.add_argument('project_id')
+    get_glossary_parser.add_argument('glossary_id')
 
     list_glossary_parser = subparsers.add_parser(
         'list-glossaries', help=list_glossaries.__doc__)
@@ -320,10 +323,12 @@ if __name__ == '__main__':
     delete_glossary_parser = subparsers.add_parser(
         'delete-glossary', help=delete_glossary.__doc__)
     delete_glossary_parser.add_argument('project_id')
+    delete_glossary_parser.add_argument('glossary_id')
 
     translate_with_glossary_parser = subparsers.add_parser(
         'translate-with-glossary', help=translate_text_with_glossary.__doc__)
     translate_with_glossary_parser.add_argument('project_id')
+    translate_with_glossary_parser.add_argument('glossary_id')
     translate_with_glossary_parser.add_argument('text')
 
     args = parser.parse_args()
@@ -340,12 +345,13 @@ if __name__ == '__main__':
     elif args.command == 'list-languages-with-target':
         list_languages_with_target(args.project_id, args.display_language_code)
     elif args.command == 'create-glossary':
-        create_glossary(args.project_id)
+        create_glossary(args.project_id, args.glossary_id)
     elif args.command == 'get-glossary':
-        get_glossary(args.project_id)
+        get_glossary(args.project_id, args.glossary_id)
     elif args.command == 'list-glossaries':
         list_glossaries(args.project_id)
     elif args.command == 'delete-glossary':
-        delete_glossary(args.project_id)
+        delete_glossary(args.project_id, args.glossary_id)
     elif args.command == 'translate-with-glossary':
-        translate_text_with_glossary(args.project_id, args.text)
+        translate_text_with_glossary(
+                args.project_id, args.glossary_id, args.text)
