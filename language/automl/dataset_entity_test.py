@@ -1,4 +1,4 @@
-!/usr/bin/env python
+#!/usr/bin/env python
 
 # Copyright 2019 Google LLC
 #
@@ -27,7 +27,7 @@ compute_region = "us-central1"
 @pytest.mark.slow
 def test_dataset_create_import_delete(capsys):
     # create dataset
-    dataset_name = "test_" + datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+    dataset_name = "test_" + datetime.datetime.now().strftime("%Y_%m_%dT%H_%M_%SZ")
     automl_natural_language_dataset.create_dataset(
         project_id, compute_region, dataset_name
     )
@@ -37,7 +37,7 @@ def test_dataset_create_import_delete(capsys):
 
     # import data
     dataset_id = create_dataset_output[1].split()[2]
-    data = "gs://{}-lcm/i2b2.csv".format(project_id)
+    data = "gs://python-docs-samples-tests-lcm/bank-marketing.csv".format(project_id)
     automl_natural_language_dataset.import_data(
         project_id, compute_region, dataset_id, data
     )
