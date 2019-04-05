@@ -1,4 +1,4 @@
-# Copyright 2018 Google, LLC.
+# Copyright 2019 Google, LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,14 +17,11 @@ import calendar
 import datetime
 import json
 import os
+import pytest
 
 from google.auth import crypt
 from google.auth import jwt
-from google.auth.transport import requests
 from google.oauth2 import id_token
-
-import mock
-import pytest
 
 import main
 
@@ -50,15 +47,15 @@ def signer():
 
 
 @pytest.fixture
-def token_factory(signer):
+def fake_token(signer):
     now = calendar.timegm(datetime.datetime.utcnow().utctimetuple())
     payload = {
-        'aud': 'https://example.com/_ah/push-handlers/receive_messages?token=1234abc',
+        'aud': 'https://e.io/_ah/push-handlers/receive_messages?token=1234abc',
         'azp': '1234567890',
         'email': 'pubsub@example.iam.gserviceaccount.com',
         'email_verified': True,
-        'exp': now,
-        'iat': now + 300,
+        'exp': now + 3600,
+        'iat': now,
         'iss': 'https://accounts.google.com',
         'sub': '1234567890'
     }
@@ -67,7 +64,12 @@ def token_factory(signer):
         'kid': signer.key_id,
         'typ': 'JWT'
     }
-    return jwt.encode(signer, payload, header=header)
+    yield jwt.encode(signer, payload, header=header)
+
+
+def _verify_mocked_oauth2_token(token, request):
+    claims = jwt.decode(token, certs=PUBLIC_CERT_BYTES, verify=True)
+    return claims
 
 
 def test_index(client):
@@ -80,36 +82,27 @@ def test_post_index(client):
     assert r.status_code == 200
 
 
-def _verify_oauth2_token_patch():
-    real_verify = jwt.decode
+def test_push_endpoint(monkeypatch, client, fake_token):
+    monkeypatch.setattr(id_token, 'verify_oauth2_token',
+                        _verify_mocked_oauth2_token)
 
-    def mock_verify():
-        real_verify(factory, certs=PUBLIC_CERT_BYTES, verify=True)
-
-    return mock.patch('id_token.verify_oauth2_token', new=mock_verify)
-
-
-def test_push_endpoint(client):
     url = '/_ah/push-handlers/receive_messages?token=' + \
         os.environ['PUBSUB_VERIFICATION_TOKEN']
+    # "".join(chr(x) for x in fake_token)
 
-    r = None
-    with _verify_oauth2_token_patch():
-        r = client.post(
-            url,
-            data=json.dumps({
-                "message": {
-                    "data": base64.b64encode(
-                        u'Test message'.encode('utf-8')
-                    ).decode('utf-8')
-                }
-            }),
-            header=json.dumps({
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + token_factory()
-            })
+    r = client.post(
+        url,
+        data=json.dumps({
+            "message": {
+                "data": base64.b64encode(
+                    u'Test message'.encode('utf-8')
+                ).decode('utf-8')
+            }
+        }),
+        headers=dict(
+            Authorization="Bearer " + fake_token.decode('utf-8')
         )
-
+    )
     assert r.status_code == 200
 
     # Make sure the message is visible on the home page.

@@ -1,4 +1,4 @@
-# Copyright 2018 Google, LLC.
+# Copyright 2019 Google, LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -40,13 +40,14 @@ MESSAGES = []
 TOKENS = []
 HEADERS = []
 CLAIMS = []
-REQUEST_HEADERS = []
+R = []
 
 # [START index]
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'GET':
-        return render_template('index.html', messages=MESSAGES, tokens=TOKENS, headers=HEADERS, claims=CLAIMS, request_headers=REQUEST_HEADERS)
+        return render_template('index.html', messages=MESSAGES, tokens=TOKENS,
+                               headers=HEADERS, claims=CLAIMS)
 
     data = request.form.get('payload', 'Example payload').encode('utf-8')
 
@@ -62,17 +63,14 @@ def index():
 # [START push]
 @app.route('/_ah/push-handlers/receive_messages', methods=['POST'])
 def receive_messages_handler():
-    # Verify the request originates from the application.
+    # Verify that the request originates from the application.
     if (request.args.get('token', '') !=
             current_app.config['PUBSUB_VERIFICATION_TOKEN']):
         return 'Invalid request', 400
 
-    REQUEST_HEADERS.append(request.headers)
-
-    # Verify the push request originates from Cloud Pub/Sub.
+    # Verify that the push request originates from Cloud Pub/Sub.
     try:
-        # Get the OpenIDConnect JWT in the "Authorization" header
-        # attached to the push request by Cloud Pub/Sub.
+        # Get the Cloud Pub/Sub-generated JWT in the "Authorization" header.
         bearer_token = request.headers.get('Authorization')
         token = bearer_token.split(' ')[1]
         TOKENS.append(token)
@@ -80,20 +78,18 @@ def receive_messages_handler():
         header = jwt.decode_header(token)
         HEADERS.append(header)
 
-        # Verify and decode the token. Underneath it checks the signature
+        # Verify and decode the JWT. Underneath it checks the signature
         # with the signed section using Google's public certs at
         # https://www.googleapis.com/oauth2/v1/certs
         req = requests.Request()
         claim = id_token.verify_oauth2_token(token, req)
         CLAIMS.append(claim)
     except Exception as e:
-        CLAIMS.append(e)
-        return 'Unable to verify: ' + e, 400
+        return 'Unable to verify: {}'.format(e), 400
 
     envelope = json.loads(request.data.decode('utf-8'))
     payload = base64.b64decode(envelope['message']['data'])
     MESSAGES.append(payload)
-
     # Returning any 2xx status indicates successful receipt of the message.
     return 'OK', 200
 # [END push]
