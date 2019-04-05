@@ -1,0 +1,33 @@
+{
+    "insertId": "-epdbpzcec8",
+    "logName": "projects/gce-audit-logs-216020/logs/cloudaudit.googleapis.com%2Factivity",
+    "operation": {
+        "id": "operation-1536619956944-5758c36b03c81-c8f9dce5-51951898",
+        "last": true,
+        "producer": "compute.googleapis.com"
+    },
+    "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "authenticationInfo": {
+            "principalEmail": "dandrade@ciandt.com"
+        },
+        "methodName": "v1.compute.instances.delete",
+        "requestMetadata": {
+            "callerIp": "2002:ae8:6843:0:0:0:0:0",
+            "callerSuppliedUserAgent": "Pantheon Google-API-Java-Client Google-HTTP-Java-Client/1.25.0-SNAPSHOT (gzip)"
+        },
+        "resourceName": "projects/gce-audit-logs-216020/zones/us-east1-b/instances/instance-victim-1",
+        "serviceName": "compute.googleapis.com"
+    },
+    "receiveTimestamp": "2018-09-10T22:53:30.771542180Z",
+    "resource": {
+        "labels": {
+            "instance_id": "7001864148707138537",
+            "project_id": "gce-audit-logs-216020",
+            "zone": "us-east1-b"
+        },
+        "type": "gce_instance"
+    },
+    "severity": "NOTICE",
+    "timestamp": "2018-09-10T22:53:29.697Z"
+}
