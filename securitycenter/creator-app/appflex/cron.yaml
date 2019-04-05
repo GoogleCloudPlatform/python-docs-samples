@@ -1,0 +1,5 @@
+cron:
+- description: test task
+  url: /events/processor
+  schedule: every 15 minutes
+

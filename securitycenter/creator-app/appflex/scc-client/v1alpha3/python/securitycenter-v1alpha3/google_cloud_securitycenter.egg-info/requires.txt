@@ -1,0 +1,2 @@
+google-api-core<0.2.0dev,>=0.1.0
+googleapis-common-protos[grpc]<2.0dev,>=1.5.2

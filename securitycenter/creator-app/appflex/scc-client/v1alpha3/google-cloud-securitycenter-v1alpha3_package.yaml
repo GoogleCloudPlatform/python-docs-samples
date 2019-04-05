@@ -1,0 +1,109 @@
+api_common_version:
+  java:
+    lower: 1.3.0
+auth_version:
+  nodejs:
+    lower: 0.9.8
+  python:
+    lower: 1.0.2
+    upper: 2.0dev
+  ruby:
+    lower: 0.6.1
+author: Google LLC
+dependency_type: release
+email: googleapis-packages@google.com
+gapic_config_name: securitycenter_gapic.yaml
+gax_grpc_version:
+  csharp:
+    lower: 2.2.1
+  java:
+    lower: 1.19.0
+gax_version:
+  java:
+    lower: 1.19.0
+  nodejs:
+    lower: 0.14.2
+  php:
+    lower: 0.28.0
+  python:
+    lower: 0.15.7
+    upper: 0.16dev
+  ruby:
+    lower: '1.0'
+generated_ga_package_version:
+  java:
+    lower: 1.1.0
+generated_package_version:
+  java:
+    lower: 0.2.0
+  nodejs:
+    lower: 0.1.0
+  php:
+    lower: 0.1.0
+  python:
+    lower: 0.1.0
+    upper: 0.2dev
+  ruby:
+    lower: 0.1.0
+google-common-protos_version:
+  java:
+    lower: 1.1.0
+  python:
+    lower: 1.5.2
+    name_override: googleapis-common-protos
+    upper: 2.0dev
+  ruby:
+    lower: 1.3.1
+    name_override: googleapis-common-protos
+google-iam-v1_version:
+  csharp:
+    lower: 1.0.0
+    name_override: Google.Cloud.Iam.V1
+  java:
+    lower: 0.2.0
+  python:
+    lower: 0.11.1
+    name_override: grpc-google-iam-v1
+    upper: 0.12dev
+  ruby:
+    lower: 0.6.9
+    name_override: grpc-google-iam-v1
+grpc_version:
+  csharp:
+    lower: 1.8.3
+  java:
+    lower: 1.9.0
+  nodejs:
+    lower: 1.1.2
+  python:
+    lower: 1.0.2
+    upper: 2.0dev
+  ruby:
+    lower: '1.0'
+homepage: https://github.com/googleapis/googleapis
+license: Apache-2.0
+major_version: v1alpha3
+package_name:
+  default: google-cloud-securitycenter-v1alpha3
+package_type: grpc_client
+proto_deps:
+- google-common-protos
+proto_path: google/cloud/securitycenter/v1alpha3
+proto_version:
+  java:
+    lower: 3.4.0
+  nodejs:
+    lower: 5.0.1
+  php:
+    lower: 3.4.0
+  python:
+    lower: 3.0.0
+    upper: 4.0dev
+  ruby:
+    lower: '3.5'
+release_level:
+  java: alpha
+  nodejs: alpha
+  python: alpha
+  ruby: alpha
+short_name: securitycenter

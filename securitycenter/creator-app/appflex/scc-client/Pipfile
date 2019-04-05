@@ -1,0 +1,18 @@
+[[source]]
+verify_ssl = true
+url = "https://pypi.org/simple"
+name = "pypi"
+
+[packages]
+"1fd43e5" = {path = "./v1alpha3/python/securitycenter-v1alpha3", editable = true}
+google-api-python-client = "*"
+google-auth = "*"
+
+[requires]
+python_version = "3.6"
+
+[dev-packages]
+pytest = "==3.9.3"
+pytest-mock = "==1.10.0"
+coverage = "*"
+pylint = "*"

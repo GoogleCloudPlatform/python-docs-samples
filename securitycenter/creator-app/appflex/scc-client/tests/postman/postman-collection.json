@@ -1,0 +1,2158 @@
+{
+	"info": {
+		"_postman_id": "4d823a48-0ca7-4ef1-9cb9-0ae82db83026",
+		"name": "Beta",
+		"description": "Scc beta api validation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "assets",
+			"item": [
+				{
+					"name": "List ALL Assets",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/assets?pageSize=1000",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"assets"
+							],
+							"query": [
+								{
+									"key": "pageSize",
+									"value": "1000"
+								},
+								{
+									"key": "pageToken",
+									"value": "CpYB3cy7qgAx8Qqfgj-C91pJO-qhQBoAE1-nokE7AcRBN9rEl-LU8e9zSqNFJj8UiZBouYG1mYYB00os6SJMV4xXcyIJxSVz8feibx5II6qpg4ZX8sR0LQVwfy-xfa0d3F3Un8zTG_LXBxwqKV3ZCEZW46LmwdIzLZJOLkzkr6-7ctfhE-YPWhjMw8VoEBrqhXtRrsFphQbW",
+									"disabled": true
+								}
+							]
+						},
+						"description": "List assets on beta api"
+					},
+					"response": []
+				},
+				{
+					"name": "List Assets with valid Params",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/assets?pageSize=1&compareDuration=120000000s&readTime=2018-10-17T22:03:23.376Z",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"assets"
+							],
+							"query": [
+								{
+									"key": "pageSize",
+									"value": "1"
+								},
+								{
+									"key": "compareDuration",
+									"value": "120000000s"
+								},
+								{
+									"key": "readTime",
+									"value": "2018-10-17T22:03:23.376Z"
+								}
+							]
+						},
+						"description": "List assets on beta api with valid params"
+					},
+					"response": []
+				},
+				{
+					"name": "List Asset by Type Name and ProjectID",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "ya29.c.El9OBuQcxDEsSujiqlXjelZ53KCjhCtpOrH9nQq5oRwy7dHIjG-5rpAhEjr_xPc-dvPc2MoJRi-RtKrKmbanJ5CUwWAbJQah4G00PUIvYJFBygqe3XQ1kgy46EL0LJ0JZw",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/assets?filter=securityCenterProperties.resourceType : \"INSTANCE\"  AND resourceProperties.name: \"deploy-machine\" AND securityCenterProperties.resourceName: \"akoclsecteamcom-dns-control\"",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"assets"
+							],
+							"query": [
+								{
+									"key": "pageSize",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "compareDuration",
+									"value": "120000000s",
+									"disabled": true
+								},
+								{
+									"key": "readTime",
+									"value": "2018-10-17T22:03:23.376Z",
+									"disabled": true
+								},
+								{
+									"key": "filter",
+									"value": "securityCenterProperties.resourceType : \"INSTANCE\"  AND resourceProperties.name: \"deploy-machine\" AND securityCenterProperties.resourceName: \"akoclsecteamcom-dns-control\""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Firewalls with allowed ports between 0 and 65535",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "498ddaa7-4199-4db9-9ac9-a580aeb408a6",
+								"exec": [
+									"pm.test(\"Your test name\", function () {",
+									"    // var parentIds = [];",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    // var value = /^projects/[/\\w-_]+$/.test(resourceName);",
+									"    var str = \"\"",
+									"    for (var i=0; i<jsonData.listAssetsResults.length; i++) {",
+									"        var resourceName = jsonData.listAssetsResults[i].asset.securityCenterProperties.resourceName;",
+									"        var resourceParent = jsonData.listAssetsResults[i].asset.securityCenterProperties.resourceParent;",
+									"        console.log(resourceName);",
+									"        // parentIds.push(resourceName);",
+									"        str += \"securityCenterProperties.resourceParent = \\\"\"+resourceParent + \"\\\" OR \";",
+									"    }",
+									"    console.log(str);",
+									"    // pm.globals.set(\"parentIds\", parentIds)",
+									"    // console.log(parentIds);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/assets?filter=securityCenterProperties.resourceType : \"Firewall\"  AND resourceProperties.allowed : \"0-65535\"",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"assets"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "securityCenterProperties.resourceType : \"Firewall\"  AND resourceProperties.allowed : \"0-65535\""
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Asset List [200]",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/688851828130/assets?filter=securityCenterProperties.resourceType : \"Firewall\"  AND resourceProperties.allowed : \"0-65535\"",
+									"protocol": "https",
+									"host": [
+										"securitycenter",
+										"googleapis",
+										"com"
+									],
+									"path": [
+										"v1beta1",
+										"organizations",
+										"688851828130",
+										"assets"
+									],
+									"query": [
+										{
+											"key": "filter",
+											"value": "securityCenterProperties.resourceType : \"Firewall\"  AND resourceProperties.allowed : \"0-65535\""
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Alt-Svc",
+									"value": "quic=\":443\"; ma=2592000; v=\"44,43,39,35\"",
+									"name": "Alt-Svc",
+									"description": "Custom header"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "private",
+									"name": "Cache-Control",
+									"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 09 Nov 2018 16:17:27 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "ESF",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked",
+									"name": "Transfer-Encoding",
+									"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+								},
+								{
+									"key": "Vary",
+									"value": "Origin",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "Vary",
+									"value": "X-Origin",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "Vary",
+									"value": "Referer",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff",
+									"name": "X-Content-Type-Options",
+									"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN",
+									"name": "X-Frame-Options",
+									"description": "Clickjacking protection: \"deny\" - no rendering within a frame, \"sameorigin\" - no rendering if origin mismatch"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block",
+									"name": "X-XSS-Protection",
+									"description": "Cross-site scripting (XSS) filter"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"listAssetsResults\": [\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/650853799622838538\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/asset-dev-project/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/138150943629\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/138150943629\",\n          \"resourceOwners\": [\n            \"user:dandrade@gcp-sec-demo-org.joonix.net\",\n            \"user:lucasbr@gcp-sec-demo-org.joonix.net\",\n            \"user:walves@gcp-sec-demo-org.joonix.net\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-02-22t05:51:30.438-08:00\",\n          \"name\": \"default-allow-internal\",\n          \"direction\": \"ingress\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/asset-dev-project/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/asset-dev-project/global/networks/default\",\n          \"id\": \"7392811674201453581\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/650853799622838538/securityMarks\",\n          \"marks\": {\n            \"environment\": \"development\",\n            \"scc_query_3891e95b-403d-44b3-ad62-6678abbeea12\": \"true\"\n          }\n        },\n        \"createTime\": \"2018-08-01T10:45:32.791Z\",\n        \"updateTime\": \"2018-10-17T22:03:23.376Z\"\n      },\n      \"state\": \"UNUSED\"\n    },\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/10855669941519462085\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/bin-auth-playground/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/246054159221\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/246054159221\",\n          \"resourceOwners\": [\n            \"user:andychang@google.com\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-09-24t14:19:08.097-07:00\",\n          \"name\": \"default-allow-internal\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/bin-auth-playground/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/bin-auth-playground/global/networks/default\",\n          \"direction\": \"ingress\",\n          \"id\": \"3927342531763038755\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/10855669941519462085/securityMarks\"\n        },\n        \"createTime\": \"2018-10-17T22:03:23.376Z\",\n        \"updateTime\": \"2018-10-17T22:03:23.376Z\"\n      },\n      \"state\": \"UNUSED\"\n    },\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/1480242085031720440\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/binary-authorization-demo/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/808630039469\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/808630039469\",\n          \"resourceOwners\": [\n            \"user:andychang@google.com\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-09-24t14:10:38.195-07:00\",\n          \"name\": \"default-allow-internal\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/binary-authorization-demo/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/binary-authorization-demo/global/networks/default\",\n          \"direction\": \"ingress\",\n          \"id\": \"7704448539799383073\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/1480242085031720440/securityMarks\"\n        },\n        \"createTime\": \"2018-09-26T06:14:09.800Z\",\n        \"updateTime\": \"2018-10-17T22:03:23.376Z\"\n      },\n      \"state\": \"UNUSED\"\n    },\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/16005324126592187086\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/cai-demo-spanner/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/581282749270\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/581282749270\",\n          \"resourceOwners\": [\n            \"user:andychang@google.com\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-10-24t10:00:31.405-07:00\",\n          \"name\": \"default-allow-internal\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/cai-demo-spanner/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/cai-demo-spanner/global/networks/default\",\n          \"direction\": \"ingress\",\n          \"id\": \"9218290225199782848\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/16005324126592187086/securityMarks\"\n        },\n        \"createTime\": \"2018-10-25T03:36:48.744Z\",\n        \"updateTime\": \"2018-10-25T03:36:48.744Z\"\n      },\n      \"state\": \"UNUSED\"\n    },\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/7776593159689461472\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/connector-project/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/520732501711\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/520732501711\",\n          \"resourceOwners\": [\n            \"user:andychang@google.com\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-03-16t19:13:29.725-07:00\",\n          \"name\": \"default-allow-internal\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/connector-project/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/connector-project/global/networks/default\",\n          \"direction\": \"ingress\",\n          \"id\": \"1389095827078760230\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/7776593159689461472/securityMarks\"\n        },\n        \"createTime\": \"2018-08-01T10:45:39.211Z\",\n        \"updateTime\": \"2018-10-17T22:03:23.376Z\"\n      },\n      \"state\": \"UNUSED\"\n    },\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/45777909775194825\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/container-security-demo/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/267334838076\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/267334838076\",\n          \"resourceOwners\": [\n            \"user:andychang@google.com\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-07-20t07:16:10.806-07:00\",\n          \"name\": \"default-allow-internal\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/container-security-demo/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/container-security-demo/global/networks/default\",\n          \"direction\": \"ingress\",\n          \"id\": \"6545807367131123781\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/45777909775194825/securityMarks\"\n        },\n        \"createTime\": \"2018-07-20T14:35:20.650Z\",\n        \"updateTime\": \"2018-10-17T22:03:23.376Z\"\n      },\n      \"state\": \"UNUSED\"\n    },\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/17354737696003905194\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/dev-gcpsec-dns-control/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/861568220405\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/861568220405\",\n          \"resourceOwners\": [\n            \"user:joaog@gcp-sec-demo-org.joonix.net\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-06-14t08:22:18.290-07:00\",\n          \"name\": \"default-allow-internal\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/dev-gcpsec-dns-control/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/dev-gcpsec-dns-control/global/networks/default\",\n          \"direction\": \"ingress\",\n          \"id\": \"2713416054722213573\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/17354737696003905194/securityMarks\"\n        },\n        \"createTime\": \"2018-06-15T00:42:06.778Z\",\n        \"updateTime\": \"2018-10-17T22:03:23.376Z\"\n      },\n      \"state\": \"UNUSED\"\n    },\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/16505592516624739660\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/jonnys-demo/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/544181147435\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/544181147435\",\n          \"resourceOwners\": [\n            \"serviceAccount:dlp-cscc@jonnys-demo.iam.gserviceaccount.com\",\n            \"user:jonshannon@google.com\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-11-01t08:51:57.201-07:00\",\n          \"name\": \"default-allow-internal\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/jonnys-demo/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/jonnys-demo/global/networks/default\",\n          \"direction\": \"ingress\",\n          \"id\": \"2042275540105601010\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/16505592516624739660/securityMarks\"\n        },\n        \"createTime\": \"2018-11-01T22:16:11.646Z\",\n        \"updateTime\": \"2018-11-01T22:16:11.646Z\"\n      },\n      \"state\": \"UNUSED\"\n    },\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/12329845047845809777\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/joonix-net-forseti-22/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/592766336107\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/592766336107\",\n          \"resourceOwners\": [\n            \"user:dandrade@ciandt.com\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-09-06t07:01:20.776-07:00\",\n          \"name\": \"default-allow-internal\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/joonix-net-forseti-22/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/joonix-net-forseti-22/global/networks/default\",\n          \"direction\": \"ingress\",\n          \"id\": \"5449556774866423263\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/12329845047845809777/securityMarks\",\n          \"marks\": {\n            \"scc_query_3891e95b-403d-44b3-ad62-6678abbeea12\": \"true\"\n          }\n        },\n        \"createTime\": \"2018-09-07T12:11:01.523Z\",\n        \"updateTime\": \"2018-10-17T22:03:23.376Z\"\n      },\n      \"state\": \"UNUSED\"\n    },\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/17220463410704705453\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/marine-physics-196005/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/1000586090784\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/1000586090784\",\n          \"resourceOwners\": [\n            \"serviceAccount:catman-demo-controller@marine-physics-196005.iam.gserviceaccount.com\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-03-16t06:13:38.154-07:00\",\n          \"name\": \"default-allow-internal\",\n          \"direction\": \"ingress\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/marine-physics-196005/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/marine-physics-196005/global/networks/default\",\n          \"id\": \"4033077930719870445\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/17220463410704705453/securityMarks\",\n          \"marks\": {\n            \"incident\": \"23661\",\n            \"environment\": \"production\"\n          }\n        },\n        \"createTime\": \"2018-08-01T10:45:45.944Z\",\n        \"updateTime\": \"2018-10-17T22:03:23.376Z\"\n      },\n      \"state\": \"UNUSED\"\n    }\n  ],\n  \"readTime\": \"2018-11-09T16:17:26.945Z\",\n  \"nextPageToken\": \"CvwC3cy7qgAx8Qqfz5RthElWlL5Y5hyPF_dvbvX7Zbj6zQQgVtncC8VMUbU-25LAZNqa8xWZBKl7ct5HwrxUhFzhdcVzfJWmwrQg_WffTQGqVfDgZ34CnDPOx7RRb67ftqqJMDoislAFj24VF-I5grgQrBPJnyTjnq8D0Skqj9fgyZRvz47XKPLQz3tJ5pTIQjjUtI9nUz1WqPE-TL4zDzyyg738m4SAwG72OsKtykwlONvkJIfcx6bP2T5A1xVmDRRcdzW6xXGn4PoYcl8dfPC3PjWsPk7_kQNoxdWi9-dGW-VhtOLd3TpF65BIrpeO3FB3l4TdglrKZXxh0Dzqx0EbAdKjK9VCLQ9IFKEOWK5D5l5ffZ18NO-94E_d24MFjitWSl3-ThJg7pF2pBybFUpRJBUYjhIHLIR9e6fqP6ZS19t8KG7cbW55hz7tI4Nle5X_J04i6UNgzWzxkyJpb0C90zXbiEK3HHD6k7Hw_eZjox7g0KcJ_c2wum2dcZ4=\",\n  \"totalSize\": 23\n}\n"
+						}
+					]
+				},
+				{
+					"name": "Get Networks created/deleted hours from",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "498ddaa7-4199-4db9-9ac9-a580aeb408a6",
+								"exec": [
+									"pm.test(\"Your test name\", function () {",
+									"    // var parentIds = [];",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    // var value = /^projects/[/\\w-_]+$/.test(resourceName);",
+									"    var str = \"\"",
+									"    for (var i=0; i<jsonData.listAssetsResults.length; i++) {",
+									"        var resourceName = jsonData.listAssetsResults[i].asset.securityCenterProperties.resourceName;",
+									"        var resourceParent = jsonData.listAssetsResults[i].asset.securityCenterProperties.resourceParent;",
+									"        console.log(resourceName);",
+									"        // parentIds.push(resourceName);",
+									"        str += \"securityCenterProperties.resourceParent = \\\"\"+resourceParent + \"\\\" OR \";",
+									"    }",
+									"    console.log(str);",
+									"    // pm.globals.set(\"parentIds\", parentIds)",
+									"    // console.log(parentIds);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/assets?pageSize=11&filter=securityCenterProperties.resourceType  = \"google.compute.Network\"&readTime=2018-03-17T14:00:00.0Z&compare_duration=28800s",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"assets"
+							],
+							"query": [
+								{
+									"key": "pageSize",
+									"value": "11"
+								},
+								{
+									"key": "filter",
+									"value": "securityCenterProperties.resourceType  = \"google.compute.Network\""
+								},
+								{
+									"key": "readTime",
+									"value": "2018-03-17T14:00:00.0Z"
+								},
+								{
+									"key": "compare_duration",
+									"value": "28800s"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Asset List [200]",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/688851828130/assets?filter=securityCenterProperties.resourceType : \"Firewall\"  AND resourceProperties.allowed : \"0-65535\"",
+									"protocol": "https",
+									"host": [
+										"securitycenter",
+										"googleapis",
+										"com"
+									],
+									"path": [
+										"v1beta1",
+										"organizations",
+										"688851828130",
+										"assets"
+									],
+									"query": [
+										{
+											"key": "filter",
+											"value": "securityCenterProperties.resourceType : \"Firewall\"  AND resourceProperties.allowed : \"0-65535\""
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Alt-Svc",
+									"value": "quic=\":443\"; ma=2592000; v=\"44,43,39,35\"",
+									"name": "Alt-Svc",
+									"description": "Custom header"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "private",
+									"name": "Cache-Control",
+									"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 09 Nov 2018 16:17:27 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "ESF",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked",
+									"name": "Transfer-Encoding",
+									"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+								},
+								{
+									"key": "Vary",
+									"value": "Origin",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "Vary",
+									"value": "X-Origin",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "Vary",
+									"value": "Referer",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff",
+									"name": "X-Content-Type-Options",
+									"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN",
+									"name": "X-Frame-Options",
+									"description": "Clickjacking protection: \"deny\" - no rendering within a frame, \"sameorigin\" - no rendering if origin mismatch"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block",
+									"name": "X-XSS-Protection",
+									"description": "Cross-site scripting (XSS) filter"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"listAssetsResults\": [\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/650853799622838538\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/asset-dev-project/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/138150943629\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/138150943629\",\n          \"resourceOwners\": [\n            \"user:dandrade@gcp-sec-demo-org.joonix.net\",\n            \"user:lucasbr@gcp-sec-demo-org.joonix.net\",\n            \"user:walves@gcp-sec-demo-org.joonix.net\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-02-22t05:51:30.438-08:00\",\n          \"name\": \"default-allow-internal\",\n          \"direction\": \"ingress\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/asset-dev-project/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/asset-dev-project/global/networks/default\",\n          \"id\": \"7392811674201453581\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/650853799622838538/securityMarks\",\n          \"marks\": {\n            \"environment\": \"development\",\n            \"scc_query_3891e95b-403d-44b3-ad62-6678abbeea12\": \"true\"\n          }\n        },\n        \"createTime\": \"2018-08-01T10:45:32.791Z\",\n        \"updateTime\": \"2018-10-17T22:03:23.376Z\"\n      },\n      \"state\": \"UNUSED\"\n    },\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/10855669941519462085\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/bin-auth-playground/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/246054159221\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/246054159221\",\n          \"resourceOwners\": [\n            \"user:andychang@google.com\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-09-24t14:19:08.097-07:00\",\n          \"name\": \"default-allow-internal\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/bin-auth-playground/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/bin-auth-playground/global/networks/default\",\n          \"direction\": \"ingress\",\n          \"id\": \"3927342531763038755\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/10855669941519462085/securityMarks\"\n        },\n        \"createTime\": \"2018-10-17T22:03:23.376Z\",\n        \"updateTime\": \"2018-10-17T22:03:23.376Z\"\n      },\n      \"state\": \"UNUSED\"\n    },\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/1480242085031720440\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/binary-authorization-demo/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/808630039469\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/808630039469\",\n          \"resourceOwners\": [\n            \"user:andychang@google.com\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-09-24t14:10:38.195-07:00\",\n          \"name\": \"default-allow-internal\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/binary-authorization-demo/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/binary-authorization-demo/global/networks/default\",\n          \"direction\": \"ingress\",\n          \"id\": \"7704448539799383073\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/1480242085031720440/securityMarks\"\n        },\n        \"createTime\": \"2018-09-26T06:14:09.800Z\",\n        \"updateTime\": \"2018-10-17T22:03:23.376Z\"\n      },\n      \"state\": \"UNUSED\"\n    },\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/16005324126592187086\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/cai-demo-spanner/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/581282749270\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/581282749270\",\n          \"resourceOwners\": [\n            \"user:andychang@google.com\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-10-24t10:00:31.405-07:00\",\n          \"name\": \"default-allow-internal\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/cai-demo-spanner/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/cai-demo-spanner/global/networks/default\",\n          \"direction\": \"ingress\",\n          \"id\": \"9218290225199782848\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/16005324126592187086/securityMarks\"\n        },\n        \"createTime\": \"2018-10-25T03:36:48.744Z\",\n        \"updateTime\": \"2018-10-25T03:36:48.744Z\"\n      },\n      \"state\": \"UNUSED\"\n    },\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/7776593159689461472\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/connector-project/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/520732501711\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/520732501711\",\n          \"resourceOwners\": [\n            \"user:andychang@google.com\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-03-16t19:13:29.725-07:00\",\n          \"name\": \"default-allow-internal\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/connector-project/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/connector-project/global/networks/default\",\n          \"direction\": \"ingress\",\n          \"id\": \"1389095827078760230\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/7776593159689461472/securityMarks\"\n        },\n        \"createTime\": \"2018-08-01T10:45:39.211Z\",\n        \"updateTime\": \"2018-10-17T22:03:23.376Z\"\n      },\n      \"state\": \"UNUSED\"\n    },\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/45777909775194825\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/container-security-demo/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/267334838076\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/267334838076\",\n          \"resourceOwners\": [\n            \"user:andychang@google.com\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-07-20t07:16:10.806-07:00\",\n          \"name\": \"default-allow-internal\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/container-security-demo/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/container-security-demo/global/networks/default\",\n          \"direction\": \"ingress\",\n          \"id\": \"6545807367131123781\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/45777909775194825/securityMarks\"\n        },\n        \"createTime\": \"2018-07-20T14:35:20.650Z\",\n        \"updateTime\": \"2018-10-17T22:03:23.376Z\"\n      },\n      \"state\": \"UNUSED\"\n    },\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/17354737696003905194\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/dev-gcpsec-dns-control/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/861568220405\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/861568220405\",\n          \"resourceOwners\": [\n            \"user:joaog@gcp-sec-demo-org.joonix.net\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-06-14t08:22:18.290-07:00\",\n          \"name\": \"default-allow-internal\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/dev-gcpsec-dns-control/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/dev-gcpsec-dns-control/global/networks/default\",\n          \"direction\": \"ingress\",\n          \"id\": \"2713416054722213573\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/17354737696003905194/securityMarks\"\n        },\n        \"createTime\": \"2018-06-15T00:42:06.778Z\",\n        \"updateTime\": \"2018-10-17T22:03:23.376Z\"\n      },\n      \"state\": \"UNUSED\"\n    },\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/16505592516624739660\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/jonnys-demo/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/544181147435\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/544181147435\",\n          \"resourceOwners\": [\n            \"serviceAccount:dlp-cscc@jonnys-demo.iam.gserviceaccount.com\",\n            \"user:jonshannon@google.com\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-11-01t08:51:57.201-07:00\",\n          \"name\": \"default-allow-internal\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/jonnys-demo/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/jonnys-demo/global/networks/default\",\n          \"direction\": \"ingress\",\n          \"id\": \"2042275540105601010\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/16505592516624739660/securityMarks\"\n        },\n        \"createTime\": \"2018-11-01T22:16:11.646Z\",\n        \"updateTime\": \"2018-11-01T22:16:11.646Z\"\n      },\n      \"state\": \"UNUSED\"\n    },\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/12329845047845809777\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/joonix-net-forseti-22/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/592766336107\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/592766336107\",\n          \"resourceOwners\": [\n            \"user:dandrade@ciandt.com\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-09-06t07:01:20.776-07:00\",\n          \"name\": \"default-allow-internal\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/joonix-net-forseti-22/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/joonix-net-forseti-22/global/networks/default\",\n          \"direction\": \"ingress\",\n          \"id\": \"5449556774866423263\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/12329845047845809777/securityMarks\",\n          \"marks\": {\n            \"scc_query_3891e95b-403d-44b3-ad62-6678abbeea12\": \"true\"\n          }\n        },\n        \"createTime\": \"2018-09-07T12:11:01.523Z\",\n        \"updateTime\": \"2018-10-17T22:03:23.376Z\"\n      },\n      \"state\": \"UNUSED\"\n    },\n    {\n      \"asset\": {\n        \"name\": \"organizations/688851828130/assets/17220463410704705453\",\n        \"securityCenterProperties\": {\n          \"resourceName\": \"//compute.googleapis.com/projects/marine-physics-196005/global/firewalls/default-allow-internal\",\n          \"resourceType\": \"google.compute.Firewall\",\n          \"resourceParent\": \"//cloudresourcemanager.googleapis.com/projects/1000586090784\",\n          \"resourceProject\": \"//cloudresourcemanager.googleapis.com/projects/1000586090784\",\n          \"resourceOwners\": [\n            \"serviceAccount:catman-demo-controller@marine-physics-196005.iam.gserviceaccount.com\"\n          ]\n        },\n        \"resourceProperties\": {\n          \"sourceRange\": \"[\\\"10.128.0.0/9\\\"]\",\n          \"creationTimestamp\": \"2018-03-16t06:13:38.154-07:00\",\n          \"name\": \"default-allow-internal\",\n          \"direction\": \"ingress\",\n          \"description\": \"allow internal traffic on the default network\",\n          \"selfLink\": \"https://www.googleapis.com/compute/v1/projects/marine-physics-196005/global/firewalls/default-allow-internal\",\n          \"priority\": 65534,\n          \"allowed\": \"[{\\\"ipProtocol\\\":\\\"tcp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"udp\\\",\\\"port\\\":[\\\"0-65535\\\"]},{\\\"ipProtocol\\\":\\\"icmp\\\"}]\",\n          \"disabled\": false,\n          \"network\": \"https://www.googleapis.com/compute/v1/projects/marine-physics-196005/global/networks/default\",\n          \"id\": \"4033077930719870445\"\n        },\n        \"securityMarks\": {\n          \"name\": \"organizations/688851828130/assets/17220463410704705453/securityMarks\",\n          \"marks\": {\n            \"incident\": \"23661\",\n            \"environment\": \"production\"\n          }\n        },\n        \"createTime\": \"2018-08-01T10:45:45.944Z\",\n        \"updateTime\": \"2018-10-17T22:03:23.376Z\"\n      },\n      \"state\": \"UNUSED\"\n    }\n  ],\n  \"readTime\": \"2018-11-09T16:17:26.945Z\",\n  \"nextPageToken\": \"CvwC3cy7qgAx8Qqfz5RthElWlL5Y5hyPF_dvbvX7Zbj6zQQgVtncC8VMUbU-25LAZNqa8xWZBKl7ct5HwrxUhFzhdcVzfJWmwrQg_WffTQGqVfDgZ34CnDPOx7RRb67ftqqJMDoislAFj24VF-I5grgQrBPJnyTjnq8D0Skqj9fgyZRvz47XKPLQz3tJ5pTIQjjUtI9nUz1WqPE-TL4zDzyyg738m4SAwG72OsKtykwlONvkJIfcx6bP2T5A1xVmDRRcdzW6xXGn4PoYcl8dfPC3PjWsPk7_kQNoxdWi9-dGW-VhtOLd3TpF65BIrpeO3FB3l4TdglrKZXxh0Dzqx0EbAdKjK9VCLQ9IFKEOWK5D5l5ffZ18NO-94E_d24MFjitWSl3-ThJg7pF2pBybFUpRJBUYjhIHLIR9e6fqP6ZS19t8KG7cbW55hz7tI4Nle5X_J04i6UNgzWzxkyJpb0C90zXbiEK3HHD6k7Hw_eZjox7g0KcJ_c2wum2dcZ4=\",\n  \"totalSize\": 23\n}\n"
+						}
+					]
+				},
+				{
+					"name": "List ALL Buckets with specific mark",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/assets?filter=securityCenterProperties.resourceType : \"bucket\" AND securityMarks.marks.bucket-type = \"investment\"",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"assets"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "securityCenterProperties.resourceType : \"bucket\" AND securityMarks.marks.bucket-type = \"investment\""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Firewalls",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/assets?filter=securityCenterProperties.resourceType = \"google.compute.Firewall\"",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"assets"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "securityCenterProperties.resourceType = \"google.compute.Firewall\""
+								}
+							]
+						},
+						"description": "Related to performance report during migration form alpha to beta"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "findings",
+			"item": [
+				{
+					"name": "List all Findings",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/sources/-/findings?filter=category = \"resource_involved_in_coin_mining\" AND parent : \"organizations/119612413569/sources/702511929790754132\"&readTime=2019-02-18T21:04:23.045123456Z&orderBy=eventTime desc",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"sources",
+								"-",
+								"findings"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "category = \"resource_involved_in_coin_mining\" AND parent : \"organizations/119612413569/sources/702511929790754132\""
+								},
+								{
+									"key": "readTime",
+									"value": "2019-02-18T21:04:23.045123456Z"
+								},
+								{
+									"key": "orderBy",
+									"value": "eventTime desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Findings From Assets named \"connector-project\" in Different Sources",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/sources/-/findings?filter= resourceName : \"connector-project\" AND parent = \"organizations/688851828130/sources/2290967579963267363\" OR parent = \"organizations/688851828130/sources/250821172470083347\"",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"sources",
+								"-",
+								"findings"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": " resourceName : \"connector-project\" AND parent = \"organizations/688851828130/sources/2290967579963267363\" OR parent = \"organizations/688851828130/sources/250821172470083347\""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Findings By Category And Resources",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/sources/-/findings?filter=category = \"CONTAINER_RUNTIME_ANOMALY-HIGH_RISK_IP\" AND resourceName = \"//compute.googleapis.com/projects/binary-authorization-demo/global/firewalls/gke-bin-auth-demo-cluster-5dd7583a-all\" OR resourceName = \"//compute.googleapis.com/projects/asset-dev-project/zones/us-central1-b/instances/aef-default-20180222t230228-s7wk\" OR resourceName = \"//compute.googleapis.com/projects/asset-dev-project/zones/us-central1-c/instances/aef-default-1-qgk7\" OR resourceName = \"//compute.googleapis.com/projects/asset-dev-project/zones/us-central1-f/instances/aef-default-20180222t230228-1rb9\" OR resourceName = \"//compute.googleapis.com/projects/binary-authorization-demo/zones/us-central1-a/instances/gke-bin-auth-demo-cluste-default-pool-da672324-tcjv\" OR resourceName = \"//compute.googleapis.com/projects/binary-authorization-demo/zones/us-central1-a/instances/gke-bin-auth-demo-cluste-default-pool-da672324-870f\" OR resourceName = \"//compute.googleapis.com/projects/binary-authorization-demo/zones/us-central1-a/instances/gke-bin-auth-demo-cluste-default-pool-da672324-kqq4\" OR resourceName = \"//compute.googleapis.com/projects/connector-project/zones/us-east1-b/instances/new-vm2\" OR resourceName = \"//compute.googleapis.com/projects/connector-project/zones/us-east1-b/instances/new-vm\" OR resourceName = \"//compute.googleapis.com/projects/container-security-demo/zones/us-central1-a/instances/gke-cluster-sec-demo-tar-default-pool-0dfce3bb-mnrn\"",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"sources",
+								"-",
+								"findings"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "category = \"CONTAINER_RUNTIME_ANOMALY-HIGH_RISK_IP\" AND resourceName = \"//compute.googleapis.com/projects/binary-authorization-demo/global/firewalls/gke-bin-auth-demo-cluster-5dd7583a-all\" OR resourceName = \"//compute.googleapis.com/projects/asset-dev-project/zones/us-central1-b/instances/aef-default-20180222t230228-s7wk\" OR resourceName = \"//compute.googleapis.com/projects/asset-dev-project/zones/us-central1-c/instances/aef-default-1-qgk7\" OR resourceName = \"//compute.googleapis.com/projects/asset-dev-project/zones/us-central1-f/instances/aef-default-20180222t230228-1rb9\" OR resourceName = \"//compute.googleapis.com/projects/binary-authorization-demo/zones/us-central1-a/instances/gke-bin-auth-demo-cluste-default-pool-da672324-tcjv\" OR resourceName = \"//compute.googleapis.com/projects/binary-authorization-demo/zones/us-central1-a/instances/gke-bin-auth-demo-cluste-default-pool-da672324-870f\" OR resourceName = \"//compute.googleapis.com/projects/binary-authorization-demo/zones/us-central1-a/instances/gke-bin-auth-demo-cluste-default-pool-da672324-kqq4\" OR resourceName = \"//compute.googleapis.com/projects/connector-project/zones/us-east1-b/instances/new-vm2\" OR resourceName = \"//compute.googleapis.com/projects/connector-project/zones/us-east1-b/instances/new-vm\" OR resourceName = \"//compute.googleapis.com/projects/container-security-demo/zones/us-central1-a/instances/gke-cluster-sec-demo-tar-default-pool-0dfce3bb-mnrn\""
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Finding List [200]",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"disabled": false
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/688851828130/sources/-/findings?filter=category = \"CONTAINER_RUNTIME_ANOMALY-HIGH_RISK_IP\" AND resourceName = \"//compute.googleapis.com/projects/binary-authorization-demo/global/firewalls/gke-bin-auth-demo-cluster-5dd7583a-all\" OR resourceName = \"//compute.googleapis.com/projects/asset-dev-project/zones/us-central1-b/instances/aef-default-20180222t230228-s7wk\" OR resourceName = \"//compute.googleapis.com/projects/asset-dev-project/zones/us-central1-c/instances/aef-default-1-qgk7\" OR resourceName = \"//compute.googleapis.com/projects/asset-dev-project/zones/us-central1-f/instances/aef-default-20180222t230228-1rb9\" OR resourceName = \"//compute.googleapis.com/projects/binary-authorization-demo/zones/us-central1-a/instances/gke-bin-auth-demo-cluste-default-pool-da672324-tcjv\" OR resourceName = \"//compute.googleapis.com/projects/binary-authorization-demo/zones/us-central1-a/instances/gke-bin-auth-demo-cluste-default-pool-da672324-870f\" OR resourceName = \"//compute.googleapis.com/projects/binary-authorization-demo/zones/us-central1-a/instances/gke-bin-auth-demo-cluste-default-pool-da672324-kqq4\" OR resourceName = \"//compute.googleapis.com/projects/connector-project/zones/us-east1-b/instances/new-vm2\" OR resourceName = \"//compute.googleapis.com/projects/connector-project/zones/us-east1-b/instances/new-vm\" OR resourceName = \"//compute.googleapis.com/projects/container-security-demo/zones/us-central1-a/instances/gke-cluster-sec-demo-tar-default-pool-0dfce3bb-mnrn\"",
+									"protocol": "https",
+									"host": [
+										"securitycenter",
+										"googleapis",
+										"com"
+									],
+									"path": [
+										"v1beta1",
+										"organizations",
+										"688851828130",
+										"sources",
+										"-",
+										"findings"
+									],
+									"query": [
+										{
+											"key": "filter",
+											"value": "category = \"CONTAINER_RUNTIME_ANOMALY-HIGH_RISK_IP\" AND resourceName = \"//compute.googleapis.com/projects/binary-authorization-demo/global/firewalls/gke-bin-auth-demo-cluster-5dd7583a-all\" OR resourceName = \"//compute.googleapis.com/projects/asset-dev-project/zones/us-central1-b/instances/aef-default-20180222t230228-s7wk\" OR resourceName = \"//compute.googleapis.com/projects/asset-dev-project/zones/us-central1-c/instances/aef-default-1-qgk7\" OR resourceName = \"//compute.googleapis.com/projects/asset-dev-project/zones/us-central1-f/instances/aef-default-20180222t230228-1rb9\" OR resourceName = \"//compute.googleapis.com/projects/binary-authorization-demo/zones/us-central1-a/instances/gke-bin-auth-demo-cluste-default-pool-da672324-tcjv\" OR resourceName = \"//compute.googleapis.com/projects/binary-authorization-demo/zones/us-central1-a/instances/gke-bin-auth-demo-cluste-default-pool-da672324-870f\" OR resourceName = \"//compute.googleapis.com/projects/binary-authorization-demo/zones/us-central1-a/instances/gke-bin-auth-demo-cluste-default-pool-da672324-kqq4\" OR resourceName = \"//compute.googleapis.com/projects/connector-project/zones/us-east1-b/instances/new-vm2\" OR resourceName = \"//compute.googleapis.com/projects/connector-project/zones/us-east1-b/instances/new-vm\" OR resourceName = \"//compute.googleapis.com/projects/container-security-demo/zones/us-central1-a/instances/gke-cluster-sec-demo-tar-default-pool-0dfce3bb-mnrn\""
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Alt-Svc",
+									"value": "quic=\":443\"; ma=2592000; v=\"44,43,39,35\"",
+									"name": "Alt-Svc",
+									"description": "Custom header"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "private",
+									"name": "Cache-Control",
+									"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 11 Nov 2018 18:11:14 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "ESF",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked",
+									"name": "Transfer-Encoding",
+									"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+								},
+								{
+									"key": "Vary",
+									"value": "Origin",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "Vary",
+									"value": "X-Origin",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "Vary",
+									"value": "Referer",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff",
+									"name": "X-Content-Type-Options",
+									"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN",
+									"name": "X-Frame-Options",
+									"description": "Clickjacking protection: \"deny\" - no rendering within a frame, \"sameorigin\" - no rendering if origin mismatch"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block",
+									"name": "X-XSS-Protection",
+									"description": "Cross-site scripting (XSS) filter"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"findings\": [\n    {\n      \"name\": \"organizations/688851828130/sources/10525437515560121179/findings/ac785971e7024c609d91f47211519d3e\",\n      \"parent\": \"organizations/688851828130/sources/10525437515560121179\",\n      \"resourceName\": \"//compute.googleapis.com/projects/container-security-demo/zones/us-central1-a/instances/gke-cluster-sec-demo-tar-default-pool-0dfce3bb-mnrn\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"CONTAINER_RUNTIME_ANOMALY-HIGH_RISK_IP\",\n      \"externalUri\": \"http://35.197.45.209:8081/#!/login\",\n      \"sourceProperties\": {\n        \"host\": \"liron-srv\",\n        \"sccCategory\": \"Container Runtime Anomaly - High Risk IP\",\n        \"sccStatus\": \"ACTIVE\",\n        \"msg\": \"Connection to high risk IP 54.88.32.27:80, which is explicitly blocked in the runtime rule\",\n        \"sccStat\": \"info\\u200b\",\n        \"container\": \"/nifty_poincare\",\n        \"url\": \"http://35.197.45.209:8081/#!/login\",\n        \"scc_status\": \"ACTIVE\",\n        \"scc_source_category_id\": \"CONTAINER_RUNTIME_ANOMALY-HIGH_RISK_IP\",\n        \"sccSeverity\": \"high\",\n        \"image\": \"alpine:3.7\",\n        \"rule\": \"Default - alert on suspicious runtime behavior\"\n      },\n      \"securityMarks\": {\n        \"name\": \"organizations/688851828130/sources/10525437515560121179/findings/ac785971e7024c609d91f47211519d3e/securityMarks\"\n      },\n      \"eventTime\": \"2018-07-20T18:31:29Z\",\n      \"createTime\": \"2018-07-20T18:31:29Z\"\n    }\n  ],\n  \"readTime\": \"2018-11-11T18:11:14.816Z\",\n  \"totalSize\": 1\n}\n"
+						}
+					]
+				},
+				{
+					"name": "List Findings From Source",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/sources/702511929790754132/findings",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"sources",
+								"702511929790754132",
+								"findings"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "[200] success on return findings",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/sources/702511929790754132/findings",
+									"protocol": "https",
+									"host": [
+										"securitycenter",
+										"googleapis",
+										"com"
+									],
+									"path": [
+										"v1beta1",
+										"organizations",
+										"{{organizationId}}",
+										"sources",
+										"702511929790754132",
+										"findings"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "X-Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Referer"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 28 Feb 2019 14:41:58 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "ESF"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "private"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "quic=\":443\"; ma=2592000; v=\"44,43,39\""
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"findings\": [\n        {\n            \"name\": \"organizations/119612413569/sources/702511929790754132/findings/0140ed41d0aefdc000f7cbd6f91781c9\",\n            \"parent\": \"organizations/119612413569/sources/702511929790754132\",\n            \"resourceName\": \"organizations/119612413569/projects/coinmining-teste-10\",\n            \"state\": \"ACTIVE\",\n            \"category\": \"resource_involved_in_coin_mining\",\n            \"sourceProperties\": {\n                \"vm_ips\": \"34.73.77.85\",\n                \"end_time_usec\": \"1550258940000000\",\n                \"abuse_target_ips\": \"139.162.81.90, 142.44.242.100\",\n                \"end_datetime_UTC\": \"2019-02-15 19:29:00 UTC\",\n                \"urls\": \"eth-jp1.nanopool.org, etc-us-east1.nanopool.org, etn-us-east1.nanopool.org, pasc-us-east1.nanopool.org, eth-us-east1.nanopool.org, zec-us-east1.nanopool.org, xmr-us-east1.nanopool.org, sia-us-east1.nanopool.org\",\n                \"vm_host_and_zone_names\": \"eth-m19-tesla-p100:us-east1-b\",\n                \"finding_type\": \"Abuse originating from a resource in your organization.\",\n                \"start_time_usec\": \"1550258760000000\",\n                \"action_taken\": \"Notification sent\",\n                \"summary_message\": \"We have recently detected activity on your Google Cloud Platform/APIs project that violates our Terms of Service or Acceptable Use Policy.\",\n                \"start_datetime_UTC\": \"2019-02-15 19:26:00 UTC\"\n            },\n            \"securityMarks\": {\n                \"name\": \"organizations/119612413569/sources/702511929790754132/findings/0140ed41d0aefdc000f7cbd6f91781c9/securityMarks\"\n            },\n            \"eventTime\": \"2019-02-15T20:07:03Z\",\n            \"createTime\": \"2019-02-15T20:07:03.280Z\"\n        },\n        {\n            \"name\": \"organizations/119612413569/sources/702511929790754132/findings/0264a74f868c482fd54c7d547fe67ff7\",\n            \"parent\": \"organizations/119612413569/sources/702511929790754132\",\n            \"resourceName\": \"organizations/119612413569/projects/next19-target\",\n            \"state\": \"ACTIVE\",\n            \"category\": \"resource_involved_in_coin_mining\",\n            \"sourceProperties\": {\n                \"vm_ips\": \"35.224.1.220\",\n                \"end_time_usec\": \"1550257140000000\",\n                \"abuse_target_ips\": \"194.58.122.146\",\n                \"end_datetime_UTC\": \"2019-02-15 18:59:00 UTC\",\n                \"urls\": \"stratum.aikapool.com\",\n                \"vm_host_and_zone_names\": \"compromised-instance:us-central1-f\",\n                \"finding_type\": \"Abuse originating from a resource in your organization.\",\n                \"start_time_usec\": \"1550256780000000\",\n                \"action_taken\": \"Notification sent\",\n                \"summary_message\": \"We have recently detected activity on your Google Cloud Platform/APIs project that violates our Terms of Service or Acceptable Use Policy.\",\n                \"start_datetime_UTC\": \"2019-02-15 18:53:00 UTC\"\n            },\n            \"securityMarks\": {\n                \"name\": \"organizations/119612413569/sources/702511929790754132/findings/0264a74f868c482fd54c7d547fe67ff7/securityMarks\"\n            },\n            \"eventTime\": \"2019-02-15T19:32:48Z\",\n            \"createTime\": \"2019-02-15T19:32:49.102Z\"\n        },\n        {\n            \"name\": \"organizations/119612413569/sources/702511929790754132/findings/1c594c3378ae4399ed25e6db39703d68\",\n            \"parent\": \"organizations/119612413569/sources/702511929790754132\",\n            \"resourceName\": \"organizations/119612413569/projects/test-cat-findings-beta\",\n            \"state\": \"ACTIVE\",\n            \"category\": \"resource_involved_in_coin_mining\",\n            \"sourceProperties\": {\n                \"End datetime (UTC)\": \"2018-11-02 17:55:00 UTC\",\n                \"Action Taken\": \"Resource restricted\",\n                \"End time (usec)\": \"1541181300000000\",\n                \"Target IP(s) of abusive behavior\": \"11.22.33.44.55\",\n                \"Start datetime (UTC)\": \"2018-11-02 17:39:00 UTC\",\n                \"VM IP(s)\": \"35.54.32.45\",\n                \"URL(s)\": \"monerohash.com\",\n                \"VM host and zone name(s)\": \"instance-1:us-east1-b\",\n                \"Start time (usec)\": \"1541180340000000\",\n                \"Finding Type\": \"Abuse originating from a resource in your organization.\",\n                \"Summary Message\": \"We have recently detected activity on your Google Cloud Platform/APIs project that violates our Terms of Service or Acceptable Use Policy.\"\n            },\n            \"securityMarks\": {\n                \"name\": \"organizations/119612413569/sources/702511929790754132/findings/1c594c3378ae4399ed25e6db39703d68/securityMarks\"\n            },\n            \"eventTime\": \"2018-11-09T17:28:46Z\",\n            \"createTime\": \"2018-11-09T17:28:46Z\"\n        },\n        {\n            \"name\": \"organizations/119612413569/sources/702511929790754132/findings/3a444673b997a88eaebe5c0bff7ddeee\",\n            \"parent\": \"organizations/119612413569/sources/702511929790754132\",\n            \"resourceName\": \"organizations/119612413569/projects/next19-target-andy4\",\n            \"state\": \"ACTIVE\",\n            \"category\": \"resource_involved_in_coin_mining\",\n            \"sourceProperties\": {\n                \"vm_ips\": \"35.193.109.168\",\n                \"end_time_usec\": \"1551096960000000\",\n                \"abuse_target_ips\": \"139.99.102.70, 172.105.211.250\",\n                \"end_datetime_UTC\": \"2019-02-25 12:16:00 UTC\",\n                \"urls\": \"eth-jp1.nanopool.org, zec-asia1.nanopool.org, sia-asia1.nanopool.org, etc-asia1.nanopool.org, eth-asia1.nanopool.org, etn-asia1.nanopool.org, xmr-asia1.nanopool.org, pasc-asia1.nanopool.org\",\n                \"vm_host_and_zone_names\": \"compromised-instance:us-central1-f\",\n                \"finding_type\": \"Abuse originating from a resource in your organization.\",\n                \"start_time_usec\": \"1551096960000000\",\n                \"action_taken\": \"Notification sent\",\n                \"summary_message\": \"We have recently detected activity on your Google Cloud Platform/APIs project that violates our Terms of Service or Acceptable Use Policy.\",\n                \"start_datetime_UTC\": \"2019-02-25 12:16:00 UTC\"\n            },\n            \"securityMarks\": {\n                \"name\": \"organizations/119612413569/sources/702511929790754132/findings/3a444673b997a88eaebe5c0bff7ddeee/securityMarks\"\n            },\n            \"eventTime\": \"2019-02-25T12:47:03Z\",\n            \"createTime\": \"2019-02-25T12:47:04.134Z\"\n        },\n        {\n            \"name\": \"organizations/119612413569/sources/702511929790754132/findings/3f14b8b7b7cdcefab3325e6657af69c4\",\n            \"parent\": \"organizations/119612413569/sources/702511929790754132\",\n            \"resourceName\": \"organizations/119612413569/projects/next19-target-20190218\",\n            \"state\": \"ACTIVE\",\n            \"category\": \"resource_involved_in_coin_mining\",\n            \"sourceProperties\": {\n                \"vm_ips\": \"35.193.221.69\",\n                \"end_time_usec\": \"1550521740000000\",\n                \"abuse_target_ips\": \"194.58.122.146\",\n                \"end_datetime_UTC\": \"2019-02-18 20:29:00 UTC\",\n                \"urls\": \"stratum.aikapool.com\",\n                \"vm_host_and_zone_names\": \"compromised-instance:us-central1-f\",\n                \"finding_type\": \"Abuse originating from a resource in your organization.\",\n                \"start_time_usec\": \"1550521500000000\",\n                \"action_taken\": \"Notification sent\",\n                \"summary_message\": \"We have recently detected activity on your Google Cloud Platform/APIs project that violates our Terms of Service or Acceptable Use Policy.\",\n                \"start_datetime_UTC\": \"2019-02-18 20:25:00 UTC\"\n            },\n            \"securityMarks\": {\n                \"name\": \"organizations/119612413569/sources/702511929790754132/findings/3f14b8b7b7cdcefab3325e6657af69c4/securityMarks\"\n            },\n            \"eventTime\": \"2019-02-18T21:04:16Z\",\n            \"createTime\": \"2019-02-18T21:04:16.489Z\"\n        },\n        {\n            \"name\": \"organizations/119612413569/sources/702511929790754132/findings/81b848c604c55cf652b5c629cec2fff2\",\n            \"parent\": \"organizations/119612413569/sources/702511929790754132\",\n            \"resourceName\": \"organizations/119612413569/projects/next19-target-andy\",\n            \"state\": \"ACTIVE\",\n            \"category\": \"resource_involved_in_coin_mining\",\n            \"sourceProperties\": {\n                \"vm_ips\": \"35.202.207.93\",\n                \"end_time_usec\": \"1550593320000000\",\n                \"abuse_target_ips\": \"194.58.122.146\",\n                \"end_datetime_UTC\": \"2019-02-19 16:22:00 UTC\",\n                \"urls\": \"stratum.aikapool.com\",\n                \"vm_host_and_zone_names\": \"compromised-instance:us-central1-f\",\n                \"finding_type\": \"Abuse originating from a resource in your organization.\",\n                \"start_time_usec\": \"1550592420000000\",\n                \"action_taken\": \"Notification sent\",\n                \"summary_message\": \"We have recently detected activity on your Google Cloud Platform/APIs project that violates our Terms of Service or Acceptable Use Policy.\",\n                \"start_datetime_UTC\": \"2019-02-19 16:07:00 UTC\"\n            },\n            \"securityMarks\": {\n                \"name\": \"organizations/119612413569/sources/702511929790754132/findings/81b848c604c55cf652b5c629cec2fff2/securityMarks\"\n            },\n            \"eventTime\": \"2019-02-19T16:47:45Z\",\n            \"createTime\": \"2019-02-19T16:47:45.884Z\"\n        },\n        {\n            \"name\": \"organizations/119612413569/sources/702511929790754132/findings/e538547f3a6707f083ec601803379e18\",\n            \"parent\": \"organizations/119612413569/sources/702511929790754132\",\n            \"resourceName\": \"organizations/119612413569/projects/test-cat-findings-beta\",\n            \"state\": \"ACTIVE\",\n            \"category\": \"test_alert\",\n            \"sourceProperties\": {\n                \"Action Taken\": \"Notification sent\",\n                \"Finding Type\": \"Unusual activity from a resource in your organization.\",\n                \"Summary Message\": \"If you are seeing this message, your integration is setup correctly for receiving findings from Cloud Anomaly Detection.\"\n            },\n            \"securityMarks\": {\n                \"name\": \"organizations/119612413569/sources/702511929790754132/findings/e538547f3a6707f083ec601803379e18/securityMarks\"\n            },\n            \"eventTime\": \"2018-11-08T23:14:33Z\",\n            \"createTime\": \"2018-11-08T23:14:33Z\"\n        },\n        {\n            \"name\": \"organizations/119612413569/sources/702511929790754132/findings/e9c9da6380a275b4e7f878377a7e1a97\",\n            \"parent\": \"organizations/119612413569/sources/702511929790754132\",\n            \"resourceName\": \"organizations/119612413569/projects/next19-target-andy2\",\n            \"state\": \"ACTIVE\",\n            \"category\": \"resource_involved_in_coin_mining\",\n            \"sourceProperties\": {\n                \"vm_ips\": \"35.184.40.198\",\n                \"end_time_usec\": \"1550609640000000\",\n                \"abuse_target_ips\": \"139.99.156.30, 164.132.108.171, 92.222.10.59, 192.99.69.170\",\n                \"end_datetime_UTC\": \"2019-02-19 20:54:00 UTC\",\n                \"urls\": \"eth-au1.nanopool.org, eth-eu2.nanopool.org, zec-eu1.nanopool.org, etc-eu1.nanopool.org, pasc-eu1.nanopool.org, eth-eu1.nanopool.org, sia-eu1.nanopool.org, etc-us-east1.nanopool.org, eth-us-east1.nanopool.org, sia-us-east1.nanopool.org, zec-us-east1.nanopool.org, etn-us-east1.nanopool.org, xmr-us-east1.nanopool.org, pasc-us-east1.nanopool.org\",\n                \"vm_host_and_zone_names\": \"compromised-instance:us-central1-f\",\n                \"finding_type\": \"Abuse originating from a resource in your organization.\",\n                \"start_time_usec\": \"1550609640000000\",\n                \"action_taken\": \"Notification sent\",\n                \"summary_message\": \"We have recently detected activity on your Google Cloud Platform/APIs project that violates our Terms of Service or Acceptable Use Policy.\",\n                \"start_datetime_UTC\": \"2019-02-19 20:54:00 UTC\"\n            },\n            \"securityMarks\": {\n                \"name\": \"organizations/119612413569/sources/702511929790754132/findings/e9c9da6380a275b4e7f878377a7e1a97/securityMarks\"\n            },\n            \"eventTime\": \"2019-02-19T21:34:26Z\",\n            \"createTime\": \"2019-02-19T21:34:26.719Z\"\n        },\n        {\n            \"name\": \"organizations/119612413569/sources/702511929790754132/findings/eddcd6d5b00a3e817b1f114f629a584d\",\n            \"parent\": \"organizations/119612413569/sources/702511929790754132\",\n            \"resourceName\": \"organizations/119612413569/projects/coinmining-teste-9\",\n            \"state\": \"ACTIVE\",\n            \"category\": \"resource_involved_in_coin_mining\",\n            \"sourceProperties\": {\n                \"vm_ips\": \"34.73.139.188\",\n                \"end_time_usec\": \"1550149680000000\",\n                \"abuse_target_ips\": \"194.58.122.146\",\n                \"end_datetime_UTC\": \"2019-02-14 13:08:00 UTC\",\n                \"urls\": \"stratum.aikapool.com\",\n                \"vm_host_and_zone_names\": \"instance-1:us-east1-b\",\n                \"finding_type\": \"Abuse originating from a resource in your organization.\",\n                \"start_time_usec\": \"1550149620000000\",\n                \"action_taken\": \"Notification sent\",\n                \"summary_message\": \"We have recently detected activity on your Google Cloud Platform/APIs project that violates our Terms of Service or Acceptable Use Policy.\",\n                \"start_datetime_UTC\": \"2019-02-14 13:07:00 UTC\"\n            },\n            \"securityMarks\": {\n                \"name\": \"organizations/119612413569/sources/702511929790754132/findings/eddcd6d5b00a3e817b1f114f629a584d/securityMarks\"\n            },\n            \"eventTime\": \"2019-02-14T13:46:32Z\",\n            \"createTime\": \"2019-02-14T13:46:32.626Z\"\n        }\n    ],\n    \"readTime\": \"2019-02-28T14:41:58.668Z\",\n    \"totalSize\": 9\n}"
+						}
+					]
+				},
+				{
+					"name": "create audit log findings",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\nname: \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0a1\",\r\nparent:\"organizations/1055058813388/sources/9264282320683959279\",\r\nresourceName: \"organizations/1055058813388/assets/2247923701696342030\",\r\nstate: \"ACTIVE\",\r\ncategory: \"audit_log_test_category\",\r\nexternalUri: \"https://example.com\",\r\nsourceProperties: {\"scc_validation\": \"finding\"},\r\n\"eventTime\": \"2018-10-23T22:03:23.376Z\"\r\n}"
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/sources/9264282320683959279/findings?findingId=a0a0a0a0a0a1",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"sources",
+								"9264282320683959279",
+								"findings"
+							],
+							"query": [
+								{
+									"key": "findingId",
+									"value": "a0a0a0a0a0a1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List all Findings with pageSize",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/sources/-/findings?pageSize=20",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"sources",
+								"-",
+								"findings"
+							],
+							"query": [
+								{
+									"key": "pageSize",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "List all Findings [200]",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/1055058813388/sources/-/findings?pageSize=20",
+									"protocol": "https",
+									"host": [
+										"securitycenter",
+										"googleapis",
+										"com"
+									],
+									"path": [
+										"v1beta1",
+										"organizations",
+										"1055058813388",
+										"sources",
+										"-",
+										"findings"
+									],
+									"query": [
+										{
+											"key": "pageSize",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Alt-Svc",
+									"value": "quic=\":443\"; ma=2592000; v=\"44,43,39,35\"",
+									"name": "Alt-Svc",
+									"description": "Custom header"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "private",
+									"name": "Cache-Control",
+									"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 07 Nov 2018 16:09:24 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "ESF",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked",
+									"name": "Transfer-Encoding",
+									"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+								},
+								{
+									"key": "Vary",
+									"value": "Origin",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "Vary",
+									"value": "X-Origin",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "Vary",
+									"value": "Referer",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff",
+									"name": "X-Content-Type-Options",
+									"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN",
+									"name": "X-Frame-Options",
+									"description": "Clickjacking protection: \"deny\" - no rendering within a frame, \"sameorigin\" - no rendering if origin mismatch"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block",
+									"name": "X-XSS-Protection",
+									"description": "Cross-site scripting (XSS) filter"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"findings\": [\n    {\n      \"name\": \"organizations/1055058813388/sources/10711839371761827624/findings/a0a0a0a0a0b8\",\n      \"parent\": \"organizations/1055058813388/sources/10711839371761827624\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"test_category\",\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/10711839371761827624/findings/a0a0a0a0a0b8/securityMarks\"\n      },\n      \"eventTime\": \"2018-11-05T18:15:51.012Z\",\n      \"createTime\": \"2018-11-05T18:15:51.012Z\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/10711839371761827624/findings/u5gh9794guthg47940001\",\n      \"parent\": \"organizations/1055058813388/sources/10711839371761827624\",\n      \"resourceName\": \"organizations/1055058813388/assets/16712790543092542367\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"PROJECT_ACCESS\",\n      \"externalUri\": \"https://console.cloud.google.com\",\n      \"sourceProperties\": {\n        \"scc_environment\": \"hackathon\"\n      },\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/10711839371761827624/findings/u5gh9794guthg47940001/securityMarks\",\n        \"marks\": {\n          \"scc_beta_client_test\": \"test_mark\"\n        }\n      },\n      \"eventTime\": \"2018-10-30T12:27:43Z\",\n      \"createTime\": \"2018-10-30T12:27:43Z\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0a1\",\n      \"parent\": \"organizations/1055058813388/sources/9264282320683959279\",\n      \"resourceName\": \"organizations/1055058813388/assets/2247923701696342030\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"audit_log_test_category\",\n      \"externalUri\": \"https://example.com\",\n      \"sourceProperties\": {\n        \"scc_validation\": \"finding\"\n      },\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0a1/securityMarks\",\n        \"marks\": {\n          \"scc_beta_client_test\": \"test\"\n        }\n      },\n      \"eventTime\": \"2018-10-23T22:03:23.376Z\",\n      \"createTime\": \"2018-10-23T22:03:23.376Z\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0a2\",\n      \"parent\": \"organizations/1055058813388/sources/9264282320683959279\",\n      \"resourceName\": \"organizations/1055058813388/assets/11712741160732498783\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"audit_log_test_category\",\n      \"externalUri\": \"https://example.com\",\n      \"sourceProperties\": {\n        \"scc_validation\": \"finding\"\n      },\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0a2/securityMarks\"\n      },\n      \"eventTime\": \"2018-10-25T18:00:00Z\",\n      \"createTime\": \"2018-10-25T18:00:00Z\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0a3\",\n      \"parent\": \"organizations/1055058813388/sources/9264282320683959279\",\n      \"resourceName\": \"organizations/1055058813388/assets/11712741160732498783\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"audit_log_test_category\",\n      \"externalUri\": \"https://example.com\",\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0a3/securityMarks\"\n      },\n      \"eventTime\": \"1970-01-01T00:00:00Z\",\n      \"createTime\": \"1970-01-01T00:00:00Z\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0a4\",\n      \"parent\": \"organizations/1055058813388/sources/9264282320683959279\",\n      \"resourceName\": \"organizations/1055058813388/assets/11712741160732498783\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"audit_log_test_category\",\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0a4/securityMarks\"\n      },\n      \"eventTime\": \"1970-01-01T00:00:00Z\",\n      \"createTime\": \"1970-01-01T00:00:00Z\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0a5\",\n      \"parent\": \"organizations/1055058813388/sources/9264282320683959279\",\n      \"resourceName\": \"organizations/1055058813388/assets/11712741160732498783\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"audit_log_test_category\",\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0a5/securityMarks\"\n      },\n      \"eventTime\": \"2018-10-25T18:00:00Z\",\n      \"createTime\": \"2018-10-25T18:00:00Z\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0a6\",\n      \"parent\": \"organizations/1055058813388/sources/9264282320683959279\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"audit_log_test_category\",\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0a6/securityMarks\"\n      },\n      \"eventTime\": \"2018-10-25T18:00:00Z\",\n      \"createTime\": \"2018-10-25T18:00:00Z\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0a7\",\n      \"parent\": \"organizations/1055058813388/sources/9264282320683959279\",\n      \"state\": \"ACTIVE\",\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0a7/securityMarks\"\n      },\n      \"eventTime\": \"2018-10-25T18:00:00Z\",\n      \"createTime\": \"2018-10-25T18:00:00Z\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0a8\",\n      \"parent\": \"organizations/1055058813388/sources/9264282320683959279\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"audit_log_test_category\",\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0a8/securityMarks\"\n      },\n      \"eventTime\": \"2018-10-25T18:00:00Z\",\n      \"createTime\": \"2018-10-25T18:00:00Z\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0a9\",\n      \"parent\": \"organizations/1055058813388/sources/9264282320683959279\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"audit_log_test_category\",\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0a9/securityMarks\"\n      },\n      \"eventTime\": \"2018-10-25T18:00:00Z\",\n      \"createTime\": \"2018-10-25T18:00:00Z\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0b0\",\n      \"parent\": \"organizations/1055058813388/sources/9264282320683959279\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"audit_log_test_category\",\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0b0/securityMarks\"\n      },\n      \"eventTime\": \"2018-10-25T18:00:00Z\",\n      \"createTime\": \"2018-10-25T18:00:00Z\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0b1\",\n      \"parent\": \"organizations/1055058813388/sources/9264282320683959279\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"audit_log_test_category\",\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0b1/securityMarks\"\n      },\n      \"eventTime\": \"2018-10-25T18:00:00Z\",\n      \"createTime\": \"2018-10-25T18:00:00Z\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0b3\",\n      \"parent\": \"organizations/1055058813388/sources/9264282320683959279\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"audit_log_test_category\",\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0b3/securityMarks\"\n      },\n      \"eventTime\": \"2018-10-25T18:00:00Z\",\n      \"createTime\": \"2018-10-25T18:00:00Z\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0b4\",\n      \"parent\": \"organizations/1055058813388/sources/9264282320683959279\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"audit_log_test_category\",\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0b4/securityMarks\"\n      },\n      \"eventTime\": \"2018-10-25T18:00:00Z\",\n      \"createTime\": \"2018-10-25T18:00:00Z\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0b5\",\n      \"parent\": \"organizations/1055058813388/sources/9264282320683959279\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"audit_log_test_category\",\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0b5/securityMarks\"\n      },\n      \"eventTime\": \"2018-10-25T22:17:46.999Z\",\n      \"createTime\": \"2018-10-25T22:17:46.999Z\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0b7\",\n      \"parent\": \"organizations/1055058813388/sources/9264282320683959279\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"audit_log_test_category\",\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0b7/securityMarks\"\n      },\n      \"eventTime\": \"2018-10-25T22:30:36.670Z\",\n      \"createTime\": \"2018-10-25T22:30:36.670Z\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0b8\",\n      \"parent\": \"organizations/1055058813388/sources/9264282320683959279\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"audit_log_test_category\",\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0b8/securityMarks\"\n      },\n      \"eventTime\": \"2018-10-30T22:31:33.918Z\",\n      \"createTime\": \"2018-10-30T22:31:33.918Z\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0b83\",\n      \"parent\": \"organizations/1055058813388/sources/9264282320683959279\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"audit_log_test_category\",\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0b83/securityMarks\"\n      },\n      \"eventTime\": \"2018-10-31T13:10:03.813Z\",\n      \"createTime\": \"2018-10-31T13:10:03.813Z\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0b8w\",\n      \"parent\": \"organizations/1055058813388/sources/9264282320683959279\",\n      \"state\": \"ACTIVE\",\n      \"category\": \"audit_log_test_category\",\n      \"securityMarks\": {\n        \"name\": \"organizations/1055058813388/sources/9264282320683959279/findings/a0a0a0a0a0b8w/securityMarks\"\n      },\n      \"eventTime\": \"2018-10-30T22:32:01.841Z\",\n      \"createTime\": \"2018-10-30T22:32:01.841Z\"\n    }\n  ],\n  \"readTime\": \"2018-11-07T16:09:23.501Z\",\n  \"totalSize\": 20\n}\n"
+						}
+					]
+				},
+				{
+					"name": "Get Findings From Projects of DOME9 and REDLOCK",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/sources/-/findings?pageSize=14&filter= parent = \"organizations/688851828130/sources/9300364871731100004\" OR parent = \"organizations/688851828130/sources/250821172470083347\" AND resourceName = \"//cloudresourcemanager.googleapis.com/projects/8604840416\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/760319584329\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/581282749270\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/387457489797\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/635775969782\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/685140108503\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/336175710359\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/520732501711\"",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"sources",
+								"-",
+								"findings"
+							],
+							"query": [
+								{
+									"key": "pageSize",
+									"value": "14"
+								},
+								{
+									"key": "filter",
+									"value": " parent = \"organizations/688851828130/sources/9300364871731100004\" OR parent = \"organizations/688851828130/sources/250821172470083347\" AND resourceName = \"//cloudresourcemanager.googleapis.com/projects/8604840416\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/760319584329\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/581282749270\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/387457489797\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/635775969782\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/685140108503\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/336175710359\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/520732501711\""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Findings From Buckets",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/sources/-/findings?pageSize=14&filter= parent = \"organizations/688851828130/sources/9300364871731100004\" OR parent = \"organizations/688851828130/sources/250821172470083347\" AND resourceName = \"//cloudresourcemanager.googleapis.com/projects/8604840416\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/760319584329\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/581282749270\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/387457489797\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/635775969782\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/685140108503\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/336175710359\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/520732501711\"",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"sources",
+								"-",
+								"findings"
+							],
+							"query": [
+								{
+									"key": "pageSize",
+									"value": "14"
+								},
+								{
+									"key": "filter",
+									"value": " parent = \"organizations/688851828130/sources/9300364871731100004\" OR parent = \"organizations/688851828130/sources/250821172470083347\" AND resourceName = \"//cloudresourcemanager.googleapis.com/projects/8604840416\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/760319584329\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/581282749270\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/387457489797\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/635775969782\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/685140108503\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/336175710359\" OR resourceName = \"//cloudresourcemanager.googleapis.com/projects/520732501711\""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Transparency Log Finding",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n      \"state\": \"ACTIVE\",\n      \"category\": \"Access Transparency - GoogleInternal.Read CUSTOMER_INITIATED_SUPPORT\",\n      \"resourceName\": \"//googleapis.com/storage/buckets/[BUCKET_NAME]/objects/foo123\",\n      \"eventTime\": \"2017-12-18T16:06:24Z\",\n      \"externalUri\": \"https://console.cloud.google.com/logs/viewer?project=[PROJECT_NAME]&minLogLevel=0&expandAll=true&interval=NO_LIMIT&expandAll=true&advancedFilter=insertId%3D%22abcdefg12345%22%0A\",\n      \"sourceProperties\":\n      { \n        \"full_scc_category\": \"Access Transparency - December 18, 2017 at 2:06:24 PM UTC-2 methodName:GoogleInternal.Read resourceName://googleapis.com/storage/buckets/[BUCKET_NAME]/objects/foo123 reasonType:CUSTOMER_INITIATED_SUPPORT reasonDetail:Case number: bar123 author:Google LLC - CA - US\",\n        \"insertId\": \"abcdefg12345\",\n        \"jsonPayload_type\": \"type.googleapis.com/google.cloud.audit.TransparencyLog\",\n        \"jsonPayload_location_principalOfficeCountry\": \"US\",\n        \"jsonPayload_location_principalEmployingEntity\": \"Google LLC\",\n        \"jsonPayload_location_principalPhysicalLocationCountry\": \"CA\",\n        \"jsonPayload_product\": \"[\\\"Cloud Storage\\\"]\",\n        \"jsonPayload_reason_detail\": \"Case number: bar123\",\n        \"jsonPayload_reason_type\": \"CUSTOMER_INITIATED_SUPPORT\",\n        \"jsonPayload_accesses_methodName\": \"GoogleInternal.Read\",\n        \"jsonPayload_accesses_resourceName\": \"//googleapis.com/storage/buckets/[BUCKET_NAME]/objects/foo123\",\n        \"logName\": \"projects/[PROJECT_NAME]/logs/cloudaudit.googleapis.com%2Faccess_transparency\",\n        \"operation_id\": \"12345xyz\",\n        \"receiveTimestamp\": \"2017-12-18T16:06:37.400577736Z\",\n        \"resource_labels_project_id\": \"1234567890\",\n        \"resource_type\": \"project\",\n        \"severity\": \"NOTICE\",\n        \"timestamp\": \"2017-12-18T16:06:24.660001Z\" \n      } \n    }"
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/sources/9264282320683959279/findings?findingId=14df56s74d8transpv021",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"sources",
+								"9264282320683959279",
+								"findings"
+							],
+							"query": [
+								{
+									"key": "findingId",
+									"value": "14df56s74d8transpv021"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "sources",
+			"item": [
+				{
+					"name": "List Sources",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/sources",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"sources"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "List Sources [200]",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/1055058813388/sources",
+									"protocol": "https",
+									"host": [
+										"securitycenter",
+										"googleapis",
+										"com"
+									],
+									"path": [
+										"v1beta1",
+										"organizations",
+										"1055058813388",
+										"sources"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Alt-Svc",
+									"value": "quic=\":443\"; ma=2592000; v=\"44,43,39,35\"",
+									"name": "Alt-Svc",
+									"description": "Custom header"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "private",
+									"name": "Cache-Control",
+									"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip",
+									"name": "Content-Encoding",
+									"description": "The type of encoding used on the data."
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 07 Nov 2018 18:53:33 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Server",
+									"value": "ESF",
+									"name": "Server",
+									"description": "A name for the server"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked",
+									"name": "Transfer-Encoding",
+									"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+								},
+								{
+									"key": "Vary",
+									"value": "Origin",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "Vary",
+									"value": "X-Origin",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "Vary",
+									"value": "Referer",
+									"name": "Vary",
+									"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff",
+									"name": "X-Content-Type-Options",
+									"description": "The only defined value, \"nosniff\", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN",
+									"name": "X-Frame-Options",
+									"description": "Clickjacking protection: \"deny\" - no rendering within a frame, \"sameorigin\" - no rendering if origin mismatch"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block",
+									"name": "X-XSS-Protection",
+									"description": "Cross-site scripting (XSS) filter"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"sources\": [\n    {\n      \"name\": \"organizations/1055058813388/sources/10100216510303575847\",\n      \"displayName\": \"AQUA_SECURITY\",\n      \"description\": \"Aqua Security\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/10534961291975889355\",\n      \"displayName\": \"SENSITIVE_INFORMATION_SCANNER\",\n      \"description\": \"Sensitive Information Scanner\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/10711839371761827624\",\n      \"displayName\": \"CUSTOM_SECURITY\",\n      \"description\": \"Custom Security Audit Source\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/10835114519657534571\",\n      \"displayName\": \"GOOGLE_ANOMALY_DETECTION\",\n      \"description\": \"Cloud Anomaly Detection\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/1177447078513635626\",\n      \"displayName\": \"TWISTLOCK\",\n      \"description\": \"Twistlock\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/14284186538246182565\",\n      \"displayName\": \"CLOUD_SECURITY_SCANNER\",\n      \"description\": \"Cloud Security Scanner\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/15322476596087255390\",\n      \"displayName\": \"SECURITY_AUDIT\",\n      \"description\": \"Security Audit\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/17834453818272807376\",\n      \"displayName\": \"STACKROX\",\n      \"description\": \"Stackrox\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/18351905999881517161\",\n      \"displayName\": \"QUALYS\",\n      \"description\": \"Qualys\"\n    },\n    {\n      \"name\": \"organizations/1055058813388/sources/18402819621348530473\",\n      \"displayName\": \"DOME9\",\n      \"description\": \"Dome9\"\n    }\n  ],\n  \"nextPageToken\": \"CnTdzLuqADHxCp-pF7d1ncl88y8FF0IoeQgHSQHXBLKyDEDQA50-HIaeZkZVzjI-u4mZdnpCBWXt2lRibrOEirlWTHxsTHw-CbY3pb1JUr3VERQVbn_pCnZPv8WzlSoIm5CxpJePz4Pw-WnUrUQXO9JbJJQ5Sg==\"\n}\n"
+						}
+					]
+				},
+				{
+					"name": "Create Source",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{display_name: \"SECURITY_AUDIT\",\ndescription: \"Security Audit\"}"
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/sources",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"sources"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "success [200]",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{display_name: \"CLOUD_AUDIT\",\ndescription: \"Cloud Audit Logs\"}"
+								},
+								"url": {
+									"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/1055058813388/sources",
+									"protocol": "https",
+									"host": [
+										"securitycenter",
+										"googleapis",
+										"com"
+									],
+									"path": [
+										"v1beta1",
+										"organizations",
+										"1055058813388",
+										"sources"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "X-Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Referer"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 07 Feb 2019 17:23:12 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "ESF"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "private"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "quic=\":443\"; ma=2592000; v=\"44,43,39\""
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"name\": \"organizations/1055058813388/sources/4650086115530965517\",\n    \"displayName\": \"CLOUD_AUDIT\",\n    \"description\": \"Cloud Audit Logs\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "marks",
+			"item": [
+				{
+					"name": "patch assets securityMarks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n\t\"marks\": { \n        \"new\": \"1234\",\n        \"environment\": \"production\",\n        \"여보세요\": \"unicode not ascii\",\n        \"testX\": \"with uppercase 2\",\n        \"scc_active\": \"with underscore\"\n\t} \n\t\n}"
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/assets/6724706078642095690/securityMarks?updateMask=marks.testX",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"assets",
+								"6724706078642095690",
+								"securityMarks"
+							],
+							"query": [
+								{
+									"key": "updateMask",
+									"value": "marks.testX"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Findings Security Marks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"marks\": {\n\t\t\"betaapi\" : \"value2\"\n\t}\n}"
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/sources/10711839371761827624/findings/u5gh9794guthg47940001/securityMarks",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"sources",
+								"10711839371761827624",
+								"findings",
+								"u5gh9794guthg47940001",
+								"securityMarks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Findings Security Marks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{oauthtoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/sources/10711839371761827624/findings/u5gh9794guthg47940001/securityMarks?updateMask=marks.betaapi",
+							"protocol": "https",
+							"host": [
+								"securitycenter",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1beta1",
+								"organizations",
+								"{{organizationId}}",
+								"sources",
+								"10711839371761827624",
+								"findings",
+								"u5gh9794guthg47940001",
+								"securityMarks"
+							],
+							"query": [
+								{
+									"key": "updateMask",
+									"value": "marks.betaapi"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "List Assets orderBY",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{oauthtoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/assets?orderBy=SECURITY_CENTER_PROPERTIES.RESOURCE_TYPE DESC",
+					"protocol": "https",
+					"host": [
+						"securitycenter",
+						"googleapis",
+						"com"
+					],
+					"path": [
+						"v1beta1",
+						"organizations",
+						"{{organizationId}}",
+						"assets"
+					],
+					"query": [
+						{
+							"key": "pageSize",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "compareDuration",
+							"value": "12s",
+							"disabled": true
+						},
+						{
+							"key": "readTime",
+							"value": "2018-10-18T22:03:23.376Z",
+							"disabled": true
+						},
+						{
+							"key": "orderBy",
+							"value": "SECURITY_CENTER_PROPERTIES.RESOURCE_TYPE DESC"
+						}
+					]
+				},
+				"description": "List assets on beta api with order by"
+			},
+			"response": []
+		},
+		{
+			"name": "List Assets fieldMask",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{oauthtoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/assets?fieldMask=ASSET.SECURITY_CENTER_PROPERTIES.RESOURCE_TYPE",
+					"protocol": "https",
+					"host": [
+						"securitycenter",
+						"googleapis",
+						"com"
+					],
+					"path": [
+						"v1beta1",
+						"organizations",
+						"{{organizationId}}",
+						"assets"
+					],
+					"query": [
+						{
+							"key": "pageSize",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "compareDuration",
+							"value": "12s",
+							"disabled": true
+						},
+						{
+							"key": "readTime",
+							"value": "2018-10-18T22:03:23.376Z",
+							"disabled": true
+						},
+						{
+							"key": "fieldMask",
+							"value": "ASSET.SECURITY_CENTER_PROPERTIES.RESOURCE_TYPE"
+						}
+					]
+				},
+				"description": "List assets on beta api with fieldMask"
+			},
+			"response": []
+		},
+		{
+			"name": "List  Assets filter",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{oauthtoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/{{organizationId}}/assets?pageSize=3&compareDuration=1200s&readTime=2018-10-18T22:03:23.376Z&filter=securityCenterProperties.resourceType : \"Project\"  OR security_center_properties.resource_type : \"Organization\" ",
+					"protocol": "https",
+					"host": [
+						"securitycenter",
+						"googleapis",
+						"com"
+					],
+					"path": [
+						"v1beta1",
+						"organizations",
+						"{{organizationId}}",
+						"assets"
+					],
+					"query": [
+						{
+							"key": "pageSize",
+							"value": "3"
+						},
+						{
+							"key": "compareDuration",
+							"value": "1200s"
+						},
+						{
+							"key": "readTime",
+							"value": "2018-10-18T22:03:23.376Z"
+						},
+						{
+							"key": "filter",
+							"value": "securityCenterProperties.resourceType : \"Project\"  OR security_center_properties.resource_type : \"Organization\" "
+						}
+					]
+				},
+				"description": "List assets on beta api with filter"
+			},
+			"response": []
+		},
+		{
+			"name": "all findings forrester",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{oauthtoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://securitycenter.googleapis.com/v1beta1/organizations/781102206835/assets?pageSize=1000",
+					"protocol": "https",
+					"host": [
+						"securitycenter",
+						"googleapis",
+						"com"
+					],
+					"path": [
+						"v1beta1",
+						"organizations",
+						"781102206835",
+						"assets"
+					],
+					"query": [
+						{
+							"key": "pageSize",
+							"value": "1000"
+						},
+						{
+							"key": "pageToken",
+							"value": "CpYB3cy7qgAx8Qqf4SPJIKTvJcUm1kuMDAzKA4icFO8gotoziGWsG_07F0iCAFOaoytFQ4UKGDRh4aZ3P7zL9oxPivcrWHMbDkGFAk24SLkzXYGepYppQWiTfgNApTIixbWB2jrDN-IjiAJd7GeVJDPadYv0dg9NAKM2n1nZpt0PYyxcrabxy9apTqhLSKzJR9ceY0lSwaP1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

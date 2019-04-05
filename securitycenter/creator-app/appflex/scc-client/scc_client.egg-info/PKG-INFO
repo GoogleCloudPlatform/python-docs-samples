@@ -1,0 +1,58 @@
+Metadata-Version: 2.1
+Name: scc-client
+Version: 1.0.0
+Summary: SCC client to use on scc tools projects
+Home-page: UNKNOWN
+License: UNKNOWN
+Description: # SCC Client module
+        
+        ## Run tests
+        
+        ### Initial setup
+        
+        To be able to run the tests you need to run the commands below
+        
+        #### Environment variables config
+        
+        ```shell
+        export SCC_SA_CLIENT_FILE=<your-service-account-file>
+        export organization_id=<your-org-id>
+        ```
+        
+        #### Pipenv setup
+        
+        We recommend the use of [pipenv](https://github.com/pypa/pipenv) to run tests on isolated environment
+        
+        ```shell
+        pip install --user pipenv
+        ```
+        
+        #### Dependencies installation
+        
+        ```shell
+        (cd scc-client && pipenv install --ignore-pipfile --dev)
+        ```
+        
+        ### Run all tests on application
+        
+        ```shell
+        (cd scc-client && pipenv run python -m coverage run --source client -m pytest -vs tests)
+        ```
+        
+        ### How to run a specific test file
+        
+        ```shell
+        (cd scc-client && pipenv run python -m coverage run --source client -m pytest -vs tests/${test_file})
+        ```
+        
+        ### How to see coverage report
+        
+        ```shell
+        (cd scc-client && pipenv run python -m coverage report -m)
+        ```
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3.6
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
