@@ -1,0 +1,14 @@
+httplib2-0.12.1.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+httplib2-0.12.1.dist-info/METADATA,sha256=wYL7lQGdgfSfOHH46GGryjHfiS8LKMKh5dWlEdkKRdg,2196
+httplib2-0.12.1.dist-info/RECORD,,
+httplib2-0.12.1.dist-info/WHEEL,sha256=wy6I0RkXf1SHQI9WgMGMZtkrPqc-c49UWrTH1_nKFnQ,93
+httplib2-0.12.1.dist-info/top_level.txt,sha256=BEY8ChKwagUWmu9x8yN9JObJpZKNeWCr1E-sIECb56I,9
+httplib2/__init__.py,sha256=bx3bIAUQMlilKsY9JLDzL9fieNToEjb3ceM9t_kmhEc,79010
+httplib2/__init__.pyc,,
+httplib2/cacerts.txt,sha256=IDmDamIPlW7AlOqufJtBoEx28xEwiYsRAU2eg8kF8N4,135546
+httplib2/certs.py,sha256=guhfjMNhDdKJEyYBb5ZyLxVO5q1I7Y_P-4BG8MniBk8,971
+httplib2/certs.pyc,,
+httplib2/iri2uri.py,sha256=5z62UPkzpvFzytto9tCBsdZJI7KCsJOWzgmnf_ERDxs,4125
+httplib2/iri2uri.pyc,,
+httplib2/socks.py,sha256=KEtJta3BqclachJw3eryhUAq-yHZTOsW1L4nkjnET20,19483
+httplib2/socks.pyc,,
