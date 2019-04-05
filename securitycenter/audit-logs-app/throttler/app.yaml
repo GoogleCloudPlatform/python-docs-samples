@@ -1,0 +1,22 @@
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /.*
+  script: main.APP
+  login: admin
+
+libraries:
+- name: flask
+  version: "0.12"
+- name: grpcio
+  version: "1.0.0"
+
+env_variables:
+    PUBSUB_SUBSCRIPTION_AGGREGATED: subscription_aggregated_findings
+    PUBSUB_SUBSCRIPTION_SINGLE: subscription_single_findings
+    PUBSUB_TOPIC_FORWARD: findings_to_save
+    CRON_MINUTES: 5
+    MAX_MESSAGES: 10
+    QPS: 10

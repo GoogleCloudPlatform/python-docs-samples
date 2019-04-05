@@ -1,0 +1,5 @@
+cron:
+- description: "Pull and forward findings"
+  url: /pull-forward-findings
+  target: default
+  schedule: every 5 minutes
