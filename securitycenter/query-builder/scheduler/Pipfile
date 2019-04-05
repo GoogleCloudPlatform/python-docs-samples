@@ -1,0 +1,13 @@
+[[source]]
+verify_ssl = true
+url = "https://pypi.org/simple"
+name = "pypi"
+
+[packages]
+google-cloud-pubsub = "==0.35.4"
+apscheduler = "==v3.5.1"
+croniter = "==0.3.23"
+google-auth = "==1.5.0"
+
+[requires]
+python_version = "3.6"

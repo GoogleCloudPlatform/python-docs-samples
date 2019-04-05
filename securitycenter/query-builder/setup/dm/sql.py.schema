@@ -1,0 +1,39 @@
+info:
+  title: Project
+  author: Google, Inc.
+  description: >
+    Deploys the infrastructure of the bot project.
+
+imports:
+- path: sql.py
+- path: sql_instance.py
+- path: sql_database.py
+- path: sql_user.py
+
+required:
+- instance_name
+- region
+- tier
+- database_name
+- charset
+- user_name
+- user_password
+- user_resource_name
+
+properties:
+  instance_name:
+    type: string
+  region:
+    type: string
+  tier:
+    type: string
+  database_name:
+    type: string
+  charset:
+    type: string
+  user_name:
+    type: string
+  user_password:
+    type: string
+  user_resource_name:
+    type: string

@@ -1,0 +1,88 @@
+{
+  "title": "scc-query-builder",
+  "properties": {
+    "query_builder": {
+      "required": [
+        "compute_zone",
+        "project_id",
+        "custom_domain",
+        "version"
+      ]
+    },
+    "oauth": {
+      "required": [
+        "client_id",
+        "client_secret"
+      ]
+    },
+    "dns": {
+      "required": [
+        "zone_name"
+      ]
+    },
+    "scc": {
+      "required": [
+        "service_account"
+      ]
+    },
+    "notification": {
+      "required": [
+        "service_account"
+      ]
+    },
+    "scheduler": {
+      "required": [
+        "service_account"
+      ]
+    },
+    "cloud_sql": {
+      "required": [
+        "instance_name",
+        "tier",
+        "database_name",
+        "charset",
+        "user_name",
+        "user_password",
+        "user_resource_name",
+        "service_account"
+      ]
+    },
+    "network": {
+      "required": [
+        "network_name",
+        "sub_network_name",
+        "static_ip",
+        "subnet_range_1",
+        "subnet_range_pods",
+        "subnet_range_services"
+      ]
+    },
+    "ssl_certificates": {
+      "required": [
+        "cert_key",
+        "private_key"
+      ]
+    },
+    "cluster": {
+      "required": [
+        "cluster_name",
+        "node_pool_name",
+        "cluster_ip",
+        "machine_type",
+        "min_nodes",
+        "max_nodes"
+      ]
+    }
+  },
+  "required": [
+    "query_builder",
+    "oauth",
+    "scc",
+    "notification",
+    "scheduler",
+    "cloud_sql",
+    "network",
+    "ssl_certificates",
+    "cluster"
+  ]
+}

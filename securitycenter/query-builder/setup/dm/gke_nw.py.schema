@@ -1,0 +1,23 @@
+info:
+  title: Project
+  author: Google, Inc.
+  description: >
+    Deploys the network of the project.
+
+imports:
+- path: gke_nw.py
+- path: network_template.py
+- path: subnetwork_template.py
+
+required:
+- region
+- network
+- subnetwork
+
+properties:
+  region:
+    type: string
+  network:
+    type: string
+  subnetwork:
+    type: string
