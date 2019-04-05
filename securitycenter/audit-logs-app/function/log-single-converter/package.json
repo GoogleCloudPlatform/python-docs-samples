@@ -1,0 +1,22 @@
+{
+    "name": "transformer",
+    "version": "3.3.0",
+    "scripts": {
+        "test": "mocha"
+    },
+    "dependencies": {
+        "@google-cloud/pubsub": "0.16.2",
+        "@google-cloud/resource": "0.8.1",
+        "@google-cloud/dns": "0.8.0",
+        "moment": "2.21.0",
+        "get-value": "3.0.0",
+        "uuid": "3.3.2"
+    },
+    "devDependencies": {
+        "JSONStream": "1.3.2",
+        "expect.js": "0.3.1",
+        "mocha": "5.0.1",
+        "should": "13.2.3",
+        "samples": "file:test/samples"
+    }
+}

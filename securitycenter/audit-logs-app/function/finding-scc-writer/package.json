@@ -1,0 +1,8 @@
+{
+    "name": "finding-scc-writer",
+    "version": "3.3.0",
+    "dependencies": {
+        "scc-client": "file:./scc-client-node",
+        "uuid4": "^1.1.4"
+    }
+}

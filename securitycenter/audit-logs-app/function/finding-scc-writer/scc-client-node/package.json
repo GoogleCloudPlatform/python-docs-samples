@@ -1,0 +1,21 @@
+{
+  "name": "scc-client",
+  "version": "3.3.0",
+  "description": "Cloud Security Command Center API client for Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest test",
+    "coverage": "jest --collectCoverageFrom=src/**.js --coverage test"
+  },
+  "dependencies": {
+    "googleapis": "^35.0.0",
+    "moment": "^2.22.2",
+    "text-ellipsis": "^1.0.3"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "jest": "^23.6.0",
+    "uuid4": "^1.1.4"
+  }
+}
