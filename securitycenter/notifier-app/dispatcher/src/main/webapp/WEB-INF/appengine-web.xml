@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+    <threadsafe>true</threadsafe>
+
+    <runtime>java8</runtime>
+
+    <system-properties>
+        <property name="java.util.logging.config.file" value="WEB-INF/logging.properties" />
+
+        <!-- Recommended to avoid spoofing. -->
+        <property name="com.google.cloud.pubsub.client.demos.appengine.subscriptionUniqueToken"
+            value="{replace-with-a-unique-value}" />
+    </system-properties>
+
+    <env-variables>
+        <env-var name="NOTIFICATION_NAMESPACE" value="${notification.namespace}" />
+        <env-var name="HASH_MECHANISM" value="${hash.mechanism}" />
+    </env-variables>
+
+</appengine-web-app>

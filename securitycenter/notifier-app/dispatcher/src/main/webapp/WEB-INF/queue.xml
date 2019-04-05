@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queue-entries>
+    <queue>
+        <name>entry</name>
+        <rate>5/s</rate>
+    </queue>
+</queue-entries>
