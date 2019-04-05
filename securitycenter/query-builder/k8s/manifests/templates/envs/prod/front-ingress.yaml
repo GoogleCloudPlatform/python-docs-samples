@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: frontend-ingress-https
+spec:
+  tls:
+  - hosts:
+    - cscc-qb.googlecloudsecuritydemo.com
+    secretName: querybuilder-ssl-secret
+  rules:
+  - host: cscc-qb.googlecloudsecuritydemo.com
+    http:
+      paths:
+      - path: /*
+        backend:
+          serviceName: frontend-svc
+          servicePort: 80

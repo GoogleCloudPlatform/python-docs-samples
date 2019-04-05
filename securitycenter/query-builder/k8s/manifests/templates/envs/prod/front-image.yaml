@@ -1,0 +1,15 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: frontend
+spec:
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: "gcr.io/prod-qb-clsecteam/scc-query-builder-front:v3.3.0"
+        - name: auth-proxy
+          image: "gcr.io/prod-qb-clsecteam/scc-query-builder-auth-proxy:v3.3.0"

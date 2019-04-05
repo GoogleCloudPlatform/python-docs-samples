@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: "gcr.io/${PROJECT_ID}/scc-query-builder-back:${DOCKER_TAG}"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+          env:
+            - name: db_host
+              value: 127.0.0.1
+            - name: db_port
+              value: "3306"
+            - name: db_user
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: username
+            - name: db_password
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: password
+            - name: organization_id
+              valueFrom:
+                configMapKeyRef:
+                  name: general-config
+                  key: organization_id
+            - name: organization_display_name
+              valueFrom:
+                configMapKeyRef:
+                  name: general-config
+                  key: organization_display_name
+            - name: project_id
+              valueFrom:
+                configMapKeyRef:
+                  name: general-config
+                  key: project_id
+            - name: NOTIFICATION_TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: notification-config
+                  key: notification_topic
+            - name: QUERIES_RUN_TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: scheduler-config
+                  key: topic.name
+            - name: MARK_CLEAN_UP_TOPIC
+              valueFrom:
+                configMapKeyRef:
+                  name: cleanup-config
+                  key: topic.name
+            - name: PUBSUB_CREDENTIALS
+              valueFrom:
+                secretKeyRef:
+                  name: scc-scheduler
+                  key: pubsub.credentials
+            - name: NOTIFIER_CREDENTIALS
+              valueFrom:
+                secretKeyRef:
+                  name: scc-scheduler
+                  key: notifier.credentials
+            - name: SCC_CLIENT_DEVELOPER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scc-client-developer-key
+                  key: developer-key
+            - name: SCC_SERVICE_ACCOUNT
+              valueFrom:
+                secretKeyRef:
+                  name: scc-account
+                  key: scc-credentials
+        - name: cloudsql-proxy
+          image: "gcr.io/cloudsql-docker/gce-proxy:1.11"
+          command: ["/cloud_sql_proxy",
+                    "-instances=${PROJECT_ID}:us-central1:db-qb-instance=tcp:3306",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+      volumes:
+      - name: cloudsql-instance-credentials
+        secret:
+          secretName: cloudsql-instance-credentials

@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: frontend-ingress-https
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: querybuilder-web-static-ip
+    kubernetes.io/ingress.allow-http: "false"
+spec:
+  tls:
+  - hosts:
+    - dev.querybuilder.clsecteam.com
+    secretName: querybuilder-ssl-secret
+  rules:
+  - host: dev.querybuilder.clsecteam.com
+    http:
+      paths:
+      - path: /*
+        backend:
+          serviceName: frontend-svc
+          servicePort: 80

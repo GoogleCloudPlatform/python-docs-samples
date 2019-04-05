@@ -1,0 +1,17 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: backend
+spec:
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: "gcr.io/qa-qb-clsecteam/scc-query-builder-back:v3.3.0"
+        - name: cloudsql-proxy
+          command: ["/cloud_sql_proxy",
+                    "-instances=qa-qb-clsecteam:us-central1:db-qb-instance=tcp:3306",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]

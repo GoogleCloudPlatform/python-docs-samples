@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jobs
+spec:
+  selector:
+    matchLabels:
+      app: jobs
+  template:
+    metadata:
+      labels:
+        app: jobs
+    spec:
+      containers:
+        - name: scheduler
+          image: "gcr.io/${PROJECT_ID}/scc-query-builder-scheduler:${DOCKER_TAG}"
+          imagePullPolicy: Always
+          env:
+            - name: QUERIES_CRON_EXPRESSION
+              value: '* * * * *'
+            - name: SUBSCRIPTION_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: scheduler-config
+                  key: subscriptions.name
+            - name: QB_BACK_URL_PROTOCOL
+              value: 'http'
+            - name: QB_BACK_URL_HOST
+              value: '10.59.240.66'
+            - name: QB_BACK_URL_PORT
+              value: '8080'
+            - name: PUBSUB_CREDENTIALS
+              valueFrom:
+                secretKeyRef:
+                  name: scc-scheduler
+                  key: pubsub.credentials
+        - name: cleanup
+          image: "gcr.io/${PROJECT_ID}/scc-query-builder-cleanup:${DOCKER_TAG}"
+          imagePullPolicy: Always
+          env:
+            - name: CLEAN_UUID_CRON_EXPRESSION
+              value: '* * * * *'
+            - name: CLEAN_ALL_CRON_EXPRESSION
+              value: '*/15 * * * *'
+            - name: SUBSCRIPTION_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: cleanup-config
+                  key: subscriptions.name
+            - name: PUBSUB_CREDENTIALS
+              valueFrom:
+                secretKeyRef:
+                  name: scc-scheduler
+                  key: pubsub.credentials
+            - name: organization_id
+              valueFrom:
+                configMapKeyRef:
+                  name: general-config
+                  key: organization_id
+            - name: SCC_SERVICE_ACCOUNT
+              valueFrom:
+                secretKeyRef:
+                  name: scc-account
+                  key: scc-credentials
+            - name: SCC_CLIENT_DEVELOPER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scc-client-developer-key
+                  key: developer-key

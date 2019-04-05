@@ -1,0 +1,304 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-svc
+spec:
+  clusterIP: 10.59.240.66
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: backend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-svc
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: frontend
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - env:
+        - name: db_host
+          value: 127.0.0.1
+        - name: db_port
+          value: "3306"
+        - name: db_user
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: cloudsql-db-credentials
+        - name: db_password
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: cloudsql-db-credentials
+        - name: organization_id
+          valueFrom:
+            configMapKeyRef:
+              key: organization_id
+              name: general-config
+        - name: organization_display_name
+          valueFrom:
+            configMapKeyRef:
+              key: organization_display_name
+              name: general-config
+        - name: project_id
+          valueFrom:
+            configMapKeyRef:
+              key: project_id
+              name: general-config
+        - name: NOTIFICATION_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              key: notification_topic
+              name: notification-config
+        - name: QUERIES_RUN_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              key: topic.name
+              name: scheduler-config
+        - name: MARK_CLEAN_UP_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              key: topic.name
+              name: cleanup-config
+        - name: PUBSUB_CREDENTIALS
+          valueFrom:
+            secretKeyRef:
+              key: pubsub.credentials
+              name: scc-scheduler
+        - name: NOTIFIER_CREDENTIALS
+          valueFrom:
+            secretKeyRef:
+              key: notifier.credentials
+              name: scc-scheduler
+        - name: SCC_CLIENT_DEVELOPER_KEY
+          valueFrom:
+            secretKeyRef:
+              key: developer-key
+              name: scc-client-developer-key
+        - name: SCC_SERVICE_ACCOUNT
+          valueFrom:
+            secretKeyRef:
+              key: scc-credentials
+              name: scc-account
+        image: gcr.io/prod-qb-clsecteam/scc-query-builder-back:v3.3.0
+        imagePullPolicy: Always
+        name: backend
+        ports:
+        - containerPort: 80
+          name: http
+      - command:
+        - /cloud_sql_proxy
+        - -instances=qb-joonixnet:us-central1:db-qb-instance=tcp:3306
+        - -credential_file=/secrets/cloudsql/credentials.json
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        name: cloudsql-proxy
+        volumeMounts:
+        - mountPath: /secrets/cloudsql
+          name: cloudsql-instance-credentials
+          readOnly: true
+      volumes:
+      - name: cloudsql-instance-credentials
+        secret:
+          secretName: cloudsql-instance-credentials
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - image: gcr.io/prod-qb-clsecteam/scc-query-builder-front:v3.3.0
+        imagePullPolicy: Always
+        name: frontend
+        ports:
+        - containerPort: 8077
+      - image: gcr.io/prod-qb-clsecteam/scc-query-builder-auth-proxy:v3.3.0
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+        name: auth-proxy
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          failureThreshold: 10
+          httpGet:
+            path: /healthz
+            port: 80
+            scheme: HTTP
+          periodSeconds: 1
+          successThreshold: 1
+          timeoutSeconds: 1
+      - env:
+        - name: GCP_IAP_AUTH_AUDIENCES
+          valueFrom:
+            configMapKeyRef:
+              key: iap.audience
+              name: iap-config
+        - name: GCP_IAP_AUTH_LISTEN_PORT
+          value: "1080"
+        image: ciandt/gcp-iap-auth:v0.0.4
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: auth
+            scheme: HTTP
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+        name: gcp-iap-auth
+        ports:
+        - containerPort: 1080
+          name: auth
+        readinessProbe:
+          failureThreshold: 10
+          httpGet:
+            path: /healthz
+            port: auth
+            scheme: HTTP
+          periodSeconds: 1
+          successThreshold: 1
+          timeoutSeconds: 1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jobs
+spec:
+  selector:
+    matchLabels:
+      app: jobs
+  template:
+    metadata:
+      labels:
+        app: jobs
+    spec:
+      containers:
+      - env:
+        - name: QUERIES_CRON_EXPRESSION
+          value: '* * * * *'
+        - name: SUBSCRIPTION_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: subscriptions.name
+              name: scheduler-config
+        - name: QB_BACK_URL_PROTOCOL
+          value: http
+        - name: QB_BACK_URL_HOST
+          value: 10.59.240.66
+        - name: QB_BACK_URL_PORT
+          value: "8080"
+        - name: PUBSUB_CREDENTIALS
+          valueFrom:
+            secretKeyRef:
+              key: pubsub.credentials
+              name: scc-scheduler
+        image: gcr.io/prod-qb-clsecteam/scc-query-builder-scheduler:v3.3.0
+        imagePullPolicy: Always
+        name: scheduler
+      - env:
+        - name: CLEAN_UUID_CRON_EXPRESSION
+          value: '* * * * *'
+        - name: CLEAN_ALL_CRON_EXPRESSION
+          value: '*/15 * * * *'
+        - name: SUBSCRIPTION_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: subscriptions.name
+              name: cleanup-config
+        - name: PUBSUB_CREDENTIALS
+          valueFrom:
+            secretKeyRef:
+              key: pubsub.credentials
+              name: scc-scheduler
+        - name: organization_id
+          valueFrom:
+            configMapKeyRef:
+              key: organization_id
+              name: general-config
+        - name: SCC_SERVICE_ACCOUNT
+          valueFrom:
+            secretKeyRef:
+              key: scc-credentials
+              name: scc-account
+        - name: SCC_CLIENT_DEVELOPER_KEY
+          valueFrom:
+            secretKeyRef:
+              key: developer-key
+              name: scc-client-developer-key
+        image: gcr.io/prod-qb-clsecteam/scc-query-builder-cleanup:v3.3.0
+        imagePullPolicy: Always
+        name: cleanup
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
+    kubernetes.io/ingress.global-static-ip-name: querybuilder-web-static-ip
+  name: frontend-ingress-https
+spec:
+  rules:
+  - host: cscc-qb.googlecloudsecuritydemo.com
+    http:
+      paths:
+      - backend:
+          serviceName: frontend-svc
+          servicePort: 80
+        path: /*
+  tls:
+  - hosts:
+    - cscc-qb.googlecloudsecuritydemo.com
+    secretName: querybuilder-ssl-secret
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-to-backend
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+  podSelector:
+    matchLabels:
+      app: backend

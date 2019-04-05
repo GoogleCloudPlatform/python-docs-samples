@@ -1,0 +1,15 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: jobs
+spec:
+  template:
+    metadata:
+      labels:
+        app: jobs
+    spec:
+      containers:
+        - name: scheduler
+          image: "gcr.io/prod-qb-clsecteam/scc-query-builder-scheduler:v3.3.0"
+        - name: cleanup
+          image: "gcr.io/prod-qb-clsecteam/scc-query-builder-cleanup:v3.3.0"

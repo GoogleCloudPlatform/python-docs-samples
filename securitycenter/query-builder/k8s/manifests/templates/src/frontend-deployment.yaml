@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - image: gcr.io/${PROJECT_ID}/scc-query-builder-auth-proxy:${DOCKER_TAG}
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+        name: auth-proxy
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          failureThreshold: 10
+          httpGet:
+            path: /healthz
+            port: 80
+            scheme: HTTP
+          periodSeconds: 1
+          successThreshold: 1
+          timeoutSeconds: 1
+      - image: gcr.io/${PROJECT_ID}/scc-query-builder-front:${DOCKER_TAG}
+        imagePullPolicy: Always
+        name: frontend
+        ports:
+        - containerPort: 8077
+      - env:
+        - name: GCP_IAP_AUTH_AUDIENCES
+          valueFrom:
+            configMapKeyRef:
+              key: iap.audience
+              name: iap-config
+        - name: GCP_IAP_AUTH_LISTEN_PORT
+          value: "1080"
+        image: ciandt/gcp-iap-auth:v0.0.4
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: auth
+            scheme: HTTP
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+        name: gcp-iap-auth
+        ports:
+        - containerPort: 1080
+          name: auth
+        readinessProbe:
+          failureThreshold: 10
+          httpGet:
+            path: /healthz
+            port: auth
+            scheme: HTTP
+          periodSeconds: 1
+          successThreshold: 1
+          timeoutSeconds: 1

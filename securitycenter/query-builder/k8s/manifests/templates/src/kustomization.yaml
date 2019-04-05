@@ -1,0 +1,8 @@
+resources:
+- frontend-deployment.yaml
+- backend-deployment.yaml
+- frontend-ingress-https.yaml
+- jobs-deployment.yaml
+- ../../base/backend-service.yaml
+- ../../base/frontend-service.yaml
+- ../../base/frontend-to-backend.yaml

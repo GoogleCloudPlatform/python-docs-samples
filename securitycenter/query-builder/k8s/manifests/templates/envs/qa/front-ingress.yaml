@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: frontend-ingress-https
+spec:
+  tls:
+  - hosts:
+    - qa.querybuilder.clsecteam.com
+    secretName: querybuilder-ssl-secret
+  rules:
+  - host: qa.querybuilder.clsecteam.com
+    http:
+      paths:
+      - path: /*
+        backend:
+          serviceName: frontend-svc
+          servicePort: 80

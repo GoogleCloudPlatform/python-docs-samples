@@ -1,0 +1,7 @@
+bases:
+- ../../src
+patches:
+- front-image.yaml
+- back-image.yaml
+- front-ingress.yaml
+- jobs-image.yaml
