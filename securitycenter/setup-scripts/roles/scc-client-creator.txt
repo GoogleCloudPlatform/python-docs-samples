@@ -1,0 +1,2 @@
+roles/securitycenter.assetsViewer
+roles/securitycenter.findingsViewer

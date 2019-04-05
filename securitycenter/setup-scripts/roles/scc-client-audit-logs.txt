@@ -1,0 +1,2 @@
+roles/securitycenter.findingsEditor
+roles/securitycenter.sourcesEditor

@@ -1,0 +1,5 @@
+roles/securitycenter.sourcesViewer
+roles/securitycenter.findingsViewer
+roles/securitycenter.assetsViewer
+roles/securitycenter.findingSecurityMarksWriter
+roles/securitycenter.assetSecurityMarksWriter

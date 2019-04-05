@@ -1,0 +1,5 @@
+roles/editor
+roles/billing.user
+roles/orgpolicy.policyAdmin
+roles/resourcemanager.projectCreator
+roles/resourcemanager.projectIamAdmin

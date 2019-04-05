@@ -1,0 +1,8 @@
+roles/container.admin
+roles/deploymentmanager.editor
+roles/storage.admin
+roles/storage.objectAdmin
+roles/pubsub.admin
+roles/cloudsql.admin
+roles/dns.admin
+roles/compute.admin

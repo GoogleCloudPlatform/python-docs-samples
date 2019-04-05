@@ -1,0 +1,15 @@
+roles/appengine.appAdmin
+roles/appengine.deployer
+roles/appengine.serviceAdmin
+roles/appengineflex.serviceAgent
+roles/browser
+roles/cloudfunctions.developer
+roles/cloudtasks.admin
+roles/container.developer
+roles/datastore.owner
+roles/editor
+roles/pubsub.admin
+roles/servicemanagement.admin
+roles/servicemanagement.quotaAdmin
+roles/storage.admin
+roles/storage.objectAdmin

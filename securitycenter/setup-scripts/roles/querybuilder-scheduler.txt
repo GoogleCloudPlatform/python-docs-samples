@@ -1,0 +1,2 @@
+roles/pubsub.publisher
+roles/pubsub.subscriber

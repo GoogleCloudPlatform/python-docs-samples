@@ -1,0 +1,11 @@
+roles/billing.user
+roles/deploymentmanager.editor
+roles/iam.serviceAccountActor
+roles/orgpolicy.policyAdmin
+roles/resourcemanager.projectCreator
+roles/resourcemanager.projectIamAdmin
+roles/storage.admin
+roles/storage.objectAdmin
+roles/cloudfunctions.serviceAgent
+roles/appengine.appAdmin
+roles/pubsub.admin

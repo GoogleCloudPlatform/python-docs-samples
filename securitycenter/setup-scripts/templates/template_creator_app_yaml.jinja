@@ -1,0 +1,13 @@
+entrypoint: gunicorn -b :$PORT main:app
+env: flex
+env_variables:
+  PUBSUB_TOPIC: demomode,
+  PUBSUB_VERIFICATION_TOKEN: {{token}}
+  organization_id: {{organization_id}}
+  organization_display_name: {{organization_display_name}}
+  project_id: {{project_id}}
+  SCC_CLIENT_DEVELOPER_KEY: {{scc_client_developer_key}}
+runtime: custom
+runtime_config:
+  python_version: 3
+skip_files: [env/]
