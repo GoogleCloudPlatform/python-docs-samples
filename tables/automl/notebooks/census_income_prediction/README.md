@@ -1,4 +1,4 @@
-﻿AutoML Tables enables your entire team to automatically build and deploy state-of-the-art machine learning models on structured data at massively increased speed and scale.
+AutoML Tables enables your entire team to automatically build and deploy state-of-the-art machine learning models on structured data at massively increased speed and scale.
 
 
 ## Problem Description
@@ -22,7 +22,7 @@ The dataset consists of over 30k rows, where each row corresponds to a different
 
 
 ## Solution Walkthrough
-The solution has been developed using [Google Colab Notebook](https://colab.sandbox.google.com/notebooks/welcome.ipynb#recent=true). 
+The solution has been developed using [Google Colab Notebook](https://colab.research.google.com/notebooks/welcome.ipynb). 
 
 
 
@@ -31,7 +31,7 @@ Steps Involved
 
 
 ### 1. Set up
-The first step in this process was to set up the project. We referred to the [AutoML tables documentation](https://cloud.google.com/AutoML-tables/docs/) and take the following steps:
+The first step in this process was to set up the project. We referred to the [AutoML tables documentation](https://cloud.google.com/automl-tables/docs/) and take the following steps:
 * Create a Google Cloud Platform (GCP) project
 * Enable billing
 * Enable the AutoML API
@@ -78,7 +78,7 @@ This section gives you the ability to do a single online prediction. You can tog
 
 
 The model takes a while to deploy online, and currently there does not exist a feedback mechanism in the sdk, so you will need to wait until the model finishes deployment to run the online prediction.
-When the deployment code ```response = client.deploy_model(model_name)``` finishes, you will be able to see this on the [UI](https://console.cloud.google.com/automl-tables?_ga=2.255483016.-1079099924.1550856636). 
+When the deployment code ```response = client.deploy_model(model_name)``` finishes, you will be able to see this on the [UI](https://console.cloud.google.com/automl-tables). 
 
 
 To see when it finishes, click on the UI link above and navitage to the dataset you just uploaded, and go to the predict tab. You should see "online prediction" text near the top, click on it, and it will take you to a view of your online prediction interface. You should see "model deployed" on the far right of the screen if the model is deployed, or a "deploying model" message if it is still deploying.
@@ -93,4 +93,4 @@ Note: If the model has not finished deployment, the prediction will NOT work.
 ### 7. Batch Prediction
 
 
-There is a validation csv file provided with a few rows of data not used in the training or testing for you to run a batch prediction with. The csv is linked in the text of the colab as well as [here](https://storage.googleapis.com/automl-tables-v1beta1/census_income_batch_prediction_input.csv) .
+There is a validation csv file provided with a few rows of data not used in the training or testing for you to run a batch prediction with. The csv is linked in the text of the colab as well as [here](https://storage.cloud.google.com/cloud-ml-data/automl-tables/notebooks/census_income_batch_prediction_input.csv) .

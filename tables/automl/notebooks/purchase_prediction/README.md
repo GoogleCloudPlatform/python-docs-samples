@@ -1,4 +1,4 @@
-Copyright 2018 Google LLC 
+Copyright 2018 Google LLC 
 
 Licensed under the Apache License, Version 2.0 (the "License");you may not use this file except in compliance with the License.You may obtain a copy of the License at
 
@@ -25,7 +25,7 @@ The dataset consists of a set of tables corresponding to Google Analytics sessio
 You can access the data on BigQuery [here](https://bigquery.cloud.google.com/dataset/bigquery-public-data:google_analytics_sample).
 
 ## Solution Walkthrough
-The solution has been developed using [Google Colab Notebook](https://colab.sandbox.google.com/notebooks/welcome.ipynb#recent=true). Here are the thought process and specific steps that went into building the “Purchase Prediction with AutoML Tables” colab. The colab is broken into 7 parts; this write up will mirror that structure.
+The solution has been developed using [Google Colab Notebook](https://colab.research.google.com/notebooks/welcome.ipynb). Here are the thought process and specific steps that went into building the “Purchase Prediction with AutoML Tables” colab. The colab is broken into 7 parts; this write up will mirror that structure.
 
 Before we dive in, a few housekeeping notes about setting up the colab.
 
@@ -33,7 +33,7 @@ Before we dive in, a few housekeeping notes about setting up the colab.
 Steps Involved
 
 ### 1. Set up
-The first step in this process was to set up the project. We referred to the [AutoML tables documentation](https://cloud.google.com/AutoML-tables/docs/) and take the following steps:
+The first step in this process was to set up the project. We referred to the [AutoML tables documentation](https://cloud.google.com/automl-tables/docs/) and take the following steps:
 * Create a Google Cloud Platform (GCP) project
 * Enable billing
 * Enable the AutoML API
@@ -65,12 +65,13 @@ This will allow your local terminal to ssh into the VM instance you created, whi
 	
 We recommend hosting using the VM for two main reasons:
 1. The VM can be provisioned to be much, much more powerful than either your local machine or the default runtime allocated by the colab notebook. 
-2. The colab is currently configured to run on either your local machine or a VM. It requires you to upload both the client library and a service account key to the machine from which you are hosting the colab. These two actions can be done the default hosted runtime, but would require a different set of instructions not detailed in this specific colab. To see them, refer to the AutoML Tables sample colab found in the tutorials section of the [documentation](https://cloud.google.com/automl-tables/docs/). Specifically step 2.
+2. The colab is currently configured to run on either your local machine or a VM. It requires you to install the AutoML client library and uplaod a service account key to the machine from which you are hosting the colab. These two actions can be done the default hosted runtime, but would require a different set of instructions not detailed in this specific colab. To see them, refer to the AutoML Tables sample colab found in the tutorials section of the [documentation](https://cloud.google.com/automl-tables/docs/). Specifically step 2.
 
 
 ### 2. Initialize and authenticate
-We created and downloaded a service account key associated with the project. This key is in the form of a json file. It was uploaded to the VM that was hosting the notebook session. We moved it into the same directory as the notebook was being hosted in, so it was easy to reference.
-We also downloaded the client library, which can be found here. This library comes in a zipped tar file, which We also uploaded to the VM. This would allow the notebook code to unzip, and install the client library.
+The client library installation is entirely self explanatory in the colab.
+
+The authentication process is only slightly more complex: run the second code block entitled "Authenticate using service account key  and create a client" and then upload the service account key you created in the set up step
 	Would also recommend setting a global variable
 
 ```export GOOGLE_APPLICATION_CREDENTIALS=`<path to your service account key>` ```
