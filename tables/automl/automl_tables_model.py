@@ -350,7 +350,7 @@ def deploy_model(project_id, compute_region, model_id):
 
 def undeploy_model(project_id, compute_region, model_id):
     """Undeploy model."""
-    # [START automl_tables_deploy_model]
+    # [START automl_tables_undeploy_model]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'

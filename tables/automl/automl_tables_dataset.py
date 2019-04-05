@@ -109,7 +109,7 @@ def list_datasets(project_id, compute_region, filter_=None):
 
 def list_table_specs(project_id, compute_region, dataset_id, filter_=None):
     """List all table specs."""
-    # [START automl_tables_list_datasets]
+    # [START automl_tables_list_specs]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
@@ -138,7 +138,7 @@ def list_table_specs(project_id, compute_region, dataset_id, filter_=None):
         print("Table spec row count: {}".format(table_spec.row_count))
         print("Table spec column count: {}".format(table_spec.column_count))
 
-    # [END automl_tables_list_table_specs]
+    # [END automl_tables_list_specs]
 
 
 def list_column_specs(project_id,
@@ -147,7 +147,7 @@ def list_column_specs(project_id,
                       table_spec_id,
                       filter_=None):
     """List all column specs."""
-    # [START automl_tables_list_datasets]
+    # [START automl_tables_list_column_specs]
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'PROJECT_ID_HERE'
     # compute_region = 'COMPUTE_REGION_HERE'
