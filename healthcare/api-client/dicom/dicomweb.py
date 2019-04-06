@@ -16,16 +16,11 @@ import argparse
 import json
 import os
 
-import email
-from email import encoders
-from email.mime import application
-from email.mime import multipart
-
 from google.auth.transport import requests
 from googleapiclient.errors import HttpError
 from google.oauth2 import service_account
 
-_BASE_URL = 'https://healthcare.googleapis.com/v1alpha'
+_BASE_URL = 'https://healthcare.googleapis.com/v1beta1'
 
 
 def get_session(service_account_json):
@@ -65,30 +60,16 @@ def dicomweb_store_instance(
     # Make an authenticated API request
     session = get_session(service_account_json)
 
-    with open(dcm_file) as dcm:
+    with open(dcm_file, 'rb') as dcm:
         dcm_content = dcm.read()
 
-    # All requests to store an instance are multipart messages, as designated
-    # by the multipart/related portion of the Content-Type. This means that
-    # the request is made up of multiple sets of data that are combined after
-    # the request completes. Each of these sets of data must be separated using
-    # a boundary, as designated by the boundary portion of the Content-Type.
-    multipart_body = multipart.MIMEMultipart(
-        subtype='related', boundary=email.generator._make_boundary())
-    part = application.MIMEApplication(
-        dcm_content, 'dicom', _encoder=encoders.encode_noop)
-    multipart_body.attach(part)
-    boundary = multipart_body.get_boundary()
-
-    content_type = (
-        'multipart/related; type="application/dicom"; ' +
-        'boundary="%s"') % boundary
+    content_type = 'application/dicom'
     headers = {'Content-Type': content_type}
 
     try:
         response = session.post(
             dicomweb_path,
-            data=multipart_body.as_string(),
+            data=dcm_content,
             headers=headers)
         response.raise_for_status()
         print('Stored DICOM instance:')
