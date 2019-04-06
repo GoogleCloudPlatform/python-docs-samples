@@ -121,6 +121,43 @@ To run this sample:
 
 
 
+Beta Snippets
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=translate/cloud-client/beta_snippets.py,translate/cloud-client/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python beta_snippets.py
+
+    usage: beta_snippets.py [-h]
+                            {translate-text,batch-translate-text,detect-language,list-languages,list-languages-with-target,create-glossary,get-glossary,list-glossaries,delete-glossary,translate-with-glossary}
+                            ...
+
+    positional arguments:
+      {translate-text,batch-translate-text,detect-language,list-languages,list-languages-with-target,create-glossary,get-glossary,list-glossaries,delete-glossary,translate-with-glossary}
+        translate-text
+        batch-translate-text
+        detect-language
+        list-languages
+        list-languages-with-target
+        create-glossary
+        get-glossary
+        list-glossaries
+        delete-glossary
+        translate-with-glossary
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
+
 
 
 The client library
