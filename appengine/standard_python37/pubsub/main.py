@@ -82,7 +82,7 @@ def receive_messages_handler():
         claim = id_token.verify_oauth2_token(token, requests.Request())
         CLAIMS.append(claim)
     except Exception as e:
-        return 'Invalid token: {}'.format(e), 400
+        return 'Invalid token: {}\n'.format(e), 400
 
     envelope = json.loads(request.data.decode('utf-8'))
     payload = base64.b64decode(envelope['message']['data'])

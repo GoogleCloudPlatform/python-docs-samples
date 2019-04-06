@@ -13,7 +13,7 @@ Before you can run or deploy the sample, you will need to do the following:
 
 1. Enable the Cloud Pub/Sub API in the [Google Developers Console](https://console.developers.google.com/project/_/apiui/apiview/pubsub/overview).
 
-2. Create a topic and subscription. The pusn auth service account must have Service Account Token Creator Role assigned, which can be done in the Cloud Console [IAM & admin](https://console.cloud.google.com/iam-admin/iam) UI.
+2. Create a topic and subscription. The push auth service account must have Service Account Token Creator Role assigned, which can be done in the Cloud Console [IAM & admin](https://console.cloud.google.com/iam-admin/iam) UI.
 
         $ gcloud pubsub topics create [your-topic-name]
         $ gcloud beta pubsub subscriptions create [your-subscription-name] \
@@ -51,7 +51,7 @@ Then set environment variables before starting your application:
 The application can send messages locally, but it is not able to receive push messages locally. You can, however, simulate a push message by making an HTTP request to the local push notification endpoint. There is an included ``sample_message.json``. You can use
 ``curl`` or [httpie](https://github.com/jkbrzt/httpie) to POST this:
 
-    $ curl -i --data @sample_message.json ":8080/_ah/push-handlers/receive_messages?token=[your-token]"
+    $ curl -i --data @sample_message.json "localhost:8080/_ah/push-handlers/receive_messages?token=[your-token]"
 
 Or
 
@@ -59,15 +59,15 @@ Or
 
 Response:
 
-    HTTP/1.0 200 OK
-    Content-Length: 2
+    HTTP/1.0 400 BAD REQUEST
     Content-Type: text/html; charset=utf-8
-    Date: Mon, 10 Aug 2015 17:52:03 GMT
-    Server: Werkzeug/0.10.4 Python/2.7.10
+    Content-Length: 58
+    Server: Werkzeug/0.15.2 Python/3.7.3
+    Date: Sat, 06 Apr 2019 04:56:12 GMT
 
-    OK
+    Invalid token: 'NoneType' object has no attribute 'split'
 
-After the request completes, you can refresh ``localhost:8080`` and see the message in the list of received messages.
+The simulated push request fails because it does not have a Cloud Pub/Sub-generated JWT in the "Authorization" header.
 
 ## Running on App Engine
 
