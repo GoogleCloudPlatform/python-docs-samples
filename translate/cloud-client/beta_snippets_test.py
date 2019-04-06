@@ -33,7 +33,6 @@ def bucket():
     bucket.delete(force=True)
 
 
-# Can this DI a unique_glossary_id into it?
 @pytest.fixture(scope='session')
 def glossary():
     """Get the ID of a glossary available to session (do not mutate/delete)."""
@@ -67,14 +66,14 @@ def test_translate_text(capsys):
     assert 'Zdravo svet' in out
 
 
-# def test_batch_translate_text(capsys, bucket):
-#     beta_snippets.batch_translate_text(
-#         PROJECT_ID,
-#         'gs://cloud-samples-data/translation/text.txt',
-#         'gs://{}/translation/BATCH_TRANSLATION_OUTPUT/'.format(bucket.name))
-#     out, _ = capsys.readouterr()
-#     assert 'Total Characters: 13' in
-#     assert 'Translated Characters: 13' in out
+def test_batch_translate_text(capsys, bucket):
+    beta_snippets.batch_translate_text(
+        PROJECT_ID,
+        'gs://cloud-samples-data/translation/text.txt',
+        'gs://{}/translation/BATCH_TRANSLATION_OUTPUT/'.format(bucket.name))
+    out, _ = capsys.readouterr()
+    assert 'Total Characters: 13' in out
+    assert 'Translated Characters: 13' in out
 
 
 def test_detect_language(capsys):
@@ -108,14 +107,14 @@ def test_create_glossary(capsys, unique_glossary_id):
 def test_get_glossary(capsys, glossary):
     beta_snippets.get_glossary(PROJECT_ID, glossary)
     out, _ = capsys.readouterr()
-    # ASSERT STUFF ABOUT GLOSSARY
+    assert glossary in out
     assert 'gs://cloud-samples-data/translation/glossary.csv' in out
 
 
 def test_list_glossary(capsys, glossary):
     beta_snippets.list_glossaries(PROJECT_ID)
     out, _ = capsys.readouterr()
-    # ASSERT STUFF ABOUT GLOSSARY
+    assert glossary in out
     assert 'gs://cloud-samples-data/translation/glossary.csv' in out
 
 
