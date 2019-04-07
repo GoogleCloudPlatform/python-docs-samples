@@ -80,7 +80,7 @@ def create_dataset(project_id, compute_region, dataset_name):
   dataset_full_id = response.name
   print('Dataset full id: {}'.format(dataset_full_id))
 
-  # [END automl_vision_iod_import_data]
+  # [END automl_vision_iod_create_dataset]
 
 
 def get_dataset(project_id, compute_region, dataset_id):
