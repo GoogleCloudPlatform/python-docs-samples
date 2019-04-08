@@ -298,31 +298,39 @@ You could select either [GCS](https://cloud.google.com/storage/) or [BigQuery](h
 
 1. Enable [AutoML Tables](https://cloud.google.com/automl-tables/docs/quickstart#before_you_begin) on GCP. 
 
-2. Visit the [AutoML Tables UI](https://console.cloud.google.com/automl-tables) to begin the process of creating your dataset and training your model. \
->![alt text](https://storage.cloud.google.com/cloud-ml-data/automl-tables/notebooks/automl_stockout_img/Image%201%202019-03-13%20at%201.02.53%20PM.png)
+2. Visit the [AutoML Tables UI](https://console.cloud.google.com/automl-tables) to begin the process of creating your dataset and training your model. 
+
+![ ](resources/automl_stockout_img/Image%201%202019-03-13%20at%201.02.53%20PM.png)
    
 3. Import your dataset or the dataset you downloaded in the last section \
-Click <+New Dataset> → Dataset Name <StockOut> → Click Create Dataset \
->![alt text](https://storage.cloud.google.com/cloud-ml-data/automl-tables/notebooks/automl_stockout_img/Image%202%202019-03-13%20at%201.05.17%20PM.png)
+Click <+New Dataset> → Dataset Name <StockOut> → Click Create Dataset 
+ 
+![ ](resources/automl_stockout_img/Image%202%202019-03-13%20at%201.05.17%20PM.png)
 
 4. You can import data from BigQuery or GCS bucket \
     a. For BigQuery enter your GCP project ID, Dataset ID and Table ID \
-    After specifying dataset click import dataset \
->![alt text]https://storage.cloud.google.com/cloud-ml-data/automl-tables/notebooks/automl_stockout_img/Image%203%202019-03-13%20at%201.08.44%20PM.png)
+    After specifying dataset click import dataset 
+    
+![ ](resources/automl_stockout_img/Image%203%202019-03-13%20at%201.08.44%20PM.png)
+
     b. For GCS enter the GCS object location by clicking on BROWSE \
-    After specifying dataset click import dataset \
->![alt text](https://storage.cloud.google.com/cloud-ml-data/automl-tables/notebooks/automl_stockout_img/Image%204%202019-03-13%20at%201.09.56%20PM.png)
+    After specifying dataset click import dataset 
+    
+![ ](resources/automl_stockout_img/Image%204%202019-03-13%20at%201.09.56%20PM.png)
+
     Depending on the size of the dataset this import can take some time.
 
 5. Once the import is complete you can set the schema of the imported dataset based on your business understanding of the data \
     a. Select Label i.e. Stockout \
     b. Select Variable Type for all features \
-    c. Click Continue \
->![alt text](https://storage.cloud.google.com/cloud-ml-data/automl-tables/notebooks/automl_stockout_img/Image%206%202019-03-13%20at%201.20.57%20PM.png)
+    c. Click Continue 
+    
+![ ](resources/automl_stockout_img/Image%206%202019-03-13%20at%201.20.57%20PM.png)
 
 6. The imported dataset is now analyzed \
-This helps you analyze the size of your dataset, dig into missing values if any, calculate correlation, mean and standard deviation. If this data quality looks good to you then we can move on to the next tab i.e. train. \
->![alt text](https://storage.cloud.google.com/cloud-ml-data/automl-tables/notebooks/automl_stockout_img/Image%20new%201%202019-03-25%20at%2012.43.13%20AM.png)
+This helps you analyze the size of your dataset, dig into missing values if any, calculate correlation, mean and standard deviation. If this data quality looks good to you then we can move on to the next tab i.e. train. 
+
+![ ](resources/automl_stockout_img/Image%20new%201%202019-03-25%20at%2012.43.13%20AM.png)
 
 7. Train \
     a. Select a model name \
@@ -331,10 +339,11 @@ This helps you analyze the size of your dataset, dig into missing values if any,
     d. Select optimization objectives. Such as: ROC, Log Loss or PR curve \
     (As our data is imbalances we use PR curve as our optimization metric) \
     e. Click TRAIN \
-    f. Training the model can take some time \
-![alt text](https://storage.cloud.google.com/cloud-ml-data/automl-tables/notebooks/automl_stockout_img/Image%208%202019-03-13%20at%201.34.08%20PM.png)
+    f. Training the model can take some time 
+    
+![ ](resources/automl_stockout_img/Image%208%202019-03-13%20at%201.34.08%20PM.png)
 
-![alt text](https://storage.cloud.google.com/cloud-ml-data/automl-tables/notebooks/automl_stockout_img/Image%20new%202%202019-03-25%20at%2012.44.18%20AM.png)
+![ ](resources/automl_stockout_img/Image%20new%202%202019-03-25%20at%2012.44.18%20AM.png)
 
 8. Once the model is trained you can click on the evaluate tab \
 This tab gives you stats for model evaluation  \
@@ -343,16 +352,18 @@ This tab gives you stats for model evaluation  \
          Area Under ROC Curve: 0.893 \
          Accuracy: 92.5% \
          Log Loss: 0.217 \
-Selecting the threshold lets you set a desired precision and recall on your predictions. \
->![alt text](https://storage.cloud.google.com/cloud-ml-data/automl-tables/notebooks/automl_stockout_img/Image%20new%203%202019-03-25%20at%2012.49.40%20AM.png)
+Selecting the threshold lets you set a desired precision and recall on your predictions. 
+
+![ ](resources/automl_stockout_img/Image%20new%203%202019-03-25%20at%2012.49.40%20AM.png)
 
 9. Using the model created let's use batch prediction to predict stock-out \
     a. Batch prediction data inputs could come from BigQuery or your GCS bucket. \
     b. Select the GCS bucket to store the results of your batch prediction \
-    c. Click Send Batch Predictions \
->![alt text](https://storage.cloud.google.com/cloud-ml-data/automl-tables/notebooks/automl_stockout_img/Image%2012%202019-03-13%20at%201.56.43%20PM.png)
+    c. Click Send Batch Predictions 
+    
+![ ](resources/automl_stockout_img/Image%2012%202019-03-13%20at%201.56.43%20PM.png)
 
->![alt text](https://storage.cloud.google.com/cloud-ml-data/automl-tables/notebooks/automl_stockout_img/Image%2013%202019-03-13%20at%201.59.18%20PM.png)
+![ ](resources/automl_stockout_img/Image%2013%202019-03-13%20at%201.59.18%20PM.png)
 
 
 ## Building the model using AutoML Tables Python Client Library
@@ -362,7 +373,7 @@ In this notebook, you will learn how to build the same model as you have done on
 
 ## Evaluation results and business impact
 
->![alt text](https://storage.cloud.google.com/cloud-ml-data/automl-tables/notebooks/automl_stockout_img/Image%20new%203%202019-03-25%20at%2012.49.40%20AM.png)
+![ ](resources/automl_stockout_img/Image%20new%203%202019-03-25%20at%2012.49.40%20AM.png)
 
 Thus the evaluation results tell us that the model we built can: 
 
