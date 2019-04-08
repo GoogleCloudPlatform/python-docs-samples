@@ -1,0 +1,62 @@
+{
+  "type":"%s",
+  "entry":[
+    {
+      "request":{
+        "method":"POST",
+        "url":"Patient"
+      },
+      "resource":{
+        "resourceType":"Patient",
+        "active":false,
+        "name":[
+          {
+            "use":"usual",
+            "text":"Marcus Smith",
+            "family":"Smith",
+            "given":[
+              "Marcus"
+            ]
+          }
+        ],
+        "gender":"male"
+      }
+    },
+    {
+      "request":{
+        "method":"POST",
+        "url":"Observation"
+      },
+      "resource":{
+        "resourceType":"Observation",
+        "status":"final",
+        "valueQuantity":{
+          "value":99,
+          "unit":"mg",
+          "system":"si"
+        },
+        "code":{
+          "coding":[
+            {
+              "system":"system1",
+              "code":"value1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/Patient?gender=male"
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/Observation?status=final"
+      }
+    }
+  ],
+  "resourceType":"Bundle"
+}
