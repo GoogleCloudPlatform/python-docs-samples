@@ -59,7 +59,7 @@ def batch_predict(
     )
 
     # Launch long-running batch prediction operation.
-    operation = prediction_client.batch_predict(model_full_id, input_config,
+    response = prediction_client.batch_predict(model_full_id, input_config,
                                                 output_config)
     print("Making batch prediction... ")
     try:
