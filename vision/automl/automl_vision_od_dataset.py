@@ -70,15 +70,6 @@ def create_dataset(project_id, compute_region, dataset_name):
   print('Dataset create time:')
   print('\tseconds: {}'.format(dataset.create_time.seconds))
   print('\tnanos: {}'.format(dataset.create_time.nanos))
-  dataset_spec = {}
-  my_dataset = {
-      'display_name': dataset_name,
-      'image_object_detection_dataset_metadata': dataset_spec
-  }
-  response = client.create_dataset(project_location, my_dataset)
-  print('\nDataset creation: {}'.format(response))
-  dataset_full_id = response.name
-  print('Dataset full id: {}'.format(dataset_full_id))
 
   # [END automl_vision_iod_create_dataset]
 
