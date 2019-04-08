@@ -70,7 +70,7 @@ The simulated push request fails because it does not have a Cloud Pub/Sub-genera
 
 ## Running on App Engine
 
-Note: Not all the files in the current directory are needed to run your code on App Engine. Specifically, `main_test.py` and the `data` directory, which contains a mocked private key file and a mocked public certs file, are for testing purposes only. You may feel free to leave them out or remove them when deploying your app. IWhen your app is deployed, Cloud Pub/Sub creates tokens using a private key, then the Google Auth Python library takes care of verifying and decoding the token using Google's public certs, to confirm that the push requests indeed come from Cloud Pub/Sub. 
+Note: Not all the files in the current directory are needed to run your code on App Engine. Specifically, `main_test.py` and the `data` directory, which contains a mocked private key file and a mocked public certs file, are for testing purposes only. They SHOULD NOT be included in when deploying your app. When your app is up and running, Cloud Pub/Sub creates tokens using a private key, then the Google Auth Python library takes care of verifying and decoding the token using Google's public certs, to confirm that the push requests indeed come from Cloud Pub/Sub. 
 
 In the current directory, deploy using `gcloud`:
 

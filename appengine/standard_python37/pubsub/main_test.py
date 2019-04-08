@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This file is for testing purposes only. You SHOULD NOT include it
+# or the PEM files when deploying your app.
+
 import base64
 import calendar
 import datetime

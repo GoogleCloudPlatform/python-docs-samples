@@ -83,8 +83,8 @@ def receive_messages_handler():
         claim = id_token.verify_oauth2_token(token, requests.Request())
         CLAIMS.append(claim)
 
-        # Check the claim audience field. It was specified in
-        # `--push-auth-token-audience` when setting up the subscription.
+        # Check the audience field in the claim. It was specified in
+        # `--push-auth-token-audience` when you created the subscription.
         assert claim['aud'] == 'example.com'
     except Exception as e:
         return 'Invalid token: {}\n'.format(e), 400
