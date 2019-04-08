@@ -78,9 +78,14 @@ def receive_messages_handler():
         HEADERS.append(header)
 
         # Verify and decode the JWT. Underneath it checks the signature against
-        # Google's public certs at https://www.googleapis.com/oauth2/v1/certs
+        # Google's public certs at https://www.googleapis.com/oauth2/v1/certs.
+        # It also checks the token expiration time.
         claim = id_token.verify_oauth2_token(token, requests.Request())
         CLAIMS.append(claim)
+
+        # Check the claim audience field. It was specified in
+        # `--push-auth-token-audience` when setting up the subscription.
+        assert claim['aud'] == 'example.com'
     except Exception as e:
         return 'Invalid token: {}\n'.format(e), 400
 

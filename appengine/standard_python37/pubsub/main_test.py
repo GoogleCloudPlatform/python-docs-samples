@@ -50,7 +50,7 @@ def signer():
 def fake_token(signer):
     now = calendar.timegm(datetime.datetime.utcnow().utctimetuple())
     payload = {
-        'aud': 'https://e.io/_ah/push-handlers/receive_messages?token=1234abc',
+        'aud': 'example.com',
         'azp': '1234567890',
         'email': 'pubsub@example.iam.gserviceaccount.com',
         'email_verified': True,
@@ -88,7 +88,6 @@ def test_push_endpoint(monkeypatch, client, fake_token):
 
     url = '/_ah/push-handlers/receive_messages?token=' + \
         os.environ['PUBSUB_VERIFICATION_TOKEN']
-    # "".join(chr(x) for x in fake_token)
 
     r = client.post(
         url,
