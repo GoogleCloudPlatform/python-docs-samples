@@ -25,7 +25,7 @@ import sqlalchemy
 db_user = os.environ.get("DB_USER")
 db_pass = os.environ.get("DB_PASS")
 db_name = os.environ.get("DB_NAME")
-cloud_sql_connection_name = os.environ.get("CLOUD_SQL_CONNECTION_NAME")
+cloud_sql_connection_name = os.environ.get("CLOUD_SQL_INSTANCE_NAME")
 
 app = Flask(__name__)
 
