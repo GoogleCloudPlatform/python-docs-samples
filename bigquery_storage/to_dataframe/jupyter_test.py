@@ -122,7 +122,7 @@ def test_jupyter_tutorial(ipython):
     # [END bigquerystorage_jupyter_tutorial_context]
 
     sample = """
-    # [START bigquerystorage_jupyter_tutorial_query]
+    # [START bigquerystorage_jupyter_tutorial_query_default]
     %%bigquery java_deps
     SELECT
         dependency_name,
@@ -140,7 +140,7 @@ def test_jupyter_tutorial(ipython):
     WHERE
         LOWER(dependency_platform) = 'maven'
     LIMIT 2500000
-    # [END bigquerystorage_jupyter_tutorial_query]
+    # [END bigquerystorage_jupyter_tutorial_query_default]
     """
     result = ip.run_cell(_strip_region_tags(sample))
     result.raise_error()  # Throws an exception if the cell failed.
