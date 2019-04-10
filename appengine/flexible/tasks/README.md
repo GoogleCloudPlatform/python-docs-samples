@@ -122,10 +122,3 @@ Now view that the payload was received and verify the payload:
 ```
 gcloud app logs read
 ```
-
-Create a task that will be scheduled for a time in the future using the
-`--in_seconds` flag:
-
-```
-python create_app_engine_queue_task.py --project=$PROJECT_ID --queue=$QUEUE_ID --location=$LOCATION_ID --payload=hello --in_seconds=30
-```
