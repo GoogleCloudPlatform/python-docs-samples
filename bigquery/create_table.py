@@ -13,18 +13,25 @@
 # limitations under the License.
 
 
-def delete_model(client, model_id):
-    """Sample ID: go/samples-tracker/1534"""
+def create_table(client, table_id):
 
-    # [START bigquery_delete_model]
+    # [START bigquery_create_table]
     from google.cloud import bigquery
+
+    schema = [
+        bigquery.SchemaField("full_name", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("age", "INTEGER", mode="REQUIRED"),
+    ]
 
     # TODO(developer): Construct a BigQuery client object.
     # client = bigquery.Client()
 
-    # TODO(developer): Set model_id to the ID of the model to fetch.
-    # model_id = 'your-project.your_dataset.your_model'
+    # TODO(developer): Set table_id to the ID of the table to create
+    # table_id = "your-project.your_dataset.your_table_name"
 
-    client.delete_model(model_id)
-    print("Deleted model '{}'.".format(model_id))
-    # [END bigquery_delete_model]
+    table = bigquery.Table(table_id, schema=schema)
+    table = client.create_table(table)  # API request
+    print(
+        "Created table {}.{}.{}".format(table.project, table.dataset_id, table.table_id)
+    )
+    # [END bigquery_create_table]

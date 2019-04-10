@@ -12,19 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .. import list_tables
 
-def delete_model(client, model_id):
-    """Sample ID: go/samples-tracker/1534"""
 
-    # [START bigquery_delete_model]
-    from google.cloud import bigquery
+def test_list_tables(capsys, client, dataset_id, table_id):
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
-
-    # TODO(developer): Set model_id to the ID of the model to fetch.
-    # model_id = 'your-project.your_dataset.your_model'
-
-    client.delete_model(model_id)
-    print("Deleted model '{}'.".format(model_id))
-    # [END bigquery_delete_model]
+    list_tables.list_tables(client, dataset_id)
+    out, err = capsys.readouterr()
+    assert "Tables contained in '{}':".format(dataset_id) in out
+    assert table_id in out

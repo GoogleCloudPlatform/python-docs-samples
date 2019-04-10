@@ -26,6 +26,25 @@ def client():
 
 
 @pytest.fixture
+def random_table_id(client, dataset_id):
+    now = datetime.datetime.now()
+    random_table_id = "example_table_{}_{}".format(
+        now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
+    )
+    return "{}.{}".format(dataset_id, random_table_id)
+
+
+@pytest.fixture
+def random_dataset_id(client):
+    now = datetime.datetime.now()
+    random_dataset_id = "example_dataset_{}_{}".format(
+        now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
+    )
+    yield "{}.{}".format(client.project, random_dataset_id)
+    client.delete_dataset(random_dataset_id, delete_contents=True, not_found_ok=True)
+
+
+@pytest.fixture
 def dataset_id(client):
     now = datetime.datetime.now()
     dataset_id = "python_samples_{}_{}".format(
@@ -33,7 +52,20 @@ def dataset_id(client):
     )
     dataset = client.create_dataset(dataset_id)
     yield "{}.{}".format(dataset.project, dataset.dataset_id)
-    client.delete_dataset(dataset, delete_contents=True)
+    client.delete_dataset(dataset, delete_contents=True, not_found_ok=True)
+
+
+@pytest.fixture
+def table_id(client, dataset_id):
+    now = datetime.datetime.now()
+    table_id = "python_samples_{}_{}".format(
+        now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
+    )
+
+    table = bigquery.Table("{}.{}".format(dataset_id, table_id))
+    table = client.create_table(table)
+    yield "{}.{}.{}".format(table.project, table.dataset_id, table.table_id)
+    client.delete_table(table, not_found_ok=True)
 
 
 @pytest.fixture

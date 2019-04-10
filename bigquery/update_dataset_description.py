@@ -13,18 +13,25 @@
 # limitations under the License.
 
 
-def delete_model(client, model_id):
-    """Sample ID: go/samples-tracker/1534"""
+def update_dataset_description(client, dataset_id):
 
-    # [START bigquery_delete_model]
+    # [START bigquery_update_dataset_description]
     from google.cloud import bigquery
 
     # TODO(developer): Construct a BigQuery client object.
     # client = bigquery.Client()
 
-    # TODO(developer): Set model_id to the ID of the model to fetch.
-    # model_id = 'your-project.your_dataset.your_model'
+    # TODO(developer): Set dataset_id to the ID of the dataset to fetch.
+    # dataset_id = 'your-project.your_dataset'
 
-    client.delete_model(model_id)
-    print("Deleted model '{}'.".format(model_id))
-    # [END bigquery_delete_model]
+    dataset = client.get_dataset(dataset_id)
+    dataset.description = "Updated description."
+    dataset = client.update_dataset(dataset, ["description"])
+
+    full_dataset_id = "{}.{}".format(dataset.project, dataset.dataset_id)
+    print(
+        "Updated dataset '{}' with description '{}'.".format(
+            full_dataset_id, dataset.description
+        )
+    )
+    # [END bigquery_update_dataset_description]

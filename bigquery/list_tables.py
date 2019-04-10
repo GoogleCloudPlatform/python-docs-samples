@@ -13,18 +13,21 @@
 # limitations under the License.
 
 
-def delete_model(client, model_id):
-    """Sample ID: go/samples-tracker/1534"""
+def list_tables(client, dataset_id):
 
-    # [START bigquery_delete_model]
+    # [START bigquery_list_tables]
     from google.cloud import bigquery
 
     # TODO(developer): Construct a BigQuery client object.
     # client = bigquery.Client()
 
-    # TODO(developer): Set model_id to the ID of the model to fetch.
-    # model_id = 'your-project.your_dataset.your_model'
+    # TODO(developer): Set dataset_id to the ID of the dataset that contains
+    #                  the tables you are listing.
+    # dataset_id = 'your-project.your_dataset'
 
-    client.delete_model(model_id)
-    print("Deleted model '{}'.".format(model_id))
-    # [END bigquery_delete_model]
+    tables = client.list_tables(dataset_id)
+
+    print("Tables contained in '{}':".format(dataset_id))
+    for table in tables:
+        print("{}.{}.{}".format(table.project, table.dataset_id, table.table_id))
+    # [END bigquery_list_tables]

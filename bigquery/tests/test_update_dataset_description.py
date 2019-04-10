@@ -12,19 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .. import update_dataset_description
 
-def delete_model(client, model_id):
-    """Sample ID: go/samples-tracker/1534"""
 
-    # [START bigquery_delete_model]
-    from google.cloud import bigquery
+def test_update_dataset_description(capsys, client, dataset_id):
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
-
-    # TODO(developer): Set model_id to the ID of the model to fetch.
-    # model_id = 'your-project.your_dataset.your_model'
-
-    client.delete_model(model_id)
-    print("Deleted model '{}'.".format(model_id))
-    # [END bigquery_delete_model]
+    update_dataset_description.update_dataset_description(client, dataset_id)
+    out, err = capsys.readouterr()
+    assert "Updated description." in out
