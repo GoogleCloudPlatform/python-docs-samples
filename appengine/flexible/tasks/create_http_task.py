@@ -47,7 +47,7 @@ def create_http_task(project,
     task = {
             'http_request': {  # Specify the type of request.
                 'http_method': 'POST',
-                'url': url # The full url path that the task will be sent to.
+                'url': url  # The full url path that the task will be sent to.
             }
     }
     if payload is not None:
