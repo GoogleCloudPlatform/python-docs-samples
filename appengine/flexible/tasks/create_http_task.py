@@ -18,20 +18,26 @@ import argparse
 import datetime
 
 
-def create_task(project, queue, location, payload=None, in_seconds=None):
-    # [START cloud_tasks_appengine_create_task]
+def create_http_task(project,
+                     queue,
+                     location,
+                     url,
+                     payload=None,
+                     in_seconds=None):
+    # [START cloud_tasks_create_http_task]
     """Create a task for a given queue with an arbitrary payload."""
 
-    from google.cloud import tasks_v2
+    from google.cloud import tasks_v2beta3
     from google.protobuf import timestamp_pb2
 
     # Create a client.
-    client = tasks_v2.CloudTasksClient()
+    client = tasks_v2beta3.CloudTasksClient()
 
     # TODO(developer): Uncomment these lines and replace with your values.
     # project = 'my-project-id'
     # queue = 'my-appengine-queue'
     # location = 'us-central1'
+    # url = 'https://<project-id>.appspot.com/example_task_handler'
     # payload = 'hello'
 
     # Construct the fully qualified queue name.
@@ -39,9 +45,9 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
 
     # Construct the request body.
     task = {
-            'app_engine_http_request': {  # Specify the type of request.
+            'http_request': {  # Specify the type of request.
                 'http_method': 'POST',
-                'relative_uri': '/example_task_handler'
+                'url': url  # The full url path that the task will be sent to.
             }
     }
     if payload is not None:
@@ -49,7 +55,7 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
         converted_payload = payload.encode()
 
         # Add the payload to the request.
-        task['app_engine_http_request']['body'] = converted_payload
+        task['http_request']['body'] = converted_payload
 
     if in_seconds is not None:
         # Convert "seconds from now" into an rfc3339 datetime string.
@@ -67,12 +73,12 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
 
     print('Created task {}'.format(response.name))
     return response
-# [END cloud_tasks_appengine_create_task]
+# [END cloud_tasks_create_http_task]
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description=create_task.__doc__,
+        description=create_http_task.__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
 
     parser.add_argument(
@@ -94,6 +100,12 @@ if __name__ == '__main__':
     )
 
     parser.add_argument(
+        '--url',
+        help='The full url path that the request will be sent to.',
+        required=True,
+    )
+
+    parser.add_argument(
         '--payload',
         help='Optional payload to attach to the push queue.'
     )
@@ -105,6 +117,6 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    create_task(
-        args.project, args.queue, args.location,
+    create_http_task(
+        args.project, args.queue, args.location, args.url,
         args.payload, args.in_seconds)

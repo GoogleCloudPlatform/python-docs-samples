@@ -12,16 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+runtime: python
+env: flex
+entrypoint: gunicorn -b :$PORT --threads=4 main:app
 
-import create_app_engine_queue_task
-
-TEST_PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-TEST_LOCATION = os.getenv('TEST_QUEUE_LOCATION', 'us-central1')
-TEST_QUEUE_NAME = os.getenv('TEST_QUEUE_NAME', 'my-appengine-queue')
-
-
-def test_create_task():
-    result = create_app_engine_queue_task.create_task(
-        TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION)
-    assert TEST_QUEUE_NAME in result.name
+runtime_config:
+  python_version: 3
