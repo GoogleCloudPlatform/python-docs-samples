@@ -25,7 +25,7 @@ def get_client(service_account_json, api_key):
     """Returns an authorized API client by discovering the Healthcare API and
     creating a service object using the service account credentials JSON."""
     api_scopes = ['https://www.googleapis.com/auth/cloud-platform']
-    api_version = 'v1alpha'
+    api_version = 'v1beta1'
     discovery_api = 'https://healthcare.googleapis.com/$discovery/rest'
     service_name = 'healthcare'
 
@@ -33,7 +33,7 @@ def get_client(service_account_json, api_key):
         service_account_json)
     scoped_credentials = credentials.with_scopes(api_scopes)
 
-    discovery_url = '{}?labels=CHC_ALPHA&version={}&key={}'.format(
+    discovery_url = '{}?labels=CHC_BETA&version={}&key={}'.format(
         discovery_api, api_version, api_key)
 
     return discovery.build(
@@ -194,6 +194,86 @@ def patch_hl7v2_store(
 # [END healthcare_patch_hl7v2_store]
 
 
+# [START healthcare_hl7v2_store_get_iam_policy]
+def get_hl7v2_store_iam_policy(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        hl7v2_store_id):
+    """Gets the IAM policy for the specified hl7v2 store."""
+    client = get_client(service_account_json, api_key)
+    hl7v2_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
+        project_id, cloud_region, dataset_id)
+    hl7v2_store_name = '{}/hl7V2Stores/{}'.format(
+        hl7v2_store_parent, hl7v2_store_id)
+
+    request = client.projects().locations().datasets().hl7V2Stores(
+        ).getIamPolicy(resource=hl7v2_store_name)
+    response = request.execute()
+
+    print('etag: {}'.format(response.get('name')))
+    return response
+# [END healthcare_hl7v2_store_get_iam_policy]
+
+
+# [START healthcare_hl7v2_store_set_iam_policy]
+def set_hl7v2_store_iam_policy(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        hl7v2_store_id,
+        member,
+        role,
+        etag=None):
+    """Sets the IAM policy for the specified hl7v2 store.
+
+        A single member will be assigned a single role. A member can be any of:
+
+        - allUsers, that is, anyone
+        - allAuthenticatedUsers, anyone authenticated with a Google account
+        - user:email, as in 'user:somebody@example.com'
+        - group:email, as in 'group:admins@example.com'
+        - domain:domainname, as in 'domain:example.com'
+        - serviceAccount:email,
+            as in 'serviceAccount:my-other-app@appspot.gserviceaccount.com'
+
+        A role can be any IAM role, such as 'roles/viewer', 'roles/owner',
+        or 'roles/editor'
+    """
+    client = get_client(service_account_json, api_key)
+    hl7v2_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
+        project_id, cloud_region, dataset_id)
+    hl7v2_store_name = '{}/hl7V2Stores/{}'.format(
+        hl7v2_store_parent, hl7v2_store_id)
+
+    policy = {
+        "bindings": [
+            {
+              "role": role,
+              "members": [
+                member
+              ]
+            }
+        ]
+    }
+
+    if etag is not None:
+        policy['etag'] = etag
+
+    request = client.projects().locations().datasets().hl7V2Stores(
+        ).setIamPolicy(resource=hl7v2_store_name, body={'policy': policy})
+    response = request.execute()
+
+    print('etag: {}'.format(response.get('name')))
+    print('bindings: {}'.format(response.get('bindings')))
+    return response
+# [END healthcare_hl7v2_store_set_iam_policy]
+
+
 def parse_command_line_args():
     """Parses command line arguments."""
 
@@ -237,6 +317,16 @@ def parse_command_line_args():
         help='The Cloud Pub/Sub topic where notifications of changes '
         'are published')
 
+    parser.add_argument(
+        '--member',
+        default=None,
+        help='Member to add to IAM policy (e.g. "domain:example.com")')
+
+    parser.add_argument(
+        '--role',
+        default=None,
+        help='IAM Role to give to member (e.g. "roles/viewer")')
+
     command = parser.add_subparsers(dest='command')
 
     command.add_parser('create-hl7v2-store', help=create_hl7v2_store.__doc__)
@@ -244,6 +334,12 @@ def parse_command_line_args():
     command.add_parser('get-hl7v2-store', help=get_hl7v2_store.__doc__)
     command.add_parser('list-hl7v2-stores', help=list_hl7v2_stores.__doc__)
     command.add_parser('patch-hl7v2-store', help=patch_hl7v2_store.__doc__)
+    command.add_parser(
+        'get_iam_policy',
+        help=get_hl7v2_store_iam_policy.__doc__)
+    command.add_parser(
+        'set_iam_policy',
+        help=set_hl7v2_store_iam_policy.__doc__)
 
     return parser.parse_args()
 
@@ -299,6 +395,26 @@ def run_command(args):
             args.dataset_id,
             args.hl7v2_store_id,
             args.pubsub_topic)
+
+    elif args.command == 'get_hl7v2_store_iam_policy':
+        get_hl7v2_store_iam_policy(
+            args.service_account_json,
+            args.api_key,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id)
+
+    elif args.command == 'set_hl7v2_store_iam_policy':
+        set_hl7v2_store_iam_policy(
+            args.service_account_json,
+            args.api_key,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            args.member,
+            args.role)
 
 
 def main():
