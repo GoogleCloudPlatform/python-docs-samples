@@ -26,7 +26,7 @@ healthy = True
 def index():
     global healthy
     return render_template('index.html',
-                           hostname=_get_hostname(),
+                           hostname=get_hostname(),
                            zone=_get_zone(),
                            template=_get_template(),
                            healthy=healthy)
@@ -35,19 +35,20 @@ def index():
 @app.route('/health')
 def health():
     global healthy
-    status = 200 if healthy else 500
-    return make_response(render_template('health.html', healthy=healthy), status)
+    template = render_template('health.html', healthy=healthy)
+    return make_response(template, 200 if healthy else 500)
 
 
 @app.route('/makeHealthy')
 def make_healthy():
     global healthy
     healthy = True
-    response = make_response(render_template('index.html',
-                                             hostname=gethostname(),
-                                             zone=_get_zone(),
-                                             template=_get_template(),
-                                             healthy=True), 302)
+    template = render_template('index.html',
+                               hostname=gethostname(),
+                               zone=_get_zone(),
+                               template=_get_template(),
+                               healthy=True)
+    response = make_response(template, 302)
     response.headers['Location'] = '/'
     return response
 
@@ -56,11 +57,12 @@ def make_healthy():
 def make_unhealthy():
     global healthy
     healthy = False
-    response = make_response(render_template('index.html',
-                                             hostname=gethostname(),
-                                             zone=_get_zone(),
-                                             template=_get_template(),
-                                             healthy=False), 302)
+    template = render_template('index.html',
+                               hostname=gethostname(),
+                               zone=_get_zone(),
+                               template=_get_template(),
+                               healthy=False)
+    response = make_response(template, 302)
     response.headers['Location'] = '/'
     return response
 
