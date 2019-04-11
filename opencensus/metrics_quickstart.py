@@ -55,9 +55,9 @@ def main():
     exporter, transport = stats_exporter.new_stats_exporter()
 
     # Record 100 fake latency values between 0 and 5 seconds.
-    for ii in range(100):
+    for num in range(100):
         ms = random() * 5 * 1000
-        print("Latency {}: {}".format(ii, ms))
+        print("Latency {}: {}".format(num, ms))
 
         mmap = stats.stats.stats_recorder.new_measurement_map()
         mmap.measure_float_put(LATENCY_MS, ms)
