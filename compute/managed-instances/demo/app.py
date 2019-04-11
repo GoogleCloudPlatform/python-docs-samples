@@ -26,7 +26,7 @@ healthy = True
 def index():
     global healthy
     return render_template('index.html',
-                           hostname=get_hostname(),
+                           hostname=gethostname(),
                            zone=_get_zone(),
                            template=_get_template(),
                            healthy=healthy)
