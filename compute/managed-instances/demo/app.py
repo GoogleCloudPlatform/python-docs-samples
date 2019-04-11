@@ -1,4 +1,16 @@
-#!/usr/bin/python3
+# Copyright 2019, Google, Inc.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 from flask import Flask, make_response, render_template
 from re import sub
 from requests import get
@@ -7,29 +19,30 @@ from socket import gethostname
 PORT_NUMBER = 80
 
 app = Flask(__name__)
-is_healthy = True
+healthy = True
 
 
 @app.route('/')
 def index():
+    global healthy
     return render_template('index.html',
                            hostname=_get_hostname(),
                            zone=_get_zone(),
                            template=_get_template(),
-                           healthy=is_healthy)
+                           healthy=healthy)
 
 
 @app.route('/health')
 def health():
-    global is_healthy
-    status = 200 if is_healthy else 500
+    global healthy
+    status = 200 if healthy else 500
     return make_response(render_template('health.html', healthy=healthy), status)
 
 
 @app.route('/makeHealthy')
 def make_healthy():
-    global is_healthy
-    is_healthy = True
+    global healthy
+    healthy = True
     response = make_response(render_template('index.html',
                                              hostname=gethostname(),
                                              zone=_get_zone(),
@@ -41,8 +54,8 @@ def make_healthy():
 
 @app.route('/makeUnhealthy')
 def make_unhealthy():
-    global is_healthy
-    is_healthy = False
+    global healthy
+    healthy = False
     response = make_response(render_template('index.html',
                                              hostname=gethostname(),
                                              zone=_get_zone(),
