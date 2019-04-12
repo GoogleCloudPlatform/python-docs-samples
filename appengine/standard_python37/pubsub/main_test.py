@@ -70,7 +70,7 @@ def fake_token(signer):
     yield jwt.encode(signer, payload, header=header)
 
 
-def _verify_mocked_oauth2_token(token, request):
+def _verify_mocked_oauth2_token(token, request, audience):
     claims = jwt.decode(token, certs=PUBLIC_CERT_BYTES, verify=True)
     return claims
 
