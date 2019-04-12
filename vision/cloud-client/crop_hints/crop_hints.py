@@ -67,7 +67,7 @@ def draw_hint(image_file):
         vects[2].x, vects[2].y,
         vects[3].x, vects[3].y], None, 'red')
     im.save('output-hint.jpg', 'JPEG')
-    print('Saved new image to output-crop.jpg')
+    print('Saved new image to output-hint.jpg')
     # [END vision_crop_hints_tutorial_draw_crop_hints]
 
 
