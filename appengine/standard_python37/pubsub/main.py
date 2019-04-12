@@ -75,7 +75,7 @@ def receive_messages_handler():
         # Verify and decode the JWT. `verify_oauth2_token` verifies
         # the JWT signature, the `aud` claim, and the `exp` claim.
         claim = id_token.verify_oauth2_token(token, requests.Request(),
-                                             'example.com')
+                                             audience='example.com')
         # Must also verify the `iss` claim.
         if claim['iss'] not in [
             'accounts.google.com',
