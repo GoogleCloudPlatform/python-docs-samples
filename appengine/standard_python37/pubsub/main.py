@@ -19,7 +19,6 @@ import json
 import logging
 import os
 
-from google.auth import jwt
 from google.auth.transport import requests
 from google.cloud import pubsub_v1
 from google.oauth2 import id_token
@@ -38,7 +37,6 @@ app.config['GCLOUD_PROJECT'] = os.environ['GOOGLE_CLOUD_PROJECT']
 # Global list to store messages, tokens, etc. received by this instance.
 MESSAGES = []
 TOKENS = []
-HEADERS = []
 CLAIMS = []
 
 # [START index]
@@ -46,7 +44,7 @@ CLAIMS = []
 def index():
     if request.method == 'GET':
         return render_template('index.html', messages=MESSAGES, tokens=TOKENS,
-                               headers=HEADERS, claims=CLAIMS)
+                               claims=CLAIMS)
 
     data = request.form.get('payload', 'Example payload').encode('utf-8')
 
@@ -74,18 +72,17 @@ def receive_messages_handler():
         token = bearer_token.split(' ')[1]
         TOKENS.append(token)
 
-        header = jwt.decode_header(token)
-        HEADERS.append(header)
-
-        # Verify and decode the JWT. Underneath it checks the signature against
-        # Google's public certs at https://www.googleapis.com/oauth2/v1/certs.
-        # It also checks the token expiration time.
-        claim = id_token.verify_oauth2_token(token, requests.Request())
+        # Verify and decode the JWT. `verify_oauth2_token` verifies
+        # the JWT signature, the `aud` claim, and the `exp` claim.
+        claim = id_token.verify_oauth2_token(token, requests.Request(),
+                                             audience='example.com')
+        # Must also verify the `iss` claim.
+        if claim['iss'] not in [
+            'accounts.google.com',
+            'https://accounts.google.com'
+        ]:
+            raise ValueError('Wrong issuer.')
         CLAIMS.append(claim)
-
-        # Check the audience field in the claim. It was specified in
-        # `--push-auth-token-audience` when you created the subscription.
-        assert claim['aud'] == 'example.com'
     except Exception as e:
         return 'Invalid token: {}\n'.format(e), 400
 
