@@ -77,8 +77,10 @@ def receive_messages_handler():
         claim = id_token.verify_oauth2_token(token, requests.Request(),
                                              'example.com')
         # Must also verify the `iss` claim.
-        if claim['iss'] not in ['accounts.google.com',
-                                 'https://accounts.google.com']:
+        if claim['iss'] not in [
+            'accounts.google.com',
+            'https://accounts.google.com'
+        ]:
             raise ValueError('Wrong issuer.')
         CLAIMS.append(claim)
     except Exception as e:
