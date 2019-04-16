@@ -16,6 +16,7 @@ from __future__ import print_function
 
 import datetime
 
+
 def create_http_task(project,
                      queue,
                      location,
@@ -52,6 +53,7 @@ def create_http_task(project,
                 }
             }
     }
+    
     if payload is not None:
         # The API expects a payload of type bytes.
         converted_payload = payload.encode()
