@@ -25,6 +25,7 @@ SECRETS_PASSWORD=$(cat "${KOKORO_GFILE_DIR}/secrets-password.txt")
 source ./testing/test-env.sh
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
 export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
+source ${KOKORO_GFILE_DIR}/tasks-service-account.sh
 
 # Run Cloud SQL proxy, if required
 if [ -n "${CLOUD_SQL_PROXY}" ]; then

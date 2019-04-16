@@ -21,6 +21,7 @@ def create_http_task(project,
                      queue,
                      location,
                      url,
+                     service_account_email,
                      payload=None,
                      in_seconds=None):
     # [START cloud_tasks_create_http_task_with_token]
@@ -48,12 +49,11 @@ def create_http_task(project,
                 'http_method': 'POST',
                 'url': url,  # The full url path that the task will be sent to.
                 'oidc_token': {
-                    'service_account_email':
-                        'client_id@project_id.iam.gserviceaccount.com'
+                    'service_account_email': service_account_email
                 }
             }
     }
-    
+
     if payload is not None:
         # The API expects a payload of type bytes.
         converted_payload = payload.encode()
