@@ -65,7 +65,7 @@ def main():
 
     # Keep the thread alive long enough for the exporter to export at least
     # once.
-    time.sleep(60)
+    time.sleep(65)
 
 
 if __name__ == '__main__':
