@@ -15,7 +15,7 @@ backend.
 
 Install the OpenCensus core and Stackdriver exporter libraries:
 
-```bash
+```sh
 pip install -r opencensus/requirements.txt
 ```
 
@@ -24,7 +24,7 @@ GCP](https://cloud.google.com/docs/authentication/getting-started).
 
 ## Running the example
 
-```bash
+```sh
 python opencensus/metrics_quickstart.py
 ```
 
