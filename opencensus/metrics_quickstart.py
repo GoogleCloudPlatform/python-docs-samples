@@ -53,6 +53,8 @@ def main():
     # Create the Stackdriver stats exporter and start exporting metrics in the
     # background, once every 60 seconds by default.
     exporter = stats_exporter.new_stats_exporter()
+    print('Exporting stats to project "{}"'
+          .format(exporter.options.project_id))
 
     # Record 100 fake latency values between 0 and 5 seconds.
     for num in range(100):
