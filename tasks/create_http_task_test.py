@@ -21,8 +21,8 @@ TEST_LOCATION = os.getenv('TEST_QUEUE_LOCATION', 'us-central1')
 TEST_QUEUE_NAME = os.getenv('TEST_QUEUE_NAME', 'my-appengine-queue')
 
 
-def test_create_task():
-    url = 'https://' + TEST_PROJECT_ID + '.appspot.com/example_task_handler'
+def test_create_http_task():
+    url = 'https://example.appspot.com/example_task_handler'
     result = create_http_task.create_http_task(
         TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION, url)
     assert TEST_QUEUE_NAME in result.name
