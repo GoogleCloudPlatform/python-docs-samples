@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Examples of using the Cloud ML Engine's online prediction service,
+"""Examples of using AI Platform's online prediction service,
    modified for scikit-learn and XGBoost."""
 
 import googleapiclient.discovery
@@ -23,7 +23,7 @@ import googleapiclient.discovery
 def predict_json(project, model, instances, version=None):
     """Send json data to a deployed model for prediction.
     Args:
-        project (str): project where the Cloud ML Engine Model is deployed.
+        project (str): project where the AI Platform Model is deployed.
         model (str): model name.
         instances ([[float]]): List of input instances, where each input
                    instance is a list of floats.
@@ -32,7 +32,7 @@ def predict_json(project, model, instances, version=None):
         Mapping[str: any]: dictionary of prediction results defined by the
             model.
     """
-    # Create the ML Engine service object.
+    # Create the AI Platform service object.
     # To authenticate set the environment variable
     # GOOGLE_APPLICATION_CREDENTIALS=<path_to_service_account_file>
     service = googleapiclient.discovery.build('ml', 'v1')
