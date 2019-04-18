@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Examples of using the Cloud ML Engine's online prediction service."""
+"""Examples of using AI Platform's online prediction service."""
 import argparse
 import base64
 import json
@@ -29,7 +29,7 @@ def predict_json(project, model, instances, version=None):
     """Send json data to a deployed model for prediction.
 
     Args:
-        project (str): project where the Cloud ML Engine Model is deployed.
+        project (str): project where the AI Platform Model is deployed.
         model (str): model name.
         instances ([Mapping[str: Any]]): Keys should be the names of Tensors
             your deployed model expects as inputs. Values should be datatypes
@@ -40,7 +40,7 @@ def predict_json(project, model, instances, version=None):
         Mapping[str: any]: dictionary of prediction results defined by the
             model.
     """
-    # Create the ML Engine service object.
+    # Create the AI Platform service object.
     # To authenticate set the environment variable
     # GOOGLE_APPLICATION_CREDENTIALS=<path_to_service_account_file>
     service = googleapiclient.discovery.build('ml', 'v1')
@@ -69,7 +69,7 @@ def predict_examples(project,
     """Send protocol buffer data to a deployed model for prediction.
 
     Args:
-        project (str): project where the Cloud ML Engine Model is deployed.
+        project (str): project where the AI Platform Model is deployed.
         model (str): model name.
         example_bytes_list ([str]): A list of bytestrings representing
             serialized tf.train.Example protocol buffers. The contents of this
