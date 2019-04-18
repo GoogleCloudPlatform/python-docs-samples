@@ -12,8 +12,11 @@ App Engine queues push tasks to an App Engine HTTP target. This directory
 contains both the App Engine app to deploy, as well as the snippets to run
 locally to push tasks to it, which could also be called on App Engine.
 
-`create_app_engine_queue_task.py` is a simple command-line program to create
-tasks to be pushed to the App Engine app.
+`create_http_task.py` is a simple command-line program to create
+tasks to be pushed to an URL endpoint.
+
+`create_http_task_with_token.py` is a simple command-line program to create
+tasks to be pushed to an URL endpoint with authorization header.
 
 `main.py` is the main App Engine app. This app serves as an endpoint to receive
 App Engine task attempts.
@@ -40,33 +43,6 @@ gcloud beta tasks queues create-app-engine-queue my-appengine-queue
 
 Note: A newly created queue will route to the default App Engine service and
 version unless configured to do otherwise.
-
-## Deploying the App Engine App
-
-Deploy the App Engine app with gcloud:
-
-* To deploy to the Standard environment:
-  ```
-  gcloud app deploy app.yaml
-  ```
-* To deploy to the Flexible environment:
-  ```
-  gcloud app deploy app.flexible.yaml
-  ```
-
-Verify the index page is serving:
-
-```
-gcloud app browse
-```
-
-The App Engine app serves as a target for the push requests. It has an
-endpoint `/example_task_handler` that reads the payload (i.e., the request body)
-of the HTTP POST request and logs it. The log output can be viewed with:
-
-```
-gcloud app logs read
-```
 
 ## Run the Sample Using the Command Line
 
