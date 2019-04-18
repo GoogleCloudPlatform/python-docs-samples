@@ -101,24 +101,3 @@ endpoint, with a payload specified:
 ```
 python create_app_engine_queue_task.py --project=$PROJECT_ID --queue=$QUEUE_ID --location=$LOCATION_ID --payload=hello
 ```
-
-### Using HTTP Push Queues
-
-Set an environment variable for the endpoint to your task handler. This is an
-example url to send requests to the App Engine task handler:
-```
-export URL=https://<project_id>.appspot.com/example_task_handler
-```
-
-Running the sample will create a task and send the task to the specific URL
-endpoint, with a payload specified:
-
-```
-python create_http_task.py --project=$PROJECT_ID --queue=$QUEUE_ID --location=$LOCATION_ID --url=$URL --payload=hello
-```
-
-Now view that the payload was received and verify the payload:
-
-```
-gcloud app logs read
-```
