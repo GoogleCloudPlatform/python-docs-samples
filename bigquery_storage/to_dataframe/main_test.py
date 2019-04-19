@@ -84,7 +84,6 @@ def test_query_to_dataframe(capsys, clients):
     view_count
     FROM `bigquery-public-data.stackoverflow.posts_questions`
     WHERE tags like '%google-bigquery%'
-    ORDER BY view_count DESC
     """
 
     dataframe = (
@@ -97,6 +96,11 @@ def test_query_to_dataframe(capsys, clients):
         # BigQuery Storage API fails to read the query results.
         .to_dataframe(bqstorage_client=bqstorageclient)
     )
+
+    # When the BigQuery Storage API is used, large results may be downloaded in
+    # parallel, so the order of rows in the DataFrame is not deterministic.
+    # Sort the rows client-side if a specific order is needed.
+    dataframe = dataframe.sort_values(by=["view_count"])
     print(dataframe.head())
     # [END bigquerystorage_pandas_tutorial_read_query_results]
     # [END bigquerystorage_pandas_tutorial_all]
