@@ -25,22 +25,23 @@ Prerequisites:
 """
 
 import argparse
-
+# [START bigtable_hw_imports_happybase]
 from google.cloud import bigtable
 from google.cloud import happybase
+# [END bigtable_hw_imports_happybase]
 
 
 def main(project_id, instance_id, table_name):
-    # [START connecting_to_bigtable]
+    # [START bigtable_hw_connect_happybase]
     # The client must be created with admin=True because it will create a
     # table.
     client = bigtable.Client(project=project_id, admin=True)
     instance = client.instance(instance_id)
     connection = happybase.Connection(instance=instance)
-    # [END connecting_to_bigtable]
+    # [END bigtable_hw_connect_happybase]
 
     try:
-        # [START creating_a_table]
+        # [START bigtable_hw_create_table_happybase]
         print('Creating the {} table.'.format(table_name))
         column_family_name = 'cf1'
         connection.create_table(
@@ -48,9 +49,9 @@ def main(project_id, instance_id, table_name):
             {
                 column_family_name: dict()  # Use default options.
             })
-        # [END creating_a_table]
+        # [END bigtable_hw_create_table_happybase]
 
-        # [START writing_rows]
+        # [START bigtable_hw_write_rows_happybase]
         print('Writing some greetings to the table.')
         table = connection.table(table_name)
         column_name = '{fam}:greeting'.format(fam=column_family_name)
@@ -75,26 +76,26 @@ def main(project_id, instance_id, table_name):
             table.put(
                 row_key, {column_name.encode('utf-8'): value.encode('utf-8')}
             )
-        # [END writing_rows]
+        # [END bigtable_hw_write_rows_happybase]
 
-        # [START getting_a_row]
+        # [START bigtable_hw_get_by_key_happybase]
         print('Getting a single greeting by row key.')
         key = 'greeting0'.encode('utf-8')
         row = table.row(key)
         print('\t{}: {}'.format(key, row[column_name.encode('utf-8')]))
-        # [END getting_a_row]
+        # [END bigtable_hw_get_by_key_happybase]
 
-        # [START scanning_all_rows]
+        # [START bigtable_hw_scan_all_happybase]
         print('Scanning for all greetings:')
 
         for key, row in table.scan():
             print('\t{}: {}'.format(key, row[column_name.encode('utf-8')]))
-        # [END scanning_all_rows]
+        # [END bigtable_hw_scan_all_happybase]
 
-        # [START deleting_a_table]
+        # [START bigtable_hw_delete_table_happybase]
         print('Deleting the {} table.'.format(table_name))
         connection.delete_table(table_name)
-        # [END deleting_a_table]
+        # [END bigtable_hw_delete_table_happybase]
 
     finally:
         connection.close()
