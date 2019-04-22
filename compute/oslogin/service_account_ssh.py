@@ -107,7 +107,8 @@ def main(cmd, project, instance=None, zone=None,
     # Identify the service account ID if it is not already provided.
     account = account or requests.get(
         SERVICE_ACCOUNT_METADATA_URL, headers=HEADERS).text
-    account = 'users/' + account
+    if not account.startswith('users/'):
+        account = 'users/' + account
 
     # Create a new SSH key pair and associate it with the service account.
     private_key_file = create_ssh_key(oslogin, account)

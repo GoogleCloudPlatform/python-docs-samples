@@ -72,7 +72,9 @@ def main(project_id, instance_id, table_name):
             #
             #     https://cloud.google.com/bigtable/docs/schema-design
             row_key = 'greeting{}'.format(i)
-            table.put(row_key, {column_name: value})
+            table.put(
+                row_key, {column_name.encode('utf-8'): value.encode('utf-8')}
+            )
         # [END bigtable_hw_write_rows_happybase]
 
         # [START bigtable_hw_get_by_key_happybase]

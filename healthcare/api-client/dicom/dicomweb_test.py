@@ -25,7 +25,7 @@ import dicomweb
 
 cloud_region = 'us-central1'
 api_key = os.environ['API_KEY']
-base_url = 'https://healthcare.googleapis.com/v1alpha'
+base_url = 'https://healthcare.googleapis.com/v1beta1'
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
@@ -33,11 +33,11 @@ dataset_id = 'test_dataset-{}'.format(int(time.time()))
 dicom_store_id = 'test_dicom_store_{}'.format(int(time.time()))
 
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
-dcm_file_name = 'IM-0002-0001-JPEG-BASELINE.dcm'
+dcm_file_name = 'dicom_00000001_000.dcm'
 dcm_file = os.path.join(RESOURCES, dcm_file_name)
 # The study_uid is not assigned by the server and is part of the
 # metadata of dcm_file
-study_uid = '1.2.840.113619.2.176.3596.3364818.7819.1259708454.105'
+study_uid = '1.3.6.1.4.1.11129.5.5.111396399361969898205364400549799252857604'
 
 
 @pytest.fixture(scope='module')
@@ -82,7 +82,6 @@ def test_dicom_store():
         dicom_store_id)
 
 
-@pytest.mark.skip(reason='disable until have access to healthcare api')
 def test_dicomweb_store_instance(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
         service_account_json,
@@ -108,7 +107,6 @@ def test_dicomweb_store_instance(test_dataset, test_dicom_store, capsys):
         study_uid)
 
 
-@pytest.mark.skip(reason='disable until have access to healthcare api')
 def test_dicomweb_search_instance(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
         service_account_json,
@@ -142,7 +140,6 @@ def test_dicomweb_search_instance(test_dataset, test_dicom_store, capsys):
         study_uid)
 
 
-@pytest.mark.skip(reason='disable until have access to healthcare api')
 def test_dicomweb_retrieve_study(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
         service_account_json,
@@ -177,7 +174,6 @@ def test_dicomweb_retrieve_study(test_dataset, test_dicom_store, capsys):
         study_uid)
 
 
-@pytest.mark.skip(reason='disable until have access to healthcare api')
 def test_dicomweb_delete_study(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
         service_account_json,
