@@ -30,6 +30,7 @@ from google.cloud import bigtable
 from google.cloud import happybase
 # [END bigtable_hw_imports_happybase]
 
+
 def main(project_id, instance_id, table_name):
     # [START bigtable_hw_connect_happybase]
     # The client must be created with admin=True because it will create a
