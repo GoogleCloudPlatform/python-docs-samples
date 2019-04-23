@@ -93,5 +93,6 @@ class AutomlVisionEdgeContainerPredictTest(unittest.TestCase):
     subprocess.check_output(['docker', 'rmi', CPU_DOCKER_GCS_PATH])
     super(AutomlVisionEdgeContainerPredictTest, self).tearDown()
 
+
 if __name__ == '__main__':
   unittest.main()
