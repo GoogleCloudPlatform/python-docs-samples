@@ -25,7 +25,7 @@ def get_client(service_account_json, api_key):
     """Returns an authorized API client by discovering the Healthcare API and
     creating a service object using the service account credentials JSON."""
     api_scopes = ['https://www.googleapis.com/auth/cloud-platform']
-    api_version = 'v1alpha2'
+    api_version = 'v1beta1'
     discovery_api = 'https://healthcare.googleapis.com/$discovery/rest'
     service_name = 'healthcare'
 
@@ -33,7 +33,7 @@ def get_client(service_account_json, api_key):
         service_account_json)
     scoped_credentials = credentials.with_scopes(api_scopes)
 
-    discovery_url = '{}?labels=CHC_ALPHA&version={}&key={}'.format(
+    discovery_url = '{}?labels=CHC_BETA&version={}&key={}'.format(
         discovery_api, api_version, api_key)
 
     return discovery.build(
@@ -237,6 +237,80 @@ def deidentify_dataset(
 # [END healthcare_deidentify_dataset]
 
 
+# [START healthcare_dataset_get_iam_policy]
+def get_dataset_iam_policy(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id):
+    """Gets the IAM policy for the specified dataset."""
+    client = get_client(service_account_json, api_key)
+    dataset_name = 'projects/{}/locations/{}/datasets/{}'.format(
+        project_id, cloud_region, dataset_id)
+
+    request = client.projects().locations().datasets().getIamPolicy(
+        resource=dataset_name)
+    response = request.execute()
+
+    print('etag: {}'.format(response.get('name')))
+    return response
+# [END healthcare_dataset_get_iam_policy]
+
+
+# [START healthcare_dataset_set_iam_policy]
+def set_dataset_iam_policy(
+        service_account_json,
+        api_key,
+        project_id,
+        cloud_region,
+        dataset_id,
+        member,
+        role,
+        etag=None):
+    """Sets the IAM policy for the specified dataset.
+
+        A single member will be assigned a single role. A member can be any of:
+
+        - allUsers, that is, anyone
+        - allAuthenticatedUsers, anyone authenticated with a Google account
+        - user:email, as in 'user:somebody@example.com'
+        - group:email, as in 'group:admins@example.com'
+        - domain:domainname, as in 'domain:example.com'
+        - serviceAccount:email,
+            as in 'serviceAccount:my-other-app@appspot.gserviceaccount.com'
+
+        A role can be any IAM role, such as 'roles/viewer', 'roles/owner',
+        or 'roles/editor'
+    """
+    client = get_client(service_account_json, api_key)
+    dataset_name = 'projects/{}/locations/{}/datasets/{}'.format(
+        project_id, cloud_region, dataset_id)
+
+    policy = {
+        "bindings": [
+            {
+              "role": role,
+              "members": [
+                member
+              ]
+            }
+        ]
+    }
+
+    if etag is not None:
+        policy['etag'] = etag
+
+    request = client.projects().locations().datasets().setIamPolicy(
+        resource=dataset_name, body={'policy': policy})
+    response = request.execute()
+
+    print('etag: {}'.format(response.get('name')))
+    print('bindings: {}'.format(response.get('bindings')))
+    return response
+# [END healthcare_dataset_set_iam_policy]
+
+
 def parse_command_line_args():
     """Parses command line arguments."""
 
@@ -286,6 +360,16 @@ def parse_command_line_args():
         help='The data to keeplist, for example "PatientID" '
         'or "StudyInstanceUID"')
 
+    parser.add_argument(
+        '--member',
+        default=None,
+        help='Member to add to IAM policy (e.g. "domain:example.com")')
+
+    parser.add_argument(
+        '--role',
+        default=None,
+        help='IAM Role to give to member (e.g. "roles/viewer")')
+
     command = parser.add_subparsers(dest='command')
 
     command.add_parser('create-dataset', help=create_dataset.__doc__)
@@ -293,6 +377,8 @@ def parse_command_line_args():
     command.add_parser('get-dataset', help=get_dataset.__doc__)
     command.add_parser('list-datasets', help=list_datasets.__doc__)
     command.add_parser('patch-dataset', help=patch_dataset.__doc__)
+    command.add_parser('get_iam_policy', help=get_dataset_iam_policy.__doc__)
+    command.add_parser('set_iam_policy', help=set_dataset_iam_policy.__doc__)
 
     command.add_parser('deidentify-dataset', help=deidentify_dataset.__doc__)
 
@@ -355,6 +441,24 @@ def run_command(args):
             args.dataset_id,
             args.destination_dataset_id,
             args.keeplist_tags)
+
+    elif args.command == 'get_iam_policy':
+        get_dataset_iam_policy(
+            args.service_account_json,
+            args.api_key,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id)
+
+    elif args.command == 'set_iam_policy':
+        set_dataset_iam_policy(
+            args.service_account_json,
+            args.api_key,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.member,
+            args.role)
 
 
 def main():

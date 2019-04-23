@@ -1,0 +1,18 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Data Labeling Service
+  short_name: Cloud Data Labeling
+  url: https://cloud.google.com/data-labeling/docs/
+  description: >
+    `Google Cloud Data Labeling Service`_ allows developers to request having
+    human labelers label a collection of data that you plan to use to train a
+    custom machine learning model.
+
+setup:
+- auth
+- install_deps
+
+cloud_client_library: true
+
+folder: datalabeling

@@ -74,6 +74,9 @@ with models.DAG(
         task_id='pod-ex-minimum',
         # Name of task you want to run, used to generate Pod ID.
         name='pod-ex-minimum',
+        # Entrypoint of the container, if not specified the Docker container's
+        # entrypoint is used. The cmds parameter is templated.
+        cmds=['echo'],
         # The namespace to run within Kubernetes, default namespace is
         # `default`. There is the potential for the resource starvation of
         # Airflow workers and scheduler within the Cloud Composer environment,
