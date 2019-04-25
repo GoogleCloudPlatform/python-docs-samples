@@ -36,8 +36,8 @@ class MyPredictor(object):
 
         Args:
             instances: A list of prediction input instances.
-            **kwargs: A dictionary of keyword args provided as additional fields
-                on the predict request body.
+            **kwargs: A dictionary of keyword args provided as additional
+                fields on the predict request body.
 
         Returns:
             A list of outputs containing the prediction results.

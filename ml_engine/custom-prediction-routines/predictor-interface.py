@@ -24,8 +24,8 @@ class Predictor(object):
 
         Args:
             instances: A list of prediction input instances.
-            **kwargs: A dictionary of keyword args provided as additional fields
-                on the predict request body.
+            **kwargs: A dictionary of keyword args provided as additional
+                fields on the predict request body.
 
         Returns:
             A list of outputs containing the prediction results. This list must
@@ -40,8 +40,8 @@ class Predictor(object):
         Loading of the predictor should be done in this method.
 
         Args:
-            model_dir: The local directory that contains the exported model file
-                along with any additional files uploaded when creating the
+            model_dir: The local directory that contains the exported model
+                file along with any additional files uploaded when creating the
                 version resource.
 
         Returns:

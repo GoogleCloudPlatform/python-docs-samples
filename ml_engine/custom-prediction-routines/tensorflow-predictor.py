@@ -36,8 +36,8 @@ class MyPredictor(object):
 
         Args:
             instances: A list of prediction input instances.
-            **kwargs: A dictionary of keyword args provided as additional fields
-                on the predict request body.
+            **kwargs: A dictionary of keyword args provided as additional
+                fields on the predict request body.
 
         Returns:
             A list of outputs containing the prediction results.
@@ -55,10 +55,10 @@ class MyPredictor(object):
         Cloud Storage. MyPredictor uses them during prediction.
 
         Args:
-            model_dir: The local directory that contains the trained Keras model
-                and the pickled preprocessor instance. These are copied from the
-                Cloud Storage model directory you provide when you deploy a
-                version resource.
+            model_dir: The local directory that contains the trained Keras
+                model and the pickled preprocessor instance. These are copied
+                from the Cloud Storage model directory you provide when you
+                deploy a version resource.
 
         Returns:
             An instance of `MyPredictor`.
