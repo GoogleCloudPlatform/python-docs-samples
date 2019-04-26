@@ -18,7 +18,6 @@ import time
 import datasets
 
 cloud_region = 'us-central1'
-api_key = os.environ['API_KEY']
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
@@ -31,20 +30,19 @@ time_zone = 'UTC'
 def test_CRUD_dataset(capsys):
     datasets.create_dataset(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id)
 
     datasets.get_dataset(
-        service_account_json, api_key, project_id, cloud_region, dataset_id)
+        service_account_json, project_id, cloud_region, dataset_id)
 
     datasets.list_datasets(
-        service_account_json, api_key, project_id, cloud_region)
+        service_account_json, project_id, cloud_region)
 
     # Test and also clean up
     datasets.delete_dataset(
-        service_account_json, api_key, project_id, cloud_region, dataset_id)
+        service_account_json, project_id, cloud_region, dataset_id)
 
     out, _ = capsys.readouterr()
 
@@ -58,14 +56,12 @@ def test_CRUD_dataset(capsys):
 def test_patch_dataset(capsys):
     datasets.create_dataset(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id)
 
     datasets.patch_dataset(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
@@ -73,7 +69,7 @@ def test_patch_dataset(capsys):
 
     # Clean up
     datasets.delete_dataset(
-        service_account_json, api_key, project_id, cloud_region, dataset_id)
+        service_account_json, project_id, cloud_region, dataset_id)
 
     out, _ = capsys.readouterr()
 
@@ -84,14 +80,12 @@ def test_patch_dataset(capsys):
 def test_deidentify_dataset(capsys):
     datasets.create_dataset(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id)
 
     datasets.deidentify_dataset(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
@@ -100,10 +94,9 @@ def test_deidentify_dataset(capsys):
 
     # Clean up
     datasets.delete_dataset(
-        service_account_json, api_key, project_id, cloud_region, dataset_id)
+        service_account_json, project_id, cloud_region, dataset_id)
     datasets.delete_dataset(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         destination_dataset_id)
@@ -117,21 +110,18 @@ def test_deidentify_dataset(capsys):
 def test_get_set_dataset_iam_policy(capsys):
     datasets.create_dataset(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id)
 
     get_response = datasets.get_dataset_iam_policy(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id)
 
     set_response = datasets.set_dataset_iam_policy(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
@@ -141,7 +131,6 @@ def test_get_set_dataset_iam_policy(capsys):
     # Clean up
     datasets.delete_dataset(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id)
