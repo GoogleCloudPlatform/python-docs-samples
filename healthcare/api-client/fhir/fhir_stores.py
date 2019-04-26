@@ -33,7 +33,7 @@ def get_client(service_account_json):
         service_account_json)
     scoped_credentials = credentials.with_scopes(api_scopes)
 
-    discovery_url = '{}?labels=CHC_BETA&version={}&key={}'.format(
+    discovery_url = '{}?labels=CHC_BETA&version={}'.format(
         discovery_api, api_version)
 
     return discovery.build(
@@ -165,8 +165,7 @@ def patch_fhir_store(
         project_id,
         cloud_region,
         dataset_id,
-        fhir_store_id,
-        pubsub_topic):
+        fhir_store_id):
     """Updates the FHIR store."""
     client = get_client(service_account_json)
     fhir_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
@@ -175,11 +174,7 @@ def patch_fhir_store(
         fhir_store_parent, fhir_store_id)
 
     patch = {
-        'notificationConfig': {
-            'pubsubTopic': 'projects/{}/locations/{}/topics/{}'.format(
-                project_id,
-                cloud_region,
-                pubsub_topic)}}
+        'notificationConfig': None}
 
     request = client.projects().locations().datasets().fhirStores().patch(
         name=fhir_store_name, updateMask='notificationConfig', body=patch)
@@ -187,9 +182,8 @@ def patch_fhir_store(
     try:
         response = request.execute()
         print(
-            'Patched FHIR store {} with Cloud Pub/Sub topic: {}'.format(
-                fhir_store_id,
-                pubsub_topic))
+            'Patched FHIR store {} with Cloud Pub/Sub topic: None'.format(
+                fhir_store_id))
         return response
     except HttpError as e:
         print('Error, FHIR store not patched: {}'.format(e))

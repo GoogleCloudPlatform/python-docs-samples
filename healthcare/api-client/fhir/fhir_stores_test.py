@@ -30,7 +30,6 @@ service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 dataset_id = 'test_dataset_{}'.format(int(time.time()))
 fhir_store_id = 'test_fhir_store-{}'.format(int(time.time()))
-pubsub_topic = 'test_pubsub_topic-{}'.format(int(time.time()))
 
 gcs_uri = os.environ['CLOUD_STORAGE_BUCKET']
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
@@ -107,8 +106,7 @@ def test_patch_fhir_store(test_dataset, capsys):
         project_id,
         cloud_region,
         dataset_id,
-        fhir_store_id,
-        pubsub_topic)
+        fhir_store_id)
 
     # Clean up
     fhir_stores.delete_fhir_store(
