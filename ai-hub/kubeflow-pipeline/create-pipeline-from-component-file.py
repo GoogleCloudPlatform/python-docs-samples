@@ -1,5 +1,5 @@
 #!/bin/python
-# Copyright 2017 Google Inc. All Rights Reserved.
+# Copyright 2019 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,8 +26,8 @@ scikit_learn_train = comp.load_component_from_file('[PATH_TO_COMPONENT_ZIP_FILE]
 # [START create_pipeline]
 # Use the @dsl.pipeline decorator to add a name and description to your pipeline definition.
 @dsl.pipeline(
-    name='Scikit-learn Trainer',
-    description='Trains a Scikit-learn model')
+    name='scikit-learn Trainer',
+    description='Trains a scikit-learn model')
 # Use a function to define the pipeline.
 def scikit_learn_trainer(
     training_data_path='gs://cloud-samples-data/ml-engine/iris/classification/train.csv',
