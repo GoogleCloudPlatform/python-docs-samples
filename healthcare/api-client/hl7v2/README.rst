@@ -31,21 +31,6 @@ credentials for applications.
 .. _Authentication Getting Started Guide:
     https://cloud.google.com/docs/authentication/getting-started
 
-Authentication
-++++++++++++++
-
-Authentication for this service is done via an `API Key`_. To obtain an API
-Key:
-
-1. Open the `Cloud Platform Console`_
-2. Make sure that billing is enabled for your project.
-3. From the **Credentials** page, create a new **API Key** or use an existing
-   one for your project.
-
-.. _API Key:
-    https://developers.google.com/api-client-library/python/guide/aaa_apikeys
-.. _Cloud Console: https://console.cloud.google.com/project?_
-
 Install Dependencies
 ++++++++++++++++++++
 
@@ -95,26 +80,39 @@ To run this sample:
     $ python hl7v2_stores.py
 
     usage: hl7v2_stores.py [-h] [--service_account_json SERVICE_ACCOUNT_JSON]
-                           [--api_key API_KEY] [--project_id PROJECT_ID]
-                           [--cloud_region CLOUD_REGION] [--dataset_id DATASET_ID]
+                           [--project_id PROJECT_ID] [--cloud_region CLOUD_REGION]
+                           [--dataset_id DATASET_ID]
                            [--hl7v2_store_id HL7V2_STORE_ID]
-                           [--pubsub_topic PUBSUB_TOPIC]
-                           {create-hl7v2-store,delete-hl7v2-store,get-hl7v2-store,list-hl7v2-stores,patch-hl7v2-store}
+                           [--pubsub_topic PUBSUB_TOPIC] [--member MEMBER]
+                           [--role ROLE]
+                           {create-hl7v2-store,delete-hl7v2-store,get-hl7v2-store,list-hl7v2-stores,patch-hl7v2-store,get_iam_policy,set_iam_policy}
                            ...
 
     positional arguments:
-      {create-hl7v2-store,delete-hl7v2-store,get-hl7v2-store,list-hl7v2-stores,patch-hl7v2-store}
+      {create-hl7v2-store,delete-hl7v2-store,get-hl7v2-store,list-hl7v2-stores,patch-hl7v2-store,get_iam_policy,set_iam_policy}
         create-hl7v2-store  Creates a new HL7v2 store within the parent dataset.
         delete-hl7v2-store  Deletes the specified HL7v2 store.
         get-hl7v2-store     Gets the specified HL7v2 store.
         list-hl7v2-stores   Lists the HL7v2 stores in the given dataset.
         patch-hl7v2-store   Updates the HL7v2 store.
+        get_iam_policy      Gets the IAM policy for the specified hl7v2 store.
+        set_iam_policy      Sets the IAM policy for the specified hl7v2 store. A
+                            single member will be assigned a single role. A member
+                            can be any of: - allUsers, that is, anyone -
+                            allAuthenticatedUsers, anyone authenticated with a
+                            Google account - user:email, as in
+                            'user:somebody@example.com' - group:email, as in
+                            'group:admins@example.com' - domain:domainname, as in
+                            'domain:example.com' - serviceAccount:email, as in
+                            'serviceAccount:my-other-
+                            app@appspot.gserviceaccount.com' A role can be any IAM
+                            role, such as 'roles/viewer', 'roles/owner', or
+                            'roles/editor'
 
     optional arguments:
       -h, --help            show this help message and exit
       --service_account_json SERVICE_ACCOUNT_JSON
                             Path to service account JSON file.
-      --api_key API_KEY     Your API key.
       --project_id PROJECT_ID
                             GCP project name
       --cloud_region CLOUD_REGION
@@ -126,6 +124,9 @@ To run this sample:
       --pubsub_topic PUBSUB_TOPIC
                             The Cloud Pub/Sub topic where notifications of changes
                             are published
+      --member MEMBER       Member to add to IAM policy (e.g.
+                            "domain:example.com")
+      --role ROLE           IAM Role to give to member (e.g. "roles/viewer")
 
 
 
@@ -145,7 +146,7 @@ To run this sample:
     $ python hl7v2_messages.py
 
     usage: hl7v2_messages.py [-h] [--service_account_json SERVICE_ACCOUNT_JSON]
-                             [--api_key API_KEY] [--project_id PROJECT_ID]
+                             [--project_id PROJECT_ID]
                              [--cloud_region CLOUD_REGION]
                              [--dataset_id DATASET_ID]
                              [--hl7v2_store_id HL7V2_STORE_ID]
@@ -178,7 +179,6 @@ To run this sample:
       -h, --help            show this help message and exit
       --service_account_json SERVICE_ACCOUNT_JSON
                             Path to service account JSON file.
-      --api_key API_KEY     Your API key.
       --project_id PROJECT_ID
                             GCP project name
       --cloud_region CLOUD_REGION
