@@ -31,21 +31,6 @@ credentials for applications.
 .. _Authentication Getting Started Guide:
     https://cloud.google.com/docs/authentication/getting-started
 
-Authentication
-++++++++++++++
-
-Authentication for this service is done via an `API Key`_. To obtain an API
-Key:
-
-1. Open the `Cloud Platform Console`_
-2. Make sure that billing is enabled for your project.
-3. From the **Credentials** page, create a new **API Key** or use an existing
-   one for your project.
-
-.. _API Key:
-    https://developers.google.com/api-client-library/python/guide/aaa_apikeys
-.. _Cloud Console: https://console.cloud.google.com/project?_
-
 Install Dependencies
 ++++++++++++++++++++
 
@@ -95,26 +80,44 @@ To run this sample:
     $ python fhir_stores.py
 
     usage: fhir_stores.py [-h] [--service_account_json SERVICE_ACCOUNT_JSON]
-                          [--api_key API_KEY] [--project_id PROJECT_ID]
-                          [--cloud_region CLOUD_REGION] [--dataset_id DATASET_ID]
+                          [--project_id PROJECT_ID] [--cloud_region CLOUD_REGION]
+                          [--dataset_id DATASET_ID]
                           [--fhir_store_id FHIR_STORE_ID]
-                          [--pubsub_topic PUBSUB_TOPIC]
-                          {create-fhir-store,delete-fhir-store,get-fhir-store,list-fhir-stores,patch-fhir-store}
+                          [--pubsub_topic PUBSUB_TOPIC] [--gcs_uri GCS_URI]
+                          [--member MEMBER] [--role ROLE]
+                          {create-fhir-store,delete-fhir-store,get-fhir-store,list-fhir-stores,patch-fhir-store,import-fhir-store,export-fhir-store-gcs,get_iam_policy,set_iam_policy}
                           ...
 
     positional arguments:
-      {create-fhir-store,delete-fhir-store,get-fhir-store,list-fhir-stores,patch-fhir-store}
+      {create-fhir-store,delete-fhir-store,get-fhir-store,list-fhir-stores,patch-fhir-store,import-fhir-store,export-fhir-store-gcs,get_iam_policy,set_iam_policy}
         create-fhir-store   Creates a new FHIR store within the parent dataset.
         delete-fhir-store   Deletes the specified FHIR store.
         get-fhir-store      Gets the specified FHIR store.
         list-fhir-stores    Lists the FHIR stores in the given dataset.
         patch-fhir-store    Updates the FHIR store.
+        import-fhir-store   Import resources into the FHIR store by copying them
+                            from the specified source.
+        export-fhir-store-gcs
+                            Export resources to a Google Cloud Storage bucket by
+                            copying them from the FHIR store.
+        get_iam_policy      Gets the IAM policy for the specified FHIR store.
+        set_iam_policy      Sets the IAM policy for the specified FHIR store. A
+                            single member will be assigned a single role. A member
+                            can be any of: - allUsers, that is, anyone -
+                            allAuthenticatedUsers, anyone authenticated with a
+                            Google account - user:email, as in
+                            'user:somebody@example.com' - group:email, as in
+                            'group:admins@example.com' - domain:domainname, as in
+                            'domain:example.com' - serviceAccount:email, as in
+                            'serviceAccount:my-other-
+                            app@appspot.gserviceaccount.com' A role can be any IAM
+                            role, such as 'roles/viewer', 'roles/owner', or
+                            'roles/editor'
 
     optional arguments:
       -h, --help            show this help message and exit
       --service_account_json SERVICE_ACCOUNT_JSON
                             Path to service account JSON file.
-      --api_key API_KEY     Your API key.
       --project_id PROJECT_ID
                             GCP cloud project name
       --cloud_region CLOUD_REGION
@@ -126,6 +129,13 @@ To run this sample:
       --pubsub_topic PUBSUB_TOPIC
                             The Cloud Pub/Sub topic where notifications of changes
                             are published
+      --gcs_uri GCS_URI     URI for a Google Cloud Storage directory from which
+                            filesshould be import or to which result filesshould
+                            be written (e.g., "bucket-
+                            id/path/to/destination/dir").
+      --member MEMBER       Member to add to IAM policy (e.g.
+                            "domain:example.com")
+      --role ROLE           IAM Role to give to member (e.g. "roles/viewer")
 
 
 
@@ -150,17 +160,36 @@ To run this sample:
                              [--dataset_id DATASET_ID]
                              [--fhir_store_id FHIR_STORE_ID]
                              [--resource_type RESOURCE_TYPE]
-                             [--resource_id RESOURCE_ID]
-                             {create-resource,delete-resource,get-resource,update-resource,patch-resource,search-resources-get,search-resources-post,get-patient-everything,get-metadata}
+                             [--resource_id RESOURCE_ID] [--bundle BUNDLE]
+                             [--uri_prefix URI_PREFIX] [--version_id VERSION_ID]
+                             {create-resource,delete-resource,conditional-delete-resource,get-resource,list-resource-history,export-resources,execute_bundle,get-resource-history,delete-resource-purge,update-resource,conditional-update-resource,patch-resource,conditional-patch-resource,search-resources-get,search-resources-post,get-patient-everything,get-metadata}
                              ...
 
     positional arguments:
-      {create-resource,delete-resource,get-resource,update-resource,patch-resource,search-resources-get,search-resources-post,get-patient-everything,get-metadata}
+      {create-resource,delete-resource,conditional-delete-resource,get-resource,list-resource-history,export-resources,execute_bundle,get-resource-history,delete-resource-purge,update-resource,conditional-update-resource,patch-resource,conditional-patch-resource,search-resources-get,search-resources-post,get-patient-everything,get-metadata}
         create-resource     Creates a new resource in a FHIR store.
         delete-resource     Creates a new resource in a FHIR store.
+        conditional-delete-resource
+                            Deletes an existing resource specified by search
+                            criteria.
         get-resource        Gets a FHIR resource.
+        list-resource-history
+                            Gets the history of a resource.
+        export-resources    Exports resources in a FHIR store.
+        export-resources    Exports resources in a FHIR store.
+        execute_bundle      Executes the operations in the given bundle.
+        get-resource-history
+                            Gets a version resource.
+        delete-resource-purge
+                            Deletes versions of a resource (excluding current
+                            version).
         update-resource     Updates an existing resource.
+        conditional-update-resource
+                            Updates an existing resource specified by search
+                            criteria.
         patch-resource      Updates part of an existing resource..
+        conditional-patch-resource
+                            Updates part of an existing resource..
         search-resources-get
                             Searches resources in the given FHIR store using the
                             searchResources GET method.
@@ -188,6 +217,12 @@ To run this sample:
                             The type of resource. First letter must be capitalized
       --resource_id RESOURCE_ID
                             Name of a FHIR resource
+      --bundle BUNDLE       Name of file containing bundle of operations to
+                            execute
+      --uri_prefix URI_PREFIX
+                            Prefix of gs:// URIs for import and export
+      --version_id VERSION_ID
+                            Version of a FHIR resource
 
 
 
