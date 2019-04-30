@@ -24,7 +24,6 @@ import fhir_stores
 import fhir_resources
 
 cloud_region = 'us-central1'
-api_key = os.environ['API_KEY']
 base_url = 'https://healthcare.googleapis.com/v1beta1'
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
@@ -38,7 +37,6 @@ resource_type = 'Patient'
 def test_dataset():
     dataset = datasets.create_dataset(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id)
@@ -48,7 +46,6 @@ def test_dataset():
     # Clean up
     datasets.delete_dataset(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id)
@@ -58,7 +55,6 @@ def test_dataset():
 def test_fhir_store():
     fhir_store = fhir_stores.create_fhir_store(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
@@ -68,7 +64,6 @@ def test_fhir_store():
 
     fhir_stores.delete_fhir_store(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,

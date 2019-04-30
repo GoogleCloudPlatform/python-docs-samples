@@ -21,7 +21,7 @@ from google.oauth2 import service_account
 
 
 # [START healthcare_get_client]
-def get_client(service_account_json, api_key):
+def get_client(service_account_json):
     """Returns an authorized API client by discovering the Healthcare API and
     creating a service object using the service account credentials JSON."""
     api_scopes = ['https://www.googleapis.com/auth/cloud-platform']
@@ -33,8 +33,8 @@ def get_client(service_account_json, api_key):
         service_account_json)
     scoped_credentials = credentials.with_scopes(api_scopes)
 
-    discovery_url = '{}?labels=CHC_BETA&version={}&key={}'.format(
-        discovery_api, api_version, api_key)
+    discovery_url = '{}?labels=CHC_BETA&version={}'.format(
+        discovery_api, api_version)
 
     return discovery.build(
         service_name,
@@ -48,13 +48,12 @@ def get_client(service_account_json, api_key):
 # [START healthcare_create_dicom_store]
 def create_dicom_store(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
         dicom_store_id):
     """Creates a new DICOM store within the parent dataset."""
-    client = get_client(service_account_json, api_key)
+    client = get_client(service_account_json)
     dicom_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
 
@@ -76,13 +75,12 @@ def create_dicom_store(
 # [START healthcare_delete_dicom_store]
 def delete_dicom_store(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
         dicom_store_id):
     """Deletes the specified DICOM store."""
-    client = get_client(service_account_json, api_key)
+    client = get_client(service_account_json)
     dicom_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
     dicom_store_name = '{}/dicomStores/{}'.format(
@@ -104,13 +102,12 @@ def delete_dicom_store(
 # [START healthcare_get_dicom_store]
 def get_dicom_store(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
         dicom_store_id):
     """Gets the specified DICOM store."""
-    client = get_client(service_account_json, api_key)
+    client = get_client(service_account_json)
     dicom_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
     dicom_store_name = '{}/dicomStores/{}'.format(
@@ -133,12 +130,11 @@ def get_dicom_store(
 # [START healthcare_list_dicom_stores]
 def list_dicom_stores(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id):
     """Lists the DICOM stores in the given dataset."""
-    client = get_client(service_account_json, api_key)
+    client = get_client(service_account_json)
     dicom_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
 
@@ -159,14 +155,13 @@ def list_dicom_stores(
 # [START healthcare_patch_dicom_store]
 def patch_dicom_store(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
         dicom_store_id,
         pubsub_topic):
     """Updates the DICOM store."""
-    client = get_client(service_account_json, api_key)
+    client = get_client(service_account_json)
     dicom_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
     dicom_store_name = '{}/dicomStores/{}'.format(
@@ -198,7 +193,6 @@ def patch_dicom_store(
 # [START healthcare_export_dicom_instance]
 def export_dicom_instance(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
@@ -206,7 +200,7 @@ def export_dicom_instance(
         uri_prefix):
     """Export data to a Google Cloud Storage bucket by copying
     it from the DICOM store."""
-    client = get_client(service_account_json, api_key)
+    client = get_client(service_account_json)
     dicom_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
     dicom_store_name = '{}/dicomStores/{}'.format(
@@ -234,7 +228,6 @@ def export_dicom_instance(
 # [START healthcare_import_dicom_instance]
 def import_dicom_instance(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
@@ -243,7 +236,7 @@ def import_dicom_instance(
     """Import data into the DICOM store by copying it from the specified
     source.
     """
-    client = get_client(service_account_json, api_key)
+    client = get_client(service_account_json)
     dicom_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
     dicom_store_name = '{}/dicomStores/{}'.format(
@@ -273,13 +266,12 @@ def import_dicom_instance(
 # [START healthcare_dicom_store_get_iam_policy]
 def get_dicom_store_iam_policy(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
         dicom_store_id):
     """Gets the IAM policy for the specified dicom store."""
-    client = get_client(service_account_json, api_key)
+    client = get_client(service_account_json)
     dicom_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
     dicom_store_name = '{}/dicomStores/{}'.format(
@@ -297,7 +289,6 @@ def get_dicom_store_iam_policy(
 # [START healthcare_dicom_store_set_iam_policy]
 def set_dicom_store_iam_policy(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
@@ -320,7 +311,7 @@ def set_dicom_store_iam_policy(
         A role can be any IAM role, such as 'roles/viewer', 'roles/owner',
         or 'roles/editor'
     """
-    client = get_client(service_account_json, api_key)
+    client = get_client(service_account_json)
     dicom_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
     dicom_store_name = '{}/dicomStores/{}'.format(
@@ -361,11 +352,6 @@ def parse_command_line_args():
         '--service_account_json',
         default=os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"),
         help='Path to service account JSON file.')
-
-    parser.add_argument(
-        '--api_key',
-        default=os.environ.get("API_KEY"),
-        help='Your API key')
 
     parser.add_argument(
         '--project_id',
@@ -458,7 +444,6 @@ def run_command(args):
     elif args.command == 'create-dicom-store':
         create_dicom_store(
             args.service_account_json,
-            args.api_key,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -467,7 +452,6 @@ def run_command(args):
     elif args.command == 'delete-dicom-store':
         delete_dicom_store(
             args.service_account_json,
-            args.api_key,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -476,7 +460,6 @@ def run_command(args):
     elif args.command == 'get-dicom-store':
         get_dicom_store(
             args.service_account_json,
-            args.api_key,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -485,7 +468,6 @@ def run_command(args):
     elif args.command == 'list-dicom-stores':
         list_dicom_stores(
             args.service_account_json,
-            args.api_key,
             args.project_id,
             args.cloud_region,
             args.dataset_id)
@@ -493,7 +475,6 @@ def run_command(args):
     elif args.command == 'patch-dicom-store':
         patch_dicom_store(
             args.service_account_json,
-            args.api_key,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -503,7 +484,6 @@ def run_command(args):
     elif args.command == 'export-dicom-store':
         export_dicom_instance(
             args.service_account_json,
-            args.api_key,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -513,7 +493,6 @@ def run_command(args):
     elif args.command == 'import-dicom-store':
         import_dicom_instance(
             args.service_account_json,
-            args.api_key,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -523,7 +502,6 @@ def run_command(args):
     elif args.command == 'get_iam_policy':
         get_dicom_store_iam_policy(
             args.service_account_json,
-            args.api_key,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -532,7 +510,6 @@ def run_command(args):
     elif args.command == 'set_iam_policy':
         set_dicom_store_iam_policy(
             args.service_account_json,
-            args.api_key,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
