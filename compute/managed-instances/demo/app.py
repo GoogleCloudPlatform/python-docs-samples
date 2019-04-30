@@ -10,6 +10,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""
+Flask app to be used as an interactive demonstration of autohealing.
+
+Exposes a simple UI showing basic server stats and a toggle button to
+simulate a healthy/unhealthy server status for any attached health check.
+
+Attached health checks should query the '/health' path.
+"""
 
 from flask import Flask, make_response, render_template
 from re import sub
@@ -24,6 +32,7 @@ healthy = True
 
 @app.route('/')
 def index():
+    """Returns the demo UI."""
     global healthy
     return render_template('index.html',
                            hostname=gethostname(),
@@ -34,6 +43,11 @@ def index():
 
 @app.route('/health')
 def health():
+    """Returns the simulated 'healthy'/'unhealthy' status of the server.
+
+    Returns:
+        HTTP status 200 if 'healthy', HTTP status 500 if 'unhealthy'
+    """
     global healthy
     template = render_template('health.html', healthy=healthy)
     return make_response(template, 200 if healthy else 500)
@@ -41,6 +55,7 @@ def health():
 
 @app.route('/makeHealthy')
 def make_healthy():
+    """Sets the server to simulate a 'healthy' status."""
     global healthy
     healthy = True
     template = render_template('index.html',
@@ -55,6 +70,7 @@ def make_healthy():
 
 @app.route('/makeUnhealthy')
 def make_unhealthy():
+    """Sets the server to simulate an 'unhealthy' status."""
     global healthy
     healthy = False
     template = render_template('index.html',
@@ -68,6 +84,12 @@ def make_unhealthy():
 
 
 def _get_zone():
+    """Gets the GCE zone of this instance.
+
+    Returns:
+        str: The name of the zone if the zone was successfully determined.
+        Empty string otherwise.
+    """
     r = get('http://metadata.google.internal/'
             'computeMetadata/v1/instance/zone',
             headers={'Metadata-Flavor': 'Google'})
@@ -78,6 +100,13 @@ def _get_zone():
 
 
 def _get_template():
+    """Gets the GCE instance template of this instance.
+
+    Returns:
+        str: The name of the template if the template was successfully
+        determined and this instance was built using an instance template.
+        Empty string otherwise.
+    """
     r = get('http://metadata.google.internal/'
             'computeMetadata/v1/instance/attributes/instance-template',
             headers={'Metadata-Flavor': 'Google'})
