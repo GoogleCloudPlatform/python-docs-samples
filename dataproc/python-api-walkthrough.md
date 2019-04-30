@@ -140,12 +140,12 @@ Job output in Cloud Shell shows cluster creation, job submission,
 ### Next Steps:
 
 * **View job details from the Console.** View job details by selecting the
-   PySpark job from the Cloud Dataproc 
+   PySpark job from the Cloud Dataproc
    [Jobs page](https://console.cloud.google.com/dataproc/jobs)
    in the Google Cloud Platform Console.
 
 * **Delete resources used in the walkthrough.**
-   The `submit_job.py` job deletes the cluster that it created for this
+   The `submit_job_to_cluster.py` job deletes the cluster that it created for this
    walkthrough.
 
    If you created a bucket to use for this walkthrough,
@@ -162,4 +162,5 @@ Job output in Cloud Shell shows cluster creation, job submission,
 
 * **For more information.** See the [Cloud Dataproc documentation](https://cloud.google.com/dataproc/docs/)
    for API reference and product feature information.
+
    
