@@ -24,14 +24,11 @@ For more information, see the README.md under /storage.
 """
 
 import argparse
-import filecmp
 import json
 import tempfile
 
-from googleapiclient import discovery
-from googleapiclient import http
-
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
+import googleapiclient.http
 
 
 def main(bucket, filename, readers=[], owners=[]):
@@ -40,12 +37,8 @@ def main(bucket, filename, readers=[], owners=[]):
     print(json.dumps(resp, indent=2))
 
     print('Fetching object..')
-    with tempfile.NamedTemporaryFile(mode='w+b') as tmpfile:
+    with tempfile.TemporaryFile(mode='w+b') as tmpfile:
         get_object(bucket, filename, out_file=tmpfile)
-        tmpfile.seek(0)
-
-        if not filecmp.cmp(filename, tmpfile.name):
-            raise Exception('Downloaded file != uploaded object')
 
     print('Deleting object..')
     resp = delete_object(bucket, filename)
@@ -55,16 +48,11 @@ def main(bucket, filename, readers=[], owners=[]):
 
 
 def create_service():
-    # Get the application default credentials. When running locally, these are
-    # available after running `gcloud init`. When running on compute
-    # engine, these are available from the environment.
-    credentials = GoogleCredentials.get_application_default()
-
     # Construct the service object for interacting with the Cloud Storage API -
     # the 'storage' service, at version 'v1'.
     # You can browse other available api services and versions here:
-    #     http://g.co/dev/api-client-library/python/apis/
-    return discovery.build('storage', 'v1', credentials=credentials)
+    #     http://g.co/dv/api-client-library/python/apis/
+    return googleapiclient.discovery.build('storage', 'v1')
 
 
 def upload_object(bucket, filename, readers, owners):
@@ -95,14 +83,15 @@ def upload_object(bucket, filename, readers, owners):
         })
 
     # Now insert them into the specified bucket as a media insertion.
-    # http://g.co/dev/resources/api-libraries/documentation/storage/v1/python/latest/storage_v1.objects.html#insert
+    # http://g.co/dv/resources/api-libraries/documentation/storage/v1/python/latest/storage_v1.objects.html#insert
     with open(filename, 'rb') as f:
         req = service.objects().insert(
             bucket=bucket, body=body,
-            # You can also just set media_body=filename, but # for the sake of
+            # You can also just set media_body=filename, but for the sake of
             # demonstration, pass in the more generic file handle, which could
             # very well be a StringIO or similar.
-            media_body=http.MediaIoBaseUpload(f, 'application/octet-stream'))
+            media_body=googleapiclient.http.MediaIoBaseUpload(
+                f, 'application/octet-stream'))
         resp = req.execute()
 
     return resp
@@ -112,10 +101,10 @@ def get_object(bucket, filename, out_file):
     service = create_service()
 
     # Use get_media instead of get to get the actual contents of the object.
-    # http://g.co/dev/resources/api-libraries/documentation/storage/v1/python/latest/storage_v1.objects.html#get_media
+    # http://g.co/dv/resources/api-libraries/documentation/storage/v1/python/latest/storage_v1.objects.html#get_media
     req = service.objects().get_media(bucket=bucket, object=filename)
 
-    downloader = http.MediaIoBaseDownload(out_file, req)
+    downloader = googleapiclient.http.MediaIoBaseDownload(out_file, req)
 
     done = False
     while done is False:

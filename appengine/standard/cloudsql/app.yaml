@@ -1,0 +1,18 @@
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /
+  script: main.app
+
+libraries:
+- name: MySQLdb
+  version: "latest"
+
+# [START gae_python_mysql_env]
+env_variables:
+    CLOUDSQL_CONNECTION_NAME: your-connection-name
+    CLOUDSQL_USER: root
+    CLOUDSQL_PASSWORD: your-cloudsql-user-password
+# [END gae_python_mysql_env]

@@ -1,8 +1,0 @@
-runtime: custom
-vm: true
-threadsafe: true
-api_version: 1
-
-handlers:
-- url: .*  # This regex directs all routes to main.app
-  script: main.app

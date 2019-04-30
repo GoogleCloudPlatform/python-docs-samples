@@ -28,22 +28,25 @@ import argparse
 import os
 import time
 
-from googleapiclient import discovery
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
 from six.moves import input
 
 
 # [START list_instances]
 def list_instances(compute, project, zone):
     result = compute.instances().list(project=project, zone=zone).execute()
-    return result['items']
+    return result['items'] if 'items' in result else None
 # [END list_instances]
 
 
 # [START create_instance]
 def create_instance(compute, project, zone, name, bucket):
-    source_disk_image = \
-        "projects/debian-cloud/global/images/debian-7-wheezy-v20150320"
+    # Get the latest Debian Jessie image.
+    image_response = compute.images().getFromFamily(
+        project='debian-cloud', family='debian-9').execute()
+    source_disk_image = image_response['selfLink']
+
+    # Configure the machine
     machine_type = "zones/%s/machineTypes/n1-standard-1" % zone
     startup_script = open(
         os.path.join(
@@ -142,8 +145,7 @@ def wait_for_operation(compute, project, zone, operation):
 
 # [START run]
 def main(project, bucket, zone, instance_name, wait=True):
-    credentials = GoogleCredentials.get_application_default()
-    compute = discovery.build('compute', 'v1', credentials=credentials)
+    compute = googleapiclient.discovery.build('compute', 'v1')
 
     print('Creating instance.')
 

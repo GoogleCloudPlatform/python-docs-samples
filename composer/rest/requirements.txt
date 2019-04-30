@@ -1,0 +1,3 @@
+google-auth==1.6.2
+requests==2.21.0
+six==1.12.0

@@ -1,0 +1,31 @@
+# [START django_app]
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /static
+  static_dir: static/
+- url: .*
+  script: mysite.wsgi.application
+
+# Only pure Python libraries can be vendored
+# Python libraries that use C extensions can
+# only be included if they are part of the App Engine SDK 
+# Using Third Party Libraries: https://cloud.google.com/appengine/docs/python/tools/using-libraries-python-27
+libraries:
+- name: MySQLdb
+  version: 1.2.5
+# [END django_app]
+
+# Google App Engine limits application deployments to 10,000 uploaded files per
+# version. The skip_files section allows us to skip virtual environment files
+# to meet this requirement. The first 5 are the default regular expressions to
+# skip, while the last one is for all env/ files.
+skip_files:
+- ^(.*/)?#.*#$
+- ^(.*/)?.*~$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?\..*$
+- ^env/.*$

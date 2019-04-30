@@ -1,0 +1,49 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Speech API
+  short_name: Cloud Speech API
+  url: https://cloud.google.com/speech/docs/
+  description: >
+    The `Google Cloud Speech API`_ enables easy integration of Google speech
+    recognition technologies into developer applications. Send audio and receive
+    a text transcription from the Cloud Speech API service.
+
+
+    - See the `migration guide`_ for information about migrating to Python client library v0.27.
+
+
+    .. _migration guide: https://cloud.google.com/speech/docs/python-client-migration
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Quickstart
+  file: quickstart.py
+- name: Transcribe
+  file: transcribe.py
+  show_help: true
+- name: Transcribe async
+  file: transcribe_async.py
+  show_help: true
+- name: Transcribe with word time offsets
+  file: transcribe_word_time_offsets.py
+  show_help: true
+- name: Transcribe Streaming
+  file: transcribe_streaming.py
+  show_help: true
+- name: Transcribe Enhanced Models
+  file: transcribe_enhanced_model.py
+  show_help: true
+- name: Transcribe Automatic Punctuation
+  file: transcribe_auto_punctuation.py
+  show_help: true
+- name: Beta Samples
+  file: beta_snippets.py
+  show_help: true
+
+cloud_client_library: true
+
+folder: speech/cloud-client

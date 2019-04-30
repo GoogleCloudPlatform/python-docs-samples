@@ -1,0 +1,11 @@
+runtime: python
+env: flex
+entrypoint: gunicorn -b :$PORT main:app
+
+runtime_config:
+  python_version: 3
+
+#[START gae_flex_analytics_env_variables]
+env_variables:
+    GA_TRACKING_ID: your-tracking-id
+#[END gae_flex_analytics_env_variables]

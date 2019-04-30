@@ -26,7 +26,10 @@ SECRET_KEY = 'pf-@jxtojga)z+4s*uwbgjrq$aep62-thd0q7f&o77xtpka!_m'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# SECURITY WARNING: If you deploy a Django app to production, make sure to set
+# an appropriate host here.
+# See https://docs.djangoproject.com/en/1.10/ref/settings/
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -40,15 +43,14 @@ INSTALLED_APPS = (
     'polls'
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
 )
 
 ROOT_URLCONF = 'mysite.urls'
@@ -77,12 +79,14 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # [START dbconfig]
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': '<your-database-name>',
-        'USER': '<your-database-user>',
-        'PASSWORD': '<your-database-password>',
-        'HOST': '<your-cloudsql-host>',
-        'PORT': '3306',
+        # If you are using Cloud SQL for MySQL rather than PostgreSQL, set
+        # 'ENGINE': 'django.db.backends.mysql' instead of the following.
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'polls',
+        'USER': os.getenv('DATABASE_USER'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 # [END dbconfig]
@@ -105,7 +109,7 @@ USE_TZ = True
 
 # [START staticurl]
 STATIC_URL = '/static/'
-# STATIC_URL = 'https://storage.googleapis.com/<your-bucket-id>/static/'
+# STATIC_URL = 'https://storage.googleapis.com/<your-gcs-bucket>/static/'
 # [END staticurl]
 
 STATIC_ROOT = 'static/'

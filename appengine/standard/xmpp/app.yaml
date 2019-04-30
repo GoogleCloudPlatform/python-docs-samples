@@ -1,0 +1,15 @@
+runtime: python27
+threadsafe: yes
+api_version: 1
+
+handlers:
+- url: .*
+  script: xmpp.app
+
+# [START inbound-services]
+inbound_services:
+- xmpp_message
+# [END inbound-services]
+- xmpp_presence
+- xmpp_subscribe
+- xmpp_error

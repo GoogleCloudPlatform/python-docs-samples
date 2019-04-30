@@ -1,0 +1,11 @@
+# [START runtime]
+runtime: python
+env: flex
+entrypoint: gunicorn -b :$PORT mysite.wsgi
+
+beta_settings:
+    cloud_sql_instances: <your-cloudsql-connection-string>
+
+runtime_config:
+  python_version: 3
+# [END runtime]

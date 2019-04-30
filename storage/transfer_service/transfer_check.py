@@ -27,16 +27,13 @@ For more information, see README.md.
 import argparse
 import json
 
-from googleapiclient import discovery
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
 
 
 # [START main]
 def main(project_id, job_name):
     """Review the transfer operations associated with a transfer job."""
-    credentials = GoogleCredentials.get_application_default()
-    storagetransfer = discovery.build(
-        'storagetransfer', 'v1', credentials=credentials)
+    storagetransfer = googleapiclient.discovery.build('storagetransfer', 'v1')
 
     filterString = (
         '{{"project_id": "{project_id}", '
@@ -49,6 +46,7 @@ def main(project_id, job_name):
     print('Result of transferOperations/list: {}'.format(
         json.dumps(result, indent=4, sort_keys=True)))
 # [END main]
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(

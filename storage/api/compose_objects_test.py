@@ -11,13 +11,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 from compose_objects import main
 
+RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
-def test_main(cloud_config, resource):
+
+def test_main():
     main(
-        cloud_config.storage_bucket,
+        BUCKET,
         'dest.txt',
-        [resource('file1.txt'),
-         resource('file2.txt')]
+        [os.path.join(RESOURCES, 'file1.txt'),
+         os.path.join(RESOURCES, 'file2.txt')]
     )

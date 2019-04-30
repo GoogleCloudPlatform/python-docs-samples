@@ -1,0 +1,30 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Vision API
+  short_name: Cloud Vision API
+  url: https://cloud.google.com/vision/docs
+  description: >
+    `Google Cloud Vision API`_ allows developers to easily integrate vision
+    detection features within applications, including image labeling, face and
+    landmark detection, optical character recognition (OCR), and tagging of
+    explicit content.
+
+
+    - See the `migration guide`_ for information about migrating to Python client library v0.25.1.
+
+
+    .. _migration guide: https://cloud.google.com/vision/docs/python-client-migration
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Web
+  file: web_detect.py
+  show_help: True
+
+cloud_client_library: true
+
+folder: vision/cloud-client/web

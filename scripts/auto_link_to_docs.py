@@ -133,12 +133,14 @@ def update_readme(readme_path, docs):
 
 def main():
     docs_links = json.load(open(
-        os.path.join(REPO_ROOT, 'scripts', 'docs-links.json'), 'r'))
+        os.path.join(
+            REPO_ROOT, 'scripts', 'resources', 'docs-links.json'), 'r'))
     files_to_docs = invert_docs_link_map(docs_links)
     readmes_to_docs = collect_docs_for_readmes(files_to_docs)
 
     for readme, docs in readmes_to_docs.iteritems():
         update_readme(readme, docs)
+
 
 if __name__ == '__main__':
     main()

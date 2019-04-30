@@ -1,0 +1,27 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Translation API
+  short_name: Translation API
+  url: https://cloud.google.com/translate/docs
+  description: >
+    With `Google Translation API`, you can dynamically translate text between
+    thousands of language pairs.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Quickstart
+  file: quickstart.py
+- name: Snippets
+  file: snippets.py
+  show_help: true
+- name: Beta Snippets
+  file: beta_snippets.py
+  show_help: true
+
+cloud_client_library: true
+
+folder: translate/cloud-client
