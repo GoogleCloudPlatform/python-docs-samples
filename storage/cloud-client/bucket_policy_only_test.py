@@ -28,6 +28,7 @@ def bucket():
     bucket_name = 'bucket-policy-only-' + str(int(time.time()))
     bucket = client.create_bucket(bucket_name)
     yield bucket
+    time.sleep(3)
     bucket.delete(force=True)
 
 
