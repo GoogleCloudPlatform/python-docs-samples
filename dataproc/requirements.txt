@@ -1,5 +1,6 @@
-google-api-python-client==1.7.8
+grpcio>=1.2.0
 google-auth==1.6.2
 google-auth-httplib2==0.0.3
 google-cloud==0.34.0
 google-cloud-storage==1.13.2
+google-cloud-dataproc==0.3.1
