@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title> Fake Status Page </title>
+<div id="welcome">
+{% if logged_in %}
+  Welcome, {{ nickname }} ! (<a href="{{ logout_url }}">sign out</a>)
+{% else %}
+  <a href="{{ login_url }}">Sign in</a>
+{% endif %}
+</div>
+<div id="message">Live status below:</div>
+<div id="status">No status yet.</div>
+<script src="/js/poll.js"></script>

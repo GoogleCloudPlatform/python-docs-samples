@@ -1,0 +1,47 @@
+{#
+# Copyright 2015 Google Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#}
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+    <p>If you've just added or updated entities, you may need to refresh
+      the page to see the changes due to
+      <a href="https://cloud.google.com/datastore/docs/articles/balancing-strong-and-eventual-consistency-with-google-cloud-datastore/">eventual consitency.</a></p>
+    {% for entity in entities %}
+      <p>
+        Author: {{entity.author}},
+        Name: {{entity.name}},
+        {% if 'num_votes' in entity._values %}
+          Votes: {{entity.num_votes}},
+        {% endif %}
+        {% if 'avg_rating' in entity._values %}
+          Average Rating: {{entity.avg_rating}}
+        {% endif %}
+      </p>
+    {% endfor %}
+    {% if entities|length == 0 %}
+      <form action="/add_entities" method="post" method="post">
+        <input type="submit" value="Add Entities">
+      </form>
+    {% endif %}
+    {% if entities|length > 0 %}
+      <form action="/update_schema" method="post" method="post">
+        <input type="submit" value="Update Schema">
+      </form>
+    {% endif %}
+  </body>
+</html>

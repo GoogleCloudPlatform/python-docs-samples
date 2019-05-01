@@ -11,13 +11,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import re
+
+from gcp_devrel.testing.flaky import flaky
 
 from customer_supplied_keys import main
 
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
-def test_main(cloud_config, capsys):
-    main(cloud_config.storage_bucket, __file__)
+
+@flaky
+def test_main(capsys):
+    main(BUCKET, __file__)
     out, err = capsys.readouterr()
 
     assert not re.search(r'Downloaded file [!]=', out)

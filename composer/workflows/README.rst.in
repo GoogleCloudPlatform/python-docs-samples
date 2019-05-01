@@ -1,0 +1,15 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Composer
+  short_name: Cloud Composer
+  url: https://cloud.google.com/composer/docs
+  description: >
+    `Google Cloud Composer`_ is a fully managed workflow orchestration
+    service built on Apache Airflow.
+
+setup:
+- auth
+- install_deps
+
+folder: composer/workflows

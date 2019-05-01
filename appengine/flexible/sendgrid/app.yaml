@@ -1,0 +1,12 @@
+runtime: python
+env: flex
+entrypoint: gunicorn -b :$PORT main:app
+
+runtime_config:
+  python_version: 3
+
+# [START gae_flex_sendgrid_yaml]
+env_variables:
+    SENDGRID_API_KEY: your-sendgrid-api-key
+    SENDGRID_SENDER: your-sendgrid-sender
+# [END gae_flex_sendgrid_yaml]

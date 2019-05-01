@@ -11,10 +11,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
+from gcp_devrel.testing.flaky import flaky
+
 from blog import main
-from gcp.testing.flaky import flaky
+
+PROJECT = os.environ['GCLOUD_PROJECT']
 
 
 @flaky
-def test_main(cloud_config):
-    main(cloud_config.project)
+def test_main():
+    main(PROJECT)

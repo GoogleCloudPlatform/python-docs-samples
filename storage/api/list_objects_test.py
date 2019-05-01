@@ -11,8 +11,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 from list_objects import main
 
+BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
-def test_main(cloud_config):
-    main(cloud_config.storage_bucket)
+
+def test_main():
+    main(BUCKET)

@@ -1,3 +1,0 @@
-Flask==0.10.1
-sendgrid==2.2.1
-gunicorn==19.4.5

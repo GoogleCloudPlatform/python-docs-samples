@@ -2,6 +2,9 @@
 *.pyc
 .coverage
 .tox
+.pytest_cache
+.ipynb_checkpoints
+.executed_notebooks
 coverage.xml
 python-docs-samples.json
 service-account.json
@@ -19,3 +22,6 @@ secrets.tar
 junit.xml
 credentials.dat
 .nox
+.vscode/
+*sponge_log.xml
+.DS_store

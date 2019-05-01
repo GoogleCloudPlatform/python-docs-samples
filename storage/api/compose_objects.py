@@ -36,19 +36,13 @@ Example invocation:
 import argparse
 import json
 
-from googleapiclient import discovery
-from oauth2client.client import GoogleCredentials
+import googleapiclient.discovery
 
 
 def main(bucket, destination, sources):
-    # Get the application default credentials. When running locally, these are
-    # available after running `gcloud init`. When running on compute
-    # engine, these are available from the environment.
-    credentials = GoogleCredentials.get_application_default()
-
     # Construct the service object for the interacting with the Cloud Storage
     # API.
-    service = discovery.build('storage', 'v1', credentials=credentials)
+    service = googleapiclient.discovery.build('storage', 'v1')
 
     # Upload the source files.
     for filename in sources:

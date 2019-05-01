@@ -14,7 +14,7 @@
 import argparse
 import datetime
 
-from gcloud import datastore
+from google.cloud import datastore
 
 
 def path_to_key(datastore, path):

@@ -1,0 +1,18 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Functions
+  short_name: GCF
+  url: https://cloud.google.com/functions/docs/
+  description: >
+    Cloud Functions is a lightweight, event-based, asynchronous compute solution that allows you to create small, single-purpose functions that respond to Cloud events without the need to manage a server or a runtime environment.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Hello World
+  file: helloworld/main.py
+
+cloud_client_library: true

@@ -1,0 +1,1 @@
+Cloud computing is a computing-infrastructure and software model for enabling ubiquitous access to shared pools of configurable resources (such as computer networks, servers, storage, applications and services), which can be rapidly provisioned with minimal management effort, often over the Internet. 
