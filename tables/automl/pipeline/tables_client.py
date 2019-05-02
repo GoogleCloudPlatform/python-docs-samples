@@ -416,9 +416,7 @@ class TablesClient(object):
     if output_path.startswith('bq'):
       output_config = {"bigquery_destination": {"output_uri": output_path}}
     else:
-      # Get the multiple Google Cloud Storage URIs.
-      output_uris = output_path.split(",").strip()
-      output_config = {"gcs_destination": {"output_uris": output_uris}}
+      output_config = {"gcs_destination": {"output_uri_prefix": output_path}}
 
     return self.prediction_client.batch_predict(
         model_name, input_config, output_config)
