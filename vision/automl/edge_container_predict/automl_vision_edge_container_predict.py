@@ -44,13 +44,13 @@ def container_predict(image_file_path, image_key, port_number=8501):
   """
 
   with io.open(image_file_path, 'rb') as image_file:
-    encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+    encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
 
   # The example here only shows prediction with one image. You can extend it to
   # predict with a batch of images indicated by different keys easily.
   instances = {
       'instances': [
-          {'image_bytes': {'b64': str(encoded_string)}, 'key': image_key}
+          {'image_bytes': {'b64': str(encoded_image)}, 'key': image_key}
       ]
   }
 

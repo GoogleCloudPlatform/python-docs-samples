@@ -8,11 +8,17 @@ If you want to try the test manually with a sample model, please install
 [gsutil tools](https://cloud.google.com/storage/docs/gsutil_install) and
 [Docker CE](https://docs.docker.com/install/) first, and then follow the steps
 below. All the following instructions with commands assume you are in this
-folder.
+folder with system variables as
+
+```bash
+$ CONTAINER_NAME=AutomlVisionEdgeContainerPredict
+$ PORT=8501
+```
 
 +   Step 1. Pull the Docker image.
 
 ```bash
+# This is a CPU TFServing 1.12.0 with some default settings to serve TF models.
 $ CPU_DOCKER_GCS_PATH=gcr.io/automl-vision-ondevice/gcloud-container-1.12.0:latest
 $ sudo docker pull ${CPU_DOCKER_GCS_PATH}
 ```
@@ -29,22 +35,23 @@ $ gsutil -m cp ${SAMPLE_SAVED_MODEL} ${YOUR_MODEL_PATH}
 +   Step 3. Run the Docker container.
 
 ```bash
-$ CONTAINER_NAME=AutomlVisionEdgeContainerPredict
-$ PORT=8501
 $ sudo docker run --rm --name ${CONTAINER_NAME} -p ${PORT}:8501 -v ${YOUR_MODEL_PATH}:/tmp/mounted_model/0001 -t ${CPU_DOCKER_GCS_PATH}
 ```
 
 +   Step 4. Send a prediction request.
 
 ```bash
-$ # The port number should be the same when you run the docker container above.
-$ PORT=8501
 $ python automl_vision_edge_container_predict.py --image_file_path=./test.jpg --image_key=1 --port_number=${PORT}
+```
+
+The outputs are
+
+```
+{'predictions': [{'scores': [0.0914393, 0.458942, 0.027604, 0.386767, 0.0352474], 'labels': ['daisy', 'dandelion', 'roses', 'sunflowers', 'tulips'], 'key': '1'}]}
 ```
 
 +   Step 5. Stop the container.
 
 ```bash
-$ # The container name should be the same when you run the docker container above.
 sudo docker stop ${CONTAINER_NAME}
 ```
