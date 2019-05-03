@@ -36,15 +36,15 @@ def main(project_id, region):
 
     if region == 'global':
         # Use the default gRPC global endpoints.
-        client_transport = ''
+        dataproc_cluster_client = dataproc_v1.ClusterControllerClient()
     else:
         # Use a regional gRPC endpoint. See:
         # https://cloud.google.com/dataproc/docs/concepts/regional-endpoints
         client_transport = (
             cluster_controller_grpc_transport.ClusterControllerGrpcTransport(
                 address='{}-dataproc.googleapis.com:443'.format(region)))
-    dataproc_cluster_client = dataproc_v1.ClusterControllerClient(
-        client_transport)
+        dataproc_cluster_client = dataproc_v1.ClusterControllerClient(
+            client_transport)
 
     list_clusters(dataproc_cluster_client, project_id, region)
 

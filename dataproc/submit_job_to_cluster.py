@@ -205,8 +205,8 @@ def main(project_id,
     if global_region:
         region = 'global'
         # Use the default gRPC global endpoints.
-        client_transport = ''
-        job_transport = ''
+        dataproc_cluster_client = dataproc_v1.ClusterControllerClient()
+        dataproc_job_client = dataproc_v1.JobControllerClient()
     else:
         region = get_region_from_zone(zone)
         # Use a regional gRPC endpoint. See:
@@ -217,9 +217,9 @@ def main(project_id,
         job_transport = (
             job_controller_grpc_transport.JobControllerGrpcTransport(
                 address='{}-dataproc.googleapis.com:443'.format(region)))
-    dataproc_cluster_client = dataproc_v1.ClusterControllerClient(
-        client_transport)
-    dataproc_job_client = dataproc_v1.JobControllerClient(job_transport)
+        dataproc_cluster_client = dataproc_v1.ClusterControllerClient(
+            client_transport)
+        dataproc_job_client = dataproc_v1.JobControllerClient(job_transport)
     # [END dataproc_get_client]
 
     try:
