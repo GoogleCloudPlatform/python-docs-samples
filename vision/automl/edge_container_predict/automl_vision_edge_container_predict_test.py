@@ -16,8 +16,8 @@
 
 """Tests for automl_vision_edge_container_predict.
 
-The test will automatically start a container with a sample saved_model.pb, 
-send a request with one image, verify the response and delete the started 
+The test will automatically start a container with a sample saved_model.pb,
+send a request with one image, verify the response and delete the started
 container.
 
 If you want to try the test, please install
