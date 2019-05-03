@@ -47,7 +47,8 @@ def container_predict(image_file_path, image_key, port_number=8501):
     encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
 
   # The example here only shows prediction with one image. You can extend it to
-  # predict with a batch of images indicated by different keys easily.
+  # predict with a batch of images indicated by different keys, which can make
+  # sure that the responses corresponding to the given image.
   instances = {
       'instances': [
           {'image_bytes': {'b64': str(encoded_image)}, 'key': image_key}
