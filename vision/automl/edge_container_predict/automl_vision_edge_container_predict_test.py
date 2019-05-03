@@ -81,7 +81,8 @@ def test_edge_container_predict(capsys, edge_container_predict_server_port):
   image_file_path = 'test.jpg'
   # If you send requests with one image each time, the key value does not
   # matter. If you send requests with multiple images, please used different
-  # keys to indicated different images.
+  # keys to indicated different images, which can make sure that the responses
+  # corresponding to the given image.
   image_key = '1'
   # Send a request.
   response = predict.container_predict(
