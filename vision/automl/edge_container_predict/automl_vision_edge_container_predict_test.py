@@ -16,8 +16,9 @@
 
 """Tests for automl_vision_edge_container_predict.
 
-The test will automatically start a container with a sample saved_model.pb, send
-a request with one image, verify the response and delete the started container.
+The test will automatically start a container with a sample saved_model.pb, 
+send a request with one image, verify the response and delete the started 
+container.
 
 If you want to try the test, please install
 [gsutil tools](https://cloud.google.com/storage/docs/gsutil_install) and
@@ -64,9 +65,9 @@ def edge_container_predict_server_port():
 
     # Start the CPU docker.
     subprocess.Popen(['docker', 'run', '--rm', '--name', NAME, '-v',
-                                        MODEL_PATH + ':/tmp/mounted_model/0001', '-p',
-                                        str(PORT_NUMBER) + ':8501', '-t',
-                                        CPU_DOCKER_GCS_PATH])
+                      MODEL_PATH + ':/tmp/mounted_model/0001', '-p',
+                      str(PORT_NUMBER) + ':8501', '-t',
+                      CPU_DOCKER_GCS_PATH])
     # Sleep a few seconds to wait for the container running.
     time.sleep(10)
 
@@ -83,8 +84,8 @@ def test_edge_container_predict(capsys, edge_container_predict_server_port):
     image_file_path = 'test.jpg'
     # If you send requests with one image each time, the key value does not
     # matter. If you send requests with multiple images, please used different
-    # keys to indicated different images, which can make sure that the responses
-    # corresponding to the given image.
+    # keys to indicated different images, which can make sure that the
+    # responses corresponding to the given image.
     image_key = '1'
     # Send a request.
     response = predict.container_predict(

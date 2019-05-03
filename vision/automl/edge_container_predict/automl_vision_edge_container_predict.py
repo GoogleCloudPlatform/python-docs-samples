@@ -36,7 +36,7 @@ def container_predict(image_file_path, image_key, port_number=8501):
     """Sends a prediction request to TFServing docker container REST API.
 
     Args:
-        image_file_path: Path to a local image to use in the prediction request.
+        image_file_path: Path to a local image for the prediction request.
         image_key: Your chosen string key to identify the given image.
         port_number: The port number on your device to accept REST API calls.
     Returns:
