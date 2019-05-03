@@ -12,13 +12,14 @@ folder with system variables as
 
 ```bash
 $ CONTAINER_NAME=AutomlVisionEdgeContainerPredict
-$ PORT=8501
+$ PORT=8505
 ```
 
 +   Step 1. Pull the Docker image.
 
 ```bash
-# This is a CPU TFServing 1.12.0 with some default settings to serve TF models.
+# This is a CPU TFServing 1.12.0 with some default settings compiled from
+# https://hub.docker.com/r/tensorflow/serving.
 $ CPU_DOCKER_GCS_PATH=gcr.io/automl-vision-ondevice/gcloud-container-1.12.0:latest
 $ sudo docker pull ${CPU_DOCKER_GCS_PATH}
 ```
