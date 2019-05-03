@@ -20,14 +20,16 @@ $ PORT=8505
 ```bash
 # This is a CPU TFServing 1.12.0 with some default settings compiled from
 # https://hub.docker.com/r/tensorflow/serving.
-$ CPU_DOCKER_GCS_PATH=gcr.io/automl-vision-ondevice/gcloud-container-1.12.0:latest
+$ DOCKER_GCS_DIR=gcr.io/automl-vision-ondevice
+$ CPU_DOCKER_GCS_PATH=${DOCKER_GCS_DIR}/gcloud-container-1.12.0:latest
 $ sudo docker pull ${CPU_DOCKER_GCS_PATH}
 ```
 
 +   Step 2. Get a sample saved model.
 
 ```bash
-$ SAMPLE_SAVED_MODEL=gs://cloud-samples-data/vision/edge_container_predict/saved_model.pb
+$ MODEL_GCS_DIR=gs://cloud-samples-data/vision/edge_container_predict
+$ SAMPLE_SAVED_MODEL=${MODEL_GCS_DIR}/saved_model.pb
 $ mkdir model_path
 $ YOUR_MODEL_PATH=$(realpath model_path)
 $ gsutil -m cp ${SAMPLE_SAVED_MODEL} ${YOUR_MODEL_PATH}
@@ -36,19 +38,30 @@ $ gsutil -m cp ${SAMPLE_SAVED_MODEL} ${YOUR_MODEL_PATH}
 +   Step 3. Run the Docker container.
 
 ```bash
-$ sudo docker run --rm --name ${CONTAINER_NAME} -p ${PORT}:8501 -v ${YOUR_MODEL_PATH}:/tmp/mounted_model/0001 -t ${CPU_DOCKER_GCS_PATH}
+$ sudo docker run --rm --name ${CONTAINER_NAME} -p ${PORT}:8501 -v \
+    ${YOUR_MODEL_PATH}:/tmp/mounted_model/0001 -t ${CPU_DOCKER_GCS_PATH}
 ```
 
 +   Step 4. Send a prediction request.
 
 ```bash
-$ python automl_vision_edge_container_predict.py --image_file_path=./test.jpg --image_key=1 --port_number=${PORT}
+$ python automl_vision_edge_container_predict.py --image_file_path=./test.jpg \
+    --image_key=1 --port_number=${PORT}
 ```
 
 The outputs are
 
 ```
-{'predictions': [{'scores': [0.0914393, 0.458942, 0.027604, 0.386767, 0.0352474], 'labels': ['daisy', 'dandelion', 'roses', 'sunflowers', 'tulips'], 'key': '1'}]}
+{
+    'predictions':
+    [
+        {
+            'scores': [0.0914393, 0.458942, 0.027604, 0.386767, 0.0352474],
+            labels': ['daisy', 'dandelion', 'roses', 'sunflowers', 'tulips'],
+            'key': '1'
+        }
+    ]
+}
 ```
 
 +   Step 5. Stop the container.
