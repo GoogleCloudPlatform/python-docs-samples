@@ -42,10 +42,14 @@ MODEL_PATH = os.path.join(ROOT_DIR, 'model_path')
 CPU_DOCKER_GCS_PATH = 'gcr.io/automl-vision-ondevice/gcloud-container-1.12.0:latest'
 # The path of a sample saved model.
 SAMPLE_SAVED_MODEL = 'gs://cloud-samples-data/vision/edge_container_predict/saved_model.pb'
+# Container Name.
+NAME = 'AutomlVisionEdgeContainerPredictTest'
+# Port Number.
+PORT_NUMBER = 8505
 
 
 @pytest.fixture
-def edge_container_predict():
+def edge_container_predict_server_port():
   # set up
   # Pull the CPU docker.
   subprocess.check_output(['docker', 'pull', CPU_DOCKER_GCS_PATH])
@@ -56,24 +60,24 @@ def edge_container_predict():
   subprocess.check_output(
       ['gsutil', '-m', 'cp', SAMPLE_SAVED_MODEL, MODEL_PATH])
 
-  yield None
-
-  # tear down
-  # Remove the docker image.
-  subprocess.check_output(['docker', 'rmi', CPU_DOCKER_GCS_PATH])
-
-
-def test_edge_container_predict(capsys, edge_container_predict):
   # Start the CPU docker.
-  name = 'AutomlVisionEdgeContainerPredictTest'
-  port_number = 8505
-  subprocess.Popen(['docker', 'run', '--rm', '--name', name, '-v',
+  subprocess.Popen(['docker', 'run', '--rm', '--name', NAME, '-v',
                     MODEL_PATH + ':/tmp/mounted_model/0001', '-p',
-                    str(port_number) + ':8501', '-t',
+                    str(PORT_NUMBER) + ':8501', '-t',
                     CPU_DOCKER_GCS_PATH])
   # Sleep a few seconds to wait for the container running.
   time.sleep(10)
 
+  yield PORT_NUMBER
+
+  # tear down
+  # Stop the container.
+  subprocess.check_output(['docker', 'stop', NAME])
+  # Remove the docker image.
+  subprocess.check_output(['docker', 'rmi', CPU_DOCKER_GCS_PATH])
+
+
+def test_edge_container_predict(capsys, edge_container_predict_server_port):
   image_file_path = 'test.jpg'
   # If you send requests with one image each time, the key value does not
   # matter. If you send requests with multiple images, please used different
@@ -81,11 +85,7 @@ def test_edge_container_predict(capsys, edge_container_predict):
   image_key = '1'
   # Send a request.
   response = predict.container_predict(
-      image_file_path, image_key, port_number)
-
-  # Stop the container.
-  subprocess.check_output(['docker', 'stop', name])
-
+      image_file_path, image_key, PORT_NUMBER)
   # Verify the response.
   assert 'predictions' in response
   assert 'key' in response['predictions'][0]
