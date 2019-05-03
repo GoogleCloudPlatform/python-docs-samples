@@ -66,7 +66,7 @@ def edge_container_predict():
 def test_edge_container_predict(capsys, edge_container_predict):
   # Start the CPU docker.
   name = 'AutomlVisionEdgeContainerPredictTest'
-  port_number = 8501
+  port_number = 8505
   subprocess.Popen(['docker', 'run', '--rm', '--name', name, '-v',
                     MODEL_PATH + ':/tmp/mounted_model/0001', '-p',
                     str(port_number) + ':8501', '-t',
