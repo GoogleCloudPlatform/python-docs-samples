@@ -24,7 +24,6 @@ import dicom_stores
 import dicomweb
 
 cloud_region = 'us-central1'
-api_key = os.environ['API_KEY']
 base_url = 'https://healthcare.googleapis.com/v1beta1'
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
@@ -44,7 +43,6 @@ study_uid = '1.3.6.1.4.1.11129.5.5.111396399361969898205364400549799252857604'
 def test_dataset():
     dataset = datasets.create_dataset(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id)
@@ -54,7 +52,6 @@ def test_dataset():
     # Clean up
     datasets.delete_dataset(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id)
@@ -64,7 +61,6 @@ def test_dataset():
 def test_dicom_store():
     dicom_store = dicom_stores.create_dicom_store(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
@@ -75,7 +71,6 @@ def test_dicom_store():
     # Clean up
     dicom_stores.delete_dicom_store(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
