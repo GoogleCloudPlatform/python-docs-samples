@@ -17,7 +17,6 @@ from time import sleep
 from google.cloud import firestore
 from google.cloud.firestore_v1 import ArrayRemove, ArrayUnion
 import google.cloud.exceptions
-import pytest
 
 
 def quickstart_new_instance():
@@ -818,52 +817,52 @@ def delete_full_collection():
     delete_collection(db.collection(u'cities'), 10)
 
 
-@pytest.mark.skip(reason="Dependant on a composite index being created,"
-                         "however creation of the index is dependent on"
-                         "having the admin client and definition")
-def collection_group_query():
-    db = firestore.Client()
-
+def collection_group_query(db):
     # [START fs_collection_group_query_data_setup]
     cities = db.collection(u'cities')
 
-    cities.document(u'SF').collection(u'landmarks').document().set({
+    sf_landmarks = cities.document(u'SF').collection(u'landmarks')
+    sf_landmarks.document().set({
         u'name': u'Golden Gate Bridge',
         u'type': u'bridge'
     })
-    cities.document(u'SF').collection(u'landmarks').document().set({
+    sf_landmarks.document().set({
         u'name': u'Legion of Honor',
         u'type': u'museum'
     })
-    cities.document(u'LA').collection(u'landmarks').document().set({
+    la_landmarks = cities.document(u'LA').collection(u'landmarks')
+    la_landmarks.document().set({
         u'name': u'Griffith Park',
         u'type': u'park'
     })
-    cities.document(u'LA').collection(u'landmarks').document().set({
+    la_landmarks.document().set({
         u'name': u'The Getty',
         u'type': u'museum'
     })
-    cities.document(u'DC').collection(u'landmarks').document().set({
+    dc_landmarks = cities.document(u'DC').collection(u'landmarks')
+    dc_landmarks.document().set({
         u'name': u'Lincoln Memorial',
         u'type': u'memorial'
     })
-    cities.document(u'DC').collection(u'landmarks').document().set({
+    dc_landmarks.document().set({
         u'name': u'National Air and Space Museum',
         u'type': u'museum'
     })
-    cities.document(u'TOK').collection(u'landmarks').document().set({
+    tok_landmarks = cities.document(u'TOK').collection(u'landmarks')
+    tok_landmarks.document().set({
         u'name': u'Ueno Park',
         u'type': u'park'
     })
-    cities.document(u'DC').collection(u'landmarks').document().set({
+    tok_landmarks.document().set({
         u'name': u'National Museum of Nature and Science',
         u'type': u'museum'
     })
-    cities.document(u'BJ').collection(u'landmarks').document().set({
+    bj_landmarks = cities.document(u'BJ').collection(u'landmarks')
+    bj_landmarks.document().set({
         u'name': u'Jingshan Park',
         u'type': u'park'
     })
-    cities.document(u'BJ').collection(u'landmarks').document().set({
+    bj_landmarks.document().set({
         u'name': u'Beijing Ancient Observatory',
         u'type': u'museum'
     })
@@ -876,3 +875,4 @@ def collection_group_query():
     for doc in docs:
         print(u'{} => {}'.format(doc.id, doc.to_dict()))
     # [END fs_collection_group_query]
+    return docs
