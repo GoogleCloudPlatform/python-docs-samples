@@ -15,7 +15,7 @@ import datetime
 from time import sleep
 
 from google.cloud import firestore
-from google.cloud.firestore_v1beta1 import ArrayRemove, ArrayUnion
+from google.cloud.firestore_v1 import ArrayRemove, ArrayUnion
 import google.cloud.exceptions
 
 
@@ -815,3 +815,64 @@ def delete_full_collection():
     # [END delete_full_collection]
 
     delete_collection(db.collection(u'cities'), 10)
+
+
+def collection_group_query(db):
+    # [START fs_collection_group_query_data_setup]
+    cities = db.collection(u'cities')
+
+    sf_landmarks = cities.document(u'SF').collection(u'landmarks')
+    sf_landmarks.document().set({
+        u'name': u'Golden Gate Bridge',
+        u'type': u'bridge'
+    })
+    sf_landmarks.document().set({
+        u'name': u'Legion of Honor',
+        u'type': u'museum'
+    })
+    la_landmarks = cities.document(u'LA').collection(u'landmarks')
+    la_landmarks.document().set({
+        u'name': u'Griffith Park',
+        u'type': u'park'
+    })
+    la_landmarks.document().set({
+        u'name': u'The Getty',
+        u'type': u'museum'
+    })
+    dc_landmarks = cities.document(u'DC').collection(u'landmarks')
+    dc_landmarks.document().set({
+        u'name': u'Lincoln Memorial',
+        u'type': u'memorial'
+    })
+    dc_landmarks.document().set({
+        u'name': u'National Air and Space Museum',
+        u'type': u'museum'
+    })
+    tok_landmarks = cities.document(u'TOK').collection(u'landmarks')
+    tok_landmarks.document().set({
+        u'name': u'Ueno Park',
+        u'type': u'park'
+    })
+    tok_landmarks.document().set({
+        u'name': u'National Museum of Nature and Science',
+        u'type': u'museum'
+    })
+    bj_landmarks = cities.document(u'BJ').collection(u'landmarks')
+    bj_landmarks.document().set({
+        u'name': u'Jingshan Park',
+        u'type': u'park'
+    })
+    bj_landmarks.document().set({
+        u'name': u'Beijing Ancient Observatory',
+        u'type': u'museum'
+    })
+    # [END fs_collection_group_query_data_setup]
+
+    # [START fs_collection_group_query]
+    museums = db.collection_group(u'landmarks')\
+        .where(u'type', u'==', u'museum')
+    docs = museums.get()
+    for doc in docs:
+        print(u'{} => {}'.format(doc.id, doc.to_dict()))
+    # [END fs_collection_group_query]
+    return docs
