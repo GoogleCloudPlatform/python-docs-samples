@@ -162,8 +162,7 @@ def test_generate_upload_signed_url_v4(capsys):
         blob_name)
 
     requests.put(url, data=content, headers={
-        'content-type': 'application/octet-stream'
-        })
+        'content-type': 'application/octet-stream'})
 
     bucket = storage.Client().bucket(BUCKET)
     blob = bucket.blob(blob_name)
