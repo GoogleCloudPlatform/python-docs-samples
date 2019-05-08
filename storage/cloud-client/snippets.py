@@ -465,6 +465,10 @@ if __name__ == '__main__':
         make_blob_public(args.bucket_name, args.blob_name)
     elif args.command == 'signed-url':
         generate_signed_url(args.bucket_name, args.blob_name)
+    elif args.command == 'signed-url-download-v4':
+        generate_download_signed_url_v4(args.bucket_name, args.blob_name)
+    elif args.command == 'signed-url-upload-v4':
+        generate_upload_signed_url_v4(args.bucket_name, args.blob_name)
     elif args.command == 'rename':
         rename_blob(args.bucket_name, args.blob_name, args.new_name)
     elif args.command == 'copy':
