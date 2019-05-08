@@ -79,7 +79,8 @@ def edge_container_predict_server_port():
     # Remove the docker image.
     subprocess.check_output(['docker', 'rmi', CPU_DOCKER_GCS_PATH])
 
-
+# TODO(dizcology): Enable tests in future.
+@pytest.mark.skip(reason='skipping to avoid running docker in docker')
 def test_edge_container_predict(capsys, edge_container_predict_server_port):
     image_file_path = 'test.jpg'
     # If you send requests with one image each time, the key value does not
