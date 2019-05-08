@@ -269,8 +269,8 @@ def translate_text_with_glossary(project_id, glossary_id, text):
         target_language_code='es',
         glossary_config=glossary_config)
 
-    for translation in result.translations:
-        print(translation)
+    for glossary_translation in result.glossary_translations:
+        print(glossary_translation)
     # [END translate_translate_text_with_glossary_beta]
 
 
