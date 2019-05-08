@@ -255,3 +255,17 @@ def test_listen_for_changes(capsys):
 
 def test_delete_full_collection():
     snippets.delete_full_collection()
+
+
+@pytest.mark.skip(reason="Dependant on a composite index being created,"
+                         "however creation of the index is dependent on"
+                         "having the admin client and definition integrated"
+                         "into the test setup")
+# TODO: b/132092178
+def test_collection_group_query(db):
+    museum_docs = snippets.collection_group_query(db)
+    names = set([museum.name for museum in museum_docs])
+    assert names == {u'Legion of Honor', u'The Getty',
+                     u'National Air and Space Museum',
+                     u'National Museum of Nature and Science',
+                     u'Beijing Ancient Observatory'}
