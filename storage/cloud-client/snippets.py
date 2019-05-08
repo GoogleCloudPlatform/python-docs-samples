@@ -320,7 +320,7 @@ def generate_upload_signed_url_v4(bucket_name, blob_name):
     print(url)
     print('You can use this URL with any user agent, for example:')
     print("curl -X PUT -H 'Content-Type: application/octet-stream' "
-          "--upload-file my-file \'{}\''.format(url)")
+          "--upload-file my-file '{}'".format(url))
     return url
 # [END storage_generate_signed_url_v4]
 
