@@ -322,7 +322,7 @@ def generate_upload_signed_url_v4(bucket_name, blob_name):
     print("curl -X PUT -H 'Content-Type: application/octet-stream' "
           "--upload-file my-file '{}'".format(url))
     return url
-# [END storage_generate_signed_url_v4]
+# [END storage_generate_upload_signed_url_v4]
 
 
 def rename_blob(bucket_name, blob_name, new_name):
