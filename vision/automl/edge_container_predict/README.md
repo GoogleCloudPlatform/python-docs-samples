@@ -1,8 +1,8 @@
 # AutoML Vision Edge Container Prediction
 
 This is an example to show how to predict with AutoML Vision Edge Containers.
-The test (freeze_meta_graph_lib_test.py) shows an automatical way to run the
-prediction.
+The test (automl_vision_edge_container_predict_test.py) shows an automatical way
+to run the prediction.
 
 If you want to try the test manually with a sample model, please install
 [gsutil tools](https://cloud.google.com/storage/docs/gsutil_install) and
