@@ -427,15 +427,15 @@ if __name__ == '__main__':
 
     if args.command == 'create-bucket':
         create_bucket(args.bucket_name)
-    if args.command == 'enable-default-kms-key':
+    elif args.command == 'enable-default-kms-key':
         enable_default_kms_key(args.bucket_name, args.kms_key_name)
     elif args.command == 'delete-bucket':
         delete_bucket(args.bucket_name)
-    if args.command == 'get-bucket-labels':
+    elif args.command == 'get-bucket-labels':
         get_bucket_labels(args.bucket_name)
-    if args.command == 'add-bucket-label':
+    elif args.command == 'add-bucket-label':
         add_bucket_label(args.bucket_name)
-    if args.command == 'remove-bucket-label':
+    elif args.command == 'remove-bucket-label':
         remove_bucket_label(args.bucket_name)
     elif args.command == 'list':
         list_blobs(args.bucket_name)
