@@ -25,7 +25,7 @@ import argparse
 
 
 def lookup_bigquery_dataset(project_id, dataset_id):
-    """Retrieves Data Catalog entry for the given dataset."""
+    """Retrieves Data Catalog entry for the given BigQuery Dataset."""
     from google.cloud import datacatalog_v1beta1
 
     datacatalog = datacatalog_v1beta1.DataCatalogClient()
@@ -39,7 +39,9 @@ def lookup_bigquery_dataset(project_id, dataset_id):
 
 
 def lookup_bigquery_dataset_sql_resource(project_id, dataset_id):
-    """Retrieves Data Catalog entry for the given dataset by sql_resource."""
+    """Retrieves Data Catalog entry for the given BigQuery Dataset by
+    sql_resource.
+    """
     from google.cloud import datacatalog_v1beta1
 
     datacatalog = datacatalog_v1beta1.DataCatalogClient()
@@ -52,7 +54,7 @@ def lookup_bigquery_dataset_sql_resource(project_id, dataset_id):
 
 
 def lookup_bigquery_table(project_id, dataset_id, table_id):
-    """Retrieves Data Catalog entry for the given table."""
+    """Retrieves Data Catalog entry for the given BigQuery Table."""
     from google.cloud import datacatalog_v1beta1
 
     datacatalog = datacatalog_v1beta1.DataCatalogClient()
@@ -66,7 +68,9 @@ def lookup_bigquery_table(project_id, dataset_id, table_id):
 
 
 def lookup_bigquery_table_sql_resource(project_id, dataset_id, table_id):
-    """Retrieves Data Catalog entry for the given table by sql_resource."""
+    """Retrieves Data Catalog entry for the given BigQuery Table by
+    sql_resource.
+    """
     from google.cloud import datacatalog_v1beta1
 
     datacatalog = datacatalog_v1beta1.DataCatalogClient()
@@ -80,7 +84,7 @@ def lookup_bigquery_table_sql_resource(project_id, dataset_id, table_id):
 
 
 def lookup_pubsub_topic(project_id, topic_id):
-    """Retrieves Data Catalog entry for the given topic."""
+    """Retrieves Data Catalog entry for the given Pub/Sub Topic."""
     from google.cloud import datacatalog_v1beta1
 
     datacatalog = datacatalog_v1beta1.DataCatalogClient()
@@ -94,7 +98,9 @@ def lookup_pubsub_topic(project_id, topic_id):
 
 
 def lookup_pubsub_topic_sql_resource(project_id, topic_id):
-    """Retrieves Data Catalog entry for the given topic by sql_resource."""
+    """Retrieves Data Catalog entry for the given Pub/Sub Topic by
+    sql_resource.
+    """
     from google.cloud import datacatalog_v1beta1
 
     datacatalog = datacatalog_v1beta1.DataCatalogClient()

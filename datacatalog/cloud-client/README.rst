@@ -91,11 +91,14 @@ To run this sample:
       project_id            Your Google Cloud project ID
       {lookup-bigquery-dataset,lookup-bigquery-table,lookup-pubsub-topic}
         lookup-bigquery-dataset
-                            Retrieves Data Catalog entry for the given dataset.
+                            Retrieves Data Catalog entry for the given BigQuery
+                            Dataset.
         lookup-bigquery-table
-                            Retrieves Data Catalog entry for the given table.
+                            Retrieves Data Catalog entry for the given BigQuery
+                            Table.
         lookup-pubsub-topic
-                            Retrieves Data Catalog entry for the given topic.
+                            Retrieves Data Catalog entry for the given Pub/Sub
+                            Topic.
 
     optional arguments:
       -h, --help            show this help message and exit
