@@ -32,13 +32,35 @@ def test_lookup_bigquery_dataset():
         assert lookup_entry.lookup_bigquery_dataset(PROJECT, BIGQUERY_DATASET)
 
 
+def test_lookup_bigquery_dataset_sql_resource():
+    @eventually_consistent.call
+    def _():
+        assert lookup_entry.lookup_bigquery_dataset_sql_resource(
+            PROJECT, BIGQUERY_DATASET)
+
+
 def test_lookup_bigquery_table():
     @eventually_consistent.call
     def _():
-        assert lookup_entry.lookup_bigquery_table(PROJECT, BIGQUERY_DATASET, BIGQUERY_TABLE)
+        assert lookup_entry.lookup_bigquery_table(
+            PROJECT, BIGQUERY_DATASET, BIGQUERY_TABLE)
+
+
+def test_lookup_bigquery_table_sql_resource():
+    @eventually_consistent.call
+    def _():
+        assert lookup_entry.lookup_bigquery_table_sql_resource(
+            PROJECT, BIGQUERY_DATASET, BIGQUERY_TABLE)
 
 
 def test_lookup_pubsub_topic():
     @eventually_consistent.call
     def _():
         assert lookup_entry.lookup_pubsub_topic(PROJECT, PUBSUB_TOPIC)
+
+
+def test_lookup_pubsub_topic_sql_resource():
+    @eventually_consistent.call
+    def _():
+        assert lookup_entry.lookup_pubsub_topic_sql_resource(
+            PROJECT, PUBSUB_TOPIC)

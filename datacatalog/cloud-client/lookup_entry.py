@@ -33,7 +33,22 @@ def lookup_bigquery_dataset(project_id, dataset_id):
     resource_name = '//bigquery.googleapis.com/projects/{}/datasets/{}'\
         .format(project_id, dataset_id)
 
-    return datacatalog.lookup_entry(linked_resource=resource_name)
+    entry = datacatalog.lookup_entry(linked_resource=resource_name)
+    print(entry.name)
+    return entry
+
+
+def lookup_bigquery_dataset_sql_resource(project_id, dataset_id):
+    """Retrieves Data Catalog's entry for the given dataset by sql_resource."""
+    from google.cloud import datacatalog_v1beta1
+
+    datacatalog = datacatalog_v1beta1.DataCatalogClient()
+
+    sql_resource = 'bigquery.dataset.`{}`.`{}`'.format(project_id, dataset_id)
+
+    entry = datacatalog.lookup_entry(sql_resource=sql_resource)
+    print(entry.name)
+    return entry
 
 
 def lookup_bigquery_table(project_id, dataset_id, table_id):
@@ -45,7 +60,23 @@ def lookup_bigquery_table(project_id, dataset_id, table_id):
     resource_name = '//bigquery.googleapis.com/projects/{}/datasets/{}/tables/{}'\
         .format(project_id, dataset_id, table_id)
 
-    return datacatalog.lookup_entry(linked_resource=resource_name)
+    entry = datacatalog.lookup_entry(linked_resource=resource_name)
+    print(entry.name)
+    return entry
+
+
+def lookup_bigquery_table_sql_resource(project_id, dataset_id, table_id):
+    """Retrieves Data Catalog's entry for the given table by sql_resource."""
+    from google.cloud import datacatalog_v1beta1
+
+    datacatalog = datacatalog_v1beta1.DataCatalogClient()
+
+    sql_resource = 'bigquery.table.`{}`.`{}`.`{}`'.format(
+        project_id, dataset_id, table_id)
+
+    entry = datacatalog.lookup_entry(sql_resource=sql_resource)
+    print(entry.name)
+    return entry
 
 
 def lookup_pubsub_topic(project_id, topic_id):
@@ -57,7 +88,22 @@ def lookup_pubsub_topic(project_id, topic_id):
     resource_name = '//pubsub.googleapis.com/projects/{}/topics/{}'\
         .format(project_id, topic_id)
 
-    return datacatalog.lookup_entry(linked_resource=resource_name)
+    entry = datacatalog.lookup_entry(linked_resource=resource_name)
+    print(entry.name)
+    return entry
+
+
+def lookup_pubsub_topic_sql_resource(project_id, topic_id):
+    """Retrieves Data Catalog's entry for the given topic by sql_resource."""
+    from google.cloud import datacatalog_v1beta1
+
+    datacatalog = datacatalog_v1beta1.DataCatalogClient()
+
+    sql_resource = 'pubsub.topic.`{}`.`{}`'.format(project_id, topic_id)
+
+    entry = datacatalog.lookup_entry(sql_resource=sql_resource)
+    print(entry.name)
+    return entry
 
 
 if __name__ == '__main__':
@@ -66,6 +112,8 @@ if __name__ == '__main__':
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument('project_id', help='Your Google Cloud project ID')
+    parser.add_argument('--sql-resource', action='store_true',
+                        help='Perform lookup by SQL Resource')
 
     subparsers = parser.add_subparsers(dest='command')
 
@@ -85,8 +133,21 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.command == 'lookup-bigquery-dataset':
-        lookup_bigquery_dataset(args.project_id, args.dataset_id)
+        methods = {
+            False: lookup_bigquery_dataset,
+            True: lookup_bigquery_dataset_sql_resource
+        }
+        methods[args.sql_resource](args.project_id, args.dataset_id)
     elif args.command == 'lookup-bigquery-table':
-        lookup_bigquery_table(args.project_id, args.dataset_id, args.table_id)
+        methods = {
+            False: lookup_bigquery_table,
+            True: lookup_bigquery_table_sql_resource
+        }
+        methods[args.sql_resource](
+            args.project_id, args.dataset_id, args.table_id)
     elif args.command == 'lookup-pubsub-topic':
-        lookup_pubsub_topic(args.project_id, args.topic_id)
+        methods = {
+            False: lookup_pubsub_topic,
+            True: lookup_pubsub_topic_sql_resource
+        }
+        methods[args.sql_resource](args.project_id, args.topic_id)
