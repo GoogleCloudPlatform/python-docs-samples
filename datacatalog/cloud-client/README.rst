@@ -84,8 +84,8 @@ To run this sample:
     This application demonstrates how to perform basic operations on entries
     with the Cloud Data Catalog API.
 
-    For more information, see the README.md under /datacatalog and the documentation
-    at https://cloud.google.com/data-catalog/docs.
+    For more information, see the README.md under /datacatalog and the
+    documentation at https://cloud.google.com/data-catalog/docs.
 
     positional arguments:
       project_id            Your Google Cloud project ID
