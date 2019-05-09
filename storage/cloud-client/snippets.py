@@ -352,7 +352,7 @@ def copy_blob(bucket_name, blob_name, new_bucket_name, new_blob_name):
         destination_bucket.name))
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -477,3 +477,7 @@ if __name__ == '__main__':
             args.blob_name,
             args.new_bucket_name,
             args.new_blob_name)
+
+
+if __name__ == '__main__':
+    main()
