@@ -5,9 +5,9 @@ product:
   short_name: Data Catalog
   url: https://cloud.google.com/data-catalog/docs
   description: >
-    `Data Catalog`_ is a fully managed and scalable metadata management service
-    that empowers organizations to quickly discover, manage, and understand all
-    their data in Google Cloud..
+    `Google Cloud Data Catalog`_ is a fully managed and scalable metadata
+    management service that empowers organizations to quickly discover, manage,
+    and understand all their data in Google Cloud.
 
 setup:
 - auth

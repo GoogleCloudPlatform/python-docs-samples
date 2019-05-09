@@ -7,7 +7,7 @@ Google Cloud Data Catalog Python Samples
    :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=datacatalog/cloud-client/README.rst
 
 
-This directory contains samples for Google Cloud Data Catalog. `Data Catalog`_ is a fully managed and scalable metadata management service that empowers organizations to quickly discover, manage, and understand all their data in Google Cloud..
+This directory contains samples for Google Cloud Data Catalog. `Google Cloud Data Catalog`_ is a fully managed and scalable metadata management service that empowers organizations to quickly discover, manage, and understand all their data in Google Cloud.
 
 
 
