@@ -59,7 +59,8 @@ def lookup_bigquery_table(project_id, dataset_id, table_id):
 
     datacatalog = datacatalog_v1beta1.DataCatalogClient()
 
-    resource_name = '//bigquery.googleapis.com/projects/{}/datasets/{}/tables/{}'\
+    resource_name = '//bigquery.googleapis.com/projects/{}/datasets/{}' \
+                    '/tables/{}'\
         .format(project_id, dataset_id, table_id)
 
     entry = datacatalog.lookup_entry(linked_resource=resource_name)
