@@ -16,51 +16,36 @@
 
 import os
 
-from gcp_devrel.testing import eventually_consistent
-
 import lookup_entry
 
 PROJECT = os.environ['GCLOUD_PROJECT']
-BIGQUERY_DATASET = os.environ['GCLOUD_BIGQUERY_DATASET']
-BIGQUERY_TABLE = os.environ['GCLOUD_BIGQUERY_TABLE']
-PUBSUB_TOPIC = os.environ['GCLOUD_PUBSUB_TOPIC']
+BIGQUERY_DATASET = os.environ['BIGQUERY_DATASET']
+BIGQUERY_TABLE = os.environ['BIGQUERY_TABLE']
+PUBSUB_TOPIC = os.environ['PUBSUB_TOPIC']
 
 
 def test_lookup_bigquery_dataset():
-    @eventually_consistent.call
-    def _():
-        assert lookup_entry.lookup_bigquery_dataset(PROJECT, BIGQUERY_DATASET)
+    assert lookup_entry.lookup_bigquery_dataset(PROJECT, BIGQUERY_DATASET)
 
 
 def test_lookup_bigquery_dataset_sql_resource():
-    @eventually_consistent.call
-    def _():
-        assert lookup_entry.lookup_bigquery_dataset_sql_resource(
-            PROJECT, BIGQUERY_DATASET)
+    assert lookup_entry.lookup_bigquery_dataset_sql_resource(
+        PROJECT, BIGQUERY_DATASET)
 
 
 def test_lookup_bigquery_table():
-    @eventually_consistent.call
-    def _():
-        assert lookup_entry.lookup_bigquery_table(
-            PROJECT, BIGQUERY_DATASET, BIGQUERY_TABLE)
+    assert lookup_entry.lookup_bigquery_table(
+        PROJECT, BIGQUERY_DATASET, BIGQUERY_TABLE)
 
 
 def test_lookup_bigquery_table_sql_resource():
-    @eventually_consistent.call
-    def _():
-        assert lookup_entry.lookup_bigquery_table_sql_resource(
-            PROJECT, BIGQUERY_DATASET, BIGQUERY_TABLE)
+    assert lookup_entry.lookup_bigquery_table_sql_resource(
+        PROJECT, BIGQUERY_DATASET, BIGQUERY_TABLE)
 
 
 def test_lookup_pubsub_topic():
-    @eventually_consistent.call
-    def _():
-        assert lookup_entry.lookup_pubsub_topic(PROJECT, PUBSUB_TOPIC)
+    assert lookup_entry.lookup_pubsub_topic(PROJECT, PUBSUB_TOPIC)
 
 
 def test_lookup_pubsub_topic_sql_resource():
-    @eventually_consistent.call
-    def _():
-        assert lookup_entry.lookup_pubsub_topic_sql_resource(
-            PROJECT, PUBSUB_TOPIC)
+    assert lookup_entry.lookup_pubsub_topic_sql_resource(PROJECT, PUBSUB_TOPIC)
