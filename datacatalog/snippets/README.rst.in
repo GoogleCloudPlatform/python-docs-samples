@@ -1,0 +1,23 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Data Catalog
+  short_name: Data Catalog
+  url: https://cloud.google.com/data-catalog/docs
+  description: >
+    `Google Cloud Data Catalog`_ is a fully managed and scalable metadata
+    management service that empowers organizations to quickly discover, manage,
+    and understand all their data in Google Cloud.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Lookup entry
+  file: lookup_entry.py
+  show_help: true
+
+cloud_client_library: true
+
+folder: datacatalog/cloud-client
