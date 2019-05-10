@@ -33,9 +33,7 @@ def lookup_bigquery_dataset(project_id, dataset_id):
     resource_name = '//bigquery.googleapis.com/projects/{}/datasets/{}'\
         .format(project_id, dataset_id)
 
-    entry = datacatalog.lookup_entry(linked_resource=resource_name)
-    print(entry.name)
-    return entry
+    return datacatalog.lookup_entry(linked_resource=resource_name)
 
 
 def lookup_bigquery_dataset_sql_resource(project_id, dataset_id):
@@ -48,9 +46,7 @@ def lookup_bigquery_dataset_sql_resource(project_id, dataset_id):
 
     sql_resource = 'bigquery.dataset.`{}`.`{}`'.format(project_id, dataset_id)
 
-    entry = datacatalog.lookup_entry(sql_resource=sql_resource)
-    print(entry.name)
-    return entry
+    return datacatalog.lookup_entry(sql_resource=sql_resource)
 
 
 def lookup_bigquery_table(project_id, dataset_id, table_id):
@@ -63,9 +59,7 @@ def lookup_bigquery_table(project_id, dataset_id, table_id):
                     '/tables/{}'\
         .format(project_id, dataset_id, table_id)
 
-    entry = datacatalog.lookup_entry(linked_resource=resource_name)
-    print(entry.name)
-    return entry
+    return datacatalog.lookup_entry(linked_resource=resource_name)
 
 
 def lookup_bigquery_table_sql_resource(project_id, dataset_id, table_id):
@@ -79,9 +73,7 @@ def lookup_bigquery_table_sql_resource(project_id, dataset_id, table_id):
     sql_resource = 'bigquery.table.`{}`.`{}`.`{}`'.format(
         project_id, dataset_id, table_id)
 
-    entry = datacatalog.lookup_entry(sql_resource=sql_resource)
-    print(entry.name)
-    return entry
+    return datacatalog.lookup_entry(sql_resource=sql_resource)
 
 
 def lookup_pubsub_topic(project_id, topic_id):
@@ -93,9 +85,7 @@ def lookup_pubsub_topic(project_id, topic_id):
     resource_name = '//pubsub.googleapis.com/projects/{}/topics/{}'\
         .format(project_id, topic_id)
 
-    entry = datacatalog.lookup_entry(linked_resource=resource_name)
-    print(entry.name)
-    return entry
+    return datacatalog.lookup_entry(linked_resource=resource_name)
 
 
 def lookup_pubsub_topic_sql_resource(project_id, topic_id):
@@ -108,9 +98,7 @@ def lookup_pubsub_topic_sql_resource(project_id, topic_id):
 
     sql_resource = 'pubsub.topic.`{}`.`{}`'.format(project_id, topic_id)
 
-    entry = datacatalog.lookup_entry(sql_resource=sql_resource)
-    print(entry.name)
-    return entry
+    return datacatalog.lookup_entry(sql_resource=sql_resource)
 
 
 if __name__ == '__main__':
@@ -139,22 +127,19 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    entry = None
+
     if args.command == 'lookup-bigquery-dataset':
-        methods = {
-            False: lookup_bigquery_dataset,
-            True: lookup_bigquery_dataset_sql_resource
-        }
-        methods[args.sql_resource](args.project_id, args.dataset_id)
+        lookup_method = lookup_bigquery_dataset_sql_resource \
+            if args.sql_resource else lookup_bigquery_dataset
+        entry = lookup_method(args.project_id, args.dataset_id)
     elif args.command == 'lookup-bigquery-table':
-        methods = {
-            False: lookup_bigquery_table,
-            True: lookup_bigquery_table_sql_resource
-        }
-        methods[args.sql_resource](
-            args.project_id, args.dataset_id, args.table_id)
+        lookup_method = lookup_bigquery_table_sql_resource \
+            if args.sql_resource else lookup_bigquery_table
+        entry = lookup_method(args.project_id, args.dataset_id, args.table_id)
     elif args.command == 'lookup-pubsub-topic':
-        methods = {
-            False: lookup_pubsub_topic,
-            True: lookup_pubsub_topic_sql_resource
-        }
-        methods[args.sql_resource](args.project_id, args.topic_id)
+        lookup_method = lookup_pubsub_topic_sql_resource \
+            if args.sql_resource else lookup_pubsub_topic
+        entry = lookup_method(args.project_id, args.topic_id)
+
+    print(entry.name)
