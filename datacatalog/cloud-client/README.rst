@@ -76,10 +76,9 @@ To run this sample:
 
     $ python lookup_entry.py
 
-    usage: lookup_entry.py [-h] [--sql-resource]
+    usage: lookup_entry.py [-h]
                            project_id
-                           {lookup-bigquery-dataset,lookup-bigquery-table,lookup-pubsub-topic}
-                           ...
+                           {bigquery-dataset,bigquery-table,pubsub-topic} ...
 
     This application demonstrates how to perform basic operations on entries
     with the Cloud Data Catalog API.
@@ -89,20 +88,16 @@ To run this sample:
 
     positional arguments:
       project_id            Your Google Cloud project ID
-      {lookup-bigquery-dataset,lookup-bigquery-table,lookup-pubsub-topic}
-        lookup-bigquery-dataset
-                            Retrieves Data Catalog entry for the given BigQuery
+      {bigquery-dataset,bigquery-table,pubsub-topic}
+        bigquery-dataset    Retrieves Data Catalog entry for the given BigQuery
                             Dataset.
-        lookup-bigquery-table
-                            Retrieves Data Catalog entry for the given BigQuery
+        bigquery-table      Retrieves Data Catalog entry for the given BigQuery
                             Table.
-        lookup-pubsub-topic
-                            Retrieves Data Catalog entry for the given Pub/Sub
+        pubsub-topic        Retrieves Data Catalog entry for the given Pub/Sub
                             Topic.
 
     optional arguments:
       -h, --help            show this help message and exit
-      --sql-resource        Perform lookup by SQL Resource
 
 
 
