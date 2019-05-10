@@ -363,6 +363,66 @@ def copy_blob(bucket_name, blob_name, new_bucket_name, new_blob_name):
         destination_bucket.name))
 
 
+def bucket_commands(args):
+    if args.command == 'list-buckets':
+        list_buckets()
+    elif args.command == 'create-bucket':
+        create_bucket(args.bucket_name)
+    elif args.command == 'enable-default-kms-key':
+        enable_default_kms_key(args.bucket_name, args.kms_key_name)
+    elif args.command == 'delete-bucket':
+        delete_bucket(args.bucket_name)
+    elif args.command == 'get-bucket-labels':
+        get_bucket_labels(args.bucket_name)
+    elif args.command == 'add-bucket-label':
+        add_bucket_label(args.bucket_name)
+    elif args.command == 'remove-bucket-label':
+        remove_bucket_label(args.bucket_name)
+
+
+def blob_commands(args):
+    if args.command == 'list':
+        list_blobs(args.bucket_name)
+    elif args.command == 'list-with-prefix':
+        list_blobs_with_prefix(args.bucket_name, args.prefix, args.delimiter)
+    elif args.command == 'upload':
+        upload_blob(
+            args.bucket_name,
+            args.source_file_name,
+            args.destination_blob_name)
+    elif args.command == 'upload-with-kms-key':
+        upload_blob_with_kms(
+            args.bucket_name,
+            args.source_file_name,
+            args.destination_blob_name,
+            args.kms_key_name)
+    elif args.command == 'download':
+        download_blob(
+            args.bucket_name,
+            args.source_blob_name,
+            args.destination_file_name)
+    elif args.command == 'delete':
+        delete_blob(args.bucket_name, args.blob_name)
+    elif args.command == 'metadata':
+        blob_metadata(args.bucket_name, args.blob_name)
+    elif args.command == 'make-public':
+        make_blob_public(args.bucket_name, args.blob_name)
+    elif args.command == 'signed-url':
+        generate_signed_url(args.bucket_name, args.blob_name)
+    elif args.command == 'signed-url-download-v4':
+        generate_download_signed_url_v4(args.bucket_name, args.blob_name)
+    elif args.command == 'signed-url-upload-v4':
+        generate_upload_signed_url_v4(args.bucket_name, args.blob_name)
+    elif args.command == 'rename':
+        rename_blob(args.bucket_name, args.blob_name, args.new_name)
+    elif args.command == 'copy':
+        copy_blob(
+            args.bucket_name,
+            args.blob_name,
+            args.new_bucket_name,
+            args.new_blob_name)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -485,60 +545,8 @@ def main():
     copy_parser.add_argument('new_blob_name')
 
     args = parser.parse_args()
-    if args.command == 'list-buckets':
-        list_buckets()
-    elif args.command == 'create-bucket':
-        create_bucket(args.bucket_name)
-    elif args.command == 'enable-default-kms-key':
-        enable_default_kms_key(args.bucket_name, args.kms_key_name)
-    elif args.command == 'delete-bucket':
-        delete_bucket(args.bucket_name)
-    elif args.command == 'get-bucket-labels':
-        get_bucket_labels(args.bucket_name)
-    elif args.command == 'add-bucket-label':
-        add_bucket_label(args.bucket_name)
-    elif args.command == 'remove-bucket-label':
-        remove_bucket_label(args.bucket_name)
-    elif args.command == 'list':
-        list_blobs(args.bucket_name)
-    elif args.command == 'list-with-prefix':
-        list_blobs_with_prefix(args.bucket_name, args.prefix, args.delimiter)
-    elif args.command == 'upload':
-        upload_blob(
-            args.bucket_name,
-            args.source_file_name,
-            args.destination_blob_name)
-    elif args.command == 'upload-with-kms-key':
-        upload_blob_with_kms(
-            args.bucket_name,
-            args.source_file_name,
-            args.destination_blob_name,
-            args.kms_key_name)
-    elif args.command == 'download':
-        download_blob(
-            args.bucket_name,
-            args.source_blob_name,
-            args.destination_file_name)
-    elif args.command == 'delete':
-        delete_blob(args.bucket_name, args.blob_name)
-    elif args.command == 'metadata':
-        blob_metadata(args.bucket_name, args.blob_name)
-    elif args.command == 'make-public':
-        make_blob_public(args.bucket_name, args.blob_name)
-    elif args.command == 'signed-url':
-        generate_signed_url(args.bucket_name, args.blob_name)
-    elif args.command == 'signed-url-download-v4':
-        generate_download_signed_url_v4(args.bucket_name, args.blob_name)
-    elif args.command == 'signed-url-upload-v4':
-        generate_upload_signed_url_v4(args.bucket_name, args.blob_name)
-    elif args.command == 'rename':
-        rename_blob(args.bucket_name, args.blob_name, args.new_name)
-    elif args.command == 'copy':
-        copy_blob(
-            args.bucket_name,
-            args.blob_name,
-            args.new_bucket_name,
-            args.new_blob_name)
+    bucket_commands(args)
+    blob_commands(args)
 
 
 if __name__ == '__main__':
