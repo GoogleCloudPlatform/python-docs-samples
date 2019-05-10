@@ -99,6 +99,17 @@ def remove_bucket_label(bucket_name):
     pprint.pprint(bucket.labels)
 
 
+# [START storage_list_buckets]
+def list_buckets():
+    """Lists all buckets."""
+    storage_client = storage.Client()
+    buckets = storage_client.list_buckets()
+
+    for bucket in buckets:
+        print(bucket.name)
+# [END storage_list_buckets]
+
+
 def list_blobs(bucket_name):
     """Lists all the blobs in the bucket."""
     storage_client = storage.Client()
@@ -356,54 +367,100 @@ def main():
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('bucket_name', help='Your cloud storage bucket.')
 
     subparsers = parser.add_subparsers(dest='command')
-    subparsers.add_parser('create-bucket', help=create_bucket.__doc__)
-    subparsers.add_parser('delete-bucket', help=delete_bucket.__doc__)
-    subparsers.add_parser('get-bucket-labels', help=get_bucket_labels.__doc__)
-    subparsers.add_parser('add-bucket-label', help=add_bucket_label.__doc__)
-    subparsers.add_parser(
+    list_buckets_parser = subparsers.add_parser(
+        'list-buckets', help=list_buckets.__doc__)
+    list_buckets_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
+
+    create_bucket_parser = subparsers.add_parser(
+        'create-bucket', help=create_bucket.__doc__)
+    create_bucket_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
+
+    delete_create_parser = subparsers.add_parser(
+        'delete-bucket', help=delete_bucket.__doc__)
+    delete_create_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
+
+    get_bucket_labels_parser = subparsers.add_parser(
+        'get-bucket-labels', help=get_bucket_labels.__doc__)
+    get_bucket_labels_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
+
+    add_bucket_label_parser = subparsers.add_parser(
+        'add-bucket-label', help=add_bucket_label.__doc__)
+    add_bucket_label_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
+
+    remove_bucket_label_parser = subparsers.add_parser(
         'remove-bucket-label', help=remove_bucket_label.__doc__)
-    subparsers.add_parser('list', help=list_blobs.__doc__)
+    remove_bucket_label_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
+
+    list_blobs_parser = subparsers.add_parser(
+        'list', help=list_blobs.__doc__)
+    list_blobs_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
 
     list_with_prefix_parser = subparsers.add_parser(
         'list-with-prefix', help=list_blobs_with_prefix.__doc__)
+    list_with_prefix_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
     list_with_prefix_parser.add_argument('prefix')
     list_with_prefix_parser.add_argument('--delimiter', default=None)
 
-    upload_parser = subparsers.add_parser('upload', help=upload_blob.__doc__)
+    upload_parser = subparsers.add_parser(
+        'upload', help=upload_blob.__doc__)
+    upload_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
     upload_parser.add_argument('source_file_name')
     upload_parser.add_argument('destination_blob_name')
 
     enable_default_kms_parser = subparsers.add_parser(
         'enable-default-kms-key', help=enable_default_kms_key.__doc__)
+    enable_default_kms_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
     enable_default_kms_parser.add_argument('kms_key_name')
 
     upload_kms_parser = subparsers.add_parser(
         'upload-with-kms-key', help=upload_blob_with_kms.__doc__)
+    upload_kms_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
     upload_kms_parser.add_argument('source_file_name')
     upload_kms_parser.add_argument('destination_blob_name')
     upload_kms_parser.add_argument('kms_key_name')
 
     download_parser = subparsers.add_parser(
         'download', help=download_blob.__doc__)
+    download_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
     download_parser.add_argument('source_blob_name')
     download_parser.add_argument('destination_file_name')
 
-    delete_parser = subparsers.add_parser('delete', help=delete_blob.__doc__)
+    delete_parser = subparsers.add_parser(
+        'delete', help=delete_blob.__doc__)
+    delete_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
     delete_parser.add_argument('blob_name')
 
     metadata_parser = subparsers.add_parser(
         'metadata', help=blob_metadata.__doc__)
+    metadata_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
     metadata_parser.add_argument('blob_name')
 
     make_public_parser = subparsers.add_parser(
         'make-public', help=make_blob_public.__doc__)
+    make_public_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
     make_public_parser.add_argument('blob_name')
 
     signed_url_parser = subparsers.add_parser(
         'signed-url', help=generate_signed_url.__doc__)
+    signed_url_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
     signed_url_parser.add_argument('blob_name')
 
     signed_url_download_v4_parser = subparsers.add_parser(
@@ -414,18 +471,23 @@ def main():
         'signed-url-upload-v4', help=generate_upload_signed_url_v4.__doc__)
     signed_url_upload_v4_parser.add_argument('blob_name')
 
-    rename_parser = subparsers.add_parser('rename', help=rename_blob.__doc__)
+    rename_parser = subparsers.add_parser(
+        'rename', help=rename_blob.__doc__)
+    rename_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
     rename_parser.add_argument('blob_name')
     rename_parser.add_argument('new_name')
 
     copy_parser = subparsers.add_parser('copy', help=rename_blob.__doc__)
+    copy_parser.add_argument('bucket_name', help='Your cloud storage bucket.')
     copy_parser.add_argument('blob_name')
     copy_parser.add_argument('new_bucket_name')
     copy_parser.add_argument('new_blob_name')
 
     args = parser.parse_args()
-
-    if args.command == 'create-bucket':
+    if args.command == 'list-buckets':
+        list_buckets()
+    elif args.command == 'create-bucket':
         create_bucket(args.bucket_name)
     elif args.command == 'enable-default-kms-key':
         enable_default_kms_key(args.bucket_name, args.kms_key_name)

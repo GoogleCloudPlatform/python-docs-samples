@@ -68,6 +68,12 @@ def test_blob():
     return blob
 
 
+def test_list_buckets(capsys):
+    snippets.list_buckets()
+    out, _ = capsys.readouterr()
+    assert BUCKET in out
+
+
 def test_list_blobs(test_blob, capsys):
     snippets.list_blobs(BUCKET)
     out, _ = capsys.readouterr()
