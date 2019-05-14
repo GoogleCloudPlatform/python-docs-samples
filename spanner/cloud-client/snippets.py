@@ -943,7 +943,6 @@ def insert_with_dml(instance_id, database_id):
     # [END spanner_dml_getting_started_insert]
 
 
-
 def query_data_with_parameter(instance_id, database_id):
     """Queries sample data from the database using SQL with a parameter."""
     # [START spanner_query_with_parameter]
