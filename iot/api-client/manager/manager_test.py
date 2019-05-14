@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import datetime
 import os
 import sys
 import time
@@ -38,6 +39,39 @@ service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
 registry_id = 'test-registry-{}'.format(int(time.time()))
+
+
+@pytest.fixture(scope="session", autouse=True)
+def clean_up_registries():
+    all_registries = manager.list_registries(
+        service_account_json, project_id, cloud_region)
+
+    for registry in all_registries:
+        reg_id = registry.get('id')
+
+        if reg_id.find('test-registry-') == 0:
+            time_str = reg_id[registry_id.rfind('-') + 1: len(reg_id)]
+
+            test_date = datetime.datetime.utcfromtimestamp(int(time_str))
+            now_date = datetime.datetime.utcfromtimestamp(int(time.time()))
+            difftime = now_date - test_date
+
+            if (difftime.days > 30):
+                client = manager.get_client(service_account_json)
+                print('targetting {} for cleanup\n'.format(reg_id))
+                gateways = client.projects().locations().registries().devices(
+                    ).list(
+                        parent=registry.get('name'),
+                        fieldMask='config,gatewayConfig'
+                    ).execute().get('devices', [])
+                devices = client.projects().locations().registries().devices(
+                    ).list(parent=registry.get('name')).execute().get(
+                        'devices', [])
+
+                for gateway in gateways:
+                    print(gateway)
+                for device in devices:
+                    print(device)
 
 
 @pytest.fixture(scope='module')
