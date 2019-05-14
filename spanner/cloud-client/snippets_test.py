@@ -261,6 +261,12 @@ def test_insert_with_dml(capsys):
     assert '4 record(s) inserted' in out
 
 
+def test_query_data_with_parameter(capsys):
+    snippets.query_data_with_parameter(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'SingerId: 12, FirstName: Melissa, LastName: Garcia' in out
+
+
 def test_write_with_dml_transaction(capsys):
     snippets.write_with_dml_transaction(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
