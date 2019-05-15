@@ -25,10 +25,11 @@ To set up authentication, please refer to our
 
 ## Creating a queue
 
-To create a queue using the Cloud SDK, use the following gcloud command:
+To create a queue (named `my-queue`) using the Cloud SDK, use the following
+gcloud command:
 
 ```
-gcloud beta tasks queues create <QUEUE_NAME>
+gcloud beta tasks queues create my-queue
 ```
 
 ## Run the Sample Using the Command Line
@@ -45,11 +46,11 @@ Then the queue ID, as specified at queue creation time. Queue IDs already
 created can be listed with `gcloud beta tasks queues list`.
 
 ```
-export QUEUE_ID=<QUEUE_NAME>
+export QUEUE_ID=my-queue
 ```
 
 And finally the location ID, which can be discovered with
-`gcloud beta tasks queues describe $QUEUE_ID`, with the location embedded in
+`gcloud beta tasks queues describe my-queue`, with the location embedded in
 the "name" value (for instance, if the name is
 "projects/my-project/locations/us-central1/queues/my-queue", then the
 location is "us-central1").
