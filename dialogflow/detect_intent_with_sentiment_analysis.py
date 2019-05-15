@@ -35,7 +35,7 @@ def detect_intent_with_sentiment_analysis(project_id, session_id, texts,
 
     Using the same `session_id` between requests allows continuation
     of the conversation."""
-    import dialogflow_v2beta1 as dialogflow
+    import dialogflow_v2 as dialogflow
     session_client = dialogflow.SessionsClient()
 
     session_path = session_client.session_path(project_id, session_id)
