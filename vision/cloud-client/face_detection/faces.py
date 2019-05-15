@@ -101,4 +101,4 @@ if __name__ == '__main__':
         help='the max results of face detection.')
     args = parser.parse_args()
 
-    main(args.input_image, args.output, args.max_results)
+    main(args.input_image, args.output, int(args.max_results))
