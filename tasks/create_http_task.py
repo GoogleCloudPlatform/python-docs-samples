@@ -35,9 +35,9 @@ def create_http_task(project,
 
     # TODO(developer): Uncomment these lines and replace with your values.
     # project = 'my-project-id'
-    # queue = 'my-appengine-queue'
+    # queue = 'my-queue'
     # location = 'us-central1'
-    # url = 'https://<project-id>.appspot.com/example_task_handler'
+    # url = 'https://example.com/task_handler'
     # payload = 'hello'
 
     # Construct the fully qualified queue name.
