@@ -18,11 +18,11 @@ import create_http_task
 
 TEST_PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 TEST_LOCATION = os.getenv('TEST_QUEUE_LOCATION', 'us-central1')
-TEST_QUEUE_NAME = os.getenv('TEST_QUEUE_NAME', 'my-appengine-queue')
+TEST_QUEUE_NAME = os.getenv('TEST_QUEUE_NAME', 'my-queue')
 
 
 def test_create_http_task():
-    url = 'https://example.appspot.com/example_task_handler'
+    url = 'https://example.com/task_handler'
     result = create_http_task.create_http_task(
         TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION, url)
     assert TEST_QUEUE_NAME in result.name
