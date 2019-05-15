@@ -5,7 +5,8 @@
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
 [shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=tasks/README.md
 
-Sample command-line programs for interacting with the Cloud Tasks API.
+This sample demonstrates how to use the
+[Cloud Tasks](https://cloud.google.com/tasks/docs/) client library.
 
 `create_http_task.py` is a simple command-line program to create
 tasks to be pushed to an URL endpoint.
