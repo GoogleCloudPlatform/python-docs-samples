@@ -38,6 +38,7 @@ from google.cloud.dataproc_v1.gapic.transports import (
     job_controller_grpc_transport)
 
 DEFAULT_FILENAME = 'pyspark_sort.py'
+waiting_callback = False
 
 
 def get_default_pyspark_file():
@@ -108,24 +109,26 @@ def create_cluster(dataproc, project, zone, region, cluster_name):
     }
 
     cluster = dataproc.create_cluster(project, region, cluster_data)
-    return cluster
+    cluster.add_done_callback(callback)
+    global waiting_callback
+    waiting_callback = True
 # [END dataproc_create_cluster]
 
 
-def wait_for_cluster_creation(dataproc, project, region, cluster_name):
+def callback(operation_future):
+    # Reset global when callback returns.
+    global waiting_callback
+    waiting_callback = False
+
+
+def wait_for_cluster_creation():
     """Wait for cluster creation."""
     print('Waiting for cluster creation...')
 
-    wait = True
-    while wait:
-        for cluster in dataproc.list_clusters(project, region):
-            if cluster.cluster_name == cluster_name:
-                if cluster.status.State.Name(cluster.status.state) == 'ERROR':
-                    raise Exception(cluster.status.detail)
-            if cluster.status.State.Name(cluster.status.state) == 'RUNNING':
-                print('Cluster created.')
-                wait = False
-                break
+    while True:
+        if not waiting_callback:
+            print("Cluster created.")
+            break
 
 
 # [START dataproc_list_clusters_with_detail]
@@ -231,8 +234,7 @@ def main(project_id,
         if create_new_cluster:
             create_cluster(dataproc_cluster_client, project_id, zone, region,
                            cluster_name)
-            wait_for_cluster_creation(dataproc_cluster_client, project_id,
-                                      region, cluster_name)
+            wait_for_cluster_creation()
         upload_pyspark_file(project_id, bucket_name, spark_filename,
                             spark_file)
 
