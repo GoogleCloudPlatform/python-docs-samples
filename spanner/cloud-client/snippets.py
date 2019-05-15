@@ -943,6 +943,27 @@ def insert_with_dml(instance_id, database_id):
     # [END spanner_dml_getting_started_insert]
 
 
+def query_data_with_parameter(instance_id, database_id):
+    """Queries sample data from the database using SQL with a parameter."""
+    # [START spanner_query_with_parameter]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            "SELECT SingerId, FirstName, LastName FROM Singers "
+            "WHERE LastName = @lastName",
+            params={"lastName": "Garcia"},
+            param_types={"lastName": spanner.param_types.STRING})
+
+        for row in results:
+            print(u"SingerId: {}, FirstName: {}, LastName: {}".format(*row))
+# [END spanner_query_with_parameter]
+
+
 def write_with_dml_transaction(instance_id, database_id):
     """ Transfers a marketing budget from one album to another. """
     # [START spanner_dml_getting_started_update]
@@ -1146,6 +1167,8 @@ if __name__ == '__main__':  # noqa: C901
         help=update_data_with_dml_struct.__doc__)
     subparsers.add_parser('insert_with_dml', help=insert_with_dml.__doc__)
     subparsers.add_parser(
+        'query_data_with_parameter', help=query_data_with_parameter.__doc__)
+    subparsers.add_parser(
         'write_with_dml_transaction', help=write_with_dml_transaction.__doc__)
     subparsers.add_parser(
         'update_data_with_partitioned_dml',
@@ -1227,6 +1250,8 @@ if __name__ == '__main__':  # noqa: C901
         update_data_with_dml_struct(args.instance_id, args.database_id)
     elif args.command == 'insert_with_dml':
         insert_with_dml(args.instance_id, args.database_id)
+    elif args.command == 'query_data_with_parameter':
+        query_data_with_parameter(args.instance_id, args.database_id)
     elif args.command == 'write_with_dml_transaction':
         write_with_dml_transaction(args.instance_id, args.database_id)
     elif args.command == 'update_data_with_partitioned_dml':
