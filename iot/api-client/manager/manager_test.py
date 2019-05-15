@@ -49,13 +49,13 @@ def clean_up_registries():
     for registry in all_registries:
         registry_id = registry.get('id')
         if registry_id.find('test-registry-') == 0:
-            time_str = 
-                registry_id[registry_id.rfind('-') + 1: len(registry_id)]
+            time_str = registry_id[
+                registry_id.rfind('-') + 1: len(registry_id)]
             test_date = datetime.datetime.utcfromtimestamp(int(time_str))
             now_date = datetime.datetime.utcfromtimestamp(int(time.time()))
             difftime = now_date - test_date
 
-            # *NOTE* Restrict to registries used in the tests older than 30 
+            # *NOTE* Restrict to registries used in the tests older than 30
             #        days to prevent thrashing in the case of async tests
             if (difftime.days > 30):
                 client = manager.get_client(service_account_json)
@@ -101,7 +101,7 @@ def clean_up_registries():
                     try:
                         client.projects().locations().registries().devices(
                             ).get(name=device_name).execute()
-                    except:
+                    except Exception:
                         remove_device = False
 
                     if remove_device:

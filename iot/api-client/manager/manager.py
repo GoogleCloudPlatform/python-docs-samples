@@ -148,16 +148,16 @@ def create_device(
 
     client = get_client(service_account_json)
     registry_path = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
+        project_id, cloud_region, registry_id)
 
     devices = client.projects().locations().registries().devices(
-            ).list(
-                    parent=registry_path, fieldMask='config,gatewayConfig'
-            ).execute().get('devices', [])
+        ).list(
+                parent=registry_path, fieldMask='config,gatewayConfig'
+        ).execute().get('devices', [])
 
     for device in devices:
-            if device.get('id') == device_id:
-                exists = True
+        if device.get('id') == device_id:
+            exists = True
 
     # Create the device
     registry_name = 'projects/{}/locations/{}/registries/{}'.format(
@@ -295,9 +295,9 @@ def list_devices(
             ).list(parent=registry_path).execute().get('devices', [])
 
     for device in devices:
-            print('Device: {} : {}'.format(
-                    device.get('numId'),
-                    device.get('id')))
+        print('Device: {} : {}'.format(
+                device.get('numId'),
+                device.get('id')))
 
     return devices
     # [END iot_list_devices]
@@ -314,9 +314,9 @@ def list_registries(service_account_json, project_id, cloud_region):
         parent=registry_path).execute().get('deviceRegistries', [])
 
     for registry in registries:
-            print('id: {}\n\tname: {}'.format(
-                    registry.get('id'),
-                    registry.get('name')))
+        print('id: {}\n\tname: {}'.format(
+            registry.get('id'),
+            registry.get('name')))
 
     return registries
     # [END iot_list_registries]
@@ -375,7 +375,7 @@ def open_registry(
         service_account_json, project_id, cloud_region,
         pubsub_topic, registry_id)
 
-    if (response is ""):
+    if response == "":
         # Device registry already exists
         print(
             'Registry {} already exists - looking it up instead.'.format(
@@ -572,14 +572,14 @@ def create_gateway(
             ).execute().get('devices', [])
 
     for device in devices:
-            if device.get('id') == gateway_id:
-                exists = True
-            print('Device: {} : {} : {} : {}'.format(
-                device.get('id'),
-                device.get('numId'),
-                device.get('config'),
-                device.get('gatewayConfig')
-                ))
+        if device.get('id') == gateway_id:
+            exists = True
+        print('Device: {} : {} : {} : {}'.format(
+            device.get('id'),
+            device.get('numId'),
+            device.get('config'),
+            device.get('gatewayConfig')
+            ))
 
     # Create the gateway
     registry_name = 'projects/{}/locations/{}/registries/{}'.format(
