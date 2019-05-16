@@ -48,10 +48,12 @@ YELLOW = '\033[0;33m'
 
 def get_current_time():
     """Return Current Time in MS."""
+
     return int(round(time.time() * 1000))
 
 class ResumableMicrophoneStream:
     """Opens a recording stream as a generator yielding the audio chunks."""
+
     def __init__(self, rate, chunk_size):
         self._rate = rate
         self.chunk_size = chunk_size
@@ -82,13 +84,12 @@ class ResumableMicrophoneStream:
         )
 
     def __enter__(self):
+
         self.closed = False
-
-
-
         return self
 
     def __exit__(self, type, value, traceback):
+
         self._audio_stream.stop_stream()
         self._audio_stream.close()
         self.closed = True
@@ -99,11 +100,13 @@ class ResumableMicrophoneStream:
 
     def _fill_buffer(self, in_data, *args, **kwargs):
         """Continuously collect data from the audio stream, into the buffer."""
+
         self._buff.put(in_data)
         return None, pyaudio.paContinue
 
     def generator(self):
         """Stream Audio from microphone to API and to local buffer"""
+
         while not self.closed:
             data = []
 
@@ -122,8 +125,8 @@ class ResumableMicrophoneStream:
                     chunks_from_ms = round((self.final_request_end_time -
                                             self.bridging_offset) / chunk_time)
 
-                    self.bridging_offset = round((
-                        len(self.last_audio_input) - chunks_from_ms) * chunk_time)
+                    self.bridging_offset = (round((len(self.last_audio_input)
+                                                   - chunks_from_ms) * chunk_time))
 
                     for i in range(chunks_from_ms, len(self.last_audio_input)):
                         data.append(self.last_audio_input[i])
@@ -229,6 +232,7 @@ def listen_print_loop(responses, stream):
 
 def main():
     """start bidirectional streaming from microphone input to speech API"""
+
     client = speech.SpeechClient()
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
@@ -244,7 +248,7 @@ def main():
     sys.stdout.write(YELLOW)
     sys.stdout.write('\nListening, say "Quit" or "Exit" to stop.\n\n')
     sys.stdout.write('End (ms)       Transcript Results/Status\n')
-    sys.stdout.write('=========================================================\n')
+    sys.stdout.write('=====================================================\n')
 
     with mic_manager as stream:
 
@@ -256,8 +260,8 @@ def main():
             stream.audio_input = []
             audio_generator = stream.generator()
 
-            requests = (speech.types.StreamingRecognizeRequest(audio_content=content)
-                        for content in audio_generator)
+            requests = (speech.types.StreamingRecognizeRequest(
+                audio_content=content)for content in audio_generator)
 
             responses = client.streaming_recognize(streaming_config,
                                                    requests)
@@ -278,5 +282,6 @@ def main():
             stream.new_stream = True
 
 if __name__ == '__main__':
+
     main()
 # [END speech_transcribe_infinite_streaming]
