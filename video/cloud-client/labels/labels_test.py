@@ -21,6 +21,6 @@ import labels
 
 @pytest.mark.slow
 def test_feline_video_labels(capsys):
-    labels.analyze_labels('gs://demomaker/cat.mp4')
+    labels.analyze_labels('gs://cloud-samples-data/video/cat.mp4')
     out, _ = capsys.readouterr()
     assert 'Video label description: cat' in out
