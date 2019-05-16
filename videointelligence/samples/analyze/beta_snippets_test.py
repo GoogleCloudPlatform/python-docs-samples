@@ -150,7 +150,7 @@ def test_track_objects():
 
 @pytest.mark.slow
 def test_track_objects_gcs():
-    in_file = 'gs://demomaker/cat.mp4'
+    in_file = 'gs://cloud-samples-data/video/cat.mp4'
     object_annotations = beta_snippets.track_objects_gcs(in_file)
 
     text_exists = False
