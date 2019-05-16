@@ -46,10 +46,12 @@ RED = '\033[0;31m'
 GREEN = '\033[0;32m'
 YELLOW = '\033[0;33m'
 
+
 def get_current_time():
     """Return Current Time in MS."""
 
     return int(round(time.time() * 1000))
+
 
 class ResumableMicrophoneStream:
     """Opens a recording stream as a generator yielding the audio chunks."""
@@ -125,8 +127,9 @@ class ResumableMicrophoneStream:
                     chunks_from_ms = round((self.final_request_end_time -
                                             self.bridging_offset) / chunk_time)
 
-                    self.bridging_offset = (round((len(self.last_audio_input)
-                                                   - chunks_from_ms) * chunk_time))
+                    self.bridging_offset = (round((
+                        len(self.last_audio_input) - chunks_from_ms)
+                                                  * chunk_time))
 
                     for i in range(chunks_from_ms, len(self.last_audio_input)):
                         data.append(self.last_audio_input[i])
@@ -156,6 +159,7 @@ class ResumableMicrophoneStream:
                     break
 
             yield b''.join(data)
+
 
 def listen_print_loop(responses, stream):
     """Iterates through server responses and prints them.
@@ -230,6 +234,7 @@ def listen_print_loop(responses, stream):
 
             stream.last_transcript_was_final = False
 
+
 def main():
     """start bidirectional streaming from microphone input to speech API"""
 
@@ -281,7 +286,9 @@ def main():
                 sys.stdout.write('\n')
             stream.new_stream = True
 
+
 if __name__ == '__main__':
+
 
     main()
 # [END speech_transcribe_infinite_streaming]
