@@ -289,6 +289,6 @@ def main():
 
 if __name__ == '__main__':
 
-
     main()
+    
 # [END speech_transcribe_infinite_streaming]
