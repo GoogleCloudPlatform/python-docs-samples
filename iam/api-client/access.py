@@ -126,7 +126,7 @@ def main():
     modify_member_parser.add_argument('project_id')
     modify_member_parser.add_argument('role')
     modify_member_parser.add_argument('member')
-    
+
     # Set
     set_parser = subparsers.add_parser(
         'set', help=set_policy.__doc__)
