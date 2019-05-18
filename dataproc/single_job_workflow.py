@@ -12,42 +12,39 @@
 # limitations under the License.
 r"""Sample Cloud Dataproc inline workflow to run a pyspark job on an ephermeral
 cluster.
-
 Example Usage to run the inline workflow on a managed cluster:
 python single_job_workflow.py --project_id=$PROJECT --gcs_bucket=$BUCKET \
   --cluster_name=$CLUSTER --zone=$ZONE
-
 Example Usage to run the inline workflow on a global region managed cluster:
 python submit_job_to_cluster.py --project_id=$PROJECT --gcs_bucket=$BUCKET \
   --cluster_name=$CLUSTER --zone=$ZONE --global_region
-
 """
 
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+
 import argparse
 import os
+
 from google.cloud import dataproc_v1
-from google.cloud import storage
 from google.cloud.dataproc_v1.gapic.transports import (
-    workflow_template_service_grpc_transport,
-)
+    workflow_template_service_grpc_transport)
+from google.cloud import storage
 
 DEFAULT_FILENAME = "pyspark_sort.py"
 waiting_callback = False
 
 
-def get_default_pyspark_file():
-    """Gets the PySpark file from this directory."""
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    f = open(os.path.join(current_dir, DEFAULT_FILENAME), "rb")
-    return f, DEFAULT_FILENAME
-
-
-def get_pyspark_file(filename):
-    f = open(filename, "rb")
-    return f, os.path.basename(filename)
+def get_pyspark_file(pyspark_file=None):
+    if pyspark_file:
+        f = open(pyspark_file, "rb")
+        return f, os.path.basename(pyspark_file)
+    else:
+        """Gets the PySpark file from current directory."""
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        f = open(os.path.join(current_dir, DEFAULT_FILENAME), "rb")
+        return f, DEFAULT_FILENAME
 
 
 def get_region_from_zone(zone):
@@ -70,7 +67,7 @@ def upload_pyspark_file(project, bucket_name, filename, spark_file):
 
 def run_workflow(dataproc, project, region, zone, bucket_name, filename,
                  cluster_name):
-    print("filename = {} ".format(filename))
+
     parent = "projects/{}/regions/{}".format(project, region)
     zone_uri = ("https://www.googleapis.com/compute/v1/projects/{}/zones/{}"
                 .format(project, zone))
@@ -120,8 +117,8 @@ def callback(operation_future):
 def wait_for_workflow_end():
     """Wait for cluster creation."""
     print("Waiting for workflow completion ...")
-    print('Workflow and job progress, and job driver output available from: '
-          'https://console.cloud.google.com/dataproc/workflows/')
+    print("Workflow and job progress, and job driver output available from: "
+          "https://console.cloud.google.com/dataproc/workflows/")
 
     while True:
         if not waiting_callback:
@@ -158,11 +155,7 @@ def main(
     # [END dataproc_get_client]
 
     try:
-        if pyspark_file:
-            spark_file, spark_filename = get_pyspark_file(pyspark_file)
-        else:
-            spark_file, spark_filename = get_default_pyspark_file()
-
+        spark_file, spark_filename = get_pyspark_file(pyspark_file)
         upload_pyspark_file(project_id, bucket_name, spark_filename,
                             spark_file)
 
@@ -201,9 +194,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--pyspark_file", help="Pyspark filename. Defaults to pyspark_sort.py"
     )
-    parser.add_argument('--global_region',
-                        action='store_true',
-                        help='If cluster is in the global region')
+    parser.add_argument("--global_region",
+                        action="store_true",
+                        help="If cluster is in the global region")
 
     args = parser.parse_args()
     main(

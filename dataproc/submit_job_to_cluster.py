@@ -28,29 +28,30 @@ python submit_job_to_cluster.py --project_id=$PROJECT --gcs_bucket=$BUCKET \
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+
 import argparse
 import os
+
 from google.cloud import dataproc_v1
-from google.cloud import storage
 from google.cloud.dataproc_v1.gapic.transports import (
     cluster_controller_grpc_transport)
 from google.cloud.dataproc_v1.gapic.transports import (
     job_controller_grpc_transport)
+from google.cloud import storage
 
 DEFAULT_FILENAME = 'pyspark_sort.py'
 waiting_callback = False
 
 
-def get_default_pyspark_file():
-    """Gets the PySpark file from this directory."""
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    f = open(os.path.join(current_dir, DEFAULT_FILENAME), 'rb')
-    return f, DEFAULT_FILENAME
-
-
-def get_pyspark_file(filename):
-    f = open(filename, 'rb')
-    return f, os.path.basename(filename)
+def get_pyspark_file(pyspark_file=None):
+    if pyspark_file:
+        f = open(pyspark_file, "rb")
+        return f, os.path.basename(pyspark_file)
+    else:
+        """Gets the PySpark file from current directory."""
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        f = open(os.path.join(current_dir, DEFAULT_FILENAME), "rb")
+        return f, DEFAULT_FILENAME
 
 
 def get_region_from_zone(zone):
@@ -226,11 +227,7 @@ def main(project_id,
     # [END dataproc_get_client]
 
     try:
-        if pyspark_file:
-            spark_file, spark_filename = get_pyspark_file(pyspark_file)
-        else:
-            spark_file, spark_filename = get_default_pyspark_file()
-
+        spark_file, spark_filename = get_pyspark_file(pyspark_file)
         if create_new_cluster:
             create_cluster(dataproc_cluster_client, project_id, zone, region,
                            cluster_name)
