@@ -69,6 +69,16 @@ def modify_policy_add_role(policy, role, member):
 # [END iam_modify_policy_add_role]
 
 
+# [START iam_modify_policy_remove_member]
+def modify_policy_remove_member(policy, role, member):
+    """Removes a  member from a role binding."""
+    binding = next(b for b in policy['bindings'] if b['role'] == role)
+    binding['members'].remove(member)
+    print(binding)
+    return policy
+# [END iam_modify_policy_remove_member]
+
+
 # [START iam_set_policy]
 def set_policy(project_id, policy):
     """Sets IAM policy for a project."""
