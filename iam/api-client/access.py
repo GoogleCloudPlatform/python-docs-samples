@@ -120,6 +120,13 @@ def main():
     modify_role_parser.add_argument('role')
     modify_role_parser.add_argument('member')
 
+    # Modify: remove member
+    modify_member_parser = subparsers.add_parser(
+        'modify_member', help=get_policy.__doc__)
+    modify_member_parser.add_argument('project_id')
+    modify_member_parser.add_argument('role')
+    modify_member_parser.add_argument('member')
+    
     # Set
     set_parser = subparsers.add_parser(
         'set', help=set_policy.__doc__)
@@ -134,6 +141,8 @@ def main():
         set_policy(args.project_id, args.policy)
     elif args.command == 'add_member':
         modify_policy_add_member(args.policy, args.role, args.member)
+    elif args.command == 'remove_member':
+        modify_policy_remove_member(args.policy, args.role, args.member)
     elif args.command == 'add_binding':
         modify_policy_add_role(args.policy, args.role, args.member)
 
