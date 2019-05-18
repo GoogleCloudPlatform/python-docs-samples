@@ -262,7 +262,7 @@ def array_contains_filter():
 def get_full_collection():
     db = firestore.Client()
     # [START get_full_collection]
-    docs = db.collection(u'cities').get()
+    docs = db.collection(u'cities').stream()
 
     for doc in docs:
         print(u'{} => {}'.format(doc.id, doc.to_dict()))
