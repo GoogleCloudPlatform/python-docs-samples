@@ -121,7 +121,7 @@ Job output in Cloud Shell shows cluster creation, job submission,
      ...
      Creating cluster...
      Cluster created.
-     Uploading pyspark file to GCS
+     Uploading pyspark file to Cloud Storage
      new-cluster-name - RUNNING
      Submitted job ID ...
      Waiting for job to finish...
@@ -140,12 +140,12 @@ Job output in Cloud Shell shows cluster creation, job submission,
 ### Next Steps:
 
 * **View job details from the Console.** View job details by selecting the
-   PySpark job from the Cloud Dataproc 
+   PySpark job from the Cloud Dataproc
    [Jobs page](https://console.cloud.google.com/dataproc/jobs)
    in the Google Cloud Platform Console.
 
 * **Delete resources used in the walkthrough.**
-   The `submit_job.py` job deletes the cluster that it created for this
+   The `submit_job_to_cluster.py` job deletes the cluster that it created for this
    walkthrough.
 
    If you created a bucket to use for this walkthrough,
