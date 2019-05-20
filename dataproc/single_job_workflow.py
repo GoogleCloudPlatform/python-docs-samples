@@ -136,7 +136,7 @@ def main(
     global_region=True,
 ):
 
-    # [START dataproc_get_client]
+    # [START dataproc_get_workflow_template_client]
     if global_region:
         region = "global"
         # Use the default gRPC global endpoints.
@@ -152,7 +152,7 @@ def main(
         dataproc_workflow_client = dataproc_v1.WorkflowTemplateServiceClient(
             client_transport
         )
-    # [END dataproc_get_client]
+    # [END dataproc_get_workflow_template_client]
 
     try:
         spark_file, spark_filename = get_pyspark_file(pyspark_file)
