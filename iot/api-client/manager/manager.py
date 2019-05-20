@@ -142,7 +142,7 @@ def create_device(
         service_account_json, project_id, cloud_region, registry_id,
         device_id):
     """Create a device to bind to a gateway if it does not exist."""
-    # [START create_device]
+    # [START iot_create_device]
     # Check that the device doesn't already exist
     exists = False
 
@@ -178,7 +178,7 @@ def create_device(
         print('Created Device {}'.format(res))
     else:
         print('Device exists, skipping')
-    # [END create_device]
+    # [END iot_create_device]
 
 
 def create_unauth_device(
@@ -559,7 +559,7 @@ def create_gateway(
         service_account_json, project_id, cloud_region, registry_id, device_id,
         gateway_id, certificate_file, algorithm):
     """Create a gateway to bind devices to."""
-    # [START create_gateway]
+    # [START iot_create_gateway]
     # Check that the gateway doesn't already exist
     exists = False
     client = get_client(service_account_json)
@@ -615,14 +615,14 @@ def create_gateway(
         print('Created gateway {}'.format(res))
     else:
         print('Gateway exists, skipping')
-    # [END create_gateway]
+    # [END iot_create_gateway]
 
 
 def bind_device_to_gateway(
         service_account_json, project_id, cloud_region, registry_id, device_id,
         gateway_id):
     """Binds a device to a gateway."""
-    # [START bind_device_to_gateway]
+    # [START iot_bind_device_to_gateway]
     client = get_client(service_account_json)
 
     create_device(
@@ -638,14 +638,14 @@ def bind_device_to_gateway(
     client.projects().locations().registries().bindDeviceToGateway(
             parent=registry_name, body=bind_request).execute()
     print('Device Bound!')
-    # [END bind_device_to_gateway]
+    # [END iot_bind_device_to_gateway]
 
 
 def unbind_device_from_gateway(
         service_account_json, project_id, cloud_region, registry_id, device_id,
         gateway_id):
     """Unbinds a device to a gateway."""
-    # [START unbind_device_from_gateway]
+    # [START iot_unbind_device_from_gateway]
     client = get_client(service_account_json)
 
     registry_name = 'projects/{}/locations/{}/registries/{}'.format(
@@ -658,13 +658,13 @@ def unbind_device_from_gateway(
     res = client.projects().locations().registries().unbindDeviceFromGateway(
         parent=registry_name, body=bind_request).execute()
     print('Device unbound: {}'.format(res))
-    # [END unbind_device_from_gateway]
+    # [END iot_unbind_device_from_gateway]
 
 
 def list_gateways(
         service_account_json, project_id, cloud_region, registry_id):
     """Lists gateways in a registry"""
-    # [START list_gateways]
+    # [START iot_list_gateways]
     client = get_client(service_account_json)
     registry_path = 'projects/{}/locations/{}/registries/{}'.format(
             project_id, cloud_region, registry_id)
@@ -678,14 +678,14 @@ def list_gateways(
         if device.get('gatewayConfig') is not None:
             if device.get('gatewayConfig').get('gatewayType') == 'GATEWAY':
                 print('Gateway ID: {}\n\t{}'.format(device.get('id'), device))
-    # [END list_gateways]
+    # [END iot_list_gateways]
 
 
 def list_devices_for_gateway(
         service_account_json, project_id, cloud_region, registry_id,
         gateway_id):
     """List devices bound to a gateway"""
-    # [START list_devices_for_gateway]
+    # [START iot_list_devices_for_gateway]
     client = get_client(service_account_json)
 
     registry_name = 'projects/{}/locations/{}/registries/{}'.format(
@@ -715,7 +715,7 @@ def list_devices_for_gateway(
     else:
         if not found:
             print('No devices bound to gateway {}'.format(gateway_id))
-    # [END list_devices_for_gateway]
+    # [END iot_list_devices_for_gateway]
 
 
 def parse_command_line_args():
