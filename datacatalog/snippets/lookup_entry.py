@@ -25,6 +25,7 @@ import argparse
 
 
 def lookup_bigquery_dataset(project_id, dataset_id):
+    # [START datacatalog_lookup_dataset]
     """Retrieves Data Catalog entry for the given BigQuery Dataset."""
     from google.cloud import datacatalog_v1beta1
 
@@ -34,6 +35,7 @@ def lookup_bigquery_dataset(project_id, dataset_id):
         .format(project_id, dataset_id)
 
     return datacatalog.lookup_entry(linked_resource=resource_name)
+    # [END datacatalog_lookup_dataset]
 
 
 def lookup_bigquery_dataset_sql_resource(project_id, dataset_id):
