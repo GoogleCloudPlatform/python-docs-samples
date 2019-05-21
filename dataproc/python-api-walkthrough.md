@@ -10,7 +10,7 @@ through the steps to use the
 to programmatically interact with [Cloud Dataproc](https://cloud.google.com/dataproc/docs/).
 
 As you follow this walkthrough, you run Python code that calls
-[Cloud Dataproc gRPC APIs](https://cloud.google.com/dataproc/docs/)
+[Cloud Dataproc gRPC APIs](https://cloud.google.com/dataproc/docs/reference/rpc/)
 to:
 
 * create a Cloud Dataproc cluster
