@@ -145,6 +145,30 @@ def test_generate_signed_url(test_blob, capsys):
     assert r.text == 'Hello, is it me you\'re looking for?'
 
 
+def test_generate_download_signed_url_v4(test_blob, capsys):
+    url = snippets.generate_download_signed_url_v4(
+        BUCKET,
+        test_blob.name)
+
+    r = requests.get(url)
+    assert r.text == 'Hello, is it me you\'re looking for?'
+
+
+def test_generate_upload_signed_url_v4(capsys):
+    blob_name = 'storage_snippets_test_upload'
+    content = b'Uploaded via v4 signed url'
+    url = snippets.generate_upload_signed_url_v4(
+        BUCKET,
+        blob_name)
+
+    requests.put(url, data=content, headers={
+        'content-type': 'application/octet-stream'})
+
+    bucket = storage.Client().bucket(BUCKET)
+    blob = bucket.blob(blob_name)
+    assert blob.download_as_string() == content
+
+
 def test_rename_blob(test_blob):
     bucket = storage.Client().bucket(BUCKET)
 

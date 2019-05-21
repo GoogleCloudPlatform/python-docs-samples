@@ -22,7 +22,7 @@ https://cloud.google.com/videointelligence/docs.
 
 Example Usage:
 
-    python shotchange.py gs://demomaker/gbikes_dinosaur.mp4
+    python shotchange.py gs://cloud-samples-data/video/gbikes_dinosaur.mp4
 
 """
 
