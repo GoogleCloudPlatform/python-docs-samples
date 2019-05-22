@@ -81,7 +81,7 @@ def dicomweb_store_instance(
 # [END healthcare_dicomweb_store_instance]
 
 
-# [START healthcare_dicomweb_search_instance]
+# [START healthcare_dicomweb_search_instances]
 def dicomweb_search_instance(
         service_account_json,
         base_url,
@@ -112,7 +112,7 @@ def dicomweb_search_instance(
     print(json.dumps(instances, indent=2))
 
     return instances
-# [END healthcare_dicomweb_search_instance]
+# [END healthcare_dicomweb_search_instances]
 
 
 # [START healthcare_dicomweb_retrieve_study]
