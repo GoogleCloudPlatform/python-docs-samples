@@ -265,7 +265,7 @@ def import_fhir_store(
 # [END healthcare_import_fhir_store]
 
 
-# [START healthcare_get_iam_policy]
+# [START healthcare_fhir_store_get_iam_policy]
 def get_fhir_store_iam_policy(
         service_account_json,
         project_id,
@@ -285,10 +285,10 @@ def get_fhir_store_iam_policy(
 
     print('etag: {}'.format(response.get('name')))
     return response
-# [END healthcare_get_iam_policy]
+# [END healthcare_fhir_store_get_iam_policy]
 
 
-# [START healthcare_set_iam_policy]
+# [START healthcare_fhir_store_set_iam_policy]
 def set_fhir_store_iam_policy(
         service_account_json,
         project_id,
@@ -340,7 +340,7 @@ def set_fhir_store_iam_policy(
     print('etag: {}'.format(response.get('name')))
     print('bindings: {}'.format(response.get('bindings')))
     return response
-# [END healthcare_set_iam_policy]
+# [END healthcare_fhir_store_set_iam_policy]
 
 
 def parse_command_line_args():

@@ -172,20 +172,20 @@ def get_client(
 
 def detach_device(client, device_id):
     """Detach the device from the gateway."""
-    # [START detach_device]
+    # [START iot_detach_device]
     detach_topic = '/devices/{}/detach'.format(device_id)
     print('Detaching: {}'.format(detach_topic))
     client.publish(detach_topic, '{}', qos=1)
-    # [END detach_device]
+    # [END iot_detach_device]
 
 
 def attach_device(client, device_id, auth):
     """Attach the device to the gateway."""
-    # [START attach_device]
+    # [START iot_attach_device]
     attach_topic = '/devices/{}/attach'.format(device_id)
     attach_payload = '{{"authorization" : "{}"}}'.format(auth)
     client.publish(attach_topic, attach_payload, qos=1)
-    # [END attach_device]
+    # [END iot_attach_device]
 
 
 def listen_for_messages(
@@ -194,7 +194,7 @@ def listen_for_messages(
         mqtt_bridge_hostname, mqtt_bridge_port, jwt_expires_minutes, duration,
         cb=None):
     """Listens for messages sent to the gateway and bound devices."""
-    # [START listen_for_messages]
+    # [START iot_listen_for_messages]
     global minimum_backoff_time
 
     jwt_iat = datetime.datetime.utcnow()
@@ -252,7 +252,7 @@ def listen_for_messages(
     detach_device(client, device_id)
 
     print('Finished.')
-    # [END listen_for_messages]
+    # [END iot_listen_for_messages]
 
 
 def send_data_from_bound_device(

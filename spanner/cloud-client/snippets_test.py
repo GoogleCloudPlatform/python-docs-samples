@@ -202,7 +202,7 @@ def test_query_with_struct(capsys):
 def test_query_with_array_of_struct(capsys):
     snippets.query_with_array_of_struct(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'SingerId: 6\nSingerId: 7' in out
+    assert 'SingerId: 8\nSingerId: 7\nSingerId: 6' in out
 
 
 def test_query_struct_field(capsys):
@@ -259,6 +259,12 @@ def test_insert_with_dml(capsys):
     snippets.insert_with_dml(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
     assert '4 record(s) inserted' in out
+
+
+def test_query_data_with_parameter(capsys):
+    snippets.query_data_with_parameter(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'SingerId: 12, FirstName: Melissa, LastName: Garcia' in out
 
 
 def test_write_with_dml_transaction(capsys):
