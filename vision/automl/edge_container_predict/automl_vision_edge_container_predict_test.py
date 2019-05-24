@@ -39,6 +39,8 @@ import pytest
 # run docker containers.
 ROOT_DIR = os.environ.get('KOKORO_ROOT', os.path.abspath(os.path.dirname(__file__)))
 MODEL_PATH = os.path.join(ROOT_DIR, 'model_path')
+
+IMAGE_FILE_PATH = os.path.join(os.path.dirname(__file__), 'test.jpg')
 # The cpu docker gcs path is from 'Edge container tutorial'.
 CPU_DOCKER_GCS_PATH = 'gcr.io/automl-vision-ondevice/gcloud-container-1.12.0:latest'
 # The path of a sample saved model.
@@ -79,7 +81,6 @@ def edge_container_predict_server_port():
 
 
 def test_edge_container_predict(capsys, edge_container_predict_server_port):
-    image_file_path = 'test.jpg'
     # If you send requests with one image each time, the key value does not
     # matter. If you send requests with multiple images, please used different
     # keys to indicated different images, which can make sure that the
@@ -87,7 +88,7 @@ def test_edge_container_predict(capsys, edge_container_predict_server_port):
     image_key = '1'
     # Send a request.
     response = predict.container_predict(
-            image_file_path, image_key, PORT_NUMBER)
+            IMAGE_FILE_PATH, image_key, PORT_NUMBER)
     # Verify the response.
     assert 'predictions' in response
     assert 'key' in response['predictions'][0]
