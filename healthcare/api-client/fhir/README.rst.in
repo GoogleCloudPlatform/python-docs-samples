@@ -16,7 +16,6 @@ product:
 
 setup:
 - auth
-- auth_api_key
 - install_deps
 
 samples:
