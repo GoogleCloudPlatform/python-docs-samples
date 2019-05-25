@@ -15,7 +15,7 @@ import datetime
 from time import sleep
 
 from google.cloud import firestore
-from google.cloud.firestore_v1 import ArrayRemove, ArrayUnion
+from google.cloud.firestore_v1 import ArrayRemove, ArrayUnion, Increment
 import google.cloud.exceptions
 
 
@@ -384,6 +384,15 @@ def update_server_timestamp():
     })
     # [END update_server_timestamp]
 
+    
+def update_data_increment():
+    db = firestore.Client()
+    # [START update_data_increment]
+    city_ref = db.collection(u'cities').document(u'SF')
+    city_ref.update({
+        u'population': Increment(1)
+    })
+    # [END update_data_increment]
 
 def update_data_transaction():
     db = firestore.Client()
