@@ -1,0 +1,7 @@
+The samples in `tmp-generated-samples` do not have automated tests.
+
+Infrastructure for automating tests is being finished.
+
+In the meantime, we do not want to merge anything untested (bad practice).
+
+This branch will be deleted on June 30, 2019.
