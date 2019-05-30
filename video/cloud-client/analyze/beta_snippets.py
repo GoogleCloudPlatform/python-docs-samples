@@ -325,7 +325,10 @@ def detect_labels_streaming(path):
     requests = stream_generator()
 
     # streaming_annotate_video returns a generator.
-    responses = client.streaming_annotate_video(requests)
+    # The default timeout is about 300 seconds.
+    # To process longer videos it should be set to
+    # larger than the length (in seconds) of the stream.
+    responses = client.streaming_annotate_video(requests, timeout=600)
 
     # Each response corresponds to about 1 second of video.
     for response in responses:
@@ -385,7 +388,10 @@ def detect_shot_change_streaming(path):
     requests = stream_generator()
 
     # streaming_annotate_video returns a generator.
-    responses = client.streaming_annotate_video(requests)
+    # The default timeout is about 300 seconds.
+    # To process longer videos it should be set to
+    # larger than the length (in seconds) of the stream.
+    responses = client.streaming_annotate_video(requests, timeout=600)
 
     # Each response corresponds to about 1 second of video.
     for response in responses:
@@ -442,7 +448,10 @@ def track_objects_streaming(path):
     requests = stream_generator()
 
     # streaming_annotate_video returns a generator.
-    responses = client.streaming_annotate_video(requests)
+    # The default timeout is about 300 seconds.
+    # To process longer videos it should be set to
+    # larger than the length (in seconds) of the stream.
+    responses = client.streaming_annotate_video(requests, timeout=600)
 
     # Each response corresponds to about 1 second of video.
     for response in responses:
@@ -519,7 +528,10 @@ def detect_explicit_content_streaming(path):
     requests = stream_generator()
 
     # streaming_annotate_video returns a generator.
-    responses = client.streaming_annotate_video(requests)
+    # The default timeout is about 300 seconds.
+    # To process longer videos it should be set to
+    # larger than the length (in seconds) of the stream.
+    responses = client.streaming_annotate_video(requests, timeout=600)
 
     # Each response corresponds to about 1 second of video.
     for response in responses:
@@ -585,7 +597,10 @@ def annotation_to_storage_streaming(path, output_uri):
     requests = stream_generator()
 
     # streaming_annotate_video returns a generator.
-    responses = client.streaming_annotate_video(requests)
+    # The default timeout is about 300 seconds.
+    # To process longer videos it should be set to
+    # larger than the length (in seconds) of the stream.
+    responses = client.streaming_annotate_video(requests, timeout=600)
 
     for response in responses:
         # Check for errors.
