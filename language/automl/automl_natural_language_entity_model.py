@@ -60,7 +60,7 @@ def get_operation_status(operation_full_id):
     # [START automl_natural_language_get_operation_status]
     # TODO(developer): Uncomment and set the following variables
     # operation_full_id =
-    #   'projects/<projectId>/locations/<region>/operations/<operationId>'
+    #   'projects/[PROJECT_ID]/locations/[REGION]/operations/[operationId]'
 
     from google.cloud import automl_v1beta1 as automl
 
