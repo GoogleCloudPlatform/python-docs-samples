@@ -206,7 +206,8 @@ def track_objects_gcs(gcs_uri):
 
     # Get only the first annotation for demo purposes.
     object_annotation = object_annotations[0]
-    print('Entity description: {}'.format(
+    # description is in Unicode
+    print(u'Entity description: {}'.format(
         object_annotation.entity.description))
     if object_annotation.entity.entity_id:
         print('Entity id: {}'.format(object_annotation.entity.entity_id))
@@ -259,7 +260,8 @@ def track_objects(path):
 
     # Get only the first annotation for demo purposes.
     object_annotation = object_annotations[0]
-    print('Entity description: {}'.format(
+    # description is in Unicode
+    print(u'Entity description: {}'.format(
         object_annotation.entity.description))
     if object_annotation.entity.entity_id:
         print('Entity id: {}'.format(object_annotation.entity.entity_id))
@@ -343,7 +345,8 @@ def detect_labels_streaming(path):
             description = annotation.entity.description
             # Every annotation has only one frame
             confidence = annotation.frames[0].confidence
-            print('\t{} (confidence: {})'.format(description, confidence))
+            # description is in Unicode
+            print(u'\t{} (confidence: {})'.format(description, confidence))
     # [END video_streaming_label_detection_beta]
 
 
@@ -463,7 +466,8 @@ def track_objects_streaming(path):
             # track_id tracks the same object in the video.
             track_id = annotation.track_id
 
-            print('\tEntity description: {}'.format(description))
+            # description is in Unicode
+            print(u'\tEntity description: {}'.format(description))
             print('\tTrack Id: {}'.format(track_id))
             if annotation.entity.entity_id:
                 print('\tEntity id: {}'.format(annotation.entity.entity_id))
