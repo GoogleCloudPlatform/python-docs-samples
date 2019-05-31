@@ -33,6 +33,7 @@ def create_dataset(project_id, compute_region, dataset_name):
     # compute_region = '[COMPUTE_REGION]'
     # dataset_name = '[DATASET_NAME]'
 
+    from datetime import datetime
     from google.cloud import automl_v1beta1 as automl
 
     client = automl.AutoMlClient()
@@ -67,6 +68,7 @@ def list_datasets(project_id, compute_region, filter_):
     # compute_region = '[COMPUTE_REGION]'
     # filter_ = 'filter expression here'
 
+    from datetime import datetime
     from google.cloud import automl_v1beta1 as automl
 
     client = automl.AutoMlClient()
@@ -97,6 +99,7 @@ def get_dataset(project_id, compute_region, dataset_id):
     # compute_region = '[COMPUTE_REGION]'
     # dataset_id = '[DATASET_ID]'
 
+    from datetime import datetime
     from google.cloud import automl_v1beta1 as automl
 
     client = automl.AutoMlClient()

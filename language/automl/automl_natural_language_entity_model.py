@@ -84,6 +84,7 @@ def list_models(project_id, compute_region, filter_):
     # compute_region = '[COMPUTE_REGION]'
     # filter_ = '[DATASET_ID]'
 
+    from datetime import datetime
     from google.cloud import automl_v1beta1 as automl
     from google.cloud.automl_v1beta1 import enums
 
@@ -122,6 +123,7 @@ def get_model(project_id, compute_region, model_id):
     # compute_region = '[COMPUTE_REGION]'
     # model_id = '[MODEL_ID]'
 
+    from datetime import datetime
     from google.cloud import automl_v1beta1 as automl
     from google.cloud.automl_v1beta1 import enums
 
