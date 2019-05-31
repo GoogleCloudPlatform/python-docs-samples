@@ -44,6 +44,7 @@ def create_model(project_id, compute_region, dataset_id, model_name):
     # Set model name and model metadata for the dataset.
     my_model = {
         "display_name": model_name,
+        "dataset_id": dataset_id,
         "text_extraction_dataset_metadata": {}
     }
 
