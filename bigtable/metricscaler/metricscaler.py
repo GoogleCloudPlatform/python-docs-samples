@@ -26,9 +26,11 @@ from google.cloud.monitoring_v3 import query
 PROJECT = os.environ['GCLOUD_PROJECT']
 
 
-def get_cpu_load():
+def get_cpu_load(cluster, instance):
     """Returns the most recent Cloud Bigtable CPU load measurement.
-
+    Args:
+            cluster (str): name of cluster
+            instance (str): name of instance
     Returns:
           float: The most recent Cloud Bigtable CPU usage metric
     """
@@ -40,42 +42,30 @@ def get_cpu_load():
                                         'cluster/cpu_load',
                             minutes=5)
     time_series = list(cpu_query)
-    recent_time_series = time_series[0]
-    return recent_time_series.points[0].value.double_value
+    for metric in time_series:
+        if metric.resource.labels['cluster'] == cluster and \
+                metric.resource.labels['instance'] == instance:
+            return metric.points[0].value.double_value
     # [END bigtable_cpu]
 
 
-def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
+def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up,
+                   min_node_count, max_node_count, size_change_step):
     """Scales the number of Cloud Bigtable nodes up or down.
-
     Edits the number of nodes in the Cloud Bigtable cluster to be increased
     or decreased, depending on the `scale_up` boolean argument. Currently
     the `incremental` strategy from `strategies.py` is used.
-
-
     Args:
            bigtable_instance (str): Cloud Bigtable instance ID to scale
            bigtable_cluster (str): Cloud Bigtable cluster ID to scale
            scale_up (bool): If true, scale up, otherwise scale down
+           min_node_count (int): Minimun number of nodes
+           max_node_count (int): Maximum number of nodes
+           size_change_step (int): The number of nodes to change the cluster by
+
     """
-
-    # The minimum number of nodes to use. The default minimum is 3. If you have
-    # a lot of data, the rule of thumb is to not go below 2.5 TB per node for
-    # SSD lusters, and 8 TB for HDD. The
-    # "bigtable.googleapis.com/disk/bytes_used" metric is useful in figuring
-    # out the minimum number of nodes.
-    min_node_count = 3
-
-    # The maximum number of nodes to use. The default maximum is 30 nodes per
-    # zone. If you need more quota, you can request more by following the
-    # instructions at https://cloud.google.com/bigtable/quota.
-    max_node_count = 30
-
-    # The number of nodes to change the cluster by.
-    size_change_step = 3
-
     # [START bigtable_scale]
-    bigtable_client = bigtable.Client(admin=True)
+    bigtable_client = bigtable.Client(project=PROJECT, admin=True)
     instance = bigtable_client.instance(bigtable_instance)
     instance.reload()
 
@@ -90,28 +80,30 @@ def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
                 current_node_count + size_change_step, max_node_count)
             cluster.serve_nodes = new_node_count
             cluster.update()
-            print('Scaled up from {} to {} nodes.'.format(
-                current_node_count, new_node_count))
+            print('Scaled up from {} to {} nodes. cluster {}'.format(
+                current_node_count, new_node_count, bigtable_cluster))
     else:
         if current_node_count > min_node_count:
             new_node_count = max(
                 current_node_count - size_change_step, min_node_count)
             cluster.serve_nodes = new_node_count
             cluster.update()
-            print('Scaled down from {} to {} nodes.'.format(
-                current_node_count, new_node_count))
+            print('Scaled down from {} to {} nodes. cluster {}'.format(
+                current_node_count, new_node_count, bigtable_cluster))
     # [END bigtable_scale]
 
 
-def main(
-        bigtable_instance,
-        bigtable_cluster,
-        high_cpu_threshold,
-        low_cpu_threshold,
-        short_sleep,
-        long_sleep):
+def main(bigtable_instance,
+         bigtable_clusters,
+         high_cpu_threshold,
+         low_cpu_threshold,
+         short_sleep,
+         long_sleep,
+         min_node_count,
+         max_node_count,
+         size_change_step
+         ):
     """Main loop runner that autoscales Cloud Bigtable.
-
     Args:
           bigtable_instance (str): Cloud Bigtable instance ID to autoscale
           high_cpu_threshold (float): If CPU is higher than this, scale up.
@@ -119,17 +111,28 @@ def main(
           short_sleep (int): How long to sleep after no operation
           long_sleep (int): How long to sleep after the number of nodes is
                             changed
+          min_node_count (int): Minimun number of nodes
+          min_node_count (int): Maximum number of nodes
+          size_change_step (int): The number of nodes to change the cluster by
     """
-    cluster_cpu = get_cpu_load()
-    print('Detected cpu of {}'.format(cluster_cpu))
-    if cluster_cpu > high_cpu_threshold:
-        scale_bigtable(bigtable_instance, bigtable_cluster, True)
-        time.sleep(long_sleep)
-    elif cluster_cpu < low_cpu_threshold:
-        scale_bigtable(bigtable_instance, bigtable_cluster, False)
+    if_scaled = False
+    for bigtable_cluster in bigtable_clusters:
+        cluster_cpu = get_cpu_load(bigtable_cluster, bigtable_instance)
+        print('Detected cpu of {} for {} cluster'.format(
+            cluster_cpu, bigtable_cluster))
+        if cluster_cpu > high_cpu_threshold:
+            scale_bigtable(bigtable_instance, bigtable_cluster, True,
+                           min_node_count, max_node_count, size_change_step)
+            if_scaled = True
+        elif cluster_cpu < low_cpu_threshold:
+            scale_bigtable(bigtable_instance, bigtable_cluster, False,
+                           min_node_count, max_node_count, size_change_step)
+            if_scaled = True
+        else:
+            print('CPU within threshold, sleeping.')
+    if if_scaled:
         time.sleep(long_sleep)
     else:
-        print('CPU within threshold, sleeping.')
         time.sleep(short_sleep)
 
 
@@ -140,16 +143,16 @@ if __name__ == '__main__':
         'bigtable_instance',
         help='ID of the Cloud Bigtable instance to connect to.')
     parser.add_argument(
-        'bigtable_cluster',
-        help='ID of the Cloud Bigtable cluster to connect to.')
+        'bigtable_clusters',
+        help='ID of the Cloud Bigtable clusters to connect to.')
     parser.add_argument(
         '--high_cpu_threshold',
         help='If Cloud Bigtable CPU usage is above this threshold, scale up',
-        default=0.6)
+        default=0.4)
     parser.add_argument(
         '--low_cpu_threshold',
         help='If Cloud Bigtable CPU usage is below this threshold, scale down',
-        default=0.2)
+        default=0.1)
     parser.add_argument(
         '--short_sleep',
         help='How long to sleep in seconds between checking metrics after no '
@@ -160,13 +163,37 @@ if __name__ == '__main__':
         help='How long to sleep in seconds between checking metrics after a '
              'scaling operation',
         default=60 * 10)
+    # The minimum number of nodes to use. The default minimum is 3. If you have
+    # a lot of data, the rule of thumb is to not go below 2.5 TB per node for
+    # SSD lusters, and 8 TB for HDD. The
+    # "bigtable.googleapis.com/disk/bytes_used" metric is useful in figuring
+    # out the minimum number of nodes
+    parser.add_argument(
+        '--min_node_count',
+        help='Minimun number of nodes',
+        default=3)
+    # The maximum number of nodes to use. The default maximum is 30 nodes per
+    # zone. If you need more quota, you can request more by following the
+    # instructions at https://cloud.google.com/bigtable/quota.
+    parser.add_argument(
+        '--max_node_count',
+        help='Maximum number of nodes',
+        default=30)
+    parser.add_argument(
+        '--size_change_step',
+        help='The number of nodes to change the cluster by',
+        default=5)
     args = parser.parse_args()
-
+    bigtable_clusters = args.bigtable_clusters.split(',')
     while True:
         main(
             args.bigtable_instance,
-            args.bigtable_cluster,
+            bigtable_clusters,
             float(args.high_cpu_threshold),
             float(args.low_cpu_threshold),
             int(args.short_sleep),
-            int(args.long_sleep))
+            int(args.long_sleep),
+            int(args.min_node_count),
+            int(args.max_node_count),
+            int(args.size_change_step)
+        )
