@@ -75,7 +75,7 @@ def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
     size_change_step = 3
 
     # [START bigtable_scale]
-    bigtable_client = bigtable.Client(admin=True)
+    bigtable_client = bigtable.Client(project=PROJECT, admin=True)
     instance = bigtable_client.instance(bigtable_instance)
     instance.reload()
 
