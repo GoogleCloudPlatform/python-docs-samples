@@ -119,6 +119,18 @@ def test_deidentify_with_fpe_ignores_insensitive_data(capsys):
     out, _ = capsys.readouterr()
     assert HARMLESS_STRING in out
 
+def test_deidentify_with_deterministic(capsys):
+    deid.deidentify_with_deterministic(
+        GCLOUD_PROJECT,
+        HARMFUL_STRING,
+        ['US_SOCIAL_SECURITY_NUMBER'],
+        wrapped_key=WRAPPED_KEY,
+        key_name=KEY_NAME,
+        surrogate_type=SURROGATE_TYPE)
+
+    out, _ = capsys.readouterr()
+    assert 'My SSN is SSN_TOKEN' in out
+    assert '372819127' not in out
 
 def test_deidentify_with_date_shift(tempdir, capsys):
     output_filepath = os.path.join(tempdir, 'dates-shifted.csv')

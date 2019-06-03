@@ -251,6 +251,169 @@ def reidentify_with_fpe(project, string, alphabet=None,
     print(response.item.value)
 # [END dlp_reidentify_fpe]
 
+# [START dlp_deidentify_deterministic_encryption]
+def deidentify_with_deterministic_enc(project, string, info_types, surrogate_type,
+                        key_name=None, wrapped_key=None):
+    """Uses the Data Loss Prevention API to deidentify sensitive data in a
+    string using Deterministic encryption.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        item: The string to deidentify (will be treated as text).
+        surrogate_type: The name of the surrogate custom info type to use.
+            Necessary for reversing the deidentified output. Can
+            be essentially any arbitrary string, as long as it doesn't appear
+            in your dataset otherwise.
+        key_name: The name of the Cloud KMS key used to encrypt ('wrap') the
+            AES-256 key. Example:
+            key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/
+            keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'
+        wrapped_key: The encrypted ('wrapped') AES-256 key to use. This key
+            should be encrypted using the Cloud KMS key specified by key_name.
+    Returns:
+        None; the response from the API is printed to the terminal.
+    """
+    # Import the client library
+    import google.cloud.dlp
+
+    # Instantiate a client
+    dlp = google.cloud.dlp.DlpServiceClient()
+
+    # Convert the project id into a full resource id.
+    parent = dlp.project_path(project)
+
+    # The wrapped key is base64-encoded, but the library expects a binary
+    # string, so decode it here.
+    import base64
+    wrapped_key = base64.b64decode(wrapped_key)
+
+    # Construct deterministic configuration dictionary
+    crypto_deterministic_config = {
+        'crypto_key': {
+            'kms_wrapped': {
+                'wrapped_key': wrapped_key,
+                'crypto_key_name': key_name
+            }
+        }
+    }
+
+    # Add surrogate type
+    crypto_deterministic_config['surrogate_info_type'] = {
+        'name': surrogate_type
+    }
+
+    # Construct inspect configuration dictionary
+    inspect_config = {
+        'info_types': [{'name': info_type} for info_type in info_types]
+    }
+
+    # Construct deidentify configuration dictionary
+    deidentify_config = {
+        'info_type_transformations': {
+            'transformations': [
+                {
+                    'primitive_transformation': {
+                        'crypto_deterministic_config':
+                            crypto_deterministic_config
+                    }
+                }
+            ]
+        }
+    }
+
+    # Convert string to item
+    item = {'value': string}
+
+    # Call the API
+    response = dlp.deidentify_content(
+        parent, inspect_config=inspect_config,
+        deidentify_config=deidentify_config, item=item)
+
+    # Print results
+    print(response.item.value)
+# [END dlp_deidentify_deterministic_enc]
+
+
+# [START dlp_reidentify_deterministic_enc]
+def reidentify_with_deterministic(project, string, surrogate_type,
+                        key_name=None, wrapped_key=None):
+    """Uses the Data Loss Prevention API to reidentify sensitive data in a
+    string that was encrypted by Deterministic Encryption.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        item: The string to deidentify (will be treated as text).
+        surrogate_type: The name of the surrogate custom info type to used
+            during the encryption process.
+        key_name: The name of the Cloud KMS key used to encrypt ('wrap') the
+            AES-256 key. Example:
+            keyName = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/
+            keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'
+        wrapped_key: The encrypted ('wrapped') AES-256 key to use. This key
+            should be encrypted using the Cloud KMS key specified by key_name.
+    Returns:
+        None; the response from the API is printed to the terminal.
+    """
+    # Import the client library
+    import google.cloud.dlp
+
+    # Instantiate a client
+    dlp = google.cloud.dlp.DlpServiceClient()
+
+    # Convert the project id into a full resource id.
+    parent = dlp.project_path(project)
+
+    # The wrapped key is base64-encoded, but the library expects a binary
+    # string, so decode it here.
+    import base64
+    wrapped_key = base64.b64decode(wrapped_key)
+
+    # Construct Deidentify Config
+    reidentify_config = {
+        'info_type_transformations': {
+            'transformations': [
+                {
+                    'primitive_transformation': {
+                        'crypto_deterministic_config': {
+                            'crypto_key': {
+                                'kms_wrapped': {
+                                    'wrapped_key': wrapped_key,
+                                    'crypto_key_name': key_name
+                                }
+                            },
+                            'surrogate_info_type': {
+                                'name': surrogate_type
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    }
+
+    inspect_config = {
+        'custom_info_types': [
+            {
+                'info_type': {
+                    'name': surrogate_type
+                },
+                'surrogate_type': {
+                }
+            }
+        ]
+    }
+
+    # Convert string to item
+    item = {'value': string}
+
+    # Call the API
+    response = dlp.reidentify_content(
+        parent,
+        inspect_config=inspect_config,
+        reidentify_config=reidentify_config,
+        item=item)
+
+    # Print results
+    print(response.item.value)
+# [END dlp_reidentify_deterministic_enc]
 
 # [START dlp_deidentify_date_shift]
 def deidentify_with_date_shift(project, input_csv_file=None,
