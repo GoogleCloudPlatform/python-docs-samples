@@ -251,7 +251,7 @@ def reidentify_with_fpe(project, string, alphabet=None,
     print(response.item.value)
 # [END dlp_reidentify_fpe]
 
-# [START dlp_deidentify_deterministic_encryption]
+# [START dlp_deidentify_deterministic_enc]
 def deidentify_with_deterministic_enc(project, string, info_types, surrogate_type,
                         key_name=None, wrapped_key=None):
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
