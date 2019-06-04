@@ -19,7 +19,8 @@ to automatically discover and redact sensitve data.
 
 Example usage:
     python transcribe_dlp.py deidentify -p <project_id>
-    python transcribe_dlp.py deidentify -f './resources/sallybrown.flac' -p <project_id>
+    python transcribe_dlp.py deidentify
+                            -f './resources/sallybrown.flac' -p <project_id>
 """
 
 import argparse
@@ -31,6 +32,7 @@ from google.cloud import speech
 from google.cloud import dlp
 from google.cloud.speech import enums
 from google.cloud.speech import types
+
 
 def deidentify(file_name, project_id):
     """ convert speech to text and then diedentify entities using dlp """
@@ -88,7 +90,9 @@ def deidentify(file_name, project_id):
     # Currently social security numbers and credit card numbers
     # are interpreted as phone numbers
 
-    regex = (r".([A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*)(\sat\s+)((?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9]))")
+    regex = (r".([A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`"
+                "{|}~-]+)*)(\sat\s+)((?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+"
+                "[a-z0-9](?:[a-z0-9-]*[a-z0-9]))")
 
     updated_transcript = re.sub(regex, r" \1@\3", transcript)
 
@@ -103,10 +107,14 @@ def deidentify(file_name, project_id):
         deidentify_config=deidentify_config, item=item)
 
     # Print out the results.
-    print('Final Result with sensitive content redacted: {}'.format(dlp_response.item.value))
+    print('Final Result with sensitive content redacted: {}'
+                                        .format(dlp_response.item.value))
     # [END dlp_deidentify_masking]
 
+
 if __name__ == '__main__':
+
+
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
