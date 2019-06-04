@@ -91,8 +91,8 @@ def deidentify(file_name, project_id):
     # are interpreted as phone numbers
 
     regex = (r".([A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`"
-                "{|}~-]+)*)(\sat\s+)((?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+"
-                "[a-z0-9](?:[a-z0-9-]*[a-z0-9]))")
+            "{|}~-]+)*)(\sat\s+)((?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+"
+            "[a-z0-9](?:[a-z0-9-]*[a-z0-9]))")
 
     updated_transcript = re.sub(regex, r" \1@\3", transcript)
 
@@ -108,13 +108,11 @@ def deidentify(file_name, project_id):
 
     # Print out the results.
     print('Final Result with sensitive content redacted: {}'
-                                        .format(dlp_response.item.value))
+            .format(dlp_response.item.value))
     # [END dlp_deidentify_masking]
 
 
 if __name__ == '__main__':
-
-
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
