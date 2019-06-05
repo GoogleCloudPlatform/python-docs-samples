@@ -178,7 +178,7 @@ if __name__ == '__main__':
         help='The Google Cloud project id to use as a parent resource.',
         default=default_project)
     parser_create.add_argument(
-        '--info_types', action='append',
+        '--info_types', nargs='+',
         help='Strings representing info types to look for. A full list of '
              'info categories and types is available from the API. Examples '
              'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
