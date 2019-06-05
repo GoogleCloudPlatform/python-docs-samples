@@ -20,7 +20,7 @@ from flask import Flask, redirect, url_for
 
 
 # [START trace_setup_python_configure]
-from opencensus.trace.exporters import stackdriver_exporter
+from opencensus.ext.stackdriver import trace_exporter as stackdriver_exporter
 import opencensus.trace.tracer
 
 
