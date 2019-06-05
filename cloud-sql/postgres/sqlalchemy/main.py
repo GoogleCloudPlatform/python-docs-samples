@@ -36,15 +36,13 @@ logger = logging.getLogger()
 # managing a pool of connections to your database
 db = sqlalchemy.create_engine(
     # Equivalent URL:
-    # postgres+pg8000://<db_user>:<db_pass>@/<db_name>?unix_socket=/cloudsql/<cloud_sql_instance_name>
+    # postgres+pg8000://<db_user>:<db_pass>@/<db_name>?host=/cloudsql/<cloud_sql_instance_name>
     sqlalchemy.engine.url.URL(
-        drivername='postgres+pg8000',
+        drivername='postgresql+psycopg2',
         username=db_user,
         password=db_pass,
-        database=db_name,
-        query={
-            'unix_sock': '/cloudsql/{}'.format(cloud_sql_connection_name)
-        }
+        host=cloud_sql_connection_name,
+        database=db_name
     ),
     # ... Specify additional properties here.
     # [START_EXCLUDE]
