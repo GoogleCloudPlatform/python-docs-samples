@@ -15,14 +15,14 @@
 import os
 import uuid
 
-from write_simple import write_simple
-from write_increment import write_increment
-from write_conditionally import write_conditional
-from write_batch import write_batch
 from google.cloud import bigtable
+from snippets.writes.write_batch import write_batch
+from snippets.writes.write_conditionally import write_conditional
+from snippets.writes.write_increment import write_increment
+from snippets.writes.write_simple import write_simple
 
 PROJECT = os.environ['GCLOUD_PROJECT']
-BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
+BIGTABLE_INSTANCE = os.environ['BIGTABLE_CLUSTER']
 TABLE_ID_PREFIX = 'mobile-time-series-{}'
 
 
@@ -59,4 +59,4 @@ def test_writes(capsys):
     out, _ = capsys.readouterr()
     assert 'Successfully wrote 2 rows' in out
 
-    # table.delete()
+    table.delete()
