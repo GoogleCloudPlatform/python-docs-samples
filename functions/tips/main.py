@@ -182,10 +182,8 @@ def retry_or_not(data, context):
         None; output is written to Stackdriver Logging
     """
 
-    if data.data.get('retry'):
-        try_again = True
-    else:
-        try_again = False
+    # Retry based on a user-defined parameter
+    try_again = data.data.get('retry') is not None
 
     try:
         raise RuntimeError('I failed you')
