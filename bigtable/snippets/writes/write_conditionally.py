@@ -16,8 +16,8 @@
 import datetime
 
 from google.cloud import bigtable
-from google.cloud.bigtable.row_filters import RowFilterChain, \
-    FamilyNameRegexFilter, ColumnQualifierRegexFilter, ValueRegexFilter
+from google.cloud.bigtable.row_filters import ColumnQualifierRegexFilter, \
+    FamilyNameRegexFilter, RowFilterChain, ValueRegexFilter
 
 
 def write_conditional(project_id, instance_id, table_id):
@@ -25,7 +25,7 @@ def write_conditional(project_id, instance_id, table_id):
     instance = client.instance(instance_id)
     table = instance.table(table_id)
 
-    timestamp = timestamp = datetime.datetime.utcnow()
+    timestamp = datetime.datetime.utcnow()
     column_family_id = "stats_summary"
 
     row_key = "phone#4c410523#20190501"

@@ -23,7 +23,7 @@ def write_batch(project_id, instance_id, table_id):
     instance = client.instance(instance_id)
     table = instance.table(table_id)
 
-    timestamp = timestamp = datetime.datetime.utcnow()
+    timestamp = datetime.datetime.utcnow()
     column_family_id = "stats_summary"
 
     rows = [table.row("tablet#a0b81f74#20190501"),

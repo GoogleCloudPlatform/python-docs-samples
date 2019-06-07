@@ -23,7 +23,7 @@ def write_simple(project_id, instance_id, table_id):
     instance = client.instance(instance_id)
     table = instance.table(table_id)
 
-    timestamp = timestamp = datetime.datetime.utcnow()
+    timestamp = datetime.datetime.utcnow()
     column_family_id = "stats_summary"
 
     row_key = "phone#4c410523#20190501"
