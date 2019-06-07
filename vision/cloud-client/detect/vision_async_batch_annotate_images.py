@@ -19,6 +19,10 @@
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-vision
 
+# sample-metadata
+#   title: Async Batch Image Annotation
+#   description: Perform async batch image annotation
+#   usage: python3 samples/v1/vision_async_batch_annotate_images.py [--input_image_uri "gs://cloud-samples-data/vision/label/wakeupcat.jpg"] [--output_uri "gs://your-bucket/prefix/"]
 import sys
 
 # [START vision_async_batch_annotate_images]
@@ -33,7 +37,7 @@ def sample_async_batch_annotate_images(input_image_uri, output_uri):
 
   client = vision_v1.ImageAnnotatorClient()
 
-  # input_image_uri = 'gs://cloud-samples-data/vision/label/woman.jpg'
+  # input_image_uri = 'gs://cloud-samples-data/vision/label/wakeupcat.jpg'
   # output_uri = 'gs://your-bucket/prefix/'
 
   if isinstance(input_image_uri, six.binary_type):
@@ -44,11 +48,9 @@ def sample_async_batch_annotate_images(input_image_uri, output_uri):
   image = {'source': source}
   type_ = enums.Feature.Type.LABEL_DETECTION
   features_element = {'type': type_}
-  type_2 = enums.Feature.Type.TEXT_DETECTION
+  type_2 = enums.Feature.Type.IMAGE_PROPERTIES
   features_element_2 = {'type': type_2}
-  type_3 = enums.Feature.Type.IMAGE_PROPERTIES
-  features_element_3 = {'type': type_3}
-  features = [features_element, features_element_2, features_element_3]
+  features = [features_element, features_element_2]
   requests_element = {'image': image, 'features': features}
   requests = [requests_element]
   gcs_destination = {'uri': output_uri}
@@ -73,7 +75,7 @@ def main():
   import argparse
 
   parser = argparse.ArgumentParser()
-  parser.add_argument('--input_image_uri', type=str, default='gs://cloud-samples-data/vision/label/woman.jpg')
+  parser.add_argument('--input_image_uri', type=str, default='gs://cloud-samples-data/vision/label/wakeupcat.jpg')
   parser.add_argument('--output_uri', type=str, default='gs://your-bucket/prefix/')
   args = parser.parse_args()
 

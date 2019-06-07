@@ -19,6 +19,10 @@
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-vision
 
+# sample-metadata
+#   title:
+#   description: Perform batch file annotation
+#   usage: python3 samples/v1/vision_batch_annotate_files.py [--file_path "resources/kafka.pdf"]
 import sys
 
 # [START vision_batch_annotate_files]
