@@ -3,7 +3,7 @@
 [![Open in Cloud Shell][shell_img]][shell_link]
 
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
-[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=container_engine/django_tutorial/README.md
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=kubernetes_engine/django_tutorial/README.md
 
 This repository is an example of how to run a [Django](https://www.djangoproject.com/) 
 app on Google Container Engine. It uses the
@@ -13,7 +13,7 @@ out, we refer to this app as the 'polls' application.
 
 
 # Tutorial
-See our [Django on Container Engine](https://cloud.google.com/python/django/container-engine) tutorial for instructions for setting up and deploying this sample application.
+See our [Django on Container Engine](https://cloud.google.com/python/django/kubernetes-engine) tutorial for instructions for setting up and deploying this sample application.
 
 
 ## Contributing changes
