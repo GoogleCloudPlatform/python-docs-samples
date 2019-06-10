@@ -19,6 +19,10 @@
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-vision
 
+# sample-metadata
+#   title:
+#   description: Perform batch file annotation
+#   usage: python3 samples/v1/vision_batch_annotate_files_gcs.py [--storage_uri "gs://cloud-samples-data/vision/document_understanding/kafka.pdf"]
 import sys
 
 # [START vision_batch_annotate_files_gcs]
@@ -27,24 +31,31 @@ from google.cloud import vision_v1
 from google.cloud.vision_v1 import enums
 import six
 
-def sample_batch_annotate_files(gcs_uri):
-  """Perform batch file annotation"""
+def sample_batch_annotate_files(storage_uri):
+  """
+    Perform batch file annotation
+
+    Args:
+      storage_uri Cloud Storage URI to source image in the format gs://[bucket]/
+      [file]
+    """
   # [START vision_batch_annotate_files_gcs_core]
 
   client = vision_v1.ImageAnnotatorClient()
 
-  # gcs_uri = 'gs://cloud-samples-data/vision/document_understanding/kafka.pdf'
+  # storage_uri = 'gs://cloud-samples-data/vision/document_understanding/kafka.pdf'
 
-  if isinstance(gcs_uri, six.binary_type):
-    gcs_uri = gcs_uri.decode('utf-8')
-  gcs_source = {'uri': gcs_uri}
+  if isinstance(storage_uri, six.binary_type):
+    storage_uri = storage_uri.decode('utf-8')
+  gcs_source = {'uri': storage_uri}
   input_config = {'gcs_source': gcs_source}
   type_ = enums.Feature.Type.DOCUMENT_TEXT_DETECTION
   features_element = {'type': type_}
   features = [features_element]
 
-  # The service can process up to 5 pages per document file. Here we specify the
-  # first, second, and last page of the document to be processed.
+  # The service can process up to 5 pages per document file.
+  # Here we specify the first, second, and last page of the document to be
+  # processed.
   pages_element = 1
   pages_element_2 = 2
   pages_element_3 = -1
@@ -57,7 +68,6 @@ def sample_batch_annotate_files(gcs_uri):
     print('Full text: {}'.format(image_response.full_text_annotation.text))
     for page in image_response.full_text_annotation.pages:
       for block in page.blocks:
-        # The service also returns the bounding boxes for blocks, paragraphs, words, and symbols.
         print('\nBlock confidence: {}'.format(block.confidence))
         for par in block.paragraphs:
           print('\tParagraph confidence: {}'.format(par.confidence))
@@ -73,10 +83,10 @@ def main():
   import argparse
 
   parser = argparse.ArgumentParser()
-  parser.add_argument('--gcs_uri', type=str, default='gs://cloud-samples-data/vision/document_understanding/kafka.pdf')
+  parser.add_argument('--storage_uri', type=str, default='gs://cloud-samples-data/vision/document_understanding/kafka.pdf')
   args = parser.parse_args()
 
-  sample_batch_annotate_files(args.gcs_uri)
+  sample_batch_annotate_files(args.storage_uri)
 
 if __name__ == '__main__':
   main()
