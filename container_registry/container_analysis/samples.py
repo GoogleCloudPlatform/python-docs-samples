@@ -18,9 +18,9 @@ from time import sleep
 from google.api_core.exceptions import AlreadyExists
 from google.cloud.devtools.containeranalysis_v1 \
     import container_analysis_client
-from google.cloud.devtools.containeranalysis_v1.proto \
-    import containeranalysis_pb2
 from google.cloud.pubsub import SubscriberClient
+
+from grafeas.grafeas_v1.types import Note, Occurrence
 
 
 # [START containeranalysis_create_note]
@@ -28,8 +28,7 @@ def create_note(note_id, project_id):
     client = container_analysis_client.ContainerAnalysisClient()
     parent = client.project_path(project_id)
 
-    type = package_vulnerability_pb2.VulnerabilityType()
-    note = containeranalysis_pb2.Note(vulnerability_type=type)
+    note = Note(vulnerability_type=type)
     response = client.create_note(parent, note_id, note)
     return response
 # [END containeranalysis_create_note]
@@ -49,11 +48,9 @@ def create_occurrence(resource_url, note_id, occurrence_project, note_project):
     client = container_analysis_client.ContainerAnalysisClient()
     formatted_note = client.note_path(note_project, note_id)
     formatted_project = client.project_path(occurrence_project)
-    vul = package_vulnerability_pb2.VulnerabilityType.VulnerabilityDetails()
 
-    occurrence = containeranalysis_pb2.Occurrence(note_name=formatted_note,
-                                                  resource_url=resource_url,
-                                                  vulnerability_details=vul)
+    occurrence = Occurrence(note_name=formatted_note,
+                            resource_url=resource_url)
     return client.create_occurrence(formatted_project, occurrence)
 # [END containeranalysis_create_occurrence]
 
@@ -85,10 +82,10 @@ def get_occurrence(occurrence_id, project_id):
 
 # [START containeranalysis_discovery_info]
 def get_discovery_info(resource_url, project_id):
-    filterStr = "kind=\"DISCOVERY\" AND resourceUrl=\"" + resource_url + "\""
+    filter_str = "kind=\"DISCOVERY\" AND resourceUrl=\"" + resource_url + "\""
     client = container_analysis_client.ContainerAnalysisClient()
     project_name = client.project_path(project_id)
-    response = client.list_occurrences(project_name, filter_=filterStr)
+    response = client.list_occurrences(project_name, filter_=filter_str)
     for occ in response:
         print(occ)
 # [END containeranalysis_discovery_info]
@@ -111,11 +108,11 @@ def get_occurrences_for_note(note_id, project_id):
 
 # [START containeranalysis_occurrences_for_image]
 def get_occurrences_for_image(resource_url, project_id):
-    filterStr = "resourceUrl=\"" + resource_url + "\""
+    filter_str = "resourceUrl=\"" + resource_url + "\""
     client = container_analysis_client.ContainerAnalysisClient()
     project_name = client.project_path(project_id)
 
-    response = client.list_occurrences(project_name, filter_=filterStr)
+    response = client.list_occurrences(project_name, filter_=filter_str)
     count = 0
     for o in response:
         # do something with the retrieved occurrence
@@ -134,7 +131,7 @@ def pubsub(subscription_id, timeout_seconds, project_id):
 
     # listen for 'timeout' seconds
     print("listening")
-    for _ in range(timeout):
+    for _ in range(timeout_seconds):
         sleep(1)
     # print and return the number of pubsub messages received
     print(receiver.msg_count)
