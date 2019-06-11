@@ -35,6 +35,15 @@ def create_note(note_id, project_id):
 # [END containeranalysis_create_note]
 
 
+# [START containeranalysis_delete_note]
+def delete_note(note_id, project_id):
+    client = container_analysis_client.ContainerAnalysisClient()
+    note_name = client.note_path(project_id, note_id)
+
+    client.delete_note(note_name)
+# [END containeranalysis_delete_note]
+
+
 # [START ccontaineranalysis_create_occurrence]
 def create_occurrence(image_url, parent_note_id, project_id):
     client = container_analysis_client.ContainerAnalysisClient()
@@ -47,30 +56,6 @@ def create_occurrence(image_url, parent_note_id, project_id):
                                                   vulnerability_details=vul)
     return client.create_occurrence(project_name, occurrence)
 # [END containeranalysis_create_occurrence]
-
-# [START containeranalysis_update_note]
-def update_note(updated, note_id, project_id):
-    client = container_analysis_client.ContainerAnalysisClient()
-    note_name = client.note_path(project_id, note_id)
-
-    client.update_note(note_name, updated)
-# [END containeranalysis_update_note]
-
-
-# [START containeranalysis_update_occurrence]
-def update_occurrence(updated, occurrence_name):
-    client = container_analysis_client.ContainerAnalysisClient()
-    client.update_occurrence(occurrence_name, updated)
-# [END containeranalysis_update_occurrence]
-
-
-# [START containeranalysis_delete_note]
-def delete_note(note_id, project_id):
-    client = container_analysis_client.ContainerAnalysisClient()
-    note_name = client.note_path(project_id, note_id)
-
-    client.delete_note(note_name)
-# [END containeranalysis_delete_note]
 
 
 # [START containeranalysis_delete_occurrence]
