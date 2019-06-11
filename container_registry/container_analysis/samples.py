@@ -25,18 +25,6 @@ from google.cloud.pubsub import SubscriberClient
 
 # [START containeranalysis_create_note]
 def create_note(note_id, project_id):
-    """Creates and returns a new note
-
-    :param note_id: A user-specified identifier for the note.
-    :param project_id: the GCP project the note will be created under
-    :return: the newly created note
-    :raises
-        google.api_core.exceptions.GoogleAPICallError: If the request
-            failed for any reason.
-        google.api_core.exceptions.RetryError: If the request failed due
-            to a retryable error and retry attempts failed.
-        ValueError: If the parameters are invalid.
-    """
     client = container_analysis_client.ContainerAnalysisClient()
     parent = client.project_path(project_id)
 
@@ -49,20 +37,6 @@ def create_note(note_id, project_id):
 
 # [START ccontaineranalysis_create_occurrence]
 def create_occurrence(image_url, parent_note_id, project_id):
-    """Creates and returns a new occurrence
-
-    :param image_url: the Container Registry URL associated with the image
-                example: "https://gcr.io/project/image@sha256:foo"
-    :param parent_note_id: the identifier of the associated note
-    :param project_id: the GCP project the occurrence will be created under
-    :return: the newly created occurrence
-    :raises
-        google.api_core.exceptions.GoogleAPICallError: If the request
-            failed for any reason.
-        google.api_core.exceptions.RetryError: If the request failed due
-            to a retryable error and retry attempts failed.
-        ValueError: If the parameters are invalid.
-    """
     client = container_analysis_client.ContainerAnalysisClient()
     parent_name = client.note_path(project_id, parent_note_id)
     project_name = client.project_path(project_id)
@@ -76,18 +50,6 @@ def create_occurrence(image_url, parent_note_id, project_id):
 
 # [START containeranalysis_update_note]
 def update_note(updated, note_id, project_id):
-    """Makes an update to an existing note
-
-    :param updated: a Note object representing the desired updates to push
-    :param note_id: the identifier of the existing note
-    :param project_id: the GCP project the occurrence will be created under.
-    :raises
-        google.api_core.exceptions.GoogleAPICallError: If the request
-            failed for any reason.
-        google.api_core.exceptions.RetryError: If the request failed due
-            to a retryable error and retry attempts failed.
-        ValueError: If the parameters are invalid.
-    """
     client = container_analysis_client.ContainerAnalysisClient()
     note_name = client.note_path(project_id, note_id)
 
@@ -97,18 +59,6 @@ def update_note(updated, note_id, project_id):
 
 # [START containeranalysis_update_occurrence]
 def update_occurrence(updated, occurrence_name):
-    """Makes an update to an existing occurrence
-
-    :param updated: an Occurrence object representing the desired updates
-    :param occurrence_name: the name of the occurrence to delete.
-                in format "projects/{projectId}/occurrences/{occurrence_id}"
-    :raises
-        google.api_core.exceptions.GoogleAPICallError: If the request
-            failed for any reason.
-        google.api_core.exceptions.RetryError: If the request failed due
-            to a retryable error and retry attempts failed.
-        ValueError: If the parameters are invalid.
-    """
     client = container_analysis_client.ContainerAnalysisClient()
     client.update_occurrence(occurrence_name, updated)
 # [END containeranalysis_update_occurrence]
@@ -116,17 +66,6 @@ def update_occurrence(updated, occurrence_name):
 
 # [START containeranalysis_delete_note]
 def delete_note(note_id, project_id):
-    """Deletes an existing note
-
-    :param note_id: the identifier of the note to delete
-    :param project_id: the GCP project the occurrence will be created under
-    :raises
-        google.api_core.exceptions.GoogleAPICallError: If the request
-            failed for any reason.
-        google.api_core.exceptions.RetryError: If the request failed due
-            to a retryable error and retry attempts failed.
-        ValueError: If the parameters are invalid.
-    """
     client = container_analysis_client.ContainerAnalysisClient()
     note_name = client.note_path(project_id, note_id)
 
@@ -136,17 +75,6 @@ def delete_note(note_id, project_id):
 
 # [START containeranalysis_delete_occurrence]
 def delete_occurrence(occurrence_name):
-    """Deletes an existing occurrence
-
-    :param occurrence_name: the name of the occurrence to delete.
-                in format "projects/{projectId}/occurrences/{occurrence_id}"
-    :raises
-        google.api_core.exceptions.GoogleAPICallError: If the request
-            failed for any reason.
-        google.api_core.exceptions.RetryError: If the request failed due
-            to a retryable error and retry attempts failed.
-        ValueError: If the parameters are invalid.
-    """
     client = container_analysis_client.ContainerAnalysisClient()
     client.delete_occurrence(occurrence_name)
 # [END containeranalysis_delete_occurrence]
@@ -154,18 +82,6 @@ def delete_occurrence(occurrence_name):
 
 # [START containeranalysis_get_note]
 def get_note(note_id, project_id):
-    """Retrieves a note based on it's noteId and projectId
-
-    :param note_id: the note's unique identifier
-    :param project_id: the project's unique identifier
-    :return: the specified Note object
-    :raises
-        google.api_core.exceptions.GoogleAPICallError: If the request
-            failed for any reason.
-        google.api_core.exceptions.RetryError: If the request failed due
-            to a retryable error and retry attempts failed.
-        ValueError: If the parameters are invalid.
-    """
     client = container_analysis_client.ContainerAnalysisClient()
     note_name = client.note_path(project_id, note_id)
     response = client.get_note(note_name)
@@ -175,18 +91,6 @@ def get_note(note_id, project_id):
 
 # [START containeranalysis_get_occurrence]
 def get_occurrence(occurrence_name):
-    """Retrieves an occurrence based on it's name
-
-    :param occurrence_name: the name of the occurrence to delete.
-                in format "projects/{projectId}/occurrences/{occurrence_id}"
-    :return: the specified Occurrence object
-    :raises
-        google.api_core.exceptions.GoogleAPICallError: If the request
-            failed for any reason.
-        google.api_core.exceptions.RetryError: If the request failed due
-            to a retryable error and retry attempts failed.
-        ValueError: If the parameters are invalid.
-    """
     client = container_analysis_client.ContainerAnalysisClient()
     return client.get_occurrence(occurrence_name)
 # [END containeranalysis_get_occurrence]
@@ -194,19 +98,6 @@ def get_occurrence(occurrence_name):
 
 # [START containeranalysis_discovery_info]
 def get_discovery_info(image_url, project_id):
-    """prints the Discovery occurrence created for a specified image
-    This occurrence contains information about the initial scan on the image
-
-    :param image_url:  the Container Registry URL associated with the image
-                example: "https://gcr.io/project/image@sha256:foo"
-    :param project_id: the GCP project the occurrence will be created under
-    :raises
-        google.api_core.exceptions.GoogleAPICallError: If the request
-            failed for any reason.
-        google.api_core.exceptions.RetryError: If the request failed due
-            to a retryable error and retry attempts failed.
-        ValueError: If the parameters are invalid.
-    """
     filterStr = "kind=\"DISCOVERY\" AND resourceUrl=\"" + image_url + "\""
     client = container_analysis_client.ContainerAnalysisClient()
     project_name = client.project_path(project_id)
@@ -218,18 +109,6 @@ def get_discovery_info(image_url, project_id):
 
 # [START containeranalysis_occurrences_for_note]
 def get_occurrences_for_note(note_id, project_id):
-    """Retrieves all the occurrences associated with a specified note
-
-    :param note_id: the note's unique identifier
-    :param project_id: the project's unique identifier
-    :return: number of occurrences found
-    :raises
-        google.api_core.exceptions.GoogleAPICallError: If the request
-            failed for any reason.
-        google.api_core.exceptions.RetryError: If the request failed due
-            to a retryable error and retry attempts failed.
-        ValueError: If the parameters are invalid.
-    """
     client = container_analysis_client.ContainerAnalysisClient()
     note_name = client.note_path(project_id, note_id)
 
@@ -245,18 +124,6 @@ def get_occurrences_for_note(note_id, project_id):
 
 # [START containeranalysis_occurrences_for_image]
 def get_occurrences_for_image(image_url, project_id):
-    """Retrieves all the occurrences associated with a specified image
-
-    :param note_id: the note's unique identifier
-    :param project_id: the project's unique identifier
-    :return: number of occurrences found
-    :raises
-        google.api_core.exceptions.GoogleAPICallError: If the request
-            failed for any reason.
-        google.api_core.exceptions.RetryError: If the request failed due
-            to a retryable error and retry attempts failed.
-        ValueError: If the parameters are invalid.
-    """
     filterStr = "resourceUrl=\"" + image_url + "\""
     client = container_analysis_client.ContainerAnalysisClient()
     project_name = client.project_path(project_id)
@@ -273,13 +140,6 @@ def get_occurrences_for_image(image_url, project_id):
 
 # [START containeranalysis_pubsub]
 def pubsub(subscription_id, timeout, project_id):
-    """Handle incoming occurrences using a pubsub subscription
-
-    :param subscription_id: the user-specified identifier for the subscription
-    :param timeout: the number of seconds to listen for pubsub messages
-    :param project_id: the project's unique identifier
-    :return: number of occurrence pubsub messages received
-    """
     client = SubscriberClient()
     subscription_name = client.subscription_path(project_id, subscription_id)
     receiver = MessageReceiver()
@@ -310,20 +170,6 @@ class MessageReceiver:
 
 
 def create_occurrence_subscription(subscription_id, project_id):
-    """Creates and returns a pubsub subscription listening to the
-    occurrence topic. This topic provides updates when occurrences are modified
-
-    :param subscription_id: the user-specified identifier for the subscription
-    :param project_id: the project's unique identifier
-    :return: a bool indicating whether the subscription is ready to use
-             if the subscription was already created, it will return True
-    :raises
-        google.api_core.exceptions.GoogleAPICallError: If the request
-            failed for any reason.
-        google.api_core.exceptions.RetryError: If the request failed due
-            to a retryable error and retry attempts failed.
-        ValueError: If the parameters are invalid.
-    """
     topic_id = "resource-notes-occurrences-v1alpha1"
     client = SubscriberClient()
     topic_name = client.topic_path(project_id, topic_id)
