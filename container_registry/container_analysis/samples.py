@@ -23,7 +23,7 @@ from google.cloud.devtools.containeranalysis_v1.proto \
 from google.cloud.pubsub import SubscriberClient
 
 
-# [START create_note]
+# [START containeranalysis_create_note]
 def create_note(note_id, project_id):
     """Creates and returns a new note
 
@@ -44,10 +44,10 @@ def create_note(note_id, project_id):
     note = containeranalysis_pb2.Note(vulnerability_type=type)
     response = client.create_note(parent, note_id, note)
     return response
-# [END create_note]
+# [END containeranalysis_create_note]
 
 
-# [START create_occurrence]
+# [START ccontaineranalysis_create_occurrence]
 def create_occurrence(image_url, parent_note_id, project_id):
     """Creates and returns a new occurrence
 
@@ -72,10 +72,9 @@ def create_occurrence(image_url, parent_note_id, project_id):
                                                   resource_url=image_url,
                                                   vulnerability_details=vul)
     return client.create_occurrence(project_name, occurrence)
-# [END create_occurrence]
+# [END containeranalysis_create_occurrence]
 
-
-# [START update_note]
+# [START containeranalysis_update_note]
 def update_note(updated, note_id, project_id):
     """Makes an update to an existing note
 
@@ -93,10 +92,10 @@ def update_note(updated, note_id, project_id):
     note_name = client.note_path(project_id, note_id)
 
     client.update_note(note_name, updated)
-# [END update_note]
+# [END containeranalysis_update_note]
 
 
-# [START update_occurrence]
+# [START containeranalysis_update_occurrence]
 def update_occurrence(updated, occurrence_name):
     """Makes an update to an existing occurrence
 
@@ -112,10 +111,10 @@ def update_occurrence(updated, occurrence_name):
     """
     client = container_analysis_client.ContainerAnalysisClient()
     client.update_occurrence(occurrence_name, updated)
-# [END update_occurrence]
+# [END containeranalysis_update_occurrence]
 
 
-# [START delete_note]
+# [START containeranalysis_delete_note]
 def delete_note(note_id, project_id):
     """Deletes an existing note
 
@@ -132,10 +131,10 @@ def delete_note(note_id, project_id):
     note_name = client.note_path(project_id, note_id)
 
     client.delete_note(note_name)
-# [END delete_note]
+# [END containeranalysis_delete_note]
 
 
-# [START delete_occurrence]
+# [START containeranalysis_delete_occurrence]
 def delete_occurrence(occurrence_name):
     """Deletes an existing occurrence
 
@@ -150,10 +149,10 @@ def delete_occurrence(occurrence_name):
     """
     client = container_analysis_client.ContainerAnalysisClient()
     client.delete_occurrence(occurrence_name)
-# [END delete_occurrence]
+# [END containeranalysis_delete_occurrence]
 
 
-# [START get_note]
+# [START containeranalysis_get_note]
 def get_note(note_id, project_id):
     """Retrieves a note based on it's noteId and projectId
 
@@ -171,10 +170,10 @@ def get_note(note_id, project_id):
     note_name = client.note_path(project_id, note_id)
     response = client.get_note(note_name)
     return response
-# [END get_note]
+# [END containeranalysis_get_note]
 
 
-# [START get_occurrence]
+# [START containeranalysis_get_occurrence]
 def get_occurrence(occurrence_name):
     """Retrieves an occurrence based on it's name
 
@@ -190,10 +189,10 @@ def get_occurrence(occurrence_name):
     """
     client = container_analysis_client.ContainerAnalysisClient()
     return client.get_occurrence(occurrence_name)
-# [END get_occurrence]
+# [END containeranalysis_get_occurrence]
 
 
-# [START discovery_info]
+# [START containeranalysis_discovery_info]
 def get_discovery_info(image_url, project_id):
     """prints the Discovery occurrence created for a specified image
     This occurrence contains information about the initial scan on the image
@@ -214,10 +213,10 @@ def get_discovery_info(image_url, project_id):
     response = client.list_occurrences(project_name, filter_=filterStr)
     for occ in response:
         print(occ)
-# [END discovery_info]
+# [END containeranalysis_discovery_info]
 
 
-# [START occurrences_for_note]
+# [START containeranalysis_occurrences_for_note]
 def get_occurrences_for_note(note_id, project_id):
     """Retrieves all the occurrences associated with a specified note
 
@@ -241,10 +240,10 @@ def get_occurrences_for_note(note_id, project_id):
         # in this sample, we will simply count each one
         count += 1
     return count
-# [END occurrences_for_note]
+# [END containeranalysis_occurrences_for_note]
 
 
-# [START occurrences_for_image]
+# [START containeranalysis_occurrences_for_image]
 def get_occurrences_for_image(image_url, project_id):
     """Retrieves all the occurrences associated with a specified image
 
@@ -269,10 +268,10 @@ def get_occurrences_for_image(image_url, project_id):
         # in this sample, we will simply count each one
         count += 1
     return count
-# [END occurrences_for_image]
+# [END containeranalysis_occurrences_for_image]
 
 
-# [START pubsub]
+# [START containeranalysis_pubsub]
 def pubsub(subscription_id, timeout, project_id):
     """Handle incoming occurrences using a pubsub subscription
 
@@ -338,4 +337,4 @@ def create_occurrence_subscription(subscription_id, project_id):
     else:
         success = False
     return success
-# [END pubsub]
+# [END containeranalysis_pubsub]
