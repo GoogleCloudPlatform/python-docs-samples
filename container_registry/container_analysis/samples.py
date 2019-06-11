@@ -45,23 +45,24 @@ def delete_note(note_id, project_id):
 
 
 # [START ccontaineranalysis_create_occurrence]
-def create_occurrence(image_url, parent_note_id, project_id):
+def create_occurrence(resource_url, note_id, occurrence_project, note_project):
     client = container_analysis_client.ContainerAnalysisClient()
-    parent_name = client.note_path(project_id, parent_note_id)
-    project_name = client.project_path(project_id)
+    formatted_note = client.note_path(note_project, note_id)
+    formatted_project = client.project_path(occurrence_project)
     vul = package_vulnerability_pb2.VulnerabilityType.VulnerabilityDetails()
 
-    occurrence = containeranalysis_pb2.Occurrence(note_name=parent_name,
-                                                  resource_url=image_url,
+    occurrence = containeranalysis_pb2.Occurrence(note_name=formatted_note,
+                                                  resource_url=resource_url,
                                                   vulnerability_details=vul)
-    return client.create_occurrence(project_name, occurrence)
+    return client.create_occurrence(formatted_project, occurrence)
 # [END containeranalysis_create_occurrence]
 
 
 # [START containeranalysis_delete_occurrence]
-def delete_occurrence(occurrence_name):
+def delete_occurrence(occurrence_id, project_id):
     client = container_analysis_client.ContainerAnalysisClient()
-    client.delete_occurrence(occurrence_name)
+    formatted_parent = client.occurrence_path(project_id, occurrence_id)
+    client.delete_occurrence(formatted_parent)
 # [END containeranalysis_delete_occurrence]
 
 
@@ -75,15 +76,16 @@ def get_note(note_id, project_id):
 
 
 # [START containeranalysis_get_occurrence]
-def get_occurrence(occurrence_name):
+def get_occurrence(occurrence_id, project_id):
     client = container_analysis_client.ContainerAnalysisClient()
-    return client.get_occurrence(occurrence_name)
+    formatted_parent = client.occurrence_path(project_id, occurrence_id)
+    return client.get_occurrence(formatted_parent)
 # [END containeranalysis_get_occurrence]
 
 
 # [START containeranalysis_discovery_info]
-def get_discovery_info(image_url, project_id):
-    filterStr = "kind=\"DISCOVERY\" AND resourceUrl=\"" + image_url + "\""
+def get_discovery_info(resource_url, project_id):
+    filterStr = "kind=\"DISCOVERY\" AND resourceUrl=\"" + resource_url + "\""
     client = container_analysis_client.ContainerAnalysisClient()
     project_name = client.project_path(project_id)
     response = client.list_occurrences(project_name, filter_=filterStr)
@@ -108,8 +110,8 @@ def get_occurrences_for_note(note_id, project_id):
 
 
 # [START containeranalysis_occurrences_for_image]
-def get_occurrences_for_image(image_url, project_id):
-    filterStr = "resourceUrl=\"" + image_url + "\""
+def get_occurrences_for_image(resource_url, project_id):
+    filterStr = "resourceUrl=\"" + resource_url + "\""
     client = container_analysis_client.ContainerAnalysisClient()
     project_name = client.project_path(project_id)
 
@@ -124,7 +126,7 @@ def get_occurrences_for_image(image_url, project_id):
 
 
 # [START containeranalysis_pubsub]
-def pubsub(subscription_id, timeout, project_id):
+def pubsub(subscription_id, timeout_seconds, project_id):
     client = SubscriberClient()
     subscription_name = client.subscription_path(project_id, subscription_id)
     receiver = MessageReceiver()
