@@ -16,12 +16,10 @@
 from time import sleep
 
 from google.api_core.exceptions import AlreadyExists
-from google.cloud.devtools.containeranalysis_v1alpha1 \
+from google.cloud.devtools.containeranalysis_v1 \
     import container_analysis_client
-from google.cloud.devtools.containeranalysis_v1alpha1.proto \
+from google.cloud.devtools.containeranalysis_v1.proto \
     import containeranalysis_pb2
-from google.cloud.devtools.containeranalysis_v1alpha1.proto \
-    import package_vulnerability_pb2
 from google.cloud.pubsub import SubscriberClient
 
 
@@ -215,7 +213,7 @@ def get_discovery_info(image_url, project_id):
     project_name = client.project_path(project_id)
     response = client.list_occurrences(project_name, filter_=filterStr)
     for occ in response:
-        print occ
+        print(occ)
 # [END discovery_info]
 
 

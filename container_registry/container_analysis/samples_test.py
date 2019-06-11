@@ -18,10 +18,6 @@ from time import sleep, time
 
 from google.api_core.exceptions import InvalidArgument
 from google.api_core.exceptions import NotFound
-from google.cloud.devtools.containeranalysis_v1alpha1.proto.\
-    containeranalysis_pb2 import Occurrence
-from google.cloud.devtools.containeranalysis_v1alpha1.proto.\
-    package_vulnerability_pb2 import VulnerabilityType
 from google.cloud.pubsub import SubscriberClient
 
 import samples
@@ -91,56 +87,38 @@ class TestContainerAnalysisSamples:
             # didn't raise exception we expected
             assert False
 
-    def test_update_occurrence(self):
-        new_type = "newType"
-        created = samples.create_occurrence(self.image_url,
-                                            self.note_id,
-                                            PROJECT_ID)
-
-        vul_details = VulnerabilityType.VulnerabilityDetails()
-        vul_details.type = new_type
-        update_prototype = Occurrence(note_name=created.note_name,
-                                      resource_url=self.image_url,
-                                      vulnerability_details=vul_details)
-
-        samples.update_occurrence(update_prototype, created.name)
-        retrieved = samples.get_occurrence(created.name)
-        assert retrieved.vulnerability_details.type == new_type
-        # clean up
-        samples.delete_occurrence(created.name)
-
     def test_occurrences_for_image(self):
-        origCount = samples.get_occurrences_for_image(self.image_url,
-                                                      PROJECT_ID)
+        orig_count = samples.get_occurrences_for_image(self.image_url,
+                                                       PROJECT_ID)
         occ = samples.create_occurrence(self.image_url, self.note_id,
                                         PROJECT_ID)
-        newCount = 0
+        new_count = 0
         tries = 0
-        while newCount != 1 and tries < TRY_LIMIT:
+        while new_count != 1 and tries < TRY_LIMIT:
             tries += 1
-            newCount = samples.get_occurrences_for_image(self.image_url,
-                                                         PROJECT_ID)
+            new_count = samples.get_occurrences_for_image(self.image_url,
+                                                          PROJECT_ID)
             sleep(SLEEP_TIME)
-        assert newCount == 1
-        assert origCount == 0
+        assert new_count == 1
+        assert orig_count == 0
         # clean up
         samples.delete_occurrence(occ.name)
 
     def test_occurrences_for_note(self):
-        origCount = samples.get_occurrences_for_note(self.note_id,
-                                                     PROJECT_ID)
+        orig_count = samples.get_occurrences_for_note(self.note_id,
+                                                      PROJECT_ID)
         occ = samples.create_occurrence(self.image_url,
                                         self.note_id,
                                         PROJECT_ID)
-        newCount = 0
+        new_count = 0
         tries = 0
-        while newCount != 1 and tries < TRY_LIMIT:
+        while new_count != 1 and tries < TRY_LIMIT:
             tries += 1
-            newCount = samples.get_occurrences_for_note(self.note_id,
-                                                        PROJECT_ID)
+            new_count = samples.get_occurrences_for_note(self.note_id,
+                                                         PROJECT_ID)
             sleep(SLEEP_TIME)
-        assert newCount == 1
-        assert origCount == 0
+        assert new_count == 1
+        assert orig_count == 0
         # clean up
         samples.delete_occurrence(occ.name)
 
@@ -158,19 +136,19 @@ class TestContainerAnalysisSamples:
         # and be counted before we start the test
         sleep(SLEEP_TIME*TRY_LIMIT)
         # set the initial state of our counter
-        startVal = receiver.msg_count + 1
+        start_val = receiver.msg_count + 1
         # test adding 3 more occurrences
-        for i in range(startVal, startVal+3):
+        for i in range(start_val, start_val+3):
             occ = samples.create_occurrence(self.image_url,
                                             self.note_id,
                                             PROJECT_ID)
             print("CREATED: " + occ.name)
             tries = 0
-            newCount = receiver.msg_count
-            while newCount != i and tries < TRY_LIMIT:
+            new_count = receiver.msg_count
+            while new_count != i and tries < TRY_LIMIT:
                 tries += 1
                 sleep(SLEEP_TIME)
-                newCount = receiver.msg_count
+                new_count = receiver.msg_count
             print(str(receiver.msg_count) + " : " + str(i))
             assert i == receiver.msg_count
             samples.delete_occurrence(occ.name)
