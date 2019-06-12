@@ -16,13 +16,12 @@
 from time import sleep
 
 from google.api_core.exceptions import AlreadyExists
-from google.cloud.devtools.containeranalysis_v1 \
-    import container_analysis_client
 from google.cloud.pubsub import SubscriberClient
 
 from grafeas.grafeas_v1 import GrafeasClient
+from grafeas.grafeas_v1.gapic.enums import Version
 from grafeas.grafeas_v1.gapic.transports import grafeas_grpc_transport
-from grafeas.grafeas_v1.types import Note, Occurrence
+from grafeas.grafeas_v1.types import Occurrence
 
 
 def tmp_create_client():
@@ -35,10 +34,24 @@ def tmp_create_client():
 # [START containeranalysis_create_note]
 def create_note(note_id, project_id):
     client = tmp_create_client()
-    parent = client.project_path(project_id)
-
-    note = Note(vulnerability_type=type)
-    response = client.create_note(parent, note_id, note)
+    project_name = client.project_path(project_id)
+    note = {
+        "vulnerability": {
+            "details": [
+                {
+                    "affected_cpe_uri": "your-uri-here",
+                    "affected_package": "your-package-here",
+                    "min_affected_version": {
+                        "kind": Version.VersionKind.MINIMUM
+                    },
+                    "fixed_version": {
+                        "kind": Version.VersionKind.MAXIMUM
+                    },
+                }
+            ]
+        }
+    }
+    response = client.create_note(project_name, note_id, note)
     return response
 # [END containeranalysis_create_note]
 
