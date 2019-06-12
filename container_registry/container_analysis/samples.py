@@ -177,7 +177,8 @@ def pubsub(subscription_id, timeout_seconds, project_id):
 
 
 class MessageReceiver:
-    """Custom class to handle incoming pubsub messages
+    """
+    Custom class to handle incoming pubsub messages
     In this case, we will simply print and count each message as it comes in
     """
     def __init__(self):
@@ -187,12 +188,12 @@ class MessageReceiver:
     def pubsub_callback(self, message):
         # every time a pubsub message comes in, print it and count it
         self.msg_count += 1
-        print("Message " + str(self.msg_count) + ": " + message.data)
+        print("Message {}: {}".format(self.msg_count, message.data))
         message.ack()
 
 
 def create_occurrence_subscription(subscription_id, project_id):
-    topic_id = "resource-notes-occurrences-v1alpha1"
+    topic_id = "container-analysis-occurrences-v1beta1"
     client = SubscriberClient()
     topic_name = client.topic_path(project_id, topic_id)
     subscription_name = client.subscription_path(project_id, subscription_id)

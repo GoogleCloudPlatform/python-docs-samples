@@ -125,31 +125,27 @@ class TestContainerAnalysisSamples:
         subscription_id = "drydockOccurrences"
         subscription_name = client.subscription_path(PROJECT_ID,
                                                      subscription_id)
-
         samples.create_occurrence_subscription(subscription_id, PROJECT_ID)
-        receiver = samples.MessageReceiver()
-        client.subscribe(subscription_name, receiver.pubsub_callback)
+        tries = 0
+        success = False
+        while not success and tries < TRY_LIMIT:
+            print(tries)
+            tries += 1
+            receiver = samples.MessageReceiver()
+            client.subscribe(subscription_name, receiver.pubsub_callback)
 
-        # sleep so any messages in the queue can go through
-        # and be counted before we start the test
-        sleep(SLEEP_TIME*TRY_LIMIT)
-        # set the initial state of our counter
-        start_val = receiver.msg_count + 1
-        # test adding 3 more occurrences
-        for i in range(start_val, start_val+3):
-            occ = samples.create_occurrence(self.image_url,
-                                            self.note_id,
-                                            PROJECT_ID,
-                                            PROJECT_ID)
-            print("CREATED: " + occ.name)
-            tries = 0
-            new_count = receiver.msg_count
-            while new_count != i and tries < TRY_LIMIT:
-                tries += 1
+            # test adding 3 more occurrences
+            total_created = 3
+            for _ in range(total_created):
+                occ = samples.create_occurrence(self.image_url,
+                                                self.note_id,
+                                                PROJECT_ID,
+                                                PROJECT_ID)
                 sleep(SLEEP_TIME)
-                new_count = receiver.msg_count
-            print(str(receiver.msg_count) + " : " + str(i))
-            assert i == receiver.msg_count
-            samples.delete_occurrence(basename(occ.name), PROJECT_ID)
+                samples.delete_occurrence(basename(occ.name), PROJECT_ID)
+                sleep(SLEEP_TIME)
+            print('done. msg_count = ' + str(receiver.msg_count))
+            success = receiver.msg_count == total_created
+        assert receiver.msg_count == total_created
         # clean up
         client.delete_subscription(subscription_name)
