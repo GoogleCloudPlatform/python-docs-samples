@@ -339,17 +339,23 @@ def detect_labels_streaming(path):
             print(response.error.message)
             break
 
-        # Get the time offset of the response.
-        frame = response.annotation_results.label_annotations[0].frames[0]
-        time_offset = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
-        print('{}s:'.format(time_offset))
+        label_annotations = response.annotation_results.label_annotations
 
-        for annotation in response.annotation_results.label_annotations:
+        # label_annotations could be empty
+        if not label_annotations:
+            continue
+
+        for annotation in label_annotations:
+            # Each annotation has one frame, which has a timeoffset.
+            frame = annotation.frames[0]
+            time_offset = frame.time_offset.seconds + \
+                frame.time_offset.nanos / 1e9
+
             description = annotation.entity.description
-            # Every annotation has only one frame
             confidence = annotation.frames[0].confidence
             # description is in Unicode
-            print(u'\t{} (confidence: {})'.format(description, confidence))
+            print(u'{}s: {} (confidence: {})'.format(
+                time_offset, description, confidence))
     # [END video_streaming_label_detection_beta]
 
 
@@ -463,12 +469,18 @@ def track_objects_streaming(path):
             print(response.error.message)
             break
 
-        # Get the time offset of the response.
-        frame = response.annotation_results.object_annotations[0].frames[0]
-        time_offset = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
-        print('{}s:'.format(time_offset))
+        object_annotations = response.annotation_results.object_annotations
 
-        for annotation in response.annotation_results.object_annotations:
+        # object_annotations could be empty
+        if not object_annotations:
+            continue
+
+        for annotation in object_annotations:
+            # Each annotation has one frame, which has a timeoffset.
+            frame = annotation.frames[0]
+            time_offset = frame.time_offset.seconds + \
+                frame.time_offset.nanos / 1e9
+
             description = annotation.entity.description
             confidence = annotation.confidence
 
@@ -476,6 +488,7 @@ def track_objects_streaming(path):
             track_id = annotation.track_id
 
             # description is in Unicode
+            print('{}s'.format(time_offset))
             print(u'\tEntity description: {}'.format(description))
             print('\tTrack Id: {}'.format(track_id))
             if annotation.entity.entity_id:
