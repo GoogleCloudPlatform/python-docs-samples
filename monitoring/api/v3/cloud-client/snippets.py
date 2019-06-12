@@ -78,7 +78,7 @@ def list_time_series(project_id):
     interval.end_time.seconds = int(now)
     interval.end_time.nanos = int(
         (now - interval.end_time.seconds) * 10**9)
-    interval.start_time.seconds = int(now - 300)
+    interval.start_time.seconds = int(now - 1200)
     interval.start_time.nanos = interval.end_time.nanos
     results = client.list_time_series(
         project_name,
