@@ -23,7 +23,6 @@ Example usage:
 """
 
 import argparse
-import io
 
 
 # [START speech_transcribe_sync]
@@ -32,6 +31,7 @@ def transcribe_file(speech_file):
     from google.cloud import speech
     from google.cloud.speech import enums
     from google.cloud.speech import types
+    import io
     client = speech.SpeechClient()
 
     # [START speech_python_migration_sync_request]
