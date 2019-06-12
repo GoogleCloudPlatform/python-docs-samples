@@ -20,12 +20,21 @@ from google.cloud.devtools.containeranalysis_v1 \
     import container_analysis_client
 from google.cloud.pubsub import SubscriberClient
 
+from grafeas.grafeas_v1 import GrafeasClient
+from grafeas.grafeas_v1.gapic.transports import grafeas_grpc_transport
 from grafeas.grafeas_v1.types import Note, Occurrence
+
+
+def tmp_create_client():
+    address = "containeranalysis.googleapis.com:443"
+    scopes = ("https://www.googleapis.com/auth/cloud-platform")
+    transport = grafeas_grpc_transport.GrafeasGrpcTransport(address, scopes)
+    return GrafeasClient(transport)
 
 
 # [START containeranalysis_create_note]
 def create_note(note_id, project_id):
-    client = container_analysis_client.ContainerAnalysisClient()
+    client = tmp_create_client()
     parent = client.project_path(project_id)
 
     note = Note(vulnerability_type=type)
@@ -36,7 +45,7 @@ def create_note(note_id, project_id):
 
 # [START containeranalysis_delete_note]
 def delete_note(note_id, project_id):
-    client = container_analysis_client.ContainerAnalysisClient()
+    client = tmp_create_client()
     note_name = client.note_path(project_id, note_id)
 
     client.delete_note(note_name)
@@ -45,7 +54,7 @@ def delete_note(note_id, project_id):
 
 # [START ccontaineranalysis_create_occurrence]
 def create_occurrence(resource_url, note_id, occurrence_project, note_project):
-    client = container_analysis_client.ContainerAnalysisClient()
+    client = tmp_create_client()
     formatted_note = client.note_path(note_project, note_id)
     formatted_project = client.project_path(occurrence_project)
 
@@ -57,7 +66,7 @@ def create_occurrence(resource_url, note_id, occurrence_project, note_project):
 
 # [START containeranalysis_delete_occurrence]
 def delete_occurrence(occurrence_id, project_id):
-    client = container_analysis_client.ContainerAnalysisClient()
+    client = tmp_create_client()
     formatted_parent = client.occurrence_path(project_id, occurrence_id)
     client.delete_occurrence(formatted_parent)
 # [END containeranalysis_delete_occurrence]
@@ -65,7 +74,7 @@ def delete_occurrence(occurrence_id, project_id):
 
 # [START containeranalysis_get_note]
 def get_note(note_id, project_id):
-    client = container_analysis_client.ContainerAnalysisClient()
+    client = tmp_create_client()
     note_name = client.note_path(project_id, note_id)
     response = client.get_note(note_name)
     return response
@@ -74,7 +83,7 @@ def get_note(note_id, project_id):
 
 # [START containeranalysis_get_occurrence]
 def get_occurrence(occurrence_id, project_id):
-    client = container_analysis_client.ContainerAnalysisClient()
+    client = tmp_create_client()
     formatted_parent = client.occurrence_path(project_id, occurrence_id)
     return client.get_occurrence(formatted_parent)
 # [END containeranalysis_get_occurrence]
@@ -83,7 +92,7 @@ def get_occurrence(occurrence_id, project_id):
 # [START containeranalysis_discovery_info]
 def get_discovery_info(resource_url, project_id):
     filter_str = "kind=\"DISCOVERY\" AND resourceUrl=\"" + resource_url + "\""
-    client = container_analysis_client.ContainerAnalysisClient()
+    client = tmp_create_client()
     project_name = client.project_path(project_id)
     response = client.list_occurrences(project_name, filter_=filter_str)
     for occ in response:
@@ -93,7 +102,7 @@ def get_discovery_info(resource_url, project_id):
 
 # [START containeranalysis_occurrences_for_note]
 def get_occurrences_for_note(note_id, project_id):
-    client = container_analysis_client.ContainerAnalysisClient()
+    client = tmp_create_client()
     note_name = client.note_path(project_id, note_id)
 
     response = client.list_note_occurrences(note_name)
@@ -109,7 +118,7 @@ def get_occurrences_for_note(note_id, project_id):
 # [START containeranalysis_occurrences_for_image]
 def get_occurrences_for_image(resource_url, project_id):
     filter_str = "resourceUrl=\"" + resource_url + "\""
-    client = container_analysis_client.ContainerAnalysisClient()
+    client = tmp_create_client()
     project_name = client.project_path(project_id)
 
     response = client.list_occurrences(project_name, filter_=filter_str)
