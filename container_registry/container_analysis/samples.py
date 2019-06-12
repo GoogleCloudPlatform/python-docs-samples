@@ -21,7 +21,6 @@ from google.cloud.pubsub import SubscriberClient
 from grafeas.grafeas_v1 import GrafeasClient
 from grafeas.grafeas_v1.gapic.enums import Version
 from grafeas.grafeas_v1.gapic.transports import grafeas_grpc_transport
-from grafeas.grafeas_v1.types import Occurrence
 
 
 def tmp_create_client():
@@ -46,7 +45,7 @@ def create_note(note_id, project_id):
                     },
                     "fixed_version": {
                         "kind": Version.VersionKind.MAXIMUM
-                    },
+                    }
                 }
             ]
         }
@@ -71,8 +70,25 @@ def create_occurrence(resource_url, note_id, occurrence_project, note_project):
     formatted_note = client.note_path(note_project, note_id)
     formatted_project = client.project_path(occurrence_project)
 
-    occurrence = Occurrence(note_name=formatted_note,
-                            resource_url=resource_url)
+    occurrence = {
+        "note_name": formatted_note,
+        "resource_uri": resource_url,
+        "vulnerability": {
+            "package_issue": [
+                {
+                    "affected_cpe_uri": "your-uri-here",
+                    "affected_package": "your-package-here",
+                    "min_affected_version": {
+                        "kind": Version.VersionKind.MINIMUM
+                    },
+                    "fixed_version": {
+                        "kind": Version.VersionKind.MAXIMUM
+                    }
+                }
+            ]
+        }
+    }
+
     return client.create_occurrence(formatted_project, occurrence)
 # [END containeranalysis_create_occurrence]
 

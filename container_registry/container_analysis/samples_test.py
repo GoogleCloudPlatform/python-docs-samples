@@ -14,6 +14,7 @@
 # limitations under the License.
 
 from os import environ
+from os.path import basename
 from time import sleep, time
 
 from google.api_core.exceptions import InvalidArgument
@@ -57,30 +58,24 @@ class TestContainerAnalysisSamples:
             # didn't raise exception we expected
             assert (False)
 
-    def test_update_note(self):
-        description = "updated"
-        self.note_obj.short_description = description
-        samples.update_note(self.note_obj, self.note_id, PROJECT_ID)
-
-        updated = samples.get_note(self.note_id, PROJECT_ID)
-        assert updated.short_description == description
-
     def test_create_occurrence(self):
         created = samples.create_occurrence(self.image_url,
                                             self.note_id,
+                                            PROJECT_ID,
                                             PROJECT_ID)
-        retrieved = samples.get_occurrence(created.name)
+        retrieved = samples.get_occurrence(basename(created.name), PROJECT_ID)
         assert created.name == retrieved.name
         # clean up
-        samples.delete_occurrence(created.name)
+        samples.delete_occurrence(basename(created.name), PROJECT_ID)
 
     def test_delete_occurrence(self):
         created = samples.create_occurrence(self.image_url,
                                             self.note_id,
+                                            PROJECT_ID,
                                             PROJECT_ID)
-        samples.delete_occurrence(created.name)
+        samples.delete_occurrence(basename(created.name), PROJECT_ID)
         try:
-            samples.get_occurrence(created.name)
+            samples.get_occurrence(basename(created.name), PROJECT_ID)
         except NotFound:
             pass
         else:
@@ -90,7 +85,9 @@ class TestContainerAnalysisSamples:
     def test_occurrences_for_image(self):
         orig_count = samples.get_occurrences_for_image(self.image_url,
                                                        PROJECT_ID)
-        occ = samples.create_occurrence(self.image_url, self.note_id,
+        occ = samples.create_occurrence(self.image_url,
+                                        self.note_id,
+                                        PROJECT_ID,
                                         PROJECT_ID)
         new_count = 0
         tries = 0
@@ -102,13 +99,14 @@ class TestContainerAnalysisSamples:
         assert new_count == 1
         assert orig_count == 0
         # clean up
-        samples.delete_occurrence(occ.name)
+        samples.delete_occurrence(basename(occ.name), PROJECT_ID)
 
     def test_occurrences_for_note(self):
         orig_count = samples.get_occurrences_for_note(self.note_id,
                                                       PROJECT_ID)
         occ = samples.create_occurrence(self.image_url,
                                         self.note_id,
+                                        PROJECT_ID,
                                         PROJECT_ID)
         new_count = 0
         tries = 0
@@ -120,7 +118,7 @@ class TestContainerAnalysisSamples:
         assert new_count == 1
         assert orig_count == 0
         # clean up
-        samples.delete_occurrence(occ.name)
+        samples.delete_occurrence(basename(occ.name), PROJECT_ID)
 
     def test_pubsub(self):
         client = SubscriberClient()
@@ -141,6 +139,7 @@ class TestContainerAnalysisSamples:
         for i in range(start_val, start_val+3):
             occ = samples.create_occurrence(self.image_url,
                                             self.note_id,
+                                            PROJECT_ID,
                                             PROJECT_ID)
             print("CREATED: " + occ.name)
             tries = 0
@@ -151,6 +150,6 @@ class TestContainerAnalysisSamples:
                 new_count = receiver.msg_count
             print(str(receiver.msg_count) + " : " + str(i))
             assert i == receiver.msg_count
-            samples.delete_occurrence(occ.name)
+            samples.delete_occurrence(basename(occ.name), PROJECT_ID)
         # clean up
         client.delete_subscription(subscription_name)
