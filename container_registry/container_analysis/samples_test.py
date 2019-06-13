@@ -156,7 +156,7 @@ class TestContainerAnalysisSamples:
         # try with no discovery occurrence
         try:
             samples.poll_discovery_finished(self.image_url, 5, PROJECT_ID)
-        except TimeoutError:
+        except RuntimeError:
             pass
         else:
             # we expect timeout error

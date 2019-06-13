@@ -236,7 +236,7 @@ def poll_discovery_finished(resource_url, timeout_seconds, project_id):
         for item in result:
             discovery_occurrence = item
         if time.time() > deadline:
-            raise TimeoutError('timeout while retrieving discovery occurrence')
+            raise RuntimeError('timeout while retrieving discovery occurrence')
 
     status = DiscoveryOccurrence.AnalysisStatus.PENDING
     while status != DiscoveryOccurrence.AnalysisStatus.FINISHED_UNSUPPORTED \
@@ -246,6 +246,6 @@ def poll_discovery_finished(resource_url, timeout_seconds, project_id):
         updated = client.get_occurrence(discovery_occurrence.name)
         status = updated.discovery.analysis_status
         if time.time() > deadline:
-            raise TimeoutError('timeout while waiting for terminal state')
+            raise RuntimeError('timeout while waiting for terminal state')
     return discovery_occurrence
 # [END containeranalysis_poll_discovery_occurrence_finished]
