@@ -18,8 +18,8 @@ def tmp_create_client():
     from grafeas.grafeas_v1 import GrafeasClient
     from grafeas.grafeas_v1.gapic.transports import grafeas_grpc_transport
 
-    address = "containeranalysis.googleapis.com:443"
-    scopes = ("https://www.googleapis.com/auth/cloud-platform")
+    address = 'containeranalysis.googleapis.com:443'
+    scopes = ('https://www.googleapis.com/auth/cloud-platform')
     transport = grafeas_grpc_transport.GrafeasGrpcTransport(address, scopes)
     return GrafeasClient(transport)
 
@@ -31,16 +31,16 @@ def create_note(note_id, project_id):
     client = tmp_create_client()
     project_name = client.project_path(project_id)
     note = {
-        "vulnerability": {
-            "details": [
+        'vulnerability': {
+            'details': [
                 {
-                    "affected_cpe_uri": "your-uri-here",
-                    "affected_package": "your-package-here",
-                    "min_affected_version": {
-                        "kind": Version.VersionKind.MINIMUM
+                    'affected_cpe_uri': 'your-uri-here',
+                    'affected_package': 'your-package-here',
+                    'min_affected_version': {
+                        'kind': Version.VersionKind.MINIMUM
                     },
-                    "fixed_version": {
-                        "kind": Version.VersionKind.MAXIMUM
+                    'fixed_version': {
+                        'kind': Version.VersionKind.MAXIMUM
                     }
                 }
             ]
@@ -69,18 +69,18 @@ def create_occurrence(resource_url, note_id, occurrence_project, note_project):
     formatted_project = client.project_path(occurrence_project)
 
     occurrence = {
-        "note_name": formatted_note,
-        "resource_uri": resource_url,
-        "vulnerability": {
-            "package_issue": [
+        'note_name': formatted_note,
+        'resource_uri': resource_url,
+        'vulnerability': {
+            'package_issue': [
                 {
-                    "affected_cpe_uri": "your-uri-here",
-                    "affected_package": "your-package-here",
-                    "min_affected_version": {
-                        "kind": Version.VersionKind.MINIMUM
+                    'affected_cpe_uri': 'your-uri-here',
+                    'affected_package': 'your-package-here',
+                    'min_affected_version': {
+                        'kind': Version.VersionKind.MINIMUM
                     },
-                    "fixed_version": {
-                        "kind": Version.VersionKind.MAXIMUM
+                    'fixed_version': {
+                        'kind': Version.VersionKind.MAXIMUM
                     }
                 }
             ]
@@ -118,7 +118,7 @@ def get_occurrence(occurrence_id, project_id):
 
 # [START containeranalysis_discovery_info]
 def get_discovery_info(resource_url, project_id):
-    filter_str = "kind=\"DISCOVERY\" AND resourceUrl=\"" + resource_url + "\""
+    filter_str = 'kind="DISCOVERY" AND resourceUrl="{}"'.format(resource_url)
     client = tmp_create_client()
     project_name = client.project_path(project_id)
     response = client.list_occurrences(project_name, filter_=filter_str)
@@ -144,7 +144,7 @@ def get_occurrences_for_note(note_id, project_id):
 
 # [START containeranalysis_occurrences_for_image]
 def get_occurrences_for_image(resource_url, project_id):
-    filter_str = "resourceUrl=\"" + resource_url + "\""
+    filter_str = 'resourceUrl="{}"'.format(resource_url)
     client = tmp_create_client()
     project_name = client.project_path(project_id)
 
@@ -170,7 +170,6 @@ def pubsub(subscription_id, timeout_seconds, project_id):
     client.subscribe(subscription_name, receiver.pubsub_callback)
 
     # listen for 'timeout' seconds
-    print("listening")
     for _ in range(timeout_seconds):
         time.sleep(1)
     # print and return the number of pubsub messages received
@@ -190,7 +189,7 @@ class MessageReceiver:
     def pubsub_callback(self, message):
         # every time a pubsub message comes in, print it and count it
         self.msg_count += 1
-        print("Message {}: {}".format(self.msg_count, message.data))
+        print('Message {}: {}'.format(self.msg_count, message.data))
         message.ack()
 
 
@@ -198,7 +197,7 @@ def create_occurrence_subscription(subscription_id, project_id):
     from google.api_core.exceptions import AlreadyExists
     from google.cloud.pubsub import SubscriberClient
 
-    topic_id = "container-analysis-occurrences-v1beta1"
+    topic_id = 'container-analysis-occurrences-v1beta1'
     client = SubscriberClient()
     topic_name = client.topic_path(project_id, topic_id)
     subscription_name = client.subscription_path(project_id, subscription_id)

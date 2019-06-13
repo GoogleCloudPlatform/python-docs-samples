@@ -35,14 +35,14 @@ TRY_LIMIT = 20
 class TestContainerAnalysisSamples:
 
     def setup_method(self, test_method):
-        print("SETUP " + test_method.__name__)
+        print('SETUP {}'.format(test_method.__name__))
         timestamp = str(int(time()))
-        self.note_id = "note-" + timestamp + test_method.__name__
-        self.image_url = "www." + timestamp + test_method.__name__ + ".com"
+        self.note_id = 'note-{}-{}'.format(timestamp, test_method.__name__)
+        self.image_url = '{}.{}'.format(timestamp, test_method.__name__)
         self.note_obj = samples.create_note(self.note_id, PROJECT_ID)
 
     def teardown_method(self, test_method):
-        print("TEAR DOWN " + test_method.__name__)
+        print('TEAR DOWN {}'.format(test_method.__name__))
         try:
             samples.delete_note(self.note_id, PROJECT_ID)
         except NotFound:
@@ -126,7 +126,7 @@ class TestContainerAnalysisSamples:
 
     def test_pubsub(self):
         client = SubscriberClient()
-        subscription_id = "drydockOccurrences"
+        subscription_id = 'drydockOccurrences'
         subscription_name = client.subscription_path(PROJECT_ID,
                                                      subscription_id)
         samples.create_occurrence_subscription(subscription_id, PROJECT_ID)
@@ -148,7 +148,7 @@ class TestContainerAnalysisSamples:
                 sleep(SLEEP_TIME)
                 samples.delete_occurrence(basename(occ.name), PROJECT_ID)
                 sleep(SLEEP_TIME)
-            print('done. msg_count = ' + str(receiver.msg_count))
+            print('done. msg_count = {}'.format(receiver.msg_count))
             success = receiver.msg_count == total_created
         assert receiver.msg_count == total_created
         # clean up
@@ -165,19 +165,19 @@ class TestContainerAnalysisSamples:
             assert False
 
         # create discovery occurrence
-        note_id = "discovery-note-" + str(int(time()))
+        note_id = 'discovery-note-{}'.format(int(time()))
         client = samples.tmp_create_client()
         note = {
-            "discovery": {
-                "analysis_kind": NoteKind.DISCOVERY
+            'discovery': {
+                'analysis_kind': NoteKind.DISCOVERY
             }
         }
         client.create_note(client.project_path(PROJECT_ID), note_id, note)
         occurrence = {
-            "note_name": client.note_path(PROJECT_ID, note_id),
-            "resource_uri": self.image_url,
-            "discovery": {
-                "analysis_status": DiscoveryOccurrence.AnalysisStatus
+            'note_name': client.note_path(PROJECT_ID, note_id),
+            'resource_uri': self.image_url,
+            'discovery': {
+                'analysis_status': DiscoveryOccurrence.AnalysisStatus
                                                       .FINISHED_SUCCESS
             }
         }
@@ -221,20 +221,20 @@ class TestContainerAnalysisSamples:
         assert len(occ_list) == 0
 
         # create new high severity vulnerability
-        note_id = "discovery-note-" + str(int(time()))
+        note_id = 'discovery-note-{}'.format(int(time()))
         client = samples.tmp_create_client()
         note = {
-            "vulnerability": {
-                "severity": Severity.CRITICAL,
-                "details": [
+            'vulnerability': {
+                'severity': Severity.CRITICAL,
+                'details': [
                     {
-                        "affected_cpe_uri": "your-uri-here",
-                        "affected_package": "your-package-here",
-                        "min_affected_version": {
-                            "kind": Version.VersionKind.MINIMUM
+                        'affected_cpe_uri': 'your-uri-here',
+                        'affected_package': 'your-package-here',
+                        'min_affected_version': {
+                            'kind': Version.VersionKind.MINIMUM
                         },
-                        "fixed_version": {
-                            "kind": Version.VersionKind.MAXIMUM
+                        'fixed_version': {
+                            'kind': Version.VersionKind.MAXIMUM
                         }
                     }
                 ]
@@ -242,18 +242,18 @@ class TestContainerAnalysisSamples:
         }
         client.create_note(client.project_path(PROJECT_ID), note_id, note)
         occurrence = {
-            "note_name": client.note_path(PROJECT_ID, note_id),
-            "resource_uri": self.image_url,
-            "vulnerability": {
-                "package_issue": [
+            'note_name': client.note_path(PROJECT_ID, note_id),
+            'resource_uri': self.image_url,
+            'vulnerability': {
+                'package_issue': [
                     {
-                        "affected_cpe_uri": "your-uri-here",
-                        "affected_package": "your-package-here",
-                        "min_affected_version": {
-                            "kind": Version.VersionKind.MINIMUM
+                        'affected_cpe_uri': 'your-uri-here',
+                        'affected_package': 'your-package-here',
+                        'min_affected_version': {
+                            'kind': Version.VersionKind.MINIMUM
                         },
-                        "fixed_version": {
-                            "kind": Version.VersionKind.MAXIMUM
+                        'fixed_version': {
+                            'kind': Version.VersionKind.MAXIMUM
                         }
                     }
                 ]
