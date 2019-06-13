@@ -20,6 +20,7 @@ from google.cloud.pubsub import SubscriberClient
 
 from grafeas.grafeas_v1 import GrafeasClient
 from grafeas.grafeas_v1.gapic.enums import DiscoveryOccurrence
+from grafeas.grafeas_v1.gapic.enums import Severity
 from grafeas.grafeas_v1.gapic.enums import Version
 from grafeas.grafeas_v1.gapic.transports import grafeas_grpc_transport
 
@@ -249,3 +250,30 @@ def poll_discovery_finished(resource_url, timeout_seconds, project_id):
             raise RuntimeError('timeout while waiting for terminal state')
     return discovery_occurrence
 # [END containeranalysis_poll_discovery_occurrence_finished]
+
+
+# [START containeranalysis_vulnerability_occurrences_for_image]
+def find_vulnerabilities_for_image(resource_url, project_id):
+    client = tmp_create_client()
+    project_name = client.project_path(project_id)
+
+    filter_str = 'kind="VULNERABILITY" AND resourceUrl="{}"'\
+        .format(resource_url)
+    return list(client.list_occurrences(project_name, filter_str))
+# [END containeranalysis_vulnerability_occurrences_for_image]
+
+
+# [START containeranalysis_filter_vulnerability_occurrences]
+def find_high_severity_vulnerabilities_for_image(resource_url, project_id):
+    client = tmp_create_client()
+    project_name = client.project_path(project_id)
+
+    filter_str = 'kind="VULNERABILITY" AND resourceUrl="{}"'\
+        .format(resource_url)
+    all_vulnerabilities = client.list_occurrences(project_name, filter_str)
+    filtered_list = []
+    for v in all_vulnerabilities:
+        if v.severity == Severity.HIGH or v.severity == Severity.CRITICAL:
+            filtered_list.append(v)
+    return filtered_list
+# [END containeranalysis_filter_vulnerability_occurrences]

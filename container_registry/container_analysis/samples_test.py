@@ -22,6 +22,8 @@ from google.api_core.exceptions import NotFound
 from google.cloud.pubsub import SubscriberClient
 
 from grafeas.grafeas_v1.gapic.enums import DiscoveryOccurrence, NoteKind
+from grafeas.grafeas_v1.gapic.enums import Severity
+from grafeas.grafeas_v1.gapic.enums import Version
 
 import samples
 
@@ -188,6 +190,87 @@ class TestContainerAnalysisSamples:
         assert disc is not None
         assert status == DiscoveryOccurrence.AnalysisStatus.FINISHED_SUCCESS
 
+        # clean up
+        samples.delete_occurrence(basename(created.name), PROJECT_ID)
+        samples.delete_note(note_id, PROJECT_ID)
+
+    def test_find_vulnerabilities_for_image(self):
+        occ_list = samples.find_vulnerabilities_for_image(self.image_url,
+                                                          PROJECT_ID)
+        assert len(occ_list) == 0
+
+        created = samples.create_occurrence(self.image_url,
+                                            self.note_id,
+                                            PROJECT_ID,
+                                            PROJECT_ID)
+        tries = 0
+        count = 0
+        while count != 1 and tries < TRY_LIMIT:
+            tries += 1
+            occ_list = samples.find_vulnerabilities_for_image(self.image_url,
+                                                              PROJECT_ID)
+            count = len(occ_list)
+            sleep(SLEEP_TIME)
+        assert len(occ_list) == 1
+        samples.delete_occurrence(basename(created.name), PROJECT_ID)
+
+    def test_find_high_severity_vulnerabilities(self):
+        occ_list = samples.find_high_severity_vulnerabilities_for_image(
+                self.image_url,
+                PROJECT_ID)
+        assert len(occ_list) == 0
+
+        # create new high severity vulnerability
+        note_id = "discovery-note-" + str(int(time()))
+        client = samples.tmp_create_client()
+        note = {
+            "vulnerability": {
+                "severity": Severity.CRITICAL,
+                "details": [
+                    {
+                        "affected_cpe_uri": "your-uri-here",
+                        "affected_package": "your-package-here",
+                        "min_affected_version": {
+                            "kind": Version.VersionKind.MINIMUM
+                        },
+                        "fixed_version": {
+                            "kind": Version.VersionKind.MAXIMUM
+                        }
+                    }
+                ]
+            }
+        }
+        client.create_note(client.project_path(PROJECT_ID), note_id, note)
+        occurrence = {
+            "note_name": client.note_path(PROJECT_ID, note_id),
+            "resource_uri": self.image_url,
+            "vulnerability": {
+                "package_issue": [
+                    {
+                        "affected_cpe_uri": "your-uri-here",
+                        "affected_package": "your-package-here",
+                        "min_affected_version": {
+                            "kind": Version.VersionKind.MINIMUM
+                        },
+                        "fixed_version": {
+                            "kind": Version.VersionKind.MAXIMUM
+                        }
+                    }
+                ]
+            }
+        }
+        created = client.create_occurrence(client.project_path(PROJECT_ID),
+                                           occurrence)
+        # query again
+        tries = 0
+        count = 0
+        while count != 1 and tries < TRY_LIMIT:
+            tries += 1
+            occ_list = samples.find_vulnerabilities_for_image(self.image_url,
+                                                              PROJECT_ID)
+            count = len(occ_list)
+            sleep(SLEEP_TIME)
+        assert len(occ_list) == 1
         # clean up
         samples.delete_occurrence(basename(created.name), PROJECT_ID)
         samples.delete_note(note_id, PROJECT_ID)
