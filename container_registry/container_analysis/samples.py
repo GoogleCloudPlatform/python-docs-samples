@@ -1,5 +1,5 @@
 #!/bin/python
-# Copyright 2018 Google Inc.
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,6 +26,10 @@ def tmp_create_client():
 
 # [START containeranalysis_create_note]
 def create_note(note_id, project_id):
+    """Creates and returns a new vulnerability note."""
+    # note_id = 'my-note'
+    # project_id = 'my-gcp-project'
+
     from grafeas.grafeas_v1.gapic.enums import Version
 
     client = tmp_create_client()
@@ -53,6 +57,10 @@ def create_note(note_id, project_id):
 
 # [START containeranalysis_delete_note]
 def delete_note(note_id, project_id):
+    """Removes an existing note from the server."""
+    # note_id = 'my-note'
+    # project_id = 'my-gcp-project'
+
     client = tmp_create_client()
     note_name = client.note_path(project_id, note_id)
 
@@ -62,6 +70,13 @@ def delete_note(note_id, project_id):
 
 # [START ccontaineranalysis_create_occurrence]
 def create_occurrence(resource_url, note_id, occurrence_project, note_project):
+    """ Creates and returns a new occurrence of a previously
+    created vulnerability note."""
+    # resource_url = 'https://gcr.io/my-project/my-image@sha256:123'
+    # note_id = 'my-note'
+    # occurrence_project = 'my-gcp-project'
+    # note_project = 'my-gcp-project'
+
     from grafeas.grafeas_v1.gapic.enums import Version
 
     client = tmp_create_client()
@@ -93,6 +108,10 @@ def create_occurrence(resource_url, note_id, occurrence_project, note_project):
 
 # [START containeranalysis_delete_occurrence]
 def delete_occurrence(occurrence_id, project_id):
+    """Removes an existing occurrence from the server."""
+    # occurrence_id = basename(occurrence.name)
+    # project_id = 'my-gcp-project'
+
     client = tmp_create_client()
     formatted_parent = client.occurrence_path(project_id, occurrence_id)
     client.delete_occurrence(formatted_parent)
@@ -101,6 +120,10 @@ def delete_occurrence(occurrence_id, project_id):
 
 # [START containeranalysis_get_note]
 def get_note(note_id, project_id):
+    """Retrieves and prints a specified note from the server."""
+    # note_id = 'my-note'
+    # project_id = 'my-gcp-project'
+
     client = tmp_create_client()
     note_name = client.note_path(project_id, note_id)
     response = client.get_note(note_name)
@@ -110,6 +133,10 @@ def get_note(note_id, project_id):
 
 # [START containeranalysis_get_occurrence]
 def get_occurrence(occurrence_id, project_id):
+    """retrieves and prints a specified occurrence from the server."""
+    # occurrence_id = basename(occurrence.name)
+    # project_id = 'my-gcp-project'
+
     client = tmp_create_client()
     formatted_parent = client.occurrence_path(project_id, occurrence_id)
     return client.get_occurrence(formatted_parent)
@@ -118,6 +145,12 @@ def get_occurrence(occurrence_id, project_id):
 
 # [START containeranalysis_discovery_info]
 def get_discovery_info(resource_url, project_id):
+    """Retrieves and prints the discovery occurrence created for a specified
+    image. The discovery occurrence contains information about the initial
+    scan on the image."""
+    # resource_url = 'https://gcr.io/my-project/my-image@sha256:123'
+    # project_id = 'my-gcp-project'
+
     filter_str = 'kind="DISCOVERY" AND resourceUrl="{}"'.format(resource_url)
     client = tmp_create_client()
     project_name = client.project_path(project_id)
@@ -129,6 +162,11 @@ def get_discovery_info(resource_url, project_id):
 
 # [START containeranalysis_occurrences_for_note]
 def get_occurrences_for_note(note_id, project_id):
+    """Retrieves all the occurrences associated with a specified Note.
+    Here, all occurrences are printed and counted."""
+    # note_id = 'my-note'
+    # project_id = 'my-gcp-project'
+
     client = tmp_create_client()
     note_name = client.note_path(project_id, note_id)
 
@@ -144,6 +182,11 @@ def get_occurrences_for_note(note_id, project_id):
 
 # [START containeranalysis_occurrences_for_image]
 def get_occurrences_for_image(resource_url, project_id):
+    """Retrieves all the occurrences associated with a specified image.
+    Here, all occurrences are simply printed and counted."""
+    # resource_url = 'https://gcr.io/my-project/my-image@sha256:123'
+    # project_id = 'my-gcp-project'
+
     filter_str = 'resourceUrl="{}"'.format(resource_url)
     client = tmp_create_client()
     project_name = client.project_path(project_id)
@@ -160,8 +203,12 @@ def get_occurrences_for_image(resource_url, project_id):
 
 # [START containeranalysis_pubsub]
 def pubsub(subscription_id, timeout_seconds, project_id):
-    import time
+    """Respond to incoming occurrences using a Cloud Pub/Sub subscription."""
+    # subscription_id := 'my-occurrences-subscription'
+    # timeout_seconds = 20
+    # project_id = 'my-gcp-project'
 
+    import time
     from google.cloud.pubsub import SubscriberClient
 
     client = SubscriberClient()
@@ -178,10 +225,7 @@ def pubsub(subscription_id, timeout_seconds, project_id):
 
 
 class MessageReceiver:
-    """
-    Custom class to handle incoming pubsub messages
-    In this case, we will simply print and count each message as it comes in
-    """
+    """Custom class to handle incoming Pub/Sub messages."""
     def __init__(self):
         # initialize counter to 0 on initialization
         self.msg_count = 0
@@ -194,6 +238,11 @@ class MessageReceiver:
 
 
 def create_occurrence_subscription(subscription_id, project_id):
+    """Creates a new Pub/Sub subscription object listening to the
+    Container Analysis Occurrences topic."""
+    # subscription_id := 'my-occurrences-subscription'
+    # project_id = 'my-gcp-project'
+
     from google.api_core.exceptions import AlreadyExists
     from google.cloud.pubsub import SubscriberClient
 
@@ -215,8 +264,13 @@ def create_occurrence_subscription(subscription_id, project_id):
 
 # [START containeranalysis_poll_discovery_occurrence_finished]
 def poll_discovery_finished(resource_url, timeout_seconds, project_id):
-    import time
+    """Returns the discovery occurrence for a resource once it reaches a
+    terminal state."""
+    # resource_url = 'https://gcr.io/my-project/my-image@sha256:123'
+    # timeout_seconds = 20
+    # project_id = 'my-gcp-project'
 
+    import time
     from grafeas.grafeas_v1.gapic.enums import DiscoveryOccurrence
 
     deadline = time.time() + timeout_seconds
@@ -236,7 +290,6 @@ def poll_discovery_finished(resource_url, timeout_seconds, project_id):
         filter_str = 'kind="DISCOVERY" AND resourceUrl="{}"'\
             .format(resource_url)
         # [START containeranalysis_poll_discovery_occurrence_finished]
-        print(filter_str)
         result = client.list_occurrences(project_name, filter_str)
         # only one occurrence should ever be returned by ListOccurrences
         # and the given filter
@@ -260,6 +313,10 @@ def poll_discovery_finished(resource_url, timeout_seconds, project_id):
 
 # [START containeranalysis_vulnerability_occurrences_for_image]
 def find_vulnerabilities_for_image(resource_url, project_id):
+    """"Retrieves all vulnerability occurrences associated with a resource."""
+    # resource_url = 'https://gcr.io/my-project/my-image@sha256:123'
+    # project_id = 'my-gcp-project'
+
     client = tmp_create_client()
     project_name = client.project_path(project_id)
 
@@ -271,6 +328,11 @@ def find_vulnerabilities_for_image(resource_url, project_id):
 
 # [START containeranalysis_filter_vulnerability_occurrences]
 def find_high_severity_vulnerabilities_for_image(resource_url, project_id):
+    """Retrieves a list of only high vulnerability occurrences associated
+    with a resource."""
+    # resource_url = 'https://gcr.io/my-project/my-image@sha256:123'
+    # project_id = 'my-gcp-project'
+
     from grafeas.grafeas_v1.gapic.enums import Severity
 
     client = tmp_create_client()
