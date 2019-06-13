@@ -19,7 +19,6 @@ def create_key_ring(project_id, location_id, key_ring_id):
     """Creates a KeyRing in the given location (e.g. global)."""
 
     from google.cloud import kms_v1
-    from google.cloud.kms_v1 import enums
 
     # Creates an API client for the KMS API.
     client = kms_v1.KeyManagementServiceClient()
@@ -70,7 +69,6 @@ def encrypt_symmetric(project_id, location_id, key_ring_id, crypto_key_id,
     """Encrypts input plaintext data using the provided symmetric CryptoKey."""
 
     from google.cloud import kms_v1
-    from google.cloud.kms_v1 import enums
 
     # Creates an API client for the KMS API.
     client = kms_v1.KeyManagementServiceClient()
@@ -91,7 +89,6 @@ def decrypt_symmetric(project_id, location_id, key_ring_id, crypto_key_id,
     """Decrypts input ciphertext using the provided symmetric CryptoKey."""
 
     from google.cloud import kms_v1
-    from google.cloud.kms_v1 import enums
 
     # Creates an API client for the KMS API.
     client = kms_v1.KeyManagementServiceClient()
@@ -168,7 +165,6 @@ def destroy_crypto_key_version(
     KeyRing for destruction 24 hours in the future."""
 
     from google.cloud import kms_v1
-    from google.cloud.kms_v1 import enums
 
     # Creates an API client for the KMS API.
     client = kms_v1.KeyManagementServiceClient()
@@ -192,7 +188,6 @@ def restore_crypto_key_version(
     """Restores a CryptoKeyVersion that is scheduled for destruction."""
 
     from google.cloud import kms_v1
-    from google.cloud.kms_v1 import enums
 
     # Creates an API client for the KMS API.
     client = kms_v1.KeyManagementServiceClient()
@@ -219,7 +214,6 @@ def add_member_to_crypto_key_policy(
     (IAM) policy for a given CryptoKey associated with a KeyRing."""
 
     from google.cloud import kms_v1
-    from google.cloud.kms_v1 import enums
 
     # Creates an API client for the KMS API.
     client = kms_v1.KeyManagementServiceClient()
@@ -251,7 +245,6 @@ def add_member_to_key_ring_policy(
     (IAM) policy for a given KeyRing."""
 
     from google.cloud import kms_v1
-    from google.cloud.kms_v1 import enums
 
     # Creates an API client for the KMS API.
     client = kms_v1.KeyManagementServiceClient()
@@ -284,7 +277,6 @@ def remove_member_from_crypto_key_policy(
     Management (IAM) policy for a given CryptoKey associated with a KeyRing."""
 
     from google.cloud import kms_v1
-    from google.cloud.kms_v1 import enums
 
     # Creates an API client for the KMS API.
     client = kms_v1.KeyManagementServiceClient()
@@ -315,7 +307,6 @@ def remove_member_from_key_ring_policy(project_id, location_id, key_ring_id,
     Management (IAM) policy for a given KeyRing."""
 
     from google.cloud import kms_v1
-    from google.cloud.kms_v1 import enums
 
     # Creates an API client for the KMS API.
     client = kms_v1.KeyManagementServiceClient()
@@ -345,7 +336,6 @@ def get_key_ring_policy(project_id, location_id, key_ring_id):
     and prints out roles and the members assigned to those roles."""
 
     from google.cloud import kms_v1
-    from google.cloud.kms_v1 import enums
 
     # Creates an API client for the KMS API.
     client = kms_v1.KeyManagementServiceClient()
@@ -370,7 +360,6 @@ def get_crypto_key_policy(project_id, location_id, key_ring_id, crypto_key_id):
     and prints out roles and the members assigned to those roles."""
 
     from google.cloud import kms_v1
-    from google.cloud.kms_v1 import enums
 
     # Creates an API client for the KMS API.
     client = kms_v1.KeyManagementServiceClient()
