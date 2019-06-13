@@ -13,19 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import time
-
-from google.api_core.exceptions import AlreadyExists
-from google.cloud.pubsub import SubscriberClient
-
-from grafeas.grafeas_v1 import GrafeasClient
-from grafeas.grafeas_v1.gapic.enums import DiscoveryOccurrence
-from grafeas.grafeas_v1.gapic.enums import Severity
-from grafeas.grafeas_v1.gapic.enums import Version
-from grafeas.grafeas_v1.gapic.transports import grafeas_grpc_transport
-
 
 def tmp_create_client():
+    from grafeas.grafeas_v1 import GrafeasClient
+    from grafeas.grafeas_v1.gapic.transports import grafeas_grpc_transport
+
     address = "containeranalysis.googleapis.com:443"
     scopes = ("https://www.googleapis.com/auth/cloud-platform")
     transport = grafeas_grpc_transport.GrafeasGrpcTransport(address, scopes)
@@ -34,6 +26,8 @@ def tmp_create_client():
 
 # [START containeranalysis_create_note]
 def create_note(note_id, project_id):
+    from grafeas.grafeas_v1.gapic.enums import Version
+
     client = tmp_create_client()
     project_name = client.project_path(project_id)
     note = {
@@ -68,6 +62,8 @@ def delete_note(note_id, project_id):
 
 # [START ccontaineranalysis_create_occurrence]
 def create_occurrence(resource_url, note_id, occurrence_project, note_project):
+    from grafeas.grafeas_v1.gapic.enums import Version
+
     client = tmp_create_client()
     formatted_note = client.note_path(note_project, note_id)
     formatted_project = client.project_path(occurrence_project)
@@ -164,6 +160,10 @@ def get_occurrences_for_image(resource_url, project_id):
 
 # [START containeranalysis_pubsub]
 def pubsub(subscription_id, timeout_seconds, project_id):
+    import time
+
+    from google.cloud.pubsub import SubscriberClient
+
     client = SubscriberClient()
     subscription_name = client.subscription_path(project_id, subscription_id)
     receiver = MessageReceiver()
@@ -195,6 +195,9 @@ class MessageReceiver:
 
 
 def create_occurrence_subscription(subscription_id, project_id):
+    from google.api_core.exceptions import AlreadyExists
+    from google.cloud.pubsub import SubscriberClient
+
     topic_id = "container-analysis-occurrences-v1beta1"
     client = SubscriberClient()
     topic_name = client.topic_path(project_id, topic_id)
@@ -213,6 +216,10 @@ def create_occurrence_subscription(subscription_id, project_id):
 
 # [START containeranalysis_poll_discovery_occurrence_finished]
 def poll_discovery_finished(resource_url, timeout_seconds, project_id):
+    import time
+
+    from grafeas.grafeas_v1.gapic.enums import DiscoveryOccurrence
+
     deadline = time.time() + timeout_seconds
 
     client = tmp_create_client()
@@ -265,6 +272,8 @@ def find_vulnerabilities_for_image(resource_url, project_id):
 
 # [START containeranalysis_filter_vulnerability_occurrences]
 def find_high_severity_vulnerabilities_for_image(resource_url, project_id):
+    from grafeas.grafeas_v1.gapic.enums import Severity
+
     client = tmp_create_client()
     project_name = client.project_path(project_id)
 
