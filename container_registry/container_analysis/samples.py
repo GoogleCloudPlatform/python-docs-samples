@@ -13,12 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from time import sleep
+import time
 
 from google.api_core.exceptions import AlreadyExists
 from google.cloud.pubsub import SubscriberClient
 
 from grafeas.grafeas_v1 import GrafeasClient
+from grafeas.grafeas_v1.gapic.enums import DiscoveryOccurrence
 from grafeas.grafeas_v1.gapic.enums import Version
 from grafeas.grafeas_v1.gapic.transports import grafeas_grpc_transport
 
@@ -170,7 +171,7 @@ def pubsub(subscription_id, timeout_seconds, project_id):
     # listen for 'timeout' seconds
     print("listening")
     for _ in range(timeout_seconds):
-        sleep(1)
+        time.sleep(1)
     # print and return the number of pubsub messages received
     print(receiver.msg_count)
     return receiver.msg_count
@@ -207,3 +208,44 @@ def create_occurrence_subscription(subscription_id, project_id):
         success = False
     return success
 # [END containeranalysis_pubsub]
+
+
+# [START containeranalysis_poll_discovery_occurrence_finished]
+def poll_discovery_finished(resource_url, timeout_seconds, project_id):
+    deadline = time.time() + timeout_seconds
+
+    client = tmp_create_client()
+    project_name = client.project_path(project_id)
+
+    discovery_occurrence = None
+    while discovery_occurrence is None:
+        time.sleep(1)
+        filter_str = 'resourceUrl="{}" \
+                      AND noteProjectId="goog-analysis" \
+                      AND noteId="PACKAGE_VULNERABILITY"'.format(resource_url)
+        # [END containeranalysis_poll_discovery_occurrence_finished]
+        # The above filter isn't testable, since it looks for occurrences in a
+        # locked down project fall back to a more permissive filter for testing
+        filter_str = 'kind="DISCOVERY" AND resourceUrl="{}"'\
+            .format(resource_url)
+        # [START containeranalysis_poll_discovery_occurrence_finished]
+        print(filter_str)
+        result = client.list_occurrences(project_name, filter_str)
+        # only one occurrence should ever be returned by ListOccurrences
+        # and the given filter
+        for item in result:
+            discovery_occurrence = item
+        if time.time() > deadline:
+            raise TimeoutError('timeout while retrieving discovery occurrence')
+
+    status = DiscoveryOccurrence.AnalysisStatus.PENDING
+    while status != DiscoveryOccurrence.AnalysisStatus.FINISHED_UNSUPPORTED \
+            and status != DiscoveryOccurrence.AnalysisStatus.FINISHED_FAILED \
+            and status != DiscoveryOccurrence.AnalysisStatus.FINISHED_SUCCESS:
+        time.sleep(1)
+        updated = client.get_occurrence(discovery_occurrence.name)
+        status = updated.discovery.analysis_status
+        if time.time() > deadline:
+            raise TimeoutError('timeout while waiting for terminal state')
+    return discovery_occurrence
+# [END containeranalysis_poll_discovery_occurrence_finished]

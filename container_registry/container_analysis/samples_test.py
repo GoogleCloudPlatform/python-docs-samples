@@ -21,6 +21,8 @@ from google.api_core.exceptions import InvalidArgument
 from google.api_core.exceptions import NotFound
 from google.cloud.pubsub import SubscriberClient
 
+from grafeas.grafeas_v1.gapic.enums import DiscoveryOccurrence, NoteKind
+
 import samples
 
 PROJECT_ID = environ['GCLOUD_PROJECT']
@@ -149,3 +151,43 @@ class TestContainerAnalysisSamples:
         assert receiver.msg_count == total_created
         # clean up
         client.delete_subscription(subscription_name)
+
+    def test_poll_discovery_occurrence(self):
+        # try with no discovery occurrence
+        try:
+            samples.poll_discovery_finished(self.image_url, 5, PROJECT_ID)
+        except TimeoutError:
+            pass
+        else:
+            # we expect timeout error
+            assert False
+
+        # create discovery occurrence
+        note_id = "discovery-note-" + str(int(time()))
+        client = samples.tmp_create_client()
+        note = {
+            "discovery": {
+                "analysis_kind": NoteKind.DISCOVERY
+            }
+        }
+        client.create_note(client.project_path(PROJECT_ID), note_id, note)
+        occurrence = {
+            "note_name": client.note_path(PROJECT_ID, note_id),
+            "resource_uri": self.image_url,
+            "discovery": {
+                "analysis_status": DiscoveryOccurrence.AnalysisStatus
+                                                      .FINISHED_SUCCESS
+            }
+        }
+        created = client.create_occurrence(client.project_path(PROJECT_ID),
+                                           occurrence)
+
+        # poll again
+        disc = samples.poll_discovery_finished(self.image_url, 10, PROJECT_ID)
+        status = disc.discovery.analysis_status
+        assert disc is not None
+        assert status == DiscoveryOccurrence.AnalysisStatus.FINISHED_SUCCESS
+
+        # clean up
+        samples.delete_occurrence(basename(created.name), PROJECT_ID)
+        samples.delete_note(note_id, PROJECT_ID)
