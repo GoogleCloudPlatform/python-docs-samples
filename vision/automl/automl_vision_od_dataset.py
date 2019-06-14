@@ -138,7 +138,7 @@ def import_data(project_id, compute_region, dataset_id, paths):
   # project_id = '[PROJECT_ID]'
   # compute_region = '[COMPUTE_REGION]'
   # dataset_id = '[DATASET_ID]'
-  # paths = '[Storage path. For example: gs://path/to/file.csv]'
+  # paths = Array of storage paths. For example: ['gs://path/to/file.csv']
 
   from google.cloud import automl_v1beta1 as automl
 
