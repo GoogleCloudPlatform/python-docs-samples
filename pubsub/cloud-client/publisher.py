@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2016 Google Inc. All Rights Reserved.
+# Copyright 2019 Google LLC. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -157,8 +157,8 @@ def publish_messages_with_futures(project_id, topic_name):
 
 
 def publish_messages_with_error_handler(project_id, topic_name):
-    """Publishes multiple messages to a Pub/Sub topic with an error handler."""
     # [START pubsub_publish_messages_error_handler]
+    """Publishes multiple messages to a Pub/Sub topic with an error handler."""
     import time
 
     from google.cloud import pubsub_v1
@@ -170,10 +170,8 @@ def publish_messages_with_error_handler(project_id, topic_name):
     topic_path = publisher.topic_path(project_id, topic_name)
 
     def callback(message_future):
-        # When timeout is unspecified, the exception method waits indefinitely.
-        if message_future.exception(timeout=30):
-            print('Publishing message on {} threw an Exception {}.'.format(
-                topic_name, message_future.exception()))
+        if message_future.exception():
+            print('{} needs handling.'.format(message_future.exception()))
         else:
             print(message_future.result())
 
@@ -183,12 +181,14 @@ def publish_messages_with_error_handler(project_id, topic_name):
         data = data.encode('utf-8')
         # When you publish a message, the client returns a Future.
         message_future = publisher.publish(topic_path, data=data)
+        # If you wish to handle publish failures, do it in the callback.
+        # Otherwise, it's okay to call `message_future.result()` directly.
         message_future.add_done_callback(callback)
 
     print('Published message IDs:')
 
-    # We must keep the main thread from exiting to allow it to process
-    # messages in the background.
+    # We keep the main thread from exiting so message futures can be
+    # resolved in the background.
     while True:
         time.sleep(60)
     # [END pubsub_publish_messages_error_handler]
