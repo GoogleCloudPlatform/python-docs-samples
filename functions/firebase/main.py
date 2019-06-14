@@ -39,7 +39,7 @@ def hello_rtdb(data, context):
     trigger_resource = context.resource
 
     if 'params' in data:
-        print('Parameters:')
+        print('Path parameters:')
         for param, value in data['params'].items():
             print(f'  {param}: {value}')
 
