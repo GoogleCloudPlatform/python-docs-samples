@@ -14,7 +14,6 @@
 # limitations under the License.
 # [START bigtable_writes_simple]
 import datetime
-
 from google.cloud import bigtable
 
 
@@ -41,7 +40,12 @@ def write_simple(project_id, instance_id, table_id):
                  "os_build",
                  "PQ2A.190405.003",
                  timestamp)
-    row.commit()
+
+    response = row.commit()
+
+    # BUG: This is always None. If you set the column_family_id to something
+    # else the commit will fail and response is still None.
+    print(response)
 
     print('Successfully wrote row {}.'.format(row_key))
 # [END bigtable_writes_simple]

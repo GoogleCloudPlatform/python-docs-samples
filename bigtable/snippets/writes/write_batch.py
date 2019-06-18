@@ -46,7 +46,10 @@ def write_batch(project_id, instance_id, table_id):
                      "12145.0.0-rc6",
                      timestamp)
 
-    table.mutate_rows(rows)
+    response = table.mutate_rows(rows)
+    for i, status in enumerate(response):
+        if status.code != 0:
+            print("Error writing row: {}".format(status.message))
 
     print('Successfully wrote 2 rows.')
 # [END bigtable_writes_batch]

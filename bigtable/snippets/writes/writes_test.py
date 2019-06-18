@@ -14,8 +14,10 @@
 
 import os
 import uuid
+import pytest
 
 from google.cloud import bigtable
+
 from write_batch import write_batch
 from write_conditionally import write_conditional
 from write_increment import write_increment
@@ -26,6 +28,7 @@ BIGTABLE_INSTANCE = os.environ['BIGTABLE_CLUSTER']
 TABLE_ID_PREFIX = 'mobile-time-series-{}'
 
 
+@pytest.fixture(scope="module")
 def test_writes(capsys):
     client = bigtable.Client(project=PROJECT, admin=True)
     instance = client.instance(BIGTABLE_INSTANCE)

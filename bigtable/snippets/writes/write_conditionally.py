@@ -16,8 +16,7 @@
 import datetime
 
 from google.cloud import bigtable
-from google.cloud.bigtable.row_filters import ColumnQualifierRegexFilter, \
-    FamilyNameRegexFilter, RowFilterChain, ValueRegexFilter
+from google.cloud.bigtable import row_filters
 
 
 def write_conditional(project_id, instance_id, table_id):
@@ -30,10 +29,10 @@ def write_conditional(project_id, instance_id, table_id):
 
     row_key = "phone#4c410523#20190501"
 
-    row_filter = RowFilterChain(
-        filters=[FamilyNameRegexFilter(column_family_id),
-                 ColumnQualifierRegexFilter('os_build'),
-                 ValueRegexFilter("PQ2A\\..*")])
+    row_filter = row_filters.RowFilterChain(
+        filters=[row_filters.FamilyNameRegexFilter(column_family_id),
+                 row_filters.ColumnQualifierRegexFilter('os_build'),
+                 row_filters.ValueRegexFilter("PQ2A\\..*")])
     row = table.row(row_key, filter_=row_filter)
     row.set_cell(column_family_id,
                  "os_name",
