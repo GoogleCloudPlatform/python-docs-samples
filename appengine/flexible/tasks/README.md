@@ -44,7 +44,7 @@ repository. For more info, see
 
 ## Creating a queue
 
-To create a queue using the Cloud SDK, use the following gcloud command:å
+To create a queue using the Cloud SDK, use the following gcloud command:
 
 ```
 gcloud tasks queues create my-appengine-queue
