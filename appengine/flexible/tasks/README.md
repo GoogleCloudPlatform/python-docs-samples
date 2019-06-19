@@ -25,10 +25,22 @@ App Engine task attempts.
 
 Please refer to [Setting Up a Python Development Environment](https://cloud.google.com/python/setup).
 
-## Authentication
+### Authentication
 
 To set up authentication, please refer to our
 [authentication getting started guide](https://cloud.google.com/docs/authentication/getting-started).
+
+### Install Dependencies
+
+To install the dependencies for this sample, use the following command:
+
+```
+pip install -r requirements.txt
+```
+
+This sample uses the common protos in the [googleapis](https://github.com/googleapis/googleapis)
+repository. For more info, see
+[Protocol Buffer Basics](https://developers.google.com/protocol-buffers/docs/pythontutorial).
 
 ## Creating a queue
 
