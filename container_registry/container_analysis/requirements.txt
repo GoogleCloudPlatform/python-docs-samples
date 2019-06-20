@@ -1,5 +1,5 @@
 google-cloud-pubsub == 0.30.0
-./google_cloud_containeranalysis-0.1.0-py2.py3-none-any.whl
-grafeas-0.1.0-py2.py3-none-any.whl
+google-cloud-containeranalysis == 0.1.0
+grafeas == 0.1.0
 pytest
 mock
