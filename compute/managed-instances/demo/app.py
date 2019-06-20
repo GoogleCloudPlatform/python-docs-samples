@@ -93,6 +93,7 @@ def make_unhealthy():
 
 @app.route('/startLoad')
 def start_load():
+    """Sets the server to simulate high CPU load."""
     global _worker, _is_healthy
     if not _is_working():
         _worker = Process(target=_burn_cpu)
@@ -111,6 +112,7 @@ def start_load():
 
 @app.route('/stopLoad')
 def stop_load():
+    """Sets the server to stop simulating CPU load."""
     global _worker, _is_healthy
     if _is_working():
         _worker.terminate()
@@ -161,11 +163,13 @@ def _get_template():
 
 
 def _is_working():
-  global _worker
-  return _worker != None and _worker.is_alive()
+    """Returns TRUE if the server is currently simulating CPU load."""
+    global _worker
+    return _worker != None and _worker.is_alive()
 
 
 def _burn_cpu():
+    """Burn CPU cycles to simulate high CPU load."""
     while True:
         random()*random()
 
