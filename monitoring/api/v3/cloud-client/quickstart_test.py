@@ -12,10 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
+import mock
+import pytest
+
 import quickstart
 
 
-def test_quickstart(capsys):
+PROJECT = os.environ['GCLOUD_PROJECT']
+
+
+@pytest.fixture
+def mock_project_path():
+    """Mock out project and replace with project from environment."""
+    project_patch = mock.patch(
+        'google.cloud.monitoring_v3.MetricServiceClient.'
+        'project_path')
+
+    with project_patch as project_mock:
+        project_mock.return_value = 'projects/{}'.format(PROJECT)
+        yield project_mock
+
+
+def test_quickstart(capsys, mock_project_path):
     quickstart.run_quickstart()
     out, _ = capsys.readouterr()
     assert 'wrote' in out

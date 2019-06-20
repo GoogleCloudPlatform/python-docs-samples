@@ -40,8 +40,9 @@ def _list_files(folder, pattern):
 
 def _collect_dirs(
         start_dir,
-        blacklist=set(['conftest.py', 'nox.py']),
-        suffix='_test.py'):
+        blacklist=set(['conftest.py', 'nox.py', 'lib']),
+        suffix='_test.py',
+        recurse_further=False):
     """Recursively collects a list of dirs that contain a file matching the
     given suffix.
 
@@ -50,17 +51,20 @@ def _collect_dirs(
     """
     # Collect all the directories that have tests in them.
     for parent, subdirs, files in os.walk(start_dir):
-        if any(f for f in files if f.endswith(suffix) and f not in blacklist):
-            # Don't recurse further, since py.test will do that.
-            del subdirs[:]
-            # This dir has tests in it. yield it.
+        if './.' in parent:
+            continue # Skip top-level dotfiles
+        elif any(f for f in files if f.endswith(suffix) and f not in blacklist):
+            # Don't recurse further for tests, since py.test will do that.
+            if not recurse_further:
+                del subdirs[:]
+            # This dir has desired files in it. yield it.
             yield parent
         else:
             # Filter out dirs we don't want to recurse into
             subdirs[:] = [
                 s for s in subdirs
                 if s[0].isalpha() and
-                os.path.join(parent, s) not in blacklist]
+                s not in blacklist]
 
 
 def _get_changed_files():
@@ -133,7 +137,7 @@ def _setup_appengine_sdk(session):
 #
 
 
-PYTEST_COMMON_ARGS = []
+PYTEST_COMMON_ARGS = ['--junitxml=sponge_log.xml']
 
 # Ignore I202 "Additional newline in a section of imports." to accommodate
 # region tags in import blocks. Since we specify an explicit ignore, we also
@@ -149,12 +153,22 @@ FLAKE8_COMMON_ARGS = [
 
 # Collect sample directories.
 ALL_TESTED_SAMPLES = sorted(list(_collect_dirs('.')))
-ALL_SAMPLE_DIRECTORIES = sorted(list(_collect_dirs('.', suffix='.py')))
+ALL_SAMPLE_DIRECTORIES = sorted(list(_collect_dirs('.', suffix='.py', recurse_further=True)))
 GAE_STANDARD_SAMPLES = [
     sample for sample in ALL_TESTED_SAMPLES
-    if sample.startswith('./appengine/standard')]
-NON_GAE_STANDARD_SAMPLES = sorted(
-    list(set(ALL_TESTED_SAMPLES) - set(GAE_STANDARD_SAMPLES)))
+    if sample.startswith('./appengine/standard/')]
+PY2_ONLY_SAMPLES = GAE_STANDARD_SAMPLES + [
+    sample for sample in ALL_TESTED_SAMPLES
+    if sample.startswith('./composer/workflows')]
+PY3_ONLY_SAMPLES = [
+    sample for sample in ALL_TESTED_SAMPLES
+    if (sample.startswith('./appengine/standard_python37')
+        or sample.startswith('./functions/'))]
+NON_GAE_STANDARD_SAMPLES_PY2 = sorted(
+    list((set(ALL_TESTED_SAMPLES) - set(GAE_STANDARD_SAMPLES)) -
+        set(PY3_ONLY_SAMPLES)))
+NON_GAE_STANDARD_SAMPLES_PY3 = sorted(
+    list(set(ALL_TESTED_SAMPLES) - set(PY2_ONLY_SAMPLES)))
 
 
 # Filter sample directories if on a CI like Travis or Circle to only run tests
@@ -169,8 +183,10 @@ if CHANGED_FILES is not None:
         ALL_SAMPLE_DIRECTORIES, CHANGED_FILES)
     GAE_STANDARD_SAMPLES = _filter_samples(
         GAE_STANDARD_SAMPLES, CHANGED_FILES)
-    NON_GAE_STANDARD_SAMPLES = _filter_samples(
-        NON_GAE_STANDARD_SAMPLES, CHANGED_FILES)
+    NON_GAE_STANDARD_SAMPLES_PY2 = _filter_samples(
+        NON_GAE_STANDARD_SAMPLES_PY2, CHANGED_FILES)
+    NON_GAE_STANDARD_SAMPLES_PY3 = _filter_samples(
+        NON_GAE_STANDARD_SAMPLES_PY3, CHANGED_FILES)
 
 
 def _session_tests(session, sample, post_install=None):
@@ -207,14 +223,14 @@ def session_gae(session, sample):
     _session_tests(session, sample, _setup_appengine_sdk)
 
 
-@nox.parametrize('sample', NON_GAE_STANDARD_SAMPLES)
+@nox.parametrize('sample', NON_GAE_STANDARD_SAMPLES_PY2)
 def session_py27(session, sample):
     """Runs py.test for a sample using Python 2.7"""
     session.interpreter = 'python2.7'
     _session_tests(session, sample)
 
 
-@nox.parametrize('sample', NON_GAE_STANDARD_SAMPLES)
+@nox.parametrize('sample', NON_GAE_STANDARD_SAMPLES_PY3)
 def session_py36(session, sample):
     """Runs py.test for a sample using Python 3.6"""
     session.interpreter = 'python3.6'

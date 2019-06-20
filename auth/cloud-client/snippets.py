@@ -18,6 +18,7 @@ the Google Cloud Client Libraries."""
 import argparse
 
 
+# [START auth_cloud_implicit]
 def implicit():
     from google.cloud import storage
 
@@ -28,8 +29,10 @@ def implicit():
     # Make an authenticated API request
     buckets = list(storage_client.list_buckets())
     print(buckets)
+# [END auth_cloud_implicit]
 
 
+# [START auth_cloud_explicit]
 def explicit():
     from google.cloud import storage
 
@@ -41,8 +44,10 @@ def explicit():
     # Make an authenticated API request
     buckets = list(storage_client.list_buckets())
     print(buckets)
+# [END auth_cloud_explicit]
 
 
+# [START auth_cloud_explicit_compute_engine]
 def explicit_compute_engine(project):
     from google.auth import compute_engine
     from google.cloud import storage
@@ -57,6 +62,7 @@ def explicit_compute_engine(project):
     # Make an authenticated API request
     buckets = list(storage_client.list_buckets())
     print(buckets)
+# [END auth_cloud_explicit_compute_engine]
 
 
 if __name__ == '__main__':

@@ -17,9 +17,9 @@ Endpoints."""
 
 # [START imports]
 import endpoints
-from protorpc import message_types
-from protorpc import messages
-from protorpc import remote
+from endpoints import message_types
+from endpoints import messages
+from endpoints import remote
 # [END imports]
 
 
@@ -39,10 +39,11 @@ ECHO_RESOURCE = endpoints.ResourceContainer(
 # [END messages]
 
 
-# [START echo_api]
+# [START echo_api_class]
 @endpoints.api(name='echo', version='v1')
 class EchoApi(remote.Service):
 
+    # [START echo_api_method]
     @endpoints.method(
         # This method takes a ResourceContainer defined above.
         ECHO_RESOURCE,
@@ -54,6 +55,7 @@ class EchoApi(remote.Service):
     def echo(self, request):
         output_content = ' '.join([request.content] * request.n)
         return EchoResponse(content=output_content)
+    # [END echo_api_method]
 
     @endpoints.method(
         # This method takes a ResourceContainer defined above.
@@ -74,9 +76,11 @@ class EchoApi(remote.Service):
         EchoResponse,
         path='echo/getApiKey',
         http_method='GET',
-        name='echo_api_key')
+        name='echo_api_key',
+        api_key_required=True)
     def echo_api_key(self, request):
-        return EchoResponse(content=request.get_unrecognized_field_info('key'))
+        key, key_type = request.get_unrecognized_field_info('key')
+        return EchoResponse(content=key)
 
     @endpoints.method(
         # This method takes an empty request body.
@@ -96,7 +100,7 @@ class EchoApi(remote.Service):
         if not user:
             raise endpoints.UnauthorizedException
         return EchoResponse(content=user.email())
-# [END echo_api]
+# [END echo_api_class]
 
 
 # [START api_server]

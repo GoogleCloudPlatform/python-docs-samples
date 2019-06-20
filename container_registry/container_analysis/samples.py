@@ -163,7 +163,8 @@ def get_discovery_info(resource_url, project_id):
     client = containeranalysis_v1.ContainerAnalysisClient()
     grafeas_client = client.get_grafeas_client()
     project_name = grafeas_client.project_path(project_id)
-    response = grafeas_client.list_occurrences(project_name, filter_=filter_str)
+    response = grafeas_client.list_occurrences(project_name,
+                                               filter_=filter_str)
     for occ in response:
         print(occ)
 # [END containeranalysis_discovery_info]
@@ -206,7 +207,8 @@ def get_occurrences_for_image(resource_url, project_id):
     grafeas_client = client.get_grafeas_client()
     project_name = grafeas_client.project_path(project_id)
 
-    response = grafeas_client.list_occurrences(project_name, filter_=filter_str)
+    response = grafeas_client.list_occurrences(project_name,
+                                               filter_=filter_str)
     count = 0
     for o in response:
         # do something with the retrieved occurrence

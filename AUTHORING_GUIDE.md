@@ -416,6 +416,13 @@ if __name__ == '__main__':
 
 ## Running tests and automated tools
 
+### Installing interpreters
+
+You need python 2.7 and 3.6, and the dev packages for each.
+
+For example, to install with apt you'd use:
+`apt-get install python2.7 python2.7-dev python3.6 python3.6-dev`
+
 ### Using nox
 
 The testing of `python-docs-samples` is managed by

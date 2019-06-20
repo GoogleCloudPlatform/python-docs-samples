@@ -18,6 +18,7 @@ product:
 
         python cloudiot_mqtt_example.py \
             --registry_id=my-registry \
+            --cloud_region=us-central1 \
             --project_id=blue-jet-123 \
             --device_id=my-python-device \
             --algorithm=RS256 \

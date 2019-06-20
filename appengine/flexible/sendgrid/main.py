@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START app]
 import logging
 import os
 
@@ -20,10 +19,8 @@ from flask import Flask, render_template, request
 import sendgrid
 from sendgrid.helpers import mail
 
-# [START config]
 SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
 SENDGRID_SENDER = os.environ['SENDGRID_SENDER']
-# [END config]
 
 app = Flask(__name__)
 
@@ -33,7 +30,7 @@ def index():
     return render_template('index.html')
 
 
-# [START example]
+# [START gae_flex_sendgrid]
 @app.route('/send/email', methods=['POST'])
 def send_email():
     to = request.form.get('to')
@@ -55,7 +52,7 @@ def send_email():
         return 'An error occurred: {}'.format(response.body), 500
 
     return 'Email sent.'
-# [END example]
+# [END gae_flex_sendgrid]
 
 
 @app.errorhandler(500)
@@ -71,4 +68,3 @@ if __name__ == '__main__':
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
     app.run(host='127.0.0.1', port=8080, debug=True)
-# [END app]

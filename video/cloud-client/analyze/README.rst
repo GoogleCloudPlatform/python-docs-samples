@@ -12,7 +12,7 @@ This directory contains samples for Google Cloud Video Intelligence API. `Google
 
 
 
-.. _Google Cloud Video Intelligence API: https://cloud.google.com/video-intelligence/docs 
+.. _Google Cloud Video Intelligence API: https://cloud.google.com/video-intelligence/docs
 
 Setup
 -------------------------------------------------------------------------------
@@ -31,10 +31,16 @@ credentials for applications.
 Install Dependencies
 ++++++++++++++++++++
 
+#. Clone python-docs-samples and change directory to the sample directory you want to use.
+
+    .. code-block:: bash
+
+        $ git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+
 #. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
 
- .. _Python Development Environment Setup Guide:
-     https://cloud.google.com/python/setup
+   .. _Python Development Environment Setup Guide:
+       https://cloud.google.com/python/setup
 
 #. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
 
@@ -59,7 +65,7 @@ analyze
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=video/cloud-client/analyze/analyze.py;video/cloud-client/analyze/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=video/cloud-client/analyze/analyze.py,video/cloud-client/analyze/README.rst
 
 
 
@@ -70,22 +76,20 @@ To run this sample:
 
     $ python analyze.py
 
-    usage: analyze.py [-h] {faces,labels,labels_file,explicit_content,shots} ...
+    usage: analyze.py [-h] {labels,labels_file,explicit_content,shots} ...
 
-    This application demonstrates face detection, label detection,
+    This application demonstrates label detection,
     explicit content, and shot change detection using the Google Cloud API.
 
     Usage Examples:
 
-        python analyze.py faces gs://demomaker/google_gmail.mp4
         python analyze.py labels gs://cloud-ml-sandbox/video/chicago.mp4
         python analyze.py labels_file resources/cat.mp4
         python analyze.py shots gs://demomaker/gbikes_dinosaur.mp4
         python analyze.py explicit_content gs://demomaker/gbikes_dinosaur.mp4
 
     positional arguments:
-      {faces,labels,labels_file,explicit_content,shots}
-        faces               Detects faces given a GCS path.
+      {labels,labels_file,explicit_content,shots}
         labels              Detects labels given a GCS path.
         labels_file         Detect labels given a file path.
         explicit_content    Detects explicit content from the GCS path to a video.
