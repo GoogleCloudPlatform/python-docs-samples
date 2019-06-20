@@ -14,16 +14,6 @@
 # limitations under the License.
 
 
-def tmp_create_client():
-    from grafeas.grafeas_v1 import GrafeasClient
-    from grafeas.grafeas_v1.gapic.transports import grafeas_grpc_transport
-
-    address = 'containeranalysis.googleapis.com:443'
-    scopes = ('https://www.googleapis.com/auth/cloud-platform')
-    transport = grafeas_grpc_transport.GrafeasGrpcTransport(address, scopes)
-    return GrafeasClient(transport)
-
-
 # [START containeranalysis_create_note]
 def create_note(note_id, project_id):
     """Creates and returns a new vulnerability note."""
@@ -31,9 +21,11 @@ def create_note(note_id, project_id):
     # project_id = 'my-gcp-project'
 
     from grafeas.grafeas_v1.gapic.enums import Version
+    from google.cloud.devtools import containeranalysis_v1
 
-    client = tmp_create_client()
-    project_name = client.project_path(project_id)
+    client = containeranalysis_v1.ContainerAnalysisClient()
+    grafeas_client = client.get_grafeas_client()
+    project_name = grafeas_client.project_path(project_id)
     note = {
         'vulnerability': {
             'details': [
@@ -50,7 +42,7 @@ def create_note(note_id, project_id):
             ]
         }
     }
-    response = client.create_note(project_name, note_id, note)
+    response = grafeas_client.create_note(project_name, note_id, note)
     return response
 # [END containeranalysis_create_note]
 
@@ -61,10 +53,13 @@ def delete_note(note_id, project_id):
     # note_id = 'my-note'
     # project_id = 'my-gcp-project'
 
-    client = tmp_create_client()
-    note_name = client.note_path(project_id, note_id)
+    from google.cloud.devtools import containeranalysis_v1
 
-    client.delete_note(note_name)
+    client = containeranalysis_v1.ContainerAnalysisClient()
+    grafeas_client = client.get_grafeas_client()
+    note_name = grafeas_client.note_path(project_id, note_id)
+
+    grafeas_client.delete_note(note_name)
 # [END containeranalysis_delete_note]
 
 
@@ -78,10 +73,12 @@ def create_occurrence(resource_url, note_id, occurrence_project, note_project):
     # note_project = 'my-gcp-project'
 
     from grafeas.grafeas_v1.gapic.enums import Version
+    from google.cloud.devtools import containeranalysis_v1
 
-    client = tmp_create_client()
-    formatted_note = client.note_path(note_project, note_id)
-    formatted_project = client.project_path(occurrence_project)
+    client = containeranalysis_v1.ContainerAnalysisClient()
+    grafeas_client = client.get_grafeas_client()
+    formatted_note = grafeas_client.note_path(note_project, note_id)
+    formatted_project = grafeas_client.project_path(occurrence_project)
 
     occurrence = {
         'note_name': formatted_note,
@@ -102,7 +99,7 @@ def create_occurrence(resource_url, note_id, occurrence_project, note_project):
         }
     }
 
-    return client.create_occurrence(formatted_project, occurrence)
+    return grafeas_client.create_occurrence(formatted_project, occurrence)
 # [END containeranalysis_create_occurrence]
 
 
@@ -112,9 +109,12 @@ def delete_occurrence(occurrence_id, project_id):
     # occurrence_id = basename(occurrence.name)
     # project_id = 'my-gcp-project'
 
-    client = tmp_create_client()
-    formatted_parent = client.occurrence_path(project_id, occurrence_id)
-    client.delete_occurrence(formatted_parent)
+    from google.cloud.devtools import containeranalysis_v1
+
+    client = containeranalysis_v1.ContainerAnalysisClient()
+    grafeas_client = client.get_grafeas_client()
+    formatted_parent = grafeas_client.occurrence_path(project_id, occurrence_id)
+    grafeas_client.delete_occurrence(formatted_parent)
 # [END containeranalysis_delete_occurrence]
 
 
@@ -124,9 +124,12 @@ def get_note(note_id, project_id):
     # note_id = 'my-note'
     # project_id = 'my-gcp-project'
 
-    client = tmp_create_client()
-    note_name = client.note_path(project_id, note_id)
-    response = client.get_note(note_name)
+    from google.cloud.devtools import containeranalysis_v1
+
+    client = containeranalysis_v1.ContainerAnalysisClient()
+    grafeas_client = client.get_grafeas_client()
+    note_name = grafeas_client.note_path(project_id, note_id)
+    response = grafeas_client.get_note(note_name)
     return response
 # [END containeranalysis_get_note]
 
@@ -137,9 +140,12 @@ def get_occurrence(occurrence_id, project_id):
     # occurrence_id = basename(occurrence.name)
     # project_id = 'my-gcp-project'
 
-    client = tmp_create_client()
-    formatted_parent = client.occurrence_path(project_id, occurrence_id)
-    return client.get_occurrence(formatted_parent)
+    from google.cloud.devtools import containeranalysis_v1
+
+    client = containeranalysis_v1.ContainerAnalysisClient()
+    grafeas_client = client.get_grafeas_client()
+    formatted_parent = grafeas_client.occurrence_path(project_id, occurrence_id)
+    return grafeas_client.get_occurrence(formatted_parent)
 # [END containeranalysis_get_occurrence]
 
 
@@ -151,10 +157,13 @@ def get_discovery_info(resource_url, project_id):
     # resource_url = 'https://gcr.io/my-project/my-image@sha256:123'
     # project_id = 'my-gcp-project'
 
+    from google.cloud.devtools import containeranalysis_v1
+
     filter_str = 'kind="DISCOVERY" AND resourceUrl="{}"'.format(resource_url)
-    client = tmp_create_client()
-    project_name = client.project_path(project_id)
-    response = client.list_occurrences(project_name, filter_=filter_str)
+    client = containeranalysis_v1.ContainerAnalysisClient()
+    grafeas_client = client.get_grafeas_client()
+    project_name = grafeas_client.project_path(project_id)
+    response = grafeas_client.list_occurrences(project_name, filter_=filter_str)
     for occ in response:
         print(occ)
 # [END containeranalysis_discovery_info]
@@ -167,10 +176,13 @@ def get_occurrences_for_note(note_id, project_id):
     # note_id = 'my-note'
     # project_id = 'my-gcp-project'
 
-    client = tmp_create_client()
-    note_name = client.note_path(project_id, note_id)
+    from google.cloud.devtools import containeranalysis_v1
 
-    response = client.list_note_occurrences(note_name)
+    client = containeranalysis_v1.ContainerAnalysisClient()
+    grafeas_client = client.get_grafeas_client()
+    note_name = grafeas_client.note_path(project_id, note_id)
+
+    response = grafeas_client.list_note_occurrences(note_name)
     count = 0
     for o in response:
         # do something with the retrieved occurrence
@@ -187,11 +199,14 @@ def get_occurrences_for_image(resource_url, project_id):
     # resource_url = 'https://gcr.io/my-project/my-image@sha256:123'
     # project_id = 'my-gcp-project'
 
-    filter_str = 'resourceUrl="{}"'.format(resource_url)
-    client = tmp_create_client()
-    project_name = client.project_path(project_id)
+    from google.cloud.devtools import containeranalysis_v1
 
-    response = client.list_occurrences(project_name, filter_=filter_str)
+    filter_str = 'resourceUrl="{}"'.format(resource_url)
+    client = containeranalysis_v1.ContainerAnalysisClient()
+    grafeas_client = client.get_grafeas_client()
+    project_name = grafeas_client.project_path(project_id)
+
+    response = grafeas_client.list_occurrences(project_name, filter_=filter_str)
     count = 0
     for o in response:
         # do something with the retrieved occurrence
@@ -272,11 +287,13 @@ def poll_discovery_finished(resource_url, timeout_seconds, project_id):
 
     import time
     from grafeas.grafeas_v1.gapic.enums import DiscoveryOccurrence
+    from google.cloud.devtools import containeranalysis_v1
 
     deadline = time.time() + timeout_seconds
 
-    client = tmp_create_client()
-    project_name = client.project_path(project_id)
+    client = containeranalysis_v1.ContainerAnalysisClient()
+    grafeas_client = client.get_grafeas_client()
+    project_name = grafeas_client.project_path(project_id)
 
     discovery_occurrence = None
     while discovery_occurrence is None:
@@ -290,7 +307,7 @@ def poll_discovery_finished(resource_url, timeout_seconds, project_id):
         filter_str = 'kind="DISCOVERY" AND resourceUrl="{}"'\
             .format(resource_url)
         # [START containeranalysis_poll_discovery_occurrence_finished]
-        result = client.list_occurrences(project_name, filter_str)
+        result = grafeas_client.list_occurrences(project_name, filter_str)
         # only one occurrence should ever be returned by ListOccurrences
         # and the given filter
         for item in result:
@@ -303,7 +320,7 @@ def poll_discovery_finished(resource_url, timeout_seconds, project_id):
             and status != DiscoveryOccurrence.AnalysisStatus.FINISHED_FAILED \
             and status != DiscoveryOccurrence.AnalysisStatus.FINISHED_SUCCESS:
         time.sleep(1)
-        updated = client.get_occurrence(discovery_occurrence.name)
+        updated = grafeas_client.get_occurrence(discovery_occurrence.name)
         status = updated.discovery.analysis_status
         if time.time() > deadline:
             raise RuntimeError('timeout while waiting for terminal state')
@@ -317,12 +334,15 @@ def find_vulnerabilities_for_image(resource_url, project_id):
     # resource_url = 'https://gcr.io/my-project/my-image@sha256:123'
     # project_id = 'my-gcp-project'
 
-    client = tmp_create_client()
-    project_name = client.project_path(project_id)
+    from google.cloud.devtools import containeranalysis_v1
+
+    client = containeranalysis_v1.ContainerAnalysisClient()
+    grafeas_client = client.get_grafeas_client()
+    project_name = grafeas_client.project_path(project_id)
 
     filter_str = 'kind="VULNERABILITY" AND resourceUrl="{}"'\
         .format(resource_url)
-    return list(client.list_occurrences(project_name, filter_str))
+    return list(grafeas_client.list_occurrences(project_name, filter_str))
 # [END containeranalysis_vulnerability_occurrences_for_image]
 
 
@@ -334,13 +354,15 @@ def find_high_severity_vulnerabilities_for_image(resource_url, project_id):
     # project_id = 'my-gcp-project'
 
     from grafeas.grafeas_v1.gapic.enums import Severity
+    from google.cloud.devtools import containeranalysis_v1
 
-    client = tmp_create_client()
-    project_name = client.project_path(project_id)
+    client = containeranalysis_v1.ContainerAnalysisClient()
+    grafeas_client = client.get_grafeas_client()
+    project_name = grafeas_client.project_path(project_id)
 
     filter_str = 'kind="VULNERABILITY" AND resourceUrl="{}"'\
         .format(resource_url)
-    all_vulnerabilities = client.list_occurrences(project_name, filter_str)
+    all_vulnerabilities = grafeas_client.list_occurrences(project_name, filter_str)
     filtered_list = []
     for v in all_vulnerabilities:
         if v.severity == Severity.HIGH or v.severity == Severity.CRITICAL:
