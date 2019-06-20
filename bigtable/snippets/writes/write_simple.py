@@ -41,11 +41,7 @@ def write_simple(project_id, instance_id, table_id):
                  "PQ2A.190405.003",
                  timestamp)
 
-    response = row.commit()
-
-    # BUG: This is always None. If you set the column_family_id to something
-    # else the commit will fail and response is still None.
-    print(response)
+    row.commit()
 
     print('Successfully wrote row {}.'.format(row_key))
 # [END bigtable_writes_simple]
