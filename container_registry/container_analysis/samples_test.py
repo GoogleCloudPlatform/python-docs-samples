@@ -19,6 +19,7 @@ from time import sleep, time
 
 from google.api_core.exceptions import InvalidArgument
 from google.api_core.exceptions import NotFound
+from google.cloud.devtools import containeranalysis_v1
 from google.cloud.pubsub import SubscriberClient
 
 from grafeas.grafeas_v1.gapic.enums import DiscoveryOccurrence, NoteKind
@@ -166,22 +167,23 @@ class TestContainerAnalysisSamples:
 
         # create discovery occurrence
         note_id = 'discovery-note-{}'.format(int(time()))
-        client = samples.tmp_create_client()
+        client = containeranalysis_v1.ContainerAnalysisClient()
+        grafeas_client = client.get_grafeas_client()
         note = {
             'discovery': {
                 'analysis_kind': NoteKind.DISCOVERY
             }
         }
-        client.create_note(client.project_path(PROJECT_ID), note_id, note)
+        grafeas_client.create_note(grafeas_client.project_path(PROJECT_ID), note_id, note)
         occurrence = {
-            'note_name': client.note_path(PROJECT_ID, note_id),
+            'note_name': grafeas_client.note_path(PROJECT_ID, note_id),
             'resource_uri': self.image_url,
             'discovery': {
                 'analysis_status': DiscoveryOccurrence.AnalysisStatus
                                                       .FINISHED_SUCCESS
             }
         }
-        created = client.create_occurrence(client.project_path(PROJECT_ID),
+        created = grafeas_client.create_occurrence(grafeas_client.project_path(PROJECT_ID),
                                            occurrence)
 
         # poll again
@@ -222,7 +224,8 @@ class TestContainerAnalysisSamples:
 
         # create new high severity vulnerability
         note_id = 'discovery-note-{}'.format(int(time()))
-        client = samples.tmp_create_client()
+        client = containeranalysis_v1.ContainerAnalysisClient()
+        grafeas_client = client.get_grafeas_client()
         note = {
             'vulnerability': {
                 'severity': Severity.CRITICAL,
@@ -240,7 +243,7 @@ class TestContainerAnalysisSamples:
                 ]
             }
         }
-        client.create_note(client.project_path(PROJECT_ID), note_id, note)
+        grafeas_client.create_note(grafeas_client.project_path(PROJECT_ID), note_id, note)
         occurrence = {
             'note_name': client.note_path(PROJECT_ID, note_id),
             'resource_uri': self.image_url,
@@ -259,7 +262,7 @@ class TestContainerAnalysisSamples:
                 ]
             }
         }
-        created = client.create_occurrence(client.project_path(PROJECT_ID),
+        created = grafeas_client.create_occurrence(grafeas_client.project_path(PROJECT_ID),
                                            occurrence)
         # query again
         tries = 0
