@@ -174,7 +174,8 @@ class TestContainerAnalysisSamples:
                 'analysis_kind': NoteKind.DISCOVERY
             }
         }
-        grafeas_client.create_note(grafeas_client.project_path(PROJECT_ID), note_id, note)
+        grafeas_client.\
+            create_note(grafeas_client.project_path(PROJECT_ID), note_id, note)
         occurrence = {
             'note_name': grafeas_client.note_path(PROJECT_ID, note_id),
             'resource_uri': self.image_url,
@@ -183,8 +184,9 @@ class TestContainerAnalysisSamples:
                                                       .FINISHED_SUCCESS
             }
         }
-        created = grafeas_client.create_occurrence(grafeas_client.project_path(PROJECT_ID),
-                                           occurrence)
+        created = grafeas_client.\
+            create_occurrence(grafeas_client.project_path(PROJECT_ID),
+                              occurrence)
 
         # poll again
         disc = samples.poll_discovery_finished(self.image_url, 10, PROJECT_ID)
@@ -243,7 +245,8 @@ class TestContainerAnalysisSamples:
                 ]
             }
         }
-        grafeas_client.create_note(grafeas_client.project_path(PROJECT_ID), note_id, note)
+        grafeas_client.\
+            create_note(grafeas_client.project_path(PROJECT_ID), note_id, note)
         occurrence = {
             'note_name': client.note_path(PROJECT_ID, note_id),
             'resource_uri': self.image_url,
@@ -262,8 +265,9 @@ class TestContainerAnalysisSamples:
                 ]
             }
         }
-        created = grafeas_client.create_occurrence(grafeas_client.project_path(PROJECT_ID),
-                                           occurrence)
+        created = grafeas_client.\
+            create_occurrence(grafeas_client.project_path(PROJECT_ID),
+                              occurrence)
         # query again
         tries = 0
         count = 0

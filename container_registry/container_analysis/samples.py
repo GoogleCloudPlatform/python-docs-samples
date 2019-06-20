@@ -113,8 +113,8 @@ def delete_occurrence(occurrence_id, project_id):
 
     client = containeranalysis_v1.ContainerAnalysisClient()
     grafeas_client = client.get_grafeas_client()
-    formatted_parent = grafeas_client.occurrence_path(project_id, occurrence_id)
-    grafeas_client.delete_occurrence(formatted_parent)
+    parent = grafeas_client.occurrence_path(project_id, occurrence_id)
+    grafeas_client.delete_occurrence(parent)
 # [END containeranalysis_delete_occurrence]
 
 
@@ -144,8 +144,8 @@ def get_occurrence(occurrence_id, project_id):
 
     client = containeranalysis_v1.ContainerAnalysisClient()
     grafeas_client = client.get_grafeas_client()
-    formatted_parent = grafeas_client.occurrence_path(project_id, occurrence_id)
-    return grafeas_client.get_occurrence(formatted_parent)
+    parent = grafeas_client.occurrence_path(project_id, occurrence_id)
+    return grafeas_client.get_occurrence(parent)
 # [END containeranalysis_get_occurrence]
 
 
@@ -362,9 +362,9 @@ def find_high_severity_vulnerabilities_for_image(resource_url, project_id):
 
     filter_str = 'kind="VULNERABILITY" AND resourceUrl="{}"'\
         .format(resource_url)
-    all_vulnerabilities = grafeas_client.list_occurrences(project_name, filter_str)
+    vulnerabilities = grafeas_client.list_occurrences(project_name, filter_str)
     filtered_list = []
-    for v in all_vulnerabilities:
+    for v in vulnerabilities:
         if v.severity == Severity.HIGH or v.severity == Severity.CRITICAL:
             filtered_list.append(v)
     return filtered_list
