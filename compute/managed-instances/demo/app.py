@@ -165,7 +165,7 @@ def _get_template():
 def _is_working():
     """Returns TRUE if the server is currently simulating CPU load."""
     global _worker
-    return _worker != None and _worker.is_alive()
+    return _worker is not None and _worker.is_alive()
 
 
 def _burn_cpu():
