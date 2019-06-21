@@ -30,10 +30,18 @@ secure solution such as [Cloud KMS](https://cloud.google.com/kms/) to help keep 
 
 ## Running locally
 
-To run this application locally, download and install the `cloud_sql_proxy` by
-following the instructions [here](https://cloud.google.com/sql/docs/mysql/sql-proxy#install).
+To run this application locally, download and instal the `cloud_sql_proxy` by
+following the instructions
+[here](https://cloud.google.com/sql/docs/mysql/sql-proxy#install). Once the
+proxy has been downloaded, use the following commands to create the `cloudsql`
+directory and give the user running the proxy the appropriate permissions.
 
-Once the proxy is ready, use the following command to start the proxy in the
+```bash
+sudo mkdir /cloudsql
+sudo chown -R $USER /cloudsql
+```
+
+Once the `/cloudsql` is ready, use the following command to start the proxy in the
 background:
 ```bash
 ./cloud_sql_proxy -dir=/cloudsql --instances=$CLOUD_SQL_CONNECTION_NAME --credential_file=$GOOGLE_APPLICATION_CREDENTIALS
