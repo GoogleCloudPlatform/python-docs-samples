@@ -21,7 +21,6 @@ Javascript is originally from an implementation of Django i18n.
 """
 from __future__ import print_function
 
-
 import gettext
 import json
 import os
@@ -31,6 +30,11 @@ import jinja2
 import webapp2
 
 from webob import Request
+
+try:
+    basestring
+except NameError:
+    basestring = basestring
 
 
 def _get_plural_forms(js_translations):
@@ -84,9 +88,9 @@ def convert_translations_to_dict(js_translations):
     for key, value in js_translations._catalog.items():
         if key == '':
             continue
-        if type(key) in (str, unicode):
+        if isinstance(key, basestring):
             translations_dict['catalog'][key] = value
-        elif type(key) == tuple:
+        elif isinstance(key, tuple):
             if key[0] not in translations_dict['catalog']:
                 translations_dict['catalog'][key[0]] = [''] * n_plural
             translations_dict['catalog'][key[0]][int(key[1])] = value
