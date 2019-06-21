@@ -34,7 +34,7 @@ from webob import Request
 try:
     basestring
 except NameError:
-    basestring = basestring
+    basestring = str
 
 
 def _get_plural_forms(js_translations):
