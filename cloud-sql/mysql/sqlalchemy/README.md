@@ -30,7 +30,7 @@ secure solution such as [Cloud KMS](https://cloud.google.com/kms/) to help keep 
 
 ## Running locally
 
-To run this application locally, download and instal the `cloud_sql_proxy` by
+To run this application locally, download and install the `cloud_sql_proxy` by
 following the instructions
 [here](https://cloud.google.com/sql/docs/mysql/sql-proxy#install). Once the
 proxy has been downloaded, use the following commands to create the `/cloudsql`
