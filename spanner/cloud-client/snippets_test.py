@@ -202,7 +202,9 @@ def test_query_with_struct(capsys):
 def test_query_with_array_of_struct(capsys):
     snippets.query_with_array_of_struct(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'SingerId: 8\nSingerId: 7\nSingerId: 6' in out
+    assert 'SingerId: 8' in out
+    assert 'SingerId: 7' in out
+    assert 'SingerId: 6' in out
 
 
 def test_query_struct_field(capsys):
@@ -270,7 +272,7 @@ def test_query_data_with_parameter(capsys):
 def test_write_with_dml_transaction(capsys):
     snippets.write_with_dml_transaction(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert "Transferred 300000 from Album1's budget to Album2's" in out
+    assert "Transferred 200000 from Album2's budget to Album1's" in out
 
 
 def update_data_with_partitioned_dml(capsys):

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2016 Google Inc. All Rights Reserved.
+# Copyright 2019 Google LLC. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -95,7 +95,7 @@ def publish_messages(project_id, topic_name):
         data = data.encode('utf-8')
         # When you publish a message, the client returns a future.
         future = publisher.publish(topic_path, data=data)
-        print('Published {} of message ID {}.'.format(data, future.result()))
+        print(future.result())
 
     print('Published messages.')
     # [END pubsub_quickstart_publisher]
@@ -119,8 +119,9 @@ def publish_messages_with_custom_attributes(project_id, topic_name):
         # Data must be a bytestring
         data = data.encode('utf-8')
         # Add two attributes, origin and username, to the message
-        publisher.publish(
+        future = publisher.publish(
             topic_path, data, origin='python-sample', username='gcp')
+        print(future.result())
 
     print('Published messages with custom attributes.')
     # [END pubsub_publish_custom_attributes]
@@ -138,27 +139,21 @@ def publish_messages_with_futures(project_id, topic_name):
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(project_id, topic_name)
 
-    # When you publish a message, the client returns a Future. This Future
-    # can be used to track when the message is published.
-    futures = []
-
     for n in range(1, 10):
         data = u'Message number {}'.format(n)
         # Data must be a bytestring
         data = data.encode('utf-8')
-        message_future = publisher.publish(topic_path, data=data)
-        futures.append(message_future)
-
-    print('Published message IDs:')
-    for future in futures:
-        # result() blocks until the message is published.
+        # When you publish a message, the client returns a future.
+        future = publisher.publish(topic_path, data=data)
         print(future.result())
+
+    print("Published messages with futures.")
     # [END pubsub_publisher_concurrency_control]
 
 
 def publish_messages_with_error_handler(project_id, topic_name):
-    """Publishes multiple messages to a Pub/Sub topic with an error handler."""
     # [START pubsub_publish_messages_error_handler]
+    """Publishes multiple messages to a Pub/Sub topic with an error handler."""
     import time
 
     from google.cloud import pubsub_v1
@@ -169,28 +164,34 @@ def publish_messages_with_error_handler(project_id, topic_name):
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(project_id, topic_name)
 
-    def callback(message_future):
-        # When timeout is unspecified, the exception method waits indefinitely.
-        if message_future.exception(timeout=30):
-            print('Publishing message on {} threw an Exception {}.'.format(
-                topic_name, message_future.exception()))
-        else:
-            print(message_future.result())
+    futures = dict()
 
-    for n in range(1, 10):
-        data = u'Message number {}'.format(n)
-        # Data must be a bytestring
-        data = data.encode('utf-8')
-        # When you publish a message, the client returns a Future.
-        message_future = publisher.publish(topic_path, data=data)
-        message_future.add_done_callback(callback)
+    def get_callback(f, data):
+        def callback(f):
+            try:
+                print(f.result())
+                futures.pop(data)
+            except: # noqa
+                print("Please handle {} for {}.".format(f.exception(), data))
+        return callback
 
-    print('Published message IDs:')
+    for i in range(10):
+        data = str(i)
+        futures.update({data: None})
+        # When you publish a message, the client returns a future.
+        future = publisher.publish(
+            topic_path,
+            data=data.encode("utf-8"),  # data must be a bytestring.
+        )
+        futures[data] = future
+        # Publish failures shall be handled in the callback function.
+        future.add_done_callback(get_callback(future, data))
 
-    # We must keep the main thread from exiting to allow it to process
-    # messages in the background.
-    while True:
-        time.sleep(60)
+    # Wait for all the publish futures to resolve before exiting.
+    while futures:
+        time.sleep(5)
+
+    print("Published message with error handler.")
     # [END pubsub_publish_messages_error_handler]
 
 
@@ -215,9 +216,10 @@ def publish_messages_with_batch_settings(project_id, topic_name):
         data = u'Message number {}'.format(n)
         # Data must be a bytestring
         data = data.encode('utf-8')
-        publisher.publish(topic_path, data=data)
+        future = publisher.publish(topic_path, data=data)
+        print(future.result())
 
-    print('Published messages.')
+    print('Published messages with batch settings.')
     # [END pubsub_publisher_batch_settings]
 
 

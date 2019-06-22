@@ -78,7 +78,7 @@ def list_time_series(project_id):
     interval.end_time.seconds = int(now)
     interval.end_time.nanos = int(
         (now - interval.end_time.seconds) * 10**9)
-    interval.start_time.seconds = int(now - 300)
+    interval.start_time.seconds = int(now - 1200)
     interval.start_time.nanos = interval.end_time.nanos
     results = client.list_time_series(
         project_name,
@@ -99,7 +99,7 @@ def list_time_series_header(project_id):
     interval.end_time.seconds = int(now)
     interval.end_time.nanos = int(
         (now - interval.end_time.seconds) * 10**9)
-    interval.start_time.seconds = int(now - 300)
+    interval.start_time.seconds = int(now - 1200)
     interval.start_time.nanos = interval.end_time.nanos
     results = client.list_time_series(
         project_name,
@@ -123,7 +123,7 @@ def list_time_series_aggregate(project_id):
     interval.start_time.seconds = int(now - 3600)
     interval.start_time.nanos = interval.end_time.nanos
     aggregation = monitoring_v3.types.Aggregation()
-    aggregation.alignment_period.seconds = 300  # 5 minutes
+    aggregation.alignment_period.seconds = 1200  # 20 minutes
     aggregation.per_series_aligner = (
         monitoring_v3.enums.Aggregation.Aligner.ALIGN_MEAN)
 
@@ -150,7 +150,7 @@ def list_time_series_reduce(project_id):
     interval.start_time.seconds = int(now - 3600)
     interval.start_time.nanos = interval.end_time.nanos
     aggregation = monitoring_v3.types.Aggregation()
-    aggregation.alignment_period.seconds = 300  # 5 minutes
+    aggregation.alignment_period.seconds = 1200  # 20 minutes
     aggregation.per_series_aligner = (
         monitoring_v3.enums.Aggregation.Aligner.ALIGN_MEAN)
     aggregation.cross_series_reducer = (
