@@ -28,8 +28,8 @@ BIGTABLE_INSTANCE = os.environ['BIGTABLE_CLUSTER']
 TABLE_ID_PREFIX = 'mobile-time-series-{}'
 
 
-@pytest.fixture(scope="module")
-def test_writes(capsys):
+@pytest.fixture
+def test_writes(capsys, writes):
     client = bigtable.Client(project=PROJECT, admin=True)
     instance = client.instance(BIGTABLE_INSTANCE)
 
@@ -61,5 +61,7 @@ def test_writes(capsys):
 
     out, _ = capsys.readouterr()
     assert 'Successfully wrote 2 rows' in out
+
+    yield writes
 
     table.delete()
