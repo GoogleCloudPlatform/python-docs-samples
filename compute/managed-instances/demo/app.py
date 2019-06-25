@@ -20,25 +20,29 @@ Attached health checks should query the '/health' path.
 """
 
 from flask import Flask, make_response, render_template
+from random import random
 from re import sub
 from requests import get
 from socket import gethostname
+from multiprocessing import Process
 
 PORT_NUMBER = 80
 
 app = Flask(__name__)
-healthy = True
+_is_healthy = True
+_worker = None
 
 
 @app.route('/')
 def index():
     """Returns the demo UI."""
-    global healthy
+    global _is_healthy
     return render_template('index.html',
                            hostname=gethostname(),
                            zone=_get_zone(),
                            template=_get_template(),
-                           healthy=healthy)
+                           healthy=_is_healthy,
+                           working=_is_working())
 
 
 @app.route('/health')
@@ -48,21 +52,23 @@ def health():
     Returns:
         HTTP status 200 if 'healthy', HTTP status 500 if 'unhealthy'
     """
-    global healthy
-    template = render_template('health.html', healthy=healthy)
-    return make_response(template, 200 if healthy else 500)
+    global _is_healthy
+    template = render_template('health.html', healthy=_is_healthy)
+    return make_response(template, 200 if _is_healthy else 500)
 
 
 @app.route('/makeHealthy')
 def make_healthy():
     """Sets the server to simulate a 'healthy' status."""
-    global healthy
-    healthy = True
+    global _is_healthy
+    _is_healthy = True
+
     template = render_template('index.html',
                                hostname=gethostname(),
                                zone=_get_zone(),
                                template=_get_template(),
-                               healthy=True)
+                               healthy=True,
+                               working=_is_working())
     response = make_response(template, 302)
     response.headers['Location'] = '/'
     return response
@@ -71,13 +77,53 @@ def make_healthy():
 @app.route('/makeUnhealthy')
 def make_unhealthy():
     """Sets the server to simulate an 'unhealthy' status."""
-    global healthy
-    healthy = False
+    global _is_healthy
+    _is_healthy = False
+
     template = render_template('index.html',
                                hostname=gethostname(),
                                zone=_get_zone(),
                                template=_get_template(),
-                               healthy=False)
+                               healthy=False,
+                               working=_is_working())
+    response = make_response(template, 302)
+    response.headers['Location'] = '/'
+    return response
+
+
+@app.route('/startLoad')
+def start_load():
+    """Sets the server to simulate high CPU load."""
+    global _worker, _is_healthy
+    if not _is_working():
+        _worker = Process(target=_burn_cpu)
+        _worker.start()
+
+    template = render_template('index.html',
+                               hostname=gethostname(),
+                               zone=_get_zone(),
+                               template=_get_template(),
+                               healthy=_is_healthy,
+                               working=True)
+    response = make_response(template, 302)
+    response.headers['Location'] = '/'
+    return response
+
+
+@app.route('/stopLoad')
+def stop_load():
+    """Sets the server to stop simulating CPU load."""
+    global _worker, _is_healthy
+    if _is_working():
+        _worker.terminate()
+        _worker = None
+
+    template = render_template('index.html',
+                               hostname=gethostname(),
+                               zone=_get_zone(),
+                               template=_get_template(),
+                               healthy=_is_healthy,
+                               working=False)
     response = make_response(template, 302)
     response.headers['Location'] = '/'
     return response
@@ -114,6 +160,18 @@ def _get_template():
         return sub(r'.+instanceTemplates/(.+)', r'\1', r.text)
     else:
         return ''
+
+
+def _is_working():
+    """Returns TRUE if the server is currently simulating CPU load."""
+    global _worker
+    return _worker is not None and _worker.is_alive()
+
+
+def _burn_cpu():
+    """Burn CPU cycles to simulate high CPU load."""
+    while True:
+        random()*random()
 
 
 if __name__ == "__main__":
