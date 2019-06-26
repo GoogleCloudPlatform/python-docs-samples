@@ -105,6 +105,8 @@ To run this sample:
       --cloud_region CLOUD_REGION
                             GCP cloud region
       --ca_certs CA_CERTS   CA root from https://pki.google.com/roots.pem
+      --gateway_id GATEWAY_ID
+                            Gateway identifier.
       --num_messages NUM_MESSAGES
                             Number of messages to publish.
       --message_type {event,state}
