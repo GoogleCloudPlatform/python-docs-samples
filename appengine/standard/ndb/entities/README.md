@@ -12,9 +12,9 @@ various operations on ndb entities.
 These samples are used on the following documentation pages:
 
 >
-* https://cloud.google.com/appengine/docs/python/datastore/creating-entities
-* https://cloud.google.com/appengine/docs/python/datastore/creating-entity-models
-* https://cloud.google.com/appengine/docs/python/users/userobjects
-* https://cloud.google.com/appengine/docs/python/datastore/creating-entity-keys
+* https://cloud.google.com/appengine/docs/standard/python/ndb/creating-entities
+* https://cloud.google.com/appengine/docs/standard/python/ndb/creating-entity-models
+* https://cloud.google.com/appengine/docs/standard/python/users/userobjects
+* https://cloud.google.com/appengine/docs/standard/python/ndb/creating-entity-keys
 
 <!-- end-auto-doc-link -->
