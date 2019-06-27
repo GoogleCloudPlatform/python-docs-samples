@@ -10,7 +10,7 @@ Use it with the [Cloud Pub/Sub with Cloud Run tutorial](http://cloud.google.com/
 docker build --tag pubsub-tutorial:python .
 ```
 
-## Run
+## Run Locally
 
 ```
 docker run --rm -p 9090:8080 pubsub-tutorial:python
