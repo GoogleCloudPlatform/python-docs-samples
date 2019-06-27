@@ -107,10 +107,10 @@ def test_replace_channels(capsys, pochan):
 
 
 def test_backup_and_restore(capsys, pochan):
-    snippets.backup(pochan.project_name)
+    snippets.backup(pochan.project_name, 'backup.json')
     out, _ = capsys.readouterr()
 
-    snippets.restore(pochan.project_name)
+    snippets.restore(pochan.project_name, 'backup.json')
     out, _ = capsys.readouterr()
     assert "Updated {0}".format(pochan.alert_policy.name) in out
     assert "Updating channel {0}".format(
