@@ -37,7 +37,7 @@ with airflow.DAG(
         default_args=default_args,
         schedule_interval=datetime.timedelta(days=1)) as dag:
 
-    # Print the dag_run's configuration. Displays in the Airflow logs.
-    print_gcs_info = bash_operator.BashOperator(
-        task_id='print_gcs_info', bash_command='echo {{ dag_run.conf }}')
+    # Print the dag_run id from the Airflow logs
+    print_dag_run_conf = bash_operator.BashOperator(
+        task_id='print_dag_run_conf', bash_command='echo {{ dag_run.id }}')
 # [END composer_quickstart]
