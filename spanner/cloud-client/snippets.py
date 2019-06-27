@@ -414,7 +414,7 @@ def read_write_transaction(instance_id, database_id):
 
         transfer_amount = 200000
 
-        if second_album_budget < 300000:
+        if second_album_budget < transfer_amount:
             # Raising an exception will automatically roll back the
             # transaction.
             raise ValueError(
@@ -965,7 +965,7 @@ def query_data_with_parameter(instance_id, database_id):
 
 
 def write_with_dml_transaction(instance_id, database_id):
-    """ Transfers a marketing budget from one album to another. """
+    """ Transfers part of a marketing budget from one album to another. """
     # [START spanner_dml_getting_started_update]
     # instance_id = "your-spanner-instance"
     # database_id = "your-spanner-db-id"
@@ -977,28 +977,28 @@ def write_with_dml_transaction(instance_id, database_id):
     def transfer_budget(transaction):
         # Transfer marketing budget from one album to another. Performed in a
         # single transaction to ensure that the transfer is atomic.
-        first_album_result = transaction.execute_sql(
+        second_album_result = transaction.execute_sql(
             "SELECT MarketingBudget from Albums "
-            "WHERE SingerId = 1 and AlbumId = 1"
+            "WHERE SingerId = 2 and AlbumId = 2"
         )
-        first_album_row = list(first_album_result)[0]
-        first_album_budget = first_album_row[0]
+        second_album_row = list(second_album_result)[0]
+        second_album_budget = second_album_row[0]
 
-        transfer_amount = 300000
+        transfer_amount = 200000
 
         # Transaction will only be committed if this condition still holds at
         # the time of commit. Otherwise it will be aborted and the callable
         # will be rerun by the client library
-        if first_album_budget >= transfer_amount:
-            second_album_result = transaction.execute_sql(
+        if second_album_budget >= transfer_amount:
+            first_album_result = transaction.execute_sql(
                 "SELECT MarketingBudget from Albums "
                 "WHERE SingerId = 1 and AlbumId = 1"
             )
-            second_album_row = list(second_album_result)[0]
-            second_album_budget = second_album_row[0]
+            first_album_row = list(first_album_result)[0]
+            first_album_budget = first_album_row[0]
 
-            first_album_budget -= transfer_amount
-            second_album_budget += transfer_amount
+            second_album_budget -= transfer_amount
+            first_album_budget += transfer_amount
 
             # Update first album
             transaction.execute_update(
@@ -1018,7 +1018,7 @@ def write_with_dml_transaction(instance_id, database_id):
                 param_types={"AlbumBudget": spanner.param_types.INT64}
             )
 
-            print("Transferred {} from Album1's budget to Album2's".format(
+            print("Transferred {} from Album2's budget to Album1's".format(
                 transfer_amount))
 
     database.run_in_transaction(transfer_budget)

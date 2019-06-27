@@ -111,11 +111,7 @@ def test_publish_with_batch_settings(topic, capsys):
 
 
 def test_publish_with_error_handler(topic, capsys):
-
-    with _make_sleep_patch():
-        with pytest.raises(RuntimeError, match='sigil'):
-            publisher.publish_messages_with_error_handler(
-                PROJECT, TOPIC)
+    publisher.publish_messages_with_error_handler(PROJECT, TOPIC)
 
     out, _ = capsys.readouterr()
     assert 'Published' in out
