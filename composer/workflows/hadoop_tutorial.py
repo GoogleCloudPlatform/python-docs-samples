@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START composer_quickstart]
+# [START composer_hadoop_tutorial]
 """Example Airflow DAG that creates a Cloud Dataproc cluster, runs the Hadoop
 wordcount example, and deletes the cluster.
 
@@ -62,20 +62,20 @@ default_dag_args = {
     'project_id': models.Variable.get('gcp_project')
 }
 
-# [START composer_quickstart_schedule]
+# [START composer_hadoop_schedule]
 with models.DAG(
-        'composer_sample_quickstart',
+        'composer_hadoop_tutorial',
         # Continue to run DAG once per day
         schedule_interval=datetime.timedelta(days=1),
         default_args=default_dag_args) as dag:
-    # [END composer_quickstart_schedule]
+    # [END composer_hadoop_schedule]
 
     # Create a Cloud Dataproc cluster.
     create_dataproc_cluster = dataproc_operator.DataprocClusterCreateOperator(
         task_id='create_dataproc_cluster',
         # Give the cluster a unique name by appending the date scheduled.
         # See https://airflow.apache.org/code.html#default-variables
-        cluster_name='quickstart-cluster-{{ ds_nodash }}',
+        cluster_name='composer-hadoop-tutorial-cluster-{{ ds_nodash }}',
         num_workers=2,
         zone=models.Variable.get('gce_zone'),
         master_machine_type='n1-standard-1',
@@ -86,20 +86,20 @@ with models.DAG(
     run_dataproc_hadoop = dataproc_operator.DataProcHadoopOperator(
         task_id='run_dataproc_hadoop',
         main_jar=WORDCOUNT_JAR,
-        cluster_name='quickstart-cluster-{{ ds_nodash }}',
+        cluster_name='composer-hadoop-tutorial-cluster-{{ ds_nodash }}',
         arguments=wordcount_args)
 
     # Delete Cloud Dataproc cluster.
     delete_dataproc_cluster = dataproc_operator.DataprocClusterDeleteOperator(
         task_id='delete_dataproc_cluster',
-        cluster_name='quickstart-cluster-{{ ds_nodash }}',
+        cluster_name='composer-hadoop-tutorial-cluster-{{ ds_nodash }}',
         # Setting trigger_rule to ALL_DONE causes the cluster to be deleted
         # even if the Dataproc job fails.
         trigger_rule=trigger_rule.TriggerRule.ALL_DONE)
 
-    # [START composer_quickstart_steps]
+    # [START composer_hadoop_steps]
     # Define DAG dependencies.
     create_dataproc_cluster >> run_dataproc_hadoop >> delete_dataproc_cluster
-    # [END composer_quickstart_steps]
+    # [END composer_hadoop_steps]
 
-# [END composer_quickstart]
+# [END composer_hadoop]

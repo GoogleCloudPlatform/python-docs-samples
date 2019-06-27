@@ -27,5 +27,5 @@ def test_dag_import():
     models.Variable.set('gcs_bucket', 'example_bucket')
     models.Variable.set('gcp_project', 'example-project')
     models.Variable.set('gce_zone', 'us-central1-f')
-    from . import quickstart as module
+    from . import hadoop_tutorial as module
     unit_testing.assert_has_valid_dag(module)
