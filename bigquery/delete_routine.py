@@ -12,10 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .. import create_table
 
+def main(client, routine_id):
+    # [START bigquery_delete_routine]
+    # TODO(developer): Import the client library.
+    # from google.cloud import bigquery
 
-def test_create_table(capsys, client, random_table_id):
-    create_table.create_table(client, random_table_id)
-    out, err = capsys.readouterr()
-    assert "Created table {}".format(random_table_id) in out
+    # TODO(developer): Construct a BigQuery client object.
+    # client = bigquery.Client()
+
+    # TODO(developer): Set the fully-qualified ID for the routine.
+    # routine_id = "my-project.my_dataset.my_routine"
+
+    client.delete_routine(routine_id)
+    # [END bigquery_delete_routine]
+
+    print("Deleted routine {}.".format(routine_id))

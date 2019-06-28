@@ -18,6 +18,7 @@ import uuid
 import pytest
 
 from google.cloud import bigquery
+from google.cloud import bigquery_v2
 
 
 @pytest.fixture(scope="module")
@@ -45,6 +46,15 @@ def random_dataset_id(client):
 
 
 @pytest.fixture
+def random_routine_id(client, dataset_id):
+    now = datetime.datetime.now()
+    random_routine_id = "example_routine_{}_{}".format(
+        now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
+    )
+    return "{}.{}".format(dataset_id, random_routine_id)
+
+
+@pytest.fixture
 def dataset_id(client):
     now = datetime.datetime.now()
     dataset_id = "python_samples_{}_{}".format(
@@ -66,6 +76,31 @@ def table_id(client, dataset_id):
     table = client.create_table(table)
     yield "{}.{}.{}".format(table.project, table.dataset_id, table.table_id)
     client.delete_table(table, not_found_ok=True)
+
+
+@pytest.fixture
+def routine_id(client, dataset_id):
+    now = datetime.datetime.now()
+    routine_id = "python_samples_{}_{}".format(
+        now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
+    )
+
+    routine = bigquery.Routine("{}.{}".format(dataset_id, routine_id))
+    routine.type_ = "SCALAR_FUNCTION"
+    routine.language = "SQL"
+    routine.body = "x * 3"
+    routine.arguments = [
+        bigquery.RoutineArgument(
+            name="x",
+            data_type=bigquery_v2.types.StandardSqlDataType(
+                type_kind=bigquery_v2.enums.StandardSqlDataType.TypeKind.INT64
+            ),
+        )
+    ]
+
+    routine = client.create_routine(routine)
+    yield "{}.{}.{}".format(routine.project, routine.dataset_id, routine.routine_id)
+    client.delete_routine(routine, not_found_ok=True)
 
 
 @pytest.fixture
