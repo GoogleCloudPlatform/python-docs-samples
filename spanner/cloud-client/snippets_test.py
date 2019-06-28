@@ -328,7 +328,8 @@ def test_query_data_with_date(capsys):
     snippets.query_data_with_date(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
     assert 'VenueId: 4, VenueName: Venue 4, LastContactDate: 2018-09-02' in out
-    assert 'VenueId: 42, VenueName: Venue 42, LastContactDate: 2018-10-01' in out
+    assert 'VenueId: 42, VenueName: Venue 42, LastContactDate: 2018-10-01' \
+        in out
 
 
 def test_query_data_with_float(capsys):
