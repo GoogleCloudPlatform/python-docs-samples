@@ -1372,7 +1372,6 @@ def query_data_with_timestamp_parameter(instance_id, database_id):
     instance = spanner_client.instance(instance_id)
     database = instance.database(database_id)
 
-    #example_timestamp = datetime.datetime.now().isoformat()
     example_timestamp = datetime.datetime.utcnow().isoformat() + "Z"
     param = {
         'last_update_time': example_timestamp
