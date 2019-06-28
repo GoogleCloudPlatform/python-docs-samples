@@ -319,7 +319,7 @@ def test_query_data_with_bool(capsys):
 
 
 def test_query_data_with_bytes(capsys):
-    snippets.query_data_with_bool(INSTANCE_ID, DATABASE_ID)
+    snippets.query_data_with_bytes(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
     assert 'VenueId: 4, VenueName: Venue 4' in out
 
