@@ -52,6 +52,9 @@ def sample_get_model(model_id, project):
     # This will have the format:
     #   projects/[Google Cloud Project Number]/locations/us-central1/models/VOT1234567890123456789
     #
+    # The Model ID is the generated identifer in this path, e.g. VOT1234567890123456789
+    # You will need this ID to perform operations on the model including predictions.
+    #
     print(u"Model name: {}".format(model.name))
     # Print out the Display Name (the text you provided during creation)
     print(u"Display name: {}".format(model.display_name))

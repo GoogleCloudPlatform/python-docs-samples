@@ -52,6 +52,9 @@ def sample_get_dataset(dataset_id, project):
     # This will have the format:
     #   projects/[Google Cloud Project Number]/locations/us-central1/datasets/VOT1234567890123456789
     #
+    # The Dataset ID is the generated identifer in this path, e.g. VOT1234567890123456789
+    # You will need this ID to perform operations on the dataset as well as to create a model.
+    #
     print(u"Name: {}".format(dataset.name))
     # Print out the Display Name (the text you provided during creation)
     print(u"Display Name: {}".format(dataset.display_name))
