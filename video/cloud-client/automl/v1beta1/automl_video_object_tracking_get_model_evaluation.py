@@ -35,6 +35,7 @@ def sample_get_model_evaluation(evaluation_id, model_id, project):
     Get Model Evaluation
 
     Args:
+      model_id Model ID, e.g. VOT1234567890123456789
       project Required. Your Google Cloud Project ID.
     """
 

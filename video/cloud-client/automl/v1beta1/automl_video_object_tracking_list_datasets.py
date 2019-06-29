@@ -21,7 +21,7 @@
 
 # sample-metadata
 #   title: List Datasets
-#   description: List Datasets
+#   description: List datasets and print each details of each dataset
 #   usage: python3 samples/v1beta1/automl_video_object_tracking_list_datasets.py [--project "[Google Cloud Project ID]"]
 import sys
 
@@ -32,7 +32,7 @@ from google.cloud import automl_v1beta1
 
 def sample_list_datasets(project):
     """
-    List Datasets
+    List datasets and print each details of each dataset
 
     Args:
       project Required. Your Google Cloud Project ID.
@@ -50,8 +50,15 @@ def sample_list_datasets(project):
     # Iterate over all results
     for response_item in client.list_datasets(parent, filter_=filter_):
         dataset = response_item
+        # Print out the full name of the created dataset.
+        #
+        # This will have the format:
+        #   projects/[Google Cloud Project Number]/locations/us-central1/datasets/VOT1234567890123456789
+        #
         print(u"Name: {}".format(dataset.name))
+        # Print out the Display Name (the text you provided during creation)
         print(u"Display Name: {}".format(dataset.display_name))
+        # Print out the user-provided description (may be blank)
         print(u"Description: {}".format(dataset.description))
         # The number of examples in the dataset, if any.
         # Added by importing data via import_data

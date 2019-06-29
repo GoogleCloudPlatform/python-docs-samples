@@ -35,7 +35,7 @@ def sample_import_data(dataset_id, project):
     Import training data into dataset
 
     Args:
-      dataset_id Dataset ID
+      dataset_id Dataset ID, e.g. VOT1234567890123456789
       project Required. Your Google Cloud Project ID.
     """
 

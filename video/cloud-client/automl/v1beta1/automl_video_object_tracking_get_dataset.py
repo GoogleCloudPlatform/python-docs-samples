@@ -21,7 +21,7 @@
 
 # sample-metadata
 #   title: Get Dataset
-#   description: Get Dataset
+#   description: Get dataset and print dataset details
 #   usage: python3 samples/v1beta1/automl_video_object_tracking_get_dataset.py [--dataset_id "[Dataset ID]"] [--project "[Google Cloud Project ID]"]
 import sys
 
@@ -32,10 +32,10 @@ from google.cloud import automl_v1beta1
 
 def sample_get_dataset(dataset_id, project):
     """
-    Get Dataset
+    Get dataset and print dataset details
 
     Args:
-      dataset_id Dataset ID
+      dataset_id Dataset ID, e.g. VOT1234567890123456789
       project Required. Your Google Cloud Project ID.
     """
 
@@ -47,8 +47,15 @@ def sample_get_dataset(dataset_id, project):
 
     response = client.get_dataset(name)
     dataset = response
+    # Print out the full name of the created dataset.
+    #
+    # This will have the format:
+    #   projects/[Google Cloud Project Number]/locations/us-central1/datasets/VOT1234567890123456789
+    #
     print(u"Name: {}".format(dataset.name))
+    # Print out the Display Name (the text you provided during creation)
     print(u"Display Name: {}".format(dataset.display_name))
+    # Print out the user-provided description (may be blank)
     print(u"Description: {}".format(dataset.description))
     # The number of examples in the dataset, if any.
     # Added by importing data via import_data

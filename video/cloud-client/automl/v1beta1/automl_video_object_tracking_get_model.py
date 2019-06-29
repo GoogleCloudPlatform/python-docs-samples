@@ -21,7 +21,7 @@
 
 # sample-metadata
 #   title: Get Model
-#   description: Get Model
+#   description: Get model and print model details
 #   usage: python3 samples/v1beta1/automl_video_object_tracking_get_model.py [--model_id "[Model ID]"] [--project "[Google Cloud Project ID]"]
 import sys
 
@@ -32,9 +32,10 @@ from google.cloud import automl_v1beta1
 
 def sample_get_model(model_id, project):
     """
-    Get Model
+    Get model and print model details
 
     Args:
+      model_id Model ID, e.g. VOT1234567890123456789
       project Required. Your Google Cloud Project ID.
     """
 
@@ -46,8 +47,18 @@ def sample_get_model(model_id, project):
 
     response = client.get_model(name)
     model = response
+    # Print out the full name of the created model.
+    #
+    # This will have the format:
+    #   projects/[Google Cloud Project Number]/locations/us-central1/models/VOT1234567890123456789
+    #
     print(u"Model name: {}".format(model.name))
+    # Print out the Display Name (the text you provided during creation)
     print(u"Display name: {}".format(model.display_name))
+    # Print out the ID of the dataset used to create this model.
+    #
+    # Note: this is the Dataset ID, e.g. VOT1234567890123456789
+    #
     print(u"Dataset ID: {}".format(model.dataset_id))
     print(u"Create time: {}".format(model.create_time))
     print(u"Update time: {}".format(model.update_time))

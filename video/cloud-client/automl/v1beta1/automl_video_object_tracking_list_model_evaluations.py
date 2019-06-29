@@ -31,7 +31,12 @@ from google.cloud import automl_v1beta1
 
 
 def sample_list_model_evaluations(project, model_id):
-    """List Model Evaluations"""
+    """
+    List Model Evaluations
+
+    Args:
+      model_id Model ID, e.g. VOT1234567890123456789
+    """
 
     client = automl_v1beta1.AutoMlClient()
 

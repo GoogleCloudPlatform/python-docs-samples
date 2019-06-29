@@ -63,8 +63,15 @@ def sample_create_dataset(display_name, project):
     response = client.create_dataset(parent, dataset)
     print(u"Created Dataset.")
     dataset = response
+    # Print out the full name of the created dataset.
+    #
+    # This will have the format:
+    #   projects/[Google Cloud Project Number]/locations/us-central1/datasets/VOT1234567890123456789
+    #
     print(u"Name: {}".format(dataset.name))
+    # Print out the Display Name (the text you provided during creation)
     print(u"Display Name: {}".format(dataset.display_name))
+    # Print out the user-provided description (may be blank)
     print(u"Description: {}".format(dataset.description))
     # The number of examples in the dataset, if any.
     # Added by importing data via import_data

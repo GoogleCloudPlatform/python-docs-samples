@@ -21,7 +21,7 @@
 
 # sample-metadata
 #   title: List Models
-#   description: List Models
+#   description: List models and print details of each dataset
 #   usage: python3 samples/v1beta1/automl_video_object_tracking_list_models.py [--filter "video_object_tracking_model_metadata:*"] [--project "[Google Cloud Project ID]"]
 import sys
 
@@ -32,7 +32,7 @@ from google.cloud import automl_v1beta1
 
 def sample_list_models(filter_, project):
     """
-    List Models
+    List models and print details of each dataset
 
     Args:
       filter_ An expression for filtering the results of the request.
@@ -49,8 +49,18 @@ def sample_list_models(filter_, project):
     # Iterate over all results
     for response_item in client.list_models(parent, filter_=filter_):
         model = response_item
+        # Print out the full name of the created model.
+        #
+        # This will have the format:
+        #   projects/[Google Cloud Project Number]/locations/us-central1/models/VOT1234567890123456789
+        #
         print(u"Model name: {}".format(model.name))
+        # Print out the Display Name (the text you provided during creation)
         print(u"Display name: {}".format(model.display_name))
+        # Print out the ID of the dataset used to create this model.
+        #
+        # Note: this is the Dataset ID, e.g. VOT1234567890123456789
+        #
         print(u"Dataset ID: {}".format(model.dataset_id))
         print(u"Create time: {}".format(model.create_time))
         print(u"Update time: {}".format(model.update_time))

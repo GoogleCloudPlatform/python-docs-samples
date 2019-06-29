@@ -35,7 +35,7 @@ def sample_delete_dataset(dataset_id, project):
     Delete Dataset
 
     Args:
-      dataset_id Dataset ID
+      dataset_id Dataset ID, e.g. VOT1234567890123456789
       project Required. Your Google Cloud Project ID.
     """
 

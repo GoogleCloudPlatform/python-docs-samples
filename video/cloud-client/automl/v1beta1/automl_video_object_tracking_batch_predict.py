@@ -39,6 +39,7 @@ def sample_batch_predict(gcs_output_prefix, model_id, project):
       request
       in your Google Cloud Storage bucket.
       You must have write permissions to the Google Cloud Storage bucket.
+      model_id Model ID, e.g. VOT1234567890123456789
       project Required. Your Google Cloud Project ID.
     """
 

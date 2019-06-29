@@ -35,6 +35,7 @@ def sample_delete_model(model_id, project):
     Delete Model
 
     Args:
+      model_id Model ID, e.g. VOT1234567890123456789
       project Required. Your Google Cloud Project ID.
     """
 
