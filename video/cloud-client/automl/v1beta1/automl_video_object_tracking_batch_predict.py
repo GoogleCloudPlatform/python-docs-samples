@@ -58,7 +58,13 @@ def sample_batch_predict(gcs_output_prefix, model_id, project):
     gcs_destination = {"output_uri_prefix": gcs_output_prefix}
     output_config = {"gcs_destination": gcs_destination}
 
-    operation = client.batch_predict(name, input_config, output_config)
+    # A value from 0.0 to 1.0. When the model detects objects on video frames,
+    # it will only produce bounding boxes that have at least this confidence score.
+    # The default is 0.5.
+    params_item = "0.0"
+    params = {"score_threshold": params_item}
+
+    operation = client.batch_predict(name, input_config, output_config, params=params)
 
     print(u"Waiting for operation to complete...")
     response = operation.result()
