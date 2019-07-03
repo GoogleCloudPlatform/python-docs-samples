@@ -1,4 +1,4 @@
-# Google Cloud Text-to-Speech API Python Samples
+# Google Cloud Text-to-Speech API
 
 This directory contains samples for Google Cloud Text-to-Speech API. The code in this directory aligns with the [Speaking addresses with SSML tutorial](https://cloud-dot-devsite.googleplex.com/text-to-speech/docs/ssml-tutorial).
 
@@ -22,8 +22,6 @@ $ source env/bin/activate
 ```
 $ pip install -r requirements.txt
 ```
-
-## Samples
 
 ## The client library
 
