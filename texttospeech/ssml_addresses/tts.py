@@ -4,6 +4,7 @@ from __future__ import print_function
 from google.cloud import texttospeech
 
 
+# [START audio]
 def ssml_to_audio(ssml_text, outfile):
   """Generates SSML text from plaintext.
 
@@ -49,8 +50,9 @@ def ssml_to_audio(ssml_text, outfile):
   with open(outfile, 'wb') as out:
     out.write(response.audio_content)
     print('Audio content written to file ' + outfile)
+# [END audio]
 
-
+# [START ssml]
 def text_to_ssml(inputfile):
   """Generates SSML text from plaintext.
 
@@ -104,8 +106,11 @@ def text_to_ssml(inputfile):
 
   # Return the concatenated string of ssml script
   return ssml
+# [END ssml]
 
-
-plaintext = 'example.txt'
-ssml_text = text_to_ssml(plaintext)
-ssml_to_audio(ssml_text, 'example.mp3')
+# [START test]
+if __name__ == '__main__':
+  plaintext = 'example.txt'
+  ssml_text = text_to_ssml(plaintext)
+  ssml_to_audio(ssml_text, 'example.mp3')
+# [END test]
