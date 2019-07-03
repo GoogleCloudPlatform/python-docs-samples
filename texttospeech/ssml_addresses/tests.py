@@ -7,13 +7,9 @@ import sys
 
 
 def test_text_to_ssml():
-"""
-Tests text_to_ssml() function
-
-Args: None
-
-Returns: array of 2 ssml strings
-"""
+# Tests text_to_ssml() function
+# Args: none
+# Returns: array of 2 ssml strings
 
 	# Array to hold strings of ssml
 	ssml = []
@@ -44,14 +40,9 @@ Returns: array of 2 ssml strings
 
 
 def test_ssml_to_audio(ssml):
-"""
-Tests ssml_to_audio() function
-
-Args: ssml = array of 2 ssml strings
-
-Returns: None
-"""
-
+# Tests ssml_to_audio() function
+# Args: ssml = array of 2 ssml strings
+# Returns: none
 
 	# Assert audio file of non-special characters generated
 	ssml_to_audio(ssml[0], 'out1.mp3')
@@ -74,24 +65,17 @@ Returns: None
 
 
 def suppressPrint():
-"""
-Suppresses printing; helper function
+# Suppresses printing; helper function
+# Args: none
+# Returns: none
 
-Args: None
-
-Returns: None
-"""
     sys.stdout = open(os.devnull, 'w')
 
 
 def enablePrint():
-"""
-Enables printing; helper function
-
-Args: None
-
-Returns: None
-"""
+# Enables printing; helper function
+# Args: None
+# Returns: None
 
     sys.stdout = sys.__stdout__
 
