@@ -1,7 +1,9 @@
 """Source code for SSML Tutorial for Cloud Text-to-Speech API."""
 
+# [START imports]
 from __future__ import print_function
 from google.cloud import texttospeech
+# [END imports]
 
 
 # [START audio]
