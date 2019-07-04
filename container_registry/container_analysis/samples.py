@@ -263,7 +263,7 @@ def create_occurrence_subscription(subscription_id, project_id):
     from google.api_core.exceptions import AlreadyExists
     from google.cloud.pubsub import SubscriberClient
 
-    topic_id = 'container-analysis-occurrences-v1'
+    topic_id = 'container-analysis-occurrences-v1beta1'
     client = SubscriberClient()
     topic_name = client.topic_path(project_id, topic_id)
     subscription_name = client.subscription_path(project_id, subscription_id)
