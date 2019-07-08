@@ -11,7 +11,7 @@ def test_text_to_ssml():
 # Args: none
 # Returns: array of 2 ssml strings
 
-	# Array to hold strings of ssml
+    # Array to hold strings of ssml
 	ssml = []
 
 	# Assert non-special characters converted to SSML
@@ -82,14 +82,14 @@ def enablePrint():
 
 if __name__ == '__main__':
 
-  # Suppress printing while testing
-  suppressPrint()
+    # Suppress printing while testing
+    suppressPrint()
 
-  ssml = test_text_to_ssml()
-  test_ssml_to_audio(ssml)
+    ssml = test_text_to_ssml()
+    test_ssml_to_audio(ssml)
 
-  # Restores printing
-  enablePrint()
+    # Restores printing
+    enablePrint()
 
-  # Print success if achieved
-  print("All tests passed!")
+    # Print success if achieved
+    print("All tests passed!")
