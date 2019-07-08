@@ -10,6 +10,7 @@ from google.cloud import texttospeech
 def ssml_to_audio(ssml_text, outfile):
     # Generates SSML text from plaintext.
 
+
     # Given a string of SSML text and an output file name, this function calls the
     # Text-to-Speech API. The API returns a synthetic audio version of the text,
     # formatted according to the SSML commands. This function stores the synthetic
@@ -57,6 +58,7 @@ def ssml_to_audio(ssml_text, outfile):
 def text_to_ssml(inputfile):
     # Generates SSML text from plaintext.
 
+
     # Given an input filename, this function converts the contents of the text
     # file into a string of formatted SSML text. This function formats the SSML
     # string so that, when synthesized, the synthetic audio will pause for two
@@ -87,16 +89,16 @@ def text_to_ssml(inputfile):
     ssml = '<speak>'
 
     # Iterate through lines of file
-    for l in raw_lines:
+    for line in raw_lines:
 
         # Expand select special characters
         # Some special characters might interfere with the SSML interpreter
-        l = l.replace('&', ' and ')
-        l = l.replace('<', ' open carot ')
-        l = l.replace('>', ' close carot ')
+        line = line.replace('&', ' and ')
+        line = line.replace('<', ' open carot ')
+        line = line.replace('>', ' close carot ')
 
         # Concatenate the line to the SSML script
-        ssml += l
+        ssml += line
 
         # Wait 2 seconds between speaking each address
         ssml += brk
@@ -110,8 +112,9 @@ def text_to_ssml(inputfile):
 
 # [START test]
 if __name__ == '__main__':
+
+
     plaintext = 'example.txt'
     ssml_text = text_to_ssml(plaintext)
     ssml_to_audio(ssml_text, 'example.mp3')
     # [END test]
-    
