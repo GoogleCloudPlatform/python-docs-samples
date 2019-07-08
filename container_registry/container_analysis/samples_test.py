@@ -17,12 +17,14 @@ from os import environ
 from os.path import basename
 from time import sleep, time
 
+from google.api_core.exceptions import AlreadyExists
 from google.api_core.exceptions import InvalidArgument
 from google.api_core.exceptions import NotFound
 from google.cloud.devtools import containeranalysis_v1
-from google.cloud.pubsub import SubscriberClient
+from google.cloud.pubsub import PublisherClient, SubscriberClient
 
-from grafeas.grafeas_v1.gapic.enums import DiscoveryOccurrence, NoteKind
+from grafeas.grafeas_v1.gapic.enums import DiscoveryOccurrence
+from grafeas.grafeas_v1.gapic.enums import NoteKind
 from grafeas.grafeas_v1.gapic.enums import Severity
 from grafeas.grafeas_v1.gapic.enums import Version
 
@@ -126,7 +128,16 @@ class TestContainerAnalysisSamples:
         samples.delete_occurrence(basename(occ.name), PROJECT_ID)
 
     def test_pubsub(self):
+        # create topic if needed
         client = SubscriberClient()
+        try:
+            topic_id = 'container-analysis-occurrences-v1'
+            topic_name = client.topic_path(PROJECT_ID, topic_id)
+            publisher = PublisherClient()
+            publisher.create_topic(topic_name)
+        except AlreadyExists:
+            pass
+
         subscription_id = 'drydockOccurrences'
         subscription_name = client.subscription_path(PROJECT_ID,
                                                      subscription_id)
