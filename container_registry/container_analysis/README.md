@@ -23,6 +23,8 @@ These samples show how to use the [Google Cloud Container Analysis Client Librar
     and create a new project or select an existing project.
 1.  **Install and Initialize Cloud SDK**
     - Follow instructions from the available [quickstarts](https://cloud.google.com/sdk/docs/quickstarts)
+1. **Authenticate with GCP**
+    - Typically, you should authenticate using a [service account key](https://cloud.google.com/docs/authentication/getting-started)
 1.  **Clone the repo** and cd into this directory
 
     ```
