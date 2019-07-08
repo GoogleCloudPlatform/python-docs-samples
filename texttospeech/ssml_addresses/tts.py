@@ -8,20 +8,19 @@ from google.cloud import texttospeech
 
 # [START audio]
 def ssml_to_audio(ssml_text, outfile):
-    """Generates SSML text from plaintext.
+    # Generates SSML text from plaintext.
 
-    Given a string of SSML text and an output file name, this function calls the
-    Text-to-Speech API. The API returns a synthetic audio version of the text,
-    formatted according to the SSML commands. This function stores the synthetic
-    audio to the designated output file.
+    # Given a string of SSML text and an output file name, this function calls the
+    # Text-to-Speech API. The API returns a synthetic audio version of the text,
+    # formatted according to the SSML commands. This function stores the synthetic
+    # audio to the designated output file.
 
-    Args:
-        ssml_text: string of SSML text
-        outfile: string name of file under which to save audio output
+    # Args:
+        # ssml_text: string of SSML text
+        # outfile: string name of file under which to save audio output
 
-    Returns:
-        nothing
-    """
+    # Returns:
+        # nothing
 
     # Checks to make sure ssml_text is not empty
     if ssml_text is None:
@@ -52,24 +51,23 @@ def ssml_to_audio(ssml_text, outfile):
     with open(outfile, 'wb') as out:
         out.write(response.audio_content)
         print('Audio content written to file ' + outfile)
-  # [END audio]
+    # [END audio]
 
 # [START ssml]
 def text_to_ssml(inputfile):
-    """Generates SSML text from plaintext.
+    # Generates SSML text from plaintext.
 
-    Given an input filename, this function converts the contents of the text
-    file into a string of formatted SSML text. This function formats the SSML
-    string so that, when synthesized, the synthetic audio will pause for two
-    seconds between each line of the text file. This function also handles
-    special text characters which might interfere with SSML commands.
+    # Given an input filename, this function converts the contents of the text
+    # file into a string of formatted SSML text. This function formats the SSML
+    # string so that, when synthesized, the synthetic audio will pause for two
+    # seconds between each line of the text file. This function also handles
+    # special text characters which might interfere with SSML commands.
 
-    Args:
-        inputfile: string name of plaintext file
+    # Args:
+        # inputfile: string name of plaintext file
 
-    Returns:
-        A string of SSML text based on plaintext input
-    """
+    # Returns:
+        # A string of SSML text based on plaintext input
 
     # Parse lines of input file
     try:
@@ -115,4 +113,5 @@ if __name__ == '__main__':
     plaintext = 'example.txt'
     ssml_text = text_to_ssml(plaintext)
     ssml_to_audio(ssml_text, 'example.mp3')
-# [END test]
+    # [END test]
+    
