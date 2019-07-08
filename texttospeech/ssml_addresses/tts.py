@@ -17,11 +17,11 @@ def ssml_to_audio(ssml_text, outfile):
     # audio to the designated output file.
 
     # Args:
-        # ssml_text: string of SSML text
-        # outfile: string name of file under which to save audio output
+    # ssml_text: string of SSML text
+    # outfile: string name of file under which to save audio output
 
     # Returns:
-        # nothing
+    # nothing
 
     # Checks to make sure ssml_text is not empty
     if ssml_text is None:
@@ -56,8 +56,9 @@ def ssml_to_audio(ssml_text, outfile):
 
 # [START ssml]
 def text_to_ssml(inputfile):
-    # Generates SSML text from plaintext.
 
+
+    # Generates SSML text from plaintext.
 
     # Given an input filename, this function converts the contents of the text
     # file into a string of formatted SSML text. This function formats the SSML
@@ -66,10 +67,10 @@ def text_to_ssml(inputfile):
     # special text characters which might interfere with SSML commands.
 
     # Args:
-        # inputfile: string name of plaintext file
+    # inputfile: string name of plaintext file
 
     # Returns:
-        # A string of SSML text based on plaintext input
+    # A string of SSML text based on plaintext input
 
     # Parse lines of input file
     try:
@@ -117,4 +118,6 @@ if __name__ == '__main__':
     plaintext = 'example.txt'
     ssml_text = text_to_ssml(plaintext)
     ssml_to_audio(ssml_text, 'example.mp3')
+
+    ssml_to_audio('this is not ssml! but it still works :) sneaky sneaky', 'not_ssml.mp3')
     # [END test]

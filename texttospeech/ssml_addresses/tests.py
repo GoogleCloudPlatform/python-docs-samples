@@ -11,7 +11,6 @@ def test_text_to_ssml():
     # Args: none
     # Returns: array of 2 ssml strings
 
-
     # Array to hold strings of ssml
     ssml = []
 
