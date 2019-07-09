@@ -1,17 +1,3 @@
-# [START tts_ssml_address_example]
 123 Street Ln, Small Town, IL 12345 USA
 1 Jenny St & Number St, Tutone City, CA 86753
 1 Piazza del Fibonacci, 12358 Pisa, Italy
-# [END tts_ssml_address_example]
-
-# [START tts_ssml_address_example_short1]
-123 Street Ln
-# [END tts_ssml_address_example_short1]
-
-# [START tts_ssml_address_example_short2]
-1 Number St
-# [END tts_ssml_address_example_short2]
-
-# [START tts_ssml_address_example_short3]
-1 Piazza del Fibonacci
-# [END tts_ssml_address_example_short3]
