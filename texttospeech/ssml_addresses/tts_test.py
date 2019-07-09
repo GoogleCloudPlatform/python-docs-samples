@@ -29,10 +29,10 @@ def test_text_to_ssml():
     input_text = 'resources/example.txt'
     tested_ssml = text_to_ssml(input_text)
     expected_ssml = '<speak>123 Street Ln, Small Town, IL 12345 USA\n' \
-                     '<break time="2s"/>1 Jenny St &amp; Number St,' \
-                     ' Tutone City, CA 86753\n' \
-                     '<break time="2s"/>1 Piazza del Fibonacci,' \
-                     ' 12358 Pisa, Italy\n<break time="2s"/></speak>'
+                    '<break time="2s"/>1 Jenny St &amp; Number St,' \
+                    ' Tutone City, CA 86753\n' \
+                    '<break time="2s"/>1 Piazza del Fibonacci,' \
+                    ' 12358 Pisa, Italy\n<break time="2s"/></speak>'
     assert expected_ssml == tested_ssml
 
     # Assert that nothing returned if given nonexistent input
@@ -46,10 +46,10 @@ def test_ssml_to_audio():
     # Returns: none
 
     input_ssml = '<speak>123 Street Ln, Small Town, IL 12345 USA\n' \
-                     '<break time="2s"/>1 Jenny St  and  Number St,' \
-                     ' Tutone City, CA 86753\n' \
-                     '<break time="2s"/>1 Piazza del Fibonacci,' \
-                     ' 12358 Pisa, Italy<break time="2s"/></speak>'
+                 '<break time="2s"/>1 Jenny St &amp; Number St,' \
+                 ' Tutone City, CA 86753\n' \
+                 '<break time="2s"/>1 Piazza del Fibonacci,' \
+                 ' 12358 Pisa, Italy\n<break time="2s"/></speak>'
 
     # Assert audio file generated
     ssml_to_audio(input_ssml, 'test_example.mp3')
