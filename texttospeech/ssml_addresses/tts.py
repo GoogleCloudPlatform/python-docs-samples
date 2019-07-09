@@ -36,7 +36,7 @@ def ssml_to_audio(ssml_text, outfile):
     # Generates SSML text from plaintext.
 
     # Given a string of SSML text and an output file name, this function
-    # calls the Text-to-Speech API. The API returns a synthetic audio 
+    # calls the Text-to-Speech API. The API returns a synthetic audio
     # version of the text, formatted according to the SSML commands. This
     # function stores the synthetic audio to the designated output file.
 
@@ -77,6 +77,7 @@ def ssml_to_audio(ssml_text, outfile):
         out.write(response.audio_content)
         print('Audio content written to file ' + outfile)
     # [END tts_ssml_address_audio]
+
 
 # [START tts_ssml_address_ssml]
 def text_to_ssml(inputfile):
@@ -133,6 +134,7 @@ def text_to_ssml(inputfile):
     # Return the concatenated string of ssml script
     return ssml
 # [END tts_ssml_address_ssml]
+
 
 # [START tts_ssml_address_test]
 if __name__ == '__main__':

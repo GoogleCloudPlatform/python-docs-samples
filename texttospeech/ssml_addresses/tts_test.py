@@ -51,7 +51,7 @@ def test_text_to_ssml():
 
     # Assert that nothing returned if given nonexistent input
     non_existent_input = text_to_ssml('mysteryfile.txt')
-    assert non_existent_input == None
+    assert non_existent_input is None
 
 
 def test_ssml_to_audio():
@@ -79,26 +79,26 @@ def test_ssml_to_audio():
     # Assert that no mp3 file generated if given empty SSML input
     # NOTE to work correctly, directory must not already contain a file named 'out3.mp3'
     ssml_to_audio(None, 'non_existent_input.mp3')
-    assert os.path.isfile('non_existent_input.mp3') == False
+    assert os.path.isfile('non_existent_input.mp3') is False
+
 
 def suppressPrint():
     # Suppresses printing; helper function
     # Args: none
     # Returns: none
 
-
     sys.stdout = open(os.devnull, 'w')
+
 
 def enablePrint():
     # Enables printing; helper function
     # Args: None
     # Returns: None
 
-
     sys.stdout = sys.__stdout__
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
 
     # Suppress printing while testing
     suppressPrint()
