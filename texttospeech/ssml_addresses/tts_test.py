@@ -37,7 +37,6 @@ def test_text_to_ssml():
     # Args: none
     # Returns: array of 2 ssml strings
 
-
     # Assert non-special characters converted to SSML
     input_chars = 'normal_chars.txt'
     tested_chars = text_to_ssml(input_chars)
@@ -46,7 +45,7 @@ def test_text_to_ssml():
 
     # Assert special characters converted to SSML
     input_special_chars = 'special_chars.txt'
-    tested_special_chars = text_to_ssml('special_chars.txt')
+    tested_special_chars = text_to_ssml(input_special_chars)
     expected_special_chars = '<speak>&lt;&amp;&gt;\n<break time="2s"/>&gt;&gt;\n<break time="2s"/>&amp;<break time="2s"/></speak>'
     assert tested_special_chars == expected_special_chars
 
@@ -82,7 +81,6 @@ def test_ssml_to_audio():
     ssml_to_audio(None, 'non_existent_input.mp3')
     assert os.path.isfile('non_existent_input.mp3') == False
 
-
 def suppressPrint():
     # Suppresses printing; helper function
     # Args: none
@@ -90,7 +88,6 @@ def suppressPrint():
 
 
     sys.stdout = open(os.devnull, 'w')
-
 
 def enablePrint():
     # Enables printing; helper function
@@ -100,8 +97,8 @@ def enablePrint():
 
     sys.stdout = sys.__stdout__
 
-
 if __name__ == '__main__':
+
 
     # Suppress printing while testing
     suppressPrint()

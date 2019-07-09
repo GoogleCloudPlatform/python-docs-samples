@@ -35,11 +35,10 @@ from google.cloud import texttospeech
 def ssml_to_audio(ssml_text, outfile):
     # Generates SSML text from plaintext.
 
-
-    # Given a string of SSML text and an output file name, this function calls the
-    # Text-to-Speech API. The API returns a synthetic audio version of the text,
-    # formatted according to the SSML commands. This function stores the synthetic
-    # audio to the designated output file.
+    # Given a string of SSML text and an output file name, this function
+    # calls the Text-to-Speech API. The API returns a synthetic audio 
+    # version of the text, formatted according to the SSML commands. This
+    # function stores the synthetic audio to the designated output file.
 
     # Args:
     # ssml_text: string of SSML text
@@ -84,7 +83,6 @@ def text_to_ssml(inputfile):
 
 
     # Generates SSML text from plaintext.
-
     # Given an input filename, this function converts the contents of the text
     # file into a string of formatted SSML text. This function formats the SSML
     # string so that, when synthesized, the synthetic audio will pause for two
@@ -132,14 +130,13 @@ def text_to_ssml(inputfile):
     # Terminate the SSML script
     ssml += '</speak>'
 
-    #print(ssml)
-
     # Return the concatenated string of ssml script
     return ssml
 # [END tts_ssml_address_ssml]
 
 # [START tts_ssml_address_test]
 if __name__ == '__main__':
+
 
     # test example address file
     plaintext = 'example.txt'
