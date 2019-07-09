@@ -85,8 +85,8 @@ To run this sample:
 
         python analyze.py labels gs://cloud-ml-sandbox/video/chicago.mp4
         python analyze.py labels_file resources/cat.mp4
-        python analyze.py shots gs://demomaker/gbikes_dinosaur.mp4
-        python analyze.py explicit_content gs://demomaker/gbikes_dinosaur.mp4
+        python analyze.py shots gs://cloud-samples-data/video/gbikes_dinosaur.mp4
+        python analyze.py explicit_content gs://cloud-samples-data/video/gbikes_dinosaur.mp4
 
     positional arguments:
       {labels,labels_file,explicit_content,shots}
@@ -94,6 +94,46 @@ To run this sample:
         labels_file         Detect labels given a file path.
         explicit_content    Detects explicit content from the GCS path to a video.
         shots               Detects camera shot changes.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
+
+beta samples
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=video/cloud-client/analyze/beta_snippets.py,video/cloud-client/analyze/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python beta_snippets.py
+
+    usage: beta_snippets.py [-h]
+                            {transcription,video-text-gcs,video-text,track-objects-gcs,track-objects}
+                            ...
+
+    This application demonstrates speech transcription using the
+    Google Cloud API.
+
+    Usage Examples:
+        python beta_snippets.py transcription         gs://python-docs-samples-tests/video/googlework_short.mp4
+        python beta_snippets.py video-text-gcs         gs://python-docs-samples-tests/video/googlework_short.mp4
+        python beta_snippets.py track-objects /resources/cat.mp4
+
+    positional arguments:
+      {transcription,video-text-gcs,video-text,track-objects-gcs,track-objects}
+        transcription       Transcribe speech from a video stored on GCS.
+        video-text-gcs      Detect text in a video stored on GCS.
+        video-text          Detect text in a local video.
+        track-objects-gcs   Object Tracking.
+        track-objects       Object Tracking.
 
     optional arguments:
       -h, --help            show this help message and exit

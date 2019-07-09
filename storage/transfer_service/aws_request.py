@@ -32,38 +32,38 @@ import googleapiclient.discovery
 
 
 # [START main]
-def main(description, project_id, year, month, day, hours, minutes,
-         source_bucket, access_key, secret_access_key, sink_bucket):
-    """Create a one-off transfer from Amazon S3 to Google Cloud Storage."""
+def main(description, project_id, start_date, start_time, source_bucket,
+         access_key_id, secret_access_key, sink_bucket):
+    """Create a one-time transfer from Amazon S3 to Google Cloud Storage."""
     storagetransfer = googleapiclient.discovery.build('storagetransfer', 'v1')
 
     # Edit this template with desired parameters.
-    # Specify times below using US Pacific Time Zone.
     transfer_job = {
         'description': description,
         'status': 'ENABLED',
         'projectId': project_id,
         'schedule': {
             'scheduleStartDate': {
-                'day': day,
-                'month': month,
-                'year': year
+                'day': start_date.day,
+                'month': start_date.month,
+                'year': start_date.year
             },
             'scheduleEndDate': {
-                'day': day,
-                'month': month,
-                'year': year
+                'day': start_date.day,
+                'month': start_date.month,
+                'year': start_date.year
             },
             'startTimeOfDay': {
-                'hours': hours,
-                'minutes': minutes
+                'hours': start_time.hour,
+                'minutes': start_time.minute,
+                'seconds': start_time.second
             }
         },
         'transferSpec': {
             'awsS3DataSource': {
                 'bucketName': source_bucket,
                 'awsAccessKey': {
-                    'accessKeyId': access_key,
+                    'accessKeyId': access_key_id,
                     'secretAccessKey': secret_access_key
                 }
             },
@@ -85,28 +85,27 @@ if __name__ == '__main__':
         formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('description', help='Transfer description.')
     parser.add_argument('project_id', help='Your Google Cloud project ID.')
-    parser.add_argument('date', help='Date YYYY/MM/DD.')
-    parser.add_argument('time', help='Time (24hr) HH:MM.')
-    parser.add_argument('source_bucket', help='Source bucket name.')
-    parser.add_argument('access_key', help='Your AWS access key id.')
-    parser.add_argument('secret_access_key', help='Your AWS secret access '
-                        'key.')
-    parser.add_argument('sink_bucket', help='Sink bucket name.')
+    parser.add_argument('start_date', help='Date YYYY/MM/DD.')
+    parser.add_argument('start_time', help='UTC Time (24hr) HH:MM:SS.')
+    parser.add_argument('source_bucket', help='AWS source bucket name.')
+    parser.add_argument('access_key_id', help='Your AWS access key id.')
+    parser.add_argument(
+        'secret_access_key', 
+        help='Your AWS secret access key.'
+    )
+    parser.add_argument('sink_bucket', help='GCS sink bucket name.')
 
     args = parser.parse_args()
-    date = datetime.datetime.strptime(args.date, '%Y/%m/%d')
-    time = datetime.datetime.strptime(args.time, '%H:%M')
+    start_date = datetime.datetime.strptime(args.start_date, '%Y/%m/%d')
+    start_time = datetime.datetime.strptime(args.start_time, '%H:%M:%S')
 
     main(
         args.description,
         args.project_id,
-        date.year,
-        date.month,
-        date.day,
-        time.hour,
-        time.minute,
+        start_date,
+        start_time,
         args.source_bucket,
-        args.access_key,
+        args.access_key_id,
         args.secret_access_key,
         args.sink_bucket)
 # [END all]

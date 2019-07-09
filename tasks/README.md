@@ -1,19 +1,18 @@
-# Google Cloud Tasks Pull Queue Samples
+# Google Cloud Tasks Samples
 
 [![Open in Cloud Shell][shell_img]][shell_link]
 
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
 [shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=tasks/README.md
 
-Sample command-line program for interacting with the Google Cloud Tasks API
-using pull queues.
+This sample demonstrates how to use the
+[Cloud Tasks](https://cloud.google.com/tasks/docs/) client library.
 
-Pull queues let you add tasks to a queue, then programatically remove and
-interact with them. Tasks can be added or processed in any environment,
-such as on Google App Engine or Google Compute Engine.
+`create_http_task.py` is a simple command-line program to create
+tasks to be pushed to an URL endpoint.
 
-`pull_queue_snippets.py` is a simple command-line program to demonstrate listing queues,
- creating tasks, and pulling and acknowledging tasks.
+`create_http_task_with_token.py` is a simple command-line program to create
+tasks to be pushed to an URL endpoint with authorization header.
 
 ## Prerequisites to run locally:
 
@@ -24,39 +23,65 @@ Please refer to [Setting Up a Python Development Environment](https://cloud.goog
 To set up authentication, please refer to our
 [authentication getting started guide](https://cloud.google.com/docs/authentication/getting-started).
 
+## Install Dependencies
+
+To install the dependencies for this sample, use the following command:
+
+```
+pip install -r requirements.txt
+```
+
+This sample uses the common protos in the [googleapis](https://github.com/googleapis/googleapis)
+repository. For more info, see
+[Protocol Buffer Basics](https://developers.google.com/protocol-buffers/docs/pythontutorial).
+
 ## Creating a queue
 
-To create a queue using the Cloud SDK, use the following gcloud command:
+To create a queue (named `my-queue`) using the Cloud SDK, use the following
+gcloud command:
 
-    gcloud beta tasks queues create-pull-queue my-pull-queue
+```
+gcloud tasks queues create my-queue
+```
 
-## Running the Samples
+## Run the Sample Using the Command Line
 
-Set the environment variables:
+Set environment variables:
 
 First, your project ID:
 
-    export PROJECT_ID=my-project-id
+```
+export PROJECT_ID=my-project-id
+```
 
 Then the queue ID, as specified at queue creation time. Queue IDs already
-created can be listed with `gcloud beta tasks queues list`.
+created can be listed with `gcloud tasks queues list`.
 
-    export QUEUE_ID=my-pull-queue
+```
+export QUEUE_ID=my-queue
+```
 
 And finally the location ID, which can be discovered with
-`gcloud beta tasks queues describe $QUEUE_ID`, with the location embedded in
+`gcloud tasks queues describe my-queue`, with the location embedded in
 the "name" value (for instance, if the name is
-"projects/my-project/locations/us-central1/queues/my-pull-queue", then the
+"projects/my-project/locations/us-central1/queues/my-queue", then the
 location is "us-central1").
 
-    export LOCATION_ID=us-central1
+```
+export LOCATION_ID=us-central1
+```
 
-Create a task for a queue:
+### Creating Tasks with HTTP Targets
 
-    python pull_queue_snippets.py create-task --project=$PROJECT_ID --queue=$QUEUE_ID --location=$LOCATION_ID
+Set an environment variable for the endpoint to your task handler. This is an
+example url:
+```
+export URL=https://example.com/task_handler
+```
 
-Pull and acknowledge a task:
+Running the sample will create a task and send the task to the specific URL
+endpoint, with a payload specified:
 
-    python pull_queue_snippets.py lease-and-ack-task --project=$PROJECT_ID --queue=$QUEUE_ID --location=$LOCATION_ID
-
-Note that usually, there would be a processing step in between pulling a task and acknowledging it.
+```
+python create_http_task.py --project=$PROJECT_ID --queue=$QUEUE_ID --location=$LOCATION_ID --url=$URL --payload=hello
+```

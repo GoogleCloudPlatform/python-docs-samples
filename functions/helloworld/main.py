@@ -14,6 +14,13 @@
 
 import sys
 
+# [START functions_helloworld_http]
+# [START functions_http_content]
+from flask import escape
+
+# [END functions_helloworld_http]
+# [END functions_http_content]
+
 
 # [START functions_tips_terminate]
 # [START functions_helloworld_get]
@@ -21,12 +28,13 @@ def hello_get(request):
     """HTTP Cloud Function.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
-    return 'Hello, World!'
+    return 'Hello World!'
 # [END functions_helloworld_get]
 
 
@@ -42,7 +50,7 @@ def hello_background(data, context):
         name = data['name']
     else:
         name = 'World'
-    return 'Hello, {}!'.format(name)
+    return 'Hello {}!'.format(name)
 # [END functions_helloworld_background]
 # [END functions_tips_terminate]
 
@@ -52,17 +60,22 @@ def hello_http(request):
     """HTTP Cloud Function.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
-    request_json = request.get_json()
-    if request_json and 'message' in request_json:
-        name = request_json['message']
+    request_json = request.get_json(silent=True)
+    request_args = request.args
+
+    if request_json and 'name' in request_json:
+        name = request_json['name']
+    elif request_args and 'name' in request_args:
+        name = request_args['name']
     else:
         name = 'World'
-    return 'Hello, {}!'.format(name)
+    return 'Hello {}!'.format(escape(name))
 # [END functions_helloworld_http]
 
 
@@ -80,7 +93,7 @@ def hello_pubsub(data, context):
         name = base64.b64decode(data['data']).decode('utf-8')
     else:
         name = 'World'
-    print('Hello, {}!'.format(name))
+    print('Hello {}!'.format(name))
 # [END functions_helloworld_pubsub]
 
 
@@ -102,14 +115,19 @@ def hello_content(request):
     according to the "content-type" header.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
     content_type = request.headers['content-type']
     if content_type == 'application/json':
-        name = request.json.get('name')
+        request_json = request.get_json(silent=True)
+        if request_json and 'name' in request_json:
+            name = request_json['name']
+        else:
+            raise ValueError("JSON is invalid, or missing a 'name' property")
     elif content_type == 'application/octet-stream':
         name = request.data
     elif content_type == 'text/plain':
@@ -118,7 +136,7 @@ def hello_content(request):
         name = request.form.get('name')
     else:
         raise ValueError("Unknown content type: {}".format(content_type))
-    return 'Hello, {}!'.format(name)
+    return 'Hello {}!'.format(escape(name))
 # [END functions_http_content]
 
 
@@ -127,15 +145,16 @@ def hello_method(request):
     """ Responds to a GET request with "Hello world!". Forbids a PUT request.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
          Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
     from flask import abort
 
     if request.method == 'GET':
-        return 'Hello, World!'
+        return 'Hello World!'
     elif request.method == 'PUT':
         return abort(403)
     else:
@@ -145,6 +164,17 @@ def hello_method(request):
 
 def hello_error_1(request):
     # [START functions_helloworld_error]
+    # This WILL be reported to Stackdriver Error
+    # Reporting, and WILL NOT show up in logs or
+    # terminate the function.
+    from google.cloud import error_reporting
+    client = error_reporting.Client()
+
+    try:
+        raise RuntimeError('I failed you')
+    except RuntimeError:
+        client.report_exception()
+
     # This WILL be reported to Stackdriver Error Reporting,
     # and WILL terminate the function
     raise RuntimeError('I failed you')

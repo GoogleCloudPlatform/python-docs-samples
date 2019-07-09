@@ -26,7 +26,7 @@ import argparse
 
 # [START vision_product_search_get_similar_products]
 # [START vision_product_search_get_similar_products_gcs]
-from google.cloud import vision_v1p3beta1 as vision
+from google.cloud import vision
 
 # [END vision_product_search_get_similar_products]
 # [END vision_product_search_get_similar_products_gcs]

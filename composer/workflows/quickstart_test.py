@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
 
 from airflow import models
 
+from . import unit_testing
+
 
 def test_dag_import():
     """Test that the DAG file can be successfully imported.
@@ -25,4 +27,5 @@ def test_dag_import():
     models.Variable.set('gcs_bucket', 'example_bucket')
     models.Variable.set('gcp_project', 'example-project')
     models.Variable.set('gce_zone', 'us-central1-f')
-    from . import quickstart  # noqa
+    from . import quickstart as module
+    unit_testing.assert_has_valid_dag(module)

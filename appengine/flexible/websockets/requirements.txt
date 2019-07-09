@@ -1,0 +1,4 @@
+Flask==1.0.2
+Flask-Sockets==0.2.1
+gunicorn==19.9.0
+requests==2.21.0

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START functions_tips_infinite_retries]
-from datetime import datetime
+from datetime import datetime, timezone
 # [END functions_tips_infinite_retries]
 
 # [START functions_tips_gcp_apis]
@@ -63,10 +63,11 @@ def lazy_globals(request):
     HTTP Cloud Function that uses lazily-initialized globals.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
     global lazy_global, non_lazy_global
 
@@ -88,10 +89,11 @@ def connection_pooling(request):
     HTTP Cloud Function that uses a connection pool to make HTTP requests.
     Args:
         request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
 
     # The URL to send the request to
@@ -119,7 +121,7 @@ def gcp_api_call(request):
     Returns:
         The response text, or any set of values that can be turned into a
         Response object using `make_response`
-        <http://flask.pocoo.org/docs/0.12/api/#flask.Flask.make_response>.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
 
     project = os.getenv('GCP_PROJECT')
@@ -148,19 +150,20 @@ def avoid_infinite_retries(data, context):
         None; output is written to Stackdriver Logging
     """
 
-    timestamp = data.timestamp
+    timestamp = context.timestamp
 
     event_time = parser.parse(timestamp)
-    event_age = (datetime.now() - event_time).total_seconds() * 1000
+    event_age = (datetime.now(timezone.utc) - event_time).total_seconds()
+    event_age_ms = event_age * 1000
 
     # Ignore events that are too old
     max_age_ms = 10000
-    if event_age > max_age_ms:
-        print('Dropped {} (age {}ms)'.format(context.event_id, event_age))
+    if event_age_ms > max_age_ms:
+        print('Dropped {} (age {}ms)'.format(context.event_id, event_age_ms))
         return 'Timeout'
 
     # Do what the function is supposed to do
-    print('Processed {} (age {}ms)'.format(context.event_id, event_age))
+    print('Processed {} (age {}ms)'.format(context.event_id, event_age_ms))
     return
 # [END functions_tips_infinite_retries]
 
@@ -179,10 +182,8 @@ def retry_or_not(data, context):
         None; output is written to Stackdriver Logging
     """
 
-    if data.data.get('retry'):
-        try_again = True
-    else:
-        try_again = False
+    # Retry based on a user-defined parameter
+    try_again = data.data.get('retry') is not None
 
     try:
         raise RuntimeError('I failed you')

@@ -40,10 +40,15 @@ def make_iap_request(url, client_id, method='GET', **kwargs):
               ('GET', 'OPTIONS', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE')
       **kwargs: Any of the parameters defined for the request function:
                 https://github.com/requests/requests/blob/master/requests/api.py
+                If no timeout is provided, it is set to 90 by default.
 
     Returns:
       The page body, or raises an exception if the page couldn't be retrieved.
     """
+    # Set the default timeout, if missing
+    if 'timeout' not in kwargs:
+        kwargs['timeout'] = 90
+        
     # Figure out what environment we're running in and get some preliminary
     # information about the service account.
     bootstrap_credentials, _ = google.auth.default(

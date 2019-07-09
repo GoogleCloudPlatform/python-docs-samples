@@ -402,7 +402,7 @@ def deidentify_with_date_shift(project, input_csv_file=None,
             write_file.writerow(map(write_data, row.values))
     # Print status
     print('Successfully saved date-shift output to {}'.format(
-                output_csv_file))
+        output_csv_file))
 # [END dlp_deidentify_date_shift]
 
 
@@ -417,7 +417,7 @@ if __name__ == '__main__':
         help='Deidentify sensitive data in a string by masking it with a '
              'character.')
     mask_parser.add_argument(
-        '--info_types', action='append',
+        '--info_types', nargs='+',
         help='Strings representing info types to look for. A full list of '
              'info categories and types is available from the API. Examples '
              'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
@@ -450,8 +450,8 @@ if __name__ == '__main__':
              'If unspecified, the three above examples will be used.',
         default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
     fpe_parser.add_argument(
-         'project',
-         help='The Google Cloud project id to use as a parent resource.')
+        'project',
+        help='The Google Cloud project id to use as a parent resource.')
     fpe_parser.add_argument(
         'item',
         help='The string to deidentify. '
