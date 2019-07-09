@@ -1,3 +1,0 @@
-This is a normal test.
-Hopefully it passes!
-:)
