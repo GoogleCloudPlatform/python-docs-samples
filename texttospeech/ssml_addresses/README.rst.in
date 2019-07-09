@@ -13,18 +13,7 @@ setup:
 - install_deps
 
 samples:
-- name: Quickstart
-  file: quickstart.py
-- name: List voices
-  file: list_voices.py
-- name: Synthesize text
-  file: synthesize_text.py
-  show_help: True
-- name: Synthesize file
-  file: synthesize_file.py
-  show_help: True
-- name: Audio profile
-  file: audio_profile.py
-  show_help: True
+- name: Speaking addresses with SSML Tutorial
+  file: tts.py
 
 cloud_client_library: true
