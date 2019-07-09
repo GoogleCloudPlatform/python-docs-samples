@@ -1,0 +1,17 @@
+# [START tts_ssml_address_ssml]
+<speak>123 Street Ln, Small Town, IL 12345 USA
+<break time="2s"/>1 Jenny St  and  Number St, Tutone City, CA 86753
+<break time="2s"/>1 Piazza del Fibonacci, 12358 Pisa, Italy<break time="2s"/></speak>
+# [END tts_ssml_address_ssml]
+
+# [START tts_ssml_address_ssml_short1]
+<speak>123 Street Ln</speak>
+# [END tts_ssml_address_ssml_short1]
+
+# [START tts_ssml_address_ssml_short2]
+<speak>1 Number St</speak>
+# [END tts_ssml_address_ssml_short2]
+
+# [START tts_ssml_address_ssml_short3]
+<speak>1 Piazza del Fibonacci</speak>
+# [END tts_ssml_address_ssml_short3]
