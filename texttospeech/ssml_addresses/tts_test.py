@@ -23,7 +23,7 @@ import sys
 def test_text_to_ssml():
     # Tests text_to_ssml() function
     # Args: none
-    # Returns: array of 2 ssml strings
+    # Returns: none
 
     # Assert plaintext converted to SSML
     input_text = 'resources/example.txt'
@@ -42,7 +42,7 @@ def test_text_to_ssml():
 
 def test_ssml_to_audio():
     # Tests ssml_to_audio() function
-    # Args: ssml = array of 2 ssml strings
+    # Args: none
     # Returns: none
 
     input_ssml = '<speak>123 Street Ln, Small Town, IL 12345 USA\n' \
@@ -84,19 +84,19 @@ def enablePrint():
 
 
 def main():
-    # Suppress printing while testing
+    # Suppresses printing while testing
     suppressPrint()
 
-    # Test text_to_ssml()
+    # Tests text_to_ssml()
     test_text_to_ssml()
 
-    # Test ssml_to_audio()
+    # Tests ssml_to_audio()
     test_ssml_to_audio()
 
-    # Restore printing
+    # Restores printing
     enablePrint()
 
-    # Print success if achieved
+    # Prints success if achieved
     print("All tests passed!")
 
 
