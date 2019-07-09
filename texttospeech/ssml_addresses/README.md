@@ -1,6 +1,6 @@
 # Google Cloud Text-to-Speech API
 
-This directory contains samples for Google Cloud Text-to-Speech API. The code in this directory aligns with the [Speaking addresses with SSML tutorial](https://cloud-dot-devsite.googleplex.com/text-to-speech/docs/ssml-tutorial).
+This directory contains samples for Google Cloud Text-to-Speech API. The code in this directory aligns with the [Speaking addresses with SSML tutorial](https://cloud.google.com/text-to-speech/docs/ssml-tutorial).
 
 ## Setup
 

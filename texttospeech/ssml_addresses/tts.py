@@ -137,7 +137,7 @@ def text_to_ssml(inputfile):
 # [START tts_ssml_address_test]
 if __name__ == '__main__':
     # test example address file
-    plaintext = 'example.txt'
+    plaintext = 'resources/example.txt'
     ssml_text = text_to_ssml(plaintext)
-    ssml_to_audio(ssml_text, 'example.mp3')
+    ssml_to_audio(ssml_text, 'resources/example.mp3')
     # [END tts_ssml_address_test]
