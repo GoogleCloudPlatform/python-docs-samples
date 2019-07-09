@@ -25,22 +25,15 @@ def test_text_to_ssml():
     # Args: none
     # Returns: array of 2 ssml strings
 
-    # Assert non-special characters converted to SSML
-    input_chars = 'resources/normal_chars.txt'
-    tested_chars = text_to_ssml(input_chars)
-    expected_chars = '<speak>This is a normal test.\n' \
-                     '<break time="2s"/>Hopefully it passes!\n' \
-                     '<break time="2s"/>:)<break time="2s"/></speak>'
-    assert tested_chars == expected_chars
-
-    # Assert special characters converted to SSML
-    input_special_chars = 'resources/special_chars.txt'
-    tested_special_chars = text_to_ssml(input_special_chars)
-    expected_special_chars = '<speak>&lt;&amp;&gt;\n<' \
-                             'break time="2s"/>&gt;&gt;\n' \
-                             '<break time="2s"/>&amp;' \
-                             '<break time="2s"/></speak>'
-    assert tested_special_chars == expected_special_chars
+    # Assert plaintext converted to SSML
+    input_text = 'resources/example.txt'
+    tested_ssml = text_to_ssml(input_text)
+    expected_ssml = '<speak>123 Street Ln, Small Town, IL 12345 USA\n' \
+                     '<break time="2s"/>1 Jenny St &amp; Number St,' \
+                     ' Tutone City, CA 86753\n' \
+                     '<break time="2s"/>1 Piazza del Fibonacci,' \
+                     ' 12358 Pisa, Italy\n<break time="2s"/></speak>'
+    assert expected_ssml == tested_ssml
 
     # Assert that nothing returned if given nonexistent input
     non_existent_input = text_to_ssml('mysteryfile.txt')
@@ -52,34 +45,24 @@ def test_ssml_to_audio():
     # Args: ssml = array of 2 ssml strings
     # Returns: none
 
-    non_special_ssml = '<speak>This is a normal test.\n' \
-                       '<break time="2s"/>Hopefully it passes!\n' \
-                       '<break time="2s"/>:)<break time="2s"/></speak>'
-    special_ssml = '<speak>&lt;&amp;&gt;\n<' \
-                   'break time="2s"/>&gt;&gt;\n' \
-                   '<break time="2s"/>&amp;<break time="2s"/></speak>'
+    input_ssml = '<speak>123 Street Ln, Small Town, IL 12345 USA\n' \
+                     '<break time="2s"/>1 Jenny St  and  Number St,' \
+                     ' Tutone City, CA 86753\n' \
+                     '<break time="2s"/>1 Piazza del Fibonacci,' \
+                     ' 12358 Pisa, Italy<break time="2s"/></speak>'
 
-    # Assert audio file of non-special characters generated
-    ssml_to_audio(non_special_ssml, 'test_non_special.mp3')
-    assert os.path.isfile('test_non_special.mp3')
+    # Assert audio file generated
+    ssml_to_audio(input_ssml, 'test_example.mp3')
+    assert os.path.isfile('test_example.mp3')
 
-    # Assert audio file of non-special characters generated correctly
-    assert filecmp.cmp('test_non_special.mp3',
-                       'resources/expected_non_special.mp3',
-                       shallow=True)
-
-    # Assert audio file of special characters generated
-    ssml_to_audio(special_ssml, 'test_special.mp3')
-    assert os.path.isfile('test_special.mp3')
-
-    # Assert audio file of special characters generated correctly
-    assert filecmp.cmp('test_special.mp3',
-                       'resources/expected_special.mp3',
+    # Assert audio file generated correctly
+    assert filecmp.cmp('test_example.mp3',
+                       'resources/expected_example.mp3',
                        shallow=True)
 
     # Assert that no mp3 file generated if given empty SSML input
     # NOTE to work correctly, directory must not already contain a file
-    # named 'out3.mp3'
+    # named 'non_existent_input.mp3'
     ssml_to_audio(None, 'non_existent_input.mp3')
     assert os.path.isfile('non_existent_input.mp3') is False
 
