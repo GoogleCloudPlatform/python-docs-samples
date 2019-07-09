@@ -100,8 +100,7 @@ def enablePrint():
     sys.stdout = sys.__stdout__
 
 
-if __name__ == '__main__':
-
+def main():
     # Suppress printing while testing
     suppressPrint()
 
@@ -116,3 +115,7 @@ if __name__ == '__main__':
 
     # Print success if achieved
     print("All tests passed!")
+
+
+if __name__ == '__main__':
+    main()
