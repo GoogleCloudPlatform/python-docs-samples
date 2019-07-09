@@ -77,7 +77,8 @@ def test_ssml_to_audio():
     assert filecmp.cmp('test_special.mp3', 'expected_special.mp3', shallow=True)
 
     # Assert that no mp3 file generated if given empty SSML input
-    # NOTE to work correctly, directory must not already contain a file named 'out3.mp3'
+    # NOTE to work correctly, directory must not already contain a file
+    # named 'out3.mp3'
     ssml_to_audio(None, 'non_existent_input.mp3')
     assert os.path.isfile('non_existent_input.mp3') is False
 

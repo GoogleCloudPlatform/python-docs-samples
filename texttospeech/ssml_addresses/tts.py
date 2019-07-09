@@ -49,7 +49,7 @@ def ssml_to_audio(ssml_text, outfile):
 
     # Checks to make sure ssml_text is not empty
     if ssml_text is None:
-        print('Error in ssml_to_audio. The input text does not exist.')
+        print('ssml_to_audio() error. The input text does not exist.')
         return
 
     # Instantiates a client
@@ -58,8 +58,8 @@ def ssml_to_audio(ssml_text, outfile):
     # Sets the text input to be synthesized
     synthesis_input = texttospeech.types.SynthesisInput(ssml=ssml_text)
 
-    # Builds the voice request, selects the language code ("en-US") and the ssml
-    # voice gender ("neutral")
+    # Builds the voice request, selects the language code ("en-US") and
+    # the ssml voice gender ("MALE")
     voice = texttospeech.types.VoiceSelectionParams(
         language_code='en-US',
         ssml_gender=texttospeech.enums.SsmlVoiceGender.MALE)
@@ -101,7 +101,7 @@ def text_to_ssml(inputfile):
 
     # Checks to make sure that the input file exists
     except IOError:
-        print('Error in text_to_ssml. The file ' + inputfile + ' does not exist.')
+        print('text_to_ssml() error. The file ' + inputfile + ' does not exist.')
         return
 
     # Define SSML timed break between addresses
