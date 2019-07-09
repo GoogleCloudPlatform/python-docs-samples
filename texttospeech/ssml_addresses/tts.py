@@ -1,12 +1,37 @@
-"""Source code for SSML Tutorial for Cloud Text-to-Speech API."""
+# Copyright 2019 Google LLC
 
-# [START imports]
+#
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+
+# you may not use this file except in compliance with the License.
+
+# You may obtain a copy of the License at
+
+#
+
+#      http://www.apache.org/licenses/LICENSE-2.0
+
+#
+
+# Unless required by applicable law or agreed to in writing, software
+
+# distributed under the License is distributed on an "AS IS" BASIS,
+
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+# See the License for the specific language governing permissions and
+
+# limitations under the License.
+
+
+# [START tts_ssml_address_imports]
 from __future__ import print_function
 from google.cloud import texttospeech
-# [END imports]
+# [END tts_ssml_address_imports]
 
 
-# [START audio]
+# [START tts_ssml_address_audio]
 def ssml_to_audio(ssml_text, outfile):
     # Generates SSML text from plaintext.
 
@@ -38,7 +63,7 @@ def ssml_to_audio(ssml_text, outfile):
     # voice gender ("neutral")
     voice = texttospeech.types.VoiceSelectionParams(
         language_code='en-US',
-        ssml_gender=texttospeech.enums.SsmlVoiceGender.NEUTRAL)
+        ssml_gender=texttospeech.enums.SsmlVoiceGender.MALE)
 
     # Selects the type of audio file to return
     audio_config = texttospeech.types.AudioConfig(
@@ -52,9 +77,9 @@ def ssml_to_audio(ssml_text, outfile):
     with open(outfile, 'wb') as out:
         out.write(response.audio_content)
         print('Audio content written to file ' + outfile)
-    # [END audio]
+    # [END tts_ssml_address_audio]
 
-# [START ssml]
+# [START tts_ssml_address_ssml]
 def text_to_ssml(inputfile):
 
 
@@ -92,11 +117,11 @@ def text_to_ssml(inputfile):
     # Iterate through lines of file
     for line in raw_lines:
 
-        # Expand select special characters
+        # Replace special characters with HTML Ampersand Character Codes
         # Some special characters might interfere with the SSML interpreter
-        line = line.replace('&', ' and ')
-        line = line.replace('<', ' open carot ')
-        line = line.replace('>', ' close carot ')
+        line = line.replace('&', '&amp;')
+        line = line.replace('<', '&lt;')
+        line = line.replace('>', '&gt;')
 
         # Concatenate the line to the SSML script
         ssml += line
@@ -107,17 +132,17 @@ def text_to_ssml(inputfile):
     # Terminate the SSML script
     ssml += '</speak>'
 
+    #print(ssml)
+
     # Return the concatenated string of ssml script
     return ssml
-# [END ssml]
+# [END tts_ssml_address_ssml]
 
-# [START test]
+# [START tts_ssml_address_test]
 if __name__ == '__main__':
 
-
+    # test example address file
     plaintext = 'example.txt'
     ssml_text = text_to_ssml(plaintext)
     ssml_to_audio(ssml_text, 'example.mp3')
-
-    ssml_to_audio('this is not ssml! but it still works :) sneaky sneaky', 'not_ssml.mp3')
-    # [END test]
+    # [END tts_ssml_address_test]
