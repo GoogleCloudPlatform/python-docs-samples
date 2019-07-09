@@ -82,7 +82,6 @@ def ssml_to_audio(ssml_text, outfile):
 # [START tts_ssml_address_ssml]
 def text_to_ssml(inputfile):
     # Generates SSML text from plaintext.
-
     # Given an input filename, this function converts the contents of the text
     # file into a string of formatted SSML text. This function formats the SSML
     # string so that, when synthesized, the synthetic audio will pause for two
@@ -137,7 +136,6 @@ def text_to_ssml(inputfile):
 
 # [START tts_ssml_address_test]
 if __name__ == '__main__':
-
     # test example address file
     plaintext = 'example.txt'
     ssml_text = text_to_ssml(plaintext)
