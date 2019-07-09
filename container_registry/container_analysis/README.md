@@ -29,15 +29,7 @@ These samples show how to use the [Google Cloud Container Analysis Client Librar
 
     ```
     git clone https://github.com/GoogleCloudPlatform/python-docs-samples
-    cd python-docs-samples/container_registry/container_analysis
-    ```
-
-1. **Install Dependencies**
-
-    ```
-    python3 -m venv ./venv
-    source ./venv/bin/activate
-    pip install -r requirements.txt
+    cd python-docs-samples
     ```
 
 1. **Set Environment Variables**
@@ -49,7 +41,7 @@ These samples show how to use the [Google Cloud Container Analysis Client Librar
 1. **Run Tests**
 
     ```
-    python -m pytest ./samples_test.py
+    nox -s "py36(sample='./container_registry/container_analysis')"
     ```
 
 ## Contributing changes
