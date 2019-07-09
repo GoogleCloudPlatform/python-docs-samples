@@ -101,7 +101,7 @@ def text_to_ssml(inputfile):
 
     # Checks to make sure that the input file exists
     except IOError:
-        print('text_to_ssml() error. The file ' + inputfile + ' does not exist.')
+        print('text_to_ssml() error. File ' + inputfile + ' does not exist.')
         return
 
     # Define SSML timed break between addresses
