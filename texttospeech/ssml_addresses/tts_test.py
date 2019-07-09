@@ -40,13 +40,17 @@ def test_text_to_ssml():
     # Assert non-special characters converted to SSML
     input_chars = 'normal_chars.txt'
     tested_chars = text_to_ssml(input_chars)
-    expected_chars = '<speak>This is a normal test.\n<break time="2s"/>Hopefully it passes!\n<break time="2s"/>:)<break time="2s"/></speak>'
+    expected_chars = '<speak>This is a normal test.\n' \
+                     '<break time="2s"/>Hopefully it passes!\n' \
+                     '<break time="2s"/>:)<break time="2s"/></speak>'
     assert tested_chars == expected_chars
 
     # Assert special characters converted to SSML
     input_special_chars = 'special_chars.txt'
     tested_special_chars = text_to_ssml(input_special_chars)
-    expected_special_chars = '<speak>&lt;&amp;&gt;\n<break time="2s"/>&gt;&gt;\n<break time="2s"/>&amp;<break time="2s"/></speak>'
+    expected_special_chars = '<speak>&lt;&amp;&gt;\n<' \
+                             'break time="2s"/>&gt;&gt;\n' \
+                             '<break time="2s"/>&amp;<break time="2s"/></speak>'
     assert tested_special_chars == expected_special_chars
 
     # Assert that nothing returned if given nonexistent input
@@ -59,22 +63,28 @@ def test_ssml_to_audio():
     # Args: ssml = array of 2 ssml strings
     # Returns: none
 
-    non_special_ssml = '<speak>This is a normal test.\n<break time="2s"/>Hopefully it passes!\n<break time="2s"/>:)<break time="2s"/></speak>'
-    special_ssml = '<speak>&lt;&amp;&gt;/n<break time="2s"/>&gt;&gt;/n<break time="2s"/>&amp;<break time="2s"/></speak>'
+    non_special_ssml = '<speak>This is a normal test.\n' \
+                       '<break time="2s"/>Hopefully it passes!\n' \
+                       '<break time="2s"/>:)<break time="2s"/></speak>'
+    special_ssml = '<speak>&lt;&amp;&gt;\n<' \
+                   'break time="2s"/>&gt;&gt;\n' \
+                   '<break time="2s"/>&amp;<break time="2s"/></speak>'
 
     # Assert audio file of non-special characters generated
     ssml_to_audio(non_special_ssml, 'test_non_special.mp3')
     assert os.path.isfile('test_non_special.mp3')
 
     # Assert audio file of non-special characters generated correctly
-    assert filecmp.cmp('test_non_special.mp3', 'expected_non_special.mp3', shallow=True)
+    assert filecmp.cmp('test_non_special.mp3', 'expected_non_special.mp3', \
+    shallow=True)
 
     # Assert audio file of special characters generated
     ssml_to_audio(special_ssml, 'test_special.mp3')
     assert os.path.isfile('test_special.mp3')
 
     # Assert audio file of special characters generated correctly
-    assert filecmp.cmp('test_special.mp3', 'expected_special.mp3', shallow=True)
+    assert filecmp.cmp('test_special.mp3', 'expected_special.mp3', \
+    shallow=True)
 
     # Assert that no mp3 file generated if given empty SSML input
     # NOTE to work correctly, directory must not already contain a file
