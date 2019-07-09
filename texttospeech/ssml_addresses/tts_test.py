@@ -77,7 +77,7 @@ def test_ssml_to_audio():
 
     # Assert audio file of non-special characters generated correctly
     assert filecmp.cmp('test_non_special.mp3', 'expected_non_special.mp3',
-        shallow=True)
+            shallow=True)
 
     # Assert audio file of special characters generated
     ssml_to_audio(special_ssml, 'test_special.mp3')
@@ -85,7 +85,7 @@ def test_ssml_to_audio():
 
     # Assert audio file of special characters generated correctly
     assert filecmp.cmp('test_special.mp3', 'expected_special.mp3',
-        shallow=True)
+            shallow=True)
 
     # Assert that no mp3 file generated if given empty SSML input
     # NOTE to work correctly, directory must not already contain a file
