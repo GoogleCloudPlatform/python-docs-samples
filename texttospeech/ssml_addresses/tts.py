@@ -15,6 +15,7 @@
 
 # [START tts_ssml_address_imports]
 from google.cloud import texttospeech
+import cgi
 # [END tts_ssml_address_imports]
 
 
@@ -102,10 +103,10 @@ def text_to_ssml(inputfile):
     for line in raw_lines:
 
         # Replace special characters with HTML Ampersand Character Codes
-        # Some special characters might interfere with the SSML interpreter
-        line = line.replace('&', '&amp;')
-        line = line.replace('<', '&lt;')
-        line = line.replace('>', '&gt;')
+        # These Codes prevent the API from confusing text with
+        # SSML commands
+        # For example, '<' --> '&lt;'
+        line = cgi.escape(line)
 
         # Concatenate the line to the SSML script
         ssml += line
