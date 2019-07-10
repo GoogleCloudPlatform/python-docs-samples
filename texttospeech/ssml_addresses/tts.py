@@ -16,7 +16,7 @@
 # [START tts_ssml_address_imports]
 from google.cloud import texttospeech
 
-# For Python 3, instead use: 
+# For Python 3, instead use:
 # import html
 import cgi
 # [END tts_ssml_address_imports]
