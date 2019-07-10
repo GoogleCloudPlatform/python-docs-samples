@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from flask import escape
-from flask import send_file
+import flask
 
 
 def hello_world(request):
@@ -45,7 +44,7 @@ def hello_name(request):
         name = request_args["name"]
     else:
         name = "World"
-    return "Hello {}!".format(escape(name))
+    return "Hello {}!".format(flask.escape(name))
 
 
 def python_powered(request):
@@ -56,4 +55,4 @@ def python_powered(request):
     Returns:
         The response file, a JPG image that says "Python Powered"
     """
-    return send_file("python_powered.jpg", mimetype="image/jpg")
+    return flask.send_file("python_powered.jpg", mimetype="image/jpg")

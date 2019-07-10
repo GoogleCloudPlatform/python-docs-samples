@@ -12,12 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from main import python_powered
-from flask import Flask, request
+import flask
 
-app = Flask(__name__)
+import main
+
+
+app = flask.Flask(__name__)
 
 
 @app.route("/")
 def index():
-    return python_powered(request)
+    return main.python_powered(flask.request)
