@@ -20,9 +20,6 @@ import os
 
 
 def test_text_to_ssml(capsys):
-    # Tests text_to_ssml() function
-    # Args: none
-    # Returns: none
 
     # Assert plaintext converted to SSML
     input_text = 'resources/example.txt'
@@ -36,9 +33,6 @@ def test_text_to_ssml(capsys):
 
 
 def test_ssml_to_audio(capsys):
-    # Tests ssml_to_audio() function
-    # Args: none
-    # Returns: none
 
     input_ssml = '<speak>123 Street Ln, Small Town, IL 12345 USA\n' \
                  '<break time="2s"/>1 Jenny St &amp; Number St,' \
