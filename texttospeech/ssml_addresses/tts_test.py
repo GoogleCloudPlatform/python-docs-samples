@@ -33,8 +33,6 @@ def test_text_to_ssml(capsys):
                     '<break time="2s"/>1 Piazza del Fibonacci,' \
                     ' 12358 Pisa, Italy\n<break time="2s"/></speak>'
     assert expected_ssml == tested_ssml
-    out, err = capsys.readouterr()
-    assert "" in out
 
 
 def test_ssml_to_audio(capsys):
