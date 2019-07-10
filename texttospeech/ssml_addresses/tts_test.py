@@ -17,7 +17,6 @@ from tts import ssml_to_audio
 
 import filecmp
 import os
-import sys
 
 
 def test_text_to_ssml(capsys):
