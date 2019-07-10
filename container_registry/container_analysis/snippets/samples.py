@@ -63,7 +63,7 @@ def delete_note(note_id, project_id):
 # [END containeranalysis_delete_note]
 
 
-# [START ccontaineranalysis_create_occurrence]
+# [START containeranalysis_create_occurrence]
 def create_occurrence(resource_url, note_id, occurrence_project, note_project):
     """ Creates and returns a new occurrence of a previously
     created vulnerability note."""
