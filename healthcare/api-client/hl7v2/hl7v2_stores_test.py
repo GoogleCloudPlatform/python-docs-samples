@@ -23,20 +23,17 @@ import datasets
 import hl7v2_stores
 
 cloud_region = 'us-central1'
-api_key = os.environ['API_KEY']
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 dataset_id = 'test_dataset_{}'.format(int(time.time()))
 hl7v2_store_id = 'test_hl7v2_store-{}'.format(int(time.time()))
-pubsub_topic = 'test_pubsub_topic-{}'.format(int(time.time()))
 
 
 @pytest.fixture(scope='module')
 def test_dataset():
     dataset = datasets.create_dataset(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id)
@@ -46,7 +43,6 @@ def test_dataset():
     # Clean up
     datasets.delete_dataset(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id)
@@ -55,7 +51,6 @@ def test_dataset():
 def test_CRUD_hl7v2_store(test_dataset, capsys):
     hl7v2_stores.create_hl7v2_store(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
@@ -63,7 +58,6 @@ def test_CRUD_hl7v2_store(test_dataset, capsys):
 
     hl7v2_stores.get_hl7v2_store(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
@@ -71,14 +65,12 @@ def test_CRUD_hl7v2_store(test_dataset, capsys):
 
     hl7v2_stores.list_hl7v2_stores(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id)
 
     hl7v2_stores.delete_hl7v2_store(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
@@ -96,7 +88,6 @@ def test_CRUD_hl7v2_store(test_dataset, capsys):
 def test_patch_hl7v2_store(test_dataset, capsys):
     hl7v2_stores.create_hl7v2_store(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
@@ -104,17 +95,14 @@ def test_patch_hl7v2_store(test_dataset, capsys):
 
     hl7v2_stores.patch_hl7v2_store(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
-        hl7v2_store_id,
-        pubsub_topic)
+        hl7v2_store_id)
 
     # Clean up
     hl7v2_stores.delete_hl7v2_store(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
@@ -128,7 +116,6 @@ def test_patch_hl7v2_store(test_dataset, capsys):
 def test_get_set_hl7v2_store_iam_policy(test_dataset, capsys):
     hl7v2_stores.create_hl7v2_store(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
@@ -136,7 +123,6 @@ def test_get_set_hl7v2_store_iam_policy(test_dataset, capsys):
 
     get_response = hl7v2_stores.get_hl7v2_store_iam_policy(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
@@ -144,7 +130,6 @@ def test_get_set_hl7v2_store_iam_policy(test_dataset, capsys):
 
     set_response = hl7v2_stores.set_hl7v2_store_iam_policy(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,
@@ -155,7 +140,6 @@ def test_get_set_hl7v2_store_iam_policy(test_dataset, capsys):
     # Clean up
     hl7v2_stores.delete_hl7v2_store(
         service_account_json,
-        api_key,
         project_id,
         cloud_region,
         dataset_id,

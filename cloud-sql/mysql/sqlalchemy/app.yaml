@@ -17,7 +17,7 @@ runtime: python37
 # Remember - storing secrets in plaintext is potentially unsafe. Consider using
 # something like https://cloud.google.com/kms/ to help keep secrets secret.
 env_variables:
-  CLOUD_SQL_INSTANCE_NAME: <MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>
+  CLOUD_SQL_CONNECTION_NAME: <MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>
   DB_USER: my-db-user
   DB_PASS: my-db-pass
   DB_NAME: my_db

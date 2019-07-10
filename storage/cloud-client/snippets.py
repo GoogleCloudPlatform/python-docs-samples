@@ -249,7 +249,7 @@ def make_blob_public(bucket_name, blob_name):
 
 
 def generate_signed_url(bucket_name, blob_name):
-    """Generates a signed URL for a blob.
+    """Generates a v2 signed URL for downloading a blob.
 
     Note that this method requires a service account key file. You can not use
     this if you are using Application Default Credentials from Google Compute
@@ -267,6 +267,62 @@ def generate_signed_url(bucket_name, blob_name):
 
     print('The signed url for {} is {}'.format(blob.name, url))
     return url
+
+
+# [START storage_generate_signed_url_v4]
+def generate_download_signed_url_v4(bucket_name, blob_name):
+    """Generates a v4 signed URL for downloading a blob.
+
+    Note that this method requires a service account key file. You can not use
+    this if you are using Application Default Credentials from Google Compute
+    Engine or from the Google Cloud SDK.
+    """
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+
+    url = blob.generate_signed_url(
+        version='v4',
+        # This URL is valid for 15 minutes
+        expiration=datetime.timedelta(minutes=15),
+        # Allow GET requests using this URL.
+        method='GET')
+
+    print('Generated GET signed URL:')
+    print(url)
+    print('You can use this URL with any user agent, for example:')
+    print('curl \'{}\''.format(url))
+    return url
+# [END storage_generate_signed_url_v4]
+
+
+# [START storage_generate_upload_signed_url_v4]
+def generate_upload_signed_url_v4(bucket_name, blob_name):
+    """Generates a v4 signed URL for uploading a blob using HTTP PUT.
+
+    Note that this method requires a service account key file. You can not use
+    this if you are using Application Default Credentials from Google Compute
+    Engine or from the Google Cloud SDK.
+    """
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+
+    url = blob.generate_signed_url(
+        version='v4',
+        # This URL is valid for 15 minutes
+        expiration=datetime.timedelta(minutes=15),
+        # Allow GET requests using this URL.
+        method='PUT',
+        content_type='application/octet-stream')
+
+    print('Generated PUT signed URL:')
+    print(url)
+    print('You can use this URL with any user agent, for example:')
+    print("curl -X PUT -H 'Content-Type: application/octet-stream' "
+          "--upload-file my-file '{}'".format(url))
+    return url
+# [END storage_generate_upload_signed_url_v4]
 
 
 def rename_blob(bucket_name, blob_name, new_name):
@@ -296,7 +352,7 @@ def copy_blob(bucket_name, blob_name, new_bucket_name, new_blob_name):
         destination_bucket.name))
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -350,6 +406,14 @@ if __name__ == '__main__':
         'signed-url', help=generate_signed_url.__doc__)
     signed_url_parser.add_argument('blob_name')
 
+    signed_url_download_v4_parser = subparsers.add_parser(
+        'signed-url-download-v4', help=generate_download_signed_url_v4.__doc__)
+    signed_url_download_v4_parser.add_argument('blob_name')
+
+    signed_url_upload_v4_parser = subparsers.add_parser(
+        'signed-url-upload-v4', help=generate_upload_signed_url_v4.__doc__)
+    signed_url_upload_v4_parser.add_argument('blob_name')
+
     rename_parser = subparsers.add_parser('rename', help=rename_blob.__doc__)
     rename_parser.add_argument('blob_name')
     rename_parser.add_argument('new_name')
@@ -363,15 +427,15 @@ if __name__ == '__main__':
 
     if args.command == 'create-bucket':
         create_bucket(args.bucket_name)
-    if args.command == 'enable-default-kms-key':
+    elif args.command == 'enable-default-kms-key':
         enable_default_kms_key(args.bucket_name, args.kms_key_name)
     elif args.command == 'delete-bucket':
         delete_bucket(args.bucket_name)
-    if args.command == 'get-bucket-labels':
+    elif args.command == 'get-bucket-labels':
         get_bucket_labels(args.bucket_name)
-    if args.command == 'add-bucket-label':
+    elif args.command == 'add-bucket-label':
         add_bucket_label(args.bucket_name)
-    if args.command == 'remove-bucket-label':
+    elif args.command == 'remove-bucket-label':
         remove_bucket_label(args.bucket_name)
     elif args.command == 'list':
         list_blobs(args.bucket_name)
@@ -401,6 +465,10 @@ if __name__ == '__main__':
         make_blob_public(args.bucket_name, args.blob_name)
     elif args.command == 'signed-url':
         generate_signed_url(args.bucket_name, args.blob_name)
+    elif args.command == 'signed-url-download-v4':
+        generate_download_signed_url_v4(args.bucket_name, args.blob_name)
+    elif args.command == 'signed-url-upload-v4':
+        generate_upload_signed_url_v4(args.bucket_name, args.blob_name)
     elif args.command == 'rename':
         rename_blob(args.bucket_name, args.blob_name, args.new_name)
     elif args.command == 'copy':
@@ -409,3 +477,7 @@ if __name__ == '__main__':
             args.blob_name,
             args.new_bucket_name,
             args.new_blob_name)
+
+
+if __name__ == '__main__':
+    main()

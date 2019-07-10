@@ -73,12 +73,14 @@ def __blur_image(current_blob):
 
     print(f'Image {file_name} was blurred.')
 
-    # Send Blurred image back to the bucket (with a 'blurred-' prefix).
-    # The prefix is necessary to avoid re-invoking the function upon upload.
-    new_file_name = f'blurred-{file_name}'
-    new_blob = current_blob.bucket.blob(new_file_name)
+    # Upload result to a second bucket, to avoid re-triggering the function.
+    # You could instead re-upload it to the same bucket + tell your function
+    # to ignore files marked as blurred (e.g. those with a "blurred" prefix)
+    blur_bucket_name = os.getenv('BLURRED_BUCKET_NAME')
+    blur_bucket = storage_client.bucket(blur_bucket_name)
+    new_blob = blur_bucket.blob(file_name)
     new_blob.upload_from_filename(temp_local_filename)
-    print(f'Blurred image was uploaded to {new_file_name}.')
+    print(f'Blurred image uploaded to: gs://{blur_bucket_name}/{file_name}')
 
     # Delete the temporary file.
     os.remove(temp_local_filename)

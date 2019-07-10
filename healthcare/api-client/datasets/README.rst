@@ -31,21 +31,6 @@ credentials for applications.
 .. _Authentication Getting Started Guide:
     https://cloud.google.com/docs/authentication/getting-started
 
-Authentication
-++++++++++++++
-
-Authentication for this service is done via an `API Key`_. To obtain an API
-Key:
-
-1. Open the `Cloud Platform Console`_
-2. Make sure that billing is enabled for your project.
-3. From the **Credentials** page, create a new **API Key** or use an existing
-   one for your project.
-
-.. _API Key:
-    https://developers.google.com/api-client-library/python/guide/aaa_apikeys
-.. _Cloud Console: https://console.cloud.google.com/project?_
-
 Install Dependencies
 ++++++++++++++++++++
 
@@ -94,21 +79,35 @@ To run this sample:
 
     $ python datasets.py
 
-    usage: datasets.py [-h] --service_account_json SERVICE_ACCOUNT_JSON --api_key
-                       API_KEY --project_id PROJECT_ID --cloud_region CLOUD_REGION
-                       --dataset_id DATASET_ID [--time_zone TIME_ZONE]
+    usage: datasets.py [-h] [--service_account_json SERVICE_ACCOUNT_JSON]
+                       [--project_id PROJECT_ID] [--cloud_region CLOUD_REGION]
+                       [--dataset_id DATASET_ID] [--time_zone TIME_ZONE]
                        [--destination_dataset_id DESTINATION_DATASET_ID]
-                       [--whitelist_tags WHITELIST_TAGS]
-                       {create-dataset,delete-dataset,get-dataset,list-datasets,patch-dataset,deidentify-dataset}
+                       [--keeplist_tags KEEPLIST_TAGS] [--member MEMBER]
+                       [--role ROLE]
+                       {create-dataset,delete-dataset,get-dataset,list-datasets,patch-dataset,get_iam_policy,set_iam_policy,deidentify-dataset}
                        ...
 
     positional arguments:
-      {create-dataset,delete-dataset,get-dataset,list-datasets,patch-dataset,deidentify-dataset}
+      {create-dataset,delete-dataset,get-dataset,list-datasets,patch-dataset,get_iam_policy,set_iam_policy,deidentify-dataset}
         create-dataset      Creates a dataset.
         delete-dataset      Deletes a dataset.
         get-dataset         Gets any metadata associated with a dataset.
         list-datasets       Lists the datasets in the project.
         patch-dataset       Updates dataset metadata.
+        get_iam_policy      Gets the IAM policy for the specified dataset.
+        set_iam_policy      Sets the IAM policy for the specified dataset. A
+                            single member will be assigned a single role. A member
+                            can be any of: - allUsers, that is, anyone -
+                            allAuthenticatedUsers, anyone authenticated with a
+                            Google account - user:email, as in
+                            'user:somebody@example.com' - group:email, as in
+                            'group:admins@example.com' - domain:domainname, as in
+                            'domain:example.com' - serviceAccount:email, as in
+                            'serviceAccount:my-other-
+                            app@appspot.gserviceaccount.com' A role can be any IAM
+                            role, such as 'roles/viewer', 'roles/owner', or
+                            'roles/editor'
         deidentify-dataset  Creates a new dataset containing de-identified data
                             from the source dataset.
 
@@ -116,7 +115,6 @@ To run this sample:
       -h, --help            show this help message and exit
       --service_account_json SERVICE_ACCOUNT_JSON
                             Path to service account JSON file.
-      --api_key API_KEY     Your API key.
       --project_id PROJECT_ID
                             GCP project name
       --cloud_region CLOUD_REGION
@@ -128,9 +126,12 @@ To run this sample:
       --destination_dataset_id DESTINATION_DATASET_ID
                             The name of the new dataset where the de-identified
                             data will be written
-      --whitelist_tags WHITELIST_TAGS
-                            The data to whitelist, for example "PatientID" or
+      --keeplist_tags KEEPLIST_TAGS
+                            The data to keeplist, for example "PatientID" or
                             "StudyInstanceUID"
+      --member MEMBER       Member to add to IAM policy (e.g.
+                            "domain:example.com")
+      --role ROLE           IAM Role to give to member (e.g. "roles/viewer")
 
 
 

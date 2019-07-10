@@ -86,7 +86,7 @@ To run this sample:
 
     Example Usage:
 
-        python shotchange.py gs://demomaker/gbikes_dinosaur.mp4
+        python shotchange.py gs://cloud-samples-data/video/gbikes_dinosaur.mp4
 
     positional arguments:
       path        GCS path for shot change detection.

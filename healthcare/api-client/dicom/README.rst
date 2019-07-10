@@ -31,21 +31,6 @@ credentials for applications.
 .. _Authentication Getting Started Guide:
     https://cloud.google.com/docs/authentication/getting-started
 
-Authentication
-++++++++++++++
-
-Authentication for this service is done via an `API Key`_. To obtain an API
-Key:
-
-1. Open the `Cloud Platform Console`_
-2. Make sure that billing is enabled for your project.
-3. From the **Credentials** page, create a new **API Key** or use an existing
-   one for your project.
-
-.. _API Key:
-    https://developers.google.com/api-client-library/python/guide/aaa_apikeys
-.. _Cloud Console: https://console.cloud.google.com/project?_
-
 Install Dependencies
 ++++++++++++++++++++
 
@@ -95,22 +80,36 @@ To run this sample:
     $ python dicom_stores.py
 
     usage: dicom_stores.py [-h] [--service_account_json SERVICE_ACCOUNT_JSON]
-                           [--api_key API_KEY] [--project_id PROJECT_ID]
-                           [--cloud_region CLOUD_REGION] [--dataset_id DATASET_ID]
+                           [--project_id PROJECT_ID] [--cloud_region CLOUD_REGION]
+                           [--dataset_id DATASET_ID]
                            [--dicom_store_id DICOM_STORE_ID]
                            [--pubsub_topic PUBSUB_TOPIC] [--uri_prefix URI_PREFIX]
                            [--content_uri CONTENT_URI]
                            [--export_format {FORMAT_UNSPECIFIED,DICOM,JSON_BIGQUERY_IMPORT}]
-                           {create-dicom-store,delete-dicom-store,get-dicom-store,list-dicom-stores,patch-dicom-store,export-dicom-store,import-dicom-store}
+                           [--member MEMBER] [--role ROLE]
+                           {create-dicom-store,delete-dicom-store,get-dicom-store,list-dicom-stores,patch-dicom-store,get_iam_policy,set_iam_policy,export-dicom-store,import-dicom-store}
                            ...
 
     positional arguments:
-      {create-dicom-store,delete-dicom-store,get-dicom-store,list-dicom-stores,patch-dicom-store,export-dicom-store,import-dicom-store}
+      {create-dicom-store,delete-dicom-store,get-dicom-store,list-dicom-stores,patch-dicom-store,get_iam_policy,set_iam_policy,export-dicom-store,import-dicom-store}
         create-dicom-store  Creates a new DICOM store within the parent dataset.
         delete-dicom-store  Deletes the specified DICOM store.
         get-dicom-store     Gets the specified DICOM store.
         list-dicom-stores   Lists the DICOM stores in the given dataset.
         patch-dicom-store   Updates the DICOM store.
+        get_iam_policy      Gets the IAM policy for the specified dicom store.
+        set_iam_policy      Sets the IAM policy for the specified dicom store. A
+                            single member will be assigned a single role. A member
+                            can be any of: - allUsers, that is, anyone -
+                            allAuthenticatedUsers, anyone authenticated with a
+                            Google account - user:email, as in
+                            'user:somebody@example.com' - group:email, as in
+                            'group:admins@example.com' - domain:domainname, as in
+                            'domain:example.com' - serviceAccount:email, as in
+                            'serviceAccount:my-other-
+                            app@appspot.gserviceaccount.com' A role can be any IAM
+                            role, such as 'roles/viewer', 'roles/owner', or
+                            'roles/editor'
         export-dicom-store  Export data to a Google Cloud Storage bucket by
                             copying it from the DICOM store.
         import-dicom-store  Import data into the DICOM store by copying it from
@@ -120,7 +119,6 @@ To run this sample:
       -h, --help            show this help message and exit
       --service_account_json SERVICE_ACCOUNT_JSON
                             Path to service account JSON file.
-      --api_key API_KEY     Your API key
       --project_id PROJECT_ID
                             GCP project name
       --cloud_region CLOUD_REGION
@@ -144,6 +142,66 @@ To run this sample:
                             Specifies the output format. If the format is
                             unspecified, thedefault functionality is to export to
                             DICOM.
+      --member MEMBER       Member to add to IAM policy (e.g.
+                            "domain:example.com")
+      --role ROLE           IAM Role to give to member (e.g. "roles/viewer")
+
+
+
+DICOMweb
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=healthcare/api-client/dicom/dicomweb.py,healthcare/api-client/dicom/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python dicomweb.py
+
+    usage: dicomweb.py [-h] [--service_account_json SERVICE_ACCOUNT_JSON]
+                       [--base_url BASE_URL] [--project_id PROJECT_ID]
+                       [--cloud_region CLOUD_REGION] [--dataset_id DATASET_ID]
+                       [--dicom_store_id DICOM_STORE_ID] [--dcm_file DCM_FILE]
+                       [--study_uid STUDY_UID]
+                       {dicomweb-store-instance,dicomweb-search-instance,dicomweb-retrieve-study,dicomweb-delete-study}
+                       ...
+
+    positional arguments:
+      {dicomweb-store-instance,dicomweb-search-instance,dicomweb-retrieve-study,dicomweb-delete-study}
+        dicomweb-store-instance
+                            Handles the POST requests specified in the DICOMweb
+                            standard.
+        dicomweb-search-instance
+                            Handles the GET requests specified in DICOMweb
+                            standard.
+        dicomweb-retrieve-study
+                            Handles the GET requests specified in the DICOMweb
+                            standard.
+        dicomweb-delete-study
+                            Handles DELETE requests equivalent to the GET requests
+                            specified in the WADO-RS standard.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      --service_account_json SERVICE_ACCOUNT_JSON
+                            Path to service account JSON file.
+      --base_url BASE_URL   Healthcare API URL
+      --project_id PROJECT_ID
+                            GCP project name
+      --cloud_region CLOUD_REGION
+                            GCP region
+      --dataset_id DATASET_ID
+                            Name of dataset
+      --dicom_store_id DICOM_STORE_ID
+                            Name of DICOM store
+      --dcm_file DCM_FILE   File name for DCM file to store.
+      --study_uid STUDY_UID
+                            Unique identifier for a study.
 
 
 

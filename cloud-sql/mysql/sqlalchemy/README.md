@@ -20,7 +20,7 @@ Download a JSON key to use to authenticate your connection.
 1. Use the information noted in the previous steps:
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
-export CLOUD_SQL_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>'
+export CLOUD_SQL_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
 export DB_USER='my-db-user'
 export DB_PASS='my-db-pass'
 export DB_NAME='my_db'
@@ -31,9 +31,16 @@ secure solution such as [Cloud KMS](https://cloud.google.com/kms/) to help keep 
 ## Running locally
 
 To run this application locally, download and install the `cloud_sql_proxy` by
-following the instructions [here](https://cloud.google.com/sql/docs/mysql/sql-proxy#install).
+following the instructions
+[here](https://cloud.google.com/sql/docs/mysql/sql-proxy#install). Once the
+proxy has been downloaded, use the following commands to create the `/cloudsql`
+directory and give the user running the proxy the appropriate permissions:
+```bash
+sudo mkdir /cloudsql
+sudo chown -R $USER /cloudsql
+```
 
-Once the proxy is ready, use the following command to start the proxy in the
+Once the `/cloudsql` directory is ready, use the following command to start the proxy in the
 background:
 ```bash
 ./cloud_sql_proxy -dir=/cloudsql --instances=$CLOUD_SQL_CONNECTION_NAME --credential_file=$GOOGLE_APPLICATION_CREDENTIALS

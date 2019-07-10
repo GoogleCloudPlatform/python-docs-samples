@@ -99,7 +99,7 @@ with models.DAG(
     # Query recent StackOverflow questions.
     bq_recent_questions_query = bigquery_operator.BigQueryOperator(
         task_id='bq_recent_questions_query',
-        bql="""
+        sql="""
         SELECT owner_display_name, title, view_count
         FROM `bigquery-public-data.stackoverflow.posts_questions`
         WHERE creation_date < CAST('{max_date}' AS TIMESTAMP)
@@ -121,7 +121,7 @@ with models.DAG(
     # Perform most popular question query.
     bq_most_popular_query = bigquery_operator.BigQueryOperator(
         task_id='bq_most_popular_question_query',
-        bql="""
+        sql="""
         SELECT title, view_count
         FROM `{table}`
         ORDER BY view_count DESC
