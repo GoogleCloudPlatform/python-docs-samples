@@ -15,6 +15,9 @@
 
 # [START tts_ssml_address_imports]
 from google.cloud import texttospeech
+
+# For Python 3, instead use: 
+# import html
 import cgi
 # [END tts_ssml_address_imports]
 
@@ -85,37 +88,26 @@ def text_to_ssml(inputfile):
     # Parses lines of input file
     try:
         with open(inputfile, 'r') as f:
-            raw_lines = f.readlines()
+            raw_lines = f.read()
 
     # Checks to make sure that the input file exists
     except IOError:
         print('text_to_ssml() error. File ' + inputfile + ' does not exist.')
         return
 
-    # Define SSML timed break between addresses
-    time = '"2s"'
-    brk = '<break time=' + time + '/>'
+    # Replace special characters with HTML Ampersand Character Codes
+    # These Codes prevent the API from confusing text with
+    # SSML commands
+    # For example, '<' --> '&lt;' and '&' --> '&amp;'
 
-    # Initialize SSML script
-    ssml = '<speak>'
+    # For Python 3, instead use:
+    # escaped_lines = html.escape(raw_lines)
+    escaped_lines = cgi.escape(raw_lines)
 
-    # Iterate through lines of file
-    for line in raw_lines:
-
-        # Replace special characters with HTML Ampersand Character Codes
-        # These Codes prevent the API from confusing text with
-        # SSML commands
-        # For example, '<' --> '&lt;'
-        line = cgi.escape(line)
-
-        # Concatenate the line to the SSML script
-        ssml += line
-
-        # Wait 2 seconds between speaking each address
-        ssml += brk
-
-    # Terminate the SSML script
-    ssml += '</speak>'
+    # Convert plaintext to SSML
+    # Wait two seconds between each address
+    ssml = '<speak>{}</speak>'.format(
+        escaped_lines.replace('\n', '\n<break time="2s"/>'))
 
     # Return the concatenated string of ssml script
     return ssml
