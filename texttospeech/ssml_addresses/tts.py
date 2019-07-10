@@ -86,14 +86,8 @@ def text_to_ssml(inputfile):
     # A string of SSML text based on plaintext input
 
     # Parses lines of input file
-    try:
-        with open(inputfile, 'r') as f:
-            raw_lines = f.read()
-
-    # Checks to make sure that the input file exists
-    except IOError:
-        print('text_to_ssml() error. File ' + inputfile + ' does not exist.')
-        return
+    with open(inputfile, 'r') as f:
+        raw_lines = f.read()
 
     # Replace special characters with HTML Ampersand Character Codes
     # These Codes prevent the API from confusing text with

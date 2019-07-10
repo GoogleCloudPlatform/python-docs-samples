@@ -17,10 +17,11 @@ from tts import ssml_to_audio
 
 import filecmp
 import os
+import os.path
 import sys
 
 
-def test_text_to_ssml():
+def test_text_to_ssml(capsys):
     # Tests text_to_ssml() function
     # Args: none
     # Returns: none
@@ -34,13 +35,11 @@ def test_text_to_ssml():
                     '<break time="2s"/>1 Piazza del Fibonacci,' \
                     ' 12358 Pisa, Italy\n<break time="2s"/></speak>'
     assert expected_ssml == tested_ssml
-
-    # Assert that nothing returned if given nonexistent input
-    non_existent_input = text_to_ssml('mysteryfile.txt')
-    assert non_existent_input is None
+    out, err = capsys.readouterr()
+    assert "" in out
 
 
-def test_ssml_to_audio():
+def test_ssml_to_audio(capsys):
     # Tests ssml_to_audio() function
     # Args: none
     # Returns: none
@@ -59,46 +58,13 @@ def test_ssml_to_audio():
     assert filecmp.cmp('test_example.mp3',
                        'resources/expected_example.mp3',
                        shallow=True)
+    out, err = capsys.readouterr()
+
+    # Assert success message printed
+    assert "Audio content written to file test_example.mp3" in out
 
     # Assert that no mp3 file generated if given empty SSML input
     # NOTE to work correctly, directory must not already contain a file
     # named 'non_existent_input.mp3'
     ssml_to_audio(None, 'non_existent_input.mp3')
     assert os.path.isfile('non_existent_input.mp3') is False
-
-
-def suppressPrint():
-    # Suppresses printing; helper function
-    # Args: none
-    # Returns: none
-
-    sys.stdout = open(os.devnull, 'w')
-
-
-def enablePrint():
-    # Enables printing; helper function
-    # Args: None
-    # Returns: None
-
-    sys.stdout = sys.__stdout__
-
-
-def main():
-    # Suppresses printing while testing
-    suppressPrint()
-
-    # Tests text_to_ssml()
-    test_text_to_ssml()
-
-    # Tests ssml_to_audio()
-    test_ssml_to_audio()
-
-    # Restores printing
-    enablePrint()
-
-    # Prints success if achieved
-    print("All tests passed!")
-
-
-if __name__ == '__main__':
-    main()
