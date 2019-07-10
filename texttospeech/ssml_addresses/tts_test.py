@@ -45,6 +45,9 @@ def test_ssml_to_audio(capsys):
                        shallow=True)
     out, err = capsys.readouterr()
 
+    # Delete test file
+    os.remove("test_example.mp3")
+
     # Assert success message printed
     assert "Audio content written to file test_example.mp3" in out
 
