@@ -17,7 +17,6 @@ from tts import ssml_to_audio
 
 import filecmp
 import os
-import os.path
 import sys
 
 
