@@ -18,12 +18,6 @@ from tts import ssml_to_audio
 import filecmp
 import os
 
-EXPECTED_SSML = '<speak>123 Street Ln, Small Town, IL 12345 USA\n' \
-                '<break time="2s"/>1 Jenny St &amp; Number St,' \
-                ' Tutone City, CA 86753\n' \
-                '<break time="2s"/>1 Piazza del Fibonacci,' \
-                ' 12358 Pisa, Italy\n<break time="2s"/></speak>'
-
 
 def test_text_to_ssml(capsys):
 
