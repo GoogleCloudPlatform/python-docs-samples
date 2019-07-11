@@ -32,7 +32,6 @@ from airflow.contrib.operators import kubernetes_pod_operator
 # more control over how it is used, and reduces the risk of accidental
 # exposure.
 
-# TODO: Region tags
 # [START composer_kubernetespodoperator_secretobject]
 secret_env = secret.Secret(
     # Expose the secret as environment variable.
