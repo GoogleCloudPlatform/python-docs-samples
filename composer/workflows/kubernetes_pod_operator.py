@@ -87,6 +87,7 @@ with models.DAG(
 
     # [END composer_kubernetespodoperator]
 
+    # [START composer_kubernetespodoperator_templateconfig]
     kubenetes_template_ex = kubernetes_pod_operator.KubernetesPodOperator(
         task_id='ex-kube-templates',
         name='ex-kube-templates',
@@ -113,7 +114,8 @@ with models.DAG(
         # the configuration file does not exist or does not provide valid
         # credentials the pod will fail to launch. If not specified, config_file defaults to ~/.kube/config
         config_file="{{ conf.get('core', 'kube_config') }}")
-
+    # [END composer_kubernetespodoperator_templateconfig]
+    # [START composer_kubernetespodoperator_secretconfig]
     kubernetes_secret_vars_ex = kubernetes_pod_operator.KubernetesPodOperator(
         task_id='ex-kube-secrets',
         name='ex-kube-secrets',
@@ -126,7 +128,7 @@ with models.DAG(
         # env_vars allows you to specify environment variables for your
         # container to use. env_vars is templated.
         env_vars={'EXAMPLE_VAR': '/example/value'})
-
+    # [END composer_kubernetespodoperator_secretconfig]
     # [START composer_kubernetespodaffinity]
     kubernetes_affinity_ex = kubernetes_pod_operator.KubernetesPodOperator(
         task_id='ex-pod-affinity',
@@ -169,7 +171,7 @@ with models.DAG(
             }
         })
     # [END composer_kubernetespodaffinity]
-
+    # [START composer_kubernetespodoperator_fullconfig]
     kubernetes_full_pod = kubernetes_pod_operator.KubernetesPodOperator(
         task_id='ex-all-configs',
         name='pi',
@@ -218,3 +220,4 @@ with models.DAG(
         # config. For more information see:
         # https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
         affinity={})
+    # [END composer_kubernetespodoperator_fullconfig]
