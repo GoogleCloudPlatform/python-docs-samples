@@ -43,7 +43,9 @@ def index():
         return render_template('index.html', messages=MESSAGES)
 
     data = request.form.get('payload', 'Example payload').encode('utf-8')
-
+    
+    # Consider initialzing the publisher client outside this function
+    # for low latency publish. 
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(
         current_app.config['PROJECT'],
