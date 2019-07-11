@@ -33,6 +33,8 @@ from airflow.contrib.operators import kubernetes_pod_operator
 # exposure.
 
 # TODO: Region tags
+# [START composer_kubernetespodoperator_secretobject]
+
 secret_env = secret.Secret(
     # Expose the secret as environment variable.
     deploy_type='env',
@@ -43,7 +45,7 @@ secret_env = secret.Secret(
     secret='airflow-secrets',
     # Key of a secret stored in this Secret object
     key='sql_alchemy_conn')
-
+# [END composer_kubernetespodoperator_secretobject]
 # [START composer_kubernetespodoperator]
 YESTERDAY = datetime.datetime.now() - datetime.timedelta(days=1)
 
