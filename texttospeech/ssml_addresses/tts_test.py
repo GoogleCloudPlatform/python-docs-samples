@@ -52,9 +52,3 @@ def test_ssml_to_audio(capsys):
 
     # Assert success message printed
     assert "Audio content written to file test_example.mp3" in out
-
-    # Assert that no mp3 file generated if given empty SSML input
-    # NOTE to work correctly, directory must not already contain a file
-    # named 'non_existent_input.mp3'
-    ssml_to_audio(None, 'non_existent_input.mp3')
-    assert os.path.isfile('non_existent_input.mp3') is False

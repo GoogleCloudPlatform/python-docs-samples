@@ -38,11 +38,6 @@ def ssml_to_audio(ssml_text, outfile):
     # Returns:
     # nothing
 
-    # Checks to make sure ssml_text is not empty
-    if ssml_text is None:
-        print('ssml_to_audio() error. The input text does not exist.')
-        return
-
     # Instantiates a client
     client = texttospeech.TextToSpeechClient()
 
