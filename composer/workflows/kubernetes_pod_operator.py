@@ -34,7 +34,6 @@ from airflow.contrib.operators import kubernetes_pod_operator
 
 # TODO: Region tags
 # [START composer_kubernetespodoperator_secretobject]
-
 secret_env = secret.Secret(
     # Expose the secret as environment variable.
     deploy_type='env',
@@ -62,6 +61,8 @@ with models.DAG(
     # no `config_file` parameter is specified. By default it will contain the
     # credentials for Cloud Composer's Google Kubernetes Engine cluster that is
     # created upon environment creation.
+
+    # [START composer_kubernetespodoperator_minconfig]
     kubernetes_min_pod = kubernetes_pod_operator.KubernetesPodOperator(
         # The ID specified for the task.
         task_id='pod-ex-minimum',
@@ -82,6 +83,8 @@ with models.DAG(
         # gcr.io images if the Composer Environment is under the same
         # project-id as the gcr.io images.
         image='gcr.io/gcp-runtimes/ubuntu_16_0_4')
+        # [END composer_kubernetespodoperator_minconfig]
+
     # [END composer_kubernetespodoperator]
 
     kubenetes_template_ex = kubernetes_pod_operator.KubernetesPodOperator(
