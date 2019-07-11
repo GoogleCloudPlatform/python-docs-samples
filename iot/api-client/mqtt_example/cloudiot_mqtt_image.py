@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import argparse
+import base64
+import io
 import os
 import sys
 import time
@@ -21,21 +23,17 @@ from google.cloud import pubsub
 
 # Add manager as library
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
-import manager
 import cloudiot_mqtt_example
 
 
+# [START iot_mqtt_image]
 def transmit_image(
         cloud_region, registry_id, device_id, rsa_private_path, ca_cert_path,
-        image_path):
+        image_path, project_id, service_account_json):
     """Send an inage to a device registry"""
 
-    with open(image_path, "rb") as f:
-        data = f.read()
-        image_data = data.encode("base64")
-
-    project_id = os.environ['GCLOUD_PROJECT']
-    service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+    with io.open(image_path, 'rb') as image_file:
+        image_data = base64.b64encode(image_file.read()).decode('utf-8')
 
     sub_topic = 'events'
     mqtt_topic = '/devices/{}/{}'.format(device_id, sub_topic)
@@ -49,16 +47,40 @@ def transmit_image(
     client.publish(mqtt_topic, image_data, qos=1)
     time.sleep(2)
     client.loop_stop()
+# [END iot_mqtt_image]
+
+
+def receive_image(project_id, sub_name, prefix, extension):
+    """Receieve images transmitted to a PubSub subscription."""
+    subscriber = pubsub.SubscriberClient()
+    subscription_path = subscriber.subscription_path(project_id, sub_name)
+
+    global count
+    count = 0
+    file_pattern = '{}-{}.{}'
+
+    def callback(message):
+        global count
+        count = count + 1
+        print('Received image {}:'.format(count))
+        image_data = base64.b64decode(message.data)
+
+        with io.open(file_pattern.format(prefix, count, extension), 'wb') as f:
+            f.write(image_data)
+
+        message.ack()
+
+    subscriber.subscribe(subscription_path, callback=callback)
+
+    print('Listening for messages on {}'.format(subscription_path))
+    while True:
+        time.sleep(60)
+
 
 def parse_command_line_args():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description=(
             'Google Cloud IoT Core MQTT binary transmission demo.'))
-    #parser.add_argument(
-    #        '--algorithm',
-    #        choices=('RS256', 'ES256'),
-    #        required=True,
-    #        help='Which encryption algorithm to use to generate the JWT.')
     parser.add_argument(
             '--ca_certs',
             default='roots.pem',
@@ -71,34 +93,6 @@ def parse_command_line_args():
             help='The telemetry data sent on behalf of a device')
     parser.add_argument(
             '--device_id', required=True, help='Cloud IoT Core device id')
-    #parser.add_argument(
-    #        '--gateway_id', required=False, help='Gateway identifier.')
-    #parser.add_argument(
-    #        '--jwt_expires_minutes',
-    #        default=20,
-    #        type=int,
-    #        help=('Expiration time, in minutes, for JWT tokens.'))
-    #parser.add_argument(
-    #        '--listen_dur',
-    #        default=60,
-    #        type=int,
-    #        help='Duration (seconds) to listen for configuration messages')
-    #parser.add_argument(
-    #        '--message_type',
-    #        choices=('event', 'state'),
-    #        default='event',
-    #        help=('Indicates whether the message to be published is a '
-    #              'telemetry event or a device state message.'))
-    #parser.add_argument(
-    #        '--mqtt_bridge_hostname',
-    #        default='mqtt.googleapis.com',
-    #        help='MQTT bridge hostname.')
-    #parser.add_argument(
-    #        '--mqtt_bridge_port',
-    #        choices=(8883, 443),
-    #        default=8883,
-    #        type=int,
-    #        help='MQTT bridge port.')
     parser.add_argument(
             '--private_key_file',
             required=True,
@@ -113,22 +107,41 @@ def parse_command_line_args():
             '--service_account_json',
             default=os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"),
             help='Path to service account json file.')
+    parser.add_argument(
+            '--subscription_name',
+            help='PubSub subscription for receieving images.')
+    parser.add_argument(
+            '--image_prefix',
+            help='Image prefix used when receieving images.')
+    parser.add_argument(
+            '--image_extension',
+            help='Image extension used when receiving images.')
 
     command = parser.add_subparsers(dest='command')
     command.add_parser(
         'send',
         help=transmit_image.__doc__)
+    command.add_parser(
+        'recv',
+        help=receive_image.__doc__)
     return parser.parse_args()
 
 
-#if __name__ == '__main__':
-#    main()
-#def main() ...
-args = parse_command_line_args()
+def main():
+    args = parse_command_line_args()
 
-if args.command == 'send':
-    transmit_image(
-        args.cloud_region, args.registry_id, args.device_id,
-        args.private_key_file, args.ca_certs, args.image_path)
-else:
-    args.print_help()
+    if args.command == 'send':
+        transmit_image(
+            args.cloud_region, args.registry_id, args.device_id,
+            args.private_key_file, args.ca_certs, args.image_path,
+            args.project_id, args.service_account_json)
+    elif args.command == 'recv':
+        receive_image(
+            args.project_id, args.subscription_name, args.image_prefix,
+            args.image_extension)
+    else:
+        print(args.print_help())
+
+
+if __name__ == '__main__':
+    main()

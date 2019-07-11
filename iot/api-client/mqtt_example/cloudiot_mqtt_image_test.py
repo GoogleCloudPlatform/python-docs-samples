@@ -12,22 +12,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import argparse
 import os
 import sys
 import time
 
 from google.cloud import pubsub
 
-# Add manager as library
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
-import manager
-
-import mock
 import pytest
 
-import cloudiot_mqtt_example
+# Add manager as library
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
 import cloudiot_mqtt_image
+import manager
 
 
 cloud_region = 'us-central1'
@@ -43,7 +39,7 @@ service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
 registry_id = 'test-registry-{}'.format(int(time.time()))
 
-image_path='./resources/owlister_hootie.png'
+image_path = './resources/owlister_hootie.png'
 
 mqtt_bridge_hostname = 'mqtt.googleapis.com'
 mqtt_bridge_port = 443
@@ -71,9 +67,20 @@ def test_image(test_topic, capsys):
             service_account_json, project_id, cloud_region, registry_id,
             device_id, rsa_cert_path)
 
-    sub_topic = 'events'
-    mqtt_topic = '/devices/{}/{}'.format(device_id, sub_topic)
+    manager.get_device(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id)
 
     cloudiot_mqtt_image.transmit_image(
         cloud_region, registry_id, device_id, rsa_private_path, ca_cert_path,
-        image_path)
+        image_path, project_id, service_account_json)
+
+    # Clean up
+    manager.delete_device(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id)
+    manager.delete_registry(
+            service_account_json, project_id, cloud_region, registry_id)
+
+    out, _ = capsys.readouterr()
+    assert 'on_publish' in out
