@@ -16,15 +16,11 @@
 
 # [START composer_kubernetespodoperator]
 import datetime
-
 from airflow import models
-# [END composer_kubernetespodoperator]
 from airflow.contrib.kubernetes import pod
 from airflow.contrib.kubernetes import secret
-# [START composer_kubernetespodoperator]
 from airflow.contrib.operators import kubernetes_pod_operator
 
-# [END composer_kubernetespodoperator]
 
 # A Secret is an object that contains a small amount of sensitive data such as
 # a password, a token, or a key. Such information might otherwise be put in a
@@ -44,7 +40,7 @@ secret_env = secret.Secret(
     # Key of a secret stored in this Secret object
     key='sql_alchemy_conn')
 # [END composer_kubernetespodoperator_secretobject]
-# [START composer_kubernetespodoperator]
+
 YESTERDAY = datetime.datetime.now() - datetime.timedelta(days=1)
 
 # If a Pod fails to launch, or has an error occur in the container, Airflow
