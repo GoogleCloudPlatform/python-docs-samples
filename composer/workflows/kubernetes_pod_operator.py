@@ -85,7 +85,6 @@ with models.DAG(
         image='gcr.io/gcp-runtimes/ubuntu_16_0_4')
         # [END composer_kubernetespodoperator_minconfig]
 
-    # [END composer_kubernetespodoperator]
 
     # [START composer_kubernetespodoperator_templateconfig]
     kubenetes_template_ex = kubernetes_pod_operator.KubernetesPodOperator(
@@ -221,3 +220,4 @@ with models.DAG(
         # https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
         affinity={})
     # [END composer_kubernetespodoperator_fullconfig]
+    # [END composer_kubernetespodoperator]
