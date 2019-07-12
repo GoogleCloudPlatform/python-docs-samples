@@ -78,9 +78,7 @@ with models.DAG(
         # gcr.io images if the Composer Environment is under the same
         # project-id as the gcr.io images.
         image='gcr.io/gcp-runtimes/ubuntu_16_0_4')
-        # [END composer_kubernetespodoperator_minconfig]
-
-
+    # [END composer_kubernetespodoperator_minconfig]
     # [START composer_kubernetespodoperator_templateconfig]
     kubenetes_template_ex = kubernetes_pod_operator.KubernetesPodOperator(
         task_id='ex-kube-templates',
@@ -104,9 +102,10 @@ with models.DAG(
         # setting the environment variable `MY_VALUE`. The pod will fail if
         # `my_value` is not set in the Airflow UI.
         env_vars={'MY_VALUE': '{{ var.value.my_value }}'},
-        # Sets the config file to a kubernetes config file specified in airflow.cfg. If
-        # the configuration file does not exist or does not provide valid
-        # credentials the pod will fail to launch. If not specified, config_file defaults to ~/.kube/config
+        # Sets the config file to a kubernetes config file specified in
+        # airflow.cfg. If the configuration file does not exist or does
+        # not provide validcredentials the pod will fail to launch. If not
+        # specified, config_file defaults to ~/.kube/config
         config_file="{{ conf.get('core', 'kube_config') }}")
     # [END composer_kubernetespodoperator_templateconfig]
     # [START composer_kubernetespodoperator_secretconfig]
