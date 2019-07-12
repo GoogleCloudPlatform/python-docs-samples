@@ -219,7 +219,4 @@ with models.DAG(
         # https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
         affinity={})
     # [END composer_kubernetespodoperator_fullconfig]
-<<<<<<< HEAD
     # [END composer_kubernetespodoperator]
-=======
->>>>>>> Add more region tags
