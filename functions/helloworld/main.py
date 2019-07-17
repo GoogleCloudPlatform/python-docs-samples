@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -92,10 +92,13 @@ def hello_pubsub(event, context):
     """
     import base64
 
+    print("""This Function was triggered by messageId {} published at {}
+    """.format(context.event_id, context.timestamp))
+
     if 'data' in event:
         name = base64.b64decode(event['data']).decode('utf-8')
     else:
-        name = 'World! Something went wrong'
+        name = 'World!'
     print('Hello {}!'.format(name))
 # [END functions_helloworld_pubsub]
 
