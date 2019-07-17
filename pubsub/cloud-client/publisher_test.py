@@ -110,6 +110,13 @@ def test_publish_with_batch_settings(topic, capsys):
     assert 'Published' in out
 
 
+def test_publish_with_retry_settings(topic, capsys):
+    publisher.publish_messages_with_retry_settings(PROJECT, TOPIC)
+
+    out, _ = capsys.readouterr()
+    assert 'Published' in out
+
+
 def test_publish_with_error_handler(topic, capsys):
     publisher.publish_messages_with_error_handler(PROJECT, TOPIC)
 
