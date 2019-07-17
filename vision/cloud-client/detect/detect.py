@@ -752,7 +752,6 @@ def localize_objects(path):
     path: The path to the local file.
     """
     from google.cloud import vision
-    import io
     client = vision.ImageAnnotatorClient()
 
     with open(path, 'rb') as image_file:
