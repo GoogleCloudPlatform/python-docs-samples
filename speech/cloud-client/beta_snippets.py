@@ -58,8 +58,8 @@ def transcribe_file_with_enhanced_model():
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print('-' * 20)
-        print('First alternative of result {}'.format(i))
-        print('Transcript: {}'.format(alternative.transcript))
+        print(u'First alternative of result {}'.format(i))
+        print(u'Transcript: {}'.format(alternative.transcript))
     # [END speech_transcribe_enhanced_model_beta]
 
 
@@ -103,8 +103,8 @@ def transcribe_file_with_metadata():
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print('-' * 20)
-        print('First alternative of result {}'.format(i))
-        print('Transcript: {}'.format(alternative.transcript))
+        print(u'First alternative of result {}'.format(i))
+        print(u'Transcript: {}'.format(alternative.transcript))
     # [END speech_transcribe_recognition_metadata_beta]
 
 
@@ -132,8 +132,8 @@ def transcribe_file_with_auto_punctuation():
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print('-' * 20)
-        print('First alternative of result {}'.format(i))
-        print('Transcript: {}'.format(alternative.transcript))
+        print(u'First alternative of result {}'.format(i))
+        print(u'Transcript: {}'.format(alternative.transcript))
     # [END speech_transcribe_auto_punctuation_beta]
 
 
@@ -170,8 +170,8 @@ def transcribe_file_with_diarization():
 
     # Printing out the output:
     for word_info in words_info:
-        print("word: '{}', speaker_tag: {}".format(word_info.word,
-                                                   word_info.speaker_tag))
+        print(u"word: '{}', speaker_tag: {}".format(
+            word_info.word, word_info.speaker_tag))
     # [END speech_transcribe_diarization_beta]
 
 
@@ -236,7 +236,7 @@ def transcribe_file_with_multilanguage():
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print('-' * 20)
-        print('First alternative of result {}: {}'.format(i, alternative))
+        print(u'First alternative of result {}: {}'.format(i, alternative))
         print(u'Transcript: {}'.format(alternative.transcript))
     # [END speech_transcribe_multilanguage_beta]
 
