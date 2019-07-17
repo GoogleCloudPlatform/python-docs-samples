@@ -98,7 +98,7 @@ def hello_pubsub(event, context):
     if 'data' in event:
         name = base64.b64decode(event['data']).decode('utf-8')
     else:
-        name = 'World!'
+        name = 'World'
     print('Hello {}!'.format(name))
 # [END functions_helloworld_pubsub]
 
