@@ -32,6 +32,7 @@ ca_cert_path = 'resources/roots.pem'
 rsa_cert_path = 'resources/rsa_cert.pem'
 rsa_private_path = 'resources/rsa_private.pem'
 topic_id = 'test-device-events-{}'.format(int(time.time()))
+subscription_name = 'test-device-images-{}'.format(int(time.time()))
 
 project_id = os.environ['GCLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
@@ -84,3 +85,46 @@ def test_image(test_topic, capsys):
 
     out, _ = capsys.readouterr()
     assert 'on_publish' in out
+
+
+def test_image_recv(test_topic, capsys):
+    """Send an inage to a device registry"""
+    subscriber = pubsub.SubscriberClient()
+    topic_path = subscriber.topic_path(project_id, topic_id)
+    subscription_path = subscriber.subscription_path(
+        project_id, subscription_name)
+
+    subscription = subscriber.create_subscription(
+        subscription_path, topic_path)
+
+    device_id = device_id_template.format('RSA256')
+    manager.open_registry(
+            service_account_json, project_id, cloud_region, pubsub_topic,
+            registry_id)
+
+    manager.create_rs256_device(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id, rsa_cert_path)
+
+    manager.get_device(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id)
+
+    cloudiot_mqtt_image.transmit_image(
+        cloud_region, registry_id, device_id, rsa_private_path, ca_cert_path,
+        image_path, project_id, service_account_json)
+
+    # Wait for the topic
+    time.sleep(10)
+
+    # Clean up
+    subscriber.delete_subscription(subscription_path)
+
+    manager.delete_device(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id)
+    manager.delete_registry(
+            service_account_json, project_id, cloud_region, registry_id)
+
+    out, _ = capsys.readouterr()
+    assert '' in out
