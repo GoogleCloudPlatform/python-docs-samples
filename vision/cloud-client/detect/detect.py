@@ -715,7 +715,7 @@ def async_detect_document(gcs_source_uri, gcs_destination_uri):
     # Process the first output file from GCS.
     # Since we specified batch_size=2, the first response contains
     # the first two pages of the input file.
-    output = blob_list[1]
+    output = blob_list[0]
 
     json_string = output.download_as_string()
     response = json_format.Parse(
