@@ -59,7 +59,7 @@ def quickstart_get_collection():
     db = firestore.Client()
     # [START quickstart_get_collection]
     users_ref = db.collection(u'users')
-    docs = users_ref.get()
+    docs = users_ref.stream()
 
     for doc in docs:
         print(u'{} => {}'.format(doc.id, doc.to_dict()))
@@ -240,7 +240,7 @@ def get_custom_class():
 def get_simple_query():
     db = firestore.Client()
     # [START get_simple_query]
-    docs = db.collection(u'cities').where(u'capital', u'==', True).get()
+    docs = db.collection(u'cities').where(u'capital', u'==', True).stream()
 
     for doc in docs:
         print(u'{} => {}'.format(doc.id, doc.to_dict()))
@@ -254,7 +254,7 @@ def array_contains_filter():
 
     query = cities_ref.where(u'regions', u'array_contains', u'west_coast')
     # [END fs_array_contains_filter]
-    docs = query.get()
+    docs = query.stream()
     for doc in docs:
         print(u'{} => {}'.format(doc.id, doc.to_dict()))
 
@@ -262,7 +262,7 @@ def array_contains_filter():
 def get_full_collection():
     db = firestore.Client()
     # [START get_full_collection]
-    docs = db.collection(u'cities').get()
+    docs = db.collection(u'cities').stream()
 
     for doc in docs:
         print(u'{} => {}'.format(doc.id, doc.to_dict()))
@@ -520,7 +520,7 @@ def compound_query_invalid_multi_field():
 def order_simple_limit():
     db = firestore.Client()
     # [START order_simple_limit]
-    db.collection(u'cities').order_by(u'name').limit(3).get()
+    db.collection(u'cities').order_by(u'name').limit(3).stream()
     # [END order_simple_limit]
 
 
@@ -530,7 +530,7 @@ def order_simple_limit_desc():
     cities_ref = db.collection(u'cities')
     query = cities_ref.order_by(
         u'name', direction=firestore.Query.DESCENDING).limit(3)
-    results = query.get()
+    results = query.stream()
     # [END order_simple_limit_desc]
     print(results)
 
@@ -550,7 +550,7 @@ def order_where_limit():
     cities_ref = db.collection(u'cities')
     query = cities_ref.where(
         u'population', u'>', 2500000).order_by(u'population').limit(2)
-    results = query.get()
+    results = query.stream()
     # [END order_where_limit]
     print(results)
 
@@ -561,7 +561,7 @@ def order_where_valid():
     cities_ref = db.collection(u'cities')
     query = cities_ref.where(
         u'population', u'>', 2500000).order_by(u'population')
-    results = query.get()
+    results = query.stream()
     # [END order_where_valid]
     print(results)
 
@@ -571,7 +571,7 @@ def order_where_invalid():
     # [START order_where_invalid]
     cities_ref = db.collection(u'cities')
     query = cities_ref.where(u'population', u'>', 2500000).order_by(u'country')
-    results = query.get()
+    results = query.stream()
     # [END order_where_invalid]
     print(results)
 
@@ -609,7 +609,7 @@ def snapshot_cursors():
     start_at_snapshot = db.collection(
         u'cities').order_by(u'population').start_at(snapshot)
     # [END fs_start_at_snapshot_query_cursor]
-    results = start_at_snapshot.limit(10).get()
+    results = start_at_snapshot.limit(10).stream()
     for doc in results:
         print(u'{}'.format(doc.id))
 
@@ -623,7 +623,7 @@ def cursor_paginate():
     first_query = cities_ref.order_by(u'population').limit(3)
 
     # Get the last document from the results
-    docs = first_query.get()
+    docs = first_query.stream()
     last_doc = list(docs)[-1]
 
     # Construct a new query starting at this document
@@ -802,7 +802,7 @@ def delete_full_collection():
 
     # [START delete_full_collection]
     def delete_collection(coll_ref, batch_size):
-        docs = coll_ref.limit(10).get()
+        docs = coll_ref.limit(10).stream()
         deleted = 0
 
         for doc in docs:
@@ -871,7 +871,7 @@ def collection_group_query(db):
     # [START fs_collection_group_query]
     museums = db.collection_group(u'landmarks')\
         .where(u'type', u'==', u'museum')
-    docs = museums.get()
+    docs = museums.stream()
     for doc in docs:
         print(u'{} => {}'.format(doc.id, doc.to_dict()))
     # [END fs_collection_group_query]
