@@ -94,8 +94,7 @@ def test_image_recv(test_topic, capsys):
     subscription_path = subscriber.subscription_path(
         project_id, subscription_name)
 
-    subscription = subscriber.create_subscription(
-        subscription_path, topic_path)
+    subscriber.create_subscription(subscription_path, topic_path)
 
     device_id = device_id_template.format('RSA256')
     manager.open_registry(
