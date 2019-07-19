@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -80,17 +80,23 @@ def hello_http(request):
 
 
 # [START functions_helloworld_pubsub]
-def hello_pubsub(data, context):
+def hello_pubsub(event, context):
     """Background Cloud Function to be triggered by Pub/Sub.
     Args:
-         data (dict): The dictionary with data specific to this type of event.
+         event (dict):  The dictionary with data specific to this type of
+         event. The `data` field contains the PubsubMessage message. The
+         `attributes` field will contain custom attributes if there are any.
          context (google.cloud.functions.Context): The Cloud Functions event
-         metadata.
+         metadata. The `event_id` field contains the Pub/Sub message ID. The
+         `timestamp` field contains the publish time.
     """
     import base64
 
-    if 'data' in data:
-        name = base64.b64decode(data['data']).decode('utf-8')
+    print("""This Function was triggered by messageId {} published at {}
+    """.format(context.event_id, context.timestamp))
+
+    if 'data' in event:
+        name = base64.b64decode(event['data']).decode('utf-8')
     else:
         name = 'World'
     print('Hello {}!'.format(name))
