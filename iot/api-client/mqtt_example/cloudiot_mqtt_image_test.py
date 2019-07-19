@@ -117,7 +117,7 @@ def test_image_recv(test_topic, capsys):
     time.sleep(10)
 
     cloudiot_mqtt_image.receive_image(
-        project_id, subscription_name, "test","png", 30)
+        project_id, subscription_name, 'test', 'png', 30)
 
     # Clean up
     subscriber.delete_subscription(subscription_path)
