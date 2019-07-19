@@ -88,13 +88,14 @@ def test_image(test_topic, capsys):
 
 
 def test_image_recv(test_topic, capsys):
-    """Send an inage to a device registry"""
+    """Transmit an image with IoT Core and receive it from PubSub"""
     subscriber = pubsub.SubscriberClient()
     topic_path = subscriber.topic_path(project_id, topic_id)
     subscription_path = subscriber.subscription_path(
         project_id, subscription_name)
 
     subscriber.create_subscription(subscription_path, topic_path)
+    time.sleep(10)
 
     device_id = device_id_template.format('RSA256')
     manager.open_registry(
@@ -113,8 +114,10 @@ def test_image_recv(test_topic, capsys):
         cloud_region, registry_id, device_id, rsa_private_path, ca_cert_path,
         image_path, project_id, service_account_json)
 
-    # Wait for the topic
     time.sleep(10)
+
+    cloudiot_mqtt_image.receive_image(
+        project_id, subscription_name, "test","png", 30)
 
     # Clean up
     subscriber.delete_subscription(subscription_path)
@@ -126,4 +129,4 @@ def test_image_recv(test_topic, capsys):
             service_account_json, project_id, cloud_region, registry_id)
 
     out, _ = capsys.readouterr()
-    assert '' in out
+    assert 'Received image' in out

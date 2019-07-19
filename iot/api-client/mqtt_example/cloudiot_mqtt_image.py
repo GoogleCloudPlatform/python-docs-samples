@@ -50,7 +50,7 @@ def transmit_image(
 # [END iot_mqtt_image]
 
 
-def receive_image(project_id, sub_name, prefix, extension):
+def receive_image(project_id, sub_name, prefix, extension, duration):
     """Receieve images transmitted to a PubSub subscription."""
     subscriber = pubsub.SubscriberClient()
     subscription_path = subscriber.subscription_path(project_id, sub_name)
@@ -72,9 +72,11 @@ def receive_image(project_id, sub_name, prefix, extension):
 
     subscriber.subscribe(subscription_path, callback=callback)
 
+    sleep_count = 0
     print('Listening for messages on {}'.format(subscription_path))
-    while True:
-        time.sleep(60)
+    while sleep_count < duration:
+        time.sleep(1)
+        sleep_count = sleep_count + 1
 
 
 def parse_command_line_args():
@@ -138,7 +140,7 @@ def main():
     elif args.command == 'recv':
         receive_image(
             args.project_id, args.subscription_name, args.image_prefix,
-            args.image_extension)
+            args.image_extension, 60)
     else:
         print(args.print_help())
 
