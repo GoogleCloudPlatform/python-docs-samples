@@ -31,6 +31,9 @@ samples:
 - name: MQTT Device Client Example
   file: cloudiot_mqtt_example.py
   show_help: True
+- name: MQTT Image Example
+  file: cloudiot_mqtt_image.py
+  show_help: True
 
 cloud_client_library: false
 
