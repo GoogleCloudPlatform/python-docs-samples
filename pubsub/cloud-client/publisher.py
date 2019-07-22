@@ -115,12 +115,12 @@ def publish_messages_with_custom_attributes(project_id, topic_name):
     topic_path = publisher.topic_path(project_id, topic_name)
 
     for n in range(1, 10):
-        data = u"Message number {}".format(n)
+        data = u'Message number {}'.format(n)
         # Data must be a bytestring
-        data = data.encode("utf-8")
+        data = data.encode('utf-8')
         # Add two attributes, origin and username, to the message
         future = publisher.publish(
-            topic_path, data, origin="python-sample", username="gcp"
+            topic_path, data, origin='python-sample', username='gcp'
         )
         print(future.result())
 
@@ -234,34 +234,34 @@ def publish_messages_with_retry_settings(project_id, topic_name):
 
     # Configure the retry settings. Defaults will be overwritten.
     retry_settings = {
-        "interfaces": {
-            "google.pubsub.v1.Publisher": {
-                "retry_codes": {
-                    "publish": [
-                        "ABORTED",
-                        "CANCELLED",
-                        "DEADLINE_EXCEEDED",
-                        "INTERNAL",
-                        "RESOURCE_EXHAUSTED",
-                        "UNAVAILABLE",
-                        "UNKNOWN",
+        'interfaces': {
+            'google.pubsub.v1.Publisher': {
+                'retry_codes': {
+                    'publish': [
+                        'ABORTED',
+                        'CANCELLED',
+                        'DEADLINE_EXCEEDED',
+                        'INTERNAL',
+                        'RESOURCE_EXHAUSTED',
+                        'UNAVAILABLE',
+                        'UNKNOWN',
                     ]
                 },
-                "retry_params": {
-                    "messaging": {
-                        "initial_retry_delay_millis": 150,  # default: 100
-                        "retry_delay_multiplier": 1.5,  # default: 1.3
-                        "max_retry_delay_millis": 65000,  # default: 60000
-                        "initial_rpc_timeout_millis": 25000,  # default: 25000
-                        "rpc_timeout_multiplier": 1.0,  # default: 1.0
-                        "max_rpc_timeout_millis": 35000,  # default: 30000
-                        "total_timeout_millis": 650000,  # default: 600000
+                'retry_params': {
+                    'messaging': {
+                        'initial_retry_delay_millis': 150,  # default: 100
+                        'retry_delay_multiplier': 1.5,  # default: 1.3
+                        'max_retry_delay_millis': 65000,  # default: 60000
+                        'initial_rpc_timeout_millis': 25000,  # default: 25000
+                        'rpc_timeout_multiplier': 1.0,  # default: 1.0
+                        'max_rpc_timeout_millis': 35000,  # default: 30000
+                        'total_timeout_millis': 650000,  # default: 600000
                     }
                 },
-                "methods": {
-                    "Publish": {
-                        "retry_codes_name": "publish",
-                        "retry_params_name": "messaging",
+                'methods': {
+                    'Publish': {
+                        'retry_codes_name': 'publish',
+                        'retry_params_name': 'messaging',
                     }
                 },
             }
@@ -313,7 +313,7 @@ if __name__ == "__main__":
     publish_with_futures_parser = subparsers.add_parser(
         'publish-with-futures', help=publish_messages_with_futures.__doc__
     )
-    publish_with_futures_parser.add_argument("topic_name")
+    publish_with_futures_parser.add_argument('topic_name')
 
     publish_with_error_handler_parser = subparsers.add_parser(
         'publish-with-error-handler',
