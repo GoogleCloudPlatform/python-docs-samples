@@ -802,7 +802,7 @@ def delete_full_collection():
 
     # [START delete_full_collection]
     def delete_collection(coll_ref, batch_size):
-        docs = coll_ref.limit(10).stream()
+        docs = coll_ref.limit(batch_size).get()
         deleted = 0
 
         for doc in docs:
