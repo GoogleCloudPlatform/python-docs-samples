@@ -12,11 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """This application demonstrates how to do batch operations from a csv file using Cloud
-
-Spanner.
-For more information, see the README.rst.
+Spanner. For more information, see the README.rst.
 """
-
 import csv
 import time
 import threading
@@ -25,12 +22,10 @@ from google.cloud import spanner
 
 
 def is_bool_null(file):
-  """
-        This function convertes the boolean values in the dataset from strings
+  """This function convertes the boolean values in the dataset from strings
         to boolean data types.
         It also converts the string Null to a None data type indicating an empty
-        cell.
-        """
+        cell."""
       data = list(csv.reader(file))
       # Reads each line in the csv file.
       for line in range(len(data)):
