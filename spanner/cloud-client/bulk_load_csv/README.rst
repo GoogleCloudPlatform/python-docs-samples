@@ -9,7 +9,7 @@ Spanner database.
 
 Pre-requisuite
 -----------------------
-Create a database in your cloud spanner instance using the schema in the folder.
+Create a database in your Cloud Spanner instance using the [schema](schema.ddl) in the folder.
 
 To run sample
 -----------------------
