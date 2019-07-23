@@ -1,9 +1,11 @@
 """Test for batch_import"""
-import unittest.mock
 import os
 import pytest
+import string
+import random
 import batch_import
 from google.cloud import spanner
+
 
 def unique_database_id():
             """ Creates a unique id for the database. """
@@ -29,8 +31,7 @@ def example_database():
 
             if not database.exists():
                         database = instance.database(DATABASE_ID, ddl_statements=[
-                        """
-                        CREATE TABLE comments (
+                        """CREATE TABLE comments (
                          id INT64,
                          author STRING(MAX),
                          `by` STRING(MAX),
@@ -42,9 +43,7 @@ def example_database():
                          time INT64,
                          time_ts TIMESTAMP,
                         ) PRIMARY KEY(parent, id);
-
                         CREATE INDEX CommentsByAuthor ON comments(author);
-
                         CREATE TABLE stories (
                          id INT64,
                          author STRING(MAX),
@@ -59,22 +58,17 @@ def example_database():
                          title STRING(MAX),
                          url STRING(MAX),
                         ) PRIMARY KEY(id);
-
                         CREATE INDEX StoriesByAuthor ON stories(author);
-
                         CRETE INDEX StoriesByScoreURL ON stories(score, url);
-
-                        CREATE INDEX StoriesByTitleTimeScore ON stories(title) STORING (time_ts, score)
-
-                        """
+                        CREATE INDEX StoriesByTitleTimeScore ON stories(title) STORING (time_ts, score)"""
                         ])
                         database.create()
 
             yield database
                     database.drop()
-
+                        
+                        
 def test_insert_data(capsys):
-          batch_import.main(INSTANCE_ID,DATABASE_ID)
+          batch_import.main(INSTANCE_ID, DATABASE_ID)
           out, _ = capsys.readouterr()
           assert 'Finished Inserting Data.' in out
-
