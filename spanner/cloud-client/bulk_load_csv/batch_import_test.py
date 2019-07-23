@@ -9,8 +9,8 @@ from google.cloud import spanner
 
 def unique_database_id():
     """ Creates a unique id for the database. """
-    return 'test-db-{}'.format(''.join(random.choice(string.ascii_lowercase +
-        string.digits) for _ in range(5)))
+    return 'test-db-{}'.format(''.join(random.choice(
+                                                    string.ascii_lowercase + string.digits) for _ in range(5)))
 
 
 INSTANCE_ID = os.environ['SPANNER_INSTANCE']
@@ -61,13 +61,14 @@ def example_database():
         ) PRIMARY KEY(id);
         CREATE INDEX StoriesByAuthor ON stories(author);
         CRETE INDEX StoriesByScoreURL ON stories(score, url);
-        CREATE INDEX StoriesByTitleTimeScore ON stories(title) STORING (time_ts, score)
+        CREATE INDEX StoriesByTitleTimeScore 
+        ON stories(title) STORING (time_ts, score)
         """
         ])
         database.create()
 
         yield database
-            database.drop()
+        database.drop()
 
 
 def test_insert_data(capsys):
