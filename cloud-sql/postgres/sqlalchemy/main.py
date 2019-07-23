@@ -43,8 +43,11 @@ db = sqlalchemy.create_engine(
         password=db_pass,
         host=cloud_sql_connection_name,
         database=db_name,
-        query={'unix_sock': '/cloudsql/{}/.s.PGSQL.5432'.format(cloud_sql_connection_name)}),
-    ),
+        query={
+               'unix_sock':
+               '/cloudsql/{}/.s.PGSQL.5432'.format(
+                 cloud_sql_connection_name)
+    }),
     # ... Specify additional properties here.
     # [START_EXCLUDE]
 
