@@ -41,7 +41,6 @@ db = sqlalchemy.create_engine(
         drivername='postgresql+pg8000',
         username=db_user,
         password=db_pass,
-        host=cloud_sql_connection_name,
         database=db_name,
         query={
                'unix_sock':
