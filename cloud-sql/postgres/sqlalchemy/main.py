@@ -38,11 +38,12 @@ db = sqlalchemy.create_engine(
     # Equivalent URL:
     # postgres+psycopg2://<db_user>:<db_pass>@/<db_name>?unix_socket=/cloudsql/<cloud_sql_instance_name>/.s.PGSQL.5432
     sqlalchemy.engine.url.URL(
-        drivername='postgresql+psycopg2',
+        drivername='postgresql+pg8000',
         username=db_user,
         password=db_pass,
         host=cloud_sql_connection_name,
-        database=db_name
+        database=db_name,
+        query={'unix_sock': '/cloudsql/{}/.s.PGSQL.5432'.format(cloud_sql_connection_name)}),
     ),
     # ... Specify additional properties here.
     # [START_EXCLUDE]
