@@ -79,5 +79,11 @@ def test_async_batch_annotate_images(capsys):
     gcs_uri = GCS_ROOT + 'landmark/eiffel_tower.jpg'
     beta_snippets.async_batch_annotate_images_uri(gcs_uri, GCS_DESTINATION_URI)
     out, _ = capsys.readouterr()
-    assert 'language_code: "en"' in out
     assert 'description: "Tower"' in out
+
+    from google.cloud import storage
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(BUCKET)
+    if len(list(bucket.list_blobs(prefix=OUTPUT_PREFIX))) > 0:
+        for blob in bucket.list_blobs(prefix=OUTPUT_PREFIX):
+            blob.delete()

@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -14,17 +14,23 @@
 
 # [START functions_pubsub_unit_test]
 import base64
+import mock
 
 import main
+
+
+mock_context = mock.Mock()
+mock_context.event_id = '617187464135194'
+mock_context.timestamp = '2019-07-15T22:09:03.761Z'
 
 
 def test_print_hello_world(capsys):
     data = {}
 
     # Call tested function
-    main.hello_pubsub(data, None)
+    main.hello_pubsub(data, mock_context)
     out, err = capsys.readouterr()
-    assert out == 'Hello World!\n'
+    assert 'Hello World!' in out
 
 
 def test_print_name(capsys):
@@ -32,7 +38,7 @@ def test_print_name(capsys):
     data = {'data': base64.b64encode(name.encode())}
 
     # Call tested function
-    main.hello_pubsub(data, None)
+    main.hello_pubsub(data, mock_context)
     out, err = capsys.readouterr()
-    assert out == 'Hello {}!\n'.format(name)
+    assert 'Hello {}!\n'.format(name) in out
 # [END functions_pubsub_unit_test]

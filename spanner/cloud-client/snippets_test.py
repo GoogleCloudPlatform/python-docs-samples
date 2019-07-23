@@ -291,3 +291,70 @@ def update_with_batch_dml(capsys):
     snippets.update_with_batch_dml(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
     assert "Executed 2 SQL statements using Batch DML" in out
+
+
+def test_create_table_with_datatypes(capsys):
+    snippets.create_table_with_datatypes(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'Created Venues table on database' in out
+
+
+def test_insert_datatypes_data(capsys):
+    snippets.insert_datatypes_data(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'Inserted data.' in out
+
+
+def test_query_data_with_array(capsys):
+    snippets.query_data_with_array(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'VenueId: 19, VenueName: Venue 19, AvailableDate: 2020-11-01' in out
+    assert 'VenueId: 42, VenueName: Venue 42, AvailableDate: 2020-10-01' in out
+
+
+def test_query_data_with_bool(capsys):
+    snippets.query_data_with_bool(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'VenueId: 19, VenueName: Venue 19, OutdoorVenue: True' in out
+
+
+def test_query_data_with_bytes(capsys):
+    snippets.query_data_with_bytes(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'VenueId: 4, VenueName: Venue 4' in out
+
+
+def test_query_data_with_date(capsys):
+    snippets.query_data_with_date(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'VenueId: 4, VenueName: Venue 4, LastContactDate: 2018-09-02' in out
+    assert 'VenueId: 42, VenueName: Venue 42, LastContactDate: 2018-10-01' \
+        in out
+
+
+def test_query_data_with_float(capsys):
+    snippets.query_data_with_float(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'VenueId: 4, VenueName: Venue 4, PopularityScore: 0.8' in out
+    assert 'VenueId: 19, VenueName: Venue 19, PopularityScore: 0.9' in out
+
+
+def test_query_data_with_int(capsys):
+    snippets.query_data_with_int(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'VenueId: 19, VenueName: Venue 19, Capacity: 6300' in out
+    assert 'VenueId: 42, VenueName: Venue 42, Capacity: 3000' in out
+
+
+def test_query_data_with_string(capsys):
+    snippets.query_data_with_string(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'VenueId: 42, VenueName: Venue 42' in out
+
+
+def test_query_data_with_timestamp_parameter(capsys):
+    snippets.query_data_with_timestamp_parameter(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'VenueId: 4, VenueName: Venue 4, LastUpdateTime:' in out
+    assert 'VenueId: 19, VenueName: Venue 19, LastUpdateTime:' in out
+    assert 'VenueId: 42, VenueName: Venue 42, LastUpdateTime:' in out

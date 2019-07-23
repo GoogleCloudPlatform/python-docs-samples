@@ -77,6 +77,7 @@ def _validate_iap_jwt(iap_jwt, expected_audience):
         decoded_jwt = jwt.decode(
             iap_jwt, key,
             algorithms=['ES256'],
+            issuer='https://cloud.google.com/iap',
             audience=expected_audience)
         return (decoded_jwt['sub'], decoded_jwt['email'], '')
     except (jwt.exceptions.InvalidTokenError,

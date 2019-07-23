@@ -1,4 +1,4 @@
-Django==2.1.9
+Django==2.1.10
 # mysqlclient==1.4.1  # Uncomment this line if using MySQL
 wheel==0.32.3
 gunicorn==19.9.0
