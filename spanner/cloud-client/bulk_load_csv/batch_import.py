@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-#This application demonstrates how to do batch operations from a csv file using Cloud Spanner. 
-#For more information, see the README.rst.
+# This application demonstrates how to do batch operations from a csv file
+# using Cloud Spanner.
+# For more information, see the README.rst.
 
 
 import csv
@@ -24,14 +25,15 @@ from google.cloud import spanner
 
 
 def is_bool_null(file):
-    """This function convertes the boolean values in the dataset from strings to boolean data types.
-    It also converts the string Null to a None data type indicating an empty
-    cell."""
+    """
+    This function convertes the boolean values in the dataset from strings to boolean data types.
+    It also converts the string Null to a None data type indicating an empty cell.
+    """
     data = list(csv.reader(file))
     # Reads each line in the csv file.
     for line in range(len(data)):
         for cell in range(len(data[line])):
-        # Changes the string to boolean.
+            # Changes the string to boolean.
             if data[line][cell] == 'true':
                 data[line][cell] = eval('True')
             # Changes blank string to python readable None type.
@@ -41,9 +43,7 @@ def is_bool_null(file):
 
 
 def divide_chunks(lst, n):
-    """
-    This function divides the csv file into chunks so that the mutation will commit every 500 rows.
-    """
+    # This function divides the csv file into chunks so that the mutation will commit every 500 rows.
     for i in range(0, len(lst), n):
         yield lst[i:i + n]
 
@@ -62,12 +62,11 @@ def insert_data(database, filepath, table_name, column_names):
         if current_inserts is not None:
             with database.batch() as batch:
                 batch.insert(table=table_name, columns=column_names, values=current_inserts)
-                
-                
+
+             
 def main(instance_id, database_id):
-    """Inserts sample data into the given database.
-    The database and table must already exist and can be created using`create_database`.
-    """
+    #Inserts sample data into the given database.
+    #The database and table must already exist and can be created using`create_database`.
     start = time.time()
     # File paths
     comments_file = 'hnewscomments.txt'
