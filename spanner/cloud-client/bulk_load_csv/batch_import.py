@@ -25,10 +25,9 @@ from google.cloud import spanner
 
 
 def is_bool_null(file):
-    """
-    This function convertes the boolean values in the dataset from strings to boolean data types.
-    It also converts the string Null to a None data type indicating an empty cell.
-    """
+    # This function convertes the boolean values
+    # in the dataset from strings to boolean data types.
+    # It also converts the string Null to a None data type indicating an empty cell.
     data = list(csv.reader(file))
     # Reads each line in the csv file.
     for line in range(len(data)):
@@ -43,16 +42,15 @@ def is_bool_null(file):
 
 
 def divide_chunks(lst, n):
-    # This function divides the csv file into chunks so that the mutation will commit every 500 rows.
+    # This function divides the csv file into chunks so that the mutation will
+    # commit every 500 rows.
     for i in range(0, len(lst), n):
         yield lst[i:i + n]
 
 
 def insert_data(database, filepath, table_name, column_names):
-    """
-    This function iterates over the list of files belonging to the dataset and,
-    writes each line into cloud spanner using the batch mutation function.
-    """
+    # This function iterates over the list of files belonging to the dataset and,
+    # writes each line into cloud spanner using the batch mutation function.
     with open(filepath, newline='') as file:
         data = is_bool_null(file)
         data = tuple(data)
@@ -61,7 +59,8 @@ def insert_data(database, filepath, table_name, column_names):
     for current_inserts in (l_group):
         if current_inserts is not None:
             with database.batch() as batch:
-                batch.insert(table=table_name, columns=column_names, values=current_inserts)
+                batch.insert(
+                    table=table_name, columns=column_names, values=current_inserts)
 
 
 def main(instance_id, database_id):
