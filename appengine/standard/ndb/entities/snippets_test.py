@@ -22,14 +22,17 @@ import snippets
 
 def test_create_entity_using_keyword_arguments(testbed):
     result = snippets.create_entity_using_keyword_arguments()
+    assert isinstance(result, snippets.Account)
 
 
 def test_create_entity_using_attributes(testbed):
     result = snippets.create_entity_using_attributes()
+    assert isinstance(result, snippets.Account)
 
 
 def test_create_entity_using_populate(testbed):
     result = snippets.create_entity_using_populate()
+    assert isinstance(result, snippets.Account)
 
 
 def test_demonstrate_model_constructor_type_checking(testbed):
@@ -46,12 +49,14 @@ def test_demonstrate_entity_attribute_type_checking(testbed):
 def test_save_entity(testbed):
     result = snippets.save_entity(
         snippets.create_entity_using_keyword_arguments())
+    assert isinstance(result, snippets.ndb.Key)
 
 
 def test_get_entity(testbed):
     sandy_key = snippets.save_entity(
         snippets.create_entity_using_keyword_arguments())
     result = snippets.get_entity(sandy_key)
+    assert isinstance(result, snippets.Account)
 
 
 def test_get_key_kind_and_id(testbed):
@@ -65,6 +70,7 @@ def test_get_url_safe_key(testbed):
     sandy_key = snippets.save_entity(
         snippets.create_entity_using_keyword_arguments())
     result = snippets.get_url_safe_key(sandy_key)
+    assert isinstance(result, str)
 
 
 def test_get_entity_from_url_safe_key(testbed):
@@ -72,6 +78,7 @@ def test_get_entity_from_url_safe_key(testbed):
         snippets.create_entity_using_keyword_arguments())
     result = snippets.get_entity_from_url_safe_key(
         snippets.get_url_safe_key(sandy_key))
+    assert isinstance(result, snippets.Account)
     assert result.username == 'Sandy'
 
 
@@ -81,6 +88,8 @@ def test_get_key_and_numeric_id_from_url_safe_key(testbed):
     urlsafe = snippets.get_url_safe_key(sandy_key)
     key, ident, kind_string = (
         snippets.get_key_and_numeric_id_from_url_safe_key(urlsafe))
+    assert isinstance(key, ndb.Key)
+    assert isinstance(kind_string, str)
 
 
 def test_update_entity_from_key(testbed):
@@ -113,6 +122,7 @@ def test_set_key_directly(testbed):
 
 def test_create_entity_with_generated_id(testbed):
     result = snippets.create_entity_with_generated_id()
+    assert result.key.id() is not None
 
 
 def test_demonstrate_entities_with_parent_hierarchy(testbed):
