@@ -31,7 +31,7 @@ def example_database():
 
     if not database.exists():
         database = instance.database(DATABASE_ID, ddl_statements=[
-        """
+        ("""
         CREATE TABLE comments (
         id INT64,
         author STRING(MAX),
@@ -61,9 +61,9 @@ def example_database():
         ) PRIMARY KEY(id);
         CREATE INDEX StoriesByAuthor ON stories(author);
         CRETE INDEX StoriesByScoreURL ON stories(score, url);
-        CREATE INDEX StoriesByTitleTimeScore 
+        CREATE INDEX StoriesByTitleTimeScore
         ON stories(title) STORING (time_ts, score)
-        """
+        """)
         ])
         database.create()
 
