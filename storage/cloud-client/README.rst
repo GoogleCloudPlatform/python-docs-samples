@@ -93,8 +93,7 @@ To run this sample:
     $ python snippets.py
 
     usage: snippets.py [-h]
-                       bucket_name
-                       {create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,rename,copy}
+                       {list-buckets,create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,signed-url-download-v4,signed-url-upload-v4,rename,copy}
                        ...
 
     This application demonstrates how to perform basic operations on blobs
@@ -104,8 +103,8 @@ To run this sample:
     at https://cloud.google.com/storage/docs.
 
     positional arguments:
-      bucket_name           Your cloud storage bucket.
-      {create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,rename,copy}
+      {list-buckets,create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,signed-url-download-v4,signed-url-upload-v4,rename,copy}
+        list-buckets        Lists all buckets.
         create-bucket       Creates a new bucket.
         delete-bucket       Deletes a bucket. The bucket must be empty.
         get-bucket-labels   Prints out a bucket's labels.
@@ -133,11 +132,23 @@ To run this sample:
         delete              Deletes a blob from the bucket.
         metadata            Prints out a blob's metadata.
         make-public         Makes a blob publicly accessible.
-        signed-url          Generates a signed URL for a blob. Note that this
-                            method requires a service account key file. You can
-                            not use this if you are using Application Default
-                            Credentials from Google Compute Engine or from the
-                            Google Cloud SDK.
+        signed-url          Generates a v2 signed URL for downloading a blob. Note
+                            that this method requires a service account key file.
+                            You can not use this if you are using Application
+                            Default Credentials from Google Compute Engine or from
+                            the Google Cloud SDK.
+        signed-url-download-v4
+                            Generates a v4 signed URL for downloading a blob. Note
+                            that this method requires a service account key file.
+                            You can not use this if you are using Application
+                            Default Credentials from Google Compute Engine or from
+                            the Google Cloud SDK.
+        signed-url-upload-v4
+                            Generates a v4 signed URL for uploading a blob using
+                            HTTP PUT. Note that this method requires a service
+                            account key file. You can not use this if you are
+                            using Application Default Credentials from Google
+                            Compute Engine or from the Google Cloud SDK.
         rename              Renames a blob.
         copy                Renames a blob.
 
