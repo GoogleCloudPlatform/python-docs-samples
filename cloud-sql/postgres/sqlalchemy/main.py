@@ -42,7 +42,7 @@ db = sqlalchemy.create_engine(
         username=db_user,
         password=db_pass,
         host=cloud_sql_connection_name,
-        database=db_name 
+        database=db_name
     ),
     # ... Specify additional properties here.
     # [START_EXCLUDE]
