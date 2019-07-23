@@ -77,7 +77,7 @@ def deidentify(file_name, project_id):
     # Detects speech in the audio file
     response = speech_client.recognize(config, audio)
 
-    transcript = ""
+    transcript = ''
 
     for result in response.results:
         transcript = transcript + result.alternatives[0].transcript
