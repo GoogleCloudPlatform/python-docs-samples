@@ -18,7 +18,6 @@ For more information, see the README.rst.
 """
 
 import csv
-import os
 import time
 import threading
 import argparse
