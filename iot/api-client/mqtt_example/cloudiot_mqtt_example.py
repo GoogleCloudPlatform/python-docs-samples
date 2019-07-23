@@ -240,7 +240,7 @@ def listen_for_messages(
 
         seconds_since_issue = (datetime.datetime.utcnow() - jwt_iat).seconds
         if seconds_since_issue > 60 * jwt_exp_mins:
-            print('Refreshing token after {}s').format(seconds_since_issue)
+            print('Refreshing token after {}s'.format(seconds_since_issue))
             jwt_iat = datetime.datetime.utcnow()
             client = get_client(
                 project_id, cloud_region, registry_id, gateway_id,
@@ -284,7 +284,7 @@ def send_data_from_bound_device(
     print(gateway_state)
     client.publish(gateway_topic, gateway_state, qos=1)
 
-    # Publish num_messages mesages to the MQTT bridge
+    # Publish num_messages messages to the MQTT bridge
     for i in range(1, num_messages + 1):
         client.loop()
 
@@ -336,7 +336,7 @@ def parse_command_line_args():
     parser.add_argument(
             '--ca_certs',
             default='roots.pem',
-            help=('CA root from https://pki.google.com/roots.pem'))
+            help='CA root from https://pki.google.com/roots.pem')
     parser.add_argument(
             '--cloud_region', default='us-central1', help='GCP cloud region')
     parser.add_argument(
@@ -351,7 +351,7 @@ def parse_command_line_args():
             '--jwt_expires_minutes',
             default=20,
             type=int,
-            help=('Expiration time, in minutes, for JWT tokens.'))
+            help='Expiration time, in minutes, for JWT tokens.')
     parser.add_argument(
             '--listen_dur',
             default=60,
@@ -429,7 +429,7 @@ def mqtt_device_demo(args):
         args.device_id, args.private_key_file, args.algorithm,
         args.ca_certs, args.mqtt_bridge_hostname, args.mqtt_bridge_port)
 
-    # Publish num_messages mesages to the MQTT bridge once per second.
+    # Publish num_messages messages to the MQTT bridge once per second.
     for i in range(1, args.num_messages + 1):
         # Process network events.
         client.loop()
@@ -455,7 +455,7 @@ def mqtt_device_demo(args):
         # [START iot_mqtt_jwt_refresh]
         seconds_since_issue = (datetime.datetime.utcnow() - jwt_iat).seconds
         if seconds_since_issue > 60 * jwt_exp_mins:
-            print('Refreshing token after {}s').format(seconds_since_issue)
+            print('Refreshing token after {}s'.format(seconds_since_issue))
             jwt_iat = datetime.datetime.utcnow()
             client = get_client(
                 args.project_id, args.cloud_region,

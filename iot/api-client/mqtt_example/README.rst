@@ -110,6 +110,7 @@ To run this sample:
       --ca_certs CA_CERTS   CA root from https://pki.google.com/roots.pem
       --cloud_region CLOUD_REGION
                             GCP cloud region
+
       --data DATA           The telemetry data sent on behalf of a device
       --device_id DEVICE_ID
                             Cloud IoT Core device id
