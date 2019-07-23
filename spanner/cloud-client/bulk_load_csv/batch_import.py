@@ -63,10 +63,10 @@ def insert_data(database, filepath, table_name, column_names):
             with database.batch() as batch:
                 batch.insert(table=table_name, columns=column_names, values=current_inserts)
 
-             
+
 def main(instance_id, database_id):
-    #Inserts sample data into the given database.
-    #The database and table must already exist and can be created using`create_database`.
+    # Inserts sample data into the given database.
+    # The database and table must already exist and can be created using`create_database`.
     start = time.time()
     # File paths
     comments_file = 'hnewscomments.txt'
