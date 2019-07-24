@@ -5,7 +5,7 @@ import batch_import
 from google.cloud import spanner
 
 
-INSTANCE_ID = 'ep-intern-instance' # os.environ['SPANNER_INSTANCE']
+INSTANCE_ID = os.environ['SPANNER_INSTANCE']
 DATABASE_ID = 'hnewsdb'
 
 
@@ -18,7 +18,7 @@ def spanner_instance():
 @pytest.fixture
 def example_database():
     spanner_client = spanner.Client()
-    instance = spanner_client.instance(SPANNER_INSTANCE)
+    instance = spanner_client.instance(INSTANCE_ID)
     database = instance.database(DATABASE_ID)
 
     if not database.exists():
