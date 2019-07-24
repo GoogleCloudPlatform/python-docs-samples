@@ -1,4 +1,4 @@
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2019 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,9 +21,8 @@ TEST_LOCATION = os.getenv('LOCATION_ID', 'us-central1')
 
 
 def test_create_job(capsys):
-    create_result = create_job.create_scheduler_job(TEST_PROJECT_ID,
-                                                    TEST_LOCATION,
-                                                    'my-service')
+    create_result = create_job.create_scheduler_job(
+        TEST_PROJECT_ID, TEST_LOCATION, 'my-service')
     out, _ = capsys.readouterr()
     assert 'Created job:' in out
 
