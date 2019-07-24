@@ -52,7 +52,7 @@ def test_remove_bucket_label(capsys):
     snippets.add_bucket_label(BUCKET)
     snippets.remove_bucket_label(BUCKET)
     out, _ = capsys.readouterr()
-    assert '{}' in out
+    assert 'Removed labels' in out
 
 
 @pytest.fixture
@@ -62,12 +62,6 @@ def test_blob():
     blob = bucket.blob('storage_snippets_test_sigil')
     blob.upload_from_string('Hello, is it me you\'re looking for?')
     return blob
-
-
-def test_list_buckets(capsys):
-    snippets.list_buckets()
-    out, _ = capsys.readouterr()
-    assert BUCKET in out
 
 
 def test_list_blobs(test_blob, capsys):
