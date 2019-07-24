@@ -7,15 +7,8 @@ import batch_import
 from google.cloud import spanner
 
 
-def unique_database_id():
-    """ Creates a unique id for the database. """
-    return ('test-db-{}'.format(''.join(random.choice(
-                                                    string.ascii_lowercase +
-                                                    string.digits) for _ in range(5))))
-
-
 INSTANCE_ID = os.environ['SPANNER_INSTANCE']
-DATABASE_ID = unique_database_id()
+DATABASE_ID = 'hnewsdb'
 
 
 @pytest.fixture(scope='module')
