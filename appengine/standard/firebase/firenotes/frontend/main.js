@@ -66,9 +66,8 @@ $(function(){
         $('#logged-out').show();
 
       }
-    // [END gae_python_state_change]
-
     });
+    // [END gae_python_state_change]
 
   }
 
