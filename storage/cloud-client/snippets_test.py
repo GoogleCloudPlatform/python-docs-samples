@@ -52,7 +52,7 @@ def test_remove_bucket_label(capsys):
     snippets.add_bucket_label(BUCKET)
     snippets.remove_bucket_label(BUCKET)
     out, _ = capsys.readouterr()
-    assert '{}' in out
+    assert 'Removed labels' in out
 
 
 @pytest.fixture
