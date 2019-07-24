@@ -91,8 +91,6 @@ if __name__ == '__main__':
     parser.add_argument('mode', help='Set to "crop" or "draw".')
     args = parser.parse_args()
 
-    parser = argparse.ArgumentParser()
-
     if args.mode == 'crop':
         crop_to_hint(args.image_file)
     elif args.mode == 'draw':
