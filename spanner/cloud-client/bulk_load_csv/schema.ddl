@@ -13,8 +13,6 @@ CREATE TABLE comments (
 
 CREATE INDEX CommentsByAuthor ON comments(author);
 
-CREATE INDEX CommentsByTimeText ON comments(time_ts) STORING (text);
-
 CREATE TABLE stories (
   id INT64,
   author STRING(MAX),
