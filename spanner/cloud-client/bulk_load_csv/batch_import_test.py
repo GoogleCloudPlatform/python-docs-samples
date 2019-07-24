@@ -5,7 +5,7 @@ import batch_import
 from google.cloud import spanner
 
 
-INSTANCE_ID = os.environ['SPANNER_INSTANCE']
+INSTANCE_ID = 'ep-intern-instance' # os.environ['SPANNER_INSTANCE']
 DATABASE_ID = 'hnewsdb'
 
 
