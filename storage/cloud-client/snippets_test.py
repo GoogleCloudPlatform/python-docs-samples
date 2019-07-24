@@ -48,15 +48,11 @@ def test_add_bucket_label(capsys):
     assert 'example' in out
 
 
-@pytest.mark.xfail(
-    reason=(
-        'https://github.com/GoogleCloudPlatform'
-        '/google-cloud-python/issues/3711'))
 def test_remove_bucket_label(capsys):
     snippets.add_bucket_label(BUCKET)
     snippets.remove_bucket_label(BUCKET)
     out, _ = capsys.readouterr()
-    assert '{}' in out
+    assert 'Removed labels' in out
 
 
 @pytest.fixture

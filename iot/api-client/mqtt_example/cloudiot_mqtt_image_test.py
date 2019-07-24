@@ -23,6 +23,7 @@ import pytest
 # Add manager as library
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
 import cloudiot_mqtt_image
+from gcp_devrel.testing.flaky import flaky
 import manager
 
 
@@ -87,6 +88,7 @@ def test_image(test_topic, capsys):
     assert 'on_publish' in out
 
 
+@flaky
 def test_image_recv(test_topic, capsys):
     """Transmit an image with IoT Core and receive it from PubSub"""
     subscriber = pubsub.SubscriberClient()
@@ -117,7 +119,7 @@ def test_image_recv(test_topic, capsys):
     time.sleep(10)
 
     cloudiot_mqtt_image.receive_image(
-        project_id, subscription_name, 'test', 'png', 30)
+        project_id, subscription_name, 'test', 'png', 60)
 
     # Clean up
     subscriber.delete_subscription(subscription_path)
