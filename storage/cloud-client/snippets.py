@@ -95,7 +95,7 @@ def remove_bucket_label(bucket_name):
     bucket.labels = labels
     bucket.patch()
 
-    print('Updated labels on {}.'.format(bucket.name))
+    print('Removed labels on {}.'.format(bucket.name))
     pprint.pprint(bucket.labels)
 
 
