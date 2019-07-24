@@ -1,8 +1,6 @@
 """Test for batch_import"""
 import os
 import pytest
-import string
-import random
 import batch_import
 from google.cloud import spanner
 
