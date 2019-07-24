@@ -549,6 +549,5 @@ def main():
     blob_commands(args)
 
 
-
 if __name__ == '__main__':
     main()
