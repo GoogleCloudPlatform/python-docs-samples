@@ -36,7 +36,7 @@ logger = logging.getLogger()
 # managing a pool of connections to your database
 db = sqlalchemy.create_engine(
     # Equivalent URL:
-    # mysql+pymysql://<db_user>:<db_pass>@/<db_name>?unix_sock=/cloudsql/<cloud_sql_instance_name>
+    # mysql+pymysql://<db_user>:<db_pass>@/<db_name>?unix_socket=/cloudsql/<cloud_sql_instance_name>
     sqlalchemy.engine.url.URL(
         drivername='mysql+pymysql',
         username=db_user,
