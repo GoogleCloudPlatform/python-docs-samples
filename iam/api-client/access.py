@@ -26,14 +26,15 @@ import os
 from google.oauth2 import service_account
 import googleapiclient.discovery
 
+
 # [START iam_get_policy]
 def get_policy(project_id):
     """Gets IAM policy for a project."""
 
     # pylint: disable=no-member
     credentials = service_account.Credentials.from_service_account_file(
-    filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
-    scopes=['https://www.googleapis.com/auth/cloud-platform'])
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
     service = googleapiclient.discovery.build(
         'cloudresourcemanager', 'v1', credentials=credentials)
     policy = service.projects().getIamPolicy(
@@ -47,13 +48,6 @@ def get_policy(project_id):
 def modify_policy_add_member(policy, role, member):
     """Adds a new member to a role binding."""
 
-    credentials = service_account.Credentials.from_service_account_file(
-    filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
-    scopes=['https://www.googleapis.com/auth/cloud-platform'])
-    service = googleapiclient.discovery.build(
-        'cloudresourcemanager', 'v1', credentials=credentials)
-
-
     binding = next(b for b in policy['bindings'] if b['role'] == role)
     binding['members'].append(member)
     print(binding)
@@ -64,12 +58,6 @@ def modify_policy_add_member(policy, role, member):
 # [START iam_modify_policy_add_role]
 def modify_policy_add_role(policy, role, member):
     """Adds a new role binding to a policy."""
-
-    credentials = service_account.Credentials.from_service_account_file(
-    filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
-    scopes=['https://www.googleapis.com/auth/cloud-platform'])
-    service = googleapiclient.discovery.build(
-        'cloudresourcemanager', 'v1', credentials=credentials)
 
     binding = {
         'role': role,
@@ -87,8 +75,8 @@ def set_policy(project_id, policy):
 
     # pylint: disable=no-member
     credentials = service_account.Credentials.from_service_account_file(
-    filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
-    scopes=['https://www.googleapis.com/auth/cloud-platform'])
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
     service = googleapiclient.discovery.build(
         'cloudresourcemanager', 'v1', credentials=credentials)
 
