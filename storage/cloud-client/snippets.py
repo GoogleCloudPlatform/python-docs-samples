@@ -113,9 +113,7 @@ def list_buckets():
 def list_blobs(bucket_name):
     """Lists all the blobs in the bucket."""
     storage_client = storage.Client()
-    bucket = storage_client.get_bucket(bucket_name)
-
-    blobs = bucket.list_blobs()
+    blobs = storage_client.list_blobs(bucket_name)
 
     for blob in blobs:
         print(blob.name)
@@ -144,9 +142,8 @@ def list_blobs_with_prefix(bucket_name, prefix, delimiter=None):
 
     """
     storage_client = storage.Client()
-    bucket = storage_client.get_bucket(bucket_name)
-
-    blobs = bucket.list_blobs(prefix=prefix, delimiter=delimiter)
+    blobs = storage_client.list_blobs(bucket_name, prefix=prefix,
+                                      delimiter=delimiter)
 
     print('Blobs:')
     for blob in blobs:
