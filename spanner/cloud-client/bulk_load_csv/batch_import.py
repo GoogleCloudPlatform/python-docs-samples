@@ -61,7 +61,7 @@ def insert_data(database, filepath, table_name, column_names):
     for current_inserts in (l_group):
         if current_inserts is not None:
             with database.batch() as batch:
-                batch.insert(table=table_name,columns=column_names,values=current_inserts)
+                batch.insert(table=table_name, columns=column_names, values=current_inserts)
 
 
 def main(instance_id, database_id):
