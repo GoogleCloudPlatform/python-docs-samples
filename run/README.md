@@ -36,7 +36,7 @@ For more Cloud Run samples beyond Python, see the main list in the [Cloud Run Sa
 2. [Build the sample container](https://cloud.google.com/run/docs/building/containers#building_locally_and_pushing_using_docker):
 
     ```
-    export SAMPLE=$sample
+    export SAMPLE=<SAMPLE_DIRECTORY>
     cd $SAMPLE
     docker build --tag $sample .
     ```
@@ -60,22 +60,29 @@ For more Cloud Run samples beyond Python, see the main list in the [Cloud Run Sa
     Injecting your service account key:
 
     ```
-    export SA_KEY_NAME=my-key-name-123
+    export SA_KEY_PATH=/path/to/service/account/my-key-name-123.json
+
     PORT=8080 && docker run --rm \
         -p 8080:${PORT} -e PORT=${PORT} \
-        -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/keys/${SA_KEY_NAME}.json \
-        -v $GOOGLE_APPLICATION_CREDENTIALS:/tmp/keys/${SA_KEY_NAME}.json:ro \
+        -e GOOGLE_APPLICATION_CREDENTIALS=$SA_KEY_PATH \
+        -v $GOOGLE_APPLICATION_CREDENTIALS:$SA_KEY_PATH:ro \
         -v $PWD:/app $SAMPLE
     ```
 
 ## Deploying
 
 ```
+export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
+
+# Submit a build using Google Cloud Build
 gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
+
+# Deploy to Cloud Run
 gcloud beta run deploy $SAMPLE \
-  # Needed for Manual Logging sample.
-  --set-env-var GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT}
+  --set-env-vars GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT} \
   --image gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
+
+# Note: GOOGLE_CLOUD_PROJECT env var is needed for Manual Logging sample.
 ```
 
 See [Building containers][run_build] and [Deploying container images][run_deploy]
