@@ -191,7 +191,7 @@ def patch_fhir_store(
 # [END healthcare_patch_fhir_store]
 
 
-# [START healthcare_export_fhir_store_gcs]
+# [START healthcare_export_fhir_resources_gcs]
 def export_fhir_store_gcs(
         service_account_json,
         project_id,
@@ -223,7 +223,7 @@ def export_fhir_store_gcs(
     except HttpError as e:
         print('Error, FHIR resources not exported: {}'.format(e))
         return ""
-# [END healthcare_export_fhir_store_gcs]
+# [END healthcare_export_fhir_resources_gcs]
 
 
 # [START healthcare_import_fhir_store]
