@@ -48,6 +48,8 @@ def index():
 
     data = request.form.get('payload', 'Example payload').encode('utf-8')
 
+    # Consider initializing the publisher client outside this function
+    # for better latency performance.
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(app.config['GCLOUD_PROJECT'],
                                       app.config['PUBSUB_TOPIC'])

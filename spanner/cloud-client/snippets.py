@@ -21,6 +21,8 @@ For more information, see the README.rst under /spanner.
 """
 
 import argparse
+import base64
+import datetime
 
 from google.cloud import spanner
 from google.cloud.spanner_v1 import param_types
@@ -961,7 +963,7 @@ def query_data_with_parameter(instance_id, database_id):
 
         for row in results:
             print(u"SingerId: {}, FirstName: {}, LastName: {}".format(*row))
-# [END spanner_query_with_parameter]
+    # [END spanner_query_with_parameter]
 
 
 def write_with_dml_transaction(instance_id, database_id):
@@ -1095,6 +1097,301 @@ def update_with_batch_dml(instance_id, database_id):
     # [END spanner_dml_batch_update]
 
 
+def create_table_with_datatypes(instance_id, database_id):
+    """Creates a table with supported dataypes. """
+    # [START spanner_create_table_with_datatypes]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    operation = database.update_ddl([
+        """CREATE TABLE Venues (
+            VenueId         INT64 NOT NULL,
+            VenueName       STRING(100),
+            VenueInfo       BYTES(MAX),
+            Capacity        INT64,
+            AvailableDates  ARRAY<DATE>,
+            LastContactDate DATE,
+            OutdoorVenue    BOOL,
+            PopularityScore FLOAT64,
+            LastUpdateTime  TIMESTAMP NOT NULL
+            OPTIONS(allow_commit_timestamp=true)
+        ) PRIMARY KEY (VenueId)"""
+    ])
+
+    print('Waiting for operation to complete...')
+    operation.result()
+
+    print('Created Venues table on database {} on instance {}'.format(
+        database_id, instance_id))
+    # [END spanner_create_table_with_datatypes]
+
+
+def insert_datatypes_data(instance_id, database_id):
+    """Inserts data with supported datatypes into a table. """
+    # [START spanner_insert_datatypes_data]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    exampleBytes1 = base64.b64encode(u'Hello World 1'.encode())
+    exampleBytes2 = base64.b64encode(u'Hello World 2'.encode())
+    exampleBytes3 = base64.b64encode(u'Hello World 3'.encode())
+    available_dates1 = ['2020-12-01', '2020-12-02', '2020-12-03']
+    available_dates2 = ['2020-11-01', '2020-11-05', '2020-11-15']
+    available_dates3 = ['2020-10-01', '2020-10-07']
+    with database.batch() as batch:
+        batch.insert(
+            table='Venues',
+            columns=(
+                'VenueId', 'VenueName', 'VenueInfo', 'Capacity',
+                'AvailableDates', 'LastContactDate', 'OutdoorVenue',
+                'PopularityScore', 'LastUpdateTime'),
+            values=[
+                (4, u'Venue 4', exampleBytes1, 1800, available_dates1,
+                    '2018-09-02', False, 0.85543, spanner.COMMIT_TIMESTAMP),
+                (19, u'Venue 19', exampleBytes2, 6300, available_dates2,
+                    '2019-01-15', True, 0.98716, spanner.COMMIT_TIMESTAMP),
+                (42, u'Venue 42', exampleBytes3, 3000, available_dates3,
+                    '2018-10-01', False, 0.72598, spanner.COMMIT_TIMESTAMP)])
+
+    print('Inserted data.')
+    # [END spanner_insert_datatypes_data]
+
+
+def query_data_with_array(instance_id, database_id):
+    """Queries sample data using SQL with an ARRAY parameter. """
+    # [START spanner_query_with_array_parameter]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    exampleArray = ['2020-10-01', '2020-11-01']
+    param = {
+        'available_dates': exampleArray
+    }
+    param_type = {
+        'available_dates': param_types.Array(param_types.DATE)
+    }
+
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            'SELECT VenueId, VenueName, AvailableDate FROM Venues v,'
+            'UNNEST(v.AvailableDates) as AvailableDate '
+            'WHERE AvailableDate in UNNEST(@available_dates)',
+            params=param, param_types=param_type)
+
+        for row in results:
+            print(u"VenueId: {}, VenueName: {}, AvailableDate: {}".format(
+                *row))
+    # [END spanner_query_with_array_parameter]
+
+
+def query_data_with_bool(instance_id, database_id):
+    """Queries sample data using SQL with a BOOL parameter. """
+    # [START spanner_query_with_bool_parameter]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    exampleBool = True
+    param = {
+        'outdoor_venue': exampleBool
+    }
+    param_type = {
+        'outdoor_venue': param_types.BOOE
+    }
+
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            'SELECT VenueId, VenueName, OutdoorVenue FROM Venues '
+            'WHERE OutdoorVenue = @outdoor_venue',
+            params=param, param_types=param_type)
+
+        for row in results:
+            print(u"VenueId: {}, VenueName: {}, OutdoorVenue: {}".format(*row))
+    # [END spanner_query_with_bool_parameter]
+
+
+def query_data_with_bytes(instance_id, database_id):
+    """Queries sample data using SQL with a BYTES parameter. """
+    # [START spanner_query_with_bytes_parameter]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    exampleBytes = base64.b64encode(u'Hello World 1'.encode())
+    param = {
+        'venue_info': exampleBytes
+    }
+    param_type = {
+        'venue_info': param_types.BYTES
+    }
+
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            'SELECT VenueId, VenueName FROM Venues '
+            'WHERE VenueInfo = @venue_info',
+            params=param, param_types=param_type)
+
+        for row in results:
+            print(u"VenueId: {}, VenueName: {}".format(*row))
+    # [END spanner_query_with_bytes_parameter]
+
+
+def query_data_with_date(instance_id, database_id):
+    """Queries sample data using SQL with a DATE parameter. """
+    # [START spanner_query_with_date_parameter]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    exampleDate = '2019-01-01'
+    param = {
+        'last_contact_date': exampleDate
+    }
+    param_type = {
+        'last_contact_date': param_types.DATE
+    }
+
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            'SELECT VenueId, VenueName, LastContactDate FROM Venues '
+            'WHERE LastContactDate < @last_contact_date',
+            params=param, param_types=param_type)
+
+        for row in results:
+            print(u"VenueId: {}, VenueName: {}, LastContactDate: {}".format(
+                *row))
+    # [END spanner_query_with_date_parameter]
+
+
+def query_data_with_float(instance_id, database_id):
+    """Queries sample data using SQL with a FLOAT64 parameter. """
+    # [START spanner_query_with_float_parameter]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    exampleFloat = 0.8
+    param = {
+        'popularity_score': exampleFloat
+    }
+    param_type = {
+        'popularity_score': param_types.FLOAT64
+    }
+
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            'SELECT VenueId, VenueName, PopularityScore FROM Venues '
+            'WHERE PopularityScore > @popularity_score',
+            params=param, param_types=param_type)
+
+        for row in results:
+            print(u"VenueId: {}, VenueName: {}, PopularityScore: {}".format(
+                *row))
+    # [END spanner_query_with_float_parameter]
+
+
+def query_data_with_int(instance_id, database_id):
+    """Queries sample data using SQL with a INT64 parameter. """
+    # [START spanner_query_with_int_parameter]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    exampleInt = 3000
+    param = {
+        'capacity': exampleInt
+    }
+    param_type = {
+        'capacity': param_types.INT64
+    }
+
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            'SELECT VenueId, VenueName, Capacity FROM Venues '
+            'WHERE Capacity >= @capacity',
+            params=param, param_types=param_type)
+
+        for row in results:
+            print(u"VenueId: {}, VenueName: {}, Capacity: {}".format(*row))
+    # [END spanner_query_with_int_parameter]
+
+
+def query_data_with_string(instance_id, database_id):
+    """Queries sample data using SQL with a STRING parameter. """
+    # [START spanner_query_with_string_parameter]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    exampleString = "Venue 42"
+    param = {
+        'venue_name': exampleString
+    }
+    param_type = {
+        'venue_name': param_types.STRING
+    }
+
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            'SELECT VenueId, VenueName FROM Venues '
+            'WHERE VenueName = @venue_name',
+            params=param, param_types=param_type)
+
+        for row in results:
+            print(u"VenueId: {}, VenueName: {}".format(*row))
+    # [END spanner_query_with_string_parameter]
+
+
+def query_data_with_timestamp_parameter(instance_id, database_id):
+    """Queries sample data using SQL with a TIMESTAMP parameter. """
+    # [START spanner_query_with_timestamp_parameter]
+    # instance_id = "your-spanner-instance"
+    # database_id = "your-spanner-db-id"
+    spanner_client = spanner.Client()
+    instance = spanner_client.instance(instance_id)
+    database = instance.database(database_id)
+
+    example_timestamp = datetime.datetime.utcnow().isoformat() + "Z"
+    param = {
+        'last_update_time': example_timestamp
+    }
+    param_type = {
+        'last_update_time': param_types.TIMESTAMP
+    }
+
+    with database.snapshot() as snapshot:
+        results = snapshot.execute_sql(
+            'SELECT VenueId, VenueName, LastUpdateTime FROM Venues '
+            'WHERE LastUpdateTime < @last_update_time',
+            params=param, param_types=param_type)
+
+        for row in results:
+            print(u"VenueId: {}, VenueName: {}, LastUpdateTime: {}".format(
+                *row))
+    # [END spanner_query_with_timestamp_parameter]
+
+
 if __name__ == '__main__':  # noqa: C901
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -1107,8 +1404,8 @@ if __name__ == '__main__':  # noqa: C901
 
     subparsers = parser.add_subparsers(dest='command')
     subparsers.add_parser('create_database', help=create_database.__doc__)
-    subparsers.add_parser('delete_data', help=delete_data.__doc__)
     subparsers.add_parser('insert_data', help=insert_data.__doc__)
+    subparsers.add_parser('delete_data', help=delete_data.__doc__)
     subparsers.add_parser('query_data', help=query_data.__doc__)
     subparsers.add_parser('read_data', help=read_data.__doc__)
     subparsers.add_parser('read_stale_data', help=read_stale_data.__doc__)
@@ -1179,6 +1476,36 @@ if __name__ == '__main__':  # noqa: C901
     subparsers.add_parser(
         'update_with_batch_dml',
         help=update_with_batch_dml.__doc__)
+    subparsers.add_parser(
+        'create_table_with_datatypes',
+        help=create_table_with_datatypes.__doc__)
+    subparsers.add_parser(
+        'insert_datatypes_data',
+        help=insert_datatypes_data.__doc__)
+    subparsers.add_parser(
+        'query_data_with_array',
+        help=query_data_with_array.__doc__)
+    subparsers.add_parser(
+        'query_data_with_bool',
+        help=query_data_with_bool.__doc__)
+    subparsers.add_parser(
+        'query_data_with_bytes',
+        help=query_data_with_bytes.__doc__)
+    subparsers.add_parser(
+        'query_data_with_date',
+        help=query_data_with_date.__doc__)
+    subparsers.add_parser(
+        'query_data_with_float',
+        help=query_data_with_float.__doc__)
+    subparsers.add_parser(
+        'query_data_with_int',
+        help=query_data_with_int.__doc__)
+    subparsers.add_parser(
+        'query_data_with_string',
+        help=query_data_with_string.__doc__)
+    subparsers.add_parser(
+        'query_data_with_timestamp_parameter',
+        help=query_data_with_timestamp_parameter.__doc__)
 
     args = parser.parse_args()
 
@@ -1260,3 +1587,23 @@ if __name__ == '__main__':  # noqa: C901
         delete_data_with_partitioned_dml(args.instance_id, args.database_id)
     elif args.command == 'update_with_batch_dml':
         update_with_batch_dml(args.instance_id, args.database_id)
+    elif args.command == 'create_table_with_datatypes':
+        create_table_with_datatypes(args.instance_id, args.database_id)
+    elif args.command == 'insert_datatypes_data':
+        insert_datatypes_data(args.instance_id, args.database_id)
+    elif args.command == 'query_data_with_array':
+        query_data_with_array(args.instance_id, args.database_id)
+    elif args.command == 'query_data_with_bool':
+        query_data_with_bool(args.instance_id, args.database_id)
+    elif args.command == 'query_data_with_bytes':
+        query_data_with_bytes(args.instance_id, args.database_id)
+    elif args.command == 'query_data_with_date':
+        query_data_with_date(args.instance_id, args.database_id)
+    elif args.command == 'query_data_with_float':
+        query_data_with_float(args.instance_id, args.database_id)
+    elif args.command == 'query_data_with_int':
+        query_data_with_int(args.instance_id, args.database_id)
+    elif args.command == 'query_data_with_string':
+        query_data_with_string(args.instance_id, args.database_id)
+    elif args.command == 'query_data_with_timestamp_parameter':
+        query_data_with_timestamp_parameter(args.instance_id, args.database_id)
