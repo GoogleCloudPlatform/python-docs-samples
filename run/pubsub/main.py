@@ -45,9 +45,10 @@ def index():
     if isinstance(pubsub_message, dict) and 'data' in pubsub_message:
         name = base64.b64decode(pubsub_message['data']).decode('utf-8').strip()
 
-    logging.info(f'Hello {name}!')
+    msg = f'Hello {name}!'
+    logging.info(msg)
 
-    return ('', 204)
+    return msg
 # [END run_pubsub_handler]
 
 
