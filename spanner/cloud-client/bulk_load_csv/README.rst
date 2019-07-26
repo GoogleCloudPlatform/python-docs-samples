@@ -69,7 +69,7 @@ Install Dependencies
 To run sample
 -----------------------
  
- $ python import.py instance_id database_id
+ $ python batch_import.py instance_id database_id
  
 positional arguments:
   instance_id:           Your Cloud Spanner instance ID.
