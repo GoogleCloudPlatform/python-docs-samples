@@ -18,36 +18,37 @@ from google.cloud import storage
 
 import pytest
 
-import bucket_policy_only
+import uniform_bucket_level_access
 
 
 @pytest.fixture()
 def bucket():
     """Creates a test bucket and deletes it upon completion."""
     client = storage.Client()
-    bucket_name = 'bucket-policy-only-' + str(int(time.time()))
+    bucket_name = 'uniform-bucket-level-access-' + str(int(time.time()))
     bucket = client.create_bucket(bucket_name)
     yield bucket
     time.sleep(3)
     bucket.delete(force=True)
 
 
-def test_get_bucket_policy_only(bucket, capsys):
-    bucket_policy_only.get_bucket_policy_only(bucket.name)
+def test_get_uniform_bucket_level_access(bucket, capsys):
+    uniform_bucket_level_access.get_uniform_bucket_level_access(bucket.name)
     out, _ = capsys.readouterr()
-    assert 'Bucket Policy Only is disabled for {}.'.format(
+    assert 'Uniform bucket-level access is disabled for {}.'.format(
         bucket.name) in out
 
 
-def test_enable_bucket_policy_only(bucket, capsys):
-    bucket_policy_only.enable_bucket_policy_only(bucket.name)
+def test_enable_uniform_bucket_level_access(bucket, capsys):
+    uniform_bucket_level_access.enable_uniform_bucket_level_access(bucket.name)
     out, _ = capsys.readouterr()
-    assert 'Bucket Policy Only was enabled for {}.'.format(
+    assert 'Uniform bucket-level access was enabled for {}.'.format(
         bucket.name) in out
 
 
-def test_disable_bucket_policy_only(bucket, capsys):
-    bucket_policy_only.disable_bucket_policy_only(bucket.name)
+def test_disable_uniform_bucket_level_access(bucket, capsys):
+    uniform_bucket_level_access.disable_uniform_bucket_level_access(
+        bucket.name)
     out, _ = capsys.readouterr()
-    assert 'Bucket Policy Only was disabled for {}.'.format(
+    assert 'Uniform bucket-level access was disabled for {}.'.format(
         bucket.name) in out
