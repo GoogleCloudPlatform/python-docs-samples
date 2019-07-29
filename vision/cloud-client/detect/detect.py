@@ -34,7 +34,6 @@ https://cloud.google.com/vision/docs.
 """
 
 import argparse
-import re
 
 
 # [START vision_face_detection]
@@ -674,6 +673,7 @@ def detect_document_uri(uri):
 # [START vision_text_detection_pdf_gcs]
 def async_detect_document(gcs_source_uri, gcs_destination_uri):
     """OCR with PDF/TIFF as source files on GCS"""
+    import re
     from google.cloud import vision
     from google.cloud import storage
     from google.protobuf import json_format
