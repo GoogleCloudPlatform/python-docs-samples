@@ -15,7 +15,6 @@ import datetime
 from time import sleep
 
 from google.cloud import firestore
-from google.cloud.firestore_v1 import ArrayRemove, ArrayUnion
 import google.cloud.exceptions
 
 
@@ -319,10 +318,10 @@ def update_doc_array():
     city_ref = db.collection(u'cities').document(u'DC')
 
     # Atomically add a new region to the 'regions' array field.
-    city_ref.update({u'regions': ArrayUnion([u'greater_virginia'])})
+    city_ref.update({u'regions': firestore.ArrayUnion([u'greater_virginia'])})
 
     # // Atomically remove a region from the 'regions' array field.
-    city_ref.update({u'regions': ArrayRemove([u'east_coast'])})
+    city_ref.update({u'regions': firestore.ArrayRemove([u'east_coast'])})
     # [END fs_update_doc_array]
     city = city_ref.get()
     print(u'Updated the regions field of the DC. {}'.format(city.to_dict()))
