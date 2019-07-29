@@ -72,6 +72,7 @@ For more Cloud Run samples beyond Python, see the main list in the [Cloud Run Sa
 ## Deploying
 
 ```
+# Set an environment variable with your GCP Project ID
 export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
 
 # Submit a build using Google Cloud Build
@@ -79,10 +80,7 @@ gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
 
 # Deploy to Cloud Run
 gcloud beta run deploy $SAMPLE \
-  --set-env-vars GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT} \
   --image gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
-
-# Note: GOOGLE_CLOUD_PROJECT env var is needed for Manual Logging sample.
 ```
 
 See [Building containers][run_build] and [Deploying container images][run_deploy]
