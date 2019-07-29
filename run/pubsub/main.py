@@ -15,7 +15,6 @@
 # [START run_pubsub_server_setup]
 import base64
 from flask import Flask, request
-import logging
 import os
 import sys
 
@@ -27,16 +26,14 @@ app = Flask(__name__)
 @app.route('/', methods=['POST'])
 def index():
     envelope = request.get_json()
-    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-
     if not envelope:
         msg = 'no Pub/Sub message received'
-        logging.error(f'error: {msg}')
+        print(f'error: {msg}')
         return f'Bad Request: {msg}', 400
 
     if not isinstance(envelope, dict) or 'message' not in envelope:
         msg = 'invalid Pub/Sub message format'
-        logging.error(f'error: {msg}')
+        print(f'error: {msg}')
         return f'Bad Request: {msg}', 400
 
     pubsub_message = envelope['message']
@@ -45,10 +42,12 @@ def index():
     if isinstance(pubsub_message, dict) and 'data' in pubsub_message:
         name = base64.b64decode(pubsub_message['data']).decode('utf-8').strip()
 
-    msg = f'Hello {name}!'
-    logging.info(msg)
+    print(f'Hello {name}!')
 
-    return msg
+    # Flush the stdout to avoid log buffering.
+    sys.stdout.flush()
+
+    return ('', 204)
 # [END run_pubsub_handler]
 
 
