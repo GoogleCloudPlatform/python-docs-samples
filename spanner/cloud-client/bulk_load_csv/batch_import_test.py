@@ -50,7 +50,8 @@ def example_database():
 
 def test_is_bool_null():
     assert batch_import.is_bool_null(['12', 'true', '', '12',
-                                      'jkl', '']) == [['12'], [True], [], ['12'],
+                                      'jkl', '']) == [['12'], [True],
+                                                      [], ['12'],
                                                       ['jkl'], []]
 
 
