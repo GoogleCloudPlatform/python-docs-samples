@@ -366,7 +366,7 @@ def listen_for_errors(project_id, subscription_name):
     # [START pubsub_subscriber_error_listener]
     from google.cloud import pubsub_v1
 
-    # TODO project           = "Your Google Cloud Project ID"
+    # TODO project_id        = "Your Google Cloud Project ID"
     # TODO subscription_name = "Your Pubsub subscription name"
 
     subscriber = pubsub_v1.SubscriberClient()
