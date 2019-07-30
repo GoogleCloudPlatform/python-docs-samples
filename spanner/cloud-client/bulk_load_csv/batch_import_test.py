@@ -48,6 +48,15 @@ def example_database():
         database.drop()
 
 
+def  test_is_bool_null():
+    assert is_bool_null(['12','true','','12','jkl','']) == [['12'], [True], [], ['12'], ['jkl'], []]
+
+
+def test_divide_chunks():
+    res = list(divide_chunks(['12','true','','12','jkl',''], 2))
+    assert res == [['12', 'true'], ['', '12'], ['jkl', '']]
+
+
 def test_insert_data(capsys):
     batch_import.main(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
