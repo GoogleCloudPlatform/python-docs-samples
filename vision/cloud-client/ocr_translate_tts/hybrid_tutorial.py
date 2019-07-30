@@ -15,6 +15,7 @@
 # Imports the Google Cloud client library
 from google.cloud import translate
 from google.cloud import vision
+from google.cloud import texttospeech
 import io
 
 def pic_to_text(path):
@@ -55,7 +56,7 @@ def text_to_speech(text, outfile):
     client = texttospeech.TextToSpeechClient()
 
     # Sets the text input to be synthesized
-    synthesis_input = texttospeech.types.SynthesisInput(ssml=ssml_text)
+    synthesis_input = texttospeech.types.SynthesisInput(text=text)
 
     # Builds the voice request, selects the language code ("en-US") and
     # the SSML voice gender ("MALE")
@@ -75,3 +76,12 @@ def text_to_speech(text, outfile):
     with open(outfile, 'wb') as out:
         out.write(response.audio_content)
         print('Audio content written to file ' + outfile)
+
+
+def main():
+    # Test example files
+    text_to_speech("This is\na test!", "resources/expected_standard_text.mp3")
+    return
+
+if __name__ == '__main__':
+    main()
