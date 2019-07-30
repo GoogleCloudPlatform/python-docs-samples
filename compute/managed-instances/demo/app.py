@@ -30,19 +30,19 @@ PORT_NUMBER = 80
 
 app = Flask(__name__)
 _is_healthy = True
-_worker = None
+_worker = Process()
 
 
 @app.route('/')
 def index():
     """Returns the demo UI."""
-    global _is_healthy
+    global _worker, _is_healthy
     return render_template('index.html',
                            hostname=gethostname(),
                            zone=_get_zone(),
                            template=_get_template(),
                            healthy=_is_healthy,
-                           working=_is_working())
+                           working=_worker.is_alive())
 
 
 @app.route('/health')
@@ -60,7 +60,7 @@ def health():
 @app.route('/makeHealthy')
 def make_healthy():
     """Sets the server to simulate a 'healthy' status."""
-    global _is_healthy
+    global _worker, _is_healthy
     _is_healthy = True
 
     template = render_template('index.html',
@@ -68,7 +68,7 @@ def make_healthy():
                                zone=_get_zone(),
                                template=_get_template(),
                                healthy=True,
-                               working=_is_working())
+                               working=_worker.is_alive())
     response = make_response(template, 302)
     response.headers['Location'] = '/'
     return response
@@ -77,7 +77,7 @@ def make_healthy():
 @app.route('/makeUnhealthy')
 def make_unhealthy():
     """Sets the server to simulate an 'unhealthy' status."""
-    global _is_healthy
+    global _worker, _is_healthy
     _is_healthy = False
 
     template = render_template('index.html',
@@ -85,7 +85,7 @@ def make_unhealthy():
                                zone=_get_zone(),
                                template=_get_template(),
                                healthy=False,
-                               working=_is_working())
+                               working=_worker.is_alive())
     response = make_response(template, 302)
     response.headers['Location'] = '/'
     return response
@@ -95,9 +95,10 @@ def make_unhealthy():
 def start_load():
     """Sets the server to simulate high CPU load."""
     global _worker, _is_healthy
-    if not _is_working():
+    if not _worker.is_alive():
         _worker = Process(target=_burn_cpu)
         _worker.start()
+        # _worker.is_alive() now returns True
 
     template = render_template('index.html',
                                hostname=gethostname(),
@@ -114,9 +115,10 @@ def start_load():
 def stop_load():
     """Sets the server to stop simulating CPU load."""
     global _worker, _is_healthy
-    if _is_working():
+    if _worker.is_alive():
         _worker.terminate()
-        _worker = None
+        _worker.join()
+        # _worker.is_alive() now returns False
 
     template = render_template('index.html',
                                hostname=gethostname(),
@@ -160,12 +162,6 @@ def _get_template():
         return sub(r'.+instanceTemplates/(.+)', r'\1', r.text)
     else:
         return ''
-
-
-def _is_working():
-    """Returns TRUE if the server is currently simulating CPU load."""
-    global _worker
-    return _worker is not None and _worker.is_alive()
 
 
 def _burn_cpu():
