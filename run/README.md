@@ -36,9 +36,9 @@ For more Cloud Run samples beyond Python, see the main list in the [Cloud Run Sa
 2. [Build the sample container](https://cloud.google.com/run/docs/building/containers#building_locally_and_pushing_using_docker):
 
     ```
-    export SAMPLE=<SAMPLE_DIRECTORY>
+    export SAMPLE=<SAMPLE_NAME>
     cd $SAMPLE
-    docker build --tag $sample .
+    docker build --tag $SAMPLE .
     ```
 
 3. [Run containers locally](https://cloud.google.com/run/docs/testing/local)
@@ -57,30 +57,42 @@ For more Cloud Run samples beyond Python, see the main list in the [Cloud Run Sa
         -v $PWD:/app $SAMPLE
     ```
 
-    Injecting your service account key:
+    Injecting your service account key for access to GCP services:
 
     ```
-    export SA_KEY_PATH=/path/to/service/account/my-key-name-123.json
+    # Set the name of the service account key within the container
+    export SA_KEY_NAME=my-key-name-123
 
     PORT=8080 && docker run --rm \
-        -p 8080:${PORT} -e PORT=${PORT} \
-        -e GOOGLE_APPLICATION_CREDENTIALS=$SA_KEY_PATH \
-        -v $GOOGLE_APPLICATION_CREDENTIALS:$SA_KEY_PATH:ro \
+        -p 8080:${PORT} \
+        -e PORT=${PORT} \
+        -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/keys/${SA_KEY_NAME}.json \
+        -v $GOOGLE_APPLICATION_CREDENTIALS:/tmp/keys/${SA_KEY_NAME}.json:ro \
         -v $PWD:/app $SAMPLE
     ```
 
+    * Use the --volume (-v) flag to inject the credential file into the container
+      (assumes you have already set your `GOOGLE_APPLICATION_CREDENTIALS`
+      environment variable on your machine)
+
+    * Use the --environment (-e) flag to set the `GOOGLE_APPLICATION_CREDENTIALS`
+      variable inside the container
+
 ## Deploying
 
+1. Set an environment variable with your GCP Project ID
 ```
-# Set an environment variable with your GCP Project ID
 export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
+```
 
-# Submit a build using Google Cloud Build
+1. Submit a build using Google Cloud Build
+```
 gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
+```
 
-# Deploy to Cloud Run
-gcloud beta run deploy $SAMPLE \
-  --image gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
+1. Deploy to Cloud Run
+```
+gcloud beta run deploy $SAMPLE --image gcr.io/${GOOGLE_CLOUD_PROJECT}/${SAMPLE}
 ```
 
 See [Building containers][run_build] and [Deploying container images][run_deploy]
