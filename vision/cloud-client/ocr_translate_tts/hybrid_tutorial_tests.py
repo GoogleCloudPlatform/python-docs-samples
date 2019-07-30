@@ -59,17 +59,24 @@ def test_vision_special_chars():
     assert text is expected_text
 """
 
+
 # TRANSLATE TESTS
 
 
 def test_translate_standard():
 
-    text = translate_text("hello", "en", "blah")
+    text = translate_text("hello", "en", "")
     expected_text = "hello"
     assert text == expected_text
 
 def test_translate_glossary():
-    return
+
+    with open(textfile, 'r') as f:
+        expectrf_text = f.read()
+
+    text = translate_text(input, "fr", "resources/glossary.csv")
+    assert text == expected_text
+
 
 # TEXT-TO-SPEECH TESTS
 
@@ -100,6 +107,8 @@ def test_tts_standard(capsys):
     # Delete test file
     os.remove(outfile)
 
+"""
 def test_tts_special_chars():
     
     return
+"""

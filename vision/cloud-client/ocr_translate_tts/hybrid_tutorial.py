@@ -14,6 +14,7 @@
 
 # Imports the Google Cloud client library
 from google.cloud import translate
+from google.cloud import translate_v3beta1 as glossary
 from google.cloud import vision
 from google.cloud import texttospeech
 import io
@@ -33,6 +34,10 @@ def pic_to_text(path):
     response = client.document_text_detection(image=image)
     text = response.full_text_annotation.text
     return text
+
+
+def create_glossary(project_id, path_to_glossary):
+    return
 
 
 def translate_text(text, new_lang, path_to_glossary):
@@ -80,7 +85,11 @@ def text_to_speech(text, outfile):
 
 def main():
     # Test example files
-    text_to_speech("This is\na test!", "resources/expected_standard_text.mp3")
+    with open("resources/glossary.txt", "r") as f:
+        text = f.read()
+
+    text = translate_text(text, "fr", "resources/glossary.csv")
+    print(text)
     return
 
 if __name__ == '__main__':
