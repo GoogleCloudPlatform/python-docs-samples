@@ -78,6 +78,8 @@ For more Cloud Run samples beyond Python, see the main list in the [Cloud Run Sa
     * Use the --environment (-e) flag to set the `GOOGLE_APPLICATION_CREDENTIALS`
       variable inside the container
 
+    Learn more about [testing your container image locally.][testing]
+
 ## Deploying
 
 1. Set an environment variable with your GCP Project ID
@@ -105,3 +107,4 @@ for more information.
 [pubsub]: pubsub/
 [run_button_helloworld]: https://console.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_image=gcr.io/cloudrun/button&cloudshell_git_repo=https://github.com/knative/docs&cloudshell_working_dir=docs/serving/samples/hello-world/helloworld-python
 [run_button_pubsub]: https://console.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_image=gcr.io/cloudrun/button&cloudshell_git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&cloudshell_working_dir=run/pubsub
+[testing]: https://cloud.google.com/run/docs/testing/local#running_locally_using_docker_with_access_to_services
