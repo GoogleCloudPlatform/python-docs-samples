@@ -50,7 +50,7 @@ def index():
                            zone=_get_zone(),
                            template=_get_template(),
                            healthy=_is_healthy,
-                           working=_cpu_burner.is_alive())
+                           working=_cpu_burner.is_running())
 
 
 @app.route('/health')
@@ -76,7 +76,7 @@ def make_healthy():
                                zone=_get_zone(),
                                template=_get_template(),
                                healthy=True,
-                               working=_cpu_burner.is_alive())
+                               working=_cpu_burner.is_running())
     response = make_response(template, 302)
     response.headers['Location'] = '/'
     return response
@@ -93,7 +93,7 @@ def make_unhealthy():
                                zone=_get_zone(),
                                template=_get_template(),
                                healthy=False,
-                               working=_cpu_burner.is_alive())
+                               working=_cpu_burner.is_running())
     response = make_response(template, 302)
     response.headers['Location'] = '/'
     return response
@@ -167,25 +167,26 @@ def _get_template():
 
 
 class CpuBurner:
-    """Object to burn CPU cycles to simulate high CPU load."""
-
+    """
+    Object to asynchronously burn CPU cycles to simulate high CPU load.
+    Burns CPU in a separate process and can be toggled on and off.
+    """
     def __init__(self):
         self._toggle = Value(c_bool, False, lock=True)
         self._process = Process(target=self._burn_cpu)
         self._process.start()
 
-
     def start(self):
+        """Start burning CPU."""
         self._toggle.value = True
 
-
     def stop(self):
+        """Stop burning CPU."""
         self._toggle.value = False
 
-
-    def is_alive(self):
+    def is_running(self):
+        """Returns true if currently burning CPU."""
         return self._toggle.value
-
 
     def _burn_cpu(self):
         """Burn CPU cycles if work is toggled, otherwise sleep."""
