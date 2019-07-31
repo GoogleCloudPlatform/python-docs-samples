@@ -32,6 +32,12 @@ _Note: you may need to install `pytest` using `pip install pytest`._
 ## Deploy
 
 ```
+# Set an environment variable with your GCP Project ID
+export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
+
+# Submit a build using Google Cloud Build
 gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/pubsub-tutorial
-gcloud alpha run deploy pubsub-tutorial --image gcr.io/${GOOGLE_CLOUD_PROJECT}/pubsub-tutorial
+
+# Deploy to Cloud Run
+gcloud beta run deploy pubsub-tutorial --image gcr.io/${GOOGLE_CLOUD_PROJECT}/pubsub-tutorial
 ```
