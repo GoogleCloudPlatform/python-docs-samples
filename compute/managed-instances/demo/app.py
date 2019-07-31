@@ -19,30 +19,38 @@ simulate a healthy/unhealthy server status for any attached health check.
 Attached health checks should query the '/health' path.
 """
 
+from ctypes import c_bool
 from flask import Flask, make_response, render_template
+from multiprocessing import Process, Value
 from random import random
 from re import sub
 from requests import get
 from socket import gethostname
-from multiprocessing import Process
+from time import sleep
 
 PORT_NUMBER = 80
 
 app = Flask(__name__)
 _is_healthy = True
-_worker = Process()
+_cpu_burner = None
+
+
+@app.before_first_request
+def init():
+    global _cpu_burner
+    _cpu_burner = CpuBurner()
 
 
 @app.route('/')
 def index():
     """Returns the demo UI."""
-    global _worker, _is_healthy
+    global _cpu_burner, _is_healthy
     return render_template('index.html',
                            hostname=gethostname(),
                            zone=_get_zone(),
                            template=_get_template(),
                            healthy=_is_healthy,
-                           working=_worker.is_alive())
+                           working=_cpu_burner.is_alive())
 
 
 @app.route('/health')
@@ -60,7 +68,7 @@ def health():
 @app.route('/makeHealthy')
 def make_healthy():
     """Sets the server to simulate a 'healthy' status."""
-    global _worker, _is_healthy
+    global _cpu_burner, _is_healthy
     _is_healthy = True
 
     template = render_template('index.html',
@@ -68,7 +76,7 @@ def make_healthy():
                                zone=_get_zone(),
                                template=_get_template(),
                                healthy=True,
-                               working=_worker.is_alive())
+                               working=_cpu_burner.is_alive())
     response = make_response(template, 302)
     response.headers['Location'] = '/'
     return response
@@ -77,7 +85,7 @@ def make_healthy():
 @app.route('/makeUnhealthy')
 def make_unhealthy():
     """Sets the server to simulate an 'unhealthy' status."""
-    global _worker, _is_healthy
+    global _cpu_burner, _is_healthy
     _is_healthy = False
 
     template = render_template('index.html',
@@ -85,7 +93,7 @@ def make_unhealthy():
                                zone=_get_zone(),
                                template=_get_template(),
                                healthy=False,
-                               working=_worker.is_alive())
+                               working=_cpu_burner.is_alive())
     response = make_response(template, 302)
     response.headers['Location'] = '/'
     return response
@@ -94,11 +102,8 @@ def make_unhealthy():
 @app.route('/startLoad')
 def start_load():
     """Sets the server to simulate high CPU load."""
-    global _worker, _is_healthy
-    if not _worker.is_alive():
-        _worker = Process(target=_burn_cpu)
-        _worker.start()
-        # _worker.is_alive() now returns True
+    global _cpu_burner, _is_healthy
+    _cpu_burner.start()
 
     template = render_template('index.html',
                                hostname=gethostname(),
@@ -114,11 +119,8 @@ def start_load():
 @app.route('/stopLoad')
 def stop_load():
     """Sets the server to stop simulating CPU load."""
-    global _worker, _is_healthy
-    if _worker.is_alive():
-        _worker.terminate()
-        _worker.join()
-        # _worker.is_alive() now returns False
+    global _cpu_burner, _is_healthy
+    _cpu_burner.stop()
 
     template = render_template('index.html',
                                hostname=gethostname(),
@@ -164,10 +166,31 @@ def _get_template():
         return ''
 
 
-def _burn_cpu():
-    """Burn CPU cycles to simulate high CPU load."""
-    while True:
-        random()*random()
+class CpuBurner:
+    """Object to burn CPU cycles to simulate high CPU load."""
+
+    def __init__(self):
+        self._toggle = Value(c_bool, False, lock=True)
+        self._process = Process(target=self._burn_cpu)
+        self._process.start()
+
+
+    def start(self):
+        self._toggle.value = True
+
+
+    def stop(self):
+        self._toggle.value = False
+
+
+    def is_alive(self):
+        return self._toggle.value
+
+
+    def _burn_cpu(self):
+        """Burn CPU cycles if work is toggled, otherwise sleep."""
+        while True:
+            random()*random() if self._toggle.value else sleep(1)
 
 
 if __name__ == "__main__":
