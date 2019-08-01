@@ -18,6 +18,8 @@ import authenticate_service_account
 
 
 def test_create_client():
-    credentials, _ = google.auth.default(["https://www.googleapis.com/auth/cloud-platform"])
+    credentials, _ = google.auth.default(
+        ["https://www.googleapis.com/auth/cloud-platform"]
+    )
     client = authenticate_service_account.create_client(credentials)
     assert client is not None
