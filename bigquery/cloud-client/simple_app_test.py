@@ -12,10 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import google.auth
+
 import simple_app
 
 
 def test_query_stackoverflow(capsys):
-    simple_app.query_stackoverflow()
+    credentials, project_id = google.auth.default(
+        ["https://www.googleapis.com/auth/cloud-platform"]
+    )
+    simple_app.query_stackoverflow(credentials, project_id)
     out, _ = capsys.readouterr()
-    assert 'views' in out
+    assert 'stackoverflow.com' in out
