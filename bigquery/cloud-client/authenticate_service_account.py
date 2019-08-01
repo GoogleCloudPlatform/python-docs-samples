@@ -12,14 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START bigquery_client_json_credentials]
-from google.cloud import bigquery
-from google.oauth2 import service_account
-# [END bigquery_client_json_credentials]
-
 
 def authenticate(key_path):
     # [START bigquery_client_json_credentials]
+    from google.oauth2 import service_account
+
     # TODO(developer): Set key_path to the path to the service account key
     #                  file.
     # key_path = "path/to/service_account.json"
@@ -34,6 +31,8 @@ def authenticate(key_path):
 
 def create_client(credentials):
     # [START bigquery_client_json_credentials]
+    from google.cloud import bigquery
+
     client = bigquery.Client(
         credentials=credentials,
         project=credentials.project_id,
