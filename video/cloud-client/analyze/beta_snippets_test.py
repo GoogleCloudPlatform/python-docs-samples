@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2017 Google, Inc
+# Copyright 2019 Google, Inc
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -160,3 +160,13 @@ def test_track_objects_gcs():
     assert text_exists
     assert object_annotations[0].frames[0].normalized_bounding_box.left >= 0.0
     assert object_annotations[0].frames[0].normalized_bounding_box.left <= 1.0
+
+
+@pytest.mark.slow
+def test_video_classification_streaming_automl():
+    assert True
+
+
+@pytest.mark.slow
+def test_object_tracking_streaming_automl():
+    assert True
