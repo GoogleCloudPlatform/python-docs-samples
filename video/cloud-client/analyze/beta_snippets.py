@@ -36,6 +36,10 @@ Usage Examples:
 
     python beta_snippets.py streaming-annotation-storage resources/cat.mp4 \
     gs://mybucket/myfolder
+
+    python beta_snippets.py streaming-automl-classification resources/cat.mp4
+
+    python beta_snippets.py streaming-automl-objects-tracking resources/cat.mp4
 """
 
 import argparse
@@ -629,6 +633,14 @@ def annotation_to_storage_streaming(path, output_uri):
     # [END video_streaming_annotation_to_storage_beta]
 
 
+def video_classification_streaming_automl(path, output_uri):
+    pass
+
+
+def object_tracking_streaming_automl(path, output_uri):
+    pass
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -678,6 +690,18 @@ if __name__ == '__main__':
     video_streaming_annotation_to_storage_parser.add_argument('path')
     video_streaming_annotation_to_storage_parser.add_argument('output_uri')
 
+    video_streaming_automl_classification_parser = subparsers.add_parser(
+        'streaming-automl-classification',
+        help=video_classification_streaming_automl.__doc__)
+    video_streaming_automl_classification_parser.add_argument('path')
+    video_streaming_automl_classification_parser.add_argument('output_uri')
+
+    video_streaming_automl_tracking_parser = subparsers.add_parser(
+        'streaming-automl-objects-tracking',
+        help=object_tracking_streaming_automl.__doc__)
+    video_streaming_automl_tracking_parser.add_argument('path')
+    video_streaming_automl_tracking_parser.add_argument('output_uri')
+
     args = parser.parse_args()
 
     if args.command == 'transcription':
@@ -700,3 +724,7 @@ if __name__ == '__main__':
         detect_explicit_content_streaming(args.path)
     elif args.command == 'streaming-annotation-storage':
         annotation_to_storage_streaming(args.path, args.output_uri)
+    elif args.command == 'streaming-automl-classification':
+        video_classification_streaming_automl(args.path, args.output_uri)
+    elif args.command == 'streaming-automl-objects-tracking':
+        object_tracking_streaming_automl(args.path, args.output_uri)
