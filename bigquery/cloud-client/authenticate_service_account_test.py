@@ -17,9 +17,14 @@ import google.auth
 import authenticate_service_account
 
 
-def test_create_client():
+def mock_credentials(*args, **kwargs):
     credentials, _ = google.auth.default(
         ["https://www.googleapis.com/auth/cloud-platform"]
     )
-    client = authenticate_service_account.create_client(credentials)
+    return credentials
+
+
+def test_main(monkeypatch):
+    monkeypatch.setattr('google.oauth2.service_account.Credentials.from_service_account_file', mock_credentials)
+    client = authenticate_service_account.main()
     assert client is not None

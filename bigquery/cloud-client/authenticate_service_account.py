@@ -12,9 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 
-def authenticate(key_path):
+
+def main():
+    key_path = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+
     # [START bigquery_client_json_credentials]
+    from google.cloud import bigquery
     from google.oauth2 import service_account
 
     # TODO(developer): Set key_path to the path to the service account key
@@ -25,13 +30,6 @@ def authenticate(key_path):
         key_path,
         scopes=["https://www.googleapis.com/auth/cloud-platform"],
     )
-    # [END bigquery_client_json_credentials]
-    return credentials
-
-
-def create_client(credentials):
-    # [START bigquery_client_json_credentials]
-    from google.cloud import bigquery
 
     client = bigquery.Client(
         credentials=credentials,
@@ -39,12 +37,6 @@ def create_client(credentials):
     )
     # [END bigquery_client_json_credentials]
     return client
-
-
-def main():
-    import os
-    credentials = authenticate(os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
-    create_client(credentials)
 
 
 if __name__ == "__main__":
