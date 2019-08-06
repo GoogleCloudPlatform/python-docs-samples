@@ -14,6 +14,7 @@
 
 from google.cloud import tasks
 
+
 def create_queue(project, location, queue_blue_name, queue_red_name):
     # [START taskqueues_using_yaml]
     client = tasks.CloudTasksClient()
@@ -106,6 +107,7 @@ def create_task(project, location, queue):
     # [END taskqueues_new_task]
     return response
 
+
 def create_tasks_with_data(project, location, queue):
     # [START taskqueues_passing_data]
     import json
@@ -162,7 +164,7 @@ def create_task_with_name(project, location, queue, task_name):
 
     parent = client.queue_path(project, location, queue)
 
-    task =  {
+    task = {
         'name': client.task_path(project, location, queue, task_name),
         'app_engine_http_request': {
             'http_method': 'GET',
@@ -229,7 +231,6 @@ def retry_task(project, location, fooqueue, barqueue, bazqueue):
     # fooqueue = 'fooqueue'
     # barqueue = 'barqueue'
     # bazqueue = 'bazqueue'
-
 
     parent = client.location_path(project, location)
 
