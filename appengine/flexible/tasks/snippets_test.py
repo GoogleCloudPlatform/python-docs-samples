@@ -78,7 +78,7 @@ def test_delete_task():
     assert name in result.name
 
 
-@pytest.mark.order8
+@pytest.mark.order7
 def test_delete_queue():
     result = snippets.delete_queue(
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
@@ -89,10 +89,11 @@ def test_delete_queue():
     assert result is None
 
 
-@pytest.mark.order7
+@pytest.mark.order8
 def test_retry_task():
+    QUEUE_SIZE = 3
     QUEUE_NAME = []
-    for i in range(3):
+    for i in range(QUEUE_SIZE):
         QUEUE_NAME.append("queue-{}".format(uuid.uuid4()))
 
     name = "projects/{}/locations/{}/queues/{}".format(
@@ -102,6 +103,8 @@ def test_retry_task():
         QUEUE_NAME[2])
     assert name in result.name
 
-    for i in range(3):
+    for i in range(QUEUE_SIZE):
         snippets.delete_queue(
-            TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME[i])
+            project=TEST_PROJECT_ID,
+            location=TEST_LOCATION,
+            queue=QUEUE_NAME[i])
