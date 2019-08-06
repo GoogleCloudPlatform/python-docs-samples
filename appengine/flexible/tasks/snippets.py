@@ -48,7 +48,6 @@ def create_queue(project, location, queue_blue_name, queue_red_name):
     queues = [queue_blue, queue_red]
     for queue in queues:
         response = client.create_queue(parent, queue)
-        print("Created queue: ")
         print(response)
     # [END taskqueues_using_yaml]
     return response
@@ -72,7 +71,6 @@ def update_queue(project, location, queue):
     queue.rate_limits.max_concurrent_dispatches = 10
 
     response = client.update_queue(queue)
-    print("Updated queue: ")
     print(response)
     # [END taskqueues_processing_rate]
     return response
