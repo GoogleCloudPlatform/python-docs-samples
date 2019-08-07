@@ -755,7 +755,6 @@ def parse_command_line_args():
             help='Path to public ES256 key file.')
     parser.add_argument(
             '--gateway_id',
-            required=True,
             help='Gateway identifier.')
     parser.add_argument(
             '--member',
