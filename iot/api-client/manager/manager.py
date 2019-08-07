@@ -704,17 +704,8 @@ def list_devices_for_gateway(
                 device.get('numId'),
                 device.get('id')))
 
-    if devices.get('deviceNumIds') is not None:
-        for device_id in devices.get('deviceNumIds'):
-            device_name = '{}/devices/{}'.format(
-                    registry_name, device_id)
-            device = client.projects().locations().registries().devices().get(
-                    name=device_name).execute()
-            print('Id: {}\n\tName: {}\n\traw: {}'.format(
-                    device_id, device.get('id'), device))
-    else:
-        if not found:
-            print('No devices bound to gateway {}'.format(gateway_id))
+    if not found:
+        print('No devices bound to gateway {}'.format(gateway_id))
     # [END iot_list_devices_for_gateway]
 
 
