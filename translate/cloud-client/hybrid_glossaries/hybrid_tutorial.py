@@ -173,8 +173,7 @@ def main():
 
     #delete_glossary('ec-gcp', 'test-glossary')   
     #create_glossary(['fr', 'en'], 'ec-gcp', 'test', 'gs://cloud-samples-data/translation/bistro_glossary.csv')
-    #translate_text('chevre et bouillabaisse et fromage et creme brulee et frites', 'fr', 'en')
-
+    print translate_text('je mange du chevre. j\'aime le bouillabaisse et creme brulee et frites', 'fr', 'en', 'ec-gcp', 'bistro-glossary')
 """
     text_to_translate = pic_to_text(infile)
     text_to_speak = translate_text(text_to_translate)

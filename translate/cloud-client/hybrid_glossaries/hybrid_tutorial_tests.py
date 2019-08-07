@@ -67,9 +67,10 @@ def test_create_glossary():
 
 def test_translate_standard():
 
+    expected_text = 'Hello'
+
     text = translate_text('Bonjour', 'fr', 'en', PROJECT_ID,
                          'bistro-glossary')
-    expected_text = 'Hello'
 
     assert text == expected_text
 
@@ -100,43 +101,16 @@ def test_tts_standard(capsys):
 
     # Assert audio file generated
     assert os.path.isfile(outfile)
-
+    
     # Assert audio file generated correctly
     assert filecmp.cmp(outfile,
                        expected_outfile,
                        shallow=True)
-
+    
     out, err = capsys.readouterr()
 
     # Assert success message printed
     assert 'Audio content written to file ' + outfile in out
-
-    # Delete test file
-    os.remove(outfile)
-
-
-def test_tts_special_chars(capsys):
-    outfile = 'resources/test_standard_text.mp3'
-    expected_outfile = 'resources/expected_standard_text.mp3'
-    textfile = 'resources/standard_format.txt'
-
-    with open(textfile, 'r') as f:
-        text = f.read()
-
-    text_to_speech(text, outfile)
-
-    # Assert audio file generated
-    assert os.path.isfile(outfile)
-
-    # Assert audio file generated correctly
-    assert filecmp.cmp(outfile,
-                       expected_outfile,
-                       shallow=True)
-
-    out, err = capsys.readouterr()
-
-    # Assert success message printed
-    assert 'Audio content written to file ' + outfile in out
-
+    
     # Delete test file
     os.remove(outfile)
