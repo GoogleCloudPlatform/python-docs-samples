@@ -218,19 +218,25 @@ def main():
     # GCP project id
     project_id = 'ec-gcp'
     # Photo from which to extract text
-    infile = "resources/example.JPG"
+    infile = "resources/example.png"
     # Name of file that will hold synthetic speech
     outfile = "resources/example.mp3"
+    # Name that will be assigned to your project's glossary resource
+    glossary_name = 'bistro-glossary'
     # URI of glossary uploaded to Cloud Storage
     glossary_uri = 'gs://cloud-samples-data/translation/bistro_glossary.csv'
 
-    # delete_glossary(project_id, 'test-glossary')
-    # create_glossary(['fr', 'en'], project_id, 'test')
-    """
+    # delete_glossary(project_id, glossary_name)
+    create_glossary(['fr', 'en'], project_id, glossary_name, glossary_uri)
+
     text_to_translate = pic_to_text(infile)
-    text_to_speak = translate_text(text_to_translate)
+    text_to_speak = translate_text(text_to_translate, 'fr', 'en',
+                                   project_id, glossary_name)
     text_to_speech(text_to_speak, outfile)
-    """
+    print(text_to_translate)
+    print("____")
+    print(text_to_speak)
+
     # [END hybrid_integration]
 
 
