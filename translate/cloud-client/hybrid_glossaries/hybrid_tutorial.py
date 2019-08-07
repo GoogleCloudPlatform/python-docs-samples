@@ -175,9 +175,9 @@ def main():
 
     glossary_uri = 'gs://cloud-samples-data/translation/bistro_glossary.csv'
 
-    #delete_glossary('ec-gcp', 'test-glossary')
-    #create_glossary(['fr', 'en'], 'ec-gcp', 'test')
-    print translate_text('je mange du chevre', 'fr', 'en', 'ec-gcp', 'bistro-glossary')
+    # delete_glossary('ec-gcp', 'test-glossary')
+    # create_glossary(['fr', 'en'], 'ec-gcp', 'test')
+    print(translate_text('je mange du chevre', 'fr', 'en', 'ec-gcp', 'bistro-glossary'))
     """
     text_to_translate = pic_to_text(infile)
     text_to_speak = translate_text(text_to_translate)
