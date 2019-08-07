@@ -1,2 +1,0 @@
-FooBar is a Foo, but not a Bar.
-I love this Product Name.
