@@ -29,7 +29,7 @@ PROJECT_ID = 'ec-gcp'
 def test_vision_standard_format():
 
     # Generate text
-    text = pic_to_text('resources/standard_format.JPG')
+    text = pic_to_text('resources/standard_format.jpeg')
 
     # Read expected text
     with open('resources/standard_format.txt') as f:

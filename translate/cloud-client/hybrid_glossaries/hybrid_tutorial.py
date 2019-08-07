@@ -173,7 +173,7 @@ def delete_glossary(project_id, glossary_name):
     resource = client.glossary_path(
         project_id,
         location,
-        glossary_id)
+        glossary_name)
 
     operation = client.delete_glossary(resource)
     result = operation.result(timeout=90)
@@ -226,10 +226,11 @@ def main():
 
     # delete_glossary(project_id, 'test-glossary')
     # create_glossary(['fr', 'en'], project_id, 'test')
-
+    """
     text_to_translate = pic_to_text(infile)
     text_to_speak = translate_text(text_to_translate)
     text_to_speech(text_to_speak, outfile)
+    """
     # [END hybrid_integration]
 
 
