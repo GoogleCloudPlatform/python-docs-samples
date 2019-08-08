@@ -120,9 +120,9 @@ def test_list_glossary(capsys, glossary):
 
 def test_translate_text_with_glossary(capsys, glossary):
     beta_snippets.translate_text_with_glossary(
-            PROJECT_ID, glossary, 'account')
+            PROJECT_ID, glossary, 'directions')
     out, _ = capsys.readouterr()
-    assert 'cuenta' in out
+    assert 'direcciones' in out
 
 
 def test_delete_glossary(capsys, unique_glossary_id):
