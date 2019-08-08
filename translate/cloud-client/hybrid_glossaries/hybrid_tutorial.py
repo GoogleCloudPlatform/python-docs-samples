@@ -53,8 +53,8 @@ def pic_to_text(infile):
 
 # [START hybrid_create_glossary]
 def create_glossary(languages, project_id, glossary_name, glossary_uri):
-    # Creates a GCP glossary resources
-    # Assumes you've already uploaded a glossary to Cloud Storage
+    # Creates a GCP glossary resource
+    # Assumes you've already manually uploaded a glossary to Cloud Storage
     #
     # ARGS
     # languages: list of languages in the glossary
@@ -70,7 +70,7 @@ def create_glossary(languages, project_id, glossary_name, glossary_uri):
 
     # Defines the languages in the glossary
     # This list must match the languages in the glossary
-    #  Here, the glossary includes French and English
+    #   Here, the glossary includes French and English
     languages = ['fr', 'en']
     # Set information to access
     glossary_uri = 'gs://cloud-samples-data/translation/bistro_glossary.csv'
@@ -87,11 +87,9 @@ def create_glossary(languages, project_id, glossary_name, glossary_uri):
     language_codes_set = translate.types.Glossary.LanguageCodesSet(
         language_codes=languages)
 
-    # todo
     gcs_source = translate.types.GcsSource(
         input_uri=glossary_uri)
 
-    # todo
     input_config = translate.types.GlossaryInputConfig(
         gcs_source=gcs_source)
 
@@ -101,10 +99,10 @@ def create_glossary(languages, project_id, glossary_name, glossary_uri):
         language_codes_set=language_codes_set,
         input_config=input_config)
 
-    parent = client.location_path(project_id, location)
+    resource = client.location_path(project_id, location)
 
     # Create glossary resource
-    operation = client.create_glossary(parent=parent, glossary=glossary)
+    operation = client.create_glossary(parent=resource, glossary=glossary)
 
     return operation.result(timeout=90)
 
@@ -160,11 +158,12 @@ def delete_glossary(project_id, glossary_name):
     # ARGS
     # project_id: GCP project id
     # glossary_name: name you gave your project's glossary
-    #  resource when you created it
+    #   resource when you created it
     #
     # RETURNS
     # nothing
 
+    # Designates the data center location that you want to use
     location = 'us-central1'
 
     # Instantiates a client
@@ -184,6 +183,14 @@ def delete_glossary(project_id, glossary_name):
 
 # [START hybrid_tts]
 def text_to_speech(text, outfile):
+    # Generates synthetic audio from plaintext
+    #
+    # ARGS
+    # text: text to synthesize
+    # outfile: filename to use to store synthetic audio
+    #
+    # RETURNS
+    # nothing
 
     # Instantiates a client
     client = texttospeech.TextToSpeechClient()
@@ -216,27 +223,30 @@ def text_to_speech(text, outfile):
 def main():
 
     # GCP project id
-    project_id = 'ec-gcp'
+    # project_id = [TODO(developer): INSERT PROJECT ID HERE]
+
     # Photo from which to extract text
     infile = "resources/example.png"
     # Name of file that will hold synthetic speech
     outfile = "resources/example.mp3"
+
     # Name that will be assigned to your project's glossary resource
     glossary_name = 'bistro-glossary'
     # URI of glossary uploaded to Cloud Storage
     glossary_uri = 'gs://cloud-samples-data/translation/bistro_glossary.csv'
+    # List of languages in the glossary
+    glossary_langs = ['fr', 'en']
 
     # delete_glossary(project_id, glossary_name)
-    create_glossary(['fr', 'en'], project_id, glossary_name, glossary_uri)
+    create_glossary(glossary_langs, project_id, glossary_name, glossary_uri)
 
+    # photo -> detected text
     text_to_translate = pic_to_text(infile)
+    # detected text -> translated text
     text_to_speak = translate_text(text_to_translate, 'fr', 'en',
                                    project_id, glossary_name)
+    # translated text -> synthetic audio
     text_to_speech(text_to_speak, outfile)
-    print(text_to_translate)
-    print("____")
-    print(text_to_speak)
-
     # [END hybrid_integration]
 
 

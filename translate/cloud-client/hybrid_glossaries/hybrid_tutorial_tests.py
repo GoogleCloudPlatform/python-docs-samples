@@ -21,21 +21,20 @@ from hybrid_tutorial import text_to_speech
 import filecmp
 import os
 
-PROJECT_ID = 'ec-gcp'
+# PROJECT_ID = [TODO(developer): INSERT GCP PROJECT ID HERE]
 
 # VISION TESTS
 
 
 def test_vision_standard_format():
 
-    # Generate text
+    expected_text = 'This is\na test!\n'
+    alt_expected_text = 'This\nis\na test!\n'
+
+    # Generate text using Vision API
     text = pic_to_text('resources/standard_format.jpeg')
 
-    # Read expected text
-    with open('resources/standard_format.txt') as f:
-        expected_text = f.read()
-
-    assert text == expected_text
+    assert (text == expected_text) or (text == alt_expected_text)
 
 
 def test_vision_non_standard_format():
@@ -79,8 +78,8 @@ def test_translate_standard():
 
 def test_translate_glossary():
 
-    expected_text = "I eat goat cheese"
-    input_text = "Je mange du chevre"
+    expected_text = 'I eat goat cheese'
+    input_text = 'Je mange du chevre'
 
     text = translate_text(input_text, 'fr', 'en', PROJECT_ID,
                           'bistro-glossary')
