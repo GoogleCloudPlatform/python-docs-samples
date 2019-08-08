@@ -20,8 +20,13 @@ from google.cloud import vision
 from google.cloud import texttospeech
 
 import io
+import os
 # [END hybrid_imports]
 
+# [START hybrid_project_id]
+# extract GCP project id
+PROJECT_ID = os.environ['GCLOUD_PROJECT']
+# [END hybrid_project_id]
 
 # [START hybrid_vision]
 def pic_to_text(infile):
@@ -222,9 +227,6 @@ def text_to_speech(text, outfile):
 # [START hybrid_integration]
 def main():
 
-    # GCP project id
-    # project_id = [TODO(developer): INSERT PROJECT ID HERE]
-
     # Photo from which to extract text
     infile = "resources/example.png"
     # Name of file that will hold synthetic speech
@@ -237,14 +239,14 @@ def main():
     # List of languages in the glossary
     glossary_langs = ['fr', 'en']
 
-    # delete_glossary(project_id, glossary_name)
-    create_glossary(glossary_langs, project_id, glossary_name, glossary_uri)
+    # delete_glossary(PROJECT_ID, glossary_name)
+    create_glossary(glossary_langs, PROJECT_ID,  glossary_name, glossary_uri)
 
     # photo -> detected text
     text_to_translate = pic_to_text(infile)
     # detected text -> translated text
     text_to_speak = translate_text(text_to_translate, 'fr', 'en',
-                                   project_id, glossary_name)
+                                   PROJECT_ID, glossary_name)
     # translated text -> synthetic audio
     text_to_speech(text_to_speak, outfile)
     # [END hybrid_integration]
