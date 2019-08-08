@@ -28,6 +28,7 @@ import os
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 # [END hybrid_project_id]
 
+
 # [START hybrid_vision]
 def pic_to_text(infile):
     # Detects text in an image file
