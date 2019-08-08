@@ -21,7 +21,7 @@ from hybrid_tutorial import text_to_speech
 import filecmp
 import os
 
-# PROJECT_ID = [TODO(developer): INSERT GCP PROJECT ID HERE]
+PROJECT_ID = os.environ['GCLOUD_PROJECT']
 
 # VISION TESTS
 
