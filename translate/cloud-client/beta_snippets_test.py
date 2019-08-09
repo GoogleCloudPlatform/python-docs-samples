@@ -63,7 +63,7 @@ def unique_glossary_id():
 def test_translate_text(capsys):
     beta_snippets.translate_text(PROJECT_ID, 'Hello world')
     out, _ = capsys.readouterr()
-    assert 'Zdravo svet' in out
+    assert 'Pozdrav svijetu' in out
 
 
 def test_batch_translate_text(capsys, bucket):
@@ -122,7 +122,7 @@ def test_translate_text_with_glossary(capsys, glossary):
     beta_snippets.translate_text_with_glossary(
             PROJECT_ID, glossary, 'directions')
     out, _ = capsys.readouterr()
-    assert 'direcciones' in out
+    assert 'indicaciones' in out
 
 
 def test_delete_glossary(capsys, unique_glossary_id):
