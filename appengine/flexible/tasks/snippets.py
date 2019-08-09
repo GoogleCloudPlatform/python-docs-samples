@@ -183,7 +183,7 @@ def delete_task(project, location, queue):
     # project = 'my-project-id'
     # location = 'us- central1'
     # queue = 'queue1'
-    # [START taskqueues_setup]
+    # [END taskqueues_setup]
 
     # [START taskqueues_deleting_tasks]
     task_path = client.task_path(project, location, queue, 'foo')
