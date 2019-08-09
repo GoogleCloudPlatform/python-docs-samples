@@ -135,7 +135,7 @@ def list_languages_with_target(project_id, display_language_code):
     print('Supported Languages:')
     for language in response.languages:
         print('Language Code: {}'.format(language.language_code))
-        print('Display Name: {}\n'.format(language.display_name))
+        # print('Display Name: {}\n'.format(language.display_name))
     # [END translate_list_language_names_beta]
 
 
