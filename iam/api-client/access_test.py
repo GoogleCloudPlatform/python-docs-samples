@@ -18,16 +18,19 @@ import random
 import access
 import service_accounts
 
+
 def test_access(capsys):
-    
     # Setting up variables for testing
     project_id = os.environ['GCLOUD_PROJECT']
+
+    # specifying a sample role to be assigned
     gcp_role = 'roles/owner'
 
     # section to create service account to test policy updates.
     rand = str(random.randint(0, 1000))
     name = 'python-test-' + rand
-    email = 'serviceAccount:' + name + '@' + project_id + '.iam.gserviceaccount.com'
+    email = name + '@' + project_id + '.iam.gserviceaccount.com'
+    member = 'serviceAccount:' + email
     service_accounts.create_service_account(
         project_id, name, 'Py Test Account')
 
@@ -35,11 +38,11 @@ def test_access(capsys):
     out, _ = capsys.readouterr()
     assert 'etag' in out
 
-    policy = access.modify_policy_add_role(policy, gcp_role, email)
+    policy = access.modify_policy_add_role(policy, gcp_role, member)
     out, _ = capsys.readouterr()
     assert 'etag' in out
 
-    policy = access.modify_policy_remove_member(policy, gcp_role, email)
+    policy = access.modify_policy_remove_member(policy, gcp_role, member)
     out, _ = capsys.readouterr()
     assert 'etag' in out
 
@@ -50,4 +53,3 @@ def test_access(capsys):
     # deleting the service account created above
     service_accounts.delete_service_account(
         email)
-
