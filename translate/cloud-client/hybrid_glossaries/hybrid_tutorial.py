@@ -206,7 +206,7 @@ def main():
     glossary_name = 'bistro-glossary'
     # uri of .csv file uploaded to Cloud Storage
     glossary_uri = 'gs://cloud-samples-data/translation/bistro_glossary.csv'
-    
+
     create_glossary(glossary_langs, PROJECT_ID,  glossary_name, glossary_uri)
 
     # photo -> detected text

@@ -12,47 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.cloud import translate_v3beta1 as translate
-
 from hybrid_tutorial import pic_to_text
 from hybrid_tutorial import create_glossary
 from hybrid_tutorial import translate_text
 from hybrid_tutorial import text_to_speech
 
+import sys
+sys.path.insert(1, '../')
+from beta_snippets import delete_glossary
+
 import filecmp
 import os
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
-
-
-# [START translate_hybrid_glossary_delete]
-def delete_glossary(project_id, glossary_name):
-    # Deletes a GCP glossary resource
-    #
-    # ARGS
-    # project_id: GCP project id
-    # glossary_name: name you gave your project's glossary
-    #   resource when you created it
-    #
-    # RETURNS
-    # nothing
-
-    # Designates the data center location that you want to use
-    location = 'us-central1'
-
-    # Instantiates a client
-    client = translate.TranslationServiceClient()
-
-    resource = client.glossary_path(
-        project_id,
-        location,
-        glossary_name)
-
-    operation = client.delete_glossary(resource)
-    result = operation.result(timeout=90)
-
-    print('Deleted: {}'.format(result.name))
-    # [END translate_hybrid_glossary_delete]
 
 
 # VISION TESTS
