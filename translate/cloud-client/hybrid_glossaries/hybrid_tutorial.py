@@ -1,4 +1,4 @@
-# Copyright 2019 Google Inc. All Rights Reserved.
+# Copyright 2019 Google LLC. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-# [START hybrid_imports]
+# [START translate_hybrid_imports]
 # Imports the Google Cloud client libraries
 from google.cloud import translate_v3beta1 as translate
 from google.cloud import vision
@@ -21,15 +21,15 @@ from google.cloud import texttospeech
 
 import io
 import os
-# [END hybrid_imports]
+# [END translate_hybrid_imports]
 
-# [START hybrid_project_id]
+# [START translate_hybrid_project_id]
 # extract GCP project id
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
-# [END hybrid_project_id]
+# [END translate_hybrid_project_id]
 
 
-# [START hybrid_vision]
+# [START translate_hybrid_vision]
 def pic_to_text(infile):
     # Detects text in an image file
     #
@@ -54,10 +54,10 @@ def pic_to_text(infile):
     text = response.full_text_annotation.text
 
     return text
-    # [END hybrid_vision]
+    # [END translate_hybrid_vision]
 
 
-# [START hybrid_create_glossary]
+# [START translate_hybrid_create_glossary]
 def create_glossary(languages, project_id, glossary_name, glossary_uri):
     # Creates a GCP glossary resource
     # Assumes you've already manually uploaded a glossary to Cloud Storage
@@ -74,12 +74,6 @@ def create_glossary(languages, project_id, glossary_name, glossary_uri):
     # Instantiates a client
     client = translate.TranslationServiceClient()
 
-    # Defines the languages in the glossary
-    # This list must match the languages in the glossary
-    #   Here, the glossary includes French and English
-    languages = ['fr', 'en']
-    # Set information to access
-    glossary_uri = 'gs://cloud-samples-data/translation/bistro_glossary.csv'
     # Designates the data center location that you want to use
     location = 'us-central1'
 
@@ -111,9 +105,10 @@ def create_glossary(languages, project_id, glossary_name, glossary_uri):
     operation = client.create_glossary(parent=resource, glossary=glossary)
 
     return operation.result(timeout=90)
+    # [END translate_hybrid_create_glossary]
 
 
-# [START hybrid_translate]
+# [START translate_hybrid_translate]
 def translate_text(text, prev_lang, new_lang, project_id, glossary_name):
     # Translates text to a given language using a glossary
     #
@@ -154,40 +149,10 @@ def translate_text(text, prev_lang, new_lang, project_id, glossary_name):
 
     # Returns translated text
     return result.glossary_translations[0].translated_text
-    # [END hybrid_translate]
+    # [END translate_hybrid_translate]
 
 
-# [START hybrid_glossary_delete]
-def delete_glossary(project_id, glossary_name):
-    # Deletes a GCP glossary resource
-    #
-    # ARGS
-    # project_id: GCP project id
-    # glossary_name: name you gave your project's glossary
-    #   resource when you created it
-    #
-    # RETURNS
-    # nothing
-
-    # Designates the data center location that you want to use
-    location = 'us-central1'
-
-    # Instantiates a client
-    client = translate.TranslationServiceClient()
-
-    resource = client.glossary_path(
-        project_id,
-        location,
-        glossary_name)
-
-    operation = client.delete_glossary(resource)
-    result = operation.result(timeout=90)
-
-    print('Deleted: {}'.format(result.name))
-    # [END hybrid_glossary_delete]
-
-
-# [START hybrid_tts]
+# [START translate_hybrid_tts]
 def text_to_speech(text, outfile):
     # Generates synthetic audio from plaintext
     #
@@ -222,10 +187,10 @@ def text_to_speech(text, outfile):
     with open(outfile, 'wb') as out:
         out.write(response.audio_content)
         print('Audio content written to file ' + outfile)
-    # [END hybrid_tts]
+    # [END translate_hybrid_tts]
 
 
-# [START hybrid_integration]
+# [START translate_hybrid_integration]
 def main():
 
     # Photo from which to extract text
@@ -233,14 +198,15 @@ def main():
     # Name of file that will hold synthetic speech
     outfile = "resources/example.mp3"
 
+    # Defines the languages in the glossary
+    # This list must match the languages in the glossary
+    #   Here, the glossary includes French and English
+    glossary_langs = ['fr', 'en']
     # Name that will be assigned to your project's glossary resource
     glossary_name = 'bistro-glossary'
-    # URI of glossary uploaded to Cloud Storage
+    # uri of .csv file uploaded to Cloud Storage
     glossary_uri = 'gs://cloud-samples-data/translation/bistro_glossary.csv'
-    # List of languages in the glossary
-    glossary_langs = ['fr', 'en']
-
-    # delete_glossary(PROJECT_ID, glossary_name)
+    
     create_glossary(glossary_langs, PROJECT_ID,  glossary_name, glossary_uri)
 
     # photo -> detected text
@@ -250,7 +216,7 @@ def main():
                                    PROJECT_ID, glossary_name)
     # translated text -> synthetic audio
     text_to_speech(text_to_speak, outfile)
-    # [END hybrid_integration]
+    # [END transalte_hybrid_integration]
 
 
 if __name__ == '__main__':
