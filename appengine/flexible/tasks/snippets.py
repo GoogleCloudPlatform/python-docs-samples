@@ -176,26 +176,44 @@ def create_task_with_name(project, location, queue, task_name):
 
 
 def delete_task(project, location, queue):
-    # [START taskqueues_setup]
+    # [START taskqueues_deleting_tasks]
     client = tasks.CloudTasksClient()
 
     # TODO(developer): Uncomment these lines and replace with your values.
     # project = 'my-project-id'
     # location = 'us- central1'
     # queue = 'queue1'
-    # [END taskqueues_setup]
 
-    # [START taskqueues_deleting_tasks]
     task_path = client.task_path(project, location, queue, 'foo')
     response = client.delete_task(task_path)
     # [END taskqueues_deleting_tasks]
+    return response
 
+
+def purge_queue(project, location, queue):
     # [START taskqueues_purging_tasks]
+    client = tasks.CloudTasksClient()
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project = 'my-project-id'
+    # location = 'us- central1'
+    # queue = 'queue1'
+
     queue_path = client.queue_path(project, location, queue)
     response = client.purge_queue(queue_path)
     # [END taskqueues_purging_tasks]
+    return response
 
+
+def pause_queue(project, location, queue):
     # [START taskqueues_pause_queue]
+    client = tasks.CloudTasksClient()
+
+    # TODO(developer): Uncomment these lines and replace with your values.
+    # project = 'my-project-id'
+    # location = 'us- central1'
+    # queue = 'queue1'
+
     queue_path = client.queue_path(project, location, queue)
     response = client.pause_queue(queue_path)
     # [END taskqueues_pause_queues]
