@@ -60,17 +60,18 @@ def pic_to_text(infile):
 
 # [START translate_hybrid_create_glossary]
 def create_glossary(languages, project_id, glossary_name, glossary_uri):
-    # Creates a GCP glossary resource
-    # Assumes you've already manually uploaded a glossary to Cloud Storage
-    #
-    # ARGS
-    # languages: list of languages in the glossary
-    # project_id: GCP project id
-    # glossary_name: name you want to give this glossary resource
-    # glossary_uri: the uri of the glossary you uploaded to Cloud Storage
-    #
-    # RETURNS
-    # nothing if glossary creation is successful
+    """Creates a GCP glossary resource
+    Assumes you've already manually uploaded a glossary to Cloud Storage
+
+    ARGS
+    languages: list of languages in the glossary
+    project_id: GCP project id
+    glossary_name: name you want to give this glossary resource
+    glossary_uri: the uri of the glossary you uploaded to Cloud Storage
+
+    RETURNS
+    nothing if glossary creation is successful
+    """
 
     # Instantiates a client
     client = translate.TranslationServiceClient()
@@ -111,18 +112,19 @@ def create_glossary(languages, project_id, glossary_name, glossary_uri):
 
 # [START translate_hybrid_translate]
 def translate_text(text, prev_lang, new_lang, project_id, glossary_name):
-    # Translates text to a given language using a glossary
-    #
-    # ARGS
-    # text: String of text to translate
-    # prev_lang: language of input text
-    # new_lang: language of output text
-    # project_id: GCP project id
-    # glossary_name: name you gave your project's glossary
-    #  resource when you created it
-    #
-    # RETURNS
-    # String of translated text
+    """Translates text to a given language using a glossary
+
+    ARGS
+    text: String of text to translate
+    prev_lang: language of input text
+    new_lang: language of output text
+    project_id: GCP project id
+    glossary_name: name you gave your project's glossary
+        resource when you created it
+
+    RETURNS
+    String of translated text
+    """
 
     # Instantiates a client
     client = translate.TranslationServiceClient()
@@ -155,14 +157,15 @@ def translate_text(text, prev_lang, new_lang, project_id, glossary_name):
 
 # [START translate_hybrid_tts]
 def text_to_speech(text, outfile):
-    # Generates synthetic audio from plaintext
-    #
-    # ARGS
-    # text: text to synthesize
-    # outfile: filename to use to store synthetic audio
-    #
-    # RETURNS
-    # nothing
+    """Generates synthetic audio from plaintext
+
+    ARGS
+    text: text to synthesize
+    outfile: filename to use to store synthetic audio
+
+    RETURNS
+    nothing
+    """
 
     # Instantiates a client
     client = texttospeech.TextToSpeechClient()
