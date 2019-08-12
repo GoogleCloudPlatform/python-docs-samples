@@ -16,9 +16,7 @@
 # [START tts_ssml_address_imports]
 from google.cloud import texttospeech
 
-# For Python 3, instead use:
-# import html
-import cgi
+import html
 # [END tts_ssml_address_imports]
 
 
@@ -89,9 +87,7 @@ def text_to_ssml(inputfile):
     # SSML commands
     # For example, '<' --> '&lt;' and '&' --> '&amp;'
 
-    # For Python 3, instead use:
-    # escaped_lines = html.escape(raw_lines)
-    escaped_lines = cgi.escape(raw_lines)
+    escaped_lines = html.escape(raw_lines)
 
     # Convert plaintext to SSML
     # Wait two seconds between each address
@@ -105,12 +101,16 @@ def text_to_ssml(inputfile):
 
 # [START tts_ssml_address_test]
 def main():
+    """
     # test example address file
     plaintext = 'resources/example.txt'
     ssml_text = text_to_ssml(plaintext)
     ssml_to_audio(ssml_text, 'resources/example.mp3')
     # [END tts_ssml_address_test]
-
+    """
+    with open('resources/example.ssml', 'r') as f:
+        input_ssml = f.read()
+    ssml_to_audio(input_ssml, 'resources/expected_example.mp3')
 
 if __name__ == '__main__':
     main()
