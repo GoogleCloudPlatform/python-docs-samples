@@ -284,7 +284,8 @@ def synchronous_pull(project_id, subscription_name):
     # Acknowledges the received messages so they will not be sent again.
     subscriber.acknowledge(subscription_path, ack_ids)
 
-    print("Received and acknowledged {} messages. Done.".format(NUM_MESSAGES))
+    print('Received and acknowledged {} messages. Done.'.format(
+        len(response.received_messages)))
     # [END pubsub_subscriber_sync_pull]
 
 
@@ -357,7 +358,8 @@ def synchronous_pull_with_lease_management(project_id, subscription_name):
         if processes:
             time.sleep(SLEEP_TIME)
 
-    print("Received and acknowledged {} messages. Done.".format(NUM_MESSAGES))
+    print('Received and acknowledged {} messages. Done.'.format(
+        len(response.received_messages)))
     # [END pubsub_subscriber_sync_pull_with_lease]
 
 
