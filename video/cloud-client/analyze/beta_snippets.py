@@ -633,12 +633,85 @@ def annotation_to_storage_streaming(path, output_uri):
     # [END video_streaming_annotation_to_storage_beta]
 
 
-def video_classification_streaming_automl(path, output_uri):
+def video_classification_streaming_automl(path, output_uri, model_path):
+    # [START video_classification_streaming_automl_beta]
+    # TODO(developer): Uncomment and set the following variables
+    # path = 'path_to_file'
+    # output_uri = 'gs://path_to_output'
+    # model_path = 'automl_model_path'
+
+    from google.cloud import automl
+    from google.cloud import videointelligence_v1p3beta1 as videointelligence
+    from google.cloud.videointelligence_v1p3beta1 import enums
+
+    automl_model = automl.AutoMlClient().get_model(automl_model_path)
+
+    client = videointelligence.StreamingVideoIntelligenceServiceClient()
+
+    # Set streaming config specifying the output_uri.
+    # The output_uri is the prefix of the actual output files.
+    storage_config = videointelligence.types.StreamingStorageConfig(
+        enable_storage_annotation_result=True,
+        annotation_result_storage_directory=output_uri)
+    # Here we use classification as an example.
+    # All features support output to GCS.
+    config = videointelligence.types.StreamingAutomlClassificationConfig(
+        model_name = model_path)
+
+    # config_request should be the first in the stream of requests.
+    config_request = videointelligence.types.StreamingAnnotateVideoRequest(
+        video_config=config)
+
+    # Set the chunk size to 5MB (recommended less than 10MB).
+    chunk_size = 5 * 1024 * 1024
+
+    # Load file content.
+    stream = []
+    with io.open(path, 'rb') as video_file:
+        while True:
+            data = video_file.read(chunk_size)
+            if not data:
+                break
+            stream.append(data)
+
+    def stream_generator():
+        yield config_request
+        for chunk in stream:
+            yield videointelligence.types.StreamingAnnotateVideoRequest(
+                input_content=chunk)
+
+    requests = stream_generator()
+
+    # streaming_annotate_video returns a generator.
+    # The default timeout is about 300 seconds.
+    # To process longer videos it should be set to
+    # larger than the length (in seconds) of the stream.
+    responses = client.streaming_annotate_video(requests, timeout=600)
+
+    for response in responses:
+        # Check for errors.
+        if response.error.message:
+            print(response.error.message)
+            break
+
+        print('Storage URI: {}'.format(response.annotation_results_uri))
+
     pass
+    # [END video_classification_streaming_automl_beta]
 
 
-def object_tracking_streaming_automl(path, output_uri):
+def object_tracking_streaming_automl(path, output_uri, automl_model):
+    # [START object_tracking_streaming_automl_beta]
+    # TODO(developer): Uncomment and set the following variables
+    # path = 'path_to_file'
+    # output_uri = 'gs://path_to_output'
+    # project_id = 'PROJECT_ID_HERE'
+    # compute_region = 'COMPUTE_REGION_HERE'
+    # model_id = 'MODEL_ID_HERE'
+
+    from google.cloud import videointelligence_v1p3beta1 as videointelligence
     pass
+    # [END object_tracking_streaming_automl_beta]
 
 
 if __name__ == '__main__':
