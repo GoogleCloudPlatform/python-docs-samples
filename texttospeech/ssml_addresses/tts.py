@@ -101,16 +101,12 @@ def text_to_ssml(inputfile):
 
 # [START tts_ssml_address_test]
 def main():
-    """
     # test example address file
     plaintext = 'resources/example.txt'
     ssml_text = text_to_ssml(plaintext)
     ssml_to_audio(ssml_text, 'resources/example.mp3')
     # [END tts_ssml_address_test]
-    """
-    with open('resources/example.ssml', 'r') as f:
-        input_ssml = f.read()
-    ssml_to_audio(input_ssml, 'resources/expected_example.mp3')
+
 
 if __name__ == '__main__':
     main()
