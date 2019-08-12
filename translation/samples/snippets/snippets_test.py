@@ -46,4 +46,4 @@ def test_translate_utf8(capsys):
     text = u'나는 파인애플을 좋아한다.'
     snippets.translate_text('en', text)
     out, _ = capsys.readouterr()
-    assert u'I like pineapples.' in out
+    assert u'I like pineapple' in out
