@@ -31,13 +31,14 @@ PROJECT_ID = os.environ['GCLOUD_PROJECT']
 
 # [START translate_hybrid_vision]
 def pic_to_text(infile):
-    # Detects text in an image file
-    #
-    # ARGS
-    # infile: path to image file
-    #
-    # RETURNS
-    # String of text detected in image
+    """Detects text in an image file
+
+    ARGS
+    infile: path to image file
+
+    RETURNS
+    String of text detected in image
+    """
 
     # Instantiates a client
     client = vision.ImageAnnotatorClient()
