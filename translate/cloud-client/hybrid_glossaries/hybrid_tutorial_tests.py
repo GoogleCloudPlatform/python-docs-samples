@@ -17,12 +17,10 @@ from hybrid_tutorial import create_glossary
 from hybrid_tutorial import translate_text
 from hybrid_tutorial import text_to_speech
 
-import sys
-sys.path.insert(1, '../')
-from beta_snippets import delete_glossary
-
 import filecmp
 import os
+import sys
+
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 
@@ -57,6 +55,9 @@ def test_vision_non_standard_format():
 
 
 def test_create_and_delete_glossary():
+    sys.path.insert(1, '../')
+    from beta_snippets import delete_glossary
+
     languages = ['fr', 'en']
     glossary_name = 'test-glossary'
     glossary_uri = 'gs://cloud-samples-data/translation/bistro_glossary.csv'
