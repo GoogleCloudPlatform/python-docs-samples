@@ -198,6 +198,7 @@ def receive_messages(project_id, subscription_name):
 def receive_messages_with_custom_attributes(project_id, subscription_name):
     """Receives messages from a pull subscription."""
     # [START pubsub_subscriber_sync_pull_custom_attributes]
+    # [START pubsub_subscriber_async_pull_custom_attributes]
     import time
 
     from google.cloud import pubsub_v1
@@ -225,6 +226,7 @@ def receive_messages_with_custom_attributes(project_id, subscription_name):
     print('Listening for messages on {}'.format(subscription_path))
     while True:
         time.sleep(60)
+    # [END pubsub_subscriber_async_pull_custom_attributes]
     # [END pubsub_subscriber_sync_pull_custom_attributes]
 
 
