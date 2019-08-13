@@ -38,8 +38,9 @@ dcm_file = os.path.join(RESOURCES, dcm_file_name)
 # server and are part of the metadata of dcm_file
 study_uid = '1.3.6.1.4.1.11129.5.5.111396399361969898205364400549799252857604'
 series_uid = '1.3.6.1.4.1.11129.5.5.195628213694300498946760767481291263511724'
-instance_uid = '1.3.6.1.4.1.11129.5.5.' + \
-    '153751009835107614666834563294684339746480'
+instance_uid = '{}.{}'.format(
+    '1.3.6.1.4.1.11129.5.5',
+    '153751009835107614666834563294684339746480')
 
 
 @pytest.fixture(scope='module')
