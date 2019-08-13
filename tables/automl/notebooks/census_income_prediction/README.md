@@ -22,7 +22,7 @@ The dataset consists of over 30k rows, where each row corresponds to a different
 
 
 ## Solution Walkthrough
-The solution has been developed using [Google Colab Notebook](https://colab.research.google.com/notebooks/welcome.ipynb). 
+The solution has been developed using [Google Colab Notebook](https://colab.research.google.com/notebooks/welcome.ipynb) or in Jupyter (see [AI Platform Notebooks](https://cloud.google.com/ai-platform-notebooks/)). 
 
 
 
@@ -31,13 +31,14 @@ Steps Involved
 
 
 ### 1. Set up
-The first step in this process was to set up the project. We referred to the [AutoML tables documentation](https://cloud.google.com/automl-tables/docs/) and take the following steps:
+The first step in this process was to set up the project. We referred to the [AutoML tables documentation](https://cloud.google.com/automl-tables/docs/) and take the following steps if run in Colab:
 * Create a Google Cloud Platform (GCP) project
 * Enable billing
 * Enable the AutoML API
 * Enable the AutoML Tables API
 * Create a service account, grant required permissions, and download the service account private key.
 
+**If you are using AI Platform Notebooks**, your environment is already authenticated
 
 ### 2. Initialize and authenticate
 
