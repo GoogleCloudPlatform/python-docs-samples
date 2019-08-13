@@ -112,7 +112,7 @@ def create_glossary(languages, project_id, glossary_name, glossary_uri):
 
 # [START translate_hybrid_translate]
 def translate_text(text, source_language_code, target_language_code,
-	               project_id, glossary_name):
+                    project_id, glossary_name):
     """Translates text to a given language using a glossary
 
     ARGS
