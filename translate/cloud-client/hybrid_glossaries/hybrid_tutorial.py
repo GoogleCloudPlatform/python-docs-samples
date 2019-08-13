@@ -1,4 +1,4 @@
-# Copyright 2019 Google LLC. All Rights Reserved.
+# Copyright 2019 Google LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ def create_glossary(languages, project_id, glossary_name, glossary_uri):
     glossary_uri: the uri of the glossary you uploaded to Cloud Storage
 
     RETURNS
-    nothing if glossary creation is successful
+    nothing
     """
 
     # Instantiates a client
@@ -101,17 +101,18 @@ def create_glossary(languages, project_id, glossary_name, glossary_uri):
         language_codes_set=language_codes_set,
         input_config=input_config)
 
-    resource = client.location_path(project_id, location)
+    parent = client.location_path(project_id, location)
 
     # Create glossary resource
-    operation = client.create_glossary(parent=resource, glossary=glossary)
+    operation = client.create_glossary(parent=parent, glossary=glossary)
 
-    return operation.result(timeout=90)
+    operation.result(timeout=90)
     # [END translate_hybrid_create_glossary]
 
 
 # [START translate_hybrid_translate]
-def translate_text(text, prev_lang, new_lang, project_id, glossary_name):
+def translate_text(text, source_language_code, target_language_code,
+	               project_id, glossary_name):
     """Translates text to a given language using a glossary
 
     ARGS
@@ -140,17 +141,17 @@ def translate_text(text, prev_lang, new_lang, project_id, glossary_name):
     glossary_config = translate.types.TranslateTextGlossaryConfig(
         glossary=glossary)
 
-    resource = client.location_path(project_id, location)
+    parent = client.location_path(project_id, location)
 
     result = client.translate_text(
-        parent=resource,
+        parent=parent,
         contents=[text],
         mime_type='text/plain',  # mime types: text/plain, text/html
-        source_language_code=prev_lang,
-        target_language_code=new_lang,
+        source_language_code=source_language_code,
+        target_language_code=target_language_code,
         glossary_config=glossary_config)
 
-    # Returns translated text
+    # Extract translated text from API response
     return result.glossary_translations[0].translated_text
     # [END translate_hybrid_translate]
 
