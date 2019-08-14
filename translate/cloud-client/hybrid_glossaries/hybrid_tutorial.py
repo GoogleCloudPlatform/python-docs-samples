@@ -15,6 +15,7 @@
 
 # [START translate_hybrid_imports]
 # Imports the Google Cloud client libraries
+import google
 from google.cloud import translate_v3beta1 as translate
 from google.cloud import vision
 from google.cloud import texttospeech
@@ -104,9 +105,15 @@ def create_glossary(languages, project_id, glossary_name, glossary_uri):
     parent = client.location_path(project_id, location)
 
     # Create glossary resource
-    operation = client.create_glossary(parent=parent, glossary=glossary)
-
-    operation.result(timeout=90)
+    # Handle exception for case in which a glossary
+    #  with glossary_name already exists
+    try:
+        operation = client.create_glossary(parent=parent, glossary=glossary)
+        operation.result(timeout=90)
+        print('Created glossary ' + glossary_name + '.')
+    except google.api_core.exceptions.AlreadyExists:
+        print('The glossary ' + glossary_name + 
+        	  ' already exists. No new glossary was created.')
     # [END translate_hybrid_create_glossary]
 
 
@@ -199,9 +206,9 @@ def text_to_speech(text, outfile):
 def main():
 
     # Photo from which to extract text
-    infile = "resources/example.png"
+    infile = 'resources/example.png'
     # Name of file that will hold synthetic speech
-    outfile = "resources/example.mp3"
+    outfile = 'resources/example.mp3'
 
     # Defines the languages in the glossary
     # This list must match the languages in the glossary
