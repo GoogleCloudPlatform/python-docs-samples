@@ -112,8 +112,8 @@ def create_glossary(languages, project_id, glossary_name, glossary_uri):
         operation.result(timeout=90)
         print('Created glossary ' + glossary_name + '.')
     except google.api_core.exceptions.AlreadyExists:
-        print('The glossary ' + glossary_name + 
-        	  ' already exists. No new glossary was created.')
+        print('The glossary ' + glossary_name +
+              ' already exists. No new glossary was created.')
     # [END translate_hybrid_create_glossary]
 
 
