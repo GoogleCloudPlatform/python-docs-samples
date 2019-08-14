@@ -41,7 +41,8 @@ def quickstart():
     for role in roles:
         print('Title: ' + role['title'])
         print('Name: ' + role['name'])
-        print('Description: ' + role['description'])
+        if 'description' in role:
+            print('Description: ' + role['description'])
         print('')
     # [END iam_quickstart]
 
