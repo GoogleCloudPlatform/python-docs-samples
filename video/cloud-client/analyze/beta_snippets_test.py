@@ -163,10 +163,17 @@ def test_track_objects_gcs():
 
 
 @pytest.mark.slow
-def test_video_classification_streaming_automl():
-    assert True
+def test_streaming_automl_classification(capsys):
+    # video_path = ''
+    # output_uri = 'gs://{}'.format(bucket.name)
+    # model_path = ''
+    out, _ = capsys.readouterr()
+    assert 'Feature is not supported.' in out
 
 
 @pytest.mark.slow
-def test_object_tracking_streaming_automl():
+def test_streaming_automl_object_tracking(capsys):
+    # video_path = ''
+    # output_uri = 'gs://{}'.format(bucket.name)
+    # model_path = ''
     assert True
