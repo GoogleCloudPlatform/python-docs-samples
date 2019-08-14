@@ -22,6 +22,7 @@ from google.cloud import texttospeech
 
 import io
 import os
+import html
 # [END translate_hybrid_imports]
 
 # [START translate_hybrid_project_id]
@@ -165,7 +166,8 @@ def translate_text(text, source_language_code, target_language_code,
 
 # [START translate_hybrid_tts]
 def text_to_speech(text, outfile):
-    """Generates synthetic audio from plaintext
+    """Converts plaintext to SSML and
+    generates synthetic audio from SSML
 
     ARGS
     text: text to synthesize
@@ -175,11 +177,22 @@ def text_to_speech(text, outfile):
     nothing
     """
 
+    # Replace special characters with HTML Ampersand Character Codes
+    # These Codes prevent the API from confusing text with
+    # SSML commands
+    # For example, '<' --> '&lt;' and '&' --> '&amp;'
+    escaped_lines = html.escape(text)
+
+    # Convert plaintext to SSML in order to wait two seconds
+    #   between each line in synthetic speech
+    ssml = '<speak>{}</speak>'.format(
+        escaped_lines.replace('\n', '\n<break time="2s"/>'))
+
     # Instantiates a client
     client = texttospeech.TextToSpeechClient()
 
     # Sets the text input to be synthesized
-    synthesis_input = texttospeech.types.SynthesisInput(text=text)
+    synthesis_input = texttospeech.types.SynthesisInput(ssml=ssml)
 
     # Builds the voice request, selects the language code ("en-US") and
     # the SSML voice gender ("MALE")
