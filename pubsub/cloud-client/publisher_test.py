@@ -1,4 +1,4 @@
-# Copyright 2016 Google Inc. All Rights Reserved.
+# Copyright 2019 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -110,12 +110,15 @@ def test_publish_with_batch_settings(topic, capsys):
     assert 'Published' in out
 
 
-def test_publish_with_error_handler(topic, capsys):
+def test_publish_with_retry_settings(topic, capsys):
+    publisher.publish_messages_with_retry_settings(PROJECT, TOPIC)
 
-    with _make_sleep_patch():
-        with pytest.raises(RuntimeError, match='sigil'):
-            publisher.publish_messages_with_error_handler(
-                PROJECT, TOPIC)
+    out, _ = capsys.readouterr()
+    assert 'Published' in out
+
+
+def test_publish_with_error_handler(topic, capsys):
+    publisher.publish_messages_with_error_handler(PROJECT, TOPIC)
 
     out, _ = capsys.readouterr()
     assert 'Published' in out

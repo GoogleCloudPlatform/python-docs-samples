@@ -16,44 +16,31 @@
 
 # [START composer_kubernetespodoperator]
 import datetime
-
 from airflow import models
-# [END composer_kubernetespodoperator]
 from airflow.contrib.kubernetes import pod
 from airflow.contrib.kubernetes import secret
-# [START composer_kubernetespodoperator]
 from airflow.contrib.operators import kubernetes_pod_operator
 
-# [END composer_kubernetespodoperator]
 
 # A Secret is an object that contains a small amount of sensitive data such as
 # a password, a token, or a key. Such information might otherwise be put in a
 # Pod specification or in an image; putting it in a Secret object allows for
 # more control over how it is used, and reduces the risk of accidental
 # exposure.
-secret_file = secret.Secret(
-    # Mounts the secret as a file in RAM-backed tmpfs.
-    deploy_type='volume',
-    # File path of where to deploy the target, since deploy_type is 'volume'
-    # rather than 'env'.
-    deploy_target='/etc/sql_conn',
-    # Name of secret in Kubernetes, if the secret is not already defined in
-    # Kubernetes using kubectl the Pod will fail to find the secret, and in
-    # turn, fail to launch.
-    secret='airflow-secrets',
-    # Key of the secret within Kubernetes.
-    key='sql_alchemy_conn')
 
+# [START composer_kubernetespodoperator_secretobject]
 secret_env = secret.Secret(
     # Expose the secret as environment variable.
     deploy_type='env',
     # The name of the environment variable, since deploy_type is `env` rather
     # than `volume`.
     deploy_target='SQL_CONN',
+    # Name of the Kubernetes Secret
     secret='airflow-secrets',
+    # Key of a secret stored in this Secret object
     key='sql_alchemy_conn')
+# [END composer_kubernetespodoperator_secretobject]
 
-# [START composer_kubernetespodoperator]
 YESTERDAY = datetime.datetime.now() - datetime.timedelta(days=1)
 
 # If a Pod fails to launch, or has an error occur in the container, Airflow
@@ -69,6 +56,8 @@ with models.DAG(
     # no `config_file` parameter is specified. By default it will contain the
     # credentials for Cloud Composer's Google Kubernetes Engine cluster that is
     # created upon environment creation.
+
+    # [START composer_kubernetespodoperator_minconfig]
     kubernetes_min_pod = kubernetes_pod_operator.KubernetesPodOperator(
         # The ID specified for the task.
         task_id='pod-ex-minimum',
@@ -89,8 +78,8 @@ with models.DAG(
         # gcr.io images if the Composer Environment is under the same
         # project-id as the gcr.io images.
         image='gcr.io/gcp-runtimes/ubuntu_16_0_4')
-    # [END composer_kubernetespodoperator]
-
+    # [END composer_kubernetespodoperator_minconfig]
+    # [START composer_kubernetespodoperator_templateconfig]
     kubenetes_template_ex = kubernetes_pod_operator.KubernetesPodOperator(
         task_id='ex-kube-templates',
         name='ex-kube-templates',
@@ -113,23 +102,26 @@ with models.DAG(
         # setting the environment variable `MY_VALUE`. The pod will fail if
         # `my_value` is not set in the Airflow UI.
         env_vars={'MY_VALUE': '{{ var.value.my_value }}'},
-        # Sets the config file to the specified airflow.cfg airflow home. If
-        # the configuration file does not exist or does not provide valid
-        # credentials the pod will fail to launch.
-        config_file="{{ conf.get('core', 'airflow_home') }}/config")
-
+        # Sets the config file to a kubernetes config file specified in
+        # airflow.cfg. If the configuration file does not exist or does
+        # not provide validcredentials the pod will fail to launch. If not
+        # specified, config_file defaults to ~/.kube/config
+        config_file="{{ conf.get('core', 'kube_config') }}")
+    # [END composer_kubernetespodoperator_templateconfig]
+    # [START composer_kubernetespodoperator_secretconfig]
     kubernetes_secret_vars_ex = kubernetes_pod_operator.KubernetesPodOperator(
         task_id='ex-kube-secrets',
         name='ex-kube-secrets',
         namespace='default',
         image='ubuntu',
+        startup_timeout_seconds=300,
         # The secrets to pass to Pod, the Pod will fail to create if the
         # secrets you specify in a Secret object do not exist in Kubernetes.
-        secrets=[secret_env, secret_file],
+        secrets=[secret_env],
         # env_vars allows you to specify environment variables for your
         # container to use. env_vars is templated.
         env_vars={'EXAMPLE_VAR': '/example/value'})
-
+    # [END composer_kubernetespodoperator_secretconfig]
     # [START composer_kubernetespodaffinity]
     kubernetes_affinity_ex = kubernetes_pod_operator.KubernetesPodOperator(
         task_id='ex-pod-affinity',
@@ -163,8 +155,8 @@ with models.DAG(
                             # The label key's value that pods can be scheduled
                             # on.
                             'values': [
-                                'node-pool-name-1',
-                                'node-pool-name-2',
+                                'pool-0',
+                                'pool-1',
                             ]
                         }]
                     }]
@@ -172,7 +164,7 @@ with models.DAG(
             }
         })
     # [END composer_kubernetespodaffinity]
-
+    # [START composer_kubernetespodoperator_fullconfig]
     kubernetes_full_pod = kubernetes_pod_operator.KubernetesPodOperator(
         task_id='ex-all-configs',
         name='pi',
@@ -221,3 +213,5 @@ with models.DAG(
         # config. For more information see:
         # https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
         affinity={})
+    # [END composer_kubernetespodoperator_fullconfig]
+    # [END composer_kubernetespodoperator]

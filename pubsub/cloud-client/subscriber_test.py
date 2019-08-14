@@ -1,4 +1,4 @@
-# Copyright 2016 Google Inc. All Rights Reserved.
+# Copyright 2019 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -169,13 +169,15 @@ def test_update(subscriber_client, subscription, capsys):
 def _publish_messages(publisher_client, topic):
     for n in range(5):
         data = u'Message {}'.format(n).encode('utf-8')
-        publisher_client.publish(
+        future = publisher_client.publish(
             topic, data=data)
+        future.result()
 
 
 def _publish_messages_with_custom_attributes(publisher_client, topic):
     data = u'Test message'.encode('utf-8')
-    publisher_client.publish(topic, data=data, origin='python-sample')
+    future = publisher_client.publish(topic, data=data, origin='python-sample')
+    future.result()
 
 
 def _make_sleep_patch():

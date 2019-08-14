@@ -134,7 +134,7 @@ def run_sample():
 
     # Update a company
     company_to_be_updated = company_created
-    company_to_be_updated.update({'website_uri': 'https://elgoog.im/'})
+    company_to_be_updated.update({'websiteUri': 'https://elgoog.im/'})
     update_company(client_service, company_name, company_to_be_updated)
 
     # Update a company with field mask

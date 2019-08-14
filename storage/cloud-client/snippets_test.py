@@ -48,15 +48,11 @@ def test_add_bucket_label(capsys):
     assert 'example' in out
 
 
-@pytest.mark.xfail(
-    reason=(
-        'https://github.com/GoogleCloudPlatform'
-        '/google-cloud-python/issues/3711'))
 def test_remove_bucket_label(capsys):
     snippets.add_bucket_label(BUCKET)
     snippets.remove_bucket_label(BUCKET)
     out, _ = capsys.readouterr()
-    assert '{}' in out
+    assert 'Removed labels' in out
 
 
 @pytest.fixture
@@ -66,6 +62,12 @@ def test_blob():
     blob = bucket.blob('storage_snippets_test_sigil')
     blob.upload_from_string('Hello, is it me you\'re looking for?')
     return blob
+
+
+def test_list_buckets(capsys):
+    snippets.list_buckets()
+    out, _ = capsys.readouterr()
+    assert BUCKET in out
 
 
 def test_list_blobs(test_blob, capsys):
@@ -143,6 +145,30 @@ def test_generate_signed_url(test_blob, capsys):
 
     r = requests.get(url)
     assert r.text == 'Hello, is it me you\'re looking for?'
+
+
+def test_generate_download_signed_url_v4(test_blob, capsys):
+    url = snippets.generate_download_signed_url_v4(
+        BUCKET,
+        test_blob.name)
+
+    r = requests.get(url)
+    assert r.text == 'Hello, is it me you\'re looking for?'
+
+
+def test_generate_upload_signed_url_v4(capsys):
+    blob_name = 'storage_snippets_test_upload'
+    content = b'Uploaded via v4 signed url'
+    url = snippets.generate_upload_signed_url_v4(
+        BUCKET,
+        blob_name)
+
+    requests.put(url, data=content, headers={
+        'content-type': 'application/octet-stream'})
+
+    bucket = storage.Client().bucket(BUCKET)
+    blob = bucket.blob(blob_name)
+    assert blob.download_as_string() == content
 
 
 def test_rename_blob(test_blob):

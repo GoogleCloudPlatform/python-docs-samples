@@ -190,7 +190,7 @@ def patch_dicom_store(
 # [END healthcare_patch_dicom_store]
 
 
-# [START healthcare_export_dicom_instance]
+# [START healthcare_export_dicom_instance_gcs]
 def export_dicom_instance(
         service_account_json,
         project_id,
@@ -222,7 +222,7 @@ def export_dicom_instance(
     except HttpError as e:
         print('Error, DICOM instances not exported: {}'.format(e))
         return ""
-# [END healthcare_export_dicom_instance]
+# [END healthcare_export_dicom_instance_gcs]
 
 
 # [START healthcare_import_dicom_instance]

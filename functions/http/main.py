@@ -108,8 +108,9 @@ def get_signed_url(request):
     request_json = request.get_json()
 
     # Get a reference to the destination file in GCS
+    bucket_name = request_json['bucket']
     file_name = request_json['filename']
-    file = storage_client.bucket('my-bucket').blob(file_name)
+    file = storage_client.bucket(bucket_name).blob(file_name)
 
     # Create a temporary upload URL
     expires_at_ms = datetime.now() + timedelta(seconds=30)

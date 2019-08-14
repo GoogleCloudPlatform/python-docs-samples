@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2016 Google Inc. All Rights Reserved.
+# Copyright 2019 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -198,6 +198,7 @@ def receive_messages(project_id, subscription_name):
 def receive_messages_with_custom_attributes(project_id, subscription_name):
     """Receives messages from a pull subscription."""
     # [START pubsub_subscriber_sync_pull_custom_attributes]
+    # [START pubsub_subscriber_async_pull_custom_attributes]
     import time
 
     from google.cloud import pubsub_v1
@@ -225,6 +226,7 @@ def receive_messages_with_custom_attributes(project_id, subscription_name):
     print('Listening for messages on {}'.format(subscription_path))
     while True:
         time.sleep(60)
+    # [END pubsub_subscriber_async_pull_custom_attributes]
     # [END pubsub_subscriber_sync_pull_custom_attributes]
 
 
@@ -284,7 +286,8 @@ def synchronous_pull(project_id, subscription_name):
     # Acknowledges the received messages so they will not be sent again.
     subscriber.acknowledge(subscription_path, ack_ids)
 
-    print("Received and acknowledged {} messages. Done.".format(NUM_MESSAGES))
+    print('Received and acknowledged {} messages. Done.'.format(
+        len(response.received_messages)))
     # [END pubsub_subscriber_sync_pull]
 
 
@@ -357,7 +360,8 @@ def synchronous_pull_with_lease_management(project_id, subscription_name):
         if processes:
             time.sleep(SLEEP_TIME)
 
-    print("Received and acknowledged {} messages. Done.".format(NUM_MESSAGES))
+    print('Received and acknowledged {} messages. Done.'.format(
+        len(response.received_messages)))
     # [END pubsub_subscriber_sync_pull_with_lease]
 
 
@@ -366,7 +370,7 @@ def listen_for_errors(project_id, subscription_name):
     # [START pubsub_subscriber_error_listener]
     from google.cloud import pubsub_v1
 
-    # TODO project           = "Your Google Cloud Project ID"
+    # TODO project_id        = "Your Google Cloud Project ID"
     # TODO subscription_name = "Your Pubsub subscription name"
 
     subscriber = pubsub_v1.SubscriberClient()
