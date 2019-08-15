@@ -19,7 +19,7 @@ import os
 import html
 
 # Imports the Google Cloud client libraries
-import google.api_core.exceptions
+from google.api_core.exceptions import AlreadyExists
 from google.cloud import translate_v3beta1 as translate
 from google.cloud import vision
 from google.cloud import texttospeech
@@ -113,7 +113,7 @@ def create_glossary(languages, project_id, glossary_name, glossary_uri):
         operation = client.create_glossary(parent=parent, glossary=glossary)
         operation.result(timeout=90)
         print('Created glossary ' + glossary_name + '.')
-    except google.api_core.exceptions.AlreadyExists:
+    except AlreadyExists:
         print('The glossary ' + glossary_name +
               ' already exists. No new glossary was created.')
     # [END translate_hybrid_create_glossary]
