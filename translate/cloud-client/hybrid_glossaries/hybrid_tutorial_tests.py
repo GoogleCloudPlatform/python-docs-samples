@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import filecmp
+import os
+import sys
+
 from hybrid_tutorial import pic_to_text
 from hybrid_tutorial import create_glossary
 from hybrid_tutorial import translate_text
 from hybrid_tutorial import text_to_speech
-
-import filecmp
-import os
-import sys
 
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']

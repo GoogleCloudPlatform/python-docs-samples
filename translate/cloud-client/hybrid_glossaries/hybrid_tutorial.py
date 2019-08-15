@@ -15,14 +15,16 @@
 
 # [START translate_hybrid_imports]
 # Imports the Google Cloud client libraries
-import google
+import io
+import os
+import html
+
+import google.api_core.exceptions
 from google.cloud import translate_v3beta1 as translate
 from google.cloud import vision
 from google.cloud import texttospeech
 
-import io
-import os
-import html
+
 # [END translate_hybrid_imports]
 
 # [START translate_hybrid_project_id]
