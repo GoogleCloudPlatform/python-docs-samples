@@ -14,18 +14,17 @@
 
 
 # [START translate_hybrid_imports]
-# Imports the Google Cloud client libraries
 import io
 import os
 import html
 
+# Imports the Google Cloud client libraries
 import google.api_core.exceptions
 from google.cloud import translate_v3beta1 as translate
 from google.cloud import vision
 from google.cloud import texttospeech
-
-
 # [END translate_hybrid_imports]
+
 
 # [START translate_hybrid_project_id]
 # extract GCP project id
