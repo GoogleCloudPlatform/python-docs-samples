@@ -159,7 +159,7 @@ def test_dicomweb_retrieve_study(test_dataset, test_dicom_store, capsys):
         study_uid)
 
     # Assert study was downloaded
-    assert os.path.isfile('study.dcm')
+    assert os.path.isfile('study.multipart')
 
     out, _ = capsys.readouterr()
 
@@ -167,7 +167,7 @@ def test_dicomweb_retrieve_study(test_dataset, test_dicom_store, capsys):
     assert 'Retrieved study' in out
 
     # Delete downloaded study
-    os.remove('study.dcm')
+    os.remove('study.multipart')
 
     dicomweb.dicomweb_delete_study(
         service_account_json,
