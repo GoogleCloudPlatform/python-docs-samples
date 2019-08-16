@@ -152,8 +152,7 @@ def purge_products_in_product_set(
             break
         time.sleep(1)
 
-    if force:
-        print('Products removed from product set.')
+    print('Products removed from product set.')
 # [END vision_product_search_purge_products_in_product_set]
 
 
