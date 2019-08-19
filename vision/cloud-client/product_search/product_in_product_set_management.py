@@ -142,7 +142,7 @@ def purge_products_in_product_set(
         parent=parent,
         product_set_purge_config=product_set_purge_config,
         # The operation is irreversible and removes multiple products.  The user is required to pass in force=True to actually perform the purge.
-        # If force is not set to True, the service raises an error.
+        # If force is not set to True, the service raises an exception.
         force=force)
     
     # TODO: replace with operation.result(timeout=60)
