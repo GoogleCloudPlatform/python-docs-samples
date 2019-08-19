@@ -1,0 +1,30 @@
+MENU
+Google Cloud Bistro
+SALADS
+SANDWICHES
+GCP Green Salad
+Fresh Greens
+$5
+Kubernetes Sandwich
+ham and cheese sandwich
+$10
+Cloud Caprese
+Mozzarella, tomatoes, basil,
+balsamic reduction
+$8
+Dialogflow Panini
+chicken, pesto, and
+mozzarella panini
+$10
+Firebase Fruit Salad
+watermelon, honeydew melon,
+and pineapple
+Compute Engine Burger
+quarter-pound burger with
+cheddar cheese
+$10
+$6
+BigQuery BLT
+bacon, lettuce, and tomato
+sandwich
+$10
