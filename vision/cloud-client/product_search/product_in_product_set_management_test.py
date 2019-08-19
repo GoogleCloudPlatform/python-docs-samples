@@ -18,7 +18,7 @@ import pytest
 
 from product_in_product_set_management import (
     add_product_to_product_set, list_products_in_product_set,
-    remove_product_from_product_set, purge_products_in_product_set)
+    purge_products_in_product_set, remove_product_from_product_set)
 from product_management import create_product, delete_product, list_products
 from product_set_management import (
     create_product_set, delete_product_set)
@@ -84,7 +84,8 @@ def test_purge_products_in_product_set(capsys, product_and_product_set):
     out, _ = capsys.readouterr()
     assert 'Product id: {}'.format(PRODUCT_ID) in out
 
-    purge_products_in_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID, force=True)
+    purge_products_in_product_set(
+        PROJECT_ID, LOCATION, PRODUCT_SET_ID, force=True)
 
     list_products(PROJECT_ID, LOCATION)
     out, _ = capsys.readouterr()

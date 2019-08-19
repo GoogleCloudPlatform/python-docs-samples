@@ -199,10 +199,12 @@ def purge_orphan_products(project_id, location, force):
     operation = client.purge_products(
         parent=parent,
         delete_orphan_products=True,
-        # The operation is irreversible and removes multiple products.  The user is required to pass in force=True to actually perform the purge.
+        # The operation is irreversible and removes multiple products.
+        # The user is required to pass in force=True to actually perform the
+        # purge.
         # If force is not set to True, the service raises an exception.
         force=force)
-    
+
     # TODO: replace with operation.result(timeout=60)
     import time
     for _ in range(60):

@@ -141,10 +141,12 @@ def purge_products_in_product_set(
     operation = client.purge_products(
         parent=parent,
         product_set_purge_config=product_set_purge_config,
-        # The operation is irreversible and removes multiple products.  The user is required to pass in force=True to actually perform the purge.
+        # The operation is irreversible and removes multiple products.
+        # The user is required to pass in force=True to actually perform the
+        # purge.
         # If force is not set to True, the service raises an exception.
         force=force)
-    
+
     # TODO: replace with operation.result(timeout=60)
     import time
     for _ in range(60):
@@ -190,7 +192,8 @@ if __name__ == '__main__':
         'purge_products_in_product_set',
         help=purge_products_in_product_set.__doc__)
     purge_products_in_product_set_parser.add_argument('product_set_id')
-    purge_products_in_product_set_parser.add_argument('--force', action='store_true')
+    purge_products_in_product_set_parser.add_argument(
+        '--force', action='store_true')
 
     args = parser.parse_args()
 
@@ -206,4 +209,5 @@ if __name__ == '__main__':
             args.project_id, args.location, args.product_id,
             args.product_set_id)
     elif args.command == 'purge_products_in_product_set':
-        purge_products_in_product_set(args.project_id, args.location, args.product_set_id, args.force)
+        purge_products_in_product_set(
+            args.project_id, args.location, args.product_set_id, args.force)

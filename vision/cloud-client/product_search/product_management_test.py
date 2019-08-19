@@ -18,9 +18,7 @@ import pytest
 
 from product_management import (
     create_product, delete_product, get_product, list_products,
-    update_product_labels, purge_orphan_products)
-
-from product_in_product_set_management_test import product_and_product_set
+    purge_orphan_products, update_product_labels)
 
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
