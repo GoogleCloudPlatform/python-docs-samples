@@ -54,7 +54,7 @@ def _get_plural_forms(js_translations):
         for l in js_translations._catalog[''].split('\n'):
             if l.startswith('Plural-Forms:'):
                 plural = l.split(':', 1)[1].strip()
-                print("plural is %s" % plural)
+                print('plural is {}}'.format(plural))
     if plural is not None:
         for raw_element in plural.split(';'):
             element = raw_element.strip()
@@ -62,7 +62,7 @@ def _get_plural_forms(js_translations):
                 n_plural = int(element.split('=', 1)[1])
             elif element.startswith('plural='):
                 plural = element.split('=', 1)[1]
-                print("plural is now %s" % plural)
+                print('plural is now {}'.format(plural))
     else:
         n_plural = 2
         plural = '(n == 1) ? 0 : 1'
