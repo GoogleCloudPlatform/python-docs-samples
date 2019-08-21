@@ -1,7 +1,7 @@
-PyJWT==1.6.0
-cryptography==2.1.4
-flask==0.12.2
-google-auth==1.4.1
-gunicorn==19.7.1
-requests==2.18.4
-requests_toolbelt==0.8.0
+PyJWT==1.7.1
+cryptography==2.5
+flask==1.0.2
+google-auth==1.6.2
+gunicorn==19.9.0
+requests==2.21.0
+requests_toolbelt==0.9.1

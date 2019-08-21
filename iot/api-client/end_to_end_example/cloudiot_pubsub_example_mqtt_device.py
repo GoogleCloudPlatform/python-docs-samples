@@ -122,7 +122,7 @@ class Device(object):
 
     def on_message(self, unused_client, unused_userdata, message):
         """Callback when the device receives a message on a subscription."""
-        payload = message.payload
+        payload = message.payload.decode('utf-8')
         print('Received message \'{}\' on topic \'{}\' with Qos {}'.format(
             payload, message.topic, str(message.qos)))
 
@@ -183,7 +183,7 @@ def parse_command_line_args():
         default='mqtt.googleapis.com',
         help='MQTT bridge hostname.')
     parser.add_argument(
-        '--mqtt_bridge_port', default=8883, help='MQTT bridge port.')
+        '--mqtt_bridge_port', type=int, default=8883, help='MQTT bridge port.')
     parser.add_argument(
         '--message_type', choices=('event', 'state'),
         default='event',

@@ -20,7 +20,6 @@ import numpy as np
 app = Flask(__name__)
 
 
-# [START numpy]
 @app.route('/')
 def calculate():
     return_str = ''
@@ -32,7 +31,6 @@ def calculate():
     # Multiply matrices
     return_str += 'x dot y : {}'.format(str(np.dot(x, y)))
     return return_str
-# [END numpy]
 
 
 @app.errorhandler(500)

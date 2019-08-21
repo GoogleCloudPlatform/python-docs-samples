@@ -90,16 +90,35 @@ def replace_notification_channels(project_name, alert_policy_id, channel_ids):
 # [END monitoring_alert_replace_channels]
 
 
+# [START monitoring_alert_delete_channel]
+def delete_notification_channels(project_name, channel_ids, force=None):
+    channel_client = monitoring_v3.NotificationChannelServiceClient()
+    for channel_id in channel_ids:
+        channel_name = '{}/notificationChannels/{}'.format(
+            project_name, channel_id)
+        try:
+            channel_client.delete_notification_channel(
+                channel_name, force=force)
+            print('Channel {} deleted'.format(channel_name))
+        except ValueError:
+            print('The parameters are invalid')
+        except Exception as e:
+            print('API call failed: {}'.format(e))
+# [END monitoring_alert_delete_channel]
+
+
 # [START monitoring_alert_backup_policies]
-def backup(project_name):
+def backup(project_name, backup_filename):
     alert_client = monitoring_v3.AlertPolicyServiceClient()
     channel_client = monitoring_v3.NotificationChannelServiceClient()
     record = {'project_name': project_name,
               'policies': list(alert_client.list_alert_policies(project_name)),
               'channels': list(channel_client.list_notification_channels(
                   project_name))}
-    json.dump(record, open('backup.json', 'wt'), cls=ProtoEncoder, indent=2)
-    print('Backed up alert policies and notification channels to backup.json.')
+    json.dump(record, open(backup_filename, 'wt'), cls=ProtoEncoder, indent=2)
+    print('Backed up alert policies and notification channels to {}.'.format(
+        backup_filename)
+    )
 
 
 class ProtoEncoder(json.JSONEncoder):
@@ -118,9 +137,12 @@ class ProtoEncoder(json.JSONEncoder):
 # [START monitoring_alert_create_policy]
 # [START monitoring_alert_create_channel]
 # [START monitoring_alert_update_channel]
-def restore(project_name):
-    print('Loading alert policies and notification channels from backup.json.')
-    record = json.load(open('backup.json', 'rt'))
+# [START monitoring_alert_enable_channel]
+def restore(project_name, backup_filename):
+    print('Loading alert policies and notification channels from {}.'.format(
+        backup_filename)
+    )
+    record = json.load(open(backup_filename, 'rt'))
     is_same_project = project_name == record['project_name']
     # Convert dicts to AlertPolicies.
     policies_json = [json.dumps(policy) for policy in record['policies']]
@@ -197,6 +219,7 @@ def restore(project_name):
                 condition.ClearField("name")
             policy = alert_client.create_alert_policy(project_name, policy)
         print('Updated', policy.name)
+# [END monitoring_alert_enable_channel]
 # [END monitoring_alert_restore_policies]
 # [END monitoring_alert_create_policy]
 # [END monitoring_alert_create_channel]
@@ -280,10 +303,18 @@ if __name__ == '__main__':
         'backup',
         help=backup.__doc__
     )
+    backup_parser.add_argument(
+        '--backup_to_filename',
+        required=True
+    )
 
     restore_parser = subparsers.add_parser(
         'restore',
         help=restore.__doc__
+    )
+    restore_parser.add_argument(
+        '--restore_from_filename',
+        required=True
     )
 
     args = parser.parse_args()
@@ -306,7 +337,7 @@ if __name__ == '__main__':
                                       args.notification_channel_id)
 
     elif args.command == 'backup':
-        backup(project_name())
+        backup(project_name(), args.backup_to_filename)
 
     elif args.command == 'restore':
-        restore(project_name())
+        restore(project_name(), args.restore_from_filename)

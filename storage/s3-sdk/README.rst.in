@@ -1,0 +1,26 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Storage
+  short_name: Cloud Storage
+  url: https://cloud.google.com/storage/docs
+  description: >
+    `Google Cloud Storage`_ provides support for S3 API users through the
+    GCS XML API.
+
+    Learn more about migrating data from S3 to GCS at https://cloud.google.com/storage/docs/migrating.
+
+setup:
+- install_deps
+
+samples:
+- name: List GCS Buckets using S3 SDK
+  file: list_gcs_buckets.py
+  show_help: true
+- name: List GCS Objects using S3 SDK
+  file: list_gcs_objects.py
+  show_help: true
+
+cloud_client_library: false
+
+folder: storage/s3-sdk

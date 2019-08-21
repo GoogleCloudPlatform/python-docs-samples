@@ -32,7 +32,7 @@ SIZE_CHANGE_STEP = 3
 
 
 def test_get_cpu_load():
-    assert get_cpu_load() > 0.0
+    assert float(get_cpu_load()) > 0.0
 
 
 def test_scale_bigtable():
@@ -46,17 +46,27 @@ def test_scale_bigtable():
 
     scale_bigtable(BIGTABLE_INSTANCE, BIGTABLE_INSTANCE, True)
 
-    time.sleep(3)
-    cluster.reload()
-
-    new_node_count = cluster.serve_nodes
-    assert (new_node_count == (original_node_count + SIZE_CHANGE_STEP))
+    for n in range(10):
+        time.sleep(10)
+        cluster.reload()
+        new_node_count = cluster.serve_nodes
+        try:
+            assert (new_node_count == (original_node_count + SIZE_CHANGE_STEP))
+        except AssertionError:
+            if n == 9:
+                raise
 
     scale_bigtable(BIGTABLE_INSTANCE, BIGTABLE_INSTANCE, False)
-    time.sleep(3)
-    cluster.reload()
-    final_node_count = cluster.serve_nodes
-    assert final_node_count == original_node_count
+
+    for n in range(10):
+        time.sleep(10)
+        cluster.reload()
+        final_node_count = cluster.serve_nodes
+        try:
+            assert final_node_count == original_node_count
+        except AssertionError:
+            if n == 9:
+                raise
 
 
 # Unit test for logic

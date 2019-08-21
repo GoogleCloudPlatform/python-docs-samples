@@ -14,6 +14,7 @@
 
 import os
 import tempfile
+import time
 
 from google.cloud import storage
 import google.cloud.exceptions
@@ -23,6 +24,18 @@ import requests
 import snippets
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+KMS_KEY = os.environ['CLOUD_KMS_KEY']
+
+
+def test_enable_default_kms_key():
+    snippets.enable_default_kms_key(
+        bucket_name=BUCKET,
+        kms_key_name=KMS_KEY)
+    time.sleep(2)  # Let change propagate as needed
+    bucket = storage.Client().get_bucket(BUCKET)
+    assert bucket.default_kms_key_name.startswith(KMS_KEY)
+    bucket.default_kms_key_name = None
+    bucket.patch()
 
 
 def test_get_bucket_labels():
@@ -35,15 +48,11 @@ def test_add_bucket_label(capsys):
     assert 'example' in out
 
 
-@pytest.mark.xfail(
-    reason=(
-        'https://github.com/GoogleCloudPlatform'
-        '/google-cloud-python/issues/3711'))
 def test_remove_bucket_label(capsys):
     snippets.add_bucket_label(BUCKET)
     snippets.remove_bucket_label(BUCKET)
     out, _ = capsys.readouterr()
-    assert '{}' in out
+    assert 'Removed labels' in out
 
 
 @pytest.fixture
@@ -53,6 +62,12 @@ def test_blob():
     blob = bucket.blob('storage_snippets_test_sigil')
     blob.upload_from_string('Hello, is it me you\'re looking for?')
     return blob
+
+
+def test_list_buckets(capsys):
+    snippets.list_buckets()
+    out, _ = capsys.readouterr()
+    assert BUCKET in out
 
 
 def test_list_blobs(test_blob, capsys):
@@ -77,6 +92,19 @@ def test_upload_blob():
             BUCKET,
             source_file.name,
             'test_upload_blob')
+
+
+def test_upload_blob_with_kms():
+    with tempfile.NamedTemporaryFile() as source_file:
+        source_file.write(b'test')
+        snippets.upload_blob_with_kms(
+            BUCKET,
+            source_file.name,
+            'test_upload_blob_encrypted',
+            KMS_KEY)
+        bucket = storage.Client().bucket(BUCKET)
+        kms_blob = bucket.get_blob('test_upload_blob_encrypted')
+        assert kms_blob.kms_key_name.startswith(KMS_KEY)
 
 
 def test_download_blob(test_blob):
@@ -111,15 +139,36 @@ def test_make_blob_public(test_blob):
 
 
 def test_generate_signed_url(test_blob, capsys):
-    snippets.generate_signed_url(
+    url = snippets.generate_signed_url(
         BUCKET,
         test_blob.name)
 
-    out, _ = capsys.readouterr()
-    url = out.rsplit().pop()
+    r = requests.get(url)
+    assert r.text == 'Hello, is it me you\'re looking for?'
+
+
+def test_generate_download_signed_url_v4(test_blob, capsys):
+    url = snippets.generate_download_signed_url_v4(
+        BUCKET,
+        test_blob.name)
 
     r = requests.get(url)
     assert r.text == 'Hello, is it me you\'re looking for?'
+
+
+def test_generate_upload_signed_url_v4(capsys):
+    blob_name = 'storage_snippets_test_upload'
+    content = b'Uploaded via v4 signed url'
+    url = snippets.generate_upload_signed_url_v4(
+        BUCKET,
+        blob_name)
+
+    requests.put(url, data=content, headers={
+        'content-type': 'application/octet-stream'})
+
+    bucket = storage.Client().bucket(BUCKET)
+    blob = bucket.blob(blob_name)
+    assert blob.download_as_string() == content
 
 
 def test_rename_blob(test_blob):

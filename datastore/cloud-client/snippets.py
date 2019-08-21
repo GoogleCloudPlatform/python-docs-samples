@@ -209,6 +209,7 @@ def delete(client):
 
 
 def batch_upsert(client):
+    # [START datastore_batch_upsert]
     task1 = datastore.Entity(client.key('Task', 1))
 
     task1.update({
@@ -227,7 +228,6 @@ def batch_upsert(client):
         'description': 'Integrate Cloud Datastore'
     })
 
-    # [START datastore_batch_upsert]
     client.put_multi([task1, task2])
     # [END datastore_batch_upsert]
 
@@ -331,6 +331,8 @@ def ancestor_query(client):
     client.put(task)
 
     # [START datastore_ancestor_query]
+    # Query filters are omitted in this example as any ancestor queries with a
+    # non-key filter require a composite index.
     ancestor = client.key('TaskList', 'default')
     query = client.query(kind='Task', ancestor=ancestor)
     # [END datastore_ancestor_query]
@@ -407,6 +409,7 @@ def key_filter(client):
     # [START datastore_key_filter]
     query = client.query(kind='Task')
     first_key = client.key('Task', 'first_task')
+    # key_filter(key, op) translates to add_filter('__key__', op, key).
     query.key_filter(first_key, '>')
     # [END datastore_key_filter]
 
@@ -467,25 +470,9 @@ def keys_only_query(client):
     query.keys_only()
     # [END datastore_keys_only_query]
 
-    # [START datastore_run_keys_only_query]
     keys = list([entity.key for entity in query.fetch(limit=10)])
-    # [END datastore_run_keys_only_query]
 
     return keys
-
-
-def distinct_query(client):
-    # Create the entity that we're going to query.
-    upsert(client)
-
-    # [START datastore_distinct_query]
-    query = client.query(kind='Task')
-    query.distinct_on = ['category', 'priority']
-    query.order = ['category', 'priority']
-    query.projection = ['category', 'priority']
-    # [END datastore_distinct_query]
-
-    return list(query.fetch())
 
 
 def distinct_on_query(client):
@@ -703,7 +690,7 @@ def transactional_single_entity_group_read_only(client):
     ])
 
     # [START datastore_transactional_single_entity_group_read_only]
-    with client.transaction():
+    with client.transaction(read_only=True):
         task_list_key = client.key('TaskList', 'default')
 
         task_list = client.get(task_list_key)

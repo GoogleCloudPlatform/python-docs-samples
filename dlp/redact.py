@@ -13,16 +13,19 @@
 # limitations under the License.
 
 """Sample app that uses the Data Loss Prevent API to redact the contents of
-a string or an image file."""
+an image file."""
 
 from __future__ import print_function
 
 import argparse
+# [START dlp_redact_image]
 import mimetypes
+# [END dlp_redact_image]
 import os
 
 
 # [START dlp_redact_image]
+
 def redact_image(project, filename, output_filename,
                  info_types, min_likelihood=None, mime_type=None):
     """Uses the Data Loss Prevention API to redact protected data in an image.
@@ -118,7 +121,7 @@ if __name__ == '__main__':
         help='The Google Cloud project id to use as a parent resource.',
         default=default_project)
     parser.add_argument(
-        '--info_types', action='append',
+        '--info_types', nargs='+',
         help='Strings representing info types to look for. A full list of '
              'info categories and types is available from the API. Examples '
              'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '

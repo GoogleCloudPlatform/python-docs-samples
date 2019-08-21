@@ -1,4 +1,4 @@
-# Copyright 2016 Google Inc. All Rights Reserved.
+# Copyright 2019 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,9 +13,11 @@
 # limitations under the License.
 
 import os
+import time
 
 from gcp_devrel.testing import eventually_consistent
 from google.cloud import pubsub_v1
+import mock
 import pytest
 
 import publisher
@@ -41,6 +43,19 @@ def topic(client):
     client.create_topic(topic_path)
 
     yield topic_path
+
+
+def _make_sleep_patch():
+    real_sleep = time.sleep
+
+    def new_sleep(period):
+        if period == 60:
+            real_sleep(5)
+            raise RuntimeError('sigil')
+        else:
+            real_sleep(period)
+
+    return mock.patch('time.sleep', new=new_sleep)
 
 
 def test_list(client, topic, capsys):
@@ -90,6 +105,20 @@ def test_publish_with_custom_attributes(topic, capsys):
 
 def test_publish_with_batch_settings(topic, capsys):
     publisher.publish_messages_with_batch_settings(PROJECT, TOPIC)
+
+    out, _ = capsys.readouterr()
+    assert 'Published' in out
+
+
+def test_publish_with_retry_settings(topic, capsys):
+    publisher.publish_messages_with_retry_settings(PROJECT, TOPIC)
+
+    out, _ = capsys.readouterr()
+    assert 'Published' in out
+
+
+def test_publish_with_error_handler(topic, capsys):
+    publisher.publish_messages_with_error_handler(PROJECT, TOPIC)
 
     out, _ = capsys.readouterr()
     assert 'Published' in out

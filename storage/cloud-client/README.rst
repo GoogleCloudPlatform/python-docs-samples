@@ -93,8 +93,7 @@ To run this sample:
     $ python snippets.py
 
     usage: snippets.py [-h]
-                       bucket_name
-                       {create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,download,delete,metadata,make-public,signed-url,rename,copy}
+                       {list-buckets,create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,signed-url-download-v4,signed-url-upload-v4,rename,copy}
                        ...
 
     This application demonstrates how to perform basic operations on blobs
@@ -104,8 +103,8 @@ To run this sample:
     at https://cloud.google.com/storage/docs.
 
     positional arguments:
-      bucket_name           Your cloud storage bucket.
-      {create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,download,delete,metadata,make-public,signed-url,rename,copy}
+      {list-buckets,create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,signed-url-download-v4,signed-url-upload-v4,rename,copy}
+        list-buckets        Lists all buckets.
         create-bucket       Creates a new bucket.
         delete-bucket       Deletes a bucket. The bucket must be empty.
         get-bucket-labels   Prints out a bucket's labels.
@@ -124,15 +123,32 @@ To run this sample:
                             However, if you specify prefix='/a' and delimiter='/',
                             you'll get back: /a/1.txt
         upload              Uploads a file to the bucket.
+        enable-default-kms-key
+                            Sets a bucket's default KMS key.
+        upload-with-kms-key
+                            Uploads a file to the bucket, encrypting it with the
+                            given KMS key.
         download            Downloads a blob from the bucket.
         delete              Deletes a blob from the bucket.
         metadata            Prints out a blob's metadata.
         make-public         Makes a blob publicly accessible.
-        signed-url          Generates a signed URL for a blob. Note that this
-                            method requires a service account key file. You can
-                            not use this if you are using Application Default
-                            Credentials from Google Compute Engine or from the
-                            Google Cloud SDK.
+        signed-url          Generates a v2 signed URL for downloading a blob. Note
+                            that this method requires a service account key file.
+                            You can not use this if you are using Application
+                            Default Credentials from Google Compute Engine or from
+                            the Google Cloud SDK.
+        signed-url-download-v4
+                            Generates a v4 signed URL for downloading a blob. Note
+                            that this method requires a service account key file.
+                            You can not use this if you are using Application
+                            Default Credentials from Google Compute Engine or from
+                            the Google Cloud SDK.
+        signed-url-upload-v4
+                            Generates a v4 signed URL for uploading a blob using
+                            HTTP PUT. Note that this method requires a service
+                            account key file. You can not use this if you are
+                            using Application Default Credentials from Google
+                            Compute Engine or from the Google Cloud SDK.
         rename              Renames a blob.
         copy                Renames a blob.
 
@@ -240,6 +256,88 @@ To run this sample:
                             same key provided when uploading the blob.
         rotate              Performs a key rotation by re-writing an encrypted
                             blob with a new encryption key.
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
+
+Bucket Lock
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/bucket_lock.py,storage/cloud-client/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python bucket_lock.py
+
+    usage: bucket_lock.py [-h]
+                          {set-retention-policy,remove-retention-policy,lock-retention-policy,get-retention-policy,set-temporary-hold,release-temporary-hold,set-event-based-hold,release-event-based-hold,enable-default-event-based-hold,disable-default-event-based-hold,get-default-event-based-hold}
+                          ...
+
+    positional arguments:
+      {set-retention-policy,remove-retention-policy,lock-retention-policy,get-retention-policy,set-temporary-hold,release-temporary-hold,set-event-based-hold,release-event-based-hold,enable-default-event-based-hold,disable-default-event-based-hold,get-default-event-based-hold}
+        set-retention-policy
+                            Defines a retention policy on a given bucket
+        remove-retention-policy
+                            Removes the retention policy on a given bucket
+        lock-retention-policy
+                            Locks the retention policy on a given bucket
+        get-retention-policy
+                            Gets the retention policy on a given bucket
+        set-temporary-hold  Sets a temporary hold on a given blob
+        release-temporary-hold
+                            Releases the temporary hold on a given blob
+        set-event-based-hold
+                            Sets a event based hold on a given blob
+        release-event-based-hold
+                            Releases the event based hold on a given blob
+        enable-default-event-based-hold
+                            Enables the default event based hold on a given bucket
+        disable-default-event-based-hold
+                            Disables the default event based hold on a given
+                            bucket
+        get-default-event-based-hold
+                            Gets the default event based hold on a given bucket
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
+
+Bucket Policy Only
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/bucket_policy_only.py,storage/cloud-client/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python bucket_policy_only.py
+
+    usage: bucket_policy_only.py [-h]
+                                 {enable-bucket-policy-only,disable-bucket-policy-only,get-bucket-policy-only}
+                                 ...
+
+    positional arguments:
+      {enable-bucket-policy-only,disable-bucket-policy-only,get-bucket-policy-only}
+        enable-bucket-policy-only
+                            Enable Bucket Policy Only for a bucket
+        disable-bucket-policy-only
+                            Disable Bucket Policy Only for a bucket
+        get-bucket-policy-only
+                            Get Bucket Policy Only for a bucket
 
     optional arguments:
       -h, --help            show this help message and exit

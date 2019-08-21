@@ -1,0 +1,4 @@
+body {
+  font-family: "helvetica", sans-serif;
+  text-align: center;
+}

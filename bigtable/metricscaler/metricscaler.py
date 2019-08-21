@@ -16,10 +16,14 @@
 programmatically scale a Google Cloud Bigtable cluster."""
 
 import argparse
+import os
 import time
 
 from google.cloud import bigtable
-from google.cloud import monitoring
+from google.cloud import monitoring_v3
+from google.cloud.monitoring_v3 import query
+
+PROJECT = os.environ['GCLOUD_PROJECT']
 
 
 def get_cpu_load():
@@ -29,11 +33,15 @@ def get_cpu_load():
           float: The most recent Cloud Bigtable CPU usage metric
     """
     # [START bigtable_cpu]
-    client = monitoring.Client()
-    query = client.query('bigtable.googleapis.com/cluster/cpu_load', minutes=5)
-    time_series = list(query)
+    client = monitoring_v3.MetricServiceClient()
+    cpu_query = query.Query(client,
+                            project=PROJECT,
+                            metric_type='bigtable.googleapis.com/'
+                                        'cluster/cpu_load',
+                            minutes=5)
+    time_series = list(cpu_query)
     recent_time_series = time_series[0]
-    return recent_time_series.points[0].value
+    return recent_time_series.points[0].value.double_value
     # [END bigtable_cpu]
 
 

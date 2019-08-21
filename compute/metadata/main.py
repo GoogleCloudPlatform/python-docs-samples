@@ -55,9 +55,6 @@ def wait_for_maintenance(callback):
         if r.text == 'NONE':
             maintenance_event = None
         else:
-            # Possible events:
-            #   MIGRATE_ON_HOST_MAINTENANCE: instance will be migrated
-            #   SHUTDOWN_ON_HOST_MAINTENANCE: instance will be shut down
             maintenance_event = r.text
 
         if maintenance_event != last_maintenance_event:

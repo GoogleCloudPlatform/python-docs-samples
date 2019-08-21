@@ -21,7 +21,7 @@ import pylibmc
 app = Flask(__name__)
 
 
-# [START client]
+# [START gae_flex_redislabs_memcache]
 # Environment variables are defined in app.yaml.
 MEMCACHE_SERVER = os.environ.get('MEMCACHE_SERVER', 'localhost:11211')
 MEMCACHE_USERNAME = os.environ.get('MEMCACHE_USERNAME')
@@ -30,10 +30,9 @@ MEMCACHE_PASSWORD = os.environ.get('MEMCACHE_PASSWORD')
 memcache_client = pylibmc.Client(
     [MEMCACHE_SERVER], binary=True,
     username=MEMCACHE_USERNAME, password=MEMCACHE_PASSWORD)
-# [END client]
+# [END gae_flex_redislabs_memcache]
 
 
-# [START example]
 @app.route('/')
 def index():
 
@@ -44,7 +43,6 @@ def index():
     value = memcache_client.incr('counter', 1)
 
     return 'Value is {}'.format(value)
-# [END example]
 
 
 @app.errorhandler(500)

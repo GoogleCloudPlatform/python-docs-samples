@@ -81,7 +81,7 @@ To run this sample:
     $ python detect.py
 
     usage: detect.py [-h]
-                     {faces,faces-uri,labels,labels-uri,landmarks,landmarks-uri,text,text-uri,logos,logos-uri,safe-search,safe-search-uri,properties,properties-uri,web,web-uri,web-geo,web-geo-uri,crophints,crophints-uri,document,document-uri}
+                     {faces,faces-uri,labels,labels-uri,landmarks,landmarks-uri,text,text-uri,logos,logos-uri,safe-search,safe-search-uri,properties,properties-uri,web,web-uri,web-geo,web-geo-uri,crophints,crophints-uri,document,document-uri,ocr-uri,object-localization,object-localization-uri}
                      ...
 
     This application demonstrates how to perform basic operations with the
@@ -94,12 +94,15 @@ To run this sample:
     python detect.py web-uri http://wheresgus.com/dog.JPG
     python detect.py web-geo ./resources/city.jpg
     python detect.py faces-uri gs://your-bucket/file.jpg
+    python detect.py ocr-uri gs://python-docs-samples-tests/HodgeConj.pdf gs://BUCKET_NAME/PREFIX/
+    python detect.py object-localization ./resources/puppies.jpg
+    python detect.py object-localization-uri gs://...
 
     For more information, the documentation at
     https://cloud.google.com/vision/docs.
 
     positional arguments:
-      {faces,faces-uri,labels,labels-uri,landmarks,landmarks-uri,text,text-uri,logos,logos-uri,safe-search,safe-search-uri,properties,properties-uri,web,web-uri,web-geo,web-geo-uri,crophints,crophints-uri,document,document-uri}
+      {faces,faces-uri,labels,labels-uri,landmarks,landmarks-uri,text,text-uri,logos,logos-uri,safe-search,safe-search-uri,properties,properties-uri,web,web-uri,web-geo,web-geo-uri,crophints,crophints-uri,document,document-uri,ocr-uri,object-localization,object-localization-uri}
         faces               Detects faces in an image.
         faces-uri           Detects faces in the file located in Google Cloud
                             Storage or the web.
@@ -125,16 +128,91 @@ To run this sample:
         web-uri             Detects web annotations in the file located in Google
                             Cloud Storage.
         web-geo             Detects web annotations given an image, using the
-                            geotag metadata in the iamge to detect web entities.
+                            geotag metadata in the image to detect web entities.
         web-geo-uri         Detects web annotations given an image in the file
                             located in Google Cloud Storage., using the geotag
-                            metadata in the iamge to detect web entities.
+                            metadata in the image to detect web entities.
         crophints           Detects crop hints in an image.
         crophints-uri       Detects crop hints in the file located in Google Cloud
                             Storage.
         document            Detects document features in an image.
         document-uri        Detects document features in the file located in
                             Google Cloud Storage.
+        ocr-uri             OCR with PDF/TIFF as source files on GCS
+        object-localization
+                            OCR with PDF/TIFF as source files on GCS
+        object-localization-uri
+                            OCR with PDF/TIFF as source files on GCS
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+
+
+Beta Detect
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=vision/cloud-client/detect/beta_snippets.py,vision/cloud-client/detect/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python beta_snippets.py
+
+    usage: beta_snippets.py [-h]
+                            {object-localization,object-localization-uri,handwritten-ocr,handwritten-ocr-uri,batch-annotate-files,batch-annotate-files-uri,batch-annotate-images-uri}
+                            ...
+
+    Google Cloud Vision API Python Beta Snippets
+
+    Example Usage:
+    python beta_snippets.py -h
+    python beta_snippets.py object-localization INPUT_IMAGE
+    python beta_snippets.py object-localization-uri gs://...
+    python beta_snippets.py handwritten-ocr INPUT_IMAGE
+    python beta_snippets.py handwritten-ocr-uri gs://...
+    python beta_snippets.py batch-annotate-files INPUT_PDF
+    python beta_snippets.py batch-annotate-files-uri gs://...
+    python beta_snippets.py batch-annotate-images-uri gs://... gs://...
+
+    For more information, the documentation at
+    https://cloud.google.com/vision/docs.
+
+    positional arguments:
+      {object-localization,object-localization-uri,handwritten-ocr,handwritten-ocr-uri,batch-annotate-files,batch-annotate-files-uri,batch-annotate-images-uri}
+        object-localization
+                            Localize objects in the local image. Args: path: The
+                            path to the local file.
+        object-localization-uri
+                            Localize objects in the image on Google Cloud Storage
+                            Args: uri: The path to the file in Google Cloud
+                            Storage (gs://...)
+        handwritten-ocr     Detects handwritten characters in a local image. Args:
+                            path: The path to the local file.
+        handwritten-ocr-uri
+                            Detects handwritten characters in the file located in
+                            Google Cloud Storage. Args: uri: The path to the file
+                            in Google Cloud Storage (gs://...)
+        batch-annotate-files
+                            Detects document features in a PDF/TIFF/GIF file.
+                            While your PDF file may have several pages, this API
+                            can process up to 5 pages only. Args: path: The path
+                            to the local file.
+        batch-annotate-files-uri
+                            Detects document features in a PDF/TIFF/GIF file.
+                            While your PDF file may have several pages, this API
+                            can process up to 5 pages only. Args: uri: The path to
+                            the file in Google Cloud Storage (gs://...)
+        batch-annotate-images-uri
+                            Batch annotation of images on Google Cloud Storage
+                            asynchronously. Args: image_uri: The path to the image
+                            in Google Cloud Storage (gs://...) gcs_uri: The path
+                            to the output path in Google Cloud Storage (gs://...)
 
     optional arguments:
       -h, --help            show this help message and exit

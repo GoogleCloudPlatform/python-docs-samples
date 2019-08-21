@@ -15,6 +15,8 @@ import os
 
 from gcp_devrel.testing.flaky import flaky
 from google.cloud import dns
+from google.cloud.exceptions import NotFound
+
 import pytest
 
 import main
@@ -33,7 +35,10 @@ def client():
 
     # Delete anything created during the test.
     for zone in client.list_zones():
-        zone.delete()
+        try:
+            zone.delete()
+        except NotFound:  # May have been in process
+            pass
 
 
 @pytest.yield_fixture
@@ -45,7 +50,10 @@ def zone(client):
     yield zone
 
     if zone.exists():
-        zone.delete()
+        try:
+            zone.delete()
+        except NotFound:  # May have been under way
+            pass
 
 
 @flaky
@@ -78,11 +86,6 @@ def test_list_zones(client, zone):
 
 
 @flaky
-def test_delete_zone(client, zone):
-    main.delete_zone(PROJECT, TEST_ZONE_NAME)
-
-
-@flaky
 def test_list_resource_records(client, zone):
     records = main.list_resource_records(PROJECT, TEST_ZONE_NAME)
 
@@ -94,3 +97,8 @@ def test_list_changes(client, zone):
     changes = main.list_changes(PROJECT, TEST_ZONE_NAME)
 
     assert changes
+
+
+@flaky
+def test_delete_zone(client, zone):
+    main.delete_zone(PROJECT, TEST_ZONE_NAME)

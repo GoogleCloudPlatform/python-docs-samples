@@ -24,16 +24,16 @@ Usage:
 
 
 def run_quickstart():
-    # [START videointelligence_quickstart]
+    # [START video_quickstart]
     from google.cloud import videointelligence
 
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.enums.Feature.LABEL_DETECTION]
     operation = video_client.annotate_video(
-        'gs://demomaker/cat.mp4', features=features)
+        'gs://cloud-samples-data/video/cat.mp4', features=features)
     print('\nProcessing video for label annotations:')
 
-    result = operation.result(timeout=90)
+    result = operation.result(timeout=120)
     print('\nFinished processing.')
 
     # first result is retrieved because a single video was processed
@@ -55,7 +55,7 @@ def run_quickstart():
             print('\tSegment {}: {}'.format(i, positions))
             print('\tConfidence: {}'.format(confidence))
         print('\n')
-    # [END videointelligence_quickstart]
+    # [END video_quickstart]
 
 
 if __name__ == '__main__':

@@ -24,7 +24,6 @@ import google.cloud.pubsub
 import google.cloud.storage
 
 import pytest
-
 import inspect_content
 
 
@@ -170,6 +169,53 @@ def test_inspect_string(capsys):
     assert 'Info type: EMAIL_ADDRESS' in out
 
 
+def test_inspect_table(capsys):
+    test_tabular_data = {
+        "header": [
+            "email",
+            "phone number"
+        ],
+        "rows": [
+            [
+                "robertfrost@xyz.com",
+                "4232342345"
+            ],
+            [
+                "johndoe@pqr.com",
+                "4253458383"
+            ]
+        ]
+    }
+
+    inspect_content.inspect_table(
+        GCLOUD_PROJECT,
+        test_tabular_data,
+        ['PHONE_NUMBER', 'EMAIL_ADDRESS'],
+        include_quote=True)
+
+    out, _ = capsys.readouterr()
+    assert 'Info type: PHONE_NUMBER' in out
+    assert 'Info type: EMAIL_ADDRESS' in out
+
+
+def test_inspect_string_with_custom_info_types(capsys):
+    test_string = 'My name is Gary Smith and my email is gary@example.com'
+    dictionaries = ['Gary Smith']
+    regexes = ['\\w+@\\w+.com']
+
+    inspect_content.inspect_string(
+        GCLOUD_PROJECT,
+        test_string,
+        [],
+        custom_dictionaries=dictionaries,
+        custom_regexes=regexes,
+        include_quote=True)
+
+    out, _ = capsys.readouterr()
+    assert 'Info type: CUSTOM_DICTIONARY_0' in out
+    assert 'Info type: CUSTOM_REGEX_0' in out
+
+
 def test_inspect_string_no_results(capsys):
     test_string = 'Nothing to see here'
 
@@ -194,6 +240,24 @@ def test_inspect_file(capsys):
 
     out, _ = capsys.readouterr()
     assert 'Info type: EMAIL_ADDRESS' in out
+
+
+def test_inspect_file_with_custom_info_types(capsys):
+    test_filepath = os.path.join(RESOURCE_DIRECTORY, 'test.txt')
+    dictionaries = ['gary@somedomain.com']
+    regexes = ['\\(\\d{3}\\) \\d{3}-\\d{4}']
+
+    inspect_content.inspect_file(
+        GCLOUD_PROJECT,
+        test_filepath,
+        [],
+        custom_dictionaries=dictionaries,
+        custom_regexes=regexes,
+        include_quote=True)
+
+    out, _ = capsys.readouterr()
+    assert 'Info type: CUSTOM_DICTIONARY_0' in out
+    assert 'Info type: CUSTOM_REGEX_0' in out
 
 
 def test_inspect_file_no_results(capsys):
@@ -230,10 +294,33 @@ def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
         'test.txt',
         topic_id,
         subscription_id,
-        ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'])
+        ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'],
+        timeout=420)
 
     out, _ = capsys.readouterr()
     assert 'Info type: EMAIL_ADDRESS' in out
+
+
+@flaky
+def test_inspect_gcs_file_with_custom_info_types(bucket, topic_id,
+                                                 subscription_id, capsys):
+    dictionaries = ['gary@somedomain.com']
+    regexes = ['\\(\\d{3}\\) \\d{3}-\\d{4}']
+
+    inspect_content.inspect_gcs_file(
+        GCLOUD_PROJECT,
+        bucket.name,
+        'test.txt',
+        topic_id,
+        subscription_id,
+        [],
+        custom_dictionaries=dictionaries,
+        custom_regexes=regexes,
+        timeout=420)
+
+    out, _ = capsys.readouterr()
+    assert 'Info type: CUSTOM_DICTIONARY_0' in out
+    assert 'Info type: CUSTOM_REGEX_0' in out
 
 
 @flaky
@@ -245,7 +332,8 @@ def test_inspect_gcs_file_no_results(
         'harmless.txt',
         topic_id,
         subscription_id,
-        ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'])
+        ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'],
+        timeout=420)
 
     out, _ = capsys.readouterr()
     assert 'No findings' in out
