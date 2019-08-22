@@ -1207,7 +1207,7 @@ def query_data_with_bool(instance_id, database_id):
         'outdoor_venue': exampleBool
     }
     param_type = {
-        'outdoor_venue': param_types.BOOE
+        'outdoor_venue': param_types.BOOL
     }
 
     with database.snapshot() as snapshot:
