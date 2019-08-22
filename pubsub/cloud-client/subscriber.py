@@ -182,6 +182,7 @@ def receive_messages(project_id, subscription_name):
 
     def callback(message):
         print('Received message: {}'.format(message))
+        print(message.message_id)
         message.ack()
 
     subscriber.subscribe(subscription_path, callback=callback)
