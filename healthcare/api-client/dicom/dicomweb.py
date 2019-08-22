@@ -131,7 +131,10 @@ def dicomweb_retrieve_study(
     dicomweb_path = '{}/datasets/{}/dicomStores/{}/dicomWeb/studies/{}'.format(
         url, dataset_id, dicom_store_id, study_uid)
 
-    file_name = 'study.dcm'
+    # When specifying the output file, use an extension like ".multipart."
+    # Then, parse the downloaded multipart file to get each individual
+    # DICOM file.
+    file_name = 'study.multipart'
 
     # Make an authenticated API request
     session = get_session(service_account_json)
