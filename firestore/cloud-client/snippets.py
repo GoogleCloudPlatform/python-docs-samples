@@ -875,3 +875,11 @@ def collection_group_query(db):
         print(u'{} => {}'.format(doc.id, doc.to_dict()))
     # [END fs_collection_group_query]
     return docs
+
+
+def update_document_increment(db):
+    # [START fs_update_document_increment]
+    washington_ref = db.collection(u'cities').document(u'DC')
+
+    washington_ref.update("population", firestore.Increment(50))
+    # [END fs_update_document_increment]

@@ -13,17 +13,43 @@
 # limitations under the License.
 
 import os
+import random
 
 import access
+import service_accounts
 
 
 def test_access(capsys):
-    project = os.environ['GCLOUD_PROJECT']
+    # Setting up variables for testing
+    project_id = os.environ['GCLOUD_PROJECT']
 
-    policy = access.get_policy(project)
-    out, _ = capsys.readouterr()
-    assert 'etag' in out
+    # specifying a sample role to be assigned
+    gcp_role = 'roles/owner'
 
-    policy = access.set_policy(project, policy)
+    # section to create service account to test policy updates.
+    rand = str(random.randint(0, 1000))
+    name = 'python-test-' + rand
+    email = name + '@' + project_id + '.iam.gserviceaccount.com'
+    member = 'serviceAccount:' + email
+    service_accounts.create_service_account(
+        project_id, name, 'Py Test Account')
+
+    policy = access.get_policy(project_id)
     out, _ = capsys.readouterr()
-    assert 'etag' in out
+    assert u'etag' in out
+
+    policy = access.modify_policy_add_role(policy, gcp_role, member)
+    out, _ = capsys.readouterr()
+    assert u'etag' in out
+
+    policy = access.modify_policy_remove_member(policy, gcp_role, member)
+    out, _ = capsys.readouterr()
+    assert 'iam.gserviceaccount.com' in out
+
+    policy = access.set_policy(project_id, policy)
+    out, _ = capsys.readouterr()
+    assert u'etag' in out
+
+    # deleting the service account created above
+    service_accounts.delete_service_account(
+        email)

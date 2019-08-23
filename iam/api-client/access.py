@@ -69,6 +69,17 @@ def modify_policy_add_role(policy, role, member):
 # [END iam_modify_policy_add_role]
 
 
+# [START iam_modify_policy_remove_member]
+def modify_policy_remove_member(policy, role, member):
+    """Removes a  member from a role binding."""
+    binding = next(b for b in policy['bindings'] if b['role'] == role)
+    if 'members' in binding and member in binding['members']:
+        binding['members'].remove(member)
+    print(binding)
+    return policy
+# [END iam_modify_policy_remove_member]
+
+
 # [START iam_set_policy]
 def set_policy(project_id, policy):
     """Sets IAM policy for a project."""
@@ -116,6 +127,13 @@ def main():
     modify_role_parser.add_argument('role')
     modify_role_parser.add_argument('member')
 
+    # Modify: remove member
+    modify_member_parser = subparsers.add_parser(
+        'modify_member', help=get_policy.__doc__)
+    modify_member_parser.add_argument('project_id')
+    modify_member_parser.add_argument('role')
+    modify_member_parser.add_argument('member')
+
     # Set
     set_parser = subparsers.add_parser(
         'set', help=set_policy.__doc__)
@@ -130,6 +148,8 @@ def main():
         set_policy(args.project_id, args.policy)
     elif args.command == 'add_member':
         modify_policy_add_member(args.policy, args.role, args.member)
+    elif args.command == 'remove_member':
+        modify_policy_remove_member(args.policy, args.role, args.member)
     elif args.command == 'add_binding':
         modify_policy_add_role(args.policy, args.role, args.member)
 

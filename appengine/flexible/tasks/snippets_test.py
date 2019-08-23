@@ -71,14 +71,30 @@ def test_create_task_with_name():
 
 @pytest.mark.order6
 def test_delete_task():
+    result = snippets.delete_task(
+        TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
+    assert result is None
+
+
+@pytest.mark.order7
+def test_purge_queue():
     name = "projects/{}/locations/{}/queues/{}".format(
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
-    result = snippets.delete_task(
+    result = snippets.purge_queue(
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
     assert name in result.name
 
 
-@pytest.mark.order7
+@pytest.mark.order8
+def test_pause_queue():
+    name = "projects/{}/locations/{}/queues/{}".format(
+        TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
+    result = snippets.pause_queue(
+        TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
+    assert name in result.name
+
+
+@pytest.mark.order9
 def test_delete_queue():
     result = snippets.delete_queue(
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME_1)
@@ -89,7 +105,7 @@ def test_delete_queue():
     assert result is None
 
 
-@pytest.mark.order8
+@pytest.mark.order10
 def test_retry_task():
     QUEUE_SIZE = 3
     QUEUE_NAME = []

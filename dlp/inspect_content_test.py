@@ -294,7 +294,8 @@ def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
         'test.txt',
         topic_id,
         subscription_id,
-        ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'])
+        ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'],
+        timeout=420)
 
     out, _ = capsys.readouterr()
     assert 'Info type: EMAIL_ADDRESS' in out
@@ -314,7 +315,8 @@ def test_inspect_gcs_file_with_custom_info_types(bucket, topic_id,
         subscription_id,
         [],
         custom_dictionaries=dictionaries,
-        custom_regexes=regexes)
+        custom_regexes=regexes,
+        timeout=420)
 
     out, _ = capsys.readouterr()
     assert 'Info type: CUSTOM_DICTIONARY_0' in out
@@ -330,7 +332,8 @@ def test_inspect_gcs_file_no_results(
         'harmless.txt',
         topic_id,
         subscription_id,
-        ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'])
+        ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'],
+        timeout=420)
 
     out, _ = capsys.readouterr()
     assert 'No findings' in out
