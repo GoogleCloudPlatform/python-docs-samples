@@ -38,14 +38,7 @@ Usage Examples:
     gs://mybucket/myfolder
 
     python beta_snippets.py streaming-automl-classification \
-    resources/cat.mp4 \
-    gs://mybucket/myfolder \
-    projects/myproject/location/mylocation/model/mymodel
-
-    python beta_snippets.py streaming-automl-object-tracking \
-    resources/cat.mp4 \
-    gs://mybucket/myfolder \
-    projects/myproject/location/mylocation/model/mymodel
+    resources/cat.mp4 projects/myproject/location/mylocation/model/mymodel
 """
 
 import argparse
@@ -639,7 +632,7 @@ def annotation_to_storage_streaming(path, output_uri):
     # [END video_streaming_annotation_to_storage_beta]
 
 
-def streaming_automl_classification(path, output_uri, model_path):
+def streaming_automl_classification(path, model_path):
     # [START video_streaming_automl_classification_beta]
     import io
 
@@ -647,16 +640,10 @@ def streaming_automl_classification(path, output_uri, model_path):
     from google.cloud.videointelligence_v1p3beta1 import enums
 
     # path = 'path_to_file'
-    # output_uri = 'gs://path_to_output'
     # model_path = 'projects/project_id/locations/location_id/models/model_id'
 
     client = videointelligence.StreamingVideoIntelligenceServiceClient()
 
-    # Set streaming storage config specifying the output_uri.
-    # The output_uri is the prefix of the actual output files.
-    storage_config = videointelligence.types.StreamingStorageConfig(
-        enable_storage_annotation_result=True,
-        annotation_result_storage_directory=output_uri)
     # Here we use classification as an example.
     automl_config = (videointelligence.types
                      .StreamingAutomlClassificationConfig(
@@ -664,8 +651,7 @@ def streaming_automl_classification(path, output_uri, model_path):
 
     video_config = videointelligence.types.StreamingVideoConfig(
         feature=enums.StreamingFeature.STREAMING_AUTOML_CLASSIFICATION,
-        automl_classification_config=automl_config,
-        storage_config=storage_config)
+        automl_classification_config=automl_config)
 
     # config_request should be the first in the stream of requests.
     config_request = videointelligence.types.StreamingAnnotateVideoRequest(
@@ -703,20 +689,13 @@ def streaming_automl_classification(path, output_uri, model_path):
             print(response.error.message)
             break
 
-        print('Storage URI: {}'.format(response.annotation_results_uri))
+        for label in response.annotation_results.label_annotations:
+            for frame in label.frames:
+                print("At {:3d}s segment, {:5.1%} {}".format(
+                    frame.time_offset.seconds,
+                    frame.confidence,
+                    label.entity.entity_id))
     # [END video_streaming_automl_classification_beta]
-
-
-def streaming_automl_object_tracking(path, output_uri, model_path):
-    # [START video_streaming_automl_object_tracking_beta]
-    # from google.cloud import videointelligence_v1p3beta1 as videointelligence
-
-    # path = 'path_to_file'
-    # output_uri = 'gs://path_to_output'
-    # model_path = 'projects/project_id/locations/location_id/models/model_id'
-
-    pass
-    # [END video_streaming_automl_object_tracking_beta]
 
 
 if __name__ == '__main__':
@@ -772,15 +751,7 @@ if __name__ == '__main__':
         'streaming-automl-classification',
         help=streaming_automl_classification.__doc__)
     video_streaming_automl_classification_parser.add_argument('path')
-    video_streaming_automl_classification_parser.add_argument('output_uri')
     video_streaming_automl_classification_parser.add_argument('model_path')
-
-    video_streaming_automl_tracking_parser = subparsers.add_parser(
-        'streaming-automl-object-tracking',
-        help=streaming_automl_object_tracking.__doc__)
-    video_streaming_automl_tracking_parser.add_argument('path')
-    video_streaming_automl_tracking_parser.add_argument('output_uri')
-    video_streaming_automl_tracking_parser.add_argument('model_path')
 
     args = parser.parse_args()
 
@@ -805,8 +776,4 @@ if __name__ == '__main__':
     elif args.command == 'streaming-annotation-storage':
         annotation_to_storage_streaming(args.path, args.output_uri)
     elif args.command == 'streaming-automl-classification':
-        streaming_automl_classification(args.path, args.output_uri,
-                                        args.model_path)
-    elif args.command == 'streaming-automl-object-tracking':
-        streaming_automl_object_tracking(args.path, args.output_uri,
-                                         args.model_path)
+        streaming_automl_classification(args.path, args.model_path)

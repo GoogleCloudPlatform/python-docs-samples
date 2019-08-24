@@ -164,16 +164,12 @@ def test_track_objects_gcs():
 
 @pytest.mark.slow
 def test_streaming_automl_classification(capsys):
-    # video_path = ''
-    # output_uri = 'gs://{}'.format(bucket.name)
-    # model_path = ''
+    video_path = 'python-docs-samples-tests'
+    model_id = 'VCN6363999689846554624'
+    model_path = 'projects/{}/locations/us-central1/models/{}'.format(
+        'python-docs-samples-tests',
+        model_id,
+    )
+    beta_snippets.streaming_automl_classification(in_file, model_path)
     out, _ = capsys.readouterr()
-    assert 'Feature is not supported.' in out
-
-
-@pytest.mark.slow
-def test_streaming_automl_object_tracking(capsys):
-    # video_path = ''
-    # output_uri = 'gs://{}'.format(bucket.name)
-    # model_path = ''
-    assert True
+    assert 'brush_hair' in out
