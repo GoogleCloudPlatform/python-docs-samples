@@ -10,7 +10,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# [START memorystore_app_yaml]
+# [START memorystore_app_yaml_flex]
 runtime: python
 env: flex
 entrypoint: gunicorn -b :$PORT main:app
@@ -26,4 +26,4 @@ env_variables:
 # Update with Redis instance network name
 network:
   name: default
-#[END memorystore_app_yaml]
+#[END memorystore_app_yaml_flex]

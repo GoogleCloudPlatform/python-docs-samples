@@ -10,7 +10,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# [START memorystore_app_yaml]
+# [START memorystore_app_yaml_standard]
 runtime: python37
 entrypoint: gunicorn -b :$PORT main:app
 
@@ -22,4 +22,4 @@ env_variables:
 # Update with Serverless VPC Access connector details
 vpc_access_connector:
   name: 'projects/<PROJECT_ID>/locations/<REGION>/connectors/<CONNECTOR_NAME>'
-# [END memorystore_app_yaml]
+# [END memorystore_app_yaml_standard]
