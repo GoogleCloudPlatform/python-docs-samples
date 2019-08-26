@@ -16,6 +16,7 @@
 
 from six.moves.urllib.request import urlopen
 import time
+import os
 import uuid
 
 import beta_snippets
@@ -166,7 +167,7 @@ def test_track_objects_gcs():
 def test_streaming_automl_classification(capsys, in_file):
     model_id = 'VCN6363999689846554624'
     model_path = 'projects/{}/locations/us-central1/models/{}'.format(
-        'python-docs-samples-tests',
+        os.environ['GCLOUD_PROJECT'],
         model_id,
     )
     beta_snippets.streaming_automl_classification(in_file, model_path)
