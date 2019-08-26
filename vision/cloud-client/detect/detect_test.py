@@ -225,7 +225,7 @@ def test_detect_web_with_geo(capsys):
     detect.web_entities_include_geo_results(file_name)
     out, _ = capsys.readouterr()
     out = out.lower()
-    assert 'zepra' in out or 'electra tower' in out
+    assert 'zepra' in out or 'electra tower' in out or 'tel aviv' in out
 
 
 def test_detect_web_with_geo_uri(capsys):
@@ -233,7 +233,7 @@ def test_detect_web_with_geo_uri(capsys):
     detect.web_entities_include_geo_results_uri(file_name)
     out, _ = capsys.readouterr()
     out = out.lower()
-    assert 'zepra' in out or 'electra tower' in out
+    assert 'zepra' in out or 'electra tower' in out or 'tel aviv' in out
 
 
 def test_detect_document(capsys):
