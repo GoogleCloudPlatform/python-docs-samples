@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2019 Google, Inc
+# Copyright 2019 Google, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -165,11 +165,9 @@ def test_track_objects_gcs():
 
 @pytest.mark.slow
 def test_streaming_automl_classification(capsys, in_file):
+    project_id = os.environ['GCLOUD_PROJECT']
     model_id = 'VCN6363999689846554624'
-    model_path = 'projects/{}/locations/us-central1/models/{}'.format(
-        os.environ['GCLOUD_PROJECT'],
-        model_id,
-    )
-    beta_snippets.streaming_automl_classification(in_file, model_path)
+    beta_snippets.streaming_automl_classification(
+        in_file, project_id, model_id)
     out, _ = capsys.readouterr()
     assert 'brush_hair' in out

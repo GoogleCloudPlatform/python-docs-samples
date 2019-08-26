@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2017 Google Inc. All Rights Reserved.
+# Copyright 2019 Google LLC. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -37,8 +37,8 @@ Usage Examples:
     python beta_snippets.py streaming-annotation-storage resources/cat.mp4 \
     gs://mybucket/myfolder
 
-    python beta_snippets.py streaming-automl-classification \
-    resources/cat.mp4 projects/myproject/location/mylocation/model/mymodel
+    python beta_snippets.py streaming-automl-classification resources/cat.mp4 \
+    $PROJECT_ID $MODEL_ID
 """
 
 import argparse
@@ -632,7 +632,7 @@ def annotation_to_storage_streaming(path, output_uri):
     # [END video_streaming_annotation_to_storage_beta]
 
 
-def streaming_automl_classification(path, model_path):
+def streaming_automl_classification(path, project_id, model_id):
     # [START video_streaming_automl_classification_beta]
     import io
 
@@ -640,9 +640,13 @@ def streaming_automl_classification(path, model_path):
     from google.cloud.videointelligence_v1p3beta1 import enums
 
     # path = 'path_to_file'
-    # model_path = 'projects/project_id/locations/location_id/models/model_id'
+    # project_id = 'gcp_project_id'
+    # model_id = 'automl_classification_model_id'
 
     client = videointelligence.StreamingVideoIntelligenceServiceClient()
+
+    model_path = 'projects/{}/locations/us-central1/models/{}'.format(
+        project_id, model_id)
 
     # Here we use classification as an example.
     automl_config = (videointelligence.types
@@ -661,6 +665,9 @@ def streaming_automl_classification(path, model_path):
     chunk_size = 5 * 1024 * 1024
 
     # Load file content.
+    # Note: Input videos must have supported video codecs. See
+    # https://cloud.google.com/video-intelligence/docs/streaming/streaming#supported_video_codecs
+    # for more details.
     stream = []
     with io.open(path, 'rb') as video_file:
         while True:
@@ -751,7 +758,8 @@ if __name__ == '__main__':
         'streaming-automl-classification',
         help=streaming_automl_classification.__doc__)
     video_streaming_automl_classification_parser.add_argument('path')
-    video_streaming_automl_classification_parser.add_argument('model_path')
+    video_streaming_automl_classification_parser.add_argument('project_id')
+    video_streaming_automl_classification_parser.add_argument('model_id')
 
     args = parser.parse_args()
 
@@ -776,4 +784,5 @@ if __name__ == '__main__':
     elif args.command == 'streaming-annotation-storage':
         annotation_to_storage_streaming(args.path, args.output_uri)
     elif args.command == 'streaming-automl-classification':
-        streaming_automl_classification(args.path, args.model_path)
+        streaming_automl_classification(
+            args.path, args.project_id, args.model_id)
