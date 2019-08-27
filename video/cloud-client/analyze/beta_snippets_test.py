@@ -164,10 +164,10 @@ def test_track_objects_gcs():
 
 
 @pytest.mark.slow
-def test_streaming_automl_classification(capsys, in_file):
+def test_streaming_automl_classification(capsys, video_path):
     project_id = os.environ['GCLOUD_PROJECT']
     model_id = 'VCN6363999689846554624'
     beta_snippets.streaming_automl_classification(
-        in_file, project_id, model_id)
+        video_path, project_id, model_id)
     out, _ = capsys.readouterr()
     assert 'brush_hair' in out
