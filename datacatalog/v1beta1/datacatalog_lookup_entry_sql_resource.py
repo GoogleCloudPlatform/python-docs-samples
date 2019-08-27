@@ -23,10 +23,8 @@
 #   title:
 #   description: Lookup Entry using SQL resource
 #   usage: python3 samples/v1beta1/datacatalog_lookup_entry_sql_resource.py [--sql_name "[SQL Resource Name]"]
-import sys
 
 # [START datacatalog_lookup_entry_sql_resource]
-
 from google.cloud import datacatalog_v1beta1
 from google.cloud.datacatalog_v1beta1 import enums
 
