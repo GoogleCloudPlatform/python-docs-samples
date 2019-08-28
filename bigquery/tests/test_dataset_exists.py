@@ -13,20 +13,18 @@
 # limitations under the License.
 
 
-def delete_model(client, model_id):
-    """Sample ID: go/samples-tracker/1534"""
+from google.cloud import bigquery
 
-    # [START bigquery_delete_model]
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
+from .. import dataset_exists
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
 
-    # TODO(developer): Set model_id to the ID of the model to fetch.
-    # model_id = 'your-project.your_dataset.your_model'
+def test_dataset_exists(capsys, client, random_dataset_id):
 
-    client.delete_model(model_id)
-
-    print("Deleted model '{}'.".format(model_id))
-    # [END bigquery_delete_model]
+    dataset_exists.dataset_exists(client, random_dataset_id)
+    out, err = capsys.readouterr()
+    assert "Dataset {} is not found".format(random_dataset_id) in out
+    dataset = bigquery.Dataset(random_dataset_id)
+    dataset = client.create_dataset(dataset)
+    dataset_exists.dataset_exists(client, random_dataset_id)
+    out, err = capsys.readouterr()
+    assert "Dataset {} already exists".format(random_dataset_id) in out

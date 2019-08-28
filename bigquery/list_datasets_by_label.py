@@ -13,22 +13,22 @@
 # limitations under the License.
 
 
-def list_routines(client, dataset_id):
+def list_datasets_by_label(client):
 
-    # [START bigquery_list_routines]
+    # [START bigquery_list_datasets_by_label]
     # TODO(developer): Import the client library.
     # from google.cloud import bigquery
 
     # TODO(developer): Construct a BigQuery client object.
     # client = bigquery.Client()
 
-    # TODO(developer): Set dataset_id to the ID of the dataset that contains
-    #                  the routines you are listing.
-    # dataset_id = 'your-project.your_dataset'
+    label_filter = "labels.color:green"
+    datasets = list(client.list_datasets(filter=label_filter))
 
-    routines = client.list_routines(dataset_id)
-
-    print("Routines contained in dataset {}:".format(dataset_id))
-    for routine in routines:
-        print(routine.reference)
-    # [END bigquery_list_routines]
+    if datasets:
+        print("Datasets filtered by {}:".format(label_filter))
+        for dataset in datasets:
+            print("\t{}.{}".format(dataset.project, dataset.dataset_id))
+    else:
+        print("No datasets found with this filter.")
+    # [END bigquery_list_datasets_by_label]

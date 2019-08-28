@@ -13,7 +13,8 @@
 # limitations under the License.
 
 
-def main(client, routine_id):
+def create_routine(client, routine_id):
+
     # [START bigquery_create_routine]
     from google.cloud import bigquery
     from google.cloud import bigquery_v2

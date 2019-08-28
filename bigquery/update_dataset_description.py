@@ -16,7 +16,8 @@
 def update_dataset_description(client, dataset_id):
 
     # [START bigquery_update_dataset_description]
-    from google.cloud import bigquery
+    # TODO(developer): Import the client library.
+    # from google.cloud import bigquery
 
     # TODO(developer): Construct a BigQuery client object.
     # client = bigquery.Client()

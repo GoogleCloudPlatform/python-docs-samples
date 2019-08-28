@@ -13,20 +13,14 @@
 # limitations under the License.
 
 
-def delete_model(client, model_id):
-    """Sample ID: go/samples-tracker/1534"""
+from .. import browse_table_data
 
-    # [START bigquery_delete_model]
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+def test_browse_table_data(capsys, client, table_with_data_id):
 
-    # TODO(developer): Set model_id to the ID of the model to fetch.
-    # model_id = 'your-project.your_dataset.your_model'
-
-    client.delete_model(model_id)
-
-    print("Deleted model '{}'.".format(model_id))
-    # [END bigquery_delete_model]
+    browse_table_data.browse_table_data(client, table_with_data_id)
+    out, err = capsys.readouterr()
+    assert "Downloaded 164656 rows from table {}".format(table_with_data_id) in out
+    assert "Downloaded 10 rows from table {}".format(table_with_data_id) in out
+    assert "Selected 2 columns from table {}".format(table_with_data_id) in out
+    assert "Downloaded 10 rows from table {}".format(table_with_data_id) in out

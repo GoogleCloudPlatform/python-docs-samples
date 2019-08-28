@@ -17,6 +17,7 @@ from .. import get_table
 
 
 def test_get_table(capsys, client, random_table_id):
+
     schema = [
         bigquery.SchemaField("full_name", "STRING", mode="REQUIRED"),
         bigquery.SchemaField("age", "INTEGER", mode="REQUIRED"),

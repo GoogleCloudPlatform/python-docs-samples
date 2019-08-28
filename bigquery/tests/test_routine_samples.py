@@ -19,7 +19,7 @@ from google.cloud import bigquery_v2
 def test_create_routine(capsys, client, random_routine_id):
     from .. import create_routine
 
-    create_routine.main(client, random_routine_id)
+    create_routine.create_routine(client, random_routine_id)
     out, err = capsys.readouterr()
     assert "Created routine {}".format(random_routine_id) in out
 
@@ -27,7 +27,7 @@ def test_create_routine(capsys, client, random_routine_id):
 def test_create_routine_ddl(capsys, client, random_routine_id):
     from .. import create_routine_ddl
 
-    create_routine_ddl.main(client, random_routine_id)
+    create_routine_ddl.create_routine_ddl(client, random_routine_id)
     routine = client.get_routine(random_routine_id)
     out, err = capsys.readouterr()
 
@@ -68,7 +68,7 @@ def test_create_routine_ddl(capsys, client, random_routine_id):
 def test_list_routines(capsys, client, dataset_id, routine_id):
     from .. import list_routines
 
-    list_routines.main(client, dataset_id)
+    list_routines.list_routines(client, dataset_id)
     out, err = capsys.readouterr()
     assert "Routines contained in dataset {}:".format(dataset_id) in out
     assert routine_id in out
@@ -77,7 +77,7 @@ def test_list_routines(capsys, client, dataset_id, routine_id):
 def test_delete_routine(capsys, client, routine_id):
     from .. import delete_routine
 
-    delete_routine.main(client, routine_id)
+    delete_routine.delete_routine(client, routine_id)
     out, err = capsys.readouterr()
     assert "Deleted routine {}.".format(routine_id) in out
 
@@ -85,5 +85,5 @@ def test_delete_routine(capsys, client, routine_id):
 def test_update_routine(client, routine_id):
     from .. import update_routine
 
-    routine = update_routine.main(client, routine_id)
+    routine = update_routine.update_routine(client, routine_id)
     assert routine.body == "x * 4"

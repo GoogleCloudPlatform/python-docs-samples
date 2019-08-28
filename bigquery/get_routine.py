@@ -13,7 +13,8 @@
 # limitations under the License.
 
 
-def main(client, routine_id):
+def get_routine(client, routine_id):
+
     # [START bigquery_get_routine]
     # TODO(developer): Import the client library.
     # from google.cloud import bigquery
@@ -34,6 +35,5 @@ def main(client, routine_id):
     for argument in routine.arguments:
         print("    Name: '{}'".format(argument.name))
         print("    Type: '{}'".format(argument.type_))
-
     # [END bigquery_get_routine]
     return routine

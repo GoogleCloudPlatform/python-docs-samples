@@ -13,25 +13,28 @@
 # limitations under the License.
 
 
-def create_table(client, table_id):
+def add_empty_column(client, table_id):
 
-    # [START bigquery_create_table]
+    # [START bigquery_add_empty_column]
     from google.cloud import bigquery
 
     # TODO(developer): Construct a BigQuery client object.
     # client = bigquery.Client()
 
-    # TODO(developer): Set table_id to the ID of the table to create
+    # TODO(developer): Set table_id to the ID of the table to add an empty column.
     # table_id = "your-project.your_dataset.your_table_name"
 
-    schema = [
-        bigquery.SchemaField("full_name", "STRING", mode="REQUIRED"),
-        bigquery.SchemaField("age", "INTEGER", mode="REQUIRED"),
-    ]
+    table = client.get_table(table_id)
 
-    table = bigquery.Table(table_id, schema=schema)
-    table = client.create_table(table)  # API request
-    print(
-        "Created table {}.{}.{}".format(table.project, table.dataset_id, table.table_id)
-    )
-    # [END bigquery_create_table]
+    original_schema = table.schema
+    new_schema = original_schema[:]  # creates a copy of the schema
+    new_schema.append(bigquery.SchemaField("phone", "STRING"))
+
+    table.schema = new_schema
+    table = client.update_table(table, ["schema"])  # API request
+
+    if len(table.schema) == len(original_schema) + 1 == len(new_schema):
+        print("A new column has been added.")
+    else:
+        print("The column has not been added.")
+    # [END bigquery_add_empty_column]

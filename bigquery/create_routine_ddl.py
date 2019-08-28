@@ -13,7 +13,8 @@
 # limitations under the License.
 
 
-def main(client, routine_id):
+def create_routine_ddl(client, routine_id):
+
     # [START bigquery_create_routine_ddl]
     # TODO(developer): Import the client library.
     # from google.cloud import bigquery

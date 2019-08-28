@@ -13,22 +13,26 @@
 # limitations under the License.
 
 
-def list_routines(client, dataset_id):
+def get_dataset_labels(client, dataset_id):
 
-    # [START bigquery_list_routines]
+    # [START bigquery_get_dataset_labels]
     # TODO(developer): Import the client library.
     # from google.cloud import bigquery
 
     # TODO(developer): Construct a BigQuery client object.
     # client = bigquery.Client()
 
-    # TODO(developer): Set dataset_id to the ID of the dataset that contains
-    #                  the routines you are listing.
-    # dataset_id = 'your-project.your_dataset'
+    # TODO(developer): Set dataset_id to the ID of the dataset to fetch.
+    # dataset_id = "your-project.your_dataset"
 
-    routines = client.list_routines(dataset_id)
+    dataset = client.get_dataset(dataset_id)
 
-    print("Routines contained in dataset {}:".format(dataset_id))
-    for routine in routines:
-        print(routine.reference)
-    # [END bigquery_list_routines]
+    # View dataset labels
+    print("Dataset ID: {}".format(dataset_id))
+    print("Labels:")
+    if dataset.labels:
+        for label, value in dataset.labels.items():
+            print("\t{}: {}".format(label, value))
+    else:
+        print("\tDataset has no labels defined.")
+    # [END bigquery_get_dataset_labels]

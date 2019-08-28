@@ -13,20 +13,11 @@
 # limitations under the License.
 
 
-def delete_model(client, model_id):
-    """Sample ID: go/samples-tracker/1534"""
+from .. import add_empty_column
 
-    # [START bigquery_delete_model]
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+def test_add_empty_column(capsys, client, table_id):
 
-    # TODO(developer): Set model_id to the ID of the model to fetch.
-    # model_id = 'your-project.your_dataset.your_model'
-
-    client.delete_model(model_id)
-
-    print("Deleted model '{}'.".format(model_id))
-    # [END bigquery_delete_model]
+    add_empty_column.add_empty_column(client, table_id)
+    out, err = capsys.readouterr()
+    assert "A new column has been added." in out

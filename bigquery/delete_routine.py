@@ -13,7 +13,8 @@
 # limitations under the License.
 
 
-def main(client, routine_id):
+def delete_routine(client, routine_id):
+
     # [START bigquery_delete_routine]
     # TODO(developer): Import the client library.
     # from google.cloud import bigquery
@@ -25,6 +26,6 @@ def main(client, routine_id):
     # routine_id = "my-project.my_dataset.my_routine"
 
     client.delete_routine(routine_id)
-    # [END bigquery_delete_routine]
 
     print("Deleted routine {}.".format(routine_id))
+    # [END bigquery_delete_routine]

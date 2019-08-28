@@ -16,7 +16,8 @@
 def get_table(client, table_id):
 
     # [START bigquery_get_table]
-    from google.cloud import bigquery
+    # TODO(developer): Import the client library.
+    # from google.cloud import bigquery
 
     # TODO(developer): Construct a BigQuery client object.
     # client = bigquery.Client()

@@ -17,7 +17,8 @@ def list_models(client, dataset_id):
     """Sample ID: go/samples-tracker/1512"""
 
     # [START bigquery_list_models]
-    from google.cloud import bigquery
+    # TODO(developer): Import the client library.
+    # from google.cloud import bigquery
 
     # TODO(developer): Construct a BigQuery client object.
     # client = bigquery.Client()
