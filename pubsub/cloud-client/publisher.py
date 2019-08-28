@@ -207,9 +207,8 @@ def publish_messages_with_batch_settings(project_id, topic_name):
     # Configure the batch to publish as soon as there is one kilobyte
     # of data or one second has passed.
     batch_settings = pubsub_v1.types.BatchSettings(
-        # max_bytes=1024,  # One kilobyte
-        # max_latency=1,   # One second
-        max_messages = 5,
+        max_bytes=1024,  # One kilobyte
+        max_latency=1,   # One second
     )
     publisher = pubsub_v1.PublisherClient(batch_settings)
     topic_path = publisher.topic_path(project_id, topic_name)
