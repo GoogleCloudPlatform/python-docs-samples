@@ -10,22 +10,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# [START memorystore_app_yaml]
-runtime: python
-env: flex
+# [START memorystore_app_yaml_standard]
+runtime: python37
 entrypoint: gunicorn -b :$PORT main:app
 
-runtime_config:
-  python_version: 3
-
-# update with Redis instance host IP, port
+# Update with Redis instance details
 env_variables:
-  REDISHOST:  redis-ip
-  REDISPORT: 6379
+  REDISHOST: '<REDIS_IP>'
+  REDISPORT: '6379'
 
-# update with Redis instance network name
-network:
-  name: default
-
-#[END memorystore_app_yaml]
+# Update with Serverless VPC Access connector details
+vpc_access_connector:
+  name: 'projects/<PROJECT_ID>/locations/<REGION>/connectors/<CONNECTOR_NAME>'
+# [END memorystore_app_yaml_standard]
