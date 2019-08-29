@@ -216,7 +216,7 @@ def pause_queue(project, location, queue):
 
     queue_path = client.queue_path(project, location, queue)
     response = client.pause_queue(queue_path)
-    # [END taskqueues_pause_queues]
+    # [END taskqueues_pause_queue]
     return response
 
 
