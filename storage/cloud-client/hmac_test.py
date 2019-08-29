@@ -39,12 +39,14 @@ def new_hmac_key():
     hmac_key = hmac.create_key(PROJECT_ID, SERVICE_ACCOUNT_EMAIL)
     yield hmac_key
     storage_client = storage.Client(project=PROJECT_ID)
-    hmac_keys = storage_client.list_hmac_keys(project_id=PROJECT_ID)
-    for key in hmac_keys:
-        if not key.state == 'INACTIVE':
-            key.state = 'INACTIVE'
-            key.update()
-        key.delete()
+    hmac_key = storage_client.get_hmac_key_metadata(hmac_key.access_id,
+                                                    project_id=PROJECT_ID)
+    if hmac_key.state == 'DELETED':
+        return
+    if not hmac_key.state == 'INACTIVE':
+        hmac_key.state = 'INACTIVE'
+        hmac_key.update()
+    hmac_key.delete()
 
 
 def test_list_keys(capsys, new_hmac_key):
