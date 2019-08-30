@@ -50,8 +50,8 @@ def create_key(project_id, service_account_email):
     # service_account_email = 'Service account used to generate HMAC key'
     storage_client = storage.Client(project=project_id)
     hmac_key, secret = storage_client.create_hmac_key(
-                                service_account_email=service_account_email,
-                                project_id=project_id)
+        service_account_email=service_account_email,
+        project_id=project_id)
     print('The base64 encoded secret is {}'.format(secret))
     print('Do not miss that secret, there is no API to recover it.')
     print('The HMAC key metadata is:')
@@ -74,8 +74,9 @@ def get_key(access_id, project_id):
     # project_id = 'Your Google Cloud project ID'
     # access_id = 'ID of an HMAC key'
     storage_client = storage.Client(project=project_id)
-    hmac_key = storage_client.get_hmac_key_metadata(access_id,
-                                                    project_id=project_id)
+    hmac_key = storage_client.get_hmac_key_metadata(
+        access_id,
+        project_id=project_id)
     print('The HMAC key metadata is:')
     print('Key ID: {}'.format(hmac_key.id))
     print('Access ID: {}'.format(hmac_key.access_id))
@@ -96,8 +97,9 @@ def activate_key(access_id, project_id):
     # project_id = 'Your Google Cloud project ID'
     # access_id = 'ID of an inactive HMAC key'
     storage_client = storage.Client(project=project_id)
-    hmac_key = storage_client.get_hmac_key_metadata(access_id,
-                                                    project_id=project_id)
+    hmac_key = storage_client.get_hmac_key_metadata(
+        access_id,
+        project_id=project_id)
     hmac_key.state = 'ACTIVE'
     hmac_key.update()
     print('The HMAC key metadata is:')
@@ -120,8 +122,9 @@ def deactivate_key(access_id, project_id):
     # project_id = 'Your Google Cloud project ID'
     # access_id = 'ID of an active HMAC key'
     storage_client = storage.Client(project=project_id)
-    hmac_key = storage_client.get_hmac_key_metadata(access_id,
-                                                    project_id=project_id)
+    hmac_key = storage_client.get_hmac_key_metadata(
+        access_id,
+        project_id=project_id)
     hmac_key.state = 'INACTIVE'
     hmac_key.update()
     print('The HMAC key is now inactive.')
@@ -146,8 +149,9 @@ def delete_key(access_id, project_id):
     # project_id = 'Your Google Cloud project ID'
     # access_id = 'ID of an inactive HMAC key'
     storage_client = storage.Client(project=project_id)
-    hmac_key = storage_client.get_hmac_key_metadata(access_id,
-                                                    project_id=project_id)
+    hmac_key = storage_client.get_hmac_key_metadata(
+        access_id,
+        project_id=project_id)
     hmac_key.delete()
     print('The key is deleted, though it may still appear in list_hmac_keys()'
           ' results.')

@@ -30,7 +30,7 @@ PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 SERVICE_ACCOUNT_EMAIL = os.environ['HMAC_KEY_TEST_SERVICE_ACCOUNT']
 
 
-@pytest.fixture()
+@pytest.fixture
 def new_hmac_key():
     """
     Fixture to create a new HMAC key, and to guarantee all keys are deleted at
@@ -38,6 +38,7 @@ def new_hmac_key():
     """
     hmac_key = hmac.create_key(PROJECT_ID, SERVICE_ACCOUNT_EMAIL)
     yield hmac_key
+    # Re-fetch the key metadata in case state has changed during the test.
     storage_client = storage.Client(project=PROJECT_ID)
     hmac_key = storage_client.get_hmac_key_metadata(hmac_key.access_id,
                                                     project_id=PROJECT_ID)
