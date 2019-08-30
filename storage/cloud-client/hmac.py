@@ -30,9 +30,7 @@ def list_keys(project_id):
     print('HMAC Keys:')
     for hmac_key in hmac_keys:
         print('The HMAC key metadata is:')
-        # TODO: fix this once field is added; see
-        #  https://github.com/googleapis/google-cloud-python/pull/9115
-        print('Key ID: {}'.format(hmac_key._properties['id']))
+        print('Key ID: {}'.format(hmac_key.id))
         print('Access ID: {}'.format(hmac_key.access_id))
         print('Project ID: {}'.format(hmac_key.project))
         print('State: {}'.format(hmac_key.state))
@@ -57,9 +55,7 @@ def create_key(project_id, service_account_email):
     print('The base64 encoded secret is {}'.format(secret))
     print('Do not miss that secret, there is no API to recover it.')
     print('The HMAC key metadata is:')
-    # TODO: fix this once field is added; see
-    #  https://github.com/googleapis/google-cloud-python/pull/9115
-    print('Key ID: {}'.format(hmac_key._properties['id']))
+    print('Key ID: {}'.format(hmac_key.id))
     print('Access ID: {}'.format(hmac_key.access_id))
     print('Project ID: {}'.format(hmac_key.project))
     print('State: {}'.format(hmac_key.state))
@@ -81,9 +77,7 @@ def get_key(access_id, project_id):
     hmac_key = storage_client.get_hmac_key_metadata(access_id,
                                                     project_id=project_id)
     print('The HMAC key metadata is:')
-    # TODO: fix this once field is added; see
-    #  https://github.com/googleapis/google-cloud-python/pull/9115
-    print('Key ID: {}'.format(hmac_key._properties['id']))
+    print('Key ID: {}'.format(hmac_key.id))
     print('Access ID: {}'.format(hmac_key.access_id))
     print('Project ID: {}'.format(hmac_key.project))
     print('State: {}'.format(hmac_key.state))
@@ -107,9 +101,7 @@ def activate_key(access_id, project_id):
     hmac_key.state = 'ACTIVE'
     hmac_key.update()
     print('The HMAC key metadata is:')
-    # TODO: fix this once field is added; see
-    #  https://github.com/googleapis/google-cloud-python/pull/9115
-    print('Key ID: {}'.format(hmac_key._properties['id']))
+    print('Key ID: {}'.format(hmac_key.id))
     print('Access ID: {}'.format(hmac_key.access_id))
     print('Project ID: {}'.format(hmac_key.project))
     print('State: {}'.format(hmac_key.state))
@@ -134,9 +126,7 @@ def deactivate_key(access_id, project_id):
     hmac_key.update()
     print('The HMAC key is now inactive.')
     print('The HMAC key metadata is:')
-    # TODO: fix this once field is added; see
-    #  https://github.com/googleapis/google-cloud-python/pull/9115
-    print('Key ID: {}'.format(hmac_key._properties['id']))
+    print('Key ID: {}'.format(hmac_key.id))
     print('Access ID: {}'.format(hmac_key.access_id))
     print('Project ID: {}'.format(hmac_key.project))
     print('State: {}'.format(hmac_key.state))
@@ -159,6 +149,6 @@ def delete_key(access_id, project_id):
     hmac_key = storage_client.get_hmac_key_metadata(access_id,
                                                     project_id=project_id)
     hmac_key.delete()
-    print('The key is deleted, though it may still appear in getHmacKeys()'
+    print('The key is deleted, though it may still appear in list_hmac_keys()'
           ' results.')
     # [END storage_delete_hmac_key]
