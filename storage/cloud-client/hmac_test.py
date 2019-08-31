@@ -28,6 +28,7 @@ import hmac
 
 PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 SERVICE_ACCOUNT_EMAIL = os.environ['HMAC_KEY_TEST_SERVICE_ACCOUNT']
+STORAGE_CLIENT = storage.Client(project=PROJECT_ID)
 
 
 @pytest.fixture
@@ -36,12 +37,14 @@ def new_hmac_key():
     Fixture to create a new HMAC key, and to guarantee all keys are deleted at
     the end of each test.
     """
-    hmac_key = hmac.create_key(PROJECT_ID, SERVICE_ACCOUNT_EMAIL)
+    hmac_key, secret = STORAGE_CLIENT.create_hmac_key(
+        service_account_email=SERVICE_ACCOUNT_EMAIL,
+        project_id=PROJECT_ID)
     yield hmac_key
     # Re-fetch the key metadata in case state has changed during the test.
-    storage_client = storage.Client(project=PROJECT_ID)
-    hmac_key = storage_client.get_hmac_key_metadata(hmac_key.access_id,
-                                                    project_id=PROJECT_ID)
+    hmac_key = STORAGE_CLIENT.get_hmac_key_metadata(
+        hmac_key.access_id,
+        project_id=PROJECT_ID)
     if hmac_key.state == 'DELETED':
         return
     if not hmac_key.state == 'INACTIVE':
@@ -56,10 +59,13 @@ def test_list_keys(capsys, new_hmac_key):
     assert hmac_keys.num_results >= 1
 
 
-def test_create_key(capsys, new_hmac_key):
+def test_create_key(capsys):
+    hmac_key = hmac.create_key(PROJECT_ID, SERVICE_ACCOUNT_EMAIL)
+    hmac_key.state = 'INACTIVE'
+    hmac_key.update()
+    hmac_key.delete()
     assert 'Key ID:' in capsys.readouterr().out
-    assert new_hmac_key.access_id
-    assert new_hmac_key.state == 'ACTIVE'
+    assert hmac_key.access_id
 
 
 def test_get_key(capsys, new_hmac_key):

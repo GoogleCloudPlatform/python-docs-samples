@@ -147,7 +147,7 @@ def delete_key(access_id, project_id):
     """
     # [START storage_delete_hmac_key]
     # project_id = 'Your Google Cloud project ID'
-    # access_id = 'ID of an inactive HMAC key'
+    # access_id = 'ID of an HMAC key (must be in INACTIVE state)'
     storage_client = storage.Client(project=project_id)
     hmac_key = storage_client.get_hmac_key_metadata(
         access_id,
