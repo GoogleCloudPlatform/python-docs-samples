@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import filecmp
 import os
 import sys
 
@@ -97,7 +96,6 @@ def test_translate_glossary():
 
 def test_tts_standard(capsys):
     outfile = 'resources/test_standard_text.mp3'
-    expected_outfile = 'resources/expected_standard_text.mp3'
     textfile = 'resources/standard_format.txt'
 
     with open(textfile, 'r') as f:
@@ -107,12 +105,6 @@ def test_tts_standard(capsys):
 
     # Assert audio file generated
     assert os.path.isfile(outfile)
-
-    # Assert audio file generated correctly
-    assert filecmp.cmp(outfile,
-                       expected_outfile,
-                       shallow=True)
-
     out, err = capsys.readouterr()
 
     # Assert success message printed
