@@ -107,12 +107,6 @@ def test_tts_standard(capsys):
 
     # Assert audio file generated
     assert os.path.isfile(outfile)
-
-    # Assert audio file generated correctly
-    assert filecmp.cmp(outfile,
-                       expected_outfile,
-                       shallow=True)
-
     out, err = capsys.readouterr()
 
     # Assert success message printed
