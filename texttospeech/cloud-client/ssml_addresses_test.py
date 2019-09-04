@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from tts import text_to_ssml
-from tts import ssml_to_audio
+from ssml_addresses import text_to_ssml
+from ssml_addresses import ssml_to_audio
 
 import filecmp
 import os
@@ -39,16 +39,11 @@ def test_ssml_to_audio(capsys):
 
     # Assert audio file generated
     ssml_to_audio(input_ssml, 'test_example.mp3')
-    assert os.path.isfile('test_example.mp3')
-
-    # Assert audio file generated correctly
-    assert filecmp.cmp('test_example.mp3',
-                       'resources/expected_example.mp3',
-                       shallow=True)
     out, err = capsys.readouterr()
 
-    # Delete test file
-    os.remove("test_example.mp3")
-
-    # Assert success message printed
+    # Assert MP3 file created
+    assert os.path.isfile('test_example.mp3')
     assert "Audio content written to file test_example.mp3" in out
+
+    # Delete MP3 test file
+    os.remove("test_example.mp3")
