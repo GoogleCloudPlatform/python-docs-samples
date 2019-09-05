@@ -60,6 +60,8 @@ def receive_image(project_id, sub_name, prefix, extension, duration):
     file_pattern = '{}-{}.{}'
 
     def callback(message):
+        message.ack() # To move forward if a message can't be processed
+
         global count
         count = count + 1
         print('Received image {}:'.format(count))
@@ -67,8 +69,6 @@ def receive_image(project_id, sub_name, prefix, extension, duration):
 
         with io.open(file_pattern.format(prefix, count, extension), 'wb') as f:
             f.write(image_data)
-
-        message.ack()
 
     subscriber.subscribe(subscription_path, callback=callback)
 
