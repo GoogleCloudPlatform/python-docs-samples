@@ -106,14 +106,17 @@ The following example will run a streaming pipeline. It will read messages from 
 + `--output`: sets the output GCS path prefix to write files to
 + `--runner [optional]`: specifies the runner to run the pipeline, defaults to `DirectRunner`
 + `--windowSize [optional]`: specifies the window size in minutes, defaults to 1
++ `--temp_location`: needed for execution of the pipeline
 
 ```bash
-python PubSubToGCS.py \
+python -m PubSubToGCS \
   --project=$PROJECT_NAME \
-  --inputTopic=projects/$PROJECT_NAME/topics/cron-topic \
-  --output=gs://$BUCKET_NAME/samples/output \
+  --input_topic=projects/$PROJECT_NAME/topics/june \
+  --output_path=gs://$BUCKET_NAME/labor \
   --runner=DataflowRunner \
-  --windowSize=2
+  --window_size=2 \
+  --temp_location=gs://$BUCKET_NAME/temp \
+  --experiments=allow_non_updateable_job
 ```
 
 After the job has been submitted, you can check its status in the [GCP Console Dataflow page].
