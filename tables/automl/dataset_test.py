@@ -27,7 +27,7 @@ import automl_tables_dataset
 PROJECT = os.environ["GCLOUD_PROJECT"]
 REGION = "us-central1"
 STATIC_DATASET = "test_dataset_do_not_delete"
-GCS_DATASET="gs://cloud-ml-tables-data/bank-marketing.csv"
+GCS_DATASET = "gs://cloud-ml-tables-data/bank-marketing.csv"
 
 ID = "{rand}_{time}".format(
     rand="".join(
@@ -36,8 +36,10 @@ ID = "{rand}_{time}".format(
     time=int(time.time()),
 )
 
+
 def _id(name):
     return "{}_{}".format(name, ID)
+
 
 def ensure_dataset_ready():
     dataset = None
@@ -62,6 +64,7 @@ def ensure_dataset_ready():
 
     return dataset
 
+
 @pytest.mark.slow
 def test_dataset_create_import_delete(capsys):
     name = _id("d_cr_dl")
@@ -81,6 +84,7 @@ def test_dataset_create_import_delete(capsys):
     with pytest.raises(exceptions.NotFound):
         automl_tables_dataset.get_dataset(PROJECT, REGION, name)
 
+
 def test_dataset_update(capsys):
     dataset = ensure_dataset_ready()
     automl_tables_dataset.update_dataset(
@@ -94,6 +98,7 @@ def test_dataset_update(capsys):
     out, _ = capsys.readouterr()
     assert "Target column updated." in out
     assert "Weight column updated." in out
+
 
 def test_column_update(capsys):
     dataset = ensure_dataset_ready()
@@ -109,26 +114,33 @@ def test_column_update(capsys):
     out, _ = capsys.readouterr()
     assert "Table spec updated." in out
 
+
 def test_list_datasets():
     ensure_dataset_ready()
     assert next(
             (
-                d 
-                for d 
-                in automl_tables_dataset.list_datasets(PROJECT, REGION) 
+                d
+                for d
+                in automl_tables_dataset.list_datasets(PROJECT, REGION)
                 if d.display_name == STATIC_DATASET
             ), None) is not None
 
+
 def test_list_table_specs():
     dataset = ensure_dataset_ready()
-    ts = automl_tables_dataset.list_table_specs(PROJECT, REGION, dataset.display_name)
+    ts = automl_tables_dataset.list_table_specs(
+        PROJECT, REGION, dataset.display_name
+    )
     assert len(ts) > 0
     for t in ts:
         assert t.name.startswith(dataset.name)
 
+
 def test_list_column_specs():
     dataset = ensure_dataset_ready()
-    cs = automl_tables_dataset.list_column_specs(PROJECT, REGION, dataset.display_name)
+    cs = automl_tables_dataset.list_column_specs(
+        PROJECT, REGION, dataset.display_name
+    )
     assert len(cs) > 0
     for c in cs:
         assert c.name.startswith(dataset.name)
