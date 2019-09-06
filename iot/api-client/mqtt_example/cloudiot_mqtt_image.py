@@ -60,7 +60,7 @@ def receive_image(project_id, sub_name, prefix, extension, duration):
     file_pattern = '{}-{}.{}'
 
     def callback(message):
-        message.ack() # To move forward if a message can't be processed
+        message.ack()  # To move forward if a message can't be processed
 
         global count
         count = count + 1
@@ -118,6 +118,11 @@ def parse_command_line_args():
     parser.add_argument(
             '--image_extension',
             help='Image extension used when receiving images.')
+    parser.add_argument(
+            '--duration',
+            default=60,
+            type=int,
+            help='Number of seconds to receieve images for.')
 
     command = parser.add_subparsers(dest='command')
     command.add_parser(
@@ -140,7 +145,7 @@ def main():
     elif args.command == 'recv':
         receive_image(
             args.project_id, args.subscription_name, args.image_prefix,
-            args.image_extension, 60)
+            args.image_extension, args.duration)
     else:
         print(args.print_help())
 
