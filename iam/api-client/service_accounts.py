@@ -34,6 +34,7 @@ import googleapiclient.discovery
 # [END iam_rename_service_account]
 # [END iam_delete_service_account]
 
+
 # [START iam_create_service_account]
 def create_service_account(project_id, name, display_name):
     """Creates a service account."""
@@ -44,7 +45,7 @@ def create_service_account(project_id, name, display_name):
         scopes=['https://www.googleapis.com/auth/cloud-platform'])
 
     service = googleapiclient.discovery.build(
-        iam', 'v1', credentials=credentials)
+        'iam', 'v1', credentials=credentials)
 
     service_account = service.projects().serviceAccounts().create(
         name='projects/' + project_id,
@@ -70,7 +71,7 @@ def list_service_accounts(project_id):
         scopes=['https://www.googleapis.com/auth/cloud-platform'])
 
     service = googleapiclient.discovery.build(
-    'iam', 'v1', credentials=credentials)
+        'iam', 'v1', credentials=credentials)
 
     service_accounts = service.projects().serviceAccounts().list(
         name='projects/' + project_id).execute()
