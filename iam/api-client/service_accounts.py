@@ -89,6 +89,7 @@ def rename_service_account(email, new_display_name):
     """Changes a service account's display name."""
 
     # First, get a service account using List() or Get()
+    # pylint: disable=no-member
     credentials = service_account.Credentials.from_service_account_file(
         filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
         scopes=['https://www.googleapis.com/auth/cloud-platform'])
@@ -98,7 +99,6 @@ def rename_service_account(email, new_display_name):
 
     resource = 'projects/-/serviceAccounts/' + email
 
-    # pylint: disable=no-member
     service_account = service.projects().serviceAccounts().get(
         name=resource).execute()
 
