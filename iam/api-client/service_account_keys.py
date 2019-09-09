@@ -34,15 +34,16 @@ import googleapiclient.discovery
 # [END iam_list_keys]
 # [END iam_delete_key]
 
+
 # [START iam_create_key]
 def create_key(service_account_email):
     """Creates a key for a service account."""
-    
+
     # pylint: disable=no-member
     credentials = service_account.Credentials.from_service_account_file(
         filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
         scopes=['https://www.googleapis.com/auth/cloud-platform'])
-    
+
     service = googleapiclient.discovery.build(
         'iam', 'v1', credentials=credentials)
 
@@ -57,12 +58,12 @@ def create_key(service_account_email):
 # [START iam_list_keys]
 def list_keys(service_account_email):
     """Lists all keys for a service account."""
-    
+
     # pylint: disable=no-member
     credentials = service_account.Credentials.from_service_account_file(
         filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
         scopes=['https://www.googleapis.com/auth/cloud-platform'])
-    
+
     service = googleapiclient.discovery.build(
         'iam', 'v1', credentials=credentials)
 
@@ -82,7 +83,7 @@ def delete_key(full_key_name):
     credentials = service_account.Credentials.from_service_account_file(
         filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
         scopes=['https://www.googleapis.com/auth/cloud-platform'])
-    
+
     service = googleapiclient.discovery.build(
         'iam', 'v1', credentials=credentials)
 
