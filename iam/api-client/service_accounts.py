@@ -28,6 +28,7 @@ import os
 
 from google.oauth2 import service_account
 import googleapiclient.discovery
+
 # [END iam_create_service_account]
 # [END iam_list_service_account]
 # [END iam_rename_service_account]
@@ -39,11 +40,11 @@ def create_service_account(project_id, name, display_name):
     
     # pylint: disable=no-member
     credentials = service_account.Credentials.from_service_account_file(
-    filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
-    scopes=['https://www.googleapis.com/auth/cloud-platform'])
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
     
     service = googleapiclient.discovery.build(
-    'iam', 'v1', credentials=credentials)
+        iam', 'v1', credentials=credentials)
 
     service_account = service.projects().serviceAccounts().create(
         name='projects/' + project_id,
@@ -65,8 +66,8 @@ def list_service_accounts(project_id):
     
     # pylint: disable=no-member
     credentials = service_account.Credentials.from_service_account_file(
-    filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
-    scopes=['https://www.googleapis.com/auth/cloud-platform'])
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
     
     service = googleapiclient.discovery.build(
     'iam', 'v1', credentials=credentials)
@@ -88,11 +89,11 @@ def rename_service_account(email, new_display_name):
     
     # First, get a service account using List() or Get()
     credentials = service_account.Credentials.from_service_account_file(
-    filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
-    scopes=['https://www.googleapis.com/auth/cloud-platform'])
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
     
     service = googleapiclient.discovery.build(
-    'iam', 'v1', credentials=credentials)
+        'iam', 'v1', credentials=credentials)
     
     resource = 'projects/-/serviceAccounts/' + email
     
@@ -117,11 +118,12 @@ def delete_service_account(email):
 
     # pylint: disable=no-member
     credentials = service_account.Credentials.from_service_account_file(
-    filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
-    scopes=['https://www.googleapis.com/auth/cloud-platform'])
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
     
     service = googleapiclient.discovery.build(
-    'iam', 'v1', credentials=credentials)
+        'iam', 'v1', credentials=credentials)
+    
     service.projects().serviceAccounts().delete(
         name='projects/-/serviceAccounts/' + email).execute()
 
