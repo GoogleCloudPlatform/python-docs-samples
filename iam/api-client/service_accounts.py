@@ -47,7 +47,7 @@ def create_service_account(project_id, name, display_name):
     service = googleapiclient.discovery.build(
         'iam', 'v1', credentials=credentials)
 
-    service_account = service.projects().serviceAccounts().create(
+    my_service_account = service.projects().serviceAccounts().create(
         name='projects/' + project_id,
         body={
             'accountId': name,
@@ -56,8 +56,8 @@ def create_service_account(project_id, name, display_name):
             }
         }).execute()
 
-    print('Created service account: ' + service_account['email'])
-    return service_account
+    print('Created service account: ' + my_service_account['email'])
+    return my_service_account
 # [END iam_create_service_account]
 
 
@@ -99,17 +99,17 @@ def rename_service_account(email, new_display_name):
 
     resource = 'projects/-/serviceAccounts/' + email
 
-    service_account = service.projects().serviceAccounts().get(
+    my_service_account = service.projects().serviceAccounts().get(
         name=resource).execute()
 
     # Then you can update the display name
-    service_account['displayName'] = new_display_name
-    service_account = service.projects().serviceAccounts().update(
+    my_service_account['displayName'] = new_display_name
+    my_service_account = service.projects().serviceAccounts().update(
         name=resource, body=service_account).execute()
 
     print('Updated display name for {} to: {}'.format(
-        service_account['email'], service_account['displayName']))
-    return service_account
+        service_account['email'], my_service_account['displayName']))
+    return my_service_account
 # [END iam_rename_service_account]
 
 
