@@ -22,12 +22,17 @@ https://cloud.google.com/iam/docs/creating-managing-service-account-keys.
 """
 
 import argparse
+# [START iam_create_key]
+# [START iam_list_keys]
+# [START iam_delete_key]
 import os
 
 from google.oauth2 import service_account
 import googleapiclient.discovery
 
-
+# [END iam_create_key]
+# [END iam_list_keys]
+# [END iam_delete_key]
 
 # [START iam_create_key]
 def create_key(service_account_email):
