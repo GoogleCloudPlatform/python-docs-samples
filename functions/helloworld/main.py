@@ -22,7 +22,6 @@ from flask import escape
 # [END functions_http_content]
 
 
-# [START functions_tips_terminate]
 # [START functions_helloworld_get]
 def hello_get(request):
     """HTTP Cloud Function.
@@ -52,7 +51,6 @@ def hello_background(event, context):
         name = 'World'
     return 'Hello {}!'.format(name)
 # [END functions_helloworld_background]
-# [END functions_tips_terminate]
 
 
 # [START functions_helloworld_http]
