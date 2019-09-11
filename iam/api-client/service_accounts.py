@@ -102,10 +102,10 @@ def rename_service_account(email, new_display_name):
     # Then you can update the display name
     my_service_account['displayName'] = new_display_name
     my_service_account = service.projects().serviceAccounts().update(
-        name=resource, body=service_account).execute()
+        name=resource, body=my_service_account).execute()
 
     print('Updated display name for {} to: {}'.format(
-        service_account['email'], my_service_account['displayName']))
+        my_service_account['email'], my_service_account['displayName']))
     return my_service_account
 # [END iam_rename_service_account]
 
