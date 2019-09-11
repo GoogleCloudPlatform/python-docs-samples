@@ -7,11 +7,23 @@ base: &common
   basepath: '.'
 samples:
 - <<: *common
-  path: '{basepath}/v1/speech_transcribe_async.py'
-  sample: 'speech_transcribe_async'
+  path: '{basepath}/v1/speech_transcribe_multichannel.py'
+  sample: 'speech_transcribe_multichannel'
+- <<: *common
+  path: '{basepath}/v1/speech_transcribe_sync_gcs.py'
+  sample: 'speech_transcribe_sync_gcs'
 - <<: *common
   path: '{basepath}/v1/speech_transcribe_async_gcs.py'
   sample: 'speech_transcribe_async_gcs'
+- <<: *common
+  path: '{basepath}/v1/speech_transcribe_multichannel_gcs.py'
+  sample: 'speech_transcribe_multichannel_gcs'
+- <<: *common
+  path: '{basepath}/v1/speech_transcribe_async.py'
+  sample: 'speech_transcribe_async'
+- <<: *common
+  path: '{basepath}/v1/speech_transcribe_model_selection_gcs.py'
+  sample: 'speech_transcribe_model_selection_gcs'
 - <<: *common
   path: '{basepath}/v1/speech_transcribe_async_word_time_offsets_gcs.py'
   sample: 'speech_transcribe_async_word_time_offsets_gcs'
@@ -22,17 +34,5 @@ samples:
   path: '{basepath}/v1/speech_transcribe_model_selection.py'
   sample: 'speech_transcribe_model_selection'
 - <<: *common
-  path: '{basepath}/v1/speech_transcribe_model_selection_gcs.py'
-  sample: 'speech_transcribe_model_selection_gcs'
-- <<: *common
-  path: '{basepath}/v1/speech_transcribe_multichannel.py'
-  sample: 'speech_transcribe_multichannel'
-- <<: *common
-  path: '{basepath}/v1/speech_transcribe_multichannel_gcs.py'
-  sample: 'speech_transcribe_multichannel_gcs'
-- <<: *common
   path: '{basepath}/v1/speech_transcribe_sync.py'
   sample: 'speech_transcribe_sync'
-- <<: *common
-  path: '{basepath}/v1/speech_transcribe_sync_gcs.py'
-  sample: 'speech_transcribe_sync_gcs'
