@@ -7,23 +7,23 @@ base: &common
   basepath: '.'
 samples:
 - <<: *common
-  path: '{basepath}/v1p1beta1/speech_adaptation_beta.py'
-  sample: 'speech_adaptation_beta'
-- <<: *common
   path: '{basepath}/v1p1beta1/speech_contexts_classes_beta.py'
   sample: 'speech_contexts_classes_beta'
 - <<: *common
-  path: '{basepath}/v1p1beta1/speech_quickstart_beta.py'
-  sample: 'speech_quickstart_beta'
+  path: '{basepath}/v1p1beta1/speech_transcribe_multilanguage_beta.py'
+  sample: 'speech_transcribe_multilanguage_beta'
 - <<: *common
   path: '{basepath}/v1p1beta1/speech_transcribe_auto_punctuation_beta.py'
   sample: 'speech_transcribe_auto_punctuation_beta'
 - <<: *common
+  path: '{basepath}/v1p1beta1/speech_adaptation_beta.py'
+  sample: 'speech_adaptation_beta'
+- <<: *common
   path: '{basepath}/v1p1beta1/speech_transcribe_diarization_beta.py'
   sample: 'speech_transcribe_diarization_beta'
 - <<: *common
-  path: '{basepath}/v1p1beta1/speech_transcribe_multilanguage_beta.py'
-  sample: 'speech_transcribe_multilanguage_beta'
+  path: '{basepath}/v1p1beta1/speech_quickstart_beta.py'
+  sample: 'speech_quickstart_beta'
 - <<: *common
   path: '{basepath}/v1p1beta1/speech_transcribe_recognition_metadata_beta.py'
   sample: 'speech_transcribe_recognition_metadata_beta'
