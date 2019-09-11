@@ -39,7 +39,6 @@ import googleapiclient.discovery
 def create_key(service_account_email):
     """Creates a key for a service account."""
 
-    # pylint: disable=no-member
     credentials = service_account.Credentials.from_service_account_file(
         filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
         scopes=['https://www.googleapis.com/auth/cloud-platform'])
@@ -59,7 +58,6 @@ def create_key(service_account_email):
 def list_keys(service_account_email):
     """Lists all keys for a service account."""
 
-    # pylint: disable=no-member
     credentials = service_account.Credentials.from_service_account_file(
         filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
         scopes=['https://www.googleapis.com/auth/cloud-platform'])
@@ -79,7 +77,6 @@ def list_keys(service_account_email):
 def delete_key(full_key_name):
     """Deletes a service account key."""
 
-    # pylint: disable=no-member
     credentials = service_account.Credentials.from_service_account_file(
         filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
         scopes=['https://www.googleapis.com/auth/cloud-platform'])
