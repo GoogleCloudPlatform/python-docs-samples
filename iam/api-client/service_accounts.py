@@ -39,7 +39,6 @@ import googleapiclient.discovery
 def create_service_account(project_id, name, display_name):
     """Creates a service account."""
 
-    # pylint: disable=no-member
     credentials = service_account.Credentials.from_service_account_file(
         filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
         scopes=['https://www.googleapis.com/auth/cloud-platform'])
@@ -65,7 +64,6 @@ def create_service_account(project_id, name, display_name):
 def list_service_accounts(project_id):
     """Lists all service accounts for the current project."""
 
-    # pylint: disable=no-member
     credentials = service_account.Credentials.from_service_account_file(
         filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
         scopes=['https://www.googleapis.com/auth/cloud-platform'])
@@ -89,7 +87,6 @@ def rename_service_account(email, new_display_name):
     """Changes a service account's display name."""
 
     # First, get a service account using List() or Get()
-    # pylint: disable=no-member
     credentials = service_account.Credentials.from_service_account_file(
         filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
         scopes=['https://www.googleapis.com/auth/cloud-platform'])
@@ -117,7 +114,6 @@ def rename_service_account(email, new_display_name):
 def delete_service_account(email):
     """Deletes a service account."""
 
-    # pylint: disable=no-member
     credentials = service_account.Credentials.from_service_account_file(
         filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
         scopes=['https://www.googleapis.com/auth/cloud-platform'])
