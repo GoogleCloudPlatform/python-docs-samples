@@ -16,6 +16,8 @@ import uuid
 
 import pytest
 
+from google.cloud import ndb
+
 import flask_app
 
 
@@ -40,3 +42,14 @@ def test_index(test_book):
     r = client.get('/')
     assert r.status_code == 200
     assert test_book.title in r.data.decode('utf-8')
+
+
+def test_ndb_wsgi_middleware():
+    def fake_wsgi_app(environ, start_response):
+        # Validate that a context is live. This will throw
+        # ndb.exceptions.ContextError if no context is set up.
+        ndb.context.get_context()
+
+    wrapped_function = flask_app.ndb_wsgi_middleware(fake_wsgi_app)
+
+    wrapped_function(None, None)

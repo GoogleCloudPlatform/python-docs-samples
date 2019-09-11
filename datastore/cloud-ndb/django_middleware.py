@@ -12,33 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START ndb_flask]
-from flask import Flask
-
+# [START ndb_django_middleware]
 from google.cloud import ndb
 
 
-client = ndb.Client()
+# Once this middleware is activated in Django settings, NDB calls inside Django
+# views will be executed in context, with a separate context for each request.
+def ndb_django_middleware(get_response):
+    client = ndb.Client()
 
-
-def ndb_wsgi_middleware(wsgi_app):
-    def middleware(environ, start_response):
+    def middleware(request):
         with client.context():
-            return wsgi_app(environ, start_response)
+            return get_response(request)
 
     return middleware
-
-
-app = Flask(__name__)
-app.wsgi_app = ndb_wsgi_middleware(app.wsgi_app)  # Wrap the app in middleware.
-
-
-class Book(ndb.Model):
-    title = ndb.StringProperty()
-
-
-@app.route('/')
-def list_books():
-    books = Book.query()
-    return str([book.to_dict() for book in books])
-# [END ndb_flask]
+# [END ndb_django_middleware]

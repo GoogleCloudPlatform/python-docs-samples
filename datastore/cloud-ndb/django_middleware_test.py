@@ -12,30 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START ndb_wsgi_middleware]
-# [START ndb_django_middleware]
 from google.cloud import ndb
 
-
-# [END ndb_django_middleware]
-def ndb_wsgi_middleware(wsgi_app):
-    client = ndb.Client()
-
-    def middleware(environ, start_response):
-        with client.context():
-            return wsgi_app(environ, start_response)
-
-    return middleware
-# [END ndb_wsgi_middleware]
+import django_middleware
 
 
-# [START ndb_django_middleware]
-def ndb_django_middleware(get_response):
-    client = ndb.Client()
+def test_ndb_django_middleware():
+    def fake_get_response(request):
+        # Validate that a context is live. This will throw
+        # ndb.exceptions.ContextError if no context is set up.
+        ndb.context.get_context()
 
-    def middleware(request):
-        with client.context():
-            return get_response(request)
+    wrapped_function = django_middleware.ndb_django_middleware(
+        fake_get_response)
 
-    return middleware
-# [END ndb_django_middleware]
+    wrapped_function(None)
