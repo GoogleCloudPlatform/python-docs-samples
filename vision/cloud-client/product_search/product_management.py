@@ -205,12 +205,7 @@ def purge_orphan_products(project_id, location, force):
         # If force is not set to True, the service raises an exception.
         force=force)
 
-    # TODO: replace with operation.result(timeout=60)
-    import time
-    for _ in range(60):
-        if operation.done():
-            break
-        time.sleep(1)
+    operation.result(timeout=90)
 
     print('Orphan products deleted.')
 # [END vision_product_search_purge_orphan_products]

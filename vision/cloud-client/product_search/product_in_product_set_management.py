@@ -147,12 +147,7 @@ def purge_products_in_product_set(
         # If force is not set to True, the service raises an exception.
         force=force)
 
-    # TODO: replace with operation.result(timeout=60)
-    import time
-    for _ in range(60):
-        if operation.done():
-            break
-        time.sleep(1)
+    result = operation.result(timeout=60)
 
     print('Deleted products in product set.')
 # [END vision_product_search_purge_products_in_product_set]
