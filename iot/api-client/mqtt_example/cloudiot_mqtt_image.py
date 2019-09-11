@@ -14,6 +14,7 @@
 # limitations under the License.
 import argparse
 import base64
+import binascii
 import io
 import os
 import sys
@@ -60,15 +61,17 @@ def receive_image(project_id, sub_name, prefix, extension, duration):
     file_pattern = '{}-{}.{}'
 
     def callback(message):
-        message.ack()  # To move forward if a message can't be processed
-
         global count
-        count = count + 1
-        print('Received image {}:'.format(count))
-        image_data = base64.b64decode(message.data)
+        try:
+            count = count + 1
+            print('Received image {}:'.format(count))
+            image_data = base64.b64decode(message.data)
 
-        with io.open(file_pattern.format(prefix, count, extension), 'wb') as f:
-            f.write(image_data)
+            with io.open(file_pattern.format(prefix, count, extension), 'wb') as f:
+                f.write(image_data)
+
+        except binascii.Error:
+            message.ack()  # To move forward if a message can't be processed
 
     subscriber.subscribe(subscription_path, callback=callback)
 
