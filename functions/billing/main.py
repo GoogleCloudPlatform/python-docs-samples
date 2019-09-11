@@ -142,7 +142,7 @@ def __list_running_instances(project_id, zone, instances):
     """
     res = instances.list(project=project_id, zone=zone).execute()
 
-    if not 'items' in res:
+    if 'items' not in res:
         return []
 
     items = res['items']
