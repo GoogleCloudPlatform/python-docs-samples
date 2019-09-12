@@ -458,7 +458,7 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter)
 
     subparsers = parser.add_subparsers(dest='command')
-    
+
     subparsers.add_parser(
         'list-buckets', help=list_buckets.__doc__)
 
