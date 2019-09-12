@@ -67,7 +67,8 @@ def receive_image(project_id, sub_name, prefix, extension, duration):
             print('Received image {}:'.format(count))
             image_data = base64.b64decode(message.data)
 
-            with io.open(file_pattern.format(prefix, count, extension), 'wb') as f:
+            with io.open(
+                    file_pattern.format(prefix, count, extension), 'wb') as f:
                 f.write(image_data)
 
         except binascii.Error:
