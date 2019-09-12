@@ -21,7 +21,7 @@ https://cloud.google.com/iam/docs/creating-managing-service-accounts.
 
 import argparse
 # [START iam_create_service_account]
-# [START iam_list_service_account]
+# [START iam_list_service_accounts]
 # [START iam_rename_service_account]
 # [START iam_delete_service_account]
 import os
@@ -30,7 +30,7 @@ from google.oauth2 import service_account
 import googleapiclient.discovery
 
 # [END iam_create_service_account]
-# [END iam_list_service_account]
+# [END iam_list_service_accounts]
 # [END iam_rename_service_account]
 # [END iam_delete_service_account]
 
