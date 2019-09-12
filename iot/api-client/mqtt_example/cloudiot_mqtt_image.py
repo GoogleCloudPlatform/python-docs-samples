@@ -70,6 +70,7 @@ def receive_image(project_id, sub_name, prefix, extension, duration):
             with io.open(
                     file_pattern.format(prefix, count, extension), 'wb') as f:
                 f.write(image_data)
+                message.ack()
 
         except binascii.Error:
             message.ack()  # To move forward if a message can't be processed
