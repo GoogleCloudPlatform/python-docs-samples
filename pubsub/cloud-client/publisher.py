@@ -249,13 +249,13 @@ def publish_messages_with_retry_settings(project_id, topic_name):
                 },
                 'retry_params': {
                     'messaging': {
-                        'initial_retry_delay_millis': 150,  # default: 100
-                        'retry_delay_multiplier': 1.5,  # default: 1.3
-                        'max_retry_delay_millis': 65000,  # default: 60000
-                        'initial_rpc_timeout_millis': 25000,  # default: 25000
+                        'initial_retry_delay_millis': 100,  # default: 100
+                        'retry_delay_multiplier': 1.3,  # default: 1.3
+                        'max_retry_delay_millis': 60000,  # default: 60000
+                        'initial_rpc_timeout_millis': 5000,  # default: 25000
                         'rpc_timeout_multiplier': 1.0,  # default: 1.0
-                        'max_rpc_timeout_millis': 35000,  # default: 30000
-                        'total_timeout_millis': 650000,  # default: 600000
+                        'max_rpc_timeout_millis': 600000,  # default: 30000
+                        'total_timeout_millis': 600000,  # default: 600000
                     }
                 },
                 'methods': {
