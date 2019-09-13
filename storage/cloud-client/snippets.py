@@ -261,11 +261,11 @@ def bucket_metadata(bucket_name):
     print('Location Type: {}'.format(bucket.location_type))
     print('Cors: {}'.format(bucket.cors))
     print('Default Event Based Hold: {}'
-        .format(bucket.default_event_based_hold))
+          .format(bucket.default_event_based_hold))
     print('Default KMS Key Name: {}'.format(bucket.default_kms_key_name))
     print('Metageneration: {}'.format(bucket.metageneration))
     print('Retention Effective Time: {}'
-        .format(bucket.retention_policy_effective_time))
+          .format(bucket.retention_policy_effective_time))
     print('Retention Period: {}'.format(bucket.retention_period))
     print('Retention Policy Locked: {}'.format(bucket.retention_policy_locked))
     print('Requester Pays: {}'.format(bucket.requester_pays))
