@@ -254,7 +254,7 @@ def publish_messages_with_retry_settings(project_id, topic_name):
                         'max_retry_delay_millis': 60000,  # default: 60000
                         'initial_rpc_timeout_millis': 5000,  # default: 25000
                         'rpc_timeout_multiplier': 1.0,  # default: 1.0
-                        'max_rpc_timeout_millis': 600000,  # default: 30000
+                        'max_rpc_timeout_millis': 10000,  # default: 30000
                         'total_timeout_millis': 600000,  # default: 600000
                     }
                 },
