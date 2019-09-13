@@ -247,11 +247,12 @@ def blob_metadata(bucket_name, blob_name):
         print("retentionExpirationTime: {}"
               .format(blob.retention_expiration_time))
 
+
 def bucket_metadata(bucket_name):
     """Prints out a bucket's metadata."""
     # [START storage_get_bucket_metadata]
-    storage_client = storage.Client();
-    bucket = storage_client.get_bucket(bucket_name);
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
 
     print('ID: {}'.format(bucket.id))
     print('Name: {}'.format(bucket.name))
@@ -259,10 +260,12 @@ def bucket_metadata(bucket_name):
     print('Location: {}'.format(bucket.location))
     print('Location Type: {}'.format(bucket.location_type))
     print('Cors: {}'.format(bucket.cors))
-    print('Default Event Based Hold: {}'.format(bucket.default_event_based_hold))
+    print('Default Event Based Hold: {}'
+        .format(bucket.default_event_based_hold))
     print('Default KMS Key Name: {}'.format(bucket.default_kms_key_name))
     print('Metageneration: {}'.format(bucket.metageneration))
-    print('Retention Effective Time: {}'.format(bucket.retention_policy_effective_time))
+    print('Retention Effective Time: {}'
+        .format(bucket.retention_policy_effective_time))
     print('Retention Period: {}'.format(bucket.retention_period))
     print('Retention Policy Locked: {}'.format(bucket.retention_policy_locked))
     print('Requester Pays: {}'.format(bucket.requester_pays))
