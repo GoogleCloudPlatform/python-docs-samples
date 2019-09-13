@@ -23,7 +23,7 @@ import os
 from google.cloud import storage
 import pytest
 
-import hmac
+import hmac_samples
 
 
 PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
@@ -54,13 +54,13 @@ def new_hmac_key():
 
 
 def test_list_keys(capsys, new_hmac_key):
-    hmac_keys = hmac.list_keys(PROJECT_ID)
+    hmac_keys = hmac_samples.list_keys(PROJECT_ID)
     assert 'HMAC Keys:' in capsys.readouterr().out
     assert hmac_keys.num_results >= 1
 
 
 def test_create_key(capsys):
-    hmac_key = hmac.create_key(PROJECT_ID, SERVICE_ACCOUNT_EMAIL)
+    hmac_key = hmac_samples.create_key(PROJECT_ID, SERVICE_ACCOUNT_EMAIL)
     hmac_key.state = 'INACTIVE'
     hmac_key.update()
     hmac_key.delete()
@@ -69,7 +69,7 @@ def test_create_key(capsys):
 
 
 def test_get_key(capsys, new_hmac_key):
-    hmac_key = hmac.get_key(new_hmac_key.access_id, PROJECT_ID)
+    hmac_key = hmac_samples.get_key(new_hmac_key.access_id, PROJECT_ID)
     assert 'HMAC key metadata' in capsys.readouterr().out
     assert hmac_key.access_id == new_hmac_key.access_id
 
@@ -77,13 +77,13 @@ def test_get_key(capsys, new_hmac_key):
 def test_activate_key(capsys, new_hmac_key):
     new_hmac_key.state = 'INACTIVE'
     new_hmac_key.update()
-    hmac_key = hmac.activate_key(new_hmac_key.access_id, PROJECT_ID)
+    hmac_key = hmac_samples.activate_key(new_hmac_key.access_id, PROJECT_ID)
     assert 'State: ACTIVE' in capsys.readouterr().out
     assert hmac_key.state == 'ACTIVE'
 
 
 def test_deactivate_key(capsys, new_hmac_key):
-    hmac_key = hmac.deactivate_key(new_hmac_key.access_id, PROJECT_ID)
+    hmac_key = hmac_samples.deactivate_key(new_hmac_key.access_id, PROJECT_ID)
     assert 'State: INACTIVE' in capsys.readouterr().out
     assert hmac_key.state == 'INACTIVE'
 
@@ -91,5 +91,5 @@ def test_deactivate_key(capsys, new_hmac_key):
 def test_delete_key(capsys, new_hmac_key):
     new_hmac_key.state = 'INACTIVE'
     new_hmac_key.update()
-    hmac.delete_key(new_hmac_key.access_id, PROJECT_ID)
+    hmac_samples.delete_key(new_hmac_key.access_id, PROJECT_ID)
     assert 'The key is deleted' in capsys.readouterr().out
