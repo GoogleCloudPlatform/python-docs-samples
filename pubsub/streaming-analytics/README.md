@@ -109,10 +109,10 @@ The following example will run a streaming pipeline. It will read messages from 
 + `--temp_location`: needed for execution of the pipeline
 
 ```bash
-python -m PubSubToGCS \
+python -m PubSubToGCS -W ignore \
   --project=$PROJECT_NAME \
-  --input_topic=projects/$PROJECT_NAME/topics/june \
-  --output_path=gs://$BUCKET_NAME/labor \
+  --input_topic=projects/$PROJECT_NAME/topics/$TOPIC_NAME \
+  --output_path=gs://$BUCKET_NAME/june \
   --runner=DataflowRunner \
   --window_size=2 \
   --temp_location=gs://$BUCKET_NAME/temp \
