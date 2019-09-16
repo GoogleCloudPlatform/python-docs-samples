@@ -17,7 +17,9 @@
 import argparse
 
 
+# [START document_parse_table]
 def parse_table_gcs(gcs_source_uri, gcs_destination_uri):
+    """Parse table with PDF/TIFF as source files on Google Cloud Storage."""
     from google.cloud import document
     from google.cloud.document import types
 
@@ -43,13 +45,23 @@ def parse_table_gcs(gcs_source_uri, gcs_destination_uri):
         table_extraction_params=table_extraction_params)
 
     requests = [request]
-    operation = client.batch_process_documents(requests)
 
     print('Waiting for operation to finish.')
+    operation = client.batch_process_documents(requests)
+    print(operation)
+
     result = operation.result(timeout=60)
 
     print(result)
+# [END document_parse_table]
 
 
 if __name__ == '__main__':
-    parse_table_gcs(None, None)
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('gcs_source_uri')
+    parser.add_argument('gcs_destination_uri')
+    args = parser.parse_args()
+
+    parse_table_gcs(args.gcs_source_uri, args.gcs_destination_uri)

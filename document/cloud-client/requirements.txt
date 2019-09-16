@@ -1,1 +1,2 @@
-google-cloud-speech==0.36.3
+google-cloud-document==0.1.0
+google-cloud-storage==1.19.0
