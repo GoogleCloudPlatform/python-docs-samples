@@ -18,6 +18,7 @@ from __future__ import print_function
 
 # Note: this import needs to be modified upon new release.
 from google.cloud import automl_v1beta1 as automl
+from google.oauth2 import service_account
 
 class TablesClient(object):
   """ Wraps the AutoML Python client and adds helper functions.
@@ -33,15 +34,11 @@ class TablesClient(object):
   """
   def __init__(self, service_account_filename=None):
     if service_account_filename:
-      self.client = automl.AutoMlClient.from_service_account_file(
-          filename=service_account_filename)
-      self.prediction_client = (
-          automl.PredictionServiceClient.from_service_account_file(
-              filename=service_account_filename))
+      self.client = automl.TablesClient(
+          credentials=service_account.Credentials.from_service_account_file(service_account_filename)
+      )
     else:
-      # AutoML client uses two clients, one for training, one for prediction.
-      self.client = automl.AutoMlClient()
-      self.prediction_client = automl.PredictionServiceClient()
+      self.client = automl.TablesClient()
 
   def list_datasets_by_display_name(self, project, location, display_name):
     """ Lists all datasets with the specified display name.
@@ -53,9 +50,12 @@ class TablesClient(object):
     Returns:
       List of datasets.
     """
-    parent = self.client.location_path(project, location)
     dataset_filter = 'display_name={}'.format(display_name)
-    response = self.client.list_datasets(parent, dataset_filter)
+    response = self.client.list_datasets(
+        project=project, 
+        region=location, 
+        filter_=dataset_filter
+    )
     return list(response)
 
   def list_models_by_display_name(self, project, location, display_name):
@@ -68,9 +68,12 @@ class TablesClient(object):
     Returns:
       List of Models.
     """
-    parent = self.client.location_path(project, location)
     model_filter = 'display_name={}'.format(display_name)
-    response = self.client.list_models(parent, model_filter)
+    response = self.client.list_models(
+        project=project,
+        region=location,
+        filter_=model_filter
+    )
     return list(response)
 
   def get_primary_table_spec(self, dataset_name):
@@ -82,7 +85,9 @@ class TablesClient(object):
     Returns:
       Table spec for the primary table.
     """
-    list_table_specs_response = self.client.list_table_specs(dataset_name)
+    list_table_specs_response = self.client.list_table_specs(
+        dataset_name=dataset_name
+    )
     return list(list_table_specs_response)[0] # Primary table is index 0.
 
   def get_column_specs(self, dataset_name):
@@ -94,9 +99,9 @@ class TablesClient(object):
     Returns:
       Dict with column_display_name: column_spec.
     """
-    primary_table_name = self.get_primary_table_spec(dataset_name).name
     list_column_specs_response = self.client.list_column_specs(
-        primary_table_name)
+        dataset_name=dataset_name
+    )
     return {s.display_name: s for s in list_column_specs_response}
 
   def get_id(self, name):
@@ -121,12 +126,11 @@ class TablesClient(object):
     Returns:
       A dataset.
     """
-    parent = self.client.location_path(project, location)
-    dataset = {
-        'display_name': dataset_display_name,
-        'tables_dataset_metadata': {},
-    }
-    return self.client.create_dataset(parent=parent, dataset=dataset)
+    return self.client.create_dataset(
+        dataset_display_name,
+        project=project,
+        region=location
+    )
 
   def import_data(self, dataset_name, dataset_input_path):
     """ Imports data into a dataset from BigQuery or Cloud Storage.
@@ -142,12 +146,15 @@ class TablesClient(object):
       status.
     """
     if dataset_input_path.startswith('bq'):
-      input_config = {"bigquery_source": {"input_uri": dataset_input_path}}
+        self.client.import_data(
+            dataset_name=dataset_name,
+            bigquery_input_uri=dataset_input_path
+        )
     else:
-      input_uris = dataset_input_path.split(",")
-      input_config = {"gcs_source": {"input_uris": input_uris}}
-
-    return self.client.import_data(dataset_name, input_config)
+        self.client.import_data(
+            dataset_name=dataset_name,
+            gcs_input_uris=dataset_input_path.split(",")
+        )
 
   def update_primary_table(self,
                            dataset_name,
@@ -162,13 +169,10 @@ class TablesClient(object):
     Returns:
       The updated primary table spec.
     """
-    primary_table_name = self.get_primary_table_spec(dataset_name).name
-    column_specs = self.get_column_specs(dataset_name)
-    primary_table_spec = {
-        'name': primary_table_name,
-        'time_column_spec_id': self.column_id(time_column, column_specs),
-    }
-    return self.client.update_table_spec(primary_table_spec)
+    return self.client.set_time_column(
+            dataset_name=dataset_name, 
+            column_spec_name=time_column
+    )
 
   def update_columns(self,
                      dataset_name,
@@ -186,25 +190,15 @@ class TablesClient(object):
       List of (only the) updated column specs.
     """
     responses = []
-    column_specs = self.get_column_specs(dataset_name)
     dtype_keys = list(columns_dtype.keys()) if columns_dtype else []
     nullable_keys = list(columns_nullable.keys()) if columns_nullable else []
     for display_name in set(dtype_keys + nullable_keys):
-      # type_code is a required field, so it must be retrieved if not set.
-      column_spec = column_specs[display_name]
-      data_type = {
-          'nullable': column_spec.data_type.nullable,
-          'type_code': column_spec.data_type.type_code,
-      }
-      if display_name in dtype_keys:
-        data_type['type_code'] = columns_dtype[display_name]
-      if display_name in nullable_keys:
-        data_type['nullable'] = columns_nullable[display_name]
-      column_spec = {
-          'name': column_spec.name,
-          'data_type': data_type,
-      }
-      responses.append(self.client.update_column_spec(column_spec))
+      responses.append(self.client.update_column_spec(
+          dataset_name=dataset_name, 
+          column_spec_display_name=display_name,
+          type_code=columns_dtype.get(display_name, None),
+          nullable=columns_nullable.get(display_name, None)
+      )
     return responses
 
   def update_dataset(self,
@@ -246,23 +240,21 @@ class TablesClient(object):
           dataset_name, time_column)
       responses.append(update_table_spec_response)
 
-    column_specs = self.get_column_specs(dataset_name)
-    tables_dataset_metadata = {}
     if label_column:
-      tables_dataset_metadata['target_column_spec_id'] = self.column_id(
-          label_column, column_specs)
+      responses.append(self.client.set_target_column(
+          dataset_name=dataset_name,
+          column_spec_display_name=label_column
+      ))
     if weight_column:
-      tables_dataset_metadata['weight_column_spec_id'] = self.column_id(
-          weight_column, column_specs)
+      responses.append(self.client.set_weight_column(
+          dataset_name=dataset_name,
+          column_spec_display_name=weight_column
+      )
     if split_column:
-      tables_dataset_metadata['ml_use_column_spec_id'] = self.column_id(
-          split_column, column_specs)
-    dataset = {
-        'name': dataset_name,
-        'tables_dataset_metadata': tables_dataset_metadata
-    }
-    update_dataset_response = self.client.update_dataset(dataset=dataset)
-    responses.append(update_dataset_response)
+      responses.append(self.client.set_test_train_column(
+          dataset_name=dataset_name,
+          column_spec_display_name=split_column
+      ))
     return responses
 
   def create_model(self,
@@ -290,37 +282,19 @@ class TablesClient(object):
       A create model operation, that can be queried for metadata and completion
       status.
     """
-    # Initialize model metadata, train budget is a required field.
-    tables_model_metadata = {
-        'train_budget_milli_node_hours': int(1000 * train_hours),
-    }
-
-    if optimization_objective:
-      tables_model_metadata['optimization_objective'] = optimization_objective
 
     dataset = self.client.get_dataset(dataset_name)
     column_specs = self.get_column_specs(dataset_name)
 
-    if ignore_columns:
-      # Model feature columns must not include label, weight, or split.
-      weight_id = str(dataset.tables_dataset_metadata.weight_column_spec_id)
-      split_id = str(dataset.tables_dataset_metadata.ml_use_column_spec_id)
-      label_id = str(dataset.tables_dataset_metadata.target_column_spec_id)
-      input_feature_column_specs = [
-          v for k, v in column_specs.items()
-          if not k in ignore_columns
-          and self.get_id(v.name) not in (weight_id, split_id, label_id)
-      ]
-      tables_model_metadata.update(
-          {'input_feature_column_specs': input_feature_column_specs})
-
-    model = {
-        'display_name': model_display_name,
-        'dataset_id': self.get_id(dataset_name),
-        'tables_model_metadata': tables_model_metadata,
-    }
-    parent = self.client.location_path(project, location)
-    return self.client.create_model(parent=parent, model=model)
+    return self.client.create_model(
+        model_display_name,
+        project=project,
+        region=location,
+        train_budget_milli_node_hours=1000*train_hours,
+        optimization_objective=optimization_objective,
+        exclude_column_spec_names=ignore_columns
+    )
+        
 
   def model_evaluation(self, model_name):
     """ Creates a summary of model evaluation metrics.
@@ -332,7 +306,7 @@ class TablesClient(object):
     Returns:
       A string with evaluation metrics for printout.
     """
-    response = self.client.list_model_evaluations(model_name)
+    response = self.client.list_model_evaluations(model_name=model_name)
 
     for evaluation in response:
       # Retrieve model evaluation and ignore evaluations for sclasses.
@@ -385,7 +359,7 @@ class TablesClient(object):
     Returns:
       A string with feature importance for printout.
     """
-    model = self.client.get_model(model_name)
+    model = self.client.get_model(model_name=model_name)
     column_info = model.tables_model_metadata.tables_model_column_info
     features = [(c.feature_importance, c.column_display_name)
                  for c in column_info]
@@ -406,19 +380,25 @@ class TablesClient(object):
       A batch predict operation, that can be queried for metadata and completion
       status.
     """
+    bigquery_input_uri=None
+    bigquery_output_uri=None
+    gcs_input_uris=None
+    gcs_output_uri_prefix=None
     if input_path.startswith('bq'):
-      input_config = {"bigquery_source": {"input_uri": input_path}}
+      bigquery_input_uri=input_path
     else:
       # Get the multiple Google Cloud Storage URIs.
-      input_uris = input_path.split(",").strip()
-      input_config = {"gcs_source": {"input_uris": input_uris}}
+      gcs_input_uris== input_path.split(",").strip()
 
     if output_path.startswith('bq'):
-      output_config = {"bigquery_destination": {"output_uri": output_path}}
+      bigquery_output_uri=output_path
     else:
-      # Get the multiple Google Cloud Storage URIs.
-      output_uris = output_path.split(",").strip()
-      output_config = {"gcs_destination": {"output_uris": output_uris}}
+      gcs_output_uri_prefix=output_path
 
     return self.prediction_client.batch_predict(
-        model_name, input_config, output_config)
+        model_name=model_name, 
+        bigquery_input_uri=bigquery_input_uri
+        bigquery_output_uri=bigquery_output_uri
+        gcs_input_uris=gcs_input_uris
+        gcs_output_uri_prefix=gcs_output_uri_prefix
+    )
