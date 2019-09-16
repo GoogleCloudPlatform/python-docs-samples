@@ -126,8 +126,8 @@ def translate_text(text, source_language_code, target_language_code,
 
     ARGS
     text: String of text to translate
-    prev_lang: language of input text
-    new_lang: language of output text
+    source_language_code: language of input text
+    target_language_code: language of output text
     project_id: GCP project id
     glossary_name: name you gave your project's glossary
         resource when you created it
