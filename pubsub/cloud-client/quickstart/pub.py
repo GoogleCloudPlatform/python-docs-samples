@@ -57,10 +57,10 @@ def pub(project_id, topic_name):
     api_future.add_done_callback(get_callback(api_future, data, ref))
 
     # Keep the main thread from exiting while the message future
-    # gets resovled in the background.
+    # gets resolved in the background.
     while api_future.running():
         time.sleep(0.5)
-        print("Published {} message.".format(ref["num_messages"]))
+        print("Published {} message(s).".format(ref["num_messages"]))
 
 
 if __name__ == '__main__':
