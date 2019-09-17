@@ -29,14 +29,9 @@ def list_keys(project_id):
     hmac_keys = storage_client.list_hmac_keys(project_id=project_id)
     print('HMAC Keys:')
     for hmac_key in hmac_keys:
-        print('The HMAC key metadata is:')
-        print('Key ID: {}'.format(hmac_key.id))
+        print('Service Account Email: {}'.format(
+            hmac_key.service_account_email))
         print('Access ID: {}'.format(hmac_key.access_id))
-        print('Project ID: {}'.format(hmac_key.project))
-        print('State: {}'.format(hmac_key.state))
-        print('Created At: {}'.format(hmac_key.time_created))
-        print('Updated At: {}'.format(hmac_key.updated))
-        print('Etag: {}'.format(hmac_key.etag))
     # [END storage_list_hmac_keys]
     return hmac_keys
 
@@ -55,6 +50,7 @@ def create_key(project_id, service_account_email):
     print('The base64 encoded secret is {}'.format(secret))
     print('Do not miss that secret, there is no API to recover it.')
     print('The HMAC key metadata is:')
+    print('Service Account Email: {}'.format(hmac_key.service_account_email))
     print('Key ID: {}'.format(hmac_key.id))
     print('Access ID: {}'.format(hmac_key.access_id))
     print('Project ID: {}'.format(hmac_key.project))
@@ -78,6 +74,7 @@ def get_key(access_id, project_id):
         access_id,
         project_id=project_id)
     print('The HMAC key metadata is:')
+    print('Service Account Email: {}'.format(hmac_key.service_account_email))
     print('Key ID: {}'.format(hmac_key.id))
     print('Access ID: {}'.format(hmac_key.access_id))
     print('Project ID: {}'.format(hmac_key.project))
@@ -103,6 +100,7 @@ def activate_key(access_id, project_id):
     hmac_key.state = 'ACTIVE'
     hmac_key.update()
     print('The HMAC key metadata is:')
+    print('Service Account Email: {}'.format(hmac_key.service_account_email))
     print('Key ID: {}'.format(hmac_key.id))
     print('Access ID: {}'.format(hmac_key.access_id))
     print('Project ID: {}'.format(hmac_key.project))
@@ -129,6 +127,7 @@ def deactivate_key(access_id, project_id):
     hmac_key.update()
     print('The HMAC key is now inactive.')
     print('The HMAC key metadata is:')
+    print('Service Account Email: {}'.format(hmac_key.service_account_email))
     print('Key ID: {}'.format(hmac_key.id))
     print('Access ID: {}'.format(hmac_key.access_id))
     print('Project ID: {}'.format(hmac_key.project))
