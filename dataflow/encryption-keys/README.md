@@ -50,7 +50,12 @@ Additionally, for this sample you need the following:
    > Key rings and keys do not have billable costs or quota limitations,
    > so their continued existence does not impact costs or production limits.
 
-1. Grant Encrypter/Decrypter permissions to the *Dataflow*, *Compute Engine*, and *BigQuery* accounts.
+1. Grant Encrypter/Decrypter permissions to the *Dataflow*, *Compute Engine*, and *BigQuery*
+   [service accounts](https://cloud.google.com/iam/docs/service-accounts).
+   This grants your Dataflow, Compute Engine and BigQuery service accounts the
+   permission to encrypt and decrypt with the CMEK you specify.
+   The Dataflow workers use these service accounts when running the pipeline,
+   which is different from the *user* service account used to start the pipeline.
 
    ```sh
    export PROJECT=$(gcloud config get-value project)
