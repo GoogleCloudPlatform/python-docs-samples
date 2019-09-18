@@ -103,7 +103,7 @@ def delete_resource(
     url = '{}/projects/{}/locations/{}'.format(base_url,
                                                project_id, cloud_region)
 
-    resource_path = '{}/datasets/{}/fhirStores/{}/resources/{}/{}'.format(
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}/{}'.format(
         url, dataset_id, fhir_store_id, resource_type, resource_id)
 
     # Make an authenticated API request
@@ -602,7 +602,7 @@ def search_resources_post(
     url = '{}/projects/{}/locations/{}'.format(base_url,
                                                project_id, cloud_region)
 
-    resource_path = '{}/datasets/{}/fhirStores/{}/resources/{}/_search'.format(
+    resource_path = '{}/datasets/{}/fhirStores/{}/fhir/{}/_search'.format(
         url, dataset_id, fhir_store_id, resource_type)
 
     # Make an authenticated API request
