@@ -106,7 +106,7 @@ The following example will run a streaming pipeline. It will read messages from 
 + `--output`: sets the output GCS path prefix to write files to
 + `--runner [optional]`: specifies the runner to run the pipeline, defaults to `DirectRunner`
 + `--windowSize [optional]`: specifies the window size in minutes, defaults to 1
-+ `--temp_location`: needed for execution of the pipeline
++ `--temp_location`: needed for executing the pipeline
 
 ```bash
 python -m PubSubToGCS -W ignore \
@@ -165,11 +165,6 @@ gsutil ls gs://$BUCKET_NAME/samples/
 [Creating and managing service accounts]: https://cloud.google.com/iam/docs/creating-managing-service-accounts
 [GCP Console IAM page]: https://console.cloud.google.com/iam-admin/iam
 [Granting roles to service accounts]: https://cloud.google.com/iam/docs/granting-roles-to-service-accounts
-
-[Java Development Kit (JDK)]: https://www.oracle.com/technetwork/java/javase/downloads/index.html
-[JAVA_HOME]: https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/envvars001.html
-[Apache Maven]: http://maven.apache.org/download.cgi
-[Maven installation guide]: http://maven.apache.org/install.html
 
 [GCP Console create Dataflow job page]: https://console.cloud.google.com/dataflow/createjob
 [GCP Console Dataflow page]: https://console.cloud.google.com/dataflow
