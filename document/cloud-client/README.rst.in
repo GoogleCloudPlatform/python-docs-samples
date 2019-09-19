@@ -1,0 +1,25 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud Document API
+  short_name: Cloud Document API
+  url: https://cloud.google.com/document/docs
+  description: >
+    `Google Cloud Document API`_ allows developers to extract information
+    from documents in PDF/TIFF formats.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Parse table
+  file: parse_table.py
+  show_help: True
+- name: Parse key/value pairs
+  file: parse_key_value.py
+  show_help: True
+
+cloud_client_library: true
+
+folder: document/cloud-client
