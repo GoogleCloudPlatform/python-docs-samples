@@ -94,10 +94,10 @@ def run(argv=None):
 
     with beam.Pipeline(options=pipeline_options) as pipeline:
         (pipeline
-        | 'Read PubSub Messages' >> beam.io.ReadFromPubSub(
-            topic=known_args.input_topic)
-        | 'Window into' >> ApplyWindowing(known_args.window_size)
-        | 'Write to GCS' >> beam.ParDo(OutputDoFn(known_args.output_path)))
+         | 'Read PubSub Messages' >> beam.io.ReadFromPubSub(
+             topic=known_args.input_topic)
+         | 'Window into' >> ApplyWindowing(known_args.window_size)
+         | 'Write to GCS' >> beam.ParDo(OutputDoFn(known_args.output_path)))
 
 
 if __name__ == '__main__': # noqa
