@@ -112,11 +112,10 @@ The following example will run a streaming pipeline. It will read messages from 
 python -m PubSubToGCS -W ignore \
   --project=$PROJECT_NAME \
   --input_topic=projects/$PROJECT_NAME/topics/$TOPIC_NAME \
-  --output_path=gs://$BUCKET_NAME/june \
+  --output_path=gs://$BUCKET_NAME/samples/output \
   --runner=DataflowRunner \
   --window_size=2 \
-  --temp_location=gs://$BUCKET_NAME/temp \
-  --experiments=allow_non_updateable_job
+  --temp_location=gs://$BUCKET_NAME/temp
 ```
 
 After the job has been submitted, you can check its status in the [GCP Console Dataflow page].
