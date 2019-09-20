@@ -110,6 +110,41 @@ def rename_service_account(email, new_display_name):
 # [END iam_rename_service_account]
 
 
+# [START iam_disable_service_account]
+def disable_service_account(email):
+    """Disables a service account."""
+
+    credentials = service_account.Credentials.from_service_account_file(
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+
+    service = googleapiclient.discovery.build(
+        'iam', 'v1', credentials=credentials)
+
+    service.projects().serviceAccounts().disable(
+        name='projects/-/serviceAccounts/' + email).execute()
+
+    print("Disabled service account :" + email)
+# [END iam_disable_service_account]
+
+# [START iam_enable_service_account]
+def enable_service_account(email):
+    """Enables a service account."""
+
+    credentials = service_account.Credentials.from_service_account_file(
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+
+    service = googleapiclient.discovery.build(
+        'iam', 'v1', credentials=credentials)
+
+    service.projects().serviceAccounts().enable(
+        name='projects/-/serviceAccounts/' + email).execute()
+
+    print("Disabled service account :" + email)
+# [END iam_enable_service_account]
+
+
 # [START iam_delete_service_account]
 def delete_service_account(email):
     """Deletes a service account."""
@@ -149,9 +184,19 @@ def main():
 
     # Rename
     rename_parser = subparsers.add_parser(
-        'delete', help=rename_service_account.__doc__)
+        'rename', help=rename_service_account.__doc__)
     rename_parser.add_argument('email')
     rename_parser.add_argument('new_display_name')
+
+    # Disable
+    rename_parser = subparsers.add_parser(
+        'disable', help=disable_service_account.__doc__)
+    list_parser.addargument('email')
+
+    # Enable
+    rename_parser = subparsers.add_parser(
+        'enable', help=enable_service_account.__doc__)
+    list_parser.addargument('email')
 
     # Delete
     delete_parser = subparsers.add_parser(
