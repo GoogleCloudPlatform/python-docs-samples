@@ -430,10 +430,9 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter)
 
     subparsers = parser.add_subparsers(dest='command')
-    list_buckets_parser = subparsers.add_parser(
+
+    subparsers.add_parser(
         'list-buckets', help=list_buckets.__doc__)
-    list_buckets_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
 
     create_bucket_parser = subparsers.add_parser(
         'create-bucket', help=create_bucket.__doc__)
