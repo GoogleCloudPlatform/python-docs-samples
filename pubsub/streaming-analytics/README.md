@@ -5,44 +5,79 @@ Sample(s) showing how to use [Google Cloud Pub/Sub] with [Google Cloud Dataflow]
 ## Before you begin
 
 1. Install the [Cloud SDK].
+   > *Note:* This is not required in
+   > [Cloud Shell]
+   > since it already has the Cloud SDK pre-installed.
 
-1. [Create a new project].
+1. Create a new Google Cloud project via the
+   [*New Project* page],
+   or via the `gcloud` command line tool.
+
+   ```sh
+   export PROJECT_NAME=your-google-cloud-project-id
+   gcloud projects create $PROJECT_NAME
+   ```
 
 1. [Enable billing].
 
-1. [Enable the APIs](https://console.cloud.google.com/flows/enableapi?apiid=dataflow,compute_component,logging,storage_component,storage_api,pubsub,cloudresourcemanager.googleapis.com,cloudscheduler.googleapis.com,appengine.googleapis.com): Dataflow, Compute Engine, Stackdriver Logging, Cloud Storage, Cloud Storage JSON, Pub/Sub, Cloud Scheduler, Cloud Resource Manager, and App Engine.
-
 1. Setup the Cloud SDK to your GCP project.
 
-   ```bash
+   ```sh
    gcloud init
    ```
 
-1. [Create a service account key] as a JSON file.
-   For more information, see [Creating and managing service accounts].
+1. [Enable the APIs](https://console.cloud.google.com/flows/enableapi?apiid=dataflow,compute_component,logging,storage_component,storage_api,pubsub,cloudresourcemanager.googleapis.com,cloudscheduler.googleapis.com,appengine.googleapis.com): Dataflow, Compute Engine, Stackdriver Logging, Cloud Storage, Cloud Storage JSON, Pub/Sub, Cloud Scheduler, Cloud Resource Manager, and App Engine.
+
+1. Create a service account JSON key via the
+   [*Create service account key* page],
+   or via the `gcloud` command line tool.
+   Here is how to do it through the *Create service account key* page.
 
    * From the **Service account** list, select **New service account**.
    * In the **Service account name** field, enter a name.
-   * From the **Role** list, select **Project > Owner**.
-
-     > **Note**: The **Role** field authorizes your service account to access resources.
-     > You can view and change this field later by using the [GCP Console IAM page].
-     > If you are developing a production app, specify more granular permissions than **Project > Owner**.
-     > For more information, see [Granting roles to service accounts].
-
+   * From the **Role** list, select **Project > Owner** **(*)**.
    * Click **Create**. A JSON file that contains your key downloads to your computer.
+
+   Alternatively, you can use `gcloud` through the command line.
+
+   ```sh
+   export PROJECT_NAME=$(gcloud config get-value project)
+   export SA_NAME=samples
+   export IAM_ACCOUNT=$SA_NAME@$PROJECT_NAME.iam.gserviceaccount.com
+
+   # Create the service account.
+   gcloud iam service-accounts create $SA_NAME --display-name $SA_NAME
+
+   # Set the role to Project Owner (*).
+   gcloud projects add-iam-policy-binding $PROJECT_NAME \
+     --member serviceAccount:$IAM_ACCOUNT \
+     --role roles/owner
+
+   # Create a JSON file with the service account credentials.
+   gcloud iam service-accounts keys create path/to/your/credentials.json \
+     --iam-account=$IAM_ACCOUNT
+   ```
+
+   > **(*)** *Note:* The **Role** field authorizes your service account to access resources.
+   > You can view and change this field later by using the
+   > [GCP Console IAM page].
+   > If you are developing a production app, specify more granular permissions than **Project > Owner**.
+   > For more information, see
+   > [Granting roles to service accounts].
+
+   For more information, see
+   [Creating and managing service accounts].
 
 1. Set your `GOOGLE_APPLICATION_CREDENTIALS` environment variable to point to your service account key file.
 
-   ```bash
+   ```sh
    export GOOGLE_APPLICATION_CREDENTIALS=path/to/your/credentials.json
    ```
 
 1. Create a Cloud Storage bucket.
 
    ```bash
-   BUCKET_NAME=your-gcs-bucket
-   PROJECT_NAME=$(gcloud config get-value project)
+   export BUCKET_NAME=your-gcs-bucket
 
    gsutil mb gs://$BUCKET_NAME
    ```
@@ -65,7 +100,7 @@ Sample(s) showing how to use [Google Cloud Pub/Sub] with [Google Cloud Dataflow]
 
 The following instructions will help you prepare your development environment.
 
-1. [Install Python and virtualenv.](https://cloud.google.com/python/setup)
+1. [Install Python and virtualenv].
 
 1. Clone the `python-docs-samples` repository.
 
@@ -102,10 +137,10 @@ The following instructions will help you prepare your development environment.
 The following example will run a streaming pipeline. It will read messages from a Pub/Sub topic, then window them into fixed-sized intervals, and write one file per window into a GCS location.
 
 + `--project`: sets the Google Cloud project ID to run the pipeline on
-+ `--inputTopic`: sets the input Pub/Sub topic to read messages from
-+ `--output`: sets the output GCS path prefix to write files to
-+ `--runner [optional]`: specifies the runner to run the pipeline, defaults to `DirectRunner`
-+ `--windowSize [optional]`: specifies the window size in minutes, defaults to 1
++ `--input_topic`: sets the input Pub/Sub topic to read messages from
++ `--output_path`: sets the output GCS path prefix to write files to
++ `--runner`: specifies the runner to run the pipeline, if not set to `DataflowRunner`, `DirectRunner` is used
++ `--window_size [optional]`: specifies the window size in minutes, defaults to 1.0
 + `--temp_location`: needed for executing the pipeline
 
 ```bash
@@ -129,15 +164,17 @@ gsutil ls gs://$BUCKET_NAME/samples/
 ## Cleanup
 
 1. Delete the [Google Cloud Scheduler] job.
+
     ```bash
     gcloud scheduler jobs delete publisher-job
     ```
 
-1. `Ctrl+C` to stop the program in your terminal. Note that this does not actually stop the job if you use `DataflowRunner`. Skip 3 if you use the `DirectRunner`.
+1. `Ctrl+C` to stop the program in your terminal. Note that this does not actually stop the job if you use `DataflowRunner`.
 
-1. Stop the Dataflow job in [GCP Console Dataflow page]. Cancel the job instead of draining it. This may take some minutes.
+1.  If you use `DirectRunner`, you can skip this step. Stop the Dataflow job in [GCP Console Dataflow page]. Cancel the job instead of draining it. This may take some minutes.
 
 1. Delete the topic. [Google Cloud Dataflow] will automatically delete the subscription associated with the streaming pipeline when the job is canceled.
+
    ```bash
    gcloud pubsub topics delete cron-topic
    ```
@@ -159,13 +196,16 @@ gsutil ls gs://$BUCKET_NAME/samples/
 [App Engine]: https://cloud.google.com/appengine/docs/
 
 [Cloud SDK]: https://cloud.google.com/sdk/docs/
-[Create a new project]: https://console.cloud.google.com/projectcreate
-[Enable billing]: https://cloud.google.com/billing/docs/how-to/modify-project
-[Create a service account key]: https://console.cloud.google.com/apis/credentials/serviceaccountkey
-[Creating and managing service accounts]: https://cloud.google.com/iam/docs/creating-managing-service-accounts
-[GCP Console IAM page]: https://console.cloud.google.com/iam-admin/iam
-[Granting roles to service accounts]: https://cloud.google.com/iam/docs/granting-roles-to-service-accounts
+[Cloud Shell]: https://console.cloud.google.com/cloudshell/editor/
+[*New Project* page]: https://console.cloud.google.com/projectcreate
+[Enable billing]: https://cloud.google.com/billing/docs/how-to/modify-project/
+[*Create service account key* page]: https://console.cloud.google.com/apis/credentials/serviceaccountkey/
+[GCP Console IAM page]: https://console.cloud.google.com/iam-admin/iam/
+[Granting roles to service accounts]: https://cloud.google.com/iam/docs/granting-roles-to-service-accounts/
+[Creating and managing service accounts]: https://cloud.google.com/iam/docs/creating-managing-service-accounts/
 
-[GCP Console create Dataflow job page]: https://console.cloud.google.com/dataflow/createjob
-[GCP Console Dataflow page]: https://console.cloud.google.com/dataflow
-[GCP Console Storage page]: https://console.cloud.google.com/storage
+[Install Python and virtualenv]: https://cloud.google.com/python/setup/
+
+[GCP Console create Dataflow job page]: https://console.cloud.google.com/dataflow/createjob/
+[GCP Console Dataflow page]: https://console.cloud.google.com/dataflow/
+[GCP Console Storage page]: https://console.cloud.google.com/storage/
