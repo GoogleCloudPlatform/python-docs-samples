@@ -23,6 +23,8 @@ import argparse
 # [START iam_create_service_account]
 # [START iam_list_service_account]
 # [START iam_rename_service_account]
+# [START iam_disable_service_account]
+# [START iam_enable_service_account]
 # [START iam_delete_service_account]
 import os
 
@@ -32,6 +34,8 @@ import googleapiclient.discovery
 # [END iam_create_service_account]
 # [END iam_list_service_account]
 # [END iam_rename_service_account]
+# [END iam_disable_service_account]
+# [END iam_enable_service_account]
 # [END iam_delete_service_account]
 
 
