@@ -25,10 +25,12 @@ import argparse
 
 # [START vision_product_search_add_product_to_product_set]
 # [START vision_product_search_remove_product_from_product_set]
+# [START vision_product_search_purge_products_in_product_set]
 from google.cloud import vision
 
 # [END vision_product_search_add_product_to_product_set]
 # [END vision_product_search_remove_product_from_product_set]
+# [END vision_product_search_purge_products_in_product_set]
 
 
 # [START vision_product_search_add_product_to_product_set]
@@ -117,6 +119,40 @@ def remove_product_from_product_set(
 # [END vision_product_search_remove_product_from_product_set]
 
 
+# [START vision_product_search_purge_products_in_product_set]
+def purge_products_in_product_set(
+        project_id, location, product_set_id, force):
+    """Delete all products in a product set.
+    Args:
+        project_id: Id of the project.
+        location: A compute region name.
+        product_set_id: Id of the product set.
+        force: Perform the purge only when force is set to True.
+    """
+    client = vision.ProductSearchClient()
+
+    parent = client.location_path(
+        project=project_id, location=location)
+
+    product_set_purge_config = vision.types.ProductSetPurgeConfig(
+        product_set_id=product_set_id)
+
+    # The purge operation is async.
+    operation = client.purge_products(
+        parent=parent,
+        product_set_purge_config=product_set_purge_config,
+        # The operation is irreversible and removes multiple products.
+        # The user is required to pass in force=True to actually perform the
+        # purge.
+        # If force is not set to True, the service raises an exception.
+        force=force)
+
+    operation.result(timeout=120)
+
+    print('Deleted products in product set.')
+# [END vision_product_search_purge_products_in_product_set]
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -147,6 +183,13 @@ if __name__ == '__main__':
     remove_product_from_product_set_parser.add_argument('product_id')
     remove_product_from_product_set_parser.add_argument('product_set_id')
 
+    purge_products_in_product_set_parser = subparsers.add_parser(
+        'purge_products_in_product_set',
+        help=purge_products_in_product_set.__doc__)
+    purge_products_in_product_set_parser.add_argument('product_set_id')
+    purge_products_in_product_set_parser.add_argument(
+        '--force', action='store_true')
+
     args = parser.parse_args()
 
     if args.command == 'add_product_to_product_set':
@@ -160,3 +203,6 @@ if __name__ == '__main__':
         remove_product_from_product_set(
             args.project_id, args.location, args.product_id,
             args.product_set_id)
+    elif args.command == 'purge_products_in_product_set':
+        purge_products_in_product_set(
+            args.project_id, args.location, args.product_set_id, args.force)
