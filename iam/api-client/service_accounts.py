@@ -28,7 +28,7 @@ import argparse
 # [START iam_delete_service_account]
 import os
 
-from google.oauth2 import service_accout
+from google.oauth2 import service_account
 import googleapiclient.discovery
 
 # [END iam_create_service_account]
@@ -112,6 +112,41 @@ def rename_service_account(email, new_display_name):
         my_service_account['email'], my_service_account['displayName']))
     return my_service_account
 # [END iam_rename_service_account]
+
+
+# [START iam_disable_service_account]	
+def disable_service_account(email):	
+    """Disables a service account."""	
+
+    credentials = service_account.Credentials.from_service_account_file(	
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],	
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])	
+
+    service = googleapiclient.discovery.build(	
+        'iam', 'v1', credentials=credentials)	
+
+    service.projects().serviceAccounts().disable(	
+        name='projects/-/serviceAccounts/' + email).execute()	
+
+    print("Disabled service account :" + email)	
+# [END iam_disable_service_account]	
+
+# [START iam_enable_service_account]	
+def enable_service_account(email):	
+    """Enables a service account."""	
+
+    credentials = service_account.Credentials.from_service_account_file(	
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],	
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])	
+
+    service = googleapiclient.discovery.build(	
+        'iam', 'v1', credentials=credentials)	
+
+    service.projects().serviceAccounts().enable(	
+        name='projects/-/serviceAccounts/' + email).execute()	
+
+    print("Disabled service account :" + email)	
+# [END iam_enable_service_account]	
 
 
 # [START iam_delete_service_account]
