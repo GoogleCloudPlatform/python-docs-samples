@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-
 import google.auth
 import google.auth.app_engine
 import google.auth.compute_engine.credentials
@@ -26,8 +24,9 @@ import requests_toolbelt.adapters.appengine
 IAM_SCOPE = 'https://www.googleapis.com/auth/iam'
 OAUTH_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 
+
 # This code is copied from https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/iap/make_iap_request.py
-### START COPIED IAP CODE
+# START COPIED IAP CODE
 def make_iap_request(url, client_id, method='GET', **kwargs):
     """Makes a request to an application protected by Identity-Aware Proxy.
 
@@ -115,8 +114,6 @@ def make_iap_request(url, client_id, method='GET', **kwargs):
                 resp.status_code, resp.headers, resp.text))
     else:
         return resp.text
-        
-
 
 def get_google_open_id_connect_token(service_account_credentials):
     """Get an OpenID Connect token issued by Google for the service account.
@@ -150,11 +147,11 @@ def get_google_open_id_connect_token(service_account_credentials):
     token_response = google.oauth2._client._token_endpoint_request(
         request, OAUTH_TOKEN_URI, body)
     return token_response['id_token']
-### END COPIED IAP CODE
+# END COPIED IAP CODE
 
 #TODO Add optional parameters for use not with gcf?
 #TODO: Add parameter expecting stuff from gcf
-def trigger_dag(data):
+def trigger_dag(data, context=None):
     #Fill in with your Composer info here
     project_id = 'YOUR-PROJECT-ID'
     client_id = 'YOUR-CLIENT-ID'
@@ -162,11 +159,4 @@ def trigger_dag(data):
     dag_name = 'composer_sample_trigger_response_dag'
     webserver_url = 'https://' + webserver_id + '.appspot.com/api/experimental/dags/' + dag_name + '/dag_runs'
     #TODO: Update final parameter here
-    make_iap_request(webserver_url, client_id, method='POST', json=data) 
-    
-
-
-
-
-if __name__ == "__main__":
-    trigger_dag({'data': {'file': 'some-file'}})
+    make_iap_request(webserver_url, client_id, method='POST', json=data)
