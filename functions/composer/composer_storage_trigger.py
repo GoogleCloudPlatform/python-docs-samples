@@ -25,7 +25,36 @@ IAM_SCOPE = 'https://www.googleapis.com/auth/iam'
 OAUTH_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 
 
-# This code is copied from https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/iap/make_iap_request.py
+def trigger_dag(data, context=None):
+    """Makes a POST request to the Composer DAG Trigger API
+
+    When called via GCF, data and context are Background function parameters.
+    For more info, refer to
+    https://cloud.google.com/functions/docs/writing/background#functions_background_parameters-python
+
+    When called via Python, a context object is not needed,
+    and a non-null data object must be present."""
+
+    # Fill in with your Composer info here
+    # The project that holds your function
+    project_id = 'YOUR-PROJECT-ID'
+    # Navigate to your webserver's login page and get this from the URL
+    # Or use the script found at
+    # https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/composer/rest/get_client_id.py
+    client_id = 'YOUR-CLIENT-ID'
+    # This should be part of your webserver's URL:
+    # {tenant-project-id}.appspot.com
+    webserver_id = 'YOUR-TENANT-PROJECT'
+    # The name of the DAG you wish to trigger
+    dag_name = 'composer_sample_trigger_response_dag'
+    webserver_url = 'https://' + webserver_id + \
+        '.appspot.com/api/experimental/dags/' + dag_name + '/dag_runs'
+    # Make a POST request to IAP which then Triggers the DAG
+    make_iap_request(webserver_url, client_id, method='POST', json=data)
+
+
+# This code is copied from
+# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/iap/make_iap_request.py
 # START COPIED IAP CODE
 def make_iap_request(url, client_id, method='GET', **kwargs):
     """Makes a request to an application protected by Identity-Aware Proxy.
@@ -115,6 +144,7 @@ def make_iap_request(url, client_id, method='GET', **kwargs):
     else:
         return resp.text
 
+
 def get_google_open_id_connect_token(service_account_credentials):
     """Get an OpenID Connect token issued by Google for the service account.
 
@@ -148,15 +178,3 @@ def get_google_open_id_connect_token(service_account_credentials):
         request, OAUTH_TOKEN_URI, body)
     return token_response['id_token']
 # END COPIED IAP CODE
-
-#TODO Add optional parameters for use not with gcf?
-#TODO: Add parameter expecting stuff from gcf
-def trigger_dag(data, context=None):
-    #Fill in with your Composer info here
-    project_id = 'YOUR-PROJECT-ID'
-    client_id = 'YOUR-CLIENT-ID'
-    webserver_id = 'YOUR-TENANT-PROJECT'
-    dag_name = 'composer_sample_trigger_response_dag'
-    webserver_url = 'https://' + webserver_id + '.appspot.com/api/experimental/dags/' + dag_name + '/dag_runs'
-    #TODO: Update final parameter here
-    make_iap_request(webserver_url, client_id, method='POST', json=data)
