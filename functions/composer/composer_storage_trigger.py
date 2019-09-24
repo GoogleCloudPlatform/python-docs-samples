@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START composer_trigger]
+
 import google.auth
 import google.auth.app_engine
 import google.auth.compute_engine.credentials
@@ -178,3 +180,5 @@ def get_google_open_id_connect_token(service_account_credentials):
         request, OAUTH_TOKEN_URI, body)
     return token_response['id_token']
 # END COPIED IAP CODE
+
+# [END composer_trigger]
