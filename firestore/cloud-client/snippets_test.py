@@ -282,7 +282,6 @@ def test_distributed_counters(db):
 
     counter.increment_counter(doc_ref)
     counter.increment_counter(doc_ref)
-
     assert counter.get_count(doc_ref) == 2
 
     # cleanup
