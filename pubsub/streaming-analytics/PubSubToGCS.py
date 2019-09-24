@@ -60,7 +60,7 @@ class AddTimestamps(beam.DoFn):
         """
 
         yield {
-            'message_body': json.loads(element),
+            'message_body': element.decode('utf-8'),
             'publish_time': datetime.datetime.utcfromtimestamp(
                 float(publish_time)).strftime("%Y-%m-%d %H:%M:%S.%f"),
         }
@@ -80,8 +80,7 @@ class WriteBatchesToGCS(beam.DoFn):
         filename = '-'.join([self.output_path, window_start, window_end])
 
         with beam.io.gcp.gcsio.GcsIO().open(filename=filename, mode='w') as f:
-            for element in batch:
-                f.write('{}\n'.format(json.dumps(element).encode('utf-8')))
+            f.write(json.dumps(batch).encode('utf-8'))
 
 
 def run(input_topic, output_path, window_size=1.0, pipeline_args=None):
