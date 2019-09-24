@@ -75,9 +75,6 @@ def test_jupyter_small_query(ipython):
     assert "stackoverflow" in ip.user_ns  # verify that variable exists
 
 
-@pytest.mark.skipif(
-    "TRAVIS" in os.environ, reason="Not running long-running queries on Travis"
-)
 def test_jupyter_tutorial(ipython):
     ip = IPython.get_ipython()
     ip.extension_manager.load_extension("google.cloud.bigquery")
@@ -86,33 +83,18 @@ def test_jupyter_tutorial(ipython):
     # speed-up of using the BigQuery Storage API to download the results.
     sample = """
     # [START bigquerystorage_jupyter_tutorial_query]
-    %%bigquery nodejs_deps --use_bqstorage_api
-    SELECT
-        dependency_name,
-        dependency_platform,
-        project_name,
-        project_id,
-        version_number,
-        version_id,
-        dependency_kind,
-        optional_dependency,
-        dependency_requirements,
-        dependency_project_id
-    FROM
-        `bigquery-public-data.libraries_io.dependencies`
-    WHERE
-        LOWER(dependency_platform) = 'npm'
-    LIMIT 2500000
+    %%bigquery tax_forms --use_bqstorage_api
+    SELECT * FROM `bigquery-public-data.irs_990.irs_990_2012`
     # [END bigquerystorage_jupyter_tutorial_query]
     """
     result = ip.run_cell(_strip_region_tags(sample))
     result.raise_error()  # Throws an exception if the cell failed.
 
-    assert "nodejs_deps" in ip.user_ns  # verify that variable exists
-    nodejs_deps = ip.user_ns["nodejs_deps"]
+    assert "tax_forms" in ip.user_ns  # verify that variable exists
+    tax_forms = ip.user_ns["tax_forms"]
 
     # [START bigquerystorage_jupyter_tutorial_results]
-    nodejs_deps.head()
+    tax_forms.head()
     # [END bigquerystorage_jupyter_tutorial_results]
 
     # [START bigquerystorage_jupyter_tutorial_context]
@@ -123,26 +105,11 @@ def test_jupyter_tutorial(ipython):
 
     sample = """
     # [START bigquerystorage_jupyter_tutorial_query_default]
-    %%bigquery java_deps
-    SELECT
-        dependency_name,
-        dependency_platform,
-        project_name,
-        project_id,
-        version_number,
-        version_id,
-        dependency_kind,
-        optional_dependency,
-        dependency_requirements,
-        dependency_project_id
-    FROM
-        `bigquery-public-data.libraries_io.dependencies`
-    WHERE
-        LOWER(dependency_platform) = 'maven'
-    LIMIT 2500000
+    %%bigquery tax_forms
+    SELECT * FROM `bigquery-public-data.irs_990.irs_990_2012`
     # [END bigquerystorage_jupyter_tutorial_query_default]
     """
     result = ip.run_cell(_strip_region_tags(sample))
     result.raise_error()  # Throws an exception if the cell failed.
 
-    assert "java_deps" in ip.user_ns  # verify that variable exists
+    assert "tax_forms" in ip.user_ns  # verify that variable exists
