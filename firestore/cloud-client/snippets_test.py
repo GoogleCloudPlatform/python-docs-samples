@@ -279,9 +279,7 @@ def test_distributed_counters(db):
     shards = doc_ref.collection("shards").list_documents()
     shards_list = []
 
-    for shard in shards:
-        shards_list.append(shard)
-
+    shards_list = [shard for shard in shards]
     assert len(shards_list) == 2
 
     counter.increment_counter(doc_ref)
