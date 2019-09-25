@@ -88,7 +88,6 @@ def test_run(publisher_client, topic_path):
     # Check for output files on GCS.
     assert sp.call(['gsutil', 'ls', 'gs://{}/pubsub/'.format(BUCKET)]) == 0
 
-    # Clean up. Delete topic. Delete files.
-    assert sp.call(['gcloud', 'pubsub', 'topics', 'delete', TOPIC]) == 0
+    # Clean up. Delete files.
     assert sp.call(['gsutil', '-m', 'rm', '-rf',
                     'gs://{}/pubsub/'.format(BUCKET)]) == 0
