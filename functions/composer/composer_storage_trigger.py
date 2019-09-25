@@ -30,7 +30,9 @@ OAUTH_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 def trigger_dag(data, context=None):
     """Makes a POST request to the Composer DAG Trigger API
 
-    When called via Google Cloud Functions (GCF), data and context are Background function parameters.
+    When called via Google Cloud Functions (GCF), 
+    data and context are Background function parameters.
+
     For more info, refer to
     https://cloud.google.com/functions/docs/writing/background#functions_background_parameters-python
 
