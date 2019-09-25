@@ -34,8 +34,9 @@ def trigger_dag(data, context=None):
     For more info, refer to
     https://cloud.google.com/functions/docs/writing/background#functions_background_parameters-python
 
-    When called via Python, a context object is not needed,
-    and a non-null data object must be present."""
+    To call this function from a Python script, omit the ``context`` argument
+    and pass in a non-null value for the ``data`` argument.
+    """
 
     # Fill in with your Composer info here
     # Navigate to your webserver's login page and get this from the URL
