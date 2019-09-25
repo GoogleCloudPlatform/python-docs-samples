@@ -30,7 +30,7 @@ OAUTH_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 def trigger_dag(data, context=None):
     """Makes a POST request to the Composer DAG Trigger API
 
-    When called via GCF, data and context are Background function parameters.
+    When called via Google Cloud Functions (GCF), data and context are Background function parameters.
     For more info, refer to
     https://cloud.google.com/functions/docs/writing/background#functions_background_parameters-python
 
@@ -47,8 +47,13 @@ def trigger_dag(data, context=None):
     webserver_id = 'YOUR-TENANT-PROJECT'
     # The name of the DAG you wish to trigger
     dag_name = 'composer_sample_trigger_response_dag'
-    webserver_url = 'https://' + webserver_id + \
-        '.appspot.com/api/experimental/dags/' + dag_name + '/dag_runs'
+    webserver_url = (
+        'https://'
+        + webserver_id
+        + '.appspot.com/api/experimental/dags/'
+        + dag_name
+        + '/dag_runs'
+    )
     # Make a POST request to IAP which then Triggers the DAG
     make_iap_request(webserver_url, client_id, method='POST', json=data)
 
