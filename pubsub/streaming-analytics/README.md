@@ -144,7 +144,7 @@ The following example will run a streaming pipeline. It will read messages from 
 + `--temp_location`: needed for executing the pipeline
 
 ```bash
-python -m PubSubToGCS -W ignore \
+python PubSubToGCS.py \
   --project=$PROJECT_NAME \
   --input_topic=projects/$PROJECT_NAME/topics/$TOPIC_NAME \
   --output_path=gs://$BUCKET_NAME/samples/output \
