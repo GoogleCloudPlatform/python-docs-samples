@@ -38,8 +38,6 @@ def trigger_dag(data, context=None):
     and a non-null data object must be present."""
 
     # Fill in with your Composer info here
-    # The project that holds your function
-    project_id = 'YOUR-PROJECT-ID'
     # Navigate to your webserver's login page and get this from the URL
     # Or use the script found at
     # https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/composer/rest/get_client_id.py
