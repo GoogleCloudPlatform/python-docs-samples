@@ -76,6 +76,12 @@ def test_list_blobs(test_blob, capsys):
     assert test_blob.name in out
 
 
+def test_bucket_metadata(capsys):
+    snippets.bucket_metadata(BUCKET)
+    out, _ = capsys.readouterr()
+    assert BUCKET in out
+
+
 def test_list_blobs_with_prefix(test_blob, capsys):
     snippets.list_blobs_with_prefix(
         BUCKET,
