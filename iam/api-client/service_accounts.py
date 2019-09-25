@@ -131,9 +131,8 @@ def disable_service_account(email):
     print("Disabled service account :" + email)
 # [END iam_disable_service_account]
 
+
 # [START iam_enable_service_account]
-
-
 def enable_service_account(email):
     """Enables a service account."""
 
