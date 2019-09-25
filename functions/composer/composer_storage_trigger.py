@@ -37,7 +37,6 @@ def trigger_dag(data, context=None):
     To call this function from a Python script, omit the ``context`` argument
     and pass in a non-null value for the ``data`` argument.
     """
-    and a non-null data object must be present."""
 
     # Fill in with your Composer info here
     # Navigate to your webserver's login page and get this from the URL
@@ -49,8 +48,13 @@ def trigger_dag(data, context=None):
     webserver_id = 'YOUR-TENANT-PROJECT'
     # The name of the DAG you wish to trigger
     dag_name = 'composer_sample_trigger_response_dag'
-    webserver_url = 'https://' + webserver_id + \
-        '.appspot.com/api/experimental/dags/' + dag_name + '/dag_runs'
+    webserver_url = (
+        'https://'
+        + webserver_id
+        + '.appspot.com/api/experimental/dags/'
+        + dag_name
+        + '/dag_runs'
+    )
     # Make a POST request to IAP which then Triggers the DAG
     make_iap_request(webserver_url, client_id, method='POST', json=data)
 
