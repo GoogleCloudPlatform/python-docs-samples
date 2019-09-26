@@ -416,7 +416,7 @@ def patch_es256_auth(
     device.num_id = 0
     device.credentials.append(cred)
 
-    mask = iot_v1.types.FieldMask();
+    mask = iot_v1.types.FieldMask()
     mask.paths.append('credentials')
 
     return client.update_device(
@@ -451,7 +451,7 @@ def patch_rsa256_auth(
     device.num_id = 0
     device.credentials.append(cred)
 
-    mask = iot_v1.types.FieldMask();
+    mask = iot_v1.types.FieldMask()
     mask.paths.append('credentials')
 
     return client.update_device(
