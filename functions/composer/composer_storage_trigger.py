@@ -15,14 +15,12 @@
 # [START composer_trigger]
 
 import google.auth
-import google.auth.app_engine
 import google.auth.compute_engine.credentials
 import google.auth.iam
 from google.auth.transport.requests import Request
 import google.oauth2.credentials
 import google.oauth2.service_account
 import requests
-import requests_toolbelt.adapters.appengine
 IAM_SCOPE = 'https://www.googleapis.com/auth/iam'
 OAUTH_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 
@@ -87,13 +85,6 @@ def make_iap_request(url, client_id, method='GET', **kwargs):
     # information about the service account.
     bootstrap_credentials, _ = google.auth.default(
         scopes=[IAM_SCOPE])
-    if isinstance(bootstrap_credentials,
-                  google.oauth2.credentials.Credentials):
-        raise Exception('make_iap_request is only supported for service '
-                        'accounts.')
-    elif isinstance(bootstrap_credentials,
-                    google.auth.app_engine.Credentials):
-        requests_toolbelt.adapters.appengine.monkeypatch()
 
     # For service account's using the Compute Engine metadata service,
     # service_account_email isn't available until refresh is called.
@@ -105,13 +96,11 @@ def make_iap_request(url, client_id, method='GET', **kwargs):
         # Since the Compute Engine metadata service doesn't expose the service
         # account key, we use the IAM signBlob API to sign instead.
         # In order for this to work:
-        #
         # 1. Your VM needs the https://www.googleapis.com/auth/iam scope.
         #    You can specify this specific scope when creating a VM
         #    through the API or gcloud. When using Cloud Console,
         #    you'll need to specify the "full access to all Cloud APIs"
         #    scope. A VM's scopes can only be specified at creation time.
-        #
         # 2. The VM's default service account needs the "Service Account Actor"
         #    role. This can be found under the "Project" category in Cloud
         #    Console, or roles/iam.serviceAccountActor in gcloud.
@@ -127,7 +116,6 @@ def make_iap_request(url, client_id, method='GET', **kwargs):
         signer, signer_email, token_uri=OAUTH_TOKEN_URI, additional_claims={
             'target_audience': client_id
         })
-
     # service_account_credentials gives us a JWT signed by the service
     # account. Next, we use that to obtain an OpenID Connect token,
     # which is a JWT signed by Google.
