@@ -35,6 +35,7 @@ import os
 import sys
 import time
 
+from google.cloud import iot_v1
 from google.cloud import pubsub
 from google.oauth2 import service_account
 from googleapiclient import discovery
@@ -236,29 +237,38 @@ def get_device(
     """Retrieve the device with the given id."""
     # [START iot_get_device]
     print('Getting device')
-    client = get_client(service_account_json)
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
+    client = iot_v1.DeviceManagerClient()
+    device_path = client.device_path(
+        project_id, cloud_region, registry_id, device_id)
 
-    device_name = '{}/devices/{}'.format(registry_name, device_id)
-    devices = client.projects().locations().registries().devices()
-    device = devices.get(name=device_name).execute()
+    device = client.get_device(device_path)
 
-    print('Id : {}'.format(device.get('id')))
-    print('Name : {}'.format(device.get('name')))
+    print('Id : {}'.format(device.id))
+    print('Name : {}'.format(device.name))
     print('Credentials:')
-    if device.get('credentials') is not None:
-        for credential in device.get('credentials'):
-            keyinfo = credential.get('publicKey')
-            print('\tcertificate: \n{}'.format(keyinfo.get('key')))
-            print('\tformat : {}'.format(keyinfo.get('format')))
-            print('\texpiration: {}'.format(credential.get('expirationTime')))
+
+    if device.credentials is not None:
+        for credential in device.credentials:
+            keyinfo = credential.public_key
+            print('\tcertificate: \n{}'.format(keyinfo.key))
+
+            if keyinfo.format == 4:
+                keyformat = 'ES256_X509_PEM'
+            elif keyinfo.format == 3:
+                keyformat = 'RSA_PEM'
+            elif keyinfo.format == 2:
+                keyformat = 'ES256_PEM'
+            elif keyinfo.format == 1:
+                keyformat = 'RSA_X509_PEM'
+            else:
+                keyformat = 'UNSPECIFIED_PUBLIC_KEY_FORMAT'
+            print('\tformat : {}'.format(keyformat))
+            print('\texpiration: {}'.format(credential.expiration_time))
 
     print('Config:')
-    print('\tdata: {}'.format(device.get('config').get('data')))
-    print('\tversion: {}'.format(device.get('config').get('version')))
-    print('\tcloudUpdateTime: {}'.format(device.get('config').get(
-            'cloudUpdateTime')))
+    print('\tdata: {}'.format(device.config.binary_data))
+    print('\tversion: {}'.format(device.config.version))
+    print('\tcloudUpdateTime: {}'.format(device.config.cloud_update_time))
 
     return device
     # [END iot_get_device]
@@ -269,17 +279,19 @@ def get_state(
         device_id):
     """Retrieve a device's state blobs."""
     # [START iot_get_device_state]
-    client = get_client(service_account_json)
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
+    client = iot_v1.DeviceManagerClient()
+    device_path = client.device_path(
+        project_id, cloud_region, registry_id, device_id)
 
-    device_name = '{}/devices/{}'.format(registry_name, device_id)
-    devices = client.projects().locations().registries().devices()
-    state = devices.states().list(name=device_name, numStates=5).execute()
+    device = client.get_device(device_path)
+    print('Last state: {}'.format(device.state))
 
-    print('State: {}\n'.format(state))
+    print('State history')
+    states = client.list_device_states(device_path).device_states
+    for state in states:
+        print('State: {}'.format(state))
 
-    return state
+    return states
     # [END iot_get_device_state]
 
 
@@ -288,16 +300,13 @@ def list_devices(
     """List all devices in the registry."""
     # [START iot_list_devices]
     print('Listing devices')
-    registry_path = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
-    client = get_client(service_account_json)
-    devices = client.projects().locations().registries().devices(
-            ).list(parent=registry_path).execute().get('devices', [])
 
+    client = iot_v1.DeviceManagerClient()
+    registry_path = client.registry_path(project_id, cloud_region, registry_id)
+
+    devices = list(client.list_devices(parent=registry_path))
     for device in devices:
-        print('Device: {} : {}'.format(
-                device.get('numId'),
-                device.get('id')))
+        print('Device: {} : {}'.format(device.num_id, device.id))
 
     return devices
     # [END iot_list_devices]
@@ -307,16 +316,14 @@ def list_registries(service_account_json, project_id, cloud_region):
     """List all registries in the project."""
     # [START iot_list_registries]
     print('Listing Registries')
-    registry_path = 'projects/{}/locations/{}'.format(
-            project_id, cloud_region)
-    client = get_client(service_account_json)
-    registries = client.projects().locations().registries().list(
-        parent=registry_path).execute().get('deviceRegistries', [])
+    client = iot_v1.DeviceManagerClient()
+    parent = client.location_path(project_id, cloud_region)
 
+    registries = list(client.list_device_registries(parent))
     for registry in registries:
         print('id: {}\n\tname: {}'.format(
-            registry.get('id'),
-            registry.get('name')))
+            registry.id,
+            registry.name))
 
     return registries
     # [END iot_list_registries]
