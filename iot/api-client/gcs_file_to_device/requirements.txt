@@ -1,8 +1,8 @@
-google-api-python-client==1.7.8
-google-auth==1.6.2
+google-api-python-client==1.7.11
+google-auth==1.6.3
 google-auth-httplib2==0.0.3
-google-cloud-pubsub==0.39.1
-google-cloud-storage==1.13.2
-cryptography==2.5
+google-cloud-pubsub==1.0.0
+google-cloud-storage==1.19.1
+cryptography==2.7
 paho-mqtt==1.4.0
 pyjwt==1.7.1

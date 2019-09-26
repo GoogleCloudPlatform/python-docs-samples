@@ -1,4 +1,4 @@
-requests==2.21.0
-google-api-python-client==1.7.8
-google-auth==1.6.2
+requests==2.22.0
+google-api-python-client==1.7.11
+google-auth==1.6.3
 google-auth-httplib2==0.0.3
