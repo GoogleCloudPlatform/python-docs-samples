@@ -16,14 +16,17 @@ import multiprocessing as mp
 import os
 import pytest
 import subprocess as sp
+import tempfile
 import time
+import uuid
 
-from google.cloud import pubsub_v1
+from google.cloud import pubsub_v1, storage
 
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 TOPIC = 'test-topic'
+UUID = uuid.uuid4().hex
 
 
 @pytest.fixture
@@ -53,7 +56,7 @@ def _infinite_publish_job(publisher_client, topic_path):
 
 
 def test_run(publisher_client, topic_path):
-    """This is antegration test that runs `PubSubToGCS.py` in its entirety.
+    """This is an integration test that runs `PubSubToGCS.py` in its entirety.
     It checks for output files on GCS.
     """
 
@@ -68,9 +71,9 @@ def test_run(publisher_client, topic_path):
             'python', 'PubSubToGCS.py',
             '--project', PROJECT,
             '--runner', 'DirectRunner',
-            '--temp_location', 'gs://{}/pubsub/temp'.format(BUCKET),
+            '--temp_location', tempfile.mkdtemp(),
             '--input_topic', topic_path,
-            '--output_path', 'gs://{}/pubsub/output'.format(BUCKET),
+            '--output_path', 'gs://{}/pubsub/{}/output'.format(BUCKET, UUID),
         ])
     )
 
@@ -86,8 +89,13 @@ def test_run(publisher_client, topic_path):
     publish_process.terminate()
 
     # Check for output files on GCS.
-    assert sp.call(['gsutil', 'ls', 'gs://{}/pubsub/'.format(BUCKET)]) == 0
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(BUCKET)
+    blobs = list(bucket.list_blobs(prefix='pubsub/{}/output'.format(UUID)))
+    assert len(blobs) > 0
 
-    # Clean up. Delete files.
-    assert sp.call(['gsutil', '-m', 'rm', '-rf',
-                    'gs://{}/pubsub/'.format(BUCKET)]) == 0
+    # Clean up. Delete topic. Delete files.
+    publisher_client.delete_topic(topic_path)
+
+    for blob in blobs:
+        bucket.delete_blob(blob.name)
