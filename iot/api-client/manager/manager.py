@@ -247,7 +247,6 @@ def get_device(
     print('Name : {}'.format(device.name))
     print('Credentials:')
 
-
     if device.credentials is not None:
         for credential in device.credentials:
             keyinfo = credential.public_key
@@ -336,9 +335,6 @@ def create_registry(
     """ Creates a registry and returns the result. Returns an empty result if
     the registry already exists."""
     # [START iot_create_registry]
-    client = iot_v1.DeviceManagerClient()
-    parent = client.location_path(project_id, cloud_region)
-
     client = get_client(service_account_json)
     registry_parent = 'projects/{}/locations/{}'.format(
             project_id,
