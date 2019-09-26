@@ -20,7 +20,8 @@ import tempfile
 import time
 import uuid
 
-from google.cloud import pubsub_v1, storage
+import apache_beam as beam
+from google.cloud import pubsub_v1
 
 
 PROJECT = os.environ['GCLOUD_PROJECT']
@@ -89,13 +90,11 @@ def test_run(publisher_client, topic_path):
     publish_process.terminate()
 
     # Check for output files on GCS.
-    storage_client = storage.Client()
-    bucket = storage_client.get_bucket(BUCKET)
-    blobs = list(bucket.list_blobs(prefix='pubsub/{}/output'.format(UUID)))
-    assert len(blobs) > 0
+    gcs_client = beam.io.gcp.gcsio.GcsIO()
+    # This returns a dictionary.
+    files = gcs_client.list_prefix('gs://{}/pubsub/{}'.format(BUCKET, UUID))
+    assert len(files) > 0
 
     # Clean up. Delete topic. Delete files.
     publisher_client.delete_topic(topic_path)
-
-    for blob in blobs:
-        bucket.delete_blob(blob.name)
+    gcs_client.delete_batch(list(files))
