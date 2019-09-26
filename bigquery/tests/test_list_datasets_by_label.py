@@ -23,4 +23,4 @@ def test_list_datasets_by_label(capsys, client, dataset_id):
     dataset = client.update_dataset(dataset, ["labels"])
     list_datasets_by_label.list_datasets_by_label(client)
     out, err = capsys.readouterr()
-    assert "{}".format(dataset_id) in out
+    assert dataset_id in out

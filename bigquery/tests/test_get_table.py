@@ -30,7 +30,7 @@ def test_get_table(capsys, client, random_table_id):
     get_table.get_table(client, random_table_id)
     out, err = capsys.readouterr()
     assert "Got table '{}'.".format(random_table_id) in out
-    assert "full_name" in out  # test that schema is printed
+    assert "full_name" in out
     assert "Table description: Sample Table" in out
     assert "Table has 0 rows" in out
     client.delete_table(table, not_found_ok=True)

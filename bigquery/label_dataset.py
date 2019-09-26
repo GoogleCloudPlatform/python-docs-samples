@@ -25,9 +25,9 @@ def label_dataset(client, dataset_id):
     # TODO(developer): Set dataset_id to the ID of the dataset to fetch.
     # dataset_id = "your-project.your_dataset"
 
-    dataset = client.get_dataset(dataset_id)
+    dataset = client.get_dataset(dataset_id)  # Make an API request.
     dataset.labels = {"color": "green"}
-    dataset = client.update_dataset(dataset, ["labels"])
+    dataset = client.update_dataset(dataset, ["labels"])  # Make an API request.
 
     print("Labels added to {}".format(dataset_id))
     # [END bigquery_label_dataset]

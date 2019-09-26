@@ -12,16 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 import pytest
 
 from .. import load_table_dataframe
 
 
-pytest.importorskip("pandas")
-pytest.importorskip("pyarrow")
+pandas = pytest.importorskip("pandas")
+pyarrow = pytest.importorskip("pyarrow")
 
 
 def test_load_table_dataframe(capsys, client, random_table_id):
+
     table = load_table_dataframe.load_table_dataframe(client, random_table_id)
     out, _ = capsys.readouterr()
     assert "Loaded 4 rows and 3 columns" in out

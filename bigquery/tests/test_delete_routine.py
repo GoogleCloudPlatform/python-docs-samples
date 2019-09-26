@@ -13,16 +13,11 @@
 # limitations under the License.
 
 
-from .. import browse_table_data
+from .. import delete_routine
 
 
-def test_browse_table_data(capsys, client, table_with_data_id):
+def test_delete_routine(capsys, client, routine_id):
 
-    browse_table_data.browse_table_data(client, table_with_data_id)
+    delete_routine.delete_routine(client, routine_id)
     out, err = capsys.readouterr()
-    assert "Downloaded 164656 rows from table {}".format(table_with_data_id) in out
-    assert "Downloaded 10 rows from table {}".format(table_with_data_id) in out
-    assert "Selected 2 columns from table {}".format(table_with_data_id) in out
-    assert "Downloaded 10 rows from table {}".format(table_with_data_id) in out
-    assert "word" in out
-    assert "LVII" in out
+    assert "Deleted routine {}.".format(routine_id) in out

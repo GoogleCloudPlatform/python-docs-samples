@@ -26,7 +26,7 @@ def list_tables(client, dataset_id):
     #                  the tables you are listing.
     # dataset_id = 'your-project.your_dataset'
 
-    tables = client.list_tables(dataset_id)
+    tables = client.list_tables(dataset_id)  # Make an API request.
 
     print("Tables contained in '{}':".format(dataset_id))
     for table in tables:

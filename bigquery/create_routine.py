@@ -40,7 +40,7 @@ def create_routine(client, routine_id):
         ],
     )
 
-    routine = client.create_routine(routine)
+    routine = client.create_routine(routine)  # Make an API request.
 
     print("Created routine {}".format(routine.reference))
     # [END bigquery_create_routine]

@@ -23,7 +23,7 @@ def list_datasets_by_label(client):
     # client = bigquery.Client()
 
     label_filter = "labels.color:green"
-    datasets = list(client.list_datasets(filter=label_filter))
+    datasets = list(client.list_datasets(filter=label_filter))  # Make an API request.
 
     if datasets:
         print("Datasets filtered by {}:".format(label_filter))

@@ -19,4 +19,4 @@ def test_get_dataset(capsys, client, dataset_id):
 
     get_dataset.get_dataset(client, dataset_id)
     out, err = capsys.readouterr()
-    assert "{}".format(dataset_id) in out
+    assert dataset_id in out

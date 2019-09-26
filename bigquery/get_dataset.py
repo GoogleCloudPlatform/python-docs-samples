@@ -25,7 +25,7 @@ def get_dataset(client, dataset_id):
     # TODO(developer): Set dataset_id to the ID of the dataset to fetch.
     # dataset_id = 'your-project.your_dataset'
 
-    dataset = client.get_dataset(dataset_id)
+    dataset = client.get_dataset(dataset_id)  # Make an API request.
 
     full_dataset_id = "{}.{}".format(dataset.project, dataset.dataset_id)
     friendly_name = dataset.friendly_name

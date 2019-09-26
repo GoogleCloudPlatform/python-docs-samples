@@ -26,7 +26,7 @@ def list_routines(client, dataset_id):
     #                  the routines you are listing.
     # dataset_id = 'your-project.your_dataset'
 
-    routines = client.list_routines(dataset_id)
+    routines = client.list_routines(dataset_id)  # Make an API request.
 
     print("Routines contained in dataset {}:".format(dataset_id))
     for routine in routines:

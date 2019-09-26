@@ -15,24 +15,15 @@
 from google.cloud import bigquery
 from google.cloud import bigquery_v2
 
-
-def test_create_routine(capsys, client, random_routine_id):
-    from .. import create_routine
-
-    create_routine.create_routine(client, random_routine_id)
-    out, err = capsys.readouterr()
-    assert "Created routine {}".format(random_routine_id) in out
+from .. import create_routine_ddl
 
 
 def test_create_routine_ddl(capsys, client, random_routine_id):
-    from .. import create_routine_ddl
 
     create_routine_ddl.create_routine_ddl(client, random_routine_id)
     routine = client.get_routine(random_routine_id)
     out, err = capsys.readouterr()
-
     assert "Created routine {}".format(random_routine_id) in out
-    return routine
     assert routine.type_ == "SCALAR_FUNCTION"
     assert routine.language == "SQL"
     expected_arguments = [
@@ -63,27 +54,3 @@ def test_create_routine_ddl(capsys, client, random_routine_id):
         )
     ]
     assert routine.arguments == expected_arguments
-
-
-def test_list_routines(capsys, client, dataset_id, routine_id):
-    from .. import list_routines
-
-    list_routines.list_routines(client, dataset_id)
-    out, err = capsys.readouterr()
-    assert "Routines contained in dataset {}:".format(dataset_id) in out
-    assert routine_id in out
-
-
-def test_delete_routine(capsys, client, routine_id):
-    from .. import delete_routine
-
-    delete_routine.delete_routine(client, routine_id)
-    out, err = capsys.readouterr()
-    assert "Deleted routine {}.".format(routine_id) in out
-
-
-def test_update_routine(client, routine_id):
-    from .. import update_routine
-
-    routine = update_routine.update_routine(client, routine_id)
-    assert routine.body == "x * 4"

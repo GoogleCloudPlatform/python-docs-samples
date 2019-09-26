@@ -14,8 +14,10 @@
 
 
 def load_table_dataframe(client, table_id):
+
     # [START bigquery_load_table_dataframe]
     from google.cloud import bigquery
+
     import pandas
 
     # TODO(developer): Construct a BigQuery client object.
@@ -59,11 +61,14 @@ def load_table_dataframe(client, table_id):
     )
 
     job = client.load_table_from_dataframe(
-        dataframe, table_id, job_config=job_config, location="US"
-    )
-    job.result()  # Waits for table load to complete.
+        dataframe,
+        table_id,
+        job_config=job_config,
+        location="US",  # Must match the destination dataset location.
+    )  # Make an API request.
+    job.result()  # Waits for the job to complete.
 
-    table = client.get_table(table_id)
+    table = client.get_table(table_id)  # Make an API request.
     print(
         "Loaded {} rows and {} columns to {}".format(
             table.num_rows, len(table.schema), table_id

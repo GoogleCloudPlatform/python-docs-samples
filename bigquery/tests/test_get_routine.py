@@ -13,16 +13,15 @@
 # limitations under the License.
 
 
-from .. import browse_table_data
+from .. import get_routine
 
 
-def test_browse_table_data(capsys, client, table_with_data_id):
+def test_get_routine(capsys, client, routine_id):
 
-    browse_table_data.browse_table_data(client, table_with_data_id)
+    get_routine.get_routine(client, routine_id)
     out, err = capsys.readouterr()
-    assert "Downloaded 164656 rows from table {}".format(table_with_data_id) in out
-    assert "Downloaded 10 rows from table {}".format(table_with_data_id) in out
-    assert "Selected 2 columns from table {}".format(table_with_data_id) in out
-    assert "Downloaded 10 rows from table {}".format(table_with_data_id) in out
-    assert "word" in out
-    assert "LVII" in out
+    assert "Routine '{}':".format(routine_id) in out
+    assert "Type: 'SCALAR_FUNCTION'" in out
+    assert "Language: 'SQL'" in out
+    assert "Name: 'x'" in out
+    assert "Type: 'type_kind: INT64\n'" in out

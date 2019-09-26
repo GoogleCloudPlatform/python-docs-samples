@@ -24,7 +24,7 @@ def update_dataset_access(client, dataset_id):
     # TODO(developer): Set dataset_id to the ID of the dataset to fetch.
     # dataset_id = 'your-project.your_dataset'
 
-    dataset = client.get_dataset(dataset_id)
+    dataset = client.get_dataset(dataset_id)  # Make an API request.
 
     entry = bigquery.AccessEntry(
         role="READER",
@@ -36,7 +36,7 @@ def update_dataset_access(client, dataset_id):
     entries.append(entry)
     dataset.access_entries = entries
 
-    dataset = client.update_dataset(dataset, ["access_entries"])  # API request
+    dataset = client.update_dataset(dataset, ["access_entries"])  # Make an API request.
 
     full_dataset_id = "{}.{}".format(dataset.project, dataset.dataset_id)
     print(

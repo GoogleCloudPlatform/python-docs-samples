@@ -25,15 +25,15 @@ def get_routine(client, routine_id):
     # TODO(developer): Set the fully-qualified ID for the routine.
     # routine_id = "my-project.my_dataset.my_routine"
 
-    routine = client.get_routine(routine_id)
+    routine = client.get_routine(routine_id)  # Make an API request.
 
-    print("Routine `{}`:".format(routine.reference))
-    print("  Type: '{}'".format(routine.type_))
-    print("  Language: '{}'".format(routine.language))
-    print("  Arguments:")
+    print("Routine '{}':".format(routine.reference))
+    print("\tType: '{}'".format(routine.type_))
+    print("\tLanguage: '{}'".format(routine.language))
+    print("\tArguments:")
 
     for argument in routine.arguments:
-        print("    Name: '{}'".format(argument.name))
-        print("    Type: '{}'".format(argument.type_))
+        print("\t\tName: '{}'".format(argument.name))
+        print("\t\tType: '{}'".format(argument.data_type))
     # [END bigquery_get_routine]
     return routine

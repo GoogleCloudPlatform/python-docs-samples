@@ -26,7 +26,7 @@ def get_model(client, model_id):
     # TODO(developer): Set model_id to the ID of the model to fetch.
     # model_id = 'your-project.your_dataset.your_model'
 
-    model = client.get_model(model_id)
+    model = client.get_model(model_id)  # Make an API request.
 
     full_model_id = "{}.{}.{}".format(model.project, model.dataset_id, model.model_id)
     friendly_name = model.friendly_name

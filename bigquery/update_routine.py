@@ -33,13 +33,14 @@ def update_routine(client, routine_id):
         routine,
         [
             "body",
-            # Due to a limitation of the API, all fields are required, not just
+            # Due to a limitation of the API,
+            # all fields are required, not just
             # those that have been updated.
             "arguments",
             "language",
             "type_",
             "return_type",
         ],
-    )
+    )  # Make an API request.
     # [END bigquery_update_routine]
     return routine

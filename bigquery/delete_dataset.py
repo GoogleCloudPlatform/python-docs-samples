@@ -27,7 +27,9 @@ def delete_dataset(client, dataset_id):
 
     # Use the delete_contents parameter to delete a dataset and its contents
     # Use the not_found_ok parameter to not receive an error if the dataset has already been deleted.
-    client.delete_dataset(dataset_id, delete_contents=True, not_found_ok=True)
+    client.delete_dataset(
+        dataset_id, delete_contents=True, not_found_ok=True
+    )  # Make an API request.
 
     print("Deleted dataset '{}'.".format(dataset_id))
     # [END bigquery_delete_dataset]

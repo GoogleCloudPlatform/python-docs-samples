@@ -13,16 +13,11 @@
 # limitations under the License.
 
 
-from .. import browse_table_data
+from .. import create_routine
 
 
-def test_browse_table_data(capsys, client, table_with_data_id):
+def test_create_routine(capsys, client, random_routine_id):
 
-    browse_table_data.browse_table_data(client, table_with_data_id)
+    create_routine.create_routine(client, random_routine_id)
     out, err = capsys.readouterr()
-    assert "Downloaded 164656 rows from table {}".format(table_with_data_id) in out
-    assert "Downloaded 10 rows from table {}".format(table_with_data_id) in out
-    assert "Selected 2 columns from table {}".format(table_with_data_id) in out
-    assert "Downloaded 10 rows from table {}".format(table_with_data_id) in out
-    assert "word" in out
-    assert "LVII" in out
+    assert "Created routine {}".format(random_routine_id) in out

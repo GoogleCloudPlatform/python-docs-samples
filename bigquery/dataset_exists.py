@@ -22,7 +22,7 @@ def dataset_exists(client, dataset_id):
     # dataset_id = "your-project.your_dataset"
 
     try:
-        client.get_dataset(dataset_id)
+        client.get_dataset(dataset_id)  # Make an API request.
         print("Dataset {} already exists".format(dataset_id))
     except NotFound:
         print("Dataset {} is not found".format(dataset_id))

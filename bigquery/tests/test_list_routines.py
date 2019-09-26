@@ -13,16 +13,12 @@
 # limitations under the License.
 
 
-from .. import browse_table_data
+from .. import list_routines
 
 
-def test_browse_table_data(capsys, client, table_with_data_id):
+def test_list_routines(capsys, client, dataset_id, routine_id):
 
-    browse_table_data.browse_table_data(client, table_with_data_id)
+    list_routines.list_routines(client, dataset_id)
     out, err = capsys.readouterr()
-    assert "Downloaded 164656 rows from table {}".format(table_with_data_id) in out
-    assert "Downloaded 10 rows from table {}".format(table_with_data_id) in out
-    assert "Selected 2 columns from table {}".format(table_with_data_id) in out
-    assert "Downloaded 10 rows from table {}".format(table_with_data_id) in out
-    assert "word" in out
-    assert "LVII" in out
+    assert "Routines contained in dataset {}:".format(dataset_id) in out
+    assert routine_id in out

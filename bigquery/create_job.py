@@ -33,7 +33,7 @@ def create_job(client):
         # The client libraries automatically generate a job ID. Override the
         # generated ID with either the job_id_prefix or job_id parameters.
         job_id_prefix="code_sample_",
-    )  # API request
+    )  # Make an API request.
 
     print("Started job: {}".format(query_job.job_id))
     # [END bigquery_create_job]

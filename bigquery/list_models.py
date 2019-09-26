@@ -27,7 +27,7 @@ def list_models(client, dataset_id):
     #                  the models you are listing.
     # dataset_id = 'your-project.your_dataset'
 
-    models = client.list_models(dataset_id)
+    models = client.list_models(dataset_id)  # Make an API request.
 
     print("Models contained in '{}':".format(dataset_id))
     for model in models:
