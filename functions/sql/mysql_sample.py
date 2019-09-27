@@ -46,11 +46,9 @@ def __get_cursor():
       PyMySQL does NOT automatically reconnect,
       so we must reconnect explicitly using ping()
     """
-    try:
-        return mysql_conn.cursor()
-    except OperationalError:
+    if not mysql_conn.open:
         mysql_conn.ping(reconnect=True)
-        return mysql_conn.cursor()
+    return mysql_conn.cursor()
 
 
 def mysql_demo(request):
