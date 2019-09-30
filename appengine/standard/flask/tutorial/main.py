@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START app]
+import json
 import logging
 
 # [START imports]
