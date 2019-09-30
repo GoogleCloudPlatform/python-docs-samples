@@ -30,15 +30,15 @@ SENDGRID_SENDER = 'your-sendgrid-sender'
 def send_simple_message(recipient):
     # [START sendgrid-send]
 
-    sg = sendgrid.SendGridAPIClient(apikey=SENDGRID_API_KEY)
+    sg = sendgrid.SendGridAPIClient(SENDGRID_API_KEY)
 
     to_email = mail.Email(recipient)
     from_email = mail.Email(SENDGRID_SENDER)
     subject = 'This is a test email'
     content = mail.Content('text/plain', 'Example message.')
-    message = mail.Mail(from_email, subject, to_email, content)
+    message = mail.Mail(from_email, to_email, subject, content)
 
-    response = sg.client.mail.send.post(request_body=message.get())
+    response = sg.send(message.get())
 
     return response
     # [END sendgrid-send]
