@@ -12,44 +12,174 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Demonstrates how to perform basic access management with Google Cloud IAM.
+
+For more information, see the documentation at
+https://cloud.google.com/iam/docs/granting-changing-revoking-access.
+"""
+
+import argparse
 import os
-import random
 
-import access
-import service_accounts
+from google.oauth2 import service_account
+import googleapiclient.discovery
 
 
-def test_access(capsys):
-    # Setting up variables for testing
-    project_id = os.environ['GCLOUD_PROJECT']
+# [START iam_get_policy]
+def get_policy(project_id):
+    """Gets IAM policy for a project."""
 
-    # specifying a sample role to be assigned
-    gcp_role = 'roles/owner'
+    credentials = service_account.Credentials.from_service_account_file(
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+    service = googleapiclient.discovery.build(
+        'cloudresourcemanager', 'v1', credentials=credentials)
+    policy = service.projects().getIamPolicy(
+        resource=project_id, body={}).execute()
+    print(policy)
+    return policy
+# [END iam_get_policy]
 
-    # section to create service account to test policy updates.
-    rand = str(random.randint(0, 1000))
-    name = 'python-test-' + rand
-    email = name + '@' + project_id + '.iam.gserviceaccount.com'
-    member = 'serviceAccount:' + email
-    service_accounts.create_service_account(
-        project_id, name, 'Py Test Account')
 
-    policy = access.get_policy(project_id)
-    out, _ = capsys.readouterr()
-    assert u'etag' in out
+# [START iam_modify_policy_add_member]
+def modify_policy_add_member(policy, role, member):
+    """Adds a new member to a role binding."""
 
-    policy = access.modify_policy_add_role(policy, gcp_role, member)
-    out, _ = capsys.readouterr()
-    assert u'etag' in out
+    binding = next(b for b in policy['bindings'] if b['role'] == role)
+    binding['members'].append(member)
+    print(binding)
+    return policy
+# [END iam_modify_policy_add_member]
 
-    policy = access.modify_policy_remove_member(policy, gcp_role, member)
-    out, _ = capsys.readouterr()
-    assert 'iam.gserviceaccount.com' in out
 
-    policy = access.set_policy(project_id, policy)
-    out, _ = capsys.readouterr()
-    assert u'etag' in out
+# [START iam_modify_policy_add_role]
+def modify_policy_add_role(policy, role, member):
+    """Adds a new role binding to a policy."""
 
-    # deleting the service account created above
-    service_accounts.delete_service_account(
-        email)
+    binding = {
+        'role': role,
+        'members': [member]
+    }
+    policy['bindings'].append(binding)
+    print(policy)
+    return policy
+# [END iam_modify_policy_add_role]
+
+
+# [START iam_modify_policy_remove_member]
+def modify_policy_remove_member(policy, role, member):
+    """Removes a  member from a role binding."""
+    binding = next(b for b in policy['bindings'] if b['role'] == role)
+    if 'members' in binding and member in binding['members']:
+        binding['members'].remove(member)
+    print(binding)
+    return policy
+# [END iam_modify_policy_remove_member]
+
+
+# [START iam_set_policy]
+def set_policy(project_id, policy):
+    """Sets IAM policy for a project."""
+
+    credentials = service_account.Credentials.from_service_account_file(
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+    service = googleapiclient.discovery.build(
+        'cloudresourcemanager', 'v1', credentials=credentials)
+
+    policy = service.projects().setIamPolicy(
+        resource=project_id, body={
+            'policy': policy
+        }).execute()
+    print(policy)
+    return policy
+# [END iam_set_policy]
+
+# [START iam_test_permissions]
+def test_permissions(project_id):
+    """Tests IAM permissions of the caller"""
+
+    credentials = service_account.Credentials.from_service_account_file(
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+    service = googleapiclient.discovery.build(
+        'cloudresourcemanager', 'v1', credentials=credentials)
+
+    permissions = {
+        "permissions": [
+            "resourcemanager.projects.get",
+            "resourcemanager.projects.delete"
+        ]
+    }
+
+    request = service.projects().testIamPermissions(
+        resource=project_id, body=permissions)
+    returnedPermissions = request.execute()
+    print(returnedPermissions)
+    return returnedPermissions
+# [END iam_test_permissions]
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
+
+    subparsers = parser.add_subparsers(dest='command')
+
+    # Get
+    get_parser = subparsers.add_parser(
+        'get', help=get_policy.__doc__)
+    get_parser.add_argument('project_id')
+
+    # Modify: add member
+    modify_member_parser = subparsers.add_parser(
+        'modify_member', help=get_policy.__doc__)
+    modify_member_parser.add_argument('project_id')
+    modify_member_parser.add_argument('role')
+    modify_member_parser.add_argument('member')
+
+    # Modify: add role
+    modify_role_parser = subparsers.add_parser(
+        'modify_role', help=get_policy.__doc__)
+    modify_role_parser.add_argument('project_id')
+    modify_role_parser.add_argument('project_id')
+    modify_role_parser.add_argument('role')
+    modify_role_parser.add_argument('member')
+
+    # Modify: remove member
+    modify_member_parser = subparsers.add_parser(
+        'modify_member', help=get_policy.__doc__)
+    modify_member_parser.add_argument('project_id')
+    modify_member_parser.add_argument('role')
+    modify_member_parser.add_argument('member')
+
+    # Set
+    set_parser = subparsers.add_parser(
+        'set', help=set_policy.__doc__)
+    set_parser.add_argument('project_id')
+    set_parser.add_argument('policy')
+
+    # Test permissions
+    test_permissions_parser = subparsers.add_parser(
+        'test_permissions', help=get_policy.__doc__)
+    test_permissions_parser.add_argument('project_id')
+
+    args = parser.parse_args()
+
+    if args.command == 'get':
+        get_policy(args.project_id)
+    elif args.command == 'set':
+        set_policy(args.project_id, args.policy)
+    elif args.command == 'add_member':
+        modify_policy_add_member(args.policy, args.role, args.member)
+    elif args.command == 'remove_member':
+        modify_policy_remove_member(args.policy, args.role, args.member)
+    elif args.command == 'add_binding':
+        modify_policy_add_role(args.policy, args.role, args.member)
+    elif args.command == 'test_permissions':
+        test_permissions(args.project_id)
+
+
+if __name__ == '__main__':
+    main()
