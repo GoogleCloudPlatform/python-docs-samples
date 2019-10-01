@@ -15,7 +15,6 @@ import datetime
 from time import sleep
 
 from google.cloud import firestore
-import google.cloud.exceptions
 
 
 def quickstart_new_instance():
