@@ -16,7 +16,7 @@ import logging
 import os
 
 from flask import Flask
-import scipy.misc
+import imageio
 
 app = Flask(__name__)
 
@@ -26,12 +26,12 @@ def resize():
     """Demonstrates using scipy to resize an image."""
     app_path = os.path.dirname(os.path.realpath(__file__))
     image_path = os.path.join(app_path, 'assets/google_logo.jpg')
-    img = scipy.misc.imread(image_path)
-    img_tinted = scipy.misc.imresize(img, (300, 300))
+    img = imageio.imread(image_path)
+    img_tinted = imageio.imresize(img, (300, 300))
     output_image_path = os.path.join(
         app_path, 'assets/resized_google_logo.jpg')
     # Write the tinted image back to disk
-    scipy.misc.imsave(output_image_path, img_tinted)
+    imageio.imsave(output_image_path, img_tinted)
     return "Image resized."
 
 
