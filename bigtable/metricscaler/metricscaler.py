@@ -26,7 +26,7 @@ from google.cloud.monitoring_v3 import query
 PROJECT = os.environ['GCLOUD_PROJECT']
 
 
-def get_cpu_load(cluster, instance):
+def get_cpu_load(instance, cluster):
     """Returns the most recent Cloud Bigtable CPU load measurement.
     Args:
             cluster (str): name of cluster
@@ -80,7 +80,7 @@ def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up,
                 current_node_count + size_change_step, max_node_count)
             cluster.serve_nodes = new_node_count
             cluster.update()
-            print('Scaled up from {} to {} nodes. cluster {}'.format(
+            print('Scaled cluster {} up from {} to {} nodes.'.format(
                 current_node_count, new_node_count, bigtable_cluster))
     else:
         if current_node_count > min_node_count:
@@ -88,7 +88,7 @@ def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up,
                 current_node_count - size_change_step, min_node_count)
             cluster.serve_nodes = new_node_count
             cluster.update()
-            print('Scaled down from {} to {} nodes. cluster {}'.format(
+            print('Scaled cluster {} down from {} to {} nodes.'.format(
                 current_node_count, new_node_count, bigtable_cluster))
     # [END bigtable_scale]
 
@@ -118,7 +118,7 @@ def main(bigtable_instance,
     if_scaled = False
     for bigtable_cluster in bigtable_clusters:
         cluster_cpu = get_cpu_load(bigtable_cluster, bigtable_instance)
-        print('Detected cpu of {} for {} cluster'.format(
+        print('Detected cpu of {} for cluster {}'.format(
             cluster_cpu, bigtable_cluster))
         if cluster_cpu > high_cpu_threshold:
             scale_bigtable(bigtable_instance, bigtable_cluster, True,
@@ -144,7 +144,7 @@ if __name__ == '__main__':
         help='ID of the Cloud Bigtable instance to connect to.')
     parser.add_argument(
         'bigtable_clusters',
-        help='ID of the Cloud Bigtable clusters to connect to.')
+        help='Comma separated list of IDs of Cloud Bigtable clusters to connect to.')
     parser.add_argument(
         '--high_cpu_threshold',
         help='If Cloud Bigtable CPU usage is above this threshold, scale up',
@@ -165,7 +165,7 @@ if __name__ == '__main__':
         default=60 * 10)
     # The minimum number of nodes to use. The default minimum is 3. If you have
     # a lot of data, the rule of thumb is to not go below 2.5 TB per node for
-    # SSD lusters, and 8 TB for HDD. The
+    # SSD clusters, and 8 TB for HDD. The
     # "bigtable.googleapis.com/disk/bytes_used" metric is useful in figuring
     # out the minimum number of nodes
     parser.add_argument(
@@ -182,7 +182,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--size_change_step',
         help='The number of nodes to change the cluster by',
-        default=5)
+        default=3)
     args = parser.parse_args()
     bigtable_clusters = args.bigtable_clusters.split(',')
     while True:
