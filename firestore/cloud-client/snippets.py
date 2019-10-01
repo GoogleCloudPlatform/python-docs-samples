@@ -217,10 +217,10 @@ def get_check_exists():
     # [START get_check_exists]
     doc_ref = db.collection(u'cities').document(u'SF')
 
-    try:
-        doc = doc_ref.get()
+    doc = doc_ref.get()
+    if doc.exists:
         print(u'Document data: {}'.format(doc.to_dict()))
-    except google.cloud.exceptions.NotFound:
+    else:
         print(u'No such document!')
     # [END get_check_exists]
 
