@@ -881,5 +881,5 @@ def update_document_increment(db):
     # [START fs_update_document_increment]
     washington_ref = db.collection(u'cities').document(u'DC')
 
-    washington_ref.update("population", firestore.Increment(50))
+    washington_ref.update({"population": firestore.Increment(50)})
     # [END fs_update_document_increment]
