@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2019 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ def deidentify(file_name, project_id):
     # Detects speech in the audio file
     response = speech_client.recognize(config, audio)
 
-    transcript = ""
+    transcript = ''
 
     for result in response.results:
         transcript = transcript + result.alternatives[0].transcript
