@@ -57,7 +57,6 @@ def create_http_task(project,
 
         # Add the payload to the request.
         task['http_request']['body'] = converted_payload
-    
     if in_seconds is not None:
         # Convert "seconds from now" into an rfc3339 datetime string.
         d = datetime.datetime.utcnow() + datetime.timedelta(seconds=in_seconds)
