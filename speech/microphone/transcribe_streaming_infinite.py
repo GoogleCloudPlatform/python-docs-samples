@@ -39,6 +39,11 @@ import pyaudio
 from six.moves import queue
 # [END speech_transcribe_infinite_streaming_imports]
 
+def get_current_time():
+    """Return Current Time in MS."""
+
+    return int(round(time.time() * 1000))
+
 # [START speech_transcribe_infinite_streaming_globals]
 
 # Audio recording parameters
@@ -46,14 +51,6 @@ STREAMING_LIMIT = 10000
 SAMPLE_RATE = 16000
 CHUNK_SIZE = int(SAMPLE_RATE / 10)  # 100ms
 
-def get_current_time():
-    """Return Current Time in MS."""
-
-    return int(round(time.time() * 1000))
-
-# [END speech_transcribe_infinite_streaming_globals]
-
-# [START speech_transcribe_infinite_streaming_stream_init]
 
 class ResumableMicrophoneStream:
     """Opens a recording stream as a generator yielding the audio chunks."""
@@ -87,6 +84,8 @@ class ResumableMicrophoneStream:
             stream_callback=self._fill_buffer,
         )
 
+# [END speech_transcribe_infinite_streaming_globals]
+
     def __enter__(self):
 
         self.closed = False
@@ -108,9 +107,9 @@ class ResumableMicrophoneStream:
         self._buff.put(in_data)
         return None, pyaudio.paContinue
     
-# [END speech_transcribe_infinite_streaming_stream_init]
+# [END speech_transcribe_infinite_streaming_init]
 
-# [START speech_transcribe_infinite_streaming_stream_generator]
+# [START speech_transcribe_infinite_streaming_generator]
 
     def generator(self):
         """Stream Audio from microphone to API and to local buffer"""
@@ -166,9 +165,9 @@ class ResumableMicrophoneStream:
 
             yield b''.join(data)
 
-# [END speech_transcribe_infinite_streaming_stream_generator]
+# [END speech_transcribe_infinite_streaming_generator]
 
-# [START speech_transcribe_infinite_streaming_stream_output]
+# [START speech_transcribe_infinite_streaming_output]
 
 def listen_print_loop(responses, stream):
     """Iterates through server responses and prints them.
@@ -234,13 +233,13 @@ def listen_print_loop(responses, stream):
                 break
 
         else:
-            print(str(corrected_time) + ': ' + transcript + '\r')
+            print(str(corrected_time) + ': ' + "PROCESSING:" + transcript + '\r')
 
             stream.last_transcript_was_final = False
 
-# [END speech_transcribe_infinite_streaming_stream_output]
+# [END speech_transcribe_infinite_streaming_output]
 
-# [START speech_transcribe_infinite_streaming_stream_main]
+# [START speech_transcribe_infinite_streaming_main]
 
 def main():
     """start bidirectional streaming from microphone input to speech API"""
@@ -295,4 +294,4 @@ if __name__ == '__main__':
 
     main()
 
-# [END speech_transcribe_infinite_streaming_stream_main]
+# [END speech_transcribe_infinite_streaming_main]
