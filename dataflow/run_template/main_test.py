@@ -56,6 +56,14 @@ def test_run_template_url(app):
         data = json.loads(res)
         job_id = data['job']['id']
         time.sleep(WAIT_TIME)
+
+        sp.call([
+            'gcloud',
+            'auth',
+            'activate-service-account',
+            '--key-file={}'.format(
+                os.environ['GOOGLE_APPLICATION_CREDENTIALS'])])
+        sp.call(['gcloud', 'config', 'set', 'project', PROJECT])
         assert sp.call(['gcloud', 'dataflow', 'jobs', 'cancel', job_id]) == 0
 
 
@@ -72,6 +80,14 @@ def test_run_template_data(app):
         data = json.loads(res)
         job_id = data['job']['id']
         time.sleep(WAIT_TIME)
+
+        sp.call([
+            'gcloud',
+            'auth',
+            'activate-service-account',
+            '--key-file={}'.format(
+                os.environ['GOOGLE_APPLICATION_CREDENTIALS'])])
+        sp.call(['gcloud', 'config', 'set', 'project', PROJECT])
         assert sp.call(['gcloud', 'dataflow', 'jobs', 'cancel', job_id]) == 0
 
 
@@ -88,4 +104,12 @@ def test_run_template_json(app):
         data = json.loads(res)
         job_id = data['job']['id']
         time.sleep(WAIT_TIME)
+
+        sp.call([
+            'gcloud',
+            'auth',
+            'activate-service-account',
+            '--key-file={}'.format(
+                os.environ['GOOGLE_APPLICATION_CREDENTIALS'])])
+        sp.call(['gcloud', 'config', 'set', 'project', PROJECT])
         assert sp.call(['gcloud', 'dataflow', 'jobs', 'cancel', job_id]) == 0
