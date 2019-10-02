@@ -57,4 +57,3 @@ def test_access(capsys):
     # deleting the service account created above
     service_accounts.delete_service_account(
         email)
-        
