@@ -29,8 +29,8 @@ PROJECT = os.environ['GCLOUD_PROJECT']
 def get_cpu_load(instance, cluster):
     """Returns the most recent Cloud Bigtable CPU load measurement.
     Args:
-            cluster (str): name of cluster
-            instance (str): name of instance
+          instance (str): name of instance
+          cluster (str): name of cluster
     Returns:
           float: The most recent Cloud Bigtable CPU usage metric
     """
@@ -59,7 +59,7 @@ def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up,
            bigtable_instance (str): Cloud Bigtable instance ID to scale
            bigtable_cluster (str): Cloud Bigtable cluster ID to scale
            scale_up (bool): If true, scale up, otherwise scale down
-           min_node_count (int): Minimun number of nodes
+           min_node_count (int): Minimum number of nodes
            max_node_count (int): Maximum number of nodes
            size_change_step (int): The number of nodes to change the cluster by
 
@@ -111,13 +111,13 @@ def main(bigtable_instance,
           short_sleep (int): How long to sleep after no operation
           long_sleep (int): How long to sleep after the number of nodes is
                             changed
-          min_node_count (int): Minimun number of nodes
+          min_node_count (int): Minimum number of nodes
           min_node_count (int): Maximum number of nodes
           size_change_step (int): The number of nodes to change the cluster by
     """
     if_scaled = False
     for bigtable_cluster in bigtable_clusters:
-        cluster_cpu = get_cpu_load(bigtable_cluster, bigtable_instance)
+        cluster_cpu = get_cpu_load(bigtable_instance, bigtable_cluster)
         print('Detected cpu of {} for cluster {}'.format(
             cluster_cpu, bigtable_cluster))
         if cluster_cpu > high_cpu_threshold:
@@ -148,7 +148,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--high_cpu_threshold',
         help='If Cloud Bigtable CPU usage is above this threshold, scale up',
-        default=0.4)
+        default=0.4) #https://cloud.google.com/bigtable/docs/monitoring-instance
     parser.add_argument(
         '--low_cpu_threshold',
         help='If Cloud Bigtable CPU usage is below this threshold, scale down',
@@ -170,7 +170,7 @@ if __name__ == '__main__':
     # out the minimum number of nodes
     parser.add_argument(
         '--min_node_count',
-        help='Minimun number of nodes',
+        help='Minimum number of nodes',
         default=3)
     # The maximum number of nodes to use. The default maximum is 30 nodes per
     # zone. If you need more quota, you can request more by following the
