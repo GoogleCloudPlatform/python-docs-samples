@@ -1,5 +1,3 @@
-# !/usr/bin/env python
-#
 # Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -98,6 +96,8 @@ def set_policy(project_id, policy):
 # [END iam_set_policy]
 
 # [START iam_test_permissions]
+
+
 def test_permissions(project_id):
     """Tests IAM permissions of the caller"""
 
@@ -109,12 +109,13 @@ def test_permissions(project_id):
 
     permissions = {
         "permissions": [
-        "resourcemanager.projects.get",
-        "resourcemanager.projects.delete"
+            "resourcemanager.projects.get",
+            "resourcemanager.projects.delete"
         ]
     }
 
-    request = service.projects().testIamPermissions(resource=project_id, body=permissions)
+    request = service.projects().testIamPermissions(
+        resource=project_id, body=permissions)
     returnedPermissions = request.execute()
     print(returnedPermissions)
     return returnedPermissions
