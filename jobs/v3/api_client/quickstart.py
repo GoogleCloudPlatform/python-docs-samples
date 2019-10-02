@@ -31,7 +31,7 @@ def run_sample():
         print('Request Id: %s' %
               response.get('metadata').get('requestId'))
         print('Companies:')
-        if response.get('companies') != None:
+        if response.get('companies') is not None:
             for company in response.get('companies'):
                 print('%s' % company.get('name'))
         print('')
