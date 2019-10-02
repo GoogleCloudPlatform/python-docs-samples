@@ -26,7 +26,7 @@ config = json.loads(data)
 
 
 kg_search = apiclient.discovery.build('kgsearch', 'v1',
-                                      developerKey=os.environ('API_KEY'))
+                                      developerKey=os.environ['API_KEY'])
 example_response = kg_search.entities().search(query='lion', limit=1).execute()
 
 
