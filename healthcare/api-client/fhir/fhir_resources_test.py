@@ -29,7 +29,9 @@ base_url = 'https://healthcare.googleapis.com/v1beta1'
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
-bundle = os.path.join(os.path.dirname(__file__), 'resources/execute_bundle.json')
+bundle = os.path.join(
+    os.path.dirname(__file__),
+    'resources/execute_bundle.json')
 dataset_id = 'test_dataset_{}'.format(int(time.time()))
 fhir_store_id = 'test_fhir_store-{}'.format(int(time.time()))
 resource_type = 'Patient'
@@ -266,9 +268,16 @@ def test_get_metadata(test_dataset, test_fhir_store, capsys):
     # get_metadata test
     assert 'fhirVersion' in out
 
+
 def test_execute_bundle(test_dataset, test_fhir_store, capsys):
-    fhir_resources.execute_bundle(service_account_json, base_url, project_id,
-    cloud_region, dataset_id, fhir_store_id, bundle)
+    fhir_resources.execute_bundle(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        bundle)
 
     out, _ = capsys.readouterr()
 

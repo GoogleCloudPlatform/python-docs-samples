@@ -746,7 +746,10 @@ def execute_bundle(service_account_json, base_url, project_id, cloud_region,
     with open(bundle, 'r') as bundle_file:
         bundle_file_content = bundle_file.read()
 
-    response = session.post(resource_path, headers=headers, data=bundle_file_content)
+    response = session.post(
+        resource_path,
+        headers=headers,
+        data=bundle_file_content)
     response.raise_for_status()
 
     resource = response.json()
