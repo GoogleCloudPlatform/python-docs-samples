@@ -166,8 +166,10 @@ To run this sample:
                              ...
 
     positional arguments:
-      {create-resource,delete-resource,conditional-delete-resource,get-resource,list-resource-history,export-resources,execute_bundle,get-resource-history,delete-resource-purge,update-resource,conditional-update-resource,patch-resource,conditional-patch-resource,search-resources-get,search-resources-post,get-patient-everything,get-metadata}
-        create-resource     Creates a new resource in a FHIR store.
+      {create-patient,create-encounter,create-observation,delete-resource,conditional-delete-resource,get-resource,list-resource-history,export-resources,execute_bundle,get-resource-history,delete-resource-purge,update-resource,conditional-update-resource,patch-resource,conditional-patch-resource,search-resources-get,search-resources-post,get-patient-everything,get-metadata}
+        create-patient      Creates a new Patient resource in a FHIR store.
+        create-encounter    Creates a new Encounter resource in a FHIR store.
+        create-observation  Creates a new Observation resource in a FHIR store.
         delete-resource     Creates a new resource in a FHIR store.
         conditional-delete-resource
                             Deletes an existing resource specified by search
@@ -187,9 +189,9 @@ To run this sample:
         conditional-update-resource
                             Updates an existing resource specified by search
                             criteria.
-        patch-resource      Updates part of an existing resource..
+        patch-resource      Updates part of an existing resource.
         conditional-patch-resource
-                            Updates part of an existing resource..
+                            Updates part of an existing resource.
         search-resources-get
                             Searches resources in the given FHIR store using the
                             searchResources GET method.
@@ -217,6 +219,10 @@ To run this sample:
                             The type of resource. First letter must be capitalized
       --resource_id RESOURCE_ID
                             Name of a FHIR resource
+      --patient_id PATIENT_ID
+                            Identifier for a Patient resource. Can be used as a reference for an Encounter/Observation
+      --encounter_id ENCOUNTER_ID
+                            Identifier for an Encounter resource. Can be used as a reference for an Observation
       --bundle BUNDLE       Name of file containing bundle of operations to
                             execute
       --uri_prefix URI_PREFIX

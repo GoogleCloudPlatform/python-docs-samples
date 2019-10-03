@@ -1,62 +1,39 @@
 {
-  "type":"%s",
-  "entry":[
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
     {
-      "request":{
-        "method":"POST",
-        "url":"Patient"
-      },
-      "resource":{
-        "resourceType":"Patient",
-        "active":false,
-        "name":[
+      "resource": {
+        "resourceType": "Patient",
+        "name": [
           {
-            "use":"usual",
-            "text":"Marcus Smith",
-            "family":"Smith",
-            "given":[
-              "Marcus"
+            "family": "Smith",
+            "given": [
+              "Darcy"
             ]
           }
         ],
-        "gender":"male"
-      }
-    },
-    {
-      "request":{
-        "method":"POST",
-        "url":"Observation"
+        "gender": "female",
+        "address": [
+          {
+            "line": [
+              "123 Main St."
+            ],
+            "city": "Anycity",
+            "state": "CA",
+            "postalCode": "12345"
+          }
+        ]
       },
-      "resource":{
-        "resourceType":"Observation",
-        "status":"final",
-        "valueQuantity":{
-          "value":99,
-          "unit":"mg",
-          "system":"si"
-        },
-        "code":{
-          "coding":[
-            {
-              "system":"system1",
-              "code":"value1"
-            }
-          ]
-        }
+      "request": {
+        "method": "POST"
       }
     },
     {
       "request": {
-        "method": "GET",
-        "url": "/Patient?gender=male"
-      }
-    },
-    {
-      "request": {
-        "method": "GET",
-        "url": "/Observation?status=final"
+        "method": "DELETE",
+        "url": "Patient/1234567890"
       }
     }
-  ],
-  "resourceType":"Bundle"
+  ]
 }
