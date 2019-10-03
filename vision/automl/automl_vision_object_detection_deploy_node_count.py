@@ -16,9 +16,9 @@
 import argparse
 
 
-def deploy_model(project_id, model_id):
+def deploy_model_node_count(project_id, model_id):
     """Deploy a model."""
-    # [START automl_vision_object_detection_deploy_model]
+    # [START automl_vision_object_detection_deploy_model_node_count]
     # project_id = 'YOUR_PROJECT_ID'
     # model_name = 'YOUR_MODEL_ID'
     from google.cloud import automl_v1beta1 as automl
@@ -28,11 +28,15 @@ def deploy_model(project_id, model_id):
     # The full path to your model
     full_model_id = client.model_path(project_id, 'us-central1', model_id)
 
-    # Deploy the model
-    response = client.deploy_model(full_model_id)
+    # Set how many nodes the model is deployed on
+    model_deployment_metadata = (
+        automl.types.ImageObjectDetectionModelDeploymentMetadata(node_count=2))
 
-    print(u'Model deployment finished'.format(response.result()))
-    # [END automl_vision_object_detection_deploy_model]
+    # Deploy the model
+    response = client.deploy_model(full_model_id, model_deployment_metadata)
+
+    print(u'Model deployment on 2 nodes finished'.format(response.result()))
+    # [END automl_vision_object_detection_deploy_model_node_count]
 
 
 if __name__ == '__main__':
@@ -52,4 +56,4 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    deploy_model(args.project_id, args.model_id)
+    deploy_model_node_count(args.project_id, args.model_id)

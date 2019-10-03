@@ -32,7 +32,6 @@ def undeploy_model(project_id, model_id):
     response = client.undeploy_model(full_model_id)
 
     print(u'Model undeploy finished'.format(response.result()))
-
     # [END automl_vision_object_detection_undeploy_model]
 
 
