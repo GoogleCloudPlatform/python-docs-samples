@@ -53,7 +53,10 @@ def bucket():
 
     # Delete the files.
     for blob in blobs:
-        blob.delete()
+        try:
+            blob.delete()
+        except google.cloud.exceptions.NotFound:
+            print('Issue during teardown, missing blob')
 
     # Attempt to delete the bucket; this will only work if it is empty.
     bucket.delete()

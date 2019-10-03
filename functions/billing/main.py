@@ -28,7 +28,7 @@ from oauth2client.client import GoogleCredentials
 # [END functions_billing_limit]
 
 # [START functions_billing_slack]
-from slackclient import SlackClient
+import slack
 # [END functions_billing_slack]
 
 # [START functions_billing_limit]
@@ -45,7 +45,7 @@ BOT_ACCESS_TOKEN = 'xxxx-111111111111-abcdefghidklmnopq'
 
 CHANNEL_ID = 'C0XXXXXX'
 
-slack_client = SlackClient(BOT_ACCESS_TOKEN)
+slack_client = slack.WebClient(token=BOT_ACCESS_TOKEN)
 
 
 def notify_slack(data, context):

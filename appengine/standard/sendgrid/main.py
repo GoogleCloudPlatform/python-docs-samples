@@ -16,7 +16,7 @@
 
 # [START sendgrid-imp]
 import sendgrid
-from sendgrid.helpers import mail
+from sendgrid.helpers.mail import Mail
 # [END sendgrid-imp]
 import webapp2
 
@@ -29,16 +29,14 @@ SENDGRID_SENDER = 'your-sendgrid-sender'
 
 def send_simple_message(recipient):
     # [START sendgrid-send]
+    message = Mail(
+        from_email=SENDGRID_SENDER,
+        to_emails='{},'.format(recipient),
+        subject='This is a test email',
+        html_content='<strong>Example</strong> message.')
 
-    sg = sendgrid.SendGridAPIClient(apikey=SENDGRID_API_KEY)
-
-    to_email = mail.Email(recipient)
-    from_email = mail.Email(SENDGRID_SENDER)
-    subject = 'This is a test email'
-    content = mail.Content('text/plain', 'Example message.')
-    message = mail.Mail(from_email, subject, to_email, content)
-
-    response = sg.client.mail.send.post(request_body=message.get())
+    sg = sendgrid.SendGridAPIClient(SENDGRID_API_KEY)
+    response = sg.send(message)
 
     return response
     # [END sendgrid-send]
