@@ -19,9 +19,10 @@ import argparse
 def undeploy_model(project_id, model_id):
     """Undeploy a model."""
     # [START automl_vision_object_detection_undeploy_model]
+    from google.cloud import automl_v1beta1 as automl
+
     # project_id = 'YOUR_PROJECT_ID'
     # model_name = 'YOUR_MODEL_ID'
-    from google.cloud import automl_v1beta1 as automl
 
     client = automl.AutoMlClient()
 
