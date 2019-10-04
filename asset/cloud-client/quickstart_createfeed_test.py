@@ -18,6 +18,8 @@ import json
 import os
 import time
 
+import pytest
+
 import quickstart_createfeed
 import quickstart_deletefeed
 from google.cloud import resource_manager
@@ -30,6 +32,7 @@ FEED_ID = 'feed-{}'.format(int(time.time()))
 TOPIC = 'topic-{}'.format(int(time.time()))
 
 
+@pytest.mark.skip(reason='TODO(cwxie-google): either remove or fix')
 def test_create_feed(capsys):
     client = resource_manager.Client()
     project_number = client.fetch_project(PROJECT).number
