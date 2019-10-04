@@ -15,7 +15,6 @@
 from ssml_addresses import text_to_ssml
 from ssml_addresses import ssml_to_audio
 
-import filecmp
 import os
 
 
