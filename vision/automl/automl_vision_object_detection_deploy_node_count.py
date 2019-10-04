@@ -19,9 +19,10 @@ import argparse
 def deploy_model_node_count(project_id, model_id):
     """Deploy a model."""
     # [START automl_vision_object_detection_deploy_model_node_count]
+    from google.cloud import automl_v1beta1 as automl
+
     # project_id = 'YOUR_PROJECT_ID'
     # model_name = 'YOUR_MODEL_ID'
-    from google.cloud import automl_v1beta1 as automl
 
     client = automl.AutoMlClient()
 
