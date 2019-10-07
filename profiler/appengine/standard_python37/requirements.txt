@@ -1,2 +1,2 @@
-Flask==1.0.2
-google-cloud-profiler
+Flask==1.1.1
+google-cloud-profiler==1.0.8
