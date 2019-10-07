@@ -35,7 +35,7 @@ from google.cloud.speech import types
 
 
 def deidentify(file_name, project_id):
-    """ convert speech to text and then diedentify entities using dlp """
+    """ Convert speech to text and then de-identify entities using DLP. """
     # Instantiates a client
     speech_client = speech.SpeechClient()
 
@@ -80,7 +80,7 @@ def deidentify(file_name, project_id):
     transcript = ''
 
     for result in response.results:
-        transcript = transcript + result.alternatives[0].transcript
+        transcript = '{}{}'.format(transcript, result.alternatives[0].transcript)
 
     print('Original Transcript: {}'.format(transcript))
 
@@ -120,7 +120,7 @@ if __name__ == '__main__':
         formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
         'command',
-        help="deidentify: replace sensitive data with [INFO TYPE]")
+        help='deidentify : replace sensitive data with [INFO TYPE]'
     parser.add_argument(
         '-f',
         '--filename',
