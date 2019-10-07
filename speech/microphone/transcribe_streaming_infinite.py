@@ -22,35 +22,34 @@ To install using pip:
     pip install pyaudio
     pip install termcolor
 
+pyaudio also requires installing "portaudio"
+
 Example usage:
     python transcribe_streaming_infinite.py
 """
 
-# [START speech_transcribe_infinite_streaming]
+# [START speech_transcribe_infinite_streaming_imports]
 
 import time
 import re
-import sys
 
 # uses result_end_time currently only avaialble in v1p1beta, will be in v1 soon
 from google.cloud import speech_v1p1beta1 as speech
 import pyaudio
 from six.moves import queue
-
-# Audio recording parameters
-STREAMING_LIMIT = 10000
-SAMPLE_RATE = 16000
-CHUNK_SIZE = int(SAMPLE_RATE / 10)  # 100ms
-
-RED = '\033[0;31m'
-GREEN = '\033[0;32m'
-YELLOW = '\033[0;33m'
-
+# [END speech_transcribe_infinite_streaming_imports]
 
 def get_current_time():
     """Return Current Time in MS."""
 
     return int(round(time.time() * 1000))
+
+# [START speech_transcribe_infinite_streaming_globals]
+
+# Audio recording parameters
+STREAMING_LIMIT = 10000
+SAMPLE_RATE = 16000
+CHUNK_SIZE = int(SAMPLE_RATE / 10)  # 100ms
 
 
 class ResumableMicrophoneStream:
@@ -85,6 +84,8 @@ class ResumableMicrophoneStream:
             stream_callback=self._fill_buffer,
         )
 
+# [END speech_transcribe_infinite_streaming_globals]
+
     def __enter__(self):
 
         self.closed = False
@@ -105,6 +106,10 @@ class ResumableMicrophoneStream:
 
         self._buff.put(in_data)
         return None, pyaudio.paContinue
+    
+# [END speech_transcribe_infinite_streaming_init]
+
+# [START speech_transcribe_infinite_streaming_generator]
 
     def generator(self):
         """Stream Audio from microphone to API and to local buffer"""
@@ -160,6 +165,9 @@ class ResumableMicrophoneStream:
 
             yield b''.join(data)
 
+# [END speech_transcribe_infinite_streaming_generator]
+
+# [START speech_transcribe_infinite_streaming_output]
 
 def listen_print_loop(responses, stream):
     """Iterates through server responses and prints them.
@@ -212,9 +220,7 @@ def listen_print_loop(responses, stream):
 
         if result.is_final:
 
-            sys.stdout.write(GREEN)
-            sys.stdout.write('\033[K')
-            sys.stdout.write(str(corrected_time) + ': ' + transcript + '\n')
+            print(str(corrected_time) + ': ' + transcript + '\n')
 
             stream.is_final_end_time = stream.result_end_time
             stream.last_transcript_was_final = True
@@ -222,18 +228,18 @@ def listen_print_loop(responses, stream):
             # Exit recognition if any of the transcribed phrases could be
             # one of our keywords.
             if re.search(r'\b(exit|quit)\b', transcript, re.I):
-                sys.stdout.write(YELLOW)
-                sys.stdout.write('Exiting...\n')
+                print('Exiting...\n')
                 stream.closed = True
                 break
 
         else:
-            sys.stdout.write(RED)
-            sys.stdout.write('\033[K')
-            sys.stdout.write(str(corrected_time) + ': ' + transcript + '\r')
+            print(str(corrected_time) + ': ' + "PROCESSING:" + transcript + '\r')
 
             stream.last_transcript_was_final = False
 
+# [END speech_transcribe_infinite_streaming_output]
+
+# [START speech_transcribe_infinite_streaming_main]
 
 def main():
     """start bidirectional streaming from microphone input to speech API"""
@@ -250,17 +256,14 @@ def main():
 
     mic_manager = ResumableMicrophoneStream(SAMPLE_RATE, CHUNK_SIZE)
     print(mic_manager.chunk_size)
-    sys.stdout.write(YELLOW)
-    sys.stdout.write('\nListening, say "Quit" or "Exit" to stop.\n\n')
-    sys.stdout.write('End (ms)       Transcript Results/Status\n')
-    sys.stdout.write('=====================================================\n')
+    print('\nListening, say "Quit" or "Exit" to stop.\n\n')
+    print('End (ms)       Transcript Results/Status\n')
+    print('=====================================================\n')
 
     with mic_manager as stream:
 
         while not stream.closed:
-            sys.stdout.write(YELLOW)
-            sys.stdout.write('\n' + str(
-                STREAMING_LIMIT * stream.restart_counter) + ': NEW REQUEST\n')
+            print('\n' + str(STREAMING_LIMIT * stream.restart_counter) + ': NEW REQUEST\n')
 
             stream.audio_input = []
             audio_generator = stream.generator()
@@ -283,7 +286,7 @@ def main():
             stream.restart_counter = stream.restart_counter + 1
 
             if not stream.last_transcript_was_final:
-                sys.stdout.write('\n')
+                print('\n')
             stream.new_stream = True
 
 
@@ -291,4 +294,4 @@ if __name__ == '__main__':
 
     main()
 
-# [END speech_transcribe_infinite_streaming]
+# [END speech_transcribe_infinite_streaming_main]
