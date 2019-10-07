@@ -1,2 +1,2 @@
 google-cloud-videointelligence==1.11.0
-google-cloud-storage==1.14.0
+google-cloud-storage==1.19.1
