@@ -265,14 +265,14 @@ def test_detect_crop_hints(capsys):
         'resources/wakeupcat.jpg')
     detect.detect_crop_hints(file_name)
     out, _ = capsys.readouterr()
-    assert 'bounds: (0,0)' in out
+    assert 'bounds: ' in out
 
 
 def test_detect_crop_hints_uri(capsys):
     file_name = 'gs://{}/vision/label/wakeupcat.jpg'.format(ASSET_BUCKET)
     detect.detect_crop_hints_uri(file_name)
     out, _ = capsys.readouterr()
-    assert 'bounds: (0,0)' in out
+    assert 'bounds: ' in out
 
 
 def test_detect_crop_hints_http(capsys):
@@ -280,7 +280,7 @@ def test_detect_crop_hints_http(capsys):
           '/vision/label/wakeupcat.jpg'
     detect.detect_crop_hints_uri(uri.format(ASSET_BUCKET))
     out, _ = capsys.readouterr()
-    assert 'bounds: (0,0)' in out
+    assert 'bounds: ' in out
 
 
 def test_async_detect_document(capsys):
