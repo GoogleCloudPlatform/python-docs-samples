@@ -80,7 +80,8 @@ def deidentify(file_name, project_id):
     transcript = ''
 
     for result in response.results:
-        transcript = '{}{}'.format(transcript, result.alternatives[0].transcript)
+        transcript = '{}{}'.format(
+            transcript, result.alternatives[0].transcript)
 
     print('Original Transcript: {}'.format(transcript))
 
