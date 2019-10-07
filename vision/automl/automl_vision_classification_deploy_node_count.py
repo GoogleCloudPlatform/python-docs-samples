@@ -30,13 +30,13 @@ def deploy_model_node_count(project_id, model_id):
     full_model_id = client.model_path(project_id, 'us-central1', model_id)
 
     # Set how many nodes the model is deployed on
-    model_deployment_metadata = (
+    metadata = (
         automl.types.ImageClassificationModelDeploymentMetadata(node_count=2))
 
     # Deploy the model
     response = client.deploy_model(
         full_model_id,
-        image_classification_model_deployment_metadata=model_deployment_metadata)
+        image_classification_model_deployment_metadata=metadata)
 
     print(u'Model deployment on 2 nodes finished'.format(response.result()))
     # [END automl_vision_classification_deploy_model_node_count]
