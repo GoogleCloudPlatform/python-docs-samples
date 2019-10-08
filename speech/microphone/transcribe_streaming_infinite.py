@@ -106,8 +106,6 @@ class ResumableMicrophoneStream:
 
         self._buff.put(in_data)
         return None, pyaudio.paContinue
-    
-# [END speech_transcribe_infinite_streaming_init]
 
 # [START speech_transcribe_infinite_streaming_generator]
 
