@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START run_pubsub_dockerfile]
-
 # Use the official Python image.
 # https://hub.docker.com/_/python
 FROM python:3.7
@@ -23,17 +21,17 @@ FROM python:3.7
 COPY requirements.txt ./
 
 # Install production dependencies.
-RUN pip install -r requirements.txt
+RUN set -ex; \
+    pip install -r requirements.txt; \
+    pip install gunicorn
 
 # Copy local code to the container image.
 ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY . ./
 
-# Run the web service on container startup. 
-# Use gunicorn webserver with one worker process and 8 threads.
+# Run the web service on container startup. Here we use the gunicorn
+# webserver, with one worker process and 8 threads.
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 main:app
-
-# [END run_pubsub_dockerfile]
