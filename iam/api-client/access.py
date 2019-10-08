@@ -1,3 +1,5 @@
+# !/usr/bin/env python
+#
 # Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,6 +31,7 @@ import googleapiclient.discovery
 def get_policy(project_id):
     """Gets IAM policy for a project."""
 
+    # pylint: disable=no-member
     credentials = service_account.Credentials.from_service_account_file(
         filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
         scopes=['https://www.googleapis.com/auth/cloud-platform'])
@@ -81,6 +84,7 @@ def modify_policy_remove_member(policy, role, member):
 def set_policy(project_id, policy):
     """Sets IAM policy for a project."""
 
+    # pylint: disable=no-member
     credentials = service_account.Credentials.from_service_account_file(
         filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
         scopes=['https://www.googleapis.com/auth/cloud-platform'])
@@ -94,32 +98,6 @@ def set_policy(project_id, policy):
     print(policy)
     return policy
 # [END iam_set_policy]
-
-# [START iam_test_permissions]
-
-
-def test_permissions(project_id):
-    """Tests IAM permissions of the caller"""
-
-    credentials = service_account.Credentials.from_service_account_file(
-        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
-        scopes=['https://www.googleapis.com/auth/cloud-platform'])
-    service = googleapiclient.discovery.build(
-        'cloudresourcemanager', 'v1', credentials=credentials)
-
-    permissions = {
-        "permissions": [
-            "resourcemanager.projects.get",
-            "resourcemanager.projects.delete"
-        ]
-    }
-
-    request = service.projects().testIamPermissions(
-        resource=project_id, body=permissions)
-    returnedPermissions = request.execute()
-    print(returnedPermissions)
-    return returnedPermissions
-# [END iam_test_permissions]
 
 
 def main():
@@ -162,11 +140,6 @@ def main():
     set_parser.add_argument('project_id')
     set_parser.add_argument('policy')
 
-    # Test permissions
-    test_permissions_parser = subparsers.add_parser(
-        'test_permissions', help=get_policy.__doc__)
-    test_permissions_parser.add_argument('project_id')
-
     args = parser.parse_args()
 
     if args.command == 'get':
@@ -179,8 +152,6 @@ def main():
         modify_policy_remove_member(args.policy, args.role, args.member)
     elif args.command == 'add_binding':
         modify_policy_add_role(args.policy, args.role, args.member)
-    elif args.command == 'test_permissions':
-        test_permissions(args.project_id)
 
 
 if __name__ == '__main__':
