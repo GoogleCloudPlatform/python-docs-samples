@@ -73,7 +73,7 @@ gcloud app deploy
 
 ## Deploy to Cloud Run
 
-See the [Cloud Run documentation](https://cloud.google.com/sql/docs/mysql/connect-run)
+See the [Cloud Run documentation](https://cloud.google.com/sql/docs/postgres/connect-run)
 for more details on connecting a Cloud Run service to Cloud SQL.
 
 1. Build the container image:
