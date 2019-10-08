@@ -16,15 +16,14 @@
 # [START functions_billing_stop]
 import base64
 import json
-# [END functions_billing_stop]
 import os
+# [END functions_billing_stop]
 # [END functions_billing_limit]
 
 # [START functions_billing_limit]
 # [START functions_billing_stop]
 from googleapiclient import discovery
 from oauth2client.client import GoogleCredentials
-
 # [END functions_billing_stop]
 # [END functions_billing_limit]
 
@@ -63,7 +62,7 @@ def notify_slack(data, context):
 # [END functions_billing_slack]
 
 
-# [START functions_billing_limit]
+# [START functions_billing_stop]
 def stop_billing(data, context):
     pubsub_data = base64.b64decode(data['data']).decode('utf-8')
     pubsub_json = json.loads(pubsub_data)
@@ -142,6 +141,9 @@ def __list_running_instances(project_id, zone, instances):
     @return {Promise} Array of names of running instances
     """
     res = instances.list(project=project_id, zone=zone).execute()
+
+    if 'items' not in res:
+        return []
 
     items = res['items']
     running_names = [i['name'] for i in items if i['status'] == 'RUNNING']

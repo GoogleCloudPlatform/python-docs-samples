@@ -76,6 +76,12 @@ def receive_messages_handler():
 
         # Verify and decode the JWT. `verify_oauth2_token` verifies
         # the JWT signature, the `aud` claim, and the `exp` claim.
+        # Note: For high volume push requests, it would save some network
+        # overhead if you verify the tokens offline by downloading Google's
+        # Public Cert and decode them using the `google.auth.jwt` module;
+        # caching already seen tokens works best when a large volume of
+        # messages have prompted a single push server to handle them, in which
+        # case they would all share the same token for a limited time window.
         claim = id_token.verify_oauth2_token(token, requests.Request(),
                                              audience='example.com')
         # Must also verify the `iss` claim.

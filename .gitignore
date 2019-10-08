@@ -25,3 +25,4 @@ credentials.dat
 .vscode/
 *sponge_log.xml
 .DS_store
+env/

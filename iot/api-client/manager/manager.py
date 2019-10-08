@@ -35,6 +35,7 @@ import os
 import sys
 import time
 
+from google.cloud import iot_v1
 from google.cloud import pubsub
 from google.oauth2 import service_account
 from googleapiclient import discovery
@@ -86,10 +87,10 @@ def create_rs256_device(
     """Create a new device with the given id, using RS256 for
     authentication."""
     # [START iot_create_rsa_device]
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
+    client = iot_v1.DeviceManagerClient()
 
-    client = get_client(service_account_json)
+    parent = client.registry_path(project_id, cloud_region, registry_id)
+
     with io.open(certificate_file) as f:
         certificate = f.read()
 
@@ -97,15 +98,14 @@ def create_rs256_device(
     device_template = {
         'id': device_id,
         'credentials': [{
-            'publicKey': {
+            'public_key': {
                 'format': 'RSA_X509_PEM',
                 'key': certificate
             }
         }]
     }
 
-    devices = client.projects().locations().registries().devices()
-    return devices.create(parent=registry_name, body=device_template).execute()
+    return client.create_device(parent, device_template)
     # [END iot_create_rsa_device]
 
 
@@ -115,10 +115,10 @@ def create_es256_device(
     """Create a new device with the given id, using ES256 for
     authentication."""
     # [START iot_create_es_device]
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
+    client = iot_v1.DeviceManagerClient()
 
-    client = get_client(service_account_json)
+    parent = client.registry_path(project_id, cloud_region, registry_id)
+
     with io.open(public_key_file) as f:
         public_key = f.read()
 
@@ -126,15 +126,14 @@ def create_es256_device(
     device_template = {
         'id': device_id,
         'credentials': [{
-            'publicKey': {
+            'public_key': {
                 'format': 'ES256_PEM',
                 'key': public_key
             }
         }]
     }
 
-    devices = client.projects().locations().registries().devices()
-    return devices.create(parent=registry_name, body=device_template).execute()
+    return client.create_device(parent, device_template)
     # [END iot_create_es_device]
 
 
@@ -186,16 +185,15 @@ def create_unauth_device(
         device_id):
     """Create a new device without authentication."""
     # [START iot_create_unauth_device]
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
+    client = iot_v1.DeviceManagerClient()
 
-    client = get_client(service_account_json)
+    parent = client.registry_path(project_id, cloud_region, registry_id)
+
     device_template = {
         'id': device_id,
     }
 
-    devices = client.projects().locations().registries().devices()
-    return devices.create(parent=registry_name, body=device_template).execute()
+    return client.create_device(parent, device_template)
     # [END iot_create_unauth_device]
 
 
@@ -205,14 +203,12 @@ def delete_device(
     """Delete the device with the given id."""
     # [START iot_delete_device]
     print('Delete device')
-    client = get_client(service_account_json)
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
+    client = iot_v1.DeviceManagerClient()
 
-    device_name = '{}/devices/{}'.format(registry_name, device_id)
+    device_path = client.device_path(
+        project_id, cloud_region, registry_id, device_id)
 
-    devices = client.projects().locations().registries().devices()
-    return devices.delete(name=device_name).execute()
+    return client.delete_device(device_path)
     # [END iot_delete_device]
 
 
@@ -236,29 +232,38 @@ def get_device(
     """Retrieve the device with the given id."""
     # [START iot_get_device]
     print('Getting device')
-    client = get_client(service_account_json)
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
+    client = iot_v1.DeviceManagerClient()
+    device_path = client.device_path(
+        project_id, cloud_region, registry_id, device_id)
 
-    device_name = '{}/devices/{}'.format(registry_name, device_id)
-    devices = client.projects().locations().registries().devices()
-    device = devices.get(name=device_name).execute()
+    device = client.get_device(device_path)
 
-    print('Id : {}'.format(device.get('id')))
-    print('Name : {}'.format(device.get('name')))
+    print('Id : {}'.format(device.id))
+    print('Name : {}'.format(device.name))
     print('Credentials:')
-    if device.get('credentials') is not None:
-        for credential in device.get('credentials'):
-            keyinfo = credential.get('publicKey')
-            print('\tcertificate: \n{}'.format(keyinfo.get('key')))
-            print('\tformat : {}'.format(keyinfo.get('format')))
-            print('\texpiration: {}'.format(credential.get('expirationTime')))
+
+    if device.credentials is not None:
+        for credential in device.credentials:
+            keyinfo = credential.public_key
+            print('\tcertificate: \n{}'.format(keyinfo.key))
+
+            if keyinfo.format == 4:
+                keyformat = 'ES256_X509_PEM'
+            elif keyinfo.format == 3:
+                keyformat = 'RSA_PEM'
+            elif keyinfo.format == 2:
+                keyformat = 'ES256_PEM'
+            elif keyinfo.format == 1:
+                keyformat = 'RSA_X509_PEM'
+            else:
+                keyformat = 'UNSPECIFIED_PUBLIC_KEY_FORMAT'
+            print('\tformat : {}'.format(keyformat))
+            print('\texpiration: {}'.format(credential.expiration_time))
 
     print('Config:')
-    print('\tdata: {}'.format(device.get('config').get('data')))
-    print('\tversion: {}'.format(device.get('config').get('version')))
-    print('\tcloudUpdateTime: {}'.format(device.get('config').get(
-            'cloudUpdateTime')))
+    print('\tdata: {}'.format(device.config.binary_data))
+    print('\tversion: {}'.format(device.config.version))
+    print('\tcloudUpdateTime: {}'.format(device.config.cloud_update_time))
 
     return device
     # [END iot_get_device]
@@ -269,17 +274,19 @@ def get_state(
         device_id):
     """Retrieve a device's state blobs."""
     # [START iot_get_device_state]
-    client = get_client(service_account_json)
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
+    client = iot_v1.DeviceManagerClient()
+    device_path = client.device_path(
+        project_id, cloud_region, registry_id, device_id)
 
-    device_name = '{}/devices/{}'.format(registry_name, device_id)
-    devices = client.projects().locations().registries().devices()
-    state = devices.states().list(name=device_name, numStates=5).execute()
+    device = client.get_device(device_path)
+    print('Last state: {}'.format(device.state))
 
-    print('State: {}\n'.format(state))
+    print('State history')
+    states = client.list_device_states(device_path).device_states
+    for state in states:
+        print('State: {}'.format(state))
 
-    return state
+    return states
     # [END iot_get_device_state]
 
 
@@ -288,16 +295,13 @@ def list_devices(
     """List all devices in the registry."""
     # [START iot_list_devices]
     print('Listing devices')
-    registry_path = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
-    client = get_client(service_account_json)
-    devices = client.projects().locations().registries().devices(
-            ).list(parent=registry_path).execute().get('devices', [])
 
+    client = iot_v1.DeviceManagerClient()
+    registry_path = client.registry_path(project_id, cloud_region, registry_id)
+
+    devices = list(client.list_devices(parent=registry_path))
     for device in devices:
-        print('Device: {} : {}'.format(
-                device.get('numId'),
-                device.get('id')))
+        print('Device: {} : {}'.format(device.num_id, device.id))
 
     return devices
     # [END iot_list_devices]
@@ -307,16 +311,14 @@ def list_registries(service_account_json, project_id, cloud_region):
     """List all registries in the project."""
     # [START iot_list_registries]
     print('Listing Registries')
-    registry_path = 'projects/{}/locations/{}'.format(
-            project_id, cloud_region)
-    client = get_client(service_account_json)
-    registries = client.projects().locations().registries().list(
-        parent=registry_path).execute().get('deviceRegistries', [])
+    client = iot_v1.DeviceManagerClient()
+    parent = client.location_path(project_id, cloud_region)
 
+    registries = list(client.list_device_registries(parent))
     for registry in registries:
         print('id: {}\n\tname: {}'.format(
-            registry.get('id'),
-            registry.get('name')))
+            registry.id,
+            registry.name))
 
     return registries
     # [END iot_list_registries]
@@ -394,26 +396,32 @@ def patch_es256_auth(
     """Patch the device to add an ES256 public key to the device."""
     # [START iot_patch_es]
     print('Patch device with ES256 certificate')
-    client = get_client(service_account_json)
-    registry_path = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
 
+    client = iot_v1.DeviceManagerClient()
+    device_path = client.device_path(
+        project_id, cloud_region, registry_id, device_id)
+
+    public_key_bytes = ''
     with io.open(public_key_file) as f:
-        public_key = f.read()
+        public_key_bytes = f.read()
 
-    patch = {
-        'credentials': [{
-            'publicKey': {
-                'format': 'ES256_PEM',
-                'key': public_key
-            }
-        }]
-    }
+    key = iot_v1.types.PublicKeyCredential(
+        format='ES256_PEM',
+        key=public_key_bytes)
 
-    device_name = '{}/devices/{}'.format(registry_path, device_id)
+    cred = iot_v1.types.DeviceCredential(public_key=key)
+    device = client.get_device(device_path)
 
-    return client.projects().locations().registries().devices().patch(
-            name=device_name, updateMask='credentials', body=patch).execute()
+    device.id = b''
+    device.num_id = 0
+    device.credentials.append(cred)
+
+    mask = iot_v1.types.FieldMask()
+    mask.paths.append('credentials')
+
+    return client.update_device(
+        device=device,
+        update_mask=mask)
     # [END iot_patch_es]
 
 
@@ -423,26 +431,33 @@ def patch_rsa256_auth(
     """Patch the device to add an RSA256 public key to the device."""
     # [START iot_patch_rsa]
     print('Patch device with RSA256 certificate')
-    client = get_client(service_account_json)
-    registry_path = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
 
+    client = iot_v1.DeviceManagerClient()
+    device_path = client.device_path(
+        project_id, cloud_region, registry_id, device_id)
+
+    public_key_bytes = ''
     with io.open(public_key_file) as f:
-        public_key = f.read()
+        public_key_bytes = f.read()
 
-    patch = {
-        'credentials': [{
-            'publicKey': {
-                'format': 'RSA_X509_PEM',
-                'key': public_key
-            }
-        }]
-    }
+    key = iot_v1.types.PublicKeyCredential(
+        format='RSA_X509_PEM',
+        key=public_key_bytes)
 
-    device_name = '{}/devices/{}'.format(registry_path, device_id)
+    cred = iot_v1.types.DeviceCredential(public_key=key)
+    device = client.get_device(device_path)
 
-    return client.projects().locations().registries().devices().patch(
-            name=device_name, updateMask='credentials', body=patch).execute()
+    device.id = b''
+    device.num_id = 0
+    device.credentials.append(cred)
+
+    mask = iot_v1.types.FieldMask()
+    mask.paths.append('credentials')
+
+    return client.update_device(
+        device=device,
+        update_mask=mask)
+
     # [END iot_patch_rsa]
 
 
@@ -597,7 +612,7 @@ def create_gateway(
     device_template = {
         'id': gateway_id,
         'credentials': [{
-            'publicKey': {
+            'public_key': {
                 'format': certificate_format,
                 'key': certificate
             }
@@ -704,17 +719,8 @@ def list_devices_for_gateway(
                 device.get('numId'),
                 device.get('id')))
 
-    if devices.get('deviceNumIds') is not None:
-        for device_id in devices.get('deviceNumIds'):
-            device_name = '{}/devices/{}'.format(
-                    registry_name, device_id)
-            device = client.projects().locations().registries().devices().get(
-                    name=device_name).execute()
-            print('Id: {}\n\tName: {}\n\traw: {}'.format(
-                    device_id, device.get('id'), device))
-    else:
-        if not found:
-            print('No devices bound to gateway {}'.format(gateway_id))
+    if not found:
+        print('No devices bound to gateway {}'.format(gateway_id))
     # [END iot_list_devices_for_gateway]
 
 
@@ -755,7 +761,6 @@ def parse_command_line_args():
             help='Path to public ES256 key file.')
     parser.add_argument(
             '--gateway_id',
-            required=True,
             help='Gateway identifier.')
     parser.add_argument(
             '--member',

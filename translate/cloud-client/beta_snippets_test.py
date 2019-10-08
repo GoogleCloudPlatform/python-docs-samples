@@ -99,7 +99,6 @@ def test_create_glossary(capsys, unique_glossary_id):
     beta_snippets.create_glossary(PROJECT_ID, unique_glossary_id)
     out, _ = capsys.readouterr()
     assert 'Created' in out
-    assert PROJECT_ID in out
     assert unique_glossary_id in out
     assert 'gs://cloud-samples-data/translation/glossary.csv' in out
 
@@ -129,6 +128,5 @@ def test_delete_glossary(capsys, unique_glossary_id):
     beta_snippets.create_glossary(PROJECT_ID, unique_glossary_id)
     beta_snippets.delete_glossary(PROJECT_ID, unique_glossary_id)
     out, _ = capsys.readouterr()
-    assert PROJECT_ID in out
     assert 'us-central1' in out
     assert unique_glossary_id in out
