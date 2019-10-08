@@ -157,9 +157,6 @@ def create_device(
             exists = True
 
     # Create the device
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
-
     device_template = {
         'id': device_id,
         'gateway_config': {
@@ -335,7 +332,7 @@ def create_registry(
     parent = client.location_path(project_id, cloud_region)
 
     if not pubsub_topic.startswith('projects/'):
-      pubsub_topic = 'projects/{}/topics/{}'.format(project_id, pubsub_topic)
+        pubsub_topic = 'projects/{}/topics/{}'.format(project_id, pubsub_topic)
 
     body = {
         'event_notification_configs': [{
@@ -682,12 +679,12 @@ def list_devices_for_gateway(
 
     devices = list(client.list_devices(
         parent=path,
-        gateway_list_options={'associations_gateway_id':gateway_id}))
+        gateway_list_options={'associations_gateway_id': gateway_id}))
 
     found = False
     for device in devices:
         found = True
-        print('Device: {} : {}'.format(device.num_id,device.id))
+        print('Device: {} : {}'.format(device.num_id, device.id))
 
     if not found:
         print('No devices bound to gateway {}'.format(gateway_id))
