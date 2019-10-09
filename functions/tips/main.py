@@ -45,11 +45,9 @@ from functools import reduce
 def file_wide_computation():
     return 1
 
-
 # Placeholder
 def function_specific_computation():
     return 1
-
 
 def light_computation():
     numbers = list(range(1, 9))
@@ -76,6 +74,7 @@ instance_var = heavy_computation()
 # [END functions_tips_global_scope]
 # [END run_tips_global_scope]
 
+
 # [START functions_tips_global_scope]
 # [START run_tips_global_scope]
 def scope_demo(request):
@@ -90,7 +89,8 @@ def scope_demo(request):
         <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
     function_var = light_computation()
-    print('Per instance: {}, per function: {}'.format(instance_var, function_var))
+    print('Per instance: {}, per function: {}'.format(
+        instance_var, function_var))
     return
 # [END functions_tips_global_scope]
 # [END run_tips_global_scope]
