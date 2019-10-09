@@ -53,13 +53,13 @@ def function_specific_computation():
 
 
 def light_computation():
-    numbers = list(range(1, 9))
+    numbers = list(range(1, 10))
     return reduce(lambda x, t: t + x, numbers)
 
 
 def heavy_computation():
     # Multiplication is more computationally expensive than addition
-    numbers = list(range(1, 9))
+    numbers = list(range(1, 10))
     return reduce(lambda x, t: t * x, numbers)
 
 
