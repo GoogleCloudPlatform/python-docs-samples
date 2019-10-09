@@ -39,6 +39,7 @@ import requests
 
 # [END functions_tips_connection_pooling]
 
+from functools import reduce
 
 # Placeholder
 def file_wide_computation():
@@ -50,12 +51,49 @@ def function_specific_computation():
     return 1
 
 
+def light_computation():
+    numbers = list(range(1, 9))
+    return reduce(lambda x, t: t + x, numbers)
+
+def heavy_computation():
+    # Multiplication is more computationally expensive than addition
+    numbers = list(range(1, 9))
+    return reduce(lambda x, t: t * x, numbers)
+
+
 # [START functions_tips_lazy_globals]
 # Always initialized (at cold-start)
 non_lazy_global = file_wide_computation()
 
 # Declared at cold-start, but only initialized if/when the function executes
 lazy_global = None
+
+# [START functions_tips_scopes]
+# [START run_tips_global_scope]
+# Global (instance-wide) scope
+# This computation runs at instance cold-start
+instance_var = heavy_computation()
+# [END functions_tips_global_scope]
+# [END run_tips_global_scope]
+
+# [START functions_tips_global_scope]
+# [START run_tips_global_scope]
+def scope_demo(request):
+    """
+    HTTP Cloud Function that declares a variable.
+    Args:
+        request (flask.Request): The request object.
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Request>
+    Returns:
+        The response text, or any set of values that can be turned into a
+        Response object using `make_response`
+        <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
+    """
+    function_var = light_computation()
+    print('Per instance: {}, per function: {}'.format(instance_var, function_var))
+    return
+# [END functions_tips_global_scope]
+# [END run_tips_global_scope]
 
 
 def lazy_globals(request):
