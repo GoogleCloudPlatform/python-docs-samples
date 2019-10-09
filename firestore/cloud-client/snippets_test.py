@@ -232,14 +232,12 @@ def test_delete_field(db):
     snippets.delete_field()
 
 
-@pytest.mark.skip(reason='Test is timing out CI')
 def test_listen_document(capsys):
     snippets.listen_document()
     out, _ = capsys.readouterr()
     assert 'Received document snapshot: SF' in out
 
 
-@pytest.mark.skip(reason='Test is timing out CI')
 def test_listen_multiple(capsys):
     snippets.listen_multiple()
     out, _ = capsys.readouterr()
@@ -247,7 +245,6 @@ def test_listen_multiple(capsys):
     assert 'SF' in out
 
 
-@pytest.mark.skip(reason='Test is timing out CI')
 def test_listen_for_changes(capsys):
     snippets.listen_for_changes()
     out, _ = capsys.readouterr()
