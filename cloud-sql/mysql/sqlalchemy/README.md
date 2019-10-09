@@ -78,19 +78,19 @@ gcloud app deploy
 
 ## Deploy to Cloud Run
 
-See the [Cloud Run documentation](https://cloud.google.com/run/docs/configuring/connect-cloudsql)
+See the [Cloud Run documentation](https://cloud.google.com/sql/docs/mysql/connect-run)
 for more details on connecting a Cloud Run service to Cloud SQL.
 
 1. Build the container image:
 
 ```sh
-gcloud builds submit --tag gcr.io/[YOUR_PROJECT_ID]/run-mysql
+gcloud builds submit --tag gcr.io/[YOUR_PROJECT_ID]/run-sql
 ```
 
 2. Deploy the service to Cloud Run:
 
 ```sh
-gcloud beta run deploy run-mysql --image gcr.io/[YOUR_PROJECT_ID]/run-mysql
+gcloud beta run deploy run-sql --image gcr.io/[YOUR_PROJECT_ID]/run-sql
 ```
 
 Take note of the URL output at the end of the deployment process.
