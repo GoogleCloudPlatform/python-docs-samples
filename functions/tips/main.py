@@ -41,17 +41,21 @@ import requests
 
 from functools import reduce
 
+
 # Placeholder
 def file_wide_computation():
     return 1
+
 
 # Placeholder
 def function_specific_computation():
     return 1
 
+
 def light_computation():
     numbers = list(range(1, 9))
     return reduce(lambda x, t: t + x, numbers)
+
 
 def heavy_computation():
     # Multiplication is more computationally expensive than addition
