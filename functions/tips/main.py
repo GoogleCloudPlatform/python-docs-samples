@@ -93,9 +93,8 @@ def scope_demo(request):
         <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
     function_var = light_computation()
-    print('Per instance: {}, per function: {}'.format(
-        instance_var, function_var))
-    return
+    return 'Per instance: {}, per function: {}'.format(
+        instance_var, function_var)
 # [END functions_tips_global_scope]
 # [END run_tips_global_scope]
 
