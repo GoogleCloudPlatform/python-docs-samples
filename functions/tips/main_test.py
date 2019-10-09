@@ -35,10 +35,10 @@ def test_lazy_globals(app):
         main.lazy_globals(flask.request)
 
 
-def test_scope_demo(capsys):
-    out, _ = capsys.readouterr()
-    main.scope_demo(flask.request)
-    assert f"Per instance: 362880, per function: 45" in out
+def test_scope_demo(app):
+    with app.test_request_context():
+        res = main.scope_demo(flask.request)
+        assert res == 'Per instance: 362880, per function: 45'
 
 
 @responses.activate
