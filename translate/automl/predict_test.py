@@ -17,6 +17,7 @@
 import os
 
 import automl_translation_predict
+import prediction
 
 project_id = os.environ["GCLOUD_PROJECT"]
 compute_region = "us-central1"
@@ -27,5 +28,12 @@ def test_predict(capsys):
     automl_translation_predict.predict(
         project_id, compute_region, model_id, "resources/input.txt"
     )
+    out, _ = capsys.readouterr()
+    assert "Translated content: " in out
+
+
+def test_prediction(capsys):
+    model_id = "TRL3128559826197068699"
+    prediction.predict(project_id, model_id, "resources/input.txt")
     out, _ = capsys.readouterr()
     assert "Translated content: " in out
