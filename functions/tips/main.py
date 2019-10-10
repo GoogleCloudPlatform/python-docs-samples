@@ -63,24 +63,13 @@ def heavy_computation():
     return reduce(lambda x, t: t * x, numbers)
 
 
-# [START functions_tips_lazy_globals]
-# Always initialized (at cold-start)
-non_lazy_global = file_wide_computation()
-
-# Declared at cold-start, but only initialized if/when the function executes
-lazy_global = None
-
-# [START functions_tips_scopes]
+# [START functions_tips_global_scope]
 # [START run_tips_global_scope]
 # Global (instance-wide) scope
 # This computation runs at instance cold-start
 instance_var = heavy_computation()
-# [END functions_tips_global_scope]
-# [END run_tips_global_scope]
 
 
-# [START functions_tips_global_scope]
-# [START run_tips_global_scope]
 def scope_demo(request):
     """
     HTTP Cloud Function that declares a variable.
@@ -95,8 +84,16 @@ def scope_demo(request):
     function_var = light_computation()
     return 'Per instance: {}, per function: {}'.format(
         instance_var, function_var)
-# [END functions_tips_global_scope]
 # [END run_tips_global_scope]
+# [END functions_tips_global_scope]
+
+
+# [START functions_tips_lazy_globals]
+# Always initialized (at cold-start)
+non_lazy_global = file_wide_computation()
+
+# Declared at cold-start, but only initialized if/when the function executes
+lazy_global = None
 
 
 def lazy_globals(request):
