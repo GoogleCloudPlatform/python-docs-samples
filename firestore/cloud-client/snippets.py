@@ -15,6 +15,7 @@ import datetime
 from time import sleep
 
 from google.cloud import firestore
+import google.cloud.exceptions
 
 
 def quickstart_new_instance():
@@ -216,10 +217,10 @@ def get_check_exists():
     # [START get_check_exists]
     doc_ref = db.collection(u'cities').document(u'SF')
 
-    doc = doc_ref.get()
-    if doc.exists:
+    try:
+        doc = doc_ref.get()
         print(u'Document data: {}'.format(doc.to_dict()))
-    else:
+    except google.cloud.exceptions.NotFound:
         print(u'No such document!')
     # [END get_check_exists]
 
@@ -880,5 +881,5 @@ def update_document_increment(db):
     # [START fs_update_document_increment]
     washington_ref = db.collection(u'cities').document(u'DC')
 
-    washington_ref.update("population", firestore.Increment(50))
+    washington_ref.update({"population": firestore.Increment(50)})
     # [END fs_update_document_increment]

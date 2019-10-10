@@ -1,5 +1,5 @@
-Django==2.1.10
+Django==2.2.5
 # mysqlclient==1.4.1  # Uncomment this line if using MySQL
-wheel==0.32.3
+wheel==0.33.6
 gunicorn==19.9.0
-psycopg2==2.7.7  # Comment this line out if using MySQL
+psycopg2==2.8.3
