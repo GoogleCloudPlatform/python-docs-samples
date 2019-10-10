@@ -1,55 +1,52 @@
 # Run template
 
-[`main.py`](main.py) - Script to run an [Apache Beam] template on [Google Cloud Dataflow].
+[![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor)
 
-The following examples show how to run the [`Word_Count` template], but you can run any other template.
+This sample demonstrate how to run an
+[Apache Beam](https://beam.apache.org/)
+template on [Google Cloud Dataflow](https://cloud.google.com/dataflow/docs/).
+For more information, see the
+[Running templates](https://cloud.google.com/dataflow/docs/guides/templates/running-templates)
+docs page.
 
-For the `Word_Count` template, we require to pass an `output` Cloud Storage path prefix, and optionally we can pass an `inputFile` Cloud Storage file pattern for the inputs.
+The following examples show how to run the
+[`Word_Count` template](https://github.com/GoogleCloudPlatform/DataflowTemplates/blob/master/src/main/java/com/google/cloud/teleport/templates/WordCount.java),
+but you can run any other template.
+
+For the `Word_Count` template, we require to pass an `output` Cloud Storage path prefix,
+and optionally we can pass an `inputFile` Cloud Storage file pattern for the inputs.
 If `inputFile` is not passed, it will take `gs://apache-beam-samples/shakespeare/kinglear.txt` as default.
 
 ## Before you begin
 
-1. Install the [Cloud SDK].
-
-1. [Create a new project].
-
-1. [Enable billing].
-
-1. [Enable the APIs](https://console.cloud.google.com/flows/enableapi?apiid=dataflow,compute_component,logging,storage_component,storage_api,bigquery,pubsub,datastore.googleapis.com,cloudfunctions.googleapis.com,cloudresourcemanager.googleapis.com): Dataflow, Compute Engine, Stackdriver Logging, Cloud Storage, Cloud Storage JSON, BigQuery, Pub/Sub, Datastore, Cloud Functions, and Cloud Resource Manager.
-
-1. Setup the Cloud SDK to your GCP project.
-
-   ```bash
-   gcloud init
-   ```
+Follow the
+[Getting started with Google Cloud Dataflow](../README.md)
+page, and make sure you have a Google Cloud project with billing enabled
+and a *service account JSON key* set up in your `GOOGLE_APPLICATION_CREDENTIALS` environment variable.
+Additionally, for this sample you need the following:
 
 1. Create a Cloud Storage bucket.
 
-   ```bash
-   gsutil mb gs://your-gcs-bucket
+   ```sh
+   export BUCKET=your-gcs-bucket
+   gsutil mb gs://$BUCKET
    ```
-
-## Setup
-
-The following instructions will help you prepare your development environment.
-
-1. [Install Python and virtualenv].
 
 1. Clone the `python-docs-samples` repository.
 
-    ```bash
-    git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
-    ```
+   ```sh
+   git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+   ```
 
 1. Navigate to the sample code directory.
 
-   ```bash
+   ```sh
    cd python-docs-samples/dataflow/run_template
    ```
 
 1. Create a virtual environment and activate it.
 
-   ```bash
+   ```sh
    virtualenv env
    source env/bin/activate
    ```
@@ -58,18 +55,18 @@ The following instructions will help you prepare your development environment.
 
 1. Install the sample requirements.
 
-   ```bash
+   ```sh
    pip install -U -r requirements.txt
    ```
 
 ## Running locally
 
+* [`main.py`](main.py)
+* [REST API dataflow/projects.templates.launch](https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.templates/launch)
+
 To run a Dataflow template from the command line.
 
-> NOTE: To run locally, you'll need to [create a service account key] as a JSON file.
-> Then export an environment variable called `GOOGLE_APPLICATION_CREDENTIALS` pointing it to your service account file.
-
-```bash
+```sh
 python main.py \
   --project <your-gcp-project> \
   --job wordcount-$(date +'%Y%m%d-%H%M%S') \
@@ -80,10 +77,10 @@ python main.py \
 
 ## Running in Python
 
-To run a Dataflow template from Python.
+* [`main.py`](main.py)
+* [REST API dataflow/projects.templates.launch](https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.templates/launch)
 
-> NOTE: To run locally, you'll need to [create a service account key] as a JSON file.
-> Then export an environment variable called `GOOGLE_APPLICATION_CREDENTIALS` pointing it to your service account file.
+To run a Dataflow template from Python.
 
 ```py
 import main as run_template
@@ -101,9 +98,12 @@ run_template.run(
 
 ## Running in Cloud Functions
 
+* [`main.py`](main.py)
+* [REST API dataflow/projects.templates.launch](https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.templates/launch)
+
 To deploy this into a Cloud Function and run a Dataflow template via an HTTP request as a REST API.
 
-```bash
+```sh
 PROJECT=$(gcloud config get-value project) \
 REGION=$(gcloud config get-value functions/region)
 
@@ -121,17 +121,3 @@ curl -X POST "https://$REGION-$PROJECT.cloudfunctions.net/run_template" \
   -d inputFile=gs://apache-beam-samples/shakespeare/kinglear.txt \
   -d output=gs://<your-gcs-bucket>/wordcount/outputs
 ```
-
-[Apache Beam]: https://beam.apache.org/
-[Google Cloud Dataflow]: https://cloud.google.com/dataflow/docs/
-[`Word_Count` template]: https://github.com/GoogleCloudPlatform/DataflowTemplates/blob/master/src/main/java/com/google/cloud/teleport/templates/WordCount.java
-
-[Cloud SDK]: https://cloud.google.com/sdk/docs/
-[Create a new project]: https://console.cloud.google.com/projectcreate
-[Enable billing]: https://cloud.google.com/billing/docs/how-to/modify-project
-[Create a service account key]: https://console.cloud.google.com/apis/credentials/serviceaccountkey
-[Creating and managing service accounts]: https://cloud.google.com/iam/docs/creating-managing-service-accounts
-[GCP Console IAM page]: https://console.cloud.google.com/iam-admin/iam
-[Granting roles to service accounts]: https://cloud.google.com/iam/docs/granting-roles-to-service-accounts
-
-[Install Python and virtualenv]: https://cloud.google.com/python/setup

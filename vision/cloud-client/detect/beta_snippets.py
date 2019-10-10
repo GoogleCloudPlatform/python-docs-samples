@@ -321,7 +321,7 @@ def async_batch_annotate_images_uri(input_image_uri, output_uri):
     bucket_name = match.group(1)
     prefix = match.group(2)
 
-    bucket = storage_client.get_bucket(bucket_name=bucket_name)
+    bucket = storage_client.get_bucket(bucket_name)
 
     # Lists objects with the given prefix.
     blob_list = list(bucket.list_blobs(prefix=prefix))

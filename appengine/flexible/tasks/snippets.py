@@ -216,11 +216,12 @@ def pause_queue(project, location, queue):
 
     queue_path = client.queue_path(project, location, queue)
     response = client.pause_queue(queue_path)
-    # [END taskqueues_pause_queues]
+    # [END taskqueues_pause_queue]
     return response
 
 
 def delete_queue(project, location, queue):
+    # [START taskqueues_deleting_queues]
     client = tasks.CloudTasksClient()
 
     # TODO(developer): Uncomment these lines and replace with your values.
@@ -228,7 +229,6 @@ def delete_queue(project, location, queue):
     # location = 'us- central1'
     # queue = 'queue1'
 
-    # [START taskqueues_deleting_queues]
     queue_path = client.queue_path(project, location, queue)
     response = client.delete_queue(queue_path)
     # [END taskqueues_deleting_queues]

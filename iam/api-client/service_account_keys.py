@@ -22,23 +22,30 @@ https://cloud.google.com/iam/docs/creating-managing-service-account-keys.
 """
 
 import argparse
+# [START iam_create_key]
+# [START iam_list_keys]
+# [START iam_delete_key]
 import os
 
 from google.oauth2 import service_account
 import googleapiclient.discovery
 
-credentials = service_account.Credentials.from_service_account_file(
-    filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
-    scopes=['https://www.googleapis.com/auth/cloud-platform'])
-service = googleapiclient.discovery.build(
-    'iam', 'v1', credentials=credentials)
+# [END iam_create_key]
+# [END iam_list_keys]
+# [END iam_delete_key]
 
 
 # [START iam_create_key]
 def create_key(service_account_email):
     """Creates a key for a service account."""
 
-    # pylint: disable=no-member
+    credentials = service_account.Credentials.from_service_account_file(
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+
+    service = googleapiclient.discovery.build(
+        'iam', 'v1', credentials=credentials)
+
     key = service.projects().serviceAccounts().keys().create(
         name='projects/-/serviceAccounts/' + service_account_email, body={}
         ).execute()
@@ -51,7 +58,13 @@ def create_key(service_account_email):
 def list_keys(service_account_email):
     """Lists all keys for a service account."""
 
-    # pylint: disable=no-member
+    credentials = service_account.Credentials.from_service_account_file(
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+
+    service = googleapiclient.discovery.build(
+        'iam', 'v1', credentials=credentials)
+
     keys = service.projects().serviceAccounts().keys().list(
         name='projects/-/serviceAccounts/' + service_account_email).execute()
 
@@ -64,7 +77,13 @@ def list_keys(service_account_email):
 def delete_key(full_key_name):
     """Deletes a service account key."""
 
-    # pylint: disable=no-member
+    credentials = service_account.Credentials.from_service_account_file(
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+
+    service = googleapiclient.discovery.build(
+        'iam', 'v1', credentials=credentials)
+
     service.projects().serviceAccounts().keys().delete(
         name=full_key_name).execute()
 
