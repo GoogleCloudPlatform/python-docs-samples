@@ -21,6 +21,7 @@ import time
 import quickstart_createfeed
 import quickstart_deletefeed
 from google.cloud import resource_manager
+from google.cloud import pubsub_v1
 
 json_data = open(os.environ["GOOGLE_APPLICATION_CREDENTIALS"]).read()
 data = json.loads(json_data)
@@ -34,6 +35,9 @@ def test_create_feed(capsys):
     client = resource_manager.Client()
     project_number = client.fetch_project(PROJECT).number
     full_topic_name = "projects/{}/topics/{}".format(PROJECT, TOPIC)
+    publisher = pubsub_v1.PublisherClient()
+    topic_path = publisher.topic_path(PROJECT, TOPIC)
+    publisher.create_topic(topic_path)
     quickstart_createfeed.create_feed(
         PROJECT, FEED_ID, [ASSET_NAME, ], full_topic_name)
     out, _ = capsys.readouterr()
@@ -42,3 +46,4 @@ def test_create_feed(capsys):
     # Clean up, delete the feed
     feed_name = "projects/{}/feeds/{}".format(project_number, FEED_ID)
     quickstart_deletefeed.delete_feed(feed_name)
+    publisher.delete_topic(topic_path)
