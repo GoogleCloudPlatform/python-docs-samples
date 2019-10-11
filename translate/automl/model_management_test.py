@@ -14,10 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
 import os
 
-from google.cloud import automl_v1beta1 as automl
 import pytest
 
 import list_models

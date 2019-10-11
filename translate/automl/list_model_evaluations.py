@@ -32,7 +32,8 @@ def list_model_evaluations(project_id, model_id):
     for evaluation in client.list_model_evaluations(model_full_id, ''):
         print('Model evaluation name: {}'.format(evaluation.name))
         print(
-            'Model annotation spec id: {}'.format(evaluation.annotation_spec_id))
+            'Model annotation spec id: {}'.format(
+                evaluation.annotation_spec_id))
         print('Create Time:')
         print('\tseconds: {}'.format(evaluation.create_time.seconds))
         print('\tnanos: {}'.format(evaluation.create_time.nanos / 1e9))
