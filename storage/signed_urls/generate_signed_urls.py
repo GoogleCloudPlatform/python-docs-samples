@@ -30,6 +30,7 @@ import hashlib
 import sys
 
 # pip install six
+import six
 from six.moves.urllib.parse import quote
 
 # [START storage_signed_url_signer]
@@ -49,7 +50,7 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
         sys.exit(1)
 
     # [START storage_signed_url_canonical_uri]
-    escaped_object_name = quote(object_name, safe='')
+    escaped_object_name = quote(six.ensure_binary(object_name), safe=b'/~')
     canonical_uri = '/{}/{}'.format(bucket_name, escaped_object_name)
     # [END storage_signed_url_canonical_uri]
 
