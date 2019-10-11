@@ -25,6 +25,7 @@ import get_model_evaluation
 import list_operation_status
 import get_operation_status
 import create_model
+import delete_model
 
 project_id = os.environ['GCLOUD_PROJECT']
 dataset_id = 'TRL3876092572857648864'
@@ -76,3 +77,14 @@ def test_create_model(capsys):
     from google.cloud import automl
     client = automl.AutoMlClient()
     client.transport._operations_client.cancel_operation(operation_id)
+
+
+@pytest.mark.slow
+def test_delete_model(capsys):
+    # As model creation can take many hours, instead try to delete a
+    # nonexistent model and confirm that the model was not found, but other
+    # elements of the request were valid.
+    delete_model.delete_model(project_id, 'TRL0000000000000000000')
+    out, _ = capsys.readouterr()
+    assert 'status = StatusCode.NOT_FOUND' in out
+    assert 'details = "The model does not exist."' in out
