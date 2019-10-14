@@ -80,6 +80,7 @@ def parse_key_value_gcs(project_id, gcs_source_uri, gcs_destination_uri):
 
     response = json_format.Parse(json, types.Document(), ignore_unknown_fields=True)
 
+    # helper function to get the extracted text from text_anchor.
     def get_text(text_anchor):
         text = ''
         for segment in text_anchor.text_segments:

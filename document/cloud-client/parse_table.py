@@ -82,13 +82,6 @@ def parse_table_gcs(project_id, gcs_source_uri, gcs_destination_uri):
 
     response = json_format.Parse(json, types.Document(), ignore_unknown_fields=True)
 
-    # def get_cell_text(cell):
-    #     text = ''
-    #     for segment in cell.layout.text_anchor.text_segments:
-    #         text += response.text[segment.start_index:segment.end_index]
-
-    #     return text
-
     # helper function to get the extracted text from text_anchor.
     def get_text(text_anchor):
         text = ''
