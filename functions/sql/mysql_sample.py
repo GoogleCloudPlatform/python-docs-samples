@@ -19,9 +19,7 @@ import pymysql
 from pymysql.err import OperationalError
 
 # TODO(developer): specify SQL connection details
-CONNECTION_NAME = getenv(
-  'INSTANCE_CONNECTION_NAME',
-  '<YOUR INSTANCE CONNECTION NAME>')
+CONNECTION_NAME = getenv('MYSQL_INSTANCE', '<YOUR INSTANCE CONNECTION NAME>')
 DB_USER = getenv('MYSQL_USER', '<YOUR DB USER>')
 DB_PASSWORD = getenv('MYSQL_PASSWORD', '<YOUR DB PASSWORD>')
 DB_NAME = getenv('MYSQL_DATABASE', '<YOUR DB NAME>')
