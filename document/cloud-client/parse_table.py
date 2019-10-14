@@ -82,14 +82,20 @@ def parse_table_gcs(project_id, gcs_source_uri, gcs_destination_uri):
 
     response = json_format.Parse(json, types.Document(), ignore_unknown_fields=True)
 
-    def get_cell_text(cell):
+    # def get_cell_text(cell):
+    #     text = ''
+    #     for segment in cell.layout.text_anchor.text_segments:
+    #         text += response.text[segment.start_index:segment.end_index]
+
+    #     return text
+
+    # helper function to get the extracted text from text_anchor.
+    def get_text(text_anchor):
         text = ''
-        for segment in cell.layout.text_anchor.text_segments:
+        for segment in text_anchor.text_segments:
             text += response.text[segment.start_index:segment.end_index]
 
-        return text
-
-    # import ipdb; ipdb.set_trace()
+        return text.strip()
 
     first_page = response.pages[0]
     first_table = first_page.tables[0]
@@ -97,13 +103,13 @@ def parse_table_gcs(project_id, gcs_source_uri, gcs_destination_uri):
     first_header_row = first_table.header_rows[0]
     for cell in first_header_row.cells:
         # Get the text
-        text = get_cell_text(cell)
+        text = get_text(cell.layout.text_anchor)
         print('Header row: {}'.format(text))
 
     for body_row in first_table.body_rows:
         print('Body row:')
         for cell in body_row.cells:
-            text = get_cell_text(cell)
+            text = get_text(cell.layout.text_anchor)
             print('Extracted cell: {}'.format(text))
 # [END document_parse_table]
 
