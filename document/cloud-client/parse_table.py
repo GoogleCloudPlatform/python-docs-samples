@@ -18,15 +18,15 @@ import argparse
 
 
 # [START document_parse_table]
-def parse_table_gcs(gcs_source_uri, gcs_destination_uri):
+def parse_table_gcs(project_id, gcs_source_uri, gcs_destination_uri):
     """Parse table with PDF/TIFF as source files on Google Cloud Storage."""
     import re
-    from google.cloud import document
-    from google.cloud.document import types
+    from google.cloud import documentai
+    from google.cloud.documentai import types
     from google.cloud import storage
     from google.protobuf import json_format
 
-    client = document.DocumentUnderstandingServiceClient()
+    client = documentai.DocumentUnderstandingServiceClient()
 
     gcs_source = types.GcsSource(uri=gcs_source_uri)
     input_config = types.InputConfig(gcs_source=gcs_source, mime_type='application/pdf')
@@ -38,11 +38,12 @@ def parse_table_gcs(gcs_source_uri, gcs_destination_uri):
 
     # Provide the optional table bounding box hint for improved table detection accuracy.
     # The coordinates are normalized between 0 and 1.
+    # The vertices here are set to work with the table in gs://cloud-samples/data/documentai/fake_invoice.pdf.
     bounding_box = types.BoundingPoly(normalized_vertices=[
-        types.NormalizedVertex(x=0, y=0),
-        types.NormalizedVertex(x=1, y=0),
-        types.NormalizedVertex(x=1, y=1),
-        types.NormalizedVertex(x=0, y=1)
+        types.NormalizedVertex(x=0, y=0.25),
+        types.NormalizedVertex(x=1, y=0.25),
+        types.NormalizedVertex(x=1, y=0.5),
+        types.NormalizedVertex(x=0, y=0.5)
     ])
 
     # The hint is applied to all pages by default.  Optionally passing in a `page_number` parameter to apply the hint to specific pages.
@@ -56,7 +57,8 @@ def parse_table_gcs(gcs_source_uri, gcs_destination_uri):
     requests = [request]
 
     print('Waiting for operation to finish.')
-    operation = client.batch_process_documents(requests)
+    parent = 'projects/{}'.format(project_id)
+    operation = client.batch_process_documents(requests, parent=parent)
 
     result = operation.result(timeout=60)
 
@@ -74,15 +76,35 @@ def parse_table_gcs(gcs_source_uri, gcs_destination_uri):
     for blob in blob_list:
         print(blob.name)
 
-    # Process the first output.  We specified pages_per_shard=1, so this corresponds to the first page.
+    # Process the first output.  We specified pages_per_shard=1, so this corresponds to the data extracted from the first first page of the document.
     first_output = blob_list[0]
     json = first_output.download_as_string()
 
     response = json_format.Parse(json, types.Document(), ignore_unknown_fields=True)
 
+    def get_cell_text(cell):
+        text = ''
+        for segment in cell.layout.text_anchor.text_segments:
+            text += response.text[segment.start_index:segment.end_index]
 
+        return text
 
+    # import ipdb; ipdb.set_trace()
 
+    first_page = response.pages[0]
+    first_table = first_page.tables[0]
+
+    first_header_row = first_table.header_rows[0]
+    for cell in first_header_row.cells:
+        # Get the text
+        text = get_cell_text(cell)
+        print('Header row: {}'.format(text))
+
+    for body_row in first_table.body_rows:
+        print('Body row:')
+        for cell in body_row.cells:
+            text = get_cell_text(cell)
+            print('Extracted cell: {}'.format(text))
 # [END document_parse_table]
 
 
@@ -90,8 +112,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('project_id')
     parser.add_argument('gcs_source_uri')
     parser.add_argument('gcs_destination_uri')
     args = parser.parse_args()
 
-    parse_table_gcs(args.gcs_source_uri, args.gcs_destination_uri)
+    parse_table_gcs(args.project_id, args.gcs_source_uri, args.gcs_destination_uri)
