@@ -39,16 +39,16 @@ def sub(project_id, subscription_name):
         message.ack()
         print('Acknowledged message {}\n'.format(message.message_id))
 
-    streaming_future = client.subscribe(subscription_path, callback=callback)
+    streaming_pull_future = client.subscribe(
+        subscription_path, callback=callback)
     print('Listening for messages on {}..\n'.format(subscription_path))
 
-    # Calling result() on the StreamingPullFuture keeps the main thread alive
-    # while the callback function processes messages in the background.
+    # Calling result() on StreamingPullFuture keeps the main thread from
+    # exiting while messages get processed in the callbacks.
     try:
         streaming_pull_future.result()
-    except Exception as error:
+    except:  # noqa
         streaming_pull_future.cancel()
-        raise error
 
 
 if __name__ == '__main__':

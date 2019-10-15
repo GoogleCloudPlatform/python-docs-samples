@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import multiprocessing as mp
 import os
 import pytest
 
@@ -64,16 +63,40 @@ def _to_delete(resource_paths):
             subscriber_client.delete_subscription(item)
 
 
-@pytest.fixture(scope='module')
-def test_sub(topic_path, subscription_path, capsys):
+def _publish_messages(topic_path):
     publish_future = publisher_client.publish(topic_path, data=b'Hello World!')
     publish_future.result()
 
-    subscribe_process = mp.Process(
-        target=sub.sub, args=(PROJECT, SUBSCRIPTION,))
-    subscribe_process.start()
-    subscribe_process.join(timeout=10)
-    subscribe_process.terminate()
+
+def _sub_timeout(project_id, subscription_name):
+    # This is an exactly copy of `sub.py` except
+    # StreamingPullFuture.result() will time out after 10s.
+    client = pubsub_v1.SubscriberClient()
+    subscription_path = client.subscription_path(
+        project_id, subscription_name)
+
+    def callback(message):
+        print('Received message {} of message ID {}\n'.format(
+            message, message.message_id))
+        message.ack()
+        print('Acknowledged message {}\n'.format(message.message_id))
+
+    streaming_pull_future = client.subscribe(
+        subscription_path, callback=callback)
+    print('Listening for messages on {}..\n'.format(subscription_path))
+
+    try:
+        streaming_pull_future.result(timeout=10)
+    except:  # noqa
+        streaming_pull_future.cancel()
+
+
+def test_sub(monkeypatch, topic_path, subscription_path, capsys):
+    monkeypatch.setattr(sub, 'sub', _sub_timeout)
+
+    _publish_messages(topic_path)
+
+    sub.sub(PROJECT, SUBSCRIPTION)
 
     # Clean up resources.
     _to_delete([topic_path, subscription_path])
