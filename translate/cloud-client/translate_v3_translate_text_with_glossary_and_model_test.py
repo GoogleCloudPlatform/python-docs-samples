@@ -14,9 +14,9 @@
 
 import os
 import uuid
-import translate_create_glossary
-import translate_delete_glossary
-import translate_translate_text_with_glossary_and_model
+import translate_v3_create_glossary
+import translate_v3_delete_glossary
+import translate_v3_translate_text_with_glossary_and_model
 import pytest
 
 PROJECT_ID = os.environ['GOOGLE_PROJECT_ID']
@@ -28,17 +28,17 @@ def glossary():
     """Get the ID of a glossary available to session (do not mutate/delete)."""
     glossary_id = 'must-start-with-letters-' + str(uuid.uuid1())
     glossary_path = "projects/{}/locations/{}/glossaries/{}".format(PROJECT_ID, "us-central1", glossary_id)
-    translate_create_glossary.sample_create_glossary(PROJECT_ID, 'en', 'ja', 'gs://translation_samples_beta/glossaries/glossary.csv', glossary_id)
+    translate_v3_create_glossary.sample_create_glossary(PROJECT_ID, 'en', 'ja', 'gs://translation_samples_beta/glossaries/glossary.csv', glossary_id)
 
     yield glossary_path
 
     try:
-        translate_delete_glossary.sample_delete_glossary(PROJECT_ID, glossary_id)
+        translate_v3_delete_glossary.sample_delete_glossary(PROJECT_ID, glossary_id)
     except Exception:
         pass
 
 def test_translate_text_with_glossary_and_model(capsys, glossary):
-    translate_translate_text_with_glossary_and_model.sample_translate_text(
+    translate_v3_translate_text_with_glossary_and_model.sample_translate_text(
         MODEL_ID,
         glossary,
         "That' il do it. deception",

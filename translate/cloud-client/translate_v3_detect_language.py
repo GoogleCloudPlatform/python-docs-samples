@@ -22,10 +22,10 @@
 # sample-metadata
 #   title: Detect Language
 #   description: Detecting the language of a text string
-#   usage: python3 samples/v3beta1/translate_detect_language.py [--text "Hello, world!"] [--project_id "[Google Cloud project_id ID]"]
+#   usage: python3 translate_detect_language.py [--text "Hello, world!"] [--project_id "[Google Cloud project_id ID]"]
 
 # [START translate_detect_language]
-from google.cloud import translate_v3beta1
+from google.cloud import translate_v3
 
 
 def sample_detect_language(text, project_id):
@@ -36,7 +36,7 @@ def sample_detect_language(text, project_id):
       text The text string for performing language detection
     """
 
-    client = translate_v3beta1.TranslationServiceClient()
+    client = translate_v3.TranslationServiceClient()
 
     # text = 'Hello, world!'
     # project_id = '[Google Cloud project_id ID]'

@@ -22,7 +22,7 @@
 # sample-metadata
 #   title: Batch translate text
 #   description: Batch translate text
-#   usage: python3 samples/v3beta1/batch_translate_text.py [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project_id "[Google Cloud Project ID]"] [--location "us-central1"] [--source_lang en] [--target_lang ja]
+#   usage: python3 batch_translate_text.py [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project_id "[Google Cloud Project ID]"] [--location "us-central1"] [--source_lang en] [--target_lang ja]
 
 # [START batch_translate_text]
 from google.cloud import translate_v3

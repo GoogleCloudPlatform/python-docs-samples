@@ -22,7 +22,7 @@
 # sample-metadata
 #   title: Batch Translate with Model
 #   description: Batch translate text using AutoML Translation model
-#   usage: python3 samples/v3beta1/batch_translate_text_with_model.py [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project "[Google Cloud Project ID]"] [--location "us-central1"] [--target_language en] [--source_language de] [--model_path "projects/{project-id}/locations/{location-id}/models/{your-model-id}"]
+#   usage: python3 batch_translate_text_with_model.py [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project "[Google Cloud Project ID]"] [--location "us-central1"] [--target_language en] [--source_language de] [--model_path "projects/{project-id}/locations/{location-id}/models/{your-model-id}"]
 
 # [START batch_translate_text_with_model]
 from google.cloud import translate_v3

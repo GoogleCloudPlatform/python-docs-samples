@@ -14,11 +14,11 @@
 
 import os
 import pytest
-import translate_detect_language
+import translate_v3_detect_language
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 
 def test_detect_language(capsys):
-    translate_detect_language.sample_detect_language('Hæ sæta', PROJECT_ID)
+    translate_v3_detect_language.sample_detect_language('Hæ sæta', PROJECT_ID)
     out, _ = capsys.readouterr()
     assert 'is' in out

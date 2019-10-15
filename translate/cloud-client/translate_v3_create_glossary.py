@@ -22,7 +22,7 @@
 # sample-metadata
 #   title: Create Glossary
 #   description: Create Glossary
-#   usage: python3 samples/v3beta1/translate_create_glossary.py [--project "[Google Cloud Project ID]"] [--project_2 "[Your Google Cloud Project ID]"] [--glossary_id "my_glossary_id_123"]
+#   usage: python3 translate_create_glossary.py [--project "[Google Cloud Project ID]"] [--project_2 "[Your Google Cloud Project ID]"] [--glossary_id "my_glossary_id_123"]
 
 # [START translate_create_glossary]
 from google.cloud import translate_v3 as translate

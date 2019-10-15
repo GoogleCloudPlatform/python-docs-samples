@@ -22,7 +22,7 @@
 # sample-metadata
 #   title: Translating Text
 #   description: Translating Text
-#   usage: python3 samples/v3beta1/translate_translate_text.py [--text "Hello, world!"] [--target_language fr] [--project "[Google Cloud Project ID]"]
+#   usage: python3 translate_translate_text.py [--text "Hello, world!"] [--target_language fr] [--project "[Google Cloud Project ID]"]
 
 # [START translate_translate_text]
 from google.cloud import translate_v3

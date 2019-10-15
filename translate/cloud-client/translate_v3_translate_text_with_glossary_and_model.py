@@ -22,7 +22,7 @@
 # sample-metadata
 #   title: Translating Text with Glossary and Model
 #   description: Translating Text with Glossary and Model
-#   usage: python3 samples/v3beta1/translate_translate_text_with_glossary_and_model.py [--model_id "projects/[PROJECT ID]/locations/[LOCATION ID]/models/[MODEL ID]"] [--glossary_path "projects/[YOUR_PROJECT_ID]/locations/[LOCATION]/glossaries/[YOUR_GLOSSARY_ID]"] [--text "Hello, world!"] [--target_language fr] [--source_language en] [--project "[Google Cloud Project ID]"] [--location global]
+#   usage: python3 translate_translate_text_with_glossary_and_model.py [--model_id "projects/[PROJECT ID]/locations/[LOCATION ID]/models/[MODEL ID]"] [--glossary_path "projects/[YOUR_PROJECT_ID]/locations/[LOCATION]/glossaries/[YOUR_GLOSSARY_ID]"] [--text "Hello, world!"] [--target_language fr] [--source_language en] [--project "[Google Cloud Project ID]"] [--location global]
 
 # [START translate_translate_text_with_glossary_and_model]
 from google.cloud import translate_v3

@@ -22,7 +22,7 @@
 # sample-metadata
 #   title: Delete Glossary
 #   description: Delete Glossary
-#   usage: python3 samples/v3beta1/translate_delete_glossary.py [--project "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
+#   usage: python3 translate_delete_glossary.py [--project "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
 
 # [START translate_delete_glossary]
 from google.cloud import translate_v3 as translate

@@ -14,12 +14,12 @@
 
 import os
 import pytest
-import translate_list_languages_with_target
+import translate_v3_list_languages_with_target
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 
 def test_list_languages_with_target(capsys):
-    translate_list_languages_with_target.sample_get_supported_languages('is', PROJECT_ID)
+    translate_v3_list_languages_with_target.sample_get_supported_languages('is', PROJECT_ID)
     out, _ = capsys.readouterr()
     assert u'Language Code: sq' in out
     assert u'Display Name: albanska' in out

@@ -15,15 +15,13 @@
 import os
 import pytest
 import uuid
-import translate_create_glossary
-import translate_delete_glossary
-import translate_translate_text_with_model
+import translate_v3_translate_text_with_model
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 MODEL_ID = os.environ['AUTOML_TRANSLATION_MODEL_ID']
 
 def test_translate_text_with_model(capsys):
-    translate_translate_text_with_model.sample_translate_text(
+    translate_v3_translate_text_with_model.sample_translate_text(
         MODEL_ID,
         "That' il do it.",
         "ja",

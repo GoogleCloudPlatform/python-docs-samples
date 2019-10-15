@@ -14,9 +14,9 @@
 
 import os
 import pytest
-import translate_create_glossary
-import translate_delete_glossary
-import translate_list_glossary
+import translate_v3_create_glossary
+import translate_v3_delete_glossary
+import translate_v3_list_glossary
 import uuid
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
@@ -27,17 +27,17 @@ GLOSSARY_INPUT_URI = 'gs://cloud-samples-data/translation/glossary.csv'
 def glossary():
     """Get the ID of a glossary available to session (do not mutate/delete)."""
     glossary_id = 'must-start-with-letters-' + str(uuid.uuid1())
-    translate_create_glossary.sample_create_glossary(PROJECT_ID, 'en', 'es', GLOSSARY_INPUT_URI, glossary_id)
+    translate_v3_create_glossary.sample_create_glossary(PROJECT_ID, 'en', 'es', GLOSSARY_INPUT_URI, glossary_id)
 
     yield glossary_id
 
     try:
-        translate_delete_glossary.sample_delete_glossary(PROJECT_ID, glossary_id)
+        translate_v3_delete_glossary.sample_delete_glossary(PROJECT_ID, glossary_id)
     except Exception:
         pass
 
 def test_list_glossary(capsys, glossary):
-    translate_list_glossary.sample_list_glossaries(PROJECT_ID)
+    translate_v3_list_glossary.sample_list_glossaries(PROJECT_ID)
     out, _ = capsys.readouterr()
     assert glossary in out
     assert 'gs://cloud-samples-data/translation/glossary.csv' in out

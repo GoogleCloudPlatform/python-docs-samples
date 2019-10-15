@@ -22,7 +22,7 @@
 # sample-metadata
 #   title: Translating Text with Glossary
 #   description: Translates a given text using a glossary.
-#   usage: python3 samples/v3beta1/translate_translate_text_with_glossary.py [--text "Hello, world!"] [--source_language en] [--target_language fr] [--project "[Google Cloud Project ID]"] [--glossary_path "projects/[YOUR_PROJECT_ID]/locations/[LOCATION]/glossaries/[YOUR_GLOSSARY_ID]"]
+#   usage: python3 translate_translate_text_with_glossary.py [--text "Hello, world!"] [--source_language en] [--target_language fr] [--project "[Google Cloud Project ID]"] [--glossary_path "projects/[YOUR_PROJECT_ID]/locations/[LOCATION]/glossaries/[YOUR_GLOSSARY_ID]"]
 
 # [START translate_translate_text_with_glossary]
 from google.cloud import translate_v3 as translate

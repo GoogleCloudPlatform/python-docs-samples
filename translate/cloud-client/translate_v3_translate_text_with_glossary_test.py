@@ -14,9 +14,9 @@
 
 import os
 import pytest
-import translate_create_glossary
-import translate_delete_glossary
-import translate_translate_text_with_glossary
+import translate_v3_create_glossary
+import translate_v3_delete_glossary
+import translate_v3_translate_text_with_glossary
 import uuid
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
@@ -26,17 +26,17 @@ GLOSSARY_INPUT_URI = 'gs://cloud-samples-data/translation/glossary.csv'
 def glossary():
     """Get the ID of a glossary available to session (do not mutate/delete)."""
     glossary_id = 'must-start-with-letters-' + str(uuid.uuid1())
-    translate_create_glossary.sample_create_glossary(PROJECT_ID, 'en', 'es', GLOSSARY_INPUT_URI, glossary_id)
+    translate_v3_create_glossary.sample_create_glossary(PROJECT_ID, 'en', 'es', GLOSSARY_INPUT_URI, glossary_id)
 
     yield glossary_id
 
     try:
-        translate_delete_glossary.sample_delete_glossary(PROJECT_ID, glossary_id)
+        translate_v3_delete_glossary.sample_delete_glossary(PROJECT_ID, glossary_id)
     except Exception:
         pass
 
 def test_translate_text_with_glossary(capsys, glossary):
-    translate_translate_text_with_glossary.sample_translate_text(
+    translate_v3_translate_text_with_glossary.sample_translate_text(
             'account', 'en', 'es', PROJECT_ID, glossary)
     out, _ = capsys.readouterr()
     assert 'cuenta' in out

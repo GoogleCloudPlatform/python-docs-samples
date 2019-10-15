@@ -22,7 +22,7 @@
 # sample-metadata
 #   title: Translating Text with Model
 #   description: Translating Text with Model
-#   usage: python3 samples/v3beta1/translate_translate_text_with_model.py [--model_id "projects/[PROJECT ID]/locations/[LOCATION ID]/models/[MODEL ID]"] [--text "Hello, world!"] [--target_language fr] [--source_language en] [--project "[Google Cloud Project ID]"] [--location global]
+#   usage: python3 translate_translate_text_with_model.py [--model_id "projects/[PROJECT ID]/locations/[LOCATION ID]/models/[MODEL ID]"] [--text "Hello, world!"] [--target_language fr] [--source_language en] [--project "[Google Cloud Project ID]"] [--location global]
 
 # [START translate_translate_text_with_model]
 from google.cloud import translate_v3

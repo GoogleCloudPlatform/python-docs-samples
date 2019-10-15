@@ -14,8 +14,8 @@
 
 import os
 import pytest
-import translate_create_glossary
-import translate_delete_glossary
+import translate_v3_create_glossary
+import translate_v3_delete_glossary
 import uuid
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
@@ -30,20 +30,20 @@ def unique_glossary_id():
     yield glossary_id
 
     try:
-        translate_delete_glossary.sample_delete_glossary(PROJECT_ID, glossary_id)
+        translate_v3_delete_glossary.sample_delete_glossary(PROJECT_ID, glossary_id)
     except Exception:
         pass
 
 def test_create_glossary(capsys, unique_glossary_id):
-    translate_create_glossary.sample_create_glossary(PROJECT_ID, 'en', 'es', GLOSSARY_INPUT_URI, unique_glossary_id)
+    translate_v3_create_glossary.sample_create_glossary(PROJECT_ID, 'en', 'es', GLOSSARY_INPUT_URI, unique_glossary_id)
     out, _ = capsys.readouterr()
     assert 'Created' in out
     assert unique_glossary_id in out
     assert 'gs://cloud-samples-data/translation/glossary.csv' in out
 
 def test_delete_glossary(capsys, unique_glossary_id):
-    translate_create_glossary.sample_create_glossary(PROJECT_ID, 'en', 'es', GLOSSARY_INPUT_URI, unique_glossary_id)
-    translate_delete_glossary.sample_delete_glossary(PROJECT_ID, unique_glossary_id)
+    translate_v3_create_glossary.sample_create_glossary(PROJECT_ID, 'en', 'es', GLOSSARY_INPUT_URI, unique_glossary_id)
+    translate_v3_delete_glossary.sample_delete_glossary(PROJECT_ID, unique_glossary_id)
     out, _ = capsys.readouterr()
     assert 'us-central1' in out
     assert unique_glossary_id in out

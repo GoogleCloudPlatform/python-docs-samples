@@ -22,7 +22,7 @@
 # sample-metadata
 #   title: List Supported Language Names and Codes
 #   description: Listing supported languages with target language name
-#   usage: python3 samples/v3beta1/translate_list_language_names.py [--language_code en] [--project_id "[Google Cloud Project ID]"]
+#   usage: python3 translate_list_language_names.py [--language_code en] [--project_id "[Google Cloud Project ID]"]
 
 # [START translate_list_language_names]
 from google.cloud import translate_v3

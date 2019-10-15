@@ -22,7 +22,7 @@
 # sample-metadata
 #   title: Get Glossary
 #   description: Get Glossary
-#   usage: python3 samples/v3beta1/translate_get_glossary.py [--project_id "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
+#   usage: python3 translate_get_glossary.py [--project_id "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
 
 # [START translate_get_glossary]
 from google.cloud import translate_v3

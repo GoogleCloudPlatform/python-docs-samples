@@ -15,7 +15,7 @@
 import os
 import pytest
 import uuid
-import batch_translate_text_with_model
+import translate_v3_batch_translate_text_with_model
 from google.cloud import storage
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
@@ -33,7 +33,7 @@ def bucket():
     bucket.delete(force=True)
 
 def test_batch_translate_text(capsys, bucket):
-    batch_translate_text_with_model.sample_batch_translate_text(
+    translate_v3_batch_translate_text_with_model.sample_batch_translate_text(
         'gs://translation_samples_beta/resources/custom_model_text.txt',
         'gs://{}/translation/BATCH_TRANSLATION_OUTPUT/'.format(bucket.name),
         PROJECT_ID,
