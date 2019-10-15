@@ -906,8 +906,9 @@ class Shard(object):
 
 class Counter(object):
     """
-    A counter stores a collection of shards which are summed to return a
-    total count. This allows for more frequent incrementing than a single document.
+    A counter stores a collection of shards which are
+    summed to return a total count. This allows for more
+    frequent incrementing than a single document.
     """
 
     def __init__(self, num_shards):
