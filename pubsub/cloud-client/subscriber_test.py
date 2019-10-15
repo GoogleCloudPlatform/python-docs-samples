@@ -42,13 +42,11 @@ def topic(publisher_client):
     topic_path = publisher_client.topic_path(PROJECT, TOPIC)
 
     try:
-        publisher_client.delete_topic(topic_path)
-    except Exception:
-        pass
+        response = publisher_client.get_topic(topic_path)
+    except:  #noqa
+        resposne = publisher_client.create_topic(topic_path)
 
-    publisher_client.create_topic(topic_path)
-
-    yield topic_path
+    yield response.name
 
 
 @pytest.fixture(scope='module')
@@ -56,54 +54,49 @@ def subscriber_client():
     yield pubsub_v1.SubscriberClient()
 
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def subscription(subscriber_client, topic):
     subscription_path = subscriber_client.subscription_path(
         PROJECT, SUBSCRIPTION)
 
     try:
-        subscriber_client.delete_subscription(subscription_path)
-    except Exception:
-        pass
+        response = subscriber_client.get_subscription(subscription_path)
+    except:  # noqa
+        response = subscriber_client.create_subscription(
+            subscription_path, topic=topic)
 
-    try:
-        subscriber_client.create_subscription(subscription_path, topic=topic)
-    except google.api_core.exceptions.AlreadyExists:
-        pass
-
-    yield subscription_path
+    yield response.name
 
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def subscription_sync1(subscriber_client, topic):
     subscription_sync_path = subscriber_client.subscription_path(
         PROJECT, SUBSCRIPTION_SYNC1)
 
     try:
-        subscriber_client.delete_subscription(subscription_sync_path)
-    except Exception:
-        pass
+        response = subscriber_client.get_subscription(subscription_path)
+    except:  # noqa
+        response = subscriber_client.create_subscription(
+            subscription_path, topic=topic)
 
-    subscriber_client.create_subscription(subscription_sync_path, topic=topic)
-
-    yield subscription_sync_path
+    yield response.name
 
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def subscription_sync2(subscriber_client, topic):
     subscription_sync_path = subscriber_client.subscription_path(
         PROJECT, SUBSCRIPTION_SYNC2)
 
     try:
-        subscriber_client.delete_subscription(subscription_sync_path)
-    except Exception:
-        pass
+        response = subscriber_client.get_subscription(subscription_path)
+    except:  # noqa
+        response = subscriber_client.create_subscription(
+            subscription_path, topic=topic)
 
-    subscriber_client.create_subscription(subscription_sync_path, topic=topic)
-
-    yield subscription_sync_path
+    yield response.name
 
 
+@pytest.fixture(scope='module')
 def test_list_in_topic(subscription, capsys):
     @eventually_consistent.call
     def _():
@@ -112,6 +105,7 @@ def test_list_in_topic(subscription, capsys):
         assert subscription in out
 
 
+@pytest.fixture(scope='module')
 def test_list_in_project(subscription, capsys):
     @eventually_consistent.call
     def _():
@@ -120,6 +114,7 @@ def test_list_in_project(subscription, capsys):
         assert subscription in out
 
 
+@pytest.fixture(scope='module')
 def test_create(subscriber_client):
     subscription_path = subscriber_client.subscription_path(
         PROJECT, SUBSCRIPTION)
@@ -135,6 +130,7 @@ def test_create(subscriber_client):
         assert subscriber_client.get_subscription(subscription_path)
 
 
+@pytest.fixture(scope='module')
 def test_create_push(subscriber_client):
     subscription_path = subscriber_client.subscription_path(
         PROJECT, SUBSCRIPTION)
@@ -150,6 +146,7 @@ def test_create_push(subscriber_client):
         assert subscriber_client.get_subscription(subscription_path)
 
 
+@pytest.fixture(scope='module')
 def test_delete(subscriber_client, subscription):
     subscriber.delete_subscription(PROJECT, SUBSCRIPTION)
 
@@ -159,6 +156,7 @@ def test_delete(subscriber_client, subscription):
             subscriber_client.get_subscription(subscription)
 
 
+@pytest.fixture(scope='module')
 def test_update(subscriber_client, subscription, capsys):
     subscriber.update_subscription(PROJECT, SUBSCRIPTION, NEW_ENDPOINT)
 
@@ -166,14 +164,15 @@ def test_update(subscriber_client, subscription, capsys):
     assert 'Subscription updated' in out
 
 
+@pytest.fixture(scope='module')
 def _publish_messages(publisher_client, topic):
     for n in range(5):
         data = u'Message {}'.format(n).encode('utf-8')
-        future = publisher_client.publish(
-            topic, data=data)
+        future = publisher_client.publish(topic, data=data)
         future.result()
 
 
+@pytest.fixture(scope='module')
 def _publish_messages_with_custom_attributes(publisher_client, topic):
     data = u'Test message'.encode('utf-8')
     future = publisher_client.publish(topic, data=data, origin='python-sample')
@@ -193,6 +192,7 @@ def _make_sleep_patch():
     return mock.patch('time.sleep', new=new_sleep)
 
 
+@pytest.fixture(scope='module')
 def test_receive(publisher_client, topic, subscription, capsys):
     _publish_messages(publisher_client, topic)
 
@@ -206,6 +206,7 @@ def test_receive(publisher_client, topic, subscription, capsys):
     assert 'Message 1' in out
 
 
+@pytest.fixture(scope='module')
 def test_receive_synchronously(
         publisher_client, topic, subscription_sync1, capsys):
     _publish_messages(publisher_client, topic)
@@ -216,6 +217,7 @@ def test_receive_synchronously(
     assert 'Done.' in out
 
 
+@pytest.fixture(scope='module')
 def test_receive_synchronously_with_lease(
         publisher_client, topic, subscription_sync2, capsys):
     _publish_messages(publisher_client, topic)
@@ -227,6 +229,7 @@ def test_receive_synchronously_with_lease(
     assert 'Done.' in out
 
 
+@pytest.fixture(scope='module')
 def test_receive_with_custom_attributes(
         publisher_client, topic, subscription, capsys):
     _publish_messages_with_custom_attributes(publisher_client, topic)
@@ -242,6 +245,7 @@ def test_receive_with_custom_attributes(
     assert 'python-sample' in out
 
 
+@pytest.fixture(scope='module')
 def test_receive_with_flow_control(
         publisher_client, topic, subscription, capsys):
     _publish_messages(publisher_client, topic)
