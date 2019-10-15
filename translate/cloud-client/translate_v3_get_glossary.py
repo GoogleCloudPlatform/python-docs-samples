@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample ("Request",  "translate_get_glossary")
+# DO NOT EDIT! This is a generated sample ("Request",  "translate_v3_get_glossary")
 
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-translate
@@ -22,9 +22,9 @@
 # sample-metadata
 #   title: Get Glossary
 #   description: Get Glossary
-#   usage: python3 translate_get_glossary.py [--project_id "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
+#   usage: python3 translate_v3_get_glossary.py [--project_id "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
 
-# [START translate_get_glossary]
+# [START translate_v3_get_glossary]
 from google.cloud import translate_v3
 
 def sample_get_glossary(project_id, glossary_id):
@@ -41,7 +41,7 @@ def sample_get_glossary(project_id, glossary_id):
     print(u"Entry count: {}".format(response.entry_count))
     print(u"Input URI: {}".format(response.input_config.gcs_source.input_uri))
 
-# [END translate_get_glossary]
+# [END translate_v3_get_glossary]
 
 
 def main():

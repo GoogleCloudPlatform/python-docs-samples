@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample ("RequestPagedAll",  "translate_list_glossary")
+# DO NOT EDIT! This is a generated sample ("RequestPagedAll",  "translate_v3_list_glossary")
 
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-translate
@@ -22,9 +22,9 @@
 # sample-metadata
 #   title: List Glossaries
 #   description: List Glossaries
-#   usage: python3 translate_list_glossary.py [--project_id "[Google Cloud Project ID]"]
+#   usage: python3 translate_v3_list_glossary.py [--project_id "[Google Cloud Project ID]"]
 
-# [START translate_list_glossary]
+# [START translate_v3_list_glossary]
 from google.cloud import translate_v3
 
 def sample_list_glossaries(project_id):
@@ -44,7 +44,7 @@ def sample_list_glossaries(project_id):
         for language_code in glossary.language_codes_set.language_codes:
             print('Language code: {}'.format(language_code))
 
-# [END translate_list_glossary]
+# [END translate_v3_list_glossary]
 
 
 def main():

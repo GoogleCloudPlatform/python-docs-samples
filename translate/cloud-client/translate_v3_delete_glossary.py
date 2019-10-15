@@ -22,7 +22,7 @@
 # sample-metadata
 #   title: Delete Glossary
 #   description: Delete Glossary
-#   usage: python3 translate_delete_glossary.py [--project "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
+#   usage: python3 translate_delete_glossary.py [--project_id "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
 
 # [START translate_delete_glossary]
 from google.cloud import translate_v3 as translate
@@ -50,11 +50,11 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--project", type=str, default="[Google Cloud Project ID]")
+    parser.add_argument("--project_id", type=str, default="[Google Cloud Project ID]")
     parser.add_argument("--glossary_id", type=str, default="[Glossary ID]")
     args = parser.parse_args()
 
-    sample_delete_glossary(args.project, args.glossary_id)
+    sample_delete_glossary(args.project_id, args.glossary_id)
 
 
 if __name__ == "__main__":

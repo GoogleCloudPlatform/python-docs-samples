@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample ("LongRunningPromise",  "translate_create_glossary")
+# DO NOT EDIT! This is a generated sample ("LongRunningPromise",  "translate_v3_create_glossary")
 
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-translate
@@ -22,9 +22,9 @@
 # sample-metadata
 #   title: Create Glossary
 #   description: Create Glossary
-#   usage: python3 translate_create_glossary.py [--project "[Google Cloud Project ID]"] [--project_2 "[Your Google Cloud Project ID]"] [--glossary_id "my_glossary_id_123"]
+#   usage: python3 translate_v3_create_glossary.py [--project "[Google Cloud Project ID]"] [--project_2 "[Your Google Cloud Project ID]"] [--glossary_id "my_glossary_id_123"]
 
-# [START translate_create_glossary]
+# [START translate_v3_create_glossary]
 from google.cloud import translate_v3 as translate
 
 def sample_create_glossary(project_id, source_lang_code, target_lang_code, input_uri, glossary_id):
@@ -71,7 +71,7 @@ def sample_create_glossary(project_id, source_lang_code, target_lang_code, input
     print('Created: {}'.format(result.name))
     print('Input Uri: {}'.format(result.input_config.gcs_source.input_uri))
 
-# [END translate_create_glossary]
+# [END translate_v3_create_glossary]
 
 
 def main():

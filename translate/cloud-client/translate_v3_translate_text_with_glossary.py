@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample ("Request",  "translate_translate_text_with_glossary")
+# DO NOT EDIT! This is a generated sample ("Request",  "translate_v3_translate_text_with_glossary")
 
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-translate
@@ -22,9 +22,9 @@
 # sample-metadata
 #   title: Translating Text with Glossary
 #   description: Translates a given text using a glossary.
-#   usage: python3 translate_translate_text_with_glossary.py [--text "Hello, world!"] [--source_language en] [--target_language fr] [--project "[Google Cloud Project ID]"] [--glossary_path "projects/[YOUR_PROJECT_ID]/locations/[LOCATION]/glossaries/[YOUR_GLOSSARY_ID]"]
+#   usage: python3 translate_v3_translate_text_with_glossary.py [--text "Hello, world!"] [--source_language en] [--target_language fr] [--project_id "[Google Cloud Project ID]"] [--glossary_id "[YOUR_GLOSSARY_ID]"]
 
-# [START translate_translate_text_with_glossary]
+# [START translate_v3_translate_text_with_glossary]
 from google.cloud import translate_v3 as translate
 
 def sample_translate_text(
@@ -37,7 +37,7 @@ def sample_translate_text(
       text The content to translate in string format
       source_language Optional. The BCP-47 language code of the input text.
       target_language Required. The BCP-47 language code to use for translation.
-      glossary_path Specifies the glossary used for this translation.
+      glossary_id Specifies the glossary used for this translation.
     """
 
     client = translate.TranslationServiceClient()
@@ -69,7 +69,7 @@ def sample_translate_text(
     for translation in response.glossary_translations:
         print(u"Translated text: {}".format(translation.translated_text))
 
-# [END translate_translate_text_with_glossary]
+# [END translate_v3_translate_text_with_glossary]
 
 
 def main():
@@ -91,8 +91,8 @@ def main():
         args.text,
         args.source_language,
         args.target_language,
-        args.project,
-        args.glossary_id,
+        args.project_id,
+        args.glossary_id
     )
 
 

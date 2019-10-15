@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample ("Request",  "translate_translate_text_with_model")
+# DO NOT EDIT! This is a generated sample ("Request",  "translate_v3_translate_text_with_model")
 
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-translate
@@ -22,9 +22,9 @@
 # sample-metadata
 #   title: Translating Text with Model
 #   description: Translating Text with Model
-#   usage: python3 translate_translate_text_with_model.py [--model_id "projects/[PROJECT ID]/locations/[LOCATION ID]/models/[MODEL ID]"] [--text "Hello, world!"] [--target_language fr] [--source_language en] [--project "[Google Cloud Project ID]"] [--location global]
+#   usage: python3 translate_v3_translate_text_with_model.py [--model_id "[MODEL ID]"] [--text "Hello, world!"] [--target_language fr] [--source_language en] [--project_id "[Google Cloud Project ID]"] [--location global]
 
-# [START translate_translate_text_with_model]
+# [START translate_v3_translate_text_with_model]
 from google.cloud import translate_v3
 
 
@@ -47,7 +47,7 @@ def sample_translate_text(
     # text = 'Hello, world!'
     # target_language = 'fr'
     # source_language = 'en'
-    # project = '[Google Cloud Project ID]'
+    # project_id = '[Google Cloud Project ID]'
     # location = 'global'
     contents = [text]
     parent = client.location_path(project_id, location)
@@ -64,7 +64,7 @@ def sample_translate_text(
         print(u"Translated text: {}".format(translation.translated_text))
 
 
-# [END translate_translate_text_with_model]
+# [END translate_v3_translate_text_with_model]
 
 
 def main():
@@ -84,7 +84,7 @@ def main():
     args = parser.parse_args()
 
     sample_translate_text(
-        args.model_path,
+        args.model_id,
         args.text,
         args.target_language,
         args.source_language,

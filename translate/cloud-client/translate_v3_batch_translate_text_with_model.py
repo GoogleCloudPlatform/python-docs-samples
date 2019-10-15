@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample ("LongRunningPromise",  "batch_translate_text_with_model")
+# DO NOT EDIT! This is a generated sample ("LongRunningPromise",  "translate_v3_batch_translate_text_with_model")
 
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-translate
@@ -22,9 +22,9 @@
 # sample-metadata
 #   title: Batch Translate with Model
 #   description: Batch translate text using AutoML Translation model
-#   usage: python3 batch_translate_text_with_model.py [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project "[Google Cloud Project ID]"] [--location "us-central1"] [--target_language en] [--source_language de] [--model_path "projects/{project-id}/locations/{location-id}/models/{your-model-id}"]
+#   usage: python3 translate_v3_batch_translate_text_with_model.py [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project "[Google Cloud Project ID]"] [--location "us-central1"] [--target_language en] [--source_language de] [--model_path "projects/{project-id}/locations/{location-id}/models/{your-model-id}"]
 
-# [START batch_translate_text_with_model]
+# [START translate_v3_batch_translate_text_with_model]
 from google.cloud import translate_v3
 
 
@@ -86,7 +86,7 @@ def sample_batch_translate_text(
     print(u"Translated Characters: {}".format(response.translated_characters))
 
 
-# [END batch_translate_text_with_model]
+# [END translate_v3_batch_translate_text_with_model]
 
 
 def main():

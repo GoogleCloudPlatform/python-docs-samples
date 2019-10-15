@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample ("LongRunningPromise",  "batch_translate_text")
+# DO NOT EDIT! This is a generated sample ("LongRunningPromise",  "translate_v3_batch_translate_text")
 
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-translate
@@ -22,9 +22,9 @@
 # sample-metadata
 #   title: Batch translate text
 #   description: Batch translate text
-#   usage: python3 batch_translate_text.py [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project_id "[Google Cloud Project ID]"] [--location "us-central1"] [--source_lang en] [--target_lang ja]
+#   usage: python3 translate_v3_batch_translate_text.py [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project_id "[Google Cloud Project ID]"] [--location "us-central1"] [--source_lang en] [--target_lang ja]
 
-# [START batch_translate_text]
+# [START translate_v3_batch_translate_text]
 from google.cloud import translate_v3
 
 def sample_batch_translate_text(
@@ -66,7 +66,7 @@ def sample_batch_translate_text(
     print(u"Translated Characters: {}".format(response.translated_characters))
 
 
-# [END batch_translate_text]
+# [END translate_v3_batch_translate_text]
 
 
 def main():

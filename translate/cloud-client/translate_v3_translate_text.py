@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample ("Request",  "translate_translate_text")
+# DO NOT EDIT! This is a generated sample ("Request",  "translate_v3_translate_text")
 
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-translate
@@ -22,9 +22,9 @@
 # sample-metadata
 #   title: Translating Text
 #   description: Translating Text
-#   usage: python3 translate_translate_text.py [--text "Hello, world!"] [--target_language fr] [--project "[Google Cloud Project ID]"]
+#   usage: python3 translate_v3_translate_text.py [--text "Hello, world!"] [--target_language fr] [--project_id "[Google Cloud Project ID]"]
 
-# [START translate_translate_text]
+# [START translate_v3_translate_text]
 from google.cloud import translate_v3
 
 
@@ -41,7 +41,7 @@ def sample_translate_text(text, target_language, project_id):
 
     # text = 'Text you wish to translate'
     # target_language = 'fr'
-    # project = '[Google Cloud Project ID]'
+    # project_id = '[Google Cloud Project ID]'
     contents = [text]
     parent = client.location_path(project_id, "global")
 
@@ -56,7 +56,7 @@ def sample_translate_text(text, target_language, project_id):
         print(u"Translated text: {}".format(translation.translated_text))
 
 
-# [END translate_translate_text]
+# [END translate_v3_translate_text]
 
 
 def main():
