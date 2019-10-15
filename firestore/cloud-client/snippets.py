@@ -892,8 +892,9 @@ from google.cloud import firestore
 
 class Shard(object):
     """
-    Shard is a single counter, which is used in a group
-    of other shards within Counter.
+    A shard is a distributed counter. Each shard can support being incremented
+    once per second. Multiple shards are needed within a Counter to allow
+    more frequent incrementing.
     """
 
     def __init__(self):
@@ -905,8 +906,8 @@ class Shard(object):
 
 class Counter(object):
     """
-    Counter is a collection of documents (shards)
-    to realize counter with high frequency.
+    A counter stores a collection of shards which are summed to return a
+    total count. This allows for more frequent incrementing than a single document.
     """
 
     def __init__(self, num_shards):
