@@ -193,11 +193,6 @@ def _make_sleep_patch():
     return mock.patch('time.sleep', new=new_sleep)
 
 
-<<<<<<< HEAD
-@pytest.fixture(scope='module')
-=======
-@flaky
->>>>>>> 5c2e2a6e6734da91246aec6aa48eb6316e5c47a5
 def test_receive(publisher_client, topic, subscription, capsys):
     _publish_messages(publisher_client, topic)
 
@@ -211,7 +206,6 @@ def test_receive(publisher_client, topic, subscription, capsys):
     assert 'Message 1' in out
 
 
-@pytest.fixture(scope='module')
 def test_receive_synchronously(
         publisher_client, topic, subscription_sync1, capsys):
     _publish_messages(publisher_client, topic)
@@ -222,7 +216,6 @@ def test_receive_synchronously(
     assert 'Done.' in out
 
 
-@pytest.fixture(scope='module')
 def test_receive_synchronously_with_lease(
         publisher_client, topic, subscription_sync2, capsys):
     _publish_messages(publisher_client, topic)
@@ -234,7 +227,6 @@ def test_receive_synchronously_with_lease(
     assert 'Done.' in out
 
 
-@pytest.fixture(scope='module')
 def test_receive_with_custom_attributes(
         publisher_client, topic, subscription, capsys):
     _publish_messages_with_custom_attributes(publisher_client, topic)
@@ -250,7 +242,6 @@ def test_receive_with_custom_attributes(
     assert 'python-sample' in out
 
 
-@pytest.fixture(scope='module')
 def test_receive_with_flow_control(
         publisher_client, topic, subscription, capsys):
     _publish_messages(publisher_client, topic)
