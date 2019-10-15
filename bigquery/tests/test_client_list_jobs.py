@@ -13,17 +13,19 @@
 # limitations under the License.
 
 
-import pyarrow
+from .. import client_list_jobs
+from .. import create_job
 
-from .. import query_to_arrow
 
+def test_client_list_jobs(capsys, client):
 
-def test_query_to_arrow(capsys, client):
-
-    arrow_table = query_to_arrow.query_to_arrow(client)
+    job = create_job.create_job(client)
+    client.cancel_job(job.job_id)
+    job.cancel()
+    client_list_jobs.client_list_jobs(client)
     out, err = capsys.readouterr()
-    assert "Downloaded 8 rows, 2 columns." in out
-    arrow_schema = arrow_table.schema
-    assert arrow_schema.names == ["race", "participant"]
-    assert pyarrow.types.is_string(arrow_schema.types[0])
-    assert pyarrow.types.is_struct(arrow_schema.types[1])
+    assert "Started job: {}".format(job.job_id) in out
+    assert "Last 10 jobs:" in out
+    assert "Jobs from the last ten minutes:" in out
+    assert "Last 10 jobs run by all users:" in out
+    assert "Last 10 jobs done:" in out

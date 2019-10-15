@@ -13,17 +13,17 @@
 # limitations under the License.
 
 
-import pyarrow
+def table_exists(client, table_id):
 
-from .. import query_to_arrow
+    # [START bigquery_table_exists]
+    from google.cloud.exceptions import NotFound
 
+    # TODO(developer): Set table_id to the ID of the table to determine existence.
+    # table_id = "your-project.your_dataset.your_table"
 
-def test_query_to_arrow(capsys, client):
-
-    arrow_table = query_to_arrow.query_to_arrow(client)
-    out, err = capsys.readouterr()
-    assert "Downloaded 8 rows, 2 columns." in out
-    arrow_schema = arrow_table.schema
-    assert arrow_schema.names == ["race", "participant"]
-    assert pyarrow.types.is_string(arrow_schema.types[0])
-    assert pyarrow.types.is_struct(arrow_schema.types[1])
+    try:
+        client.get_table(table_id)  # Make an API request.
+        print("Table {} already exists.".format(table_id))
+    except NotFound:
+        print("Table {} is not found.".format(table_id))
+    # [END bigquery_table_exists]

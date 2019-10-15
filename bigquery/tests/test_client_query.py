@@ -13,17 +13,12 @@
 # limitations under the License.
 
 
-import pyarrow
-
-from .. import query_to_arrow
+from .. import client_query
 
 
-def test_query_to_arrow(capsys, client):
+def test_client_query(capsys, client):
 
-    arrow_table = query_to_arrow.query_to_arrow(client)
+    client_query.client_query(client)
     out, err = capsys.readouterr()
-    assert "Downloaded 8 rows, 2 columns." in out
-    arrow_schema = arrow_table.schema
-    assert arrow_schema.names == ["race", "participant"]
-    assert pyarrow.types.is_string(arrow_schema.types[0])
-    assert pyarrow.types.is_struct(arrow_schema.types[1])
+    assert "The query data:" in out
+    assert "name=James, count=272793" in out

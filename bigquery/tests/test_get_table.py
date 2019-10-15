@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 from google.cloud import bigquery
+
 from .. import get_table
 
 

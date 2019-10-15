@@ -13,26 +13,29 @@
 # limitations under the License.
 
 
-def get_dataset_labels(client, dataset_id):
+def client_query(client):
 
-    # [START bigquery_get_dataset_labels]
+    # [START bigquery_query]
     # TODO(developer): Import the client library.
     # from google.cloud import bigquery
 
     # TODO(developer): Construct a BigQuery client object.
     # client = bigquery.Client()
 
-    # TODO(developer): Set dataset_id to the ID of the dataset to fetch.
-    # dataset_id = "your-project.your_dataset"
+    query = """
+        SELECT name, SUM(number) as total_people
+        FROM `bigquery-public-data.usa_names.usa_1910_2013`
+        WHERE state = 'TX'
+        GROUP BY name, state
+        ORDER BY total_people DESC
+        LIMIT 20
+    """
+    query_job = client.query(
+        query, location="US"  # Must match the destination dataset(s) location.
+    )  # Make an API request.
 
-    dataset = client.get_dataset(dataset_id)  # Make an API request.
-
-    # View dataset labels.
-    print("Dataset ID: {}".format(dataset_id))
-    print("Labels:")
-    if dataset.labels:
-        for label, value in dataset.labels.items():
-            print("\t{}: {}".format(label, value))
-    else:
-        print("\tDataset has no labels defined.")
-    # [END bigquery_get_dataset_labels]
+    print("The query data:")
+    for row in query_job:
+        # Row values can be accessed by field name or index.
+        print("name={}, count={}".format(row[0], row["total_people"]))
+    # [END bigquery_query]

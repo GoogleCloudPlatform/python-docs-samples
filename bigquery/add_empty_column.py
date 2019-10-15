@@ -28,7 +28,7 @@ def add_empty_column(client, table_id):
     table = client.get_table(table_id)  # Make an API request.
 
     original_schema = table.schema
-    new_schema = original_schema[:]  # creates a copy of the schema
+    new_schema = original_schema[:]  # Creates a copy of the schema.
     new_schema.append(bigquery.SchemaField("phone", "STRING"))
 
     table.schema = new_schema

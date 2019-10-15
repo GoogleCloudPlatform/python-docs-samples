@@ -26,7 +26,7 @@ def delete_table(client, table_id):
     # table_id = 'your-project.your_dataset.your_table'
 
     # If the table does not exist, delete_table raises
-    # google.api_core.exceptions.NotFound unless not_found_ok is True
+    # google.api_core.exceptions.NotFound unless not_found_ok is True.
     client.delete_table(table_id, not_found_ok=True)  # Make an API request.
     print("Deleted table '{}'.".format(table_id))
     # [END bigquery_delete_table]

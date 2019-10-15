@@ -13,22 +13,18 @@
 # limitations under the License.
 
 
-from .. import delete_dataset_labels
-from .. import get_dataset_labels
-from .. import label_dataset
+from google.cloud import bigquery
+
+from .. import table_exists
 
 
-def test_dataset_label_samples(capsys, client, dataset_id):
+def test_table_exists(capsys, client, random_table_id):
 
-    label_dataset.label_dataset(client, dataset_id)
+    table_exists.table_exists(client, random_table_id)
     out, err = capsys.readouterr()
-    assert "Labels added to {}".format(dataset_id) in out
-
-    get_dataset_labels.get_dataset_labels(client, dataset_id)
+    assert "Table {} is not found.".format(random_table_id) in out
+    table = bigquery.Table(random_table_id)
+    table = client.create_table(table)
+    table_exists.table_exists(client, random_table_id)
     out, err = capsys.readouterr()
-    assert "color: green" in out
-
-    dataset = delete_dataset_labels.delete_dataset_labels(client, dataset_id)
-    out, err = capsys.readouterr()
-    assert "Labels deleted from {}".format(dataset_id) in out
-    assert dataset.labels.get("color") is None
+    assert "Table {} already exists.".format(random_table_id) in out

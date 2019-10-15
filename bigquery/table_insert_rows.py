@@ -13,26 +13,22 @@
 # limitations under the License.
 
 
-def get_dataset_labels(client, dataset_id):
+def table_insert_rows(client, table_id):
 
-    # [START bigquery_get_dataset_labels]
+    # [START bigquery_table_insert_rows]
     # TODO(developer): Import the client library.
     # from google.cloud import bigquery
 
     # TODO(developer): Construct a BigQuery client object.
     # client = bigquery.Client()
 
-    # TODO(developer): Set dataset_id to the ID of the dataset to fetch.
-    # dataset_id = "your-project.your_dataset"
+    # TODO(developer): Set table_id to the ID of the model to fetch.
+    # table_id = "your-project.your_dataset.your_table"
 
-    dataset = client.get_dataset(dataset_id)  # Make an API request.
+    table = client.get_table(table_id)  # Make an API request.
+    rows_to_insert = [(u"Phred Phlyntstone", 32), (u"Wylma Phlyntstone", 29)]
 
-    # View dataset labels.
-    print("Dataset ID: {}".format(dataset_id))
-    print("Labels:")
-    if dataset.labels:
-        for label, value in dataset.labels.items():
-            print("\t{}: {}".format(label, value))
-    else:
-        print("\tDataset has no labels defined.")
-    # [END bigquery_get_dataset_labels]
+    errors = client.insert_rows(table, rows_to_insert)  # Make an API request.
+    if errors == []:
+        print("New rows have been added.")
+    # [END bigquery_table_insert_rows]

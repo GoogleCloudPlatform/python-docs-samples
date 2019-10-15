@@ -35,7 +35,7 @@ def get_dataset(client, dataset_id):
         )
     )
 
-    # View dataset properties
+    # View dataset properties.
     print("Description: {}".format(dataset.description))
     print("Labels:")
     labels = dataset.labels
@@ -45,9 +45,9 @@ def get_dataset(client, dataset_id):
     else:
         print("\tDataset has no labels defined.")
 
-    # View tables in dataset
+    # View tables in dataset.
     print("Tables:")
-    tables = list(client.list_tables(dataset))  # API request(s)
+    tables = list(client.list_tables(dataset))  # Make an API request(s).
     if tables:
         for table in tables:
             print("\t{}".format(table.table_id))

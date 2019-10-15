@@ -26,7 +26,7 @@ def update_dataset_default_table_expiration(client, dataset_id):
     # dataset_id = 'your-project.your_dataset'
 
     dataset = client.get_dataset(dataset_id)  # Make an API request.
-    dataset.default_table_expiration_ms = 24 * 60 * 60 * 1000  # in milliseconds.
+    dataset.default_table_expiration_ms = 24 * 60 * 60 * 1000  # In milliseconds.
 
     dataset = client.update_dataset(
         dataset, ["default_table_expiration_ms"]

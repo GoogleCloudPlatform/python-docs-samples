@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 from google.cloud import bigquery
 from google.cloud import bigquery_v2
 

@@ -13,17 +13,21 @@
 # limitations under the License.
 
 
-import pyarrow
+from google.cloud import bigquery
 
-from .. import query_to_arrow
+from .. import table_insert_rows
 
 
-def test_query_to_arrow(capsys, client):
+def test_table_insert_rows(capsys, client, random_table_id):
 
-    arrow_table = query_to_arrow.query_to_arrow(client)
+    schema = [
+        bigquery.SchemaField("full_name", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("age", "INTEGER", mode="REQUIRED"),
+    ]
+
+    table = bigquery.Table(random_table_id, schema=schema)
+    table = client.create_table(table)
+
+    table_insert_rows.table_insert_rows(client, random_table_id)
     out, err = capsys.readouterr()
-    assert "Downloaded 8 rows, 2 columns." in out
-    arrow_schema = arrow_table.schema
-    assert arrow_schema.names == ["race", "participant"]
-    assert pyarrow.types.is_string(arrow_schema.types[0])
-    assert pyarrow.types.is_struct(arrow_schema.types[1])
+    assert "New rows have been added." in out

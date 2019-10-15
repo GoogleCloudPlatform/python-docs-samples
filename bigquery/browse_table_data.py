@@ -39,7 +39,7 @@ def browse_table_data(client, table_id):
 
     # Specify selected fields to limit the results to certain columns.
     table = client.get_table(table_id)  # Make an API request.
-    fields = table.schema[:2]  # first two columns
+    fields = table.schema[:2]  # First two columns.
     rows_iter = client.list_rows(table_id, selected_fields=fields, max_results=10)
     rows = list(rows_iter)
     print("Selected {} columns from table {}.".format(len(rows_iter.schema), table_id))

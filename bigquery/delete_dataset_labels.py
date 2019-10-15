@@ -27,7 +27,7 @@ def delete_dataset_labels(client, dataset_id):
 
     dataset = client.get_dataset(dataset_id)  # Make an API request.
 
-    # To delete a label from a dataset, set its value to None
+    # To delete a label from a dataset, set its value to None.
     dataset.labels["color"] = None
 
     dataset = client.update_dataset(dataset, ["labels"])  # Make an API request.

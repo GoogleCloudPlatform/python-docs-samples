@@ -13,17 +13,15 @@
 # limitations under the License.
 
 
-import pyarrow
-
-from .. import query_to_arrow
+from .. import copy_table
 
 
-def test_query_to_arrow(capsys, client):
+def test_copy_table(capsys, client, table_with_data_id, random_table_id):
 
-    arrow_table = query_to_arrow.query_to_arrow(client)
+    copy_table.copy_table(client, table_with_data_id, random_table_id)
     out, err = capsys.readouterr()
-    assert "Downloaded 8 rows, 2 columns." in out
-    arrow_schema = arrow_table.schema
-    assert arrow_schema.names == ["race", "participant"]
-    assert pyarrow.types.is_string(arrow_schema.types[0])
-    assert pyarrow.types.is_struct(arrow_schema.types[1])
+    assert "A copy of the table created." in out
+    assert (
+        client.get_table(random_table_id).num_rows
+        == client.get_table(table_with_data_id).num_rows
+    )

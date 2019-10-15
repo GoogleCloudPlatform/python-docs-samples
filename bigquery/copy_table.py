@@ -13,26 +13,27 @@
 # limitations under the License.
 
 
-def get_dataset_labels(client, dataset_id):
+def copy_table(client, source_table_id, destination_table_id):
 
-    # [START bigquery_get_dataset_labels]
+    # [START bigquery_copy_table]
     # TODO(developer): Import the client library.
     # from google.cloud import bigquery
 
     # TODO(developer): Construct a BigQuery client object.
     # client = bigquery.Client()
 
-    # TODO(developer): Set dataset_id to the ID of the dataset to fetch.
-    # dataset_id = "your-project.your_dataset"
+    # TODO(developer): Set source_table_id to the ID of the original table.
+    # source_table_id = "your-project.source_dataset.source_table"
 
-    dataset = client.get_dataset(dataset_id)  # Make an API request.
+    # TODO(developer): Set destination_table_id to the ID of the destination table.
+    # destination_table_id = "your-project.destination_dataset.destination_table"
 
-    # View dataset labels.
-    print("Dataset ID: {}".format(dataset_id))
-    print("Labels:")
-    if dataset.labels:
-        for label, value in dataset.labels.items():
-            print("\t{}: {}".format(label, value))
-    else:
-        print("\tDataset has no labels defined.")
-    # [END bigquery_get_dataset_labels]
+    job = client.copy_table(
+        source_table_id,
+        destination_table_id,
+        location="US",  # Must match the source and destination tables location.
+    )
+    job.result()  # Waits for job to complete.
+
+    print("A copy of the table created.")
+    # [END bigquery_copy_table]
