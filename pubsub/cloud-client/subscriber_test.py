@@ -16,7 +16,6 @@ import os
 import time
 
 from gcp_devrel.testing import eventually_consistent
-from gcp_devrel.testing.flaky import flaky
 from google.cloud import pubsub_v1
 import mock
 import pytest
@@ -164,7 +163,6 @@ def test_update(subscriber_client, subscription, capsys):
     assert 'Subscription updated' in out
 
 
-@pytest.fixture(scope='module')
 def _publish_messages(publisher_client, topic):
     for n in range(5):
         data = u'Message {}'.format(n).encode('utf-8')
@@ -172,7 +170,6 @@ def _publish_messages(publisher_client, topic):
         future.result()
 
 
-@pytest.fixture(scope='module')
 def _publish_messages_with_custom_attributes(publisher_client, topic):
     data = u'Test message'.encode('utf-8')
     future = publisher_client.publish(topic, data=data, origin='python-sample')
