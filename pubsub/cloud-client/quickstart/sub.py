@@ -45,9 +45,9 @@ def sub(project_id, subscription_name):
     # Calling result() on the StreamingPullFuture keeps the main thread alive
     # while the callback function processes messages in the background.
     try:
-        streaming_future.result()
+        streaming_pull_future.result()
     except Exception as error:
-        streaming_future.cancel()
+        streaming_pull_future.cancel()
         raise error
 
 

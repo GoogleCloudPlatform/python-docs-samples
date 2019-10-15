@@ -1,4 +1,4 @@
-Flask==1.0.2
+Flask==1.1.1
 gunicorn==19.9.0
-google-cloud-tasks==1.1.0
+google-cloud-tasks==1.2.1
 googleapis-common-protos==1.6.0

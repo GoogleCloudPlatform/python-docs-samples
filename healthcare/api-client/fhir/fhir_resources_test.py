@@ -70,6 +70,7 @@ def test_fhir_store():
         fhir_store_id)
 
 
+@pytest.mark.skip(reason='TODO(noerog): enable when resource updated')
 def test_CRUD_search_resource(test_dataset, test_fhir_store, capsys):
     response = fhir_resources.create_resource(
         service_account_json,

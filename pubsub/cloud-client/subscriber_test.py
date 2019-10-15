@@ -16,6 +16,7 @@ import os
 import time
 
 from gcp_devrel.testing import eventually_consistent
+from gcp_devrel.testing.flaky import flaky
 from google.cloud import pubsub_v1
 import google.api_core.exceptions
 import mock
@@ -192,7 +193,11 @@ def _make_sleep_patch():
     return mock.patch('time.sleep', new=new_sleep)
 
 
+<<<<<<< HEAD
 @pytest.fixture(scope='module')
+=======
+@flaky
+>>>>>>> 5c2e2a6e6734da91246aec6aa48eb6316e5c47a5
 def test_receive(publisher_client, topic, subscription, capsys):
     _publish_messages(publisher_client, topic)
 
