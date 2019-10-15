@@ -44,7 +44,7 @@ def topic(publisher_client):
     try:
         response = publisher_client.get_topic(topic_path)
     except:  # noqa
-        resposne = publisher_client.create_topic(topic_path)
+        response = publisher_client.create_topic(topic_path)
 
     yield response.name
 
