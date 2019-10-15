@@ -18,7 +18,6 @@ import time
 from gcp_devrel.testing import eventually_consistent
 from gcp_devrel.testing.flaky import flaky
 from google.cloud import pubsub_v1
-import google.api_core.exceptions
 import mock
 import pytest
 
@@ -44,7 +43,7 @@ def topic(publisher_client):
 
     try:
         response = publisher_client.get_topic(topic_path)
-    except:  #noqa
+    except:  # noqa
         resposne = publisher_client.create_topic(topic_path)
 
     yield response.name
@@ -71,7 +70,7 @@ def subscription(subscriber_client, topic):
 
 @pytest.fixture(scope='module')
 def subscription_sync1(subscriber_client, topic):
-    subscription_sync_path = subscriber_client.subscription_path(
+    subscription_path = subscriber_client.subscription_path(
         PROJECT, SUBSCRIPTION_SYNC1)
 
     try:
@@ -85,7 +84,7 @@ def subscription_sync1(subscriber_client, topic):
 
 @pytest.fixture(scope='module')
 def subscription_sync2(subscriber_client, topic):
-    subscription_sync_path = subscriber_client.subscription_path(
+    subscription_path = subscriber_client.subscription_path(
         PROJECT, SUBSCRIPTION_SYNC2)
 
     try:
