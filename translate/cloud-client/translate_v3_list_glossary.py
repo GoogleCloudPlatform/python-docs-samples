@@ -42,6 +42,11 @@ def sample_list_glossaries(project_id):
         print('Entry count: {}'.format(glossary.entry_count))
         print('Input uri: {}'.format(
             glossary.input_config.gcs_source.input_uri))
+        for language_code in glossary.language_codes_set.language_codes:
+            print('Language code: {}'.format(language_code))
+        if glossary.language_pair:
+            print(glossary.language_pair.source_language_code)
+            print(glossary.language_pair.target_language_code)
 
 # [END translate_v3_list_glossary]
 
