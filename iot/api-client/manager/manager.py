@@ -29,7 +29,6 @@ Usage example:
 """
 
 import argparse
-import base64
 import io
 import os
 import sys
@@ -464,20 +463,13 @@ def set_config(
         version, config):
     # [START iot_set_device_config]
     print('Set device configuration')
-    client = get_client(service_account_json)
-    device_path = 'projects/{}/locations/{}/registries/{}/devices/{}'.format(
-            project_id, cloud_region, registry_id, device_id)
+    client = iot_v1.DeviceManagerClient()
+    device_path = client.device_path(
+        project_id, cloud_region, registry_id, device_id)
 
-    config_body = {
-        'versionToUpdate': version,
-        'binaryData': base64.urlsafe_b64encode(
-                config.encode('utf-8')).decode('ascii')
-    }
+    data = config.encode('utf-8')
 
-    return client.projects(
-        ).locations().registries(
-        ).devices().modifyCloudToDeviceConfig(
-        name=device_path, body=config_body).execute()
+    return client.modify_cloud_to_device_config(device_path, data, version)
     # [END iot_set_device_config]
 
 
@@ -486,21 +478,17 @@ def get_config_versions(
         device_id):
     """Lists versions of a device config in descending order (newest first)."""
     # [START iot_get_device_configs]
-    client = get_client(service_account_json)
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-        project_id, cloud_region, registry_id)
+    client = iot_v1.DeviceManagerClient()
+    device_path = client.device_path(
+        project_id, cloud_region, registry_id, device_id)
 
-    device_name = '{}/devices/{}'.format(registry_name, device_id)
-    devices = client.projects().locations().registries().devices()
-    configs = devices.configVersions().list(
-        name=device_name).execute().get(
-        'deviceConfigs', [])
+    configs = client.list_device_config_versions(device_path)
 
-    for config in configs:
-        print('version: {}\n\tcloudUpdateTime: {}\n\t binaryData: {}'.format(
-            config.get('version'),
-            config.get('cloudUpdateTime'),
-            config.get('binaryData')))
+    for config in configs.device_configs:
+        print('version: {}\n\tcloudUpdateTime: {}\n\t data: {}'.format(
+            config.version,
+            config.cloud_update_time,
+            config.binary_data))
 
     return configs
     # [END iot_get_device_configs]
@@ -546,19 +534,13 @@ def send_command(
     """Send a command to a device."""
     # [START iot_send_command]
     print('Sending command to device')
-    client = get_client(service_account_json)
-    device_path = 'projects/{}/locations/{}/registries/{}/devices/{}'.format(
-            project_id, cloud_region, registry_id, device_id)
+    client = iot_v1.DeviceManagerClient()
+    device_path = client.device_path(
+        project_id, cloud_region, registry_id, device_id)
 
-    config_body = {
-        'binaryData': base64.urlsafe_b64encode(
-                command.encode('utf-8')).decode('ascii')
-    }
+    data = command.encode('utf-8')
 
-    return client.projects(
-        ).locations().registries(
-        ).devices().sendCommandToDevice(
-        name=device_path, body=config_body).execute()
+    return client.send_command_to_device(device_path, data)
     # [END iot_send_command]
 
 
@@ -578,10 +560,10 @@ def create_gateway(
         if device.id == gateway_id:
             exists = True
         print('Device: {} : {} : {} : {}'.format(
-            device.get('id'),
-            device.get('numId'),
-            device.get('config'),
-            device.get('gatewayConfig')
+            device.id,
+            device.num_id,
+            device.config,
+            device.gateway_config
             ))
 
     with io.open(certificate_file) as f:
@@ -759,7 +741,8 @@ def parse_command_line_args():
             help='Path to service account json file.')
     parser.add_argument(
             '--version',
-            default=None,
+            default=0,
+            type=int,
             help='Version number for setting device configuration.')
 
     # Command subparser
@@ -841,7 +824,7 @@ def run_get(args):
                 args.cloud_region, args.registry_id, args.device_id)
 
     elif args.command == 'get-config-versions':
-        get_device(
+        get_config_versions(
                 args.service_account_json, args.project_id,
                 args.cloud_region, args.registry_id, args.device_id)
 
