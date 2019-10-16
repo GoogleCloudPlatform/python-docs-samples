@@ -22,7 +22,7 @@
 # sample-metadata
 #   title: Batch Translate with Model
 #   description: Batch translate text using AutoML Translation model
-#   usage: python3 translate_v3_batch_translate_text_with_model.py [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project "[Google Cloud Project ID]"] [--location "us-central1"] [--target_language en] [--source_language de] [--model_path "projects/{project-id}/locations/{location-id}/models/{your-model-id}"]
+#   usage: python3 translate_v3_batch_translate_text_with_model.py [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project "[Google Cloud Project ID]"] [--location "us-central1"] [--target_language en] [--source_language de] [--model_id "{your-model-id}"]
 
 # [START translate_v3_batch_translate_text_with_model]
 from google.cloud import translate_v3
@@ -35,7 +35,7 @@ def sample_batch_translate_text(
     location,
     target_language,
     source_language,
-    model_id,
+    model_id
 ):
     """
     Batch translate text using AutoML Translation model
@@ -106,7 +106,7 @@ def main():
     parser.add_argument(
         "--model_id",
         type=str,
-        default="projects/{project-id}/locations/{location-id}/models/{your-model-id}",
+        default="projects/{project-id}/locations/{location-id}/models/{your-model-id}"
     )
     args = parser.parse_args()
 
@@ -117,7 +117,7 @@ def main():
         args.location,
         args.target_language,
         args.source_language,
-        args.model_id,
+        args.model_id
     )
 
 
