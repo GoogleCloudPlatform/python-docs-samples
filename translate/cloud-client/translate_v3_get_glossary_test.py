@@ -26,7 +26,7 @@ GLOSSARY_INPUT_URI = 'gs://cloud-samples-data/translation/glossary.csv'
 def glossary():
     """Get the ID of a glossary available to session (do not mutate/delete)."""
     glossary_id = 'must-start-with-letters-' + str(uuid.uuid1())
-    translate_v3_create_glossary.sample_create_glossary(PROJECT_ID, 'en', 'es', GLOSSARY_INPUT_URI, glossary_id)
+    translate_v3_create_glossary.sample_create_glossary(PROJECT_ID, GLOSSARY_INPUT_URI, glossary_id)
 
     yield glossary_id
 

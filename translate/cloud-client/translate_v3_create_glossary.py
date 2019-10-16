@@ -42,7 +42,7 @@ def sample_create_glossary(project_id, input_uri, glossary_id):
         location,
         glossary_id)
     language_codes_set = translate.types.Glossary.LanguageCodesSet(
-        language_codes=['en', 'ja'])
+        language_codes=['en', 'es'])
 
     gcs_source = translate.types.GcsSource(
        input_uri=input_uri)

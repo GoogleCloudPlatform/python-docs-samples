@@ -42,4 +42,3 @@ def test_batch_translate_text(capsys, bucket):
         )
     out, _ = capsys.readouterr()
     assert 'Total Characters: 13' in out
-    assert 'Translated Characters: 13' in out
