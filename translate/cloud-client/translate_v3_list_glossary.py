@@ -32,6 +32,7 @@ def sample_list_glossaries(project_id):
 
     client = translate_v3.TranslationServiceClient()
 
+    # TODO(developer): Uncomment and set the following variables
     # project_id = '[Google Cloud Project ID]'
     parent = client.location_path(project_id, "us-central1")
 

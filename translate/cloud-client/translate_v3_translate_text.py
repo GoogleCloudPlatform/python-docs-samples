@@ -39,6 +39,7 @@ def sample_translate_text(text, target_language, project_id):
 
     client = translate_v3.TranslationServiceClient()
 
+    # TODO(developer): Uncomment and set the following variables
     # text = 'Text you wish to translate'
     # target_language = 'fr'
     # project_id = '[Google Cloud Project ID]'

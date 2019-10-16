@@ -34,6 +34,7 @@ def sample_batch_translate_text(
 
     client = translate_v3.TranslationServiceClient()
 
+    # TODO(developer): Uncomment and set the following variables
     # input_uri = 'gs://cloud-samples-data/text.txt'
     # output_uri = 'gs://YOUR_BUCKET_ID/path_to_store_results/'
     # project_id = '[Google Cloud Project ID]'
@@ -61,7 +62,6 @@ def sample_batch_translate_text(
     print(u"Waiting for operation to complete...")
     response = operation.result(90)
 
-    # Display the translation for each input text provided
     print(u"Total Characters: {}".format(response.total_characters))
     print(u"Translated Characters: {}".format(response.translated_characters))
 

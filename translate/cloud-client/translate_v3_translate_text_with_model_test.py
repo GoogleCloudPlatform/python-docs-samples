@@ -21,7 +21,7 @@ PROJECT_ID = os.environ['GCLOUD_PROJECT']
 MODEL_ID = os.environ['AUTOML_TRANSLATION_MODEL_ID']
 
 def test_translate_text_with_model(capsys):
-    translate_v3_translate_text_with_model.sample_translate_text(
+    translate_v3_translate_text_with_model.sample_translate_text_with_model(
         MODEL_ID,
         "That' il do it.",
         "ja",

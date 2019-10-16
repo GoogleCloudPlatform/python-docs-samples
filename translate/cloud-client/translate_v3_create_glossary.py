@@ -41,6 +41,7 @@ def sample_create_glossary(project_id, source_lang_code, target_lang_code, input
 
     client = translate.TranslationServiceClient()
 
+    # TODO(developer): Uncomment and set the following variables
     # project_id = 'YOUR_PROJECT_ID'
     # glossary_id = 'glossary-id'
     location = 'us-central1'  # The location of the glossary

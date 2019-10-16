@@ -38,11 +38,16 @@ def sample_detect_language(text, project_id):
 
     client = translate_v3.TranslationServiceClient()
 
+    # TODO(developer): Uncomment and set the following variables
     # text = 'Hello, world!'
     # project_id = '[Google Cloud project_id ID]'
     parent = client.location_path(project_id, "global")
 
-    response = client.detect_language(content=text, parent=parent)
+    response = client.detect_language(
+        content=text,
+        parent=parent,
+        mime_type='text/plain'  # mime types: text/plain, text/html
+        )
     # Display list of detected languages sorted by detection confidence.
     # The most probable language is first.
     for language in response.languages:

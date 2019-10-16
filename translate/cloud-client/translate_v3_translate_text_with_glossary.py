@@ -27,7 +27,7 @@
 # [START translate_v3_translate_text_with_glossary]
 from google.cloud import translate_v3 as translate
 
-def sample_translate_text(
+def sample_translate_text_with_glossary(
     text, source_language, target_language, project_id, glossary_id
 ):
     """
@@ -42,6 +42,7 @@ def sample_translate_text(
 
     client = translate.TranslationServiceClient()
 
+    # TODO(developer): Uncomment and set the following variables
     # text = 'Hello, world!'
     # source_language = 'en'
     # target_language = 'fr'
@@ -64,6 +65,7 @@ def sample_translate_text(
         source_language_code=source_language,
         parent=parent,
         glossary_config=glossary_config,
+        mime_type='text/plain'  # mime types: text/plain, text/html
     )
 
     for translation in response.glossary_translations:

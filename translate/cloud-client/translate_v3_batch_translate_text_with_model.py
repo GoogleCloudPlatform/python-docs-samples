@@ -28,7 +28,7 @@
 from google.cloud import translate_v3
 
 
-def sample_batch_translate_text(
+def sample_batch_translate_text_with_model(
     input_uri,
     output_uri,
     project_id,
@@ -49,6 +49,7 @@ def sample_batch_translate_text(
 
     client = translate_v3.TranslationServiceClient()
 
+    # TODO(developer): Uncomment and set the following variables
     # input_uri = 'gs://cloud-samples-data/text.txt'
     # output_uri = 'gs://YOUR_BUCKET_ID/path_to_store_results/'
     # project = '[Google Cloud Project ID]'

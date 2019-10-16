@@ -32,6 +32,7 @@ def sample_get_glossary(project_id, glossary_id):
 
     client = translate_v3.TranslationServiceClient()
 
+    # TODO(developer): Uncomment and set the following variables
     # project = '[Google Cloud Project ID]'
     # glossary_id = '[Glossary ID]'
     name = client.glossary_path(project_id, "us-central1", glossary_id)

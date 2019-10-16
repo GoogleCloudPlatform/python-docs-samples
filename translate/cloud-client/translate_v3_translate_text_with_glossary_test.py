@@ -36,7 +36,7 @@ def glossary():
         pass
 
 def test_translate_text_with_glossary(capsys, glossary):
-    translate_v3_translate_text_with_glossary.sample_translate_text(
+    translate_v3_translate_text_with_glossary.sample_translate_text_with_glossary(
             'account', 'en', 'es', PROJECT_ID, glossary)
     out, _ = capsys.readouterr()
     assert 'cuenta' in out

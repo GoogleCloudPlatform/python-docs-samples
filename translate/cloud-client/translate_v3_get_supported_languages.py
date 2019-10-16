@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample ("Request",  "translate_v3_list_codes")
+# DO NOT EDIT! This is a generated sample ("Request",  "translate_v3_get_supported_languages")
 
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-translate
@@ -22,9 +22,9 @@
 # sample-metadata
 #   title: List Supported Language Codes
 #   description: Getting a list of supported language codes
-#   usage: python3 translate_v3_list_codes.py [--project_id "[Google Cloud Project ID]"]
+#   usage: python3 translate_v3_get_supported_languages.py [--project_id "[Google Cloud Project ID]"]
 
-# [START translate_v3_list_codes]
+# [START translate_v3_get_supported_languages]
 from google.cloud import translate_v3
 
 def sample_get_supported_languages(project_id):
@@ -32,6 +32,7 @@ def sample_get_supported_languages(project_id):
 
     client = translate_v3.TranslationServiceClient()
 
+    # TODO(developer): Uncomment and set the following variables
     # project = '[Google Cloud Project ID]'
     parent = client.location_path(project_id, "global")
 
@@ -43,7 +44,7 @@ def sample_get_supported_languages(project_id):
         print(u"Language Code: {}".format(language.language_code))
 
 
-# [END translate_v3_list_codes]
+# [END translate_v3_get_supported_languages]
 
 
 def main():

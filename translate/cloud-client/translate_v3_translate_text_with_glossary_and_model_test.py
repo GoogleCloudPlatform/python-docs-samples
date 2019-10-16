@@ -37,7 +37,7 @@ def glossary():
         pass
 
 def test_translate_text_with_glossary_and_model(capsys, glossary):
-    translate_v3_translate_text_with_glossary_and_model.sample_translate_text(
+    translate_v3_translate_text_with_glossary_and_model.sample_translate_text_glossary_and_model(
         MODEL_ID,
         glossary,
         "That' il do it. deception",

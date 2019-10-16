@@ -31,6 +31,7 @@ def sample_delete_glossary(project_id, glossary_id):
     """Delete Glossary"""
     client = translate.TranslationServiceClient()
 
+    # TODO(developer): Uncomment and set the following variables
     # project_id = 'YOUR_PROJECT_ID'
     # glossary_id = 'GLOSSARY_ID'
 

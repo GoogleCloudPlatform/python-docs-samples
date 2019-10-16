@@ -28,7 +28,7 @@
 from google.cloud import translate_v3
 
 
-def sample_translate_text(
+def sample_translate_text_with_model(
     model_id, text, target_language, source_language, project_id, location
 ):
     """
@@ -43,6 +43,7 @@ def sample_translate_text(
 
     client = translate_v3.TranslationServiceClient()
 
+    # TODO(developer): Uncomment and set the following variables
     # model_id = '[MODEL ID]'
     # text = 'Hello, world!'
     # target_language = 'fr'
@@ -58,6 +59,7 @@ def sample_translate_text(
         model=model_path,
         source_language_code=source_language,
         parent=parent,
+        mime_type='text/plain'  # mime types: text/plain, text/html
     )
     # Display the translation for each input text provided
     for translation in response.translations:
