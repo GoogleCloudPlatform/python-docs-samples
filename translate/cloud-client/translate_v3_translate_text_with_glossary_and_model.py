@@ -102,7 +102,7 @@ def main():
     parser.add_argument("--location", type=str, default="global")
     args = parser.parse_args()
 
-    sample_translate_text(
+    sample_translate_text_glossary_and_model(
         args.model_id,
         args.glossary_id,
         args.text,

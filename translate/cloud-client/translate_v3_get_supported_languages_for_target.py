@@ -64,7 +64,7 @@ def main():
     parser.add_argument("--project_id", type=str, default="[Google Cloud Project ID]")
     args = parser.parse_args()
 
-    sample_get_supported_languages(args.language_code, args.project_id)
+    sample_get_supported_languages_with_target(args.language_code, args.project_id)
 
 
 if __name__ == "__main__":

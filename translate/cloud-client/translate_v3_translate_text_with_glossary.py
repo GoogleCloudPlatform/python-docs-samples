@@ -89,7 +89,7 @@ def main():
     )
     args = parser.parse_args()
 
-    sample_translate_text(
+    sample_translate_text_with_glossary(
         args.text,
         args.source_language,
         args.target_language,

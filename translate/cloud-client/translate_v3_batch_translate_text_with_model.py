@@ -111,7 +111,7 @@ def main():
     )
     args = parser.parse_args()
 
-    sample_batch_translate_text(
+    sample_batch_translate_text_with_model(
         args.input_uri,
         args.output_uri,
         args.project_id,

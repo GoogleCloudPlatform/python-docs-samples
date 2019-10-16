@@ -22,28 +22,19 @@
 # sample-metadata
 #   title: Create Glossary
 #   description: Create Glossary
-#   usage: python3 translate_v3_create_glossary.py [--project "[Google Cloud Project ID]"] [--project_2 "[Your Google Cloud Project ID]"] [--glossary_id "my_glossary_id_123"]
+#   usage: python3 translate_v3_create_glossary.py [--project "[Google Cloud Project ID]"] [--glossary_id "my_glossary_id_123"]
 
 # [START translate_v3_create_glossary]
 from google.cloud import translate_v3 as translate
 
-def sample_create_glossary(project_id, source_lang_code, target_lang_code, input_uri, glossary_id):
-    """
-    Create Glossary
-
-    Args:
-      glossary_id USEFUL DESCRIPTION
-      This needs to inform the developer what value
-      they should provide to glossary_id.
-      It might even want to make a distinction between
-      the full `name` and the `glossary-id`
-    """
-
+def sample_create_glossary(project_id, input_uri, glossary_id):
+    """Create Glossary"""
     client = translate.TranslationServiceClient()
 
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'YOUR_PROJECT_ID'
     # glossary_id = 'glossary-id'
+    # input_uri = 'gs://translation_samples_beta/glossaries/glossary.csv'
     location = 'us-central1'  # The location of the glossary
 
     name = client.glossary_path(
@@ -51,7 +42,7 @@ def sample_create_glossary(project_id, source_lang_code, target_lang_code, input
         location,
         glossary_id)
     language_codes_set = translate.types.Glossary.LanguageCodesSet(
-        language_codes=[source_lang_code, target_lang_code])
+        language_codes=['en', 'ja'])
 
     gcs_source = translate.types.GcsSource(
        input_uri=input_uri)
@@ -79,19 +70,12 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--project", type=str, default="[Google Cloud Project ID]")
-    parser.add_argument(
-        "--project_2", type=str, default="[Your Google Cloud Project ID]"
-    )
+    parser.add_argument("--project_id", type=str, default="[Google Cloud Project ID]")
     parser.add_argument("--glossary_id", type=str, default="my_glossary_id_123")
-    parser.add_argument('--project_id')
-    parser.add_argument('--source_lang_code', type=str, default="en")
-    parser.add_argument('--target_lang_code', type=str, default="es")
     parser.add_argument('--input_uri')
     args = parser.parse_args()
 
-    sample_create_glossary(args.project_id, args.source_lang_code, args.target_lang_code, 
-    args.input_uri, args.glossary_id)
+    sample_create_glossary(args.project_id, args.input_uri, args.glossary_id)
 
 
 if __name__ == "__main__":
