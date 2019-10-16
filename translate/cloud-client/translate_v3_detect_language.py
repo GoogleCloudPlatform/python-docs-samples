@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample ("Request",  "translate_detect_language")
+# DO NOT EDIT! This is a generated sample ("Request",  "translate_v3_detect_language")
 
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-translate
@@ -22,9 +22,9 @@
 # sample-metadata
 #   title: Detect Language
 #   description: Detecting the language of a text string
-#   usage: python3 translate_detect_language.py [--text "Hello, world!"] [--project_id "[Google Cloud project_id ID]"]
+#   usage: python3 translate_v3_detect_language.py [--text "Hello, world!"] [--project_id "[Google Cloud project_id ID]"]
 
-# [START translate_detect_language]
+# [START translate_v3_detect_language]
 from google.cloud import translate_v3
 
 
@@ -52,7 +52,7 @@ def sample_detect_language(text, project_id):
         print(u"Confidence: {}".format(language.confidence))
 
 
-# [END translate_detect_language]
+# [END translate_v3_detect_language]
 
 
 def main():

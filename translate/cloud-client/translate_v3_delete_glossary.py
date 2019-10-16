@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample ("LongRunningPromise",  "translate_delete_glossary")
+# DO NOT EDIT! This is a generated sample ("LongRunningPromise",  "translate_v3_delete_glossary")
 
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-translate
@@ -22,9 +22,9 @@
 # sample-metadata
 #   title: Delete Glossary
 #   description: Delete Glossary
-#   usage: python3 translate_delete_glossary.py [--project_id "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
+#   usage: python3 translate_v3_delete_glossary.py [--project_id "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
 
-# [START translate_delete_glossary]
+# [START translate_v3_delete_glossary]
 from google.cloud import translate_v3 as translate
 
 def sample_delete_glossary(project_id, glossary_id):
@@ -43,7 +43,7 @@ def sample_delete_glossary(project_id, glossary_id):
     result = operation.result(timeout=90)
     print('Deleted: {}'.format(result.name))
 
-# [END translate_delete_glossary]
+# [END translate_v3_delete_glossary]
 
 
 def main():
