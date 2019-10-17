@@ -42,7 +42,7 @@ def create_dataset(project_id, display_name):
 
     # Display the dataset information
     print('Dataset name: {}'.format(created_dataset.name))
-    print('Dataset id: {}'.format(created_dataset.name.split("/")[-1]))
+    print('Dataset id: {}'.format(created_dataset.name.split('/')[-1]))
     print('Dataset display name: {}'.format(created_dataset.display_name))
     print('Translation dataset Metadata:')
     print(

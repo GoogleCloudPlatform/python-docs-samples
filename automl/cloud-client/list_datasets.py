@@ -17,7 +17,7 @@
 
 def list_datasets(project_id):
     """List datasets."""
-    # [START automl_translate_list_dataset]
+    # [START automl_translate_list_datasets]
     from google.cloud import automl
 
     # TODO(developer): Uncomment and set the following variables
@@ -50,4 +50,4 @@ def list_datasets(project_id):
                 dataset.translation_dataset_metadata.target_language_code
             )
         )
-    # [END automl_translate_list_dataset]
+    # [END automl_translate_list_datasets]

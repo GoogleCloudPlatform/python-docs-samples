@@ -84,7 +84,9 @@ def test_delete_model(capsys):
     # As model creation can take many hours, instead try to delete a
     # nonexistent model and confirm that the model was not found, but other
     # elements of the request were valid.
-    delete_model.delete_model(project_id, 'TRL0000000000000000000')
-    out, _ = capsys.readouterr()
-    assert 'status = StatusCode.NOT_FOUND' in out
-    assert 'details = "The model does not exist."' in out
+    try:
+        delete_model.delete_model(project_id, 'TRL0000000000000000000')
+        out, _ = capsys.readouterr()
+        assert 'The model does not exist' in out
+    except Exception as e:
+        assert 'The model does not exist' in e.message

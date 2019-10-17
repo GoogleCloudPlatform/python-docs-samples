@@ -17,7 +17,7 @@
 
 def list_models(project_id):
     """List models."""
-    # [START automl_list_model]
+    # [START automl_list_models]
     from google.cloud import automl
 
     # TODO(developer): Uncomment and set the following variables
@@ -44,4 +44,4 @@ def list_models(project_id):
         print('\tseconds: {}'.format(model.create_time.seconds))
         print('\tnanos: {}'.format(model.create_time.nanos))
         print('Model deployment state: {}'.format(deployment_state))
-    # [END automl_list_model]
+    # [END automl_list_models]

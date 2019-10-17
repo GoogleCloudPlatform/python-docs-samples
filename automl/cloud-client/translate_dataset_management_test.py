@@ -26,42 +26,42 @@ import list_datasets
 import get_dataset
 import export_dataset
 
-project_id = os.environ["GCLOUD_PROJECT"]
+project_id = os.environ['GCLOUD_PROJECT']
 dataset_id = 'TRL3876092572857648864'
 
 
 @pytest.mark.slow
 def test_create_import_delete_dataset(capsys):
     # create dataset
-    dataset_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    dataset_name = 'test_' + datetime.datetime.now().strftime('%Y%m%d%H%M%S')
     translate_create_dataset.create_dataset(project_id, dataset_name)
     out, _ = capsys.readouterr()
-    assert "Dataset id: " in out
+    assert 'Dataset id: ' in out
 
     # import data
     dataset_id = out.splitlines()[1].split()[2]
-    data = "gs://{}-vcm/en-ja.csv".format(project_id)
+    data = 'gs://{}-vcm/en-ja.csv'.format(project_id)
     import_dataset.import_dataset(project_id, dataset_id, data)
     out, _ = capsys.readouterr()
-    assert "Data imported." in out
+    assert 'Data imported.' in out
 
     # delete dataset
     delete_dataset.delete_dataset(project_id, dataset_id)
     out, _ = capsys.readouterr()
-    assert "Dataset deleted." in out
+    assert 'Dataset deleted.' in out
 
 
 def test_list_dataset(capsys):
     # list datasets
     list_datasets.list_datasets(project_id)
     out, _ = capsys.readouterr()
-    assert "Dataset id: " in out
+    assert 'Dataset id: ' in out
 
 
 def test_get_dataset(capsys):
     get_dataset.get_dataset(project_id, dataset_id)
     out, _ = capsys.readouterr()
-    assert "Dataset name: " in out
+    assert 'Dataset name: ' in out
 
 
 def test_export_dataset(capsys):
@@ -71,7 +71,7 @@ def test_export_dataset(capsys):
         'gs://{}-vcm/TEST_EXPORT_OUTPUT/'.format(project_id))
 
     out, _ = capsys.readouterr()
-    assert "Dataset exported" in out
+    assert 'Dataset exported' in out
 
     from google.cloud import storage
     storage_client = storage.Client()

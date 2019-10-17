@@ -17,7 +17,7 @@
 
 def list_model_evaluations(project_id, model_id):
     """List model evaluations."""
-    # [START automl_list_model_evaluation]
+    # [START automl_list_model_evaluations]
     from google.cloud import automl
 
     # TODO(developer): Uncomment and set the following variables
@@ -41,4 +41,4 @@ def list_model_evaluations(project_id, model_id):
             evaluation.evaluated_example_count))
         print('Model evaluation metrics: {}'.format(
             evaluation.translation_evaluation_metrics))
-    # [END automl_list_model_evaluation]
+    # [END automl_list_model_evaluations]
