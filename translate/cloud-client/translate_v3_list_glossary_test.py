@@ -20,7 +20,7 @@ import translate_v3_list_glossary
 import uuid
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
-GLOSSARY_INPUT_URI = 'gs://cloud-samples-data/translation/glossary.csv'
+GLOSSARY_INPUT_URI = 'gs://cloud-samples-data/translation/glossary_ja.csv'
 
 
 @pytest.fixture(scope='session')
@@ -40,4 +40,4 @@ def test_list_glossary(capsys, glossary):
     translate_v3_list_glossary.sample_list_glossaries(PROJECT_ID)
     out, _ = capsys.readouterr()
     assert glossary in out
-    assert 'gs://cloud-samples-data/translation/glossary.csv' in out
+    assert 'gs://cloud-samples-data/translation/glossary_ja.csv' in out

@@ -21,13 +21,14 @@ import pytest
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 MODEL_ID = os.environ['AUTOML_TRANSLATION_MODEL_ID']
+GLOSSARY_INPUT_URI = 'gs://cloud-samples-data/translation/glossary_ja.csv'
 
 #setup and teardown
 @pytest.fixture(scope='session')
 def glossary():
     """Get the ID of a glossary available to session (do not mutate/delete)."""
     glossary_id = 'must-start-with-letters-' + str(uuid.uuid1())
-    translate_v3_create_glossary.sample_create_glossary(PROJECT_ID, 'gs://translation_samples_beta/glossaries/glossary.csv', glossary_id)
+    translate_v3_create_glossary.sample_create_glossary(PROJECT_ID, GLOSSARY_INPUT_URI, glossary_id)
 
     yield glossary_id
 

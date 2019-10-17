@@ -20,7 +20,7 @@ import uuid
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 MODEL_ID = os.environ['AUTOML_TRANSLATION_MODEL_ID']
-GLOSSARY_INPUT_URI = 'gs://cloud-samples-data/translation/glossary.csv'
+GLOSSARY_INPUT_URI = 'gs://cloud-samples-data/translation/glossary_ja.csv'
 
 @pytest.fixture(scope='function')
 def unique_glossary_id():
@@ -39,7 +39,7 @@ def test_create_glossary(capsys, unique_glossary_id):
     out, _ = capsys.readouterr()
     assert 'Created' in out
     assert unique_glossary_id in out
-    assert 'gs://cloud-samples-data/translation/glossary.csv' in out
+    assert 'gs://cloud-samples-data/translation/glossary_ja.csv' in out
 
 def test_delete_glossary(capsys, unique_glossary_id):
     translate_v3_create_glossary.sample_create_glossary(PROJECT_ID, GLOSSARY_INPUT_URI, unique_glossary_id)
