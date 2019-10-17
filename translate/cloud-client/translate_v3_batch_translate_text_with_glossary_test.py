@@ -13,17 +13,16 @@
 # limitations under the License.
 
 import os
+import pytest
 import uuid
+import translate_v3_batch_translate_text_with_glossary
 import translate_v3_create_glossary
 import translate_v3_delete_glossary
-import translate_v3_translate_text_with_glossary_and_model
-import pytest
+from google.cloud import storage
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
-MODEL_ID = os.environ['AUTOML_TRANSLATION_MODEL_ID']
 GLOSSARY_INPUT_URI = 'gs://cloud-samples-data/translation/glossary_ja.csv'
 
-#setup and teardown
 @pytest.fixture(scope='session')
 def glossary():
     """Get the ID of a glossary available to session (do not mutate/delete)."""
@@ -36,16 +35,28 @@ def glossary():
         translate_v3_delete_glossary.sample_delete_glossary(PROJECT_ID, glossary_id)
     except Exception:
         pass
+        
+@pytest.fixture(scope='function')
+def bucket():
+    """Create a temporary bucket to store annotation output."""
+    bucket_name = str(uuid.uuid1())
+    storage_client = storage.Client()
+    bucket = storage_client.create_bucket(bucket_name)
 
-def test_translate_text_with_glossary_and_model(capsys, glossary):
-    translate_v3_translate_text_with_glossary_and_model.sample_translate_text_glossary_and_model(
-        MODEL_ID,
-        glossary,
-        "That' il do it. deception",
-        "ja",
-        "en",
+    yield bucket
+
+    bucket.delete(force=True)
+
+def test_batch_translate_text_with_glossary(capsys, bucket, glossary):
+    translate_v3_batch_translate_text_with_glossary.sample_batch_translate_text_with_glossary(
+        'gs://cloud-samples-data/translation/text_with_glossary.txt',
+        'gs://{}/translation/BATCH_TRANSLATION_OUTPUT/'.format(bucket.name),
         PROJECT_ID,
-        "us-central1")
+        'us-central1',
+        'en',
+        'ja',
+        glossary
+        )
+    
     out, _ = capsys.readouterr()
-    assert 'それはそうだ' in out # custom model
-    assert '欺く' in out # glossary
+    assert 'Total Characters: 9' in out
