@@ -19,7 +19,7 @@ import translate_v3_delete_glossary
 import translate_v3_translate_text_with_glossary_and_model
 import pytest
 
-PROJECT_ID = os.environ['GOOGLE_PROJECT_ID']
+PROJECT_ID = os.environ['GCLOUD_PROJECT']
 MODEL_ID = os.environ['AUTOML_TRANSLATION_MODEL_ID']
 
 #setup and teardown
