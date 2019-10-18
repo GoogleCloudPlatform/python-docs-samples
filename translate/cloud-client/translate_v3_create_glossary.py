@@ -34,7 +34,7 @@ def sample_create_glossary(project_id, input_uri, glossary_id):
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'YOUR_PROJECT_ID'
     # glossary_id = 'glossary-id'
-    # input_uri = 'gs://translation_samples_beta/glossaries/glossary.csv'
+    # input_uri = 'gs://cloud-samples-data/translation/glossary.csv'
     location = 'us-central1'  # The location of the glossary
 
     name = client.glossary_path(
