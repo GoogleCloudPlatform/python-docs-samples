@@ -24,7 +24,7 @@ DB_PASSWORD = getenv('MYSQL_PASSWORD', '<YOUR DB PASSWORD>')
 DB_NAME = getenv('MYSQL_DATABASE', '<YOUR DB NAME>')
 
 # set to true to test locally using Cloud SQL proxy listening on a TCP port
-DEBUG = False 
+DEBUG = False
 
 mysql_config = {
   'user': DB_USER,
@@ -59,7 +59,7 @@ def mysql_demo(request):
     # which helps keep your GCF instances under SQL connection limits.
     if not mysql_conn:
         if DEBUG:
-            # try to connect using localling running Cloud SQL proxy 
+            # try to connect using localling running Cloud SQL proxy
             # (local development only)
             mysql_conn = pymysql.connect(
               **mysql_config, host='127.0.0.1', port=3306)
