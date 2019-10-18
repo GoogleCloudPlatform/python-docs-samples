@@ -219,6 +219,10 @@ def test_add_config_unauth_device(test_topic, capsys):
             service_account_json, project_id, cloud_region, registry_id,
             device_id)
 
+    manager.get_config_versions(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id)
+
     manager.delete_device(
             service_account_json, project_id, cloud_region, registry_id,
             device_id)
@@ -369,7 +373,7 @@ def test_send_command(test_topic, capsys):
     devices = manager.list_devices(
             service_account_json, project_id, cloud_region, registry_id)
     for device in devices:
-        if device.get('id') == device_id:
+        if device.id == device_id:
             exists = True
 
     if not exists:
