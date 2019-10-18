@@ -19,7 +19,7 @@ import translate_v3_batch_translate_text_with_model
 from google.cloud import storage
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
-MODEL_ID = os.environ['AUTOML_TRANSLATION_MODEL_ID']
+MODEL_ID = 'TRL3876092572857648864'
 
 @pytest.fixture(scope='function')
 def bucket():

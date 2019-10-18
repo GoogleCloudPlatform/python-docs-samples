@@ -18,7 +18,7 @@ import uuid
 import translate_v3_translate_text_with_model
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
-MODEL_ID = os.environ['AUTOML_TRANSLATION_MODEL_ID']
+MODEL_ID = 'TRL3128559826197068699'
 
 def test_translate_text_with_model(capsys):
     translate_v3_translate_text_with_model.sample_translate_text_with_model(
@@ -29,4 +29,4 @@ def test_translate_text_with_model(capsys):
         PROJECT_ID,
         "us-central1")
     out, _ = capsys.readouterr()
-    assert 'それはそうだ' in out
+    assert 'それはそうだ' or 'それじゃあ' in out

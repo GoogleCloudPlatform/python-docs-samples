@@ -19,7 +19,6 @@ import translate_v3_delete_glossary
 import uuid
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
-MODEL_ID = os.environ['AUTOML_TRANSLATION_MODEL_ID']
 GLOSSARY_INPUT_URI = 'gs://cloud-samples-data/translation/glossary_ja.csv'
 
 @pytest.fixture(scope='function')

@@ -20,7 +20,7 @@ import translate_v3_translate_text_with_glossary_and_model
 import pytest
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
-MODEL_ID = os.environ['AUTOML_TRANSLATION_MODEL_ID']
+MODEL_ID = 'TRL3128559826197068699'
 GLOSSARY_INPUT_URI = 'gs://cloud-samples-data/translation/glossary_ja.csv'
 
 #setup and teardown
@@ -47,5 +47,5 @@ def test_translate_text_with_glossary_and_model(capsys, glossary):
         PROJECT_ID,
         "us-central1")
     out, _ = capsys.readouterr()
-    assert 'それはそうだ' in out # custom model
+    assert 'それはそうだ' or 'それじゃあ' in out # custom model
     assert '欺く' in out # glossary

@@ -22,7 +22,7 @@ from google.cloud import storage
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 GLOSSARY_INPUT_URI = 'gs://cloud-samples-data/translation/glossary_ja.csv'
-MODEL_ID = os.environ['AUTOML_TRANSLATION_MODEL_ID']
+MODEL_ID = 'TRL3128559826197068699'
 
 @pytest.fixture(scope='session')
 def glossary():
