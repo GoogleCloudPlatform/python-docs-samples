@@ -19,7 +19,8 @@ import argparse
 
 # [START document_parse_key_value]
 def parse_key_value_gcs(project_id, gcs_source_uri, gcs_destination_uri):
-    """Parse key-value pairs with PDF/TIFF as source files on Google Cloud Storage."""
+    """Parse key-value pairs with PDF/TIFF as source files
+    on Google Cloud Storage."""
     import re
     from google.cloud import documentai
     from google.cloud.documentai import types
@@ -29,24 +30,28 @@ def parse_key_value_gcs(project_id, gcs_source_uri, gcs_destination_uri):
     client = documentai.DocumentUnderstandingServiceClient()
 
     gcs_source = types.GcsSource(uri=gcs_source_uri)
-    input_config = types.InputConfig(gcs_source=gcs_source, mime_type='application/pdf')
+    input_config = types.InputConfig(
+        gcs_source=gcs_source, mime_type='application/pdf')
 
     # How many pages should be grouped into each json output file.
     pages_per_shard = 1
     gcs_destination = types.GcsDestination(uri=gcs_destination_uri)
-    output_config = types.OutputConfig(gcs_destination=gcs_destination, pages_per_shard=pages_per_shard)
+    output_config = types.OutputConfig(
+        gcs_destination=gcs_destination, pages_per_shard=pages_per_shard)
 
     # Provide key-value pair hints.
     # For each key hint, key is some text that is likely to appear in the
-    # document as key, value types are optional, but can be one or more of DATE,
-    # LOCATION, ORGANIZATION, etc.
-    # Accepted value types: ADDRESS, LOCATION, ORGANIZATION, PERSON, PHONE_NUMBER, ID, NUMBER, EMAIL, PRICE, TERMS, DATE, NAME
+    # document as key, value types are optional, but can be one or more of
+    # DATE, LOCATION, ORGANIZATION, etc.
+    # Accepted value types: ADDRESS, LOCATION, ORGANIZATION, PERSON,
+    # PHONE_NUMBER, ID, NUMBER, EMAIL, PRICE, TERMS, DATE, NAME
     key_value_pair_hints = [
         types.KeyValuePairHint(key='Phone', value_types=['PHONE_NUMBER']),
         types.KeyValuePairHint(key='Contact', value_types=['EMAIL', 'NAME'])
     ]
 
-    form_extraction_params = types.FormExtractionParams(enabled=True, key_value_pair_hints=key_value_pair_hints)
+    form_extraction_params = types.FormExtractionParams(
+        enabled=True, key_value_pair_hints=key_value_pair_hints)
 
     request = types.ProcessDocumentRequest(
         input_config=input_config, output_config=output_config,
@@ -58,7 +63,7 @@ def parse_key_value_gcs(project_id, gcs_source_uri, gcs_destination_uri):
     parent = 'projects/{}'.format(project_id)
     operation = client.batch_process_documents(requests, parent=parent)
 
-    result = operation.result(timeout=60)
+    _ = operation.result(timeout=60)
 
     # After the output json files have been written to GCS we can process them.
     storage_client = storage.Client()
@@ -74,11 +79,14 @@ def parse_key_value_gcs(project_id, gcs_source_uri, gcs_destination_uri):
     for blob in blob_list:
         print(blob.name)
 
-    # Process the first output.  We specified pages_per_shard=1, so this corresponds to the data extracted from the first first page of the document.
+    # Process the first output.  We specified pages_per_shard=1,
+    # so this corresponds to the data extracted from the first page
+    # of the document.
     first_output = blob_list[0]
     json = first_output.download_as_string()
 
-    response = json_format.Parse(json, types.Document(), ignore_unknown_fields=True)
+    response = json_format.Parse(
+        json, types.Document(), ignore_unknown_fields=True)
 
     # helper function to get the extracted text from text_anchor.
     def get_text(text_anchor):
@@ -94,7 +102,8 @@ def parse_key_value_gcs(project_id, gcs_source_uri, gcs_destination_uri):
         field_name_text = get_text(field.field_name.text_anchor)
         field_value_text = get_text(field.field_value.text_anchor)
 
-        print('Extracted key-value pair: ({}, {})'.format(field_name_text, field_value_text))
+        print('Extracted key-value pair: ({}, {})'.format(
+            field_name_text, field_value_text))
 # [END document_parse_key_value]
 
 
@@ -107,4 +116,5 @@ if __name__ == '__main__':
     parser.add_argument('gcs_destination_uri')
     args = parser.parse_args()
 
-    parse_key_value_gcs(args.project_id, args.gcs_source_uri, args.gcs_destination_uri)
+    parse_key_value_gcs(
+        args.project_id, args.gcs_source_uri, args.gcs_destination_uri)

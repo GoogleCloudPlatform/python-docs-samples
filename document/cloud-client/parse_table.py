@@ -29,16 +29,20 @@ def parse_table_gcs(project_id, gcs_source_uri, gcs_destination_uri):
     client = documentai.DocumentUnderstandingServiceClient()
 
     gcs_source = types.GcsSource(uri=gcs_source_uri)
-    input_config = types.InputConfig(gcs_source=gcs_source, mime_type='application/pdf')
+    input_config = types.InputConfig(
+        gcs_source=gcs_source, mime_type='application/pdf')
 
     # How many pages should be grouped into each json output file.
     pages_per_shard = 1
     gcs_destination = types.GcsDestination(uri=gcs_destination_uri)
-    output_config = types.OutputConfig(gcs_destination=gcs_destination, pages_per_shard=pages_per_shard)
+    output_config = types.OutputConfig(
+        gcs_destination=gcs_destination, pages_per_shard=pages_per_shard)
 
-    # Provide the optional table bounding box hint for improved table detection accuracy.
+    # Provide the optional table bounding box hint for
+    # improved table detection accuracy.
     # The coordinates are normalized between 0 and 1.
-    # The vertices here are set to work with the table in gs://cloud-samples/data/documentai/fake_invoice.pdf.
+    # The vertices here are set to work with the table in
+    # gs://cloud-samples/data/documentai/fake_invoice.pdf.
     bounding_box = types.BoundingPoly(normalized_vertices=[
         types.NormalizedVertex(x=0, y=0.25),
         types.NormalizedVertex(x=1, y=0.25),
@@ -46,9 +50,11 @@ def parse_table_gcs(project_id, gcs_source_uri, gcs_destination_uri):
         types.NormalizedVertex(x=0, y=0.5)
     ])
 
-    # The hint is applied to all pages by default.  Optionally passing in a `page_number` parameter to apply the hint to specific pages.
+    # The hint is applied to all pages by default.  Optionally passing in a
+    # `page_number` parameter to apply the hint to specific pages.
     table_bound_hint = types.TableBoundHint(bounding_box=bounding_box)
-    table_extraction_params = types.TableExtractionParams(enabled=True, table_bound_hints=[table_bound_hint])
+    table_extraction_params = types.TableExtractionParams(
+        enabled=True, table_bound_hints=[table_bound_hint])
 
     request = types.ProcessDocumentRequest(
         input_config=input_config, output_config=output_config,
@@ -60,7 +66,7 @@ def parse_table_gcs(project_id, gcs_source_uri, gcs_destination_uri):
     parent = 'projects/{}'.format(project_id)
     operation = client.batch_process_documents(requests, parent=parent)
 
-    result = operation.result(timeout=60)
+    _ = operation.result(timeout=60)
 
     # After the output json files have been written to GCS we can process them.
     storage_client = storage.Client()
@@ -76,11 +82,14 @@ def parse_table_gcs(project_id, gcs_source_uri, gcs_destination_uri):
     for blob in blob_list:
         print(blob.name)
 
-    # Process the first output.  We specified pages_per_shard=1, so this corresponds to the data extracted from the first first page of the document.
+    # Process the first output.  We specified pages_per_shard=1,
+    # so this corresponds to the data extracted from the first page
+    # of the document.
     first_output = blob_list[0]
     json = first_output.download_as_string()
 
-    response = json_format.Parse(json, types.Document(), ignore_unknown_fields=True)
+    response = json_format.Parse(
+        json, types.Document(), ignore_unknown_fields=True)
 
     # helper function to get the extracted text from text_anchor.
     def get_text(text_anchor):
@@ -116,4 +125,5 @@ if __name__ == '__main__':
     parser.add_argument('gcs_destination_uri')
     args = parser.parse_args()
 
-    parse_table_gcs(args.project_id, args.gcs_source_uri, args.gcs_destination_uri)
+    parse_table_gcs(
+        args.project_id, args.gcs_source_uri, args.gcs_destination_uri)

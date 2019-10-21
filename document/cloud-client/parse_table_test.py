@@ -14,9 +14,9 @@
 import os
 import uuid
 
+from google.cloud import storage
 import pytest
 
-from google.cloud import storage
 from parse_table import parse_table_gcs
 
 
