@@ -16,7 +16,6 @@
 
 # [START pubsub_quickstart_sub_all]
 import argparse
-import time
 # [START pubsub_quickstart_sub_deps]
 from google.cloud import pubsub_v1
 # [END pubsub_quickstart_sub_deps]
@@ -34,20 +33,22 @@ def sub(project_id, subscription_name):
         project_id, subscription_name)
 
     def callback(message):
-        print('Received message {} of message ID {}'.format(
+        print('Received message {} of message ID {}\n'.format(
             message, message.message_id))
         # Acknowledge the message. Unack'ed messages will be redelivered.
         message.ack()
-        print('Acknowledged message of message ID {}\n'.format(
-            message.message_id))
+        print('Acknowledged message {}\n'.format(message.message_id))
 
-    client.subscribe(subscription_path, callback=callback)
+    streaming_pull_future = client.subscribe(
+        subscription_path, callback=callback)
     print('Listening for messages on {}..\n'.format(subscription_path))
 
-    # Keep the main thread from exiting so the subscriber can
-    # process messages in the background.
-    while True:
-        time.sleep(60)
+    # Calling result() on StreamingPullFuture keeps the main thread from
+    # exiting while messages get processed in the callbacks.
+    try:
+        streaming_pull_future.result()
+    except:  # noqa
+        streaming_pull_future.cancel()
 
 
 if __name__ == '__main__':
