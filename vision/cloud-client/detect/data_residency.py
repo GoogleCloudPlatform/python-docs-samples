@@ -19,7 +19,7 @@ def data_residency():
     # [START vision_data_residency]
     from google.cloud import vision
 
-    client_options = {'api_endpoint': 'vision.googleapis.com:443'}
+    client_options = {'api_endpoint': 'us-vision.googleapis.com:443'}
 
     client = vision.ImageAnnotatorClient(client_options=client_options)
     # [END vision_data_residency]
