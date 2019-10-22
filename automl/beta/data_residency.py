@@ -19,7 +19,7 @@ def data_residency(project_id):
     # [START automl_data_residency]
     from google.cloud import automl_v1beta1 as automl
 
-    client_options = {'api_endpoint': 'automl.googleapis.com:443'}
+    client_options = {'api_endpoint': 'us-automl.googleapis.com:443'}
 
     # Instantiates a client
     client = automl.AutoMlClient(client_options=client_options)
