@@ -20,7 +20,7 @@ def data_residency():
     # Imports the Google Cloud client library
     from google.cloud import language
 
-    client_options = {'api_endpoint': 'language.googleapis.com:443'}
+    client_options = {'api_endpoint': 'us-language.googleapis.com:443'}
 
     # Instantiates a client
     client = language.LanguageServiceClient(client_options=client_options)
