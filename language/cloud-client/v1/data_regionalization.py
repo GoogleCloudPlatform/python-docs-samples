@@ -39,4 +39,4 @@ def data_regionalization():
 
 
 if __name__ == '__main__':
-    data_residency()
+    data_regionalization()
