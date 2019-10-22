@@ -43,19 +43,4 @@ def create_dataset(project_id, display_name):
     # Display the dataset information
     print('Dataset name: {}'.format(created_dataset.name))
     print('Dataset id: {}'.format(created_dataset.name.split('/')[-1]))
-    print('Dataset display name: {}'.format(created_dataset.display_name))
-    print('Translation dataset Metadata:')
-    print(
-        '\tsource_language_code: {}'.format(
-            created_dataset.translation_dataset_metadata.source_language_code
-        )
-    )
-    print(
-        '\ttarget_language_code: {}'.format(
-            created_dataset.translation_dataset_metadata.target_language_code
-        )
-    )
-    print('Dataset create time:')
-    print('\tseconds: {}'.format(created_dataset.create_time.seconds))
-    print('\tnanos: {}'.format(created_dataset.create_time.nanos))
     # [END automl_translate_create_dataset]
