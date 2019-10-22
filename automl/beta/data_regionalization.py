@@ -13,21 +13,21 @@
 # limitations under the License.
 
 
-def data_residency(project_id):
-    """Set a regional data endpoint using data residency"""
+def data_regionalization(project_id):
+    """Set a regional data endpoint using data regionalization"""
     # [START automl_client_library]
-    # [START automl_data_residency]
+    # [START automl_data_regionalization]
     from google.cloud import automl_v1beta1 as automl
 
-    client_options = {'api_endpoint': 'us-automl.googleapis.com:443'}
+    client_options = {'api_endpoint': 'eu-automl.googleapis.com:443'}
 
     # Instantiates a client
     client = automl.AutoMlClient(client_options=client_options)
-    # [END automl_data_residency]
+    # [END automl_data_regionalization]
 
     # A resource that represents Google Cloud Platform location.
     # project_id = 'YOUR_PROJECT_ID'
-    project_location = client.location_path(project_id, 'us-central1')
+    project_location = client.location_path(project_id, 'europe-north1')
 
     # List all the datasets available in the region.
     response = client.list_datasets(

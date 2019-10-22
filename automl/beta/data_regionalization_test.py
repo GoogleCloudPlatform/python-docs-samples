@@ -12,11 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import data_residency
+import os
+import data_regionalization
+
+PROJECT_ID = os.environ['GCLOUD_PROJECT']
 
 
-def test_data_residency(capsys):
-    data_residency.data_residency()
+def test_data_regionalization(capsys):
+    data_regionalization.data_regionalization(PROJECT_ID)
 
     out, _ = capsys.readouterr()
-    assert 'Street' in out
+    # Look for the display name
+    assert 'do_not_delete_me' in out

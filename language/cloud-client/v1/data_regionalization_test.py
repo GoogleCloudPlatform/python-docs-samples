@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import data_residency
+import data_regionalization
 
 
-def test_data_residency(capsys):
-    data_residency.data_residency()
+def test_data_regionalization(capsys):
+    data_regionalization.data_regionalization()
 
     out, _ = capsys.readouterr()
     assert 'Sentiment' in out

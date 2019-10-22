@@ -13,10 +13,10 @@
 # limitations under the License.
 
 
-def data_residency():
-    """Set a regional data endpoint using data residency"""
+def data_regionalization():
+    """Set a regional data endpoint using data regionalization"""
     # [START language_client_library]
-    # [START language_data_residency]
+    # [START language_data_regionalization]
     # Imports the Google Cloud client library
     from google.cloud import language
 
@@ -24,7 +24,7 @@ def data_residency():
 
     # Instantiates a client
     client = language.LanguageServiceClient(client_options=client_options)
-    # [END language_data_residency]
+    # [END language_data_regionalization]
 
     # The text to analyze
     document = language.types.Document(

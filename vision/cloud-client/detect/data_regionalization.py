@@ -13,16 +13,16 @@
 # limitations under the License.
 
 
-def data_residency():
-    """Set a regional data endpoint using data residency"""
+def data_regionalization():
+    """Set a regional data endpoint using data regionalization"""
     # [START vision_client_library]
-    # [START vision_data_residency]
+    # [START vision_data_regionalization]
     from google.cloud import vision
 
     client_options = {'api_endpoint': 'us-vision.googleapis.com:443'}
 
     client = vision.ImageAnnotatorClient(client_options=client_options)
-    # [END vision_data_residency]
+    # [END vision_data_regionalization]
 
     image_source = vision.types.ImageSource(
         image_uri='gs://cloud-samples-data/vision/label/setagaya.jpeg')
