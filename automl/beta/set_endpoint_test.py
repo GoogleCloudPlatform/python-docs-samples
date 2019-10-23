@@ -13,13 +13,13 @@
 # limitations under the License.
 
 import os
-import data_regionalization
+import set_endpoint
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 
 
-def test_data_regionalization(capsys):
-    data_regionalization.data_regionalization(PROJECT_ID)
+def test_set_endpoint(capsys):
+    set_endpoint.set_endpoint(PROJECT_ID)
 
     out, _ = capsys.readouterr()
     # Look for the display name

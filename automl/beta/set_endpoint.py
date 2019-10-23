@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-def data_regionalization(project_id):
-    """Set a regional data endpoint using data regionalization"""
+def set_endpoint(project_id):
+    """Change your endpoint"""
     # [START automl_client_library]
-    # [START automl_data_regionalization]
+    # [START automl_set_endpoint]
     from google.cloud import automl_v1beta1 as automl
 
-    # You must first create a dataset, using the `eu` selection, before you can
+    # You must first create a dataset, using the `eu` endpoint, before you can
     # call other operations such as: list, get, import, delete, etc.
     client_options = {'api_endpoint': 'eu-automl.googleapis.com:443'}
 
@@ -29,12 +29,12 @@ def data_regionalization(project_id):
     # A resource that represents Google Cloud Platform location.
     # project_id = 'YOUR_PROJECT_ID'
     project_location = client.location_path(project_id, 'eu')
-    # [END automl_data_regionalization]
+    # [END automl_set_endpoint]
 
-    # List all the datasets available in the region.
+    # List all the datasets available
     # Note: Create a dataset in `eu`, before calling `list_datasets`.
     response = client.list_datasets(
-        project_location, 'translation_dataset_metadata:*')
+        project_location, '')
 
     for dataset in response:
         print(dataset)

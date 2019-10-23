@@ -13,10 +13,10 @@
 # limitations under the License.
 
 
-def data_regionalization():
-    """Set a regional data endpoint using data regionalization"""
+def set_endpoint():
+    """Change your endpoint"""
     # [START language_client_library]
-    # [START language_data_regionalization]
+    # [START language_set_endpoint]
     # Imports the Google Cloud client library
     from google.cloud import language
 
@@ -24,7 +24,7 @@ def data_regionalization():
 
     # Instantiates a client
     client = language.LanguageServiceClient(client_options=client_options)
-    # [END language_data_regionalization]
+    # [END language_set_endpoint]
 
     # The text to analyze
     document = language.types.Document(
@@ -39,4 +39,4 @@ def data_regionalization():
 
 
 if __name__ == '__main__':
-    data_regionalization()
+    set_endpoint()
