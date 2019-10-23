@@ -27,7 +27,7 @@ def data_regionalization(project_id):
 
     # A resource that represents Google Cloud Platform location.
     # project_id = 'YOUR_PROJECT_ID'
-    project_location = client.location_path(project_id, 'europe-north1')
+    project_location = client.location_path(project_id, 'eu')
 
     # List all the datasets available in the region.
     response = client.list_datasets(
