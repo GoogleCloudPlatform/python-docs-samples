@@ -19,17 +19,20 @@ def data_regionalization(project_id):
     # [START automl_data_regionalization]
     from google.cloud import automl_v1beta1 as automl
 
+    # You must first create a dataset, using the `eu` selection, before you can
+    # call other operations such as: list, get, import, delete, etc.
     client_options = {'api_endpoint': 'eu-automl.googleapis.com:443'}
 
     # Instantiates a client
     client = automl.AutoMlClient(client_options=client_options)
-    # [END automl_data_regionalization]
 
     # A resource that represents Google Cloud Platform location.
     # project_id = 'YOUR_PROJECT_ID'
     project_location = client.location_path(project_id, 'eu')
+    # [END automl_data_regionalization]
 
     # List all the datasets available in the region.
+    # Note: Create a dataset in `eu`, before calling `list_datasets`.
     response = client.list_datasets(
         project_location, 'translation_dataset_metadata:*')
 
