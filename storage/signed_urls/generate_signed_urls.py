@@ -94,7 +94,7 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
         query_parameters = dict()
     # [START storage_signed_url_canonical_query_parameters]
     query_parameters['X-Goog-Algorithm'] = 'GOOG4-RSA-SHA256'
-    query_parameters['x-goog-Credential'] = credential
+    query_parameters['X-Goog-Credential'] = credential
     query_parameters['X-Goog-Date'] = request_timestamp
     query_parameters['X-Goog-Expires'] = expiration
     query_parameters['X-Goog-SignedHeaders'] = signed_headers
