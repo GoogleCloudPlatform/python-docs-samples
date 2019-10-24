@@ -19,7 +19,7 @@ import google.cloud.storage
 
 import pytest
 
-import triggers
+import dlp.triggers as triggers
 
 
 GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')

@@ -14,6 +14,7 @@
 
 import os
 
+from google.api_core import exceptions
 from gcp_devrel.testing import eventually_consistent
 from gcp_devrel.testing.flaky import flaky
 import google.api_core.exceptions
@@ -24,11 +25,16 @@ import google.cloud.pubsub
 import google.cloud.storage
 
 import pytest
-import inspect_content
+import dlp.inspect_content as inspect_content
 
-
+VPC_ENABLED = os.getenv('VPC_ENABLED')
 GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
-TEST_BUCKET_NAME = GCLOUD_PROJECT + '-dlp-python-client-test'
+
+if VPC_ENABLED:
+    TEST_BUCKET_NAME = os.getenv('TEST_BUCKET_NAME')
+else:
+    TEST_BUCKET_NAME = GCLOUD_PROJECT + '-dlp-python-client-test'
+
 RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), 'resources')
 RESOURCE_FILE_NAMES = ['test.txt', 'test.png', 'harmless.txt', 'accounts.txt']
 TOPIC_ID = 'dlp-test'
@@ -37,6 +43,16 @@ DATASTORE_KIND = 'DLP test kind'
 BIGQUERY_DATASET_ID = 'dlp_test_dataset'
 BIGQUERY_TABLE_ID = 'dlp_test_table'
 
+def vpc_check(fn):
+  def wrapped(*args, **kwargs):
+    try:
+      return fn(*args, **kwags)
+    except exceptions.PermissionDenied as e:
+        return VPC_ENABLED and (e.message == "Request is prohibited by organization's policy")
+    except:
+        pass
+    return False
+  return wrapped
 
 @pytest.fixture(scope='module')
 def bucket():
@@ -154,7 +170,7 @@ def bigquery_project():
 
     bigquery_client.delete_dataset(dataset_ref, delete_contents=True)
 
-
+@vpc_check
 def test_inspect_string(capsys):
     test_string = 'My name is Gary Smith and my email is gary@example.com'
 
@@ -169,6 +185,7 @@ def test_inspect_string(capsys):
     assert 'Info type: EMAIL_ADDRESS' in out
 
 
+@vpc_check
 def test_inspect_table(capsys):
     test_tabular_data = {
         "header": [
@@ -198,6 +215,7 @@ def test_inspect_table(capsys):
     assert 'Info type: EMAIL_ADDRESS' in out
 
 
+@vpc_check
 def test_inspect_string_with_custom_info_types(capsys):
     test_string = 'My name is Gary Smith and my email is gary@example.com'
     dictionaries = ['Gary Smith']
@@ -216,6 +234,7 @@ def test_inspect_string_with_custom_info_types(capsys):
     assert 'Info type: CUSTOM_REGEX_0' in out
 
 
+@vpc_check
 def test_inspect_string_no_results(capsys):
     test_string = 'Nothing to see here'
 
@@ -229,6 +248,7 @@ def test_inspect_string_no_results(capsys):
     assert 'No findings' in out
 
 
+@vpc_check
 def test_inspect_file(capsys):
     test_filepath = os.path.join(RESOURCE_DIRECTORY, 'test.txt')
 
@@ -242,6 +262,7 @@ def test_inspect_file(capsys):
     assert 'Info type: EMAIL_ADDRESS' in out
 
 
+@vpc_check
 def test_inspect_file_with_custom_info_types(capsys):
     test_filepath = os.path.join(RESOURCE_DIRECTORY, 'test.txt')
     dictionaries = ['gary@somedomain.com']
@@ -260,6 +281,7 @@ def test_inspect_file_with_custom_info_types(capsys):
     assert 'Info type: CUSTOM_REGEX_0' in out
 
 
+@vpc_check
 def test_inspect_file_no_results(capsys):
     test_filepath = os.path.join(RESOURCE_DIRECTORY, 'harmless.txt')
 
@@ -273,6 +295,7 @@ def test_inspect_file_no_results(capsys):
     assert 'No findings' in out
 
 
+@vpc_check
 def test_inspect_image_file(capsys):
     test_filepath = os.path.join(RESOURCE_DIRECTORY, 'test.png')
 
@@ -287,6 +310,7 @@ def test_inspect_image_file(capsys):
 
 
 @flaky
+@vpc_check
 def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
     inspect_content.inspect_gcs_file(
         GCLOUD_PROJECT,
@@ -302,6 +326,7 @@ def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
 
 
 @flaky
+@vpc_check
 def test_inspect_gcs_file_with_custom_info_types(bucket, topic_id,
                                                  subscription_id, capsys):
     dictionaries = ['gary@somedomain.com']
@@ -324,6 +349,7 @@ def test_inspect_gcs_file_with_custom_info_types(bucket, topic_id,
 
 
 @flaky
+@vpc_check
 def test_inspect_gcs_file_no_results(
         bucket, topic_id, subscription_id, capsys):
     inspect_content.inspect_gcs_file(
@@ -340,6 +366,7 @@ def test_inspect_gcs_file_no_results(
 
 
 @pytest.mark.skip(reason='nondeterministically failing')
+@vpc_check
 def test_inspect_gcs_image_file(bucket, topic_id, subscription_id, capsys):
     inspect_content.inspect_gcs_file(
         GCLOUD_PROJECT,
@@ -354,6 +381,7 @@ def test_inspect_gcs_image_file(bucket, topic_id, subscription_id, capsys):
 
 
 @flaky
+@vpc_check
 def test_inspect_gcs_multiple_files(bucket, topic_id, subscription_id, capsys):
     inspect_content.inspect_gcs_file(
         GCLOUD_PROJECT,
@@ -369,6 +397,7 @@ def test_inspect_gcs_multiple_files(bucket, topic_id, subscription_id, capsys):
 
 
 @flaky
+@vpc_check
 def test_inspect_datastore(
         datastore_project, topic_id, subscription_id, capsys):
     @eventually_consistent.call
@@ -386,6 +415,7 @@ def test_inspect_datastore(
 
 
 @flaky
+@vpc_check
 def test_inspect_datastore_no_results(
         datastore_project, topic_id, subscription_id, capsys):
     inspect_content.inspect_datastore(
@@ -401,6 +431,7 @@ def test_inspect_datastore_no_results(
 
 
 @pytest.mark.skip(reason='unknown issue')
+@vpc_check
 def test_inspect_bigquery(
         bigquery_project, topic_id, subscription_id, capsys):
     inspect_content.inspect_bigquery(

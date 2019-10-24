@@ -13,24 +13,33 @@
 # limitations under the License.
 
 import os
+import shutil
+import tempfile
 
-import google.cloud.dlp
-import mock
+import pytest
 
-import quickstart
-
+import dlp.redact as redact
 
 GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
+RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), 'resources')
 
 
-def test_quickstart(capsys):
-    # Mock out project_path to use the test runner's project ID.
-    with mock.patch.object(
-            google.cloud.dlp.DlpServiceClient,
-            'project_path',
-            return_value='projects/{}'.format(GCLOUD_PROJECT)):
-        quickstart.quickstart(GCLOUD_PROJECT)
+@pytest.fixture(scope='module')
+def tempdir():
+    tempdir = tempfile.mkdtemp()
+    yield tempdir
+    shutil.rmtree(tempdir)
+
+
+def test_redact_image_file(tempdir, capsys):
+    test_filepath = os.path.join(RESOURCE_DIRECTORY, 'test.png')
+    output_filepath = os.path.join(tempdir, 'redacted.png')
+
+    redact.redact_image(
+        GCLOUD_PROJECT,
+        test_filepath,
+        output_filepath,
+        ['FIRST_NAME', 'EMAIL_ADDRESS'])
 
     out, _ = capsys.readouterr()
-    assert 'FIRST_NAME' in out
-    assert 'LAST_NAME' in out
+    assert output_filepath in out

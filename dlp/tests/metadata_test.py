@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import metadata
+import dlp.metadata as metadata
 
 
 def test_fetch_info_types(capsys):

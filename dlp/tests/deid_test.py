@@ -18,7 +18,7 @@ import tempfile
 
 import pytest
 
-import deid
+import dlp.deid as deid
 
 HARMFUL_STRING = 'My SSN is 372819127'
 HARMLESS_STRING = 'My favorite color is blue'

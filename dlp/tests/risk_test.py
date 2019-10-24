@@ -17,7 +17,7 @@ import google.cloud.pubsub
 
 import pytest
 
-import risk
+import dlp.risk as risk
 
 GCLOUD_PROJECT = 'nodejs-docs-samples'
 TABLE_PROJECT = 'nodejs-docs-samples'
