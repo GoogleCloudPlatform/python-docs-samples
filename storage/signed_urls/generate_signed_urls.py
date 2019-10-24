@@ -39,6 +39,8 @@ from google.oauth2 import service_account
 
 # [END storage_signed_url_signer]
 # [END storage_signed_url_dependencies]
+
+
 def generate_signed_url(service_account_file, bucket_name, object_name,
                         subresource=None, expiration=604800, http_method='GET',
                         query_parameters=None, headers=None):
