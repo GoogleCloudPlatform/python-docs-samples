@@ -71,7 +71,7 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
     if headers is None:
         headers = dict()
     # [START storage_signed_url_canonical_headers]
-    host = 'storage.googleapis.com'
+    host = '{}.storage.googleapis.com'.format(bucket_name)
     headers['host'] = host
 
     canonical_headers = ''
