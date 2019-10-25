@@ -42,8 +42,8 @@ from google.oauth2 import service_account
 
 
 def generate_signed_url(service_account_file, bucket_name, object_name,
-                        expiration, http_method='GET', query_parameters=None,
-                        headers=None):
+                        subresource=None, expiration=604800, http_method='GET',
+                        query_parameters=None, headers=None):
 
     if expiration > 604800:
         print('Expiration Time can\'t be longer than 604800 seconds (7 days).')
@@ -51,7 +51,7 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
 
     # [START storage_signed_url_canonical_uri]
     escaped_object_name = quote(six.ensure_binary(object_name), safe=b'/~')
-    canonical_uri = '/{}/{}'.format(bucket_name, escaped_object_name)
+    canonical_uri = '/{}'.format(escaped_object_name)
     # [END storage_signed_url_canonical_uri]
 
     # [START storage_signed_url_canonical_datetime]
@@ -73,7 +73,8 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
     if headers is None:
         headers = dict()
     # [START storage_signed_url_canonical_headers]
-    headers['host'] = 'storage.googleapis.com'
+    host = '{}.storage.googleapis.com'.format(bucket_name)
+    headers['host'] = host
 
     canonical_headers = ''
     ordered_headers = collections.OrderedDict(sorted(headers.items()))
@@ -99,6 +100,8 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
     query_parameters['X-Goog-Date'] = request_timestamp
     query_parameters['X-Goog-Expires'] = expiration
     query_parameters['X-Goog-SignedHeaders'] = signed_headers
+    if subresource:
+        query_parameters[subresource] = ''
 
     canonical_query_string = ''
     ordered_query_parameters = collections.OrderedDict(
@@ -138,10 +141,9 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
     # [END storage_signed_url_signer]
 
     # [START storage_signed_url_construction]
-    host_name = 'https://storage.googleapis.com'
-    signed_url = '{}{}?{}&X-Goog-Signature={}'.format(host_name, canonical_uri,
-                                                      canonical_query_string,
-                                                      signature)
+    scheme_and_host = '{}://{}'.format('https', host)
+    signed_url = '{}{}?{}&x-goog-signature={}'.format(
+        scheme_and_host, canonical_uri, canonical_query_string, signature)
     # [END storage_signed_url_construction]
     return signed_url
 # [END storage_signed_url_all]
@@ -151,18 +153,26 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('service_account_file',
-                        help='Path to your Google service account.')
     parser.add_argument(
-        'request_method', help='A request method, e.g GET, POST.')
+        'service_account_file',
+        help='Path to your Google service account keyfile.')
+    parser.add_argument(
+        'request_method',
+        help='A request method, e.g GET, POST.')
     parser.add_argument('bucket_name', help='Your Cloud Storage bucket name.')
     parser.add_argument('object_name', help='Your Cloud Storage object name.')
-    parser.add_argument('expiration', help='Expiration Time.')
+    parser.add_argument('expiration', type=int, help='Expiration time.')
+    parser.add_argument(
+        '--subresource',
+        default=None,
+        help='Subresource of the specified resource, e.g. "acl".')
 
     args = parser.parse_args()
+
     signed_url = generate_signed_url(
         service_account_file=args.service_account_file,
         http_method=args.request_method, bucket_name=args.bucket_name,
-        object_name=args.object_name, expiration=int(args.expiration))
+        object_name=args.object_name, subresource=args.subresource,
+        expiration=int(args.expiration))
 
     print(signed_url)
