@@ -25,7 +25,7 @@
 #   usage: python3 translate_v3_translate_text.py [--text "Hello, world!"] [--target_language fr] [--project_id "[Google Cloud Project ID]"]
 
 # [START translate_v3_translate_text]
-from google.cloud import translate_v3
+from google.cloud import translate
 
 
 def sample_translate_text(text, target_language, project_id):
@@ -37,7 +37,7 @@ def sample_translate_text(text, target_language, project_id):
       target_language Required. The BCP-47 language code to use for translation.
     """
 
-    client = translate_v3.TranslationServiceClient()
+    client = translate.TranslationServiceClient()
 
     # TODO(developer): Uncomment and set the following variables
     # text = 'Text you wish to translate'

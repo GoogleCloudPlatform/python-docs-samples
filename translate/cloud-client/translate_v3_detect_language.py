@@ -25,7 +25,7 @@
 #   usage: python3 translate_v3_detect_language.py [--text "Hello, world!"] [--project_id "[Google Cloud project_id ID]"]
 
 # [START translate_v3_detect_language]
-from google.cloud import translate_v3
+from google.cloud import translate
 
 
 def sample_detect_language(text, project_id):
@@ -36,7 +36,7 @@ def sample_detect_language(text, project_id):
       text The text string for performing language detection
     """
 
-    client = translate_v3.TranslationServiceClient()
+    client = translate.TranslationServiceClient()
 
     # TODO(developer): Uncomment and set the following variables
     # text = 'Hello, world!'

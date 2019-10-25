@@ -25,12 +25,12 @@
 #   usage: python3 translate_v3_get_supported_languages.py [--project_id "[Google Cloud Project ID]"]
 
 # [START translate_v3_get_supported_languages]
-from google.cloud import translate_v3
+from google.cloud import translate
 
 def sample_get_supported_languages(project_id):
     """Getting a list of supported language codes"""
 
-    client = translate_v3.TranslationServiceClient()
+    client = translate.TranslationServiceClient()
 
     # TODO(developer): Uncomment and set the following variables
     # project = '[Google Cloud Project ID]'

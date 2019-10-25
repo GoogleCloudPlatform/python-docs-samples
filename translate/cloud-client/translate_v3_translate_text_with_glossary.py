@@ -25,7 +25,7 @@
 #   usage: python3 translate_v3_translate_text_with_glossary.py [--text "Hello, world!"] [--source_language en] [--target_language fr] [--project_id "[Google Cloud Project ID]"] [--glossary_id "[YOUR_GLOSSARY_ID]"]
 
 # [START translate_v3_translate_text_with_glossary]
-from google.cloud import translate_v3 as translate
+from google.cloud import translate
 
 def sample_translate_text_with_glossary(
     text, source_language, target_language, project_id, glossary_id

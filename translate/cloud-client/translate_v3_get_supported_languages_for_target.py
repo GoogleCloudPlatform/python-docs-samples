@@ -25,7 +25,7 @@
 #   usage: python3 translate_v3_get_supported_languages_for_target.py [--language_code en] [--project_id "[Google Cloud Project ID]"]
 
 # [START translate_v3_get_supported_languages_for_target]
-from google.cloud import translate_v3
+from google.cloud import translate
 
 
 def sample_get_supported_languages_with_target(language_code, project_id):
@@ -37,7 +37,7 @@ def sample_get_supported_languages_with_target(language_code, project_id):
       human readable names of supported languages.
     """
 
-    client = translate_v3.TranslationServiceClient()
+    client = translate.TranslationServiceClient()
 
     # TODO(developer): Uncomment and set the following variables
     # language_code = 'en'

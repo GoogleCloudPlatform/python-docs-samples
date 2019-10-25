@@ -25,7 +25,7 @@
 #   usage: python3 translate_v3_batch_translate_text_with_glossary_and_model.py [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project "[Google Cloud Project ID]"] [--location "us-central1"] [--target_language en] [--source_language de] [--model_id "{your-model-id}"] [--glossary_id "{your-glossary-id}"]
 
 # [START translate_v3_batch_translate_text_with_glossary_and_model]
-from google.cloud import translate_v3
+from google.cloud import translate
 
 def sample_batch_translate_text_with_glossary_and_model(
     input_uri,
@@ -41,7 +41,7 @@ def sample_batch_translate_text_with_glossary_and_model(
     Batch translate text with Glossary and Translation model
     """
 
-    client = translate_v3.TranslationServiceClient()
+    client = translate.TranslationServiceClient()
 
     # TODO(developer): Uncomment and set the following variables
     # input_uri = 'gs://cloud-samples-data/text.txt'
@@ -70,7 +70,7 @@ def sample_batch_translate_text_with_glossary_and_model(
         'us-central1',  # The location of the glossary
         glossary_id)
         
-    glossary_config = translate_v3.types.TranslateTextGlossaryConfig(
+    glossary_config = translate.types.TranslateTextGlossaryConfig(
         glossary=glossary_path)
     glossaries = {"ja": glossary_config} #target lang as key
 

@@ -23,7 +23,7 @@ https://cloud.google.com/translate/docs.
 
 import argparse
 
-from google.cloud import translate
+from google.cloud import translate_v2 as translate
 import six
 
 
@@ -70,7 +70,7 @@ def list_languages_with_target(target):
     # [END translate_list_language_names]
 
 
-def translate_text_with_model(target, text, model=translate.NMT):
+def translate_text_with_model(target, text, model='nmt'):
     # [START translate_text_with_model]
     """Translates text into the target language.
 

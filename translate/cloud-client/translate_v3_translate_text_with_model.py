@@ -25,7 +25,7 @@
 #   usage: python3 translate_v3_translate_text_with_model.py [--model_id "[MODEL ID]"] [--text "Hello, world!"] [--target_language fr] [--source_language en] [--project_id "[Google Cloud Project ID]"] [--location global]
 
 # [START translate_v3_translate_text_with_model]
-from google.cloud import translate_v3
+from google.cloud import translate
 
 
 def sample_translate_text_with_model(
@@ -41,7 +41,7 @@ def sample_translate_text_with_model(
       source_language Optional. The BCP-47 language code of the input text.
     """
 
-    client = translate_v3.TranslationServiceClient()
+    client = translate.TranslationServiceClient()
 
     # TODO(developer): Uncomment and set the following variables
     # model_id = '[MODEL ID]'

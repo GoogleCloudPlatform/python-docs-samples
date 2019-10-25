@@ -25,7 +25,7 @@
 #   usage: python3 translate_v3_translate_text_with_glossary_and_model.py [--model_id "[MODEL ID]"] [--glossary_id "[YOUR_GLOSSARY_ID]"] [--text "Hello, world!"] [--target_language fr] [--source_language en] [--project_id "[Google Cloud Project ID]"] [--location global]
 
 # [START translate_v3_translate_text_with_glossary_and_model]
-from google.cloud import translate_v3
+from google.cloud import translate
 
 
 def sample_translate_text_glossary_and_model(
@@ -42,7 +42,7 @@ def sample_translate_text_glossary_and_model(
       source_language Optional. The BCP-47 language code of the input text.
     """
 
-    client = translate_v3.TranslationServiceClient()
+    client = translate.TranslationServiceClient()
 
     # TODO(developer): Uncomment and set the following variables
     # model_id = '[MODEL ID]'
@@ -61,7 +61,7 @@ def sample_translate_text_glossary_and_model(
         'us-central1',  # The location of the glossary
         glossary_id)
         
-    glossary_config = translate_v3.types.TranslateTextGlossaryConfig(
+    glossary_config = translate.types.TranslateTextGlossaryConfig(
         glossary=glossary)
 
     response = client.translate_text(

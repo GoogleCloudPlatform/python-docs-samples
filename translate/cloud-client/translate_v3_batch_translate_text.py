@@ -25,14 +25,14 @@
 #   usage: python3 translate_v3_batch_translate_text.py [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project_id "[Google Cloud Project ID]"] [--location "us-central1"] [--source_lang en] [--target_lang ja]
 
 # [START translate_v3_batch_translate_text]
-from google.cloud import translate_v3
+from google.cloud import translate
 
 def sample_batch_translate_text(
     input_uri, output_uri, project_id, location, source_lang, target_lang
 ):
     """Batch translate text"""
 
-    client = translate_v3.TranslationServiceClient()
+    client = translate.TranslationServiceClient()
 
     # TODO(developer): Uncomment and set the following variables
     # input_uri = 'gs://cloud-samples-data/text.txt'

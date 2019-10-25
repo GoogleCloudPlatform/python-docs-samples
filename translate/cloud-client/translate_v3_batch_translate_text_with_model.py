@@ -25,7 +25,7 @@
 #   usage: python3 translate_v3_batch_translate_text_with_model.py [--input_uri "gs://cloud-samples-data/text.txt"] [--output_uri "gs://YOUR_BUCKET_ID/path_to_store_results/"] [--project "[Google Cloud Project ID]"] [--location "us-central1"] [--target_language en] [--source_language de] [--model_id "{your-model-id}"]
 
 # [START translate_v3_batch_translate_text_with_model]
-from google.cloud import translate_v3
+from google.cloud import translate
 
 
 def sample_batch_translate_text_with_model(
@@ -47,7 +47,7 @@ def sample_batch_translate_text_with_model(
       code.
     """
 
-    client = translate_v3.TranslationServiceClient()
+    client = translate.TranslationServiceClient()
 
     # TODO(developer): Uncomment and set the following variables
     # input_uri = 'gs://cloud-samples-data/text.txt'

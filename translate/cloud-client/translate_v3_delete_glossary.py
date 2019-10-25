@@ -25,7 +25,7 @@
 #   usage: python3 translate_v3_delete_glossary.py [--project_id "[Google Cloud Project ID]"] [--glossary_id "[Glossary ID]"]
 
 # [START translate_v3_delete_glossary]
-from google.cloud import translate_v3 as translate
+from google.cloud import translate
 
 def sample_delete_glossary(project_id, glossary_id):
     """Delete Glossary"""

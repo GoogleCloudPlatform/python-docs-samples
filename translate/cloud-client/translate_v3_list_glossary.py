@@ -25,12 +25,12 @@
 #   usage: python3 translate_v3_list_glossary.py [--project_id "[Google Cloud Project ID]"]
 
 # [START translate_v3_list_glossary]
-from google.cloud import translate_v3
+from google.cloud import translate
 
 def sample_list_glossaries(project_id):
     """List Glossaries"""
 
-    client = translate_v3.TranslationServiceClient()
+    client = translate.TranslationServiceClient()
 
     # TODO(developer): Uncomment and set the following variables
     # project_id = '[Google Cloud Project ID]'

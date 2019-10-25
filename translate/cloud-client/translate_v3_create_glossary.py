@@ -25,7 +25,7 @@
 #   usage: python3 translate_v3_create_glossary.py [--project "[Google Cloud Project ID]"] [--glossary_id "my_glossary_id_123"]
 
 # [START translate_v3_create_glossary]
-from google.cloud import translate_v3 as translate
+from google.cloud import translate
 
 def sample_create_glossary(project_id, input_uri, glossary_id):
     """Create Glossary"""
