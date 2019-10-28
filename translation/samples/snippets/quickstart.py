@@ -18,7 +18,7 @@
 def run_quickstart():
     # [START translate_quickstart]
     # Imports the Google Cloud client library
-    from google.cloud import translate
+    from google.cloud import translate_v2 as translate
 
     # Instantiates a client
     translate_client = translate.Client()
