@@ -52,6 +52,6 @@ Required variables for this sample include:
 
 ## Maintenance Note
 
-* The `image.py` file is copied from the [Cloud Functions ImageMagick sample `index.py`](../../functions/imagemagick/index.py). Region tags are changed.
+* The `image.py` file is copied from the [Cloud Functions ImageMagick sample `main.py`](../../functions/imagemagick/main.py). Region tags are changed.
 * The requirements.txt dependencies used in the copied code should track the [Cloud Functions ImageMagick `requirements.txt`](../../functions/imagemagick/requirements.txt)
 
