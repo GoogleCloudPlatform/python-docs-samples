@@ -49,8 +49,8 @@ def query_external_sheets_temporary_table():
     ]
     external_config.options.skip_leading_rows = 1  # Optionally skip header row.
     external_config.options.range = (
-        "us-states!A20:B49"
-    )  # Optionally set range of the sheet to query from.
+        "us-states!A20:B49"  # Optionally set range of the sheet to query from.
+    )
     table_id = "us_states"
     job_config = bigquery.QueryJobConfig()
     job_config.table_definitions = {table_id: external_config}
