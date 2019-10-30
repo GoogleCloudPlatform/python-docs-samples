@@ -67,8 +67,8 @@ def ReverseString():
     expected = s[::-1]
     return '''
         <table>
-            <tr><th>Current:</th><th>{}</th></tr>
-            <tr><th>Expected:</th><th>{}</th><tr>
+            <tr><th>Program Output:</th><th>{}</th></tr>
+            <tr><th>Correct Output:</th><th>{}</th><tr>
         </table>
     '''.format(current, expected)
 
