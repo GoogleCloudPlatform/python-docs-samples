@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-# [START run_image_processing_imagemagick_setup]
+# [START run_imageproc_handler_setup]
 import os
 import tempfile
 
@@ -22,10 +22,10 @@ from wand.image import Image
 
 storage_client = storage.Client()
 vision_client = vision.ImageAnnotatorClient()
-# [END run_image_processing_imagemagick_setup]
+# [END run_imageproc_handler_setup]
 
 
-# [START run_image_processing_imagemagick_analyze]
+# [START run_imageproc_handler_analyze]
 # Blurs uploaded images that are flagged as Adult or Violence.
 def blur_offensive_images(data):
     file_data = data
@@ -53,10 +53,10 @@ def blur_offensive_images(data):
         return __blur_image(blob)
     else:
         print(f'The image {file_name} was detected as OK.')
-# [END run_image_processing_imagemagick_analyze]
+# [END run_imageproc_handler_analyze]
 
 
-# [START run_image_processing_imagemagick_blur]
+# [START run_imageproc_handler_blur]
 # Blurs the given file using ImageMagick.
 def __blur_image(current_blob):
     file_name = current_blob.name
@@ -84,4 +84,4 @@ def __blur_image(current_blob):
 
     # Delete the temporary file.
     os.remove(temp_local_filename)
-# [END run_image_processing_imagemagick_blur]
+# [END run_imageproc_handler_blur]

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START run_image_processing_server_setup]
+# [START run_imageproc_controller]
 import base64
 from flask import Flask, request
 import json
@@ -21,10 +21,8 @@ import sys
 import image
 
 app = Flask(__name__)
-# [END run_image_processing_server_setup]
 
 
-# [START run_image_processing_handler]
 @app.route('/', methods=['POST'])
 def index():
     envelope = request.get_json()
@@ -67,7 +65,7 @@ def index():
             return ('', 500)
 
     return ('', 500)
-    # [END run_image_processing_handler]
+    # [END run_imageproc_controller]
 
 
 if __name__ == '__main__':

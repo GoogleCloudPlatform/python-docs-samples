@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START run_pubsub_dockerfile]
-
 # Use the official Python image.
 # https://hub.docker.com/_/python
 FROM python:3.7
@@ -25,6 +23,8 @@ COPY requirements.txt ./
 # Install production dependencies.
 RUN pip install -r requirements.txt
 
+# [START run_imageproc_dockerfile_imagemagick]
+
 # Install Imagemagick into the container image.
 # For more on system packages review the system packages tutorial.
 # https://cloud.google.com/run/docs/tutorials/system-packages#dockerfile
@@ -32,6 +32,8 @@ RUN set -ex; \
   apt-get -y update; \
   apt-get -y install imagemagick; \
   rm -rf /var/lib/apt/lists/*
+
+# [END run_imageproc_dockerfile_imagemagick]
 
 # Copy local code to the container image.
 ENV APP_HOME /app
@@ -44,4 +46,4 @@ COPY . ./
 # to be equal to the cores available.
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 main:app
 
-# [END run_pubsub_dockerfile]
+# [END run_imageproc_dockerfile_imagemagick]
