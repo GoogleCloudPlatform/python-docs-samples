@@ -16,13 +16,11 @@
 # These tests are unit tests that mock Pub/Sub.
 
 import base64
-import image
 import json
 import main
 import mock
 import pytest
 
-from collections import UserDict
 from uuid import uuid4
 
 
@@ -49,10 +47,10 @@ def test_invalid_mimetype(client):
 
 @mock.patch('image.blur_offensive_images', mock.MagicMock(return_value=204))
 def test_minimally_valid_message(client):
-    data_json = json.dumps({'name': True, 'bucket': True })
+    data_json = json.dumps({'name': True, 'bucket': True})
     data = base64.b64encode(data_json.encode()).decode()
 
-    r = client.post('/', json={'message': {'data': data }})
+    r = client.post('/', json={'message': {'data': data}})
     assert r.status_code == 204
 
 
@@ -60,7 +58,7 @@ def test_call_to_blur_image(client, capsys):
     filename = str(uuid4())
     blur_bucket = 'blurred-bucket-' + str(uuid4())
 
-    data_json = json.dumps({'name': filename, 'bucket': blur_bucket })
+    data_json = json.dumps({'name': filename, 'bucket': blur_bucket})
     data = base64.b64encode(data_json.encode()).decode()
 
     r = client.post('/', json={'message': {'data': data}})
@@ -68,3 +66,4 @@ def test_call_to_blur_image(client, capsys):
 
     out, _ = capsys.readouterr()
     assert f'The image {filename} was detected as OK' in out
+    

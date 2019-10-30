@@ -41,16 +41,19 @@ def index():
 
     if isinstance(pubsub_message, dict) and 'data' in pubsub_message:
         try:
-            data = json.loads(base64.b64decode(pubsub_message['data']).decode())
+            data = json.loads(
+                base64.b64decode(pubsub_message['data']).decode())
 
         except Exception as e:
-            msg = 'Invalid Pub/Sub message: data property is not valid base64 encoded JSON'
+            msg = ('Invalid Pub/Sub message: '
+                   'data property is not valid base64 encoded JSON')
             print(f'error: {e}')
             return f'Bad Request: {msg}', 400
 
         # Validate the message is a Cloud Storage event.
         if not data["name"] or not data["bucket"]:
-            msg = 'Invalid Cloud Storage notification: expected name and bucket properties'
+            msg = ('Invalid Cloud Storage notification: '
+                   'expected name and bucket properties')
             print(f'error: {msg}')
             return f'Bad Request: {msg}', 400
 
