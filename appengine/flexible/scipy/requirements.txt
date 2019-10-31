@@ -2,4 +2,4 @@ Flask==1.1.1
 gunicorn==19.9.0
 numpy==1.17.2
 scipy==1.2.0
-Pillow==6.1.0
+pillow==6.2.1
