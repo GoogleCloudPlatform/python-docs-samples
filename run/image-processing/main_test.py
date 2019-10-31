@@ -66,4 +66,3 @@ def test_call_to_blur_image(client, capsys):
 
     out, _ = capsys.readouterr()
     assert f'The image {filename} was detected as OK' in out
-    
