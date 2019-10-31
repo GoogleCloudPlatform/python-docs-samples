@@ -76,7 +76,9 @@ with models.DAG(
         # Docker image specified. Defaults to hub.docker.com, but any fully
         # qualified URLs will point to a custom repository. Supports private
         # gcr.io images if the Composer Environment is under the same
-        # project-id as the gcr.io images.
+        # project-id as the gcr.io images and the service account that Composer
+        # uses has permission to access the Google Container Registry
+        # (the default service account has permission)
         image='gcr.io/gcp-runtimes/ubuntu_16_0_4')
     # [END composer_kubernetespodoperator_minconfig]
     # [START composer_kubernetespodoperator_templateconfig]
