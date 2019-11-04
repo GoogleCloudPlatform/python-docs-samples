@@ -48,7 +48,6 @@ def disable_uniform_bucket_level_access(bucket_name):
 
     print('Uniform bucket-level access was disabled for {}.'.format(
         bucket.name))
-    # [END storage_disable_uniform_bucket_level_access]
 
 
 def get_uniform_bucket_level_access(bucket_name):
