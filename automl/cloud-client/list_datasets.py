@@ -29,24 +29,24 @@ def list_datasets(project_id):
 
     # List all the datasets available in the region.
     response = client.list_datasets(
-        project_location, 'translation_dataset_metadata:*')
+        project_location, '')
 
     print("List of datasets:")
     for dataset in response:
-        print('Dataset name: {}'.format(dataset.name))
-        print('Dataset id: {}'.format(dataset.name.split('/')[-1]))
-        print('Dataset display name: {}'.format(dataset.display_name))
+        print(u'Dataset name: {}'.format(dataset.name))
+        print(u'Dataset id: {}'.format(dataset.name.split('/')[-1]))
+        print(u'Dataset display name: {}'.format(dataset.display_name))
         print('Dataset create time:')
-        print('\tseconds: {}'.format(dataset.create_time.seconds))
-        print('\tnanos: {}'.format(dataset.create_time.nanos))
+        print(u'\tseconds: {}'.format(dataset.create_time.seconds))
+        print(u'\tnanos: {}'.format(dataset.create_time.nanos))
         print('Translation dataset metadata:')
         print(
-            '\tsource_language_code: {}'.format(
+            u'\tsource_language_code: {}'.format(
                 dataset.translation_dataset_metadata.source_language_code
             )
         )
         print(
-            '\ttarget_language_code: {}'.format(
+            u'\ttarget_language_code: {}'.format(
                 dataset.translation_dataset_metadata.target_language_code
             )
         )

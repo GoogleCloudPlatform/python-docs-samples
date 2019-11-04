@@ -37,5 +37,5 @@ def export_dataset(project_id, dataset_id, gcs_uri):
         gcs_destination=gcs_destination)
 
     response = client.export_data(dataset_full_id, output_config)
-    print('Dataset exported. {}'.format(response.result()))
+    print(u'Dataset exported. {}'.format(response.result()))
     # [END automl_export_dataset]

@@ -30,15 +30,15 @@ def list_model_evaluations(project_id, model_id):
 
     print('List of model evaluations:')
     for evaluation in client.list_model_evaluations(model_full_id, ''):
-        print('Model evaluation name: {}'.format(evaluation.name))
+        print(u'Model evaluation name: {}'.format(evaluation.name))
         print(
-            'Model annotation spec id: {}'.format(
+            u'Model annotation spec id: {}'.format(
                 evaluation.annotation_spec_id))
-        print('Create Time:')
-        print('\tseconds: {}'.format(evaluation.create_time.seconds))
-        print('\tnanos: {}'.format(evaluation.create_time.nanos / 1e9))
-        print('Evaluation example count: {}'.format(
+        print(u'Create Time:')
+        print(u'\tseconds: {}'.format(evaluation.create_time.seconds))
+        print(u'\tnanos: {}'.format(evaluation.create_time.nanos / 1e9))
+        print(u'Evaluation example count: {}'.format(
             evaluation.evaluated_example_count))
-        print('Model evaluation metrics: {}'.format(
+        print(u'Model evaluation metrics: {}'.format(
             evaluation.translation_evaluation_metrics))
     # [END automl_list_model_evaluations]

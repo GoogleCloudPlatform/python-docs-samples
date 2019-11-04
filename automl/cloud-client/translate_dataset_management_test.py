@@ -55,7 +55,7 @@ def test_list_dataset(capsys):
     # list datasets
     list_datasets.list_datasets(project_id)
     out, _ = capsys.readouterr()
-    assert 'Dataset id: ' in out
+    assert 'Dataset id: {}'.format(dataset_id) in out
 
 
 def test_get_dataset(capsys):

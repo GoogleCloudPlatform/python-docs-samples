@@ -36,11 +36,11 @@ def get_model(project_id, model_id):
         deployment_state = 'undeployed'
 
     # Display the model information.
-    print('Model name: {}'.format(model.name))
-    print('Model id: {}'.format(model.name.split('/')[-1]))
-    print('Model display name: {}'.format(model.display_name))
-    print('Model create time:')
-    print('\tseconds: {}'.format(model.create_time.seconds))
-    print('\tnanos: {}'.format(model.create_time.nanos))
-    print('Model deployment state: {}'.format(deployment_state))
+    print(u'Model name: {}'.format(model.name))
+    print(u'Model id: {}'.format(model.name.split('/')[-1]))
+    print(u'Model display name: {}'.format(model.display_name))
+    print(u'Model create time:')
+    print(u'\tseconds: {}'.format(model.create_time.seconds))
+    print(u'\tnanos: {}'.format(model.create_time.nanos))
+    print(u'Model deployment state: {}'.format(deployment_state))
     # [END automl_get_model]

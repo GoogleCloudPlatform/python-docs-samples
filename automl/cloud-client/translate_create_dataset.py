@@ -41,6 +41,6 @@ def create_dataset(project_id, display_name):
     created_dataset = response.result()
 
     # Display the dataset information
-    print('Dataset name: {}'.format(created_dataset.name))
-    print('Dataset id: {}'.format(created_dataset.name.split('/')[-1]))
+    print(u'Dataset name: {}'.format(created_dataset.name))
+    print(u'Dataset id: {}'.format(created_dataset.name.split('/')[-1]))
     # [END automl_translate_create_dataset]

@@ -29,5 +29,5 @@ def delete_model(project_id, model_id):
     model_full_id = client.model_path(project_id, 'us-central1', model_id)
     response = client.delete_model(model_full_id)
 
-    print('Model deleted. {}'.format(response.result()))
+    print(u'Model deleted. {}'.format(response.result()))
     # [END automl_delete_model]

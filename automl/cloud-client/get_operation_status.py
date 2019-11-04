@@ -30,7 +30,7 @@ def get_operation_status(operation_full_id):
         operation_full_id
     )
 
-    print('Name: {}'.format(response.name))
+    print(u'Name: {}'.format(response.name))
     print('Operation details:')
     print(response)
     # [END automl_get_operation_status]

@@ -39,5 +39,5 @@ def import_dataset(project_id, dataset_id, path):
     response = client.import_data(dataset_full_id, input_config)
 
     print('Processing import...')
-    print('Data imported. {}'.format(response.result()))
+    print(u'Data imported. {}'.format(response.result()))
     # [END automl_import_data]

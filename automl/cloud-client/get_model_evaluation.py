@@ -34,13 +34,13 @@ def get_model_evaluation(project_id, model_id, model_evaluation_id):
     # Get complete detail of the model evaluation.
     response = client.get_model_evaluation(model_evaluation_full_id)
 
-    print('Model evaluation name: {}'.format(response.name))
-    print('Model annotation spec id: {}'.format(response.annotation_spec_id))
+    print(u'Model evaluation name: {}'.format(response.name))
+    print(u'Model annotation spec id: {}'.format(response.annotation_spec_id))
     print('Create Time:')
-    print('\tseconds: {}'.format(response.create_time.seconds))
-    print('\tnanos: {}'.format(response.create_time.nanos / 1e9))
-    print('Evaluation example count: {}'.format(
+    print(u'\tseconds: {}'.format(response.create_time.seconds))
+    print(u'\tnanos: {}'.format(response.create_time.nanos / 1e9))
+    print(u'Evaluation example count: {}'.format(
         response.evaluated_example_count))
-    print('Model evaluation metrics: {}'.format(
+    print(u'Model evaluation metrics: {}'.format(
         response.translation_evaluation_metrics))
     # [END automl_get_model_evaluation]
