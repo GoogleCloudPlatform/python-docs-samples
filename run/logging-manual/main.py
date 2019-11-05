@@ -22,23 +22,23 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def index():
-    project = os.environ['GOOGLE_CLOUD_PROJECT']
+    PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
 
     # [START run_manual_logging]
     # Uncomment and populate this variable in your code:
-    # project = 'The project ID of your Cloud Run service';
+    # PROJECT = 'The project ID of your Cloud Run service';
 
     # Build structured log messages as an object.
-    global_log_fields = dict()
+    global_log_fields = {}
 
     # Add log correlation to nest all log messages
     # beneath request log in Log Viewer.
     trace_header = request.headers.get('X-Cloud-Trace-Context')
 
-    if trace_header and project:
+    if trace_header and PROJECT:
         trace = trace_header.split('/')
         global_log_fields['logging.googleapis.com/trace'] = (
-            f"projects/{project}/traces/{trace[0]}")
+            f"projects/{PROJECT}/traces/{trace[0]}")
 
     # Complete a structured log entry.
     entry = dict(severity='NOTICE',
@@ -53,7 +53,7 @@ def index():
     # Flush the stdout to avoid log buffering.
     sys.stdout.flush()
 
-    return ('Hello Logger!')
+    return 'Hello Logger!'
 
 
 if __name__ == '__main__':
