@@ -53,3 +53,29 @@ def random_entry_group_id(client, project_id):
         project_id, "us-central1", random_entry_group_id
     )
     client.delete_entry_group(entry_group_name)
+
+
+@pytest.fixture
+def random_entry_name(client, entry_group_name):
+    now = datetime.datetime.now()
+    random_entry_id = "example_entry_{}_{}".format(
+        now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
+    )
+    random_entry_name = "{}/entries/{}".format(entry_group_name, random_entry_id)
+    yield random_entry_name
+    client.delete_entry(random_entry_name)
+
+
+@pytest.fixture
+def entry_group_name(client, project_id):
+    now = datetime.datetime.now()
+    entry_group_id = "python_entry_group_sample_{}_{}".format(
+        now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
+    )
+    entry_group = client.create_entry_group(
+        datacatalog_v1beta1.DataCatalogClient.location_path(project_id, "us-central1"),
+        entry_group_id,
+        {},
+    )
+    yield entry_group.name
+    client.delete_entry_group(entry_group.name)
