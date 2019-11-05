@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # NOTE:
-# These tests are unit tests.
+# These tests are unit tests mocking logging.
 
 
 import pytest
