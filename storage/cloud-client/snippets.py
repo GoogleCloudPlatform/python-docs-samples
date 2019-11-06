@@ -113,6 +113,8 @@ def list_buckets():
 def list_blobs(bucket_name):
     """Lists all the blobs in the bucket."""
     storage_client = storage.Client()
+
+    # Note: Client.list_blobs requires at least package version 1.17.0.
     blobs = storage_client.list_blobs(bucket_name)
 
     for blob in blobs:
@@ -142,6 +144,8 @@ def list_blobs_with_prefix(bucket_name, prefix, delimiter=None):
 
     """
     storage_client = storage.Client()
+
+    # Note: Client.list_blobs requires at least package version 1.17.0.
     blobs = storage_client.list_blobs(bucket_name, prefix=prefix,
                                       delimiter=delimiter)
 
@@ -242,6 +246,35 @@ def blob_metadata(bucket_name, blob_name):
     if blob.retention_expiration_time:
         print("retentionExpirationTime: {}"
               .format(blob.retention_expiration_time))
+
+
+def bucket_metadata(bucket_name):
+    """Prints out a bucket's metadata."""
+    # [START storage_get_bucket_metadata]
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+
+    print('ID: {}'.format(bucket.id))
+    print('Name: {}'.format(bucket.name))
+    print('Storage Class: {}'.format(bucket.storage_class))
+    print('Location: {}'.format(bucket.location))
+    print('Location Type: {}'.format(bucket.location_type))
+    print('Cors: {}'.format(bucket.cors))
+    print('Default Event Based Hold: {}'
+          .format(bucket.default_event_based_hold))
+    print('Default KMS Key Name: {}'.format(bucket.default_kms_key_name))
+    print('Metageneration: {}'.format(bucket.metageneration))
+    print('Retention Effective Time: {}'
+          .format(bucket.retention_policy_effective_time))
+    print('Retention Period: {}'.format(bucket.retention_period))
+    print('Retention Policy Locked: {}'.format(bucket.retention_policy_locked))
+    print('Requester Pays: {}'.format(bucket.requester_pays))
+    print('Self Link: {}'.format(bucket.self_link))
+    print('Time Created: {}'.format(bucket.time_created))
+    print('Versioning Enabled: {}'.format(bucket.versioning_enabled))
+    print('Labels:')
+    pprint.pprint(bucket.labels)
+    # [END storage_get_bucket_metadata]
 
 
 def make_blob_public(bucket_name, blob_name):
@@ -363,6 +396,8 @@ def copy_blob(bucket_name, blob_name, new_bucket_name, new_blob_name):
 def bucket_commands(args):
     if args.command == 'list-buckets':
         list_buckets()
+    elif args.command == 'bucket-metadata':
+        bucket_metadata(args.bucket_name)
     elif args.command == 'create-bucket':
         create_bucket(args.bucket_name)
     elif args.command == 'enable-default-kms-key':
@@ -426,10 +461,9 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter)
 
     subparsers = parser.add_subparsers(dest='command')
-    list_buckets_parser = subparsers.add_parser(
+
+    subparsers.add_parser(
         'list-buckets', help=list_buckets.__doc__)
-    list_buckets_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
 
     create_bucket_parser = subparsers.add_parser(
         'create-bucket', help=create_bucket.__doc__)
@@ -459,6 +493,11 @@ def main():
     list_blobs_parser = subparsers.add_parser(
         'list', help=list_blobs.__doc__)
     list_blobs_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
+
+    bucket_metadata_parser = subparsers.add_parser(
+        'bucket-metadata', help=bucket_metadata.__doc__)
+    bucket_metadata_parser.add_argument(
         'bucket_name', help='Your cloud storage bucket.')
 
     list_with_prefix_parser = subparsers.add_parser(
@@ -522,10 +561,14 @@ def main():
 
     signed_url_download_v4_parser = subparsers.add_parser(
         'signed-url-download-v4', help=generate_download_signed_url_v4.__doc__)
+    signed_url_download_v4_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
     signed_url_download_v4_parser.add_argument('blob_name')
 
     signed_url_upload_v4_parser = subparsers.add_parser(
         'signed-url-upload-v4', help=generate_upload_signed_url_v4.__doc__)
+    signed_url_upload_v4_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
     signed_url_upload_v4_parser.add_argument('blob_name')
 
     rename_parser = subparsers.add_parser(

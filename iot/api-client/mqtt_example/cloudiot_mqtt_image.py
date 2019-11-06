@@ -14,6 +14,7 @@
 # limitations under the License.
 import argparse
 import base64
+import binascii
 import io
 import os
 import sys
@@ -61,14 +62,18 @@ def receive_image(project_id, sub_name, prefix, extension, duration):
 
     def callback(message):
         global count
-        count = count + 1
-        print('Received image {}:'.format(count))
-        image_data = base64.b64decode(message.data)
+        try:
+            count = count + 1
+            print('Received image {}:'.format(count))
+            image_data = base64.b64decode(message.data)
 
-        with io.open(file_pattern.format(prefix, count, extension), 'wb') as f:
-            f.write(image_data)
+            with io.open(
+                    file_pattern.format(prefix, count, extension), 'wb') as f:
+                f.write(image_data)
+                message.ack()
 
-        message.ack()
+        except binascii.Error:
+            message.ack()  # To move forward if a message can't be processed
 
     subscriber.subscribe(subscription_path, callback=callback)
 
@@ -118,6 +123,11 @@ def parse_command_line_args():
     parser.add_argument(
             '--image_extension',
             help='Image extension used when receiving images.')
+    parser.add_argument(
+            '--duration',
+            default=60,
+            type=int,
+            help='Number of seconds to receieve images for.')
 
     command = parser.add_subparsers(dest='command')
     command.add_parser(
@@ -140,7 +150,7 @@ def main():
     elif args.command == 'recv':
         receive_image(
             args.project_id, args.subscription_name, args.image_prefix,
-            args.image_extension, 60)
+            args.image_extension, args.duration)
     else:
         print(args.print_help())
 

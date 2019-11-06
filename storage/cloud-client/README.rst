@@ -93,7 +93,7 @@ To run this sample:
     $ python snippets.py
 
     usage: snippets.py [-h]
-                       {list-buckets,create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,signed-url-download-v4,signed-url-upload-v4,rename,copy}
+                       {list-buckets,create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,bucket-metadata,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,signed-url-download-v4,signed-url-upload-v4,rename,copy}
                        ...
 
     This application demonstrates how to perform basic operations on blobs
@@ -103,7 +103,7 @@ To run this sample:
     at https://cloud.google.com/storage/docs.
 
     positional arguments:
-      {list-buckets,create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,signed-url-download-v4,signed-url-upload-v4,rename,copy}
+      {list-buckets,create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,bucket-metadata,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,signed-url-download-v4,signed-url-upload-v4,rename,copy}
         list-buckets        Lists all buckets.
         create-bucket       Creates a new bucket.
         delete-bucket       Deletes a bucket. The bucket must be empty.
@@ -112,6 +112,7 @@ To run this sample:
         remove-bucket-label
                             Remove a label from a bucket.
         list                Lists all the blobs in the bucket.
+        bucket-metadata     Prints out a bucket's metadata.
         list-with-prefix    Lists all the blobs in the bucket that begin with the
                             prefix. This can be used to list all blobs in a
                             "folder", e.g. "public/". The delimiter argument can
@@ -401,6 +402,22 @@ To run this sample:
     optional arguments:
       -h, --help    show this help message and exit
 
+
+
+Service Account HMAC Keys
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/hmac_samples.py,storage/cloud-client/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python hmac_samples.py
 
 
 

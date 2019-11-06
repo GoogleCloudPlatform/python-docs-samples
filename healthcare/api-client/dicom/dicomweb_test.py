@@ -34,9 +34,13 @@ dicom_store_id = 'test_dicom_store_{}'.format(int(time.time()))
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 dcm_file_name = 'dicom_00000001_000.dcm'
 dcm_file = os.path.join(RESOURCES, dcm_file_name)
-# The study_uid is not assigned by the server and is part of the
-# metadata of dcm_file
+# The study_uid, series_uid, and instance_uid are not assigned by the
+# server and are part of the metadata of dcm_file
 study_uid = '1.3.6.1.4.1.11129.5.5.111396399361969898205364400549799252857604'
+series_uid = '1.3.6.1.4.1.11129.5.5.195628213694300498946760767481291263511724'
+instance_uid = '{}.{}'.format(
+    '1.3.6.1.4.1.11129.5.5',
+    '153751009835107614666834563294684339746480')
 
 
 @pytest.fixture(scope='module')
@@ -154,10 +158,100 @@ def test_dicomweb_retrieve_study(test_dataset, test_dicom_store, capsys):
         dicom_store_id,
         study_uid)
 
+    # Assert study was downloaded
+    assert os.path.isfile('study.multipart')
+
     out, _ = capsys.readouterr()
 
-    # Check that store instance worked
-    assert 'Retrieved study with UID:' in out
+    # Check that retrieve study worked
+    assert 'Retrieved study' in out
+
+    # Delete downloaded study
+    os.remove('study.multipart')
+
+    dicomweb.dicomweb_delete_study(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        dicom_store_id,
+        study_uid)
+
+
+def test_dicomweb_retrieve_instance(test_dataset, test_dicom_store, capsys):
+    dicomweb.dicomweb_store_instance(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        dicom_store_id,
+        dcm_file)
+
+    dicomweb.dicomweb_retrieve_instance(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        dicom_store_id,
+        study_uid,
+        series_uid,
+        instance_uid)
+
+    # Assert instance was downloaded
+    assert os.path.isfile('instance.dcm')
+
+    out, _ = capsys.readouterr()
+
+    # Check that retrieve instance worked
+    assert 'Retrieved DICOM instance' in out
+
+    # Delete downloaded instance
+    os.remove('instance.dcm')
+
+    dicomweb.dicomweb_delete_study(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        dicom_store_id,
+        study_uid)
+
+
+def test_dicomweb_retrieve_rendered(test_dataset, test_dicom_store, capsys):
+    dicomweb.dicomweb_store_instance(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        dicom_store_id,
+        dcm_file)
+
+    dicomweb.dicomweb_retrieve_rendered(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        dicom_store_id,
+        study_uid,
+        series_uid,
+        instance_uid)
+
+    # Assert rendered image was downloaded
+    assert os.path.isfile('rendered_image.png')
+
+    out, _ = capsys.readouterr()
+
+    # Check that retrieve rendered image worked
+    assert 'Retrieved rendered image' in out
+
+    # Delete downloaded rendered image
+    os.remove('rendered_image.png')
 
     dicomweb.dicomweb_delete_study(
         service_account_json,

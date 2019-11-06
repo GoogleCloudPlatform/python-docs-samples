@@ -33,6 +33,9 @@ samples:
 - name: Notification Polling
   file: notification_polling.py
   show_help: true
+- name: Service Account HMAC Keys
+  file: hmac_samples.py
+  show_help: false
 
 cloud_client_library: true
 
