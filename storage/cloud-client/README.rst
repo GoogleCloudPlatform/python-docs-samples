@@ -312,11 +312,11 @@ To run this sample:
 
 
 
-Bucket Policy Only
+Uniform Bucket Level Access
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/bucket_policy_only.py,storage/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/uniform_bucket_level_access.py,storage/cloud-client/README.rst
 
 
 
@@ -325,20 +325,20 @@ To run this sample:
 
 .. code-block:: bash
 
-    $ python bucket_policy_only.py
+    $ python uniform_bucket_level_access.py
 
-    usage: bucket_policy_only.py [-h]
-                                 {enable-bucket-policy-only,disable-bucket-policy-only,get-bucket-policy-only}
+    usage: uniform_bucket_level_access.py [-h]
+                                 {enable-uniform-bucket-level-access,disable-uniform-bucket-level-access,get-uniform-bucket-level-access}
                                  ...
 
     positional arguments:
-      {enable-bucket-policy-only,disable-bucket-policy-only,get-bucket-policy-only}
-        enable-bucket-policy-only
-                            Enable Bucket Policy Only for a bucket
-        disable-bucket-policy-only
-                            Disable Bucket Policy Only for a bucket
-        get-bucket-policy-only
-                            Get Bucket Policy Only for a bucket
+      {enable-uniform-bucket-level-access,disable-uniform-bucket-level-access,get-uniform-bucket-level-access}
+        enable-uniform-bucket-level-access
+                            Enable uniform bucket-level access  for a bucket
+        disable-uniform-bucket-level-access
+                            Disable uniform bucket-level access for a bucket
+        get-uniform-bucket-level-access
+                            Get uniform bucket-level access for a bucket
 
     optional arguments:
       -h, --help            show this help message and exit
