@@ -37,7 +37,7 @@ def enable_uniform_bucket_level_access(bucket_name):
 
 def disable_uniform_bucket_level_access(bucket_name):
     """Disable uniform bucket-level access for a bucket"""
-    # [START storage_uniform_bucket_level_access]
+    # [START storage_disable_uniform_bucket_level_access]
     # bucket_name = "my-bucket"
 
     storage_client = storage.Client()
@@ -48,6 +48,7 @@ def disable_uniform_bucket_level_access(bucket_name):
 
     print('Uniform bucket-level access was disabled for {}.'.format(
         bucket.name))
+    # [END storage_disable_uniform_bucket_level_access]
 
 
 def get_uniform_bucket_level_access(bucket_name):
