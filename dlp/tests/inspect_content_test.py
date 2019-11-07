@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import pdb
 
 from google.api_core import exceptions
 from gcp_devrel.testing import eventually_consistent
@@ -26,14 +27,16 @@ import google.cloud.storage
 
 import pytest
 import dlp.inspect_content as inspect_content
+from test_utils import vpc_check, vpc_dec
 
-VPC_ENABLED = os.getenv('VPC_ENABLED')
 GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
+SHOULD_PASS = os.getenv('SHOULD_PASS').lower() == 'true'
 
-if VPC_ENABLED:
-    TEST_BUCKET_NAME = os.getenv('TEST_BUCKET_NAME')
-else:
-    TEST_BUCKET_NAME = GCLOUD_PROJECT + '-dlp-python-client-test'
+#TEST_BUCKET_NAME = GCLOUD_PROJECT + '-dlp-python-client-test'
+
+TEST_BUCKET_INSIDE = GCLOUD_PROJECT + '-dlp-python-client-test'
+TEST_BUCKET_OUTSIDE = 'python-docs-sample-tests' + '-dlp-python-client-test'
+
 
 RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), 'resources')
 RESOURCE_FILE_NAMES = ['test.txt', 'test.png', 'harmless.txt', 'accounts.txt']
@@ -43,27 +46,14 @@ DATASTORE_KIND = 'DLP test kind'
 BIGQUERY_DATASET_ID = 'dlp_test_dataset'
 BIGQUERY_TABLE_ID = 'dlp_test_table'
 
-def vpc_check(fn):
-  def wrapped(*args, **kwargs):
-    try:
-      return fn(*args, **kwags)
-    except exceptions.PermissionDenied as e:
-        return VPC_ENABLED and (e.message == "Request is prohibited by organization's policy")
-    except:
-        pass
-    return False
-  return wrapped
-
-@pytest.fixture(scope='module')
-def bucket():
-    # Creates a GCS bucket, uploads files required for the test, and tears down
-    # the entire bucket afterwards.
-
+@pytest.fixture(params=[TEST_BUCKET_INSIDE, TEST_BUCKET_OUTSIDE], scope='module')
+def bucket(request):
     client = google.cloud.storage.Client()
     try:
-        bucket = client.get_bucket(TEST_BUCKET_NAME)
+        print("new bucket time")
+        bucket = client.get_bucket(request.param)
     except google.cloud.exceptions.NotFound:
-        bucket = client.create_bucket(TEST_BUCKET_NAME)
+        bucket = client.create_bucket(request.param)
 
     # Upoad the blobs and keep track of them in a list.
     blobs = []
@@ -83,7 +73,6 @@ def bucket():
     # Attempt to delete the bucket; this will only work if it is empty.
     bucket.delete()
 
-
 @pytest.fixture(scope='module')
 def topic_id():
     # Creates a pubsub topic, and tears it down.
@@ -97,6 +86,7 @@ def topic_id():
     yield TOPIC_ID
 
     publisher.delete_topic(topic_path)
+
 
 
 @pytest.fixture(scope='module')
@@ -170,22 +160,9 @@ def bigquery_project():
 
     bigquery_client.delete_dataset(dataset_ref, delete_contents=True)
 
-@vpc_check
-def test_inspect_string(capsys):
-    test_string = 'My name is Gary Smith and my email is gary@example.com'
-
-    inspect_content.inspect_string(
-        GCLOUD_PROJECT,
-        test_string,
-        ['FIRST_NAME', 'EMAIL_ADDRESS'],
-        include_quote=True)
-
-    out, _ = capsys.readouterr()
-    assert 'Info type: FIRST_NAME' in out
-    assert 'Info type: EMAIL_ADDRESS' in out
-
 
 @vpc_check
+@pytest.mark.skipif(not SHOULD_PASS, reason="expected to break under VPC")
 def test_inspect_table(capsys):
     test_tabular_data = {
         "header": [
@@ -215,102 +192,11 @@ def test_inspect_table(capsys):
     assert 'Info type: EMAIL_ADDRESS' in out
 
 
+
+
+#@flaky
 @vpc_check
-def test_inspect_string_with_custom_info_types(capsys):
-    test_string = 'My name is Gary Smith and my email is gary@example.com'
-    dictionaries = ['Gary Smith']
-    regexes = ['\\w+@\\w+.com']
-
-    inspect_content.inspect_string(
-        GCLOUD_PROJECT,
-        test_string,
-        [],
-        custom_dictionaries=dictionaries,
-        custom_regexes=regexes,
-        include_quote=True)
-
-    out, _ = capsys.readouterr()
-    assert 'Info type: CUSTOM_DICTIONARY_0' in out
-    assert 'Info type: CUSTOM_REGEX_0' in out
-
-
-@vpc_check
-def test_inspect_string_no_results(capsys):
-    test_string = 'Nothing to see here'
-
-    inspect_content.inspect_string(
-        GCLOUD_PROJECT,
-        test_string,
-        ['FIRST_NAME', 'EMAIL_ADDRESS'],
-        include_quote=True)
-
-    out, _ = capsys.readouterr()
-    assert 'No findings' in out
-
-
-@vpc_check
-def test_inspect_file(capsys):
-    test_filepath = os.path.join(RESOURCE_DIRECTORY, 'test.txt')
-
-    inspect_content.inspect_file(
-        GCLOUD_PROJECT,
-        test_filepath,
-        ['FIRST_NAME', 'EMAIL_ADDRESS'],
-        include_quote=True)
-
-    out, _ = capsys.readouterr()
-    assert 'Info type: EMAIL_ADDRESS' in out
-
-
-@vpc_check
-def test_inspect_file_with_custom_info_types(capsys):
-    test_filepath = os.path.join(RESOURCE_DIRECTORY, 'test.txt')
-    dictionaries = ['gary@somedomain.com']
-    regexes = ['\\(\\d{3}\\) \\d{3}-\\d{4}']
-
-    inspect_content.inspect_file(
-        GCLOUD_PROJECT,
-        test_filepath,
-        [],
-        custom_dictionaries=dictionaries,
-        custom_regexes=regexes,
-        include_quote=True)
-
-    out, _ = capsys.readouterr()
-    assert 'Info type: CUSTOM_DICTIONARY_0' in out
-    assert 'Info type: CUSTOM_REGEX_0' in out
-
-
-@vpc_check
-def test_inspect_file_no_results(capsys):
-    test_filepath = os.path.join(RESOURCE_DIRECTORY, 'harmless.txt')
-
-    inspect_content.inspect_file(
-        GCLOUD_PROJECT,
-        test_filepath,
-        ['FIRST_NAME', 'EMAIL_ADDRESS'],
-        include_quote=True)
-
-    out, _ = capsys.readouterr()
-    assert 'No findings' in out
-
-
-@vpc_check
-def test_inspect_image_file(capsys):
-    test_filepath = os.path.join(RESOURCE_DIRECTORY, 'test.png')
-
-    inspect_content.inspect_file(
-        GCLOUD_PROJECT,
-        test_filepath,
-        ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'],
-        include_quote=True)
-
-    out, _ = capsys.readouterr()
-    assert 'Info type: PHONE_NUMBER' in out
-
-
-@flaky
-@vpc_check
+@pytest.mark.skipif(not SHOULD_PASS, reason="expected to break under VPC")
 def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
     inspect_content.inspect_gcs_file(
         GCLOUD_PROJECT,
@@ -323,125 +209,3 @@ def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
 
     out, _ = capsys.readouterr()
     assert 'Info type: EMAIL_ADDRESS' in out
-
-
-@flaky
-@vpc_check
-def test_inspect_gcs_file_with_custom_info_types(bucket, topic_id,
-                                                 subscription_id, capsys):
-    dictionaries = ['gary@somedomain.com']
-    regexes = ['\\(\\d{3}\\) \\d{3}-\\d{4}']
-
-    inspect_content.inspect_gcs_file(
-        GCLOUD_PROJECT,
-        bucket.name,
-        'test.txt',
-        topic_id,
-        subscription_id,
-        [],
-        custom_dictionaries=dictionaries,
-        custom_regexes=regexes,
-        timeout=420)
-
-    out, _ = capsys.readouterr()
-    assert 'Info type: CUSTOM_DICTIONARY_0' in out
-    assert 'Info type: CUSTOM_REGEX_0' in out
-
-
-@flaky
-@vpc_check
-def test_inspect_gcs_file_no_results(
-        bucket, topic_id, subscription_id, capsys):
-    inspect_content.inspect_gcs_file(
-        GCLOUD_PROJECT,
-        bucket.name,
-        'harmless.txt',
-        topic_id,
-        subscription_id,
-        ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'],
-        timeout=420)
-
-    out, _ = capsys.readouterr()
-    assert 'No findings' in out
-
-
-@pytest.mark.skip(reason='nondeterministically failing')
-@vpc_check
-def test_inspect_gcs_image_file(bucket, topic_id, subscription_id, capsys):
-    inspect_content.inspect_gcs_file(
-        GCLOUD_PROJECT,
-        bucket.name,
-        'test.png',
-        topic_id,
-        subscription_id,
-        ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'])
-
-    out, _ = capsys.readouterr()
-    assert 'Info type: EMAIL_ADDRESS' in out
-
-
-@flaky
-@vpc_check
-def test_inspect_gcs_multiple_files(bucket, topic_id, subscription_id, capsys):
-    inspect_content.inspect_gcs_file(
-        GCLOUD_PROJECT,
-        bucket.name,
-        '*',
-        topic_id,
-        subscription_id,
-        ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'])
-
-    out, _ = capsys.readouterr()
-    assert 'Info type: EMAIL_ADDRESS' in out
-    assert 'Info type: PHONE_NUMBER' in out
-
-
-@flaky
-@vpc_check
-def test_inspect_datastore(
-        datastore_project, topic_id, subscription_id, capsys):
-    @eventually_consistent.call
-    def _():
-        inspect_content.inspect_datastore(
-            GCLOUD_PROJECT,
-            datastore_project,
-            DATASTORE_KIND,
-            topic_id,
-            subscription_id,
-            ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'])
-
-        out, _ = capsys.readouterr()
-        assert 'Info type: EMAIL_ADDRESS' in out
-
-
-@flaky
-@vpc_check
-def test_inspect_datastore_no_results(
-        datastore_project, topic_id, subscription_id, capsys):
-    inspect_content.inspect_datastore(
-        GCLOUD_PROJECT,
-        datastore_project,
-        DATASTORE_KIND,
-        topic_id,
-        subscription_id,
-        ['PHONE_NUMBER'])
-
-    out, _ = capsys.readouterr()
-    assert 'No findings' in out
-
-
-@pytest.mark.skip(reason='unknown issue')
-@vpc_check
-def test_inspect_bigquery(
-        bigquery_project, topic_id, subscription_id, capsys):
-    inspect_content.inspect_bigquery(
-        GCLOUD_PROJECT,
-        bigquery_project,
-        BIGQUERY_DATASET_ID,
-        BIGQUERY_TABLE_ID,
-        topic_id,
-        subscription_id,
-        ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'])
-
-    out, _ = capsys.readouterr()
-    assert 'Info type: FIRST_NAME' in out

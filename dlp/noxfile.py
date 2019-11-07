@@ -22,19 +22,14 @@ def setup(session):
         session.skip("Credentials must be set via environment variable")
 
 @nox.session
-@nox.parametrize("bucket_name", ["GOOGLE_CLOUD_TESTS_VPCSC_INSIDE_PERIMETER_BUCKET", "GOOGLE_CLOUD_TESTS_VPCSC_OUTSIDE_PERIMETER_BUCKET"])
-def vpc_enabled(session, bucket_name):
+def vpc_enabled(session):
 
     # Additional setup for VPCSC system tests
     env = {
-        "VPC_ENABLED": True,
+        "SHOULD_PASS": "True",
         "GCLOUD_PROJECT": os.environ.get("GCLOUD_PROJECT"),
-        "GOOGLE_CLOUD_TESTS_VPCSC_OUTSIDE_PERIMETER_PROJECT": os.environ.get(
-            "GCLOUD_PROJECT"
-        ),
-        "TEST_BUCKET_NAME": os.environ.get(bucket_name),
     }
-    tests_path = "tests"
+    tests_path = "tests/inspect_content_test.py"
     if not os.path.exists(tests_path):
       session.skip("tests were not found")
     session.run("pytest", "--quiet", tests_path, env=env)
