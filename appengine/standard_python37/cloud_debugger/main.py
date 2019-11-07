@@ -16,13 +16,13 @@
 from flask import Flask, request
 
 # Enable cloud debugger
-# Adjust logging level to INFO
 try:
     import googleclouddebugger
     googleclouddebugger.enable()
 except ImportError:
     pass
 
+# Adjust logging level to INFO
 import logging
 logging.basicConfig(level=logging.INFO)
 
