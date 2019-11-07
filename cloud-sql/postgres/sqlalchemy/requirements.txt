@@ -1,3 +1,3 @@
 Flask==1.1.1
-SQLAlchemy==1.3.6
+SQLAlchemy==1.3.8
 pg8000==1.13.2

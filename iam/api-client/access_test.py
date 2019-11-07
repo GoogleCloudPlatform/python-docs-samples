@@ -50,6 +50,10 @@ def test_access(capsys):
     out, _ = capsys.readouterr()
     assert u'etag' in out
 
+    access.test_permissions(project_id)
+    out, _ = capsys.readouterr()
+    assert u'permissions' in out
+
     # deleting the service account created above
     service_accounts.delete_service_account(
         email)

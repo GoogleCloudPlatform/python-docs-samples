@@ -561,10 +561,14 @@ def main():
 
     signed_url_download_v4_parser = subparsers.add_parser(
         'signed-url-download-v4', help=generate_download_signed_url_v4.__doc__)
+    signed_url_download_v4_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
     signed_url_download_v4_parser.add_argument('blob_name')
 
     signed_url_upload_v4_parser = subparsers.add_parser(
         'signed-url-upload-v4', help=generate_upload_signed_url_v4.__doc__)
+    signed_url_upload_v4_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
     signed_url_upload_v4_parser.add_argument('blob_name')
 
     rename_parser = subparsers.add_parser(
