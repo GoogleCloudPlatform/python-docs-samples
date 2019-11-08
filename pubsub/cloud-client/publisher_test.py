@@ -1,4 +1,4 @@
-# Copyright 2019 Google Inc. All Rights Reserved.
+# Copyright 2016 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,13 +36,11 @@ def topic(client):
     topic_path = client.topic_path(PROJECT, TOPIC)
 
     try:
-        client.delete_topic(topic_path)
-    except Exception:
-        pass
+        response = client.get_topic(topic_path)
+    except:  # noqa
+        response = client.create_topic(topic_path)
 
-    client.create_topic(topic_path)
-
-    yield topic_path
+    yield response.name
 
 
 def _make_sleep_patch():
