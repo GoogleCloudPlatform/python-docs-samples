@@ -2,14 +2,21 @@ import json
 import requests
 import time
 
-METADATA_URL = 'http://metadata.google.internal/computeMetadata/v1/'
+"""Example of using the Metadata Server to watch deprecated endpoint accesses.
+
+For more information, see the README.md under /compute.
+"""
+
+
+METADATA_URL = 'http://metadata.google.internal/computeMetadata/v1'
 METADATA_HEADERS = {'Metadata-Flavor': 'Google'}
 
 
+# [START compute_wait_for_legacy_usage]
 def wait_for_legacy_usage(callback):
-    url = METADATA_URL + 'instance/legacy-endpoint-access/'
+    url = '{}/instance/legacy-endpoint-access'.format(METADATA_URL)
     last_etag = '0'
-    counts = {'0.1': 0, 'v1beta1': 0}
+    counts = None
     while True:
         r = requests.get(
             url,
@@ -24,19 +31,22 @@ def wait_for_legacy_usage(callback):
             time.sleep(1)
             continue
         if r.status_code == 404:  # Feature not yet supported
-            print('Legacy endpoint access not yet supported. Sleeping for 1 hour.')
+            print('Legacy endpoint access not supported. Sleeping for 1 hour.')
             time.sleep(3600)
             continue
         r.raise_for_status()
 
         last_etag = r.headers['etag']
         access_info = json.loads(r.text)
+        if not counts:
+            counts = access_info
         if access_info != counts:
             diff = {
                 ver: access_info[ver] - counts[ver] for ver in counts
             }
             counts = access_info
             callback(diff)
+            # [END compute_wait_for_legacy_usage]
 
 
 def legacy_callback(diff):

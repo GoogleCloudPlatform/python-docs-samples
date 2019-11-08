@@ -4,53 +4,85 @@ import json
 
 import detect_legacy_usage
 
-@mock.patch('detect_legacy_usage.requests')
-@mock.patch('detect_legacy_usage.time')
-def test_wait_for_legacy_usage(time_mock, requests_mock):
-    #Response 1 is a 404
-    response1_mock = mock.Mock()
-    response1_mock.status_code = 404
-    #Response 2 is a 503
-    response2_mock = mock.Mock()
-    response2_mock.status_code = 503
-    #Response 3 is a 200 with no change (all 0s)
-    response3_data = {'0.1': 0, 'v1beta1': 0}
-    response3_mock = mock.Mock()
-    response3_mock.status_code = 200
-    response3_mock.text = json.dumps(response3_data)
-    response3_mock.headers = {'etag': 1}
-    #Response 4 is a 200 with different data
-    response4_data = {'0.1': 0, 'v1beta1': 1}
-    response4_mock = mock.Mock()
-    response4_mock.status_code = 200
-    response4_mock.text = json.dumps(response4_data)
-    response4_mock.headers = {'etag': 2}
 
-    #Response 5 has another change
-    response5_data = {'0.1': 1, 'v1beta1': 1}
-    response5_mock = mock.Mock()
-    response5_mock.status_code = 200
-    response5_mock.text = json.dumps(response5_data)
-    response5_mock.headers = {'etag': 3}
-
-    requests_mock.codes.ok = requests.codes.ok
-    #Repeat last response to make sure callback isn't called (no change)
-    requests_mock.get.side_effect = [
-        response1_mock, response2_mock, response3_mock, response4_mock,
-        response5_mock, response5_mock, StopIteration()]
-
-
-
+def execute_test(requests_mock, *responses):
     callback_mock = mock.Mock()
-
+    requests_mock.codes.ok = requests.codes.ok
+    requests_mock.get.side_effect = responses + (StopIteration(),)
     try:
         detect_legacy_usage.wait_for_legacy_usage(callback_mock)
     except StopIteration:
-        pass
+        return callback_mock
 
-    assert callback_mock.call_count == 2
-    assert callback_mock.call_args_list[0][0] == (response4_data,)
-    assert callback_mock.call_args_list[1][0] == ({'0.1': 1, 'v1beta1': 0},)
-    assert time_mock.sleep.call_count == 2
+@mock.patch('detect_legacy_usage.requests')
+@mock.patch('detect_legacy_usage.time')
+def test_metadata_server_unavailable(time_mock, requests_mock):
+    # Metadata server unavailable
+    response_mock = mock.Mock()
+    response_mock.status_code = 503
+
+    callback_mock = execute_test(requests_mock, response_mock)
+
+    assert callback_mock.call_count == 0
+    assert time_mock.sleep.call_count == 1
+    assert time_mock.sleep.call_args_list[0][0] == (1,)
+
+@mock.patch('detect_legacy_usage.requests')
+@mock.patch('detect_legacy_usage.time')
+def test_endpoint_does_not_exist(time_mock, requests_mock):
+    # legacy-endpoint-access endpoint unavailable (removed or not yet supported)
+    response_mock = mock.Mock()
+    response_mock.status_code = 404
+
+    callback_mock = execute_test(requests_mock, response_mock)
+
+    assert callback_mock.call_count == 0
+    assert time_mock.sleep.call_count == 1
     assert time_mock.sleep.call_args_list[0][0] == (3600,)
-    assert time_mock.sleep.call_args_list[1][0] == (1,)
+
+@mock.patch('detect_legacy_usage.requests')
+@mock.patch('detect_legacy_usage.time')
+def test_callback_called_on_change(time_mock, requests_mock):
+    #Response 1 has starting counts (should not trigger callback)
+    response1_data = {'0.1': 5, 'v1beta1': 10}
+    response1_mock = mock.Mock()
+    response1_mock.status_code = 200
+    response1_mock.text = json.dumps(response1_data)
+    response1_mock.headers = {'etag': '1'}
+
+     #Response 2 has different data
+    response2_data = {'0.1': 6, 'v1beta1': 10}
+    response2_mock = mock.Mock()
+    response2_mock.status_code = 200
+    response2_mock.text = json.dumps(response2_data)
+    response2_mock.headers = {'etag': '2'}
+
+    callback_mock = execute_test(requests_mock, response1_mock, response2_mock)
+
+    # One change so callback is called once
+    assert callback_mock.call_count == 1
+    assert callback_mock.call_args_list[0][0] == ({'0.1': 1, 'v1beta1': 0},)
+    assert time_mock.sleep.call_count == 0
+
+
+@mock.patch('detect_legacy_usage.requests')
+@mock.patch('detect_legacy_usage.time')
+def test_callback_not_called_without_change(time_mock, requests_mock):
+    #Response 1 has starting counts (should not trigger callback)
+    response1_data = {'0.1': 5, 'v1beta1': 10}
+    response1_mock = mock.Mock()
+    response1_mock.status_code = 200
+    response1_mock.text = json.dumps(response1_data)
+    response1_mock.headers = {'etag': '1'}
+
+    #Response 2 has the same data (no change)
+    response2_mock = mock.Mock()
+    response2_mock.status_code = 200
+    response2_mock.text = json.dumps(response1_data)
+    response2_mock.headers = {'etag': '1'}
+
+    callback_mock = execute_test(requests_mock, response1_mock, response2_mock)
+
+    # No change so callback is not called
+    assert callback_mock.call_count == 0
+    assert time_mock.sleep.call_count == 0
