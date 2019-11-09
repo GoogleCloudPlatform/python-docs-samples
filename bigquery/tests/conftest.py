@@ -79,6 +79,22 @@ def table_id(client, dataset_id):
 
 
 @pytest.fixture
+def table_with_schema_id(client, dataset_id):
+    now = datetime.datetime.now()
+    table_id = "python_table_with_schema_{}_{}".format(
+        now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
+    )
+    schema = [
+        bigquery.SchemaField("full_name", "STRING"),
+        bigquery.SchemaField("age", "INTEGER"),
+    ]
+    table = bigquery.Table("{}.{}".format(dataset_id, table_id), schema=schema)
+    table = client.create_table(table)
+    yield "{}.{}.{}".format(table.project, table.dataset_id, table.table_id)
+    client.delete_table(table, not_found_ok=True)
+
+
+@pytest.fixture
 def table_with_data_id(client):
     return "bigquery-public-data.samples.shakespeare"
 
