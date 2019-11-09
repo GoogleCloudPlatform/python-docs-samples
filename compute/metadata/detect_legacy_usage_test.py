@@ -14,6 +14,7 @@ def execute_test(requests_mock, *responses):
     except StopIteration:
         return callback_mock
 
+
 @mock.patch('detect_legacy_usage.requests')
 @mock.patch('detect_legacy_usage.time')
 def test_metadata_server_unavailable(time_mock, requests_mock):
@@ -27,10 +28,11 @@ def test_metadata_server_unavailable(time_mock, requests_mock):
     assert time_mock.sleep.call_count == 1
     assert time_mock.sleep.call_args_list[0][0] == (1,)
 
+
 @mock.patch('detect_legacy_usage.requests')
 @mock.patch('detect_legacy_usage.time')
 def test_endpoint_does_not_exist(time_mock, requests_mock):
-    # legacy-endpoint-access endpoint unavailable (removed or not yet supported)
+    # legacy-endpoint-access url unavailable (removed or not yet supported)
     response_mock = mock.Mock()
     response_mock.status_code = 404
 
@@ -40,17 +42,18 @@ def test_endpoint_does_not_exist(time_mock, requests_mock):
     assert time_mock.sleep.call_count == 1
     assert time_mock.sleep.call_args_list[0][0] == (3600,)
 
+
 @mock.patch('detect_legacy_usage.requests')
 @mock.patch('detect_legacy_usage.time')
 def test_callback_called_on_change(time_mock, requests_mock):
-    #Response 1 has starting counts (should not trigger callback)
+    # Response 1 has starting counts (should not trigger callback)
     response1_data = {'0.1': 5, 'v1beta1': 10}
     response1_mock = mock.Mock()
     response1_mock.status_code = 200
     response1_mock.text = json.dumps(response1_data)
     response1_mock.headers = {'etag': '1'}
 
-     #Response 2 has different data
+    # Response 2 has different data
     response2_data = {'0.1': 6, 'v1beta1': 10}
     response2_mock = mock.Mock()
     response2_mock.status_code = 200
@@ -68,14 +71,14 @@ def test_callback_called_on_change(time_mock, requests_mock):
 @mock.patch('detect_legacy_usage.requests')
 @mock.patch('detect_legacy_usage.time')
 def test_callback_not_called_without_change(time_mock, requests_mock):
-    #Response 1 has starting counts (should not trigger callback)
+    # Response 1 has starting counts (should not trigger callback)
     response1_data = {'0.1': 5, 'v1beta1': 10}
     response1_mock = mock.Mock()
     response1_mock.status_code = 200
     response1_mock.text = json.dumps(response1_data)
     response1_mock.headers = {'etag': '1'}
 
-    #Response 2 has the same data (no change)
+    # Response 2 has the same data (no change)
     response2_mock = mock.Mock()
     response2_mock.status_code = 200
     response2_mock.text = json.dumps(response1_data)

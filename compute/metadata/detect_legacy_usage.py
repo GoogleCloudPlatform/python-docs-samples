@@ -56,8 +56,8 @@ def legacy_callback(diff):
 
 
 def main():
-  wait_for_legacy_usage(legacy_callback)
+    wait_for_legacy_usage(legacy_callback)
 
 
 if __name__ == '__main__':
-  main()
+    main()
