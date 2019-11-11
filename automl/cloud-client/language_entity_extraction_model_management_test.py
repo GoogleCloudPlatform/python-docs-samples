@@ -16,13 +16,21 @@
 
 import os
 
-import translate_predict
+import pytest
 
-project_id = os.environ['GCLOUD_PROJECT']
+import deploy_model
+import undeploy_model
+
+PROJECT_ID = os.environ['GCLOUD_PROJECT']
+MODEL_ID = 'TEN5112482778553778176'
 
 
-def test_predict(capsys):
-    model_id = 'TRL3128559826197068699'
-    translate_predict.predict(project_id, model_id, 'resources/input.txt')
+@pytest.mark.slow
+def test_deploy_undeploy_model(capsys):
+    undeploy_model.undeploy_model(PROJECT_ID, MODEL_ID)
     out, _ = capsys.readouterr()
-    assert 'Translated content: ' in out
+    assert 'Model undeployment finished.' in out
+
+    deploy_model.deploy_model(PROJECT_ID, MODEL_ID)
+    out, _ = capsys.readouterr()
+    assert 'Model deployment finished.' in out
