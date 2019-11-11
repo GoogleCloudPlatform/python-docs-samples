@@ -25,7 +25,8 @@ BUCKET_ID = '{}-lcm'.format(PROJECT_ID)
 
 def test_predict(capsys):
     model_id = 'TEN5112482778553778176'
-    text = 'Constitutional mutations in the WT1 gene in patients with Denys-Drash syndrome.'
+    text = 'Constitutional mutations in the WT1 gene in patients with ' \
+           'Denys-Drash syndrome.'
     language_entity_extraction_predict.predict(PROJECT_ID, model_id, text)
     out, _ = capsys.readouterr()
     assert 'Text Extract Entity Types: ' in out
@@ -35,7 +36,8 @@ def test_batch_predict(capsys):
     model_id = 'TEN5112482778553778176'
     input_uri = 'gs://{}/entity_extraction/input.jsonl'.format(BUCKET_ID)
     output_uri = 'gs://{}/TEST_BATCH_PREDICT/'.format(BUCKET_ID)
-    language_batch_predict.batch_predict(PROJECT_ID, model_id, input_uri, output_uri)
+    language_batch_predict.batch_predict(
+        PROJECT_ID, model_id, input_uri, output_uri)
     out, _ = capsys.readouterr()
     assert 'Batch Prediction results saved to Cloud Storage bucket' in out
 

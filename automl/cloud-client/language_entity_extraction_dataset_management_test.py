@@ -35,13 +35,15 @@ DATASET_ID = 'TEN4058147884539838464'
 def test_create_import_delete_dataset(capsys):
     # create dataset
     dataset_name = 'test_' + datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-    language_entity_extraction_create_dataset.create_dataset(PROJECT_ID, dataset_name)
+    language_entity_extraction_create_dataset.create_dataset(
+        PROJECT_ID, dataset_name)
     out, _ = capsys.readouterr()
     assert 'Dataset id: ' in out
 
     # import data
     dataset_id = out.splitlines()[1].split()[2]
-    data = 'gs://cloud-samples-data/automl/language_entity_extraction/dataset.csv'
+    data = \
+        'gs://cloud-samples-data/automl/language_entity_extraction/dataset.csv'
     import_dataset.import_dataset(PROJECT_ID, dataset_id, data)
     out, _ = capsys.readouterr()
     assert 'Data imported.' in out

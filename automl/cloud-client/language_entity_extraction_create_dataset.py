@@ -42,6 +42,3 @@ def create_dataset(project_id, display_name):
     print(u'Dataset name: {}'.format(created_dataset.name))
     print(u'Dataset id: {}'.format(created_dataset.name.split('/')[-1]))
     # [END automl_language_entity_extraction_create_dataset]
-
-
-# create_dataset('python-docs-samples-tests', 'operation_known')
