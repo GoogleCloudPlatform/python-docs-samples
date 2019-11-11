@@ -17,7 +17,12 @@
 
 def get_dataset(project_id, dataset_id):
     """Get a dataset."""
+    # [START automl_language_entity_extraction_get_dataset]
+    # [START automl_language_sentiment_analysis_get_dataset]
+    # [START automl_language_text_classification_get_dataset]
     # [START automl_translate_get_dataset]
+    # [START automl_vision_classification_get_dataset]
+    # [START automl_vision_object_detection_get_dataset]
     from google.cloud import automl
 
     # TODO(developer): Uncomment and set the following variables
@@ -38,6 +43,26 @@ def get_dataset(project_id, dataset_id):
     print('Dataset create time:')
     print(u'\tseconds: {}'.format(dataset.create_time.seconds))
     print(u'\tnanos: {}'.format(dataset.create_time.nanos))
+    # [END automl_language_sentiment_analysis_get_dataset]
+    # [END automl_language_text_classification_get_dataset]
+    # [END automl_translate_get_dataset]
+    # [END automl_vision_classification_get_dataset]
+    # [END automl_vision_object_detection_get_datset]
+    print('Text extraction dataset metadata: {}'.format(
+        dataset.text_extraction_dataset_metadata))
+    # [END automl_language_entity_extraction_get_dataset]
+
+    # [START automl_language_sentiment_analysis_get_dataset]
+    print('Text sentiment dataset metadata: {}'.format(
+        dataset.text_sentiment_dataset_metadata))
+    # [END automl_language_sentiment_analysis_get_dataset]
+
+    # [START automl_language_text_classification_get_dataset]
+    print('Text classification dataset metadata: {}'.format(
+        dataset.text_classification_dataset_metadata))
+    # [END automl_language_text_classification_get_dataset]
+
+    # [START automl_translate_get_dataset]
     print('Translation dataset metadata:')
     print(
         u'\tsource_language_code: {}'.format(
@@ -50,3 +75,15 @@ def get_dataset(project_id, dataset_id):
         )
     )
     # [END automl_translate_get_dataset]
+
+    # [START automl_vision_classification_get_dataset]
+    print('Image classification dataset metadata: {}'.format(
+        dataset.image_classification_dataset_metadata
+    ))
+    # [END automl_vision_classification_get_dataset]
+
+    # [START automl_vision_object_detection_get_dataset]
+    print('Image object detection dataset metadata: {}'.format(
+        dataset.image_object_detection_dataset_metadata
+    ))
+    # [END automl_vision_object_detection_get_dataset]
