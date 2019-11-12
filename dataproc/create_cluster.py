@@ -14,8 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
-
 def create_cluster(project_id, region, cluster_name):
     # [START create_cluster]
     from google.cloud import dataproc_v1
