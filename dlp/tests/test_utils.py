@@ -22,7 +22,7 @@ def is_rejected_by_vpc(call):
         return "Request is prohibited by organization's policy." in e.message
     except exceptions.Forbidden as e:
         return "Request violates VPC Service Controls." in e.message
-    except Exception as e:
+    except Exception:
         return False
 
 
