@@ -25,10 +25,7 @@ import argparse
 import os
 
 
-def predict(project_id,
-            compute_region,
-            model_display_name,
-            inputs):
+def predict(project_id, compute_region, model_display_name, inputs):
     """Make a prediction."""
     # [START automl_tables_predict]
     # TODO(developer): Uncomment and set the following variables
@@ -42,22 +39,23 @@ def predict(project_id,
     client = automl.TablesClient(project=project_id, region=compute_region)
 
     response = client.predict(
-        model_display_name=model_display_name,
-        inputs=inputs)
+        model_display_name=model_display_name, inputs=inputs
+    )
     print("Prediction results:")
     for result in response.payload:
         print("Predicted class name: {}".format(result.display_name))
-        print("Predicted class score: {}".format(
-            result.classification.score))
+        print("Predicted class score: {}".format(result.classification.score))
 
     # [END automl_tables_predict]
 
 
-def batch_predict(project_id,
-                  compute_region,
-                  model_display_name,
-                  gcs_input_uris,
-                  gcs_output_uri):
+def batch_predict(
+    project_id,
+    compute_region,
+    model_display_name,
+    gcs_input_uris,
+    gcs_output_uri,
+):
     """Make a batch of predictions."""
     # [START automl_tables_batch_predict]
     # TODO(developer): Uncomment and set the following variables
@@ -107,10 +105,7 @@ if __name__ == "__main__":
 
     if args.command == "predict":
         predict(
-            project_id,
-            compute_region,
-            args.model_display_name,
-            args.file_path,
+            project_id, compute_region, args.model_display_name, args.file_path
         )
 
     if args.command == "batch_predict":
