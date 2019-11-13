@@ -39,42 +39,6 @@ TOPIC_ID = 'dlp-test'
 
 
 @pytest.fixture(scope='module')
-def bucket():
-    # Creates a GCS bucket, uploads files required for the test, and tears down
-    # the entire bucket afterwards.
-    client = google.cloud.storage.Client()
-    try:
-        bucket = client.get_bucket(TEST_BUCKET_NAME)
-    except google.cloud.exceptions.NotFound:
-        try:
-            bucket = client.create_bucket(TEST_BUCKET_NAME)
-        except google.api_core.exceptions.PermissionDenied as e:
-            if "Request is prohibited by organization's policy." in e.message:
-                pytest.skip(VPC_FAILURE_MESSAGE)
-        except google.api_core.exceptions.Forbidden as e:
-            if "Request violates VPC Service Controls." in e.message:
-                pytest.skip(VPC_FAILURE_MESSAGE)
-
-    # Upoad the blobs and keep track of them in a list.
-    blobs = []
-    for name in RESOURCE_FILE_NAMES:
-        path = os.path.join(RESOURCE_DIRECTORY, name)
-        blob = bucket.blob(name)
-        blob.upload_from_filename(path)
-        blobs.append(blob)
-
-    # Yield the object to the test; lines after this execute as a teardown.
-    yield bucket
-
-    # Delete the files.
-    for blob in blobs:
-        blob.delete()
-
-    # Attempt to delete the bucket; this will only work if it is empty.
-    bucket.delete()
-
-
-@pytest.fixture(scope='module')
 def topic_id():
     # Creates a pubsub topic, and tears it down.
     publisher = google.cloud.pubsub.PublisherClient()

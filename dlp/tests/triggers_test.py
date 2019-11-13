@@ -20,6 +20,7 @@ import google.cloud.storage
 import pytest
 
 import dlp.triggers as triggers
+from test_utils import vpc_check, bucket
 
 
 GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
@@ -29,39 +30,7 @@ RESOURCE_FILE_NAMES = ['test.txt', 'test.png', 'harmless.txt', 'accounts.txt']
 TEST_TRIGGER_ID = 'test-trigger'
 
 
-@pytest.fixture(scope='module')
-def bucket():
-    # Creates a GCS bucket, uploads files required for the test, and tears down
-    # the entire bucket afterwards.
-
-    client = google.cloud.storage.Client()
-    try:
-        bucket = client.get_bucket(TEST_BUCKET_NAME)
-    except google.cloud.exceptions.NotFound:
-        bucket = client.create_bucket(TEST_BUCKET_NAME)
-
-    # Upoad the blobs and keep track of them in a list.
-    blobs = []
-    for name in RESOURCE_FILE_NAMES:
-        path = os.path.join(RESOURCE_DIRECTORY, name)
-        blob = bucket.blob(name)
-        blob.upload_from_filename(path)
-        blobs.append(blob)
-
-    # Yield the object to the test; lines after this execute as a teardown.
-    yield bucket
-
-    # Delete the files.
-    for blob in blobs:
-        try:
-            blob.delete()
-        except google.cloud.exceptions.NotFound:
-            print('Issue during teardown, missing blob')
-
-    # Attempt to delete the bucket; this will only work if it is empty.
-    bucket.delete()
-
-
+@vpc_check
 def test_create_list_and_delete_trigger(bucket, capsys):
     try:
         triggers.create_trigger(

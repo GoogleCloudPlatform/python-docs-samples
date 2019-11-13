@@ -23,11 +23,24 @@ def setup(session):
 
 
 @nox.session
-def vpc_enabled(session):
+def tests_should_pass(session):
     # Additional setup for VPCSC system tests
     env = {
         "SHOULD_PASS_VPCSC": "True",
-        "GCLOUD_PROJECT": "dlp-prober-prod",
+        "GCLOUD_PROJECT": "python-docs-samples-tests",
+    }
+    tests_path = "tests"
+    if not os.path.exists(tests_path):
+        session.skip("tests were not found")
+    session.run("pytest", "--quiet", tests_path, env=env)
+
+
+@nox.session
+def vpcsc_inspect_content_test(session):
+    # Additional setup for VPCSC system tests
+    env = {
+        "SHOULD_PASS_VPCSC": "False",
+        "GCLOUD_PROJECT": "vpcsc-dlp-1569864437-dut-0",
     }
     tests_path = "tests/inspect_content_test.py"
     if not os.path.exists(tests_path):
@@ -36,13 +49,13 @@ def vpc_enabled(session):
 
 
 @nox.session
-def vpc_disabled(session):
+def vpcsc_triggers_test(session):
     # Additional setup for VPCSC system tests
     env = {
         "SHOULD_PASS_VPCSC": "False",
         "GCLOUD_PROJECT": "vpcsc-dlp-1569864437-dut-0",
     }
-    tests_path = "tests/inspect_content_test.py"
+    tests_path = "tests/triggers_test.py"
     if not os.path.exists(tests_path):
         session.skip("tests were not found")
     session.run("pytest", "--quiet", tests_path, env=env)
