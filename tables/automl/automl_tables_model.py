@@ -156,12 +156,21 @@ def get_model(project_id, compute_region, model_display_name):
     else:
         deployment_state = "undeployed"
 
+    # get features of top importance
+    feat_list = [(x.feature_importance, x.column_display_name) for x in tables_model_metadata.tables_model_column_info]
+    feat_list.sort(reverse=True)
+    if len(feat_list) < 10:
+        feat_to_show = len(feat_list)
+    else:
+        feat_to_show = 10
+
     # Display the model information.
     print("Model name: {}".format(model.name))
     print("Model id: {}".format(model.name.split("/")[-1]))
     print("Model display name: {}".format(model.display_name))
-    print("Model metadata:")
-    print(model.tables_model_metadata)
+    print("Features of top importance:")
+    for feat in feat_list[:feat_to_show]:
+        print(feat)
     print("Model create time:")
     print("\tseconds: {}".format(model.create_time.seconds))
     print("\tnanos: {}".format(model.create_time.nanos))
@@ -170,7 +179,6 @@ def get_model(project_id, compute_region, model_display_name):
     # [END automl_tables_get_model]
 
     return model
-
 
 def list_model_evaluations(
     project_id, compute_region, model_display_name, filter_=None
