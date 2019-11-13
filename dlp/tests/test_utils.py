@@ -1,7 +1,6 @@
 import os
 
 import decorator
-import google.cloud.pubsub
 import pytest
 from google.api_core import exceptions
 

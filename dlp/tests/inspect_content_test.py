@@ -25,7 +25,8 @@ from gcp_devrel.testing import eventually_consistent
 from gcp_devrel.testing.flaky import flaky
 
 import dlp.inspect_content as inspect_content
-from dlp.tests.test_utils import SHOULD_PASS_VPCSC, vpc_check, VPC_FAILURE_MESSAGE
+from dlp.tests.test_utils import vpc_check
+from dlp.tests.test_utils import SHOULD_PASS_VPCSC, VPC_FAILURE_MESSAGE
 
 BIGQUERY_DATASET_ID = 'dlp_test_dataset'
 BIGQUERY_TABLE_ID = 'dlp_test_table'
