@@ -25,7 +25,7 @@ from gcp_devrel.testing import eventually_consistent
 from gcp_devrel.testing.flaky import flaky
 
 import dlp.inspect_content as inspect_content
-from test_utils import vpc_check
+from test_utils import VPC_FAILURE_MESSAGE, SHOULD_PASS_VPCSC, vpc_check
 
 BIGQUERY_DATASET_ID = 'dlp_test_dataset'
 BIGQUERY_TABLE_ID = 'dlp_test_table'
@@ -33,13 +33,12 @@ DATASTORE_KIND = 'DLP test kind'
 GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
 RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), 'resources')
 RESOURCE_FILE_NAMES = ['test.txt', 'test.png', 'harmless.txt', 'accounts.txt']
-SHOULD_PASS_VPCSC = os.getenv('SHOULD_PASS_VPCSC')
 SUBSCRIPTION_ID = 'dlp-test-subscription'
 TEST_BUCKET_NAME = GCLOUD_PROJECT + '-dlp-python-client-test'
 TOPIC_ID = 'dlp-test'
 
 
-@pytest.fixture(params=[pytest.mark.skipif(not SHOULD_PASS_VPCSC, reason='Expected to fail when VPCSC is not properly configured.')], scope='module')
+@pytest.fixture(scope='module')
 def bucket():
     # Creates a GCS bucket, uploads files required for the test, and tears down
     # the entire bucket afterwards.
@@ -47,7 +46,14 @@ def bucket():
     try:
         bucket = client.get_bucket(TEST_BUCKET_NAME)
     except google.cloud.exceptions.NotFound:
-        bucket = client.create_bucket(TEST_BUCKET_NAME)
+        try:
+            bucket = client.create_bucket(TEST_BUCKET_NAME)
+        except google.api_core.exceptions.PermissionDenied as e:
+            if "Request is prohibited by organization's policy." in e.message:
+                pytest.skip(VPC_FAILURE_MESSAGE)
+        except google.api_core.exceptions.Forbidden as e:
+            if "Request violates VPC Service Controls." in e.message:
+                pytest.skip(VPC_FAILURE_MESSAGE)
 
     # Upoad the blobs and keep track of them in a list.
     blobs = []
@@ -103,8 +109,9 @@ def subscription_id(topic_id):
 @pytest.fixture(scope='module')
 def datastore_project():
     # Adds test Datastore data, yields the project ID and then tears down.
+    if not SHOULD_PASS_VPCSC:
+        pytest.skip(VPC_FAILURE_MESSAGE)
     datastore_client = google.cloud.datastore.Client()
-
     kind = DATASTORE_KIND
     name = 'DLP test object'
     key = datastore_client.key(kind, name)
@@ -118,7 +125,7 @@ def datastore_project():
     datastore_client.delete(key)
 
 
-@pytest.fixture(params=[pytest.mark.skipif(not SHOULD_PASS_VPCSC, reason='Expected to fail when VPCSC is not properly configured.')], scope='module')
+@pytest.fixture(scope='module')
 def bigquery_project():
     # Adds test Bigquery data, yields the project ID and then tears down.
     bigquery_client = google.cloud.bigquery.Client()
@@ -311,8 +318,7 @@ def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
 
 @flaky
 @vpc_check
-def test_inspect_gcs_file_with_custom_info_types(bucket, topic_id,
-                                                 subscription_id, capsys):
+def test_inspect_gcs_file_with_custom_info_types(bucket, topic_id, subscription_id, capsys):
     dictionaries = ['gary@somedomain.com']
     regexes = ['\\(\\d{3}\\) \\d{3}-\\d{4}']
 
@@ -334,8 +340,7 @@ def test_inspect_gcs_file_with_custom_info_types(bucket, topic_id,
 
 @flaky
 @vpc_check
-def test_inspect_gcs_file_no_results(
-        bucket, topic_id, subscription_id, capsys):
+def test_inspect_gcs_file_no_results(bucket, topic_id, subscription_id, capsys):
     inspect_content.inspect_gcs_file(
         GCLOUD_PROJECT,
         bucket.name,

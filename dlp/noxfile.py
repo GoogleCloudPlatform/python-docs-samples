@@ -41,7 +41,6 @@ def vpc_disabled(session):
     env = {
         "SHOULD_PASS_VPCSC": "False",
         "GCLOUD_PROJECT": "vpcsc-dlp-1569864437-dut-0",
-        # os.environ.get("GCLOUD_PROJECT"),
     }
     tests_path = "tests/inspect_content_test.py"
     if not os.path.exists(tests_path):
