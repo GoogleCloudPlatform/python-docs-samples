@@ -44,7 +44,9 @@ def predict(project_id, compute_region, model_display_name, inputs):
 
     print("Prediction results:")
     for result in response.payload:
-        print("Predicted class name: {}".format(result.tables.value.string_value))
+        print(
+            "Predicted class name: {}".format(result.tables.value.string_value)
+        )
         print("Predicted class score: {}".format(result.tables.score))
 
         # get features of top importance
