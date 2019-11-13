@@ -17,8 +17,6 @@ import os
 import google.api_core.exceptions
 import google.cloud.storage
 
-import pytest
-
 import dlp.triggers as triggers
 from test_utils import vpc_check, bucket
 

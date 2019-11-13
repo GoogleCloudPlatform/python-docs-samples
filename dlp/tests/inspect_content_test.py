@@ -25,7 +25,7 @@ from gcp_devrel.testing import eventually_consistent
 from gcp_devrel.testing.flaky import flaky
 
 import dlp.inspect_content as inspect_content
-from test_utils import VPC_FAILURE_MESSAGE, SHOULD_PASS_VPCSC, vpc_check
+from test_utils import SHOULD_PASS_VPCSC, VPC_FAILURE_MESSAGE, vpc_check
 
 BIGQUERY_DATASET_ID = 'dlp_test_dataset'
 BIGQUERY_TABLE_ID = 'dlp_test_table'
@@ -282,7 +282,8 @@ def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
 
 @flaky
 @vpc_check
-def test_inspect_gcs_file_with_custom_info_types(bucket, topic_id, subscription_id, capsys):
+def test_inspect_gcs_file_with_custom_info_types(
+        bucket, topic_id, subscription_id, capsys):
     dictionaries = ['gary@somedomain.com']
     regexes = ['\\(\\d{3}\\) \\d{3}-\\d{4}']
 
@@ -304,7 +305,8 @@ def test_inspect_gcs_file_with_custom_info_types(bucket, topic_id, subscription_
 
 @flaky
 @vpc_check
-def test_inspect_gcs_file_no_results(bucket, topic_id, subscription_id, capsys):
+def test_inspect_gcs_file_no_results(
+        bucket, topic_id, subscription_id, capsys):
     inspect_content.inspect_gcs_file(
         GCLOUD_PROJECT,
         bucket.name,
