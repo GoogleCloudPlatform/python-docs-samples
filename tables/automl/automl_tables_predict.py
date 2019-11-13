@@ -41,10 +41,26 @@ def predict(project_id, compute_region, model_display_name, inputs):
     response = client.predict(
         model_display_name=model_display_name, inputs=inputs
     )
+
     print("Prediction results:")
     for result in response.payload:
-        print("Predicted class name: {}".format(result.display_name))
-        print("Predicted class score: {}".format(result.classification.score))
+        print("Predicted class name: {}".format(result.tables.value.string_value))
+        print("Predicted class score: {}".format(result.tables.score))
+
+        # get features of top importance
+        feat_list = [
+            (x.feature_importance, x.column_display_name)
+            for x in result.tables.tables_model_column_info
+        ]
+        feat_list.sort(reverse=True)
+        if len(feat_list) < 10:
+            feat_to_show = len(feat_list)
+        else:
+            feat_to_show = 10
+
+        print("Features of top importance:")
+        for feat in feat_list[:feat_to_show]:
+            print(feat)
 
     # [END automl_tables_predict]
 
