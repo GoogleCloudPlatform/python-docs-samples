@@ -21,15 +21,29 @@ def setup(session):
     if not os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", ""):
         session.skip("Credentials must be set via environment variable")
 
+
 @nox.session
 def vpc_enabled(session):
-
     # Additional setup for VPCSC system tests
     env = {
-        "SHOULD_PASS": "True",
-        "GCLOUD_PROJECT": os.environ.get("GCLOUD_PROJECT"),
+        "SHOULD_PASS_VPCSC": "True",
+        "GCLOUD_PROJECT": "dlp-prober-prod",
     }
     tests_path = "tests/inspect_content_test.py"
     if not os.path.exists(tests_path):
-      session.skip("tests were not found")
+        session.skip("tests were not found")
+    session.run("pytest", "--quiet", tests_path, env=env)
+
+
+@nox.session
+def vpc_disabled(session):
+    # Additional setup for VPCSC system tests
+    env = {
+        "SHOULD_PASS_VPCSC": "False",
+        "GCLOUD_PROJECT": "vpcsc-dlp-1569864437-dut-0",
+        # os.environ.get("GCLOUD_PROJECT"),
+    }
+    tests_path = "tests/inspect_content_test.py"
+    if not os.path.exists(tests_path):
+        session.skip("tests were not found")
     session.run("pytest", "--quiet", tests_path, env=env)
