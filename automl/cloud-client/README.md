@@ -1,42 +1,33 @@
 # AutoML Samples
 
-<a href="https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/java-docs-samples&page=editor&open_in_editor=vision/beta/cloud-client/README.md">
+<a href="https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=automl/cloud-client/README.md">
 <img alt="Open in Cloud Shell" src ="http://gstatic.com/cloudssh/images/open-btn.png"></a>
 
 
 This directory contains samples for the [Google Cloud AutoML APIs](https://cloud.google.com/automl/) - [docs](https://cloud.google.com/automl/docs/)
 
 We highly reccommend that you refer to the official documentation pages:
-<!--* AutoML Natural Language
+* AutoML Natural Language
   * [Classification](https://cloud.google.com/natural-language/automl/docs)
   * [Entity Extraction](https://cloud.google.com/natural-language/automl/entity-analysis/docs)
-  * [Sentiment Analysis](https://cloud.google.com/natural-language/automl/sentiment/docs) -->
+  * [Sentiment Analysis](https://cloud.google.com/natural-language/automl/sentiment/docs)
 * [AutoML Translation](https://cloud.google.com/translate/automl/docs)
 <!--* AutoML Video Intelligence
   * [Classification](https://cloud.google.com/video-intelligence/automl/docs)
-  * [Object Tracking](https://cloud.google.com/video-intelligence/automl/object-tracking/docs)
+  * [Object Tracking](https://cloud.google.com/video-intelligence/automl/object-tracking/docs)-->
 * AutoML Vision
   * [Classification](https://cloud.google.com/vision/automl/docs)
-  * [Edge](https://cloud.google.com/vision/automl/docs/edge-quickstart)
+  <!--* [Edge](https://cloud.google.com/vision/automl/docs/edge-quickstart)-->
   * [Object Detection](https://cloud.google.com/vision/automl/object-detection/docs)
-* [AutoML Tables](https://cloud.google.com/automl-tables/docs)-->
+<!--* [AutoML Tables](https://cloud.google.com/automl-tables/docs)-->
 
 This API is part of the larger collection of Cloud Machine Learning APIs.
 
-These Java samples demonstrates how to access the Cloud AutoML API
-using the [Google Cloud Client Library for Java][google-cloud-java].
+These Python samples demonstrates how to access the Cloud AutoML API
+using the [Google Cloud Client Library for Python][google-cloud-python].
 
-[google-cloud-java]: https://github.com/GoogleCloudPlatform/google-cloud-java
+[google-cloud-python]: https://github.com/GoogleCloudPlatform/google-cloud-python
 
-## Build the samples
-
-Install [Maven](http://maven.apache.org/).
-
-Build your project with:
-
-```
-mvn clean package
-```
 
 ## Sample Types
 There are two types of samples: Base and API Specific
@@ -47,26 +38,58 @@ Type. However, for API Specific samples, there will be a unique sample for each 
 
 ## Base Samples
 ### Dataset Management
-* [Import Dataset](src/main/java/com/example/automl/ImportDataset.java)
-* [List Datasets](src/main/java/com/example/automl/ListDatasets.java) - For each AutoML Type the `metadata` field inside the dataset is unique, therefore each AutoML Type will have a
+* [Import Dataset](import_dataset.py)
+* [List Datasets](list_datasets.py) - For each AutoML Type the `metadata` field inside the dataset is unique, therefore each AutoML Type will have a
 small section of code to print out the `metadata` field. 
-* [Get Dataset](src/main/java/com/example/automl/GetDataset.java) - For each AutoML Type the `metadata` field inside the dataset is unique, therefore each AutoML Type will have a
+* [Get Dataset](get_dataset.py) - For each AutoML Type the `metadata` field inside the dataset is unique, therefore each AutoML Type will have a
 small section of code to print out the `metadata` field. 
-* [Export Dataset](src/main/java/com/example/automl/ExportDataset.java)
-* [Delete Dataset](src/main/java/com/example/automl/DeleteDataset.java)
+* [Export Dataset](export_dataset.py)
+* [Delete Dataset](delete_dataset.py)
 ### Model Management
-* [List Models](src/main/java/com/example/automl/ListModels.java)
-* [List Model Evaluation](src/main/java/com/example/automl/ListModelEvaluations.java)
-* [Get Model](src/main/java/com/example/automl/)
-* [Get Model Evaluation](src/main/java/com/example/automl/GetModelEvaluation.java)
-* [Delete Model](src/main/java/com/example/automl/DeleteModel.java)
+* [List Models](list_models.py)
+* [List Model Evaluation](list_model_evaluations.py)
+* [Get Model](get_model.py)
+* [Get Model Evaluation](get_model_evaluation.py)
+* [Delete Model](delete_model.py)
+* [Deploy Model](deploy_model.py) - Not supported by Translation
+* [Uneploy Model](undeploy_model.py) - Not supported by Translation
 
 ### Operation Management
-* [List Operation Statuses](src/main/java/com/example/automl/ListOperationStatus.java)
-* [Get Operation Status](src/main/java/com/example/automl/GetOperationStatus.java)
+* [List Operation Statuses](list_operation_status.py)
+* [Get Operation Status](get_operation_status.py)
 
 ## AutoML Type Specific Samples
 ### Translation
-* [Translate Create Dataset](src/main/java/com/example/automl/TranslateCreateDataset.java)
-* [Translate Create Model](src/main/java/com/example/automl/TranslateCreateModel.java)
-* [Translate Predict](src/main/java/com/example/automl/TranslatePredict.java)
+* [Translate Create Dataset](translate_create_dataset.py)
+* [Translate Create Model](translate_create_model.py)
+* [Translate Predict](translate_predict.py)
+
+### Natural Language Entity Extraction
+* [Entity Extraction Create Dataset](language_entity_extraction_create_dataset.py)
+* [Entity Extraction Create Model](language_entity_extraction_create_model.py)
+* [Entity Extraction Predict](language_entity_extraction_predict.py)
+* [Entity Extraction Batch Predict](language_batch_predict.py)
+
+### Natural Language Sentiment Analysis
+* [Sentiment Analysis Create Dataset](language_sentiment_analysis_create_dataset.py)
+* [Sentiment Analysis Create Model](language_sentiment_analysis_create_model.py)
+* [Sentiment Analysis Predict](language_sentiment_analysis_predict.py)
+
+### Natural Language Text Classification
+* [Text Classification Create Dataset](language_text_classification_create_dataset.py)
+* [Text Classification Create Model](language_text_classification_create_model.py)
+* [Text Classification Predict](language_text_classification_predict.py)
+
+### Vision Classification
+* [Classification Create Dataset](vision_classification_create_dataset.py)
+* [Classification Create Model](vision_classification_create_model.py)
+* [Classification Predict](vision_classification_predict.py)
+* [Classification Batch Predict](vision_batch_predict.py)
+* [Deploy Node Count](vision_classification_deploy_model_node_count.py)
+
+### Vision Object Detection
+* [Object Detection Create Dataset](vision_object_detection_create_dataset.py)
+* [Object Detection Create Model](vision_object_detection_create_model.py)
+* [Object Detection Predict](vision_object_detection_predict.py)
+* [Object Detection Batch Predict](vision_batch_predict.py)
+* [Deploy Node Count](vision_object_detection_deploy_model_node_count.py)

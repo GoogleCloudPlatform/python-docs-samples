@@ -30,8 +30,7 @@ def create_model(project_id, dataset_id, display_name):
     # A resource that represents Google Cloud Platform location.
     project_location = client.location_path(project_id, 'us-central1')
     # Leave model unset to use the default base model provided by Google
-    metadata = automl.types.ImageObjectDetectionModelMetadata(
-        train_budge=8)  # Train budget of creating a model, expressed in hours
+    metadata = automl.types.ImageObjectDetectionModelMetadata()
     model = automl.types.Model(
         display_name=display_name,
         dataset_id=dataset_id,

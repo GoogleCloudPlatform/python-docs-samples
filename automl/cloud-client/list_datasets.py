@@ -22,7 +22,7 @@ def list_datasets(project_id):
     # [START automl_language_text_classification_list_datasets]
     # [START automl_translate_list_datasets]
     # [START automl_vision_classification_list_datasets]
-    # [START automl_vision_object_detection_list_model]
+    # [START automl_vision_object_detection_list_datasets]
     from google.cloud import automl
 
     # TODO(developer): Uncomment and set the following variables
