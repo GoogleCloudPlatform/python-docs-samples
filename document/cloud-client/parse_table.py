@@ -17,14 +17,18 @@
 import argparse
 
 
-# [START document_parse_table]
 def parse_table_gcs(project_id, gcs_source_uri, gcs_destination_uri):
     """Parse table with PDF/TIFF as source files on Google Cloud Storage."""
+    # [START document_parse_table]
     import re
     from google.cloud import documentai
     from google.cloud.documentai import types
     from google.cloud import storage
     from google.protobuf import json_format
+
+    # project_id = 'GCP-PROJECT-ID'
+    # gcs_source_uri = 'gs://cloud-samples-data/documentai/invoice.pdf'
+    # gcs_destination_uri = 'gs://YOUR_GCS_BUCKET/PREFIX'
 
     client = documentai.DocumentUnderstandingServiceClient()
 
@@ -113,7 +117,7 @@ def parse_table_gcs(project_id, gcs_source_uri, gcs_destination_uri):
         for cell in body_row.cells:
             text = get_text(cell.layout.text_anchor)
             print('Extracted cell: {}'.format(text))
-# [END document_parse_table]
+    # [END document_parse_table]
 
 
 if __name__ == '__main__':

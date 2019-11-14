@@ -17,15 +17,19 @@
 import argparse
 
 
-# [START document_parse_key_value]
 def parse_key_value_gcs(project_id, gcs_source_uri, gcs_destination_uri):
     """Parse key-value pairs with PDF/TIFF as source files
     on Google Cloud Storage."""
+    # [START document_parse_key_value]
     import re
     from google.cloud import documentai
     from google.cloud.documentai import types
     from google.cloud import storage
     from google.protobuf import json_format
+
+    # project_id = 'GCP-PROJECT-ID'
+    # gcs_source_uri = 'gs://cloud-samples-data/documentai/invoice.pdf'
+    # gcs_destination_uri = 'gs://YOUR_GCS_BUCKET/PREFIX'
 
     client = documentai.DocumentUnderstandingServiceClient()
 
@@ -104,7 +108,7 @@ def parse_key_value_gcs(project_id, gcs_source_uri, gcs_destination_uri):
 
         print('Extracted key-value pair: ({}, {})'.format(
             field_name_text, field_value_text))
-# [END document_parse_key_value]
+    # [END document_parse_key_value]
 
 
 if __name__ == '__main__':
