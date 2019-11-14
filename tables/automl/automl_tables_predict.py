@@ -55,8 +55,8 @@ def predict(project_id, compute_region, model_display_name, inputs, feature_impo
 
         # get features of top importance
         feat_list = [
-            (x.feature_importance, x.column_display_name)
-            for x in result.tables.tables_model_column_info
+            (column.feature_importance, column.column_display_name)
+            for column in result.tables.tables_model_column_info
         ]
         feat_list.sort(reverse=True)
         if len(feat_list) < 10:

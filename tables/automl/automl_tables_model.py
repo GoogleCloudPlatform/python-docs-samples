@@ -169,8 +169,8 @@ def get_model(project_id, compute_region, model_display_name):
 
     # get features of top importance
     feat_list = [
-        (x.feature_importance, x.column_display_name)
-        for x in model.tables_model_metadata.tables_model_column_info
+        (column.feature_importance, column.column_display_name)
+        for column in model.tables_model_metadata.tables_model_column_info
     ]
     feat_list.sort(reverse=True)
     if len(feat_list) < 10:
