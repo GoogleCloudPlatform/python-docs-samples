@@ -43,7 +43,7 @@ def test_deploy_undeploy_model_with_node_count(capsys):
     out, _ = capsys.readouterr()
     assert 'Model undeployment finished.' in out
 
-    vision_object_detection_deploy_model_node_count.deploy_model_with_node_count(
-        PROJECT_ID, MODEL_ID)
+    vision_object_detection_deploy_model_node_count.\
+        deploy_model_with_node_count(PROJECT_ID, MODEL_ID)
     out, _ = capsys.readouterr()
     assert 'Model deployment finished.' in out
