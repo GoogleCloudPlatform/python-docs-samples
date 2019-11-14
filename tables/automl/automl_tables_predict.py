@@ -25,7 +25,7 @@ import argparse
 import os
 
 
-def predict(project_id, compute_region, model_display_name, inputs):
+def predict(project_id, compute_region, model_display_name, inputs, feature_importance=None):
     """Make a prediction."""
     # [START automl_tables_predict]
     # TODO(developer): Uncomment and set the following variables
@@ -38,8 +38,12 @@ def predict(project_id, compute_region, model_display_name, inputs):
 
     client = automl.TablesClient(project=project_id, region=compute_region)
 
+    params = {}
+    if feature_importance:
+        params = {"feature_importance": feature_importance}
+
     response = client.predict(
-        model_display_name=model_display_name, inputs=inputs
+        model_display_name=model_display_name, inputs=inputs, params=params
     )
 
     print("Prediction results:")
