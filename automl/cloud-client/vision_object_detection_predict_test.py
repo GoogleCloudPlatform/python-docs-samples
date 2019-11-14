@@ -16,6 +16,8 @@
 
 import os
 
+import pytest
+
 import vision_batch_predict
 import vision_object_detection_predict
 
@@ -32,6 +34,7 @@ def test_predict(capsys):
     assert 'Y:' in out
 
 
+@pytest.mark.slow
 def test_batch_predict(capsys):
     model_id = 'IOD6143103405779845120'
     input_uri = 'gs://{}/vision_object_detection_batch_predict_test.csv'\

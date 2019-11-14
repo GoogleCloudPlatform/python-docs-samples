@@ -16,6 +16,8 @@
 
 import os
 
+import pytest
+
 import vision_batch_predict
 import vision_classification_predict
 
@@ -31,6 +33,7 @@ def test_predict(capsys):
     assert 'Predicted class name:' in out
 
 
+@pytest.mark.slow
 def test_batch_predict(capsys):
     model_id = 'ICN7383667271543079510'
     input_uri = 'gs://{}/batch_predict_test.csv'.format(BUCKET_ID)
