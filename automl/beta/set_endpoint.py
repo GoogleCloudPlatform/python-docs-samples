@@ -33,7 +33,7 @@ def set_endpoint(project_id):
     # List all the datasets available
     # Note: Create a dataset in `eu`, before calling `list_datasets`.
     response = client.list_datasets(
-        project_location, '')
+        project_location, filter_='')
 
     for dataset in response:
         print(dataset)
