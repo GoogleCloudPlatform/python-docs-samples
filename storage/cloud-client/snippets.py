@@ -141,11 +141,10 @@ def list_blobs_with_prefix(bucket_name, prefix, delimiter=None):
     However, if you specify prefix='a' and delimiter='/', you'll get back:
 
         a/1.txt
-        
-    Additionally, the same request will return blobs.prefixes populated with:
-        
-        a/b/
 
+    Additionally, the same request will return blobs.prefixes populated with:
+
+        a/b/
     """
     storage_client = storage.Client()
 
