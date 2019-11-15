@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 def create_cluster(project_id, region, cluster_name):
     # [START create_cluster]
     from google.cloud import dataproc_v1
@@ -23,14 +24,14 @@ def create_cluster(project_id, region, cluster_name):
     # region = 'YOUR_CLUSTER_REGION'
     # cluster_name = 'YOUR_CLUSTER_NAME'
 
-    # Create client
-    client = dataproc_v1.ClusterControllerClient({
+    # Create a client with the endpoint set to the desired cluster region
+    client = dataproc_v1.ClusterControllerClient(client_options={
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
 
-    # Create cluster config
+    # Create the cluster config
     cluster = {
-        'project_id': project,
+        'project_id': project_id,
         'cluster_name': cluster_name,
         'config': {
             'master_config': {
@@ -44,18 +45,10 @@ def create_cluster(project_id, region, cluster_name):
         }
     }
 
-    # Define a callback
-    def callback(operation_future):
-        result = operation_future.result()
-        print(result)
+    # Create the cluster
+    operation = client.create_cluster(project_id, region, cluster)
+    result = operation.result()
 
-    # Submit cluster creation request
-    response = client.create_cluster(project_id, region, cluster)
-    
-    # Add callback to cluster creation request
-    response.add_done_callback(callback)
-    
-    print(response.metadata())
+    # Output a success message
+    print('Cluster created successfully: {}'.format(result.cluster_name))
     # [END create_cluster]
-
-
