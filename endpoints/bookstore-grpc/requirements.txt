@@ -1,4 +1,4 @@
-grpcio>=1.10.0
-grpcio-tools>=1.10.0
-google-auth>=1.4.1
-six>=1.11
+grpcio==1.25.0
+grpcio-tools==1.25.0
+google-auth==1.7.1
+six==1.13.0
