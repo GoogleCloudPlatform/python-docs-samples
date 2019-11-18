@@ -47,9 +47,11 @@ small section of code to print out the `metadata` field.
 * [Delete Dataset](delete_dataset.py)
 ### Model Management
 * [List Models](list_models.py)
-* [List Model Evaluation](list_model_evaluations.py)
+* [List Model Evaluation](list_model_evaluations.py) - For each AutoML Type the `metrics` field inside the model is unique, therefore each AutoML Type will have a
+small section of code to print out the `metrics` field. 
 * [Get Model](get_model.py)
-* [Get Model Evaluation](get_model_evaluation.py)
+* [Get Model Evaluation](get_model_evaluation.py) - For each AutoML Type the `metrics` field inside the model is unique, therefore each AutoML Type will have a
+small section of code to print out the `metrics` field. 
 * [Delete Model](delete_model.py)
 * [Deploy Model](deploy_model.py) - Not supported by Translation
 * [Uneploy Model](undeploy_model.py) - Not supported by Translation
