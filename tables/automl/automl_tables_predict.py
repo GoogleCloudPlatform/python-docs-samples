@@ -25,7 +25,13 @@ import argparse
 import os
 
 
-def predict(project_id, compute_region, model_display_name, inputs, feature_importance=None):
+def predict(
+    project_id,
+    compute_region,
+    model_display_name,
+    inputs,
+    feature_importance=None,
+):
     """Make a prediction."""
     # [START automl_tables_predict]
     # TODO(developer): Uncomment and set the following variables
@@ -38,13 +44,16 @@ def predict(project_id, compute_region, model_display_name, inputs, feature_impo
 
     client = automl.TablesClient(project=project_id, region=compute_region)
 
-    params = {}
     if feature_importance:
-        params = {"feature_importance": feature_importance}
-
-    response = client.predict(
-        model_display_name=model_display_name, inputs=inputs, params=params
-    )
+        response = client.predict(
+            model_display_name=model_display_name,
+            inputs=inputs,
+            feature_importance=True,
+        )
+    else:
+        response = client.predict(
+            model_display_name=model_display_name, inputs=inputs
+        )
 
     print("Prediction results:")
     for result in response.payload:
@@ -53,20 +62,21 @@ def predict(project_id, compute_region, model_display_name, inputs, feature_impo
         )
         print("Predicted class score: {}".format(result.tables.score))
 
-        # get features of top importance
-        feat_list = [
-            (column.feature_importance, column.column_display_name)
-            for column in result.tables.tables_model_column_info
-        ]
-        feat_list.sort(reverse=True)
-        if len(feat_list) < 10:
-            feat_to_show = len(feat_list)
-        else:
-            feat_to_show = 10
+        if feature_importance:
+            # get features of top importance
+            feat_list = [
+                (column.feature_importance, column.column_display_name)
+                for column in result.tables.tables_model_column_info
+            ]
+            feat_list.sort(reverse=True)
+            if len(feat_list) < 10:
+                feat_to_show = len(feat_list)
+            else:
+                feat_to_show = 10
 
-        print("Features of top importance:")
-        for feat in feat_list[:feat_to_show]:
-            print(feat)
+            print("Features of top importance:")
+            for feat in feat_list[:feat_to_show]:
+                print(feat)
 
     # [END automl_tables_predict]
 

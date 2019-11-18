@@ -52,6 +52,7 @@ def test_predict(capsys):
     out, _ = capsys.readouterr()
     assert "Predicted class name:" in out
     assert "Predicted class score:" in out
+    assert "Features of top importance:" in out
 
 
 def ensure_model_online():
