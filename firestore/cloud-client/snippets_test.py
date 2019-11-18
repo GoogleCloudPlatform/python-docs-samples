@@ -270,22 +270,3 @@ def test_collection_group_query(db):
                      u'National Museum of Nature and Science',
                      u'Beijing Ancient Observatory'}
 
-
-def test_distributed_counters(db):
-    doc_ref = db.collection("counter_samples").document("distributed_counter")
-    counter = snippets.Counter(2)
-    counter.init_counter(doc_ref)
-
-    shards = doc_ref.collection("shards").list_documents()
-    shards_list = [shard for shard in shards]
-    assert len(shards_list) == 2
-
-    counter.increment_counter(doc_ref)
-    counter.increment_counter(doc_ref)
-    assert counter.get_count(doc_ref) == 2
-
-    # cleanup
-    for shard in shards_list:
-        shard.delete()
-
-    doc_ref.delete()
