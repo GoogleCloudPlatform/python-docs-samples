@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "labels": [
+    "kokoro:run"
+  ],
+  "prConcurrentLimit": 5,
+  "prCreation": "not-pending",
+  "rebaseStalePrs": true
+}
