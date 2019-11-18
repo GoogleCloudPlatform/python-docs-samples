@@ -1,0 +1,72 @@
+# Copyright 2019 Google, LLC.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from flask import Flask, make_response, request
+import os
+import subprocess
+import sys
+
+app = Flask(__name__)
+
+# [START run_system_package_handler]
+@app.route('/diagram.png', methods=['GET'])
+def index():
+    try:
+        image = create_diagram(request.args.get('dot'))
+
+        response = make_response(image)
+        response.headers.set('Content-Type', 'image/png')
+        return response
+
+    except Exception as e:
+        print(f'error: {e}')
+
+        # Flush the stdout to avoid log buffering.
+        sys.stdout.flush()
+
+        if 'syntax' in str(e):
+            return f'Bad Request: {e}', 400
+
+        return 'Internal Server Error', 500
+# [END run_system_package_handler]
+
+
+# [START run_system_package_exec]
+def create_diagram(dot):
+    if not dot:
+        raise Exception('syntax: no graphviz definition provided')
+
+    dot_args = ['/usr/bin/dot',  # Command to run
+                '-Glabel=Made on Cloud Run',  # Args
+                '-Gfontsize=10',
+                '-Glabeljust=right',
+                '-Glabelloc=bottom',
+                '-Gfontcolor=gray',
+                '-Tpng']
+
+    image = subprocess.run(dot_args, input=dot.encode('utf-8'),
+                           capture_output=True).stdout
+
+    if not image:
+        raise Exception('syntax: bad graphviz definition provided')
+    return image
+# [END run_system_package_exec]
+
+
+if __name__ == '__main__':
+    PORT = int(os.getenv('PORT')) if os.getenv('PORT') else 8080
+
+    # This is used when running locally. Gunicorn is used to run the
+    # application on Cloud Run. See entrypoint in Dockerfile.
+    app.run(host='127.0.0.1', port=PORT, debug=True)
