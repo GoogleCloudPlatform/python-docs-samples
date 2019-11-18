@@ -1,6 +1,10 @@
 # Code owners file.
 # This file controls who is tagged for review for any given pull request.
 
+# The python-samples-owners team is the default owner for anything not
+# explicitly taken by someone else.
+*                         @GoogleCloudPlatform/python-samples-owners
+
 # Alix Hamilton is the primary maintainer of the BigQuery samples.
 bigquery/*                @alixhami
 
