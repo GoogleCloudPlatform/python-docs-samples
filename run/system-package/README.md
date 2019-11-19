@@ -32,7 +32,7 @@ _Note: you may need to install `pytest` using `pip install pytest`._
 
 ## Deploy
 
-```
+```sh
 # Set an environment variable with your GCP Project ID
 export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
 

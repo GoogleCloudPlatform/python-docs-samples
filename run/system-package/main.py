@@ -17,11 +17,15 @@ import os
 import subprocess
 import sys
 
+
 app = Flask(__name__)
+
 
 # [START run_system_package_handler]
 @app.route('/diagram.png', methods=['GET'])
 def index():
+    # Uses the graphviz DOT language 
+    # https://www.graphviz.org/doc/info/lang.html
     try:
         image = create_diagram(request.args.get('dot'))
 
@@ -35,6 +39,7 @@ def index():
         # Flush the stdout to avoid log buffering.
         sys.stdout.flush()
 
+        # If no graphviz definition or bad graphviz def, return 400
         if 'syntax' in str(e):
             return f'Bad Request: {e}', 400
 
@@ -47,7 +52,8 @@ def create_diagram(dot):
     if not dot:
         raise Exception('syntax: no graphviz definition provided')
 
-    dot_args = ['/usr/bin/dot',  # Command to run
+    dot_args = [ # usr/bin/dot is a system package in the container
+                '/usr/bin/dot', # Command to run
                 '-Glabel=Made on Cloud Run',  # Args
                 '-Gfontsize=10',
                 '-Glabeljust=right',
