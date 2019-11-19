@@ -10,13 +10,29 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 from google.cloud import firestore
+import pytest
 import distributed_counters
 
+shards_list = []
+doc_ref = None
 
-def test_distributed_counters():
-    db = firestore.Client()
-    doc_ref = db.collection("counter_samples").document("distributed_counter")
+
+@pytest.fixture
+def fs_client():
+    yield firestore.Client()
+
+    # clean up
+    for shard in shards_list:
+        shard.delete()
+
+    if doc_ref:
+        doc_ref.delete()
+
+
+def test_distributed_counters(fs_client):
+    doc_ref = fs_client.collection("counter_samples").document("distributed_counter")
     counter = distributed_counters.Counter(2)
     counter.init_counter(doc_ref)
 
@@ -27,9 +43,3 @@ def test_distributed_counters():
     counter.increment_counter(doc_ref)
     counter.increment_counter(doc_ref)
     assert counter.get_count(doc_ref) == 2
-
-    # cleanup
-    for shard in shards_list:
-        shard.delete()
-
-    doc_ref.delete()
