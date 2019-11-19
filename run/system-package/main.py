@@ -28,7 +28,6 @@ def index():
     # https://www.graphviz.org/doc/info/lang.html
     try:
         image = create_diagram(request.args.get('dot'))
-
         response = make_response(image)
         response.headers.set('Content-Type', 'image/png')
         return response
