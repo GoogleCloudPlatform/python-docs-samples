@@ -24,7 +24,7 @@ app = Flask(__name__)
 # [START run_system_package_handler]
 @app.route('/diagram.png', methods=['GET'])
 def index():
-    # Uses the graphviz DOT language 
+    # Uses the graphviz DOT language
     # https://www.graphviz.org/doc/info/lang.html
     try:
         image = create_diagram(request.args.get('dot'))
@@ -51,8 +51,8 @@ def create_diagram(dot):
     if not dot:
         raise Exception('syntax: no graphviz definition provided')
 
-    dot_args = [ # usr/bin/dot is a system package in the container
-                '/usr/bin/dot', # Command to run
+    dot_args = [  # usr/bin/dot is a system package in the container
+                '/usr/bin/dot',  # Command to run
                 '-Glabel=Made on Cloud Run',  # Args
                 '-Gfontsize=10',
                 '-Glabeljust=right',
