@@ -17,7 +17,6 @@
 # [START composer_kubernetespodoperator]
 import datetime
 from airflow import models
-from airflow.contrib.kubernetes import pod
 from airflow.contrib.kubernetes import secret
 from airflow.contrib.operators import kubernetes_pod_operator
 
@@ -76,7 +75,9 @@ with models.DAG(
         # Docker image specified. Defaults to hub.docker.com, but any fully
         # qualified URLs will point to a custom repository. Supports private
         # gcr.io images if the Composer Environment is under the same
-        # project-id as the gcr.io images.
+        # project-id as the gcr.io images and the service account that Composer
+        # uses has permission to access the Google Container Registry
+        # (the default service account has permission)
         image='gcr.io/gcp-runtimes/ubuntu_16_0_4')
     # [END composer_kubernetespodoperator_minconfig]
     # [START composer_kubernetespodoperator_templateconfig]
@@ -198,7 +199,14 @@ with models.DAG(
         annotations={'key1': 'value1'},
         # Resource specifications for Pod, this will allow you to set both cpu
         # and memory limits and requirements.
-        resources=pod.Resources().__dict__,
+        # Prior to Airflow 1.10.4, resource specifications were
+        # passed as a Pod Resources Class object,
+        # If using this example on a version of Airflow prior to 1.10.4,
+        # import the "pod" package from airflow.contrib.kubernetes and use
+        # resources = pod.Resources() instead passing a dict
+        # For more info see:
+        # https://github.com/apache/airflow/pull/4551
+        resources={'limit_memory': 1, 'limit_cpu': 1},
         # Specifies path to kubernetes config. If no config is specified will
         # default to '~/.kube/config'. The config_file is templated.
         config_file='/home/airflow/composer_kube_config',
