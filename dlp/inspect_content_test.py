@@ -27,7 +27,6 @@ from gcp_devrel.testing.flaky import flaky
 import inspect_content
 from test_utils import vpc_check
 from test_utils import SHOULD_PASS_VPCSC, VPC_FAILURE_MESSAGE
-import pdb
 
 BIGQUERY_DATASET_ID = 'dlp_test_dataset'
 BIGQUERY_TABLE_ID = 'dlp_test_table'
@@ -45,7 +44,6 @@ def bucket():
     # Creates a GCS bucket, uploads files required for the test, and tears down
     # the entire bucket afterwards.
     client = google.cloud.storage.Client()
-    # pdb.set_trace()
     try:
         bucket = client.get_bucket(TEST_BUCKET_NAME)
     except google.cloud.exceptions.NotFound:
