@@ -32,7 +32,8 @@ def fs_client():
 
 
 def test_distributed_counters(fs_client):
-    doc_ref = fs_client.collection("dc_samples").document("distributed_counter")
+    col = fs_client.collection("dc_samples")
+    doc_ref = col.document("distributed_counter")
     counter = distributed_counters.Counter(2)
     counter.init_counter(doc_ref)
 
