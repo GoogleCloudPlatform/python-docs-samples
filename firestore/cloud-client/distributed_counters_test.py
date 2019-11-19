@@ -14,7 +14,7 @@ from google.cloud import firestore
 import distributed_counters
 
 
-def distributed_counters_test():
+def test_distributed_counters():
     db = firestore.Client()
     doc_ref = db.collection("counter_samples").document("distributed_counter")
     counter = distributed_counters.Counter(2)
