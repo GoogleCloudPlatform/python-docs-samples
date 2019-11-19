@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import mock
 import os
 import pytest
 
@@ -68,31 +69,31 @@ def _publish_messages(topic_path):
     publish_future.result()
 
 
-def _sub_timeout(project_id, subscription_name):
-    # This is an exactly copy of `sub.py` except
-    # StreamingPullFuture.result() will time out after 10s.
-    client = pubsub_v1.SubscriberClient()
-    subscription_path = client.subscription_path(
-        project_id, subscription_name)
-
-    def callback(message):
-        print('Received message {} of message ID {}\n'.format(
-            message, message.message_id))
-        message.ack()
-        print('Acknowledged message {}\n'.format(message.message_id))
-
-    streaming_pull_future = client.subscribe(
-        subscription_path, callback=callback)
-    print('Listening for messages on {}..\n'.format(subscription_path))
-
-    try:
-        streaming_pull_future.result(timeout=10)
-    except:  # noqa
-        streaming_pull_future.cancel()
-
-
 def test_sub(monkeypatch, topic_path, subscription_path, capsys):
-    monkeypatch.setattr(sub, 'sub', _sub_timeout)
+
+    real_client = pubsub_v1.SubscriberClient()
+    mock_client = mock.Mock(spec=pubsub_v1.SubscriberClient,
+                            wraps=real_client)
+
+    # Attributes on mock_client_constructor uses the corresponding
+    # attributes on pubsub_v1.SubscriberClient.
+    mock_client_constructor = mock.create_autospec(pubsub_v1.SubscriberClient)
+    mock_client_constructor.return_value = mock_client
+
+    monkeypatch.setattr(pubsub_v1, 'SubscriberClient', mock_client_constructor)
+
+    def mock_subscribe(subscription_path, callback=None):
+        real_future = real_client.subscribe(subscription_path,
+                                            callback=callback)
+        mock_future = mock.Mock(spec=real_future, wraps=real_future)
+
+        def mock_result():
+            return real_future.result(timeout=10)
+
+        mock_future.result.side_effect = mock_result
+        return mock_future
+
+    mock_client.subscribe.side_effect = mock_subscribe
 
     _publish_messages(topic_path)
 
