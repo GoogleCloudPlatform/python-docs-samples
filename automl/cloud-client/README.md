@@ -12,14 +12,9 @@ We highly reccommend that you refer to the official documentation pages:
   * [Entity Extraction](https://cloud.google.com/natural-language/automl/entity-analysis/docs)
   * [Sentiment Analysis](https://cloud.google.com/natural-language/automl/sentiment/docs)
 * [AutoML Translation](https://cloud.google.com/translate/automl/docs)
-<!--* AutoML Video Intelligence
-  * [Classification](https://cloud.google.com/video-intelligence/automl/docs)
-  * [Object Tracking](https://cloud.google.com/video-intelligence/automl/object-tracking/docs)-->
 * AutoML Vision
   * [Classification](https://cloud.google.com/vision/automl/docs)
-  <!--* [Edge](https://cloud.google.com/vision/automl/docs/edge-quickstart)-->
   * [Object Detection](https://cloud.google.com/vision/automl/object-detection/docs)
-<!--* [AutoML Tables](https://cloud.google.com/automl-tables/docs)-->
 
 This API is part of the larger collection of Cloud Machine Learning APIs.
 
