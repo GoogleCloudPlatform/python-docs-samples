@@ -10,10 +10,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from google.cloud import firestore
 import distributed_counters
 
 
-def test_distributed_counters(db):
+def distributed_counters_test():
+    db = firestore.Client()
     doc_ref = db.collection("counter_samples").document("distributed_counter")
     counter = distributed_counters.Counter(2)
     counter.init_counter(doc_ref)
