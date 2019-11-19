@@ -137,7 +137,7 @@ def test_create_delete_registry(test_topic, capsys):
 
     # Check that create / list worked
     assert 'Created registry' in out
-    assert 'eventNotificationConfig' in out
+    assert 'event_notification_config' in out
 
     # Clean up
     manager.delete_registry(
@@ -167,7 +167,8 @@ def test_get_iam_permissions(test_topic, capsys):
 
     # Check that create / list worked
     assert 'Created registry' in out
-    assert 'eventNotificationConfig' in out
+    assert 'event_notification_config' in out
+    assert 'dpebot' in out
     assert 'etag' in out
 
     # Clean up
@@ -215,6 +216,10 @@ def test_add_config_unauth_device(test_topic, capsys):
             device_id, 0, 'test')
 
     manager.get_device(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id)
+
+    manager.get_config_versions(
             service_account_json, project_id, cloud_region, registry_id,
             device_id)
 
@@ -368,7 +373,7 @@ def test_send_command(test_topic, capsys):
     devices = manager.list_devices(
             service_account_json, project_id, cloud_region, registry_id)
     for device in devices:
-        if device.get('id') == device_id:
+        if device.id == device_id:
             exists = True
 
     if not exists:
@@ -430,7 +435,7 @@ def test_create_gateway(test_topic, capsys):
 
     out, _ = capsys.readouterr()
 
-    assert 'Created gateway' in out
+    assert 'Created Gateway' in out
 
 
 def test_list_gateways(test_topic, capsys):
