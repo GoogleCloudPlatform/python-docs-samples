@@ -54,6 +54,33 @@ def test_add_example_data():
     snippets.add_example_data()
 
 
+def test_array_contains_any(db):
+    query = snippets.array_contains_any_queries(db)
+
+    expected = {'SF', 'LA', 'DC'}
+    actual = {document.id for document in query.stream()}
+
+    assert expected == actual
+
+
+def test_query_filter_in_query_without_array(db):
+    query = snippets.in_query_without_array(db)
+
+    expected = {'SF', 'LA', 'DC', 'TOK'}
+    actual = {document.id for document in query.stream()}
+
+    assert expected == actual
+
+
+def test_query_filter_in_query_with_array(db):
+    query = snippets.in_query_with_array(db)
+
+    expected = {'DC'}
+    actual = {document.id for document in query.stream()}
+
+    assert expected == actual
+
+
 def test_add_custom_class_with_id():
     snippets.add_custom_class_with_id()
 

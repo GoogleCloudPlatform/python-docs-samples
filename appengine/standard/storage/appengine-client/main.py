@@ -88,8 +88,8 @@ class MainPage(webapp2.RequestHandler):
             filename, 'w', content_type='text/plain', options={
                 'x-goog-meta-foo': 'foo', 'x-goog-meta-bar': 'bar'},
                 retry_params=write_retry_params) as cloudstorage_file:
-                    cloudstorage_file.write('abcde\n')
-                    cloudstorage_file.write('f'*1024*4 + '\n')
+            cloudstorage_file.write('abcde\n')
+            cloudstorage_file.write('f'*1024*4 + '\n')
         self.tmp_filenames_to_clean_up.append(filename)
 # [END write]
 

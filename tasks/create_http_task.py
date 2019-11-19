@@ -27,11 +27,11 @@ def create_http_task(project,
     # [START cloud_tasks_create_http_task]
     """Create a task for a given queue with an arbitrary payload."""
 
-    from google.cloud import tasks_v2beta3
+    from google.cloud import tasks_v2
     from google.protobuf import timestamp_pb2
 
     # Create a client.
-    client = tasks_v2beta3.CloudTasksClient()
+    client = tasks_v2.CloudTasksClient()
 
     # TODO(developer): Uncomment these lines and replace with your values.
     # project = 'my-project-id'

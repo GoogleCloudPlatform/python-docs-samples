@@ -14,10 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import mock
 import os
 import pytest
-import time
 
 from google.api_core.exceptions import AlreadyExists
 from google.cloud import pubsub_v1
@@ -29,84 +27,79 @@ PROJECT = os.environ['GCLOUD_PROJECT']
 TOPIC = 'quickstart-sub-test-topic'
 SUBSCRIPTION = 'quickstart-sub-test-topic-sub'
 
-
-@pytest.fixture(scope='module')
-def publisher_client():
-    yield pubsub_v1.PublisherClient()
+publisher_client = pubsub_v1.PublisherClient()
+subscriber_client = pubsub_v1.SubscriberClient()
 
 
 @pytest.fixture(scope='module')
-def topic_path(publisher_client):
+def topic_path():
     topic_path = publisher_client.topic_path(PROJECT, TOPIC)
 
     try:
-        publisher_client.create_topic(topic_path)
+        topic = publisher_client.create_topic(topic_path)
+        return topic.name
     except AlreadyExists:
-        pass
-
-    yield topic_path
+        return topic_path
 
 
 @pytest.fixture(scope='module')
-def subscriber_client():
-    yield pubsub_v1.SubscriberClient()
-
-
-@pytest.fixture(scope='module')
-def subscription(subscriber_client, topic_path):
+def subscription_path(topic_path):
     subscription_path = subscriber_client.subscription_path(
         PROJECT, SUBSCRIPTION)
 
     try:
-        subscriber_client.create_subscription(subscription_path, topic_path)
+        subscription = subscriber_client.create_subscription(
+            subscription_path, topic_path)
+        return subscription.name
     except AlreadyExists:
-        pass
-
-    yield SUBSCRIPTION
+        return subscription_path
 
 
-@pytest.fixture
-def to_delete(publisher_client, subscriber_client):
-    doomed = []
-    yield doomed
-    for client, item in doomed:
+def _to_delete(resource_paths):
+    for item in resource_paths:
         if 'topics' in item:
             publisher_client.delete_topic(item)
         if 'subscriptions' in item:
             subscriber_client.delete_subscription(item)
 
 
-def _make_sleep_patch():
-    real_sleep = time.sleep
-
-    def new_sleep(period):
-        if period == 60:
-            real_sleep(10)
-            raise RuntimeError('sigil')
-        else:
-            real_sleep(period)
-
-    return mock.patch('time.sleep', new=new_sleep)
+def _publish_messages(topic_path):
+    publish_future = publisher_client.publish(topic_path, data=b'Hello World!')
+    publish_future.result()
 
 
-def test_sub(publisher_client,
-             topic_path,
-             subscriber_client,
-             subscription,
-             to_delete,
-             capsys):
+def _sub_timeout(project_id, subscription_name):
+    # This is an exactly copy of `sub.py` except
+    # StreamingPullFuture.result() will time out after 10s.
+    client = pubsub_v1.SubscriberClient()
+    subscription_path = client.subscription_path(
+        project_id, subscription_name)
 
-    publisher_client.publish(topic_path, data=b'Hello, World!')
+    def callback(message):
+        print('Received message {} of message ID {}\n'.format(
+            message, message.message_id))
+        message.ack()
+        print('Acknowledged message {}\n'.format(message.message_id))
 
-    to_delete.append((publisher_client, topic_path))
+    streaming_pull_future = client.subscribe(
+        subscription_path, callback=callback)
+    print('Listening for messages on {}..\n'.format(subscription_path))
 
-    with _make_sleep_patch():
-        with pytest.raises(RuntimeError, match='sigil'):
-            sub.sub(PROJECT, subscription)
+    try:
+        streaming_pull_future.result(timeout=10)
+    except:  # noqa
+        streaming_pull_future.cancel()
 
-    to_delete.append((subscriber_client,
-                      'projects/{}/subscriptions/{}'.format(PROJECT,
-                                                            SUBSCRIPTION)))
+
+def test_sub(monkeypatch, topic_path, subscription_path, capsys):
+    monkeypatch.setattr(sub, 'sub', _sub_timeout)
+
+    _publish_messages(topic_path)
+
+    sub.sub(PROJECT, SUBSCRIPTION)
+
+    # Clean up resources.
+    _to_delete([topic_path, subscription_path])
 
     out, _ = capsys.readouterr()
     assert "Received message" in out
