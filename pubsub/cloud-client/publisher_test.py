@@ -36,13 +36,11 @@ def topic(client):
     topic_path = client.topic_path(PROJECT, TOPIC)
 
     try:
-        client.delete_topic(topic_path)
-    except Exception:
-        pass
+        response = client.get_topic(topic_path)
+    except:  # noqa
+        response = client.create_topic(topic_path)
 
-    client.create_topic(topic_path)
-
-    yield topic_path
+    yield response.name
 
 
 def _make_sleep_patch():
@@ -105,6 +103,13 @@ def test_publish_with_custom_attributes(topic, capsys):
 
 def test_publish_with_batch_settings(topic, capsys):
     publisher.publish_messages_with_batch_settings(PROJECT, TOPIC)
+
+    out, _ = capsys.readouterr()
+    assert 'Published' in out
+
+
+def test_publish_with_retry_settings(topic, capsys):
+    publisher.publish_messages_with_retry_settings(PROJECT, TOPIC)
 
     out, _ = capsys.readouterr()
     assert 'Published' in out

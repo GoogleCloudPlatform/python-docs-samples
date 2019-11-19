@@ -1,3 +1,4 @@
+from __future__ import print_function
 # Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,7 +41,7 @@ class SendMailHandler(webapp2.RequestHandler):
         </form></body></html>""")
 
     def post(self):
-        print repr(self.request.POST)
+        print(repr(self.request.POST))
         id = self.request.POST['thread_id']
         send_example_mail('{}@appspot.gserviceaccount.com'.format(
             app_identity.get_application_id()), id)

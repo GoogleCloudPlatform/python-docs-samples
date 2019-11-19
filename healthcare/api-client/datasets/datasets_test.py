@@ -23,7 +23,7 @@ service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 dataset_id = 'test-dataset-{}'.format(int(time.time()))
 destination_dataset_id = 'test-destination-dataset-{}'.format(int(time.time()))
-whitelist_tags = 'PatientID'
+keeplist_tags = 'PatientID'
 time_zone = 'UTC'
 
 
@@ -90,7 +90,7 @@ def test_deidentify_dataset(capsys):
         cloud_region,
         dataset_id,
         destination_dataset_id,
-        whitelist_tags)
+        keeplist_tags)
 
     # Clean up
     datasets.delete_dataset(

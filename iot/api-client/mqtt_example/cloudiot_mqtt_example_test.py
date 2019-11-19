@@ -139,7 +139,7 @@ def test_state(test_topic, capsys):
 
     out, _ = capsys.readouterr()
     assert 'on_publish' in out
-    assert 'c3RhdGUgdGVzdA' in out
+    assert 'binary_data: "state test"' in out
 
 
 def test_config(test_topic, capsys):
@@ -354,6 +354,12 @@ def test_gateway_trigger_error_topic(test_topic, capsys):
                 service_account_json, project_id, cloud_region, registry_id,
                 device_id, gateway_id, num_messages, rsa_private_path,
                 'RS256', ca_cert_path, 'mqtt.googleapis.com', 443,
+                20, 42, trigger_error)
+    # Try to connect the gateway aagin on 8883
+    cloudiot_mqtt_example.listen_for_messages(
+                service_account_json, project_id, cloud_region, registry_id,
+                device_id, gateway_id, num_messages, rsa_private_path,
+                'RS256', ca_cert_path, 'mqtt.googleapis.com', 8883,
                 20, 15, trigger_error)
 
     # Clean up
