@@ -18,8 +18,8 @@ import google.api_core.exceptions
 import google.cloud.storage
 import pytest
 
-import dlp.triggers as triggers
-from dlp.tests.test_utils import vpc_check, VPC_FAILURE_MESSAGE
+import triggers
+from test_utils import vpc_check, VPC_FAILURE_MESSAGE
 
 GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
 TEST_BUCKET_NAME = GCLOUD_PROJECT + '-dlp-python-client-test'
@@ -68,7 +68,6 @@ def bucket():
 
 
 @vpc_check
-@pytest.mark.usefixtures("bucket")
 def test_create_list_and_delete_trigger(bucket, capsys):
     try:
         triggers.create_trigger(

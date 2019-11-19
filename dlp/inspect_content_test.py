@@ -24,9 +24,10 @@ import pytest
 from gcp_devrel.testing import eventually_consistent
 from gcp_devrel.testing.flaky import flaky
 
-import dlp.inspect_content as inspect_content
-from dlp.tests.test_utils import vpc_check
-from dlp.tests.test_utils import SHOULD_PASS_VPCSC, VPC_FAILURE_MESSAGE
+import inspect_content
+from test_utils import vpc_check
+from test_utils import SHOULD_PASS_VPCSC, VPC_FAILURE_MESSAGE
+import pdb
 
 BIGQUERY_DATASET_ID = 'dlp_test_dataset'
 BIGQUERY_TABLE_ID = 'dlp_test_table'
@@ -44,6 +45,7 @@ def bucket():
     # Creates a GCS bucket, uploads files required for the test, and tears down
     # the entire bucket afterwards.
     client = google.cloud.storage.Client()
+    # pdb.set_trace()
     try:
         bucket = client.get_bucket(TEST_BUCKET_NAME)
     except google.cloud.exceptions.NotFound:
@@ -306,7 +308,6 @@ def test_inspect_image_file(capsys):
 
 @flaky
 @vpc_check
-@pytest.mark.usefixtures("bucket")
 def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
     inspect_content.inspect_gcs_file(
         GCLOUD_PROJECT,
@@ -323,7 +324,6 @@ def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
 
 @flaky
 @vpc_check
-@pytest.mark.usefixtures("bucket")
 def test_inspect_gcs_file_with_custom_info_types(
         bucket, topic_id, subscription_id, capsys):
     dictionaries = ['gary@somedomain.com']
@@ -347,7 +347,6 @@ def test_inspect_gcs_file_with_custom_info_types(
 
 @flaky
 @vpc_check
-@pytest.mark.usefixtures("bucket")
 def test_inspect_gcs_file_no_results(
         bucket, topic_id, subscription_id, capsys):
     inspect_content.inspect_gcs_file(
@@ -365,7 +364,6 @@ def test_inspect_gcs_file_no_results(
 
 @pytest.mark.skip(reason='nondeterministically failing')
 @vpc_check
-@pytest.mark.usefixtures("bucket")
 def test_inspect_gcs_image_file(bucket, topic_id, subscription_id, capsys):
     inspect_content.inspect_gcs_file(
         GCLOUD_PROJECT,
@@ -381,7 +379,6 @@ def test_inspect_gcs_image_file(bucket, topic_id, subscription_id, capsys):
 
 @flaky
 @vpc_check
-@pytest.mark.usefixtures("bucket")
 def test_inspect_gcs_multiple_files(bucket, topic_id, subscription_id, capsys):
     inspect_content.inspect_gcs_file(
         GCLOUD_PROJECT,

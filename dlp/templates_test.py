@@ -17,7 +17,7 @@ import os
 import google.api_core.exceptions
 import google.cloud.storage
 
-import dlp.templates as templates
+import templates
 
 
 GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')

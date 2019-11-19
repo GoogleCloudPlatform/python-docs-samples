@@ -18,7 +18,7 @@ import tempfile
 
 import pytest
 
-import dlp.redact as redact
+import redact
 
 GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
 RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), 'resources')

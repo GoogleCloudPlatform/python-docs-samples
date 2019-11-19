@@ -16,7 +16,7 @@ import os
 
 import pytest
 
-import dlp.jobs as jobs
+import jobs
 
 GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
 TEST_COLUMN_NAME = 'zip_code'
