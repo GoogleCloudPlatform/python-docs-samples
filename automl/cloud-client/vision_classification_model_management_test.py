@@ -18,23 +18,11 @@ import os
 
 import pytest
 
-import deploy_model
 import undeploy_model
 import vision_classification_deploy_model_node_count
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 MODEL_ID = 'ICN5430958520562352128'
-
-
-@pytest.mark.slow
-def test_deploy_undeploy_model(capsys):
-    deploy_model.deploy_model(PROJECT_ID, MODEL_ID)
-    out, _ = capsys.readouterr()
-    assert 'Model deployment finished.' in out
-
-    undeploy_model.undeploy_model(PROJECT_ID, MODEL_ID)
-    out, _ = capsys.readouterr()
-    assert 'Model undeployment finished.' in out
 
 
 @pytest.mark.slow

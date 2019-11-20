@@ -23,7 +23,7 @@ def batch_predict(project_id, model_id, input_uri, output_uri):
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'YOUR_PROJECT_ID'
     # model_id = 'YOUR_MODEL_ID'
-    # input_uri = 'gs://YOUR_BUCKET_ID/path_to_your_input_file.txt'
+    # input_uri = 'gs://YOUR_BUCKET_ID/path_to_your_input_file.jsonl'
     # output_uri = 'gs://YOUR_BUCKET_ID/path_to_save_results/'
 
     prediction_client = automl.PredictionServiceClient()

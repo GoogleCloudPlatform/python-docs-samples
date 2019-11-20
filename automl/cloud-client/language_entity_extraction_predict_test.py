@@ -16,6 +16,8 @@
 
 import os
 
+import pytest
+
 import language_batch_predict
 import language_entity_extraction_predict
 
@@ -32,6 +34,7 @@ def test_predict(capsys):
     assert 'Text Extract Entity Types: ' in out
 
 
+@pytest.mark.slow
 def test_batch_predict(capsys):
     model_id = 'TEN5112482778553778176'
     input_uri = 'gs://{}/entity_extraction/input.jsonl'.format(BUCKET_ID)

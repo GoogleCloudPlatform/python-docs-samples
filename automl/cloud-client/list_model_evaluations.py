@@ -17,7 +17,12 @@
 
 def list_model_evaluations(project_id, model_id):
     """List model evaluations."""
-    # [START automl_list_model_evaluations]
+    # [START automl_language_entity_extraction_list_model_evaluations]
+    # [START automl_language_sentiment_analysis_list_model_evaluations]
+    # [START automl_language_text_classification_list_model_evaluations]
+    # [START automl_translate_list_model_evaluations]
+    # [START automl_vision_classification_list_model_evaluations]
+    # [START automl_vision_object_detection_list_model_evaluations]
     from google.cloud import automl
 
     # TODO(developer): Uncomment and set the following variables
@@ -39,6 +44,33 @@ def list_model_evaluations(project_id, model_id):
         print(u'\tnanos: {}'.format(evaluation.create_time.nanos / 1e9))
         print(u'Evaluation example count: {}'.format(
             evaluation.evaluated_example_count))
-        print(u'Model evaluation metrics: {}'.format(
-            evaluation.translation_evaluation_metrics))
-    # [END automl_list_model_evaluations]
+        # [END automl_language_sentiment_analysis_list_model_evaluations]
+        # [END automl_language_text_classification_list_model_evaluations]
+        # [END automl_translate_list_model_evaluations]
+        # [END automl_vision_classification_list_model_evaluations]
+        # [END automl_vision_object_detection_list_model_evaluations]
+        print('Entity extraction model evaluation metrics: {}'.format(
+              evaluation.text_extraction_evaluation_metrics))
+        # [END automl_language_entity_extraction_list_model_evaluations]
+
+        # [START automl_language_sentiment_analysis_list_model_evaluations]
+        print('Sentiment analysis model evaluation metrics: {}'.format(
+              evaluation.text_sentiment_evaluation_metrics))
+        # [END automl_language_sentiment_analysis_list_model_evaluations]
+
+        # [START automl_language_text_classification_list_model_evaluations]
+        # [START automl_vision_classification_list_model_evaluations]
+        print('Classification model evaluation metrics: {}'.format(
+              evaluation.classification_evaluation_metrics))
+        # [END automl_language_text_classification_list_model_evaluations]
+        # [END automl_vision_classification_list_model_evaluations]
+
+        # [START automl_translate_list_model_evaluations]
+        print('Translation model evaluation metrics: {}'.format(
+              evaluation.translation_evaluation_metrics))
+        # [END automl_translate_list_model_evaluations]
+
+        # [START automl_vision_object_detection_list_model_evaluations]
+        print('Object detection model evaluation metrics: {}\n\n'.format(
+              evaluation.image_object_detection_evaluation_metrics))
+        # [END automl_vision_object_detection_list_model_evaluations]

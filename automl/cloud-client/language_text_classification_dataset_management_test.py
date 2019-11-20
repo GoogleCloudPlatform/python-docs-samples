@@ -66,6 +66,7 @@ def test_get_dataset(capsys):
     assert 'Dataset name: ' in out
 
 
+@pytest.mark.slow
 def test_export_dataset(capsys):
     export_dataset.export_dataset(
         PROJECT_ID,

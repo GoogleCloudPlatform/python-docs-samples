@@ -27,8 +27,8 @@ samples:
 - name: Bucket Lock
   file: bucket_lock.py
   show_help: true
-- name: Bucket Policy Only
-  file: bucket_policy_only.py
+- name: Uniform bucket-level access
+  file: uniform_bucket_level_access.py
   show_help: true
 - name: Notification Polling
   file: notification_polling.py
