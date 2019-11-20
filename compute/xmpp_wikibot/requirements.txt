@@ -1,4 +1,4 @@
-Flask==1.0.2
-requests==2.21.0
+Flask==1.1.1
+requests==2.22.0
 sleekxmpp==1.3.3
 six==1.12.0
