@@ -6,8 +6,8 @@ Use it with the [Cloud Pub/Sub with Cloud Run tutorial](http://cloud.google.com/
 
 [![Run in Google Cloud][run_img]][run_link]
 
-[run_img]: https://storage.googleapis.com/cloudrun/button.svg
-[run_link]: https://console.cloud.google.com/cloudshell/editor?shellonly=true&cloudshell_image=gcr.io/cloudrun/button&cloudshell_git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&cloudshell_working_dir=run/pubsub
+[run_img]: https://deploy.cloud.run/button.svg
+[run_link]: https://deploy.cloud.run/?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&dir=run/pubsub
 
 ## Build
 
