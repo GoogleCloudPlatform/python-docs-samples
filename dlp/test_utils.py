@@ -4,7 +4,7 @@ import decorator
 import pytest
 from google.api_core import exceptions
 
-SHOULD_PASS_VPCSC = os.getenv('SHOULD_PASS_VPCSC').lower() == "true"
+SHOULD_PASS_VPCSC = os.getenv('SHOULD_PASS_VPCSC', "false").lower() == "true"
 VPC_FAILURE_MESSAGE = "Expected to fail if VPCSC is misconfigured."
 
 # VPCSC function wrappers.
