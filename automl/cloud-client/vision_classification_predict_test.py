@@ -23,23 +23,22 @@ import vision_classification_predict
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 BUCKET_ID = '{}-vcm'.format(PROJECT_ID)
+MODEL_ID = 'ICN7383667271543079510'
 
 
 def test_predict(capsys):
-    model_id = 'ICN7383667271543079510'
     file_path = 'resources/test.png'
-    vision_classification_predict.predict(PROJECT_ID, model_id, file_path)
+    vision_classification_predict.predict(PROJECT_ID, MODEL_ID, file_path)
     out, _ = capsys.readouterr()
     assert 'Predicted class name:' in out
 
 
 @pytest.mark.slow
 def test_batch_predict(capsys):
-    model_id = 'ICN7383667271543079510'
     input_uri = 'gs://{}/batch_predict_test.csv'.format(BUCKET_ID)
     output_uri = 'gs://{}/TEST_BATCH_PREDICT/'.format(BUCKET_ID)
     vision_batch_predict.batch_predict(
-        PROJECT_ID, model_id, input_uri, output_uri)
+        PROJECT_ID, MODEL_ID, input_uri, output_uri)
     out, _ = capsys.readouterr()
     assert 'Batch Prediction results saved to Cloud Storage bucket' in out
 

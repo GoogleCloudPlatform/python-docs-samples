@@ -22,16 +22,16 @@ import undeploy_model
 import vision_object_detection_deploy_model_node_count
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
-MODEL_ID = 'IOD6143103405779845120'
+MODEL_ID = 'IOD1729298694026559488'
 
 
 @pytest.mark.slow
 def test_deploy_undeploy_model_with_node_count(capsys):
-    undeploy_model.undeploy_model(PROJECT_ID, MODEL_ID)
-    out, _ = capsys.readouterr()
-    assert 'Model undeployment finished.' in out
-
     vision_object_detection_deploy_model_node_count.\
         deploy_model_with_node_count(PROJECT_ID, MODEL_ID)
     out, _ = capsys.readouterr()
     assert 'Model deployment finished.' in out
+
+    undeploy_model.undeploy_model(PROJECT_ID, MODEL_ID)
+    out, _ = capsys.readouterr()
+    assert 'Model undeployment finished.' in out

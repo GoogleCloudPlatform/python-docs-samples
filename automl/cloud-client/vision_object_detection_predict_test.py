@@ -23,12 +23,12 @@ import vision_object_detection_predict
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 BUCKET_ID = '{}-vcm'.format(PROJECT_ID)
+MODEL_ID = 'IOD6143103405779845120'
 
 
 def test_predict(capsys):
-    model_id = 'IOD6143103405779845120'
     file_path = 'resources/salad.jpg'
-    vision_object_detection_predict.predict(PROJECT_ID, model_id, file_path)
+    vision_object_detection_predict.predict(PROJECT_ID, MODEL_ID, file_path)
     out, _ = capsys.readouterr()
     assert 'X:' in out
     assert 'Y:' in out
@@ -36,12 +36,11 @@ def test_predict(capsys):
 
 @pytest.mark.slow
 def test_batch_predict(capsys):
-    model_id = 'IOD6143103405779845120'
     input_uri = 'gs://{}/vision_object_detection_batch_predict_test.csv'\
         .format(BUCKET_ID)
     output_uri = 'gs://{}/TEST_BATCH_PREDICT/'.format(BUCKET_ID)
     vision_batch_predict.batch_predict(
-        PROJECT_ID, model_id, input_uri, output_uri)
+        PROJECT_ID, MODEL_ID, input_uri, output_uri)
     out, _ = capsys.readouterr()
     assert 'Batch Prediction results saved to Cloud Storage bucket' in out
 
