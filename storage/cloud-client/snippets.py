@@ -130,18 +130,21 @@ def list_blobs_with_prefix(bucket_name, prefix, delimiter=None):
     "files" in the given "folder". Without the delimiter, the entire tree under
     the prefix is returned. For example, given these blobs:
 
-        /a/1.txt
-        /a/b/2.txt
+        a/1.txt
+        a/b/2.txt
 
-    If you just specify prefix = '/a', you'll get back:
+    If you just specify prefix = 'a', you'll get back:
 
-        /a/1.txt
-        /a/b/2.txt
+        a/1.txt
+        a/b/2.txt
 
-    However, if you specify prefix='/a' and delimiter='/', you'll get back:
+    However, if you specify prefix='a' and delimiter='/', you'll get back:
 
-        /a/1.txt
+        a/1.txt
 
+    Additionally, the same request will return blobs.prefixes populated with:
+
+        a/b/
     """
     storage_client = storage.Client()
 
@@ -561,10 +564,14 @@ def main():
 
     signed_url_download_v4_parser = subparsers.add_parser(
         'signed-url-download-v4', help=generate_download_signed_url_v4.__doc__)
+    signed_url_download_v4_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
     signed_url_download_v4_parser.add_argument('blob_name')
 
     signed_url_upload_v4_parser = subparsers.add_parser(
         'signed-url-upload-v4', help=generate_upload_signed_url_v4.__doc__)
+    signed_url_upload_v4_parser.add_argument(
+        'bucket_name', help='Your cloud storage bucket.')
     signed_url_upload_v4_parser.add_argument('blob_name')
 
     rename_parser = subparsers.add_parser(

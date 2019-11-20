@@ -13,8 +13,8 @@ This directory contains samples for [Google Cloud Run](https://cloud.run). [Clou
 | ------------------------------- | ------------------------ | ------------- |
 |[Hello World][helloworld]&nbsp;&#10149; | Quickstart | [<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30">][run_button_helloworld] |
 |[Cloud Pub/Sub][pubsub] | Handling Pub/Sub push messages | [<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30">][run_button_pubsub] |
-|[Cloud SQL (MySQL)[mysql]        | Use MySQL with Cloud Run    |      -        |
-|[Cloud SQL (Postgres)[postgres]  | Use Postgres with Cloud Run |      -        |
+|[Cloud SQL (MySQL)][mysql]        | Use MySQL with Cloud Run    |      -        |
+|[Cloud SQL (Postgres)][postgres]  | Use Postgres with Cloud Run |      -        |
 
 For more Cloud Run samples beyond Python, see the main list in the [Cloud Run Samples repository](https://github.com/GoogleCloudPlatform/cloud-run-samples).
 
