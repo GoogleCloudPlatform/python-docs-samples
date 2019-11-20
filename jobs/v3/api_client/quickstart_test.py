@@ -11,8 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from gcp_devrel.testing.flaky import flaky
 
 
+@flaky
 def test_quickstart(capsys):
     import quickstart
 

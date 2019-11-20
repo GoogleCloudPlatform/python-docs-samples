@@ -67,7 +67,7 @@ def draw_hint(image_file):
         vects[2].x, vects[2].y,
         vects[3].x, vects[3].y], None, 'red')
     im.save('output-hint.jpg', 'JPEG')
-    print('Saved new image to output-crop.jpg')
+    print('Saved new image to output-hint.jpg')
     # [END vision_crop_hints_tutorial_draw_crop_hints]
 
 
@@ -90,8 +90,6 @@ if __name__ == '__main__':
     parser.add_argument('image_file', help='The image you\'d like to crop.')
     parser.add_argument('mode', help='Set to "crop" or "draw".')
     args = parser.parse_args()
-
-    parser = argparse.ArgumentParser()
 
     if args.mode == 'crop':
         crop_to_hint(args.image_file)

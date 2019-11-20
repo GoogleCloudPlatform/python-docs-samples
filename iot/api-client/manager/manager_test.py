@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import datetime
 import os
 import sys
 import time
@@ -40,6 +41,79 @@ pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
 registry_id = 'test-registry-{}'.format(int(time.time()))
 
 
+@pytest.fixture(scope="session", autouse=True)
+def clean_up_registries():
+    all_registries = list(manager.list_registries(
+        service_account_json, project_id, cloud_region))
+
+    for registry in all_registries:
+        registry_id = registry.id
+        if registry_id.find('test-registry-') == 0:
+            time_str = registry_id[
+                registry_id.rfind('-') + 1: len(registry_id)]
+            test_date = datetime.datetime.utcfromtimestamp(int(time_str))
+            now_date = datetime.datetime.utcfromtimestamp(int(time.time()))
+            difftime = now_date - test_date
+
+            # *NOTE* Restrict to registries used in the tests older than 30
+            #        days to prevent thrashing in the case of async tests
+            if (difftime.days > 30):
+                client = manager.get_client(service_account_json)
+                gateways = client.projects().locations().registries().devices(
+                    ).list(
+                        parent=registry.name,
+                        fieldMask='config,gatewayConfig'
+                    ).execute().get('devices', [])
+                devices = client.projects().locations().registries().devices(
+                    ).list(parent=registry.name).execute().get(
+                        'devices', [])
+
+                # Unbind devices from each gateway and delete
+                for gateway in gateways:
+                    gateway_id = gateway.get('id')
+                    bound = client.projects().locations().registries().devices(
+                        ).list(
+                            parent=registry.name,
+                            gatewayListOptions_associationsGatewayId=gateway_id
+                        ).execute()
+                    if 'devices' in bound:
+                        for device in bound['devices']:
+                            bind_request = {
+                                'deviceId': device.get('id'),
+                                'gatewayId': gateway_id
+                            }
+                            client.projects().locations().registries(
+                                ).unbindDeviceFromGateway(
+                                    parent=registry.get('name'),
+                                    body=bind_request).execute()
+                    gateway_name = '{}/devices/{}'.format(
+                        registry.name, gateway_id)
+                    client.projects().locations().registries().devices(
+                        ).delete(name=gateway_name).execute()
+
+                # Delete the devices
+                # Assumption is that the devices are not bound to gateways
+                for device in devices:
+                    device_name = '{}/devices/{}'.format(
+                        registry.name, device.get('id'))
+                    print(device_name)
+                    remove_device = True
+                    try:
+                        client.projects().locations().registries().devices(
+                            ).get(name=device_name).execute()
+                    except Exception:
+                        remove_device = False
+
+                    if remove_device:
+                        print('removing {}'.format(device_name))
+                        client.projects().locations().registries().devices(
+                            ).delete(name=device_name).execute()
+
+                # Delete the old test registry
+                client.projects().locations().registries().delete(
+                    name=registry.name).execute()
+
+
 @pytest.fixture(scope='module')
 def test_topic():
     topic = manager.create_iot_topic(project_id, topic_id)
@@ -63,7 +137,7 @@ def test_create_delete_registry(test_topic, capsys):
 
     # Check that create / list worked
     assert 'Created registry' in out
-    assert 'eventNotificationConfig' in out
+    assert 'event_notification_config' in out
 
     # Clean up
     manager.delete_registry(
@@ -93,7 +167,8 @@ def test_get_iam_permissions(test_topic, capsys):
 
     # Check that create / list worked
     assert 'Created registry' in out
-    assert 'eventNotificationConfig' in out
+    assert 'event_notification_config' in out
+    assert 'dpebot' in out
     assert 'etag' in out
 
     # Clean up
@@ -119,6 +194,9 @@ def test_add_delete_unauth_device(test_topic, capsys):
             service_account_json, project_id, cloud_region, registry_id,
             device_id)
 
+    manager.delete_registry(
+            service_account_json, project_id, cloud_region, registry_id)
+
     out, _ = capsys.readouterr()
     assert 'UNAUTH' in out
 
@@ -141,9 +219,16 @@ def test_add_config_unauth_device(test_topic, capsys):
             service_account_json, project_id, cloud_region, registry_id,
             device_id)
 
+    manager.get_config_versions(
+            service_account_json, project_id, cloud_region, registry_id,
+            device_id)
+
     manager.delete_device(
             service_account_json, project_id, cloud_region, registry_id,
             device_id)
+
+    manager.delete_registry(
+            service_account_json, project_id, cloud_region, registry_id)
 
     out, _ = capsys.readouterr()
     assert 'Set device configuration' in out
@@ -178,7 +263,6 @@ def test_add_delete_rs256_device(test_topic, capsys):
 
     out, _ = capsys.readouterr()
     assert 'format : RSA_X509_PEM' in out
-    assert 'State: {' in out
 
 
 def test_add_delete_es256_device(test_topic, capsys):
@@ -208,7 +292,6 @@ def test_add_delete_es256_device(test_topic, capsys):
 
     out, _ = capsys.readouterr()
     assert 'format : ES256_PEM' in out
-    assert 'State: {' in out
 
 
 def test_add_patch_delete_rs256(test_topic, capsys):
@@ -290,7 +373,7 @@ def test_send_command(test_topic, capsys):
     devices = manager.list_devices(
             service_account_json, project_id, cloud_region, registry_id)
     for device in devices:
-        if device.get('id') == device_id:
+        if device.id == device_id:
             exists = True
 
     if not exists:
@@ -352,7 +435,7 @@ def test_create_gateway(test_topic, capsys):
 
     out, _ = capsys.readouterr()
 
-    assert 'Created gateway' in out
+    assert 'Created Gateway' in out
 
 
 def test_list_gateways(test_topic, capsys):

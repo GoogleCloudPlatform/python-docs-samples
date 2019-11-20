@@ -93,8 +93,7 @@ To run this sample:
     $ python snippets.py
 
     usage: snippets.py [-h]
-                       bucket_name
-                       {create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,rename,copy}
+                       {list-buckets,create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,bucket-metadata,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,signed-url-download-v4,signed-url-upload-v4,rename,copy}
                        ...
 
     This application demonstrates how to perform basic operations on blobs
@@ -104,8 +103,8 @@ To run this sample:
     at https://cloud.google.com/storage/docs.
 
     positional arguments:
-      bucket_name           Your cloud storage bucket.
-      {create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,rename,copy}
+      {list-buckets,create-bucket,delete-bucket,get-bucket-labels,add-bucket-label,remove-bucket-label,list,bucket-metadata,list-with-prefix,upload,enable-default-kms-key,upload-with-kms-key,download,delete,metadata,make-public,signed-url,signed-url-download-v4,signed-url-upload-v4,rename,copy}
+        list-buckets        Lists all buckets.
         create-bucket       Creates a new bucket.
         delete-bucket       Deletes a bucket. The bucket must be empty.
         get-bucket-labels   Prints out a bucket's labels.
@@ -113,6 +112,7 @@ To run this sample:
         remove-bucket-label
                             Remove a label from a bucket.
         list                Lists all the blobs in the bucket.
+        bucket-metadata     Prints out a bucket's metadata.
         list-with-prefix    Lists all the blobs in the bucket that begin with the
                             prefix. This can be used to list all blobs in a
                             "folder", e.g. "public/". The delimiter argument can
@@ -133,11 +133,23 @@ To run this sample:
         delete              Deletes a blob from the bucket.
         metadata            Prints out a blob's metadata.
         make-public         Makes a blob publicly accessible.
-        signed-url          Generates a signed URL for a blob. Note that this
-                            method requires a service account key file. You can
-                            not use this if you are using Application Default
-                            Credentials from Google Compute Engine or from the
-                            Google Cloud SDK.
+        signed-url          Generates a v2 signed URL for downloading a blob. Note
+                            that this method requires a service account key file.
+                            You can not use this if you are using Application
+                            Default Credentials from Google Compute Engine or from
+                            the Google Cloud SDK.
+        signed-url-download-v4
+                            Generates a v4 signed URL for downloading a blob. Note
+                            that this method requires a service account key file.
+                            You can not use this if you are using Application
+                            Default Credentials from Google Compute Engine or from
+                            the Google Cloud SDK.
+        signed-url-upload-v4
+                            Generates a v4 signed URL for uploading a blob using
+                            HTTP PUT. Note that this method requires a service
+                            account key file. You can not use this if you are
+                            using Application Default Credentials from Google
+                            Compute Engine or from the Google Cloud SDK.
         rename              Renames a blob.
         copy                Renames a blob.
 
@@ -300,11 +312,11 @@ To run this sample:
 
 
 
-Bucket Policy Only
+Uniform Bucket Level Access
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/bucket_policy_only.py,storage/cloud-client/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/uniform_bucket_level_access.py,storage/cloud-client/README.rst
 
 
 
@@ -313,20 +325,20 @@ To run this sample:
 
 .. code-block:: bash
 
-    $ python bucket_policy_only.py
+    $ python uniform_bucket_level_access.py
 
-    usage: bucket_policy_only.py [-h]
-                                 {enable-bucket-policy-only,disable-bucket-policy-only,get-bucket-policy-only}
+    usage: uniform_bucket_level_access.py [-h]
+                                 {enable-uniform-bucket-level-access,disable-uniform-bucket-level-access,get-uniform-bucket-level-access}
                                  ...
 
     positional arguments:
-      {enable-bucket-policy-only,disable-bucket-policy-only,get-bucket-policy-only}
-        enable-bucket-policy-only
-                            Enable Bucket Policy Only for a bucket
-        disable-bucket-policy-only
-                            Disable Bucket Policy Only for a bucket
-        get-bucket-policy-only
-                            Get Bucket Policy Only for a bucket
+      {enable-uniform-bucket-level-access,disable-uniform-bucket-level-access,get-uniform-bucket-level-access}
+        enable-uniform-bucket-level-access
+                            Enable uniform bucket-level access  for a bucket
+        disable-uniform-bucket-level-access
+                            Disable uniform bucket-level access for a bucket
+        get-uniform-bucket-level-access
+                            Get uniform bucket-level access for a bucket
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -390,6 +402,22 @@ To run this sample:
     optional arguments:
       -h, --help    show this help message and exit
 
+
+
+Service Account HMAC Keys
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/cloud-client/hmac_samples.py,storage/cloud-client/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python hmac_samples.py
 
 
 

@@ -36,13 +36,11 @@ def topic(client):
     topic_path = client.topic_path(PROJECT, TOPIC)
 
     try:
-        client.delete_topic(topic_path)
-    except Exception:
-        pass
+        response = client.get_topic(topic_path)
+    except:  # noqa
+        response = client.create_topic(topic_path)
 
-    client.create_topic(topic_path)
-
-    yield topic_path
+    yield response.name
 
 
 def _make_sleep_patch():
@@ -110,12 +108,15 @@ def test_publish_with_batch_settings(topic, capsys):
     assert 'Published' in out
 
 
-def test_publish_with_error_handler(topic, capsys):
+def test_publish_with_retry_settings(topic, capsys):
+    publisher.publish_messages_with_retry_settings(PROJECT, TOPIC)
 
-    with _make_sleep_patch():
-        with pytest.raises(RuntimeError, match='sigil'):
-            publisher.publish_messages_with_error_handler(
-                PROJECT, TOPIC)
+    out, _ = capsys.readouterr()
+    assert 'Published' in out
+
+
+def test_publish_with_error_handler(topic, capsys):
+    publisher.publish_messages_with_error_handler(PROJECT, TOPIC)
 
     out, _ = capsys.readouterr()
     assert 'Published' in out

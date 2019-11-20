@@ -417,7 +417,7 @@ if __name__ == '__main__':
         help='Deidentify sensitive data in a string by masking it with a '
              'character.')
     mask_parser.add_argument(
-        '--info_types', action='append',
+        '--info_types', nargs='+',
         help='Strings representing info types to look for. A full list of '
              'info categories and types is available from the API. Examples '
              'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '

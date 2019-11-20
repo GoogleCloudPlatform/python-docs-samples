@@ -13,13 +13,13 @@ Before you can run or deploy the sample, you will need to do the following:
 
 1. Enable the Cloud Pub/Sub API in the [Google Developers Console](https://console.developers.google.com/project/_/apiui/apiview/pubsub/overview).
 
-2. Create a topic and subscription. The push auth service account must have Service Account Token Creator Role assigned, which can be done in the Cloud Console [IAM & admin](https://console.cloud.google.com/iam-admin/iam) UI. `--push-auth-token-audience` is optional. If set, remember to modify the audience field check in `main.py` (line 88).
+2. Create a topic and subscription. Your push auth service account must have Service Account Token Creator Role assigned, which can be done in the Cloud Console [IAM & admin](https://console.cloud.google.com/iam-admin/iam) UI. `--push-auth-token-audience` is optional. If set, remember to modify the audience field check in `main.py` (line 88).
 
         $ gcloud pubsub topics create [your-topic-name]
         $ gcloud beta pubsub subscriptions create [your-subscription-name] \
             --topic=[your-topic-name] \
             --push-endpoint=\
-                https://[your-app-id].appspot.com/_ah/push-handlers/receive_messages/token=[your-token] \
+                https://[your-app-id].appspot.com/_ah/push-handlers/receive_messages?token=[your-token] \
             --ack-deadline=30 \
             --push-auth-service-account=[your-service-account-email] \
             --push-auth-token-audience=example.com
@@ -70,7 +70,7 @@ The simulated push request fails because it does not have a Cloud Pub/Sub-genera
 
 ## Running on App Engine
 
-Note: Not all the files in the current directory are needed to run your code on App Engine. Specifically, `main_test.py` and the `data` directory, which contains a mocked private key file and a mocked public certs file, are for testing purposes only. They SHOULD NOT be included in when deploying your app. When your app is up and running, Cloud Pub/Sub creates tokens using a private key, then the Google Auth Python library takes care of verifying and decoding the token using Google's public certs, to confirm that the push requests indeed come from Cloud Pub/Sub. 
+Note: Not all the files in the current directory are needed to run your code on App Engine. Specifically, `main_test.py` and the `data` directory, which contains a mocked private key file and a mocked public certs file, are for testing purposes only. They SHOULD NOT be included when deploying your app. When your app is up and running, Cloud Pub/Sub's push servers create tokens using a private key, then the Google Auth Python library takes care of verifying and decoding the token using Google's public certs, to confirm that the push requests indeed come from Cloud Pub/Sub.
 
 In the current directory, deploy using `gcloud`:
 

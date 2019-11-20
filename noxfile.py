@@ -167,7 +167,8 @@ PY2_ONLY_SAMPLES = GAE_STANDARD_SAMPLES
 PY3_ONLY_SAMPLES = [
     sample for sample in ALL_TESTED_SAMPLES
     if (sample.startswith('./appengine/standard_python37')
-        or sample.startswith('./functions/'))]
+        or sample.startswith('./functions/')
+        or sample.startswith('./bigquery/pandas-gbq-migration'))]
 NON_GAE_STANDARD_SAMPLES_PY2 = sorted(list((
     set(ALL_TESTED_SAMPLES) -
     set(GAE_STANDARD_SAMPLES)) -

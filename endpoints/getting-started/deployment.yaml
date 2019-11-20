@@ -51,6 +51,6 @@ spec:
         ports:
         - containerPort: 8081
       - name: echo
-        image: gcr.io/google-samples/echo-python:1.0
+        image: gcr.io/endpoints-release/echo-python:1.0
         ports:
         - containerPort: 8080

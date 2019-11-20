@@ -19,10 +19,6 @@ import json
 # [END functions_log_stackdriver]
 
 # [START functions_log_retrieve]
-import os
-# [END functions_log_retrieve]
-
-# [START functions_log_retrieve]
 import google.cloud.logging as cloud_logging
 # [END functions_log_retrieve]
 
@@ -41,7 +37,7 @@ def hello_world(data, context):
 # [START functions_log_retrieve]
 cloud_client = cloud_logging.Client()
 log_name = 'cloudfunctions.googleapis.com%2Fcloud-functions'
-cloud_logger = cloud_client.logger(log_name.format(os.getenv('GCP_PROJECT')))
+cloud_logger = cloud_client.logger(log_name)
 
 
 def get_log_entries(request):
