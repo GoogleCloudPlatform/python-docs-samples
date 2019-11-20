@@ -17,6 +17,7 @@ import pytest
 
 import distributed_counters
 
+
 shards_list = []
 doc_ref = None
 
