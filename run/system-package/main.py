@@ -48,12 +48,15 @@ def index():
 
 # [START run_system_package_exec]
 def create_diagram(dot):
+    # Generates a diagram based on a graphviz DOT diagram description.
     if not dot:
         raise Exception('syntax: no graphviz definition provided')
 
-    dot_args = [  # usr/bin/dot is a system package in the container
-                '/usr/bin/dot',  # Command to run
-                '-Glabel=Made on Cloud Run',  # Args
+    dot_args = [  # Uses local `dot` binary from Graphviz: 
+                  # https://graphviz.gitlab.io 
+                '/usr/bin/dot',  
+                # Adds a watermark to the dot graphic.
+                '-Glabel=Made on Cloud Run', 
                 '-Gfontsize=10',
                 '-Glabeljust=right',
                 '-Glabelloc=bottom',
