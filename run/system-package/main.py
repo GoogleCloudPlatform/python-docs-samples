@@ -24,8 +24,8 @@ app = Flask(__name__)
 # [START run_system_package_handler]
 @app.route('/diagram.png', methods=['GET'])
 def index():
-    # Uses the graphviz DOT language
-    # https://www.graphviz.org/doc/info/lang.html
+    # Takes an HTTP GET request with query param dot and
+    # returns a png with the rendered DOT diagram in a HTTP response.
     try:
         image = create_diagram(request.args.get('dot'))
         response = make_response(image)
