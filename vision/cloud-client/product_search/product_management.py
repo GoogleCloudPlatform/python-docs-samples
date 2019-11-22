@@ -28,6 +28,7 @@ import argparse
 # [START vision_product_search_list_products]
 # [START vision_product_search_get_product]
 # [START vision_product_search_update_product_labels]
+# [START vision_product_search_purge_orphan_products]
 from google.cloud import vision
 
 # [END vision_product_search_create_product]
@@ -35,6 +36,7 @@ from google.cloud import vision
 # [END vision_product_search_list_products]
 # [END vision_product_search_get_product]
 # [END vision_product_search_update_product_labels]
+# [END vision_product_search_purge_orphan_products]
 
 
 # [START vision_product_search_create_product]
@@ -181,6 +183,34 @@ def delete_product(project_id, location, product_id):
 # [END vision_product_search_delete_product]
 
 
+# [START vision_product_search_purge_orphan_products]
+def purge_orphan_products(project_id, location, force):
+    """Delete all products not in any product sets.
+    Args:
+        project_id: Id of the project.
+        location: A compute region name.
+    """
+    client = vision.ProductSearchClient()
+
+    parent = client.location_path(
+        project=project_id, location=location)
+
+    # The purge operation is async.
+    operation = client.purge_products(
+        parent=parent,
+        delete_orphan_products=True,
+        # The operation is irreversible and removes multiple products.
+        # The user is required to pass in force=True to actually perform the
+        # purge.
+        # If force is not set to True, the service raises an exception.
+        force=force)
+
+    operation.result(timeout=120)
+
+    print('Orphan products deleted.')
+# [END vision_product_search_purge_orphan_products]
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -219,6 +249,10 @@ if __name__ == '__main__':
         'delete_product', help=delete_product.__doc__)
     delete_product_parser.add_argument('product_id')
 
+    purge_orphan_products_parser = subparsers.add_parser(
+        'purge_orphan_products', help=purge_orphan_products.__doc__)
+    purge_orphan_products_parser.add_argument('--force', action='store_true')
+
     args = parser.parse_args()
 
     if args.command == 'create_product':
@@ -235,3 +269,5 @@ if __name__ == '__main__':
             args.key, args.value)
     elif args.command == 'delete_product':
         delete_product(args.project_id, args.location, args.product_id)
+    elif args.command == 'purge_orphan_products':
+        purge_orphan_products(args.project_id, args.location, args.force)

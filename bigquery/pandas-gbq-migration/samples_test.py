@@ -81,6 +81,41 @@ def test_pandas_gbq_query():
     assert len(df) > 0
 
 
+def test_client_library_query_bqstorage():
+    # [START bigquery_migration_client_library_query_bqstorage]
+    import google.auth
+    from google.cloud import bigquery
+    from google.cloud import bigquery_storage_v1beta1
+
+    # Create a BigQuery client and a BigQuery Storage API client with the same
+    # credentials to avoid authenticating twice.
+    credentials, project_id = google.auth.default(
+        scopes=["https://www.googleapis.com/auth/cloud-platform"]
+    )
+    client = bigquery.Client(credentials=credentials, project=project_id)
+    bqstorage_client = bigquery_storage_v1beta1.BigQueryStorageClient(
+        credentials=credentials
+    )
+    sql = "SELECT * FROM `bigquery-public-data.irs_990.irs_990_2012`"
+
+    # Use a BigQuery Storage API client to download results more quickly.
+    df = client.query(sql).to_dataframe(bqstorage_client=bqstorage_client)
+    # [END bigquery_migration_client_library_query_bqstorage]
+    assert len(df) > 0
+
+
+def test_pandas_gbq_query_bqstorage():
+    # [START bigquery_migration_pandas_gbq_query_bqstorage]
+    import pandas
+
+    sql = "SELECT * FROM `bigquery-public-data.irs_990.irs_990_2012`"
+
+    # Use the BigQuery Storage API to download results more quickly.
+    df = pandas.read_gbq(sql, dialect='standard', use_bqstorage_api=True)
+    # [END bigquery_migration_pandas_gbq_query_bqstorage]
+    assert len(df) > 0
+
+
 def test_client_library_legacy_query():
     # [START bigquery_migration_client_library_query_legacy]
     from google.cloud import bigquery
@@ -184,16 +219,28 @@ def test_client_library_upload_from_dataframe(temp_dataset):
         }
     )
     client = bigquery.Client()
-    dataset_ref = client.dataset('my_dataset')
+    table_id = 'my_dataset.new_table'
     # [END bigquery_migration_client_library_upload_from_dataframe]
-    dataset_ref = client.dataset(temp_dataset.dataset_id)
+    table_id = (
+        temp_dataset.dataset_id
+        + ".test_client_library_upload_from_dataframe"
+    )
     # [START bigquery_migration_client_library_upload_from_dataframe]
-    table_ref = dataset_ref.table('new_table')
+    # Since string columns use the "object" dtype, pass in a (partial) schema
+    # to ensure the correct BigQuery data type.
+    job_config = bigquery.LoadJobConfig(schema=[
+        bigquery.SchemaField("my_string", "STRING"),
+    ])
 
-    client.load_table_from_dataframe(df, table_ref).result()
+    job = client.load_table_from_dataframe(
+        df, table_id, job_config=job_config
+    )
+
+    # Wait for the load job to complete.
+    job.result()
     # [END bigquery_migration_client_library_upload_from_dataframe]
     client = bigquery.Client()
-    table = client.get_table(table_ref)
+    table = client.get_table(table_id)
     assert table.num_rows == 3
 
 
@@ -209,16 +256,16 @@ def test_pandas_gbq_upload_from_dataframe(temp_dataset):
             'my_float64': [4.0, 5.0, 6.0],
         }
     )
-    full_table_id = 'my_dataset.new_table'
-    project_id = 'my-project-id'
+    table_id = 'my_dataset.new_table'
     # [END bigquery_migration_pandas_gbq_upload_from_dataframe]
-    table_id = 'new_table'
-    full_table_id = '{}.{}'.format(temp_dataset.dataset_id, table_id)
-    project_id = os.environ['GCLOUD_PROJECT']
+    table_id = (
+        temp_dataset.dataset_id
+        + ".test_pandas_gbq_upload_from_dataframe"
+    )
     # [START bigquery_migration_pandas_gbq_upload_from_dataframe]
 
-    df.to_gbq(full_table_id, project_id=project_id)
+    df.to_gbq(table_id)
     # [END bigquery_migration_pandas_gbq_upload_from_dataframe]
     client = bigquery.Client()
-    table = client.get_table(temp_dataset.table(table_id))
+    table = client.get_table(table_id)
     assert table.num_rows == 3
