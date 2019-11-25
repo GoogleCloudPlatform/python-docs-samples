@@ -13,21 +13,17 @@
 # limitations under the License.
 
 # NOTE:
-# These unit tests mock subprocess.run
+# To pass these tests locally, run `brew install graphviz`
+
 
 import main
-import mock
 import pytest
-
-
-class SubprocessOject:
-    def __init__(self, data=None):
-        self.stdout = data
 
 
 @pytest.fixture
 def client():
     main.app.testing = True
+    main.PACKAGE_PATH = '/usr/local/bin/dot'
     return main.app.test_client()
 
 
@@ -41,15 +37,11 @@ def test_empty_dot_parameter(client):
     assert r.status_code == 400
 
 
-@mock.patch('main.subprocess.run',
-            mock.MagicMock(return_value=SubprocessOject()))
 def test_bad_dot_parameter(client):
     r = client.get('/diagram.png?dot=digraph')
     assert r.status_code == 400
 
 
-@mock.patch('main.subprocess.run',
-            mock.MagicMock(return_value=SubprocessOject('Image')))
 def test_good_dot_parameter(client):
     r = client.get(
         '/diagram.png?dot=digraph G { A -> {B, C, D} -> {F} }')
