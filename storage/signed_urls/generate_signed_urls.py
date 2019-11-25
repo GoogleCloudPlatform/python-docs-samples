@@ -110,7 +110,7 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
         encoded_k = quote(str(k), safe='')
         encoded_v = quote(str(v), safe='')
         canonical_query_string += '{}={}&'.format(encoded_k, encoded_v)
-    canonical_query_string = canonical_query_string[:-1]  # remove trailing ';'
+    canonical_query_string = canonical_query_string[:-1]  # remove trailing '&'
     # [END storage_signed_url_canonical_query_parameters]
 
     # [START storage_signed_url_canonical_request]
