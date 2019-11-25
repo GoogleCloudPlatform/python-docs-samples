@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,39 +20,40 @@ Examples:
 
 # [START dialogflow_microphone_streaming]
 import dialogflow
+from dialogflow import enums
 import pyaudio
 import simpleaudio as sa
 import uuid
-from dialogflow import enums
 
 # Audio recording parameters
 SAMPLE_RATE = 44100  # Most modern mics support modeling at this rate
 CHUNK_SIZE = int(SAMPLE_RATE / 10)
 
 
-def grab_intent(project_id, session_id, language_code):
+class Stream:
     """Start stream from microphone input to dialogflow API"""
 
-    session_client = dialogflow.SessionsClient()
-    # Audio output stream
+    def __init__(self, project_id, session_id, language_code):
+        self.project_id = project_id
+        self.session_id = session_id
+        self.language_code = language_code
+        self.session_client = dialogflow.SessionsClient()
+        self.final_request_received = False
 
-    final_request_received = False
-
-    def _build_initial_request():
+    def _build_initial_request(self):
         """The first request should always contain the configuration"""
-        session_path = session_client.session_path(
-            project=project_id, session=session_id
+        session_path = self.session_client.session_path(
+            project=self.project_id, session=self.session_id
         )
 
         input_audio_config = dialogflow.types.InputAudioConfig(
             audio_encoding=enums.AudioEncoding.AUDIO_ENCODING_LINEAR_16,
-            language_code=language_code,
+            language_code=self.language_code,
             sample_rate_hertz=SAMPLE_RATE,
         )
         query_input = dialogflow.types.QueryInput(
             audio_config=input_audio_config
         )
-
         voice = dialogflow.types.VoiceSelectionParams(
             ssml_gender=enums.SsmlVoiceGender.SSML_VOICE_GENDER_FEMALE
         )
@@ -74,15 +73,16 @@ def grab_intent(project_id, session_id, language_code):
             output_audio_config=output_audio_config,
         )
 
-    def _request_generator():
+    def _request_generator(self):
+        """Get the audio from the microphone and build the request"""
         input_stream = pyaudio.PyAudio().open(
             channels=1, rate=SAMPLE_RATE, format=pyaudio.paInt16, input=True
         )
 
-        yield _build_initial_request()
+        yield self._build_initial_request()
 
         while True:
-            if final_request_received:
+            if self.final_request_received:
                 input_stream.close()
                 return
             if input_stream.is_active():
@@ -93,33 +93,40 @@ def grab_intent(project_id, session_id, language_code):
                     input_audio=content
                 )
 
-    while True:
-        print("=" * 20)
-        requests = _request_generator()
-        responses = session_client.streaming_detect_intent(requests)
-
-        for response in responses:
-            if response.recognition_result.transcript:
-                print(
-                    "Intermediate transcription result: {}".format(
-                        response.recognition_result.transcript
+    def stream(self):
+        """Stream audio to Dialogflow and display the results"""
+        while True:
+            self.final_request_received = False
+            print("=" * 20)
+            requests = self._request_generator()
+            responses = self.session_client.streaming_detect_intent(requests)
+            for response in responses:
+                if response.recognition_result.is_final:
+                    print(
+                        "\nFinal transcription: {}".format(
+                            response.recognition_result.transcript
+                        )
                     )
-                )
-            if response.recognition_result.is_final:
-                final_request_received = True
-            if response.query_result.query_text:
-                print(
-                    "Fullfilment Text: {}".format(
-                        response.query_result.fulfillment_text
+                    self.final_request_received = True
+                elif not self.final_request_received:
+                    print(
+                        "Intermediate transcription: {}".format(
+                            response.recognition_result.transcript
+                        )
                     )
-                )
-                print(
-                    "Intent: {}".format(
-                        response.query_result.intent.display_name
+                if response.query_result.query_text:
+                    print(
+                        "Fullfilment Text: {}".format(
+                            response.query_result.fulfillment_text
+                        )
                     )
-                )
-            if response.output_audio:
-                return response
+                    print(
+                        "Intent: {}".format(
+                            response.query_result.intent.display_name
+                        )
+                    )
+                if response.output_audio:
+                    return response
 
 
 def play_audio(audio):
@@ -130,7 +137,7 @@ def play_audio(audio):
 def main(project_id, session_id, language_code):
     print('Listening...')
     while True:
-        response = grab_intent(project_id, session_id, language_code)
+        response = Stream(project_id, session_id, language_code).stream()
         play_audio(response.output_audio)
 
 
@@ -145,10 +152,10 @@ if __name__ == "__main__":
 
 # OUTPUT
 # ====================
-# Intermediate transcription result: Game Room in San Francisco
-# Intermediate transcription result: Game Room in San Francisco
-# Intermediate transcription result: a room in San Francisco
-# Intermediate transcription result:
+# Intermediate transcription: Saint Francis
+# Intermediate transcription: San Francisco
+# Intermediate transcription: San Francisco
+
+# Final transcription: a room in San Francisco
 # Fullfilment Text: What date?
 # Intent: room.reservation
-# Intermediate transcription result:
