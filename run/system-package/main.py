@@ -18,15 +18,6 @@ import subprocess
 import sys
 
 
-# Uses local `dot` binary from Graphviz: https://graphviz.gitlab.io
-
-# NOTE:
-# Local installation may not be the same as container installation.
-# To run locally, run `brew install graphviz`
-# and update PACKAGE_PATH to the output of `which dot`.
-PACKAGE_PATH = '/usr/bin/dot'
-
-
 app = Flask(__name__)
 
 
@@ -61,8 +52,7 @@ def create_diagram(dot):
     if not dot:
         raise Exception('syntax: no graphviz definition provided')
 
-    dot_args = [PACKAGE_PATH,
-                # The args below add a watermark to the dot graphic.
+    dot_args = [  # These args add a watermark to the dot graphic.
                 '-Glabel=Made on Cloud Run',
                 '-Gfontsize=10',
                 '-Glabeljust=right',
@@ -70,7 +60,10 @@ def create_diagram(dot):
                 '-Gfontcolor=gray',
                 '-Tpng']
 
-    image = subprocess.run(dot_args, input=dot.encode('utf-8'),
+    # Uses local `dot` binary from Graphviz:
+    # https://graphviz.gitlab.io
+    image = subprocess.run(['dot'] + dot_args,
+                           input=dot.encode('utf-8'),
                            capture_output=True).stdout
 
     if not image:

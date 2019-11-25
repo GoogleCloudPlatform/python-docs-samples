@@ -23,7 +23,6 @@ import pytest
 @pytest.fixture
 def client():
     main.app.testing = True
-    main.PACKAGE_PATH = '/usr/local/bin/dot'
     return main.app.test_client()
 
 
