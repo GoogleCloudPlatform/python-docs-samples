@@ -16,13 +16,11 @@
 
 """Dialogflow API streams user input through the microphone and
 speaks voice responses through the speaker.
-
 Examples:
   python mic_stream_audio_response.py
 """
 
 # [START dialogflow_microphone_streaming]
-
 import dialogflow
 import pyaudio
 import simpleaudio as sa
@@ -54,14 +52,18 @@ def grab_intent(project_id, session_id, language_code):
             sample_rate_hertz=SAMPLE_RATE,
         )
         query_input = dialogflow.types.QueryInput(
-            audio_config=input_audio_config)
+            audio_config=input_audio_config
+        )
 
         voice = dialogflow.types.VoiceSelectionParams(
             ssml_gender=enums.SsmlVoiceGender.SSML_VOICE_GENDER_FEMALE
         )
         speech_config = dialogflow.types.SynthesizeSpeechConfig(voice=voice)
+        audio_encoding = (
+            enums.OutputAudioEncoding.OUTPUT_AUDIO_ENCODING_LINEAR_16
+        )
         output_audio_config = dialogflow.types.OutputAudioConfig(
-            audio_encoding=enums.OutputAudioEncoding.OUTPUT_AUDIO_ENCODING_LINEAR_16,
+            audio_encoding=audio_encoding,
             sample_rate_hertz=SAMPLE_RATE,
             synthesize_speech_config=speech_config,
         )
@@ -74,7 +76,8 @@ def grab_intent(project_id, session_id, language_code):
 
     def _request_generator():
         input_stream = pyaudio.PyAudio().open(
-            channels=1, rate=SAMPLE_RATE, format=pyaudio.paInt16, input=True)
+            channels=1, rate=SAMPLE_RATE, format=pyaudio.paInt16, input=True
+        )
 
         yield _build_initial_request()
 
@@ -84,25 +87,37 @@ def grab_intent(project_id, session_id, language_code):
                 return
             if input_stream.is_active():
                 content = input_stream.read(
-                    CHUNK_SIZE, exception_on_overflow=False)
+                    CHUNK_SIZE, exception_on_overflow=False
+                )
                 yield dialogflow.types.StreamingDetectIntentRequest(
-                    input_audio=content)
+                    input_audio=content
+                )
 
     while True:
-        print('=' * 20)
+        print("=" * 20)
         requests = _request_generator()
         responses = session_client.streaming_detect_intent(requests)
 
         for response in responses:
-            print('Intermediate transcription result: {}'.format(
-                response.recognition_result.transcript))
+            if response.recognition_result.transcript:
+                print(
+                    "Intermediate transcription result: {}".format(
+                        response.recognition_result.transcript
+                    )
+                )
             if response.recognition_result.is_final:
                 final_request_received = True
             if response.query_result.query_text:
-                print('Fullfilment Text: {}'.format(
-                    response.query_result.fulfillment_text))
-                print('Intent: {}'.format(
-                    response.query_result.intent.display_name))
+                print(
+                    "Fullfilment Text: {}".format(
+                        response.query_result.fulfillment_text
+                    )
+                )
+                print(
+                    "Intent: {}".format(
+                        response.query_result.intent.display_name
+                    )
+                )
             if response.output_audio:
                 return response
 
@@ -113,17 +128,27 @@ def play_audio(audio):
 
 
 def main(project_id, session_id, language_code):
-    while(True):
+    print('Listening...')
+    while True:
         response = grab_intent(project_id, session_id, language_code)
         play_audio(response.output_audio)
 
 
 if __name__ == "__main__":
-
-    # TODO: developer uncomment and replace these variables with your own
-    # project_id = 'YOUR_PROJECT_ID'
+    # TODO: developer replace these variables with your own
+    # project_id = "YOUR_PROJECT_ID"
     # session_id = uuid.uuid4()
-    # language_code = 'en-US'
+    # language_code = "en-US"
     main(project_id, session_id, language_code)
-
 # [END dialogflow_microphone_streaming]
+
+
+# OUTPUT
+# ====================
+# Intermediate transcription result: Game Room in San Francisco
+# Intermediate transcription result: Game Room in San Francisco
+# Intermediate transcription result: a room in San Francisco
+# Intermediate transcription result:
+# Fullfilment Text: What date?
+# Intent: room.reservation
+# Intermediate transcription result:
