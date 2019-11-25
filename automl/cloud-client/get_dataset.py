@@ -47,7 +47,7 @@ def get_dataset(project_id, dataset_id):
     # [END automl_language_text_classification_get_dataset]
     # [END automl_translate_get_dataset]
     # [END automl_vision_classification_get_dataset]
-    # [END automl_vision_object_detection_get_datset]
+    # [END automl_vision_object_detection_get_dataset]
     print('Text extraction dataset metadata: {}'.format(
         dataset.text_extraction_dataset_metadata))
     # [END automl_language_entity_extraction_get_dataset]

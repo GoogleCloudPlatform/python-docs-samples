@@ -48,7 +48,7 @@ def list_datasets(project_id):
         # [END automl_language_text_classification_list_datasets]
         # [END automl_translate_list_datasets]
         # [END automl_vision_classification_list_datasets]
-        # [END automl_vision_object_detection_list_model]
+        # [END automl_vision_object_detection_list_datasets]
         print('Text extraction dataset metadata: {}'.format(
             dataset.text_extraction_dataset_metadata))
         # [END automl_language_entity_extraction_list_datasets]
