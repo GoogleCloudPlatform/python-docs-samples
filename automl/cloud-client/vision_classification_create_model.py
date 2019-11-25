@@ -20,7 +20,7 @@ def create_model(project_id, dataset_id, display_name):
     # [START automl_vision_classification_create_model]
     from google.cloud import automl
 
-    # TODO(developer): Uncomment and saet the following variables
+    # TODO(developer): Uncomment and set the following variables
     # project_id = 'YOUR_PROJECT_ID'
     # dataset_id = 'YOUR_DATASET_ID'
     # display_name = 'YOUR_MODEL_NAME'

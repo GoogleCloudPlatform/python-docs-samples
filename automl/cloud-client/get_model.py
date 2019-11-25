@@ -20,7 +20,7 @@ def get_model(project_id, model_id):
     # [START automl_get_model]
     from google.cloud import automl
 
-    # TODO(developer): Uncomment and saet the following variables
+    # TODO(developer): Uncomment and set the following variables
     # project_id = 'YOUR_PROJECT_ID'
     # model_id = 'YOUR_MODEL_ID'
 

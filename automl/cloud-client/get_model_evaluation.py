@@ -25,7 +25,7 @@ def get_model_evaluation(project_id, model_id, model_evaluation_id):
     # [START automl_vision_object_detection_get_model_evaluation]
     from google.cloud import automl
 
-    # TODO(developer): Uncomment and saet the following variables
+    # TODO(developer): Uncomment and set the following variables
     # project_id = 'YOUR_PROJECT_ID'
     # model_id = 'YOUR_MODEL_ID'
     # model_evaluation_id = 'YOUR_MODEL_EVALUATION_ID'

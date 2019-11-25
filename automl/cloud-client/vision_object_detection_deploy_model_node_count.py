@@ -20,7 +20,7 @@ def deploy_model_with_node_count(project_id, model_id):
     # [START automl_vision_object_detection_deploy_model_node_count]
     from google.cloud import automl
 
-    # TODO(developer): Uncomment and saet the following variables
+    # TODO(developer): Uncomment and set the following variables
     # project_id = 'YOUR_PROJECT_ID'
     # model_id = 'YOUR_MODEL_ID'
 
