@@ -12,19 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START_dataproc_delete_cluster]
+import os
+import uuid
+import pytest
+
 from google.cloud import dataproc_v1 as dataproc
 
+import create_cluster
 
-def delete_cluster(project_id, region, cluster_name):
-    """Deletes a Cloud Dataproc cluster."""
+
+PROJECT_ID = os.environ['GCLOUD_PROJECT']
+REGION = 'us-central1'
+CLUSTER_NAME = 'test-cluster-{}'.format(str(uuid.uuid4()))
+
+
+@pytest.fixture(autouse=True)
+def teardown():
+    yield
+
     cluster_client = dataproc.ClusterControllerClient(client_options={
-      'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
+        'api_endpoint': '{}-dataproc.googleapis.com:443'.format(REGION)
     })
+    # Client library function
+    cluster_client.delete_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
 
-    operation = cluster_client.delete_cluster(project_id, region, cluster_name)
-    result = operation.result()
 
-    # Output a success message
-    print('Cluster deleted successfully: {}'.format(result.cluster_name))
-    # [END_dataproc_delete_cluster]
+def test_cluster_create(capsys):
+    # Wrapper function for client library function
+    create_cluster.create_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
+
+    out, _ = capsys.readouterr()
+    assert CLUSTER_NAME in out

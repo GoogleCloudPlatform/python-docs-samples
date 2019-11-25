@@ -18,9 +18,8 @@
 from google.cloud import dataproc_v1 as dataproc
 
 
-def create_cluster(project_id, region, cluster_name):
-    """Creates a Cloud Dataproc cluster."""
-
+def update_cluster(project_id, region, cluster_name, num_workers):
+    """Updates the number of workers in a Cloud Dataproc cluster."""
     # Create a client with the endpoint set to the desired cluster region
     cluster_client = dataproc.ClusterControllerClient(client_options={
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
@@ -36,16 +35,24 @@ def create_cluster(project_id, region, cluster_name):
                 'machine_type_uri': 'n1-standard-1'
             },
             'worker_config': {
-                'num_instances': 2,
+                'num_instances': num_workers,
                 'machine_type_uri': 'n1-standard-1'
             }
         }
     }
 
-    # Create the cluster
-    operation = cluster_client.create_cluster(project_id, region, cluster)
+    update_mask = {
+        'paths': {
+            'config.worker_config.num_instances': num_workers
+        }
+    }
+
+    # Update the cluster
+    operation = cluster_client.update_cluster(
+        project_id, region, cluster_name, cluster, update_mask
+    )
     result = operation.result()
 
     # Output a success message
-    print('Cluster created successfully: {}'.format(result.cluster_name))
+    print('Cluster updated successfully: {}'.format(result.cluster_name))
     # [END dataproc_create_cluster]

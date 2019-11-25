@@ -12,15 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-def submit_job(project_id, region, cluster_name, job_file_path):
-    # [START_dataproc_submit_job]
-    from google.cloud import dataproc_v1 as dataproc
+# [START_dataproc_submit_job]
+from google.cloud import dataproc_v1 as dataproc
 
-    # TODO(developer): Uncomment and set the following variables
-    # project_id = 'YOUR_PROJECT_ID'
-    # region = 'YOUR_CLUSTER_REGION'
-    # cluster_name = 'YOUR_CLUSTER_NAME'
-    # job_file_path = 'YOUR_JOB_FILE_PATH'
+
+def submit_job(project_id, region, cluster_name, job_file_path):
 
     job_client = dataproc.JobControllerClient(client_options={
       'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)

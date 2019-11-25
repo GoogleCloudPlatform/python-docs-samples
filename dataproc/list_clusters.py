@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START dataproc_list_clusters]
+from google.cloud import dataproc_v1 as dataproc
+
+
 def list_clusters(project_id, region):
-    """List the details of clusters in the region."""
-    # [START dataproc_list_clusters]
-    from google.cloud import dataproc_v1 as dataproc
+    """Lists all Cloud Dataproc clusters in a region."""
 
     cluster_client = dataproc.ClusterControllerClient({
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
