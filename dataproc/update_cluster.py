@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START dataproc_create_cluster]
+# [START dataproc_update_cluster]
 from google.cloud import dataproc_v1 as dataproc
 
 
@@ -55,4 +55,4 @@ def update_cluster(project_id, region, cluster_name, num_workers):
 
     # Output a success message
     print('Cluster updated successfully: {}'.format(result.cluster_name))
-    # [END dataproc_create_cluster]
+    # [END dataproc_update_cluster]
