@@ -18,8 +18,7 @@ from google.cloud import dataproc_v1 as dataproc
 
 def list_clusters(project_id, region):
     """Lists all Cloud Dataproc clusters in a region."""
-
-    cluster_client = dataproc.ClusterControllerClient({
+    cluster_client = dataproc.ClusterControllerClient(client_options={
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
 

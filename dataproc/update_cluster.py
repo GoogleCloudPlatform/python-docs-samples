@@ -19,7 +19,7 @@ from google.cloud import dataproc_v1 as dataproc
 
 
 def update_cluster(project_id, region, cluster_name, num_workers):
-    """Updates the number of workers in a Cloud Dataproc cluster."""
+    """Changes the number of workers in a Cloud Dataproc cluster."""
     # Create a client with the endpoint set to the desired cluster region
     cluster_client = dataproc.ClusterControllerClient(client_options={
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
@@ -54,5 +54,7 @@ def update_cluster(project_id, region, cluster_name, num_workers):
     result = operation.result()
 
     # Output a success message
-    print('Cluster updated successfully: {}'.format(result.cluster_name))
+    print('Cluster {} now has {} workers.'.format(
+        result.cluster_name, result.config.worker_config.num_instances
+    ))
     # [END dataproc_update_cluster]

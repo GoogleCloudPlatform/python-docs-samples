@@ -18,12 +18,14 @@ import pytest
 
 from google.cloud import dataproc_v1 as dataproc
 
-import list_clusters
+import update_cluster
 
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 REGION = 'us-central1'
 CLUSTER_NAME = 'test-cluster-{}'.format(str(uuid.uuid4()))
+NUM_WORKERS = 2
+NEW_WORKERS = NUM_WORKERS * 2
 
 
 @pytest.fixture(autouse=True)
@@ -36,7 +38,16 @@ def setup_teardown():
     cluster = {
         'project_id': PROJECT_ID,
         'cluster_name': CLUSTER_NAME,
-        'config': {}
+        'config': {
+            'master_config': {
+                'num_instances': 1,
+                'machine_type_uri': 'n1-standard-1'
+            },
+            'worker_config': {
+                'num_instances': NUM_WORKERS,
+                'machine_type_uri': 'n1-standard-1'
+            }
+        }
     }
 
     # Create the cluster
@@ -49,9 +60,9 @@ def setup_teardown():
     cluster_client.delete_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
 
 
-def test_list_clusters(capsys):
+def test_update_cluster(capsys):
     # Wrapper function for client library function
-    list_clusters.list_clusters(PROJECT_ID, REGION)
+    update_cluster.update_cluster(PROJECT_ID, REGION, CLUSTER_NAME, NEW_WORKERS)
 
     out, _ = capsys.readouterr()
-    assert CLUSTER_NAME in out
+    assert '{} workers'.format(NEW_WORKERS) in out

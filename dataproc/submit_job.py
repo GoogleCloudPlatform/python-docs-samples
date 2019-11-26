@@ -17,7 +17,8 @@ from google.cloud import dataproc_v1 as dataproc
 
 
 def submit_job(project_id, region, cluster_name, job_file_path):
-
+    """Submit a job to a Cloud Dataproc cluster."""
+    # Create a job client
     job_client = dataproc.JobControllerClient(client_options={
       'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
@@ -37,7 +38,7 @@ def submit_job(project_id, region, cluster_name, job_file_path):
 
     # Wait for job to finish
     while True:
-        job = dataproc.get_job(project_id, region, job_id)
+        job = job_client.get_job(project_id, region, job_id)
         # Handle exceptions
         if job.status.State.Name(job.status.state) == 'ERROR':
             print('Jod {} failed: {}'.format(job_id, job.status.details))

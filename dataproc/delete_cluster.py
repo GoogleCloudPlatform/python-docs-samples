@@ -23,8 +23,10 @@ def delete_cluster(project_id, region, cluster_name):
     })
 
     operation = cluster_client.delete_cluster(project_id, region, cluster_name)
-    result = operation.result()
+
+    # Block the asynchronous delete_cluster call until deletion is finished.
+    operation.result()
 
     # Output a success message
-    print('Cluster deleted successfully: {}'.format(result.cluster_name))
+    print('Cluster deleted successfully: {}'.format(cluster_name))
     # [END_dataproc_delete_cluster]

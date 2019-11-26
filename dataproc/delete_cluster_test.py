@@ -18,7 +18,7 @@ import pytest
 
 from google.cloud import dataproc_v1 as dataproc
 
-import create_cluster
+import delete_cluster
 
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
@@ -27,19 +27,26 @@ CLUSTER_NAME = 'test-cluster-{}'.format(str(uuid.uuid4()))
 
 
 @pytest.fixture(autouse=True)
-def teardown():
-    yield
-
+def startup():
     cluster_client = dataproc.ClusterControllerClient(client_options={
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(REGION)
     })
-    # Client library function
-    cluster_client.delete_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
+
+    cluster = {
+        'project_id': PROJECT_ID,
+        'cluster_name': CLUSTER_NAME,
+        'config': {}
+    }
+
+    # Create the cluster
+    operation = cluster_client.create_cluster(PROJECT_ID, REGION, cluster)
+    operation.result()
+    yield
 
 
-def test_cluster_create(capsys):
+def test_cluster_delete(capsys):
     # Wrapper function for client library function
-    create_cluster.create_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
+    delete_cluster.delete_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
 
     out, _ = capsys.readouterr()
     assert CLUSTER_NAME in out

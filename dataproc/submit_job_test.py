@@ -17,17 +17,32 @@ import uuid
 import pytest
 
 from google.cloud import dataproc_v1 as dataproc
+from google.cloud import storage
 
-import list_clusters
+import submit_job
 
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 REGION = 'us-central1'
 CLUSTER_NAME = 'test-cluster-{}'.format(str(uuid.uuid4()))
+STAGING_BUCKET = 'test-bucket-{}'.format(str(uuid.uuid4()))
+JOB_FILE_NAME = 'sum.py'
 
 
 @pytest.fixture(autouse=True)
 def setup_teardown():
+    sort_file = """
+    import pyspark
+    sc = pyspark.SparkContext()
+    rdd = sc.parallelize((1,2,3,4,5)
+    sum = rdd.reduce(lambda x, y: x + y)
+    """
+
+    storage_client = storage.Client()
+
+    bucket = storage_client.create_bucket(STAGING_BUCKET)
+    blob = bucket.blob(JOB_FILE_NAME)
+    blob.upload_from_string(sort_file)
 
     cluster_client = dataproc.ClusterControllerClient(client_options={
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(REGION)
@@ -47,10 +62,13 @@ def setup_teardown():
 
     cluster_client.delete_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
 
+    blob.delete()
 
-def test_cluster_create(capsys):
+
+def test_submit_job(capsys):
     # Wrapper function for client library function
-    list_clusters.list_clusters(PROJECT_ID, REGION)
+    job_file_path = 'gs://{}/{}'.format(STAGING_BUCKET, JOB_FILE_NAME)
+    submit_job.submit_job(PROJECT_ID, REGION, CLUSTER_NAME, job_file_path)
 
     out, _ = capsys.readouterr()
-    assert CLUSTER_NAME in out
+    assert 'finished' in out
