@@ -15,16 +15,16 @@
 # [START gae_python37_app]
 from flask import Flask, request
 
-
 # Enable cloud debugger
-# Adjust logging level to INFO
 try:
     import googleclouddebugger
     googleclouddebugger.enable()
-    import logging
-    logging.basicConfig(level=logging.INFO)
 except ImportError:
     pass
+
+# Adjust logging level to INFO
+import logging
+logging.basicConfig(level=logging.INFO)
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.

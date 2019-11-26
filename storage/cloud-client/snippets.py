@@ -130,18 +130,21 @@ def list_blobs_with_prefix(bucket_name, prefix, delimiter=None):
     "files" in the given "folder". Without the delimiter, the entire tree under
     the prefix is returned. For example, given these blobs:
 
-        /a/1.txt
-        /a/b/2.txt
+        a/1.txt
+        a/b/2.txt
 
-    If you just specify prefix = '/a', you'll get back:
+    If you just specify prefix = 'a', you'll get back:
 
-        /a/1.txt
-        /a/b/2.txt
+        a/1.txt
+        a/b/2.txt
 
-    However, if you specify prefix='/a' and delimiter='/', you'll get back:
+    However, if you specify prefix='a' and delimiter='/', you'll get back:
 
-        /a/1.txt
+        a/1.txt
 
+    Additionally, the same request will return blobs.prefixes populated with:
+
+        a/b/
     """
     storage_client = storage.Client()
 

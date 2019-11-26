@@ -877,6 +877,37 @@ def collection_group_query(db):
     return docs
 
 
+def array_contains_any_queries(db):
+    # [START fs_query_filter_array_contains_any]
+    cities_ref = db.collection(u'cities')
+
+    query = cities_ref.where(
+        u'regions', u'array_contains_any', [u'west_coast', u'east_coast']
+    )
+    return query
+    # [END fs_query_filter_array_contains_any]
+
+
+def in_query_without_array(db):
+    # [START fs_query_filter_in]
+    cities_ref = db.collection(u'cities')
+
+    query = cities_ref.where(u'country', u'in', [u'USA', u'Japan'])
+    return query
+    # [END fs_query_filter_in]
+
+
+def in_query_with_array(db):
+    # [START fs_query_filter_in_with_array]
+    cities_ref = db.collection(u'cities')
+
+    query = cities_ref.where(
+        u'regions', u'in', [[u'west_coast'], [u'east_coast']]
+    )
+    return query
+    # [END fs_query_filter_in_with_array]
+
+
 def update_document_increment(db):
     # [START fs_update_document_increment]
     washington_ref = db.collection(u'cities').document(u'DC')
