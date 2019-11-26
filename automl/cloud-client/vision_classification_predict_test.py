@@ -18,7 +18,7 @@ import os
 
 import pytest
 
-import vision_batch_predict
+import batch_predict
 import vision_classification_predict
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
@@ -37,8 +37,7 @@ def test_predict(capsys):
 def test_batch_predict(capsys):
     input_uri = 'gs://{}/batch_predict_test.csv'.format(BUCKET_ID)
     output_uri = 'gs://{}/TEST_BATCH_PREDICT/'.format(BUCKET_ID)
-    vision_batch_predict.batch_predict(
-        PROJECT_ID, MODEL_ID, input_uri, output_uri)
+    batch_predict.batch_predict(PROJECT_ID, MODEL_ID, input_uri, output_uri)
     out, _ = capsys.readouterr()
     assert 'Batch Prediction results saved to Cloud Storage bucket' in out
 

@@ -51,6 +51,9 @@ small section of code to print out the `metrics` field.
 * [Deploy Model](deploy_model.py) - Not supported by Translation
 * [Uneploy Model](undeploy_model.py) - Not supported by Translation
 
+### Batch Prediction
+* [Batch Predict](batch_predict.py)
+
 ### Operation Management
 * [List Operation Statuses](list_operation_status.py)
 * [Get Operation Status](get_operation_status.py)
@@ -65,7 +68,6 @@ small section of code to print out the `metrics` field.
 * [Entity Extraction Create Dataset](language_entity_extraction_create_dataset.py)
 * [Entity Extraction Create Model](language_entity_extraction_create_model.py)
 * [Entity Extraction Predict](language_entity_extraction_predict.py)
-* [Entity Extraction Batch Predict](language_batch_predict.py)
 
 ### Natural Language Sentiment Analysis
 * [Sentiment Analysis Create Dataset](language_sentiment_analysis_create_dataset.py)
@@ -81,12 +83,10 @@ small section of code to print out the `metrics` field.
 * [Classification Create Dataset](vision_classification_create_dataset.py)
 * [Classification Create Model](vision_classification_create_model.py)
 * [Classification Predict](vision_classification_predict.py)
-* [Classification Batch Predict](vision_batch_predict.py)
 * [Deploy Node Count](vision_classification_deploy_model_node_count.py)
 
 ### Vision Object Detection
 * [Object Detection Create Dataset](vision_object_detection_create_dataset.py)
 * [Object Detection Create Model](vision_object_detection_create_model.py)
 * [Object Detection Predict](vision_object_detection_predict.py)
-* [Object Detection Batch Predict](vision_batch_predict.py)
 * [Deploy Node Count](vision_object_detection_deploy_model_node_count.py)

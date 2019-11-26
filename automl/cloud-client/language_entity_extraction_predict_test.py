@@ -18,7 +18,7 @@ import os
 
 import pytest
 
-import language_batch_predict
+import batch_predict
 import language_entity_extraction_predict
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
@@ -39,8 +39,7 @@ def test_batch_predict(capsys):
     model_id = 'TEN5112482778553778176'
     input_uri = 'gs://{}/entity_extraction/input.jsonl'.format(BUCKET_ID)
     output_uri = 'gs://{}/TEST_BATCH_PREDICT/'.format(BUCKET_ID)
-    language_batch_predict.batch_predict(
-        PROJECT_ID, model_id, input_uri, output_uri)
+    batch_predict.batch_predict(PROJECT_ID, model_id, input_uri, output_uri)
     out, _ = capsys.readouterr()
     assert 'Batch Prediction results saved to Cloud Storage bucket' in out
 
