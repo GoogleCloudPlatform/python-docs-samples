@@ -59,7 +59,10 @@ def setup_teardown():
 
     yield
 
-    cluster_client.delete_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
+    operation = cluster_client.delete_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
+
+    # Wait for cluster to be deleted
+    operation.result()
 
     blob.delete()
 

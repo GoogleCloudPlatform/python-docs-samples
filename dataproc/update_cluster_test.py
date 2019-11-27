@@ -57,7 +57,10 @@ def setup_teardown():
     yield
 
     # Delete the cluster
-    cluster_client.delete_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
+    operation = cluster_client.delete_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
+
+    # Wait for cluster to be deleted
+    operation.result()
 
 
 def test_update_cluster(capsys):

@@ -34,7 +34,9 @@ def teardown():
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(REGION)
     })
     # Client library function
-    cluster_client.delete_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
+    operation = cluster_client.delete_cluster(PROJECT_ID, REGION, CLUSTER_NAME)\
+    # Wait for cluster to delete
+    operation.result()
 
 
 def test_cluster_create(capsys):
