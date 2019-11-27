@@ -62,7 +62,9 @@ def setup_teardown():
 
 def test_update_cluster(capsys):
     # Wrapper function for client library function
-    update_cluster.update_cluster(PROJECT_ID, REGION, CLUSTER_NAME, NEW_WORKERS)
+    update_cluster.update_cluster(
+        PROJECT_ID, REGION, CLUSTER_NAME, NEW_WORKERS
+    )
 
     out, _ = capsys.readouterr()
     assert '{} workers'.format(NEW_WORKERS) in out

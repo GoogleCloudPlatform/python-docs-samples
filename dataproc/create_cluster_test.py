@@ -29,7 +29,7 @@ CLUSTER_NAME = 'test-cluster-{}'.format(str(uuid.uuid4()))
 @pytest.fixture(autouse=True)
 def teardown():
     yield
-    
+
     cluster_client = dataproc.ClusterControllerClient(client_options={
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(REGION)
     })
