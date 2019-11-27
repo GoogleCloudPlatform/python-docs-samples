@@ -42,6 +42,7 @@ def submit_job(project_id, region, cluster_name, job_file_path):
         # Handle exceptions
         if job.status.State.Name(job.status.state) == 'ERROR':
             print('Jod {} failed: {}'.format(job_id, job.status.details))
+            break
         elif job.status.State.Name(job.status.state) == 'DONE':
             print('Job {} finished.'.format(job_id))
             break

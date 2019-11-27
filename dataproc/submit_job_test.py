@@ -27,22 +27,21 @@ REGION = 'us-central1'
 CLUSTER_NAME = 'test-cluster-{}'.format(str(uuid.uuid4()))
 STAGING_BUCKET = 'test-bucket-{}'.format(str(uuid.uuid4()))
 JOB_FILE_NAME = 'sum.py'
+SORT_CODE = (
+    "import pyspark\n"
+    "sc = pyspark.SparkContext()\n"
+    "rdd = sc.parallelize((1,2,3,4,5))\n"
+    "sum = rdd.reduce(lambda x, y: x + y)\n"
+)
 
 
 @pytest.fixture(autouse=True)
 def setup_teardown():
-    sort_file = """
-    import pyspark
-    sc = pyspark.SparkContext()
-    rdd = sc.parallelize((1,2,3,4,5)
-    sum = rdd.reduce(lambda x, y: x + y)
-    """
-
     storage_client = storage.Client()
 
     bucket = storage_client.create_bucket(STAGING_BUCKET)
     blob = bucket.blob(JOB_FILE_NAME)
-    blob.upload_from_string(sort_file)
+    blob.upload_from_string(SORT_CODE)
 
     cluster_client = dataproc.ClusterControllerClient(client_options={
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(REGION)
