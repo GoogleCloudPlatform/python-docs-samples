@@ -106,7 +106,8 @@ def test_dicomweb_store_instance(test_dataset, test_dicom_store, capsys):
         study_uid)
 
 
-def test_dicomweb_search_instance(test_dataset, test_dicom_store, capsys):
+def test_dicomweb_search_instance_studies(
+        test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
         service_account_json,
         base_url,
@@ -124,10 +125,20 @@ def test_dicomweb_search_instance(test_dataset, test_dicom_store, capsys):
         dataset_id,
         dicom_store_id)
 
+    dicomweb.dicomweb_search_studies(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        dicom_store_id)
+
     out, _ = capsys.readouterr()
 
-    # Check that store instance worked
+    # Check that search instance worked
     assert 'Instances:' in out
+    # Check that search studies worked
+    assert 'Patients found matching query' in out
 
     dicomweb.dicomweb_delete_study(
         service_account_json,
