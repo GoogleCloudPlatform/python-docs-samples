@@ -26,8 +26,8 @@ from google.cloud import pubsub_v1
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-TOPIC = 'test-topic'
-UUID = uuid.uuid4().hex
+UUID = uuid.uuid1().hex
+TOPIC = 'test-topic-' + UUID
 
 
 @pytest.fixture
@@ -95,6 +95,10 @@ def test_run(publisher_client, topic_path):
     files = gcs_client.list_prefix('gs://{}/pubsub/{}'.format(BUCKET, UUID))
     assert len(files) > 0
 
-    # Clean up. Delete topic. Delete files.
+    # Clean up. Delete subscription. Delete topic. Delete GCS files.
+    subscriber_client = pubsub_v1.SubscriberClient()
+    subscriptions = publisher_client.list_topic_subscriptions(topic_path)
+    for subscription in subscriptions:
+        subscriber_client.delete_subscription(subscription)
     publisher_client.delete_topic(topic_path)
     gcs_client.delete_batch(list(files))
