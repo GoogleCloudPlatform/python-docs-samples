@@ -185,6 +185,20 @@ def _make_sleep_patch():
     return mock.patch('time.sleep', new=new_sleep)
 
 
+def _to_delete():
+    publisher_client = pubsub_v1.PublisherClient()
+    subscriber_client = pubsub_v1.SubscriberClient()
+    resources = [TOPIC, SUBSCRIPTION_TWO, SUBSCRIPTION_THREE]
+
+    for item in resources:
+        if 'subscription-test-topic' in item:
+            publisher_client.delete_topic(
+                'projects/{}/topics/{}'.format(PROJECT, item))
+        if 'subscription-test-subscription' in item:
+            subscriber_client.delete_subscription(
+                'projects/{}/subscriptions/{}'.format(PROJECT, item))
+
+
 def test_receive(publisher_client, topic, subscription_two, capsys):
     _publish_messages(publisher_client, topic)
 
@@ -249,3 +263,6 @@ def test_receive_synchronously_with_lease(
 
     out, _ = capsys.readouterr()
     assert 'Done.' in out
+
+    # Clean up resources after all the tests.
+    _to_delete()
