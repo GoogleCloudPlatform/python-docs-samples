@@ -73,7 +73,7 @@ def numerical_risk_analysis(project, table_project_id, dataset_id, table_id,
             message.drop()
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
@@ -181,7 +181,7 @@ def categorical_risk_analysis(project, table_project_id, dataset_id, table_id,
             message.drop()
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
@@ -293,7 +293,7 @@ def k_anonymity_analysis(project, table_project_id, dataset_id, table_id,
             message.drop()
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
@@ -413,7 +413,7 @@ def l_diversity_analysis(project, table_project_id, dataset_id, table_id,
             message.drop()
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
@@ -538,7 +538,7 @@ def k_map_estimate_analysis(project, table_project_id, dataset_id, table_id,
             message.drop()
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)

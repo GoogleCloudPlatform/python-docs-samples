@@ -39,7 +39,7 @@ def deidentify_with_mask(project, string, info_types, masking_character=None,
     import google.cloud.dlp
 
     # Instantiate a client
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
@@ -106,7 +106,7 @@ def deidentify_with_fpe(project, string, info_types, alphabet=None,
     import google.cloud.dlp
 
     # Instantiate a client
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
@@ -191,7 +191,7 @@ def reidentify_with_fpe(project, string, alphabet=None,
     import google.cloud.dlp
 
     # Instantiate a client
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
@@ -289,7 +289,7 @@ def deidentify_with_date_shift(project, input_csv_file=None,
     import google.cloud.dlp
 
     # Instantiate a client
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)

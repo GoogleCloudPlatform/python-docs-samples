@@ -53,7 +53,7 @@ def create_trigger(project, bucket, scan_period_days, info_types,
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted).
@@ -130,7 +130,7 @@ def list_triggers(project):
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
@@ -171,7 +171,7 @@ def delete_trigger(project, trigger_id):
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)

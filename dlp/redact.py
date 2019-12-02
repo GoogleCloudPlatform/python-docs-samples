@@ -47,7 +47,7 @@ def redact_image(project, filename, output_filename,
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted).

@@ -28,7 +28,7 @@ TEST_TABLE_ID = 'bikeshare_trips'
 @pytest.fixture(scope='session')
 def test_job_name():
     import google.cloud.dlp
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     parent = dlp.project_path(GCLOUD_PROJECT)
 

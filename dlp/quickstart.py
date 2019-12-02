@@ -29,7 +29,7 @@ def quickstart(project_id):
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp_client = google.cloud.dlp.DlpServiceClient()
+    dlp_client = google.cloud.dlp_v2.DlpServiceClient()
 
     # The string to inspect
     content = 'Robert Frost'

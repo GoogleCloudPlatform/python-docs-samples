@@ -46,7 +46,7 @@ def inspect_string(project, content_string, info_types,
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted).
@@ -157,7 +157,7 @@ def inspect_table(project, data, info_types,
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted).
@@ -254,7 +254,7 @@ def inspect_file(project, filename, info_types, min_likelihood=None,
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted).
@@ -367,7 +367,7 @@ def inspect_gcs_file(project, bucket, filename, topic_id, subscription_id,
     import threading
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted).
@@ -511,7 +511,7 @@ def inspect_datastore(project, datastore_project, kind,
     import threading
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted).
@@ -662,7 +662,7 @@ def inspect_bigquery(project, bigquery_project, dataset_id, table_id,
     import threading
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted).

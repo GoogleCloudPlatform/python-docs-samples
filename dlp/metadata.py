@@ -34,7 +34,7 @@ def list_info_types(language_code=None, result_filter=None):
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Make the API call.
     response = dlp.list_info_types(language_code, result_filter)

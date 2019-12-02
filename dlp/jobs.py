@@ -58,7 +58,7 @@ def list_dlp_jobs(project, filter_string=None, job_type=None):
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
@@ -102,7 +102,7 @@ def delete_dlp_job(project, job_name):
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id and job name into a full resource id.
     name = dlp.dlp_job_path(project, job_name)
