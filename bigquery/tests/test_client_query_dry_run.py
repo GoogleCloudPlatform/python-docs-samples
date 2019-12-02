@@ -12,16 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .. import client_query_dry_run
 
-from .. import get_routine
 
+def test_client_query_dry_run(capsys, client):
 
-def test_get_routine(capsys, client, routine_id):
-
-    get_routine.get_routine(client, routine_id)
+    query_job = client_query_dry_run.client_query_dry_run(client)
     out, err = capsys.readouterr()
-    assert "Routine '{}':".format(routine_id) in out
-    assert "Type: 'SCALAR_FUNCTION'" in out
-    assert "Language: 'SQL'" in out
-    assert "Name: 'x'" in out
-    assert "Type: 'type_kind: INT64\n'" in out
+    assert "This query will process" in out
+    assert query_job.state == "DONE"
+    assert query_job.dry_run
+    assert query_job.total_bytes_processed > 0

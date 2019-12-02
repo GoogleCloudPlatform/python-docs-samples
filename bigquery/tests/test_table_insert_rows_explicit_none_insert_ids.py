@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from google.cloud import bigquery
 
 from .. import table_insert_rows_explicit_none_insert_ids as mut

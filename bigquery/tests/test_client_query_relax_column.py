@@ -12,13 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from google.cloud import bigquery
 
-from .. import list_routines
+from .. import client_query_relax_column
 
 
-def test_list_routines(capsys, client, dataset_id, routine_id):
+def test_client_query_relax_column(capsys, client, random_table_id):
 
-    list_routines.list_routines(client, dataset_id)
+    schema = [
+        bigquery.SchemaField("full_name", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("age", "INTEGER", mode="REQUIRED"),
+    ]
+
+    client.create_table(bigquery.Table(random_table_id, schema=schema))
+
+    client_query_relax_column.client_query_relax_column(client, random_table_id)
     out, err = capsys.readouterr()
-    assert "Routines contained in dataset {}:".format(dataset_id) in out
-    assert routine_id in out
+    assert "2 fields in the schema are required." in out
+    assert "0 fields in the schema are now required." in out

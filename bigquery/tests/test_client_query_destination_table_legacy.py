@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .. import copy_table
+from .. import client_query_destination_table_legacy
 
 
-def test_copy_table(capsys, client, table_with_data_id, random_table_id):
+def test_client_query_destination_table_legacy(capsys, client, random_table_id):
 
-    copy_table.copy_table(client, table_with_data_id, random_table_id)
-    out, err = capsys.readouterr()
-    assert "A copy of the table created." in out
-    assert (
-        client.get_table(random_table_id).num_rows
-        == client.get_table(table_with_data_id).num_rows
+    client_query_destination_table_legacy.client_query_destination_table_legacy(
+        client, random_table_id
     )
+    out, err = capsys.readouterr()
+    assert "Query results loaded to the table {}".format(random_table_id) in out

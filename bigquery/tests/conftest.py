@@ -148,3 +148,8 @@ def model_id(client, dataset_id):
 
     client.query(sql).result()
     return model_id
+
+
+@pytest.fixture
+def kms_key_name():
+    return "projects/cloud-samples-tests/locations/us/keyRings/test/cryptoKeys/test"

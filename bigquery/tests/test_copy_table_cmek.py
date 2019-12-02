@@ -12,12 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .. import copy_table_cmek
 
-from .. import create_routine
 
+def test_copy_table_cmek(
+    capsys, client, random_table_id, table_with_data_id, kms_key_name
+):
 
-def test_create_routine(capsys, client, random_routine_id):
-
-    create_routine.create_routine(client, random_routine_id)
+    copy_table_cmek.copy_table_cmek(
+        client, random_table_id, table_with_data_id, kms_key_name
+    )
     out, err = capsys.readouterr()
-    assert "Created routine {}".format(random_routine_id) in out
+    assert "A copy of the table created" in out

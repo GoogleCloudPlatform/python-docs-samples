@@ -46,7 +46,7 @@ def undelete_table(client, table_id, recovered_table_id):
     # [END_EXCLUDE]
 
     # "Accidentally" delete the table.
-    client.delete_table(table_id)  # API request
+    client.delete_table(table_id)  # Make an API request.
 
     # Construct the restore-from table ID using a snapshot decorator.
     snapshot_table_id = "{}@{}".format(table_id, snapshot_epoch)
@@ -55,11 +55,11 @@ def undelete_table(client, table_id, recovered_table_id):
     job = client.copy_table(
         snapshot_table_id,
         recovered_table_id,
-        # Location must match that of the source and destination tables.
+        # Must match the source and destination tables location.
         location="US",
-    )  # API request
+    )  # Make an API request.
 
-    job.result()  # Wait for job to complete.
+    job.result()  # Wait for the job to complete.
 
     print(
         "Copied data from deleted table {} to {}".format(table_id, recovered_table_id)

@@ -12,12 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from google.cloud import bigquery
 
-from .. import delete_routine
+from .. import client_query_add_column
 
 
-def test_delete_routine(capsys, client, routine_id):
+def test_client_query_add_column(capsys, client, random_table_id):
 
-    delete_routine.delete_routine(client, routine_id)
+    schema = [
+        bigquery.SchemaField("full_name", "STRING", mode="REQUIRED"),
+        bigquery.SchemaField("age", "INTEGER", mode="REQUIRED"),
+    ]
+
+    client.create_table(bigquery.Table(random_table_id, schema=schema))
+
+    client_query_add_column.client_query_add_column(client, random_table_id)
     out, err = capsys.readouterr()
-    assert "Deleted routine {}.".format(routine_id) in out
+    assert "Table {} contains 2 columns".format(random_table_id) in out
+    assert "Table {} now contains 3 columns".format(random_table_id) in out

@@ -52,11 +52,11 @@ def query_external_sheets_temporary_table():
         "us-states!A20:B49"  # Optionally set range of the sheet to query from.
     )
     table_id = "us_states"
-    job_config = bigquery.QueryJobConfig()
-    job_config.table_definitions = {table_id: external_config}
+    job_config = bigquery.QueryJobConfig(table_definitions={table_id: external_config})
 
     # Example query to find states starting with "W".
     sql = 'SELECT * FROM `{}` WHERE name LIKE "W%"'.format(table_id)
+
     query_job = client.query(sql, job_config=job_config)  # Make an API request.
 
     # Wait for the query to complete.

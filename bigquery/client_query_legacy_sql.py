@@ -13,27 +13,27 @@
 # limitations under the License.
 
 
-def client_query(client):
+def client_query_legacy_sql(client):
 
-    # [START bigquery_query]
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
+    # [START bigquery_query_legacy]
+    from google.cloud import bigquery
 
     # TODO(developer): Construct a BigQuery client object.
     # client = bigquery.Client()
 
-    query = """
-        SELECT name, SUM(number) as total_people
-        FROM `bigquery-public-data.usa_names.usa_1910_2013`
-        WHERE state = 'TX'
-        GROUP BY name, state
-        ORDER BY total_people DESC
-        LIMIT 20
-    """
-    query_job = client.query(query)  # Make an API request.
+    query = (
+        "SELECT name FROM [bigquery-public-data:usa_names.usa_1910_2013] "
+        'WHERE state = "TX" '
+        "LIMIT 100"
+    )
+
+    # Set use_legacy_sql to True to use legacy SQL syntax.
+    job_config = bigquery.QueryJobConfig(use_legacy_sql=True)
+
+    # Start the query, passing in the extra configuration.
+    query_job = client.query(query, job_config=job_config)  # Make an API request.
 
     print("The query data:")
     for row in query_job:
-        # Row values can be accessed by field name or index.
-        print("name={}, count={}".format(row[0], row["total_people"]))
-    # [END bigquery_query]
+        print(row)
+    # [END bigquery_query_legacy]

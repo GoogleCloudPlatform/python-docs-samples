@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .. import client_query_batch
 
-from .. import update_routine
 
+def test_client_query_batch(capsys, client):
 
-def test_update_routine(client, routine_id):
-
-    routine = update_routine.update_routine(client, routine_id)
-    assert routine.body == "x * 4"
+    job = client_query_batch.client_query_batch(client)
+    out, err = capsys.readouterr()
+    assert "Job {} is currently in state {}".format(job.job_id, job.state) in out

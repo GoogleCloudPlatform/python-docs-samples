@@ -12,15 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .. import copy_table
+from .. import client_query_destination_table_cmek
 
 
-def test_copy_table(capsys, client, table_with_data_id, random_table_id):
+def test_client_query_destination_table_cmek(
+    capsys, client, random_table_id, kms_key_name
+):
 
-    copy_table.copy_table(client, table_with_data_id, random_table_id)
-    out, err = capsys.readouterr()
-    assert "A copy of the table created." in out
-    assert (
-        client.get_table(random_table_id).num_rows
-        == client.get_table(table_with_data_id).num_rows
+    client_query_destination_table_cmek.client_query_destination_table_cmek(
+        client, random_table_id, kms_key_name
     )
+    out, err = capsys.readouterr()
+    assert "The destination table is written using the encryption configuration" in out

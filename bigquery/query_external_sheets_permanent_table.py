@@ -61,6 +61,7 @@ def query_external_sheets_permanent_table(dataset_id):
 
     # Example query to find states starting with "W".
     sql = 'SELECT * FROM `{}.{}` WHERE name LIKE "W%"'.format(dataset_id, table_id)
+
     query_job = client.query(sql)  # Make an API request.
 
     # Wait for the query to complete.

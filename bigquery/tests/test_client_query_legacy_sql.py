@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .. import copy_table
+import re
+
+from .. import client_query_legacy_sql
 
 
-def test_copy_table(capsys, client, table_with_data_id, random_table_id):
+def test_client_query_legacy_sql(capsys, client):
 
-    copy_table.copy_table(client, table_with_data_id, random_table_id)
+    client_query_legacy_sql.client_query_legacy_sql(client)
     out, err = capsys.readouterr()
-    assert "A copy of the table created." in out
-    assert (
-        client.get_table(random_table_id).num_rows
-        == client.get_table(table_with_data_id).num_rows
-    )
+    assert re.search(r"(Row[\w(){}:', ]+)$", out)
