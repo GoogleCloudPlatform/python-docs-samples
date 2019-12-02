@@ -38,12 +38,12 @@ def submit_job(project_id, region, cluster_name, job_file_path):
 
     # Wait for job to finish
     while True:
-        job = job_client.get_job(project_id, region, job_id)
+        job_info = job_client.get_job(project_id, region, job_id)
         # Handle exceptions
-        if job.status.State.Name(job.status.state) == 'ERROR':
-            print('Jod {} failed: {}'.format(job_id, job.status.details))
+        if job_info.status.State.Name(job_info.status.state) == 'ERROR':
+            print('Job {} failed: {}'.format(job_id, job_info.status.details))
             break
-        elif job.status.State.Name(job.status.state) == 'DONE':
+        elif job_info.status.State.Name(job_info.status.state) == 'DONE':
             print('Job {} finished.'.format(job_id))
             break
     # [END dataproc_submit_job]
