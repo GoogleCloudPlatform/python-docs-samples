@@ -56,6 +56,12 @@ def _make_sleep_patch():
     return mock.patch('time.sleep', new=new_sleep)
 
 
+def _to_delete():
+    publisher_client = pubsub_v1.PublisherClient()
+    publisher_client.delete_topic('projects/{}/topics/{}'.format(
+        PROJECT, TOPIC))
+
+
 def test_list(client, topic, capsys):
     @eventually_consistent.call
     def _():
@@ -127,3 +133,5 @@ def test_publish_with_futures(topic, capsys):
 
     out, _ = capsys.readouterr()
     assert 'Published' in out
+
+    _to_delete()

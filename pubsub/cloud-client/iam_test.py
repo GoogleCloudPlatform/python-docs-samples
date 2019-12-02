@@ -63,6 +63,15 @@ def subscription(subscriber_client, topic):
     yield subscription_path
 
 
+def _to_delete():
+    publisher_client = pubsub_v1.PublisherClient()
+    subscriber_client = pubsub_v1.SubscriberClient()
+    publisher_client.delete_topic(
+        'projects/{}/topics/{}'.format(PROJECT, TOPIC))
+    subscriber_client.delete_subscription(
+        'projects/{}/subscriptions/{}'.format(PROJECT, SUBSCRIPTION))
+
+
 def test_get_topic_policy(topic, capsys):
     iam.get_topic_policy(PROJECT, TOPIC)
 
@@ -109,3 +118,6 @@ def test_check_subscription_permissions(subscription, capsys):
 
     assert subscription in out
     assert 'pubsub.subscriptions.consume' in out
+
+    # Clean up resources.
+    _to_delete()
