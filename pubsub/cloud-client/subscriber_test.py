@@ -14,6 +14,7 @@
 
 import os
 import time
+import uuid
 
 from gcp_devrel.testing import eventually_consistent
 from google.cloud import pubsub_v1
@@ -22,11 +23,12 @@ import pytest
 
 import subscriber
 
+UUID = uuid.uuid4().hex
 PROJECT = os.environ['GCLOUD_PROJECT']
-TOPIC = 'subscription-test-topic'
-SUBSCRIPTION_ONE = 'subscription-test-subscription-one'
-SUBSCRIPTION_TWO = 'subscription-test-subscription-two'
-SUBSCRIPTION_THREE = 'subscription-test-subscription-three'
+TOPIC = 'subscription-test-topic-' + UUID
+SUBSCRIPTION_ONE = 'subscription-test-subscription-one-' + UUID
+SUBSCRIPTION_TWO = 'subscription-test-subscription-two-' + UUID
+SUBSCRIPTION_THREE = 'subscription-test-subscription-three-' + UUID
 ENDPOINT = 'https://{}.appspot.com/push'.format(PROJECT)
 NEW_ENDPOINT = 'https://{}.appspot.com/push2'.format(PROJECT)
 

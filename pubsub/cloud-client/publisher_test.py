@@ -14,6 +14,7 @@
 
 import os
 import time
+import uuid
 
 from gcp_devrel.testing import eventually_consistent
 from google.cloud import pubsub_v1
@@ -22,8 +23,9 @@ import pytest
 
 import publisher
 
+UUID = uuid.uuid4().hex
 PROJECT = os.environ['GCLOUD_PROJECT']
-TOPIC = 'publisher-test-topic'
+TOPIC = 'publisher-test-topic-' + UUID
 
 
 @pytest.fixture

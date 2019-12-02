@@ -15,14 +15,16 @@
 # limitations under the License.
 
 import os
+import uuid
 
 from google.cloud import pubsub_v1
 import pytest
 import quickstart
 
+UUID = uuid.uuid4().hex
 PROJECT = os.environ['GCLOUD_PROJECT']
-TOPIC = 'end-to-end-test-topic'
-SUBSCRIPTION = 'end-to-end-test-topic-sub'
+TOPIC = 'end-to-end-test-topic-' + UUID
+SUBSCRIPTION = 'end-to-end-test-topic-sub-' + UUID
 N = 10
 
 

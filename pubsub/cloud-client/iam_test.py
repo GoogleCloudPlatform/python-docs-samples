@@ -13,15 +13,17 @@
 # limitations under the License.
 
 import os
+import uuid
 
 from google.cloud import pubsub_v1
 import pytest
 
 import iam
 
+UUID = uuid.uuid4().hex
 PROJECT = os.environ['GCLOUD_PROJECT']
-TOPIC = 'iam-test-topic'
-SUBSCRIPTION = 'iam-test-subscription'
+TOPIC = 'iam-test-topic-' + UUID
+SUBSCRIPTION = 'iam-test-subscription-' + UUID
 
 
 @pytest.fixture(scope='module')
