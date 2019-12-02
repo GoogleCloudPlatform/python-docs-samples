@@ -209,7 +209,7 @@ def test_receive(publisher_client, topic, subscription_two, capsys):
     out, _ = capsys.readouterr()
     assert 'Listening' in out
     assert subscription_two in out
-    assert 'Message 1' in out
+    assert 'Message' in out
 
 
 def test_receive_with_custom_attributes(
@@ -241,7 +241,7 @@ def test_receive_with_flow_control(
     out, _ = capsys.readouterr()
     assert 'Listening' in out
     assert subscription_two in out
-    assert 'Message 1' in out
+    assert 'Message' in out
 
 
 def test_receive_synchronously(
