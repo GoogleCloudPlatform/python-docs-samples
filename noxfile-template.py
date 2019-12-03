@@ -131,15 +131,12 @@ FLAKE8_COMMON_ARGS = [
 
 # Collect sample directories.
 ALL_TESTED_SAMPLES = sorted(list(_collect_dirs(".")))
-ALL_SAMPLE_DIRECTORIES = sorted(
-    list(_collect_dirs(".", suffix=".py", recurse_further=True))
-)
+
 GAE_STANDARD_SAMPLES = [
     sample
     for sample in ALL_TESTED_SAMPLES
     if sample.startswith("./appengine/standard/")
 ]
-PY2_ONLY_SAMPLES = GAE_STANDARD_SAMPLES
 PY3_ONLY_SAMPLES = [
     sample
     for sample in ALL_TESTED_SAMPLES
@@ -153,7 +150,7 @@ NON_GAE_STANDARD_SAMPLES_PY2 = sorted(
     list((set(ALL_TESTED_SAMPLES) - set(GAE_STANDARD_SAMPLES)) - set(PY3_ONLY_SAMPLES))
 )
 NON_GAE_STANDARD_SAMPLES_PY3 = sorted(
-    list(set(ALL_TESTED_SAMPLES) - set(PY2_ONLY_SAMPLES))
+    list(set(ALL_TESTED_SAMPLES) - set(GAE_STANDARD_SAMPLES))
 )
 
 
@@ -207,21 +204,19 @@ def py36(session, sample):
 
 
 @nox.session(python="3.6")
-@nox.parametrize("sample", list(ALL_SAMPLE_DIRECTORIES))
-def lint(session, sample):
+def lint(session):
     """Runs flake8 on the sample."""
     session.install("flake8", "flake8-import-order", BLACK_VERSION)
 
-    session.run("black", "--check", sample)
+    session.run("black", "--check", ".")
 
 
-    local_names = _determine_local_import_names(sample)
+    local_names = _determine_local_import_names(".")
     args = FLAKE8_COMMON_ARGS + [
         "--application-import-names",
         ",".join(local_names),
         ".",
     ]
-    session.chdir(sample)
     session.run("flake8", *args)
 
 
@@ -235,7 +230,7 @@ def blacken(session):
     Format code to uniform standard.
     """
     session.install(BLACK_VERSION)
-    session.run("black", *list(ALL_SAMPLE_DIRECTORIES))
+    session.run("black", ".")
 
 
 
