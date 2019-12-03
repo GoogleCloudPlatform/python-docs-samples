@@ -249,18 +249,6 @@ def blacken(session):
     session.run("black", *list(ALL_SAMPLE_DIRECTORIES))
 
 
-#
-# Utility sessions
-#
-
-
-@nox.session
-def missing_tests(session):
-    """Lists all sample directories that do not have tests."""
-    print("The following samples do not have tests:")
-    for sample in set(ALL_SAMPLE_DIRECTORIES) - set(ALL_TESTED_SAMPLES):
-        print("* {}".format(sample))
-
 
 SAMPLES_WITH_GENERATED_READMES = sorted(list(_collect_dirs(".", suffix=".rst.in")))
 
@@ -275,4 +263,4 @@ def readmegen(session, sample):
         session.install("-r", os.path.join(sample, "requirements.txt"))
 
     in_file = os.path.join(sample, "README.rst.in")
-    session.run("python", "scripts/readme-gen/readme_gen.py", in_file)
+    session.run("python", REPO_ROOT + "/scripts/readme-gen/readme_gen.py", in_file)
