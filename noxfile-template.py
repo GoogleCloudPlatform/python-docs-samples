@@ -71,17 +71,6 @@ def _collect_dirs(
             subdirs[:] = [s for s in subdirs if s[0].isalpha() and s not in blacklist]
 
 
-def _filter_samples(sample_dirs, changed_files):
-    """Filers the list of sample directories to only include directories that
-    contain files in the list of changed files."""
-    result = []
-    for sample_dir in sample_dirs:
-        for changed_file in changed_files:
-            if changed_file.startswith(sample_dir):
-                result.append(sample_dir)
-
-    return list(set(result))
-
 
 def _determine_local_import_names(start_dir):
     """Determines all import names that should be considered "local".
