@@ -135,15 +135,15 @@ ALL_TESTED_SAMPLES = sorted(list(_collect_dirs(".")))
 GAE_STANDARD_SAMPLES = [
     sample
     for sample in ALL_TESTED_SAMPLES
-    if sample.startswith("./appengine/standard/")
+    if str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith("appengine/standard/")
 ]
 PY3_ONLY_SAMPLES = [
     sample
     for sample in ALL_TESTED_SAMPLES
     if (
-        sample.startswith("./appengine/standard_python37")
-        or sample.startswith("./functions/")
-        or sample.startswith("./bigquery/pandas-gbq-migration")
+        str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith("appengine/standard_python37")
+        or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith("functions/")
+        or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith("bigquery/pandas-gbq-migration")
     )
 ]
 NON_GAE_STANDARD_SAMPLES_PY2 = sorted(
