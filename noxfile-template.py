@@ -135,7 +135,7 @@ FLAKE8_COMMON_ARGS = [
     "google",
     "--exclude",
     ".nox,.cache,env,lib,generated_pb2,*_pb2.py,*_pb2_grpc.py",
-    "--ignore=E121,E123,E126,E226,E24,E704,W503,W504,I100,I201,I202",
+    "--ignore=E121,E123,E126,E203, E226,E24,E266,E501,E704,W503,W504,I100,I201,I202",
 ]
 
 
@@ -216,11 +216,14 @@ def py36(session, sample):
     _session_tests(session, sample)
 
 
-@nox.session(python="2.7")
+@nox.session(python="3.6")
 @nox.parametrize("sample", list(ALL_SAMPLE_DIRECTORIES))
 def lint(session, sample):
     """Runs flake8 on the sample."""
-    session.install("flake8", "flake8-import-order")
+    session.install("flake8", "flake8-import-order", BLACK_VERSION)
+
+    session.run("black", "--check", sample)
+
 
     local_names = _determine_local_import_names(sample)
     args = FLAKE8_COMMON_ARGS + [
@@ -228,9 +231,9 @@ def lint(session, sample):
         ",".join(local_names),
         ".",
     ]
-
     session.chdir(sample)
     session.run("flake8", *args)
+
 
 
 BLACK_VERSION = "black==19.3b0"
@@ -242,7 +245,7 @@ def blacken(session):
     Format code to uniform standard.
     """
     session.install(BLACK_VERSION)
-    session.run("black", list(ALL_SAMPLE_DIRECTORIES))
+    session.run("black", *list(ALL_SAMPLE_DIRECTORIES))
 
 
 #
