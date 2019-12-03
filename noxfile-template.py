@@ -16,15 +16,19 @@ from __future__ import print_function
 
 import fnmatch
 import os
+from pathlib import Path
 import tempfile
 
 import nox
 
-try:
-    import ci_diff_helper
-except ImportError:
-    ci_diff_helper = None
-
+# Get root of this repository. Assume we don't have directories nested deeper than 10 items.
+p = Path(os.getcwd())
+for i in range(10):
+    if p.parent is None:
+        raise Exception("Unable to detect repository root.")
+    if Path(p.parent / ".git").exists():
+        REPO_ROOT = str(p.parent)
+        break
 
 #
 # Helpers and utility functions
@@ -64,27 +68,6 @@ def _collect_dirs(
         else:
             # Filter out dirs we don't want to recurse into
             subdirs[:] = [s for s in subdirs if s[0].isalpha() and s not in blacklist]
-
-
-def _get_changed_files():
-    """Returns a list of files changed for this pull request / push.
-
-    If running on a public CI like Travis or Circle this is used to only
-    run tests/lint for changed files.
-    """
-    if not ci_diff_helper:
-        return None
-
-    try:
-        config = ci_diff_helper.get_config()
-    except OSError:  # Not on CI.
-        return None
-
-    changed_files = ci_diff_helper.get_changed_files("HEAD", config.base)
-
-    changed_files = set(["./{}".format(filename) for filename in changed_files])
-
-    return changed_files
 
 
 def _filter_samples(sample_dirs, changed_files):
@@ -184,26 +167,9 @@ NON_GAE_STANDARD_SAMPLES_PY3 = sorted(
 )
 
 
-# Filter sample directories if on a CI like Travis or Circle to only run tests
-# for changed samples.
-CHANGED_FILES = _get_changed_files()
-
-if CHANGED_FILES is not None:
-    print("Filtering based on changed files.")
-    ALL_TESTED_SAMPLES = _filter_samples(ALL_TESTED_SAMPLES, CHANGED_FILES)
-    ALL_SAMPLE_DIRECTORIES = _filter_samples(ALL_SAMPLE_DIRECTORIES, CHANGED_FILES)
-    GAE_STANDARD_SAMPLES = _filter_samples(GAE_STANDARD_SAMPLES, CHANGED_FILES)
-    NON_GAE_STANDARD_SAMPLES_PY2 = _filter_samples(
-        NON_GAE_STANDARD_SAMPLES_PY2, CHANGED_FILES
-    )
-    NON_GAE_STANDARD_SAMPLES_PY3 = _filter_samples(
-        NON_GAE_STANDARD_SAMPLES_PY3, CHANGED_FILES
-    )
-
-
 def _session_tests(session, sample, post_install=None):
     """Runs py.test for a particular sample."""
-    session.install("-r", "testing/requirements.txt")
+    session.install("-r", REPO_ROOT + "/testing/requirements.txt")
 
     session.chdir(sample)
 
@@ -250,8 +216,8 @@ def py36(session, sample):
     _session_tests(session, sample)
 
 
-@nox.session
-@nox.parametrize("sample", ALL_SAMPLE_DIRECTORIES)
+@nox.session(python="2.7")
+@nox.parametrize("sample", list(ALL_SAMPLE_DIRECTORIES))
 def lint(session, sample):
     """Runs flake8 on the sample."""
     session.install("flake8", "flake8-import-order")
@@ -265,6 +231,18 @@ def lint(session, sample):
 
     session.chdir(sample)
     session.run("flake8", *args)
+
+
+BLACK_VERSION = "black==19.3b0"
+
+
+@nox.session(python="3.6")
+def blacken(session):
+    """Run black.
+    Format code to uniform standard.
+    """
+    session.install(BLACK_VERSION)
+    session.run("black", list(ALL_SAMPLE_DIRECTORIES))
 
 
 #
