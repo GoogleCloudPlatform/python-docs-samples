@@ -27,7 +27,6 @@ else
     ONLY_DIFF="false"
 fi
 
-
 # Unencrypt and extract secrets
 SECRETS_PASSWORD=$(cat "${KOKORO_GFILE_DIR}/secrets-password.txt")
 ./scripts/decrypt-secrets.sh "${SECRETS_PASSWORD}"
@@ -69,6 +68,12 @@ for file in **/requirements.txt; do
     echo "- testing $file"
     echo "------------------------------------------------------------"
 
+    # If no local noxfile exists, copy the one from root
+    if [[ -f "noxfile.py" ]]; then
+      cp "$ROOT/noxfile-template.py" "./noxfile.py"
+      echo -e "\n Using noxfile from project root. \n"
+    fi
+
     # Use nox to execute the tests for the project.
     nox -s "$NOX_SESSION"
     EXIT=$?
@@ -81,6 +86,7 @@ for file in **/requirements.txt; do
     fi
 
 done
+cd "$ROOT"
 
 # Stop Cloud SQL proxy
 killall cloud_sql_proxy || true
