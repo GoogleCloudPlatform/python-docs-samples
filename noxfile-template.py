@@ -196,10 +196,10 @@ def py27(session, sample):
     _session_tests(session, sample)
 
 
-@nox.session(python="3.6")
+@nox.session(python=["3.5", "3.6", "3.7"])
 @nox.parametrize("sample", NON_GAE_STANDARD_SAMPLES_PY3)
 def py36(session, sample):
-    """Runs py.test for a sample using Python 3.6"""
+    """Runs py.test for a sample using Python 3.x"""
     _session_tests(session, sample)
 
 
