@@ -75,7 +75,7 @@ for file in **/requirements.txt; do
     fi
 
     # Use nox to execute the tests for the project.
-    nox -s "$NOX_SESSION"
+    nox -s "$RUN_TESTS_SESSION"
     EXIT=$?
 
     if [[ $EXIT -ne 0 ]]; then
