@@ -24,11 +24,12 @@ import nox
 # Get root of this repository. Assume we don't have directories nested deeper than 10 items.
 p = Path(os.getcwd())
 for i in range(10):
-    if p.parent is None:
+    if p is None:
         raise Exception("Unable to detect repository root.")
-    if Path(p.parent / ".git").exists():
-        REPO_ROOT = str(p.parent)
+    if Path(p / ".git").exists():
+        REPO_ROOT = str(p)
         break
+    p = p.parent
 
 #
 # Helpers and utility functions
