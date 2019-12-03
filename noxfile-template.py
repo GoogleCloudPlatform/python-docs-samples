@@ -276,23 +276,3 @@ def readmegen(session, sample):
 
     in_file = os.path.join(sample, "README.rst.in")
     session.run("python", "scripts/readme-gen/readme_gen.py", in_file)
-
-
-@nox.session
-def check_requirements(session):
-    """Checks for out of date requirements and optionally updates them.
-
-    This is intentionally not parametric, as it's desired to never have two
-    samples with differing versions of dependencies.
-    """
-    session.install("-r", "testing/requirements.txt")
-
-    if "update" in session.posargs:
-        command = "update-requirements"
-    else:
-        command = "check-requirements"
-
-    reqfiles = list(_list_files(".", "requirements*.txt"))
-
-    for reqfile in reqfiles:
-        session.run("gcp-devrel-py-tools", command, reqfile)
