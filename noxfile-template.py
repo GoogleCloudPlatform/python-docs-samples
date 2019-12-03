@@ -191,14 +191,14 @@ def gae(session, sample):
 
 @nox.session(python="2.7")
 @nox.parametrize("sample", NON_GAE_STANDARD_SAMPLES_PY2)
-def py27(session, sample):
+def py2(session, sample):
     """Runs py.test for a sample using Python 2.7"""
     _session_tests(session, sample)
 
 
 @nox.session(python=["3.5", "3.6", "3.7"])
 @nox.parametrize("sample", NON_GAE_STANDARD_SAMPLES_PY3)
-def py36(session, sample):
+def py3(session, sample):
     """Runs py.test for a sample using Python 3.x"""
     _session_tests(session, sample)
 
