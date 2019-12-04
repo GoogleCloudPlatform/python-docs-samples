@@ -70,7 +70,7 @@ for file in **/requirements.txt; do
     echo "------------------------------------------------------------"
 
     # If no local noxfile exists, copy the one from root
-    if [[ -f "noxfile.py" ]]; then
+    if [[ ! -f "noxfile.py" ]]; then
       cp "$ROOT/noxfile-template.py" "./noxfile.py"
       echo -e "\n Using noxfile from project root. \n"
     fi
