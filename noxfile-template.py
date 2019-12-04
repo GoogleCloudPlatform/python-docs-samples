@@ -213,7 +213,7 @@ BLACK_VERSION = "black==19.3b0"
 
 @nox.session(python="3.6")
 def lint(session):
-    """Checks if blacken would result in any changes onl the sample."""
+    """Checks if blacken would result in any changes in the sample."""
     session.install("flake8", "flake8-import-order", BLACK_VERSION)
 
     session.run("black", "--check", ".")
