@@ -37,10 +37,10 @@ source ./testing/test-env.sh
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
 export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
 
-# Run Cloud SQL proxy
+# Run Cloud SQL proxy (background process exit when script does)
 wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy && chmod +x cloud_sql_proxy
-./cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306 &
-./cloud_sql_proxy -instances="${POSTGRES_INSTANCE}"=tcp:5432 &
+./cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306 &>> cloud_sql_proxy.log &
+./cloud_sql_proxy -instances="${POSTGRES_INSTANCE}"=tcp:5432 &>> cloud_sql_proxy.log &
 
 echo -e "\n******************** TESTING PROJECTS ********************"
 # Switch to 'fail at end' to allow all tests to complete before exiting.
@@ -88,9 +88,6 @@ for file in **/requirements.txt; do
 
 done
 cd "$ROOT"
-
-# Stop Cloud SQL proxy
-killall cloud_sql_proxy || true
 
 # Workaround for Kokoro permissions issue: delete secrets
 rm testing/{test-env.sh,client-secrets.json,service-account.json}
