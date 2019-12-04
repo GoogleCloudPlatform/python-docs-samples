@@ -27,6 +27,8 @@ else
     ONLY_DIFF="false"
 fi
 
+cd github/python-docs-samples
+
 # Unencrypt and extract secrets
 SECRETS_PASSWORD=$(cat "${KOKORO_GFILE_DIR}/secrets-password.txt")
 ./scripts/decrypt-secrets.sh "${SECRETS_PASSWORD}"
@@ -38,8 +40,6 @@ export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
 # Run Cloud SQL proxy
 cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306 &
 cloud_sql_proxy -instances="${POSTGRES_INSTANCE}"=tcp:5432 &
-
-cd github/python-docs-samples
 
 echo -e "\n******************** TESTING PROJECTS ********************"
 # Switch to 'fail at end' to allow all tests to complete before exiting.
