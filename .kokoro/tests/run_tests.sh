@@ -38,6 +38,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
 export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
 
 # Run Cloud SQL proxy
+wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy && chmod +x cloud_sql_proxy
 cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306 &
 cloud_sql_proxy -instances="${POSTGRES_INSTANCE}"=tcp:5432 &
 
