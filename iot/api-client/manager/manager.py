@@ -29,12 +29,12 @@ Usage example:
 """
 
 import argparse
-import base64
 import io
 import os
 import sys
 import time
 
+from google.api_core.exceptions import AlreadyExists
 from google.cloud import iot_v1
 from google.cloud import pubsub
 from google.oauth2 import service_account
@@ -143,37 +143,29 @@ def create_device(
     """Create a device to bind to a gateway if it does not exist."""
     # [START iot_create_device]
     # Check that the device doesn't already exist
+    client = iot_v1.DeviceManagerClient()
+
     exists = False
 
-    client = get_client(service_account_json)
-    registry_path = 'projects/{}/locations/{}/registries/{}'.format(
-        project_id, cloud_region, registry_id)
+    parent = client.registry_path(project_id, cloud_region, registry_id)
 
-    devices = client.projects().locations().registries().devices(
-        ).list(
-                parent=registry_path, fieldMask='config,gatewayConfig'
-        ).execute().get('devices', [])
+    devices = list(client.list_devices(parent=parent))
 
     for device in devices:
-        if device.get('id') == device_id:
+        if device.id == device_id:
             exists = True
 
     # Create the device
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
-
     device_template = {
         'id': device_id,
-        'gatewayConfig': {
-          'gatewayType': 'NON_GATEWAY',
-          'gatewayAuthMethod': 'ASSOCIATION_ONLY'
+        'gateway_config': {
+          'gateway_type': 'NON_GATEWAY',
+          'gateway_auth_method': 'ASSOCIATION_ONLY'
         }
     }
-    devices = client.projects().locations().registries().devices()
 
     if not exists:
-        res = devices.create(
-                parent=registry_name, body=device_template).execute()
+        res = client.create_device(parent, device_template)
         print('Created Device {}'.format(res))
     else:
         print('Device exists, skipping')
@@ -217,12 +209,17 @@ def delete_registry(
     """Deletes the specified registry."""
     # [START iot_delete_registry]
     print('Delete registry')
-    client = get_client(service_account_json)
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
 
-    registries = client.projects().locations().registries()
-    return registries.delete(name=registry_name).execute()
+    client = iot_v1.DeviceManagerClient()
+    registry_path = client.registry_path(project_id, cloud_region, registry_id)
+
+    try:
+        response = client.delete_device_registry(registry_path)
+        print('Deleted registry')
+        return response
+    except HttpError:
+        print('Error, registry not deleted')
+        return ""
     # [END iot_delete_registry]
 
 
@@ -330,25 +327,28 @@ def create_registry(
     """ Creates a registry and returns the result. Returns an empty result if
     the registry already exists."""
     # [START iot_create_registry]
-    client = get_client(service_account_json)
-    registry_parent = 'projects/{}/locations/{}'.format(
-            project_id,
-            cloud_region)
+    client = iot_v1.DeviceManagerClient()
+    parent = client.location_path(project_id, cloud_region)
+
+    if not pubsub_topic.startswith('projects/'):
+        pubsub_topic = 'projects/{}/topics/{}'.format(project_id, pubsub_topic)
+
     body = {
-        'eventNotificationConfigs': [{
-            'pubsubTopicName': pubsub_topic
+        'event_notification_configs': [{
+            'pubsub_topic_name': pubsub_topic
         }],
         'id': registry_id
     }
-    request = client.projects().locations().registries().create(
-        parent=registry_parent, body=body)
 
     try:
-        response = request.execute()
+        response = client.create_device_registry(parent, body)
         print('Created registry')
         return response
     except HttpError:
         print('Error, registry not created')
+        return ""
+    except AlreadyExists:
+        print('Error, registry already exists')
         return ""
     # [END iot_create_registry]
 
@@ -357,13 +357,10 @@ def get_registry(
         service_account_json, project_id, cloud_region, registry_id):
     """ Retrieves a device registry."""
     # [START iot_get_registry]
-    client = get_client(service_account_json)
-    registry_parent = 'projects/{}/locations/{}'.format(
-            project_id,
-            cloud_region)
-    topic_name = '{}/registries/{}'.format(registry_parent, registry_id)
-    request = client.projects().locations().registries().get(name=topic_name)
-    return request.execute()
+    client = iot_v1.DeviceManagerClient()
+    registry_path = client.registry_path(project_id, cloud_region, registry_id)
+
+    return client.get_device_registry(registry_path)
     # [END iot_get_registry]
 
 
@@ -377,7 +374,7 @@ def open_registry(
         service_account_json, project_id, cloud_region,
         pubsub_topic, registry_id)
 
-    if response == "":
+    if response == '':
         # Device registry already exists
         print(
             'Registry {} already exists - looking it up instead.'.format(
@@ -386,7 +383,7 @@ def open_registry(
             service_account_json, project_id, cloud_region,
             registry_id)
 
-    print('Registry {} opened: '.format(response.get('name')))
+    print('Registry {} opened: '.format(response.name))
     print(response)
 
 
@@ -466,20 +463,13 @@ def set_config(
         version, config):
     # [START iot_set_device_config]
     print('Set device configuration')
-    client = get_client(service_account_json)
-    device_path = 'projects/{}/locations/{}/registries/{}/devices/{}'.format(
-            project_id, cloud_region, registry_id, device_id)
+    client = iot_v1.DeviceManagerClient()
+    device_path = client.device_path(
+        project_id, cloud_region, registry_id, device_id)
 
-    config_body = {
-        'versionToUpdate': version,
-        'binaryData': base64.urlsafe_b64encode(
-                config.encode('utf-8')).decode('ascii')
-    }
+    data = config.encode('utf-8')
 
-    return client.projects(
-        ).locations().registries(
-        ).devices().modifyCloudToDeviceConfig(
-        name=device_path, body=config_body).execute()
+    return client.modify_cloud_to_device_config(device_path, data, version)
     # [END iot_set_device_config]
 
 
@@ -488,21 +478,17 @@ def get_config_versions(
         device_id):
     """Lists versions of a device config in descending order (newest first)."""
     # [START iot_get_device_configs]
-    client = get_client(service_account_json)
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-        project_id, cloud_region, registry_id)
+    client = iot_v1.DeviceManagerClient()
+    device_path = client.device_path(
+        project_id, cloud_region, registry_id, device_id)
 
-    device_name = '{}/devices/{}'.format(registry_name, device_id)
-    devices = client.projects().locations().registries().devices()
-    configs = devices.configVersions().list(
-        name=device_name).execute().get(
-        'deviceConfigs', [])
+    configs = client.list_device_config_versions(device_path)
 
-    for config in configs:
-        print('version: {}\n\tcloudUpdateTime: {}\n\t binaryData: {}'.format(
-            config.get('version'),
-            config.get('cloudUpdateTime'),
-            config.get('binaryData')))
+    for config in configs.device_configs:
+        print('version: {}\n\tcloudUpdateTime: {}\n\t data: {}'.format(
+            config.version,
+            config.cloud_update_time,
+            config.binary_data))
 
     return configs
     # [END iot_get_device_configs]
@@ -512,12 +498,11 @@ def get_iam_permissions(
         service_account_json, project_id, cloud_region, registry_id):
     """Retrieves IAM permissions for the given registry."""
     # [START iot_get_iam_policy]
-    client = get_client(service_account_json)
-    registry_path = 'projects/{}/locations/{}/registries/{}'.format(
-        project_id, cloud_region, registry_id)
+    client = iot_v1.DeviceManagerClient()
 
-    policy = client.projects().locations().registries().getIamPolicy(
-            resource=registry_path, body={}).execute()
+    registry_path = client.registry_path(project_id, cloud_region, registry_id)
+
+    policy = client.get_iam_policy(registry_path)
 
     return policy
     # [END iot_get_iam_policy]
@@ -528,23 +513,18 @@ def set_iam_permissions(
         member):
     """Sets IAM permissions for the given registry to a single role/member."""
     # [START iot_set_iam_policy]
-    client = get_client(service_account_json)
+    client = iot_v1.DeviceManagerClient()
+    registry_path = client.registry_path(project_id, cloud_region, registry_id)
 
-    registry_path = 'projects/{}/locations/{}/registries/{}'.format(
-        project_id, cloud_region, registry_id)
     body = {
-        "policy":
-        {
-            "bindings":
-            [{
-                "members": [member],
-                "role": role
-            }]
-        }
+        'bindings':
+        [{
+            'members': [member],
+            'role': role
+        }]
     }
 
-    return client.projects().locations().registries().setIamPolicy(
-            resource=registry_path, body=body).execute()
+    return client.set_iam_policy(registry_path, body)
     # [END iot_set_iam_policy]
 
 
@@ -554,19 +534,13 @@ def send_command(
     """Send a command to a device."""
     # [START iot_send_command]
     print('Sending command to device')
-    client = get_client(service_account_json)
-    device_path = 'projects/{}/locations/{}/registries/{}/devices/{}'.format(
-            project_id, cloud_region, registry_id, device_id)
+    client = iot_v1.DeviceManagerClient()
+    device_path = client.device_path(
+        project_id, cloud_region, registry_id, device_id)
 
-    config_body = {
-        'binaryData': base64.urlsafe_b64encode(
-                command.encode('utf-8')).decode('ascii')
-    }
+    data = command.encode('utf-8')
 
-    return client.projects(
-        ).locations().registries(
-        ).devices().sendCommandToDevice(
-        name=device_path, body=config_body).execute()
+    return client.send_command_to_device(device_path, data)
     # [END iot_send_command]
 
 
@@ -577,28 +551,20 @@ def create_gateway(
     # [START iot_create_gateway]
     # Check that the gateway doesn't already exist
     exists = False
-    client = get_client(service_account_json)
-    registry_path = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
+    client = iot_v1.DeviceManagerClient()
 
-    devices = client.projects().locations().registries().devices(
-            ).list(
-                    parent=registry_path, fieldMask='config,gatewayConfig'
-            ).execute().get('devices', [])
+    parent = client.registry_path(project_id, cloud_region, registry_id)
+    devices = list(client.list_devices(parent=parent))
 
     for device in devices:
-        if device.get('id') == gateway_id:
+        if device.id == gateway_id:
             exists = True
         print('Device: {} : {} : {} : {}'.format(
-            device.get('id'),
-            device.get('numId'),
-            device.get('config'),
-            device.get('gatewayConfig')
+            device.id,
+            device.num_id,
+            device.config,
+            device.gateway_config
             ))
-
-    # Create the gateway
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
 
     with io.open(certificate_file) as f:
         certificate = f.read()
@@ -617,17 +583,15 @@ def create_gateway(
                 'key': certificate
             }
         }],
-        'gatewayConfig': {
-          'gatewayType': 'GATEWAY',
-          'gatewayAuthMethod': 'ASSOCIATION_ONLY'
+        'gateway_config': {
+          'gateway_type': 'GATEWAY',
+          'gateway_auth_method': 'ASSOCIATION_ONLY'
         }
     }
-    devices = client.projects().locations().registries().devices()
 
     if not exists:
-        res = devices.create(
-                parent=registry_name, body=device_template).execute()
-        print('Created gateway {}'.format(res))
+        res = client.create_device(parent, device_template)
+        print('Created Gateway {}'.format(res))
     else:
         print('Gateway exists, skipping')
     # [END iot_create_gateway]
@@ -638,21 +602,17 @@ def bind_device_to_gateway(
         gateway_id):
     """Binds a device to a gateway."""
     # [START iot_bind_device_to_gateway]
-    client = get_client(service_account_json)
+    client = iot_v1.DeviceManagerClient()
 
     create_device(
             service_account_json, project_id, cloud_region, registry_id,
             device_id)
 
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
-    bind_request = {
-        'deviceId': device_id,
-        'gatewayId': gateway_id
-    }
-    client.projects().locations().registries().bindDeviceToGateway(
-            parent=registry_name, body=bind_request).execute()
-    print('Device Bound!')
+    parent = client.registry_path(project_id, cloud_region, registry_id)
+
+    res = client.bind_device_to_gateway(parent, gateway_id, device_id)
+
+    print('Device Bound! {}'.format(res))
     # [END iot_bind_device_to_gateway]
 
 
@@ -661,17 +621,12 @@ def unbind_device_from_gateway(
         gateway_id):
     """Unbinds a device to a gateway."""
     # [START iot_unbind_device_from_gateway]
-    client = get_client(service_account_json)
+    client = iot_v1.DeviceManagerClient()
 
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
-    bind_request = {
-        'deviceId': device_id,
-        'gatewayId': gateway_id
-    }
+    parent = client.registry_path(project_id, cloud_region, registry_id)
 
-    res = client.projects().locations().registries().unbindDeviceFromGateway(
-        parent=registry_name, body=bind_request).execute()
+    res = client.unbind_device_from_gateway(parent, gateway_id, device_id)
+
     print('Device unbound: {}'.format(res))
     # [END iot_unbind_device_from_gateway]
 
@@ -680,19 +635,18 @@ def list_gateways(
         service_account_json, project_id, cloud_region, registry_id):
     """Lists gateways in a registry"""
     # [START iot_list_gateways]
-    client = get_client(service_account_json)
-    registry_path = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
+    client = iot_v1.DeviceManagerClient()
 
-    devices = client.projects().locations().registries().devices(
-            ).list(
-                    parent=registry_path, fieldMask='config,gatewayConfig'
-            ).execute().get('devices', [])
+    path = client.registry_path(project_id, cloud_region, registry_id)
+    mask = iot_v1.types.FieldMask()
+    mask.paths.append('config')
+    mask.paths.append('gateway_config')
+    devices = list(client.list_devices(parent=path, field_mask=mask))
 
     for device in devices:
-        if device.get('gatewayConfig') is not None:
-            if device.get('gatewayConfig').get('gatewayType') == 'GATEWAY':
-                print('Gateway ID: {}\n\t{}'.format(device.get('id'), device))
+        if device.gateway_config is not None:
+            if device.gateway_config.gateway_type == 1:
+                print('Gateway ID: {}\n\t{}'.format(device.id, device))
     # [END iot_list_gateways]
 
 
@@ -701,23 +655,18 @@ def list_devices_for_gateway(
         gateway_id):
     """List devices bound to a gateway"""
     # [START iot_list_devices_for_gateway]
-    client = get_client(service_account_json)
+    client = iot_v1.DeviceManagerClient()
 
-    registry_name = 'projects/{}/locations/{}/registries/{}'.format(
-            project_id, cloud_region, registry_id)
+    path = client.registry_path(project_id, cloud_region, registry_id)
 
-    devices = client.projects().locations().registries().devices(
-        ).list(
-                parent=registry_name,
-                gatewayListOptions_associationsGatewayId=gateway_id
-        ).execute()
+    devices = list(client.list_devices(
+        parent=path,
+        gateway_list_options={'associations_gateway_id': gateway_id}))
 
     found = False
-    for device in devices.get('devices', []):
+    for device in devices:
         found = True
-        print('Device: {} : {}'.format(
-                device.get('numId'),
-                device.get('id')))
+        print('Device: {} : {}'.format(device.num_id, device.id))
 
     if not found:
         print('No devices bound to gateway {}'.format(gateway_id))
@@ -792,7 +741,8 @@ def parse_command_line_args():
             help='Path to service account json file.')
     parser.add_argument(
             '--version',
-            default=None,
+            default=0,
+            type=int,
             help='Version number for setting device configuration.')
 
     # Command subparser
@@ -874,7 +824,7 @@ def run_get(args):
                 args.cloud_region, args.registry_id, args.device_id)
 
     elif args.command == 'get-config-versions':
-        get_device(
+        get_config_versions(
                 args.service_account_json, args.project_id,
                 args.cloud_region, args.registry_id, args.device_id)
 

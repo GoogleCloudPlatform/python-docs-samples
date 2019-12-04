@@ -95,9 +95,8 @@ def set_policy(project_id, policy):
     return policy
 # [END iam_set_policy]
 
+
 # [START iam_test_permissions]
-
-
 def test_permissions(project_id):
     """Tests IAM permissions of the caller"""
 
