@@ -1,4 +1,4 @@
-# Copyright 2016 Google Inc. All Rights Reserved.
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,15 +16,20 @@ from __future__ import print_function
 
 import fnmatch
 import os
+from pathlib import Path
 import tempfile
 
 import nox
 
-try:
-    import ci_diff_helper
-except ImportError:
-    ci_diff_helper = None
-
+# Get root of this repository. Assume we don't have directories nested deeper than 10 items.
+p = Path(os.getcwd())
+for i in range(10):
+    if p is None:
+        raise Exception("Unable to detect repository root.")
+    if Path(p / ".git").exists():
+        REPO_ROOT = str(p)
+        break
+    p = p.parent
 
 #
 # Helpers and utility functions
@@ -65,38 +70,6 @@ def _collect_dirs(
             # Filter out dirs we don't want to recurse into
             subdirs[:] = [s for s in subdirs if s[0].isalpha() and s not in blacklist]
 
-
-def _get_changed_files():
-    """Returns a list of files changed for this pull request / push.
-
-    If running on a public CI like Travis or Circle this is used to only
-    run tests/lint for changed files.
-    """
-    if not ci_diff_helper:
-        return None
-
-    try:
-        config = ci_diff_helper.get_config()
-    except OSError:  # Not on CI.
-        return None
-
-    changed_files = ci_diff_helper.get_changed_files("HEAD", config.base)
-
-    changed_files = set(["./{}".format(filename) for filename in changed_files])
-
-    return changed_files
-
-
-def _filter_samples(sample_dirs, changed_files):
-    """Filers the list of sample directories to only include directories that
-    contain files in the list of changed files."""
-    result = []
-    for sample_dir in sample_dirs:
-        for changed_file in changed_files:
-            if changed_file.startswith(sample_dir):
-                result.append(sample_dir)
-
-    return list(set(result))
 
 
 def _determine_local_import_names(start_dir):
@@ -152,58 +125,38 @@ FLAKE8_COMMON_ARGS = [
     "google",
     "--exclude",
     ".nox,.cache,env,lib,generated_pb2,*_pb2.py,*_pb2_grpc.py",
-    "--ignore=E121,E123,E126,E226,E24,E704,W503,W504,I100,I201,I202",
+    "--ignore=E121,E123,E126,E203, E226,E24,E266,E501,E704,W503,W504,I100,I201,I202",
 ]
 
 
 # Collect sample directories.
 ALL_TESTED_SAMPLES = sorted(list(_collect_dirs(".")))
-ALL_SAMPLE_DIRECTORIES = sorted(
-    list(_collect_dirs(".", suffix=".py", recurse_further=True))
-)
+
 GAE_STANDARD_SAMPLES = [
     sample
     for sample in ALL_TESTED_SAMPLES
-    if sample.startswith("./appengine/standard/")
+    if str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith("appengine/standard/")
 ]
-PY2_ONLY_SAMPLES = GAE_STANDARD_SAMPLES
 PY3_ONLY_SAMPLES = [
     sample
     for sample in ALL_TESTED_SAMPLES
     if (
-        sample.startswith("./appengine/standard_python37")
-        or sample.startswith("./functions/")
-        or sample.startswith("./bigquery/pandas-gbq-migration")
+        str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith("appengine/standard_python37")
+        or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith("functions/")
+        or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith("bigquery/pandas-gbq-migration")
     )
 ]
 NON_GAE_STANDARD_SAMPLES_PY2 = sorted(
     list((set(ALL_TESTED_SAMPLES) - set(GAE_STANDARD_SAMPLES)) - set(PY3_ONLY_SAMPLES))
 )
 NON_GAE_STANDARD_SAMPLES_PY3 = sorted(
-    list(set(ALL_TESTED_SAMPLES) - set(PY2_ONLY_SAMPLES))
+    list(set(ALL_TESTED_SAMPLES) - set(GAE_STANDARD_SAMPLES))
 )
-
-
-# Filter sample directories if on a CI like Travis or Circle to only run tests
-# for changed samples.
-CHANGED_FILES = _get_changed_files()
-
-if CHANGED_FILES is not None:
-    print("Filtering based on changed files.")
-    ALL_TESTED_SAMPLES = _filter_samples(ALL_TESTED_SAMPLES, CHANGED_FILES)
-    ALL_SAMPLE_DIRECTORIES = _filter_samples(ALL_SAMPLE_DIRECTORIES, CHANGED_FILES)
-    GAE_STANDARD_SAMPLES = _filter_samples(GAE_STANDARD_SAMPLES, CHANGED_FILES)
-    NON_GAE_STANDARD_SAMPLES_PY2 = _filter_samples(
-        NON_GAE_STANDARD_SAMPLES_PY2, CHANGED_FILES
-    )
-    NON_GAE_STANDARD_SAMPLES_PY3 = _filter_samples(
-        NON_GAE_STANDARD_SAMPLES_PY3, CHANGED_FILES
-    )
 
 
 def _session_tests(session, sample, post_install=None):
     """Runs py.test for a particular sample."""
-    session.install("-r", "testing/requirements.txt")
+    session.install("-r", REPO_ROOT + "/testing/requirements.txt")
 
     session.chdir(sample)
 
@@ -238,46 +191,47 @@ def gae(session, sample):
 
 @nox.session(python="2.7")
 @nox.parametrize("sample", NON_GAE_STANDARD_SAMPLES_PY2)
-def py27(session, sample):
+def py2(session, sample):
     """Runs py.test for a sample using Python 2.7"""
     _session_tests(session, sample)
 
 
-@nox.session(python="3.6")
+@nox.session(python=["3.5", "3.6", "3.7"])
 @nox.parametrize("sample", NON_GAE_STANDARD_SAMPLES_PY3)
-def py36(session, sample):
-    """Runs py.test for a sample using Python 3.6"""
+def py3(session, sample):
+    """Runs py.test for a sample using Python 3.x"""
     _session_tests(session, sample)
 
 
-@nox.session
-@nox.parametrize("sample", ALL_SAMPLE_DIRECTORIES)
-def lint(session, sample):
+@nox.session(python="3.6")
+def lint(session):
     """Runs flake8 on the sample."""
-    session.install("flake8", "flake8-import-order")
+    session.install("flake8", "flake8-import-order", BLACK_VERSION)
 
-    local_names = _determine_local_import_names(sample)
+    session.run("black", "--check", ".")
+
+
+    local_names = _determine_local_import_names(".")
     args = FLAKE8_COMMON_ARGS + [
         "--application-import-names",
         ",".join(local_names),
         ".",
     ]
-
-    session.chdir(sample)
     session.run("flake8", *args)
 
 
-#
-# Utility sessions
-#
+
+BLACK_VERSION = "black==19.3b0"
 
 
-@nox.session
-def missing_tests(session):
-    """Lists all sample directories that do not have tests."""
-    print("The following samples do not have tests:")
-    for sample in set(ALL_SAMPLE_DIRECTORIES) - set(ALL_TESTED_SAMPLES):
-        print("* {}".format(sample))
+@nox.session(python="3.6")
+def blacken(session):
+    """Run black.
+    Format code to uniform standard.
+    """
+    session.install(BLACK_VERSION)
+    session.run("black", ".")
+
 
 
 SAMPLES_WITH_GENERATED_READMES = sorted(list(_collect_dirs(".", suffix=".rst.in")))
@@ -293,24 +247,4 @@ def readmegen(session, sample):
         session.install("-r", os.path.join(sample, "requirements.txt"))
 
     in_file = os.path.join(sample, "README.rst.in")
-    session.run("python", "scripts/readme-gen/readme_gen.py", in_file)
-
-
-@nox.session
-def check_requirements(session):
-    """Checks for out of date requirements and optionally updates them.
-
-    This is intentionally not parametric, as it's desired to never have two
-    samples with differing versions of dependencies.
-    """
-    session.install("-r", "testing/requirements.txt")
-
-    if "update" in session.posargs:
-        command = "update-requirements"
-    else:
-        command = "check-requirements"
-
-    reqfiles = list(_list_files(".", "requirements*.txt"))
-
-    for reqfile in reqfiles:
-        session.run("gcp-devrel-py-tools", command, reqfile)
+    session.run("python", REPO_ROOT + "/scripts/readme-gen/readme_gen.py", in_file)
