@@ -29,6 +29,9 @@ fi
 
 cd github/python-docs-samples
 
+# install nox for testing
+pip install -q nox
+
 # Unencrypt and extract secrets
 SECRETS_PASSWORD=$(cat "${KOKORO_GFILE_DIR}/secrets-password.txt")
 ./scripts/decrypt-secrets.sh "${SECRETS_PASSWORD}"
