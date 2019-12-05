@@ -64,7 +64,7 @@ def create_diagram(dot):
     # https://graphviz.gitlab.io
     image = subprocess.run(['dot'] + dot_args,
                            input=dot.encode('utf-8'),
-                           capture_output=True).stdout
+                           stdout=subprocess.PIPE).stdout
 
     if not image:
         raise Exception('syntax: bad graphviz definition provided')
