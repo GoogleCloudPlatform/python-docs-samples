@@ -47,14 +47,14 @@ def _list_files(folder, pattern):
 def _collect_dirs(
     start_dir,
     blacklist=set(["conftest.py", "noxfile.py", "lib", "third_party"]),
-    suffix="_test.py",
+    suffix="requirements.txt",
     recurse_further=False,
 ):
     """Recursively collects a list of dirs that contain a file matching the
     given suffix.
 
     This works by listing the contents of directories and finding
-    directories that have `*_test.py` files.
+    directories that have `"requirements.text` files.
     """
     # Collect all the directories that have tests in them.
     for parent, subdirs, files in os.walk(start_dir):
@@ -69,7 +69,6 @@ def _collect_dirs(
         else:
             # Filter out dirs we don't want to recurse into
             subdirs[:] = [s for s in subdirs if s[0].isalpha() and s not in blacklist]
-
 
 
 def _determine_local_import_names(start_dir):
@@ -135,15 +134,21 @@ ALL_TESTED_SAMPLES = sorted(list(_collect_dirs(".")))
 GAE_STANDARD_SAMPLES = [
     sample
     for sample in ALL_TESTED_SAMPLES
-    if str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith("appengine/standard/")
+    if str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith(
+        "appengine/standard/"
+    )
 ]
 PY3_ONLY_SAMPLES = [
     sample
     for sample in ALL_TESTED_SAMPLES
     if (
-        str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith("appengine/standard_python37")
+        str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith(
+            "appengine/standard_python37"
+        )
         or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith("functions/")
-        or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith("bigquery/pandas-gbq-migration")
+        or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith(
+            "bigquery/pandas-gbq-migration"
+        )
     )
 ]
 NON_GAE_STANDARD_SAMPLES_PY2 = sorted(
@@ -203,13 +208,15 @@ def py3(session, sample):
     _session_tests(session, sample)
 
 
+BLACK_VERSION = "black==19.3b0"
+
+
 @nox.session(python="3.6")
 def lint(session):
-    """Runs flake8 on the sample."""
+    """Checks if blacken would result in any changes in the sample."""
     session.install("flake8", "flake8-import-order", BLACK_VERSION)
 
     session.run("black", "--check", ".")
-
 
     local_names = _determine_local_import_names(".")
     args = FLAKE8_COMMON_ARGS + [
@@ -220,10 +227,6 @@ def lint(session):
     session.run("flake8", *args)
 
 
-
-BLACK_VERSION = "black==19.3b0"
-
-
 @nox.session(python="3.6")
 def blacken(session):
     """Run black.
@@ -231,7 +234,6 @@ def blacken(session):
     """
     session.install(BLACK_VERSION)
     session.run("black", ".")
-
 
 
 SAMPLES_WITH_GENERATED_READMES = sorted(list(_collect_dirs(".", suffix=".rst.in")))
