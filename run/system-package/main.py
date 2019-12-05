@@ -22,27 +22,29 @@ app = Flask(__name__)
 
 
 # [START run_system_package_handler]
-@app.route('/diagram.png', methods=['GET'])
+@app.route("/diagram.png", methods=["GET"])
 def index():
     # Takes an HTTP GET request with query param dot and
     # returns a png with the rendered DOT diagram in a HTTP response.
     try:
-        image = create_diagram(request.args.get('dot'))
+        image = create_diagram(request.args.get("dot"))
         response = make_response(image)
-        response.headers.set('Content-Type', 'image/png')
+        response.headers.set("Content-Type", "image/png")
         return response
 
     except Exception as e:
-        print(f'error: {e}')
+        print(f"error: {e}")
 
         # Flush the stdout to avoid log buffering.
         sys.stdout.flush()
 
         # If no graphviz definition or bad graphviz def, return 400
-        if 'syntax' in str(e):
-            return f'Bad Request: {e}', 400
+        if "syntax" in str(e):
+            return f"Bad Request: {e}", 400
 
-        return 'Internal Server Error', 500
+        return "Internal Server Error", 500
+
+
 # [END run_system_package_handler]
 
 
@@ -50,31 +52,34 @@ def index():
 def create_diagram(dot):
     # Generates a diagram based on a graphviz DOT diagram description.
     if not dot:
-        raise Exception('syntax: no graphviz definition provided')
+        raise Exception("syntax: no graphviz definition provided")
 
     dot_args = [  # These args add a watermark to the dot graphic.
-                '-Glabel=Made on Cloud Run',
-                '-Gfontsize=10',
-                '-Glabeljust=right',
-                '-Glabelloc=bottom',
-                '-Gfontcolor=gray',
-                '-Tpng']
+        "-Glabel=Made on Cloud Run",
+        "-Gfontsize=10",
+        "-Glabeljust=right",
+        "-Glabelloc=bottom",
+        "-Gfontcolor=gray",
+        "-Tpng",
+    ]
 
     # Uses local `dot` binary from Graphviz:
     # https://graphviz.gitlab.io
-    image = subprocess.run(['dot'] + dot_args,
-                           input=dot.encode('utf-8'),
-                           stdout=subprocess.PIPE).stdout
+    image = subprocess.run(
+        ["dot"] + dot_args, input=dot.encode("utf-8"), stdout=subprocess.PIPE
+    ).stdout
 
     if not image:
-        raise Exception('syntax: bad graphviz definition provided')
+        raise Exception("syntax: bad graphviz definition provided")
     return image
+
+
 # [END run_system_package_exec]
 
 
-if __name__ == '__main__':
-    PORT = int(os.getenv('PORT')) if os.getenv('PORT') else 8080
+if __name__ == "__main__":
+    PORT = int(os.getenv("PORT")) if os.getenv("PORT") else 8080
 
     # This is used when running locally. Gunicorn is used to run the
     # application on Cloud Run. See entrypoint in Dockerfile.
-    app.run(host='127.0.0.1', port=PORT, debug=True)
+    app.run(host="127.0.0.1", port=PORT, debug=True)

@@ -27,21 +27,20 @@ def client():
 
 
 def test_empty_query_string(client):
-    r = client.get('/diagram.png')
+    r = client.get("/diagram.png")
     assert r.status_code == 400
 
 
 def test_empty_dot_parameter(client):
-    r = client.get('/diagram.png?dot=')
+    r = client.get("/diagram.png?dot=")
     assert r.status_code == 400
 
 
 def test_bad_dot_parameter(client):
-    r = client.get('/diagram.png?dot=digraph')
+    r = client.get("/diagram.png?dot=digraph")
     assert r.status_code == 400
 
 
 def test_good_dot_parameter(client):
-    r = client.get(
-        '/diagram.png?dot=digraph G { A -> {B, C, D} -> {F} }')
+    r = client.get("/diagram.png?dot=digraph G { A -> {B, C, D} -> {F} }")
     assert r.status_code == 200
