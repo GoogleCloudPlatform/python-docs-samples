@@ -25,7 +25,7 @@ using the [Google Cloud Client Library for Python][google-cloud-python].
 
 
 ## Sample Types
-There are two types of samples: Base and API Specific
+There are two types of samples: Base and API Specific.
 
 The base samples make up a set of samples that have code that
 is identical or nearly identical for each AutoML Type. Meaning that for "Base" samples you can use them with any AutoML
