@@ -18,7 +18,7 @@ def set_endpoint():
     # [START vision_set_endpoint]
     from google.cloud import vision
 
-    client_options = {'api_endpoint': 'eu-vision.googleapis.com:443'}
+    client_options = {'api_endpoint': 'eu-vision.googleapis.com'}
 
     client = vision.ImageAnnotatorClient(client_options=client_options)
     # [END vision_set_endpoint]
