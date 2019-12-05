@@ -6,7 +6,7 @@
 
 This directory contains samples for the [Google Cloud AutoML APIs](https://cloud.google.com/automl/) - [docs](https://cloud.google.com/automl/docs/)
 
-We highly reccommend that you refer to the official documentation pages:
+We highly recommend that you refer to the official documentation pages:
 * AutoML Natural Language
   * [Classification](https://cloud.google.com/natural-language/automl/docs)
   * [Entity Extraction](https://cloud.google.com/natural-language/automl/entity-analysis/docs)
@@ -18,7 +18,7 @@ We highly reccommend that you refer to the official documentation pages:
 
 This API is part of the larger collection of Cloud Machine Learning APIs.
 
-These Python samples demonstrates how to access the Cloud AutoML API
+These Python samples demonstrate how to access the Cloud AutoML API
 using the [Google Cloud Client Library for Python][google-cloud-python].
 
 [google-cloud-python]: https://github.com/GoogleCloudPlatform/google-cloud-python
@@ -49,7 +49,7 @@ small section of code to print out the `metrics` field.
 small section of code to print out the `metrics` field. 
 * [Delete Model](delete_model.py)
 * [Deploy Model](deploy_model.py) - Not supported by Translation
-* [Uneploy Model](undeploy_model.py) - Not supported by Translation
+* [Undeploy Model](undeploy_model.py) - Not supported by Translation
 
 ### Batch Prediction
 * [Batch Predict](batch_predict.py)
