@@ -148,14 +148,3 @@ if __name__ == "__main__":
     # language_code = "en-US"
     main(project_id, session_id, language_code)
 # [END dialogflow_microphone_streaming]
-
-
-# OUTPUT
-# ====================
-# Intermediate transcription: Saint Francis
-# Intermediate transcription: San Francisco
-# Intermediate transcription: San Francisco
-
-# Final transcription: a room in San Francisco
-# Fullfilment Text: What date?
-# Intent: room.reservation
