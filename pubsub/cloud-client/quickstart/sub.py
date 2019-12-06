@@ -35,13 +35,19 @@ def sub(project_id, subscription_name):
 
     def callback(message):
         print(
-            "Received message {} of message ID {}\n".format(message, message.message_id)
+            "Received message {} of message ID {}\n".format(
+                message,
+                message.message_id
+            )
         )
         # Acknowledge the message. Unack'ed messages will be redelivered.
         message.ack()
         print("Acknowledged message {}\n".format(message.message_id))
 
-    streaming_pull_future = client.subscribe(subscription_path, callback=callback)
+    streaming_pull_future = client.subscribe(
+        subscription_path,
+        callback=callback
+    )
     print("Listening for messages on {}..\n".format(subscription_path))
 
     # Calling result() on StreamingPullFuture keeps the main thread from
@@ -54,7 +60,8 @@ def sub(project_id, subscription_name):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("project_id", help="Google Cloud project ID")
     parser.add_argument("subscription_name", help="Pub/Sub subscription name")

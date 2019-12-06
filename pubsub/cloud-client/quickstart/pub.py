@@ -75,7 +75,8 @@ def pub(project_id, topic_name):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("project_id", help="Google Cloud project ID")
     parser.add_argument("topic_name", help="Pub/Sub topic name")

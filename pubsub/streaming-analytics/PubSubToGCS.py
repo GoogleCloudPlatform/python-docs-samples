@@ -95,7 +95,9 @@ def run(input_topic, output_path, window_size=1.0, pipeline_args=None):
     with beam.Pipeline(options=pipeline_options) as pipeline:
         (
             pipeline
-            | "Read PubSub Messages" >> beam.io.ReadFromPubSub(topic=input_topic)
+            | "Read PubSub Messages" >> beam.io.ReadFromPubSub(
+                topic=input_topic
+            )
             | "Window into" >> GroupWindowsIntoBatches(window_size)
             | "Write to GCS" >> beam.ParDo(WriteBatchesToGCS(output_path))
         )
@@ -117,7 +119,8 @@ if __name__ == "__main__":  # noqa
         help="Output file's window size in number of minutes.",
     )
     parser.add_argument(
-        "--output_path", help="GCS Path of the output file including filename prefix."
+        "--output_path",
+        help="GCS Path of the output file including filename prefix."
     )
     known_args, pipeline_args = parser.parse_known_args()
 

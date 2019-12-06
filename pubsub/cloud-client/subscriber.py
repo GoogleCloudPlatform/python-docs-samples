@@ -66,15 +66,26 @@ def create_subscription(project_id, topic_name, subscription_name):
 
     subscriber = pubsub_v1.SubscriberClient()
     topic_path = subscriber.topic_path(project_id, topic_name)
-    subscription_path = subscriber.subscription_path(project_id, subscription_name)
+    subscription_path = subscriber.subscription_path(
+        project_id,
+        subscription_name
+    )
 
-    subscription = subscriber.create_subscription(subscription_path, topic_path)
+    subscription = subscriber.create_subscription(
+        subscription_path,
+        topic_path
+    )
 
     print("Subscription created: {}".format(subscription))
     # [END pubsub_create_pull_subscription]
 
 
-def create_push_subscription(project_id, topic_name, subscription_name, endpoint):
+def create_push_subscription(
+    project_id,
+    topic_name,
+    subscription_name,
+    endpoint
+):
     """Create a new push subscription on the given topic."""
     # [START pubsub_create_push_subscription]
     from google.cloud import pubsub_v1
@@ -86,7 +97,10 @@ def create_push_subscription(project_id, topic_name, subscription_name, endpoint
 
     subscriber = pubsub_v1.SubscriberClient()
     topic_path = subscriber.topic_path(project_id, topic_name)
-    subscription_path = subscriber.subscription_path(project_id, subscription_name)
+    subscription_path = subscriber.subscription_path(
+        project_id,
+        subscription_name
+    )
 
     push_config = pubsub_v1.types.PushConfig(push_endpoint=endpoint)
 
@@ -108,7 +122,10 @@ def delete_subscription(project_id, subscription_name):
     # TODO subscription_name = "Your Pub/Sub subscription name"
 
     subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(project_id, subscription_name)
+    subscription_path = subscriber.subscription_path(
+        project_id,
+        subscription_name
+    )
 
     subscriber.delete_subscription(subscription_path)
 
@@ -131,7 +148,10 @@ def update_subscription(project_id, subscription_name, endpoint):
     # TODO endpoint = "https://my-test-project.appspot.com/push"
 
     subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(project_id, subscription_name)
+    subscription_path = subscriber.subscription_path(
+        project_id,
+        subscription_name
+    )
 
     push_config = pubsub_v1.types.PushConfig(push_endpoint=endpoint)
 
@@ -163,7 +183,10 @@ def receive_messages(project_id, subscription_name):
     subscriber = pubsub_v1.SubscriberClient()
     # The `subscription_path` method creates a fully qualified identifier
     # in the form `projects/{project_id}/subscriptions/{subscription_name}`
-    subscription_path = subscriber.subscription_path(project_id, subscription_name)
+    subscription_path = subscriber.subscription_path(
+        project_id,
+        subscription_name
+    )
 
     def callback(message):
         print("Received message: {}".format(message))
@@ -192,7 +215,10 @@ def receive_messages_with_custom_attributes(project_id, subscription_name):
     # TODO subscription_name = "Your Pub/Sub subscription name"
 
     subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(project_id, subscription_name)
+    subscription_path = subscriber.subscription_path(
+        project_id,
+        subscription_name
+    )
 
     def callback(message):
         print("Received message: {}".format(message.data))
@@ -225,7 +251,10 @@ def receive_messages_with_flow_control(project_id, subscription_name):
     # TODO subscription_name = "Your Pub/Sub subscription name"
 
     subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(project_id, subscription_name)
+    subscription_path = subscriber.subscription_path(
+        project_id,
+        subscription_name
+    )
 
     def callback(message):
         print("Received message: {}".format(message.data))
@@ -254,7 +283,10 @@ def synchronous_pull(project_id, subscription_name):
     # TODO subscription_name = "Your Pub/Sub subscription name"
 
     subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(project_id, subscription_name)
+    subscription_path = subscriber.subscription_path(
+        project_id,
+        subscription_name
+    )
 
     NUM_MESSAGES = 3
 
@@ -291,7 +323,10 @@ def synchronous_pull_with_lease_management(project_id, subscription_name):
     # TODO subscription_name = "Your Pub/Sub subscription name"
 
     subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(project_id, subscription_name)
+    subscription_path = subscriber.subscription_path(
+        project_id,
+        subscription_name
+    )
 
     NUM_MESSAGES = 2
     ACK_DEADLINE = 30
@@ -330,11 +365,15 @@ def synchronous_pull_with_lease_management(project_id, subscription_name):
             if process.is_alive():
                 # `ack_deadline_seconds` must be between 10 to 600.
                 subscriber.modify_ack_deadline(
-                    subscription_path, [ack_id], ack_deadline_seconds=ACK_DEADLINE
+                    subscription_path,
+                    [ack_id],
+                    ack_deadline_seconds=ACK_DEADLINE
                 )
                 logger.info(
                     "{}: Reset ack deadline for {} for {}s".format(
-                        time.strftime("%X", time.gmtime()), msg_data, ACK_DEADLINE
+                        time.strftime("%X", time.gmtime()),
+                        msg_data,
+                        ACK_DEADLINE
                     )
                 )
 
@@ -369,7 +408,10 @@ def listen_for_errors(project_id, subscription_name):
     # TODO subscription_name = "Your Pubsub subscription name"
 
     subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(project_id, subscription_name)
+    subscription_path = subscriber.subscription_path(
+        project_id,
+        subscription_name
+    )
 
     def callback(message):
         print("Received message: {}".format(message))
@@ -393,7 +435,8 @@ def listen_for_errors(project_id, subscription_name):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("project_id", help="Your Google Cloud project ID")
 
@@ -407,7 +450,10 @@ if __name__ == "__main__":
         "list_in_project", help=list_subscriptions_in_project.__doc__
     )
 
-    create_parser = subparsers.add_parser("create", help=create_subscription.__doc__)
+    create_parser = subparsers.add_parser(
+        "create",
+        help=create_subscription.__doc__
+    )
     create_parser.add_argument("topic_name")
     create_parser.add_argument("subscription_name")
 
@@ -418,14 +464,23 @@ if __name__ == "__main__":
     create_push_parser.add_argument("subscription_name")
     create_push_parser.add_argument("endpoint")
 
-    delete_parser = subparsers.add_parser("delete", help=delete_subscription.__doc__)
+    delete_parser = subparsers.add_parser(
+        "delete",
+        help=delete_subscription.__doc__
+    )
     delete_parser.add_argument("subscription_name")
 
-    update_parser = subparsers.add_parser("update", help=update_subscription.__doc__)
+    update_parser = subparsers.add_parser(
+        "update",
+        help=update_subscription.__doc__
+    )
     update_parser.add_argument("subscription_name")
     update_parser.add_argument("endpoint")
 
-    receive_parser = subparsers.add_parser("receive", help=receive_messages.__doc__)
+    receive_parser = subparsers.add_parser(
+        "receive",
+        help=receive_messages.__doc__
+    )
     receive_parser.add_argument("subscription_name")
 
     receive_with_custom_attributes_parser = subparsers.add_parser(
@@ -435,7 +490,8 @@ if __name__ == "__main__":
     receive_with_custom_attributes_parser.add_argument("subscription_name")
 
     receive_with_flow_control_parser = subparsers.add_parser(
-        "receive-flow-control", help=receive_messages_with_flow_control.__doc__
+        "receive-flow-control",
+        help=receive_messages_with_flow_control.__doc__
     )
     receive_with_flow_control_parser.add_argument("subscription_name")
 
@@ -448,7 +504,9 @@ if __name__ == "__main__":
         "receive-synchronously-with-lease",
         help=synchronous_pull_with_lease_management.__doc__,
     )
-    synchronous_pull_with_lease_management_parser.add_argument("subscription_name")
+    synchronous_pull_with_lease_management_parser.add_argument(
+        "subscription_name"
+    )
 
     listen_for_errors_parser = subparsers.add_parser(
         "listen_for_errors", help=listen_for_errors.__doc__
@@ -462,24 +520,44 @@ if __name__ == "__main__":
     elif args.command == "list_in_project":
         list_subscriptions_in_project(args.project_id)
     elif args.command == "create":
-        create_subscription(args.project_id, args.topic_name, args.subscription_name)
+        create_subscription(
+            args.project_id,
+            args.topic_name,
+            args.subscription_name
+        )
     elif args.command == "create-push":
         create_push_subscription(
-            args.project_id, args.topic_name, args.subscription_name, args.endpoint
+            args.project_id,
+            args.topic_name,
+            args.subscription_name,
+            args.endpoint
         )
     elif args.command == "delete":
         delete_subscription(args.project_id, args.subscription_name)
     elif args.command == "update":
-        update_subscription(args.project_id, args.subscription_name, args.endpoint)
+        update_subscription(
+            args.project_id,
+            args.subscription_name,
+            args.endpoint
+        )
     elif args.command == "receive":
         receive_messages(args.project_id, args.subscription_name)
     elif args.command == "receive-custom-attributes":
-        receive_messages_with_custom_attributes(args.project_id, args.subscription_name)
+        receive_messages_with_custom_attributes(
+            args.project_id,
+            args.subscription_name
+        )
     elif args.command == "receive-flow-control":
-        receive_messages_with_flow_control(args.project_id, args.subscription_name)
+        receive_messages_with_flow_control(
+            args.project_id,
+            args.subscription_name
+        )
     elif args.command == "receive-synchronously":
         synchronous_pull(args.project_id, args.subscription_name)
     elif args.command == "receive-synchronously-with-lease":
-        synchronous_pull_with_lease_management(args.project_id, args.subscription_name)
+        synchronous_pull_with_lease_management(
+            args.project_id,
+            args.subscription_name
+        )
     elif args.command == "listen_for_errors":
         listen_for_errors(args.project_id, args.subscription_name)
