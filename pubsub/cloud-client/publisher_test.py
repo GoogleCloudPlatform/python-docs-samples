@@ -60,9 +60,7 @@ def _make_sleep_patch():
 
 def _to_delete():
     publisher_client = pubsub_v1.PublisherClient()
-    publisher_client.delete_topic(
-        "projects/{}/topics/{}".format(PROJECT, TOPIC)
-    )
+    publisher_client.delete_topic("projects/{}/topics/{}".format(PROJECT, TOPIC))
 
 
 def test_list(client, topic, capsys):

@@ -283,8 +283,7 @@ def publish_messages_with_retry_settings(project_id, topic_name):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("project_id", help="Your Google Cloud project ID")
 
@@ -297,10 +296,7 @@ if __name__ == "__main__":
     delete_parser = subparsers.add_parser("delete", help=delete_topic.__doc__)
     delete_parser.add_argument("topic_name")
 
-    publish_parser = subparsers.add_parser(
-        "publish",
-        help=publish_messages.__doc__
-    )
+    publish_parser = subparsers.add_parser("publish", help=publish_messages.__doc__)
     publish_parser.add_argument("topic_name")
 
     publish_with_custom_attributes_parser = subparsers.add_parser(
@@ -315,20 +311,17 @@ if __name__ == "__main__":
     publish_with_futures_parser.add_argument("topic_name")
 
     publish_with_error_handler_parser = subparsers.add_parser(
-        "publish-with-error-handler",
-        help=publish_messages_with_error_handler.__doc__
+        "publish-with-error-handler", help=publish_messages_with_error_handler.__doc__
     )
     publish_with_error_handler_parser.add_argument("topic_name")
 
     publish_with_batch_settings_parser = subparsers.add_parser(
-        "publish-with-batch-settings",
-        help=publish_messages_with_batch_settings.__doc__
+        "publish-with-batch-settings", help=publish_messages_with_batch_settings.__doc__
     )
     publish_with_batch_settings_parser.add_argument("topic_name")
 
     publish_with_retry_settings_parser = subparsers.add_parser(
-        "publish-with-retry-settings",
-        help=publish_messages_with_retry_settings.__doc__
+        "publish-with-retry-settings", help=publish_messages_with_retry_settings.__doc__
     )
     publish_with_retry_settings_parser.add_argument("topic_name")
 
@@ -343,10 +336,7 @@ if __name__ == "__main__":
     elif args.command == "publish":
         publish_messages(args.project_id, args.topic_name)
     elif args.command == "publish-with-custom-attributes":
-        publish_messages_with_custom_attributes(
-            args.project_id,
-            args.topic_name
-        )
+        publish_messages_with_custom_attributes(args.project_id, args.topic_name)
     elif args.command == "publish-with-futures":
         publish_messages_with_futures(args.project_id, args.topic_name)
     elif args.command == "publish-with-error-handler":

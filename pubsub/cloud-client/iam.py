@@ -89,16 +89,12 @@ def set_subscription_policy(project, subscription_name):
     policy.bindings.add(role="roles/pubsub.viewer", members=["allUsers"])
 
     # Add a group as an editor.
-    policy.bindings.add(
-        role="roles/editor",
-        members=["group:cloud-logs@google.com"]
-    )
+    policy.bindings.add(role="roles/editor", members=["group:cloud-logs@google.com"])
 
     # Set the policy
     policy = client.set_iam_policy(subscription_path, policy)
 
-    print("IAM policy for subscription {} set: {}".format(
-        subscription_name, policy))
+    print("IAM policy for subscription {} set: {}".format(subscription_name, policy))
     # [END pubsub_set_subscription_policy]
 
 
@@ -110,15 +106,10 @@ def check_topic_permissions(project, topic_name):
 
     permissions_to_check = ["pubsub.topics.publish", "pubsub.topics.update"]
 
-    allowed_permissions = client.test_iam_permissions(
-        topic_path,
-        permissions_to_check
-    )
+    allowed_permissions = client.test_iam_permissions(topic_path, permissions_to_check)
 
     print(
-        "Allowed permissions for topic {}: {}".format(
-            topic_path,
-            allowed_permissions)
+        "Allowed permissions for topic {}: {}".format(topic_path, allowed_permissions)
     )
     # [END pubsub_test_topic_permissions]
 
@@ -148,8 +139,7 @@ def check_subscription_permissions(project, subscription_name):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("project", help="Your Google Cloud project ID")
 
@@ -181,8 +171,7 @@ if __name__ == "__main__":
     check_topic_permissions_parser.add_argument("topic_name")
 
     check_subscription_permissions_parser = subparsers.add_parser(
-        "check-subscription-permissions",
-        help=check_subscription_permissions.__doc__
+        "check-subscription-permissions", help=check_subscription_permissions.__doc__
     )
     check_subscription_permissions_parser.add_argument("subscription_name")
 

@@ -54,10 +54,7 @@ def subscriber_client():
 
 @pytest.fixture(scope="module")
 def subscription(subscriber_client, topic):
-    subscription_path = subscriber_client.subscription_path(
-        PROJECT,
-        SUBSCRIPTION
-    )
+    subscription_path = subscriber_client.subscription_path(PROJECT, SUBSCRIPTION)
 
     try:
         subscriber_client.delete_subscription(subscription_path)
