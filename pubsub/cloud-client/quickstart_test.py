@@ -44,6 +44,8 @@ def topic(publisher_client):
 
     yield TOPIC
 
+    publisher_client.delete_topic(topic_path)
+
 
 @pytest.fixture(scope='module')
 def subscriber_client():
@@ -62,14 +64,7 @@ def subscription(subscriber_client, topic):
 
     yield SUBSCRIPTION
 
-
-def _to_delete():
-    publisher_client = pubsub_v1.PublisherClient()
-    subscriber_client = pubsub_v1.SubscriberClient()
-    publisher_client.delete_topic(
-        'projects/{}/topics/{}'.format(PROJECT, TOPIC))
-    subscriber_client.delete_subscription(
-        'projects/{}/subscriptions/{}'.format(PROJECT, SUBSCRIPTION))
+    subscriber_client.delete_subscription(subscription_path)
 
 
 def test_end_to_end(topic, subscription, capsys):
@@ -80,6 +75,3 @@ def test_end_to_end(topic, subscription, capsys):
     assert "Received all messages" in out
     assert "Publish time lapsed" in out
     assert "Subscribe time lapsed" in out
-
-    # Clean up resources.
-    _to_delete()

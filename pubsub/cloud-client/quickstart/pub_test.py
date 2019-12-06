@@ -42,19 +42,11 @@ def topic(publisher_client):
 
     yield TOPIC
 
-
-@pytest.fixture
-def to_delete(publisher_client):
-    doomed = []
-    yield doomed
-    for item in doomed:
-        publisher_client.delete_topic(item)
+    publisher_client.delete_topic(topic_path)
 
 
-def test_pub(publisher_client, topic, to_delete, capsys):
+def test_pub(publisher_client, topic, capsys):
     pub.pub(PROJECT, topic)
-
-    to_delete.append('projects/{}/topics/{}'.format(PROJECT, TOPIC))
 
     out, _ = capsys.readouterr()
 
