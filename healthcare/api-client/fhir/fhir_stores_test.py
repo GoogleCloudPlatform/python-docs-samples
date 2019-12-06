@@ -136,7 +136,7 @@ def test_import_fhir_store_gcs(test_dataset, capsys):
     blob.upload_from_filename(resource_file)
 
     time.sleep(5)   # Give new blob time to propagate
-    fhir_stores.import_fhir_store(
+    fhir_stores.import_fhir_resources(
         service_account_json,
         project_id,
         cloud_region,

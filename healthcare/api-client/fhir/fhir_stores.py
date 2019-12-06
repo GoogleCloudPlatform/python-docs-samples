@@ -226,8 +226,8 @@ def export_fhir_store_gcs(
 # [END healthcare_export_fhir_resources_gcs]
 
 
-# [START healthcare_import_fhir_store]
-def import_fhir_store(
+# [START healthcare_import_fhir_resources]
+def import_fhir_resources(
         service_account_json,
         project_id,
         cloud_region,
@@ -262,7 +262,7 @@ def import_fhir_store(
     except HttpError as e:
         print('Error, FHIR resources not imported: {}'.format(e))
         return ""
-# [END healthcare_import_fhir_store]
+# [END healthcare_import_fhir_resources]
 
 
 # [START healthcare_fhir_store_get_iam_policy]
@@ -406,8 +406,8 @@ def parse_command_line_args():
     command.add_parser('list-fhir-stores', help=list_fhir_stores.__doc__)
     command.add_parser('patch-fhir-store', help=patch_fhir_store.__doc__)
     command.add_parser(
-        'import-fhir-store',
-        help=import_fhir_store.__doc__)
+        'import-fhir-resources',
+        help=import_fhir_resources.__doc__)
     command.add_parser(
         'export-fhir-store-gcs',
         help=export_fhir_store_gcs.__doc__)
@@ -477,8 +477,8 @@ def run_command(args):
             args.fhir_store_id,
             args.gcs_uri)
 
-    elif args.command == 'import-fhir-store':
-        import_fhir_store(
+    elif args.command == 'import-fhir-resources':
+        import_fhir_resources(
             args.service_account_json,
             args.project_id,
             args.cloud_region,
