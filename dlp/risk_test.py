@@ -19,8 +19,8 @@ import pytest
 
 import risk
 
-GCLOUD_PROJECT = "nodejs-docs-samples"
-TABLE_PROJECT = "nodejs-docs-samples"
+GCLOUD_PROJECT = "python-docs-samples"
+TABLE_PROJECT = "python-docs-samples"
 TOPIC_ID = "dlp-test"
 SUBSCRIPTION_ID = "dlp-test-subscription"
 DATASET_ID = "integration_tests_dlp"
