@@ -12,6 +12,8 @@
 # limitations under the License.
 
 # [START functions_slack_setup]
+import hashlib
+import hmac
 import json
 import os
 
@@ -26,13 +28,24 @@ config = json.loads(data)
 kgsearch = apiclient.discovery.build(
     'kgsearch',
     'v1',
-    developerKey=os.environ['API_KEY'] or config['KG_API_KEY'])
+    developerKey=os.environ.get('API_KEY') or config.get('KG_API_KEY'),
+    cache_discovery=False)
 # [END functions_slack_setup]
 
 
 # [START functions_verify_webhook]
-def verify_web_hook(form):
-    if not form or form.get('token') != config['SLACK_TOKEN']:
+# Python 3+ version of https://github.com/slackapi/python-slack-events-api/blob/master/slackeventsapi/server.py
+def verify_signature(request):
+    timestamp = request.headers.get('X-Slack-Request-Timestamp')
+    signature = request.headers.get('X-Slack-Signature')
+
+    req = str.encode('v0:' + str(timestamp) + ':') + request.get_data()
+    request_hash = 'v0=' + hmac.new(
+        str.encode(config['SLACK_SECRET']),
+        req, hashlib.sha256
+    ).hexdigest()
+
+    if not hmac.compare_digest(request_hash, signature):
         raise ValueError('Invalid request/credentials.')
 # [END functions_verify_webhook]
 
@@ -92,7 +105,7 @@ def kg_search(request):
     if request.method != 'POST':
         return 'Only POST requests are accepted', 405
 
-    verify_web_hook(request.form)
+    verify_signature(request)
     kg_search_response = make_search_request(request.form['text'])
     return jsonify(kg_search_response)
 # [END functions_slack_search]
