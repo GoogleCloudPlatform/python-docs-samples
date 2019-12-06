@@ -47,6 +47,12 @@ def topic_path(publisher_client):
     response = publisher_client.create_topic(topic_path)
     yield response.name
 
+    subscriber_client = pubsub_v1.SubscriberClient()
+    subscriptions = publisher_client.list_topic_subscriptions(topic_path)
+    for subscription in subscriptions:
+        subscriber_client.delete_subscription(subscription)
+    publisher_client.delete_topic(topic_path)
+
 
 def _infinite_publish_job(publisher_client, topic_path):
     while True:
@@ -105,10 +111,5 @@ def test_run(publisher_client, topic_path):
     files = gcs_client.list_prefix("gs://{}/pubsub/{}".format(BUCKET, UUID))
     assert len(files) > 0
 
-    # Clean up. Delete subscription. Delete topic. Delete GCS files.
-    subscriber_client = pubsub_v1.SubscriberClient()
-    subscriptions = publisher_client.list_topic_subscriptions(topic_path)
-    for subscription in subscriptions:
-        subscriber_client.delete_subscription(subscription)
-    publisher_client.delete_topic(topic_path)
+    # Clean up.
     gcs_client.delete_batch(list(files))
