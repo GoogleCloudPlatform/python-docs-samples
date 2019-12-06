@@ -16,14 +16,16 @@
 
 import os
 import pytest
+import uuid
 
 from google.api_core.exceptions import AlreadyExists
 from google.cloud import pubsub_v1
 
 import pub
 
+UUID = uuid.uuid4().hex
 PROJECT = os.environ['GCLOUD_PROJECT']
-TOPIC = 'quickstart-pub-test-topic'
+TOPIC = 'quickstart-pub-test-topic-' + UUID
 
 
 @pytest.fixture(scope='module')
