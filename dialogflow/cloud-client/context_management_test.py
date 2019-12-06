@@ -19,15 +19,14 @@ import os
 import context_management
 import detect_intent_texts
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-SESSION_ID = 'fake_session_for_testing'
-CONTEXT_ID = 'fake_context_for_testing'
+PROJECT_ID = os.getenv("GCLOUD_PROJECT")
+SESSION_ID = "fake_session_for_testing"
+CONTEXT_ID = "fake_context_for_testing"
 
 
 def test_create_context(capsys):
     # Calling detect intent to create a session.
-    detect_intent_texts.detect_intent_texts(
-        PROJECT_ID, SESSION_ID, ['hi'], 'en-US')
+    detect_intent_texts.detect_intent_texts(PROJECT_ID, SESSION_ID, ["hi"], "en-US")
 
     context_management.create_context(PROJECT_ID, SESSION_ID, CONTEXT_ID, 1)
     context_management.list_contexts(PROJECT_ID, SESSION_ID)

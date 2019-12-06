@@ -24,6 +24,4 @@ class BackendHandler(webapp2.RequestHandler):
         self.response.write("hello world")
 
 
-app = webapp2.WSGIApplication([
-    ('/', BackendHandler),
-], debug=True)
+app = webapp2.WSGIApplication([("/", BackendHandler)], debug=True)

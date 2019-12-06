@@ -15,18 +15,25 @@ from __future__ import absolute_import
 
 import os
 
-from detect_intent_with_sentiment_analysis import \
-    detect_intent_with_sentiment_analysis
+from detect_intent_with_sentiment_analysis import detect_intent_with_sentiment_analysis
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-SESSION_ID = 'fake_session_for_testing'
-TEXTS = ["hello", "book a meeting room", "Mountain View",
-         "tomorrow", "10 AM", "2 hours", "10 people", "A", "yes"]
+PROJECT_ID = os.getenv("GCLOUD_PROJECT")
+SESSION_ID = "fake_session_for_testing"
+TEXTS = [
+    "hello",
+    "book a meeting room",
+    "Mountain View",
+    "tomorrow",
+    "10 AM",
+    "2 hours",
+    "10 people",
+    "A",
+    "yes",
+]
 
 
 def test_detect_intent_with_sentiment_analysis(capsys):
-    detect_intent_with_sentiment_analysis(PROJECT_ID, SESSION_ID, TEXTS,
-                                          'en-US')
+    detect_intent_with_sentiment_analysis(PROJECT_ID, SESSION_ID, TEXTS, "en-US")
     out, _ = capsys.readouterr()
 
-    assert 'Query Text Sentiment Score' in out
+    assert "Query Text Sentiment Score" in out

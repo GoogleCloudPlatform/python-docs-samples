@@ -27,27 +27,27 @@ def app(testbed):
 
 
 def test_app(app):
-    response = app.get('/')
+    response = app.get("/")
     assert response.status_int == 200
 
 
 def test_add_entities(app):
-    response = app.post('/add_entities')
+    response = app.post("/add_entities")
     assert response.status_int == 200
-    response = app.get('/')
+    response = app.get("/")
     assert response.status_int == 200
-    assert 'Author: Bob' in response.body
-    assert 'Name: Sunrise' in response.body
-    assert 'Author: Alice' in response.body
-    assert 'Name: Sunset' in response.body
+    assert "Author: Bob" in response.body
+    assert "Name: Sunrise" in response.body
+    assert "Author: Alice" in response.body
+    assert "Name: Sunset" in response.body
 
 
 def test_update_schema(app, testbed):
     reload(models_v1)
-    test_model = models_v1.Picture(author='Test', name='Test')
+    test_model = models_v1.Picture(author="Test", name="Test")
     test_model.put()
 
-    response = app.post('/update_schema')
+    response = app.post("/update_schema")
     assert response.status_int == 200
 
     # Run the queued task.

@@ -20,31 +20,34 @@ import webapp2
 # [START send_attachment]
 class AttachmentHandler(webapp2.RequestHandler):
     def post(self):
-        f = self.request.POST['file']
-        mail.send_mail(sender='{}@appspot.gserviceaccount.com'.format(
-            app_identity.get_application_id()),
-                       to="Albert Johnson <Albert.Johnson@example.com>",
-                       subject="The doc you requested",
-                       body="""
+        f = self.request.POST["file"]
+        mail.send_mail(
+            sender="{}@appspot.gserviceaccount.com".format(
+                app_identity.get_application_id()
+            ),
+            to="Albert Johnson <Albert.Johnson@example.com>",
+            subject="The doc you requested",
+            body="""
 Attached is the document file you requested.
 
 The example.com Team
 """,
-                       attachments=[(f.filename, f.file.read())])
-# [END send_attachment]
-        self.response.content_type = 'text/plain'
-        self.response.write('Sent {} to Albert.'.format(f.filename))
+            attachments=[(f.filename, f.file.read())],
+        )
+        # [END send_attachment]
+        self.response.content_type = "text/plain"
+        self.response.write("Sent {} to Albert.".format(f.filename))
 
     def get(self):
-        self.response.content_type = 'text/html'
-        self.response.write("""<html><body>
+        self.response.content_type = "text/html"
+        self.response.write(
+            """<html><body>
             <form method="post" enctype="multipart/form-data">
               Send a file to Albert:<br />
               <input type="file" name="file"><br /><br />
               <input type="submit" name="submit" value="Submit">
-            </form></body></html""")
+            </form></body></html"""
+        )
 
 
-app = webapp2.WSGIApplication([
-    ('/attachment', AttachmentHandler),
-], debug=True)
+app = webapp2.WSGIApplication([("/attachment", AttachmentHandler)], debug=True)

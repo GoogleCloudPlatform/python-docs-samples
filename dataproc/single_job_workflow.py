@@ -29,7 +29,8 @@ import os
 
 from google.cloud import dataproc_v1
 from google.cloud.dataproc_v1.gapic.transports import (
-    workflow_template_service_grpc_transport)
+    workflow_template_service_grpc_transport,
+)
 from google.cloud import storage
 
 DEFAULT_FILENAME = "pyspark_sort.py"
@@ -65,12 +66,12 @@ def upload_pyspark_file(project, bucket_name, filename, spark_file):
     blob.upload_from_file(spark_file)
 
 
-def run_workflow(dataproc, project, region, zone, bucket_name, filename,
-                 cluster_name):
+def run_workflow(dataproc, project, region, zone, bucket_name, filename, cluster_name):
 
     parent = "projects/{}/regions/{}".format(project, region)
-    zone_uri = ("https://www.googleapis.com/compute/v1/projects/{}/zones/{}"
-                .format(project, zone))
+    zone_uri = "https://www.googleapis.com/compute/v1/projects/{}/zones/{}".format(
+        project, zone
+    )
 
     workflow_data = {
         "placement": {
@@ -92,16 +93,14 @@ def run_workflow(dataproc, project, region, zone, bucket_name, filename,
         "jobs": [
             {
                 "pyspark_job": {
-                    "main_python_file_uri": "gs://{}/{}".format(
-                        bucket_name, filename)
+                    "main_python_file_uri": "gs://{}/{}".format(bucket_name, filename)
                 },
                 "step_id": "pyspark-job",
             }
         ],
     }
 
-    workflow = dataproc.instantiate_inline_workflow_template(parent,
-                                                             workflow_data)
+    workflow = dataproc.instantiate_inline_workflow_template(parent, workflow_data)
 
     workflow.add_done_callback(callback)
     global waiting_callback
@@ -117,8 +116,10 @@ def callback(operation_future):
 def wait_for_workflow_end():
     """Wait for cluster creation."""
     print("Waiting for workflow completion ...")
-    print("Workflow and job progress, and job driver output available from: "
-          "https://console.cloud.google.com/dataproc/workflows/")
+    print(
+        "Workflow and job progress, and job driver output available from: "
+        "https://console.cloud.google.com/dataproc/workflows/"
+    )
 
     while True:
         if not waiting_callback:
@@ -145,10 +146,9 @@ def main(
         region = get_region_from_zone(zone)
         # Use a regional gRPC endpoint. See:
         # https://cloud.google.com/dataproc/docs/concepts/regional-endpoints
-        client_transport = (workflow_template_service_grpc_transport
-                            .WorkflowTemplateServiceGrpcTransport(
-                                address="{}-dataproc.googleapis.com:443"
-                                .format(region)))
+        client_transport = workflow_template_service_grpc_transport.WorkflowTemplateServiceGrpcTransport(
+            address="{}-dataproc.googleapis.com:443".format(region)
+        )
         dataproc_workflow_client = dataproc_v1.WorkflowTemplateServiceClient(
             client_transport
         )
@@ -156,8 +156,7 @@ def main(
 
     try:
         spark_file, spark_filename = get_pyspark_file(pyspark_file)
-        upload_pyspark_file(project_id, bucket_name, spark_filename,
-                            spark_file)
+        upload_pyspark_file(project_id, bucket_name, spark_filename, spark_file)
 
         run_workflow(
             dataproc_workflow_client,
@@ -166,7 +165,7 @@ def main(
             zone,
             bucket_name,
             spark_filename,
-            cluster_name
+            cluster_name,
         )
         wait_for_workflow_end()
 
@@ -176,8 +175,8 @@ def main(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=(argparse
-                                              .RawDescriptionHelpFormatter))
+        description=__doc__, formatter_class=(argparse.RawDescriptionHelpFormatter)
+    )
     parser.add_argument(
         "--project_id", help="Project ID you want to access.", required=True
     )
@@ -185,8 +184,7 @@ if __name__ == "__main__":
         "--zone", help="Zone to create clusters in/connect to", required=True
     )
     parser.add_argument(
-        "--cluster_name", help="Name of the cluster to create/connect to",
-        required=True
+        "--cluster_name", help="Name of the cluster to create/connect to", required=True
     )
     parser.add_argument(
         "--gcs_bucket", help="Bucket to upload Pyspark file to", required=True
@@ -194,9 +192,11 @@ if __name__ == "__main__":
     parser.add_argument(
         "--pyspark_file", help="Pyspark filename. Defaults to pyspark_sort.py"
     )
-    parser.add_argument("--global_region",
-                        action="store_true",
-                        help="If cluster is in the global region")
+    parser.add_argument(
+        "--global_region",
+        action="store_true",
+        help="If cluster is in the global region",
+    )
 
     args = parser.parse_args()
     main(

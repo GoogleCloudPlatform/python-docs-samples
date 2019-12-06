@@ -21,44 +21,47 @@ import string
 from googleapiclient.discovery import build
 from googleapiclient.errors import Error
 
-client_service = build('jobs', 'v2')
+client_service = build("jobs", "v2")
 # [END instantiate]
 
 
 # [START basic_job]
 def generate_job_with_required_fields(company_name):
     # Requisition id should be a unique Id in your system.
-    requisition_id = 'job_with_required_fields:' + ''.join(
-        random.choice(string.ascii_uppercase + string.digits)
-        for _ in range(16))
+    requisition_id = "job_with_required_fields:" + "".join(
+        random.choice(string.ascii_uppercase + string.digits) for _ in range(16)
+    )
 
-    job_title = 'Software Engineer'
-    application_urls = ['http://careers.google.com']
-    description = ('Design, develop, test, deploy, maintain and improve '
-                   'software.')
+    job_title = "Software Engineer"
+    application_urls = ["http://careers.google.com"]
+    description = "Design, develop, test, deploy, maintain and improve " "software."
 
     job = {
-        'requisition_id': requisition_id,
-        'job_title': job_title,
-        'application_urls': application_urls,
-        'description': description,
-        'company_name': company_name
+        "requisition_id": requisition_id,
+        "job_title": job_title,
+        "application_urls": application_urls,
+        "description": description,
+        "company_name": company_name,
     }
-    print('Job generated: %s' % job)
+    print("Job generated: %s" % job)
     return job
+
+
 # [END basic_job]
 
 
 # [START create_job]
 def create_job(client_service, job_to_be_created):
     try:
-        request = {'job': job_to_be_created}
+        request = {"job": job_to_be_created}
         job_created = client_service.jobs().create(body=request).execute()
-        print('Job created: %s' % job_created)
+        print("Job created: %s" % job_created)
         return job_created
     except Error as e:
-        print('Got exception while creating job')
+        print("Got exception while creating job")
         raise e
+
+
 # [END create_job]
 
 
@@ -66,40 +69,43 @@ def create_job(client_service, job_to_be_created):
 def get_job(client_service, job_name):
     try:
         job_existed = client_service.jobs().get(name=job_name).execute()
-        print('Job existed: %s' % job_existed)
+        print("Job existed: %s" % job_existed)
         return job_existed
     except Error as e:
-        print('Got exception while getting job')
+        print("Got exception while getting job")
         raise e
+
+
 # [END get_job]
 
 
 # [START update_job]
 def update_job(client_service, job_name, job_to_be_updated):
     try:
-        request = {'job': job_to_be_updated}
-        job_updated = client_service.jobs().patch(
-            name=job_name, body=request).execute()
-        print('Job updated: %s' % job_updated)
+        request = {"job": job_to_be_updated}
+        job_updated = client_service.jobs().patch(name=job_name, body=request).execute()
+        print("Job updated: %s" % job_updated)
         return job_updated
     except Error as e:
-        print('Got exception while updating job')
+        print("Got exception while updating job")
         raise e
+
+
 # [END update_job]
 
 
 # [START update_job_with_field_mask]
-def update_job_with_field_mask(client_service, job_name, job_to_be_updated,
-                               field_mask):
+def update_job_with_field_mask(client_service, job_name, job_to_be_updated, field_mask):
     try:
-        request = {'job': job_to_be_updated, 'update_job_fields': field_mask}
-        job_updated = client_service.jobs().patch(
-            name=job_name, body=request).execute()
-        print('Job updated: %s' % job_updated)
+        request = {"job": job_to_be_updated, "update_job_fields": field_mask}
+        job_updated = client_service.jobs().patch(name=job_name, body=request).execute()
+        print("Job updated: %s" % job_updated)
         return job_updated
     except Error as e:
-        print('Got exception while updating job with field mask')
+        print("Got exception while updating job with field mask")
         raise e
+
+
 # [END update_job_with_field_mask]
 
 
@@ -107,10 +113,12 @@ def update_job_with_field_mask(client_service, job_name, job_to_be_updated,
 def delete_job(client_service, job_name):
     try:
         client_service.jobs().delete(name=job_name).execute()
-        print('Job deleted')
+        print("Job deleted")
     except Error as e:
-        print('Got exception while deleting job')
+        print("Got exception while deleting job")
         raise e
+
+
 # [END delete_job]
 
 
@@ -120,8 +128,9 @@ def run_sample():
     # Create a company before creating jobs
     company_to_be_created = base_company_sample.generate_company()
     company_created = base_company_sample.create_company(
-        client_service, company_to_be_created)
-    company_name = company_created.get('name')
+        client_service, company_to_be_created
+    )
+    company_name = company_created.get("name")
 
     # Construct a job
     job_to_be_created = generate_job_with_required_fields(company_name)
@@ -130,17 +139,18 @@ def run_sample():
     job_created = create_job(client_service, job_to_be_created)
 
     # Get a job
-    job_name = job_created.get('name')
+    job_name = job_created.get("name")
     get_job(client_service, job_name)
 
     # Update a job
     job_to_be_updated = job_created
-    job_to_be_updated.update({'description': 'changedDescription'})
+    job_to_be_updated.update({"description": "changedDescription"})
     update_job(client_service, job_name, job_to_be_updated)
 
     # Update a job with field mask
-    update_job_with_field_mask(client_service, job_name,
-                               {'job_title': 'changedJobTitle'}, 'job_title')
+    update_job_with_field_mask(
+        client_service, job_name, {"job_title": "changedJobTitle"}, "job_title"
+    )
 
     # Delete a job
     delete_job(client_service, job_name)
@@ -149,5 +159,5 @@ def run_sample():
     base_company_sample.delete_company(client_service, company_name)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_sample()

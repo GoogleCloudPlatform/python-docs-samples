@@ -25,31 +25,30 @@ import opencensus.trace.tracer
 
 
 def initialize_tracer(project_id):
-    exporter = stackdriver_exporter.StackdriverExporter(
-        project_id=project_id
-    )
+    exporter = stackdriver_exporter.StackdriverExporter(project_id=project_id)
     tracer = opencensus.trace.tracer.Tracer(
-        exporter=exporter,
-        sampler=opencensus.trace.tracer.samplers.AlwaysOnSampler()
+        exporter=exporter, sampler=opencensus.trace.tracer.samplers.AlwaysOnSampler()
     )
 
     return tracer
+
+
 # [END trace_setup_python_configure]
 
 
 app = Flask(__name__)
 
 
-@app.route('/', methods=['GET'])
+@app.route("/", methods=["GET"])
 def root():
-    return redirect(url_for('index'))
+    return redirect(url_for("index"))
 
 
 # [START trace_setup_python_quickstart]
-@app.route('/index.html', methods=['GET'])
+@app.route("/index.html", methods=["GET"])
 def index():
-    tracer = app.config['TRACER']
-    tracer.start_span(name='index')
+    tracer = app.config["TRACER"]
+    tracer.start_span(name="index")
 
     # Add up to 1 sec delay, weighted toward zero
     time.sleep(random.random() ** 2)
@@ -57,19 +56,21 @@ def index():
 
     tracer.end_span()
     return result
+
+
 # [END trace_setup_python_quickstart]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument(
-        '--project_id', help='Project ID you want to access.', required=True)
+        "--project_id", help="Project ID you want to access.", required=True
+    )
     args = parser.parse_args()
 
     tracer = initialize_tracer(args.project_id)
-    app.config['TRACER'] = tracer
+    app.config["TRACER"] = tracer
 
     app.run()

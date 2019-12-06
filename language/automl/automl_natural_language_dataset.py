@@ -119,9 +119,7 @@ def get_dataset(project_id, compute_region, dataset_id):
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset
-    dataset_full_id = client.dataset_path(
-        project_id, compute_region, dataset_id
-    )
+    dataset_full_id = client.dataset_path(project_id, compute_region, dataset_id)
 
     # Get complete detail of the dataset.
     dataset = client.get_dataset(dataset_full_id)
@@ -154,9 +152,7 @@ def import_data(project_id, compute_region, dataset_id, path):
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset.
-    dataset_full_id = client.dataset_path(
-        project_id, compute_region, dataset_id
-    )
+    dataset_full_id = client.dataset_path(project_id, compute_region, dataset_id)
 
     # Get the multiple Google Cloud Storage URIs.
     input_uris = path.split(",")
@@ -186,9 +182,7 @@ def export_data(project_id, compute_region, dataset_id, output_uri):
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset.
-    dataset_full_id = client.dataset_path(
-        project_id, compute_region, dataset_id
-    )
+    dataset_full_id = client.dataset_path(project_id, compute_region, dataset_id)
 
     # Set the output URI
     output_config = {"gcs_destination": {"output_uri_prefix": output_uri}}
@@ -216,9 +210,7 @@ def delete_dataset(project_id, compute_region, dataset_id):
     client = automl.AutoMlClient()
 
     # Get the full path of the dataset.
-    dataset_full_id = client.dataset_path(
-        project_id, compute_region, dataset_id
-    )
+    dataset_full_id = client.dataset_path(project_id, compute_region, dataset_id)
 
     # Delete a dataset.
     response = client.delete_dataset(dataset_full_id)
@@ -231,8 +223,7 @@ def delete_dataset(project_id, compute_region, dataset_id):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     subparsers = parser.add_subparsers(dest="command")
 
@@ -251,20 +242,14 @@ if __name__ == "__main__":
         "filter_", nargs="?", default="text_classification_dataset_metadata:*"
     )
 
-    get_dataset_parser = subparsers.add_parser(
-        "get_dataset", help=get_dataset.__doc__
-    )
+    get_dataset_parser = subparsers.add_parser("get_dataset", help=get_dataset.__doc__)
     get_dataset_parser.add_argument("dataset_id")
 
-    import_data_parser = subparsers.add_parser(
-        "import_data", help=import_data.__doc__
-    )
+    import_data_parser = subparsers.add_parser("import_data", help=import_data.__doc__)
     import_data_parser.add_argument("dataset_id")
     import_data_parser.add_argument("path")
 
-    export_data_parser = subparsers.add_parser(
-        "export_data", help=export_data.__doc__
-    )
+    export_data_parser = subparsers.add_parser("export_data", help=export_data.__doc__)
     export_data_parser.add_argument("dataset_id")
     export_data_parser.add_argument("output_uri")
 
@@ -280,9 +265,7 @@ if __name__ == "__main__":
 
     if args.command == "create_dataset":
         multilabel = True if args.multilabel == "True" else False
-        create_dataset(
-            project_id, compute_region, args.dataset_name, multilabel
-        )
+        create_dataset(project_id, compute_region, args.dataset_name, multilabel)
     if args.command == "list_datasets":
         list_datasets(project_id, compute_region, args.filter_)
     if args.command == "get_dataset":
@@ -290,8 +273,6 @@ if __name__ == "__main__":
     if args.command == "import_data":
         import_data(project_id, compute_region, args.dataset_id, args.path)
     if args.command == "export_data":
-        export_data(
-            project_id, compute_region, args.dataset_id, args.output_uri
-        )
+        export_data(project_id, compute_region, args.dataset_id, args.output_uri)
     if args.command == "delete_dataset":
         delete_dataset(project_id, compute_region, args.dataset_id)

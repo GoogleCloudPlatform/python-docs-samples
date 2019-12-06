@@ -21,7 +21,7 @@ from hybrid_tutorial import translate_text
 from hybrid_tutorial import text_to_speech
 
 
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
+PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 
 
 # VISION TESTS
@@ -29,11 +29,11 @@ PROJECT_ID = os.environ['GCLOUD_PROJECT']
 
 def test_vision_standard_format():
 
-    expected_text = 'This is\na test!\n'
-    alt_expected_text = 'This\nis\na test!\n'
+    expected_text = "This is\na test!\n"
+    alt_expected_text = "This\nis\na test!\n"
 
     # Generate text using Vision API
-    text = pic_to_text('resources/standard_format.jpeg')
+    text = pic_to_text("resources/standard_format.jpeg")
 
     assert (text == expected_text) or (text == alt_expected_text)
 
@@ -41,10 +41,10 @@ def test_vision_standard_format():
 def test_vision_non_standard_format():
 
     # Generate text
-    text = pic_to_text('resources/non_standard_format.png')
+    text = pic_to_text("resources/non_standard_format.png")
 
     # Read expected text
-    with open('resources/non_standard_format.txt') as f:
+    with open("resources/non_standard_format.txt") as f:
         expected_text = f.read()
 
     assert text == expected_text
@@ -54,16 +54,15 @@ def test_vision_non_standard_format():
 
 
 def test_create_and_delete_glossary():
-    sys.path.insert(1, '../')
+    sys.path.insert(1, "../")
     from beta_snippets import delete_glossary
 
-    languages = ['fr', 'en']
-    glossary_name = 'test-glossary'
-    glossary_uri = 'gs://cloud-samples-data/translation/bistro_glossary.csv'
+    languages = ["fr", "en"]
+    glossary_name = "test-glossary"
+    glossary_uri = "gs://cloud-samples-data/translation/bistro_glossary.csv"
 
     # create_glossary will raise an exception if creation fails
-    create_glossary(languages, PROJECT_ID, glossary_name,
-                    glossary_uri)
+    create_glossary(languages, PROJECT_ID, glossary_name, glossary_uri)
 
     # Delete glossary so that future tests will pass
     # delete_glossary will raise an exception if deletion fails
@@ -72,21 +71,19 @@ def test_create_and_delete_glossary():
 
 def test_translate_standard():
 
-    expected_text = 'Hello'
+    expected_text = "Hello"
 
-    text = translate_text('Bonjour', 'fr', 'en', PROJECT_ID,
-                          'bistro-glossary')
+    text = translate_text("Bonjour", "fr", "en", PROJECT_ID, "bistro-glossary")
 
     assert text == expected_text
 
 
 def test_translate_glossary():
 
-    expected_text = 'I eat goat cheese'
-    input_text = 'Je mange du chevre'
+    expected_text = "I eat goat cheese"
+    input_text = "Je mange du chevre"
 
-    text = translate_text(input_text, 'fr', 'en', PROJECT_ID,
-                          'bistro-glossary')
+    text = translate_text(input_text, "fr", "en", PROJECT_ID, "bistro-glossary")
 
     assert text == expected_text
 
@@ -95,10 +92,10 @@ def test_translate_glossary():
 
 
 def test_tts_standard(capsys):
-    outfile = 'resources/test_standard_text.mp3'
-    textfile = 'resources/standard_format.txt'
+    outfile = "resources/test_standard_text.mp3"
+    textfile = "resources/standard_format.txt"
 
-    with open(textfile, 'r') as f:
+    with open(textfile, "r") as f:
         text = f.read()
 
     text_to_speech(text, outfile)
@@ -108,7 +105,7 @@ def test_tts_standard(capsys):
     out, err = capsys.readouterr()
 
     # Assert success message printed
-    assert 'Audio content written to file ' + outfile in out
+    assert "Audio content written to file " + outfile in out
 
     # Delete test file
     os.remove(outfile)

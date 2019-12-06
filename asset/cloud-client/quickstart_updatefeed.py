@@ -35,15 +35,15 @@ def update_feed(feed_name, topic):
     # In this example, we update topic of the feed
     update_mask.paths.append("feed_output_config.pubsub_destination.topic")
     response = client.update_feed(feed, update_mask)
-    print('updated_feed: {}'.format(response))
+    print("updated_feed: {}".format(response))
     # [END asset_quickstart_update_feed]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('feed_name', help='Feed Name you want to update')
-    parser.add_argument('topic', help='Topic name you want to update with')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("feed_name", help="Feed Name you want to update")
+    parser.add_argument("topic", help="Topic name you want to update with")
     args = parser.parse_args()
     update_feed(args.feed_name, args.topic)

@@ -24,9 +24,9 @@ import apache_beam as beam
 from google.cloud import pubsub_v1
 
 
-PROJECT = os.environ['GCLOUD_PROJECT']
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-TOPIC = 'test-topic'
+PROJECT = os.environ["GCLOUD_PROJECT"]
+BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
+TOPIC = "test-topic"
 UUID = uuid.uuid4().hex
 
 
@@ -51,7 +51,8 @@ def topic_path(publisher_client):
 def _infinite_publish_job(publisher_client, topic_path):
     while True:
         future = publisher_client.publish(
-            topic_path, data='Hello World!'.encode('utf-8'))
+            topic_path, data="Hello World!".encode("utf-8")
+        )
         future.result()
         time.sleep(10)
 
@@ -63,19 +64,28 @@ def test_run(publisher_client, topic_path):
 
     # Use one process to publish messages to a topic.
     publish_process = mp.Process(
-        target=lambda: _infinite_publish_job(publisher_client, topic_path))
+        target=lambda: _infinite_publish_job(publisher_client, topic_path)
+    )
 
     # Use another process to run the streaming pipeline that should write one
     # file to GCS every minute (according to the default window size).
     pipeline_process = mp.Process(
-        target=lambda: sp.call([
-            'python', 'PubSubToGCS.py',
-            '--project', PROJECT,
-            '--runner', 'DirectRunner',
-            '--temp_location', tempfile.mkdtemp(),
-            '--input_topic', topic_path,
-            '--output_path', 'gs://{}/pubsub/{}/output'.format(BUCKET, UUID),
-        ])
+        target=lambda: sp.call(
+            [
+                "python",
+                "PubSubToGCS.py",
+                "--project",
+                PROJECT,
+                "--runner",
+                "DirectRunner",
+                "--temp_location",
+                tempfile.mkdtemp(),
+                "--input_topic",
+                topic_path,
+                "--output_path",
+                "gs://{}/pubsub/{}/output".format(BUCKET, UUID),
+            ]
+        )
     )
 
     publish_process.start()
@@ -92,7 +102,7 @@ def test_run(publisher_client, topic_path):
     # Check for output files on GCS.
     gcs_client = beam.io.gcp.gcsio.GcsIO()
     # This returns a dictionary.
-    files = gcs_client.list_prefix('gs://{}/pubsub/{}'.format(BUCKET, UUID))
+    files = gcs_client.list_prefix("gs://{}/pubsub/{}".format(BUCKET, UUID))
     assert len(files) > 0
 
     # Clean up. Delete topic. Delete files.

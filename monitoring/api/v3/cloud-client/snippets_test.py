@@ -22,38 +22,38 @@ import snippets
 def test_create_get_delete_metric_descriptor(capsys):
     snippets.create_metric_descriptor(snippets.project_id())
     out, _ = capsys.readouterr()
-    match = re.search(r'Created (.*)\.', out)
+    match = re.search(r"Created (.*)\.", out)
     metric_name = match.group(1)
     try:
+
         @eventually_consistent.call
         def __():
             snippets.get_metric_descriptor(metric_name)
 
         out, _ = capsys.readouterr()
-        assert 'DOUBLE' in out
+        assert "DOUBLE" in out
     finally:
         snippets.delete_metric_descriptor(metric_name)
         out, _ = capsys.readouterr()
-    assert 'Deleted metric' in out
+    assert "Deleted metric" in out
 
 
 def test_list_metric_descriptors(capsys):
     snippets.list_metric_descriptors(snippets.project_id())
     out, _ = capsys.readouterr()
-    assert 'logging.googleapis.com/byte_count' in out
+    assert "logging.googleapis.com/byte_count" in out
 
 
 def test_list_resources(capsys):
     snippets.list_monitored_resources(snippets.project_id())
     out, _ = capsys.readouterr()
-    assert 'pubsub_topic' in out
+    assert "pubsub_topic" in out
 
 
 def test_get_resources(capsys):
-    snippets.get_monitored_resource_descriptor(
-        snippets.project_id(), 'pubsub_topic')
+    snippets.get_monitored_resource_descriptor(snippets.project_id(), "pubsub_topic")
     out, _ = capsys.readouterr()
-    assert 'A topic in Google Cloud Pub/Sub' in out
+    assert "A topic in Google Cloud Pub/Sub" in out
 
 
 def test_time_series(capsys):
@@ -61,22 +61,22 @@ def test_time_series(capsys):
 
     snippets.list_time_series(snippets.project_id())
     out, _ = capsys.readouterr()
-    assert 'gce_instance' in out
+    assert "gce_instance" in out
 
     snippets.list_time_series_header(snippets.project_id())
     out, _ = capsys.readouterr()
-    assert 'gce_instance' in out
+    assert "gce_instance" in out
 
     snippets.list_time_series_aggregate(snippets.project_id())
     out, _ = capsys.readouterr()
-    assert 'points' in out
-    assert 'interval' in out
-    assert 'start_time' in out
-    assert 'end_time' in out
+    assert "points" in out
+    assert "interval" in out
+    assert "start_time" in out
+    assert "end_time" in out
 
     snippets.list_time_series_reduce(snippets.project_id())
     out, _ = capsys.readouterr()
-    assert 'points' in out
-    assert 'interval' in out
-    assert 'start_time' in out
-    assert 'end_time' in out
+    assert "points" in out
+    assert "interval" in out
+    assert "start_time" in out
+    assert "end_time" in out

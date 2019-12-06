@@ -27,10 +27,12 @@ import requests
 
 
 # [START endpoints_generate_jwt_sa]
-def generate_jwt(sa_keyfile,
-                 sa_email='account@project-id.iam.gserviceaccount.com',
-                 audience='your-service-name',
-                 expiry_length=3600):
+def generate_jwt(
+    sa_keyfile,
+    sa_email="account@project-id.iam.gserviceaccount.com",
+    audience="your-service-name",
+    expiry_length=3600,
+):
 
     """Generates a signed JSON Web Token using a Google API Service Account."""
 
@@ -38,18 +40,18 @@ def generate_jwt(sa_keyfile,
 
     # build payload
     payload = {
-        'iat': now,
+        "iat": now,
         # expires after 'expiry_length' seconds.
         "exp": now + expiry_length,
         # iss must match 'issuer' in the security configuration in your
         # swagger spec (e.g. service account email). It can be any string.
-        'iss': sa_email,
+        "iss": sa_email,
         # aud must be either your Endpoints service name, or match the value
         # specified as the 'x-google-audience' in the OpenAPI document.
-        'aud':  audience,
+        "aud": audience,
         # sub and email should match the service account's email address
-        'sub': sa_email,
-        'email': sa_email
+        "sub": sa_email,
+        "email": sa_email,
     }
 
     # sign with keyfile
@@ -57,43 +59,42 @@ def generate_jwt(sa_keyfile,
     jwt = google.auth.jwt.encode(signer, payload)
 
     return jwt
+
+
 # [END endpoints_generate_jwt_sa]
 
 
 # [START endpoints_jwt_request]
-def make_jwt_request(signed_jwt, url='https://your-endpoint.com'):
+def make_jwt_request(signed_jwt, url="https://your-endpoint.com"):
     """Makes an authorized request to the endpoint"""
     headers = {
-        'Authorization': 'Bearer {}'.format(signed_jwt.decode('utf-8')),
-        'content-type': 'application/json'
+        "Authorization": "Bearer {}".format(signed_jwt.decode("utf-8")),
+        "content-type": "application/json",
     }
     response = requests.get(url, headers=headers)
 
     response.raise_for_status()
     return response.text
+
+
 # [END endpoints_jwt_request]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument(
-        'host', help='Your API host, e.g. https://your-project.appspot.com.')
-    parser.add_argument(
-        'audience', help='The aud entry for the JWT')
-    parser.add_argument(
-        'sa_path',
-        help='The path to your service account json file.')
-    parser.add_argument(
-        'sa_email',
-        help='The email address for the service account.')
+        "host", help="Your API host, e.g. https://your-project.appspot.com."
+    )
+    parser.add_argument("audience", help="The aud entry for the JWT")
+    parser.add_argument("sa_path", help="The path to your service account json file.")
+    parser.add_argument("sa_email", help="The email address for the service account.")
 
     args = parser.parse_args()
 
     expiry_length = 3600
-    keyfile_jwt = generate_jwt(args.sa_path,
-                               args.sa_email,
-                               args.audience,
-                               expiry_length)
+    keyfile_jwt = generate_jwt(
+        args.sa_path, args.sa_email, args.audience, expiry_length
+    )
     print(make_jwt_request(keyfile_jwt, args.host))

@@ -27,12 +27,12 @@ def client():
 
 
 def test_index_wo_credentials(client):
-    r = client.get('/')
+    r = client.get("/")
     assert r.status_code == 302
-    assert r.headers['location'].endswith('/authorize')
+    assert r.headers["location"].endswith("/authorize")
 
 
 def test_authorize(client):
-    r = client.get('/authorize')
+    r = client.get("/authorize")
     assert r.status_code == 302
-    assert r.headers['location'].startswith('https://accounts.google.com')
+    assert r.headers["location"].startswith("https://accounts.google.com")

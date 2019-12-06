@@ -23,14 +23,12 @@ import webapp2
 class MainPage(webapp2.RequestHandler):
     def get(self):
         # [START batch]
-        values = {'comment': 'I did not ... ', 'comment_by': 'Bill Holiday'}
+        values = {"comment": "I did not ... ", "comment_by": "Bill Holiday"}
         if not memcache.set_multi(values):
-            logging.error('Unable to set Memcache values')
-        tvalues = memcache.get_multi(('comment', 'comment_by'))
+            logging.error("Unable to set Memcache values")
+        tvalues = memcache.get_multi(("comment", "comment_by"))
         self.response.write(tvalues)
         # [END batch]
 
 
-app = webapp2.WSGIApplication([
-    ('/', MainPage),
-], debug=True)
+app = webapp2.WSGIApplication([("/", MainPage)], debug=True)

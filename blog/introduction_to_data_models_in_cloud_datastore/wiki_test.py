@@ -17,7 +17,7 @@ from gcp_devrel.testing.flaky import flaky
 
 from wiki import main
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ["GCLOUD_PROJECT"]
 
 
 @flaky

@@ -25,9 +25,11 @@ Prerequisites:
 """
 
 import argparse
+
 # [START bigtable_hw_imports_happybase]
 from google.cloud import bigtable
 from google.cloud import happybase
+
 # [END bigtable_hw_imports_happybase]
 
 
@@ -42,24 +44,18 @@ def main(project_id, instance_id, table_name):
 
     try:
         # [START bigtable_hw_create_table_happybase]
-        print('Creating the {} table.'.format(table_name))
-        column_family_name = 'cf1'
+        print("Creating the {} table.".format(table_name))
+        column_family_name = "cf1"
         connection.create_table(
-            table_name,
-            {
-                column_family_name: dict()  # Use default options.
-            })
+            table_name, {column_family_name: dict()}  # Use default options.
+        )
         # [END bigtable_hw_create_table_happybase]
 
         # [START bigtable_hw_write_rows_happybase]
-        print('Writing some greetings to the table.')
+        print("Writing some greetings to the table.")
         table = connection.table(table_name)
-        column_name = '{fam}:greeting'.format(fam=column_family_name)
-        greetings = [
-            'Hello World!',
-            'Hello Cloud Bigtable!',
-            'Hello HappyBase!',
-        ]
+        column_name = "{fam}:greeting".format(fam=column_family_name)
+        greetings = ["Hello World!", "Hello Cloud Bigtable!", "Hello HappyBase!"]
 
         for i, value in enumerate(greetings):
             # Note: This example uses sequential numeric IDs for simplicity,
@@ -72,28 +68,26 @@ def main(project_id, instance_id, table_name):
             # the best performance, see the documentation:
             #
             #     https://cloud.google.com/bigtable/docs/schema-design
-            row_key = 'greeting{}'.format(i)
-            table.put(
-                row_key, {column_name.encode('utf-8'): value.encode('utf-8')}
-            )
+            row_key = "greeting{}".format(i)
+            table.put(row_key, {column_name.encode("utf-8"): value.encode("utf-8")})
         # [END bigtable_hw_write_rows_happybase]
 
         # [START bigtable_hw_get_by_key_happybase]
-        print('Getting a single greeting by row key.')
-        key = 'greeting0'.encode('utf-8')
+        print("Getting a single greeting by row key.")
+        key = "greeting0".encode("utf-8")
         row = table.row(key)
-        print('\t{}: {}'.format(key, row[column_name.encode('utf-8')]))
+        print("\t{}: {}".format(key, row[column_name.encode("utf-8")]))
         # [END bigtable_hw_get_by_key_happybase]
 
         # [START bigtable_hw_scan_all_happybase]
-        print('Scanning for all greetings:')
+        print("Scanning for all greetings:")
 
         for key, row in table.scan():
-            print('\t{}: {}'.format(key, row[column_name.encode('utf-8')]))
+            print("\t{}: {}".format(key, row[column_name.encode("utf-8")]))
         # [END bigtable_hw_scan_all_happybase]
 
         # [START bigtable_hw_delete_table_happybase]
-        print('Deleting the {} table.'.format(table_name))
+        print("Deleting the {} table.".format(table_name))
         connection.delete_table(table_name)
         # [END bigtable_hw_delete_table_happybase]
 
@@ -101,17 +95,17 @@ def main(project_id, instance_id, table_name):
         connection.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('project_id', help='Your Cloud Platform project ID.')
+        description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument("project_id", help="Your Cloud Platform project ID.")
     parser.add_argument(
-        'instance_id', help='ID of the Cloud Bigtable instance to connect to.')
+        "instance_id", help="ID of the Cloud Bigtable instance to connect to."
+    )
     parser.add_argument(
-        '--table',
-        help='Table to create and destroy.',
-        default='Hello-Bigtable')
+        "--table", help="Table to create and destroy.", default="Hello-Bigtable"
+    )
 
     args = parser.parse_args()
     main(args.project_id, args.instance_id, args.table)

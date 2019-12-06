@@ -17,8 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-urlpatterns = [url(r'^', include('polls.urls')),
-               url(r'^admin/', admin.site.urls)]
+urlpatterns = [url(r"^", include("polls.urls")), url(r"^admin/", admin.site.urls)]
 
 
 # This enables static files to be served from the Gunicorn server

@@ -27,13 +27,14 @@ from google.appengine.ext import ndb
 # [START structured_property_models]
 class PhoneNumber(ndb.Model):
     """A model representing a phone number."""
-    phone_type = ndb.StringProperty(
-        choices=('home', 'work', 'fax', 'mobile', 'other'))
+
+    phone_type = ndb.StringProperty(choices=("home", "work", "fax", "mobile", "other"))
     number = ndb.StringProperty()
 
 
 class Contact(ndb.Model):
     """A Contact model that uses StructuredProperty for phone numbers."""
+
     # Basic info.
     name = ndb.StringProperty()
     birth_day = ndb.DateProperty()
@@ -48,4 +49,6 @@ class Contact(ndb.Model):
     company_name = ndb.StringProperty()
     company_description = ndb.TextProperty()
     company_address = ndb.StringProperty()
+
+
 # [END structured_property_models]

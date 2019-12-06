@@ -17,25 +17,21 @@ import random
 
 from main import main
 
-PROJECT = os.environ['GCLOUD_PROJECT']
-BIGTABLE_CLUSTER = os.environ['BIGTABLE_CLUSTER']
-TABLE_NAME_FORMAT = 'hello_happybase-system-tests-{}'
+PROJECT = os.environ["GCLOUD_PROJECT"]
+BIGTABLE_CLUSTER = os.environ["BIGTABLE_CLUSTER"]
+TABLE_NAME_FORMAT = "hello_happybase-system-tests-{}"
 TABLE_NAME_RANGE = 10000
 
 
 def test_main(capsys):
-    table_name = TABLE_NAME_FORMAT.format(
-        random.randrange(TABLE_NAME_RANGE))
-    main(
-        PROJECT,
-        BIGTABLE_CLUSTER,
-        table_name)
+    table_name = TABLE_NAME_FORMAT.format(random.randrange(TABLE_NAME_RANGE))
+    main(PROJECT, BIGTABLE_CLUSTER, table_name)
 
     out, _ = capsys.readouterr()
-    assert 'Creating the {} table.'.format(table_name) in out
-    assert 'Writing some greetings to the table.' in out
-    assert 'Getting a single greeting by row key.' in out
-    assert 'Hello World!' in out
-    assert 'Scanning for all greetings' in out
-    assert 'Hello Cloud Bigtable!' in out
-    assert 'Deleting the {} table.'.format(table_name) in out
+    assert "Creating the {} table.".format(table_name) in out
+    assert "Writing some greetings to the table." in out
+    assert "Getting a single greeting by row key." in out
+    assert "Hello World!" in out
+    assert "Scanning for all greetings" in out
+    assert "Hello Cloud Bigtable!" in out
+    assert "Deleting the {} table.".format(table_name) in out

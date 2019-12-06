@@ -23,4 +23,5 @@ def test_dag_import():
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
     from . import trigger_response_dag as module
+
     unit_testing.assert_has_valid_dag(module)

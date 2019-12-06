@@ -27,8 +27,7 @@ import jwt
 import requests
 
 
-def validate_iap_jwt_from_app_engine(iap_jwt, cloud_project_number,
-                                     cloud_project_id):
+def validate_iap_jwt_from_app_engine(iap_jwt, cloud_project_number, cloud_project_id):
     """Validate a JWT passed to your App Engine app by Identity-Aware Proxy.
 
     Args:
@@ -41,13 +40,15 @@ def validate_iap_jwt_from_app_engine(iap_jwt, cloud_project_number,
     Returns:
       (user_id, user_email, error_str).
     """
-    expected_audience = '/projects/{}/apps/{}'.format(
-        cloud_project_number, cloud_project_id)
+    expected_audience = "/projects/{}/apps/{}".format(
+        cloud_project_number, cloud_project_id
+    )
     return _validate_iap_jwt(iap_jwt, expected_audience)
 
 
-def validate_iap_jwt_from_compute_engine(iap_jwt, cloud_project_number,
-                                         backend_service_id):
+def validate_iap_jwt_from_compute_engine(
+    iap_jwt, cloud_project_number, backend_service_id
+):
     """Validate an IAP JWT for your (Compute|Container) Engine service.
 
     Args:
@@ -63,26 +64,31 @@ def validate_iap_jwt_from_compute_engine(iap_jwt, cloud_project_number,
     Returns:
       (user_id, user_email, error_str).
     """
-    expected_audience = '/projects/{}/global/backendServices/{}'.format(
-        cloud_project_number, backend_service_id)
+    expected_audience = "/projects/{}/global/backendServices/{}".format(
+        cloud_project_number, backend_service_id
+    )
     return _validate_iap_jwt(iap_jwt, expected_audience)
 
 
 def _validate_iap_jwt(iap_jwt, expected_audience):
     try:
-        key_id = jwt.get_unverified_header(iap_jwt).get('kid')
+        key_id = jwt.get_unverified_header(iap_jwt).get("kid")
         if not key_id:
-            return (None, None, '**ERROR: no key ID**')
+            return (None, None, "**ERROR: no key ID**")
         key = get_iap_key(key_id)
         decoded_jwt = jwt.decode(
-            iap_jwt, key,
-            algorithms=['ES256'],
-            issuer='https://cloud.google.com/iap',
-            audience=expected_audience)
-        return (decoded_jwt['sub'], decoded_jwt['email'], '')
-    except (jwt.exceptions.InvalidTokenError,
-            requests.exceptions.RequestException) as e:
-        return (None, None, '**ERROR: JWT validation error {}**'.format(e))
+            iap_jwt,
+            key,
+            algorithms=["ES256"],
+            issuer="https://cloud.google.com/iap",
+            audience=expected_audience,
+        )
+        return (decoded_jwt["sub"], decoded_jwt["email"], "")
+    except (
+        jwt.exceptions.InvalidTokenError,
+        requests.exceptions.RequestException,
+    ) as e:
+        return (None, None, "**ERROR: JWT validation error {}**".format(e))
 
 
 def get_iap_key(key_id):
@@ -93,17 +99,18 @@ def get_iap_key(key_id):
     key = key_cache.get(key_id)
     if not key:
         # Re-fetch the key file.
-        resp = requests.get(
-            'https://www.gstatic.com/iap/verify/public_key')
+        resp = requests.get("https://www.gstatic.com/iap/verify/public_key")
         if resp.status_code != 200:
             raise Exception(
-                'Unable to fetch IAP keys: {} / {} / {}'.format(
-                    resp.status_code, resp.headers, resp.text))
+                "Unable to fetch IAP keys: {} / {} / {}".format(
+                    resp.status_code, resp.headers, resp.text
+                )
+            )
         key_cache = resp.json()
         get_iap_key.key_cache = key_cache
         key = key_cache.get(key_id)
         if not key:
-            raise Exception('Key {!r} not found'.format(key_id))
+            raise Exception("Key {!r} not found".format(key_id))
     return key
 
 

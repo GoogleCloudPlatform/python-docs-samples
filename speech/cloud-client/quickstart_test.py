@@ -19,4 +19,4 @@ import quickstart
 def test_quickstart(capsys):
     quickstart.run_quickstart()
     out, _ = capsys.readouterr()
-    assert 'Transcript: how old is the Brooklyn Bridge' in out
+    assert "Transcript: how old is the Brooklyn Bridge" in out

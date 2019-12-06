@@ -29,35 +29,35 @@ def get_dag_prefix(project_id, location, composer_environment):
     # Authenticate with Google Cloud.
     # See: https://cloud.google.com/docs/authentication/getting-started
     credentials, _ = google.auth.default(
-        scopes=['https://www.googleapis.com/auth/cloud-platform'])
-    authed_session = google.auth.transport.requests.AuthorizedSession(
-        credentials)
+        scopes=["https://www.googleapis.com/auth/cloud-platform"]
+    )
+    authed_session = google.auth.transport.requests.AuthorizedSession(credentials)
 
     # project_id = 'YOUR_PROJECT_ID'
     # location = 'us-central1'
     # composer_environment = 'YOUR_COMPOSER_ENVIRONMENT_NAME'
 
     environment_url = (
-        'https://composer.googleapis.com/v1beta1/projects/{}/locations/{}'
-        '/environments/{}').format(project_id, location, composer_environment)
-    response = authed_session.request('GET', environment_url)
+        "https://composer.googleapis.com/v1beta1/projects/{}/locations/{}"
+        "/environments/{}"
+    ).format(project_id, location, composer_environment)
+    response = authed_session.request("GET", environment_url)
     environment_data = response.json()
 
     # Print the bucket name from the response body.
-    print(environment_data['config']['dagGcsPrefix'])
+    print(environment_data["config"]["dagGcsPrefix"])
     # [END composer_get_environment_dag_prefix]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('project_id', help='Your Project ID.')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="Your Project ID.")
+    parser.add_argument("location", help="Region of the Cloud Composer environent.")
     parser.add_argument(
-        'location', help='Region of the Cloud Composer environent.')
-    parser.add_argument(
-        'composer_environment', help='Name of the Cloud Composer environent.')
+        "composer_environment", help="Name of the Cloud Composer environent."
+    )
 
     args = parser.parse_args()
-    get_dag_prefix(
-        args.project_id, args.location, args.composer_environment)
+    get_dag_prefix(args.project_id, args.location, args.composer_environment)

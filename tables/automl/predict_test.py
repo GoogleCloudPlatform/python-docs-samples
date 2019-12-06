@@ -43,15 +43,15 @@ def test_predict(capsys):
         "MaritalStatus": "divorced",
         "Month": "jul",
         "PDays": 4,
-        "POutcome": '0',
+        "POutcome": "0",
         "Previous": 12,
     }
 
     ensure_model_online()
     automl_tables_predict.predict(PROJECT, REGION, STATIC_MODEL, inputs)
     out, _ = capsys.readouterr()
-    assert 'Predicted class name:' in out
-    assert 'Predicted class score:' in out
+    assert "Predicted class name:" in out
+    assert "Predicted class score:" in out
 
 
 def ensure_model_online():

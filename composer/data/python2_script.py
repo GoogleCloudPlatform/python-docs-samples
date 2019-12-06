@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-print 'Output from Python 2.'  # noqa
+print("Output from Python 2.")  # noqa

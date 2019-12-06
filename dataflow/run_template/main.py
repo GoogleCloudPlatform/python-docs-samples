@@ -43,14 +43,15 @@ def run(project, job, template, parameters=None):
     #     'output': 'gs://<your-gcs-bucket>/wordcount/outputs',
     # }
 
-    dataflow = build('dataflow', 'v1b3')
-    request = dataflow.projects().templates().launch(
-        projectId=project,
-        gcsPath=template,
-        body={
-            'jobName': job,
-            'parameters': parameters,
-        }
+    dataflow = build("dataflow", "v1b3")
+    request = (
+        dataflow.projects()
+        .templates()
+        .launch(
+            projectId=project,
+            gcsPath=template,
+            body={"jobName": job, "parameters": parameters},
+        )
     )
 
     response = request.execute()
@@ -69,37 +70,35 @@ def run_template(request):
         <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
     parameters = request.get_json(silent=True) or {}  # application/json
-    parameters.update(request.form.to_dict())         # Form request data
-    parameters.update(request.args.to_dict())         # URL parameters
+    parameters.update(request.form.to_dict())  # Form request data
+    parameters.update(request.args.to_dict())  # URL parameters
 
-    project = parameters.pop('project')
-    job = parameters.pop('job')
-    template = parameters.pop('template')
-    response = run(
-        project=project,
-        job=job,
-        template=template,
-        parameters=parameters,
-    )
-    return json.dumps(response, separators=(',', ':'))
+    project = parameters.pop("project")
+    job = parameters.pop("job")
+    template = parameters.pop("template")
+    response = run(project=project, job=job, template=template, parameters=parameters)
+    return json.dumps(response, separators=(",", ":"))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--project', required=True,
-                        help='Google Cloud project ID to run on.')
-    parser.add_argument('--job', required=True,
-                        help='Unique Dataflow job name.')
-    parser.add_argument('--template', required=True,
-                        help='Google Cloud Storage path to Dataflow template.')
+    parser.add_argument(
+        "--project", required=True, help="Google Cloud project ID to run on."
+    )
+    parser.add_argument("--job", required=True, help="Unique Dataflow job name.")
+    parser.add_argument(
+        "--template",
+        required=True,
+        help="Google Cloud Storage path to Dataflow template.",
+    )
     args, unknown_args = parser.parse_known_args()
 
     # Parse the template parameters.
     template_argparser = argparse.ArgumentParser()
     for arg in unknown_args:
-        if arg.startswith('-'):
+        if arg.startswith("-"):
             template_argparser.add_argument(arg)
     parameters = template_argparser.parse_args(unknown_args)
 

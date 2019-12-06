@@ -18,21 +18,21 @@ from os import getenv
 import pymysql
 
 # TODO(developer): specify SQL connection details
-CONNECTION_NAME = getenv('MYSQL_INSTANCE', '<YOUR INSTANCE CONNECTION NAME>')
-DB_USER = getenv('MYSQL_USER', '<YOUR DB USER>')
-DB_PASSWORD = getenv('MYSQL_PASSWORD', '<YOUR DB PASSWORD>')
-DB_NAME = getenv('MYSQL_DATABASE', '<YOUR DB NAME>')
+CONNECTION_NAME = getenv("MYSQL_INSTANCE", "<YOUR INSTANCE CONNECTION NAME>")
+DB_USER = getenv("MYSQL_USER", "<YOUR DB USER>")
+DB_PASSWORD = getenv("MYSQL_PASSWORD", "<YOUR DB PASSWORD>")
+DB_NAME = getenv("MYSQL_DATABASE", "<YOUR DB NAME>")
 
 # set to true to test locally using Cloud SQL proxy listening on a TCP port
 DEBUG = False
 
 mysql_config = {
-  'user': DB_USER,
-  'password': DB_PASSWORD,
-  'db': DB_NAME,
-  'charset': 'utf8mb4',
-  'cursorclass': pymysql.cursors.DictCursor,
-  'autocommit': True
+    "user": DB_USER,
+    "password": DB_PASSWORD,
+    "db": DB_NAME,
+    "charset": "utf8mb4",
+    "cursorclass": pymysql.cursors.DictCursor,
+    "autocommit": True,
 }
 
 # Create SQL connection globally to enable reuse
@@ -61,16 +61,18 @@ def mysql_demo(request):
         if DEBUG:
             # try to connect using localling running Cloud SQL proxy
             # (local development only)
-            mysql_conn = pymysql.connect(
-              **mysql_config, host='127.0.0.1', port=3306)
+            mysql_conn = pymysql.connect(**mysql_config, host="127.0.0.1", port=3306)
         else:
             mysql_conn = pymysql.connect(
-              **mysql_config, unix_socket=f'/cloudsql/{CONNECTION_NAME}')
+                **mysql_config, unix_socket=f"/cloudsql/{CONNECTION_NAME}"
+            )
 
     # Remember to close SQL resources declared while running this function.
     # Keep any declared in global scope (e.g. mysql_conn) for later reuse.
     with __get_cursor() as cursor:
-        cursor.execute('SELECT NOW() as now')
+        cursor.execute("SELECT NOW() as now")
         results = cursor.fetchone()
-        return str(results['now'])
+        return str(results["now"])
+
+
 # [END functions_sql_mysql]

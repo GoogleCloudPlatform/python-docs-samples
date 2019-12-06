@@ -26,30 +26,22 @@ def write_batch(project_id, instance_id, table_id):
     timestamp = datetime.datetime.utcnow()
     column_family_id = "stats_summary"
 
-    rows = [table.row("tablet#a0b81f74#20190501"),
-            table.row("tablet#a0b81f74#20190502")]
+    rows = [
+        table.row("tablet#a0b81f74#20190501"),
+        table.row("tablet#a0b81f74#20190502"),
+    ]
 
-    rows[0].set_cell(column_family_id,
-                     "connected_wifi",
-                     1,
-                     timestamp)
-    rows[0].set_cell(column_family_id,
-                     "os_build",
-                     "12155.0.0-rc1",
-                     timestamp)
-    rows[1].set_cell(column_family_id,
-                     "connected_wifi",
-                     1,
-                     timestamp)
-    rows[1].set_cell(column_family_id,
-                     "os_build",
-                     "12145.0.0-rc6",
-                     timestamp)
+    rows[0].set_cell(column_family_id, "connected_wifi", 1, timestamp)
+    rows[0].set_cell(column_family_id, "os_build", "12155.0.0-rc1", timestamp)
+    rows[1].set_cell(column_family_id, "connected_wifi", 1, timestamp)
+    rows[1].set_cell(column_family_id, "os_build", "12145.0.0-rc6", timestamp)
 
     response = table.mutate_rows(rows)
     for i, status in enumerate(response):
         if status.code != 0:
             print("Error writing row: {}".format(status.message))
 
-    print('Successfully wrote 2 rows.')
+    print("Successfully wrote 2 rows.")
+
+
 # [END bigtable_writes_batch]

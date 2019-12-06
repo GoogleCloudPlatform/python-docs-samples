@@ -19,31 +19,31 @@ import snippets
 
 
 def test_detect_language(capsys):
-    snippets.detect_language('Hæ sæta')
+    snippets.detect_language("Hæ sæta")
     out, _ = capsys.readouterr()
-    assert 'is' in out
+    assert "is" in out
 
 
 def test_list_languages(capsys):
     snippets.list_languages()
     out, _ = capsys.readouterr()
-    assert 'Icelandic (is)' in out
+    assert "Icelandic (is)" in out
 
 
 def test_list_languages_with_target(capsys):
-    snippets.list_languages_with_target('is')
+    snippets.list_languages_with_target("is")
     out, _ = capsys.readouterr()
-    assert u'íslenska (is)' in out
+    assert u"íslenska (is)" in out
 
 
 def test_translate_text(capsys):
-    snippets.translate_text('is', 'Hello world')
+    snippets.translate_text("is", "Hello world")
     out, _ = capsys.readouterr()
-    assert u'Halló heimur' in out
+    assert u"Halló heimur" in out
 
 
 def test_translate_utf8(capsys):
-    text = u'나는 파인애플을 좋아한다.'
-    snippets.translate_text('en', text)
+    text = u"나는 파인애플을 좋아한다."
+    snippets.translate_text("en", text)
     out, _ = capsys.readouterr()
-    assert u'I like pineapple' in out
+    assert u"I like pineapple" in out

@@ -22,7 +22,7 @@ import pytest
 # flake8: noqa E703
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def ipython():
     config = tools.default_config()
     config.TerminalInteractiveShell.simple_prompt = True
@@ -42,15 +42,16 @@ def ipython_interactive(request, ipython):
 
 def _strip_region_tags(sample_text):
     """Remove blank lines and region tags from sample text"""
-    magic_lines = [line for line in sample_text.split('\n')
-                   if len(line) > 0 and '# [' not in line]
-    return '\n'.join(magic_lines)
+    magic_lines = [
+        line for line in sample_text.split("\n") if len(line) > 0 and "# [" not in line
+    ]
+    return "\n".join(magic_lines)
 
 
 def test_jupyter_tutorial(ipython):
-    matplotlib.use('agg')
+    matplotlib.use("agg")
     ip = IPython.get_ipython()
-    ip.extension_manager.load_extension('google.cloud.bigquery')
+    ip.extension_manager.load_extension("google.cloud.bigquery")
 
     sample = """
     # [START bigquery_jupyter_magic_gender_by_year]
@@ -82,10 +83,10 @@ def test_jupyter_tutorial(ipython):
     result = ip.run_cell(_strip_region_tags(sample))
     result.raise_error()  # Throws an exception if the cell failed.
 
-    assert 'total_births' in ip.user_ns  # verify that variable exists
-    total_births = ip.user_ns['total_births']
+    assert "total_births" in ip.user_ns  # verify that variable exists
+    total_births = ip.user_ns["total_births"]
     # [START bigquery_jupyter_plot_births_by_year]
-    total_births.plot(kind='bar', x='year', y='birth_count');
+    total_births.plot(kind="bar", x="year", y="birth_count")
     # [END bigquery_jupyter_plot_births_by_year]
 
     sample = """
@@ -104,14 +105,15 @@ def test_jupyter_tutorial(ipython):
     result = ip.run_cell(_strip_region_tags(sample))
     result.raise_error()  # Throws an exception if the cell failed.
 
-    assert 'births_by_weekday' in ip.user_ns  # verify that variable exists
-    births_by_weekday = ip.user_ns['births_by_weekday']
+    assert "births_by_weekday" in ip.user_ns  # verify that variable exists
+    births_by_weekday = ip.user_ns["births_by_weekday"]
     # [START bigquery_jupyter_plot_births_by_weekday]
-    births_by_weekday.plot(x='wday');
+    births_by_weekday.plot(x="wday")
     # [END bigquery_jupyter_plot_births_by_weekday]
 
     # [START bigquery_jupyter_import_and_client]
     from google.cloud import bigquery
+
     client = bigquery.Client()
     # [END bigquery_jupyter_import_and_client]
 
@@ -135,8 +137,8 @@ def test_jupyter_tutorial(ipython):
     # [END bigquery_jupyter_query_plurality_by_year]
 
     # [START bigquery_jupyter_plot_plurality_by_year]
-    pivot_table = df.pivot(index='year', columns='plurality', values='count')
-    pivot_table.plot(kind='bar', stacked=True, figsize=(15, 7));
+    pivot_table = df.pivot(index="year", columns="plurality", values="count")
+    pivot_table.plot(kind="bar", stacked=True, figsize=(15, 7))
     # [END bigquery_jupyter_plot_plurality_by_year]
 
     # [START bigquery_jupyter_query_births_by_gestation]
@@ -157,8 +159,8 @@ def test_jupyter_tutorial(ipython):
     # [END bigquery_jupyter_query_births_by_gestation]
 
     # [START bigquery_jupyter_plot_births_by_gestation]
-    ax = df.plot(kind='bar', x='gestation_weeks', y='count', figsize=(15,7))
-    ax.set_title('Count of Births by Gestation Weeks')
-    ax.set_xlabel('Gestation Weeks')
-    ax.set_ylabel('Count');
+    ax = df.plot(kind="bar", x="gestation_weeks", y="count", figsize=(15, 7))
+    ax.set_title("Count of Births by Gestation Weeks")
+    ax.set_xlabel("Gestation Weeks")
+    ax.set_ylabel("Count")
     # [END bigquery_jupyter_plot_births_by_gestation]

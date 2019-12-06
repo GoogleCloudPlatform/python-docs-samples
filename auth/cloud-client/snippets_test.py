@@ -25,19 +25,20 @@ def test_implicit():
 
 
 def test_explicit():
-    with open(os.environ['GOOGLE_APPLICATION_CREDENTIALS']) as creds_file:
+    with open(os.environ["GOOGLE_APPLICATION_CREDENTIALS"]) as creds_file:
         creds_file_data = creds_file.read()
 
     open_mock = mock.mock_open(read_data=creds_file_data)
 
-    with mock.patch('io.open', open_mock):
+    with mock.patch("io.open", open_mock):
         snippets.explicit()
 
 
 def test_explicit_compute_engine():
     adc, project = google.auth.default()
     credentials_patch = mock.patch(
-        'google.auth.compute_engine.Credentials', return_value=adc)
+        "google.auth.compute_engine.Credentials", return_value=adc
+    )
 
     with credentials_patch:
         snippets.explicit_compute_engine(project)

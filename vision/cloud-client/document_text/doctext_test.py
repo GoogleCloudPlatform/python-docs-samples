@@ -19,6 +19,6 @@ import doctext
 
 def test_text(capsys):
     """Checks the output image for drawing the crop hint is created."""
-    doctext.render_doc_text('resources/text_menu.jpg', 'output-text.jpg')
+    doctext.render_doc_text("resources/text_menu.jpg", "output-text.jpg")
     out, _ = capsys.readouterr()
-    assert os.path.isfile('output-text.jpg')
+    assert os.path.isfile("output-text.jpg")

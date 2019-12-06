@@ -26,16 +26,16 @@ def list_feeds(parent_resource):
 
     client = asset_v1p2beta1.AssetServiceClient()
     response = client.list_feeds(parent_resource)
-    print('feeds: {}'.format(response.feeds))
+    print("feeds: {}".format(response.feeds))
     # [END asset_quickstart_list_feeds]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument(
-        'parent_resource',
-        help='Parent resource you want to list all feeds')
+        "parent_resource", help="Parent resource you want to list all feeds"
+    )
     args = parser.parse_args()
     list_feeds(args.parent_resource)

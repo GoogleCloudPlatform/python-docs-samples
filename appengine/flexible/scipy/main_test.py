@@ -21,15 +21,13 @@ def test_index():
     main.app.testing = True
     client = main.app.test_client()
     test_path = os.path.dirname(os.path.realpath(__file__))
-    asset_path = os.path.join(
-        test_path, 'assets/resized_google_logo.jpg')
-    fixtured_path = os.path.join(
-        test_path, 'fixtures/assets/resized_google_logo.jpg')
+    asset_path = os.path.join(test_path, "assets/resized_google_logo.jpg")
+    fixtured_path = os.path.join(test_path, "fixtures/assets/resized_google_logo.jpg")
     try:
         os.remove(asset_path)
     except OSError:
         pass  # if doesn't exist
-    r = client.get('/')
+    r = client.get("/")
 
     assert os.path.isfile(fixtured_path)
     assert r.status_code == 200

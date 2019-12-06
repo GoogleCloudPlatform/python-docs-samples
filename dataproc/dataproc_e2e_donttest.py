@@ -20,13 +20,12 @@ import os
 
 import submit_job_to_cluster
 
-PROJECT = os.environ['GCLOUD_PROJECT']
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-CLUSTER_NAME = 'testcluster3'
-ZONE = 'us-central1-b'
+PROJECT = os.environ["GCLOUD_PROJECT"]
+BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
+CLUSTER_NAME = "testcluster3"
+ZONE = "us-central1-b"
 
 
 def test_e2e():
-    output = submit_job_to_cluster.main(
-        PROJECT, ZONE, CLUSTER_NAME, BUCKET)
+    output = submit_job_to_cluster.main(PROJECT, ZONE, CLUSTER_NAME, BUCKET)
     assert b"['Hello,', 'dog', 'elephant', 'panther', 'world!']" in output

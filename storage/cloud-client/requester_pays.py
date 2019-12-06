@@ -32,9 +32,9 @@ def get_requester_pays_status(bucket_name):
     bucket = storage_client.get_bucket(bucket_name)
     requester_pays_status = bucket.requester_pays
     if requester_pays_status:
-        print('Requester Pays is enabled for {}'.format(bucket_name))
+        print("Requester Pays is enabled for {}".format(bucket_name))
     else:
-        print('Requester Pays is disabled for {}'.format(bucket_name))
+        print("Requester Pays is disabled for {}".format(bucket_name))
 
 
 def enable_requester_pays(bucket_name):
@@ -43,7 +43,7 @@ def enable_requester_pays(bucket_name):
     bucket = storage_client.get_bucket(bucket_name)
     bucket.requester_pays = True
     bucket.patch()
-    print('Requester Pays has been enabled for {}'.format(bucket_name))
+    print("Requester Pays has been enabled for {}".format(bucket_name))
 
 
 def disable_requester_pays(bucket_name):
@@ -52,11 +52,12 @@ def disable_requester_pays(bucket_name):
     bucket = storage_client.get_bucket(bucket_name)
     bucket.requester_pays = False
     bucket.patch()
-    print('Requester Pays has been disabled for {}'.format(bucket_name))
+    print("Requester Pays has been disabled for {}".format(bucket_name))
 
 
 def download_file_requester_pays(
-        bucket_name, project_id, source_blob_name, destination_file_name):
+    bucket_name, project_id, source_blob_name, destination_file_name
+):
     """Download file using specified project as the requester"""
     storage_client = storage.Client()
     user_project = project_id
@@ -64,42 +65,45 @@ def download_file_requester_pays(
     blob = bucket.blob(source_blob_name)
     blob.download_to_filename(destination_file_name)
 
-    print('Blob {} downloaded to {} using a requester-pays request.'.format(
-        source_blob_name,
-        destination_file_name))
+    print(
+        "Blob {} downloaded to {} using a requester-pays request.".format(
+            source_blob_name, destination_file_name
+        )
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('bucket_name', help='Your Cloud Storage bucket name.')
-    subparsers = parser.add_subparsers(dest='command')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("bucket_name", help="Your Cloud Storage bucket name.")
+    subparsers = parser.add_subparsers(dest="command")
 
-    subparsers.add_parser(
-        'check-status', help=get_requester_pays_status.__doc__)
+    subparsers.add_parser("check-status", help=get_requester_pays_status.__doc__)
 
-    subparsers.add_parser(
-        'enable', help=enable_requester_pays.__doc__)
+    subparsers.add_parser("enable", help=enable_requester_pays.__doc__)
 
-    subparsers.add_parser(
-        'disable', help=disable_requester_pays.__doc__)
+    subparsers.add_parser("disable", help=disable_requester_pays.__doc__)
 
     download_parser = subparsers.add_parser(
-        'download', help=download_file_requester_pays.__doc__)
-    download_parser.add_argument('project')
-    download_parser.add_argument('source_blob_name')
-    download_parser.add_argument('destination_file_name')
+        "download", help=download_file_requester_pays.__doc__
+    )
+    download_parser.add_argument("project")
+    download_parser.add_argument("source_blob_name")
+    download_parser.add_argument("destination_file_name")
 
     args = parser.parse_args()
 
-    if args.command == 'check-status':
+    if args.command == "check-status":
         get_requester_pays_status(args.bucket_name)
-    elif args.command == 'enable':
+    elif args.command == "enable":
         enable_requester_pays(args.bucket_name)
-    elif args.command == 'disable':
+    elif args.command == "disable":
         disable_requester_pays(args.bucket_name)
-    elif args.command == 'download':
+    elif args.command == "download":
         download_file_requester_pays(
-            args.bucket_name, args.project, args.source_blob_name,
-            args.destination_file_name)
+            args.bucket_name,
+            args.project,
+            args.source_blob_name,
+            args.destination_file_name,
+        )

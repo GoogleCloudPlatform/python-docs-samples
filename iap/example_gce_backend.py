@@ -18,25 +18,25 @@ import flask
 
 import validate_jwt
 
-CLOUD_PROJECT_ID = 'YOUR_PROJECT_ID'
-BACKEND_SERVICE_ID = 'YOUR_BACKEND_SERVICE_ID'
+CLOUD_PROJECT_ID = "YOUR_PROJECT_ID"
+BACKEND_SERVICE_ID = "YOUR_BACKEND_SERVICE_ID"
 
 app = flask.Flask(__name__)
 
 
-@app.route('/')
+@app.route("/")
 def root():
-    jwt = flask.request.headers.get('x-goog-iap-jwt-assertion')
+    jwt = flask.request.headers.get("x-goog-iap-jwt-assertion")
     if jwt is None:
-        return 'Unauthorized request.'
-    user_id, user_email, error_str = (
-        validate_jwt.validate_iap_jwt_from_compute_engine(
-            jwt, CLOUD_PROJECT_ID, BACKEND_SERVICE_ID))
+        return "Unauthorized request."
+    user_id, user_email, error_str = validate_jwt.validate_iap_jwt_from_compute_engine(
+        jwt, CLOUD_PROJECT_ID, BACKEND_SERVICE_ID
+    )
     if error_str:
-        return 'Error: {}'.format(error_str)
+        return "Error: {}".format(error_str)
     else:
-        return 'Hi, {}. I am {}.'.format(user_email, platform.node())
+        return "Hi, {}. I am {}.".format(user_email, platform.node())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run()

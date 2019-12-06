@@ -34,51 +34,52 @@ def generate_jwt():
     service account."""
     now = int(time.time())
 
-    header_json = json.dumps({
-        "typ": "JWT",
-        "alg": "RS256"})
+    header_json = json.dumps({"typ": "JWT", "alg": "RS256"})
 
-    payload_json = json.dumps({
-        "iat": now,
-        # expires after one hour.
-        "exp": now + 3600,
-        # iss is the service account email.
-        "iss": SERVICE_ACCOUNT_EMAIL,
-        # target_audience is the URL of the target service.
-        "target_audience": TARGET_AUD,
-        # aud must be Google token endpoints URL.
-        "aud": "https://www.googleapis.com/oauth2/v4/token"
-    })
+    payload_json = json.dumps(
+        {
+            "iat": now,
+            # expires after one hour.
+            "exp": now + 3600,
+            # iss is the service account email.
+            "iss": SERVICE_ACCOUNT_EMAIL,
+            # target_audience is the URL of the target service.
+            "target_audience": TARGET_AUD,
+            # aud must be Google token endpoints URL.
+            "aud": "https://www.googleapis.com/oauth2/v4/token",
+        }
+    )
 
-    header_and_payload = '{}.{}'.format(
-        base64.urlsafe_b64encode(header_json),
-        base64.urlsafe_b64encode(payload_json))
+    header_and_payload = "{}.{}".format(
+        base64.urlsafe_b64encode(header_json), base64.urlsafe_b64encode(payload_json)
+    )
     (key_name, signature) = app_identity.sign_blob(header_and_payload)
-    signed_jwt = '{}.{}'.format(
-        header_and_payload,
-        base64.urlsafe_b64encode(signature))
+    signed_jwt = "{}.{}".format(header_and_payload, base64.urlsafe_b64encode(signature))
 
     return signed_jwt
 
 
 def get_id_token():
     """Request a Google ID token using a JWT."""
-    params = urllib.urlencode({
-        'grant_type': 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-        'assertion': generate_jwt()})
+    params = urllib.urlencode(
+        {
+            "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
+            "assertion": generate_jwt(),
+        }
+    )
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     conn = httplib.HTTPSConnection("www.googleapis.com")
     conn.request("POST", "/oauth2/v4/token", params, headers)
     res = json.loads(conn.getresponse().read())
     conn.close()
-    return res['id_token']
+    return res["id_token"]
 
 
 def make_request(token):
     """Makes a request to the auth info endpoint for Google ID token."""
-    headers = {'Authorization': 'Bearer {}'.format(token)}
+    headers = {"Authorization": "Bearer {}".format(token)}
     conn = httplib.HTTPSConnection(HOST)
-    conn.request("GET", '/auth/info/googleidtoken', None, headers)
+    conn.request("GET", "/auth/info/googleidtoken", None, headers)
     res = conn.getresponse()
     conn.close()
     return res.read()
@@ -86,12 +87,10 @@ def make_request(token):
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
-        self.response.headers['Content-Type'] = 'text/plain'
+        self.response.headers["Content-Type"] = "text/plain"
         token = get_id_token()
         res = make_request(token)
         self.response.write(res)
 
 
-app = webapp2.WSGIApplication([
-    ('/', MainPage),
-], debug=True)
+app = webapp2.WSGIApplication([("/", MainPage)], debug=True)

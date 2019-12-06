@@ -22,13 +22,13 @@ def run_quickstart():
     from google.cloud import kms_v1
 
     # Your Google Cloud Platform project ID
-    project_id = 'YOUR_PROJECT_ID'
+    project_id = "YOUR_PROJECT_ID"
     # [END kms_quickstart]
-    project_id = os.environ['GCLOUD_PROJECT']
+    project_id = os.environ["GCLOUD_PROJECT"]
     # [START kms_quickstart]
 
     # Lists keys in the "global" location.
-    location = 'global'
+    location = "global"
 
     # Creates an API client for the KMS API.
     client = kms_v1.KeyManagementServiceClient()
@@ -41,13 +41,13 @@ def run_quickstart():
     response_list = list(response)
 
     if len(response_list) > 0:
-        print('Key rings:')
+        print("Key rings:")
         for key_ring in response_list:
             print(key_ring.name)
     else:
-        print('No key rings found.')
+        print("No key rings found.")
     # [END kms_quickstart]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_quickstart()

@@ -31,20 +31,21 @@ import webapp2
 
 
 # The bucket that will be used to list objects.
-BUCKET_NAME = '<your-bucket-name>'
+BUCKET_NAME = "<your-bucket-name>"
 
-storage = googleapiclient.discovery.build('storage', 'v1')
+storage = googleapiclient.discovery.build("storage", "v1")
 
 
 class MainPage(webapp2.RequestHandler):
     def upload_object(self, bucket, file_object):
-        body = {
-            'name': 'storage-api-client-sample-file.txt',
-        }
+        body = {"name": "storage-api-client-sample-file.txt"}
         req = storage.objects().insert(
-            bucket=bucket, body=body,
+            bucket=bucket,
+            body=body,
             media_body=googleapiclient.http.MediaIoBaseUpload(
-                file_object, 'application/octet-stream'))
+                file_object, "application/octet-stream"
+            ),
+        )
         resp = req.execute()
         return resp
 
@@ -54,18 +55,16 @@ class MainPage(webapp2.RequestHandler):
         return resp
 
     def get(self):
-        string_io_file = StringIO.StringIO('Hello World!')
+        string_io_file = StringIO.StringIO("Hello World!")
         self.upload_object(BUCKET_NAME, string_io_file)
 
         response = storage.objects().list(bucket=BUCKET_NAME).execute()
         self.response.write(
-            '<h3>Objects.list raw response:</h3>'
-            '<pre>{}</pre>'.format(
-                json.dumps(response, sort_keys=True, indent=2)))
+            "<h3>Objects.list raw response:</h3>"
+            "<pre>{}</pre>".format(json.dumps(response, sort_keys=True, indent=2))
+        )
 
-        self.delete_object(BUCKET_NAME, 'storage-api-client-sample-file.txt')
+        self.delete_object(BUCKET_NAME, "storage-api-client-sample-file.txt")
 
 
-app = webapp2.WSGIApplication([
-    ('/', MainPage)
-], debug=True)
+app = webapp2.WSGIApplication([("/", MainPage)], debug=True)

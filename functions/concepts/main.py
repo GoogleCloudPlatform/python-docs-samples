@@ -37,7 +37,9 @@ def statelessness(request):
 
     # Note: the total function invocation count across
     # all instances may not be equal to this value!
-    return 'Instance execution count: {}'.format(count)
+    return "Instance execution count: {}".format(count)
+
+
 # [END functions_concepts_stateless]
 
 
@@ -72,7 +74,9 @@ def scope_demo(request):
     # Per-function scope
     # This computation runs every time this function is called
     function_var = light_computation()
-    return 'Instance: {}; function: {}'.format(instance_var, function_var)
+    return "Instance: {}; function: {}".format(instance_var, function_var)
+
+
 # [END functions_tips_scopes]
 
 
@@ -91,23 +95,27 @@ def make_request(request):
     import requests
 
     # The URL to send the request to
-    url = 'http://example.com'
+    url = "http://example.com"
 
     # Process the request
     response = requests.get(url)
     response.raise_for_status()
-    return 'Success!'
+    return "Success!"
+
+
 # [END functions_concepts_requests]
 
 
 # [START functions_concepts_after_timeout]
 def timeout(request):
-    print('Function running...')
+    print("Function running...")
     time.sleep(120)
 
     # May not execute if function's timeout is <2 minutes
-    print('Function completed!')
-    return 'Function completed!'
+    print("Function completed!")
+    return "Function completed!"
+
+
 # [END functions_concepts_after_timeout]
 
 
@@ -119,5 +127,7 @@ def list_files(request):
     root = path.dirname(path.abspath(__file__))
     children = os.listdir(root)
     files = [c for c in children if path.isfile(path.join(root, c))]
-    return 'Files: {}'.format(files)
+    return "Files: {}".format(files)
+
+
 # [END functions_concepts_filesystem]

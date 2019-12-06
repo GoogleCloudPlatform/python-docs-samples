@@ -18,14 +18,14 @@ import pytest
 
 import snippets
 
-TEST_LOGGER_NAME = 'example_log'
+TEST_LOGGER_NAME = "example_log"
 
 
 @pytest.fixture
 def example_log():
     client = logging.Client()
     logger = client.logger(TEST_LOGGER_NAME)
-    text = 'Hello, world.'
+    text = "Hello, world."
     logger.log_text(text)
     return text
 

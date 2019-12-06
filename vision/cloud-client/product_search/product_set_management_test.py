@@ -17,21 +17,23 @@ import os
 import pytest
 
 from product_set_management import (
-    create_product_set, delete_product_set, list_product_sets)
+    create_product_set,
+    delete_product_set,
+    list_product_sets,
+)
 
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-LOCATION = 'us-west1'
+PROJECT_ID = os.getenv("GCLOUD_PROJECT")
+LOCATION = "us-west1"
 
-PRODUCT_SET_DISPLAY_NAME = 'fake_product_set_display_name_for_testing'
-PRODUCT_SET_ID = 'fake_product_set_id_for_testing'
+PRODUCT_SET_DISPLAY_NAME = "fake_product_set_display_name_for_testing"
+PRODUCT_SET_ID = "fake_product_set_id_for_testing"
 
 
 @pytest.fixture
 def product_set():
     # set up
-    create_product_set(
-        PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_SET_DISPLAY_NAME)
+    create_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_SET_DISPLAY_NAME)
 
     yield None
 
@@ -44,9 +46,7 @@ def test_create_product_set(capsys):
     out, _ = capsys.readouterr()
     assert PRODUCT_SET_ID not in out
 
-    create_product_set(
-        PROJECT_ID, LOCATION, PRODUCT_SET_ID,
-        PRODUCT_SET_DISPLAY_NAME)
+    create_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_SET_DISPLAY_NAME)
     list_product_sets(PROJECT_ID, LOCATION)
     out, _ = capsys.readouterr()
     assert PRODUCT_SET_ID in out

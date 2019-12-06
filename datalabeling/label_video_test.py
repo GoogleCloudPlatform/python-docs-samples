@@ -24,17 +24,17 @@ import label_video
 import manage_dataset
 import pytest
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/videos/video_dataset.csv'
+PROJECT_ID = os.getenv("GCLOUD_PROJECT")
+INPUT_GCS_URI = "gs://cloud-samples-data/datalabeling/videos/video_dataset.csv"
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def dataset():
     # create a temporary dataset
     dataset = manage_dataset.create_dataset(PROJECT_ID)
 
     # import some data to it
-    import_data.import_data(dataset.name, 'VIDEO', INPUT_GCS_URI)
+    import_data.import_data(dataset.name, "VIDEO", INPUT_GCS_URI)
 
     yield dataset
 
@@ -42,11 +42,10 @@ def dataset():
     manage_dataset.delete_dataset(dataset.name)
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def annotation_spec_set():
     # create a temporary annotation_spec_set
-    response = create_annotation_spec_set.create_annotation_spec_set(
-        PROJECT_ID)
+    response = create_annotation_spec_set.create_annotation_spec_set(PROJECT_ID)
 
     yield response
 
@@ -55,12 +54,12 @@ def annotation_spec_set():
     client.delete_annotation_spec_set(response.name)
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def instruction():
     # create a temporary instruction
     instruction = create_instruction.create_instruction(
-            PROJECT_ID, 'VIDEO',
-            'gs://cloud-samples-data/datalabeling/instruction/test.pdf')
+        PROJECT_ID, "VIDEO", "gs://cloud-samples-data/datalabeling/instruction/test.pdf"
+    )
 
     yield instruction
 
@@ -76,12 +75,10 @@ def test_label_video(capsys, annotation_spec_set, instruction, dataset):
 
     # Start labeling.
     response = label_video.label_video(
-        dataset.name,
-        instruction.name,
-        annotation_spec_set.name
+        dataset.name, instruction.name, annotation_spec_set.name
     )
     out, _ = capsys.readouterr()
-    assert 'Label_video operation name: ' in out
+    assert "Label_video operation name: " in out
     operation_name = response.operation.name
 
     # Cancels the labeling operation.
@@ -89,5 +86,4 @@ def test_label_video(capsys, annotation_spec_set, instruction, dataset):
     assert response.cancelled() is True
 
     client = datalabeling.DataLabelingServiceClient()
-    client.transport._operations_client.cancel_operation(
-            operation_name)
+    client.transport._operations_client.cancel_operation(operation_name)

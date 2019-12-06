@@ -32,32 +32,33 @@ def python2_function():
 
     arg0 = virtualenv_string_args[0]
     buffer = cStringIO.StringIO()
-    buffer.write('Wrote an ASCII string to buffer:\n')
+    buffer.write("Wrote an ASCII string to buffer:\n")
     buffer.write(arg0)
     logging.info(buffer.getvalue())
 
 
 yesterday = datetime.datetime.combine(
-    datetime.datetime.today() - datetime.timedelta(1),
-    datetime.datetime.min.time())
+    datetime.datetime.today() - datetime.timedelta(1), datetime.datetime.min.time()
+)
 
 
 default_dag_args = {
     # Setting start date as yesterday starts the DAG immediately when it is
     # detected in the Cloud Storage bucket.
-    'start_date': yesterday,
+    "start_date": yesterday
 }
 
 with models.DAG(
-        'composer_sample_pythonvirtualenvoperator_python2',
-        schedule_interval=datetime.timedelta(days=1),
-        default_args=default_dag_args) as dag:
+    "composer_sample_pythonvirtualenvoperator_python2",
+    schedule_interval=datetime.timedelta(days=1),
+    default_args=default_dag_args,
+) as dag:
 
     # Use the PythonVirtualenvOperator to select an explicit python_version.
     run_python2 = python_operator.PythonVirtualenvOperator(
-        task_id='run_python2',
+        task_id="run_python2",
         python_callable=python2_function,
-        python_version='2',
-        string_args=['An example input string'],
+        python_version="2",
+        string_args=["An example input string"],
     )
 # [END composer_pythonvirtualenvoperator_python2]

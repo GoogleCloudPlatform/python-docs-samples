@@ -18,4 +18,4 @@ import quickstart
 def test_quickstart(capsys):
     quickstart.run_quickstart()
     out, _ = capsys.readouterr()
-    assert 'Labels' in out
+    assert "Labels" in out

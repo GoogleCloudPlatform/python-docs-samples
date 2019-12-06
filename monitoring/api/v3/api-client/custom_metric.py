@@ -55,8 +55,7 @@ def get_now_rfc3339():
     return format_rfc3339(datetime.datetime.utcnow())
 
 
-def create_custom_metric(client, project_id,
-                         custom_metric_type, metric_kind):
+def create_custom_metric(client, project_id, custom_metric_type, metric_kind):
     """Create custom metric descriptor"""
     metrics_descriptor = {
         "type": custom_metric_type,
@@ -64,37 +63,44 @@ def create_custom_metric(client, project_id,
             {
                 "key": "environment",
                 "valueType": "STRING",
-                "description": "An arbitrary measurement"
+                "description": "An arbitrary measurement",
             }
         ],
         "metricKind": metric_kind,
         "valueType": "INT64",
         "unit": "items",
         "description": "An arbitrary measurement.",
-        "displayName": "Custom Metric"
+        "displayName": "Custom Metric",
     }
 
-    return client.projects().metricDescriptors().create(
-        name=project_id, body=metrics_descriptor).execute()
+    return (
+        client.projects()
+        .metricDescriptors()
+        .create(name=project_id, body=metrics_descriptor)
+        .execute()
+    )
 
 
-def delete_metric_descriptor(
-        client, custom_metric_name):
+def delete_metric_descriptor(client, custom_metric_name):
     """Delete a custom metric descriptor."""
-    client.projects().metricDescriptors().delete(
-        name=custom_metric_name).execute()
+    client.projects().metricDescriptors().delete(name=custom_metric_name).execute()
 
 
 def get_custom_metric(client, project_id, custom_metric_type):
     """Retrieve the custom metric we created"""
-    request = client.projects().metricDescriptors().list(
-        name=project_id,
-        filter='metric.type=starts_with("{}")'.format(custom_metric_type))
+    request = (
+        client.projects()
+        .metricDescriptors()
+        .list(
+            name=project_id,
+            filter='metric.type=starts_with("{}")'.format(custom_metric_type),
+        )
+    )
     response = request.execute()
-    print('ListCustomMetrics response:')
+    print("ListCustomMetrics response:")
     pprint.pprint(response)
     try:
-        return response['metricDescriptors']
+        return response["metricDescriptors"]
     except KeyError:
         return None
 
@@ -108,42 +114,35 @@ def get_custom_data_point():
 
 
 # [START write_timeseries]
-def write_timeseries_value(client, project_resource,
-                           custom_metric_type, instance_id, metric_kind):
+def write_timeseries_value(
+    client, project_resource, custom_metric_type, instance_id, metric_kind
+):
     """Write the custom metric obtained by get_custom_data_point at a point in
     time."""
     # Specify a new data point for the time series.
     now = get_now_rfc3339()
     timeseries_data = {
-        "metric": {
-            "type": custom_metric_type,
-            "labels": {
-                "environment": "STAGING"
-            }
-        },
+        "metric": {"type": custom_metric_type, "labels": {"environment": "STAGING"}},
         "resource": {
-            "type": 'gce_instance',
-            "labels": {
-                'instance_id': instance_id,
-                'zone': 'us-central1-f'
-            }
+            "type": "gce_instance",
+            "labels": {"instance_id": instance_id, "zone": "us-central1-f"},
         },
         "points": [
             {
-                "interval": {
-                    "startTime": now,
-                    "endTime": now
-                },
-                "value": {
-                    "int64Value": get_custom_data_point()
-                }
+                "interval": {"startTime": now, "endTime": now},
+                "value": {"int64Value": get_custom_data_point()},
             }
-        ]
+        ],
     }
 
-    request = client.projects().timeSeries().create(
-        name=project_resource, body={"timeSeries": [timeseries_data]})
+    request = (
+        client.projects()
+        .timeSeries()
+        .create(name=project_resource, body={"timeSeries": [timeseries_data]})
+    )
     request.execute()
+
+
 # [END write_timeseries]
 
 
@@ -154,12 +153,17 @@ def read_timeseries(client, project_resource, custom_metric_type):
                              from.
     :param custom_metric_name: The name of the timeseries we want to read.
     """
-    request = client.projects().timeSeries().list(
-        name=project_resource,
-        filter='metric.type="{0}"'.format(custom_metric_type),
-        pageSize=3,
-        interval_startTime=get_start_time(),
-        interval_endTime=get_now_rfc3339())
+    request = (
+        client.projects()
+        .timeSeries()
+        .list(
+            name=project_resource,
+            filter='metric.type="{0}"'.format(custom_metric_type),
+            pageSize=3,
+            interval_startTime=get_start_time(),
+            interval_endTime=get_now_rfc3339(),
+        )
+    )
     response = request.execute()
     return response
 
@@ -173,33 +177,32 @@ def main(project_id):
     METRIC_KIND = "GAUGE"
 
     project_resource = "projects/{0}".format(project_id)
-    client = googleapiclient.discovery.build('monitoring', 'v3')
-    create_custom_metric(client, project_resource,
-                         CUSTOM_METRIC_TYPE, METRIC_KIND)
+    client = googleapiclient.discovery.build("monitoring", "v3")
+    create_custom_metric(client, project_resource, CUSTOM_METRIC_TYPE, METRIC_KIND)
     custom_metric = None
     while not custom_metric:
         # wait until it's created
         time.sleep(1)
-        custom_metric = get_custom_metric(
-            client, project_resource, CUSTOM_METRIC_TYPE)
+        custom_metric = get_custom_metric(client, project_resource, CUSTOM_METRIC_TYPE)
 
-    write_timeseries_value(client, project_resource,
-                           CUSTOM_METRIC_TYPE, INSTANCE_ID, METRIC_KIND)
+    write_timeseries_value(
+        client, project_resource, CUSTOM_METRIC_TYPE, INSTANCE_ID, METRIC_KIND
+    )
     # Sometimes on new metric descriptors, writes have a delay in being read
     # back. 3 seconds should be enough to make sure our read call picks up the
     # write
     time.sleep(3)
     timeseries = read_timeseries(client, project_resource, CUSTOM_METRIC_TYPE)
-    print('read_timeseries response:\n{}'.format(pprint.pformat(timeseries)))
+    print("read_timeseries response:\n{}".format(pprint.pformat(timeseries)))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument(
-        '--project_id', help='Project ID you want to access.', required=True)
+        "--project_id", help="Project ID you want to access.", required=True
+    )
 
     args = parser.parse_args()
     main(args.project_id)

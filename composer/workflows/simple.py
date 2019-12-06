@@ -21,10 +21,12 @@ from __future__ import print_function
 import datetime
 
 from airflow import models
+
 # [END composer_simple_define_dag]
 # [START composer_simple_operators]
 from airflow.operators import bash_operator
 from airflow.operators import python_operator
+
 # [END composer_simple_operators]
 
 
@@ -34,32 +36,34 @@ default_dag_args = {
     # fixed point in time rather than dynamically, since it is evaluated every
     # time a DAG is parsed. See:
     # https://airflow.apache.org/faq.html#what-s-the-deal-with-start-date
-    'start_date': datetime.datetime(2018, 1, 1),
+    "start_date": datetime.datetime(2018, 1, 1)
 }
 
 # Define a DAG (directed acyclic graph) of tasks.
 # Any task you create within the context manager is automatically added to the
 # DAG object.
 with models.DAG(
-        'composer_sample_simple_greeting',
-        schedule_interval=datetime.timedelta(days=1),
-        default_args=default_dag_args) as dag:
+    "composer_sample_simple_greeting",
+    schedule_interval=datetime.timedelta(days=1),
+    default_args=default_dag_args,
+) as dag:
     # [END composer_simple_define_dag]
     # [START composer_simple_operators]
     def greeting():
         import logging
-        logging.info('Hello World!')
+
+        logging.info("Hello World!")
 
     # An instance of an operator is called a task. In this case, the
     # hello_python task calls the "greeting" Python function.
     hello_python = python_operator.PythonOperator(
-        task_id='hello',
-        python_callable=greeting)
+        task_id="hello", python_callable=greeting
+    )
 
     # Likewise, the goodbye_bash task calls a Bash script.
     goodbye_bash = bash_operator.BashOperator(
-        task_id='bye',
-        bash_command='echo Goodbye.')
+        task_id="bye", bash_command="echo Goodbye."
+    )
     # [END composer_simple_operators]
 
     # [START composer_simple_relationships]

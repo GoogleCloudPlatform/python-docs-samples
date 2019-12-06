@@ -29,11 +29,9 @@ class TestMetricsQuickstart(unittest.TestCase):
     in order for the demo to run. See the opencensus and
     opencensus-ext-stackdriver source for actual library tests.
     """
+
     def test_measure_creation(self):
-        measure.MeasureFloat(
-            "task_latency",
-            "The task latency in milliseconds",
-            "ms")
+        measure.MeasureFloat("task_latency", "The task latency in milliseconds", "ms")
 
     def test_view_creation(self):
         test_view = view.View(
@@ -41,13 +39,13 @@ class TestMetricsQuickstart(unittest.TestCase):
             "The distribution of the task latencies",
             [],
             mock.Mock(),
-            aggregation.DistributionAggregation([1.0, 2.0, 3.0]))
+            aggregation.DistributionAggregation([1.0, 2.0, 3.0]),
+        )
         # Check that metric descriptor conversion doesn't crash
         test_view.get_metric_descriptor()
 
     # Don't modify global stats
-    @mock.patch('opencensus.ext.stackdriver.stats_exporter.stats.stats',
-                stats._Stats())
+    @mock.patch("opencensus.ext.stackdriver.stats_exporter.stats.stats", stats._Stats())
     def test_measurement_map_record(self):
         mock_measure = mock.Mock()
         mock_measure_name = mock.Mock()
@@ -64,15 +62,17 @@ class TestMetricsQuickstart(unittest.TestCase):
 
         # Reaching into the stats internals here to check that recording the
         # measurement map affects view data.
-        m2vd = (stats.stats.view_manager.measure_to_view_map
-                ._measure_to_view_data_list_map)
+        m2vd = (
+            stats.stats.view_manager.measure_to_view_map._measure_to_view_data_list_map
+        )
         self.assertIn(mock_measure_name, m2vd)
         [view_data] = m2vd[mock_measure_name]
         agg_data = view_data.tag_value_aggregation_data_map[tuple()]
         agg_data.add_sample.assert_called_once()
 
-    @mock.patch('opencensus.ext.stackdriver.stats_exporter'
-                '.monitoring_v3.MetricServiceClient')
+    @mock.patch(
+        "opencensus.ext.stackdriver.stats_exporter" ".monitoring_v3.MetricServiceClient"
+    )
     def test_new_stats_exporter(self, mock_client):
         transport = stats_exporter.new_stats_exporter()
         self.assertIsNotNone(transport)

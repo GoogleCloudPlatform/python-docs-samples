@@ -21,8 +21,7 @@ from google.cloud import bigtable
 from google.cloud import happybase
 
 
-def main(project_id="project-id", instance_id="instance-id",
-         table_id="my-table"):
+def main(project_id="project-id", instance_id="instance-id", table_id="my-table"):
     # Creates a Bigtable client
     client = bigtable.Client(project=project_id)
 
@@ -35,27 +34,30 @@ def main(project_id="project-id", instance_id="instance-id",
         # Connect to an existing table:my-table
         table = connection.table(table_id)
 
-        key = 'r1'
-        row = table.row(key.encode('utf-8'))
+        key = "r1"
+        row = table.row(key.encode("utf-8"))
         value = {k.decode("utf-8"): v.decode("utf-8") for k, v in row.items()}
-        print('Row key: {}\nData: {}'.format(key, json.dumps(value, indent=4,
-                                                             sort_keys=True)))
+        print(
+            "Row key: {}\nData: {}".format(
+                key, json.dumps(value, indent=4, sort_keys=True)
+            )
+        )
 
     finally:
         connection.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('project_id', help='Your Cloud Platform project ID.')
+        description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument("project_id", help="Your Cloud Platform project ID.")
     parser.add_argument(
-        'instance_id', help='ID of the Cloud Bigtable instance to connect to.')
+        "instance_id", help="ID of the Cloud Bigtable instance to connect to."
+    )
     parser.add_argument(
-        '--table',
-        help='Existing table used in the quickstart.',
-        default='my-table')
+        "--table", help="Existing table used in the quickstart.", default="my-table"
+    )
 
     args = parser.parse_args()
     main(args.project_id, args.instance_id, args.table)

@@ -20,20 +20,19 @@ def set_endpoint(project_id):
 
     # You must first create a dataset, using the `eu` endpoint, before you can
     # call other operations such as: list, get, import, delete, etc.
-    client_options = {'api_endpoint': 'eu-automl.googleapis.com:443'}
+    client_options = {"api_endpoint": "eu-automl.googleapis.com:443"}
 
     # Instantiates a client
     client = automl.AutoMlClient(client_options=client_options)
 
     # A resource that represents Google Cloud Platform location.
     # project_id = 'YOUR_PROJECT_ID'
-    project_location = client.location_path(project_id, 'eu')
+    project_location = client.location_path(project_id, "eu")
     # [END automl_set_endpoint]
 
     # List all the datasets available
     # Note: Create a dataset in `eu`, before calling `list_datasets`.
-    response = client.list_datasets(
-        project_location, filter_='')
+    response = client.list_datasets(project_location, filter_="")
 
     for dataset in response:
         print(dataset)

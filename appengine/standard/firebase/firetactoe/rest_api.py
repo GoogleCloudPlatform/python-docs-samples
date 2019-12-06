@@ -25,8 +25,9 @@ import httplib2
 from oauth2client.client import GoogleCredentials
 
 _FIREBASE_SCOPES = [
-    'https://www.googleapis.com/auth/firebase.database',
-    'https://www.googleapis.com/auth/userinfo.email']
+    "https://www.googleapis.com/auth/firebase.database",
+    "https://www.googleapis.com/auth/userinfo.email",
+]
 
 
 # Memoize the authorized http, to avoid fetching new access tokens
@@ -36,8 +37,7 @@ def _get_http():
     http = httplib2.Http()
     # Use application default credentials to make the Firebase calls
     # https://firebase.google.com/docs/reference/rest/database/user-auth
-    creds = GoogleCredentials.get_application_default().create_scoped(
-        _FIREBASE_SCOPES)
+    creds = GoogleCredentials.get_application_default().create_scoped(_FIREBASE_SCOPES)
     creds.authorize(http)
     return http
 
@@ -52,7 +52,7 @@ def firebase_put(path, value=None):
         path - the url to the Firebase object to write.
         value - a json string.
     """
-    response, content = _get_http().request(path, method='PUT', body=value)
+    response, content = _get_http().request(path, method="PUT", body=value)
     return json.loads(content)
 
 
@@ -66,7 +66,7 @@ def firebase_patch(path, value=None):
         path - the url to the Firebase object to write.
         value - a json string.
     """
-    response, content = _get_http().request(path, method='PATCH', body=value)
+    response, content = _get_http().request(path, method="PATCH", body=value)
     return json.loads(content)
 
 
@@ -82,8 +82,10 @@ def firebase_post(path, value=None):
         path - the url to the Firebase list to append to.
         value - a json string.
     """
-    response, content = _get_http().request(path, method='POST', body=value)
+    response, content = _get_http().request(path, method="POST", body=value)
     return json.loads(content)
+
+
 # [END rest_writing_data]
 
 
@@ -97,7 +99,7 @@ def firebase_get(path):
     Args:
         path - the url to the Firebase object to read.
     """
-    response, content = _get_http().request(path, method='GET')
+    response, content = _get_http().request(path, method="GET")
     return json.loads(content)
 
 
@@ -111,4 +113,4 @@ def firebase_delete(path):
     Args:
         path - the url to the Firebase object to delete.
     """
-    response, content = _get_http().request(path, method='DELETE')
+    response, content = _get_http().request(path, method="DELETE")

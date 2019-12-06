@@ -26,7 +26,7 @@ def client():
 
 
 def test_index(client):
-    r = client.get('/')
+    r = client.get("/")
     assert r.status_code == 200
 
 
@@ -34,17 +34,12 @@ def test_upload(client):
     # Upload a simple file
     file_content = b"This is some test content."
 
-    r = client.post(
-        '/upload',
-        data={
-            'file': (BytesIO(file_content), 'example.txt')
-        }
-    )
+    r = client.post("/upload", data={"file": (BytesIO(file_content), "example.txt")})
 
     assert r.status_code == 200
 
     # The app should return the public cloud storage URL for the uploaded
     # file. Download and verify it.
-    cloud_storage_url = r.data.decode('utf-8')
+    cloud_storage_url = r.data.decode("utf-8")
     r = requests.get(cloud_storage_url)
-    assert r.text.encode('utf-8') == file_content
+    assert r.text.encode("utf-8") == file_content

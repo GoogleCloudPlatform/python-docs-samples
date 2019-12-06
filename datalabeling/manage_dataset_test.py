@@ -22,7 +22,7 @@ import pytest
 PROJECT_ID = os.getenv("GCLOUD_PROJECT")
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def dataset():
     # create a temporary dataset
     dataset = manage_dataset.create_dataset(PROJECT_ID)

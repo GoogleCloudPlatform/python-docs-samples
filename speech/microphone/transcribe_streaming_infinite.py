@@ -42,9 +42,9 @@ STREAMING_LIMIT = 10000
 SAMPLE_RATE = 16000
 CHUNK_SIZE = int(SAMPLE_RATE / 10)  # 100ms
 
-RED = '\033[0;31m'
-GREEN = '\033[0;32m'
-YELLOW = '\033[0;33m'
+RED = "\033[0;31m"
+GREEN = "\033[0;32m"
+YELLOW = "\033[0;33m"
 
 
 def get_current_time():
@@ -124,12 +124,14 @@ class ResumableMicrophoneStream:
                     if self.bridging_offset > self.final_request_end_time:
                         self.bridging_offset = self.final_request_end_time
 
-                    chunks_from_ms = round((self.final_request_end_time -
-                                            self.bridging_offset) / chunk_time)
+                    chunks_from_ms = round(
+                        (self.final_request_end_time - self.bridging_offset)
+                        / chunk_time
+                    )
 
-                    self.bridging_offset = (round((
-                        len(self.last_audio_input) - chunks_from_ms)
-                                                  * chunk_time))
+                    self.bridging_offset = round(
+                        (len(self.last_audio_input) - chunks_from_ms) * chunk_time
+                    )
 
                     for i in range(chunks_from_ms, len(self.last_audio_input)):
                         data.append(self.last_audio_input[i])
@@ -158,7 +160,7 @@ class ResumableMicrophoneStream:
                 except queue.Empty:
                     break
 
-            yield b''.join(data)
+            yield b"".join(data)
 
 
 def listen_print_loop(responses, stream):
@@ -202,35 +204,37 @@ def listen_print_loop(responses, stream):
         if result.result_end_time.nanos:
             result_nanos = result.result_end_time.nanos
 
-        stream.result_end_time = int((result_seconds * 1000)
-                                     + (result_nanos / 1000000))
+        stream.result_end_time = int((result_seconds * 1000) + (result_nanos / 1000000))
 
-        corrected_time = (stream.result_end_time - stream.bridging_offset
-                          + (STREAMING_LIMIT * stream.restart_counter))
+        corrected_time = (
+            stream.result_end_time
+            - stream.bridging_offset
+            + (STREAMING_LIMIT * stream.restart_counter)
+        )
         # Display interim results, but with a carriage return at the end of the
         # line, so subsequent lines will overwrite them.
 
         if result.is_final:
 
             sys.stdout.write(GREEN)
-            sys.stdout.write('\033[K')
-            sys.stdout.write(str(corrected_time) + ': ' + transcript + '\n')
+            sys.stdout.write("\033[K")
+            sys.stdout.write(str(corrected_time) + ": " + transcript + "\n")
 
             stream.is_final_end_time = stream.result_end_time
             stream.last_transcript_was_final = True
 
             # Exit recognition if any of the transcribed phrases could be
             # one of our keywords.
-            if re.search(r'\b(exit|quit)\b', transcript, re.I):
+            if re.search(r"\b(exit|quit)\b", transcript, re.I):
                 sys.stdout.write(YELLOW)
-                sys.stdout.write('Exiting...\n')
+                sys.stdout.write("Exiting...\n")
                 stream.closed = True
                 break
 
         else:
             sys.stdout.write(RED)
-            sys.stdout.write('\033[K')
-            sys.stdout.write(str(corrected_time) + ': ' + transcript + '\r')
+            sys.stdout.write("\033[K")
+            sys.stdout.write(str(corrected_time) + ": " + transcript + "\r")
 
             stream.last_transcript_was_final = False
 
@@ -242,34 +246,37 @@ def main():
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=SAMPLE_RATE,
-        language_code='en-US',
-        max_alternatives=1)
+        language_code="en-US",
+        max_alternatives=1,
+    )
     streaming_config = speech.types.StreamingRecognitionConfig(
-        config=config,
-        interim_results=True)
+        config=config, interim_results=True
+    )
 
     mic_manager = ResumableMicrophoneStream(SAMPLE_RATE, CHUNK_SIZE)
     print(mic_manager.chunk_size)
     sys.stdout.write(YELLOW)
     sys.stdout.write('\nListening, say "Quit" or "Exit" to stop.\n\n')
-    sys.stdout.write('End (ms)       Transcript Results/Status\n')
-    sys.stdout.write('=====================================================\n')
+    sys.stdout.write("End (ms)       Transcript Results/Status\n")
+    sys.stdout.write("=====================================================\n")
 
     with mic_manager as stream:
 
         while not stream.closed:
             sys.stdout.write(YELLOW)
-            sys.stdout.write('\n' + str(
-                STREAMING_LIMIT * stream.restart_counter) + ': NEW REQUEST\n')
+            sys.stdout.write(
+                "\n" + str(STREAMING_LIMIT * stream.restart_counter) + ": NEW REQUEST\n"
+            )
 
             stream.audio_input = []
             audio_generator = stream.generator()
 
-            requests = (speech.types.StreamingRecognizeRequest(
-                audio_content=content)for content in audio_generator)
+            requests = (
+                speech.types.StreamingRecognizeRequest(audio_content=content)
+                for content in audio_generator
+            )
 
-            responses = client.streaming_recognize(streaming_config,
-                                                   requests)
+            responses = client.streaming_recognize(streaming_config, requests)
 
             # Now, put the transcription responses to use.
             listen_print_loop(responses, stream)
@@ -283,11 +290,11 @@ def main():
             stream.restart_counter = stream.restart_counter + 1
 
             if not stream.last_transcript_was_final:
-                sys.stdout.write('\n')
+                sys.stdout.write("\n")
             stream.new_stream = True
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     main()
 

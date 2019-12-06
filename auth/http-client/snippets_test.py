@@ -24,10 +24,10 @@ def test_implicit():
 
 
 def test_explicit():
-    with open(os.environ['GOOGLE_APPLICATION_CREDENTIALS']) as creds_file:
+    with open(os.environ["GOOGLE_APPLICATION_CREDENTIALS"]) as creds_file:
         creds_file_data = creds_file.read()
 
     open_mock = mock.mock_open(read_data=creds_file_data)
 
-    with mock.patch('io.open', open_mock):
-        snippets.explicit(os.environ['GCLOUD_PROJECT'])
+    with mock.patch("io.open", open_mock):
+        snippets.explicit(os.environ["GCLOUD_PROJECT"])

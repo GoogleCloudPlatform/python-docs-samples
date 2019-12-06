@@ -24,18 +24,20 @@ def create_instruction(project_id, data_type, instruction_gcs_uri):
     Google Cloud Storage.
     """
     from google.cloud import datalabeling_v1beta1 as datalabeling
+
     client = datalabeling.DataLabelingServiceClient()
 
     project_path = client.project_path(project_id)
 
     pdf_instruction = datalabeling.types.PdfInstruction(
-        gcs_file_uri=instruction_gcs_uri)
+        gcs_file_uri=instruction_gcs_uri
+    )
 
     instruction = datalabeling.types.Instruction(
-        display_name='YOUR_INSTRUCTION_DISPLAY_NAME',
-        description='YOUR_DESCRIPTION',
+        display_name="YOUR_INSTRUCTION_DISPLAY_NAME",
+        description="YOUR_DESCRIPTION",
         data_type=data_type,
-        pdf_instruction=pdf_instruction
+        pdf_instruction=pdf_instruction,
     )
 
     operation = client.create_instruction(project_path, instruction)
@@ -44,50 +46,41 @@ def create_instruction(project_id, data_type, instruction_gcs_uri):
 
     # The format of the resource name:
     # project_id/{project_id}/instruction/{instruction_id}
-    print('The instruction resource name: {}\n'.format(result.name))
-    print('Display name: {}'.format(result.display_name))
-    print('Description: {}'.format(result.description))
-    print('Create time:')
-    print('\tseconds: {}'.format(result.create_time.seconds))
-    print('\tnanos: {}'.format(result.create_time.nanos))
-    print('Data type: {}'.format(
-        datalabeling.enums.DataType(result.data_type).name))
-    print('Pdf instruction:')
-    print('\tGcs file uri: {}'.format(
-        result.pdf_instruction.gcs_file_uri))
+    print("The instruction resource name: {}\n".format(result.name))
+    print("Display name: {}".format(result.display_name))
+    print("Description: {}".format(result.description))
+    print("Create time:")
+    print("\tseconds: {}".format(result.create_time.seconds))
+    print("\tnanos: {}".format(result.create_time.nanos))
+    print("Data type: {}".format(datalabeling.enums.DataType(result.data_type).name))
+    print("Pdf instruction:")
+    print("\tGcs file uri: {}".format(result.pdf_instruction.gcs_file_uri))
 
     return result
+
+
 # [END datalabeling_create_instruction_beta]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+
+    parser.add_argument("--project-id", help="Project ID. Required.", required=True)
+
+    parser.add_argument(
+        "--data-type",
+        help="Data type. Only support IMAGE, VIDEO, TEXT and AUDIO. Required.",
+        required=True,
     )
 
     parser.add_argument(
-        '--project-id',
-        help='Project ID. Required.',
-        required=True
-    )
-
-    parser.add_argument(
-        '--data-type',
-        help='Data type. Only support IMAGE, VIDEO, TEXT and AUDIO. Required.',
-        required=True
-    )
-
-    parser.add_argument(
-        '--instruction-gcs-uri',
-        help='The URI of Google Cloud Storage of the instruction. Required.',
-        required=True
+        "--instruction-gcs-uri",
+        help="The URI of Google Cloud Storage of the instruction. Required.",
+        required=True,
     )
 
     args = parser.parse_args()
 
-    create_instruction(
-        args.project_id,
-        args.data_type,
-        args.instruction_gcs_uri
-    )
+    create_instruction(args.project_id, args.data_type, args.instruction_gcs_uri)

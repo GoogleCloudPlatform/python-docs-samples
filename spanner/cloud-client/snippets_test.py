@@ -25,21 +25,22 @@ import snippets
 
 def unique_database_id():
     """ Creates a unique id for the database. """
-    return 'test-db-{}'.format(''.join(random.choice(
-        string.ascii_lowercase + string.digits) for _ in range(5)))
+    return "test-db-{}".format(
+        "".join(random.choice(string.ascii_lowercase + string.digits) for _ in range(5))
+    )
 
 
-INSTANCE_ID = os.environ['SPANNER_INSTANCE']
+INSTANCE_ID = os.environ["SPANNER_INSTANCE"]
 DATABASE_ID = unique_database_id()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def spanner_instance():
     spanner_client = spanner.Client()
     return spanner_client.instance(INSTANCE_ID)
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def database(spanner_instance):
     """ Creates a temporary database that is removed after testing. """
     snippets.create_database(INSTANCE_ID, DATABASE_ID)
@@ -56,32 +57,32 @@ def test_create_database(database):
 def test_insert_data(capsys):
     snippets.insert_data(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'Inserted data' in out
+    assert "Inserted data" in out
 
 
 def test_delete_data(capsys):
     snippets.delete_data(INSTANCE_ID, DATABASE_ID)
     snippets.insert_data(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'Deleted data' in out
+    assert "Deleted data" in out
 
 
 def test_query_data(capsys):
     snippets.query_data(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk' in out
+    assert "SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk" in out
 
 
 def test_add_column(capsys):
     snippets.add_column(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'Added the MarketingBudget column.' in out
+    assert "Added the MarketingBudget column." in out
 
 
 def test_read_data(capsys):
     snippets.read_data(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk' in out
+    assert "SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk" in out
 
 
 def test_update_data(capsys):
@@ -91,7 +92,7 @@ def test_update_data(capsys):
 
     snippets.update_data(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'Updated data.' in out
+    assert "Updated data." in out
 
 
 def test_read_stale_data(capsys):
@@ -99,61 +100,61 @@ def test_read_stale_data(capsys):
     # at least 15 seconds after the previous insert
     snippets.read_stale_data(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'SingerId: 1, AlbumId: 1, MarketingBudget: None' in out
+    assert "SingerId: 1, AlbumId: 1, MarketingBudget: None" in out
 
 
 def test_read_write_transaction(capsys):
     snippets.read_write_transaction(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'Transaction complete' in out
+    assert "Transaction complete" in out
 
 
 def test_query_data_with_new_column(capsys):
     snippets.query_data_with_new_column(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'SingerId: 1, AlbumId: 1, MarketingBudget: 300000' in out
-    assert 'SingerId: 2, AlbumId: 2, MarketingBudget: 300000' in out
+    assert "SingerId: 1, AlbumId: 1, MarketingBudget: 300000" in out
+    assert "SingerId: 2, AlbumId: 2, MarketingBudget: 300000" in out
 
 
 def test_add_index(capsys):
     snippets.add_index(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'Added the AlbumsByAlbumTitle index' in out
+    assert "Added the AlbumsByAlbumTitle index" in out
 
 
 def test_query_data_with_index(capsys):
     snippets.query_data_with_index(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'Go, Go, Go' in out
-    assert 'Forever Hold Your Peace' in out
-    assert 'Green' not in out
+    assert "Go, Go, Go" in out
+    assert "Forever Hold Your Peace" in out
+    assert "Green" not in out
 
 
 def test_read_data_with_index(capsys):
     snippets.read_data_with_index(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'Go, Go, Go' in out
-    assert 'Forever Hold Your Peace' in out
-    assert 'Green' in out
+    assert "Go, Go, Go" in out
+    assert "Forever Hold Your Peace" in out
+    assert "Green" in out
 
 
 def test_add_storing_index(capsys):
     snippets.add_storing_index(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'Added the AlbumsByAlbumTitle2 index.' in out
+    assert "Added the AlbumsByAlbumTitle2 index." in out
 
 
 def test_read_data_with_storing_index(capsys):
     snippets.read_data_with_storing_index(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert '300000' in out
+    assert "300000" in out
 
 
 def test_read_only_transaction(capsys):
     snippets.read_only_transaction(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
     # Snippet does two reads, so entry should be listed twice
-    assert out.count('SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk') == 2
+    assert out.count("SingerId: 1, AlbumId: 1, AlbumTitle: Total Junk") == 2
 
 
 def test_add_timestamp_column(capsys):
@@ -165,108 +166,108 @@ def test_add_timestamp_column(capsys):
 def test_update_data_with_timestamp(capsys):
     snippets.update_data_with_timestamp(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'Updated data' in out
+    assert "Updated data" in out
 
 
 def test_query_data_with_timestamp(capsys):
     snippets.query_data_with_timestamp(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'SingerId: 1, AlbumId: 1, MarketingBudget: 1000000' in out
-    assert 'SingerId: 2, AlbumId: 2, MarketingBudget: 750000' in out
+    assert "SingerId: 1, AlbumId: 1, MarketingBudget: 1000000" in out
+    assert "SingerId: 2, AlbumId: 2, MarketingBudget: 750000" in out
 
 
 def test_create_table_with_timestamp(capsys):
     snippets.create_table_with_timestamp(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'Created Performances table on database' in out
+    assert "Created Performances table on database" in out
 
 
 def test_insert_data_with_timestamp(capsys):
     snippets.insert_data_with_timestamp(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'Inserted data.' in out
+    assert "Inserted data." in out
 
 
 def test_write_struct_data(capsys):
     snippets.write_struct_data(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'Inserted sample data for STRUCT queries' in out
+    assert "Inserted sample data for STRUCT queries" in out
 
 
 def test_query_with_struct(capsys):
     snippets.query_with_struct(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'SingerId: 6' in out
+    assert "SingerId: 6" in out
 
 
 def test_query_with_array_of_struct(capsys):
     snippets.query_with_array_of_struct(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'SingerId: 8' in out
-    assert 'SingerId: 7' in out
-    assert 'SingerId: 6' in out
+    assert "SingerId: 8" in out
+    assert "SingerId: 7" in out
+    assert "SingerId: 6" in out
 
 
 def test_query_struct_field(capsys):
     snippets.query_struct_field(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'SingerId: 6' in out
+    assert "SingerId: 6" in out
 
 
 def test_query_nested_struct_field(capsys):
     snippets.query_nested_struct_field(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'SingerId: 6 SongName: Imagination' in out
-    assert 'SingerId: 9 SongName: Imagination' in out
+    assert "SingerId: 6 SongName: Imagination" in out
+    assert "SingerId: 9 SongName: Imagination" in out
 
 
 def test_insert_data_with_dml(capsys):
     snippets.insert_data_with_dml(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert '1 record(s) inserted.' in out
+    assert "1 record(s) inserted." in out
 
 
 def test_update_data_with_dml(capsys):
     snippets.update_data_with_dml(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert '1 record(s) updated.' in out
+    assert "1 record(s) updated." in out
 
 
 def test_delete_data_with_dml(capsys):
     snippets.delete_data_with_dml(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert '1 record(s) deleted.' in out
+    assert "1 record(s) deleted." in out
 
 
 def test_update_data_with_dml_timestamp(capsys):
     snippets.update_data_with_dml_timestamp(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert '2 record(s) updated.' in out
+    assert "2 record(s) updated." in out
 
 
 def test_dml_write_read_transaction(capsys):
     snippets.dml_write_read_transaction(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert '1 record(s) inserted.' in out
-    assert 'FirstName: Timothy, LastName: Campbell' in out
+    assert "1 record(s) inserted." in out
+    assert "FirstName: Timothy, LastName: Campbell" in out
 
 
 def test_update_data_with_dml_struct(capsys):
     snippets.update_data_with_dml_struct(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert '1 record(s) updated' in out
+    assert "1 record(s) updated" in out
 
 
 def test_insert_with_dml(capsys):
     snippets.insert_with_dml(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert '4 record(s) inserted' in out
+    assert "4 record(s) inserted" in out
 
 
 def test_query_data_with_parameter(capsys):
     snippets.query_data_with_parameter(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'SingerId: 12, FirstName: Melissa, LastName: Garcia' in out
+    assert "SingerId: 12, FirstName: Melissa, LastName: Garcia" in out
 
 
 def test_write_with_dml_transaction(capsys):
@@ -296,65 +297,64 @@ def update_with_batch_dml(capsys):
 def test_create_table_with_datatypes(capsys):
     snippets.create_table_with_datatypes(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'Created Venues table on database' in out
+    assert "Created Venues table on database" in out
 
 
 def test_insert_datatypes_data(capsys):
     snippets.insert_datatypes_data(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'Inserted data.' in out
+    assert "Inserted data." in out
 
 
 def test_query_data_with_array(capsys):
     snippets.query_data_with_array(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'VenueId: 19, VenueName: Venue 19, AvailableDate: 2020-11-01' in out
-    assert 'VenueId: 42, VenueName: Venue 42, AvailableDate: 2020-10-01' in out
+    assert "VenueId: 19, VenueName: Venue 19, AvailableDate: 2020-11-01" in out
+    assert "VenueId: 42, VenueName: Venue 42, AvailableDate: 2020-10-01" in out
 
 
 def test_query_data_with_bool(capsys):
     snippets.query_data_with_bool(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'VenueId: 19, VenueName: Venue 19, OutdoorVenue: True' in out
+    assert "VenueId: 19, VenueName: Venue 19, OutdoorVenue: True" in out
 
 
 def test_query_data_with_bytes(capsys):
     snippets.query_data_with_bytes(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'VenueId: 4, VenueName: Venue 4' in out
+    assert "VenueId: 4, VenueName: Venue 4" in out
 
 
 def test_query_data_with_date(capsys):
     snippets.query_data_with_date(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'VenueId: 4, VenueName: Venue 4, LastContactDate: 2018-09-02' in out
-    assert 'VenueId: 42, VenueName: Venue 42, LastContactDate: 2018-10-01' \
-        in out
+    assert "VenueId: 4, VenueName: Venue 4, LastContactDate: 2018-09-02" in out
+    assert "VenueId: 42, VenueName: Venue 42, LastContactDate: 2018-10-01" in out
 
 
 def test_query_data_with_float(capsys):
     snippets.query_data_with_float(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'VenueId: 4, VenueName: Venue 4, PopularityScore: 0.8' in out
-    assert 'VenueId: 19, VenueName: Venue 19, PopularityScore: 0.9' in out
+    assert "VenueId: 4, VenueName: Venue 4, PopularityScore: 0.8" in out
+    assert "VenueId: 19, VenueName: Venue 19, PopularityScore: 0.9" in out
 
 
 def test_query_data_with_int(capsys):
     snippets.query_data_with_int(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'VenueId: 19, VenueName: Venue 19, Capacity: 6300' in out
-    assert 'VenueId: 42, VenueName: Venue 42, Capacity: 3000' in out
+    assert "VenueId: 19, VenueName: Venue 19, Capacity: 6300" in out
+    assert "VenueId: 42, VenueName: Venue 42, Capacity: 3000" in out
 
 
 def test_query_data_with_string(capsys):
     snippets.query_data_with_string(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'VenueId: 42, VenueName: Venue 42' in out
+    assert "VenueId: 42, VenueName: Venue 42" in out
 
 
 def test_query_data_with_timestamp_parameter(capsys):
     snippets.query_data_with_timestamp_parameter(INSTANCE_ID, DATABASE_ID)
     out, _ = capsys.readouterr()
-    assert 'VenueId: 4, VenueName: Venue 4, LastUpdateTime:' in out
-    assert 'VenueId: 19, VenueName: Venue 19, LastUpdateTime:' in out
-    assert 'VenueId: 42, VenueName: Venue 42, LastUpdateTime:' in out
+    assert "VenueId: 4, VenueName: Venue 4, LastUpdateTime:" in out
+    assert "VenueId: 19, VenueName: Venue 19, LastUpdateTime:" in out
+    assert "VenueId: 42, VenueName: Venue 42, LastUpdateTime:" in out

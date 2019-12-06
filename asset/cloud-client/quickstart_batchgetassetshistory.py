@@ -33,24 +33,25 @@ def batch_get_assets_history(project_id, asset_names):
     content_type = enums.ContentType.RESOURCE
     read_time_window = assets_pb2.TimeWindow()
     response = client.batch_get_assets_history(
-        parent, content_type, read_time_window, asset_names)
-    print('assets: {}'.format(response.assets))
+        parent, content_type, read_time_window, asset_names
+    )
+    print("assets: {}".format(response.assets))
     # [END asset_quickstart_batch_get_assets_history]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument('project_id', help='Your Google Cloud project ID')
+    parser.add_argument("project_id", help="Your Google Cloud project ID")
     parser.add_argument(
-        'asset_names',
-        help='The asset names for which history will be fetched, comma '
-        'delimited, e.g.: //storage.googleapis.com/[BUCKET_NAME]')
+        "asset_names",
+        help="The asset names for which history will be fetched, comma "
+        "delimited, e.g.: //storage.googleapis.com/[BUCKET_NAME]",
+    )
 
     args = parser.parse_args()
 
-    asset_name_list = args.asset_names.split(',')
+    asset_name_list = args.asset_names.split(",")
 
     batch_get_assets_history(args.project_id, asset_name_list)

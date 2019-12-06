@@ -23,16 +23,16 @@ from product_set_management import delete_product_set, list_product_sets
 from reference_image_management import list_reference_images
 
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-LOCATION = 'us-west1'
+PROJECT_ID = os.getenv("GCLOUD_PROJECT")
+LOCATION = "us-west1"
 
-GCS_URI = 'gs://cloud-samples-data/vision/product_search/product_sets.csv'
-PRODUCT_SET_DISPLAY_NAME = 'fake_product_set_display_name_for_testing'
-PRODUCT_SET_ID = 'fake_product_set_id_for_testing'
-PRODUCT_ID_1 = 'fake_product_id_for_testing_1'
-PRODUCT_ID_2 = 'fake_product_id_for_testing_2'
-IMAGE_URI_1 = 'shoes_1.jpg'
-IMAGE_URI_2 = 'shoes_2.jpg'
+GCS_URI = "gs://cloud-samples-data/vision/product_search/product_sets.csv"
+PRODUCT_SET_DISPLAY_NAME = "fake_product_set_display_name_for_testing"
+PRODUCT_SET_ID = "fake_product_set_id_for_testing"
+PRODUCT_ID_1 = "fake_product_id_for_testing_1"
+PRODUCT_ID_2 = "fake_product_id_for_testing_2"
+IMAGE_URI_1 = "shoes_1.jpg"
+IMAGE_URI_2 = "shoes_2.jpg"
 
 
 @pytest.fixture

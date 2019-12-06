@@ -18,25 +18,27 @@ ASSET_BUCKET = "cloud-samples-data"
 
 
 def test_detect_file(capsys):
-    file_name = ('../detect/resources/landmark.jpg')
+    file_name = "../detect/resources/landmark.jpg"
     web_detect.report(web_detect.annotate(file_name))
     out, _ = capsys.readouterr()
     print(out)
-    assert 'description' in out.lower()
-    assert 'palace' in out.lower()
+    assert "description" in out.lower()
+    assert "palace" in out.lower()
 
 
 def test_detect_web_gsuri(capsys):
-    file_name = ('gs://{}/vision/landmark/pofa.jpg'.format(
-                 ASSET_BUCKET))
+    file_name = "gs://{}/vision/landmark/pofa.jpg".format(ASSET_BUCKET)
     web_detect.report(web_detect.annotate(file_name))
     out, _ = capsys.readouterr()
-    assert 'description:' in out.lower()
-    assert 'palace' in out.lower()
+    assert "description:" in out.lower()
+    assert "palace" in out.lower()
 
 
 def test_detect_web_http(capsys):
-    web_detect.report(web_detect.annotate(
-        'https://cloud.google.com/images/products/vision/extract-text.png'))
+    web_detect.report(
+        web_detect.annotate(
+            "https://cloud.google.com/images/products/vision/extract-text.png"
+        )
+    )
     out, _ = capsys.readouterr()
-    assert 'web entities' in out.lower()
+    assert "web entities" in out.lower()

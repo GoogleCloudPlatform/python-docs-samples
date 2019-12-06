@@ -63,11 +63,11 @@ class MyPredictor(object):
         Returns:
             An instance of `MyPredictor`.
         """
-        model_path = os.path.join(model_dir, 'model.joblib')
+        model_path = os.path.join(model_dir, "model.joblib")
         model = joblib.load(model_path)
 
-        preprocessor_path = os.path.join(model_dir, 'preprocessor.pkl')
-        with open(preprocessor_path, 'rb') as f:
+        preprocessor_path = os.path.join(model_dir, "preprocessor.pkl")
+        with open(preprocessor_path, "rb") as f:
             preprocessor = pickle.load(f)
 
         return cls(model, preprocessor)

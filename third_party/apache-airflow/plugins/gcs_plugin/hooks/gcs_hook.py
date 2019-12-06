@@ -33,23 +33,28 @@ class GoogleCloudStorageHook(GoogleCloudBaseHook):
     connection.
     """
 
-    def __init__(self,
-                 google_cloud_storage_conn_id='google_cloud_default',
-                 delegate_to=None):
-        super(GoogleCloudStorageHook, self).__init__(google_cloud_storage_conn_id,
-                                                     delegate_to)
+    def __init__(
+        self, google_cloud_storage_conn_id="google_cloud_default", delegate_to=None
+    ):
+        super(GoogleCloudStorageHook, self).__init__(
+            google_cloud_storage_conn_id, delegate_to
+        )
 
     def get_conn(self):
         """
         Returns a Google Cloud Storage service object.
         """
         http_authorized = self._authorize()
-        return build(
-            'storage', 'v1', http=http_authorized, cache_discovery=False)
+        return build("storage", "v1", http=http_authorized, cache_discovery=False)
 
     # pylint:disable=redefined-builtin
-    def copy(self, source_bucket, source_object, destination_bucket=None,
-             destination_object=None):
+    def copy(
+        self,
+        source_bucket,
+        source_object,
+        destination_bucket=None,
+        destination_object=None,
+    ):
         """
         Copies an object from a bucket to another, with renaming if requested.
 
@@ -69,32 +74,34 @@ class GoogleCloudStorageHook(GoogleCloudBaseHook):
         """
         destination_bucket = destination_bucket or source_bucket
         destination_object = destination_object or source_object
-        if source_bucket == destination_bucket and \
-                source_object == destination_object:
+        if source_bucket == destination_bucket and source_object == destination_object:
 
             raise ValueError(
-                'Either source/destination bucket or source/destination object '
-                'must be different, not both the same: bucket=%s, object=%s' %
-                (source_bucket, source_object))
+                "Either source/destination bucket or source/destination object "
+                "must be different, not both the same: bucket=%s, object=%s"
+                % (source_bucket, source_object)
+            )
         if not source_bucket or not source_object:
-            raise ValueError('source_bucket and source_object cannot be empty.')
+            raise ValueError("source_bucket and source_object cannot be empty.")
 
         service = self.get_conn()
         try:
-            service \
-                .objects() \
-                .copy(sourceBucket=source_bucket, sourceObject=source_object,
-                      destinationBucket=destination_bucket,
-                      destinationObject=destination_object, body='') \
-                .execute()
+            service.objects().copy(
+                sourceBucket=source_bucket,
+                sourceObject=source_object,
+                destinationBucket=destination_bucket,
+                destinationObject=destination_object,
+                body="",
+            ).execute()
             return True
         except errors.HttpError as ex:
-            if ex.resp['status'] == '404':
+            if ex.resp["status"] == "404":
                 return False
             raise
 
-    def rewrite(self, source_bucket, source_object, destination_bucket,
-                destination_object=None):
+    def rewrite(
+        self, source_bucket, source_object, destination_bucket, destination_object=None
+    ):
         """
         Has the same functionality as copy, except that will work on files
         over 5 TB, as well as when copying between locations and/or storage
@@ -112,36 +119,48 @@ class GoogleCloudStorageHook(GoogleCloudBaseHook):
             Can be omitted; then the same name is used.
         """
         destination_object = destination_object or source_object
-        if (source_bucket == destination_bucket and
-                source_object == destination_object):
+        if source_bucket == destination_bucket and source_object == destination_object:
             raise ValueError(
-                'Either source/destination bucket or source/destination object '
-                'must be different, not both the same: bucket=%s, object=%s' %
-                (source_bucket, source_object))
+                "Either source/destination bucket or source/destination object "
+                "must be different, not both the same: bucket=%s, object=%s"
+                % (source_bucket, source_object)
+            )
         if not source_bucket or not source_object:
-            raise ValueError('source_bucket and source_object cannot be empty.')
+            raise ValueError("source_bucket and source_object cannot be empty.")
 
         service = self.get_conn()
         request_count = 1
         try:
-            result = service.objects() \
-                .rewrite(sourceBucket=source_bucket, sourceObject=source_object,
-                         destinationBucket=destination_bucket,
-                         destinationObject=destination_object, body='') \
+            result = (
+                service.objects()
+                .rewrite(
+                    sourceBucket=source_bucket,
+                    sourceObject=source_object,
+                    destinationBucket=destination_bucket,
+                    destinationObject=destination_object,
+                    body="",
+                )
                 .execute()
-            self.log.info('Rewrite request #%s: %s', request_count, result)
-            while not result['done']:
+            )
+            self.log.info("Rewrite request #%s: %s", request_count, result)
+            while not result["done"]:
                 request_count += 1
-                result = service.objects() \
-                    .rewrite(sourceBucket=source_bucket, sourceObject=source_object,
-                             destinationBucket=destination_bucket,
-                             destinationObject=destination_object,
-                             rewriteToken=result['rewriteToken'], body='') \
+                result = (
+                    service.objects()
+                    .rewrite(
+                        sourceBucket=source_bucket,
+                        sourceObject=source_object,
+                        destinationBucket=destination_bucket,
+                        destinationObject=destination_object,
+                        rewriteToken=result["rewriteToken"],
+                        body="",
+                    )
                     .execute()
-                self.log.info('Rewrite request #%s: %s', request_count, result)
+                )
+                self.log.info("Rewrite request #%s: %s", request_count, result)
             return True
         except errors.HttpError as ex:
-            if ex.resp['status'] == '404':
+            if ex.resp["status"] == "404":
                 return False
             raise
 
@@ -158,21 +177,20 @@ class GoogleCloudStorageHook(GoogleCloudBaseHook):
         :type filename: str
         """
         service = self.get_conn()
-        downloaded_file_bytes = service \
-            .objects() \
-            .get_media(bucket=bucket, object=object) \
-            .execute()
+        downloaded_file_bytes = (
+            service.objects().get_media(bucket=bucket, object=object).execute()
+        )
 
         # Write the file to local file path, if requested.
         if filename:
-            write_argument = 'wb' if isinstance(downloaded_file_bytes, bytes) else 'w'
+            write_argument = "wb" if isinstance(downloaded_file_bytes, bytes) else "w"
             with open(filename, write_argument) as file_fd:
                 file_fd.write(downloaded_file_bytes)
 
         return downloaded_file_bytes
 
     # pylint:disable=redefined-builtin
-    def upload(self, bucket, object, filename, mime_type='application/octet-stream'):
+    def upload(self, bucket, object, filename, mime_type="application/octet-stream"):
         """
         Uploads a local file to Google Cloud Storage.
 
@@ -188,13 +206,12 @@ class GoogleCloudStorageHook(GoogleCloudBaseHook):
         service = self.get_conn()
         media = MediaFileUpload(filename, mime_type)
         try:
-            service \
-                .objects() \
-                .insert(bucket=bucket, name=object, media_body=media) \
-                .execute()
+            service.objects().insert(
+                bucket=bucket, name=object, media_body=media
+            ).execute()
             return True
         except errors.HttpError as ex:
-            if ex.resp['status'] == '404':
+            if ex.resp["status"] == "404":
                 return False
             raise
 
@@ -211,13 +228,10 @@ class GoogleCloudStorageHook(GoogleCloudBaseHook):
         """
         service = self.get_conn()
         try:
-            service \
-                .objects() \
-                .get(bucket=bucket, object=object) \
-                .execute()
+            service.objects().get(bucket=bucket, object=object).execute()
             return True
         except errors.HttpError as ex:
-            if ex.resp['status'] == '404':
+            if ex.resp["status"] == "404":
                 return False
             raise
 
@@ -236,26 +250,23 @@ class GoogleCloudStorageHook(GoogleCloudBaseHook):
         """
         service = self.get_conn()
         try:
-            response = (service
-                        .objects()
-                        .get(bucket=bucket, object=object)
-                        .execute())
+            response = service.objects().get(bucket=bucket, object=object).execute()
 
-            if 'updated' in response:
+            if "updated" in response:
                 import dateutil.parser
                 import dateutil.tz
 
                 if not ts.tzinfo:
                     ts = ts.replace(tzinfo=dateutil.tz.tzutc())
 
-                updated = dateutil.parser.parse(response['updated'])
+                updated = dateutil.parser.parse(response["updated"])
                 self.log.info("Verify object date: %s > %s", updated, ts)
 
                 if updated > ts:
                     return True
 
         except errors.HttpError as ex:
-            if ex.resp['status'] != '404':
+            if ex.resp["status"] != "404":
                 raise
 
         return False
@@ -276,13 +287,12 @@ class GoogleCloudStorageHook(GoogleCloudBaseHook):
         service = self.get_conn()
 
         try:
-            service \
-                .objects() \
-                .delete(bucket=bucket, object=object, generation=generation) \
-                .execute()
+            service.objects().delete(
+                bucket=bucket, object=object, generation=generation
+            ).execute()
             return True
         except errors.HttpError as ex:
-            if ex.resp['status'] == '404':
+            if ex.resp["status"] == "404":
                 return False
             raise
 
@@ -308,32 +318,36 @@ class GoogleCloudStorageHook(GoogleCloudBaseHook):
         ids = list()
         pageToken = None
         while True:
-            response = service.objects().list(
-                bucket=bucket,
-                versions=versions,
-                maxResults=maxResults,
-                pageToken=pageToken,
-                prefix=prefix,
-                delimiter=delimiter
-            ).execute()
+            response = (
+                service.objects()
+                .list(
+                    bucket=bucket,
+                    versions=versions,
+                    maxResults=maxResults,
+                    pageToken=pageToken,
+                    prefix=prefix,
+                    delimiter=delimiter,
+                )
+                .execute()
+            )
 
-            if 'prefixes' not in response:
-                if 'items' not in response:
+            if "prefixes" not in response:
+                if "items" not in response:
                     self.log.info("No items found for prefix: %s", prefix)
                     break
 
-                for item in response['items']:
-                    if item and 'name' in item:
-                        ids.append(item['name'])
+                for item in response["items"]:
+                    if item and "name" in item:
+                        ids.append(item["name"])
             else:
-                for item in response['prefixes']:
+                for item in response["prefixes"]:
                     ids.append(item)
 
-            if 'nextPageToken' not in response:
+            if "nextPageToken" not in response:
                 # no further pages of results, so stop the loop
                 break
 
-            pageToken = response['nextPageToken']
+            pageToken = response["nextPageToken"]
             if not pageToken:
                 # empty next page token
                 break
@@ -349,26 +363,23 @@ class GoogleCloudStorageHook(GoogleCloudBaseHook):
         :type object: str
 
         """
-        self.log.info('Checking the file size of object: %s in bucket: %s',
-                      object,
-                      bucket)
+        self.log.info(
+            "Checking the file size of object: %s in bucket: %s", object, bucket
+        )
         service = self.get_conn()
         try:
-            response = service.objects().get(
-                bucket=bucket,
-                object=object
-            ).execute()
+            response = service.objects().get(bucket=bucket, object=object).execute()
 
-            if 'name' in response and response['name'][-1] != '/':
+            if "name" in response and response["name"][-1] != "/":
                 # Remove Directories & Just check size of files
-                size = response['size']
-                self.log.info('The file size of %s is %s bytes.', object, size)
+                size = response["size"]
+                self.log.info("The file size of %s is %s bytes.", object, size)
                 return size
             else:
-                raise ValueError('Object is not a file')
+                raise ValueError("Object is not a file")
         except errors.HttpError as ex:
-            if ex.resp['status'] == '404':
-                raise ValueError('Object Not Found')
+            if ex.resp["status"] == "404":
+                raise ValueError("Object Not Found")
 
     def get_crc32c(self, bucket, object):
         """
@@ -380,22 +391,22 @@ class GoogleCloudStorageHook(GoogleCloudBaseHook):
             storage bucket.
         :type object: str
         """
-        self.log.info('Retrieving the crc32c checksum of '
-                      'object: %s in bucket: %s', object, bucket)
+        self.log.info(
+            "Retrieving the crc32c checksum of " "object: %s in bucket: %s",
+            object,
+            bucket,
+        )
         service = self.get_conn()
         try:
-            response = service.objects().get(
-                bucket=bucket,
-                object=object
-            ).execute()
+            response = service.objects().get(bucket=bucket, object=object).execute()
 
-            crc32c = response['crc32c']
-            self.log.info('The crc32c checksum of %s is %s', object, crc32c)
+            crc32c = response["crc32c"]
+            self.log.info("The crc32c checksum of %s is %s", object, crc32c)
             return crc32c
 
         except errors.HttpError as ex:
-            if ex.resp['status'] == '404':
-                raise ValueError('Object Not Found')
+            if ex.resp["status"] == "404":
+                raise ValueError("Object Not Found")
 
     def get_md5hash(self, bucket, object):
         """
@@ -407,30 +418,29 @@ class GoogleCloudStorageHook(GoogleCloudBaseHook):
             storage bucket.
         :type object: str
         """
-        self.log.info('Retrieving the MD5 hash of '
-                      'object: %s in bucket: %s', object, bucket)
+        self.log.info(
+            "Retrieving the MD5 hash of " "object: %s in bucket: %s", object, bucket
+        )
         service = self.get_conn()
         try:
-            response = service.objects().get(
-                bucket=bucket,
-                object=object
-            ).execute()
+            response = service.objects().get(bucket=bucket, object=object).execute()
 
-            md5hash = response['md5Hash']
-            self.log.info('The md5Hash of %s is %s', object, md5hash)
+            md5hash = response["md5Hash"]
+            self.log.info("The md5Hash of %s is %s", object, md5hash)
             return md5hash
 
         except errors.HttpError as ex:
-            if ex.resp['status'] == '404':
-                raise ValueError('Object Not Found')
+            if ex.resp["status"] == "404":
+                raise ValueError("Object Not Found")
 
-    def create_bucket(self,
-                      bucket_name,
-                      storage_class='MULTI_REGIONAL',
-                      location='US',
-                      project_id=None,
-                      labels=None
-                      ):
+    def create_bucket(
+        self,
+        bucket_name,
+        storage_class="MULTI_REGIONAL",
+        location="US",
+        project_id=None,
+        labels=None,
+    ):
         """
         Creates a new bucket. Google Cloud Storage uses a flat namespace, so
         you can't create a bucket with a name that is already in use.
@@ -469,51 +479,57 @@ class GoogleCloudStorageHook(GoogleCloudBaseHook):
 
         project_id = project_id if project_id is not None else self.project_id
         storage_classes = [
-            'MULTI_REGIONAL',
-            'REGIONAL',
-            'NEARLINE',
-            'COLDLINE',
-            'STANDARD',  # alias for MULTI_REGIONAL/REGIONAL, based on location
+            "MULTI_REGIONAL",
+            "REGIONAL",
+            "NEARLINE",
+            "COLDLINE",
+            "STANDARD",  # alias for MULTI_REGIONAL/REGIONAL, based on location
         ]
 
-        self.log.info('Creating Bucket: %s; Location: %s; Storage Class: %s',
-                      bucket_name, location, storage_class)
+        self.log.info(
+            "Creating Bucket: %s; Location: %s; Storage Class: %s",
+            bucket_name,
+            location,
+            storage_class,
+        )
         if storage_class not in storage_classes:
             raise ValueError(
-                'Invalid value ({}) passed to storage_class. Value should be '
-                'one of {}'.format(storage_class, storage_classes))
+                "Invalid value ({}) passed to storage_class. Value should be "
+                "one of {}".format(storage_class, storage_classes)
+            )
 
-        if not re.match('[a-zA-Z0-9]+', bucket_name[0]):
-            raise ValueError('Bucket names must start with a number or letter.')
+        if not re.match("[a-zA-Z0-9]+", bucket_name[0]):
+            raise ValueError("Bucket names must start with a number or letter.")
 
-        if not re.match('[a-zA-Z0-9]+', bucket_name[-1]):
-            raise ValueError('Bucket names must end with a number or letter.')
+        if not re.match("[a-zA-Z0-9]+", bucket_name[-1]):
+            raise ValueError("Bucket names must end with a number or letter.")
 
         service = self.get_conn()
         bucket_resource = {
-            'name': bucket_name,
-            'location': location,
-            'storageClass': storage_class
+            "name": bucket_name,
+            "location": location,
+            "storageClass": storage_class,
         }
 
-        self.log.info('The Default Project ID is %s', self.project_id)
+        self.log.info("The Default Project ID is %s", self.project_id)
 
         if labels is not None:
-            bucket_resource['labels'] = labels
+            bucket_resource["labels"] = labels
 
         try:
-            response = service.buckets().insert(
-                project=project_id,
-                body=bucket_resource
-            ).execute()
+            response = (
+                service.buckets()
+                .insert(project=project_id, body=bucket_resource)
+                .execute()
+            )
 
-            self.log.info('Bucket: %s created successfully.', bucket_name)
+            self.log.info("Bucket: %s created successfully.", bucket_name)
 
-            return response['id']
+            return response["id"]
 
         except errors.HttpError as ex:
             raise AirflowException(
-                'Bucket creation failed. Error was: {}'.format(ex.content)
+                "Bucket creation failed. Error was: {}".format(ex.content)
             )
 
 
@@ -531,9 +547,9 @@ def _parse_gcs_url(gsurl):
 
     parsed_url = urlparse(gsurl)
     if not parsed_url.netloc:
-        raise AirflowException('Please provide a bucket name')
+        raise AirflowException("Please provide a bucket name")
     else:
         bucket = parsed_url.netloc
         # Remove leading '/' but NOT trailing one
-        blob = parsed_url.path.lstrip('/')
+        blob = parsed_url.path.lstrip("/")
         return bucket, blob

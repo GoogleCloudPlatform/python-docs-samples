@@ -43,23 +43,20 @@ def container_predict(image_file_path, image_key, port_number=8501):
         The response of the prediction request.
     """
 
-    with io.open(image_file_path, 'rb') as image_file:
-        encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
+    with io.open(image_file_path, "rb") as image_file:
+        encoded_image = base64.b64encode(image_file.read()).decode("utf-8")
 
     # The example here only shows prediction with one image. You can extend it
     # to predict with a batch of images indicated by different keys, which can
     # make sure that the responses corresponding to the given image.
     instances = {
-            'instances': [
-                    {'image_bytes': {'b64': str(encoded_image)},
-                     'key': image_key}
-            ]
+        "instances": [{"image_bytes": {"b64": str(encoded_image)}, "key": image_key}]
     }
 
     # This example shows sending requests in the same server that you start
     # docker containers. If you would like to send requests to other servers,
     # please change localhost to IP of other servers.
-    url = 'http://localhost:{}/v1/models/default:predict'.format(port_number)
+    url = "http://localhost:{}/v1/models/default:predict".format(port_number)
 
     response = requests.post(url, data=json.dumps(instances))
     print(response.json())
@@ -69,13 +66,13 @@ def container_predict(image_file_path, image_key, port_number=8501):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--image_file_path', type=str)
-    parser.add_argument('--image_key', type=str, default='1')
-    parser.add_argument('--port_number', type=int, default=8501)
+    parser.add_argument("--image_file_path", type=str)
+    parser.add_argument("--image_key", type=str, default="1")
+    parser.add_argument("--port_number", type=int, default=8501)
     args = parser.parse_args()
 
     container_predict(args.image_file_path, args.image_key, args.port_number)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

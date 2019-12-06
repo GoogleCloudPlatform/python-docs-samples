@@ -16,32 +16,34 @@
 
 import lookup_entry
 
-BIGQUERY_PROJECT = 'bigquery-public-data'
-BIGQUERY_DATASET = 'new_york_taxi_trips'
-BIGQUERY_TABLE = 'taxi_zone_geom'
+BIGQUERY_PROJECT = "bigquery-public-data"
+BIGQUERY_DATASET = "new_york_taxi_trips"
+BIGQUERY_TABLE = "taxi_zone_geom"
 
-PUBSUB_PROJECT = 'pubsub-public-data'
-PUBSUB_TOPIC = 'taxirides-realtime'
+PUBSUB_PROJECT = "pubsub-public-data"
+PUBSUB_TOPIC = "taxirides-realtime"
 
 
 def test_lookup_bigquery_dataset():
-    assert lookup_entry.lookup_bigquery_dataset(
-        BIGQUERY_PROJECT, BIGQUERY_DATASET)
+    assert lookup_entry.lookup_bigquery_dataset(BIGQUERY_PROJECT, BIGQUERY_DATASET)
 
 
 def test_lookup_bigquery_dataset_sql_resource():
     assert lookup_entry.lookup_bigquery_dataset_sql_resource(
-        BIGQUERY_PROJECT, BIGQUERY_DATASET)
+        BIGQUERY_PROJECT, BIGQUERY_DATASET
+    )
 
 
 def test_lookup_bigquery_table():
     assert lookup_entry.lookup_bigquery_table(
-        BIGQUERY_PROJECT, BIGQUERY_DATASET, BIGQUERY_TABLE)
+        BIGQUERY_PROJECT, BIGQUERY_DATASET, BIGQUERY_TABLE
+    )
 
 
 def test_lookup_bigquery_table_sql_resource():
     assert lookup_entry.lookup_bigquery_table_sql_resource(
-        BIGQUERY_PROJECT, BIGQUERY_DATASET, BIGQUERY_TABLE)
+        BIGQUERY_PROJECT, BIGQUERY_DATASET, BIGQUERY_TABLE
+    )
 
 
 def test_lookup_pubsub_topic():
@@ -49,5 +51,4 @@ def test_lookup_pubsub_topic():
 
 
 def test_lookup_pubsub_topic_sql_resource():
-    assert lookup_entry.lookup_pubsub_topic_sql_resource(
-        PUBSUB_PROJECT, PUBSUB_TOPIC)
+    assert lookup_entry.lookup_pubsub_topic_sql_resource(PUBSUB_PROJECT, PUBSUB_TOPIC)

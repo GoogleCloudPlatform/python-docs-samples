@@ -21,24 +21,22 @@ import relation_model_models as models
 
 def test_relationship(testbed):
     # Creates 1 contact and 2 companies
-    addressbook_key = ndb.Key('AddressBook', 'tmatsuo')
-    mary = models.Contact(parent=addressbook_key, name='Mary')
+    addressbook_key = ndb.Key("AddressBook", "tmatsuo")
+    mary = models.Contact(parent=addressbook_key, name="Mary")
     mary.put()
-    google = models.Company(name='Google')
+    google = models.Company(name="Google")
     google.put()
-    candit = models.Company(name='Candit')
+    candit = models.Company(name="Candit")
     candit.put()
 
     # first google hires Mary
-    models.ContactCompany(parent=addressbook_key,
-                          contact=mary.key,
-                          company=google.key,
-                          title='engineer').put()
+    models.ContactCompany(
+        parent=addressbook_key, contact=mary.key, company=google.key, title="engineer"
+    ).put()
     # then another company named 'candit' hires Mary too
-    models.ContactCompany(parent=addressbook_key,
-                          contact=mary.key,
-                          company=candit.key,
-                          title='president').put()
+    models.ContactCompany(
+        parent=addressbook_key, contact=mary.key, company=candit.key, title="president"
+    ).put()
 
     # get the list of companies that Mary belongs to
     assert len(mary.companies) == 2

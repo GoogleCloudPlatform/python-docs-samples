@@ -15,23 +15,23 @@ from __future__ import absolute_import
 
 import os
 
-from detect_intent_with_model_selection import \
-    detect_intent_with_model_selection
+from detect_intent_with_model_selection import detect_intent_with_model_selection
 
 DIRNAME = os.path.realpath(os.path.dirname(__file__))
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-SESSION_ID = 'fake_session_for_testing'
+PROJECT_ID = os.getenv("GCLOUD_PROJECT")
+SESSION_ID = "fake_session_for_testing"
 AUDIOS = [
-    '{0}/resources/book_a_room.wav'.format(DIRNAME),
-    '{0}/resources/mountain_view.wav'.format(DIRNAME),
-    '{0}/resources/today.wav'.format(DIRNAME),
+    "{0}/resources/book_a_room.wav".format(DIRNAME),
+    "{0}/resources/mountain_view.wav".format(DIRNAME),
+    "{0}/resources/today.wav".format(DIRNAME),
 ]
 
 
 def test_detect_intent_audio_with_model_selection(capsys):
     for audio_file_path in AUDIOS:
-        detect_intent_with_model_selection(PROJECT_ID, SESSION_ID,
-                                           audio_file_path, 'en-US')
+        detect_intent_with_model_selection(
+            PROJECT_ID, SESSION_ID, audio_file_path, "en-US"
+        )
     out, _ = capsys.readouterr()
 
-    assert 'Fulfillment text: What time will the meeting start?' in out
+    assert "Fulfillment text: What time will the meeting start?" in out

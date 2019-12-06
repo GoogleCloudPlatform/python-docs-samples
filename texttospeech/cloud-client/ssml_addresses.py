@@ -17,6 +17,7 @@
 from google.cloud import texttospeech
 
 import html
+
 # [END tts_ssml_address_imports]
 
 
@@ -45,21 +46,22 @@ def ssml_to_audio(ssml_text, outfile):
     # Builds the voice request, selects the language code ("en-US") and
     # the SSML voice gender ("MALE")
     voice = texttospeech.types.VoiceSelectionParams(
-        language_code='en-US',
-        ssml_gender=texttospeech.enums.SsmlVoiceGender.MALE)
+        language_code="en-US", ssml_gender=texttospeech.enums.SsmlVoiceGender.MALE
+    )
 
     # Selects the type of audio file to return
     audio_config = texttospeech.types.AudioConfig(
-        audio_encoding=texttospeech.enums.AudioEncoding.MP3)
+        audio_encoding=texttospeech.enums.AudioEncoding.MP3
+    )
 
     # Performs the text-to-speech request on the text input with the selected
     # voice parameters and audio file type
     response = client.synthesize_speech(synthesis_input, voice, audio_config)
 
     # Writes the synthetic audio to the output file.
-    with open(outfile, 'wb') as out:
+    with open(outfile, "wb") as out:
         out.write(response.audio_content)
-        print('Audio content written to file ' + outfile)
+        print("Audio content written to file " + outfile)
     # [END tts_ssml_address_audio]
 
 
@@ -79,7 +81,7 @@ def text_to_ssml(inputfile):
     # A string of SSML text based on plaintext input
 
     # Parses lines of input file
-    with open(inputfile, 'r') as f:
+    with open(inputfile, "r") as f:
         raw_lines = f.read()
 
     # Replace special characters with HTML Ampersand Character Codes
@@ -91,22 +93,25 @@ def text_to_ssml(inputfile):
 
     # Convert plaintext to SSML
     # Wait two seconds between each address
-    ssml = '<speak>{}</speak>'.format(
-        escaped_lines.replace('\n', '\n<break time="2s"/>'))
+    ssml = "<speak>{}</speak>".format(
+        escaped_lines.replace("\n", '\n<break time="2s"/>')
+    )
 
     # Return the concatenated string of ssml script
     return ssml
+
+
 # [END tts_ssml_address_ssml]
 
 
 # [START tts_ssml_address_test]
 def main():
     # test example address file
-    plaintext = 'resources/example.txt'
+    plaintext = "resources/example.txt"
     ssml_text = text_to_ssml(plaintext)
-    ssml_to_audio(ssml_text, 'resources/example.mp3')
+    ssml_to_audio(ssml_text, "resources/example.mp3")
     # [END tts_ssml_address_test]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

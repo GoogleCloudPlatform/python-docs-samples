@@ -59,9 +59,7 @@ def test_model_list_get_evaluate(capsys):
 
     # get model
     model_id = list_models_output[2].split()[2]
-    automl_natural_language_model.get_model(
-        project_id, compute_region, model_id
-    )
+    automl_natural_language_model.get_model(project_id, compute_region, model_id)
     out, _ = capsys.readouterr()
     assert "Model name: " in out
 

@@ -17,7 +17,7 @@ import sys
 
 from colors import bcolors
 
-ADDR = ''
+ADDR = ""
 PORT = 10000
 BUFF_SIZE = 4096
 device_id = None
@@ -30,60 +30,71 @@ def send_command(sock, message):
     sock.sendto(message.encode(), server_address)
 
     # Receive response
-    print('Waiting for response.....')
+    print("Waiting for response.....")
     response = sock.recv(BUFF_SIZE)
 
     return response
 
 
-def make_message(device_id, action, data=''):
+def make_message(device_id, action, data=""):
     if data:
         return '{{ "device" : "{}", "action":"{}", "data" : "{}" }}'.format(
-            device_id, action, data)
+            device_id, action, data
+        )
     else:
         return '{{ "device" : "{}", "action":"{}" }}'.format(device_id, action)
 
 
-def run_action(device_id, action, data=''):
+def run_action(device_id, action, data=""):
     message = make_message(device_id, action, data)
     if not message:
         return
-    print('Send message: {}'.format(message))
+    print("Send message: {}".format(message))
 
-    event_response = send_command(client_sock, message).decode('utf-8')
-    print('Received response: {}'.format(event_response))
+    event_response = send_command(client_sock, message).decode("utf-8")
+    print("Received response: {}".format(event_response))
 
 
 def main():
     device_id = sys.argv[1]
     if not device_id:
-        sys.exit('The device id must be specified.')
+        sys.exit("The device id must be specified.")
 
-    print('Bringing up device {}'.format(device_id))
+    print("Bringing up device {}".format(device_id))
     try:
-        run_action(device_id, 'detach')
-        run_action(device_id, 'attach')
-        run_action(device_id, 'event', 'LED is online')
-        run_action(device_id, 'subscribe')
+        run_action(device_id, "detach")
+        run_action(device_id, "attach")
+        run_action(device_id, "event", "LED is online")
+        run_action(device_id, "subscribe")
 
         while True:
             response = client_sock.recv(BUFF_SIZE)
-            message = response.decode('utf-8')
+            message = response.decode("utf-8")
             if message.find("ON") != -1:
                 sys.stdout.write(
-                    '\r>> ' + bcolors.CGREEN + bcolors.CBLINK +
-                    " LED is ON " + bcolors.ENDC + ' <<')
+                    "\r>> "
+                    + bcolors.CGREEN
+                    + bcolors.CBLINK
+                    + " LED is ON "
+                    + bcolors.ENDC
+                    + " <<"
+                )
                 sys.stdout.flush()
             elif message.find("OFF") != -1:
                 sys.stdout.write(
-                    '\r >>' + bcolors.CRED + bcolors.BOLD +
-                    " LED is OFF " + bcolors.ENDC + ' <<')
+                    "\r >>"
+                    + bcolors.CRED
+                    + bcolors.BOLD
+                    + " LED is OFF "
+                    + bcolors.ENDC
+                    + " <<"
+                )
                 sys.stdout.flush()
 
     finally:
-        print('closing socket')
+        print("closing socket")
         client_sock.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -21,8 +21,8 @@ import responses
 
 @pytest.fixture
 def app(monkeypatch):
-    monkeypatch.setenv('MAILGUN_DOMAIN_NAME', 'example.com')
-    monkeypatch.setenv('MAILGUN_API_KEY', 'apikey')
+    monkeypatch.setenv("MAILGUN_DOMAIN_NAME", "example.com")
+    monkeypatch.setenv("MAILGUN_API_KEY", "apikey")
 
     import main
 
@@ -31,7 +31,7 @@ def app(monkeypatch):
 
 
 def test_index(app):
-    r = app.get('/')
+    r = app.get("/")
     assert r.status_code == 200
 
 
@@ -39,26 +39,28 @@ def test_index(app):
 def test_send_error(app):
     responses.add(
         responses.POST,
-        'https://api.mailgun.net/v3/example.com/messages',
-        body='Test error',
-        status=500)
+        "https://api.mailgun.net/v3/example.com/messages",
+        body="Test error",
+        status=500,
+    )
 
     with pytest.raises(requests.exceptions.HTTPError):
-        app.post('/send/email', data={
-            'recipient': 'user@example.com',
-            'submit': 'Send simple email'})
+        app.post(
+            "/send/email",
+            data={"recipient": "user@example.com", "submit": "Send simple email"},
+        )
 
 
 @responses.activate
 def test_send_simple(app):
     responses.add(
-        responses.POST,
-        'https://api.mailgun.net/v3/example.com/messages',
-        body='')
+        responses.POST, "https://api.mailgun.net/v3/example.com/messages", body=""
+    )
 
-    response = app.post('/send/email', data={
-        'recipient': 'user@example.com',
-        'submit': 'Send simple email'})
+    response = app.post(
+        "/send/email",
+        data={"recipient": "user@example.com", "submit": "Send simple email"},
+    )
     assert response.status_code == 200
     assert len(responses.calls) == 1
 
@@ -66,15 +68,16 @@ def test_send_simple(app):
 @responses.activate
 def test_send_complex(app, monkeypatch):
     import main
+
     monkeypatch.chdir(os.path.dirname(main.__file__))
 
     responses.add(
-        responses.POST,
-        'https://api.mailgun.net/v3/example.com/messages',
-        body='')
+        responses.POST, "https://api.mailgun.net/v3/example.com/messages", body=""
+    )
 
-    response = app.post('/send/email', data={
-        'recipient': 'user@example.com',
-        'submit': 'Send complex email'})
+    response = app.post(
+        "/send/email",
+        data={"recipient": "user@example.com", "submit": "Send complex email"},
+    )
     assert response.status_code == 200
     assert len(responses.calls) == 1

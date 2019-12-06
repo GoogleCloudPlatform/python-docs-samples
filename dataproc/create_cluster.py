@@ -25,24 +25,18 @@ def create_cluster(project_id, region, cluster_name):
     # cluster_name = 'YOUR_CLUSTER_NAME'
 
     # Create a client with the endpoint set to the desired cluster region
-    client = dataproc.ClusterControllerClient(client_options={
-        'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
-    })
+    client = dataproc.ClusterControllerClient(
+        client_options={"api_endpoint": "{}-dataproc.googleapis.com:443".format(region)}
+    )
 
     # Create the cluster config
     cluster = {
-        'project_id': project_id,
-        'cluster_name': cluster_name,
-        'config': {
-            'master_config': {
-                'num_instances': 1,
-                'machine_type_uri': 'n1-standard-1'
-            },
-            'worker_config': {
-                'num_instances': 2,
-                'machine_type_uri': 'n1-standard-1'
-            }
-        }
+        "project_id": project_id,
+        "cluster_name": cluster_name,
+        "config": {
+            "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-1"},
+            "worker_config": {"num_instances": 2, "machine_type_uri": "n1-standard-1"},
+        },
     }
 
     # Create the cluster
@@ -50,5 +44,5 @@ def create_cluster(project_id, region, cluster_name):
     result = operation.result()
 
     # Output a success message
-    print('Cluster created successfully: {}'.format(result.cluster_name))
+    print("Cluster created successfully: {}".format(result.cluster_name))
     # [END dataproc_create_cluster]

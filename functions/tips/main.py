@@ -14,10 +14,12 @@
 
 # [START functions_tips_infinite_retries]
 from datetime import datetime, timezone
+
 # [END functions_tips_infinite_retries]
 
 # [START functions_tips_gcp_apis]
 import os
+
 # [END functions_tips_gcp_apis]
 
 # [START functions_tips_infinite_retries]
@@ -28,10 +30,12 @@ from dateutil import parser
 
 # [START functions_tips_retry]
 from google.cloud import error_reporting
+
 # [END functions_tips_retry]
 
 # [START functions_tips_gcp_apis]
 from google.cloud import pubsub_v1
+
 # [END functions_tips_gcp_apis]
 
 # [START functions_tips_connection_pooling]
@@ -82,8 +86,9 @@ def scope_demo(request):
         <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
     function_var = light_computation()
-    return 'Per instance: {}, per function: {}'.format(
-        instance_var, function_var)
+    return "Per instance: {}, per function: {}".format(instance_var, function_var)
+
+
 # [END run_tips_global_scope]
 # [END functions_tips_global_scope]
 
@@ -114,7 +119,9 @@ def lazy_globals(request):
     if not lazy_global:
         lazy_global = function_specific_computation()
 
-    return 'Lazy: {}, non-lazy: {}.'.format(lazy_global, non_lazy_global)
+    return "Lazy: {}, non-lazy: {}.".format(lazy_global, non_lazy_global)
+
+
 # [END run_tips_global_lazy]
 # [END functions_tips_lazy_globals]
 
@@ -137,12 +144,14 @@ def connection_pooling(request):
     """
 
     # The URL to send the request to
-    url = 'http://example.com'
+    url = "http://example.com"
 
     # Process the request
     response = session.get(url)
     response.raise_for_status()
-    return 'Success!'
+    return "Success!"
+
+
 # [END functions_tips_connection_pooling]
 
 
@@ -164,17 +173,19 @@ def gcp_api_call(request):
         <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
 
-    project = os.getenv('GCP_PROJECT')
+    project = os.getenv("GCP_PROJECT")
     request_json = request.get_json()
 
-    topic_name = request_json['topic']
+    topic_name = request_json["topic"]
     topic_path = pubsub.topic_path(project, topic_name)
 
     # Process the request
-    data = 'Test message'.encode('utf-8')
+    data = "Test message".encode("utf-8")
     pubsub.publish(topic_path, data=data)
 
-    return '1 message published'
+    return "1 message published"
+
+
 # [END functions_tips_gcp_apis]
 
 
@@ -199,12 +210,14 @@ def avoid_infinite_retries(data, context):
     # Ignore events that are too old
     max_age_ms = 10000
     if event_age_ms > max_age_ms:
-        print('Dropped {} (age {}ms)'.format(context.event_id, event_age_ms))
-        return 'Timeout'
+        print("Dropped {} (age {}ms)".format(context.event_id, event_age_ms))
+        return "Timeout"
 
     # Do what the function is supposed to do
-    print('Processed {} (age {}ms)'.format(context.event_id, event_age_ms))
+    print("Processed {} (age {}ms)".format(context.event_id, event_age_ms))
     return
+
+
 # [END functions_tips_infinite_retries]
 
 
@@ -223,14 +236,16 @@ def retry_or_not(data, context):
     """
 
     # Retry based on a user-defined parameter
-    try_again = data.data.get('retry') is not None
+    try_again = data.data.get("retry") is not None
 
     try:
-        raise RuntimeError('I failed you')
+        raise RuntimeError("I failed you")
     except RuntimeError:
         error_client.report_exception()
         if try_again:
             raise  # Raise the exception and try again
         else:
-            pass   # Swallow the exception and don't retry
+            pass  # Swallow the exception and don't retry
+
+
 # [END functions_tips_retry]

@@ -19,5 +19,5 @@ def test_featured_job_search_sample(capsys):
 
     featured_job_search_sample.run_sample()
     out, _ = capsys.readouterr()
-    expected = ('.*matchingJobs.*')
+    expected = ".*matchingJobs.*"
     assert re.search(expected, out)

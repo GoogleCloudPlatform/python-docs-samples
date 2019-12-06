@@ -22,16 +22,16 @@ from google.cloud import pubsub_v1
 
 import pub
 
-PROJECT = os.environ['GCLOUD_PROJECT']
-TOPIC = 'quickstart-pub-test-topic'
+PROJECT = os.environ["GCLOUD_PROJECT"]
+TOPIC = "quickstart-pub-test-topic"
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def publisher_client():
     yield pubsub_v1.PublisherClient()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def topic(publisher_client):
     topic_path = publisher_client.topic_path(PROJECT, TOPIC)
 
@@ -54,7 +54,7 @@ def to_delete(publisher_client):
 def test_pub(publisher_client, topic, to_delete, capsys):
     pub.pub(PROJECT, topic)
 
-    to_delete.append('projects/{}/topics/{}'.format(PROJECT, TOPIC))
+    to_delete.append("projects/{}/topics/{}".format(PROJECT, TOPIC))
 
     out, _ = capsys.readouterr()
 

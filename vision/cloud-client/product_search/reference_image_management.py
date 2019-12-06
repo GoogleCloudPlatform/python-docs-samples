@@ -37,7 +37,8 @@ from google.cloud import vision
 
 # [START vision_product_search_create_reference_image]
 def create_reference_image(
-        project_id, location, product_id, reference_image_id, gcs_uri):
+    project_id, location, product_id, reference_image_id, gcs_uri
+):
     """Create a reference image.
     Args:
         project_id: Id of the project.
@@ -50,7 +51,8 @@ def create_reference_image(
 
     # Get the full path of the product.
     product_path = client.product_path(
-        project=project_id, location=location, product=product_id)
+        project=project_id, location=location, product=product_id
+    )
 
     # Create a reference image.
     reference_image = vision.types.ReferenceImage(uri=gcs_uri)
@@ -59,17 +61,19 @@ def create_reference_image(
     image = client.create_reference_image(
         parent=product_path,
         reference_image=reference_image,
-        reference_image_id=reference_image_id)
+        reference_image_id=reference_image_id,
+    )
 
     # Display the reference image information.
-    print('Reference image name: {}'.format(image.name))
-    print('Reference image uri: {}'.format(image.uri))
+    print("Reference image name: {}".format(image.name))
+    print("Reference image uri: {}".format(image.uri))
+
+
 # [END vision_product_search_create_reference_image]
 
 
 # [START vision_product_search_list_reference_images]
-def list_reference_images(
-        project_id, location, product_id):
+def list_reference_images(project_id, location, product_id):
     """List all images in a product.
     Args:
         project_id: Id of the project.
@@ -80,24 +84,25 @@ def list_reference_images(
 
     # Get the full path of the product.
     product_path = client.product_path(
-        project=project_id, location=location, product=product_id)
+        project=project_id, location=location, product=product_id
+    )
 
     # List all the reference images available in the product.
     reference_images = client.list_reference_images(parent=product_path)
 
     # Display the reference image information.
     for image in reference_images:
-        print('Reference image name: {}'.format(image.name))
-        print('Reference image id: {}'.format(image.name.split('/')[-1]))
-        print('Reference image uri: {}'.format(image.uri))
-        print('Reference image bounding polygons: {}'.format(
-            image.bounding_polys))
+        print("Reference image name: {}".format(image.name))
+        print("Reference image id: {}".format(image.name.split("/")[-1]))
+        print("Reference image uri: {}".format(image.uri))
+        print("Reference image bounding polygons: {}".format(image.bounding_polys))
+
+
 # [END vision_product_search_list_reference_images]
 
 
 # [START vision_product_search_get_reference_image]
-def get_reference_image(
-        project_id, location, product_id, reference_image_id):
+def get_reference_image(project_id, location, product_id, reference_image_id):
     """Get info about a reference image.
     Args:
         project_id: Id of the project.
@@ -109,23 +114,27 @@ def get_reference_image(
 
     # Get the full path of the reference image.
     reference_image_path = client.reference_image_path(
-        project=project_id, location=location, product=product_id,
-        reference_image=reference_image_id)
+        project=project_id,
+        location=location,
+        product=product_id,
+        reference_image=reference_image_id,
+    )
 
     # Get complete detail of the reference image.
     image = client.get_reference_image(name=reference_image_path)
 
     # Display the reference image information.
-    print('Reference image name: {}'.format(image.name))
-    print('Reference image id: {}'.format(image.name.split('/')[-1]))
-    print('Reference image uri: {}'.format(image.uri))
-    print('Reference image bounding polygons: {}'.format(image.bounding_polys))
+    print("Reference image name: {}".format(image.name))
+    print("Reference image id: {}".format(image.name.split("/")[-1]))
+    print("Reference image uri: {}".format(image.uri))
+    print("Reference image bounding polygons: {}".format(image.bounding_polys))
+
+
 # [END vision_product_search_get_reference_image]
 
 
 # [START vision_product_search_delete_reference_image]
-def delete_reference_image(
-        project_id, location, product_id, reference_image_id):
+def delete_reference_image(project_id, location, product_id, reference_image_id):
     """Delete a reference image.
     Args:
         project_id: Id of the project.
@@ -137,64 +146,69 @@ def delete_reference_image(
 
     # Get the full path of the reference image.
     reference_image_path = client.reference_image_path(
-        project=project_id, location=location, product=product_id,
-        reference_image=reference_image_id)
+        project=project_id,
+        location=location,
+        product=product_id,
+        reference_image=reference_image_id,
+    )
 
     # Delete the reference image.
     client.delete_reference_image(name=reference_image_path)
-    print('Reference image deleted from product.')
+    print("Reference image deleted from product.")
+
+
 # [END vision_product_search_delete_reference_image]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    subparsers = parser.add_subparsers(dest='command')
-    parser.add_argument(
-        '--project_id',
-        help='Project id.  Required',
-        required=True)
-    parser.add_argument(
-        '--location',
-        help='Compute region name',
-        default='us-west1')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    subparsers = parser.add_subparsers(dest="command")
+    parser.add_argument("--project_id", help="Project id.  Required", required=True)
+    parser.add_argument("--location", help="Compute region name", default="us-west1")
 
     create_reference_image_parser = subparsers.add_parser(
-        'create_reference_image', help=create_reference_image.__doc__)
-    create_reference_image_parser.add_argument('product_id')
-    create_reference_image_parser.add_argument('reference_image_id')
-    create_reference_image_parser.add_argument('gcs_uri')
+        "create_reference_image", help=create_reference_image.__doc__
+    )
+    create_reference_image_parser.add_argument("product_id")
+    create_reference_image_parser.add_argument("reference_image_id")
+    create_reference_image_parser.add_argument("gcs_uri")
 
     list_reference_images_parser = subparsers.add_parser(
-        'list_reference_images',
-        help=list_reference_images.__doc__)
-    list_reference_images_parser.add_argument('product_id')
+        "list_reference_images", help=list_reference_images.__doc__
+    )
+    list_reference_images_parser.add_argument("product_id")
 
     get_reference_image_parser = subparsers.add_parser(
-        'get_reference_image', help=get_reference_image.__doc__)
-    get_reference_image_parser.add_argument('product_id')
-    get_reference_image_parser.add_argument('reference_image_id')
+        "get_reference_image", help=get_reference_image.__doc__
+    )
+    get_reference_image_parser.add_argument("product_id")
+    get_reference_image_parser.add_argument("reference_image_id")
 
     delete_reference_image_parser = subparsers.add_parser(
-        'delete_reference_image', help=delete_reference_image.__doc__)
-    delete_reference_image_parser.add_argument('product_id')
-    delete_reference_image_parser.add_argument('reference_image_id')
+        "delete_reference_image", help=delete_reference_image.__doc__
+    )
+    delete_reference_image_parser.add_argument("product_id")
+    delete_reference_image_parser.add_argument("reference_image_id")
 
     args = parser.parse_args()
 
-    if args.command == 'create_reference_image':
+    if args.command == "create_reference_image":
         create_reference_image(
-            args.project_id, args.location, args.product_id,
-            args.reference_image_id, args.gcs_uri)
-    elif args.command == 'list_reference_images':
-        list_reference_images(
-            args.project_id, args.location, args.product_id)
-    elif args.command == 'get_reference_image':
+            args.project_id,
+            args.location,
+            args.product_id,
+            args.reference_image_id,
+            args.gcs_uri,
+        )
+    elif args.command == "list_reference_images":
+        list_reference_images(args.project_id, args.location, args.product_id)
+    elif args.command == "get_reference_image":
         get_reference_image(
-            args.project_id, args.location, args.product_id,
-            args.reference_image_id)
-    elif args.command == 'delete_reference_image':
+            args.project_id, args.location, args.product_id, args.reference_image_id
+        )
+    elif args.command == "delete_reference_image":
         delete_reference_image(
-            args.project_id, args.location, args.product_id,
-            args.reference_image_id)
+            args.project_id, args.location, args.product_id, args.reference_image_id
+        )

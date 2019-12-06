@@ -26,21 +26,18 @@ import googleapiclient.discovery
 def get_native_encoding_type():
     """Returns the encoding type that matches Python's native strings."""
     if sys.maxunicode == 65535:
-        return 'UTF16'
+        return "UTF16"
     else:
-        return 'UTF32'
+        return "UTF32"
 
 
-def analyze_entities(text, encoding='UTF32'):
+def analyze_entities(text, encoding="UTF32"):
     body = {
-        'document': {
-            'type': 'PLAIN_TEXT',
-            'content': text,
-        },
-        'encoding_type': encoding,
+        "document": {"type": "PLAIN_TEXT", "content": text},
+        "encoding_type": encoding,
     }
 
-    service = googleapiclient.discovery.build('language', 'v1')
+    service = googleapiclient.discovery.build("language", "v1")
 
     request = service.documents().analyzeEntities(body=body)
     response = request.execute()
@@ -48,16 +45,13 @@ def analyze_entities(text, encoding='UTF32'):
     return response
 
 
-def analyze_sentiment(text, encoding='UTF32'):
+def analyze_sentiment(text, encoding="UTF32"):
     body = {
-        'document': {
-            'type': 'PLAIN_TEXT',
-            'content': text,
-        },
-        'encoding_type': encoding
+        "document": {"type": "PLAIN_TEXT", "content": text},
+        "encoding_type": encoding,
     }
 
-    service = googleapiclient.discovery.build('language', 'v1')
+    service = googleapiclient.discovery.build("language", "v1")
 
     request = service.documents().analyzeSentiment(body=body)
     response = request.execute()
@@ -65,16 +59,13 @@ def analyze_sentiment(text, encoding='UTF32'):
     return response
 
 
-def analyze_syntax(text, encoding='UTF32'):
+def analyze_syntax(text, encoding="UTF32"):
     body = {
-        'document': {
-            'type': 'PLAIN_TEXT',
-            'content': text,
-        },
-        'encoding_type': encoding
+        "document": {"type": "PLAIN_TEXT", "content": text},
+        "encoding_type": encoding,
     }
 
-    service = googleapiclient.discovery.build('language', 'v1')
+    service = googleapiclient.discovery.build("language", "v1")
 
     request = service.documents().analyzeSyntax(body=body)
     response = request.execute()
@@ -82,21 +73,20 @@ def analyze_syntax(text, encoding='UTF32'):
     return response
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('command', choices=[
-        'entities', 'sentiment', 'syntax'])
-    parser.add_argument('text')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("command", choices=["entities", "sentiment", "syntax"])
+    parser.add_argument("text")
 
     args = parser.parse_args()
 
-    if args.command == 'entities':
+    if args.command == "entities":
         result = analyze_entities(args.text, get_native_encoding_type())
-    elif args.command == 'sentiment':
+    elif args.command == "sentiment":
         result = analyze_sentiment(args.text, get_native_encoding_type())
-    elif args.command == 'syntax':
+    elif args.command == "syntax":
         result = analyze_syntax(args.text, get_native_encoding_type())
 
     print(json.dumps(result, indent=2))

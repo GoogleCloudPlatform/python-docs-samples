@@ -32,19 +32,19 @@ import googleapiclient.http
 
 
 def main(bucket, filename, readers=[], owners=[]):
-    print('Uploading object..')
+    print("Uploading object..")
     resp = upload_object(bucket, filename, readers, owners)
     print(json.dumps(resp, indent=2))
 
-    print('Fetching object..')
-    with tempfile.TemporaryFile(mode='w+b') as tmpfile:
+    print("Fetching object..")
+    with tempfile.TemporaryFile(mode="w+b") as tmpfile:
         get_object(bucket, filename, out_file=tmpfile)
 
-    print('Deleting object..')
+    print("Deleting object..")
     resp = delete_object(bucket, filename)
     if resp:
         print(json.dumps(resp, indent=2))
-    print('Done')
+    print("Done")
 
 
 def create_service():
@@ -52,7 +52,7 @@ def create_service():
     # the 'storage' service, at version 'v1'.
     # You can browse other available api services and versions here:
     #     http://g.co/dv/api-client-library/python/apis/
-    return googleapiclient.discovery.build('storage', 'v1')
+    return googleapiclient.discovery.build("storage", "v1")
 
 
 def upload_object(bucket, filename, readers, owners):
@@ -60,38 +60,31 @@ def upload_object(bucket, filename, readers, owners):
 
     # This is the request body as specified:
     # http://g.co/cloud/storage/docs/json_api/v1/objects/insert#request
-    body = {
-        'name': filename,
-    }
+    body = {"name": filename}
 
     # If specified, create the access control objects and add them to the
     # request body
     if readers or owners:
-        body['acl'] = []
+        body["acl"] = []
 
     for r in readers:
-        body['acl'].append({
-            'entity': 'user-%s' % r,
-            'role': 'READER',
-            'email': r
-        })
+        body["acl"].append({"entity": "user-%s" % r, "role": "READER", "email": r})
     for o in owners:
-        body['acl'].append({
-            'entity': 'user-%s' % o,
-            'role': 'OWNER',
-            'email': o
-        })
+        body["acl"].append({"entity": "user-%s" % o, "role": "OWNER", "email": o})
 
     # Now insert them into the specified bucket as a media insertion.
     # http://g.co/dv/resources/api-libraries/documentation/storage/v1/python/latest/storage_v1.objects.html#insert
-    with open(filename, 'rb') as f:
+    with open(filename, "rb") as f:
         req = service.objects().insert(
-            bucket=bucket, body=body,
+            bucket=bucket,
+            body=body,
             # You can also just set media_body=filename, but for the sake of
             # demonstration, pass in the more generic file handle, which could
             # very well be a StringIO or similar.
             media_body=googleapiclient.http.MediaIoBaseUpload(
-                f, 'application/octet-stream'))
+                f, "application/octet-stream"
+            ),
+        )
         resp = req.execute()
 
     return resp
@@ -123,16 +116,18 @@ def delete_object(bucket, filename):
     return resp
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('filename', help='The name of the file to upload')
-    parser.add_argument('bucket', help='Your Cloud Storage bucket.')
-    parser.add_argument('--reader', action='append', default=[],
-                        help='Your Cloud Storage bucket.')
-    parser.add_argument('--owner', action='append', default=[],
-                        help='Your Cloud Storage bucket.')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("filename", help="The name of the file to upload")
+    parser.add_argument("bucket", help="Your Cloud Storage bucket.")
+    parser.add_argument(
+        "--reader", action="append", default=[], help="Your Cloud Storage bucket."
+    )
+    parser.add_argument(
+        "--owner", action="append", default=[], help="Your Cloud Storage bucket."
+    )
 
     args = parser.parse_args()
 

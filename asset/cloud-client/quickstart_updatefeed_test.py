@@ -23,11 +23,11 @@ import quickstart_updatefeed
 from google.cloud import resource_manager
 from google.cloud import pubsub_v1
 
-PROJECT = os.environ['GCLOUD_PROJECT']
-ASSET_NAME = 'assets-{}'.format(int(time.time()))
-FEED_ID = 'feed-{}'.format(int(time.time()))
-TOPIC = 'topic-{}'.format(int(time.time()))
-NEW_TOPIC = 'new-topic-{}'.format(int(time.time()))
+PROJECT = os.environ["GCLOUD_PROJECT"]
+ASSET_NAME = "assets-{}".format(int(time.time()))
+FEED_ID = "feed-{}".format(int(time.time()))
+TOPIC = "topic-{}".format(int(time.time()))
+NEW_TOPIC = "new-topic-{}".format(int(time.time()))
 
 
 def test_update_feed(capsys):
@@ -38,8 +38,7 @@ def test_update_feed(capsys):
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(PROJECT, TOPIC)
     publisher.create_topic(topic_path)
-    quickstart_createfeed.create_feed(
-        PROJECT, FEED_ID, [ASSET_NAME, ], full_topic_name)
+    quickstart_createfeed.create_feed(PROJECT, FEED_ID, [ASSET_NAME], full_topic_name)
 
     feed_name = "projects/{}/feeds/{}".format(project_number, FEED_ID)
     new_full_topic_name = "projects/" + PROJECT + "/topics/" + NEW_TOPIC

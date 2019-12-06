@@ -25,18 +25,22 @@ def implicit():
 
     # Get the credentials and project ID from the environment.
     credentials, project = google.auth.default(
-        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+        scopes=["https://www.googleapis.com/auth/cloud-platform"]
+    )
 
     # Create a requests Session object with the credentials.
     session = requests.AuthorizedSession(credentials)
 
     # Make an authenticated API request
     response = session.get(
-        'https://www.googleapis.com/storage/v1/b'.format(project),
-        params={'project': project})
+        "https://www.googleapis.com/storage/v1/b".format(project),
+        params={"project": project},
+    )
     response.raise_for_status()
     buckets = response.json()
     print(buckets)
+
+
 # [END auth_http_implicit]
 
 
@@ -48,36 +52,41 @@ def explicit(project):
     # Construct service account credentials using the service account key
     # file.
     credentials = service_account.Credentials.from_service_account_file(
-        'service_account.json')
+        "service_account.json"
+    )
     credentials = credentials.with_scopes(
-        ['https://www.googleapis.com/auth/cloud-platform'])
+        ["https://www.googleapis.com/auth/cloud-platform"]
+    )
 
     # Create a requests Session object with the credentials.
     session = requests.AuthorizedSession(credentials)
 
     # Make an authenticated API request
     response = session.get(
-        'https://www.googleapis.com/storage/v1/b'.format(project),
-        params={'project': project})
+        "https://www.googleapis.com/storage/v1/b".format(project),
+        params={"project": project},
+    )
     response.raise_for_status()
     buckets = response.json()
     print(buckets)
+
+
 # [END auth_http_explicit]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
 
-    subparsers = parser.add_subparsers(dest='command')
-    subparsers.add_parser('implicit', help=implicit.__doc__)
-    explicit_parser = subparsers.add_parser('explicit', help=explicit.__doc__)
-    explicit_parser.add_argument('project')
+    subparsers = parser.add_subparsers(dest="command")
+    subparsers.add_parser("implicit", help=implicit.__doc__)
+    explicit_parser = subparsers.add_parser("explicit", help=explicit.__doc__)
+    explicit_parser.add_argument("project")
 
     args = parser.parse_args()
 
-    if args.command == 'implicit':
+    if args.command == "implicit":
         implicit()
-    elif args.command == 'explicit':
+    elif args.command == "explicit":
         explicit(args.project)

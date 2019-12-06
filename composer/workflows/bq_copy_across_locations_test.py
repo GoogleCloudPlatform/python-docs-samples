@@ -22,16 +22,18 @@ import pytest
 from . import unit_testing
 
 
-@pytest.fixture(scope='module', autouse=True)
+@pytest.fixture(scope="module", autouse=True)
 def gcs_plugin():
-    plugins_dir = os.path.abspath(os.path.join(
-        os.path.dirname(__file__),
-        '..',
-        '..',
-        'third_party',
-        'apache-airflow',
-        'plugins',
-    ))
+    plugins_dir = os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "..",
+            "third_party",
+            "apache-airflow",
+            "plugins",
+        )
+    )
     sys.path.append(plugins_dir)
     yield
     sys.path.remove(plugins_dir)
@@ -45,10 +47,11 @@ def test_dag():
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
     example_file_path = os.path.join(
-        os.path.abspath(os.path.dirname(__file__)),
-        'bq_copy_eu_to_us_sample.csv')
-    models.Variable.set('table_list_file_path', example_file_path)
-    models.Variable.set('gcs_source_bucket', 'example-project')
-    models.Variable.set('gcs_dest_bucket', 'us-central1-f')
+        os.path.abspath(os.path.dirname(__file__)), "bq_copy_eu_to_us_sample.csv"
+    )
+    models.Variable.set("table_list_file_path", example_file_path)
+    models.Variable.set("gcs_source_bucket", "example-project")
+    models.Variable.set("gcs_dest_bucket", "us-central1-f")
     from . import bq_copy_across_locations as module
+
     unit_testing.assert_has_valid_dag(module)

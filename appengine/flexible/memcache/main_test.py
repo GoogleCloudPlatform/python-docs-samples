@@ -20,22 +20,20 @@ except ImportError:
     main = None
 
 
-@pytest.mark.skipif(
-    not main,
-    reason='pylibmc not installed.')
+@pytest.mark.skipif(not main, reason="pylibmc not installed.")
 def test_index():
     try:
-        main.memcache_client.set('counter', 0)
+        main.memcache_client.set("counter", 0)
     except Exception:
-        pytest.skip('Memcache is unavailable.')
+        pytest.skip("Memcache is unavailable.")
 
     main.app.testing = True
     client = main.app.test_client()
 
-    r = client.get('/')
+    r = client.get("/")
     assert r.status_code == 200
-    assert '1' in r.data.decode('utf-8')
+    assert "1" in r.data.decode("utf-8")
 
-    r = client.get('/')
+    r = client.get("/")
     assert r.status_code == 200
-    assert '2' in r.data.decode('utf-8')
+    assert "2" in r.data.decode("utf-8")

@@ -43,13 +43,17 @@ def _id(name):
 
 def test_list_models():
     ensure_model_ready()
-    assert next(
+    assert (
+        next(
             (
                 m
-                for m
-                in automl_tables_model.list_models(PROJECT, REGION)
+                for m in automl_tables_model.list_models(PROJECT, REGION)
                 if m.display_name == STATIC_MODEL
-            ), None) is not None
+            ),
+            None,
+        )
+        is not None
+    )
 
 
 def test_list_model_evaluations():
@@ -68,10 +72,7 @@ def test_get_model_evaluations():
         PROJECT, REGION, model.display_name
     )[0]
     mep = automl_tables_model.get_model_evaluation(
-        PROJECT,
-        REGION,
-        model.name.rpartition('/')[2],
-        me.name.rpartition('/')[2]
+        PROJECT, REGION, model.name.rpartition("/")[2], me.name.rpartition("/")[2]
     )
 
     assert mep.name == me.name
@@ -86,5 +87,5 @@ def ensure_model_ready():
 
     dataset = dataset_test.ensure_dataset_ready()
     return automl_tables_model.create_model(
-            PROJECT, REGION, dataset.display_name, name, 1000
+        PROJECT, REGION, dataset.display_name, name, 1000
     )

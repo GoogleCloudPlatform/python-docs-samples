@@ -41,9 +41,7 @@ def predict(project_id, compute_region, model_id, file_path):
     prediction_client = automl.PredictionServiceClient()
 
     # Get the full path of the model.
-    model_full_id = automl_client.model_path(
-        project_id, compute_region, model_id
-    )
+    model_full_id = automl_client.model_path(project_id, compute_region, model_id)
 
     # Read the file content for translation.
     with open(file_path, "rb") as content_file:
@@ -66,8 +64,7 @@ def predict(project_id, compute_region, model_id, file_path):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     subparsers = parser.add_subparsers(dest="command")
 

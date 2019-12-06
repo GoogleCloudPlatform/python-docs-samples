@@ -33,7 +33,7 @@ def is_ipv6(addr):
 
 
 # [START gae_flex_datastore_app]
-@app.route('/')
+@app.route("/")
 def index():
     ds = datastore.Client()
 
@@ -41,40 +41,44 @@ def index():
 
     # Keep only the first two octets of the IP address.
     if is_ipv6(user_ip):
-        user_ip = ':'.join(user_ip.split(':')[:2])
+        user_ip = ":".join(user_ip.split(":")[:2])
     else:
-        user_ip = '.'.join(user_ip.split('.')[:2])
+        user_ip = ".".join(user_ip.split(".")[:2])
 
-    entity = datastore.Entity(key=ds.key('visit'))
-    entity.update({
-        'user_ip': user_ip,
-        'timestamp': datetime.datetime.utcnow()
-    })
+    entity = datastore.Entity(key=ds.key("visit"))
+    entity.update({"user_ip": user_ip, "timestamp": datetime.datetime.utcnow()})
 
     ds.put(entity)
 
-    query = ds.query(kind='visit', order=('-timestamp',))
+    query = ds.query(kind="visit", order=("-timestamp",))
 
     results = [
-        'Time: {timestamp} Addr: {user_ip}'.format(**x)
-        for x in query.fetch(limit=10)]
+        "Time: {timestamp} Addr: {user_ip}".format(**x) for x in query.fetch(limit=10)
+    ]
 
-    output = 'Last 10 visits:\n{}'.format('\n'.join(results))
+    output = "Last 10 visits:\n{}".format("\n".join(results))
 
-    return output, 200, {'Content-Type': 'text/plain; charset=utf-8'}
+    return output, 200, {"Content-Type": "text/plain; charset=utf-8"}
+
+
 # [END gae_flex_datastore_app]
 
 
 @app.errorhandler(500)
 def server_error(e):
-    logging.exception('An error occurred during a request.')
-    return """
+    logging.exception("An error occurred during a request.")
+    return (
+        """
     An internal error occurred: <pre>{}</pre>
     See logs for full stacktrace.
-    """.format(e), 500
+    """.format(
+            e
+        ),
+        500,
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)

@@ -16,18 +16,17 @@ import os
 
 import create_http_task_with_token
 
-TEST_PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-TEST_LOCATION = os.getenv('TEST_QUEUE_LOCATION', 'us-central1')
-TEST_QUEUE_NAME = os.getenv('TEST_QUEUE_NAME', 'my-queue')
+TEST_PROJECT_ID = os.getenv("GCLOUD_PROJECT")
+TEST_LOCATION = os.getenv("TEST_QUEUE_LOCATION", "us-central1")
+TEST_QUEUE_NAME = os.getenv("TEST_QUEUE_NAME", "my-queue")
 TEST_SERVICE_ACCOUNT = (
-    'test-run-invoker@python-docs-samples-tests.iam.gserviceaccount.com')
+    "test-run-invoker@python-docs-samples-tests.iam.gserviceaccount.com"
+)
 
 
 def test_create_http_task_with_token():
-    url = 'https://example.com/task_handler'
-    result = create_http_task_with_token.create_http_task(TEST_PROJECT_ID,
-                                                          TEST_QUEUE_NAME,
-                                                          TEST_LOCATION,
-                                                          url,
-                                                          TEST_SERVICE_ACCOUNT)
+    url = "https://example.com/task_handler"
+    result = create_http_task_with_token.create_http_task(
+        TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION, url, TEST_SERVICE_ACCOUNT
+    )
     assert TEST_QUEUE_NAME in result.name

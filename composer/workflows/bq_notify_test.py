@@ -24,9 +24,10 @@ def test_dag_import():
     environment. This is a recommended sanity check by the official Airflow
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
-    models.Variable.set('gcs_bucket', 'example_bucket')
-    models.Variable.set('gcp_project', 'example-project')
-    models.Variable.set('gce_zone', 'us-central1-f')
-    models.Variable.set('email', 'notify@example.com')
+    models.Variable.set("gcs_bucket", "example_bucket")
+    models.Variable.set("gcp_project", "example-project")
+    models.Variable.set("gce_zone", "us-central1-f")
+    models.Variable.set("email", "notify@example.com")
     from . import bq_notify as module
+
     unit_testing.assert_has_valid_dag(module)

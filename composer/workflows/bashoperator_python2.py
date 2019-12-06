@@ -20,25 +20,26 @@ from airflow.operators import bash_operator
 
 
 yesterday = datetime.datetime.combine(
-    datetime.datetime.today() - datetime.timedelta(1),
-    datetime.datetime.min.time())
+    datetime.datetime.today() - datetime.timedelta(1), datetime.datetime.min.time()
+)
 
 
 default_dag_args = {
     # Setting start date as yesterday starts the DAG immediately when it is
     # detected in the Cloud Storage bucket.
-    'start_date': yesterday,
+    "start_date": yesterday
 }
 
 with models.DAG(
-        'composer_sample_bashoperator_python2',
-        schedule_interval=datetime.timedelta(days=1),
-        default_args=default_dag_args) as dag:
+    "composer_sample_bashoperator_python2",
+    schedule_interval=datetime.timedelta(days=1),
+    default_args=default_dag_args,
+) as dag:
 
     run_python2 = bash_operator.BashOperator(
-        task_id='run_python2',
+        task_id="run_python2",
         # This example runs a Python script from the data folder to prevent
         # Airflow from attempting to parse the script as a DAG.
-        bash_command='python2 /home/airflow/gcs/data/python2_script.py',
+        bash_command="python2 /home/airflow/gcs/data/python2_script.py",
     )
 # [END composer_bashoperator_python2]

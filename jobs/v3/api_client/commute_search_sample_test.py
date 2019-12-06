@@ -19,5 +19,5 @@ def test_commute_search_sample(capsys):
 
     commute_search_sample.run_sample()
     out, _ = capsys.readouterr()
-    expected = ('.*matchingJobs.*1600 Amphitheatre Pkwy.*')
+    expected = ".*matchingJobs.*1600 Amphitheatre Pkwy.*"
     assert re.search(expected, out)

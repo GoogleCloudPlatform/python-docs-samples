@@ -17,26 +17,31 @@ import os
 import pytest
 
 from product_management import (
-    create_product, delete_product, get_product, list_products,
-    purge_orphan_products, update_product_labels)
+    create_product,
+    delete_product,
+    get_product,
+    list_products,
+    purge_orphan_products,
+    update_product_labels,
+)
 
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-LOCATION = 'us-west1'
+PROJECT_ID = os.getenv("GCLOUD_PROJECT")
+LOCATION = "us-west1"
 
-PRODUCT_DISPLAY_NAME = 'fake_product_display_name_for_testing'
-PRODUCT_CATEGORY = 'homegoods'
-PRODUCT_ID = 'fake_product_id_for_testing'
-KEY = 'fake_key_for_testing'
-VALUE = 'fake_value_for_testing'
+PRODUCT_DISPLAY_NAME = "fake_product_display_name_for_testing"
+PRODUCT_CATEGORY = "homegoods"
+PRODUCT_ID = "fake_product_id_for_testing"
+KEY = "fake_key_for_testing"
+VALUE = "fake_value_for_testing"
 
 
 @pytest.fixture
 def product():
     # set up
     create_product(
-        PROJECT_ID, LOCATION, PRODUCT_ID,
-        PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY)
+        PROJECT_ID, LOCATION, PRODUCT_ID, PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY
+    )
 
     yield None
 
@@ -50,8 +55,8 @@ def test_create_product(capsys):
     assert PRODUCT_ID not in out
 
     create_product(
-        PROJECT_ID, LOCATION, PRODUCT_ID,
-        PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY)
+        PROJECT_ID, LOCATION, PRODUCT_ID, PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY
+    )
     list_products(PROJECT_ID, LOCATION)
     out, _ = capsys.readouterr()
     assert PRODUCT_ID in out

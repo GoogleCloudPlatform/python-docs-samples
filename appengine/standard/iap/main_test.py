@@ -19,17 +19,17 @@ import webtest
 def test_index(testbed, login):
     app = webtest.TestApp(main.app)
 
-    response = app.get('/')
-    assert 'Login' in response.body
+    response = app.get("/")
+    assert "Login" in response.body
 
     login()
-    response = app.get('/')
-    assert 'Logout' in response.body
-    assert 'user@example.com' in response.body
+    response = app.get("/")
+    assert "Logout" in response.body
+    assert "user@example.com" in response.body
 
 
 def test_status(testbed):
     app = webtest.TestApp(main.app)
 
-    response = app.get('/status')
-    assert 'Success' in response.body
+    response = app.get("/status")
+    assert "Success" in response.body

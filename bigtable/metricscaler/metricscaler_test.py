@@ -25,7 +25,7 @@ from metricscaler import main
 from metricscaler import scale_bigtable
 
 # tests assume instance and cluster have the same ID
-BIGTABLE_INSTANCE = os.environ['BIGTABLE_CLUSTER']
+BIGTABLE_INSTANCE = os.environ["BIGTABLE_CLUSTER"]
 SIZE_CHANGE_STEP = 3
 
 # System tests to verify API calls succeed
@@ -51,7 +51,7 @@ def test_scale_bigtable():
         cluster.reload()
         new_node_count = cluster.serve_nodes
         try:
-            assert (new_node_count == (original_node_count + SIZE_CHANGE_STEP))
+            assert new_node_count == (original_node_count + SIZE_CHANGE_STEP)
         except AssertionError:
             if n == 9:
                 raise
@@ -70,30 +70,25 @@ def test_scale_bigtable():
 
 
 # Unit test for logic
-@patch('time.sleep')
-@patch('metricscaler.get_cpu_load')
-@patch('metricscaler.scale_bigtable')
+@patch("time.sleep")
+@patch("metricscaler.get_cpu_load")
+@patch("metricscaler.scale_bigtable")
 def test_main(scale_bigtable, get_cpu_load, sleep):
     SHORT_SLEEP = 5
     LONG_SLEEP = 10
     get_cpu_load.return_value = 0.5
 
-    main(BIGTABLE_INSTANCE, BIGTABLE_INSTANCE, 0.6, 0.3, SHORT_SLEEP,
-         LONG_SLEEP)
+    main(BIGTABLE_INSTANCE, BIGTABLE_INSTANCE, 0.6, 0.3, SHORT_SLEEP, LONG_SLEEP)
     scale_bigtable.assert_not_called()
     scale_bigtable.reset_mock()
 
     get_cpu_load.return_value = 0.7
-    main(BIGTABLE_INSTANCE, BIGTABLE_INSTANCE, 0.6, 0.3, SHORT_SLEEP,
-         LONG_SLEEP)
-    scale_bigtable.assert_called_once_with(BIGTABLE_INSTANCE,
-                                           BIGTABLE_INSTANCE, True)
+    main(BIGTABLE_INSTANCE, BIGTABLE_INSTANCE, 0.6, 0.3, SHORT_SLEEP, LONG_SLEEP)
+    scale_bigtable.assert_called_once_with(BIGTABLE_INSTANCE, BIGTABLE_INSTANCE, True)
     scale_bigtable.reset_mock()
 
     get_cpu_load.return_value = 0.2
-    main(BIGTABLE_INSTANCE, BIGTABLE_INSTANCE, 0.6, 0.3, SHORT_SLEEP,
-         LONG_SLEEP)
-    scale_bigtable.assert_called_once_with(BIGTABLE_INSTANCE,
-                                           BIGTABLE_INSTANCE, False)
+    main(BIGTABLE_INSTANCE, BIGTABLE_INSTANCE, 0.6, 0.3, SHORT_SLEEP, LONG_SLEEP)
+    scale_bigtable.assert_called_once_with(BIGTABLE_INSTANCE, BIGTABLE_INSTANCE, False)
 
     scale_bigtable.reset_mock()

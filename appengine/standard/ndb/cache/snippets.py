@@ -27,7 +27,7 @@ def set_memcache_policy(func):
 
 def bypass_in_process_cache_for_account_entities():
     context = ndb.get_context()
-    context.set_cache_policy(lambda key: key.kind() != 'Account')
+    context.set_cache_policy(lambda key: key.kind() != "Account")
 
 
 def set_datastore_policy(func):

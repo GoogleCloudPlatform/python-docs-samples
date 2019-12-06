@@ -14,6 +14,7 @@
 
 # [START bqml_data_scientist_tutorial_import_and_client]
 from google.cloud import bigquery
+
 # [END bqml_data_scientist_tutorial_import_and_client]
 import pytest
 
@@ -25,14 +26,13 @@ client = bigquery.Client()
 @pytest.fixture
 def delete_dataset():
     yield
-    client.delete_dataset(
-        client.dataset('bqml_tutorial'), delete_contents=True)
+    client.delete_dataset(client.dataset("bqml_tutorial"), delete_contents=True)
 
 
 def test_data_scientist_tutorial(delete_dataset):
     # [START bqml_data_scientist_tutorial_create_dataset]
-    dataset = bigquery.Dataset(client.dataset('bqml_tutorial'))
-    dataset.location = 'US'
+    dataset = bigquery.Dataset(client.dataset("bqml_tutorial"))
+    dataset.location = "US"
     client.create_dataset(dataset)
     # [END bqml_data_scientist_tutorial_create_dataset]
 

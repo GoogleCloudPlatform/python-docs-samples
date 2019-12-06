@@ -21,22 +21,24 @@ app = Flask(__name__)
 
 
 # Define relative URI for job endpoint
-@app.route('/log_payload', methods=['POST'])
+@app.route("/log_payload", methods=["POST"])
 def example_task_handler():
     """Log the job payload."""
-    payload = request.get_data(as_text=True) or '(empty payload)'
-    print('Received job with payload: {}'.format(payload))
-    return 'Printed job payload: {}'.format(payload)
+    payload = request.get_data(as_text=True) or "(empty payload)"
+    print("Received job with payload: {}".format(payload))
+    return "Printed job payload: {}".format(payload)
+
+
 # [END cloud_scheduler_app]
 
 
-@app.route('/')
+@app.route("/")
 def hello():
     """Basic index to verify app is serving."""
-    return 'Hello World!'
+    return "Hello World!"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)

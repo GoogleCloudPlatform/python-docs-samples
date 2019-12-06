@@ -16,12 +16,12 @@ import re
 
 from crud_object import main
 
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 
 
 def test_main(capsys):
     main(BUCKET, __file__)
     out, err = capsys.readouterr()
 
-    assert not re.search(r'Downloaded file [!]=', out)
-    assert re.search(r'Uploading.*Fetching.*Deleting.*Done', out, re.DOTALL)
+    assert not re.search(r"Downloaded file [!]=", out)
+    assert re.search(r"Uploading.*Fetching.*Deleting.*Done", out, re.DOTALL)

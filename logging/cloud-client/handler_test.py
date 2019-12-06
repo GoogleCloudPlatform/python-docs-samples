@@ -19,4 +19,4 @@ import handler
 def test_handler(capsys):
     handler.use_logging_handler()
     out, _ = capsys.readouterr()
-    assert 'Logged' in out
+    assert "Logged" in out

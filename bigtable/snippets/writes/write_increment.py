@@ -30,5 +30,7 @@ def write_increment(project_id, instance_id, table_id):
     row.increment_cell_value(column_family_id, "connected_wifi", -1)
     row.commit()
 
-    print('Successfully updated row {}.'.format(row_key))
+    print("Successfully updated row {}.".format(row_key))
+
+
 # [END bigtable_writes_increment]

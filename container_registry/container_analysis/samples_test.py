@@ -30,22 +30,21 @@ from grafeas.grafeas_v1.gapic.enums import Version
 
 import samples
 
-PROJECT_ID = environ['GCLOUD_PROJECT']
+PROJECT_ID = environ["GCLOUD_PROJECT"]
 SLEEP_TIME = 1
 TRY_LIMIT = 20
 
 
 class TestContainerAnalysisSamples:
-
     def setup_method(self, test_method):
-        print('SETUP {}'.format(test_method.__name__))
+        print("SETUP {}".format(test_method.__name__))
         timestamp = str(int(time()))
-        self.note_id = 'note-{}-{}'.format(timestamp, test_method.__name__)
-        self.image_url = '{}.{}'.format(timestamp, test_method.__name__)
+        self.note_id = "note-{}-{}".format(timestamp, test_method.__name__)
+        self.image_url = "{}.{}".format(timestamp, test_method.__name__)
         self.note_obj = samples.create_note(self.note_id, PROJECT_ID)
 
     def teardown_method(self, test_method):
-        print('TEAR DOWN {}'.format(test_method.__name__))
+        print("TEAR DOWN {}".format(test_method.__name__))
         try:
             samples.delete_note(self.note_id, PROJECT_ID)
         except NotFound:
@@ -63,23 +62,21 @@ class TestContainerAnalysisSamples:
             pass
         else:
             # didn't raise exception we expected
-            assert (False)
+            assert False
 
     def test_create_occurrence(self):
-        created = samples.create_occurrence(self.image_url,
-                                            self.note_id,
-                                            PROJECT_ID,
-                                            PROJECT_ID)
+        created = samples.create_occurrence(
+            self.image_url, self.note_id, PROJECT_ID, PROJECT_ID
+        )
         retrieved = samples.get_occurrence(basename(created.name), PROJECT_ID)
         assert created.name == retrieved.name
         # clean up
         samples.delete_occurrence(basename(created.name), PROJECT_ID)
 
     def test_delete_occurrence(self):
-        created = samples.create_occurrence(self.image_url,
-                                            self.note_id,
-                                            PROJECT_ID,
-                                            PROJECT_ID)
+        created = samples.create_occurrence(
+            self.image_url, self.note_id, PROJECT_ID, PROJECT_ID
+        )
         samples.delete_occurrence(basename(created.name), PROJECT_ID)
         try:
             samples.get_occurrence(basename(created.name), PROJECT_ID)
@@ -90,18 +87,15 @@ class TestContainerAnalysisSamples:
             assert False
 
     def test_occurrences_for_image(self):
-        orig_count = samples.get_occurrences_for_image(self.image_url,
-                                                       PROJECT_ID)
-        occ = samples.create_occurrence(self.image_url,
-                                        self.note_id,
-                                        PROJECT_ID,
-                                        PROJECT_ID)
+        orig_count = samples.get_occurrences_for_image(self.image_url, PROJECT_ID)
+        occ = samples.create_occurrence(
+            self.image_url, self.note_id, PROJECT_ID, PROJECT_ID
+        )
         new_count = 0
         tries = 0
         while new_count != 1 and tries < TRY_LIMIT:
             tries += 1
-            new_count = samples.get_occurrences_for_image(self.image_url,
-                                                          PROJECT_ID)
+            new_count = samples.get_occurrences_for_image(self.image_url, PROJECT_ID)
             sleep(SLEEP_TIME)
         assert new_count == 1
         assert orig_count == 0
@@ -109,18 +103,15 @@ class TestContainerAnalysisSamples:
         samples.delete_occurrence(basename(occ.name), PROJECT_ID)
 
     def test_occurrences_for_note(self):
-        orig_count = samples.get_occurrences_for_note(self.note_id,
-                                                      PROJECT_ID)
-        occ = samples.create_occurrence(self.image_url,
-                                        self.note_id,
-                                        PROJECT_ID,
-                                        PROJECT_ID)
+        orig_count = samples.get_occurrences_for_note(self.note_id, PROJECT_ID)
+        occ = samples.create_occurrence(
+            self.image_url, self.note_id, PROJECT_ID, PROJECT_ID
+        )
         new_count = 0
         tries = 0
         while new_count != 1 and tries < TRY_LIMIT:
             tries += 1
-            new_count = samples.get_occurrences_for_note(self.note_id,
-                                                         PROJECT_ID)
+            new_count = samples.get_occurrences_for_note(self.note_id, PROJECT_ID)
             sleep(SLEEP_TIME)
         assert new_count == 1
         assert orig_count == 0
@@ -131,16 +122,15 @@ class TestContainerAnalysisSamples:
         # create topic if needed
         client = SubscriberClient()
         try:
-            topic_id = 'container-analysis-occurrences-v1'
+            topic_id = "container-analysis-occurrences-v1"
             topic_name = client.topic_path(PROJECT_ID, topic_id)
             publisher = PublisherClient()
             publisher.create_topic(topic_name)
         except AlreadyExists:
             pass
 
-        subscription_id = 'drydockOccurrences'
-        subscription_name = client.subscription_path(PROJECT_ID,
-                                                     subscription_id)
+        subscription_id = "drydockOccurrences"
+        subscription_name = client.subscription_path(PROJECT_ID, subscription_id)
         samples.create_occurrence_subscription(subscription_id, PROJECT_ID)
         tries = 0
         success = False
@@ -153,14 +143,13 @@ class TestContainerAnalysisSamples:
             # test adding 3 more occurrences
             total_created = 3
             for _ in range(total_created):
-                occ = samples.create_occurrence(self.image_url,
-                                                self.note_id,
-                                                PROJECT_ID,
-                                                PROJECT_ID)
+                occ = samples.create_occurrence(
+                    self.image_url, self.note_id, PROJECT_ID, PROJECT_ID
+                )
                 sleep(SLEEP_TIME)
                 samples.delete_occurrence(basename(occ.name), PROJECT_ID)
                 sleep(SLEEP_TIME)
-            print('done. msg_count = {}'.format(receiver.msg_count))
+            print("done. msg_count = {}".format(receiver.msg_count))
             success = receiver.msg_count == total_created
         assert receiver.msg_count == total_created
         # clean up
@@ -177,27 +166,23 @@ class TestContainerAnalysisSamples:
             assert False
 
         # create discovery occurrence
-        note_id = 'discovery-note-{}'.format(int(time()))
+        note_id = "discovery-note-{}".format(int(time()))
         client = containeranalysis_v1.ContainerAnalysisClient()
         grafeas_client = client.get_grafeas_client()
-        note = {
-            'discovery': {
-                'analysis_kind': NoteKind.DISCOVERY
-            }
-        }
-        grafeas_client.\
-            create_note(grafeas_client.project_path(PROJECT_ID), note_id, note)
+        note = {"discovery": {"analysis_kind": NoteKind.DISCOVERY}}
+        grafeas_client.create_note(
+            grafeas_client.project_path(PROJECT_ID), note_id, note
+        )
         occurrence = {
-            'note_name': grafeas_client.note_path(PROJECT_ID, note_id),
-            'resource_uri': self.image_url,
-            'discovery': {
-                'analysis_status': DiscoveryOccurrence.AnalysisStatus
-                                                      .FINISHED_SUCCESS
-            }
+            "note_name": grafeas_client.note_path(PROJECT_ID, note_id),
+            "resource_uri": self.image_url,
+            "discovery": {
+                "analysis_status": DiscoveryOccurrence.AnalysisStatus.FINISHED_SUCCESS
+            },
         }
-        created = grafeas_client.\
-            create_occurrence(grafeas_client.project_path(PROJECT_ID),
-                              occurrence)
+        created = grafeas_client.create_occurrence(
+            grafeas_client.project_path(PROJECT_ID), occurrence
+        )
 
         # poll again
         disc = samples.poll_discovery_finished(self.image_url, 10, PROJECT_ID)
@@ -210,20 +195,19 @@ class TestContainerAnalysisSamples:
         samples.delete_note(note_id, PROJECT_ID)
 
     def test_find_vulnerabilities_for_image(self):
-        occ_list = samples.find_vulnerabilities_for_image(self.image_url,
-                                                          PROJECT_ID)
+        occ_list = samples.find_vulnerabilities_for_image(self.image_url, PROJECT_ID)
         assert len(occ_list) == 0
 
-        created = samples.create_occurrence(self.image_url,
-                                            self.note_id,
-                                            PROJECT_ID,
-                                            PROJECT_ID)
+        created = samples.create_occurrence(
+            self.image_url, self.note_id, PROJECT_ID, PROJECT_ID
+        )
         tries = 0
         count = 0
         while count != 1 and tries < TRY_LIMIT:
             tries += 1
-            occ_list = samples.find_vulnerabilities_for_image(self.image_url,
-                                                              PROJECT_ID)
+            occ_list = samples.find_vulnerabilities_for_image(
+                self.image_url, PROJECT_ID
+            )
             count = len(occ_list)
             sleep(SLEEP_TIME)
         assert len(occ_list) == 1
@@ -231,61 +215,55 @@ class TestContainerAnalysisSamples:
 
     def test_find_high_severity_vulnerabilities(self):
         occ_list = samples.find_high_severity_vulnerabilities_for_image(
-                self.image_url,
-                PROJECT_ID)
+            self.image_url, PROJECT_ID
+        )
         assert len(occ_list) == 0
 
         # create new high severity vulnerability
-        note_id = 'discovery-note-{}'.format(int(time()))
+        note_id = "discovery-note-{}".format(int(time()))
         client = containeranalysis_v1.ContainerAnalysisClient()
         grafeas_client = client.get_grafeas_client()
         note = {
-            'vulnerability': {
-                'severity': Severity.CRITICAL,
-                'details': [
+            "vulnerability": {
+                "severity": Severity.CRITICAL,
+                "details": [
                     {
-                        'affected_cpe_uri': 'your-uri-here',
-                        'affected_package': 'your-package-here',
-                        'min_affected_version': {
-                            'kind': Version.VersionKind.MINIMUM
-                        },
-                        'fixed_version': {
-                            'kind': Version.VersionKind.MAXIMUM
-                        }
+                        "affected_cpe_uri": "your-uri-here",
+                        "affected_package": "your-package-here",
+                        "min_affected_version": {"kind": Version.VersionKind.MINIMUM},
+                        "fixed_version": {"kind": Version.VersionKind.MAXIMUM},
                     }
-                ]
+                ],
             }
         }
-        grafeas_client.\
-            create_note(grafeas_client.project_path(PROJECT_ID), note_id, note)
+        grafeas_client.create_note(
+            grafeas_client.project_path(PROJECT_ID), note_id, note
+        )
         occurrence = {
-            'note_name': client.note_path(PROJECT_ID, note_id),
-            'resource_uri': self.image_url,
-            'vulnerability': {
-                'package_issue': [
+            "note_name": client.note_path(PROJECT_ID, note_id),
+            "resource_uri": self.image_url,
+            "vulnerability": {
+                "package_issue": [
                     {
-                        'affected_cpe_uri': 'your-uri-here',
-                        'affected_package': 'your-package-here',
-                        'min_affected_version': {
-                            'kind': Version.VersionKind.MINIMUM
-                        },
-                        'fixed_version': {
-                            'kind': Version.VersionKind.MAXIMUM
-                        }
+                        "affected_cpe_uri": "your-uri-here",
+                        "affected_package": "your-package-here",
+                        "min_affected_version": {"kind": Version.VersionKind.MINIMUM},
+                        "fixed_version": {"kind": Version.VersionKind.MAXIMUM},
                     }
                 ]
-            }
+            },
         }
-        created = grafeas_client.\
-            create_occurrence(grafeas_client.project_path(PROJECT_ID),
-                              occurrence)
+        created = grafeas_client.create_occurrence(
+            grafeas_client.project_path(PROJECT_ID), occurrence
+        )
         # query again
         tries = 0
         count = 0
         while count != 1 and tries < TRY_LIMIT:
             tries += 1
-            occ_list = samples.find_vulnerabilities_for_image(self.image_url,
-                                                              PROJECT_ID)
+            occ_list = samples.find_vulnerabilities_for_image(
+                self.image_url, PROJECT_ID
+            )
             count = len(occ_list)
             sleep(SLEEP_TIME)
         assert len(occ_list) == 1

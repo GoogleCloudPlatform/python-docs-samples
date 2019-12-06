@@ -28,20 +28,13 @@ def write_simple(project_id, instance_id, table_id):
     row_key = "phone#4c410523#20190501"
 
     row = table.row(row_key)
-    row.set_cell(column_family_id,
-                 "connected_cell",
-                 1,
-                 timestamp)
-    row.set_cell(column_family_id,
-                 "connected_wifi",
-                 1,
-                 timestamp)
-    row.set_cell(column_family_id,
-                 "os_build",
-                 "PQ2A.190405.003",
-                 timestamp)
+    row.set_cell(column_family_id, "connected_cell", 1, timestamp)
+    row.set_cell(column_family_id, "connected_wifi", 1, timestamp)
+    row.set_cell(column_family_id, "os_build", "PQ2A.190405.003", timestamp)
 
     row.commit()
 
-    print('Successfully wrote row {}.'.format(row_key))
+    print("Successfully wrote row {}.".format(row_key))
+
+
 # [END bigtable_writes_simple]

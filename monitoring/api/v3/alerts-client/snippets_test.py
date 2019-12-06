@@ -25,8 +25,7 @@ import snippets
 
 
 def random_name(length):
-    return ''.join(
-        [random.choice(string.ascii_lowercase) for i in range(length)])
+    return "".join([random.choice(string.ascii_lowercase) for i in range(length)])
 
 
 class PochanFixture:
@@ -39,25 +38,28 @@ class PochanFixture:
         self.project_name = snippets.project_name()
         self.alert_policy_client = monitoring_v3.AlertPolicyServiceClient()
         self.notification_channel_client = (
-            monitoring_v3.NotificationChannelServiceClient())
+            monitoring_v3.NotificationChannelServiceClient()
+        )
 
     def __enter__(self):
         # Create a policy.
         policy = monitoring_v3.types.alert_pb2.AlertPolicy()
-        json = open('test_alert_policy.json').read()
+        json = open("test_alert_policy.json").read()
         google.protobuf.json_format.Parse(json, policy)
-        policy.display_name = 'snippets-test-' + random_name(10)
+        policy.display_name = "snippets-test-" + random_name(10)
         self.alert_policy = self.alert_policy_client.create_alert_policy(
-            self.project_name, policy)
+            self.project_name, policy
+        )
         # Create a notification channel.
         notification_channel = (
-            monitoring_v3.types.notification_pb2.NotificationChannel())
-        json = open('test_notification_channel.json').read()
+            monitoring_v3.types.notification_pb2.NotificationChannel()
+        )
+        json = open("test_notification_channel.json").read()
         google.protobuf.json_format.Parse(json, notification_channel)
-        notification_channel.display_name = 'snippets-test-' + random_name(10)
-        self.notification_channel = (
-            self.notification_channel_client.create_notification_channel(
-                self.project_name, notification_channel))
+        notification_channel.display_name = "snippets-test-" + random_name(10)
+        self.notification_channel = self.notification_channel_client.create_notification_channel(
+            self.project_name, notification_channel
+        )
         return self
 
     def __exit__(self, type, value, traceback):
@@ -65,10 +67,11 @@ class PochanFixture:
         self.alert_policy_client.delete_alert_policy(self.alert_policy.name)
         if self.notification_channel.name:
             self.notification_channel_client.delete_notification_channel(
-                self.notification_channel.name)
+                self.notification_channel.name
+            )
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def pochan():
     with PochanFixture() as pochan:
         yield pochan
@@ -98,29 +101,32 @@ def test_enable_alert_policies(capsys, pochan):
 
 
 def test_replace_channels(capsys, pochan):
-    alert_policy_id = pochan.alert_policy.name.split('/')[-1]
-    notification_channel_id = pochan.notification_channel.name.split('/')[-1]
+    alert_policy_id = pochan.alert_policy.name.split("/")[-1]
+    notification_channel_id = pochan.notification_channel.name.split("/")[-1]
     snippets.replace_notification_channels(
-        pochan.project_name, alert_policy_id, [notification_channel_id])
+        pochan.project_name, alert_policy_id, [notification_channel_id]
+    )
     out, _ = capsys.readouterr()
     assert "Updated {0}".format(pochan.alert_policy.name) in out
 
 
 def test_backup_and_restore(capsys, pochan):
-    snippets.backup(pochan.project_name, 'backup.json')
+    snippets.backup(pochan.project_name, "backup.json")
     out, _ = capsys.readouterr()
 
-    snippets.restore(pochan.project_name, 'backup.json')
+    snippets.restore(pochan.project_name, "backup.json")
     out, _ = capsys.readouterr()
     assert "Updated {0}".format(pochan.alert_policy.name) in out
-    assert "Updating channel {0}".format(
-        pochan.notification_channel.display_name) in out
+    assert (
+        "Updating channel {0}".format(pochan.notification_channel.display_name) in out
+    )
 
 
 def test_delete_channels(capsys, pochan):
-    notification_channel_id = pochan.notification_channel.name.split('/')[-1]
+    notification_channel_id = pochan.notification_channel.name.split("/")[-1]
     snippets.delete_notification_channels(
-        pochan.project_name, [notification_channel_id], force=True)
+        pochan.project_name, [notification_channel_id], force=True
+    )
     out, _ = capsys.readouterr()
     assert "{0} deleted".format(notification_channel_id) in out
-    pochan.notification_channel.name = ''   # So teardown is not tried
+    pochan.notification_channel.name = ""  # So teardown is not tried

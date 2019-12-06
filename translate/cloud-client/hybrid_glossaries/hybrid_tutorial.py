@@ -23,12 +23,13 @@ from google.api_core.exceptions import AlreadyExists
 from google.cloud import translate_v3beta1 as translate
 from google.cloud import vision
 from google.cloud import texttospeech
+
 # [END translate_hybrid_imports]
 
 
 # [START translate_hybrid_project_id]
 # extract GCP project id
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
+PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 # [END translate_hybrid_project_id]
 
 
@@ -47,7 +48,7 @@ def pic_to_text(infile):
     client = vision.ImageAnnotatorClient()
 
     # Opens the input image file
-    with io.open(infile, 'rb') as image_file:
+    with io.open(infile, "rb") as image_file:
         content = image_file.read()
 
     image = vision.types.Image(content=content)
@@ -80,29 +81,24 @@ def create_glossary(languages, project_id, glossary_name, glossary_uri):
     client = translate.TranslationServiceClient()
 
     # Designates the data center location that you want to use
-    location = 'us-central1'
+    location = "us-central1"
 
     # Set glossary resource name
-    name = client.glossary_path(
-        project_id,
-        location,
-        glossary_name)
+    name = client.glossary_path(project_id, location, glossary_name)
 
     # Set language codes
     language_codes_set = translate.types.Glossary.LanguageCodesSet(
-        language_codes=languages)
+        language_codes=languages
+    )
 
-    gcs_source = translate.types.GcsSource(
-        input_uri=glossary_uri)
+    gcs_source = translate.types.GcsSource(input_uri=glossary_uri)
 
-    input_config = translate.types.GlossaryInputConfig(
-        gcs_source=gcs_source)
+    input_config = translate.types.GlossaryInputConfig(gcs_source=gcs_source)
 
     # Set glossary resource information
     glossary = translate.types.Glossary(
-        name=name,
-        language_codes_set=language_codes_set,
-        input_config=input_config)
+        name=name, language_codes_set=language_codes_set, input_config=input_config
+    )
 
     parent = client.location_path(project_id, location)
 
@@ -112,16 +108,20 @@ def create_glossary(languages, project_id, glossary_name, glossary_uri):
     try:
         operation = client.create_glossary(parent=parent, glossary=glossary)
         operation.result(timeout=90)
-        print('Created glossary ' + glossary_name + '.')
+        print("Created glossary " + glossary_name + ".")
     except AlreadyExists:
-        print('The glossary ' + glossary_name +
-              ' already exists. No new glossary was created.')
+        print(
+            "The glossary "
+            + glossary_name
+            + " already exists. No new glossary was created."
+        )
     # [END translate_hybrid_create_glossary]
 
 
 # [START translate_hybrid_translate]
-def translate_text(text, source_language_code, target_language_code,
-                   project_id, glossary_name):
+def translate_text(
+    text, source_language_code, target_language_code, project_id, glossary_name
+):
     """Translates text to a given language using a glossary
 
     ARGS
@@ -140,25 +140,22 @@ def translate_text(text, source_language_code, target_language_code,
     client = translate.TranslationServiceClient()
 
     # Designates the data center location that you want to use
-    location = 'us-central1'
+    location = "us-central1"
 
-    glossary = client.glossary_path(
-        project_id,
-        location,
-        glossary_name)
+    glossary = client.glossary_path(project_id, location, glossary_name)
 
-    glossary_config = translate.types.TranslateTextGlossaryConfig(
-        glossary=glossary)
+    glossary_config = translate.types.TranslateTextGlossaryConfig(glossary=glossary)
 
     parent = client.location_path(project_id, location)
 
     result = client.translate_text(
         parent=parent,
         contents=[text],
-        mime_type='text/plain',  # mime types: text/plain, text/html
+        mime_type="text/plain",  # mime types: text/plain, text/html
         source_language_code=source_language_code,
         target_language_code=target_language_code,
-        glossary_config=glossary_config)
+        glossary_config=glossary_config,
+    )
 
     # Extract translated text from API response
     return result.glossary_translations[0].translated_text
@@ -186,8 +183,9 @@ def text_to_speech(text, outfile):
 
     # Convert plaintext to SSML in order to wait two seconds
     #   between each line in synthetic speech
-    ssml = '<speak>{}</speak>'.format(
-        escaped_lines.replace('\n', '\n<break time="2s"/>'))
+    ssml = "<speak>{}</speak>".format(
+        escaped_lines.replace("\n", '\n<break time="2s"/>')
+    )
 
     # Instantiates a client
     client = texttospeech.TextToSpeechClient()
@@ -198,21 +196,22 @@ def text_to_speech(text, outfile):
     # Builds the voice request, selects the language code ("en-US") and
     # the SSML voice gender ("MALE")
     voice = texttospeech.types.VoiceSelectionParams(
-        language_code='en-US',
-        ssml_gender=texttospeech.enums.SsmlVoiceGender.MALE)
+        language_code="en-US", ssml_gender=texttospeech.enums.SsmlVoiceGender.MALE
+    )
 
     # Selects the type of audio file to return
     audio_config = texttospeech.types.AudioConfig(
-        audio_encoding=texttospeech.enums.AudioEncoding.MP3)
+        audio_encoding=texttospeech.enums.AudioEncoding.MP3
+    )
 
     # Performs the text-to-speech request on the text input with the selected
     # voice parameters and audio file type
     response = client.synthesize_speech(synthesis_input, voice, audio_config)
 
     # Writes the synthetic audio to the output file.
-    with open(outfile, 'wb') as out:
+    with open(outfile, "wb") as out:
         out.write(response.audio_content)
-        print('Audio content written to file ' + outfile)
+        print("Audio content written to file " + outfile)
     # [END translate_hybrid_tts]
 
 
@@ -220,30 +219,31 @@ def text_to_speech(text, outfile):
 def main():
 
     # Photo from which to extract text
-    infile = 'resources/example.png'
+    infile = "resources/example.png"
     # Name of file that will hold synthetic speech
-    outfile = 'resources/example.mp3'
+    outfile = "resources/example.mp3"
 
     # Defines the languages in the glossary
     # This list must match the languages in the glossary
     #   Here, the glossary includes French and English
-    glossary_langs = ['fr', 'en']
+    glossary_langs = ["fr", "en"]
     # Name that will be assigned to your project's glossary resource
-    glossary_name = 'bistro-glossary'
+    glossary_name = "bistro-glossary"
     # uri of .csv file uploaded to Cloud Storage
-    glossary_uri = 'gs://cloud-samples-data/translation/bistro_glossary.csv'
+    glossary_uri = "gs://cloud-samples-data/translation/bistro_glossary.csv"
 
-    create_glossary(glossary_langs, PROJECT_ID,  glossary_name, glossary_uri)
+    create_glossary(glossary_langs, PROJECT_ID, glossary_name, glossary_uri)
 
     # photo -> detected text
     text_to_translate = pic_to_text(infile)
     # detected text -> translated text
-    text_to_speak = translate_text(text_to_translate, 'fr', 'en',
-                                   PROJECT_ID, glossary_name)
+    text_to_speak = translate_text(
+        text_to_translate, "fr", "en", PROJECT_ID, glossary_name
+    )
     # translated text -> synthetic audio
     text_to_speech(text_to_speak, outfile)
     # [END transalte_hybrid_integration]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

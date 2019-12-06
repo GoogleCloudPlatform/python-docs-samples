@@ -18,24 +18,22 @@ from gcp_devrel.testing.flaky import flaky
 
 from create_instance import main
 
-PROJECT = os.environ['GCLOUD_PROJECT']
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+PROJECT = os.environ["GCLOUD_PROJECT"]
+BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 
 
 @flaky
 def test_main(capsys):
-    main(
-        PROJECT,
-        BUCKET,
-        'us-central1-f',
-        'test-instance',
-        wait=False)
+    main(PROJECT, BUCKET, "us-central1-f", "test-instance", wait=False)
 
     out, _ = capsys.readouterr()
 
     expected_output = re.compile(
-        (r'Instances in project .* and zone us-central1-.* - test-instance'
-         r'.*Deleting instance.*done..$'),
-        re.DOTALL)
+        (
+            r"Instances in project .* and zone us-central1-.* - test-instance"
+            r".*Deleting instance.*done..$"
+        ),
+        re.DOTALL,
+    )
 
     assert re.search(expected_output, out)

@@ -24,6 +24,7 @@ def run_quickstart():
     # [START vision_python_migration_import]
     from google.cloud import vision
     from google.cloud.vision import types
+
     # [END vision_python_migration_import]
 
     # Instantiates a client
@@ -32,10 +33,10 @@ def run_quickstart():
     # [END vision_python_migration_client]
 
     # The name of the image file to annotate
-    file_name = os.path.abspath('resources/wakeupcat.jpg')
+    file_name = os.path.abspath("resources/wakeupcat.jpg")
 
     # Loads the image into memory
-    with io.open(file_name, 'rb') as image_file:
+    with io.open(file_name, "rb") as image_file:
         content = image_file.read()
 
     image = types.Image(content=content)
@@ -44,11 +45,11 @@ def run_quickstart():
     response = client.label_detection(image=image)
     labels = response.label_annotations
 
-    print('Labels:')
+    print("Labels:")
     for label in labels:
         print(label.description)
     # [END vision_quickstart]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_quickstart()

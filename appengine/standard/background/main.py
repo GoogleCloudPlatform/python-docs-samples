@@ -21,16 +21,17 @@ app.yaml scaling must be set to manual or basic.
 
 # [START gae_runtime_import]
 from google.appengine.api import background_thread
+
 # [END gae_runtime_import]
 
 import webapp2
 
-val = 'Dog'
+val = "Dog"
 
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.headers['Content-Type'] = 'text/plain'
+        self.response.headers["Content-Type"] = "text/plain"
         self.response.write(str(val))
 
 
@@ -39,9 +40,9 @@ class SetDogHandler(webapp2.RequestHandler):
 
     def get(self):
         global val
-        val = 'Dog'
-        self.response.headers['Content-Type'] = 'text/plain'
-        self.response.write('Done')
+        val = "Dog"
+        self.response.headers["Content-Type"] = "text/plain"
+        self.response.write("Done")
 
 
 class SetCatBackgroundHandler(webapp2.RequestHandler):
@@ -56,7 +57,7 @@ class SetCatBackgroundHandler(webapp2.RequestHandler):
         The auto GET parameter determines whether to start the thread
         automatically or manually
         """
-        auto = self.request.get('auto')
+        auto = self.request.get("auto")
 
         # [START gae_runtime]
         # sample function to run in a background thread
@@ -66,20 +67,18 @@ class SetCatBackgroundHandler(webapp2.RequestHandler):
 
         if auto:
             # Start the new thread in one command
-            background_thread.start_new_background_thread(change_val, ['Cat'])
+            background_thread.start_new_background_thread(change_val, ["Cat"])
         else:
             # create a new thread and start it
-            t = background_thread.BackgroundThread(
-                target=change_val, args=['Cat'])
+            t = background_thread.BackgroundThread(target=change_val, args=["Cat"])
             t.start()
         # [END gae_runtime]
 
-        self.response.headers['Content-Type'] = 'text/plain'
-        self.response.write('Done')
+        self.response.headers["Content-Type"] = "text/plain"
+        self.response.write("Done")
 
 
-app = webapp2.WSGIApplication([
-    ('/', MainHandler),
-    ('/dog', SetDogHandler),
-    ('/cat', SetCatBackgroundHandler),
-], debug=True)
+app = webapp2.WSGIApplication(
+    [("/", MainHandler), ("/dog", SetDogHandler), ("/cat", SetCatBackgroundHandler)],
+    debug=True,
+)

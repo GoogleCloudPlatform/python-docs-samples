@@ -22,15 +22,15 @@ import pytest
 
 import export
 
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-TEST_SINK_NAME_TMPL = 'example_sink_{}'
-TEST_SINK_FILTER = 'severity>=CRITICAL'
+BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
+TEST_SINK_NAME_TMPL = "example_sink_{}"
+TEST_SINK_FILTER = "severity>=CRITICAL"
 
 
 def _random_id():
-    return ''.join(
-        random.choice(string.ascii_uppercase + string.digits)
-        for _ in range(6))
+    return "".join(
+        random.choice(string.ascii_uppercase + string.digits) for _ in range(6)
+    )
 
 
 @pytest.yield_fixture
@@ -40,7 +40,8 @@ def example_sink():
     sink = client.sink(
         TEST_SINK_NAME_TMPL.format(_random_id()),
         TEST_SINK_FILTER,
-        'storage.googleapis.com/{bucket}'.format(bucket=BUCKET))
+        "storage.googleapis.com/{bucket}".format(bucket=BUCKET),
+    )
 
     sink.create()
 
@@ -64,10 +65,7 @@ def test_create(capsys):
     sink_name = TEST_SINK_NAME_TMPL.format(_random_id())
 
     try:
-        export.create_sink(
-            sink_name,
-            BUCKET,
-            TEST_SINK_FILTER)
+        export.create_sink(sink_name, BUCKET, TEST_SINK_FILTER)
     # Clean-up the temporary sink.
     finally:
         try:
@@ -80,7 +78,7 @@ def test_create(capsys):
 
 
 def test_update(example_sink, capsys):
-    updated_filter = 'severity>=INFO'
+    updated_filter = "severity>=INFO"
     export.update_sink(example_sink.name, updated_filter)
 
     example_sink.reload()

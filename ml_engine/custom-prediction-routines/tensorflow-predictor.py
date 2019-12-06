@@ -63,11 +63,11 @@ class MyPredictor(object):
         Returns:
             An instance of `MyPredictor`.
         """
-        model_path = os.path.join(model_dir, 'model.h5')
+        model_path = os.path.join(model_dir, "model.h5")
         model = keras.models.load_model(model_path)
 
-        preprocessor_path = os.path.join(model_dir, 'preprocessor.pkl')
-        with open(preprocessor_path, 'rb') as f:
+        preprocessor_path = os.path.join(model_dir, "preprocessor.pkl")
+        with open(preprocessor_path, "rb") as f:
             preprocessor = pickle.load(f)
 
         return cls(model, preprocessor)

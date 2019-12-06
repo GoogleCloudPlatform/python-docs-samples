@@ -27,29 +27,22 @@ def undeploy_model(project_id, model_id):
     client = automl.AutoMlClient()
 
     # The full path to your model
-    full_model_id = client.model_path(project_id, 'us-central1', model_id)
+    full_model_id = client.model_path(project_id, "us-central1", model_id)
 
     # Undeploy the model
     response = client.undeploy_model(full_model_id)
 
-    print(u'Model undeploy finished'.format(response.result()))
+    print(u"Model undeploy finished".format(response.result()))
     # [END automl_vision_object_detection_undeploy_model]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
-    parser.add_argument(
-        '--project-id',
-        help='YOUR_PROJECT_ID',
-        required=True)
-    parser.add_argument(
-        '--model-id',
-        help='YOUR_MODEL_ID',
-        required=True)
+    parser.add_argument("--project-id", help="YOUR_PROJECT_ID", required=True)
+    parser.add_argument("--model-id", help="YOUR_MODEL_ID", required=True)
 
     args = parser.parse_args()
 

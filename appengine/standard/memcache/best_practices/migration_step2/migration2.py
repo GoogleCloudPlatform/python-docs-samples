@@ -33,18 +33,18 @@ def get_or_add_person(name, userid):
         person = Person(name=name, userid=userid)
         memcache.add(name, person)
     else:
-        logging.info('Found in cache: ' + name + ', userid: ' + person.userid)
+        logging.info("Found in cache: " + name + ", userid: " + person.userid)
     return person
+
+
 # [END best-practice-2]
 
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
-        person = get_or_add_person('Stevie Wonder', "1")
-        self.response.content_type = 'text/html'
+        person = get_or_add_person("Stevie Wonder", "1")
+        self.response.content_type = "text/html"
         self.response.write(person.name)
 
 
-app = webapp2.WSGIApplication([
-    ('/', MainPage),
-], debug=True)
+app = webapp2.WSGIApplication([("/", MainPage)], debug=True)

@@ -23,9 +23,9 @@ from .write_conditionally import write_conditional
 from .write_increment import write_increment
 from .write_simple import write_simple
 
-PROJECT = os.environ['GCLOUD_PROJECT']
-BIGTABLE_INSTANCE = os.environ['BIGTABLE_CLUSTER']
-TABLE_ID_PREFIX = 'mobile-time-series-{}'
+PROJECT = os.environ["GCLOUD_PROJECT"]
+BIGTABLE_INSTANCE = os.environ["BIGTABLE_CLUSTER"]
+TABLE_ID_PREFIX = "mobile-time-series-{}"
 
 
 @pytest.fixture
@@ -45,7 +45,7 @@ def table_id(bigtable_instance):
     if table.exists():
         table.delete()
 
-    column_family_id = 'stats_summary'
+    column_family_id = "stats_summary"
     column_families = {column_family_id: None}
     table.create(column_families=column_families)
 
@@ -58,19 +58,19 @@ def test_writes(capsys, table_id):
     write_simple(PROJECT, BIGTABLE_INSTANCE, table_id)
 
     out, _ = capsys.readouterr()
-    assert 'Successfully wrote row' in out
+    assert "Successfully wrote row" in out
 
     write_increment(PROJECT, BIGTABLE_INSTANCE, table_id)
 
     out, _ = capsys.readouterr()
-    assert 'Successfully updated row' in out
+    assert "Successfully updated row" in out
 
     write_conditional(PROJECT, BIGTABLE_INSTANCE, table_id)
 
     out, _ = capsys.readouterr()
-    assert 'Successfully updated row\'s os_name' in out
+    assert "Successfully updated row's os_name" in out
 
     write_batch(PROJECT, BIGTABLE_INSTANCE, table_id)
 
     out, _ = capsys.readouterr()
-    assert 'Successfully wrote 2 rows' in out
+    assert "Successfully wrote 2 rows" in out

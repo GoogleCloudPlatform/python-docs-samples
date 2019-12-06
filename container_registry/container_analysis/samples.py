@@ -27,23 +27,21 @@ def create_note(note_id, project_id):
     grafeas_client = client.get_grafeas_client()
     project_name = grafeas_client.project_path(project_id)
     note = {
-        'vulnerability': {
-            'details': [
+        "vulnerability": {
+            "details": [
                 {
-                    'affected_cpe_uri': 'your-uri-here',
-                    'affected_package': 'your-package-here',
-                    'min_affected_version': {
-                        'kind': Version.VersionKind.MINIMUM
-                    },
-                    'fixed_version': {
-                        'kind': Version.VersionKind.MAXIMUM
-                    }
+                    "affected_cpe_uri": "your-uri-here",
+                    "affected_package": "your-package-here",
+                    "min_affected_version": {"kind": Version.VersionKind.MINIMUM},
+                    "fixed_version": {"kind": Version.VersionKind.MAXIMUM},
                 }
             ]
         }
     }
     response = grafeas_client.create_note(project_name, note_id, note)
     return response
+
+
 # [END containeranalysis_create_note]
 
 
@@ -60,6 +58,8 @@ def delete_note(note_id, project_id):
     note_name = grafeas_client.note_path(project_id, note_id)
 
     grafeas_client.delete_note(note_name)
+
+
 # [END containeranalysis_delete_note]
 
 
@@ -81,25 +81,23 @@ def create_occurrence(resource_url, note_id, occurrence_project, note_project):
     formatted_project = grafeas_client.project_path(occurrence_project)
 
     occurrence = {
-        'note_name': formatted_note,
-        'resource_uri': resource_url,
-        'vulnerability': {
-            'package_issue': [
+        "note_name": formatted_note,
+        "resource_uri": resource_url,
+        "vulnerability": {
+            "package_issue": [
                 {
-                    'affected_cpe_uri': 'your-uri-here',
-                    'affected_package': 'your-package-here',
-                    'min_affected_version': {
-                        'kind': Version.VersionKind.MINIMUM
-                    },
-                    'fixed_version': {
-                        'kind': Version.VersionKind.MAXIMUM
-                    }
+                    "affected_cpe_uri": "your-uri-here",
+                    "affected_package": "your-package-here",
+                    "min_affected_version": {"kind": Version.VersionKind.MINIMUM},
+                    "fixed_version": {"kind": Version.VersionKind.MAXIMUM},
                 }
             ]
-        }
+        },
     }
 
     return grafeas_client.create_occurrence(formatted_project, occurrence)
+
+
 # [END containeranalysis_create_occurrence]
 
 
@@ -115,6 +113,8 @@ def delete_occurrence(occurrence_id, project_id):
     grafeas_client = client.get_grafeas_client()
     parent = grafeas_client.occurrence_path(project_id, occurrence_id)
     grafeas_client.delete_occurrence(parent)
+
+
 # [END containeranalysis_delete_occurrence]
 
 
@@ -131,6 +131,8 @@ def get_note(note_id, project_id):
     note_name = grafeas_client.note_path(project_id, note_id)
     response = grafeas_client.get_note(note_name)
     return response
+
+
 # [END containeranalysis_get_note]
 
 
@@ -146,6 +148,8 @@ def get_occurrence(occurrence_id, project_id):
     grafeas_client = client.get_grafeas_client()
     parent = grafeas_client.occurrence_path(project_id, occurrence_id)
     return grafeas_client.get_occurrence(parent)
+
+
 # [END containeranalysis_get_occurrence]
 
 
@@ -163,10 +167,11 @@ def get_discovery_info(resource_url, project_id):
     client = containeranalysis_v1.ContainerAnalysisClient()
     grafeas_client = client.get_grafeas_client()
     project_name = grafeas_client.project_path(project_id)
-    response = grafeas_client.list_occurrences(project_name,
-                                               filter_=filter_str)
+    response = grafeas_client.list_occurrences(project_name, filter_=filter_str)
     for occ in response:
         print(occ)
+
+
 # [END containeranalysis_discovery_info]
 
 
@@ -190,6 +195,8 @@ def get_occurrences_for_note(note_id, project_id):
         # in this sample, we will simply count each one
         count += 1
     return count
+
+
 # [END containeranalysis_occurrences_for_note]
 
 
@@ -207,14 +214,15 @@ def get_occurrences_for_image(resource_url, project_id):
     grafeas_client = client.get_grafeas_client()
     project_name = grafeas_client.project_path(project_id)
 
-    response = grafeas_client.list_occurrences(project_name,
-                                               filter_=filter_str)
+    response = grafeas_client.list_occurrences(project_name, filter_=filter_str)
     count = 0
     for o in response:
         # do something with the retrieved occurrence
         # in this sample, we will simply count each one
         count += 1
     return count
+
+
 # [END containeranalysis_occurrences_for_image]
 
 
@@ -243,6 +251,7 @@ def pubsub(subscription_id, timeout_seconds, project_id):
 
 class MessageReceiver:
     """Custom class to handle incoming Pub/Sub messages."""
+
     def __init__(self):
         # initialize counter to 0 on initialization
         self.msg_count = 0
@@ -250,7 +259,7 @@ class MessageReceiver:
     def pubsub_callback(self, message):
         # every time a pubsub message comes in, print it and count it
         self.msg_count += 1
-        print('Message {}: {}'.format(self.msg_count, message.data))
+        print("Message {}: {}".format(self.msg_count, message.data))
         message.ack()
 
 
@@ -263,7 +272,7 @@ def create_occurrence_subscription(subscription_id, project_id):
     from google.api_core.exceptions import AlreadyExists
     from google.cloud.pubsub import SubscriberClient
 
-    topic_id = 'container-analysis-occurrences-v1'
+    topic_id = "container-analysis-occurrences-v1"
     client = SubscriberClient()
     topic_name = client.topic_path(project_id, topic_id)
     subscription_name = client.subscription_path(project_id, subscription_id)
@@ -276,6 +285,8 @@ def create_occurrence_subscription(subscription_id, project_id):
     else:
         success = False
     return success
+
+
 # [END containeranalysis_pubsub]
 
 
@@ -302,12 +313,13 @@ def poll_discovery_finished(resource_url, timeout_seconds, project_id):
         time.sleep(1)
         filter_str = 'resourceUrl="{}" \
                       AND noteProjectId="goog-analysis" \
-                      AND noteId="PACKAGE_VULNERABILITY"'.format(resource_url)
+                      AND noteId="PACKAGE_VULNERABILITY"'.format(
+            resource_url
+        )
         # [END containeranalysis_poll_discovery_occurrence_finished]
         # The above filter isn't testable, since it looks for occurrences in a
         # locked down project fall back to a more permissive filter for testing
-        filter_str = 'kind="DISCOVERY" AND resourceUrl="{}"'\
-            .format(resource_url)
+        filter_str = 'kind="DISCOVERY" AND resourceUrl="{}"'.format(resource_url)
         # [START containeranalysis_poll_discovery_occurrence_finished]
         result = grafeas_client.list_occurrences(project_name, filter_str)
         # only one occurrence should ever be returned by ListOccurrences
@@ -315,18 +327,22 @@ def poll_discovery_finished(resource_url, timeout_seconds, project_id):
         for item in result:
             discovery_occurrence = item
         if time.time() > deadline:
-            raise RuntimeError('timeout while retrieving discovery occurrence')
+            raise RuntimeError("timeout while retrieving discovery occurrence")
 
     status = DiscoveryOccurrence.AnalysisStatus.PENDING
-    while status != DiscoveryOccurrence.AnalysisStatus.FINISHED_UNSUPPORTED \
-            and status != DiscoveryOccurrence.AnalysisStatus.FINISHED_FAILED \
-            and status != DiscoveryOccurrence.AnalysisStatus.FINISHED_SUCCESS:
+    while (
+        status != DiscoveryOccurrence.AnalysisStatus.FINISHED_UNSUPPORTED
+        and status != DiscoveryOccurrence.AnalysisStatus.FINISHED_FAILED
+        and status != DiscoveryOccurrence.AnalysisStatus.FINISHED_SUCCESS
+    ):
         time.sleep(1)
         updated = grafeas_client.get_occurrence(discovery_occurrence.name)
         status = updated.discovery.analysis_status
         if time.time() > deadline:
-            raise RuntimeError('timeout while waiting for terminal state')
+            raise RuntimeError("timeout while waiting for terminal state")
     return discovery_occurrence
+
+
 # [END containeranalysis_poll_discovery_occurrence_finished]
 
 
@@ -342,9 +358,10 @@ def find_vulnerabilities_for_image(resource_url, project_id):
     grafeas_client = client.get_grafeas_client()
     project_name = grafeas_client.project_path(project_id)
 
-    filter_str = 'kind="VULNERABILITY" AND resourceUrl="{}"'\
-        .format(resource_url)
+    filter_str = 'kind="VULNERABILITY" AND resourceUrl="{}"'.format(resource_url)
     return list(grafeas_client.list_occurrences(project_name, filter_str))
+
+
 # [END containeranalysis_vulnerability_occurrences_for_image]
 
 
@@ -362,12 +379,13 @@ def find_high_severity_vulnerabilities_for_image(resource_url, project_id):
     grafeas_client = client.get_grafeas_client()
     project_name = grafeas_client.project_path(project_id)
 
-    filter_str = 'kind="VULNERABILITY" AND resourceUrl="{}"'\
-        .format(resource_url)
+    filter_str = 'kind="VULNERABILITY" AND resourceUrl="{}"'.format(resource_url)
     vulnerabilities = grafeas_client.list_occurrences(project_name, filter_str)
     filtered_list = []
     for v in vulnerabilities:
         if v.severity == Severity.HIGH or v.severity == Severity.CRITICAL:
             filtered_list.append(v)
     return filtered_list
+
+
 # [END containeranalysis_filter_vulnerability_occurrences]

@@ -24,25 +24,25 @@ def run_quickstart():
     spanner_client = spanner.Client()
 
     # Your Cloud Spanner instance ID.
-    instance_id = 'my-instance-id'
+    instance_id = "my-instance-id"
 
     # Get a Cloud Spanner instance by ID.
     instance = spanner_client.instance(instance_id)
 
     # Your Cloud Spanner database ID.
-    database_id = 'my-database-id'
+    database_id = "my-database-id"
 
     # Get a Cloud Spanner database by ID.
     database = instance.database(database_id)
 
     # Execute a simple SQL statement.
     with database.snapshot() as snapshot:
-        results = snapshot.execute_sql('SELECT 1')
+        results = snapshot.execute_sql("SELECT 1")
 
         for row in results:
             print(row)
     # [END spanner_quickstart]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_quickstart()

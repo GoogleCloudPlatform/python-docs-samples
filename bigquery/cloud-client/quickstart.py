@@ -24,7 +24,7 @@ def run_quickstart():
     bigquery_client = bigquery.Client()
 
     # The name for the new dataset
-    dataset_id = 'my_new_dataset'
+    dataset_id = "my_new_dataset"
 
     # Prepares a reference to the new dataset
     dataset_ref = bigquery_client.dataset(dataset_id)
@@ -33,9 +33,9 @@ def run_quickstart():
     # Creates the new dataset
     dataset = bigquery_client.create_dataset(dataset)
 
-    print('Dataset {} created.'.format(dataset.dataset_id))
+    print("Dataset {} created.".format(dataset.dataset_id))
     # [END bigquery_quickstart]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_quickstart()

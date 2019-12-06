@@ -28,27 +28,31 @@ import argparse
 def synthesize_text_file(text_file):
     """Synthesizes speech from the input file of text."""
     from google.cloud import texttospeech
+
     client = texttospeech.TextToSpeechClient()
 
-    with open(text_file, 'r') as f:
+    with open(text_file, "r") as f:
         text = f.read()
         input_text = texttospeech.types.SynthesisInput(text=text)
 
     # Note: the voice can also be specified by name.
     # Names of voices can be retrieved with client.list_voices().
     voice = texttospeech.types.VoiceSelectionParams(
-        language_code='en-US',
-        ssml_gender=texttospeech.enums.SsmlVoiceGender.FEMALE)
+        language_code="en-US", ssml_gender=texttospeech.enums.SsmlVoiceGender.FEMALE
+    )
 
     audio_config = texttospeech.types.AudioConfig(
-        audio_encoding=texttospeech.enums.AudioEncoding.MP3)
+        audio_encoding=texttospeech.enums.AudioEncoding.MP3
+    )
 
     response = client.synthesize_speech(input_text, voice, audio_config)
 
     # The response's audio_content is binary.
-    with open('output.mp3', 'wb') as out:
+    with open("output.mp3", "wb") as out:
         out.write(response.audio_content)
         print('Audio content written to file "output.mp3"')
+
+
 # [END tts_synthesize_text_file]
 
 
@@ -60,39 +64,41 @@ def synthesize_ssml_file(ssml_file):
         https://www.w3.org/TR/speech-synthesis/
     """
     from google.cloud import texttospeech
+
     client = texttospeech.TextToSpeechClient()
 
-    with open(ssml_file, 'r') as f:
+    with open(ssml_file, "r") as f:
         ssml = f.read()
         input_text = texttospeech.types.SynthesisInput(ssml=ssml)
 
     # Note: the voice can also be specified by name.
     # Names of voices can be retrieved with client.list_voices().
     voice = texttospeech.types.VoiceSelectionParams(
-        language_code='en-US',
-        ssml_gender=texttospeech.enums.SsmlVoiceGender.FEMALE)
+        language_code="en-US", ssml_gender=texttospeech.enums.SsmlVoiceGender.FEMALE
+    )
 
     audio_config = texttospeech.types.AudioConfig(
-        audio_encoding=texttospeech.enums.AudioEncoding.MP3)
+        audio_encoding=texttospeech.enums.AudioEncoding.MP3
+    )
 
     response = client.synthesize_speech(input_text, voice, audio_config)
 
     # The response's audio_content is binary.
-    with open('output.mp3', 'wb') as out:
+    with open("output.mp3", "wb") as out:
         out.write(response.audio_content)
         print('Audio content written to file "output.mp3"')
+
+
 # [END tts_synthesize_ssml_file]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument('--text',
-                       help='The text file from which to synthesize speech.')
-    group.add_argument('--ssml',
-                       help='The ssml file from which to synthesize speech.')
+    group.add_argument("--text", help="The text file from which to synthesize speech.")
+    group.add_argument("--ssml", help="The ssml file from which to synthesize speech.")
 
     args = parser.parse_args()
 

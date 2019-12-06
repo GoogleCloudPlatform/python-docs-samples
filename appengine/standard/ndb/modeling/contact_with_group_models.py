@@ -27,8 +27,8 @@ from google.appengine.ext import ndb
 # [START contact_with_group_models]
 class PhoneNumber(ndb.Model):
     """A model representing a phone number."""
-    phone_type = ndb.StringProperty(
-        choices=('home', 'work', 'fax', 'mobile', 'other'))
+
+    phone_type = ndb.StringProperty(choices=("home", "work", "fax", "mobile", "other"))
     number = ndb.StringProperty()
 
 
@@ -43,6 +43,7 @@ class Group(ndb.Model):
         friends = models.Group(parent=addrbook_key, name="friends")
         friends.put()
     """
+
     name = ndb.StringProperty()
     description = ndb.TextProperty()
 
@@ -50,7 +51,8 @@ class Group(ndb.Model):
     def members(self):
         """Returns a query object with myself as an ancestor."""
         return Contact.query(ancestor=self.key.parent()).filter(
-            Contact.groups == self.key)
+            Contact.groups == self.key
+        )
 
 
 class Contact(ndb.Model):
@@ -64,6 +66,7 @@ class Contact(ndb.Model):
         mary = models.Contact(parent=addrbook_key, name='mary', ...)
         mary.put()
     """
+
     # Basic info.
     name = ndb.StringProperty()
     birth_day = ndb.DateProperty()
@@ -81,4 +84,6 @@ class Contact(ndb.Model):
 
     # Group affiliation
     groups = ndb.KeyProperty(Group, repeated=True)
+
+
 # [END contact_with_group_models]

@@ -21,11 +21,11 @@ import os
 def test_text_to_ssml(capsys):
 
     # Read expected SSML output from resources
-    with open('resources/example.ssml', 'r') as f:
+    with open("resources/example.ssml", "r") as f:
         expected_ssml = f.read()
 
     # Assert plaintext converted to SSML
-    input_text = 'resources/example.txt'
+    input_text = "resources/example.txt"
     tested_ssml = text_to_ssml(input_text)
     assert expected_ssml == tested_ssml
 
@@ -33,15 +33,15 @@ def test_text_to_ssml(capsys):
 def test_ssml_to_audio(capsys):
 
     # Read SSML input from resources
-    with open('resources/example.ssml', 'r') as f:
+    with open("resources/example.ssml", "r") as f:
         input_ssml = f.read()
 
     # Assert audio file generated
-    ssml_to_audio(input_ssml, 'test_example.mp3')
+    ssml_to_audio(input_ssml, "test_example.mp3")
     out, err = capsys.readouterr()
 
     # Assert MP3 file created
-    assert os.path.isfile('test_example.mp3')
+    assert os.path.isfile("test_example.mp3")
     assert "Audio content written to file test_example.mp3" in out
 
     # Delete MP3 test file

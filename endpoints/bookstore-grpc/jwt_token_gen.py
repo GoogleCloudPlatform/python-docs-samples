@@ -29,41 +29,40 @@ MAX_TOKEN_LIFETIME_SECS = 3600
 
 def generate_jwt(service_account_file, issuer, audiences):
     """Generates a signed JSON Web Token using a Google API Service Account."""
-    with open(service_account_file, 'r') as fh:
+    with open(service_account_file, "r") as fh:
         service_account_info = json.load(fh)
 
     signer = google.auth.crypt.RSASigner.from_string(
-        service_account_info['private_key'],
-        service_account_info['private_key_id'])
+        service_account_info["private_key"], service_account_info["private_key_id"]
+    )
 
     now = int(time.time())
 
     payload = {
-        'iat': now,
-        'exp': now + MAX_TOKEN_LIFETIME_SECS,
+        "iat": now,
+        "exp": now + MAX_TOKEN_LIFETIME_SECS,
         # aud must match 'audience' in the security configuration in your
         # swagger spec. It can be any string.
-        'aud': audiences,
+        "aud": audiences,
         # iss must match 'issuer' in the security configuration in your
         # swagger spec. It can be any string.
-        'iss': issuer,
+        "iss": issuer,
         # sub and email are mapped to the user id and email respectively.
-        'sub': issuer,
-        'email': 'user@example.com'
+        "sub": issuer,
+        "email": "user@example.com",
     }
 
     signed_jwt = google.auth.jwt.encode(signer, payload)
     return signed_jwt
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--file',
-                        help='The path to your service account json file.')
-    parser.add_argument('--issuer', default='', help='issuer')
-    parser.add_argument('--audiences', default='', help='audiences')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("--file", help="The path to your service account json file.")
+    parser.add_argument("--issuer", default="", help="issuer")
+    parser.add_argument("--audiences", default="", help="audiences")
 
     args = parser.parse_args()
 

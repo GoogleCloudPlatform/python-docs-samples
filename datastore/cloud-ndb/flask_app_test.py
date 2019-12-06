@@ -39,9 +39,9 @@ def test_index(test_book):
     flask_app.app.testing = True
     client = flask_app.app.test_client()
 
-    r = client.get('/')
+    r = client.get("/")
     assert r.status_code == 200
-    assert test_book.title in r.data.decode('utf-8')
+    assert test_book.title in r.data.decode("utf-8")
 
 
 def test_ndb_wsgi_middleware():

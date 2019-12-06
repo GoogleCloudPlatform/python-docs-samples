@@ -42,54 +42,48 @@ import googleapiclient.discovery
 def main(bucket, destination, sources):
     # Construct the service object for the interacting with the Cloud Storage
     # API.
-    service = googleapiclient.discovery.build('storage', 'v1')
+    service = googleapiclient.discovery.build("storage", "v1")
 
     # Upload the source files.
     for filename in sources:
         req = service.objects().insert(
-            media_body=filename,
-            name=filename,
-            bucket=bucket)
+            media_body=filename, name=filename, bucket=bucket
+        )
         resp = req.execute()
-        print('> Uploaded source file {}'.format(filename))
+        print("> Uploaded source file {}".format(filename))
         print(json.dumps(resp, indent=2))
 
     # Construct a request to compose the source files into the destination.
     compose_req_body = {
-        'sourceObjects': [{'name': filename} for filename in sources],
-        'destination': {
-            'contentType': 'text/plain',    # required
-        }
+        "sourceObjects": [{"name": filename} for filename in sources],
+        "destination": {"contentType": "text/plain"},  # required
     }
 
     req = service.objects().compose(
-        destinationBucket=bucket,
-        destinationObject=destination,
-        body=compose_req_body)
+        destinationBucket=bucket, destinationObject=destination, body=compose_req_body
+    )
 
     resp = req.execute()
 
-    print('> Composed files into {}'.format(destination))
+    print("> Composed files into {}".format(destination))
     print(json.dumps(resp, indent=2))
 
     # Download and print the composed object.
-    req = service.objects().get_media(
-        bucket=bucket,
-        object=destination)
+    req = service.objects().get_media(bucket=bucket, object=destination)
 
     res = req.execute()
 
-    print('> Composed file contents:')
+    print("> Composed file contents:")
     print(res)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('bucket', help='Your Cloud Storage bucket.')
-    parser.add_argument('destination', help='Destination file name.')
-    parser.add_argument('sources', nargs='+', help='Source files to compose.')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("bucket", help="Your Cloud Storage bucket.")
+    parser.add_argument("destination", help="Destination file name.")
+    parser.add_argument("sources", nargs="+", help="Source files to compose.")
 
     args = parser.parse_args()
 

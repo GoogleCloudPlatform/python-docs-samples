@@ -29,12 +29,12 @@ from google.oauth2 import id_token
 import main
 
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
+DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
-with open(os.path.join(DATA_DIR, 'privatekey.pem'), 'rb') as fh:
+with open(os.path.join(DATA_DIR, "privatekey.pem"), "rb") as fh:
     PRIVATE_KEY_BYTES = fh.read()
 
-with open(os.path.join(DATA_DIR, 'public_cert.pem'), 'rb') as fh:
+with open(os.path.join(DATA_DIR, "public_cert.pem"), "rb") as fh:
     PUBLIC_CERT_BYTES = fh.read()
 
 
@@ -46,27 +46,23 @@ def client():
 
 @pytest.fixture
 def signer():
-    return crypt.RSASigner.from_string(PRIVATE_KEY_BYTES, '1')
+    return crypt.RSASigner.from_string(PRIVATE_KEY_BYTES, "1")
 
 
 @pytest.fixture
 def fake_token(signer):
     now = calendar.timegm(datetime.datetime.utcnow().utctimetuple())
     payload = {
-        'aud': 'example.com',
-        'azp': '1234567890',
-        'email': 'pubsub@example.iam.gserviceaccount.com',
-        'email_verified': True,
-        'iat': now,
-        'exp': now + 3600,
-        'iss': 'https://accounts.google.com',
-        'sub': '1234567890'
+        "aud": "example.com",
+        "azp": "1234567890",
+        "email": "pubsub@example.iam.gserviceaccount.com",
+        "email_verified": True,
+        "iat": now,
+        "exp": now + 3600,
+        "iss": "https://accounts.google.com",
+        "sub": "1234567890",
     }
-    header = {
-        'alg': 'RS256',
-        'kid': signer.key_id,
-        'typ': 'JWT'
-    }
+    header = {"alg": "RS256", "kid": signer.key_id, "typ": "JWT"}
     yield jwt.encode(signer, payload, header=header)
 
 
@@ -76,48 +72,49 @@ def _verify_mocked_oauth2_token(token, request, audience):
 
 
 def test_index(client):
-    r = client.get('/')
+    r = client.get("/")
     assert r.status_code == 200
 
 
 def test_post_index(client):
-    r = client.post('/', data={'payload': 'Test payload'})
+    r = client.post("/", data={"payload": "Test payload"})
     assert r.status_code == 200
 
 
 def test_push_endpoint(monkeypatch, client, fake_token):
-    monkeypatch.setattr(id_token, 'verify_oauth2_token',
-                        _verify_mocked_oauth2_token)
+    monkeypatch.setattr(id_token, "verify_oauth2_token", _verify_mocked_oauth2_token)
 
-    url = '/_ah/push-handlers/receive_messages?token=' + \
-        os.environ['PUBSUB_VERIFICATION_TOKEN']
+    url = (
+        "/_ah/push-handlers/receive_messages?token="
+        + os.environ["PUBSUB_VERIFICATION_TOKEN"]
+    )
 
     r = client.post(
         url,
-        data=json.dumps({
-            "message": {
-                "data": base64.b64encode(
-                    u'Test message'.encode('utf-8')
-                ).decode('utf-8')
+        data=json.dumps(
+            {
+                "message": {
+                    "data": base64.b64encode(u"Test message".encode("utf-8")).decode(
+                        "utf-8"
+                    )
+                }
             }
-        }),
-        headers=dict(
-            Authorization="Bearer " + fake_token.decode('utf-8')
-        )
+        ),
+        headers=dict(Authorization="Bearer " + fake_token.decode("utf-8")),
     )
     assert r.status_code == 200
 
     # Make sure the message is visible on the home page.
-    r = client.get('/')
+    r = client.get("/")
     assert r.status_code == 200
-    assert 'Test message' in r.data.decode('utf-8')
+    assert "Test message" in r.data.decode("utf-8")
 
 
 def test_push_endpoint_errors(client):
     # no token
-    r = client.post('/_ah/push-handlers/receive_messages')
+    r = client.post("/_ah/push-handlers/receive_messages")
     assert r.status_code == 400
 
     # invalid token
-    r = client.post('/_ah/push-handlers/receive_messages?token=bad')
+    r = client.post("/_ah/push-handlers/receive_messages?token=bad")
     assert r.status_code == 400

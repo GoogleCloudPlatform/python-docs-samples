@@ -20,7 +20,7 @@ import pytest
 
 import quickstart
 
-SPANNER_INSTANCE = os.environ['SPANNER_INSTANCE']
+SPANNER_INSTANCE = os.environ["SPANNER_INSTANCE"]
 
 
 @pytest.fixture
@@ -31,9 +31,8 @@ def patch_instance():
         return original_instance(self, SPANNER_INSTANCE)
 
     instance_patch = mock.patch(
-        'google.cloud.spanner.Client.instance',
-        side_effect=new_instance,
-        autospec=True)
+        "google.cloud.spanner.Client.instance", side_effect=new_instance, autospec=True
+    )
 
     with instance_patch:
         yield
@@ -43,7 +42,7 @@ def patch_instance():
 def example_database():
     spanner_client = spanner.Client()
     instance = spanner_client.instance(SPANNER_INSTANCE)
-    database = instance.database('my-database-id')
+    database = instance.database("my-database-id")
 
     if not database.exists():
         database.create()
@@ -54,4 +53,4 @@ def example_database():
 def test_quickstart(capsys, patch_instance, example_database):
     quickstart.run_quickstart()
     out, _ = capsys.readouterr()
-    assert '[1]' in out
+    assert "[1]" in out

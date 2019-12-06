@@ -22,16 +22,16 @@ import pytest
 
 import quickstart_batchgetassetshistory
 
-PROJECT = os.environ['GCLOUD_PROJECT']
-BUCKET = 'assets-{}'.format(int(time.time()))
+PROJECT = os.environ["GCLOUD_PROJECT"]
+BUCKET = "assets-{}".format(int(time.time()))
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def storage_client():
     yield storage.Client()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def asset_bucket(storage_client):
     bucket = storage_client.create_bucket(BUCKET)
 
@@ -40,18 +40,17 @@ def asset_bucket(storage_client):
     try:
         bucket.delete(force=True)
     except Exception as e:
-        print('Failed to delete bucket{}'.format(BUCKET))
+        print("Failed to delete bucket{}".format(BUCKET))
         raise e
 
 
 def test_batch_get_assets_history(asset_bucket, capsys):
-    bucket_asset_name = '//storage.googleapis.com/{}'.format(BUCKET)
-    asset_names = [bucket_asset_name, ]
+    bucket_asset_name = "//storage.googleapis.com/{}".format(BUCKET)
+    asset_names = [bucket_asset_name]
     # There's some delay between bucket creation and when it's reflected in the
     # backend.
     time.sleep(15)
-    quickstart_batchgetassetshistory.batch_get_assets_history(
-        PROJECT, asset_names)
+    quickstart_batchgetassetshistory.batch_get_assets_history(PROJECT, asset_names)
     out, _ = capsys.readouterr()
 
     if not out:

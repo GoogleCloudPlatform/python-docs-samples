@@ -16,12 +16,13 @@ import logging
 import os
 
 from flask import Flask, render_template, request
+
 # [START gae_flex_mailjet_config]
 import mailjet_rest
 
-MAILJET_API_KEY = os.environ['MAILJET_API_KEY']
-MAILJET_API_SECRET = os.environ['MAILJET_API_SECRET']
-MAILJET_SENDER = os.environ['MAILJET_SENDER']
+MAILJET_API_KEY = os.environ["MAILJET_API_KEY"]
+MAILJET_API_SECRET = os.environ["MAILJET_API_SECRET"]
+MAILJET_SENDER = os.environ["MAILJET_SENDER"]
 # [END gae_flex_mailjet_config]
 
 app = Flask(__name__)
@@ -30,53 +31,61 @@ app = Flask(__name__)
 # [START gae_flex_mailjet_send_message]
 def send_message(to):
     client = mailjet_rest.Client(
-        auth=(MAILJET_API_KEY, MAILJET_API_SECRET), version='v3.1')
+        auth=(MAILJET_API_KEY, MAILJET_API_SECRET), version="v3.1"
+    )
 
     data = {
-        'Messages': [{
-            "From": {
+        "Messages": [
+            {
+                "From": {
                     "Email": MAILJET_SENDER,
-                    "Name": 'App Engine Flex Mailjet Sample'
-            },
-            "To": [{
-                "Email": to
-            }],
-            "Subject": 'Example email.',
-            "TextPart": 'This is an example email.',
-            "HTMLPart": 'This is an <i>example</i> email.'
-        }]
+                    "Name": "App Engine Flex Mailjet Sample",
+                },
+                "To": [{"Email": to}],
+                "Subject": "Example email.",
+                "TextPart": "This is an example email.",
+                "HTMLPart": "This is an <i>example</i> email.",
+            }
+        ]
     }
 
     result = client.send.create(data=data)
 
     return result.json()
+
+
 # [END gae_flex_mailjet_send_message]
 
 
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.route('/send/email', methods=['POST'])
+@app.route("/send/email", methods=["POST"])
 def send_email():
-    to = request.form.get('to')
+    to = request.form.get("to")
 
     result = send_message(to)
 
-    return 'Email sent, response: <pre>{}</pre>'.format(result)
+    return "Email sent, response: <pre>{}</pre>".format(result)
 
 
 @app.errorhandler(500)
 def server_error(e):
-    logging.exception('An error occurred during a request.')
-    return """
+    logging.exception("An error occurred during a request.")
+    return (
+        """
     An internal error occurred: <pre>{}</pre>
     See logs for full stacktrace.
-    """.format(e), 500
+    """.format(
+            e
+        ),
+        500,
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)

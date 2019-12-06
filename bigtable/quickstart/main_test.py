@@ -16,13 +16,13 @@ import os
 
 from main import main
 
-PROJECT = os.environ['GCLOUD_PROJECT']
-BIGTABLE_CLUSTER = os.environ['BIGTABLE_CLUSTER']
-TABLE_NAME = 'my-table'
+PROJECT = os.environ["GCLOUD_PROJECT"]
+BIGTABLE_CLUSTER = os.environ["BIGTABLE_CLUSTER"]
+TABLE_NAME = "my-table"
 
 
 def test_main(capsys):
     main(PROJECT, BIGTABLE_CLUSTER, TABLE_NAME)
 
     out, _ = capsys.readouterr()
-    assert 'Row key: r1\nData: test-value\n' in out
+    assert "Row key: r1\nData: test-value\n" in out

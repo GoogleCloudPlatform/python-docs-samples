@@ -34,7 +34,7 @@ def view_bucket_iam_members(bucket_name):
 
     for role in policy:
         members = policy[role]
-        print('Role: {}, Members: {}'.format(role, members))
+        print("Role: {}, Members: {}".format(role, members))
 
 
 def add_bucket_iam_member(bucket_name, role, member):
@@ -47,8 +47,7 @@ def add_bucket_iam_member(bucket_name, role, member):
 
     bucket.set_iam_policy(policy)
 
-    print('Added {} with role {} to {}.'.format(
-         member, role, bucket_name))
+    print("Added {} with role {} to {}.".format(member, role, bucket_name))
 
 
 def remove_bucket_iam_member(bucket_name, role, member):
@@ -61,35 +60,37 @@ def remove_bucket_iam_member(bucket_name, role, member):
 
     bucket.set_iam_policy(policy)
 
-    print('Removed {} with role {} from {}.'.format(
-        member, role, bucket_name))
+    print("Removed {} with role {} from {}.".format(member, role, bucket_name))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('bucket_name', help='Your Cloud Storage bucket name.')
-    subparsers = parser.add_subparsers(dest='command')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("bucket_name", help="Your Cloud Storage bucket name.")
+    subparsers = parser.add_subparsers(dest="command")
 
     subparsers.add_parser(
-        'view-bucket-iam-members', help=view_bucket_iam_members.__doc__)
+        "view-bucket-iam-members", help=view_bucket_iam_members.__doc__
+    )
 
     add_member_parser = subparsers.add_parser(
-        'add-bucket-iam-member', help=add_bucket_iam_member.__doc__)
-    add_member_parser.add_argument('role')
-    add_member_parser.add_argument('member')
+        "add-bucket-iam-member", help=add_bucket_iam_member.__doc__
+    )
+    add_member_parser.add_argument("role")
+    add_member_parser.add_argument("member")
 
     remove_member_parser = subparsers.add_parser(
-        'remove-bucket-iam-member', help=remove_bucket_iam_member.__doc__)
-    remove_member_parser.add_argument('role')
-    remove_member_parser.add_argument('member')
+        "remove-bucket-iam-member", help=remove_bucket_iam_member.__doc__
+    )
+    remove_member_parser.add_argument("role")
+    remove_member_parser.add_argument("member")
 
     args = parser.parse_args()
 
-    if args.command == 'view-bucket-iam-members':
+    if args.command == "view-bucket-iam-members":
         view_bucket_iam_members(args.bucket_name)
-    elif args.command == 'add-bucket-iam-member':
+    elif args.command == "add-bucket-iam-member":
         add_bucket_iam_member(args.bucket_name, args.role, args.member)
-    elif args.command == 'remove-bucket-iam-member':
+    elif args.command == "remove-bucket-iam-member":
         remove_bucket_iam_member(args.bucket_name, args.role, args.member)

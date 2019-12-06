@@ -19,5 +19,5 @@ def test_email_alert_search_sample(capsys):
 
     email_alert_search_sample.run_sample()
     out, _ = capsys.readouterr()
-    expected = ('.*matchingJobs.*')
+    expected = ".*matchingJobs.*"
     assert re.search(expected, out)

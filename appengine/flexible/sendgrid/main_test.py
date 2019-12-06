@@ -18,8 +18,8 @@ import pytest
 
 @pytest.fixture
 def app(monkeypatch):
-    monkeypatch.setenv('SENDGRID_API_KEY', 'apikey')
-    monkeypatch.setenv('SENDGRID_SENDER', 'sender@example.com')
+    monkeypatch.setenv("SENDGRID_API_KEY", "apikey")
+    monkeypatch.setenv("SENDGRID_SENDER", "sender@example.com")
 
     import main
 
@@ -28,22 +28,20 @@ def app(monkeypatch):
 
 
 def test_get(app):
-    r = app.get('/')
+    r = app.get("/")
     assert r.status_code == 200
 
 
-@mock.patch('python_http_client.client.Client._make_request')
+@mock.patch("python_http_client.client.Client._make_request")
 def test_post(make_request_mock, app):
     response = mock.Mock()
     response.getcode.return_value = 200
-    response.read.return_value = 'OK'
+    response.read.return_value = "OK"
     response.info.return_value = {}
     make_request_mock.return_value = response
 
-    app.post('/send/email', data={
-        'to': 'user@example.com'
-    })
+    app.post("/send/email", data={"to": "user@example.com"})
 
     assert make_request_mock.called
     request = make_request_mock.call_args[0][1]
-    assert 'user@example.com' in request.data.decode('utf-8')
+    assert "user@example.com" in request.data.decode("utf-8")

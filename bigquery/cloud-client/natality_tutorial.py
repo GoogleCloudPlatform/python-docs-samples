@@ -37,7 +37,7 @@ def run_natality_tutorial():
     client = bigquery.Client()
 
     # Prepare a reference to a new dataset for storing the query results.
-    dataset_ref = client.dataset('natality_regression')
+    dataset_ref = client.dataset("natality_regression")
     dataset = bigquery.Dataset(dataset_ref)
 
     # Create the new BigQuery dataset.
@@ -45,7 +45,7 @@ def run_natality_tutorial():
 
     # In the new BigQuery dataset, create a reference to a new table for
     # storing the query results.
-    table_ref = dataset.table('regression_input')
+    table_ref = dataset.table("regression_input")
 
     # Configure the query job.
     job_config = bigquery.QueryJobConfig()
@@ -77,5 +77,5 @@ def run_natality_tutorial():
     # [END bigquery_query_natality_tutorial]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_natality_tutorial()

@@ -20,20 +20,20 @@ import pytest
 
 import gcs_example_mqtt_device as device
 
-gcs_bucket = os.environ['CLOUD_STORAGE_BUCKET']
-cloud_region = 'us-central1'
-destination_file_name = 'destination-file.bin'
-project_id = os.environ['GCLOUD_PROJECT']
+gcs_bucket = os.environ["CLOUD_STORAGE_BUCKET"]
+cloud_region = "us-central1"
+destination_file_name = "destination-file.bin"
+project_id = os.environ["GCLOUD_PROJECT"]
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def test_blob():
     """Provides a pre-existing blob in the test bucket."""
     bucket = storage.Client().bucket(gcs_bucket)
     # Name of the blob
-    blob = bucket.blob('iot_core_store_file_gcs')
+    blob = bucket.blob("iot_core_store_file_gcs")
     # Text in the blob
-    blob.upload_from_string('This file on GCS will go to a device.')
+    blob.upload_from_string("This file on GCS will go to a device.")
 
     yield blob
     # Clean up
@@ -44,5 +44,7 @@ def test_download_blob(test_blob, capsys):
     device.download_blob(gcs_bucket, test_blob.name, destination_file_name)
 
     out, _ = capsys.readouterr()
-    assert 'Config {} downloaded to {}.'.format(
-        test_blob.name, destination_file_name) in out
+    assert (
+        "Config {} downloaded to {}.".format(test_blob.name, destination_file_name)
+        in out
+    )

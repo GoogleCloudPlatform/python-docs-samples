@@ -30,9 +30,9 @@ def app():
 def test_statelessness(app):
     with app.test_request_context():
         res = main.statelessness(flask.request)
-        assert res == 'Instance execution count: 1'
+        assert res == "Instance execution count: 1"
         res = main.statelessness(flask.request)
-        assert res == 'Instance execution count: 2'
+        assert res == "Instance execution count: 2"
 
 
 def test_scope_demo(app):
@@ -42,16 +42,18 @@ def test_scope_demo(app):
 
 @responses.activate
 def test_make_request_200(app):
-    responses.add(responses.GET, 'http://example.com',
-                  json={'status': 'OK'}, status=200)
+    responses.add(
+        responses.GET, "http://example.com", json={"status": "OK"}, status=200
+    )
     with app.test_request_context():
         main.make_request(flask.request)
 
 
 @responses.activate
 def test_make_request_404(app):
-    responses.add(responses.GET, 'http://example.com',
-                  json={'error': 'not found'}, status=404)
+    responses.add(
+        responses.GET, "http://example.com", json={"error": "not found"}, status=404
+    )
     with app.test_request_context():
         with pytest.raises(requests.exceptions.HTTPError):
             main.make_request(flask.request)
@@ -60,4 +62,4 @@ def test_make_request_404(app):
 def test_list_files(app):
     with app.test_request_context():
         res = main.list_files(flask.request)
-        assert 'main.py' in res
+        assert "main.py" in res

@@ -17,11 +17,13 @@ import main
 
 
 def test_print(capsys):
-    name = 'test'
-    data = {'objectId': name}
+    name = "test"
+    data = {"objectId": name}
 
     # Call tested function
     main.hello_gcs(data, None)
     out, err = capsys.readouterr()
-    assert out == 'File: {}.\n'.format(name)
+    assert out == "File: {}.\n".format(name)
+
+
 # [END functions_storage_unit_test]

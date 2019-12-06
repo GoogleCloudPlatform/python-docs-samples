@@ -33,7 +33,8 @@ import requests
 
 
 GOOGLE_PUBLIC_CERT_URL = (
-    'https://cloud-certs.storage.googleapis.com/google-cloud-csek-ingress.pem')
+    "https://cloud-certs.storage.googleapis.com/google-cloud-csek-ingress.pem"
+)
 
 
 def get_google_public_cert_key():
@@ -42,7 +43,8 @@ def get_google_public_cert_key():
 
     # Load the certificate.
     certificate = x509.load_pem_x509_certificate(
-        r.text.encode('utf-8'), default_backend())
+        r.text.encode("utf-8"), default_backend()
+    )
 
     # Get the certicate's public key.
     public_key = certificate.public_key()
@@ -59,7 +61,9 @@ def wrap_rsa_key(public_key, private_key_bytes):
         padding.OAEP(
             mgf=padding.MGF1(algorithm=hashes.SHA1()),
             algorithm=hashes.SHA1(),
-            label=None))
+            label=None,
+        ),
+    )
     encoded_wrapped_key = base64.b64encode(wrapped_key)
     return encoded_wrapped_key
 
@@ -69,23 +73,25 @@ def main(key_file):
     if not key_file:
         customer_key_bytes = os.urandom(32)
     else:
-        with open(key_file, 'rb') as f:
+        with open(key_file, "rb") as f:
             customer_key_bytes = f.read()
 
     google_public_key = get_google_public_cert_key()
     wrapped_rsa_key = wrap_rsa_key(google_public_key, customer_key_bytes)
 
-    print('Base-64 encoded private key: {}'.format(
-        base64.b64encode(customer_key_bytes).decode('utf-8')))
-    print('Wrapped RSA key: {}'.format(wrapped_rsa_key.decode('utf-8')))
+    print(
+        "Base-64 encoded private key: {}".format(
+            base64.b64encode(customer_key_bytes).decode("utf-8")
+        )
+    )
+    print("Wrapped RSA key: {}".format(wrapped_rsa_key.decode("utf-8")))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument(
-        '--key_file', help='File containing your binary private key.')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("--key_file", help="File containing your binary private key.")
 
     args = parser.parse_args()
 

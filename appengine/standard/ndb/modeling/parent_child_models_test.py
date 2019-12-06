@@ -20,7 +20,7 @@ import pytest
 import parent_child_models as models
 
 
-NAME = 'Takashi Matsuo'
+NAME = "Takashi Matsuo"
 
 
 @pytest.fixture
@@ -38,45 +38,44 @@ def test_basic(contact_key):
 # [START succeeding_test]
 def test_success(contact_key):
     contact = contact_key.get()
-    models.PhoneNumber(parent=contact_key,
-                       phone_type='home',
-                       number='(650) 555 - 2200').put()
+    models.PhoneNumber(
+        parent=contact_key, phone_type="home", number="(650) 555 - 2200"
+    ).put()
     numbers = contact.phone_numbers.fetch()
     assert 1 == len(numbers)
+
+
 # [START succeeding_test]
 
 
 def test_phone_numbers(contact_key):
     """A test for 'phone_numbers' property."""
-    models.PhoneNumber(parent=contact_key,
-                       phone_type='home',
-                       number='(650) 555 - 2200').put()
-    models.PhoneNumber(parent=contact_key,
-                       phone_type='mobile',
-                       number='(650) 555 - 2201').put()
+    models.PhoneNumber(
+        parent=contact_key, phone_type="home", number="(650) 555 - 2200"
+    ).put()
+    models.PhoneNumber(
+        parent=contact_key, phone_type="mobile", number="(650) 555 - 2201"
+    ).put()
     contact = contact_key.get()
     for phone in contact.phone_numbers:
         # it doesn't ensure any order
-        if phone.phone_type == 'home':
-            assert '(650) 555 - 2200' == phone.number
-        elif phone.phone_type == 'mobile':
-            assert phone.number == '(650) 555 - 2201'
+        if phone.phone_type == "home":
+            assert "(650) 555 - 2200" == phone.number
+        elif phone.phone_type == "mobile":
+            assert phone.number == "(650) 555 - 2201"
 
     # filer the phone numbers by type. Note that this is an
     # ancestor query.
-    query = contact.phone_numbers.filter(
-        models.PhoneNumber.phone_type == 'home')
+    query = contact.phone_numbers.filter(models.PhoneNumber.phone_type == "home")
     entities = query.fetch()
     assert 1 == len(entities)
-    assert entities[0].number == '(650) 555 - 2200'
+    assert entities[0].number == "(650) 555 - 2200"
 
     # delete the mobile phones
-    query = contact.phone_numbers.filter(
-        models.PhoneNumber.phone_type == 'mobile')
+    query = contact.phone_numbers.filter(models.PhoneNumber.phone_type == "mobile")
     ndb.delete_multi([e.key for e in query])
 
     # make sure there's no mobile phones any more
-    query = contact.phone_numbers.filter(
-        models.PhoneNumber.phone_type == 'mobile')
+    query = contact.phone_numbers.filter(models.PhoneNumber.phone_type == "mobile")
     entities = query.fetch()
     assert 0 == len(entities)

@@ -17,7 +17,7 @@ import googleapiclient.discovery
 
 import generate_wrapped_rsa_key
 
-PROJECT = os.environ['GCLOUD_PROJECT']
+PROJECT = os.environ["GCLOUD_PROJECT"]
 
 
 def test_main():
@@ -25,27 +25,26 @@ def test_main():
 
 
 def test_create_disk():
-    compute = googleapiclient.discovery.build('compute', 'beta')
+    compute = googleapiclient.discovery.build("compute", "beta")
 
     # Generate the key.
     key_bytes = os.urandom(32)
     google_public_key = generate_wrapped_rsa_key.get_google_public_cert_key()
     wrapped_rsa_key = generate_wrapped_rsa_key.wrap_rsa_key(
-        google_public_key, key_bytes)
+        google_public_key, key_bytes
+    )
 
     # Create the disk, if the encryption key is invalid, this will raise.
     compute.disks().insert(
         project=PROJECT,
-        zone='us-central1-f',
+        zone="us-central1-f",
         body={
-            'name': 'new-encrypted-disk',
-            'diskEncryptionKey': {
-                'rsaEncryptedKey': wrapped_rsa_key.decode('utf-8')
-            }
-        }).execute()
+            "name": "new-encrypted-disk",
+            "diskEncryptionKey": {"rsaEncryptedKey": wrapped_rsa_key.decode("utf-8")},
+        },
+    ).execute()
 
     # Delete the disk.
     compute.disks().delete(
-        project=PROJECT,
-        zone='us-central1-f',
-        disk='new-encrypted-disk').execute()
+        project=PROJECT, zone="us-central1-f", disk="new-encrypted-disk"
+    ).execute()

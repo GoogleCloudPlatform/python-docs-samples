@@ -21,12 +21,12 @@ def test_models(testbed):
     # Creates 3 contacts and 1 group.
     # Assuming the group and contacts are private and belong to tmatsuo's
     # addressbook.
-    addressbook_key = ndb.Key('AddressBook', 'tmatsuo')
+    addressbook_key = ndb.Key("AddressBook", "tmatsuo")
 
-    friends = models.Group(parent=addressbook_key, name='friends')
+    friends = models.Group(parent=addressbook_key, name="friends")
     friends.put()
     friends_key = friends.key
-    mary = models.Contact(parent=addressbook_key, name='Mary')
+    mary = models.Contact(parent=addressbook_key, name="Mary")
     mary.put()
     mary_key = mary.key
 

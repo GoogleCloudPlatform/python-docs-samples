@@ -20,18 +20,18 @@ from google.cloud import pubsub_v1
 import pytest
 import quickstart
 
-PROJECT = os.environ['GCLOUD_PROJECT']
-TOPIC = 'end-to-end-test-topic'
-SUBSCRIPTION = 'end-to-end-test-topic-sub'
+PROJECT = os.environ["GCLOUD_PROJECT"]
+TOPIC = "end-to-end-test-topic"
+SUBSCRIPTION = "end-to-end-test-topic-sub"
 N = 10
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def publisher_client():
     yield pubsub_v1.PublisherClient()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def topic(publisher_client):
     topic_path = publisher_client.topic_path(PROJECT, TOPIC)
 
@@ -43,15 +43,14 @@ def topic(publisher_client):
     yield TOPIC
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def subscriber_client():
     yield pubsub_v1.SubscriberClient()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def subscription(subscriber_client, topic):
-    subscription_path = subscriber_client.subscription_path(
-        PROJECT, SUBSCRIPTION)
+    subscription_path = subscriber_client.subscription_path(PROJECT, SUBSCRIPTION)
 
     try:
         subscriber_client.delete_subscription(subscription_path)

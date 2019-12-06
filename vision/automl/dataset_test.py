@@ -29,9 +29,7 @@ compute_region = "us-central1"
 def test_dataset_create_import_delete(capsys):
     # create dataset
     dataset_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    automl_vision_dataset.create_dataset(
-        project_id, compute_region, dataset_name
-    )
+    automl_vision_dataset.create_dataset(project_id, compute_region, dataset_name)
     out, _ = capsys.readouterr()
     create_dataset_output = out.splitlines()
     assert "Dataset id: " in create_dataset_output[1]
@@ -39,16 +37,12 @@ def test_dataset_create_import_delete(capsys):
     # import data
     dataset_id = create_dataset_output[1].split()[2]
     data = "gs://{}-vcm/flower_traindata.csv".format(project_id)
-    automl_vision_dataset.import_data(
-        project_id, compute_region, dataset_id, data
-    )
+    automl_vision_dataset.import_data(project_id, compute_region, dataset_id, data)
     out, _ = capsys.readouterr()
     assert "Data imported." in out
 
     # delete dataset
-    automl_vision_dataset.delete_dataset(
-        project_id, compute_region, dataset_id
-    )
+    automl_vision_dataset.delete_dataset(project_id, compute_region, dataset_id)
     out, _ = capsys.readouterr()
     assert "Dataset deleted." in out
 

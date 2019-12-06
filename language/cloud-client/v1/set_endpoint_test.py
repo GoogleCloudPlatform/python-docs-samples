@@ -19,4 +19,4 @@ def test_set_endpoint(capsys):
     set_endpoint.set_endpoint()
 
     out, _ = capsys.readouterr()
-    assert 'Sentiment' in out
+    assert "Sentiment" in out

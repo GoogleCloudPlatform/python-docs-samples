@@ -35,6 +35,7 @@ from google.appengine.ext import ndb
 # [START keyproperty_models]
 class Contact(ndb.Model):
     """A Contact model with KeyProperty."""
+
     # Basic info.
     name = ndb.StringProperty()
     birth_day = ndb.DateProperty()
@@ -57,8 +58,10 @@ class Contact(ndb.Model):
 
 class PhoneNumber(ndb.Model):
     """A model representing a phone number."""
+
     contact = ndb.KeyProperty(Contact)
-    phone_type = ndb.StringProperty(
-        choices=('home', 'work', 'fax', 'mobile', 'other'))
+    phone_type = ndb.StringProperty(choices=("home", "work", "fax", "mobile", "other"))
     number = ndb.StringProperty()
+
+
 # [END keyproperty_models]

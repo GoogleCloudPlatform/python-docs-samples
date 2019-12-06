@@ -36,16 +36,18 @@ def create_asymmetric_key(project_id, location_id, key_ring_id, crypto_key_id):
 
     # Create the CryptoKey object template
     purpose = enums.CryptoKey.CryptoKeyPurpose.ASYMMETRIC_DECRYPT
-    algorithm = enums.CryptoKeyVersion.CryptoKeyVersionAlgorithm.\
-        RSA_DECRYPT_OAEP_2048_SHA256
-    crypto_key = {'purpose': purpose,
-                  'version_template': {'algorithm': algorithm}}
+    algorithm = (
+        enums.CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_DECRYPT_OAEP_2048_SHA256
+    )
+    crypto_key = {"purpose": purpose, "version_template": {"algorithm": algorithm}}
 
     # Create a CryptoKey for the given KeyRing.
     response = client.create_crypto_key(parent, crypto_key_id, crypto_key)
 
-    print('Created CryptoKey {}.'.format(response.name))
+    print("Created CryptoKey {}.".format(response.name))
     return response
+
+
 # [END kms_create_asymmetric_key]
 
 
@@ -66,9 +68,11 @@ def get_asymmetric_public_key(key_name):
     client = kms_v1.KeyManagementServiceClient()
     response = client.get_public_key(key_name)
 
-    key_txt = response.pem.encode('ascii')
+    key_txt = response.pem.encode("ascii")
     key = serialization.load_pem_public_key(key_txt, default_backend())
     return key
+
+
 # [END kms_get_asymmetric_public]
 
 
@@ -86,6 +90,8 @@ def decrypt_rsa(ciphertext, key_name):
     client = kms_v1.KeyManagementServiceClient()
     response = client.asymmetric_decrypt(key_name, ciphertext)
     return response.plaintext
+
+
 # [END kms_decrypt_rsa]
 
 
@@ -106,14 +112,18 @@ def encrypt_rsa(plaintext, key_name):
     # get the public key
     client = kms_v1.KeyManagementServiceClient()
     response = client.get_public_key(key_name)
-    key_txt = response.pem.encode('ascii')
+    key_txt = response.pem.encode("ascii")
     public_key = serialization.load_pem_public_key(key_txt, default_backend())
 
     # encrypt plaintext
-    pad = padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()),
-                       algorithm=hashes.SHA256(),
-                       label=None)
+    pad = padding.OAEP(
+        mgf=padding.MGF1(algorithm=hashes.SHA256()),
+        algorithm=hashes.SHA256(),
+        label=None,
+    )
     return public_key.encrypt(plaintext, pad)
+
+
 # [END kms_encrypt_rsa]
 
 
@@ -134,10 +144,12 @@ def sign_asymmetric(message, key_name):
     client = kms_v1.KeyManagementServiceClient()
     digest_bytes = hashlib.sha256(message).digest()
 
-    digest_json = {'sha256': digest_bytes}
+    digest_json = {"sha256": digest_bytes}
 
     response = client.asymmetric_sign(key_name, digest_json)
     return response.signature
+
+
 # [END kms_sign_asymmetric]
 
 
@@ -161,7 +173,7 @@ def verify_signature_rsa(signature, message, key_name):
     # get the public key
     client = kms_v1.KeyManagementServiceClient()
     response = client.get_public_key(key_name)
-    key_txt = response.pem.encode('ascii')
+    key_txt = response.pem.encode("ascii")
     public_key = serialization.load_pem_public_key(key_txt, default_backend())
 
     # get the digest of the message
@@ -169,15 +181,18 @@ def verify_signature_rsa(signature, message, key_name):
 
     try:
         # Attempt verification
-        public_key.verify(signature,
-                          digest_bytes,
-                          padding.PSS(mgf=padding.MGF1(hashes.SHA256()),
-                                      salt_length=32),
-                          utils.Prehashed(hashes.SHA256()))
+        public_key.verify(
+            signature,
+            digest_bytes,
+            padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=32),
+            utils.Prehashed(hashes.SHA256()),
+        )
         # No errors were thrown. Verification was successful
         return True
     except InvalidSignature:
         return False
+
+
 # [END kms_verify_signature_rsa]
 
 
@@ -201,7 +216,7 @@ def verify_signature_ec(signature, message, key_name):
     # get the public key
     client = kms_v1.KeyManagementServiceClient()
     response = client.get_public_key(key_name)
-    key_txt = response.pem.encode('ascii')
+    key_txt = response.pem.encode("ascii")
     public_key = serialization.load_pem_public_key(key_txt, default_backend())
 
     # get the digest of the message
@@ -209,11 +224,13 @@ def verify_signature_ec(signature, message, key_name):
 
     try:
         # Attempt verification
-        public_key.verify(signature,
-                          digest_bytes,
-                          ec.ECDSA(utils.Prehashed(hashes.SHA256())))
+        public_key.verify(
+            signature, digest_bytes, ec.ECDSA(utils.Prehashed(hashes.SHA256()))
+        )
         # No errors were thrown. Verification was successful
         return True
     except InvalidSignature:
         return False
+
+
 # [END kms_verify_signature_ec]

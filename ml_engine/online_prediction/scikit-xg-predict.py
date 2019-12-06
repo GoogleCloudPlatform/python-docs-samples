@@ -1,4 +1,3 @@
-
 # Copyright 2018 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,19 +34,20 @@ def predict_json(project, model, instances, version=None):
     # Create the AI Platform service object.
     # To authenticate set the environment variable
     # GOOGLE_APPLICATION_CREDENTIALS=<path_to_service_account_file>
-    service = googleapiclient.discovery.build('ml', 'v1')
-    name = 'projects/{}/models/{}'.format(project, model)
+    service = googleapiclient.discovery.build("ml", "v1")
+    name = "projects/{}/models/{}".format(project, model)
 
     if version is not None:
-        name += '/versions/{}'.format(version)
+        name += "/versions/{}".format(version)
 
-    response = service.projects().predict(
-        name=name,
-        body={'instances': instances}
-    ).execute()
+    response = (
+        service.projects().predict(name=name, body={"instances": instances}).execute()
+    )
 
-    if 'error' in response:
-        raise RuntimeError(response['error'])
+    if "error" in response:
+        raise RuntimeError(response["error"])
 
-    return response['predictions']
+    return response["predictions"]
+
+
 # [END predict_json]

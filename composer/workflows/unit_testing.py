@@ -29,5 +29,7 @@ def assert_has_valid_dag(module):
             dag.test_cycle()  # Throws if a task cycle is found.
 
     if no_dag_found:
-        raise AssertionError('module does not contain a valid DAG')
+        raise AssertionError("module does not contain a valid DAG")
+
+
 # [END composer_dag_unit_testing]

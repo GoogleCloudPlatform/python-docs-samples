@@ -18,25 +18,26 @@
 from googleapiclient.discovery import build
 from googleapiclient.errors import Error
 
-client_service = build('jobs', 'v2')
+client_service = build("jobs", "v2")
 
 
 def run_sample():
     try:
         list_companies_response = client_service.companies().list().execute()
-        print('Request Id: %s' %
-              list_companies_response.get('metadata').get('requestId'))
-        print('Companies:')
+        print(
+            "Request Id: %s" % list_companies_response.get("metadata").get("requestId")
+        )
+        print("Companies:")
         if list_companies_response is not None:
-            for company in list_companies_response.get('companies'):
-                print('%s' % company.get('name'))
-        print('')
+            for company in list_companies_response.get("companies"):
+                print("%s" % company.get("name"))
+        print("")
 
     except Error as e:
-        print('Got exception while listing companies')
+        print("Got exception while listing companies")
         raise e
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_sample()
 # [END quickstart]

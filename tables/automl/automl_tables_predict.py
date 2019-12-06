@@ -25,10 +25,7 @@ import argparse
 import os
 
 
-def predict(project_id,
-            compute_region,
-            model_display_name,
-            inputs):
+def predict(project_id, compute_region, model_display_name, inputs):
     """Make a prediction."""
     # [START automl_tables_predict]
     # TODO(developer): Uncomment and set the following variables
@@ -41,23 +38,18 @@ def predict(project_id,
 
     client = automl.TablesClient(project=project_id, region=compute_region)
 
-    response = client.predict(
-        model_display_name=model_display_name,
-        inputs=inputs)
+    response = client.predict(model_display_name=model_display_name, inputs=inputs)
     print("Prediction results:")
     for result in response.payload:
         print("Predicted class name: {}".format(result.display_name))
-        print("Predicted class score: {}".format(
-            result.classification.score))
+        print("Predicted class score: {}".format(result.classification.score))
 
     # [END automl_tables_predict]
 
 
-def batch_predict(project_id,
-                  compute_region,
-                  model_display_name,
-                  gcs_input_uris,
-                  gcs_output_uri):
+def batch_predict(
+    project_id, compute_region, model_display_name, gcs_input_uris, gcs_output_uri
+):
     """Make a batch of predictions."""
     # [START automl_tables_batch_predict]
     # TODO(developer): Uncomment and set the following variables
@@ -72,9 +64,11 @@ def batch_predict(project_id,
     client = automl.TablesClient(project=project_id, region=compute_region)
 
     # Query model
-    response = client.batch_predict(gcs_input_uris=gcs_input_uris,
-                                    gcs_output_uri_prefix=gcs_output_uri,
-                                    model_display_name=model_display_name)
+    response = client.batch_predict(
+        gcs_input_uris=gcs_input_uris,
+        gcs_output_uri_prefix=gcs_output_uri,
+        model_display_name=model_display_name,
+    )
     print("Making batch prediction... ")
     response.result()
     print("Batch prediction complete.\n{}".format(response.metadata))
@@ -84,8 +78,7 @@ def batch_predict(project_id,
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     subparsers = parser.add_subparsers(dest="command")
 
@@ -93,9 +86,7 @@ if __name__ == "__main__":
     predict_parser.add_argument("--model_display_name")
     predict_parser.add_argument("--file_path")
 
-    batch_predict_parser = subparsers.add_parser(
-        "batch_predict", help=predict.__doc__
-    )
+    batch_predict_parser = subparsers.add_parser("batch_predict", help=predict.__doc__)
     batch_predict_parser.add_argument("--model_display_name")
     batch_predict_parser.add_argument("--input_path")
     batch_predict_parser.add_argument("--output_path")
@@ -106,12 +97,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.command == "predict":
-        predict(
-            project_id,
-            compute_region,
-            args.model_display_name,
-            args.file_path,
-        )
+        predict(project_id, compute_region, args.model_display_name, args.file_path)
 
     if args.command == "batch_predict":
         batch_predict(

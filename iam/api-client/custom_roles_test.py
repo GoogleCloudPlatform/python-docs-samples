@@ -19,44 +19,43 @@ import custom_roles
 
 
 def test_custom_roles(capsys):
-    project = os.environ['GCLOUD_PROJECT']
-    name = 'pythonTestCustomRole' + str(random.randint(0, 100000))
-    title = 'Python Test Custom Role'
-    description = 'This is a Python test custom role.'
-    permissions = ['iam.roles.get']
-    stage = 'GA'
+    project = os.environ["GCLOUD_PROJECT"]
+    name = "pythonTestCustomRole" + str(random.randint(0, 100000))
+    title = "Python Test Custom Role"
+    description = "This is a Python test custom role."
+    permissions = ["iam.roles.get"]
+    stage = "GA"
 
     custom_roles.query_testable_permissions(
-        '//cloudresourcemanager.googleapis.com/projects/' + project
+        "//cloudresourcemanager.googleapis.com/projects/" + project
     )
     out, _ = capsys.readouterr()
-    assert 'appengine' in out
+    assert "appengine" in out
 
-    custom_roles.get_role('roles/appengine.appViewer')
+    custom_roles.get_role("roles/appengine.appViewer")
     out, _ = capsys.readouterr()
-    assert 'roles/' in out
+    assert "roles/" in out
 
-    custom_roles.create_role(
-        name, project, title, description, permissions, stage)
+    custom_roles.create_role(name, project, title, description, permissions, stage)
     out, _ = capsys.readouterr()
-    assert 'Created role:' in out
+    assert "Created role:" in out
 
-    custom_roles.edit_role(name, project, title, 'Updated', permissions, stage)
+    custom_roles.edit_role(name, project, title, "Updated", permissions, stage)
     out, _ = capsys.readouterr()
-    assert 'Updated role:' in out
+    assert "Updated role:" in out
 
     custom_roles.list_roles(project)
     out, _ = capsys.readouterr()
-    assert 'roles/' in out
+    assert "roles/" in out
 
     custom_roles.disable_role(name, project)
     out, _ = capsys.readouterr()
-    assert 'Disabled role:' in out
+    assert "Disabled role:" in out
 
     custom_roles.delete_role(name, project)
     out, _ = capsys.readouterr()
-    assert 'Deleted role:' in out
+    assert "Deleted role:" in out
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_custom_roles()

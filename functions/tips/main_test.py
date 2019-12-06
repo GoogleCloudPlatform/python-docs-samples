@@ -38,21 +38,23 @@ def test_lazy_globals(app):
 def test_scope_demo(app):
     with app.test_request_context():
         res = main.scope_demo(flask.request)
-        assert res == 'Per instance: 362880, per function: 45'
+        assert res == "Per instance: 362880, per function: 45"
 
 
 @responses.activate
 def test_connection_pooling_200(app):
-    responses.add(responses.GET, 'http://example.com',
-                  json={'status': 'OK'}, status=200)
+    responses.add(
+        responses.GET, "http://example.com", json={"status": "OK"}, status=200
+    )
     with app.test_request_context():
         main.connection_pooling(flask.request)
 
 
 @responses.activate
 def test_connection_pooling_404(app):
-    responses.add(responses.GET, 'http://example.com',
-                  json={'error': 'not found'}, status=404)
+    responses.add(
+        responses.GET, "http://example.com", json={"error": "not found"}, status=404
+    )
     with app.test_request_context():
         with pytest.raises(requests.exceptions.HTTPError):
             main.connection_pooling(flask.request)
@@ -61,16 +63,16 @@ def test_connection_pooling_404(app):
 def test_avoid_infinite_retries(capsys):
     now = datetime.now(timezone.utc)
 
-    with patch('main.datetime', wraps=datetime) as datetime_mock:
+    with patch("main.datetime", wraps=datetime) as datetime_mock:
         datetime_mock.now = Mock(return_value=now)
 
         old_context = UserDict()
         old_context.timestamp = (now - timedelta(seconds=15)).isoformat()
-        old_context.event_id = 'old_event_id'
+        old_context.event_id = "old_event_id"
 
         young_context = UserDict()
         young_context.timestamp = (now - timedelta(seconds=5)).isoformat()
-        young_context.event_id = 'young_event_id'
+        young_context.event_id = "young_event_id"
 
         main.avoid_infinite_retries(None, old_context)
         out, _ = capsys.readouterr()
@@ -82,14 +84,14 @@ def test_avoid_infinite_retries(capsys):
 
 
 def test_retry_or_not():
-    with patch('main.error_client') as error_client_mock:
+    with patch("main.error_client") as error_client_mock:
         error_client_mock.report_exception = MagicMock()
 
         event = Mock(data={})
         main.retry_or_not(event, None)
         assert error_client_mock.report_exception.call_count == 1
 
-        event.data = {'retry': True}
+        event.data = {"retry": True}
         with pytest.raises(RuntimeError):
             main.retry_or_not(event, None)
 

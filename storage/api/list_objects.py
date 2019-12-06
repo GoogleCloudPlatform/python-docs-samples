@@ -35,7 +35,7 @@ def create_service():
     # the 'storage' service, at version 'v1'.
     # You can browse other available api services and versions here:
     #     https://developers.google.com/api-client-library/python/apis/
-    return googleapiclient.discovery.build('storage', 'v1')
+    return googleapiclient.discovery.build("storage", "v1")
 
 
 def get_bucket_metadata(bucket):
@@ -53,8 +53,7 @@ def list_bucket(bucket):
     service = create_service()
 
     # Create a request to objects.list to retrieve a list of objects.
-    fields_to_return = \
-        'nextPageToken,items(name,size,contentType,metadata(my-key))'
+    fields_to_return = "nextPageToken,items(name,size,contentType,metadata(my-key))"
     req = service.objects().list(bucket=bucket, fields=fields_to_return)
 
     all_objects = []
@@ -62,7 +61,7 @@ def list_bucket(bucket):
     # automatically handle paging with the pageToken.
     while req:
         resp = req.execute()
-        all_objects.extend(resp.get('items', []))
+        all_objects.extend(resp.get("items", []))
         req = service.objects().list_next(req, resp)
     return all_objects
 
@@ -72,11 +71,11 @@ def main(bucket):
     print(json.dumps(list_bucket(bucket), indent=2))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('bucket', help='Your Cloud Storage bucket.')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("bucket", help="Your Cloud Storage bucket.")
 
     args = parser.parse_args()
 

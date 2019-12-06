@@ -18,7 +18,7 @@ import pytest
 
 import snippets
 
-os.environ['GOOGLE_CLOUD_PROJECT'] = os.environ['FIRESTORE_PROJECT']
+os.environ["GOOGLE_CLOUD_PROJECT"] = os.environ["FIRESTORE_PROJECT"]
 
 
 @pytest.fixture
@@ -57,7 +57,7 @@ def test_add_example_data():
 def test_array_contains_any(db):
     query = snippets.array_contains_any_queries(db)
 
-    expected = {'SF', 'LA', 'DC'}
+    expected = {"SF", "LA", "DC"}
     actual = {document.id for document in query.stream()}
 
     assert expected == actual
@@ -66,7 +66,7 @@ def test_array_contains_any(db):
 def test_query_filter_in_query_without_array(db):
     query = snippets.in_query_without_array(db)
 
-    expected = {'SF', 'LA', 'DC', 'TOK'}
+    expected = {"SF", "LA", "DC", "TOK"}
     actual = {document.id for document in query.stream()}
 
     assert expected == actual
@@ -75,7 +75,7 @@ def test_query_filter_in_query_without_array(db):
 def test_query_filter_in_query_with_array(db):
     query = snippets.in_query_with_array(db)
 
-    expected = {'DC'}
+    expected = {"DC"}
     actual = {document.id for document in query.stream()}
 
     assert expected == actual
@@ -104,7 +104,7 @@ def test_get_simple_query():
 def test_array_contains_filter(capsys):
     snippets.array_contains_filter()
     out, _ = capsys.readouterr()
-    assert 'SF' in out
+    assert "SF" in out
 
 
 def test_get_full_collection():
@@ -146,7 +146,7 @@ def test_update_doc():
 def test_update_doc_array(capsys):
     snippets.update_doc_array()
     out, _ = capsys.readouterr()
-    assert 'greater_virginia' in out
+    assert "greater_virginia" in out
 
 
 def test_update_multiple():
@@ -154,23 +154,23 @@ def test_update_multiple():
 
 
 def test_update_server_timestamp(db):
-    db.collection(u'objects').document(u'some-id').set({'timestamp': 0})
+    db.collection(u"objects").document(u"some-id").set({"timestamp": 0})
     snippets.update_server_timestamp()
 
 
 def test_update_data_transaction(db):
-    db.collection('cities').document('SF').set({'population': 1})
+    db.collection("cities").document("SF").set({"population": 1})
     snippets.update_data_transaction()
 
 
 def test_update_data_transaction_result(db):
-    db.collection('cities').document('SF').set({'population': 1})
+    db.collection("cities").document("SF").set({"population": 1})
     snippets.update_data_transaction_result()
 
 
 def test_update_data_batch(db):
-    db.collection('cities').document('SF').set({})
-    db.collection('cities').document('LA').set({})
+    db.collection("cities").document("SF").set({})
+    db.collection("cities").document("LA").set({})
     snippets.update_data_batch()
 
 
@@ -237,9 +237,9 @@ def test_cursor_simple_end_at():
 def test_snapshot_cursors(capsys):
     snippets.snapshot_cursors()
     out, _ = capsys.readouterr()
-    assert 'SF' in out
-    assert 'TOK' in out
-    assert 'BJ' in out
+    assert "SF" in out
+    assert "TOK" in out
+    assert "BJ" in out
 
 
 def test_cursor_paginate():
@@ -255,44 +255,49 @@ def test_delete_single_doc():
 
 
 def test_delete_field(db):
-    db.collection('cities').document('Beijing').set({'capital': True})
+    db.collection("cities").document("Beijing").set({"capital": True})
     snippets.delete_field()
 
 
 def test_listen_document(capsys):
     snippets.listen_document()
     out, _ = capsys.readouterr()
-    assert 'Received document snapshot: SF' in out
+    assert "Received document snapshot: SF" in out
 
 
 def test_listen_multiple(capsys):
     snippets.listen_multiple()
     out, _ = capsys.readouterr()
-    assert 'Current cities in California:' in out
-    assert 'SF' in out
+    assert "Current cities in California:" in out
+    assert "SF" in out
 
 
 def test_listen_for_changes(capsys):
     snippets.listen_for_changes()
     out, _ = capsys.readouterr()
-    assert 'New city: MTV' in out
-    assert 'Modified city: MTV' in out
-    assert 'Removed city: MTV' in out
+    assert "New city: MTV" in out
+    assert "Modified city: MTV" in out
+    assert "Removed city: MTV" in out
 
 
 def test_delete_full_collection():
     snippets.delete_full_collection()
 
 
-@pytest.mark.skip(reason="Dependant on a composite index being created,"
-                         "however creation of the index is dependent on"
-                         "having the admin client and definition integrated"
-                         "into the test setup")
+@pytest.mark.skip(
+    reason="Dependant on a composite index being created,"
+    "however creation of the index is dependent on"
+    "having the admin client and definition integrated"
+    "into the test setup"
+)
 # TODO: b/132092178
 def test_collection_group_query(db):
     museum_docs = snippets.collection_group_query(db)
     names = set([museum.name for museum in museum_docs])
-    assert names == {u'Legion of Honor', u'The Getty',
-                     u'National Air and Space Museum',
-                     u'National Museum of Nature and Science',
-                     u'Beijing Ancient Observatory'}
+    assert names == {
+        u"Legion of Honor",
+        u"The Getty",
+        u"National Air and Space Museum",
+        u"National Museum of Nature and Science",
+        u"Beijing Ancient Observatory",
+    }

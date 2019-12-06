@@ -17,23 +17,23 @@ import os
 from product_search import get_similar_products_file, get_similar_products_uri
 
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-LOCATION = 'us-west1'
+PROJECT_ID = os.getenv("GCLOUD_PROJECT")
+LOCATION = "us-west1"
 
-PRODUCT_SET_ID = 'indexed_product_set_id_for_testing'
-PRODUCT_CATEGORY = 'apparel'
-PRODUCT_ID_1 = 'indexed_product_id_for_testing_1'
-PRODUCT_ID_2 = 'indexed_product_id_for_testing_2'
+PRODUCT_SET_ID = "indexed_product_set_id_for_testing"
+PRODUCT_CATEGORY = "apparel"
+PRODUCT_ID_1 = "indexed_product_id_for_testing_1"
+PRODUCT_ID_2 = "indexed_product_id_for_testing_2"
 
-FILE_PATH_1 = 'resources/shoes_1.jpg'
-IMAGE_URI_1 = 'gs://cloud-samples-data/vision/product_search/shoes_1.jpg'
-FILTER = 'style=womens'
+FILE_PATH_1 = "resources/shoes_1.jpg"
+IMAGE_URI_1 = "gs://cloud-samples-data/vision/product_search/shoes_1.jpg"
+FILTER = "style=womens"
 
 
 def test_get_similar_products_file(capsys):
     get_similar_products_file(
-        PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_CATEGORY, FILE_PATH_1,
-        '')
+        PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_CATEGORY, FILE_PATH_1, ""
+    )
     out, _ = capsys.readouterr()
     assert PRODUCT_ID_1 in out
     assert PRODUCT_ID_2 in out
@@ -41,8 +41,8 @@ def test_get_similar_products_file(capsys):
 
 def test_get_similar_products_uri(capsys):
     get_similar_products_uri(
-        PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_CATEGORY, IMAGE_URI_1,
-        '')
+        PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_CATEGORY, IMAGE_URI_1, ""
+    )
     out, _ = capsys.readouterr()
     assert PRODUCT_ID_1 in out
     assert PRODUCT_ID_2 in out
@@ -50,8 +50,8 @@ def test_get_similar_products_uri(capsys):
 
 def test_get_similar_products_file_with_filter(capsys):
     get_similar_products_file(
-        PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_CATEGORY, FILE_PATH_1,
-        FILTER)
+        PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_CATEGORY, FILE_PATH_1, FILTER
+    )
     out, _ = capsys.readouterr()
     assert PRODUCT_ID_1 in out
     assert PRODUCT_ID_2 not in out
@@ -59,8 +59,8 @@ def test_get_similar_products_file_with_filter(capsys):
 
 def test_get_similar_products_uri_with_filter(capsys):
     get_similar_products_uri(
-        PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_CATEGORY, IMAGE_URI_1,
-        FILTER)
+        PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_CATEGORY, IMAGE_URI_1, FILTER
+    )
     out, _ = capsys.readouterr()
     assert PRODUCT_ID_1 in out
     assert PRODUCT_ID_2 not in out

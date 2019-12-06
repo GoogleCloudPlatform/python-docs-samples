@@ -18,5 +18,4 @@ from django.http import HttpResponse
 
 
 def index(request):
-    return HttpResponse(
-        'Hello, World. This is Django running on Google App Engine')
+    return HttpResponse("Hello, World. This is Django running on Google App Engine")

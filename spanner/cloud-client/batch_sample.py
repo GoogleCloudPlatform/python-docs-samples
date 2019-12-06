@@ -44,9 +44,9 @@ def run_batch_query(instance_id, database_id):
     # Create the batch transaction and generate partitions
     snapshot = database.batch_snapshot()
     partitions = snapshot.generate_read_batches(
-        table='Singers',
-        columns=('SingerId', 'FirstName', 'LastName',),
-        keyset=spanner.KeySet(all_=True)
+        table="Singers",
+        columns=("SingerId", "FirstName", "LastName"),
+        keyset=spanner.KeySet(all_=True),
     )
 
     # Create a pool of workers for the tasks
@@ -57,7 +57,7 @@ def run_batch_query(instance_id, database_id):
         for future in concurrent.futures.as_completed(futures, timeout=3600):
             finish, row_ct = future.result()
             elapsed = finish - start
-            print(u'Completed {} rows in {} seconds'.format(row_ct, elapsed))
+            print(u"Completed {} rows in {} seconds".format(row_ct, elapsed))
 
     # Clean up
     snapshot.close()
@@ -65,24 +65,25 @@ def run_batch_query(instance_id, database_id):
 
 def process(snapshot, partition):
     """Processes the requests of a query in an separate process."""
-    print('Started processing partition.')
+    print("Started processing partition.")
     row_ct = 0
     for row in snapshot.process_read_batch(partition):
-        print(u'SingerId: {}, AlbumId: {}, AlbumTitle: {}'.format(*row))
+        print(u"SingerId: {}, AlbumId: {}, AlbumTitle: {}".format(*row))
         row_ct += 1
     return time.time(), row_ct
+
+
 # [END spanner_batch_client]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("instance_id", help="Your Cloud Spanner instance ID.")
     parser.add_argument(
-        'instance_id', help='Your Cloud Spanner instance ID.')
-    parser.add_argument(
-        'database_id', help='Your Cloud Spanner database ID.',
-        default='example_db')
+        "database_id", help="Your Cloud Spanner database ID.", default="example_db"
+    )
 
     args = parser.parse_args()
 

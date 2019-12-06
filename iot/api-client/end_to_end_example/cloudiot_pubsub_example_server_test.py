@@ -17,48 +17,42 @@ import time
 
 import cloudiot_pubsub_example_server as example_server
 
-cloud_region = 'us-central1'
-device_id_template = 'test-device-{}'
-topic_id = 'test-device-events-{}'.format(int(time.time()))
+cloud_region = "us-central1"
+device_id_template = "test-device-{}"
+topic_id = "test-device-events-{}".format(int(time.time()))
 
-project_id = os.environ['GCLOUD_PROJECT']
-service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+project_id = os.environ["GCLOUD_PROJECT"]
+service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
-pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
-registry_id = 'test-registry-{}'.format(int(time.time()))
+pubsub_topic = "projects/{}/topics/{}".format(project_id, topic_id)
+registry_id = "test-registry-{}".format(int(time.time()))
 
 
 def test_config_turn_on(capsys):
     max_temp = 11
-    data = {u'temperature': max_temp}
+    data = {u"temperature": max_temp}
 
     Server = example_server.Server(service_account_json)
     Server._update_device_config(
-        project_id,
-        cloud_region,
-        registry_id,
-        device_id_template,
-        data)
+        project_id, cloud_region, registry_id, device_id_template, data
+    )
 
     stdout, _ = capsys.readouterr()
-    assert 'on' in stdout
-    assert '11' in stdout
-    assert 'test-device-{}' in stdout
+    assert "on" in stdout
+    assert "11" in stdout
+    assert "test-device-{}" in stdout
 
 
 def test_config_turn_off(capsys):
     min_temp = -1
-    data = {u'temperature': min_temp}
+    data = {u"temperature": min_temp}
 
     Server = example_server.Server(service_account_json)
     Server._update_device_config(
-        project_id,
-        cloud_region,
-        registry_id,
-        device_id_template,
-        data)
+        project_id, cloud_region, registry_id, device_id_template, data
+    )
 
     stdout, _ = capsys.readouterr()
-    assert 'off' in stdout
-    assert '-1' in stdout
-    assert 'test-device-{}' in stdout
+    assert "off" in stdout
+    assert "-1" in stdout
+    assert "test-device-{}" in stdout

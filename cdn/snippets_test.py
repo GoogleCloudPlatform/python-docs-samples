@@ -23,30 +23,36 @@ import snippets
 
 def test_sign_url(capsys):
     snippets.sign_url(
-        'http://35.186.234.33/index.html',
-        'my-key',
-        'nZtRohdNF9m3cKM24IcK4w==',
-        datetime.datetime.utcfromtimestamp(1549751401))
+        "http://35.186.234.33/index.html",
+        "my-key",
+        "nZtRohdNF9m3cKM24IcK4w==",
+        datetime.datetime.utcfromtimestamp(1549751401),
+    )
     snippets.sign_url(
-        'http://www.example.com/',
-        'my-key',
-        'nZtRohdNF9m3cKM24IcK4w==',
-        datetime.datetime.utcfromtimestamp(1549751401))
+        "http://www.example.com/",
+        "my-key",
+        "nZtRohdNF9m3cKM24IcK4w==",
+        datetime.datetime.utcfromtimestamp(1549751401),
+    )
     snippets.sign_url(
-        'http://www.example.com/some/path?some=query&another=param',
-        'my-key',
-        'nZtRohdNF9m3cKM24IcK4w==',
-        datetime.datetime.utcfromtimestamp(1549751401))
+        "http://www.example.com/some/path?some=query&another=param",
+        "my-key",
+        "nZtRohdNF9m3cKM24IcK4w==",
+        datetime.datetime.utcfromtimestamp(1549751401),
+    )
 
     out, _ = capsys.readouterr()
 
     results = out.splitlines()
     assert results[0] == (
-        'http://35.186.234.33/index.html?Expires=1549751401&KeyName=my-key&'
-        'Signature=CRFqQnVfFyiUyR63OQf-HRUpIwc=')
+        "http://35.186.234.33/index.html?Expires=1549751401&KeyName=my-key&"
+        "Signature=CRFqQnVfFyiUyR63OQf-HRUpIwc="
+    )
     assert results[1] == (
-        'http://www.example.com/?Expires=1549751401&KeyName=my-key&'
-        'Signature=OqDUFfHpN5Vxga6r80bhsgxKves=')
+        "http://www.example.com/?Expires=1549751401&KeyName=my-key&"
+        "Signature=OqDUFfHpN5Vxga6r80bhsgxKves="
+    )
     assert results[2] == (
-        'http://www.example.com/some/path?some=query&another=param&Expires='
-        '1549751401&KeyName=my-key&Signature=9Q9TCxSju8-W5nUkk5CuTrun2_o=')
+        "http://www.example.com/some/path?some=query&another=param&Expires="
+        "1549751401&KeyName=my-key&Signature=9Q9TCxSju8-W5nUkk5CuTrun2_o="
+    )

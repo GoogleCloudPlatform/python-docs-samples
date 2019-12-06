@@ -34,8 +34,8 @@ from google.cloud import vision
 
 # [START vision_product_search_get_similar_products]
 def get_similar_products_file(
-        project_id, location, product_set_id, product_category,
-        file_path, filter):
+    project_id, location, product_set_id, product_category, file_path, filter
+):
     """Search similar products to image.
     Args:
         project_id: Id of the project.
@@ -54,7 +54,7 @@ def get_similar_products_file(
     image_annotator_client = vision.ImageAnnotatorClient()
 
     # Read the image as a stream of bytes.
-    with open(file_path, 'rb') as image_file:
+    with open(file_path, "rb") as image_file:
         content = image_file.read()
 
     # Create annotate image request along with product search feature.
@@ -62,45 +62,47 @@ def get_similar_products_file(
 
     # product search specific parameters
     product_set_path = product_search_client.product_set_path(
-        project=project_id, location=location,
-        product_set=product_set_id)
+        project=project_id, location=location, product_set=product_set_id
+    )
     product_search_params = vision.types.ProductSearchParams(
         product_set=product_set_path,
         product_categories=[product_category],
-        filter=filter)
+        filter=filter,
+    )
     image_context = vision.types.ImageContext(
-        product_search_params=product_search_params)
+        product_search_params=product_search_params
+    )
 
     # Search products similar to the image.
-    response = image_annotator_client.product_search(
-        image, image_context=image_context)
+    response = image_annotator_client.product_search(image, image_context=image_context)
 
     index_time = response.product_search_results.index_time
-    print('Product set index time:')
-    print('  seconds: {}'.format(index_time.seconds))
-    print('  nanos: {}\n'.format(index_time.nanos))
+    print("Product set index time:")
+    print("  seconds: {}".format(index_time.seconds))
+    print("  nanos: {}\n".format(index_time.nanos))
 
     results = response.product_search_results.results
 
-    print('Search results:')
+    print("Search results:")
     for result in results:
         product = result.product
 
-        print('Score(Confidence): {}'.format(result.score))
-        print('Image name: {}'.format(result.image))
+        print("Score(Confidence): {}".format(result.score))
+        print("Image name: {}".format(result.image))
 
-        print('Product name: {}'.format(product.name))
-        print('Product display name: {}'.format(
-            product.display_name))
-        print('Product description: {}\n'.format(product.description))
-        print('Product labels: {}\n'.format(product.product_labels))
+        print("Product name: {}".format(product.name))
+        print("Product display name: {}".format(product.display_name))
+        print("Product description: {}\n".format(product.description))
+        print("Product labels: {}\n".format(product.product_labels))
+
+
 # [END vision_product_search_get_similar_products]
 
 
 # [START vision_product_search_get_similar_products_gcs]
 def get_similar_products_uri(
-        project_id, location, product_set_id, product_category,
-        image_uri, filter):
+    project_id, location, product_set_id, product_category, image_uri, filter
+):
     """Search similar products to image.
     Args:
         project_id: Id of the project.
@@ -124,73 +126,81 @@ def get_similar_products_uri(
 
     # product search specific parameters
     product_set_path = product_search_client.product_set_path(
-        project=project_id, location=location,
-        product_set=product_set_id)
+        project=project_id, location=location, product_set=product_set_id
+    )
     product_search_params = vision.types.ProductSearchParams(
         product_set=product_set_path,
         product_categories=[product_category],
-        filter=filter)
+        filter=filter,
+    )
     image_context = vision.types.ImageContext(
-        product_search_params=product_search_params)
+        product_search_params=product_search_params
+    )
 
     # Search products similar to the image.
-    response = image_annotator_client.product_search(
-        image, image_context=image_context)
+    response = image_annotator_client.product_search(image, image_context=image_context)
 
     index_time = response.product_search_results.index_time
-    print('Product set index time:')
-    print('  seconds: {}'.format(index_time.seconds))
-    print('  nanos: {}\n'.format(index_time.nanos))
+    print("Product set index time:")
+    print("  seconds: {}".format(index_time.seconds))
+    print("  nanos: {}\n".format(index_time.nanos))
 
     results = response.product_search_results.results
 
-    print('Search results:')
+    print("Search results:")
     for result in results:
         product = result.product
 
-        print('Score(Confidence): {}'.format(result.score))
-        print('Image name: {}'.format(result.image))
+        print("Score(Confidence): {}".format(result.score))
+        print("Image name: {}".format(result.image))
 
-        print('Product name: {}'.format(product.name))
-        print('Product display name: {}'.format(
-            product.display_name))
-        print('Product description: {}\n'.format(product.description))
-        print('Product labels: {}\n'.format(product.product_labels))
+        print("Product name: {}".format(product.name))
+        print("Product display name: {}".format(product.display_name))
+        print("Product description: {}\n".format(product.description))
+        print("Product labels: {}\n".format(product.product_labels))
+
+
 # [END vision_product_search_get_similar_products_gcs]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    subparsers = parser.add_subparsers(dest='command')
-    parser.add_argument(
-        '--project_id',
-        help='Project id.  Required',
-        required=True)
-    parser.add_argument(
-        '--location',
-        help='Compute region name',
-        default='us-west1')
-    parser.add_argument('--product_set_id')
-    parser.add_argument('--product_category')
-    parser.add_argument('--filter', default='')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    subparsers = parser.add_subparsers(dest="command")
+    parser.add_argument("--project_id", help="Project id.  Required", required=True)
+    parser.add_argument("--location", help="Compute region name", default="us-west1")
+    parser.add_argument("--product_set_id")
+    parser.add_argument("--product_category")
+    parser.add_argument("--filter", default="")
 
     get_similar_products_file_parser = subparsers.add_parser(
-        'get_similar_products_file', help=get_similar_products_file.__doc__)
-    get_similar_products_file_parser.add_argument('--file_path')
+        "get_similar_products_file", help=get_similar_products_file.__doc__
+    )
+    get_similar_products_file_parser.add_argument("--file_path")
 
     get_similar_products_uri_parser = subparsers.add_parser(
-        'get_similar_products_uri', help=get_similar_products_uri.__doc__)
-    get_similar_products_uri_parser.add_argument('--image_uri')
+        "get_similar_products_uri", help=get_similar_products_uri.__doc__
+    )
+    get_similar_products_uri_parser.add_argument("--image_uri")
 
     args = parser.parse_args()
 
-    if args.command == 'get_similar_products_file':
+    if args.command == "get_similar_products_file":
         get_similar_products_file(
-            args.project_id, args.location, args.product_set_id,
-            args.product_category, args.file_path, args.filter)
-    elif args.command == 'get_similar_products_uri':
+            args.project_id,
+            args.location,
+            args.product_set_id,
+            args.product_category,
+            args.file_path,
+            args.filter,
+        )
+    elif args.command == "get_similar_products_uri":
         get_similar_products_uri(
-            args.project_id, args.location, args.product_set_id,
-            args.product_category, args.image_uri, args.filter)
+            args.project_id,
+            args.location,
+            args.product_set_id,
+            args.product_category,
+            args.image_uri,
+            args.filter,
+        )

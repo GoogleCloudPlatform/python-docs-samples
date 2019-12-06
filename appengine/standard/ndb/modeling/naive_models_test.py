@@ -18,7 +18,7 @@ import naive_models as models
 
 
 def test_models(testbed):
-    name = 'Takashi Matsuo'
+    name = "Takashi Matsuo"
     contact = models.Contact(name=name)
     contact.put()
     contact = contact.key.get()

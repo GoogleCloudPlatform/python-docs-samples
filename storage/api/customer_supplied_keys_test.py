@@ -18,7 +18,7 @@ from gcp_devrel.testing.flaky import flaky
 
 from customer_supplied_keys import main
 
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 
 
 @flaky
@@ -26,5 +26,5 @@ def test_main(capsys):
     main(BUCKET, __file__)
     out, err = capsys.readouterr()
 
-    assert not re.search(r'Downloaded file [!]=', out)
-    assert re.search(r'Uploading.*Downloading.*Rotating.*Done', out, re.DOTALL)
+    assert not re.search(r"Downloaded file [!]=", out)
+    assert re.search(r"Uploading.*Downloading.*Rotating.*Done", out, re.DOTALL)

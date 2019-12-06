@@ -19,9 +19,9 @@ import pytest
 
 import iam
 
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-MEMBER = 'group:dpebot@google.com'
-ROLE = 'roles/storage.legacyBucketReader'
+BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
+MEMBER = "group:dpebot@google.com"
+ROLE = "roles/storage.legacyBucketReader"
 
 
 @pytest.fixture
@@ -34,12 +34,10 @@ def test_view_bucket_iam_members():
 
 
 def test_add_bucket_iam_member(bucket):
-    iam.add_bucket_iam_member(
-        BUCKET, ROLE, MEMBER)
+    iam.add_bucket_iam_member(BUCKET, ROLE, MEMBER)
     assert MEMBER in bucket.get_iam_policy()[ROLE]
 
 
 def test_remove_bucket_iam_member(bucket):
-    iam.remove_bucket_iam_member(
-        BUCKET, ROLE, MEMBER)
+    iam.remove_bucket_iam_member(BUCKET, ROLE, MEMBER)
     assert MEMBER not in bucket.get_iam_policy()[ROLE]

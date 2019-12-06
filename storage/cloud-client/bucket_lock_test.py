@@ -20,8 +20,8 @@ import pytest
 
 import bucket_lock
 
-BLOB_NAME = 'storage_snippets_test_sigil'
-BLOB_CONTENT = 'Hello, is it me you\'re looking for?'
+BLOB_NAME = "storage_snippets_test_sigil"
+BLOB_CONTENT = "Hello, is it me you're looking for?"
 # Retention policy for 5 seconds
 RETENTION_POLICY = 5
 
@@ -30,7 +30,7 @@ RETENTION_POLICY = 5
 def bucket():
     """Creates a test bucket and deletes it upon completion."""
     client = storage.Client()
-    bucket_name = 'bucket-lock-' + str(int(time.time()))
+    bucket_name = "bucket-lock-" + str(int(time.time()))
     bucket = client.create_bucket(bucket_name)
     yield bucket
     bucket.delete(force=True)
@@ -46,10 +46,10 @@ def test_retention_policy_no_lock(bucket, capsys):
 
     bucket_lock.get_retention_policy(bucket.name)
     out, _ = capsys.readouterr()
-    assert 'Retention Policy for {}'.format(bucket.name) in out
-    assert 'Retention Period: 5' in out
-    assert 'Effective Time: ' in out
-    assert 'Retention Policy is locked' not in out
+    assert "Retention Policy for {}".format(bucket.name) in out
+    assert "Retention Period: 5" in out
+    assert "Effective Time: " in out
+    assert "Retention Policy is locked" not in out
 
     blob = bucket.blob(BLOB_NAME)
     blob.upload_from_string(BLOB_CONTENT)
@@ -74,16 +74,14 @@ def test_retention_policy_lock(bucket, capsys):
 
     bucket_lock.get_retention_policy(bucket.name)
     out, _ = capsys.readouterr()
-    assert 'Retention Policy is locked' in out
+    assert "Retention Policy is locked" in out
 
 
 def test_enable_disable_bucket_default_event_based_hold(bucket, capsys):
     bucket_lock.get_default_event_based_hold(bucket.name)
     out, _ = capsys.readouterr()
-    assert 'Default event-based hold is not enabled for {}'.format(
-        bucket.name) in out
-    assert 'Default event-based hold is enabled for {}'.format(
-        bucket.name) not in out
+    assert "Default event-based hold is not enabled for {}".format(bucket.name) in out
+    assert "Default event-based hold is enabled for {}".format(bucket.name) not in out
 
     bucket_lock.enable_default_event_based_hold(bucket.name)
     bucket.reload()
@@ -92,8 +90,7 @@ def test_enable_disable_bucket_default_event_based_hold(bucket, capsys):
 
     bucket_lock.get_default_event_based_hold(bucket.name)
     out, _ = capsys.readouterr()
-    assert 'Default event-based hold is enabled for {}'.format(
-        bucket.name) in out
+    assert "Default event-based hold is enabled for {}".format(bucket.name) in out
 
     blob = bucket.blob(BLOB_NAME)
     blob.upload_from_string(BLOB_CONTENT)

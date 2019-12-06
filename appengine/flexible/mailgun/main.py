@@ -18,74 +18,83 @@ import os
 from flask import Flask, render_template, request
 import requests
 
-MAILGUN_DOMAIN_NAME = os.environ['MAILGUN_DOMAIN_NAME']
-MAILGUN_API_KEY = os.environ['MAILGUN_API_KEY']
+MAILGUN_DOMAIN_NAME = os.environ["MAILGUN_DOMAIN_NAME"]
+MAILGUN_API_KEY = os.environ["MAILGUN_API_KEY"]
 
 app = Flask(__name__)
 
 
 # [START gae_flex_mailgun_simple_message]
 def send_simple_message(to):
-    url = 'https://api.mailgun.net/v3/{}/messages'.format(MAILGUN_DOMAIN_NAME)
-    auth = ('api', MAILGUN_API_KEY)
+    url = "https://api.mailgun.net/v3/{}/messages".format(MAILGUN_DOMAIN_NAME)
+    auth = ("api", MAILGUN_API_KEY)
     data = {
-        'from': 'Mailgun User <mailgun@{}>'.format(MAILGUN_DOMAIN_NAME),
-        'to': to,
-        'subject': 'Simple Mailgun Example',
-        'text': 'Plaintext content',
+        "from": "Mailgun User <mailgun@{}>".format(MAILGUN_DOMAIN_NAME),
+        "to": to,
+        "subject": "Simple Mailgun Example",
+        "text": "Plaintext content",
     }
 
     response = requests.post(url, auth=auth, data=data)
     response.raise_for_status()
+
+
 # [END gae_flex_mailgun_simple_message]
 
 
 # [START gae_flex_mailgun_complex_message]
 def send_complex_message(to):
-    url = 'https://api.mailgun.net/v3/{}/messages'.format(MAILGUN_DOMAIN_NAME)
-    auth = ('api', MAILGUN_API_KEY)
+    url = "https://api.mailgun.net/v3/{}/messages".format(MAILGUN_DOMAIN_NAME)
+    auth = ("api", MAILGUN_API_KEY)
     data = {
-        'from': 'Mailgun User <mailgun@{}>'.format(MAILGUN_DOMAIN_NAME),
-        'to': to,
-        'subject': 'Complex Mailgun Example',
-        'text': 'Plaintext content',
-        'html': '<html>HTML <strong>content</strong></html>'
+        "from": "Mailgun User <mailgun@{}>".format(MAILGUN_DOMAIN_NAME),
+        "to": to,
+        "subject": "Complex Mailgun Example",
+        "text": "Plaintext content",
+        "html": "<html>HTML <strong>content</strong></html>",
     }
     files = [("attachment", open("example-attachment.txt"))]
 
     response = requests.post(url, auth=auth, data=data, files=files)
     response.raise_for_status()
+
+
 # [END gae_flex_mailgun_complex_message]
 
 
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.route('/send/email', methods=['POST'])
+@app.route("/send/email", methods=["POST"])
 def send_email():
-    action = request.form.get('submit')
-    to = request.form.get('to')
+    action = request.form.get("submit")
+    to = request.form.get("to")
 
-    if action == 'Send simple email':
+    if action == "Send simple email":
         send_simple_message(to)
     else:
         send_complex_message(to)
 
-    return 'Email sent.'
+    return "Email sent."
 
 
 @app.errorhandler(500)
 def server_error(e):
-    logging.exception('An error occurred during a request.')
-    return """
+    logging.exception("An error occurred during a request.")
+    return (
+        """
     An internal error occurred: <pre>{}</pre>
     See logs for full stacktrace.
-    """.format(e), 500
+    """.format(
+            e
+        ),
+        500,
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)

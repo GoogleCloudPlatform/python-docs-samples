@@ -23,8 +23,8 @@ import google.oauth2.service_account
 import requests
 
 
-IAM_SCOPE = 'https://www.googleapis.com/auth/iam'
-OAUTH_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
+IAM_SCOPE = "https://www.googleapis.com/auth/iam"
+OAUTH_TOKEN_URI = "https://www.googleapis.com/oauth2/v4/token"
 
 
 def trigger_dag(data, context=None):
@@ -44,27 +44,27 @@ def trigger_dag(data, context=None):
     # Navigate to your webserver's login page and get this from the URL
     # Or use the script found at
     # https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/composer/rest/get_client_id.py
-    client_id = 'YOUR-CLIENT-ID'
+    client_id = "YOUR-CLIENT-ID"
     # This should be part of your webserver's URL:
     # {tenant-project-id}.appspot.com
-    webserver_id = 'YOUR-TENANT-PROJECT'
+    webserver_id = "YOUR-TENANT-PROJECT"
     # The name of the DAG you wish to trigger
-    dag_name = 'composer_sample_trigger_response_dag'
+    dag_name = "composer_sample_trigger_response_dag"
     webserver_url = (
-        'https://'
+        "https://"
         + webserver_id
-        + '.appspot.com/api/experimental/dags/'
+        + ".appspot.com/api/experimental/dags/"
         + dag_name
-        + '/dag_runs'
+        + "/dag_runs"
     )
     # Make a POST request to IAP which then Triggers the DAG
-    make_iap_request(webserver_url, client_id, method='POST', json=data)
+    make_iap_request(webserver_url, client_id, method="POST", json=data)
 
 
 # This code is copied from
 # https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/iap/make_iap_request.py
 # START COPIED IAP CODE
-def make_iap_request(url, client_id, method='GET', **kwargs):
+def make_iap_request(url, client_id, method="GET", **kwargs):
     """Makes a request to an application protected by Identity-Aware Proxy.
 
     Args:
@@ -80,21 +80,21 @@ def make_iap_request(url, client_id, method='GET', **kwargs):
       The page body, or raises an exception if the page couldn't be retrieved.
     """
     # Set the default timeout, if missing
-    if 'timeout' not in kwargs:
-        kwargs['timeout'] = 90
+    if "timeout" not in kwargs:
+        kwargs["timeout"] = 90
 
     # Figure out what environment we're running in and get some preliminary
     # information about the service account.
-    bootstrap_credentials, _ = google.auth.default(
-        scopes=[IAM_SCOPE])
+    bootstrap_credentials, _ = google.auth.default(scopes=[IAM_SCOPE])
 
     # For service account's using the Compute Engine metadata service,
     # service_account_email isn't available until refresh is called.
     bootstrap_credentials.refresh(Request())
 
     signer_email = bootstrap_credentials.service_account_email
-    if isinstance(bootstrap_credentials,
-                  google.auth.compute_engine.credentials.Credentials):
+    if isinstance(
+        bootstrap_credentials, google.auth.compute_engine.credentials.Credentials
+    ):
         # Since the Compute Engine metadata service doesn't expose the service
         # account key, we use the IAM signBlob API to sign instead.
         # In order for this to work:
@@ -106,8 +106,7 @@ def make_iap_request(url, client_id, method='GET', **kwargs):
         # 2. The VM's default service account needs the "Service Account Actor"
         #    role. This can be found under the "Project" category in Cloud
         #    Console, or roles/iam.serviceAccountActor in gcloud.
-        signer = google.auth.iam.Signer(
-            Request(), bootstrap_credentials, signer_email)
+        signer = google.auth.iam.Signer(Request(), bootstrap_credentials, signer_email)
     else:
         # A Signer object can sign a JWT using the service account's key.
         signer = bootstrap_credentials.signer
@@ -115,30 +114,38 @@ def make_iap_request(url, client_id, method='GET', **kwargs):
     # Construct OAuth 2.0 service account credentials using the signer
     # and email acquired from the bootstrap credentials.
     service_account_credentials = google.oauth2.service_account.Credentials(
-        signer, signer_email, token_uri=OAUTH_TOKEN_URI, additional_claims={
-            'target_audience': client_id
-        })
+        signer,
+        signer_email,
+        token_uri=OAUTH_TOKEN_URI,
+        additional_claims={"target_audience": client_id},
+    )
     # service_account_credentials gives us a JWT signed by the service
     # account. Next, we use that to obtain an OpenID Connect token,
     # which is a JWT signed by Google.
     google_open_id_connect_token = get_google_open_id_connect_token(
-        service_account_credentials)
+        service_account_credentials
+    )
 
     # Fetch the Identity-Aware Proxy-protected URL, including an
     # Authorization header containing "Bearer " followed by a
     # Google-issued OpenID Connect token for the service account.
     resp = requests.request(
-        method, url,
-        headers={'Authorization': 'Bearer {}'.format(
-            google_open_id_connect_token)}, **kwargs)
+        method,
+        url,
+        headers={"Authorization": "Bearer {}".format(google_open_id_connect_token)},
+        **kwargs
+    )
     if resp.status_code == 403:
-        raise Exception('Service account {} does not have permission to '
-                        'access the IAP-protected application.'.format(
-                            signer_email))
+        raise Exception(
+            "Service account {} does not have permission to "
+            "access the IAP-protected application.".format(signer_email)
+        )
     elif resp.status_code != 200:
         raise Exception(
-            'Bad response from application: {!r} / {!r} / {!r}'.format(
-                resp.status_code, resp.headers, resp.text))
+            "Bad response from application: {!r} / {!r} / {!r}".format(
+                resp.status_code, resp.headers, resp.text
+            )
+        )
     else:
         return resp.text
 
@@ -166,15 +173,19 @@ def get_google_open_id_connect_token(service_account_credentials):
     """
 
     service_account_jwt = (
-        service_account_credentials._make_authorization_grant_assertion())
+        service_account_credentials._make_authorization_grant_assertion()
+    )
     request = google.auth.transport.requests.Request()
     body = {
-        'assertion': service_account_jwt,
-        'grant_type': google.oauth2._client._JWT_GRANT_TYPE,
+        "assertion": service_account_jwt,
+        "grant_type": google.oauth2._client._JWT_GRANT_TYPE,
     }
     token_response = google.oauth2._client._token_endpoint_request(
-        request, OAUTH_TOKEN_URI, body)
-    return token_response['id_token']
+        request, OAUTH_TOKEN_URI, body
+    )
+    return token_response["id_token"]
+
+
 # END COPIED IAP CODE
 
 # [END composer_trigger]

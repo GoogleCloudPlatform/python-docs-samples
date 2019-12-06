@@ -33,7 +33,9 @@ def hello_get(request):
         Response object using `make_response`
         <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
-    return 'Hello World!'
+    return "Hello World!"
+
+
 # [END functions_helloworld_get]
 
 
@@ -45,11 +47,13 @@ def hello_background(event, context):
          context (google.cloud.functions.Context): The Cloud Functions event
          metadata.
     """
-    if event and 'name' in event:
-        name = event['name']
+    if event and "name" in event:
+        name = event["name"]
     else:
-        name = 'World'
-    return 'Hello {}!'.format(name)
+        name = "World"
+    return "Hello {}!".format(name)
+
+
 # [END functions_helloworld_background]
 
 
@@ -67,13 +71,15 @@ def hello_http(request):
     request_json = request.get_json(silent=True)
     request_args = request.args
 
-    if request_json and 'name' in request_json:
-        name = request_json['name']
-    elif request_args and 'name' in request_args:
-        name = request_args['name']
+    if request_json and "name" in request_json:
+        name = request_json["name"]
+    elif request_args and "name" in request_args:
+        name = request_args["name"]
     else:
-        name = 'World'
-    return 'Hello {}!'.format(escape(name))
+        name = "World"
+    return "Hello {}!".format(escape(name))
+
+
 # [END functions_helloworld_http]
 
 
@@ -90,14 +96,20 @@ def hello_pubsub(event, context):
     """
     import base64
 
-    print("""This Function was triggered by messageId {} published at {}
-    """.format(context.event_id, context.timestamp))
+    print(
+        """This Function was triggered by messageId {} published at {}
+    """.format(
+            context.event_id, context.timestamp
+        )
+    )
 
-    if 'data' in event:
-        name = base64.b64decode(event['data']).decode('utf-8')
+    if "data" in event:
+        name = base64.b64decode(event["data"]).decode("utf-8")
     else:
-        name = 'World'
-    print('Hello {}!'.format(name))
+        name = "World"
+    print("Hello {}!".format(name))
+
+
 # [END functions_helloworld_pubsub]
 
 
@@ -109,7 +121,9 @@ def hello_gcs(event, context):
          context (google.cloud.functions.Context): The Cloud Functions
          event metadata.
     """
-    print("File: {}.".format(event['objectId']))
+    print("File: {}.".format(event["objectId"]))
+
+
 # [END functions_helloworld_storage]
 
 
@@ -125,22 +139,24 @@ def hello_content(request):
         Response object using `make_response`
         <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
-    content_type = request.headers['content-type']
-    if content_type == 'application/json':
+    content_type = request.headers["content-type"]
+    if content_type == "application/json":
         request_json = request.get_json(silent=True)
-        if request_json and 'name' in request_json:
-            name = request_json['name']
+        if request_json and "name" in request_json:
+            name = request_json["name"]
         else:
             raise ValueError("JSON is invalid, or missing a 'name' property")
-    elif content_type == 'application/octet-stream':
+    elif content_type == "application/octet-stream":
         name = request.data
-    elif content_type == 'text/plain':
+    elif content_type == "text/plain":
         name = request.data
-    elif content_type == 'application/x-www-form-urlencoded':
-        name = request.form.get('name')
+    elif content_type == "application/x-www-form-urlencoded":
+        name = request.form.get("name")
     else:
         raise ValueError("Unknown content type: {}".format(content_type))
-    return 'Hello {}!'.format(escape(name))
+    return "Hello {}!".format(escape(name))
+
+
 # [END functions_http_content]
 
 
@@ -157,12 +173,14 @@ def hello_method(request):
     """
     from flask import abort
 
-    if request.method == 'GET':
-        return 'Hello World!'
-    elif request.method == 'PUT':
+    if request.method == "GET":
+        return "Hello World!"
+    elif request.method == "PUT":
         return abort(403)
     else:
         return abort(405)
+
+
 # [END functions_http_methods]
 
 
@@ -172,16 +190,17 @@ def hello_error_1(request):
     # Reporting, and WILL NOT show up in logs or
     # terminate the function.
     from google.cloud import error_reporting
+
     client = error_reporting.Client()
 
     try:
-        raise RuntimeError('I failed you')
+        raise RuntimeError("I failed you")
     except RuntimeError:
         client.report_exception()
 
     # This WILL be reported to Stackdriver Error Reporting,
     # and WILL terminate the function
-    raise RuntimeError('I failed you')
+    raise RuntimeError("I failed you")
 
     # [END functions_helloworld_error]
 
@@ -191,12 +210,14 @@ def hello_error_2(request):
     # WILL NOT be reported to Stackdriver Error Reporting, but will show up
     # in logs
     import logging
-    print(RuntimeError('I failed you (print to stdout)'))
-    logging.warn(RuntimeError('I failed you (logging.warn)'))
-    logging.error(RuntimeError('I failed you (logging.error)'))
-    sys.stderr.write('I failed you (sys.stderr.write)\n')
+
+    print(RuntimeError("I failed you (print to stdout)"))
+    logging.warn(RuntimeError("I failed you (logging.warn)"))
+    logging.error(RuntimeError("I failed you (logging.error)"))
+    sys.stderr.write("I failed you (sys.stderr.write)\n")
 
     # This WILL be reported to Stackdriver Error Reporting
     from flask import abort
+
     return abort(500)
     # [END functions_helloworld_error]

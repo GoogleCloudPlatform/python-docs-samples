@@ -20,8 +20,8 @@ import main
 
 
 mock_context = mock.Mock()
-mock_context.event_id = '617187464135194'
-mock_context.timestamp = '2019-07-15T22:09:03.761Z'
+mock_context.event_id = "617187464135194"
+mock_context.timestamp = "2019-07-15T22:09:03.761Z"
 
 
 def test_print_hello_world(capsys):
@@ -30,15 +30,17 @@ def test_print_hello_world(capsys):
     # Call tested function
     main.hello_pubsub(data, mock_context)
     out, err = capsys.readouterr()
-    assert 'Hello World!' in out
+    assert "Hello World!" in out
 
 
 def test_print_name(capsys):
-    name = 'test'
-    data = {'data': base64.b64encode(name.encode())}
+    name = "test"
+    data = {"data": base64.b64encode(name.encode())}
 
     # Call tested function
     main.hello_pubsub(data, mock_context)
     out, err = capsys.readouterr()
-    assert 'Hello {}!\n'.format(name) in out
+    assert "Hello {}!\n".format(name) in out
+
+
 # [END functions_pubsub_unit_test]

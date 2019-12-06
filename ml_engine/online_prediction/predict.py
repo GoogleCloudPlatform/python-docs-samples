@@ -21,6 +21,7 @@ import json
 # [START import_libraries]
 import googleapiclient.discovery
 import six
+
 # [END import_libraries]
 
 
@@ -43,29 +44,27 @@ def predict_json(project, model, instances, version=None):
     # Create the AI Platform service object.
     # To authenticate set the environment variable
     # GOOGLE_APPLICATION_CREDENTIALS=<path_to_service_account_file>
-    service = googleapiclient.discovery.build('ml', 'v1')
-    name = 'projects/{}/models/{}'.format(project, model)
+    service = googleapiclient.discovery.build("ml", "v1")
+    name = "projects/{}/models/{}".format(project, model)
 
     if version is not None:
-        name += '/versions/{}'.format(version)
+        name += "/versions/{}".format(version)
 
-    response = service.projects().predict(
-        name=name,
-        body={'instances': instances}
-    ).execute()
+    response = (
+        service.projects().predict(name=name, body={"instances": instances}).execute()
+    )
 
-    if 'error' in response:
-        raise RuntimeError(response['error'])
+    if "error" in response:
+        raise RuntimeError(response["error"])
 
-    return response['predictions']
+    return response["predictions"]
+
+
 # [END predict_json]
 
 
 # [START predict_tf_records]
-def predict_examples(project,
-                     model,
-                     example_bytes_list,
-                     version=None):
+def predict_examples(project, model, example_bytes_list, version=None):
     """Send protocol buffer data to a deployed model for prediction.
 
     Args:
@@ -80,24 +79,32 @@ def predict_examples(project,
         Mapping[str: any]: dictionary of prediction results defined by the
             model.
     """
-    service = googleapiclient.discovery.build('ml', 'v1')
-    name = 'projects/{}/models/{}'.format(project, model)
+    service = googleapiclient.discovery.build("ml", "v1")
+    name = "projects/{}/models/{}".format(project, model)
 
     if version is not None:
-        name += '/versions/{}'.format(version)
+        name += "/versions/{}".format(version)
 
-    response = service.projects().predict(
-        name=name,
-        body={'instances': [
-            {'b64': base64.b64encode(example_bytes).decode('utf-8')}
-            for example_bytes in example_bytes_list
-        ]}
-    ).execute()
+    response = (
+        service.projects()
+        .predict(
+            name=name,
+            body={
+                "instances": [
+                    {"b64": base64.b64encode(example_bytes).decode("utf-8")}
+                    for example_bytes in example_bytes_list
+                ]
+            },
+        )
+        .execute()
+    )
 
-    if 'error' in response:
-        raise RuntimeError(response['error'])
+    if "error" in response:
+        raise RuntimeError(response["error"])
 
-    return response['predictions']
+    return response["predictions"]
+
+
 # [END predict_tf_records]
 
 
@@ -118,22 +125,26 @@ def census_to_example_bytes(json_instance):
             tf.train.Example protocol buffer.
     """
     import tensorflow as tf
+
     feature_dict = {}
     for key, data in six.iteritems(json_instance):
         if isinstance(data, six.string_types):
             feature_dict[key] = tf.train.Feature(
-                bytes_list=tf.train.BytesList(value=[data.encode('utf-8')]))
+                bytes_list=tf.train.BytesList(value=[data.encode("utf-8")])
+            )
         elif isinstance(data, float):
             feature_dict[key] = tf.train.Feature(
-                float_list=tf.train.FloatList(value=[data]))
+                float_list=tf.train.FloatList(value=[data])
+            )
         elif isinstance(data, int):
             feature_dict[key] = tf.train.Feature(
-                int64_list=tf.train.Int64List(value=[data]))
+                int64_list=tf.train.Int64List(value=[data])
+            )
     return tf.train.Example(
-        features=tf.train.Features(
-            feature=feature_dict
-        )
+        features=tf.train.Features(feature=feature_dict)
     ).SerializeToString()
+
+
 # [END census_to_example_bytes]
 
 
@@ -149,50 +160,38 @@ def main(project, model, version=None, force_tfrecord=False):
             user_input = [user_input]
         try:
             if force_tfrecord:
-                example_bytes_list = [
-                    census_to_example_bytes(e)
-                    for e in user_input
-                ]
+                example_bytes_list = [census_to_example_bytes(e) for e in user_input]
                 result = predict_examples(
-                    project, model, example_bytes_list, version=version)
+                    project, model, example_bytes_list, version=version
+                )
             else:
-                result = predict_json(
-                    project, model, user_input, version=version)
+                result = predict_json(project, model, user_input, version=version)
         except RuntimeError as err:
             print(str(err))
         else:
             print(result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--project',
-        help='Project in which the model is deployed',
+        "--project",
+        help="Project in which the model is deployed",
         type=str,
-        required=True
+        required=True,
     )
+    parser.add_argument("--model", help="Model name", type=str, required=True)
+    parser.add_argument("--version", help="Name of the version.", type=str)
     parser.add_argument(
-        '--model',
-        help='Model name',
-        type=str,
-        required=True
-    )
-    parser.add_argument(
-        '--version',
-        help='Name of the version.',
-        type=str
-    )
-    parser.add_argument(
-        '--force-tfrecord',
-        help='Send predictions as TFRecords rather than raw JSON',
-        action='store_true',
-        default=False
+        "--force-tfrecord",
+        help="Send predictions as TFRecords rather than raw JSON",
+        action="store_true",
+        default=False,
     )
     args = parser.parse_args()
     main(
         args.project,
         args.model,
         version=args.version,
-        force_tfrecord=args.force_tfrecord
+        force_tfrecord=args.force_tfrecord,
     )

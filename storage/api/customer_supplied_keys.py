@@ -40,16 +40,16 @@ import googleapiclient.http
 #     'import base64; import os; print(base64.encodestring(os.urandom(32)))'
 # Although these keys are provided here for simplicity, please remember that it
 # is a bad idea to store your encryption keys in your source code.
-ENCRYPTION_KEY = '4RzDI0TeWa9M/nAvYH05qbCskPaSU/CFV5HeCxk0IUA='
+ENCRYPTION_KEY = "4RzDI0TeWa9M/nAvYH05qbCskPaSU/CFV5HeCxk0IUA="
 
 # You can use openssl to quickly calculate the hash of any key.
 # Try running this:
 #   openssl base64 -d <<< ENCRYPTION_KEY | openssl dgst -sha256 -binary \
 #     | openssl base64
-KEY_HASH = 'aanjNC2nwso8e2FqcWILC3/Tt1YumvIwEj34kr6PRpI='
+KEY_HASH = "aanjNC2nwso8e2FqcWILC3/Tt1YumvIwEj34kr6PRpI="
 
-ANOTHER_ENCRYPTION_KEY = 'oevtavYZC+TfGtV86kJBKTeytXAm1s2r3xIqam+QPKM='
-ANOTHER_KEY_HASH = '/gd0N3k3MK0SEDxnUiaswl0FFv6+5PHpo+5KD5SBCeA='
+ANOTHER_ENCRYPTION_KEY = "oevtavYZC+TfGtV86kJBKTeytXAm1s2r3xIqam+QPKM="
+ANOTHER_KEY_HASH = "/gd0N3k3MK0SEDxnUiaswl0FFv6+5PHpo+5KD5SBCeA="
 
 
 def create_service():
@@ -58,24 +58,27 @@ def create_service():
     # the 'storage' service, at version 'v1'.
     # You can browse other available api services and versions here:
     #     https://developers.google.com/api-client-library/python/apis/
-    return googleapiclient.discovery.build('storage', 'v1')
+    return googleapiclient.discovery.build("storage", "v1")
 
 
 def upload_object(bucket, filename, encryption_key, key_hash):
     """Uploads an object, specifying a custom encryption key."""
     service = create_service()
 
-    with open(filename, 'rb') as f:
+    with open(filename, "rb") as f:
         request = service.objects().insert(
-            bucket=bucket, name=filename,
+            bucket=bucket,
+            name=filename,
             # You can also just set media_body=filename, but for the sake of
             # demonstration, pass in the more generic file handle, which could
             # very well be a StringIO or similar.
             media_body=googleapiclient.http.MediaIoBaseUpload(
-                f, 'application/octet-stream'))
-        request.headers['x-goog-encryption-algorithm'] = 'AES256'
-        request.headers['x-goog-encryption-key'] = encryption_key
-        request.headers['x-goog-encryption-key-sha256'] = key_hash
+                f, "application/octet-stream"
+            ),
+        )
+        request.headers["x-goog-encryption-algorithm"] = "AES256"
+        request.headers["x-goog-encryption-key"] = encryption_key
+        request.headers["x-goog-encryption-key-sha256"] = key_hash
 
         resp = request.execute()
 
@@ -87,9 +90,9 @@ def download_object(bucket, obj, out_file, encryption_key, key_hash):
     service = create_service()
 
     request = service.objects().get_media(bucket=bucket, object=obj)
-    request.headers['x-goog-encryption-algorithm'] = 'AES256'
-    request.headers['x-goog-encryption-key'] = encryption_key
-    request.headers['x-goog-encryption-key-sha256'] = key_hash
+    request.headers["x-goog-encryption-algorithm"] = "AES256"
+    request.headers["x-goog-encryption-key"] = encryption_key
+    request.headers["x-goog-encryption-key-sha256"] = key_hash
 
     # Unfortunately, http.MediaIoBaseDownload overwrites HTTP headers,
     # and so it cannot be used here. Instead, we shall download as a
@@ -97,61 +100,83 @@ def download_object(bucket, obj, out_file, encryption_key, key_hash):
     out_file.write(request.execute())
 
 
-def rotate_key(bucket, obj, current_encryption_key, current_key_hash,
-               new_encryption_key, new_key_hash):
+def rotate_key(
+    bucket,
+    obj,
+    current_encryption_key,
+    current_key_hash,
+    new_encryption_key,
+    new_key_hash,
+):
     """Changes the encryption key used to store an existing object."""
     service = create_service()
 
     request = service.objects().rewrite(
-            sourceBucket=bucket, sourceObject=obj,
-            destinationBucket=bucket, destinationObject=obj,
-            body={})
+        sourceBucket=bucket,
+        sourceObject=obj,
+        destinationBucket=bucket,
+        destinationObject=obj,
+        body={},
+    )
 
     # For very large objects, calls to rewrite may not complete on the first
     # call and may need to be resumed.
     while True:
-        request.headers.update({
-            'x-goog-copy-source-encryption-algorithm': 'AES256',
-            'x-goog-copy-source-encryption-key': current_encryption_key,
-            'x-goog-copy-source-encryption-key-sha256': current_key_hash,
-            'x-goog-encryption-algorithm': 'AES256',
-            'x-goog-encryption-key': new_encryption_key,
-            'x-goog-encryption-key-sha256': new_key_hash})
+        request.headers.update(
+            {
+                "x-goog-copy-source-encryption-algorithm": "AES256",
+                "x-goog-copy-source-encryption-key": current_encryption_key,
+                "x-goog-copy-source-encryption-key-sha256": current_key_hash,
+                "x-goog-encryption-algorithm": "AES256",
+                "x-goog-encryption-key": new_encryption_key,
+                "x-goog-encryption-key-sha256": new_key_hash,
+            }
+        )
 
         rewrite_response = request.execute()
 
-        if rewrite_response['done']:
+        if rewrite_response["done"]:
             break
 
-        print('Continuing rewrite call...')
+        print("Continuing rewrite call...")
         request = service.objects().rewrite(
-                source_bucket=bucket, source_object=obj,
-                destination_bucket=bucket, destination_object=obj,
-                rewriteToken=rewrite_response['rewriteToken'])
+            source_bucket=bucket,
+            source_object=obj,
+            destination_bucket=bucket,
+            destination_object=obj,
+            rewriteToken=rewrite_response["rewriteToken"],
+        )
         rewrite_response.execute()
 
 
 def main(bucket, filename):
-    print('Uploading object gs://{}/{}'.format(bucket, filename))
+    print("Uploading object gs://{}/{}".format(bucket, filename))
     upload_object(bucket, filename, ENCRYPTION_KEY, KEY_HASH)
-    print('Downloading it back')
-    with tempfile.NamedTemporaryFile(mode='w+b') as tmpfile:
+    print("Downloading it back")
+    with tempfile.NamedTemporaryFile(mode="w+b") as tmpfile:
         download_object(bucket, filename, tmpfile, ENCRYPTION_KEY, KEY_HASH)
         tmpfile.seek(0)
-        assert filecmp.cmp(filename, tmpfile.name), \
-            'Downloaded file has different content from the original file.'
-    print('Rotating its key')
-    rotate_key(bucket, filename, ENCRYPTION_KEY, KEY_HASH,
-               ANOTHER_ENCRYPTION_KEY, ANOTHER_KEY_HASH)
-    print('Done')
+        assert filecmp.cmp(
+            filename, tmpfile.name
+        ), "Downloaded file has different content from the original file."
+    print("Rotating its key")
+    rotate_key(
+        bucket,
+        filename,
+        ENCRYPTION_KEY,
+        KEY_HASH,
+        ANOTHER_ENCRYPTION_KEY,
+        ANOTHER_KEY_HASH,
+    )
+    print("Done")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-            description=__doc__,
-            formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('bucket', help='Your Cloud Storage bucket.')
-    parser.add_argument('filename', help='A file to upload and download.')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("bucket", help="Your Cloud Storage bucket.")
+    parser.add_argument("filename", help="A file to upload and download.")
 
     args = parser.parse_args()
 

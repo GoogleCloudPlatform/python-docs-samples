@@ -20,11 +20,11 @@ import import_data
 import manage_dataset
 import pytest
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/image/image_dataset.csv'
+PROJECT_ID = os.getenv("GCLOUD_PROJECT")
+INPUT_GCS_URI = "gs://cloud-samples-data/datalabeling/image/image_dataset.csv"
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def dataset():
     # create a temporary dataset
     dataset = manage_dataset.create_dataset(PROJECT_ID)
@@ -37,6 +37,6 @@ def dataset():
 
 @pytest.mark.slow
 def test_import_data(capsys, dataset):
-    import_data.import_data(dataset.name, 'IMAGE', INPUT_GCS_URI)
+    import_data.import_data(dataset.name, "IMAGE", INPUT_GCS_URI)
     out, _ = capsys.readouterr()
-    assert 'Dataset resource name: ' in out
+    assert "Dataset resource name: " in out

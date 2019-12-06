@@ -17,12 +17,12 @@ from PIL import Image
 
 from faces import main
 
-RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
+RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 def test_main(tmpdir):
-    out_file = os.path.join(tmpdir.dirname, 'face-output.jpg')
-    in_file = os.path.join(RESOURCES, 'face-input.jpg')
+    out_file = os.path.join(tmpdir.dirname, "face-output.jpg")
+    in_file = os.path.join(RESOURCES, "face-input.jpg")
 
     # Make sure there isn't already a green box
     im = Image.open(in_file)

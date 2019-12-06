@@ -15,7 +15,7 @@ import os
 
 from list_objects import main
 
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 
 
 def test_main():

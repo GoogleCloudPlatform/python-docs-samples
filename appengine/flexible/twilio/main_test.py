@@ -19,9 +19,9 @@ import responses
 
 @pytest.fixture
 def app(monkeypatch):
-    monkeypatch.setenv('TWILIO_ACCOUNT_SID', 'sid123')
-    monkeypatch.setenv('TWILIO_AUTH_TOKEN', 'auth123')
-    monkeypatch.setenv('TWILIO_NUMBER', '0123456789')
+    monkeypatch.setenv("TWILIO_ACCOUNT_SID", "sid123")
+    monkeypatch.setenv("TWILIO_AUTH_TOKEN", "auth123")
+    monkeypatch.setenv("TWILIO_NUMBER", "0123456789")
 
     import main
 
@@ -30,8 +30,8 @@ def app(monkeypatch):
 
 
 def test_receive_call(app):
-    r = app.post('/call/receive')
-    assert 'Hello from Twilio!' in r.data.decode('utf-8')
+    r = app.post("/call/receive")
+    assert "Hello from Twilio!" in r.data.decode("utf-8")
 
 
 @responses.activate
@@ -56,22 +56,20 @@ def test_send_sms(app, monkeypatch):
         "error_code": None,
         "error_message": None,
         "uri": "/2010-04-01/Accounts/sample.json",
-        "subresource_uris": {
-            "media": "/2010-04-01/Accounts/sample/Media.json"
-        }
+        "subresource_uris": {"media": "/2010-04-01/Accounts/sample/Media.json"},
     }
-    responses.add(responses.POST, re.compile('.*'),
-                  json=sample_response, status=200)
+    responses.add(responses.POST, re.compile(".*"), json=sample_response, status=200)
 
-    r = app.get('/sms/send')
+    r = app.get("/sms/send")
     assert r.status_code == 400
 
-    r = app.get('/sms/send?to=5558675309')
+    r = app.get("/sms/send?to=5558675309")
     assert r.status_code == 200
 
 
 def test_receive_sms(app):
-    r = app.post('/sms/receive', data={
-        'From': '5558675309', 'Body': 'Jenny, I got your number.'})
+    r = app.post(
+        "/sms/receive", data={"From": "5558675309", "Body": "Jenny, I got your number."}
+    )
     assert r.status_code == 200
-    assert 'Jenny, I got your number' in r.data.decode('utf-8')
+    assert "Jenny, I got your number" in r.data.decode("utf-8")

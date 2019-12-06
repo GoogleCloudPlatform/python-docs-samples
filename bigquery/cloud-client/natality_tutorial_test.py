@@ -28,15 +28,14 @@ def dataset_exists(dataset, client):
 
 def test_natality_tutorial():
     client = bigquery.Client()
-    dataset_ref = client.dataset('natality_regression')
+    dataset_ref = client.dataset("natality_regression")
     assert not dataset_exists(dataset_ref, client)
 
     natality_tutorial.run_natality_tutorial()
 
     assert dataset_exists(dataset_ref, client)
 
-    table = client.get_table(
-        bigquery.Table(dataset_ref.table('regression_input')))
+    table = client.get_table(bigquery.Table(dataset_ref.table("regression_input")))
     assert table.num_rows > 0
 
     client.delete_dataset(dataset_ref, delete_contents=True)

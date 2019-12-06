@@ -35,17 +35,17 @@ def export_assets(project_id, dump_file_path):
     # [END asset_quickstart_export_assets]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument('project_id', help='Your Google Cloud project ID')
+    parser.add_argument("project_id", help="Your Google Cloud project ID")
     parser.add_argument(
-        'dump_file_path',
-        help='The file ExportAssets API will dump assets to, '
-        'e.g.: gs://<bucket-name>/asset_dump_file')
+        "dump_file_path",
+        help="The file ExportAssets API will dump assets to, "
+        "e.g.: gs://<bucket-name>/asset_dump_file",
+    )
 
     args = parser.parse_args()
 

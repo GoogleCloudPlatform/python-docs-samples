@@ -20,12 +20,12 @@ import detect_intent_knowledge
 import document_management
 import knowledge_base_management
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-SESSION_ID = 'fake_session_for_testing'
-TEXTS = ['Where is my data stored?']
+PROJECT_ID = os.getenv("GCLOUD_PROJECT")
+SESSION_ID = "fake_session_for_testing"
+TEXTS = ["Where is my data stored?"]
 
-KNOWLEDGE_BASE_NAME = 'fake_knowledge_base_name'
-DOCUMENT_BASE_NAME = 'fake_document_name'
+KNOWLEDGE_BASE_NAME = "fake_knowledge_base_name"
+DOCUMENT_BASE_NAME = "fake_document_name"
 
 
 def test_create_knowledge_base(capsys):
@@ -33,75 +33,77 @@ def test_create_knowledge_base(capsys):
     knowledge_base_management.list_knowledge_bases(PROJECT_ID)
 
     out, _ = capsys.readouterr()
-    assert 'Display Name: {}'.format(KNOWLEDGE_BASE_NAME) not in out
+    assert "Display Name: {}".format(KNOWLEDGE_BASE_NAME) not in out
 
     # Create a knowledge base
-    knowledge_base_management.create_knowledge_base(PROJECT_ID,
-                                                    KNOWLEDGE_BASE_NAME)
+    knowledge_base_management.create_knowledge_base(PROJECT_ID, KNOWLEDGE_BASE_NAME)
 
     out, _ = capsys.readouterr()
-    assert 'Display Name: {}'.format(KNOWLEDGE_BASE_NAME) in out
+    assert "Display Name: {}".format(KNOWLEDGE_BASE_NAME) in out
 
     # List the knowledge base
     knowledge_base_management.list_knowledge_bases(PROJECT_ID)
 
     out, _ = capsys.readouterr()
-    assert 'Display Name: {}'.format(KNOWLEDGE_BASE_NAME) in out
+    assert "Display Name: {}".format(KNOWLEDGE_BASE_NAME) in out
 
-    knowledge_base_id = out.split('knowledgeBases/')[1].rstrip()
+    knowledge_base_id = out.split("knowledgeBases/")[1].rstrip()
 
     # Get the knowledge base
     knowledge_base_management.get_knowledge_base(PROJECT_ID, knowledge_base_id)
 
     out, _ = capsys.readouterr()
-    assert 'Display Name: {}'.format(KNOWLEDGE_BASE_NAME) in out
+    assert "Display Name: {}".format(KNOWLEDGE_BASE_NAME) in out
 
     # Create a Document
     document_management.create_document(
-        PROJECT_ID, knowledge_base_id, DOCUMENT_BASE_NAME, 'text/html', 'FAQ',
-        'https://cloud.google.com/storage/docs/faq')
+        PROJECT_ID,
+        knowledge_base_id,
+        DOCUMENT_BASE_NAME,
+        "text/html",
+        "FAQ",
+        "https://cloud.google.com/storage/docs/faq",
+    )
 
     out, _ = capsys.readouterr()
-    assert 'Display Name: {}'.format(DOCUMENT_BASE_NAME) in out
+    assert "Display Name: {}".format(DOCUMENT_BASE_NAME) in out
 
     # List the Document
     document_management.list_documents(PROJECT_ID, knowledge_base_id)
 
     out, _ = capsys.readouterr()
-    assert 'Display Name: {}'.format(DOCUMENT_BASE_NAME) in out
+    assert "Display Name: {}".format(DOCUMENT_BASE_NAME) in out
 
-    document_id = out.split('documents/')[1].split(' - MIME Type:')[0].rstrip()
+    document_id = out.split("documents/")[1].split(" - MIME Type:")[0].rstrip()
 
     # Get the Document
-    document_management.get_document(PROJECT_ID, knowledge_base_id,
-                                     document_id)
+    document_management.get_document(PROJECT_ID, knowledge_base_id, document_id)
 
     out, _ = capsys.readouterr()
-    assert 'Display Name: {}'.format(DOCUMENT_BASE_NAME) in out
+    assert "Display Name: {}".format(DOCUMENT_BASE_NAME) in out
 
     # Detect intent with Knowledge Base
     detect_intent_knowledge.detect_intent_knowledge(
-        PROJECT_ID, SESSION_ID, 'en-us', knowledge_base_id, TEXTS)
+        PROJECT_ID, SESSION_ID, "en-us", knowledge_base_id, TEXTS
+    )
 
     out, _ = capsys.readouterr()
-    assert 'Knowledge results' in out
+    assert "Knowledge results" in out
 
     # Delete the Document
-    document_management.delete_document(PROJECT_ID, knowledge_base_id,
-                                        document_id)
+    document_management.delete_document(PROJECT_ID, knowledge_base_id, document_id)
 
     # List the Document
     document_management.list_documents(PROJECT_ID, knowledge_base_id)
 
     out, _ = capsys.readouterr()
-    assert 'Display Name: {}'.format(DOCUMENT_BASE_NAME) not in out
+    assert "Display Name: {}".format(DOCUMENT_BASE_NAME) not in out
 
     # Delete the Knowledge Base
-    knowledge_base_management.delete_knowledge_base(PROJECT_ID,
-                                                    knowledge_base_id)
+    knowledge_base_management.delete_knowledge_base(PROJECT_ID, knowledge_base_id)
 
     # List the knowledge base
     knowledge_base_management.list_knowledge_bases(PROJECT_ID)
 
     out, _ = capsys.readouterr()
-    assert 'Display Name: {}'.format(KNOWLEDGE_BASE_NAME) not in out
+    assert "Display Name: {}".format(KNOWLEDGE_BASE_NAME) not in out

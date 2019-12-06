@@ -29,16 +29,16 @@ import sleekxmpp
 app = Flask(__name__)
 
 
-@app.route('/send_message', methods=['GET'])
+@app.route("/send_message", methods=["GET"])
 def send_message():
-    recipient = request.args.get('recipient')
-    message = request.args.get('message')
+    recipient = request.args.get("recipient")
+    message = request.args.get("message")
 
     if chat_client and recipient and message:
         chat_client.send_message(mto=recipient, mbody=message)
-        return 'message sent to {} with body: {}'.format(recipient, message)
+        return "message sent to {} with body: {}".format(recipient, message)
     else:
-        return 'message failed to send', 400
+        return "message failed to send", 400
 
 
 class WikiBot(sleekxmpp.ClientXMPP):
@@ -54,19 +54,19 @@ class WikiBot(sleekxmpp.ClientXMPP):
         # and the XML streams are ready for use. We want to
         # listen for this event so that we we can initialize
         # our roster.
-        self.add_event_handler('session_start', self.start)
+        self.add_event_handler("session_start", self.start)
 
         # The message event is triggered whenever a message
         # stanza is received. Be aware that that includes
         # MUC messages and error messages.
-        self.add_event_handler('message', self.message)
+        self.add_event_handler("message", self.message)
 
         # Register plugins. Note that while plugins may have
         # interdependencies, the order you register them in doesn't matter.
-        self.register_plugin('xep_0030')  # Service Discovery
-        self.register_plugin('xep_0004')  # Data Forms
-        self.register_plugin('xep_0060')  # PubSub
-        self.register_plugin('xep_0199')  # XMPP Ping
+        self.register_plugin("xep_0030")  # Service Discovery
+        self.register_plugin("xep_0004")  # Data Forms
+        self.register_plugin("xep_0060")  # PubSub
+        self.register_plugin("xep_0199")  # XMPP Ping
 
     def start(self, event):
         """Process the session_start event.
@@ -95,45 +95,47 @@ class WikiBot(sleekxmpp.ClientXMPP):
                 for stanza objects and the Message stanza to see how it may be
                 used.
         """
-        if msg['type'] in ('chat', 'normal'):
-            msg_body = msg['body']
+        if msg["type"] in ("chat", "normal"):
+            msg_body = msg["body"]
             encoded_body = urllib.quote_plus(msg_body)
             response = requests.get(
-                'https://en.wikipedia.org/w/api.php?'
-                'action=query&list=search&format=json&srprop=snippet&'
-                'srsearch={}'.format(encoded_body))
+                "https://en.wikipedia.org/w/api.php?"
+                "action=query&list=search&format=json&srprop=snippet&"
+                "srsearch={}".format(encoded_body)
+            )
             doc = json.loads(response.content)
 
-            results = doc.get('query', {}).get('search')
+            results = doc.get("query", {}).get("search")
             if not results:
-                msg.reply('I wasn\'t able to locate info on "{}" Sorry'.format(
-                    msg_body)).send()
+                msg.reply(
+                    'I wasn\'t able to locate info on "{}" Sorry'.format(msg_body)
+                ).send()
                 return
 
-            snippet = results[0]['snippet']
-            title = urllib.quote_plus(results[0]['title'])
+            snippet = results[0]["snippet"]
+            title = urllib.quote_plus(results[0]["title"])
 
             # Strip out html
-            snippet = html_parser.HTMLParser().unescape(
-                re.sub(r'<[^>]*>', '', snippet))
-            msg.reply(u'{}...\n(http://en.wikipedia.org/w/?title={})'.format(
-                snippet, title)).send()
+            snippet = html_parser.HTMLParser().unescape(re.sub(r"<[^>]*>", "", snippet))
+            msg.reply(
+                u"{}...\n(http://en.wikipedia.org/w/?title={})".format(snippet, title)
+            ).send()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Setup the command line arguments.
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
 
     # JID and password options.
-    parser.add_argument('-j', '--jid', help='JID to use', required=True)
-    parser.add_argument('-p', '--password', help='password to use')
+    parser.add_argument("-j", "--jid", help="JID to use", required=True)
+    parser.add_argument("-p", "--password", help="password to use")
 
     args = parser.parse_args()
 
     if args.password is None:
-        args.password = getpass.getpass('Password: ')
+        args.password = getpass.getpass("Password: ")
 
     xmpp = WikiBot(args.jid, args.password)
 
@@ -142,12 +144,12 @@ if __name__ == '__main__':
     try:
         # Connect to the XMPP server and start processing XMPP stanzas.
         if not xmpp.connect():
-            print('Unable to connect.')
+            print("Unable to connect.")
             sys.exit(1)
 
         xmpp.process(block=False)
 
-        app.run(threaded=True, use_reloader=False, host='0.0.0.0', debug=False)
-        print('Done')
+        app.run(threaded=True, use_reloader=False, host="0.0.0.0", debug=False)
+        print("Done")
     finally:
         xmpp.disconnect()

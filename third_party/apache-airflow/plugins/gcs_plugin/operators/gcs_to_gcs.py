@@ -106,23 +106,31 @@ class GoogleCloudStorageToGoogleCloudStorageOperator(BaseOperator):
     wget https://raw.githubusercontent.com/apache/incubator-airflow/\
     v1-10-stable/airflow/contrib/hooks/gcs_hook.py
     """
-    template_fields = ('source_bucket', 'source_object', 'destination_bucket',
-                       'destination_object',)
-    ui_color = '#f0eee4'
+
+    template_fields = (
+        "source_bucket",
+        "source_object",
+        "destination_bucket",
+        "destination_object",
+    )
+    ui_color = "#f0eee4"
 
     @apply_defaults
-    def __init__(self,
-                 source_bucket,
-                 source_object,
-                 destination_bucket=None,
-                 destination_object=None,
-                 move_object=False,
-                 google_cloud_storage_conn_id='google_cloud_default',
-                 delegate_to=None,
-                 *args,
-                 **kwargs):
-        super(GoogleCloudStorageToGoogleCloudStorageOperator,
-              self).__init__(*args, **kwargs)
+    def __init__(
+        self,
+        source_bucket,
+        source_object,
+        destination_bucket=None,
+        destination_object=None,
+        move_object=False,
+        google_cloud_storage_conn_id="google_cloud_default",
+        delegate_to=None,
+        *args,
+        **kwargs
+    ):
+        super(GoogleCloudStorageToGoogleCloudStorageOperator, self).__init__(
+            *args, **kwargs
+        )
         self.source_bucket = source_bucket
         self.source_object = source_object
         self.destination_bucket = destination_bucket
@@ -130,48 +138,60 @@ class GoogleCloudStorageToGoogleCloudStorageOperator(BaseOperator):
         self.move_object = move_object
         self.google_cloud_storage_conn_id = google_cloud_storage_conn_id
         self.delegate_to = delegate_to
-        self.wildcard = '*'
+        self.wildcard = "*"
 
     def execute(self, context):
 
         hook = GoogleCloudStorageHook(
             google_cloud_storage_conn_id=self.google_cloud_storage_conn_id,
-            delegate_to=self.delegate_to
+            delegate_to=self.delegate_to,
         )
-        log_message = 'Executing copy of gs://{0}/{1} to gs://{2}/{3}'
+        log_message = "Executing copy of gs://{0}/{1} to gs://{2}/{3}"
 
         if self.wildcard in self.source_object:
             prefix, delimiter = self.source_object.split(self.wildcard, 1)
-            objects = hook.list(self.source_bucket, prefix=prefix,
-                                delimiter=delimiter)
+            objects = hook.list(self.source_bucket, prefix=prefix, delimiter=delimiter)
 
             for source_object in objects:
                 if self.destination_object is None:
                     destination_object = source_object
                 else:
-                    destination_object = source_object\
-                        .replace(prefix, self.destination_object, 1)
+                    destination_object = source_object.replace(
+                        prefix, self.destination_object, 1
+                    )
                 self.log.info(
-                    log_message.format(self.source_bucket, source_object,
-                                       self.destination_bucket,
-                                       destination_object)
+                    log_message.format(
+                        self.source_bucket,
+                        source_object,
+                        self.destination_bucket,
+                        destination_object,
+                    )
                 )
 
-                hook.rewrite(self.source_bucket, source_object,
-                             self.destination_bucket, destination_object)
+                hook.rewrite(
+                    self.source_bucket,
+                    source_object,
+                    self.destination_bucket,
+                    destination_object,
+                )
                 if self.move_object:
                     hook.delete(self.source_bucket, source_object)
 
         else:
             self.log.info(
-                log_message.format(self.source_bucket, self.source_object,
-                                   self.destination_bucket or
-                                   self.source_bucket,
-                                   self.destination_object or
-                                   self.source_object)
+                log_message.format(
+                    self.source_bucket,
+                    self.source_object,
+                    self.destination_bucket or self.source_bucket,
+                    self.destination_object or self.source_object,
+                )
             )
-            hook.rewrite(self.source_bucket, self.source_object,
-                         self.destination_bucket, self.destination_object)
+            hook.rewrite(
+                self.source_bucket,
+                self.source_object,
+                self.destination_bucket,
+                self.destination_object,
+            )
 
             if self.move_object:
                 hook.delete(self.source_bucket, self.source_object)

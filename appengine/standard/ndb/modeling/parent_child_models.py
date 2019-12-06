@@ -32,6 +32,7 @@ from google.appengine.ext import ndb
 # [START parent_child_models]
 class Contact(ndb.Model):
     """A Contact model with Parent/Child relationship."""
+
     # Basic info.
     name = ndb.StringProperty()
     birth_day = ndb.DateProperty()
@@ -57,7 +58,9 @@ class PhoneNumber(ndb.Model):
 
     Expects to have Contact's key as the parent key.
     """
-    phone_type = ndb.StringProperty(
-        choices=('home', 'work', 'fax', 'mobile', 'other'))
+
+    phone_type = ndb.StringProperty(choices=("home", "work", "fax", "mobile", "other"))
     number = ndb.StringProperty()
+
+
 # [END parent_child_models]

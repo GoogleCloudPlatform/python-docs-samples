@@ -55,17 +55,13 @@ def test_dataset_create_import_delete(capsys):
 
 def test_dataset_list_get(capsys):
     # list datasets
-    automl_natural_language_dataset.list_datasets(
-        project_id, compute_region, ""
-    )
+    automl_natural_language_dataset.list_datasets(project_id, compute_region, "")
     out, _ = capsys.readouterr()
     list_dataset_output = out.splitlines()
     assert "Dataset id: " in list_dataset_output[2]
 
     # get dataset
     dataset_id = list_dataset_output[2].split()[2]
-    automl_natural_language_dataset.get_dataset(
-        project_id, compute_region, dataset_id
-    )
+    automl_natural_language_dataset.get_dataset(project_id, compute_region, dataset_id)
     out, _ = capsys.readouterr()
     assert "Dataset name: " in out

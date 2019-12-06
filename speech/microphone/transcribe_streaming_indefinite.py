@@ -53,6 +53,7 @@ def duration_to_secs(duration):
 
 class ResumableMicrophoneStream:
     """Opens a recording stream as a generator yielding the audio chunks."""
+
     def __init__(self, rate, chunk_size):
         self._rate = rate
         self._chunk_size = chunk_size
@@ -68,9 +69,8 @@ class ResumableMicrophoneStream:
         self._bytes_per_sample = 2 * self._num_channels
         self._bytes_per_second = self._rate * self._bytes_per_sample
 
-        self._bytes_per_chunk = (self._chunk_size * self._bytes_per_sample)
-        self._chunks_per_second = (
-                self._bytes_per_second // self._bytes_per_chunk)
+        self._bytes_per_chunk = self._chunk_size * self._bytes_per_sample
+        self._chunks_per_second = self._bytes_per_second // self._bytes_per_chunk
 
     def __enter__(self):
         self.closed = False
@@ -127,7 +127,7 @@ class ResumableMicrophoneStream:
                 except queue.Empty:
                     break
 
-            yield b''.join(data)
+            yield b"".join(data)
 
 
 def listen_print_loop(responses, stream):
@@ -145,8 +145,7 @@ def listen_print_loop(responses, stream):
     the next result to overwrite it, until the response is a final one. For the
     final one, print a newline to preserve the finalized transcription.
     """
-    responses = (r for r in responses if (
-            r.results and r.results[0].alternatives))
+    responses = (r for r in responses if (r.results and r.results[0].alternatives))
 
     num_chars_printed = 0
     for response in responses:
@@ -169,10 +168,10 @@ def listen_print_loop(responses, stream):
         #
         # If the previous result was longer than this one, we need to print
         # some extra spaces to overwrite the previous result
-        overwrite_chars = ' ' * (num_chars_printed - len(transcript))
+        overwrite_chars = " " * (num_chars_printed - len(transcript))
 
         if not result.is_final:
-            sys.stdout.write(transcript + overwrite_chars + '\r')
+            sys.stdout.write(transcript + overwrite_chars + "\r")
             sys.stdout.flush()
 
             num_chars_printed = len(transcript)
@@ -181,8 +180,8 @@ def listen_print_loop(responses, stream):
 
             # Exit recognition if any of the transcribed phrases could be
             # one of our keywords.
-            if re.search(r'\b(exit|quit)\b', transcript, re.I):
-                print('Exiting..')
+            if re.search(r"\b(exit|quit)\b", transcript, re.I):
+                print("Exiting..")
                 stream.closed = True
                 break
 
@@ -194,12 +193,13 @@ def main():
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=SAMPLE_RATE,
-        language_code='en-US',
+        language_code="en-US",
         max_alternatives=1,
-        enable_word_time_offsets=True)
+        enable_word_time_offsets=True,
+    )
     streaming_config = speech.types.StreamingRecognitionConfig(
-        config=config,
-        interim_results=True)
+        config=config, interim_results=True
+    )
 
     mic_manager = ResumableMicrophoneStream(SAMPLE_RATE, CHUNK_SIZE)
 
@@ -208,16 +208,16 @@ def main():
     with mic_manager as stream:
         while not stream.closed:
             audio_generator = stream.generator()
-            requests = (speech.types.StreamingRecognizeRequest(
-                audio_content=content)
-                for content in audio_generator)
+            requests = (
+                speech.types.StreamingRecognizeRequest(audio_content=content)
+                for content in audio_generator
+            )
 
-            responses = client.streaming_recognize(streaming_config,
-                                                   requests)
+            responses = client.streaming_recognize(streaming_config, requests)
             # Now, put the transcription responses to use.
             listen_print_loop(responses, stream)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 # [END speech_transcribe_infinite_streaming]

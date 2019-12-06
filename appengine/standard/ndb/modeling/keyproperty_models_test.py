@@ -20,7 +20,7 @@ import keyproperty_models as models
 
 
 def test_models(testbed):
-    name = 'Takashi Matsuo'
+    name = "Takashi Matsuo"
     contact = models.Contact(name=name)
     contact.put()
     contact = contact.key.get()
@@ -33,13 +33,14 @@ def test_models(testbed):
 @pytest.mark.xfail
 # [START failing_test]
 def test_fails(self):
-    contact = models.Contact(name='Example')
+    contact = models.Contact(name="Example")
     contact.put()
 
     models.PhoneNumber(
-        contact=self.contact_key,
-        phone_type='home',
-        number='(650) 555 - 2200').put()
+        contact=self.contact_key, phone_type="home", number="(650) 555 - 2200"
+    ).put()
     numbers = contact.phone_numbers.fetch()
     assert 1 == len(numbers)
+
+
 # [END failing_test]

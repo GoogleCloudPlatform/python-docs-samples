@@ -16,5 +16,7 @@ import googleapiclient.discovery
 
 
 def create_transfer_client():
-    return googleapiclient.discovery.build('storagetransfer', 'v1')
+    return googleapiclient.discovery.build("storagetransfer", "v1")
+
+
 # [END all]

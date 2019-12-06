@@ -68,9 +68,7 @@ def get_operation_status(operation_full_id):
     client = automl.AutoMlClient()
 
     # Get the latest state of a long-running operation.
-    response = client.transport._operations_client.get_operation(
-        operation_full_id
-    )
+    response = client.transport._operations_client.get_operation(operation_full_id)
 
     print("Operation status: {}".format(response))
 
@@ -181,9 +179,7 @@ def list_model_evaluations(project_id, compute_region, model_id, filter_):
     # [END automl_language_list_model_evaluations]
 
 
-def get_model_evaluation(
-    project_id, compute_region, model_id, model_evaluation_id
-):
+def get_model_evaluation(project_id, compute_region, model_id, model_evaluation_id):
     """Get model evaluation."""
     # [START automl_language_get_model_evaluation]
     # TODO(developer): Uncomment and set the following variables
@@ -310,8 +306,7 @@ def delete_model(project_id, compute_region, model_id):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     subparsers = parser.add_subparsers(dest="command")
 
@@ -326,9 +321,7 @@ if __name__ == "__main__":
     )
     get_operation_status_parser.add_argument("operation_full_id")
 
-    list_models_parser = subparsers.add_parser(
-        "list_models", help=list_models.__doc__
-    )
+    list_models_parser = subparsers.add_parser("list_models", help=list_models.__doc__)
     list_models_parser.add_argument("filter_")
 
     get_model_parser = subparsers.add_parser(
@@ -340,9 +333,7 @@ if __name__ == "__main__":
         "list_model_evaluations", help=list_model_evaluations.__doc__
     )
     list_model_evaluations_parser.add_argument("model_id")
-    list_model_evaluations_parser.add_argument(
-        "filter_", nargs="?", default=""
-    )
+    list_model_evaluations_parser.add_argument("filter_", nargs="?", default="")
 
     get_model_evaluation_parser = subparsers.add_parser(
         "get_model_evaluation", help=get_model_evaluation.__doc__
@@ -367,9 +358,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.command == "create_model":
-        create_model(
-            project_id, compute_region, args.dataset_id, args.model_name
-        )
+        create_model(project_id, compute_region, args.dataset_id, args.model_name)
     if args.command == "get_operation_status":
         get_operation_status(args.operation_full_id)
     if args.command == "list_models":
@@ -377,16 +366,12 @@ if __name__ == "__main__":
     if args.command == "get_model":
         get_model(project_id, compute_region, args.model_id)
     if args.command == "list_model_evaluations":
-        list_model_evaluations(
-            project_id, compute_region, args.model_id, args.filter_
-        )
+        list_model_evaluations(project_id, compute_region, args.model_id, args.filter_)
     if args.command == "get_model_evaluation":
         get_model_evaluation(
             project_id, compute_region, args.model_id, args.model_evaluation_id
         )
     if args.command == "display_evaluation":
-        display_evaluation(
-            project_id, compute_region, args.model_id, args.filter_
-        )
+        display_evaluation(project_id, compute_region, args.model_id, args.filter_)
     if args.command == "delete_model":
         delete_model(project_id, compute_region, args.model_id)

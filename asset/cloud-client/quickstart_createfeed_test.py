@@ -25,10 +25,10 @@ from google.cloud import pubsub_v1
 
 json_data = open(os.environ["GOOGLE_APPLICATION_CREDENTIALS"]).read()
 data = json.loads(json_data)
-PROJECT = data['project_id']
-ASSET_NAME = 'assets-{}'.format(int(time.time()))
-FEED_ID = 'feed-{}'.format(int(time.time()))
-TOPIC = 'topic-{}'.format(int(time.time()))
+PROJECT = data["project_id"]
+ASSET_NAME = "assets-{}".format(int(time.time()))
+FEED_ID = "feed-{}".format(int(time.time()))
+TOPIC = "topic-{}".format(int(time.time()))
 
 
 def test_create_feed(capsys):
@@ -38,8 +38,7 @@ def test_create_feed(capsys):
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(PROJECT, TOPIC)
     publisher.create_topic(topic_path)
-    quickstart_createfeed.create_feed(
-        PROJECT, FEED_ID, [ASSET_NAME, ], full_topic_name)
+    quickstart_createfeed.create_feed(PROJECT, FEED_ID, [ASSET_NAME], full_topic_name)
     out, _ = capsys.readouterr()
     assert "feed" in out
 

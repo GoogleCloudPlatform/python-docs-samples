@@ -17,12 +17,12 @@ import os
 from .get_client_id import get_client_id
 
 
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
-COMPOSER_LOCATION = os.environ['COMPOSER_LOCATION']
-COMPOSER_ENVIRONMENT = os.environ['COMPOSER_ENVIRONMENT']
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+COMPOSER_LOCATION = os.environ["COMPOSER_LOCATION"]
+COMPOSER_ENVIRONMENT = os.environ["COMPOSER_ENVIRONMENT"]
 
 
 def test_get_client_id(capsys):
     get_client_id(PROJECT, COMPOSER_LOCATION, COMPOSER_ENVIRONMENT)
     out, _ = capsys.readouterr()
-    assert '.apps.googleusercontent.com' in out
+    assert ".apps.googleusercontent.com" in out

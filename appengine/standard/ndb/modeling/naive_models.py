@@ -29,6 +29,7 @@ from google.appengine.ext import ndb
 # [START naive_models]
 class Contact(ndb.Model):
     """A naive Contact model."""
+
     # Basic info.
     name = ndb.StringProperty()
     birth_day = ndb.DateProperty()
@@ -44,4 +45,6 @@ class Contact(ndb.Model):
     company_name = ndb.StringProperty()
     company_description = ndb.TextProperty()
     company_address = ndb.StringProperty()
+
+
 # [END naive_models]

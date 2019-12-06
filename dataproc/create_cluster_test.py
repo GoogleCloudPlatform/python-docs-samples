@@ -20,18 +20,18 @@ from google.cloud import dataproc_v1 as dataproc
 
 import create_cluster
 
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
-REGION = 'us-central1'
-CLUSTER_NAME = 'test-cluster-{}'.format(str(uuid.uuid4()))
+PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+REGION = "us-central1"
+CLUSTER_NAME = "test-cluster-{}".format(str(uuid.uuid4()))
 
 
 @pytest.fixture(autouse=True)
 def teardown():
     yield
 
-    client = dataproc.ClusterControllerClient(client_options={
-        'api_endpoint': '{}-dataproc.googleapis.com:443'.format(REGION)
-    })
+    client = dataproc.ClusterControllerClient(
+        client_options={"api_endpoint": "{}-dataproc.googleapis.com:443".format(REGION)}
+    )
     # Client library function
     client.delete_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
 

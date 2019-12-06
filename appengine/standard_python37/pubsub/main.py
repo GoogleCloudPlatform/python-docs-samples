@@ -29,10 +29,9 @@ app = Flask(__name__)
 # Configure the following environment variables via app.yaml
 # This is used in the push request handler to verify that the request came from
 # pubsub and originated from a trusted source.
-app.config['PUBSUB_VERIFICATION_TOKEN'] = \
-    os.environ['PUBSUB_VERIFICATION_TOKEN']
-app.config['PUBSUB_TOPIC'] = os.environ['PUBSUB_TOPIC']
-app.config['GCLOUD_PROJECT'] = os.environ['GOOGLE_CLOUD_PROJECT']
+app.config["PUBSUB_VERIFICATION_TOKEN"] = os.environ["PUBSUB_VERIFICATION_TOKEN"]
+app.config["PUBSUB_TOPIC"] = os.environ["PUBSUB_TOPIC"]
+app.config["GCLOUD_PROJECT"] = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 # Global list to store messages, tokens, etc. received by this instance.
 MESSAGES = []
@@ -40,38 +39,41 @@ TOKENS = []
 CLAIMS = []
 
 # [START index]
-@app.route('/', methods=['GET', 'POST'])
+@app.route("/", methods=["GET", "POST"])
 def index():
-    if request.method == 'GET':
-        return render_template('index.html', messages=MESSAGES, tokens=TOKENS,
-                               claims=CLAIMS)
+    if request.method == "GET":
+        return render_template(
+            "index.html", messages=MESSAGES, tokens=TOKENS, claims=CLAIMS
+        )
 
-    data = request.form.get('payload', 'Example payload').encode('utf-8')
+    data = request.form.get("payload", "Example payload").encode("utf-8")
 
     # Consider initializing the publisher client outside this function
     # for better latency performance.
     publisher = pubsub_v1.PublisherClient()
-    topic_path = publisher.topic_path(app.config['GCLOUD_PROJECT'],
-                                      app.config['PUBSUB_TOPIC'])
+    topic_path = publisher.topic_path(
+        app.config["GCLOUD_PROJECT"], app.config["PUBSUB_TOPIC"]
+    )
     future = publisher.publish(topic_path, data)
     future.result()
-    return 'OK', 200
+    return "OK", 200
+
+
 # [END index]
 
 
 # [START push]
-@app.route('/_ah/push-handlers/receive_messages', methods=['POST'])
+@app.route("/_ah/push-handlers/receive_messages", methods=["POST"])
 def receive_messages_handler():
     # Verify that the request originates from the application.
-    if (request.args.get('token', '') !=
-            current_app.config['PUBSUB_VERIFICATION_TOKEN']):
-        return 'Invalid request', 400
+    if request.args.get("token", "") != current_app.config["PUBSUB_VERIFICATION_TOKEN"]:
+        return "Invalid request", 400
 
     # Verify that the push request originates from Cloud Pub/Sub.
     try:
         # Get the Cloud Pub/Sub-generated JWT in the "Authorization" header.
-        bearer_token = request.headers.get('Authorization')
-        token = bearer_token.split(' ')[1]
+        bearer_token = request.headers.get("Authorization")
+        token = bearer_token.split(" ")[1]
         TOKENS.append(token)
 
         # Verify and decode the JWT. `verify_oauth2_token` verifies
@@ -82,37 +84,42 @@ def receive_messages_handler():
         # caching already seen tokens works best when a large volume of
         # messages have prompted a single push server to handle them, in which
         # case they would all share the same token for a limited time window.
-        claim = id_token.verify_oauth2_token(token, requests.Request(),
-                                             audience='example.com')
+        claim = id_token.verify_oauth2_token(
+            token, requests.Request(), audience="example.com"
+        )
         # Must also verify the `iss` claim.
-        if claim['iss'] not in [
-            'accounts.google.com',
-            'https://accounts.google.com'
-        ]:
-            raise ValueError('Wrong issuer.')
+        if claim["iss"] not in ["accounts.google.com", "https://accounts.google.com"]:
+            raise ValueError("Wrong issuer.")
         CLAIMS.append(claim)
     except Exception as e:
-        return 'Invalid token: {}\n'.format(e), 400
+        return "Invalid token: {}\n".format(e), 400
 
-    envelope = json.loads(request.data.decode('utf-8'))
-    payload = base64.b64decode(envelope['message']['data'])
+    envelope = json.loads(request.data.decode("utf-8"))
+    payload = base64.b64decode(envelope["message"]["data"])
     MESSAGES.append(payload)
     # Returning any 2xx status indicates successful receipt of the message.
-    return 'OK', 200
+    return "OK", 200
+
+
 # [END push]
 
 
 @app.errorhandler(500)
 def server_error(e):
-    logging.exception('An error occurred during a request.')
-    return """
+    logging.exception("An error occurred during a request.")
+    return (
+        """
     An internal error occurred: <pre>{}</pre>
     See logs for full stacktrace.
-    """.format(e), 500
+    """.format(
+            e
+        ),
+        500,
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)
 # [END app]

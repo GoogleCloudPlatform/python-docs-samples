@@ -17,6 +17,7 @@ import os
 
 # [START bqml_ncaa_tutorial_import_and_client]
 from google.cloud import bigquery
+
 # [END bqml_ncaa_tutorial_import_and_client]
 import pytest
 
@@ -28,14 +29,13 @@ client = bigquery.Client()
 @pytest.fixture
 def delete_dataset():
     yield
-    client.delete_dataset(
-        client.dataset('bqml_tutorial'), delete_contents=True)
+    client.delete_dataset(client.dataset("bqml_tutorial"), delete_contents=True)
 
 
 def test_ncaa_tutorial(delete_dataset):
     # [START bqml_ncaa_tutorial_create_dataset]
-    dataset = bigquery.Dataset(client.dataset('bqml_tutorial'))
-    dataset.location = 'US'
+    dataset = bigquery.Dataset(client.dataset("bqml_tutorial"))
+    dataset.location = "US"
     client.create_dataset(dataset)
     # [END bqml_ncaa_tutorial_create_dataset]
 
@@ -43,17 +43,16 @@ def test_ncaa_tutorial(delete_dataset):
     # Note: the queries are saved to a file. This should be updated to use the
     # saved queries once the library supports running saved queries.
     query_filepath_to_table_name = {
-        'feature_input_query.sql': 'cume_games',
-        'training_data_query.sql': 'wide_games'
+        "feature_input_query.sql": "cume_games",
+        "training_data_query.sql": "wide_games",
     }
-    resources_directory = os.path.join(os.path.dirname(__file__), 'resources')
+    resources_directory = os.path.join(os.path.dirname(__file__), "resources")
     for query_filepath, table_name in query_filepath_to_table_name.items():
         table_ref = dataset.table(table_name)
         job_config = bigquery.QueryJobConfig()
         job_config.destination = table_ref
-        query_filepath = os.path.join(
-            resources_directory, query_filepath)
-        sql = io.open(query_filepath, 'r', encoding='utf-8').read()
+        query_filepath = os.path.join(resources_directory, query_filepath)
+        sql = io.open(query_filepath, "r", encoding="utf-8").read()
         client.query(sql, job_config=job_config).result()
 
     # [START bqml_ncaa_tutorial_create_model]

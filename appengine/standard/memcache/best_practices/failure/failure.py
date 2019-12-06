@@ -36,7 +36,7 @@ class ReadPage(webapp2.RequestHandler):
             memcache.add(key, v)
         # [END memcache-read]
 
-        self.response.content_type = 'text/html'
+        self.response.content_type = "text/html"
         self.response.write(str(v))
 
 
@@ -50,24 +50,22 @@ class DeletePage(webapp2.RequestHandler):
         # write to persistent datastore
         # Do not attempt to put new value in cache, first reader will do that
         # [END memcache-delete]
-        self.response.content_type = 'text/html'
-        self.response.write('done')
+        self.response.content_type = "text/html"
+        self.response.write("done")
 
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
         value = 3
         # [START memcache-failure]
-        if not memcache.set('counter', value):
+        if not memcache.set("counter", value):
             logging.error("Memcache set failed")
             # Other error handling here
         # [END memcache-failure]
-        self.response.content_type = 'text/html'
-        self.response.write('done')
+        self.response.content_type = "text/html"
+        self.response.write("done")
 
 
-app = webapp2.WSGIApplication([
-    ('/', MainPage),
-    ('/delete', DeletePage),
-    ('/read', ReadPage),
-], debug=True)
+app = webapp2.WSGIApplication(
+    [("/", MainPage), ("/delete", DeletePage), ("/read", ReadPage)], debug=True
+)

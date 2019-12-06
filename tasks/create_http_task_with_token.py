@@ -17,13 +17,9 @@ from __future__ import print_function
 import datetime
 
 
-def create_http_task(project,
-                     queue,
-                     location,
-                     url,
-                     service_account_email,
-                     payload=None,
-                     in_seconds=None):
+def create_http_task(
+    project, queue, location, url, service_account_email, payload=None, in_seconds=None
+):
     # [START cloud_tasks_create_http_task_with_token]
     """Create a task for a given queue with an arbitrary payload."""
 
@@ -45,13 +41,11 @@ def create_http_task(project,
 
     # Construct the request body.
     task = {
-            'http_request': {  # Specify the type of request.
-                'http_method': 'POST',
-                'url': url,  # The full url path that the task will be sent to.
-                'oidc_token': {
-                    'service_account_email': service_account_email
-                }
-            }
+        "http_request": {  # Specify the type of request.
+            "http_method": "POST",
+            "url": url,  # The full url path that the task will be sent to.
+            "oidc_token": {"service_account_email": service_account_email},
+        }
     }
 
     if payload is not None:
@@ -59,7 +53,7 @@ def create_http_task(project,
         converted_payload = payload.encode()
 
         # Add the payload to the request.
-        task['http_request']['body'] = converted_payload
+        task["http_request"]["body"] = converted_payload
 
     if in_seconds is not None:
         # Convert "seconds from now" into an rfc3339 datetime string.
@@ -70,11 +64,13 @@ def create_http_task(project,
         timestamp.FromDatetime(d)
 
         # Add the timestamp to the tasks.
-        task['schedule_time'] = timestamp
+        task["schedule_time"] = timestamp
 
     # Use the client to build and send the task.
     response = client.create_task(parent, task)
 
-    print('Created task {}'.format(response.name))
+    print("Created task {}".format(response.name))
     return response
+
+
 # [END cloud_tasks_create_http_task_with_token]

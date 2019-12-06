@@ -22,14 +22,14 @@ import uuid
 from google.cloud import pubsub_v1
 import pytest
 
-PROJECT = getenv('GCP_PROJECT')
-TOPIC = getenv('TOPIC')
+PROJECT = getenv("GCP_PROJECT")
+TOPIC = getenv("TOPIC")
 
 assert PROJECT is not None
 assert TOPIC is not None
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def publisher_client():
     yield pubsub_v1.PublisherClient()
 
@@ -40,23 +40,28 @@ def test_print_name(publisher_client):
 
     # Publish the message
     name = uuid.uuid4()
-    data = str(name).encode('utf-8')
+    data = str(name).encode("utf-8")
     publisher_client.publish(topic_path, data=data).result()
 
     # Wait for logs to become consistent
     time.sleep(15)
 
     # Check logs after a delay
-    log_process = subprocess.Popen([
-        'gcloud',
-        'alpha',
-        'functions',
-        'logs',
-        'read',
-        'hello_pubsub',
-        '--start-time',
-        start_time
-    ], stdout=subprocess.PIPE)
+    log_process = subprocess.Popen(
+        [
+            "gcloud",
+            "alpha",
+            "functions",
+            "logs",
+            "read",
+            "hello_pubsub",
+            "--start-time",
+            start_time,
+        ],
+        stdout=subprocess.PIPE,
+    )
     logs = str(log_process.communicate()[0])
-    assert 'Hello {}!'.format(name) in logs
+    assert "Hello {}!".format(name) in logs
+
+
 # [END functions_pubsub_system_test]
