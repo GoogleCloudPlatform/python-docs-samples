@@ -52,4 +52,4 @@ def test_pub(publisher_client, topic, capsys):
 
     out, _ = capsys.readouterr()
 
-    assert "Published message b'Hello, World!'" in out
+    assert "Hello, World!" in out
