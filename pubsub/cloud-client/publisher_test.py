@@ -24,8 +24,8 @@ import pytest
 import publisher
 
 UUID = uuid.uuid4().hex
-PROJECT = os.environ['GCLOUD_PROJECT']
-TOPIC = 'publisher-test-topic-' + UUID
+PROJECT = os.environ["GCLOUD_PROJECT"]
+TOPIC = "publisher-test-topic-" + UUID
 
 
 @pytest.fixture
@@ -51,17 +51,16 @@ def _make_sleep_patch():
     def new_sleep(period):
         if period == 60:
             real_sleep(5)
-            raise RuntimeError('sigil')
+            raise RuntimeError("sigil")
         else:
             real_sleep(period)
 
-    return mock.patch('time.sleep', new=new_sleep)
+    return mock.patch("time.sleep", new=new_sleep)
 
 
 def _to_delete():
     publisher_client = pubsub_v1.PublisherClient()
-    publisher_client.delete_topic('projects/{}/topics/{}'.format(
-        PROJECT, TOPIC))
+    publisher_client.delete_topic("projects/{}/topics/{}".format(PROJECT, TOPIC))
 
 
 def test_list(client, topic, capsys):
@@ -99,41 +98,41 @@ def test_publish(topic, capsys):
     publisher.publish_messages(PROJECT, TOPIC)
 
     out, _ = capsys.readouterr()
-    assert 'Published' in out
+    assert "Published" in out
 
 
 def test_publish_with_custom_attributes(topic, capsys):
     publisher.publish_messages_with_custom_attributes(PROJECT, TOPIC)
 
     out, _ = capsys.readouterr()
-    assert 'Published' in out
+    assert "Published" in out
 
 
 def test_publish_with_batch_settings(topic, capsys):
     publisher.publish_messages_with_batch_settings(PROJECT, TOPIC)
 
     out, _ = capsys.readouterr()
-    assert 'Published' in out
+    assert "Published" in out
 
 
 def test_publish_with_retry_settings(topic, capsys):
     publisher.publish_messages_with_retry_settings(PROJECT, TOPIC)
 
     out, _ = capsys.readouterr()
-    assert 'Published' in out
+    assert "Published" in out
 
 
 def test_publish_with_error_handler(topic, capsys):
     publisher.publish_messages_with_error_handler(PROJECT, TOPIC)
 
     out, _ = capsys.readouterr()
-    assert 'Published' in out
+    assert "Published" in out
 
 
 def test_publish_with_futures(topic, capsys):
     publisher.publish_messages_with_futures(PROJECT, TOPIC)
 
     out, _ = capsys.readouterr()
-    assert 'Published' in out
+    assert "Published" in out
 
     _to_delete()

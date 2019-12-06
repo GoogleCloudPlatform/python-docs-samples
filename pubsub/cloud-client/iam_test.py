@@ -21,17 +21,17 @@ import pytest
 import iam
 
 UUID = uuid.uuid4().hex
-PROJECT = os.environ['GCLOUD_PROJECT']
-TOPIC = 'iam-test-topic-' + UUID
-SUBSCRIPTION = 'iam-test-subscription-' + UUID
+PROJECT = os.environ["GCLOUD_PROJECT"]
+TOPIC = "iam-test-topic-" + UUID
+SUBSCRIPTION = "iam-test-subscription-" + UUID
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def publisher_client():
     yield pubsub_v1.PublisherClient()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def topic(publisher_client):
     topic_path = publisher_client.topic_path(PROJECT, TOPIC)
 
@@ -47,15 +47,14 @@ def topic(publisher_client):
     publisher_client.delete_topic(topic_path)
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def subscriber_client():
     yield pubsub_v1.SubscriberClient()
 
 
 @pytest.fixture
 def subscription(subscriber_client, topic):
-    subscription_path = subscriber_client.subscription_path(
-        PROJECT, SUBSCRIPTION)
+    subscription_path = subscriber_client.subscription_path(PROJECT, SUBSCRIPTION)
 
     try:
         subscriber_client.delete_subscription(subscription_path)
@@ -87,16 +86,16 @@ def test_set_topic_policy(publisher_client, topic):
     iam.set_topic_policy(PROJECT, TOPIC)
 
     policy = publisher_client.get_iam_policy(topic)
-    assert 'roles/pubsub.publisher' in str(policy)
-    assert 'allUsers' in str(policy)
+    assert "roles/pubsub.publisher" in str(policy)
+    assert "allUsers" in str(policy)
 
 
 def test_set_subscription_policy(subscriber_client, subscription):
     iam.set_subscription_policy(PROJECT, SUBSCRIPTION)
 
     policy = subscriber_client.get_iam_policy(subscription)
-    assert 'roles/pubsub.viewer' in str(policy)
-    assert 'allUsers' in str(policy)
+    assert "roles/pubsub.viewer" in str(policy)
+    assert "allUsers" in str(policy)
 
 
 def test_check_topic_permissions(topic, capsys):
@@ -105,7 +104,7 @@ def test_check_topic_permissions(topic, capsys):
     out, _ = capsys.readouterr()
 
     assert topic in out
-    assert 'pubsub.topics.publish' in out
+    assert "pubsub.topics.publish" in out
 
 
 def test_check_subscription_permissions(subscription, capsys):
@@ -114,4 +113,4 @@ def test_check_subscription_permissions(subscription, capsys):
     out, _ = capsys.readouterr()
 
     assert subscription in out
-    assert 'pubsub.subscriptions.consume' in out
+    assert "pubsub.subscriptions.consume" in out

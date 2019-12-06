@@ -24,21 +24,21 @@ import pytest
 import subscriber
 
 UUID = uuid.uuid4().hex
-PROJECT = os.environ['GCLOUD_PROJECT']
-TOPIC = 'subscription-test-topic-' + UUID
-SUBSCRIPTION_ONE = 'subscription-test-subscription-one-' + UUID
-SUBSCRIPTION_TWO = 'subscription-test-subscription-two-' + UUID
-SUBSCRIPTION_THREE = 'subscription-test-subscription-three-' + UUID
-ENDPOINT = 'https://{}.appspot.com/push'.format(PROJECT)
-NEW_ENDPOINT = 'https://{}.appspot.com/push2'.format(PROJECT)
+PROJECT = os.environ["GCLOUD_PROJECT"]
+TOPIC = "subscription-test-topic-" + UUID
+SUBSCRIPTION_ONE = "subscription-test-subscription-one-" + UUID
+SUBSCRIPTION_TWO = "subscription-test-subscription-two-" + UUID
+SUBSCRIPTION_THREE = "subscription-test-subscription-three-" + UUID
+ENDPOINT = "https://{}.appspot.com/push".format(PROJECT)
+NEW_ENDPOINT = "https://{}.appspot.com/push2".format(PROJECT)
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def publisher_client():
     yield pubsub_v1.PublisherClient()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def topic(publisher_client):
     topic_path = publisher_client.topic_path(PROJECT, TOPIC)
 
@@ -50,49 +50,43 @@ def topic(publisher_client):
     yield response.name
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def subscriber_client():
     yield pubsub_v1.SubscriberClient()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def subscription_one(subscriber_client, topic):
-    subscription_path = subscriber_client.subscription_path(
-        PROJECT, SUBSCRIPTION_ONE)
+    subscription_path = subscriber_client.subscription_path(PROJECT, SUBSCRIPTION_ONE)
 
     try:
         response = subscriber_client.get_subscription(subscription_path)
     except:  # noqa
-        response = subscriber_client.create_subscription(
-            subscription_path, topic=topic)
+        response = subscriber_client.create_subscription(subscription_path, topic=topic)
 
     yield response.name
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def subscription_two(subscriber_client, topic):
-    subscription_path = subscriber_client.subscription_path(
-        PROJECT, SUBSCRIPTION_TWO)
+    subscription_path = subscriber_client.subscription_path(PROJECT, SUBSCRIPTION_TWO)
 
     try:
         response = subscriber_client.get_subscription(subscription_path)
     except:  # noqa
-        response = subscriber_client.create_subscription(
-            subscription_path, topic=topic)
+        response = subscriber_client.create_subscription(subscription_path, topic=topic)
 
     yield response.name
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def subscription_three(subscriber_client, topic):
-    subscription_path = subscriber_client.subscription_path(
-        PROJECT, SUBSCRIPTION_THREE)
+    subscription_path = subscriber_client.subscription_path(PROJECT, SUBSCRIPTION_THREE)
 
     try:
         response = subscriber_client.get_subscription(subscription_path)
     except:  # noqa
-        response = subscriber_client.create_subscription(
-            subscription_path, topic=topic)
+        response = subscriber_client.create_subscription(subscription_path, topic=topic)
 
     yield response.name
 
@@ -114,8 +108,7 @@ def test_list_in_project(subscription_one, capsys):
 
 
 def test_create(subscriber_client):
-    subscription_path = subscriber_client.subscription_path(
-        PROJECT, SUBSCRIPTION_ONE)
+    subscription_path = subscriber_client.subscription_path(PROJECT, SUBSCRIPTION_ONE)
 
     try:
         subscriber_client.delete_subscription(subscription_path)
@@ -130,15 +123,13 @@ def test_create(subscriber_client):
 
 
 def test_create_push(subscriber_client):
-    subscription_path = subscriber_client.subscription_path(
-        PROJECT, SUBSCRIPTION_ONE)
+    subscription_path = subscriber_client.subscription_path(PROJECT, SUBSCRIPTION_ONE)
     try:
         subscriber_client.delete_subscription(subscription_path)
     except Exception:
         pass
 
-    subscriber.create_push_subscription(
-        PROJECT, TOPIC, SUBSCRIPTION_ONE, ENDPOINT)
+    subscriber.create_push_subscription(PROJECT, TOPIC, SUBSCRIPTION_ONE, ENDPOINT)
 
     @eventually_consistent.call
     def _():
@@ -149,7 +140,7 @@ def test_update(subscriber_client, subscription_one, capsys):
     subscriber.update_subscription(PROJECT, SUBSCRIPTION_ONE, NEW_ENDPOINT)
 
     out, _ = capsys.readouterr()
-    assert 'Subscription updated' in out
+    assert "Subscription updated" in out
 
 
 def test_delete(subscriber_client, subscription_one):
@@ -163,14 +154,14 @@ def test_delete(subscriber_client, subscription_one):
 
 def _publish_messages(publisher_client, topic):
     for n in range(5):
-        data = u'Message {}'.format(n).encode('utf-8')
+        data = u"Message {}".format(n).encode("utf-8")
         future = publisher_client.publish(topic, data=data)
         future.result()
 
 
 def _publish_messages_with_custom_attributes(publisher_client, topic):
-    data = u'Test message'.encode('utf-8')
-    future = publisher_client.publish(topic, data=data, origin='python-sample')
+    data = u"Test message".encode("utf-8")
+    future = publisher_client.publish(topic, data=data, origin="python-sample")
     future.result()
 
 
@@ -180,11 +171,11 @@ def _make_sleep_patch():
     def new_sleep(period):
         if period == 60:
             real_sleep(5)
-            raise RuntimeError('sigil')
+            raise RuntimeError("sigil")
         else:
             real_sleep(period)
 
-    return mock.patch('time.sleep', new=new_sleep)
+    return mock.patch("time.sleep", new=new_sleep)
 
 
 def _to_delete():
@@ -193,78 +184,77 @@ def _to_delete():
     resources = [TOPIC, SUBSCRIPTION_TWO, SUBSCRIPTION_THREE]
 
     for item in resources:
-        if 'subscription-test-topic' in item:
-            publisher_client.delete_topic(
-                'projects/{}/topics/{}'.format(PROJECT, item))
-        if 'subscription-test-subscription' in item:
+        if "subscription-test-topic" in item:
+            publisher_client.delete_topic("projects/{}/topics/{}".format(PROJECT, item))
+        if "subscription-test-subscription" in item:
             subscriber_client.delete_subscription(
-                'projects/{}/subscriptions/{}'.format(PROJECT, item))
+                "projects/{}/subscriptions/{}".format(PROJECT, item)
+            )
 
 
 def test_receive(publisher_client, topic, subscription_two, capsys):
     _publish_messages(publisher_client, topic)
 
     with _make_sleep_patch():
-        with pytest.raises(RuntimeError, match='sigil'):
+        with pytest.raises(RuntimeError, match="sigil"):
             subscriber.receive_messages(PROJECT, SUBSCRIPTION_TWO)
 
     out, _ = capsys.readouterr()
-    assert 'Listening' in out
+    assert "Listening" in out
     assert subscription_two in out
-    assert 'Message' in out
+    assert "Message" in out
 
 
 def test_receive_with_custom_attributes(
-        publisher_client, topic, subscription_two, capsys):
+    publisher_client, topic, subscription_two, capsys
+):
 
     _publish_messages_with_custom_attributes(publisher_client, topic)
 
     with _make_sleep_patch():
-        with pytest.raises(RuntimeError, match='sigil'):
+        with pytest.raises(RuntimeError, match="sigil"):
             subscriber.receive_messages_with_custom_attributes(
-                PROJECT, SUBSCRIPTION_TWO)
+                PROJECT, SUBSCRIPTION_TWO
+            )
 
     out, _ = capsys.readouterr()
-    assert 'Test message' in out
-    assert 'origin' in out
-    assert 'python-sample' in out
+    assert "Test message" in out
+    assert "origin" in out
+    assert "python-sample" in out
 
 
-def test_receive_with_flow_control(
-        publisher_client, topic, subscription_two, capsys):
+def test_receive_with_flow_control(publisher_client, topic, subscription_two, capsys):
 
     _publish_messages(publisher_client, topic)
 
     with _make_sleep_patch():
-        with pytest.raises(RuntimeError, match='sigil'):
-            subscriber.receive_messages_with_flow_control(
-                PROJECT, SUBSCRIPTION_TWO)
+        with pytest.raises(RuntimeError, match="sigil"):
+            subscriber.receive_messages_with_flow_control(PROJECT, SUBSCRIPTION_TWO)
 
     out, _ = capsys.readouterr()
-    assert 'Listening' in out
+    assert "Listening" in out
     assert subscription_two in out
-    assert 'Message' in out
+    assert "Message" in out
 
 
-def test_receive_synchronously(
-        publisher_client, topic, subscription_three, capsys):
+def test_receive_synchronously(publisher_client, topic, subscription_three, capsys):
     _publish_messages(publisher_client, topic)
 
     subscriber.synchronous_pull(PROJECT, SUBSCRIPTION_THREE)
 
     out, _ = capsys.readouterr()
-    assert 'Done.' in out
+    assert "Done." in out
 
 
 def test_receive_synchronously_with_lease(
-        publisher_client, topic, subscription_three, capsys):
+    publisher_client, topic, subscription_three, capsys
+):
     _publish_messages(publisher_client, topic)
 
-    subscriber.synchronous_pull_with_lease_management(
-        PROJECT, SUBSCRIPTION_THREE)
+    subscriber.synchronous_pull_with_lease_management(PROJECT, SUBSCRIPTION_THREE)
 
     out, _ = capsys.readouterr()
-    assert 'Done.' in out
+    assert "Done." in out
 
     # Clean up resources after all the tests.
     _to_delete()

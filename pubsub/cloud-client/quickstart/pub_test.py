@@ -24,16 +24,16 @@ from google.cloud import pubsub_v1
 import pub
 
 UUID = uuid.uuid4().hex
-PROJECT = os.environ['GCLOUD_PROJECT']
-TOPIC = 'quickstart-pub-test-topic-' + UUID
+PROJECT = os.environ["GCLOUD_PROJECT"]
+TOPIC = "quickstart-pub-test-topic-" + UUID
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def publisher_client():
     yield pubsub_v1.PublisherClient()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def topic(publisher_client):
     topic_path = publisher_client.topic_path(PROJECT, TOPIC)
 
