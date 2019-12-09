@@ -35,7 +35,7 @@ def create_bucket(bucket_name):
     """Creates a new bucket."""
     storage_client = storage.Client()
     bucket = storage_client.create_bucket(bucket_name)
-    print('Bucket {} created'.format(bucket.name))
+    print("Bucket {} created".format(bucket.name))
 
 
 def delete_bucket(bucket_name):
@@ -43,7 +43,7 @@ def delete_bucket(bucket_name):
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
     bucket.delete()
-    print('Bucket {} deleted'.format(bucket.name))
+    print("Bucket {} deleted".format(bucket.name))
 
 
 def enable_default_kms_key(bucket_name, kms_key_name):
@@ -54,9 +54,11 @@ def enable_default_kms_key(bucket_name, kms_key_name):
     bucket.default_kms_key_name = kms_key_name
     bucket.patch()
 
-    print('Set default KMS key for bucket {} to {}.'.format(
-        bucket.name,
-        bucket.default_kms_key_name))
+    print(
+        "Set default KMS key for bucket {} to {}.".format(
+            bucket.name, bucket.default_kms_key_name
+        )
+    )
     # [END storage_set_bucket_default_kms_key]
 
 
@@ -74,11 +76,11 @@ def add_bucket_label(bucket_name):
     bucket = storage_client.get_bucket(bucket_name)
 
     labels = bucket.labels
-    labels['example'] = 'label'
+    labels["example"] = "label"
     bucket.labels = labels
     bucket.patch()
 
-    print('Updated labels on {}.'.format(bucket.name))
+    print("Updated labels on {}.".format(bucket.name))
     pprint.pprint(bucket.labels)
 
 
@@ -89,13 +91,13 @@ def remove_bucket_label(bucket_name):
 
     labels = bucket.labels
 
-    if 'example' in labels:
-        del labels['example']
+    if "example" in labels:
+        del labels["example"]
 
     bucket.labels = labels
     bucket.patch()
 
-    print('Removed labels on {}.'.format(bucket.name))
+    print("Removed labels on {}.".format(bucket.name))
     pprint.pprint(bucket.labels)
 
 
@@ -107,6 +109,8 @@ def list_buckets():
 
     for bucket in buckets:
         print(bucket.name)
+
+
 # [END storage_list_buckets]
 
 
@@ -149,15 +153,14 @@ def list_blobs_with_prefix(bucket_name, prefix, delimiter=None):
     storage_client = storage.Client()
 
     # Note: Client.list_blobs requires at least package version 1.17.0.
-    blobs = storage_client.list_blobs(bucket_name, prefix=prefix,
-                                      delimiter=delimiter)
+    blobs = storage_client.list_blobs(bucket_name, prefix=prefix, delimiter=delimiter)
 
-    print('Blobs:')
+    print("Blobs:")
     for blob in blobs:
         print(blob.name)
 
     if delimiter:
-        print('Prefixes:')
+        print("Prefixes:")
         for prefix in blobs.prefixes:
             print(prefix)
 
@@ -171,14 +174,15 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
 
     blob.upload_from_filename(source_file_name)
 
-    print('File {} uploaded to {}.'.format(
-        source_file_name,
-        destination_blob_name))
+    print("File {} uploaded to {}.".format(source_file_name, destination_blob_name))
+
+
 # [END storage_upload_file]
 
 
-def upload_blob_with_kms(bucket_name, source_file_name, destination_blob_name,
-                         kms_key_name):
+def upload_blob_with_kms(
+    bucket_name, source_file_name, destination_blob_name, kms_key_name
+):
     # [START storage_upload_with_kms_key]
     """Uploads a file to the bucket, encrypting it with the given KMS key."""
     storage_client = storage.Client()
@@ -186,10 +190,11 @@ def upload_blob_with_kms(bucket_name, source_file_name, destination_blob_name,
     blob = bucket.blob(destination_blob_name, kms_key_name=kms_key_name)
     blob.upload_from_filename(source_file_name)
 
-    print('File {} uploaded to {} with encryption key {}.'.format(
-        source_file_name,
-        destination_blob_name,
-        kms_key_name))
+    print(
+        "File {} uploaded to {} with encryption key {}.".format(
+            source_file_name, destination_blob_name, kms_key_name
+        )
+    )
     # [END storage_upload_with_kms_key]
 
 
@@ -201,9 +206,7 @@ def download_blob(bucket_name, source_blob_name, destination_file_name):
 
     blob.download_to_filename(destination_file_name)
 
-    print('Blob {} downloaded to {}.'.format(
-        source_blob_name,
-        destination_file_name))
+    print("Blob {} downloaded to {}.".format(source_blob_name, destination_file_name))
 
 
 def delete_blob(bucket_name, blob_name):
@@ -214,7 +217,7 @@ def delete_blob(bucket_name, blob_name):
 
     blob.delete()
 
-    print('Blob {} deleted.'.format(blob_name))
+    print("Blob {} deleted.".format(blob_name))
 
 
 def blob_metadata(bucket_name, blob_name):
@@ -223,32 +226,29 @@ def blob_metadata(bucket_name, blob_name):
     bucket = storage_client.get_bucket(bucket_name)
     blob = bucket.get_blob(blob_name)
 
-    print('Blob: {}'.format(blob.name))
-    print('Bucket: {}'.format(blob.bucket.name))
-    print('Storage class: {}'.format(blob.storage_class))
-    print('ID: {}'.format(blob.id))
-    print('Size: {} bytes'.format(blob.size))
-    print('Updated: {}'.format(blob.updated))
-    print('Generation: {}'.format(blob.generation))
-    print('Metageneration: {}'.format(blob.metageneration))
-    print('Etag: {}'.format(blob.etag))
-    print('Owner: {}'.format(blob.owner))
-    print('Component count: {}'.format(blob.component_count))
-    print('Crc32c: {}'.format(blob.crc32c))
-    print('md5_hash: {}'.format(blob.md5_hash))
-    print('Cache-control: {}'.format(blob.cache_control))
-    print('Content-type: {}'.format(blob.content_type))
-    print('Content-disposition: {}'.format(blob.content_disposition))
-    print('Content-encoding: {}'.format(blob.content_encoding))
-    print('Content-language: {}'.format(blob.content_language))
-    print('Metadata: {}'.format(blob.metadata))
-    print("Temporary hold: ",
-          'enabled' if blob.temporary_hold else 'disabled')
-    print("Event based hold: ",
-          'enabled' if blob.event_based_hold else 'disabled')
+    print("Blob: {}".format(blob.name))
+    print("Bucket: {}".format(blob.bucket.name))
+    print("Storage class: {}".format(blob.storage_class))
+    print("ID: {}".format(blob.id))
+    print("Size: {} bytes".format(blob.size))
+    print("Updated: {}".format(blob.updated))
+    print("Generation: {}".format(blob.generation))
+    print("Metageneration: {}".format(blob.metageneration))
+    print("Etag: {}".format(blob.etag))
+    print("Owner: {}".format(blob.owner))
+    print("Component count: {}".format(blob.component_count))
+    print("Crc32c: {}".format(blob.crc32c))
+    print("md5_hash: {}".format(blob.md5_hash))
+    print("Cache-control: {}".format(blob.cache_control))
+    print("Content-type: {}".format(blob.content_type))
+    print("Content-disposition: {}".format(blob.content_disposition))
+    print("Content-encoding: {}".format(blob.content_encoding))
+    print("Content-language: {}".format(blob.content_language))
+    print("Metadata: {}".format(blob.metadata))
+    print("Temporary hold: ", "enabled" if blob.temporary_hold else "disabled")
+    print("Event based hold: ", "enabled" if blob.event_based_hold else "disabled")
     if blob.retention_expiration_time:
-        print("retentionExpirationTime: {}"
-              .format(blob.retention_expiration_time))
+        print("retentionExpirationTime: {}".format(blob.retention_expiration_time))
 
 
 def bucket_metadata(bucket_name):
@@ -257,25 +257,23 @@ def bucket_metadata(bucket_name):
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)
 
-    print('ID: {}'.format(bucket.id))
-    print('Name: {}'.format(bucket.name))
-    print('Storage Class: {}'.format(bucket.storage_class))
-    print('Location: {}'.format(bucket.location))
-    print('Location Type: {}'.format(bucket.location_type))
-    print('Cors: {}'.format(bucket.cors))
-    print('Default Event Based Hold: {}'
-          .format(bucket.default_event_based_hold))
-    print('Default KMS Key Name: {}'.format(bucket.default_kms_key_name))
-    print('Metageneration: {}'.format(bucket.metageneration))
-    print('Retention Effective Time: {}'
-          .format(bucket.retention_policy_effective_time))
-    print('Retention Period: {}'.format(bucket.retention_period))
-    print('Retention Policy Locked: {}'.format(bucket.retention_policy_locked))
-    print('Requester Pays: {}'.format(bucket.requester_pays))
-    print('Self Link: {}'.format(bucket.self_link))
-    print('Time Created: {}'.format(bucket.time_created))
-    print('Versioning Enabled: {}'.format(bucket.versioning_enabled))
-    print('Labels:')
+    print("ID: {}".format(bucket.id))
+    print("Name: {}".format(bucket.name))
+    print("Storage Class: {}".format(bucket.storage_class))
+    print("Location: {}".format(bucket.location))
+    print("Location Type: {}".format(bucket.location_type))
+    print("Cors: {}".format(bucket.cors))
+    print("Default Event Based Hold: {}".format(bucket.default_event_based_hold))
+    print("Default KMS Key Name: {}".format(bucket.default_kms_key_name))
+    print("Metageneration: {}".format(bucket.metageneration))
+    print("Retention Effective Time: {}".format(bucket.retention_policy_effective_time))
+    print("Retention Period: {}".format(bucket.retention_period))
+    print("Retention Policy Locked: {}".format(bucket.retention_policy_locked))
+    print("Requester Pays: {}".format(bucket.requester_pays))
+    print("Self Link: {}".format(bucket.self_link))
+    print("Time Created: {}".format(bucket.time_created))
+    print("Versioning Enabled: {}".format(bucket.versioning_enabled))
+    print("Labels:")
     pprint.pprint(bucket.labels)
     # [END storage_get_bucket_metadata]
 
@@ -288,8 +286,7 @@ def make_blob_public(bucket_name, blob_name):
 
     blob.make_public()
 
-    print('Blob {} is publicly accessible at {}'.format(
-        blob.name, blob.public_url))
+    print("Blob {} is publicly accessible at {}".format(blob.name, blob.public_url))
 
 
 def generate_signed_url(bucket_name, blob_name):
@@ -307,9 +304,10 @@ def generate_signed_url(bucket_name, blob_name):
         # This URL is valid for 1 hour
         expiration=datetime.timedelta(hours=1),
         # Allow GET requests using this URL.
-        method='GET')
+        method="GET",
+    )
 
-    print('The signed url for {} is {}'.format(blob.name, url))
+    print("The signed url for {} is {}".format(blob.name, url))
     return url
 
 
@@ -326,17 +324,20 @@ def generate_download_signed_url_v4(bucket_name, blob_name):
     blob = bucket.blob(blob_name)
 
     url = blob.generate_signed_url(
-        version='v4',
+        version="v4",
         # This URL is valid for 15 minutes
         expiration=datetime.timedelta(minutes=15),
         # Allow GET requests using this URL.
-        method='GET')
+        method="GET",
+    )
 
-    print('Generated GET signed URL:')
+    print("Generated GET signed URL:")
     print(url)
-    print('You can use this URL with any user agent, for example:')
-    print('curl \'{}\''.format(url))
+    print("You can use this URL with any user agent, for example:")
+    print("curl '{}'".format(url))
     return url
+
+
 # [END storage_generate_signed_url_v4]
 
 
@@ -353,19 +354,24 @@ def generate_upload_signed_url_v4(bucket_name, blob_name):
     blob = bucket.blob(blob_name)
 
     url = blob.generate_signed_url(
-        version='v4',
+        version="v4",
         # This URL is valid for 15 minutes
         expiration=datetime.timedelta(minutes=15),
         # Allow GET requests using this URL.
-        method='PUT',
-        content_type='application/octet-stream')
+        method="PUT",
+        content_type="application/octet-stream",
+    )
 
-    print('Generated PUT signed URL:')
+    print("Generated PUT signed URL:")
     print(url)
-    print('You can use this URL with any user agent, for example:')
-    print("curl -X PUT -H 'Content-Type: application/octet-stream' "
-          "--upload-file my-file '{}'".format(url))
+    print("You can use this URL with any user agent, for example:")
+    print(
+        "curl -X PUT -H 'Content-Type: application/octet-stream' "
+        "--upload-file my-file '{}'".format(url)
+    )
     return url
+
+
 # [END storage_generate_upload_signed_url_v4]
 
 
@@ -377,8 +383,7 @@ def rename_blob(bucket_name, blob_name, new_name):
 
     new_blob = bucket.rename_blob(blob, new_name)
 
-    print('Blob {} has been renamed to {}'.format(
-        blob.name, new_blob.name))
+    print("Blob {} has been renamed to {}".format(blob.name, new_blob.name))
 
 
 def copy_blob(bucket_name, blob_name, new_bucket_name, new_blob_name):
@@ -388,209 +393,208 @@ def copy_blob(bucket_name, blob_name, new_bucket_name, new_blob_name):
     source_blob = source_bucket.blob(blob_name)
     destination_bucket = storage_client.get_bucket(new_bucket_name)
 
-    new_blob = source_bucket.copy_blob(
-        source_blob, destination_bucket, new_blob_name)
+    new_blob = source_bucket.copy_blob(source_blob, destination_bucket, new_blob_name)
 
-    print('Blob {} in bucket {} copied to blob {} in bucket {}.'.format(
-        source_blob.name, source_bucket.name, new_blob.name,
-        destination_bucket.name))
+    print(
+        "Blob {} in bucket {} copied to blob {} in bucket {}.".format(
+            source_blob.name, source_bucket.name, new_blob.name, destination_bucket.name
+        )
+    )
 
 
 def bucket_commands(args):
-    if args.command == 'list-buckets':
+    if args.command == "list-buckets":
         list_buckets()
-    elif args.command == 'bucket-metadata':
+    elif args.command == "bucket-metadata":
         bucket_metadata(args.bucket_name)
-    elif args.command == 'create-bucket':
+    elif args.command == "create-bucket":
         create_bucket(args.bucket_name)
-    elif args.command == 'enable-default-kms-key':
+    elif args.command == "enable-default-kms-key":
         enable_default_kms_key(args.bucket_name, args.kms_key_name)
-    elif args.command == 'delete-bucket':
+    elif args.command == "delete-bucket":
         delete_bucket(args.bucket_name)
-    elif args.command == 'get-bucket-labels':
+    elif args.command == "get-bucket-labels":
         get_bucket_labels(args.bucket_name)
-    elif args.command == 'add-bucket-label':
+    elif args.command == "add-bucket-label":
         add_bucket_label(args.bucket_name)
-    elif args.command == 'remove-bucket-label':
+    elif args.command == "remove-bucket-label":
         remove_bucket_label(args.bucket_name)
 
 
 def blob_commands(args):
-    if args.command == 'list':
+    if args.command == "list":
         list_blobs(args.bucket_name)
-    elif args.command == 'list-with-prefix':
+    elif args.command == "list-with-prefix":
         list_blobs_with_prefix(args.bucket_name, args.prefix, args.delimiter)
-    elif args.command == 'upload':
-        upload_blob(
-            args.bucket_name,
-            args.source_file_name,
-            args.destination_blob_name)
-    elif args.command == 'upload-with-kms-key':
+    elif args.command == "upload":
+        upload_blob(args.bucket_name, args.source_file_name, args.destination_blob_name)
+    elif args.command == "upload-with-kms-key":
         upload_blob_with_kms(
             args.bucket_name,
             args.source_file_name,
             args.destination_blob_name,
-            args.kms_key_name)
-    elif args.command == 'download':
+            args.kms_key_name,
+        )
+    elif args.command == "download":
         download_blob(
-            args.bucket_name,
-            args.source_blob_name,
-            args.destination_file_name)
-    elif args.command == 'delete':
+            args.bucket_name, args.source_blob_name, args.destination_file_name
+        )
+    elif args.command == "delete":
         delete_blob(args.bucket_name, args.blob_name)
-    elif args.command == 'metadata':
+    elif args.command == "metadata":
         blob_metadata(args.bucket_name, args.blob_name)
-    elif args.command == 'make-public':
+    elif args.command == "make-public":
         make_blob_public(args.bucket_name, args.blob_name)
-    elif args.command == 'signed-url':
+    elif args.command == "signed-url":
         generate_signed_url(args.bucket_name, args.blob_name)
-    elif args.command == 'signed-url-download-v4':
+    elif args.command == "signed-url-download-v4":
         generate_download_signed_url_v4(args.bucket_name, args.blob_name)
-    elif args.command == 'signed-url-upload-v4':
+    elif args.command == "signed-url-upload-v4":
         generate_upload_signed_url_v4(args.bucket_name, args.blob_name)
-    elif args.command == 'rename':
+    elif args.command == "rename":
         rename_blob(args.bucket_name, args.blob_name, args.new_name)
-    elif args.command == 'copy':
+    elif args.command == "copy":
         copy_blob(
-            args.bucket_name,
-            args.blob_name,
-            args.new_bucket_name,
-            args.new_blob_name)
+            args.bucket_name, args.blob_name, args.new_bucket_name, args.new_blob_name
+        )
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
 
-    subparsers = parser.add_subparsers(dest='command')
+    subparsers = parser.add_subparsers(dest="command")
 
-    subparsers.add_parser(
-        'list-buckets', help=list_buckets.__doc__)
+    subparsers.add_parser("list-buckets", help=list_buckets.__doc__)
 
     create_bucket_parser = subparsers.add_parser(
-        'create-bucket', help=create_bucket.__doc__)
-    create_bucket_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
+        "create-bucket", help=create_bucket.__doc__
+    )
+    create_bucket_parser.add_argument("bucket_name", help="Your cloud storage bucket.")
 
     delete_create_parser = subparsers.add_parser(
-        'delete-bucket', help=delete_bucket.__doc__)
-    delete_create_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
+        "delete-bucket", help=delete_bucket.__doc__
+    )
+    delete_create_parser.add_argument("bucket_name", help="Your cloud storage bucket.")
 
     get_bucket_labels_parser = subparsers.add_parser(
-        'get-bucket-labels', help=get_bucket_labels.__doc__)
+        "get-bucket-labels", help=get_bucket_labels.__doc__
+    )
     get_bucket_labels_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
+        "bucket_name", help="Your cloud storage bucket."
+    )
 
     add_bucket_label_parser = subparsers.add_parser(
-        'add-bucket-label', help=add_bucket_label.__doc__)
+        "add-bucket-label", help=add_bucket_label.__doc__
+    )
     add_bucket_label_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
+        "bucket_name", help="Your cloud storage bucket."
+    )
 
     remove_bucket_label_parser = subparsers.add_parser(
-        'remove-bucket-label', help=remove_bucket_label.__doc__)
+        "remove-bucket-label", help=remove_bucket_label.__doc__
+    )
     remove_bucket_label_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
+        "bucket_name", help="Your cloud storage bucket."
+    )
 
-    list_blobs_parser = subparsers.add_parser(
-        'list', help=list_blobs.__doc__)
-    list_blobs_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
+    list_blobs_parser = subparsers.add_parser("list", help=list_blobs.__doc__)
+    list_blobs_parser.add_argument("bucket_name", help="Your cloud storage bucket.")
 
     bucket_metadata_parser = subparsers.add_parser(
-        'bucket-metadata', help=bucket_metadata.__doc__)
+        "bucket-metadata", help=bucket_metadata.__doc__
+    )
     bucket_metadata_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
+        "bucket_name", help="Your cloud storage bucket."
+    )
 
     list_with_prefix_parser = subparsers.add_parser(
-        'list-with-prefix', help=list_blobs_with_prefix.__doc__)
+        "list-with-prefix", help=list_blobs_with_prefix.__doc__
+    )
     list_with_prefix_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
-    list_with_prefix_parser.add_argument('prefix')
-    list_with_prefix_parser.add_argument('--delimiter', default=None)
+        "bucket_name", help="Your cloud storage bucket."
+    )
+    list_with_prefix_parser.add_argument("prefix")
+    list_with_prefix_parser.add_argument("--delimiter", default=None)
 
-    upload_parser = subparsers.add_parser(
-        'upload', help=upload_blob.__doc__)
-    upload_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
-    upload_parser.add_argument('source_file_name')
-    upload_parser.add_argument('destination_blob_name')
+    upload_parser = subparsers.add_parser("upload", help=upload_blob.__doc__)
+    upload_parser.add_argument("bucket_name", help="Your cloud storage bucket.")
+    upload_parser.add_argument("source_file_name")
+    upload_parser.add_argument("destination_blob_name")
 
     enable_default_kms_parser = subparsers.add_parser(
-        'enable-default-kms-key', help=enable_default_kms_key.__doc__)
+        "enable-default-kms-key", help=enable_default_kms_key.__doc__
+    )
     enable_default_kms_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
-    enable_default_kms_parser.add_argument('kms_key_name')
+        "bucket_name", help="Your cloud storage bucket."
+    )
+    enable_default_kms_parser.add_argument("kms_key_name")
 
     upload_kms_parser = subparsers.add_parser(
-        'upload-with-kms-key', help=upload_blob_with_kms.__doc__)
-    upload_kms_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
-    upload_kms_parser.add_argument('source_file_name')
-    upload_kms_parser.add_argument('destination_blob_name')
-    upload_kms_parser.add_argument('kms_key_name')
+        "upload-with-kms-key", help=upload_blob_with_kms.__doc__
+    )
+    upload_kms_parser.add_argument("bucket_name", help="Your cloud storage bucket.")
+    upload_kms_parser.add_argument("source_file_name")
+    upload_kms_parser.add_argument("destination_blob_name")
+    upload_kms_parser.add_argument("kms_key_name")
 
-    download_parser = subparsers.add_parser(
-        'download', help=download_blob.__doc__)
-    download_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
-    download_parser.add_argument('source_blob_name')
-    download_parser.add_argument('destination_file_name')
+    download_parser = subparsers.add_parser("download", help=download_blob.__doc__)
+    download_parser.add_argument("bucket_name", help="Your cloud storage bucket.")
+    download_parser.add_argument("source_blob_name")
+    download_parser.add_argument("destination_file_name")
 
-    delete_parser = subparsers.add_parser(
-        'delete', help=delete_blob.__doc__)
-    delete_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
-    delete_parser.add_argument('blob_name')
+    delete_parser = subparsers.add_parser("delete", help=delete_blob.__doc__)
+    delete_parser.add_argument("bucket_name", help="Your cloud storage bucket.")
+    delete_parser.add_argument("blob_name")
 
-    metadata_parser = subparsers.add_parser(
-        'metadata', help=blob_metadata.__doc__)
-    metadata_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
-    metadata_parser.add_argument('blob_name')
+    metadata_parser = subparsers.add_parser("metadata", help=blob_metadata.__doc__)
+    metadata_parser.add_argument("bucket_name", help="Your cloud storage bucket.")
+    metadata_parser.add_argument("blob_name")
 
     make_public_parser = subparsers.add_parser(
-        'make-public', help=make_blob_public.__doc__)
-    make_public_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
-    make_public_parser.add_argument('blob_name')
+        "make-public", help=make_blob_public.__doc__
+    )
+    make_public_parser.add_argument("bucket_name", help="Your cloud storage bucket.")
+    make_public_parser.add_argument("blob_name")
 
     signed_url_parser = subparsers.add_parser(
-        'signed-url', help=generate_signed_url.__doc__)
-    signed_url_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
-    signed_url_parser.add_argument('blob_name')
+        "signed-url", help=generate_signed_url.__doc__
+    )
+    signed_url_parser.add_argument("bucket_name", help="Your cloud storage bucket.")
+    signed_url_parser.add_argument("blob_name")
 
     signed_url_download_v4_parser = subparsers.add_parser(
-        'signed-url-download-v4', help=generate_download_signed_url_v4.__doc__)
+        "signed-url-download-v4", help=generate_download_signed_url_v4.__doc__
+    )
     signed_url_download_v4_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
-    signed_url_download_v4_parser.add_argument('blob_name')
+        "bucket_name", help="Your cloud storage bucket."
+    )
+    signed_url_download_v4_parser.add_argument("blob_name")
 
     signed_url_upload_v4_parser = subparsers.add_parser(
-        'signed-url-upload-v4', help=generate_upload_signed_url_v4.__doc__)
+        "signed-url-upload-v4", help=generate_upload_signed_url_v4.__doc__
+    )
     signed_url_upload_v4_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
-    signed_url_upload_v4_parser.add_argument('blob_name')
+        "bucket_name", help="Your cloud storage bucket."
+    )
+    signed_url_upload_v4_parser.add_argument("blob_name")
 
-    rename_parser = subparsers.add_parser(
-        'rename', help=rename_blob.__doc__)
-    rename_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
-    rename_parser.add_argument('blob_name')
-    rename_parser.add_argument('new_name')
+    rename_parser = subparsers.add_parser("rename", help=rename_blob.__doc__)
+    rename_parser.add_argument("bucket_name", help="Your cloud storage bucket.")
+    rename_parser.add_argument("blob_name")
+    rename_parser.add_argument("new_name")
 
-    copy_parser = subparsers.add_parser('copy', help=rename_blob.__doc__)
-    copy_parser.add_argument('bucket_name', help='Your cloud storage bucket.')
-    copy_parser.add_argument('blob_name')
-    copy_parser.add_argument('new_bucket_name')
-    copy_parser.add_argument('new_blob_name')
+    copy_parser = subparsers.add_parser("copy", help=rename_blob.__doc__)
+    copy_parser.add_argument("bucket_name", help="Your cloud storage bucket.")
+    copy_parser.add_argument("blob_name")
+    copy_parser.add_argument("new_bucket_name")
+    copy_parser.add_argument("new_blob_name")
 
     args = parser.parse_args()
     bucket_commands(args)
     blob_commands(args)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

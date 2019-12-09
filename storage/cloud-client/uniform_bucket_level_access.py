@@ -30,8 +30,7 @@ def enable_uniform_bucket_level_access(bucket_name):
     bucket.iam_configuration.uniform_bucket_level_access_enabled = True
     bucket.patch()
 
-    print('Uniform bucket-level access was enabled for {}.'.format(
-        bucket.name))
+    print("Uniform bucket-level access was enabled for {}.".format(bucket.name))
     # [END storage_enable_uniform_bucket_level_access]
 
 
@@ -46,8 +45,7 @@ def disable_uniform_bucket_level_access(bucket_name):
     bucket.iam_configuration.uniform_bucket_level_access_enabled = False
     bucket.patch()
 
-    print('Uniform bucket-level access was disabled for {}.'.format(
-        bucket.name))
+    print("Uniform bucket-level access was disabled for {}.".format(bucket.name))
     # [END storage_disable_uniform_bucket_level_access]
 
 
@@ -61,43 +59,46 @@ def get_uniform_bucket_level_access(bucket_name):
     iam_configuration = bucket.iam_configuration
 
     if iam_configuration.uniform_bucket_level_access_enabled:
-        print('Uniform bucket-level access is enabled for {}.'.format(
-            bucket.name))
-        print('Bucket will be locked on {}.'.format(
-            iam_configuration.uniform_bucket_level_locked_time))
+        print("Uniform bucket-level access is enabled for {}.".format(bucket.name))
+        print(
+            "Bucket will be locked on {}.".format(
+                iam_configuration.uniform_bucket_level_locked_time
+            )
+        )
     else:
-        print('Uniform bucket-level access is disabled for {}.'.format(
-            bucket.name))
+        print("Uniform bucket-level access is disabled for {}.".format(bucket.name))
     # [END storage_get_uniform_bucket_level_access]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    subparsers = parser.add_subparsers(dest='command')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    subparsers = parser.add_subparsers(dest="command")
 
     enable_uniform_bucket_level_access_parser = subparsers.add_parser(
-        'enable-uniform-bucket-level-access',
-        help=enable_uniform_bucket_level_access.__doc__)
-    enable_uniform_bucket_level_access_parser.add_argument('bucket_name')
+        "enable-uniform-bucket-level-access",
+        help=enable_uniform_bucket_level_access.__doc__,
+    )
+    enable_uniform_bucket_level_access_parser.add_argument("bucket_name")
 
     disable_uniform_bucket_level_access_parser = subparsers.add_parser(
-        'disable-uniform-bucket-level-access',
-        help=disable_uniform_bucket_level_access.__doc__)
-    disable_uniform_bucket_level_access_parser.add_argument('bucket_name')
+        "disable-uniform-bucket-level-access",
+        help=disable_uniform_bucket_level_access.__doc__,
+    )
+    disable_uniform_bucket_level_access_parser.add_argument("bucket_name")
 
     get_uniform_bucket_level_access_parser = subparsers.add_parser(
-        'get-uniform-bucket-level-access',
-        help=get_uniform_bucket_level_access.__doc__)
-    get_uniform_bucket_level_access_parser.add_argument('bucket_name')
+        "get-uniform-bucket-level-access", help=get_uniform_bucket_level_access.__doc__
+    )
+    get_uniform_bucket_level_access_parser.add_argument("bucket_name")
 
     args = parser.parse_args()
 
-    if args.command == 'enable-uniform-bucket-level-access':
+    if args.command == "enable-uniform-bucket-level-access":
         enable_uniform_bucket_level_access(args.bucket_name)
-    elif args.command == 'disable-uniform-bucket-level-access':
+    elif args.command == "disable-uniform-bucket-level-access":
         disable_uniform_bucket_level_access(args.bucket_name)
-    elif args.command == 'get-uniform-bucket-level-access':
+    elif args.command == "get-uniform-bucket-level-access":
         get_uniform_bucket_level_access(args.bucket_name)

@@ -32,7 +32,7 @@ def print_bucket_acl(bucket_name):
     bucket = storage_client.bucket(bucket_name)
 
     for entry in bucket.acl:
-        print('{}: {}'.format(entry['role'], entry['entity']))
+        print("{}: {}".format(entry["role"], entry["entity"]))
 
 
 def print_bucket_acl_for_user(bucket_name, user_email):
@@ -65,8 +65,7 @@ def add_bucket_owner(bucket_name, user_email):
     bucket.acl.user(user_email).grant_owner()
     bucket.acl.save()
 
-    print('Added user {} as an owner on bucket {}.'.format(
-        user_email, bucket_name))
+    print("Added user {} as an owner on bucket {}.".format(user_email, bucket_name))
 
 
 def remove_bucket_owner(bucket_name, user_email):
@@ -84,8 +83,7 @@ def remove_bucket_owner(bucket_name, user_email):
     bucket.acl.user(user_email).revoke_owner()
     bucket.acl.save()
 
-    print('Removed user {} from bucket {}.'.format(
-        user_email, bucket_name))
+    print("Removed user {} from bucket {}.".format(user_email, bucket_name))
 
 
 def add_bucket_default_owner(bucket_name, user_email):
@@ -103,8 +101,11 @@ def add_bucket_default_owner(bucket_name, user_email):
     bucket.default_object_acl.user(user_email).grant_owner()
     bucket.default_object_acl.save()
 
-    print('Added user {} as an owner in the default acl on bucket {}.'.format(
-        user_email, bucket_name))
+    print(
+        "Added user {} as an owner in the default acl on bucket {}.".format(
+            user_email, bucket_name
+        )
+    )
 
 
 def remove_bucket_default_owner(bucket_name, user_email):
@@ -123,8 +124,11 @@ def remove_bucket_default_owner(bucket_name, user_email):
     bucket.default_object_acl.user(user_email).revoke_owner()
     bucket.default_object_acl.save()
 
-    print('Removed user {} from the default acl of bucket {}.'.format(
-        user_email, bucket_name))
+    print(
+        "Removed user {} from the default acl of bucket {}.".format(
+            user_email, bucket_name
+        )
+    )
 
 
 def print_blob_acl(bucket_name, blob_name):
@@ -134,7 +138,7 @@ def print_blob_acl(bucket_name, blob_name):
     blob = bucket.blob(blob_name)
 
     for entry in blob.acl:
-        print('{}: {}'.format(entry['role'], entry['entity']))
+        print("{}: {}".format(entry["role"], entry["entity"]))
 
 
 def print_blob_acl_for_user(bucket_name, blob_name, user_email):
@@ -168,8 +172,11 @@ def add_blob_owner(bucket_name, blob_name, user_email):
     blob.acl.user(user_email).grant_owner()
     blob.acl.save()
 
-    print('Added user {} as an owner on blob {} in bucket {}.'.format(
-        user_email, blob_name, bucket_name))
+    print(
+        "Added user {} as an owner on blob {} in bucket {}.".format(
+            user_email, blob_name, bucket_name
+        )
+    )
 
 
 def remove_blob_owner(bucket_name, blob_name, user_email):
@@ -186,89 +193,100 @@ def remove_blob_owner(bucket_name, blob_name, user_email):
     blob.acl.user(user_email).revoke_owner()
     blob.acl.save()
 
-    print('Removed user {} from blob {} in bucket {}.'.format(
-        user_email, blob_name, bucket_name))
+    print(
+        "Removed user {} from blob {} in bucket {}.".format(
+            user_email, blob_name, bucket_name
+        )
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    subparsers = parser.add_subparsers(dest='command')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    subparsers = parser.add_subparsers(dest="command")
 
     print_bucket_acl_parser = subparsers.add_parser(
-        'print-bucket-acl', help=print_bucket_acl.__doc__)
-    print_bucket_acl_parser.add_argument('bucket_name')
+        "print-bucket-acl", help=print_bucket_acl.__doc__
+    )
+    print_bucket_acl_parser.add_argument("bucket_name")
 
     print_bucket_acl_for_user_parser = subparsers.add_parser(
-        'print-bucket-acl-for-user', help=print_bucket_acl.__doc__)
-    print_bucket_acl_for_user_parser.add_argument('bucket_name')
-    print_bucket_acl_for_user_parser.add_argument('user_email')
+        "print-bucket-acl-for-user", help=print_bucket_acl.__doc__
+    )
+    print_bucket_acl_for_user_parser.add_argument("bucket_name")
+    print_bucket_acl_for_user_parser.add_argument("user_email")
 
     add_bucket_owner_parser = subparsers.add_parser(
-        'add-bucket-owner', help=add_bucket_owner.__doc__)
-    add_bucket_owner_parser.add_argument('bucket_name')
-    add_bucket_owner_parser.add_argument('user_email')
+        "add-bucket-owner", help=add_bucket_owner.__doc__
+    )
+    add_bucket_owner_parser.add_argument("bucket_name")
+    add_bucket_owner_parser.add_argument("user_email")
 
     remove_bucket_owner_parser = subparsers.add_parser(
-        'remove-bucket-owner', help=remove_bucket_owner.__doc__)
-    remove_bucket_owner_parser.add_argument('bucket_name')
-    remove_bucket_owner_parser.add_argument('user_email')
+        "remove-bucket-owner", help=remove_bucket_owner.__doc__
+    )
+    remove_bucket_owner_parser.add_argument("bucket_name")
+    remove_bucket_owner_parser.add_argument("user_email")
 
     add_bucket_default_owner_parser = subparsers.add_parser(
-        'add-bucket-default-owner', help=add_bucket_default_owner.__doc__)
-    add_bucket_default_owner_parser.add_argument('bucket_name')
-    add_bucket_default_owner_parser.add_argument('user_email')
+        "add-bucket-default-owner", help=add_bucket_default_owner.__doc__
+    )
+    add_bucket_default_owner_parser.add_argument("bucket_name")
+    add_bucket_default_owner_parser.add_argument("user_email")
 
     remove_bucket_default_owner_parser = subparsers.add_parser(
-        'remove-bucket-default-owner',
-        help=remove_bucket_default_owner.__doc__)
-    remove_bucket_default_owner_parser.add_argument('bucket_name')
-    remove_bucket_default_owner_parser.add_argument('user_email')
+        "remove-bucket-default-owner", help=remove_bucket_default_owner.__doc__
+    )
+    remove_bucket_default_owner_parser.add_argument("bucket_name")
+    remove_bucket_default_owner_parser.add_argument("user_email")
 
     print_blob_acl_parser = subparsers.add_parser(
-        'print-blob-acl', help=print_blob_acl.__doc__)
-    print_blob_acl_parser.add_argument('bucket_name')
-    print_blob_acl_parser.add_argument('blob_name')
+        "print-blob-acl", help=print_blob_acl.__doc__
+    )
+    print_blob_acl_parser.add_argument("bucket_name")
+    print_blob_acl_parser.add_argument("blob_name")
 
     print_blob_acl_for_user_parser = subparsers.add_parser(
-        'print-blob-acl-for-user', help=print_blob_acl_for_user.__doc__)
-    print_blob_acl_for_user_parser.add_argument('bucket_name')
-    print_blob_acl_for_user_parser.add_argument('blob_name')
-    print_blob_acl_for_user_parser.add_argument('user_email')
+        "print-blob-acl-for-user", help=print_blob_acl_for_user.__doc__
+    )
+    print_blob_acl_for_user_parser.add_argument("bucket_name")
+    print_blob_acl_for_user_parser.add_argument("blob_name")
+    print_blob_acl_for_user_parser.add_argument("user_email")
 
     add_blob_owner_parser = subparsers.add_parser(
-        'add-blob-owner', help=add_blob_owner.__doc__)
-    add_blob_owner_parser.add_argument('bucket_name')
-    add_blob_owner_parser.add_argument('blob_name')
-    add_blob_owner_parser.add_argument('user_email')
+        "add-blob-owner", help=add_blob_owner.__doc__
+    )
+    add_blob_owner_parser.add_argument("bucket_name")
+    add_blob_owner_parser.add_argument("blob_name")
+    add_blob_owner_parser.add_argument("user_email")
 
     remove_blob_owner_parser = subparsers.add_parser(
-        'remove-blob-owner', help=remove_blob_owner.__doc__)
-    remove_blob_owner_parser.add_argument('bucket_name')
-    remove_blob_owner_parser.add_argument('blob_name')
-    remove_blob_owner_parser.add_argument('user_email')
+        "remove-blob-owner", help=remove_blob_owner.__doc__
+    )
+    remove_blob_owner_parser.add_argument("bucket_name")
+    remove_blob_owner_parser.add_argument("blob_name")
+    remove_blob_owner_parser.add_argument("user_email")
 
     args = parser.parse_args()
 
-    if args.command == 'print-bucket-acl':
+    if args.command == "print-bucket-acl":
         print_bucket_acl(args.bucket_name)
-    elif args.command == 'print-bucket-acl-for-user':
+    elif args.command == "print-bucket-acl-for-user":
         print_bucket_acl_for_user(args.bucket_name, args.user_email)
-    elif args.command == 'add-bucket-owner':
+    elif args.command == "add-bucket-owner":
         add_bucket_owner(args.bucket_name, args.user_email)
-    elif args.command == 'remove-bucket-owner':
+    elif args.command == "remove-bucket-owner":
         remove_bucket_owner(args.bucket_name, args.user_email)
-    elif args.command == 'add-bucket-default-owner':
+    elif args.command == "add-bucket-default-owner":
         add_bucket_default_owner(args.bucket_name, args.user_email)
-    elif args.command == 'remove-bucket-default-owner':
+    elif args.command == "remove-bucket-default-owner":
         remove_bucket_default_owner(args.bucket_name, args.user_email)
-    elif args.command == 'print-blob-acl':
+    elif args.command == "print-blob-acl":
         print_blob_acl(args.bucket_name, args.blob_name)
-    elif args.command == 'print-blob-acl-for-user':
-        print_blob_acl_for_user(
-            args.bucket_name, args.blob_name, args.user_email)
-    elif args.command == 'add-blob-owner':
+    elif args.command == "print-blob-acl-for-user":
+        print_blob_acl_for_user(args.bucket_name, args.blob_name, args.user_email)
+    elif args.command == "add-blob-owner":
         add_blob_owner(args.bucket_name, args.blob_name, args.user_email)
-    elif args.command == 'remove-blob-owner':
+    elif args.command == "remove-blob-owner":
         remove_blob_owner(args.bucket_name, args.blob_name, args.user_email)

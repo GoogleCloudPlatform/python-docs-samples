@@ -44,12 +44,13 @@ def generate_encryption_key():
     comprehensive security policy.
     """
     key = os.urandom(32)
-    encoded_key = base64.b64encode(key).decode('utf-8')
-    print('Base 64 encoded encryption key: {}'.format(encoded_key))
+    encoded_key = base64.b64encode(key).decode("utf-8")
+    print("Base 64 encoded encryption key: {}".format(encoded_key))
 
 
-def upload_encrypted_blob(bucket_name, source_file_name,
-                          destination_blob_name, base64_encryption_key):
+def upload_encrypted_blob(
+    bucket_name, source_file_name, destination_blob_name, base64_encryption_key
+):
     """Uploads a file to a Google Cloud Storage bucket using a custom
     encryption key.
 
@@ -66,13 +67,12 @@ def upload_encrypted_blob(bucket_name, source_file_name,
 
     blob.upload_from_filename(source_file_name)
 
-    print('File {} uploaded to {}.'.format(
-        source_file_name,
-        destination_blob_name))
+    print("File {} uploaded to {}.".format(source_file_name, destination_blob_name))
 
 
-def download_encrypted_blob(bucket_name, source_blob_name,
-                            destination_file_name, base64_encryption_key):
+def download_encrypted_blob(
+    bucket_name, source_blob_name, destination_file_name, base64_encryption_key
+):
     """Downloads a previously-encrypted blob from Google Cloud Storage.
 
     The encryption key provided must be the same key provided when uploading
@@ -88,13 +88,12 @@ def download_encrypted_blob(bucket_name, source_blob_name,
 
     blob.download_to_filename(destination_file_name)
 
-    print('Blob {} downloaded to {}.'.format(
-        source_blob_name,
-        destination_file_name))
+    print("Blob {} downloaded to {}.".format(source_blob_name, destination_file_name))
 
 
-def rotate_encryption_key(bucket_name, blob_name, base64_encryption_key,
-                          base64_new_encryption_key):
+def rotate_encryption_key(
+    bucket_name, blob_name, base64_encryption_key, base64_new_encryption_key
+):
     """Performs a key rotation by re-writing an encrypted blob with a new
     encryption key."""
     storage_client = storage.Client()
@@ -104,74 +103,73 @@ def rotate_encryption_key(bucket_name, blob_name, base64_encryption_key,
 
     # Both source_blob and destination_blob refer to the same storage object,
     # but destination_blob has the new encryption key.
-    source_blob = Blob(
-        blob_name, bucket, encryption_key=current_encryption_key)
-    destination_blob = Blob(
-        blob_name, bucket, encryption_key=new_encryption_key)
+    source_blob = Blob(blob_name, bucket, encryption_key=current_encryption_key)
+    destination_blob = Blob(blob_name, bucket, encryption_key=new_encryption_key)
 
     token = None
 
     while True:
         token, bytes_rewritten, total_bytes = destination_blob.rewrite(
-            source_blob, token=token)
+            source_blob, token=token
+        )
         if token is None:
             break
 
-    print('Key rotation complete for Blob {}'.format(blob_name))
+    print("Key rotation complete for Blob {}".format(blob_name))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    subparsers = parser.add_subparsers(dest='command')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    subparsers = parser.add_subparsers(dest="command")
 
     subparsers.add_parser(
-        'generate-encryption-key', help=generate_encryption_key.__doc__)
+        "generate-encryption-key", help=generate_encryption_key.__doc__
+    )
 
-    upload_parser = subparsers.add_parser(
-        'upload', help=upload_encrypted_blob.__doc__)
-    upload_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
-    upload_parser.add_argument('source_file_name')
-    upload_parser.add_argument('destination_blob_name')
-    upload_parser.add_argument('base64_encryption_key')
+    upload_parser = subparsers.add_parser("upload", help=upload_encrypted_blob.__doc__)
+    upload_parser.add_argument("bucket_name", help="Your cloud storage bucket.")
+    upload_parser.add_argument("source_file_name")
+    upload_parser.add_argument("destination_blob_name")
+    upload_parser.add_argument("base64_encryption_key")
 
     download_parser = subparsers.add_parser(
-        'download', help=download_encrypted_blob.__doc__)
-    download_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
-    download_parser.add_argument('source_blob_name')
-    download_parser.add_argument('destination_file_name')
-    download_parser.add_argument('base64_encryption_key')
+        "download", help=download_encrypted_blob.__doc__
+    )
+    download_parser.add_argument("bucket_name", help="Your cloud storage bucket.")
+    download_parser.add_argument("source_blob_name")
+    download_parser.add_argument("destination_file_name")
+    download_parser.add_argument("base64_encryption_key")
 
-    rotate_parser = subparsers.add_parser(
-        'rotate', help=rotate_encryption_key.__doc__)
-    rotate_parser.add_argument(
-        'bucket_name', help='Your cloud storage bucket.')
-    rotate_parser.add_argument('blob_name')
-    rotate_parser.add_argument('base64_encryption_key')
-    rotate_parser.add_argument('base64_new_encryption_key')
+    rotate_parser = subparsers.add_parser("rotate", help=rotate_encryption_key.__doc__)
+    rotate_parser.add_argument("bucket_name", help="Your cloud storage bucket.")
+    rotate_parser.add_argument("blob_name")
+    rotate_parser.add_argument("base64_encryption_key")
+    rotate_parser.add_argument("base64_new_encryption_key")
 
     args = parser.parse_args()
 
-    if args.command == 'generate-encryption-key':
+    if args.command == "generate-encryption-key":
         generate_encryption_key()
-    elif args.command == 'upload':
+    elif args.command == "upload":
         upload_encrypted_blob(
             args.bucket_name,
             args.source_file_name,
             args.destination_blob_name,
-            args.base64_encryption_key)
-    elif args.command == 'download':
+            args.base64_encryption_key,
+        )
+    elif args.command == "download":
         download_encrypted_blob(
             args.bucket_name,
             args.source_blob_name,
             args.destination_file_name,
-            args.base64_encryption_key)
-    elif args.command == 'rotate':
+            args.base64_encryption_key,
+        )
+    elif args.command == "rotate":
         rotate_encryption_key(
             args.bucket_name,
             args.blob_name,
             args.base64_encryption_key,
-            args.base64_new_encryption_key)
+            args.base64_new_encryption_key,
+        )
