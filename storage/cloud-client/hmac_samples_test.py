@@ -19,6 +19,7 @@ set in order to run.
 
 
 import os
+from datetime import datetime
 
 from google.cloud import storage
 import pytest
@@ -37,6 +38,16 @@ def new_hmac_key():
     Fixture to create a new HMAC key, and to guarantee all keys are deleted at
     the end of each test.
     """
+    # Clean up inactive keys.
+    hmac_keys = STORAGE_CLIENT.list_hmac_keys(project_id=PROJECT_ID)
+    for hmac_key in hmac_keys:
+        time_created = datetime.strptime(hmac_key.time_created,'%Y-%m-%dT%H:%M:%S.%fZ')
+        current_time = datetime.utcnow()
+        delta_in_minutes = ((current_time - time_created).seconds)//60;
+        # Delete hmac key if time_created is greater than 5 minutes
+        if hmac_key.state == 'INACTIVE' and delta_in_minutes > 5:
+            hmac_key.delete()
+    
     hmac_key, secret = STORAGE_CLIENT.create_hmac_key(
         service_account_email=SERVICE_ACCOUNT_EMAIL,
         project_id=PROJECT_ID)
