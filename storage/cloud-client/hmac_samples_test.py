@@ -23,7 +23,12 @@ import os
 from google.cloud import storage
 import pytest
 
-import hmac_samples
+import storage_activate_hmac_key
+import storage_create_hmac_key
+import storage_deactivate_hmac_key
+import storage_delete_hmac_key
+import storage_get_hmac_key
+import storage_list_hmac_keys
 
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]

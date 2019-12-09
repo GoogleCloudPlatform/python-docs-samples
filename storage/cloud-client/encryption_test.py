@@ -20,7 +20,10 @@ from google.cloud import storage
 from google.cloud.storage import Blob
 import pytest
 
-import encryption
+import storage_download_encrypted_file
+import storage_generate_encryption_key
+import storage_upload_encrypted_file
+import storage_rotate_encryption_key
 
 BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 

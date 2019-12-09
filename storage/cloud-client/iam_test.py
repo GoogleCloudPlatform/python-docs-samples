@@ -18,6 +18,9 @@ from google.cloud import storage
 import pytest
 
 import iam
+import storage_remove_bucket_iam_member
+import storage_add_bucket_iam_member
+import storage_view_bucket_iam_member
 
 BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 MEMBER = "group:dpebot@google.com"
