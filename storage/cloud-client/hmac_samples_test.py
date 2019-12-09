@@ -40,22 +40,30 @@ def new_hmac_key():
     """
     # Clean up inactive keys.
     hmac_keys = STORAGE_CLIENT.list_hmac_keys(project_id=PROJECT_ID)
+    current_time = datetime.utcnow()
     for hmac_key in hmac_keys:
         time_created = datetime.strptime(hmac_key.time_created,'%Y-%m-%dT%H:%M:%S.%fZ')
-        current_time = datetime.utcnow()
         delta_in_minutes = ((current_time - time_created).seconds)//60;
         # Delete hmac key if time_created is greater than 5 minutes
-        if hmac_key.state == 'INACTIVE' and delta_in_minutes > 5:
+        if delta_in_minutes > 5 and not hmac_key.state == 'DELETED':
+            if not hmac_key.state == 'INACTIVE':
+                hmac_key.state = 'INACTIVE'
+                hmac_key.patch()
             hmac_key.delete()
-    
+
+    # create a new hmac key
     hmac_key, secret = STORAGE_CLIENT.create_hmac_key(
         service_account_email=SERVICE_ACCOUNT_EMAIL,
         project_id=PROJECT_ID)
+
+    # Pass hmac_key to test
     yield hmac_key
+
     # Re-fetch the key metadata in case state has changed during the test.
     hmac_key = STORAGE_CLIENT.get_hmac_key_metadata(
         hmac_key.access_id,
         project_id=PROJECT_ID)
+
     if hmac_key.state == 'DELETED':
         return
     if not hmac_key.state == 'INACTIVE':
