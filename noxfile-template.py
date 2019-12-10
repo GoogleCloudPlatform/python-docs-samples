@@ -207,6 +207,7 @@ def py3(session, sample):
     """Runs py.test for a sample using Python 3.x"""
     _session_tests(session, sample)
 
+
 @nox.session(python="3.6")
 def lint(session):
     session.install("flake8", "flake8-import-order")
@@ -218,6 +219,7 @@ def lint(session):
         ".",
     ]
     session.run("flake8", *args)
+
 
 SAMPLES_WITH_GENERATED_READMES = sorted(list(_collect_dirs(".", suffix=".rst.in")))
 
