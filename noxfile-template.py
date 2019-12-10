@@ -207,16 +207,9 @@ def py3(session, sample):
     """Runs py.test for a sample using Python 3.x"""
     _session_tests(session, sample)
 
-
-BLACK_VERSION = "black==19.3b0"
-
-
 @nox.session(python="3.6")
 def lint(session):
-    """Checks if blacken would result in any changes in the sample."""
-    session.install("flake8", "flake8-import-order", BLACK_VERSION)
-
-    session.run("black", "--check", ".")
+    session.install("flake8", "flake8-import-order")
 
     local_names = _determine_local_import_names(".")
     args = FLAKE8_COMMON_ARGS + [
@@ -225,16 +218,6 @@ def lint(session):
         ".",
     ]
     session.run("flake8", *args)
-
-
-@nox.session(python="3.6")
-def blacken(session):
-    """Run black.
-    Format code to uniform standard.
-    """
-    session.install(BLACK_VERSION)
-    session.run("black", ".")
-
 
 SAMPLES_WITH_GENERATED_READMES = sorted(list(_collect_dirs(".", suffix=".rst.in")))
 
