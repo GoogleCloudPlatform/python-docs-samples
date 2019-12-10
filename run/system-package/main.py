@@ -40,7 +40,7 @@ def index():
 
         # If no graphviz definition or bad graphviz def, return 400
         if "syntax" in str(e):
-            return f"Bad Request: {e}", 400
+            return "Bad Request: {}".format(e), 400
 
         return "Internal Server Error", 500
 
