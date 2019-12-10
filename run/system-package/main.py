@@ -33,7 +33,7 @@ def index():
         return response
 
     except Exception as e:
-        print(f"error: {e}")
+        print("error: {}".format(e))
 
         # Flush the stdout to avoid log buffering.
         sys.stdout.flush()
