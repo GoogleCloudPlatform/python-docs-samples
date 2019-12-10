@@ -83,7 +83,7 @@ def list_models(project_id, compute_region, filter_):
     # TODO(developer): Uncomment and set the following variables
     # project_id = '[PROJECT_ID]'
     # compute_region = '[COMPUTE_REGION]'
-    # filter_ = '[DATASET_ID]'
+    # filter_ = 'text_sentiment_model_metadata:*'
 
     from google.cloud import automl_v1beta1 as automl
     from google.cloud.automl_v1beta1 import enums
@@ -151,14 +151,13 @@ def get_model(project_id, compute_region, model_id):
     # [END automl_natural_language_get_model]
 
 
-def list_model_evaluations(project_id, compute_region, model_id, filter_):
+def list_model_evaluations(project_id, compute_region, model_id):
     """List model evaluations."""
     # [START automl_natural_language_list_model_evaluations]
     # TODO(developer): Uncomment and set the following variables
     # project_id = '[PROJECT_ID]'
     # compute_region = '[COMPUTE_REGION]'
     # model_id = '[MODEL_ID]'
-    # filter_ = 'filter expression here'
 
     from google.cloud import automl_v1beta1 as automl
 
@@ -168,7 +167,7 @@ def list_model_evaluations(project_id, compute_region, model_id, filter_):
     model_full_id = client.model_path(project_id, compute_region, model_id)
 
     # List all the model evaluations in the model by applying filter.
-    response = client.list_model_evaluations(model_full_id, filter_)
+    response = client.list_model_evaluations(model_full_id)
 
     print("List of model evaluations:")
     for element in response:
@@ -207,14 +206,13 @@ def get_model_evaluation(
     # [END automl_natural_language_get_model_evaluation]
     
     
-def display_evaluation(project_id, compute_region, model_id, filter_):
+def display_evaluation(project_id, compute_region, model_id):
     """Display evaluation."""
     # [START automl_natural_language_display_evaluation]
     # TODO(developer): Uncomment and set the following variables
     # project_id = '[PROJECT_ID]'
     # compute_region = '[COMPUTE_REGION]'
     # model_id = '[MODEL_ID]'
-    # filter_ = 'filter expression here'
 
     from google.cloud import automl_v1beta1 as automl
 
@@ -224,7 +222,7 @@ def display_evaluation(project_id, compute_region, model_id, filter_):
     model_full_id = client.model_path(project_id, compute_region, model_id)
 
     # List all the model evaluations in the model by applying filter.
-    response = client.list_model_evaluations(model_full_id, filter_)
+    response = client.list_model_evaluations(model_full_id)
 
     # Iterate through the results.
     for element in response:
@@ -327,7 +325,8 @@ if __name__ == "__main__":
     list_models_parser = subparsers.add_parser(
         "list_models", help=list_models.__doc__
     )
-    list_models_parser.add_argument("filter_")
+    list_models_parser.add_argument(
+        "filter_", nargs="?", default="text_sentiment_model_metadata:*")
 
     get_model_parser = subparsers.add_parser(
         "get_model", help=get_model_evaluation.__doc__
@@ -338,9 +337,6 @@ if __name__ == "__main__":
         "list_model_evaluations", help=list_model_evaluations.__doc__
     )
     list_model_evaluations_parser.add_argument("model_id")
-    list_model_evaluations_parser.add_argument(
-        "filter_", nargs="?", default=""
-    )
 
     get_model_evaluation_parser = subparsers.add_parser(
         "get_model_evaluation", help=get_model_evaluation.__doc__
@@ -352,7 +348,6 @@ if __name__ == "__main__":
         "display_evaluation", help=display_evaluation.__doc__
     )
     display_evaluation_parser.add_argument("model_id")
-    display_evaluation_parser.add_argument("filter_", nargs="?", default="")
 
     delete_model_parser = subparsers.add_parser(
         "delete_model", help=delete_model.__doc__
@@ -376,7 +371,7 @@ if __name__ == "__main__":
         get_model(project_id, compute_region, args.model_id)
     if args.command == "list_model_evaluations":
         list_model_evaluations(
-            project_id, compute_region, args.model_id, args.filter_
+            project_id, compute_region, args.model_id 
         )
     if args.command == "get_model_evaluation":
         get_model_evaluation(
@@ -384,7 +379,7 @@ if __name__ == "__main__":
         )
     if args.command == "display_evaluation":
         display_evaluation(
-            project_id, compute_region, args.model_id, args.filter_
+            project_id, compute_region, args.model_id
         )
     if args.command == "delete_model":
         delete_model(project_id, compute_region, args.model_id)

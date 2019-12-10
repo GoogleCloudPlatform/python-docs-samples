@@ -71,7 +71,7 @@ def list_datasets(project_id, compute_region, filter_):
     # TODO(developer): Uncomment and set the following variables
     # project_id = '[PROJECT_ID]'
     # compute_region = '[COMPUTE_REGION]'
-    # filter_ = 'filter expression here'
+    # filter_ = 'text_sentiment_dataset_metadata:*'
 
     from google.cloud import automl_v1beta1 as automl
 
