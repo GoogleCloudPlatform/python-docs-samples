@@ -12,13 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
+import mock
 import os
-import unittest
 import uuid
 
 import apache_beam as beam
-from apache_beam.options.pipeline_options import PipelineOptions
 from apache_beam.testing.test_pipeline import TestPipeline
 from apache_beam.testing.test_stream import TestStream
 from apache_beam.testing.test_utils import TempDir
@@ -31,49 +29,33 @@ BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 UUID = uuid.uuid1().hex
 
 
-class PubSubToGCSTest(unittest.TestCase):
-    def test_pubsub_to_gcs(self):
+@mock.patch("apache_beam.Pipeline", TestPipeline)
+@mock.patch(
+    "apache_beam.io.ReadFromPubSub",
+    lambda topic: (
+        TestStream()
+        .advance_watermark_to(0)
+        .advance_processing_time(30)
+        .add_elements([TimestampedValue(b"a", 1575937195)])
+        .advance_processing_time(30)
+        .add_elements([TimestampedValue(b"b", 1575937225)])
+        .advance_processing_time(30)
+        .add_elements([TimestampedValue(b"c", 1575937255)])
+        .advance_watermark_to_infinity()
+    ),
+)
+def test_pubsub_to_gcs():
+    PubSubToGCS.run(
+        input_topic="unused",  # mocked by TestStream
+        output_path="gs://{}/pubsub/{}/output".format(BUCKET, UUID),
+        window_size=1,  # 1 minute
+        pipeline_args=["--project", PROJECT, "--temp_location", TempDir().get_path()],
+    )
 
-        pipeline_options = PipelineOptions(
-            project=PROJECT,
-            runner="DirectRunner",
-            temp_location=TempDir().get_path(),
-            streaming=True,
-            save_main_session=True,
-        )
+    # Check for output files on GCS.
+    gcs_client = beam.io.gcp.gcsio.GcsIO()
+    files = gcs_client.list_prefix("gs://{}/pubsub/{}".format(BUCKET, UUID))
+    assert len(files) > 0
 
-        with TestPipeline(options=pipeline_options) as p:
-
-            mocked_pubsub_stream = (
-                TestStream()
-                .advance_watermark_to(0)
-                .advance_processing_time(30)
-                .add_elements([TimestampedValue(b"a", 1575937195)])
-                .advance_processing_time(30)
-                .add_elements([TimestampedValue(b"b", 1575937225)])
-                .advance_processing_time(30)
-                .add_elements([TimestampedValue(b"c", 1575937255)])
-                .advance_watermark_to_infinity()
-            )
-
-            output_path = "gs://{}/pubsub/{}/output".format(BUCKET, UUID)
-
-            _ = (
-                p
-                | mocked_pubsub_stream
-                | PubSubToGCS.GroupWindowsIntoBatches(1)
-                | beam.ParDo(PubSubToGCS.WriteBatchesToGCS(output_path))
-            )
-
-        # Check for output files on GCS.
-        gcs_client = beam.io.gcp.gcsio.GcsIO()
-        files = gcs_client.list_prefix("gs://{}/pubsub/{}".format(BUCKET, UUID))
-        assert len(files) > 0
-
-        # Clean up.
-        gcs_client.delete_batch(list(files))
-
-
-if __name__ == "__main__":
-    logging.getLogger().setLevel(logging.INFO)
-    unittest.main()
+    # Clean up.
+    gcs_client.delete_batch(list(files))

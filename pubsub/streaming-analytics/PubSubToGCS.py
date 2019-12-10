@@ -40,7 +40,7 @@ class GroupWindowsIntoBatches(beam.PTransform):
             # publish timestamp.
             | "Window into Fixed Intervals"
             >> beam.WindowInto(window.FixedWindows(self.window_size))
-            | "Add timestamps to messages" >> (beam.ParDo(AddTimestamps()))
+            | "Add timestamps to messages" >> beam.ParDo(AddTimestamps())
             # Use a dummy key to group the elements in the same window.
             # Note that all the elements in one window must fit into memory
             # for this. If the windowed elements do not fit into memory,
