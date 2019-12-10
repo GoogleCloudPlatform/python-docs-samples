@@ -21,12 +21,12 @@ Example usage:
 """
 
 import argparse
-import io
 
 
 # [START speech_transcribe_streaming]
 def transcribe_streaming(stream_file):
     """Streams transcription of the given audio file."""
+    import io
     from google.cloud import speech
     from google.cloud.speech import enums
     from google.cloud.speech import types
