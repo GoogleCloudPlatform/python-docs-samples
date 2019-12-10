@@ -38,14 +38,18 @@ def end_to_end(project_id, topic_name, subscription_name, num_messages):
 
     # The `subscription_path` method creates a fully qualified identifier
     # in the form `projects/{project_id}/subscriptions/{subscription_name}`
-    subscription_path = subscriber.subscription_path(project_id, subscription_name)
+    subscription_path = subscriber.subscription_path(
+        project_id, subscription_name
+    )
 
     # Create the topic.
     topic = publisher.create_topic(topic_path)
     print("\nTopic created: {}".format(topic.name))
 
     # Create a subscription.
-    subscription = subscriber.create_subscription(subscription_path, topic_path)
+    subscription = subscriber.create_subscription(
+        subscription_path, topic_path
+    )
     print("\nSubscription created: {}\n".format(subscription.name))
 
     publish_begin = time.time()
@@ -92,7 +96,8 @@ def end_to_end(project_id, topic_name, subscription_name, num_messages):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("project_id", help="Your Google Cloud project ID")
     parser.add_argument("topic_name", help="Your topic name")
@@ -101,4 +106,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    end_to_end(args.project_id, args.topic_name, args.subscription_name, args.num_msgs)
+    end_to_end(
+        args.project_id, args.topic_name, args.subscription_name, args.num_msgs
+    )

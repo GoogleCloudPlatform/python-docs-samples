@@ -49,7 +49,12 @@ def test_pubsub_to_gcs():
         input_topic="unused",  # mocked by TestStream
         output_path="gs://{}/pubsub/{}/output".format(BUCKET, UUID),
         window_size=1,  # 1 minute
-        pipeline_args=["--project", PROJECT, "--temp_location", TempDir().get_path()],
+        pipeline_args=[
+            "--project",
+            PROJECT,
+            "--temp_location",
+            TempDir().get_path(),
+        ],
     )
 
     # Check for output files on GCS.
