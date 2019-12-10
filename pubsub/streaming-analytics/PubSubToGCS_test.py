@@ -24,7 +24,7 @@ from apache_beam.testing.test_utils import TempDir
 from apache_beam.transforms.window import TimestampedValue
 from apache_beam.testing.util import assert_that
 
-from PubSubToGCS import *
+import PubSubToGCS
 
 PROJECT = os.environ["GCLOUD_PROJECT"]
 BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
@@ -61,8 +61,8 @@ class PubSubToGCSTest(unittest.TestCase):
             _ = (
                 p
                 | mocked_pubsub_stream
-                | "Window into" >> GroupWindowsIntoBatches(1)
-                | "Write to GCS" >> beam.ParDo(WriteBatchesToGCS(output_path))
+                | PubSubToGCS.GroupWindowsIntoBatches(1)
+                | beam.ParDo(PubSubToGCS.WriteBatchesToGCS(output_path))
             )
 
         # Check for output files on GCS.
