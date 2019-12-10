@@ -371,7 +371,7 @@ if __name__ == "__main__":
         get_model(project_id, compute_region, args.model_id)
     if args.command == "list_model_evaluations":
         list_model_evaluations(
-            project_id, compute_region, args.model_id 
+            project_id, compute_region, args.model_id
         )
     if args.command == "get_model_evaluation":
         get_model_evaluation(
