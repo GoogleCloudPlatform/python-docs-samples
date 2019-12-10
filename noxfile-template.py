@@ -149,6 +149,9 @@ PY3_ONLY_SAMPLES = [
         or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith(
             "bigquery/pandas-gbq-migration"
         )
+        or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith(
+            "run/system-package"
+        )
     )
 ]
 NON_GAE_STANDARD_SAMPLES_PY2 = sorted(
@@ -207,6 +210,7 @@ def py3(session, sample):
     """Runs py.test for a sample using Python 3.x"""
     _session_tests(session, sample)
 
+
 @nox.session(python="3.6")
 def lint(session):
     session.install("flake8", "flake8-import-order")
@@ -218,6 +222,7 @@ def lint(session):
         ".",
     ]
     session.run("flake8", *args)
+
 
 SAMPLES_WITH_GENERATED_READMES = sorted(list(_collect_dirs(".", suffix=".rst.in")))
 
