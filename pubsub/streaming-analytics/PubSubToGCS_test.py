@@ -23,7 +23,6 @@ from apache_beam.testing.test_pipeline import TestPipeline
 from apache_beam.testing.test_stream import TestStream
 from apache_beam.testing.test_utils import TempDir
 from apache_beam.transforms.window import TimestampedValue
-from apache_beam.testing.util import assert_that
 
 import PubSubToGCS
 
