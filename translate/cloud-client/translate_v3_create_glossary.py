@@ -33,7 +33,7 @@ def sample_create_glossary(project_id, input_uri, glossary_id):
 
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'YOUR_PROJECT_ID'
-    # glossary_id = 'glossary-id'
+    # glossary_id = 'your-glossary-display-name'
     # input_uri = 'gs://cloud-samples-data/translation/glossary.csv'
     location = 'us-central1'  # The location of the glossary
 
