@@ -17,5 +17,8 @@ composer/*                @tswast
 # Gus Class is the primary maintainer of the IoT samples.
 iot/*                     @gguuss
 
-# Alix Hamilton is the primary maintainer of the Jupyter notebook samples
+# Alix Hamilton is the primary maintainer of the Jupyter notebook samples.
 notebooks/*               @alixhami
+
+# Torry Yang is the primary maintainer of the Tables samples.
+tables/*               @sirtorry
