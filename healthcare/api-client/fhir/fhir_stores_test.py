@@ -35,7 +35,7 @@ gcs_uri = os.environ["CLOUD_STORAGE_BUCKET"]
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 source_file_name = "Patient.json"
 resource_file = os.path.join(RESOURCES, source_file_name)
-import_object = gcs_uri + "/healthcare-api/" + source_file_name
+import_object = "{}/healthcare-api/{}".format(gcs_uri, source_file_name)
 
 
 @pytest.fixture(scope="module")
