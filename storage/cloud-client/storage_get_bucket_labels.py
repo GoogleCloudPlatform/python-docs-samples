@@ -18,6 +18,7 @@
 from google.cloud import storage
 import pprint
 
+
 def get_bucket_labels(bucket_name):
     """Prints out a bucket's labels."""
     # bucket_name = 'your-bucket-name'

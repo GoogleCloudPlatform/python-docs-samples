@@ -17,6 +17,7 @@
 # [START storage_get_uniform_bucket_level_access]
 from google.cloud import storage
 
+
 def get_uniform_bucket_level_access(bucket_name):
     """Get uniform bucket-level access for a bucket"""
     # bucket_name = "my-bucket"
@@ -34,7 +35,9 @@ def get_uniform_bucket_level_access(bucket_name):
         )
     else:
         print("Uniform bucket-level access is disabled for {}.".format(bucket.name))
+
+
 # [END storage_get_uniform_bucket_level_access]
 
 if __name__ == "__main__":
-  get_uniform_bucket_level_access(bucket_name=sys.argv[1])
+    get_uniform_bucket_level_access(bucket_name=sys.argv[1])
