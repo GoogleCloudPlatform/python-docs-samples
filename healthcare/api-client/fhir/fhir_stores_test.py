@@ -35,7 +35,7 @@ gcs_uri = os.environ["CLOUD_STORAGE_BUCKET"]
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 source_file_name = "Patient.json"
 resource_file = os.path.join(RESOURCES, source_file_name)
-import_object = "{}/healthcare-api/{}".format(gcs_uri, source_file_name)
+import_object = gcs_uri + '/' + source_file_name
 
 
 @pytest.fixture(scope="module")
@@ -106,7 +106,7 @@ def test_import_fhir_store_gcs(test_dataset, capsys):
 
     blob.upload_from_filename(resource_file)
 
-    time.sleep(5)  # Give new blob time to propagate
+    time.sleep(10)  # Give new blob time to propagate
     fhir_stores.import_fhir_resources(
         service_account_json,
         project_id,
