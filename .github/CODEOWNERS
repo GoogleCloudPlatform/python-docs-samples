@@ -21,4 +21,4 @@ iot/*                     @gguuss
 notebooks/*               @alixhami
 
 # Torry Yang is the primary maintainer of the Tables samples.
-tables/*               @sirtorry
+/tables/               @sirtorry
