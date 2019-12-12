@@ -161,16 +161,16 @@ def update_subscription(project_id, subscription_name, endpoint):
     # [END pubsub_update_push_configuration]
 
 
-def receive_messages(project_id, subscription_name):
+def receive_messages(project_id, subscription_name, timeout=None):
     """Receives messages from a pull subscription."""
     # [START pubsub_subscriber_async_pull]
     # [START pubsub_quickstart_subscriber]
-    import time
-
     from google.cloud import pubsub_v1
 
     # TODO project_id = "Your Google Cloud Project ID"
     # TODO subscription_name = "Your Pub/Sub subscription name"
+    # TODO timeout = 5.0  # "How long the subscriber should listen for
+    # messages in seconds"
 
     subscriber = pubsub_v1.SubscriberClient()
     # The `subscription_path` method creates a fully qualified identifier
@@ -183,27 +183,33 @@ def receive_messages(project_id, subscription_name):
         print("Received message: {}".format(message))
         message.ack()
 
-    subscriber.subscribe(subscription_path, callback=callback)
+    streaming_pull_future = subscriber.subscribe(
+        subscription_path, callback=callback
+    )
+    print("Listening for messages on {}..\n".format(subscription_path))
 
-    # The subscriber is non-blocking. We must keep the main thread from
-    # exiting to allow it to process messages asynchronously in the background.
-    print("Listening for messages on {}".format(subscription_path))
-    while True:
-        time.sleep(60)
+    # result() in a future will block indefinitely if `timeout` is not set,
+    # unless an exception is encountered first.
+    try:
+        streaming_pull_future.result(timeout=timeout)
+    except:  # noqa
+        streaming_pull_future.cancel()
     # [END pubsub_subscriber_async_pull]
     # [END pubsub_quickstart_subscriber]
 
 
-def receive_messages_with_custom_attributes(project_id, subscription_name):
+def receive_messages_with_custom_attributes(
+    project_id, subscription_name, timeout=None
+):
     """Receives messages from a pull subscription."""
     # [START pubsub_subscriber_sync_pull_custom_attributes]
     # [START pubsub_subscriber_async_pull_custom_attributes]
-    import time
-
     from google.cloud import pubsub_v1
 
     # TODO project_id = "Your Google Cloud Project ID"
     # TODO subscription_name = "Your Pub/Sub subscription name"
+    # TODO timeout = 5.0  # "How long the subscriber should listen for
+    # messages in seconds"
 
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
@@ -219,26 +225,32 @@ def receive_messages_with_custom_attributes(project_id, subscription_name):
                 print("{}: {}".format(key, value))
         message.ack()
 
-    subscriber.subscribe(subscription_path, callback=callback)
+    streaming_pull_future = subscriber.subscribe(
+        subscription_path, callback=callback
+    )
+    print("Listening for messages on {}..\n".format(subscription_path))
 
-    # The subscriber is non-blocking, so we must keep the main thread from
-    # exiting to allow it to process messages in the background.
-    print("Listening for messages on {}".format(subscription_path))
-    while True:
-        time.sleep(60)
+    # result() in a future will block indefinitely if `timeout` is not set,
+    # unless an exception is encountered first.
+    try:
+        streaming_pull_future.result(timeout=timeout)
+    except:  # noqa
+        streaming_pull_future.cancel()
     # [END pubsub_subscriber_async_pull_custom_attributes]
     # [END pubsub_subscriber_sync_pull_custom_attributes]
 
 
-def receive_messages_with_flow_control(project_id, subscription_name):
+def receive_messages_with_flow_control(
+    project_id, subscription_name, timeout=None
+):
     """Receives messages from a pull subscription with flow control."""
     # [START pubsub_subscriber_flow_settings]
-    import time
-
     from google.cloud import pubsub_v1
 
     # TODO project_id = "Your Google Cloud Project ID"
     # TODO subscription_name = "Your Pub/Sub subscription name"
+    # TODO timeout = 5.0  # "How long the subscriber should listen for
+    # messages in seconds"
 
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
@@ -251,15 +263,18 @@ def receive_messages_with_flow_control(project_id, subscription_name):
 
     # Limit the subscriber to only have ten outstanding messages at a time.
     flow_control = pubsub_v1.types.FlowControl(max_messages=10)
-    subscriber.subscribe(
+
+    streaming_pull_future = subscriber.subscribe(
         subscription_path, callback=callback, flow_control=flow_control
     )
+    print("Listening for messages on {}..\n".format(subscription_path))
 
-    # The subscriber is non-blocking, so we must keep the main thread from
-    # exiting to allow it to process messages in the background.
-    print("Listening for messages on {}".format(subscription_path))
-    while True:
-        time.sleep(60)
+    # result() in a future will block indefinitely if `timeout` is not set,
+    # unless an exception is encountered first.
+    try:
+        streaming_pull_future.result(timeout=timeout)
+    except:  # noqa
+        streaming_pull_future.cancel()
     # [END pubsub_subscriber_flow_settings]
 
 
@@ -386,13 +401,15 @@ def synchronous_pull_with_lease_management(project_id, subscription_name):
     # [END pubsub_subscriber_sync_pull_with_lease]
 
 
-def listen_for_errors(project_id, subscription_name):
+def listen_for_errors(project_id, subscription_name, timeout=None):
     """Receives messages and catches errors from a pull subscription."""
     # [START pubsub_subscriber_error_listener]
     from google.cloud import pubsub_v1
 
     # TODO project_id        = "Your Google Cloud Project ID"
     # TODO subscription_name = "Your Pubsub subscription name"
+    # TODO timeout = 5.0  # "How long the subscriber should listen for
+    # messages in seconds"
 
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
@@ -403,16 +420,19 @@ def listen_for_errors(project_id, subscription_name):
         print("Received message: {}".format(message))
         message.ack()
 
-    future = subscriber.subscribe(subscription_path, callback=callback)
+    streaming_pull_future = subscriber.subscribe(
+        subscription_path, callback=callback
+    )
+    print("Listening for messages on {}..\n".format(subscription_path))
 
-    # Blocks the thread while messages are coming in through the stream. Any
-    # exceptions that crop up on the thread will be set on the future.
+    # result() in a future will block indefinitely if `timeout` is not set,
+    # unless an exception is encountered first.
     try:
-        # When timeout is unspecified, the result method waits indefinitely.
-        future.result(timeout=30)
+        streaming_pull_future.result(timeout=timeout)
     except Exception as e:
+        streaming_pull_future.cancel()
         print(
-            "Listening for messages on {} threw an Exception: {}.".format(
+            "Listening for messages on {} threw an exception: {}.".format(
                 subscription_name, e
             )
         )
@@ -518,14 +538,14 @@ if __name__ == "__main__":
             args.project_id, args.subscription_name, args.endpoint
         )
     elif args.command == "receive":
-        receive_messages(args.project_id, args.subscription_name)
+        receive_messages(args.project_id, args.subscription_name, args.timeout)
     elif args.command == "receive-custom-attributes":
         receive_messages_with_custom_attributes(
-            args.project_id, args.subscription_name
+            args.project_id, args.subscription_name, args.timeout
         )
     elif args.command == "receive-flow-control":
         receive_messages_with_flow_control(
-            args.project_id, args.subscription_name
+            args.project_id, args.subscription_name, args.timeout
         )
     elif args.command == "receive-synchronously":
         synchronous_pull(args.project_id, args.subscription_name)
@@ -534,4 +554,6 @@ if __name__ == "__main__":
             args.project_id, args.subscription_name
         )
     elif args.command == "listen_for_errors":
-        listen_for_errors(args.project_id, args.subscription_name)
+        listen_for_errors(
+            args.project_id, args.subscription_name, args.timeout
+        )
