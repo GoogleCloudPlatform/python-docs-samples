@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import sys
+
 # [START storage_print_file_acl_for_user]
 from google.cloud import storage
 

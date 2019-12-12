@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import sys
+
 # [START storage_enable_requester_pays]
 from google.cloud import storage
 
@@ -21,6 +23,7 @@ from google.cloud import storage
 def enable_requester_pays(bucket_name):
     """Enable a bucket's requesterpays metadata"""
     # bucket_name = "my-bucket"
+
     storage_client = storage.Client()
 
     bucket = storage_client.get_bucket(bucket_name)

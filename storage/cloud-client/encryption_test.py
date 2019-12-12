@@ -35,7 +35,7 @@ TEST_ENCRYPTION_KEY_2_DECODED = base64.b64decode(TEST_ENCRYPTION_KEY_2)
 
 
 def test_generate_encryption_key(capsys):
-    encryption.generate_encryption_key()
+    storage_generate_encryption_key.generate_encryption_key()
     out, _ = capsys.readouterr()
     encoded_key = out.split(":", 1).pop().strip()
     key = base64.b64decode(encoded_key)
@@ -46,7 +46,7 @@ def test_upload_encrypted_blob():
     with tempfile.NamedTemporaryFile() as source_file:
         source_file.write(b"test")
 
-        encryption.upload_encrypted_blob(
+        storage_upload_encrypted_file.upload_encrypted_blob(
             BUCKET, source_file.name, "test_encrypted_upload_blob", TEST_ENCRYPTION_KEY
         )
 
@@ -66,7 +66,7 @@ def test_blob():
 def test_download_blob(test_blob):
     test_blob_name, test_blob_content = test_blob
     with tempfile.NamedTemporaryFile() as dest_file:
-        encryption.download_encrypted_blob(
+        storage_download_encrypted_file.download_encrypted_blob(
             BUCKET, test_blob_name, dest_file.name, TEST_ENCRYPTION_KEY
         )
 
@@ -76,7 +76,7 @@ def test_download_blob(test_blob):
 
 def test_rotate_encryption_key(test_blob):
     test_blob_name, test_blob_content = test_blob
-    encryption.rotate_encryption_key(
+    storage_rotate_encryption_key.rotate_encryption_key(
         BUCKET, test_blob_name, TEST_ENCRYPTION_KEY, TEST_ENCRYPTION_KEY_2
     )
 

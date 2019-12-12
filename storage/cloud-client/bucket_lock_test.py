@@ -47,7 +47,7 @@ def bucket():
 
 
 def test_retention_policy_no_lock(bucket, capsys):
-    bucket_lock.set_retention_policy(bucket.name, RETENTION_POLICY)
+    storage_set_retention_policy.set_retention_policy(bucket.name, RETENTION_POLICY)
     bucket.reload()
 
     assert bucket.retention_period is RETENTION_POLICY

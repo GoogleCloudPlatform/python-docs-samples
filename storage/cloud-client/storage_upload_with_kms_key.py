@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import sys
 
 # [START storage_upload_with_kms_key]
 from google.cloud import storage

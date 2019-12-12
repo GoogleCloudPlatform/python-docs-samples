@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import sys
+
 # [START storage_set_event_based_hold]
 from google.cloud import storage
 

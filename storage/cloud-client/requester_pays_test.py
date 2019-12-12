@@ -28,19 +28,19 @@ PROJECT = os.environ["GCLOUD_PROJECT"]
 
 
 def test_enable_requester_pays(capsys):
-    requester_pays.enable_requester_pays(BUCKET)
+    storage_enable_requester_pays.enable_requester_pays(BUCKET)
     out, _ = capsys.readouterr()
     assert "Requester Pays has been enabled for {}".format(BUCKET) in out
 
 
 def test_disable_requester_pays(capsys):
-    requester_pays.disable_requester_pays(BUCKET)
+    storage_disable_requester_pays.disable_requester_pays(BUCKET)
     out, _ = capsys.readouterr()
     assert "Requester Pays has been disabled for {}".format(BUCKET) in out
 
 
 def test_get_requester_pays_status(capsys):
-    requester_pays.get_requester_pays_status(BUCKET)
+    storage_get_requester_pays_status.get_requester_pays_status(BUCKET)
     out, _ = capsys.readouterr()
     assert "Requester Pays is disabled for {}".format(BUCKET) in out
 
@@ -56,7 +56,7 @@ def test_blob():
 
 def test_download_file_requester_pays(test_blob, capsys):
     with tempfile.NamedTemporaryFile() as dest_file:
-        requester_pays.download_file_requester_pays(
+        storage_download_file_requester_pays.download_file_requester_pays(
             BUCKET, PROJECT, test_blob.name, dest_file.name
         )
 

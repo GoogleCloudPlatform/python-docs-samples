@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import sys
+
 # [START storage_list_files_with_prefix]
 from google.cloud import storage
 

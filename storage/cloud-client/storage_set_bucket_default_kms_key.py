@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import sys
+
 # [START storage_set_bucket_default_kms_key]
 from google.cloud import storage
 

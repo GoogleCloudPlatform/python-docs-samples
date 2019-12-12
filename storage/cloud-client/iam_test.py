@@ -32,14 +32,14 @@ def bucket():
 
 
 def test_view_bucket_iam_members():
-    iam.view_bucket_iam_members(BUCKET)
+    storage_view_bucket_iam_members.view_bucket_iam_members(BUCKET)
 
 
 def test_add_bucket_iam_member(bucket):
-    iam.add_bucket_iam_member(BUCKET, ROLE, MEMBER)
+    storage_add_bucket_iam_member.add_bucket_iam_member(BUCKET, ROLE, MEMBER)
     assert MEMBER in bucket.get_iam_policy()[ROLE]
 
 
 def test_remove_bucket_iam_member(bucket):
-    iam.remove_bucket_iam_member(BUCKET, ROLE, MEMBER)
+    storage_remove_bucket_iam_member.remove_bucket_iam_member(BUCKET, ROLE, MEMBER)
     assert MEMBER not in bucket.get_iam_policy()[ROLE]
