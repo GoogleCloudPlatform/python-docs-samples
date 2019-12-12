@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import datetime
 import os
 
 import pytest
@@ -23,12 +24,15 @@ import export_dataset
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 BUCKET_ID = "{}-lcm".format(PROJECT_ID)
 DATASET_ID = "TEN4058147884539838464"
+PREFIX = "TEST_EXPORT_OUTPUT_" + datetime.datetime.now().strftime(
+    "%Y%m%d%H%M%S"
+)
 
 
 @pytest.mark.slow
 def test_export_dataset(capsys):
     export_dataset.export_dataset(
-        PROJECT_ID, DATASET_ID, "gs://{}/TEST_EXPORT_OUTPUT/".format(BUCKET_ID)
+        PROJECT_ID, DATASET_ID, "gs://{}/{}/".format(BUCKET_ID, PREFIX)
     )
 
     out, _ = capsys.readouterr()
@@ -39,6 +43,6 @@ def test_export_dataset(capsys):
 
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(BUCKET_ID)
-    if len(list(bucket.list_blobs(prefix="TEST_EXPORT_OUTPUT"))) > 0:
-        for blob in bucket.list_blobs(prefix="TEST_EXPORT_OUTPUT"):
+    if len(list(bucket.list_blobs(prefix=PREFIX))) > 0:
+        for blob in bucket.list_blobs(prefix=PREFIX):
             blob.delete()
