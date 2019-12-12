@@ -169,8 +169,8 @@ def receive_messages(project_id, subscription_name, timeout=None):
 
     # TODO project_id = "Your Google Cloud Project ID"
     # TODO subscription_name = "Your Pub/Sub subscription name"
-    # TODO timeout = "How long the subscriber should listen for messages in
-    # seconds"
+    # TODO timeout = 5.0  # "How long the subscriber should listen for
+    # messages in seconds"
 
     subscriber = pubsub_v1.SubscriberClient()
     # The `subscription_path` method creates a fully qualified identifier
@@ -188,8 +188,8 @@ def receive_messages(project_id, subscription_name, timeout=None):
     )
     print("Listening for messages on {}..\n".format(subscription_path))
 
-    # result() will block indefinitely if `timeout` is not set, unless
-    # an exception is encountered first.
+    # result() in a future will block indefinitely if `timeout` is not set,
+    # unless an exception is encountered first.
     try:
         streaming_pull_future.result(timeout=timeout)
     except:  # noqa
@@ -208,8 +208,8 @@ def receive_messages_with_custom_attributes(
 
     # TODO project_id = "Your Google Cloud Project ID"
     # TODO subscription_name = "Your Pub/Sub subscription name"
-    # TODO timeout = "How long the subscriber should listen for messages in
-    # seconds"
+    # TODO timeout = 5.0  # "How long the subscriber should listen for
+    # messages in seconds"
 
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
@@ -230,8 +230,8 @@ def receive_messages_with_custom_attributes(
     )
     print("Listening for messages on {}..\n".format(subscription_path))
 
-    # result() will block indefinitely if `timeout` is not set, unless
-    # an exception is encountered first.
+    # result() in a future will block indefinitely if `timeout` is not set,
+    # unless an exception is encountered first.
     try:
         streaming_pull_future.result(timeout=timeout)
     except:  # noqa
@@ -249,8 +249,8 @@ def receive_messages_with_flow_control(
 
     # TODO project_id = "Your Google Cloud Project ID"
     # TODO subscription_name = "Your Pub/Sub subscription name"
-    # TODO timeout = "How long the subscriber should listen for messages in
-    # seconds"
+    # TODO timeout = 5.0  # "How long the subscriber should listen for
+    # messages in seconds"
 
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
@@ -269,8 +269,8 @@ def receive_messages_with_flow_control(
     )
     print("Listening for messages on {}..\n".format(subscription_path))
 
-    # result() will block indefinitely if `timeout` is not set, unless
-    # an exception is encountered first.
+    # result() in a future will block indefinitely if `timeout` is not set,
+    # unless an exception is encountered first.
     try:
         streaming_pull_future.result(timeout=timeout)
     except:  # noqa
@@ -408,8 +408,8 @@ def listen_for_errors(project_id, subscription_name, timeout=None):
 
     # TODO project_id        = "Your Google Cloud Project ID"
     # TODO subscription_name = "Your Pubsub subscription name"
-    # TODO timeout = "How long the subscriber should listen for messages in
-    # seconds"
+    # TODO timeout = 5.0  # "How long the subscriber should listen for
+    # messages in seconds"
 
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(
@@ -425,8 +425,8 @@ def listen_for_errors(project_id, subscription_name, timeout=None):
     )
     print("Listening for messages on {}..\n".format(subscription_path))
 
-    # result() will block indefinitely if `timeout` is not set, unless
-    # an exception is encountered first.
+    # result() in a future will block indefinitely if `timeout` is not set,
+    # unless an exception is encountered first.
     try:
         streaming_pull_future.result(timeout=timeout)
     except Exception as e:

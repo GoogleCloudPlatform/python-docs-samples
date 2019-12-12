@@ -25,8 +25,8 @@ import publisher
 
 UUID = uuid.uuid4().hex
 PROJECT = os.environ["GCLOUD_PROJECT"]
-TOPIC_ONE = "publisher-test-topic-one-" + UUID
-TOPIC_TWO = "publisher-test-topic-two-" + UUID
+TOPIC_ADMIN = "publisher-test-topic-admin-" + UUID
+TOPIC_PUBLISH = "publisher-test-topic-publish-" + UUID
 
 
 @pytest.fixture
@@ -35,29 +35,30 @@ def client():
 
 
 @pytest.fixture
-def topic_one(client):
-    topic_path = client.topic_path(PROJECT, TOPIC_ONE)
+def topic_admin(client):
+    topic_path = client.topic_path(PROJECT, TOPIC_ADMIN)
 
     try:
-        response = client.get_topic(topic_path)
+        topic = client.get_topic(topic_path)
     except:  # noqa
-        response = client.create_topic(topic_path)
+        topic = client.create_topic(topic_path)
 
-    yield response.name
+    yield topic.name
+    # Teardown of `topic_admin` is handled in `test_delete()`.
 
 
 @pytest.fixture
-def topic_two(client):
-    topic_path = client.topic_path(PROJECT, TOPIC_TWO)
+def topic_publish(client):
+    topic_path = client.topic_path(PROJECT, TOPIC_PUBLISH)
 
     try:
-        response = client.get_topic(topic_path)
+        topic = client.get_topic(topic_path)
     except:  # noqa
-        response = client.create_topic(topic_path)
+        topic = client.create_topic(topic_path)
 
-    yield response.name
+    yield topic.name
 
-    client.delete_topic(response.name)
+    client.delete_topic(topic.name)
 
 
 def _make_sleep_patch():
@@ -73,74 +74,74 @@ def _make_sleep_patch():
     return mock.patch("time.sleep", new=new_sleep)
 
 
-def test_list(client, topic_one, capsys):
+def test_list(client, topic_admin, capsys):
     @eventually_consistent.call
     def _():
         publisher.list_topics(PROJECT)
         out, _ = capsys.readouterr()
-        assert topic_one in out
+        assert topic_admin in out
 
 
 def test_create(client):
-    topic_path = client.topic_path(PROJECT, TOPIC_ONE)
+    topic_path = client.topic_path(PROJECT, TOPIC_ADMIN)
     try:
         client.delete_topic(topic_path)
     except Exception:
         pass
 
-    publisher.create_topic(PROJECT, TOPIC_ONE)
+    publisher.create_topic(PROJECT, TOPIC_ADMIN)
 
     @eventually_consistent.call
     def _():
         assert client.get_topic(topic_path)
 
 
-def test_delete(client, topic_one):
-    publisher.delete_topic(PROJECT, TOPIC_ONE)
+def test_delete(client, topic_admin):
+    publisher.delete_topic(PROJECT, TOPIC_ADMIN)
 
     @eventually_consistent.call
     def _():
         with pytest.raises(Exception):
-            client.get_topic(client.topic_path(PROJECT, TOPIC_ONE))
+            client.get_topic(client.topic_path(PROJECT, TOPIC_ADMIN))
 
 
-def test_publish(topic_two, capsys):
-    publisher.publish_messages(PROJECT, TOPIC_TWO)
-
-    out, _ = capsys.readouterr()
-    assert "Published" in out
-
-
-def test_publish_with_custom_attributes(topic_two, capsys):
-    publisher.publish_messages_with_custom_attributes(PROJECT, TOPIC_TWO)
+def test_publish(topic_publish, capsys):
+    publisher.publish_messages(PROJECT, TOPIC_PUBLISH)
 
     out, _ = capsys.readouterr()
     assert "Published" in out
 
 
-def test_publish_with_batch_settings(topic_two, capsys):
-    publisher.publish_messages_with_batch_settings(PROJECT, TOPIC_TWO)
+def test_publish_with_custom_attributes(topic_publish, capsys):
+    publisher.publish_messages_with_custom_attributes(PROJECT, TOPIC_PUBLISH)
 
     out, _ = capsys.readouterr()
     assert "Published" in out
 
 
-def test_publish_with_retry_settings(topic_two, capsys):
-    publisher.publish_messages_with_retry_settings(PROJECT, TOPIC_TWO)
+def test_publish_with_batch_settings(topic_publish, capsys):
+    publisher.publish_messages_with_batch_settings(PROJECT, TOPIC_PUBLISH)
 
     out, _ = capsys.readouterr()
     assert "Published" in out
 
 
-def test_publish_with_error_handler(topic_two, capsys):
-    publisher.publish_messages_with_error_handler(PROJECT, TOPIC_TWO)
+def test_publish_with_retry_settings(topic_publish, capsys):
+    publisher.publish_messages_with_retry_settings(PROJECT, TOPIC_PUBLISH)
 
     out, _ = capsys.readouterr()
     assert "Published" in out
 
 
-def test_publish_with_futures(topic_two, capsys):
-    publisher.publish_messages_with_futures(PROJECT, TOPIC_TWO)
+def test_publish_with_error_handler(topic_publish, capsys):
+    publisher.publish_messages_with_error_handler(PROJECT, TOPIC_PUBLISH)
+
+    out, _ = capsys.readouterr()
+    assert "Published" in out
+
+
+def test_publish_with_futures(topic_publish, capsys):
+    publisher.publish_messages_with_futures(PROJECT, TOPIC_PUBLISH)
 
     out, _ = capsys.readouterr()
     assert "Published" in out
