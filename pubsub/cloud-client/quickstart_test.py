@@ -15,23 +15,25 @@
 # limitations under the License.
 
 import os
+import uuid
 
 from google.cloud import pubsub_v1
 import pytest
 import quickstart
 
-PROJECT = os.environ['GCLOUD_PROJECT']
-TOPIC = 'end-to-end-test-topic'
-SUBSCRIPTION = 'end-to-end-test-topic-sub'
+UUID = uuid.uuid4().hex
+PROJECT = os.environ["GCLOUD_PROJECT"]
+TOPIC = "end-to-end-test-topic-" + UUID
+SUBSCRIPTION = "end-to-end-test-topic-sub-" + UUID
 N = 10
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def publisher_client():
     yield pubsub_v1.PublisherClient()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def topic(publisher_client):
     topic_path = publisher_client.topic_path(PROJECT, TOPIC)
 
@@ -42,16 +44,19 @@ def topic(publisher_client):
 
     yield TOPIC
 
+    publisher_client.delete_topic(topic_path)
 
-@pytest.fixture(scope='module')
+
+@pytest.fixture(scope="module")
 def subscriber_client():
     yield pubsub_v1.SubscriberClient()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def subscription(subscriber_client, topic):
     subscription_path = subscriber_client.subscription_path(
-        PROJECT, SUBSCRIPTION)
+        PROJECT, SUBSCRIPTION
+    )
 
     try:
         subscriber_client.delete_subscription(subscription_path)
@@ -59,6 +64,8 @@ def subscription(subscriber_client, topic):
         pass
 
     yield SUBSCRIPTION
+
+    subscriber_client.delete_subscription(subscription_path)
 
 
 def test_end_to_end(topic, subscription, capsys):
