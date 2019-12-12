@@ -17,7 +17,6 @@ import uuid
 
 from gcp_devrel.testing import eventually_consistent
 from google.cloud import pubsub_v1
-import mock
 import pytest
 
 import subscriber

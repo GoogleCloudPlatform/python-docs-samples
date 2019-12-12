@@ -165,8 +165,6 @@ def receive_messages(project_id, subscription_name, timeout=None):
     """Receives messages from a pull subscription."""
     # [START pubsub_subscriber_async_pull]
     # [START pubsub_quickstart_subscriber]
-    import time
-
     from google.cloud import pubsub_v1
 
     # TODO project_id = "Your Google Cloud Project ID"
@@ -206,8 +204,6 @@ def receive_messages_with_custom_attributes(
     """Receives messages from a pull subscription."""
     # [START pubsub_subscriber_sync_pull_custom_attributes]
     # [START pubsub_subscriber_async_pull_custom_attributes]
-    import time
-
     from google.cloud import pubsub_v1
 
     # TODO project_id = "Your Google Cloud Project ID"
@@ -249,8 +245,6 @@ def receive_messages_with_flow_control(
 ):
     """Receives messages from a pull subscription with flow control."""
     # [START pubsub_subscriber_flow_settings]
-    import time
-
     from google.cloud import pubsub_v1
 
     # TODO project_id = "Your Google Cloud Project ID"
