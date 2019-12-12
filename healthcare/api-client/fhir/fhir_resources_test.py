@@ -256,7 +256,7 @@ def test_get_patient_everything(test_dataset, test_fhir_store, capsys):
 
     assert "id" in out
 
-
+@pytest.mark.skip(reason="TODO(noerog): enable when changed to capabilities and endpoint updated")
 def test_get_metadata(test_dataset, test_fhir_store, capsys):
     fhir_resources.get_metadata(
         service_account_json,
