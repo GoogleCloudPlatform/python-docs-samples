@@ -96,7 +96,7 @@ def numerical_risk_analysis(
     # Tell the API where to send a notification when the job is complete.
     actions = [
         {'pub_sub': {'topic': '{}/topics/{}'.format(parent, topic_id)}},
-       #  {'save_findings': {'output_config': {'table': {'project_id': 'dlapi-test','dataset_id':'ste1','table_id': 'pytest1'}}}
+        {'save_findings': {'output_config': {'table': {'project_id': 'test-project','dataset_id':'test-dataset','table_id': 'test-table'}}}
     }]
 
     # Configure risk analysis job
