@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-# Copyright 2016 Google Inc. All Rights Reserved.
+# Copyright 2019 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,24 +14,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import sys
 
-def run_quickstart():
-    # [START storage_quickstart]
-    # Imports the Google Cloud client library
-    from google.cloud import storage
+# [START storage_enable_requester_pays]
+from google.cloud import storage
 
-    # Instantiates a client
+
+def enable_requester_pays(bucket_name):
+    """Enable a bucket's requesterpays metadata"""
+    # bucket_name = "my-bucket"
+
     storage_client = storage.Client()
 
-    # The name for the new bucket
-    bucket_name = "my-new-bucket"
+    bucket = storage_client.get_bucket(bucket_name)
+    bucket.requester_pays = True
+    bucket.patch()
 
-    # Creates the new bucket
-    bucket = storage_client.create_bucket(bucket_name)
+    print("Requester Pays has been enabled for {}".format(bucket_name))
 
-    print("Bucket {} created.".format(bucket.name))
-    # [END storage_quickstart]
 
+# [END storage_enable_requester_pays]
 
 if __name__ == "__main__":
-    run_quickstart()
+    enable_requester_pays(bucket_name=sys.argv[1])

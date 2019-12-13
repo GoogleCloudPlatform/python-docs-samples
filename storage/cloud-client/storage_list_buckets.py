@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-# Copyright 2016 Google Inc. All Rights Reserved.
+# Copyright 2019 Google Inc. All Rights Reserved.
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
+# Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
@@ -14,24 +14,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START storage_list_buckets]
+from google.cloud import storage
 
-def run_quickstart():
-    # [START storage_quickstart]
-    # Imports the Google Cloud client library
-    from google.cloud import storage
 
-    # Instantiates a client
+def list_buckets():
+    """Lists all buckets."""
+
     storage_client = storage.Client()
+    buckets = storage_client.list_buckets()
 
-    # The name for the new bucket
-    bucket_name = "my-new-bucket"
+    for bucket in buckets:
+        print(bucket.name)
 
-    # Creates the new bucket
-    bucket = storage_client.create_bucket(bucket_name)
 
-    print("Bucket {} created.".format(bucket.name))
-    # [END storage_quickstart]
+# [END storage_list_buckets]
 
 
 if __name__ == "__main__":
-    run_quickstart()
+    list_buckets()

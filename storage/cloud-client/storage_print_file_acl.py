@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Copyright 2019 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +14,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+import sys
 
-import list_gcs_objects
-
-BUCKET = os.environ["GOOGLE_CLOUD_PROJECT_S3_SDK"]
-KEY_ID = os.environ["STORAGE_HMAC_ACCESS_KEY_ID"]
-SECRET_KEY = os.environ["STORAGE_HMAC_ACCESS_SECRET_KEY"]
+# [START storage_print_file_acl]
+from google.cloud import storage
 
 
-def test_list_blobs(capsys):
-    list_gcs_objects.list_gcs_objects(
-        google_access_key_id=KEY_ID,
-        google_access_key_secret=SECRET_KEY,
-        bucket_name=BUCKET,
-    )
-    out, _ = capsys.readouterr()
-    assert "Objects:" in out
+def print_blob_acl(bucket_name, blob_name):
+    """Prints out a blob's access control list."""
+
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+
+    for entry in blob.acl:
+        print("{}: {}".format(entry["role"], entry["entity"]))
+
+
+# [END storage_print_file_acl]
+
+if __name__ == "__main__":
+    print_blob_acl(bucket_name=sys.argv[1], blob_name=sys.argv[2])
