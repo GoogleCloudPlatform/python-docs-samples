@@ -16,7 +16,7 @@
 
 import sys
 
-# [START storage_rename_file]
+# [START storage_move_file]
 from google.cloud import storage
 
 
@@ -35,7 +35,7 @@ def rename_blob(bucket_name, blob_name, new_name):
     print("Blob {} has been renamed to {}".format(blob.name, new_blob.name))
 
 
-# [END storage_rename_file]
+# [END storage_move_file]
 
 if __name__ == "__main__":
     rename_blob(

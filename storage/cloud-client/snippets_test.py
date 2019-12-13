@@ -33,7 +33,7 @@ import storage_list_files_with_prefix
 import storage_list_files
 import storage_make_public
 import storage_remove_bucket_label
-import storage_rename_file
+import storage_move_file
 import storage_upload_file
 import storage_upload_with_kms_key
 import storage_generate_signed_url_v2
