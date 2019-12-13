@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2019 Google LLC
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,18 +16,12 @@
 
 import os
 
-import delete_model
+import list_models
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 
 
-def test_delete_model(capsys):
-    # As model creation can take many hours, instead try to delete a
-    # nonexistent model and confirm that the model was not found, but other
-    # elements of the request were valid.
-    try:
-        delete_model.delete_model(PROJECT_ID, "TRL0000000000000000000")
-        out, _ = capsys.readouterr()
-        assert "The model does not exist" in out
-    except Exception as e:
-        assert "The model does not exist" in e.message
+def test_list_get_eval_model(capsys):
+    list_models.list_models(PROJECT_ID)
+    out, _ = capsys.readouterr()
+    assert "Model id: " in out

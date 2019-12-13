@@ -26,21 +26,21 @@ def get_model(project_id, model_id):
 
     client = automl.AutoMlClient()
     # Get the full path of the model.
-    model_full_id = client.model_path(project_id, 'us-central1', model_id)
+    model_full_id = client.model_path(project_id, "us-central1", model_id)
     model = client.get_model(model_full_id)
 
     # Retrieve deployment state.
     if model.deployment_state == automl.enums.Model.DeploymentState.DEPLOYED:
-        deployment_state = 'deployed'
+        deployment_state = "deployed"
     else:
-        deployment_state = 'undeployed'
+        deployment_state = "undeployed"
 
     # Display the model information.
-    print(u'Model name: {}'.format(model.name))
-    print(u'Model id: {}'.format(model.name.split('/')[-1]))
-    print(u'Model display name: {}'.format(model.display_name))
-    print(u'Model create time:')
-    print(u'\tseconds: {}'.format(model.create_time.seconds))
-    print(u'\tnanos: {}'.format(model.create_time.nanos))
-    print(u'Model deployment state: {}'.format(deployment_state))
+    print(u"Model name: {}".format(model.name))
+    print(u"Model id: {}".format(model.name.split("/")[-1]))
+    print(u"Model display name: {}".format(model.display_name))
+    print(u"Model create time:")
+    print(u"\tseconds: {}".format(model.create_time.seconds))
+    print(u"\tnanos: {}".format(model.create_time.nanos))
+    print(u"Model deployment state: {}".format(deployment_state))
     # [END automl_get_model]

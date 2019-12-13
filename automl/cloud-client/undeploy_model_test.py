@@ -19,7 +19,7 @@ import sys
 
 import pytest
 
-import deploy_model
+import undeploy_model
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 
@@ -43,15 +43,15 @@ def verify_model_state():
     model_full_id = client.model_path(PROJECT_ID, "us-central1", MODEL_ID)
 
     model = client.get_model(model_full_id)
-    if model.deployment_state == automl.enums.Model.DeploymentState.DEPLOYED:
-        # Undeploy model if it is deployed
-        response = client.undeploy_model(model_full_id)
+    if model.deployment_state == automl.enums.Model.DeploymentState.UNDEPLOYED:
+        # Deploy model if it is deployed
+        response = client.deploy_model(model_full_id)
         response.result()
 
 
 @pytest.mark.slow
 def test_deploy_undeploy_model(capsys, verify_model_state):
     verify_model_state
-    deploy_model.deploy_model(PROJECT_ID, MODEL_ID)
+    undeploy_model.undeploy_model(PROJECT_ID, MODEL_ID)
     out, _ = capsys.readouterr()
-    assert "Model deployment finished." in out
+    assert "Model undeployment finished." in out

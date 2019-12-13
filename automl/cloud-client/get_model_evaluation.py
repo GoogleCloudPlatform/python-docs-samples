@@ -33,46 +33,60 @@ def get_model_evaluation(project_id, model_id, model_evaluation_id):
     client = automl.AutoMlClient()
     # Get the full path of the model evaluation.
     model_evaluation_full_id = client.model_evaluation_path(
-        project_id, 'us-central1', model_id, model_evaluation_id
+        project_id, "us-central1", model_id, model_evaluation_id
     )
 
     # Get complete detail of the model evaluation.
     response = client.get_model_evaluation(model_evaluation_full_id)
 
-    print(u'Model evaluation name: {}'.format(response.name))
-    print(u'Model annotation spec id: {}'.format(response.annotation_spec_id))
-    print('Create Time:')
-    print(u'\tseconds: {}'.format(response.create_time.seconds))
-    print(u'\tnanos: {}'.format(response.create_time.nanos / 1e9))
-    print(u'Evaluation example count: {}'.format(
-        response.evaluated_example_count))
+    print(u"Model evaluation name: {}".format(response.name))
+    print(u"Model annotation spec id: {}".format(response.annotation_spec_id))
+    print("Create Time:")
+    print(u"\tseconds: {}".format(response.create_time.seconds))
+    print(u"\tnanos: {}".format(response.create_time.nanos / 1e9))
+    print(u"Evaluation example count: {}".format(response.evaluated_example_count))
     # [END automl_language_sentiment_analysis_get_model_evaluation]
     # [END automl_language_text_classification_get_model_evaluation]
     # [END automl_translate_get_model_evaluation]
     # [END automl_vision_classification_get_model_evaluation]
     # [END automl_vision_object_detection_get_model_evaluation]
-    print('Entity extraction model evaluation metrics: {}'.format(
-          response.text_extraction_evaluation_metrics))
+    print(
+        "Entity extraction model evaluation metrics: {}".format(
+            response.text_extraction_evaluation_metrics
+        )
+    )
     # [END automl_language_entity_extraction_get_model_evaluation]
 
     # [START automl_language_sentiment_analysis_get_model_evaluation]
-    print('Sentiment analysis model evaluation metrics: {}'.format(
-          response.text_sentiment_evaluation_metrics))
+    print(
+        "Sentiment analysis model evaluation metrics: {}".format(
+            response.text_sentiment_evaluation_metrics
+        )
+    )
     # [END automl_language_sentiment_analysis_get_model_evaluation]
 
     # [START automl_language_text_classification_get_model_evaluation]
     # [START automl_vision_classification_get_model_evaluation]
-    print('Classification model evaluation metrics: {}'.format(
-          response.classification_evaluation_metrics))
+    print(
+        "Classification model evaluation metrics: {}".format(
+            response.classification_evaluation_metrics
+        )
+    )
     # [END automl_language_text_classification_get_model_evaluation]
     # [END automl_vision_classification_get_model_evaluation]
 
     # [START automl_translate_get_model_evaluation]
-    print('Translation model evaluation metrics: {}'.format(
-          response.translation_evaluation_metrics))
+    print(
+        "Translation model evaluation metrics: {}".format(
+            response.translation_evaluation_metrics
+        )
+    )
     # [END automl_translate_get_model_evaluation]
 
     # [START automl_vision_object_detection_get_model_evaluation]
-    print('Object detection model evaluation metrics: {}'.format(
-          response.image_object_detection_evaluation_metrics))
+    print(
+        "Object detection model evaluation metrics: {}".format(
+            response.image_object_detection_evaluation_metrics
+        )
+    )
     # [END automl_vision_object_detection_get_model_evaluation]

@@ -31,46 +31,60 @@ def list_model_evaluations(project_id, model_id):
 
     client = automl.AutoMlClient()
     # Get the full path of the model.
-    model_full_id = client.model_path(project_id, 'us-central1', model_id)
+    model_full_id = client.model_path(project_id, "us-central1", model_id)
 
-    print('List of model evaluations:')
-    for evaluation in client.list_model_evaluations(model_full_id, ''):
-        print(u'Model evaluation name: {}'.format(evaluation.name))
+    print("List of model evaluations:")
+    for evaluation in client.list_model_evaluations(model_full_id, ""):
+        print(u"Model evaluation name: {}".format(evaluation.name))
+        print(u"Model annotation spec id: {}".format(evaluation.annotation_spec_id))
+        print(u"Create Time:")
+        print(u"\tseconds: {}".format(evaluation.create_time.seconds))
+        print(u"\tnanos: {}".format(evaluation.create_time.nanos / 1e9))
         print(
-            u'Model annotation spec id: {}'.format(
-                evaluation.annotation_spec_id))
-        print(u'Create Time:')
-        print(u'\tseconds: {}'.format(evaluation.create_time.seconds))
-        print(u'\tnanos: {}'.format(evaluation.create_time.nanos / 1e9))
-        print(u'Evaluation example count: {}'.format(
-            evaluation.evaluated_example_count))
+            u"Evaluation example count: {}".format(evaluation.evaluated_example_count)
+        )
         # [END automl_language_sentiment_analysis_list_model_evaluations]
         # [END automl_language_text_classification_list_model_evaluations]
         # [END automl_translate_list_model_evaluations]
         # [END automl_vision_classification_list_model_evaluations]
         # [END automl_vision_object_detection_list_model_evaluations]
-        print('Entity extraction model evaluation metrics: {}'.format(
-              evaluation.text_extraction_evaluation_metrics))
+        print(
+            "Entity extraction model evaluation metrics: {}".format(
+                evaluation.text_extraction_evaluation_metrics
+            )
+        )
         # [END automl_language_entity_extraction_list_model_evaluations]
 
         # [START automl_language_sentiment_analysis_list_model_evaluations]
-        print('Sentiment analysis model evaluation metrics: {}'.format(
-              evaluation.text_sentiment_evaluation_metrics))
+        print(
+            "Sentiment analysis model evaluation metrics: {}".format(
+                evaluation.text_sentiment_evaluation_metrics
+            )
+        )
         # [END automl_language_sentiment_analysis_list_model_evaluations]
 
         # [START automl_language_text_classification_list_model_evaluations]
         # [START automl_vision_classification_list_model_evaluations]
-        print('Classification model evaluation metrics: {}'.format(
-              evaluation.classification_evaluation_metrics))
+        print(
+            "Classification model evaluation metrics: {}".format(
+                evaluation.classification_evaluation_metrics
+            )
+        )
         # [END automl_language_text_classification_list_model_evaluations]
         # [END automl_vision_classification_list_model_evaluations]
 
         # [START automl_translate_list_model_evaluations]
-        print('Translation model evaluation metrics: {}'.format(
-              evaluation.translation_evaluation_metrics))
+        print(
+            "Translation model evaluation metrics: {}".format(
+                evaluation.translation_evaluation_metrics
+            )
+        )
         # [END automl_translate_list_model_evaluations]
 
         # [START automl_vision_object_detection_list_model_evaluations]
-        print('Object detection model evaluation metrics: {}\n\n'.format(
-              evaluation.image_object_detection_evaluation_metrics))
+        print(
+            "Object detection model evaluation metrics: {}\n\n".format(
+                evaluation.image_object_detection_evaluation_metrics
+            )
+        )
         # [END automl_vision_object_detection_list_model_evaluations]
