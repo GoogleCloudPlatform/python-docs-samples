@@ -198,7 +198,7 @@ def test_rename_blob(test_blob):
     except google.cloud.exceptions.exceptions.NotFound:
         pass
 
-    storage_rename_file.rename_blob(
+    storage_move_file.rename_blob(
         bucket.name, test_blob.name, "test_rename_blob"
     )
 
