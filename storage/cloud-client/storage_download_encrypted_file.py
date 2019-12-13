@@ -45,7 +45,7 @@ def download_encrypted_blob(
     # 32 bytes. Since it's passed in as a base64 encoded string, it needs
     # to be decoded.
     encryption_key = base64.b64decode(base64_encryption_key)
-    blob = bucket.blob(source_blob_name, bucket, encryption_key=encryption_key)
+    blob = bucket.blob(source_blob_name, encryption_key=encryption_key)
 
     blob.download_to_filename(destination_file_name)
 

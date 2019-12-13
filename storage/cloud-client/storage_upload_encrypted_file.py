@@ -42,7 +42,7 @@ def upload_encrypted_blob(
     # to be decoded.
     encryption_key = base64.b64decode(base64_encryption_key)
     blob = bucket.blob(
-        destination_blob_name, bucket, encryption_key=encryption_key
+        destination_blob_name, encryption_key=encryption_key
     )
 
     blob.upload_from_filename(source_file_name)
