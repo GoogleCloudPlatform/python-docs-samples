@@ -23,13 +23,15 @@ import deploy_model
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 
-if "major=3, minor=7" in sys.version_info:
-    MODEL_ID = "TEN5112482778553778176"
-elif "major=3, minor=6" in sys.version_info:
-    MODEL_ID = "TCN3472481026502981088"
-elif "major=3, minor=5" in sys.version_info:
-    MODEL_ID = "TST8532792392862639819"
-elif "major=2, minor=7" in sys.version_info:
+version_info = sys.version_info
+if version_info.major == 3:
+    if version_info.minor == 5:
+        MODEL_ID = "TEN5112482778553778176"
+    elif version_info.minor == 6:
+        MODEL_ID = "TCN3472481026502981088"
+    elif version_info.minor == 7:
+        MODEL_ID = "TST8532792392862639819"
+elif version_info.major == 2:
     MODEL_ID = "TEN1499896588007374848"
 else:
     MODEL_ID = "TEN7450981283112419328"
