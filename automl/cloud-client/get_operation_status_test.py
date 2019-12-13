@@ -18,11 +18,11 @@ import os
 
 import get_operation_status
 
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
+PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 OPERATION_ID = ""
 
 
 def test_get_operation_status(capsys):
     get_operation_status.get_operation_status(OPERATION_ID)
     out, _ = capsys.readouterr()
-    assert 'Operation details' in out
+    assert "Operation details" in out

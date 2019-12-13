@@ -25,14 +25,13 @@ def list_operation_status(project_id):
 
     client = automl.AutoMlClient()
     # A resource that represents Google Cloud Platform location.
-    project_location = client.location_path(project_id, 'us-central1')
+    project_location = client.location_path(project_id, "us-central1")
     # List all the operations names available in the region.
-    response = client.transport._operations_client.list_operations(
-        project_location, '')
+    response = client.transport._operations_client.list_operations(project_location, "")
 
-    print('List of operations:')
+    print("List of operations:")
     for operation in response:
-        print(u'Name: {}'.format(operation.name))
-        print('Operation details:')
+        print(u"Name: {}".format(operation.name))
+        print("Operation details:")
         print(operation)
     # [END automl_list_operation_status]

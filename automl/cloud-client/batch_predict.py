@@ -27,24 +27,26 @@ def batch_predict(project_id, model_id, input_uri, output_uri):
     prediction_client = automl.PredictionServiceClient()
 
     # Get the full path of the model.
-    model_full_id = prediction_client.model_path(
-        project_id, 'us-central1', model_id)
+    model_full_id = prediction_client.model_path(project_id, "us-central1", model_id)
 
-    gcs_source = automl.types.GcsSource(
-        input_uris=[input_uri])
+    gcs_source = automl.types.GcsSource(input_uris=[input_uri])
 
     input_config = automl.types.BatchPredictInputConfig(gcs_source=gcs_source)
-    gcs_destination = automl.types.GcsDestination(
-        output_uri_prefix=output_uri)
+    gcs_destination = automl.types.GcsDestination(output_uri_prefix=output_uri)
     output_config = automl.types.BatchPredictOutputConfig(
-        gcs_destination=gcs_destination)
+        gcs_destination=gcs_destination
+    )
     # [0.0-1.0] Only produce results higher than this value
-    params = {'score_threshold': '0.8'}
+    params = {"score_threshold": "0.8"}
 
     response = prediction_client.batch_predict(
-        model_full_id, input_config, output_config, params)
+        model_full_id, input_config, output_config, params
+    )
 
-    print('Waiting for operation to complete...')
-    print(u'Batch Prediction results saved to Cloud Storage bucket. {}'.format(
-        response.result()))
+    print("Waiting for operation to complete...")
+    print(
+        u"Batch Prediction results saved to Cloud Storage bucket. {}".format(
+            response.result()
+        )
+    )
     # [END automl_batch_predict]

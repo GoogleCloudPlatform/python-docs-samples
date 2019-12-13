@@ -20,11 +20,11 @@ import pytest
 
 import list_operation_status
 
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
+PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 
 
 @pytest.mark.slow
 def test_list_operation_status(capsys):
     list_operation_status.list_operation_status(PROJECT_ID)
     out, _ = capsys.readouterr()
-    assert 'Operation details' in out
+    assert "Operation details" in out
