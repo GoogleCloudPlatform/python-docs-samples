@@ -35,6 +35,7 @@ from six.moves.urllib.parse import quote
 # pip install google-auth
 from google.oauth2 import service_account
 
+
 def generate_signed_url(service_account_file, bucket_name, object_name,
                         subresource=None, expiration=604800, http_method='GET',
                         query_parameters=None, headers=None):
