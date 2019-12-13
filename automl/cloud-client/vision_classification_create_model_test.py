@@ -25,7 +25,7 @@ DATASET_ID = "ICN3946265060617537378"
 
 
 @pytest.mark.slow
-def test_deploy_undeploy_model_with_node_count(capsys):
+def test_vision_classification_create_model(capsys):
     vision_classification_create_model.create_model(
         PROJECT_ID, DATASET_ID, "classification_test_create_model"
     )
