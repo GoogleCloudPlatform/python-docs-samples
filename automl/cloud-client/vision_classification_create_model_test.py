@@ -21,18 +21,20 @@ import pytest
 import vision_classification_create_model
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-DATASET_ID = 'ICN3946265060617537378'
+DATASET_ID = "ICN3946265060617537378"
 
 
 @pytest.mark.slow
 def test_deploy_undeploy_model_with_node_count(capsys):
     vision_classification_create_model.create_model(
-        PROJECT_ID, DATASET_ID, 'classification_test_create_model')
+        PROJECT_ID, DATASET_ID, "classification_test_create_model"
+    )
     out, _ = capsys.readouterr()
-    assert 'Training started' in out
+    assert "Training started" in out
 
     # Cancel the operation
-    operation_id = out.split('Training operation name: ')[1].split('\n')[0]
+    operation_id = out.split("Training operation name: ")[1].split("\n")[0]
     from google.cloud import automl
+
     client = automl.AutoMlClient()
     client.transport._operations_client.cancel_operation(operation_id)
