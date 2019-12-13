@@ -24,4 +24,4 @@ notebooks/*               @alixhami
 /tables/                  @sirtorry
 
 # Tianzi Cai is the primary maintainer of the Pub/Sub samples.
-pubsub/*                  @anguillanneuf
+/pubsub/                  @anguillanneuf
