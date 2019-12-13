@@ -47,7 +47,10 @@ def test_upload_encrypted_blob():
         source_file.write(b"test")
 
         storage_upload_encrypted_file.upload_encrypted_blob(
-            BUCKET, source_file.name, "test_encrypted_upload_blob", TEST_ENCRYPTION_KEY
+            BUCKET,
+            source_file.name,
+            "test_encrypted_upload_blob",
+            TEST_ENCRYPTION_KEY,
         )
 
 
@@ -56,7 +59,9 @@ def test_blob():
     """Provides a pre-existing blob in the test bucket."""
     bucket = storage.Client().bucket(BUCKET)
     blob = Blob(
-        "encryption_test_sigil", bucket, encryption_key=TEST_ENCRYPTION_KEY_DECODED
+        "encryption_test_sigil",
+        bucket,
+        encryption_key=TEST_ENCRYPTION_KEY_DECODED,
     )
     content = "Hello, is it me you're looking for?"
     blob.upload_from_string(content)
@@ -81,7 +86,7 @@ def test_rotate_encryption_key(test_blob):
     )
 
     with tempfile.NamedTemporaryFile() as dest_file:
-        encryption.download_encrypted_blob(
+        storage_download_encrypted_file.download_encrypted_blob(
             BUCKET, test_blob_name, dest_file.name, TEST_ENCRYPTION_KEY_2
         )
 

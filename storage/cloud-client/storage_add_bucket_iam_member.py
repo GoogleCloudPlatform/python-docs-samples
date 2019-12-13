@@ -42,4 +42,6 @@ def add_bucket_iam_member(bucket_name, role, member):
 
 
 if __name__ == "__main__":
-    add_bucket_iam_member(bucket_name=sys.argv[1], role=sys.argv[2], member=sys.argv[3])
+    add_bucket_iam_member(
+        bucket_name=sys.argv[1], role=sys.argv[2], member=sys.argv[3]
+    )

@@ -41,5 +41,7 @@ def test_add_bucket_iam_member(bucket):
 
 
 def test_remove_bucket_iam_member(bucket):
-    storage_remove_bucket_iam_member.remove_bucket_iam_member(BUCKET, ROLE, MEMBER)
+    storage_remove_bucket_iam_member.remove_bucket_iam_member(
+        BUCKET, ROLE, MEMBER
+    )
     assert MEMBER not in bucket.get_iam_policy()[ROLE]

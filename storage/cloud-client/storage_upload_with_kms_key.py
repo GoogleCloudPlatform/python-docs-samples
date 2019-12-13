@@ -27,7 +27,7 @@ def upload_blob_with_kms(
     # bucket_name = "your-bucket-name"
     # source_file_name = "local/path/to/file"
     # destination_blob_name = "storage-object-name"
-    # kms_key_name = "projects/PROJECT_ID/locations/LOCATION/keyRings/KEY_RING/cryptoKey/KEY"
+    # kms_key_name = "projects/PROJ/locations/LOC/keyRings/RING/cryptoKey/KEY"
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)

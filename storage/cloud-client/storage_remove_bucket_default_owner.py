@@ -49,4 +49,6 @@ def remove_bucket_default_owner(bucket_name, user_email):
 # [END storage_remove_bucket_default_owner]
 
 if __name__ == "__main__":
-    remove_bucket_default_owner(bucket_name=sys.argv[1], user_email=sys.argv[2])
+    remove_bucket_default_owner(
+        bucket_name=sys.argv[1], user_email=sys.argv[2]
+    )

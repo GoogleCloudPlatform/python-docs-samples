@@ -96,7 +96,9 @@ def summarize(message):
             "\tSize: {object_size}\n"
             "\tMetageneration: {metageneration}\n"
         ).format(
-            content_type=content_type, object_size=size, metageneration=metageneration
+            content_type=content_type,
+            object_size=size,
+            metageneration=metageneration,
         )
     return description
     # [END parse_message]
@@ -106,7 +108,9 @@ def poll_notifications(project, subscription_name):
     """Polls a Cloud Pub/Sub subscription for new GCS events for display."""
     # [BEGIN poll_notifications]
     subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(project, subscription_name)
+    subscription_path = subscriber.subscription_path(
+        project, subscription_name
+    )
 
     def callback(message):
         print("Received message:\n{}".format(summarize(message)))
@@ -124,11 +128,14 @@ def poll_notifications(project, subscription_name):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
         "project", help="The ID of the project that owns the subscription"
     )
-    parser.add_argument("subscription", help="The ID of the Pub/Sub subscription")
+    parser.add_argument(
+        "subscription", help="The ID of the Pub/Sub subscription"
+    )
     args = parser.parse_args()
     poll_notifications(args.project, args.subscription)

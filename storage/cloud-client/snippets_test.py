@@ -34,7 +34,7 @@ import storage_list_files
 import storage_make_public
 import storage_remove_bucket_label
 import storage_rename_file
-import storage_upload
+import storage_upload_file
 import storage_upload_with_kms_key
 import storage_generate_signed_url_v2
 import storage_generate_signed_url_v4
@@ -46,7 +46,9 @@ KMS_KEY = os.environ["CLOUD_KMS_KEY"]
 
 
 def test_enable_default_kms_key():
-    storage_set_bucket_default_kms_key.enable_default_kms_key(bucket_name=BUCKET, kms_key_name=KMS_KEY)
+    storage_set_bucket_default_kms_key.enable_default_kms_key(
+        bucket_name=BUCKET, kms_key_name=KMS_KEY
+    )
     time.sleep(2)  # Let change propagate as needed
     bucket = storage.Client().get_bucket(BUCKET)
     assert bucket.default_kms_key_name.startswith(KMS_KEY)
@@ -99,7 +101,9 @@ def test_bucket_metadata(capsys):
 
 
 def test_list_blobs_with_prefix(test_blob, capsys):
-    storage_list_files_with_prefix.list_blobs_with_prefix(BUCKET, prefix="storage_snippets")
+    storage_list_files_with_prefix.list_blobs_with_prefix(
+        BUCKET, prefix="storage_snippets"
+    )
     out, _ = capsys.readouterr()
     assert test_blob.name in out
 
@@ -108,7 +112,9 @@ def test_upload_blob():
     with tempfile.NamedTemporaryFile() as source_file:
         source_file.write(b"test")
 
-        storage_upload.upload_blob(BUCKET, source_file.name, "test_upload_blob")
+        storage_upload_file.upload_blob(
+            BUCKET, source_file.name, "test_upload_blob"
+        )
 
 
 def test_upload_blob_with_kms():
@@ -124,7 +130,9 @@ def test_upload_blob_with_kms():
 
 def test_download_blob(test_blob):
     with tempfile.NamedTemporaryFile() as dest_file:
-        storage_download_file.download_blob(BUCKET, test_blob.name, dest_file.name)
+        storage_download_file.download_blob(
+            BUCKET, test_blob.name, dest_file.name
+        )
 
         assert dest_file.read()
 
@@ -147,14 +155,18 @@ def test_make_blob_public(test_blob):
 
 
 def test_generate_signed_url(test_blob, capsys):
-    url = storage_generate_signed_url_v2.generate_signed_url(BUCKET, test_blob.name)
+    url = storage_generate_signed_url_v2.generate_signed_url(
+        BUCKET, test_blob.name
+    )
 
     r = requests.get(url)
     assert r.text == "Hello, is it me you're looking for?"
 
 
 def test_generate_download_signed_url_v4(test_blob, capsys):
-    url = storage_generate_signed_url_v4.generate_download_signed_url_v4(BUCKET, test_blob.name)
+    url = storage_generate_signed_url_v4.generate_download_signed_url_v4(
+        BUCKET, test_blob.name
+    )
 
     r = requests.get(url)
     assert r.text == "Hello, is it me you're looking for?"
@@ -163,10 +175,14 @@ def test_generate_download_signed_url_v4(test_blob, capsys):
 def test_generate_upload_signed_url_v4(capsys):
     blob_name = "storage_snippets_test_upload"
     content = b"Uploaded via v4 signed url"
-    url = storage_generate_upload_signed_url_v4.generate_upload_signed_url_v4(BUCKET, blob_name)
+    url = storage_generate_upload_signed_url_v4.generate_upload_signed_url_v4(
+        BUCKET, blob_name
+    )
 
     requests.put(
-        url, data=content, headers={"content-type": "application/octet-stream"}
+        url,
+        data=content,
+        headers={"content-type": "application/octet-stream"},
     )
 
     bucket = storage.Client().bucket(BUCKET)
@@ -182,7 +198,9 @@ def test_rename_blob(test_blob):
     except google.cloud.exceptions.exceptions.NotFound:
         pass
 
-    storage_rename_file.rename_blob(bucket.name, test_blob.name, "test_rename_blob")
+    storage_rename_file.rename_blob(
+        bucket.name, test_blob.name, "test_rename_blob"
+    )
 
     assert bucket.get_blob("test_rename_blob") is not None
     assert bucket.get_blob(test_blob.name) is None
@@ -196,7 +214,9 @@ def test_copy_blob(test_blob):
     except google.cloud.exceptions.NotFound:
         pass
 
-    storage_copy_file.copy_blob(bucket.name, test_blob.name, bucket.name, "test_copy_blob")
+    storage_copy_file.copy_blob(
+        bucket.name, test_blob.name, bucket.name, "test_copy_blob"
+    )
 
     assert bucket.get_blob("test_copy_blob") is not None
     assert bucket.get_blob(test_blob.name) is not None

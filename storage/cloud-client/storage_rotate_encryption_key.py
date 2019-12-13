@@ -33,8 +33,12 @@ def rotate_encryption_key(
 
     # Both source_blob and destination_blob refer to the same storage object,
     # but destination_blob has the new encryption key.
-    source_blob = bucket.blob(blob_name, bucket, encryption_key=current_encryption_key)
-    destination_blob = bucket.blob(blob_name, bucket, encryption_key=new_encryption_key)
+    source_blob = bucket.blob(
+        blob_name, bucket, encryption_key=current_encryption_key
+    )
+    destination_blob = bucket.blob(
+        blob_name, bucket, encryption_key=new_encryption_key
+    )
 
     token = None
 

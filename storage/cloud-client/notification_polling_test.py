@@ -29,7 +29,9 @@ def test_parse_json_message():
         "objectId": "myobject",
         "objectGeneration": 1234567,
         "resource": "projects/_/buckets/mybucket/objects/myobject#1234567",
-        "notificationConfig": ("projects/_/buckets/mybucket/" "notificationConfigs/5"),
+        "notificationConfig": (
+            "projects/_/buckets/mybucket/" "notificationConfigs/5"
+        ),
         "payloadFormat": "JSON_API_V1",
     }
     data = (

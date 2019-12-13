@@ -34,7 +34,8 @@ BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 # Typically we'd use a @example.com address, but GCS requires a real Google
 # account.
 TEST_EMAIL = (
-    "google-auth-system-tests" "@python-docs-samples-tests.iam.gserviceaccount.com"
+    "google-auth-system-tests"
+    "@python-docs-samples-tests.iam.gserviceaccount.com"
 )
 
 
@@ -77,7 +78,9 @@ def test_print_bucket_acl_for_user(test_bucket, capsys):
     test_bucket.acl.user(TEST_EMAIL).grant_owner()
     test_bucket.acl.save()
 
-    storage_print_bucket_acl_for_user.print_bucket_acl_for_user(BUCKET, TEST_EMAIL)
+    storage_print_bucket_acl_for_user.print_bucket_acl_for_user(
+        BUCKET, TEST_EMAIL
+    )
 
     out, _ = capsys.readouterr()
     assert "OWNER" in out
@@ -101,7 +104,9 @@ def test_remove_bucket_owner(test_bucket):
 
 
 def test_add_bucket_default_owner(test_bucket):
-    storage_add_bucket_default_owner.add_bucket_default_owner(BUCKET, TEST_EMAIL)
+    storage_add_bucket_default_owner.add_bucket_default_owner(
+        BUCKET, TEST_EMAIL
+    )
 
     test_bucket.default_object_acl.reload()
     roles = test_bucket.default_object_acl.user(TEST_EMAIL).get_roles()
@@ -112,7 +117,9 @@ def test_remove_bucket_default_owner(test_bucket):
     test_bucket.acl.user(TEST_EMAIL).grant_owner()
     test_bucket.acl.save()
 
-    storage_remove_bucket_default_owner.remove_bucket_default_owner(BUCKET, TEST_EMAIL)
+    storage_remove_bucket_default_owner.remove_bucket_default_owner(
+        BUCKET, TEST_EMAIL
+    )
 
     test_bucket.default_object_acl.reload()
     roles = test_bucket.default_object_acl.user(TEST_EMAIL).get_roles()
@@ -148,7 +155,9 @@ def test_remove_blob_owner(test_blob):
     test_blob.acl.user(TEST_EMAIL).grant_owner()
     test_blob.acl.save()
 
-    storage_remove_file_owner.remove_blob_owner(BUCKET, test_blob.name, TEST_EMAIL)
+    storage_remove_file_owner.remove_blob_owner(
+        BUCKET, test_blob.name, TEST_EMAIL
+    )
 
     test_blob.acl.reload()
     assert "OWNER" not in test_blob.acl.user(TEST_EMAIL).get_roles()

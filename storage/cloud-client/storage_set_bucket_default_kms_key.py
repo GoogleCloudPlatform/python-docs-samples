@@ -23,7 +23,7 @@ from google.cloud import storage
 def enable_default_kms_key(bucket_name, kms_key_name):
     """Sets a bucket's default KMS key."""
     # bucket_name = "your-bucket-name"
-    # kms_key_name = "projects/PROJECT_ID/locations/LOCATION/keyRings/KEY_RING/cryptoKey/KEY"
+    # kms_key_name = "projects/PROJ/locations/LOC/keyRings/RING/cryptoKey/KEY"
 
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket_name)

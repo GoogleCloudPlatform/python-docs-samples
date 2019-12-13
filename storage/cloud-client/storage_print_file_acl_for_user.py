@@ -41,5 +41,5 @@ def print_blob_acl_for_user(bucket_name, blob_name, user_email):
 
 if __name__ == "__main__":
     print_blob_acl_for_user(
-        bucket_name=sys.argv[1], blob_name=sys.argv[2], user_email=sys.argv[3]
+        bucket_name=sys.argv[1], blob_name=sys.argv[2], user_email=sys.argv[3],
     )

@@ -34,7 +34,9 @@ def get_retention_policy(bucket_name):
         print("Retention Policy is locked")
 
     if bucket.retention_policy_effective_time:
-        print("Effective Time: {}".format(bucket.retention_policy_effective_time))
+        print(
+            "Effective Time: {}".format(bucket.retention_policy_effective_time)
+        )
 
 
 # [END storage_get_retention_policy]

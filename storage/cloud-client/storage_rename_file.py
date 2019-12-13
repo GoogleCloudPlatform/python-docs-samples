@@ -38,4 +38,6 @@ def rename_blob(bucket_name, blob_name, new_name):
 # [END storage_rename_file]
 
 if __name__ == "__main__":
-    rename_blob(bucket_name=sys.argv[1], blob_name=sys.argv[2], new_name=sys.argv[3])
+    rename_blob(
+        bucket_name=sys.argv[1], blob_name=sys.argv[2], new_name=sys.argv[3]
+    )

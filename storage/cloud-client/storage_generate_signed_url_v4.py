@@ -53,4 +53,6 @@ def generate_download_signed_url_v4(bucket_name, blob_name):
 # [END storage_generate_signed_url_v4]
 
 if __name__ == "__main__":
-    generate_download_signed_url_v4(bucket_name=sys.argv[1], blob_name=sys.argv[2])
+    generate_download_signed_url_v4(
+        bucket_name=sys.argv[1], blob_name=sys.argv[2]
+    )

@@ -65,7 +65,9 @@ def test_list_keys(capsys, new_hmac_key):
 
 
 def test_create_key(capsys):
-    hmac_key = storage_create_hmac_key.create_key(PROJECT_ID, SERVICE_ACCOUNT_EMAIL)
+    hmac_key = storage_create_hmac_key.create_key(
+        PROJECT_ID, SERVICE_ACCOUNT_EMAIL
+    )
     hmac_key.state = "INACTIVE"
     hmac_key.update()
     hmac_key.delete()
@@ -82,13 +84,17 @@ def test_get_key(capsys, new_hmac_key):
 def test_activate_key(capsys, new_hmac_key):
     new_hmac_key.state = "INACTIVE"
     new_hmac_key.update()
-    hmac_key = storage_activate_hmac_key.activate_key(new_hmac_key.access_id, PROJECT_ID)
+    hmac_key = storage_activate_hmac_key.activate_key(
+        new_hmac_key.access_id, PROJECT_ID
+    )
     assert "State: ACTIVE" in capsys.readouterr().out
     assert hmac_key.state == "ACTIVE"
 
 
 def test_deactivate_key(capsys, new_hmac_key):
-    hmac_key = storage_deactivate_hmac_key.deactivate_key(new_hmac_key.access_id, PROJECT_ID)
+    hmac_key = storage_deactivate_hmac_key.deactivate_key(
+        new_hmac_key.access_id, PROJECT_ID
+    )
     assert "State: INACTIVE" in capsys.readouterr().out
     assert hmac_key.state == "INACTIVE"
 

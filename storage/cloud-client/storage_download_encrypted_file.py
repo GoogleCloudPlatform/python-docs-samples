@@ -18,10 +18,14 @@ import sys
 
 # [START storage_download_encrypted_file]
 from google.cloud import storage
+import base64
 
 
 def download_encrypted_blob(
-    bucket_name, source_blob_name, destination_file_name, base64_encryption_key
+    bucket_name,
+    source_blob_name,
+    destination_file_name,
+    base64_encryption_key,
 ):
     """Downloads a previously-encrypted blob from Google Cloud Storage.
 
@@ -41,11 +45,15 @@ def download_encrypted_blob(
     # 32 bytes. Since it's passed in as a base64 encoded string, it needs
     # to be decoded.
     encryption_key = base64.b64decode(base64_encryption_key)
-    blob = Blob(source_blob_name, bucket, encryption_key=encryption_key)
+    blob = bucket.blob(source_blob_name, bucket, encryption_key=encryption_key)
 
     blob.download_to_filename(destination_file_name)
 
-    print("Blob {} downloaded to {}.".format(source_blob_name, destination_file_name))
+    print(
+        "Blob {} downloaded to {}.".format(
+            source_blob_name, destination_file_name
+        )
+    )
 
 
 # [END storage_download_encrypted_file]

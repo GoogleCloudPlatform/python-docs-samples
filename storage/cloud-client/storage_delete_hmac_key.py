@@ -30,15 +30,18 @@ def delete_key(access_id, project_id):
 
     storage_client = storage.Client(project=project_id)
 
-    hmac_key = storage_client.get_hmac_key_metadata(access_id, project_id=project_id)
+    hmac_key = storage_client.get_hmac_key_metadata(
+        access_id, project_id=project_id
+    )
     hmac_key.delete()
 
     print(
-        "The key is deleted, though it may still appear in list_hmac_keys()" " results."
+        "The key is deleted, though it may still appear in list_hmac_keys()"
+        " results."
     )
 
 
 # [END storage_delete_hmac_key]
 
 if __name__ == "__main__":
-    deactivate_key(access_id=sys.argv[1], project_id=sys.argv[2])
+    delete_key(access_id=sys.argv[1], project_id=sys.argv[2])

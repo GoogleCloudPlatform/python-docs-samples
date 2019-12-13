@@ -29,14 +29,22 @@ def get_uniform_bucket_level_access(bucket_name):
     iam_configuration = bucket.iam_configuration
 
     if iam_configuration.uniform_bucket_level_access_enabled:
-        print("Uniform bucket-level access is enabled for {}.".format(bucket.name))
+        print(
+            "Uniform bucket-level access is enabled for {}.".format(
+                bucket.name
+            )
+        )
         print(
             "Bucket will be locked on {}.".format(
                 iam_configuration.uniform_bucket_level_locked_time
             )
         )
     else:
-        print("Uniform bucket-level access is disabled for {}.".format(bucket.name))
+        print(
+            "Uniform bucket-level access is disabled for {}.".format(
+                bucket.name
+            )
+        )
 
 
 # [END storage_get_uniform_bucket_level_access]

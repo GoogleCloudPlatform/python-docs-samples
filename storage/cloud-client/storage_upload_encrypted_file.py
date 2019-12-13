@@ -18,10 +18,14 @@ import sys
 
 # [START storage_upload_encrypted_file]
 from google.cloud import storage
+import base64
 
 
 def upload_encrypted_blob(
-    bucket_name, source_file_name, destination_blob_name, base64_encryption_key
+    bucket_name,
+    source_file_name,
+    destination_blob_name,
+    base64_encryption_key,
 ):
     """Uploads a file to a Google Cloud Storage bucket using a custom
     encryption key.
@@ -37,11 +41,17 @@ def upload_encrypted_blob(
     # 32 bytes. Since it's passed in as a base64 encoded string, it needs
     # to be decoded.
     encryption_key = base64.b64decode(base64_encryption_key)
-    blob = Blob(destination_blob_name, bucket, encryption_key=encryption_key)
+    blob = bucket.blob(
+        destination_blob_name, bucket, encryption_key=encryption_key
+    )
 
     blob.upload_from_filename(source_file_name)
 
-    print("File {} uploaded to {}.".format(source_file_name, destination_blob_name))
+    print(
+        "File {} uploaded to {}.".format(
+            source_file_name, destination_blob_name
+        )
+    )
 
 
 # [END storage_upload_encrypted_file]

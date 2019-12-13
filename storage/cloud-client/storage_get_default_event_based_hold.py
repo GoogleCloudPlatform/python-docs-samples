@@ -31,7 +31,11 @@ def get_default_event_based_hold(bucket_name):
     if bucket.default_event_based_hold:
         print("Default event-based hold is enabled for {}".format(bucket_name))
     else:
-        print("Default event-based hold is not enabled for {}".format(bucket_name))
+        print(
+            "Default event-based hold is not enabled for {}".format(
+                bucket_name
+            )
+        )
 
 
 # [END storage_get_default_event_based_hold]

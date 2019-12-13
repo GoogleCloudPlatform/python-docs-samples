@@ -29,7 +29,9 @@ def activate_key(access_id, project_id):
 
     storage_client = storage.Client(project=project_id)
 
-    hmac_key = storage_client.get_hmac_key_metadata(access_id, project_id=project_id)
+    hmac_key = storage_client.get_hmac_key_metadata(
+        access_id, project_id=project_id
+    )
     hmac_key.state = "ACTIVE"
     hmac_key.update()
 

@@ -20,7 +20,9 @@ import sys
 from google.cloud import storage
 
 
-def copy_blob(bucket_name, blob_name, destination_bucket_name, destination_blob_name):
+def copy_blob(
+    bucket_name, blob_name, destination_bucket_name, destination_blob_name
+):
     """Copies a blob from one bucket to another with a new name."""
     # bucket_name = "your-bucket-name"
     # blob_name = "your-object-name"

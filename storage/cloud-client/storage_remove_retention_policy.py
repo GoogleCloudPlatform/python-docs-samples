@@ -29,7 +29,9 @@ def remove_retention_policy(bucket_name):
     bucket.reload()
 
     if bucket.retention_policy_locked:
-        print("Unable to remove retention period as retention policy is locked.")
+        print(
+            "Unable to remove retention period as retention policy is locked."
+        )
         return
 
     bucket.retention_period = None

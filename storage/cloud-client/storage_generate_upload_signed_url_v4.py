@@ -58,4 +58,6 @@ def generate_upload_signed_url_v4(bucket_name, blob_name):
 
 
 if __name__ == "__main__":
-    generate_upload_signed_url_v4(bucket_name=sys.argv[1], blob_name=sys.argv[2])
+    generate_upload_signed_url_v4(
+        bucket_name=sys.argv[1], blob_name=sys.argv[2]
+    )
