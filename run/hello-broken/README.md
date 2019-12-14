@@ -1,8 +1,8 @@
 # Cloud Run Broken Sample
 
-This sample presents broken code in need of troubleshooting. An alternate resource at /improved shows a more stable implementation with more informative errors and default values.
+This sample presents broken code in need of troubleshooting. View [improved]('main.py#L43') for a more stable implementation. 
 
-Use it with the [Local Container Troubleshooting tutorial](http://cloud.google.com/run/docs/tutorials/local-troubleshooting).
+Troubleshoot this code by following the [Local Container Troubleshooting Tutorial](http://cloud.google.com/run/docs/tutorials/local-troubleshooting).
 
 [![Run in Google Cloud][run_img]][run_link]
 
@@ -39,7 +39,7 @@ export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
 gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/hello-broken
 
 # Deploy to Cloud Run
-gcloud beta run deploy hello-broken \
+gcloud run deploy hello-broken \
 --image gcr.io/${GOOGLE_CLOUD_PROJECT}/hello-broken 
 ```
 
