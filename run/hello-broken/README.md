@@ -40,8 +40,7 @@ gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/hello-broken
 
 # Deploy to Cloud Run
 gcloud beta run deploy hello-broken \
---image gcr.io/${GOOGLE_CLOUD_PROJECT}/hello-broken \
---set-env-vars GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT}
+--image gcr.io/${GOOGLE_CLOUD_PROJECT}/hello-broken 
 ```
 
 
