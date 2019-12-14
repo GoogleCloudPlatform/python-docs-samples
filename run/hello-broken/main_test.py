@@ -12,9 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# NOTE:
-# These unit tests mock logging.
-
 import os
 import pytest
 import main
