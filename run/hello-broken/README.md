@@ -1,6 +1,6 @@
 # Cloud Run Broken Sample
 
-This sample presents broken code in need of troubleshooting. View [improved]('main.py#L43') for a more stable implementation. 
+This sample presents broken code in need of troubleshooting. View [improved](main.py#L43) for a more stable implementation. 
 
 Troubleshoot this code by following the [Local Container Troubleshooting Tutorial](http://cloud.google.com/run/docs/tutorials/local-troubleshooting).
 
