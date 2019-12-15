@@ -38,17 +38,14 @@ db = sqlalchemy.create_engine(
     # Equivalent URL:
     # mysql+pymysql://<db_user>:<db_pass>@/<db_name>?unix_socket=/cloudsql/<cloud_sql_instance_name>
     sqlalchemy.engine.url.URL(
-        drivername='mysql+pymysql',
+        drivername="mysql+pymysql",
         username=db_user,
         password=db_pass,
         database=db_name,
-        query={
-            'unix_socket': '/cloudsql/{}'.format(cloud_sql_connection_name)
-        }
+        query={"unix_socket": "/cloudsql/{}".format(cloud_sql_connection_name)},
     ),
     # ... Specify additional properties here.
     # [START_EXCLUDE]
-
     # [START cloud_sql_mysql_sqlalchemy_limit]
     # Pool size is the maximum number of permanent connections to keep.
     pool_size=5,
@@ -57,26 +54,22 @@ db = sqlalchemy.create_engine(
     # The total number of concurrent connections for your application will be
     # a total of pool_size and max_overflow.
     # [END cloud_sql_mysql_sqlalchemy_limit]
-
     # [START cloud_sql_mysql_sqlalchemy_backoff]
     # SQLAlchemy automatically uses delays between failed connection attempts,
     # but provides no arguments for configuration.
     # [END cloud_sql_mysql_sqlalchemy_backoff]
-
     # [START cloud_sql_mysql_sqlalchemy_timeout]
     # 'pool_timeout' is the maximum number of seconds to wait when retrieving a
     # new connection from the pool. After the specified amount of time, an
     # exception will be thrown.
     pool_timeout=30,  # 30 seconds
     # [END cloud_sql_mysql_sqlalchemy_timeout]
-
     # [START cloud_sql_mysql_sqlalchemy_lifetime]
     # 'pool_recycle' is the maximum number of seconds a connection can persist.
     # Connections that live longer than the specified amount of time will be
     # reestablished
     pool_recycle=1800,  # 30 minutes
     # [END cloud_sql_mysql_sqlalchemy_lifetime]
-
     # [END_EXCLUDE]
 )
 # [END cloud_sql_mysql_sqlalchemy_create]
@@ -93,24 +86,21 @@ def create_tables():
         )
 
 
-@app.route('/', methods=['GET'])
+@app.route("/", methods=["GET"])
 def index():
     votes = []
     with db.connect() as conn:
         # Execute the query and fetch all results
         recent_votes = conn.execute(
-            "SELECT candidate, time_cast FROM votes "
-            "ORDER BY time_cast DESC LIMIT 5"
+            "SELECT candidate, time_cast FROM votes " "ORDER BY time_cast DESC LIMIT 5"
         ).fetchall()
         # Convert the results into a list of dicts representing votes
         for row in recent_votes:
-            votes.append({
-                'candidate': row[0],
-                'time_cast': row[1]
-            })
+            votes.append({"candidate": row[0], "time_cast": row[1]})
 
         stmt = sqlalchemy.text(
-            "SELECT COUNT(vote_id) FROM votes WHERE candidate=:candidate")
+            "SELECT COUNT(vote_id) FROM votes WHERE candidate=:candidate"
+        )
         # Count number of votes for tabs
         tab_result = conn.execute(stmt, candidate="TABS").fetchone()
         tab_count = tab_result[0]
@@ -119,31 +109,24 @@ def index():
         space_count = space_result[0]
 
     return render_template(
-        'index.html',
-        recent_votes=votes,
-        tab_count=tab_count,
-        space_count=space_count
+        "index.html", recent_votes=votes, tab_count=tab_count, space_count=space_count
     )
 
 
-@app.route('/', methods=['POST'])
+@app.route("/", methods=["POST"])
 def save_vote():
     # Get the team and time the vote was cast.
-    team = request.form['team']
+    team = request.form["team"]
     time_cast = datetime.datetime.utcnow()
     # Verify that the team is one of the allowed options
     if team != "TABS" and team != "SPACES":
         logger.warning(team)
-        return Response(
-            response="Invalid team specified.",
-            status=400
-        )
+        return Response(response="Invalid team specified.", status=400)
 
     # [START cloud_sql_mysql_sqlalchemy_connection]
     # Preparing a statement before hand can help protect against injections.
     stmt = sqlalchemy.text(
-        "INSERT INTO votes (time_cast, candidate)"
-        " VALUES (:time_cast, :candidate)"
+        "INSERT INTO votes (time_cast, candidate)" " VALUES (:time_cast, :candidate)"
     )
     try:
         # Using a with statement ensures that the connection is always released
@@ -158,17 +141,16 @@ def save_vote():
         return Response(
             status=500,
             response="Unable to successfully cast vote! Please check the "
-                     "application logs for more details."
+            "application logs for more details.",
         )
         # [END_EXCLUDE]
     # [END cloud_sql_mysql_sqlalchemy_connection]
 
     return Response(
         status=200,
-        response="Vote successfully cast for '{}' at time {}!".format(
-            team, time_cast)
+        response="Vote successfully cast for '{}' at time {}!".format(team, time_cast),
     )
 
 
-if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=8080, debug=True)
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=8080, debug=True)

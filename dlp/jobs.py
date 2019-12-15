@@ -58,32 +58,29 @@ def list_dlp_jobs(project, filter_string=None, job_type=None):
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
 
     # Job type dictionary
     job_type_to_int = {
-        'DLP_JOB_TYPE_UNSPECIFIED':
-            google.cloud.dlp.enums.DlpJobType.DLP_JOB_TYPE_UNSPECIFIED,
-        'INSPECT_JOB': google.cloud.dlp.enums.DlpJobType.INSPECT_JOB,
-        'RISK_ANALYSIS_JOB':
-            google.cloud.dlp.enums.DlpJobType.RISK_ANALYSIS_JOB
+        "DLP_JOB_TYPE_UNSPECIFIED": google.cloud.dlp.enums.DlpJobType.DLP_JOB_TYPE_UNSPECIFIED,
+        "INSPECT_JOB": google.cloud.dlp.enums.DlpJobType.INSPECT_JOB,
+        "RISK_ANALYSIS_JOB": google.cloud.dlp.enums.DlpJobType.RISK_ANALYSIS_JOB,
     }
     # If job type is specified, convert job type to number through enums.
     if job_type:
         job_type = job_type_to_int[job_type]
 
     # Call the API to get a list of jobs.
-    response = dlp.list_dlp_jobs(
-        parent,
-        filter_=filter_string,
-        type_=job_type)
+    response = dlp.list_dlp_jobs(parent, filter_=filter_string, type_=job_type)
 
     # Iterate over results.
     for job in response:
-        print('Job: %s; status: %s' % (job.name, job.JobState.Name(job.state)))
+        print("Job: %s; status: %s" % (job.name, job.JobState.Name(job.state)))
+
+
 # [END dlp_list_jobs]
 
 
@@ -102,7 +99,7 @@ def delete_dlp_job(project, job_name):
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id and job name into a full resource id.
     name = dlp.dlp_job_path(project, job_name)
@@ -110,49 +107,52 @@ def delete_dlp_job(project, job_name):
     # Call the API to delete job.
     dlp.delete_dlp_job(name)
 
-    print('Successfully deleted %s' % job_name)
+    print("Successfully deleted %s" % job_name)
+
+
 # [END dlp_delete_job]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(
-        dest='content', help='Select how to submit content to the API.')
+        dest="content", help="Select how to submit content to the API."
+    )
     subparsers.required = True
 
     list_parser = subparsers.add_parser(
-        'list',
-        help='List Data Loss Prevention API jobs corresponding to a given '
-        'filter.')
+        "list",
+        help="List Data Loss Prevention API jobs corresponding to a given " "filter.",
+    )
     list_parser.add_argument(
-        'project',
-        help='The project id to use as a parent resource.')
+        "project", help="The project id to use as a parent resource."
+    )
     list_parser.add_argument(
-        '-f', '--filter',
-        help='Filter expressions are made up of one or more restrictions.')
+        "-f",
+        "--filter",
+        help="Filter expressions are made up of one or more restrictions.",
+    )
     list_parser.add_argument(
-        '-t', '--type',
-        choices=['DLP_JOB_TYPE_UNSPECIFIED', 'INSPECT_JOB',
-                 'RISK_ANALYSIS_JOB'],
-        help='The type of job. API defaults to "INSPECT"')
+        "-t",
+        "--type",
+        choices=["DLP_JOB_TYPE_UNSPECIFIED", "INSPECT_JOB", "RISK_ANALYSIS_JOB"],
+        help='The type of job. API defaults to "INSPECT"',
+    )
 
     delete_parser = subparsers.add_parser(
-        'delete',
-        help='Delete results of a Data Loss Prevention API job.')
+        "delete", help="Delete results of a Data Loss Prevention API job."
+    )
     delete_parser.add_argument(
-        'project',
-        help='The project id to use as a parent resource.')
+        "project", help="The project id to use as a parent resource."
+    )
     delete_parser.add_argument(
-        'job_name',
-        help='The name of the DlpJob resource to be deleted. '
-             'Example: X-#####')
+        "job_name",
+        help="The name of the DlpJob resource to be deleted. " "Example: X-#####",
+    )
 
     args = parser.parse_args()
 
-    if args.content == 'list':
-        list_dlp_jobs(
-            args.project,
-            filter_string=args.filter,
-            job_type=args.type)
-    elif args.content == 'delete':
+    if args.content == "list":
+        list_dlp_jobs(args.project, filter_string=args.filter, job_type=args.type)
+    elif args.content == "delete":
         delete_dlp_job(args.project, args.job_name)
