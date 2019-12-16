@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START run_broken_service]
 from flask import Flask
 import json
 import os
@@ -19,7 +20,7 @@ import sys
 
 app = Flask(__name__)
 
-# [START run_broken_service]
+
 @app.route("/", methods=["GET"])
 def index():
     print("hello: received request.")

@@ -24,10 +24,10 @@ docker run --rm -p 9090:8080 hello-broken:python
 ## Test
 
 ```
-pytest
+nox -s "py36(sample='./run/hello-broken')"
 ```
 
-_Note: you may need to install `pytest` using `pip install pytest`._
+_Note: you may need to install `nox` using `pip install nox`._
 
 ## Deploy
 
