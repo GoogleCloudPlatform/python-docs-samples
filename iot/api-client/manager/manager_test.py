@@ -19,7 +19,7 @@ import time
 
 # Add command receiver for bootstrapping device registry / device for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'mqtt_example'))  # noqa
-from gcp_devrel.testing.flaky import flaky
+from flaky import flaky
 from google.cloud import pubsub
 import pytest
 

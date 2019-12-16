@@ -20,7 +20,7 @@ from google.cloud import pubsub
 
 # Add manager for bootstrapping device registry / device for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
-from gcp_devrel.testing.flaky import flaky
+from flaky import flaky
 import manager
 
 import pytest
