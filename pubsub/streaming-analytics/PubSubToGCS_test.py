@@ -12,89 +12,55 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import multiprocessing as mp
+import mock
 import os
-import pytest
-import subprocess as sp
-import tempfile
-import time
 import uuid
 
 import apache_beam as beam
-from google.cloud import pubsub_v1
+from apache_beam.testing.test_pipeline import TestPipeline
+from apache_beam.testing.test_stream import TestStream
+from apache_beam.testing.test_utils import TempDir
+from apache_beam.transforms.window import TimestampedValue
+
+import PubSubToGCS
+
+PROJECT = os.environ["GCLOUD_PROJECT"]
+BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
+UUID = uuid.uuid1().hex
 
 
-PROJECT = os.environ['GCLOUD_PROJECT']
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-TOPIC = 'test-topic'
-UUID = uuid.uuid4().hex
-
-
-@pytest.fixture
-def publisher_client():
-    yield pubsub_v1.PublisherClient()
-
-
-@pytest.fixture
-def topic_path(publisher_client):
-    topic_path = publisher_client.topic_path(PROJECT, TOPIC)
-
-    try:
-        publisher_client.delete_topic(topic_path)
-    except Exception:
-        pass
-
-    response = publisher_client.create_topic(topic_path)
-    yield response.name
-
-
-def _infinite_publish_job(publisher_client, topic_path):
-    while True:
-        future = publisher_client.publish(
-            topic_path, data='Hello World!'.encode('utf-8'))
-        future.result()
-        time.sleep(10)
-
-
-def test_run(publisher_client, topic_path):
-    """This is an integration test that runs `PubSubToGCS.py` in its entirety.
-    It checks for output files on GCS.
-    """
-
-    # Use one process to publish messages to a topic.
-    publish_process = mp.Process(
-        target=lambda: _infinite_publish_job(publisher_client, topic_path))
-
-    # Use another process to run the streaming pipeline that should write one
-    # file to GCS every minute (according to the default window size).
-    pipeline_process = mp.Process(
-        target=lambda: sp.call([
-            'python', 'PubSubToGCS.py',
-            '--project', PROJECT,
-            '--runner', 'DirectRunner',
-            '--temp_location', tempfile.mkdtemp(),
-            '--input_topic', topic_path,
-            '--output_path', 'gs://{}/pubsub/{}/output'.format(BUCKET, UUID),
-        ])
+@mock.patch("apache_beam.Pipeline", TestPipeline)
+@mock.patch(
+    "apache_beam.io.ReadFromPubSub",
+    lambda topic: (
+        TestStream()
+        .advance_watermark_to(0)
+        .advance_processing_time(30)
+        .add_elements([TimestampedValue(b"a", 1575937195)])
+        .advance_processing_time(30)
+        .add_elements([TimestampedValue(b"b", 1575937225)])
+        .advance_processing_time(30)
+        .add_elements([TimestampedValue(b"c", 1575937255)])
+        .advance_watermark_to_infinity()
+    ),
+)
+def test_pubsub_to_gcs():
+    PubSubToGCS.run(
+        input_topic="unused",  # mocked by TestStream
+        output_path="gs://{}/pubsub/{}/output".format(BUCKET, UUID),
+        window_size=1,  # 1 minute
+        pipeline_args=[
+            "--project",
+            PROJECT,
+            "--temp_location",
+            TempDir().get_path(),
+        ],
     )
-
-    publish_process.start()
-    pipeline_process.start()
-
-    # Times out the streaming pipeline after 90 seconds.
-    pipeline_process.join(timeout=90)
-    # Immediately kills the publish process after the pipeline shuts down.
-    publish_process.join(timeout=0)
-
-    pipeline_process.terminate()
-    publish_process.terminate()
 
     # Check for output files on GCS.
     gcs_client = beam.io.gcp.gcsio.GcsIO()
-    # This returns a dictionary.
-    files = gcs_client.list_prefix('gs://{}/pubsub/{}'.format(BUCKET, UUID))
+    files = gcs_client.list_prefix("gs://{}/pubsub/{}".format(BUCKET, UUID))
     assert len(files) > 0
 
-    # Clean up. Delete topic. Delete files.
-    publisher_client.delete_topic(topic_path)
+    # Clean up.
     gcs_client.delete_batch(list(files))
