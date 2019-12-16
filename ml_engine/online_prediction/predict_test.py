@@ -15,7 +15,7 @@
 import json
 import socket
 
-from gcp_devrel.testing.flaky import flaky
+from flaky import flaky
 import pytest
 
 import predict
