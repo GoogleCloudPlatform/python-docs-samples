@@ -22,10 +22,15 @@ import time
 
 
 # [START dlp_create_template]
-def create_inspect_template(project, info_types,
-                            template_id=None, display_name=None,
-                            min_likelihood=None, max_findings=None,
-                            include_quote=None):
+def create_inspect_template(
+    project,
+    info_types,
+    template_id=None,
+    display_name=None,
+    min_likelihood=None,
+    max_findings=None,
+    include_quote=None,
+):
     """Creates a Data Loss Prevention API inspect template.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -48,34 +53,33 @@ def create_inspect_template(project, info_types,
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted).
-    info_types = [{'name': info_type} for info_type in info_types]
+    info_types = [{"name": info_type} for info_type in info_types]
 
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
     inspect_config = {
-        'info_types': info_types,
-        'min_likelihood': min_likelihood,
-        'include_quote': include_quote,
-        'limits': {'max_findings_per_request': max_findings},
+        "info_types": info_types,
+        "min_likelihood": min_likelihood,
+        "include_quote": include_quote,
+        "limits": {"max_findings_per_request": max_findings},
     }
 
-    inspect_template = {
-        'inspect_config': inspect_config,
-        'display_name': display_name,
-    }
+    inspect_template = {"inspect_config": inspect_config, "display_name": display_name}
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
 
     # Call the API.
     response = dlp.create_inspect_template(
-        parent, inspect_template=inspect_template, template_id=template_id)
+        parent, inspect_template=inspect_template, template_id=template_id
+    )
 
-    print('Successfully created template {}'.format(response.name))
+    print("Successfully created template {}".format(response.name))
+
 
 # [END dlp_create_template]
 
@@ -93,7 +97,7 @@ def list_inspect_templates(project):
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
@@ -107,22 +111,24 @@ def list_inspect_templates(project):
         return str(time.localtime(timestamp.seconds))
 
     for template in response:
-        print('Template {}:'.format(template.name))
+        print("Template {}:".format(template.name))
         if template.display_name:
-            print('  Display Name: {}'.format(template.display_name))
-        print('  Created: {}'.format(
-            human_readable_time(template.create_time)))
-        print('  Updated: {}'.format(
-            human_readable_time(template.update_time)))
+            print("  Display Name: {}".format(template.display_name))
+        print("  Created: {}".format(human_readable_time(template.create_time)))
+        print("  Updated: {}".format(human_readable_time(template.update_time)))
 
         config = template.inspect_config
-        print('  InfoTypes: {}'.format(', '.join(
-            [it.name for it in config.info_types]
-        )))
-        print('  Minimum likelihood: {}'.format(config.min_likelihood))
-        print('  Include quotes: {}'.format(config.include_quote))
-        print('  Max findings per request: {}'.format(
-            config.limits.max_findings_per_request))
+        print(
+            "  InfoTypes: {}".format(", ".join([it.name for it in config.info_types]))
+        )
+        print("  Minimum likelihood: {}".format(config.min_likelihood))
+        print("  Include quotes: {}".format(config.include_quote))
+        print(
+            "  Max findings per request: {}".format(
+                config.limits.max_findings_per_request
+            )
+        )
+
 
 # [END dlp_list_templates]
 
@@ -141,89 +147,108 @@ def delete_inspect_template(project, template_id):
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
 
     # Combine the template id with the parent id.
-    template_resource = '{}/inspectTemplates/{}'.format(parent, template_id)
+    template_resource = "{}/inspectTemplates/{}".format(parent, template_id)
 
     # Call the API.
     dlp.delete_inspect_template(template_resource)
 
-    print('Template {} successfully deleted.'.format(template_resource))
+    print("Template {} successfully deleted.".format(template_resource))
+
 
 # [END dlp_delete_template]
 
 
-if __name__ == '__main__':
-    default_project = os.environ.get('GCLOUD_PROJECT')
+if __name__ == "__main__":
+    default_project = os.environ.get("GCLOUD_PROJECT")
 
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(
-        dest='action', help='Select which action to perform.')
+        dest="action", help="Select which action to perform."
+    )
     subparsers.required = True
 
-    parser_create = subparsers.add_parser('create', help='Create a template.')
+    parser_create = subparsers.add_parser("create", help="Create a template.")
     parser_create.add_argument(
-        '--template_id',
-        help='The id of the template. If omitted, an id will be randomly '
-             'generated')
+        "--template_id",
+        help="The id of the template. If omitted, an id will be randomly " "generated",
+    )
     parser_create.add_argument(
-        '--display_name',
-        help='The optional display name of the template.')
+        "--display_name", help="The optional display name of the template."
+    )
     parser_create.add_argument(
-        '--project',
-        help='The Google Cloud project id to use as a parent resource.',
-        default=default_project)
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
     parser_create.add_argument(
-        '--info_types', nargs='+',
-        help='Strings representing info types to look for. A full list of '
-             'info categories and types is available from the API. Examples '
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
-             'If unspecified, the three above examples will be used.',
-        default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
+        "--info_types",
+        nargs="+",
+        help="Strings representing info types to look for. A full list of "
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+        "If unspecified, the three above examples will be used.",
+        default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
+    )
     parser_create.add_argument(
-        '--min_likelihood',
-        choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
-                 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'],
-        help='A string representing the minimum likelihood threshold that '
-             'constitutes a match.')
+        "--min_likelihood",
+        choices=[
+            "LIKELIHOOD_UNSPECIFIED",
+            "VERY_UNLIKELY",
+            "UNLIKELY",
+            "POSSIBLE",
+            "LIKELY",
+            "VERY_LIKELY",
+        ],
+        help="A string representing the minimum likelihood threshold that "
+        "constitutes a match.",
+    )
     parser_create.add_argument(
-        '--max_findings', type=int,
-        help='The maximum number of findings to report; 0 = no maximum.')
+        "--max_findings",
+        type=int,
+        help="The maximum number of findings to report; 0 = no maximum.",
+    )
     parser_create.add_argument(
-        '--include_quote', type=bool,
-        help='A boolean for whether to display a quote of the detected '
-             'information in the results.',
-        default=True)
+        "--include_quote",
+        type=bool,
+        help="A boolean for whether to display a quote of the detected "
+        "information in the results.",
+        default=True,
+    )
 
-    parser_list = subparsers.add_parser('list', help='List all templates.')
+    parser_list = subparsers.add_parser("list", help="List all templates.")
     parser_list.add_argument(
-        '--project',
-        help='The Google Cloud project id to use as a parent resource.',
-        default=default_project)
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
 
-    parser_delete = subparsers.add_parser('delete', help='Delete a template.')
+    parser_delete = subparsers.add_parser("delete", help="Delete a template.")
+    parser_delete.add_argument("template_id", help="The id of the template to delete.")
     parser_delete.add_argument(
-        'template_id',
-        help='The id of the template to delete.')
-    parser_delete.add_argument(
-        '--project',
-        help='The Google Cloud project id to use as a parent resource.',
-        default=default_project)
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
 
     args = parser.parse_args()
 
-    if args.action == 'create':
+    if args.action == "create":
         create_inspect_template(
-            args.project, args.info_types,
-            template_id=args.template_id, display_name=args.display_name,
+            args.project,
+            args.info_types,
+            template_id=args.template_id,
+            display_name=args.display_name,
             min_likelihood=args.min_likelihood,
-            max_findings=args.max_findings, include_quote=args.include_quote
+            max_findings=args.max_findings,
+            include_quote=args.include_quote,
         )
-    elif args.action == 'list':
+    elif args.action == "list":
         list_inspect_templates(args.project)
-    elif args.action == 'delete':
+    elif args.action == "delete":
         delete_inspect_template(args.project, args.template_id)

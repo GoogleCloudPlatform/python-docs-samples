@@ -16,22 +16,24 @@
 
 import os
 import pytest
+import uuid
 
 from google.api_core.exceptions import AlreadyExists
 from google.cloud import pubsub_v1
 
 import pub
 
-PROJECT = os.environ['GCLOUD_PROJECT']
-TOPIC = 'quickstart-pub-test-topic'
+UUID = uuid.uuid4().hex
+PROJECT = os.environ["GCLOUD_PROJECT"]
+TOPIC = "quickstart-pub-test-topic-" + UUID
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def publisher_client():
     yield pubsub_v1.PublisherClient()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def topic(publisher_client):
     topic_path = publisher_client.topic_path(PROJECT, TOPIC)
 
@@ -42,20 +44,12 @@ def topic(publisher_client):
 
     yield TOPIC
 
-
-@pytest.fixture
-def to_delete(publisher_client):
-    doomed = []
-    yield doomed
-    for item in doomed:
-        publisher_client.delete_topic(item)
+    publisher_client.delete_topic(topic_path)
 
 
-def test_pub(publisher_client, topic, to_delete, capsys):
+def test_pub(publisher_client, topic, capsys):
     pub.pub(PROJECT, topic)
-
-    to_delete.append('projects/{}/topics/{}'.format(PROJECT, TOPIC))
 
     out, _ = capsys.readouterr()
 
-    assert "Published message b'Hello, World!'" in out
+    assert "Hello, World!" in out
