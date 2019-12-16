@@ -20,11 +20,11 @@ import argparse
 
 def list_feeds(parent_resource):
     # [START asset_quickstart_list_feeds]
-    from google.cloud import asset_v1p2beta1
+    from google.cloud import asset_v1
 
     # TODO parent_resource = 'Parent resource you want to list all feeds'
 
-    client = asset_v1p2beta1.AssetServiceClient()
+    client = asset_v1.AssetServiceClient()
     response = client.list_feeds(parent_resource)
     print('feeds: {}'.format(response.feeds))
     # [END asset_quickstart_list_feeds]
