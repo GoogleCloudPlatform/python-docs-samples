@@ -13,7 +13,7 @@
 
 import os
 
-from gcp_devrel.testing.flaky import flaky
+from flaky import flaky
 from google.cloud import dns
 from google.cloud.exceptions import NotFound
 

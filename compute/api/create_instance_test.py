@@ -14,7 +14,7 @@
 import os
 import re
 
-from gcp_devrel.testing.flaky import flaky
+from flaky import flaky
 
 from create_instance import main
 

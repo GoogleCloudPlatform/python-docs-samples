@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from gcp_devrel.testing.flaky import flaky
+from flaky import flaky
 import google.cloud.pubsub
 
 import pytest
