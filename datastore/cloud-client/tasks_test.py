@@ -14,7 +14,7 @@
 import os
 
 from gcp_devrel.testing import eventually_consistent
-from gcp_devrel.testing.flaky import flaky
+from flaky import flaky
 from google.cloud import datastore
 import pytest
 
