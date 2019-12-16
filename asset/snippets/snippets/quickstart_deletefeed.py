@@ -20,11 +20,11 @@ import argparse
 
 def delete_feed(feed_name):
     # [START asset_quickstart_delete_feed]
-    from google.cloud import asset_v1p2beta1
+    from google.cloud import asset_v1
 
     # TODO feed_name = 'Feed name you want to delete'
 
-    client = asset_v1p2beta1.AssetServiceClient()
+    client = asset_v1.AssetServiceClient()
     client.delete_feed(feed_name)
     print('deleted_feed')
     # [END asset_quickstart_delete_feed]
