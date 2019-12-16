@@ -70,7 +70,7 @@ def test_hello_content_empty_json(app):
     with app.test_request_context(json=''):
         with pytest.raises(
                 ValueError,
-                message="JSON is invalid, or missing a 'name' property"):
+                match="JSON is invalid, or missing a 'name' property"):
             main.hello_content(flask.request)
 
 
