@@ -12,18 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from gcp_devrel.testing.flaky import flaky
+from flaky import flaky
 import google.cloud.pubsub
 
 import pytest
+import os
 
 import risk
 
-GCLOUD_PROJECT = "python-docs-samples"
-TABLE_PROJECT = "python-docs-samples"
+GCLOUD_PROJECT = os.environ.get('GCLOUD_PROJECT')
+TABLE_PROJECT = os.environ.get('GCLOUD_PROJECT')
 TOPIC_ID = "dlp-test"
 SUBSCRIPTION_ID = "dlp-test-subscription"
-DATASET_ID = "integration_tests_dlp"
+DATASET_ID = "dlp_test_dataset"
 UNIQUE_FIELD = "Name"
 REPEATED_FIELD = "Mystery"
 NUMERIC_FIELD = "Age"
