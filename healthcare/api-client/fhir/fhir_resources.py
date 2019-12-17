@@ -372,11 +372,7 @@ def update_resource(
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
-    body = {
-        "resourceType": resource_type,
-        "active": True,
-        "id": resource_id,
-    }
+    body = {"resourceType": resource_type, "active": True, "id": resource_id}
 
     response = session.put(resource_path, headers=headers, json=body)
     response.raise_for_status()
@@ -414,11 +410,7 @@ def conditional_update_resource(
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
-    body = {
-        "resourceType": resource_type,
-        "active": True,
-        "id": resource_id,
-    }
+    body = {"resourceType": resource_type, "active": True, "id": resource_id}
 
     response = session.put(resource_path, headers=headers, json=body)
     response.raise_for_status()
