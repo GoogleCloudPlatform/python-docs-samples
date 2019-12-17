@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +15,7 @@
 import datetime
 import os
 
+from google.cloud import storage
 import pytest
 
 import export_dataset
@@ -39,8 +38,6 @@ def test_export_dataset(capsys):
     assert "Dataset exported" in out
 
     # Delete the created files
-    from google.cloud import storage
-
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(BUCKET_ID)
     if len(list(bucket.list_blobs(prefix=PREFIX))) > 0:

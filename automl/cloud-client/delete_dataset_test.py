@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +15,7 @@
 import datetime
 import os
 
+from google.cloud import automl
 import pytest
 
 import delete_dataset
@@ -27,8 +26,6 @@ BUCKET_ID = "{}-lcm".format(PROJECT_ID)
 
 @pytest.fixture(scope="function")
 def create_dataset():
-    from google.cloud import automl
-
     client = automl.AutoMlClient()
     project_location = client.location_path(PROJECT_ID, "us-central1")
     display_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +21,7 @@ def import_dataset(project_id, dataset_id, path):
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'YOUR_PROJECT_ID'
     # dataset_id = 'YOUR_DATASET_ID'
-    # path = 'gs://BUCKET_ID/path_to_training_data.csv'
+    # path = 'gs://YOUR_BUCKET_ID/path/to/data.csv'
 
     client = automl.AutoMlClient()
     # Get the full path of the dataset.
@@ -38,5 +36,5 @@ def import_dataset(project_id, dataset_id, path):
     response = client.import_data(dataset_full_id, input_config)
 
     print("Processing import...")
-    print(u"Data imported. {}".format(response.result()))
+    print("Data imported. {}".format(response.result()))
     # [END automl_import_data]

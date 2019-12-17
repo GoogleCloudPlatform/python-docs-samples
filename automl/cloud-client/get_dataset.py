@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,12 +35,12 @@ def get_dataset(project_id, dataset_id):
     dataset = client.get_dataset(dataset_full_id)
 
     # Display the dataset information
-    print(u"Dataset name: {}".format(dataset.name))
-    print(u"Dataset id: {}".format(dataset.name.split("/")[-1]))
-    print(u"Dataset display name: {}".format(dataset.display_name))
+    print("Dataset name: {}".format(dataset.name))
+    print("Dataset id: {}".format(dataset.name.split("/")[-1]))
+    print("Dataset display name: {}".format(dataset.display_name))
     print("Dataset create time:")
-    print(u"\tseconds: {}".format(dataset.create_time.seconds))
-    print(u"\tnanos: {}".format(dataset.create_time.nanos))
+    print("\tseconds: {}".format(dataset.create_time.seconds))
+    print("\tnanos: {}".format(dataset.create_time.nanos))
     # [END automl_language_sentiment_analysis_get_dataset]
     # [END automl_language_text_classification_get_dataset]
     # [END automl_translate_get_dataset]
@@ -74,12 +72,12 @@ def get_dataset(project_id, dataset_id):
     # [START automl_translate_get_dataset]
     print("Translation dataset metadata:")
     print(
-        u"\tsource_language_code: {}".format(
+        "\tsource_language_code: {}".format(
             dataset.translation_dataset_metadata.source_language_code
         )
     )
     print(
-        u"\ttarget_language_code: {}".format(
+        "\ttarget_language_code: {}".format(
             dataset.translation_dataset_metadata.target_language_code
         )
     )

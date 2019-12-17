@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +21,7 @@ def export_dataset(project_id, dataset_id, gcs_uri):
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'YOUR_PROJECT_ID'
     # dataset_id = 'YOUR_DATASET_ID'
-    # gcs_uri = 'gs://BUCKET_ID/path_to_export/'
+    # gcs_uri = 'gs://YOUR_BUCKET_ID/path/to/export/'
 
     client = automl.AutoMlClient()
 
@@ -36,5 +34,5 @@ def export_dataset(project_id, dataset_id, gcs_uri):
     output_config = automl.types.OutputConfig(gcs_destination=gcs_destination)
 
     response = client.export_data(dataset_full_id, output_config)
-    print(u"Dataset exported. {}".format(response.result()))
+    print("Dataset exported. {}".format(response.result()))
     # [END automl_export_dataset]

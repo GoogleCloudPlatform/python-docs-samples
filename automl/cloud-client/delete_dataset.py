@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,5 +29,5 @@ def delete_dataset(project_id, dataset_id):
     )
     response = client.delete_dataset(dataset_full_id)
 
-    print(u"Dataset deleted. {}".format(response.result()))
+    print("Dataset deleted. {}".format(response.result()))
     # [END automl_delete_dataset]
