@@ -32,8 +32,7 @@ import time
 import re
 import sys
 
-# uses result_end_time currently only avaialble in v1p1beta, will be in v1 soon
-from google.cloud import speech_v1p1beta1 as speech
+from google.cloud import speech
 import pyaudio
 from six.moves import queue
 
