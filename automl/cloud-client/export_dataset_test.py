@@ -28,7 +28,6 @@ PREFIX = "TEST_EXPORT_OUTPUT_" + datetime.datetime.now().strftime(
 )
 
 
-@pytest.mark.slow
 def test_export_dataset(capsys):
     export_dataset.export_dataset(
         PROJECT_ID, DATASET_ID, "gs://{}/{}/".format(BUCKET_ID, PREFIX)

@@ -22,7 +22,6 @@ import import_dataset
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 BUCKET_ID = "{}-lcm".format(PROJECT_ID)
-DATASET_ID = "TEN4058147884539838464"
 
 
 @pytest.fixture(scope="function")
@@ -45,14 +44,15 @@ def test_import_dataset(capsys, create_dataset):
     data = (
         "gs://cloud-samples-data/automl/language_entity_extraction/dataset.csv"
     )
-    import_dataset.import_dataset(PROJECT_ID, create_dataset, data)
+    dataset_id = create_dataset
+    import_dataset.import_dataset(PROJECT_ID, dataset_id, data)
     out, _ = capsys.readouterr()
     assert "Data imported." in out
 
     # delete created dataset
     client = automl.AutoMlClient()
     dataset_full_id = client.dataset_path(
-        PROJECT_ID, "us-central1", create_dataset
+        PROJECT_ID, "us-central1", dataset_id
     )
     response = client.delete_dataset(dataset_full_id)
     response.result()
