@@ -49,8 +49,8 @@ def setup_teardown():
       'api_endpoint': '{}-dataproc.googleapis.com:443'.format(REGION)
     })
 
-    # The quickstart sample deletes the cluster, but if the test fails
-    # before cluster deletion occurs, it can be manually deleted here.
+    # The quickstart sample deletes the cluster, but in the event that the
+    # test fails before cluster deletion occurs, it can be manually deleted here.
     clusters = cluster_client.list_clusters(PROJECT_ID, REGION)
 
     for cluster in clusters:

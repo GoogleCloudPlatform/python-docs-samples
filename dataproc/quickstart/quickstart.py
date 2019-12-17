@@ -22,9 +22,9 @@ from google.cloud import storage
 
 
 def quickstart(project_id, region, cluster_name, job_file_path):
-    """This quickstart sample walks a user through creating a Cloud Dataproc
-       cluster, submitting a PySpark job from Google Cloud Storage to the
-       cluster, reading the output of the job and deleting the cluster, all
+    """This quickstart sample walks a user through creating a Cloud Dataproc 
+       cluster, submitting a PySpark job from Google Cloud Storage to the 
+       cluster, reading the output of the job and deleting the cluster, all 
        using the Python client library.
     """
     # TODO(developer): Uncomment and set the following variables
@@ -35,23 +35,23 @@ def quickstart(project_id, region, cluster_name, job_file_path):
 
     # Create the cluster client
     cluster_client = dataproc.ClusterControllerClient(client_options={
-        'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
+      'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
 
     # Create the cluster config
     cluster = {
-        'project_id': project_id,
-        'cluster_name': cluster_name,
-        'config': {
-            'master_config': {
-                'num_instances': 1,
-                'machine_type_uri': 'n1-standard-1'
-            },
-            'worker_config': {
-                'num_instances': 2,
-                'machine_type_uri': 'n1-standard-1'
-            }
+      'project_id': project_id,
+      'cluster_name': cluster_name,
+      'config': {
+        'master_config': {
+          'num_instances': 1,
+          'machine_type_uri': 'n1-standard-1'
+        },
+        'worker_config': {
+          'num_instances': 2,
+          'machine_type_uri': 'n1-standard-1'
         }
+      }
     }
 
     # Create the cluster
@@ -62,17 +62,17 @@ def quickstart(project_id, region, cluster_name, job_file_path):
 
     # Create the job client
     job_client = dataproc.JobControllerClient(client_options={
-        'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
+      'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
 
     # Create the job config
     job = {
-        'placement': {
-            'cluster_name': cluster_name
-        },
-        'pyspark_job': {
-            'main_python_file_uri': job_file_path
-        }
+      'placement': {
+        'cluster_name': cluster_name
+      },
+      'pyspark_job': {
+        'main_python_file_uri': job_file_path
+      }
     }
 
     job_response = job_client.submit_job(project_id, region, job)
@@ -82,14 +82,14 @@ def quickstart(project_id, region, cluster_name, job_file_path):
 
     # Termimal states for a job
     terminal_states = {
-        dataproc.types.JobStatus.ERROR,
-        dataproc.types.JobStatus.CANCELLED,
-        dataproc.types.JobStatus.DONE
+      dataproc.types.JobStatus.ERROR,
+      dataproc.types.JobStatus.CANCELLED,
+      dataproc.types.JobStatus.DONE
     }
 
     # Create a timeout such that the job gets cancelled if not in a
     # terminal state after a fixed period of time.
-    timeout = 600000
+    timeout = 600000 
     time_start = time.time()
 
     # Wait for the job to complete
@@ -102,8 +102,8 @@ def quickstart(project_id, region, cluster_name, job_file_path):
         # Poll for job termination once a second
         time.sleep(1)
         job_response = job_client.get_job(project_id, region, job_id)
-
-    # Cloud Dataproc job output gets saved to a GCS bucket allocated to it.
+        
+    # Cloud Dataproc job output gets saved to a GCS bucket allocated to it. 
     cluster_info = cluster_client.get_cluster(project_id, region, cluster_name)
     output_bucket = cluster_info.config.config_bucket
     cluster_uuid = cluster_info.cluster_uuid
@@ -111,8 +111,8 @@ def quickstart(project_id, region, cluster_name, job_file_path):
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(output_bucket)
     output_blob = (
-        ('google-cloud-dataproc-metainfo/{}/jobs/{}/driveroutput.000000000'.
-         format(cluster_uuid, job_id)))
+      ('google-cloud-dataproc-metainfo/{}/jobs/{}/driveroutput.000000000'.
+       format(cluster_uuid, job_id)))
     output = bucket.blob(output_blob).download_as_string()
 
     print('Job {} finished with state {}:\n{}'.format(
@@ -122,6 +122,6 @@ def quickstart(project_id, region, cluster_name, job_file_path):
 
     # Delete the cluster once the job has terminated
     cluster_client.delete_cluster(project_id, region, cluster_name).result()
-
+    
     print('Cluster {} successfully deleted.'.format(cluster_name))
     # [END dataproc_quickstart]
