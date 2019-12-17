@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+<<<<<<< HEAD
 
 def create_cluster(project_id, region, cluster_name):
     # [START dataproc_create_cluster]
@@ -26,6 +27,22 @@ def create_cluster(project_id, region, cluster_name):
 
     # Create a client with the endpoint set to the desired cluster region
     client = dataproc.ClusterControllerClient(client_options={
+=======
+# This sample walks a user through creating a Cloud Dataproc cluster using
+# the Python client library. 
+
+# [START dataproc_create_cluster]
+from google.cloud import dataproc_v1 as dataproc
+
+def create_cluster(project_id, region, cluster_name):
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = 'YOUR_PROJECT_ID'
+    # region = 'YOUR_CLUSTER_REGION'
+    # cluster_name = 'YOUR_CLUSTER_NAME'
+
+    # Create a client with the endpoint set to the desired cluster region
+    cluster_client = dataproc.ClusterControllerClient(client_options={
+>>>>>>> 82959cee... Adding quickstart and changes to create cluster
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
 
