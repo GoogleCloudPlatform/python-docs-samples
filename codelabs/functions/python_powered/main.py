@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 import flask
 
 
@@ -55,4 +57,4 @@ def python_powered(request):
     Returns:
         The response file, a JPG image that says "Python Powered"
     """
-    return flask.send_file("python_powered.jpg", mimetype="image/jpg")
+    return flask.send_from_directory(os.getcwd(), "python_powered.jpg", mimetype="image/jpg")

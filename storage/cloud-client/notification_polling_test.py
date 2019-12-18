@@ -24,28 +24,32 @@ MESSAGE_ID = 12345
 
 def test_parse_json_message():
     attributes = {
-        'eventType': 'OBJECT_FINALIZE',
-        'bucketId': 'mybucket',
-        'objectId': 'myobject',
-        'objectGeneration': 1234567,
-        'resource': 'projects/_/buckets/mybucket/objects/myobject#1234567',
-        'notificationConfig': ('projects/_/buckets/mybucket/'
-                               'notificationConfigs/5'),
-        'payloadFormat': 'JSON_API_V1'}
-    data = (b'{'
-            b'  "size": 12345,'
-            b'  "contentType": "text/html",'
-            b'  "metageneration": 1'
-            b'}')
+        "eventType": "OBJECT_FINALIZE",
+        "bucketId": "mybucket",
+        "objectId": "myobject",
+        "objectGeneration": 1234567,
+        "resource": "projects/_/buckets/mybucket/objects/myobject#1234567",
+        "notificationConfig": (
+            "projects/_/buckets/mybucket/" "notificationConfigs/5"
+        ),
+        "payloadFormat": "JSON_API_V1",
+    }
+    data = (
+        b"{"
+        b'  "size": 12345,'
+        b'  "contentType": "text/html",'
+        b'  "metageneration": 1'
+        b"}"
+    )
     message = Message(
-        mock.Mock(data=data, attributes=attributes),
-        MESSAGE_ID,
-        mock.Mock())
+        mock.Mock(data=data, attributes=attributes), MESSAGE_ID, mock.Mock()
+    )
     assert summarize(message) == (
-        '\tEvent type: OBJECT_FINALIZE\n'
-        '\tBucket ID: mybucket\n'
-        '\tObject ID: myobject\n'
-        '\tGeneration: 1234567\n'
-        '\tContent type: text/html\n'
-        '\tSize: 12345\n'
-        '\tMetageneration: 1\n')
+        "\tEvent type: OBJECT_FINALIZE\n"
+        "\tBucket ID: mybucket\n"
+        "\tObject ID: myobject\n"
+        "\tGeneration: 1234567\n"
+        "\tContent type: text/html\n"
+        "\tSize: 12345\n"
+        "\tMetageneration: 1\n"
+    )
