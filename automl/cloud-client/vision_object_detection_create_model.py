@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,6 +38,6 @@ def create_model(project_id, dataset_id, display_name):
     # Create a model with the model metadata in the region.
     response = client.create_model(project_location, model)
 
-    print(u"Training operation name: {}".format(response.operation.name))
+    print("Training operation name: {}".format(response.operation.name))
     print("Training started...")
     # [END automl_vision_object_detection_create_model]

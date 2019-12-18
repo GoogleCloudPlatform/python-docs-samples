@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,6 +38,6 @@ def create_dataset(project_id, display_name):
     created_dataset = response.result()
 
     # Display the dataset information
-    print(u"Dataset name: {}".format(created_dataset.name))
-    print(u"Dataset id: {}".format(created_dataset.name.split("/")[-1]))
+    print("Dataset name: {}".format(created_dataset.name))
+    print("Dataset id: {}".format(created_dataset.name.split("/")[-1]))
     # [END automl_vision_object_detection_create_dataset]

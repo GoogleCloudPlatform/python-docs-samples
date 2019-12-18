@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-
-# Copyright 2018 Google LLC
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,40 +13,25 @@
 # limitations under the License.
 
 import os
-import sys
 
 import pytest
 
 import vision_object_detection_deploy_model_node_count
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-
-version_info = sys.version_info
-if version_info.major == 3 and version_info.minor == 6:
-    MODEL_ID = "IOD1729298694026559488"
-else:
-    MODEL_ID = "IOD6143103405779845120"
-
-
-@pytest.fixture(scope="function")
-def verify_model_state():
-    from google.cloud import automl
-
-    client = automl.AutoMlClient()
-    model_full_id = client.model_path(PROJECT_ID, "us-central1", MODEL_ID)
-
-    model = client.get_model(model_full_id)
-    if model.deployment_state == automl.enums.Model.DeploymentState.DEPLOYED:
-        # Undeploy model if it is deployed
-        response = client.undeploy_model(model_full_id)
-        response.result()
+MODEL_ID = "0000000000000000000000"
 
 
 @pytest.mark.slow
-def test_vision_object_detection_deploy_model(capsys, verify_model_state):
-    verify_model_state
-    vision_object_detection_deploy_model_node_count.deploy_model_with_node_count(
-        PROJECT_ID, MODEL_ID
-    )
-    out, _ = capsys.readouterr()
-    assert "Model deployment finished." in out
+def test_object_detection_deploy_model_with_node_count(capsys):
+    # As model deployment can take a long time, instead try to deploy a
+    # nonexistent model and confirm that the model was not found, but other
+    # elements of the request were valid.
+    try:
+        vision_object_detection_deploy_model_node_count.deploy_model(
+            PROJECT_ID, MODEL_ID
+        )
+        out, _ = capsys.readouterr()
+        assert "The model does not exist" in out
+    except Exception as e:
+        assert "The model does not exist" in e.message

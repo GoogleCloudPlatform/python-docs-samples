@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,14 +44,14 @@ def predict(project_id, model_id, file_path):
     response = prediction_client.predict(model_full_id, payload, params)
     print("Prediction results:")
     for result in response.payload:
-        print(u"Predicted class name: {}".format(result.display_name))
+        print("Predicted class name: {}".format(result.display_name))
         print(
-            u"Predicted class score: {}".format(
+            "Predicted class score: {}".format(
                 result.image_object_detection.score
             )
         )
         bounding_box = result.image_object_detection.bounding_box
         print("Normalized Vertices:")
         for vertex in bounding_box.normalized_vertices:
-            print(u"\tX: {}, Y: {}".format(vertex.x, vertex.y))
+            print("\tX: {}, Y: {}".format(vertex.x, vertex.y))
     # [END automl_vision_object_detection_predict]

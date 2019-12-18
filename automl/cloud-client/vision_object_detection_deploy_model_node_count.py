@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +13,7 @@
 # limitations under the License.
 
 
-def deploy_model_with_node_count(project_id, model_id):
+def deploy_model(project_id, model_id):
     """Deploy a model with a specified node count."""
     # [START automl_vision_object_detection_deploy_model_node_count]
     from google.cloud import automl
@@ -35,5 +33,5 @@ def deploy_model_with_node_count(project_id, model_id):
         image_object_detection_model_deployment_metadata=metadata,
     )
 
-    print(u"Model deployment finished. {}".format(response.result()))
+    print("Model deployment finished. {}".format(response.result()))
     # [END automl_vision_object_detection_deploy_model_node_count]
