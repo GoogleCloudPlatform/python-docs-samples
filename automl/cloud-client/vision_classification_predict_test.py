@@ -38,7 +38,7 @@ def verify_model_state():
         response.result()
 
 
-def test_predict(capsys, verify_model_state):
+def test_vision_classification_predict(capsys, verify_model_state):
     verify_model_state
     file_path = "resources/test.png"
     vision_classification_predict.predict(PROJECT_ID, MODEL_ID, file_path)

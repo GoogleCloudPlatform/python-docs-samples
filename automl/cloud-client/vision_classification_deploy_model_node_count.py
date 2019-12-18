@@ -15,7 +15,7 @@
 # limitations under the License.
 
 
-def deploy_model_with_node_count(project_id, model_id):
+def deploy_model(project_id, model_id):
     """Deploy a model with a specified node count."""
     # [START automl_vision_classification_deploy_model_node_count]
     from google.cloud import automl

@@ -26,7 +26,7 @@ PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 
 
 @pytest.mark.slow
-def test_create_import_delete_dataset(capsys):
+def test_create_dataset(capsys):
     # create dataset
     dataset_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     vision_classification_create_dataset.create_dataset(
