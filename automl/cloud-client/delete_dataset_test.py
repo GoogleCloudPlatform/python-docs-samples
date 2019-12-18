@@ -20,7 +20,7 @@ import pytest
 
 import delete_dataset
 
-PROJECT_ID = 'cdpe-automl-tests'
+PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 BUCKET_ID = "{}-lcm".format(PROJECT_ID)
 
 

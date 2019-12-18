@@ -19,9 +19,9 @@ from google.cloud import storage
 
 import export_dataset
 
-PROJECT_ID = 'cdpe-automl-tests'
+PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 BUCKET_ID = "{}-lcm".format(PROJECT_ID)
-DATASET_ID = "TEN6765176298449928192"
+DATASET_ID = "TEN4058147884539838464"
 PREFIX = "TEST_EXPORT_OUTPUT_" + datetime.datetime.now().strftime(
     "%Y%m%d%H%M%S"
 )
