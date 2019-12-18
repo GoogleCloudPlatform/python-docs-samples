@@ -38,7 +38,7 @@ def verify_model_state():
 
 def test_vision_object_detection_predict(capsys, verify_model_state):
     verify_model_state
-    file_path = "resources/test.png"
+    file_path = "resources/salad.jpg"
     vision_object_detection_predict.predict(PROJECT_ID, MODEL_ID, file_path)
     out, _ = capsys.readouterr()
     assert "Predicted class name:" in out
