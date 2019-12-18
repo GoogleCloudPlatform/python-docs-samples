@@ -22,7 +22,8 @@ SECRET_KEY = os.environ["STORAGE_HMAC_ACCESS_SECRET_KEY"]
 
 
 def test_list_blobs(capsys):
-    list_gcs_buckets.list_gcs_buckets(google_access_key_id=KEY_ID,
-                                      google_access_key_secret=SECRET_KEY)
+    list_gcs_buckets.list_gcs_buckets(
+        google_access_key_id=KEY_ID, google_access_key_secret=SECRET_KEY
+    )
     out, _ = capsys.readouterr()
     assert BUCKET in out
