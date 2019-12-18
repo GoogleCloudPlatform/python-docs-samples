@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,16 +29,19 @@ def list_models(project_id):
     print("List of models:")
     for model in response:
         # Display the model information.
-        if model.deployment_state == automl.enums.Model.DeploymentState.DEPLOYED:
+        if (
+            model.deployment_state
+            == automl.enums.Model.DeploymentState.DEPLOYED
+        ):
             deployment_state = "deployed"
         else:
             deployment_state = "undeployed"
 
-        print(u"Model name: {}".format(model.name))
-        print(u"Model id: {}".format(model.name.split("/")[-1]))
-        print(u"Model display name: {}".format(model.display_name))
-        print(u"Model create time:")
-        print(u"\tseconds: {}".format(model.create_time.seconds))
-        print(u"\tnanos: {}".format(model.create_time.nanos))
-        print(u"Model deployment state: {}".format(deployment_state))
+        print("Model name: {}".format(model.name))
+        print("Model id: {}".format(model.name.split("/")[-1]))
+        print("Model display name: {}".format(model.display_name))
+        print("Model create time:")
+        print("\tseconds: {}".format(model.create_time.seconds))
+        print("\tnanos: {}".format(model.create_time.nanos))
+        print("Model deployment state: {}".format(deployment_state))
     # [END automl_list_models]

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,13 +33,19 @@ def list_model_evaluations(project_id, model_id):
 
     print("List of model evaluations:")
     for evaluation in client.list_model_evaluations(model_full_id, ""):
-        print(u"Model evaluation name: {}".format(evaluation.name))
-        print(u"Model annotation spec id: {}".format(evaluation.annotation_spec_id))
-        print(u"Create Time:")
-        print(u"\tseconds: {}".format(evaluation.create_time.seconds))
-        print(u"\tnanos: {}".format(evaluation.create_time.nanos / 1e9))
+        print("Model evaluation name: {}".format(evaluation.name))
         print(
-            u"Evaluation example count: {}".format(evaluation.evaluated_example_count)
+            "Model annotation spec id: {}".format(
+                evaluation.annotation_spec_id
+            )
+        )
+        print("Create Time:")
+        print("\tseconds: {}".format(evaluation.create_time.seconds))
+        print("\tnanos: {}".format(evaluation.create_time.nanos / 1e9))
+        print(
+            "Evaluation example count: {}".format(
+                evaluation.evaluated_example_count
+            )
         )
         # [END automl_language_sentiment_analysis_list_model_evaluations]
         # [END automl_language_text_classification_list_model_evaluations]

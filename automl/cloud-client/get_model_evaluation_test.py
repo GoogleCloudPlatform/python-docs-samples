@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,6 +39,8 @@ def get_evaluation_id():
 
 
 def test_get_model_evaluation(capsys, get_evaluation_id):
-    get_model_evaluation.get_model_evaluation(PROJECT_ID, MODEL_ID, get_evaluation_id)
+    get_model_evaluation.get_model_evaluation(
+        PROJECT_ID, MODEL_ID, get_evaluation_id
+    )
     out, _ = capsys.readouterr()
     assert "Model evaluation name: " in out

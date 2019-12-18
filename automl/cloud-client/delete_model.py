@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,5 +27,5 @@ def delete_model(project_id, model_id):
     model_full_id = client.model_path(project_id, "us-central1", model_id)
     response = client.delete_model(model_full_id)
 
-    print(u"Model deleted. {}".format(response.result()))
+    print("Model deleted. {}".format(response.result()))
     # [END automl_delete_model]

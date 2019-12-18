@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,45 +13,23 @@
 # limitations under the License.
 
 import os
-import sys
 
 import pytest
 
 import undeploy_model
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-
-version_info = sys.version_info
-if version_info.major == 3:
-    if version_info.minor == 5:
-        MODEL_ID = "TEN5112482778553778176"
-    elif version_info.minor == 6:
-        MODEL_ID = "TCN3472481026502981088"
-    elif version_info.minor == 7:
-        MODEL_ID = "TST8532792392862639819"
-elif version_info.major == 2:
-    MODEL_ID = "TEN1499896588007374848"
-else:
-    MODEL_ID = "TEN7450981283112419328"
-
-
-@pytest.fixture(scope="function")
-def verify_model_state():
-    from google.cloud import automl
-
-    client = automl.AutoMlClient()
-    model_full_id = client.model_path(PROJECT_ID, "us-central1", MODEL_ID)
-
-    model = client.get_model(model_full_id)
-    if model.deployment_state == automl.enums.Model.DeploymentState.UNDEPLOYED:
-        # Deploy model if it is deployed
-        response = client.deploy_model(model_full_id)
-        response.result()
+MODEL_ID = "TRL0000000000000000000"
 
 
 @pytest.mark.slow
-def test_deploy_undeploy_model(capsys, verify_model_state):
-    verify_model_state
-    undeploy_model.undeploy_model(PROJECT_ID, MODEL_ID)
-    out, _ = capsys.readouterr()
-    assert "Model undeployment finished." in out
+def test_undeploy_model(capsys):
+    # As model undeployment can take a long time, instead try to deploy a
+    # nonexistent model and confirm that the model was not found, but other
+    # elements of the request were valid.
+    try:
+        undeploy_model.undeploy_model(PROJECT_ID, MODEL_ID)
+        out, _ = capsys.readouterr()
+        assert "The model does not exist" in out
+    except Exception as e:
+        assert "The model does not exist" in e.message
