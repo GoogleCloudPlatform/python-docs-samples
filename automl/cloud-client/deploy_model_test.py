@@ -23,7 +23,7 @@ MODEL_ID = "TRL0000000000000000000"
 
 
 @pytest.mark.slow
-def test_deploy_undeploy_model(capsys):
+def test_deploy_model(capsys):
     # As model deployment can take a long time, instead try to deploy a
     # nonexistent model and confirm that the model was not found, but other
     # elements of the request were valid.
