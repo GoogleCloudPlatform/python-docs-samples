@@ -26,7 +26,7 @@ import dataset_test
 
 PROJECT = os.environ["GCLOUD_PROJECT"]
 REGION = "us-central1"
-STATIC_MODEL = "do_not_delete_this_model_2"
+STATIC_MODEL = "do_not_delete_this_model_0"
 GCS_DATASET = "gs://cloud-ml-tables-data/bank-marketing.csv"
 
 ID = "{rand}_{time}".format(
