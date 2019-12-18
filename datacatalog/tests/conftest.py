@@ -43,6 +43,19 @@ def project_id(default_credentials):
 
 
 @pytest.fixture
+def random_entry_id(client, project_id, random_entry_group_id):
+    now = datetime.datetime.now()
+    random_entry_id = "example_entry_{}_{}".format(
+        now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
+    )
+    yield random_entry_id
+    entry_name = datacatalog_v1beta1.DataCatalogClient.entry_path(
+        project_id, "us-central1", random_entry_group_id, random_entry_id
+    )
+    client.delete_entry(entry_name)
+
+
+@pytest.fixture
 def random_entry_group_id(client, project_id):
     now = datetime.datetime.now()
     random_entry_group_id = "example_entry_group_{}_{}".format(
