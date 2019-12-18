@@ -20,14 +20,14 @@ import argparse
 
 def update_feed(feed_name, topic):
     # [START asset_quickstart_update_feed]
-    from google.cloud import asset_v1p2beta1
-    from google.cloud.asset_v1p2beta1.proto import asset_service_pb2
+    from google.cloud import asset_v1
+    from google.cloud.asset_v1.proto import asset_service_pb2
     from google.protobuf import field_mask_pb2
 
     # TODO feed_name = 'Feed Name you want to update'
     # TODO topic = "Topic name you want to update with"
 
-    client = asset_v1p2beta1.AssetServiceClient()
+    client = asset_v1.AssetServiceClient()
     feed = asset_service_pb2.Feed()
     feed.name = feed_name
     feed.feed_output_config.pubsub_destination.topic = topic

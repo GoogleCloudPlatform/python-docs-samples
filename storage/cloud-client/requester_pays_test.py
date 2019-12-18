@@ -18,45 +18,46 @@ import tempfile
 from google.cloud import storage
 import pytest
 
-import requester_pays
+import storage_disable_requester_pays
+import storage_enable_requester_pays
+import storage_download_file_requester_pays
+import storage_get_requester_pays_status
 
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-PROJECT = os.environ['GCLOUD_PROJECT']
+BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
+PROJECT = os.environ["GCLOUD_PROJECT"]
 
 
 def test_enable_requester_pays(capsys):
-    requester_pays.enable_requester_pays(BUCKET)
+    storage_enable_requester_pays.enable_requester_pays(BUCKET)
     out, _ = capsys.readouterr()
-    assert 'Requester Pays has been enabled for {}'.format(BUCKET) in out
+    assert "Requester Pays has been enabled for {}".format(BUCKET) in out
 
 
 def test_disable_requester_pays(capsys):
-    requester_pays.disable_requester_pays(BUCKET)
+    storage_disable_requester_pays.disable_requester_pays(BUCKET)
     out, _ = capsys.readouterr()
-    assert 'Requester Pays has been disabled for {}'.format(BUCKET) in out
+    assert "Requester Pays has been disabled for {}".format(BUCKET) in out
 
 
 def test_get_requester_pays_status(capsys):
-    requester_pays.get_requester_pays_status(BUCKET)
+    storage_get_requester_pays_status.get_requester_pays_status(BUCKET)
     out, _ = capsys.readouterr()
-    assert 'Requester Pays is disabled for {}'.format(BUCKET) in out
+    assert "Requester Pays is disabled for {}".format(BUCKET) in out
 
 
 @pytest.fixture
 def test_blob():
     """Provides a pre-existing blob in the test bucket."""
     bucket = storage.Client().bucket(BUCKET)
-    blob = bucket.blob('storage_snippets_test_sigil')
-    blob.upload_from_string('Hello, is it me you\'re looking for?')
+    blob = bucket.blob("storage_snippets_test_sigil")
+    blob.upload_from_string("Hello, is it me you're looking for?")
     return blob
 
 
 def test_download_file_requester_pays(test_blob, capsys):
     with tempfile.NamedTemporaryFile() as dest_file:
-        requester_pays.download_file_requester_pays(
-            BUCKET,
-            PROJECT,
-            test_blob.name,
-            dest_file.name)
+        storage_download_file_requester_pays.download_file_requester_pays(
+            BUCKET, PROJECT, test_blob.name, dest_file.name
+        )
 
         assert dest_file.read()
