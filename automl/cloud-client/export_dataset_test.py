@@ -16,13 +16,12 @@ import datetime
 import os
 
 from google.cloud import storage
-import pytest
 
 import export_dataset
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+PROJECT_ID = 'cdpe-automl-tests'
 BUCKET_ID = "{}-lcm".format(PROJECT_ID)
-DATASET_ID = "TEN4058147884539838464"
+DATASET_ID = "TEN6765176298449928192"
 PREFIX = "TEST_EXPORT_OUTPUT_" + datetime.datetime.now().strftime(
     "%Y%m%d%H%M%S"
 )
