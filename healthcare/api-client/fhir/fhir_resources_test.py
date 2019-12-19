@@ -18,9 +18,7 @@ import sys
 import time
 
 # Add datasets for bootstrapping datasets for testing
-sys.path.append(
-    os.path.join(os.path.dirname(__file__), "..", "datasets")
-)  # noqa
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "datasets"))  # noqa
 import datasets
 import fhir_stores
 import fhir_resources
@@ -30,9 +28,7 @@ base_url = "https://healthcare.googleapis.com/v1beta1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
-bundle = os.path.join(
-    os.path.dirname(__file__), "resources/execute_bundle.json"
-)
+bundle = os.path.join(os.path.dirname(__file__), "resources/execute_bundle.json")
 dataset_id = "test_dataset_{}".format(int(time.time()))
 fhir_store_id = "test_fhir_store-{}".format(int(time.time()))
 resource_type = "Patient"
@@ -47,30 +43,20 @@ def test_dataset():
     yield dataset
 
     # Clean up
-    datasets.delete_dataset(
-        service_account_json, project_id, cloud_region, dataset_id
-    )
+    datasets.delete_dataset(service_account_json, project_id, cloud_region, dataset_id)
 
 
 @pytest.fixture(scope="module")
 def test_fhir_store():
     fhir_store = fhir_stores.create_fhir_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
+        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     yield fhir_store
 
     # Clean up
     fhir_stores.delete_fhir_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
+        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
     )
 
 
@@ -177,9 +163,7 @@ def test_CRUD_patient(test_dataset, test_fhir_store, capsys):
     assert "Deleted Patient resource" in out
 
 
-def test_resource_versions(
-    test_dataset, test_fhir_store, test_patient, capsys
-):
+def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
     # We have to update the resource so that different versions of it are
     # created, then we test to see if we can get/delete those versions.
     fhir_resources.update_resource(
@@ -239,9 +223,7 @@ def test_resource_versions(
     assert "Deleted versions of Patient resource" in out
 
 
-def test_conditions_resource(
-    test_dataset, test_fhir_store, test_patient, capsys
-):
+def test_conditions_resource(test_dataset, test_fhir_store, test_patient, capsys):
     # The conditional method tests use an Observation, so we have to create an
     # Encounter from test_patient and then create an Observation from the
     # Encounter.
@@ -336,9 +318,7 @@ def test_search_resources(test_dataset, test_fhir_store, test_patient, capsys):
     assert "Using POST request" in out
 
 
-def test_get_patient_everything(
-    test_dataset, test_fhir_store, test_patient, capsys
-):
+def test_get_patient_everything(test_dataset, test_fhir_store, test_patient, capsys):
     fhir_resources.get_patient_everything(
         service_account_json,
         base_url,

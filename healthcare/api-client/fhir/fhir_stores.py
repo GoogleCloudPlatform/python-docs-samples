@@ -34,9 +34,7 @@ def get_client(service_account_json):
     )
     scoped_credentials = credentials.with_scopes(api_scopes)
 
-    discovery_url = "{}?labels=CHC_BETA&version={}".format(
-        discovery_api, api_version
-    )
+    discovery_url = "{}?labels=CHC_BETA&version={}".format(discovery_api, api_version)
 
     return discovery.build(
         service_name,
@@ -90,9 +88,7 @@ def delete_fhir_store(
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, cloud_region, dataset_id
     )
-    fhir_store_name = "{}/fhirStores/{}".format(
-        fhir_store_parent, fhir_store_id
-    )
+    fhir_store_name = "{}/fhirStores/{}".format(fhir_store_parent, fhir_store_id)
 
     request = (
         client.projects()
@@ -123,24 +119,18 @@ def get_fhir_store(
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, cloud_region, dataset_id
     )
-    fhir_store_name = "{}/fhirStores/{}".format(
-        fhir_store_parent, fhir_store_id
-    )
+    fhir_store_name = "{}/fhirStores/{}".format(fhir_store_parent, fhir_store_id)
 
     fhir_stores = client.projects().locations().datasets().fhirStores()
     fhir_store = fhir_stores.get(name=fhir_store_name).execute()
 
     print("Name: {}".format(fhir_store.get("name")))
-    print(
-        "Enable update/create: {}".format(fhir_store.get("enableUpdateCreate"))
-    )
+    print("Enable update/create: {}".format(fhir_store.get("enableUpdateCreate")))
     print("Notification config:")
     if fhir_store.get("notificationConfig") is not None:
         notification_config = fhir_store.get("notificationConfig")
         print(
-            "\tCloud Pub/Sub topic: {}".format(
-                notification_config.get("pubsubTopic")
-            )
+            "\tCloud Pub/Sub topic: {}".format(notification_config.get("pubsubTopic"))
         )
     print(
         "Disable referential integrity: {}".format(
@@ -155,9 +145,7 @@ def get_fhir_store(
 
 
 # [START healthcare_list_fhir_stores]
-def list_fhir_stores(
-    service_account_json, project_id, cloud_region, dataset_id
-):
+def list_fhir_stores(service_account_json, project_id, cloud_region, dataset_id):
     """Lists the FHIR stores in the given dataset."""
     client = get_client(service_account_json)
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
@@ -202,9 +190,7 @@ def patch_fhir_store(
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, cloud_region, dataset_id
     )
-    fhir_store_name = "{}/fhirStores/{}".format(
-        fhir_store_parent, fhir_store_id
-    )
+    fhir_store_name = "{}/fhirStores/{}".format(fhir_store_parent, fhir_store_id)
 
     patch = {"notificationConfig": None}
 
@@ -213,17 +199,13 @@ def patch_fhir_store(
         .locations()
         .datasets()
         .fhirStores()
-        .patch(
-            name=fhir_store_name, updateMask="notificationConfig", body=patch
-        )
+        .patch(name=fhir_store_name, updateMask="notificationConfig", body=patch)
     )
 
     try:
         response = request.execute()
         print(
-            "Patched FHIR store {} with Cloud Pub/Sub topic: None".format(
-                fhir_store_id
-            )
+            "Patched FHIR store {} with Cloud Pub/Sub topic: None".format(fhir_store_id)
         )
         return response
     except HttpError as e:
@@ -236,12 +218,7 @@ def patch_fhir_store(
 
 # [START healthcare_export_fhir_resources_gcs]
 def export_fhir_store_gcs(
-    service_account_json,
-    project_id,
-    cloud_region,
-    dataset_id,
-    fhir_store_id,
-    gcs_uri,
+    service_account_json, project_id, cloud_region, dataset_id, fhir_store_id, gcs_uri
 ):
     """Export resources to a Google Cloud Storage bucket by copying
     them from the FHIR store."""
@@ -249,13 +226,9 @@ def export_fhir_store_gcs(
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, cloud_region, dataset_id
     )
-    fhir_store_name = "{}/fhirStores/{}".format(
-        fhir_store_parent, fhir_store_id
-    )
+    fhir_store_name = "{}/fhirStores/{}".format(fhir_store_parent, fhir_store_id)
 
-    body = {
-        "gcsDestination": {"uriPrefix": "gs://{}/fhir_export".format(gcs_uri)}
-    }
+    body = {"gcsDestination": {"uriPrefix": "gs://{}/fhir_export".format(gcs_uri)}}
 
     request = (
         client.projects()
@@ -279,12 +252,7 @@ def export_fhir_store_gcs(
 
 # [START healthcare_import_fhir_resources]
 def import_fhir_resources(
-    service_account_json,
-    project_id,
-    cloud_region,
-    dataset_id,
-    fhir_store_id,
-    gcs_uri,
+    service_account_json, project_id, cloud_region, dataset_id, fhir_store_id, gcs_uri
 ):
     """Import resources into the FHIR store by copying them from the
     specified source.
@@ -293,9 +261,7 @@ def import_fhir_resources(
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, cloud_region, dataset_id
     )
-    fhir_store_name = "{}/fhirStores/{}".format(
-        fhir_store_parent, fhir_store_id
-    )
+    fhir_store_name = "{}/fhirStores/{}".format(fhir_store_parent, fhir_store_id)
 
     body = {
         "contentStructure": "CONTENT_STRUCTURE_UNSPECIFIED",
@@ -333,9 +299,7 @@ def get_fhir_store_iam_policy(
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, cloud_region, dataset_id
     )
-    fhir_store_name = "{}/fhirStores/{}".format(
-        fhir_store_parent, fhir_store_id
-    )
+    fhir_store_name = "{}/fhirStores/{}".format(fhir_store_parent, fhir_store_id)
 
     request = (
         client.projects()
@@ -383,9 +347,7 @@ def set_fhir_store_iam_policy(
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, cloud_region, dataset_id
     )
-    fhir_store_name = "{}/fhirStores/{}".format(
-        fhir_store_parent, fhir_store_id
-    )
+    fhir_store_name = "{}/fhirStores/{}".format(fhir_store_parent, fhir_store_id)
 
     policy = {"bindings": [{"role": role, "members": [member]}]}
 
@@ -413,8 +375,7 @@ def parse_command_line_args():
     """Parses command line arguments."""
 
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
     parser.add_argument(
@@ -435,15 +396,12 @@ def parse_command_line_args():
 
     parser.add_argument("--dataset_id", default=None, help="Name of dataset")
 
-    parser.add_argument(
-        "--fhir_store_id", default=None, help="Name of FHIR store"
-    )
+    parser.add_argument("--fhir_store_id", default=None, help="Name of FHIR store")
 
     parser.add_argument(
         "--pubsub_topic",
         default=None,
-        help="The Cloud Pub/Sub topic where notifications of changes "
-        "are published",
+        help="The Cloud Pub/Sub topic where notifications of changes " "are published",
     )
 
     parser.add_argument(
@@ -461,9 +419,7 @@ def parse_command_line_args():
     )
 
     parser.add_argument(
-        "--role",
-        default=None,
-        help='IAM Role to give to member (e.g. "roles/viewer")',
+        "--role", default=None, help='IAM Role to give to member (e.g. "roles/viewer")'
     )
 
     command = parser.add_subparsers(dest="command")
@@ -473,18 +429,10 @@ def parse_command_line_args():
     command.add_parser("get-fhir-store", help=get_fhir_store.__doc__)
     command.add_parser("list-fhir-stores", help=list_fhir_stores.__doc__)
     command.add_parser("patch-fhir-store", help=patch_fhir_store.__doc__)
-    command.add_parser(
-        "import-fhir-resources", help=import_fhir_resources.__doc__
-    )
-    command.add_parser(
-        "export-fhir-store-gcs", help=export_fhir_store_gcs.__doc__
-    )
-    command.add_parser(
-        "get_iam_policy", help=get_fhir_store_iam_policy.__doc__
-    )
-    command.add_parser(
-        "set_iam_policy", help=set_fhir_store_iam_policy.__doc__
-    )
+    command.add_parser("import-fhir-resources", help=import_fhir_resources.__doc__)
+    command.add_parser("export-fhir-store-gcs", help=export_fhir_store_gcs.__doc__)
+    command.add_parser("get_iam_policy", help=get_fhir_store_iam_policy.__doc__)
+    command.add_parser("set_iam_policy", help=set_fhir_store_iam_policy.__doc__)
 
     return parser.parse_args()
 

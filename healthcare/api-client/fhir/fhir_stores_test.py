@@ -20,9 +20,7 @@ import time
 from google.cloud import storage
 
 # Add datasets for bootstrapping datasets for testing
-sys.path.append(
-    os.path.join(os.path.dirname(__file__), "..", "datasets")
-)  # noqa
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "datasets"))  # noqa
 import datasets
 import fhir_stores
 
@@ -49,26 +47,16 @@ def test_dataset():
     yield dataset
 
     # Clean up
-    datasets.delete_dataset(
-        service_account_json, project_id, cloud_region, dataset_id
-    )
+    datasets.delete_dataset(service_account_json, project_id, cloud_region, dataset_id)
 
 
 def test_CRUD_fhir_store(test_dataset, capsys):
     fhir_stores.create_fhir_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
+        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     fhir_stores.get_fhir_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
+        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     fhir_stores.list_fhir_stores(
@@ -76,11 +64,7 @@ def test_CRUD_fhir_store(test_dataset, capsys):
     )
 
     fhir_stores.delete_fhir_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
+        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     out, _ = capsys.readouterr()
@@ -94,28 +78,16 @@ def test_CRUD_fhir_store(test_dataset, capsys):
 
 def test_patch_fhir_store(test_dataset, capsys):
     fhir_stores.create_fhir_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
+        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     fhir_stores.patch_fhir_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
+        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     # Clean up
     fhir_stores.delete_fhir_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
+        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     out, _ = capsys.readouterr()
@@ -125,11 +97,7 @@ def test_patch_fhir_store(test_dataset, capsys):
 
 def test_import_fhir_store_gcs(test_dataset, capsys):
     fhir_stores.create_fhir_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
+        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     storage_client = storage.Client()
@@ -152,11 +120,7 @@ def test_import_fhir_store_gcs(test_dataset, capsys):
     blob.delete()
 
     fhir_stores.delete_fhir_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
+        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     out, _ = capsys.readouterr()
@@ -166,11 +130,7 @@ def test_import_fhir_store_gcs(test_dataset, capsys):
 
 def test_export_fhir_store_gcs(test_dataset, capsys):
     fhir_stores.create_fhir_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
+        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     fhir_stores.export_fhir_store_gcs(
@@ -184,11 +144,7 @@ def test_export_fhir_store_gcs(test_dataset, capsys):
 
     # Clean up
     fhir_stores.delete_fhir_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
+        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     out, _ = capsys.readouterr()
@@ -198,19 +154,11 @@ def test_export_fhir_store_gcs(test_dataset, capsys):
 
 def test_get_set_fhir_store_iam_policy(test_dataset, capsys):
     fhir_stores.create_fhir_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
+        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     get_response = fhir_stores.get_fhir_store_iam_policy(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
+        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     set_response = fhir_stores.set_fhir_store_iam_policy(
@@ -225,11 +173,7 @@ def test_get_set_fhir_store_iam_policy(test_dataset, capsys):
 
     # Clean up
     fhir_stores.delete_fhir_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
+        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     out, _ = capsys.readouterr()

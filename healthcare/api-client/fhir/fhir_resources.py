@@ -51,17 +51,10 @@ def get_session(service_account_json):
 
 # [START healthcare_create_resource]
 def create_patient(
-    service_account_json,
-    base_url,
-    project_id,
-    cloud_region,
-    dataset_id,
-    fhir_store_id,
+    service_account_json, base_url, project_id, cloud_region, dataset_id, fhir_store_id
 ):
     """Creates a new Patient resource in a FHIR store."""
-    url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region
-    )
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
     fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir/Patient".format(
         url, dataset_id, fhir_store_id
@@ -226,9 +219,7 @@ def delete_resource(
     resource was successfully deleted, search for or get the resource and
     see if it exists.
     """
-    url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region
-    )
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
     resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}/{}".format(
         url, dataset_id, fhir_store_id, resource_type, resource_id
@@ -258,9 +249,7 @@ def get_resource(
     resource_id,
 ):
     """Gets a FHIR resource."""
-    url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region
-    )
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
     resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}/{}".format(
         url, dataset_id, fhir_store_id, resource_type, resource_id
@@ -297,9 +286,7 @@ def list_resource_history(
     resource_id,
 ):
     """Gets the history of a resource."""
-    url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region
-    )
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
     resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}/{}".format(
         url, dataset_id, fhir_store_id, resource_type, resource_id
@@ -341,9 +328,7 @@ def get_resource_history(
     version_id,
 ):
     """Gets a version resource."""
-    url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region
-    )
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
     resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}/{}".format(
         url, dataset_id, fhir_store_id, resource_type, resource_id
@@ -380,9 +365,7 @@ def export_resources(
     gcs_destination,
 ):
     """Exports resources in a FHIR store."""
-    url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region
-    )
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
     resource_path = "{}/datasets/{}/fhirStores/{}".format(
         url, dataset_id, fhir_store_id
@@ -395,9 +378,7 @@ def export_resources(
 
     body = {"gcsDestination": {"uriPrefix": gcs_destination}}
 
-    response = session.post(
-        resource_path + ":export", headers=headers, json=body
-    )
+    response = session.post(resource_path + ":export", headers=headers, json=body)
     response.raise_for_status()
 
     resource = response.json()
@@ -421,9 +402,7 @@ def import_resources(
     gcs_source,
 ):
     """Exports resources in a FHIR store."""
-    url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region
-    )
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
     resource_path = "{}/datasets/{}/fhirStores/{}".format(
         url, dataset_id, fhir_store_id
@@ -439,9 +418,7 @@ def import_resources(
         "gcsErrorDestination": {"uriPrefix": gcs_source + "_errors"},
     }
 
-    response = session.post(
-        resource_path + ":import", headers=headers, json=body
-    )
+    response = session.post(resource_path + ":import", headers=headers, json=body)
     response.raise_for_status()
 
     resource = response.json()
@@ -466,9 +443,7 @@ def delete_resource_purge(
     resource_id,
 ):
     """Deletes versions of a resource (excluding current version)."""
-    url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region
-    )
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
     resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}/{}".format(
         url, dataset_id, fhir_store_id, resource_type, resource_id
@@ -507,9 +482,7 @@ def update_resource(
     resource_id,
 ):
     """Updates an existing resource."""
-    url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region
-    )
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
     resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}/{}".format(
         url, dataset_id, fhir_store_id, resource_type, resource_id
@@ -520,11 +493,7 @@ def update_resource(
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
-    body = {
-        "resourceType": resource_type,
-        "active": True,
-        "id": resource_id,
-    }
+    body = {"resourceType": resource_type, "active": True, "id": resource_id}
 
     response = session.put(resource_path, headers=headers, json=body)
     response.raise_for_status()
@@ -555,9 +524,7 @@ def conditional_update_resource(
     If a resource is found based on the search criteria specified in
     the query parameters, updates the entire contents of that resource.
     """
-    url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region
-    )
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
     # The search query in this request updates all Observations
     # using the Observation's identifier (ABC-12345 in my-code-system)
@@ -583,9 +550,7 @@ def conditional_update_resource(
 
     params = {"identifier": "my-code-system|ABC-12345"}
 
-    response = session.put(
-        resource_path, headers=headers, params=params, json=body
-    )
+    response = session.put(resource_path, headers=headers, params=params, json=body)
 
     response.raise_for_status()
     resource = response.json()
@@ -605,17 +570,10 @@ def conditional_update_resource(
 
 # [START healthcare_conditional_delete_resource]
 def conditional_delete_resource(
-    service_account_json,
-    base_url,
-    project_id,
-    cloud_region,
-    dataset_id,
-    fhir_store_id,
+    service_account_json, base_url, project_id, cloud_region, dataset_id, fhir_store_id
 ):
     """Deletes FHIR resources that match a search query."""
-    url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region
-    )
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
     # The search query in this request deletes all Observations
     # with a status of 'cancelled'.
@@ -653,9 +611,7 @@ def patch_resource(
     resource_id,
 ):
     """Updates part of an existing resource.."""
-    url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region
-    )
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
     resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}/{}".format(
         url, dataset_id, fhir_store_id, resource_type, resource_id
@@ -684,21 +640,14 @@ def patch_resource(
 
 # [START healthcare_conditional_patch_resource]
 def conditional_patch_resource(
-    service_account_json,
-    base_url,
-    project_id,
-    cloud_region,
-    dataset_id,
-    fhir_store_id,
+    service_account_json, base_url, project_id, cloud_region, dataset_id, fhir_store_id
 ):
     """
     If a resource is found based on the search criteria specified in
     the query parameters, updates part of that resource by
     applying the operations specified in a JSON Patch document.
     """
-    url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region
-    )
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
     # The search query in this request updates all Observations
     # if the subject of the Observation is a particular patient.
@@ -726,9 +675,7 @@ def conditional_patch_resource(
     # The search query is passed in as a query string parameter.
     params = {"identifier": "my-code-system|ABC-12345"}
 
-    response = session.patch(
-        resource_path, headers=headers, params=params, data=body
-    )
+    response = session.patch(resource_path, headers=headers, params=params, data=body)
     response.raise_for_status()
 
     print(response.url)
@@ -761,9 +708,7 @@ def search_resources_get(
     Searches resources in the given FHIR store using the
     searchResources GET method.
     """
-    url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region
-    )
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
     resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}".format(
         url, dataset_id, fhir_store_id, resource_type
@@ -792,12 +737,7 @@ def search_resources_get(
 
 # [START healthcare_search_resources_post]
 def search_resources_post(
-    service_account_json,
-    base_url,
-    project_id,
-    cloud_region,
-    dataset_id,
-    fhir_store_id,
+    service_account_json, base_url, project_id, cloud_region, dataset_id, fhir_store_id
 ):
     """
     Searches resources in the given FHIR store using the
@@ -805,17 +745,13 @@ def search_resources_post(
     information to search for. In this sample, the search criteria is
     'family:exact=Smith' on a Patient resource.
     """
-    url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region
-    )
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
     fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir".format(
         url, dataset_id, fhir_store_id
     )
 
-    resource_path = "{}/Patient/_search?family:exact=Smith".format(
-        fhir_store_path
-    )
+    resource_path = "{}/Patient/_search?family:exact=Smith".format(fhir_store_path)
 
     # Make an authenticated API request
     session = get_session(service_account_json)
@@ -851,9 +787,7 @@ def get_patient_everything(
     resource_id,
 ):
     """Gets all the resources in the patient compartment."""
-    url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region
-    )
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
     resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}/{}".format(
         url, dataset_id, fhir_store_id, "Patient", resource_id
@@ -880,17 +814,10 @@ def get_patient_everything(
 
 # [START healthcare_get_metadata]
 def get_metadata(
-    service_account_json,
-    base_url,
-    project_id,
-    cloud_region,
-    dataset_id,
-    fhir_store_id,
+    service_account_json, base_url, project_id, cloud_region, dataset_id, fhir_store_id
 ):
     """Gets the capabilities statement for a FHIR store."""
-    url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region
-    )
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
     fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir/metadata".format(
         url, dataset_id, fhir_store_id
@@ -923,9 +850,7 @@ def execute_bundle(
     bundle,
 ):
     """Executes the operations in the given bundle."""
-    url = "{}/projects/{}/locations/{}".format(
-        base_url, project_id, cloud_region
-    )
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
     resource_path = "{}/datasets/{}/fhirStores/{}/fhir".format(
         url, dataset_id, fhir_store_id
@@ -939,9 +864,7 @@ def execute_bundle(
     with open(bundle, "r") as bundle_file:
         bundle_file_content = bundle_file.read()
 
-    response = session.post(
-        resource_path, headers=headers, data=bundle_file_content
-    )
+    response = session.post(resource_path, headers=headers, data=bundle_file_content)
     response.raise_for_status()
 
     resource = response.json()
@@ -959,8 +882,7 @@ def parse_command_line_args():
     """Parses command line arguments."""
 
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
     parser.add_argument(
@@ -969,9 +891,7 @@ def parse_command_line_args():
         help="Path to service account JSON file.",
     )
 
-    parser.add_argument(
-        "--base_url", default=_BASE_URL, help="Healthcare API URL."
-    )
+    parser.add_argument("--base_url", default=_BASE_URL, help="Healthcare API URL.")
 
     parser.add_argument(
         "--project_id",
@@ -979,15 +899,11 @@ def parse_command_line_args():
         help="GCP project name",
     )
 
-    parser.add_argument(
-        "--cloud_region", default="us-central1", help="GCP region"
-    )
+    parser.add_argument("--cloud_region", default="us-central1", help="GCP region")
 
     parser.add_argument("--dataset_id", default=None, help="Name of dataset")
 
-    parser.add_argument(
-        "--fhir_store_id", default=None, help="Name of FHIR store"
-    )
+    parser.add_argument("--fhir_store_id", default=None, help="Name of FHIR store")
 
     parser.add_argument(
         "--resource_type",
@@ -1020,14 +936,10 @@ def parse_command_line_args():
     )
 
     parser.add_argument(
-        "--uri_prefix",
-        default=None,
-        help="Prefix of gs:// URIs for import and export",
+        "--uri_prefix", default=None, help="Prefix of gs:// URIs for import and export"
     )
 
-    parser.add_argument(
-        "--version_id", default=None, help="Version of a FHIR resource"
-    )
+    parser.add_argument("--version_id", default=None, help="Version of a FHIR resource")
 
     command = parser.add_subparsers(dest="command")
 
@@ -1039,16 +951,10 @@ def parse_command_line_args():
         "conditional-delete-resource", help=conditional_delete_resource.__doc__
     )
     command.add_parser("get-resource", help=get_resource.__doc__)
-    command.add_parser(
-        "list-resource-history", help=list_resource_history.__doc__
-    )
+    command.add_parser("list-resource-history", help=list_resource_history.__doc__)
     command.add_parser("execute-bundle", help=execute_bundle.__doc__)
-    command.add_parser(
-        "get-resource-history", help=get_resource_history.__doc__
-    )
-    command.add_parser(
-        "delete-resource-purge", help=delete_resource_purge.__doc__
-    )
+    command.add_parser("get-resource-history", help=get_resource_history.__doc__)
+    command.add_parser("delete-resource-purge", help=delete_resource_purge.__doc__)
     command.add_parser("update-resource", help=update_resource.__doc__)
     command.add_parser(
         "conditional-update-resource", help=conditional_update_resource.__doc__
@@ -1057,15 +963,9 @@ def parse_command_line_args():
     command.add_parser(
         "conditional-patch-resource", help=conditional_patch_resource.__doc__
     )
-    command.add_parser(
-        "search-resources-get", help=search_resources_get.__doc__
-    )
-    command.add_parser(
-        "search-resources-post", help=search_resources_get.__doc__
-    )
-    command.add_parser(
-        "get-patient-everything", help=get_patient_everything.__doc__
-    )
+    command.add_parser("search-resources-get", help=search_resources_get.__doc__)
+    command.add_parser("search-resources-post", help=search_resources_get.__doc__)
+    command.add_parser("get-patient-everything", help=get_patient_everything.__doc__)
     command.add_parser("get-metadata", help=get_metadata.__doc__)
 
     return parser.parse_args()
