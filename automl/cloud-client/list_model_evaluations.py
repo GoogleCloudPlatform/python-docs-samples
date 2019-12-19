@@ -24,8 +24,8 @@ def list_model_evaluations(project_id, model_id):
     from google.cloud import automl
 
     # TODO(developer): Uncomment and set the following variables
-    # project_id = 'YOUR_PROJECT_ID'
-    # model_id = 'YOUR_MODEL_ID'
+    # project_id = "YOUR_PROJECT_ID"
+    # model_id = "YOUR_MODEL_ID"
 
     client = automl.AutoMlClient()
     # Get the full path of the model.
