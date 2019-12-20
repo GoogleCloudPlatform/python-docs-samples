@@ -24,8 +24,8 @@ def get_dataset(project_id, dataset_id):
     from google.cloud import automl
 
     # TODO(developer): Uncomment and set the following variables
-    # project_id = 'YOUR_PROJECT_ID'
-    # dataset_id = 'YOUR_DATASET_ID'
+    # project_id = "YOUR_PROJECT_ID"
+    # dataset_id = "YOUR_DATASET_ID"
 
     client = automl.AutoMlClient()
     # Get the full path of the dataset

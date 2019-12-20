@@ -19,9 +19,9 @@ def export_dataset(project_id, dataset_id, gcs_uri):
     from google.cloud import automl
 
     # TODO(developer): Uncomment and set the following variables
-    # project_id = 'YOUR_PROJECT_ID'
-    # dataset_id = 'YOUR_DATASET_ID'
-    # gcs_uri = 'gs://YOUR_BUCKET_ID/path/to/export/'
+    # project_id = "YOUR_PROJECT_ID"
+    # dataset_id = "YOUR_DATASET_ID"
+    # gcs_uri = "gs://YOUR_BUCKET_ID/path/to/export/"
 
     client = automl.AutoMlClient()
 

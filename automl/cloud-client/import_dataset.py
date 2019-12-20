@@ -19,9 +19,9 @@ def import_dataset(project_id, dataset_id, path):
     from google.cloud import automl
 
     # TODO(developer): Uncomment and set the following variables
-    # project_id = 'YOUR_PROJECT_ID'
-    # dataset_id = 'YOUR_DATASET_ID'
-    # path = 'gs://YOUR_BUCKET_ID/path/to/data.csv'
+    # project_id = "YOUR_PROJECT_ID"
+    # dataset_id = "YOUR_DATASET_ID"
+    # path = "gs://YOUR_BUCKET_ID/path/to/data.csv"
 
     client = automl.AutoMlClient()
     # Get the full path of the dataset.

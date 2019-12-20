@@ -24,7 +24,7 @@ def list_datasets(project_id):
     from google.cloud import automl
 
     # TODO(developer): Uncomment and set the following variables
-    # project_id = 'YOUR_PROJECT_ID'
+    # project_id = "YOUR_PROJECT_ID"
 
     client = automl.AutoMlClient()
     # A resource that represents Google Cloud Platform location.
