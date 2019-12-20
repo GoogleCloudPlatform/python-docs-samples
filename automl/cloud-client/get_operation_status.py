@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,11 +20,13 @@ def get_operation_status(operation_full_id):
 
     # TODO(developer): Uncomment and set the following variables
     # operation_full_id = \
-    #     'projects/[projectId]/locations/us-central1/operations/[operationId]'
+    #     "projects/[projectId]/locations/us-central1/operations/[operationId]"
 
     client = automl.AutoMlClient()
     # Get the latest state of a long-running operation.
-    response = client.transport._operations_client.get_operation(operation_full_id)
+    response = client.transport._operations_client.get_operation(
+        operation_full_id
+    )
 
     print(u"Name: {}".format(response.name))
     print("Operation details:")

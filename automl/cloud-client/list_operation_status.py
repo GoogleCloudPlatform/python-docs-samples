@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,13 +19,15 @@ def list_operation_status(project_id):
     from google.cloud import automl
 
     # TODO(developer): Uncomment and set the following variables
-    # project_id = 'YOUR_PROJECT_ID'
+    # project_id = "YOUR_PROJECT_ID"
 
     client = automl.AutoMlClient()
     # A resource that represents Google Cloud Platform location.
     project_location = client.location_path(project_id, "us-central1")
     # List all the operations names available in the region.
-    response = client.transport._operations_client.list_operations(project_location, "")
+    response = client.transport._operations_client.list_operations(
+        project_location, ""
+    )
 
     print("List of operations:")
     for operation in response:

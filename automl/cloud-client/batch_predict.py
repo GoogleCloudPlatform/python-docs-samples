@@ -19,15 +19,17 @@ def batch_predict(project_id, model_id, input_uri, output_uri):
     from google.cloud import automl
 
     # TODO(developer): Uncomment and set the following variables
-    # project_id = 'YOUR_PROJECT_ID'
-    # model_id = 'YOUR_MODEL_ID'
-    # input_uri = 'gs://YOUR_BUCKET_ID/path_to_your_input_csv_or_jsonl'
-    # output_uri = 'gs://YOUR_BUCKET_ID/path_to_save_results/'
+    # project_id = "YOUR_PROJECT_ID"
+    # model_id = "YOUR_MODEL_ID"
+    # input_uri = "gs://YOUR_BUCKET_ID/path/to/your/input/csv_or_jsonl"
+    # output_uri = "gs://YOUR_BUCKET_ID/path/to/save/results/"
 
     prediction_client = automl.PredictionServiceClient()
 
     # Get the full path of the model.
-    model_full_id = prediction_client.model_path(project_id, "us-central1", model_id)
+    model_full_id = prediction_client.model_path(
+        project_id, "us-central1", model_id
+    )
 
     gcs_source = automl.types.GcsSource(input_uris=[input_uri])
 
@@ -36,11 +38,9 @@ def batch_predict(project_id, model_id, input_uri, output_uri):
     output_config = automl.types.BatchPredictOutputConfig(
         gcs_destination=gcs_destination
     )
-    # [0.0-1.0] Only produce results higher than this value
-    params = {"score_threshold": "0.8"}
 
     response = prediction_client.batch_predict(
-        model_full_id, input_config, output_config, params
+        model_full_id, input_config, output_config
     )
 
     print("Waiting for operation to complete...")

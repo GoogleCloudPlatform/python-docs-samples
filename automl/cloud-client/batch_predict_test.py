@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-
-# Copyright 2018 Google LLC
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,12 +9,14 @@
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
+# See the License for the specific ladnguage governing permissions and
 # limitations under the License.
 
 import datetime
 import os
 
+from google.cloud import automl
+from google.cloud import storage
 import pytest
 
 import batch_predict
@@ -24,13 +24,13 @@ import batch_predict
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 BUCKET_ID = "{}-lcm".format(PROJECT_ID)
 MODEL_ID = "TEN5112482778553778176"
-PREFIX = "TEST_EXPORT_OUTPUT_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+PREFIX = "TEST_EXPORT_OUTPUT_" + datetime.datetime.now().strftime(
+    "%Y%m%d%H%M%S"
+)
 
 
 @pytest.fixture(scope="function")
 def verify_model_state():
-    from google.cloud import automl
-
     client = automl.AutoMlClient()
     model_full_id = client.model_path(PROJECT_ID, "us-central1", MODEL_ID)
     model = client.get_model(model_full_id)
@@ -50,8 +50,6 @@ def test_batch_predict(capsys, verify_model_state):
     assert "Batch Prediction results saved to Cloud Storage bucket" in out
 
     # Delete created files
-    from google.cloud import storage
-
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(BUCKET_ID)
     if len(list(bucket.list_blobs(prefix=PREFIX))) > 0:
