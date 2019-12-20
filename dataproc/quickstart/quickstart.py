@@ -22,9 +22,9 @@ from google.cloud import storage
 
 
 def quickstart(project_id, region, cluster_name, job_file_path):
-    """This quickstart sample walks a user through creating a Cloud Dataproc 
-       cluster, submitting a PySpark job from Google Cloud Storage to the 
-       cluster, reading the output of the job and deleting the cluster, all 
+    """This quickstart walks a user through creating a Cloud Dataproc
+       cluster, submitting a PySpark job from Google Cloud Storage to the
+       cluster, reading the output of the job and deleting the cluster, all
        using the Python client library.
     """
     # TODO(developer): Uncomment and set the following variables
@@ -35,44 +35,45 @@ def quickstart(project_id, region, cluster_name, job_file_path):
 
     # Create the cluster client
     cluster_client = dataproc.ClusterControllerClient(client_options={
-      'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
+        'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
 
     # Create the cluster config
     cluster = {
-      'project_id': project_id,
-      'cluster_name': cluster_name,
-      'config': {
-        'master_config': {
-          'num_instances': 1,
-          'machine_type_uri': 'n1-standard-1'
-        },
-        'worker_config': {
-          'num_instances': 2,
-          'machine_type_uri': 'n1-standard-1'
+        'project_id': project_id,
+        'cluster_name': cluster_name,
+        'config': {
+            'master_config': {
+                'num_instances': 1,
+                'machine_type_uri': 'n1-standard-1'
+            },
+            'worker_config': {
+                'num_instances': 2,
+                'machine_type_uri': 'n1-standard-1'
+            }
         }
-      }
     }
 
     # Create the cluster
     operation = cluster_client.create_cluster(project_id, region, cluster)
     result = operation.result()
 
+    # Output a success message
     print('Cluster created successfully: {}'.format(result.cluster_name))
 
     # Create the job client
     job_client = dataproc.JobControllerClient(client_options={
-      'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
+        'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
 
     # Create the job config
     job = {
-      'placement': {
-        'cluster_name': cluster_name
-      },
-      'pyspark_job': {
-        'main_python_file_uri': job_file_path
-      }
+        'placement': {
+            'cluster_name': cluster_name
+        },
+        'pyspark_job': {
+            'main_python_file_uri': job_file_path
+        }
     }
 
     job_response = job_client.submit_job(project_id, region, job)
@@ -82,9 +83,9 @@ def quickstart(project_id, region, cluster_name, job_file_path):
 
     # Termimal states for a job
     terminal_states = {
-      dataproc.types.JobStatus.ERROR,
-      dataproc.types.JobStatus.CANCELLED,
-      dataproc.types.JobStatus.DONE
+        dataproc.types.JobStatus.ERROR,
+        dataproc.types.JobStatus.CANCELLED,
+        dataproc.types.JobStatus.DONE
     }
 
     # Create a timeout such that the job gets cancelled if not in a
@@ -111,10 +112,11 @@ def quickstart(project_id, region, cluster_name, job_file_path):
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(output_bucket)
     output_blob = (
-      ('google-cloud-dataproc-metainfo/{}/jobs/{}/driveroutput.000000000'.
-       format(cluster_uuid, job_id)))
+        ('google-cloud-dataproc-metainfo/{}/jobs/{}/driveroutput.000000000'.
+         format(cluster_uuid, job_id)))
     output = bucket.blob(output_blob).download_as_string()
 
+    # Output a success message
     print('Job {} finished with state {}:\n{}'.format(
         job_id,
         job_response.status.State.Name(job_response.status.state),
@@ -123,5 +125,6 @@ def quickstart(project_id, region, cluster_name, job_file_path):
     # Delete the cluster once the job has terminated
     cluster_client.delete_cluster(project_id, region, cluster_name).result()
     
+    # Output a success message
     print('Cluster {} successfully deleted.'.format(cluster_name))
     # [END dataproc_quickstart]
