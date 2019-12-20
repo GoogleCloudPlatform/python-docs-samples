@@ -19,8 +19,8 @@ def create_dataset(project_id, display_name):
     from google.cloud import automl
 
     # TODO(developer): Uncomment and set the following variables
-    # project_id = 'YOUR_PROJECT_ID'
-    # display_name = 'YOUR_DATASET_NAME'
+    # project_id = "YOUR_PROJECT_ID"
+    # display_name = "your_datasets_display_name"
 
     client = automl.AutoMlClient()
 
