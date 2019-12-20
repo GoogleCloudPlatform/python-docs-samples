@@ -144,10 +144,11 @@ class TestContainerAnalysisSamples:
         samples.create_occurrence_subscription(subscription_id, PROJECT_ID)
         tries = 0
         success = False
+        receiver = samples.MessageReceiver()
         while not success and tries < TRY_LIMIT:
             print(tries)
+            receiver.msg_count = 0
             tries += 1
-            receiver = samples.MessageReceiver()
             client.subscribe(subscription_name, receiver.pubsub_callback)
 
             # test adding 3 more occurrences
@@ -241,12 +242,12 @@ class TestContainerAnalysisSamples:
         grafeas_client = client.get_grafeas_client()
         note = {
             'vulnerability': {
-                'effective_severity': Severity.CRITICAL,
+                'severity': Severity.CRITICAL,
                 'details': [
                     {
                         'affected_cpe_uri': 'your-uri-here',
                         'affected_package': 'your-package-here',
-                        'min_affected_version': {
+                        'affected_version_start': {
                             'kind': Version.VersionKind.MINIMUM
                         },
                         'fixed_version': {
@@ -266,7 +267,7 @@ class TestContainerAnalysisSamples:
                     {
                         'affected_cpe_uri': 'your-uri-here',
                         'affected_package': 'your-package-here',
-                        'min_affected_version': {
+                        'affected_version': {
                             'kind': Version.VersionKind.MINIMUM
                         },
                         'fixed_version': {
