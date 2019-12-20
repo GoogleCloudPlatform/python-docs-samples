@@ -16,6 +16,7 @@
 from os import environ
 from os.path import basename
 from time import sleep, time
+import uuid
 
 from google.api_core.exceptions import AlreadyExists
 from google.api_core.exceptions import InvalidArgument
@@ -39,9 +40,9 @@ class TestContainerAnalysisSamples:
 
     def setup_method(self, test_method):
         print('SETUP {}'.format(test_method.__name__))
-        timestamp = str(int(time()))
-        self.note_id = 'note-{}-{}'.format(timestamp, test_method.__name__)
-        self.image_url = '{}.{}'.format(timestamp, test_method.__name__)
+        identifier = str(uuid.uuid1())
+        self.note_id = 'note-{}-{}'.format(identifier, test_method.__name__)
+        self.image_url = '{}.{}'.format(identifier, test_method.__name__)
         self.note_obj = samples.create_note(self.note_id, PROJECT_ID)
 
     def teardown_method(self, test_method):
