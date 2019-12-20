@@ -163,8 +163,8 @@ class TestContainerAnalysisSamples:
                 samples.delete_occurrence(basename(occ.name), PROJECT_ID)
                 sleep(SLEEP_TIME)
             final_count = receiver.msg_count
-            print('done. msg_count = {}'.format(final_count))
-            success = final_count == total_created
+            print('try {} done. msg_count = {}'.format(tries, final_count))
+            success = (final_count == total_created)
         assert final_count == total_created
         # clean up
         client.delete_subscription(subscription_name)
