@@ -139,7 +139,7 @@ class TestContainerAnalysisSamples:
         except AlreadyExists:
             pass
 
-        subscription_id = 'drydockOccurrences'
+        subscription_id = 'drydockOccurrences-{}'.format(str(uuid.uuid1()))
         subscription_name = client.subscription_path(PROJECT_ID,
                                                      subscription_id)
         samples.create_occurrence_subscription(subscription_id, PROJECT_ID)
