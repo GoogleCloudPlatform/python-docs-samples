@@ -14,6 +14,7 @@
 
 import os
 
+from google.cloud import automl
 import pytest
 
 import vision_classification_predict
@@ -24,8 +25,6 @@ MODEL_ID = "ICN7383667271543079510"
 
 @pytest.fixture(scope="function")
 def verify_model_state():
-    from google.cloud import automl
-
     client = automl.AutoMlClient()
     model_full_id = client.model_path(PROJECT_ID, "us-central1", MODEL_ID)
 

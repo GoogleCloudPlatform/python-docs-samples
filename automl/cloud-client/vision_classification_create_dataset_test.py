@@ -15,6 +15,7 @@
 import datetime
 import os
 
+from google.cloud import automl
 import pytest
 
 import vision_classification_create_dataset
@@ -35,8 +36,6 @@ def test_create_dataset(capsys):
 
     # Delete the created dataset
     dataset_id = out.splitlines()[1].split()[2]
-    from google.cloud import automl
-
     client = automl.AutoMlClient()
     dataset_full_id = client.dataset_path(
         PROJECT_ID, "us-central1", dataset_id
