@@ -241,7 +241,7 @@ class TestContainerAnalysisSamples:
         grafeas_client = client.get_grafeas_client()
         note = {
             'vulnerability': {
-                'severity': Severity.CRITICAL,
+                'effective_severity': Severity.CRITICAL,
                 'details': [
                     {
                         'affected_cpe_uri': 'your-uri-here',
