@@ -18,18 +18,20 @@ import argparse
 import os
 from google.api_core.client_options import ClientOptions
 
+
 # [START datalabeling_label_video_beta]
 def label_video(dataset_resource_name, instruction_resource_name,
                 annotation_spec_set_resource_name):
     """Labels a video dataset."""
     from google.cloud import datalabeling_v1beta1 as datalabeling
     client = datalabeling.DataLabelingServiceClient()
-    # [END datalabeling_export_data_beta]
+    # [END datalabeling_label_video_beta]
     # If provided, use a provided test endpoint - this will prevent tests on
     # this snippet from triggering any action by a real human
     if 'DATALABELING_ENDPOINT' in os.environ:
         opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
-    # [START datalabeling_export_data_beta]
+        client = datalabeling.DataLabelingServiceClient(client_options=opts)
+    # [START datalabeling_label_video_beta]
 
     basic_config = datalabeling.types.HumanAnnotationConfig(
         instruction=instruction_resource_name,

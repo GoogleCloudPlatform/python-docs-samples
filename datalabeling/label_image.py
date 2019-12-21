@@ -30,6 +30,7 @@ def label_image(dataset_resource_name, instruction_resource_name,
     # this snippet from triggering any action by a real human
     if 'DATALABELING_ENDPOINT' in os.environ:
         opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
+        client = datalabeling.DataLabelingServiceClient(client_options=opts)
     # [START datalabeling_label_image_beta]
 
     basic_config = datalabeling.types.HumanAnnotationConfig(

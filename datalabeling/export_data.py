@@ -30,6 +30,7 @@ def export_data(dataset_resource_name, annotated_dataset_resource_name,
     # this snippet from triggering any action by a real human
     if 'DATALABELING_ENDPOINT' in os.environ:
         opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
+        client = datalabeling.DataLabelingServiceClient(client_options=opts)
     # [START datalabeling_export_data_beta]
 
     gcs_destination = datalabeling.types.GcsDestination(
