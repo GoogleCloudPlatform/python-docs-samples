@@ -29,6 +29,7 @@ def create_dataset(project_id):
     # this snippet from triggering any action by a real human
     if 'DATALABELING_ENDPOINT' in os.environ:
         opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
+        client = datalabeling.DataLabelingServiceClient(client_options=opts)
     # [START datalabeling_create_dataset_beta]
 
     formatted_project_name = client.project_path(project_id)

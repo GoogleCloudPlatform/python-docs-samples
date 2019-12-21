@@ -29,6 +29,7 @@ def import_data(dataset_resource_name, data_type, input_gcs_uri):
     # this snippet from triggering any action by a real human
     if 'DATALABELING_ENDPOINT' in os.environ:
         opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
+        client = datalabeling.DataLabelingServiceClient(client_options=opts)
     # [START datalabeling_import_data_beta]
 
     gcs_source = datalabeling.types.GcsSource(
