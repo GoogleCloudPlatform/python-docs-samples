@@ -1,3 +1,3 @@
-google-cloud-vision==0.39.0
-google-cloud-storage==1.19.1
-Wand==0.5.7
+google-cloud-vision==0.41.0
+google-cloud-storage==1.23.0
+Wand==0.5.8
