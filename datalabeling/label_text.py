@@ -15,7 +15,8 @@
 # limitations under the License.
 
 import argparse
-
+import os
+from google.api_core.client_options import ClientOptions
 
 # [START datalabeling_label_text_beta]
 def label_text(dataset_resource_name, instruction_resource_name,
@@ -23,6 +24,12 @@ def label_text(dataset_resource_name, instruction_resource_name,
     """Labels a text dataset."""
     from google.cloud import datalabeling_v1beta1 as datalabeling
     client = datalabeling.DataLabelingServiceClient()
+    # [END datalabeling_export_data_beta]
+    # If provided, use a provided test endpoint - this will prevent tests on
+    # this snippet from triggering any action by a real human
+    if 'DATALABELING_ENDPOINT' in os.environ:
+        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
+    # [START datalabeling_export_data_beta]
 
     basic_config = datalabeling.types.HumanAnnotationConfig(
         instruction=instruction_resource_name,
