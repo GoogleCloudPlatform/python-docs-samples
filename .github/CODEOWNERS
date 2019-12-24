@@ -1,27 +1,64 @@
 # Code owners file.
 # This file controls who is tagged for review for any given pull request.
+#
+# For syntax help see:
+# https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners#codeowners-syntax
+
 
 # The python-samples-owners team is the default owner for anything not
 # explicitly taken by someone else.
-*                         @GoogleCloudPlatform/python-samples-owners
+*                       @GoogleCloudPlatform/python-samples-owners
 
-# Alix Hamilton is the primary maintainer of the BigQuery samples.
-bigquery/*                @alixhami
-
-# Tim Swast is the primary maintainer of the BigQuery Data Transfer samples.
-bigquery/transfer/*       @tswast
-
-# Tim Swast is the primary maintainer of the Composer samples.
-composer/*                @tswast
-
-# Gus Class is the primary maintainer of the IoT samples.
-iot/*                     @gguuss
-
-# Alix Hamilton is the primary maintainer of the Jupyter notebook samples.
-notebooks/*               @alixhami
-
-# Torry Yang is the primary maintainer of the Tables samples.
-/tables/                  @sirtorry
-
-# Tianzi Cai is the primary maintainer of the Pub/Sub samples.
-/pubsub/                  @anguillanneuf
+/auth/                  @busunkim96
+/automl/
+/bigquery/              @tswast
+/bigquery_storage/      @tswast
+/bigtable/              @billyjacobson
+/blog/
+/cdn/
+/cloud-sql/             @kvg
+/codelabs/
+/composer/              @leahecole
+/compute/               @djmailhot
+/container_registry/    @DanSanche
+/datacatalog/           @tswast
+/dataflow/              @davidcavazos
+/datalabeling/          @tswast
+/dataproc/              @bradmiro
+/datastore/             @andrewsg
+/dialogflow/            @nnegrey
+/dlp/                   
+/dns/                   @michaelawyu
+/endpoints/             @DanSanche
+/error_reporting/
+/firestore/             @BenWhitehead
+/functions/             @grant
+/healthcare/            @noerog
+/iam/                   @melaniedejong
+/iap/                   
+/iot/                   @gguuss
+/jobs/
+/kms/                   @DanSanche
+/kubernetes_engine/     
+/language/              @nnegrey
+/logging/           
+/memorystore/
+/ml_engine/             @alecglassford      
+/monitoring/            
+/notebooks/             @alexhami
+/opencensus/
+/profiler/              @jqll
+/pubsub/                @anguillanneuf
+/run/                   @averikitsch
+/scheduler/             @averikitsch        
+/spanner/               @mmmarklu
+/speech/                @nnegrey
+/storage/               @crwilcox
+/tables/automl/         @sirtorry
+/tasks/                 @averikitsch
+/texttospeech/          @nnegrey   
+/third_party/apache-airflow/    @leahecole
+/trace/                 @engelke
+/translate/             @nnegrey
+/video/                 @dizcology
+/vision/                @nnegrey
