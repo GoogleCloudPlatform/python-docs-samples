@@ -10,7 +10,7 @@
 *                       @GoogleCloudPlatform/python-samples-owners
 
 /auth/                          @busunkim96
-/automl/
+/automl/                        @nnegrey
 /bigquery/                      @tswast
 /bigquery_storage/              @tswast
 /bigtable/                      @billyjacobson
