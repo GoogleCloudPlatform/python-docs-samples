@@ -45,7 +45,7 @@
 /memorystore/
 /ml_engine/                     @alecglassford      
 /monitoring/            
-/notebooks/                     @alexhami
+/notebooks/                     @alixhami
 /opencensus/
 /profiler/                      @jqll
 /pubsub/                        @anguillanneuf
