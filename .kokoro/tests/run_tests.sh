@@ -43,7 +43,7 @@ export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
 # For Datalabeling samples to hit the testing endpoint
 export DATALABELING_ENDPOINT="test-datalabeling.sandbox.googleapis.com:443"
 # Required for "run/image-processing" && "functions/imagemagick"
-sudo apt install libmagickwand-dev -qq
+sudo apt update -qqq && sudo apt install libmagickwand-dev -qq
 
 # Run Cloud SQL proxy (background process exit when script does)
 wget --quiet https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy && chmod +x cloud_sql_proxy
