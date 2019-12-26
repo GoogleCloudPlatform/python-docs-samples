@@ -93,12 +93,12 @@ def scope_demo(request):
 from functools import lru_cache
 
 # Always initialized (at cold-start)
-non_lazy_global = expensive_computation()
+non_lazy_global = file_wide_computation()
 
 # Only initialized if/when the function executes
 @lru_cache()
 def lazy_computation():
-    return expensive_computation()
+    return file_wide_computation()
 
 
 def lazy_globals(request):
