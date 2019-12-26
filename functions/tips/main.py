@@ -96,7 +96,7 @@ from functools import lru_cache
 non_lazy_global = expensive_computation()
 
 # Only initialized if/when the function executes
-@lru_cache(maxsize=1)
+@lru_cache()
 def lazy_computation():
     return expensive_computation()
 
