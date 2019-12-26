@@ -30,11 +30,11 @@ def client_query_add_column(client, table_id):
 
     # Configures the query to append the results to a destination table,
     # allowing field addition.
-    job_config = bigquery.QueryJobConfig(destination=table_id)
-    job_config.schema_update_options = [
-        bigquery.SchemaUpdateOption.ALLOW_FIELD_ADDITION
-    ]
-    job_config.write_disposition = bigquery.WriteDisposition.WRITE_APPEND
+    job_config = bigquery.QueryJobConfig(
+        destination=table_id,
+        schema_update_options=[bigquery.SchemaUpdateOption.ALLOW_FIELD_ADDITION],
+        write_disposition=bigquery.WriteDisposition.WRITE_APPEND,
+    )
 
     # Start the query, passing in the extra configuration.
     query_job = client.query(

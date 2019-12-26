@@ -13,13 +13,15 @@
 # limitations under the License.
 
 from google.cloud import bigquery
+
 from .. import update_table_require_partition_filter
 
 
 def test_update_table_require_partition_filter(capsys, client, random_table_id):
+
     # Make a partitioned table.
     schema = [bigquery.SchemaField("transaction_timestamp", "TIMESTAMP")]
-    table = bigquery.Table(random_table_id, schema)
+    table = bigquery.Table(random_table_id, schema=schema)
     table.time_partitioning = bigquery.TimePartitioning(field="transaction_timestamp")
     table = client.create_table(table)
 
