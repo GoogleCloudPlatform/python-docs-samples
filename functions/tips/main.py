@@ -90,11 +90,15 @@ def scope_demo(request):
 
 # [START functions_tips_lazy_globals]
 # [START run_tips_global_lazy]
-# Always initialized (at cold-start)
-non_lazy_global = file_wide_computation()
+from functools import lru_cache
 
-# Declared at cold-start, but only initialized if/when the function executes
-lazy_global = None
+# Always initialized (at cold-start)
+non_lazy_global = expensive_computation()
+
+# Only initialized if/when the function executes
+@lru_cache(maxsize=1)
+def lazy_computation():
+    return expensive_computation()
 
 
 def lazy_globals(request):
@@ -108,13 +112,11 @@ def lazy_globals(request):
         Response object using `make_response`
         <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
-    global lazy_global, non_lazy_global
-
+    
     # This value is initialized only if (and when) the function is called
-    if not lazy_global:
-        lazy_global = function_specific_computation()
+    lazy_value = lazy_computation()
 
-    return 'Lazy: {}, non-lazy: {}.'.format(lazy_global, non_lazy_global)
+    return 'Lazy: {}, non-lazy: {}.'.format(lazy_value, non_lazy_global)
 # [END run_tips_global_lazy]
 # [END functions_tips_lazy_globals]
 
