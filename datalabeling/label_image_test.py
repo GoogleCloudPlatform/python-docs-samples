@@ -24,6 +24,7 @@ import import_data
 import label_image
 import manage_dataset
 import pytest
+import time
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/image/image_dataset.csv'
@@ -60,6 +61,7 @@ def annotation_spec_set():
         opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
         client = datalabeling.DataLabelingServiceClient(client_options=opts)
 
+    time.sleep(5)
     client.delete_annotation_spec_set(response.name)
 
 
@@ -81,6 +83,7 @@ def instruction():
         opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
         client = datalabeling.DataLabelingServiceClient(client_options=opts)
 
+    time.sleep(5)
     client.delete_instruction(instruction.name)
 
 
