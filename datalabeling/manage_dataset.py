@@ -20,7 +20,9 @@ from google.api_core.client_options import ClientOptions
 
 
 # [START datalabeling_create_dataset_beta]
-def create_dataset(project_id):
+def create_dataset(
+        project_id,
+        display_name='YOUR_ANNOTATION_SPEC_SET_DISPLAY_NAME'):
     """Creates a dataset for the given Google Cloud project."""
     from google.cloud import datalabeling_v1beta1 as datalabeling
     client = datalabeling.DataLabelingServiceClient()
@@ -31,11 +33,12 @@ def create_dataset(project_id):
         opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
         client = datalabeling.DataLabelingServiceClient(client_options=opts)
     # [START datalabeling_create_dataset_beta]
+    # display_name = 'YOUR_ANNOTATION_SPEC_SET_DISPLAY_NAME'
 
     formatted_project_name = client.project_path(project_id)
 
     dataset = datalabeling.types.Dataset(
-        display_name='YOUR_ANNOTATION_SPEC_SET_DISPLAY_NAME',
+        display_name=display_name,
         description='YOUR_DESCRIPTION'
     )
 

@@ -19,7 +19,9 @@ import os
 import import_data
 import manage_dataset
 import pytest
+import uuid
 
+DISPLAY_NAME = str(uuid.uuid4())
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/image/image_dataset.csv'
 
@@ -27,7 +29,7 @@ INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/image/image_dataset.csv'
 @pytest.fixture(scope='function')
 def dataset():
     # create a temporary dataset
-    dataset = manage_dataset.create_dataset(PROJECT_ID)
+    dataset = manage_dataset.create_dataset(PROJECT_ID, DISPLAY_NAME)
 
     yield dataset
 

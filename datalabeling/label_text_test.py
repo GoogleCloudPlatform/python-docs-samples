@@ -24,7 +24,10 @@ import import_data
 import label_text
 import manage_dataset
 import pytest
+import uuid
 
+
+DISPLAY_NAME = str(uuid.uuid4())
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/text/text_dataset.csv'
 
@@ -32,7 +35,7 @@ INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/text/text_dataset.csv'
 @pytest.fixture(scope='function')
 def dataset():
     # create a temporary dataset
-    dataset = manage_dataset.create_dataset(PROJECT_ID)
+    dataset = manage_dataset.create_dataset(PROJECT_ID, DISPLAY_NAME)
 
     # import some data to it
     import_data.import_data(dataset.name, 'TEXT', INPUT_GCS_URI)

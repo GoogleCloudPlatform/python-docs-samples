@@ -18,14 +18,16 @@ import os
 
 import manage_dataset
 import pytest
+import uuid
 
+DISPLAY_NAME = str(uuid.uuid4())
 PROJECT_ID = os.getenv("GCLOUD_PROJECT")
 
 
 @pytest.fixture(scope='function')
 def dataset():
     # create a temporary dataset
-    dataset = manage_dataset.create_dataset(PROJECT_ID)
+    dataset = manage_dataset.create_dataset(PROJECT_ID, DISPLAY_NAME)
 
     yield dataset
 
