@@ -61,7 +61,6 @@ def annotation_spec_set():
         opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
         client = datalabeling.DataLabelingServiceClient(client_options=opts)
 
-    time.sleep(5)
     client.delete_annotation_spec_set(response.name)
 
 
@@ -83,7 +82,6 @@ def instruction():
         opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
         client = datalabeling.DataLabelingServiceClient(client_options=opts)
 
-    time.sleep(5)
     client.delete_instruction(instruction.name)
 
 
@@ -116,3 +114,5 @@ def test_label_image(capsys, annotation_spec_set, instruction, dataset):
 
     client.transport._operations_client.cancel_operation(
             operation_name)
+
+    time.sleep(30)
