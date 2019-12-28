@@ -24,6 +24,7 @@ import import_data
 import label_text
 import manage_dataset
 import pytest
+import time
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/text/text_dataset.csv'
@@ -72,6 +73,7 @@ def test_label_text(capsys):
 
     # tear down
     manage_dataset.delete_dataset(dataset.name)
+    time.sleep(30)
 
     client.delete_annotation_spec_set(annotation_spec.name)
     client.delete_instruction(instruction.name)
