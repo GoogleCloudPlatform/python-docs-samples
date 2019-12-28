@@ -24,6 +24,7 @@ import import_data
 import label_video
 import manage_dataset
 import pytest
+import time
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/videos/video_dataset.csv'
@@ -68,5 +69,7 @@ def test_label_video(capsys):
             operation_name)
 
     manage_dataset.delete_dataset(dataset.name)
+
+    time.sleep(60)
     client.delete_instruction(instruction.name)
     client.delete_annotation_spec_set(annotation_spec.name)

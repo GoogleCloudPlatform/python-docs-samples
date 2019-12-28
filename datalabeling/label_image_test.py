@@ -24,6 +24,7 @@ import import_data
 import label_image
 import manage_dataset
 import pytest
+import time
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/image/image_dataset.csv'
@@ -71,5 +72,7 @@ def test_label_image(capsys):
             operation_name)
 
     manage_dataset.delete_dataset(dataset.name)
+
+    time.sleep(30)
     client.delete_instruction(instruction.name)
     client.delete_annotation_spec_set(anno_spec_set.name)
