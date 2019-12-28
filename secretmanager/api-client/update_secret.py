@@ -38,7 +38,7 @@ def update_secret(project_id, secret_id):
 
     # Print the new secret name.
     print('Updated secret: {}'.format(response.name))
-# [END secretmanager_update_secret]
+    # [END secretmanager_update_secret]
 
     return response
 
