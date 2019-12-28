@@ -19,7 +19,7 @@ command line application and sample code for creating an accessing a secret.
 import os
 
 
-def run_quickstart():
+def quickstart(_project_id=None, _secret_id=None):
     # [START secretmanager_quickstart]
     # Import the Secret Manager client library.
     from google.cloud import secretmanager_v1beta1 as secretmanager
@@ -31,8 +31,8 @@ def run_quickstart():
     secret_id = 'YOUR_SECRET_ID'
 
     # [END secretmanager_quickstart]
-    project_id = os.environ['GCLOUD_PROJECT']
-    secret_id = os.environ['SECRETMANAGER_SECRET_ID']
+    project_id = _project_id
+    secret_id = _secret_id
     # [START secretmanager_quickstart]
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()
@@ -63,4 +63,4 @@ def run_quickstart():
 
 
 if __name__ == '__main__':
-    run_quickstart()
+    quickstart()

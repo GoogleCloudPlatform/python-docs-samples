@@ -15,6 +15,7 @@ import os
 import pytest
 import uuid
 
+from quickstart import quickstart
 from access_secret_version import access_secret_version
 from add_secret_version import add_secret_version
 from create_secret import create_secret
@@ -80,6 +81,11 @@ def secret_version(client, secret):
 
 
 another_secret_version = secret_version
+
+
+def test_quickstart(project_id):
+    secret_id = 'python-secret-{}'.format(uuid.uuid4())
+    quickstart(project_id, secret_id)
 
 
 def test_access_secret_version(secret_version):
