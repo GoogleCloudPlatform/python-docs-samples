@@ -29,71 +29,24 @@ PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/videos/video_dataset.csv'
 
 
-@pytest.fixture(scope='function')
-def dataset():
+@pytest.mark.slow
+def test_label_video(capsys):
     # create a temporary dataset
     dataset = manage_dataset.create_dataset(PROJECT_ID)
 
-    # import some data to it
     import_data.import_data(dataset.name, 'VIDEO', INPUT_GCS_URI)
 
-    yield dataset
-
-    # tear down
-    manage_dataset.delete_dataset(dataset.name)
-
-
-@pytest.fixture(scope='function')
-def annotation_spec_set():
-    # create a temporary annotation_spec_set
-    response = create_annotation_spec_set.create_annotation_spec_set(
-        PROJECT_ID)
-
-    yield response
-
-    # tear down
-    client = datalabeling.DataLabelingServiceClient()
-
-    # If provided, use a provided test endpoint - this will prevent tests on
-    # this snippet from triggering any action by a real human
-    if 'DATALABELING_ENDPOINT' in os.environ:
-        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
-        client = datalabeling.DataLabelingServiceClient(client_options=opts)
-
-    client.delete_annotation_spec_set(response.name)
-
-
-@pytest.fixture(scope='function')
-def instruction():
-    # create a temporary instruction
     instruction = create_instruction.create_instruction(
             PROJECT_ID, 'VIDEO',
             'gs://cloud-samples-data/datalabeling/instruction/test.pdf')
-
-    yield instruction
-
-    # tear down
-    client = datalabeling.DataLabelingServiceClient()
-
-    # If provided, use a provided test endpoint - this will prevent tests on
-    # this snippet from triggering any action by a real human
-    if 'DATALABELING_ENDPOINT' in os.environ:
-        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
-        client = datalabeling.DataLabelingServiceClient(client_options=opts)
-
-    client.delete_instruction(instruction.name)
-
-
-# Passing in dataset as the last argument in test_label_image since it needs
-# to be deleted before the annotation_spec_set can be deleted.
-@pytest.mark.slow
-def test_label_video(capsys, annotation_spec_set, instruction, dataset):
+    annotation_spec = create_annotation_spec_set.create_annotation_spec_set(
+        PROJECT_ID)
 
     # Start labeling.
     response = label_video.label_video(
         dataset.name,
         instruction.name,
-        annotation_spec_set.name
+        annotation_spec.name
     )
     out, _ = capsys.readouterr()
     assert 'Label_video operation name: ' in out
@@ -113,3 +66,7 @@ def test_label_video(capsys, annotation_spec_set, instruction, dataset):
 
     client.transport._operations_client.cancel_operation(
             operation_name)
+
+    manage_dataset.delete_dataset(dataset.name)
+    client.delete_instruction(instruction.name)
+    client.delete_annotation_spec_set(annotation_spec.name)
