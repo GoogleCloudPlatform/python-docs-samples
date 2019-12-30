@@ -499,12 +499,12 @@ def compound_query_valid_multi_clause():
     # [START compound_query_valid_multi_clause]
     cities_ref = db.collection(u'cities')
 
-    sydney_query = cities_ref.where(
+    denver_query = cities_ref.where(
         u'state', u'==', u'CO').where(u'name', u'==', u'Denver')
     large_us_cities_query = cities_ref.where(
         u'state', u'==', u'CA').where(u'population', u'>', 1000000)
     # [END compound_query_valid_multi_clause]
-    print(sydney_query)
+    print(denver_query)
     print(large_us_cities_query)
 
 
