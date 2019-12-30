@@ -276,7 +276,7 @@ def test_delete_single_doc():
 
 
 def test_delete_field(db):
-    db.collection('cities').document('Beijing').set({'capital': True})
+    db.collection('cities').document('BJ').set({'capital': True})
     snippets.delete_field()
 
 
