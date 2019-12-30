@@ -13,7 +13,6 @@
 
 import os
 
-from google.cloud import firestore
 import pytest
 
 import snippets
