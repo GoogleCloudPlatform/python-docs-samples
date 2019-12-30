@@ -250,15 +250,6 @@ def test_cursor_multiple_conditions():
     snippets.cursor_multiple_conditions()
 
 
-def test_delete_single_doc():
-    snippets.delete_single_doc()
-
-
-def test_delete_field(db):
-    db.collection('cities').document('Beijing').set({'capital': True})
-    snippets.delete_field()
-
-
 def test_listen_document(capsys):
     snippets.listen_document()
     out, _ = capsys.readouterr()
@@ -278,6 +269,15 @@ def test_listen_for_changes(capsys):
     assert 'New city: MTV' in out
     assert 'Modified city: MTV' in out
     assert 'Removed city: MTV' in out
+
+
+def test_delete_single_doc():
+    snippets.delete_single_doc()
+
+
+def test_delete_field(db):
+    db.collection('cities').document('Beijing').set({'capital': True})
+    snippets.delete_field()
 
 
 def test_delete_full_collection():
