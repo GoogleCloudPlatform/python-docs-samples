@@ -15,7 +15,7 @@
 # limitations under the License.
 
 # This sample walks a user through creating a Cloud Dataproc cluster using
-# the Python client library. 
+# the Python client library.
 
 # [START dataproc_create_cluster]
 from google.cloud import dataproc_v1 as dataproc
