@@ -450,9 +450,9 @@ def update_data_batch():
     sf_ref = db.collection(u'cities').document(u'SF')
     batch.update(sf_ref, {u'population': 1000000})
 
-    # Delete LA
-    la_ref = db.collection(u'cities').document(u'LA')
-    batch.delete(la_ref)
+    # Delete DEN
+    den_ref = db.collection(u'cities').document(u'DEN')
+    batch.delete(den_ref)
 
     # Commit the batch
     batch.commit()
@@ -754,6 +754,7 @@ def listen_for_changes():
         u'capital': False,
         u'population': 80000
     })
+    sleep(1)
 
     # Modifying document
     mtv_document.update({
