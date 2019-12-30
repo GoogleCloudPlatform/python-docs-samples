@@ -702,11 +702,12 @@ def listen_multiple():
         u'population': 860000
     }
     db.collection(u'cities').document(u'SF').set(data)
-    
+
     # Wait for 'SF' to be in the doc_map for up to 60 seconds.
     waited = 0
-    while waited < 60 and not [x for x in query_watch.doc_map.keys() if x.endswith('/SF')]:
-        waited += 1
+    while waited < 60 and not [
+        x for x in query_watch.doc_map.keys() if x.endswith("/SF")
+    ]:        waited += 1
         sleep(1)
 
     query_watch.unsubscribe()
