@@ -22,18 +22,17 @@ from google.cloud import dataproc_v1 as dataproc
 
 
 def create_cluster(project_id, region, cluster_name):
-    """Creates a Cloud Dataproc cluster."""
-    # TODO(developer): Uncomment and set the following variables
+    # TODO(developer): Uncomment and set the following variables.
     # project_id = 'YOUR_PROJECT_ID'
     # region = 'YOUR_CLUSTER_REGION'
     # cluster_name = 'YOUR_CLUSTER_NAME'
 
-    # Create a client with the endpoint set to the desired cluster region
+    # Create a client with the endpoint set to the desired cluster region.
     cluster_client = dataproc.ClusterControllerClient(client_options={
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
 
-    # Create the cluster config
+    # Create the cluster config.
     cluster = {
         'project_id': project_id,
         'cluster_name': cluster_name,
@@ -49,10 +48,10 @@ def create_cluster(project_id, region, cluster_name):
         }
     }
 
-    # Create the cluster
+    # Create the cluster.
     operation = cluster_client.create_cluster(project_id, region, cluster)
     result = operation.result()
 
-    # Output a success message
+    # Output a success message.
     print('Cluster created successfully: {}'.format(result.cluster_name))
     # [END dataproc_create_cluster]

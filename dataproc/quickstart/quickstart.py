@@ -22,23 +22,23 @@ from google.cloud import storage
 
 
 def quickstart(project_id, region, cluster_name, job_file_path):
-    """This quickstart walks a user through creating a Cloud Dataproc
-       cluster, submitting a PySpark job from Google Cloud Storage to the
-       cluster, reading the output of the job and deleting the cluster, all
+    """This quickstart sample walks a user through creating a Cloud Dataproc 
+       cluster, submitting a PySpark job from Google Cloud Storage to the 
+       cluster, reading the output of the job and deleting the cluster, all 
        using the Python client library.
     """
-    # TODO(developer): Uncomment and set the following variables
+    # TODO(developer): Uncomment and set the following variables.
     # project_id = 'YOUR_PROJECT_ID'
     # region = 'YOUR_CLUSTER_REGION'
     # cluster_name = 'YOUR_CLUSTER_NAME'
     # job_file_path = 'YOUR_GCS_JOB_FILE_PATH'
 
-    # Create the cluster client
+    # Create the cluster client.
     cluster_client = dataproc.ClusterControllerClient(client_options={
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
 
-    # Create the cluster config
+    # Create the cluster config.
     cluster = {
         'project_id': project_id,
         'cluster_name': cluster_name,
@@ -46,34 +46,33 @@ def quickstart(project_id, region, cluster_name, job_file_path):
             'master_config': {
                 'num_instances': 1,
                 'machine_type_uri': 'n1-standard-1'
-            },
+        },
             'worker_config': {
                 'num_instances': 2,
-                'machine_type_uri': 'n1-standard-1'
-            }
+                 'machine_type_uri': 'n1-standard-1'
         }
+      }
     }
 
-    # Create the cluster
+    # Create the cluster.
     operation = cluster_client.create_cluster(project_id, region, cluster)
     result = operation.result()
 
-    # Output a success message
     print('Cluster created successfully: {}'.format(result.cluster_name))
 
-    # Create the job client
+    # Create the job client.
     job_client = dataproc.JobControllerClient(client_options={
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
 
-    # Create the job config
+    # Create the job config.
     job = {
         'placement': {
             'cluster_name': cluster_name
         },
         'pyspark_job': {
             'main_python_file_uri': job_file_path
-        }
+        }  
     }
 
     job_response = job_client.submit_job(project_id, region, job)
@@ -81,7 +80,7 @@ def quickstart(project_id, region, cluster_name, job_file_path):
 
     print('Submitted job \"{}\".'.format(job_id))
 
-    # Termimal states for a job
+    # Termimal states for a job.
     terminal_states = {
         dataproc.types.JobStatus.ERROR,
         dataproc.types.JobStatus.CANCELLED,
@@ -93,38 +92,34 @@ def quickstart(project_id, region, cluster_name, job_file_path):
     timeout = 600000 
     time_start = time.time()
 
-    # Wait for the job to complete
+    # Wait for the job to complete.
     while job_response.status.state not in terminal_states:
         if time.time() > time_start + timeout:
             job_client.cancel_job(project_id, region, job_id)
             print('Job {} timed out after threshold of {} seconds.'.format(
                 job_id, timeout / 1000))
 
-        # Poll for job termination once a second
+        # Poll for job termination once a second.
         time.sleep(1)
         job_response = job_client.get_job(project_id, region, job_id)
         
     # Cloud Dataproc job output gets saved to a GCS bucket allocated to it. 
     cluster_info = cluster_client.get_cluster(project_id, region, cluster_name)
-    output_bucket = cluster_info.config.config_bucket
-    cluster_uuid = cluster_info.cluster_uuid
 
     storage_client = storage.Client()
-    bucket = storage_client.get_bucket(output_bucket)
+    bucket = storage_client.get_bucket(cluster_info.config.config_bucket)
     output_blob = (
         ('google-cloud-dataproc-metainfo/{}/jobs/{}/driveroutput.000000000'.
-         format(cluster_uuid, job_id)))
+        format(cluster_info.cluster_uuid, job_id)))
     output = bucket.blob(output_blob).download_as_string()
 
-    # Output a success message
     print('Job {} finished with state {}:\n{}'.format(
         job_id,
         job_response.status.State.Name(job_response.status.state),
         output))
 
-    # Delete the cluster once the job has terminated
+    # Delete the cluster once the job has terminated.
     cluster_client.delete_cluster(project_id, region, cluster_name).result()
     
-    # Output a success message
     print('Cluster {} successfully deleted.'.format(cluster_name))
     # [END dataproc_quickstart]
