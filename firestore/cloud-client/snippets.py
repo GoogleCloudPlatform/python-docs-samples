@@ -159,6 +159,8 @@ def add_example_data():
     db = firestore.Client()
     # [START add_example_data]
     cities_ref = db.collection(u'cities')
+    cities_ref.document(u'BJ').set(
+        City(u'Beijing', None, u'China', True, 21500000, [u'hebei']).to_dict())
     cities_ref.document(u'SF').set(
         City(u'San Francisco', u'CA', u'USA', False, 860000,
              [u'west_coast', u'norcal']).to_dict())
@@ -171,8 +173,6 @@ def add_example_data():
     cities_ref.document(u'TOK').set(
         City(u'Tokyo', None, u'Japan', True, 9000000,
              [u'kanto', u'honshu']).to_dict())
-    cities_ref.document(u'BJ').set(
-        City(u'Beijing', None, u'China', True, 21500000, [u'hebei']).to_dict())
     # [END add_example_data]
 
 
@@ -304,8 +304,9 @@ def structure_subcollection_ref():
 
 def update_doc():
     db = firestore.Client()
-    doc_ref = db.collection(u'cities').document(u'DC')
-    doc_ref.set({})
+    db.collection(u'cities').document(u'DC').set(
+        City(u'Washington D.C.', None, u'USA', True, 680000,
+             [u'east_coast']).to_dict())
 
     # [START update_doc]
     city_ref = db.collection(u'cities').document(u'DC')
@@ -317,8 +318,9 @@ def update_doc():
 
 def update_doc_array():
     db = firestore.Client()
-    doc_ref = db.collection(u'cities').document(u'DC')
-    doc_ref.set({})
+    db.collection(u'cities').document(u'DC').set(
+        City(u'Washington D.C.', None, u'USA', True, 680000,
+             [u'east_coast']).to_dict())
 
     # [START fs_update_doc_array]
     city_ref = db.collection(u'cities').document(u'DC')
@@ -335,8 +337,9 @@ def update_doc_array():
 
 def update_multiple():
     db = firestore.Client()
-    doc_ref = db.collection(u'cities').document(u'DC')
-    doc_ref.set({})
+    db.collection(u'cities').document(u'DC').set(
+        City(u'Washington D.C.', None, u'USA', True, 680000,
+             [u'east_coast']).to_dict())
 
     # [START update_multiple]
     doc_ref = db.collection(u'cities').document(u'DC')
