@@ -16,8 +16,6 @@
 command line application and sample code for creating an accessing a secret.
 """
 
-import os
-
 
 def quickstart(_project_id=None, _secret_id=None):
     # [START secretmanager_quickstart]
