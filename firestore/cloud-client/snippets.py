@@ -20,16 +20,6 @@ import google.cloud.exceptions
 
 UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 
-def quickstart_new_instance():
-    # [START quickstart_new_instance]
-    from google.cloud import firestore
-
-    # Project ID is determined by the GCLOUD_PROJECT environment variable
-    db = firestore.Client()
-    # [END quickstart_new_instance]
-
-    return db
-
 
 def _make_one():
     # monkeypatch the collection method so the collection names can be unique for each test run.
@@ -40,6 +30,18 @@ def _make_one():
     db._collection = db.collection
     db.collection = modified_collection_creation 
     return db
+
+
+def quickstart_new_instance():
+    # [START quickstart_new_instance]
+    from google.cloud import firestore
+
+    # Project ID is determined by the GCLOUD_PROJECT environment variable
+    db = firestore.Client()
+    # [END quickstart_new_instance]
+
+    return db
+
 
 def quickstart_add_data_one():
     db = _make_one()
