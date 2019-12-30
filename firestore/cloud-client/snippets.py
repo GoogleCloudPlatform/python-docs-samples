@@ -707,7 +707,7 @@ def listen_multiple():
     waited = 0
     while waited < 60 and not [
         x for x in query_watch.doc_map.keys() if x.endswith("/SF")
-    ]:        
+    ]:
         waited += 1
         sleep(1)
 
