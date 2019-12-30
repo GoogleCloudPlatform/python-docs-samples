@@ -23,7 +23,7 @@ os.environ['GOOGLE_CLOUD_PROJECT'] = os.environ['FIRESTORE_PROJECT']
 
 @pytest.fixture
 def db():
-    yield firestore.Client()
+    yield snippets._make_one()
 
 
 def test_quickstart_new_instance():
