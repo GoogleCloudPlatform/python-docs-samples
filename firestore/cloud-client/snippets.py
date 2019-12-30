@@ -304,6 +304,9 @@ def structure_subcollection_ref():
 
 def update_doc():
     db = firestore.Client()
+    doc_ref = db.collection(u'cities').document(u'DC')
+    doc_ref.set({})
+
     # [START update_doc]
     city_ref = db.collection(u'cities').document(u'DC')
 
@@ -314,6 +317,9 @@ def update_doc():
 
 def update_doc_array():
     db = firestore.Client()
+    doc_ref = db.collection(u'cities').document(u'DC')
+    doc_ref.set({})
+
     # [START fs_update_doc_array]
     city_ref = db.collection(u'cities').document(u'DC')
 
@@ -329,6 +335,9 @@ def update_doc_array():
 
 def update_multiple():
     db = firestore.Client()
+    doc_ref = db.collection(u'cities').document(u'DC')
+    doc_ref.set({})
+
     # [START update_multiple]
     doc_ref = db.collection(u'cities').document(u'DC')
 
@@ -754,6 +763,7 @@ def listen_for_changes():
         u'capital': False,
         u'population': 90000
     })
+    sleep(1)
 
     # Delete document
     mtv_document.delete()
