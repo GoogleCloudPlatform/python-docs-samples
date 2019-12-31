@@ -27,8 +27,8 @@ UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 class TestFirestoreClient(firestore.Client):
     def __init__(self, *args, **kwargs):
         self._UNIQUE_STRING = UNIQUE_STRING
-        self._super = super()
-        self._super.__init__()
+        self._super = super(TestFirestoreClient, self)
+        self._super.__init__(*args, **kwargs)
 
     def collection(self, collection_name, *args, **kwargs):
         collection_name += '-{}'.format(self._UNIQUE_STRING)
