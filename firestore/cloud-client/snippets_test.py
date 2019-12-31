@@ -23,6 +23,7 @@ os.environ['GOOGLE_CLOUD_PROJECT'] = os.environ['FIRESTORE_PROJECT']
 
 UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 
+
 class TestFirestoreClient(firestore.Client):
     def __init__(self, *args, **kwargs):
         self._UNIQUE_STRING = UNIQUE_STRING
@@ -33,11 +34,14 @@ class TestFirestoreClient(firestore.Client):
         collection_name += '-{}'.format(self._UNIQUE_STRING)
         return self._super.collection(collection_name, *args, **kwargs)
 
+
 snippets.firestore.Client = TestFirestoreClient
+
 
 @pytest.fixture
 def db():
     yield snippets.firestore.Client()
+
 
 def test_quickstart_new_instance():
     snippets.quickstart_new_instance()
