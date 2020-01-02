@@ -20,7 +20,7 @@ import pytest
 import language_entity_extraction_predict
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-BUCKET_ID = "{}-lcm".format(PROJECT_ID)
+MODEL_ID = "TEN5112482778553778176"
 
 
 @pytest.fixture(scope="function")
@@ -37,11 +37,10 @@ def verify_model_state():
 
 def test_predict(capsys, verify_model_state):
     verify_model_state
-    model_id = "TEN5112482778553778176"
     text = (
         "Constitutional mutations in the WT1 gene in patients with "
         "Denys-Drash syndrome."
     )
-    language_entity_extraction_predict.predict(PROJECT_ID, model_id, text)
+    language_entity_extraction_predict.predict(PROJECT_ID, MODEL_ID, text)
     out, _ = capsys.readouterr()
     assert "Text Extract Entity Types: " in out
