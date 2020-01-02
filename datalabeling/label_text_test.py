@@ -19,6 +19,7 @@ import os
 import create_annotation_spec_set
 import create_instruction
 from google.cloud import datalabeling_v1beta1 as datalabeling
+from google.api_core.client_options import ClientOptions
 import import_data
 import label_text
 import manage_dataset
@@ -52,6 +53,13 @@ def annotation_spec_set():
 
     # tear down
     client = datalabeling.DataLabelingServiceClient()
+
+    # If provided, use a provided test endpoint - this will prevent tests on
+    # this snippet from triggering any action by a real human
+    if 'DATALABELING_ENDPOINT' in os.environ:
+        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
+        client = datalabeling.DataLabelingServiceClient(client_options=opts)
+
     client.delete_annotation_spec_set(response.name)
 
 
@@ -66,6 +74,13 @@ def instruction():
 
     # tear down
     client = datalabeling.DataLabelingServiceClient()
+
+    # If provided, use a provided test endpoint - this will prevent tests on
+    # this snippet from triggering any action by a real human
+    if 'DATALABELING_ENDPOINT' in os.environ:
+        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
+        client = datalabeling.DataLabelingServiceClient(client_options=opts)
+
     client.delete_instruction(instruction.name)
 
 
@@ -89,5 +104,12 @@ def test_label_text(capsys, annotation_spec_set, instruction, dataset):
     assert response.cancelled() is True
 
     client = datalabeling.DataLabelingServiceClient()
+
+    # If provided, use a provided test endpoint - this will prevent tests on
+    # this snippet from triggering any action by a real human
+    if 'DATALABELING_ENDPOINT' in os.environ:
+        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
+        client = datalabeling.DataLabelingServiceClient(client_options=opts)
+
     client.transport._operations_client.cancel_operation(
             operation_name)
