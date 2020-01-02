@@ -1,4 +1,4 @@
-# Copyright 2019 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ def batch_predict(project_id, model_id, input_uri, output_uri):
 
     print("Waiting for operation to complete...")
     print(
-        u"Batch Prediction results saved to Cloud Storage bucket. {}".format(
+        "Batch Prediction results saved to Cloud Storage bucket. {}".format(
             response.result()
         )
     )

@@ -1,4 +1,4 @@
-# Copyright 2019 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ def get_operation_status(operation_full_id):
         operation_full_id
     )
 
-    print(u"Name: {}".format(response.name))
+    print("Name: {}".format(response.name))
     print("Operation details:")
     print(response)
     # [END automl_get_operation_status]
