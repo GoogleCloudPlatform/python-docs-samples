@@ -1,4 +1,4 @@
-# Copyright 2019 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,5 +32,5 @@ def deploy_model(project_id, model_id):
         model_full_id, image_classification_model_deployment_metadata=metadata
     )
 
-    print(u"Model deployment finished. {}".format(response.result()))
+    print("Model deployment finished. {}".format(response.result()))
     # [END automl_vision_classification_deploy_model_node_count]

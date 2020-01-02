@@ -1,4 +1,4 @@
-# Copyright 2019 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -44,6 +44,6 @@ def predict(project_id, model_id, file_path):
     response = prediction_client.predict(model_full_id, payload, params)
     print("Prediction results:")
     for result in response.payload:
-        print(u"Predicted class name: {}".format(result.display_name))
-        print(u"Predicted class score: {}".format(result.classification.score))
+        print("Predicted class name: {}".format(result.display_name))
+        print("Predicted class score: {}".format(result.classification.score))
     # [END automl_vision_classification_predict]
