@@ -484,17 +484,24 @@ if __name__ == "__main__":
         "receive", help=receive_messages.__doc__
     )
     receive_parser.add_argument("subscription_name")
+    receive_parser.add_argument("--timeout", default=None, type=float)
 
     receive_with_custom_attributes_parser = subparsers.add_parser(
         "receive-custom-attributes",
         help=receive_messages_with_custom_attributes.__doc__,
     )
     receive_with_custom_attributes_parser.add_argument("subscription_name")
+    receive_with_custom_attributes_parser.add_argument(
+        "--timeout", default=None, type=float
+    )
 
     receive_with_flow_control_parser = subparsers.add_parser(
         "receive-flow-control", help=receive_messages_with_flow_control.__doc__
     )
     receive_with_flow_control_parser.add_argument("subscription_name")
+    receive_with_flow_control_parser.add_argument(
+        "--timeout", default=None, type=float
+    )
 
     synchronous_pull_parser = subparsers.add_parser(
         "receive-synchronously", help=synchronous_pull.__doc__
@@ -513,6 +520,9 @@ if __name__ == "__main__":
         "listen_for_errors", help=listen_for_errors.__doc__
     )
     listen_for_errors_parser.add_argument("subscription_name")
+    listen_for_errors_parser.add_argument(
+        "--timeout", default=None, type=float
+    )
 
     args = parser.parse_args()
 
