@@ -1,4 +1,4 @@
-# Copyright 2019 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,29 +17,27 @@ import os
 from google.cloud import automl
 import pytest
 
-import get_model_evaluation
+import vision_classification_predict
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-MODEL_ID = "TEN1499896588007374848"
+MODEL_ID = "ICN7383667271543079510"
 
 
 @pytest.fixture(scope="function")
-def get_evaluation_id():
+def verify_model_state():
     client = automl.AutoMlClient()
     model_full_id = client.model_path(PROJECT_ID, "us-central1", MODEL_ID)
-    evaluation = None
-    for e in client.list_model_evaluations(model_full_id, ""):
-        evaluation = e
-        break
-    model_evaluation_id = evaluation.name.split(
-        "{}/modelEvaluations/".format(MODEL_ID)
-    )[1].split("\n")[0]
-    yield model_evaluation_id
+
+    model = client.get_model(model_full_id)
+    if model.deployment_state == automl.enums.Model.DeploymentState.UNDEPLOYED:
+        # Deploy model if it is not deployed
+        response = client.deploy_model(model_full_id)
+        response.result()
 
 
-def test_get_model_evaluation(capsys, get_evaluation_id):
-    get_model_evaluation.get_model_evaluation(
-        PROJECT_ID, MODEL_ID, get_evaluation_id
-    )
+def test_vision_classification_predict(capsys, verify_model_state):
+    verify_model_state
+    file_path = "resources/test.png"
+    vision_classification_predict.predict(PROJECT_ID, MODEL_ID, file_path)
     out, _ = capsys.readouterr()
-    assert "Model evaluation name: " in out
+    assert "Predicted class name:" in out
