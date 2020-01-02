@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,13 +14,29 @@
 
 import os
 
+from google.cloud import automl
+import pytest
+
 import language_entity_extraction_predict
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 BUCKET_ID = "{}-lcm".format(PROJECT_ID)
 
 
-def test_predict(capsys):
+@pytest.fixture(scope="function")
+def verify_model_state():
+    client = automl.AutoMlClient()
+    model_full_id = client.model_path(PROJECT_ID, "us-central1", MODEL_ID)
+
+    model = client.get_model(model_full_id)
+    if model.deployment_state == automl.enums.Model.DeploymentState.UNDEPLOYED:
+        # Deploy model if it is not deployed
+        response = client.deploy_model(model_full_id)
+        response.result()
+
+
+def test_predict(capsys, verify_model_state):
+    verify_model_state
     model_id = "TEN5112482778553778176"
     text = (
         "Constitutional mutations in the WT1 gene in patients with "
