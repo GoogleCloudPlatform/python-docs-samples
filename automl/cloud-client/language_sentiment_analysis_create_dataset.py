@@ -26,9 +26,15 @@ def create_dataset(project_id, display_name):
 
     # A resource that represents Google Cloud Platform location.
     project_location = client.location_path(project_id, "us-central1")
+
+    # Each dataset requires a sentiment score with a defined sentiment_max
+    # value, for more information on TextSentimentDatasetMetadata, see:
+    # https://cloud.google.com/natural-language/automl/docs/prepare#sentiment-analysis
+    # https://cloud.google.com/automl/docs/reference/rpc/google.cloud.automl.v1#textsentimentdatasetmetadata
     metadata = automl.types.TextSentimentDatasetMetadata(
         sentiment_max=4
     )  # Possible max sentiment score: 1-10
+
     dataset = automl.types.Dataset(
         display_name=display_name, text_sentiment_dataset_metadata=metadata
     )
