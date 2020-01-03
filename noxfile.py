@@ -175,6 +175,7 @@ PY3_ONLY_SAMPLES = [
         or sample.startswith("./functions/")
         or sample.startswith("./bigquery/pandas-gbq-migration")
         or sample.startswith("./run/system-package")
+        or sample.startswith("./run/hello-broken")
     )
 ]
 NON_GAE_STANDARD_SAMPLES_PY2 = sorted(
