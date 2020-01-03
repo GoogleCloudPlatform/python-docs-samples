@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import uuid
 
 from gcp_devrel.testing import eventually_consistent
 from gcp_devrel.testing.flaky import flaky
@@ -26,16 +27,18 @@ import google.cloud.storage
 import pytest
 import inspect_content
 
+UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 
 GCLOUD_PROJECT = os.getenv("GCLOUD_PROJECT")
-TEST_BUCKET_NAME = GCLOUD_PROJECT + "-dlp-python-client-test"
+TEST_BUCKET_NAME = GCLOUD_PROJECT + "-dlp-python-client-test" + UNIQUE_STRING
 RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), "resources")
 RESOURCE_FILE_NAMES = ["test.txt", "test.png", "harmless.txt", "accounts.txt"]
-TOPIC_ID = "dlp-test"
-SUBSCRIPTION_ID = "dlp-test-subscription"
+TOPIC_ID = "dlp-test" + UNIQUE_STRING
+SUBSCRIPTION_ID = "dlp-test-subscription" + UNIQUE_STRING
 DATASTORE_KIND = "DLP test kind"
-BIGQUERY_DATASET_ID = "dlp_test_dataset"
-BIGQUERY_TABLE_ID = "dlp_test_table"
+DATASTORE_NAME = "DLP test object" + UNIQUE_STRING
+BIGQUERY_DATASET_ID = "dlp_test_dataset" + UNIQUE_STRING
+BIGQUERY_TABLE_ID = "dlp_test_table" + UNIQUE_STRING
 
 
 @pytest.fixture(scope="module")
@@ -108,7 +111,7 @@ def datastore_project():
     datastore_client = google.cloud.datastore.Client()
 
     kind = DATASTORE_KIND
-    name = "DLP test object"
+    name = DATASTORE_NAME
     key = datastore_client.key(kind, name)
     item = google.cloud.datastore.Entity(key=key)
     item["payload"] = "My name is Gary Smith and my email is gary@example.com"

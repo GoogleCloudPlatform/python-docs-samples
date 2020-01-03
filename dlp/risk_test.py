@@ -13,6 +13,8 @@
 # limitations under the License.
 
 from flaky import flaky
+import uuid
+
 import google.cloud.pubsub
 
 import pytest
@@ -20,11 +22,12 @@ import os
 
 import risk
 
+UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 GCLOUD_PROJECT = os.environ.get('GCLOUD_PROJECT')
 TABLE_PROJECT = os.environ.get('GCLOUD_PROJECT')
-TOPIC_ID = "dlp-test"
-SUBSCRIPTION_ID = "dlp-test-subscription"
-DATASET_ID = "dlp_test_dataset"
+TOPIC_ID = "dlp-test" + UNIQUE_STRING
+SUBSCRIPTION_ID = "dlp-test-subscription" + UNIQUE_STRING
+DATASET_ID = "integration_tests_dlp" + UNIQUE_STRING
 UNIQUE_FIELD = "Name"
 REPEATED_FIELD = "Mystery"
 NUMERIC_FIELD = "Age"
