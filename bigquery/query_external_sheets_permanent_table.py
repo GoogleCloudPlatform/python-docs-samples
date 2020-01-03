@@ -28,7 +28,7 @@ def query_external_sheets_permanent_table(dataset_id):
         ]
     )
 
-    # TODO(developer): Construct a BigQuery client object.
+    # Construct a BigQuery client object.
     client = bigquery.Client(credentials=credentials, project=project)
 
     # TODO(developer): Set dataset_id to the ID of the dataset to fetch.

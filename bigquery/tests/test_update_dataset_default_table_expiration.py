@@ -15,12 +15,12 @@
 from .. import update_dataset_default_table_expiration
 
 
-def test_update_dataset_default_table_expiration(capsys, client, dataset_id):
+def test_update_dataset_default_table_expiration(capsys, dataset_id):
 
     one_day_ms = 24 * 60 * 60 * 1000  # in milliseconds
 
     update_dataset_default_table_expiration.update_dataset_default_table_expiration(
-        client, dataset_id
+        dataset_id
     )
     out, err = capsys.readouterr()
     assert (

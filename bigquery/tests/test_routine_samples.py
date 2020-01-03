@@ -16,18 +16,18 @@ from google.cloud import bigquery
 from google.cloud import bigquery_v2
 
 
-def test_create_routine(capsys, client, random_routine_id):
+def test_create_routine(capsys, random_routine_id):
     from .. import create_routine
 
-    create_routine.create_routine(client, random_routine_id)
+    create_routine.create_routine(random_routine_id)
     out, err = capsys.readouterr()
     assert "Created routine {}".format(random_routine_id) in out
 
 
-def test_create_routine_ddl(capsys, client, random_routine_id):
+def test_create_routine_ddl(capsys, random_routine_id, client):
     from .. import create_routine_ddl
 
-    create_routine_ddl.create_routine_ddl(client, random_routine_id)
+    create_routine_ddl.create_routine_ddl(random_routine_id)
     routine = client.get_routine(random_routine_id)
     out, err = capsys.readouterr()
 
@@ -65,19 +65,19 @@ def test_create_routine_ddl(capsys, client, random_routine_id):
     assert routine.arguments == expected_arguments
 
 
-def test_list_routines(capsys, client, dataset_id, routine_id):
+def test_list_routines(capsys, dataset_id, routine_id):
     from .. import list_routines
 
-    list_routines.list_routines(client, dataset_id)
+    list_routines.list_routines(dataset_id)
     out, err = capsys.readouterr()
     assert "Routines contained in dataset {}:".format(dataset_id) in out
     assert routine_id in out
 
 
-def test_get_routine(capsys, client, routine_id):
+def test_get_routine(capsys, routine_id):
     from .. import get_routine
 
-    get_routine.get_routine(client, routine_id)
+    get_routine.get_routine(routine_id)
     out, err = capsys.readouterr()
     assert "Routine '{}':".format(routine_id) in out
     assert "Type: 'SCALAR_FUNCTION'" in out
@@ -86,16 +86,16 @@ def test_get_routine(capsys, client, routine_id):
     assert "Type: 'type_kind: INT64\n'" in out
 
 
-def test_delete_routine(capsys, client, routine_id):
+def test_delete_routine(capsys, routine_id):
     from .. import delete_routine
 
-    delete_routine.delete_routine(client, routine_id)
+    delete_routine.delete_routine(routine_id)
     out, err = capsys.readouterr()
     assert "Deleted routine {}.".format(routine_id) in out
 
 
-def test_update_routine(client, routine_id):
+def test_update_routine(routine_id):
     from .. import update_routine
 
-    routine = update_routine.update_routine(client, routine_id)
+    routine = update_routine.update_routine(routine_id)
     assert routine.body == "x * 4"

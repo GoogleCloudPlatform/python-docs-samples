@@ -18,22 +18,22 @@ from .. import list_models
 from .. import update_model
 
 
-def test_model_samples(capsys, client, dataset_id, model_id):
+def test_model_samples(capsys, dataset_id, model_id):
     """Since creating a model is a long operation, test all model samples in
     the same test, following a typical end-to-end flow.
     """
-    get_model.get_model(client, model_id)
+    get_model.get_model(model_id)
     out, err = capsys.readouterr()
     assert model_id in out
 
-    list_models.list_models(client, dataset_id)
+    list_models.list_models(dataset_id)
     out, err = capsys.readouterr()
     assert "Models contained in '{}':".format(dataset_id) in out
 
-    update_model.update_model(client, model_id)
+    update_model.update_model(model_id)
     out, err = capsys.readouterr()
     assert "This model was modified from a Python program." in out
 
-    delete_model.delete_model(client, model_id)
+    delete_model.delete_model(model_id)
     out, err = capsys.readouterr()
     assert "Deleted model '{}'.".format(model_id) in out

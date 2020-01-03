@@ -15,12 +15,8 @@
 from .. import copy_table_cmek
 
 
-def test_copy_table_cmek(
-    capsys, client, random_table_id, table_with_data_id, kms_key_name
-):
+def test_copy_table_cmek(capsys, random_table_id, table_with_data_id, kms_key_name):
 
-    copy_table_cmek.copy_table_cmek(
-        client, random_table_id, table_with_data_id, kms_key_name
-    )
+    copy_table_cmek.copy_table_cmek(random_table_id, table_with_data_id, kms_key_name)
     out, err = capsys.readouterr()
     assert "A copy of the table created" in out

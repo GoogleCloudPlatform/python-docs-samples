@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-def copy_table_cmek(client, dest_table_id, orig_table_id, kms_key_name):
+def copy_table_cmek(dest_table_id, orig_table_id, kms_key_name):
 
     # [START bigquery_copy_table_cmek]
     from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     # TODO(developer): Set dest_table_id to the ID of the destination table.
     # dest_table_id = "your-project.your_dataset.your_table_name"

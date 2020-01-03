@@ -15,12 +15,12 @@
 from .. import update_dataset_default_partition_expiration
 
 
-def test_update_dataset_default_partition_expiration(capsys, client, dataset_id):
+def test_update_dataset_default_partition_expiration(capsys, dataset_id):
 
     ninety_days_ms = 90 * 24 * 60 * 60 * 1000  # in milliseconds
 
     update_dataset_default_partition_expiration.update_dataset_default_partition_expiration(
-        client, dataset_id
+        dataset_id
     )
     out, _ = capsys.readouterr()
     assert (

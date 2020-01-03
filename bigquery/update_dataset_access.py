@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-def update_dataset_access(client, dataset_id):
+def update_dataset_access(dataset_id):
 
     # [START bigquery_update_dataset_access]
     from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     # TODO(developer): Set dataset_id to the ID of the dataset to fetch.
     # dataset_id = 'your-project.your_dataset'

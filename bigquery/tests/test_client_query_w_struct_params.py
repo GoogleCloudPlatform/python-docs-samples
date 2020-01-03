@@ -15,9 +15,9 @@
 from .. import client_query_w_struct_params
 
 
-def test_client_query_w_struct_params(capsys, client):
+def test_client_query_w_struct_params(capsys,):
 
-    client_query_w_struct_params.client_query_w_struct_params(client)
+    client_query_w_struct_params.client_query_w_struct_params()
     out, err = capsys.readouterr()
     assert "1" in out
     assert "foo" in out

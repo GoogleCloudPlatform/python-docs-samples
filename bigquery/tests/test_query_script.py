@@ -15,9 +15,9 @@
 from .. import query_script
 
 
-def test_query_script(capsys, client):
+def test_query_script(capsys,):
 
-    query_script.query_script(client)
+    query_script.query_script()
     out, _ = capsys.readouterr()
     assert "Script created 2 child jobs." in out
     assert (

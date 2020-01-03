@@ -15,8 +15,8 @@
 from .. import client_load_partitioned_table
 
 
-def test_client_load_partitioned_table(capsys, client, random_table_id):
+def test_client_load_partitioned_table(capsys, random_table_id):
 
-    client_load_partitioned_table.client_load_partitioned_table(client, random_table_id)
+    client_load_partitioned_table.client_load_partitioned_table(random_table_id)
     out, err = capsys.readouterr()
     assert "Loaded 50 rows to table {}".format(random_table_id) in out

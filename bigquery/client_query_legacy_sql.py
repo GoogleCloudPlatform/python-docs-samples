@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-def client_query_legacy_sql(client):
+def client_query_legacy_sql():
 
     # [START bigquery_query_legacy]
     from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     query = (
         "SELECT name FROM [bigquery-public-data:usa_names.usa_1910_2013] "

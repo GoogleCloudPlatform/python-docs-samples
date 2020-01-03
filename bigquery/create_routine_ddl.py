@@ -13,14 +13,14 @@
 # limitations under the License.
 
 
-def create_routine_ddl(client, routine_id):
+def create_routine_ddl(routine_id):
 
     # [START bigquery_create_routine_ddl]
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    from google.cloud import bigquery
+
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     # TODO(developer): Choose a fully-qualified ID for the routine.
     # routine_id = "my-project.my_dataset.my_routine"

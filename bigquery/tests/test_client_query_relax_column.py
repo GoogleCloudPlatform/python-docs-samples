@@ -17,7 +17,7 @@ from google.cloud import bigquery
 from .. import client_query_relax_column
 
 
-def test_client_query_relax_column(capsys, client, random_table_id):
+def test_client_query_relax_column(capsys, random_table_id, client):
 
     schema = [
         bigquery.SchemaField("full_name", "STRING", mode="REQUIRED"),
@@ -26,7 +26,7 @@ def test_client_query_relax_column(capsys, client, random_table_id):
 
     client.create_table(bigquery.Table(random_table_id, schema=schema))
 
-    client_query_relax_column.client_query_relax_column(client, random_table_id)
+    client_query_relax_column.client_query_relax_column(random_table_id)
     out, err = capsys.readouterr()
     assert "2 fields in the schema are required." in out
     assert "0 fields in the schema are now required." in out

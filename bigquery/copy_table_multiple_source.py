@@ -13,14 +13,14 @@
 # limitations under the License.
 
 
-def copy_table_multiple_source(client, dest_table_id, table_ids):
+def copy_table_multiple_source(dest_table_id, table_ids):
 
     # [START bigquery_copy_table_multiple_source]
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    from google.cloud import bigquery
+
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     # TODO(developer): Set dest_table_id to the ID of the destination table.
     # dest_table_id = "your-project.your_dataset.your_table_name"

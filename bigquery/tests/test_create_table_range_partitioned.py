@@ -15,9 +15,9 @@
 from .. import create_table_range_partitioned
 
 
-def test_create_table_range_partitioned(capsys, client, random_table_id):
+def test_create_table_range_partitioned(capsys, random_table_id):
     table = create_table_range_partitioned.create_table_range_partitioned(
-        client, random_table_id
+        random_table_id
     )
     out, _ = capsys.readouterr()
     assert "Created table {}".format(random_table_id) in out

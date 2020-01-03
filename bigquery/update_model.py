@@ -13,15 +13,15 @@
 # limitations under the License.
 
 
-def update_model(client, model_id):
+def update_model(model_id):
     """Sample ID: go/samples-tracker/1533"""
 
     # [START bigquery_update_model_description]
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    from google.cloud import bigquery
+
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     # TODO(developer): Set model_id to the ID of the model to fetch.
     # model_id = 'your-project.your_dataset.your_model'

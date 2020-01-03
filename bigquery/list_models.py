@@ -13,15 +13,15 @@
 # limitations under the License.
 
 
-def list_models(client, dataset_id):
+def list_models(dataset_id):
     """Sample ID: go/samples-tracker/1512"""
 
     # [START bigquery_list_models]
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    from google.cloud import bigquery
+
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     # TODO(developer): Set dataset_id to the ID of the dataset that contains
     #                  the models you are listing.

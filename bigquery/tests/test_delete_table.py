@@ -15,8 +15,8 @@
 from .. import delete_table
 
 
-def test_delete_table(capsys, client, table_id):
+def test_delete_table(capsys, table_id):
 
-    delete_table.delete_table(client, table_id)
+    delete_table.delete_table(table_id)
     out, err = capsys.readouterr()
     assert "Deleted table '{}'.".format(table_id) in out

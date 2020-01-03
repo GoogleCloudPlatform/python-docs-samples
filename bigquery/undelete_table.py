@@ -15,15 +15,14 @@
 from google.api_core import datetime_helpers
 
 
-def undelete_table(client, table_id, recovered_table_id):
+def undelete_table(table_id, recovered_table_id):
     # [START bigquery_undelete_table]
     import time
 
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
+    from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     # TODO(developer): Choose a table to recover.
     # table_id = "your-project.your_dataset.your_table"

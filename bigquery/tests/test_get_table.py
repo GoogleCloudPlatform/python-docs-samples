@@ -17,7 +17,7 @@ from google.cloud import bigquery
 from .. import get_table
 
 
-def test_get_table(capsys, client, random_table_id):
+def test_get_table(capsys, random_table_id, client):
 
     schema = [
         bigquery.SchemaField("full_name", "STRING", mode="REQUIRED"),
@@ -28,7 +28,7 @@ def test_get_table(capsys, client, random_table_id):
     table.description = "Sample Table"
     table = client.create_table(table)
 
-    get_table.get_table(client, random_table_id)
+    get_table.get_table(random_table_id)
     out, err = capsys.readouterr()
     assert "Got table '{}'.".format(random_table_id) in out
     assert "full_name" in out

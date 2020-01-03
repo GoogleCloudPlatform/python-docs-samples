@@ -15,8 +15,8 @@
 from .. import update_dataset_description
 
 
-def test_update_dataset_description(capsys, client, dataset_id):
+def test_update_dataset_description(capsys, dataset_id):
 
-    update_dataset_description.update_dataset_description(client, dataset_id)
+    update_dataset_description.update_dataset_description(dataset_id)
     out, err = capsys.readouterr()
     assert "Updated description." in out

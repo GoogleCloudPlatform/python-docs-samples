@@ -13,14 +13,14 @@
 # limitations under the License.
 
 
-def query_to_arrow(client):
+def query_to_arrow():
 
     # [START bigquery_query_to_arrow]
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    from google.cloud import bigquery
+
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     sql = """
     WITH races AS (

@@ -15,8 +15,8 @@
 from .. import get_dataset
 
 
-def test_get_dataset(capsys, client, dataset_id):
+def test_get_dataset(capsys, dataset_id):
 
-    get_dataset.get_dataset(client, dataset_id)
+    get_dataset.get_dataset(dataset_id)
     out, err = capsys.readouterr()
     assert dataset_id in out

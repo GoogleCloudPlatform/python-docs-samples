@@ -15,9 +15,9 @@
 from .. import query_pagination
 
 
-def test_query_pagination(capsys, client):
+def test_query_pagination(capsys,):
 
-    query_pagination.query_pagination(client)
+    query_pagination.query_pagination()
     out, _ = capsys.readouterr()
     assert "The query data:" in out
     assert "name=James, count=4942431" in out

@@ -15,8 +15,8 @@
 from .. import add_empty_column
 
 
-def test_add_empty_column(capsys, client, table_id):
+def test_add_empty_column(capsys, table_id):
 
-    add_empty_column.add_empty_column(client, table_id)
+    add_empty_column.add_empty_column(table_id)
     out, err = capsys.readouterr()
     assert "A new column has been added." in out

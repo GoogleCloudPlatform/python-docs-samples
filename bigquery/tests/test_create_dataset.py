@@ -15,8 +15,8 @@
 from .. import create_dataset
 
 
-def test_create_dataset(capsys, client, random_dataset_id):
+def test_create_dataset(capsys, random_dataset_id):
 
-    create_dataset.create_dataset(client, random_dataset_id)
+    create_dataset.create_dataset(random_dataset_id)
     out, err = capsys.readouterr()
     assert "Created dataset {}".format(random_dataset_id) in out

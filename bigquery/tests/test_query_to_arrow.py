@@ -17,9 +17,9 @@ import pyarrow
 from .. import query_to_arrow
 
 
-def test_query_to_arrow(capsys, client):
+def test_query_to_arrow(capsys,):
 
-    arrow_table = query_to_arrow.query_to_arrow(client)
+    arrow_table = query_to_arrow.query_to_arrow()
     out, err = capsys.readouterr()
     assert "Downloaded 8 rows, 2 columns." in out
     arrow_schema = arrow_table.schema

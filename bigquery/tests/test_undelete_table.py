@@ -15,8 +15,8 @@
 from .. import undelete_table
 
 
-def test_undelete_table(capsys, client, table_with_schema_id, random_table_id):
-    undelete_table.undelete_table(client, table_with_schema_id, random_table_id)
+def test_undelete_table(capsys, table_with_schema_id, random_table_id):
+    undelete_table.undelete_table(table_with_schema_id, random_table_id)
     out, _ = capsys.readouterr()
     assert (
         "Copied data from deleted table {} to {}".format(

@@ -13,14 +13,14 @@
 # limitations under the License.
 
 
-def delete_table(client, table_id):
+def delete_table(table_id):
 
     # [START bigquery_delete_table]
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    from google.cloud import bigquery
+
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     # TODO(developer): Set table_id to the ID of the table to fetch.
     # table_id = 'your-project.your_dataset.your_table'

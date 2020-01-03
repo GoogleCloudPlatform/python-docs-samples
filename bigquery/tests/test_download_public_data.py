@@ -17,11 +17,11 @@ import logging
 from .. import download_public_data
 
 
-def test_download_public_data(caplog, capsys, client):
+def test_download_public_data(caplog, capsys):
     # Enable debug-level logging to verify the BigQuery Storage API is used.
     caplog.set_level(logging.DEBUG)
 
-    download_public_data.download_public_data(client)
+    download_public_data.download_public_data()
     out, _ = capsys.readouterr()
     assert "year" in out
     assert "gender" in out

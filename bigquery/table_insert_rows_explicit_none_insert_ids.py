@@ -13,14 +13,14 @@
 # limitations under the License.
 
 
-def table_insert_rows_explicit_none_insert_ids(client, table_id):
+def table_insert_rows_explicit_none_insert_ids(table_id):
 
     # [START bigquery_table_insert_rows_explicit_none_insert_ids]
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    from google.cloud import bigquery
+
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     # TODO(developer): Set table_id to the ID of the model to fetch.
     # table_id = "your-project.your_dataset.your_table"

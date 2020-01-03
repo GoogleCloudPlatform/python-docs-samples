@@ -17,7 +17,7 @@ from google.cloud import bigquery
 from .. import update_table_require_partition_filter
 
 
-def test_update_table_require_partition_filter(capsys, client, random_table_id):
+def test_update_table_require_partition_filter(capsys, random_table_id, client):
 
     # Make a partitioned table.
     schema = [bigquery.SchemaField("transaction_timestamp", "TIMESTAMP")]
@@ -26,7 +26,7 @@ def test_update_table_require_partition_filter(capsys, client, random_table_id):
     table = client.create_table(table)
 
     update_table_require_partition_filter.update_table_require_partition_filter(
-        client, random_table_id
+        random_table_id
     )
     out, _ = capsys.readouterr()
     assert (

@@ -13,16 +13,16 @@
 # limitations under the License.
 
 
-def client_list_jobs(client):
+def client_list_jobs():
 
     # [START bigquery_list_jobs]
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
+
+    from google.cloud import bigquery
 
     import datetime
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     # List the 10 most recent jobs in reverse chronological order.
     # Omit the max_results parameter to list jobs from the past 6 months.

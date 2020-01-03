@@ -17,7 +17,7 @@ from google.cloud import bigquery
 from .. import table_insert_rows_explicit_none_insert_ids as mut
 
 
-def test_table_insert_rows_explicit_none_insert_ids(capsys, client, random_table_id):
+def test_table_insert_rows_explicit_none_insert_ids(capsys, random_table_id, client):
 
     schema = [
         bigquery.SchemaField("full_name", "STRING", mode="REQUIRED"),
@@ -27,6 +27,6 @@ def test_table_insert_rows_explicit_none_insert_ids(capsys, client, random_table
     table = bigquery.Table(random_table_id, schema=schema)
     table = client.create_table(table)
 
-    mut.table_insert_rows_explicit_none_insert_ids(client, random_table_id)
+    mut.table_insert_rows_explicit_none_insert_ids(random_table_id)
     out, err = capsys.readouterr()
     assert "New rows have been added." in out

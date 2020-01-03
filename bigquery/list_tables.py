@@ -13,14 +13,14 @@
 # limitations under the License.
 
 
-def list_tables(client, dataset_id):
+def list_tables(dataset_id):
 
     # [START bigquery_list_tables]
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    from google.cloud import bigquery
+
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     # TODO(developer): Set dataset_id to the ID of the dataset that contains
     #                  the tables you are listing.

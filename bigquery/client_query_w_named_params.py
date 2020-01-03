@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-def client_query_w_named_params(client):
+def client_query_w_named_params():
 
     # [START bigquery_query_params_named]
     from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     query = """
         SELECT word, word_count

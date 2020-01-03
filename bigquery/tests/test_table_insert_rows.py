@@ -17,7 +17,7 @@ from google.cloud import bigquery
 from .. import table_insert_rows
 
 
-def test_table_insert_rows(capsys, client, random_table_id):
+def test_table_insert_rows(capsys, random_table_id, client):
 
     schema = [
         bigquery.SchemaField("full_name", "STRING", mode="REQUIRED"),
@@ -27,6 +27,6 @@ def test_table_insert_rows(capsys, client, random_table_id):
     table = bigquery.Table(random_table_id, schema=schema)
     table = client.create_table(table)
 
-    table_insert_rows.table_insert_rows(client, random_table_id)
+    table_insert_rows.table_insert_rows(random_table_id)
     out, err = capsys.readouterr()
     assert "New rows have been added." in out

@@ -15,9 +15,9 @@
 from .. import client_query
 
 
-def test_client_query(capsys, client):
+def test_client_query(capsys,):
 
-    client_query.client_query(client)
+    client_query.client_query()
     out, err = capsys.readouterr()
     assert "The query data:" in out
     assert "name=James, count=272793" in out

@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-def create_dataset(client, dataset_id):
+def create_dataset(dataset_id):
 
     # [START bigquery_create_dataset]
     from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     # TODO(developer): Set dataset_id to the ID of the dataset to create.
     # dataset_id = "{}.your_dataset".format(client.project)

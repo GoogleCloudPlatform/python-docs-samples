@@ -15,19 +15,31 @@
 import datetime
 import uuid
 
+import google.auth
+import mock
 import pytest
 
 from google.cloud import bigquery
 from google.cloud import bigquery_v2
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session", autouse=True)
 def client():
-    return bigquery.Client()
+    credentials, project = google.auth.default(
+        scopes=[
+            "https://www.googleapis.com/auth/drive",
+            "https://www.googleapis.com/auth/bigquery",
+        ]
+    )
+    real_client = bigquery.Client(credentials=credentials, project=project)
+    mock_client = mock.create_autospec(bigquery.Client)
+    mock_client.return_value = real_client
+    bigquery.Client = mock_client
+    return real_client
 
 
 @pytest.fixture
-def random_table_id(client, dataset_id):
+def random_table_id(dataset_id):
     now = datetime.datetime.now()
     random_table_id = "example_table_{}_{}".format(
         now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
@@ -46,7 +58,7 @@ def random_dataset_id(client):
 
 
 @pytest.fixture
-def random_routine_id(client, dataset_id):
+def random_routine_id(dataset_id):
     now = datetime.datetime.now()
     random_routine_id = "example_routine_{}_{}".format(
         now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
@@ -95,7 +107,7 @@ def table_with_schema_id(client, dataset_id):
 
 
 @pytest.fixture
-def table_with_data_id(client):
+def table_with_data_id():
     return "bigquery-public-data.samples.shakespeare"
 
 

@@ -15,8 +15,7 @@
 from .. import list_datasets
 
 
-def test_list_datasets(capsys, client, dataset_id):
-
-    list_datasets.list_datasets(client)
+def test_list_datasets(capsys, dataset_id, client):
+    list_datasets.list_datasets()
     out, err = capsys.readouterr()
     assert "Datasets in project {}:".format(client.project) in out

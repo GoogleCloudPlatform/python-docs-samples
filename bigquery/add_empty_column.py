@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-def add_empty_column(client, table_id):
+def add_empty_column(table_id):
 
     # [START bigquery_add_empty_column]
     from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     # TODO(developer): Set table_id to the ID of the table
     #                  to add an empty column.

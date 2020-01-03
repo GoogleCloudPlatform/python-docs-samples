@@ -13,14 +13,14 @@
 # limitations under the License.
 
 
-def list_datasets(client):
+def list_datasets():
 
     # [START bigquery_list_datasets]
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    from google.cloud import bigquery
+
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     datasets = list(client.list_datasets())  # Make an API request.
     project = client.project

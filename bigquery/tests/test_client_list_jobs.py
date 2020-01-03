@@ -18,10 +18,10 @@ from .. import create_job
 
 def test_client_list_jobs(capsys, client):
 
-    job = create_job.create_job(client)
+    job = create_job.create_job()
     client.cancel_job(job.job_id)
     job.cancel()
-    client_list_jobs.client_list_jobs(client)
+    client_list_jobs.client_list_jobs()
     out, err = capsys.readouterr()
     assert "Started job: {}".format(job.job_id) in out
     assert "Last 10 jobs:" in out

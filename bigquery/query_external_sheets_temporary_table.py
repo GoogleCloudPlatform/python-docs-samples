@@ -29,7 +29,7 @@ def query_external_sheets_temporary_table():
         ]
     )
 
-    # TODO(developer): Construct a BigQuery client object.
+    # Construct a BigQuery client object.
     client = bigquery.Client(credentials=credentials, project=project)
     # [END bigquery_auth_drive_scope]
 

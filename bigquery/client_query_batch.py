@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-def client_query_batch(client):
+def client_query_batch():
 
     # [START bigquery_query_batch]
     from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     job_config = bigquery.QueryJobConfig(
         # Run at batch priority, which won't count toward concurrent rate limit.

@@ -13,14 +13,14 @@
 # limitations under the License.
 
 
-def get_dataset(client, dataset_id):
+def get_dataset(dataset_id):
 
     # [START bigquery_get_dataset]
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    from google.cloud import bigquery
+
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     # TODO(developer): Set dataset_id to the ID of the dataset to fetch.
     # dataset_id = 'your-project.your_dataset'

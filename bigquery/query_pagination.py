@@ -13,14 +13,14 @@
 # limitations under the License.
 
 
-def query_pagination(client):
+def query_pagination():
 
     # [START bigquery_query_pagination]
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    from google.cloud import bigquery
+
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     query = """
         SELECT name, SUM(number) as total_people

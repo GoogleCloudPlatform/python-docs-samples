@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-def client_query_dry_run(client):
+def client_query_dry_run():
 
     # [START bigquery_query_dry_run]
     from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     job_config = bigquery.QueryJobConfig(dry_run=True, use_query_cache=False)
 

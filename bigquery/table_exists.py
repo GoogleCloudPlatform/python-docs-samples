@@ -13,10 +13,13 @@
 # limitations under the License.
 
 
-def table_exists(client, table_id):
+def table_exists(table_id):
 
     # [START bigquery_table_exists]
+    from google.cloud import bigquery
     from google.cloud.exceptions import NotFound
+
+    client = bigquery.Client()
 
     # TODO(developer): Set table_id to the ID of the table to determine existence.
     # table_id = "your-project.your_dataset.your_table"

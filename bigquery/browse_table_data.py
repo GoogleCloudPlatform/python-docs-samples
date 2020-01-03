@@ -13,14 +13,14 @@
 # limitations under the License.
 
 
-def browse_table_data(client, table_id):
+def browse_table_data(table_id):
 
     # [START bigquery_browse_table]
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    from google.cloud import bigquery
+
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     # TODO(developer): Set table_id to the ID of the table to browse data rows.
     # table_id = "your-project.your_dataset.your_table_name"

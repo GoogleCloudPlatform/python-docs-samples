@@ -17,17 +17,17 @@ from .. import get_dataset_labels
 from .. import label_dataset
 
 
-def test_dataset_label_samples(capsys, client, dataset_id):
+def test_dataset_label_samples(capsys, dataset_id):
 
-    label_dataset.label_dataset(client, dataset_id)
+    label_dataset.label_dataset(dataset_id)
     out, err = capsys.readouterr()
     assert "Labels added to {}".format(dataset_id) in out
 
-    get_dataset_labels.get_dataset_labels(client, dataset_id)
+    get_dataset_labels.get_dataset_labels(dataset_id)
     out, err = capsys.readouterr()
     assert "color: green" in out
 
-    dataset = delete_dataset_labels.delete_dataset_labels(client, dataset_id)
+    dataset = delete_dataset_labels.delete_dataset_labels(dataset_id)
     out, err = capsys.readouterr()
     assert "Labels deleted from {}".format(dataset_id) in out
     assert dataset.labels.get("color") is None

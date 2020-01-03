@@ -13,14 +13,14 @@
 # limitations under the License.
 
 
-def copy_table(client, source_table_id, destination_table_id):
+def copy_table(source_table_id, destination_table_id):
 
     # [START bigquery_copy_table]
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    from google.cloud import bigquery
+
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     # TODO(developer): Set source_table_id to the ID of the original table.
     # source_table_id = "your-project.source_dataset.source_table"

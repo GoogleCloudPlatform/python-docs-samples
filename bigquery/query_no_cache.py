@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-def query_no_cache(client):
+def query_no_cache():
 
     # [START bigquery_query_no_cache]
     from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     job_config = bigquery.QueryJobConfig(use_query_cache=False)
     sql = """

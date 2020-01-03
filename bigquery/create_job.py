@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-def create_job(client):
+def create_job():
 
     # [START bigquery_create_job]
     from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     query_job = client.query(
         "SELECT country_name from `bigquery-public-data.utility_us.country_code_iso`",

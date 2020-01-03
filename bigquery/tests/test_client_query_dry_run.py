@@ -15,9 +15,9 @@
 from .. import client_query_dry_run
 
 
-def test_client_query_dry_run(capsys, client):
+def test_client_query_dry_run(capsys,):
 
-    query_job = client_query_dry_run.client_query_dry_run(client)
+    query_job = client_query_dry_run.client_query_dry_run()
     out, err = capsys.readouterr()
     assert "This query will process" in out
     assert query_job.state == "DONE"

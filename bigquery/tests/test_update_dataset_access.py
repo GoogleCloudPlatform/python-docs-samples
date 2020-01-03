@@ -15,9 +15,9 @@
 from .. import update_dataset_access
 
 
-def test_update_dataset_access(capsys, client, dataset_id):
+def test_update_dataset_access(capsys, dataset_id):
 
-    update_dataset_access.update_dataset_access(client, dataset_id)
+    update_dataset_access.update_dataset_access(dataset_id)
     out, err = capsys.readouterr()
     assert (
         "Updated dataset '{}' with modified user permissions.".format(dataset_id) in out

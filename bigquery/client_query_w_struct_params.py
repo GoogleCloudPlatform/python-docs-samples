@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-def client_query_w_struct_params(client):
+def client_query_w_struct_params():
 
     # [START bigquery_query_params_structs]
     from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     query = "SELECT @struct_value AS s;"
     job_config = bigquery.QueryJobConfig(

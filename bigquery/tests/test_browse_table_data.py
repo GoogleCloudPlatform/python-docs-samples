@@ -15,9 +15,9 @@
 from .. import browse_table_data
 
 
-def test_browse_table_data(capsys, client, table_with_data_id):
+def test_browse_table_data(capsys, table_with_data_id):
 
-    browse_table_data.browse_table_data(client, table_with_data_id)
+    browse_table_data.browse_table_data(table_with_data_id)
     out, err = capsys.readouterr()
     assert "Downloaded 164656 rows from table {}".format(table_with_data_id) in out
     assert "Downloaded 10 rows from table {}".format(table_with_data_id) in out

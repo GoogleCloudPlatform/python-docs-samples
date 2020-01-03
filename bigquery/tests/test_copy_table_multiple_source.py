@@ -18,7 +18,7 @@ from google.cloud import bigquery
 from .. import copy_table_multiple_source
 
 
-def test_copy_table_multiple_source(capsys, client, random_table_id, random_dataset_id):
+def test_copy_table_multiple_source(capsys, random_table_id, random_dataset_id, client):
 
     dataset = bigquery.Dataset(random_dataset_id)
     dataset.location = "US"
@@ -42,9 +42,7 @@ def test_copy_table_multiple_source(capsys, client, random_table_id, random_data
         "{}.table2".format(random_dataset_id),
     ]
 
-    copy_table_multiple_source.copy_table_multiple_source(
-        client, random_table_id, table_ids
-    )
+    copy_table_multiple_source.copy_table_multiple_source(random_table_id, table_ids)
     dest_table = client.get_table(random_table_id)
     out, err = capsys.readouterr()
     assert (

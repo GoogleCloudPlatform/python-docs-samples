@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-def query_script(client):
+def query_script():
     # [START bigquery_query_script]
-    # TODO(developer): Import the client library.
-    # from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    from google.cloud import bigquery
+
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     # Run a SQL script.
     sql_script = """

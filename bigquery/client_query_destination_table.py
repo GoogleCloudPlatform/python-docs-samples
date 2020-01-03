@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-def client_query_destination_table(client, table_id):
+def client_query_destination_table(table_id):
 
     # [START bigquery_query_destination_table]
     from google.cloud import bigquery
 
-    # TODO(developer): Construct a BigQuery client object.
-    # client = bigquery.Client()
+    # Construct a BigQuery client object.
+    client = bigquery.Client()
 
     # TODO(developer): Set table_id to the ID of the destination table.
     # table_id = "your-project.your_dataset.your_table_name"

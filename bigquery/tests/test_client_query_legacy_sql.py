@@ -17,8 +17,8 @@ import re
 from .. import client_query_legacy_sql
 
 
-def test_client_query_legacy_sql(capsys, client):
+def test_client_query_legacy_sql(capsys,):
 
-    client_query_legacy_sql.client_query_legacy_sql(client)
+    client_query_legacy_sql.client_query_legacy_sql()
     out, err = capsys.readouterr()
     assert re.search(r"(Row[\w(){}:', ]+)$", out)
