@@ -18,8 +18,8 @@ from google.cloud import automl
 
 import translate_create_model
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-DATASET_ID = "TRL3876092572857648864"
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+DATASET_ID = os.environ["TRANSLATION_DATASET_ID"]
 
 
 def test_translate_create_model(capsys):

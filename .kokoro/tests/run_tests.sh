@@ -39,6 +39,7 @@ SECRETS_PASSWORD=$(cat "${KOKORO_GFILE_DIR}/secrets-password.txt")
 source ./testing/test-env.sh
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
 export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
+source "${KOKORO_GFILE_DIR}/automl_secrets.txt"
 
 # For Datalabeling samples to hit the testing endpoint
 export DATALABELING_ENDPOINT="test-datalabeling.sandbox.googleapis.com:443"

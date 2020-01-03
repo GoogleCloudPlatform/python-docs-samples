@@ -19,8 +19,8 @@ import pytest
 
 import language_sentiment_analysis_predict
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-MODEL_ID = "TST8532792392862639819"
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+MODEL_ID = os.environ["SENTIMENT_ANALYSIS_MODEL_ID"]
 
 
 @pytest.fixture(scope="function")

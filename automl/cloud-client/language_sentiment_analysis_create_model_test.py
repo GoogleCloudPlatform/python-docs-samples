@@ -19,8 +19,8 @@ import pytest
 
 import language_sentiment_analysis_create_model
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-DATASET_ID = "TST3960250460385409610"
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+DATASET_ID = os.environ["SENTIMENT_ANALYSIS_DATASET_ID"]
 
 
 @pytest.mark.slow

@@ -16,7 +16,7 @@ import os
 
 import list_models
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 
 
 def test_list_get_eval_model(capsys):

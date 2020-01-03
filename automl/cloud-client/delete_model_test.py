@@ -16,7 +16,7 @@ import os
 
 import delete_model
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 
 
 def test_delete_model(capsys):
