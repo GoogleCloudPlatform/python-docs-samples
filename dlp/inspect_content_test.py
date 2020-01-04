@@ -162,7 +162,10 @@ def test_inspect_string(capsys):
     test_string = "My name is Gary Smith and my email is gary@example.com"
 
     inspect_content.inspect_string(
-        GCLOUD_PROJECT, test_string, ["FIRST_NAME", "EMAIL_ADDRESS"], include_quote=True
+        GCLOUD_PROJECT,
+        test_string,
+        ["FIRST_NAME", "EMAIL_ADDRESS"],
+        include_quote=True,
     )
 
     out, _ = capsys.readouterr()
@@ -214,7 +217,10 @@ def test_inspect_string_no_results(capsys):
     test_string = "Nothing to see here"
 
     inspect_content.inspect_string(
-        GCLOUD_PROJECT, test_string, ["FIRST_NAME", "EMAIL_ADDRESS"], include_quote=True
+        GCLOUD_PROJECT,
+        test_string,
+        ["FIRST_NAME", "EMAIL_ADDRESS"],
+        include_quote=True,
     )
 
     out, _ = capsys.readouterr()

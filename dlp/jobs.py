@@ -135,7 +135,7 @@ if __name__ == "__main__":
     list_parser.add_argument(
         "-t",
         "--type",
-        choices=["DLP_JOB_TYPE_UNSPECIFIED", "INSPECT_JOB", "RISK_ANALYSIS_JOB"],
+        choices=["DLP_JOB_TYPE_UNSPECIFIED", "INSPECT_JOB", "RISK_ANALYSIS_JOB",],
         help='The type of job. API defaults to "INSPECT"',
     )
 

@@ -131,7 +131,7 @@ def deidentify_with_fpe(
     # Construct FPE configuration dictionary
     crypto_replace_ffx_fpe_config = {
         "crypto_key": {
-            "kms_wrapped": {"wrapped_key": wrapped_key, "crypto_key_name": key_name}
+            "kms_wrapped": {"wrapped_key": wrapped_key, "crypto_key_name": key_name,}
         },
         "common_alphabet": alphabet,
     }
@@ -176,7 +176,12 @@ def deidentify_with_fpe(
 
 # [START dlp_reidentify_fpe]
 def reidentify_with_fpe(
-    project, string, alphabet=None, surrogate_type=None, key_name=None, wrapped_key=None
+    project,
+    string,
+    alphabet=None,
+    surrogate_type=None,
+    key_name=None,
+    wrapped_key=None,
 ):
     """Uses the Data Loss Prevention API to reidentify sensitive data in a
     string that was encrypted by Format Preserving Encryption (FPE).
@@ -333,7 +338,7 @@ def deidentify_with_date_shift(
         try:
             date = datetime.strptime(value, "%m/%d/%Y")
             return {
-                "date_value": {"year": date.year, "month": date.month, "day": date.day}
+                "date_value": {"year": date.year, "month": date.month, "day": date.day,}
             }
         except ValueError:
             return {"string_value": value}
@@ -438,7 +443,7 @@ if __name__ == "__main__":
         default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
     )
     mask_parser.add_argument(
-        "project", help="The Google Cloud project id to use as a parent resource."
+        "project", help="The Google Cloud project id to use as a parent resource.",
     )
     mask_parser.add_argument("item", help="The string to deidentify.")
     mask_parser.add_argument(
@@ -471,7 +476,7 @@ if __name__ == "__main__":
         default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
     )
     fpe_parser.add_argument(
-        "project", help="The Google Cloud project id to use as a parent resource."
+        "project", help="The Google Cloud project id to use as a parent resource.",
     )
     fpe_parser.add_argument(
         "item",
@@ -513,7 +518,7 @@ if __name__ == "__main__":
         "Encryption (FPE).",
     )
     reid_parser.add_argument(
-        "project", help="The Google Cloud project id to use as a parent resource."
+        "project", help="The Google Cloud project id to use as a parent resource.",
     )
     reid_parser.add_argument(
         "item",
@@ -553,7 +558,7 @@ if __name__ == "__main__":
         help="Deidentify dates in a CSV file by pseudorandomly shifting them.",
     )
     date_shift_parser.add_argument(
-        "project", help="The Google Cloud project id to use as a parent resource."
+        "project", help="The Google Cloud project id to use as a parent resource.",
     )
     date_shift_parser.add_argument(
         "input_csv_file",

@@ -68,7 +68,10 @@ def create_inspect_template(
         "limits": {"max_findings_per_request": max_findings},
     }
 
-    inspect_template = {"inspect_config": inspect_config, "display_name": display_name}
+    inspect_template = {
+        "inspect_config": inspect_config,
+        "display_name": display_name,
+    }
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)

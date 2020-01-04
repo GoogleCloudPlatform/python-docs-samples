@@ -16,6 +16,7 @@ from flaky import flaky
 import uuid
 
 import google.cloud.pubsub
+import google.cloud.bigquery
 
 import pytest
 import os
@@ -23,16 +24,18 @@ import os
 import risk
 
 UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
-GCLOUD_PROJECT = os.environ.get('GCLOUD_PROJECT')
-TABLE_PROJECT = os.environ.get('GCLOUD_PROJECT')
+GCLOUD_PROJECT = os.environ.get("GCLOUD_PROJECT")
+TABLE_PROJECT = os.environ.get("GCLOUD_PROJECT")
 TOPIC_ID = "dlp-test" + UNIQUE_STRING
 SUBSCRIPTION_ID = "dlp-test-subscription" + UNIQUE_STRING
-DATASET_ID = "integration_tests_dlp" + UNIQUE_STRING
 UNIQUE_FIELD = "Name"
 REPEATED_FIELD = "Mystery"
 NUMERIC_FIELD = "Age"
 STRING_BOOLEAN_FIELD = "Gender"
 
+BIGQUERY_DATASET_ID = "dlp_test_dataset" + UNIQUE_STRING
+BIGQUERY_TABLE_ID = "dlp_test_table" + UNIQUE_STRING
+BIGQUERY_HARMFUL_TABLE_ID = "harmful" + UNIQUE_STRING
 
 # Create new custom topic/subscription
 @pytest.fixture(scope="module")
@@ -66,13 +69,95 @@ def subscription_id(topic_id):
     subscriber.delete_subscription(subscription_path)
 
 
+"""
+@pytest.fixture(scope="module")
+def bigquery_dataset_id():
+    # adds bq dataset, yields the id, tears down
+    bigquery_client = google.cloud.bigquery.Client()
+
+    dataset_ref = bigquery_client.dataset(BIGQUERY_DATASET_ID)
+    dataset = google.cloud.bigquery.Dataset(dataset_ref)
+    try:
+        dataset = bigquery_client.create_dataset(dataset)
+    except google.api_core.exceptions.Conflict:
+        dataset = bigquery_client.get_dataset(dataset)
+    yield BIGQUERY_DATASET_ID
+    bigquery_client.delete_dataset(dataset_ref, delete_contents=True)
+
+@pytest.fixture(scope="module")
+def bigquery_table_id(bigquery_dataset_id):
+  bigquery_client = google.cloud.bigquery.Client()
+  dataset_ref = bigquery_client.dataset(bigquery
+"""
+
+
+@pytest.fixture(scope="module")
+def bigquery_project():
+    # Adds test Bigquery data, yields the project ID and then tears down.
+
+    bigquery_client = google.cloud.bigquery.Client()
+
+    dataset_ref = bigquery_client.dataset(BIGQUERY_DATASET_ID)
+    dataset = google.cloud.bigquery.Dataset(dataset_ref)
+    try:
+        dataset = bigquery_client.create_dataset(dataset)
+    except google.api_core.exceptions.Conflict:
+        dataset = bigquery_client.get_dataset(dataset)
+    table_ref = dataset_ref.table(BIGQUERY_TABLE_ID)
+    table = google.cloud.bigquery.Table(table_ref)
+
+    harmful_table_ref = dataset_ref.table(BIGQUERY_HARMFUL_TABLE_ID)
+    harmful_table = google.cloud.bigquery.Table(harmful_table_ref)
+
+    # DO NOT SUBMIT: trim this down once we find out what works
+    table.schema = (
+        google.cloud.bigquery.SchemaField("Name", "STRING"),
+        google.cloud.bigquery.SchemaField("Comment", "STRING"),
+    )
+
+    harmful_table.schema = (
+        google.cloud.bigquery.SchemaField("Name", "STRING", "REQUIRED"),
+        google.cloud.bigquery.SchemaField("TelephoneNumber", "STRING", "REQUIRED"),
+        google.cloud.bigquery.SchemaField("Mystery", "STRING", "REQUIRED"),
+        google.cloud.bigquery.SchemaField("Age", "INTEGER", "REQUIRED"),
+        google.cloud.bigquery.SchemaField("Gender", "STRING"),
+        google.cloud.bigquery.SchemaField("RegionCode", "STRING"),
+    )
+
+    try:
+        table = bigquery_client.create_table(table)
+    except google.api_core.exceptions.Conflict:
+        table = bigquery_client.get_table(table)
+
+    try:
+        harmful_table = bigquery_client.create_table(harmful_table)
+    except google.api_core.exceptions.Conflict:
+        harmful_table = bigquery_client.get_table(harmful_table)
+
+    rows_to_insert = [(u"Gary Smith", u"My email is gary@example.com")]
+    harmful_rows_to_insert = [
+        (u"Gandalf", u"(123) 456-7890", "4231 5555 6781 9876", 27, "Male", "US"),
+        (u"Dumbledore", u"(313) 337-1337", "6291 8765 1095 7629", 27, "Male", "US"),
+        (u"Joe", u"(452) 123-1234", "3782 2288 1166 3030", 35, "Male", "US"),
+        (u"James", u"(567) 890-1234", "8291 3627 8250 1234", 19, "Male", "US"),
+        (u"Marie", u"(452) 123-1234", "8291 3627 8250 1234", 35, "Female", "US"),
+        (u"Carrie", u"(567) 890-1234", "2253 5218 4251 4526", 35, "Female", "US"),
+    ]
+
+    bigquery_client.insert_rows(table, rows_to_insert)
+    bigquery_client.insert_rows(harmful_table, harmful_rows_to_insert)
+    yield GCLOUD_PROJECT
+
+    bigquery_client.delete_dataset(dataset_ref, delete_contents=True)
+
+
 @flaky
-def test_numerical_risk_analysis(topic_id, subscription_id, capsys):
+def test_numerical_risk_analysis(topic_id, subscription_id, bigquery_project, capsys):
     risk.numerical_risk_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
-        DATASET_ID,
-        "harmful",
+        BIGQUERY_DATASET_ID,
+        BIGQUERY_HARMFUL_TABLE_ID,
         NUMERIC_FIELD,
         topic_id,
         subscription_id,
@@ -83,12 +168,14 @@ def test_numerical_risk_analysis(topic_id, subscription_id, capsys):
 
 
 @flaky
-def test_categorical_risk_analysis_on_string_field(topic_id, subscription_id, capsys):
+def test_categorical_risk_analysis_on_string_field(
+    topic_id, subscription_id, bigquery_project, capsys
+):
     risk.categorical_risk_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
-        DATASET_ID,
-        "harmful",
+        BIGQUERY_DATASET_ID,
+        BIGQUERY_HARMFUL_TABLE_ID,
         UNIQUE_FIELD,
         topic_id,
         subscription_id,
@@ -100,12 +187,14 @@ def test_categorical_risk_analysis_on_string_field(topic_id, subscription_id, ca
 
 
 @flaky
-def test_categorical_risk_analysis_on_number_field(topic_id, subscription_id, capsys):
+def test_categorical_risk_analysis_on_number_field(
+    topic_id, subscription_id, bigquery_project, capsys
+):
     risk.categorical_risk_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
-        DATASET_ID,
-        "harmful",
+        BIGQUERY_DATASET_ID,
+        BIGQUERY_HARMFUL_TABLE_ID,
         NUMERIC_FIELD,
         topic_id,
         subscription_id,
@@ -116,12 +205,14 @@ def test_categorical_risk_analysis_on_number_field(topic_id, subscription_id, ca
 
 
 @flaky
-def test_k_anonymity_analysis_single_field(topic_id, subscription_id, capsys):
+def test_k_anonymity_analysis_single_field(
+    topic_id, subscription_id, bigquery_project, capsys
+):
     risk.k_anonymity_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
-        DATASET_ID,
-        "harmful",
+        BIGQUERY_DATASET_ID,
+        BIGQUERY_HARMFUL_TABLE_ID,
         topic_id,
         subscription_id,
         [NUMERIC_FIELD],
@@ -133,12 +224,14 @@ def test_k_anonymity_analysis_single_field(topic_id, subscription_id, capsys):
 
 
 @flaky
-def test_k_anonymity_analysis_multiple_fields(topic_id, subscription_id, capsys):
+def test_k_anonymity_analysis_multiple_fields(
+    topic_id, subscription_id, bigquery_project, capsys
+):
     risk.k_anonymity_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
-        DATASET_ID,
-        "harmful",
+        BIGQUERY_DATASET_ID,
+        BIGQUERY_HARMFUL_TABLE_ID,
         topic_id,
         subscription_id,
         [NUMERIC_FIELD, REPEATED_FIELD],
@@ -150,12 +243,14 @@ def test_k_anonymity_analysis_multiple_fields(topic_id, subscription_id, capsys)
 
 
 @flaky
-def test_l_diversity_analysis_single_field(topic_id, subscription_id, capsys):
+def test_l_diversity_analysis_single_field(
+    topic_id, subscription_id, bigquery_project, capsys
+):
     risk.l_diversity_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
-        DATASET_ID,
-        "harmful",
+        BIGQUERY_DATASET_ID,
+        BIGQUERY_HARMFUL_TABLE_ID,
         topic_id,
         subscription_id,
         UNIQUE_FIELD,
@@ -169,12 +264,14 @@ def test_l_diversity_analysis_single_field(topic_id, subscription_id, capsys):
 
 
 @flaky
-def test_l_diversity_analysis_multiple_field(topic_id, subscription_id, capsys):
+def test_l_diversity_analysis_multiple_field(
+    topic_id, subscription_id, bigquery_project, capsys
+):
     risk.l_diversity_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
-        DATASET_ID,
-        "harmful",
+        BIGQUERY_DATASET_ID,
+        BIGQUERY_HARMFUL_TABLE_ID,
         topic_id,
         subscription_id,
         UNIQUE_FIELD,
@@ -188,12 +285,14 @@ def test_l_diversity_analysis_multiple_field(topic_id, subscription_id, capsys):
 
 
 @flaky
-def test_k_map_estimate_analysis_single_field(topic_id, subscription_id, capsys):
+def test_k_map_estimate_analysis_single_field(
+    topic_id, subscription_id, bigquery_project, capsys
+):
     risk.k_map_estimate_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
-        DATASET_ID,
-        "harmful",
+        BIGQUERY_DATASET_ID,
+        BIGQUERY_HARMFUL_TABLE_ID,
         topic_id,
         subscription_id,
         [NUMERIC_FIELD],
@@ -207,12 +306,14 @@ def test_k_map_estimate_analysis_single_field(topic_id, subscription_id, capsys)
 
 
 @flaky
-def test_k_map_estimate_analysis_multiple_field(topic_id, subscription_id, capsys):
+def test_k_map_estimate_analysis_multiple_field(
+    topic_id, subscription_id, bigquery_project, capsys
+):
     risk.k_map_estimate_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
-        DATASET_ID,
-        "harmful",
+        BIGQUERY_DATASET_ID,
+        BIGQUERY_HARMFUL_TABLE_ID,
         topic_id,
         subscription_id,
         [NUMERIC_FIELD, STRING_BOOLEAN_FIELD],
@@ -226,13 +327,15 @@ def test_k_map_estimate_analysis_multiple_field(topic_id, subscription_id, capsy
 
 
 @flaky
-def test_k_map_estimate_analysis_quasi_ids_info_types_equal(topic_id, subscription_id):
+def test_k_map_estimate_analysis_quasi_ids_info_types_equal(
+    topic_id, subscription_id, bigquery_project
+):
     with pytest.raises(ValueError):
         risk.k_map_estimate_analysis(
             GCLOUD_PROJECT,
             TABLE_PROJECT,
-            DATASET_ID,
-            "harmful",
+            BIGQUERY_DATASET_ID,
+            BIGQUERY_HARMFUL_TABLE_ID,
             topic_id,
             subscription_id,
             [NUMERIC_FIELD, STRING_BOOLEAN_FIELD],

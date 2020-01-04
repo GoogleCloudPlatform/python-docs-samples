@@ -1121,10 +1121,11 @@ if __name__ == "__main__":
         "datastore", help="Inspect files on Google Datastore."
     )
     parser_datastore.add_argument(
-        "datastore_project", help="The Google Cloud project id of the target Datastore."
+        "datastore_project",
+        help="The Google Cloud project id of the target Datastore.",
     )
     parser_datastore.add_argument(
-        "kind", help='The kind of the Datastore entity to inspect, e.g. "Person".'
+        "kind", help='The kind of the Datastore entity to inspect, e.g. "Person".',
     )
     parser_datastore.add_argument(
         "topic_id",
@@ -1200,7 +1201,7 @@ if __name__ == "__main__":
         "bigquery", help="Inspect files on Google BigQuery."
     )
     parser_bigquery.add_argument(
-        "bigquery_project", help="The Google Cloud project id of the target table."
+        "bigquery_project", help="The Google Cloud project id of the target table.",
     )
     parser_bigquery.add_argument(
         "dataset_id", help="The ID of the target BigQuery dataset."

@@ -66,7 +66,7 @@ def numerical_risk_analysis(
             results = job.risk_details.numerical_stats_result
             print(
                 "Value Range: [{}, {}]".format(
-                    results.min_value.integer_value, results.max_value.integer_value
+                    results.min_value.integer_value, results.max_value.integer_value,
                 )
             )
             prev_value = None
@@ -674,7 +674,7 @@ if __name__ == "__main__":
 
     numerical_parser = subparsers.add_parser("numerical", help="")
     numerical_parser.add_argument(
-        "project", help="The Google Cloud project id to use as a parent resource."
+        "project", help="The Google Cloud project id to use as a parent resource.",
     )
     numerical_parser.add_argument(
         "table_project_id",
@@ -685,7 +685,7 @@ if __name__ == "__main__":
     )
     numerical_parser.add_argument("table_id", help="The id of the table to inspect.")
     numerical_parser.add_argument(
-        "column_name", help="The name of the column to compute risk metrics for."
+        "column_name", help="The name of the column to compute risk metrics for.",
     )
     numerical_parser.add_argument(
         "topic_id",
@@ -704,7 +704,7 @@ if __name__ == "__main__":
 
     categorical_parser = subparsers.add_parser("categorical", help="")
     categorical_parser.add_argument(
-        "project", help="The Google Cloud project id to use as a parent resource."
+        "project", help="The Google Cloud project id to use as a parent resource.",
     )
     categorical_parser.add_argument(
         "table_project_id",
@@ -715,7 +715,7 @@ if __name__ == "__main__":
     )
     categorical_parser.add_argument("table_id", help="The id of the table to inspect.")
     categorical_parser.add_argument(
-        "column_name", help="The name of the column to compute risk metrics for."
+        "column_name", help="The name of the column to compute risk metrics for.",
     )
     categorical_parser.add_argument(
         "topic_id",
@@ -737,7 +737,7 @@ if __name__ == "__main__":
         help="Computes the k-anonymity of a column set in a Google BigQuery" "table.",
     )
     k_anonymity_parser.add_argument(
-        "project", help="The Google Cloud project id to use as a parent resource."
+        "project", help="The Google Cloud project id to use as a parent resource.",
     )
     k_anonymity_parser.add_argument(
         "table_project_id",
@@ -757,7 +757,7 @@ if __name__ == "__main__":
         "job completion notifications.",
     )
     k_anonymity_parser.add_argument(
-        "quasi_ids", nargs="+", help="A set of columns that form a composite key."
+        "quasi_ids", nargs="+", help="A set of columns that form a composite key.",
     )
     k_anonymity_parser.add_argument(
         "--timeout",
@@ -770,7 +770,7 @@ if __name__ == "__main__":
         help="Computes the l-diversity of a column set in a Google BigQuery" "table.",
     )
     l_diversity_parser.add_argument(
-        "project", help="The Google Cloud project id to use as a parent resource."
+        "project", help="The Google Cloud project id to use as a parent resource.",
     )
     l_diversity_parser.add_argument(
         "table_project_id",
@@ -790,10 +790,10 @@ if __name__ == "__main__":
         "job completion notifications.",
     )
     l_diversity_parser.add_argument(
-        "sensitive_attribute", help="The column to measure l-diversity relative to."
+        "sensitive_attribute", help="The column to measure l-diversity relative to.",
     )
     l_diversity_parser.add_argument(
-        "quasi_ids", nargs="+", help="A set of columns that form a composite key."
+        "quasi_ids", nargs="+", help="A set of columns that form a composite key.",
     )
     l_diversity_parser.add_argument(
         "--timeout",
@@ -807,7 +807,7 @@ if __name__ == "__main__":
         "BigQuery table.",
     )
     k_map_parser.add_argument(
-        "project", help="The Google Cloud project id to use as a parent resource."
+        "project", help="The Google Cloud project id to use as a parent resource.",
     )
     k_map_parser.add_argument(
         "table_project_id",
@@ -825,7 +825,7 @@ if __name__ == "__main__":
         "job completion notifications.",
     )
     k_map_parser.add_argument(
-        "quasi_ids", nargs="+", help="A set of columns that form a composite key."
+        "quasi_ids", nargs="+", help="A set of columns that form a composite key.",
     )
     k_map_parser.add_argument(
         "-t",
