@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,7 +35,7 @@ def translate_text(project_id, text):
         target_language_code='sr-Latn')
 
     for translation in response.translations:
-        print('Translated Text: {}'.format(translation))
+        print(u'Translated Text: {}'.format(translation))
     # [END translate_translate_text_beta]
 
 
@@ -71,8 +72,8 @@ def batch_translate_text(project_id, input_uri, output_uri):
 
     result = operation.result(90)
 
-    print('Total Characters: {}'.format(result.total_characters))
-    print('Translated Characters: {}'.format(result.translated_characters))
+    print(u'Total Characters: {}'.format(result.total_characters))
+    print(u'Translated Characters: {}'.format(result.translated_characters))
     # [END translate_batch_translate_text_beta]
 
 
@@ -93,7 +94,7 @@ def detect_language(project_id, text):
         mime_type='text/plain')  # mime types: text/plain, text/html
 
     for language in response.languages:
-        print('Language Code: {} (Confidence: {})'.format(
+        print(u'Language Code: {} (Confidence: {})'.format(
             language.language_code,
             language.confidence))
     # [END translate_detect_language_beta]
@@ -113,7 +114,7 @@ def list_languages(project_id):
 
     print('Supported Languages:')
     for language in response.languages:
-        print('Language Code: {}'.format(language.language_code))
+        print(u'Language Code: {}'.format(language.language_code))
     # [END translate_list_codes_beta]
 
 
@@ -134,8 +135,8 @@ def list_languages_with_target(project_id, display_language_code):
 
     print('Supported Languages:')
     for language in response.languages:
-        print('Language Code: {}'.format(language.language_code))
-        print('Display Name: {}\n'.format(language.display_name))
+        print(u'Language Code: {}'.format(language.language_code))
+        print(u'Display Name: {}\n'.format(language.display_name))
     # [END translate_list_language_names_beta]
 
 
@@ -172,8 +173,8 @@ def create_glossary(project_id, glossary_id):
     operation = client.create_glossary(parent=parent, glossary=glossary)
 
     result = operation.result(timeout=90)
-    print('Created: {}'.format(result.name))
-    print('Input Uri: {}'.format(result.input_config.gcs_source.input_uri))
+    print(u'Created: {}'.format(result.name))
+    print(u'Input Uri: {}'.format(result.input_config.gcs_source.input_uri))
     # [END translate_create_glossary_beta]
 
 
@@ -188,12 +189,12 @@ def list_glossaries(project_id):
     parent = client.location_path(project_id, location)
 
     for glossary in client.list_glossaries(parent):
-        print('Name: {}'.format(glossary.name))
-        print('Entry count: {}'.format(glossary.entry_count))
-        print('Input uri: {}'.format(
+        print(u'Name: {}'.format(glossary.name))
+        print(u'Entry count: {}'.format(glossary.entry_count))
+        print(u'Input uri: {}'.format(
             glossary.input_config.gcs_source.input_uri))
         for language_code in glossary.language_codes_set.language_codes:
-            print('Language code: {}'.format(language_code))
+            print(u'Language code: {}'.format(language_code))
     # [END translate_list_glossary_beta]
 
 
@@ -211,13 +212,13 @@ def get_glossary(project_id, glossary_id):
         glossary_id)
 
     response = client.get_glossary(parent)
-    print('Name: {}'.format(response.name))
-    print('Language Pair:')
-    print('\tSource Language Code: {}'.format(
+    print(u'Name: {}'.format(response.name))
+    print(u'Language Pair:')
+    print(u'\tSource Language Code: {}'.format(
         response.language_pair.source_language_code))
-    print('\tTarget Language Code: {}'.format(
+    print(u'\tTarget Language Code: {}'.format(
         response.language_pair.target_language_code))
-    print('Input Uri: {}'.format(
+    print(u'Input Uri: {}'.format(
         response.input_config.gcs_source.input_uri))
     # [END translate_get_glossary_beta]
 
@@ -237,7 +238,7 @@ def delete_glossary(project_id, glossary_id):
 
     operation = client.delete_glossary(parent)
     result = operation.result(timeout=90)
-    print('Deleted: {}'.format(result.name))
+    print(u'Deleted: {}'.format(result.name))
     # [END translate_delete_glossary_beta]
 
 
