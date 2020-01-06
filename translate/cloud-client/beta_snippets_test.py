@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -77,7 +78,7 @@ def test_batch_translate_text(capsys, bucket):
 
 
 def test_detect_language(capsys):
-    beta_snippets.detect_language(PROJECT_ID, 'Hæ sæta')
+    beta_snippets.detect_language(PROJECT_ID, u'Hæ sæta')
     out, _ = capsys.readouterr()
     assert 'is' in out
 
