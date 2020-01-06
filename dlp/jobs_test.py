@@ -49,8 +49,13 @@ def test_job_name():
     full_path = response.name
     # API expects only job name, not full project path
     job_name = full_path[full_path.rfind("/") + 1 :]
-    return job_name
+    yield job_name
 
+    # clean up job if not deleted
+    try:
+      dlp.delete_dlp_job(full_path)
+    except google.cloud.exceptions.NotFound:
+      print("Issue during teardown, missing job")
 
 def test_list_dlp_jobs(capsys):
     jobs.list_dlp_jobs(GCLOUD_PROJECT)
