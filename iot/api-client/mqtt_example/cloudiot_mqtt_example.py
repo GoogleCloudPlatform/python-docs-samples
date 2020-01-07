@@ -242,6 +242,8 @@ def listen_for_messages(
         if seconds_since_issue > 60 * jwt_exp_mins:
             print('Refreshing token after {}s'.format(seconds_since_issue))
             jwt_iat = datetime.datetime.utcnow()
+            client.loop()
+            client.disconnect()
             client = get_client(
                 project_id, cloud_region, registry_id, gateway_id,
                 private_key_file, algorithm, ca_certs, mqtt_bridge_hostname,
@@ -457,6 +459,8 @@ def mqtt_device_demo(args):
         if seconds_since_issue > 60 * jwt_exp_mins:
             print('Refreshing token after {}s'.format(seconds_since_issue))
             jwt_iat = datetime.datetime.utcnow()
+            client.loop()
+            client.disconnect()
             client = get_client(
                 args.project_id, args.cloud_region,
                 args.registry_id, args.device_id, args.private_key_file,
@@ -469,7 +473,9 @@ def mqtt_device_demo(args):
         client.publish(mqtt_topic, payload, qos=1)
 
         # Send events every second. State should not be updated as often
-        time.sleep(1 if args.message_type == 'event' else 5)
+        for i in range(0, 60):
+            time.sleep(1)
+            client.loop()
     # [END iot_mqtt_run]
 
 

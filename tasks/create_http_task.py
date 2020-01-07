@@ -23,7 +23,8 @@ def create_http_task(project,
                      location,
                      url,
                      payload=None,
-                     in_seconds=None):
+                     in_seconds=None,
+                     task_name=None):
     # [START cloud_tasks_create_http_task]
     """Create a task for a given queue with an arbitrary payload."""
 
@@ -67,6 +68,10 @@ def create_http_task(project,
 
         # Add the timestamp to the tasks.
         task['schedule_time'] = timestamp
+
+    if task_name is not None:
+        # Add the name to tasks.
+        task['name'] = task_name
 
     # Use the client to build and send the task.
     response = client.create_task(parent, task)
@@ -115,8 +120,12 @@ if __name__ == '__main__':
         help='The number of seconds from now to schedule task attempt.'
     )
 
+    parser.add_argument(
+        '--task_name',
+        help='Task name of the task to create'
+    )
     args = parser.parse_args()
 
     create_http_task(
         args.project, args.queue, args.location, args.url,
-        args.payload, args.in_seconds)
+        args.payload, args.in_seconds, args.task_name)

@@ -25,10 +25,13 @@ import argparse
 import os
 
 
-def predict(project_id,
-            compute_region,
-            model_display_name,
-            inputs):
+def predict(
+    project_id,
+    compute_region,
+    model_display_name,
+    inputs,
+    feature_importance=None,
+):
     """Make a prediction."""
     # [START automl_tables_predict]
     # TODO(developer): Uncomment and set the following variables
@@ -41,23 +44,50 @@ def predict(project_id,
 
     client = automl.TablesClient(project=project_id, region=compute_region)
 
-    response = client.predict(
-        model_display_name=model_display_name,
-        inputs=inputs)
+    if feature_importance:
+        response = client.predict(
+            model_display_name=model_display_name,
+            inputs=inputs,
+            feature_importance=True,
+        )
+    else:
+        response = client.predict(
+            model_display_name=model_display_name, inputs=inputs
+        )
+
     print("Prediction results:")
     for result in response.payload:
-        print("Predicted class name: {}".format(result.display_name))
-        print("Predicted class score: {}".format(
-            result.classification.score))
+        print(
+            "Predicted class name: {}".format(result.tables.value.string_value)
+        )
+        print("Predicted class score: {}".format(result.tables.score))
+
+        if feature_importance:
+            # get features of top importance
+            feat_list = [
+                (column.feature_importance, column.column_display_name)
+                for column in result.tables.tables_model_column_info
+            ]
+            feat_list.sort(reverse=True)
+            if len(feat_list) < 10:
+                feat_to_show = len(feat_list)
+            else:
+                feat_to_show = 10
+
+            print("Features of top importance:")
+            for feat in feat_list[:feat_to_show]:
+                print(feat)
 
     # [END automl_tables_predict]
 
 
-def batch_predict(project_id,
-                  compute_region,
-                  model_display_name,
-                  gcs_input_uris,
-                  gcs_output_uri):
+def batch_predict(
+    project_id,
+    compute_region,
+    model_display_name,
+    gcs_input_uris,
+    gcs_output_uri,
+):
     """Make a batch of predictions."""
     # [START automl_tables_batch_predict]
     # TODO(developer): Uncomment and set the following variables
@@ -107,10 +137,7 @@ if __name__ == "__main__":
 
     if args.command == "predict":
         predict(
-            project_id,
-            compute_region,
-            args.model_display_name,
-            args.file_path,
+            project_id, compute_region, args.model_display_name, args.file_path
         )
 
     if args.command == "batch_predict":
