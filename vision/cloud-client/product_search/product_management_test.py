@@ -18,7 +18,7 @@ import pytest
 
 from product_management import (
     create_product, delete_product, get_product, list_products,
-    update_product_labels)
+    purge_orphan_products, update_product_labels)
 
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
@@ -83,3 +83,15 @@ def test_update_product_labels(capsys, product):
     assert VALUE in out
 
     delete_product(PROJECT_ID, LOCATION, PRODUCT_ID)
+
+
+def test_purge_orphan_products(capsys, product):
+    list_products(PROJECT_ID, LOCATION)
+    out, _ = capsys.readouterr()
+    assert PRODUCT_ID in out
+
+    purge_orphan_products(PROJECT_ID, LOCATION, force=True)
+
+    list_products(PROJECT_ID, LOCATION)
+    out, _ = capsys.readouterr()
+    assert PRODUCT_ID not in out

@@ -27,12 +27,15 @@ You can access the data on BigQuery [here](https://bigquery.cloud.google.com/dat
 ## Solution Walkthrough
 The solution has been developed using [Google Colab Notebook](https://colab.research.google.com/notebooks/welcome.ipynb). Here are the thought process and specific steps that went into building the “Purchase Prediction with AutoML Tables” colab. The colab is broken into 7 parts; this write up will mirror that structure.
 
-Before we dive in, a few housekeeping notes about setting up the colab.
+Before we dive in, a few housekeeping notes about setting up the colab or Jupyter.
 
 
 Steps Involved
 
 ### 1. Set up
+
+**If you are using AI Platform Notebooks**, your environment is alreadyauthenticated. Skip this step.
+
 The first step in this process was to set up the project. We referred to the [AutoML tables documentation](https://cloud.google.com/automl-tables/docs/) and take the following steps:
 * Create a Google Cloud Platform (GCP) project
 * Enable billing
@@ -44,6 +47,7 @@ There are a few options concerning how to host the colab: default hosted runtime
 ##### Default Hosted Runtime:
 
 The hosted runtime is the simplest to use. It accesses a default VM already configured to host the colab notebook. Simply navigate to the upper right hand corner click on the connect drop down box, which will give you the option to “connect to hosted runtime”. 
+Alternatively you can use the [AI Platform Notebooks] (https://cloud.google.com/ai-platform-notebooks/).
 
 ##### Local Runtime:
 The local runtime takes a bit more work. It involves downloading jupyter notebooks onto your local machine, likely the desktop from which you access the colab. After downloading jupyter notebooks, you can connect to the local runtime. The colab notebook will run off of your local machine. Detailed instructions can be found [here](https://research.google.com/colaboratory/local-runtimes.html).
@@ -64,12 +68,12 @@ Once your firewall rules are created, you should be able to ssh into your VM ins
 This will allow your local terminal to ssh into the VM instance you created, which simultaneously port forwarding the port 8888 from your local machine to the VM. Once in the VM, you can download jupyter notebooks and open up a notebook as seen in the instructions [here](https://research.google.com/colaboratory/local-runtimes.html). Specifically steps 2, 3.
 	
 We recommend hosting using the VM for two main reasons:
-1. The VM can be provisioned to be much, much more powerful than either your local machine or the default runtime allocated by the colab notebook. 
-2. The colab is currently configured to run on either your local machine or a VM. It requires you to install the AutoML client library and uplaod a service account key to the machine from which you are hosting the colab. These two actions can be done the default hosted runtime, but would require a different set of instructions not detailed in this specific colab. To see them, refer to the AutoML Tables sample colab found in the tutorials section of the [documentation](https://cloud.google.com/automl-tables/docs/). Specifically step 2.
+1. The VM can be provisioned to be much, much more powerful than either your local machine or the default runtime allocated by the notebook. 
+2. The notebook is currently configured to run on either your local machine or a VM. It requires you to install the AutoML client library and uplaod a service account key to the machine from which you are hosting the notebook. These two actions can be done the default hosted runtime, but would require a different set of instructions not detailed in this specific colab. To see them, refer to the AutoML Tables sample colab found in the tutorials section of the [documentation](https://cloud.google.com/automl-tables/docs/). Specifically step 2.
 
 
 ### 2. Initialize and authenticate
-The client library installation is entirely self explanatory in the colab.
+The client library installation is entirely self explanatory in the notebook.
 
 The authentication process is only slightly more complex: run the second code block entitled "Authenticate using service account key  and create a client" and then upload the service account key you created in the set up step
 	Would also recommend setting a global variable

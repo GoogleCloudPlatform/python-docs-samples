@@ -1,3 +1,4 @@
+from __future__ import print_function
 # Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -343,7 +344,7 @@ def test_fetch_message_accounts_inefficient(testbed):
 
     assert len(message_account_pairs) == 5
 
-    print repr(message_account_pairs)
+    print(repr(message_account_pairs))
     for i in range(1, 6):
         message, account = message_account_pairs[i - 1]
         assert message.content == 'Message %s' % i

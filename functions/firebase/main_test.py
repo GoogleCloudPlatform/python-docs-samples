@@ -29,7 +29,8 @@ class Context(object):
 def test_rtdb(capsys):
     data = {
         'admin': True,
-        'delta': {'id': 'my-data'}
+        'delta': {'id': 'my-data'},
+        'params': {'baz': 'quux'}
     }
 
     context = Context()
@@ -39,6 +40,7 @@ def test_rtdb(capsys):
 
     out, _ = capsys.readouterr()
 
+    assert 'baz: quux' in out
     assert 'Function triggered by change to: my-resource' in out
     assert 'Admin?: True' in out
     assert 'my-data' in out

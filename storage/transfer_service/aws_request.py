@@ -90,7 +90,7 @@ if __name__ == '__main__':
     parser.add_argument('source_bucket', help='AWS source bucket name.')
     parser.add_argument('access_key_id', help='Your AWS access key id.')
     parser.add_argument(
-        'secret_access_key', 
+        'secret_access_key',
         help='Your AWS secret access key.'
     )
     parser.add_argument('sink_bucket', help='GCS sink bucket name.')

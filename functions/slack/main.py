@@ -13,6 +13,7 @@
 
 # [START functions_slack_setup]
 import json
+import os
 
 import apiclient
 from flask import jsonify
@@ -21,8 +22,11 @@ with open('config.json', 'r') as f:
     data = f.read()
 config = json.loads(data)
 
-kgsearch = apiclient.discovery.build('kgsearch', 'v1',
-                                     developerKey=config['KG_API_KEY'])
+
+kgsearch = apiclient.discovery.build(
+    'kgsearch',
+    'v1',
+    developerKey=os.environ['API_KEY'] or config['KG_API_KEY'])
 # [END functions_slack_setup]
 
 

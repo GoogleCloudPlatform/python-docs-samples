@@ -45,7 +45,8 @@ test their code.
     source ~/.bashrc
     ```
 
-1.  Verify that you are now using the pyenv Python shim.
+1.  After you have installed a python version through pyenv (see below), 
+    verify that you are now using the pyenv Python shim.
 
     ```
     $ which python
@@ -69,16 +70,25 @@ test their code.
     brew update
     brew upgrade pyenv
     ```
+    
+    View the options related to a specific release with
+    
+    ```
+    pyenv install 3.x
+    ```
+    
+    
 
 1. Compile the necessary Python versions with pyenv. Use the latest release
-   of the versions you wish to test against.
+   of the versions you wish to test against.  A list of available versions
+   is available on [python.org](https://www.python.org/doc/versions/)
 
-    As of August 8, 2018 my (tswast@) Python versions are:
+    As of December 9, 2019 latest Python versions are:
 
-    *  2.7.15 (latest 2.7.x release)
-    *  3.5.4 (latest 3.5.x release)
-    *  3.6.4 (latest 3.6.x release)
-    *  3.7.0 (latest 3.7.x release)
+    *  2.7.17 (latest 2.7.x release)
+    *  3.5.8 (latest 3.5.x release)
+    *  3.6.9 (latest 3.6.x release)
+    *  3.7.5 (latest 3.7.x release)
 
 ## Using pyenv and pyenv-virtualenv to manage your Python versions
 

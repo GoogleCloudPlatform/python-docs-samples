@@ -89,7 +89,7 @@ def test_push_endpoint(monkeypatch, client, fake_token):
     monkeypatch.setattr(id_token, 'verify_oauth2_token',
                         _verify_mocked_oauth2_token)
 
-    url = '/_ah/push-handlers/receive_messages?token=' + \
+    url = '/push-handlers/receive_messages?token=' + \
         os.environ['PUBSUB_VERIFICATION_TOKEN']
 
     r = client.post(
@@ -115,9 +115,9 @@ def test_push_endpoint(monkeypatch, client, fake_token):
 
 def test_push_endpoint_errors(client):
     # no token
-    r = client.post('/_ah/push-handlers/receive_messages')
+    r = client.post('/push-handlers/receive_messages')
     assert r.status_code == 400
 
     # invalid token
-    r = client.post('/_ah/push-handlers/receive_messages?token=bad')
+    r = client.post('/push-handlers/receive_messages?token=bad')
     assert r.status_code == 400
