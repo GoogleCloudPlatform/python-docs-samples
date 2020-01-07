@@ -57,4 +57,6 @@ def python_powered(request):
     Returns:
         The response file, a JPG image that says "Python Powered"
     """
-    return flask.send_from_directory(os.getcwd(), "python_powered.jpg", mimetype="image/jpg")
+    return flask.send_from_directory(
+        os.getcwd(), "python_powered.jpg", mimetype="image/jpg"
+    )
