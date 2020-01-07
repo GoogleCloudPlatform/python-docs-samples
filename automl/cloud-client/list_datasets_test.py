@@ -16,8 +16,8 @@ import os
 
 import list_datasets
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-DATASET_ID = "TEN4058147884539838464"
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+DATASET_ID = os.environ["ENTITY_EXTRACTION_DATASET_ID"]
 
 
 def test_list_dataset(capsys):

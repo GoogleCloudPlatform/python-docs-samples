@@ -17,7 +17,7 @@ import os
 
 import export_dataset
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 BUCKET_ID = "{}-lcm".format(PROJECT_ID)
 PREFIX = "TEST_EXPORT_OUTPUT_" + datetime.datetime.now().strftime(
     "%Y%m%d%H%M%S"
