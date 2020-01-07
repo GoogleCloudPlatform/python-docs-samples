@@ -37,11 +37,11 @@ def test_batch_predict(capsys):
         )
         out, _ = capsys.readouterr()
         assert (
-            "The model is either not found or not supported for prediction yet."
+            "The model is either not found or not supported for prediction yet"
             in out
         )
     except Exception as e:
         assert (
-            "The model is either not found or not supported for prediction yet."
+            "The model is either not found or not supported for prediction yet"
             in e.message
         )
