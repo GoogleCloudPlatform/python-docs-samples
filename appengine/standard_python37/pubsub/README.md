@@ -25,7 +25,7 @@ Before you can run or deploy the sample, you will need to do the following:
         $ gcloud beta pubsub subscriptions create [your-subscription-name] \
             --topic=[your-topic-name] \
             --push-endpoint=\
-                https://[your-app-id].appspot.com/_ah/push-handlers/receive_messages?token=[your-token] \
+                https://[your-app-id].appspot.com/push-handlers/receive_messages?token=[your-token] \
             --ack-deadline=30 \
             --push-auth-service-account=[your-service-account] \
             --push-auth-token-audience=example.com
@@ -56,11 +56,11 @@ Then set environment variables before starting your application:
 The application can send messages locally, but it is not able to receive push messages locally. You can, however, simulate a push message by making an HTTP request to the local push notification endpoint. There is an included ``sample_message.json``. You can use
 ``curl`` or [httpie](https://github.com/jkbrzt/httpie) to POST this:
 
-    $ curl -i --data @sample_message.json "localhost:8080/_ah/push-handlers/receive_messages?token=[your-token]"
+    $ curl -i --data @sample_message.json "localhost:8080/push-handlers/receive_messages?token=[your-token]"
 
 Or
 
-    $ http POST ":8080/_ah/push-handlers/receive_messages?token=[your-token]" < sample_message.json
+    $ http POST ":8080/push-handlers/receive_messages?token=[your-token]" < sample_message.json
 
 Response:
 
