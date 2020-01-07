@@ -29,9 +29,11 @@ def create_dataset():
     client = automl.AutoMlClient()
     project_location = client.location_path(PROJECT_ID, "us-central1")
     display_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    metadata = automl.types.TextExtractionDatasetMetadata()
+    metadata = automl.types.TextSentimentDatasetMetadata(
+        sentiment_max=4
+    )
     dataset = automl.types.Dataset(
-        display_name=display_name, text_extraction_dataset_metadata=metadata
+        display_name=display_name, text_sentiment_dataset_metadata=metadata
     )
     response = client.create_dataset(project_location, dataset)
     dataset_id = response.result().name.split("/")[-1]
@@ -42,7 +44,7 @@ def create_dataset():
 @pytest.mark.slow
 def test_import_dataset(capsys, create_dataset):
     data = (
-        "gs://cloud-samples-data/automl/language_entity_extraction/dataset.csv"
+        "gs://{}/sentiment-analysis/dataset.csv".format(BUCKET_ID)
     )
     dataset_id = create_dataset
     import_dataset.import_dataset(PROJECT_ID, dataset_id, data)
