@@ -20,7 +20,7 @@ import pytest
 import vision_classification_create_model
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
-DATASET_ID = os.environ["VISION_CLASSIFICATION_MODEL_ID"]
+DATASET_ID = os.environ["VISION_CLASSIFICATION_DATASET_ID"]
 
 
 @pytest.mark.slow
