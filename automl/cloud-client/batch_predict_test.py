@@ -15,43 +15,33 @@
 import datetime
 import os
 
-from google.cloud import automl
-from google.cloud import storage
-import pytest
-
 import batch_predict
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 BUCKET_ID = "{}-lcm".format(PROJECT_ID)
-MODEL_ID = os.environ["ENTITY_EXTRACTION_MODEL_ID"]
+MODEL_ID = "TEN0000000000000000000"
 PREFIX = "TEST_EXPORT_OUTPUT_" + datetime.datetime.now().strftime(
     "%Y%m%d%H%M%S"
 )
 
 
-@pytest.fixture(scope="function")
-def verify_model_state():
-    client = automl.AutoMlClient()
-    model_full_id = client.model_path(PROJECT_ID, "us-central1", MODEL_ID)
-    model = client.get_model(model_full_id)
-    if model.deployment_state == automl.enums.Model.DeploymentState.UNDEPLOYED:
-        # Deploy model if it is not deployed
-        response = client.deploy_model(model_full_id)
-        response.result()
-
-
-@pytest.mark.slow
-def test_batch_predict(capsys, verify_model_state):
-    verify_model_state
-    input_uri = "gs://{}/entity-extraction/input.jsonl".format(BUCKET_ID)
-    output_uri = "gs://{}/{}/".format(BUCKET_ID, PREFIX)
-    batch_predict.batch_predict(PROJECT_ID, MODEL_ID, input_uri, output_uri)
-    out, _ = capsys.readouterr()
-    assert "Batch Prediction results saved to Cloud Storage bucket" in out
-
-    # Delete created files
-    storage_client = storage.Client()
-    bucket = storage_client.get_bucket(BUCKET_ID)
-    if len(list(bucket.list_blobs(prefix=PREFIX))) > 0:
-        for blob in bucket.list_blobs(prefix=PREFIX):
-            blob.delete()
+def test_batch_predict(capsys):
+    # As batch prediction can take a long time. Try to batch predict on a model
+    # and confirm that the model was not found, but other elements of the
+    # request were valid.
+    try:
+        input_uri = "gs://{}/entity-extraction/input.jsonl".format(BUCKET_ID)
+        output_uri = "gs://{}/{}/".format(BUCKET_ID, PREFIX)
+        batch_predict.batch_predict(
+            PROJECT_ID, MODEL_ID, input_uri, output_uri
+        )
+        out, _ = capsys.readouterr()
+        assert (
+            "The model is either not found or not supported for prediction yet."
+            in out
+        )
+    except Exception as e:
+        assert (
+            "The model is either not found or not supported for prediction yet."
+            in e.message
+        )
