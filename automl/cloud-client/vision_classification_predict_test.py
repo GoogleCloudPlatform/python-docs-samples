@@ -19,8 +19,8 @@ import pytest
 
 import vision_classification_predict
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-MODEL_ID = "ICN7383667271543079510"
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+MODEL_ID = os.environ["VISION_CLASSIFICATION_MODEL_ID"]
 
 
 @pytest.fixture(scope="function")
