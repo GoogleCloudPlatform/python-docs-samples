@@ -19,8 +19,7 @@ import pytest
 
 import get_operation_status
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-OPERATION_ID = ""
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 
 
 @pytest.fixture(scope="function")

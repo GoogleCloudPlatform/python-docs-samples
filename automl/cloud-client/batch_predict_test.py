@@ -21,9 +21,9 @@ import pytest
 
 import batch_predict
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 BUCKET_ID = "{}-lcm".format(PROJECT_ID)
-MODEL_ID = "TEN5112482778553778176"
+MODEL_ID = os.environ["ENTITY_EXTRACTION_MODEL_ID"]
 PREFIX = "TEST_EXPORT_OUTPUT_" + datetime.datetime.now().strftime(
     "%Y%m%d%H%M%S"
 )
