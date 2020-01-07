@@ -43,7 +43,7 @@ def verify_model_state():
 @pytest.mark.slow
 def test_batch_predict(capsys, verify_model_state):
     verify_model_state
-    input_uri = "gs://{}/entity_extraction/input.jsonl".format(BUCKET_ID)
+    input_uri = "gs://{}/entity-extraction/input.jsonl".format(BUCKET_ID)
     output_uri = "gs://{}/{}/".format(BUCKET_ID, PREFIX)
     batch_predict.batch_predict(PROJECT_ID, MODEL_ID, input_uri, output_uri)
     out, _ = capsys.readouterr()
