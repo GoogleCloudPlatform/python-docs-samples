@@ -19,8 +19,8 @@ import pytest
 
 import language_entity_extraction_predict
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-MODEL_ID = "TEN5112482778553778176"
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+MODEL_ID = os.environ["ENTITY_EXTRACTION_MODEL_ID"]
 
 
 @pytest.fixture(scope="function")

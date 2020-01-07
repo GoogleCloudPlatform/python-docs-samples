@@ -20,7 +20,7 @@ from google.cloud import automl
 import language_entity_extraction_create_dataset
 
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 
 
 def test_entity_extraction_create_dataset(capsys):

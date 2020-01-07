@@ -30,9 +30,11 @@ def predict(project_id, model_id, content):
         project_id, "us-central1", model_id
     )
 
+    # Supported mime_types: 'text/plain', 'text/html'
+    # https://cloud.google.com/automl/docs/reference/rpc/google.cloud.automl.v1#textsnippet
     text_snippet = automl.types.TextSnippet(
         content=content, mime_type="text/plain"
-    )  # Types: 'text/plain', 'text/html'
+    )
     payload = automl.types.ExamplePayload(text_snippet=text_snippet)
 
     response = prediction_client.predict(model_full_id, payload)
