@@ -37,7 +37,7 @@ class StringProcessor():
         self._string = string
 
     def Reverse(self):
-        if self._string is '':
+        if self._string == '':
             return ''
 
         chars = [c for c in self._string]
@@ -71,7 +71,6 @@ def ReverseString():
             <tr><th>Correct Output:</th><th>{}</th><tr>
         </table>
     '''.format(current, expected)
-
 
 
 @app.route('/')
