@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2017 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,7 +44,7 @@ def list_info_types(language_code=None, result_filter=None):
     print("Info types:")
     for info_type in response.info_types:
         print(
-            "{name}: {display_name}".format(
+            u"{name}: {display_name}".format(
                 name=info_type.name, display_name=info_type.display_name
             )
         )
