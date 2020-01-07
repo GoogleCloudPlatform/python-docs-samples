@@ -18,7 +18,7 @@ import pytest
 
 import undeploy_model
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 MODEL_ID = "TRL0000000000000000000"
 
 

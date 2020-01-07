@@ -15,29 +15,24 @@
 
 def create_model(project_id, dataset_id, display_name):
     """Create a model."""
-    # [START automl_vision_classification_create_model]
+    # [START automl_language_sentiment_analysis_create_model]
     from google.cloud import automl
 
     # TODO(developer): Uncomment and set the following variables
     # project_id = "YOUR_PROJECT_ID"
     # dataset_id = "YOUR_DATASET_ID"
-    # display_name = "your_models_display_name"
+    # display_name = "YOUR_MODEL_NAME"
 
     client = automl.AutoMlClient()
 
     # A resource that represents Google Cloud Platform location.
     project_location = client.location_path(project_id, "us-central1")
     # Leave model unset to use the default base model provided by Google
-    # train_budget_milli_node_hours: The actual train_cost will be equal or
-    # less than this value.
-    # https://cloud.google.com/automl/docs/reference/rpc/google.cloud.automl.v1#imageclassificationmodelmetadata
-    metadata = automl.types.ImageClassificationModelMetadata(
-        train_budget_milli_node_hours=24000
-    )
+    metadata = automl.types.TextSentimentModelMetadata()
     model = automl.types.Model(
         display_name=display_name,
         dataset_id=dataset_id,
-        image_classification_model_metadata=metadata,
+        text_sentiment_model_metadata=metadata,
     )
 
     # Create a model with the model metadata in the region.
@@ -45,4 +40,4 @@ def create_model(project_id, dataset_id, display_name):
 
     print("Training operation name: {}".format(response.operation.name))
     print("Training started...")
-    # [END automl_vision_classification_create_model]
+    # [END automl_language_sentiment_analysis_create_model]
