@@ -16,8 +16,8 @@ import os
 
 import get_model
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-MODEL_ID = "TEN1499896588007374848"
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+MODEL_ID = os.environ["ENTITY_EXTRACTION_MODEL_ID"]
 
 
 def test_get_model(capsys):

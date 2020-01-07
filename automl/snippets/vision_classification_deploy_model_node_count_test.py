@@ -18,7 +18,7 @@ import pytest
 
 import vision_classification_deploy_model_node_count
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 MODEL_ID = "ICN0000000000000000000"
 
 

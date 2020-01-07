@@ -19,8 +19,8 @@ import pytest
 
 import translate_predict
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-MODEL_ID = "TRL3128559826197068699"
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+MODEL_ID = os.environ["TRANSLATION_MODEL_ID"]
 
 
 @pytest.fixture(scope="function")

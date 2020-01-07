@@ -25,6 +25,9 @@ def deploy_model(project_id, model_id):
     client = automl.AutoMlClient()
     # Get the full path of the model.
     model_full_id = client.model_path(project_id, "us-central1", model_id)
+
+    # node count determines the number of nodes to deploy the model on.
+    # https://cloud.google.com/automl/docs/reference/rpc/google.cloud.automl.v1#imageclassificationmodeldeploymentmetadata
     metadata = automl.types.ImageClassificationModelDeploymentMetadata(
         node_count=2
     )
