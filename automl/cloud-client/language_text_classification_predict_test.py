@@ -19,8 +19,8 @@ import pytest
 
 import language_text_classification_predict
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-MODEL_ID = "TCN3472481026502981088"
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+MODEL_ID = os.environ["TEXT_CLASSIFICATION_MODEL_ID"]
 
 
 @pytest.fixture(scope="function")
@@ -35,7 +35,7 @@ def verify_model_state():
         response.result()
 
 
-def test_predict(capsys, verify_model_state):
+def test_text_classification_predict(capsys, verify_model_state):
     verify_model_state
     text = "Fruit and nut flavour"
     language_text_classification_predict.predict(PROJECT_ID, MODEL_ID, text)

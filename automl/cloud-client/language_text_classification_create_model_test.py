@@ -19,14 +19,14 @@ import pytest
 
 import language_text_classification_create_model
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-DATASET_ID = "TST3960250460385409610"
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+DATASET_ID = os.environ["TEXT_CLASSIFICATION_DATASET_ID"]
 
 
 @pytest.mark.slow
 def test_text_classification_create_model(capsys):
     language_text_classification_create_model.create_model(
-        PROJECT_ID, DATASET_ID, "object_test_create_model"
+        PROJECT_ID, DATASET_ID, "classification_test_create_model"
     )
     out, _ = capsys.readouterr()
     assert "Training started" in out
