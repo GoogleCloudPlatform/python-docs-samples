@@ -21,7 +21,7 @@ def predict(project_id, model_id, file_path):
     # TODO(developer): Uncomment and set the following variables
     # project_id = "YOUR_PROJECT_ID"
     # model_id = "YOUR_MODEL_ID"
-    # file_path = "path_to_local_file.txt"
+    # file_path = "path_to_local_file.jpg"
 
     prediction_client = automl.PredictionServiceClient()
 
@@ -39,6 +39,7 @@ def predict(project_id, model_id, file_path):
 
     # params is additional domain-specific parameters.
     # score_threshold is used to filter the result
+    # https://cloud.google.com/automl/docs/reference/rpc/google.cloud.automl.v1#predictrequest
     params = {"score_threshold": "0.8"}
 
     response = prediction_client.predict(model_full_id, payload, params)

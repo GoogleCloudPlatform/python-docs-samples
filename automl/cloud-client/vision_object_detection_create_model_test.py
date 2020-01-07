@@ -19,8 +19,8 @@ import pytest
 
 import vision_object_detection_create_model
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-DATASET_ID = "IOD6284333475344416768"
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+DATASET_ID = os.environ["OBJECT_DETECTION_DATASET_ID"]
 
 
 @pytest.mark.slow

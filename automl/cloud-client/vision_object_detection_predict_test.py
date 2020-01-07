@@ -19,8 +19,8 @@ import pytest
 
 import vision_object_detection_predict
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-MODEL_ID = "IOD1729298694026559488"
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+MODEL_ID = os.environ["OBJECT_DETECTION_MODEL_ID"]
 
 
 @pytest.fixture(scope="function")
