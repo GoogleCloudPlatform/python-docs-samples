@@ -94,7 +94,7 @@ test their code.
 
     ```console
     $ which python
-    /Users/tswast/.pyenv/shims/python
+    ~/.pyenv/shims/python
     ```
 
 
