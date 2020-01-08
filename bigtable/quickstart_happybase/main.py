@@ -22,7 +22,7 @@ from google.cloud import happybase
 
 
 def main(project_id="project-id", instance_id="instance-id",
-         table_id="my-table"):
+    table_id="my-table"):
     # Creates a Bigtable client
     client = bigtable.Client(project=project_id)
 
@@ -37,9 +37,10 @@ def main(project_id="project-id", instance_id="instance-id",
 
         key = 'r1'
         row = table.row(key.encode('utf-8'))
-        value = {k.decode("utf-8"): v.decode("utf-8") for k, v in row.items()}
-        print('Row key: {}\nData: {}'.format(key, json.dumps(value, indent=4,
-                                                             sort_keys=True)))
+
+        column = 'cf1:c1'.encode('utf-8')
+        value = row[column].decode('utf-8')
+        print('Row key: {}\nData: {}'.format(key, value))
 
     finally:
         connection.close()

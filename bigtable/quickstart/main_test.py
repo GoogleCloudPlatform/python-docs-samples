@@ -13,8 +13,8 @@
 # limitations under the License.
 
 import os
-
 import random
+import pytest
 
 from main import main
 from google.cloud import bigtable
@@ -25,7 +25,8 @@ TABLE_ID_FORMAT = 'quickstart-test-{}'
 TABLE_ID_RANGE = 10000
 
 
-def test_main(capsys):
+@pytest.fixture()
+def table():
     table_id = TABLE_ID_FORMAT.format(
         random.randrange(TABLE_ID_RANGE))
     client = bigtable.Client(project=PROJECT, admin=True)
@@ -39,6 +40,13 @@ def test_main(capsys):
     row.set_cell(column_family_id, "c1", "test-value")
     row.commit()
 
+    yield table_id
+
+    table.delete()
+
+
+def test_main(capsys, table):
+    table_id = table
     main(PROJECT, BIGTABLE_INSTANCE, table_id)
 
     out, _ = capsys.readouterr()
