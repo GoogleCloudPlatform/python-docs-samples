@@ -18,7 +18,7 @@ import random
 from main import main
 
 PROJECT = os.environ['GCLOUD_PROJECT']
-BIGTABLE_CLUSTER = os.environ['BIGTABLE_CLUSTER']
+BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
 TABLE_NAME_FORMAT = 'hello_happybase-system-tests-{}'
 TABLE_NAME_RANGE = 10000
 
@@ -28,7 +28,7 @@ def test_main(capsys):
         random.randrange(TABLE_NAME_RANGE))
     main(
         PROJECT,
-        BIGTABLE_CLUSTER,
+        BIGTABLE_INSTANCE,
         table_name)
 
     out, _ = capsys.readouterr()
