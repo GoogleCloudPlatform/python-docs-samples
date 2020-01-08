@@ -14,28 +14,32 @@
 
 import os
 
+import random
+
 from main import main
 from google.cloud import bigtable
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
-TABLE_ID = 'my-table'
+TABLE_ID_FORMAT = 'quickstart-test-{}'
+TABLE_ID_RANGE = 10000
 
 
 def test_main(capsys):
+    table_id = TABLE_ID_FORMAT.format(
+        random.randrange(TABLE_ID_RANGE))
     client = bigtable.Client(project=PROJECT, admin=True)
     instance = client.instance(BIGTABLE_INSTANCE)
-    table = instance.table(TABLE_ID)
+    table = instance.table(table_id)
     column_family_id = 'cf1'
     column_families = {column_family_id: None}
-    if not table.exists():
-        table.create(column_families=column_families)
+    table.create(column_families=column_families)
 
-        row = table.direct_row("r1")
-        row.set_cell(column_family_id, "c1", "value")
-        row.commit()
+    row = table.direct_row("r1")
+    row.set_cell(column_family_id, "c1", "test-value")
+    row.commit()
 
-    main(PROJECT, BIGTABLE_INSTANCE, TABLE_ID)
+    main(PROJECT, BIGTABLE_INSTANCE, table_id)
 
     out, _ = capsys.readouterr()
     assert 'Row key: r1\nData: test-value\n' in out

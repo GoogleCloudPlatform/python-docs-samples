@@ -26,7 +26,7 @@ from metricscaler import scale_bigtable
 
 # tests assume instance and cluster have the same ID
 BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
-SIZE_CHANGE_STEP = 3
+SIZE_CHANGE_STEP = 1
 
 # System tests to verify API calls succeed
 
