@@ -48,7 +48,7 @@ def run_quickstart():
 
     # Perform the text-to-speech request on the text input with the selected
     # voice parameters and audio file type
-    response = client.synthesize_speech(synthesis_input, voice, audio_config)
+    response = client.synthesize_speech(request = {'input': synthesis_input, 'voice': voice, 'audio_config': audio_config})
 
     # The response's audio_content is binary.
     with open('output.mp3', 'wb') as out:
