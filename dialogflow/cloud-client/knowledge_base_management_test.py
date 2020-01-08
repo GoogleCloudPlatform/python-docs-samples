@@ -14,6 +14,7 @@
 
 from __future__ import absolute_import
 
+import datetime
 import os
 
 import detect_intent_knowledge
@@ -21,11 +22,11 @@ import document_management
 import knowledge_base_management
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-SESSION_ID = 'fake_session_for_testing'
+SESSION_ID = 'test_session_' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 TEXTS = ['Where is my data stored?']
 
-KNOWLEDGE_BASE_NAME = 'fake_knowledge_base_name'
-DOCUMENT_BASE_NAME = 'fake_document_name'
+KNOWLEDGE_BASE_NAME = 'test_knowledge_' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+DOCUMENT_BASE_NAME = 'test_document_' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
 
 def test_create_knowledge_base(capsys):
