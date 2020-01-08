@@ -19,7 +19,7 @@ from main import main
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
-TABLE_NAME_FORMAT = 'hello-bigtable-system-tests-{}'
+TABLE_NAME_FORMAT = 'hello-world-test-{}'
 TABLE_NAME_RANGE = 10000
 
 
