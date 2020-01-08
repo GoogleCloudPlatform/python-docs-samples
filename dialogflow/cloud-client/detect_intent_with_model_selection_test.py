@@ -18,13 +18,12 @@ import os
 from detect_intent_with_model_selection import \
     detect_intent_with_model_selection
 
-DIRNAME = os.path.realpath(os.path.dirname(__file__))
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 SESSION_ID = 'fake_session_for_testing'
 AUDIOS = [
-    '{0}/resources/book_a_room.wav'.format(DIRNAME),
-    '{0}/resources/mountain_view.wav'.format(DIRNAME),
-    '{0}/resources/today.wav'.format(DIRNAME),
+    'resources/book_a_room.wav',
+    'resources/mountain_view.wav',
+    'resources/today.wav',
 ]
 
 
