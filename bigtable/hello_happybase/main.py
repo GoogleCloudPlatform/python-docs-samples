@@ -81,7 +81,7 @@ def main(project_id, instance_id, table_name):
         # [START bigtable_hw_get_by_key_happybase]
         print('Getting a single greeting by row key.')
         key = 'greeting0'.encode('utf-8')
-        row = table.direct_row(key)
+        row = table.row(key)
         print('\t{}: {}'.format(key, row[column_name.encode('utf-8')]))
         # [END bigtable_hw_get_by_key_happybase]
 

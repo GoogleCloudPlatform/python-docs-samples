@@ -46,10 +46,9 @@ def table():
     table.delete()
 
 
-def test_main(capsys,table):
+def test_main(capsys, table):
     table_id = table
     main(PROJECT, BIGTABLE_INSTANCE, table_id)
 
     out, _ = capsys.readouterr()
     assert 'Row key: r1\nData: test-value\n' in out
-
