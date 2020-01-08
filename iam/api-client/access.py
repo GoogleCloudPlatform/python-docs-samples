@@ -26,7 +26,7 @@ import googleapiclient.discovery
 
 
 # [START iam_get_policy]
-def get_policy(project_id):
+def get_policy(project_id, version=1):
     """Gets IAM policy for a project."""
 
     credentials = service_account.Credentials.from_service_account_file(
@@ -35,7 +35,7 @@ def get_policy(project_id):
     service = googleapiclient.discovery.build(
         'cloudresourcemanager', 'v1', credentials=credentials)
     policy = service.projects().getIamPolicy(
-        resource=project_id, body={}).execute()
+        resource=project_id, body={ 'options': {'requestedPolicyVersion': version}}).execute()
     print(policy)
     return policy
 # [END iam_get_policy]
