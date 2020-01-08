@@ -50,6 +50,8 @@ def test_run_table_operations(capsys):
     assert 'Delete a column family cf2...' in out
     assert 'Column family cf2 deleted successfully.' in out
 
+    delete_table(PROJECT, BIGTABLE_CLUSTER, table_name)
+
 
 def test_delete_table(capsys):
     table_name = TABLE_NAME_FORMAT.format(
