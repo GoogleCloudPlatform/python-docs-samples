@@ -33,7 +33,9 @@ def test_member():
     name = "python-test-" + rand
     email = name + "@" + GCLOUD_PROJECT + ".iam.gserviceaccount.com"
     member = "serviceAccount:" + email
-    service_accounts.create_service_account(GCLOUD_PROJECT, name, "Py Test Account")
+    service_accounts.create_service_account(
+        GCLOUD_PROJECT, name, "Py Test Account"
+    )
 
     yield member
 
@@ -42,28 +44,28 @@ def test_member():
 
 
 def test_get_policy(capsys):
-    policy = access.get_policy(GCLOUD_PROJECT, version=3)
+    access.get_policy(GCLOUD_PROJECT, version=3)
     out, _ = capsys.readouterr()
     assert u"etag" in out
 
 
 def test_modify_policy_add_role(test_member, capsys):
     policy = access.get_policy(GCLOUD_PROJECT, version=3)
-    policy = access.modify_policy_add_role(policy, GCLOUD_PROJECT, test_member)
+    access.modify_policy_add_role(policy, GCLOUD_PROJECT, test_member)
     out, _ = capsys.readouterr()
     assert u"etag" in out
 
 
 def test_modify_policy_remove_member(test_member, capsys):
     policy = access.get_policy(GCLOUD_PROJECT, version=3)
-    policy = access.modify_policy_remove_member(policy, GCP_ROLE, test_member)
+    access.modify_policy_remove_member(policy, GCP_ROLE, test_member)
     out, _ = capsys.readouterr()
     assert "iam.gserviceaccount.com" in out
 
 
 def test_set_policy(capsys):
     policy = access.get_policy(GCLOUD_PROJECT, version=3)
-    policy = access.set_policy(GCLOUD_PROJECT, policy)
+    access.set_policy(GCLOUD_PROJECT, policy)
     out, _ = capsys.readouterr()
     assert u"etag" in out
 

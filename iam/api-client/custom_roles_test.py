@@ -127,5 +127,3 @@ def test_delete_role(unique_custom_role_name, capsys):
     custom_roles.delete_role(unique_custom_role_name, GCLOUD_PROJECT)
     out, _ = capsys.readouterr()
     assert "Deleted role:" in out
-
-
