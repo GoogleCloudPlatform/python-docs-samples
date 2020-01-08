@@ -10,15 +10,18 @@ test their code.
 
 ## Before you begin
 
-1.  [Optional] Install [homebrew](https://brew.sh/).
+1. Install [homebrew](https://brew.sh/) if you do not already have it.
+
+   **Note:** If you are running Catalina (MacOS 10.15.x), ensure that you have a
+   compatible version of Homebrew (2.1.13 or later). Running `brew update` on
+   Catalina does not always result in a compatible version, so uninstall and
+   reinstall homebrew, if necessary.
 
 ## Installing pyenv and pyenv-virtualenv
 
 1.  Install [pyenv](https://github.com/pyenv/pyenv).
 
-    I (tswast@) use [homebrew](https://brew.sh/) to install it.
-
-    ```
+    ```console
     brew update
     brew install pyenv
     ```
@@ -26,7 +29,7 @@ test their code.
 1.  Install the [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv)
     plugin.
 
-    ```
+    ```console
     brew install pyenv-virtualenv
     ```
 
@@ -37,20 +40,12 @@ test their code.
     eval "$(pyenv virtualenv-init -)"
     ```
 
-    Note that this also works with ZSH.
+    **Note:** This also works with ZSH.
 
 1.  Reload your shell.
 
-    ```
+    ```console
     source ~/.bashrc
-    ```
-
-1.  After you have installed a python version through pyenv (see below), 
-    verify that you are now using the pyenv Python shim.
-
-    ```
-    $ which python
-    /Users/tswast/.pyenv/shims/python
     ```
 
 ## Installing multiple Python versions
@@ -58,59 +53,72 @@ test their code.
 
 1.  See the available Python versions with
 
-    ```
+    ```console
     pyenv install --list
     ```
 
-    The Python versions are at the top of the long list. If the Python
+    **Note:** The Python versions are at the top of the long list. If the Python
     version you want isn't listed, you may need to upgrade your pyenv with
     homebrew.
 
-    ```
+    ```console
     brew update
     brew upgrade pyenv
     ```
     
-    View the options related to a specific release with
-    
-    ```
-    pyenv install 3.x
-    ```
-    
-    
+1.  Install the necessary Python versions with pyenv. Use the latest release
+    of the versions you wish to test against.  A list of available versions
+    is available on [python.org](https://www.python.org/doc/versions/)
 
-1. Compile the necessary Python versions with pyenv. Use the latest release
-   of the versions you wish to test against.  A list of available versions
-   is available on [python.org](https://www.python.org/doc/versions/)
-
-    As of December 9, 2019 latest Python versions are:
+    As of January 8, 2020, the latest Python versions are:
 
     *  2.7.17 (latest 2.7.x release)
-    *  3.5.8 (latest 3.5.x release)
-    *  3.6.9 (latest 3.6.x release)
-    *  3.7.5 (latest 3.7.x release)
+    ```console
+    $ pyenv install 2.7.17
+    ```
+    *  3.5.9 (latest 3.5.x release)
+    ```console
+    $ pyenv install 3.5.9
+    ```
+    *  3.6.10 (latest 3.6.x release)
+    ```console
+    $ pyenv install 3.6.10
+    ```
+    *  3.7.6 (latest 3.7.x release)
+    ```console
+    $ pyenv install 3.7.6
+    ```
+
+1.  After you have installed a python version through pyenv,
+    verify that you are now using the pyenv Python shim.
+
+    ```console
+    $ which python
+    ~/.pyenv/shims/python
+    ```
+
 
 ## Using pyenv and pyenv-virtualenv to manage your Python versions
 
 1.  Change to the desired source directory.
 
-    ```
+    ```console
     cd ~/src/python-docs-samples
     ```
 
 1.  Create a virtualenv using `pyenv virtualenv`.
 
-    ```
-    pyenv virtualenv 3.6.4 python-docs-samples
+    ```console
+    pyenv virtualenv 3.7.6 python-docs-samples
     ```
 
     This creates a virtualenv folder within `~/.pyenv/versions/`.
 
 1.  Set the local Python version(s) with `pyenv local`
 
-    ```
+    ```console
     # pyenv local [name of virtualenv] [list of python versions to use]
-    pyenv local python-docs-samples 3.6.4 3.7.0 3.5.4 2.7.15
+    pyenv local python-docs-samples 3.6.10 3.7.6 3.5.9 2.7.17
     ```
 
 1.  Now, when you `cd` into the source directory or a subdirectory within it,
@@ -120,4 +128,4 @@ test their code.
 
 1.  Add `.python-version` to your [global gitignore
     file](https://help.github.com/articles/ignoring-files/#create-a-global-gitignore),
-    so it wont be committed into the repository.
+    so it won't be committed into the repository.
