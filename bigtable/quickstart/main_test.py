@@ -51,5 +51,3 @@ def test_main(capsys, table):
 
     out, _ = capsys.readouterr()
     assert 'Row key: r1\nData: test-value\n' in out
-
-    table.delete()
