@@ -33,7 +33,7 @@ def write_conditional(project_id, instance_id, table_id):
         filters=[row_filters.FamilyNameRegexFilter(column_family_id),
                  row_filters.ColumnQualifierRegexFilter('os_build'),
                  row_filters.ValueRegexFilter("PQ2A\\..*")])
-    row = table.row(row_key, filter_=row_filter)
+    row = table.conditional_row(row_key, filter_=row_filter)
     row.set_cell(column_family_id,
                  "os_name",
                  "android",
