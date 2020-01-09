@@ -26,6 +26,8 @@ def create_dataset(project_id, display_name):
 
     # A resource that represents Google Cloud Platform location.
     project_location = client.location_path(project_id, "us-central1")
+    # For a list of supported languages, see:
+    # https://cloud.google.com/translate/automl/docs/languages
     dataset_metadata = automl.types.TranslationDatasetMetadata(
         source_language_code="en", target_language_code="ja"
     )

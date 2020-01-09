@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,29 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
-import os
 
-from google.cloud import automl
+def delete_dataset(project_id, dataset_id):
+    """Delete a dataset."""
+    # [START automl_delete_dataset]
+    from google.cloud import automl
 
-import translate_create_dataset
+    # TODO(developer): Uncomment and set the following variables
+    # project_id = "YOUR_PROJECT_ID"
+    # dataset_id = "YOUR_DATASET_ID"
 
-
-PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
-
-
-def test_translate_create_dataset(capsys):
-    # create dataset
-    dataset_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    translate_create_dataset.create_dataset(PROJECT_ID, dataset_name)
-    out, _ = capsys.readouterr()
-    assert "Dataset id: " in out
-
-    # Delete the created dataset
-    dataset_id = out.splitlines()[1].split()[2]
     client = automl.AutoMlClient()
+    # Get the full path of the dataset
     dataset_full_id = client.dataset_path(
-        PROJECT_ID, "us-central1", dataset_id
+        project_id, "us-central1", dataset_id
     )
     response = client.delete_dataset(dataset_full_id)
-    response.result()
+
+    print("Dataset deleted. {}".format(response.result()))
+    # [END automl_delete_dataset]
