@@ -18,24 +18,40 @@ import os
 from google.cloud import automl
 import pytest
 
-import vision_classification_create_dataset
-
+import import_dataset
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+BUCKET_ID = "{}-lcm".format(PROJECT_ID)
+
+
+@pytest.fixture(scope="function")
+def create_dataset():
+    client = automl.AutoMlClient()
+    project_location = client.location_path(PROJECT_ID, "us-central1")
+    display_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    metadata = automl.types.TextSentimentDatasetMetadata(
+        sentiment_max=4
+    )
+    dataset = automl.types.Dataset(
+        display_name=display_name, text_sentiment_dataset_metadata=metadata
+    )
+    response = client.create_dataset(project_location, dataset)
+    dataset_id = response.result().name.split("/")[-1]
+
+    yield dataset_id
 
 
 @pytest.mark.slow
-def test_create_dataset(capsys):
-    # create dataset
-    dataset_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    vision_classification_create_dataset.create_dataset(
-        PROJECT_ID, dataset_name
+def test_import_dataset(capsys, create_dataset):
+    data = (
+        "gs://{}/sentiment-analysis/dataset.csv".format(BUCKET_ID)
     )
+    dataset_id = create_dataset
+    import_dataset.import_dataset(PROJECT_ID, dataset_id, data)
     out, _ = capsys.readouterr()
-    assert "Dataset id: " in out
+    assert "Data imported." in out
 
-    # Delete the created dataset
-    dataset_id = out.splitlines()[1].split()[2]
+    # delete created dataset
     client = automl.AutoMlClient()
     dataset_full_id = client.dataset_path(
         PROJECT_ID, "us-central1", dataset_id

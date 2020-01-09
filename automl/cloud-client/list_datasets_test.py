@@ -1,4 +1,4 @@
-# Copyright 2019 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,12 +14,14 @@
 
 import os
 
-import list_models
+import list_datasets
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+DATASET_ID = os.environ["ENTITY_EXTRACTION_DATASET_ID"]
 
 
-def test_list_get_eval_model(capsys):
-    list_models.list_models(PROJECT_ID)
+def test_list_dataset(capsys):
+    # list datasets
+    list_datasets.list_datasets(PROJECT_ID)
     out, _ = capsys.readouterr()
-    assert "Model id: " in out
+    assert "Dataset id: {}".format(DATASET_ID) in out
