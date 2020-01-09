@@ -32,8 +32,8 @@ def set_endpoint():
     for text in response.text_annotations:
         print('{}'.format(text.description))
 
-        vertices = (['({},{})'.format(vertex.x, vertex.y)
-                     for vertex in text.bounding_poly.vertices])
+        vertices = ['({},{})'.format(vertex.x, vertex.y)
+                     for vertex in text.bounding_poly.vertices]
 
         print('bounds: {}\n'.format(','.join(vertices)))
 
