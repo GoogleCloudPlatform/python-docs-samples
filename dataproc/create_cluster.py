@@ -14,22 +14,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This sample walks a user through creating a Cloud Dataproc cluster using
+# the Python client library.
+
+# [START dataproc_create_cluster]
+from google.cloud import dataproc_v1 as dataproc
+
 
 def create_cluster(project_id, region, cluster_name):
-    # [START dataproc_create_cluster]
-    from google.cloud import dataproc_v1 as dataproc
+    """This sample walks a user through creating a Cloud Dataproc cluster
+       using the Python client library.
 
-    # TODO(developer): Uncomment and set the following variables
-    # project_id = 'YOUR_PROJECT_ID'
-    # region = 'YOUR_CLUSTER_REGION'
-    # cluster_name = 'YOUR_CLUSTER_NAME'
+       Args:
+           project_id (string): Project to use for creating resources.
+           region (string): Region where the resources should live.
+           cluster_name (string): Name to use for creating a cluster.
+    """
 
-    # Create a client with the endpoint set to the desired cluster region
-    client = dataproc.ClusterControllerClient(client_options={
+    # Create a client with the endpoint set to the desired cluster region.
+    cluster_client = dataproc.ClusterControllerClient(client_options={
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
     })
 
-    # Create the cluster config
+    # Create the cluster config.
     cluster = {
         'project_id': project_id,
         'cluster_name': cluster_name,
@@ -45,10 +52,10 @@ def create_cluster(project_id, region, cluster_name):
         }
     }
 
-    # Create the cluster
-    operation = client.create_cluster(project_id, region, cluster)
+    # Create the cluster.
+    operation = cluster_client.create_cluster(project_id, region, cluster)
     result = operation.result()
 
-    # Output a success message
+    # Output a success message.
     print('Cluster created successfully: {}'.format(result.cluster_name))
     # [END dataproc_create_cluster]
