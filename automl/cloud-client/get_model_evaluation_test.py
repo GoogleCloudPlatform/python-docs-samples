@@ -14,18 +14,17 @@
 
 import os
 
+from google.cloud import automl
 import pytest
 
 import get_model_evaluation
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-MODEL_ID = "TEN1499896588007374848"
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+MODEL_ID = os.environ["ENTITY_EXTRACTION_MODEL_ID"]
 
 
 @pytest.fixture(scope="function")
 def get_evaluation_id():
-    from google.cloud import automl
-
     client = automl.AutoMlClient()
     model_full_id = client.model_path(PROJECT_ID, "us-central1", MODEL_ID)
     evaluation = None
