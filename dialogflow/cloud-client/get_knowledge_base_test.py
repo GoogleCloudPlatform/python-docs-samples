@@ -48,7 +48,7 @@ def setup_teardown():
 
 
 def test_get_knowledge_base(capsys):
-    knowledge_base_management.get_knowledge_base(PROJECT_ID,
-                                                   pytest.KNOWLEDGE_BASE_ID)
+    knowledge_base_management.get_knowledge_base(
+        PROJECT_ID, pytest.KNOWLEDGE_BASE_ID)
     out, _ = capsys.readouterr()
     assert KNOWLEDGE_BASE_NAME in out
