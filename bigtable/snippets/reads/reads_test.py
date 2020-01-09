@@ -23,8 +23,8 @@ BIGTABLE_INSTANCE = os.environ['BIGTABLE_CLUSTER']
 TABLE_ID_PREFIX = 'mobile-time-series-{}'
 
 
-# @pytest.fixture(autouse=True)
-def test_write_test_data(capsys):
+@pytest.fixture(scope="session", autouse=True)
+def test_table():
     client = bigtable.Client(project=PROJECT, admin=True)
     instance = client.instance(BIGTABLE_INSTANCE)
 
@@ -63,11 +63,13 @@ def test_write_test_data(capsys):
     rows[4].set_cell("stats_summary", "os_build", "PQ2A.190406.000", timestamp)
 
     response = table.mutate_rows(rows)
-    out, _ = capsys.readouterr()
-    assert 'Successfully wrote row' in out
+    # out, _ = capsys.readouterr()
+    # assert 'Successfully wrote row' in out
+    print("above")
 
-    # yield table
+    yield table_id
 
+    print("below")
     # write_simple(PROJECT, BIGTABLE_INSTANCE, table_id)
     #
     # out, _ = capsys.readouterr()
@@ -93,7 +95,6 @@ def test_write_test_data(capsys):
     # table.delete()
 
 
-# def test_ehlo(capsys, write_test_data):
-#     write_test_data
-#     print("hi")
-#     assert "abc" in ""  # for demo purposes
+def test_read_simple(capsys, test_table):
+    print("hi")
+    assert "abc" in ""  # for demo purposes
