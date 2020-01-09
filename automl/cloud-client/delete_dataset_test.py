@@ -12,32 +12,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import datetime
 import os
 
 from google.cloud import automl
 import pytest
 
-import vision_classification_predict
+import delete_dataset
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
-MODEL_ID = os.environ["VISION_CLASSIFICATION_MODEL_ID"]
+BUCKET_ID = "{}-lcm".format(PROJECT_ID)
 
 
 @pytest.fixture(scope="function")
-def verify_model_state():
+def create_dataset():
     client = automl.AutoMlClient()
-    model_full_id = client.model_path(PROJECT_ID, "us-central1", MODEL_ID)
+    project_location = client.location_path(PROJECT_ID, "us-central1")
+    display_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    metadata = automl.types.TextExtractionDatasetMetadata()
+    dataset = automl.types.Dataset(
+        display_name=display_name, text_extraction_dataset_metadata=metadata
+    )
+    response = client.create_dataset(project_location, dataset)
+    dataset_id = response.result().name.split("/")[-1]
 
-    model = client.get_model(model_full_id)
-    if model.deployment_state == automl.enums.Model.DeploymentState.UNDEPLOYED:
-        # Deploy model if it is not deployed
-        response = client.deploy_model(model_full_id)
-        response.result()
+    yield dataset_id
 
 
-def test_vision_classification_predict(capsys, verify_model_state):
-    verify_model_state
-    file_path = "resources/test.png"
-    vision_classification_predict.predict(PROJECT_ID, MODEL_ID, file_path)
+def test_delete_dataset(capsys, create_dataset):
+    # delete dataset
+    delete_dataset.delete_dataset(PROJECT_ID, create_dataset)
     out, _ = capsys.readouterr()
-    assert "Predicted class name:" in out
+    assert "Dataset deleted." in out
