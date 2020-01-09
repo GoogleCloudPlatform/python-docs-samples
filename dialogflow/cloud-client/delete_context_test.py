@@ -1,4 +1,4 @@
-# Copyright 2017 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,26 +14,31 @@
 
 from __future__ import absolute_import
 
+import datetime
 import os
 
+import dialogflow_v2 as dialogflow
+import pytest
+
 import context_management
-import detect_intent_texts
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-SESSION_ID = 'fake_session_for_testing'
-CONTEXT_ID = 'fake_context_for_testing'
+SESSION_ID = 'session_' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+CONTEXT_ID = 'context_' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
 
-def test_create_context(capsys):
-    # Calling detect intent to create a session.
-    detect_intent_texts.detect_intent_texts(
-        PROJECT_ID, SESSION_ID, ['hi'], 'en-US')
+@pytest.fixture(scope="function", autouse=True)
+def setup():
+    # Setup a context to list
+    contexts_client = dialogflow.ContextsClient()
+    session_path = contexts_client.session_path(PROJECT_ID, SESSION_ID)
+    context_name = contexts_client.context_path(
+        PROJECT_ID, SESSION_ID, CONTEXT_ID)
 
-    context_management.create_context(PROJECT_ID, SESSION_ID, CONTEXT_ID, 1)
-    context_management.list_contexts(PROJECT_ID, SESSION_ID)
+    context = dialogflow.types.Context(
+        name=context_name, lifespan_count=0)
 
-    out, _ = capsys.readouterr()
-    assert CONTEXT_ID in out
+    contexts_client.create_context(session_path, context)
 
 
 def test_delete_context(capsys):
