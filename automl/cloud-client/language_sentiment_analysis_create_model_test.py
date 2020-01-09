@@ -1,4 +1,4 @@
-# Copyright 2019 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,12 +14,24 @@
 
 import os
 
-import list_models
+from google.cloud import automl
+import pytest
+
+import language_sentiment_analysis_create_model
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+DATASET_ID = os.environ["SENTIMENT_ANALYSIS_DATASET_ID"]
 
 
-def test_list_get_eval_model(capsys):
-    list_models.list_models(PROJECT_ID)
+@pytest.mark.slow
+def test_sentiment_analysis_create_model(capsys):
+    language_sentiment_analysis_create_model.create_model(
+        PROJECT_ID, DATASET_ID, "object_test_create_model"
+    )
     out, _ = capsys.readouterr()
-    assert "Model id: " in out
+    assert "Training started" in out
+
+    # Cancel the operation
+    operation_id = out.split("Training operation name: ")[1].split("\n")[0]
+    client = automl.AutoMlClient()
+    client.transport._operations_client.cancel_operation(operation_id)
