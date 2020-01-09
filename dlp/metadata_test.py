@@ -19,4 +19,4 @@ def test_fetch_info_types(capsys):
     metadata.list_info_types()
 
     out, _ = capsys.readouterr()
-    assert 'EMAIL_ADDRESS' in out
+    assert "EMAIL_ADDRESS" in out

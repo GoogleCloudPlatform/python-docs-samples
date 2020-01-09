@@ -79,12 +79,16 @@ def test_process_safe_image(
 
 @patch('main.os')
 @patch('main.Image')
-def test_blur_image(image_mock, os_mock, capsys):
+@patch('main.storage_client')
+def test_blur_image(storage_client, image_mock, os_mock, capsys):
     filename = str(uuid.uuid4())
+    blur_bucket = 'blurred-bucket-' + str(uuid.uuid4())
 
     os_mock.remove = MagicMock()
     os_mock.path = MagicMock()
     os_mock.path.basename = MagicMock(side_effect=(lambda x: x))
+
+    os_mock.getenv = MagicMock(return_value=blur_bucket)
 
     image_mock.return_value = image_mock
     image_mock.__enter__.return_value = image_mock
@@ -92,7 +96,6 @@ def test_blur_image(image_mock, os_mock, capsys):
     blob = UserDict()
     blob.name = filename
     blob.bucket = UserDict()
-    blob.bucket.blob = MagicMock(return_value=blob)
     blob.download_to_filename = MagicMock()
     blob.upload_from_filename = MagicMock()
 
@@ -102,6 +105,6 @@ def test_blur_image(image_mock, os_mock, capsys):
 
     assert f'Image {filename} was downloaded to' in out
     assert f'Image {filename} was blurred.' in out
-    assert f'Blurred image was uploaded to blurred-{filename}.' in out
+    assert f'Blurred image uploaded to: gs://{blur_bucket}/{filename}' in out
     assert os_mock.remove.called
     assert image_mock.resize.called

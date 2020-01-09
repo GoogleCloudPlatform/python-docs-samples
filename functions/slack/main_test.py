@@ -15,6 +15,7 @@ import json
 
 import apiclient
 import mock
+import os
 import pytest
 
 import main
@@ -23,8 +24,9 @@ with open('config.json', 'r') as f:
     data = f.read()
 config = json.loads(data)
 
+
 kg_search = apiclient.discovery.build('kgsearch', 'v1',
-                                      developerKey=config['KG_API_KEY'])
+                                      developerKey=os.environ['API_KEY'])
 example_response = kg_search.entities().search(query='lion', limit=1).execute()
 
 

@@ -39,7 +39,7 @@ def generate_jwt(sa_keyfile,
     # build payload
     payload = {
         'iat': now,
-        # expires after 'expirary_length' seconds.
+        # expires after 'expiry_length' seconds.
         "exp": now + expiry_length,
         # iss must match 'issuer' in the security configuration in your
         # swagger spec (e.g. service account email). It can be any string.
@@ -64,7 +64,7 @@ def generate_jwt(sa_keyfile,
 def make_jwt_request(signed_jwt, url='https://your-endpoint.com'):
     """Makes an authorized request to the endpoint"""
     headers = {
-        'Authorization': 'Bearer {}'.format(signed_jwt),
+        'Authorization': 'Bearer {}'.format(signed_jwt.decode('utf-8')),
         'content-type': 'application/json'
     }
     response = requests.get(url, headers=headers)

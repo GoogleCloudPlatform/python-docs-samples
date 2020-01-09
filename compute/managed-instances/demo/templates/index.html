@@ -22,6 +22,14 @@
                 <td><b>{{ template }}</b></td>
             </tr>
             <tr>
+                <td>Current load:</td>
+                {% if working %}
+                <td><span class="btn red">high</span></td>
+                {% else %}
+                <td><span class="btn green">none</span></td>
+                {% endif %}
+            </tr>
+            <tr>
                 <td>Health status:</td>
                 {% if healthy %}
                 <td><span class="btn green">healthy</span></td>
@@ -39,6 +47,12 @@
                     {% endif %}
 
                     <a class="btn blue" href="/health">Check health</a>
+
+                    {% if working %}
+                    <a class="btn blue" href="/stopLoad">Stop load</a>
+                    {% else %}
+                    <a class="btn blue" href="/startLoad">Start load</a>
+                    {% endif %}
                 </td>
             </tr>
         </tbody>

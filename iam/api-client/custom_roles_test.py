@@ -13,50 +13,117 @@
 # limitations under the License.
 
 import os
-import random
+import pytest
+import uuid
 
 import custom_roles
+import googleapiclient.errors
+
+GCLOUD_PROJECT = os.environ["GCLOUD_PROJECT"]
+
+CUSTOM_ROLE_NAME = "pythonTestCustomRole" + str(uuid.uuid1().int)
+CUSTOM_ROLE_TITLE = "Python Test Custom Role"
+CUSTOM_ROLE_DESCRIPTION = "This is a python test custom role"
+CUSTOM_ROLE_PERMISSIONS = ["iam.roles.get"]
+CUSTOM_ROLE_STAGE = "GA"
+CUSTOM_ROLE_EMAIL = (
+    CUSTOM_ROLE_NAME + "@" + GCLOUD_PROJECT + ".iam.gserviceaccount.com"
+)
 
 
-def test_custom_roles(capsys):
-    project = os.environ['GCLOUD_PROJECT']
-    name = 'pythonTestCustomRole' + str(random.randint(0, 100000))
-    title = 'Python Test Custom Role'
-    description = 'This is a Python test custom role.'
-    permissions = ['iam.roles.get']
-    stage = 'GA'
+@pytest.fixture(scope="module")
+def test_custom_role():
+    # section to create custom role to test policy updates.
+    custom_roles.create_role(
+        CUSTOM_ROLE_NAME,
+        GCLOUD_PROJECT,
+        CUSTOM_ROLE_TITLE,
+        CUSTOM_ROLE_DESCRIPTION,
+        CUSTOM_ROLE_PERMISSIONS,
+        CUSTOM_ROLE_STAGE,
+    )
+    yield CUSTOM_ROLE_NAME
 
+    # Delete the custom role
+    try:
+        custom_roles.delete_role(CUSTOM_ROLE_NAME, GCLOUD_PROJECT)
+    except googleapiclient.errors.HttpError:
+        print("Custom role already deleted.")
+
+
+@pytest.fixture(scope="function")
+def unique_custom_role_name():
+    UNIQUE_CUSTOM_ROLE_NAME = "pythonTestCustomRole" + str(uuid.uuid1().int)
+    yield UNIQUE_CUSTOM_ROLE_NAME
+
+    # Delete the custom role
+    try:
+        custom_roles.delete_role(UNIQUE_CUSTOM_ROLE_NAME, GCLOUD_PROJECT)
+    except googleapiclient.errors.HttpError:
+        print("Custom role already deleted.")
+
+
+def test_query_testable_permissions(capsys):
     custom_roles.query_testable_permissions(
-        '//cloudresourcemanager.googleapis.com/projects/' + project
+        "//cloudresourcemanager.googleapis.com/projects/" + GCLOUD_PROJECT
     )
     out, _ = capsys.readouterr()
-    assert 'appengine' in out
+    assert "apigee" in out
 
-    custom_roles.get_role('roles/appengine.appViewer')
+
+def test_get_role(capsys):
+    custom_roles.get_role("roles/appengine.appViewer")
     out, _ = capsys.readouterr()
-    assert 'roles/' in out
+    assert "roles/" in out
 
+
+def test_create_role(unique_custom_role_name, capsys):
     custom_roles.create_role(
-        name, project, title, description, permissions, stage)
+        unique_custom_role_name,
+        GCLOUD_PROJECT,
+        CUSTOM_ROLE_TITLE,
+        CUSTOM_ROLE_DESCRIPTION,
+        CUSTOM_ROLE_PERMISSIONS,
+        CUSTOM_ROLE_STAGE,
+    )
     out, _ = capsys.readouterr()
-    assert 'Created role:' in out
+    assert "Created role:" in out
 
-    custom_roles.edit_role(name, project, title, 'Updated', permissions, stage)
+
+def test_edit_role(test_custom_role, capsys):
+    custom_roles.edit_role(
+        test_custom_role,
+        GCLOUD_PROJECT,
+        CUSTOM_ROLE_TITLE,
+        "Updated",
+        CUSTOM_ROLE_PERMISSIONS,
+        CUSTOM_ROLE_STAGE,
+    )
     out, _ = capsys.readouterr()
-    assert 'Updated role:' in out
+    assert "Updated role:" in out
 
-    custom_roles.list_roles(project)
+
+def test_list_roles(capsys):
+    custom_roles.list_roles(GCLOUD_PROJECT)
     out, _ = capsys.readouterr()
-    assert 'roles/' in out
+    assert "roles/" in out
 
-    custom_roles.disable_role(name, project)
+
+def test_disable_role(test_custom_role, capsys):
+    custom_roles.disable_role(test_custom_role, GCLOUD_PROJECT)
     out, _ = capsys.readouterr()
-    assert 'Disabled role:' in out
+    assert "Disabled role:" in out
 
-    custom_roles.delete_role(name, project)
+
+def test_delete_role(unique_custom_role_name, capsys):
+    custom_roles.create_role(
+        unique_custom_role_name,
+        GCLOUD_PROJECT,
+        CUSTOM_ROLE_TITLE,
+        CUSTOM_ROLE_DESCRIPTION,
+        CUSTOM_ROLE_PERMISSIONS,
+        CUSTOM_ROLE_STAGE,
+    )
+    custom_roles.delete_role(unique_custom_role_name, GCLOUD_PROJECT)
     out, _ = capsys.readouterr()
-    assert 'Deleted role:' in out
-
-
-if __name__ == '__main__':
-    test_custom_roles()
+    assert "Deleted role:" in out

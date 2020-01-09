@@ -169,7 +169,7 @@ def patch_dataset(
 # [END healthcare_patch_dataset]
 
 
-# [START healthcare_deidentify_dataset]
+# [START healthcare_dicom_keeplist_deidentify_dataset]
 def deidentify_dataset(
         service_account_json,
         project_id,
@@ -229,7 +229,7 @@ def deidentify_dataset(
     except HttpError as e:
         print('Error, data could not be deidentified: {}'.format(e))
         return ""
-# [END healthcare_deidentify_dataset]
+# [END healthcare_dicom_keeplist_deidentify_dataset]
 
 
 # [START healthcare_dataset_get_iam_policy]
