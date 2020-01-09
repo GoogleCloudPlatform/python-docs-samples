@@ -61,7 +61,6 @@ def quickstart(project_id, region, cluster_name, job_file_path):
 
     print('Cluster created successfully: {}'.format(result.cluster_name))
 
-
     # Create the job client.
     job_client = dataproc.JobControllerClient(client_options={
         'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)
