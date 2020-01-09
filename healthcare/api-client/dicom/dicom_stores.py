@@ -169,9 +169,8 @@ def patch_dicom_store(
 
     patch = {
         'notificationConfig': {
-            'pubsubTopic': 'projects/{}/locations/{}/topics/{}'.format(
+            'pubsubTopic': 'projects/{}/topics/{}'.format(
                 project_id,
-                cloud_region,
                 pubsub_topic)}}
 
     request = client.projects().locations().datasets().dicomStores().patch(

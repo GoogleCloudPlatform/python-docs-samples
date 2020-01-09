@@ -17,7 +17,7 @@ import mock
 import quickstart
 
 
-@mock.patch('google.cloud.storage.client.Client.create_bucket')
+@mock.patch("google.cloud.storage.client.Client.create_bucket")
 def test_quickstart(create_bucket_mock, capsys):
     # Unlike other quickstart tests, this one mocks out the creation
     # because buckets are expensive, globally-namespaced object.
@@ -25,4 +25,4 @@ def test_quickstart(create_bucket_mock, capsys):
 
     quickstart.run_quickstart()
 
-    create_bucket_mock.assert_called_with('my-new-bucket')
+    create_bucket_mock.assert_called_with("my-new-bucket")

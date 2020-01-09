@@ -168,7 +168,7 @@ To run this sample:
     
     positional arguments:
       {send}
-        send                Send an inage to a device registry
+        send                Send an image to a device registry
     
     optional arguments:
       -h, --help            show this help message and exit

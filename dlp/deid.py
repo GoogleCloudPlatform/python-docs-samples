@@ -20,8 +20,9 @@ import argparse
 
 
 # [START dlp_deidentify_masking]
-def deidentify_with_mask(project, string, info_types, masking_character=None,
-                         number_to_mask=0):
+def deidentify_with_mask(
+    project, string, info_types, masking_character=None, number_to_mask=0
+):
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string by masking it with a character.
     Args:
@@ -39,25 +40,23 @@ def deidentify_with_mask(project, string, info_types, masking_character=None,
     import google.cloud.dlp
 
     # Instantiate a client
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
 
     # Construct inspect configuration dictionary
-    inspect_config = {
-        'info_types': [{'name': info_type} for info_type in info_types]
-    }
+    inspect_config = {"info_types": [{"name": info_type} for info_type in info_types]}
 
     # Construct deidentify configuration dictionary
     deidentify_config = {
-        'info_type_transformations': {
-            'transformations': [
+        "info_type_transformations": {
+            "transformations": [
                 {
-                    'primitive_transformation': {
-                        'character_mask_config': {
-                            'masking_character': masking_character,
-                            'number_to_mask': number_to_mask
+                    "primitive_transformation": {
+                        "character_mask_config": {
+                            "masking_character": masking_character,
+                            "number_to_mask": number_to_mask,
                         }
                     }
                 }
@@ -66,21 +65,33 @@ def deidentify_with_mask(project, string, info_types, masking_character=None,
     }
 
     # Construct item
-    item = {'value': string}
+    item = {"value": string}
 
     # Call the API
     response = dlp.deidentify_content(
-        parent, inspect_config=inspect_config,
-        deidentify_config=deidentify_config, item=item)
+        parent,
+        inspect_config=inspect_config,
+        deidentify_config=deidentify_config,
+        item=item,
+    )
 
     # Print out the results.
     print(response.item.value)
+
+
 # [END dlp_deidentify_masking]
 
 
 # [START dlp_deidentify_fpe]
-def deidentify_with_fpe(project, string, info_types, alphabet=None,
-                        surrogate_type=None, key_name=None, wrapped_key=None):
+def deidentify_with_fpe(
+    project,
+    string,
+    info_types,
+    alphabet=None,
+    surrogate_type=None,
+    key_name=None,
+    wrapped_key=None,
+):
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string using Format Preserving Encryption (FPE).
     Args:
@@ -106,7 +117,7 @@ def deidentify_with_fpe(project, string, info_types, alphabet=None,
     import google.cloud.dlp
 
     # Instantiate a client
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
@@ -114,38 +125,31 @@ def deidentify_with_fpe(project, string, info_types, alphabet=None,
     # The wrapped key is base64-encoded, but the library expects a binary
     # string, so decode it here.
     import base64
+
     wrapped_key = base64.b64decode(wrapped_key)
 
     # Construct FPE configuration dictionary
     crypto_replace_ffx_fpe_config = {
-        'crypto_key': {
-            'kms_wrapped': {
-                'wrapped_key': wrapped_key,
-                'crypto_key_name': key_name
-            }
+        "crypto_key": {
+            "kms_wrapped": {"wrapped_key": wrapped_key, "crypto_key_name": key_name}
         },
-        'common_alphabet': alphabet
+        "common_alphabet": alphabet,
     }
 
     # Add surrogate type
     if surrogate_type:
-        crypto_replace_ffx_fpe_config['surrogate_info_type'] = {
-            'name': surrogate_type
-        }
+        crypto_replace_ffx_fpe_config["surrogate_info_type"] = {"name": surrogate_type}
 
     # Construct inspect configuration dictionary
-    inspect_config = {
-        'info_types': [{'name': info_type} for info_type in info_types]
-    }
+    inspect_config = {"info_types": [{"name": info_type} for info_type in info_types]}
 
     # Construct deidentify configuration dictionary
     deidentify_config = {
-        'info_type_transformations': {
-            'transformations': [
+        "info_type_transformations": {
+            "transformations": [
                 {
-                    'primitive_transformation': {
-                        'crypto_replace_ffx_fpe_config':
-                            crypto_replace_ffx_fpe_config
+                    "primitive_transformation": {
+                        "crypto_replace_ffx_fpe_config": crypto_replace_ffx_fpe_config
                     }
                 }
             ]
@@ -153,21 +157,27 @@ def deidentify_with_fpe(project, string, info_types, alphabet=None,
     }
 
     # Convert string to item
-    item = {'value': string}
+    item = {"value": string}
 
     # Call the API
     response = dlp.deidentify_content(
-        parent, inspect_config=inspect_config,
-        deidentify_config=deidentify_config, item=item)
+        parent,
+        inspect_config=inspect_config,
+        deidentify_config=deidentify_config,
+        item=item,
+    )
 
     # Print results
     print(response.item.value)
+
+
 # [END dlp_deidentify_fpe]
 
 
 # [START dlp_reidentify_fpe]
-def reidentify_with_fpe(project, string, alphabet=None,
-                        surrogate_type=None, key_name=None, wrapped_key=None):
+def reidentify_with_fpe(
+    project, string, alphabet=None, surrogate_type=None, key_name=None, wrapped_key=None
+):
     """Uses the Data Loss Prevention API to reidentify sensitive data in a
     string that was encrypted by Format Preserving Encryption (FPE).
     Args:
@@ -191,7 +201,7 @@ def reidentify_with_fpe(project, string, alphabet=None,
     import google.cloud.dlp
 
     # Instantiate a client
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
@@ -199,25 +209,24 @@ def reidentify_with_fpe(project, string, alphabet=None,
     # The wrapped key is base64-encoded, but the library expects a binary
     # string, so decode it here.
     import base64
+
     wrapped_key = base64.b64decode(wrapped_key)
 
     # Construct Deidentify Config
     reidentify_config = {
-        'info_type_transformations': {
-            'transformations': [
+        "info_type_transformations": {
+            "transformations": [
                 {
-                    'primitive_transformation': {
-                        'crypto_replace_ffx_fpe_config': {
-                            'crypto_key': {
-                                'kms_wrapped': {
-                                    'wrapped_key': wrapped_key,
-                                    'crypto_key_name': key_name
+                    "primitive_transformation": {
+                        "crypto_replace_ffx_fpe_config": {
+                            "crypto_key": {
+                                "kms_wrapped": {
+                                    "wrapped_key": wrapped_key,
+                                    "crypto_key_name": key_name,
                                 }
                             },
-                            'common_alphabet': alphabet,
-                            'surrogate_info_type': {
-                                'name': surrogate_type
-                            }
+                            "common_alphabet": alphabet,
+                            "surrogate_info_type": {"name": surrogate_type},
                         }
                     }
                 }
@@ -226,38 +235,41 @@ def reidentify_with_fpe(project, string, alphabet=None,
     }
 
     inspect_config = {
-        'custom_info_types': [
-            {
-                'info_type': {
-                    'name': surrogate_type
-                },
-                'surrogate_type': {
-                }
-            }
+        "custom_info_types": [
+            {"info_type": {"name": surrogate_type}, "surrogate_type": {}}
         ]
     }
 
     # Convert string to item
-    item = {'value': string}
+    item = {"value": string}
 
     # Call the API
     response = dlp.reidentify_content(
         parent,
         inspect_config=inspect_config,
         reidentify_config=reidentify_config,
-        item=item)
+        item=item,
+    )
 
     # Print results
     print(response.item.value)
+
+
 # [END dlp_reidentify_fpe]
 
 
 # [START dlp_deidentify_date_shift]
-def deidentify_with_date_shift(project, input_csv_file=None,
-                               output_csv_file=None, date_fields=None,
-                               lower_bound_days=None, upper_bound_days=None,
-                               context_field_id=None, wrapped_key=None,
-                               key_name=None):
+def deidentify_with_date_shift(
+    project,
+    input_csv_file=None,
+    output_csv_file=None,
+    date_fields=None,
+    lower_bound_days=None,
+    upper_bound_days=None,
+    context_field_id=None,
+    wrapped_key=None,
+    key_name=None,
+):
     """Uses the Data Loss Prevention API to deidentify dates in a CSV file by
         pseudorandomly shifting them.
     Args:
@@ -289,14 +301,14 @@ def deidentify_with_date_shift(project, input_csv_file=None,
     import google.cloud.dlp
 
     # Instantiate a client
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
 
     # Convert date field list to Protobuf type
     def map_fields(field):
-        return {'name': field}
+        return {"name": field}
 
     if date_fields:
         date_fields = map(map_fields, date_fields)
@@ -306,31 +318,28 @@ def deidentify_with_date_shift(project, input_csv_file=None,
     # Read and parse the CSV file
     import csv
     from datetime import datetime
+
     f = []
-    with open(input_csv_file, 'r') as csvfile:
+    with open(input_csv_file, "r") as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
             f.append(row)
 
     #  Helper function for converting CSV rows to Protobuf types
     def map_headers(header):
-        return {'name': header}
+        return {"name": header}
 
     def map_data(value):
         try:
-            date = datetime.strptime(value, '%m/%d/%Y')
+            date = datetime.strptime(value, "%m/%d/%Y")
             return {
-                'date_value': {
-                    'year': date.year,
-                    'month': date.month,
-                    'day': date.day
-                }
+                "date_value": {"year": date.year, "month": date.month, "day": date.day}
             }
         except ValueError:
-            return {'string_value': value}
+            return {"string_value": value}
 
     def map_rows(row):
-        return {'values': map(map_data, row)}
+        return {"values": map(map_data, row)}
 
     # Using the helper functions, convert CSV rows to protobuf-compatible
     # dictionaries.
@@ -338,17 +347,12 @@ def deidentify_with_date_shift(project, input_csv_file=None,
     csv_rows = map(map_rows, f[1:])
 
     # Construct the table dict
-    table_item = {
-        'table': {
-            'headers': csv_headers,
-            'rows': csv_rows
-        }
-    }
+    table_item = {"table": {"headers": csv_headers, "rows": csv_rows}}
 
     # Construct date shift config
     date_shift_config = {
-        'lower_bound_days': lower_bound_days,
-        'upper_bound_days': upper_bound_days
+        "lower_bound_days": lower_bound_days,
+        "upper_bound_days": upper_bound_days,
     }
 
     # If using a Cloud KMS key, add it to the date_shift_config.
@@ -356,26 +360,29 @@ def deidentify_with_date_shift(project, input_csv_file=None,
     # string, so decode it here.
     if context_field_id and key_name and wrapped_key:
         import base64
-        date_shift_config['context'] = {'name': context_field_id}
-        date_shift_config['crypto_key'] = {
-            'kms_wrapped': {
-                'wrapped_key': base64.b64decode(wrapped_key),
-                'crypto_key_name': key_name
+
+        date_shift_config["context"] = {"name": context_field_id}
+        date_shift_config["crypto_key"] = {
+            "kms_wrapped": {
+                "wrapped_key": base64.b64decode(wrapped_key),
+                "crypto_key_name": key_name,
             }
         }
     elif context_field_id or key_name or wrapped_key:
-        raise ValueError("""You must set either ALL or NONE of
-        [context_field_id, key_name, wrapped_key]!""")
+        raise ValueError(
+            """You must set either ALL or NONE of
+        [context_field_id, key_name, wrapped_key]!"""
+        )
 
     # Construct Deidentify Config
     deidentify_config = {
-        'record_transformations': {
-            'field_transformations': [
+        "record_transformations": {
+            "field_transformations": [
                 {
-                    'fields': date_fields,
-                    'primitive_transformation': {
-                        'date_shift_config': date_shift_config
-                    }
+                    "fields": date_fields,
+                    "primitive_transformation": {
+                        "date_shift_config": date_shift_config
+                    },
                 }
             ]
         }
@@ -386,199 +393,252 @@ def deidentify_with_date_shift(project, input_csv_file=None,
         return header.name
 
     def write_data(data):
-        return data.string_value or '%s/%s/%s' % (data.date_value.month,
-                                                  data.date_value.day,
-                                                  data.date_value.year)
+        return data.string_value or "%s/%s/%s" % (
+            data.date_value.month,
+            data.date_value.day,
+            data.date_value.year,
+        )
 
     # Call the API
     response = dlp.deidentify_content(
-        parent, deidentify_config=deidentify_config, item=table_item)
+        parent, deidentify_config=deidentify_config, item=table_item
+    )
 
     # Write results to CSV file
-    with open(output_csv_file, 'w') as csvfile:
-        write_file = csv.writer(csvfile, delimiter=',')
+    with open(output_csv_file, "w") as csvfile:
+        write_file = csv.writer(csvfile, delimiter=",")
         write_file.writerow(map(write_header, response.item.table.headers))
         for row in response.item.table.rows:
             write_file.writerow(map(write_data, row.values))
     # Print status
-    print('Successfully saved date-shift output to {}'.format(
-        output_csv_file))
+    print("Successfully saved date-shift output to {}".format(output_csv_file))
+
+
 # [END dlp_deidentify_date_shift]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(
-        dest='content', help='Select how to submit content to the API.')
+        dest="content", help="Select how to submit content to the API."
+    )
     subparsers.required = True
 
     mask_parser = subparsers.add_parser(
-        'deid_mask',
-        help='Deidentify sensitive data in a string by masking it with a '
-             'character.')
+        "deid_mask",
+        help="Deidentify sensitive data in a string by masking it with a " "character.",
+    )
     mask_parser.add_argument(
-        '--info_types', nargs='+',
-        help='Strings representing info types to look for. A full list of '
-             'info categories and types is available from the API. Examples '
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
-             'If unspecified, the three above examples will be used.',
-        default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
+        "--info_types",
+        nargs="+",
+        help="Strings representing info types to look for. A full list of "
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+        "If unspecified, the three above examples will be used.",
+        default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
+    )
     mask_parser.add_argument(
-        'project',
-        help='The Google Cloud project id to use as a parent resource.')
-    mask_parser.add_argument('item', help='The string to deidentify.')
+        "project", help="The Google Cloud project id to use as a parent resource."
+    )
+    mask_parser.add_argument("item", help="The string to deidentify.")
     mask_parser.add_argument(
-        '-n', '--number_to_mask',
+        "-n",
+        "--number_to_mask",
         type=int,
         default=0,
-        help='The maximum number of sensitive characters to mask in a match. '
-        'If omitted the request or set to 0, the API will mask any mathcing '
-        'characters.')
+        help="The maximum number of sensitive characters to mask in a match. "
+        "If omitted the request or set to 0, the API will mask any mathcing "
+        "characters.",
+    )
     mask_parser.add_argument(
-        '-m', '--masking_character',
-        help='The character to mask matching sensitive data with.')
+        "-m",
+        "--masking_character",
+        help="The character to mask matching sensitive data with.",
+    )
 
     fpe_parser = subparsers.add_parser(
-        'deid_fpe',
-        help='Deidentify sensitive data in a string using Format Preserving '
-             'Encryption (FPE).')
+        "deid_fpe",
+        help="Deidentify sensitive data in a string using Format Preserving "
+        "Encryption (FPE).",
+    )
     fpe_parser.add_argument(
-        '--info_types', action='append',
-        help='Strings representing info types to look for. A full list of '
-             'info categories and types is available from the API. Examples '
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
-             'If unspecified, the three above examples will be used.',
-        default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
+        "--info_types",
+        action="append",
+        help="Strings representing info types to look for. A full list of "
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+        "If unspecified, the three above examples will be used.",
+        default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
+    )
     fpe_parser.add_argument(
-        'project',
-        help='The Google Cloud project id to use as a parent resource.')
+        "project", help="The Google Cloud project id to use as a parent resource."
+    )
     fpe_parser.add_argument(
-        'item',
-        help='The string to deidentify. '
-             'Example: string = \'My SSN is 372819127\'')
+        "item",
+        help="The string to deidentify. " "Example: string = 'My SSN is 372819127'",
+    )
     fpe_parser.add_argument(
-        'key_name',
-        help='The name of the Cloud KMS key used to encrypt (\'wrap\') the '
-        'AES-256 key. Example: '
-        'key_name = \'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/'
-        'keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME\'')
+        "key_name",
+        help="The name of the Cloud KMS key used to encrypt ('wrap') the "
+        "AES-256 key. Example: "
+        "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
+        "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
+    )
     fpe_parser.add_argument(
-        'wrapped_key',
-        help='The encrypted (\'wrapped\') AES-256 key to use. This key should '
-        'be encrypted using the Cloud KMS key specified by key_name.')
+        "wrapped_key",
+        help="The encrypted ('wrapped') AES-256 key to use. This key should "
+        "be encrypted using the Cloud KMS key specified by key_name.",
+    )
     fpe_parser.add_argument(
-        '-a', '--alphabet', default='ALPHA_NUMERIC',
-        help='The set of characters to replace sensitive ones with. Commonly '
+        "-a",
+        "--alphabet",
+        default="ALPHA_NUMERIC",
+        help="The set of characters to replace sensitive ones with. Commonly "
         'used subsets of the alphabet include "NUMERIC", "HEXADECIMAL", '
         '"UPPER_CASE_ALPHA_NUMERIC", "ALPHA_NUMERIC", '
-        '"FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED"')
+        '"FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED"',
+    )
     fpe_parser.add_argument(
-        '-s', '--surrogate_type',
-        help='The name of the surrogate custom info type to use. Only '
-        'necessary if you want to reverse the deidentification process. Can '
-        'be essentially any arbitrary string, as long as it doesn\'t appear '
-        'in your dataset otherwise.')
+        "-s",
+        "--surrogate_type",
+        help="The name of the surrogate custom info type to use. Only "
+        "necessary if you want to reverse the deidentification process. Can "
+        "be essentially any arbitrary string, as long as it doesn't appear "
+        "in your dataset otherwise.",
+    )
 
     reid_parser = subparsers.add_parser(
-        'reid_fpe',
-        help='Reidentify sensitive data in a string using Format Preserving '
-             'Encryption (FPE).')
+        "reid_fpe",
+        help="Reidentify sensitive data in a string using Format Preserving "
+        "Encryption (FPE).",
+    )
     reid_parser.add_argument(
-        'project',
-        help='The Google Cloud project id to use as a parent resource.')
+        "project", help="The Google Cloud project id to use as a parent resource."
+    )
     reid_parser.add_argument(
-        'item',
-        help='The string to deidentify. '
-             'Example: string = \'My SSN is 372819127\'')
+        "item",
+        help="The string to deidentify. " "Example: string = 'My SSN is 372819127'",
+    )
     reid_parser.add_argument(
-        'surrogate_type',
-        help='The name of the surrogate custom info type to use. Only '
-        'necessary if you want to reverse the deidentification process. Can '
-        'be essentially any arbitrary string, as long as it doesn\'t appear '
-        'in your dataset otherwise.')
+        "surrogate_type",
+        help="The name of the surrogate custom info type to use. Only "
+        "necessary if you want to reverse the deidentification process. Can "
+        "be essentially any arbitrary string, as long as it doesn't appear "
+        "in your dataset otherwise.",
+    )
     reid_parser.add_argument(
-        'key_name',
-        help='The name of the Cloud KMS key used to encrypt (\'wrap\') the '
-        'AES-256 key. Example: '
-        'key_name = \'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/'
-        'keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME\'')
+        "key_name",
+        help="The name of the Cloud KMS key used to encrypt ('wrap') the "
+        "AES-256 key. Example: "
+        "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
+        "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
+    )
     reid_parser.add_argument(
-        'wrapped_key',
-        help='The encrypted (\'wrapped\') AES-256 key to use. This key should '
-        'be encrypted using the Cloud KMS key specified by key_name.')
+        "wrapped_key",
+        help="The encrypted ('wrapped') AES-256 key to use. This key should "
+        "be encrypted using the Cloud KMS key specified by key_name.",
+    )
     reid_parser.add_argument(
-        '-a', '--alphabet', default='ALPHA_NUMERIC',
-        help='The set of characters to replace sensitive ones with. Commonly '
+        "-a",
+        "--alphabet",
+        default="ALPHA_NUMERIC",
+        help="The set of characters to replace sensitive ones with. Commonly "
         'used subsets of the alphabet include "NUMERIC", "HEXADECIMAL", '
         '"UPPER_CASE_ALPHA_NUMERIC", "ALPHA_NUMERIC", '
-        '"FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED"')
+        '"FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED"',
+    )
 
     date_shift_parser = subparsers.add_parser(
-        'deid_date_shift',
-        help='Deidentify dates in a CSV file by pseudorandomly shifting them.')
+        "deid_date_shift",
+        help="Deidentify dates in a CSV file by pseudorandomly shifting them.",
+    )
     date_shift_parser.add_argument(
-        'project',
-        help='The Google Cloud project id to use as a parent resource.')
+        "project", help="The Google Cloud project id to use as a parent resource."
+    )
     date_shift_parser.add_argument(
-        'input_csv_file',
-        help='The path to the CSV file to deidentify. The first row of the '
-        'file must specify column names, and all other rows must contain '
-        'valid values.')
+        "input_csv_file",
+        help="The path to the CSV file to deidentify. The first row of the "
+        "file must specify column names, and all other rows must contain "
+        "valid values.",
+    )
     date_shift_parser.add_argument(
-        'output_csv_file',
-        help='The path to save the date-shifted CSV file.')
+        "output_csv_file", help="The path to save the date-shifted CSV file."
+    )
     date_shift_parser.add_argument(
-        'lower_bound_days', type=int,
-        help='The maximum number of days to shift a date backward')
+        "lower_bound_days",
+        type=int,
+        help="The maximum number of days to shift a date backward",
+    )
     date_shift_parser.add_argument(
-        'upper_bound_days', type=int,
-        help='The maximum number of days to shift a date forward')
+        "upper_bound_days",
+        type=int,
+        help="The maximum number of days to shift a date forward",
+    )
     date_shift_parser.add_argument(
-        'date_fields', nargs='+',
-        help='The list of date fields in the CSV file to date shift. Example: '
-        '[\'birth_date\', \'register_date\']')
+        "date_fields",
+        nargs="+",
+        help="The list of date fields in the CSV file to date shift. Example: "
+        "['birth_date', 'register_date']",
+    )
     date_shift_parser.add_argument(
-        '--context_field_id',
-        help='(Optional) The column to determine date shift amount based on. '
-        'If this is not specified, a random shift amount will be used for '
-        'every row. If this is specified, then \'wrappedKey\' and \'keyName\' '
-        'must also be set.')
+        "--context_field_id",
+        help="(Optional) The column to determine date shift amount based on. "
+        "If this is not specified, a random shift amount will be used for "
+        "every row. If this is specified, then 'wrappedKey' and 'keyName' "
+        "must also be set.",
+    )
     date_shift_parser.add_argument(
-        '--key_name',
-        help='(Optional) The name of the Cloud KMS key used to encrypt '
-        '(\'wrap\') the AES-256 key. Example: '
-        'key_name = \'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/'
-        'keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME\'')
+        "--key_name",
+        help="(Optional) The name of the Cloud KMS key used to encrypt "
+        "('wrap') the AES-256 key. Example: "
+        "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
+        "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
+    )
     date_shift_parser.add_argument(
-        '--wrapped_key',
-        help='(Optional) The encrypted (\'wrapped\') AES-256 key to use. This '
-        'key should be encrypted using the Cloud KMS key specified by'
-        'key_name.')
+        "--wrapped_key",
+        help="(Optional) The encrypted ('wrapped') AES-256 key to use. This "
+        "key should be encrypted using the Cloud KMS key specified by"
+        "key_name.",
+    )
 
     args = parser.parse_args()
 
-    if args.content == 'deid_mask':
-        deidentify_with_mask(args.project, args.item, args.info_types,
-                             masking_character=args.masking_character,
-                             number_to_mask=args.number_to_mask)
-    elif args.content == 'deid_fpe':
-        deidentify_with_fpe(args.project, args.item, args.info_types,
-                            alphabet=args.alphabet,
-                            wrapped_key=args.wrapped_key,
-                            key_name=args.key_name,
-                            surrogate_type=args.surrogate_type)
-    elif args.content == 'reid_fpe':
-        reidentify_with_fpe(args.project, args.item,
-                            surrogate_type=args.surrogate_type,
-                            wrapped_key=args.wrapped_key,
-                            key_name=args.key_name, alphabet=args.alphabet)
-    elif args.content == 'deid_date_shift':
-        deidentify_with_date_shift(args.project,
-                                   input_csv_file=args.input_csv_file,
-                                   output_csv_file=args.output_csv_file,
-                                   lower_bound_days=args.lower_bound_days,
-                                   upper_bound_days=args.upper_bound_days,
-                                   date_fields=args.date_fields,
-                                   context_field_id=args.context_field_id,
-                                   wrapped_key=args.wrapped_key,
-                                   key_name=args.key_name)
+    if args.content == "deid_mask":
+        deidentify_with_mask(
+            args.project,
+            args.item,
+            args.info_types,
+            masking_character=args.masking_character,
+            number_to_mask=args.number_to_mask,
+        )
+    elif args.content == "deid_fpe":
+        deidentify_with_fpe(
+            args.project,
+            args.item,
+            args.info_types,
+            alphabet=args.alphabet,
+            wrapped_key=args.wrapped_key,
+            key_name=args.key_name,
+            surrogate_type=args.surrogate_type,
+        )
+    elif args.content == "reid_fpe":
+        reidentify_with_fpe(
+            args.project,
+            args.item,
+            surrogate_type=args.surrogate_type,
+            wrapped_key=args.wrapped_key,
+            key_name=args.key_name,
+            alphabet=args.alphabet,
+        )
+    elif args.content == "deid_date_shift":
+        deidentify_with_date_shift(
+            args.project,
+            input_csv_file=args.input_csv_file,
+            output_csv_file=args.output_csv_file,
+            lower_bound_days=args.lower_bound_days,
+            upper_bound_days=args.upper_bound_days,
+            date_fields=args.date_fields,
+            context_field_id=args.context_field_id,
+            wrapped_key=args.wrapped_key,
+            key_name=args.key_name,
+        )

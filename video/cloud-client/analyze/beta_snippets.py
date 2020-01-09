@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2017 Google Inc. All Rights Reserved.
+# Copyright 2019 Google LLC. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,6 +36,9 @@ Usage Examples:
 
     python beta_snippets.py streaming-annotation-storage resources/cat.mp4 \
     gs://mybucket/myfolder
+
+    python beta_snippets.py streaming-automl-classification resources/cat.mp4 \
+    $PROJECT_ID $MODEL_ID
 """
 
 import argparse
@@ -629,6 +632,79 @@ def annotation_to_storage_streaming(path, output_uri):
     # [END video_streaming_annotation_to_storage_beta]
 
 
+def streaming_automl_classification(path, project_id, model_id):
+    # [START video_streaming_automl_classification_beta]
+    import io
+
+    from google.cloud import videointelligence_v1p3beta1 as videointelligence
+    from google.cloud.videointelligence_v1p3beta1 import enums
+
+    # path = 'path_to_file'
+    # project_id = 'gcp_project_id'
+    # model_id = 'automl_classification_model_id'
+
+    client = videointelligence.StreamingVideoIntelligenceServiceClient()
+
+    model_path = 'projects/{}/locations/us-central1/models/{}'.format(
+        project_id, model_id)
+
+    # Here we use classification as an example.
+    automl_config = (videointelligence.types
+                     .StreamingAutomlClassificationConfig(
+                         model_name=model_path))
+
+    video_config = videointelligence.types.StreamingVideoConfig(
+        feature=enums.StreamingFeature.STREAMING_AUTOML_CLASSIFICATION,
+        automl_classification_config=automl_config)
+
+    # config_request should be the first in the stream of requests.
+    config_request = videointelligence.types.StreamingAnnotateVideoRequest(
+        video_config=video_config)
+
+    # Set the chunk size to 5MB (recommended less than 10MB).
+    chunk_size = 5 * 1024 * 1024
+
+    # Load file content.
+    # Note: Input videos must have supported video codecs. See
+    # https://cloud.google.com/video-intelligence/docs/streaming/streaming#supported_video_codecs
+    # for more details.
+    stream = []
+    with io.open(path, 'rb') as video_file:
+        while True:
+            data = video_file.read(chunk_size)
+            if not data:
+                break
+            stream.append(data)
+
+    def stream_generator():
+        yield config_request
+        for chunk in stream:
+            yield videointelligence.types.StreamingAnnotateVideoRequest(
+                input_content=chunk)
+
+    requests = stream_generator()
+
+    # streaming_annotate_video returns a generator.
+    # The default timeout is about 300 seconds.
+    # To process longer videos it should be set to
+    # larger than the length (in seconds) of the stream.
+    responses = client.streaming_annotate_video(requests, timeout=600)
+
+    for response in responses:
+        # Check for errors.
+        if response.error.message:
+            print(response.error.message)
+            break
+
+        for label in response.annotation_results.label_annotations:
+            for frame in label.frames:
+                print("At {:3d}s segment, {:5.1%} {}".format(
+                    frame.time_offset.seconds,
+                    frame.confidence,
+                    label.entity.entity_id))
+    # [END video_streaming_automl_classification_beta]
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -678,6 +754,13 @@ if __name__ == '__main__':
     video_streaming_annotation_to_storage_parser.add_argument('path')
     video_streaming_annotation_to_storage_parser.add_argument('output_uri')
 
+    video_streaming_automl_classification_parser = subparsers.add_parser(
+        'streaming-automl-classification',
+        help=streaming_automl_classification.__doc__)
+    video_streaming_automl_classification_parser.add_argument('path')
+    video_streaming_automl_classification_parser.add_argument('project_id')
+    video_streaming_automl_classification_parser.add_argument('model_id')
+
     args = parser.parse_args()
 
     if args.command == 'transcription':
@@ -700,3 +783,6 @@ if __name__ == '__main__':
         detect_explicit_content_streaming(args.path)
     elif args.command == 'streaming-annotation-storage':
         annotation_to_storage_streaming(args.path, args.output_uri)
+    elif args.command == 'streaming-automl-classification':
+        streaming_automl_classification(
+            args.path, args.project_id, args.model_id)

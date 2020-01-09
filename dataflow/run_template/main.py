@@ -43,8 +43,8 @@ def run(project, job, template, parameters=None):
     #     'output': 'gs://<your-gcs-bucket>/wordcount/outputs',
     # }
 
-    service = build('dataflow', 'v1b3')
-    request = service.projects().templates().launch(
+    dataflow = build('dataflow', 'v1b3')
+    request = dataflow.projects().templates().launch(
         projectId=project,
         gcsPath=template,
         body={

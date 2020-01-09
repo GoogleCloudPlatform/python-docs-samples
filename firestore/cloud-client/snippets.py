@@ -15,7 +15,6 @@ import datetime
 from time import sleep
 
 from google.cloud import firestore
-from google.cloud.firestore_v1 import ArrayRemove, ArrayUnion
 import google.cloud.exceptions
 
 
@@ -160,6 +159,8 @@ def add_example_data():
     db = firestore.Client()
     # [START add_example_data]
     cities_ref = db.collection(u'cities')
+    cities_ref.document(u'BJ').set(
+        City(u'Beijing', None, u'China', True, 21500000, [u'hebei']).to_dict())
     cities_ref.document(u'SF').set(
         City(u'San Francisco', u'CA', u'USA', False, 860000,
              [u'west_coast', u'norcal']).to_dict())
@@ -172,8 +173,6 @@ def add_example_data():
     cities_ref.document(u'TOK').set(
         City(u'Tokyo', None, u'Japan', True, 9000000,
              [u'kanto', u'honshu']).to_dict())
-    cities_ref.document(u'BJ').set(
-        City(u'Beijing', None, u'China', True, 21500000, [u'hebei']).to_dict())
     # [END add_example_data]
 
 
@@ -305,6 +304,10 @@ def structure_subcollection_ref():
 
 def update_doc():
     db = firestore.Client()
+    db.collection(u'cities').document(u'DC').set(
+        City(u'Washington D.C.', None, u'USA', True, 680000,
+             [u'east_coast']).to_dict())
+
     # [START update_doc]
     city_ref = db.collection(u'cities').document(u'DC')
 
@@ -315,14 +318,18 @@ def update_doc():
 
 def update_doc_array():
     db = firestore.Client()
+    db.collection(u'cities').document(u'DC').set(
+        City(u'Washington D.C.', None, u'USA', True, 680000,
+             [u'east_coast']).to_dict())
+
     # [START fs_update_doc_array]
     city_ref = db.collection(u'cities').document(u'DC')
 
     # Atomically add a new region to the 'regions' array field.
-    city_ref.update({u'regions': ArrayUnion([u'greater_virginia'])})
+    city_ref.update({u'regions': firestore.ArrayUnion([u'greater_virginia'])})
 
     # // Atomically remove a region from the 'regions' array field.
-    city_ref.update({u'regions': ArrayRemove([u'east_coast'])})
+    city_ref.update({u'regions': firestore.ArrayRemove([u'east_coast'])})
     # [END fs_update_doc_array]
     city = city_ref.get()
     print(u'Updated the regions field of the DC. {}'.format(city.to_dict()))
@@ -330,6 +337,10 @@ def update_doc_array():
 
 def update_multiple():
     db = firestore.Client()
+    db.collection(u'cities').document(u'DC').set(
+        City(u'Washington D.C.', None, u'USA', True, 680000,
+             [u'east_coast']).to_dict())
+
     # [START update_multiple]
     doc_ref = db.collection(u'cities').document(u'DC')
 
@@ -442,9 +453,9 @@ def update_data_batch():
     sf_ref = db.collection(u'cities').document(u'SF')
     batch.update(sf_ref, {u'population': 1000000})
 
-    # Delete LA
-    la_ref = db.collection(u'cities').document(u'LA')
-    batch.delete(la_ref)
+    # Delete DEN
+    den_ref = db.collection(u'cities').document(u'DEN')
+    batch.delete(den_ref)
 
     # Commit the batch
     batch.commit()
@@ -491,12 +502,12 @@ def compound_query_valid_multi_clause():
     # [START compound_query_valid_multi_clause]
     cities_ref = db.collection(u'cities')
 
-    sydney_query = cities_ref.where(
+    denver_query = cities_ref.where(
         u'state', u'==', u'CO').where(u'name', u'==', u'Denver')
     large_us_cities_query = cities_ref.where(
         u'state', u'==', u'CA').where(u'population', u'>', 1000000)
     # [END compound_query_valid_multi_clause]
-    print(sydney_query)
+    print(denver_query)
     print(large_us_cities_query)
 
 
@@ -704,6 +715,7 @@ def listen_multiple():
     }
     db.collection(u'cities').document(u'SF').set(data)
     sleep(1)
+
     query_watch.unsubscribe()
 
 
@@ -738,6 +750,7 @@ def listen_for_changes():
         u'capital': False,
         u'population': 80000
     })
+    sleep(1)
 
     # Modifying document
     mtv_document.update({
@@ -747,6 +760,7 @@ def listen_for_changes():
         u'capital': False,
         u'population': 90000
     })
+    sleep(1)
 
     # Delete document
     mtv_document.delete()
@@ -802,7 +816,7 @@ def delete_full_collection():
 
     # [START delete_full_collection]
     def delete_collection(coll_ref, batch_size):
-        docs = coll_ref.limit(batch_size).get()
+        docs = coll_ref.limit(batch_size).stream()
         deleted = 0
 
         for doc in docs:
@@ -815,6 +829,9 @@ def delete_full_collection():
     # [END delete_full_collection]
 
     delete_collection(db.collection(u'cities'), 10)
+    delete_collection(db.collection(u'data'), 10)
+    delete_collection(db.collection(u'objects'), 10)
+    delete_collection(db.collection(u'users'), 10)
 
 
 def collection_group_query(db):
@@ -876,3 +893,42 @@ def collection_group_query(db):
         print(u'{} => {}'.format(doc.id, doc.to_dict()))
     # [END fs_collection_group_query]
     return docs
+
+
+def array_contains_any_queries(db):
+    # [START fs_query_filter_array_contains_any]
+    cities_ref = db.collection(u'cities')
+
+    query = cities_ref.where(
+        u'regions', u'array_contains_any', [u'west_coast', u'east_coast']
+    )
+    return query
+    # [END fs_query_filter_array_contains_any]
+
+
+def in_query_without_array(db):
+    # [START fs_query_filter_in]
+    cities_ref = db.collection(u'cities')
+
+    query = cities_ref.where(u'country', u'in', [u'USA', u'Japan'])
+    return query
+    # [END fs_query_filter_in]
+
+
+def in_query_with_array(db):
+    # [START fs_query_filter_in_with_array]
+    cities_ref = db.collection(u'cities')
+
+    query = cities_ref.where(
+        u'regions', u'in', [[u'west_coast'], [u'east_coast']]
+    )
+    return query
+    # [END fs_query_filter_in_with_array]
+
+
+def update_document_increment(db):
+    # [START fs_update_document_increment]
+    washington_ref = db.collection(u'cities').document(u'DC')
+
+    washington_ref.update({"population": firestore.Increment(50)})
+    # [END fs_update_document_increment]
