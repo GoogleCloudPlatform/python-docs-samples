@@ -25,7 +25,7 @@ BUCKET_ID = "{}-lcm".format(PROJECT_ID)
 
 
 @pytest.fixture(scope="function")
-def create_dataset():
+def dataset_id():
     client = automl.AutoMlClient()
     project_location = client.location_path(PROJECT_ID, "us-central1")
     display_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
@@ -42,19 +42,19 @@ def create_dataset():
 
 
 @pytest.mark.slow
-def test_import_dataset(capsys, create_dataset):
+def test_import_dataset(capsys, dataset_id):
     data = (
         "gs://{}/sentiment-analysis/dataset.csv".format(BUCKET_ID)
     )
-    dataset_id = create_dataset
-    import_dataset.import_dataset(PROJECT_ID, dataset_id, data)
+    created_dataset_id = dataset_id
+    import_dataset.import_dataset(PROJECT_ID, created_dataset_id, data)
     out, _ = capsys.readouterr()
     assert "Data imported." in out
 
     # delete created dataset
     client = automl.AutoMlClient()
     dataset_full_id = client.dataset_path(
-        PROJECT_ID, "us-central1", dataset_id
+        PROJECT_ID, "us-central1", created_dataset_id
     )
     response = client.delete_dataset(dataset_full_id)
     response.result()

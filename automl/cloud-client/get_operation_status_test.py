@@ -23,7 +23,7 @@ PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 
 
 @pytest.fixture(scope="function")
-def get_operation_id():
+def operation_id():
     client = automl.AutoMlClient()
     project_location = client.location_path(PROJECT_ID, "us-central1")
     response = client.transport._operations_client.list_operations(
@@ -36,7 +36,7 @@ def get_operation_id():
     yield operation_id
 
 
-def test_get_operation_status(capsys, get_operation_id):
-    get_operation_status.get_operation_status(get_operation_id)
+def test_get_operation_status(capsys, operation_id):
+    get_operation_status.get_operation_status(operation_id)
     out, _ = capsys.readouterr()
     assert "Operation details" in out
