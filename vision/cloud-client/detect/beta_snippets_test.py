@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
 import os
+import uuid
 
 import beta_snippets
 
@@ -21,8 +21,7 @@ RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 GCS_ROOT = 'gs://cloud-samples-data/vision/'
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-OUTPUT_PREFIX = 'TEST_OUTPUT_{}'.format(
-    datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
+OUTPUT_PREFIX = 'TEST_OUTPUT_{}'.format(uuid.uuid4())
 GCS_DESTINATION_URI = 'gs://{}/{}/'.format(BUCKET, OUTPUT_PREFIX)
 
 

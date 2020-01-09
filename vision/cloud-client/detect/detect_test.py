@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
 import os
+import uuid
 
 from google.cloud import storage
 
@@ -22,8 +22,7 @@ import detect
 ASSET_BUCKET = "cloud-samples-data"
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-OUTPUT_PREFIX = 'TEST_OUTPUT_{}'.format(
-    datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
+OUTPUT_PREFIX = 'TEST_OUTPUT_{}'.format(uuid.uuid4())
 GCS_SOURCE_URI = 'gs://{}/HodgeConj.pdf'.format(BUCKET)
 GCS_DESTINATION_URI = 'gs://{}/{}/'.format(BUCKET, OUTPUT_PREFIX)
 
