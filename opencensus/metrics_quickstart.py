@@ -56,6 +56,9 @@ def main():
     print('Exporting stats to project "{}"'
           .format(exporter.options.project_id))
 
+    # Register exporter to the view manager.
+    stats.stats.view_manager.register_exporter(exporter)
+
     # Record 100 fake latency values between 0 and 5 seconds.
     for num in range(100):
         ms = random() * 5 * 1000

@@ -1,3 +1,4 @@
+from __future__ import print_function
 # Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -147,4 +148,4 @@ class Part(ndb.Model):
 
 def print_part():
     p1 = Part(name='foo', color=Color.RED)
-    print p1.color  # prints "RED"
+    print(p1.color)  # prints "RED"

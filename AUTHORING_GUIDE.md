@@ -137,7 +137,7 @@ Don't include shebangs in web applications or test files.
 All samples should start with the following (modulo shebang line):
 
 ```
-# Copyright 2017 Google, Inc.
+# Copyright 2019 Google, LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -413,6 +413,8 @@ if __name__ == '__main__':
   standard- these samples are only be tested against Python 2.7.
 * Samples that use App Engine Standard should use the App Engine testbed for
   system testing. See existing App Engine tests for how to use this.
+* All tests should be independent of one another and should create and tear
+  down resources needed to execute. Using UUIDs to avoid resource collision is recommended.
 
 ## Running tests and automated tools
 

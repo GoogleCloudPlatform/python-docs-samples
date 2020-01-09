@@ -209,6 +209,7 @@ def delete(client):
 
 
 def batch_upsert(client):
+    # [START datastore_batch_upsert]
     task1 = datastore.Entity(client.key('Task', 1))
 
     task1.update({
@@ -227,7 +228,6 @@ def batch_upsert(client):
         'description': 'Integrate Cloud Datastore'
     })
 
-    # [START datastore_batch_upsert]
     client.put_multi([task1, task2])
     # [END datastore_batch_upsert]
 

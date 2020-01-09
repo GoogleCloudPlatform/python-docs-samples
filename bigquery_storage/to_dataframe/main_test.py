@@ -33,7 +33,7 @@ def clients():
     # Make clients.
     bqclient = bigquery.Client(
         credentials=credentials,
-        project=your_project_id
+        project=your_project_id,
     )
     bqstorageclient = bigquery_storage_v1beta1.BigQueryStorageClient(
         credentials=credentials
@@ -90,11 +90,6 @@ def test_query_to_dataframe(capsys, clients):
     dataframe = (
         bqclient.query(query_string)
         .result()
-
-        # Note: The BigQuery Storage API cannot be used to download small query
-        # results, but as of google-cloud-bigquery version 1.11.1, the
-        # to_dataframe method will fallback to the tabledata.list API when the
-        # BigQuery Storage API fails to read the query results.
         .to_dataframe(bqstorage_client=bqstorageclient)
     )
     print(dataframe.head())
@@ -126,7 +121,18 @@ def test_session_to_dataframe(capsys, clients):
 
     parent = "projects/{}".format(your_project_id)
     session = bqstorageclient.create_read_session(
-        table, parent, read_options=read_options
+        table,
+        parent,
+        read_options=read_options,
+        # This API can also deliver data serialized in Apache Avro format.
+        # This example leverages Apache Arrow.
+        format_=bigquery_storage_v1beta1.enums.DataFormat.ARROW,
+        # We use a LIQUID strategy in this example because we only read from a
+        # single stream. Consider BALANCED if you're consuming multiple streams
+        # concurrently and want more consistent stream sizes.
+        sharding_strategy=(
+            bigquery_storage_v1beta1.enums.ShardingStrategy.LIQUID
+        ),
     )
 
     # This example reads from only a single stream. Read from multiple streams

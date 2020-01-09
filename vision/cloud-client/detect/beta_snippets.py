@@ -321,7 +321,7 @@ def async_batch_annotate_images_uri(input_image_uri, output_uri):
     bucket_name = match.group(1)
     prefix = match.group(2)
 
-    bucket = storage_client.get_bucket(bucket_name=bucket_name)
+    bucket = storage_client.get_bucket(bucket_name)
 
     # Lists objects with the given prefix.
     blob_list = list(bucket.list_blobs(prefix=prefix))
@@ -388,9 +388,9 @@ if __name__ == '__main__':
             localize_objects_uri(args.uri)
         elif 'handwritten-ocr-uri' in args.command:
             detect_handwritten_ocr_uri(args.uri)
-        elif 'batch-annotate-files' in args.command:
+        elif 'batch-annotate-files-uri' in args.command:
             detect_batch_annotate_files_uri(args.uri)
-        elif 'batch-annotate-images' in args.command:
+        elif 'batch-annotate-images-uri' in args.command:
             async_batch_annotate_images_uri(args.uri, args.output)
     else:
         if 'object-localization' in args.command:

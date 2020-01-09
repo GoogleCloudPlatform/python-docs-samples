@@ -20,25 +20,37 @@ https://cloud.google.com/iam/docs/creating-managing-service-accounts.
 """
 
 import argparse
+# [START iam_create_service_account]
+# [START iam_list_service_account]
+# [START iam_rename_service_account]
+# [START iam_disable_service_account]
+# [START iam_enable_service_account]
+# [START iam_delete_service_account]
 import os
 
 from google.oauth2 import service_account
 import googleapiclient.discovery
 
-credentials = service_account.Credentials.from_service_account_file(
-    filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
-    scopes=['https://www.googleapis.com/auth/cloud-platform'])
-
-service = googleapiclient.discovery.build(
-    'iam', 'v1', credentials=credentials)
+# [END iam_create_service_account]
+# [END iam_list_service_accounts]
+# [END iam_rename_service_account]
+# [END iam_disable_service_account]
+# [END iam_enable_service_account]
+# [END iam_delete_service_account]
 
 
 # [START iam_create_service_account]
 def create_service_account(project_id, name, display_name):
     """Creates a service account."""
 
-    # pylint: disable=no-member
-    service_account = service.projects().serviceAccounts().create(
+    credentials = service_account.Credentials.from_service_account_file(
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+
+    service = googleapiclient.discovery.build(
+        'iam', 'v1', credentials=credentials)
+
+    my_service_account = service.projects().serviceAccounts().create(
         name='projects/' + project_id,
         body={
             'accountId': name,
@@ -47,8 +59,8 @@ def create_service_account(project_id, name, display_name):
             }
         }).execute()
 
-    print('Created service account: ' + service_account['email'])
-    return service_account
+    print('Created service account: ' + my_service_account['email'])
+    return my_service_account
 # [END iam_create_service_account]
 
 
@@ -56,7 +68,13 @@ def create_service_account(project_id, name, display_name):
 def list_service_accounts(project_id):
     """Lists all service accounts for the current project."""
 
-    # pylint: disable=no-member
+    credentials = service_account.Credentials.from_service_account_file(
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+
+    service = googleapiclient.discovery.build(
+        'iam', 'v1', credentials=credentials)
+
     service_accounts = service.projects().serviceAccounts().list(
         name='projects/' + project_id).execute()
 
@@ -73,27 +91,76 @@ def rename_service_account(email, new_display_name):
     """Changes a service account's display name."""
 
     # First, get a service account using List() or Get()
+    credentials = service_account.Credentials.from_service_account_file(
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+
+    service = googleapiclient.discovery.build(
+        'iam', 'v1', credentials=credentials)
+
     resource = 'projects/-/serviceAccounts/' + email
-    # pylint: disable=no-member
-    service_account = service.projects().serviceAccounts().get(
+
+    my_service_account = service.projects().serviceAccounts().get(
         name=resource).execute()
 
     # Then you can update the display name
-    service_account['displayName'] = new_display_name
-    service_account = service.projects().serviceAccounts().update(
-        name=resource, body=service_account).execute()
+    my_service_account['displayName'] = new_display_name
+    my_service_account = service.projects().serviceAccounts().update(
+        name=resource, body=my_service_account).execute()
 
     print('Updated display name for {} to: {}'.format(
-        service_account['email'], service_account['displayName']))
-    return service_account
+        my_service_account['email'], my_service_account['displayName']))
+    return my_service_account
 # [END iam_rename_service_account]
+
+
+# [START iam_disable_service_account]
+def disable_service_account(email):
+    """Disables a service account."""
+
+    credentials = service_account.Credentials.from_service_account_file(
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+
+    service = googleapiclient.discovery.build(
+        'iam', 'v1', credentials=credentials)
+
+    service.projects().serviceAccounts().disable(
+        name='projects/-/serviceAccounts/' + email).execute()
+
+    print("Disabled service account :" + email)
+# [END iam_disable_service_account]
+
+
+# [START iam_enable_service_account]
+def enable_service_account(email):
+    """Enables a service account."""
+
+    credentials = service_account.Credentials.from_service_account_file(
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+
+    service = googleapiclient.discovery.build(
+        'iam', 'v1', credentials=credentials)
+
+    service.projects().serviceAccounts().enable(
+        name='projects/-/serviceAccounts/' + email).execute()
+
+    print("Disabled service account :" + email)
+# [END iam_enable_service_account]
 
 
 # [START iam_delete_service_account]
 def delete_service_account(email):
     """Deletes a service account."""
 
-    # pylint: disable=no-member
+    credentials = service_account.Credentials.from_service_account_file(
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+
+    service = googleapiclient.discovery.build(
+        'iam', 'v1', credentials=credentials)
+
     service.projects().serviceAccounts().delete(
         name='projects/-/serviceAccounts/' + email).execute()
 
@@ -122,9 +189,19 @@ def main():
 
     # Rename
     rename_parser = subparsers.add_parser(
-        'delete', help=rename_service_account.__doc__)
+        'rename', help=rename_service_account.__doc__)
     rename_parser.add_argument('email')
     rename_parser.add_argument('new_display_name')
+
+    # Disable
+    rename_parser = subparsers.add_parser(
+        'disable', help=disable_service_account.__doc__)
+    list_parser.addargument('email')
+
+    # Enable
+    rename_parser = subparsers.add_parser(
+        'enable', help=enable_service_account.__doc__)
+    list_parser.addargument('email')
 
     # Delete
     delete_parser = subparsers.add_parser(

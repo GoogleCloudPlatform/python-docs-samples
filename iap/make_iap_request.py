@@ -48,7 +48,7 @@ def make_iap_request(url, client_id, method='GET', **kwargs):
     # Set the default timeout, if missing
     if 'timeout' not in kwargs:
         kwargs['timeout'] = 90
-        
+
     # Figure out what environment we're running in and get some preliminary
     # information about the service account.
     bootstrap_credentials, _ = google.auth.default(

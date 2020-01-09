@@ -20,7 +20,7 @@ from flask import Flask, redirect, url_for
 
 
 # [START trace_setup_python_configure]
-from opencensus.trace.exporters import stackdriver_exporter
+from opencensus.ext.stackdriver import trace_exporter as stackdriver_exporter
 import opencensus.trace.tracer
 
 
@@ -28,7 +28,10 @@ def initialize_tracer(project_id):
     exporter = stackdriver_exporter.StackdriverExporter(
         project_id=project_id
     )
-    tracer = opencensus.trace.tracer.Tracer(exporter=exporter)
+    tracer = opencensus.trace.tracer.Tracer(
+        exporter=exporter,
+        sampler=opencensus.trace.tracer.samplers.AlwaysOnSampler()
+    )
 
     return tracer
 # [END trace_setup_python_configure]

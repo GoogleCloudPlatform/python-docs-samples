@@ -29,19 +29,19 @@ def quickstart(project_id):
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp_client = google.cloud.dlp.DlpServiceClient()
+    dlp_client = google.cloud.dlp_v2.DlpServiceClient()
 
     # The string to inspect
-    content = 'Robert Frost'
+    content = "Robert Frost"
 
     # Construct the item to inspect.
-    item = {'value': content}
+    item = {"value": content}
 
     # The info types to search for in the content. Required.
-    info_types = [{'name': 'FIRST_NAME'}, {'name': 'LAST_NAME'}]
+    info_types = [{"name": "FIRST_NAME"}, {"name": "LAST_NAME"}]
 
     # The minimum likelihood to constitute a match. Optional.
-    min_likelihood = 'LIKELIHOOD_UNSPECIFIED'
+    min_likelihood = "LIKELIHOOD_UNSPECIFIED"
 
     # The maximum number of findings to report (0 = server maximum). Optional.
     max_findings = 0
@@ -52,10 +52,10 @@ def quickstart(project_id):
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
     inspect_config = {
-        'info_types': info_types,
-        'min_likelihood': min_likelihood,
-        'include_quote': include_quote,
-        'limits': {'max_findings_per_request': max_findings},
+        "info_types": info_types,
+        "min_likelihood": min_likelihood,
+        "include_quote": include_quote,
+        "limits": {"max_findings_per_request": max_findings},
     }
 
     # Convert the project id into a full resource id.
@@ -68,25 +68,25 @@ def quickstart(project_id):
     if response.result.findings:
         for finding in response.result.findings:
             try:
-                print('Quote: {}'.format(finding.quote))
+                print("Quote: {}".format(finding.quote))
             except AttributeError:
                 pass
-            print('Info type: {}'.format(finding.info_type.name))
+            print("Info type: {}".format(finding.info_type.name))
             # Convert likelihood value to string respresentation.
-            likelihood = (google.cloud.dlp.types.Finding.DESCRIPTOR
-                          .fields_by_name['likelihood']
-                          .enum_type.values_by_number[finding.likelihood]
-                          .name)
-            print('Likelihood: {}'.format(likelihood))
+            likelihood = (
+                google.cloud.dlp.types.Finding.DESCRIPTOR.fields_by_name["likelihood"]
+                .enum_type.values_by_number[finding.likelihood]
+                .name
+            )
+            print("Likelihood: {}".format(likelihood))
     else:
-        print('No findings.')
+        print("No findings.")
     # [END dlp_quickstart]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "project_id", help="Enter your GCP project id.", type=str)
+    parser.add_argument("project_id", help="Enter your GCP project id.", type=str)
     args = parser.parse_args()
     if len(sys.argv) == 1:
         parser.print_usage()

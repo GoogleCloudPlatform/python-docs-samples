@@ -83,18 +83,18 @@ def upload_object(bucket, filename, encryption_key, key_hash):
 
 
 def download_object(bucket, obj, out_file, encryption_key, key_hash):
-        """Downloads an object protected by a custom encryption key."""
-        service = create_service()
+    """Downloads an object protected by a custom encryption key."""
+    service = create_service()
 
-        request = service.objects().get_media(bucket=bucket, object=obj)
-        request.headers['x-goog-encryption-algorithm'] = 'AES256'
-        request.headers['x-goog-encryption-key'] = encryption_key
-        request.headers['x-goog-encryption-key-sha256'] = key_hash
+    request = service.objects().get_media(bucket=bucket, object=obj)
+    request.headers['x-goog-encryption-algorithm'] = 'AES256'
+    request.headers['x-goog-encryption-key'] = encryption_key
+    request.headers['x-goog-encryption-key-sha256'] = key_hash
 
-        # Unfortunately, http.MediaIoBaseDownload overwrites HTTP headers,
-        # and so it cannot be used here. Instead, we shall download as a
-        # single request.
-        out_file.write(request.execute())
+    # Unfortunately, http.MediaIoBaseDownload overwrites HTTP headers,
+    # and so it cannot be used here. Instead, we shall download as a
+    # single request.
+    out_file.write(request.execute())
 
 
 def rotate_key(bucket, obj, current_encryption_key, current_key_hash,

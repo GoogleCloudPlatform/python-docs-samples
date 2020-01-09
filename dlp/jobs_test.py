@@ -18,40 +18,37 @@ import pytest
 
 import jobs
 
-GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
-TEST_COLUMN_NAME = 'zip_code'
-TEST_TABLE_PROJECT_ID = 'bigquery-public-data'
-TEST_DATASET_ID = 'san_francisco'
-TEST_TABLE_ID = 'bikeshare_trips'
+GCLOUD_PROJECT = os.getenv("GCLOUD_PROJECT")
+TEST_COLUMN_NAME = "zip_code"
+TEST_TABLE_PROJECT_ID = "bigquery-public-data"
+TEST_DATASET_ID = "san_francisco"
+TEST_TABLE_ID = "bikeshare_trips"
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def test_job_name():
     import google.cloud.dlp
-    dlp = google.cloud.dlp.DlpServiceClient()
+
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     parent = dlp.project_path(GCLOUD_PROJECT)
 
     # Construct job request
     risk_job = {
-        'privacy_metric': {
-            'categorical_stats_config': {
-                'field': {
-                    'name': TEST_COLUMN_NAME
-                }
-            }
+        "privacy_metric": {
+            "categorical_stats_config": {"field": {"name": TEST_COLUMN_NAME}}
         },
-        'source_table': {
-            'project_id': TEST_TABLE_PROJECT_ID,
-            'dataset_id': TEST_DATASET_ID,
-            'table_id': TEST_TABLE_ID
-        }
+        "source_table": {
+            "project_id": TEST_TABLE_PROJECT_ID,
+            "dataset_id": TEST_DATASET_ID,
+            "table_id": TEST_TABLE_ID,
+        },
     }
 
     response = dlp.create_dlp_job(parent, risk_job=risk_job)
     full_path = response.name
     # API expects only job name, not full project path
-    job_name = full_path[full_path.rfind('/')+1:]
+    job_name = full_path[full_path.rfind("/") + 1 :]
     return job_name
 
 
@@ -59,21 +56,21 @@ def test_list_dlp_jobs(capsys):
     jobs.list_dlp_jobs(GCLOUD_PROJECT)
 
     out, _ = capsys.readouterr()
-    assert 'Job: projects/' in out
+    assert "Job: projects/" in out
 
 
 def test_list_dlp_jobs_with_filter(capsys):
-    jobs.list_dlp_jobs(GCLOUD_PROJECT, filter_string='state=DONE')
+    jobs.list_dlp_jobs(GCLOUD_PROJECT, filter_string="state=DONE")
 
     out, _ = capsys.readouterr()
-    assert 'Job: projects/' in out
+    assert "Job: projects/" in out
 
 
 def test_list_dlp_jobs_with_job_type(capsys):
-    jobs.list_dlp_jobs(GCLOUD_PROJECT, job_type='INSPECT_JOB')
+    jobs.list_dlp_jobs(GCLOUD_PROJECT, job_type="INSPECT_JOB")
 
     out, _ = capsys.readouterr()
-    assert 'Job: projects/' in out
+    assert "Job: projects/" in out
 
 
 def test_delete_dlp_job(test_job_name, capsys):

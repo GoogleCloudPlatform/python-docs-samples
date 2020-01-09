@@ -20,8 +20,8 @@ import json
 
 # [START import_libraries]
 import googleapiclient.discovery
-# [END import_libraries]
 import six
+# [END import_libraries]
 
 
 # [START predict_json]
