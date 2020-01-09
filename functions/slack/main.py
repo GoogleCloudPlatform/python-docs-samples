@@ -36,12 +36,12 @@ kgsearch = apiclient.discovery.build(
 # [START functions_verify_webhook]
 # Python 3+ version of https://github.com/slackapi/python-slack-events-api/blob/master/slackeventsapi/server.py
 def verify_signature(request):
-    timestamp = request.headers.get('X-Slack-Request-Timestamp')
-    signature = request.headers.get('X-Slack-Signature')
+    timestamp = request.headers.get('X-Slack-Request-Timestamp', '')
+    signature = request.headers.get('X-Slack-Signature', '')
 
     req = str.encode('v0:' + str(timestamp) + ':') + request.get_data()
     request_hash = 'v0=' + hmac.new(
-        str.encode(config['SLACK_SECRET']),
+        str(config['SLACK_SECRET']),
         req, hashlib.sha256
     ).hexdigest()
 
