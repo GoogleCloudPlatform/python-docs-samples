@@ -17,6 +17,7 @@
 import os
 
 import create_instruction
+from google.api_core.client_options import ClientOptions
 from google.cloud import datalabeling_v1beta1 as datalabeling
 import pytest
 
@@ -38,4 +39,11 @@ def test_create_instruction(capsys):
     # Delete the created instruction.
     instruction_name = result.name
     client = datalabeling.DataLabelingServiceClient()
+
+    # If provided, use a provided test endpoint - this will prevent tests on
+    # this snippet from triggering any action by a real human
+    if 'DATALABELING_ENDPOINT' in os.environ:
+        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
+        client = datalabeling.DataLabelingServiceClient(client_options=opts)
+
     client.delete_instruction(instruction_name)

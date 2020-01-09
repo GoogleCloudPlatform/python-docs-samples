@@ -159,6 +159,8 @@ def add_example_data():
     db = firestore.Client()
     # [START add_example_data]
     cities_ref = db.collection(u'cities')
+    cities_ref.document(u'BJ').set(
+        City(u'Beijing', None, u'China', True, 21500000, [u'hebei']).to_dict())
     cities_ref.document(u'SF').set(
         City(u'San Francisco', u'CA', u'USA', False, 860000,
              [u'west_coast', u'norcal']).to_dict())
@@ -171,8 +173,6 @@ def add_example_data():
     cities_ref.document(u'TOK').set(
         City(u'Tokyo', None, u'Japan', True, 9000000,
              [u'kanto', u'honshu']).to_dict())
-    cities_ref.document(u'BJ').set(
-        City(u'Beijing', None, u'China', True, 21500000, [u'hebei']).to_dict())
     # [END add_example_data]
 
 
@@ -304,6 +304,10 @@ def structure_subcollection_ref():
 
 def update_doc():
     db = firestore.Client()
+    db.collection(u'cities').document(u'DC').set(
+        City(u'Washington D.C.', None, u'USA', True, 680000,
+             [u'east_coast']).to_dict())
+
     # [START update_doc]
     city_ref = db.collection(u'cities').document(u'DC')
 
@@ -314,6 +318,10 @@ def update_doc():
 
 def update_doc_array():
     db = firestore.Client()
+    db.collection(u'cities').document(u'DC').set(
+        City(u'Washington D.C.', None, u'USA', True, 680000,
+             [u'east_coast']).to_dict())
+
     # [START fs_update_doc_array]
     city_ref = db.collection(u'cities').document(u'DC')
 
@@ -329,6 +337,10 @@ def update_doc_array():
 
 def update_multiple():
     db = firestore.Client()
+    db.collection(u'cities').document(u'DC').set(
+        City(u'Washington D.C.', None, u'USA', True, 680000,
+             [u'east_coast']).to_dict())
+
     # [START update_multiple]
     doc_ref = db.collection(u'cities').document(u'DC')
 
@@ -441,9 +453,9 @@ def update_data_batch():
     sf_ref = db.collection(u'cities').document(u'SF')
     batch.update(sf_ref, {u'population': 1000000})
 
-    # Delete LA
-    la_ref = db.collection(u'cities').document(u'LA')
-    batch.delete(la_ref)
+    # Delete DEN
+    den_ref = db.collection(u'cities').document(u'DEN')
+    batch.delete(den_ref)
 
     # Commit the batch
     batch.commit()
@@ -490,12 +502,12 @@ def compound_query_valid_multi_clause():
     # [START compound_query_valid_multi_clause]
     cities_ref = db.collection(u'cities')
 
-    sydney_query = cities_ref.where(
+    denver_query = cities_ref.where(
         u'state', u'==', u'CO').where(u'name', u'==', u'Denver')
     large_us_cities_query = cities_ref.where(
         u'state', u'==', u'CA').where(u'population', u'>', 1000000)
     # [END compound_query_valid_multi_clause]
-    print(sydney_query)
+    print(denver_query)
     print(large_us_cities_query)
 
 
@@ -703,6 +715,7 @@ def listen_multiple():
     }
     db.collection(u'cities').document(u'SF').set(data)
     sleep(1)
+
     query_watch.unsubscribe()
 
 
@@ -737,6 +750,7 @@ def listen_for_changes():
         u'capital': False,
         u'population': 80000
     })
+    sleep(1)
 
     # Modifying document
     mtv_document.update({
@@ -746,6 +760,7 @@ def listen_for_changes():
         u'capital': False,
         u'population': 90000
     })
+    sleep(1)
 
     # Delete document
     mtv_document.delete()
@@ -801,7 +816,7 @@ def delete_full_collection():
 
     # [START delete_full_collection]
     def delete_collection(coll_ref, batch_size):
-        docs = coll_ref.limit(batch_size).get()
+        docs = coll_ref.limit(batch_size).stream()
         deleted = 0
 
         for doc in docs:
@@ -814,6 +829,9 @@ def delete_full_collection():
     # [END delete_full_collection]
 
     delete_collection(db.collection(u'cities'), 10)
+    delete_collection(db.collection(u'data'), 10)
+    delete_collection(db.collection(u'objects'), 10)
+    delete_collection(db.collection(u'users'), 10)
 
 
 def collection_group_query(db):
