@@ -26,12 +26,13 @@ def quickstart(project_id, region, cluster_name, job_file_path):
        cluster, submitting a PySpark job from Google Cloud Storage to the
        cluster, reading the output of the job and deleting the cluster, all
        using the Python client library.
+
+       Args:
+           project_id (string): Project to use for creating resources.
+           region (string): Region where the resources should live.
+           cluster_name (string): Name to use for creating a cluster.
+           job_file_path (string): Job in GCS to execute against the cluster.
     """
-    # TODO(developer): Uncomment and set the following variables.
-    # project_id = 'YOUR_PROJECT_ID'
-    # region = 'YOUR_CLUSTER_REGION'
-    # cluster_name = 'YOUR_CLUSTER_NAME'
-    # job_file_path = 'YOUR_GCS_JOB_FILE_PATH'
 
     # Create the cluster client.
     cluster_client = dataproc.ClusterControllerClient(client_options={
@@ -59,6 +60,7 @@ def quickstart(project_id, region, cluster_name, job_file_path):
     result = operation.result()
 
     print('Cluster created successfully: {}'.format(result.cluster_name))
+
 
     # Create the job client.
     job_client = dataproc.JobControllerClient(client_options={
@@ -89,22 +91,23 @@ def quickstart(project_id, region, cluster_name, job_file_path):
 
     # Create a timeout such that the job gets cancelled if not in a
     # terminal state after a fixed period of time.
-    timeout = 600000
+    timeout_seconds = 600
     time_start = time.time()
 
     # Wait for the job to complete.
     while job_response.status.state not in terminal_states:
-        if time.time() > time_start + timeout:
+        if time.time() > time_start + timeout_seconds:
             job_client.cancel_job(project_id, region, job_id)
             print('Job {} timed out after threshold of {} seconds.'.format(
-                job_id, timeout / 1000))
+                job_id, timeout_seconds))
 
         # Poll for job termination once a second.
         time.sleep(1)
         job_response = job_client.get_job(project_id, region, job_id)
 
     # Cloud Dataproc job output gets saved to a GCS bucket allocated to it.
-    cluster_info = cluster_client.get_cluster(project_id, region, cluster_name)
+    cluster_info = cluster_client.get_cluster(
+        project_id, region, cluster_name)
 
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(cluster_info.config.config_bucket)
@@ -119,7 +122,8 @@ def quickstart(project_id, region, cluster_name, job_file_path):
         output))
 
     # Delete the cluster once the job has terminated.
-    cluster_client.delete_cluster(project_id, region, cluster_name).result()
+    operation = cluster_client.delete_cluster(project_id, region, cluster_name)
+    operation.result()
 
     print('Cluster {} successfully deleted.'.format(cluster_name))
     # [END dataproc_quickstart]

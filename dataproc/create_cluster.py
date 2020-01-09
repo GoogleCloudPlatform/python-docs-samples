@@ -22,10 +22,14 @@ from google.cloud import dataproc_v1 as dataproc
 
 
 def create_cluster(project_id, region, cluster_name):
-    # TODO(developer): Uncomment and set the following variables.
-    # project_id = 'YOUR_PROJECT_ID'
-    # region = 'YOUR_CLUSTER_REGION'
-    # cluster_name = 'YOUR_CLUSTER_NAME'
+    """This sample walks a user through creating a Cloud Dataproc cluster
+       using the Python client library.
+
+       Args:
+           project_id (string): Project to use for creating resources.
+           region (string): Region where the resources should live.
+           cluster_name (string): Name to use for creating a cluster.
+    """
 
     # Create a client with the endpoint set to the desired cluster region.
     cluster_client = dataproc.ClusterControllerClient(client_options={
