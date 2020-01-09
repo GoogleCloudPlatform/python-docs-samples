@@ -33,7 +33,7 @@ def set_endpoint():
         print('{}'.format(text.description))
 
         vertices = ['({},{})'.format(vertex.x, vertex.y)
-                     for vertex in text.bounding_poly.vertices]
+                    for vertex in text.bounding_poly.vertices]
 
         print('bounds: {}\n'.format(','.join(vertices)))
 
