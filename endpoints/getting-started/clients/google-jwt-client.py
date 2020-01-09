@@ -39,7 +39,7 @@ def generate_jwt(sa_keyfile,
     # build payload
     payload = {
         'iat': now,
-        # expires after 'expirary_length' seconds.
+        # expires after 'expiry_length' seconds.
         "exp": now + expiry_length,
         # iss must match 'issuer' in the security configuration in your
         # swagger spec (e.g. service account email). It can be any string.

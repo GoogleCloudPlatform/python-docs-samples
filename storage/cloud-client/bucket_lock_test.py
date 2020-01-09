@@ -18,10 +18,20 @@ from google.cloud import storage
 
 import pytest
 
-import bucket_lock
+import storage_set_retention_policy
+import storage_lock_retention_policy
+import storage_get_retention_policy
+import storage_get_default_event_based_hold
+import storage_enable_default_event_based_hold
+import storage_disable_default_event_based_hold
+import storage_set_event_based_hold
+import storage_release_event_based_hold
+import storage_set_temporary_hold
+import storage_release_temporary_hold
+import storage_remove_retention_policy
 
-BLOB_NAME = 'storage_snippets_test_sigil'
-BLOB_CONTENT = 'Hello, is it me you\'re looking for?'
+BLOB_NAME = "storage_snippets_test_sigil"
+BLOB_CONTENT = "Hello, is it me you're looking for?"
 # Retention policy for 5 seconds
 RETENTION_POLICY = 5
 
@@ -30,33 +40,35 @@ RETENTION_POLICY = 5
 def bucket():
     """Creates a test bucket and deletes it upon completion."""
     client = storage.Client()
-    bucket_name = 'bucket-lock-' + str(int(time.time()))
+    bucket_name = "bucket-lock-" + str(int(time.time()))
     bucket = client.create_bucket(bucket_name)
     yield bucket
     bucket.delete(force=True)
 
 
 def test_retention_policy_no_lock(bucket, capsys):
-    bucket_lock.set_retention_policy(bucket.name, RETENTION_POLICY)
+    storage_set_retention_policy.set_retention_policy(
+        bucket.name, RETENTION_POLICY
+    )
     bucket.reload()
 
     assert bucket.retention_period is RETENTION_POLICY
     assert bucket.retention_policy_effective_time is not None
     assert bucket.retention_policy_locked is None
 
-    bucket_lock.get_retention_policy(bucket.name)
+    storage_get_retention_policy.get_retention_policy(bucket.name)
     out, _ = capsys.readouterr()
-    assert 'Retention Policy for {}'.format(bucket.name) in out
-    assert 'Retention Period: 5' in out
-    assert 'Effective Time: ' in out
-    assert 'Retention Policy is locked' not in out
+    assert "Retention Policy for {}".format(bucket.name) in out
+    assert "Retention Period: 5" in out
+    assert "Effective Time: " in out
+    assert "Retention Policy is locked" not in out
 
     blob = bucket.blob(BLOB_NAME)
     blob.upload_from_string(BLOB_CONTENT)
 
     assert blob.retention_expiration_time is not None
 
-    bucket_lock.remove_retention_policy(bucket.name)
+    storage_remove_retention_policy.remove_retention_policy(bucket.name)
     bucket.reload()
     assert bucket.retention_period is None
 
@@ -64,46 +76,63 @@ def test_retention_policy_no_lock(bucket, capsys):
 
 
 def test_retention_policy_lock(bucket, capsys):
-    bucket_lock.set_retention_policy(bucket.name, RETENTION_POLICY)
+    storage_set_retention_policy.set_retention_policy(
+        bucket.name, RETENTION_POLICY
+    )
     bucket.reload()
     assert bucket.retention_policy_locked is None
 
-    bucket_lock.lock_retention_policy(bucket.name)
+    storage_lock_retention_policy.lock_retention_policy(bucket.name)
     bucket.reload()
     assert bucket.retention_policy_locked is True
 
-    bucket_lock.get_retention_policy(bucket.name)
+    storage_get_retention_policy.get_retention_policy(bucket.name)
     out, _ = capsys.readouterr()
-    assert 'Retention Policy is locked' in out
+    assert "Retention Policy is locked" in out
 
 
 def test_enable_disable_bucket_default_event_based_hold(bucket, capsys):
-    bucket_lock.get_default_event_based_hold(bucket.name)
+    storage_get_default_event_based_hold.get_default_event_based_hold(
+        bucket.name
+    )
     out, _ = capsys.readouterr()
-    assert 'Default event-based hold is not enabled for {}'.format(
-        bucket.name) in out
-    assert 'Default event-based hold is enabled for {}'.format(
-        bucket.name) not in out
+    assert (
+        "Default event-based hold is not enabled for {}".format(bucket.name)
+        in out
+    )
+    assert (
+        "Default event-based hold is enabled for {}".format(bucket.name)
+        not in out
+    )
 
-    bucket_lock.enable_default_event_based_hold(bucket.name)
+    storage_enable_default_event_based_hold.enable_default_event_based_hold(
+        bucket.name
+    )
     bucket.reload()
 
     assert bucket.default_event_based_hold is True
 
-    bucket_lock.get_default_event_based_hold(bucket.name)
+    storage_get_default_event_based_hold.get_default_event_based_hold(
+        bucket.name
+    )
     out, _ = capsys.readouterr()
-    assert 'Default event-based hold is enabled for {}'.format(
-        bucket.name) in out
+    assert (
+        "Default event-based hold is enabled for {}".format(bucket.name) in out
+    )
 
     blob = bucket.blob(BLOB_NAME)
     blob.upload_from_string(BLOB_CONTENT)
     assert blob.event_based_hold is True
 
-    bucket_lock.release_event_based_hold(bucket.name, blob.name)
+    storage_release_event_based_hold.release_event_based_hold(
+        bucket.name, blob.name
+    )
     blob.reload()
     assert blob.event_based_hold is False
 
-    bucket_lock.disable_default_event_based_hold(bucket.name)
+    storage_disable_default_event_based_hold.disable_default_event_based_hold(
+        bucket.name
+    )
     bucket.reload()
     assert bucket.default_event_based_hold is False
 
@@ -113,11 +142,13 @@ def test_enable_disable_temporary_hold(bucket):
     blob.upload_from_string(BLOB_CONTENT)
     assert blob.temporary_hold is None
 
-    bucket_lock.set_temporary_hold(bucket.name, blob.name)
+    storage_set_temporary_hold.set_temporary_hold(bucket.name, blob.name)
     blob.reload()
     assert blob.temporary_hold is True
 
-    bucket_lock.release_temporary_hold(bucket.name, blob.name)
+    storage_release_temporary_hold.release_temporary_hold(
+        bucket.name, blob.name
+    )
     blob.reload()
     assert blob.temporary_hold is False
 
@@ -127,10 +158,12 @@ def test_enable_disable_event_based_hold(bucket):
     blob.upload_from_string(BLOB_CONTENT)
     assert blob.event_based_hold is None
 
-    bucket_lock.set_event_based_hold(bucket.name, blob.name)
+    storage_set_event_based_hold.set_event_based_hold(bucket.name, blob.name)
     blob.reload()
     assert blob.event_based_hold is True
 
-    bucket_lock.release_event_based_hold(bucket.name, blob.name)
+    storage_release_event_based_hold.release_event_based_hold(
+        bucket.name, blob.name
+    )
     blob.reload()
     assert blob.event_based_hold is False

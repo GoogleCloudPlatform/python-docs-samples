@@ -25,13 +25,15 @@ import argparse
 import os
 
 
-def create_model(project_id,
-                 compute_region,
-                 dataset_display_name,
-                 model_display_name,
-                 train_budget_milli_node_hours,
-                 include_column_spec_names=None,
-                 exclude_column_spec_names=None):
+def create_model(
+    project_id,
+    compute_region,
+    dataset_display_name,
+    model_display_name,
+    train_budget_milli_node_hours,
+    include_column_spec_names=None,
+    exclude_column_spec_names=None,
+):
     """Create a model."""
     # [START automl_tables_create_model]
     # TODO(developer): Uncomment and set the following variables
@@ -116,19 +118,28 @@ def list_models(project_id, compute_region, filter_=None):
         print("Model id: {}".format(model.name.split("/")[-1]))
         print("Model display name: {}".format(model.display_name))
         metadata = model.tables_model_metadata
-        print("Target column display name: {}".format(
-            metadata.target_column_spec.display_name))
-        print("Training budget in node milli hours: {}".format(
-            metadata.train_budget_milli_node_hours))
-        print("Training cost in node milli hours: {}".format(
-            metadata.train_cost_milli_node_hours))
+        print(
+            "Target column display name: {}".format(
+                metadata.target_column_spec.display_name
+            )
+        )
+        print(
+            "Training budget in node milli hours: {}".format(
+                metadata.train_budget_milli_node_hours
+            )
+        )
+        print(
+            "Training cost in node milli hours: {}".format(
+                metadata.train_cost_milli_node_hours
+            )
+        )
         print("Model create time:")
         print("\tseconds: {}".format(model.create_time.seconds))
         print("\tnanos: {}".format(model.create_time.nanos))
         print("Model deployment state: {}".format(deployment_state))
         print("\n")
 
-    # [END automl_tables_list_models]
+        # [END automl_tables_list_models]
         result.append(model)
 
     return result
@@ -156,12 +167,24 @@ def get_model(project_id, compute_region, model_display_name):
     else:
         deployment_state = "undeployed"
 
+    # get features of top importance
+    feat_list = [
+        (column.feature_importance, column.column_display_name)
+        for column in model.tables_model_metadata.tables_model_column_info
+    ]
+    feat_list.sort(reverse=True)
+    if len(feat_list) < 10:
+        feat_to_show = len(feat_list)
+    else:
+        feat_to_show = 10
+
     # Display the model information.
     print("Model name: {}".format(model.name))
     print("Model id: {}".format(model.name.split("/")[-1]))
     print("Model display name: {}".format(model.display_name))
-    print("Model metadata:")
-    print(model.tables_model_metadata)
+    print("Features of top importance:")
+    for feat in feat_list[:feat_to_show]:
+        print(feat)
     print("Model create time:")
     print("\tseconds: {}".format(model.create_time.seconds))
     print("\tnanos: {}".format(model.create_time.nanos))
@@ -191,21 +214,23 @@ def list_model_evaluations(
 
     # List all the model evaluations in the model by applying filter.
     response = client.list_model_evaluations(
-        model_display_name=model_display_name,
-        filter_=filter_
+        model_display_name=model_display_name, filter_=filter_
     )
 
     print("List of model evaluations:")
     for evaluation in response:
         print("Model evaluation name: {}".format(evaluation.name))
         print("Model evaluation id: {}".format(evaluation.name.split("/")[-1]))
-        print("Model evaluation example count: {}".format(
-            evaluation.evaluated_example_count))
+        print(
+            "Model evaluation example count: {}".format(
+                evaluation.evaluated_example_count
+            )
+        )
         print("Model evaluation time:")
         print("\tseconds: {}".format(evaluation.create_time.seconds))
         print("\tnanos: {}".format(evaluation.create_time.nanos))
         print("\n")
-    # [END automl_tables_list_model_evaluations]
+        # [END automl_tables_list_model_evaluations]
         result.append(evaluation)
 
     return result
@@ -304,12 +329,15 @@ def display_evaluation(
     regression_metrics = model_evaluation.regression_evaluation_metrics
     if str(regression_metrics):
         print("Model regression metrics:")
-        print("Model RMSE: {}".format(
-          regression_metrics.root_mean_squared_error
-        ))
+        print(
+            "Model RMSE: {}".format(regression_metrics.root_mean_squared_error)
+        )
         print("Model MAE: {}".format(regression_metrics.mean_absolute_error))
-        print("Model MAPE: {}".format(
-            regression_metrics.mean_absolute_percentage_error))
+        print(
+            "Model MAPE: {}".format(
+                regression_metrics.mean_absolute_percentage_error
+            )
+        )
         print("Model R^2: {}".format(regression_metrics.r_squared))
 
     # [END automl_tables_display_evaluation]
@@ -391,7 +419,7 @@ if __name__ == "__main__":
     create_model_parser.add_argument("--dataset_display_name")
     create_model_parser.add_argument("--model_display_name")
     create_model_parser.add_argument(
-        "--train_budget_milli_node_hours", type=int,
+        "--train_budget_milli_node_hours", type=int
     )
 
     get_operation_status_parser = subparsers.add_parser(
@@ -472,7 +500,7 @@ if __name__ == "__main__":
             project_id,
             compute_region,
             args.model_display_name,
-            args.model_evaluation_id
+            args.model_evaluation_id,
         )
     if args.command == "display_evaluation":
         display_evaluation(

@@ -26,7 +26,7 @@ import automl_tables_dataset
 
 PROJECT = os.environ["GCLOUD_PROJECT"]
 REGION = "us-central1"
-STATIC_DATASET = "test_dataset_do_not_delete"
+STATIC_DATASET = "do_not_delete_this_table"
 GCS_DATASET = "gs://cloud-ml-tables-data/bank-marketing.csv"
 
 ID = "{rand}_{time}".format(
@@ -50,16 +50,14 @@ def ensure_dataset_ready():
         dataset = automl_tables_dataset.create_dataset(PROJECT, REGION, name)
 
     if dataset.example_count is None or dataset.example_count == 0:
-        automl_tables_dataset.import_data(
-            PROJECT, REGION, name, GCS_DATASET
-        )
+        automl_tables_dataset.import_data(PROJECT, REGION, name, GCS_DATASET)
         dataset = automl_tables_dataset.get_dataset(PROJECT, REGION, name)
 
     automl_tables_dataset.update_dataset(
         PROJECT,
         REGION,
         dataset.display_name,
-        target_column_spec_name='Deposit',
+        target_column_spec_name="Deposit",
     )
 
     return dataset
@@ -72,9 +70,7 @@ def test_dataset_create_import_delete(capsys):
     assert dataset is not None
     assert dataset.display_name == name
 
-    automl_tables_dataset.import_data(
-        PROJECT, REGION, name, GCS_DATASET
-    )
+    automl_tables_dataset.import_data(PROJECT, REGION, name, GCS_DATASET)
 
     out, _ = capsys.readouterr()
     assert "Data imported." in out
@@ -91,8 +87,8 @@ def test_dataset_update(capsys):
         PROJECT,
         REGION,
         dataset.display_name,
-        target_column_spec_name='Deposit',
-        weight_column_spec_name='Balance'
+        target_column_spec_name="Deposit",
+        weight_column_spec_name="Balance",
     )
 
     out, _ = capsys.readouterr()
@@ -106,9 +102,9 @@ def test_column_update(capsys):
         PROJECT,
         REGION,
         dataset.display_name,
-        column_spec_display_name='Job',
-        type_code='CATEGORY',
-        nullable=False
+        column_spec_display_name="Job",
+        type_code="CATEGORY",
+        nullable=False,
     )
 
     out, _ = capsys.readouterr()
@@ -117,13 +113,17 @@ def test_column_update(capsys):
 
 def test_list_datasets():
     ensure_dataset_ready()
-    assert next(
+    assert (
+        next(
             (
                 d
-                for d
-                in automl_tables_dataset.list_datasets(PROJECT, REGION)
+                for d in automl_tables_dataset.list_datasets(PROJECT, REGION)
                 if d.display_name == STATIC_DATASET
-            ), None) is not None
+            ),
+            None,
+        )
+        is not None
+    )
 
 
 def test_list_table_specs():

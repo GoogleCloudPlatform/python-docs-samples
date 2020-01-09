@@ -1,2 +1,2 @@
-google-cloud-pubsub==1.0.0
-google-cloud-storage==1.22.0
+google-cloud-pubsub==1.1.0
+google-cloud-storage==1.23.0

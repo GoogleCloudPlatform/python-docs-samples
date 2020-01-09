@@ -20,17 +20,18 @@ import mock
 import quickstart
 
 
-GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
+GCLOUD_PROJECT = os.getenv("GCLOUD_PROJECT")
 
 
 def test_quickstart(capsys):
     # Mock out project_path to use the test runner's project ID.
     with mock.patch.object(
-            google.cloud.dlp.DlpServiceClient,
-            'project_path',
-            return_value='projects/{}'.format(GCLOUD_PROJECT)):
+        google.cloud.dlp.DlpServiceClient,
+        "project_path",
+        return_value="projects/{}".format(GCLOUD_PROJECT),
+    ):
         quickstart.quickstart(GCLOUD_PROJECT)
 
     out, _ = capsys.readouterr()
-    assert 'FIRST_NAME' in out
-    assert 'LAST_NAME' in out
+    assert "FIRST_NAME" in out
+    assert "LAST_NAME" in out

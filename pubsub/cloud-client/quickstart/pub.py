@@ -17,22 +17,32 @@
 # [START pubsub_quickstart_pub_all]
 import argparse
 import time
+
 # [START pubsub_quickstart_pub_deps]
 from google.cloud import pubsub_v1
+
 # [END pubsub_quickstart_pub_deps]
 
 
 def get_callback(api_future, data, ref):
     """Wrap message data in the context of the callback function."""
+
     def callback(api_future):
         try:
-            print("Published message {} now has message ID {}".format(
-                data, api_future.result()))
+            print(
+                "Published message {} now has message ID {}".format(
+                    data, api_future.result()
+                )
+            )
             ref["num_messages"] += 1
         except Exception:
-            print("A problem occurred when publishing {}: {}\n".format(
-                data, api_future.exception()))
+            print(
+                "A problem occurred when publishing {}: {}\n".format(
+                    data, api_future.exception()
+                )
+            )
             raise
+
     return callback
 
 
@@ -63,13 +73,13 @@ def pub(project_id, topic_name):
         print("Published {} message(s).".format(ref["num_messages"]))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument('project_id', help='Google Cloud project ID')
-    parser.add_argument('topic_name', help='Pub/Sub topic name')
+    parser.add_argument("project_id", help="Google Cloud project ID")
+    parser.add_argument("topic_name", help="Pub/Sub topic name")
 
     args = parser.parse_args()
 

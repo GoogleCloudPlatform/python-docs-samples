@@ -1,6 +1,6 @@
-google-auth==1.6.3
+google-auth==1.10.0
 google-cloud-bigquery-storage==0.7.0
-google-cloud-bigquery==1.20.0
-pyarrow==0.14.1
-ipython==7.8.0
-pandas==0.25.1
+google-cloud-bigquery==1.23.1
+pyarrow==0.15.1
+ipython==7.10.2
+pandas==0.25.3
