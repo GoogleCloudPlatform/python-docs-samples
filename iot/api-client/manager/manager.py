@@ -214,7 +214,7 @@ def delete_registry(
     registry_path = client.registry_path(project_id, cloud_region, registry_id)
 
     try:
-        response = client.delete_device_registry(registry_path)
+        client.delete_device_registry(registry_path)
         print('Deleted registry')
         return 'Registry deleted'
     except HttpError:
