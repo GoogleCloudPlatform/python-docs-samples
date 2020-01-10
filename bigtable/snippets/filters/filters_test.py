@@ -19,7 +19,7 @@ import datetime
 import pytest
 from google.cloud import bigtable
 
-from snippets.filters.filter_snippets import filter_composing_chain, \
+from filter_snippets import filter_composing_chain, \
     filter_composing_condition, filter_composing_interleave, \
     filter_limit_block_all, filter_limit_cells_per_col, \
     filter_limit_cells_per_row, filter_limit_cells_per_row_offset, \

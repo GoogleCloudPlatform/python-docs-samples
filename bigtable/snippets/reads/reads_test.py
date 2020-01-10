@@ -18,7 +18,7 @@ import pytest
 
 from google.cloud import bigtable
 
-from snippets.reads.read_snippets import read_filter, read_prefix, \
+from read_snippets import read_filter, read_prefix, \
     read_row_partial, read_row_range, read_row_ranges, read_rows, read_simple
 
 PROJECT = os.environ['GCLOUD_PROJECT']
