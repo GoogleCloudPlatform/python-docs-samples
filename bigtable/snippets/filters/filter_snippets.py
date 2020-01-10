@@ -328,7 +328,7 @@ def print_row(row):
     print("Reading data for {}:".format(row.row_key.decode('utf-8')))
     for cf, cols in row.cells.items():
         print("Column Family {}".format(cf))
-        for col, cells in cols.items():
+        for col, cells in sorted(cols.items()):
             for cell in cells:
                 labels = " [{}]".format(",".join(cell.labels)) \
                     if len(cell.labels) else ""
