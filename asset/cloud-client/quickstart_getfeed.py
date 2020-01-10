@@ -20,11 +20,11 @@ import argparse
 
 def get_feed(feed_name):
     # [START asset_quickstart_get_feed]
-    from google.cloud import asset_v1p2beta1
+    from google.cloud import asset_v1
 
     # TODO feed_name = 'Feed Name you want to get'
 
-    client = asset_v1p2beta1.AssetServiceClient()
+    client = asset_v1.AssetServiceClient()
     response = client.get_feed(feed_name)
     print('gotten_feed: {}'.format(response))
     # [START asset_quickstart_get_feed]

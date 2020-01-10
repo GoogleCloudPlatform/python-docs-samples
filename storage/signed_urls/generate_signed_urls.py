@@ -22,7 +22,6 @@ at https://cloud.google.com/storage/docs/access-control/signing-urls-manually.
 """
 
 # [START storage_signed_url_all]
-# [START storage_signed_url_dependencies]
 import binascii
 import collections
 import datetime
@@ -33,12 +32,8 @@ import sys
 import six
 from six.moves.urllib.parse import quote
 
-# [START storage_signed_url_signer]
 # pip install google-auth
 from google.oauth2 import service_account
-
-# [END storage_signed_url_signer]
-# [END storage_signed_url_dependencies]
 
 
 def generate_signed_url(service_account_file, bucket_name, object_name,
@@ -49,30 +44,21 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
         print('Expiration Time can\'t be longer than 604800 seconds (7 days).')
         sys.exit(1)
 
-    # [START storage_signed_url_canonical_uri]
     escaped_object_name = quote(six.ensure_binary(object_name), safe=b'/~')
     canonical_uri = '/{}'.format(escaped_object_name)
-    # [END storage_signed_url_canonical_uri]
 
-    # [START storage_signed_url_canonical_datetime]
     datetime_now = datetime.datetime.utcnow()
     request_timestamp = datetime_now.strftime('%Y%m%dT%H%M%SZ')
     datestamp = datetime_now.strftime('%Y%m%d')
-    # [END storage_signed_url_canonical_datetime]
 
-    # [START storage_signed_url_credentials]
-    # [START storage_signed_url_signer]
     google_credentials = service_account.Credentials.from_service_account_file(
         service_account_file)
-    # [END storage_signed_url_signer]
     client_email = google_credentials.service_account_email
     credential_scope = '{}/auto/storage/goog4_request'.format(datestamp)
     credential = '{}/{}'.format(client_email, credential_scope)
-    # [END storage_signed_url_credentials]
 
     if headers is None:
         headers = dict()
-    # [START storage_signed_url_canonical_headers]
     host = '{}.storage.googleapis.com'.format(bucket_name)
     headers['host'] = host
 
@@ -82,19 +68,15 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
         lower_k = str(k).lower()
         strip_v = str(v).lower()
         canonical_headers += '{}:{}\n'.format(lower_k, strip_v)
-    # [END storage_signed_url_canonical_headers]
 
-    # [START storage_signed_url_signed_headers]
     signed_headers = ''
     for k, _ in ordered_headers.items():
         lower_k = str(k).lower()
         signed_headers += '{};'.format(lower_k)
     signed_headers = signed_headers[:-1]  # remove trailing ';'
-    # [END storage_signed_url_signed_headers]
 
     if query_parameters is None:
         query_parameters = dict()
-    # [START storage_signed_url_canonical_query_parameters]
     query_parameters['X-Goog-Algorithm'] = 'GOOG4-RSA-SHA256'
     query_parameters['X-Goog-Credential'] = credential
     query_parameters['X-Goog-Date'] = request_timestamp
@@ -111,40 +93,30 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
         encoded_v = quote(str(v), safe='')
         canonical_query_string += '{}={}&'.format(encoded_k, encoded_v)
     canonical_query_string = canonical_query_string[:-1]  # remove trailing '&'
-    # [END storage_signed_url_canonical_query_parameters]
 
-    # [START storage_signed_url_canonical_request]
     canonical_request = '\n'.join([http_method,
                                    canonical_uri,
                                    canonical_query_string,
                                    canonical_headers,
                                    signed_headers,
                                    'UNSIGNED-PAYLOAD'])
-    # [END storage_signed_url_canonical_request]
 
-    # [START storage_signed_url_hash]
     canonical_request_hash = hashlib.sha256(
         canonical_request.encode()).hexdigest()
-    # [END storage_signed_url_hash]
 
-    # [START storage_signed_url_string_to_sign]
     string_to_sign = '\n'.join(['GOOG4-RSA-SHA256',
                                 request_timestamp,
                                 credential_scope,
                                 canonical_request_hash])
-    # [END storage_signed_url_string_to_sign]
 
-    # [START storage_signed_url_signer]
     signature = binascii.hexlify(
         google_credentials.signer.sign(string_to_sign)
     ).decode()
-    # [END storage_signed_url_signer]
 
-    # [START storage_signed_url_construction]
     scheme_and_host = '{}://{}'.format('https', host)
     signed_url = '{}{}?{}&x-goog-signature={}'.format(
         scheme_and_host, canonical_uri, canonical_query_string, signature)
-    # [END storage_signed_url_construction]
+
     return signed_url
 # [END storage_signed_url_all]
 

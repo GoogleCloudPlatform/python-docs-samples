@@ -20,14 +20,15 @@ import google.cloud.storage
 import templates
 
 
-GCLOUD_PROJECT = os.getenv('GCLOUD_PROJECT')
-TEST_TEMPLATE_ID = 'test-template'
+GCLOUD_PROJECT = os.getenv("GCLOUD_PROJECT")
+TEST_TEMPLATE_ID = "test-template"
 
 
 def test_create_list_and_delete_template(capsys):
     try:
         templates.create_inspect_template(
-            GCLOUD_PROJECT, ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'],
+            GCLOUD_PROJECT,
+            ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
             template_id=TEST_TEMPLATE_ID,
         )
     except google.api_core.exceptions.InvalidArgument:
@@ -39,7 +40,8 @@ def test_create_list_and_delete_template(capsys):
 
         # Try again and move on.
         templates.create_inspect_template(
-            GCLOUD_PROJECT, ['FIRST_NAME', 'EMAIL_ADDRESS', 'PHONE_NUMBER'],
+            GCLOUD_PROJECT,
+            ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
             template_id=TEST_TEMPLATE_ID,
         )
 

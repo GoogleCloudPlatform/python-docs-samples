@@ -391,7 +391,6 @@ def test_send_command(test_topic, capsys):
 
     # Pre-process commands
     for i in range(1, 5):
-        client.loop()
         time.sleep(1)
 
     manager.send_command(
@@ -401,10 +400,11 @@ def test_send_command(test_topic, capsys):
 
     # Process commands
     for i in range(1, 5):
-        client.loop()
         time.sleep(1)
 
     # Clean up
+    client.loop_stop()
+    client.disconnect()
     manager.delete_device(
             service_account_json, project_id, cloud_region, registry_id,
             device_id)

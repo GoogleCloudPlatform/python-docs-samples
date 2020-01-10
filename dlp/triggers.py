@@ -22,10 +22,18 @@ import time
 
 
 # [START dlp_create_trigger]
-def create_trigger(project, bucket, scan_period_days, info_types,
-                   trigger_id=None, display_name=None, description=None,
-                   min_likelihood=None, max_findings=None,
-                   auto_populate_timespan=False):
+def create_trigger(
+    project,
+    bucket,
+    scan_period_days,
+    info_types,
+    trigger_id=None,
+    display_name=None,
+    description=None,
+    min_likelihood=None,
+    max_findings=None,
+    auto_populate_timespan=False,
+):
     """Creates a scheduled Data Loss Prevention API inspect_content trigger.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -53,56 +61,47 @@ def create_trigger(project, bucket, scan_period_days, info_types,
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted).
-    info_types = [{'name': info_type} for info_type in info_types]
+    info_types = [{"name": info_type} for info_type in info_types]
 
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
     inspect_config = {
-        'info_types': info_types,
-        'min_likelihood': min_likelihood,
-        'limits': {'max_findings_per_request': max_findings},
+        "info_types": info_types,
+        "min_likelihood": min_likelihood,
+        "limits": {"max_findings_per_request": max_findings},
     }
 
     # Construct a cloud_storage_options dictionary with the bucket's URL.
-    url = 'gs://{}/*'.format(bucket)
+    url = "gs://{}/*".format(bucket)
     storage_config = {
-        'cloud_storage_options': {
-            'file_set': {'url': url}
-        },
+        "cloud_storage_options": {"file_set": {"url": url}},
         # Time-based configuration for each storage object.
-        'timespan_config': {
+        "timespan_config": {
             # Auto-populate start and end times in order to scan new objects
             # only.
-            'enable_auto_population_of_timespan_config': auto_populate_timespan
+            "enable_auto_population_of_timespan_config": auto_populate_timespan
         },
     }
 
     # Construct the job definition.
-    job = {
-        'inspect_config': inspect_config,
-        'storage_config': storage_config,
-    }
+    job = {"inspect_config": inspect_config, "storage_config": storage_config}
 
     # Construct the schedule definition:
     schedule = {
-        'recurrence_period_duration': {
-            'seconds': scan_period_days * 60 * 60 * 24,
-        }
+        "recurrence_period_duration": {"seconds": scan_period_days * 60 * 60 * 24}
     }
 
     # Construct the trigger definition.
     job_trigger = {
-        'inspect_job': job,
-        'display_name': display_name,
-        'description': description,
-        'triggers': [
-            {'schedule': schedule}
-        ],
-        'status': 'HEALTHY'
+        "inspect_job": job,
+        "display_name": display_name,
+        "description": description,
+        "triggers": [{"schedule": schedule}],
+        "status": "HEALTHY",
     }
 
     # Convert the project id into a full resource id.
@@ -110,9 +109,11 @@ def create_trigger(project, bucket, scan_period_days, info_types,
 
     # Call the API.
     response = dlp.create_job_trigger(
-        parent, job_trigger=job_trigger, trigger_id=trigger_id)
+        parent, job_trigger=job_trigger, trigger_id=trigger_id
+    )
 
-    print('Successfully created trigger {}'.format(response.name))
+    print("Successfully created trigger {}".format(response.name))
+
 
 # [END dlp_create_trigger]
 
@@ -130,7 +131,7 @@ def list_triggers(project):
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
@@ -144,15 +145,16 @@ def list_triggers(project):
         return str(time.localtime(timestamp.seconds))
 
     for trigger in response:
-        print('Trigger {}:'.format(trigger.name))
-        print('  Created: {}'.format(human_readable_time(trigger.create_time)))
-        print('  Updated: {}'.format(human_readable_time(trigger.update_time)))
+        print("Trigger {}:".format(trigger.name))
+        print("  Created: {}".format(human_readable_time(trigger.create_time)))
+        print("  Updated: {}".format(human_readable_time(trigger.update_time)))
         if trigger.display_name:
-            print('  Display Name: {}'.format(trigger.display_name))
+            print("  Display Name: {}".format(trigger.display_name))
         if trigger.description:
-            print('  Description: {}'.format(trigger.discription))
-        print('  Status: {}'.format(trigger.status))
-        print('  Error count: {}'.format(len(trigger.errors)))
+            print("  Description: {}".format(trigger.discription))
+        print("  Status: {}".format(trigger.status))
+        print("  Error count: {}".format(len(trigger.errors)))
+
 
 # [END dlp_list_triggers]
 
@@ -171,96 +173,118 @@ def delete_trigger(project, trigger_id):
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id into a full resource id.
     parent = dlp.project_path(project)
 
     # Combine the trigger id with the parent id.
-    trigger_resource = '{}/jobTriggers/{}'.format(parent, trigger_id)
+    trigger_resource = "{}/jobTriggers/{}".format(parent, trigger_id)
 
     # Call the API.
     dlp.delete_job_trigger(trigger_resource)
 
-    print('Trigger {} successfully deleted.'.format(trigger_resource))
+    print("Trigger {} successfully deleted.".format(trigger_resource))
+
 
 # [END dlp_delete_triggers]
 
 
-if __name__ == '__main__':
-    default_project = os.environ.get('GCLOUD_PROJECT')
+if __name__ == "__main__":
+    default_project = os.environ.get("GCLOUD_PROJECT")
 
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(
-        dest='action', help='Select which action to perform.')
+        dest="action", help="Select which action to perform."
+    )
     subparsers.required = True
 
-    parser_create = subparsers.add_parser('create', help='Create a trigger.')
+    parser_create = subparsers.add_parser("create", help="Create a trigger.")
     parser_create.add_argument(
-        'bucket', help='The name of the GCS bucket containing the file.')
+        "bucket", help="The name of the GCS bucket containing the file."
+    )
     parser_create.add_argument(
-        'scan_period_days', type=int,
-        help='How often to repeat the scan, in days. The minimum is 1 day.')
+        "scan_period_days",
+        type=int,
+        help="How often to repeat the scan, in days. The minimum is 1 day.",
+    )
     parser_create.add_argument(
-        '--trigger_id',
-        help='The id of the trigger. If omitted, an id will be randomly '
-             'generated')
+        "--trigger_id",
+        help="The id of the trigger. If omitted, an id will be randomly " "generated",
+    )
     parser_create.add_argument(
-        '--display_name',
-        help='The optional display name of the trigger.')
+        "--display_name", help="The optional display name of the trigger."
+    )
     parser_create.add_argument(
-        '--description',
-        help='The optional description of the trigger.')
+        "--description", help="The optional description of the trigger."
+    )
     parser_create.add_argument(
-        '--project',
-        help='The Google Cloud project id to use as a parent resource.',
-        default=default_project)
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
     parser_create.add_argument(
-        '--info_types', nargs='+',
-        help='Strings representing info types to look for. A full list of '
-             'info categories and types is available from the API. Examples '
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
-             'If unspecified, the three above examples will be used.',
-        default=['FIRST_NAME', 'LAST_NAME', 'EMAIL_ADDRESS'])
+        "--info_types",
+        nargs="+",
+        help="Strings representing info types to look for. A full list of "
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+        "If unspecified, the three above examples will be used.",
+        default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
+    )
     parser_create.add_argument(
-        '--min_likelihood',
-        choices=['LIKELIHOOD_UNSPECIFIED', 'VERY_UNLIKELY', 'UNLIKELY',
-                 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'],
-        help='A string representing the minimum likelihood threshold that '
-             'constitutes a match.')
+        "--min_likelihood",
+        choices=[
+            "LIKELIHOOD_UNSPECIFIED",
+            "VERY_UNLIKELY",
+            "UNLIKELY",
+            "POSSIBLE",
+            "LIKELY",
+            "VERY_LIKELY",
+        ],
+        help="A string representing the minimum likelihood threshold that "
+        "constitutes a match.",
+    )
     parser_create.add_argument(
-        '--max_findings', type=int,
-        help='The maximum number of findings to report; 0 = no maximum.')
+        "--max_findings",
+        type=int,
+        help="The maximum number of findings to report; 0 = no maximum.",
+    )
     parser_create.add_argument(
-        '--auto_populate_timespan', type=bool,
-        help='Limit scan to new content only.')
+        "--auto_populate_timespan", type=bool, help="Limit scan to new content only."
+    )
 
-    parser_list = subparsers.add_parser('list', help='List all triggers.')
+    parser_list = subparsers.add_parser("list", help="List all triggers.")
     parser_list.add_argument(
-        '--project',
-        help='The Google Cloud project id to use as a parent resource.',
-        default=default_project)
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
 
-    parser_delete = subparsers.add_parser('delete', help='Delete a trigger.')
+    parser_delete = subparsers.add_parser("delete", help="Delete a trigger.")
+    parser_delete.add_argument("trigger_id", help="The id of the trigger to delete.")
     parser_delete.add_argument(
-        'trigger_id',
-        help='The id of the trigger to delete.')
-    parser_delete.add_argument(
-        '--project',
-        help='The Google Cloud project id to use as a parent resource.',
-        default=default_project)
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
 
     args = parser.parse_args()
 
-    if args.action == 'create':
+    if args.action == "create":
         create_trigger(
-            args.project, args.bucket, args.scan_period_days, args.info_types,
-            trigger_id=args.trigger_id, display_name=args.display_name,
-            description=args.description, min_likelihood=args.min_likelihood,
+            args.project,
+            args.bucket,
+            args.scan_period_days,
+            args.info_types,
+            trigger_id=args.trigger_id,
+            display_name=args.display_name,
+            description=args.description,
+            min_likelihood=args.min_likelihood,
             max_findings=args.max_findings,
             auto_populate_timespan=args.auto_populate_timespan,
         )
-    elif args.action == 'list':
+    elif args.action == "list":
         list_triggers(args.project)
-    elif args.action == 'delete':
+    elif args.action == "delete":
         delete_trigger(args.project, args.trigger_id)
