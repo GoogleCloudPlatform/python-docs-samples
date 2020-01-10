@@ -51,7 +51,7 @@ test their code.
 ## Installing multiple Python versions
 
 
-1.  See the available Python versions with
+1.  See the available Python versions with [pyenv](https://github.com/pyenv/pyenv),=.
 
     ```console
     pyenv install --list
@@ -88,6 +88,10 @@ test their code.
     ```console
     $ pyenv install 3.7.6
     ```
+    *  3.8.1 (latest 3.8.x release)
+    ```console
+    $ pyenv install 3.8.1
+    ```
 
 1.  After you have installed a python version through pyenv,
     verify that you are now using the pyenv Python shim.
@@ -97,8 +101,35 @@ test their code.
     ~/.pyenv/shims/python
     ```
 
+## Managing python versions using Pyenv global
+Pyenv allows you to configure the prioirty order for your python installs.
 
-## Using pyenv and pyenv-virtualenv to manage your Python versions
+```
+pyenv global 3.8.1 3.7.6 3.6.10 3.5.9 2.7.17
+```
+
+This will make python and python3 point to Python 3.8.1. python2 will go to 2.7.17. You can also further specify versions, such as python3.6 to use that version.
+
+## Python virtual environments
+Using Virtual Environments is fairly common across the Python community. While there is built in support in python for creating environments, there are also other tools that the community has embraced. Option 1 relies on python itself, Option 2 uses an additional tool that some users may prefer.
+
+In either case, you can create and source virtual environments, `python` will point to this virtual environment, not a global python install. Each virtual environment can have its own set of packages that can be different from others.
+
+
+### Option 1: Using builtin support, venv
+Python ships with support of its own to create virtual environments. You can [create a virtual environment](https://docs.python.org/3/library/venv.html).
+
+```
+cd python-docs-samples
+python3 -m venv venv-name
+source venv-name/bin/activate
+```
+
+Typically you will name the venv `venv`, or `venv38` for a python 3.8 venv.
+
+
+## Option 2: Using pyenv-virtualenv to manage your Python versions
+You can also use an extension for pyenv that will assist in managing virtual environments. This allows you to use `pyenv local` to automatically use the create virtual environment
 
 1.  Change to the desired source directory.
 
@@ -106,10 +137,10 @@ test their code.
     cd ~/src/python-docs-samples
     ```
 
-1.  Create a virtualenv using `pyenv virtualenv`.
+1.  Create a virtualenv for python 3.8.1 using `pyenv virtualenv`.
 
     ```console
-    pyenv virtualenv 3.7.6 python-docs-samples
+    pyenv virtualenv 3.8.1 python-docs-samples
     ```
 
     This creates a virtualenv folder within `~/.pyenv/versions/`.
@@ -118,7 +149,7 @@ test their code.
 
     ```console
     # pyenv local [name of virtualenv] [list of python versions to use]
-    pyenv local python-docs-samples 3.6.10 3.7.6 3.5.9 2.7.17
+    pyenv local python-docs-samples 3.8.1 3.7.6 3.6.10 3.5.9 2.7.17
     ```
 
 1.  Now, when you `cd` into the source directory or a subdirectory within it,
