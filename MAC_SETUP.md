@@ -128,7 +128,7 @@ source venv-name/bin/activate
 Typically you will name the venv `venv`, or `venv38` for a python 3.8 venv.
 
 
-## Option 2: Using pyenv-virtualenv to manage your Python versions
+### Option 2: Using pyenv-virtualenv to manage your Python versions
 You can also use an extension for pyenv that will assist in managing virtual environments. This allows you to use `pyenv local` to automatically use the create virtual environment
 
 1.  Change to the desired source directory.
