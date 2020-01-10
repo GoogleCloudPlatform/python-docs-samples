@@ -30,7 +30,7 @@ from filter_snippets import filter_composing_chain, \
     filter_modify_apply_label, filter_modify_strip_value
 
 PROJECT = os.environ['GCLOUD_PROJECT']
-BIGTABLE_INSTANCE = os.environ['BIGTABLE_CLUSTER']
+BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
 TABLE_ID_PREFIX = 'mobile-time-series-{}'
 
 

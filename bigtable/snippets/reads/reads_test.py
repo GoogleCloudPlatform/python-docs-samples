@@ -22,7 +22,7 @@ from read_snippets import read_filter, read_prefix, \
     read_row_partial, read_row_range, read_row_ranges, read_rows, read_simple
 
 PROJECT = os.environ['GCLOUD_PROJECT']
-BIGTABLE_INSTANCE = os.environ['BIGTABLE_CLUSTER']
+BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
 TABLE_ID_PREFIX = 'mobile-time-series-{}'
 
 
