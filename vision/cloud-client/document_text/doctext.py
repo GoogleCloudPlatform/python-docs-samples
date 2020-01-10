@@ -85,9 +85,6 @@ def get_document_bounds(image_file, feature):
             if (feature == FeatureType.BLOCK):
                 bounds.append(block.bounding_box)
 
-        if (feature == FeatureType.PAGE):
-            bounds.append(block.bounding_box)
-
     # The list `bounds` contains the coordinates of the bounding boxes.
     # [END vision_document_text_tutorial_detect_bounds]
     return bounds
@@ -95,7 +92,7 @@ def get_document_bounds(image_file, feature):
 
 def render_doc_text(filein, fileout):
     image = Image.open(filein)
-    bounds = get_document_bounds(filein, FeatureType.PAGE)
+    bounds = get_document_bounds(filein, FeatureType.BLOCK)
     draw_boxes(image, bounds, 'blue')
     bounds = get_document_bounds(filein, FeatureType.PARA)
     draw_boxes(image, bounds, 'red')
