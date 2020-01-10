@@ -102,13 +102,13 @@ test their code.
     ```
 
 ## Managing python versions using Pyenv global
-Pyenv allows you to configure the prioirty order for your python installs.
+Pyenv allows you to configure the priority order for your python installs.
 
 ```
 pyenv global 3.8.1 3.7.6 3.6.10 3.5.9 2.7.17
 ```
 
-This will make python and python3 point to Python 3.8.1. python2 will go to 2.7.17. You can also further specify versions, such as python3.6 to use that version.
+This will make python and python3 point to Python 3.8.1. python2 will use 2.7.17. You can also further specify versions, such as python3.6 to use that version.
 
 ## Python virtual environments
 Using [Virtual Environments](https://docs.python.org/3/library/venv.html) prevents inadvertent modifications to your global python install. Once created and sourced, calls to `python` will uses this virtual environment, not a global python install. Each virtual environment can have its own set of packages that can be different from others.
@@ -122,3 +122,16 @@ source venv-name/bin/activate
 ```
 
 Typically you will name the venv `venv`, or `venv38` for a python 3.8 venv.
+
+## Nox
+The tests for this repository use [nox](https://github.com/theacodes/nox) for managing test runs across multiple python versions. 
+
+```
+# List available test runs
+nox -l
+
+# Run Firestore cloud client tests using Python 3.6
+nox -s "py36(sample='./firestore/cloud-client')"
+```
+
+nox creates virtual environments for each of these runs and places them under `.nox/`. For instance you could use the pytest from that test run by calling `.nox/py36-sample-firestore-cloud-client/bin/pytest`
