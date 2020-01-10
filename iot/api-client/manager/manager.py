@@ -216,10 +216,10 @@ def delete_registry(
     try:
         response = client.delete_device_registry(registry_path)
         print('Deleted registry')
-        return response
+        return 'Registry deleted'
     except HttpError:
         print('Error, registry not deleted')
-        return ""
+        return 'Registry not deleted'
     # [END iot_delete_registry]
 
 
