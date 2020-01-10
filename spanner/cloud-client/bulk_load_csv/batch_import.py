@@ -73,8 +73,8 @@ def main(instance_id, database_id):
     # using`create_database`.
     start = time.time()
     # File paths
-    comments_file = 'hnewscomments.txt'
-    stories_file = 'hnewsstories.txt'
+    comments_file = 'hnewscomments.csv'
+    stories_file = 'hnewsstories.csv'
     # Instantiates a spanner client
     spanner_client = spanner.Client()
     instance = spanner_client.instance(instance_id)

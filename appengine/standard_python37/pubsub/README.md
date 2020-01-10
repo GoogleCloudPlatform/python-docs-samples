@@ -13,18 +13,24 @@ Before you can run or deploy the sample, you will need to do the following:
 
 1. Enable the Cloud Pub/Sub API in the [Google Developers Console](https://console.developers.google.com/project/_/apiui/apiview/pubsub/overview).
 
-2. Create a topic and subscription. Your push auth service account must have Service Account Token Creator Role assigned, which can be done in the Cloud Console [IAM & admin](https://console.cloud.google.com/iam-admin/iam) UI. `--push-auth-token-audience` is optional. If set, remember to modify the audience field check in `main.py` (line 88).
+1. Allow Cloud Pub/Sub to create authentication tokens in your project.
+
+        $ gcloud projects add-iam-policy-binding [your-project-id] \
+            --member=serviceAccount:service-[your-project-number]@gcp-sa-pubsub.iam.gserviceaccount.com \
+            --role=roles/iam.serviceAccountTokenCreator
+
+1. Create a topic and subscription. The `--push-auth-service-account` flag activates the Pub/Sub push functionality for Authentication and Authorization. Pub/Sub messages pushed to your endpoint will carry the identity of this service account. You may use an existing service account or create a new one. The `--push-auth-token-audience` flag is optional; if set, remember to modify the audience field check in `main.py`.
 
         $ gcloud pubsub topics create [your-topic-name]
         $ gcloud beta pubsub subscriptions create [your-subscription-name] \
             --topic=[your-topic-name] \
             --push-endpoint=\
-                https://[your-app-id].appspot.com/_ah/push-handlers/receive_messages?token=[your-token] \
+                https://[your-app-id].appspot.com/push-handlers/receive_messages?token=[your-token] \
             --ack-deadline=30 \
-            --push-auth-service-account=[your-service-account-email] \
+            --push-auth-service-account=[your-service-account] \
             --push-auth-token-audience=example.com
 
-3. Update the environment variables in ``app.yaml``.
+1. Update the environment variables in ``app.yaml``.
 
 ## Running locally
 
@@ -50,11 +56,11 @@ Then set environment variables before starting your application:
 The application can send messages locally, but it is not able to receive push messages locally. You can, however, simulate a push message by making an HTTP request to the local push notification endpoint. There is an included ``sample_message.json``. You can use
 ``curl`` or [httpie](https://github.com/jkbrzt/httpie) to POST this:
 
-    $ curl -i --data @sample_message.json "localhost:8080/_ah/push-handlers/receive_messages?token=[your-token]"
+    $ curl -i --data @sample_message.json "localhost:8080/push-handlers/receive_messages?token=[your-token]"
 
 Or
 
-    $ http POST ":8080/_ah/push-handlers/receive_messages?token=[your-token]" < sample_message.json
+    $ http POST ":8080/push-handlers/receive_messages?token=[your-token]" < sample_message.json
 
 Response:
 

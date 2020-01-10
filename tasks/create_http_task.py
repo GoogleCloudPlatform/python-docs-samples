@@ -23,15 +23,16 @@ def create_http_task(project,
                      location,
                      url,
                      payload=None,
-                     in_seconds=None):
+                     in_seconds=None,
+                     task_name=None):
     # [START cloud_tasks_create_http_task]
     """Create a task for a given queue with an arbitrary payload."""
 
-    from google.cloud import tasks_v2beta3
+    from google.cloud import tasks_v2
     from google.protobuf import timestamp_pb2
 
     # Create a client.
-    client = tasks_v2beta3.CloudTasksClient()
+    client = tasks_v2.CloudTasksClient()
 
     # TODO(developer): Uncomment these lines and replace with your values.
     # project = 'my-project-id'
@@ -39,7 +40,6 @@ def create_http_task(project,
     # location = 'us-central1'
     # url = 'https://example.com/task_handler'
     # payload = 'hello'
-    in_seconds = 10
 
     # Construct the fully qualified queue name.
     parent = client.queue_path(project, location, queue)
@@ -57,6 +57,7 @@ def create_http_task(project,
 
         # Add the payload to the request.
         task['http_request']['body'] = converted_payload
+
     if in_seconds is not None:
         # Convert "seconds from now" into an rfc3339 datetime string.
         d = datetime.datetime.utcnow() + datetime.timedelta(seconds=in_seconds)
@@ -67,6 +68,10 @@ def create_http_task(project,
 
         # Add the timestamp to the tasks.
         task['schedule_time'] = timestamp
+
+    if task_name is not None:
+        # Add the name to tasks.
+        task['name'] = task_name
 
     # Use the client to build and send the task.
     response = client.create_task(parent, task)
@@ -115,8 +120,12 @@ if __name__ == '__main__':
         help='The number of seconds from now to schedule task attempt.'
     )
 
+    parser.add_argument(
+        '--task_name',
+        help='Task name of the task to create'
+    )
     args = parser.parse_args()
 
     create_http_task(
         args.project, args.queue, args.location, args.url,
-        args.payload, args.in_seconds)
+        args.payload, args.in_seconds, args.task_name)

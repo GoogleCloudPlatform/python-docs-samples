@@ -21,8 +21,8 @@ from tableadmin import delete_table
 from tableadmin import run_table_operations
 
 PROJECT = os.environ['GCLOUD_PROJECT']
-BIGTABLE_CLUSTER = os.environ['BIGTABLE_CLUSTER']
-TABLE_NAME_FORMAT = 'hello-bigtable-system-tests-{}'
+BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
+TABLE_NAME_FORMAT = 'tableadmin-test-{}'
 TABLE_NAME_RANGE = 10000
 
 
@@ -30,7 +30,7 @@ def test_run_table_operations(capsys):
     table_name = TABLE_NAME_FORMAT.format(
         random.randrange(TABLE_NAME_RANGE))
 
-    run_table_operations(PROJECT, BIGTABLE_CLUSTER, table_name)
+    run_table_operations(PROJECT, BIGTABLE_INSTANCE, table_name)
     out, _ = capsys.readouterr()
 
     assert 'Creating the ' + table_name + ' table.' in out
@@ -50,13 +50,15 @@ def test_run_table_operations(capsys):
     assert 'Delete a column family cf2...' in out
     assert 'Column family cf2 deleted successfully.' in out
 
+    delete_table(PROJECT, BIGTABLE_INSTANCE, table_name)
+
 
 def test_delete_table(capsys):
     table_name = TABLE_NAME_FORMAT.format(
         random.randrange(TABLE_NAME_RANGE))
-    create_table(PROJECT, BIGTABLE_CLUSTER, table_name)
+    create_table(PROJECT, BIGTABLE_INSTANCE, table_name)
 
-    delete_table(PROJECT, BIGTABLE_CLUSTER, table_name)
+    delete_table(PROJECT, BIGTABLE_INSTANCE, table_name)
     out, _ = capsys.readouterr()
 
     assert 'Table ' + table_name + ' exists.' in out

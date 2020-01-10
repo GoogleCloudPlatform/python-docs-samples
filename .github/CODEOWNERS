@@ -1,6 +1,10 @@
 # Code owners file.
 # This file controls who is tagged for review for any given pull request.
 
+# The python-samples-owners team is the default owner for anything not
+# explicitly taken by someone else.
+*                         @GoogleCloudPlatform/python-samples-owners
+
 # Alix Hamilton is the primary maintainer of the BigQuery samples.
 bigquery/*                @alixhami
 
@@ -13,5 +17,11 @@ composer/*                @tswast
 # Gus Class is the primary maintainer of the IoT samples.
 iot/*                     @gguuss
 
-# Alix Hamilton is the primary maintainer of the Jupyter notebook samples
+# Alix Hamilton is the primary maintainer of the Jupyter notebook samples.
 notebooks/*               @alixhami
+
+# Torry Yang is the primary maintainer of the Tables samples.
+/tables/                  @sirtorry
+
+# Tianzi Cai is the primary maintainer of the Pub/Sub samples.
+/pubsub/                  @anguillanneuf

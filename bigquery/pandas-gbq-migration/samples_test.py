@@ -216,6 +216,11 @@ def test_client_library_upload_from_dataframe(temp_dataset):
             'my_string': ['a', 'b', 'c'],
             'my_int64': [1, 2, 3],
             'my_float64': [4.0, 5.0, 6.0],
+            'my_timestamp': [
+                pandas.Timestamp("1998-09-04T16:03:14"),
+                pandas.Timestamp("2010-09-13T12:03:45"),
+                pandas.Timestamp("2015-10-02T16:00:00")
+            ],
         }
     )
     client = bigquery.Client()
@@ -254,6 +259,11 @@ def test_pandas_gbq_upload_from_dataframe(temp_dataset):
             'my_string': ['a', 'b', 'c'],
             'my_int64': [1, 2, 3],
             'my_float64': [4.0, 5.0, 6.0],
+            'my_timestamp': [
+                pandas.Timestamp("1998-09-04T16:03:14"),
+                pandas.Timestamp("2010-09-13T12:03:45"),
+                pandas.Timestamp("2015-10-02T16:00:00")
+            ],
         }
     )
     table_id = 'my_dataset.new_table'

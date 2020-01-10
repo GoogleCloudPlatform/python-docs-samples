@@ -19,19 +19,19 @@ import pytest
 
 import risk
 
-GCLOUD_PROJECT = 'nodejs-docs-samples'
-TABLE_PROJECT = 'nodejs-docs-samples'
-TOPIC_ID = 'dlp-test'
-SUBSCRIPTION_ID = 'dlp-test-subscription'
-DATASET_ID = 'integration_tests_dlp'
-UNIQUE_FIELD = 'Name'
-REPEATED_FIELD = 'Mystery'
-NUMERIC_FIELD = 'Age'
-STRING_BOOLEAN_FIELD = 'Gender'
+GCLOUD_PROJECT = "python-docs-samples"
+TABLE_PROJECT = "python-docs-samples"
+TOPIC_ID = "dlp-test"
+SUBSCRIPTION_ID = "dlp-test-subscription"
+DATASET_ID = "integration_tests_dlp"
+UNIQUE_FIELD = "Name"
+REPEATED_FIELD = "Mystery"
+NUMERIC_FIELD = "Age"
+STRING_BOOLEAN_FIELD = "Gender"
 
 
 # Create new custom topic/subscription
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def topic_id():
     # Creates a pubsub topic, and tears it down.
     publisher = google.cloud.pubsub.PublisherClient()
@@ -46,13 +46,12 @@ def topic_id():
     publisher.delete_topic(topic_path)
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def subscription_id(topic_id):
     # Subscribes to a topic.
     subscriber = google.cloud.pubsub.SubscriberClient()
     topic_path = subscriber.topic_path(GCLOUD_PROJECT, topic_id)
-    subscription_path = subscriber.subscription_path(
-        GCLOUD_PROJECT, SUBSCRIPTION_ID)
+    subscription_path = subscriber.subscription_path(GCLOUD_PROJECT, SUBSCRIPTION_ID)
     try:
         subscriber.create_subscription(subscription_path, topic_path)
     except google.api_core.exceptions.AlreadyExists:
@@ -69,45 +68,47 @@ def test_numerical_risk_analysis(topic_id, subscription_id, capsys):
         GCLOUD_PROJECT,
         TABLE_PROJECT,
         DATASET_ID,
-        'harmful',
+        "harmful",
         NUMERIC_FIELD,
         topic_id,
-        subscription_id)
+        subscription_id,
+    )
 
     out, _ = capsys.readouterr()
-    assert 'Value Range:' in out
+    assert "Value Range:" in out
 
 
 @flaky
-def test_categorical_risk_analysis_on_string_field(
-        topic_id, subscription_id, capsys):
+def test_categorical_risk_analysis_on_string_field(topic_id, subscription_id, capsys):
     risk.categorical_risk_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
         DATASET_ID,
-        'harmful',
+        "harmful",
         UNIQUE_FIELD,
         topic_id,
-        subscription_id, timeout=180)
+        subscription_id,
+        timeout=180,
+    )
 
     out, _ = capsys.readouterr()
-    assert 'Most common value occurs' in out
+    assert "Most common value occurs" in out
 
 
 @flaky
-def test_categorical_risk_analysis_on_number_field(
-        topic_id, subscription_id, capsys):
+def test_categorical_risk_analysis_on_number_field(topic_id, subscription_id, capsys):
     risk.categorical_risk_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
         DATASET_ID,
-        'harmful',
+        "harmful",
         NUMERIC_FIELD,
         topic_id,
-        subscription_id)
+        subscription_id,
+    )
 
     out, _ = capsys.readouterr()
-    assert 'Most common value occurs' in out
+    assert "Most common value occurs" in out
 
 
 @flaky
@@ -116,31 +117,32 @@ def test_k_anonymity_analysis_single_field(topic_id, subscription_id, capsys):
         GCLOUD_PROJECT,
         TABLE_PROJECT,
         DATASET_ID,
-        'harmful',
+        "harmful",
         topic_id,
         subscription_id,
-        [NUMERIC_FIELD])
+        [NUMERIC_FIELD],
+    )
 
     out, _ = capsys.readouterr()
-    assert 'Quasi-ID values:' in out
-    assert 'Class size:' in out
+    assert "Quasi-ID values:" in out
+    assert "Class size:" in out
 
 
 @flaky
-def test_k_anonymity_analysis_multiple_fields(topic_id, subscription_id,
-                                              capsys):
+def test_k_anonymity_analysis_multiple_fields(topic_id, subscription_id, capsys):
     risk.k_anonymity_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
         DATASET_ID,
-        'harmful',
+        "harmful",
         topic_id,
         subscription_id,
-        [NUMERIC_FIELD, REPEATED_FIELD])
+        [NUMERIC_FIELD, REPEATED_FIELD],
+    )
 
     out, _ = capsys.readouterr()
-    assert 'Quasi-ID values:' in out
-    assert 'Class size:' in out
+    assert "Quasi-ID values:" in out
+    assert "Class size:" in out
 
 
 @flaky
@@ -149,85 +151,86 @@ def test_l_diversity_analysis_single_field(topic_id, subscription_id, capsys):
         GCLOUD_PROJECT,
         TABLE_PROJECT,
         DATASET_ID,
-        'harmful',
+        "harmful",
         topic_id,
         subscription_id,
         UNIQUE_FIELD,
-        [NUMERIC_FIELD])
+        [NUMERIC_FIELD],
+    )
 
     out, _ = capsys.readouterr()
-    assert 'Quasi-ID values:' in out
-    assert 'Class size:' in out
-    assert 'Sensitive value' in out
+    assert "Quasi-ID values:" in out
+    assert "Class size:" in out
+    assert "Sensitive value" in out
 
 
 @flaky
-def test_l_diversity_analysis_multiple_field(
-        topic_id, subscription_id, capsys):
+def test_l_diversity_analysis_multiple_field(topic_id, subscription_id, capsys):
     risk.l_diversity_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
         DATASET_ID,
-        'harmful',
+        "harmful",
         topic_id,
         subscription_id,
         UNIQUE_FIELD,
-        [NUMERIC_FIELD, REPEATED_FIELD])
+        [NUMERIC_FIELD, REPEATED_FIELD],
+    )
 
     out, _ = capsys.readouterr()
-    assert 'Quasi-ID values:' in out
-    assert 'Class size:' in out
-    assert 'Sensitive value' in out
+    assert "Quasi-ID values:" in out
+    assert "Class size:" in out
+    assert "Sensitive value" in out
 
 
 @flaky
-def test_k_map_estimate_analysis_single_field(
-        topic_id, subscription_id, capsys):
+def test_k_map_estimate_analysis_single_field(topic_id, subscription_id, capsys):
     risk.k_map_estimate_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
         DATASET_ID,
-        'harmful',
+        "harmful",
         topic_id,
         subscription_id,
         [NUMERIC_FIELD],
-        ['AGE'])
+        ["AGE"],
+    )
 
     out, _ = capsys.readouterr()
-    assert 'Anonymity range:' in out
-    assert 'Size:' in out
-    assert 'Values' in out
+    assert "Anonymity range:" in out
+    assert "Size:" in out
+    assert "Values" in out
 
 
 @flaky
-def test_k_map_estimate_analysis_multiple_field(
-        topic_id, subscription_id, capsys):
+def test_k_map_estimate_analysis_multiple_field(topic_id, subscription_id, capsys):
     risk.k_map_estimate_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
         DATASET_ID,
-        'harmful',
+        "harmful",
         topic_id,
         subscription_id,
         [NUMERIC_FIELD, STRING_BOOLEAN_FIELD],
-        ['AGE', 'GENDER'])
+        ["AGE", "GENDER"],
+    )
 
     out, _ = capsys.readouterr()
-    assert 'Anonymity range:' in out
-    assert 'Size:' in out
-    assert 'Values' in out
+    assert "Anonymity range:" in out
+    assert "Size:" in out
+    assert "Values" in out
 
 
 @flaky
-def test_k_map_estimate_analysis_quasi_ids_info_types_equal(
-        topic_id, subscription_id):
+def test_k_map_estimate_analysis_quasi_ids_info_types_equal(topic_id, subscription_id):
     with pytest.raises(ValueError):
         risk.k_map_estimate_analysis(
             GCLOUD_PROJECT,
             TABLE_PROJECT,
             DATASET_ID,
-            'harmful',
+            "harmful",
             topic_id,
             subscription_id,
             [NUMERIC_FIELD, STRING_BOOLEAN_FIELD],
-            ['AGE'])
+            ["AGE"],
+        )

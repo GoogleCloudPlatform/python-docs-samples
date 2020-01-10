@@ -33,7 +33,7 @@ def test_predict(capsys):
         "Balance": 200,
         "Campaign": 2,
         "Contact": "cellular",
-        "Day": 4,
+        "Day": "4",
         "Default": "no",
         "Duration": 12,
         "Education": "primary",
@@ -43,15 +43,16 @@ def test_predict(capsys):
         "MaritalStatus": "divorced",
         "Month": "jul",
         "PDays": 4,
-        "POutcome": '0',
+        "POutcome": "0",
         "Previous": 12,
     }
 
     ensure_model_online()
-    automl_tables_predict.predict(PROJECT, REGION, STATIC_MODEL, inputs)
+    automl_tables_predict.predict(PROJECT, REGION, STATIC_MODEL, inputs, True)
     out, _ = capsys.readouterr()
-    assert 'Predicted class name:' in out
-    assert 'Predicted class score:' in out
+    assert "Predicted class name:" in out
+    assert "Predicted class score:" in out
+    assert "Features of top importance:" in out
 
 
 def ensure_model_online():

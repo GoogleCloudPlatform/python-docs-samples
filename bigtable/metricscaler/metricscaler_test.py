@@ -17,16 +17,25 @@
 import os
 import time
 
+import random
+
+import pytest
 from google.cloud import bigtable
+from google.cloud.bigtable import enums
 from mock import patch
 
 from metricscaler import get_cpu_load
 from metricscaler import main
 from metricscaler import scale_bigtable
 
-# tests assume instance and cluster have the same ID
-BIGTABLE_INSTANCE = os.environ['BIGTABLE_CLUSTER']
+PROJECT = os.environ['GCLOUD_PROJECT']
+BIGTABLE_ZONE = os.environ['BIGTABLE_ZONE']
 SIZE_CHANGE_STEP = 3
+INSTANCE_ID_FORMAT = 'metric-scale-test-{}'
+INSTANCE_ID_RANGE = 10000
+BIGTABLE_INSTANCE = INSTANCE_ID_FORMAT.format(
+    random.randrange(INSTANCE_ID_RANGE))
+
 
 # System tests to verify API calls succeed
 
@@ -35,8 +44,33 @@ def test_get_cpu_load():
     assert float(get_cpu_load()) > 0.0
 
 
-def test_scale_bigtable():
+@pytest.fixture()
+def instance():
+    cluster_id = BIGTABLE_INSTANCE
+
+    client = bigtable.Client(project=PROJECT, admin=True)
+
+    serve_nodes = 3
+    storage_type = enums.StorageType.SSD
+    production = enums.Instance.Type.PRODUCTION
+    labels = {'prod-label': 'prod-label'}
+    instance = client.instance(BIGTABLE_INSTANCE, instance_type=production,
+                               labels=labels)
+
+    if not instance.exists():
+        cluster = instance.cluster(cluster_id, location_id=BIGTABLE_ZONE,
+                                   serve_nodes=serve_nodes,
+                                   default_storage_type=storage_type)
+        instance.create(clusters=[cluster])
+
+    yield
+
+    instance.delete()
+
+
+def test_scale_bigtable(instance):
     bigtable_client = bigtable.Client(admin=True)
+
     instance = bigtable_client.instance(BIGTABLE_INSTANCE)
     instance.reload()
 

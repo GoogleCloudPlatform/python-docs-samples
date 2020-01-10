@@ -34,30 +34,35 @@ def list_info_types(language_code=None, result_filter=None):
     import google.cloud.dlp
 
     # Instantiate a client.
-    dlp = google.cloud.dlp.DlpServiceClient()
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Make the API call.
     response = dlp.list_info_types(language_code, result_filter)
 
     # Print the results to the console.
-    print('Info types:')
+    print("Info types:")
     for info_type in response.info_types:
-        print('{name}: {display_name}'.format(
-            name=info_type.name, display_name=info_type.display_name))
+        print(
+            "{name}: {display_name}".format(
+                name=info_type.name, display_name=info_type.display_name
+            )
+        )
+
+
 # [END dlp_list_info_types]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        '--language_code',
-        help='The BCP-47 language code to use, e.g. \'en-US\'.')
+        "--language_code", help="The BCP-47 language code to use, e.g. 'en-US'."
+    )
     parser.add_argument(
-        '--filter',
-        help='An optional filter to only return info types supported by '
-             'certain parts of the API. Defaults to "supported_by=INSPECT".')
+        "--filter",
+        help="An optional filter to only return info types supported by "
+        'certain parts of the API. Defaults to "supported_by=INSPECT".',
+    )
 
     args = parser.parse_args()
 
-    list_info_types(
-        language_code=args.language_code, result_filter=args.filter)
+    list_info_types(language_code=args.language_code, result_filter=args.filter)

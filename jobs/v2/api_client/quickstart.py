@@ -27,8 +27,9 @@ def run_sample():
         print('Request Id: %s' %
               list_companies_response.get('metadata').get('requestId'))
         print('Companies:')
-        for company in list_companies_response.get('companies'):
-            print('%s' % company.get('name'))
+        if list_companies_response is not None:
+            for company in list_companies_response.get('companies'):
+                print('%s' % company.get('name'))
         print('')
 
     except Error as e:

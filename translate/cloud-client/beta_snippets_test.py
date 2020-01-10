@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -63,7 +64,7 @@ def unique_glossary_id():
 def test_translate_text(capsys):
     beta_snippets.translate_text(PROJECT_ID, 'Hello world')
     out, _ = capsys.readouterr()
-    assert 'Zdravo svet' in out or 'Pozdrav svijetu' in out
+    assert 'Translated Text:' in out
 
 
 def test_batch_translate_text(capsys, bucket):
@@ -77,7 +78,7 @@ def test_batch_translate_text(capsys, bucket):
 
 
 def test_detect_language(capsys):
-    beta_snippets.detect_language(PROJECT_ID, 'Hæ sæta')
+    beta_snippets.detect_language(PROJECT_ID, u'Hæ sæta')
     out, _ = capsys.readouterr()
     assert 'is' in out
 
@@ -99,7 +100,6 @@ def test_create_glossary(capsys, unique_glossary_id):
     beta_snippets.create_glossary(PROJECT_ID, unique_glossary_id)
     out, _ = capsys.readouterr()
     assert 'Created' in out
-    assert PROJECT_ID in out
     assert unique_glossary_id in out
     assert 'gs://cloud-samples-data/translation/glossary.csv' in out
 
@@ -129,6 +129,5 @@ def test_delete_glossary(capsys, unique_glossary_id):
     beta_snippets.create_glossary(PROJECT_ID, unique_glossary_id)
     beta_snippets.delete_glossary(PROJECT_ID, unique_glossary_id)
     out, _ = capsys.readouterr()
-    assert PROJECT_ID in out
     assert 'us-central1' in out
     assert unique_glossary_id in out

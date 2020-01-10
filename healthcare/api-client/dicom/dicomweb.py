@@ -152,6 +152,41 @@ def dicomweb_retrieve_study(
 # [END healthcare_dicomweb_retrieve_study]
 
 
+# [START healthcare_dicomweb_search_studies]
+def dicomweb_search_studies(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        dicom_store_id):
+    """Handles the GET requests specified in the DICOMweb standard."""
+    url = '{}/projects/{}/locations/{}'.format(base_url,
+                                               project_id, cloud_region)
+
+    dicomweb_path = '{}/datasets/{}/dicomStores/{}/dicomWeb/studies'.format(
+        url, dataset_id, dicom_store_id)
+
+    # Refine your search by appending DICOM tags to the
+    # request in the form of query parameters. This sample
+    # searches for studies containing a patient's name.
+    params = {'PatientName': 'Sally Zhang'}
+
+    session = get_session(service_account_json)
+
+    response = session.get(dicomweb_path, params=params)
+
+    response.raise_for_status()
+
+    patients = response.json()
+
+    print('Patients found matching query:')
+    print(json.dumps(patients, indent=2))
+
+    return patients
+# [END healthcare_dicomweb_search_studies]
+
+
 # [START healthcare_dicomweb_retrieve_instance]
 def dicomweb_retrieve_instance(
         service_account_json,
@@ -343,6 +378,9 @@ def parse_command_line_args():
         'dicomweb-retrieve-study',
         help=dicomweb_retrieve_study.__doc__)
     command.add_parser(
+        'dicomweb-search-studies',
+        help=dicomweb_search_studies.__doc__)
+    command.add_parser(
         'dicomweb-retrieve-instance',
         help=dicomweb_retrieve_instance.__doc__)
     command.add_parser(
@@ -402,6 +440,15 @@ def run_command(args):
             args.study_uid,
             args.series_uid,
             args.instance_uid)
+
+    elif args.command == 'dicomweb-search-studies':
+        dicomweb_search_studies(
+            args.service_account_json,
+            args.base_url,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.dicom_store_id)
 
     elif args.command == 'dicomweb-retrieve-rendered':
         dicomweb_retrieve_rendered(
