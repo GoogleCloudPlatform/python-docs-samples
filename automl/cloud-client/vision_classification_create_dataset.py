@@ -30,6 +30,7 @@ def create_dataset(project_id, display_name):
     # Types:
     # MultiLabel: Multiple labels are allowed for one example.
     # MultiClass: At most one label is allowed per example.
+    # https://cloud.google.com/automl/docs/reference/rpc/google.cloud.automl.v1#classificationtype
     metadata = automl.types.ImageClassificationDatasetMetadata(
         classification_type=automl.enums.ClassificationType.MULTILABEL
     )

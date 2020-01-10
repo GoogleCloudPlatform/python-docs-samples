@@ -28,6 +28,9 @@ def create_model(project_id, dataset_id, display_name):
     # A resource that represents Google Cloud Platform location.
     project_location = client.location_path(project_id, "us-central1")
     # Leave model unset to use the default base model provided by Google
+    # train_budget_milli_node_hours: The actual train_cost will be equal or
+    # less than this value.
+    # https://cloud.google.com/automl/docs/reference/rpc/google.cloud.automl.v1#imageclassificationmodelmetadata
     metadata = automl.types.ImageClassificationModelMetadata(
         train_budget_milli_node_hours=24000
     )
