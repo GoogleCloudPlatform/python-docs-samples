@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 # [START bigtable_reads_row]
 # [START bigtable_reads_row_partial]
 # [START bigtable_reads_rows]
@@ -155,12 +156,12 @@ def read_filter(project_id, instance_id, table_id):
 # [START bigtable_reads_prefix]
 # [START bigtable_reads_filter]
 def print_row(row):
-    print ("Reading data for {}:".format(row.row_key.decode('utf-8')))
+    print("Reading data for {}:".format(row.row_key.decode('utf-8')))
     for cf, cols in row.cells.items():
-        print ("Column Family {}".format(cf))
+        print("Column Family {}".format(cf))
         for col, cells in cols.items():
             for cell in cells:
-                print (
+                print(
                     "\t{}: {} @{}{}".format(col.decode('utf-8'),
                                             cell.value.decode('utf-8'),
                                             cell.timestamp, ""))

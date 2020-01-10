@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 # [START bigtable_filters_limit_row_sample]
 # [START bigtable_filters_limit_row_regex]
 # [START bigtable_filters_limit_cells_per_col]
@@ -51,9 +52,13 @@ from google.cloud import bigtable
 # [END bigtable_filters_composing_chain]
 # [END bigtable_filters_composing_interleave]
 # [END bigtable_filters_composing_condition]
-
-from google.cloud.bigtable.row_filters import *
-from google.cloud.bigtable.row_set import RowSet
+from google.cloud.bigtable.row_filters import ApplyLabelFilter, \
+    BlockAllFilter, CellsColumnLimitFilter, CellsRowLimitFilter, \
+    CellsRowOffsetFilter, ColumnQualifierRegexFilter, ColumnRangeFilter, \
+    ConditionalRowFilter, FamilyNameRegexFilter, PassAllFilter, \
+    RowFilterChain, RowFilterUnion, RowKeyRegexFilter, RowSampleFilter, \
+    StripValueTransformerFilter, TimestampRange, TimestampRangeFilter, \
+    ValueRangeFilter, ValueRegexFilter
 
 
 # [START bigtable_filters_limit_row_sample]
@@ -285,8 +290,7 @@ def filter_composing_condition(project_id, instance_id, table_id):
     table = instance.table(table_id)
 
     rows = table.read_rows(filter_=ConditionalRowFilter(
-        base_filter=
-        RowFilterChain(filters=[
+        base_filter=RowFilterChain(filters=[
             ColumnQualifierRegexFilter(
                 "data_plan_10gb"),
             ValueRegexFilter(
