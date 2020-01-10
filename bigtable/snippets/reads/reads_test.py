@@ -18,13 +18,17 @@ import pytest
 
 from google.cloud import bigtable
 
+from snippets.reads.read_snippets import read_simple, read_prefix, \
+    read_row_partial, read_rows, read_row_range, read_row_ranges, read_filter
+from snapshottest.file import FileSnapshot
+
 PROJECT = os.environ['GCLOUD_PROJECT']
 BIGTABLE_INSTANCE = os.environ['BIGTABLE_CLUSTER']
 TABLE_ID_PREFIX = 'mobile-time-series-{}'
 
 
 @pytest.fixture(scope="session", autouse=True)
-def test_table():
+def table_id():
     client = bigtable.Client(project=PROJECT, admin=True)
     instance = client.instance(BIGTABLE_INSTANCE)
 
@@ -37,7 +41,7 @@ def test_table():
 
     # table = instance.table(table_id)
 
-    timestamp = datetime.datetime.utcnow()
+    timestamp = datetime.datetime(2019, 5, 1)
     rows = [
         table.direct_row("phone#4c410523#20190501"),
         table.direct_row("phone#4c410523#20190502"),
@@ -62,39 +66,57 @@ def test_table():
     rows[4].set_cell("stats_summary", "connected_wifi", 0, timestamp)
     rows[4].set_cell("stats_summary", "os_build", "PQ2A.190406.000", timestamp)
 
-    response = table.mutate_rows(rows)
-    # out, _ = capsys.readouterr()
-    # assert 'Successfully wrote row' in out
-    print("above")
+    table.mutate_rows(rows)
 
     yield table_id
 
-    print("below")
-    # write_simple(PROJECT, BIGTABLE_INSTANCE, table_id)
-    #
-    # out, _ = capsys.readouterr()
-    # assert 'Successfully wrote row' in out
-    #
-    # write_increment(PROJECT, BIGTABLE_INSTANCE, table_id)
-    #
-    # out, _ = capsys.readouterr()
-    # assert 'Successfully updated row' in out
-    #
-    # write_conditional(PROJECT, BIGTABLE_INSTANCE, table_id)
-    #
-    # out, _ = capsys.readouterr()
-    # assert 'Successfully updated row\'s os_name' in out
-    #
-    # write_batch(PROJECT, BIGTABLE_INSTANCE, table_id)
-    #
-    # out, _ = capsys.readouterr()
-    # assert 'Successfully wrote 2 rows' in out
-
-    # yield response
-
-    # table.delete()
+    table.delete()
 
 
-def test_read_simple(capsys, test_table):
-    print("hi")
-    assert "abc" in ""  # for demo purposes
+def test_read_simple(capsys, snapshot, table_id):
+    read_simple(PROJECT, BIGTABLE_INSTANCE, table_id)
+
+    out, _ = capsys.readouterr()
+    snapshot.assert_match(out)
+
+
+def test_read_row_partial(capsys, snapshot, table_id):
+    read_row_partial(PROJECT, BIGTABLE_INSTANCE, table_id)
+
+    out, _ = capsys.readouterr()
+    snapshot.assert_match(out)
+
+
+def test_read_rows(capsys, snapshot, table_id):
+    read_rows(PROJECT, BIGTABLE_INSTANCE, table_id)
+
+    out, _ = capsys.readouterr()
+    snapshot.assert_match(out)
+
+
+def test_read_row_range(capsys, snapshot, table_id):
+    read_row_range(PROJECT, BIGTABLE_INSTANCE, table_id)
+
+    out, _ = capsys.readouterr()
+    snapshot.assert_match(out)
+
+
+def test_read_row_ranges(capsys, snapshot, table_id):
+    read_row_ranges(PROJECT, BIGTABLE_INSTANCE, table_id)
+
+    out, _ = capsys.readouterr()
+    snapshot.assert_match(out)
+
+
+def test_read_prefix(capsys, snapshot, table_id):
+    read_prefix(PROJECT, BIGTABLE_INSTANCE, table_id)
+
+    out, _ = capsys.readouterr()
+    snapshot.assert_match(out)
+
+
+def test_read_filter(capsys, snapshot, table_id):
+    read_filter(PROJECT, BIGTABLE_INSTANCE, table_id)
+
+    out, _ = capsys.readouterr()
+    snapshot.assert_match(out)

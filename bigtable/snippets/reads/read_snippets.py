@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2019, Google LLC
+# Copyright 2020, Google LLC
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -12,36 +12,163 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# [START bigtable_writes_simple]
-import datetime
+# [START bigtable_reads_row]
+# [START bigtable_reads_row_partial]
+# [START bigtable_reads_rows]
+# [START bigtable_reads_row_range]
+# [START bigtable_reads_row_ranges]
+# [START bigtable_reads_prefix]
+# [START bigtable_reads_filter]
 from google.cloud import bigtable
 
+# [END bigtable_reads_row]
+# [END bigtable_reads_row_partial]
+# [END bigtable_reads_rows]
+# [END bigtable_reads_row_range]
+# [END bigtable_reads_row_ranges]
+# [END bigtable_reads_prefix]
+# [END bigtable_reads_filter]
 
-def write_simple(project_id, instance_id, table_id):
+# [START bigtable_reads_row]
+from google.cloud.bigtable.row_filters import ColumnQualifierRegexFilter, \
+    ValueRegexFilter
+from google.cloud.bigtable.row_set import RowSet
+
+
+def read_simple(project_id, instance_id, table_id):
     client = bigtable.Client(project=project_id, admin=True)
     instance = client.instance(instance_id)
     table = instance.table(table_id)
 
-    timestamp = datetime.datetime.utcnow()
-    column_family_id = "stats_summary"
-
     row_key = "phone#4c410523#20190501"
 
-    row = table.row(row_key)
-    row.set_cell(column_family_id,
-                 "connected_cell",
-                 1,
-                 timestamp)
-    row.set_cell(column_family_id,
-                 "connected_wifi",
-                 1,
-                 timestamp)
-    row.set_cell(column_family_id,
-                 "os_build",
-                 "PQ2A.190405.003",
-                 timestamp)
+    row = table.read_row(row_key)
+    print_row(row)
 
-    row.commit()
 
-    print('Successfully wrote row {}.'.format(row_key))
-# [END bigtable_writes_simple]
+# [END bigtable_reads_row]
+
+# [START bigtable_reads_row_partial]
+def read_row_partial(project_id, instance_id, table_id):
+    client = bigtable.Client(project=project_id, admin=True)
+    instance = client.instance(instance_id)
+    table = instance.table(table_id)
+
+    row_key = "phone#4c410523#20190501"
+    col_filter = ColumnQualifierRegexFilter(b'os_build')
+
+    row = table.read_row(row_key, filter_=col_filter)
+    print_row(row)
+
+
+# [END bigtable_reads_row_partial]
+# [START bigtable_reads_rows]
+def read_rows(project_id, instance_id, table_id):
+    client = bigtable.Client(project=project_id, admin=True)
+    instance = client.instance(instance_id)
+    table = instance.table(table_id)
+
+    row_set = RowSet()
+    row_set.add_row_key("phone#4c410523#20190501".encode("utf-8"))
+    row_set.add_row_key("phone#4c410523#20190502".encode("utf-8"))
+
+    rows = table.read_rows(row_set=row_set)
+    for row in rows:
+        print_row(row)
+
+
+# [END bigtable_reads_rows]
+# [START bigtable_reads_row_range]
+def read_row_range(project_id, instance_id, table_id):
+    client = bigtable.Client(project=project_id, admin=True)
+    instance = client.instance(instance_id)
+    table = instance.table(table_id)
+
+    row_set = RowSet()
+    row_set.add_row_range_from_keys(
+        start_key="phone#4c410523#20190501".encode("utf-8"),
+        end_key="phone#4c410523#201906201".encode("utf-8"))
+
+    rows = table.read_rows(row_set=row_set)
+    for row in rows:
+        print_row(row)
+
+
+# [END bigtable_reads_row_range]
+# [START bigtable_reads_row_ranges]
+def read_row_ranges(project_id, instance_id, table_id):
+    client = bigtable.Client(project=project_id, admin=True)
+    instance = client.instance(instance_id)
+    table = instance.table(table_id)
+
+    row_set = RowSet()
+    row_set.add_row_range_from_keys(
+        start_key="phone#4c410523#20190501".encode("utf-8"),
+        end_key="phone#4c410523#201906201".encode("utf-8"))
+    row_set.add_row_range_from_keys(
+        start_key="phone#5c10102#20190501".encode("utf-8"),
+        end_key="phone#5c10102#201906201".encode("utf-8"))
+
+    rows = table.read_rows(row_set=row_set)
+    for row in rows:
+        print_row(row)
+
+
+# [END bigtable_reads_row_ranges]
+# [START bigtable_reads_prefix]
+def read_prefix(project_id, instance_id, table_id):
+    client = bigtable.Client(project=project_id, admin=True)
+    instance = client.instance(instance_id)
+    table = instance.table(table_id)
+    prefix = "phone#"
+    end_key = prefix[:-1] + chr(ord(prefix[-1]) + 1)
+
+    row_set = RowSet()
+    row_set.add_row_range_from_keys(prefix.encode("utf-8"),
+                                    end_key.encode("utf-8"))
+
+    rows = table.read_rows(row_set=row_set)
+    for row in rows:
+        print_row(row)
+
+
+# [END bigtable_reads_prefix]
+# [START bigtable_reads_filter]
+def read_filter(project_id, instance_id, table_id):
+    client = bigtable.Client(project=project_id, admin=True)
+    instance = client.instance(instance_id)
+    table = instance.table(table_id)
+
+    rows = table.read_rows(filter_=ValueRegexFilter("PQ2A.*$".encode("utf-8")))
+    for row in rows:
+        print_row(row)
+
+
+# [END bigtable_reads_filter]
+
+
+# [START bigtable_reads_row]
+# [START bigtable_reads_row_partial]
+# [START bigtable_reads_rows]
+# [START bigtable_reads_row_range]
+# [START bigtable_reads_row_ranges]
+# [START bigtable_reads_prefix]
+# [START bigtable_reads_filter]
+def print_row(row):
+    print ("Reading data for {}:".format(row.row_key.decode('utf-8')))
+    for cf, cols in row.cells.items():
+        print ("Column Family {}".format(cf))
+        for col, cells in cols.items():
+            for cell in cells:
+                print (
+                    "\t{}: {} @{}{}".format(col.decode('utf-8'),
+                                            cell.value.decode('utf-8'),
+                                            cell.timestamp, ""))
+    print()
+# [END bigtable_reads_row]
+# [END bigtable_reads_row_partial]
+# [END bigtable_reads_rows]
+# [END bigtable_reads_row_range]
+# [END bigtable_reads_row_ranges]
+# [END bigtable_reads_prefix]
+# [END bigtable_reads_filter]
