@@ -13,47 +13,64 @@
 # limitations under the License.
 
 import os
+import pytest
 import random
 
 import access
 import service_accounts
 
+# Setting up variables for testing
+GCLOUD_PROJECT = os.environ["GCLOUD_PROJECT"]
 
-def test_access(capsys):
-    # Setting up variables for testing
-    project_id = os.environ['GCLOUD_PROJECT']
+# specifying a sample role to be assigned
+GCP_ROLE = "roles/owner"
 
-    # specifying a sample role to be assigned
-    gcp_role = 'roles/owner'
 
+@pytest.fixture(scope="module")
+def test_member():
     # section to create service account to test policy updates.
     rand = str(random.randint(0, 1000))
-    name = 'python-test-' + rand
-    email = name + '@' + project_id + '.iam.gserviceaccount.com'
-    member = 'serviceAccount:' + email
+    name = "python-test-" + rand
+    email = name + "@" + GCLOUD_PROJECT + ".iam.gserviceaccount.com"
+    member = "serviceAccount:" + email
     service_accounts.create_service_account(
-        project_id, name, 'Py Test Account')
+        GCLOUD_PROJECT, name, "Py Test Account"
+    )
 
-    policy = access.get_policy(project_id)
-    out, _ = capsys.readouterr()
-    assert u'etag' in out
-
-    policy = access.modify_policy_add_role(policy, gcp_role, member)
-    out, _ = capsys.readouterr()
-    assert u'etag' in out
-
-    policy = access.modify_policy_remove_member(policy, gcp_role, member)
-    out, _ = capsys.readouterr()
-    assert 'iam.gserviceaccount.com' in out
-
-    policy = access.set_policy(project_id, policy)
-    out, _ = capsys.readouterr()
-    assert u'etag' in out
-
-    access.test_permissions(project_id)
-    out, _ = capsys.readouterr()
-    assert u'permissions' in out
+    yield member
 
     # deleting the service account created above
-    service_accounts.delete_service_account(
-        email)
+    service_accounts.delete_service_account(email)
+
+
+def test_get_policy(capsys):
+    access.get_policy(GCLOUD_PROJECT, version=3)
+    out, _ = capsys.readouterr()
+    assert u"etag" in out
+
+
+def test_modify_policy_add_role(test_member, capsys):
+    policy = access.get_policy(GCLOUD_PROJECT, version=3)
+    access.modify_policy_add_role(policy, GCLOUD_PROJECT, test_member)
+    out, _ = capsys.readouterr()
+    assert u"etag" in out
+
+
+def test_modify_policy_remove_member(test_member, capsys):
+    policy = access.get_policy(GCLOUD_PROJECT, version=3)
+    access.modify_policy_remove_member(policy, GCP_ROLE, test_member)
+    out, _ = capsys.readouterr()
+    assert "iam.gserviceaccount.com" in out
+
+
+def test_set_policy(capsys):
+    policy = access.get_policy(GCLOUD_PROJECT, version=3)
+    access.set_policy(GCLOUD_PROJECT, policy)
+    out, _ = capsys.readouterr()
+    assert u"etag" in out
+
+
+def test_permissions(capsys):
+    access.test_permissions(GCLOUD_PROJECT)
+    out, _ = capsys.readouterr()
+    assert u"permissions" in out
