@@ -111,13 +111,9 @@ pyenv global 3.8.1 3.7.6 3.6.10 3.5.9 2.7.17
 This will make python and python3 point to Python 3.8.1. python2 will go to 2.7.17. You can also further specify versions, such as python3.6 to use that version.
 
 ## Python virtual environments
-Using Virtual Environments is fairly common across the Python community. While there is built in support in python for creating environments, there are also other tools that the community has embraced. Option 1 relies on python itself, Option 2 uses an additional tool that some users may prefer.
+Using [Virtual Environments](https://docs.python.org/3/library/venv.html) prevents inadvertent modifications to your global python install. Once created and sourced, calls to `python` will uses this virtual environment, not a global python install. Each virtual environment can have its own set of packages that can be different from others.
 
-In either case, you can create and source virtual environments, `python` will point to this virtual environment, not a global python install. Each virtual environment can have its own set of packages that can be different from others.
-
-
-### Option 1: Using builtin support, venv
-Python ships with support of its own to create virtual environments. You can [create a virtual environment](https://docs.python.org/3/library/venv.html).
+To create a virtual environment, run `python3 -m venv`.
 
 ```
 cd python-docs-samples
@@ -126,37 +122,3 @@ source venv-name/bin/activate
 ```
 
 Typically you will name the venv `venv`, or `venv38` for a python 3.8 venv.
-
-
-### Option 2: Using pyenv-virtualenv to manage your Python versions
-You can also use an extension for pyenv that will assist in managing virtual environments. This allows you to use `pyenv local` to automatically use the create virtual environment
-
-1.  Change to the desired source directory.
-
-    ```console
-    cd ~/src/python-docs-samples
-    ```
-
-1.  Create a virtualenv for python 3.8.1 using `pyenv virtualenv`.
-
-    ```console
-    pyenv virtualenv 3.8.1 python-docs-samples
-    ```
-
-    This creates a virtualenv folder within `~/.pyenv/versions/`.
-
-1.  Set the local Python version(s) with `pyenv local`
-
-    ```console
-    # pyenv local [name of virtualenv] [list of python versions to use]
-    pyenv local python-docs-samples 3.8.1 3.7.6 3.6.10 3.5.9 2.7.17
-    ```
-
-1.  Now, when you `cd` into the source directory or a subdirectory within it,
-    pyenv will make your virtualenv the default Python. Since you specified
-    more than one version, it will also add binaries like `python36` and
-    `python27` to your PATH, which nox uses when picking Python interpreters.
-
-1.  Add `.python-version` to your [global gitignore
-    file](https://help.github.com/articles/ignoring-files/#create-a-global-gitignore),
-    so it won't be committed into the repository.
