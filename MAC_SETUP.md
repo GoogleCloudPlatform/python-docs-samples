@@ -51,7 +51,7 @@ test their code.
 ## Installing multiple Python versions
 
 
-1.  See the available Python versions with [pyenv](https://github.com/pyenv/pyenv),=.
+1.  See the available Python versions with [pyenv](https://github.com/pyenv/pyenv).
 
     ```console
     pyenv install --list
