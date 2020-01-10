@@ -336,7 +336,7 @@ def print_row(row):
                     "\t{}: {} @{}{}".format(col.decode('utf-8'),
                                             cell.value.decode('utf-8'),
                                             cell.timestamp, labels))
-    print()
+    print("")
 # [END bigtable_filters_limit_row_sample]
 # [END bigtable_filters_limit_row_regex]
 # [END bigtable_filters_limit_cells_per_col]

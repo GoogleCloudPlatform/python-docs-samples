@@ -161,11 +161,13 @@ def print_row(row):
         print("Column Family {}".format(cf))
         for col, cells in cols.items():
             for cell in cells:
+                labels = " [{}]".format(",".join(cell.labels)) \
+                    if len(cell.labels) else ""
                 print(
                     "\t{}: {} @{}{}".format(col.decode('utf-8'),
                                             cell.value.decode('utf-8'),
-                                            cell.timestamp, ""))
-    print()
+                                            cell.timestamp, labels))
+    print("")
 # [END bigtable_reads_row]
 # [END bigtable_reads_row_partial]
 # [END bigtable_reads_rows]
