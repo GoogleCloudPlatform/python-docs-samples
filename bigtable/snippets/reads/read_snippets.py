@@ -69,8 +69,8 @@ def read_rows(project_id, instance_id, table_id):
     table = instance.table(table_id)
 
     row_set = RowSet()
-    row_set.add_row_key("phone#4c410523#20190501".encode("utf-8"))
-    row_set.add_row_key("phone#4c410523#20190502".encode("utf-8"))
+    row_set.add_row_key(b"phone#4c410523#20190501")
+    row_set.add_row_key(b"phone#4c410523#20190502")
 
     rows = table.read_rows(row_set=row_set)
     for row in rows:
@@ -86,8 +86,8 @@ def read_row_range(project_id, instance_id, table_id):
 
     row_set = RowSet()
     row_set.add_row_range_from_keys(
-        start_key="phone#4c410523#20190501".encode("utf-8"),
-        end_key="phone#4c410523#201906201".encode("utf-8"))
+        start_key=b"phone#4c410523#20190501",
+        end_key=b"phone#4c410523#201906201")
 
     rows = table.read_rows(row_set=row_set)
     for row in rows:
@@ -103,11 +103,11 @@ def read_row_ranges(project_id, instance_id, table_id):
 
     row_set = RowSet()
     row_set.add_row_range_from_keys(
-        start_key="phone#4c410523#20190501".encode("utf-8"),
-        end_key="phone#4c410523#201906201".encode("utf-8"))
+        start_key=b"phone#4c410523#20190501",
+        end_key=b"phone#4c410523#201906201")
     row_set.add_row_range_from_keys(
-        start_key="phone#5c10102#20190501".encode("utf-8"),
-        end_key="phone#5c10102#201906201".encode("utf-8"))
+        start_key=b"phone#5c10102#20190501",
+        end_key=b"phone#5c10102#201906201")
 
     rows = table.read_rows(row_set=row_set)
     for row in rows:
@@ -139,7 +139,7 @@ def read_filter(project_id, instance_id, table_id):
     instance = client.instance(instance_id)
     table = instance.table(table_id)
 
-    rows = table.read_rows(filter_=ValueRegexFilter("PQ2A.*$".encode("utf-8")))
+    rows = table.read_rows(filter_=ValueRegexFilter(b"PQ2A.*$"))
     for row in rows:
         print_row(row)
 
