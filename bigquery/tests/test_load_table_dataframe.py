@@ -21,11 +21,52 @@ pandas = pytest.importorskip("pandas")
 pyarrow = pytest.importorskip("pyarrow")
 
 
-def test_load_table_dataframe(capsys, random_table_id):
+def test_load_table_dataframe(capsys, client, random_table_id):
 
     table = load_table_dataframe.load_table_dataframe(random_table_id)
     out, _ = capsys.readouterr()
-    assert "Loaded 4 rows and 3 columns" in out
+    expected_column_names = [
+        "wikidata_id",
+        "title",
+        "release_year",
+        "length_minutes",
+        "release_date",
+        "dvd_release",
+    ]
+    assert "Loaded 4 rows and {} columns".format(len(expected_column_names)) in out
 
     column_names = [field.name for field in table.schema]
-    assert column_names == ["wikidata_id", "title", "release_year"]
+    assert column_names == expected_column_names
+    column_types = [field.field_type for field in table.schema]
+    assert column_types == [
+        "STRING",
+        "STRING",
+        "INTEGER",
+        "FLOAT",
+        "TIMESTAMP",
+        "TIMESTAMP",
+    ]
+
+    df = client.list_rows(table).to_dataframe()
+    df.sort_values("release_year", inplace=True)
+    assert df["title"].tolist() == [
+        u"And Now for Something Completely Different",
+        u"Monty Python and the Holy Grail",
+        u"Life of Brian",
+        u"The Meaning of Life",
+    ]
+    assert df["release_year"].tolist() == [1971, 1975, 1979, 1983]
+    assert df["length_minutes"].tolist() == [88.0, 91.5, 94.25, 112.5]
+    assert df["release_date"].tolist() == [
+        pandas.Timestamp("1971-09-28T22:59:07+00:00"),
+        pandas.Timestamp("1975-04-09T22:59:02+00:00"),
+        pandas.Timestamp("1979-08-18T03:59:05+00:00"),
+        pandas.Timestamp("1983-05-09T11:00:00+00:00"),
+    ]
+    assert df["dvd_release"].tolist() == [
+        pandas.Timestamp("2003-10-22T10:00:00+00:00"),
+        pandas.Timestamp("2002-07-16T09:00:00+00:00"),
+        pandas.Timestamp("2008-01-14T08:00:00+00:00"),
+        pandas.Timestamp("2002-01-22T07:00:00+00:00"),
+    ]
+    assert df["wikidata_id"].tolist() == [u"Q16403", u"Q25043", u"Q24953", u"Q24980"]
