@@ -41,7 +41,7 @@ def verify_signature(request):
 
     req = str.encode('v0:' + str(timestamp) + ':') + request.get_data()
     request_hash = 'v0=' + hmac.new(
-        str(config['SLACK_SECRET']),
+        str.encode(config['SLACK_SECRET']),
         req, hashlib.sha256
     ).hexdigest()
 
