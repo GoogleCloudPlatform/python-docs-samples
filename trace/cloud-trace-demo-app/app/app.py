@@ -42,21 +42,24 @@ def createMiddleWare(exporter, sampler):
 
 @app.route('/')
 def template_test():
+  # Sleep for a random time to create various spans.
   time.sleep(random.uniform(0,0.5))
+  # Keyword that gets passed in will be concatenated to the final output string.
   output_string = app.config['keyword']
+  # If there is no endpoint, return the output string.
   if app.config['endpoint'] == "":
     return output_string, 200
-  else:
-    url = app.config['endpoint']
-    data = {'body': output_string}
-    trace_context_header = propagator.to_header(execution_context.get_opencensus_tracer().span_context)
-    response = requests.get(
-        url,
-        params = data,
-        headers={
-          'X-Cloud-Trace-Context' : trace_context_header}
-    )
-    return response.text + app.config['keyword']
+  # Endpoint is the next service to send string to.
+  url = app.config['endpoint']
+  data = {'body': output_string}
+  trace_context_header = propagator.to_header(execution_context.get_opencensus_tracer().span_context)
+  response = requests.get(
+      url,
+      params = data,
+      headers={
+        'X-Cloud-Trace-Context' : trace_context_header}
+  )
+  return response.text + app.config['keyword']
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
