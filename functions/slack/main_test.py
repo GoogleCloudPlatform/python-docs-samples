@@ -31,7 +31,7 @@ example_response = kg_search.entities().search(query='lion', limit=1).execute()
 
 
 class Request(object):
-    def __init__(self, data=''):
+    def __init__(self, data=b''):
         self.data = data
 
     def get_data(self):
