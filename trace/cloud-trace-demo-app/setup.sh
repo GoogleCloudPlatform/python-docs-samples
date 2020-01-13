@@ -24,7 +24,7 @@ fi
 echo "Passing external IP for the first service ${endpoint} to the second service template"
 sed "s/{{ endpoint }}/${endpoint}/g" app/demo-service-b.yaml.template > app/demo-service-b.yaml
 kubectl apply -f app/demo-service-b.yaml
-#rm app/demo-service-a.yaml
+rm app/demo-service-b.yaml
 
 ################## Set up service c ###########################
 echo "Fetching the external IP of the service b"
@@ -46,6 +46,6 @@ fi
 echo "Passing external IP for the service b ${endpoint} to the service c"
 sed "s/{{ endpoint }}/${endpoint}/g" app/demo-service-c.yaml.template > app/demo-service-c.yaml
 kubectl apply -f app/demo-service-c.yaml
-#rm app/demo-service-a.yaml
+rm app/demo-service-c.yaml
 
 echo "Successfully deployed all services"
