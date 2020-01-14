@@ -35,7 +35,7 @@ def get_secret(project_id, secret_id):
     # Build the resource name of the secret.
     name = client.secret_path(project_id, secret_id)
 
-    # Delete the secret.
+    # Get the secret.
     response = client.get_secret(name)
 
     # Get the replication policy.

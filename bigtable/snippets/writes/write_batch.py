@@ -26,8 +26,8 @@ def write_batch(project_id, instance_id, table_id):
     timestamp = datetime.datetime.utcnow()
     column_family_id = "stats_summary"
 
-    rows = [table.row("tablet#a0b81f74#20190501"),
-            table.row("tablet#a0b81f74#20190502")]
+    rows = [table.direct_row("tablet#a0b81f74#20190501"),
+            table.direct_row("tablet#a0b81f74#20190502")]
 
     rows[0].set_cell(column_family_id,
                      "connected_wifi",

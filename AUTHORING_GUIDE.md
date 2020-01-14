@@ -18,18 +18,18 @@ No matter what, all samples must:
 1. Have a license header.
 1. Pass lint.
 1. Be either a web application or a runnable console application.
-1. Have a `requirements.txt` containing all of its third-party dependencies.
-1. Work in Python 2.7, 3.5, & 3.6. App Engine Standard is exempt as it
+1. Have a `requirements.txt` containing all of its third-party dependencies. All
+requirements must be pinned.
+1. Work in Python 2.7, 3.5, 3.6, and 3.7. App Engine Standard is exempt as it
    only supports 2.7. Our default version is currently Python 3.5.
 1. Have tests.
-1. Declare all dependencies in a `requirements.txt`. All requirements must
-  be pinned.
 
 ## Style & linting
 
 We follow [pep8](https://www.python.org/dev/peps/pep-0008/) and the
-*external* [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
-we verify this with [flake8](https://pypi.python.org/pypi/flake8). In general:
+*external* [Google Python Style
+Guide](https://google.github.io/styleguide/pyguide.html), which we verify with
+[flake8](https://pypi.python.org/pypi/flake8). In general:
 
 1.  4 spaces.
 1.  `CamelCase` only for classes, `snake_case` elsewhere.
@@ -75,7 +75,7 @@ Beyond PEP8, there are several idioms and style nits we prefer.
     ```
 
    This rule can be relaxed for counter or accumulation variables used in loops.
-1. Don't use parenthesis on multiple return values (`return one, two`) or in
+1. Don't use parentheses on multiple return values (`return one, two`) or in
    destructuring assignment (`one, two = some_function()`).
 2. Prefer not to do hanging indents if possible. If you break at the first
    logical grouping, it shouldn't be necessary. For example:
@@ -114,15 +114,15 @@ Beyond PEP8, there are several idioms and style nits we prefer.
 
 In general our sample format follows ideas borrowed from
 [Literate Programming](https://en.wikipedia.org/wiki/Literate_programming).
-Notably, your sample program should self-contained, readable from top to bottom,
-and should be fairly self-documenting. Prefer descriptive names. Use comments
+Notably, your sample program should be self-contained, readable from top to bottom,
+and fairly self-documenting. Prefer descriptive names. Use comments
 and docstrings only as needed to further explain. Always introduce functions and
 variables before they are used. Prefer less indirection. Prefer imperative
 programming as it is easier to understand.
 
 ### Shebang
 
-If, and only if, your sample application is a command-line application then
+If, and only if, your sample application is a command-line application, then
 include a shebang as the first line. Separate the shebang from the rest of
 the application with a blank line. The shebang should always be:
 
@@ -137,7 +137,7 @@ Don't include shebangs in web applications or test files.
 All samples should start with the following (modulo shebang line):
 
 ```
-# Copyright 2019 Google, LLC.
+# Copyright 2020 Google, LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -156,7 +156,7 @@ All samples should start with the following (modulo shebang line):
 
 All samples should contain a module-level docstring. For command-line
 applications, this docstring will be used as the summary when `-h` is passed.
-The docstring should be succinct and should avoid repeating information
+The docstring should be succinct and avoid repeating information
 available in readmes or documentation.
 
 Here's a simple docstring for a command-line application with straightforward
@@ -206,10 +206,10 @@ documentation at https://cloud.google.com/appengine/docs/flexible.
 Very few samples will require authoring classes. Prefer functions whenever
 possible. See [this video](https://www.youtube.com/watch?v=o9pEzgHorH0) for
 some insight into why classes aren't as necessary as you might think in Python.
-Classes also introduce cognitive load. If you do write a class in a sample be
+Classes also introduce cognitive load. If you do write a class in a sample, be
 prepared to justify its existence during code review.
 
-Always prefer descriptive function names even if they are long.
+Always prefer descriptive function names, even if they are long.
 For example `upload_file`, `upload_encrypted_file`, and `list_resource_records`.
 Similarly, prefer long and descriptive parameter names. For example
 `source_file_name`, `dns_zone_name`, and `base64_encryption_key`.
@@ -233,7 +233,7 @@ implying a string instead of just `bucket` which could imply a class instance).
 
 This particular function is intended to be the "top of the stack" - the function
 executed when the command-line sample is run by the user. As such, notice that
-it prints the blobs instead of returning. In general top of the stack
+it prints the blobs instead of returning. In general, top of the stack
 functions in command-line applications should print, but use your best
 judgment.
 
@@ -286,7 +286,7 @@ as having to resort to this kind of docstring might be extremely accurate but
 it comes at the cost of high redundancy, signal-to-noise ratio, and increased
 cognitive load.
 
-Finally, if absolutely necessary feel free to document the type for the
+Finally, if absolutely necessary, feel free to document the type for the
 parameters, for example:
 
 ```
@@ -301,7 +301,7 @@ of constraints, for example `A base64-encoded string` or `Must be between 0 and
 
 ### Request handlers
 
-In general these follow the same rules as top-level functions.
+In general, these follow the same rules as top-level functions.
 Here's a sample function from a web application:
 
 ```python
@@ -403,24 +403,27 @@ if __name__ == '__main__':
 ## Writing tests
 
 * Use [pytest](https://docs.pytest.org/en/latest/)-style tests and plain
-  asserts. Don't use `unittest`-style tests or `assertX` mthods.
-* All tests in this repository are **system tests**. This means they hit real
-  services and should use little to no mocking.
+  asserts. Don't use `unittest`-style tests or `assertX` methods.
+* All tests in this repository are **system tests**. This means that they hit
+  real services and should use little to no mocking.
 * Tests should avoid doing very strict assertions. The exact output format
-  from an API call can change, but as long as sample still works assertions
+  from an API call can change, but as long as samples still work, assertions
   should pass.
 * Tests will run against Python 2.7 and 3. The only exception is App Engine
-  standard- these samples are only be tested against Python 2.7.
+  standard- these samples are only tested against Python 2.7.
 * Samples that use App Engine Standard should use the App Engine testbed for
   system testing. See existing App Engine tests for how to use this.
 * All tests should be independent of one another and should create and tear
-  down resources needed to execute. Using UUIDs to avoid resource collision is recommended.
+  down the resources needed to execute. Using UUIDs to avoid resource
+  collision is recommended.
 
 ## Running tests and automated tools
 
 ### Installing interpreters
 
-You need python 2.7 and 3.6, and the dev packages for each.
+You need python 2.7, 3.5, 3.6, and 3.7 and the dev packages for each. See
+[MAC_SETUP.md](MAC_SETUP.md) for details on setting up your environment on
+a Mac.
 
 For example, to install with apt you'd use:
 `apt-get install python2.7 python2.7-dev python3.6 python3.6-dev`
