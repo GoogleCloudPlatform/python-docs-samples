@@ -56,7 +56,10 @@ def test_blob():
     yield blob
 
     # Clean up
-    blob.delete()
+    try:
+        blob.delete()
+    except:  # noqa
+        pass
 
 
 @mock.patch('google.cloud.storage.client.Client.create_bucket')
