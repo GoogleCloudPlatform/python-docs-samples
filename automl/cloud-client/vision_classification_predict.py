@@ -39,6 +39,7 @@ def predict(project_id, model_id, file_path):
 
     # params is additional domain-specific parameters.
     # score_threshold is used to filter the result
+    # https://cloud.google.com/automl/docs/reference/rpc/google.cloud.automl.v1#predictrequest
     params = {"score_threshold": "0.8"}
 
     response = prediction_client.predict(model_full_id, payload, params)
