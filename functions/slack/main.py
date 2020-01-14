@@ -39,11 +39,12 @@ def verify_signature(request):
     timestamp = request.headers.get('X-Slack-Request-Timestamp', '')
     signature = request.headers.get('X-Slack-Signature', '')
 
-    req = str.encode('v0:' + str(timestamp) + ':') + request.get_data()
-    request_hash = 'v0=' + hmac.new(
+    req = str.encode('v0:{}:'.format(timestamp)) + request.get_data()
+    request_digest = hmac.new(
         str.encode(config['SLACK_SECRET']),
         req, hashlib.sha256
     ).hexdigest()
+    request_hash = 'v0={}'.format(request_digest)
 
     if not hmac.compare_digest(request_hash, signature):
         raise ValueError('Invalid request/credentials.')
