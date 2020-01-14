@@ -26,7 +26,7 @@ DATASET_ID = os.environ["SENTIMENT_ANALYSIS_DATASET_ID"]
 @pytest.mark.slow
 def test_sentiment_analysis_create_model(capsys):
     language_sentiment_analysis_create_model.create_model(
-        PROJECT_ID, DATASET_ID, "object_test_create_model"
+        PROJECT_ID, DATASET_ID, "sentiment_test_create_model"
     )
     out, _ = capsys.readouterr()
     assert "Training started" in out

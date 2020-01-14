@@ -19,7 +19,7 @@ import list_models
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 
 
-def test_list_get_eval_model(capsys):
+def test_list_models(capsys):
     list_models.list_models(PROJECT_ID)
     out, _ = capsys.readouterr()
     assert "Model id: " in out

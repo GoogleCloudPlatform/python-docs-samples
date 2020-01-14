@@ -35,7 +35,7 @@ def verify_model_state():
         response.result()
 
 
-def test_predict(capsys, verify_model_state):
+def test_translate_predict(capsys, verify_model_state):
     verify_model_state
     translate_predict.predict(PROJECT_ID, MODEL_ID, "resources/input.txt")
     out, _ = capsys.readouterr()

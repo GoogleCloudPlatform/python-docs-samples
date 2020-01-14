@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,10 +17,10 @@ import os
 from google.cloud import automl
 import pytest
 
-import language_sentiment_analysis_predict
+import language_text_classification_predict
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
-MODEL_ID = os.environ["SENTIMENT_ANALYSIS_MODEL_ID"]
+MODEL_ID = os.environ["TEXT_CLASSIFICATION_MODEL_ID"]
 
 
 @pytest.fixture(scope="function")
@@ -35,9 +35,9 @@ def verify_model_state():
         response.result()
 
 
-def test_sentiment_analysis_predict(capsys, verify_model_state):
+def test_text_classification_predict(capsys, verify_model_state):
     verify_model_state
-    text = "Hopefully this Claritin kicks in soon"
-    language_sentiment_analysis_predict.predict(PROJECT_ID, MODEL_ID, text)
+    text = "Fruit and nut flavour"
+    language_text_classification_predict.predict(PROJECT_ID, MODEL_ID, text)
     out, _ = capsys.readouterr()
-    assert "Predicted sentiment score: " in out
+    assert "Predicted class name: " in out
