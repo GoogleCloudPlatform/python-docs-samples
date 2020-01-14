@@ -17,10 +17,10 @@ import os
 from google.cloud import automl
 import pytest
 
-import language_sentiment_analysis_predict
+import vision_object_detection_predict
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
-MODEL_ID = os.environ["SENTIMENT_ANALYSIS_MODEL_ID"]
+MODEL_ID = os.environ["OBJECT_DETECTION_MODEL_ID"]
 
 
 @pytest.fixture(scope="function")
@@ -35,9 +35,9 @@ def verify_model_state():
         response.result()
 
 
-def test_sentiment_analysis_predict(capsys, verify_model_state):
+def test_vision_object_detection_predict(capsys, verify_model_state):
     verify_model_state
-    text = "Hopefully this Claritin kicks in soon"
-    language_sentiment_analysis_predict.predict(PROJECT_ID, MODEL_ID, text)
+    file_path = "resources/salad.jpg"
+    vision_object_detection_predict.predict(PROJECT_ID, MODEL_ID, file_path)
     out, _ = capsys.readouterr()
-    assert "Predicted sentiment score: " in out
+    assert "Predicted class name:" in out
