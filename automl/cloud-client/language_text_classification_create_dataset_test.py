@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,19 +16,16 @@ import datetime
 import os
 
 from google.cloud import automl
-import pytest
 
-import vision_classification_create_dataset
+import language_text_classification_create_dataset
 
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 
 
-@pytest.mark.slow
-def test_vision_classification_create_dataset(capsys):
-    # create dataset
+def test_text_classification_create_dataset(capsys):
     dataset_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    vision_classification_create_dataset.create_dataset(
+    language_text_classification_create_dataset.create_dataset(
         PROJECT_ID, dataset_name
     )
     out, _ = capsys.readouterr()
