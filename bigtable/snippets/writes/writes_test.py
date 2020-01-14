@@ -24,7 +24,7 @@ from .write_increment import write_increment
 from .write_simple import write_simple
 
 PROJECT = os.environ['GCLOUD_PROJECT']
-BIGTABLE_INSTANCE = os.environ['BIGTABLE_CLUSTER']
+BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
 TABLE_ID_PREFIX = 'mobile-time-series-{}'
 
 
