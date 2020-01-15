@@ -16,10 +16,9 @@ A sample app demonstrating Stackdriver Trace
 """
 
 import app
-import pytest
 import mock
 import httpretty
-from opencensus.trace import execution_context
+
 
 def test_send_response():
     service_keyword = "Hello"
@@ -31,6 +30,7 @@ def test_send_response():
     assert resp.status_code == 200
     assert service_keyword in resp.data.decode('utf-8')
 
+
 @httpretty.activate
 def test_request_url_with_trace_context():
     service1_keyword = "World"
@@ -41,16 +41,13 @@ def test_request_url_with_trace_context():
     app.app.config['endpoint'] = service2_url
 
     def request_callback(request, uri, response_headers):
-        content_type = request.headers.get('Content-Context')
         # Assert that the request is sent with a trace context
         assert request.headers.get("X-Cloud-Trace-Context")
         return [200, response_headers, service2_keyword]
 
-    httpretty.register_uri(httpretty.GET, service2_url,
-                            body=request_callback)
-    sampler = mock.Mock()
+    httpretty.register_uri(httpretty.GET, service2_url, body=request_callback)
     exporter = mock.Mock()
-    app.createMiddleWare(exporter, sampler)
+    app.createMiddleWare(exporter)
 
     client = app.app.test_client()
     resp = client.get('/')
