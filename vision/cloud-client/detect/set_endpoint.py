@@ -37,6 +37,9 @@ def set_endpoint():
 
         print('bounds: {}\n'.format(','.join(vertices)))
 
+    if response.error.message:
+        raise Exception(response.error.message)
+
 
 if __name__ == '__main__':
     set_endpoint()
