@@ -52,7 +52,7 @@ def template_test():
     # If there is no endpoint, return the output string.
     url = app.config['endpoint']
     if url == "":
-      return output_string, 200
+        return output_string, 200
     # Endpoint is the next service to send string to.
     data = {'body': output_string}
     trace_context_header = propagator.to_header(execution_context.get_opencensus_tracer().span_context)
@@ -63,6 +63,7 @@ def template_test():
           'X-Cloud-Trace-Context' : trace_context_header}
     )
     return response.text + app.config['keyword']
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
