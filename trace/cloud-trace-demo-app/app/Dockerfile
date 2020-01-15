@@ -10,9 +10,10 @@ COPY requirements.txt /app/
 
 WORKDIR /app
 RUN pip3 install -r requirements.txt
-RUN pip3 install opencensus-ext-stackdriver
-RUN pip3 install grpcio
-COPY *.py /app/
+
+ENV APP_HOME /app
+WORKDIR $APP_HOME
+COPY . ./
 
 ENTRYPOINT ["python"]
-CMD ["./app.py"]
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 main:app

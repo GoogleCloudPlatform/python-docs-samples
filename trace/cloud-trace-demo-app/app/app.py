@@ -31,27 +31,27 @@ app = Flask(__name__)
 
 propagator = google_cloud_format.GoogleCloudFormatPropagator()
 
-def createMiddleWare(exporter, sampler):
+def createMiddleWare(exporter):
   # Configure a flask middleware that listens for each request and applies automatic tracing.
   # This needs to be set up before the application starts.
   middleware = FlaskMiddleware(
       app,
       exporter=exporter,
       propagator=propagator,
-      sampler=sampler)
+      sampler=AlwaysOnSampler())
   return middleware
 
 @app.route('/')
 def template_test():
-  # Sleep for a random time to create various spans.
+  # Sleep for a random time to imitate a random processing time
   time.sleep(random.uniform(0,0.5))
   # Keyword that gets passed in will be concatenated to the final output string.
   output_string = app.config['keyword']
   # If there is no endpoint, return the output string.
-  if app.config['endpoint'] == "":
+  url = app.config['endpoint']
+  if url == "":
     return output_string, 200
   # Endpoint is the next service to send string to.
-  url = app.config['endpoint']
   data = {'body': output_string}
   trace_context_header = propagator.to_header(execution_context.get_opencensus_tracer().span_context)
   response = requests.get(
@@ -69,5 +69,5 @@ if __name__ == "__main__":
   args = parser.parse_args()
   app.config['keyword'] = args.keyword
   app.config['endpoint'] = args.endpoint
-  createMiddleWare(StackdriverExporter(), AlwaysOnSampler())
+  createMiddleWare(StackdriverExporter())
   app.run(debug=True, host='0.0.0.0', port=8080)
