@@ -113,15 +113,51 @@ This will make python and python3 point to Python 3.8.1. python2 will use 2.7.17
 ## Python virtual environments
 Using [Virtual Environments](https://docs.python.org/3/library/venv.html) prevents inadvertent modifications to your global python install. Once created and sourced, calls to `python` will uses this virtual environment, not a global python install. Each virtual environment can have its own set of packages that can be different from others.
 
-To create a virtual environment, run `python3 -m venv`.
+
+### Using Python 3+ venv
+Python has builtin support for creating virtual environments, accessible by running `python -m venv`.
 
 ```
 cd python-docs-samples
-python3 -m venv venv-name
-source venv-name/bin/activate
+python -m venv [venv-name]
+source [venv-name]/bin/activate
 ```
 
 Typically you will name the venv `venv`, or `venv38` for a python 3.8 venv.
+
+
+### Using pyenv-virtualenv
+You can also use an extension for pyenv that will assist in managing virtual environments. This allows you to use `pyenv local` to automatically use the created virtual environment. You can install this by running `$ brew install pyenv-virtualenv`
+
+1.  Change to the desired source directory.	
+
+    ```console	
+    cd ~/src/python-docs-samples	
+    ```	
+
+1.  Create a virtualenv for python 3.8.1 using `pyenv virtualenv`.	
+
+    ```console	
+    pyenv virtualenv 3.8.1 python-docs-samples	
+    ```	
+
+    This creates a virtualenv folder within `~/.pyenv/versions/`.	
+
+1.  Set the local Python version(s) with `pyenv local`	
+
+    ```console	
+    # pyenv local [name of virtualenv] [list of python versions to use]	
+    pyenv local python-docs-samples 3.8.1 3.7.6 3.6.10 3.5.9 2.7.17	
+    ```	
+
+1.  Now, when you `cd` into the source directory or a subdirectory within it,	
+    pyenv will make your virtualenv the default Python. Since you specified	
+    more than one version, it will also add binaries like `python36` and	
+    `python27` to your PATH, which nox uses when picking Python interpreters.	
+
+1.  Add `.python-version` to your [global gitignore	
+    file](https://help.github.com/articles/ignoring-files/#create-a-global-gitignore),	
+    so it won't be committed into the repository.
 
 ## Nox
 The tests for this repository use [nox](https://github.com/theacodes/nox) for managing test runs across multiple python versions. 
