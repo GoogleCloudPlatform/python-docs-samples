@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,33 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
 import os
 
 from google.cloud import automl
 import pytest
 
-import vision_classification_create_dataset
-
+import language_text_classification_create_model
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+DATASET_ID = os.environ["TEXT_CLASSIFICATION_DATASET_ID"]
 
 
 @pytest.mark.slow
-def test_vision_classification_create_dataset(capsys):
-    # create dataset
-    dataset_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    vision_classification_create_dataset.create_dataset(
-        PROJECT_ID, dataset_name
+def test_text_classification_create_model(capsys):
+    language_text_classification_create_model.create_model(
+        PROJECT_ID, DATASET_ID, "classification_test_create_model"
     )
     out, _ = capsys.readouterr()
-    assert "Dataset id: " in out
+    assert "Training started" in out
 
-    # Delete the created dataset
-    dataset_id = out.splitlines()[1].split()[2]
+    # Cancel the operation
+    operation_id = out.split("Training operation name: ")[1].split("\n")[0]
     client = automl.AutoMlClient()
-    dataset_full_id = client.dataset_path(
-        PROJECT_ID, "us-central1", dataset_id
-    )
-    response = client.delete_dataset(dataset_full_id)
-    response.result()
+    client.transport._operations_client.cancel_operation(operation_id)
