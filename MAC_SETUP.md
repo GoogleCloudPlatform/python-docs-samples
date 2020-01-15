@@ -115,7 +115,7 @@ Using [Virtual Environments](https://docs.python.org/3/library/venv.html) preven
 
 
 ### Using Python 3+ venv
-Python has builtin support for creating virtual environments, accessible by running `python -m venv`.
+Python has builtin support for creating virtual environments, accessible by running the `venv` module.
 
 ```
 cd python-docs-samples
