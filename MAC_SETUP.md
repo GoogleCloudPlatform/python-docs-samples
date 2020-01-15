@@ -163,6 +163,9 @@ You can also use an extension for pyenv that will assist in managing virtual env
 The tests for this repository use [nox](https://github.com/theacodes/nox) for managing test runs across multiple python versions. 
 
 ```
+# Install nox
+python -m pip install nox
+
 # List available test runs
 nox -l
 
