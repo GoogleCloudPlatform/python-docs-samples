@@ -17,15 +17,14 @@ import os
 from google.cloud import automl
 import pytest
 
-import language_sentiment_analysis_predict
+import language_entity_extraction_predict
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
-MODEL_ID = os.environ["SENTIMENT_ANALYSIS_MODEL_ID"]
+MODEL_ID = os.environ["ENTITY_EXTRACTION_MODEL_ID"]
 
 
-@pytest.fixture(scope="function", autouse=True)
-def setup():
-    # Verify the model is deployed before trying to predict
+@pytest.fixture(scope="function")
+def verify_model_state():
     client = automl.AutoMlClient()
     model_full_id = client.model_path(PROJECT_ID, "us-central1", MODEL_ID)
 
@@ -36,9 +35,12 @@ def setup():
         response.result()
 
 
-def test_sentiment_analysis_predict(capsys, verify_model_state):
+def test_predict(capsys, verify_model_state):
     verify_model_state
-    text = "Hopefully this Claritin kicks in soon"
-    language_sentiment_analysis_predict.predict(PROJECT_ID, MODEL_ID, text)
+    text = (
+        "Constitutional mutations in the WT1 gene in patients with "
+        "Denys-Drash syndrome."
+    )
+    language_entity_extraction_predict.predict(PROJECT_ID, MODEL_ID, text)
     out, _ = capsys.readouterr()
-    assert "Predicted sentiment score: " in out
+    assert "Text Extract Entity Types: " in out

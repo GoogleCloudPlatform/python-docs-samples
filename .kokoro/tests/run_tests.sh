@@ -40,6 +40,7 @@ source ./testing/test-env.sh
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
 export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
 source "${KOKORO_GFILE_DIR}/automl_secrets.txt"
+cp "${KOKORO_GFILE_DIR}/functions-slack-config.json" "functions/slack/config.json"
 
 # For Datalabeling samples to hit the testing endpoint
 export DATALABELING_ENDPOINT="test-datalabeling.sandbox.googleapis.com:443"
