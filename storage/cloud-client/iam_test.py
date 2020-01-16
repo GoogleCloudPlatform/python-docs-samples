@@ -17,6 +17,7 @@ import os
 from google.cloud import storage
 import pytest
 import re
+import time
 
 import storage_remove_bucket_iam_member
 import storage_add_bucket_iam_member
@@ -38,6 +39,7 @@ def bucket():
     bucket.iam_configuration.uniform_bucket_level_access_enabled = True
     bucket.patch()
     yield bucket
+    time.sleep(3)
     bucket.delete(force=True)
 
 
