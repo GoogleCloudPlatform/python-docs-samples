@@ -20,7 +20,9 @@ import sys
 from google.cloud import storage
 
 
-def add_bucket_conditional_iam_binding(bucket_name, role, title, description, expression, members):
+def add_bucket_conditional_iam_binding(
+    bucket_name, role, title, description, expression, members
+):
     """Add a conditional IAM binding to a bucket's IAM policy."""
     # bucket_name = "your-bucket-name"
     # role = "IAM role, e.g. roles/storage.objectViewer"
@@ -37,15 +39,17 @@ def add_bucket_conditional_iam_binding(bucket_name, role, title, description, ex
     # Set the policy's version to 3 to use condition in bindings.
     policy.version = 3
 
-    policy.bindings.append({
-        "role": role,
-        "members": {members},
-        "condition": {
-            "title": title,
-            "description": description,
-            "expression": expression
+    policy.bindings.append(
+        {
+            "role": role,
+            "members": members,
+            "condition": {
+                "title": title,
+                "description": description,
+                "expression": expression,
+            },
         }
-    })
+    )
 
     bucket.set_iam_policy(policy)
 
@@ -70,5 +74,5 @@ if __name__ == "__main__":
         title=sys.argv[3],
         description=sys.argv[4],
         expression=sys.argv[5],
-        members=set(sys.argv[6::])
+        members=set(sys.argv[6::]),
     )
