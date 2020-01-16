@@ -14,24 +14,24 @@
 
 import os
 
-from google.cloud import automl
 import pytest
 
-import language_sentiment_analysis_create_model
+import vision_object_detection_deploy_model_node_count
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
-DATASET_ID = os.environ["SENTIMENT_ANALYSIS_DATASET_ID"]
+MODEL_ID = "0000000000000000000000"
 
 
 @pytest.mark.slow
-def test_sentiment_analysis_create_model(capsys):
-    language_sentiment_analysis_create_model.create_model(
-        PROJECT_ID, DATASET_ID, "sentiment_test_create_model"
-    )
-    out, _ = capsys.readouterr()
-    assert "Training started" in out
-
-    # Cancel the operation
-    operation_id = out.split("Training operation name: ")[1].split("\n")[0]
-    client = automl.AutoMlClient()
-    client.transport._operations_client.cancel_operation(operation_id)
+def test_object_detection_deploy_model_with_node_count(capsys):
+    # As model deployment can take a long time, instead try to deploy a
+    # nonexistent model and confirm that the model was not found, but other
+    # elements of the request were valid.
+    try:
+        vision_object_detection_deploy_model_node_count.deploy_model(
+            PROJECT_ID, MODEL_ID
+        )
+        out, _ = capsys.readouterr()
+        assert "The model does not exist" in out
+    except Exception as e:
+        assert "The model does not exist" in e.message
