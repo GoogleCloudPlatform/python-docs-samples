@@ -16,6 +16,7 @@ import os
 
 from google.cloud import storage
 import pytest
+import re
 
 import storage_remove_bucket_iam_member
 import storage_add_bucket_iam_member
@@ -31,8 +32,9 @@ def bucket():
     yield storage.Client().bucket(BUCKET)
 
 
-def test_view_bucket_iam_members():
+def test_view_bucket_iam_members(capsys):
     storage_view_bucket_iam_members.view_bucket_iam_members(BUCKET)
+    assert re.match("Role: .*, Members: .*", capsys.readouterr().out)
 
 
 def test_add_bucket_iam_member(bucket):
