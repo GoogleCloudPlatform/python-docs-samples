@@ -17,28 +17,27 @@ If you are using cloud shell, skip to the next section.
 
 #### Google Container Registry Image Setup
 If you are using the provided image, skip to the next section.
-
-4. Build Image:
+4. Get default project id:
+    `PROJECT_ID=$(gcloud config get-value project)`
+5. Build Image:
     `sudo docker build -t gcr.io/${PROJECT-ID}/cloud-trace-demo .`
-5. Upload Image to Container Registry:
+6. Upload Image to Container Registry:
     `sudo gcloud docker -- push gcr.io/${PROJECT-ID}/cloud-trace-demo-test:v1`
 
-Note: Learn how to find your project id: https://support.google.com/googleapi/answer/7014113?hl=en
-
 #### Create a GKE cluster
-6. Enable Google cloud and set up regions
+7. Enable Google cloud and set up regions
     `gcloud init`
-7. Enable GKE api & billing:
+8. Enable GKE api & billing:
     `gcloud services enable container.googleapis.com`
-8. Create GKE cluster:
-    `gcloud container clusters create ${CLUSTER-NAME}`
+9. Create a GKE cluster named "demo":
+    `gcloud container clusters create demo`
 
 #### Send Requests to See Generated Traces
 
-9. Run setup.sh to apply the YAML files. Note this file configures the default image we provide.
+10. Run setup.sh to apply the YAML files. Note this file configures the default image we provide.
     `./setup.sh`
-10. Send request to the last service:
+11. Send request to the last service:
     `curl $(kubectl get svc cloud-trace-demo-a -ojsonpath='{.status.loadBalancer.ingress[0].ip}')`
-11. Visit [Trace List](https://pantheon.corp.google.com/traces/list) to check traces generated
-12. Clean up GKE cluster/pods/services
+12. Visit [Trace List](https://pantheon.corp.google.com/traces/list) to check traces generated
+13. Clean up GKE cluster/pods/services
     `gcloud container clusters delete ${CLUSTER-NAME}`
