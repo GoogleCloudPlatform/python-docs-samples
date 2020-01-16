@@ -42,15 +42,15 @@ def test_add_bucket_iam_member(bucket):
     policy = bucket.get_iam_policy()
     assert any(
         binding["role"] == ROLE and MEMBER in binding["members"]
-        for binding in policy.bindings)
+        for binding in policy.bindings
+    )
 
 
 def test_remove_bucket_iam_member(bucket):
-    storage_remove_bucket_iam_member.remove_bucket_iam_member(
-        BUCKET, ROLE, MEMBER
-    )
+    storage_remove_bucket_iam_member.remove_bucket_iam_member(BUCKET, ROLE, MEMBER)
 
     policy = bucket.get_iam_policy()
     assert not any(
         binding["role"] == ROLE and MEMBER in binding["members"]
-        for binding in policy.bindings)
+        for binding in policy.bindings
+    )
