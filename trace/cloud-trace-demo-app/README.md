@@ -35,6 +35,8 @@ If you are using the provided image, skip to the next section.
 #### Send Requests to See Generated Traces
 
 10. Run setup.sh to apply the YAML files. Note this file configures the default image we provide.
+    If you are using your own image, please go and change the image string in
+    the YAML file and templates.
     `./setup.sh`
 11. Send request to the last service:
     `curl $(kubectl get svc cloud-trace-demo-a -ojsonpath='{.status.loadBalancer.ingress[0].ip}')`
