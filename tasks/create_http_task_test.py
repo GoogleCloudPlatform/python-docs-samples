@@ -31,4 +31,5 @@ def test_create_http_task():
         url=url,
         task_name=TEST_TASK_NAME,
     )
+
     assert TEST_QUEUE_NAME in result.name
