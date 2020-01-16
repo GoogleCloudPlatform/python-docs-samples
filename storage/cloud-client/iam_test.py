@@ -37,7 +37,10 @@ def test_view_bucket_iam_members():
 
 def test_add_bucket_iam_member(bucket):
     storage_add_bucket_iam_member.add_bucket_iam_member(BUCKET, ROLE, MEMBER)
-    assert MEMBER in bucket.get_iam_policy()[ROLE]
+    policy = bucket.get_iam_policy()
+    assert any(
+        binding["role"] == ROLE and MEMBER in binding["members"]
+        for binding in policy.bindings)
 
 
 def test_remove_bucket_iam_member(bucket):
