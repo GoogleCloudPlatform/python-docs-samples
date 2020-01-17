@@ -22,8 +22,10 @@ import dialogflow_v2 as dialogflow
 
 import entity_type_management
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-DISPLAY_NAME = 'entity_type_' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+PROJECT_ID = os.getenv("GCLOUD_PROJECT")
+DISPLAY_NAME = "entity_type_" + datetime.datetime.now().strftime(
+    "%Y%m%d%H%M%S"
+)
 pytest.ENTITY_TYPE_ID = None
 
 
@@ -35,16 +37,18 @@ def teardown():
     entity_types_client = dialogflow.EntityTypesClient()
     assert pytest.ENTITY_TYPE_ID is not None
     entity_type_path = entity_types_client.entity_type_path(
-        PROJECT_ID, pytest.ENTITY_TYPE_ID)
+        PROJECT_ID, pytest.ENTITY_TYPE_ID
+    )
     entity_types_client.delete_entity_type(entity_type_path)
 
 
 def test_create_entity_type(capsys):
     entity_type_management.create_entity_type(
-        PROJECT_ID, DISPLAY_NAME, 'KIND_MAP')
+        PROJECT_ID, DISPLAY_NAME, "KIND_MAP"
+    )
     out, _ = capsys.readouterr()
 
     assert 'display_name: "{}"'.format(DISPLAY_NAME) in out
 
     # Save the entity id so that it can be deleted
-    pytest.ENTITY_TYPE_ID = out.split('agent/entityTypes/')[1].split('"\n')[0]
+    pytest.ENTITY_TYPE_ID = out.split("agent/entityTypes/")[1].split('"\n')[0]

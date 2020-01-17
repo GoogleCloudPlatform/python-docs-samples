@@ -22,8 +22,10 @@ import dialogflow_v2 as dialogflow
 
 import entity_type_management
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-DISPLAY_NAME = 'entity_type_' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+PROJECT_ID = os.getenv("GCLOUD_PROJECT")
+DISPLAY_NAME = "entity_type_" + datetime.datetime.now().strftime(
+    "%Y%m%d%H%M%S"
+)
 pytest.ENTITY_TYPE_ID = None
 
 
@@ -34,16 +36,18 @@ def setup():
     parent = entity_types_client.project_agent_path(PROJECT_ID)
     entity_type = dialogflow.types.EntityType(
         display_name=DISPLAY_NAME,
-        kind=dialogflow.enums.EntityType.Kind.KIND_MAP)
+        kind=dialogflow.enums.EntityType.Kind.KIND_MAP,
+    )
 
     response = entity_types_client.create_entity_type(parent, entity_type)
-    pytest.ENTITY_TYPE_ID = response.name.split('agent/entityTypes/')[1]
+    pytest.ENTITY_TYPE_ID = response.name.split("agent/entityTypes/")[1]
 
 
 def test_delete_entity_type(capsys):
-    entity_type_management.delete_entity_type(PROJECT_ID, pytest.ENTITY_TYPE_ID)
+    entity_type_management.delete_entity_type(
+        PROJECT_ID, pytest.ENTITY_TYPE_ID
+    )
 
     entity_type_management.list_entity_types(PROJECT_ID)
     out, _ = capsys.readouterr()
     assert DISPLAY_NAME not in out
-

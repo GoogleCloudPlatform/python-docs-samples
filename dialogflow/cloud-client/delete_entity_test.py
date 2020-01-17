@@ -22,9 +22,9 @@ import dialogflow_v2 as dialogflow
 
 import entity_management
 
-PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-DISPLAY_NAME = 'entity_' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-ENTITY_VALUE_1 = 'test_delete_entity_value'
+PROJECT_ID = os.getenv("GCLOUD_PROJECT")
+DISPLAY_NAME = "entity_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+ENTITY_VALUE_1 = "test_delete_entity_value"
 
 pytest.ENTITY_TYPE_ID = None
 
@@ -36,17 +36,22 @@ def setup_teardown():
     parent = entity_types_client.project_agent_path(PROJECT_ID)
     entity_type = dialogflow.types.EntityType(
         display_name=DISPLAY_NAME,
-        kind=dialogflow.enums.EntityType.Kind.KIND_MAP)
+        kind=dialogflow.enums.EntityType.Kind.KIND_MAP,
+    )
 
     response = entity_types_client.create_entity_type(parent, entity_type)
-    pytest.ENTITY_TYPE_ID = response.name.split('agent/entityTypes/')[1]
+    pytest.ENTITY_TYPE_ID = response.name.split("agent/entityTypes/")[1]
 
     # Create an entity inside the entity type
     entity_type_path = entity_types_client.entity_type_path(
-        PROJECT_ID, pytest.ENTITY_TYPE_ID)
+        PROJECT_ID, pytest.ENTITY_TYPE_ID
+    )
     entity = dialogflow.types.EntityType.Entity(
-        value=ENTITY_VALUE_1, synonyms=[ENTITY_VALUE_1])
-    response = entity_types_client.batch_create_entities(entity_type_path, [entity])
+        value=ENTITY_VALUE_1, synonyms=[ENTITY_VALUE_1]
+    )
+    response = entity_types_client.batch_create_entities(
+        entity_type_path, [entity]
+    )
     response.result()
 
     yield
@@ -57,7 +62,8 @@ def setup_teardown():
 
 def test_delete_entity(capsys):
     entity_management.delete_entity(
-        PROJECT_ID, pytest.ENTITY_TYPE_ID, ENTITY_VALUE_1)
+        PROJECT_ID, pytest.ENTITY_TYPE_ID, ENTITY_VALUE_1
+    )
 
     entity_management.list_entities(PROJECT_ID, pytest.ENTITY_TYPE_ID)
 
