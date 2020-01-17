@@ -131,6 +131,8 @@ def detect_handwritten_ocr(path):
                         print('\tSymbol: {} (confidence: {})'.format(
                             symbol.text, symbol.confidence))
 
+    # For more info on error messages
+    # check: https://cloud.google.com/apis/design/errors
     if response.error.message:
         raise Exception(response.error.message)
 # [END vision_handwritten_ocr_beta]
@@ -178,6 +180,8 @@ def detect_handwritten_ocr_uri(uri):
                         print('\tSymbol: {} (confidence: {})'.format(
                             symbol.text, symbol.confidence))
 
+    # For more info on error messages
+    # check: https://cloud.google.com/apis/design/errors
     if response.error.message:
         raise Exception(response.error.message)
 # [END vision_handwritten_ocr_gcs_beta]

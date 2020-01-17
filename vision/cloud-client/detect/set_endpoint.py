@@ -37,6 +37,8 @@ def set_endpoint():
 
         print('bounds: {}\n'.format(','.join(vertices)))
 
+    # For more info on error messages
+    # check: https://cloud.google.com/apis/design/errors
     if response.error.message:
         raise Exception(response.error.message)
 
