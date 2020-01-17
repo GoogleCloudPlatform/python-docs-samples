@@ -18,17 +18,17 @@ import os
 from google.cloud import automl
 import pytest
 
-import vision_classification_create_dataset
+import vision_object_detection_create_dataset
 
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 
 
 @pytest.mark.slow
-def test_vision_classification_create_dataset(capsys):
+def test_vision_object_detection_create_dataset(capsys):
     # create dataset
     dataset_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    vision_classification_create_dataset.create_dataset(
+    vision_object_detection_create_dataset.create_dataset(
         PROJECT_ID, dataset_name
     )
     out, _ = capsys.readouterr()
