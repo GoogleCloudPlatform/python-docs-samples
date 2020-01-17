@@ -1,9 +1,10 @@
-# Copyright 2017, Google LLC
+# Copyright 2020 Google LLC
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,16 +17,17 @@ from __future__ import absolute_import
 import datetime
 import os
 
-from detect_intent_texts import detect_intent_texts
+import detect_intent_knowledge
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-SESSION_ID = 'test_' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-TEXTS = ["hello", "book a meeting room", "Mountain View",
-         "tomorrow", "10 AM", "2 hours", "10 people", "A", "yes"]
+SESSION_ID = 'session_' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+KNOWLEDGE_BASE_ID = 'MjEwMjE4MDQ3MDQwMDc0NTQ3Mg'
+TEXTS = ['Where is my data stored?']
 
 
-def test_detect_intent_texts(capsys):
-    detect_intent_texts(PROJECT_ID, SESSION_ID, TEXTS, 'en-US')
+def test_detect_intent_knowledge(capsys):
+    detect_intent_knowledge.detect_intent_knowledge(
+        PROJECT_ID, SESSION_ID, 'en-us', KNOWLEDGE_BASE_ID, TEXTS)
+
     out, _ = capsys.readouterr()
-
-    assert 'Fulfillment text: All set!' in out
+    assert 'Knowledge results' in out
