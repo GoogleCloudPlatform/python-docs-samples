@@ -1,9 +1,10 @@
-# Copyright 2018, Google LLC
+# Copyright 2020 Google LLC
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,21 +14,18 @@
 
 from __future__ import absolute_import
 
-import datetime
 import os
 
-from detect_intent_with_sentiment_analysis import \
-    detect_intent_with_sentiment_analysis
+import document_management
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-SESSION_ID = 'test_' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-TEXTS = ["hello", "book a meeting room", "Mountain View",
-         "tomorrow", "10 AM", "2 hours", "10 people", "A", "yes"]
+DOCUMENT_DISPLAY_NAME = 'DO_NOT_DELETE_TEST_DOCUMENT'
+KNOWLEDGE_BASE_ID = 'MjEwMjE4MDQ3MDQwMDc0NTQ3Mg'
+DOCUMENT_ID = 'MzMxOTU0NjU1MDUzNDc5OTM2MA'
 
 
-def test_detect_intent_with_sentiment_analysis(capsys):
-    detect_intent_with_sentiment_analysis(PROJECT_ID, SESSION_ID, TEXTS,
-                                          'en-US')
+def test_get_document(capsys):
+    document_management.get_document(
+        PROJECT_ID, KNOWLEDGE_BASE_ID, DOCUMENT_ID)
     out, _ = capsys.readouterr()
-
-    assert 'Query Text Sentiment Score' in out
+    assert DOCUMENT_DISPLAY_NAME in out
