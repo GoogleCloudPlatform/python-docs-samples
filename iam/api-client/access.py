@@ -26,18 +26,28 @@ import googleapiclient.discovery
 
 
 # [START iam_get_policy]
-def get_policy(project_id):
+def get_policy(project_id, version=1):
     """Gets IAM policy for a project."""
 
     credentials = service_account.Credentials.from_service_account_file(
-        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
-        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+        filename=os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
+        scopes=["https://www.googleapis.com/auth/cloud-platform"],
+    )
     service = googleapiclient.discovery.build(
-        'cloudresourcemanager', 'v1', credentials=credentials)
-    policy = service.projects().getIamPolicy(
-        resource=project_id, body={}).execute()
+        "cloudresourcemanager", "v1", credentials=credentials
+    )
+    policy = (
+        service.projects()
+        .getIamPolicy(
+            resource=project_id,
+            body={"options": {"requestedPolicyVersion": version}},
+        )
+        .execute()
+    )
     print(policy)
     return policy
+
+
 # [END iam_get_policy]
 
 
@@ -45,10 +55,12 @@ def get_policy(project_id):
 def modify_policy_add_member(policy, role, member):
     """Adds a new member to a role binding."""
 
-    binding = next(b for b in policy['bindings'] if b['role'] == role)
-    binding['members'].append(member)
+    binding = next(b for b in policy["bindings"] if b["role"] == role)
+    binding["members"].append(member)
     print(binding)
     return policy
+
+
 # [END iam_modify_policy_add_member]
 
 
@@ -56,24 +68,25 @@ def modify_policy_add_member(policy, role, member):
 def modify_policy_add_role(policy, role, member):
     """Adds a new role binding to a policy."""
 
-    binding = {
-        'role': role,
-        'members': [member]
-    }
-    policy['bindings'].append(binding)
+    binding = {"role": role, "members": [member]}
+    policy["bindings"].append(binding)
     print(policy)
     return policy
+
+
 # [END iam_modify_policy_add_role]
 
 
 # [START iam_modify_policy_remove_member]
 def modify_policy_remove_member(policy, role, member):
     """Removes a  member from a role binding."""
-    binding = next(b for b in policy['bindings'] if b['role'] == role)
-    if 'members' in binding and member in binding['members']:
-        binding['members'].remove(member)
+    binding = next(b for b in policy["bindings"] if b["role"] == role)
+    if "members" in binding and member in binding["members"]:
+        binding["members"].remove(member)
     print(binding)
     return policy
+
+
 # [END iam_modify_policy_remove_member]
 
 
@@ -82,17 +95,22 @@ def set_policy(project_id, policy):
     """Sets IAM policy for a project."""
 
     credentials = service_account.Credentials.from_service_account_file(
-        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
-        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+        filename=os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
+        scopes=["https://www.googleapis.com/auth/cloud-platform"],
+    )
     service = googleapiclient.discovery.build(
-        'cloudresourcemanager', 'v1', credentials=credentials)
+        "cloudresourcemanager", "v1", credentials=credentials
+    )
 
-    policy = service.projects().setIamPolicy(
-        resource=project_id, body={
-            'policy': policy
-        }).execute()
+    policy = (
+        service.projects()
+        .setIamPolicy(resource=project_id, body={"policy": policy})
+        .execute()
+    )
     print(policy)
     return policy
+
+
 # [END iam_set_policy]
 
 
@@ -101,86 +119,94 @@ def test_permissions(project_id):
     """Tests IAM permissions of the caller"""
 
     credentials = service_account.Credentials.from_service_account_file(
-        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
-        scopes=['https://www.googleapis.com/auth/cloud-platform'])
+        filename=os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
+        scopes=["https://www.googleapis.com/auth/cloud-platform"],
+    )
     service = googleapiclient.discovery.build(
-        'cloudresourcemanager', 'v1', credentials=credentials)
+        "cloudresourcemanager", "v1", credentials=credentials
+    )
 
     permissions = {
         "permissions": [
             "resourcemanager.projects.get",
-            "resourcemanager.projects.delete"
+            "resourcemanager.projects.delete",
         ]
     }
 
     request = service.projects().testIamPermissions(
-        resource=project_id, body=permissions)
+        resource=project_id, body=permissions
+    )
     returnedPermissions = request.execute()
     print(returnedPermissions)
     return returnedPermissions
+
+
 # [END iam_test_permissions]
 
 
 def main():
     parser = argparse.ArgumentParser(
         description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
 
-    subparsers = parser.add_subparsers(dest='command')
+    subparsers = parser.add_subparsers(dest="command")
 
     # Get
-    get_parser = subparsers.add_parser(
-        'get', help=get_policy.__doc__)
-    get_parser.add_argument('project_id')
+    get_parser = subparsers.add_parser("get", help=get_policy.__doc__)
+    get_parser.add_argument("project_id")
 
     # Modify: add member
     modify_member_parser = subparsers.add_parser(
-        'modify_member', help=get_policy.__doc__)
-    modify_member_parser.add_argument('project_id')
-    modify_member_parser.add_argument('role')
-    modify_member_parser.add_argument('member')
+        "modify_member", help=get_policy.__doc__
+    )
+    modify_member_parser.add_argument("project_id")
+    modify_member_parser.add_argument("role")
+    modify_member_parser.add_argument("member")
 
     # Modify: add role
     modify_role_parser = subparsers.add_parser(
-        'modify_role', help=get_policy.__doc__)
-    modify_role_parser.add_argument('project_id')
-    modify_role_parser.add_argument('project_id')
-    modify_role_parser.add_argument('role')
-    modify_role_parser.add_argument('member')
+        "modify_role", help=get_policy.__doc__
+    )
+    modify_role_parser.add_argument("project_id")
+    modify_role_parser.add_argument("project_id")
+    modify_role_parser.add_argument("role")
+    modify_role_parser.add_argument("member")
 
     # Modify: remove member
     modify_member_parser = subparsers.add_parser(
-        'modify_member', help=get_policy.__doc__)
-    modify_member_parser.add_argument('project_id')
-    modify_member_parser.add_argument('role')
-    modify_member_parser.add_argument('member')
+        "modify_member", help=get_policy.__doc__
+    )
+    modify_member_parser.add_argument("project_id")
+    modify_member_parser.add_argument("role")
+    modify_member_parser.add_argument("member")
 
     # Set
-    set_parser = subparsers.add_parser(
-        'set', help=set_policy.__doc__)
-    set_parser.add_argument('project_id')
-    set_parser.add_argument('policy')
+    set_parser = subparsers.add_parser("set", help=set_policy.__doc__)
+    set_parser.add_argument("project_id")
+    set_parser.add_argument("policy")
 
     # Test permissions
     test_permissions_parser = subparsers.add_parser(
-        'test_permissions', help=get_policy.__doc__)
-    test_permissions_parser.add_argument('project_id')
+        "test_permissions", help=get_policy.__doc__
+    )
+    test_permissions_parser.add_argument("project_id")
 
     args = parser.parse_args()
 
-    if args.command == 'get':
+    if args.command == "get":
         get_policy(args.project_id)
-    elif args.command == 'set':
+    elif args.command == "set":
         set_policy(args.project_id, args.policy)
-    elif args.command == 'add_member':
+    elif args.command == "add_member":
         modify_policy_add_member(args.policy, args.role, args.member)
-    elif args.command == 'remove_member':
+    elif args.command == "remove_member":
         modify_policy_remove_member(args.policy, args.role, args.member)
-    elif args.command == 'add_binding':
+    elif args.command == "add_binding":
         modify_policy_add_role(args.policy, args.role, args.member)
-    elif args.command == 'test_permissions':
+    elif args.command == "test_permissions":
         test_permissions(args.project_id)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
