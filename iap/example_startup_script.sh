@@ -3,7 +3,7 @@ apt-get -y install git
 apt-get -y install virtualenv
 git clone https://github.com/GoogleCloudPlatform/python-docs-samples
 cd python-docs-samples/iap
-virtualenv venv
+virtualenv venv -p python3
 source venv/bin/activate
 pip install -r requirements.txt
 cat example_gce_backend.py |
