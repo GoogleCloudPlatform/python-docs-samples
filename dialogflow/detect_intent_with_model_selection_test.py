@@ -13,6 +13,7 @@
 
 from __future__ import absolute_import
 
+import datetime
 import os
 
 from detect_intent_with_model_selection import \
@@ -20,7 +21,7 @@ from detect_intent_with_model_selection import \
 
 DIRNAME = os.path.realpath(os.path.dirname(__file__))
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-SESSION_ID = 'fake_session_for_testing'
+SESSION_ID = 'test_' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 AUDIOS = [
     '{0}/resources/book_a_room.wav'.format(DIRNAME),
     '{0}/resources/mountain_view.wav'.format(DIRNAME),
