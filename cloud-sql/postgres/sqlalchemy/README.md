@@ -20,7 +20,7 @@ Download a JSON key to use to authenticate your connection.
 1. Use the information noted in the previous steps:
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service/account/key.json
-export CLOUD_SQL_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>'
+export CLOUD_SQL_CONNECTION_NAME='<MY-PROJECT>:<INSTANCE-REGION>:<INSTANCE-NAME>'
 export DB_USER='my-db-user'
 export DB_PASS='my-db-pass'
 export DB_NAME='my_db'
@@ -31,16 +31,18 @@ secure solution such as [Cloud KMS](https://cloud.google.com/kms/) to help keep 
 ## Running locally
 
 To run this application locally, download and install the `cloud_sql_proxy` by
-following the instructions [here](https://cloud.google.com/sql/docs/mysql/sql-proxy#install).
+following the instructions [here](https://cloud.google.com/sql/docs/mysql/sql-proxy#install). Once the proxy has been downloaded, use the following commands to create the `/cloudsql`
+directory and give the user running the proxy the appropriate permissions:
+```bash
+sudo mkdir /cloudsql
+sudo chown -R $USER /cloudsql
+```
 
-Once the proxy is ready, use the following command to start the proxy in the
+Once the `/cloudsql` directory is ready, use the following command to start the proxy in the
 background:
 ```bash
 ./cloud_sql_proxy -dir=/cloudsql --instances=$CLOUD_SQL_CONNECTION_NAME --credential_file=$GOOGLE_APPLICATION_CREDENTIALS
 ```
-Note: Make sure to run the command under a user with write access in the 
-`/cloudsql` directory. This proxy will use this folder to create a unix socket
-the application will use to connect to Cloud SQL. 
 
 Next, setup install the requirements into a virtual enviroment:
 ```bash
@@ -68,3 +70,40 @@ Next, the following command will deploy the application to your Google Cloud pro
 ```bash
 gcloud app deploy
 ```
+
+## Deploy to Cloud Run
+
+See the [Cloud Run documentation](https://cloud.google.com/sql/docs/postgres/connect-run)
+for more details on connecting a Cloud Run service to Cloud SQL.
+
+1. Build the container image:
+
+```sh
+gcloud builds submit --tag gcr.io/[YOUR_PROJECT_ID]/run-sql
+```
+
+2. Deploy the service to Cloud Run:
+
+```sh
+gcloud beta run deploy run-sql --image gcr.io/[YOUR_PROJECT_ID]/run-sql
+```
+
+Take note of the URL output at the end of the deployment process.
+
+3. Configure the service for use with Cloud Run
+
+```sh
+gcloud beta run services update run-mysql \
+    --add-cloudsql-instances [INSTANCE_CONNECTION_NAME] \
+    --set-env-vars CLOUD_SQL_CONNECTION_NAME=[INSTANCE_CONNECTION_NAME],\
+      DB_USER=[MY_DB_USER],DB_PASS=[MY_DB_PASS],DB_NAME=[MY_DB]
+```
+Replace environment variables with the correct values for your Cloud SQL
+instance configuration.
+
+This step can be done as part of deployment but is separated for clarity.
+
+4. Navigate your browser to the URL noted in step 2.
+
+For more details about using Cloud Run see http://cloud.run.
+Review other [Python on Cloud Run samples](../../../run/).

@@ -3,26 +3,16 @@
 [![Open in Cloud Shell][shell_img]][shell_link]
 
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
-[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/tasks/README.md
+[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=tasks/README.md
 
-Sample command-line programs for interacting with the Cloud Tasks API
-.
-
-App Engine queues push tasks to an App Engine HTTP target. This directory
-contains both the App Engine app to deploy, as well as the snippets to run
-locally to push tasks to it, which could also be called on App Engine.
+This sample demonstrates how to use the
+[Cloud Tasks](https://cloud.google.com/tasks/docs/) client library.
 
 `create_http_task.py` is a simple command-line program to create
 tasks to be pushed to an URL endpoint.
 
 `create_http_task_with_token.py` is a simple command-line program to create
 tasks to be pushed to an URL endpoint with authorization header.
-
-`main.py` is the main App Engine app. This app serves as an endpoint to receive
-App Engine task attempts.
-
-`app.yaml` configures the App Engine app.
-
 
 ## Prerequisites to run locally:
 
@@ -33,16 +23,26 @@ Please refer to [Setting Up a Python Development Environment](https://cloud.goog
 To set up authentication, please refer to our
 [authentication getting started guide](https://cloud.google.com/docs/authentication/getting-started).
 
+## Install Dependencies
+
+To install the dependencies for this sample, use the following command:
+
+```
+pip install -r requirements.txt
+```
+
+This sample uses the common protos in the [googleapis](https://github.com/googleapis/googleapis)
+repository. For more info, see
+[Protocol Buffer Basics](https://developers.google.com/protocol-buffers/docs/pythontutorial).
+
 ## Creating a queue
 
-To create a queue using the Cloud SDK, use the following gcloud command:
+To create a queue (named `my-queue`) using the Cloud SDK, use the following
+gcloud command:
 
 ```
-gcloud beta tasks queues create-app-engine-queue my-appengine-queue
+gcloud tasks queues create my-queue
 ```
-
-Note: A newly created queue will route to the default App Engine service and
-version unless configured to do otherwise.
 
 ## Run the Sample Using the Command Line
 
@@ -55,28 +55,28 @@ export PROJECT_ID=my-project-id
 ```
 
 Then the queue ID, as specified at queue creation time. Queue IDs already
-created can be listed with `gcloud beta tasks queues list`.
+created can be listed with `gcloud tasks queues list`.
 
 ```
-export QUEUE_ID=my-appengine-queue
+export QUEUE_ID=my-queue
 ```
 
 And finally the location ID, which can be discovered with
-`gcloud beta tasks queues describe $QUEUE_ID`, with the location embedded in
+`gcloud tasks queues describe my-queue`, with the location embedded in
 the "name" value (for instance, if the name is
-"projects/my-project/locations/us-central1/queues/my-appengine-queue", then the
+"projects/my-project/locations/us-central1/queues/my-queue", then the
 location is "us-central1").
 
 ```
 export LOCATION_ID=us-central1
 ```
 
-### Using HTTP Push Queues
+### Creating Tasks with HTTP Targets
 
 Set an environment variable for the endpoint to your task handler. This is an
-example url to send requests to the App Engine task handler:
+example url:
 ```
-export URL=https://<project_id>.appspot.com/example_task_handler
+export URL=https://example.com/task_handler
 ```
 
 Running the sample will create a task and send the task to the specific URL

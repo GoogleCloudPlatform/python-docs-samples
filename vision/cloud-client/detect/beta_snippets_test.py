@@ -11,7 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 import os
+import uuid
 
 import beta_snippets
 
@@ -19,7 +21,7 @@ RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 GCS_ROOT = 'gs://cloud-samples-data/vision/'
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-OUTPUT_PREFIX = 'OCR_PDF_TEST_OUTPUT'
+OUTPUT_PREFIX = 'TEST_OUTPUT_{}'.format(uuid.uuid4())
 GCS_DESTINATION_URI = 'gs://{}/{}/'.format(BUCKET, OUTPUT_PREFIX)
 
 
@@ -79,5 +81,11 @@ def test_async_batch_annotate_images(capsys):
     gcs_uri = GCS_ROOT + 'landmark/eiffel_tower.jpg'
     beta_snippets.async_batch_annotate_images_uri(gcs_uri, GCS_DESTINATION_URI)
     out, _ = capsys.readouterr()
-    assert 'language_code: "en"' in out
     assert 'description: "Tower"' in out
+
+    from google.cloud import storage
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(BUCKET)
+    if len(list(bucket.list_blobs(prefix=OUTPUT_PREFIX))) > 0:
+        for blob in bucket.list_blobs(prefix=OUTPUT_PREFIX):
+            blob.delete()

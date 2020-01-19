@@ -10,49 +10,54 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Sample command-line program to list Cloud Dataproc clusters in a region.
 
-""" Sample command-line program for listing Google Dataproc Clusters
+Example usage:
+python list_clusters.py --project_id=my-project-id --region=global
+
 """
-
 import argparse
 
-import googleapiclient.discovery
+from google.cloud import dataproc_v1
+from google.cloud.dataproc_v1.gapic.transports import (
+    cluster_controller_grpc_transport)
 
 
 # [START dataproc_list_clusters]
 def list_clusters(dataproc, project, region):
-    result = dataproc.projects().regions().clusters().list(
-        projectId=project,
-        region=region).execute()
-    return result
+    """List the details of clusters in the region."""
+    for cluster in dataproc.list_clusters(project, region):
+        print(('{} - {}'.format(cluster.cluster_name,
+                                cluster.status.State.Name(
+                                    cluster.status.state))))
 # [END dataproc_list_clusters]
 
 
-# [START dataproc_get_client]
-def get_client():
-    """Builds a client to the dataproc API."""
-    dataproc = googleapiclient.discovery.build('dataproc', 'v1')
-    return dataproc
-# [END dataproc_get_client]
-
-
 def main(project_id, region):
-    dataproc = get_client()
-    result = list_clusters(dataproc, project_id, region)
-    print(result)
+
+    if region == 'global':
+        # Use the default gRPC global endpoints.
+        dataproc_cluster_client = dataproc_v1.ClusterControllerClient()
+    else:
+        # Use a regional gRPC endpoint. See:
+        # https://cloud.google.com/dataproc/docs/concepts/regional-endpoints
+        client_transport = (
+            cluster_controller_grpc_transport.ClusterControllerGrpcTransport(
+                address='{}-dataproc.googleapis.com:443'.format(region)))
+        dataproc_cluster_client = dataproc_v1.ClusterControllerClient(
+            client_transport)
+
+    list_clusters(dataproc_cluster_client, project_id, region)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
-    )
+        description=__doc__, formatter_class=(
+            argparse.RawDescriptionHelpFormatter))
     parser.add_argument(
-        'project_id', help='Project ID you want to access.'),
-    # Sets the region to "global" if it's not provided
-    # Note: sub-regions (e.g.: us-central1-a/b) are currently not supported
+        '--project_id', help='Project ID to access.', required=True)
     parser.add_argument(
-        '--region', default='global', help='Region to list clusters')
+        '--region', help='Region of clusters to list.', required=True)
 
     args = parser.parse_args()
     main(args.project_id, args.region)

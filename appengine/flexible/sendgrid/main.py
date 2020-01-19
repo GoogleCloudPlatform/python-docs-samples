@@ -17,7 +17,7 @@ import os
 
 from flask import Flask, render_template, request
 import sendgrid
-from sendgrid.helpers import mail
+from sendgrid.helpers.mail import Mail
 
 SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
 SENDGRID_SENDER = os.environ['SENDGRID_SENDER']
@@ -33,20 +33,19 @@ def index():
 # [START gae_flex_sendgrid]
 @app.route('/send/email', methods=['POST'])
 def send_email():
-    to = request.form.get('to')
-    if not to:
+    recipient = request.form.get('to')
+    if not recipient:
         return ('Please provide an email address in the "to" query string '
                 'parameter.'), 400
 
-    sg = sendgrid.SendGridAPIClient(apikey=SENDGRID_API_KEY)
+    message = Mail(
+        from_email=SENDGRID_SENDER,
+        to_emails='{},'.format(recipient),
+        subject='This is a test email',
+        html_content='<strong>Example</strong> message.')
+    sg = sendgrid.SendGridAPIClient(SENDGRID_API_KEY)
 
-    to_email = mail.Email(to)
-    from_email = mail.Email(SENDGRID_SENDER)
-    subject = 'This is a test email'
-    content = mail.Content('text/plain', 'Example message.')
-    message = mail.Mail(from_email, subject, to_email, content)
-
-    response = sg.client.mail.send.post(request_body=message.get())
+    response = sg.send(message)
 
     if response.status_code != 202:
         return 'An error occurred: {}'.format(response.body), 500

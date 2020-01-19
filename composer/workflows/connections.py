@@ -40,19 +40,19 @@ with models.DAG(
     # [START composer_connections_default]
     task_default = bigquery_operator.BigQueryOperator(
         task_id='task_default_connection',
-        bql='SELECT 1', use_legacy_sql=False)
+        sql='SELECT 1', use_legacy_sql=False)
     # [END composer_connections_default]
     # [START composer_connections_explicit]
     task_explicit = bigquery_operator.BigQueryOperator(
         task_id='task_explicit_connection',
-        bql='SELECT 1', use_legacy_sql=False,
+        sql='SELECT 1', use_legacy_sql=False,
         # Composer creates a 'google_cloud_default' connection by default.
         bigquery_conn_id='google_cloud_default')
     # [END composer_connections_explicit]
     # [START composer_connections_custom]
     task_custom = bigquery_operator.BigQueryOperator(
         task_id='task_custom_connection',
-        bql='SELECT 1', use_legacy_sql=False,
+        sql='SELECT 1', use_legacy_sql=False,
         # Set a connection ID to use a connection that you have created.
         bigquery_conn_id='my_gcp_connection')
     # [END composer_connections_custom]

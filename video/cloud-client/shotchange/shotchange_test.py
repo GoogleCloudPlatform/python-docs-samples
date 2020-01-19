@@ -21,6 +21,7 @@ import shotchange
 
 @pytest.mark.slow
 def test_shots_dino(capsys):
-    shotchange.analyze_shots('gs://demomaker/gbikes_dinosaur.mp4')
+    shotchange.analyze_shots(
+        'gs://cloud-samples-data/video/gbikes_dinosaur.mp4')
     out, _ = capsys.readouterr()
     assert 'Shot 1:' in out

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2017 Google, Inc
+# Copyright 2019 Google, LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 from six.moves.urllib.request import urlopen
 import time
+import os
 import uuid
 
 import beta_snippets
@@ -150,7 +151,7 @@ def test_track_objects():
 
 @pytest.mark.slow
 def test_track_objects_gcs():
-    in_file = 'gs://demomaker/cat.mp4'
+    in_file = 'gs://cloud-samples-data/video/cat.mp4'
     object_annotations = beta_snippets.track_objects_gcs(in_file)
 
     text_exists = False
@@ -160,3 +161,13 @@ def test_track_objects_gcs():
     assert text_exists
     assert object_annotations[0].frames[0].normalized_bounding_box.left >= 0.0
     assert object_annotations[0].frames[0].normalized_bounding_box.left <= 1.0
+
+
+@pytest.mark.slow
+def test_streaming_automl_classification(capsys, video_path):
+    project_id = os.environ['GCLOUD_PROJECT']
+    model_id = 'VCN6363999689846554624'
+    beta_snippets.streaming_automl_classification(
+        video_path, project_id, model_id)
+    out, _ = capsys.readouterr()
+    assert 'brush_hair' in out

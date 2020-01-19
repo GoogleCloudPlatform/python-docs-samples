@@ -214,16 +214,16 @@ def detect_batch_annotate_files(path):
     for image_response in response.responses[0].responses:
         for page in image_response.full_text_annotation.pages:
             for block in page.blocks:
-                print('\nBlock confidence: {}\n'.format(block.confidence))
+                print(u'\nBlock confidence: {}\n'.format(block.confidence))
                 for par in block.paragraphs:
-                    print('\tParagraph confidence: {}'.format(par.confidence))
+                    print(u'\tParagraph confidence: {}'.format(par.confidence))
                     for word in par.words:
                         symbol_texts = [symbol.text for symbol in word.symbols]
                         word_text = ''.join(symbol_texts)
-                        print('\t\tWord text: {} (confidence: {})'.format(
+                        print(u'\t\tWord text: {} (confidence: {})'.format(
                             word_text, word.confidence))
                         for symbol in word.symbols:
-                            print('\t\t\tSymbol: {} (confidence: {})'.format(
+                            print(u'\t\t\tSymbol: {} (confidence: {})'.format(
                                 symbol.text, symbol.confidence))
 # [END vision_batch_annotate_files_beta]
 
@@ -262,16 +262,16 @@ def detect_batch_annotate_files_uri(gcs_uri):
     for image_response in response.responses[0].responses:
         for page in image_response.full_text_annotation.pages:
             for block in page.blocks:
-                print('\nBlock confidence: {}\n'.format(block.confidence))
+                print(u'\nBlock confidence: {}\n'.format(block.confidence))
                 for par in block.paragraphs:
-                    print('\tParagraph confidence: {}'.format(par.confidence))
+                    print(u'\tParagraph confidence: {}'.format(par.confidence))
                     for word in par.words:
                         symbol_texts = [symbol.text for symbol in word.symbols]
                         word_text = ''.join(symbol_texts)
-                        print('\t\tWord text: {} (confidence: {})'.format(
+                        print(u'\t\tWord text: {} (confidence: {})'.format(
                             word_text, word.confidence))
                         for symbol in word.symbols:
-                            print('\t\t\tSymbol: {} (confidence: {})'.format(
+                            print(u'\t\t\tSymbol: {} (confidence: {})'.format(
                                 symbol.text, symbol.confidence))
 # [END vision_batch_annotate_files_gcs_beta]
 
@@ -321,7 +321,7 @@ def async_batch_annotate_images_uri(input_image_uri, output_uri):
     bucket_name = match.group(1)
     prefix = match.group(2)
 
-    bucket = storage_client.get_bucket(bucket_name=bucket_name)
+    bucket = storage_client.get_bucket(bucket_name)
 
     # Lists objects with the given prefix.
     blob_list = list(bucket.list_blobs(prefix=prefix))
@@ -388,9 +388,9 @@ if __name__ == '__main__':
             localize_objects_uri(args.uri)
         elif 'handwritten-ocr-uri' in args.command:
             detect_handwritten_ocr_uri(args.uri)
-        elif 'batch-annotate-files' in args.command:
+        elif 'batch-annotate-files-uri' in args.command:
             detect_batch_annotate_files_uri(args.uri)
-        elif 'batch-annotate-images' in args.command:
+        elif 'batch-annotate-images-uri' in args.command:
             async_batch_annotate_images_uri(args.uri, args.output)
     else:
         if 'object-localization' in args.command:

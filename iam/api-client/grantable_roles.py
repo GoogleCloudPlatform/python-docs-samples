@@ -34,7 +34,8 @@ def view_grantable_roles(full_resource_name):
     }).execute()
 
     for role in roles['roles']:
-        print('Title: ' + role['title'])
+        if 'title' in role:
+            print('Title: ' + role['title'])
         print('Name: ' + role['name'])
         print('Description: ' + role['description'])
         print(' ')

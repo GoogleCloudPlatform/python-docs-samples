@@ -15,6 +15,8 @@
 # limitations under the License.
 
 import argparse
+import os
+from google.api_core.client_options import ClientOptions
 
 
 # [START datalabeling_create_annotation_spec_set_beta]
@@ -24,6 +26,13 @@ def create_annotation_spec_set(project_id):
     """
     from google.cloud import datalabeling_v1beta1 as datalabeling
     client = datalabeling.DataLabelingServiceClient()
+    # [END datalabeling_create_annotation_spec_set_beta]
+    # If provided, use a provided test endpoint - this will prevent tests on
+    # this snippet from triggering any action by a real human
+    if 'DATALABELING_ENDPOINT' in os.environ:
+        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
+        client = datalabeling.DataLabelingServiceClient(client_options=opts)
+    # [START datalabeling_create_annotation_spec_set_beta]
 
     project_path = client.project_path(project_id)
 

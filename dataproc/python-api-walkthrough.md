@@ -6,12 +6,12 @@ Estimated completion time: <walkthrough-tutorial-duration duration="5"></walkthr
 
 This [Cloud Shell](https://cloud.google.com/shell/docs/) walkthrough leads you
 through the steps to use the
-[Google APIs Client Library for Python](http://code.google.com/p/google-api-python-client/ )
+[Google Cloud Client Libraries for Python](https://googleapis.github.io/google-cloud-python/latest/dataproc/index.html)
 to programmatically interact with [Dataproc](https://cloud.google.com/dataproc/docs/).
 
 As you follow this walkthrough, you run Python code that calls
-[Dataproc REST API](https://cloud.google.com//dataproc/docs/reference/rest/)
-methods to:
+[Dataproc gRPC APIs](https://cloud.google.com/dataproc/docs/reference/rpc/)
+to:
 
 * create a Dataproc cluster
 * submit a small PySpark word sort job to run on the cluster
@@ -126,7 +126,7 @@ Job output in Cloud Shell shows cluster creation, job submission,
      ...
      Creating cluster...
      Cluster created.
-     Uploading pyspark file to GCS
+     Uploading pyspark file to Cloud Storage.
      new-cluster-name - RUNNING
      Submitted job ID ...
      Waiting for job to finish...
@@ -146,11 +146,12 @@ Job output in Cloud Shell shows cluster creation, job submission,
 
 * **View job details from the Console.** View job details by selecting the
    PySpark job from the Dataproc 
+=
    [Jobs page](https://console.cloud.google.com/dataproc/jobs)
    in the Google Cloud Platform Console.
 
 * **Delete resources used in the walkthrough.**
-   The `submit_job.py` job deletes the cluster that it created for this
+   The `submit_job_to_cluster.py` job deletes the cluster that it created for this
    walkthrough.
 
    If you created a bucket to use for this walkthrough,
@@ -167,4 +168,3 @@ Job output in Cloud Shell shows cluster creation, job submission,
 
 * **For more information.** See the [Dataproc documentation](https://cloud.google.com/dataproc/docs/)
    for API reference and product feature information.
-   

@@ -1,0 +1,61 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+</head>
+<body>
+    <table class="striped">
+        <colgroup>
+            <col width="200">
+        </colgroup>
+        <tbody>
+            <tr>
+                <td>Hostname:</td>
+                <td><b>{{ hostname }}</b></td>
+            </tr>
+            <tr>
+                <td>Zone:</td>
+                <td><b>{{ zone }}</b></td>
+            </tr>
+            <tr>
+                <td>Template:</td>
+                <td><b>{{ template }}</b></td>
+            </tr>
+            <tr>
+                <td>Current load:</td>
+                {% if working %}
+                <td><span class="btn red">high</span></td>
+                {% else %}
+                <td><span class="btn green">none</span></td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td>Health status:</td>
+                {% if healthy %}
+                <td><span class="btn green">healthy</span></td>
+                {% else %}
+                <td><span class="btn red">unhealthy</span></td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td>Actions:</td>
+                <td>
+                    {% if healthy %}
+                    <a class="btn blue" href="/makeUnhealthy">Make unhealthy</a>
+                    {% else %}
+                    <a class="btn blue" href="/makeHealthy">Make healthy</a>
+                    {% endif %}
+
+                    <a class="btn blue" href="/health">Check health</a>
+
+                    {% if working %}
+                    <a class="btn blue" href="/stopLoad">Stop load</a>
+                    {% else %}
+                    <a class="btn blue" href="/startLoad">Start load</a>
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -30,7 +30,7 @@ def run_quickstart():
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.enums.Feature.LABEL_DETECTION]
     operation = video_client.annotate_video(
-        'gs://demomaker/cat.mp4', features=features)
+        'gs://cloud-samples-data/video/cat.mp4', features=features)
     print('\nProcessing video for label annotations:')
 
     result = operation.result(timeout=120)

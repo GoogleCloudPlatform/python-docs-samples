@@ -30,5 +30,9 @@ def test_service_accounts(capsys):
         project_id)
     service_accounts.rename_service_account(
         email, 'Updated Py Test Account')
+    service_accounts.disable_service_account(
+        email)
+    service_accounts.enable_service_account(
+        email)
     service_accounts.delete_service_account(
         email)

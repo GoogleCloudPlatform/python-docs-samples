@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2017 Google Inc. All Rights Reserved.
+# Copyright 2019 Google LLC. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,6 +36,9 @@ Usage Examples:
 
     python beta_snippets.py streaming-annotation-storage resources/cat.mp4 \
     gs://mybucket/myfolder
+
+    python beta_snippets.py streaming-automl-classification resources/cat.mp4 \
+    $PROJECT_ID $MODEL_ID
 """
 
 import argparse
@@ -206,7 +209,8 @@ def track_objects_gcs(gcs_uri):
 
     # Get only the first annotation for demo purposes.
     object_annotation = object_annotations[0]
-    print('Entity description: {}'.format(
+    # description is in Unicode
+    print(u'Entity description: {}'.format(
         object_annotation.entity.description))
     if object_annotation.entity.entity_id:
         print('Entity id: {}'.format(object_annotation.entity.entity_id))
@@ -259,7 +263,8 @@ def track_objects(path):
 
     # Get only the first annotation for demo purposes.
     object_annotation = object_annotations[0]
-    print('Entity description: {}'.format(
+    # description is in Unicode
+    print(u'Entity description: {}'.format(
         object_annotation.entity.description))
     if object_annotation.entity.entity_id:
         print('Entity id: {}'.format(object_annotation.entity.entity_id))
@@ -325,7 +330,10 @@ def detect_labels_streaming(path):
     requests = stream_generator()
 
     # streaming_annotate_video returns a generator.
-    responses = client.streaming_annotate_video(requests)
+    # The default timeout is about 300 seconds.
+    # To process longer videos it should be set to
+    # larger than the length (in seconds) of the stream.
+    responses = client.streaming_annotate_video(requests, timeout=600)
 
     # Each response corresponds to about 1 second of video.
     for response in responses:
@@ -334,16 +342,23 @@ def detect_labels_streaming(path):
             print(response.error.message)
             break
 
-        # Get the time offset of the response.
-        frame = response.annotation_results.label_annotations[0].frames[0]
-        time_offset = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
-        print('{}s:'.format(time_offset))
+        label_annotations = response.annotation_results.label_annotations
 
-        for annotation in response.annotation_results.label_annotations:
+        # label_annotations could be empty
+        if not label_annotations:
+            continue
+
+        for annotation in label_annotations:
+            # Each annotation has one frame, which has a timeoffset.
+            frame = annotation.frames[0]
+            time_offset = frame.time_offset.seconds + \
+                frame.time_offset.nanos / 1e9
+
             description = annotation.entity.description
-            # Every annotation has only one frame
             confidence = annotation.frames[0].confidence
-            print('\t{} (confidence: {})'.format(description, confidence))
+            # description is in Unicode
+            print(u'{}s: {} (confidence: {})'.format(
+                time_offset, description, confidence))
     # [END video_streaming_label_detection_beta]
 
 
@@ -385,7 +400,10 @@ def detect_shot_change_streaming(path):
     requests = stream_generator()
 
     # streaming_annotate_video returns a generator.
-    responses = client.streaming_annotate_video(requests)
+    # The default timeout is about 300 seconds.
+    # To process longer videos it should be set to
+    # larger than the length (in seconds) of the stream.
+    responses = client.streaming_annotate_video(requests, timeout=600)
 
     # Each response corresponds to about 1 second of video.
     for response in responses:
@@ -442,7 +460,10 @@ def track_objects_streaming(path):
     requests = stream_generator()
 
     # streaming_annotate_video returns a generator.
-    responses = client.streaming_annotate_video(requests)
+    # The default timeout is about 300 seconds.
+    # To process longer videos it should be set to
+    # larger than the length (in seconds) of the stream.
+    responses = client.streaming_annotate_video(requests, timeout=600)
 
     # Each response corresponds to about 1 second of video.
     for response in responses:
@@ -451,19 +472,27 @@ def track_objects_streaming(path):
             print(response.error.message)
             break
 
-        # Get the time offset of the response.
-        frame = response.annotation_results.object_annotations[0].frames[0]
-        time_offset = frame.time_offset.seconds + frame.time_offset.nanos / 1e9
-        print('{}s:'.format(time_offset))
+        object_annotations = response.annotation_results.object_annotations
 
-        for annotation in response.annotation_results.object_annotations:
+        # object_annotations could be empty
+        if not object_annotations:
+            continue
+
+        for annotation in object_annotations:
+            # Each annotation has one frame, which has a timeoffset.
+            frame = annotation.frames[0]
+            time_offset = frame.time_offset.seconds + \
+                frame.time_offset.nanos / 1e9
+
             description = annotation.entity.description
             confidence = annotation.confidence
 
             # track_id tracks the same object in the video.
             track_id = annotation.track_id
 
-            print('\tEntity description: {}'.format(description))
+            # description is in Unicode
+            print('{}s'.format(time_offset))
+            print(u'\tEntity description: {}'.format(description))
             print('\tTrack Id: {}'.format(track_id))
             if annotation.entity.entity_id:
                 print('\tEntity id: {}'.format(annotation.entity.entity_id))
@@ -519,7 +548,10 @@ def detect_explicit_content_streaming(path):
     requests = stream_generator()
 
     # streaming_annotate_video returns a generator.
-    responses = client.streaming_annotate_video(requests)
+    # The default timeout is about 300 seconds.
+    # To process longer videos it should be set to
+    # larger than the length (in seconds) of the stream.
+    responses = client.streaming_annotate_video(requests, timeout=600)
 
     # Each response corresponds to about 1 second of video.
     for response in responses:
@@ -585,7 +617,10 @@ def annotation_to_storage_streaming(path, output_uri):
     requests = stream_generator()
 
     # streaming_annotate_video returns a generator.
-    responses = client.streaming_annotate_video(requests)
+    # The default timeout is about 300 seconds.
+    # To process longer videos it should be set to
+    # larger than the length (in seconds) of the stream.
+    responses = client.streaming_annotate_video(requests, timeout=600)
 
     for response in responses:
         # Check for errors.
@@ -595,6 +630,79 @@ def annotation_to_storage_streaming(path, output_uri):
 
         print('Storage URI: {}'.format(response.annotation_results_uri))
     # [END video_streaming_annotation_to_storage_beta]
+
+
+def streaming_automl_classification(path, project_id, model_id):
+    # [START video_streaming_automl_classification_beta]
+    import io
+
+    from google.cloud import videointelligence_v1p3beta1 as videointelligence
+    from google.cloud.videointelligence_v1p3beta1 import enums
+
+    # path = 'path_to_file'
+    # project_id = 'gcp_project_id'
+    # model_id = 'automl_classification_model_id'
+
+    client = videointelligence.StreamingVideoIntelligenceServiceClient()
+
+    model_path = 'projects/{}/locations/us-central1/models/{}'.format(
+        project_id, model_id)
+
+    # Here we use classification as an example.
+    automl_config = (videointelligence.types
+                     .StreamingAutomlClassificationConfig(
+                         model_name=model_path))
+
+    video_config = videointelligence.types.StreamingVideoConfig(
+        feature=enums.StreamingFeature.STREAMING_AUTOML_CLASSIFICATION,
+        automl_classification_config=automl_config)
+
+    # config_request should be the first in the stream of requests.
+    config_request = videointelligence.types.StreamingAnnotateVideoRequest(
+        video_config=video_config)
+
+    # Set the chunk size to 5MB (recommended less than 10MB).
+    chunk_size = 5 * 1024 * 1024
+
+    # Load file content.
+    # Note: Input videos must have supported video codecs. See
+    # https://cloud.google.com/video-intelligence/docs/streaming/streaming#supported_video_codecs
+    # for more details.
+    stream = []
+    with io.open(path, 'rb') as video_file:
+        while True:
+            data = video_file.read(chunk_size)
+            if not data:
+                break
+            stream.append(data)
+
+    def stream_generator():
+        yield config_request
+        for chunk in stream:
+            yield videointelligence.types.StreamingAnnotateVideoRequest(
+                input_content=chunk)
+
+    requests = stream_generator()
+
+    # streaming_annotate_video returns a generator.
+    # The default timeout is about 300 seconds.
+    # To process longer videos it should be set to
+    # larger than the length (in seconds) of the stream.
+    responses = client.streaming_annotate_video(requests, timeout=600)
+
+    for response in responses:
+        # Check for errors.
+        if response.error.message:
+            print(response.error.message)
+            break
+
+        for label in response.annotation_results.label_annotations:
+            for frame in label.frames:
+                print("At {:3d}s segment, {:5.1%} {}".format(
+                    frame.time_offset.seconds,
+                    frame.confidence,
+                    label.entity.entity_id))
+    # [END video_streaming_automl_classification_beta]
 
 
 if __name__ == '__main__':
@@ -646,6 +754,13 @@ if __name__ == '__main__':
     video_streaming_annotation_to_storage_parser.add_argument('path')
     video_streaming_annotation_to_storage_parser.add_argument('output_uri')
 
+    video_streaming_automl_classification_parser = subparsers.add_parser(
+        'streaming-automl-classification',
+        help=streaming_automl_classification.__doc__)
+    video_streaming_automl_classification_parser.add_argument('path')
+    video_streaming_automl_classification_parser.add_argument('project_id')
+    video_streaming_automl_classification_parser.add_argument('model_id')
+
     args = parser.parse_args()
 
     if args.command == 'transcription':
@@ -668,3 +783,6 @@ if __name__ == '__main__':
         detect_explicit_content_streaming(args.path)
     elif args.command == 'streaming-annotation-storage':
         annotation_to_storage_streaming(args.path, args.output_uri)
+    elif args.command == 'streaming-automl-classification':
+        streaming_automl_classification(
+            args.path, args.project_id, args.model_id)
