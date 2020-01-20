@@ -21,7 +21,7 @@ from google.cloud import bigtable
 from main import main
 
 PROJECT = os.environ['GCLOUD_PROJECT']
-BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
+BIGTABLE_INSTANCE = os.environ['BIGTABLE_CLUSTER']
 TABLE_ID_FORMAT = 'quickstart-hb-test-{}'
 TABLE_ID_RANGE = 10000
 
