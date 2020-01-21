@@ -25,6 +25,7 @@ BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
 TABLE_NAME_FORMAT = 'tableadmin-test-{}'
 TABLE_NAME_RANGE = 10000
 
+
 def test_run_table_operations(capsys):
     table_name = TABLE_NAME_FORMAT.format(
         random.randrange(TABLE_NAME_RANGE))

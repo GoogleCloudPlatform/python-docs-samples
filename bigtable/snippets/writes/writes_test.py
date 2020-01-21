@@ -27,6 +27,7 @@ PROJECT = os.environ['GCLOUD_PROJECT']
 BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
 TABLE_ID_PREFIX = 'mobile-time-series-{}'
 
+
 @pytest.fixture
 def bigtable_client():
     return bigtable.Client(project=PROJECT, admin=True)

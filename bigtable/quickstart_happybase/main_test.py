@@ -25,6 +25,7 @@ BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
 TABLE_ID_FORMAT = 'quickstart-hb-test-{}'
 TABLE_ID_RANGE = 10000
 
+
 @pytest.fixture()
 def table():
     table_id = TABLE_ID_FORMAT.format(
