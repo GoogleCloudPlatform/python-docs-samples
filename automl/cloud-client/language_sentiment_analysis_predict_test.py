@@ -36,8 +36,7 @@ def setup():
         response.result()
 
 
-def test_sentiment_analysis_predict(capsys, verify_model_state):
-    verify_model_state
+def test_sentiment_analysis_predict(capsys):
     text = "Hopefully this Claritin kicks in soon"
     language_sentiment_analysis_predict.predict(PROJECT_ID, MODEL_ID, text)
     out, _ = capsys.readouterr()
