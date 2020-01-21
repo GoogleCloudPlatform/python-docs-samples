@@ -37,7 +37,7 @@ def test_labels(capsys):
 
 
 def test_labels_uri(capsys):
-    file_name = 'gs://{}/vision/wakeupcat.jpg'.format(ASSET_BUCKET)
+    file_name = 'gs://{}/vision/label/wakeupcat.jpg'.format(ASSET_BUCKET)
     detect.detect_labels_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'Labels' in out
