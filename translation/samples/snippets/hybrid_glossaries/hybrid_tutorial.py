@@ -242,7 +242,7 @@ def main():
                                    PROJECT_ID, glossary_name)
     # translated text -> synthetic audio
     text_to_speech(text_to_speak, outfile)
-    # [END transalte_hybrid_integration]
+    # [END translate_hybrid_integration]
 
 
 if __name__ == '__main__':
