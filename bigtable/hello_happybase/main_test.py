@@ -18,7 +18,7 @@ import random
 from main import main
 
 PROJECT = os.environ['GCLOUD_PROJECT']
-BIGTABLE_INSTANCE = os.environ['BIGTABLE_CLUSTER']
+BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
 TABLE_NAME_FORMAT = 'hello-world-hb-test-{}'
 TABLE_NAME_RANGE = 10000
 

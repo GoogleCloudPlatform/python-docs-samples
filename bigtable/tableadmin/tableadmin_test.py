@@ -21,7 +21,7 @@ from tableadmin import delete_table
 from tableadmin import run_table_operations
 
 PROJECT = os.environ['GCLOUD_PROJECT']
-BIGTABLE_INSTANCE = os.environ['BIGTABLE_CLUSTER']
+BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
 TABLE_NAME_FORMAT = 'tableadmin-test-{}'
 TABLE_NAME_RANGE = 10000
 
