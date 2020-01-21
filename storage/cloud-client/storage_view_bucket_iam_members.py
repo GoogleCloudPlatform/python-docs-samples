@@ -27,11 +27,10 @@ def view_bucket_iam_members(bucket_name):
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
 
-    policy = bucket.get_iam_policy()
+    policy = bucket.get_iam_policy(requested_policy_version=3)
 
-    for role in policy:
-        members = policy[role]
-        print("Role: {}, Members: {}".format(role, members))
+    for binding in policy.bindings:
+        print("Role: {}, Members: {}".format(binding["role"], binding["members"]))
 
 
 # [END storage_view_bucket_iam_members]
