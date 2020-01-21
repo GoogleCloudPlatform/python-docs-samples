@@ -43,13 +43,23 @@ def dataset_id():
 
 @pytest.mark.slow
 def test_import_dataset(capsys, dataset_id):
-    data = (
-        "gs://{}/sentiment-analysis/dataset.csv".format(BUCKET_ID)
-    )
-    created_dataset_id = dataset_id
-    import_dataset.import_dataset(PROJECT_ID, created_dataset_id, data)
-    out, _ = capsys.readouterr()
-    assert "Data imported." in out
+    # Importing a dataset can take a long time and only four operations can be
+    # run on a project at once. Try to import the dataset and if a resource
+    # exhausted error is thrown, catch it. Otherwise, proceed as usual.
+    try:
+        data = (
+            "gs://{}/sentiment-analysis/dataset.csv".format(BUCKET_ID)
+        )
+        created_dataset_id = dataset_id
+        import_dataset.import_dataset(PROJECT_ID, created_dataset_id, data)
+        out, _ = capsys.readouterr()
+        assert "Data imported." in out
+    except Exception as e:
+        assert (
+                "ResourceExhausted: 429 There are too many import data "
+                "operations are running in parallel"
+                in e.message
+        )
 
     # delete created dataset
     client = automl.AutoMlClient()
@@ -58,3 +68,5 @@ def test_import_dataset(capsys, dataset_id):
     )
     response = client.delete_dataset(dataset_full_id)
     response.result()
+
+
