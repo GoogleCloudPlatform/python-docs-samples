@@ -16,6 +16,7 @@ If you are using Cloud Shell, skip to the next section.
 
 #### Google Container Registry Image Setup
 If you are using the provided image, skip to the next section.
+
 4. Get default project id and set environment variable:
     `PROJECT_ID=$(gcloud config get-value project)`
 5. Build Image:
