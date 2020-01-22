@@ -43,6 +43,7 @@ def sample_batch_annotate_files(storage_uri):
         gs://[bucket]/ [file]
     """
     # [START vision_batch_annotate_files_gcs_core]
+    mime_type = 'application/pdf'
 
     client = vision_v1.ImageAnnotatorClient()
 
@@ -53,7 +54,8 @@ def sample_batch_annotate_files(storage_uri):
     if isinstance(storage_uri, six.binary_type):
         storage_uri = storage_uri.decode("utf-8")
     gcs_source = {"uri": storage_uri}
-    input_config = {"gcs_source": gcs_source}
+    input_config = {"gcs_source": gcs_source,
+      "mime_type": mime_type}
     type_ = enums.Feature.Type.DOCUMENT_TEXT_DETECTION
     features_element = {"type": type_}
     features = [features_element]
