@@ -28,7 +28,8 @@ GCS_DESTINATION_URI = "gs://{}/{}/".format(BUCKET, OUTPUT_PREFIX)
 def test_sample_batch_annotate_files_gcs(capsys):
     storage_uri = os.path.join(GCS_ROOT, "document_understanding/kafka.pdf")
 
-    vision_batch_annotate_files_gcs.sample_batch_annotate_files(storage_uri=storage_uri)
+    vision_batch_annotate_files_gcs.sample_batch_annotate_files(
+        storage_uri=storage_uri)
 
     out, _ = capsys.readouterr()
 

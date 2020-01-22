@@ -29,7 +29,8 @@ GCS_DESTINATION_URI = "gs://{}/{}/".format(BUCKET, OUTPUT_PREFIX)
 def test_sample_batch_annotate_files(capsys):
     file_path = "resources/kafka.pdf"
 
-    vision_batch_annotate_files.sample_batch_annotate_files(file_path=file_path)
+    vision_batch_annotate_files.sample_batch_annotate_files(
+        file_path=file_path)
 
     out, _ = capsys.readouterr()
 
