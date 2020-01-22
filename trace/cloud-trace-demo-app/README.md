@@ -1,7 +1,5 @@
 # cloud-trace-demo-app
 
-Public Docker image: gcr.io/cloud-trace-demo/demo-image:latest
-
 Open this demo app in [Google Cloud Shell](https://cloud.google.com/shell/docs/). This includes necessary tools.
 
 [![Open Cloud Trace Demo APP in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=trace/cloud-trace-demo-app/README.md&amp;cloudshell_tutorial=README.md)
@@ -9,11 +7,11 @@ Open this demo app in [Google Cloud Shell](https://cloud.google.com/shell/docs/)
 Run `gcloud init` to set up your region and zone.
 
 #### Demo Requirements
-If you are using cloud shell, skip to the next section.
+If you are using Cloud Shell, skip to the next section.
 
-1. Install gcloud https://cloud.google.com/sdk/install
-2. Install kubectl https://kubernetes.io/docs/tasks/tools/install-kubectl/
-3. Install docker https://docs.docker.com/install/
+1. Install gcloud <https://cloud.google.com/sdk/install>
+2. Install kubectl <https://kubernetes.io/docs/tasks/tools/install-kubectl/>
+3. Install docker <https://docs.docker.com/install/>
 
 #### Google Container Registry Image Setup
 If you are using the provided image, skip to the next section.
