@@ -19,7 +19,7 @@ from google.cloud.vision_v1 import enums
 import io
 
 
-def sample_batch_annotate_files(file_path):
+def sample_batch_annotate_files(file_path="resources/kafka.pdf"):
     """
     Perform batch file annotation
 
@@ -30,7 +30,7 @@ def sample_batch_annotate_files(file_path):
 
     client = vision_v1.ImageAnnotatorClient()
 
-    # file_path = 'resources/kafka.pdf'
+    # file_path = "resources/kafka.pdf"
 
     # Supported mime_type: application/pdf, image/tiff, image/gif
     mime_type = "application/pdf"
@@ -56,16 +56,14 @@ def sample_batch_annotate_files(file_path):
 
     response = client.batch_annotate_files(requests)
     for image_response in response.responses[0].responses:
-        print(
-            u"Full text: {}".format(image_response.full_text_annotation.text))
+        print(u"Full text: {}".format(image_response.full_text_annotation.text))
         for page in image_response.full_text_annotation.pages:
             for block in page.blocks:
                 print(u"\nBlock confidence: {}".format(block.confidence))
                 for par in block.paragraphs:
                     print(u"\tParagraph confidence: {}".format(par.confidence))
                     for word in par.words:
-                        print(
-                            u"\t\tWord confidence: {}".format(word.confidence))
+                        print(u"\t\tWord confidence: {}".format(word.confidence))
                         for symbol in word.symbols:
                             print(
                                 u"\t\t\tSymbol: {}, (confidence: {})".format(
@@ -77,17 +75,3 @@ def sample_batch_annotate_files(file_path):
 
 
 # [END vision_batch_annotate_files]
-
-
-def main():
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--file_path", type=str, default="resources/kafka.pdf")
-    args = parser.parse_args()
-
-    sample_batch_annotate_files(args.file_path)
-
-
-if __name__ == "__main__":
-    main()

@@ -18,7 +18,9 @@ from google.cloud import vision_v1
 from google.cloud.vision_v1 import enums
 
 
-def sample_batch_annotate_files(storage_uri):
+def sample_batch_annotate_files(
+    storage_uri="gs://cloud-samples-data/vision/document_understanding/kafka.pdf",
+):
     """
     Perform batch file annotation
 
@@ -32,7 +34,7 @@ def sample_batch_annotate_files(storage_uri):
     client = vision_v1.ImageAnnotatorClient()
 
     # storage_uri = (
-    #    'gs://cloud-samples-data/vision/document_understanding/kafka.pdf'
+    #    "gs://cloud-samples-data/vision/document_understanding/kafka.pdf"
     # )
 
     gcs_source = {"uri": storage_uri}
@@ -57,16 +59,14 @@ def sample_batch_annotate_files(storage_uri):
 
     response = client.batch_annotate_files(requests)
     for image_response in response.responses[0].responses:
-        print(
-            u"Full text: {}".format(image_response.full_text_annotation.text))
+        print(u"Full text: {}".format(image_response.full_text_annotation.text))
         for page in image_response.full_text_annotation.pages:
             for block in page.blocks:
                 print(u"\nBlock confidence: {}".format(block.confidence))
                 for par in block.paragraphs:
                     print(u"\tParagraph confidence: {}".format(par.confidence))
                     for word in par.words:
-                        print(
-                            u"\t\tWord confidence: {}".format(word.confidence))
+                        print(u"\t\tWord confidence: {}".format(word.confidence))
                         for symbol in word.symbols:
                             print(
                                 u"\t\t\tSymbol: {}, (confidence: {})".format(
@@ -78,23 +78,3 @@ def sample_batch_annotate_files(storage_uri):
 
 
 # [END vision_batch_annotate_files_gcs]
-
-
-def main():
-    import argparse
-
-    storage_uri_default = (
-        "gs://cloud-samples-data/vision/document_understanding/kafka.pdf"
-    )
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--storage_uri", type=str, default=storage_uri_default,
-    )
-    args = parser.parse_args()
-
-    sample_batch_annotate_files(args.storage_uri)
-
-
-if __name__ == "__main__":
-    main()

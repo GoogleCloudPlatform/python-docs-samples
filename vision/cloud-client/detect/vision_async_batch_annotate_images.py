@@ -18,14 +18,17 @@ from google.cloud import vision_v1
 from google.cloud.vision_v1 import enums
 
 
-def sample_async_batch_annotate_images(input_image_uri, output_uri):
+def sample_async_batch_annotate_images(
+    input_image_uri="gs://cloud-samples-data/vision/label/wakeupcat.jpg",
+    output_uri="gs://your-bucket/prefix/",
+):
     """Perform async batch image annotation"""
     # [START vision_async_batch_annotate_images_core]
 
     client = vision_v1.ImageAnnotatorClient()
 
-    # input_image_uri = 'gs://cloud-samples-data/vision/label/wakeupcat.jpg'
-    # output_uri = 'gs://your-bucket/prefix/'
+    # input_image_uri = "gs://cloud-samples-data/vision/label/wakeupcat.jpg"
+    # output_uri = "gs://your-bucket/prefix/"
 
     source = {"image_uri": input_image_uri}
     image = {"source": source}
@@ -40,8 +43,7 @@ def sample_async_batch_annotate_images(input_image_uri, output_uri):
 
     # The max number of responses to output in each JSON file
     batch_size = 2
-    output_config = {
-        "gcs_destination": gcs_destination, "batch_size": batch_size}
+    output_config = {"gcs_destination": gcs_destination, "batch_size": batch_size}
 
     operation = client.async_batch_annotate_images(requests, output_config)
 
@@ -56,23 +58,3 @@ def sample_async_batch_annotate_images(input_image_uri, output_uri):
 
 
 # [END vision_async_batch_annotate_images]
-
-
-def main():
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--input_image_uri",
-        type=str,
-        default="gs://cloud-samples-data/vision/label/wakeupcat.jpg",
-    )
-    parser.add_argument(
-        "--output_uri", type=str, default="gs://your-bucket/prefix/")
-    args = parser.parse_args()
-
-    sample_async_batch_annotate_images(args.input_image_uri, args.output_uri)
-
-
-if __name__ == "__main__":
-    main()
