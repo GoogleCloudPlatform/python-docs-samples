@@ -68,6 +68,12 @@ def detect_faces(path):
                     for vertex in face.bounding_poly.vertices])
 
         print('face bounds: {}'.format(','.join(vertices)))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
     # [END vision_python_migration_face_detection]
 # [END vision_face_detection]
 
@@ -99,6 +105,12 @@ def detect_faces_uri(uri):
                     for vertex in face.bounding_poly.vertices])
 
         print('face bounds: {}'.format(','.join(vertices)))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
 # [END vision_face_detection_gcs]
 
 
@@ -121,6 +133,12 @@ def detect_labels(path):
 
     for label in labels:
         print(label.description)
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
     # [END vision_python_migration_label_detection]
 # [END vision_label_detection]
 
@@ -140,6 +158,12 @@ def detect_labels_uri(uri):
 
     for label in labels:
         print(label.description)
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
 # [END vision_label_detection_gcs]
 
 
@@ -166,6 +190,12 @@ def detect_landmarks(path):
             lat_lng = location.lat_lng
             print('Latitude {}'.format(lat_lng.latitude))
             print('Longitude {}'.format(lat_lng.longitude))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
     # [END vision_python_migration_landmark_detection]
 # [END vision_landmark_detection]
 
@@ -185,6 +215,12 @@ def detect_landmarks_uri(uri):
 
     for landmark in landmarks:
         print(landmark.description)
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
 # [END vision_landmark_detection_gcs]
 
 
@@ -207,6 +243,12 @@ def detect_logos(path):
 
     for logo in logos:
         print(logo.description)
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
     # [END vision_python_migration_logo_detection]
 # [END vision_logo_detection]
 
@@ -226,6 +268,12 @@ def detect_logos_uri(uri):
 
     for logo in logos:
         print(logo.description)
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
 # [END vision_logo_detection_gcs]
 
 
@@ -255,6 +303,12 @@ def detect_safe_search(path):
     print('spoofed: {}'.format(likelihood_name[safe.spoof]))
     print('violence: {}'.format(likelihood_name[safe.violence]))
     print('racy: {}'.format(likelihood_name[safe.racy]))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
     # [END vision_python_migration_safe_search_detection]
 # [END vision_safe_search_detection]
 
@@ -281,6 +335,12 @@ def detect_safe_search_uri(uri):
     print('spoofed: {}'.format(likelihood_name[safe.spoof]))
     print('violence: {}'.format(likelihood_name[safe.violence]))
     print('racy: {}'.format(likelihood_name[safe.racy]))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
 # [END vision_safe_search_detection_gcs]
 
 
@@ -308,6 +368,12 @@ def detect_text(path):
                     for vertex in text.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
     # [END vision_python_migration_text_detection]
 # [END vision_text_detection]
 
@@ -332,6 +398,12 @@ def detect_text_uri(uri):
                     for vertex in text.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
 # [END vision_text_detection_gcs]
 
 
@@ -358,6 +430,12 @@ def detect_properties(path):
         print('\tg: {}'.format(color.color.green))
         print('\tb: {}'.format(color.color.blue))
         print('\ta: {}'.format(color.color.alpha))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
     # [END vision_python_migration_image_properties]
 # [END vision_image_property_detection]
 
@@ -381,6 +459,12 @@ def detect_properties_uri(uri):
         print('\tg: {}'.format(color.color.green))
         print('\tb: {}'.format(color.color.blue))
         print('\ta: {}'.format(color.color.alpha))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
 # [END vision_image_property_detection_gcs]
 
 
@@ -439,6 +523,12 @@ def detect_web(path):
 
         for image in annotations.visually_similar_images:
             print('\tImage url    : {}'.format(image.url))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
     # [END vision_python_migration_web_detection]
 # [END vision_web_detection]
 
@@ -493,6 +583,12 @@ def detect_web_uri(uri):
 
         for image in annotations.visually_similar_images:
             print('\tImage url    : {}'.format(image.url))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
 # [END vision_web_detection_gcs]
 
 
@@ -519,6 +615,12 @@ def web_entities_include_geo_results(path):
     for entity in response.web_detection.web_entities:
         print('\n\tScore      : {}'.format(entity.score))
         print(u'\tDescription: {}'.format(entity.description))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
 # [END vision_web_detection_include_geo]
 
 
@@ -543,6 +645,12 @@ def web_entities_include_geo_results_uri(uri):
     for entity in response.web_detection.web_entities:
         print('\n\tScore      : {}'.format(entity.score))
         print(u'\tDescription: {}'.format(entity.description))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
 # [END vision_web_detection_include_geo_gcs]
 
 
@@ -572,6 +680,12 @@ def detect_crop_hints(path):
                     for vertex in hint.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
     # [END vision_python_migration_crop_hints]
 # [END vision_crop_hint_detection]
 
@@ -598,6 +712,12 @@ def detect_crop_hints_uri(uri):
                     for vertex in hint.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
 # [END vision_crop_hint_detection_gcs]
 
 
@@ -634,6 +754,12 @@ def detect_document(path):
                     for symbol in word.symbols:
                         print('\tSymbol: {} (confidence: {})'.format(
                             symbol.text, symbol.confidence))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
     # [END vision_python_migration_document_text_detection]
 # [END vision_fulltext_detection]
 
@@ -667,6 +793,12 @@ def detect_document_uri(uri):
                     for symbol in word.symbols:
                         print('\tSymbol: {} (confidence: {})'.format(
                             symbol.text, symbol.confidence))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
 # [END vision_fulltext_detection_gcs]
 
 
