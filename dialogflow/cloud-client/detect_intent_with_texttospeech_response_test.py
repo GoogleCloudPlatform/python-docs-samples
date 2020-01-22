@@ -13,13 +13,14 @@
 
 from __future__ import absolute_import
 
+import datetime
 import os
 
 from detect_intent_with_texttospeech_response import \
     detect_intent_with_texttospeech_response
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-SESSION_ID = 'fake_session_for_testing'
+SESSION_ID = 'test_' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 TEXTS = ["hello"]
 
 

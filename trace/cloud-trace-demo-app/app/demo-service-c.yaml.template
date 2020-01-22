@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: cloud-trace-demo-container
-        image: gcr.io/another-gke-demo/final-demo-image:latest
+        image: gcr.io/cloud-trace-demo/demo-image:latest
         command:
         - python
         args:

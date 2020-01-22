@@ -1,6 +1,6 @@
 # cloud-trace-demo-app
 
-Public Docker image: gcr.io/another-gke-demo/final-demo-image
+Public Docker image: gcr.io/cloud-trace-demo/demo-image:latest
 
 Open this demo app in [Google Cloud Shell](https://cloud.google.com/shell/docs/). This includes necessary tools.
 
