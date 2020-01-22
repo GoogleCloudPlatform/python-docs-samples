@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright 2019 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,24 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample
-#   ("Request",  "vision_batch_annotate_files")
-
-# To install the latest published package dependency, execute the following:
-#   pip install google-cloud-vision
-
-# sample-metadata
-#   title:
-#   description: Perform batch file annotation
-#   usage: python3 samples/v1/vision_batch_annotate_files.py \
-#     [--file_path "resources/kafka.pdf"]
-
 # [START vision_batch_annotate_files]
 
 from google.cloud import vision_v1
 from google.cloud.vision_v1 import enums
 import io
-import six
 
 
 def sample_batch_annotate_files(file_path):
@@ -46,9 +31,6 @@ def sample_batch_annotate_files(file_path):
     client = vision_v1.ImageAnnotatorClient()
 
     # file_path = 'resources/kafka.pdf'
-
-    if isinstance(file_path, six.binary_type):
-        file_path = file_path.decode("utf-8")
 
     # Supported mime_type: application/pdf, image/tiff, image/gif
     mime_type = "application/pdf"

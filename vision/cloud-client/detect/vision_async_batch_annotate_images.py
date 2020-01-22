@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright 2019 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,25 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample
-#   ("LongRunningPromise",  "vision_async_batch_annotate_images")
-
-# To install the latest published package dependency, execute the following:
-#   pip install google-cloud-vision
-
-# sample-metadata
-#   title: Async Batch Image Annotation
-#   description: Perform async batch image annotation
-#   usage: python3 samples/v1/vision_async_batch_annotate_images.py \
-#     [--input_image_uri \
-#     "gs://cloud-samples-data/vision/label/wakeupcat.jpg"] \
-#     [--output_uri "gs://your-bucket/prefix/"]
-
 # [START vision_async_batch_annotate_images]
 
 from google.cloud import vision_v1
 from google.cloud.vision_v1 import enums
-import six
 
 
 def sample_async_batch_annotate_images(input_image_uri, output_uri):
@@ -44,10 +27,6 @@ def sample_async_batch_annotate_images(input_image_uri, output_uri):
     # input_image_uri = 'gs://cloud-samples-data/vision/label/wakeupcat.jpg'
     # output_uri = 'gs://your-bucket/prefix/'
 
-    if isinstance(input_image_uri, six.binary_type):
-        input_image_uri = input_image_uri.decode("utf-8")
-    if isinstance(output_uri, six.binary_type):
-        output_uri = output_uri.decode("utf-8")
     source = {"image_uri": input_image_uri}
     image = {"source": source}
     type_ = enums.Feature.Type.LABEL_DETECTION
