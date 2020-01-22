@@ -43,7 +43,7 @@ def sample_batch_annotate_files(storage_uri):
         gs://[bucket]/ [file]
     """
     # [START vision_batch_annotate_files_gcs_core]
-    mime_type = 'application/pdf'
+    mime_type = "application/pdf"
 
     client = vision_v1.ImageAnnotatorClient()
 
@@ -54,8 +54,7 @@ def sample_batch_annotate_files(storage_uri):
     if isinstance(storage_uri, six.binary_type):
         storage_uri = storage_uri.decode("utf-8")
     gcs_source = {"uri": storage_uri}
-    input_config = {"gcs_source": gcs_source,
-      "mime_type": mime_type}
+    input_config = {"gcs_source": gcs_source, "mime_type": mime_type}
     type_ = enums.Feature.Type.DOCUMENT_TEXT_DETECTION
     features_element = {"type": type_}
     features = [features_element]
@@ -76,18 +75,17 @@ def sample_batch_annotate_files(storage_uri):
 
     response = client.batch_annotate_files(requests)
     for image_response in response.responses[0].responses:
-        print("Full text: {}".format(image_response.full_text_annotation.text))
+        print(u"Full text: {}".format(image_response.full_text_annotation.text))
         for page in image_response.full_text_annotation.pages:
             for block in page.blocks:
-                print("\nBlock confidence: {}".format(block.confidence))
+                print(u"\nBlock confidence: {}".format(block.confidence))
                 for par in block.paragraphs:
-                    print("\tParagraph confidence: {}".format(par.confidence))
+                    print(u"\tParagraph confidence: {}".format(par.confidence))
                     for word in par.words:
-                        print(
-                            "\t\tWord confidence: {}".format(word.confidence))
+                        print(u"\t\tWord confidence: {}".format(word.confidence))
                         for symbol in word.symbols:
                             print(
-                                "\t\t\tSymbol: {}, (confidence: {})".format(
+                                u"\t\t\tSymbol: {}, (confidence: {})".format(
                                     symbol.text, symbol.confidence
                                 )
                             )

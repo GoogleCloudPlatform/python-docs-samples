@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright 2020 Google
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +16,7 @@
 import os
 import uuid
 
-import vision_batch_annotate_files_gcs
+import vision_batch_annotate_files
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 GCS_ROOT = "gs://cloud-samples-data/vision/"
@@ -25,10 +26,10 @@ OUTPUT_PREFIX = "TEST_OUTPUT_{}".format(uuid.uuid4())
 GCS_DESTINATION_URI = "gs://{}/{}/".format(BUCKET, OUTPUT_PREFIX)
 
 
-def test_sample_batch_annotate_files_gcs(capsys):
-    storage_uri = os.path.join(GCS_ROOT, "document_understanding/kafka.pdf")
+def test_sample_batch_annotate_files(capsys):
+    file_path = "resources/kafka.pdf"
 
-    vision_batch_annotate_files_gcs.sample_batch_annotate_files(storage_uri=storage_uri)
+    vision_batch_annotate_files.sample_batch_annotate_files(file_path=file_path)
 
     out, _ = capsys.readouterr()
 

@@ -74,18 +74,17 @@ def sample_batch_annotate_files(file_path):
 
     response = client.batch_annotate_files(requests)
     for image_response in response.responses[0].responses:
-        print("Full text: {}".format(image_response.full_text_annotation.text))
+        print(u"Full text: {}".format(image_response.full_text_annotation.text))
         for page in image_response.full_text_annotation.pages:
             for block in page.blocks:
-                print("\nBlock confidence: {}".format(block.confidence))
+                print(u"\nBlock confidence: {}".format(block.confidence))
                 for par in block.paragraphs:
-                    print("\tParagraph confidence: {}".format(par.confidence))
+                    print(u"\tParagraph confidence: {}".format(par.confidence))
                     for word in par.words:
-                        print(
-                            "\t\tWord confidence: {}".format(word.confidence))
+                        print(u"\t\tWord confidence: {}".format(word.confidence))
                         for symbol in word.symbols:
                             print(
-                                "\t\t\tSymbol: {}, (confidence: {})".format(
+                                u"\t\t\tSymbol: {}, (confidence: {})".format(
                                     symbol.text, symbol.confidence
                                 )
                             )
