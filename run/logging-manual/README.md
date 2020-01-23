@@ -16,7 +16,7 @@ docker build --tag logging-manual:python .
 ## Run Locally
 
 ```
-docker run --rm -p 9090:8080 logging-manual:python
+docker run --rm -p 9090:8080 -e PORT=8080 logging-manual:python
 ```
 
 ## Test
