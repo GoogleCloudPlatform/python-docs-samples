@@ -15,7 +15,6 @@
 import os
 import pytest
 import sys
-import time
 import uuid
 
 # Add datasets for bootstrapping datasets for testing
@@ -106,6 +105,7 @@ def test_create_patient(test_dataset, test_fhir_store, capsys):
     print(out)
 
     assert "Created Patient" in out
+
 
 def test_get_patient(test_dataset, test_fhir_store, test_patient, capsys):
     fhir_resources.get_resource(
@@ -420,7 +420,7 @@ def test_search_resources_post(test_dataset, test_fhir_store, test_patient, caps
     )
 
     out, _ = capsys.readouterr()
-    
+
     assert "Using POST request" in out
 
 
