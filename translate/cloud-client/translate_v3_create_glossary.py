@@ -34,7 +34,7 @@ def sample_create_glossary(project_id, input_uri, glossary_id):
     # TODO(developer): Uncomment and set the following variables
     # project_id = 'YOUR_PROJECT_ID'
     # glossary_id = 'your-glossary-display-name'
-    # input_uri = 'gs://cloud-samples-data/translation/glossary.csv'
+    # input_uri = 'gs://cloud-samples-data/translation/glossary_ja.csv'
     location = 'us-central1'  # The location of the glossary
 
     name = client.glossary_path(
@@ -50,6 +50,10 @@ def sample_create_glossary(project_id, input_uri, glossary_id):
     input_config = translate.types.GlossaryInputConfig(
         gcs_source=gcs_source)
 
+    # Note: You can create a glossary using one of two modes:
+    # language_code_set or language_pair. When listing the information for
+    # a glossary, you can only get information for the mode you used
+    # when creating the glossary.
     glossary = translate.types.Glossary(
         name=name,
         language_codes_set=language_codes_set,

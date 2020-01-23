@@ -34,7 +34,8 @@ def sample_list_glossaries(project_id):
 
     # TODO(developer): Uncomment and set the following variables
     # project_id = '[Google Cloud Project ID]'
-    parent = client.location_path(project_id, "us-central1")
+    location = 'us-central1'
+    parent = client.location_path(project_id, location)
 
     # Iterate over all results
     for glossary in client.list_glossaries(parent):
@@ -42,11 +43,14 @@ def sample_list_glossaries(project_id):
         print('Entry count: {}'.format(glossary.entry_count))
         print('Input uri: {}'.format(
             glossary.input_config.gcs_source.input_uri))
+
+        # Note: You can create a glossary using one of two modes:
+        # language_code_set or language_pair. When listing the information for
+        # a glossary, you can only get information for the mode you used
+        # when creating the glossary.
         for language_code in glossary.language_codes_set.language_codes:
             print('Language code: {}'.format(language_code))
-        if glossary.language_pair:
-            print(glossary.language_pair.source_language_code)
-            print(glossary.language_pair.target_language_code)
+
 
 # [END translate_v3_list_glossary]
 
