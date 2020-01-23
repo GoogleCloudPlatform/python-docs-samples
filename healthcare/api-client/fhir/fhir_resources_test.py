@@ -125,6 +125,176 @@ def test_get_patient(test_dataset, test_fhir_store, test_patient, capsys):
 
     assert "Got Patient resource" in out
 
+
+def test_conditional_patch_resource(test_dataset, test_fhir_store, test_patient, capsys):
+    # The conditional method tests use an Observation, so we have to create an
+    # Encounter from test_patient and then create an Observation from the
+    # Encounter.
+    encounter_response = fhir_resources.create_encounter(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        test_patient,
+    )
+
+    encounter_resource_id = encounter_response.json()["id"]
+
+    observation_response = fhir_resources.create_observation(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        test_patient,
+        encounter_resource_id,
+    )
+
+    observation_resource_id = observation_response.json()["id"]
+
+    fhir_resources.conditional_patch_resource(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+    )
+
+    # In accordance with the FHIR spec, if conditional patch or conditional update
+    # can only be applied to one resource at a time. If the search criteria
+    # identify more than one match, the request returns a 412 Precondition Failed
+    # error. Every time the tests create an Observation resource, the resource is
+    # identical, therefore you have to delete each Observation after it's created
+    # or else conditional patch/update will detect more than one Observation
+    # that matches.
+    fhir_resources.delete_resource(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        'Observation',
+        observation_resource_id
+    )
+
+    out, _ = capsys.readouterr()
+
+    print(out)
+
+    assert "Conditionally patched" in out
+
+
+def test_conditional_update_resource(test_dataset, test_fhir_store, test_patient, capsys):
+    # The conditional method tests use an Observation, so we have to create an
+    # Encounter from test_patient and then create an Observation from the
+    # Encounter.
+    encounter_response = fhir_resources.create_encounter(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        test_patient,
+    )
+
+    encounter_resource_id = encounter_response.json()["id"]
+
+    observation_response = fhir_resources.create_observation(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        test_patient,
+        encounter_resource_id,
+    )
+
+    observation_resource_id = observation_response.json()["id"]
+
+    fhir_resources.conditional_update_resource(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        test_patient,
+        encounter_resource_id,
+    )
+
+    # In accordance with the FHIR spec, if conditional patch or conditional update
+    # can only be applied to one resource at a time. If the search criteria
+    # identify more than one match, the request returns a 412 Precondition Failed
+    # error. Every time the tests create an Observation resource, the resource is
+    # identical, therefore you have to delete each Observation after it's created
+    # or else conditional patch/update will detect more than one Observation
+    # that matches.
+    fhir_resources.delete_resource(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        'Observation',
+        observation_resource_id
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "Conditionally updated" in out
+
+
+def test_conditional_delete_resource(test_dataset, test_fhir_store, test_patient, capsys):
+    # The conditional method tests use an Observation, so we have to create an
+    # Encounter from test_patient and then create an Observation from the
+    # Encounter.
+    encounter_response = fhir_resources.create_encounter(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        test_patient,
+    )
+
+    encounter_resource_id = encounter_response.json()["id"]
+
+    fhir_resources.create_observation(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+        test_patient,
+        encounter_resource_id,
+    )
+
+    fhir_resources.conditional_delete_resource(
+        service_account_json,
+        base_url,
+        project_id,
+        cloud_region,
+        dataset_id,
+        fhir_store_id,
+    )
+
+    out, _ = capsys.readouterr()
+
+    print(out)
+
+    assert "Conditionally deleted" in out
+
+
 def test_update_patient(test_dataset, test_fhir_store, test_patient, capsys):
     fhir_resources.update_resource(
         service_account_json,
@@ -221,136 +391,6 @@ def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
     assert "Got history for Patient resource" in out
     # delete_resource_purge test
     assert "Deleted versions of Patient resource" in out
-
-
-def test_conditional_patch_resource(test_dataset, test_fhir_store, test_patient, capsys):
-    # The conditional method tests use an Observation, so we have to create an
-    # Encounter from test_patient and then create an Observation from the
-    # Encounter.
-    encounter_response = fhir_resources.create_encounter(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        test_patient,
-    )
-
-    encounter_resource_id = encounter_response.json()["id"]
-
-    fhir_resources.create_observation(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        test_patient,
-        encounter_resource_id,
-    )
-
-    fhir_resources.conditional_patch_resource(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-    )
-
-    out, _ = capsys.readouterr()
-
-    print(out)
-
-    assert "Conditionally patched" in out
-
-def test_conditional_update_resource(test_dataset, test_fhir_store, test_patient, capsys):
-    # The conditional method tests use an Observation, so we have to create an
-    # Encounter from test_patient and then create an Observation from the
-    # Encounter.
-    encounter_response = fhir_resources.create_encounter(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        test_patient,
-    )
-
-    encounter_resource_id = encounter_response.json()["id"]
-
-    fhir_resources.create_observation(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        test_patient,
-        encounter_resource_id,
-    )
-
-    fhir_resources.conditional_update_resource(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        test_patient,
-        encounter_resource_id,
-    )
-
-    out, _ = capsys.readouterr()
-
-    print(out)
-
-    assert "Conditionally updated" in out
-
-
-def test_conditional_delete_resource(test_dataset, test_fhir_store, test_patient, capsys):
-    # The conditional method tests use an Observation, so we have to create an
-    # Encounter from test_patient and then create an Observation from the
-    # Encounter.
-    encounter_response = fhir_resources.create_encounter(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        test_patient,
-    )
-
-    encounter_resource_id = encounter_response.json()["id"]
-
-    fhir_resources.create_observation(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        test_patient,
-        encounter_resource_id,
-    )
-
-    fhir_resources.conditional_delete_resource(
-        service_account_json,
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-    )
-
-    out, _ = capsys.readouterr()
-
-    print(out)
-
-    assert "Conditionally deleted" in out
 
 
 def test_search_resources_get(test_dataset, test_fhir_store, test_patient, capsys):
