@@ -13,23 +13,16 @@
 # limitations under the License.
 
 import os
-import uuid
 
 import vision_batch_annotate_files_gcs
 
-RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 GCS_ROOT = "gs://cloud-samples-data/vision/"
-
-BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
-OUTPUT_PREFIX = "TEST_OUTPUT_{}".format(uuid.uuid4())
-GCS_DESTINATION_URI = "gs://{}/{}/".format(BUCKET, OUTPUT_PREFIX)
 
 
 def test_sample_batch_annotate_files_gcs(capsys):
     storage_uri = os.path.join(GCS_ROOT, "document_understanding/kafka.pdf")
 
-    vision_batch_annotate_files_gcs.sample_batch_annotate_files(
-        storage_uri=storage_uri)
+    vision_batch_annotate_files_gcs.sample_batch_annotate_files(storage_uri=storage_uri)
 
     out, _ = capsys.readouterr()
 

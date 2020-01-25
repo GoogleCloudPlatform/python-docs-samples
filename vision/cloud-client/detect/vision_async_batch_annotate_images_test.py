@@ -16,6 +16,7 @@ import os
 import uuid
 
 from google.cloud import storage
+import pytest
 
 import vision_async_batch_annotate_images
 
@@ -27,15 +28,28 @@ OUTPUT_PREFIX = "TEST_OUTPUT_{}".format(uuid.uuid4())
 GCS_DESTINATION_URI = "gs://{}/{}/".format(BUCKET, OUTPUT_PREFIX)
 
 
-def test_sample_asyn_batch_annotate_images(capsys):
-    storage_client = storage.Client()
+@pytest.fixture()
+def storage_client():
+    yield storage.Client()
+
+
+@pytest.fixture()
+def bucket(storage_client):
     bucket = storage_client.get_bucket(BUCKET)
-    if len(list(bucket.list_blobs(prefix=OUTPUT_PREFIX))) > 0:
+
+    try:
         for blob in bucket.list_blobs(prefix=OUTPUT_PREFIX):
             blob.delete()
+    except Exception:
+        pass
 
-    assert len(list(bucket.list_blobs(prefix=OUTPUT_PREFIX))) == 0
+    yield bucket
 
+    for blob in bucket.list_blobs(prefix=OUTPUT_PREFIX):
+        blob.delete()
+
+
+def test_sample_asyn_batch_annotate_images(storage_client, bucket, capsys):
     input_image_uri = os.path.join(GCS_ROOT, "label/wakeupcat.jpg")
 
     vision_async_batch_annotate_images.sample_async_batch_annotate_images(
@@ -46,8 +60,3 @@ def test_sample_asyn_batch_annotate_images(capsys):
 
     assert "Output written to GCS" in out
     assert len(list(bucket.list_blobs(prefix=OUTPUT_PREFIX))) > 0
-
-    for blob in bucket.list_blobs(prefix=OUTPUT_PREFIX):
-        blob.delete()
-
-    assert len(list(bucket.list_blobs(prefix=OUTPUT_PREFIX))) == 0

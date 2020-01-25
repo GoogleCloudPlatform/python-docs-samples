@@ -39,23 +39,13 @@ def sample_batch_annotate_files(
 
     gcs_source = {"uri": storage_uri}
     input_config = {"gcs_source": gcs_source, "mime_type": mime_type}
-    type_ = enums.Feature.Type.DOCUMENT_TEXT_DETECTION
-    features_element = {"type": type_}
-    features = [features_element]
+    features = [{"type": enums.Feature.Type.DOCUMENT_TEXT_DETECTION}]
 
     # The service can process up to 5 pages per document file.
     # Here we specify the first, second, and last page of the document to be
     # processed.
-    pages_element = 1
-    pages_element_2 = 2
-    pages_element_3 = -1
-    pages = [pages_element, pages_element_2, pages_element_3]
-    requests_element = {
-        "input_config": input_config,
-        "features": features,
-        "pages": pages,
-    }
-    requests = [requests_element]
+    pages = [1, 2, -1]
+    requests = [{"input_config": input_config, "features": features, "pages": pages}]
 
     response = client.batch_annotate_files(requests)
     for image_response in response.responses[0].responses:

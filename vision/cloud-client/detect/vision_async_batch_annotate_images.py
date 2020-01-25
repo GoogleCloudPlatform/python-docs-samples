@@ -32,13 +32,11 @@ def sample_async_batch_annotate_images(
 
     source = {"image_uri": input_image_uri}
     image = {"source": source}
-    type_ = enums.Feature.Type.LABEL_DETECTION
-    features_element = {"type": type_}
-    type_2 = enums.Feature.Type.IMAGE_PROPERTIES
-    features_element_2 = {"type": type_2}
-    features = [features_element, features_element_2]
-    requests_element = {"image": image, "features": features}
-    requests = [requests_element]
+    features = [
+        {"type": enums.Feature.Type.LABEL_DETECTION},
+        {"type": enums.Feature.Type.IMAGE_PROPERTIES},
+    ]
+    requests = [{"image": image, "features": features}]
     gcs_destination = {"uri": output_uri}
 
     # The max number of responses to output in each JSON file
