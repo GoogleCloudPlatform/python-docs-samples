@@ -19,7 +19,7 @@ docker build --tag graphviz:python .
 ## Run Locally
 
 ```
-docker run --rm -p 9090:8080 graphviz:python
+docker run --rm -p 9090:8080 -e PORT=8080 graphviz:python
 ```
 
 ## Test

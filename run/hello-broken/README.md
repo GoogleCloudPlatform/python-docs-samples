@@ -18,7 +18,7 @@ docker build --tag hello-broken:python .
 ## Run Locally
 
 ```
-docker run --rm -p 9090:8080 hello-broken:python
+docker run --rm -p 9090:8080 -e PORT=8080 hello-broken:python
 ```
 
 ## Test
