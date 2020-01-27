@@ -28,14 +28,9 @@ def sample_batch_annotate_files(
       storage_uri Cloud Storage URI to source image in the format
         gs://[bucket]/ [file]
     """
-    # [START vision_batch_annotate_files_gcs_core]
     mime_type = "application/pdf"
 
     client = vision_v1.ImageAnnotatorClient()
-
-    # storage_uri = (
-    #    "gs://cloud-samples-data/vision/document_understanding/kafka.pdf"
-    # )
 
     gcs_source = {"uri": storage_uri}
     input_config = {"gcs_source": gcs_source, "mime_type": mime_type}
@@ -63,8 +58,6 @@ def sample_batch_annotate_files(
                                     symbol.text, symbol.confidence
                                 )
                             )
-
-    # [END vision_batch_annotate_files_gcs_core]
 
 
 # [END vision_batch_annotate_files_gcs]

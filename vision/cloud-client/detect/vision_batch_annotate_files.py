@@ -26,11 +26,7 @@ def sample_batch_annotate_files(file_path="resources/kafka.pdf"):
     Args:
       file_path Path to local pdf file, e.g. /path/document.pdf
     """
-    # [START vision_batch_annotate_files_core]
-
     client = vision_v1.ImageAnnotatorClient()
-
-    # file_path = "resources/kafka.pdf"
 
     # Supported mime_type: application/pdf, image/tiff, image/gif
     mime_type = "application/pdf"
@@ -60,8 +56,6 @@ def sample_batch_annotate_files(file_path="resources/kafka.pdf"):
                                     symbol.text, symbol.confidence
                                 )
                             )
-
-    # [END vision_batch_annotate_files_core]
 
 
 # [END vision_batch_annotate_files]

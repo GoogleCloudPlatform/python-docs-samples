@@ -23,12 +23,8 @@ def sample_async_batch_annotate_images(
     output_uri="gs://your-bucket/prefix/",
 ):
     """Perform async batch image annotation"""
-    # [START vision_async_batch_annotate_images_core]
 
     client = vision_v1.ImageAnnotatorClient()
-
-    # input_image_uri = "gs://cloud-samples-data/vision/label/wakeupcat.jpg"
-    # output_uri = "gs://your-bucket/prefix/"
 
     source = {"image_uri": input_image_uri}
     image = {"source": source}
@@ -51,8 +47,6 @@ def sample_async_batch_annotate_images(
     # The output is written to GCS with the provided output_uri as prefix
     gcs_output_uri = response.output_config.gcs_destination.uri
     print("Output written to GCS with prefix: {}".format(gcs_output_uri))
-
-    # [END vision_async_batch_annotate_images_core]
 
 
 # [END vision_async_batch_annotate_images]
