@@ -41,4 +41,6 @@ def test_video_classification_create_model(capsys):
     assert "Training started" in out
 
     # Get the the operation id for cancellation
-    pytest.OPERATION_ID = out.split("Training operation name: ")[1].split("\n")[0]
+    pytest.OPERATION_ID = out.split("Training operation name: ")[1].split(
+        "\n"
+    )[0]
