@@ -146,7 +146,7 @@ if __name__ == "__main__":
         '--cluster_name',
         type=str,
         required=True,
-        help='Name to use for creating a cluster')
+        help='Name to use for creating a cluster.')
     parser.add_argument(
         '--job_file_path',
         type=str,
