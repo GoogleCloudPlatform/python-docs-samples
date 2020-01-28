@@ -47,7 +47,7 @@ def project_id():
 
 @pytest.fixture()
 def iam_user():
-    return 'user:sethvargo@google.com'
+    return 'serviceAccount:' + os.environ['GCLOUD_SECRETS_SERVICE_ACCOUNT']
 
 
 @pytest.fixture()
