@@ -15,14 +15,15 @@
 # limitations under the License.
 
 # [START dataproc_quickstart]
-"""This quickstart sample walks a user through creating a Cloud Dataproc
-    cluster, submitting a PySpark job from Google Cloud Storage to the
-    cluster, reading the output of the job and deleting the cluster, all
-    using the Python client library.
+"""
+This quickstart sample walks a user through creating a Cloud Dataproc
+cluster, submitting a PySpark job from Google Cloud Storage to the
+cluster, reading the output of the job and deleting the cluster, all
+using the Python client library.
 
-    Usage:
-        python quickstart.py --project_id <PROJECT_ID> --region <REGION> \
-            --cluster_name <CLUSTER_NAME> --job_file_path <GCS_JOB_FILE_PATH>
+Usage:
+    python quickstart.py --project_id <PROJECT_ID> --region <REGION> \
+        --cluster_name <CLUSTER_NAME> --job_file_path <GCS_JOB_FILE_PATH>
 """
 
 import argparse
@@ -131,14 +132,26 @@ if __name__ == "__main__":
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument('--project_id', type=str,
-                        help='Project to use for creating resources.')
-    parser.add_argument('--region', type=str,
-                        help='Region where the resources should live.')
-    parser.add_argument('--cluster_name', type=str,
-                        help='Name to use for creating a cluster')
-    parser.add_argument('--job_file_path', type=str,
-                        help='Job in GCS to execute against the cluster.')
+    parser.add_argument(
+        '--project_id',
+        type=str,
+        required=True,
+        help='Project to use for creating resources.')
+    parser.add_argument(
+        '--region',
+        type=str,
+        required=True,
+        help='Region where the resources should live.')
+    parser.add_argument(
+        '--cluster_name',
+        type=str,
+        required=True,
+        help='Name to use for creating a cluster')
+    parser.add_argument(
+        '--job_file_path',
+        type=str,
+        required=True,
+        help='Job in GCS to execute against the cluster.')
 
     args = parser.parse_args()
     quickstart(args.project_id, args.region,
