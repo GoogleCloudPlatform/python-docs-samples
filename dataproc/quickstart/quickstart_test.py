@@ -67,8 +67,7 @@ def test_quickstart():
         '--cluster_name', CLUSTER_NAME,
         '--job_file_path', JOB_FILE_PATH
     ]
-    out = subprocess.check_output(command)
-    out = str(out, "utf-8")
+    out = subprocess.check_output(command).decode("utf-8")
 
     assert 'Cluster created successfully' in out
     assert 'Submitted job' in out
