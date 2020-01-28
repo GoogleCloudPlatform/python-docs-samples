@@ -24,7 +24,7 @@ MODEL_ID = os.environ["ENTITY_EXTRACTION_MODEL_ID"]
 
 
 @pytest.fixture(scope="function")
-def get_evaluation_id():
+def model_evaluation_id():
     client = automl.AutoMlClient()
     model_full_id = client.model_path(PROJECT_ID, "us-central1", MODEL_ID)
     evaluation = None
@@ -37,9 +37,9 @@ def get_evaluation_id():
     yield model_evaluation_id
 
 
-def test_get_model_evaluation(capsys, get_evaluation_id):
+def test_get_model_evaluation(capsys, model_evaluation_id):
     get_model_evaluation.get_model_evaluation(
-        PROJECT_ID, MODEL_ID, get_evaluation_id
+        PROJECT_ID, MODEL_ID, model_evaluation_id
     )
     out, _ = capsys.readouterr()
     assert "Model evaluation name: " in out
