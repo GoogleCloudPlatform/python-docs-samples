@@ -19,13 +19,8 @@ from google.cloud.vision_v1 import enums
 import io
 
 
-def sample_batch_annotate_files(file_path="resources/kafka.pdf"):
-    """
-    Perform batch file annotation
-
-    Args:
-      file_path Path to local pdf file, e.g. /path/document.pdf
-    """
+def sample_batch_annotate_files(file_path="path/to/your/document.pdf"):
+    """Perform batch file annotation."""
     client = vision_v1.ImageAnnotatorClient()
 
     # Supported mime_type: application/pdf, image/tiff, image/gif

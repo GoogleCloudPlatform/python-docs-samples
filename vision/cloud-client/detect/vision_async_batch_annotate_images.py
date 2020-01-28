@@ -22,8 +22,7 @@ def sample_async_batch_annotate_images(
     input_image_uri="gs://cloud-samples-data/vision/label/wakeupcat.jpg",
     output_uri="gs://your-bucket/prefix/",
 ):
-    """Perform async batch image annotation"""
-
+    """Perform async batch image annotation."""
     client = vision_v1.ImageAnnotatorClient()
 
     source = {"image_uri": input_image_uri}

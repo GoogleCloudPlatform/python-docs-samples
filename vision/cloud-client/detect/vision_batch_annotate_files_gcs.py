@@ -21,13 +21,7 @@ from google.cloud.vision_v1 import enums
 def sample_batch_annotate_files(
     storage_uri="gs://cloud-samples-data/vision/document_understanding/kafka.pdf",
 ):
-    """
-    Perform batch file annotation
-
-    Args:
-      storage_uri Cloud Storage URI to source image in the format
-        gs://[bucket]/ [file]
-    """
+    """Perform batch file annotation."""
     mime_type = "application/pdf"
 
     client = vision_v1.ImageAnnotatorClient()
