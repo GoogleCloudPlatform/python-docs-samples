@@ -26,14 +26,12 @@ PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 def operation_id():
     client = automl.AutoMlClient()
     project_location = client.location_path(PROJECT_ID, "us-central1")
-    response = client.transport._operations_client.list_operations(
-        project_location, ""
-    )
-    operation_id = ""
-    for operation in response:
-        operation_id = operation.name
-        break
-    yield operation_id
+    generator = client.transport._operations_client.list_operations(
+        project_location, filter_=""
+    ).pages
+    page = next(generator)
+    operation = page.next()
+    yield operation.name
 
 
 def test_get_operation_status(capsys, operation_id):
