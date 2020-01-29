@@ -43,7 +43,7 @@ def test_transcribe_file_with_auto_punctuation(capsys):
     transcribe_file_with_auto_punctuation()
     out, _ = capsys.readouterr()
 
-    assert 'Okay. Sure.' in out
+    assert 'First alternative of result ' in out
 
 
 def test_transcribe_diarization(capsys):
