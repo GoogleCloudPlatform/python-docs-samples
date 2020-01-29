@@ -23,4 +23,4 @@ def test_transcribe_file_with_auto_punctuation(capsys):
         'resources/commercial_mono.wav')
     out, _ = capsys.readouterr()
 
-    assert 'Okay. Sure.' in out
+    assert 'First alternative of result ' in out
