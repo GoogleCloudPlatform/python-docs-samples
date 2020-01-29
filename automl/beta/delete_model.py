@@ -15,7 +15,7 @@
 
 def delete_model(project_id, model_id):
     """Delete a model."""
-    # [START automl_delete_model]
+    # [START automl_delete_model_beta]
     from google.cloud import automl_v1beta1 as automl
 
     # TODO(developer): Uncomment and set the following variables
@@ -28,4 +28,4 @@ def delete_model(project_id, model_id):
     response = client.delete_model(model_full_id)
 
     print("Model deleted. {}".format(response.result()))
-    # [END automl_delete_model]
+    # [END automl_delete_model_beta]
