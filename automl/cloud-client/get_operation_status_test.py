@@ -12,35 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
 import os
 
 from google.cloud import automl
 import pytest
 
-import delete_dataset
+import get_operation_status
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
-BUCKET_ID = "{}-lcm".format(PROJECT_ID)
 
 
 @pytest.fixture(scope="function")
-def dataset_id():
+def operation_id():
     client = automl.AutoMlClient()
     project_location = client.location_path(PROJECT_ID, "us-central1")
-    display_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    metadata = automl.types.TextExtractionDatasetMetadata()
-    dataset = automl.types.Dataset(
-        display_name=display_name, text_extraction_dataset_metadata=metadata
-    )
-    response = client.create_dataset(project_location, dataset)
-    dataset_id = response.result().name.split("/")[-1]
-
-    yield dataset_id
+    generator = client.transport._operations_client.list_operations(
+        project_location, filter_=""
+    ).pages
+    page = next(generator)
+    operation = page.next()
+    yield operation.name
 
 
-def test_delete_dataset(capsys, dataset_id):
-    # delete dataset
-    delete_dataset.delete_dataset(PROJECT_ID, dataset_id)
+def test_get_operation_status(capsys, operation_id):
+    get_operation_status.get_operation_status(operation_id)
     out, _ = capsys.readouterr()
-    assert "Dataset deleted." in out
+    assert "Operation details" in out
