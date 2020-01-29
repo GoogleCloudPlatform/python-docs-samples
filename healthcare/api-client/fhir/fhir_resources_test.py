@@ -126,8 +126,7 @@ def test_get_patient(test_dataset, test_fhir_store, test_patient, capsys):
     assert "Got Patient resource" in out
 
 
-@pytest.mark.skip(reason='flaky test sometimes returns 403 errors, need to investigate.
-                  Tests pass locally')
+@pytest.mark.skip(reason='flaky test sometimes returns 403 errors, need to investigate')
 def test_conditional_patch_resource(test_dataset, test_fhir_store, test_patient, capsys):
     # The conditional method tests use an Observation, so we have to create an
     # Encounter from test_patient and then create an Observation from the
@@ -191,8 +190,7 @@ def test_conditional_patch_resource(test_dataset, test_fhir_store, test_patient,
     assert "Conditionally patched" in out
 
 
-@pytest.mark.skip(reason='flaky test sometimes returns 412 errors, need to investigate.
-                  Tests pass locally.')
+@pytest.mark.skip(reason='flaky test sometimes returns 412 errors, need to investigate')
 def test_conditional_update_resource(test_dataset, test_fhir_store, test_patient, capsys):
     # The conditional method tests use an Observation, so we have to create an
     # Encounter from test_patient and then create an Observation from the
