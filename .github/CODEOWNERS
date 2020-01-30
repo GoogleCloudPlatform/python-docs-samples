@@ -1,27 +1,64 @@
 # Code owners file.
 # This file controls who is tagged for review for any given pull request.
+#
+# For syntax help see:
+# https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners#codeowners-syntax
+
 
 # The python-samples-owners team is the default owner for anything not
 # explicitly taken by someone else.
-*                         @GoogleCloudPlatform/python-samples-owners
+*                               @GoogleCloudPlatform/python-samples-owners
 
-# Alix Hamilton is the primary maintainer of the BigQuery samples.
-bigquery/*                @alixhami
-
-# Tim Swast is the primary maintainer of the BigQuery Data Transfer samples.
-bigquery/transfer/*       @tswast
-
-# Tim Swast is the primary maintainer of the Composer samples.
-composer/*                @tswast
-
-# Gus Class is the primary maintainer of the IoT samples.
-iot/*                     @gguuss
-
-# Alix Hamilton is the primary maintainer of the Jupyter notebook samples.
-notebooks/*               @alixhami
-
-# Torry Yang is the primary maintainer of the Tables samples.
-/tables/                  @sirtorry
-
-# Tianzi Cai is the primary maintainer of the Pub/Sub samples.
-/pubsub/                  @anguillanneuf
+/auth/                          @busunkim96 @GoogleCloudPlatform/python-samples-owners
+/automl/                        @nnegrey @GoogleCloudPlatform/python-samples-owners
+/bigquery/                      @shollyman @GoogleCloudPlatform/python-samples-owners
+/bigquery_storage/              @shollyman @GoogleCloudPlatform/python-samples-owners
+/bigtable/                      @billyjacobson @GoogleCloudPlatform/python-samples-owners
+/blog/                          @GoogleCloudPlatform/python-samples-owners
+/cdn/                           @GoogleCloudPlatform/python-samples-owners
+/cloud-sql/                     @kvg @GoogleCloudPlatform/python-samples-owners
+/codelabs/                      @GoogleCloudPlatform/python-samples-owners
+/composer/                      @leahecole @GoogleCloudPlatform/python-samples-owners
+/compute/                       @djmailhot @GoogleCloudPlatform/python-samples-owners
+/container_registry/            @DanSanche @GoogleCloudPlatform/python-samples-owners
+/datacatalog/                   @shollyman @GoogleCloudPlatform/python-samples-owners
+/dataflow/                      @davidcavazos @GoogleCloudPlatform/python-samples-owners
+/datalabeling/                  @shollyman @GoogleCloudPlatform/python-samples-owners
+/dataproc/                      @bradmiro @GoogleCloudPlatform/python-samples-owners
+/datastore/                     @andrewsg @GoogleCloudPlatform/python-samples-owners
+/dialogflow/                    @nnegrey @GoogleCloudPlatform/python-samples-owners
+/dlp/                           @GoogleCloudPlatform/python-samples-owners
+/dns/                           @michaelawyu @GoogleCloudPlatform/python-samples-owners
+/endpoints/                     @DanSanche @GoogleCloudPlatform/python-samples-owners
+/error_reporting/               @GoogleCloudPlatform/python-samples-owners
+/firestore/                     @BenWhitehead @GoogleCloudPlatform/python-samples-owners
+/functions/                     @grant @GoogleCloudPlatform/python-samples-owners
+/healthcare/                    @noerog @GoogleCloudPlatform/python-samples-owners
+/iam/                           @melaniedejong @GoogleCloudPlatform/python-samples-owners
+/iap/                           @GoogleCloudPlatform/python-samples-owners
+/iot/                           @gguuss @GoogleCloudPlatform/python-samples-owners
+/jobs/                          @GoogleCloudPlatform/python-samples-owners
+/kms/                           @DanSanche @GoogleCloudPlatform/python-samples-owners
+/kubernetes_engine/             @GoogleCloudPlatform/python-samples-owners
+/language/                      @nnegrey @GoogleCloudPlatform/python-samples-owners
+/logging/                       @GoogleCloudPlatform/python-samples-owners
+/memorystore/                   @GoogleCloudPlatform/python-samples-owners
+/ml_engine/                     @alecglassford @GoogleCloudPlatform/python-samples-owners
+/monitoring/                    @GoogleCloudPlatform/python-samples-owners
+/notebooks/                     @alixhami @sirtorry @GoogleCloudPlatform/python-samples-owners
+/opencensus/                    @GoogleCloudPlatform/python-samples-owners
+/profiler/                      @jqll @GoogleCloudPlatform/python-samples-owners
+/pubsub/                        @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-owners
+/run/                           @averikitsch @GoogleCloudPlatform/python-samples-owners
+/scheduler/                     @averikitsch @GoogleCloudPlatform/python-samples-owners
+/spanner/                       @mmmarklu @GoogleCloudPlatform/python-samples-owners
+/speech/                        @nnegrey @GoogleCloudPlatform/python-samples-owners
+/storage/                       @crwilcox @GoogleCloudPlatform/python-samples-owners
+/tables/automl/                 @sirtorry @GoogleCloudPlatform/python-samples-owners
+/tasks/                         @averikitsch @GoogleCloudPlatform/python-samples-owners
+/texttospeech/                  @nnegrey @GoogleCloudPlatform/python-samples-owners
+/third_party/apache-airflow/    @leahecole @GoogleCloudPlatform/python-samples-owners
+/trace/                         @dukeng @ziweizhao @GoogleCloudPlatform/python-samples-owners
+/translate/                     @nnegrey @GoogleCloudPlatform/python-samples-owners
+/video/                         @dizcology @GoogleCloudPlatform/python-samples-owners
+/vision/                        @nnegrey @GoogleCloudPlatform/python-samples-owners

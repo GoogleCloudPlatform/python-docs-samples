@@ -15,11 +15,10 @@
 import os
 import uuid
 import pytest
+import subprocess
 
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
-
-import quickstart
 
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
@@ -29,10 +28,10 @@ STAGING_BUCKET = 'py-dataproc-qs-bucket-{}'.format(str(uuid.uuid4()))
 JOB_FILE_NAME = 'sum.py'
 JOB_FILE_PATH = 'gs://{}/{}'.format(STAGING_BUCKET, JOB_FILE_NAME)
 SORT_CODE = (
-  "import pyspark\n"
-  "sc = pyspark.SparkContext()\n"
-  "rdd = sc.parallelize((1,2,3,4,5))\n"
-  "sum = rdd.reduce(lambda x, y: x + y)\n"
+    "import pyspark\n"
+    "sc = pyspark.SparkContext()\n"
+    "rdd = sc.parallelize((1,2,3,4,5))\n"
+    "sum = rdd.reduce(lambda x, y: x + y)\n"
 )
 
 
@@ -60,10 +59,16 @@ def setup_teardown():
     blob.delete()
 
 
-def test_quickstart(capsys):
-    quickstart.quickstart(PROJECT_ID, REGION, CLUSTER_NAME, JOB_FILE_PATH)
+def test_quickstart():
+    command = [
+        'python', 'quickstart/quickstart.py',
+        '--project_id', PROJECT_ID,
+        '--region', REGION,
+        '--cluster_name', CLUSTER_NAME,
+        '--job_file_path', JOB_FILE_PATH
+    ]
+    out = subprocess.check_output(command).decode("utf-8")
 
-    out, _ = capsys.readouterr()
     assert 'Cluster created successfully' in out
     assert 'Submitted job' in out
     assert 'finished with state DONE:' in out

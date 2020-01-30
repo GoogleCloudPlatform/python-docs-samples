@@ -14,14 +14,15 @@
 
 from __future__ import absolute_import
 
+import datetime
 import os
 
 import context_management
 import detect_intent_texts
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-SESSION_ID = 'fake_session_for_testing'
-CONTEXT_ID = 'fake_context_for_testing'
+SESSION_ID = 'test_session_' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+CONTEXT_ID = 'test_context_' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
 
 def test_create_context(capsys):
