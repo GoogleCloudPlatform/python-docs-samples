@@ -27,7 +27,7 @@ def write_simple(project_id, instance_id, table_id):
 
     row_key = "phone#4c410523#20190501"
 
-    row = table.row(row_key)
+    row = table.direct_row(row_key)
     row.set_cell(column_family_id,
                  "connected_cell",
                  1,
