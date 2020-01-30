@@ -280,6 +280,64 @@ To run this sample:
 
 
 
+IAM Grant Access
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=secretmanager/api-client/iam_grant_access.py,secretmanager/api-client/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python iam_grant_access.py
+
+    usage: iam_grant_access.py [-h] project_id secret_id member
+
+    command line application and sample code for granting access to a secret.
+
+    positional arguments:
+      project_id  id of the GCP project
+      secret_id   id of the secret to get
+      member      member to grant access
+
+    optional arguments:
+      -h, --help  show this help message and exit
+
+
+
+IAM Revoke Access
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. image:: https://gstatic.com/cloudssh/images/open-btn.png
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=secretmanager/api-client/iam_revoke_access.py,secretmanager/api-client/README.rst
+
+
+
+
+To run this sample:
+
+.. code-block:: bash
+
+    $ python iam_revoke_access.py
+
+    usage: iam_revoke_access.py [-h] project_id secret_id member
+
+    command line application and sample code for revoking access to a secret.
+
+    positional arguments:
+      project_id  id of the GCP project
+      secret_id   id of the secret to get
+      member      member to revoke access
+
+    optional arguments:
+      -h, --help  show this help message and exit
+
+
+
 Get Secret
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
