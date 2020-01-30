@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright 2019 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ def sample_analyze_syntax(text_content):
             u"Location of this token in overall document: {}".format(text.begin_offset)
         )
         # Get the part of speech information for this token.
-        # Parts of speech are as defined in:
+        # Parts of spech are as defined in:
         # http://www.lrec-conf.org/proceedings/lrec2012/pdf/274_Paper.pdf
         part_of_speech = token.part_of_speech
         # Get the tag, e.g. NOUN, ADJ for Adjective, et al.
