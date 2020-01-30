@@ -29,9 +29,9 @@ def add_bucket_iam_member(bucket_name, role, member):
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
 
-    policy = bucket.get_iam_policy()
+    policy = bucket.get_iam_policy(requested_policy_version=3)
 
-    policy[role].add(member)
+    policy.bindings.append({"role": role, "members": {member}})
 
     bucket.set_iam_policy(policy)
 
@@ -42,6 +42,4 @@ def add_bucket_iam_member(bucket_name, role, member):
 
 
 if __name__ == "__main__":
-    add_bucket_iam_member(
-        bucket_name=sys.argv[1], role=sys.argv[2], member=sys.argv[3]
-    )
+    add_bucket_iam_member(bucket_name=sys.argv[1], role=sys.argv[2], member=sys.argv[3])
