@@ -34,11 +34,14 @@ If you are using the provided image, skip to the next section.
 
 #### Send Requests to See Generated Traces
 
-10. Run setup.sh to apply the YAML files. Note this file configures the default image we provide.
-    If you are using your own image, please change the variable in the [YAML](./app/demo-service-a.yaml) file and in the templates[B](./app/demo-service-b.yaml.template)[C](./app/demo-service-c.yaml.template).
+10. If you are using your own image, please change the image variable in the following files:
+    * [YAML](./app/demo-service-a.yaml)
+    * [template B](./app/demo-service-b.yaml.template)
+    * [template C](./app/demo-service-c.yaml.template)
+11. Run setup.sh to apply the YAML files. Note this file configures the default image we provide.
     `./setup.sh`
-11. Send request to the last service:
+12. Send request to the last service:
     `curl $(kubectl get svc cloud-trace-demo-a -ojsonpath='{.status.loadBalancer.ingress[0].ip}')`
-12. Visit [Trace List](https://pantheon.corp.google.com/traces/list) to check traces generated
-13. Clean up GKE cluster/pods/services
+13. Visit [Trace List](https://pantheon.corp.google.com/traces/list) to check traces generated
+14. Clean up GKE cluster/pods/services
     `gcloud container clusters delete demo`
