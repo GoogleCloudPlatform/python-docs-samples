@@ -19,7 +19,7 @@ from google.cloud.videointelligence_v1p3beta1 import enums
 
 
 def sample_annotate_video(
-    input_uri="gs://cloud-samples-data/video/googlework_short.mp4",
+    input_uri="gs://cloud-samples-data/video/googlework_tiny.mp4",
 ):
 
     client = videointelligence_v1p3beta1.VideoIntelligenceServiceClient()

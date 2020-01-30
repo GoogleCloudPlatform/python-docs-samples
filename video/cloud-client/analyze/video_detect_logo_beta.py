@@ -20,7 +20,7 @@ from google.cloud import videointelligence_v1p3beta1
 from google.cloud.videointelligence_v1p3beta1 import enums
 
 
-def sample_annotate_video(local_file_path="resources/googlework_short.mp4"):
+def sample_annotate_video(local_file_path="resources/googlework_tiny.mp4"):
     """Performs asynchronous video annotation for logo recognition on a local file."""
 
     client = videointelligence_v1p3beta1.VideoIntelligenceServiceClient()
