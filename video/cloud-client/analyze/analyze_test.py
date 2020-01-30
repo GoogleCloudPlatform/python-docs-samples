@@ -58,8 +58,9 @@ def test_detect_text_gcs(capsys):
     out, _ = capsys.readouterr()
 
     text_exists = False
+    out_upper = out.upper()
     for possible_text in POSSIBLE_TEXTS:
-        if possible_text.upper() in text_annotation.text.upper():
+        if possible_text.upper() in out_upper:
             text_exists = True
     assert text_exists
 
