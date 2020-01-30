@@ -17,7 +17,7 @@ import pytest
 import sys
 import time
 
-from google.cloud import storage
+from google.cloud import exceptions, storage
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "datasets"))  # noqa
@@ -117,7 +117,11 @@ def test_import_fhir_store_gcs(test_dataset, capsys):
     )
 
     # Clean up
-    blob.delete()
+    try:
+        blob.delete()
+    # If blob not found, then it's already been deleted, so no need to clean up.
+    except exceptions.NotFound:
+        pass
 
     fhir_stores.delete_fhir_store(
         service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
