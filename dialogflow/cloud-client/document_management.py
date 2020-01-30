@@ -20,14 +20,8 @@ Examples:
   python document_management.py -h
   python document_management.py --project-id PROJECT_ID \
   --knowledge-base-id knowledge_base_id \
-  list
-  python document_management.py --project-id PROJECT_ID \
-  --knowledge-base-id knowledge_base_id \
   create --display-name DISPLAY_NAME --mime-type MIME_TYPE \
   --knowledge-type KNOWLEDGE_TYPE --content-uri CONTENT_URI
-  python document_management.py --project-id PROJECT_ID \
-  --knowledge-base-id knowledge_base_id \
-  get --document-id DOCUMENT_ID
   python document_management.py --project-id PROJECT_ID \
   --knowledge-base-id knowledge_base_id \
   delete --document-id DOCUMENT_ID
@@ -154,8 +148,6 @@ if __name__ == '__main__':
         create_document(args.project_id, args.knowledge_base_id,
                         args.display_name, args.mime_type, args.knowledge_type,
                         args.content_uri)
-    elif args.command == 'get':
-        get_document(args.project_id, args.knowledge_base_id, args.document_id)
     elif args.command == 'delete':
         delete_document(args.project_id, args.knowledge_base_id,
                         args.document_id)
