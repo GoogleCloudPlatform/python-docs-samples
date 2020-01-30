@@ -39,30 +39,6 @@ import argparse
 KNOWLEDGE_TYPES = ['KNOWLEDGE_TYPE_UNSPECIFIED', 'FAQ', 'EXTRACTIVE_QA']
 
 
-# [START dialogflow_list_document]
-def list_documents(project_id, knowledge_base_id):
-    """Lists the Documents belonging to a Knowledge base.
-
-    Args:
-        project_id: The GCP project linked with the agent.
-        knowledge_base_id: Id of the Knowledge base."""
-    import dialogflow_v2beta1 as dialogflow
-    client = dialogflow.DocumentsClient()
-    knowledge_base_path = client.knowledge_base_path(project_id,
-                                                     knowledge_base_id)
-
-    print('Documents for Knowledge Id: {}'.format(knowledge_base_id))
-    for document in client.list_documents(knowledge_base_path):
-        print(' - Display Name: {}'.format(document.display_name))
-        print(' - Knowledge ID: {}'.format(document.name))
-        print(' - MIME Type: {}'.format(document.mime_type))
-        print(' - Knowledge Types:')
-        for knowledge_type in document.knowledge_types:
-            print('    - {}'.format(KNOWLEDGE_TYPES[knowledge_type]))
-        print(' - Source: {}\n'.format(document.content_uri))
-# [END dialogflow_list_document]
-
-
 # [START dialogflow_create_document]]
 def create_document(project_id, knowledge_base_id, display_name, mime_type,
                     knowledge_type, content_uri):
@@ -104,32 +80,8 @@ def create_document(project_id, knowledge_base_id, display_name, mime_type,
 # [END dialogflow_create_document]]
 
 
-# [START dialogflow_get_document]]
-def get_document(project_id, knowledge_base_id, document_id):
-    """Gets a Document.
-
-    Args:
-        project_id: The GCP project linked with the agent.
-        knowledge_base_id: Id of the Knowledge base.
-        document_id: Id of the Document."""
-    import dialogflow_v2beta1 as dialogflow
-    client = dialogflow.DocumentsClient()
-    document_path = client.document_path(project_id, knowledge_base_id,
-                                         document_id)
-
-    response = client.get_document(document_path)
-    print('Got Document:')
-    print(' - Display Name: {}'.format(response.display_name))
-    print(' - Knowledge ID: {}'.format(response.name))
-    print(' - MIME Type: {}'.format(response.mime_type))
-    print(' - Knowledge Types:')
-    for knowledge_type in response.knowledge_types:
-        print('    - {}'.format(KNOWLEDGE_TYPES[knowledge_type]))
-    print(' - Source: {}\n'.format(response.content_uri))
-# [END dialogflow_get_document]]
-
-
-# [START dialogflow_delete_document]]
+# This is used by create_document_test.py
+# No region tag (because this is not shown in the documentation)
 def delete_document(project_id, knowledge_base_id, document_id):
     """Deletes a Document.
 
@@ -146,7 +98,6 @@ def delete_document(project_id, knowledge_base_id, document_id):
     print('operation running:\n {}'.format(response.operation))
     print('Waiting for results...')
     print('Done.\n {}'.format(response.result()))
-# [END dialogflow_delete_document]]
 
 
 if __name__ == '__main__':
@@ -161,10 +112,6 @@ if __name__ == '__main__':
         required=True)
 
     subparsers = parser.add_subparsers(dest='command')
-
-    list_parser = subparsers.add_parser(
-        'list',
-        help='List all Documents that belong to a certain Knowledge base.')
 
     create_parser = subparsers.add_parser(
         'create', help='Create a Document for a certain Knowledge base.')
@@ -203,9 +150,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    if args.command == 'list':
-        list_documents(args.project_id, args.knowledge_base_id)
-    elif args.command == 'create':
+    if args.command == 'create':
         create_document(args.project_id, args.knowledge_base_id,
                         args.display_name, args.mime_type, args.knowledge_type,
                         args.content_uri)
