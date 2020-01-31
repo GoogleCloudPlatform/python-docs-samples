@@ -20,7 +20,7 @@ def transcribe_context_classes(storage_uri):
     from google.cloud import speech
     client = speech.SpeechClient()
 
-    # storage_uri = 'gs://YOUR_BUCKET_ID/path/to/your/file.mp3'
+    # storage_uri = 'gs://YOUR_BUCKET_ID/path/to/your/file.wav'
     audio = speech.types.RecognitionAudio(uri=storage_uri)
 
     # SpeechContext: to configure your speech_context see:
@@ -30,7 +30,7 @@ def transcribe_context_classes(storage_uri):
     speech_context = speech.types.SpeechContext(phrases=['$TIME'])
 
     # RecognitionConfig: to configure your encoding and sample_rate_hertz, see:
-    # https://cloud.google.com/speech-to-text/docs/reference/rpc/google.cloud.speech.v1#audioencoding
+    # https://cloud.google.com/speech-to-text/docs/reference/rpc/google.cloud.speech.v1#recognitionconfig
     config = speech.types.RecognitionConfig(
         encoding=speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=8000,
