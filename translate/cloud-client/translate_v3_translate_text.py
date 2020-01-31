@@ -16,22 +16,21 @@
 from google.cloud import translate
 
 
-def sample_translate_text(
-    text="Hello, world!", target_language="fr", project_id="[Google Cloud Project ID]"
-):
+def sample_translate_text(project_id="[Google Cloud Project ID]"):
     """Translating Text."""
 
     client = translate.TranslationServiceClient()
 
-    contents = [text]
     parent = client.location_path(project_id, "global")
 
+    # Detail on supported types can be found here:
+    # https://cloud.google.com/translate/docs/supported-formats
     response = client.translate_text(
         parent=parent,
-        contents=contents,
+        contents=["Hello, world!"],
         mime_type="text/plain",  # mime types: text/plain, text/html
         source_language_code="en-US",
-        target_language_code=target_language,
+        target_language_code="fr",
     )
     # Display the translation for each input text provided
     for translation in response.translations:
