@@ -19,10 +19,10 @@ Google Cloud API.
 
 Usage Examples:
     python beta_snippets.py transcription \
-        gs://python-docs-samples-tests/video/googlework_short.mp4
+        gs://python-docs-samples-tests/video/googlework_tiny.mp4
 
     python beta_snippets.py video-text-gcs \
-        gs://python-docs-samples-tests/video/googlework_short.mp4
+        gs://python-docs-samples-tests/video/googlework_tiny.mp4
 
     python beta_snippets.py track-objects resources/cat.mp4
 

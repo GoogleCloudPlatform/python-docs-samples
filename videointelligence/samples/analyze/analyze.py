@@ -25,8 +25,8 @@ Usage Examples:
     python analyze.py explicit_content \
     gs://cloud-samples-data/video/gbikes_dinosaur.mp4
     python analyze.py text_gcs \
-    gs://cloud-samples-data/video/googlework_short.mp4
-    python analyze.py text_file resources/googlework_short.mp4
+    gs://cloud-samples-data/video/googlework_tiny.mp4
+    python analyze.py text_file resources/googlework_tiny.mp4
     python analyze.py objects_gcs gs://cloud-samples-data/video/cat.mp4
     python analyze.py objects_file resources/cat.mp4
 """

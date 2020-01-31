@@ -111,7 +111,7 @@ def test_annotation_to_storage_streaming(capsys, video_path, bucket):
 
 @pytest.mark.slow
 def test_detect_text():
-    in_file = './resources/googlework_short.mp4'
+    in_file = './resources/googlework_tiny.mp4'
     text_annotations = beta_snippets.video_detect_text(in_file)
 
     text_exists = False
@@ -124,7 +124,7 @@ def test_detect_text():
 
 @pytest.mark.slow
 def test_detect_text_gcs():
-    in_file = 'gs://python-docs-samples-tests/video/googlework_short.mp4'
+    in_file = 'gs://python-docs-samples-tests/video/googlework_tiny.mp4'
     text_annotations = beta_snippets.video_detect_text_gcs(in_file)
 
     text_exists = False
