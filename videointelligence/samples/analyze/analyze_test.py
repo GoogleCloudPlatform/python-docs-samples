@@ -18,6 +18,9 @@ import pytest
 
 import analyze
 
+POSSIBLE_TEXTS = ['Google', 'SUR', 'SUR', 'ROTO', 'Vice President', '58oo9',
+                  'LONDRES', 'OMAR', 'PARIS', 'METRO', 'RUE', 'CARLO']
+
 
 @pytest.mark.slow
 def test_analyze_shots(capsys):
@@ -51,9 +54,15 @@ def test_speech_transcription(capsys):
 @pytest.mark.slow
 def test_detect_text_gcs(capsys):
     analyze.video_detect_text_gcs(
-        'gs://cloud-samples-data/video/googlework_short.mp4')
+        'gs://cloud-samples-data/video/googlework_tiny.mp4')
     out, _ = capsys.readouterr()
-    assert 'GOOGLE' in out
+
+    text_exists = False
+    out_upper = out.upper()
+    for possible_text in POSSIBLE_TEXTS:
+        if possible_text.upper() in out_upper:
+            text_exists = True
+    assert text_exists
 
 
 @pytest.mark.slow
