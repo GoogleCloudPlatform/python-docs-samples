@@ -12,13 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import translate_v3_translate_text
-
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+# [START translate_v3_delete_glossary]
+from google.cloud import translate_v3 as translate
 
 
-def test_translate_text(capsys):
-    translate_v3_translate_text.sample_translate_text(PROJECT_ID)
-    out, _ = capsys.readouterr()
-    assert "Bonjour le monde" in out
+def delete_glossary(
+    project_id="[GOOGLE_CLOUD_PROJECT_ID]", glossary_id="[YOUR_GLOSSARY_ID]"
+):
+    """Delete Glossary"""
+    client = translate.TranslationServiceClient()
+
+    parent = client.glossary_path(project_id, "us-central1", glossary_id)
+
+    operation = client.delete_glossary(parent)
+    result = operation.result(timeout=90)
+    print("Deleted: {}".format(result.name))
+
+
+# [END translate_v3_delete_glossary]

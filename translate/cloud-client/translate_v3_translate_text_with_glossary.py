@@ -12,23 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START translate_translate_text_with_glossary]
+# [START translate_v3_translate_text_with_glossary]
 
 from google.cloud import translate_v3
 
 
 def translate_text_with_glossary(
-    text, source_language, target_language, project_id, glossary_id
+    text="Hello, world!",
+    source_language="en",
+    target_language="fr",
+    project_id="[GOOGLE_CLOUD_PROJECT_ID]",
+    glossary_id="[YOUR_GLOSSARY_ID]",
 ):
     """Translates a given text using a glossary."""
 
     client = translate_v3.TranslationServiceClient()
 
-    # text = 'Hello, world!'
-    # source_language = 'en'
-    # target_language = 'fr'
-    # project_id = '[Google Cloud Project ID]'
-    # glossary_id = '[YOUR_GLOSSARY_ID]'
     contents = [text]
     parent = client.location_path(project_id, "us-central1")
 
@@ -45,9 +44,9 @@ def translate_text_with_glossary(
         parent=parent,
         glossary_config=glossary_config,
     )
-
+    print("Translated text: \n")
     for translation in response.glossary_translations:
-        print(u"Translated text: {}".format(translation.translated_text))
+        print(u"\t {}".format(translation.translated_text))
 
 
-# [END translate_translate_text_with_glossary]
+# [END translate_v3_translate_text_with_glossary]

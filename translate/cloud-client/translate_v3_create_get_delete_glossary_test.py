@@ -16,7 +16,7 @@ import os
 import pytest
 import translate_v3_create_glossary
 import translate_v3_delete_glossary
-import translate_v3_translate_text_with_glossary
+import translate_v3_get_glossary
 import uuid
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
@@ -39,9 +39,7 @@ def glossary():
         pass
 
 
-def test_translate_text_with_glossary(capsys, glossary):
-    translate_v3_translate_text_with_glossary.translate_text_with_glossary(
-        "account", "en", "ja", PROJECT_ID, glossary
-    )
+def test_get_glossary(capsys, glossary):
+    translate_v3_get_glossary.get_glossary(PROJECT_ID, glossary)
     out, _ = capsys.readouterr()
-    assert "アカウント" or "口座" in out
+    assert "gs://cloud-samples-data/translation/glossary_ja.csv" in out
