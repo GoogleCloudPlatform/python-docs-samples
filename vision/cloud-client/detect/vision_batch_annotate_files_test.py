@@ -1,9 +1,10 @@
-# Copyright 2018, Google LLC
+# Copyright 2020 Google
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,14 +14,17 @@
 
 import os
 
-import transcribe_auto_punctuation
+import vision_batch_annotate_files
 
-RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
+RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
-def test_transcribe_file_with_auto_punctuation(capsys):
-    transcribe_auto_punctuation.transcribe_file_with_auto_punctuation(
-        'resources/commercial_mono.wav')
+def test_sample_batch_annotate_files(capsys):
+    file_path = os.path.join(RESOURCES, "kafka.pdf")
+
+    vision_batch_annotate_files.sample_batch_annotate_files(file_path=file_path)
+
     out, _ = capsys.readouterr()
 
-    assert 'First alternative of result ' in out
+    assert "Full text" in out
+    assert "Block confidence" in out

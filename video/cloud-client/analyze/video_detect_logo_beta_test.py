@@ -1,9 +1,10 @@
-# Copyright 2018, Google LLC
+# Copyright 2020 Google
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,14 +14,19 @@
 
 import os
 
-import transcribe_auto_punctuation
+import video_detect_logo_beta
 
-RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
+RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
-def test_transcribe_file_with_auto_punctuation(capsys):
-    transcribe_auto_punctuation.transcribe_file_with_auto_punctuation(
-        'resources/commercial_mono.wav')
+def test_sample_annotate_video(capsys):
+    local_file_path = os.path.join(RESOURCES, "googlework_tiny.mp4")
+
+    video_detect_logo_beta.sample_annotate_video(local_file_path=local_file_path)
+
     out, _ = capsys.readouterr()
 
-    assert 'First alternative of result ' in out
+    assert "Description : Google Maps" in out
+    assert "Confidence" in out
+    assert "Start Time Offset" in out
+    assert "End Time Offset" in out

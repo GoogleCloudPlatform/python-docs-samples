@@ -1,9 +1,10 @@
-# Copyright 2018, Google LLC
+# Copyright 2020 Google LLC
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,14 +14,15 @@
 
 import os
 
-import transcribe_auto_punctuation
+import pytest
 
-RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
+import list_operation_status
+
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 
 
-def test_transcribe_file_with_auto_punctuation(capsys):
-    transcribe_auto_punctuation.transcribe_file_with_auto_punctuation(
-        'resources/commercial_mono.wav')
+@pytest.mark.slow
+def test_list_operation_status(capsys):
+    list_operation_status.list_operation_status(PROJECT_ID)
     out, _ = capsys.readouterr()
-
-    assert 'First alternative of result ' in out
+    assert "Operation details" in out
