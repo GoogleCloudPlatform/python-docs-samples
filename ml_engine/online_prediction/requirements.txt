@@ -1,4 +1,5 @@
-tensorflow==2.0.0
+tensorflow==2.0.1; python_version > "3.0"
+tensorflow==1.15.0; python_version < "3.0"
 google-api-python-client==1.7.11
 google-auth==1.10.0
 google-auth-httplib2==0.0.3
