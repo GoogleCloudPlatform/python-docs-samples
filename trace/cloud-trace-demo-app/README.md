@@ -3,7 +3,7 @@
 Open this demo app in [Google Cloud Shell](https://cloud.google.com/shell/docs/). This includes necessary tools.
 
 We provide a public image for the services in this demo app. You could also build
-your own following step 4 - 6.
+your own following steps 4 - 6.
 
 [![Open Cloud Trace Demo APP in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=trace/cloud-trace-demo-app/README.md&amp;cloudshell_tutorial=README.md)
 
@@ -27,7 +27,7 @@ If you are using the provided image, skip to the next section.
 #### Create a GKE cluster
 7. Enable Google Cloud and set up region and zone.
     `gcloud init`
-8. Enable the GKE api & billing:
+8. Enable the GKE API & billing:
     `gcloud services enable container.googleapis.com`
 9. Create a GKE cluster named "demo":
     `gcloud container clusters create demo`
@@ -38,11 +38,12 @@ If you are using the provided image, skip to the next section.
     * [YAML](./app/demo-service-a.yaml)
     * [template B](./app/demo-service-b.yaml.template)
     * [template C](./app/demo-service-c.yaml.template)
-11. Run setup.sh to apply the YAML files. Note this file configures the default image we provide.
+11. Run setup.sh to apply the YAML files.
     `./setup.sh`
 12. Send request to the last service:
-    `curl $(kubectl get svc cloud-trace-demo-a -ojsonpath='{.status.loadBalancer.ingress[0].ip}')`
-13. Visit [Trace List](https://pantheon.corp.google.com/traces/list) to check traces generated
+    `curl $(kubectl get svc cloud-trace-demo-a \ -ojsonpath='{.status.loadBalancer.ingress[0].ip}')`
+13. Visit [Trace List](https://pantheon.corp.google.com/traces/list) to check traces generated. 
+    Click on Trace Graph to see the Waterfall View.
     ![Screenshot](./example.png)
 14. Clean up GKE cluster/pods/services
     `gcloud container clusters delete demo`
