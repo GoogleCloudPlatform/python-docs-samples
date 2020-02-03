@@ -41,7 +41,8 @@ If you are using the provided image, skip to the next section.
 11. Run setup.sh to apply the YAML files.
     `./setup.sh`
 12. Send request to the last service:
-    `curl $(kubectl get svc cloud-trace-demo-a \ -ojsonpath='{.status.loadBalancer.ingress[0].ip}')`
+
+    `curl $(kubectl get svc cloud-trace-demo-a -ojsonpath='{.status.loadBalancer.ingress[0].ip}')`
 13. Visit [Trace List](https://pantheon.corp.google.com/traces/list) to check traces generated. 
     Click on Trace Graph to see the Waterfall View.
     ![Screenshot](./example.png)
