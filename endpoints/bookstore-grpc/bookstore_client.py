@@ -26,7 +26,7 @@ def run(host, port, api_key, auth_token, timeout, use_tls):
     """Makes a basic ListShelves call against a gRPC Bookstore server."""
 
     if use_tls:
-        with open('roots.pem', 'rb') as f:
+        with open('../roots.pem', 'rb') as f:
             creds = grpc.ssl_channel_credentials(f.read())
         channel = grpc.secure_channel('{}:{}'.format(host, port), creds)
     else:
