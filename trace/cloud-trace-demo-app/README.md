@@ -43,8 +43,8 @@ If you are using the provided image, skip to the next section.
 12. Send request to the last service:
 
     `curl $(kubectl get svc cloud-trace-demo-a -ojsonpath='{.status.loadBalancer.ingress[0].ip}')`
-13. Visit [Trace List](https://pantheon.corp.google.com/traces/list) to check traces generated. 
-    Click on Trace Graph to see the Waterfall View.
+13. Visit [Trace List](https://pantheon.corp.google.com/traces/list) to check traces generated.
+    Click on any trace in the graph to see the Waterfall View.
     ![Screenshot](./example.png)
 14. Clean up GKE cluster/pods/services
     `gcloud container clusters delete demo`
