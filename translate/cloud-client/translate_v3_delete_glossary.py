@@ -17,9 +17,9 @@ from google.cloud import translate_v3 as translate
 
 
 def delete_glossary(
-    project_id="[GOOGLE_CLOUD_PROJECT_ID]", glossary_id="[YOUR_GLOSSARY_ID]"
+    project_id="YOUR_PROJECT_ID", glossary_id="YOUR_GLOSSARY_ID"
 ):
-    """Delete Glossary"""
+    """Delete a specific glossary based on the glossary ID."""
     client = translate.TranslationServiceClient()
 
     parent = client.glossary_path(project_id, "us-central1", glossary_id)

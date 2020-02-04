@@ -18,11 +18,9 @@ from google.cloud import translate_v3
 
 
 def translate_text_with_glossary(
-    text="Hello, world!",
-    source_language="en",
-    target_language="fr",
-    project_id="[GOOGLE_CLOUD_PROJECT_ID]",
-    glossary_id="[YOUR_GLOSSARY_ID]",
+    text="YOUR_TEXT_TO_TRANSLATE",
+    project_id="YOUR_PROJECT_ID",
+    glossary_id="YOUR_GLOSSARY_ID"
 ):
     """Translates a given text using a glossary."""
 
@@ -37,10 +35,11 @@ def translate_text_with_glossary(
 
     glossary_config = translate_v3.types.TranslateTextGlossaryConfig(glossary=glossary)
 
+    # Supported language codes: https://cloud.google.com/translate/docs/languages
     response = client.translate_text(
         contents,
-        target_language_code=target_language,
-        source_language_code=source_language,
+        target_language_code="fr",
+        source_language_code="en",
         parent=parent,
         glossary_config=glossary_config,
     )

@@ -17,12 +17,17 @@ from google.cloud import translate_v3 as translate
 
 
 def create_glossary(
-    project_id="[YOUR_PROJECT_ID]",
-    input_uri="[YOUR_INPUT_URI]",
-    glossary_id="[YOUR_GLOSSARY_ID]",
+    project_id="YOUR_PROJECT_ID",
+    input_uri="YOUR_INPUT_URI",
+    glossary_id="YOUR_GLOSSARY_ID",
 ):
-    """Create Glossary"""
+    """Create a equivalent term sets glossary. Glossary can be words or 
+    short phrases(usually fewer than five words).
+    https://cloud.google.com/translate/docs/advanced/glossary#format-glossary
+    """
     client = translate.TranslationServiceClient()
+
+    # Supported language codes: https://cloud.google.com/translate/docs/languages
     source_lang_code = "en"
     target_lang_code = "ja"
     location = "us-central1"  # The location of the glossary
