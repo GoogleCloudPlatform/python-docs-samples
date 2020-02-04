@@ -92,9 +92,7 @@ def create_trigger(
 
     # Construct the schedule definition:
     schedule = {
-        "recurrence_period_duration": {
-            "seconds": scan_period_days * 60 * 60 * 24
-        }
+        "recurrence_period_duration": {"seconds": scan_period_days * 60 * 60 * 24}
     }
 
     # Construct the trigger definition.
@@ -212,8 +210,7 @@ if __name__ == "__main__":
     )
     parser_create.add_argument(
         "--trigger_id",
-        help="The id of the trigger. If omitted, an id will be randomly "
-        "generated",
+        help="The id of the trigger. If omitted, an id will be randomly " "generated",
     )
     parser_create.add_argument(
         "--display_name", help="The optional display name of the trigger."
@@ -254,9 +251,7 @@ if __name__ == "__main__":
         help="The maximum number of findings to report; 0 = no maximum.",
     )
     parser_create.add_argument(
-        "--auto_populate_timespan",
-        type=bool,
-        help="Limit scan to new content only.",
+        "--auto_populate_timespan", type=bool, help="Limit scan to new content only.",
     )
 
     parser_list = subparsers.add_parser("list", help="List all triggers.")
@@ -267,9 +262,7 @@ if __name__ == "__main__":
     )
 
     parser_delete = subparsers.add_parser("delete", help="Delete a trigger.")
-    parser_delete.add_argument(
-        "trigger_id", help="The id of the trigger to delete."
-    )
+    parser_delete.add_argument("trigger_id", help="The id of the trigger to delete.")
     parser_delete.add_argument(
         "--project",
         help="The Google Cloud project id to use as a parent resource.",

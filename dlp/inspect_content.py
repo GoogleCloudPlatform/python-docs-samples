@@ -220,9 +220,7 @@ def inspect_table(
     headers = [{"name": val} for val in data["header"]]
     rows = []
     for row in data["rows"]:
-        rows.append(
-            {"values": [{"string_value": cell_val} for cell_val in row]}
-        )
+        rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
 
     table = {}
     table["headers"] = headers
@@ -980,9 +978,7 @@ if __name__ == "__main__":
     )
 
     parser_file = subparsers.add_parser("file", help="Inspect a local file.")
-    parser_file.add_argument(
-        "filename", help="The path to the file to inspect."
-    )
+    parser_file.add_argument("filename", help="The path to the file to inspect.")
     parser_file.add_argument(
         "--project",
         help="The Google Cloud project id to use as a parent resource.",
@@ -1129,8 +1125,7 @@ if __name__ == "__main__":
         help="The Google Cloud project id of the target Datastore.",
     )
     parser_datastore.add_argument(
-        "kind",
-        help='The kind of the Datastore entity to inspect, e.g. "Person".',
+        "kind", help='The kind of the Datastore entity to inspect, e.g. "Person".',
     )
     parser_datastore.add_argument(
         "topic_id",
@@ -1206,8 +1201,7 @@ if __name__ == "__main__":
         "bigquery", help="Inspect files on Google BigQuery."
     )
     parser_bigquery.add_argument(
-        "bigquery_project",
-        help="The Google Cloud project id of the target table.",
+        "bigquery_project", help="The Google Cloud project id of the target table.",
     )
     parser_bigquery.add_argument(
         "dataset_id", help="The ID of the target BigQuery dataset."

@@ -30,6 +30,7 @@ TEST_TABLE_ID = "bikeshare_trips"
 @pytest.fixture(scope="module")
 def test_job_name():
     import google.cloud.dlp
+
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     parent = dlp.project_path(GCLOUD_PROJECT)
@@ -61,7 +62,8 @@ def test_job_name():
     except google.api_core.exceptions.NotFound:
         print("Issue during teardown, missing job")
 
-@pytest.mark.skip(reason='investigating possible api bug')
+
+@pytest.mark.skip(reason="investigating possible api bug")
 def test_list_dlp_jobs(test_job_name, capsys):
     print(test_job_name)
     jobs.list_dlp_jobs(GCLOUD_PROJECT)
@@ -70,8 +72,7 @@ def test_list_dlp_jobs(test_job_name, capsys):
     assert "Job: projects/" in out
 
 
-@pytest.mark.skip(reason='investigating possible api bug')
-def test_list_dlp_jobs(test_job_name, capsys):
+@pytest.mark.skip(reason="investigating possible api bug")
 def test_list_dlp_jobs_with_filter(capsys):
     jobs.list_dlp_jobs(GCLOUD_PROJECT, filter_string="state=DONE")
 
@@ -79,8 +80,7 @@ def test_list_dlp_jobs_with_filter(capsys):
     assert "Job: projects/" in out
 
 
-@pytest.mark.skip(reason='investigating possible api bug')
-def test_list_dlp_jobs(test_job_name, capsys):
+@pytest.mark.skip(reason="investigating possible api bug")
 def test_list_dlp_jobs_with_job_type(capsys):
     jobs.list_dlp_jobs(GCLOUD_PROJECT, job_type="INSPECT_JOB")
 
