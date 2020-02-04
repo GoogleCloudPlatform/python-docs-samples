@@ -16,7 +16,7 @@
 from google.cloud import translate
 
 
-def sample_translate_text(project_id="[Google Cloud Project ID]"):
+def sample_translate_text(project_id="YOUR_PROJECT_ID"):
     """Translating Text."""
 
     client = translate.TranslationServiceClient()
