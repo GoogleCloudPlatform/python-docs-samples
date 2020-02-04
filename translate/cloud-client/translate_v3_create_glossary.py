@@ -22,7 +22,7 @@ def create_glossary(
     glossary_id="YOUR_GLOSSARY_ID",
 ):
     """
-    Create a equivalent term sets glossary. Glossary can be words or 
+    Create a equivalent term sets glossary. Glossary can be words or
     short phrases (usually fewer than five words).
     https://cloud.google.com/translate/docs/advanced/glossary#format-glossary
     """
