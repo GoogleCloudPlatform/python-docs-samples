@@ -21,8 +21,7 @@ def sample_list_glossaries(project_id="YOUR_PROJECT_ID"):
 
     client = translate.TranslationServiceClient()
 
-    location = "us-central1"
-    parent = client.location_path(project_id, location)
+    parent = client.location_path(project_id, "us-central1")
 
     # Iterate over all results
     for glossary in client.list_glossaries(parent):
