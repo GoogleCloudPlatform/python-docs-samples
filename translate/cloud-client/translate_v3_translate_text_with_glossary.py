@@ -38,7 +38,7 @@ def translate_text_with_glossary(
     # Supported language codes: https://cloud.google.com/translate/docs/languages
     response = client.translate_text(
         contents,
-        target_language_code="fr",
+        target_language_code="ja",
         source_language_code="en",
         parent=parent,
         glossary_config=glossary_config,
