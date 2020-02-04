@@ -19,8 +19,6 @@ from google.cloud import translate
 def sample_detect_language(project_id="YOUR_PROJECT_ID"):
     """Detecting the language of a text string."""
 
-    text = "Hello, world!"
-
     client = translate.TranslationServiceClient()
 
     parent = client.location_path(project_id, "global")
@@ -28,7 +26,7 @@ def sample_detect_language(project_id="YOUR_PROJECT_ID"):
     # Detail on supported types can be found here:
     # https://cloud.google.com/translate/docs/supported-formats
     response = client.detect_language(
-        content=text,
+        content="Hello, world!",
         parent=parent,
         mime_type="text/plain",  # mime types: text/plain, text/html
     )
