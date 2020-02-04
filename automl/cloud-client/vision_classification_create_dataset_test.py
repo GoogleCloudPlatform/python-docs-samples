@@ -25,7 +25,7 @@ PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 
 
 @pytest.mark.slow
-def test_create_dataset(capsys):
+def test_vision_classification_create_dataset(capsys):
     # create dataset
     dataset_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     vision_classification_create_dataset.create_dataset(

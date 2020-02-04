@@ -25,9 +25,11 @@ _BASE_URL = "https://healthcare.googleapis.com/v1beta1"
 
 # [START healthcare_get_session]
 def get_session(service_account_json):
-    """Returns an authorized Requests Session class using the service account
+    """
+    Returns an authorized Requests Session class using the service account
     credentials JSON. This class is used to perform requests to the
-    Healthcare API endpoint."""
+    Healthcare API endpoint.
+    """
 
     # Pass in the credentials and project ID. If none supplied, get them
     # from the environment.
@@ -48,20 +50,14 @@ def get_session(service_account_json):
 
 
 # [START healthcare_create_resource]
-def create_resource(
-    service_account_json,
-    base_url,
-    project_id,
-    cloud_region,
-    dataset_id,
-    fhir_store_id,
-    resource_type,
+def create_patient(
+    service_account_json, base_url, project_id, cloud_region, dataset_id, fhir_store_id
 ):
-    """Creates a new resource in a FHIR store."""
+    """Creates a new Patient resource in a FHIR store."""
     url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
-    fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir/{}".format(
-        url, dataset_id, fhir_store_id, resource_type
+    fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir/Patient".format(
+        url, dataset_id, fhir_store_id
     )
 
     # Make an authenticated API request
@@ -69,15 +65,20 @@ def create_resource(
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
-    payload = {"language": "en", "resourceType": resource_type}
+    body = {
+        "name": [{"use": "official", "family": "Smith", "given": ["Darcy"]}],
+        "gender": "female",
+        "birthDate": "1970-01-01",
+        "resourceType": "Patient",
+    }
 
     try:
-        response = session.post(fhir_store_path, headers=headers, json=payload)
+        response = session.post(fhir_store_path, headers=headers, json=body)
         response.raise_for_status()
 
         resource = response.json()
 
-        print("Created Resource: {} with ID {}".format(resource_type, resource["id"]))
+        print("Created Patient resource with ID {}".format(resource["id"]))
 
         return response
     except HttpError as err:
@@ -86,6 +87,119 @@ def create_resource(
 
 
 # [END healthcare_create_resource]
+
+
+# [START healthcare_create_encounter]
+def create_encounter(
+    service_account_json,
+    base_url,
+    project_id,
+    cloud_region,
+    dataset_id,
+    fhir_store_id,
+    patient_id,
+):
+    """Creates a new Encounter resource in a FHIR store based on a Patient."""
+    url = "{}/projects/{}/locations/{}".format(
+        base_url, project_id, cloud_region, patient_id
+    )
+
+    fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir/Encounter".format(
+        url, dataset_id, fhir_store_id
+    )
+
+    # Make an authenticated API request
+    session = get_session(service_account_json)
+
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
+
+    body = {
+        "status": "finished",
+        "class": {
+            "system": "http://hl7.org/fhir/v3/ActCode",
+            "code": "IMP",
+            "display": "inpatient encounter",
+        },
+        "reason": [
+            {
+                "text": "The patient had an abnormal heart rate. She was"
+                " concerned about this."
+            }
+        ],
+        "subject": {"reference": "Patient/{}".format(patient_id)},
+        "resourceType": "Encounter",
+    }
+
+    try:
+        response = session.post(fhir_store_path, headers=headers, json=body)
+        response.raise_for_status()
+
+        resource = response.json()
+
+        print("Created Encounter resource with ID {}".format(resource["id"]))
+
+        return response
+    except HttpError as err:
+        print(err)
+        return ""
+
+
+# [END healthcare_create_encounter]
+
+
+# [START healthcare_create_observation]
+def create_observation(
+    service_account_json,
+    base_url,
+    project_id,
+    cloud_region,
+    dataset_id,
+    fhir_store_id,
+    patient_id,
+    encounter_id,
+):
+    """
+    Creates a new Observation resource in a FHIR store based on
+    an Encounter.
+    """
+    url = "{}/projects/{}/locations/{}".format(
+        base_url, project_id, cloud_region, patient_id
+    )
+
+    fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir/Observation".format(
+        url, dataset_id, fhir_store_id
+    )
+
+    # Make an authenticated API request
+    session = get_session(service_account_json)
+
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
+
+    body = {
+        "resourceType": "Observation",
+        "identifier": [{"system": "my-code-system", "value": "ABC-12345"}],
+        "status": "final",
+        "subject": {"reference": "Patient/{}".format(patient_id)},
+        "effectiveDateTime": "2019-01-01T00:00:00+00:00",
+        "valueQuantity": {"value": 80, "unit": "bpm"},
+        "context": {"reference": "Encounter/{}".format(encounter_id)},
+    }
+
+    try:
+        response = session.post(fhir_store_path, headers=headers, json=body)
+        response.raise_for_status()
+
+        resource = response.json()
+
+        print("Created Observation resource with ID {}".format(resource["id"]))
+
+        return response
+    except HttpError as err:
+        print(err)
+        return ""
+
+
+# [END healthcare_create_observation]
 
 
 # [START healthcare_delete_resource]
@@ -99,28 +213,25 @@ def delete_resource(
     resource_type,
     resource_id,
 ):
-    """Deletes a FHIR resource or returns NOT_FOUND if it doesn't exist."""
+    """
+    Deletes a FHIR resource. Regardless of whether the operation succeeds or
+    fails, the server returns a 200 OK HTTP status code. To check that the
+    resource was successfully deleted, search for or get the resource and
+    see if it exists.
+    """
     url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
-    resource_path = "{}/datasets/{}/fhirStores/{}/resources/{}/{}".format(
+    resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}/{}".format(
         url, dataset_id, fhir_store_id, resource_type, resource_id
     )
 
     # Make an authenticated API request
     session = get_session(service_account_json)
 
-    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
+    response = session.delete(resource_path)
+    print("Deleted {} resource with ID {}.".format(resource_type, resource_id))
 
-    try:
-        response = session.delete(resource_path, headers=headers)
-        if response.status_code != 404:  # Don't consider missing to be error
-            response.raise_for_status()
-        print(response)
-        print("Deleted Resource: {}".format(resource_id))
-        return response
-    except HttpError:
-        print("Error, Resource not deleted")
-        return ""
+    return response
 
 
 # [END healthcare_delete_resource]
@@ -154,6 +265,7 @@ def get_resource(
 
     resource = response.json()
 
+    print("Got {} resource:".format(resource["resourceType"]))
     print(json.dumps(resource, indent=2))
 
     return resource
@@ -190,6 +302,11 @@ def list_resource_history(
 
     resource = response.json()
 
+    print(
+        "History for {} resource:".format(
+            resource["entry"][0]["resource"]["resourceType"]
+        )
+    )
     print(json.dumps(resource, indent=2))
 
     return resource
@@ -228,6 +345,7 @@ def get_resource_history(
 
     resource = response.json()
 
+    print("Got history for {} resource:".format(resource_type))
     print(json.dumps(resource, indent=2))
 
     return resource
@@ -341,7 +459,10 @@ def delete_resource_purge(
     response.raise_for_status()
 
     if response.status_code < 400:
-        print("{} deleted".format(response.status_code))
+        print(
+            "Deleted versions of {} resource "
+            "(excluding current version).".format(resource_type)
+        )
 
     return response
 
@@ -379,6 +500,7 @@ def update_resource(
 
     resource = response.json()
 
+    print("Updated {} resource:".format(resource["resourceType"]))
     print(json.dumps(resource, indent=2))
 
     return resource
@@ -395,28 +517,49 @@ def conditional_update_resource(
     cloud_region,
     dataset_id,
     fhir_store_id,
-    resource_type,
-    resource_id,
+    patient_id,
+    encounter_id,
 ):
-    """Updates an existing resource specified by search criteria."""
+    """
+    If a resource is found based on the search criteria specified in
+    the query parameters, updates the entire contents of that resource.
+    """
     url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
-    resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}".format(
-        url, dataset_id, fhir_store_id, resource_type
+    # The search query in this request updates all Observations
+    # using the Observation's identifier (ABC-12345 in my-code-system)
+    # so that their 'status' is 'cancelled'.
+    resource_path = "{}/datasets/{}/fhirStores/{}/fhir/Observation".format(
+        url, dataset_id, fhir_store_id
     )
 
     # Make an authenticated API request
     session = get_session(service_account_json)
 
+    body = {
+        "effectiveDateTime": "2019-01-01T00:00:00+00:00",
+        "resourceType": "Observation",
+        "context": {"reference": "Encounter/{}".format(encounter_id)},
+        "identifier": [{"system": "my-code-system", "value": "ABC-12345"}],
+        "status": "cancelled",
+        "subject": {"reference": "Patient/{}".format(patient_id)},
+        "valueQuantity": {"unit": "bpm", "value": 80},
+    }
+
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
-    body = {"resourceType": resource_type, "active": True, "id": resource_id}
+    params = {"identifier": "my-code-system|ABC-12345"}
 
-    response = session.put(resource_path, headers=headers, json=body)
+    response = session.put(resource_path, headers=headers, params=params, json=body)
+
     response.raise_for_status()
     resource = response.json()
 
-    print("Conditionally updated")
+    print(
+        "Conditionally updated Observations with the identifier "
+        "'my-code-system|ABC-12345' to have a 'status' of "
+        "'cancelled'."
+    )
     print(json.dumps(resource, indent=2))
 
     return resource
@@ -427,31 +570,28 @@ def conditional_update_resource(
 
 # [START healthcare_conditional_delete_resource]
 def conditional_delete_resource(
-    service_account_json,
-    base_url,
-    project_id,
-    cloud_region,
-    dataset_id,
-    fhir_store_id,
-    resource_type,
-    resource_id,
+    service_account_json, base_url, project_id, cloud_region, dataset_id, fhir_store_id
 ):
-    """Deletes an existing resource specified by search criteria."""
+    """Deletes FHIR resources that match a search query."""
     url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
-    resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}".format(
-        url, dataset_id, fhir_store_id, resource_type
+    # The search query in this request deletes all Observations
+    # with a status of 'cancelled'.
+    resource_path = "{}/datasets/{}/fhirStores/{}/fhir/Observation".format(
+        url, dataset_id, fhir_store_id
     )
-    resource_path += "?id={}".format(resource_id)
+    # The search query is passed in as a query string parameter.
+    params = {"status": "cancelled"}
 
     # Make an authenticated API request
     session = get_session(service_account_json)
 
-    response = session.delete(resource_path)
+    response = session.delete(resource_path, params=params)
+    print(response.url)
     if response.status_code != 404:  # Don't consider missing to be error
         response.raise_for_status()
 
-    print("Conditionally deleted. Status = {}".format(response.status_code))
+    print("Conditionally deleted all Observations with status='cancelled'.")
 
     return response
 
@@ -489,6 +629,7 @@ def patch_resource(
 
     resource = response.json()
 
+    print("Patched {} resource:".format(resource["resourceType"]))
     print(json.dumps(resource, indent=2))
 
     return resource
@@ -499,35 +640,52 @@ def patch_resource(
 
 # [START healthcare_conditional_patch_resource]
 def conditional_patch_resource(
-    service_account_json,
-    base_url,
-    project_id,
-    cloud_region,
-    dataset_id,
-    fhir_store_id,
-    resource_type,
-    resource_id,
+    service_account_json, base_url, project_id, cloud_region, dataset_id, fhir_store_id
 ):
-    """Updates part of an existing resource.."""
+    """
+    If a resource is found based on the search criteria specified in
+    the query parameters, updates part of that resource by
+    applying the operations specified in a JSON Patch document.
+    """
     url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
-    resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}".format(
-        url, dataset_id, fhir_store_id, resource_type
+    # The search query in this request updates all Observations
+    # if the subject of the Observation is a particular patient.
+    resource_path = "{}/datasets/{}/fhirStores/{}/fhir/Observation".format(
+        url, dataset_id, fhir_store_id
     )
-    resource_path += "?id={}".format(resource_id)
 
     # Make an authenticated API request
     session = get_session(service_account_json)
 
     headers = {"Content-Type": "application/json-patch+json"}
 
-    body = json.dumps([{"op": "replace", "path": "/active", "value": True}])
+    body = json.dumps(
+        [
+            {
+                "op": "replace",
+                "path": "/valueQuantity/value",
+                # Sets the BPM for all matching Observations to 80. This
+                # is the portion of the request being patched.
+                "value": 80,
+            }
+        ]
+    )
 
-    response = session.patch(resource_path, headers=headers, data=body)
+    # The search query is passed in as a query string parameter.
+    params = {"identifier": "my-code-system|ABC-12345"}
+
+    response = session.patch(resource_path, headers=headers, params=params, data=body)
     response.raise_for_status()
+
+    print(response.url)
 
     resource = response.json()
 
+    print(
+        "Conditionally patched all Observations with the "
+        "identifier 'my-code-system|ABC-12345' to use a BPM of 80."
+    )
     print(json.dumps(resource, indent=2))
 
     return resource
@@ -546,8 +704,10 @@ def search_resources_get(
     fhir_store_id,
     resource_type,
 ):
-    """Searches resources in the given FHIR store using the
-    searchResources GET method."""
+    """
+    Searches resources in the given FHIR store using the
+    searchResources GET method.
+    """
     url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
     resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}".format(
@@ -557,13 +717,16 @@ def search_resources_get(
     # Make an authenticated API request
     session = get_session(service_account_json)
 
-    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
-
-    response = session.get(resource_path, headers=headers)
+    response = session.get(resource_path)
     response.raise_for_status()
 
     resources = response.json()
 
+    print(
+        "Using GET request, found a total of {} {} resources:".format(
+            resources["total"], resource_type
+        )
+    )
     print(json.dumps(resources, indent=2))
 
     return resources
@@ -574,21 +737,21 @@ def search_resources_get(
 
 # [START healthcare_search_resources_post]
 def search_resources_post(
-    service_account_json,
-    base_url,
-    project_id,
-    cloud_region,
-    dataset_id,
-    fhir_store_id,
-    resource_type,
+    service_account_json, base_url, project_id, cloud_region, dataset_id, fhir_store_id
 ):
-    """Searches resources in the given FHIR store using the
-    _search POST method."""
+    """
+    Searches resources in the given FHIR store using the
+    _search POST method and a query string containing the
+    information to search for. In this sample, the search criteria is
+    'family:exact=Smith' on a Patient resource.
+    """
     url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
-    resource_path = "{}/datasets/{}/fhirStores/{}/resources/{}/_search".format(
-        url, dataset_id, fhir_store_id, resource_type
+    fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir".format(
+        url, dataset_id, fhir_store_id
     )
+
+    resource_path = "{}/Patient/_search?family:exact=Smith".format(fhir_store_path)
 
     # Make an authenticated API request
     session = get_session(service_account_json)
@@ -599,6 +762,11 @@ def search_resources_post(
     response.raise_for_status()
 
     resources = response.json()
+    print(
+        "Using POST request, found a total of {} Patient resources:".format(
+            resources["total"]
+        )
+    )
 
     print(json.dumps(resources, indent=2))
 
@@ -693,11 +861,15 @@ def execute_bundle(
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
-    response = session.post(resource_path, headers=headers, json=bundle)
+    with open(bundle, "r") as bundle_file:
+        bundle_file_content = bundle_file.read()
+
+    response = session.post(resource_path, headers=headers, data=bundle_file_content)
     response.raise_for_status()
 
     resource = response.json()
 
+    print("Executed bundle from file: {}".format(bundle))
     print(json.dumps(resource, indent=2))
 
     return resource
@@ -739,7 +911,23 @@ def parse_command_line_args():
         help="The type of resource. First letter must be capitalized",
     )
 
-    parser.add_argument("--resource_id", default=None, help="Name of a FHIR resource")
+    parser.add_argument(
+        "--resource_id", default=None, help="Identifier for a FHIR resource"
+    )
+
+    parser.add_argument(
+        "--patient_id",
+        default=None,
+        help="Identifier for a Patient resource. Can be used as a reference "
+        "for an Encounter/Observation",
+    )
+
+    parser.add_argument(
+        "--encounter_id",
+        default=None,
+        help="Identifier for an Encounter resource. Can be used as a "
+        "reference for an Observation",
+    )
 
     parser.add_argument(
         "--bundle",
@@ -755,16 +943,16 @@ def parse_command_line_args():
 
     command = parser.add_subparsers(dest="command")
 
-    command.add_parser("create-resource", help=create_resource.__doc__)
-    command.add_parser("delete-resource", help=create_resource.__doc__)
+    command.add_parser("create-patient", help=create_patient.__doc__)
+    command.add_parser("create-encounter", help=create_encounter.__doc__)
+    command.add_parser("create-observation", help=create_observation.__doc__)
+    command.add_parser("delete-resource", help=delete_resource.__doc__)
     command.add_parser(
         "conditional-delete-resource", help=conditional_delete_resource.__doc__
     )
     command.add_parser("get-resource", help=get_resource.__doc__)
     command.add_parser("list-resource-history", help=list_resource_history.__doc__)
-    command.add_parser("export-resources", help=export_resources.__doc__)
-    command.add_parser("export-resources", help=export_resources.__doc__)
-    command.add_parser("execute_bundle", help=execute_bundle.__doc__)
+    command.add_parser("execute-bundle", help=execute_bundle.__doc__)
     command.add_parser("get-resource-history", help=get_resource_history.__doc__)
     command.add_parser("delete-resource-purge", help=delete_resource_purge.__doc__)
     command.add_parser("update-resource", help=update_resource.__doc__)
@@ -792,15 +980,37 @@ def run_command(args):
         )
         return
 
-    elif args.command == "create-resource":
-        create_resource(
+    elif args.command == "create-patient":
+        create_patient(
             args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
             args.fhir_store_id,
-            args.resource_type,
+        )
+
+    elif args.command == "create-encounter":
+        create_encounter(
+            args.service_account_json,
+            args.base_url,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            args.patient_id,
+        )
+
+    elif args.command == "create-observation":
+        create_observation(
+            args.service_account_json,
+            args.base_url,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            args.patient_id,
+            args.encounter_id,
         )
 
     elif args.command == "delete-resource":
@@ -823,8 +1033,6 @@ def run_command(args):
             args.cloud_region,
             args.dataset_id,
             args.fhir_store_id,
-            args.resource_type,
-            args.resource_id,
         )
 
     elif args.command == "get-resource":
@@ -839,8 +1047,8 @@ def run_command(args):
             args.resource_id,
         )
 
-    elif args.command == "execute_bundle":
-        get_resource(
+    elif args.command == "execute-bundle":
+        execute_bundle(
             args.service_account_json,
             args.base_url,
             args.project_id,
@@ -907,8 +1115,8 @@ def run_command(args):
             args.cloud_region,
             args.dataset_id,
             args.fhir_store_id,
-            args.resource_type,
-            args.resource_id,
+            args.patient_id,
+            args.encounter_id,
         )
 
     elif args.command == "patch-resource":
@@ -931,7 +1139,6 @@ def run_command(args):
             args.cloud_region,
             args.dataset_id,
             args.fhir_store_id,
-            args.resource_type,
         )
 
     elif args.command == "search-resources-get":
@@ -945,28 +1152,6 @@ def run_command(args):
             args.resource_type,
         )
 
-    elif args.command == "export-resources":
-        export_resources(
-            args.service_account_json,
-            args.base_url,
-            args.project_id,
-            args.cloud_region,
-            args.dataset_id,
-            args.fhir_store_id,
-            args.uri_prefix,
-        )
-
-    elif args.command == "import-resources":
-        import_resources(
-            args.service_account_json,
-            args.base_url,
-            args.project_id,
-            args.cloud_region,
-            args.dataset_id,
-            args.fhir_store_id,
-            args.uri_prefix,
-        )
-
     elif args.command == "search-resources-post":
         search_resources_post(
             args.service_account_json,
@@ -975,7 +1160,6 @@ def run_command(args):
             args.cloud_region,
             args.dataset_id,
             args.fhir_store_id,
-            args.resource_type,
         )
 
     elif args.command == "get-patient-everything":

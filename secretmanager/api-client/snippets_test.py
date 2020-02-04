@@ -23,8 +23,10 @@ from delete_secret import delete_secret
 from destroy_secret_version import destroy_secret_version
 from disable_secret_version import disable_secret_version
 from enable_secret_version import enable_secret_version
-from get_secret_version import get_secret_version
 from get_secret import get_secret
+from get_secret_version import get_secret_version
+from iam_grant_access import iam_grant_access
+from iam_revoke_access import iam_revoke_access
 from list_secret_versions import list_secret_versions
 from list_secrets import list_secrets
 from update_secret import update_secret
@@ -41,6 +43,11 @@ def client():
 @pytest.fixture()
 def project_id():
     return os.environ['GCLOUD_PROJECT']
+
+
+@pytest.fixture()
+def iam_user():
+    return 'serviceAccount:' + os.environ['GCLOUD_SECRETS_SERVICE_ACCOUNT']
 
 
 @pytest.fixture()
@@ -143,6 +150,18 @@ def test_get_secret(client, secret):
     project_id, secret_id = secret
     snippet_secret = get_secret(project_id, secret_id)
     assert secret_id in snippet_secret.name
+
+
+def test_iam_grant_access(client, secret, iam_user):
+    project_id, secret_id = secret
+    policy = iam_grant_access(project_id, secret_id, iam_user)
+    assert any(iam_user in b.members for b in policy.bindings)
+
+
+def test_iam_revoke_access(client, secret, iam_user):
+    project_id, secret_id = secret
+    policy = iam_revoke_access(project_id, secret_id, iam_user)
+    assert not any(iam_user in b.members for b in policy.bindings)
 
 
 def test_list_secret_versions(capsys, secret_version, another_secret_version):
