@@ -146,6 +146,9 @@ PY3_ONLY_SAMPLES = [
         str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith(
             "appengine/standard_python37"
         )
+        or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith(
+            "appengine/flexible/django_cloudsql"
+        )
         or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith("functions/")
         or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith(
             "bigquery/pandas-gbq-migration"
