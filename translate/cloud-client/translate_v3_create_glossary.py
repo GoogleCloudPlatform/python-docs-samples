@@ -21,8 +21,9 @@ def create_glossary(
     input_uri="YOUR_INPUT_URI",
     glossary_id="YOUR_GLOSSARY_ID",
 ):
-    """Create a equivalent term sets glossary. Glossary can be words or 
-    short phrases(usually fewer than five words).
+    """
+    Create a equivalent term sets glossary. Glossary can be words or 
+    short phrases (usually fewer than five words).
     https://cloud.google.com/translate/docs/advanced/glossary#format-glossary
     """
     client = translate.TranslationServiceClient()

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-trace-demo-a
+  labels:
+    app: cloud-trace-demo-app-a
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloud-trace-demo-app-a
+  template:
+    metadata:
+      name: cloud-trace-demo-a
+      labels:
+        app: cloud-trace-demo-app-a
+    spec:
+      containers:
+      - name: cloud-trace-demo-container
+        image: gcr.io/cloud-trace-demo/demo-image:latest
+        command:
+        - python
+        args:
+        - app.py
+        - --keyword=Hello
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloud-trace-demo-a
+spec:
+  selector:
+    app: cloud-trace-demo-app-a
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  type: LoadBalancer
