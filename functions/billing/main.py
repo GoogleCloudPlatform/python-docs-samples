@@ -168,3 +168,36 @@ def __stop_instances(project_id, zone, instance_names, instances):
           instance=name).execute()
         print(f'Instance stopped successfully: {name}')
 # [END functions_billing_limit]
+
+
+# [START functions_billing_limit_appengine]
+APP_NAME = os.getenv('GCP_PROJECT')
+
+
+def limit_use_appengine(data, context):
+    pubsub_data = base64.b64decode(data['data']).decode('utf-8')
+    pubsub_json = json.loads(pubsub_data)
+    cost_amount = pubsub_json['costAmount']
+    budget_amount = pubsub_json['budgetAmount']
+    if cost_amount <= budget_amount:
+        print(f'No action necessary. (Current cost: {cost_amount})')
+        return
+
+    appengine = discovery.build(
+        'appengine',
+        'v1',
+        cache_discovery=False,
+        credentials=GoogleCredentials.get_application_default()
+    )
+    apps = appengine.apps()
+
+    # Get the target app's serving status
+    target_app = apps.get(appsId=APP_NAME).execute()
+    current_status = target_app['servingStatus']
+
+    # Disable target app, if necessary
+    if current_status == 'SERVING':
+        print(f'Attempting to disable app {APP_NAME}...')
+        body = {'servingStatus': 'USER_DISABLED'}
+        apps.patch(appsId=APP_NAME, updateMask='serving_status', body=body).execute()
+# [END functions_billing_limit_appengine]
