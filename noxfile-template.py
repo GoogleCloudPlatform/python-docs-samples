@@ -158,12 +158,26 @@ PY3_ONLY_SAMPLES = [
         )
     )
 ]
+
+NON_PY35_SAMPLES = [
+    sample
+    for sample in PY3_ONLY_SAMPLES
+      if (
+        str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith("functions/")
+        or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith(
+            "run/"
+        )
+]
+
 NON_GAE_STANDARD_SAMPLES_PY2 = sorted(
     list((set(ALL_TESTED_SAMPLES) - set(GAE_STANDARD_SAMPLES)) - set(PY3_ONLY_SAMPLES))
 )
 NON_GAE_STANDARD_SAMPLES_PY3 = sorted(
     list(set(ALL_TESTED_SAMPLES) - set(GAE_STANDARD_SAMPLES))
 )
+
+PY35_SAMPLES = sorted(
+  list(set(NON_GAE_STANDARD_SAMPLES_PY3) - set(NON_PY35_SAMPLES))
 
 
 def _session_tests(session, sample, post_install=None):
@@ -208,7 +222,13 @@ def py2(session, sample):
     _session_tests(session, sample)
 
 
-@nox.session(python=["3.5", "3.6", "3.7"])
+@nox.session(python=["3.5"])
+@nox.parametrize("sample", PY35_SAMPLES)
+def py35(session, sample):
+    """Runs py.test for a sample using Python 3.5"""
+    _session_tests(session, sample)
+
+@nox.session(python=["3.6", "3.7"])
 @nox.parametrize("sample", NON_GAE_STANDARD_SAMPLES_PY3)
 def py3(session, sample):
     """Runs py.test for a sample using Python 3.x"""
