@@ -136,7 +136,7 @@ def test_limit_use_appengine(discovery_mock, ZONE, PROJECT_ID):
     projects_mock.getBillingInfo = MagicMock(return_value=projects_mock)
     projects_mock.updateBillingInfo = MagicMock(return_value=projects_mock)
 
-    apps_list = [{ 'servingStatus': 'SERVING' }]
+    apps_list = [{'servingStatus': 'SERVING'}]
     app_patch_mock = MagicMock()
     apps_mock = MagicMock()
     apps_mock.get.return_value.execute.return_value = apps_list
@@ -160,4 +160,5 @@ def test_limit_use_appengine(discovery_mock, ZONE, PROJECT_ID):
 
     assert projects_mock.getBillingInfo.called_with(name=PROJECT_NAME)
     assert apps_mock.get.calledWith(appsId=PROJECT_ID)
-    assert apps_mock.stop.calledWith(appsId=PROJECT_ID, updateMask='serving_status', body=patch_body)
+    assert apps_mock.stop.calledWith(
+        appsId=PROJECT_ID, updateMask='serving_status', body=patch_body)
