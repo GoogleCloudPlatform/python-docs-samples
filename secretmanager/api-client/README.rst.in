@@ -36,6 +36,12 @@ samples:
 - name: Get Secret Version
   file: get_secret_version.py
   show_help: True
+- name: IAM Grant Access
+  file: iam_grant_access.py
+  show_help: True
+- name: IAM Revoke Access
+  file: iam_revoke_access.py
+  show_help: True
 - name: Get Secret
   file: get_secret.py
   show_help: True
