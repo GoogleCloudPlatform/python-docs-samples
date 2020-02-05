@@ -122,7 +122,6 @@ def test_limit_use(discovery_mock, ZONE, PROJECT_ID):
 def test_limit_use_appengine(discovery_mock, ZONE, PROJECT_ID):
     PROJECT_ID = 'my-project'
     PROJECT_NAME = f'projects/{PROJECT_ID}'
-    ZONE = 'my-zone'
 
     data = {"budgetAmount": 400, "costAmount": 500}
 
