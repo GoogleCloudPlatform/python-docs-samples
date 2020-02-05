@@ -90,7 +90,7 @@ gcloud builds submit --tag gcr.io/[YOUR_PROJECT_ID]/run-mysql
 2. Deploy the service to Cloud Run:
 
 ```sh
-gcloud run deploy run-sql --image gcr.io/[YOUR_PROJECT_ID]/run-mysql
+gcloud run deploy run-mysql --image gcr.io/[YOUR_PROJECT_ID]/run-mysql
 ```
 
 Take note of the URL output at the end of the deployment process.
