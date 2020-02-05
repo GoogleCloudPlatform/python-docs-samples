@@ -13,30 +13,36 @@
 # limitations under the License.
 
 # [START functions_billing_limit]
+# [START functions_billing_limit_appengine]
 # [START functions_billing_stop]
 import base64
 import json
 import os
 # [END functions_billing_stop]
 # [END functions_billing_limit]
+# [END functions_billing_limit_appengine]
 
 # [START functions_billing_limit]
+# [START functions_billing_limit_appengine]
 # [START functions_billing_stop]
 from googleapiclient import discovery
 from oauth2client.client import GoogleCredentials
 # [END functions_billing_stop]
 # [END functions_billing_limit]
+# [END functions_billing_limit_appengine]
 
 # [START functions_billing_slack]
 import slack
 # [END functions_billing_slack]
 
 # [START functions_billing_limit]
+# [START functions_billing_limit_appengine]
 # [START functions_billing_stop]
 PROJECT_ID = os.getenv('GCP_PROJECT')
 PROJECT_NAME = f'projects/{PROJECT_ID}'
 # [END functions_billing_stop]
 # [END functions_billing_limit]
+# [END functions_billing_limit_appengine]
 
 # [START functions_billing_slack]
 
