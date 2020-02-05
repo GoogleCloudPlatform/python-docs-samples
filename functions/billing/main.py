@@ -198,6 +198,5 @@ def limit_use_appengine(data, context):
     if current_status == 'SERVING':
         print(f'Attempting to disable app {APP_NAME}...')
         body = {'servingStatus': 'USER_DISABLED'}
-        app = apps.patch(
-            appsId=APP_NAME, updateMask='serving_status', body=body).execute()
+        apps.patch(appsId=APP_NAME, updateMask='serving_status', body=body).execute()
 # [END functions_billing_limit_appengine]
