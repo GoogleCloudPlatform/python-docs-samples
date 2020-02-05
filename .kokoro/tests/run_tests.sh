@@ -78,10 +78,12 @@ for file in **/requirements.txt; do
 
     # Skip unsupported Python versions for Cloud Functions
     # (Some GCF samples' dependencies don't support them)
-    PYTHON_VERSION=$(python --version)
-    if [[ "$PYTHON_VERSION" == "Python 2."* || "$PYTHON_VERSION" == "Python 3.5"* ]]; then
-      # echo -e "\n Skipping $file: Python $PYTHON_VERSION is not supported by Cloud Functions.\n"
-      continue
+    if [[ "$file" == "functions/"* ]]; then
+      PYTHON_VERSION="$(python --version)"
+      if [[ "$PYTHON_VERSION" == "Python 2."* || "$PYTHON_VERSION" == "Python 3.5"* ]]; then
+        # echo -e "\n Skipping $file: Python $PYTHON_VERSION is not supported by Cloud Functions.\n"
+        continue
+      fi
     fi
 
     echo "------------------------------------------------------------"
