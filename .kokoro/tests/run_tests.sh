@@ -90,9 +90,9 @@ for file in **/requirements.txt; do
     nox -s "$RUN_TESTS_SESSION"
     EXIT=$?
 
-    # If we're running system tests, send the test log to the Build Cop Bot.
+    # If this is a continuous build, send the test log to the Build Cop Bot.
     # See https://github.com/googleapis/repo-automation-bots/tree/master/packages/buildcop.
-    if [[ $KOKORO_BUILD_ARTIFACTS_SUBDIR = *"system-tests"* ]]; then
+    if [[ $KOKORO_BUILD_ARTIFACTS_SUBDIR = *"continuous"* ]]; then
       # Use the service account with access to the repo-automation-bots project.
       gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
       gcloud config set project repo-automation-bots
