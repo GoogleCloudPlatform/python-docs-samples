@@ -169,6 +169,7 @@ def __stop_instances(project_id, zone, instance_names, instances):
         print(f'Instance stopped successfully: {name}')
 # [END functions_billing_limit]
 
+
 # [START functions_billing_limit_appengine]
 APP_NAME = os.getenv('GCP_PROJECT')
 
