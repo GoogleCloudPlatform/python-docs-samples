@@ -71,28 +71,6 @@ def subscription_id(topic_id):
     subscriber.delete_subscription(subscription_path)
 
 
-"""
-@pytest.fixture(scope="module")
-def bigquery_dataset_id():
-    # adds bq dataset, yields the id, tears down
-    bigquery_client = google.cloud.bigquery.Client()
-
-    dataset_ref = bigquery_client.dataset(BIGQUERY_DATASET_ID)
-    dataset = google.cloud.bigquery.Dataset(dataset_ref)
-    try:
-        dataset = bigquery_client.create_dataset(dataset)
-    except google.api_core.exceptions.Conflict:
-        dataset = bigquery_client.get_dataset(dataset)
-    yield BIGQUERY_DATASET_ID
-    bigquery_client.delete_dataset(dataset_ref, delete_contents=True)
-
-@pytest.fixture(scope="module")
-def bigquery_table_id(bigquery_dataset_id):
-  bigquery_client = google.cloud.bigquery.Client()
-  dataset_ref = bigquery_client.dataset(bigquery
-"""
-
-
 @pytest.fixture(scope="module")
 def bigquery_project():
     # Adds test Bigquery data, yields the project ID and then tears down.
@@ -111,7 +89,6 @@ def bigquery_project():
     harmful_table_ref = dataset_ref.table(BIGQUERY_HARMFUL_TABLE_ID)
     harmful_table = google.cloud.bigquery.Table(harmful_table_ref)
 
-    # DO NOT SUBMIT: trim this down once we find out what works
     table.schema = (
         google.cloud.bigquery.SchemaField("Name", "STRING"),
         google.cloud.bigquery.SchemaField("Comment", "STRING"),
