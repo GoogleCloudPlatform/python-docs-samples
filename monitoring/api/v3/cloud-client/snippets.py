@@ -20,15 +20,13 @@ import uuid
 
 from google.cloud import monitoring_v3
 
-METRIC_UUID = str(uuid.uuid4())
-
 
 def create_metric_descriptor(project_id):
     # [START monitoring_create_metric]
     client = monitoring_v3.MetricServiceClient()
     project_name = client.project_path(project_id)
     descriptor = monitoring_v3.types.MetricDescriptor()
-    descriptor.type = "custom.googleapis.com/my_metric" + METRIC_UUID
+    descriptor.type = "custom.googleapis.com/my_metric" + str(uuid.uuid4())
     descriptor.metric_kind = monitoring_v3.enums.MetricDescriptor.MetricKind.GAUGE
     descriptor.value_type = monitoring_v3.enums.MetricDescriptor.ValueType.DOUBLE
     descriptor.description = "This is a simple example of a custom metric."
@@ -51,7 +49,7 @@ def write_time_series(project_id):
     project_name = client.project_path(project_id)
 
     series = monitoring_v3.types.TimeSeries()
-    series.metric.type = "custom.googleapis.com/my_metric"
+    series.metric.type = "custom.googleapis.com/my_metric" + str(uuid.uuid4())
     series.resource.type = "gce_instance"
     series.resource.labels["instance_id"] = "1234567890123456789"
     series.resource.labels["zone"] = "us-central1-f"
