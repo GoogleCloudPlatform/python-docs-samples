@@ -20,24 +20,25 @@ def run_quickstart():
     import time
 
     client = monitoring_v3.MetricServiceClient()
-    project = 'my-project'  # TODO: Update to your project ID.
+    project = "my-project"  # TODO: Update to your project ID.
     project_name = client.project_path(project)
 
     series = monitoring_v3.types.TimeSeries()
-    series.metric.type = 'custom.googleapis.com/my_metric'
-    series.resource.type = 'gce_instance'
-    series.resource.labels['instance_id'] = '1234567890123456789'
-    series.resource.labels['zone'] = 'us-central1-f'
+    series.metric.type = "custom.googleapis.com/my_metric"
+    series.resource.type = "gce_instance"
+    series.resource.labels["instance_id"] = "1234567890123456789"
+    series.resource.labels["zone"] = "us-central1-f"
     point = series.points.add()
     point.value.double_value = 3.14
     now = time.time()
     point.interval.end_time.seconds = int(now)
     point.interval.end_time.nanos = int(
-        (now - point.interval.end_time.seconds) * 10**9)
+        (now - point.interval.end_time.seconds) * 10 ** 9
+    )
     client.create_time_series(project_name, [series])
-    print('Successfully wrote time series.')
+    print("Successfully wrote time series.")
     # [END monitoring_quickstart]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_quickstart()
