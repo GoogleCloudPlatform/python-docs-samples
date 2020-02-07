@@ -482,6 +482,11 @@ def mqtt_device_demo(args):
 def main():
     args = parse_command_line_args()
 
+    if args.command.startswith('gateway'):
+        if (args.gateway_id is None):
+            print('Error: For gateway commands you must specify a gateway ID')
+            return
+
     if args.command == 'gateway_listen':
         listen_for_messages(
                 args.service_account_json, args.project_id,
