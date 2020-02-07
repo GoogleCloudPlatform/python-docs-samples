@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import uuid
 
 def run_quickstart():
     # [START monitoring_quickstart]
@@ -24,7 +25,7 @@ def run_quickstart():
     project_name = client.project_path(project)
 
     series = monitoring_v3.types.TimeSeries()
-    series.metric.type = "custom.googleapis.com/my_metric"
+    series.metric.type = "custom.googleapis.com/my_metric" + str(uuid.uuid4())
     series.resource.type = "gce_instance"
     series.resource.labels["instance_id"] = "1234567890123456789"
     series.resource.labels["zone"] = "us-central1-f"
@@ -38,6 +39,8 @@ def run_quickstart():
     client.create_time_series(project_name, [series])
     print("Successfully wrote time series.")
     # [END monitoring_quickstart]
+    # debug statement used for test cleanup
+    print("Metric to clean up {}.".format(series.metric.type))
 
 
 if __name__ == "__main__":

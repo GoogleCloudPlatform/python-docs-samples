@@ -64,6 +64,9 @@ def write_time_series(project_id):
     )
     client.create_time_series(project_name, [series])
     # [END monitoring_write_timeseries]
+    # debug statement used for test cleanup
+    print("Metric to clean up {}.".format(series.metric.type))
+
 
 
 def list_time_series(project_id):

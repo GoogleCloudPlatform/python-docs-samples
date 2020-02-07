@@ -19,10 +19,10 @@ import os
 
 from flaky import flaky
 
+import google.api_core.exceptions
 import snippets
-from google.cloud import monitoring_v3
-from google.cloud.exceptions import NotFound
 
+from google.cloud import monitoring_v3
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 
 
@@ -39,7 +39,7 @@ def test_custom_metric_descriptor():
     yield descriptor_response.name
     try:
         snippets.delete_metric_descriptor(descriptor_response.name)
-    except NotFound:
+    except google.api_core.exceptions.NotFound:
         print("Metric already deleted")
 
 
@@ -90,6 +90,10 @@ def test_write_time_series(capsys):
     snippets.write_time_series(snippets.project_id())
     out, _ = capsys.readouterr()
     assert "Error" not in out  # this method returns nothing unless there is an error
+   # clean up custom metric created as part of quickstart
+    match = re.search(r"Metric to clean up (.*)\.", out)
+    metric_name = "projects/{}/metricDescriptors/{}".format(PROJECT_ID,match.group(1))
+    snippets.delete_metric_descriptor(metric_name)
 
 
 def test_list_time_series(capsys):
