@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import os
-import re 
+import re
 
 import mock
 import pytest
@@ -44,5 +44,5 @@ def test_quickstart(capsys, mock_project_path):
 
     # clean up custom metric created as part of quickstart
     match = re.search(r"Metric to clean up (.*)\.", out)
-    metric_name = "projects/{}/metricDescriptors/{}".format(PROJECT,match.group(1))
+    metric_name = "projects/{}/metricDescriptors/{}".format(PROJECT, match.group(1))
     snippets.delete_metric_descriptor(metric_name)

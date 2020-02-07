@@ -14,6 +14,7 @@
 
 import uuid
 
+
 def run_quickstart():
     # [START monitoring_quickstart]
     from google.cloud import monitoring_v3

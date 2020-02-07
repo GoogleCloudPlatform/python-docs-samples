@@ -29,42 +29,37 @@ import pytest
 
 import list_resources
 
-PROJECT = os.environ['GCLOUD_PROJECT']
-METRIC = 'compute.googleapis.com/instance/cpu/usage_time'
+PROJECT = os.environ["GCLOUD_PROJECT"]
+METRIC = "compute.googleapis.com/instance/cpu/usage_time"
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def client():
-    return googleapiclient.discovery.build('monitoring', 'v3')
+    return googleapiclient.discovery.build("monitoring", "v3")
 
 
 @flaky
 def test_list_monitored_resources(client, capsys):
     PROJECT_RESOURCE = "projects/{}".format(PROJECT)
-    list_resources.list_monitored_resource_descriptors(
-        client, PROJECT_RESOURCE)
+    list_resources.list_monitored_resource_descriptors(client, PROJECT_RESOURCE)
     stdout, _ = capsys.readouterr()
-    regex = re.compile(
-        'An application running', re.I)
+    regex = re.compile("An application running", re.I)
     assert regex.search(stdout) is not None
 
 
 @flaky
 def test_list_metrics(client, capsys):
     PROJECT_RESOURCE = "projects/{}".format(PROJECT)
-    list_resources.list_metric_descriptors(
-        client, PROJECT_RESOURCE, METRIC)
+    list_resources.list_metric_descriptors(client, PROJECT_RESOURCE, METRIC)
     stdout, _ = capsys.readouterr()
-    regex = re.compile(
-        u'Delta CPU', re.I)
+    regex = re.compile(u"Delta CPU", re.I)
     assert regex.search(stdout) is not None
 
 
 @flaky
 def test_list_timeseries(client, capsys):
     PROJECT_RESOURCE = "projects/{}".format(PROJECT)
-    list_resources.list_timeseries(
-        client, PROJECT_RESOURCE, METRIC)
+    list_resources.list_timeseries(client, PROJECT_RESOURCE, METRIC)
     stdout, _ = capsys.readouterr()
-    regex = re.compile(u'list_timeseries response:\n', re.I)
+    regex = re.compile(u"list_timeseries response:\n", re.I)
     assert regex.search(stdout) is not None

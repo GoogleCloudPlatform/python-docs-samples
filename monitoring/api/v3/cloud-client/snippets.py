@@ -68,7 +68,6 @@ def write_time_series(project_id):
     print("Metric to clean up {}.".format(series.metric.type))
 
 
-
 def list_time_series(project_id):
     # [START monitoring_read_timeseries_simple]
     client = monitoring_v3.MetricServiceClient()
