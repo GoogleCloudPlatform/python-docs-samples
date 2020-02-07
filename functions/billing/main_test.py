@@ -114,3 +114,50 @@ def test_limit_use(discovery_mock, ZONE, PROJECT_ID):
     assert instances_mock.list.calledWith(project=PROJECT_ID, zone=ZONE)
     assert instances_mock.stop.call_count == 1
     assert instances_mock.execute.call_count == 2
+
+
+@patch('main.PROJECT_ID')
+@patch('main.ZONE')
+@patch('main.discovery')
+def test_limit_use_appengine(discovery_mock, ZONE, PROJECT_ID):
+    PROJECT_ID = 'my-project'
+    PROJECT_NAME = f'projects/{PROJECT_ID}'
+
+    data = {"budgetAmount": 400, "costAmount": 500}
+
+    pubsub_message = {
+        "data": base64.b64encode(bytes(json.dumps(data), 'utf-8')),
+        "attributes": {}
+    }
+
+    projects_mock = MagicMock()
+    projects_mock.projects = MagicMock(return_value=projects_mock)
+    projects_mock.getBillingInfo = MagicMock(return_value=projects_mock)
+    projects_mock.updateBillingInfo = MagicMock(return_value=projects_mock)
+
+    apps_list = [{'servingStatus': 'SERVING'}]
+    app_patch_mock = MagicMock()
+    apps_mock = MagicMock()
+    apps_mock.get.return_value.execute.return_value = apps_list
+    apps_mock.patch.return_value.execute = app_patch_mock
+    appengine_mock = MagicMock()
+    appengine_mock.apps.return_value = apps_mock
+
+    def discovery_mocker(x, *args, **kwargs):
+        if x == 'appengine':
+            return apps_mock
+        else:
+            return projects_mock
+
+    discovery_mock.build = MagicMock(side_effect=discovery_mocker)
+
+    main.limit_use_appengine(pubsub_message, None)
+
+    patch_body = {
+        'servingStatus': 'USER_DISABLED'
+    }
+
+    assert projects_mock.getBillingInfo.called_with(name=PROJECT_NAME)
+    assert apps_mock.get.calledWith(appsId=PROJECT_ID)
+    assert apps_mock.stop.calledWith(
+        appsId=PROJECT_ID, updateMask='serving_status', body=patch_body)

@@ -12,29 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START translate_v3_translate_text]
+# [START translate_v3_get_supported_languages]
 from google.cloud import translate
 
 
-def sample_translate_text(project_id="YOUR_PROJECT_ID"):
-    """Translating Text."""
+def sample_get_supported_languages(project_id="YOUR_PROJECT_ID"):
+    """Getting a list of supported language codes."""
 
     client = translate.TranslationServiceClient()
 
     parent = client.location_path(project_id, "global")
 
-    # Detail on supported types can be found here:
-    # https://cloud.google.com/translate/docs/supported-formats
-    response = client.translate_text(
-        parent=parent,
-        contents=["Hello, world!"],
-        mime_type="text/plain",  # mime types: text/plain, text/html
-        source_language_code="en-US",
-        target_language_code="fr",
-    )
-    # Display the translation for each input text provided
-    for translation in response.translations:
-        print(u"Translated text: {}".format(translation.translated_text))
+    response = client.get_supported_languages(parent=parent)
+
+    # List language codes of supported languages.
+    print("Supported Languages:")
+    for language in response.languages:
+        print(u"Language Code: {}".format(language.language_code))
 
 
-# [END translate_v3_translate_text]
+# [END translate_v3_get_supported_languages]

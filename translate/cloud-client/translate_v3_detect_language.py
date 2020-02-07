@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START translate_v3_translate_text]
+# [START translate_v3_detect_language]
 from google.cloud import translate
 
 
-def sample_translate_text(project_id="YOUR_PROJECT_ID"):
-    """Translating Text."""
+def sample_detect_language(project_id="YOUR_PROJECT_ID"):
+    """Detecting the language of a text string."""
 
     client = translate.TranslationServiceClient()
 
@@ -25,16 +25,19 @@ def sample_translate_text(project_id="YOUR_PROJECT_ID"):
 
     # Detail on supported types can be found here:
     # https://cloud.google.com/translate/docs/supported-formats
-    response = client.translate_text(
+    response = client.detect_language(
+        content="Hello, world!",
         parent=parent,
-        contents=["Hello, world!"],
         mime_type="text/plain",  # mime types: text/plain, text/html
-        source_language_code="en-US",
-        target_language_code="fr",
     )
-    # Display the translation for each input text provided
-    for translation in response.translations:
-        print(u"Translated text: {}".format(translation.translated_text))
+
+    # Display list of detected languages sorted by detection confidence.
+    # The most probable language is first.
+    for language in response.languages:
+        # The language detected
+        print(u"Language code: {}".format(language.language_code))
+        # Confidence of detection result for this language
+        print(u"Confidence: {}".format(language.confidence))
 
 
-# [END translate_v3_translate_text]
+# [END translate_v3_detect_language]
