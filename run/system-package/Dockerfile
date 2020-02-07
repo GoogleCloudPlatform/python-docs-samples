@@ -14,7 +14,7 @@
 
 # Use the official Python image.
 # https://hub.docker.com/_/python
-FROM python:3.7
+FROM python:3.8
 
 # [START run_system_package_ubuntu]
 RUN apt-get update -y && apt-get install -y \
