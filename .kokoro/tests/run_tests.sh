@@ -103,10 +103,6 @@ for file in **/requirements.txt; do
     # If this is a continuous build, send the test log to the Build Cop Bot.
     # See https://github.com/googleapis/repo-automation-bots/tree/master/packages/buildcop.
     if [[ $KOKORO_BUILD_ARTIFACTS_SUBDIR = *"continuous"* ]]; then
-      # Use the service account with access to the repo-automation-bots project.
-      gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
-      gcloud config set project repo-automation-bots
-
       XML=$(base64 -w 0 sponge_log.xml)
 
       # See https://github.com/apps/build-cop-bot/installations/5943459.
@@ -124,7 +120,9 @@ for file in **/requirements.txt; do
 EOF
       )
 
-      gcloud pubsub topics publish passthrough --message="$MESSAGE"
+      # Use a service account with access to the repo-automation-bots project.
+      gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
+      gcloud pubsub topics publish passthrough --project=repo-automation-bots --message="$MESSAGE"
     fi
 
     if [[ $EXIT -ne 0 ]]; then
