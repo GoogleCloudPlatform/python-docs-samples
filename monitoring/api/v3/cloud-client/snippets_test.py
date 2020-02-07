@@ -43,21 +43,6 @@ def test_custom_metric_descriptor():
         print("Metric already deleted")
 
 
-@pytest.fixture(scope="module")
-def timeseries_cleanup_leftovers():
-    # the timeseries method doesn't return the name of the metric
-    # used so we need to clean up after it
-    yield
-    client = monitoring_v3.MetricServiceClient()
-    project_name = client.project_path(PROJECT_ID)
-    descriptors = []
-    for descriptor in client.list_metric_descriptors(project_name):
-        if "custom.googleapis.com/my_metric" in descriptor.name:
-            descriptors.append(descriptor.name)
-    for descriptor in descriptors:
-        snippets.delete_metric_descriptor(descriptor)
-
-
 def test_create_metric_descriptor(capsys):
     snippets.create_metric_descriptor(PROJECT_ID)
     out, _ = capsys.readouterr()
@@ -101,7 +86,7 @@ def test_get_resources(capsys):
     assert "A topic in Google Cloud Pub/Sub" in out
 
 
-def test_write_time_series(timeseries_cleanup_leftovers, capsys):
+def test_write_time_series(capsys):
     snippets.write_time_series(snippets.project_id())
     out, _ = capsys.readouterr()
     assert "Error" not in out  # this method returns nothing unless there is an error
