@@ -64,8 +64,8 @@ def test_get_metric_descriptor(test_custom_metric_descriptor, capsys):
 
         out, _ = capsys.readouterr()
         assert test_custom_metric_descriptor in out
-    except:
-        pass
+    except Exception as e:
+        print(e)
 
 
 def test_delete_metric_descriptor(test_custom_metric_descriptor, capsys):
