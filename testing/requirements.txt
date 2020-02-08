@@ -9,7 +9,7 @@ pytest==5.3.2; python_version > "3.0"
 pytest==4.6.9; python_version < "3.0"
 pyyaml==5.1.2
 responses==0.10.6
-WebTest==2.0.33
+WebTest==2.0.34
 webapp2==2.5.2
 google-api-python-client==1.7.11
 google-cloud-core==1.0.3
