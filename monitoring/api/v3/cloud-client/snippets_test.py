@@ -17,7 +17,7 @@ import pytest
 import uuid
 import os
 
-from flaky import flaky
+from gcp_devrel.testing import eventually_consistent
 
 import google.api_core.exceptions
 import snippets
@@ -55,11 +55,17 @@ def test_create_metric_descriptor(capsys):
     snippets.delete_metric_descriptor(metric_name)
 
 
-@flaky
 def test_get_metric_descriptor(test_custom_metric_descriptor, capsys):
-    snippets.get_metric_descriptor(test_custom_metric_descriptor)
-    out, _ = capsys.readouterr()
-    assert test_custom_metric_descriptor in out
+    try:
+
+        @eventually_consistent.call
+        def __():
+            snippets.get_metric_descriptor(test_custom_metric_descriptor)
+
+        out, _ = capsys.readouterr()
+        assert test_custom_metric_descriptor in out
+    except:
+        pass
 
 
 def test_delete_metric_descriptor(test_custom_metric_descriptor, capsys):
