@@ -35,39 +35,16 @@ IMAGE_URI_1 = 'shoes_1.jpg'
 IMAGE_URI_2 = 'shoes_2.jpg'
 
 
-@pytest.fixture
+@pytest.fixture(scope="function", autouse=True)
 def teardown():
-    # no set up, tear down only
-    yield None
+    yield
 
     delete_product(PROJECT_ID, LOCATION, PRODUCT_ID_1)
     delete_product(PROJECT_ID, LOCATION, PRODUCT_ID_2)
     delete_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
 
 
-def test_import_product_sets(capsys, teardown):
-    list_product_sets(PROJECT_ID, LOCATION)
-    out, _ = capsys.readouterr()
-    assert PRODUCT_SET_ID not in out
-
-    list_products(PROJECT_ID, LOCATION)
-    out, _ = capsys.readouterr()
-    assert PRODUCT_ID_1 not in out
-    assert PRODUCT_ID_2 not in out
-
-    list_products_in_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
-    out, _ = capsys.readouterr()
-    assert PRODUCT_ID_1 not in out
-    assert PRODUCT_ID_2 not in out
-
-    list_reference_images(PROJECT_ID, LOCATION, PRODUCT_ID_1)
-    out, _ = capsys.readouterr()
-    assert IMAGE_URI_1 not in out
-
-    list_reference_images(PROJECT_ID, LOCATION, PRODUCT_ID_2)
-    out, _ = capsys.readouterr()
-    assert IMAGE_URI_2 not in out
-
+def test_import_product_sets(capsys):
     import_product_sets(PROJECT_ID, LOCATION, GCS_URI)
 
     list_product_sets(PROJECT_ID, LOCATION)

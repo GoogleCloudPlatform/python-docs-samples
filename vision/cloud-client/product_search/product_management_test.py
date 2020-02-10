@@ -13,11 +13,12 @@
 # limitations under the License.
 
 import os
+import uuid
 
 import pytest
 
 from product_management import (
-    create_product, delete_product, get_product, list_products,
+    create_product, delete_product, list_products,
     purge_orphan_products, update_product_labels)
 
 
@@ -26,13 +27,13 @@ LOCATION = 'us-west1'
 
 PRODUCT_DISPLAY_NAME = 'fake_product_display_name_for_testing'
 PRODUCT_CATEGORY = 'homegoods'
-PRODUCT_ID = 'fake_product_id_for_testing'
+PRODUCT_ID = 'test_{}'.format(uuid.uuid4())
 KEY = 'fake_key_for_testing'
 VALUE = 'fake_value_for_testing'
 
 
-@pytest.fixture
-def product():
+@pytest.fixture(scope="function", autouse=True)
+def setup_teardown():
     # set up
     create_product(
         PROJECT_ID, LOCATION, PRODUCT_ID,
@@ -44,22 +45,7 @@ def product():
     delete_product(PROJECT_ID, LOCATION, PRODUCT_ID)
 
 
-def test_create_product(capsys):
-    list_products(PROJECT_ID, LOCATION)
-    out, _ = capsys.readouterr()
-    assert PRODUCT_ID not in out
-
-    create_product(
-        PROJECT_ID, LOCATION, PRODUCT_ID,
-        PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY)
-    list_products(PROJECT_ID, LOCATION)
-    out, _ = capsys.readouterr()
-    assert PRODUCT_ID in out
-
-    delete_product(PROJECT_ID, LOCATION, PRODUCT_ID)
-
-
-def test_delete_product(capsys, product):
+def test_delete_product(capsys):
     list_products(PROJECT_ID, LOCATION)
     out, _ = capsys.readouterr()
     assert PRODUCT_ID in out
@@ -71,21 +57,14 @@ def test_delete_product(capsys, product):
     assert PRODUCT_ID not in out
 
 
-def test_update_product_labels(capsys, product):
-    get_product(PROJECT_ID, LOCATION, PRODUCT_ID)
-    out, _ = capsys.readouterr()
-    assert KEY not in out
-    assert VALUE not in out
-
+def test_update_product_labels(capsys):
     update_product_labels(PROJECT_ID, LOCATION, PRODUCT_ID, KEY, VALUE)
     out, _ = capsys.readouterr()
     assert KEY in out
     assert VALUE in out
 
-    delete_product(PROJECT_ID, LOCATION, PRODUCT_ID)
 
-
-def test_purge_orphan_products(capsys, product):
+def test_purge_orphan_products(capsys):
     list_products(PROJECT_ID, LOCATION)
     out, _ = capsys.readouterr()
     assert PRODUCT_ID in out
