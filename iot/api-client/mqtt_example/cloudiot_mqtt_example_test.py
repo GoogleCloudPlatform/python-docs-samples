@@ -280,6 +280,7 @@ def test_gateway_listen_for_bound_device_configs(test_topic, capsys):
     assert 'Received message' in out
 
 
+@flaky
 def test_gateway_send_data_for_device(test_topic, capsys):
     gateway_id = device_id_template.format('RS256')
     device_id = device_id_template.format('noauthbind')

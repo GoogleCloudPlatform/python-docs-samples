@@ -130,6 +130,12 @@ def detect_handwritten_ocr(path):
                     for symbol in word.symbols:
                         print('\tSymbol: {} (confidence: {})'.format(
                             symbol.text, symbol.confidence))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
 # [END vision_handwritten_ocr_beta]
 
 
@@ -174,6 +180,12 @@ def detect_handwritten_ocr_uri(uri):
                     for symbol in word.symbols:
                         print('\tSymbol: {} (confidence: {})'.format(
                             symbol.text, symbol.confidence))
+
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
 # [END vision_handwritten_ocr_gcs_beta]
 
 
@@ -214,16 +226,16 @@ def detect_batch_annotate_files(path):
     for image_response in response.responses[0].responses:
         for page in image_response.full_text_annotation.pages:
             for block in page.blocks:
-                print('\nBlock confidence: {}\n'.format(block.confidence))
+                print(u'\nBlock confidence: {}\n'.format(block.confidence))
                 for par in block.paragraphs:
-                    print('\tParagraph confidence: {}'.format(par.confidence))
+                    print(u'\tParagraph confidence: {}'.format(par.confidence))
                     for word in par.words:
                         symbol_texts = [symbol.text for symbol in word.symbols]
                         word_text = ''.join(symbol_texts)
-                        print('\t\tWord text: {} (confidence: {})'.format(
+                        print(u'\t\tWord text: {} (confidence: {})'.format(
                             word_text, word.confidence))
                         for symbol in word.symbols:
-                            print('\t\t\tSymbol: {} (confidence: {})'.format(
+                            print(u'\t\t\tSymbol: {} (confidence: {})'.format(
                                 symbol.text, symbol.confidence))
 # [END vision_batch_annotate_files_beta]
 
@@ -262,16 +274,16 @@ def detect_batch_annotate_files_uri(gcs_uri):
     for image_response in response.responses[0].responses:
         for page in image_response.full_text_annotation.pages:
             for block in page.blocks:
-                print('\nBlock confidence: {}\n'.format(block.confidence))
+                print(u'\nBlock confidence: {}\n'.format(block.confidence))
                 for par in block.paragraphs:
-                    print('\tParagraph confidence: {}'.format(par.confidence))
+                    print(u'\tParagraph confidence: {}'.format(par.confidence))
                     for word in par.words:
                         symbol_texts = [symbol.text for symbol in word.symbols]
                         word_text = ''.join(symbol_texts)
-                        print('\t\tWord text: {} (confidence: {})'.format(
+                        print(u'\t\tWord text: {} (confidence: {})'.format(
                             word_text, word.confidence))
                         for symbol in word.symbols:
-                            print('\t\t\tSymbol: {} (confidence: {})'.format(
+                            print(u'\t\t\tSymbol: {} (confidence: {})'.format(
                                 symbol.text, symbol.confidence))
 # [END vision_batch_annotate_files_gcs_beta]
 
