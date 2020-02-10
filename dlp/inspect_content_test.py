@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import uuid
 
 from gcp_devrel.testing import eventually_consistent
 from gcp_devrel.testing.flaky import flaky
@@ -26,16 +27,18 @@ import google.cloud.storage
 import pytest
 import inspect_content
 
+UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 
 GCLOUD_PROJECT = os.getenv("GCLOUD_PROJECT")
-TEST_BUCKET_NAME = GCLOUD_PROJECT + "-dlp-python-client-test"
+TEST_BUCKET_NAME = GCLOUD_PROJECT + "-dlp-python-client-test" + UNIQUE_STRING
 RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), "resources")
 RESOURCE_FILE_NAMES = ["test.txt", "test.png", "harmless.txt", "accounts.txt"]
-TOPIC_ID = "dlp-test"
-SUBSCRIPTION_ID = "dlp-test-subscription"
+TOPIC_ID = "dlp-test" + UNIQUE_STRING
+SUBSCRIPTION_ID = "dlp-test-subscription" + UNIQUE_STRING
 DATASTORE_KIND = "DLP test kind"
-BIGQUERY_DATASET_ID = "dlp_test_dataset"
-BIGQUERY_TABLE_ID = "dlp_test_table"
+DATASTORE_NAME = "DLP test object" + UNIQUE_STRING
+BIGQUERY_DATASET_ID = "dlp_test_dataset" + UNIQUE_STRING
+BIGQUERY_TABLE_ID = "dlp_test_table" + UNIQUE_STRING
 
 
 @pytest.fixture(scope="module")
@@ -91,7 +94,9 @@ def subscription_id(topic_id):
     # Subscribes to a topic.
     subscriber = google.cloud.pubsub.SubscriberClient()
     topic_path = subscriber.topic_path(GCLOUD_PROJECT, topic_id)
-    subscription_path = subscriber.subscription_path(GCLOUD_PROJECT, SUBSCRIPTION_ID)
+    subscription_path = subscriber.subscription_path(
+        GCLOUD_PROJECT, SUBSCRIPTION_ID
+    )
     try:
         subscriber.create_subscription(subscription_path, topic_path)
     except google.api_core.exceptions.AlreadyExists:
@@ -108,7 +113,7 @@ def datastore_project():
     datastore_client = google.cloud.datastore.Client()
 
     kind = DATASTORE_KIND
-    name = "DLP test object"
+    name = DATASTORE_NAME
     key = datastore_client.key(kind, name)
     item = google.cloud.datastore.Entity(key=key)
     item["payload"] = "My name is Gary Smith and my email is gary@example.com"
@@ -159,7 +164,10 @@ def test_inspect_string(capsys):
     test_string = "My name is Gary Smith and my email is gary@example.com"
 
     inspect_content.inspect_string(
-        GCLOUD_PROJECT, test_string, ["FIRST_NAME", "EMAIL_ADDRESS"], include_quote=True
+        GCLOUD_PROJECT,
+        test_string,
+        ["FIRST_NAME", "EMAIL_ADDRESS"],
+        include_quote=True,
     )
 
     out, _ = capsys.readouterr()
@@ -211,7 +219,10 @@ def test_inspect_string_no_results(capsys):
     test_string = "Nothing to see here"
 
     inspect_content.inspect_string(
-        GCLOUD_PROJECT, test_string, ["FIRST_NAME", "EMAIL_ADDRESS"], include_quote=True
+        GCLOUD_PROJECT,
+        test_string,
+        ["FIRST_NAME", "EMAIL_ADDRESS"],
+        include_quote=True,
     )
 
     out, _ = capsys.readouterr()
@@ -320,7 +331,9 @@ def test_inspect_gcs_file_with_custom_info_types(
 
 
 @flaky
-def test_inspect_gcs_file_no_results(bucket, topic_id, subscription_id, capsys):
+def test_inspect_gcs_file_no_results(
+    bucket, topic_id, subscription_id, capsys
+):
     inspect_content.inspect_gcs_file(
         GCLOUD_PROJECT,
         bucket.name,
@@ -367,7 +380,9 @@ def test_inspect_gcs_multiple_files(bucket, topic_id, subscription_id, capsys):
 
 
 @flaky
-def test_inspect_datastore(datastore_project, topic_id, subscription_id, capsys):
+def test_inspect_datastore(
+    datastore_project, topic_id, subscription_id, capsys
+):
     @eventually_consistent.call
     def _():
         inspect_content.inspect_datastore(
