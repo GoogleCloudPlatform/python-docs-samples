@@ -65,7 +65,8 @@ def list_dlp_jobs(project, filter_string=None, job_type=None):
 
     # Job type dictionary
     job_type_to_int = {
-        "DLP_JOB_TYPE_UNSPECIFIED": google.cloud.dlp.enums.DlpJobType.DLP_JOB_TYPE_UNSPECIFIED,
+        "DLP_JOB_TYPE_UNSPECIFIED":
+            google.cloud.dlp.enums.DlpJobType.DLP_JOB_TYPE_UNSPECIFIED,
         "INSPECT_JOB": google.cloud.dlp.enums.DlpJobType.INSPECT_JOB,
         "RISK_ANALYSIS_JOB": google.cloud.dlp.enums.DlpJobType.RISK_ANALYSIS_JOB,
     }
@@ -122,7 +123,8 @@ if __name__ == "__main__":
 
     list_parser = subparsers.add_parser(
         "list",
-        help="List Data Loss Prevention API jobs corresponding to a given " "filter.",
+        help="List Data Loss Prevention API jobs corresponding to a given "
+        "filter.",
     )
     list_parser.add_argument(
         "project", help="The project id to use as a parent resource."
@@ -135,7 +137,11 @@ if __name__ == "__main__":
     list_parser.add_argument(
         "-t",
         "--type",
-        choices=["DLP_JOB_TYPE_UNSPECIFIED", "INSPECT_JOB", "RISK_ANALYSIS_JOB"],
+        choices=[
+            "DLP_JOB_TYPE_UNSPECIFIED",
+            "INSPECT_JOB",
+            "RISK_ANALYSIS_JOB",
+        ],
         help='The type of job. API defaults to "INSPECT"',
     )
 
@@ -147,12 +153,15 @@ if __name__ == "__main__":
     )
     delete_parser.add_argument(
         "job_name",
-        help="The name of the DlpJob resource to be deleted. " "Example: X-#####",
+        help="The name of the DlpJob resource to be deleted. "
+        "Example: X-#####",
     )
 
     args = parser.parse_args()
 
     if args.content == "list":
-        list_dlp_jobs(args.project, filter_string=args.filter, job_type=args.type)
+        list_dlp_jobs(
+            args.project, filter_string=args.filter, job_type=args.type
+        )
     elif args.content == "delete":
         delete_dlp_job(args.project, args.job_name)
