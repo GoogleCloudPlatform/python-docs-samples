@@ -13,15 +13,16 @@
 # limitations under the License.
 
 import os
+import uuid
 
 import google.api_core.exceptions
 import google.cloud.storage
 
 import templates
 
-
+UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 GCLOUD_PROJECT = os.getenv("GCLOUD_PROJECT")
-TEST_TEMPLATE_ID = "test-template"
+TEST_TEMPLATE_ID = "test-template" + UNIQUE_STRING
 
 
 def test_create_list_and_delete_template(capsys):
