@@ -33,7 +33,7 @@ FILENAME = uuid.uuid4()
 GCS_URI = 'gs://{}/vision/{}.csv'.format(PROJECT_ID, FILENAME)
 PRODUCT_SET_DISPLAY_NAME = 'fake_product_set_display_name_for_testing'
 PRODUCT_SET_ID = 'test_{}'.format(uuid.uuid4())
-PRODUCT_ID_1 = 'fake_product_id_for_testing_1'
+PRODUCT_ID_1 = 'test_{}'.format(uuid.uuid4())
 IMAGE_URI_1 = 'shoes_1.jpg'
 
 
