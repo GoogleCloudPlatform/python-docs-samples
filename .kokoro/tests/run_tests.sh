@@ -100,6 +100,31 @@ for file in **/requirements.txt; do
     nox -s "$RUN_TESTS_SESSION"
     EXIT=$?
 
+    # If this is a continuous build, send the test log to the Build Cop Bot.
+    # See https://github.com/googleapis/repo-automation-bots/tree/master/packages/buildcop.
+    if [[ $KOKORO_BUILD_ARTIFACTS_SUBDIR = *"continuous"* ]]; then
+      XML=$(base64 -w 0 sponge_log.xml)
+
+      # See https://github.com/apps/build-cop-bot/installations/5943459.
+      MESSAGE=$(cat <<EOF
+      {
+          "Name": "buildcop",
+          "Type" : "function",
+          "Location": "us-central1",
+          "installation": {"id": "5943459"},
+          "repo": "GoogleCloudPlatform/python-docs-samples",
+          "buildID": "$KOKORO_GIT_COMMIT",
+          "buildURL": "https://source.cloud.google.com/results/invocations/$KOKORO_BUILD_ID",
+          "xunitXML": "$XML"
+      }
+EOF
+      )
+
+      # Use a service account with access to the repo-automation-bots project.
+      gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
+      gcloud pubsub topics publish passthrough --project=repo-automation-bots --message="$MESSAGE"
+    fi
+
     if [[ $EXIT -ne 0 ]]; then
       RTN=1
       echo -e "\n Testing failed: Nox returned a non-zero exit code. \n"
