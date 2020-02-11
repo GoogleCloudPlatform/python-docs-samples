@@ -1,4 +1,4 @@
-FROM python:3.6.0
+FROM python:3.8.0b1
 
 RUN pip3 install --upgrade pip
 
