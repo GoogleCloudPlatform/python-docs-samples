@@ -88,12 +88,15 @@ def instruction():
 # to be deleted before the annotation_spec_set can be deleted.
 @pytest.mark.slow
 def test_label_image(capsys, annotation_spec_set, instruction, dataset):
+    annotation_spec_set_name = annotation_spec_set.name
+    instruction_name = instruction.name
+    dataset_name = dataset.name
 
     # Start labeling.
     response = label_image.label_image(
-        dataset.name,
-        instruction.name,
-        annotation_spec_set.name
+        dataset_name,
+        instruction_name,
+        annotation_spec_set_name
     )
     out, _ = capsys.readouterr()
     assert 'Label_image operation name: ' in out
