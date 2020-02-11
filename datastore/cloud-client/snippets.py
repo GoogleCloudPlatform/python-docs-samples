@@ -875,7 +875,7 @@ def index_merge_queries(client):
 
     results = []
     for query in queries:
-        results.append[query.fetch()]
+        results.append(query.fetch())
 
     return results
 
