@@ -153,24 +153,11 @@ You can also use an extension for pyenv that will assist in managing virtual env
 1.  Now, when you `cd` into the source directory or a subdirectory within it,	
     pyenv will make your virtualenv the default Python. Since you specified	
     more than one version, it will also add binaries like `python36` and	
-    `python27` to your PATH, which nox uses when picking Python interpreters.	
+    `python27` to your PATH, which [nox](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/AUTHORING_GUIDE.md#using-nox) uses when picking Python interpreters.	
 
 1.  Add `.python-version` to your [global gitignore	
     file](https://help.github.com/articles/ignoring-files/#create-a-global-gitignore),	
     so it won't be committed into the repository.
 
-## Nox
-The tests for this repository use [nox](https://github.com/theacodes/nox) for managing test runs across multiple python versions. 
-
-```
-# Install nox
-python -m pip install nox
-
-# List available test runs
-nox -l
-
-# Run Firestore cloud client tests using Python 3.6
-nox -s "py36(sample='./firestore/cloud-client')"
-```
-
-nox creates virtual environments for each of these runs and places them under `.nox/`. For instance you could use the pytest from that test run by calling `.nox/py36-sample-firestore-cloud-client/bin/pytest`
+## More on authoring samples
+If you are looking for more information on how to author samples, please view the [Authoring Guide](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/AUTHORING_GUIDE.md)
