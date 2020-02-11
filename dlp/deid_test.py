@@ -78,7 +78,10 @@ def test_deidentify_with_mask_masking_character_specified(capsys):
 
 def test_deidentify_with_mask_masking_number_specified(capsys):
     deid.deidentify_with_mask(
-        GCLOUD_PROJECT, HARMFUL_STRING, ["US_SOCIAL_SECURITY_NUMBER"], number_to_mask=7
+        GCLOUD_PROJECT,
+        HARMFUL_STRING,
+        ["US_SOCIAL_SECURITY_NUMBER"],
+        number_to_mask=7,
     )
 
     out, _ = capsys.readouterr()

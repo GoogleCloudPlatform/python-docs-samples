@@ -17,6 +17,4 @@ ADD . /bookstore/
 WORKDIR /bookstore
 RUN pip install -r requirements.txt
 
-EXPOSE 8000
-
 ENTRYPOINT ["python", "/bookstore/bookstore_server.py"]
