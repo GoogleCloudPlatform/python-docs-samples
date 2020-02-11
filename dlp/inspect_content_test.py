@@ -298,7 +298,7 @@ def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
         "test.txt",
         topic_id,
         subscription_id,
-        ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
+        ["EMAIL_ADDRESS", "PHONE_NUMBER"],
         timeout=420,
     )
 
@@ -340,7 +340,7 @@ def test_inspect_gcs_file_no_results(
         "harmless.txt",
         topic_id,
         subscription_id,
-        ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
+        ["EMAIL_ADDRESS", "PHONE_NUMBER"],
         timeout=420,
     )
 
@@ -356,7 +356,7 @@ def test_inspect_gcs_image_file(bucket, topic_id, subscription_id, capsys):
         "test.png",
         topic_id,
         subscription_id,
-        ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
+        ["EMAIL_ADDRESS", "PHONE_NUMBER"],
     )
 
     out, _ = capsys.readouterr()
@@ -371,7 +371,7 @@ def test_inspect_gcs_multiple_files(bucket, topic_id, subscription_id, capsys):
         "*",
         topic_id,
         subscription_id,
-        ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
+        ["EMAIL_ADDRESS", "PHONE_NUMBER"],
     )
 
     out, _ = capsys.readouterr()
