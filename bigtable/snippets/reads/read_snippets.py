@@ -30,13 +30,28 @@ from google.cloud import bigtable
 # [END bigtable_reads_prefix]
 # [END bigtable_reads_filter]
 
-# [START bigtable_reads_row]
-from google.cloud.bigtable.row_filters import ColumnQualifierRegexFilter, \
-    ValueRegexFilter
+# [START bigtable_reads_row_partial]
+# [START bigtable_reads_filter]
+import google.cloud.bigtable.row_filters as row_filters
+# [END bigtable_reads_row_partial]
+# [END bigtable_reads_filter]
+
+
+# [START bigtable_reads_rows]
+# [START bigtable_reads_row_range]
+# [START bigtable_reads_row_ranges]
+# [START bigtable_reads_prefix]
 from google.cloud.bigtable.row_set import RowSet
 
 
-def read_simple(project_id, instance_id, table_id):
+# [END bigtable_reads_rows]
+# [END bigtable_reads_row_range]
+# [END bigtable_reads_row_ranges]
+# [END bigtable_reads_prefix]
+
+
+# [START bigtable_reads_row]
+def read_row(project_id, instance_id, table_id):
     client = bigtable.Client(project=project_id, admin=True)
     instance = client.instance(instance_id)
     table = instance.table(table_id)
@@ -56,7 +71,7 @@ def read_row_partial(project_id, instance_id, table_id):
     table = instance.table(table_id)
 
     row_key = "phone#4c410523#20190501"
-    col_filter = ColumnQualifierRegexFilter(b'os_build')
+    col_filter = row_filters.ColumnQualifierRegexFilter(b'os_build')
 
     row = table.read_row(row_key, filter_=col_filter)
     print_row(row)
@@ -140,7 +155,7 @@ def read_filter(project_id, instance_id, table_id):
     instance = client.instance(instance_id)
     table = instance.table(table_id)
 
-    rows = table.read_rows(filter_=ValueRegexFilter(b"PQ2A.*$"))
+    rows = table.read_rows(filter_=row_filters.ValueRegexFilter(b"PQ2A.*$"))
     for row in rows:
         print_row(row)
 

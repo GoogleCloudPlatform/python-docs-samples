@@ -19,15 +19,7 @@ import datetime
 import pytest
 from google.cloud import bigtable
 
-from filter_snippets import filter_composing_chain, \
-    filter_composing_condition, filter_composing_interleave, \
-    filter_limit_block_all, filter_limit_cells_per_col, \
-    filter_limit_cells_per_row, filter_limit_cells_per_row_offset, \
-    filter_limit_col_family_regex, filter_limit_col_qualifier_regex, \
-    filter_limit_col_range, filter_limit_pass_all, filter_limit_row_regex, \
-    filter_limit_row_sample, filter_limit_timestamp_range, \
-    filter_limit_value_range, filter_limit_value_regex, \
-    filter_modify_apply_label, filter_modify_strip_value
+import filter_snippets
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
@@ -89,126 +81,145 @@ def table_id():
 
 
 def test_filter_limit_row_sample(capsys, snapshot, table_id):
-    filter_limit_row_sample(PROJECT, BIGTABLE_INSTANCE, table_id)
+    filter_snippets.filter_limit_row_sample(PROJECT, BIGTABLE_INSTANCE,
+                                            table_id)
 
     out, _ = capsys.readouterr()
     assert 'Reading data for' in out
 
 
 def test_filter_limit_row_regex(capsys, snapshot, table_id):
-    filter_limit_row_regex(PROJECT, BIGTABLE_INSTANCE, table_id)
+    filter_snippets.filter_limit_row_regex(PROJECT, BIGTABLE_INSTANCE,
+                                           table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_filter_limit_cells_per_col(capsys, snapshot, table_id):
-    filter_limit_cells_per_col(PROJECT, BIGTABLE_INSTANCE, table_id)
+    filter_snippets.filter_limit_cells_per_col(PROJECT, BIGTABLE_INSTANCE,
+                                               table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_filter_limit_cells_per_row(capsys, snapshot, table_id):
-    filter_limit_cells_per_row(PROJECT, BIGTABLE_INSTANCE, table_id)
+    filter_snippets.filter_limit_cells_per_row(PROJECT, BIGTABLE_INSTANCE,
+                                               table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_filter_limit_cells_per_row_offset(capsys, snapshot, table_id):
-    filter_limit_cells_per_row_offset(PROJECT, BIGTABLE_INSTANCE, table_id)
+    filter_snippets.filter_limit_cells_per_row_offset(PROJECT,
+                                                      BIGTABLE_INSTANCE,
+                                                      table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_filter_limit_col_family_regex(capsys, snapshot, table_id):
-    filter_limit_col_family_regex(PROJECT, BIGTABLE_INSTANCE, table_id)
+    filter_snippets.filter_limit_col_family_regex(PROJECT, BIGTABLE_INSTANCE,
+                                                  table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_filter_limit_col_qualifier_regex(capsys, snapshot, table_id):
-    filter_limit_col_qualifier_regex(PROJECT, BIGTABLE_INSTANCE, table_id)
+    filter_snippets.filter_limit_col_qualifier_regex(PROJECT,
+                                                     BIGTABLE_INSTANCE,
+                                                     table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_filter_limit_col_range(capsys, snapshot, table_id):
-    filter_limit_col_range(PROJECT, BIGTABLE_INSTANCE, table_id)
+    filter_snippets.filter_limit_col_range(PROJECT, BIGTABLE_INSTANCE,
+                                           table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_filter_limit_value_range(capsys, snapshot, table_id):
-    filter_limit_value_range(PROJECT, BIGTABLE_INSTANCE, table_id)
+    filter_snippets.filter_limit_value_range(PROJECT, BIGTABLE_INSTANCE,
+                                             table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_filter_limit_value_regex(capsys, snapshot, table_id):
-    filter_limit_value_regex(PROJECT, BIGTABLE_INSTANCE, table_id)
+    filter_snippets.filter_limit_value_regex(PROJECT, BIGTABLE_INSTANCE,
+                                             table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_filter_limit_timestamp_range(capsys, snapshot, table_id):
-    filter_limit_timestamp_range(PROJECT, BIGTABLE_INSTANCE, table_id)
+    filter_snippets.filter_limit_timestamp_range(PROJECT, BIGTABLE_INSTANCE,
+                                                 table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_filter_limit_block_all(capsys, snapshot, table_id):
-    filter_limit_block_all(PROJECT, BIGTABLE_INSTANCE, table_id)
+    filter_snippets.filter_limit_block_all(PROJECT, BIGTABLE_INSTANCE,
+                                           table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_filter_limit_pass_all(capsys, snapshot, table_id):
-    filter_limit_pass_all(PROJECT, BIGTABLE_INSTANCE, table_id)
+    filter_snippets.filter_limit_pass_all(PROJECT, BIGTABLE_INSTANCE, table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_filter_modify_strip_value(capsys, snapshot, table_id):
-    filter_modify_strip_value(PROJECT, BIGTABLE_INSTANCE, table_id)
+    filter_snippets.filter_modify_strip_value(PROJECT, BIGTABLE_INSTANCE,
+                                              table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_filter_modify_apply_label(capsys, snapshot, table_id):
-    filter_modify_apply_label(PROJECT, BIGTABLE_INSTANCE, table_id)
+    filter_snippets.filter_modify_apply_label(PROJECT, BIGTABLE_INSTANCE,
+                                              table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_filter_composing_chain(capsys, snapshot, table_id):
-    filter_composing_chain(PROJECT, BIGTABLE_INSTANCE, table_id)
+    filter_snippets.filter_composing_chain(PROJECT, BIGTABLE_INSTANCE,
+                                           table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_filter_composing_interleave(capsys, snapshot, table_id):
-    filter_composing_interleave(PROJECT, BIGTABLE_INSTANCE, table_id)
+    filter_snippets.filter_composing_interleave(PROJECT, BIGTABLE_INSTANCE,
+                                                table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_filter_composing_condition(capsys, snapshot, table_id):
-    filter_composing_condition(PROJECT, BIGTABLE_INSTANCE, table_id)
+    filter_snippets.filter_composing_condition(PROJECT, BIGTABLE_INSTANCE,
+                                               table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)

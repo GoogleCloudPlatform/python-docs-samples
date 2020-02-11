@@ -18,8 +18,7 @@ import pytest
 
 from google.cloud import bigtable
 
-from read_snippets import read_filter, read_prefix, \
-    read_row_partial, read_row_range, read_row_ranges, read_rows, read_simple
+import read_snippets
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
@@ -72,50 +71,50 @@ def table_id():
     table.delete()
 
 
-def test_read_simple(capsys, snapshot, table_id):
-    read_simple(PROJECT, BIGTABLE_INSTANCE, table_id)
+def test_read_row(capsys, snapshot, table_id):
+    read_snippets.read_row(PROJECT, BIGTABLE_INSTANCE, table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_read_row_partial(capsys, snapshot, table_id):
-    read_row_partial(PROJECT, BIGTABLE_INSTANCE, table_id)
+    read_snippets.read_row_partial(PROJECT, BIGTABLE_INSTANCE, table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_read_rows(capsys, snapshot, table_id):
-    read_rows(PROJECT, BIGTABLE_INSTANCE, table_id)
+    read_snippets.read_rows(PROJECT, BIGTABLE_INSTANCE, table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_read_row_range(capsys, snapshot, table_id):
-    read_row_range(PROJECT, BIGTABLE_INSTANCE, table_id)
+    read_snippets.read_row_range(PROJECT, BIGTABLE_INSTANCE, table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_read_row_ranges(capsys, snapshot, table_id):
-    read_row_ranges(PROJECT, BIGTABLE_INSTANCE, table_id)
+    read_snippets.read_row_ranges(PROJECT, BIGTABLE_INSTANCE, table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_read_prefix(capsys, snapshot, table_id):
-    read_prefix(PROJECT, BIGTABLE_INSTANCE, table_id)
+    read_snippets.read_prefix(PROJECT, BIGTABLE_INSTANCE, table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)
 
 
 def test_read_filter(capsys, snapshot, table_id):
-    read_filter(PROJECT, BIGTABLE_INSTANCE, table_id)
+    read_snippets.read_filter(PROJECT, BIGTABLE_INSTANCE, table_id)
 
     out, _ = capsys.readouterr()
     snapshot.assert_match(out)

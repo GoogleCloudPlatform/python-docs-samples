@@ -31,8 +31,8 @@
 # [START bigtable_filters_composing_chain]
 # [START bigtable_filters_composing_interleave]
 # [START bigtable_filters_composing_condition]
-import datetime
 from google.cloud import bigtable
+import google.cloud.bigtable.row_filters as row_filters
 
 # [END bigtable_filters_limit_row_sample]
 # [END bigtable_filters_limit_row_regex]
@@ -52,14 +52,12 @@ from google.cloud import bigtable
 # [END bigtable_filters_composing_chain]
 # [END bigtable_filters_composing_interleave]
 # [END bigtable_filters_composing_condition]
-from google.cloud.bigtable.row_filters import ApplyLabelFilter, \
-    BlockAllFilter, CellsColumnLimitFilter, CellsRowLimitFilter, \
-    CellsRowOffsetFilter, ColumnQualifierRegexFilter, ColumnRangeFilter, \
-    ConditionalRowFilter, FamilyNameRegexFilter, PassAllFilter, \
-    RowFilterChain, RowFilterUnion, RowKeyRegexFilter, RowSampleFilter, \
-    StripValueTransformerFilter, TimestampRange, TimestampRangeFilter, \
-    ValueRangeFilter, ValueRegexFilter
 
+# [START bigtable_filters_limit_timestamp_range]
+import datetime
+
+
+# [END bigtable_filters_limit_timestamp_range]
 
 # [START bigtable_filters_limit_row_sample]
 def filter_limit_row_sample(project_id, instance_id, table_id):
@@ -67,7 +65,7 @@ def filter_limit_row_sample(project_id, instance_id, table_id):
     instance = client.instance(instance_id)
     table = instance.table(table_id)
 
-    rows = table.read_rows(filter_=RowSampleFilter(.75))
+    rows = table.read_rows(filter_=row_filters.RowSampleFilter(.75))
     for row in rows:
         print_row(row)
 
@@ -80,7 +78,7 @@ def filter_limit_row_regex(project_id, instance_id, table_id):
     table = instance.table(table_id)
 
     rows = table.read_rows(
-        filter_=RowKeyRegexFilter(".*#20190501$".encode("utf-8")))
+        filter_=row_filters.RowKeyRegexFilter(".*#20190501$".encode("utf-8")))
     for row in rows:
         print_row(row)
 
@@ -92,7 +90,7 @@ def filter_limit_cells_per_col(project_id, instance_id, table_id):
     instance = client.instance(instance_id)
     table = instance.table(table_id)
 
-    rows = table.read_rows(filter_=CellsColumnLimitFilter(2))
+    rows = table.read_rows(filter_=row_filters.CellsColumnLimitFilter(2))
     for row in rows:
         print_row(row)
 
@@ -104,7 +102,7 @@ def filter_limit_cells_per_row(project_id, instance_id, table_id):
     instance = client.instance(instance_id)
     table = instance.table(table_id)
 
-    rows = table.read_rows(filter_=CellsRowLimitFilter(2))
+    rows = table.read_rows(filter_=row_filters.CellsRowLimitFilter(2))
     for row in rows:
         print_row(row)
 
@@ -116,7 +114,7 @@ def filter_limit_cells_per_row_offset(project_id, instance_id, table_id):
     instance = client.instance(instance_id)
     table = instance.table(table_id)
 
-    rows = table.read_rows(filter_=CellsRowOffsetFilter(2))
+    rows = table.read_rows(filter_=row_filters.CellsRowOffsetFilter(2))
     for row in rows:
         print_row(row)
 
@@ -129,7 +127,7 @@ def filter_limit_col_family_regex(project_id, instance_id, table_id):
     table = instance.table(table_id)
 
     rows = table.read_rows(
-        filter_=FamilyNameRegexFilter("stats_.*$".encode("utf-8")))
+        filter_=row_filters.FamilyNameRegexFilter("stats_.*$".encode("utf-8")))
     for row in rows:
         print_row(row)
 
@@ -142,7 +140,8 @@ def filter_limit_col_qualifier_regex(project_id, instance_id, table_id):
     table = instance.table(table_id)
 
     rows = table.read_rows(
-        filter_=ColumnQualifierRegexFilter("connected_.*$".encode("utf-8")))
+        filter_=row_filters.ColumnQualifierRegexFilter(
+            "connected_.*$".encode("utf-8")))
     for row in rows:
         print_row(row)
 
@@ -155,10 +154,10 @@ def filter_limit_col_range(project_id, instance_id, table_id):
     table = instance.table(table_id)
 
     rows = table.read_rows(
-        filter_=ColumnRangeFilter("cell_plan",
-                                  b"data_plan_01gb",
-                                  b"data_plan_10gb",
-                                  inclusive_end=False))
+        filter_=row_filters.ColumnRangeFilter("cell_plan",
+                                              b"data_plan_01gb",
+                                              b"data_plan_10gb",
+                                              inclusive_end=False))
     for row in rows:
         print_row(row)
 
@@ -171,7 +170,7 @@ def filter_limit_value_range(project_id, instance_id, table_id):
     table = instance.table(table_id)
 
     rows = table.read_rows(
-        filter_=ValueRangeFilter(b"PQ2A.190405", b"PQ2A.190406"))
+        filter_=row_filters.ValueRangeFilter(b"PQ2A.190405", b"PQ2A.190406"))
 
     for row in rows:
         print_row(row)
@@ -186,7 +185,8 @@ def filter_limit_value_regex(project_id, instance_id, table_id):
     instance = client.instance(instance_id)
     table = instance.table(table_id)
 
-    rows = table.read_rows(filter_=ValueRegexFilter("PQ2A.*$".encode("utf-8")))
+    rows = table.read_rows(
+        filter_=row_filters.ValueRegexFilter("PQ2A.*$".encode("utf-8")))
     for row in rows:
         print_row(row)
 
@@ -201,7 +201,8 @@ def filter_limit_timestamp_range(project_id, instance_id, table_id):
     end = datetime.datetime(2019, 5, 1)
 
     rows = table.read_rows(
-        filter_=TimestampRangeFilter(TimestampRange(end=end)))
+        filter_=row_filters.TimestampRangeFilter(
+            row_filters.TimestampRange(end=end)))
     for row in rows:
         print_row(row)
 
@@ -213,7 +214,7 @@ def filter_limit_block_all(project_id, instance_id, table_id):
     instance = client.instance(instance_id)
     table = instance.table(table_id)
 
-    rows = table.read_rows(filter_=BlockAllFilter(True))
+    rows = table.read_rows(filter_=row_filters.BlockAllFilter(True))
     for row in rows:
         print_row(row)
 
@@ -225,7 +226,7 @@ def filter_limit_pass_all(project_id, instance_id, table_id):
     instance = client.instance(instance_id)
     table = instance.table(table_id)
 
-    rows = table.read_rows(filter_=PassAllFilter(True))
+    rows = table.read_rows(filter_=row_filters.PassAllFilter(True))
     for row in rows:
         print_row(row)
 
@@ -237,7 +238,8 @@ def filter_modify_strip_value(project_id, instance_id, table_id):
     instance = client.instance(instance_id)
     table = instance.table(table_id)
 
-    rows = table.read_rows(filter_=StripValueTransformerFilter(True))
+    rows = table.read_rows(
+        filter_=row_filters.StripValueTransformerFilter(True))
     for row in rows:
         print_row(row)
 
@@ -249,7 +251,8 @@ def filter_modify_apply_label(project_id, instance_id, table_id):
     instance = client.instance(instance_id)
     table = instance.table(table_id)
 
-    rows = table.read_rows(filter_=ApplyLabelFilter(label="labelled"))
+    rows = table.read_rows(
+        filter_=row_filters.ApplyLabelFilter(label="labelled"))
     for row in rows:
         print_row(row)
 
@@ -261,9 +264,9 @@ def filter_composing_chain(project_id, instance_id, table_id):
     instance = client.instance(instance_id)
     table = instance.table(table_id)
 
-    rows = table.read_rows(filter_=RowFilterChain(
-        filters=[CellsColumnLimitFilter(1),
-                 FamilyNameRegexFilter("cell_plan")]))
+    rows = table.read_rows(filter_=row_filters.RowFilterChain(
+        filters=[row_filters.CellsColumnLimitFilter(1),
+                 row_filters.FamilyNameRegexFilter("cell_plan")]))
     for row in rows:
         print_row(row)
 
@@ -275,9 +278,9 @@ def filter_composing_interleave(project_id, instance_id, table_id):
     instance = client.instance(instance_id)
     table = instance.table(table_id)
 
-    rows = table.read_rows(filter_=RowFilterUnion(
-        filters=[ValueRegexFilter("true"),
-                 ColumnQualifierRegexFilter("os_build")]))
+    rows = table.read_rows(filter_=row_filters.RowFilterUnion(
+        filters=[row_filters.ValueRegexFilter("true"),
+                 row_filters.ColumnQualifierRegexFilter("os_build")]))
     for row in rows:
         print_row(row)
 
@@ -289,14 +292,14 @@ def filter_composing_condition(project_id, instance_id, table_id):
     instance = client.instance(instance_id)
     table = instance.table(table_id)
 
-    rows = table.read_rows(filter_=ConditionalRowFilter(
-        base_filter=RowFilterChain(filters=[
-            ColumnQualifierRegexFilter(
+    rows = table.read_rows(filter_=row_filters.ConditionalRowFilter(
+        base_filter=row_filters.RowFilterChain(filters=[
+            row_filters.ColumnQualifierRegexFilter(
                 "data_plan_10gb"),
-            ValueRegexFilter(
+            row_filters.ValueRegexFilter(
                 "true")]),
-        true_filter=ApplyLabelFilter(label="passed-filter"),
-        false_filter=ApplyLabelFilter(label="filtered-out")
+        true_filter=row_filters.ApplyLabelFilter(label="passed-filter"),
+        false_filter=row_filters.ApplyLabelFilter(label="filtered-out")
 
     ))
     for row in rows:
