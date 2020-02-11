@@ -155,8 +155,8 @@ You can also use an extension for pyenv that will assist in managing virtual env
     more than one version, it will also add binaries like `python36` and	
     `python27` to your PATH, which [nox](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/AUTHORING_GUIDE.md#using-nox) uses when picking Python interpreters.	
 
-1.  Add `.python-version` to your [global gitignore	
-    file](https://help.github.com/articles/ignoring-files/#create-a-global-gitignore),	
+1.  Add `.python-version` to your
+    [global gitignore	file](https://help.github.com/articles/ignoring-files/#create-a-global-gitignore),	
     so it won't be committed into the repository.
 
 ## More on authoring samples
