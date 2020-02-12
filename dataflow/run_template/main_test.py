@@ -42,6 +42,29 @@ def app():
     return flask.Flask(__name__)
 
 
+@pytest.fixture(scope="function")
+def dataflow_jobs_cancel():
+    def _dataflow_jobs_cancel(job_id):
+        # Wait time until the job can be cancelled.
+        state = None
+        while state != 'JOB_STATE_RUNNING':
+            job = dataflow.projects().jobs().get(
+                projectId=PROJECT,
+                jobId=job_id
+            ).execute()
+            state = job['currentState']
+            time.sleep(1)
+
+        # Cancel the Dataflow job.
+        request = dataflow.projects().jobs().update(
+            projectId=PROJECT,
+            jobId=job_id,
+            body={'requestedState': 'JOB_STATE_CANCELLED'}
+        )
+        request.execute()
+    return _dataflow_jobs_cancel
+
+
 def unique_job_name(label):
     return datetime.now().strftime('{}-%Y%m%d-%H%M%S-{}'.format(
         label, uuid.uuid4().hex))
@@ -55,7 +78,7 @@ def test_run_template_python_empty_args(app):
         main.run(project, job, template)
 
 
-def test_run_template_python(app):
+def test_run_template_python(app, dataflow_jobs_cancel):
     project = PROJECT
     job = unique_job_name('test_run_template_python')
     template = 'gs://dataflow-templates/latest/Word_Count'
@@ -73,7 +96,7 @@ def test_run_template_http_empty_args(app):
             main.run_template(flask.request)
 
 
-def test_run_template_http_url(app):
+def test_run_template_http_url(app, dataflow_jobs_cancel):
     args = {
         'project': PROJECT,
         'job': unique_job_name('test_run_template_url'),
@@ -87,7 +110,7 @@ def test_run_template_http_url(app):
         dataflow_jobs_cancel(data['job']['id'])
 
 
-def test_run_template_http_data(app):
+def test_run_template_http_data(app, dataflow_jobs_cancel):
     args = {
         'project': PROJECT,
         'job': unique_job_name('test_run_template_data'),
@@ -101,7 +124,7 @@ def test_run_template_http_data(app):
         dataflow_jobs_cancel(data['job']['id'])
 
 
-def test_run_template_http_json(app):
+def test_run_template_http_json(app, dataflow_jobs_cancel):
     args = {
         'project': PROJECT,
         'job': unique_job_name('test_run_template_json'),
@@ -113,23 +136,3 @@ def test_run_template_http_json(app):
         res = main.run_template(flask.request)
         data = json.loads(res)
         dataflow_jobs_cancel(data['job']['id'])
-
-
-def dataflow_jobs_cancel(job_id):
-    # Wait time until the job can be cancelled.
-    state = None
-    while state != 'JOB_STATE_RUNNING':
-        job = dataflow.projects().jobs().get(
-            projectId=PROJECT,
-            jobId=job_id
-        ).execute()
-        state = job['currentState']
-        time.sleep(1)
-
-    # Cancel the Dataflow job.
-    request = dataflow.projects().jobs().update(
-        projectId=PROJECT,
-        jobId=job_id,
-        body={'requestedState': 'JOB_STATE_CANCELLED'}
-    )
-    request.execute()
