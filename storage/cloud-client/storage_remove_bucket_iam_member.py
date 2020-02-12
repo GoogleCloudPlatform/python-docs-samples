@@ -29,9 +29,12 @@ def remove_bucket_iam_member(bucket_name, role, member):
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
 
-    policy = bucket.get_iam_policy()
+    policy = bucket.get_iam_policy(requested_policy_version=3)
 
-    policy[role].discard(member)
+    for binding in policy.bindings:
+        print(binding)
+        if binding["role"] == role and binding.get("condition") is None:
+            binding["members"].discard(member)
 
     bucket.set_iam_policy(policy)
 
