@@ -1,4 +1,4 @@
-# Copyright 2016 Google Inc. All Rights Reserved.
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,31 +17,29 @@ import uuid
 
 import pytest
 
-from product_set_management import (
-    create_product_set, delete_product_set, list_product_sets)
+from product_management import create_product, delete_product, list_products
 
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 LOCATION = 'us-west1'
 
-PRODUCT_SET_DISPLAY_NAME = 'fake_product_set_display_name_for_testing'
-PRODUCT_SET_ID = 'test_{}'.format(uuid.uuid4())
+PRODUCT_DISPLAY_NAME = 'fake_product_display_name_for_testing'
+PRODUCT_CATEGORY = 'homegoods'
+PRODUCT_ID = 'test_{}'.format(uuid.uuid4())
 
 
 @pytest.fixture(scope="function", autouse=True)
-def setup():
-    # set up
-    create_product_set(
-        PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_SET_DISPLAY_NAME)
+def teardown():
+    yield
+
+    # tear down
+    delete_product(PROJECT_ID, LOCATION, PRODUCT_ID)
 
 
-def test_delete_product_set(capsys):
-    list_product_sets(PROJECT_ID, LOCATION)
+def test_create_product(capsys):
+    create_product(
+        PROJECT_ID, LOCATION, PRODUCT_ID,
+        PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY)
+    list_products(PROJECT_ID, LOCATION)
     out, _ = capsys.readouterr()
-    assert PRODUCT_SET_ID in out
-
-    delete_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
-
-    list_product_sets(PROJECT_ID, LOCATION)
-    out, _ = capsys.readouterr()
-    assert PRODUCT_SET_ID not in out
+    assert PRODUCT_ID in out
