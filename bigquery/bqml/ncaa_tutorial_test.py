@@ -23,7 +23,7 @@ import pytest
 
 # [START bqml_ncaa_tutorial_import_and_client]
 client = bigquery.Client()
-# We use a unique dataset ID for this example to avoid collisions with 
+# We use a unique dataset ID for this example to avoid collisions with
 # other invocations of this tutorial.  In practice, you could leverage
 # a persistent dataset and not create/destroy it with each invocation.
 dataset_id = "bqml_tutorial_{}".format(str(uuid.uuid4().hex))
@@ -47,19 +47,13 @@ def test_ncaa_tutorial(delete_dataset):
     # Create the tables used by the tutorial
     # Note: the queries are saved to a file. This should be updated to use the
     # saved queries once the library supports running saved queries.
-    query_filepath_to_table_name = {
-        'feature_input_query.sql': 'cume_games',
-        'training_data_query.sql': 'wide_games'
-    }
+    query_files = ['feature_input_query.sql', 'training_data_query.sql']
     resources_directory = os.path.join(os.path.dirname(__file__), 'resources')
-    for query_filepath, table_name in query_filepath_to_table_name.items():
-        table_ref = dataset.table(table_name)
-        job_config = bigquery.QueryJobConfig()
-        job_config.destination = table_ref
+    for fname in query_files:
         query_filepath = os.path.join(
-            resources_directory, query_filepath)
+            resources_directory, fname)
         sql = io.open(query_filepath, 'r', encoding='utf-8').read().format(dataset_id)
-        client.query(sql, job_config=job_config).result()
+        client.query(sql).result()
 
     # [START bqml_ncaa_tutorial_create_model]
     sql = """

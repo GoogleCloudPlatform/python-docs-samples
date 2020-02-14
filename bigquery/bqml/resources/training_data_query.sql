@@ -1,4 +1,5 @@
 #standardSQL
+CREATE OR REPLACE TABLE `{0}.wide_games` AS
 SELECT
   team.game_id AS game_id,
   team.season AS season,
