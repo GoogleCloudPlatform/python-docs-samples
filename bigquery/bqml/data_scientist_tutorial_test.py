@@ -20,7 +20,7 @@ import uuid
 
 # [START bqml_data_scientist_tutorial_import_and_client]
 client = bigquery.Client()
-# We use a unique dataset ID for this example to avoid collisions with 
+# We use a unique dataset ID for this example to avoid collisions with
 # other invocations of this tutorial.  In practice, you could leverage
 # a persistent dataset and not create/destroy it with each invocation.
 dataset_id = "bqml_tutorial_{}".format(str(uuid.uuid4().hex))
