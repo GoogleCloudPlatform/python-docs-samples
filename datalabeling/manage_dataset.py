@@ -59,6 +59,13 @@ def list_datasets(project_id):
     """Lists datasets for the given Google Cloud project."""
     from google.cloud import datalabeling_v1beta1 as datalabeling
     client = datalabeling.DataLabelingServiceClient()
+    # [END datalabeling_list_datasets_beta]
+    # If provided, use a provided test endpoint - this will prevent tests on
+    # this snippet from triggering any action by a real human
+    if 'DATALABELING_ENDPOINT' in os.environ:
+        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
+        client = datalabeling.DataLabelingServiceClient(client_options=opts)
+    # [START datalabeling_list_datasets_beta]
 
     formatted_project_name = client.project_path(project_id)
 
@@ -80,6 +87,13 @@ def get_dataset(dataset_resource_name):
     """Gets a dataset for the given Google Cloud project."""
     from google.cloud import datalabeling_v1beta1 as datalabeling
     client = datalabeling.DataLabelingServiceClient()
+    # [END datalabeling_get_dataset_beta]
+    # If provided, use a provided test endpoint - this will prevent tests on
+    # this snippet from triggering any action by a real human
+    if 'DATALABELING_ENDPOINT' in os.environ:
+        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
+        client = datalabeling.DataLabelingServiceClient(client_options=opts)
+    # [START datalabeling_get_dataset_beta]
 
     response = client.get_dataset(dataset_resource_name)
 
@@ -97,6 +111,13 @@ def delete_dataset(dataset_resource_name):
     """Deletes a dataset for the given Google Cloud project."""
     from google.cloud import datalabeling_v1beta1 as datalabeling
     client = datalabeling.DataLabelingServiceClient()
+    # [END datalabeling_delete_dataset_beta]
+    # If provided, use a provided test endpoint - this will prevent tests on
+    # this snippet from triggering any action by a real human
+    if 'DATALABELING_ENDPOINT' in os.environ:
+        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
+        client = datalabeling.DataLabelingServiceClient(client_options=opts)
+    # [START datalabeling_delete_dataset_beta]
 
     response = client.delete_dataset(dataset_resource_name)
 
