@@ -177,6 +177,7 @@ PY3_ONLY_SAMPLES = [
         or sample.startswith("./bigquery/pandas-gbq-migration")
         or sample.startswith("./run/system-package")
         or sample.startswith("./run/hello-broken")
+        or sample.startswith("./memorystore/redis")
     )
 ]
 NON_GAE_STANDARD_SAMPLES_PY2 = sorted(
