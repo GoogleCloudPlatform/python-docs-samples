@@ -156,6 +156,9 @@ PY3_ONLY_SAMPLES = [
         or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith(
             "run/system-package"
         )
+        or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith(
+            "memorystore/redis"
+        )
     )
 ]
 NON_GAE_STANDARD_SAMPLES_PY2 = sorted(
