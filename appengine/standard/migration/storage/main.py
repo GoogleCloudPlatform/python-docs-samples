@@ -23,7 +23,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def get():
-    bucket_name = os.environ['BUCKET_NAME']
+    bucket_name = os.environ['CLOUD_STORAGE_BUCKET']
     blob_name = os.environ['BLOB_NAME']
 
     client = storage.Client()

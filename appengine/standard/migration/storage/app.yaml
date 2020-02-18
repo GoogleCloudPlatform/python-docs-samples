@@ -3,7 +3,7 @@ api_version: 1
 threadsafe: yes
 
 env_variables:
-    BUCKET_NAME: "REPLACE THIS WITH YOUR EXISTING BUCKET NAME"
+    CLOUD_STORAGE_BUCKET: "REPLACE THIS WITH YOUR EXISTING BUCKET NAME"
     BLOB_NAME: "my-demo-blob"
 
 libraries:

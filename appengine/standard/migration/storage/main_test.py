@@ -24,8 +24,7 @@ def test_index():
     assert r.status_code == 200
     assert 'Downloaded text matches uploaded text' in r.data.decode('utf-8')
 
-    bucket_name = os.environ['BUCKET_NAME']
+    bucket_name = os.environ['CLOUD_STORAGE_BUCKET']
     blob_name = os.environ['BLOB_NAME']
     assert '    {}/{}'.format(bucket_name, blob_name) in r.data.decode('utf-8')
     assert 'Blob {} deleted.'.format(blob_name) in r.data.decode('utf-8')
-    
