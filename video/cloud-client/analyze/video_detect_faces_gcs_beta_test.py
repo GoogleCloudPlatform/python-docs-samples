@@ -19,7 +19,7 @@ import video_detect_faces_gcs_beta
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
-def test_detect_person(capsys):
+def test_detect_faces(capsys):
     input_uri = "gs://cloud-samples-data/video/googlework_short.mp4"
 
     video_detect_faces_gcs_beta.detect_face(gcs_uri=input_uri)
