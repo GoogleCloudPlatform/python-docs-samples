@@ -1,4 +1,4 @@
-# Copyright 2016 Google Inc. All Rights Reserved.
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,19 +29,17 @@ PRODUCT_SET_ID = 'test_{}'.format(uuid.uuid4())
 
 
 @pytest.fixture(scope="function", autouse=True)
-def setup():
-    # set up
+def teardown():
+    yield
+
+    # tear down
+    delete_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
+
+
+def test_create_product_set(capsys):
     create_product_set(
-        PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_SET_DISPLAY_NAME)
-
-
-def test_delete_product_set(capsys):
+        PROJECT_ID, LOCATION, PRODUCT_SET_ID,
+        PRODUCT_SET_DISPLAY_NAME)
     list_product_sets(PROJECT_ID, LOCATION)
     out, _ = capsys.readouterr()
     assert PRODUCT_SET_ID in out
-
-    delete_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
-
-    list_product_sets(PROJECT_ID, LOCATION)
-    out, _ = capsys.readouterr()
-    assert PRODUCT_SET_ID not in out

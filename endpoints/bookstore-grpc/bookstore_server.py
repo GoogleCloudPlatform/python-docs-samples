@@ -17,6 +17,7 @@
 import argparse
 from concurrent import futures
 import time
+import os
 
 from google.protobuf import struct_pb2
 import grpc
@@ -109,6 +110,8 @@ def serve(port, shutdown_grace_duration):
     server.add_insecure_port('[::]:{}'.format(port))
     server.start()
 
+    print('Listening on port {}'.format(port))
+
     try:
         while True:
             time.sleep(_ONE_DAY_IN_SECONDS)
@@ -121,11 +124,20 @@ if __name__ == '__main__':
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
-        '--port', type=int, default=8000, help='The port to listen on')
+        '--port', type=int, default=None,
+        help='The port to listen on.'
+             'If arg is not set, will listen on the $PORT env var.'
+             'If env var is empty, defaults to 8000.')
     parser.add_argument(
         '--shutdown_grace_duration', type=int, default=5,
         help='The shutdown grace duration, in seconds')
 
     args = parser.parse_args()
 
-    serve(args.port, args.shutdown_grace_duration)
+    port = args.port
+    if not port:
+        port = os.environ.get('PORT')
+    if not port:
+        port = 8000
+
+    serve(port, args.shutdown_grace_duration)
