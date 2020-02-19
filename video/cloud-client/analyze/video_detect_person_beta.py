@@ -67,11 +67,11 @@ def detect_person(local_file_path="path/to/your/video-file.mp4"):
             # Grab the first timestamped object
             timestamped_object = track.timestamped_objects[0]
             box = timestamped_object.normalized_bounding_box
-                print("\tBounding box:")
-                    print("\t\tleft  : {}".format(box.left))
-                    print("\t\ttop   : {}".format(box.top))
-                    print("\t\tright : {}".format(box.right))
-                    print("\t\tbottom: {}".format(box.bottom))
+            print("\tBounding box:")
+            print("\t\tleft  : {}".format(box.left))
+            print("\t\ttop   : {}".format(box.top))
+            print("\t\tright : {}".format(box.right))
+            print("\t\tbottom: {}".format(box.bottom))
 
             # Attributes include unique pieces of clothing,
             # poses, or hair color.

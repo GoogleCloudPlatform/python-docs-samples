@@ -61,11 +61,11 @@ def detect_faces(gcs_uri="gs://YOUR_BUCKET_ID/path/to/your/video.mp4"):
             # Grab the first timestamped face
             timestamped_object = track.timestamped_objects[0]
             box = timestamped_object.normalized_bounding_box
-                print("\tBounding box:")
-                    print("\t\tleft  : {}".format(box.left))
-                    print("\t\ttop   : {}".format(box.top))
-                    print("\t\tright : {}".format(box.right))
-                    print("\t\tbottom: {}".format(box.bottom))
+            print("\tBounding box:")
+            print("\t\tleft  : {}".format(box.left))
+            print("\t\ttop   : {}".format(box.top))
+            print("\t\tright : {}".format(box.right))
+            print("\t\tbottom: {}".format(box.bottom))
 
             # Attributes include glasses, headwear, facial hair, smiling,
             # direction of gaze, etc.
