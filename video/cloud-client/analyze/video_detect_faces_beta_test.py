@@ -22,7 +22,7 @@ RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 def test_detect_faces(capsys):
     local_file_path = os.path.join(RESOURCES, "googlework_short.mp4")
 
-    video_detect_faces_beta.detect_face(local_file_path=local_file_path)
+    video_detect_faces_beta.detect_faces(local_file_path=local_file_path)
 
     out, _ = capsys.readouterr()
 

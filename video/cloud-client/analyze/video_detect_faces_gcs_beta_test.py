@@ -22,7 +22,7 @@ RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 def test_detect_faces(capsys):
     input_uri = "gs://cloud-samples-data/video/googlework_short.mp4"
 
-    video_detect_faces_gcs_beta.detect_face(gcs_uri=input_uri)
+    video_detect_faces_gcs_beta.detect_faces(gcs_uri=input_uri)
 
     out, _ = capsys.readouterr()
 

@@ -17,7 +17,7 @@ import io
 from google.cloud import videointelligence_v1p3beta1 as videointelligence
 
 
-def detect_face(local_file_path="path/to/your/video-file.mp4"):
+def detect_faces(local_file_path="path/to/your/video-file.mp4"):
     """Detects faces in a video from a local file."""
 
     client = videointelligence.VideoIntelligenceServiceClient()
@@ -60,16 +60,16 @@ def detect_face(local_file_path="path/to/your/video-file.mp4"):
                 )
             )
 
-            # Each segment includes timestamped objects that include
+            # Each segment includes timestamped faces that include
             # characteristics of the face detected.
-            # Grab the first timestamped object
+            # Grab the first timestamped face
             timestamped_object = track.timestamped_objects[0]
             box = timestamped_object.normalized_bounding_box
-            print("\tBounding box:")
-            print("\t\tleft  : {}".format(box.left))
-            print("\t\ttop   : {}".format(box.top))
-            print("\t\tright : {}".format(box.right))
-            print("\t\tbottom: {}".format(box.bottom))
+                print("\tBounding box:")
+                    print("\t\tleft  : {}".format(box.left))
+                    print("\t\ttop   : {}".format(box.top))
+                    print("\t\tright : {}".format(box.right))
+                    print("\t\tbottom: {}".format(box.bottom))
 
             # Attributes include glasses, headwear, facial hair, smiling,
             # direction of gaze, etc.
