@@ -68,8 +68,8 @@ def make_jwt_request(signed_jwt, url='https://your-endpoint.com'):
         'content-type': 'application/json'
     }
     response = requests.get(url, headers=headers)
+    print(response.status_code, response.content)
 
-    print(response.text)
 # [END endpoints_jwt_request]
 
 
