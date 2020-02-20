@@ -63,32 +63,32 @@ def detect_person(gcs_uri="gs://YOUR_BUCKET_ID/path/to/your/video.mp4"):
             # Grab the first timestamped object
             timestamped_object = track.timestamped_objects[0]
             box = timestamped_object.normalized_bounding_box
-            print("\tBounding box:")
-            print("\t\tleft  : {}".format(box.left))
-            print("\t\ttop   : {}".format(box.top))
-            print("\t\tright : {}".format(box.right))
-            print("\t\tbottom: {}".format(box.bottom))
+            print("Bounding box:")
+            print("\tleft  : {}".format(box.left))
+            print("\ttop   : {}".format(box.top))
+            print("\tright : {}".format(box.right))
+            print("\tbottom: {}".format(box.bottom))
 
             # Attributes include unique pieces of clothing,
             # poses, or hair color.
-            print("\tAttributes:")
+            print("Attributes:")
             for attribute in timestamped_object.attributes:
                 print(
-                    "\t\t{}:{} {}".format(
+                    "\t{}:{} {}".format(
                         attribute.name, attribute.value, attribute.confidence
                     )
                 )
 
             # Landmarks in person detection include body parts such as
             # left_shoulder, right_ear, and right_ankle
-            print("\tLandmarks:")
+            print("Landmarks:")
             for landmark in timestamped_object.landmarks:
                 print(
-                    "\t\t{}: {} (x={}, y={})".format(
+                    "\t{}: {} (x={}, y={})".format(
                         landmark.name,
                         landmark.confidence,
-                        landmark.point.x,
-                        landmark.point.y,
+                        landmark.point.x,  # Normalized vertex
+                        landmark.point.y,  # Normalized vertex
                     )
                 )
 
