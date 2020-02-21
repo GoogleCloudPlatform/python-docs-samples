@@ -42,7 +42,6 @@ def sample_recognize(local_file_path):
     # local_file_path = 'resources/hello.wav'
 
     # The enhanced model to use, e.g. phone_call
-    # Currently phone_call is the only model available as an enhanced model.
     model = "phone_call"
 
     # Use an enhanced model for speech recognition (when set to true).
