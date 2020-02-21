@@ -48,12 +48,14 @@ def sub(project_id, subscription_name):
     )
     print("Listening for messages on {}..\n".format(subscription_path))
 
-    # Calling result() on StreamingPullFuture keeps the main thread from
-    # exiting while messages get processed in the callbacks.
-    try:
-        streaming_pull_future.result()
-    except:  # noqa
-        streaming_pull_future.cancel()
+    # Wrap subscriber in a 'with' block to automatically call close() when done.
+    with subscriber:
+        try:
+            # Calling result() on StreamingPullFuture keeps the main thread from
+            # exiting while messages get processed in the callbacks.
+            streaming_pull_future.result()
+        except:  # noqa
+            streaming_pull_future.cancel()
 
 
 if __name__ == "__main__":

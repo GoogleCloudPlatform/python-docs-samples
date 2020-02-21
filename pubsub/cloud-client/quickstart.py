@@ -90,6 +90,9 @@ def end_to_end(project_id, topic_name, subscription_name, num_messages):
         else:
             # Sleeps the thread at 50Hz to save on resources.
             time.sleep(1.0 / 50)
+
+    # Release subscriber's underlying resources.
+    subscriber.close()
     # [END pubsub_end_to_end]
 
 

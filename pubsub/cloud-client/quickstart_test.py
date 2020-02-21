@@ -66,6 +66,7 @@ def subscription(subscriber_client, topic):
     yield SUBSCRIPTION
 
     subscriber_client.delete_subscription(subscription_path)
+    subscriber_client.close()
 
 
 def test_end_to_end(topic, subscription, capsys):
