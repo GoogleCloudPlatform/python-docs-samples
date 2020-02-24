@@ -93,8 +93,8 @@ To run this sample:
     $ python publisher.py
 
     usage: publisher.py [-h]
-                        project
-                        {list,create,delete,publish,publish-with-custom-attributes,publish-with-futures,publish-with-batch-settings}
+                        project_id
+                        {list,create,delete,publish,publish-with-custom-attributes,publish-with-error-handler,publish-with-batch-settings,publish-with-retry-settings}
                         ...
 
     This application demonstrates how to perform basic operations on topics
@@ -104,8 +104,8 @@ To run this sample:
     at https://cloud.google.com/pubsub/docs.
 
     positional arguments:
-      project               Your Google Cloud project ID
-      {list,create,delete,publish,publish-with-custom-attributes,publish-with-futures,publish-with-batch-settings}
+      project_id            Your Google Cloud project ID
+      {list,create,delete,publish,publish-with-custom-attributes,publish-with-error-handler,publish-with-batch-settings,publish-with-retry-settings}
         list                Lists all Pub/Sub topics in the given project.
         create              Create a new Pub/Sub topic.
         delete              Deletes an existing Pub/Sub topic.
@@ -113,12 +113,14 @@ To run this sample:
         publish-with-custom-attributes
                             Publishes multiple messages with custom attributes to
                             a Pub/Sub topic.
-        publish-with-futures
-                            Publishes multiple messages to a Pub/Sub topic and
-                            prints their message IDs.
+        publish-with-error-handler
+                            Publishes multiple messages to a Pub/Sub topic with an
+                            error handler.
         publish-with-batch-settings
                             Publishes multiple messages to a Pub/Sub topic with
                             batch settings.
+        publish-with-retry-settings
+                            Publishes messages with custom retry settings.
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -141,8 +143,8 @@ To run this sample:
     $ python subscriber.py
 
     usage: subscriber.py [-h]
-                         project
-                         {list_in_topic,list_in_project,create,create-push,delete,update,receive,receive-custom-attributes,receive-flow-control,listen_for_errors}
+                         project_id
+                         {list_in_topic,list_in_project,create,create-push,delete,update,receive,receive-custom-attributes,receive-flow-control,receive-synchronously,receive-synchronously-with-lease,listen_for_errors}
                          ...
 
     This application demonstrates how to perform basic operations on
@@ -152,26 +154,26 @@ To run this sample:
     at https://cloud.google.com/pubsub/docs.
 
     positional arguments:
-      project               Your Google Cloud project ID
-      {list_in_topic,list_in_project,create,create-push,delete,update,receive,receive-custom-attributes,receive-flow-control,listen_for_errors}
+      project_id            Your Google Cloud project ID
+      {list_in_topic,list_in_project,create,create-push,delete,update,receive,receive-custom-attributes,receive-flow-control,receive-synchronously,receive-synchronously-with-lease,listen_for_errors}
         list_in_topic       Lists all subscriptions for a given topic.
         list_in_project     Lists all subscriptions in the current project.
         create              Create a new pull subscription on the given topic.
-        create-push         Create a new push subscription on the given topic. For
-                            example, endpoint is "https://my-test-
-                            project.appspot.com/push".
+        create-push         Create a new push subscription on the given topic.
         delete              Deletes an existing Pub/Sub topic.
         update              Updates an existing Pub/Sub subscription's push
                             endpoint URL. Note that certain properties of a
                             subscription, such as its topic, are not modifiable.
-                            For example, endpoint is "https://my-test-
-                            project.appspot.com/push".
         receive             Receives messages from a pull subscription.
         receive-custom-attributes
                             Receives messages from a pull subscription.
         receive-flow-control
                             Receives messages from a pull subscription with flow
                             control.
+        receive-synchronously
+                            Pulling messages synchronously.
+        receive-synchronously-with-lease
+                            Pulling messages synchronously with lease management
         listen_for_errors   Receives messages and catches errors from a pull
                             subscription.
 
