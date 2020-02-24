@@ -128,30 +128,6 @@ def publish_messages_with_custom_attributes(project_id, topic_name):
     # [END pubsub_publish_custom_attributes]
 
 
-def publish_messages_with_futures(project_id, topic_name):
-    """Publishes multiple messages to a Pub/Sub topic and prints their
-    message IDs."""
-    # [START pubsub_publisher_concurrency_control]
-    from google.cloud import pubsub_v1
-
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO topic_name = "Your Pub/Sub topic name"
-
-    publisher = pubsub_v1.PublisherClient()
-    topic_path = publisher.topic_path(project_id, topic_name)
-
-    for n in range(1, 10):
-        data = u"Message number {}".format(n)
-        # Data must be a bytestring
-        data = data.encode("utf-8")
-        # When you publish a message, the client returns a future.
-        future = publisher.publish(topic_path, data=data)
-        print(future.result())
-
-    print("Published messages with futures.")
-    # [END pubsub_publisher_concurrency_control]
-
-
 def publish_messages_with_error_handler(project_id, topic_name):
     # [START pubsub_publish_messages_error_handler]
     """Publishes multiple messages to a Pub/Sub topic with an error handler."""
@@ -308,11 +284,6 @@ if __name__ == "__main__":
     )
     publish_with_custom_attributes_parser.add_argument("topic_name")
 
-    publish_with_futures_parser = subparsers.add_parser(
-        "publish-with-futures", help=publish_messages_with_futures.__doc__
-    )
-    publish_with_futures_parser.add_argument("topic_name")
-
     publish_with_error_handler_parser = subparsers.add_parser(
         "publish-with-error-handler",
         help=publish_messages_with_error_handler.__doc__,
@@ -345,8 +316,6 @@ if __name__ == "__main__":
         publish_messages_with_custom_attributes(
             args.project_id, args.topic_name
         )
-    elif args.command == "publish-with-futures":
-        publish_messages_with_futures(args.project_id, args.topic_name)
     elif args.command == "publish-with-error-handler":
         publish_messages_with_error_handler(args.project_id, args.topic_name)
     elif args.command == "publish-with-batch-settings":
