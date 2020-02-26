@@ -21,9 +21,7 @@ def test_detect_file(capsys):
     file_name = ('../detect/resources/landmark.jpg')
     web_detect.report(web_detect.annotate(file_name))
     out, _ = capsys.readouterr()
-    print(out)
     assert 'description' in out.lower()
-    assert 'palace' in out.lower()
 
 
 def test_detect_web_gsuri(capsys):
@@ -32,7 +30,6 @@ def test_detect_web_gsuri(capsys):
     web_detect.report(web_detect.annotate(file_name))
     out, _ = capsys.readouterr()
     assert 'description:' in out.lower()
-    assert 'palace' in out.lower()
 
 
 def test_detect_web_http(capsys):
