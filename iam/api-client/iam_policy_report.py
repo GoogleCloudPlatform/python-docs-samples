@@ -40,6 +40,7 @@ print('Starting to query projects')
 service = discovery.build(
     'cloudresourcemanager', 'v1', credentials=credentials)
 
+# [START generatePolicyReport]
 def generatePolicyReport()
     try:
         request = service.projects().list()
@@ -59,3 +60,4 @@ def generatePolicyReport()
         print('Finished export')
     except Exception as e:
         print(e)
+# [END generatePolicyReport]
