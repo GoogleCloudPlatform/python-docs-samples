@@ -18,5 +18,5 @@ import metrics_quickstart
 def test_quickstart_main(capsys):
     # Run the quickstart, making sure that it runs successfully
     metrics_quickstart.main()
-    output = capsys.readouterr().out
-    assert output.contains("Fake latency recorded")
+    output = capsys.readouterr()
+    assert "Fake latency recorded" in output.out
