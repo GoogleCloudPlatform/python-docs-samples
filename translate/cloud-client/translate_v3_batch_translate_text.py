@@ -17,31 +17,31 @@ from google.cloud import translate
 
 
 def batch_translate_text(
-    input_uri="YOUR_INPUT_URI",
-    output_uri="YOUR_OUTPUT_URI",
+    input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.type",
+    output_uri="gs://YOUR_BUCKET_ID/path/to/save/results/",
     project_id="YOUR_PROJECT_ID"
 ):
     """Translates a batch of texts on GCS and stores the result in a GCS location."""
 
     client = translate.TranslationServiceClient()
 
-    # Supported language codes: https://cloud.google.com/translate/docs/language
-    target_lang = "ja"
     location = "us-central1"
     gcs_source = {"input_uri": input_uri}
 
-    mime_type = "text/plain"  # Can be "text/plain" or "text/html".
-    input_configs_element = {"gcs_source": gcs_source, "mime_type": mime_type}
-    input_configs = [input_configs_element]
+    input_configs_element = {
+        "gcs_source": gcs_source,
+        "mime_type": "text/plain"  # Can be "text/plain" or "text/html".
+    }
     gcs_destination = {"output_uri_prefix": output_uri}
     output_config = {"gcs_destination": gcs_destination}
     parent = client.location_path(project_id, location)
 
+    # Supported language codes: https://cloud.google.com/translate/docs/language
     operation = client.batch_translate_text(
         parent=parent,
         source_language_code="en",
-        target_language_codes=[target_lang],  # Up to 10 language codes here.
-        input_configs=input_configs,
+        target_language_codes=["ja"],  # Up to 10 language codes here.
+        input_configs=[input_configs_element],
         output_config=output_config)
 
     print(u"Waiting for operation to complete...")
