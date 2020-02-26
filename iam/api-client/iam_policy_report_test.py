@@ -22,10 +22,6 @@ import iam_policy_report
 # Setting up variables for testing
 GCLOUD_PROJECT = os.environ["GCLOUD_PROJECT"]
 
-# specifying a sample role to be assigned
-GCP_ROLE = "roles/owner"
-
-
 @def test_iam_policy_report(capsys):
     iam_policy_report.generatePolicyReport()
  
