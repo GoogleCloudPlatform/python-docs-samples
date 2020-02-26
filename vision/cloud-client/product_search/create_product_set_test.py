@@ -12,22 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import absolute_import
-
 import os
 import uuid
 
-import detect_intent_knowledge
+import pytest
+
+from product_set_management import (
+    create_product_set, delete_product_set, list_product_sets)
+
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-SESSION_ID = 'session_{}'.format(uuid.uuid4())
-KNOWLEDGE_BASE_ID = 'MjEwMjE4MDQ3MDQwMDc0NTQ3Mg'
-TEXTS = ['Where is my data stored?']
+LOCATION = 'us-west1'
+
+PRODUCT_SET_DISPLAY_NAME = 'fake_product_set_display_name_for_testing'
+PRODUCT_SET_ID = 'test_{}'.format(uuid.uuid4())
 
 
-def test_detect_intent_knowledge(capsys):
-    detect_intent_knowledge.detect_intent_knowledge(
-        PROJECT_ID, SESSION_ID, 'en-us', KNOWLEDGE_BASE_ID, TEXTS)
+@pytest.fixture(scope="function", autouse=True)
+def teardown():
+    yield
 
+    # tear down
+    delete_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
+
+
+def test_create_product_set(capsys):
+    create_product_set(
+        PROJECT_ID, LOCATION, PRODUCT_SET_ID,
+        PRODUCT_SET_DISPLAY_NAME)
+    list_product_sets(PROJECT_ID, LOCATION)
     out, _ = capsys.readouterr()
-    assert 'Knowledge results' in out
+    assert PRODUCT_SET_ID in out
