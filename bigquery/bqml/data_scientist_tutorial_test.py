@@ -16,9 +16,14 @@
 from google.cloud import bigquery
 # [END bqml_data_scientist_tutorial_import_and_client]
 import pytest
+import uuid
 
 # [START bqml_data_scientist_tutorial_import_and_client]
 client = bigquery.Client()
+# We use a unique dataset ID for this example to avoid collisions with
+# other invocations of this tutorial.  In practice, you could leverage
+# a persistent dataset and not create/destroy it with each invocation.
+dataset_id = "bqml_tutorial_{}".format(str(uuid.uuid4().hex))
 # [END bqml_data_scientist_tutorial_import_and_client]
 
 
@@ -26,19 +31,19 @@ client = bigquery.Client()
 def delete_dataset():
     yield
     client.delete_dataset(
-        client.dataset('bqml_tutorial'), delete_contents=True)
+        client.dataset(dataset_id), delete_contents=True)
 
 
 def test_data_scientist_tutorial(delete_dataset):
     # [START bqml_data_scientist_tutorial_create_dataset]
-    dataset = bigquery.Dataset(client.dataset('bqml_tutorial'))
+    dataset = bigquery.Dataset(client.dataset(dataset_id))
     dataset.location = 'US'
     client.create_dataset(dataset)
     # [END bqml_data_scientist_tutorial_create_dataset]
 
     # [START bqml_data_scientist_tutorial_create_model]
     sql = """
-        CREATE OR REPLACE MODEL `bqml_tutorial.sample_model`
+        CREATE OR REPLACE MODEL `{}.sample_model`
         OPTIONS(model_type='logistic_reg') AS
         SELECT
             IF(totals.transactions IS NULL, 0, 1) AS label,
@@ -50,7 +55,7 @@ def test_data_scientist_tutorial(delete_dataset):
             `bigquery-public-data.google_analytics_sample.ga_sessions_*`
         WHERE
             _TABLE_SUFFIX BETWEEN '20160801' AND '20170630'
-    """
+    """.format(dataset_id)
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_data_scientist_tutorial_create_model]
@@ -60,8 +65,8 @@ def test_data_scientist_tutorial(delete_dataset):
         SELECT
         *
         FROM
-        ML.TRAINING_INFO(MODEL `bqml_tutorial.sample_model`)
-    """
+        ML.TRAINING_INFO(MODEL `{}.sample_model`)
+    """.format(dataset_id)
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_data_scientist_tutorial_get_training_statistics]
@@ -70,7 +75,7 @@ def test_data_scientist_tutorial(delete_dataset):
     sql = """
         SELECT
             *
-        FROM ML.EVALUATE(MODEL `bqml_tutorial.sample_model`, (
+        FROM ML.EVALUATE(MODEL `{}.sample_model`, (
             SELECT
                 IF(totals.transactions IS NULL, 0, 1) AS label,
                 IFNULL(device.operatingSystem, "") AS os,
@@ -81,7 +86,7 @@ def test_data_scientist_tutorial(delete_dataset):
                 `bigquery-public-data.google_analytics_sample.ga_sessions_*`
             WHERE
                 _TABLE_SUFFIX BETWEEN '20170701' AND '20170801'))
-    """
+    """.format(dataset_id)
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_data_scientist_tutorial_evaluate_model]
@@ -91,7 +96,7 @@ def test_data_scientist_tutorial(delete_dataset):
         SELECT
             country,
             SUM(predicted_label) as total_predicted_purchases
-        FROM ML.PREDICT(MODEL `bqml_tutorial.sample_model`, (
+        FROM ML.PREDICT(MODEL `{}.sample_model`, (
             SELECT
                 IFNULL(device.operatingSystem, "") AS os,
                 device.isMobile AS is_mobile,
@@ -104,7 +109,7 @@ def test_data_scientist_tutorial(delete_dataset):
             GROUP BY country
             ORDER BY total_predicted_purchases DESC
             LIMIT 10
-    """
+    """.format(dataset_id)
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_data_scientist_tutorial_predict_transactions]
@@ -114,7 +119,7 @@ def test_data_scientist_tutorial(delete_dataset):
         SELECT
             fullVisitorId,
             SUM(predicted_label) as total_predicted_purchases
-        FROM ML.PREDICT(MODEL `bqml_tutorial.sample_model`, (
+        FROM ML.PREDICT(MODEL `{}.sample_model`, (
             SELECT
                 IFNULL(device.operatingSystem, "") AS os,
                 device.isMobile AS is_mobile,
@@ -128,7 +133,7 @@ def test_data_scientist_tutorial(delete_dataset):
             GROUP BY fullVisitorId
             ORDER BY total_predicted_purchases DESC
             LIMIT 10
-    """
+    """.format(dataset_id)
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_data_scientist_tutorial_predict_purchases]
