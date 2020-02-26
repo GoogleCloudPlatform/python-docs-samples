@@ -1,5 +1,5 @@
 google-api-python-client==1.7.11
-google-auth==1.6.3
+google-auth==1.11.2
 google-auth-httplib2==0.0.3
 google-cloud-iot==0.3.0
 google-cloud-pubsub==1.0.0
