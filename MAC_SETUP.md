@@ -12,10 +12,10 @@ test their code.
 
 1. Install [homebrew](https://brew.sh/) if you do not already have it.
 
-   **Note:** If you are running Catalina (MacOS 10.15.x), ensure that you have a
-   compatible version of Homebrew (2.1.13 or later). Running `brew update` on
+   **Note:** If you are running Catalina (MacOS 10.15.x), ensure that you have
+   a compatible version of Homebrew (2.1.13 or later). Running `brew update` on
    Catalina does not always result in a compatible version, so uninstall and
-   reinstall homebrew, if necessary.
+   reinstall homebrew, if necessary
 
 ## Installing pyenv and pyenv-virtualenv
 
@@ -51,7 +51,7 @@ test their code.
 ## Installing multiple Python versions
 
 
-1.  See the available Python versions with
+1.  See the available Python versions with [pyenv](https://github.com/pyenv/pyenv).
 
     ```console
     pyenv install --list
@@ -88,6 +88,10 @@ test their code.
     ```console
     $ pyenv install 3.7.6
     ```
+    *  3.8.1 (latest 3.8.x release)
+    ```console
+    $ pyenv install 3.8.1
+    ```
 
 1.  After you have installed a python version through pyenv,
     verify that you are now using the pyenv Python shim.
@@ -97,35 +101,76 @@ test their code.
     ~/.pyenv/shims/python
     ```
 
+## Managing python versions using Pyenv global
+Pyenv allows you to configure the priority order for your python installs.
 
-## Using pyenv and pyenv-virtualenv to manage your Python versions
+```
+pyenv global 3.8.1 3.7.6 3.6.10 3.5.9 2.7.17
+```
 
-1.  Change to the desired source directory.
+This will make python and python3 point to Python 3.8.1. python2 will use
+2.7.17. You can also further specify versions, such as python3.6 to use that
+version.
 
-    ```console
-    cd ~/src/python-docs-samples
-    ```
+## Python virtual environments
+Using [Virtual Environments](https://docs.python.org/3/library/venv.html)
+prevents inadvertent modifications to your global python install. Once
+created and sourced, calls to `python` will use this virtual environment, not
+a global python install. Each virtual environment can have its own set of
+packages that can be different from others.
 
-1.  Create a virtualenv using `pyenv virtualenv`.
 
-    ```console
-    pyenv virtualenv 3.7.6 python-docs-samples
-    ```
+### Using Python 3+ venv
+Python has builtin support for creating virtual environments, accessible by
+running the `venv` module.
 
-    This creates a virtualenv folder within `~/.pyenv/versions/`.
+```
+cd python-docs-samples
+python -m venv [venv-name]
+source [venv-name]/bin/activate
+```
 
-1.  Set the local Python version(s) with `pyenv local`
+Typically you will name the venv `venv`, or `venv38` for a python 3.8 venv.
 
-    ```console
-    # pyenv local [name of virtualenv] [list of python versions to use]
-    pyenv local python-docs-samples 3.6.10 3.7.6 3.5.9 2.7.17
-    ```
 
-1.  Now, when you `cd` into the source directory or a subdirectory within it,
-    pyenv will make your virtualenv the default Python. Since you specified
-    more than one version, it will also add binaries like `python36` and
-    `python27` to your PATH, which nox uses when picking Python interpreters.
+### Using pyenv-virtualenv
+You can also use an extension for pyenv that will assist in managing virtual
+environments. This allows you to use `pyenv local` to automatically use the
+created virtual environment. You can install this by running
+`$ brew install pyenv-virtualenv`
 
-1.  Add `.python-version` to your [global gitignore
-    file](https://help.github.com/articles/ignoring-files/#create-a-global-gitignore),
+1.  Change to the desired source directory.	
+
+    ```console	
+    cd ~/src/python-docs-samples	
+    ```	
+
+1.  Create a virtualenv for python 3.8.1 using `pyenv virtualenv`.	
+
+    ```console	
+    pyenv virtualenv 3.8.1 python-docs-samples	
+    ```	
+
+    This creates a virtualenv folder within `~/.pyenv/versions/`.	
+
+1.  Set the local Python version(s) with `pyenv local`	
+
+    ```console	
+    # pyenv local [name of virtualenv] [list of python versions to use]	
+    pyenv local python-docs-samples 3.8.1 3.7.6 3.6.10 3.5.9 2.7.17	
+    ```	
+
+1.  Now, when you `cd` into the source directory or a subdirectory within it,	
+    pyenv will make your virtualenv the default Python. Since you specified	
+    more than one version, it will also add binaries like `python36` and	
+    `python27` to your PATH, which
+    [nox](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/AUTHORING_GUIDE.md#using-nox)
+    uses when picking Python interpreters.	
+
+1.  Add `.python-version` to your
+    [global gitignore file](https://help.github.com/articles/ignoring-files/#create-a-global-gitignore),	
     so it won't be committed into the repository.
+
+## More on authoring samples
+If you are looking for more information on how to author samples, please view
+the [Authoring Guide](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/AUTHORING_GUIDE.md)
