@@ -62,11 +62,12 @@ def main():
     # Record 100 fake latency values between 0 and 5 seconds.
     for num in range(100):
         ms = random() * 5 * 1000
-        print("Latency {}: {}".format(num, ms))
 
         mmap = stats.stats.stats_recorder.new_measurement_map()
         mmap.measure_float_put(LATENCY_MS, ms)
         mmap.record()
+
+        print("Fake latency recorded ({}: {})".format(num, ms))
 
     # Keep the thread alive long enough for the exporter to export at least
     # once.
