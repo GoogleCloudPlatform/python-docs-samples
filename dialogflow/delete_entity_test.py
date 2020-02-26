@@ -14,8 +14,8 @@
 
 from __future__ import absolute_import
 
-import datetime
 import os
+import uuid
 import pytest
 
 import dialogflow_v2 as dialogflow
@@ -23,7 +23,7 @@ import dialogflow_v2 as dialogflow
 import entity_management
 
 PROJECT_ID = os.getenv("GCLOUD_PROJECT")
-DISPLAY_NAME = "entity_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+DISPLAY_NAME = "entity_{}".format(uuid.uuid4()).replace('-', '')[:30]
 ENTITY_VALUE_1 = "test_delete_entity_value"
 
 pytest.ENTITY_TYPE_ID = None
