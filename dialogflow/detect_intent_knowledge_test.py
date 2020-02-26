@@ -14,13 +14,13 @@
 
 from __future__ import absolute_import
 
-import datetime
 import os
+import uuid
 
 import detect_intent_knowledge
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-SESSION_ID = 'session_' + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+SESSION_ID = 'session_{}'.format(uuid.uuid4())
 KNOWLEDGE_BASE_ID = 'MjEwMjE4MDQ3MDQwMDc0NTQ3Mg'
 TEXTS = ['Where is my data stored?']
 

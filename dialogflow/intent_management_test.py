@@ -14,14 +14,13 @@
 
 from __future__ import absolute_import
 
-import datetime
 import os
+import uuid
 
 import intent_management
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-INTENT_DISPLAY_NAME = 'test_' \
-                      + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+INTENT_DISPLAY_NAME = 'test_{}'.format(uuid.uuid4())
 MESSAGE_TEXTS = [
     'fake_message_text_for_testing_1',
     'fake_message_text_for_testing_2'
