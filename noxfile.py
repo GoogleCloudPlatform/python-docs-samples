@@ -153,6 +153,7 @@ FLAKE8_COMMON_ARGS = [
     "--exclude",
     ".nox,.cache,env,lib,generated_pb2,*_pb2.py,*_pb2_grpc.py",
     "--ignore=E121,E123,E126,E226,E24,E704,W503,W504,I100,I201,I202",
+    "--max-line-length=88",
 ]
 
 
@@ -175,6 +176,7 @@ PY3_ONLY_SAMPLES = [
         or sample.startswith("./functions/")
         or sample.startswith("./bigquery/pandas-gbq-migration")
         or sample.startswith("./run/system-package")
+        or sample.startswith("./run/hello-broken")
     )
 ]
 NON_GAE_STANDARD_SAMPLES_PY2 = sorted(

@@ -24,7 +24,7 @@ def write_increment(project_id, instance_id, table_id):
     column_family_id = "stats_summary"
 
     row_key = "phone#4c410523#20190501"
-    row = table.row(row_key, append=True)
+    row = table.append_row(row_key)
 
     # Decrement the connected_wifi value by 1.
     row.increment_cell_value(column_family_id, "connected_wifi", -1)

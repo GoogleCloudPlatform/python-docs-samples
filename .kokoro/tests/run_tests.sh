@@ -39,6 +39,13 @@ SECRETS_PASSWORD=$(cat "${KOKORO_GFILE_DIR}/secrets-password.txt")
 source ./testing/test-env.sh
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
 export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
+source "${KOKORO_GFILE_DIR}/automl_secrets.txt"
+cp "${KOKORO_GFILE_DIR}/functions-slack-config.json" "functions/slack/config.json"
+
+# For Datalabeling samples to hit the testing endpoint
+export DATALABELING_ENDPOINT="test-datalabeling.sandbox.googleapis.com:443"
+# Required for "run/image-processing" && "functions/imagemagick"
+apt-get -qq update  && apt-get -qq install libmagickwand-dev > /dev/null
 
 # Run Cloud SQL proxy (background process exit when script does)
 wget --quiet https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy && chmod +x cloud_sql_proxy
@@ -69,6 +76,16 @@ for file in **/requirements.txt; do
         fi
     fi
 
+    # Skip unsupported Python versions for Cloud Functions
+    # (Some GCF samples' dependencies don't support them)
+    if [[ "$file" == "functions/"* ]]; then
+      PYTHON_VERSION="$(python --version 2>&1)"
+      if [[ "$PYTHON_VERSION" == "Python 2."* || "$PYTHON_VERSION" == "Python 3.5"* ]]; then
+        # echo -e "\n Skipping $file: Python $PYTHON_VERSION is not supported by Cloud Functions.\n"
+        continue
+      fi
+    fi
+
     echo "------------------------------------------------------------"
     echo "- testing $file"
     echo "------------------------------------------------------------"
@@ -82,6 +99,13 @@ for file in **/requirements.txt; do
     # Use nox to execute the tests for the project.
     nox -s "$RUN_TESTS_SESSION"
     EXIT=$?
+
+    # If this is a continuous build, send the test log to the Build Cop Bot.
+    # See https://github.com/googleapis/repo-automation-bots/tree/master/packages/buildcop.
+    if [[ $KOKORO_BUILD_ARTIFACTS_SUBDIR = *"continuous"* ]]; then
+      chmod +x $KOKORO_GFILE_DIR/linux_amd64/buildcop
+      $KOKORO_GFILE_DIR/linux_amd64/buildcop
+    fi
 
     if [[ $EXIT -ne 0 ]]; then
       RTN=1

@@ -60,7 +60,7 @@ def index():
 
 
 # [START push]
-@app.route('/_ah/push-handlers/receive_messages', methods=['POST'])
+@app.route('/push-handlers/receive_messages', methods=['POST'])
 def receive_messages_handler():
     # Verify that the request originates from the application.
     if (request.args.get('token', '') !=

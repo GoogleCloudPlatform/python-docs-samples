@@ -74,7 +74,9 @@ def quickstart(project_id):
             print("Info type: {}".format(finding.info_type.name))
             # Convert likelihood value to string respresentation.
             likelihood = (
-                google.cloud.dlp.types.Finding.DESCRIPTOR.fields_by_name["likelihood"]
+                google.cloud.dlp.types.Finding.DESCRIPTOR.fields_by_name[
+                    "likelihood"
+                ]
                 .enum_type.values_by_number[finding.likelihood]
                 .name
             )
@@ -86,7 +88,9 @@ def quickstart(project_id):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("project_id", help="Enter your GCP project id.", type=str)
+    parser.add_argument(
+        "project_id", help="Enter your GCP project id.", type=str
+    )
     args = parser.parse_args()
     if len(sys.argv) == 1:
         parser.print_usage()
