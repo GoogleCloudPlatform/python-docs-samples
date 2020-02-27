@@ -7,9 +7,8 @@ style expected of samples that live in
 
 ## Canonical sample
 
-The [Cloud Storage Sample](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/storage/cloud-client/snippets.py)
-is a great example of what we expect from samples. It's a great sample to copy
-and start from.
+The [Cloud Storage Samples](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/storage/cloud-client)
+are great examples of what we expect from samples. Take a look at some of the files within to gain better understanding of the patterns we use.
 
 ## The basics
 

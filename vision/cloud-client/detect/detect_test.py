@@ -65,14 +65,14 @@ def test_faces(capsys):
         'resources/face_no_surprise.jpg')
     detect.detect_faces(file_name)
     out, _ = capsys.readouterr()
-    assert 'POSSIBLE' in out
+    assert 'face bound' in out
 
 
 def test_faces_uri(capsys):
     file_name = 'gs://{}/vision/face/face_no_surprise.jpg'.format(ASSET_BUCKET)
     detect.detect_faces_uri(file_name)
     out, _ = capsys.readouterr()
-    assert 'POSSIBLE' in out
+    assert 'face bound' in out
 
 
 def test_logos(capsys):

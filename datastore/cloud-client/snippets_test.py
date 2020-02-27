@@ -276,3 +276,7 @@ class TestDatastoreSnippets:
         client.entities_to_delete.extend(
             client.query(kind='Task').fetch())
         assert reprs
+
+    @eventually_consistent.mark
+    def test_index_merge_queries(self, client):
+        snippets.index_merge_queries(client)

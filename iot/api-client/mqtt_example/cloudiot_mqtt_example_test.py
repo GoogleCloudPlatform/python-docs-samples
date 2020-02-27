@@ -182,7 +182,7 @@ def test_config(test_topic, capsys):
     assert '/devices/{}/config'.format(device_id) in out
 
 
-@flaky
+@flaky(max_runs=5)
 def test_receive_command(capsys):
     device_id = device_id_template.format('RSA256')
     manager.create_registry(
@@ -234,7 +234,7 @@ def test_receive_command(capsys):
     assert '\'me want cookies\'' in out  # Verify can receive command
 
 
-@flaky
+@flaky(max_runs=5)
 def test_gateway_listen_for_bound_device_configs(test_topic, capsys):
     gateway_id = device_id_template.format('RS256')
     device_id = device_id_template.format('noauthbind')
@@ -280,7 +280,7 @@ def test_gateway_listen_for_bound_device_configs(test_topic, capsys):
     assert 'Received message' in out
 
 
-@flaky
+@flaky(max_runs=5)
 def test_gateway_send_data_for_device(test_topic, capsys):
     gateway_id = device_id_template.format('RS256')
     device_id = device_id_template.format('noauthbind')

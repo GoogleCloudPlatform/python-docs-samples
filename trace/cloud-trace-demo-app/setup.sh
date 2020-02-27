@@ -27,7 +27,7 @@ kubectl apply -f app/demo-service-b.yaml
 rm app/demo-service-b.yaml
 
 ################## Set up service c ###########################
-echo "Fetching the external IP of the service b"
+echo "Fetching the external IP of service b"
 endpoint=""
 for run in {1..20}
 do
