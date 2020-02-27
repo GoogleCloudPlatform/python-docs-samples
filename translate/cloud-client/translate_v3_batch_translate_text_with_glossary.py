@@ -18,7 +18,7 @@ from google.cloud import translate
 
 
 def batch_translate_text_with_glossary(
-    input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.type",
+    input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.txt",
     output_uri="gs://YOUR_BUCKET_ID/path/to/save/results/",
     project_id="YOUR_PROJECT_ID",
     glossary_id="YOUR_GLOSSARY_ID",
@@ -30,6 +30,8 @@ def batch_translate_text_with_glossary(
 
     # Supported language codes: https://cloud.google.com/translate/docs/languages
     location = "us-central1"
+
+    # Supported file types: https://cloud.google.com/translate/docs/supported-formats
     gcs_source = {"input_uri": input_uri}
 
     input_configs_element = {

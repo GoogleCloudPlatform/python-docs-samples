@@ -18,7 +18,7 @@ from google.cloud import translate
 
 
 def batch_translate_text_with_model(
-    input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.type",
+    input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.txt",
     output_uri="gs://YOUR_BUCKET_ID/path/to/save/results/",
     project_id="YOUR_PROJECT_ID",
     model_id="YOUR_MODEL_ID",
@@ -28,6 +28,7 @@ def batch_translate_text_with_model(
 
     client = translate.TranslationServiceClient()
 
+    # Supported file types: https://cloud.google.com/translate/docs/supported-formats
     gcs_source = {"input_uri": input_uri}
     location = "us-central1"
 
