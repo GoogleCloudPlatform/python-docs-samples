@@ -39,6 +39,7 @@ def track_event(category, action, label=None, value=0):
         'ea': action,  # Event action.
         'el': label,  # Event label.
         'ev': value,  # Event value, must be an integer
+        'ua': 'Opera/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14'
     }
 
     response = requests.post(
