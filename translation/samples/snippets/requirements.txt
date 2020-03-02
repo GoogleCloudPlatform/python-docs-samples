@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 google-cloud-translate==3.0.0
 google-cloud-storage==1.30.0
 google-cloud-automl==1.0.1
+=======
+google-cloud-translate==2.0.0
+google-cloud-storage==1.19.1
+google-cloud-automl==0.9.0
+>>>>>>> 65dd67b5 (Translate: migrate published  v3 translate batch samples [(#2914)](https://github.com/GoogleCloudPlatform/python-docs-samples/issues/2914))
