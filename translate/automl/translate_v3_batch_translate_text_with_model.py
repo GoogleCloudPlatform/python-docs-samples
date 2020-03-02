@@ -41,7 +41,7 @@ def batch_translate_text_with_model(
     parent = client.location_path(project_id, location)
 
     model_path = "projects/{}/locations/{}/models/{}".format(
-        project_id, "us-central1", model_id  # The location of AutoML model.
+        project_id, location, model_id  # The location of AutoML model.
     )
 
     # Supported language codes: https://cloud.google.com/translate/docs/languages
