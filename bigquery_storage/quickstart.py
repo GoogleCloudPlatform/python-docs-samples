@@ -97,4 +97,4 @@ if __name__ == "__main__":
     parser.add_argument("project_id")
     parser.add_argument("--snapshot_millis", default=0, type=int)
     args = parser.parse_args()
-    main(project_id=args.project_id)
+    main(project_id=args.project_id, snapshot_millis=args.snapshot_millis)
