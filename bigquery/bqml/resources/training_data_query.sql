@@ -1,4 +1,5 @@
 #standardSQL
+CREATE OR REPLACE TABLE `{0}.wide_games` AS
 SELECT
   team.game_id AS game_id,
   team.season AS season,
@@ -768,9 +769,9 @@ SELECT
   opponent.opp_possessions_std_last_5 AS	opponent_opp_possessions_std_last_5,
   opponent.opp_possessions_std_last_10 AS	opponent_opp_possessions_std_last_10
 FROM
-  `bqml_tutorial.cume_games` AS team
+  `{0}.cume_games` AS team
 JOIN
-  `bqml_tutorial.cume_games` AS opponent
+  `{0}.cume_games` AS opponent
 ON
   team.game_id = opponent.game_id AND team.team_id != opponent.team_id
 WHERE
