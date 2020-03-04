@@ -55,7 +55,6 @@ def test_blob(test_bucket):
     blob = bucket.blob("storage_acl_test_sigil")
     blob.upload_from_string("Hello, is it me you're looking for?")
     yield blob
-    blob.delete()
 
 
 def test_print_bucket_acl(test_bucket, capsys):

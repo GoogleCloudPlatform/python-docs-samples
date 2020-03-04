@@ -92,7 +92,6 @@ def test_blob(test_bucket):
     blob = bucket.blob("storage_snippets_test_sigil")
     blob.upload_from_string("Hello, is it me you're looking for?")
     yield blob
-    blob.delete()
 
 
 def test_list_buckets(test_bucket, capsys):
