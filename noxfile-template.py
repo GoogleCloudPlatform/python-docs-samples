@@ -154,7 +154,7 @@ PY3_ONLY_SAMPLES = [
             "bigquery/pandas-gbq-migration"
         )
         or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith(
-            "run/system-package"
+            "run/"
         )
     )
 ]
