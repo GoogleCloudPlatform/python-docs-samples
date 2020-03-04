@@ -12,12 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import time
 import uuid
 
 from google.cloud import storage
-import google.cloud.storage.acl
 import pytest
 
 import storage_remove_file_owner
@@ -39,7 +36,7 @@ TEST_EMAIL = (
 )
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def test_bucket():
     """Yields a bucket that is deleted after the test completes."""
     bucket_name = "acl-test-{}".format(uuid.uuid4())
@@ -88,7 +85,8 @@ def test_remove_bucket_owner(test_bucket):
     test_bucket.acl.user(TEST_EMAIL).grant_owner()
     test_bucket.acl.save()
 
-    storage_remove_bucket_owner.remove_bucket_owner(test_bucket.name, TEST_EMAIL)
+    storage_remove_bucket_owner.remove_bucket_owner(
+        test_bucket.name, TEST_EMAIL)
 
     test_bucket.acl.reload()
     assert "OWNER" not in test_bucket.acl.user(TEST_EMAIL).get_roles()
@@ -118,7 +116,8 @@ def test_remove_bucket_default_owner(test_bucket):
 
 
 def test_print_blob_acl(test_blob, capsys):
-    storage_print_file_acl.print_blob_acl(test_blob.bucket.name, test_blob.name)
+    storage_print_file_acl.print_blob_acl(
+        test_blob.bucket.name, test_blob.name)
     out, _ = capsys.readouterr()
     assert out
 
@@ -136,7 +135,8 @@ def test_print_blob_acl_for_user(test_blob, capsys):
 
 
 def test_add_blob_owner(test_blob):
-    storage_add_file_owner.add_blob_owner(test_blob.bucket.name, test_blob.name, TEST_EMAIL)
+    storage_add_file_owner.add_blob_owner(
+        test_blob.bucket.name, test_blob.name, TEST_EMAIL)
 
     test_blob.acl.reload()
     assert "OWNER" in test_blob.acl.user(TEST_EMAIL).get_roles()

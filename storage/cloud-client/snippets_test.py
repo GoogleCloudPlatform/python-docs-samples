@@ -82,6 +82,7 @@ def test_bucket():
     yield bucket
     bucket.delete(force=True)
 
+
 @pytest.fixture
 def test_blob(test_bucket):
     """Yields a blob that is deleted after the test completes."""
@@ -90,7 +91,6 @@ def test_blob(test_bucket):
     blob.upload_from_string("Hello, is it me you're looking for?")
     yield blob
     blob.delete()
-
 
 
 def test_list_buckets(test_bucket, capsys):
@@ -199,6 +199,7 @@ def test_generate_upload_signed_url_v4(test_bucket, capsys):
     bucket = storage.Client().bucket(test_bucket.name)
     blob = bucket.blob(blob_name)
     assert blob.download_as_string() == content
+
 
 def test_rename_blob(test_blob):
     bucket = storage.Client().bucket(test_blob.bucket.name)
