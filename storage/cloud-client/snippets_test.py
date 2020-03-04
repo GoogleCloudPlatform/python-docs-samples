@@ -15,6 +15,7 @@
 import os
 import tempfile
 import time
+import uuid
 
 from google.cloud import storage
 import google.cloud.exceptions
@@ -41,7 +42,6 @@ import storage_generate_signed_url_v4
 import storage_generate_upload_signed_url_v4
 import storage_set_bucket_default_kms_key
 
-#BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 KMS_KEY = os.environ["CLOUD_KMS_KEY"]
 
 

@@ -31,7 +31,6 @@ import storage_print_bucket_acl
 import storage_print_file_acl_for_user
 import storage_print_file_acl
 
-#BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 # Typically we'd use a @example.com address, but GCS requires a real Google
 # account.
 TEST_EMAIL = (
