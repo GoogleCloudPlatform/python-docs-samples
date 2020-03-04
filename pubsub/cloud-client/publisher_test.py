@@ -138,10 +138,3 @@ def test_publish_with_error_handler(topic_publish, capsys):
 
     out, _ = capsys.readouterr()
     assert "Published" in out
-
-
-def test_publish_with_futures(topic_publish, capsys):
-    publisher.publish_messages_with_futures(PROJECT, TOPIC_PUBLISH)
-
-    out, _ = capsys.readouterr()
-    assert "Published" in out

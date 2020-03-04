@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import uuid
 
 import pytest
 
@@ -24,37 +25,17 @@ PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 LOCATION = 'us-west1'
 
 PRODUCT_SET_DISPLAY_NAME = 'fake_product_set_display_name_for_testing'
-PRODUCT_SET_ID = 'fake_product_set_id_for_testing'
+PRODUCT_SET_ID = 'test_{}'.format(uuid.uuid4())
 
 
-@pytest.fixture
-def product_set():
+@pytest.fixture(scope="function", autouse=True)
+def setup():
     # set up
     create_product_set(
         PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_SET_DISPLAY_NAME)
 
-    yield None
 
-    # tear down
-    delete_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
-
-
-def test_create_product_set(capsys):
-    list_product_sets(PROJECT_ID, LOCATION)
-    out, _ = capsys.readouterr()
-    assert PRODUCT_SET_ID not in out
-
-    create_product_set(
-        PROJECT_ID, LOCATION, PRODUCT_SET_ID,
-        PRODUCT_SET_DISPLAY_NAME)
-    list_product_sets(PROJECT_ID, LOCATION)
-    out, _ = capsys.readouterr()
-    assert PRODUCT_SET_ID in out
-
-    delete_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
-
-
-def test_delete_product_set(capsys, product_set):
+def test_delete_product_set(capsys):
     list_product_sets(PROJECT_ID, LOCATION)
     out, _ = capsys.readouterr()
     assert PRODUCT_SET_ID in out

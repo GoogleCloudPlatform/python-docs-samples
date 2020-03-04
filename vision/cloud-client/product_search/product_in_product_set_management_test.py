@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import uuid
 
 import pytest
 
@@ -28,15 +29,15 @@ PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 LOCATION = 'us-west1'
 
 PRODUCT_SET_DISPLAY_NAME = 'fake_product_set_display_name_for_testing'
-PRODUCT_SET_ID = 'fake_product_set_id_for_testing'
+PRODUCT_SET_ID = 'test_set_{}'.format(uuid.uuid4())
 
 PRODUCT_DISPLAY_NAME = 'fake_product_display_name_for_testing'
 PRODUCT_CATEGORY = 'homegoods'
-PRODUCT_ID = 'fake_product_id_for_testing'
+PRODUCT_ID = 'test_product_{}'.format(uuid.uuid4())
 
 
-@pytest.fixture
-def product_and_product_set():
+@pytest.fixture(scope="function", autouse=True)
+def setup_teardown():
     # set up
     create_product_set(
         PROJECT_ID, LOCATION, PRODUCT_SET_ID, PRODUCT_SET_DISPLAY_NAME)
@@ -44,18 +45,14 @@ def product_and_product_set():
         PROJECT_ID, LOCATION, PRODUCT_ID,
         PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY)
 
-    yield None
+    yield
 
     # tear down
     delete_product(PROJECT_ID, LOCATION, PRODUCT_ID)
     delete_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
 
 
-def test_add_product_to_product_set(capsys, product_and_product_set):
-    list_products_in_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
-    out, _ = capsys.readouterr()
-    assert 'Product id: {}'.format(PRODUCT_ID) not in out
-
+def test_add_product_to_product_set(capsys):
     add_product_to_product_set(
         PROJECT_ID, LOCATION, PRODUCT_ID, PRODUCT_SET_ID)
     list_products_in_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
@@ -63,7 +60,7 @@ def test_add_product_to_product_set(capsys, product_and_product_set):
     assert 'Product id: {}'.format(PRODUCT_ID) in out
 
 
-def test_remove_product_from_product_set(capsys, product_and_product_set):
+def test_remove_product_from_product_set(capsys):
     add_product_to_product_set(
         PROJECT_ID, LOCATION, PRODUCT_ID, PRODUCT_SET_ID)
     list_products_in_product_set(PROJECT_ID, LOCATION, PRODUCT_SET_ID)
@@ -77,7 +74,7 @@ def test_remove_product_from_product_set(capsys, product_and_product_set):
     assert 'Product id: {}'.format(PRODUCT_ID) not in out
 
 
-def test_purge_products_in_product_set(capsys, product_and_product_set):
+def test_purge_products_in_product_set(capsys):
     add_product_to_product_set(
         PROJECT_ID, LOCATION, PRODUCT_ID, PRODUCT_SET_ID)
     list_products(PROJECT_ID, LOCATION)
@@ -90,5 +87,3 @@ def test_purge_products_in_product_set(capsys, product_and_product_set):
     list_products(PROJECT_ID, LOCATION)
     out, _ = capsys.readouterr()
     assert 'Product id: {}'.format(PRODUCT_ID) not in out
-
-    print(out)

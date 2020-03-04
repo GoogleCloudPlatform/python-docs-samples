@@ -1,4 +1,8 @@
-#standardSQL
+# This query creates a sample table using
+# the ncaa_basketball public dataset.  It
+# uses a format string token for setting
+# the destination dataset.
+CREATE OR REPLACE TABLE `{0}.cume_games` AS
 SELECT
   game_id,
   season,
