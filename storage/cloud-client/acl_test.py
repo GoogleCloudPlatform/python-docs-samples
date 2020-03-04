@@ -52,7 +52,7 @@ def test_bucket():
 def test_blob(test_bucket):
     """Yields a blob that is deleted after the test completes."""
     bucket = test_bucket
-    blob = bucket.blob("storage_acl_test_sigil")
+    blob = bucket.blob("storage_acl_test_sigil-{}".format(uuid.uuid4()))
     blob.upload_from_string("Hello, is it me you're looking for?")
     yield blob
 
