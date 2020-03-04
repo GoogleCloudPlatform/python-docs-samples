@@ -37,7 +37,7 @@ BLOB_CONTENT = "Hello, is it me you're looking for?"
 RETENTION_POLICY = 5
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def bucket():
     """Yields a bucket that is deleted after the test completes."""
     bucket = None
