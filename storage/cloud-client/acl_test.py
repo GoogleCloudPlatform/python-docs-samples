@@ -39,8 +39,10 @@ TEST_EMAIL = (
 @pytest.fixture(scope="module")
 def test_bucket():
     """Yields a bucket that is deleted after the test completes."""
-    bucket_name = "acl-test-{}".format(uuid.uuid4())
-    bucket = storage.Client().bucket(bucket_name)
+    bucket = None
+    while bucket is None or bucket.exists():
+        bucket_name = "acl-test-{}".format(uuid.uuid4())
+        bucket = storage.Client().bucket(bucket_name)
     bucket.create()
     yield bucket
     bucket.delete(force=True)
