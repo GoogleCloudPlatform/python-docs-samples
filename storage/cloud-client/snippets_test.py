@@ -73,7 +73,7 @@ def test_remove_bucket_label(test_bucket, capsys):
     assert "Removed labels" in out
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def test_bucket():
     """Yields a bucket that is deleted after the test completes."""
     bucket_name = "storage-snippets-test-{}".format(uuid.uuid4())
