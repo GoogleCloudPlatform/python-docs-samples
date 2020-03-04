@@ -789,6 +789,97 @@ def eventual_consistent_query(client):
     pass
 
 
+def index_merge_queries(client):
+    # Create a Photo entity to query
+    photo = datastore.Entity(client.key('Photo', 'sample_photo'))
+
+    photo.update({
+        'owner_id': 'user1234',
+        'size': 2,
+        'coloration': 2,
+        'tag': ['family', 'outside', 'camping']
+    })
+
+    client.put(photo)
+
+    # Sample queries using built-in indexes
+    queries = []
+
+    # [START datastore_built_in_index_queries]
+    query_owner_id = client.query(
+        kind='Photo',
+        filters=[('owner_id', '=', 'user1234')])
+
+    query_size = client.query(
+        kind='Photo',
+        filters=[('size', '=', 2)])
+
+    query_coloration = client.query(
+        kind='Photo',
+        filters=[('coloration', '=', 2)])
+    # [END datastore_built_in_index_queries]
+
+    queries.append(query_owner_id)
+    queries.append(query_size)
+    queries.append(query_coloration)
+
+    # [START datastore_merged_index_query]
+    query_all_properties = client.query(
+        kind='Photo',
+        filters=[('owner_id', '=', 'user1234'),
+                 ('size', '=', 2),
+                 ('coloration', '=', 2),
+                 ('tag', '=', 'family')])
+    # [END datastore_merged_index_query]
+
+    queries.append(query_all_properties)
+
+    # [START datastore_merged_index_tag_queries]
+    query_tag = client.query(
+        kind='Photo',
+        filters=[('tag', '=', 'family'),
+                 ('tag', '=', 'outside'),
+                 ('tag', '=', 'camping')])
+
+    query_owner_size_color_tags = client.query(
+        kind='Photo',
+        filters=[('owner_id', '=', 'user1234'),
+                 ('size', '=', 2),
+                 ('coloration', '=', 2),
+                 ('tag', '=', 'family'),
+                 ('tag', '=', 'outside'),
+                 ('tag', '=', 'camping')])
+    # [END datastore_merged_index_tag_queries]
+
+    queries.append(query_tag)
+    queries.append(query_owner_size_color_tags)
+
+    # [START datastore_owner_size_tag_query]
+    query_owner_size_tag = client.query(
+        kind='Photo',
+        filters=[('owner_id', '=', 'username'),
+                 ('size', '=', 2),
+                 ('tag', '=', 'family')])
+    # [END datastore_owner_size_tag_query]
+
+    queries.append(query_owner_size_tag)
+
+    # [START datastore_size_coloration_query]
+    query_size_coloration = client.query(
+        kind='Photo',
+        filters=[('size', '=', 2),
+                 ('coloration', '=', 1)])
+    # [END datastore_size_coloration_query]
+
+    queries.append(query_size_coloration)
+
+    results = []
+    for query in queries:
+        results.append(query.fetch())
+
+    return results
+
+
 def main(project_id):
     client = datastore.Client(project_id)
 
