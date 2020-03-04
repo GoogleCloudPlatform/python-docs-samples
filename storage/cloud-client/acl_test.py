@@ -14,6 +14,7 @@
 
 import os
 import time
+import uuid
 
 from google.cloud import storage
 import google.cloud.storage.acl
@@ -30,7 +31,7 @@ import storage_print_bucket_acl
 import storage_print_file_acl_for_user
 import storage_print_file_acl
 
-BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
+#BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 # Typically we'd use a @example.com address, but GCS requires a real Google
 # account.
 TEST_EMAIL = (
@@ -41,35 +42,26 @@ TEST_EMAIL = (
 
 @pytest.fixture
 def test_bucket():
-    """Yields a bucket that resets its acl after the test completes."""
-    bucket = storage.Client().bucket(BUCKET)
-    acl = google.cloud.storage.acl.BucketACL(bucket)
-    object_default_acl = google.cloud.storage.acl.DefaultObjectACL(bucket)
-    acl.reload()
-    object_default_acl.reload()
-    time.sleep(1)  # bucket ops rate limited 1 update per second
+    """Yields a bucket that is deleted after the test completes."""
+    bucket_name = "acl-test-{}".format(uuid.uuid4())
+    bucket = storage.Client().bucket(bucket_name)
+    bucket.create()
     yield bucket
-    time.sleep(1)  # bucket ops rate limited 1 update per second
-    acl.save()
-    object_default_acl.save()
+    bucket.delete(force=True)
 
 
 @pytest.fixture
-def test_blob():
-    """Yields a blob that resets its acl after the test completes."""
-    bucket = storage.Client().bucket(BUCKET)
+def test_blob(test_bucket):
+    """Yields a blob that is deleted after the test completes."""
+    bucket = test_bucket
     blob = bucket.blob("storage_acl_test_sigil")
     blob.upload_from_string("Hello, is it me you're looking for?")
-    acl = google.cloud.storage.acl.ObjectACL(blob)
-    acl.reload()  # bucket ops rate limited 1 update per second
-    time.sleep(1)
-    yield blob  # bucket ops rate limited 1 update per second
-    time.sleep(1)
-    acl.save()
+    yield blob
+    blob.delete()
 
 
-def test_print_bucket_acl(capsys):
-    storage_print_bucket_acl.print_bucket_acl(BUCKET)
+def test_print_bucket_acl(test_bucket, capsys):
+    storage_print_bucket_acl.print_bucket_acl(test_bucket.name)
     out, _ = capsys.readouterr()
     assert out
 
@@ -79,7 +71,7 @@ def test_print_bucket_acl_for_user(test_bucket, capsys):
     test_bucket.acl.save()
 
     storage_print_bucket_acl_for_user.print_bucket_acl_for_user(
-        BUCKET, TEST_EMAIL
+        test_bucket.name, TEST_EMAIL
     )
 
     out, _ = capsys.readouterr()
@@ -87,7 +79,7 @@ def test_print_bucket_acl_for_user(test_bucket, capsys):
 
 
 def test_add_bucket_owner(test_bucket):
-    storage_add_bucket_owner.add_bucket_owner(BUCKET, TEST_EMAIL)
+    storage_add_bucket_owner.add_bucket_owner(test_bucket.name, TEST_EMAIL)
 
     test_bucket.acl.reload()
     assert "OWNER" in test_bucket.acl.user(TEST_EMAIL).get_roles()
@@ -97,7 +89,7 @@ def test_remove_bucket_owner(test_bucket):
     test_bucket.acl.user(TEST_EMAIL).grant_owner()
     test_bucket.acl.save()
 
-    storage_remove_bucket_owner.remove_bucket_owner(BUCKET, TEST_EMAIL)
+    storage_remove_bucket_owner.remove_bucket_owner(test_bucket.name, TEST_EMAIL)
 
     test_bucket.acl.reload()
     assert "OWNER" not in test_bucket.acl.user(TEST_EMAIL).get_roles()
@@ -105,7 +97,7 @@ def test_remove_bucket_owner(test_bucket):
 
 def test_add_bucket_default_owner(test_bucket):
     storage_add_bucket_default_owner.add_bucket_default_owner(
-        BUCKET, TEST_EMAIL
+        test_bucket.name, TEST_EMAIL
     )
 
     test_bucket.default_object_acl.reload()
@@ -118,7 +110,7 @@ def test_remove_bucket_default_owner(test_bucket):
     test_bucket.acl.save()
 
     storage_remove_bucket_default_owner.remove_bucket_default_owner(
-        BUCKET, TEST_EMAIL
+        test_bucket.name, TEST_EMAIL
     )
 
     test_bucket.default_object_acl.reload()
@@ -127,7 +119,7 @@ def test_remove_bucket_default_owner(test_bucket):
 
 
 def test_print_blob_acl(test_blob, capsys):
-    storage_print_file_acl.print_blob_acl(BUCKET, test_blob.name)
+    storage_print_file_acl.print_blob_acl(test_blob.bucket.name, test_blob.name)
     out, _ = capsys.readouterr()
     assert out
 
@@ -137,7 +129,7 @@ def test_print_blob_acl_for_user(test_blob, capsys):
     test_blob.acl.save()
 
     storage_print_file_acl_for_user.print_blob_acl_for_user(
-        BUCKET, test_blob.name, TEST_EMAIL
+        test_blob.bucket.name, test_blob.name, TEST_EMAIL
     )
 
     out, _ = capsys.readouterr()
@@ -145,7 +137,7 @@ def test_print_blob_acl_for_user(test_blob, capsys):
 
 
 def test_add_blob_owner(test_blob):
-    storage_add_file_owner.add_blob_owner(BUCKET, test_blob.name, TEST_EMAIL)
+    storage_add_file_owner.add_blob_owner(test_blob.bucket.name, test_blob.name, TEST_EMAIL)
 
     test_blob.acl.reload()
     assert "OWNER" in test_blob.acl.user(TEST_EMAIL).get_roles()
@@ -156,7 +148,7 @@ def test_remove_blob_owner(test_blob):
     test_blob.acl.save()
 
     storage_remove_file_owner.remove_blob_owner(
-        BUCKET, test_blob.name, TEST_EMAIL
+        test_blob.bucket.name, test_blob.name, TEST_EMAIL
     )
 
     test_blob.acl.reload()
