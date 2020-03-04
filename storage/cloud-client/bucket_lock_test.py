@@ -38,11 +38,11 @@ RETENTION_POLICY = 5
 
 
 @pytest.fixture(scope="module")
-def test_bucket():
+def bucket():
     """Yields a bucket that is deleted after the test completes."""
     bucket = None
     while bucket is None or bucket.exists():
-        bucket_name = "bucket-lock-test-{}".format(uuid.uuid4())
+        bucket_name = "bucket-lock-{}".format(uuid.uuid4())
         bucket = storage.Client().bucket(bucket_name)
     bucket.create()
     yield bucket
