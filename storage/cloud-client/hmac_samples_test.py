@@ -41,7 +41,9 @@ STORAGE_CLIENT = storage.Client(project=PROJECT_ID)
 def new_hmac_key():
     """
     Fixture to create a new HMAC key, and to guarantee all keys are deleted at
-    the end of each test.
+    the end of the module.
+
+    NOTE: Due to the module scope, test order in this file is significant
     """
     hmac_key, secret = STORAGE_CLIENT.create_hmac_key(
         service_account_email=SERVICE_ACCOUNT_EMAIL, project_id=PROJECT_ID
@@ -92,7 +94,7 @@ def test_activate_key(capsys, new_hmac_key):
     assert hmac_key.state == "ACTIVE"
 
 
-def test_deactivate_key(capsys, new_hmac_key):
+def test_deactivate_key(capsys, new_hmac_key): 
     hmac_key = storage_deactivate_hmac_key.deactivate_key(
         new_hmac_key.access_id, PROJECT_ID
     )
