@@ -26,7 +26,6 @@ def translate_text_with_model(
 
     client = translate.TranslationServiceClient()
 
-    contents = [text]
     parent = client.location_path(project_id, "us-central1")
     model_path = "projects/{}/locations/{}/models/{}".format(
         project_id, "us-central1", model_id
@@ -34,7 +33,7 @@ def translate_text_with_model(
 
     # Supported language codes: https://cloud.google.com/translate/docs/languages
     response = client.translate_text(
-        contents,
+        contents=[text],
         target_language_code="ja",
         model=model_path,
         source_language_code="en",
