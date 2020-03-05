@@ -94,7 +94,7 @@ def test_activate_key(capsys, new_hmac_key):
     assert hmac_key.state == "ACTIVE"
 
 
-def test_deactivate_key(capsys, new_hmac_key): 
+def test_deactivate_key(capsys, new_hmac_key):
     hmac_key = storage_deactivate_hmac_key.deactivate_key(
         new_hmac_key.access_id, PROJECT_ID
     )
