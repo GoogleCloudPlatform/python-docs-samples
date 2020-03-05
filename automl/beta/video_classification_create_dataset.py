@@ -31,9 +31,7 @@ def create_dataset(
     )
 
     # Create a dataset with the dataset metadata in the region.
-    response = client.create_dataset(project_location, dataset)
-
-    created_dataset = response.result()
+    created_dataset = client.create_dataset(project_location, dataset)
 
     # Display the dataset information
     print("Dataset name: {}".format(created_dataset.name))
