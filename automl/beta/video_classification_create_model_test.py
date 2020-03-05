@@ -20,7 +20,7 @@ import pytest
 
 import video_classification_create_model
 
-PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 DATASET_ID = "VCN510437278078730240"
 pytest.OPERATION_ID = None
 
