@@ -36,6 +36,7 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 SERVICE_ACCOUNT_EMAIL = os.environ["HMAC_KEY_TEST_SERVICE_ACCOUNT"]
 STORAGE_CLIENT = storage.Client(project=PROJECT_ID)
 
+
 @pytest.fixture(scope="module")
 def new_hmac_key():
     """
@@ -107,6 +108,6 @@ def test_delete_key(capsys, new_hmac_key):
         new_hmac_key.update()
     except google.api_core.exceptions.BadRequest:
         pass
-    
+
     storage_delete_hmac_key.delete_key(new_hmac_key.access_id, PROJECT_ID)
     assert "The key is deleted" in capsys.readouterr().out
