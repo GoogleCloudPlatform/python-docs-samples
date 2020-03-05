@@ -21,6 +21,7 @@ set in order to run.
 import os
 
 from google.cloud import storage
+import google.api_core.exceptions
 import pytest
 
 import storage_activate_hmac_key
@@ -35,8 +36,7 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 SERVICE_ACCOUNT_EMAIL = os.environ["HMAC_KEY_TEST_SERVICE_ACCOUNT"]
 STORAGE_CLIENT = storage.Client(project=PROJECT_ID)
 
-
-@pytest.fixture
+@pytest.fixture(scope="module")
 def new_hmac_key():
     """
     Fixture to create a new HMAC key, and to guarantee all keys are deleted at
@@ -100,7 +100,13 @@ def test_deactivate_key(capsys, new_hmac_key):
 
 
 def test_delete_key(capsys, new_hmac_key):
-    new_hmac_key.state = "INACTIVE"
-    new_hmac_key.update()
+    # Due to reuse of the HMAC key for each test function, the previous
+    # test has deactivated the key already.
+    try:
+        new_hmac_key.state = "INACTIVE"
+        new_hmac_key.update()
+    except google.api_core.exceptions.BadRequest:
+        pass
+    
     storage_delete_hmac_key.delete_key(new_hmac_key.access_id, PROJECT_ID)
     assert "The key is deleted" in capsys.readouterr().out
