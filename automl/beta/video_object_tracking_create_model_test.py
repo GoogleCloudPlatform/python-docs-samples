@@ -35,7 +35,7 @@ def teardown():
 
 
 def test_video_classification_create_model(capsys):
-    model_name = "test_" + uuid.uuid4()
+    model_name = "test_{}".format(uuid.uuid4()).replace("-", "")[:32]
     video_object_tracking_create_model.create_model(
         PROJECT_ID, DATASET_ID, model_name
     )
