@@ -1,4 +1,4 @@
-grpcio>=1.2.0
+grpcio==1.27.1
 google-auth==1.10.0
 google-auth-httplib2==0.0.3
 google-cloud==0.34.0
