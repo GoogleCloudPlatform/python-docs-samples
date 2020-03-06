@@ -57,6 +57,7 @@ def setup_teardown():
             cluster_client.delete_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
 
     blob.delete()
+    bucket.delete()
 
 
 def test_quickstart():
