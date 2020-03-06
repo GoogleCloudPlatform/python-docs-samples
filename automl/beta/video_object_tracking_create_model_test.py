@@ -44,6 +44,4 @@ def test_video_classification_create_model(capsys):
 
     # Cancel the operation
     global OPERATION_ID
-    OPERATION_ID = out.split("Training operation name: ")[1].split(
-        "\n"
-    )[0]
+    OPERATION_ID = out.split("Training operation name: ")[1].split("\n")[0]
