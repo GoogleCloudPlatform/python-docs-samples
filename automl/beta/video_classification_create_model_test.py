@@ -22,7 +22,7 @@ import video_classification_create_model
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 DATASET_ID = "VCN510437278078730240"
-pytest.OPERATION_ID = None
+OPERATION_ID = None
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -31,7 +31,7 @@ def teardown():
 
     # Cancel the training operation
     client = automl.AutoMlClient()
-    client.transport._operations_client.cancel_operation(pytest.OPERATION_ID)
+    client.transport._operations_client.cancel_operation(OPERATION_ID)
 
 
 def test_video_classification_create_model(capsys):
@@ -43,6 +43,5 @@ def test_video_classification_create_model(capsys):
     assert "Training started" in out
 
     # Cancel the operation
-    pytest.OPERATION_ID = out.split("Training operation name: ")[1].split(
-        "\n"
-    )[0]
+    global OPERATION_ID
+    OPERATION_ID = out.split("Training operation name: ")[1].split("\n")[0]
