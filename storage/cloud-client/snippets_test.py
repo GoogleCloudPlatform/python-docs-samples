@@ -15,6 +15,7 @@
 import os
 import tempfile
 import time
+import uuid
 
 from google.cloud import storage
 import google.cloud.exceptions
@@ -41,89 +42,100 @@ import storage_generate_signed_url_v4
 import storage_generate_upload_signed_url_v4
 import storage_set_bucket_default_kms_key
 
-BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 KMS_KEY = os.environ["CLOUD_KMS_KEY"]
 
 
-def test_enable_default_kms_key():
+def test_enable_default_kms_key(test_bucket):
     storage_set_bucket_default_kms_key.enable_default_kms_key(
-        bucket_name=BUCKET, kms_key_name=KMS_KEY
+        bucket_name=test_bucket.name, kms_key_name=KMS_KEY
     )
     time.sleep(2)  # Let change propagate as needed
-    bucket = storage.Client().get_bucket(BUCKET)
+    bucket = storage.Client().get_bucket(test_bucket.name)
     assert bucket.default_kms_key_name.startswith(KMS_KEY)
     bucket.default_kms_key_name = None
     bucket.patch()
 
 
-def test_get_bucket_labels():
-    storage_get_bucket_labels.get_bucket_labels(BUCKET)
+def test_get_bucket_labels(test_bucket):
+    storage_get_bucket_labels.get_bucket_labels(test_bucket.name)
 
 
-def test_add_bucket_label(capsys):
-    storage_add_bucket_label.add_bucket_label(BUCKET)
+def test_add_bucket_label(test_bucket, capsys):
+    storage_add_bucket_label.add_bucket_label(test_bucket.name)
     out, _ = capsys.readouterr()
     assert "example" in out
 
 
-def test_remove_bucket_label(capsys):
-    storage_add_bucket_label.add_bucket_label(BUCKET)
-    storage_remove_bucket_label.remove_bucket_label(BUCKET)
+def test_remove_bucket_label(test_bucket, capsys):
+    storage_add_bucket_label.add_bucket_label(test_bucket.name)
+    storage_remove_bucket_label.remove_bucket_label(test_bucket.name)
     out, _ = capsys.readouterr()
     assert "Removed labels" in out
 
 
+@pytest.fixture(scope="module")
+def test_bucket():
+    """Yields a bucket that is deleted after the test completes."""
+    bucket = None
+    while bucket is None or bucket.exists():
+        bucket_name = "storage-snippets-test-{}".format(uuid.uuid4())
+        bucket = storage.Client().bucket(bucket_name)
+    bucket.create()
+    yield bucket
+    bucket.delete(force=True)
+
+
 @pytest.fixture
-def test_blob():
-    """Provides a pre-existing blob in the test bucket."""
-    bucket = storage.Client().bucket(BUCKET)
-    blob = bucket.blob("storage_snippets_test_sigil")
+def test_blob(test_bucket):
+    """Yields a blob that is deleted after the test completes."""
+    bucket = test_bucket
+    blob = bucket.blob("storage_snippets_test_sigil-{}".format(uuid.uuid4()))
     blob.upload_from_string("Hello, is it me you're looking for?")
-    return blob
+    yield blob
 
 
-def test_list_buckets(capsys):
+def test_list_buckets(test_bucket, capsys):
     storage_list_buckets.list_buckets()
     out, _ = capsys.readouterr()
-    assert BUCKET in out
+    assert test_bucket.name in out
 
 
 def test_list_blobs(test_blob, capsys):
-    storage_list_files.list_blobs(BUCKET)
+    storage_list_files.list_blobs(test_blob.bucket.name)
     out, _ = capsys.readouterr()
     assert test_blob.name in out
 
 
-def test_bucket_metadata(capsys):
-    storage_get_bucket_metadata.bucket_metadata(BUCKET)
+def test_bucket_metadata(test_bucket, capsys):
+    storage_get_bucket_metadata.bucket_metadata(test_bucket.name)
     out, _ = capsys.readouterr()
-    assert BUCKET in out
+    assert test_bucket.name in out
 
 
 def test_list_blobs_with_prefix(test_blob, capsys):
     storage_list_files_with_prefix.list_blobs_with_prefix(
-        BUCKET, prefix="storage_snippets"
+        test_blob.bucket.name, prefix="storage_snippets"
     )
     out, _ = capsys.readouterr()
     assert test_blob.name in out
 
 
-def test_upload_blob():
+def test_upload_blob(test_bucket):
     with tempfile.NamedTemporaryFile() as source_file:
         source_file.write(b"test")
 
         storage_upload_file.upload_blob(
-            BUCKET, source_file.name, "test_upload_blob"
+            test_bucket.name, source_file.name, "test_upload_blob"
         )
 
 
-def test_upload_blob_with_kms():
+def test_upload_blob_with_kms(test_bucket):
     with tempfile.NamedTemporaryFile() as source_file:
         source_file.write(b"test")
         storage_upload_with_kms_key.upload_blob_with_kms(
-            BUCKET, source_file.name, "test_upload_blob_encrypted", KMS_KEY
+            test_bucket.name, source_file.name, "test_upload_blob_encrypted", KMS_KEY
         )
-        bucket = storage.Client().bucket(BUCKET)
+        bucket = storage.Client().bucket(test_bucket.name)
         kms_blob = bucket.get_blob("test_upload_blob_encrypted")
         assert kms_blob.kms_key_name.startswith(KMS_KEY)
 
@@ -131,24 +143,24 @@ def test_upload_blob_with_kms():
 def test_download_blob(test_blob):
     with tempfile.NamedTemporaryFile() as dest_file:
         storage_download_file.download_blob(
-            BUCKET, test_blob.name, dest_file.name
+            test_blob.bucket.name, test_blob.name, dest_file.name
         )
 
         assert dest_file.read()
 
 
 def test_blob_metadata(test_blob, capsys):
-    storage_get_metadata.blob_metadata(BUCKET, test_blob.name)
+    storage_get_metadata.blob_metadata(test_blob.bucket.name, test_blob.name)
     out, _ = capsys.readouterr()
     assert test_blob.name in out
 
 
 def test_delete_blob(test_blob):
-    storage_delete_file.delete_blob(BUCKET, test_blob.name)
+    storage_delete_file.delete_blob(test_blob.bucket.name, test_blob.name)
 
 
 def test_make_blob_public(test_blob):
-    storage_make_public.make_blob_public(BUCKET, test_blob.name)
+    storage_make_public.make_blob_public(test_blob.bucket.name, test_blob.name)
 
     r = requests.get(test_blob.public_url)
     assert r.text == "Hello, is it me you're looking for?"
@@ -156,7 +168,7 @@ def test_make_blob_public(test_blob):
 
 def test_generate_signed_url(test_blob, capsys):
     url = storage_generate_signed_url_v2.generate_signed_url(
-        BUCKET, test_blob.name
+        test_blob.bucket.name, test_blob.name
     )
 
     r = requests.get(url)
@@ -165,18 +177,18 @@ def test_generate_signed_url(test_blob, capsys):
 
 def test_generate_download_signed_url_v4(test_blob, capsys):
     url = storage_generate_signed_url_v4.generate_download_signed_url_v4(
-        BUCKET, test_blob.name
+        test_blob.bucket.name, test_blob.name
     )
 
     r = requests.get(url)
     assert r.text == "Hello, is it me you're looking for?"
 
 
-def test_generate_upload_signed_url_v4(capsys):
+def test_generate_upload_signed_url_v4(test_bucket, capsys):
     blob_name = "storage_snippets_test_upload"
     content = b"Uploaded via v4 signed url"
     url = storage_generate_upload_signed_url_v4.generate_upload_signed_url_v4(
-        BUCKET, blob_name
+        test_bucket.name, blob_name
     )
 
     requests.put(
@@ -185,13 +197,13 @@ def test_generate_upload_signed_url_v4(capsys):
         headers={"content-type": "application/octet-stream"},
     )
 
-    bucket = storage.Client().bucket(BUCKET)
+    bucket = storage.Client().bucket(test_bucket.name)
     blob = bucket.blob(blob_name)
     assert blob.download_as_string() == content
 
 
 def test_rename_blob(test_blob):
-    bucket = storage.Client().bucket(BUCKET)
+    bucket = storage.Client().bucket(test_blob.bucket.name)
 
     try:
         bucket.delete_blob("test_rename_blob")
@@ -207,7 +219,7 @@ def test_rename_blob(test_blob):
 
 
 def test_copy_blob(test_blob):
-    bucket = storage.Client().bucket(BUCKET)
+    bucket = storage.Client().bucket(test_blob.bucket.name)
 
     try:
         bucket.delete_blob("test_copy_blob")
