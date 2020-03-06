@@ -21,7 +21,7 @@ import pytest
 import video_object_tracking_create_dataset
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
-pytest.DATASET_ID = None
+DATASET_ID = None
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -31,7 +31,7 @@ def teardown():
     # Delete the created dataset
     client = automl.AutoMlClient()
     dataset_full_id = client.dataset_path(
-        PROJECT_ID, "us-central1", pytest.DATASET_ID
+        PROJECT_ID, "us-central1", DATASET_ID
     )
     response = client.delete_dataset(dataset_full_id)
     response.result()
@@ -47,4 +47,5 @@ def test_video_classification_create_dataset(capsys):
     assert "Dataset id: " in out
 
     # Get the dataset id for deletion
-    pytest.DATASET_ID = out.splitlines()[1].split()[2]
+    global DATASET_ID
+    DATASET_ID = out.splitlines()[1].split()[2]
