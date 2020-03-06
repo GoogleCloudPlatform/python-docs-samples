@@ -16,6 +16,7 @@ from google.cloud import storage
 import pytest
 import re
 import time
+import uuid
 
 import storage_remove_bucket_iam_member
 import storage_add_bucket_iam_member
@@ -32,8 +33,11 @@ CONDITION_EXPRESSION = "resource.name.startsWith(\"projects/_/buckets/bucket-nam
 
 @pytest.fixture
 def bucket():
-    bucket_name = "test-iam-" + str(int(time.time()))
-    bucket = storage.Client().create_bucket(bucket_name)
+    bucket = None
+    while bucket is None or bucket.exists():
+        bucket_name = "test-iam-{}".format(uuid.uuid4())
+        bucket = storage.Client().bucket(bucket_name)
+    bucket.create()
     bucket.iam_configuration.uniform_bucket_level_access_enabled = True
     bucket.patch()
     yield bucket
