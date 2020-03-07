@@ -1,31 +1,35 @@
+#!/usr/bin/env python
 #
-# Licensed to the Apache Software Foundation (ASF) under one or more
-# contributor license agreements.  See the NOTICE file distributed with
-# this work for additional information regarding copyright ownership.
-# The ASF licenses this file to You under the Apache License, Version 2.0
-# (the "License"); you may not use this file except in compliance with
-# the License.  You may obtain a copy of the License at
+# Copyright 2020 Google Inc. All Rights Reserved.
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
-# limitations under the License.py
-#
+# limitations under the License.
 
-"""An Apache Beam streaming pipeline that reads JSON encoded messages from Pub/Sub, transform the message data and writes the results to BigQuery.
+"""An Apache Beam streaming pipeline example.
+
+It reads JSON encoded messages from Pub/Sub, transforms the message data and
+writes the results to BigQuery.
 """
 
 from __future__ import absolute_import
 
 import argparse
-import logging
 import json
+import logging
+import time
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
+from apache_beam.options.pipeline_options import SetupOptions
 from apache_beam.options.pipeline_options import StandardOptions
 import apache_beam.transforms.window as window
 
@@ -53,7 +57,6 @@ class ParseJsonMessageDoFn(beam.DoFn):
       The tuple of url string and the dict.
       The dict contain the keys: 'url', 'review', 'score' and 'processing_time'.
     """
-    import time
     row = json.loads(element)
     row['score'] = 0.0
     if row['review'] == 'positive':
@@ -62,7 +65,7 @@ class ParseJsonMessageDoFn(beam.DoFn):
     return [(row['url'], row)]
 
 
-def run(argv=None):
+def run(argv=None, save_main_session=True):
   """Build and run the pipeline."""
   parser = argparse.ArgumentParser()
   parser.add_argument(
@@ -85,6 +88,7 @@ def run(argv=None):
   known_args, pipeline_args = parser.parse_known_args(argv)
 
   pipeline_options = PipelineOptions(pipeline_args)
+  pipeline_options.view_as(SetupOptions).save_main_session = save_main_session
   pipeline_options.view_as(StandardOptions).streaming = True
   with beam.Pipeline(options=pipeline_options) as p:
 
