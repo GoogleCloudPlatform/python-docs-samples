@@ -20,6 +20,7 @@ from gcp_devrel.testing.flaky import flaky
 import google.api_core.exceptions
 import google.cloud.bigquery
 import google.cloud.datastore
+import google.cloud.dlp_v2
 import google.cloud.exceptions
 import google.cloud.pubsub
 import google.cloud.storage
@@ -290,7 +291,6 @@ def test_inspect_image_file(capsys):
     assert "Info type: PHONE_NUMBER" in out
 
 
-@flaky
 def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
     inspect_content.inspect_gcs_file(
         GCLOUD_PROJECT,
@@ -303,7 +303,12 @@ def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
     )
 
     out, _ = capsys.readouterr()
-    assert "Info type: EMAIL_ADDRESS" in out
+    assert "Inspection operation started" in out
+    # Cancel the operation
+    operation_id = out.split("Inspection operation started: ")[1].split("\n")[0]
+    print(operation_id)
+    client = google.cloud.dlp_v2.DlpServiceClient()
+    client.cancel_dlp_job(operation_id)
 
 
 @flaky
