@@ -3,6 +3,6 @@
     "config:base"
   ],
   "prConcurrentLimit": 5,
-  "rebaseStalePrs": true,
+  "rebaseWhen": "auto",
   "masterIssue": true
 }
