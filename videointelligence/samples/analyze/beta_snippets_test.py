@@ -101,11 +101,15 @@ def test_annotation_to_storage_streaming(capsys, video_path, bucket):
     assert 'Storage' in out
 
     # It takes a few seconds before the results show up on GCS.
-    time.sleep(3)
+    for _ in range(10):
+        time.sleep(3)
+
+        blobs_iterator = bucket.list_blobs()
+        blobs = [blob for blob in blobs_iterator]
+        if len(blobs):
+            break
 
     # Confirm that one output blob had been written to GCS.
-    blobs_iterator = bucket.list_blobs()
-    blobs = [blob for blob in blobs_iterator]
     assert len(blobs) == 1
 
 
