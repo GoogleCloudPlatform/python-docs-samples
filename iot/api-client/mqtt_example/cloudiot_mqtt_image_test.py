@@ -88,7 +88,7 @@ def test_image(test_topic, capsys):
     assert 'on_publish' in out
 
 
-@flaky(max_runs=5)
+@flaky(max_runs=5, min_passes=1)
 def test_image_recv(test_topic, capsys):
     """Transmit an image with IoT Core and receive it from PubSub"""
     subscriber = pubsub.SubscriberClient()
