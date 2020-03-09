@@ -414,17 +414,19 @@ def test_inspect_datastore(datastore_project, topic_id, subscription_id, capsys)
 def test_inspect_datastore_no_results(
     datastore_project, topic_id, subscription_id, capsys
 ):
-    inspect_content.inspect_datastore(
-        GCLOUD_PROJECT,
-        datastore_project,
-        DATASTORE_KIND,
-        topic_id,
-        subscription_id,
-        ["PHONE_NUMBER"],
-    )
+    @eventually_consistent.call
+    def _():
+        inspect_content.inspect_datastore(
+            GCLOUD_PROJECT,
+            datastore_project,
+            DATASTORE_KIND,
+            topic_id,
+            subscription_id,
+            ["PHONE_NUMBER"],
+        )
 
-    out, _ = capsys.readouterr()
-    assert "No findings" in out
+        out, _ = capsys.readouterr()
+        assert "No findings" in out
 
 
 @pytest.mark.skip(reason="unknown issue")
