@@ -23,7 +23,7 @@ import pytest
 # Add manager as library
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
 import cloudiot_mqtt_image
-from gcp_devrel.testing.flaky import flaky
+from flaky import flaky
 import manager
 
 
