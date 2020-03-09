@@ -39,7 +39,7 @@ def generate_upload_signed_url_v4(bucket_name, blob_name):
         version="v4",
         # This URL is valid for 15 minutes
         expiration=datetime.timedelta(minutes=15),
-        # Allow GET requests using this URL.
+        # Allow PUT requests using this URL.
         method="PUT",
         content_type="application/octet-stream",
     )
