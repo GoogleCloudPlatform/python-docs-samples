@@ -14,7 +14,7 @@
 
 import os
 
-import instantiate_inline_workflow
+import instantiate_inline_workflow_template
 
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
@@ -23,7 +23,9 @@ REGION = 'us-central1'
 
 def test_workflows(capsys):
     # Wrapper function for client library function
-    instantiate_inline_workflow.instantiate_inline_workflow(PROJECT_ID, REGION)
+    instantiate_inline_workflow_template.instantiate_inline_workflow_template(
+        PROJECT_ID, REGION
+    )
 
     out, _ = capsys.readouterr()
     assert "successfully" in out

@@ -12,15 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This sample walks a user through creating a workflow
-# for Cloud Dataproc using the Python client library.
+# This sample walks a user through instantiating an inline
+# workflow for Cloud Dataproc using the Python client library.
+#
+# This script can be run on its own:
+#   python workflows.py ${PROJECT_ID} ${REGION}
 
 import sys
-# [START dataproc_inline_workflow]
+# [START dataproc_instantiate_inline_workflow_template]
 from google.cloud import dataproc_v1 as dataproc
 
 
-def instantiate_inline_workflow(project_id, region):
+def instantiate_inline_workflow_template(project_id, region):
     """This sample walks a user through submitting a workflow
        for a Cloud Dataproc using the Python client library.
 
@@ -30,12 +33,12 @@ def instantiate_inline_workflow(project_id, region):
     """
 
     # Create a client with the endpoint set to the desired region.
-    workflow_client = dataproc.WorkflowTemplateServiceClient(
+    workflow_template_client = dataproc.WorkflowTemplateServiceClient(
         client_options={
             'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)}
     )
 
-    parent = workflow_client.region_path(project_id, region)
+    parent = workflow_template_client.region_path(project_id, region)
 
     template = {
         'jobs': [
@@ -81,14 +84,15 @@ def instantiate_inline_workflow(project_id, region):
     }
 
     # Submit the request to instantiate the workflow from an inline template.
-    operation = workflow_client.instantiate_inline_workflow_template(
-        parent, template)
+    operation = workflow_template_client.instantiate_inline_workflow_template(
+        parent, template
+    )
     operation.result()
 
     # Output a success message.
     print('Workflow ran successfully.')
-# [END dataproc_inline_workflow]
+# [END dataproc_instantiate_inline_workflow_template]
 
 
 if __name__ == "__main__":
-    instantiate_inline_workflow(sys.argv[1], sys.argv[2])
+    instantiate_inline_workflow_template(sys.argv[1], sys.argv[2])
