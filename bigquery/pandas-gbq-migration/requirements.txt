@@ -1,5 +1,6 @@
 google-cloud-bigquery==1.23.1
-google-cloud-bigquery-storage==0.7.0
-pandas==0.25.3
-pandas-gbq==0.13.0
+google-cloud-bigquery-storage==0.8.0
+pandas==0.25.3; python_version > '3.0'
+pandas==0.24.2; python_version < '3.0'
+pandas-gbq==0.13.1
 pyarrow==0.15.1
