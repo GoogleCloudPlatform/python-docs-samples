@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +21,7 @@ MODEL_ID = "TRL3128559826197068699"
 
 def test_translate_text_with_model(capsys):
     translate_v3_translate_text_with_model.translate_text_with_model(
-        "That' il do it.", PROJECT_ID, MODEL_ID
+        PROJECT_ID, MODEL_ID
     )
     out, _ = capsys.readouterr()
     assert "それはそうだ" or "それじゃあ" in out
