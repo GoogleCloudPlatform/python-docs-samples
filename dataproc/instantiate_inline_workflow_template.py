@@ -74,7 +74,7 @@ def instantiate_inline_workflow_template(project_id, region):
                 'cluster_name': 'my-managed-cluster',
                 'config': {
                     'gce_cluster_config': {
-                        # Leave 'zone_uri' empty for 'autozone'
+                        # Leave 'zone_uri' empty for 'Auto Zone Placement'
                         # 'zone_uri': ''
                         'zone_uri': 'us-central1-a'
                     }
