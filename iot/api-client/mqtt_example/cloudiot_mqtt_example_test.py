@@ -15,6 +15,7 @@
 import os
 import sys
 import time
+import uuid
 
 from google.cloud import pubsub
 
@@ -39,7 +40,7 @@ project_id = os.environ['GCLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
-registry_id = 'test-registry-{}'.format(int(time.time()))
+registry_id = 'test-registry-{}-{}'.format(uuid.uuid1(), int(time.time()))
 
 mqtt_bridge_hostname = 'mqtt.googleapis.com'
 mqtt_bridge_port = 443

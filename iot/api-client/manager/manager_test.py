@@ -16,6 +16,7 @@ import datetime
 import os
 import sys
 import time
+import uuid
 
 # Add command receiver for bootstrapping device registry / device for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'mqtt_example'))  # noqa
@@ -38,7 +39,7 @@ project_id = os.environ['GCLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
-registry_id = 'test-registry-{}'.format(int(time.time()))
+registry_id = 'test-registry-{}-{}'.format(iuuid.uuid1(), int(time.time()))
 
 
 @pytest.fixture(scope="session", autouse=True)
