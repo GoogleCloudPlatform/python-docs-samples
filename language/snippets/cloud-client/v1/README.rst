@@ -53,7 +53,7 @@ Install Dependencies
         $ virtualenv env
         $ source env/bin/activate
 
-#. Install the dependencies needed to run the samples.
+#. Install the dependencies needed to run the sample.
 
     .. code-block:: bash
 
@@ -62,7 +62,7 @@ Install Dependencies
 .. _pip: https://pip.pypa.io/
 .. _virtualenv: https://virtualenv.pypa.io/
 
-Samples
+Sample
 -------------------------------------------------------------------------------
 
 Quickstart
@@ -79,58 +79,6 @@ To run this sample:
 .. code-block:: bash
 
     $ python quickstart.py
-
-
-Snippets
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-.. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=language/cloud-client/v1/snippets.py,language/cloud-client/v1/README.rst
-
-
-
-
-To run this sample:
-
-.. code-block:: bash
-
-    $ python snippets.py
-
-    usage: snippets.py [-h]
-                       {classify-text,classify-file,sentiment-entities-text,sentiment-entities-file,sentiment-text,sentiment-file,entities-text,entities-file,syntax-text,syntax-file}
-                       ...
-
-    This application demonstrates how to perform basic operations with the
-    Google Cloud Natural Language API
-
-    For more information, the documentation at
-    https://cloud.google.com/natural-language/docs.
-
-    positional arguments:
-      {classify-text,classify-file,sentiment-entities-text,sentiment-entities-file,sentiment-text,sentiment-file,entities-text,entities-file,syntax-text,syntax-file}
-        classify-text       Classifies content categories of the provided text.
-        classify-file       Classifies content categories of the text in a Google
-                            Cloud Storage file.
-        sentiment-entities-text
-                            Detects entity sentiment in the provided text.
-        sentiment-entities-file
-                            Detects entity sentiment in a Google Cloud Storage
-                            file.
-        sentiment-text      Detects sentiment in the text.
-        sentiment-file      Detects sentiment in the file located in Google Cloud
-                            Storage.
-        entities-text       Detects entities in the text.
-        entities-file       Detects entities in the file located in Google Cloud
-                            Storage.
-        syntax-text         Detects syntax in the text.
-        syntax-file         Detects syntax in the file located in Google Cloud
-                            Storage.
-
-    optional arguments:
-      -h, --help            show this help message and exit
-
-
-
 
 
 The client library
