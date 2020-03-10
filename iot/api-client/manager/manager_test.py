@@ -39,7 +39,7 @@ project_id = os.environ['GCLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
-registry_id = 'test-registry-{}-{}'.format(iuuid.uuid1(), int(time.time()))
+registry_id = 'test-registry-{}-{}'.format(uuid.uuid1(), int(time.time()))
 
 
 @pytest.fixture(scope="session", autouse=True)
