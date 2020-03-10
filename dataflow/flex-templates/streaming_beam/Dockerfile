@@ -1,11 +1,13 @@
 FROM gcr.io/dataflow-templates-base/python3-template-launcher-base
 
-RUN mkdir -p /cloud/dataflow
+ARG WORKDIR=/dataflow/template
+RUN mkdir -p ${WORKDIR}
+WORKDIR ${WORKDIR}
 
-COPY streaming_beam.py /cloud/dataflow
-COPY requirements.txt /cloud/dataflow
+COPY requirements.txt .
+COPY streaming_beam.py .
 
-ENV FLEX_TEMPLATE_PYTHON_REQUIREMENTS_FILE /cloud/dataflow/requirements.txt
-ENV FLEX_TEMPLATE_PYTHON_PY_FILE /cloud/dataflow/streaming_beam.py
+ENV FLEX_TEMPLATE_PYTHON_REQUIREMENTS_FILE="${WORKDIR}/requirements.txt"
+ENV FLEX_TEMPLATE_PYTHON_PY_FILE="${WORKDIR}/streaming_beam.py"
 
-RUN pip install -U -r /cloud/dataflow/requirements.txt
+RUN pip install -U -r ./requirements.txt

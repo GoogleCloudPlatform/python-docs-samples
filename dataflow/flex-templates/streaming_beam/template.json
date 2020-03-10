@@ -9,14 +9,6 @@
     "description": "Streaming beam example for python flex template.",
     "parameters": [
       {
-        "name": "input_topic",
-        "label": "Input PubSub topic.",
-        "helpText": "Name of the input PubSub topic to consume from.",
-        "regexes": [
-          "[/:-_.a-zA-Z0-9]+"
-        ]
-      },
-      {
         "name": "input_subscription",
         "label": "Input PubSub subscription.",
 	"is_optional": true,
