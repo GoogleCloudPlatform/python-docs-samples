@@ -32,7 +32,7 @@ def test_file():
 
     os.remove(file_path)
 
- 
+
 def test_main(capsys, test_file):
     main(BUCKET, test_file)
     out, err = capsys.readouterr()
