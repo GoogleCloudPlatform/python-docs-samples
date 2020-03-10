@@ -1,4 +1,4 @@
-# Dataflow flex templates - Streaming Beam SQL
+# Dataflow flex templates - Streaming Beam
 
 [![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor)
 
