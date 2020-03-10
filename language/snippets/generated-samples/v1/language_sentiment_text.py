@@ -29,7 +29,6 @@ import six
 
 
 def sample_analyze_sentiment(content):
-    # [START language_sentiment_text_core]
 
     client = language_v1.LanguageServiceClient()
 
@@ -45,8 +44,6 @@ def sample_analyze_sentiment(content):
     sentiment = response.document_sentiment
     print('Score: {}'.format(sentiment.score))
     print('Magnitude: {}'.format(sentiment.magnitude))
-
-    # [END language_sentiment_text_core]
 
 
 # [END language_sentiment_text]
