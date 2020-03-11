@@ -16,10 +16,11 @@ import datetime
 import os
 import sys
 import time
+import uuid
 
 # Add command receiver for bootstrapping device registry / device for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'mqtt_example'))  # noqa
-from gcp_devrel.testing.flaky import flaky
+from flaky import flaky
 from google.cloud import pubsub
 import pytest
 
@@ -38,7 +39,7 @@ project_id = os.environ['GCLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
-registry_id = 'test-registry-{}'.format(int(time.time()))
+registry_id = 'test-registry-{}-{}'.format(uuid.uuid1(), int(time.time()))
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -362,7 +363,7 @@ def test_add_patch_delete_es256(test_topic, capsys):
             service_account_json, project_id, cloud_region, registry_id)
 
 
-@flaky
+@flaky(max_runs=5, min_passes=1)
 def test_send_command(test_topic, capsys):
     device_id = device_id_template.format('RSA256')
     manager.create_registry(
