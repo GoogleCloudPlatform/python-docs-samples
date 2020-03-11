@@ -20,7 +20,7 @@ PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 
 def test_list_languages_with_target(capsys):
     get_supported_langs.get_supported_languages_with_target(
-        "is", PROJECT_ID
+        PROJECT_ID
     )
     out, _ = capsys.readouterr()
     assert u"Language Code: sq" in out

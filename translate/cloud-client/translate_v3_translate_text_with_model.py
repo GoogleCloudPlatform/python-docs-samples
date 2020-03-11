@@ -31,8 +31,9 @@ def translate_text_with_model(
     )
 
     # Supported language codes: https://cloud.google.com/translate/docs/languages
+    text_to_translate = "That' il do it."
     response = client.translate_text(
-        contents=["That' il do it."],
+        contents=[text_to_translate],
         target_language_code="ja",
         model=model_path,
         source_language_code="en",
