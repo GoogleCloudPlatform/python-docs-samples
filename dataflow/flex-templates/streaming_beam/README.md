@@ -2,6 +2,8 @@
 
 [![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor)
 
+📝 Docs: [Using Flex Templates](https://cloud.google.com/dataflow/docs/guides/templates/using-flex-templates)
+
 Samples showing how to create and run an
 [Apache Beam](https://beam.apache.org/) template with a custom Docker image on
 [Google Cloud Dataflow](https://cloud.google.com/dataflow/docs/).
@@ -16,7 +18,7 @@ environment variable.
 Additionally, for this sample you need the following:
 
 1. Create a
-   [Cloud Storage bucket](https://cloud.google.com/storage/docs/creating-buckets).
+    [Cloud Storage bucket](https://cloud.google.com/storage/docs/creating-buckets).
 
     ```sh
     export BUCKET="your-gcs-bucket"
@@ -24,10 +26,11 @@ Additionally, for this sample you need the following:
     ```
 
 1. Create a
-   [Pub/Sub topic](https://cloud.google.com/pubsub/docs/admin#creating_a_topic)
-   and a
-   [subscription](https://cloud.google.com/pubsub/docs/admin#creating_subscriptions)
-   to that topic.
+    [Pub/Sub topic](https://cloud.google.com/pubsub/docs/admin#creating_a_topic)
+    and a
+    [subscription](https://cloud.google.com/pubsub/docs/admin#creating_subscriptions)
+    to that topic.
+    This is a streaming source of data for the sample.
 
     ```sh
     # For simplicity we use the same topic name as the subscription name.
@@ -39,11 +42,13 @@ Additionally, for this sample you need the following:
     ```
 
 1. Create a
-   [Cloud Scheduler job](https://cloud.google.com/scheduler/docs/quickstart)
-   to publish
-   [1 message per minute](https://cloud.google.com/scheduler/docs/configuring/cron-job-schedules).
+    [Cloud Scheduler job](https://cloud.google.com/scheduler/docs/quickstart)
+    to publish "positive" and "negative" ratings every
+    [1 and 2 minutes](https://cloud.google.com/scheduler/docs/configuring/cron-job-schedules).
+    This publishes messages to the Pub/Sub source topic.
 
     ```sh
+    # Create a publisher for "positive ratings" that publishes 1 message per minute
     # If an App Engine app does not exist for the project, this step will create one.
     gcloud scheduler jobs create pubsub thumbs-up-publisher \
       --schedule="* * * * *" \
@@ -53,8 +58,8 @@ Additionally, for this sample you need the following:
     # Start the job.
     gcloud scheduler jobs run thumbs-up-publisher
 
-    # Now, let's create a similar publisher for thumbs down, but publish
-    # 1 message every 2 minutes.
+    # Create and run another similar publisher for "negative ratings" that
+    # publishes 1 message every 2 minutes.
     gcloud scheduler jobs create pubsub thumbs-down-publisher \
       --schedule="*/2 * * * *" \
       --topic="$TOPIC" \
@@ -64,6 +69,7 @@ Additionally, for this sample you need the following:
     ```
 
 1. Create a [BigQuery dataset](https://cloud.google.com/bigquery/docs/datasets).
+    This is a table to write the output data.
 
     ```sh
     export PROJECT="$(gcloud config get-value project)"
@@ -73,41 +79,28 @@ Additionally, for this sample you need the following:
     bq mk --dataset "$PROJECT:$DATASET"
     ```
 
-1. Clone the `python-docs-samples` repository and navigate to the code sample.
+1. Clone the
+    [`python-docs-samples` repository](https://github.com/GoogleCloudPlatform/python-docs-samples)
+    and navigate to the code sample.
 
     ```sh
     git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
     cd python-docs-samples/dataflow/flex-templates/streaming_beam
     ```
 
-1. Create a virtual environment and activate it.
-
-   ```sh
-   virtualenv env
-   source env/bin/activate
-   ```
-
-   > Once you are done, you can deactivate the virtualenv and go back to your global Python environment by running `deactivate`.
-
-1. Install the sample requirements.
-
-   ```sh
-   pip install -U -r requirements.txt
-   ```
-
-## Pub/Sub to BigQuery with Beam sample
+## Pub/Sub to BigQuery sample
 
 This sample shows how to deploy an Apache Beam streaming pipeline that reads
 [JSON encoded](https://www.w3schools.com/whatis/whatis_json.asp) messages from
 [Pub/Sub](https://cloud.google.com/pubsub),
-to transform the message data, and writes the results to a
+transforms the message data, and writes the results to a
 [BigQuery](https://cloud.google.com/bigquery) table.
 
 * [Dockerfile](Dockerfile)
-* [streaming_beam.py](streaming_beam.py)
+* [streaming_beam.py](streaming_beam)
 * [metadata.json](metadata.json)
 
-### Build the container image
+### Building a container image
 
 We will build the
 [Docker](https://docs.docker.com/engine/docker-overview/)
@@ -121,7 +114,7 @@ so we don't need a local installation of Docker.
 > in Cloud Build.
 >
 > ```sh
-> # [optional] Enable to use Kaniko cache by default.
+> # (Optional) Enable to use Kaniko cache by default.
 > gcloud config set builds/use_kaniko True
 > ```
 
@@ -131,104 +124,66 @@ and saves it into
 [Container Registry](https://cloud.google.com/container-registry/),
 where the image is accessible to other Google Cloud products.
 
-Images starting with `gcr.io/<PROJECT>/` are saved into your project's
-Container Registry.
-
 ```sh
-export TEMPLATE_IMAGE="gcr.io/$PROJECT/samples/dataflow/streaming-beam:latest"
+export TEMPLATE_IMAGE="$PROJECT/samples/dataflow/streaming-beam:latest"
 
 # Build the image into Container Registry, this is roughly equivalent to:
 #   gcloud auth configure-docker
 #   docker image build -t $TEMPLATE_IMAGE .
 #   docker push $TEMPLATE_IMAGE
-gcloud builds submit --tag $TEMPLATE_IMAGE .
+gcloud builds submit --tag "gcr.io/$TEMPLATE_IMAGE" .
 ```
 
-### Creating the Dataflow Flex Template
+Images starting with `gcr.io/PROJECT/` are saved into your project's
+Container Registry, where the image is accessible to other Google Cloud products.
 
-To run a template, we need to create a *template spec* file containing all the
-information necessary to run the job, such as the SDK information and metadata.
+### Creating a Flex Template
 
-The [`metadata.json`](metadata.json) file contains more information for the
-template such as the name, a description and the list of input parameters.
+To run a template, you need to create a *template spec* file containing all the
+necessary information to run the job, such as the SDK information and metadata.
+
+The [`metadata.json`](metadata.json) file contains additional information for
+the template such as the "name", "description", and input "parameters" field.
 
 The template file must be created in a Cloud Storage location,
 and is used to run a new Dataflow job.
 
-We can build the Dataflow Flex template via the
-[`gcloud dataflow flex-templates build`](https://cloud.google.com/sdk/gcloud/reference/beta/dataflow/flex-templates/build)
-command.
-
 ```sh
 export TEMPLATE_PATH="gs://$BUCKET/samples/dataflow/templates/streaming-beam.json"
 
-# Option A: Build the template via `gcloud`.
-gcloud dataflow flex-templates build $TEMPLATE_PATH \
-  --image "$TEMPLATE_IMAGE" \
+# Build the Flex Template.
+gcloud beta dataflow flex-template build $TEMPLATE_PATH \
+  --image "gcr://$TEMPLATE_IMAGE" \
   --sdk-language "PYTHON" \
   --metadata-file "metadata.json"
-
-# Option B: Copy the template.json file to a Cloud Storage location.
-# NOTE: we need to set the image path to the one in the project it was built.
-sed "s|<IMAGE>|$TEMPLATE_IMAGE|g" template.json | gsutil cp - $TEMPLATE_PATH
 ```
 
-The template is now available through the template file in the
-Cloud Storage location we saved it.
+The template is now available through the template file in the Cloud Storage
+location that you specified.
 
 ### Running a Dataflow Flex Template pipeline
 
-Users can now run the Apache Beam pipeline in Dataflow by simply referring
-to the template file and passing the template parameters required by
-the pipeline.
-
-Once a template is created, it's easy to run via the
-[`gcloud dataflow flex-templates run`](https://cloud.google.com/sdk/gcloud/reference/beta/dataflow/flex-templates/run)
-command.
-There is no need to modify any code for users running a deployed template.
+You can now run the Apache Beam pipeline in Dataflow by referring to the
+template file and passing the template
+[parameters](https://cloud.devsite.corp.google.com/dataflow/docs/guides/specifying-exec-params#setting-other-cloud-dataflow-pipeline-options)
+required by the pipeline.
 
 ```sh
-# Option A: Run the template via `gcloud`.
 # Parameters before the `--` are passed to the `gcloud` command.
-# Parameters after the `--` are passed to the pipeline.
-# We can optionally still pass other standard PipelineOptions,
-# such as `--workerMachineType`, flags alongside other template parameters.
-gcloud dataflow flex-templates run "streaming-beam-`date +%Y%m%d-%H%M%S`"
-  --template-file-gcs-location $TEMPLATE_PATH \
-  -- \
-  --input_topic "$TOPIC" \
-  --output_table "$PROJECT:$DATASET.$TABLE" \
-  --workerMachineType "e2-micro"  # optional PipelineOptions flag
-
-# Option B: Run via a POST request using curl.
-curl -X POST \
-  "https://dataflow-staging.sandbox.googleapis.com/v1b3/projects/$PROJECT/locations/us-central1/flexTemplates:launch" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
-  -d '{
-    "launch_parameter": {
-      "jobName": "streaming-beam-'$(date +%Y%m%d-%H%M%S)'",
-      "parameters": {
-        "input_topic": "'$TOPIC'",
-        "output_table": "'$PROJECT:$DATASET.$TABLE'"
-      },
-      "container_spec_gcs_path": "'$TEMPLATE_PATH'"
-    }
-  }'
+# Parameters after the `--` are passed to the Beam pipeline.
+gcloud beta dataflow flex-template run "streaming-beam-`date +%Y%m%d-%H%M%S`" \
+  --template-file-gcs-location "$TEMPLATE_PATH" \
+  --parameters "input_subscription=$SUBSCRIPTION,output_table=$PROJECT:$DATASET.$TABLE"
 ```
 
-> To learn more about the supported `PipelineOptions`, see the
-> [Setting other Cloud Dataflow pipeline options](https://cloud.google.com/dataflow/docs/guides/specifying-exec-params#setting-other-cloud-dataflow-pipeline-options) page.
-
-Now that your Dataflow pipeline is running, you should be able to see new rows
-being appended into the BigQuery table every minute or so,
-depending on the window size in your Dataflow job.
-
-Run the following query to check the results in BigQuery.
+Check the results in BigQuery by running the following query:
 
 ```sh
 bq query --use_legacy_sql=false 'SELECT * FROM `'"$PROJECT.$DATASET.$TABLE"'`'
 ```
+
+While this pipeline is running, you can see new rows appended into the BigQuery
+table every minute.
 
 You can manually publish more messages from the
 [Cloud Scheduler page](https://console.cloud.google.com/cloudscheduler)
@@ -249,48 +204,79 @@ a minute later.
 {"url": "https://cloud.google.com/bigquery/", "review": "positive"}
 ```
 
-### Clean up
+### Cleaning up
 
-To avoid incurring charges to your Google Cloud account for the resources used
-in this guide, follow these steps.
+After you've finished this tutorial, you can clean up the resources you created
+on Google Cloud so you won't be billed for them in the future.
+The following sections describe how to delete or turn off these resources.
 
-Clean up the Dataflow Flex template resources.
+#### Clean up the Flex template resources
 
-```sh
-# Stop the Dataflow pipeline.
-gcloud dataflow jobs list \
-    --filter 'NAME:streaming-beam AND STATE=Running' \
-    --format 'value(JOB_ID)' \
-  | xargs gcloud dataflow jobs cancel
+1. Stop the Dataflow pipeline.
 
-# Delete the template spec file from Cloud Storage.
-gsutil rm $TEMPLATE_PATH
+    ```sh
+    gcloud dataflow jobs list \
+        --filter 'NAME:streaming-beam AND STATE=Running' \
+        --format 'value(JOB_ID)' \
+      | xargs gcloud dataflow jobs cancel
+    ```
 
-# Delete the Flex Template container image from Container Registry.
-gcloud container images delete $TEMPLATE_IMAGE --force-delete-tags
-```
+1. Delete the template spec file from Cloud Storage.
 
-Clean up project resources.
+    ```sh
+    gsutil rm $TEMPLATE_PATH
+    ```
 
-```sh
-# Delete the Cloud Scheduler jobs.
-gcloud scheduler jobs delete thumbs-down-publisher
-gcloud scheduler jobs delete thumbs-up-publisher
+1. Delete the Flex Template container image from Container Registry.
 
-# Delete the Pub/Sub subscription and topic.
-gcloud pubsub subscriptions delete $SUBSCRIPTION
-gcloud pubsub topics delete $TOPIC
+    ```sh
+    gcloud container images delete $TEMPLATE_IMAGE --force-delete-tags
+    ```
 
-# Delete the BigQuery table.
-bq rm -f -t $PROJECT:$DATASET.$TABLE
+#### Clean up Google Cloud project resources
 
-# Delete the BigQuery dataset, this alone does not incur any charges.
-# WARNING: The following command also deletes all tables in the dataset.
-#          The tables and data cannot be recovered.
-bq rm -r -f -d $PROJECT:$DATASET
+1. Delete the Cloud Scheduler jobs.
 
-# Delete the Cloud Storage bucket, this alone does not incur any charges.
-# WARNING: The following command also deletes all objects in the bucket.
-#          These objects cannot be recovered.
-gsutil rm -r gs://$BUCKET
-```
+    ```sh
+    gcloud scheduler jobs delete thumbs-down-publisher
+    gcloud scheduler jobs delete thumbs-up-publisher
+    ```
+
+1. Delete the Pub/Sub subscription and topic.
+
+    ```sh
+    gcloud pubsub subscriptions delete $SUBSCRIPTION
+    gcloud pubsub topics delete $TOPIC
+    ```
+
+1. Delete the BigQuery table.
+
+    ```sh
+    bq rm -f -t $PROJECT:$DATASET.$TABLE
+    ```
+
+1. Delete the BigQuery dataset, this alone does not incur any charges.
+
+    > ⚠️ The following command also deletes all tables in the dataset.
+    > The tables and data cannot be recovered.
+    >
+    > ```sh
+    > bq rm -r -f -d $PROJECT:$DATASET
+    > ```
+
+1. Delete the Cloud Storage bucket, this alone does not incur any charges.
+
+    > ⚠️ The following command also deletes all objects in the bucket.
+    > These objects cannot be recovered.
+    >
+    > ```sh
+    > gsutil rm -r gs://$BUCKET
+    > ```
+
+## Limitations
+
+* You must use a Google-provided base image to package your containers using Docker.
+* You cannot update streaming jobs using Flex Template.
+* You cannot use FlexRS for Flex Template jobs.
+
+📝 Docs: [Using Flex Templates](https://cloud.google.com/dataflow/docs/guides/templates/using-flex-templates)
