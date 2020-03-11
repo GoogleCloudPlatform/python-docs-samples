@@ -153,7 +153,7 @@ export TEMPLATE_PATH="gs://$BUCKET/samples/dataflow/templates/streaming-beam.jso
 
 # Build the Flex Template.
 gcloud beta dataflow flex-template build $TEMPLATE_PATH \
-  --image "gcr://$TEMPLATE_IMAGE" \
+  --image "gcr.io/$TEMPLATE_IMAGE" \
   --sdk-language "PYTHON" \
   --metadata-file "metadata.json"
 ```
