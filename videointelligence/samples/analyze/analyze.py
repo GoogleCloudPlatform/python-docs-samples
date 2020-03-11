@@ -296,7 +296,7 @@ def video_detect_text_gcs(input_uri):
         features=features)
 
     print('\nProcessing video for text detection.')
-    result = operation.result(timeout=300)
+    result = operation.result(timeout=600)
 
     # The first result is retrieved because a single video was processed.
     annotation_result = result.annotation_results[0]
