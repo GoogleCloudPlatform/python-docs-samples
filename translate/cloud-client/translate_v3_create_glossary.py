@@ -51,7 +51,7 @@ def create_glossary(
     # to translate the domain-specific terminology.
     operation = client.create_glossary(parent=parent, glossary=glossary)
 
-    result = operation.result(timeout=90)
+    result = operation.result(timeout=180)
     print("Created: {}".format(result.name))
     print("Input Uri: {}".format(result.input_config.gcs_source.input_uri))
 
