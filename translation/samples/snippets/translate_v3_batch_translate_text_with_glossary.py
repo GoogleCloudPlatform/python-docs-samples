@@ -65,7 +65,7 @@ def batch_translate_text_with_glossary(
     )
 
     print(u"Waiting for operation to complete...")
-    response = operation.result(120)
+    response = operation.result(180)
 
     print(u"Total Characters: {}".format(response.total_characters))
     print(u"Translated Characters: {}".format(response.translated_characters))
