@@ -16,6 +16,7 @@
 def get_model_evaluation(project_id, model_id, model_evaluation_id):
     """Get model evaluation."""
     # [START automl_video_classification_get_model_evaluation_beta]
+    # [START automl_video_object_tracking_get_model_evaluation_beta]
     from google.cloud import automl_v1beta1 as automl
 
     # TODO(developer): Uncomment and set the following variables
@@ -41,9 +42,19 @@ def get_model_evaluation(project_id, model_id, model_evaluation_id):
         "Evaluation example count: {}".format(response.evaluated_example_count)
     )
 
+    # [END automl_video_object_tracking_get_model_evaluation_beta]
+
     print(
         "Classification model evaluation metrics: {}".format(
             response.classification_evaluation_metrics
         )
     )
     # [END automl_video_classification_get_model_evaluation_beta]
+
+    # [START automl_video_object_tracking_get_model_evaluation_beta]
+    print(
+        "Video object tracking model evaluation metrics: {}".format(
+            response.video_object_tracking_evaluation_metrics
+        )
+    )
+    # [END automl_video_object_tracking_get_model_evaluation_beta]
