@@ -14,15 +14,15 @@
 
 import os
 
-import video_detect_logo_beta
+import video_detect_logo_gcs
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 def test_sample_annotate_video(capsys):
-    local_file_path = os.path.join(RESOURCES, "googlework_tiny.mp4")
+    input_uri = "gs://cloud-samples-data/video/googlework_tiny.mp4"
 
-    video_detect_logo_beta.sample_annotate_video(local_file_path=local_file_path)
+    video_detect_logo_gcs.sample_annotate_video(input_uri=input_uri)
 
     out, _ = capsys.readouterr()
 

@@ -12,25 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import io
+# [START video_detect_logo_gcs]
 
-# [START video_detect_logo_beta]
-
-from google.cloud import videointelligence_v1p3beta1
-from google.cloud.videointelligence_v1p3beta1 import enums
+from google.cloud import videointelligence
+from google.cloud.videointelligence import enums
 
 
-def sample_annotate_video(local_file_path="resources/googlework_tiny.mp4"):
-    """Performs asynchronous video annotation for logo recognition on a local file."""
+def sample_annotate_video(
+    input_uri="gs://cloud-samples-data/video/googlework_tiny.mp4",
+):
 
-    client = videointelligence_v1p3beta1.VideoIntelligenceServiceClient()
+    client = videointelligence.VideoIntelligenceServiceClient()
 
-    with io.open(local_file_path, "rb") as f:
-        input_content = f.read()
     features_element = enums.Feature.LOGO_RECOGNITION
     features = [features_element]
 
-    operation = client.annotate_video(input_content=input_content, features=features)
+    operation = client.annotate_video(input_uri=input_uri, features=features)
 
     print(u"Waiting for operation to complete...")
     response = operation.result()
@@ -104,4 +101,4 @@ def sample_annotate_video(local_file_path="resources/googlework_tiny.mp4"):
             )
 
 
-# [END video_detect_logo_beta]
+# [END video_detect_logo_gcs]
