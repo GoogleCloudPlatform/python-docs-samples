@@ -5,7 +5,7 @@ Open this demo app in [Google Cloud Shell](https://cloud.google.com/shell/docs/)
 We provide a public image for the services in this demo app. You could also build
 your own following steps 4 - 6.
 
-[![Open Cloud Trace Demo APP in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=trace/cloud-trace-demo-app/README.md&amp;cloudshell_tutorial=README.md)
+[![Open Cloud Trace Demo APP in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/open?cloudshell_git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=trace/cloud-trace-demo-app/README.md&amp;cloudshell_tutorial=trace/cloud-trace-demo-app/README.md)
 
 #### Demo Requirements
 If you are using Cloud Shell, skip to the next section.
@@ -42,7 +42,7 @@ If you are using the provided image, skip to the next section.
     `./setup.sh`
 12. Send request to the last service:
 
-    `curl $(kubectl get svc cloud-trace-demo-a -ojsonpath='{.status.loadBalancer.ingress[0].ip}')`
+    `curl $(kubectl get svc cloud-trace-demo-c -ojsonpath='{.status.loadBalancer.ingress[0].ip}')`
 13. Visit [Trace List](https://pantheon.corp.google.com/traces/list) to check traces generated.
     Click on any trace in the graph to see the Waterfall View.
     ![Screenshot](./example.png)

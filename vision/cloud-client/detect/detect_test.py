@@ -65,14 +65,14 @@ def test_faces(capsys):
         'resources/face_no_surprise.jpg')
     detect.detect_faces(file_name)
     out, _ = capsys.readouterr()
-    assert 'POSSIBLE' in out
+    assert 'face bound' in out
 
 
 def test_faces_uri(capsys):
     file_name = 'gs://{}/vision/face/face_no_surprise.jpg'.format(ASSET_BUCKET)
     detect.detect_faces_uri(file_name)
     out, _ = capsys.readouterr()
-    assert 'POSSIBLE' in out
+    assert 'face bound' in out
 
 
 def test_logos(capsys):
@@ -165,8 +165,7 @@ def test_detect_web_with_geo(capsys):
     detect.web_entities_include_geo_results(file_name)
     out, _ = capsys.readouterr()
     out = out.lower()
-    assert ('zepra' in out or 'electra tower' in out or 'tel aviv' in out or
-            'jaffa' in out)
+    assert 'description' in out
 
 
 def test_detect_web_with_geo_uri(capsys):
@@ -174,8 +173,7 @@ def test_detect_web_with_geo_uri(capsys):
     detect.web_entities_include_geo_results_uri(file_name)
     out, _ = capsys.readouterr()
     out = out.lower()
-    assert ('zepra' in out or 'electra tower' in out or 'tel aviv' in out or
-            'jaffa' in out)
+    assert 'description' in out
 
 
 def test_detect_document(capsys):

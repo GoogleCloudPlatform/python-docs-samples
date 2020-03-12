@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#      http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,10 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Format: //devtools/kokoro/config/proto/build.proto
+import os
 
-# Tell the trampoline which build file to use.
-env_vars: {
-    key: "TRAMPOLINE_BUILD_FILE"
-    value: "github/python-docs-samples/.kokoro/tests/run_tests.sh"
-}
+import video_detect_person_gcs_beta
+
+RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+
+
+def test_detect_person(capsys):
+    input_uri = "gs://cloud-samples-data/video/googlework_tiny.mp4"
+
+    video_detect_person_gcs_beta.detect_person(gcs_uri=input_uri)
+
+    out, _ = capsys.readouterr()
+
+    assert "Person detected:" in out
+    assert "Attributes:" in out
+    assert "x=" in out
+    assert "y=" in out
