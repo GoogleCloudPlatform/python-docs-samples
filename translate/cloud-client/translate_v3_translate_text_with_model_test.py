@@ -22,7 +22,7 @@ MODEL_ID = "TRL3128559826197068699"
 
 def test_translate_text_with_model(capsys):
     translate_v3_translate_text_with_model.translate_text_with_model(
-        PROJECT_ID, MODEL_ID
+        "That' il do it.", PROJECT_ID, MODEL_ID
     )
     out, _ = capsys.readouterr()
     assert "それはそうだ" or "それじゃあ" in out

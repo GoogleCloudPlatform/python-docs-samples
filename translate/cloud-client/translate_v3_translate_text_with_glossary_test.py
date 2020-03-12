@@ -42,7 +42,7 @@ def glossary():
 
 def test_translate_text_with_glossary(capsys, glossary):
     translate_v3_translate_text_with_glossary.translate_text_with_glossary(
-        PROJECT_ID, glossary
+        "account", PROJECT_ID, glossary
     )
     out, _ = capsys.readouterr()
     assert "アカウント" or "口座" in out
