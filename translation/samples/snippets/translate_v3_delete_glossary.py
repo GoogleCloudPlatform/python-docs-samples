@@ -25,7 +25,7 @@ def delete_glossary(
     parent = client.glossary_path(project_id, "us-central1", glossary_id)
 
     operation = client.delete_glossary(parent)
-    result = operation.result(timeout=90)
+    result = operation.result(timeout=180)
     print("Deleted: {}".format(result.name))
 
 

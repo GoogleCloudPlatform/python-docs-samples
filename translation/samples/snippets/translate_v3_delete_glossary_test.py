@@ -23,7 +23,7 @@ GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
 
 def test_delete_glossary(capsys):
     # setup
-    glossary_id = "must-start-with-letters-" + str(uuid.uuid1())
+    glossary_id = "test-{}".format(uuid.uuid4())
     translate_v3_create_glossary.create_glossary(
         PROJECT_ID, GLOSSARY_INPUT_URI, glossary_id
     )
