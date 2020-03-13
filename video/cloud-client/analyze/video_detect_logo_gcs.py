@@ -15,17 +15,13 @@
 # [START video_detect_logo_gcs]
 
 from google.cloud import videointelligence
-from google.cloud.videointelligence import enums
 
 
-def sample_annotate_video(
-    input_uri="gs://cloud-samples-data/video/googlework_tiny.mp4",
-):
+def detect_logo_gcs(input_uri="gs://cloud-samples-data/video/googlework_tiny.mp4",):
 
     client = videointelligence.VideoIntelligenceServiceClient()
 
-    features_element = enums.Feature.LOGO_RECOGNITION
-    features = [features_element]
+    features = [videointelligence.enums.Feature.LOGO_RECOGNITION]
 
     operation = client.annotate_video(input_uri=input_uri, features=features)
 
@@ -46,17 +42,16 @@ def sample_annotate_video(
         # to one logo instance appearing in consecutive frames.
         for track in logo_recognition_annotation.tracks:
             # Video segment of a track.
-            segment = track.segment
-            segment_start_time_offset = segment.start_time_offset
             print(
                 u"\n\tStart Time Offset : {}.{}".format(
-                    segment_start_time_offset.seconds, segment_start_time_offset.nanos
+                    track.segment.start_time_offset.seconds,
+                    track.segment.start_time_offset.nanos,
                 )
             )
-            segment_end_time_offset = segment.end_time_offset
             print(
                 u"\tEnd Time Offset : {}.{}".format(
-                    segment_end_time_offset.seconds, segment_end_time_offset.nanos
+                    track.segment.end_time_offset.seconds,
+                    track.segment.end_time_offset.nanos,
                 )
             )
             print(u"\tConfidence : {}".format(track.confidence))
@@ -80,23 +75,15 @@ def sample_annotate_video(
                 print(u"\t\tValue : {}".format(track_attribute.value))
         # All video segments where the recognized logo appears. There might be
         # multiple instances of the same logo class appearing in one VideoSegment.
-        for logo_recognition_annotation_segment in logo_recognition_annotation.segments:
-            logo_recognition_annotation_segment_start_time_offset = (
-                logo_recognition_annotation_segment.start_time_offset
-            )
+        for segment in logo_recognition_annotation.segments:
             print(
                 u"\n\tStart Time Offset : {}.{}".format(
-                    logo_recognition_annotation_segment_start_time_offset.seconds,
-                    logo_recognition_annotation_segment_start_time_offset.nanos,
+                    segment.start_time_offset.seconds, segment.start_time_offset.nanos,
                 )
-            )
-            logo_recognition_annotation_segment_end_time_offset = (
-                logo_recognition_annotation_segment.end_time_offset
             )
             print(
                 u"\tEnd Time Offset : {}.{}".format(
-                    logo_recognition_annotation_segment_end_time_offset.seconds,
-                    logo_recognition_annotation_segment_end_time_offset.nanos,
+                    segment.end_time_offset.seconds, segment.end_time_offset.nanos,
                 )
             )
 

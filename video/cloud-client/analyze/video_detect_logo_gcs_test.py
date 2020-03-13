@@ -19,10 +19,10 @@ import video_detect_logo_gcs
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
-def test_sample_annotate_video(capsys):
+def test_detect_logo_gcs(capsys):
     input_uri = "gs://cloud-samples-data/video/googlework_tiny.mp4"
 
-    video_detect_logo_gcs.sample_annotate_video(input_uri=input_uri)
+    video_detect_logo_gcs.detect_logo_gcs(input_uri=input_uri)
 
     out, _ = capsys.readouterr()
 

@@ -19,10 +19,10 @@ import video_detect_logo
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
-def test_sample_annotate_video(capsys):
+def test_detect_logo(capsys):
     local_file_path = os.path.join(RESOURCES, "googlework_tiny.mp4")
 
-    video_detect_logo.sample_annotate_video(local_file_path=local_file_path)
+    video_detect_logo.detect_logo(local_file_path=local_file_path)
 
     out, _ = capsys.readouterr()
 
