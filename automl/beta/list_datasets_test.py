@@ -1,4 +1,4 @@
-# Copyright 2017 Google Inc. All Rights Reserved.
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,21 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import web_detect
+import os
 
-ASSET_BUCKET = "cloud-samples-data"
+import list_datasets
+
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+DATASET_ID = os.environ["ENTITY_EXTRACTION_DATASET_ID"]
 
 
-def test_detect_file(capsys):
-    file_name = ('../detect/resources/landmark.jpg')
-    web_detect.report(web_detect.annotate(file_name))
+def test_list_dataset(capsys):
+    # list datasets
+    list_datasets.list_datasets(PROJECT_ID)
     out, _ = capsys.readouterr()
-    assert 'description' in out.lower()
-
-
-def test_detect_web_gsuri(capsys):
-    file_name = ('gs://{}/vision/landmark/pofa.jpg'.format(
-                 ASSET_BUCKET))
-    web_detect.report(web_detect.annotate(file_name))
-    out, _ = capsys.readouterr()
-    assert 'description:' in out.lower()
+    assert "Dataset id: {}".format(DATASET_ID) in out
