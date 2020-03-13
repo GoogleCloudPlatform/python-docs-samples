@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import time
+import uuid
 
 from google.cloud import storage
 
@@ -36,12 +37,14 @@ BLOB_CONTENT = "Hello, is it me you're looking for?"
 RETENTION_POLICY = 5
 
 
-@pytest.fixture()
+@pytest.fixture
 def bucket():
-    """Creates a test bucket and deletes it upon completion."""
-    client = storage.Client()
-    bucket_name = "bucket-lock-" + str(int(time.time()))
-    bucket = client.create_bucket(bucket_name)
+    """Yields a bucket that is deleted after the test completes."""
+    bucket = None
+    while bucket is None or bucket.exists():
+        bucket_name = "bucket-lock-{}".format(uuid.uuid4())
+        bucket = storage.Client().bucket(bucket_name)
+    bucket.create()
     yield bucket
     bucket.delete(force=True)
 

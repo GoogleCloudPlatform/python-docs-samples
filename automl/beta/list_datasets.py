@@ -13,14 +13,13 @@
 # limitations under the License.
 
 
-def list_datasets(project_id):
+# [START automl_video_classification_list_datasets_beta]
+# [START automl_video_object_tracking_list_datasets_beta]
+from google.cloud import automl_v1beta1 as automl
+
+
+def list_datasets(project_id="YOUR_PROJECT_ID"):
     """List datasets."""
-    # [START automl_video_classification_list_datasets_beta]
-    from google.cloud import automl_v1beta1 as automl
-
-    # TODO(developer): Uncomment and set the following variables
-    # project_id = "YOUR_PROJECT_ID"
-
     client = automl.AutoMlClient()
     # A resource that represents Google Cloud Platform location.
     project_location = client.location_path(project_id, "us-central1")
@@ -36,10 +35,19 @@ def list_datasets(project_id):
         print("Dataset create time:")
         print("\tseconds: {}".format(dataset.create_time.seconds))
         print("\tnanos: {}".format(dataset.create_time.nanos))
+        # [END automl_video_object_tracking_list_datasets_beta]
 
         print(
-            "Video classification dataset metadata:: {}".format(
+            "Video classification dataset metadata: {}".format(
                 dataset.video_classification_dataset_metadata
             )
         )
-    # [END automl_video_classification_list_datasets_beta]
+        # [END automl_video_classification_list_datasets_beta]
+
+        # [START automl_video_object_tracking_list_datasets_beta]
+        print(
+            "Video object tracking dataset metadata: {}".format(
+                dataset.video_object_tracking_dataset_metadata
+            )
+        )
+        # [END automl_video_object_tracking_list_datasets_beta]

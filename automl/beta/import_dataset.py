@@ -13,16 +13,16 @@
 # limitations under the License.
 
 
-def import_dataset(project_id, dataset_id, path):
+# [START automl_import_data_beta]
+from google.cloud import automl_v1beta1 as automl
+
+
+def import_dataset(
+    project_id="YOUR_PROJECT_ID",
+    dataset_id="YOUR_DATASET_ID",
+    path="gs://YOUR_BUCKET_ID/path/to/data.csv",
+):
     """Import a dataset."""
-    # [START automl_import_data_beta]
-    from google.cloud import automl_v1beta1 as automl
-
-    # TODO(developer): Uncomment and set the following variables
-    # project_id = "YOUR_PROJECT_ID"
-    # dataset_id = "YOUR_DATASET_ID"
-    # path = "gs://YOUR_BUCKET_ID/path/to/data.csv"
-
     client = automl.AutoMlClient()
     # Get the full path of the dataset.
     dataset_full_id = client.dataset_path(
@@ -37,4 +37,4 @@ def import_dataset(project_id, dataset_id, path):
 
     print("Processing import...")
     print("Data imported. {}".format(response.result()))
-    # [END automl_import_data_beta]
+# [END automl_import_data_beta]
