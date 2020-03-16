@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,13 +14,15 @@
 # limitations under the License.
 
 import os
-import translate_v3_translate_text
+import translate_v3_translate_text_with_model
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+MODEL_ID = "TRL3128559826197068699"
 
 
-def test_translate_text(capsys):
-    translate_v3_translate_text.sample_translate_text(
-        "Hello World!", PROJECT_ID)
+def test_translate_text_with_model(capsys):
+    translate_v3_translate_text_with_model.translate_text_with_model(
+        "That' il do it.", PROJECT_ID, MODEL_ID
+    )
     out, _ = capsys.readouterr()
-    assert "Bonjour le monde" in out
+    assert "それはそうだ" or "それじゃあ" in out

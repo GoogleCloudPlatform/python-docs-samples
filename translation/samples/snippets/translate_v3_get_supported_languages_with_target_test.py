@@ -13,13 +13,15 @@
 # limitations under the License.
 
 import os
-import translate_v3_translate_text
+import translate_v3_get_supported_languages_with_target as get_supported_langs
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 
 
-def test_translate_text(capsys):
-    translate_v3_translate_text.sample_translate_text(
-        "Hello World!", PROJECT_ID)
+def test_list_languages_with_target(capsys):
+    get_supported_langs.get_supported_languages_with_target(
+        PROJECT_ID
+    )
     out, _ = capsys.readouterr()
-    assert "Bonjour le monde" in out
+    assert u"Language Code: sq" in out
+    assert u"Display Name: albanska" in out
