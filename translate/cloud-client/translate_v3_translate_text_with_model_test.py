@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,26 +14,15 @@
 # limitations under the License.
 
 import os
-import translate_v3_create_glossary
-import translate_v3_delete_glossary
-import uuid
+import translate_v3_translate_text_with_model
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
+MODEL_ID = "TRL3128559826197068699"
 
 
-def test_create_glossary(capsys):
-    glossary_id = "test-{}".format(uuid.uuid4())
-    translate_v3_create_glossary.create_glossary(
-        PROJECT_ID, GLOSSARY_INPUT_URI, glossary_id
+def test_translate_text_with_model(capsys):
+    translate_v3_translate_text_with_model.translate_text_with_model(
+        "That' il do it.", PROJECT_ID, MODEL_ID
     )
     out, _ = capsys.readouterr()
-    # assert
-    assert "Created:" in out
-    assert "gs://cloud-samples-data/translation/glossary_ja.csv" in out
-
-    # clean up after use
-    try:
-        translate_v3_delete_glossary.delete_glossary(PROJECT_ID, glossary_id)
-    except Exception:
-        pass
+    assert "それはそうだ" or "それじゃあ" in out

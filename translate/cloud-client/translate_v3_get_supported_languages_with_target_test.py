@@ -13,26 +13,15 @@
 # limitations under the License.
 
 import os
-import translate_v3_create_glossary
-import translate_v3_delete_glossary
-import uuid
+import translate_v3_get_supported_languages_with_target as get_supported_langs
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
 
 
-def test_create_glossary(capsys):
-    glossary_id = "test-{}".format(uuid.uuid4())
-    translate_v3_create_glossary.create_glossary(
-        PROJECT_ID, GLOSSARY_INPUT_URI, glossary_id
+def test_list_languages_with_target(capsys):
+    get_supported_langs.get_supported_languages_with_target(
+        PROJECT_ID
     )
     out, _ = capsys.readouterr()
-    # assert
-    assert "Created:" in out
-    assert "gs://cloud-samples-data/translation/glossary_ja.csv" in out
-
-    # clean up after use
-    try:
-        translate_v3_delete_glossary.delete_glossary(PROJECT_ID, glossary_id)
-    except Exception:
-        pass
+    assert u"Language Code: sq" in out
+    assert u"Display Name: albanska" in out

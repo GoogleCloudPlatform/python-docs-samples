@@ -31,12 +31,17 @@ def sample_async_batch_annotate_images(
         {"type": enums.Feature.Type.LABEL_DETECTION},
         {"type": enums.Feature.Type.IMAGE_PROPERTIES},
     ]
+
+    # Each requests element corresponds to a single image.  To annotate more
+    # images, create a request element for each image and add it to
+    # the array of requests
     requests = [{"image": image, "features": features}]
     gcs_destination = {"uri": output_uri}
 
     # The max number of responses to output in each JSON file
     batch_size = 2
-    output_config = {"gcs_destination": gcs_destination, "batch_size": batch_size}
+    output_config = {"gcs_destination": gcs_destination,
+                     "batch_size": batch_size}
 
     operation = client.async_batch_annotate_images(requests, output_config)
 
