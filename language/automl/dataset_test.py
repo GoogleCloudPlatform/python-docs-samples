@@ -35,15 +35,7 @@ def test_dataset_create_import_delete(capsys):
     out, _ = capsys.readouterr()
     create_dataset_output = out.splitlines()
     assert "Dataset id: " in create_dataset_output[1]
-
-    # import data
     dataset_id = create_dataset_output[1].split()[2]
-    data = "gs://{}-lcm/happiness.csv".format(project_id)
-    automl_natural_language_dataset.import_data(
-        project_id, compute_region, dataset_id, data
-    )
-    out, _ = capsys.readouterr()
-    assert "Data imported." in out
 
     # delete dataset
     automl_natural_language_dataset.delete_dataset(
@@ -51,6 +43,28 @@ def test_dataset_create_import_delete(capsys):
     )
     out, _ = capsys.readouterr()
     assert "Dataset deleted." in out
+
+
+def test_import_data(capsys):
+    # As importing a dataset can take a long time and only four operations can
+    # be run on a dataset at once. Try to import into a nonexistent dataset and
+    # confirm that the dataset was not found, but other elements of the request
+    # were valid.
+    try:
+        data = "gs://{}-lcm/happiness.csv".format(project_id)
+        automl_natural_language_dataset.import_data(
+            project_id, compute_region, "TEN0000000000000000000", data
+        )
+        out, _ = capsys.readouterr()
+        assert (
+                "Dataset doesn't exist or is inaccessible for use with AutoMl."
+                in out
+        )
+    except Exception as e:
+        assert (
+                "Dataset doesn't exist or is inaccessible for use with AutoMl."
+                in e.message
+        )
 
 
 def test_dataset_list_get(capsys):
