@@ -26,8 +26,8 @@ def mock_credentials(*args, **kwargs):
 
 def test_main(monkeypatch):
     monkeypatch.setattr(
-        'google.oauth2.service_account.Credentials.from_service_account_file',
         mock_credentials,
+        'google.oauth2.service_account.Credentials.from_service_account_file',
     )
     client = authenticate_service_account.main()
     assert client is not None
