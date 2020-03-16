@@ -41,6 +41,7 @@ def sample_classify_text(text_content):
 
     # text_content = 'That actor on TV makes movies in Hollywood and also stars in a variety of popular new TV shows.'
 
+    # [START language_python_migration_document_text]
     # Available types: PLAIN_TEXT, HTML
     type_ = enums.Document.Type.PLAIN_TEXT
 
@@ -49,6 +50,7 @@ def sample_classify_text(text_content):
     # https://cloud.google.com/natural-language/docs/languages
     language = "en"
     document = {"content": text_content, "type": type_, "language": language}
+    # [END language_python_migration_document_text]
 
     response = client.classify_text(document)
     # Loop through classified categories returned from the API

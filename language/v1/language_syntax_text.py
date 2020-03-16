@@ -50,6 +50,7 @@ def sample_analyze_syntax(text_content):
     language = "en"
     document = {"content": text_content, "type": type_, "language": language}
 
+    # [START language_python_migration_syntax_text]
     # Available values: NONE, UTF8, UTF16, UTF32
     encoding_type = enums.EncodingType.UTF8
 
@@ -72,6 +73,8 @@ def sample_analyze_syntax(text_content):
                 enums.PartOfSpeech.Tag(part_of_speech.tag).name
             )
         )
+        # [END language_python_migration_syntax_text]
+
         # Get the voice, e.g. ACTIVE or PASSIVE
         print(u"Voice: {}".format(enums.PartOfSpeech.Voice(part_of_speech.voice).name))
         # Get the tense, e.g. PAST, FUTURE, PRESENT, et al.
