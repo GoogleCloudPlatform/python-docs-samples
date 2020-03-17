@@ -125,13 +125,13 @@ and saves it into
 where the image is accessible to other Google Cloud products.
 
 ```sh
-export TEMPLATE_IMAGE="$PROJECT/samples/dataflow/streaming-beam:latest"
+export TEMPLATE_IMAGE="gcr.io/$PROJECT/samples/dataflow/streaming-beam:latest"
 
 # Build the image into Container Registry, this is roughly equivalent to:
 #   gcloud auth configure-docker
 #   docker image build -t $TEMPLATE_IMAGE .
 #   docker push $TEMPLATE_IMAGE
-gcloud builds submit --tag "gcr.io/$TEMPLATE_IMAGE" .
+gcloud builds submit --tag "$TEMPLATE_IMAGE" .
 ```
 
 Images starting with `gcr.io/PROJECT/` are saved into your project's
@@ -153,7 +153,7 @@ export TEMPLATE_PATH="gs://$BUCKET/samples/dataflow/templates/streaming-beam.jso
 
 # Build the Flex Template.
 gcloud beta dataflow flex-template build $TEMPLATE_PATH \
-  --image "gcr.io/$TEMPLATE_IMAGE" \
+  --image "$TEMPLATE_IMAGE" \
   --sdk-language "PYTHON" \
   --metadata-file "metadata.json"
 ```
