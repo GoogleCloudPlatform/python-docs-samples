@@ -17,6 +17,9 @@ and a *service account JSON key* set up in your `GOOGLE_APPLICATION_CREDENTIALS`
 environment variable.
 Additionally, for this sample you need the following:
 
+1. [Enable the APIs](https://console.cloud.google.com/flows/enableapi?apiid=appengine.googleapis.com,cloudscheduler.googleapis.com,cloudbuild.googleapis.com):
+    App Engine, Cloud Scheduler, Cloud Build.
+
 1. Create a
     [Cloud Storage bucket](https://cloud.google.com/storage/docs/creating-buckets).
 
@@ -50,22 +53,22 @@ Additionally, for this sample you need the following:
     ```sh
     # Create a publisher for "positive ratings" that publishes 1 message per minute
     # If an App Engine app does not exist for the project, this step will create one.
-    gcloud scheduler jobs create pubsub thumbs-up-publisher \
+    gcloud scheduler jobs create pubsub positive-ratings-publisher \
       --schedule="* * * * *" \
       --topic="$TOPIC" \
       --message-body='{"url": "https://beam.apache.org/", "review": "positive"}'
 
     # Start the job.
-    gcloud scheduler jobs run thumbs-up-publisher
+    gcloud scheduler jobs run positive-ratings-publisher
 
     # Create and run another similar publisher for "negative ratings" that
     # publishes 1 message every 2 minutes.
-    gcloud scheduler jobs create pubsub thumbs-down-publisher \
+    gcloud scheduler jobs create pubsub negative-ratings-publisher \
       --schedule="*/2 * * * *" \
       --topic="$TOPIC" \
       --message-body='{"url": "https://beam.apache.org/", "review": "negative"}'
 
-    gcloud scheduler jobs run thumbs-down-publisher
+    gcloud scheduler jobs run negative-ratings-publisher
     ```
 
 1. Create a [BigQuery dataset](https://cloud.google.com/bigquery/docs/datasets).
@@ -109,7 +112,7 @@ We are using
 [Cloud Build](https://cloud.google.com/cloud-build)
 so we don't need a local installation of Docker.
 
-> *Note:* You can speed up subsequent builds with
+> ℹ️  You can speed up subsequent builds with
 > [Kaniko cache](https://cloud.google.com/cloud-build/docs/kaniko-cache)
 > in Cloud Build.
 >
@@ -169,8 +172,7 @@ template file and passing the template
 required by the pipeline.
 
 ```sh
-# Parameters before the `--` are passed to the `gcloud` command.
-# Parameters after the `--` are passed to the Beam pipeline.
+# Run the Flex Template.
 gcloud beta dataflow flex-template run "streaming-beam-`date +%Y%m%d-%H%M%S`" \
   --template-file-gcs-location "$TEMPLATE_PATH" \
   --parameters "input_subscription=$SUBSCRIPTION,output_table=$PROJECT:$DATASET.$TABLE"
@@ -238,8 +240,8 @@ The following sections describe how to delete or turn off these resources.
 1. Delete the Cloud Scheduler jobs.
 
     ```sh
-    gcloud scheduler jobs delete thumbs-down-publisher
-    gcloud scheduler jobs delete thumbs-up-publisher
+    gcloud scheduler jobs delete negative-ratings-publisher
+    gcloud scheduler jobs delete positive-ratings-publisher
     ```
 
 1. Delete the Pub/Sub subscription and topic.
