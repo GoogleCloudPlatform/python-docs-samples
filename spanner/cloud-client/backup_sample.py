@@ -19,7 +19,6 @@ For more information, see the README.rst under /spanner.
 """
 
 import argparse
-import concurrent.futures
 from datetime import (
     datetime,
     timedelta
@@ -47,13 +46,14 @@ def create_backup(instance_id, database_id, backup_id):
 
     # Verify that the backup is ready.
     backup.reload()
-    assert backup.is_ready() == True
+    assert backup.is_ready() is True
 
     # Get the name, create time and backup size.
     backup.reload()
     print("Backup {} of size {} bytes was created at {}".format(
         backup.name, backup.size_bytes, backup.create_time))
 # [END spanner_create_backup]
+
 
 # [START spanner_restore_database]
 def restore_database(instance_id, new_database_id, backup_id):
@@ -78,6 +78,7 @@ def restore_database(instance_id, new_database_id, backup_id):
         new_database_id,
         restore_info.backup_info.backup))
 # [END spanner_restore_database]
+
 
 # [START spanner_cancel_backup]
 def cancel_backup(instance_id, database_id, backup_id):
@@ -109,6 +110,7 @@ def cancel_backup(instance_id, database_id, backup_id):
         print("Backup creation was successfully cancelled.")
 # [END spanner_cancel_backup]
 
+
 # [START spanner_list_backup_operations]
 def list_backup_operations(instance_id, database_id):
     spanner_client = spanner.Client()
@@ -130,6 +132,7 @@ def list_backup_operations(instance_id, database_id):
                 metadata.progress.progress_percent))
 # [END spanner_list_backup_operations]
 
+
 # [START spanner_list_database_operations]
 def list_database_operations(instance_id):
     spanner_client = spanner.Client()
@@ -145,6 +148,7 @@ def list_database_operations(instance_id):
         print("Database {} restored from backup is {}% optimized.".format(
             op.metadata.name, op.metadata.progress.progress_percent))
 # [END spanner_list_database_operations]
+
 
 # [START spanner_list_backups]
 def list_backups(instance_id):
@@ -169,7 +173,7 @@ def list_backups(instance_id):
     # List all backups that expire before a timestamp.
     print("All backups with expire_time before \"2019-10-18T02:56:53Z\":")
     for backup in instance.list_backups(
-        filter_="expire_time < \"2019-10-18T02:56:53Z\""):
+            filter_="expire_time < \"2019-10-18T02:56:53Z\""):
         print(backup.name)
 
     # List all backups with a size greater than some bytes.
@@ -180,10 +184,11 @@ def list_backups(instance_id):
     # List backups that were created after a timestamp that are also ready.
     print("All backups created after \"2019-10-18T02:56:53Z\" and are READY:")
     for backup in instance.list_backups(filter_=(
-        "create_time >= \"2019-10-18T02:56:53Z\" AND "
-        "state:READY")):
+            "create_time >= \"2019-10-18T02:56:53Z\" AND "
+            "state:READY")):
         print(backup.name)
 # [END spanner_list_backups]
+
 
 # [START spanner_delete_backup]
 def delete_backup(instance_id, backup_id):
@@ -194,16 +199,17 @@ def delete_backup(instance_id, backup_id):
 
     # Wait for databases that reference this backup to finish optimizing
     while backup.referencing_databases:
-       time.sleep(30)
-       backup.reload()
+        time.sleep(30)
+        backup.reload()
 
     # Delete the backup.
     backup.delete()
 
     # Verify that the backup is deleted.
-    assert backup.exists() == False
+    assert backup.exists() is False
     print("Backup {} has been deleted.".format(backup.name))
 # [END spanner_delete_backup]
+
 
 # [START spanner_update_backup]
 def update_backup(instance_id, backup_id):
@@ -219,6 +225,7 @@ def update_backup(instance_id, backup_id):
     print("Backup {} expire time was updated from {} to {}.".format(
         backup.name, old_expire_time, new_expire_time))
 # [END spanner_update_backup]
+
 
 if __name__ == '__main__':  # noqa: C901
     parser = argparse.ArgumentParser(
@@ -240,7 +247,8 @@ if __name__ == '__main__':  # noqa: C901
     subparsers.add_parser('restore_database', help=restore_database.__doc__)
     subparsers.add_parser('list_backups', help=list_backups.__doc__)
     subparsers.add_parser('list_backup_operations', help=list_backup_operations.__doc__)
-    subparsers.add_parser('list_database_operations', help=list_database_operations.__doc__)
+    subparsers.add_parser('list_database_operations',
+                          help=list_database_operations.__doc__)
     subparsers.add_parser('delete_backup', help=delete_backup.__doc__)
 
     args = parser.parse_args()

@@ -15,29 +15,30 @@
 import os
 
 from google.cloud import spanner
-import mock
 import pytest
 import random
 import string
-import time
 
 import backup_sample
-import snippets
+
 
 def unique_database_id():
     """ Creates a unique id for the database. """
     return 'test-db-{}'.format(''.join(random.choice(
         string.ascii_lowercase + string.digits) for _ in range(5)))
 
+
 def unique_backup_id():
     """ Creates a unique id for the backup. """
     return 'test-backup-{}'.format(''.join(random.choice(
         string.ascii_lowercase + string.digits) for _ in range(5)))
 
+
 INSTANCE_ID = os.environ['SPANNER_INSTANCE']
 DATABASE_ID = unique_database_id()
 RESTORE_DB_ID = unique_database_id()
 BACKUP_ID = unique_backup_id()
+
 
 @pytest.fixture(scope='module')
 def spanner_instance():
@@ -57,9 +58,9 @@ def database(spanner_instance):
 def test_create_backup(capsys, database):
     backup_sample.create_backup(INSTANCE_ID, DATABASE_ID, BACKUP_ID)
     out, _ = capsys.readouterr()
-    expected_output = "Backup {} of size {} bytes was created at {}"
     assert "Backup " in out
     assert (BACKUP_ID + " of size 0 bytes was created at ") in out
+
 
 def test_restore_database(capsys):
     backup_sample.restore_database(INSTANCE_ID, RESTORE_DB_ID, BACKUP_ID)
@@ -69,6 +70,7 @@ def test_restore_database(capsys):
     assert (RESTORE_DB_ID + " from backup ") in out
     assert (BACKUP_ID + ".") in out
 
+
 def test_update_backup(capsys):
     backup_sample.update_backup(INSTANCE_ID, BACKUP_ID)
     out, _ = capsys.readouterr()
@@ -76,11 +78,13 @@ def test_update_backup(capsys):
     assert (BACKUP_ID + " expire time was updated from ") in out
     assert " to " in out
 
+
 def test_delete_backup(capsys, spanner_instance):
     backup_sample.delete_backup(INSTANCE_ID, BACKUP_ID)
     out, _ = capsys.readouterr()
     assert "Backup " in out
     assert (BACKUP_ID + " has been deleted.") in out
+
 
 def test_cancel_backup(capsys):
     backup_sample.cancel_backup(INSTANCE_ID, DATABASE_ID, BACKUP_ID)
