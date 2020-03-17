@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 # [START automl_import_data_beta]
 from google.cloud import automl_v1beta1 as automl
 
