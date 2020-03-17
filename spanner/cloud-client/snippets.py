@@ -1394,7 +1394,7 @@ def query_data_with_timestamp_parameter(instance_id, database_id):
 
 def query_data_with_query_options(instance_id, database_id):
     """Queries sample data using SQL with query options."""
-    # [START query_data_with_query_options]
+    # [START spanner_query_with_query_options]
     # instance_id = "your-spanner-instance"
     # database_id = "your-spanner-db-id"
     spanner_client = spanner.Client()
@@ -1410,12 +1410,12 @@ def query_data_with_query_options(instance_id, database_id):
         for row in results:
             print(u"VenueId: {}, VenueName: {}, LastUpdateTime: {}".format(
                 *row))
-    # [END query_data_with_query_options]
+    # [END spanner_query_with_query_options]
 
 
 def create_client_with_query_options(instance_id, database_id):
     """Create a client with query options."""
-    # [START create_client_with_query_options]
+    # [START spanner_create_client_with_query_options]
     # instance_id = "your-spanner-instance"
     # database_id = "your-spanner-db-id"
     spanner_client = spanner.Client(
@@ -1432,7 +1432,7 @@ def create_client_with_query_options(instance_id, database_id):
         for row in results:
             print(u"VenueId: {}, VenueName: {}, LastUpdateTime: {}".format(
                 *row))
-    # [END create_client_with_query_options]
+    # [END spanner_create_client_with_query_options]
 
 
 if __name__ == '__main__':  # noqa: C901
