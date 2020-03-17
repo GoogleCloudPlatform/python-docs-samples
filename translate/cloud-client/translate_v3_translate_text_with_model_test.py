@@ -1,10 +1,11 @@
-# Copyright 2018 Google LLC. All Rights Reserved.
+# -*- encoding: utf-8 -*-
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,12 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+import translate_v3_translate_text_with_model
 
-def test_histogram_sample(capsys):
-    import histogram_sample
-    import re
+PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+MODEL_ID = "TRL3128559826197068699"
 
-    histogram_sample.run_sample()
+
+def test_translate_text_with_model(capsys):
+    translate_v3_translate_text_with_model.translate_text_with_model(
+        "That' il do it.", PROJECT_ID, MODEL_ID
+    )
     out, _ = capsys.readouterr()
-    assert re.search('COMPANY_ID', out)
-    assert re.search('someFieldName1', out)
+    assert "それはそうだ" or "それじゃあ" in out
