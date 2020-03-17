@@ -1403,7 +1403,7 @@ def query_data_with_query_options(instance_id, database_id):
 
     with database.snapshot() as snapshot:
         results = snapshot.execute_sql(
-            'SELECT VenueId, VenueName, LastUpdateTime FROM Venues ',
+            'SELECT VenueId, VenueName, LastUpdateTime FROM Venues',
             query_options={'optimizer_version': '1'}
         )
 
@@ -1426,7 +1426,7 @@ def create_client_with_query_options(instance_id, database_id):
 
     with database.snapshot() as snapshot:
         results = snapshot.execute_sql(
-            'SELECT VenueId, VenueName, LastUpdateTime FROM Venues '
+            'SELECT VenueId, VenueName, LastUpdateTime FROM Venues'
         )
 
         for row in results:
