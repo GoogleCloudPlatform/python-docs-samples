@@ -21,7 +21,7 @@ import webapp2
 class AttachmentHandler(webapp2.RequestHandler):
     def post(self):
         f = self.request.POST['file']
-        mail.send_mail(sender='{}@appspot.gserviceaccount.com'.format(
+        mail.send_mail(sender='example@{}.appspotmail.com'.format(
             app_identity.get_application_id()),
                        to="Albert Johnson <Albert.Johnson@example.com>",
                        subject="The doc you requested",
