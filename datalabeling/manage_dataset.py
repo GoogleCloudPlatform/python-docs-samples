@@ -35,7 +35,7 @@ def create_dataset(project_id):
     formatted_project_name = client.project_path(project_id)
 
     dataset = datalabeling.types.Dataset(
-        display_name='YOUR_ANNOTATION_SPEC_SET_DISPLAY_NAME',
+        display_name='YOUR_DATASET_SET_DISPLAY_NAME',
         description='YOUR_DESCRIPTION'
     )
 
@@ -43,12 +43,12 @@ def create_dataset(project_id):
 
     # The format of resource name:
     # project_id/{project_id}/datasets/{dataset_id}
-    print('The dataset resource name: {}\n'.format(response.name))
+    print('The dataset resource name: {}'.format(response.name))
     print('Display name: {}'.format(response.display_name))
     print('Description: {}'.format(response.description))
     print('Create time:')
     print('\tseconds: {}'.format(response.create_time.seconds))
-    print('\tnanos: {}'.format(response.create_time.nanos))
+    print('\tnanos: {}\n'.format(response.create_time.nanos))
 
     return response
 # [END datalabeling_create_dataset_beta]
