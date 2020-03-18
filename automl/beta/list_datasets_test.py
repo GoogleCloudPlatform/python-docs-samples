@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC. All Rights Reserved.
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,19 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 
-def test_auto_complete_sample(capsys):
-    import auto_complete_sample
-    import re
+import list_datasets
 
-    auto_complete_sample.run_sample()
+PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
+DATASET_ID = os.environ["ENTITY_EXTRACTION_DATASET_ID"]
+
+
+def test_list_dataset(capsys):
+    # list datasets
+    list_datasets.list_datasets(PROJECT_ID)
     out, _ = capsys.readouterr()
-    expected = (
-        '.*completionResults.*'
-        'suggestion.*Google.*type.*COMPANY_NAME.*\n'
-        '.*completionResults.*'
-        'suggestion.*Software Engineer.*type.*JOB_TITLE.*\n'
-        '.*completionResults.*'
-        'suggestion.*Software Engineer.*type.*JOB_TITLE.*\n'
-    )
-    assert re.search(expected, out)
+    assert "Dataset id: {}".format(DATASET_ID) in out

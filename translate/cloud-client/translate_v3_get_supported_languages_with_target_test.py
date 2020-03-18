@@ -1,10 +1,10 @@
-# Copyright 2018 Google LLC. All Rights Reserved.
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#    http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,12 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+import translate_v3_get_supported_languages_with_target as get_supported_langs
 
-def test_email_alert_search_sample(capsys):
-    import email_alert_search_sample
-    import re
+PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 
-    email_alert_search_sample.run_sample()
+
+def test_list_languages_with_target(capsys):
+    get_supported_langs.get_supported_languages_with_target(
+        PROJECT_ID
+    )
     out, _ = capsys.readouterr()
-    expected = ('.*matchingJobs.*')
-    assert re.search(expected, out)
+    assert u"Language Code: sq" in out
+    assert u"Display Name: albanska" in out
