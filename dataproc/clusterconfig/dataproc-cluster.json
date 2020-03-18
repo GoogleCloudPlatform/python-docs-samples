@@ -1,0 +1,58 @@
+{
+  "project_id": "xxxx",
+  "cluster_name": "rajib-cluster-dataproc",
+  "labels": {
+    "applicationname": "sample"
+  },
+  "config": {
+    "config_bucket": "xxx-bucket",
+    "gce_cluster_config": {
+      "zone_uri": "us-central1-a",
+      "metadata": {},
+      "subnetwork_uri": "default",
+      "service_account_scopes": [
+        "https://www.googleapis.com/auth/cloud-platform"
+      ]
+    },
+    "master_config": {
+      "num_instances": 1,
+      "machine_type_uri": "n1-standard-2",
+      "disk_config": {
+        "boot_disk_type": "pd-standard",
+        "boot_disk_size_gb": 15,
+        "num_local_ssds": 0
+      },
+      "accelerators": []
+    },
+    "worker_config": {
+      "num_instances": 2,
+      "machine_type_uri": "n1-standard-2",
+      "disk_config": {
+        "boot_disk_type": "pd-standard",
+        "boot_disk_size_gb": 15,
+        "num_local_ssds": 0
+      },
+      "accelerators": []
+    },
+    "software_config": {
+      "image_version": "1.3-deb9",
+      "properties": {},
+      "optional_components": [
+        "ANACONDA",
+        "JUPYTER"
+      ]
+    },
+    "endpoint_config": {
+      "http_ports": {},
+      "enable_http_port_access": true
+    },
+    "lifecycle_config": {
+      "idle_delete_ttl": "1800s"
+    },
+    "initialization_actions": [
+      {
+        "executable_file": "gs://xxx-bucket/job_dep.sh"
+      }
+    ]
+  }
+}
