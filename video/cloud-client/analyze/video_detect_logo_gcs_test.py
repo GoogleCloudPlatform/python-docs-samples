@@ -26,7 +26,7 @@ def test_detect_logo_gcs(capsys):
 
     out, _ = capsys.readouterr()
 
-    assert "Description : Google Maps" in out
+    assert "Description" in out
     assert "Confidence" in out
     assert "Start Time Offset" in out
     assert "End Time Offset" in out
