@@ -22,6 +22,12 @@ import string
 import backup_sample
 
 
+def unique_instance_id():
+    """ Creates a unique id for the database. """
+    return 'test-instance-{}'.format(''.join(random.choice(
+        string.ascii_lowercase + string.digits) for _ in range(5)))
+
+
 def unique_database_id():
     """ Creates a unique id for the database. """
     return 'test-db-{}'.format(''.join(random.choice(
@@ -34,7 +40,7 @@ def unique_backup_id():
         string.ascii_lowercase + string.digits) for _ in range(5)))
 
 
-INSTANCE_ID = os.environ['SPANNER_INSTANCE']
+INSTANCE_ID = unique_instance_id()
 DATABASE_ID = unique_database_id()
 RESTORE_DB_ID = unique_database_id()
 BACKUP_ID = unique_backup_id()
@@ -43,7 +49,12 @@ BACKUP_ID = unique_backup_id()
 @pytest.fixture(scope='module')
 def spanner_instance():
     spanner_client = spanner.Client()
-    return spanner_client.instance(INSTANCE_ID)
+    instance_config = '{}/instanceConfigs/{}'.format(
+        spanner_client.project_name, 'regional-us-central1')
+    instance = spanner_client.instance(INSTANCE_ID, instance_config)
+    instance.create()
+    yield instance
+    instance.delete()
 
 
 @pytest.fixture(scope='module')
