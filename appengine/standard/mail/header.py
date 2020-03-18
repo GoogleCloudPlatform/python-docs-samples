@@ -43,7 +43,7 @@ class SendMailHandler(webapp2.RequestHandler):
     def post(self):
         print(repr(self.request.POST))
         id = self.request.POST['thread_id']
-        send_example_mail('{}@appspot.gserviceaccount.com'.format(
+        send_example_mail('example@{}.appspotmail.com'.format(
             app_identity.get_application_id()), id)
         self.response.content_type = 'text/plain'
         self.response.write(
