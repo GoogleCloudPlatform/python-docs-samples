@@ -106,9 +106,12 @@ def test_remove_bucket_conditional_iam_binding(bucket):
             binding["role"] == ROLE
             and MEMBER in binding["members"]
             and binding.get("condition")
-            and binding.get("condition").title == CONDITION_TITLE
-            and binding.get("condition").description == CONDITION_DESCRIPTION
-            and binding.get("condition").expression == CONDITION_EXPRESSION
+            and binding["condition"]
+            == {
+                "title": CONDITION_TITLE,
+                "description": CONDITION_DESCRIPTION,
+                "expression": CONDITION_EXPRESSION,
+            }
         )
         for binding in policy.bindings
     )

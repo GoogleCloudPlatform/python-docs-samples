@@ -41,12 +41,15 @@ def remove_bucket_conditional_iam_binding(
     policy.bindings = [
         binding
         for binding in policy.bindings
-        if (
+        if not (
             binding["role"] == role
             and binding.get("condition")
-            and binding.get("condition").title == title
-            and binding.get("condition").description == description
-            and binding.get("condition").expression == expression
+            and binding["condition"]
+            == {
+                "title": title,
+                "description": description,
+                "expression": expression,
+            }
         )
     ]
 
