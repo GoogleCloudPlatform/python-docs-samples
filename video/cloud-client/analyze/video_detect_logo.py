@@ -44,7 +44,6 @@ def detect_logo(local_file_path="path/to/your/video.mp4"):
         # Search API](https://developers.google.com/knowledge-graph/).
         print(u"Entity Id : {}".format(entity.entity_id))
 
-        # Textual description, e.g. `Google`.
         print(u"Description : {}".format(entity.description))
 
         # All logo tracks where the recognized logo appears. Each track corresponds
