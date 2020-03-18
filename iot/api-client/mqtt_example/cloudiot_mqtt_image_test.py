@@ -15,6 +15,7 @@
 import os
 import sys
 import time
+import uuid
 
 from google.cloud import pubsub
 
@@ -23,7 +24,7 @@ import pytest
 # Add manager as library
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
 import cloudiot_mqtt_image
-from gcp_devrel.testing.flaky import flaky
+from flaky import flaky
 import manager
 
 
@@ -39,7 +40,7 @@ project_id = os.environ['GCLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
-registry_id = 'test-registry-{}'.format(int(time.time()))
+registry_id = 'test-registry-{}-{}'.format(uuid.uuid1(), int(time.time()))
 
 image_path = './resources/owlister_hootie.png'
 
@@ -88,7 +89,7 @@ def test_image(test_topic, capsys):
     assert 'on_publish' in out
 
 
-@flaky(max_runs=5)
+@flaky(max_runs=5, min_passes=1)
 def test_image_recv(test_topic, capsys):
     """Transmit an image with IoT Core and receive it from PubSub"""
     subscriber = pubsub.SubscriberClient()

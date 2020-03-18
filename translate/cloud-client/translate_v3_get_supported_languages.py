@@ -23,6 +23,7 @@ def sample_get_supported_languages(project_id="YOUR_PROJECT_ID"):
 
     parent = client.location_path(project_id, "global")
 
+    # Supported language codes: https://cloud.google.com/translate/docs/languages
     response = client.get_supported_languages(parent=parent)
 
     # List language codes of supported languages.
