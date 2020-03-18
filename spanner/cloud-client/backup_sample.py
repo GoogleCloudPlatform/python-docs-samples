@@ -1,4 +1,4 @@
-# Copyright 2019 Google Inc. All Rights Reserved.
+# Copyright 2020 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -138,7 +138,7 @@ def list_database_operations(instance_id):
     spanner_client = spanner.Client()
     instance = spanner_client.instance(instance_id)
 
-    # List the progress of restore
+    # List the progress of restore.
     filter_ = (
         "(metadata.@type:type.googleapis.com/"
         "google.spanner.admin.database.v1.OptimizeRestoredDatabaseMetadata)"
@@ -197,7 +197,7 @@ def delete_backup(instance_id, backup_id):
     backup = instance.backup(backup_id)
     backup.reload()
 
-    # Wait for databases that reference this backup to finish optimizing
+    # Wait for databases that reference this backup to finish optimizing.
     while backup.referencing_databases:
         time.sleep(30)
         backup.reload()
