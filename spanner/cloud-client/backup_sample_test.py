@@ -50,7 +50,8 @@ def spanner_instance():
     instance_config = '{}/instanceConfigs/{}'.format(
         spanner_client.project_name, 'regional-us-central1')
     instance = spanner_client.instance(INSTANCE_ID, instance_config)
-    instance.create()
+    op = instance.create()
+    op.result(30)  # block until completion
     yield instance
     instance.delete()
 
