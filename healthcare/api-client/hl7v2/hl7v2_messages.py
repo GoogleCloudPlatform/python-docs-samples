@@ -192,7 +192,6 @@ def list_hl7v2_messages(
     hl7v2_messages = client.projects().locations().datasets().hl7V2Stores(
     ).messages().list(parent=hl7v2_message_path).execute().get('hl7V2Messages', [])
 
-    print(hl7v2_messages)
     for hl7v2_message in hl7v2_messages:
         print(hl7v2_message)
 
