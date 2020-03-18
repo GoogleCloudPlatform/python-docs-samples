@@ -1,5 +1,6 @@
 Flask==1.1.1
-gunicorn==20.0.4
+gunicorn==20.0.4; python_version > '3.0'
+gunicorn==19.10.0; python_version < '3.0'
 google-cloud-vision==0.41.0
-google-cloud-storage==1.23.0
+google-cloud-storage==1.26.0
 google-cloud-datastore==1.10.0
