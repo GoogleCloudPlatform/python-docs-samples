@@ -17,7 +17,7 @@
 from google.cloud import videointelligence
 
 
-def detect_logo_gcs(input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.mp4",):
+def detect_logo_gcs(input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.mp4"):
 
     client = videointelligence.VideoIntelligenceServiceClient()
 
