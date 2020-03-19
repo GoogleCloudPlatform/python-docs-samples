@@ -200,30 +200,3 @@ def test_main(scale_bigtable, get_cpu_load, get_storage_utilization, sleep):
     scale_bigtable.assert_called_once_with(BIGTABLE_INSTANCE,
                                            BIGTABLE_INSTANCE, True)
     scale_bigtable.reset_mock()
-
-    # Test okay CPU, low storage utilization
-    get_cpu_load.return_value = 0.5
-    get_storage_utilization.return_value = 0.2
-
-    main(BIGTABLE_INSTANCE, BIGTABLE_INSTANCE, 0.6, 0.3, 0.6, SHORT_SLEEP,
-         LONG_SLEEP)
-    scale_bigtable.assert_not_called()
-    scale_bigtable.reset_mock()
-
-    # Test high CPU, low storage utilization
-    get_cpu_load.return_value = 0.7
-    get_storage_utilization.return_value = 0.2
-    main(BIGTABLE_INSTANCE, BIGTABLE_INSTANCE, 0.6, 0.3, 0.6, SHORT_SLEEP,
-         LONG_SLEEP)
-    scale_bigtable.assert_called_once_with(BIGTABLE_INSTANCE,
-                                           BIGTABLE_INSTANCE, True)
-    scale_bigtable.reset_mock()
-
-    # Test low CPU, low storage utilization
-    get_cpu_load.return_value = 0.2
-    get_storage_utilization.return_value = 0.2
-    main(BIGTABLE_INSTANCE, BIGTABLE_INSTANCE, 0.6, 0.3, 0.6, SHORT_SLEEP,
-         LONG_SLEEP)
-    scale_bigtable.assert_called_once_with(BIGTABLE_INSTANCE,
-                                           BIGTABLE_INSTANCE, False)
-    scale_bigtable.reset_mock()
