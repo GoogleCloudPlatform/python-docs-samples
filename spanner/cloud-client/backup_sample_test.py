@@ -89,6 +89,21 @@ def test_update_backup(capsys):
     assert " to " in out
 
 
+def test_list_backups(capsys, spanner_instance):
+    backup_sample.list_backups(INSTANCE_ID)
+    out, _ = capsys.readouterr()
+    backup_name = spanner_instance.name + "/backups/" + BACKUP_ID
+    assert "All backups:\n" + backup_name in out
+    assert (
+        "All backups with backup name containing \"users\":\n"
+        "All backups with database name containing \"bank\":\n"
+        "All backups with expire_time before \"2019-10-18T02:56:53Z\":\n"
+        "All backups with backup size more than 1000 bytes:\n"
+        "All backups created after \"2019-10-18T02:56:53Z\" and are READY:\n"
+    ) in out
+    assert "All backups created after \"2019-10-18T02:56:53Z\" and are READY:" + backup_name in out
+
+
 def test_delete_backup(capsys, spanner_instance):
     backup_sample.delete_backup(INSTANCE_ID, BACKUP_ID)
     out, _ = capsys.readouterr()
