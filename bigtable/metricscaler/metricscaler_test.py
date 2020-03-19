@@ -35,6 +35,8 @@ INSTANCE_ID_FORMAT = 'metric-scale-test-{}'
 INSTANCE_ID_RANGE = 10000
 BIGTABLE_INSTANCE = INSTANCE_ID_FORMAT.format(
     random.randrange(INSTANCE_ID_RANGE))
+BIGTABLE_DEV_INSTANCE = INSTANCE_ID_FORMAT.format(
+    random.randrange(INSTANCE_ID_RANGE))
 
 
 # System tests to verify API calls succeed
@@ -60,6 +62,29 @@ def instance():
     if not instance.exists():
         cluster = instance.cluster(cluster_id, location_id=BIGTABLE_ZONE,
                                    serve_nodes=serve_nodes,
+                                   default_storage_type=storage_type)
+        instance.create(clusters=[cluster])
+
+    yield
+
+    instance.delete()
+
+
+@pytest.fixture()
+def dev_instance():
+    cluster_id = BIGTABLE_DEV_INSTANCE
+
+    client = bigtable.Client(project=PROJECT, admin=True)
+
+    storage_type = enums.StorageType.SSD
+    development = enums.Instance.Type.DEVELOPMENT
+    labels = {'dev-label': 'dev-label'}
+    instance = client.instance(BIGTABLE_DEV_INSTANCE,
+                               instance_type=development,
+                               labels=labels)
+
+    if not instance.exists():
+        cluster = instance.cluster(cluster_id, location_id=BIGTABLE_ZONE,
                                    default_storage_type=storage_type)
         instance.create(clusters=[cluster])
 
@@ -101,6 +126,15 @@ def test_scale_bigtable(instance):
         except AssertionError:
             if n == 9:
                 raise
+
+
+def test_handle_dev_instance(capsys, dev_instance):
+    bigtable_client = bigtable.Client(admin=True)
+
+    scale_bigtable(BIGTABLE_DEV_INSTANCE, BIGTABLE_DEV_INSTANCE, True)
+
+    out, _ = capsys.readouterr()
+    assert 'Development instances cannot be scaled' in out
 
 
 # Unit test for logic

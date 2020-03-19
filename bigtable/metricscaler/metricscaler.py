@@ -21,6 +21,7 @@ import time
 
 from google.cloud import bigtable
 from google.cloud import monitoring_v3
+from google.cloud.bigtable import enums
 from google.cloud.monitoring_v3 import query
 
 PROJECT = os.environ['GCLOUD_PROJECT']
@@ -79,6 +80,9 @@ def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
     instance = bigtable_client.instance(bigtable_instance)
     instance.reload()
 
+    if instance.type_ == enums.Instance.Type.DEVELOPMENT:
+        raise ValueError("Development instances cannot be scaled.")
+
     cluster = instance.cluster(bigtable_cluster)
     cluster.reload()
 
@@ -104,12 +108,12 @@ def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
 
 
 def main(
-        bigtable_instance,
-        bigtable_cluster,
-        high_cpu_threshold,
-        low_cpu_threshold,
-        short_sleep,
-        long_sleep):
+    bigtable_instance,
+    bigtable_cluster,
+    high_cpu_threshold,
+    low_cpu_threshold,
+    short_sleep,
+    long_sleep):
     """Main loop runner that autoscales Cloud Bigtable.
 
     Args:
@@ -122,15 +126,18 @@ def main(
     """
     cluster_cpu = get_cpu_load()
     print('Detected cpu of {}'.format(cluster_cpu))
-    if cluster_cpu > high_cpu_threshold:
-        scale_bigtable(bigtable_instance, bigtable_cluster, True)
-        time.sleep(long_sleep)
-    elif cluster_cpu < low_cpu_threshold:
-        scale_bigtable(bigtable_instance, bigtable_cluster, False)
-        time.sleep(long_sleep)
-    else:
-        print('CPU within threshold, sleeping.')
-        time.sleep(short_sleep)
+    try:
+        if cluster_cpu > high_cpu_threshold:
+            scale_bigtable(bigtable_instance, bigtable_cluster, True)
+            time.sleep(long_sleep)
+        elif cluster_cpu < low_cpu_threshold:
+            scale_bigtable(bigtable_instance, bigtable_cluster, False)
+            time.sleep(long_sleep)
+        else:
+            print('CPU within threshold, sleeping.')
+            time.sleep(short_sleep)
+    except Exception as e:
+        print("Error during scaling: %s", e)
 
 
 if __name__ == '__main__':
