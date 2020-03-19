@@ -101,7 +101,10 @@ def test_list_backups(capsys, spanner_instance):
         "All backups with backup size more than 1000 bytes:\n"
         "All backups created after \"2019-10-18T02:56:53Z\" and are READY:\n"
     ) in out
-    assert "All backups created after \"2019-10-18T02:56:53Z\" and are READY:" + backup_name in out
+    assert (
+        "All backups created after \"2019-10-18T02:56:53Z\" and are READY:" +
+        backup_name
+    ) in out
 
 
 def test_delete_backup(capsys, spanner_instance):
