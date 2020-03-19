@@ -27,10 +27,10 @@ import storage_enable_uniform_bucket_level_access
 def bucket():
     """Yields a bucket that is deleted after the test completes."""
     bucket = None
-    while bucket is None or not bucket.exists():
+    while bucket is None or bucket.exists():
         bucket_name = "uniform-bucket-level-access-{}".format(int(time.time()))
         bucket = storage.Client().bucket(bucket_name)
-        bucket.create()
+    bucket.create()
     yield bucket
     time.sleep(3)
     bucket.delete(force=True)
