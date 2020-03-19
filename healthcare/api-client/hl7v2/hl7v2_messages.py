@@ -16,9 +16,9 @@ import argparse
 import json
 import os
 
+from google.oauth2 import service_account
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
-from google.oauth2 import service_account
 
 
 # [START healthcare_get_client]

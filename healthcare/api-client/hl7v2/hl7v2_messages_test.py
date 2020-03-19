@@ -13,16 +13,16 @@
 # limitations under the License.
 
 import os
-import pytest
-import re
 import sys
 import time
 
 # Add datasets for bootstrapping datasets for testing
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'datasets')) # noqa
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'datasets'))  # noqa
 import datasets
-import hl7v2_stores
+import pytest
+
 import hl7v2_messages
+import hl7v2_stores
 
 cloud_region = 'us-central1'
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
