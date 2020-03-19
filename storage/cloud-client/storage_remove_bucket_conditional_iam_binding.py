@@ -23,7 +23,7 @@ from google.cloud import storage
 def remove_bucket_conditional_iam_binding(
     bucket_name, role, title, description, expression
 ):
-    """Add a conditional IAM binding to a bucket's IAM policy."""
+    """Remove a conditional IAM binding from a bucket's IAM policy."""
     # bucket_name = "your-bucket-name"
     # role = "IAM role, e.g. roles/storage.objectViewer"
     # title = "Condition title."
@@ -38,19 +38,15 @@ def remove_bucket_conditional_iam_binding(
     # Set the policy's version to 3 to use condition in bindings.
     policy.version = 3
 
+    condition = {
+        "title": title,
+        "description": description,
+        "expression": expression,
+    }
     policy.bindings = [
         binding
         for binding in policy.bindings
-        if not (
-            binding["role"] == role
-            and binding.get("condition")
-            and binding["condition"]
-            == {
-                "title": title,
-                "description": description,
-                "expression": expression,
-            }
-        )
+        if not (binding["role"] == role and binding.get("condition") == condition)
     ]
 
     bucket.set_iam_policy(policy)
