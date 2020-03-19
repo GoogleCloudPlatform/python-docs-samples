@@ -46,6 +46,25 @@ def get_cpu_load():
     # [END bigtable_cpu]
 
 
+def get_storage_utilization():
+    """Returns the most recent Cloud Bigtable storage utilization measurement.
+
+    Returns:
+          float: The most recent Cloud Bigtable storage utilization metric
+    """
+    # [START bigtable_metric_scaler_storage_utilization]
+    client = monitoring_v3.MetricServiceClient()
+    utilization_query = query.Query(client,
+                                    project=PROJECT,
+                                    metric_type='bigtable.googleapis.com/'
+                                                'cluster/storage_utilization',
+                                    minutes=5)
+    time_series = list(utilization_query)
+    recent_time_series = time_series[0]
+    return recent_time_series.points[0].value.double_value
+    # [END bigtable_metric_scaler_storage_utilization]
+
+
 def scale_bigtable(bigtable_instance, bigtable_cluster, scale_up):
     """Scales the number of Cloud Bigtable nodes up or down.
 
@@ -112,27 +131,34 @@ def main(
     bigtable_cluster,
     high_cpu_threshold,
     low_cpu_threshold,
+    high_storage_threshold,
     short_sleep,
-    long_sleep):
+    long_sleep
+):
     """Main loop runner that autoscales Cloud Bigtable.
 
     Args:
           bigtable_instance (str): Cloud Bigtable instance ID to autoscale
           high_cpu_threshold (float): If CPU is higher than this, scale up.
           low_cpu_threshold (float): If CPU is lower than this, scale down.
+          high_storage_threshold (float): If storage is higher than this,
+                                          scale up.
           short_sleep (int): How long to sleep after no operation
           long_sleep (int): How long to sleep after the number of nodes is
                             changed
     """
     cluster_cpu = get_cpu_load()
+    cluster_storage = get_storage_utilization()
     print('Detected cpu of {}'.format(cluster_cpu))
+    print('Detected storage utilization of {}'.format(cluster_storage))
     try:
-        if cluster_cpu > high_cpu_threshold:
+        if cluster_cpu > high_cpu_threshold or cluster_storage > high_storage_threshold:
             scale_bigtable(bigtable_instance, bigtable_cluster, True)
             time.sleep(long_sleep)
         elif cluster_cpu < low_cpu_threshold:
-            scale_bigtable(bigtable_instance, bigtable_cluster, False)
-            time.sleep(long_sleep)
+            if cluster_storage < high_storage_threshold:
+                scale_bigtable(bigtable_instance, bigtable_cluster, False)
+                time.sleep(long_sleep)
         else:
             print('CPU within threshold, sleeping.')
             time.sleep(short_sleep)
@@ -158,6 +184,11 @@ if __name__ == '__main__':
         help='If Cloud Bigtable CPU usage is below this threshold, scale down',
         default=0.2)
     parser.add_argument(
+        '--high_storage_threshold',
+        help='If Cloud Bigtable storage utilization is above this threshold, '
+             'scale up',
+        default=0.6)
+    parser.add_argument(
         '--short_sleep',
         help='How long to sleep in seconds between checking metrics after no '
              'scale operation',
@@ -175,5 +206,6 @@ if __name__ == '__main__':
             args.bigtable_cluster,
             float(args.high_cpu_threshold),
             float(args.low_cpu_threshold),
+            float(args.high_storage_threshold),
             int(args.short_sleep),
             int(args.long_sleep))
