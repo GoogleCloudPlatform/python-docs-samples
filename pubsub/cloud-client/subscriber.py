@@ -201,8 +201,8 @@ def receive_messages(project_id, subscription_name, timeout=None):
     # Wrap subscriber in a 'with' block to automatically call close() when done.
     with subscriber:
         try:
-            # result() in a future will block indefinitely if `timeout` is not
-            # set, unless an exception is encountered first.
+            # When `timeout` is not set, result() will block indefinitely,
+            # unless an exception is encountered first.
             streaming_pull_future.result(timeout=timeout)
         except:  # noqa
             streaming_pull_future.cancel()
@@ -245,8 +245,8 @@ def receive_messages_with_custom_attributes(
     # Wrap subscriber in a 'with' block to automatically call close() when done.
     with subscriber:
         try:
-            # result() in a future will block indefinitely if `timeout` is not
-            # set, unless an exception is encountered first.
+            # When `timeout` is not set, result() will block indefinitely,
+            # unless an exception is encountered first.
             streaming_pull_future.result(timeout=timeout)
         except:  # noqa
             streaming_pull_future.cancel()
@@ -286,8 +286,8 @@ def receive_messages_with_flow_control(
     # Wrap subscriber in a 'with' block to automatically call close() when done.
     with subscriber:
         try:
-            # result() in a future will block indefinitely if `timeout` is not
-            # set, unless an exception is encountered first.
+            # When `timeout` is not set, result() will block indefinitely,
+            # unless an exception is encountered first.
             streaming_pull_future.result(timeout=timeout)
         except:  # noqa
             streaming_pull_future.cancel()
@@ -445,19 +445,19 @@ def listen_for_errors(project_id, subscription_name, timeout=None):
     )
     print("Listening for messages on {}..\n".format(subscription_path))
 
-    # result() in a future will block indefinitely if `timeout` is not set,
-    # unless an exception is encountered first.
-    try:
-        streaming_pull_future.result(timeout=timeout)
-    except Exception as e:
-        streaming_pull_future.cancel()
-        print(
-            "Listening for messages on {} threw an exception: {}.".format(
-                subscription_name, e
+    # Wrap subscriber in a 'with' block to automatically call close() when done.
+    with subscriber:
+        # When `timeout` is not set, result() will block indefinitely,
+        # unless an exception is encountered first.
+        try:
+            streaming_pull_future.result(timeout=timeout)
+        except Exception as e:
+            streaming_pull_future.cancel()
+            print(
+                "Listening for messages on {} threw an exception: {}.".format(
+                    subscription_name, e
+                )
             )
-        )
-
-    subscriber.close()
     # [END pubsub_subscriber_error_listener]
 
 
