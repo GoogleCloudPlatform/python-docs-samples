@@ -13,15 +13,12 @@
 # limitations under the License.
 
 
-def delete_dataset(project_id, dataset_id):
+# [START automl_delete_dataset_beta]
+from google.cloud import automl_v1beta1 as automl
+
+
+def delete_dataset(project_id="YOUR_PROJECT_ID", dataset_id="YOUR_DATASET_ID"):
     """Delete a dataset."""
-    # [START automl_delete_dataset_beta]
-    from google.cloud import automl_v1beta1 as automl
-
-    # TODO(developer): Uncomment and set the following variables
-    # project_id = "YOUR_PROJECT_ID"
-    # dataset_id = "YOUR_DATASET_ID"
-
     client = automl.AutoMlClient()
     # Get the full path of the dataset
     dataset_full_id = client.dataset_path(
@@ -30,4 +27,4 @@ def delete_dataset(project_id, dataset_id):
     response = client.delete_dataset(dataset_full_id)
 
     print("Dataset deleted. {}".format(response.result()))
-    # [END automl_delete_dataset_beta]
+# [END automl_delete_dataset_beta]

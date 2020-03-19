@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
 import os
+import uuid
 
 from google.cloud import automl_v1beta1 as automl
 import pytest
@@ -28,13 +28,13 @@ BUCKET_ID = "{}-lcm".format(PROJECT_ID)
 def dataset_id():
     client = automl.AutoMlClient()
     project_location = client.location_path(PROJECT_ID, "us-central1")
-    display_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    display_name = "test_{}".format(uuid.uuid4()).replace("-", "")[:32]
     metadata = automl.types.TextExtractionDatasetMetadata()
     dataset = automl.types.Dataset(
         display_name=display_name, text_extraction_dataset_metadata=metadata
     )
-    dataset = client.create_dataset(project_location, dataset)
-    dataset_id = dataset.name.split("/")[-1]
+    response = client.create_dataset(project_location, dataset)
+    dataset_id = response.name.split("/")[-1]
 
     yield dataset_id
 
