@@ -102,7 +102,7 @@ def test_list_backups(capsys, spanner_instance):
         "All backups created after \"2019-10-18T02:56:53Z\" and are READY:\n"
     ) in out
     assert (
-        "All backups created after \"2019-10-18T02:56:53Z\" and are READY:" +
+        "All backups created after \"2019-10-18T02:56:53Z\" and are READY:\n" +
         backup_name
     ) in out
 
