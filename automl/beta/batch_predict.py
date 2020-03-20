@@ -13,17 +13,17 @@
 # limitations under the License.
 
 
-def batch_predict(project_id, model_id, input_uri, output_uri):
+# [START automl_batch_predict_beta]
+from google.cloud import automl_v1beta1 as automl
+
+
+def batch_predict(
+    project_id="YOUR_PROJECT_ID",
+    model_id="YOUR_MODEL_ID",
+    input_uri="gs://YOUR_BUCKET_ID/path/to/your/input/csv_or_jsonl",
+    output_uri="gs://YOUR_BUCKET_ID/path/to/save/results/",
+):
     """Batch predict"""
-    # [START automl_batch_predict_beta]
-    from google.cloud import automl_v1beta1 as automl
-
-    # TODO(developer): Uncomment and set the following variables
-    # project_id = "YOUR_PROJECT_ID"
-    # model_id = "YOUR_MODEL_ID"
-    # input_uri = "gs://YOUR_BUCKET_ID/path/to/your/input/csv_or_jsonl"
-    # output_uri = "gs://YOUR_BUCKET_ID/path/to/save/results/"
-
     prediction_client = automl.PredictionServiceClient()
 
     # Get the full path of the model.
@@ -49,4 +49,4 @@ def batch_predict(project_id, model_id, input_uri, output_uri):
             response.result()
         )
     )
-    # [END automl_batch_predict_beta]
+# [END automl_batch_predict_beta]
