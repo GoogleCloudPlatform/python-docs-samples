@@ -31,9 +31,7 @@ def detect_person(local_file_path="path/to/your/video-file.mp4"):
         include_attributes=True,
         include_pose_landmarks=True,
     )
-    context = videointelligence.types.VideoContext(
-        person_detection_config=config
-    )
+    context = videointelligence.types.VideoContext(person_detection_config=config)
 
     # Start the asynchronous request
     operation = client.annotate_video(

@@ -25,9 +25,7 @@ def detect_faces(gcs_uri="gs://YOUR_BUCKET_ID/path/to/your/video.mp4"):
     config = videointelligence.types.FaceDetectionConfig(
         include_bounding_boxes=True, include_attributes=True
     )
-    context = videointelligence.types.VideoContext(
-        face_detection_config=config
-    )
+    context = videointelligence.types.VideoContext(face_detection_config=config)
 
     # Start the asynchronous request
     operation = client.annotate_video(

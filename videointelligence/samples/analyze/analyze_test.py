@@ -18,43 +18,53 @@ import pytest
 
 import analyze
 
-POSSIBLE_TEXTS = ['Google', 'SUR', 'SUR', 'ROTO', 'Vice President', '58oo9',
-                  'LONDRES', 'OMAR', 'PARIS', 'METRO', 'RUE', 'CARLO']
+POSSIBLE_TEXTS = [
+    "Google",
+    "SUR",
+    "SUR",
+    "ROTO",
+    "Vice President",
+    "58oo9",
+    "LONDRES",
+    "OMAR",
+    "PARIS",
+    "METRO",
+    "RUE",
+    "CARLO",
+]
 
 
 @pytest.mark.slow
 def test_analyze_shots(capsys):
-    analyze.analyze_shots('gs://cloud-samples-data/video/gbikes_dinosaur.mp4')
+    analyze.analyze_shots("gs://cloud-samples-data/video/gbikes_dinosaur.mp4")
     out, _ = capsys.readouterr()
-    assert 'Shot 1:' in out
+    assert "Shot 1:" in out
 
 
 @pytest.mark.slow
 def test_analyze_labels(capsys):
-    analyze.analyze_labels('gs://cloud-samples-data/video/cat.mp4')
+    analyze.analyze_labels("gs://cloud-samples-data/video/cat.mp4")
     out, _ = capsys.readouterr()
-    assert 'label description: cat' in out
+    assert "label description: cat" in out
 
 
 @pytest.mark.slow
 def test_analyze_explicit_content(capsys):
-    analyze.analyze_explicit_content('gs://cloud-samples-data/video/cat.mp4')
+    analyze.analyze_explicit_content("gs://cloud-samples-data/video/cat.mp4")
     out, _ = capsys.readouterr()
-    assert 'pornography' in out
+    assert "pornography" in out
 
 
 @pytest.mark.slow
 def test_speech_transcription(capsys):
-    analyze.speech_transcription(
-        'gs://cloud-samples-data/video/googlework_short.mp4')
+    analyze.speech_transcription("gs://cloud-samples-data/video/googlework_short.mp4")
     out, _ = capsys.readouterr()
-    assert 'cultural' in out
+    assert "cultural" in out
 
 
 @pytest.mark.slow
 def test_detect_text_gcs(capsys):
-    analyze.video_detect_text_gcs(
-        'gs://cloud-samples-data/video/googlework_tiny.mp4')
+    analyze.video_detect_text_gcs("gs://cloud-samples-data/video/googlework_tiny.mp4")
     out, _ = capsys.readouterr()
 
     text_exists = False
@@ -67,7 +77,6 @@ def test_detect_text_gcs(capsys):
 
 @pytest.mark.slow
 def test_track_objects_gcs(capsys):
-    analyze.track_objects_gcs(
-        'gs://cloud-samples-data/video/cat.mp4')
+    analyze.track_objects_gcs("gs://cloud-samples-data/video/cat.mp4")
     out, _ = capsys.readouterr()
-    assert 'cat' in out
+    assert "cat" in out
