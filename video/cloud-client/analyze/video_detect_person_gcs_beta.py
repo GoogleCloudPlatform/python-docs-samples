@@ -27,9 +27,7 @@ def detect_person(gcs_uri="gs://YOUR_BUCKET_ID/path/to/your/video.mp4"):
         include_attributes=True,
         include_pose_landmarks=True,
     )
-    context = videointelligence.types.VideoContext(
-        person_detection_config=config
-    )
+    context = videointelligence.types.VideoContext(person_detection_config=config)
 
     # Start the asynchronous request
     operation = client.annotate_video(
