@@ -47,9 +47,9 @@ def label_text(dataset_resource_name, instruction_resource_name,
         annotation_spec_set=annotation_spec_set_resource_name)
 
     response = client.label_text(
-        dataset_resource_name,
-        basic_config,
-        feature,
+        parent=dataset_resource_name,
+        basic_config=basic_config,
+        feature=feature,
         text_entity_extraction_config=config
     )
 
