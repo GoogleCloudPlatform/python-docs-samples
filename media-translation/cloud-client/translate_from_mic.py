@@ -121,27 +121,30 @@ def listen_print_loop(responses):
 
 def main():
     client = mediatranslation.SpeechTranslationServiceClient()
+
+    speech_config = mediatranslation.TranslateSpeechConfig(
+        audio_encoding='linear16',
+        source_language_code='en-US',
+        target_language_code='es-ES')
+
     config = mediatranslation.StreamingTranslateSpeechConfig(
-        audio_config=mediatranslation.TranslateSpeechConfig(
-            audio_encoding='linear16',
-            source_language_code='en-US',
-            target_language_code='es-ES')
+        audio_config=speech_config)
 
     # The first request contains the configuration.
     # Note that audio_content is explicitly set to None.
-    first_request=mediatranslation.StreamingTranslateSpeechRequest(
+    first_request = mediatranslation.StreamingTranslateSpeechRequest(
         streaming_config=config, audio_content=None)
 
     with MicrophoneStream(RATE, CHUNK) as stream:
-        audio_generator=stream.generator()
-        mic_requests=(mediatranslation.StreamingTranslateSpeechRequest(
+        audio_generator = stream.generator()
+        mic_requests = (mediatranslation.StreamingTranslateSpeechRequest(
             audio_content=content,
             streaming_config=config)
             for content in audio_generator)
 
-        requests=itertools.chain(iter([first_request]), mic_requests)
+        requests = itertools.chain(iter([first_request]), mic_requests)
 
-        responses=client.streaming_translate_speech(requests)
+        responses = client.streaming_translate_speech(requests)
 
         # Print the translation responses as they arrive
         listen_print_loop(responses)
