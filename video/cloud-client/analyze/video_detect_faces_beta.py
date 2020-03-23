@@ -29,9 +29,7 @@ def detect_faces(local_file_path="path/to/your/video-file.mp4"):
     config = videointelligence.types.FaceDetectionConfig(
         include_bounding_boxes=True, include_attributes=True
     )
-    context = videointelligence.types.VideoContext(
-        face_detection_config=config
-    )
+    context = videointelligence.types.VideoContext(face_detection_config=config)
 
     # Start the asynchronous request
     operation = client.annotate_video(
