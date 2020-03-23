@@ -125,7 +125,7 @@ def create_es256_device(
     # cloud_region = 'us-central1'
     # registry_id = 'your-registry-id'
     # device_id = 'your-device-id'
-    # certificate_file = 'path/to/certificate.pem'
+    # public_key_file = 'path/to/certificate.pem'
 
     client = iot_v1.DeviceManagerClient()
 
