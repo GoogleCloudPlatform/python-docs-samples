@@ -29,8 +29,6 @@ Example usage:
 from __future__ import division
 
 import itertools
-import re
-import sys
 
 from google.cloud import mediatranslation
 import pyaudio

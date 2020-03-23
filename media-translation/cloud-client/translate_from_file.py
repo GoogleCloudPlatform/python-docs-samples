@@ -25,7 +25,6 @@ import argparse
 
 
 def translate_from_file(file_path):
-    import io
     from google.cloud import mediatranslation
 
     client = mediatranslation.SpeechTranslationServiceClient()
@@ -79,4 +78,3 @@ if __name__ == '__main__':
     parser.add_argument('stream', help='File to stream to the API')
     args = parser.parse_args()
     translate_from_file(args.stream)
-
