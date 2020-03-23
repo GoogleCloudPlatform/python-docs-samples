@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-
-# Copyright 2020 Google Inc. All Rights Reserved.
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Google Cloud Media Translation sample application.
+"""Cloud Media Translation sample application.
+
 Example usage:
     python translate_from_file.py resources/audio.raw
 """
@@ -22,18 +21,20 @@ Example usage:
 import argparse
 
 # [START media_translation_translate_from_file]
+from google.cloud import mediatranslation
 
 
-def translate_from_file(file_path):
-    from google.cloud import mediatranslation
+def translate_from_file(file_path='path/to/your/file'):
 
     client = mediatranslation.SpeechTranslationServiceClient()
 
+    speech_config = mediatranslation.TranslateSpeechConfig(
+        audio_encoding='linear16',
+        source_language_code='en-US',
+        target_language_code='fr-FR')
+
     config = mediatranslation.StreamingTranslateSpeechConfig(
-        audio_config=mediatranslation.TranslateSpeechConfig(
-            audio_encoding='linear16',
-            source_language_code='en-US',
-            target_language_code='fr-FR'))
+        audio_config=speech_config)
 
     def request_generator(config, audio_file_path):
 
@@ -69,6 +70,7 @@ def translate_from_file(file_path):
 
         print(u'\nPartial translation: {0}'.format(translation))
         print(u'Partial recognition result: {0}'.format(source))
+    # [END media_translation_translate_from_file]
 
 
 if __name__ == '__main__':

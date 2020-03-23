@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-
-# Copyright 2020 Google Inc. All Rights Reserved.
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,11 +13,6 @@
 # limitations under the License.
 
 """Cloud Media Translation API sample application using a microphone.
-
-NOTE: This module requires the additional dependency `pyaudio`. To install
-using pip:
-
-    pip install pyaudio
 
 Example usage:
     python translate_from_mic.py
@@ -127,31 +120,28 @@ def listen_print_loop(responses):
 
 
 def main():
-    source_language_code = 'en-US'
-    target_language_code = 'es-ES'
-
     client = mediatranslation.SpeechTranslationServiceClient()
     config = mediatranslation.StreamingTranslateSpeechConfig(
         audio_config=mediatranslation.TranslateSpeechConfig(
             audio_encoding='linear16',
-            source_language_code=source_language_code,
-            target_language_code=target_language_code))
+            source_language_code='en-US',
+            target_language_code='es-ES')
 
     # The first request contains the configuration.
     # Note that audio_content is explicitly set to None.
-    first_request = mediatranslation.StreamingTranslateSpeechRequest(
+    first_request=mediatranslation.StreamingTranslateSpeechRequest(
         streaming_config=config, audio_content=None)
 
     with MicrophoneStream(RATE, CHUNK) as stream:
-        audio_generator = stream.generator()
-        mic_requests = (mediatranslation.StreamingTranslateSpeechRequest(
+        audio_generator=stream.generator()
+        mic_requests=(mediatranslation.StreamingTranslateSpeechRequest(
             audio_content=content,
             streaming_config=config)
             for content in audio_generator)
 
-        requests = itertools.chain(iter([first_request]), mic_requests)
+        requests=itertools.chain(iter([first_request]), mic_requests)
 
-        responses = client.streaming_translate_speech(requests)
+        responses=client.streaming_translate_speech(requests)
 
         # Print the translation responses as they arrive
         listen_print_loop(responses)
