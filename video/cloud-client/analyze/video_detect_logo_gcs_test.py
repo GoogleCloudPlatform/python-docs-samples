@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC. All Rights Reserved.
+# Copyright 2020 Google
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,19 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 
-def test_auto_complete_sample(capsys):
-    import auto_complete_sample
-    import re
+import video_detect_logo_gcs
 
-    auto_complete_sample.run_sample()
+RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+
+
+def test_detect_logo_gcs(capsys):
+    input_uri = "gs://cloud-samples-data/video/googlework_tiny.mp4"
+
+    video_detect_logo_gcs.detect_logo_gcs(input_uri=input_uri)
+
     out, _ = capsys.readouterr()
-    expected = (
-        '.*completionResults.*'
-        'suggestion.*Google.*type.*COMPANY_NAME.*\n'
-        '.*completionResults.*'
-        'suggestion.*Software Engineer.*type.*JOB_TITLE.*\n'
-        '.*completionResults.*'
-        'suggestion.*Software Engineer.*type.*JOB_TITLE.*\n'
-    )
-    assert re.search(expected, out)
+
+    assert "Description" in out
+    assert "Confidence" in out
+    assert "Start Time Offset" in out
+    assert "End Time Offset" in out

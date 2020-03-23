@@ -20,7 +20,7 @@ command line application and sample code for creating an accessing a secret.
 def quickstart(_project_id=None, _secret_id=None):
     # [START secretmanager_quickstart]
     # Import the Secret Manager client library.
-    from google.cloud import secretmanager_v1beta1 as secretmanager
+    from google.cloud import secretmanager
 
     # GCP project in which to store secrets in Secret Manager.
     project_id = 'YOUR_PROJECT_ID'

@@ -13,28 +13,18 @@
 # limitations under the License.
 
 
-# [START automl_import_data_beta]
+# [START automl_delete_dataset_beta]
 from google.cloud import automl_v1beta1 as automl
 
 
-def import_dataset(
-    project_id="YOUR_PROJECT_ID",
-    dataset_id="YOUR_DATASET_ID",
-    path="gs://YOUR_BUCKET_ID/path/to/data.csv",
-):
-    """Import a dataset."""
+def delete_dataset(project_id="YOUR_PROJECT_ID", dataset_id="YOUR_DATASET_ID"):
+    """Delete a dataset."""
     client = automl.AutoMlClient()
-    # Get the full path of the dataset.
+    # Get the full path of the dataset
     dataset_full_id = client.dataset_path(
         project_id, "us-central1", dataset_id
     )
-    # Get the multiple Google Cloud Storage URIs
-    input_uris = path.split(",")
-    gcs_source = automl.types.GcsSource(input_uris=input_uris)
-    input_config = automl.types.InputConfig(gcs_source=gcs_source)
-    # Import data from the input URI
-    response = client.import_data(dataset_full_id, input_config)
+    response = client.delete_dataset(dataset_full_id)
 
-    print("Processing import...")
-    print("Data imported. {}".format(response.result()))
-# [END automl_import_data_beta]
+    print("Dataset deleted. {}".format(response.result()))
+# [END automl_delete_dataset_beta]
