@@ -1,1 +1,1 @@
-google-cloud-media-translation==1.0.0
+google-cloud-media-translation>=0.1.0
