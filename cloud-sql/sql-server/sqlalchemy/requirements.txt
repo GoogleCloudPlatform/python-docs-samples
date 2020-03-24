@@ -1,0 +1,4 @@
+Flask==1.1.1
+SQLAlchemy==1.3.13
+pyodbc==4.0.30
+
