@@ -40,9 +40,8 @@ def get_cpu_load():
                             metric_type='bigtable.googleapis.com/'
                                         'cluster/cpu_load',
                             minutes=5)
-    time_series = next(cpu_query.iter())
-    recent_time_series = time_series[0]
-    return recent_time_series.points[0].value.double_value
+    cpu = next(cpu_query.iter())
+    return cpu.points[0].value.double_value
     # [END bigtable_cpu]
 
 
@@ -59,9 +58,8 @@ def get_storage_utilization():
                                     metric_type='bigtable.googleapis.com/'
                                                 'cluster/storage_utilization',
                                     minutes=5)
-    time_series = next(utilization_query.iter())
-    recent_time_series = time_series[0]
-    return recent_time_series.points[0].value.double_value
+    utilization = next(utilization_query.iter())
+    return utilization.points[0].value.double_value
     # [END bigtable_metric_scaler_storage_utilization]
 
 
