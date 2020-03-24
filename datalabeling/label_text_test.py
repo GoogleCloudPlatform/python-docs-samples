@@ -26,7 +26,7 @@ import manage_dataset
 import pytest
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/text/text_dataset.csv'
+INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/text/input.csv'
 
 
 @pytest.fixture(scope='function')
