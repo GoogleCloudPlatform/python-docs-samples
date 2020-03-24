@@ -12,12 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-runtime: python37
+runtime: custom
+env: flex
 
 # Remember - storing secrets in plaintext is potentially unsafe. Consider using
 # something like https://cloud.google.com/kms/ to help keep secrets secret.
 env_variables:
-  CLOUD_SQL_CONNECTION_NAME: <MY-PROJECT>:<INSTANCE-REGION>:<MY-DATABASE>
-  DB_USER: my-db-user
-  DB_PASS: my-db-pass
-  DB_NAME: my_db
+  DB_USER: <your-username>
+  DB_PASS: <your-password>
+  DB_NAME: votes
+  PROD: true
+
+beta_settings:
+  cloud_sql_instances: <project-name>:<region-name>:<instance-name>=tcp:1433
