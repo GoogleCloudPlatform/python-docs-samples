@@ -40,8 +40,8 @@ def run_natality_tutorial():
     dataset_ref = client.dataset('natality_regression')
     dataset = bigquery.Dataset(dataset_ref)
 
-    # Create the new BigQuery dataset.
-    dataset = client.create_dataset(dataset)
+    # Optionally create the new BigQuery dataset if it doesn't already exist.
+    dataset = client.create_dataset(dataset, exists_ok=True)
 
     # In the new BigQuery dataset, create a reference to a new table for
     # storing the query results.
@@ -52,6 +52,12 @@ def run_natality_tutorial():
 
     # Set the destination table to the table reference created above.
     job_config.destination = table_ref
+    # [END bigquery_query_natality_tutorial]
+    # We override the dispositions to allow atomic replacements from concurrent
+    # invocations, which is safe due to the atomic truncate-and-replace model
+    # this sample employs.
+    job_config.write_disposition = "WRITE_TRUNCATE"
+    # [START bigquery_query_natality_tutorial]
 
     # Set up a query in Standard SQL, which is the default for the BigQuery
     # Python client library.
