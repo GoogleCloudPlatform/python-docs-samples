@@ -18,10 +18,9 @@ import os
 
 from flask import Flask, render_template, request, Response
 import sqlalchemy
-from sqlalchemy import MetaData
 from sqlalchemy import Table
 from sqlalchemy import Column
-from sqlalchemy import Integer, String, DateTime
+from sqlalchemy import DateTime, Integer, String
 
 app = Flask(__name__)
 
@@ -34,7 +33,8 @@ db_user = os.environ.get("DB_USER")
 db_pass = os.environ.get("DB_PASS")
 db_name = os.environ.get("DB_NAME")
 
-# If this is running in the docker container when deployed to GAE flex, use "172.17.0.1"
+# If this is running in the docker container when deployed to GAE flex,
+# use "172.17.0.1"
 host = "172.17.0.1" if os.environ.get("PROD") else "127.0.0.1"
 
 # The SQLAlchemy engine will help manage interactions, including automatically
@@ -88,7 +88,7 @@ def create_tables():
     # Create tables (if they don't already exist)
     if not db.has_table("votes"):
         metadata = sqlalchemy.MetaData(db)
-        table = Table(
+        Table(
             "votes",
             metadata,
             Column("vote_id", Integer, primary_key=True, nullable=False),
@@ -104,7 +104,8 @@ def index():
     with db.connect() as conn:
         # Execute the query and fetch all results
         recent_votes = conn.execute(
-            "SELECT TOP(5) candidate, time_cast FROM votes ORDER BY time_cast DESC"
+            "SELECT TOP(5) candidate, time_cast FROM votes "
+            "ORDER BY time_cast DESC"
         ).fetchall()
         # Convert the results into a list of dicts representing votes
         for row in recent_votes:
@@ -120,9 +121,8 @@ def index():
         space_result = conn.execute(stmt, candidate="SPACES").fetchone()
         space_count = space_result[0]
 
-    return render_template(
-        "index.html", recent_votes=votes, tab_count=tab_count, space_count=space_count
-    )
+    return render_template("index.html", recent_votes=votes,
+                           tab_count=tab_count, space_count=space_count)
 
 
 @app.route("/", methods=["POST"])
@@ -138,7 +138,8 @@ def save_vote():
     # [START cloud_sql_server_python_sqlalchemy_connection]
     # Preparing a statement before hand can help protect against injections.
     stmt = sqlalchemy.text(
-        "INSERT INTO votes (time_cast, candidate)" " VALUES (:time_cast, :candidate)"
+        "INSERT INTO votes (time_cast, candidate)"
+        " VALUES (:time_cast, :candidate)"
     )
     try:
         # Using a with statement ensures that the connection is always released
@@ -160,7 +161,8 @@ def save_vote():
 
     return Response(
         status=200,
-        response="Vote successfully cast for '{}' at time {}!".format(team, time_cast),
+        response="Vote successfully cast for '{}' at time {}!".format(
+                    team, time_cast),
     )
 
 
