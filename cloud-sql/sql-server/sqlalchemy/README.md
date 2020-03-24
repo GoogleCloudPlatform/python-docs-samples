@@ -74,6 +74,8 @@ App Engine Flexible supports connecting to your SQL Server instance through TCP
 First, update `app.yaml` with the correct values to pass the environment 
 variables and instance name into the runtime.
 
+Then, make sure that the service account `service-{PROJECT_NUMBER}>@gae-api-prod.google.com.iam.gserviceaccount.com` has the IAM role `Cloud SQL Client`.
+
 Next, the following command will deploy the application to your Google Cloud project:
 ```bash
 gcloud beta app deploy
