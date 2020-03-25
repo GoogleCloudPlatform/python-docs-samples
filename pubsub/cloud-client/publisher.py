@@ -175,8 +175,6 @@ def publish_messages_with_error_handler(project_id, topic_name):
 def publish_messages_with_batch_settings(project_id, topic_name):
     """Publishes multiple messages to a Pub/Sub topic with batch settings."""
     # [START pubsub_publisher_batch_settings]
-    import threading
-
     from google.cloud import pubsub_v1
 
     # TODO project_id = "Your Google Cloud Project ID"
