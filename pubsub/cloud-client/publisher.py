@@ -175,6 +175,8 @@ def publish_messages_with_error_handler(project_id, topic_name):
 def publish_messages_with_batch_settings(project_id, topic_name):
     """Publishes multiple messages to a Pub/Sub topic with batch settings."""
     # [START pubsub_publisher_batch_settings]
+    import threading
+
     from google.cloud import pubsub_v1
 
     # TODO project_id = "Your Google Cloud Project ID"
@@ -183,17 +185,24 @@ def publish_messages_with_batch_settings(project_id, topic_name):
     # Configure the batch to publish as soon as there is one kilobyte
     # of data or one second has passed.
     batch_settings = pubsub_v1.types.BatchSettings(
-        max_bytes=1024, max_latency=1  # One kilobyte  # One second
+        max_bytes=1024, # One kilobyte
+        max_latency=1,  # One second
     )
     publisher = pubsub_v1.PublisherClient(batch_settings)
     topic_path = publisher.topic_path(project_id, topic_name)
+
+    # Resolve the publish future in a separate thread.
+    def callback(future):
+        message_id = future.result()
+        print(message_id)
 
     for n in range(1, 10):
         data = u"Message number {}".format(n)
         # Data must be a bytestring
         data = data.encode("utf-8")
         future = publisher.publish(topic_path, data=data)
-        print(future.result())
+        # Non-blocking. Allow the publisher client to batch multiple messages.
+        future.add_done_callback(callback)
 
     print("Published messages with batch settings.")
     # [END pubsub_publisher_batch_settings]
