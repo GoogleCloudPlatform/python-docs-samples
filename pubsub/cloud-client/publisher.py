@@ -180,11 +180,12 @@ def publish_messages_with_batch_settings(project_id, topic_name):
     # TODO project_id = "Your Google Cloud Project ID"
     # TODO topic_name = "Your Pub/Sub topic name"
 
-    # Configure the batch to publish as soon as there is one kilobyte
-    # of data or one second has passed.
+    # Configure the batch to publish as soon as there is ten messages,
+    # one kilobyte of data, or one second has passed.
     batch_settings = pubsub_v1.types.BatchSettings(
-        max_bytes=1024,
-        max_latency=1
+        max_messages=10,  # default 100
+        max_bytes=1024,  # default 1 MB
+        max_latency=1,  # default 10 ms
     )
     publisher = pubsub_v1.PublisherClient(batch_settings)
     topic_path = publisher.topic_path(project_id, topic_name)
