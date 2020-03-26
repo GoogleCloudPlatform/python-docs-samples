@@ -18,8 +18,6 @@ Example usage:
     python translate_from_file.py resources/audio.raw
 """
 
-import argparse
-
 # [START media_translation_translate_from_file]
 from google.cloud import mediatranslation
 
