@@ -71,12 +71,3 @@ def translate_from_file(file_path='path/to/your/file'):
         print(u'\nPartial translation: {0}'.format(translation))
         print(u'Partial recognition result: {0}'.format(source))
     # [END media_translation_translate_from_file]
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('stream', help='File to stream to the API')
-    args = parser.parse_args()
-    translate_from_file(args.stream)
