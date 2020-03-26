@@ -12,19 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 
-# [START automl_delete_dataset_beta]
-from google.cloud import automl_v1beta1 as automl
+import instantiate_inline_workflow_template
 
 
-def delete_dataset(project_id="YOUR_PROJECT_ID", dataset_id="YOUR_DATASET_ID"):
-    """Delete a dataset."""
-    client = automl.AutoMlClient()
-    # Get the full path of the dataset
-    dataset_full_id = client.dataset_path(
-        project_id, "us-central1", dataset_id
+PROJECT_ID = os.environ['GCLOUD_PROJECT']
+REGION = 'us-central1'
+
+
+def test_workflows(capsys):
+    # Wrapper function for client library function
+    instantiate_inline_workflow_template.instantiate_inline_workflow_template(
+        PROJECT_ID, REGION
     )
-    response = client.delete_dataset(dataset_full_id)
 
-    print("Dataset deleted. {}".format(response.result()))
-# [END automl_delete_dataset_beta]
+    out, _ = capsys.readouterr()
+    assert "successfully" in out
