@@ -61,7 +61,7 @@ def dataset():
     dataset_id = '{}.{}'.format(PROJECT, DATASET)
     dataset = bigquery.Dataset(dataset_id)
     dataset = bigquery_client.create_dataset(dataset, exists_ok=True)
-    yield
+    yield '{}:{}'.format(PROJECT, DATASET) 
     bigquery_client.delete_table('{}.{}'.format(DATASET, TABLE), not_found_ok=True)
     bigquery_client.delete_dataset(DATASET, not_found_ok=True)
 
@@ -89,7 +89,7 @@ def test_dataflow_flex_templates_pubsub_to_bigquery(dataset, topic_path,
         '--runner', 'DirectRunner',
         '--temp_location', tempfile.mkdtemp(),
         '--input_subscription', subscription_path,
-        '--output_table', '{}:{}.{}'.format(PROJECT, DATASET, TABLE),
+        '--output_table', '{}.{}'.format(dataset, TABLE),
         '--window_interval', '5',
     ]))
 
