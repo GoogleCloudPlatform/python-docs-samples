@@ -9,42 +9,61 @@
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an 'AS IS' BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
 import multiprocessing as mp
 import os
+import pytest
 import subprocess as sp
 import tempfile
 import time
+import uuid
 
 from google.cloud import bigquery
 from google.cloud import pubsub
 
 PROJECT = os.environ["GCLOUD_PROJECT"]
-DATASET = 'beam_samples'
+UUID = str(uuid.uuid4()).split('-')[0]
+DATASET = 'beam_samples_{}'.format(UUID)
 TABLE = 'streaming_beam_sql'
-TOPIC = 'messages'
-SUBSCRIPTION = 'messages'
+TOPIC = 'messages-{}'.format(UUID)
+SUBSCRIPTION = TOPIC
 
 
-def create_topic_path():
+@pytest.fixture
+def topic_path():
     publisher_client = pubsub.PublisherClient()
     topic_path = publisher_client.topic_path(PROJECT, TOPIC)
     try:
         publisher_client.delete_topic(topic_path)
     except Exception:
         pass
-    response = publisher_client.create_topic(topic_path)
-    return response.name
+    topic = publisher_client.create_topic(topic_path)
+    yield topic.name
+    publisher_client.delete_topic(topic_path)
 
 
-def create_subscription(topic_path):
+@pytest.fixture
+def subscription_path(topic_path):
     subscriber = pubsub.SubscriberClient()
-    sub_path = subscriber.subscription_path(PROJECT, SUBSCRIPTION)
+    subscription_path = subscriber.subscription_path(PROJECT, SUBSCRIPTION)
     try:
-        subscriber.delete_subscription(sub_path)
+        subscriber.delete_subscription(subscription_path)
     except Exception:
         pass
-    response = subscriber.create_subscription(sub_path, topic_path)
-    return response.name
+    subscription = subscriber.create_subscription(subscription_path, topic_path)
+    yield subscription.name
+    subscriber.delete_subscription(subscription_path)
+
+
+@pytest.fixture
+def dataset():
+    bigquery_client = bigquery.Client(project=PROJECT)
+    dataset_id = '{}.{}'.format(PROJECT, DATASET)
+    dataset = bigquery.Dataset(dataset_id)
+    dataset = bigquery_client.create_dataset(dataset, exists_ok=True)
+    yield
+    bigquery_client.delete_table('{}.{}'.format(DATASET, TABLE), not_found_ok=True)
+    bigquery_client.delete_dataset(DATASET, not_found_ok=True)
 
 
 def _infinite_publish_job(topic_path):
@@ -54,38 +73,23 @@ def _infinite_publish_job(topic_path):
             topic_path,
             b'{"url": "https://beam.apache.org/", "review": "positive"}')
         future.result()
-        time.sleep(10)
+        time.sleep(1)
 
 
-def test_dataflow_flex_templates_pubsub_to_bigquery():
-    # Create BigQuery client and dataset.
-    bigquery_client = bigquery.Client(project=PROJECT)
-    dataset_id = '{}.{}'.format(PROJECT, DATASET)
-    dataset = bigquery.Dataset(dataset_id)
-    dataset = bigquery_client.create_dataset(dataset, exists_ok=True)
-
-    # Create Pubsub topic and subscription.
-    topic_path = create_topic_path()
-    sub_path = create_subscription(topic_path)
-
+def test_dataflow_flex_templates_pubsub_to_bigquery(dataset, topic_path,
+                                                    subscription_path):
     # Use one process to publish messages to a topic.
     publish_process = mp.Process(target=lambda: _infinite_publish_job(topic_path))
 
     # Use another process to run the streaming pipeline that should write one
     # row to BigQuery every minute (according to the default window size).
     pipeline_process = mp.Process(target=lambda: sp.call([
-        'python',
-        'streaming_beam.py',
-        '--project',
-        PROJECT,
-        '--runner',
-        'DirectRunner',
-        '--temp_location',
-        tempfile.mkdtemp(),
-        '--input_subscription',
-        sub_path,
-        '--output_table',
-        '{}:{}.{}'.format(PROJECT, DATASET, TABLE),
+        'python', 'streaming_beam.py',
+        '--project', PROJECT,
+        '--runner', 'DirectRunner',
+        '--temp_location', tempfile.mkdtemp(),
+        '--input_subscription', subscription_path,
+        '--output_table', '{}:{}.{}'.format(PROJECT, DATASET, TABLE),
     ]))
 
     publish_process.start()
@@ -98,20 +102,13 @@ def test_dataflow_flex_templates_pubsub_to_bigquery():
     publish_process.terminate()
 
     # Check for output data in BigQuery.
-    time.sleep(10)
-    query = 'SELECT * FROM beam_samples.streaming_beam_sql'
+    bigquery_client = bigquery.Client(project=PROJECT)
+    query = 'SELECT * FROM {}.{}'.format(DATASET, TABLE)
     query_job = bigquery_client.query(query)
     rows = query_job.result()
     assert rows.total_rows > 0
     for row in rows:
         assert row['score'] == 1
-
-    # Clean up.
-    bigquery_client.delete_table(
-        'beam_samples.streaming_beam_sql', not_found_ok=True)
-    bigquery_client.delete_dataset(DATASET, not_found_ok=True)
-    pubsub.PublisherClient().delete_topic(topic_path)
-    pubsub.SubscriberClient().delete_subscription(sub_path)
 
 
 # TODO:Testcase using Teststream currently does not work as intended.
@@ -135,33 +132,20 @@ def test_dataflow_flex_templates_pubsub_to_bigquery():
         .advance_watermark_to_infinity()
     ),
 )
-def test_dataflow_flex_templates_pubsub_to_bigquery():
-
-    # Create BigQuery client, dataset and table.
-    bigquery_client = bigquery.Client(project=PROJECT)
-    dataset_id = '{}.{}'.format(PROJECT, DATASET)
-    dataset = bigquery.Dataset(dataset_id)
-    dataset = bigquery_client.create_dataset(dataset, exists_ok=True)
-
+def test_dataflow_flex_templates_pubsub_to_bigquery(dataset):
     streaming_beam.run(
         args=[
-            "--project",
-            PROJECT,
-            "--runner",
-            "DirectRunner"
+            "--project", PROJECT,
+            "--runner", "DirectRunner"
         ],
-        #input_subscription="unused",
-        input_subscription="projects/google.com:clouddfe/subscriptions/messages",
-        output_table=PROJECT+":beam_samples.streaming_beam_sql",
+        input_subscription="unused",
+        output_table='{}:{}.{}'.format(PROJECT, DATASET, TABLE),
     )
 
     # Check for output data in BigQuery.
-    query = 'SELECT * FROM beam_samples.streaming_beam_sql'
+    bigquery_client = bigquery.Client(project=PROJECT)
+    query = 'SELECT * FROM {}.{}'.format(DATASET, TABLE)
     query_job = bigquery_client.query(query)
     rows = query_job.result()
     assert rows.total_rows > 0
-
-    # Clean up.
-    bigquery_client.delete_table("beam_samples.streaming_beam_sql", not_found_ok=True)
-    bigquery_client.delete_dataset(DATASET, not_found_ok=True)
 '''
