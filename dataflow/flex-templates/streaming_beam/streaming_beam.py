@@ -61,7 +61,7 @@ def get_statistics(url_messages):
     }
 
 
-def run(args, input_subscription, output_table):
+def run(args, input_subscription, output_table, window_interval):
     """Build and run the pipeline."""
     options = PipelineOptions(args, save_main_session=True, streaming=True)
 
@@ -75,7 +75,7 @@ def run(args, input_subscription, output_table):
             | 'UTF-8 bytes to string' >> beam.Map(lambda msg: msg.decode('utf-8'))
             | 'Parse JSON messages' >> beam.Map(parse_json_message)
             | 'Fixed-size windows' >> beam.WindowInto(
-                window.FixedWindows(60, 0))  # 1 minute
+                window.FixedWindows(int(window_interval), 0))
             | 'Add URL keys' >> beam.Map(lambda msg: (msg['url'], msg))
             | 'Group by URLs' >> beam.GroupByKey()
             | 'Get statistics' >> beam.Map(get_statistics))
@@ -96,5 +96,10 @@ if __name__ == '__main__':
         '--input_subscription',
         help='Input PubSub subscription of the form '
         '"projects/<PROJECT>/subscriptions/<SUBSCRIPTION>."')
+    parser.add_argument(
+        '--window_interval',
+        default=60,
+        help='Window interval in seconds for grouping incoming messages.')
     known_args, pipeline_args = parser.parse_known_args()
-    run(pipeline_args, known_args.input_subscription, known_args.output_table)
+    run(pipeline_args, known_args.input_subscription, known_args.output_table,
+        known_args.window_interval)

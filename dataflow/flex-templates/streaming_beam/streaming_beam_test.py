@@ -90,12 +90,13 @@ def test_dataflow_flex_templates_pubsub_to_bigquery(dataset, topic_path,
         '--temp_location', tempfile.mkdtemp(),
         '--input_subscription', subscription_path,
         '--output_table', '{}:{}.{}'.format(PROJECT, DATASET, TABLE),
+        '--window_interval', '5',
     ]))
 
     publish_process.start()
     pipeline_process.start()
 
-    pipeline_process.join(timeout=90)
+    pipeline_process.join(timeout=30)
     publish_process.join(timeout=0)
 
     pipeline_process.terminate()
