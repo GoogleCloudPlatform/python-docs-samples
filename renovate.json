@@ -2,7 +2,7 @@
   "extends": [
     "config:base"
   ],
-  "prConcurrentLimit": 5,
-  "rebaseWhen": "auto",
+  "prConcurrentLimit": 0,
+  "rebaseWhen": "never",
   "masterIssue": true
 }
