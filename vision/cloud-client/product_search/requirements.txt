@@ -1,2 +1,2 @@
-google-cloud-vision==0.39.0
+google-cloud-vision==0.42.0
 google-cloud-storage==1.26.0
