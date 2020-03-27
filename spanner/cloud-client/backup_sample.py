@@ -190,6 +190,11 @@ def list_backups(instance_id, database_id, backup_id):
             filter_="create_time >= \"{}-{}-{}T{}:{}:{}Z\" AND state:READY".format(
                 *create_time.timetuple())):
         print(backup.name)
+
+    print("All backups with pagination")
+    for page in instance.list_backups(page_size=2).pages:
+        for backup in page:
+            print(backup.name)
 # [END spanner_list_backups]
 
 
