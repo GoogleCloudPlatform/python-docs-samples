@@ -68,50 +68,41 @@ def database(spanner_instance):
 def test_create_backup(capsys, database):
     backup_sample.create_backup(INSTANCE_ID, DATABASE_ID, BACKUP_ID)
     out, _ = capsys.readouterr()
-    assert "Backup " in out
-    assert (BACKUP_ID + " of size 0 bytes was created at ") in out
+    assert BACKUP_ID in out
 
 
 def test_restore_database(capsys):
     backup_sample.restore_database(INSTANCE_ID, RESTORE_DB_ID, BACKUP_ID)
     out, _ = capsys.readouterr()
-    assert "Database " in out
     assert (DATABASE_ID + " restored to ") in out
     assert (RESTORE_DB_ID + " from backup ") in out
-    assert (BACKUP_ID + ".") in out
+    assert BACKUP_ID in out
 
 
 def test_update_backup(capsys):
     backup_sample.update_backup(INSTANCE_ID, BACKUP_ID)
     out, _ = capsys.readouterr()
-    assert "Backup " in out
-    assert (BACKUP_ID + " expire time was updated from ") in out
-    assert " to " in out
+    assert BACKUP_ID in out
+
+
+def test_list_backup_operations(capsys, spanner_instance):
+    backup_sample.list_backup_operations(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert BACKUP_ID in out
+    assert DATABASE_ID in out
 
 
 def test_list_backups(capsys, spanner_instance):
-    backup_sample.list_backups(INSTANCE_ID)
+    backup_sample.list_backups(INSTANCE_ID, DATABASE_ID, BACKUP_ID)
     out, _ = capsys.readouterr()
-    backup_name = spanner_instance.name + "/backups/" + BACKUP_ID
-    assert "All backups:\n" + backup_name in out
-    assert (
-        "All backups with backup name containing \"users\":\n"
-        "All backups with database name containing \"bank\":\n"
-        "All backups with expire_time before \"2019-10-18T02:56:53Z\":\n"
-        "All backups with backup size more than 1000 bytes:\n"
-        "All backups created after \"2019-10-18T02:56:53Z\" and are READY:\n"
-    ) in out
-    assert (
-        "All backups created after \"2019-10-18T02:56:53Z\" and are READY:\n" +
-        backup_name
-    ) in out
+    id_count = out.count(BACKUP_ID)
+    assert id_count is 6
 
 
 def test_delete_backup(capsys, spanner_instance):
     backup_sample.delete_backup(INSTANCE_ID, BACKUP_ID)
     out, _ = capsys.readouterr()
-    assert "Backup " in out
-    assert (BACKUP_ID + " has been deleted.") in out
+    assert BACKUP_ID in out
 
 
 def test_cancel_backup(capsys):

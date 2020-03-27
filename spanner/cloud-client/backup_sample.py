@@ -125,11 +125,9 @@ def list_backup_operations(instance_id, database_id):
     operations = instance.list_backup_operations(filter_=filter_)
     for op in operations:
         metadata = op.metadata
-        # List the pending backups on the instance.
-        if metadata.progress.progress_percent < 100:
-            print("Backup {} on database {} pending: {}% complete.".format(
-                metadata.name, metadata.database,
-                metadata.progress.progress_percent))
+        print("Backup {} on database {}: {}% complete.".format(
+            metadata.name, metadata.database,
+            metadata.progress.progress_percent))
 # [END spanner_list_backup_operations]
 
 
@@ -151,7 +149,7 @@ def list_database_operations(instance_id):
 
 
 # [START spanner_list_backups]
-def list_backups(instance_id):
+def list_backups(instance_id, database_id, backup_id):
     spanner_client = spanner.Client()
     instance = spanner_client.instance(instance_id)
 
@@ -161,31 +159,32 @@ def list_backups(instance_id):
         print(backup.name)
 
     # List all backups that contain a name.
-    print("All backups with backup name containing \"users\":")
-    for backup in instance.list_backups(filter_="name:users"):
+    print("All backups with backup name containing \"{}\":".format(backup_id))
+    for backup in instance.list_backups(filter_="name:{}".format(backup_id)):
         print(backup.name)
 
     # List all backups for a database that contains a name.
-    print("All backups with database name containing \"bank\":")
-    for backup in instance.list_backups(filter_="database:bank"):
+    print("All backups with database name containing \"{}\":".format(database_id))
+    for backup in instance.list_backups(filter_="database:{}".format(database_id)):
         print(backup.name)
 
     # List all backups that expire before a timestamp.
-    print("All backups with expire_time before \"2019-10-18T02:56:53Z\":")
+    expire_time = datetime.utcnow().replace(microsecond=0) + timedelta(days=30)
+    print("All backups with expire_time before \"{}-{}-{}T{}:{}:{}Z\":".format(*expire_time.timetuple()))
     for backup in instance.list_backups(
-            filter_="expire_time < \"2019-10-18T02:56:53Z\""):
+            filter_="expire_time < \"{}-{}-{}T{}:{}:{}Z\"".format(*expire_time.timetuple())):
         print(backup.name)
 
     # List all backups with a size greater than some bytes.
-    print("All backups with backup size more than 1000 bytes:")
-    for backup in instance.list_backups(filter_="size_bytes > 1000"):
+    print("All backups with backup size more than 100 bytes:")
+    for backup in instance.list_backups(filter_="size_bytes > 100"):
         print(backup.name)
 
     # List backups that were created after a timestamp that are also ready.
-    print("All backups created after \"2019-10-18T02:56:53Z\" and are READY:")
-    for backup in instance.list_backups(filter_=(
-            "create_time >= \"2019-10-18T02:56:53Z\" AND "
-            "state:READY")):
+    create_time = datetime.utcnow().replace(microsecond=0) - timedelta(days=1)
+    print("All backups created after \"{}-{}-{}T{}:{}:{}Z\" and are READY:".format(*create_time.timetuple()))
+    for backup in instance.list_backups(
+            filter_="create_time >= \"{}-{}-{}T{}:{}:{}Z\" AND state:READY".format(*create_time.timetuple())):
         print(backup.name)
 # [END spanner_list_backups]
 
@@ -262,7 +261,7 @@ if __name__ == '__main__':  # noqa: C901
     elif args.command == 'restore_database':
         restore_database(args.instance_id, args.database_id, args.backup_id)
     elif args.command == 'list_backups':
-        list_backups(args.instance_id)
+        list_backups(args.instance_id, args.database_id, args.backup_id)
     elif args.command == 'list_backup_operations':
         list_backup_operations(args.instance_id, args.database_id)
     elif args.command == 'list_database_operations':
