@@ -170,9 +170,11 @@ def list_backups(instance_id, database_id, backup_id):
 
     # List all backups that expire before a timestamp.
     expire_time = datetime.utcnow().replace(microsecond=0) + timedelta(days=30)
-    print("All backups with expire_time before \"{}-{}-{}T{}:{}:{}Z\":".format(*expire_time.timetuple()))
+    print("All backups with expire_time before \"{}-{}-{}T{}:{}:{}Z\":".format(
+        *expire_time.timetuple()))
     for backup in instance.list_backups(
-            filter_="expire_time < \"{}-{}-{}T{}:{}:{}Z\"".format(*expire_time.timetuple())):
+            filter_="expire_time < \"{}-{}-{}T{}:{}:{}Z\"".format(
+                *expire_time.timetuple())):
         print(backup.name)
 
     # List all backups with a size greater than some bytes.
@@ -182,9 +184,11 @@ def list_backups(instance_id, database_id, backup_id):
 
     # List backups that were created after a timestamp that are also ready.
     create_time = datetime.utcnow().replace(microsecond=0) - timedelta(days=1)
-    print("All backups created after \"{}-{}-{}T{}:{}:{}Z\" and are READY:".format(*create_time.timetuple()))
+    print("All backups created after \"{}-{}-{}T{}:{}:{}Z\" and are READY:".format(
+        *create_time.timetuple()))
     for backup in instance.list_backups(
-            filter_="create_time >= \"{}-{}-{}T{}:{}:{}Z\" AND state:READY".format(*create_time.timetuple())):
+            filter_="create_time >= \"{}-{}-{}T{}:{}:{}Z\" AND state:READY".format(
+                *create_time.timetuple())):
         print(backup.name)
 # [END spanner_list_backups]
 

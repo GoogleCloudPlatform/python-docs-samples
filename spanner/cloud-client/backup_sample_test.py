@@ -96,7 +96,7 @@ def test_list_backups(capsys, spanner_instance):
     backup_sample.list_backups(INSTANCE_ID, DATABASE_ID, BACKUP_ID)
     out, _ = capsys.readouterr()
     id_count = out.count(BACKUP_ID)
-    assert id_count is 6
+    assert id_count == 6
 
 
 def test_delete_backup(capsys, spanner_instance):
