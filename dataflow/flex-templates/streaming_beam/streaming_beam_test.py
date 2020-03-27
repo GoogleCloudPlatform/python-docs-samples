@@ -61,7 +61,7 @@ def dataset():
     dataset_id = '{}.{}'.format(PROJECT, DATASET)
     dataset = bigquery.Dataset(dataset_id)
     dataset = bigquery_client.create_dataset(dataset, exists_ok=True)
-    yield '{}:{}'.format(PROJECT, DATASET) 
+    yield '{}:{}'.format(PROJECT, DATASET)
     bigquery_client.delete_table('{}.{}'.format(DATASET, TABLE), not_found_ok=True)
     bigquery_client.delete_dataset(DATASET, not_found_ok=True)
 
