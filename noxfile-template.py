@@ -139,28 +139,9 @@ GAE_STANDARD_SAMPLES = [
         "appengine/standard/"
     )
 ]
-PY3_ONLY_SAMPLES = [
-    sample
-    for sample in ALL_TESTED_SAMPLES
-    if (
-        str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith(
-            "appengine/standard_python37"
-        )
-        or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith(
-            "appengine/flexible/django_cloudsql"
-        )
-        or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith("functions/")
-        or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith(
-            "bigquery/pandas-gbq-migration"
-        )
-        or str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith(
-            "run/"
-        )
-    )
-]
-NON_GAE_STANDARD_SAMPLES_PY2 = sorted(
-    list((set(ALL_TESTED_SAMPLES) - set(GAE_STANDARD_SAMPLES)) - set(PY3_ONLY_SAMPLES))
-)
+
+PY2_ONLY_SAMPLES = GAE_STANDARD_SAMPLES
+
 NON_GAE_STANDARD_SAMPLES_PY3 = sorted(
     list(set(ALL_TESTED_SAMPLES) - set(GAE_STANDARD_SAMPLES))
 )
@@ -189,7 +170,7 @@ def _session_tests(session, sample, post_install=None):
 
 
 @nox.session(python="2.7")
-@nox.parametrize("sample", GAE_STANDARD_SAMPLES)
+@nox.parametrize("sample", PY2_ONLY_SAMPLES)
 def gae(session, sample):
     """Runs py.test for an App Engine standard sample."""
 
@@ -199,14 +180,7 @@ def gae(session, sample):
         os.mkdir(os.path.join(sample, "lib"))
 
     _session_tests(session, sample, _setup_appengine_sdk)
-
-
-@nox.session(python="2.7")
-@nox.parametrize("sample", NON_GAE_STANDARD_SAMPLES_PY2)
-def py2(session, sample):
-    """Runs py.test for a sample using Python 2.7"""
-    _session_tests(session, sample)
-
+    
 
 @nox.session(python=["3.6", "3.7"])
 @nox.parametrize("sample", NON_GAE_STANDARD_SAMPLES_PY3)
