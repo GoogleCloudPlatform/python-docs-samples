@@ -180,7 +180,7 @@ def gae(session, sample):
         os.mkdir(os.path.join(sample, "lib"))
 
     _session_tests(session, sample, _setup_appengine_sdk)
-    
+
 
 @nox.session(python=["3.6", "3.7"])
 @nox.parametrize("sample", NON_GAE_STANDARD_SAMPLES_PY3)
