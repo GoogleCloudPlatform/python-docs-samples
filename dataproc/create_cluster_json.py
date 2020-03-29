@@ -4,13 +4,9 @@ from google.cloud import dataproc_v1beta2
 import google.protobuf.json_format as json_format
 import google.cloud.dataproc_v1beta2.proto.clusters_pb2 as clusters
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "D:\\GCP\\xxxx.json"
-
-def create_cluster(project_id,region):
+def create_cluster(cluster_json_path,project_id,region):
     '''
     This function takes an external JSON with cluster configuration and creates the cluster.
-    Currently, there are no examples available to do this and I learnt it the hard way. The
-    function takes the JSON message and converts to protocol buffer message format
     :param project_id: project id of the service account
     :param region: region where needs to be created
     :return: returns the cluster client instance
@@ -20,14 +16,16 @@ def create_cluster(project_id,region):
     })
 
     ##The JOSN is created under the clusterconfig folder
-    with open("./clusterconfig/dataproc-cluster.json") as f:
-        cluster = f.read()
-        cluster_message = json_format.Parse(cluster,clusters.Cluster())
+    with open(cluster_json_path, 'r') as f:
+        cluster_json = f.read()
+        cluster_config = json_format.Parse(cluster_json,clusters.Cluster())
 
-    operation = cluster_client.create_cluster(project_id,region,cluster_message)
+    operation = cluster_client.create_cluster(project_id,region,cluster_config)
     result = operation.result()
+
+    # Output a success message.
     print('Cluster created successfully : {}'.format(result.cluster_name))
-    return cluster_client
+    # [END dataproc_create_cluster]
 
 if __name__=="__main__":
     project_id = 'xxxx' ## replace with project-id

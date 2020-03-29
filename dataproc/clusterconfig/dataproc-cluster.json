@@ -1,11 +1,11 @@
 {
-  "project_id": "xxxx",
-  "cluster_name": "rajib-cluster-dataproc",
+  "project_id": "YOUR_PROJECT_ID",
+  "cluster_name": "my-cluster",
   "labels": {
     "applicationname": "sample"
   },
   "config": {
-    "config_bucket": "xxx-bucket",
+    "config_bucket": "my-bucket",
     "gce_cluster_config": {
       "zone_uri": "us-central1-a",
       "metadata": {},
@@ -51,7 +51,7 @@
     },
     "initialization_actions": [
       {
-        "executable_file": "gs://xxx-bucket/job_dep.sh"
+        "executable_file": "YOUR_GCS_INIT_ACTION"
       }
     ]
   }
