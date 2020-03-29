@@ -26,9 +26,3 @@ def create_cluster(cluster_json_path,project_id,region):
     # Output a success message.
     print('Cluster created successfully : {}'.format(result.cluster_name))
     # [END dataproc_create_cluster]
-
-if __name__=="__main__":
-    project_id = 'xxxx' ## replace with project-id
-    region = 'xxx' ## replace with region
-    result = create_cluster(project_id,region)
-    print(result)
