@@ -22,14 +22,16 @@ import authorized_view_tutorial
 def client():
     return bigquery.Client()
 
+
 def remove_authz_views(client, dataset_ref):
     try:
         ds = client.get_dataset(dataset_ref)
         ds.access_entries = [entry for entry in ds.access_entries
-                                if entry.entity_type != 'view']
+                             if entry.entity_type != 'view']
         client.update_dataset(ds, ['access_entries'])
-    except:
+    except Exception:
         pass
+
 
 def test_authorized_view_tutorial(client):
     source_dataset_ref = client.dataset('github_source_data')

@@ -66,7 +66,7 @@ def run_authorized_view_tutorial():
     shared_dataset_id = 'shared_views'
     shared_dataset = bigquery.Dataset(client.dataset(shared_dataset_id))
     shared_dataset.location = 'US'
-    shared_dataset = client.create_dataset(shared_dataset, exists_ok=True)  # API request
+    shared_dataset = client.create_dataset(shared_dataset, exists_ok=True)
     # [END bigquery_avt_create_shared_dataset]
 
     # Create the view in the new dataset
@@ -82,7 +82,7 @@ def run_authorized_view_tutorial():
     """
     view.view_query = sql_template.format(
         client.project, source_dataset_id, source_table_id)
-    view = client.create_table(view, exists_ok=True)  # API request
+    view = client.create_table(view, exists_ok=True)
     # [END bigquery_avt_create_view]
 
     # Assign access controls to the dataset containing the view
