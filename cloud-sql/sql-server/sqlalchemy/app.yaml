@@ -20,7 +20,7 @@ env: flex
 env_variables:
   DB_USER: <your-username>
   DB_PASS: <your-password>
-  DB_NAME: votes
+  DB_NAME: <your-db-name>
   PROD: true
 
 beta_settings:
