@@ -1,4 +1,4 @@
 google-cloud-storage==1.26.0
-google-cloud-asset==0.8.0
+google-cloud-asset==0.9.0
 google-cloud-resource-manager==0.30.1
 google-cloud-pubsub==1.1.0
