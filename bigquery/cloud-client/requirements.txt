@@ -1,6 +1,5 @@
 google-cloud-bigquery[pandas]==1.20.0
 google-auth-oauthlib==0.4.0
-# ipython 5.9.0 is the last LTS release that supports python 2.7.
-ipython==5.9.0
+ipython==7.8.0
 matplotlib==3.1.1
 pytz==2019.2
