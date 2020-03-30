@@ -8,7 +8,7 @@ pytest-cov==2.8.1
 pytest==5.3.2; python_version > "3.0"
 pytest==4.6.9; python_version < "3.0"
 pyyaml==5.3.1
-responses==0.10.6
+responses==0.10.12
 WebTest==2.0.34
 webapp2==2.5.2
 google-api-python-client==1.7.11
