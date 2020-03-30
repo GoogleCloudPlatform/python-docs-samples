@@ -6,4 +6,4 @@ opencensus-ext-stackdriver==0.7.2
 opencensus-ext-flask==0.7.3
 opencensus-context==0.1.1
 grpcio==1.27.2
-httpretty==0.9.7
+httpretty==1.0.2
