@@ -22,25 +22,20 @@ import authorized_view_tutorial
 def client():
     return bigquery.Client()
 
+def remove_authz_views(client, dataset_ref):
+    try:
+        ds = client.get_dataset(dataset_ref)
+        ds.access_entries = [entry for entry in ds.access_entries
+                                if entry.entity_type != 'view']
+        client.update_dataset(ds, ['access_entries'])
+    except:
+        pass
 
-@pytest.fixture
-def to_delete(client):
-    doomed = []
-    yield doomed
-    for item in doomed:
-        if isinstance(item, (bigquery.Dataset, bigquery.DatasetReference)):
-            client.delete_dataset(item, delete_contents=True)
-        elif isinstance(item, (bigquery.Table, bigquery.TableReference)):
-            client.delete_table(item)
-        else:
-            item.delete()
-
-
-def test_authorized_view_tutorial(client, to_delete):
+def test_authorized_view_tutorial(client):
     source_dataset_ref = client.dataset('github_source_data')
     shared_dataset_ref = client.dataset('shared_views')
-    to_delete.extend([source_dataset_ref, shared_dataset_ref])
 
+    remove_authz_views(client, source_dataset_ref)
     authorized_view_tutorial.run_authorized_view_tutorial()
 
     source_dataset = client.get_dataset(source_dataset_ref)
@@ -60,3 +55,6 @@ def test_authorized_view_tutorial(client, to_delete):
     }
     assert len(authorized_view_entries) == 1
     assert authorized_view_entries[0].entity_id == expected_view_ref
+
+    # Remove the modification on exit
+    remove_authz_views(client, source_dataset_ref)

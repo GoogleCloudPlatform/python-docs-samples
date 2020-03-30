@@ -31,7 +31,7 @@ def run_authorized_view_tutorial():
     source_dataset = bigquery.Dataset(client.dataset(source_dataset_id))
     # Specify the geographic location where the dataset should reside.
     source_dataset.location = 'US'
-    source_dataset = client.create_dataset(source_dataset)  # API request
+    source_dataset = client.create_dataset(source_dataset, exists_ok=True)
     # [END bigquery_avt_create_source_dataset]
 
     # Populate a source table
@@ -39,6 +39,13 @@ def run_authorized_view_tutorial():
     source_table_id = 'github_contributors'
     job_config = bigquery.QueryJobConfig()
     job_config.destination = source_dataset.table(source_table_id)
+    # [END bigquery_avt_create_source_table]
+    # We override the dispositions to allow atomic replacements from concurrent
+    # invocations, which is safe due to the atomic truncate-and-replace model
+    # this sample employs.
+    job_config.write_disposition = "WRITE_TRUNCATE"
+    # [START bigquery_avt_create_source_table]
+
     sql = """
         SELECT commit, author, committer, repo_name
         FROM `bigquery-public-data.github_repos.commits`
@@ -59,7 +66,7 @@ def run_authorized_view_tutorial():
     shared_dataset_id = 'shared_views'
     shared_dataset = bigquery.Dataset(client.dataset(shared_dataset_id))
     shared_dataset.location = 'US'
-    shared_dataset = client.create_dataset(shared_dataset)  # API request
+    shared_dataset = client.create_dataset(shared_dataset, exists_ok=True)  # API request
     # [END bigquery_avt_create_shared_dataset]
 
     # Create the view in the new dataset
@@ -75,7 +82,7 @@ def run_authorized_view_tutorial():
     """
     view.view_query = sql_template.format(
         client.project, source_dataset_id, source_table_id)
-    view = client.create_table(view)  # API request
+    view = client.create_table(view, exists_ok=True)  # API request
     # [END bigquery_avt_create_view]
 
     # Assign access controls to the dataset containing the view
