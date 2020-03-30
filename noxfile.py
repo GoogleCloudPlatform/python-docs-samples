@@ -167,25 +167,10 @@ GAE_STANDARD_SAMPLES = [
     for sample in ALL_TESTED_SAMPLES
     if sample.startswith("./appengine/standard/")
 ]
-PY2_ONLY_SAMPLES = GAE_STANDARD_SAMPLES
-PY3_ONLY_SAMPLES = [
-    sample
-    for sample in ALL_TESTED_SAMPLES
-    if (
-        sample.startswith("./appengine/standard_python37")
-        or sample.startswith("./functions/")
-        or sample.startswith("./bigquery/pandas-gbq-migration")
-        or sample.startswith("./run/system-package")
-        or sample.startswith("./run/hello-broken")
-    )
-]
-NON_GAE_STANDARD_SAMPLES_PY2 = sorted(
-    list((set(ALL_TESTED_SAMPLES) - set(GAE_STANDARD_SAMPLES)) - set(PY3_ONLY_SAMPLES))
-)
-NON_GAE_STANDARD_SAMPLES_PY3 = sorted(
-    list(set(ALL_TESTED_SAMPLES) - set(PY2_ONLY_SAMPLES))
-)
 
+NON_GAE_STANDARD_SAMPLES_PY3 = sorted(
+    list(set(ALL_TESTED_SAMPLES) - set(GAE_STANDARD_SAMPLES))
+)
 
 # Filter sample directories if on a CI like Travis or Circle to only run tests
 # for changed samples.
@@ -196,13 +181,9 @@ if CHANGED_FILES is not None:
     ALL_TESTED_SAMPLES = _filter_samples(ALL_TESTED_SAMPLES, CHANGED_FILES)
     ALL_SAMPLE_DIRECTORIES = _filter_samples(ALL_SAMPLE_DIRECTORIES, CHANGED_FILES)
     GAE_STANDARD_SAMPLES = _filter_samples(GAE_STANDARD_SAMPLES, CHANGED_FILES)
-    NON_GAE_STANDARD_SAMPLES_PY2 = _filter_samples(
-        NON_GAE_STANDARD_SAMPLES_PY2, CHANGED_FILES
+    NON_GAE_STANDARD_SAMPLES_PY3 = _filter_samples(	
+        NON_GAE_STANDARD_SAMPLES_PY3, CHANGED_FILES	
     )
-    NON_GAE_STANDARD_SAMPLES_PY3 = _filter_samples(
-        NON_GAE_STANDARD_SAMPLES_PY3, CHANGED_FILES
-    )
-
 
 def _session_tests(session, sample, post_install=None):
     """Runs py.test for a particular sample."""
@@ -237,13 +218,6 @@ def gae(session, sample):
         os.mkdir(os.path.join(sample, "lib"))
 
     _session_tests(session, sample, _setup_appengine_sdk)
-
-
-@nox.session(python="2.7")
-@nox.parametrize("sample", NON_GAE_STANDARD_SAMPLES_PY2)
-def py27(session, sample):
-    """Runs py.test for a sample using Python 2.7"""
-    _session_tests(session, sample)
 
 
 @nox.session(python="3.6")
