@@ -1,24 +1,23 @@
 # This file is used to generate README.rst
 
 product:
-  name: Google Cloud Media Translation
-  short_name: Media Translation API
+  name: Cloud Media Translation
+  short_name: Media Translation
   url: https://cloud.google.com/translate/media/docs
   description: >
-    With `Google Media Translation API`, you can translate streamed audio
-    data in many of language pairs.
+    With `Cloud Media Translation`, you can dynamically translate text between
+    thousands of language pairs.
 
 setup:
 - auth
 - install_deps
 
 samples:
-- name: Translating a stream from a file
+- name: Translate from file
   file: translate_from_file.py
   show_help: true
-- name: Translating a stream from a microphone
+- name: Translate from mic
   file: translate_from_mic.py
-  show_help: true
 
 cloud_client_library: true
 

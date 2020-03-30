@@ -26,13 +26,15 @@ def translate_from_file(file_path='path/to/your/file'):
 
     client = mediatranslation.SpeechTranslationServiceClient()
 
-    speech_config = mediatranslation.TranslateSpeechConfig(
+    # The `sample_rate_hertz` field is not required for FLAC and WAV (Linear16)
+    # encoded data. Other audio encodings must provide the sampling rate.
+    audio_config = mediatranslation.TranslateSpeechConfig(
         audio_encoding='linear16',
         source_language_code='en-US',
         target_language_code='fr-FR')
 
-    config = mediatranslation.StreamingTranslateSpeechConfig(
-        audio_config=speech_config)
+    streaming_config = mediatranslation.StreamingTranslateSpeechConfig(
+        audio_config=audio_config)
 
     def request_generator(config, audio_file_path):
 
@@ -50,7 +52,7 @@ def translate_from_file(file_path='path/to/your/file'):
                     audio_content=chunk,
                     streaming_config=config)
 
-    requests = request_generator(config, file_path)
+    requests = request_generator(streaming_config, file_path)
     responses = client.streaming_translate_speech(requests)
 
     for response in responses:
