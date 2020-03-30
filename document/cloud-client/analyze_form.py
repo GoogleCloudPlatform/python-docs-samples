@@ -13,11 +13,11 @@
 # limitations under the License.
 
 
-def analyze_form(project_id, input_uri):
+# [START documentai_analyze_form]
+from google.cloud import documentai_v1beta2 as documentai
+
+def analyze_form(project_id='YOUR_PROJECT_ID', input_uri='gs://cloud-samples-data/documentai/invoice.pdf'):
     """Parse a form"""
-    # [START analyze_form]
-    from google.cloud import documentai_v1beta2 as documentai
-    from google.cloud.documentai_v1beta2 import types
 
     client = documentai.DocumentUnderstandingServiceClient()
 
