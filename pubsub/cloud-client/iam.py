@@ -51,6 +51,8 @@ def get_subscription_policy(project, subscription_name):
     print("Policy for subscription {}:".format(subscription_path))
     for binding in policy.bindings:
         print("Role: {}, Members: {}".format(binding.role, binding.members))
+
+    client.close()
     # [END pubsub_get_subscription_policy]
 
 
@@ -101,6 +103,8 @@ def set_subscription_policy(project, subscription_name):
             subscription_name, policy
         )
     )
+
+    client.close()
     # [END pubsub_set_subscription_policy]
 
 
@@ -144,6 +148,8 @@ def check_subscription_permissions(project, subscription_name):
             subscription_path, allowed_permissions
         )
     )
+
+    client.close()
     # [END pubsub_test_subscription_permissions]
 
 
