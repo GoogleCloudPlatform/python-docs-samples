@@ -1,5 +1,5 @@
 beautifulsoup4==4.8.2
-coverage==4.5.4
+coverage==5.0.4
 flaky==3.6.1
 funcsigs==1.0.2
 mock==3.0.5
