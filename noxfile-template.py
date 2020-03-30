@@ -91,8 +91,8 @@ def _session_tests(session, post_install=None):
     if os.path.exists("requirements.txt"):
         session.install("-r", "requirements.txt")
 
-    if os.path.exists("requirements-testing.txt"):
-        session.install("-r", "requirements-testing.txt")
+    if os.path.exists("requirements-test.txt"):
+        session.install("-r", "requirements-test.txt")
 
     if post_install:
         post_install(session)
