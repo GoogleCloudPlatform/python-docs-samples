@@ -33,8 +33,7 @@ db_user = os.environ.get("DB_USER")
 db_pass = os.environ.get("DB_PASS")
 db_name = os.environ.get("DB_NAME")
 
-# If this is running in the docker container when deployed to GAE flex,
-# use "172.17.0.1"
+# When deployed to GAE Flex for TCP, use "172.17.0.1" to connect
 host = "172.17.0.1" if os.environ.get("PROD") else "127.0.0.1"
 
 # The SQLAlchemy engine will help manage interactions, including automatically
