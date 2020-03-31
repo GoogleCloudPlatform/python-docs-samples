@@ -18,6 +18,7 @@ import os
 from pathlib import Path
 
 import nox
+import tempfile
 
 
 # DO NOT EDIT - automatically generated.
@@ -107,13 +108,24 @@ def _session_tests(session, post_install=None):
     )
 
 
+_GAE_ROOT = os.environ.get("GAE_ROOT")
+if _GAE_ROOT is None:
+    _GAE_ROOT = tempfile.mkdtemp()
+
+
+def _setup_appengine_sdk(session):
+    """Installs the App Engine SDK, if needed."""
+    session.env["GAE_SDK_PATH"] = os.path.join(_GAE_ROOT, "google_appengine")
+    session.run("gcp-devrel-py-tools", "download-appengine-sdk", _GAE_ROOT)
+
+
 @nox.session(python=ALL_VERSIONS)
 def py(session):
     """Runs py.test for a sample using the specified version of Python."""
     if session.python in TESTED_VERSIONS:
-        _session_tests(session)
+        _session_tests(session, post_install=_setup_appengine_sdk)
     else:
-        print("SUCCESS: {} tests are disable for this sample.".format(session.python))
+        print("SKIPPED: {} tests are disable for this sample.".format(session.python))
 
 
 #

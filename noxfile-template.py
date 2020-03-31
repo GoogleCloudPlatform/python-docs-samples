@@ -113,7 +113,7 @@ def py(session):
     if session.python in TESTED_VERSIONS:
         _session_tests(session)
     else:
-        print("SUCCESS: {} tests are disable for this sample.".format(session.python))
+        print("SKIPPED: {} tests are disable for this sample.".format(session.python))
 
 
 #
