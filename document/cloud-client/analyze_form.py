@@ -16,13 +16,16 @@
 # [START documentai_analyze_form]
 from google.cloud import documentai_v1beta2 as documentai
 
-def analyze_form(project_id='YOUR_PROJECT_ID', input_uri='gs://cloud-samples-data/documentai/invoice.pdf'):
+def analyze_form(project_id='invoice-parser0', input_uri='gs://cloud-samples-data/documentai/form.pdf'):
     """Parse a form"""
 
     client = documentai.DocumentUnderstandingServiceClient()
 
-    gcs_source = types.GcsSource(uri=input_uri)
-    input_config = types.InputConfig(
+    gcs_source = documentai.types.GcsSource(uri=input_uri)
+    
+    # mime_type can be application/pdf, image/tiff, 
+    # and image/gif, or application/json
+    input_config = documentai.types.InputConfig(
         gcs_source=gcs_source, mime_type='application/pdf')
 
     # Improve form parsing results by providing key-value pair hints.
@@ -32,94 +35,45 @@ def analyze_form(project_id='YOUR_PROJECT_ID', input_uri='gs://cloud-samples-dat
     # ADDRESS, LOCATION, ORGANIZATION, PERSON, PHONE_NUMBER, ID,
     # NUMBER, EMAIL, PRICE, TERMS, DATE, NAME
     key_value_pair_hints = [
-        types.KeyValuePairHint(key='Name', value_types=['NAME']),
-        types.KeyValuePairHint(key='Agreement Number', value_types=['NUMBER'])
+        documentai.types.KeyValuePairHint(key='Emergency Contact', 
+            value_types=['NAME']),
+        documentai.types.KeyValuePairHint(
+            key='Referred By')
     ]
 
     # Setting enabled=True enables form extraction
-    form_extraction_params = types.FormExtractionParams(
+    form_extraction_params = documentai.types.FormExtractionParams(
         enabled=True, key_value_pair_hints=key_value_pair_hints)
 
     # For now, location must be us-central1
     parent = "projects/{}/locations/us-central1".format(project_id)
-    request = types.ProcessDocumentRequest(
+    request = documentai.types.ProcessDocumentRequest(
         parent=parent,
         input_config=input_config,
         form_extraction_params=form_extraction_params)
 
-    return client.process_document(request=request)
-    # [END analyze_form]
+    document = client.process_document(request=request)
 
-
-def parse_form_response(document):
-    """Parse Document response from the DAI API to make
-    it easier to work with. Returns:
-
-    [
-        {'name':
-            {'text': 'Address: ',
-            'start_index': 746,
-            'end_index': 755,
-            'confidence': 1.0,
-            'bounding_poly':
-                [x: 0.12581700086593628
-                y: 0.31313130259513855
-                , x: 0.19771242141723633
-                y: 0.31313130259513855
-                , x: 0.19771242141723633
-                y: 0.32575756311416626
-                , x: 0.12581700086593628
-                y: 0.32575756311416626]
-        },
-        'value':
-            {'text': '100 Franklin Street, Mountain View, CA, 94035\n',
-            'start_index': 755,
-            'end_index': 801,
-            'confidence': 1.0,
-            'bounding_poly':
-                [x: 0.2222222238779068
-                y: 0.31439393758773804
-                , x: 0.5947712659835815
-                y: 0.31439393758773804
-                , x: 0.5947712659835815
-                y: 0.32702019810676575
-                , x: 0.2222222238779068
-                y: 0.32702019810676575
-                ]
-        },
-        'page': 0},
-    ...
-    ]
-     """
-    # [START parse_form_response]
-    form_items = []
-    for page_num, page in enumerate(document.pages):
+    def _get_text(el):
+        """Doc AI identifies form fields by their offsets
+        in document text. This function converts offsets
+        to text snippets.
+        """
+        response = ""
+        # If a form field spans several lines, it will
+        # be stored in different text segments.
+        for segment in el.text_anchor.text_segments:
+            start_index = segment.start_index
+            end_index = segment.end_index
+            response += document.text[start_index:end_index]
+        return response
+            
+    for page in document.pages:
+        print('Page number: {}'.format(page.page_number))
         for form_field in page.form_fields:
-            form_item = {}
-            field_name = form_field.field_name
-            start_idx = field_name.text_anchor.text_segments[0].start_index
-            end_idx = field_name.text_anchor.text_segments[0].end_index
-            form_item["name"] = {
-                "text": document.text[start_idx:end_idx],
-                "start_index": start_idx,
-                "end_index": end_idx,
-                "confidence": field_name.confidence,
-                "bounding_poly": field_name.bounding_poly.normalized_vertices
+            print('Field Name: {}\tConfidence: {}'.format(
+                _get_text(form_field.field_name), form_field.field_name.confidence))
+            print('Field Value: {}\tConfidence: {}'.format(
+                _get_text(form_field.field_value), form_field.field_value.confidence))
 
-            }
-
-            field_value = form_field.field_value
-            start_idx = field_value.text_anchor.text_segments[0].start_index
-            end_idx = field_value.text_anchor.text_segments[0].end_index
-            form_item["value"] = {
-                "text": document.text[start_idx:end_idx],
-                "start_index": start_idx,
-                "end_index": end_idx,
-                "confidence": field_value.confidence,
-                "bounding_poly": field_value.bounding_poly.normalized_vertices
-            }
-
-            form_item["page"] = page_num
-            form_items.append(form_item)
-    return form_items
-    # [END parse_form_response]
+# [END documentai_analyze_form]
