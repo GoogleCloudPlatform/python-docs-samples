@@ -125,7 +125,7 @@ def py(session):
     if session.python in TESTED_VERSIONS:
         _session_tests(session, post_install=_setup_appengine_sdk)
     else:
-        print("SKIPPED: {} tests are disabledgit st for this sample.".format(session.python))
+        print("SKIPPED: {} tests are disabled for this sample.".format(session.python))
 
 
 #
