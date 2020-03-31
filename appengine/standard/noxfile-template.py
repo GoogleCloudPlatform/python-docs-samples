@@ -123,6 +123,11 @@ def _setup_appengine_sdk(session):
 def py(session):
     """Runs py.test for a sample using the specified version of Python."""
     if session.python in TESTED_VERSIONS:
+        # Create a lib directory if needed,
+        # otherwise the App Engine vendor library will complain.
+        if not os.path.isdir("lib"):
+            os.mkdir("lib")
+
         _session_tests(session, post_install=_setup_appengine_sdk)
     else:
         print("SKIPPED: {} tests are disabled for this sample.".format(session.python))
