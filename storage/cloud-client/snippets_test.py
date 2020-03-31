@@ -40,6 +40,7 @@ import storage_upload_with_kms_key
 import storage_generate_signed_url_v2
 import storage_generate_signed_url_v4
 import storage_generate_upload_signed_url_v4
+import storage_generate_signed_post_policy_v4
 import storage_set_bucket_default_kms_key
 
 KMS_KEY = os.environ["CLOUD_KMS_KEY"]
@@ -200,6 +201,16 @@ def test_generate_upload_signed_url_v4(test_bucket, capsys):
     bucket = storage.Client().bucket(test_bucket.name)
     blob = bucket.blob(blob_name)
     assert blob.download_as_string() == content
+
+
+def test_generate_signed_post_policy_v4(test_bucket, capsys):
+    blob_name = "storage_snippets_test_upload"
+    content = b"Uploaded via v4 signed url"
+    short_name = storage_generate_signed_post_policy_v4
+    html_form = short_name.generate_signed_post_policy_v4(
+        test_bucket.name, blob_name
+    )
+    assert html_form == ""
 
 
 def test_rename_blob(test_blob):
