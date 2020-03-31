@@ -5,5 +5,5 @@ google-cloud-iot==1.0.0
 google-cloud-pubsub==1.0.0
 google-cloud-storage==1.26.0
 cryptography==2.8
-paho-mqtt==1.4.0
+paho-mqtt==1.5.0
 pyjwt==1.7.1
