@@ -28,7 +28,6 @@ Examples:
 
 import argparse
 
-
 KNOWLEDGE_TYPES = ['KNOWLEDGE_TYPE_UNSPECIFIED', 'FAQ', 'EXTRACTIVE_QA']
 
 # [START dialogflow_create_document]]
