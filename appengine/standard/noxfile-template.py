@@ -128,6 +128,11 @@ def py(session):
         if not os.path.isdir("lib"):
             os.mkdir("lib")
 
+        # mailjet_rest has an issue with requests being required pre install
+        # https://github.com/mailjet/mailjet-apiv3-python/issues/38
+        if 'appengine/standard/mailjet' in os.getcwd():
+            session.install("requests")
+
         _session_tests(session, post_install=_setup_appengine_sdk)
     else:
         print("SKIPPED: {} tests are disabled for this sample.".format(session.python))
