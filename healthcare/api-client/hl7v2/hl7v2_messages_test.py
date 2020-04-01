@@ -14,7 +14,6 @@
 
 import os
 import pytest
-import re
 import sys
 import time
 
@@ -88,8 +87,8 @@ def test_CRUD_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         dataset_id,
         hl7v2_store_id)
 
-    hl7v2_messages_list_to_str = str(hl7v2_messages_list).split('/', 9)[9]
-    hl7v2_message_id = re.sub('\']', '', hl7v2_messages_list_to_str)
+    hl7v2_message_name = hl7v2_messages_list[0].get('name')
+    hl7v2_message_id = hl7v2_message_name.split('/', 9)[9]
 
     hl7v2_messages.get_hl7v2_message(
         service_account_json,
@@ -131,8 +130,8 @@ def test_ingest_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         dataset_id,
         hl7v2_store_id)
 
-    hl7v2_messages_list_to_str = str(hl7v2_messages_list).split('/', 9)[9]
-    hl7v2_message_id = re.sub('\']', '', hl7v2_messages_list_to_str)
+    hl7v2_message_name = hl7v2_messages_list[0].get('name')
+    hl7v2_message_id = hl7v2_message_name.split('/', 9)[9]
 
     hl7v2_messages.get_hl7v2_message(
         service_account_json,
@@ -174,8 +173,8 @@ def test_patch_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         dataset_id,
         hl7v2_store_id)
 
-    hl7v2_messages_list_to_str = str(hl7v2_messages_list).split('/', 9)[9]
-    hl7v2_message_id = re.sub('\']', '', hl7v2_messages_list_to_str)
+    hl7v2_message_name = hl7v2_messages_list[0].get('name')
+    hl7v2_message_id = hl7v2_message_name.split('/', 9)[9]
 
     hl7v2_messages.patch_hl7v2_message(
         service_account_json,
