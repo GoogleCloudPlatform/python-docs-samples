@@ -333,12 +333,19 @@ is expected. Strive to verify the content of the output rather than the syntax.
 For example, the test might verify that a string is included in the output,
 without taking a dependency on where that string occurs in the output.
 
-### Using nox
+### Running tests
+
 
 Automated testing for samples in `python-docs-samples` is managed by
 [nox](https://nox.readthedocs.io). Nox allows us to run a variety of tests,
 including the flake8 linter, Python 2.7, Python 3.x, and App Engine tests,
 as well as automated README generation.
+
+__Note:__ As a temporary workaround, each project currently uses first
+`noxfile-template.py` found in a parent folder above the current sample. In 
+order to simulate this locally, you need to copy + rename the parent
+`noxfile-template.py` as `noxfile.py` in the folder of the project you want to
+run tests.
 
 To use nox, install it globally with `pip`:
 
@@ -346,45 +353,26 @@ To use nox, install it globally with `pip`:
 $ pip install nox
 ```
 
-Nox automatically discovers all samples in the repository and generates
-three types of sessions for each sample:
-
-1. A test sessions (`gae`, `py27` and `py36`) for running the system tests
-against a specific Python version.
-2. `lint` sessions for running the style linter.
-3. `readmegen` sessions for regenerating READMEs.
-
-Because nox generates all of these sessions, it's often useful to filter down
-by just the sample you're working on. For example, if you just want to see
-which sessions are available for storage samples:
-
+To run style checks on your samples:
 ```console
-$ nox -k storage -l
-* gae(sample='./appengine/standard/storage/api-client')
-* gae(sample='./appengine/standard/storage/appengine-client')
-* lint(sample='./appengine/flexible/storage')
-* lint(sample='./appengine/standard/storage/api-client')
-* lint(sample='./appengine/standard/storage/appengine-client')
-* lint(sample='./storage/api')
-* lint(sample='./storage/cloud-client')
-* lint(sample='./storage/transfer_service')
-* py27(sample='./appengine/flexible/storage')
-* py27(sample='./storage/api')
-* py27(sample='./storage/cloud-client')
-* py35(sample='./appengine/flexible/storage')
-* py35(sample='./storage/api')
-* py35(sample='./storage/cloud-client')
-* readmegen(sample='./storage/api')
-* readmegen(sample='./storage/cloud-client')
-* readmegen(sample='./storage/transfer_service')
+nox -s lint
 ```
 
-Now you can use nox to run a specific session, for example, if you want to
-lint the storage cloud-client samples:
-
+To run tests with a python version, use the correct `py-3.*` sessions:
 ```console
-$ nox -s "lint(sample='./storage/cloud-client')"
+nox -s py-3.6
 ```
+
+To run a specific file:
+```console
+nox -s py-3.7 -- snippets_test.py
+```
+
+To run a specific test from a specific following:
+```console
+nox -s py-3.7 -- snippets_test.py:test_list_blobs
+```
+
 
 ### Test Environment Setup
 
