@@ -15,9 +15,7 @@
 import os
 import pytest
 import random
-import string
 import sys
-import time
 import uuid
 
 # Add datasets for bootstrapping datasets for testing
@@ -33,6 +31,7 @@ service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 random.seed()
 dataset_id = 'test_dataset_{}'.format(uuid.uuid4())
 hl7v2_store_id = 'test_hl7v2_store-{}'.format(uuid.uuid4())
+
 
 @pytest.fixture(scope='module')
 def test_dataset():
