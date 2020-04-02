@@ -45,7 +45,7 @@ import time
 from google.cloud import pubsub
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
-from gogole.auth import service_account
+from google.auth import service_account
 
 
 API_SCOPES = ['https://www.googleapis.com/auth/cloud-platform']
