@@ -1,7 +1,7 @@
 # Python Sample Authoring Guide
 
 We're happy you want to write a Python sample! Like a lot of Pythonistas,
-we're opinationed and fussy. This guide is a reference for the format and
+we're opinioned and fussy. This guide is a reference for the format and
 style expected of samples contributed to the
 [python-docs-samples](https://github.com/GoogleCloudPlatform/python-docs-samples)
 repo. The guidelines below are intended to ensure that all Python samples
@@ -48,12 +48,7 @@ started with using a service or API — it should be in a _quickstart_ folder.
 
 ### Python Version
 
-As of this writing (early 2020), the default Python version for samples is
-Python 3.7. All samples should pass tests on 3.7, and support for 3.8 is recommended.
-
-Support for Python 2.7 is no longer required for new samples. If you’re
-making a change to an existing sample that supports Python 2.7, the preferred
-approach is to maintain compatibility with 2.7.
+Samples should support Python 3.6, 3.7, and 3.8.
 
 If the API or service your sample works with has specific Python version
 requirements different from those mentioned above, the sample should support
