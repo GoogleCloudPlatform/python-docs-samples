@@ -1,4 +1,4 @@
 Flask==1.1.1
 gunicorn==20.0.4
-requests[security]==2.22.0
+requests[security]==2.23.0
 mailjet-rest==1.3.3
