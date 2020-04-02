@@ -59,7 +59,7 @@ class Server(object):
 
     def __init__(self, service_account_json):
         credentials = service_account.from_service_account_file(
-            service_account_json, API_SCOPES).with_scopes(API_SCOPES)
+            service_account_json).with_scopes(API_SCOPES)
         if not credentials:
             sys.exit('Could not load service account credential '
                      'from {}'.format(service_account_json))
