@@ -17,7 +17,9 @@ import pytest
 import random
 import string
 import sys
-import time
+import uuid
+
+from gcp_devrel.testing import eventually_consistent
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'datasets')) # noqa
@@ -31,12 +33,8 @@ service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 # assume we can access the OS provied raondom source.
 random.seed()
-dataset_id = 'test_dataset_{}_{}'.format(
-    int(time.time()),
-    ''.join([random.choice(string.ascii_letters) for n in range(5)]))
-hl7v2_store_id = 'test_hl7v2_store-{}-{}'.format(
-    int(time.time()),
-    ''.join([random.choice(string.ascii_letters) for n in range(5)]))
+dataset_id = 'test_dataset_{}'.format(uuid.uuid4())
+hl7v2_store_id = 'test_hl7v2_store-{}'.format(uuid.uuid4())
 hl7v2_message_file = 'resources/hl7-sample-ingest.json'
 label_key = 'PROCESSED'
 label_value = 'TRUE'
@@ -88,15 +86,20 @@ def test_CRUD_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         hl7v2_store_id,
         hl7v2_message_file)
 
-    hl7v2_messages_list = hl7v2_messages.list_hl7v2_messages(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        hl7v2_store_id)
+    hl7v2_message_id = ""
+    @eventually_consistent.call
+    def _():
+      hl7v2_messages_list = hl7v2_messages.list_hl7v2_messages(
+          service_account_json,
+          project_id,
+          cloud_region,
+          dataset_id,
+          hl7v2_store_id)
 
-    hl7v2_message_name = hl7v2_messages_list[0].get('name')
-    hl7v2_message_id = hl7v2_message_name.split('/', 9)[9]
+      assert len(hl7v2_messages_list) > 0
+      hl7v2_message_name = hl7v2_messages_list[0].get('name')
+      nonlocal hl7v2_message_id
+      hl7v2_message_id = hl7v2_message_name.split('/', 9)[9]
 
     hl7v2_messages.get_hl7v2_message(
         service_account_json,
@@ -131,15 +134,20 @@ def test_ingest_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         hl7v2_store_id,
         hl7v2_message_file)
 
-    hl7v2_messages_list = hl7v2_messages.list_hl7v2_messages(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        hl7v2_store_id)
+    hl7v2_message_id = ""
+    @eventually_consistent.call
+    def _():
+      hl7v2_messages_list = hl7v2_messages.list_hl7v2_messages(
+          service_account_json,
+          project_id,
+          cloud_region,
+          dataset_id,
+          hl7v2_store_id)
 
-    hl7v2_message_name = hl7v2_messages_list[0].get('name')
-    hl7v2_message_id = hl7v2_message_name.split('/', 9)[9]
+      assert len(hl7v2_messages_list) > 0
+      hl7v2_message_name = hl7v2_messages_list[0].get('name')
+      nonlocal hl7v2_message_id
+      hl7v2_message_id = hl7v2_message_name.split('/', 9)[9]
 
     hl7v2_messages.get_hl7v2_message(
         service_account_json,
@@ -174,15 +182,20 @@ def test_patch_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         hl7v2_store_id,
         hl7v2_message_file)
 
-    hl7v2_messages_list = hl7v2_messages.list_hl7v2_messages(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        hl7v2_store_id)
+    hl7v2_message_id = ""
+    @eventually_consistent.call
+    def _():
+      hl7v2_messages_list = hl7v2_messages.list_hl7v2_messages(
+          service_account_json,
+          project_id,
+          cloud_region,
+          dataset_id,
+          hl7v2_store_id)
 
-    hl7v2_message_name = hl7v2_messages_list[0].get('name')
-    hl7v2_message_id = hl7v2_message_name.split('/', 9)[9]
+      assert len(hl7v2_messages_list) > 0
+      hl7v2_message_name = hl7v2_messages_list[0].get('name')
+      nonlocal hl7v2_message_id
+      hl7v2_message_id = hl7v2_message_name.split('/', 9)[9]
 
     hl7v2_messages.patch_hl7v2_message(
         service_account_json,

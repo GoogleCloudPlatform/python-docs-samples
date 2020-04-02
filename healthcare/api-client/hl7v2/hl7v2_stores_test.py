@@ -18,6 +18,7 @@ import random
 import string
 import sys
 import time
+import uuid
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'datasets')) # noqa
@@ -30,13 +31,8 @@ service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 # assume we can access the OS provied raondom source.
 random.seed()
-dataset_id = 'test_dataset_{}_{}'.format(
-    int(time.time()),
-    ''.join([random.choice(string.ascii_letters) for n in range(5)]))
-hl7v2_store_id = 'test_hl7v2_store-{}-{}'.format(
-    int(time.time()),
-    ''.join([random.choice(string.ascii_letters) for n in range(5)]))
-
+dataset_id = 'test_dataset_{}'.format(uuid.uuid4())
+hl7v2_store_id = 'test_hl7v2_store-{}'.format(uuid.uuid4())
 
 @pytest.fixture(scope='module')
 def test_dataset():
