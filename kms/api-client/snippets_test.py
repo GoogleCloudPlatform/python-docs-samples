@@ -16,7 +16,7 @@
 import time
 from os import environ
 
-from google.api_core.exceptions import GoogleAPICallError
+from google.api_core.exceptions import GoogleAPICallError, Aborted
 from google.cloud import kms_v1
 from google.cloud.kms_v1 import enums
 from google.iam.v1.policy_pb2 import Policy
@@ -68,6 +68,7 @@ class TestKMSSnippets:
     parent = 'projects/{}/locations/{}'.format(project_id, location)
     keyring_path = '{}/keyRings/{}'.format(parent, keyring_id)
     version = '1'
+    try_limit = 10
 
     symId = 'symmetric'
 
@@ -177,10 +178,18 @@ class TestKMSSnippets:
                                                  self.symId,
                                                  self.member,
                                                  self.role)
-        policy = snippets.get_crypto_key_policy(self.project_id,
-                                                self.location,
-                                                self.keyring_id,
-                                                self.symId)
+        try_number = 0
+        policy = None
+        while policy is None and try_number < self.try_limit:
+            try:
+                time.sleep(2*try_number)
+                policy = snippets.get_crypto_key_policy(self.project_id,
+                                                        self.location,
+                                                        self.keyring_id,
+                                                        self.symId)
+            except Aborted:
+                # aborted by backend. Try again
+                try_number += 1
         found = False
         for b in list(policy.bindings):
             if b.role == self.role and self.member in b.members:
@@ -193,10 +202,18 @@ class TestKMSSnippets:
                                                       self.symId,
                                                       self.member,
                                                       self.role)
-        policy = snippets.get_crypto_key_policy(self.project_id,
-                                                self.location,
-                                                self.keyring_id,
-                                                self.symId)
+        try_number = 0
+        policy = None
+        while policy is None and try_number < self.try_limit:
+            try:
+                time.sleep(2*try_number)
+                policy = snippets.get_crypto_key_policy(self.project_id,
+                                                        self.location,
+                                                        self.keyring_id,
+                                                        self.symId)
+            except Aborted:
+                # aborted by backend. Try again
+                try_number += 1
         found = False
         for b in list(policy.bindings):
             if b.role == self.role and self.member in b.members:
