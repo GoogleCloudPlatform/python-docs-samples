@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
 import os
+import uuid
 
 from google.cloud import automl_v1beta1 as automl
 import pytest
@@ -22,7 +22,7 @@ import video_classification_create_dataset
 
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
-pytest.DATASET_ID = None
+DATASET_ID = None
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -32,7 +32,7 @@ def teardown():
     # Delete the created dataset
     client = automl.AutoMlClient()
     dataset_full_id = client.dataset_path(
-        PROJECT_ID, "us-central1", pytest.DATASET_ID
+        PROJECT_ID, "us-central1", DATASET_ID
     )
     response = client.delete_dataset(dataset_full_id)
     response.result()
@@ -40,12 +40,13 @@ def teardown():
 
 def test_video_classification_create_dataset(capsys):
     # create dataset
-    dataset_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    dataset_name = "test_{}".format(uuid.uuid4()).replace("-", "")[:32]
     video_classification_create_dataset.create_dataset(
         PROJECT_ID, dataset_name
     )
     out, _ = capsys.readouterr()
     assert "Dataset id: " in out
 
-    # Get the the created dataset id for deletion
-    pytest.DATASET_ID = out.splitlines()[1].split()[2]
+    # Get the dataset id for deletion
+    global DATASET_ID
+    DATASET_ID = out.splitlines()[1].split()[2]
