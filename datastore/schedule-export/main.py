@@ -9,11 +9,12 @@ project_id = os.environ.get('GCP_PROJECT')
 
 
 def datastore_export(event, context):
-    '''Trigger a Datastore export from a Cloud Scheduler message on a
-    Cloud Pub/Sub topic.
+    '''Trigger a Datastore export from a Cloud Scheduler job.
     Args:
-         event (dict): event[data] must contain a json object. Must include
-         'bucket'. Can include 'kinds' and 'namespaceIds'.
+         event (dict): event[data] must contain a json object encoded in
+         base-64. Cloud Scheduler encodes payloads in base-64 by default.
+         Object must include a 'bucket' value and can include 'kinds'
+         and 'namespaceIds' values.
          context (google.cloud.functions.Context): The Cloud Functions event
          metadata.
     '''
@@ -31,7 +32,7 @@ def datastore_export(event, context):
     request_body = {
         'outputUrlPrefix': bucket,
         'entityFilter': entity_filter
-        }
+    }
 
     export_request = datastore.projects().export(
         projectId=project_id,
