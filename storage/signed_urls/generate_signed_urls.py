@@ -109,6 +109,7 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
                                 credential_scope,
                                 canonical_request_hash])
 
+    # signer.sign() signs using RSA-SHA256 with PKCS1v15 padding
     signature = binascii.hexlify(
         google_credentials.signer.sign(string_to_sign)
     ).decode()

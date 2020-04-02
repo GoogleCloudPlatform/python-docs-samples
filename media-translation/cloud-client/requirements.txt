@@ -1,0 +1,3 @@
+google-cloud-media-translation==0.1.1
+pyaudio==0.2.11
+six==1.14.0
