@@ -92,8 +92,13 @@ for file in **/requirements.txt; do
 
     # If no local noxfile exists, copy the one from root
     if [[ ! -f "noxfile.py" ]]; then
-      cp "$ROOT/noxfile-template.py" "./noxfile.py"
-      echo -e "\n Using noxfile from project root. \n"
+      PARENT_DIR=$(cd ../ && pwd)
+      while [[ "$PARENT_DIR" != "$ROOT" && ! -f "$PARENT_DIR/noxfile-template.py" ]];
+      do
+        PARENT_DIR=$(dirname "$PARENT_DIR")
+      done
+      cp "$PARENT_DIR/noxfile-template.py" "./noxfile.py"
+      echo -e "\n Using noxfile-template from parent folder ($PARENT_DIR). \n"
     fi
 
     # Use nox to execute the tests for the project.
