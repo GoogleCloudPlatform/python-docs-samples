@@ -24,7 +24,7 @@ def create_model(
     """Create a automl video classification model."""
     client = automl.AutoMlClient()
 
-    # A resource that represents Google Cloud Platform loacation.
+    # A resource that represents Google Cloud Platform location.
     project_location = client.location_path(project_id, "us-central1")
     # Leave model unset to use the default base model provided by Google
     metadata = automl.types.VideoClassificationModelMetadata()
