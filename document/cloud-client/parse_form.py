@@ -16,14 +16,16 @@
 # [START documentai_parse_form]
 from google.cloud import documentai_v1beta2 as documentai
 
-def parse_form(project_id='YOUR_PROJECT_ID', input_uri='gs://cloud-samples-data/documentai/form.pdf'):
+
+def parse_form(project_id='YOUR_PROJECT_ID',
+               input_uri='gs://cloud-samples-data/documentai/form.pdf'):
     """Parse a form"""
 
     client = documentai.DocumentUnderstandingServiceClient()
 
     gcs_source = documentai.types.GcsSource(uri=input_uri)
-    
-    # mime_type can be application/pdf, image/tiff, 
+
+    # mime_type can be application/pdf, image/tiff,
     # and image/gif, or application/json
     input_config = documentai.types.InputConfig(
         gcs_source=gcs_source, mime_type='application/pdf')
@@ -35,8 +37,8 @@ def parse_form(project_id='YOUR_PROJECT_ID', input_uri='gs://cloud-samples-data/
     # ADDRESS, LOCATION, ORGANIZATION, PERSON, PHONE_NUMBER, ID,
     # NUMBER, EMAIL, PRICE, TERMS, DATE, NAME
     key_value_pair_hints = [
-        documentai.types.KeyValuePairHint(key='Emergency Contact', 
-            value_types=['NAME']),
+        documentai.types.KeyValuePairHint(key='Emergency Contact',
+                                          value_types=['NAME']),
         documentai.types.KeyValuePairHint(
             key='Referred By')
     ]
@@ -45,7 +47,6 @@ def parse_form(project_id='YOUR_PROJECT_ID', input_uri='gs://cloud-samples-data/
     form_extraction_params = documentai.types.FormExtractionParams(
         enabled=True, key_value_pair_hints=key_value_pair_hints)
 
-    # For now, location must be us-central1
     parent = "projects/{}/locations/us-central1".format(project_id)
     request = documentai.types.ProcessDocumentRequest(
         parent=parent,
@@ -67,13 +68,15 @@ def parse_form(project_id='YOUR_PROJECT_ID', input_uri='gs://cloud-samples-data/
             end_index = segment.end_index
             response += document.text[start_index:end_index]
         return response
-            
+
     for page in document.pages:
         print('Page number: {}'.format(page.page_number))
         for form_field in page.form_fields:
             print('Field Name: {}\tConfidence: {}'.format(
-                _get_text(form_field.field_name), form_field.field_name.confidence))
+                _get_text(form_field.field_name),
+                form_field.field_name.confidence))
             print('Field Value: {}\tConfidence: {}'.format(
-                _get_text(form_field.field_value), form_field.field_value.confidence))
+                _get_text(form_field.field_value),
+                form_field.field_value.confidence))
 
 # [END documentai_parse_form]
