@@ -14,6 +14,8 @@
 
 import os
 import pytest
+import random
+import string
 import sys
 import time
 
@@ -27,8 +29,14 @@ cloud_region = 'us-central1'
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
-dataset_id = 'test_dataset_{}'.format(int(time.time()))
-hl7v2_store_id = 'test_hl7v2_store-{}'.format(int(time.time()))
+# assume we can access the OS provied raondom source.
+random.seed()
+dataset_id = 'test_dataset_{}_{}'.format(
+    int(time.time()),
+    ''.join([random.choice(string.ascii_letters) for n in range(5)]))
+hl7v2_store_id = 'test_hl7v2_store-{}-{}'.format(
+    int(time.time()),
+    ''.join([random.choice(string.ascii_letters) for n in range(5)]))
 hl7v2_message_file = 'resources/hl7-sample-ingest.json'
 label_key = 'PROCESSED'
 label_value = 'TRUE'
