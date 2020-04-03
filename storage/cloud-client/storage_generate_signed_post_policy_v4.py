@@ -42,7 +42,7 @@ def generate_signed_post_policy_v4(bucket_name, blob_name):
     form = header.format(policy["url"])
 
     # Include all fields returned in the HTML form as they're required
-    for index, (key, value) in enumerate(policy["fields"].items()):
+    for key, value in policy["fields"].items():
         form += "  <input name='{}' value='{}' type='hidden'/>\n".format(key, value)
 
     form += "  <input type='file' name='file'/><br />\n"
