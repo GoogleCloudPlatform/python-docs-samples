@@ -25,6 +25,8 @@ import pytest
 
 import snippets
 
+from gcp_devrel.testing import eventually_consistent
+
 
 def create_key_helper(key_id, purpose, algorithm, t):
     try:
@@ -68,7 +70,6 @@ class TestKMSSnippets:
     parent = 'projects/{}/locations/{}'.format(project_id, location)
     keyring_path = '{}/keyRings/{}'.format(parent, keyring_id)
     version = '1'
-    try_limit = 10
 
     symId = 'symmetric'
 
@@ -178,23 +179,18 @@ class TestKMSSnippets:
                                                  self.symId,
                                                  self.member,
                                                  self.role)
-        try_number = 0
-        policy = None
-        while policy is None and try_number < self.try_limit:
-            try:
-                time.sleep(2*try_number)
-                policy = snippets.get_crypto_key_policy(self.project_id,
-                                                        self.location,
-                                                        self.keyring_id,
-                                                        self.symId)
-            except Aborted:
-                # aborted by backend. Try again
-                try_number += 1
-        found = False
-        for b in list(policy.bindings):
-            if b.role == self.role and self.member in b.members:
-                found = True
-        assert found
+
+        @eventually_consistent.call(exceptions=[Aborted, AssertionError])
+        def _():
+            policy = snippets.get_crypto_key_policy(self.project_id,
+                                                    self.location,
+                                                    self.keyring_id,
+                                                    self.symId)
+            found = False
+            for b in list(policy.bindings):
+                if b.role == self.role and self.member in b.members:
+                    found = True
+            assert found
         # remove member
         snippets.remove_member_from_crypto_key_policy(self.project_id,
                                                       self.location,
@@ -202,23 +198,18 @@ class TestKMSSnippets:
                                                       self.symId,
                                                       self.member,
                                                       self.role)
-        try_number = 0
-        policy = None
-        while policy is None and try_number < self.try_limit:
-            try:
-                time.sleep(2*try_number)
-                policy = snippets.get_crypto_key_policy(self.project_id,
-                                                        self.location,
-                                                        self.keyring_id,
-                                                        self.symId)
-            except Aborted:
-                # aborted by backend. Try again
-                try_number += 1
-        found = False
-        for b in list(policy.bindings):
-            if b.role == self.role and self.member in b.members:
-                found = True
-        assert not found
+
+        @eventually_consistent.call(exceptions=[Aborted, AssertionError])
+        def _():
+            policy = snippets.get_crypto_key_policy(self.project_id,
+                                                    self.location,
+                                                    self.keyring_id,
+                                                    self.symId)
+            found = False
+            for b in list(policy.bindings):
+                if b.role == self.role and self.member in b.members:
+                    found = True
+            assert not found
 
     def test_symmetric_encrypt_decrypt(self):
         cipher_bytes = snippets.encrypt_symmetric(self.project_id,
