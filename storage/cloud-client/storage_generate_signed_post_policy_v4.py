@@ -30,24 +30,28 @@ def generate_signed_post_policy_v4(bucket_name, blob_name):
 
     policy = storage_client.generate_signed_post_policy_v4(
         bucket_name,
-        object_name,
+        blob_name,
         expiration=datetime.timedelta(minutes=10),
+        fields={
+          'x-goog-meta-test': 'data'
+        }
     )
 
     # Create an HTML form with the provided policy
-    form_html = "<form action='{}' method='POST' enctype='multipart/form-data'>\n".format(policy["url"])
+    header = "<form action='{}' method='POST' enctype='multipart/form-data'>\n"
+    form = header.format(policy["url"])
 
     # Include all fields returned in the HTML form as they're required
     for index, (key, value) in enumerate(policy["fields"].items()):
-      form_html += "  <input name='{}' value='{}' type='hidden'/>\n".format(key, value)
+        form += "  <input name='{}' value='{}' type='hidden'/>\n".format(key, value)
 
-    form_html += "  <input type='file' name='file'/><br />\n"
-    form_html += "  <input type='submit' value='Upload File' name='submit'/><br />\n"
-    form_html += "</form>"
+    form += "  <input type='file' name='file'/><br />\n"
+    form += "  <input type='submit' value='Upload File' name='submit'/><br />\n"
+    form += "</form>"
 
-    print(form_html)
+    print(form)
 
-    return form_html
+    return form
 
 
 # [END storage_generate_signed_post_policy_v4]
