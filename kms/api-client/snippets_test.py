@@ -16,7 +16,7 @@
 import time
 from os import environ
 
-from google.api_core.exceptions import GoogleAPICallError, Aborted
+from google.api_core.exceptions import Aborted, GoogleAPICallError
 from google.cloud import kms_v1
 from google.cloud.kms_v1 import enums
 from google.iam.v1.policy_pb2 import Policy
