@@ -144,6 +144,7 @@ distance = 0.5
 keyword = 'Software Engineer'
 location2 = 'Synnyvale, CA'
 
+
 def set_up():
     import base_company_sample
     import base_job_sample
@@ -152,7 +153,6 @@ def set_up():
     company_created = base_company_sample.create_company(
         client_service, company_to_be_created)
     company_name = company_created.get('name')
-
 
     job_to_be_created = base_job_sample.generate_job_with_required_fields(
         company_name)
