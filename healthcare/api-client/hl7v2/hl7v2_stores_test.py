@@ -15,7 +15,7 @@
 import os
 import pytest
 import sys
-import time
+import uuid
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'datasets')) # noqa
@@ -26,8 +26,8 @@ cloud_region = 'us-central1'
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
-dataset_id = 'test_dataset_{}'.format(int(time.time()))
-hl7v2_store_id = 'test_hl7v2_store-{}'.format(int(time.time()))
+dataset_id = 'test_dataset_{}'.format(uuid.uuid4())
+hl7v2_store_id = 'test_hl7v2_store-{}'.format(uuid.uuid4())
 
 
 @pytest.fixture(scope='module')
