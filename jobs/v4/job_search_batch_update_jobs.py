@@ -18,13 +18,26 @@ from google.cloud import talent_v4beta1
 import six
 
 
-def sample_batch_update_jobs(project_id, tenant_id, job_name_one,
-                             company_name_one, requisition_id_one, title_one,
-                             description_one, job_application_url_one,
-                             address_one, language_code_one, job_name_two,
-                             company_name_two, requisition_id_two, title_two,
-                             description_two, job_application_url_two,
-                             address_two, language_code_two):
+def sample_batch_update_jobs(
+    project_id,
+    tenant_id,
+    job_name_one,
+    company_name_one,
+    requisition_id_one,
+    title_one,
+    description_one,
+    job_application_url_one,
+    address_one,
+    language_code_one,
+    job_name_two,
+    company_name_two,
+    requisition_id_two,
+    title_two,
+    description_two,
+    job_application_url_two,
+    address_two,
+    language_code_two,
+):
     """
     Batch Update Jobs
 
@@ -55,75 +68,76 @@ def sample_batch_update_jobs(project_id, tenant_id, job_name_one,
     # language_code_two = 'en-US'
 
     if isinstance(project_id, six.binary_type):
-        project_id = project_id.decode('utf-8')
+        project_id = project_id.decode("utf-8")
     if isinstance(tenant_id, six.binary_type):
-        tenant_id = tenant_id.decode('utf-8')
+        tenant_id = tenant_id.decode("utf-8")
     if isinstance(job_name_one, six.binary_type):
-        job_name_one = job_name_one.decode('utf-8')
+        job_name_one = job_name_one.decode("utf-8")
     if isinstance(company_name_one, six.binary_type):
-        company_name_one = company_name_one.decode('utf-8')
+        company_name_one = company_name_one.decode("utf-8")
     if isinstance(requisition_id_one, six.binary_type):
-        requisition_id_one = requisition_id_one.decode('utf-8')
+        requisition_id_one = requisition_id_one.decode("utf-8")
     if isinstance(title_one, six.binary_type):
-        title_one = title_one.decode('utf-8')
+        title_one = title_one.decode("utf-8")
     if isinstance(description_one, six.binary_type):
-        description_one = description_one.decode('utf-8')
+        description_one = description_one.decode("utf-8")
     if isinstance(job_application_url_one, six.binary_type):
-        job_application_url_one = job_application_url_one.decode('utf-8')
+        job_application_url_one = job_application_url_one.decode("utf-8")
     if isinstance(address_one, six.binary_type):
-        address_one = address_one.decode('utf-8')
+        address_one = address_one.decode("utf-8")
     if isinstance(language_code_one, six.binary_type):
-        language_code_one = language_code_one.decode('utf-8')
+        language_code_one = language_code_one.decode("utf-8")
     if isinstance(job_name_two, six.binary_type):
-        job_name_two = job_name_two.decode('utf-8')
+        job_name_two = job_name_two.decode("utf-8")
     if isinstance(company_name_two, six.binary_type):
-        company_name_two = company_name_two.decode('utf-8')
+        company_name_two = company_name_two.decode("utf-8")
     if isinstance(requisition_id_two, six.binary_type):
-        requisition_id_two = requisition_id_two.decode('utf-8')
+        requisition_id_two = requisition_id_two.decode("utf-8")
     if isinstance(title_two, six.binary_type):
-        title_two = title_two.decode('utf-8')
+        title_two = title_two.decode("utf-8")
     if isinstance(description_two, six.binary_type):
-        description_two = description_two.decode('utf-8')
+        description_two = description_two.decode("utf-8")
     if isinstance(job_application_url_two, six.binary_type):
-        job_application_url_two = job_application_url_two.decode('utf-8')
+        job_application_url_two = job_application_url_two.decode("utf-8")
     if isinstance(address_two, six.binary_type):
-        address_two = address_two.decode('utf-8')
+        address_two = address_two.decode("utf-8")
     if isinstance(language_code_two, six.binary_type):
-        language_code_two = language_code_two.decode('utf-8')
+        language_code_two = language_code_two.decode("utf-8")
     parent = client.tenant_path(project_id, tenant_id)
     uris = [job_application_url_one]
-    application_info = {'uris': uris}
+    application_info = {"uris": uris}
     addresses = [address_one]
     jobs_element = {
-        'name': job_name_one,
-        'company': company_name_one,
-        'requisition_id': requisition_id_one,
-        'title': title_one,
-        'description': description_one,
-        'application_info': application_info,
-        'addresses': addresses,
-        'language_code': language_code_one
+        "name": job_name_one,
+        "company": company_name_one,
+        "requisition_id": requisition_id_one,
+        "title": title_one,
+        "description": description_one,
+        "application_info": application_info,
+        "addresses": addresses,
+        "language_code": language_code_one,
     }
     uris_2 = [job_application_url_two]
-    application_info_2 = {'uris': uris_2}
+    application_info_2 = {"uris": uris_2}
     addresses_2 = [address_two]
     jobs_element_2 = {
-        'name': job_name_two,
-        'company': company_name_two,
-        'requisition_id': requisition_id_two,
-        'title': title_two,
-        'description': description_two,
-        'application_info': application_info_2,
-        'addresses': addresses_2,
-        'language_code': language_code_two
+        "name": job_name_two,
+        "company": company_name_two,
+        "requisition_id": requisition_id_two,
+        "title": title_two,
+        "description": description_two,
+        "application_info": application_info_2,
+        "addresses": addresses_2,
+        "language_code": language_code_two,
     }
     jobs = [jobs_element, jobs_element_2]
 
     operation = client.batch_update_jobs(parent, jobs)
 
-    print('Waiting for operation to complete...')
+    print("Waiting for operation to complete...")
     response = operation.result()
 
-    print('Batch response: {}'.format(response))
+    print("Batch response: {}".format(response))
+
 
 # [END job_search_batch_update_jobs]

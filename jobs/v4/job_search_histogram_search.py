@@ -35,30 +35,28 @@ def sample_search_jobs(project_id, tenant_id, query):
     # query = 'count(base_compensation, [bucket(12, 20)])'
 
     if isinstance(project_id, six.binary_type):
-        project_id = project_id.decode('utf-8')
+        project_id = project_id.decode("utf-8")
     if isinstance(tenant_id, six.binary_type):
-        tenant_id = tenant_id.decode('utf-8')
+        tenant_id = tenant_id.decode("utf-8")
     if isinstance(query, six.binary_type):
-        query = query.decode('utf-8')
+        query = query.decode("utf-8")
     parent = client.tenant_path(project_id, tenant_id)
-    domain = 'www.example.com'
-    session_id = 'Hashed session identifier'
-    user_id = 'Hashed user identifier'
-    request_metadata = {
-        'domain': domain,
-        'session_id': session_id,
-        'user_id': user_id
-    }
-    histogram_queries_element = {'histogram_query': query}
+    domain = "www.example.com"
+    session_id = "Hashed session identifier"
+    user_id = "Hashed user identifier"
+    request_metadata = {"domain": domain, "session_id": session_id, "user_id": user_id}
+    histogram_queries_element = {"histogram_query": query}
     histogram_queries = [histogram_queries_element]
 
     # Iterate over all results
     for response_item in client.search_jobs(
-            parent, request_metadata, histogram_queries=histogram_queries):
-        print('Job summary: {}'.format(response_item.job_summary))
-        print('Job title snippet: {}'.format(response_item.job_title_snippet))
+        parent, request_metadata, histogram_queries=histogram_queries
+    ):
+        print("Job summary: {}".format(response_item.job_summary))
+        print("Job title snippet: {}".format(response_item.job_title_snippet))
         job = response_item.job
-        print('Job name: {}'.format(job.name))
-        print('Job title: {}'.format(job.title))
+        print("Job name: {}".format(job.name))
+        print("Job title: {}".format(job.title))
+
 
 # [END job_search_histogram_search]

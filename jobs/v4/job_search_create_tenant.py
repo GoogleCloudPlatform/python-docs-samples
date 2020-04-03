@@ -27,15 +27,16 @@ def sample_create_tenant(project_id, external_id):
     # external_id = 'Your Unique Identifier for Tenant'
 
     if isinstance(project_id, six.binary_type):
-        project_id = project_id.decode('utf-8')
+        project_id = project_id.decode("utf-8")
     if isinstance(external_id, six.binary_type):
-        external_id = external_id.decode('utf-8')
+        external_id = external_id.decode("utf-8")
     parent = client.project_path(project_id)
-    tenant = {'external_id': external_id}
+    tenant = {"external_id": external_id}
 
     response = client.create_tenant(parent, tenant)
-    print('Created Tenant')
-    print('Name: {}'.format(response.name))
-    print('External ID: {}'.format(response.external_id))
+    print("Created Tenant")
+    print("Name: {}".format(response.name))
+    print("External ID: {}".format(response.external_id))
+
 
 # [END job_search_create_tenant]
