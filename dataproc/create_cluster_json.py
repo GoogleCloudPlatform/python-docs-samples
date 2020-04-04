@@ -1,8 +1,7 @@
-import os
-
-from google.cloud import dataproc_v1beta2
-import google.protobuf.json_format as json_format
 import google.cloud.dataproc_v1beta2.proto.clusters_pb2 as clusters
+import google.protobuf.json_format as json_format
+from google.cloud import dataproc_v1beta2
+
 
 def create_cluster(cluster_json_path,project_id,region):
     '''
