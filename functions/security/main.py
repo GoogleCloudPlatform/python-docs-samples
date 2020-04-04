@@ -32,7 +32,7 @@ token_headers = {'Metadata-Flavor': 'Google'}
 def calling_function(request):
     # Fetch the token
     token_response = requests.get(token_full_url, headers=token_headers)
-    jwt = token_response.content.decode("utf-8")
+    jwt = token_response.content
 
     # Provide the token in the request to the receiving function
     function_headers = {'Authorization': f'bearer {jwt}'}
