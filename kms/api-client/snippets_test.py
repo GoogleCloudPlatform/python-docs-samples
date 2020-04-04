@@ -180,8 +180,7 @@ class TestKMSSnippets:
                                                  self.member,
                                                  self.role)
 
-        @eventually_consistent.call(exceptions=[Aborted, AssertionError])
-        def _():
+        def check_policy():
             policy = snippets.get_crypto_key_policy(self.project_id,
                                                     self.location,
                                                     self.keyring_id,
@@ -191,6 +190,8 @@ class TestKMSSnippets:
                 if b.role == self.role and self.member in b.members:
                     found = True
             assert found
+        eventually_consistent.call(check_policy,
+                                   exceptions=[Aborted, AssertionError])
         # remove member
         snippets.remove_member_from_crypto_key_policy(self.project_id,
                                                       self.location,
@@ -199,8 +200,7 @@ class TestKMSSnippets:
                                                       self.member,
                                                       self.role)
 
-        @eventually_consistent.call(exceptions=[Aborted, AssertionError])
-        def _():
+        def check_policy():
             policy = snippets.get_crypto_key_policy(self.project_id,
                                                     self.location,
                                                     self.keyring_id,
@@ -210,6 +210,8 @@ class TestKMSSnippets:
                 if b.role == self.role and self.member in b.members:
                     found = True
             assert not found
+        eventually_consistent.call(check_policy,
+                                   exceptions=[Aborted, AssertionError])
 
     def test_symmetric_encrypt_decrypt(self):
         cipher_bytes = snippets.encrypt_symmetric(self.project_id,
