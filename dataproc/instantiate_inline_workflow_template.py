@@ -97,7 +97,7 @@ def instantiate_inline_workflow_template(project_id, region):
 if __name__ == "__main__":
     if len(sys.arv) != 3:
         print("INSUFFICIENT ARGS: Please provide a PROJECT_ID and REGION.")
-    else: 
+    else:
         project_id = sys.argv[1]
         region = sys.argv[2]
         instantiate_inline_workflow_template(project_id, region)

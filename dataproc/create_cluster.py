@@ -68,8 +68,8 @@ def create_cluster(project_id, region, cluster_name):
 
 if __name__ == "__main__":
     if len(sys.arv) != 4:
-        print("INSUFFICIENT ARGS: Please provide a " 
-            + "PROJECT_ID, REGION AND CLUSTER_NAME.")
+        print("INSUFFICIENT ARGS: Please provide a "
+              + "PROJECT_ID, REGION AND CLUSTER_NAME.")
     else:
         project_id = sys.argv[1]
         region = sys.argv[2]
