@@ -14,63 +14,30 @@
 
 from __future__ import print_function
 
-import fnmatch
 import os
 from pathlib import Path
-import tempfile
 
 import nox
 
-# Get root of this repository. Assume we don't have directories nested deeper than 10 items.
-p = Path(os.getcwd())
-for i in range(10):
-    if p is None:
-        raise Exception("Unable to detect repository root.")
-    if Path(p / ".git").exists():
-        REPO_ROOT = str(p)
-        break
-    p = p.parent
+
+# DO NOT EDIT - automatically generated.
+# All versions used to tested samples.
+ALL_VERSIONS = ["2.7", "3.6", "3.7", "3.8"]
+
+# Any default versions that should be ignored.
+IGNORED_VERSIONS = ["2.7"]
+
+TESTED_VERSIONS = sorted([v for v in ALL_VERSIONS if v not in IGNORED_VERSIONS])
 
 #
-# Helpers and utility functions
+# Style Checks
 #
 
 
-def _list_files(folder, pattern):
-    """Lists all files below the given folder that match the pattern."""
-    for root, folders, files in os.walk(folder):
-        for filename in files:
-            if fnmatch.fnmatch(filename, pattern):
-                yield os.path.join(root, filename)
-
-
-def _collect_dirs(
-    start_dir,
-    blacklist=set(["conftest.py", "noxfile.py", "lib", "third_party"]),
-    suffix="requirements.txt",
-    recurse_further=False,
-):
-    """Recursively collects a list of dirs that contain a file matching the
-    given suffix.
-
-    This works by listing the contents of directories and finding
-    directories that have `"requirements.text` files.
-    """
-    # Collect all the directories that have tests in them.
-    for parent, subdirs, files in os.walk(start_dir):
-        if "./." in parent:
-            continue  # Skip top-level dotfiles
-        elif any(f for f in files if f.endswith(suffix) and f not in blacklist):
-            # Don't recurse further for tests, since py.test will do that.
-            if not recurse_further:
-                del subdirs[:]
-            # This dir has desired files in it. yield it.
-            yield parent
-        else:
-            # Filter out dirs we don't want to recurse into
-            subdirs[:] = [s for s in subdirs if s[0].isalpha() and s not in blacklist]
-
-
+# Ignore I202 "Additional newline in a section of imports." to accommodate
+# region tags in import blocks. Since we specify an explicit ignore, we also
+# have to explicitly ignore the list of default ignores:
+# `E121,E123,E126,E226,E24,E704,W503,W504` as shown by `flake8 --help`.
 def _determine_local_import_names(start_dir):
     """Determines all import names that should be considered "local".
 
@@ -87,74 +54,45 @@ def _determine_local_import_names(start_dir):
     ]
 
 
+FLAKE8_COMMON_ARGS = [
+    "--show-source",
+    "--builtin=gettext",
+    "--max-complexity=20",
+    "--import-order-style=google",
+    "--exclude=.nox,.cache,env,lib,generated_pb2,*_pb2.py,*_pb2_grpc.py",
+    "--ignore=E121,E123,E126,E203,E226,E24,E266,E501,E704,W503,W504,I100,I201,I202",
+    "--max-line-length=88",
+]
+
+
+@nox.session
+def lint(session):
+    session.install("flake8", "flake8-import-order")
+
+    local_names = _determine_local_import_names(".")
+    args = FLAKE8_COMMON_ARGS + [
+        "--application-import-names",
+        ",".join(local_names),
+        ".",
+    ]
+    session.run("flake8", *args)
+
+
 #
-# App Engine specific helpers
-#
-
-
-_GAE_ROOT = os.environ.get("GAE_ROOT")
-if _GAE_ROOT is None:
-    _GAE_ROOT = tempfile.mkdtemp()
-
-
-def _setup_appengine_sdk(session):
-    """Installs the App Engine SDK, if needed."""
-    session.env["GAE_SDK_PATH"] = os.path.join(_GAE_ROOT, "google_appengine")
-    session.run("gcp-devrel-py-tools", "download-appengine-sdk", _GAE_ROOT)
-
-
-#
-# Test sessions
+# Sample Tests
 #
 
 
 PYTEST_COMMON_ARGS = ["--junitxml=sponge_log.xml"]
 
-# Ignore I202 "Additional newline in a section of imports." to accommodate
-# region tags in import blocks. Since we specify an explicit ignore, we also
-# have to explicitly ignore the list of default ignores:
-# `E121,E123,E126,E226,E24,E704,W503,W504` as shown by `flake8 --help`.
-FLAKE8_COMMON_ARGS = [
-    "--show-source",
-    "--builtin",
-    "gettext",
-    "--max-complexity",
-    "20",
-    "--import-order-style",
-    "google",
-    "--exclude",
-    ".nox,.cache,env,lib,generated_pb2,*_pb2.py,*_pb2_grpc.py",
-    "--ignore=E121,E123,E126,E203, E226,E24,E266,E501,E704,W503,W504,I100,I201,I202",
-    "--max-line-length=88",
-]
 
-
-# Collect sample directories.
-ALL_TESTED_SAMPLES = sorted(list(_collect_dirs(".")))
-
-GAE_STANDARD_SAMPLES = [
-    sample
-    for sample in ALL_TESTED_SAMPLES
-    if str(Path(sample).absolute().relative_to(REPO_ROOT)).startswith(
-        "appengine/standard/"
-    )
-]
-
-PY2_ONLY_SAMPLES = GAE_STANDARD_SAMPLES
-
-NON_GAE_STANDARD_SAMPLES_PY3 = sorted(
-    list(set(ALL_TESTED_SAMPLES) - set(GAE_STANDARD_SAMPLES))
-)
-
-
-def _session_tests(session, sample, post_install=None):
-    """Runs py.test for a particular sample."""
-    session.install("-r", REPO_ROOT + "/testing/requirements.txt")
-
-    session.chdir(sample)
-
+def _session_tests(session, post_install=None):
+    """Runs py.test for a particular project."""
     if os.path.exists("requirements.txt"):
         session.install("-r", "requirements.txt")
+
+    if os.path.exists("requirements-test.txt"):
+        session.install("-r", "requirements-test.txt")
 
     if post_install:
         post_install(session)
@@ -169,50 +107,46 @@ def _session_tests(session, sample, post_install=None):
     )
 
 
-@nox.session(python="2.7")
-@nox.parametrize("sample", PY2_ONLY_SAMPLES)
-def gae(session, sample):
-    """Runs py.test for an App Engine standard sample."""
-
-    # Create a lib directory if needed, otherwise the App Engine vendor library
-    # will complain.
-    if not os.path.isdir(os.path.join(sample, "lib")):
-        os.mkdir(os.path.join(sample, "lib"))
-
-    _session_tests(session, sample, _setup_appengine_sdk)
+@nox.session(python=ALL_VERSIONS)
+def py(session):
+    """Runs py.test for a sample using the specified version of Python."""
+    if session.python in TESTED_VERSIONS:
+        _session_tests(session)
+    else:
+        print("SKIPPED: {} tests are disabled for this sample.".format(session.python))
 
 
-@nox.session(python=["3.6", "3.7"])
-@nox.parametrize("sample", NON_GAE_STANDARD_SAMPLES_PY3)
-def py3(session, sample):
-    """Runs py.test for a sample using Python 3.x"""
-    _session_tests(session, sample)
+#
+# Readmegen
+#
 
 
-@nox.session(python="3.6")
-def lint(session):
-    session.install("flake8", "flake8-import-order")
+def _get_repo_root():
+    """ Returns the root folder of the project. """
+    # Get root of this repository. Assume we don't have directories nested deeper than 10 items.
+    p = Path(os.getcwd())
+    for i in range(10):
+        if p is None:
+            break
+        if Path(p / ".git").exists():
+            return str(p)
+        p = p.parent
+    raise Exception("Unable to detect repository root.")
 
-    local_names = _determine_local_import_names(".")
-    args = FLAKE8_COMMON_ARGS + [
-        "--application-import-names",
-        ",".join(local_names),
-        ".",
-    ]
-    session.run("flake8", *args)
 
-
-SAMPLES_WITH_GENERATED_READMES = sorted(list(_collect_dirs(".", suffix=".rst.in")))
+GENERATED_READMES = sorted([x for x in Path(".").rglob("*.rst.in")])
 
 
 @nox.session
-@nox.parametrize("sample", SAMPLES_WITH_GENERATED_READMES)
-def readmegen(session, sample):
+@nox.parametrize("path", GENERATED_READMES)
+def readmegen(session, path):
     """(Re-)generates the readme for a sample."""
     session.install("jinja2", "pyyaml")
 
-    if os.path.exists(os.path.join(sample, "requirements.txt")):
-        session.install("-r", os.path.join(sample, "requirements.txt"))
+    if os.path.exists(os.path.join(path, "requirements.txt")):
+        session.install("-r", os.path.join(path, "requirements.txt"))
 
-    in_file = os.path.join(sample, "README.rst.in")
-    session.run("python", REPO_ROOT + "/scripts/readme-gen/readme_gen.py", in_file)
+    in_file = os.path.join(path, "README.rst.in")
+    session.run(
+        "python", _get_repo_root() + "/scripts/readme-gen/readme_gen.py", in_file
+    )
