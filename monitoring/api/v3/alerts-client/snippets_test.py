@@ -17,6 +17,7 @@ from __future__ import print_function
 import random
 import string
 
+from gcp_devrel.testing import eventually_consistent
 from google.cloud import monitoring_v3
 import google.protobuf.json_format
 import pytest
@@ -74,12 +75,14 @@ def pochan():
         yield pochan
 
 
+@eventually_consistent.mark
 def test_list_alert_policies(capsys, pochan):
     snippets.list_alert_policies(pochan.project_name)
     out, _ = capsys.readouterr()
     assert pochan.alert_policy.display_name in out
 
 
+@eventually_consistent.mark
 def test_enable_alert_policies(capsys, pochan):
     snippets.enable_alert_policies(pochan.project_name, False)
     out, _ = capsys.readouterr()
@@ -97,6 +100,7 @@ def test_enable_alert_policies(capsys, pochan):
     assert "already enabled" in out
 
 
+@eventually_consistent.mark
 def test_replace_channels(capsys, pochan):
     alert_policy_id = pochan.alert_policy.name.split('/')[-1]
     notification_channel_id = pochan.notification_channel.name.split('/')[-1]
@@ -106,6 +110,7 @@ def test_replace_channels(capsys, pochan):
     assert "Updated {0}".format(pochan.alert_policy.name) in out
 
 
+@eventually_consistent.mark
 def test_backup_and_restore(capsys, pochan):
     snippets.backup(pochan.project_name, 'backup.json')
     out, _ = capsys.readouterr()
@@ -117,6 +122,7 @@ def test_backup_and_restore(capsys, pochan):
         pochan.notification_channel.display_name) in out
 
 
+@eventually_consistent.mark
 def test_delete_channels(capsys, pochan):
     notification_channel_id = pochan.notification_channel.name.split('/')[-1]
     snippets.delete_notification_channels(
