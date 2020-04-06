@@ -13,19 +13,21 @@
 # limitations under the License.
 
 import os
-
-import instantiate_inline_workflow_template
+import subprocess
 
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 REGION = 'us-central1'
 
 
-def test_workflows(capsys):
+def test_workflows():
     # Wrapper function for client library function
-    instantiate_inline_workflow_template.instantiate_inline_workflow_template(
-        PROJECT_ID, REGION
-    )
+    command = [
+        'python', 'instantiate_inline_workflow_template.py',
+        PROJECT_ID,
+        REGION,
+    ]
 
-    out, _ = capsys.readouterr()
+    out = subprocess.check_output(command).decode("utf-8")
+
     assert "successfully" in out

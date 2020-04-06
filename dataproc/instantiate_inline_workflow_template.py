@@ -16,14 +16,15 @@
 # workflow for Cloud Dataproc using the Python client library.
 #
 # This script can be run on its own:
-#   python workflows.py ${PROJECT_ID} ${REGION}
+#   python instantiate_inline_workflow_template.py ${PROJECT_ID} ${REGION}
 
-import sys
 # [START dataproc_instantiate_inline_workflow_template]
+import sys
+
 from google.cloud import dataproc_v1 as dataproc
 
 
-def instantiate_inline_workflow_template(project_id, region):
+def instantiate_inline_workflow_template(project_id="PROJECT_ID", region="REGION"):
     """This sample walks a user through submitting a workflow
        for a Cloud Dataproc using the Python client library.
 
@@ -91,8 +92,10 @@ def instantiate_inline_workflow_template(project_id, region):
 
     # Output a success message.
     print('Workflow ran successfully.')
-# [END dataproc_instantiate_inline_workflow_template]
 
 
 if __name__ == "__main__":
-    instantiate_inline_workflow_template(sys.argv[1], sys.argv[2])
+    project_id = sys.argv[1]
+    region = sys.argv[2]
+    instantiate_inline_workflow_template(project_id, region)
+# [END dataproc_instantiate_inline_workflow_template]
