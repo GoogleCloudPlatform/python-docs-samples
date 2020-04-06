@@ -15,14 +15,16 @@
 from flask import Flask, request
 import markdown
 import os
-import sys
+
 
 app = Flask(__name__)
+
 
 @app.route('/', methods=['POST'])
 def index():
     data = request.get_data(as_text=True)
     return markdown.markdown(data)
+
 
 if __name__ == '__main__':
     PORT = int(os.getenv('PORT')) if os.getenv('PORT') else 8080

@@ -13,54 +13,40 @@
 # limitations under the License.
 
 import os
-from urllib import request
+import urllib
 
 
 METADATA_URL = 'http://metadata.google.internal/computeMetadata/v1/'
 METADATA_HEADERS = {'Metadata-Flavor': 'Google'}
 
 
-class RenderService(object):
-    """
-    RenderService represents our upstream render service.
-    """
-
-    def __init__(self, URL, Authenticated):
-        # URL is the render service address.
-        self.url = URL
-        # Auth determines whether identity token authentication will be used.
-        self.authenticated = Authenticated
-
-
-def new_request(RenderService):
+def new_request(data):
     """
     new_request creates a new HTTP request with IAM ID Token credential.
     This token is automatically handled by private Cloud Run (fully managed)
     and Cloud Functions.
     """
-    req = request.Request(RenderService.url)
 
-    if not RenderService.authenticated:
-        response = urllib.request.urlopen(req)
+    url = os.environ.get('EDITOR_UPSTREAM_RENDER_URL')
+    unauthenticated = os.environ.get('EDITOR_UPSTREAM_UNAUTHENTICATED')
 
-    token_url = (
-        f"{METADATA_URL}instance/service-accounts/"
-        f"default/identity?audience={RenderService.url}")
-    token_req = request.Request(token_url, headers=METADATA_HEADERS)
-    token_response = request.urlopen(token_req)
-    token = token_response.read()
+    req = urllib.request.Request(url, data=data.encode())
 
-    return token
+    if not unauthenticated:
+        token = get_token(url)
+        req.add_header("Authorization", f"Bearer {token}")
 
-
-def render(RenderService):
-    """
-    render converts the Markdown plaintext to HTML.
-    """
-    req = new_request(RenderService)
     response = urllib.request.urlopen(req)
-    return response
+    return response.read()
 
 
-
-
+def get_token(url):
+    """
+    Retrieves the IAM ID Token credential for the url.
+    """
+    token_url = (f"{METADATA_URL}instance/service-accounts/"
+                 f"default/identity?audience={url}")
+    token_req = urllib.request.Request(token_url, headers=METADATA_HEADERS)
+    token_response = urllib.request.urlopen(token_req)
+    token = token_response.read()
+    return token.decode()

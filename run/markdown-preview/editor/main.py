@@ -12,25 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from flask import Flask, request, render_template
-import markdown
+from flask import Flask, render_template, request
 import os
-import sys
+
+import render
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET','POST'])
+
+@app.route('/', methods=['GET'])
 def index():
+    # Render the default template
     f = open('templates/markdown.md')
-    default =f.read()
+    default = f.read()
     return render_template('index.html', default=default)
 
 
 @app.route('/render', methods=['POST'])
-def render():
-    f = open('templates/markdown.md')
-    default =f.read()
-    return markdown.markdown(default)
+def render_handler():
+    body = request.get_json()
+    data = body["data"]
+    parsed_markdown = render.new_request(data)
+    return parsed_markdown
 
 
 if __name__ == '__main__':
