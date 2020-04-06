@@ -50,3 +50,26 @@ def test_sign_url(capsys):
     assert results[2] == (
         'http://www.example.com/some/path?some=query&another=param&Expires='
         '1549751401&KeyName=my-key&Signature=9Q9TCxSju8-W5nUkk5CuTrun2_o=')
+
+
+def test_sign_cookie(capsys):
+    snippets.sign_cookie(
+        'http://35.186.234.33/index.html',
+        'my-key',
+        'nZtRohdNF9m3cKM24IcK4w==',
+        datetime.datetime.utcfromtimestamp(1549751401))
+    snippets.sign_cookie(
+        'http://www.example.com/foo/',
+        'my-key',
+        'nZtRohdNF9m3cKM24IcK4w==',
+        datetime.datetime.utcfromtimestamp(1549751401))
+
+    out, _ = capsys.readouterr()
+
+    results = out.splitlines()
+    assert results[0] == (
+        'Cloud-CDN-Cookie=URLPrefix=aHR0cDovLzM1LjE4Ni4yMzQuMzMvaW5kZXguaHRtbA==:'
+        'Expires=1549751401:KeyName=my-key:Signature=uImwlOBCPs91mlCyG9vyyZRrNWU=')
+    assert results[1] == (
+        'Cloud-CDN-Cookie=URLPrefix=aHR0cDovL3d3dy5leGFtcGxlLmNvbS9mb28v:'
+        'Expires=1549751401:KeyName=my-key:Signature=Z9uYAu73YHioRScZDxnP-TnS274=')
