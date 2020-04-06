@@ -15,9 +15,10 @@
 import os
 import uuid
 import pytest
-import subprocess
 
 from google.cloud import dataproc_v1 as dataproc
+
+import create_cluster
 
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
@@ -39,11 +40,8 @@ def teardown():
 
 
 def test_cluster_create(capsys):
-    command = [
-        'python', 'create_cluster.py',
-        PROJECT_ID,
-        REGION,
-        CLUSTER_NAME,
-    ]
-    out = subprocess.check_output(command).decode("utf-8")
+    # Wrapper function for client library function
+    create_cluster.create_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
+
+    out, _ = capsys.readouterr()
     assert CLUSTER_NAME in out

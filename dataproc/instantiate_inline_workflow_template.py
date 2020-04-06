@@ -24,7 +24,7 @@ import sys
 from google.cloud import dataproc_v1 as dataproc
 
 
-def instantiate_inline_workflow_template(project_id="PROJECT_ID", region="REGION"):
+def instantiate_inline_workflow_template(project_id, region):
     """This sample walks a user through submitting a workflow
        for a Cloud Dataproc using the Python client library.
 
@@ -95,7 +95,10 @@ def instantiate_inline_workflow_template(project_id="PROJECT_ID", region="REGION
 
 
 if __name__ == "__main__":
-    project_id = sys.argv[1]
-    region = sys.argv[2]
-    instantiate_inline_workflow_template(project_id, region)
+    if len(sys.arv) != 3:
+        print("INSUFFICIENT ARGS: Please provide a PROJECT_ID and REGION.")
+    else: 
+        project_id = sys.argv[1]
+        region = sys.argv[2]
+        instantiate_inline_workflow_template(project_id, region)
 # [END dataproc_instantiate_inline_workflow_template]
