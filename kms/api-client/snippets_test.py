@@ -191,7 +191,7 @@ class TestKMSSnippets:
                     found = True
             assert found
         eventually_consistent.call(check_policy,
-                                   exceptions=[Aborted, AssertionError])
+                                   exceptions=(Aborted, AssertionError))
         # remove member
         snippets.remove_member_from_crypto_key_policy(self.project_id,
                                                       self.location,
@@ -211,7 +211,7 @@ class TestKMSSnippets:
                     found = True
             assert not found
         eventually_consistent.call(check_policy,
-                                   exceptions=[Aborted, AssertionError])
+                                   exceptions=(Aborted, AssertionError))
 
     def test_symmetric_encrypt_decrypt(self):
         cipher_bytes = snippets.encrypt_symmetric(self.project_id,
