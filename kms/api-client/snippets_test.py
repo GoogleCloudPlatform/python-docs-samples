@@ -53,7 +53,7 @@ def setup_module(module):
     except GoogleAPICallError:
         # keyring already exists
         pass
-    s = create_key_helper(t.symId,
+    s = create_key_helper(t.sym_id,
                           enums.CryptoKey.CryptoKeyPurpose.ENCRYPT_DECRYPT,
                           enums.CryptoKeyVersion.CryptoKeyVersionAlgorithm.
                           GOOGLE_SYMMETRIC_ENCRYPTION,
@@ -71,9 +71,9 @@ class TestKMSSnippets:
     keyring_path = '{}/keyRings/{}'.format(parent, keyring_id)
     version = '1'
 
-    symId = 'symmetric'
+    sym_id = 'symmetric'
 
-    sym = '{}/cryptoKeys/{}'.format(keyring_path, symId)
+    sym = '{}/cryptoKeys/{}'.format(keyring_path, sym_id)
     sym_version = '{}/cryptoKeyVersions/{}'.format(sym, version)
 
     message = 'test message 123'
@@ -96,7 +96,7 @@ class TestKMSSnippets:
     @pytest.mark.skip(reason="Deleting keys isn't instant, so we should avoid \
                               creating a large number of them in our tests")
     def test_create_crypto_key(self):
-        key_id = self.symId + '-test' + str(int(time.time()))
+        key_id = self.sym_id + '-test' + str(int(time.time()))
         snippets.create_crypto_key(self.project_id, self.location,
                                    self.keyring_id, key_id)
         c = kms_v1.KeyManagementServiceClient()
@@ -110,30 +110,30 @@ class TestKMSSnippets:
     def test_key_change_version_state(self):
         client = kms_v1.KeyManagementServiceClient()
         name = client.crypto_key_version_path(self.project_id, self.location,
-                                              self.keyring_id, self.symId,
+                                              self.keyring_id, self.sym_id,
                                               self.version)
         state_enum = enums.CryptoKeyVersion.CryptoKeyVersionState
         # test disable
         snippets.disable_crypto_key_version(self.project_id, self.location,
-                                            self.keyring_id, self.symId,
+                                            self.keyring_id, self.sym_id,
                                             self.version)
         response = client.get_crypto_key_version(name)
         assert response.state == state_enum.DISABLED
         # test destroy
         snippets.destroy_crypto_key_version(self.project_id, self.location,
-                                            self.keyring_id, self.symId,
+                                            self.keyring_id, self.sym_id,
                                             self.version)
         response = client.get_crypto_key_version(name)
         assert response.state == state_enum.DESTROY_SCHEDULED
         # test restore
         snippets.restore_crypto_key_version(self.project_id, self.location,
-                                            self.keyring_id, self.symId,
+                                            self.keyring_id, self.sym_id,
                                             self.version)
         response = client.get_crypto_key_version(name)
         assert response.state == state_enum.DISABLED
         # test re-enable
         snippets.enable_crypto_key_version(self.project_id, self.location,
-                                           self.keyring_id, self.symId,
+                                           self.keyring_id, self.sym_id,
                                            self.version)
         response = client.get_crypto_key_version(name)
         assert response.state == state_enum.ENABLED
@@ -176,7 +176,7 @@ class TestKMSSnippets:
         snippets.add_member_to_crypto_key_policy(self.project_id,
                                                  self.location,
                                                  self.keyring_id,
-                                                 self.symId,
+                                                 self.sym_id,
                                                  self.member,
                                                  self.role)
 
@@ -184,7 +184,7 @@ class TestKMSSnippets:
             policy = snippets.get_crypto_key_policy(self.project_id,
                                                     self.location,
                                                     self.keyring_id,
-                                                    self.symId)
+                                                    self.sym_id)
             found = False
             for b in list(policy.bindings):
                 if b.role == self.role and self.member in b.members:
@@ -196,7 +196,7 @@ class TestKMSSnippets:
         snippets.remove_member_from_crypto_key_policy(self.project_id,
                                                       self.location,
                                                       self.keyring_id,
-                                                      self.symId,
+                                                      self.sym_id,
                                                       self.member,
                                                       self.role)
 
@@ -204,7 +204,7 @@ class TestKMSSnippets:
             policy = snippets.get_crypto_key_policy(self.project_id,
                                                     self.location,
                                                     self.keyring_id,
-                                                    self.symId)
+                                                    self.sym_id)
             found = False
             for b in list(policy.bindings):
                 if b.role == self.role and self.member in b.members:
@@ -217,12 +217,12 @@ class TestKMSSnippets:
         cipher_bytes = snippets.encrypt_symmetric(self.project_id,
                                                   self.location,
                                                   self.keyring_id,
-                                                  self.symId,
+                                                  self.sym_id,
                                                   self.message_bytes)
         plain_bytes = snippets.decrypt_symmetric(self.project_id,
                                                  self.location,
                                                  self.keyring_id,
-                                                 self.symId,
+                                                 self.sym_id,
                                                  cipher_bytes)
         assert plain_bytes == self.message_bytes
         assert cipher_bytes != self.message_bytes
