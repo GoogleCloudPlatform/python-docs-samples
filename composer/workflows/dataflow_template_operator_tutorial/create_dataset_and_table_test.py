@@ -5,7 +5,7 @@ import uuid
 
 client = bigquery.Client()
 dataset_UUID = str(uuid.uuid4())
-dataset_id = F"{client.project}.sample_dataset_{dataset_UUID}"
+dataset_id = f"{client.project}.sample_dataset_{dataset_UUID}"
 
 
 @pytest.fixture(scope="module")
@@ -26,7 +26,7 @@ def dataset():
 @pytest.fixture(scope="module")
 def table():
 
-    table_id = F"{dataset_id}.average_weather"
+    table_id = f"{dataset_id}.average_weather"
 
     schema = [
         bigquery.SchemaField("location", "GEOGRAPHY", mode="REQUIRED"),

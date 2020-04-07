@@ -17,13 +17,12 @@ bucket_path = "gs://" + models.Variable.get("bucket_name")
 project_id = models.Variable.get("project_id")
 gce_zone = models.Variable.get("gce-zone")
 
-# [START dataflow_composer_DAG]
+# [START composer_dataflow_dag]
 
-import datetime
 from airflow.utils.dates import days_ago
 from airflow import models
 from airflow.contrib.operators.dataflow_operator import DataflowTemplateOperator
-
+import datetime
 # TODO: Replace all instances of project_id with your project id.
 # TODO: Replace bucket_name with your bucket name.
 
@@ -54,7 +53,7 @@ with models.DAG(
 
     start_template_job = DataflowTemplateOperator(
         # The task id of your job
-        task_id="composer_dataflow_dag",
+        task_id="dataflow_operator_transform_CSV_to_BQ",
         # The name of the template that you're using. Below is a list of all the templates you can use.
         # For versions in non-production environments, use the subfolder 'latest'
         # https://cloud.google.com/dataflow/docs/guides/templates/provided-streaming#gcstexttobigquerystream
@@ -71,4 +70,4 @@ with models.DAG(
         },
     )
 
-# [END dataflow_composer_DAG]
+# [END composer_dataflow_dag]

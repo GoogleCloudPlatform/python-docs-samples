@@ -1,4 +1,4 @@
-# [START dataflow_composer_dataset_table_creation]
+# [START composer_dataflow_dataset_table_creation]
 
 from google.cloud import bigquery
 
@@ -18,7 +18,7 @@ dataset = bigquery.Dataset(dataset_id)
 # Raises google.api_core.exceptions.Conflict if the Dataset already
 # exists within the project.
 dataset = client.create_dataset(dataset)  # Make an API request.
-print(F"Created dataset {client.project} {dataset.dataset_id}")
+print(f"Created dataset {client.project} {dataset.dataset_id}")
 
 
 # Create a table from this dataset.
@@ -37,6 +37,6 @@ schema = [
 
 table = bigquery.Table(table_id, schema=schema)
 table = client.create_table(table)  # Make an API request.
-print(F"Created table {table.project}.{table.dataset_id}.{table.table_id}")
+print(f"Created table {table.project}.{table.dataset_id}.{table.table_id}")
 
-# [END dataflow_composer_dataset_table_creation]
+# [END composer_dataflow_dataset_table_creation]
