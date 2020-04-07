@@ -34,7 +34,7 @@ db_pass = os.environ.get("DB_PASS")
 db_name = os.environ.get("DB_NAME")
 
 # When deployed to GAE Flex for TCP, use "172.17.0.1" to connect
-host = "172.17.0.1" if os.environ.get("PROD") else "127.0.0.1"
+host = "172.17.0.1" if os.environ.get("DEPLOYED") else "127.0.0.1"
 
 # The SQLAlchemy engine will help manage interactions, including automatically
 # managing a pool of connections to your database

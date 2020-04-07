@@ -14,28 +14,14 @@
 
 # Use the official Python image.
 # https://hub.docker.com/_/python
-FROM python:3.8-alpine
-
-RUN apk --no-cache add curl build-base unixodbc-dev
+FROM python:3.8-buster
 
 #Download the desired package(s) for Microsoft ODBC 17 Driver
-RUN curl -O https://download.microsoft.com/download/e/4/e/e4e67866-dffd-428c-aac7-8d28ddafb39b/msodbcsql17_17.5.2.1-1_amd64.apk
-RUN curl -O https://download.microsoft.com/download/e/4/e/e4e67866-dffd-428c-aac7-8d28ddafb39b/mssql-tools_17.5.2.1-1_amd64.apk
-
-
-#(Optional) Verify signature:
-RUN apk add gnupg
-RUN curl -O https://download.microsoft.com/download/e/4/e/e4e67866-dffd-428c-aac7-8d28ddafb39b/msodbcsql17_17.5.2.1-1_amd64.sig
-RUN curl -O https://download.microsoft.com/download/e/4/e/e4e67866-dffd-428c-aac7-8d28ddafb39b/mssql-tools_17.5.2.1-1_amd64.sig
-
-RUN curl https://packages.microsoft.com/keys/microsoft.asc  | gpg --import -
-RUN gpg --verify msodbcsql17_17.5.2.1-1_amd64.sig msodbcsql17_17.5.2.1-1_amd64.apk
-RUN gpg --verify mssql-tools_17.5.2.1-1_amd64.sig mssql-tools_17.5.2.1-1_amd64.apk
-
-
-#Install the package(s)
-RUN apk add --allow-untrusted msodbcsql17_17.5.2.1-1_amd64.apk
-RUN apk add --allow-untrusted mssql-tools_17.5.2.1-1_amd64.apk
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list
+RUN apt-get update
+RUN ACCEPT_EULA=Y apt-get install -y msodbcsql17
+RUN apt-get install unixodbc-dev
 
 # Copy application dependency manifests to the container image.
 # Copying this separately prevents re-running pip install on every code change.
