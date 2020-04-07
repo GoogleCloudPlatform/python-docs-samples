@@ -1,4 +1,4 @@
-# Copyright 2019 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -34,4 +34,4 @@ def test_functions_bearer_token_should_run(requestsMock):
 
     second_headers = requestsMock.get.call_args_list[0][1]
     assert second_headers == {'headers': {'Metadata-Flavor': 'Google'}}
-    assert 'function-done' == res
+    assert res == 'function-done'
