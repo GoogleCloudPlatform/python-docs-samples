@@ -43,7 +43,9 @@ def test_custom_role():
             CUSTOM_ROLE_PERMISSIONS,
             CUSTOM_ROLE_STAGE,
         )
-    except googleapiclient.errors.HttpError:
+    except googleapiclient.errors.HttpError as e:
+        if "HttpError 409" not in str(e):
+            raise e
         # Ignore error since we just reuse the same custom role.
         pass
     yield CUSTOM_ROLE_NAME
