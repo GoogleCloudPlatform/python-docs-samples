@@ -29,8 +29,8 @@ project_id = os.environ["GCLOUD_PROJECT"]
 service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
 bundle = os.path.join(os.path.dirname(__file__), "resources/execute_bundle.json")
-dataset_id = "test_dataset_{}".format(str(uuid.uuid4()))
-fhir_store_id = "test_fhir_store-{}".format(str(uuid.uuid4()))
+dataset_id = "test_dataset_{}".format(uuid.uuid4())
+fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
 resource_type = "Patient"
 
 
