@@ -12,31 +12,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+bucket_name = models.Variable.get('bucket_name')
+project_id = models.Variable.get('project_id')
+gce_zone = models.Variable.get('gce-zone')
+
+# [START dataflow_composer_DAG]
+
 import datetime
 from airflow.utils.dates import days_ago
 from airflow import models
 from airflow.contrib.operators.dataflow_operator import DataflowTemplateOperator
 
-gs = "gs://"
-JSONPath = "gs://"+models.Variable.get('bucket_name')+"/jsonSchema.json"
-javascriptTextTransformGcsPath ="gs://"+models.Variable.get('bucket_name')+"/inputFile.txt"
-inputFilePattern = "gs://"+models.Variable.get('bucket_name')+"/inputFile.txt"
-outputTable = models.Variable.get('project_id')+":average_weather.average_weather"
-outputDeadletterTable = models.Variable.get('project_id')+":average_weather.average_weather_error_records"
-bigQueryLoadingTemporaryDirectory = "gs://"+models.Variable.get('bucket_name')+"/tmp/"
+#TODO: Replace all instances of project_id with your project id.
+#TODO: Replace bucket_name with your bucket name.
 
 default_args = {
     #Tell airflow to start one day ago, so that it runs as soon as you upload it
     "start_date": days_ago(1),
     'dataflow_default_options': {
 
-        'project': models.Variable.get('project_id'),
+        'project': project_id,
         #Set to your region
-        'region': models.Variable.get('gce_zone'),
+        'region': gce_zone,
         #Set to your zone
-        'zone': models.Variable.get('gce_zone'),
+        'zone': gce_zone,
         #This is a subfolder for storing temporary files, like the staged pipeline job.
-        'tempLocation': "gs://"+models.Variable.get('bucket_name')+"/tmp/"
+        'tempLocation': "gs://"+bucket_name+"/tmp/"
         }
     }
 
@@ -63,14 +65,14 @@ with models.DAG(
 
         #Use the link above to specify the correct parameters for your template.
         parameters={
-            #TODO: Replace projectId with your project id.
-            #TODO: Replace bucketName with your bucket name.
             'javascriptTextTransformFunctionName': "transformCSVtoJSON",
-            'JSONPath': 'JSONPath',
-            'javascriptTextTransformGcsPath': javascriptTextTransformGcsPath,
-            'inputFilePattern': inputFilePattern,
-            'outputTable': outputTable,
-            'outputDeadletterTable': outputDeadletterTable,
-            'bigQueryLoadingTemporaryDirectory': bigQueryLoadingTemporaryDirectory,
+            'JSONPath': "gs://"+bucket_name+"/jsonSchema.json",
+            'javascriptTextTransformGcsPath': "gs://"+bucket_name+"/inputFile.txt",
+            'inputFilePattern': "gs://"+bucket_name+"/inputFile.txt",
+            'outputTable': project_id+":average_weather.average_weather",
+            'outputDeadletterTable': project_id+":average_weather.average_weather"
+            'bigQueryLoadingTemporaryDirectory': "gs://"+bucket_name+"/tmp/"
         },
     )
+
+# [END dataflow_composer_DAG]

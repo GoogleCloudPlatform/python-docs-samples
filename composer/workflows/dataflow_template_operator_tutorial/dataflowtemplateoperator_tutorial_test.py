@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from airflow import models
-
 from . import unit_testing
 
 
