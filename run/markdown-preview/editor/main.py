@@ -31,6 +31,8 @@ def index():
 @app.route('/render', methods=['POST'])
 def render_handler():
     body = request.get_json()
+    assert body, "Invalid JSON"
+    
     data = body["data"]
     parsed_markdown = render.new_request(data)
     return parsed_markdown
