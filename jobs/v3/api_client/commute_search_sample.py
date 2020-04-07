@@ -19,7 +19,6 @@ import os
 import time
 
 from googleapiclient.discovery import build
-
 client_service = build('jobs', 'v3')
 parent = 'projects/' + os.environ['GOOGLE_CLOUD_PROJECT']
 # [END instantiate]
@@ -54,7 +53,7 @@ def commute_search(client_service, company_name):
 # [END commute_search]
 
 
-def run_sample():
+def set_up():
     import base_company_sample
     import base_job_sample
 
@@ -70,14 +69,24 @@ def run_sample():
     })
     job_name = base_job_sample.create_job(client_service,
                                           job_to_be_created).get('name')
+    return company_name, job_name
 
-    # Wait several seconds for post processing
-    time.sleep(10)
-    commute_search(client_service, company_name)
+
+def tear_down(company_name, job_name):
+    import base_company_sample
+    import base_job_sample
 
     base_job_sample.delete_job(client_service, job_name)
     base_company_sample.delete_company(client_service, company_name)
 
 
+def run_sample(company_name):
+    commute_search(client_service, company_name)
+
+
 if __name__ == '__main__':
-    run_sample()
+    company_name, job_name = set_up()
+    # Wait several seconds for post processing
+    time.sleep(10)
+    run_sample(company_name)
+    tear_down(company_name, job_name)
