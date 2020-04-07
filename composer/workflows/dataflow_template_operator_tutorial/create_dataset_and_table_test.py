@@ -4,13 +4,13 @@ import google.cloud.exceptions
 import uuid
 
 client = bigquery.Client()
-dataset_UUID = str(uuid.uuid4()).split("-")[0]
+dataset_UUID = str(uuid.uuid4())
+dataset_id = "{}.sample_dataset_{}".format(client.project, dataset_UUID) 
 
 
 @pytest.fixture(scope="module")
 def dataset():
   
-    dataset_id = format(client.project)+".sample_dataset"+dataset_UUID
     dataset = bigquery.Dataset(dataset_id)
     
     try:
@@ -25,7 +25,8 @@ def dataset():
 @pytest.fixture(scope="module")
 def table():
 
-    table_id = client.project+".sample_dataset"+dataset_UUID+".average_weather"
+    table_id = "{}.average_weather".format(dataset_id)
+
 
     schema = [
         bigquery.SchemaField("location", "GEOGRAPHY", mode="REQUIRED"),
@@ -51,9 +52,8 @@ def test_dataset_creation(dataset, table):
 
     table = client.get_table(table)
     schema = table.schema
-    dataset = dataset.dataset_id
 
-    schemaTest = schema = [
+    expected_schema = schema = [
         bigquery.SchemaField("location", "GEOGRAPHY", mode="REQUIRED"),
         bigquery.SchemaField("average_temperature", "INTEGER", mode="REQUIRED"),
         bigquery.SchemaField("month", "STRING", mode="REQUIRED"),
@@ -62,6 +62,5 @@ def test_dataset_creation(dataset, table):
         bigquery.SchemaField("latest_measurement", "DATE", mode="NULLABLE")
     ]  
     assert table.table_id == "average_weather"
-    assert schema == schemaTest
-    assert dataset == "sample_dataset"+dataset_UUID
-   
+    assert schema == expected_schema
+    assert dataset.dataset_id == dataset_id

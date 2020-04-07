@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-bucket_name = models.Variable.get('bucket_name')
+bucket_path = bucket_path = "gs://{}".format(bucket_name)
 project_id = models.Variable.get('project_id')
 gce_zone = models.Variable.get('gce-zone')
 
@@ -38,7 +38,7 @@ default_args = {
         #Set to your zone
         'zone': gce_zone,
         #This is a subfolder for storing temporary files, like the staged pipeline job.
-        'tempLocation': "gs://"+bucket_name+"/tmp/"
+        'tempLocation': bucket_path+"/tmp/"
         }
     }
 
@@ -66,12 +66,12 @@ with models.DAG(
         #Use the link above to specify the correct parameters for your template.
         parameters={
             'javascriptTextTransformFunctionName': "transformCSVtoJSON",
-            'JSONPath': "gs://"+bucket_name+"/jsonSchema.json",
-            'javascriptTextTransformGcsPath': "gs://"+bucket_name+"/inputFile.txt",
-            'inputFilePattern': "gs://"+bucket_name+"/inputFile.txt",
+            'JSONPath': bucket_path+"/jsonSchema.json",
+            'javascriptTextTransformGcsPath': bucket_path+"/inputFile.txt",
+            'inputFilePattern': bucket_path+"/inputFile.txt",
             'outputTable': project_id+":average_weather.average_weather",
             'outputDeadletterTable': project_id+":average_weather.average_weather"
-            'bigQueryLoadingTemporaryDirectory': "gs://"+bucket_name+"/tmp/"
+            'bigQueryLoadingTemporaryDirectory': bucket_path+"/tmp/"
         },
     )
 
