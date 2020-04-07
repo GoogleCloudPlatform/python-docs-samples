@@ -28,9 +28,8 @@ RUN apt-get install unixodbc-dev
 COPY requirements.txt ./
 
 # Install production dependencies.
-RUN set -ex; \
-    pip install -r requirements.txt; \
-    pip install gunicorn
+RUN pip install -r requirements.txt && \
+         pip install gunicorn
 
 # Copy local code to the container image.
 ENV APP_HOME /app
