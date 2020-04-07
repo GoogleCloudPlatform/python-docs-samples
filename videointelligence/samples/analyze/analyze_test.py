@@ -49,6 +49,13 @@ def test_analyze_labels(capsys):
 
 
 @pytest.mark.slow
+def test_analyze_labels_file(capsys):
+    analyze.analyze_labels_file("resources/googlework_tiny.mp4")
+    out, _ = capsys.readouterr()
+    assert "label description" in out
+
+
+@pytest.mark.slow
 def test_analyze_explicit_content(capsys):
     analyze.analyze_explicit_content("gs://cloud-samples-data/video/cat.mp4")
     out, _ = capsys.readouterr()
@@ -76,7 +83,22 @@ def test_detect_text_gcs(capsys):
 
 
 @pytest.mark.slow
+def test_detect_text(capsys):
+    analyze.video_detect_text("resources/googlework_tiny.mp4")
+    out, _ = capsys.readouterr()
+    assert 'Text' in out
+
+
+@pytest.mark.slow
 def test_track_objects_gcs(capsys):
     analyze.track_objects_gcs("gs://cloud-samples-data/video/cat.mp4")
     out, _ = capsys.readouterr()
     assert "cat" in out
+
+
+@pytest.mark.slow
+def test_track_objects(capsys):
+    in_file = "./resources/googlework_tiny.mp4"
+    analyze.track_objects(in_file)
+    out, _ = capsys.readouterr()
+    assert "Entity id" in out
