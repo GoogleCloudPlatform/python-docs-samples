@@ -31,6 +31,10 @@ def random_name(length):
         [random.choice(string.ascii_lowercase) for i in range(length)])
 
 
+def retry_if_aborted(exception):
+    return isinstance(exception, Aborted)
+
+
 class PochanFixture:
     """A test fixture that creates an alert POlicy and a notification CHANnel,
        hence the name, pochan.
@@ -45,7 +49,7 @@ class PochanFixture:
 
     def __enter__(self):
         @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
-               stop_max_attempt_number=5, retry_on_exception=(Aborted,))
+               stop_max_attempt_number=5, retry_on_exception=retry_if_aborted)
         def setup():
             # Create a policy.
             policy = monitoring_v3.types.alert_pb2.AlertPolicy()
