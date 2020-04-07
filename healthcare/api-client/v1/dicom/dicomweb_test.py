@@ -24,7 +24,7 @@ import dicom_stores
 import dicomweb
 
 cloud_region = 'us-central1'
-base_url = 'https://healthcare.googleapis.com/v1beta1'
+base_url = 'https://healthcare.googleapis.com/v1'
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
