@@ -173,18 +173,20 @@ class TestKMSSnippets:
     # tests get/add/remove policy members
     def test_key_policy(self):
         # add member
-        snippets.add_member_to_crypto_key_policy(self.project_id,
-                                                 self.location,
-                                                 self.keyring_id,
-                                                 self.sym_id,
-                                                 self.member,
-                                                 self.role)
+        snippets.add_member_to_crypto_key_policy(
+            self.project_id,
+            self.location,
+            self.keyring_id,
+            self.sym_id,
+            self.member,
+            self.role)
 
         def check_policy():
-            policy = snippets.get_crypto_key_policy(self.project_id,
-                                                    self.location,
-                                                    self.keyring_id,
-                                                    self.sym_id)
+            policy = snippets.get_crypto_key_policy(
+                self.project_id,
+                self.location,
+                self.keyring_id,
+                self.sym_id)
             found = False
             for b in list(policy.bindings):
                 if b.role == self.role and self.member in b.members:
@@ -194,24 +196,25 @@ class TestKMSSnippets:
                                    exceptions=(Aborted, AssertionError))
         # remove member
         snippets.remove_member_from_crypto_key_policy(self.project_id,
-                                                      self.location,
-                                                      self.keyring_id,
-                                                      self.sym_id,
-                                                      self.member,
-                                                      self.role)
+            self.location,
+            self.keyring_id,
+            self.sym_id,
+            self.member,
+            self.role)
 
         def check_policy():
             policy = snippets.get_crypto_key_policy(self.project_id,
-                                                    self.location,
-                                                    self.keyring_id,
-                                                    self.sym_id)
+                self.location,
+                self.keyring_id,
+                self.sym_id)
             found = False
             for b in list(policy.bindings):
                 if b.role == self.role and self.member in b.members:
                     found = True
             assert not found
-        eventually_consistent.call(check_policy,
-                                   exceptions=(Aborted, AssertionError))
+        eventually_consistent.call(
+            check_policy,
+            exceptions=(Aborted, AssertionError))
 
     def test_symmetric_encrypt_decrypt(self):
         cipher_bytes = snippets.encrypt_symmetric(self.project_id,
