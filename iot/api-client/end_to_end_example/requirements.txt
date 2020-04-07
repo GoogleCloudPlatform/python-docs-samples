@@ -3,6 +3,5 @@ google-api-python-client==1.7.11
 google-auth-httplib2==0.0.3
 google-auth==1.11.2
 google-cloud-pubsub==1.1.0
-oauth2client==4.1.3
 pyjwt==1.7.1
 paho-mqtt==1.5.0
