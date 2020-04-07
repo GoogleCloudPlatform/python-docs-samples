@@ -49,6 +49,7 @@ def test_custom_role():
     yield CUSTOM_ROLE_NAME
     # we don't delete this custom role for future tests.
 
+
 @pytest.fixture(scope="function")
 def unique_custom_role_name():
     UNIQUE_CUSTOM_ROLE_NAME = "pythonTestCustomRole" + str(uuid.uuid1().int)
