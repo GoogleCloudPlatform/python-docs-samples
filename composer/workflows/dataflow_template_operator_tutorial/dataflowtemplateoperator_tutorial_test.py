@@ -23,8 +23,9 @@ def test_dag_import():
     environment. This is a recommended sanity check by the official Airflow
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
-    models.Variable.set('bucket_name', 'example_bucket')
-    models.Variable.set('project_id', 'example-project')
-    models.Variable.set('gce_zone', 'us-central1-f')
+    models.Variable.set("bucket_name", "example_bucket")
+    models.Variable.set("project_id", "example-project")
+    models.Variable.set("gce_zone", "us-central1-f")
     from . import dataflowtemplateoperator_tutorial as module
+
     unit_testing.assert_has_valid_dag(module)
