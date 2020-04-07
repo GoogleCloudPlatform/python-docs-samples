@@ -152,17 +152,11 @@ def test_detect_text_gcs():
 
 
 @pytest.mark.slow
-def test_track_objects():
-    in_file = "./resources/cat.mp4"
-    object_annotations = beta_snippets.track_objects(in_file)
-
-    text_exists = False
-    for object_annotation in object_annotations:
-        if "CAT" in object_annotation.entity.description.upper():
-            text_exists = True
-    assert text_exists
-    assert object_annotations[0].frames[0].normalized_bounding_box.left >= 0.0
-    assert object_annotations[0].frames[0].normalized_bounding_box.left <= 1.0
+def test_track_objects(capsys):
+    in_file = "./resources/googlework_tiny.mp4"
+    beta_snippets.track_objects(in_file)
+    out, _ = capsys.readouterr()
+    assert "Entity id" in out
 
 
 @pytest.mark.slow
