@@ -195,7 +195,8 @@ class TestKMSSnippets:
         eventually_consistent.call(check_policy,
                                    exceptions=(Aborted, AssertionError))
         # remove member
-        snippets.remove_member_from_crypto_key_policy(self.project_id,
+        snippets.remove_member_from_crypto_key_policy(
+            self.project_id,
             self.location,
             self.keyring_id,
             self.sym_id,
@@ -203,7 +204,8 @@ class TestKMSSnippets:
             self.role)
 
         def check_policy():
-            policy = snippets.get_crypto_key_policy(self.project_id,
+            policy = snippets.get_crypto_key_policy(
+                self.project_id,
                 self.location,
                 self.keyring_id,
                 self.sym_id)
