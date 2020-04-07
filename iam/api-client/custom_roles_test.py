@@ -47,7 +47,7 @@ def test_custom_role():
         if "HttpError 409" not in str(e):
             raise e
         # Ignore error since we just reuse the same custom role.
-        pass
+        print('Re-using the custom role "{}".'.format(CUSTOM_ROLE_NAME))
     yield CUSTOM_ROLE_NAME
     # we don't delete this custom role for future tests.
 
