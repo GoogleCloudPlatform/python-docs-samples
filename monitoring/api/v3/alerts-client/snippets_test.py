@@ -17,9 +17,11 @@ from __future__ import print_function
 import random
 import string
 
+from google.api_core.exceptions import Aborted
 from google.cloud import monitoring_v3
 import google.protobuf.json_format
 import pytest
+from retrying import retry
 
 import snippets
 
@@ -42,22 +44,27 @@ class PochanFixture:
             monitoring_v3.NotificationChannelServiceClient())
 
     def __enter__(self):
-        # Create a policy.
-        policy = monitoring_v3.types.alert_pb2.AlertPolicy()
-        json = open('test_alert_policy.json').read()
-        google.protobuf.json_format.Parse(json, policy)
-        policy.display_name = 'snippets-test-' + random_name(10)
-        self.alert_policy = self.alert_policy_client.create_alert_policy(
-            self.project_name, policy)
-        # Create a notification channel.
-        notification_channel = (
-            monitoring_v3.types.notification_pb2.NotificationChannel())
-        json = open('test_notification_channel.json').read()
-        google.protobuf.json_format.Parse(json, notification_channel)
-        notification_channel.display_name = 'snippets-test-' + random_name(10)
-        self.notification_channel = (
-            self.notification_channel_client.create_notification_channel(
-                self.project_name, notification_channel))
+        @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
+               stop_max_attempt_number=5, retry_on_exception=(Aborted,))
+        def setup():
+            # Create a policy.
+            policy = monitoring_v3.types.alert_pb2.AlertPolicy()
+            json = open('test_alert_policy.json').read()
+            google.protobuf.json_format.Parse(json, policy)
+            policy.display_name = 'snippets-test-' + random_name(10)
+            self.alert_policy = self.alert_policy_client.create_alert_policy(
+                self.project_name, policy)
+            # Create a notification channel.
+            notification_channel = (
+                monitoring_v3.types.notification_pb2.NotificationChannel())
+            json = open('test_notification_channel.json').read()
+            google.protobuf.json_format.Parse(json, notification_channel)
+            notification_channel.display_name = (
+                'snippets-test-' + random_name(10))
+            self.notification_channel = (
+                self.notification_channel_client.create_notification_channel(
+                    self.project_name, notification_channel))
+        setup()
         return self
 
     def __exit__(self, type, value, traceback):
@@ -74,14 +81,12 @@ def pochan():
         yield pochan
 
 
-@pytest.mark.flaky(max_runs=5)
 def test_list_alert_policies(capsys, pochan):
     snippets.list_alert_policies(pochan.project_name)
     out, _ = capsys.readouterr()
     assert pochan.alert_policy.display_name in out
 
 
-@pytest.mark.flaky(max_runs=5)
 def test_enable_alert_policies(capsys, pochan):
     snippets.enable_alert_policies(pochan.project_name, False)
     out, _ = capsys.readouterr()
@@ -99,7 +104,6 @@ def test_enable_alert_policies(capsys, pochan):
     assert "already enabled" in out
 
 
-@pytest.mark.flaky(max_runs=5)
 def test_replace_channels(capsys, pochan):
     alert_policy_id = pochan.alert_policy.name.split('/')[-1]
     notification_channel_id = pochan.notification_channel.name.split('/')[-1]
@@ -109,7 +113,6 @@ def test_replace_channels(capsys, pochan):
     assert "Updated {0}".format(pochan.alert_policy.name) in out
 
 
-@pytest.mark.flaky(max_runs=5)
 def test_backup_and_restore(capsys, pochan):
     snippets.backup(pochan.project_name, 'backup.json')
     out, _ = capsys.readouterr()
@@ -121,7 +124,6 @@ def test_backup_and_restore(capsys, pochan):
         pochan.notification_channel.display_name) in out
 
 
-@pytest.mark.flaky(max_runs=5)
 def test_delete_channels(capsys, pochan):
     notification_channel_id = pochan.notification_channel.name.split('/')[-1]
     snippets.delete_notification_channels(
