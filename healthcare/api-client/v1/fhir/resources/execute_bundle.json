@@ -1,0 +1,39 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "name": [
+          {
+            "family": "Smith",
+            "given": [
+              "Darcy"
+            ]
+          }
+        ],
+        "gender": "female",
+        "address": [
+          {
+            "line": [
+              "123 Main St."
+            ],
+            "city": "Anycity",
+            "state": "CA",
+            "postalCode": "12345"
+          }
+        ]
+      },
+      "request": {
+        "method": "POST"
+      }
+    },
+    {
+      "request": {
+        "method": "DELETE",
+        "url": "Patient/1234567890"
+      }
+    }
+  ]
+}
