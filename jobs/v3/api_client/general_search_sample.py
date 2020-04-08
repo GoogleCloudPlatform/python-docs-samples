@@ -196,7 +196,7 @@ def compensation_search(client_service, company_name):
 # [END compensation_filter]
 
 
-def run_sample():
+def set_up():
     import base_company_sample
     import base_job_sample
 
@@ -224,9 +224,18 @@ def run_sample():
     })
     job_name = base_job_sample.create_job(client_service,
                                           job_to_be_created).get('name')
+    return company_name, job_name
 
-    # Wait several seconds for post processing
-    time.sleep(10)
+
+def tear_down(company_name, job_name):
+    import base_company_sample
+    import base_job_sample
+
+    base_job_sample.delete_job(client_service, job_name)
+    base_company_sample.delete_company(client_service, company_name)
+
+
+def run_sample(company_name, job_name):
     basic_keyword_search(client_service, company_name, 'Systems Administrator')
     category_search(client_service, company_name, ['COMPUTER_AND_IT'])
     date_range = {'start_time': '2018-07-01T00:00:00Z'}
@@ -237,9 +246,10 @@ def run_sample():
     compensation_search(client_service, company_name)
     language_code_search(client_service, company_name, ['pt-BR', 'en-US'])
 
-    base_job_sample.delete_job(client_service, job_name)
-    base_company_sample.delete_company(client_service, company_name)
-
 
 if __name__ == '__main__':
-    run_sample()
+    company_name, job_name = set_up()
+    # Wait several seconds for post processing
+    time.sleep(10)
+    run_sample(company_name, job_name)
+    tear_down(company_name, job_name)
