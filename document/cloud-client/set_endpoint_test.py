@@ -20,7 +20,7 @@ INPUT_URI = "gs://cloud-samples-data/documentai/invoice.pdf"
 
 
 def test_set_endpoint(capsys):
-    set_endpoint.main(PROJECT_ID, INPUT_URI)
+    set_endpoint.set_endpoint(PROJECT_ID, INPUT_URI)
     out, _ = capsys.readouterr()
     assert "Entity type" in out
     assert "Mention text" in out

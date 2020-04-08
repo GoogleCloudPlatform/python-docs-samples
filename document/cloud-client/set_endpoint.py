@@ -17,7 +17,7 @@
 from google.cloud import documentai_v1beta2 as documentai
 
 
-def main(project_id='YOUR_PROJECT_ID',
+def set_endpoint(project_id='YOUR_PROJECT_ID',
          input_uri='gs://cloud-samples-data/documentai/invoice.pdf'):
     """Process a single document with the Document AI API, including
     text extraction and entity extraction."""
