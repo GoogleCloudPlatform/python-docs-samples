@@ -23,7 +23,7 @@ import datetime
 
 bucket_path = "gs://" + models.Variable.get("bucket_name")
 project_id = models.Variable.get("project_id")
-gce_zone = models.Variable.get("gce-zone")
+gce_zone = models.Variable.get("gce_zone")
 
 # [START composer_dataflow_dag]
 
