@@ -4,7 +4,7 @@ import google.cloud.exceptions
 import uuid
 
 client = bigquery.Client()
-dataset_UUID = str(uuid.uuid4())
+dataset_UUID = str(uuid.uuid4()).split("-")[0]
 dataset_id = f"{client.project}.sample_dataset_{dataset_UUID}"
 
 
