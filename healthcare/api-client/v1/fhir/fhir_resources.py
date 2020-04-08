@@ -509,96 +509,6 @@ def update_resource(
 # [END healthcare_update_resource]
 
 
-# [START healthcare_conditional_update_resource]
-def conditional_update_resource(
-    service_account_json,
-    base_url,
-    project_id,
-    cloud_region,
-    dataset_id,
-    fhir_store_id,
-    patient_id,
-    encounter_id,
-):
-    """
-    If a resource is found based on the search criteria specified in
-    the query parameters, updates the entire contents of that resource.
-    """
-    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
-
-    # The search query in this request updates all Observations
-    # using the Observation's identifier (ABC-12345 in my-code-system)
-    # so that their 'status' is 'cancelled'.
-    resource_path = "{}/datasets/{}/fhirStores/{}/fhir/Observation".format(
-        url, dataset_id, fhir_store_id
-    )
-
-    # Make an authenticated API request
-    session = get_session(service_account_json)
-
-    body = {
-        "effectiveDateTime": "2019-01-01T00:00:00+00:00",
-        "resourceType": "Observation",
-        "context": {"reference": "Encounter/{}".format(encounter_id)},
-        "identifier": [{"system": "my-code-system", "value": "ABC-12345"}],
-        "status": "cancelled",
-        "subject": {"reference": "Patient/{}".format(patient_id)},
-        "valueQuantity": {"unit": "bpm", "value": 80},
-    }
-
-    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
-
-    params = {"identifier": "my-code-system|ABC-12345"}
-
-    response = session.put(resource_path, headers=headers, params=params, json=body)
-
-    response.raise_for_status()
-    resource = response.json()
-
-    print(
-        "Conditionally updated Observations with the identifier "
-        "'my-code-system|ABC-12345' to have a 'status' of "
-        "'cancelled'."
-    )
-    print(json.dumps(resource, indent=2))
-
-    return resource
-
-
-# [END healthcare_conditional_update_resource]
-
-
-# [START healthcare_conditional_delete_resource]
-def conditional_delete_resource(
-    service_account_json, base_url, project_id, cloud_region, dataset_id, fhir_store_id
-):
-    """Deletes FHIR resources that match a search query."""
-    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
-
-    # The search query in this request deletes all Observations
-    # with a status of 'cancelled'.
-    resource_path = "{}/datasets/{}/fhirStores/{}/fhir/Observation".format(
-        url, dataset_id, fhir_store_id
-    )
-    # The search query is passed in as a query string parameter.
-    params = {"status": "cancelled"}
-
-    # Make an authenticated API request
-    session = get_session(service_account_json)
-
-    response = session.delete(resource_path, params=params)
-    print(response.url)
-    if response.status_code != 404:  # Don't consider missing to be error
-        response.raise_for_status()
-
-    print("Conditionally deleted all Observations with status='cancelled'.")
-
-    return response
-
-
-# [END healthcare_conditional_delete_resource]
-
-
 # [START healthcare_patch_resource]
 def patch_resource(
     service_account_json,
@@ -636,62 +546,6 @@ def patch_resource(
 
 
 # [END healthcare_patch_resource]
-
-
-# [START healthcare_conditional_patch_resource]
-def conditional_patch_resource(
-    service_account_json, base_url, project_id, cloud_region, dataset_id, fhir_store_id
-):
-    """
-    If a resource is found based on the search criteria specified in
-    the query parameters, updates part of that resource by
-    applying the operations specified in a JSON Patch document.
-    """
-    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
-
-    # The search query in this request updates all Observations
-    # if the subject of the Observation is a particular patient.
-    resource_path = "{}/datasets/{}/fhirStores/{}/fhir/Observation".format(
-        url, dataset_id, fhir_store_id
-    )
-
-    # Make an authenticated API request
-    session = get_session(service_account_json)
-
-    headers = {"Content-Type": "application/json-patch+json"}
-
-    body = json.dumps(
-        [
-            {
-                "op": "replace",
-                "path": "/valueQuantity/value",
-                # Sets the BPM for all matching Observations to 80. This
-                # is the portion of the request being patched.
-                "value": 80,
-            }
-        ]
-    )
-
-    # The search query is passed in as a query string parameter.
-    params = {"identifier": "my-code-system|ABC-12345"}
-
-    response = session.patch(resource_path, headers=headers, params=params, data=body)
-    response.raise_for_status()
-
-    print(response.url)
-
-    resource = response.json()
-
-    print(
-        "Conditionally patched all Observations with the "
-        "identifier 'my-code-system|ABC-12345' to use a BPM of 80."
-    )
-    print(json.dumps(resource, indent=2))
-
-    return resource
-
-
-# [END healthcare_conditional_patch_resource]
 
 
 # [START healthcare_search_resources_get]
@@ -947,22 +801,13 @@ def parse_command_line_args():
     command.add_parser("create-encounter", help=create_encounter.__doc__)
     command.add_parser("create-observation", help=create_observation.__doc__)
     command.add_parser("delete-resource", help=delete_resource.__doc__)
-    command.add_parser(
-        "conditional-delete-resource", help=conditional_delete_resource.__doc__
-    )
     command.add_parser("get-resource", help=get_resource.__doc__)
     command.add_parser("list-resource-history", help=list_resource_history.__doc__)
     command.add_parser("execute-bundle", help=execute_bundle.__doc__)
     command.add_parser("get-resource-history", help=get_resource_history.__doc__)
     command.add_parser("delete-resource-purge", help=delete_resource_purge.__doc__)
     command.add_parser("update-resource", help=update_resource.__doc__)
-    command.add_parser(
-        "conditional-update-resource", help=conditional_update_resource.__doc__
-    )
     command.add_parser("patch-resource", help=patch_resource.__doc__)
-    command.add_parser(
-        "conditional-patch-resource", help=conditional_patch_resource.__doc__
-    )
     command.add_parser("search-resources-get", help=search_resources_get.__doc__)
     command.add_parser("search-resources-post", help=search_resources_get.__doc__)
     command.add_parser("get-patient-everything", help=get_patient_everything.__doc__)
@@ -1023,16 +868,6 @@ def run_command(args):
             args.fhir_store_id,
             args.resource_type,
             args.resource_id,
-        )
-
-    elif args.command == "conditional-delete-resource":
-        conditional_delete_resource(
-            args.service_account_json,
-            args.base_url,
-            args.project_id,
-            args.cloud_region,
-            args.dataset_id,
-            args.fhir_store_id,
         )
 
     elif args.command == "get-resource":
@@ -1107,18 +942,6 @@ def run_command(args):
             args.resource_id,
         )
 
-    elif args.command == "conditional-update-resource":
-        conditional_update_resource(
-            args.service_account_json,
-            args.base_url,
-            args.project_id,
-            args.cloud_region,
-            args.dataset_id,
-            args.fhir_store_id,
-            args.patient_id,
-            args.encounter_id,
-        )
-
     elif args.command == "patch-resource":
         patch_resource(
             args.service_account_json,
@@ -1129,16 +952,6 @@ def run_command(args):
             args.fhir_store_id,
             args.resource_type,
             args.resource_id,
-        )
-
-    elif args.command == "conditional-patch-resource":
-        conditional_patch_resource(
-            args.service_account_json,
-            args.base_url,
-            args.project_id,
-            args.cloud_region,
-            args.dataset_id,
-            args.fhir_store_id,
         )
 
     elif args.command == "search-resources-get":

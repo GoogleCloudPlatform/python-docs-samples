@@ -162,16 +162,13 @@ To run this sample:
                              [--resource_type RESOURCE_TYPE]
                              [--resource_id RESOURCE_ID] [--bundle BUNDLE]
                              [--uri_prefix URI_PREFIX] [--version_id VERSION_ID]
-                             {create-resource,delete-resource,conditional-delete-resource,get-resource,list-resource-history,export-resources,execute_bundle,get-resource-history,delete-resource-purge,update-resource,conditional-update-resource,patch-resource,conditional-patch-resource,search-resources-get,search-resources-post,get-patient-everything,get-metadata}
+                             {create-resource,delete-resource,get-resource,list-resource-history,export-resources,execute_bundle,get-resource-history,delete-resource-purge,update-resource,patch-resource,search-resources-get,search-resources-post,get-patient-everything,get-metadata}
                              ...
 
     positional arguments:
       {create-resource,delete-resource,conditional-delete-resource,get-resource,list-resource-history,export-resources,execute_bundle,get-resource-history,delete-resource-purge,update-resource,conditional-update-resource,patch-resource,conditional-patch-resource,search-resources-get,search-resources-post,get-patient-everything,get-metadata}
         create-resource     Creates a new resource in a FHIR store.
         delete-resource     Creates a new resource in a FHIR store.
-        conditional-delete-resource
-                            Deletes an existing resource specified by search
-                            criteria.
         get-resource        Gets a FHIR resource.
         list-resource-history
                             Gets the history of a resource.
@@ -184,12 +181,7 @@ To run this sample:
                             Deletes versions of a resource (excluding current
                             version).
         update-resource     Updates an existing resource.
-        conditional-update-resource
-                            Updates an existing resource specified by search
-                            criteria.
-        patch-resource      Updates part of an existing resource..
-        conditional-patch-resource
-                            Updates part of an existing resource..
+        patch-resource      Updates part of an existing resource.
         search-resources-get
                             Searches resources in the given FHIR store using the
                             searchResources GET method.
