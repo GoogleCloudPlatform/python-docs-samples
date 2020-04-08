@@ -16,6 +16,7 @@ from __future__ import print_function
 
 import random
 import string
+import time
 
 from google.api_core.exceptions import Aborted
 from google.cloud import monitoring_v3
@@ -102,15 +103,23 @@ def test_enable_alert_policies(capsys, pochan):
     def invoke_sample(val):
         snippets.enable_alert_policies(pochan.project_name, val)
 
+    # These sleep calls are for mitigating the following error:
+    # "409 Too many concurrent edits to the project configuration.
+    # Please try again."
+    # TODO(#3310): Having multiple projects will void these `sleep()` calls
+    time.sleep(2)
     invoke_sample(False)
+    time.sleep(2)
     invoke_sample(False)
     out, _ = capsys.readouterr()
     assert "already disabled" in out
 
+    time.sleep(2)
     invoke_sample(True)
     out, _ = capsys.readouterr()
     assert "Enabled {0}".format(pochan.project_name) in out
 
+    time.sleep(2)
     invoke_sample(True)
     out, _ = capsys.readouterr()
     assert "already enabled" in out
@@ -126,6 +135,11 @@ def test_replace_channels(capsys, pochan):
         snippets.replace_notification_channels(
             pochan.project_name, alert_policy_id, [notification_channel_id])
 
+    # This sleep call is for mitigating the following error:
+    # "409 Too many concurrent edits to the project configuration.
+    # Please try again."
+    # TODO(#3310): Having multiple projects will void this `sleep()` call.
+    time.sleep(2)
     invoke_sample()
     out, _ = capsys.readouterr()
     assert "Updated {0}".format(pochan.alert_policy.name) in out
@@ -137,6 +151,11 @@ def test_backup_and_restore(capsys, pochan):
     def invoke_backup():
         snippets.backup(pochan.project_name, 'backup.json')
 
+    # These sleep calls are for mitigating the following error:
+    # "409 Too many concurrent edits to the project configuration.
+    # Please try again."
+    # TODO(#3310): Having multiple projects will void these `sleep()` calls
+    time.sleep(2)
     invoke_backup()
     out, _ = capsys.readouterr()
 
@@ -145,6 +164,7 @@ def test_backup_and_restore(capsys, pochan):
     def invoke_restore():
         snippets.restore(pochan.project_name, 'backup.json')
 
+    time.sleep(2)
     invoke_restore()
     out, _ = capsys.readouterr()
     assert "Updated {0}".format(pochan.alert_policy.name) in out
@@ -161,6 +181,11 @@ def test_delete_channels(capsys, pochan):
         snippets.delete_notification_channels(
             pochan.project_name, [notification_channel_id], force=True)
 
+    # This sleep call is for mitigating the following error:
+    # "409 Too many concurrent edits to the project configuration.
+    # Please try again."
+    # TODO(#3310): Having multiple projects will void this `sleep()` call.
+    time.sleep(2)
     invoke_delete()
     out, _ = capsys.readouterr()
     assert "{0} deleted".format(notification_channel_id) in out
