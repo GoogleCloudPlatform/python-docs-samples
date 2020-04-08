@@ -32,7 +32,7 @@ ca_cert_path = '../mqtt_example/resources/roots.pem'
 es_cert_path = 'resources/ec_public.pem'
 rsa_cert_path = 'resources/rsa_cert.pem'
 rsa_private_path = 'resources/rsa_private.pem'  # Must match rsa_cert
-topic_id = 'test-device-events-{}'.format(uuid.uuid1())
+topic_id = 'test-device-events-{}'.format(uuid.uuid4())
 
 project_id = os.environ['GCLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
