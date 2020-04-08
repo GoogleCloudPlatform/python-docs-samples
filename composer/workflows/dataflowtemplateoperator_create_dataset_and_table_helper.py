@@ -1,4 +1,4 @@
-# This script is a helper function to the Dataflow Template Operator Tutorial. 
+# This script is a helper function to the Dataflow Template Operator Tutorial.
 # It helps the user set up a BigQuery dataset and table that is needed
 # for the tutorial.
 
