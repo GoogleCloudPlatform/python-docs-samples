@@ -64,4 +64,4 @@ def test_dataset_creation(dataset, table):
     ]
     assert table.table_id == "average_weather"
     assert schema == expected_schema
-    assert dataset.dataset_id == dataset_id
+    assert f"{client.project}.{dataset.dataset_id}" == dataset_id
