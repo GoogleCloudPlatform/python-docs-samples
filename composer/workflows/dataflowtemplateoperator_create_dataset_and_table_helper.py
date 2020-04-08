@@ -1,3 +1,4 @@
+# TODO: Comment about script being tied to tutorial
 # [START composer_dataflow_dataset_table_creation]
 
 from google.cloud import bigquery
