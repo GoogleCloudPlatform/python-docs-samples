@@ -37,6 +37,13 @@ def retry_if_aborted(exception):
     return isinstance(exception, (Aborted, ServiceUnavailable))
 
 
+def delay_on_aborted(err, *args):
+    if retry_if_aborted(err[0]):
+        time.sleep(2)
+        return True
+    return False
+
+
 class PochanFixture:
     """A test fixture that creates an alert POlicy and a notification CHANnel,
        hence the name, pochan.
@@ -98,38 +105,28 @@ def test_list_alert_policies(capsys, pochan):
     assert pochan.alert_policy.display_name in out
 
 
+@pytest.mark.flaky(rerun_filter=delay_on_aborted, max_runs=5)
 def test_enable_alert_policies(capsys, pochan):
-    @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
-           stop_max_attempt_number=5, retry_on_exception=retry_if_aborted)
-    def invoke_sample(val):
-        snippets.enable_alert_policies(pochan.project_name, val)
-
     # These sleep calls are for mitigating the following error:
     # "409 Too many concurrent edits to the project configuration.
     # Please try again."
     # Having multiple projects will void these `sleep()` calls.
     # See also #3310
     time.sleep(2)
-    invoke_sample(True)
-
+    snippets.enable_alert_policies(pochan.project_name, True)
     out, _ = capsys.readouterr()
     assert "Enabled {0}".format(pochan.project_name) in out
 
     time.sleep(2)
-    invoke_sample(False)
+    snippets.enable_alert_policies(pochan.project_name, False)
     out, _ = capsys.readouterr()
     assert "Disabled {}".format(pochan.project_name) in out
 
 
+@pytest.mark.flaky(rerun_filter=delay_on_aborted, max_runs=5)
 def test_replace_channels(capsys, pochan):
-    @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
-           stop_max_attempt_number=5, retry_on_exception=retry_if_aborted)
-    def invoke_sample():
-        alert_policy_id = pochan.alert_policy.name.split('/')[-1]
-        notification_channel_id = pochan.notification_channel.name.split(
-            '/')[-1]
-        snippets.replace_notification_channels(
-            pochan.project_name, alert_policy_id, [notification_channel_id])
+    alert_policy_id = pochan.alert_policy.name.split('/')[-1]
+    notification_channel_id = pochan.notification_channel.name.split('/')[-1]
 
     # This sleep call is for mitigating the following error:
     # "409 Too many concurrent edits to the project configuration.
@@ -137,47 +134,34 @@ def test_replace_channels(capsys, pochan):
     # Having multiple projects will void this `sleep()` call.
     # See also #3310
     time.sleep(2)
-    invoke_sample()
+    snippets.replace_notification_channels(
+        pochan.project_name, alert_policy_id, [notification_channel_id])
     out, _ = capsys.readouterr()
     assert "Updated {0}".format(pochan.alert_policy.name) in out
 
 
+@pytest.mark.flaky(rerun_filter=delay_on_aborted, max_runs=5)
 def test_backup_and_restore(capsys, pochan):
-    @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
-           stop_max_attempt_number=5, retry_on_exception=retry_if_aborted)
-    def invoke_backup():
-        snippets.backup(pochan.project_name, 'backup.json')
-
     # These sleep calls are for mitigating the following error:
     # "409 Too many concurrent edits to the project configuration.
     # Please try again."
     # Having multiple projects will void this `sleep()` call.
     # See also #3310
     time.sleep(2)
-    invoke_backup()
+    snippets.backup(pochan.project_name, 'backup.json')
     out, _ = capsys.readouterr()
 
-    @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
-           stop_max_attempt_number=5, retry_on_exception=retry_if_aborted)
-    def invoke_restore():
-        snippets.restore(pochan.project_name, 'backup.json')
-
     time.sleep(2)
-    invoke_restore()
+    snippets.restore(pochan.project_name, 'backup.json')
     out, _ = capsys.readouterr()
     assert "Updated {0}".format(pochan.alert_policy.name) in out
     assert "Updating channel {0}".format(
         pochan.notification_channel.display_name) in out
 
 
+@pytest.mark.flaky(rerun_filter=delay_on_aborted, max_runs=5)
 def test_delete_channels(capsys, pochan):
     notification_channel_id = pochan.notification_channel.name.split('/')[-1]
-
-    @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
-           stop_max_attempt_number=5, retry_on_exception=retry_if_aborted)
-    def invoke_delete():
-        snippets.delete_notification_channels(
-            pochan.project_name, [notification_channel_id], force=True)
 
     # This sleep call is for mitigating the following error:
     # "409 Too many concurrent edits to the project configuration.
@@ -185,7 +169,8 @@ def test_delete_channels(capsys, pochan):
     # Having multiple projects will void these `sleep()` calls.
     # See also #3310
     time.sleep(2)
-    invoke_delete()
+    snippets.delete_notification_channels(
+        pochan.project_name, [notification_channel_id], force=True)
     out, _ = capsys.readouterr()
     assert "{0} deleted".format(notification_channel_id) in out
     pochan.notification_channel.name = ''   # So teardown is not tried
