@@ -38,7 +38,7 @@ def retry_if_aborted(exception):
 
 
 def delay_on_aborted(err, *args):
-    if retry_if_aborted(err[0]):
+    if retry_if_aborted(err[1]):
         time.sleep(2)
         return True
     return False
