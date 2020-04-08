@@ -28,6 +28,10 @@ from retrying import retry
 import snippets
 
 
+# We assume we have access to good randomness source.
+random.seed()
+
+
 def random_name(length):
     return ''.join(
         [random.choice(string.ascii_lowercase) for i in range(length)])
@@ -39,7 +43,8 @@ def retry_if_aborted(exception):
 
 def delay_on_aborted(err, *args):
     if retry_if_aborted(err[1]):
-        time.sleep(2)
+        # add randomness for avoiding continuous conflict
+        time.sleep(2 + (random.randint(0, 9) * 0.1))
         return True
     return False
 
