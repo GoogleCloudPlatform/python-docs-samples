@@ -110,21 +110,15 @@ def test_enable_alert_policies(capsys, pochan):
     # Having multiple projects will void these `sleep()` calls.
     # See also #3310
     time.sleep(2)
-    invoke_sample(False)
-    time.sleep(2)
-    invoke_sample(False)
-    out, _ = capsys.readouterr()
-    assert "already disabled" in out
-
-    time.sleep(2)
     invoke_sample(True)
+
     out, _ = capsys.readouterr()
     assert "Enabled {0}".format(pochan.project_name) in out
 
     time.sleep(2)
-    invoke_sample(True)
+    invoke_sample(False)
     out, _ = capsys.readouterr()
-    assert "already enabled" in out
+    assert "Disabled {}".format(pochan.project_name) in out
 
 
 def test_replace_channels(capsys, pochan):
