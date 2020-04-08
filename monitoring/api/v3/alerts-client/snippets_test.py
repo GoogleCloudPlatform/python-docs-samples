@@ -107,7 +107,8 @@ def test_enable_alert_policies(capsys, pochan):
     # These sleep calls are for mitigating the following error:
     # "409 Too many concurrent edits to the project configuration.
     # Please try again."
-    # TODO(#3310): Having multiple projects will void these `sleep()` calls
+    # Having multiple projects will void these `sleep()` calls.
+    # See also #3310
     time.sleep(2)
     invoke_sample(False)
     time.sleep(2)
@@ -139,7 +140,8 @@ def test_replace_channels(capsys, pochan):
     # This sleep call is for mitigating the following error:
     # "409 Too many concurrent edits to the project configuration.
     # Please try again."
-    # TODO(#3310): Having multiple projects will void this `sleep()` call.
+    # Having multiple projects will void this `sleep()` call.
+    # See also #3310
     time.sleep(2)
     invoke_sample()
     out, _ = capsys.readouterr()
@@ -155,7 +157,8 @@ def test_backup_and_restore(capsys, pochan):
     # These sleep calls are for mitigating the following error:
     # "409 Too many concurrent edits to the project configuration.
     # Please try again."
-    # TODO(#3310): Having multiple projects will void these `sleep()` calls
+    # Having multiple projects will void this `sleep()` call.
+    # See also #3310
     time.sleep(2)
     invoke_backup()
     out, _ = capsys.readouterr()
@@ -185,7 +188,8 @@ def test_delete_channels(capsys, pochan):
     # This sleep call is for mitigating the following error:
     # "409 Too many concurrent edits to the project configuration.
     # Please try again."
-    # TODO(#3310): Having multiple projects will void this `sleep()` call.
+    # Having multiple projects will void these `sleep()` calls.
+    # See also #3310
     time.sleep(2)
     invoke_delete()
     out, _ = capsys.readouterr()
