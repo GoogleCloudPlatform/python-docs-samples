@@ -1,5 +1,9 @@
 {
   "resourceType": "Bundle",
+  "id": "bundle-transaction",
+  "meta": {
+    "lastUpdated": "2018-03-11T11:22:16Z"
+  },
   "type": "transaction",
   "entry": [
     {
@@ -26,7 +30,8 @@
         ]
       },
       "request": {
-        "method": "POST"
+        "method": "POST",
+	"url": "Patient"
       }
     },
     {
