@@ -7,7 +7,7 @@ from google.cloud import bigquery
 client = bigquery.Client()
 
 # TODO(developer): Set dataset_id to the ID of the dataset to create.
-# dataset_id = F"{client.project}.average_weather"
+dataset_id = x.average_weather"
 
 # Construct a full Dataset object to send to the API.
 dataset = bigquery.Dataset(dataset_id)
@@ -25,7 +25,7 @@ print(f"Created dataset {client.project} {dataset.dataset_id}")
 # Create a table from this dataset.
 
 # TODO(developer): Set table_id to the ID of the table to create.
-# table_id = "your-project.average_weather.your_table_name"
+table_id = f"{client.project}.average_weather.average_weather"
 
 schema = [
     bigquery.SchemaField("location", "GEOGRAPHY", mode="REQUIRED"),
