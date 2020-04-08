@@ -13,14 +13,14 @@
 # limitations under the License.
 
 import os
-import parse_table
+import batch_parse_form
 
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
 INPUT_URI = "gs://cloud-samples-data/documentai/invoice.pdf"
+OUTPUT_URI = os.environ["BATCH_OUTPUT_URI"]
 
 
-def test_parse_table(capsys):
-    parse_table.parse_table(PROJECT_ID, INPUT_URI)
+def test_batch_parse_form(capsys):
+    batch_parse_form.batch_parse_form(PROJECT_ID, INPUT_URI, OUTPUT_URI)
     out, _ = capsys.readouterr()
-    assert "Table" in out
-    assert "Header Row" in out
+    assert "Output files" in out

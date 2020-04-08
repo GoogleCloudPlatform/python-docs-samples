@@ -12,12 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START documentai_parse_table]
+
+# [START documentai_batch_parse_table]
 from google.cloud import documentai_v1beta2 as documentai
+from google.cloud import storage
+import re
 
 
-def parse_table(project_id='YOUR_PROJECT_ID',
-                input_uri='gs://cloud-samples-data/documentai/invoice.pdf'):
+def batch_parse_table(
+        project_id='YOUR_PROJECT_ID',
+        input_uri='gs://cloud-samples-data/documentai/form.pdf',
+        destination_uri='DESTINATION_URI'):
     """Parse a form"""
 
     client = documentai.DocumentUnderstandingServiceClient()
@@ -28,6 +33,13 @@ def parse_table(project_id='YOUR_PROJECT_ID',
     # and image/gif, or application/json
     input_config = documentai.types.InputConfig(
         gcs_source=gcs_source, mime_type='application/pdf')
+
+    # where to write results
+    output_config = documentai.types.OutputConfig(
+        gcs_destination=documentai.types.GcsDestination(
+            uri=destination_uri),
+        pages_per_shard=1  # Map one doc page to one output page
+    )
 
     # Improve table parsing results by providing bounding boxes
     # specifying where the box appears in the document (optional)
@@ -61,38 +73,33 @@ def parse_table(project_id='YOUR_PROJECT_ID',
     table_extraction_params = documentai.types.TableExtractionParams(
         enabled=True, table_bound_hints=table_bound_hints)
 
+    # For now, location must be us-central1
     parent = "projects/{}/locations/us-central1".format(project_id)
     request = documentai.types.ProcessDocumentRequest(
-        parent=parent,
         input_config=input_config,
+        output_config=output_config,
         table_extraction_params=table_extraction_params)
 
-    document = client.process_document(request=request)
+    requests = documentai.types.BatchProcessDocumentsRequest(
+        parent=parent, requests=[request]
+    )
 
-    def _get_text(el):
-        """Convert text offset indexes into text snippets.
-        """
-        response = ""
-        # If a form field spans several lines, it will
-        # be stored in different text segments.
-        for segment in el.text_anchor.text_segments:
-            start_index = segment.start_index
-            end_index = segment.end_index
-            response += document.text[start_index:end_index]
-        return response
+    operation = client.batch_process_documents(requests)
 
-    for page in document.pages:
-        print('Page number: {}'.format(page.page_number))
-        for table_num, table in enumerate(page.tables):
-            print("Table {}: ".format(table_num))
-            for row_num, row in enumerate(table.header_rows):
-                cells = '\t'.join(
-                    [_get_text(cell.layout) for cell in row.cells])
-                print("Header Row {}: {}".format(row_num, cells))
-            for row_num, row in enumerate(table.body_rows):
-                cells = '\t'.join(
-                    [_get_text(cell.layout) for cell in row.cells])
-                print("Row {}: {}".format(row_num, cells))
+    # Wait for the operation to finish
+    operation.result()
 
+    # Results are written to GCS. Use a regex to find
+    # output files
+    match = re.match(r'gs://([^/]+)/(.+)', destination_uri)
+    output_bucket = match.group(1)
+    prefix = match.group(2)
 
-# [END documentai_parse_table]
+    storage_client = storage.client.Client()
+    bucket = storage_client.get_bucket(output_bucket)
+    blob_list = list(bucket.list_blobs(prefix=prefix))
+    print('Output files:')
+    for blob in blob_list:
+        print(blob.name)
+
+# [END documentai_batch_parse_table]
