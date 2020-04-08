@@ -19,14 +19,14 @@ import json
 import os
 
 
-# Instantiates a client
+# Instantiates a Pub/Sub client
 publisher = pubsub_v1.PublisherClient()
 PROJECT_ID = os.getenv('GCP_PROJECT')
 # [END functions_pubsub_setup]
 
 
 # [START functions_pubsub_publish]
-# Publishes a message to a Cloud Pub/Sub Topic.
+# Publishes a message to a Cloud Pub/Sub topic.
 def publish(request):
     request_json = request.get_json(silent=True)
 
