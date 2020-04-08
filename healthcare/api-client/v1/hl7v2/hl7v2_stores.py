@@ -166,11 +166,11 @@ def patch_hl7v2_store(
         hl7v2_store_parent, hl7v2_store_id)
 
     patch = {
-        'notificationConfig': None
+        'notificationConfigs': None
     }
 
     request = client.projects().locations().datasets().hl7V2Stores().patch(
-        name=hl7v2_store_name, updateMask='notificationConfig', body=patch)
+        name=hl7v2_store_name, updateMask='notificationConfigs', body=patch)
 
     try:
         response = request.execute()
