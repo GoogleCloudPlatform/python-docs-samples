@@ -1,4 +1,7 @@
-# TODO: Comment about script being tied to tutorial
+# This script is a helper function to the Dataflow Template Operator Tutorial. 
+# It helps the user set up a BigQuery dataset and table that is needed
+# for the tutorial.
+
 # [START composer_dataflow_dataset_table_creation]
 
 from google.cloud import bigquery
@@ -6,8 +9,10 @@ from google.cloud import bigquery
 # Construct a BigQuery client object.
 client = bigquery.Client()
 
-# TODO(developer): Set dataset_id to the ID of the dataset to create.
-dataset_id = x.average_weather"
+# TODO(developer): Set client.project to your GCP Project ID.
+# client.project = "your-client-project"
+
+dataset_id = F"{client.project}.average_weather"
 
 # Construct a full Dataset object to send to the API.
 dataset = bigquery.Dataset(dataset_id)
@@ -24,7 +29,6 @@ print(f"Created dataset {client.project} {dataset.dataset_id}")
 
 # Create a table from this dataset.
 
-# TODO(developer): Set table_id to the ID of the table to create.
 table_id = f"{client.project}.average_weather.average_weather"
 
 schema = [

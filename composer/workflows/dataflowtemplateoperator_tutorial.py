@@ -12,10 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START composer_dataflow_dag]
+
 from airflow import models
 from airflow.utils.dates import days_ago
 from airflow.contrib.operators.dataflow_operator import DataflowTemplateOperator
 import datetime
+
+# [END composer_dataflow_dag]
 
 bucket_path = "gs://" + models.Variable.get("bucket_name")
 project_id = models.Variable.get("project_id")
