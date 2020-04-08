@@ -118,25 +118,24 @@ def test_list_alert_policies(capsys, pochan):
     assert pochan.alert_policy.display_name in out
 
 
+@pytest.mark.flaky(rerun_filter=delay_on_aborted, max_runs=5)
 def test_enable_alert_policies(capsys, pochan):
-    @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
-           stop_max_attempt_number=5, retry_on_exception=retry_if_aborted)
-    def invoke_sample(val):
-        snippets.enable_alert_policies(pochan.project_name, val)
     # These sleep calls are for mitigating the following error:
     # "409 Too many concurrent edits to the project configuration.
     # Please try again."
     # Having multiple projects will void these `sleep()` calls.
     # See also #3310
     time.sleep(2)
-    invoke_sample(True)
+    snippets.enable_alert_policies(pochan.project_name, True)
     out, _ = capsys.readouterr()
-    assert "Enabled {0}".format(pochan.project_name) in out
+    assert "Enabled {0}".format(pochan.project_name) in out \
+        or "{} is already enabled".format(pochan.alert_policy.name) in out
 
     time.sleep(2)
-    invoke_sample(False)
+    snippets.enable_alert_policies(pochan.project_name, False)
     out, _ = capsys.readouterr()
-    assert "Disabled {}".format(pochan.project_name) in out
+    assert "Disabled {}".format(pochan.project_name) in out \
+        or "{} is already disabled".format(pochan.alert_policy.name) in out
 
 
 @pytest.mark.flaky(rerun_filter=delay_on_aborted, max_runs=5)
