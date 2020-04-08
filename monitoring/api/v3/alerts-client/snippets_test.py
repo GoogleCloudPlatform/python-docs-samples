@@ -64,7 +64,7 @@ class PochanFixture:
 
     def __enter__(self):
         @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
-               stop_max_attempt_number=5, retry_on_exception=retry_if_aborted)
+               stop_max_attempt_number=10, retry_on_exception=retry_if_aborted)
         def setup():
             # Create a policy.
             policy = monitoring_v3.types.alert_pb2.AlertPolicy()
@@ -89,7 +89,7 @@ class PochanFixture:
     def __exit__(self, type, value, traceback):
         # Delete the policy and channel we created.
         @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
-               stop_max_attempt_number=5, retry_on_exception=retry_if_aborted)
+               stop_max_attempt_number=10, retry_on_exception=retry_if_aborted)
         def teardown():
             try:
                 self.alert_policy_client.delete_alert_policy(
