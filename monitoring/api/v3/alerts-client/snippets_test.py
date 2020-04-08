@@ -19,6 +19,7 @@ import string
 import time
 
 from google.api_core.exceptions import Aborted
+from google.api_core.exceptions import ServiceUnavailable
 from google.cloud import monitoring_v3
 import google.protobuf.json_format
 import pytest
@@ -33,7 +34,7 @@ def random_name(length):
 
 
 def retry_if_aborted(exception):
-    return isinstance(exception, Aborted)
+    return isinstance(exception, (Aborted, ServiceUnavailable))
 
 
 class PochanFixture:
