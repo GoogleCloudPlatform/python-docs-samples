@@ -178,12 +178,14 @@ def dicomweb_search_studies(
 
     response.raise_for_status()
 
-    patients = response.json()
+    print('Studies found: response is {}'.format(response))
 
-    print('Patients found matching query:')
-    print(json.dumps(patients, indent=2))
+    # Uncomment the following lines to process the response as JSON.
+    # patients = response.json()
+    # print('Patients found matching query:')
+    # print(json.dumps(patients, indent=2))
 
-    return patients
+    # return patients
 # [END healthcare_dicomweb_search_studies]
 
 

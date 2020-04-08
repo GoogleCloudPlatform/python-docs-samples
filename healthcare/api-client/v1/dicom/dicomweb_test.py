@@ -138,7 +138,7 @@ def test_dicomweb_search_instance_studies(
     # Check that search instance worked
     assert 'Instances:' in out
     # Check that search studies worked
-    assert 'Patients found matching query' in out
+    assert 'Studies found: response is <Response [204]>' in out
 
     dicomweb.dicomweb_delete_study(
         service_account_json,
