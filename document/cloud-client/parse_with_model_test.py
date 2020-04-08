@@ -13,13 +13,14 @@
 # limitations under the License.
 
 import os
-import quickstart
+import parse_with_model
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 INPUT_URI = 'gs://cloud-samples-data/documentai/invoice.pdf'
 MODEL_ID = os.environ['ENTITY_EXTRACTION_MODEL_ID']
 
-def test_quickstart(capsys):
+
+def test_parse_with_model(capsys):
     parse_with_model.parse_with_model(PROJECT_ID, INPUT_URI, MODEL_ID)
     out, _ = capsys.readouterr()
     assert 'Label detected' in out
