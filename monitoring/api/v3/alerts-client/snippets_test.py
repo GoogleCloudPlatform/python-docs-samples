@@ -19,6 +19,7 @@ import string
 import time
 
 from google.api_core.exceptions import Aborted
+from google.api_core.exceptions import NotFound
 from google.api_core.exceptions import ServiceUnavailable
 from google.cloud import monitoring_v3
 import google.protobuf.json_format
@@ -44,7 +45,7 @@ def retry_if_aborted(exception):
 def delay_on_aborted(err, *args):
     if retry_if_aborted(err[1]):
         # add randomness for avoiding continuous conflict
-        time.sleep(2 + (random.randint(0, 9) * 0.1))
+        time.sleep(5 + (random.randint(0, 9) * 0.1))
         return True
     return False
 
@@ -90,11 +91,18 @@ class PochanFixture:
         @retry(wait_exponential_multiplier=1000, wait_exponential_max=10000,
                stop_max_attempt_number=5, retry_on_exception=retry_if_aborted)
         def teardown():
-            self.alert_policy_client.delete_alert_policy(
-                self.alert_policy.name)
-            if self.notification_channel.name:
-                self.notification_channel_client.delete_notification_channel(
-                    self.notification_channel.name)
+            try:
+                self.alert_policy_client.delete_alert_policy(
+                    self.alert_policy.name)
+            except NotFound:
+                print("Ignored NotFound when deleting a policy.")
+            try:
+                if self.notification_channel.name:
+                    self.notification_channel_client\
+                        .delete_notification_channel(
+                            self.notification_channel.name)
+            except NotFound:
+                print("Ignored NotFound when deleting a channel.")
         teardown()
 
 
