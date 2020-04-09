@@ -18,6 +18,7 @@ import sys
 import uuid
 
 from google.cloud import exceptions, storage
+from googleapiclient import errors
 from retrying import retry
 
 # Add datasets for bootstrapping datasets for testing
@@ -37,6 +38,7 @@ RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 source_file_name = "Patient.json"
 resource_file = os.path.join(RESOURCES, source_file_name)
 import_object = gcs_uri + "/" + source_file_name
+
 
 def retry_if_exception(exception):
     return (isinstance(exception, errors.HttpError))
