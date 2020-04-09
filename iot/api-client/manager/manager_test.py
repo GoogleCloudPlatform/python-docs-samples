@@ -20,7 +20,6 @@ import uuid
 
 # Add command receiver for bootstrapping device registry / device for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'mqtt_example'))  # noqa
-from flaky import flaky
 from google.cloud import pubsub
 import pytest
 
@@ -33,7 +32,7 @@ ca_cert_path = '../mqtt_example/resources/roots.pem'
 es_cert_path = 'resources/ec_public.pem'
 rsa_cert_path = 'resources/rsa_cert.pem'
 rsa_private_path = 'resources/rsa_private.pem'  # Must match rsa_cert
-topic_id = 'test-device-events-{}'.format(int(time.time()))
+topic_id = 'test-device-events-{}'.format(uuid.uuid4())
 
 project_id = os.environ['GCLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
@@ -202,6 +201,7 @@ def test_add_delete_unauth_device(test_topic, capsys):
     assert 'UNAUTH' in out
 
 
+@pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_add_config_unauth_device(test_topic, capsys):
     device_id = device_id_template.format('UNAUTH')
     manager.open_registry(
@@ -363,7 +363,7 @@ def test_add_patch_delete_es256(test_topic, capsys):
             service_account_json, project_id, cloud_region, registry_id)
 
 
-@flaky(max_runs=5, min_passes=1)
+@pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_send_command(test_topic, capsys):
     device_id = device_id_template.format('RSA256')
     manager.create_registry(
