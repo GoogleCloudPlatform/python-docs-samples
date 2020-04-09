@@ -18,10 +18,11 @@ import parse_with_model
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 INPUT_URI = 'gs://cloud-samples-data/documentai/invoice.pdf'
 MODEL_ID = os.environ['ENTITY_EXTRACTION_MODEL_ID']
+MODEL_NAME = 'projects/{}/locations/us-central1/models/{}'.format(PROJECT_ID, MODEL_ID)
 
 
 def test_parse_with_model(capsys):
-    parse_with_model.parse_with_model(PROJECT_ID, INPUT_URI, MODEL_ID)
+    parse_with_model.parse_with_model(PROJECT_ID, INPUT_URI, MODEL_NAME)
     out, _ = capsys.readouterr()
     assert 'Label detected' in out
     assert 'Confidence' in out

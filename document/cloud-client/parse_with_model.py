@@ -20,7 +20,7 @@ from google.cloud import documentai_v1beta2 as documentai
 def parse_with_model(
         project_id='YOUR_PROJECT_ID',
         input_uri='gs://cloud-samples-data/documentai/invoice.pdf',
-        automl_model='YOUR_AUTOML_MODELID_HERE'):
+        automl_model='YOUR_AUTOML_MODEL_NAME_HERE'):
     """Process a single document with the Document AI API with including
     text extraction and entity extraction.
     """
