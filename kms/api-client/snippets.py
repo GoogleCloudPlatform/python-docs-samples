@@ -74,7 +74,7 @@ def encrypt_symmetric(project_id, location_id, key_ring_id, crypto_key_id,
     client = kms_v1.KeyManagementServiceClient()
 
     # The resource name of the CryptoKey.
-    name = client.crypto_key_path_path(project_id, location_id, key_ring_id,
+    name = client.crypto_key_path(project_id, location_id, key_ring_id,
                                        crypto_key_id)
 
     # Use the KMS API to encrypt the data.
@@ -94,7 +94,7 @@ def decrypt_symmetric(project_id, location_id, key_ring_id, crypto_key_id,
     client = kms_v1.KeyManagementServiceClient()
 
     # The resource name of the CryptoKey.
-    name = client.crypto_key_path_path(project_id, location_id, key_ring_id,
+    name = client.crypto_key_path(project_id, location_id, key_ring_id,
                                        crypto_key_id)
     # Use the KMS API to decrypt the data.
     response = client.decrypt(name, ciphertext)
@@ -219,7 +219,7 @@ def add_member_to_crypto_key_policy(
     client = kms_v1.KeyManagementServiceClient()
 
     # The resource name of the CryptoKey.
-    resource = client.crypto_key_path_path(project_id, location_id,
+    resource = client.crypto_key_path(project_id, location_id,
                                            key_ring_id, crypto_key_id)
     # Get the current IAM policy.
     policy = client.get_iam_policy(resource)
@@ -282,7 +282,7 @@ def remove_member_from_crypto_key_policy(
     client = kms_v1.KeyManagementServiceClient()
 
     # The resource name of the CryptoKey.
-    resource = client.crypto_key_path_path(project_id, location_id,
+    resource = client.crypto_key_path(project_id, location_id,
                                            key_ring_id, crypto_key_id)
     # Get the current IAM policy.
     policy = client.get_iam_policy(resource)
