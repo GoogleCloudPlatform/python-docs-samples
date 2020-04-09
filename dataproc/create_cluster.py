@@ -21,9 +21,9 @@
 #   python create_cluster.py ${PROJECT_ID} ${REGION} ${CLUSTER_NAME}
 
 
-# [START dataproc_create_cluster]
 import sys
 
+# [START dataproc_create_cluster]
 from google.cloud import dataproc_v1 as dataproc
 
 
@@ -64,7 +64,7 @@ def create_cluster(project_id, region, cluster_name):
 
     # Output a success message.
     print('Cluster created successfully: {}'.format(result.cluster_name))
-
+    # [END dataproc_create_cluster]
 
 if __name__ == "__main__":
     if len(sys.arv) != 4:
@@ -75,4 +75,3 @@ if __name__ == "__main__":
         region = sys.argv[2]
         cluster_name = sys.argv[3]
         create_cluster(project_id, region, cluster_name)
-# [END dataproc_create_cluster]

@@ -18,9 +18,10 @@
 # This script can be run on its own:
 #   python instantiate_inline_workflow_template.py ${PROJECT_ID} ${REGION}
 
-# [START dataproc_instantiate_inline_workflow_template]
+
 import sys
 
+# [START dataproc_instantiate_inline_workflow_template]
 from google.cloud import dataproc_v1 as dataproc
 
 
@@ -92,6 +93,7 @@ def instantiate_inline_workflow_template(project_id, region):
 
     # Output a success message.
     print('Workflow ran successfully.')
+    # [END dataproc_instantiate_inline_workflow_template]
 
 
 if __name__ == "__main__":
@@ -101,4 +103,3 @@ if __name__ == "__main__":
         project_id = sys.argv[1]
         region = sys.argv[2]
         instantiate_inline_workflow_template(project_id, region)
-# [END dataproc_instantiate_inline_workflow_template]
