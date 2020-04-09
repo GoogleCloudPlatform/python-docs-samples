@@ -24,6 +24,7 @@ PROJECT_ID = os.environ['GCLOUD_PROJECT']
 INPUT_URI = 'gs://cloud-samples-data/documentai/invoice.pdf'
 BATCH_OUTPUT_URI = 'gs://{}/{}/'.format(BUCKET, OUTPUT_PREFIX)
 
+
 @pytest.fixture(autouse=True)
 def setup_teardown():
     """Create a temporary bucket to store annotation output."""

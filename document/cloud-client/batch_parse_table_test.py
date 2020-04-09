@@ -24,6 +24,7 @@ PROJECT_ID = os.environ['GCLOUD_PROJECT']
 INPUT_URI = 'gs://cloud-samples-data/documentai/invoice.pdf'
 BATCH_OUTPUT_URI = 'gs://{}/{}/'.format(BUCKET, OUTPUT_PREFIX)
 
+
 @pytest.fixture(autouse=True)
 def setup_teardown():
     """Create a temporary bucket to store annotation output."""
@@ -33,6 +34,7 @@ def setup_teardown():
     yield
 
     bucket.delete(force=True)
+
 
 def test_batch_parse_table(capsys):
     batch_parse_table.batch_parse_table(PROJECT_ID, INPUT_URI, BATCH_OUTPUT_URI)
