@@ -28,7 +28,7 @@ def create_data():
 
 
 def test_custom_attribute_sample(create_data, capsys):
-    @eventually_consistent.call
+    @eventually_consistent.call(tries=5)
     def _():
         custom_attribute_sample.run_sample()
         out, _ = capsys.readouterr()

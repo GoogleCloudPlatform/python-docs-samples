@@ -28,7 +28,7 @@ def company_name():
 
 
 def test_histogram_sample(company_name, capsys):
-    @eventually_consistent.call
+    @eventually_consistent.call(tries=5)
     def _():
         histogram_sample.run_sample(company_name)
         out, _ = capsys.readouterr()

@@ -28,7 +28,7 @@ def company_name():
 
 
 def test_email_alert_search_sample(company_name, capsys):
-    @eventually_consistent.call
+    @eventually_consistent.call(tries=5)
     def _():
         email_alert_search_sample.run_sample(company_name)
         out, _ = capsys.readouterr()

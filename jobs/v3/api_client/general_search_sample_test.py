@@ -28,7 +28,7 @@ def company_and_job():
 
 
 def test_general_search_sample(company_and_job, capsys):
-    @eventually_consistent.call
+    @eventually_consistent.call(tries=5)
     def _():
         general_search_sample.run_sample(
             company_and_job[0], company_and_job[1])
