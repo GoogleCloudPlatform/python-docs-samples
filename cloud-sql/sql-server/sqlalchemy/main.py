@@ -26,7 +26,7 @@ app = Flask(__name__)
 
 logger = logging.getLogger()
 
-# [START cloud_sql_server_python_sqlalchemy_create]
+# [START cloud_sql_server_sqlalchemy_create]
 # Remember - storing secrets in plaintext is potentially unsafe. Consider using
 # something like https://cloud.google.com/kms/ to help keep secrets secret.
 db_user = os.environ.get("DB_USER")
@@ -52,34 +52,34 @@ db = sqlalchemy.create_engine(
     ),
     # ... Specify additional properties here.
     # [START_EXCLUDE]
-    # [START cloud_sql_server_python_sqlalchemy_limit]
+    # [START cloud_sql_server_sqlalchemy_limit]
     # Pool size is the maximum number of permanent connections to keep.
     pool_size=5,
     # Temporarily exceeds the set pool_size if no connections are available.
     max_overflow=2,
     # The total number of concurrent connections for your application will be
     # a total of pool_size and max_overflow.
-    # [END cloud_sql_server_python_sqlalchemy_limit]
-    # [START cloud_sql_server_python_sqlalchemy_backoff]
+    # [END cloud_sql_server_sqlalchemy_limit]
+    # [START cloud_sql_server_sqlalchemy_backoff]
     # SQLAlchemy automatically uses delays between failed connection attempts,
     # but provides no arguments for configuration.
-    # [END cloud_sql_server_python_sqlalchemy_backoff]
-    # [START cloud_sql_server_python_sqlalchemy_timeout]
+    # [END cloud_sql_server_sqlalchemy_backoff]
+    # [START cloud_sql_server_sqlalchemy_timeout]
     # 'pool_timeout' is the maximum number of seconds to wait when retrieving a
     # new connection from the pool. After the specified amount of time, an
     # exception will be thrown.
     pool_timeout=30,  # 30 seconds
-    # [END cloud_sql_server_python_sqlalchemy_limit]
-    # [START cloud_sql_server_python_sqlalchemy_lifetime]
+    # [END cloud_sql_server_sqlalchemy_limit]
+    # [START cloud_sql_server_sqlalchemy_lifetime]
     # 'pool_recycle' is the maximum number of seconds a connection can persist.
     # Connections that live longer than the specified amount of time will be
     # reestablished
     pool_recycle=1800,  # 30 minutes
-    # [END cloud_sql_server_python_sqlalchemy_lifetime]
+    # [END cloud_sql_server_sqlalchemy_lifetime]
     echo=True  # debug
     # [END_EXCLUDE]
 )
-# [END cloud_sql_server_python_sqlalchemy_create]
+# [END cloud_sql_server_sqlalchemy_create]
 
 
 @app.before_first_request
@@ -134,7 +134,7 @@ def save_vote():
         logger.warning(team)
         return Response(response="Invalid team specified.", status=400)
 
-    # [START cloud_sql_server_python_sqlalchemy_connection]
+    # [START cloud_sql_server_sqlalchemy_connection]
     # Preparing a statement before hand can help protect against injections.
     stmt = sqlalchemy.text(
         "INSERT INTO votes (time_cast, candidate)"
@@ -156,7 +156,7 @@ def save_vote():
             "application logs for more details.",
         )
         # [END_EXCLUDE]
-    # [END cloud_sql_server_python_sqlalchemy_connection]
+    # [END cloud_sql_server_sqlalchemy_connection]
 
     return Response(
         status=200,
