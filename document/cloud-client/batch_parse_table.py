@@ -47,19 +47,25 @@ def batch_parse_table(
         documentai.types.TableBoundHint(
             page_number=1,
             bounding_box=documentai.types.BoundingPoly(
+                # Define a polygon around tables to detect
+                # Each vertice coordinate must be a number between 0 and 1
                 normalized_vertices=[
+                    # Top left
                     documentai.types.geometry.NormalizedVertex(
                         x=0,
                         y=0
                     ),
+                    # Top right
                     documentai.types.geometry.NormalizedVertex(
                         x=1,
                         y=0
                     ),
+                    # Bottom right
                     documentai.types.geometry.NormalizedVertex(
                         x=1,
                         y=1
                     ),
+                    # Bottom left
                     documentai.types.geometry.NormalizedVertex(
                         x=0,
                         y=1
