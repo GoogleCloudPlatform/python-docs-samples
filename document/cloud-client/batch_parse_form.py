@@ -60,14 +60,18 @@ def batch_parse_form(
         enabled=True, key_value_pair_hints=key_value_pair_hints)
 
     # For now, location must be us-central1
-    parent = "projects/{}/locations/us-central1".format(project_id)
+    parent = 'projects/{}/locations/us-central1'.format(project_id)
     request = documentai.types.ProcessDocumentRequest(
         input_config=input_config,
         output_config=output_config,
         form_extraction_params=form_extraction_params)
 
+    # Add each ProcessDocumentRequest to the batch request
+    batch_request = []
+    batch_request.append(request)
+
     requests = documentai.types.BatchProcessDocumentsRequest(
-        parent=parent, requests=[request]
+        parent=parent, requests=batch_request
     )
 
     operation = client.batch_process_documents(requests)

@@ -74,14 +74,17 @@ def batch_parse_table(
         enabled=True, table_bound_hints=table_bound_hints)
 
     # For now, location must be us-central1
-    parent = "projects/{}/locations/us-central1".format(project_id)
+    parent = 'projects/{}/locations/us-central1'.format(project_id)
     request = documentai.types.ProcessDocumentRequest(
         input_config=input_config,
         output_config=output_config,
         table_extraction_params=table_extraction_params)
 
+    batch_request = []
+    batch_request.append(request)
+
     requests = documentai.types.BatchProcessDocumentsRequest(
-        parent=parent, requests=[request]
+        parent=parent, requests=batch_request
     )
 
     operation = client.batch_process_documents(requests)
