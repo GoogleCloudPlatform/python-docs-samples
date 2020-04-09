@@ -15,7 +15,7 @@
 import os
 import pytest
 import sys
-import time
+import uuid
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'datasets')) # noqa
@@ -26,9 +26,9 @@ cloud_region = 'us-central1'
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
-dataset_id = 'test_dataset-{}'.format(int(time.time()))
-dicom_store_id = 'test_dicom_store_{}'.format(int(time.time()))
-pubsub_topic = 'test_pubsub_topic_{}'.format(int(time.time()))
+dataset_id = 'test_dataset-{}'.format(uuid.uuid4())
+dicom_store_id = 'test_dicom_store_{}'.format(uuid.uuid4())
+pubsub_topic = 'test_pubsub_topic_{}'.format(uuid.uuid4())
 
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 bucket = os.environ['CLOUD_STORAGE_BUCKET']
@@ -53,6 +53,26 @@ def test_dataset():
         project_id,
         cloud_region,
         dataset_id)
+
+
+@pytest.fixture(scope='module')
+def test_dicom_store():
+    dicom_store = dicom_stores.create_dicom_store(
+        service_account_json,
+        project_id,
+        cloud_region,
+        dataset_id,
+        dicom_store_id)
+
+    yield dicom_store
+
+    # Clean up
+    dicom_stores.delete_dicom_store(
+        service_account_json,
+        project_id,
+        cloud_region,
+        dataset_id,
+        dicom_store_id)
 
 
 def test_CRUD_dicom_store(test_dataset, capsys):
@@ -92,14 +112,7 @@ def test_CRUD_dicom_store(test_dataset, capsys):
     assert 'Deleted DICOM store' in out
 
 
-def test_patch_dicom_store(test_dataset, capsys):
-    dicom_stores.create_dicom_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        dicom_store_id)
-
+def test_patch_dicom_store(test_dataset, test_dicom_store, capsys):
     dicom_stores.patch_dicom_store(
         service_account_json,
         project_id,
@@ -108,27 +121,12 @@ def test_patch_dicom_store(test_dataset, capsys):
         dicom_store_id,
         pubsub_topic)
 
-    # Clean up
-    dicom_stores.delete_dicom_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        dicom_store_id)
-
     out, _ = capsys.readouterr()
 
     assert 'Patched DICOM store' in out
 
 
-def test_import_dicom_instance(test_dataset, capsys):
-    dicom_stores.create_dicom_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        dicom_store_id)
-
+def test_import_dicom_instance(test_dataset, test_dicom_store, capsys):
     dicom_stores.import_dicom_instance(
         service_account_json,
         project_id,
@@ -137,27 +135,12 @@ def test_import_dicom_instance(test_dataset, capsys):
         dicom_store_id,
         content_uri)
 
-    # Clean up
-    dicom_stores.delete_dicom_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        dicom_store_id)
-
     out, _ = capsys.readouterr()
 
     assert 'Imported DICOM instance' in out
 
 
-def test_export_dicom_instance(test_dataset, capsys):
-    dicom_stores.create_dicom_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        dicom_store_id)
-
+def test_export_dicom_instance(test_dataset, test_dicom_store, capsys):
     dicom_stores.export_dicom_instance(
         service_account_json,
         project_id,
@@ -166,27 +149,12 @@ def test_export_dicom_instance(test_dataset, capsys):
         dicom_store_id,
         bucket)
 
-    # Clean up
-    dicom_stores.delete_dicom_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        dicom_store_id)
-
     out, _ = capsys.readouterr()
 
     assert 'Exported DICOM instance' in out
 
 
-def test_get_set_dicom_store_iam_policy(test_dataset, capsys):
-    dicom_stores.create_dicom_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        dicom_store_id)
-
+def test_get_set_dicom_store_iam_policy(test_dataset, test_dicom_store, capsys):
     get_response = dicom_stores.get_dicom_store_iam_policy(
         service_account_json,
         project_id,
@@ -202,14 +170,6 @@ def test_get_set_dicom_store_iam_policy(test_dataset, capsys):
         dicom_store_id,
         'serviceAccount:python-docs-samples-tests@appspot.gserviceaccount.com',
         'roles/viewer')
-
-    # Clean up
-    dicom_stores.delete_dicom_store(
-        service_account_json,
-        project_id,
-        cloud_region,
-        dataset_id,
-        dicom_store_id)
 
     out, _ = capsys.readouterr()
 

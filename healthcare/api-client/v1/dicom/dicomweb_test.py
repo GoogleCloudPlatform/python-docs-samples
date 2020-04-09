@@ -15,7 +15,7 @@
 import os
 import pytest
 import sys
-import time
+import uuid
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'datasets'))  # noqa
@@ -28,8 +28,8 @@ base_url = 'https://healthcare.googleapis.com/v1'
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
-dataset_id = 'test_dataset-{}'.format(int(time.time()))
-dicom_store_id = 'test_dicom_store_{}'.format(int(time.time()))
+dataset_id = 'test_dataset-{}'.format(uuid.uuid4())
+dicom_store_id = 'test_dicom_store_{}'.format(uuid.uuid4())
 
 RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 dcm_file_name = 'dicom_00000001_000.dcm'
