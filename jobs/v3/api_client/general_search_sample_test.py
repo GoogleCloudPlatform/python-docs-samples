@@ -12,18 +12,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
+import re
 
-def test_general_search_sample(capsys):
-    import general_search_sample
-    import re
+from gcp_devrel.testing import eventually_consistent
 
-    general_search_sample.run_sample()
-    out, _ = capsys.readouterr()
-    expected = ('.*matchingJobs.*\n'
-                '.*matchingJobs.*\n'
-                '.*matchingJobs.*\n'
-                '.*matchingJobs.*\n'
-                '.*matchingJobs.*\n'
-                '.*matchingJobs.*\n'
-                '.*matchingJobs.*\n')
-    assert re.search(expected, out, re.DOTALL)
+import general_search_sample
+
+
+@pytest.fixture(scope="module")
+def company_and_job():
+    company_name, job_name = general_search_sample.set_up()
+    yield company_name, job_name
+    general_search_sample.tear_down(company_name, job_name)
+
+
+def test_general_search_sample(company_and_job, capsys):
+    @eventually_consistent.call
+    def _():
+        general_search_sample.run_sample(
+            company_and_job[0], company_and_job[1])
+        out, _ = capsys.readouterr()
+        expected = ('.*matchingJobs.*\n'
+                    '.*matchingJobs.*\n'
+                    '.*matchingJobs.*\n'
+                    '.*matchingJobs.*\n'
+                    '.*matchingJobs.*\n'
+                    '.*matchingJobs.*\n'
+                    '.*matchingJobs.*\n')
+        assert re.search(expected, out, re.DOTALL)

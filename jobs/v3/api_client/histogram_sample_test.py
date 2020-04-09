@@ -12,12 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
+import re
 
-def test_histogram_sample(capsys):
-    import histogram_sample
-    import re
+from gcp_devrel.testing import eventually_consistent
 
-    histogram_sample.run_sample()
-    out, _ = capsys.readouterr()
-    assert re.search('COMPANY_ID', out)
-    assert re.search('someFieldName1', out)
+import histogram_sample
+
+
+@pytest.fixture(scope="module")
+def company_name():
+    company_name, job_name = histogram_sample.set_up()
+    yield company_name
+    histogram_sample.tear_down(company_name, job_name)
+
+
+def test_histogram_sample(company_name, capsys):
+    @eventually_consistent.call
+    def _():
+        histogram_sample.run_sample(company_name)
+        out, _ = capsys.readouterr()
+        assert re.search('COMPANY_ID', out)
+        assert re.search('someFieldName1', out)
