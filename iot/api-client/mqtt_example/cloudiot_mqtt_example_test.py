@@ -15,12 +15,13 @@
 import os
 import sys
 import time
+import uuid
 
 from google.cloud import pubsub
 
 # Add manager for bootstrapping device registry / device for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
-from gcp_devrel.testing.flaky import flaky
+from flaky import flaky
 import manager
 
 import pytest
@@ -39,7 +40,7 @@ project_id = os.environ['GCLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
-registry_id = 'test-registry-{}'.format(int(time.time()))
+registry_id = 'test-registry-{}-{}'.format(uuid.uuid1(), int(time.time()))
 
 mqtt_bridge_hostname = 'mqtt.googleapis.com'
 mqtt_bridge_port = 443
@@ -182,7 +183,7 @@ def test_config(test_topic, capsys):
     assert '/devices/{}/config'.format(device_id) in out
 
 
-@flaky(max_runs=5)
+@flaky(max_runs=5, min_passes=1)
 def test_receive_command(capsys):
     device_id = device_id_template.format('RSA256')
     manager.create_registry(
@@ -234,7 +235,7 @@ def test_receive_command(capsys):
     assert '\'me want cookies\'' in out  # Verify can receive command
 
 
-@flaky(max_runs=5)
+@flaky(max_runs=5, min_passes=1)
 def test_gateway_listen_for_bound_device_configs(test_topic, capsys):
     gateway_id = device_id_template.format('RS256')
     device_id = device_id_template.format('noauthbind')
@@ -280,7 +281,7 @@ def test_gateway_listen_for_bound_device_configs(test_topic, capsys):
     assert 'Received message' in out
 
 
-@flaky(max_runs=5)
+@flaky(max_runs=5, min_passes=1)
 def test_gateway_send_data_for_device(test_topic, capsys):
     gateway_id = device_id_template.format('RS256')
     device_id = device_id_template.format('noauthbind')
