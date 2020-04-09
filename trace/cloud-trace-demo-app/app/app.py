@@ -14,13 +14,14 @@
 """
 A sample app demonstrating Stackdriver Trace
 """
-
+# [START trace_demo_imports]
 from flask import Flask
 from opencensus.trace import execution_context
 from opencensus.trace.propagation import google_cloud_format
 from opencensus.trace.samplers import AlwaysOnSampler
 from opencensus.ext.stackdriver.trace_exporter import StackdriverExporter
 from opencensus.ext.flask.flask_middleware import FlaskMiddleware
+# [END trace_demo_imports]
 
 import requests
 import argparse
@@ -32,6 +33,7 @@ app = Flask(__name__)
 propagator = google_cloud_format.GoogleCloudFormatPropagator()
 
 
+# [START trace_demo_middleware]
 def createMiddleWare(exporter):
     # Configure a flask middleware that listens for each request and applies automatic tracing.
     # This needs to be set up before the application starts.
@@ -41,6 +43,7 @@ def createMiddleWare(exporter):
         propagator=propagator,
         sampler=AlwaysOnSampler())
     return middleware
+# [END trace_demo_middleware]
 
 
 @app.route('/')
@@ -72,5 +75,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     app.config['keyword'] = args.keyword
     app.config['endpoint'] = args.endpoint
+    # [START trace_demo_create_exporter]
     createMiddleWare(StackdriverExporter())
+    # [END trace_demo_create_exporter]
     app.run(debug=True, host='0.0.0.0', port=8080)
+    
