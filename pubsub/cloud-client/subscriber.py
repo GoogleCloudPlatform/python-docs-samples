@@ -52,6 +52,8 @@ def list_subscriptions_in_project(project_id):
 
     for subscription in subscriber.list_subscriptions(project_path):
         print(subscription.name)
+
+    subscriber.close()
     # [END pubsub_list_subscriptions]
 
 
@@ -75,6 +77,8 @@ def create_subscription(project_id, topic_name, subscription_name):
     )
 
     print("Subscription created: {}".format(subscription))
+
+    subscriber.close()
     # [END pubsub_create_pull_subscription]
 
 
@@ -104,6 +108,8 @@ def create_push_subscription(
 
     print("Push subscription created: {}".format(subscription))
     print("Endpoint for subscription is: {}".format(endpoint))
+
+    subscriber.close()
     # [END pubsub_create_push_subscription]
 
 
@@ -123,6 +129,8 @@ def delete_subscription(project_id, subscription_name):
     subscriber.delete_subscription(subscription_path)
 
     print("Subscription deleted: {}".format(subscription_path))
+
+    subscriber.close()
     # [END pubsub_delete_subscription]
 
 
@@ -158,6 +166,8 @@ def update_subscription(project_id, subscription_name, endpoint):
 
     print("Subscription updated: {}".format(subscription_path))
     print("New endpoint for subscription is: {}".format(result.push_config))
+
+    subscriber.close()
     # [END pubsub_update_push_configuration]
 
 
@@ -188,12 +198,14 @@ def receive_messages(project_id, subscription_name, timeout=None):
     )
     print("Listening for messages on {}..\n".format(subscription_path))
 
-    # result() in a future will block indefinitely if `timeout` is not set,
-    # unless an exception is encountered first.
-    try:
-        streaming_pull_future.result(timeout=timeout)
-    except:  # noqa
-        streaming_pull_future.cancel()
+    # Wrap subscriber in a 'with' block to automatically call close() when done.
+    with subscriber:
+        try:
+            # When `timeout` is not set, result() will block indefinitely,
+            # unless an exception is encountered first.
+            streaming_pull_future.result(timeout=timeout)
+        except:  # noqa
+            streaming_pull_future.cancel()
     # [END pubsub_subscriber_async_pull]
     # [END pubsub_quickstart_subscriber]
 
@@ -230,12 +242,14 @@ def receive_messages_with_custom_attributes(
     )
     print("Listening for messages on {}..\n".format(subscription_path))
 
-    # result() in a future will block indefinitely if `timeout` is not set,
-    # unless an exception is encountered first.
-    try:
-        streaming_pull_future.result(timeout=timeout)
-    except:  # noqa
-        streaming_pull_future.cancel()
+    # Wrap subscriber in a 'with' block to automatically call close() when done.
+    with subscriber:
+        try:
+            # When `timeout` is not set, result() will block indefinitely,
+            # unless an exception is encountered first.
+            streaming_pull_future.result(timeout=timeout)
+        except:  # noqa
+            streaming_pull_future.cancel()
     # [END pubsub_subscriber_async_pull_custom_attributes]
     # [END pubsub_subscriber_sync_pull_custom_attributes]
 
@@ -269,12 +283,14 @@ def receive_messages_with_flow_control(
     )
     print("Listening for messages on {}..\n".format(subscription_path))
 
-    # result() in a future will block indefinitely if `timeout` is not set,
-    # unless an exception is encountered first.
-    try:
-        streaming_pull_future.result(timeout=timeout)
-    except:  # noqa
-        streaming_pull_future.cancel()
+    # Wrap subscriber in a 'with' block to automatically call close() when done.
+    with subscriber:
+        try:
+            # When `timeout` is not set, result() will block indefinitely,
+            # unless an exception is encountered first.
+            streaming_pull_future.result(timeout=timeout)
+        except:  # noqa
+            streaming_pull_future.cancel()
     # [END pubsub_subscriber_flow_settings]
 
 
@@ -309,6 +325,8 @@ def synchronous_pull(project_id, subscription_name):
             len(response.received_messages)
         )
     )
+
+    subscriber.close()
     # [END pubsub_subscriber_sync_pull]
 
 
@@ -398,6 +416,8 @@ def synchronous_pull_with_lease_management(project_id, subscription_name):
             len(response.received_messages)
         )
     )
+
+    subscriber.close()
     # [END pubsub_subscriber_sync_pull_with_lease]
 
 
@@ -425,17 +445,19 @@ def listen_for_errors(project_id, subscription_name, timeout=None):
     )
     print("Listening for messages on {}..\n".format(subscription_path))
 
-    # result() in a future will block indefinitely if `timeout` is not set,
-    # unless an exception is encountered first.
-    try:
-        streaming_pull_future.result(timeout=timeout)
-    except Exception as e:
-        streaming_pull_future.cancel()
-        print(
-            "Listening for messages on {} threw an exception: {}.".format(
-                subscription_name, e
+    # Wrap subscriber in a 'with' block to automatically call close() when done.
+    with subscriber:
+        # When `timeout` is not set, result() will block indefinitely,
+        # unless an exception is encountered first.
+        try:
+            streaming_pull_future.result(timeout=timeout)
+        except Exception as e:
+            streaming_pull_future.cancel()
+            print(
+                "Listening for messages on {} threw an exception: {}.".format(
+                    subscription_name, e
+                )
             )
-        )
     # [END pubsub_subscriber_error_listener]
 
 

@@ -35,6 +35,9 @@ app.config['PROJECT'] = os.environ['GOOGLE_CLOUD_PROJECT']
 # Global list to storage messages received by this instance.
 MESSAGES = []
 
+# Initialize the publisher client once to avoid memory leak
+# and reduce publish latency.
+publisher = pubsub_v1.PublisherClient()
 
 # [START gae_flex_pubsub_index]
 @app.route('/', methods=['GET', 'POST'])
@@ -44,9 +47,7 @@ def index():
 
     data = request.form.get('payload', 'Example payload').encode('utf-8')
 
-    # Consider initialzing the publisher client outside this function
-    # for low latency publish.
-    publisher = pubsub_v1.PublisherClient()
+    # publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(
         current_app.config['PROJECT'],
         current_app.config['PUBSUB_TOPIC'])
