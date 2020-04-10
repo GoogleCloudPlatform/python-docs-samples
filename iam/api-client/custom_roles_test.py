@@ -21,7 +21,7 @@ import googleapiclient.errors
 
 GCLOUD_PROJECT = os.environ["GCLOUD_PROJECT"]
 
-CUSTOM_ROLE_NAME = "pythonTestCustomRole" + str(uuid.uuid1().int)
+CUSTOM_ROLE_NAME = "pythonTestCustomRole"
 CUSTOM_ROLE_TITLE = "Python Test Custom Role"
 CUSTOM_ROLE_DESCRIPTION = "This is a python test custom role"
 CUSTOM_ROLE_PERMISSIONS = ["iam.roles.get"]
@@ -33,22 +33,23 @@ CUSTOM_ROLE_EMAIL = (
 
 @pytest.fixture(scope="module")
 def test_custom_role():
-    # section to create custom role to test policy updates.
-    custom_roles.create_role(
-        CUSTOM_ROLE_NAME,
-        GCLOUD_PROJECT,
-        CUSTOM_ROLE_TITLE,
-        CUSTOM_ROLE_DESCRIPTION,
-        CUSTOM_ROLE_PERMISSIONS,
-        CUSTOM_ROLE_STAGE,
-    )
-    yield CUSTOM_ROLE_NAME
-
-    # Delete the custom role
+    # This custom role is reused in read/update tests.
     try:
-        custom_roles.delete_role(CUSTOM_ROLE_NAME, GCLOUD_PROJECT)
-    except googleapiclient.errors.HttpError:
-        print("Custom role already deleted.")
+        custom_roles.create_role(
+            CUSTOM_ROLE_NAME,
+            GCLOUD_PROJECT,
+            CUSTOM_ROLE_TITLE,
+            CUSTOM_ROLE_DESCRIPTION,
+            CUSTOM_ROLE_PERMISSIONS,
+            CUSTOM_ROLE_STAGE,
+        )
+    except googleapiclient.errors.HttpError as e:
+        if "HttpError 409" not in str(e):
+            raise e
+        # Ignore error since we just reuse the same custom role.
+        print('Re-using the custom role "{}".'.format(CUSTOM_ROLE_NAME))
+    yield CUSTOM_ROLE_NAME
+    # we don't delete this custom role for future tests.
 
 
 @pytest.fixture(scope="function")
