@@ -1,4 +1,4 @@
-# [START functions_ci_cd_cloud_build_python]
+# [START functions_ci_cd_cloud_build]
 steps:
 - name: 'docker.io/library/python:3.7'
   entrypoint: /bin/sh
@@ -9,4 +9,4 @@ steps:
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['functions', 'deploy', '[YOUR_DEPLOYED_FUNCTION_NAME]', '[YOUR_FUNCTION_TRIGGER]', '--runtime', '[YOUR_RUNTIME]', '--entry-point', '[YOUR_FUNCTION_NAME_IN_CODE]']
   dir: 'functions/autodeploy'
-# [END functions_ci_cd_cloud_build_python]
+# [END functions_ci_cd_cloud_build]
