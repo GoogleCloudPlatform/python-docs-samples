@@ -38,11 +38,7 @@ def table():
     ]
 
     table = bigquery.Table(table_id, schema=schema)
-
-    try:
-        table = client.get_table(table_id)  # Make an API request.
-    except google.cloud.exceptions.NotFound:
-        table = client.create_table(table)
+    table = client.create_table(table, exists_ok=True)
 
     yield table_id
 
