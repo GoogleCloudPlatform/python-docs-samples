@@ -72,7 +72,7 @@ for file in **/requirements.txt; do
     cd "$file"
 
     # If $DIFF_FROM is set, use it to check for changes in this directory.
-    if [[ "DIFF_FROM" != "" ]]; then
+    if [[ "$DIFF_FROM" != "" ]]; then
         git diff --quiet "$DIFF_FROM" .
         CHANGED=$?
         if [[ "$CHANGED" -eq 0 ]]; then
