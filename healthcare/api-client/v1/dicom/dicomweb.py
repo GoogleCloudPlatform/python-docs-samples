@@ -23,27 +23,23 @@ from google.oauth2 import service_account
 _BASE_URL = 'https://healthcare.googleapis.com/v1'
 
 
-def get_session(service_account_json):
+def get_session():
     """Returns an authorized Requests Session class using the service account
     credentials JSON. This class is used to perform requests to the
     Cloud Healthcare API endpoint."""
 
-    # Pass in the credentials and project ID. If none supplied, get them
-    # from the environment.
     credentials = service_account.Credentials.from_service_account_file(
-        service_account_json)
-    scoped_credentials = credentials.with_scopes(
-        ['https://www.googleapis.com/auth/cloud-platform'])
+        filename=os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
+        scopes=["https://www.googleapis.com/auth/cloud-platform"],
+    )
 
     # Create a requests Session object with the credentials.
-    session = requests.AuthorizedSession(scoped_credentials)
-
+    session = requests.AuthorizedSession(credentials)
     return session
 
 
 # [START healthcare_dicomweb_store_instance]
 def dicomweb_store_instance(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -58,7 +54,7 @@ def dicomweb_store_instance(
         url, dataset_id, dicom_store_id)
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     with open(dcm_file, 'rb') as dcm:
         dcm_content = dcm.read()
@@ -83,7 +79,6 @@ def dicomweb_store_instance(
 
 # [START healthcare_dicomweb_search_instances]
 def dicomweb_search_instance(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -97,7 +92,7 @@ def dicomweb_search_instance(
         url, dataset_id, dicom_store_id)
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     headers = {
         'Content-Type': 'application/dicom+json; charset=utf-8'
@@ -117,7 +112,6 @@ def dicomweb_search_instance(
 
 # [START healthcare_dicomweb_retrieve_study]
 def dicomweb_retrieve_study(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -137,7 +131,7 @@ def dicomweb_retrieve_study(
     file_name = 'study.multipart'
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     response = session.get(dicomweb_path)
 
@@ -145,8 +139,8 @@ def dicomweb_retrieve_study(
 
     with open(file_name, 'wb') as f:
         f.write(response.content)
-        print('Retrieved study and saved to file ' +
-              '{} in current directory'.format(file_name))
+        print(
+            'Retrieved study and saved to {} in current directory'.format(file_name))
 
     return response
 # [END healthcare_dicomweb_retrieve_study]
@@ -154,7 +148,6 @@ def dicomweb_retrieve_study(
 
 # [START healthcare_dicomweb_search_studies]
 def dicomweb_search_studies(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -172,7 +165,7 @@ def dicomweb_search_studies(
     # searches for studies containing a patient's name.
     params = {'PatientName': 'Sally Zhang'}
 
-    session = get_session(service_account_json)
+    session = get_session()
 
     response = session.get(dicomweb_path, params=params)
 
@@ -191,7 +184,6 @@ def dicomweb_search_studies(
 
 # [START healthcare_dicomweb_retrieve_instance]
 def dicomweb_retrieve_instance(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -213,7 +205,7 @@ def dicomweb_retrieve_instance(
     file_name = 'instance.dcm'
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     headers = {
         'Accept': 'application/dicom; transfer-syntax=*'
@@ -225,8 +217,8 @@ def dicomweb_retrieve_instance(
 
     with open(file_name, 'wb') as f:
         f.write(response.content)
-        print('Retrieved DICOM instance and saved to file ' +
-              '{} in current directory'.format(file_name))
+        print('Retrieved DICOM instance and saved to {} in current directory'.format(
+            file_name))
 
     return response
 # [END healthcare_dicomweb_retrieve_instance]
@@ -234,7 +226,6 @@ def dicomweb_retrieve_instance(
 
 # [START healthcare_dicomweb_retrieve_rendered]
 def dicomweb_retrieve_rendered(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -258,7 +249,7 @@ def dicomweb_retrieve_rendered(
     file_name = 'rendered_image.png'
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     headers = {
         'Accept': 'image/png'
@@ -270,8 +261,8 @@ def dicomweb_retrieve_rendered(
 
     with open(file_name, 'wb') as f:
         f.write(response.content)
-        print('Retrieved rendered image and saved to file ' +
-              '{} in current directory'.format(file_name))
+        print('Retrieved rendered image and saved to {} in current directory'.format(
+            file_name))
 
     return response
 # [END healthcare_dicomweb_retrieve_rendered]
@@ -279,7 +270,6 @@ def dicomweb_retrieve_rendered(
 
 # [START healthcare_dicomweb_delete_study]
 def dicomweb_delete_study(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -296,7 +286,7 @@ def dicomweb_delete_study(
         url, dataset_id, dicom_store_id, study_uid)
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     headers = {
         'Content-Type': 'application/dicom+json; charset=utf-8'
@@ -317,11 +307,6 @@ def parse_command_line_args():
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
-
-    parser.add_argument(
-        '--service_account_json',
-        default=os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"),
-        help='Path to service account JSON file.')
 
     parser.add_argument(
         '--base_url',
@@ -404,7 +389,6 @@ def run_command(args):
 
     elif args.command == 'dicomweb-store-instance':
         dicomweb_store_instance(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -414,7 +398,6 @@ def run_command(args):
 
     elif args.command == 'dicomweb-search-instance':
         dicomweb_search_instance(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -423,7 +406,6 @@ def run_command(args):
 
     elif args.command == 'dicomweb-retrieve-study':
         dicomweb_retrieve_study(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -433,7 +415,6 @@ def run_command(args):
 
     elif args.command == 'dicomweb-retrieve-instance':
         dicomweb_retrieve_instance(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -445,7 +426,6 @@ def run_command(args):
 
     elif args.command == 'dicomweb-search-studies':
         dicomweb_search_studies(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -454,7 +434,6 @@ def run_command(args):
 
     elif args.command == 'dicomweb-retrieve-rendered':
         dicomweb_retrieve_rendered(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -466,7 +445,6 @@ def run_command(args):
 
     elif args.command == 'dicomweb-delete-study':
         dicomweb_delete_study(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,

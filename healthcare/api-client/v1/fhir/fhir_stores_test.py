@@ -28,7 +28,6 @@ import fhir_stores
 
 cloud_region = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
 dataset_id = "test_dataset_{}".format(uuid.uuid4())
 fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
@@ -47,42 +46,42 @@ def retry_if_exception(exception):
 @pytest.fixture(scope="module")
 def test_dataset():
     dataset = datasets.create_dataset(
-        service_account_json, project_id, cloud_region, dataset_id
+        project_id, cloud_region, dataset_id
     )
 
     yield dataset
 
     # Clean up
-    datasets.delete_dataset(service_account_json, project_id, cloud_region, dataset_id)
+    datasets.delete_dataset(project_id, cloud_region, dataset_id)
 
 
 @pytest.fixture(scope="module")
 def test_fhir_store():
     fhir_store = fhir_stores.create_fhir_store(
-        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
+        project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     yield fhir_store
 
     # Clean up
-    fhir_stores.delete_fhir_store(service_account_json, project_id, cloud_region, dataset_id, fhir_store_id)
+    fhir_stores.delete_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id)
 
 
 def test_CRUD_fhir_store(test_dataset, capsys):
     fhir_stores.create_fhir_store(
-        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
+        project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     fhir_stores.get_fhir_store(
-        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
+        project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     fhir_stores.list_fhir_stores(
-        service_account_json, project_id, cloud_region, dataset_id
+        project_id, cloud_region, dataset_id
     )
 
     fhir_stores.delete_fhir_store(
-        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
+        project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     out, _ = capsys.readouterr()
@@ -96,7 +95,7 @@ def test_CRUD_fhir_store(test_dataset, capsys):
 
 def test_patch_fhir_store(test_dataset, test_fhir_store, capsys):
     fhir_stores.patch_fhir_store(
-        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
+        project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     out, _ = capsys.readouterr()
@@ -116,7 +115,6 @@ def test_import_fhir_store_gcs(test_dataset, test_fhir_store, capsys):
            stop_max_attempt_number=10, retry_on_exception=retry_if_exception)
     def test_call():
         fhir_stores.import_fhir_resources(
-            service_account_json,
             project_id,
             cloud_region,
             dataset_id,
@@ -139,7 +137,6 @@ def test_import_fhir_store_gcs(test_dataset, test_fhir_store, capsys):
 
 def test_export_fhir_store_gcs(test_dataset, test_fhir_store, capsys):
     fhir_stores.export_fhir_store_gcs(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -154,11 +151,10 @@ def test_export_fhir_store_gcs(test_dataset, test_fhir_store, capsys):
 
 def test_get_set_fhir_store_iam_policy(test_dataset, test_fhir_store, capsys):
     get_response = fhir_stores.get_fhir_store_iam_policy(
-        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
+        project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     set_response = fhir_stores.set_fhir_store_iam_policy(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,

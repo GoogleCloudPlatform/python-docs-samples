@@ -21,38 +21,32 @@ from google.oauth2 import service_account
 
 
 # [START healthcare_get_client]
-def get_client(service_account_json):
+def get_client():
     """Returns an authorized API client by discovering the Healthcare API and
     creating a service object using the service account credentials JSON."""
-    api_scopes = ['https://www.googleapis.com/auth/cloud-platform']
     api_version = 'v1'
-    discovery_api = 'https://healthcare.googleapis.com/$discovery/rest'
     service_name = 'healthcare'
 
     credentials = service_account.Credentials.from_service_account_file(
-        service_account_json)
-    scoped_credentials = credentials.with_scopes(api_scopes)
-
-    discovery_url = '{}?version={}'.format(
-        discovery_api, api_version)
+        filename=os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
+        scopes=["https://www.googleapis.com/auth/cloud-platform"],
+    )
 
     return discovery.build(
         service_name,
         api_version,
-        discoveryServiceUrl=discovery_url,
-        credentials=scoped_credentials)
+        credentials=credentials)
 # [END healthcare_get_client]
 
 
 # [START healthcare_create_hl7v2_store]
 def create_hl7v2_store(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
         hl7v2_store_id):
     """Creates a new HL7v2 store within the parent dataset."""
-    client = get_client(service_account_json)
+    client = get_client()
     hl7v2_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
 
@@ -73,13 +67,12 @@ def create_hl7v2_store(
 
 # [START healthcare_delete_hl7v2_store]
 def delete_hl7v2_store(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
         hl7v2_store_id):
     """Deletes the specified HL7v2 store."""
-    client = get_client(service_account_json)
+    client = get_client()
     hl7v2_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
     hl7v2_store_name = '{}/hl7V2Stores/{}'.format(
@@ -100,13 +93,12 @@ def delete_hl7v2_store(
 
 # [START healthcare_get_hl7v2_store]
 def get_hl7v2_store(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
         hl7v2_store_id):
     """Gets the specified HL7v2 store."""
-    client = get_client(service_account_json)
+    client = get_client()
     hl7v2_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
     hl7v2_store_name = '{}/hl7V2Stores/{}'.format(
@@ -128,12 +120,11 @@ def get_hl7v2_store(
 
 # [START healthcare_list_hl7v2_stores]
 def list_hl7v2_stores(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id):
     """Lists the HL7v2 stores in the given dataset."""
-    client = get_client(service_account_json)
+    client = get_client()
     hl7v2_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
 
@@ -153,13 +144,12 @@ def list_hl7v2_stores(
 
 # [START healthcare_patch_hl7v2_store]
 def patch_hl7v2_store(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
         hl7v2_store_id):
     """Updates the HL7v2 store."""
-    client = get_client(service_account_json)
+    client = get_client()
     hl7v2_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
     hl7v2_store_name = '{}/hl7V2Stores/{}'.format(
@@ -186,13 +176,12 @@ def patch_hl7v2_store(
 
 # [START healthcare_hl7v2_store_get_iam_policy]
 def get_hl7v2_store_iam_policy(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
         hl7v2_store_id):
     """Gets the IAM policy for the specified hl7v2 store."""
-    client = get_client(service_account_json)
+    client = get_client()
     hl7v2_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
     hl7v2_store_name = '{}/hl7V2Stores/{}'.format(
@@ -209,7 +198,6 @@ def get_hl7v2_store_iam_policy(
 
 # [START healthcare_hl7v2_store_set_iam_policy]
 def set_hl7v2_store_iam_policy(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -232,7 +220,7 @@ def set_hl7v2_store_iam_policy(
         A role can be any IAM role, such as 'roles/viewer', 'roles/owner',
         or 'roles/editor'
     """
-    client = get_client(service_account_json)
+    client = get_client()
     hl7v2_store_parent = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
     hl7v2_store_name = '{}/hl7V2Stores/{}'.format(
@@ -268,11 +256,6 @@ def parse_command_line_args():
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
-
-    parser.add_argument(
-        '--service_account_json',
-        default=os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"),
-        help='Path to service account JSON file.')
 
     parser.add_argument(
         '--project_id',
@@ -336,7 +319,6 @@ def run_command(args):
 
     elif args.command == 'create-hl7v2-store':
         create_hl7v2_store(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -344,7 +326,6 @@ def run_command(args):
 
     elif args.command == 'delete-hl7v2-store':
         delete_hl7v2_store(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -352,7 +333,6 @@ def run_command(args):
 
     elif args.command == 'get-hl7v2-store':
         get_hl7v2_store(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -360,14 +340,12 @@ def run_command(args):
 
     elif args.command == 'list-hl7v2-stores':
         list_hl7v2_stores(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id)
 
     elif args.command == 'patch-hl7v2-store':
         patch_hl7v2_store(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -376,7 +354,6 @@ def run_command(args):
 
     elif args.command == 'get_hl7v2_store_iam_policy':
         get_hl7v2_store_iam_policy(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -384,7 +361,6 @@ def run_command(args):
 
     elif args.command == 'set_hl7v2_store_iam_policy':
         set_hl7v2_store_iam_policy(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id,

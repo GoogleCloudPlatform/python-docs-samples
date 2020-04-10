@@ -79,8 +79,7 @@ To run this sample:
 
     $ python fhir_stores.py
 
-    usage: fhir_stores.py [-h] [--service_account_json SERVICE_ACCOUNT_JSON]
-                          [--project_id PROJECT_ID] [--cloud_region CLOUD_REGION]
+    usage: fhir_stores.py [-h] [--project_id PROJECT_ID] [--cloud_region CLOUD_REGION]
                           [--dataset_id DATASET_ID]
                           [--fhir_store_id FHIR_STORE_ID]
                           [--pubsub_topic PUBSUB_TOPIC] [--gcs_uri GCS_URI]
@@ -116,8 +115,6 @@ To run this sample:
 
     optional arguments:
       -h, --help            show this help message and exit
-      --service_account_json SERVICE_ACCOUNT_JSON
-                            Path to service account JSON file.
       --project_id PROJECT_ID
                             GCP cloud project name
       --cloud_region CLOUD_REGION
@@ -154,8 +151,7 @@ To run this sample:
 
     $ python fhir_resources.py
 
-    usage: fhir_resources.py [-h] [--service_account_json SERVICE_ACCOUNT_JSON]
-                             [--base_url BASE_URL] [--project_id PROJECT_ID]
+    usage: fhir_resources.py [-h] [--base_url BASE_URL] [--project_id PROJECT_ID]
                              [--cloud_region CLOUD_REGION]
                              [--dataset_id DATASET_ID]
                              [--fhir_store_id FHIR_STORE_ID]
@@ -194,8 +190,6 @@ To run this sample:
 
     optional arguments:
       -h, --help            show this help message and exit
-      --service_account_json SERVICE_ACCOUNT_JSON
-                            Path to service account JSON file.
       --base_url BASE_URL   Healthcare API URL.
       --project_id PROJECT_ID
                             GCP project name

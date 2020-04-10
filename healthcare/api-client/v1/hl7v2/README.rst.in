@@ -29,4 +29,4 @@ samples:
 
 cloud_client_library: true
 
-folder: healthcare/api-client/hl7v2
+folder: healthcare/api-client/v1/hl7v2

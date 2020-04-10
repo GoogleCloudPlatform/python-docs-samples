@@ -79,8 +79,7 @@ To run this sample:
 
     $ python hl7v2_stores.py
 
-    usage: hl7v2_stores.py [-h] [--service_account_json SERVICE_ACCOUNT_JSON]
-                           [--project_id PROJECT_ID] [--cloud_region CLOUD_REGION]
+    usage: hl7v2_stores.py [-h] [--project_id PROJECT_ID] [--cloud_region CLOUD_REGION]
                            [--dataset_id DATASET_ID]
                            [--hl7v2_store_id HL7V2_STORE_ID]
                            [--pubsub_topic PUBSUB_TOPIC] [--member MEMBER]
@@ -111,8 +110,6 @@ To run this sample:
 
     optional arguments:
       -h, --help            show this help message and exit
-      --service_account_json SERVICE_ACCOUNT_JSON
-                            Path to service account JSON file.
       --project_id PROJECT_ID
                             GCP project name
       --cloud_region CLOUD_REGION
@@ -145,8 +142,7 @@ To run this sample:
 
     $ python hl7v2_messages.py
 
-    usage: hl7v2_messages.py [-h] [--service_account_json SERVICE_ACCOUNT_JSON]
-                             [--project_id PROJECT_ID]
+    usage: hl7v2_messages.py [-h] [--project_id PROJECT_ID]
                              [--cloud_region CLOUD_REGION]
                              [--dataset_id DATASET_ID]
                              [--hl7v2_store_id HL7V2_STORE_ID]
@@ -177,8 +173,6 @@ To run this sample:
 
     optional arguments:
       -h, --help            show this help message and exit
-      --service_account_json SERVICE_ACCOUNT_JSON
-                            Path to service account JSON file.
       --project_id PROJECT_ID
                             GCP project name
       --cloud_region CLOUD_REGION

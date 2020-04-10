@@ -27,7 +27,6 @@ import hl7v2_messages
 
 cloud_region = 'us-central1'
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
-service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 dataset_id = 'test_dataset_{}'.format(uuid.uuid4())
 hl7v2_store_id = 'test_hl7v2_store-{}'.format(uuid.uuid4())
@@ -39,7 +38,6 @@ label_value = 'TRUE'
 @pytest.fixture(scope='module')
 def test_dataset():
     dataset = datasets.create_dataset(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id)
@@ -48,7 +46,6 @@ def test_dataset():
 
     # Clean up
     datasets.delete_dataset(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id)
@@ -57,7 +54,6 @@ def test_dataset():
 @pytest.fixture(scope='module')
 def test_hl7v2_store():
     hl7v2_store = hl7v2_stores.create_hl7v2_store(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -66,7 +62,6 @@ def test_hl7v2_store():
     yield hl7v2_store
 
     hl7v2_stores.delete_hl7v2_store(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -75,7 +70,6 @@ def test_hl7v2_store():
 
 def test_CRUD_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
     hl7v2_messages.create_hl7v2_message(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -86,7 +80,6 @@ def test_CRUD_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
     @eventually_consistent.call
     def _():
         hl7v2_messages_list = hl7v2_messages.list_hl7v2_messages(
-            service_account_json,
             project_id,
             cloud_region,
             dataset_id,
@@ -98,7 +91,6 @@ def test_CRUD_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         hl7v2_message_id = hl7v2_message_name.split('/', 9)[9]
 
     hl7v2_messages.get_hl7v2_message(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -106,7 +98,6 @@ def test_CRUD_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         hl7v2_message_id)
 
     hl7v2_messages.delete_hl7v2_message(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -123,7 +114,6 @@ def test_CRUD_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
 
 def test_ingest_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
     hl7v2_messages.ingest_hl7v2_message(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -134,7 +124,6 @@ def test_ingest_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
     @eventually_consistent.call
     def _():
         hl7v2_messages_list = hl7v2_messages.list_hl7v2_messages(
-            service_account_json,
             project_id,
             cloud_region,
             dataset_id,
@@ -146,7 +135,6 @@ def test_ingest_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         hl7v2_message_id = hl7v2_message_name.split('/', 9)[9]
 
     hl7v2_messages.get_hl7v2_message(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -154,7 +142,6 @@ def test_ingest_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         hl7v2_message_id)
 
     hl7v2_messages.delete_hl7v2_message(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -171,7 +158,6 @@ def test_ingest_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
 
 def test_patch_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
     hl7v2_messages.create_hl7v2_message(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -182,7 +168,6 @@ def test_patch_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
     @eventually_consistent.call
     def _():
         hl7v2_messages_list = hl7v2_messages.list_hl7v2_messages(
-            service_account_json,
             project_id,
             cloud_region,
             dataset_id,
@@ -194,7 +179,6 @@ def test_patch_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         hl7v2_message_id = hl7v2_message_name.split('/', 9)[9]
 
     hl7v2_messages.patch_hl7v2_message(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -204,7 +188,6 @@ def test_patch_hl7v2_message(test_dataset, test_hl7v2_store, capsys):
         label_value)
 
     hl7v2_messages.delete_hl7v2_message(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,

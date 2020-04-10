@@ -79,8 +79,7 @@ To run this sample:
 
     $ python dicom_stores.py
 
-    usage: dicom_stores.py [-h] [--service_account_json SERVICE_ACCOUNT_JSON]
-                           [--project_id PROJECT_ID] [--cloud_region CLOUD_REGION]
+    usage: dicom_stores.py [-h] [--project_id PROJECT_ID] [--cloud_region CLOUD_REGION]
                            [--dataset_id DATASET_ID]
                            [--dicom_store_id DICOM_STORE_ID]
                            [--pubsub_topic PUBSUB_TOPIC] [--uri_prefix URI_PREFIX]
@@ -117,8 +116,6 @@ To run this sample:
 
     optional arguments:
       -h, --help            show this help message and exit
-      --service_account_json SERVICE_ACCOUNT_JSON
-                            Path to service account JSON file.
       --project_id PROJECT_ID
                             GCP project name
       --cloud_region CLOUD_REGION
@@ -163,8 +160,7 @@ To run this sample:
 
     $ python dicomweb.py
 
-    usage: dicomweb.py [-h] [--service_account_json SERVICE_ACCOUNT_JSON]
-                       [--base_url BASE_URL] [--project_id PROJECT_ID]
+    usage: dicomweb.py [-h] [--base_url BASE_URL] [--project_id PROJECT_ID]
                        [--cloud_region CLOUD_REGION] [--dataset_id DATASET_ID]
                        [--dicom_store_id DICOM_STORE_ID] [--dcm_file DCM_FILE]
                        [--study_uid STUDY_UID]
@@ -188,8 +184,6 @@ To run this sample:
 
     optional arguments:
       -h, --help            show this help message and exit
-      --service_account_json SERVICE_ACCOUNT_JSON
-                            Path to service account JSON file.
       --base_url BASE_URL   Healthcare API URL
       --project_id PROJECT_ID
                             GCP project name

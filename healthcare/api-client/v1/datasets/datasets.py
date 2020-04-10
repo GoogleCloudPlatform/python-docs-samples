@@ -21,37 +21,31 @@ from google.oauth2 import service_account
 
 
 # [START healthcare_get_client]
-def get_client(service_account_json):
+def get_client():
     """Returns an authorized API client by discovering the Healthcare API and
     creating a service object using the service account credentials JSON."""
-    api_scopes = ['https://www.googleapis.com/auth/cloud-platform']
     api_version = 'v1'
-    discovery_api = 'https://healthcare.googleapis.com/$discovery/rest'
     service_name = 'healthcare'
 
     credentials = service_account.Credentials.from_service_account_file(
-        service_account_json)
-    scoped_credentials = credentials.with_scopes(api_scopes)
-
-    discovery_url = '{}?version={}'.format(
-        discovery_api, api_version)
+        filename=os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
+        scopes=["https://www.googleapis.com/auth/cloud-platform"],
+    )
 
     return discovery.build(
         service_name,
         api_version,
-        discoveryServiceUrl=discovery_url,
-        credentials=scoped_credentials)
+        credentials=credentials)
 # [END healthcare_get_client]
 
 
 # [START healthcare_create_dataset]
 def create_dataset(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id):
     """Creates a dataset."""
-    client = get_client(service_account_json)
+    client = get_client()
     dataset_parent = 'projects/{}/locations/{}'.format(
         project_id, cloud_region)
 
@@ -72,12 +66,11 @@ def create_dataset(
 
 # [START healthcare_delete_dataset]
 def delete_dataset(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id):
     """Deletes a dataset."""
-    client = get_client(service_account_json)
+    client = get_client()
     dataset_name = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
 
@@ -96,12 +89,11 @@ def delete_dataset(
 
 # [START healthcare_get_dataset]
 def get_dataset(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id):
     """Gets any metadata associated with a dataset."""
-    client = get_client(service_account_json)
+    client = get_client()
     dataset_name = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
 
@@ -116,9 +108,9 @@ def get_dataset(
 
 
 # [START healthcare_list_datasets]
-def list_datasets(service_account_json, project_id, cloud_region):
+def list_datasets(project_id, cloud_region):
     """Lists the datasets in the project."""
-    client = get_client(service_account_json)
+    client = get_client()
     dataset_parent = 'projects/{}/locations/{}'.format(
         project_id, cloud_region)
 
@@ -137,13 +129,12 @@ def list_datasets(service_account_json, project_id, cloud_region):
 
 # [START healthcare_patch_dataset]
 def patch_dataset(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
         time_zone):
     """Updates dataset metadata."""
-    client = get_client(service_account_json)
+    client = get_client()
     dataset_parent = 'projects/{}/locations/{}'.format(
         project_id, cloud_region)
     dataset_name = '{}/datasets/{}'.format(dataset_parent, dataset_id)
@@ -171,7 +162,6 @@ def patch_dataset(
 
 # [START healthcare_dicom_keeplist_deidentify_dataset]
 def deidentify_dataset(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -180,7 +170,7 @@ def deidentify_dataset(
     """Creates a new dataset containing de-identified data
     from the source dataset.
     """
-    client = get_client(service_account_json)
+    client = get_client()
     source_dataset = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
     destination_dataset = 'projects/{}/locations/{}/datasets/{}'.format(
@@ -234,12 +224,11 @@ def deidentify_dataset(
 
 # [START healthcare_dataset_get_iam_policy]
 def get_dataset_iam_policy(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id):
     """Gets the IAM policy for the specified dataset."""
-    client = get_client(service_account_json)
+    client = get_client()
     dataset_name = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
 
@@ -254,7 +243,6 @@ def get_dataset_iam_policy(
 
 # [START healthcare_dataset_set_iam_policy]
 def set_dataset_iam_policy(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -276,7 +264,7 @@ def set_dataset_iam_policy(
         A role can be any IAM role, such as 'roles/viewer', 'roles/owner',
         or 'roles/editor'
     """
-    client = get_client(service_account_json)
+    client = get_client()
     dataset_name = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
 
@@ -310,11 +298,6 @@ def parse_command_line_args():
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
-
-    parser.add_argument(
-        '--service_account_json',
-        default=os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"),
-        help='Path to service account JSON file.')
 
     parser.add_argument(
         '--project_id',
@@ -382,34 +365,29 @@ def run_command(args):
 
     elif args.command == 'create-dataset':
         create_dataset(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id)
 
     elif args.command == 'delete-dataset':
         delete_dataset(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id)
 
     elif args.command == 'get-dataset':
         get_dataset(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id)
 
     elif args.command == 'list-datasets':
         list_datasets(
-            args.service_account_json,
             args.project_id,
             args.cloud_region)
 
     elif args.command == 'patch-dataset':
         patch_dataset(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -417,7 +395,6 @@ def run_command(args):
 
     elif args.command == 'deidentify-dataset':
         deidentify_dataset(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -426,14 +403,12 @@ def run_command(args):
 
     elif args.command == 'get_iam_policy':
         get_dataset_iam_policy(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id)
 
     elif args.command == 'set_iam_policy':
         set_dataset_iam_policy(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id,

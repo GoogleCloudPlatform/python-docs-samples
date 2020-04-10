@@ -26,7 +26,6 @@ import dicomweb
 cloud_region = 'us-central1'
 base_url = 'https://healthcare.googleapis.com/v1'
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
-service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 dataset_id = 'test_dataset-{}'.format(uuid.uuid4())
 dicom_store_id = 'test_dicom_store_{}'.format(uuid.uuid4())
@@ -46,7 +45,6 @@ instance_uid = '{}.{}'.format(
 @pytest.fixture(scope='module')
 def test_dataset():
     dataset = datasets.create_dataset(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id)
@@ -55,7 +53,6 @@ def test_dataset():
 
     # Clean up
     datasets.delete_dataset(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id)
@@ -64,7 +61,6 @@ def test_dataset():
 @pytest.fixture(scope='module')
 def test_dicom_store():
     dicom_store = dicom_stores.create_dicom_store(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -74,7 +70,6 @@ def test_dicom_store():
 
     # Clean up
     dicom_stores.delete_dicom_store(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -83,7 +78,6 @@ def test_dicom_store():
 
 def test_dicomweb_store_instance(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -97,7 +91,6 @@ def test_dicomweb_store_instance(test_dataset, test_dicom_store, capsys):
     assert 'Stored DICOM instance' in out
 
     dicomweb.dicomweb_delete_study(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -109,7 +102,6 @@ def test_dicomweb_store_instance(test_dataset, test_dicom_store, capsys):
 def test_dicomweb_search_instance_studies(
         test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -118,7 +110,6 @@ def test_dicomweb_search_instance_studies(
         dcm_file)
 
     dicomweb.dicomweb_search_instance(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -126,7 +117,6 @@ def test_dicomweb_search_instance_studies(
         dicom_store_id)
 
     dicomweb.dicomweb_search_studies(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -141,7 +131,6 @@ def test_dicomweb_search_instance_studies(
     assert 'Studies found: response is <Response [204]>' in out
 
     dicomweb.dicomweb_delete_study(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -152,7 +141,6 @@ def test_dicomweb_search_instance_studies(
 
 def test_dicomweb_retrieve_study(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -161,7 +149,6 @@ def test_dicomweb_retrieve_study(test_dataset, test_dicom_store, capsys):
         dcm_file)
 
     dicomweb.dicomweb_retrieve_study(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -181,7 +168,6 @@ def test_dicomweb_retrieve_study(test_dataset, test_dicom_store, capsys):
     os.remove('study.multipart')
 
     dicomweb.dicomweb_delete_study(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -192,7 +178,6 @@ def test_dicomweb_retrieve_study(test_dataset, test_dicom_store, capsys):
 
 def test_dicomweb_retrieve_instance(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -201,7 +186,6 @@ def test_dicomweb_retrieve_instance(test_dataset, test_dicom_store, capsys):
         dcm_file)
 
     dicomweb.dicomweb_retrieve_instance(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -223,7 +207,6 @@ def test_dicomweb_retrieve_instance(test_dataset, test_dicom_store, capsys):
     os.remove('instance.dcm')
 
     dicomweb.dicomweb_delete_study(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -234,7 +217,6 @@ def test_dicomweb_retrieve_instance(test_dataset, test_dicom_store, capsys):
 
 def test_dicomweb_retrieve_rendered(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -243,7 +225,6 @@ def test_dicomweb_retrieve_rendered(test_dataset, test_dicom_store, capsys):
         dcm_file)
 
     dicomweb.dicomweb_retrieve_rendered(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -265,7 +246,6 @@ def test_dicomweb_retrieve_rendered(test_dataset, test_dicom_store, capsys):
     os.remove('rendered_image.png')
 
     dicomweb.dicomweb_delete_study(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -276,7 +256,6 @@ def test_dicomweb_retrieve_rendered(test_dataset, test_dicom_store, capsys):
 
 def test_dicomweb_delete_study(test_dataset, test_dicom_store, capsys):
     dicomweb.dicomweb_store_instance(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -285,7 +264,6 @@ def test_dicomweb_delete_study(test_dataset, test_dicom_store, capsys):
         dcm_file)
 
     dicomweb.dicomweb_delete_study(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,

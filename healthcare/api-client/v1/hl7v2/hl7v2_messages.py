@@ -22,32 +22,26 @@ from google.oauth2 import service_account
 
 
 # [START healthcare_get_client]
-def get_client(service_account_json):
+def get_client():
     """Returns an authorized API client by discovering the Healthcare API and
     creating a service object using the service account credentials JSON."""
-    api_scopes = ['https://www.googleapis.com/auth/cloud-platform']
     api_version = 'v1'
-    discovery_api = 'https://healthcare.googleapis.com/$discovery/rest'
     service_name = 'healthcare'
 
     credentials = service_account.Credentials.from_service_account_file(
-        service_account_json)
-    scoped_credentials = credentials.with_scopes(api_scopes)
-
-    discovery_url = '{}?version={}'.format(
-        discovery_api, api_version)
+        filename=os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
+        scopes=["https://www.googleapis.com/auth/cloud-platform"],
+    )
 
     return discovery.build(
         service_name,
         api_version,
-        discoveryServiceUrl=discovery_url,
-        credentials=scoped_credentials)
+        credentials=credentials)
 # [END healthcare_get_client]
 
 
 # [START healthcare_create_hl7v2_message]
 def create_hl7v2_message(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -56,7 +50,7 @@ def create_hl7v2_message(
     """Creates an HL7v2 message and sends a notification to the
     Cloud Pub/Sub topic.
     """
-    client = get_client(service_account_json)
+    client = get_client()
     hl7v2_parent = 'projects/{}/locations/{}'.format(project_id, cloud_region)
     hl7v2_store_name = '{}/datasets/{}/hl7V2Stores/{}'.format(
         hl7v2_parent, dataset_id, hl7v2_store_id)
@@ -79,14 +73,13 @@ def create_hl7v2_message(
 
 # [START healthcare_delete_hl7v2_message]
 def delete_hl7v2_message(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
         hl7v2_store_id,
         hl7v2_message_id):
     """Deletes an HL7v2 message."""
-    client = get_client(service_account_json)
+    client = get_client()
     hl7v2_parent = 'projects/{}/locations/{}'.format(project_id, cloud_region)
     hl7v2_message = '{}/datasets/{}/hl7V2Stores/{}/messages/{}'.format(
         hl7v2_parent, dataset_id, hl7v2_store_id, hl7v2_message_id)
@@ -106,14 +99,13 @@ def delete_hl7v2_message(
 
 # [START healthcare_get_hl7v2_message]
 def get_hl7v2_message(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
         hl7v2_store_id,
         hl7v2_message_id):
     """Gets an HL7v2 message."""
-    client = get_client(service_account_json)
+    client = get_client()
     hl7v2_parent = 'projects/{}/locations/{}'.format(project_id, cloud_region)
     hl7v2_message_name = '{}/datasets/{}/hl7V2Stores/{}/messages/{}'.format(
         hl7v2_parent, dataset_id, hl7v2_store_id, hl7v2_message_id)
@@ -141,7 +133,6 @@ def get_hl7v2_message(
 
 # [START healthcare_ingest_hl7v2_message]
 def ingest_hl7v2_message(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -151,7 +142,7 @@ def ingest_hl7v2_message(
     to the Cloud Pub/Sub topic. Return is an HL7v2 ACK message if the message
     was successfully stored.
     """
-    client = get_client(service_account_json)
+    client = get_client()
     hl7v2_parent = 'projects/{}/locations/{}'.format(project_id, cloud_region)
     hl7v2_store_name = '{}/datasets/{}/hl7V2Stores/{}'.format(
         hl7v2_parent, dataset_id, hl7v2_store_id)
@@ -175,7 +166,6 @@ def ingest_hl7v2_message(
 
 # [START healthcare_list_hl7v2_messages]
 def list_hl7v2_messages(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -183,7 +173,7 @@ def list_hl7v2_messages(
     """Lists all the messages in the given HL7v2 store with support for
     filtering.
     """
-    client = get_client(service_account_json)
+    client = get_client()
     hl7v2_messages_parent = 'projects/{}/locations/{}/datasets/{}'.format(
         project_id, cloud_region, dataset_id)
     hl7v2_message_path = '{}/hl7V2Stores/{}'.format(
@@ -201,7 +191,6 @@ def list_hl7v2_messages(
 
 # [START healthcare_patch_hl7v2_message]
 def patch_hl7v2_message(
-        service_account_json,
         project_id,
         cloud_region,
         dataset_id,
@@ -210,7 +199,7 @@ def patch_hl7v2_message(
         label_key,
         label_value):
     """Updates the message."""
-    client = get_client(service_account_json)
+    client = get_client()
     hl7v2_message_parent = 'projects/{}/locations/{}'.format(
         project_id, cloud_region, dataset_id, hl7v2_store_id)
     hl7v2_message_name = '{}/datasets/{}/hl7V2Stores/{}/messages/{}'.format(
@@ -245,11 +234,6 @@ def parse_command_line_args():
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
-
-    parser.add_argument(
-        '--service_account_json',
-        default=os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"),
-        help='Path to service account JSON file.')
 
     parser.add_argument(
         '--project_id',
@@ -323,7 +307,6 @@ def run_command(args):
 
     elif args.command == 'create-hl7v2-message':
         create_hl7v2_message(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -332,7 +315,6 @@ def run_command(args):
 
     elif args.command == 'delete-hl7v2-message':
         delete_hl7v2_message(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -341,7 +323,6 @@ def run_command(args):
 
     elif args.command == 'get-hl7v2-message':
         get_hl7v2_message(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -350,7 +331,6 @@ def run_command(args):
 
     elif args.command == 'ingest-hl7v2-message':
         ingest_hl7v2_message(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -359,7 +339,6 @@ def run_command(args):
 
     elif args.command == 'list-hl7v2-messages':
         list_hl7v2_messages(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -367,7 +346,6 @@ def run_command(args):
 
     elif args.command == 'patch-hl7v2-message':
         patch_hl7v2_message(
-            args.service_account_json,
             args.project_id,
             args.cloud_region,
             args.dataset_id,

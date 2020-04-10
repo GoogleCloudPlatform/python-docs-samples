@@ -25,4 +25,4 @@ samples:
 
 cloud_client_library: true
 
-folder: healthcare/api-client/datasets
+folder: healthcare/api-client/v1/datasets

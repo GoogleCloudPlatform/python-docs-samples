@@ -79,8 +79,8 @@ To run this sample:
 
     $ python datasets.py
 
-    usage: datasets.py [-h] [--service_account_json SERVICE_ACCOUNT_JSON]
-                       [--project_id PROJECT_ID] [--cloud_region CLOUD_REGION]
+    usage: datasets.py [-h] [--project_id PROJECT_ID]
+                       [--cloud_region CLOUD_REGION]
                        [--dataset_id DATASET_ID] [--time_zone TIME_ZONE]
                        [--destination_dataset_id DESTINATION_DATASET_ID]
                        [--keeplist_tags KEEPLIST_TAGS] [--member MEMBER]
@@ -113,8 +113,6 @@ To run this sample:
 
     optional arguments:
       -h, --help            show this help message and exit
-      --service_account_json SERVICE_ACCOUNT_JSON
-                            Path to service account JSON file.
       --project_id PROJECT_ID
                             GCP project name
       --cloud_region CLOUD_REGION

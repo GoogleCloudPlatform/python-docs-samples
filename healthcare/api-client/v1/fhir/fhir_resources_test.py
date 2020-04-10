@@ -37,26 +37,26 @@ resource_type = "Patient"
 @pytest.fixture(scope="module")
 def test_dataset():
     dataset = datasets.create_dataset(
-        service_account_json, project_id, cloud_region, dataset_id
+        project_id, cloud_region, dataset_id
     )
 
     yield dataset
 
     # Clean up
-    datasets.delete_dataset(service_account_json, project_id, cloud_region, dataset_id)
+    datasets.delete_dataset(project_id, cloud_region, dataset_id)
 
 
 @pytest.fixture(scope="module")
 def test_fhir_store():
     fhir_store = fhir_stores.create_fhir_store(
-        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
+        project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     yield fhir_store
 
     # Clean up
     fhir_stores.delete_fhir_store(
-        service_account_json, project_id, cloud_region, dataset_id, fhir_store_id
+        project_id, cloud_region, dataset_id, fhir_store_id
     )
 
 
@@ -64,7 +64,6 @@ def test_fhir_store():
 @pytest.fixture(scope="module")
 def test_patient():
     patient_response = fhir_resources.create_patient(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -77,7 +76,6 @@ def test_patient():
 
     # Clean up
     fhir_resources.delete_resource(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -92,7 +90,6 @@ def test_create_patient(test_dataset, test_fhir_store, capsys):
     # Manually create a new Patient here to test that creating a Patient
     # works.
     fhir_resources.create_patient(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -109,7 +106,6 @@ def test_create_patient(test_dataset, test_fhir_store, capsys):
 
 def test_get_patient(test_dataset, test_fhir_store, test_patient, capsys):
     fhir_resources.get_resource(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -128,7 +124,6 @@ def test_get_patient(test_dataset, test_fhir_store, test_patient, capsys):
 
 def test_update_patient(test_dataset, test_fhir_store, test_patient, capsys):
     fhir_resources.update_resource(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -147,7 +142,6 @@ def test_update_patient(test_dataset, test_fhir_store, test_patient, capsys):
 
 def test_patch_patient(test_dataset, test_fhir_store, test_patient, capsys):
     fhir_resources.patch_resource(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -168,7 +162,6 @@ def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
     # We have to update the resource so that different versions of it are
     # created, then we test to see if we can get/delete those versions.
     fhir_resources.update_resource(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -179,7 +172,6 @@ def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
     )
 
     history = fhir_resources.list_resource_history(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -190,7 +182,6 @@ def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
     )
 
     fhir_resources.get_resource_history(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -202,7 +193,6 @@ def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
     )
 
     fhir_resources.delete_resource_purge(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -226,7 +216,6 @@ def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
 
 def test_search_resources_get(test_dataset, test_fhir_store, test_patient, capsys):
     fhir_resources.search_resources_get(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -242,7 +231,6 @@ def test_search_resources_get(test_dataset, test_fhir_store, test_patient, capsy
 
 def test_search_resources_post(test_dataset, test_fhir_store, test_patient, capsys):
     fhir_resources.search_resources_post(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -257,7 +245,6 @@ def test_search_resources_post(test_dataset, test_fhir_store, test_patient, caps
 
 def test_get_patient_everything(test_dataset, test_fhir_store, test_patient, capsys):
     fhir_resources.get_patient_everything(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -274,7 +261,6 @@ def test_get_patient_everything(test_dataset, test_fhir_store, test_patient, cap
 
 def test_get_metadata(test_dataset, test_fhir_store, capsys):
     fhir_resources.get_metadata(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -290,7 +276,6 @@ def test_get_metadata(test_dataset, test_fhir_store, capsys):
 
 def test_delete_patient(test_dataset, test_fhir_store, test_patient, capsys):
     fhir_resources.delete_resource(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,
@@ -309,7 +294,6 @@ def test_delete_patient(test_dataset, test_fhir_store, test_patient, capsys):
 
 def test_execute_bundle(test_dataset, test_fhir_store, capsys):
     fhir_resources.execute_bundle(
-        service_account_json,
         base_url,
         project_id,
         cloud_region,

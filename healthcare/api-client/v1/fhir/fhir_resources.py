@@ -24,24 +24,20 @@ _BASE_URL = "https://healthcare.googleapis.com/v1"
 
 
 # [START healthcare_get_session]
-def get_session(service_account_json):
+def get_session():
     """
     Returns an authorized Requests Session class using the service account
     credentials JSON. This class is used to perform requests to the
     Healthcare API endpoint.
     """
 
-    # Pass in the credentials and project ID. If none supplied, get them
-    # from the environment.
     credentials = service_account.Credentials.from_service_account_file(
-        service_account_json
-    )
-    scoped_credentials = credentials.with_scopes(
-        ["https://www.googleapis.com/auth/cloud-platform"]
+        filename=os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
+        scopes=["https://www.googleapis.com/auth/cloud-platform"],
     )
 
     # Create a requests Session object with the credentials.
-    session = requests.AuthorizedSession(scoped_credentials)
+    session = requests.AuthorizedSession(credentials)
 
     return session
 
@@ -51,7 +47,7 @@ def get_session(service_account_json):
 
 # [START healthcare_create_resource]
 def create_patient(
-    service_account_json, base_url, project_id, cloud_region, dataset_id, fhir_store_id
+    base_url, project_id, cloud_region, dataset_id, fhir_store_id
 ):
     """Creates a new Patient resource in a FHIR store."""
     url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
@@ -61,7 +57,7 @@ def create_patient(
     )
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
@@ -91,7 +87,6 @@ def create_patient(
 
 # [START healthcare_create_encounter]
 def create_encounter(
-    service_account_json,
     base_url,
     project_id,
     cloud_region,
@@ -109,7 +104,7 @@ def create_encounter(
     )
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
@@ -149,7 +144,6 @@ def create_encounter(
 
 # [START healthcare_create_observation]
 def create_observation(
-    service_account_json,
     base_url,
     project_id,
     cloud_region,
@@ -171,7 +165,7 @@ def create_observation(
     )
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
@@ -204,7 +198,6 @@ def create_observation(
 
 # [START healthcare_delete_resource]
 def delete_resource(
-    service_account_json,
     base_url,
     project_id,
     cloud_region,
@@ -226,7 +219,7 @@ def delete_resource(
     )
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     response = session.delete(resource_path)
     print("Deleted {} resource with ID {}.".format(resource_type, resource_id))
@@ -239,7 +232,6 @@ def delete_resource(
 
 # [START healthcare_get_resource]
 def get_resource(
-    service_account_json,
     base_url,
     project_id,
     cloud_region,
@@ -256,7 +248,7 @@ def get_resource(
     )
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
@@ -276,7 +268,6 @@ def get_resource(
 
 # [START healthcare_list_resource_history]
 def list_resource_history(
-    service_account_json,
     base_url,
     project_id,
     cloud_region,
@@ -293,7 +284,7 @@ def list_resource_history(
     )
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
@@ -317,7 +308,6 @@ def list_resource_history(
 
 # [START healthcare_get_resource_history]
 def get_resource_history(
-    service_account_json,
     base_url,
     project_id,
     cloud_region,
@@ -336,7 +326,7 @@ def get_resource_history(
     resource_path += "/_history/{}".format(version_id)
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
@@ -356,7 +346,6 @@ def get_resource_history(
 
 # [START healthcare_export_fhir_resources]
 def export_resources(
-    service_account_json,
     base_url,
     project_id,
     cloud_region,
@@ -372,7 +361,7 @@ def export_resources(
     )
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
@@ -393,7 +382,6 @@ def export_resources(
 
 # [START healthcare_import_fhir_resources]
 def import_resources(
-    service_account_json,
     base_url,
     project_id,
     cloud_region,
@@ -409,7 +397,7 @@ def import_resources(
     )
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
@@ -433,7 +421,6 @@ def import_resources(
 
 # [START healthcare_delete_resource_purge]
 def delete_resource_purge(
-    service_account_json,
     base_url,
     project_id,
     cloud_region,
@@ -451,7 +438,7 @@ def delete_resource_purge(
     resource_path += "/$purge"
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
@@ -472,7 +459,6 @@ def delete_resource_purge(
 
 # [START healthcare_update_resource]
 def update_resource(
-    service_account_json,
     base_url,
     project_id,
     cloud_region,
@@ -489,7 +475,7 @@ def update_resource(
     )
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
@@ -511,7 +497,6 @@ def update_resource(
 
 # [START healthcare_patch_resource]
 def patch_resource(
-    service_account_json,
     base_url,
     project_id,
     cloud_region,
@@ -528,7 +513,7 @@ def patch_resource(
     )
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     headers = {"Content-Type": "application/json-patch+json"}
 
@@ -550,7 +535,6 @@ def patch_resource(
 
 # [START healthcare_search_resources_get]
 def search_resources_get(
-    service_account_json,
     base_url,
     project_id,
     cloud_region,
@@ -569,7 +553,7 @@ def search_resources_get(
     )
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     response = session.get(resource_path)
     response.raise_for_status()
@@ -591,7 +575,7 @@ def search_resources_get(
 
 # [START healthcare_search_resources_post]
 def search_resources_post(
-    service_account_json, base_url, project_id, cloud_region, dataset_id, fhir_store_id
+    base_url, project_id, cloud_region, dataset_id, fhir_store_id
 ):
     """
     Searches resources in the given FHIR store using the
@@ -608,7 +592,7 @@ def search_resources_post(
     resource_path = "{}/Patient/_search?family:exact=Smith".format(fhir_store_path)
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
@@ -632,7 +616,6 @@ def search_resources_post(
 
 # [START healthcare_get_patient_everything]
 def get_patient_everything(
-    service_account_json,
     base_url,
     project_id,
     cloud_region,
@@ -649,7 +632,7 @@ def get_patient_everything(
     resource_path += "/$everything"
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
@@ -668,7 +651,7 @@ def get_patient_everything(
 
 # [START healthcare_get_metadata]
 def get_metadata(
-    service_account_json, base_url, project_id, cloud_region, dataset_id, fhir_store_id
+    base_url, project_id, cloud_region, dataset_id, fhir_store_id
 ):
     """Gets the capabilities statement for a FHIR store."""
     url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
@@ -678,7 +661,7 @@ def get_metadata(
     )
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     response = session.get(fhir_store_path)
     response.raise_for_status()
@@ -695,7 +678,6 @@ def get_metadata(
 
 # [START healthcare_fhir_execute_bundle]
 def execute_bundle(
-    service_account_json,
     base_url,
     project_id,
     cloud_region,
@@ -711,7 +693,7 @@ def execute_bundle(
     )
 
     # Make an authenticated API request
-    session = get_session(service_account_json)
+    session = get_session()
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
@@ -737,12 +719,6 @@ def parse_command_line_args():
 
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-
-    parser.add_argument(
-        "--service_account_json",
-        default=os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"),
-        help="Path to service account JSON file.",
     )
 
     parser.add_argument("--base_url", default=_BASE_URL, help="Healthcare API URL.")
@@ -827,7 +803,6 @@ def run_command(args):
 
     elif args.command == "create-patient":
         create_patient(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -837,7 +812,6 @@ def run_command(args):
 
     elif args.command == "create-encounter":
         create_encounter(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -848,7 +822,6 @@ def run_command(args):
 
     elif args.command == "create-observation":
         create_observation(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -860,7 +833,6 @@ def run_command(args):
 
     elif args.command == "delete-resource":
         delete_resource(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -872,7 +844,6 @@ def run_command(args):
 
     elif args.command == "get-resource":
         get_resource(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -884,7 +855,6 @@ def run_command(args):
 
     elif args.command == "execute-bundle":
         execute_bundle(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -895,7 +865,6 @@ def run_command(args):
 
     elif args.command == "list-resource-history":
         list_resource_history(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -907,7 +876,6 @@ def run_command(args):
 
     elif args.command == "get-resource-history":
         get_resource_history(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -920,7 +888,6 @@ def run_command(args):
 
     elif args.command == "delete-resource-purge":
         delete_resource_purge(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -932,7 +899,6 @@ def run_command(args):
 
     elif args.command == "update-resource":
         update_resource(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -944,7 +910,6 @@ def run_command(args):
 
     elif args.command == "patch-resource":
         patch_resource(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -956,7 +921,6 @@ def run_command(args):
 
     elif args.command == "search-resources-get":
         search_resources_get(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -967,7 +931,6 @@ def run_command(args):
 
     elif args.command == "search-resources-post":
         search_resources_post(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -977,7 +940,6 @@ def run_command(args):
 
     elif args.command == "get-patient-everything":
         get_patient_everything(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
@@ -988,7 +950,6 @@ def run_command(args):
 
     elif args.command == "get-metadata":
         get_metadata(
-            args.service_account_json,
             args.base_url,
             args.project_id,
             args.cloud_region,
