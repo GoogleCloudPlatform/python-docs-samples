@@ -13,6 +13,7 @@
 
 import os
 import re
+import uuid
 
 from flaky import flaky
 
@@ -20,7 +21,7 @@ from create_instance import main
 
 PROJECT = os.environ['GCLOUD_PROJECT']
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-
+INSTANCE_NAME = 'test-instance-' + str(uuid.uuid4())
 
 @flaky
 def test_main(capsys):
@@ -28,14 +29,12 @@ def test_main(capsys):
         PROJECT,
         BUCKET,
         'us-central1-f',
-        'test-instance',
+        INSTANCE_NAME,
         wait=False)
 
     out, _ = capsys.readouterr()
 
-    expected_output = re.compile(
-        (r'Instances in project .* and zone us-central1-.* - test-instance'
-         r'.*Deleting instance.*done..$'),
-        re.DOTALL)
-
-    assert re.search(expected_output, out)
+    assert "Instances in project" in out
+    assert "zone us-central1-f" in out
+    assert INSTANCE_NAME in out
+    assert "Deleting instance" in out
