@@ -98,7 +98,8 @@ def instantiate_inline_workflow_template(project_id, region):
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        sys.exit('python create_cluster.py project_id region')
+        sys.exit('python instantiate_inline_workflow_template.py '
+                 + 'project_id region')
 
     project_id = sys.argv[1]
     region = sys.argv[2]
