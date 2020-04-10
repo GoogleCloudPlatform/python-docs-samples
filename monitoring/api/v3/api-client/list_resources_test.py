@@ -56,7 +56,7 @@ def test_list_metrics(client, capsys):
         client, PROJECT_RESOURCE, METRIC)
     stdout, _ = capsys.readouterr()
     regex = re.compile(
-        u'Delta CPU', re.I)
+        u'Delta vCPU', re.I)
     assert regex.search(stdout) is not None
 
 
