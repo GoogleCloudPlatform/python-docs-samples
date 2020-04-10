@@ -12,7 +12,6 @@
 # limitations under the License.
 
 import os
-import re
 import uuid
 
 from flaky import flaky
@@ -22,6 +21,7 @@ from create_instance import main
 PROJECT = os.environ['GCLOUD_PROJECT']
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 INSTANCE_NAME = 'test-instance-' + str(uuid.uuid4())
+
 
 @flaky
 def test_main(capsys):
