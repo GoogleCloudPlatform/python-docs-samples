@@ -71,7 +71,7 @@ for file in **/requirements.txt; do
     file=$(dirname "$file")
     cd "$file"
 
-    # If $DIFF_ONLY is true, skip projects without changes.
+    # If $DIFF_FROM is set, use it to check for changes in this directory.
     if [[ "DIFF_FROM" != "" ]]; then
         git diff --quiet "$DIFF_FROM" .
         CHANGED=$?
