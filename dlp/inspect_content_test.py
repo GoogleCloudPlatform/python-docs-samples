@@ -16,7 +16,7 @@ import os
 import uuid
 
 from gcp_devrel.testing import eventually_consistent
-from gcp_devrel.testing.flaky import flaky
+from flaky import flaky
 import google.api_core.exceptions
 import google.cloud.bigquery
 import google.cloud.datastore
