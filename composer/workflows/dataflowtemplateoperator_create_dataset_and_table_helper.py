@@ -12,7 +12,7 @@ client = bigquery.Client()
 # TODO(developer): Set client.project to your GCP Project ID.
 # client.project = "your-client-project"
 
-dataset_id = F"{client.project}.average_weather"
+dataset_id = f"{client.project}.average_weather"
 
 # Construct a full Dataset object to send to the API.
 dataset = bigquery.Dataset(dataset_id)
