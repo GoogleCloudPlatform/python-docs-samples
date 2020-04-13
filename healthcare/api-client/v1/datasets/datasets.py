@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC All Rights Reserved.
+# Copyright 2020 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,25 +17,19 @@ import os
 
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
-from google.oauth2 import service_account
 
 
 # [START healthcare_get_client]
 def get_client():
     """Returns an authorized API client by discovering the Healthcare API and
-    creating a service object using the service account credentials JSON."""
+    creating a service object using the service account credentials in the
+    GOOGLE_APPLICATION_CREDENTIALS environment variable."""
     api_version = 'v1'
     service_name = 'healthcare'
 
-    credentials = service_account.Credentials.from_service_account_file(
-        filename=os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
-        scopes=["https://www.googleapis.com/auth/cloud-platform"],
-    )
-
     return discovery.build(
         service_name,
-        api_version,
-        credentials=credentials)
+        api_version)
 # [END healthcare_get_client]
 
 
@@ -49,10 +43,8 @@ def create_dataset(
     dataset_parent = 'projects/{}/locations/{}'.format(
         project_id, cloud_region)
 
-    body = {}
-
     request = client.projects().locations().datasets().create(
-        parent=dataset_parent, body=body, datasetId=dataset_id)
+        parent=dataset_parent, body={}, datasetId=dataset_id)
 
     try:
         response = request.execute()
@@ -60,7 +52,6 @@ def create_dataset(
         return response
     except HttpError as e:
         print('Error, dataset not created: {}'.format(e))
-        return ""
 # [END healthcare_create_dataset]
 
 
@@ -83,7 +74,6 @@ def delete_dataset(
         return response
     except HttpError as e:
         print('Error, dataset not deleted: {}'.format(e))
-        return ""
 # [END healthcare_delete_dataset]
 
 
@@ -156,7 +146,6 @@ def patch_dataset(
         return response
     except HttpError as e:
         print('Error, dataset not patched: {}'.format(e))
-        return ""
 # [END healthcare_patch_dataset]
 
 
@@ -218,7 +207,6 @@ def deidentify_dataset(
         return response
     except HttpError as e:
         print('Error, data could not be deidentified: {}'.format(e))
-        return ""
 # [END healthcare_dicom_keeplist_deidentify_dataset]
 
 

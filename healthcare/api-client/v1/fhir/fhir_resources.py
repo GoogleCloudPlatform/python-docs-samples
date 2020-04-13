@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC All Rights Reserved.
+# Copyright 2020 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -79,7 +79,6 @@ def create_patient(
         return response
     except HttpError as err:
         print(err)
-        return ""
 
 
 # [END healthcare_create_resource]
@@ -136,7 +135,6 @@ def create_encounter(
         return response
     except HttpError as err:
         print(err)
-        return ""
 
 
 # [END healthcare_create_encounter]
@@ -190,7 +188,6 @@ def create_observation(
         return response
     except HttpError as err:
         print(err)
-        return ""
 
 
 # [END healthcare_create_observation]

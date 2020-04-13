@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC All Rights Reserved.
+# Copyright 2020 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,25 +17,19 @@ import os
 
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
-from google.oauth2 import service_account
 
 
 # [START healthcare_get_client]
 def get_client():
     """Returns an authorized API client by discovering the Healthcare API and
-    creating a service object using the service account credentials JSON."""
+    creating a service object using the service account credentials in the
+    GOOGLE_APPLICATION_CREDENTIALS environment variable."""
     api_version = "v1"
     service_name = "healthcare"
 
-    credentials = service_account.Credentials.from_service_account_file(
-        filename=os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
-        scopes=["https://www.googleapis.com/auth/cloud-platform"],
-    )
-
     return discovery.build(
         service_name,
-        api_version,
-        credentials=credentials)
+        api_version)
 # [END healthcare_get_client]
 
 
@@ -65,7 +59,6 @@ def create_fhir_store(
         return response
     except HttpError as e:
         print("Error, FHIR store not created: {}".format(e))
-        return ""
 
 
 # [END healthcare_create_fhir_store]
@@ -96,7 +89,6 @@ def delete_fhir_store(
         return response
     except HttpError as e:
         print("Error, FHIR store not deleted: {}".format(e))
-        return ""
 
 
 # [END healthcare_delete_fhir_store]
@@ -202,7 +194,6 @@ def patch_fhir_store(
         return response
     except HttpError as e:
         print("Error, FHIR store not patched: {}".format(e))
-        return ""
 
 
 # [END healthcare_patch_fhir_store]
@@ -236,7 +227,6 @@ def export_fhir_store_gcs(
         return response
     except HttpError as e:
         print("Error, FHIR resources not exported: {}".format(e))
-        return ""
 
 
 # [END healthcare_export_fhir_resources_gcs]
@@ -276,7 +266,6 @@ def import_fhir_resources(
         return response
     except HttpError as e:
         print("Error, FHIR resources not imported: {}".format(e))
-        return ""
 
 
 # [END healthcare_import_fhir_resources]

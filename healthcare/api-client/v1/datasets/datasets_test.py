@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC All Rights Reserved.
+# Copyright 2020 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,18 +13,30 @@
 # limitations under the License.
 
 import os
-import time
+import pytest
+import uuid
 
 import datasets
 
 cloud_region = 'us-central1'
 project_id = os.environ['GOOGLE_CLOUD_PROJECT']
-# service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
-dataset_id = 'test-dataset-{}'.format(int(time.time()))
-destination_dataset_id = 'test-destination-dataset-{}'.format(int(time.time()))
+dataset_id = 'test-dataset-{}'.format(uuid.uuid4())
+destination_dataset_id = 'test-destination-dataset-{}'.format(uuid.uuid4())
 keeplist_tags = 'PatientID'
 time_zone = 'UTC'
+
+
+@pytest.fixture(scope="module")
+def test_dataset():
+    dataset = datasets.create_dataset(
+        project_id, cloud_region, dataset_id
+    )
+
+    yield dataset
+
+    # Clean up
+    datasets.delete_dataset(project_id, cloud_region, dataset_id)
 
 
 def test_CRUD_dataset(capsys):
@@ -39,7 +51,6 @@ def test_CRUD_dataset(capsys):
     datasets.list_datasets(
         project_id, cloud_region)
 
-    # Test and also clean up
     datasets.delete_dataset(
         project_id, cloud_region, dataset_id)
 
@@ -52,21 +63,12 @@ def test_CRUD_dataset(capsys):
     assert 'Deleted dataset' in out
 
 
-def test_patch_dataset(capsys):
-    datasets.create_dataset(
-        project_id,
-        cloud_region,
-        dataset_id)
-
+def test_patch_dataset(capsys, test_dataset):
     datasets.patch_dataset(
         project_id,
         cloud_region,
         dataset_id,
         time_zone)
-
-    # Clean up
-    datasets.delete_dataset(
-        project_id, cloud_region, dataset_id)
 
     out, _ = capsys.readouterr()
 
@@ -74,12 +76,7 @@ def test_patch_dataset(capsys):
     assert 'UTC' in out
 
 
-def test_deidentify_dataset(capsys):
-    datasets.create_dataset(
-        project_id,
-        cloud_region,
-        dataset_id)
-
+def test_deidentify_dataset(capsys, test_dataset):
     datasets.deidentify_dataset(
         project_id,
         cloud_region,
@@ -87,9 +84,8 @@ def test_deidentify_dataset(capsys):
         destination_dataset_id,
         keeplist_tags)
 
-    # Clean up
-    datasets.delete_dataset(
-        project_id, cloud_region, dataset_id)
+    # Delete the destination_dataset_id which
+    # is created as part of the de-id test.
     datasets.delete_dataset(
         project_id,
         cloud_region,
@@ -101,12 +97,7 @@ def test_deidentify_dataset(capsys):
     assert 'De-identified data written to' in out
 
 
-def test_get_set_dataset_iam_policy(capsys):
-    datasets.create_dataset(
-        project_id,
-        cloud_region,
-        dataset_id)
-
+def test_get_set_dataset_iam_policy(capsys, test_dataset):
     get_response = datasets.get_dataset_iam_policy(
         project_id,
         cloud_region,
@@ -118,12 +109,6 @@ def test_get_set_dataset_iam_policy(capsys):
         dataset_id,
         'serviceAccount:python-docs-samples-tests@appspot.gserviceaccount.com',
         'roles/viewer')
-
-    # Clean up
-    datasets.delete_dataset(
-        project_id,
-        cloud_region,
-        dataset_id)
 
     out, _ = capsys.readouterr()
 
