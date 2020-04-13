@@ -37,7 +37,8 @@ def instantiate_inline_workflow_template(project_id, region):
     # Create a client with the endpoint set to the desired region.
     workflow_template_client = dataproc.WorkflowTemplateServiceClient(
         client_options={
-            'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)}
+            'api_endpoint': f'{region}-dataproc.googleapis.com:443'
+        }
     )
 
     parent = workflow_template_client.region_path(project_id, region)
