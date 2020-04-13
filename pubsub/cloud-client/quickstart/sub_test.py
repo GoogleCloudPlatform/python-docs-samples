@@ -62,6 +62,7 @@ def subscription_path(topic_path):
         yield subscription_path
 
     subscriber_client.delete_subscription(subscription_path)
+    subscriber_client.close()
 
 
 def _publish_messages(topic_path):
@@ -102,3 +103,5 @@ def test_sub(monkeypatch, topic_path, subscription_path, capsys):
     out, _ = capsys.readouterr()
     assert "Received message" in out
     assert "Acknowledged message" in out
+
+    real_client.close()

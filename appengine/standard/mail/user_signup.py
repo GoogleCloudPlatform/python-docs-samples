@@ -35,7 +35,7 @@ class UserSignupHandler(webapp2.RequestHandler):
         else:
             confirmation_url = create_new_user_confirmation(user_address)
             sender_address = (
-                'Example.com Support <{}@appspot.gserviceaccount.com>'.format(
+                'Example.com Support <example@{}.appspotmail.com>'.format(
                     app_identity.get_application_id()))
             subject = 'Confirm your registration'
             body = """Thank you for creating an account!

@@ -15,13 +15,14 @@
 from __future__ import absolute_import
 
 import os
+import uuid
 
 import entity_type_management
 import session_entity_type_management
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-SESSION_ID = 'fake_session_for_testing'
-ENTITY_TYPE_DISPLAY_NAME = 'fake_display_name_for_testing'
+SESSION_ID = 'test_session_{}'.format(uuid.uuid4())
+ENTITY_TYPE_DISPLAY_NAME = 'test_{}'.format(uuid.uuid4()).replace('-', '')[:30]
 ENTITY_VALUES = ['fake_entity_value_1', 'fake_entity_value_2']
 
 

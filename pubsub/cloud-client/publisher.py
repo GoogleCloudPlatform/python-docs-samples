@@ -128,30 +128,6 @@ def publish_messages_with_custom_attributes(project_id, topic_name):
     # [END pubsub_publish_custom_attributes]
 
 
-def publish_messages_with_futures(project_id, topic_name):
-    """Publishes multiple messages to a Pub/Sub topic and prints their
-    message IDs."""
-    # [START pubsub_publisher_concurrency_control]
-    from google.cloud import pubsub_v1
-
-    # TODO project_id = "Your Google Cloud Project ID"
-    # TODO topic_name = "Your Pub/Sub topic name"
-
-    publisher = pubsub_v1.PublisherClient()
-    topic_path = publisher.topic_path(project_id, topic_name)
-
-    for n in range(1, 10):
-        data = u"Message number {}".format(n)
-        # Data must be a bytestring
-        data = data.encode("utf-8")
-        # When you publish a message, the client returns a future.
-        future = publisher.publish(topic_path, data=data)
-        print(future.result())
-
-    print("Published messages with futures.")
-    # [END pubsub_publisher_concurrency_control]
-
-
 def publish_messages_with_error_handler(project_id, topic_name):
     # [START pubsub_publish_messages_error_handler]
     """Publishes multiple messages to a Pub/Sub topic with an error handler."""
@@ -204,20 +180,28 @@ def publish_messages_with_batch_settings(project_id, topic_name):
     # TODO project_id = "Your Google Cloud Project ID"
     # TODO topic_name = "Your Pub/Sub topic name"
 
-    # Configure the batch to publish as soon as there is one kilobyte
-    # of data or one second has passed.
+    # Configure the batch to publish as soon as there is ten messages,
+    # one kilobyte of data, or one second has passed.
     batch_settings = pubsub_v1.types.BatchSettings(
-        max_bytes=1024, max_latency=1  # One kilobyte  # One second
+        max_messages=10,  # default 100
+        max_bytes=1024,  # default 1 MB
+        max_latency=1,  # default 10 ms
     )
     publisher = pubsub_v1.PublisherClient(batch_settings)
     topic_path = publisher.topic_path(project_id, topic_name)
+
+    # Resolve the publish future in a separate thread.
+    def callback(future):
+        message_id = future.result()
+        print(message_id)
 
     for n in range(1, 10):
         data = u"Message number {}".format(n)
         # Data must be a bytestring
         data = data.encode("utf-8")
         future = publisher.publish(topic_path, data=data)
-        print(future.result())
+        # Non-blocking. Allow the publisher client to batch multiple messages.
+        future.add_done_callback(callback)
 
     print("Published messages with batch settings.")
     # [END pubsub_publisher_batch_settings]
@@ -308,11 +292,6 @@ if __name__ == "__main__":
     )
     publish_with_custom_attributes_parser.add_argument("topic_name")
 
-    publish_with_futures_parser = subparsers.add_parser(
-        "publish-with-futures", help=publish_messages_with_futures.__doc__
-    )
-    publish_with_futures_parser.add_argument("topic_name")
-
     publish_with_error_handler_parser = subparsers.add_parser(
         "publish-with-error-handler",
         help=publish_messages_with_error_handler.__doc__,
@@ -345,8 +324,6 @@ if __name__ == "__main__":
         publish_messages_with_custom_attributes(
             args.project_id, args.topic_name
         )
-    elif args.command == "publish-with-futures":
-        publish_messages_with_futures(args.project_id, args.topic_name)
     elif args.command == "publish-with-error-handler":
         publish_messages_with_error_handler(args.project_id, args.topic_name)
     elif args.command == "publish-with-batch-settings":

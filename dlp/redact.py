@@ -30,7 +30,12 @@ import os
 
 
 def redact_image(
-    project, filename, output_filename, info_types, min_likelihood=None, mime_type=None
+    project,
+    filename,
+    output_filename,
+    info_types,
+    min_likelihood=None,
+    mime_type=None,
 ):
     """Uses the Data Loss Prevention API to redact protected data in an image.
     Args:
@@ -68,7 +73,10 @@ def redact_image(
 
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
-    inspect_config = {"min_likelihood": min_likelihood, "info_types": info_types}
+    inspect_config = {
+        "min_likelihood": min_likelihood,
+        "info_types": info_types,
+    }
 
     # If mime_type is not specified, guess it from the filename.
     if mime_type is None:
@@ -121,7 +129,8 @@ if __name__ == "__main__":
 
     parser.add_argument("filename", help="The path to the file to inspect.")
     parser.add_argument(
-        "output_filename", help="The path to which the redacted image will be written."
+        "output_filename",
+        help="The path to which the redacted image will be written.",
     )
     parser.add_argument(
         "--project",

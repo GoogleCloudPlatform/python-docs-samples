@@ -18,7 +18,7 @@ docker build --tag pubsub-tutorial:python .
 ## Run Locally
 
 ```
-docker run --rm -p 9090:8080 pubsub-tutorial:python
+docker run --rm -p 9090:8080 -e PORT=8080 pubsub-tutorial:python
 ```
 
 ## Test

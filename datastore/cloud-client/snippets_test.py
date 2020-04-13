@@ -14,7 +14,7 @@
 import os
 
 from gcp_devrel.testing import eventually_consistent
-from gcp_devrel.testing.flaky import flaky
+from flaky import flaky
 from google.cloud import datastore
 import pytest
 
@@ -276,3 +276,7 @@ class TestDatastoreSnippets:
         client.entities_to_delete.extend(
             client.query(kind='Task').fetch())
         assert reprs
+
+    @eventually_consistent.mark
+    def test_index_merge_queries(self, client):
+        snippets.index_merge_queries(client)

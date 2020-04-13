@@ -16,8 +16,9 @@ import os
 import pytest
 import sys
 import time
+import uuid
 
-from google.cloud import storage
+from google.cloud import exceptions, storage
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "datasets"))  # noqa
@@ -28,8 +29,8 @@ cloud_region = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
-dataset_id = "test_dataset_{}".format(int(time.time()))
-fhir_store_id = "test_fhir_store-{}".format(int(time.time()))
+dataset_id = "test_dataset_{}".format(uuid.uuid4())
+fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
 
 gcs_uri = os.environ["CLOUD_STORAGE_BUCKET"]
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
@@ -117,7 +118,11 @@ def test_import_fhir_store_gcs(test_dataset, capsys):
     )
 
     # Clean up
-    blob.delete()
+    try:
+        blob.delete()
+    # If blob not found, then it's already been deleted, so no need to clean up.
+    except exceptions.NotFound:
+        pass
 
     fhir_stores.delete_fhir_store(
         service_account_json, project_id, cloud_region, dataset_id, fhir_store_id

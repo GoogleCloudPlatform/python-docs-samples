@@ -13,12 +13,14 @@
 # limitations under the License.
 
 import os
+import uuid
 
 from gcp_devrel.testing import eventually_consistent
 from gcp_devrel.testing.flaky import flaky
 import google.api_core.exceptions
 import google.cloud.bigquery
 import google.cloud.datastore
+import google.cloud.dlp_v2
 import google.cloud.exceptions
 import google.cloud.pubsub
 import google.cloud.storage
@@ -26,16 +28,18 @@ import google.cloud.storage
 import pytest
 import inspect_content
 
+UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 
 GCLOUD_PROJECT = os.getenv("GCLOUD_PROJECT")
-TEST_BUCKET_NAME = GCLOUD_PROJECT + "-dlp-python-client-test"
+TEST_BUCKET_NAME = GCLOUD_PROJECT + "-dlp-python-client-test" + UNIQUE_STRING
 RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), "resources")
 RESOURCE_FILE_NAMES = ["test.txt", "test.png", "harmless.txt", "accounts.txt"]
-TOPIC_ID = "dlp-test"
-SUBSCRIPTION_ID = "dlp-test-subscription"
+TOPIC_ID = "dlp-test" + UNIQUE_STRING
+SUBSCRIPTION_ID = "dlp-test-subscription" + UNIQUE_STRING
 DATASTORE_KIND = "DLP test kind"
-BIGQUERY_DATASET_ID = "dlp_test_dataset"
-BIGQUERY_TABLE_ID = "dlp_test_table"
+DATASTORE_NAME = "DLP test object" + UNIQUE_STRING
+BIGQUERY_DATASET_ID = "dlp_test_dataset" + UNIQUE_STRING
+BIGQUERY_TABLE_ID = "dlp_test_table" + UNIQUE_STRING
 
 
 @pytest.fixture(scope="module")
@@ -108,7 +112,7 @@ def datastore_project():
     datastore_client = google.cloud.datastore.Client()
 
     kind = DATASTORE_KIND
-    name = "DLP test object"
+    name = DATASTORE_NAME
     key = datastore_client.key(kind, name)
     item = google.cloud.datastore.Entity(key=key)
     item["payload"] = "My name is Gary Smith and my email is gary@example.com"
@@ -159,7 +163,10 @@ def test_inspect_string(capsys):
     test_string = "My name is Gary Smith and my email is gary@example.com"
 
     inspect_content.inspect_string(
-        GCLOUD_PROJECT, test_string, ["FIRST_NAME", "EMAIL_ADDRESS"], include_quote=True
+        GCLOUD_PROJECT,
+        test_string,
+        ["FIRST_NAME", "EMAIL_ADDRESS"],
+        include_quote=True,
     )
 
     out, _ = capsys.readouterr()
@@ -211,7 +218,10 @@ def test_inspect_string_no_results(capsys):
     test_string = "Nothing to see here"
 
     inspect_content.inspect_string(
-        GCLOUD_PROJECT, test_string, ["FIRST_NAME", "EMAIL_ADDRESS"], include_quote=True
+        GCLOUD_PROJECT,
+        test_string,
+        ["FIRST_NAME", "EMAIL_ADDRESS"],
+        include_quote=True,
     )
 
     out, _ = capsys.readouterr()
@@ -279,7 +289,6 @@ def test_inspect_image_file(capsys):
     assert "Info type: PHONE_NUMBER" in out
 
 
-@flaky
 def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
     inspect_content.inspect_gcs_file(
         GCLOUD_PROJECT,
@@ -287,15 +296,19 @@ def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
         "test.txt",
         topic_id,
         subscription_id,
-        ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
+        ["EMAIL_ADDRESS", "PHONE_NUMBER"],
         timeout=420,
     )
 
     out, _ = capsys.readouterr()
-    assert "Info type: EMAIL_ADDRESS" in out
+    assert "Inspection operation started" in out
+    # Cancel the operation
+    operation_id = out.split("Inspection operation started: ")[1].split("\n")[0]
+    print(operation_id)
+    client = google.cloud.dlp_v2.DlpServiceClient()
+    client.cancel_dlp_job(operation_id)
 
 
-@flaky
 def test_inspect_gcs_file_with_custom_info_types(
     bucket, topic_id, subscription_id, capsys
 ):
@@ -315,11 +328,15 @@ def test_inspect_gcs_file_with_custom_info_types(
     )
 
     out, _ = capsys.readouterr()
-    assert "Info type: CUSTOM_DICTIONARY_0" in out
-    assert "Info type: CUSTOM_REGEX_0" in out
+
+    assert "Inspection operation started" in out
+    # Cancel the operation
+    operation_id = out.split("Inspection operation started: ")[1].split("\n")[0]
+    print(operation_id)
+    client = google.cloud.dlp_v2.DlpServiceClient()
+    client.cancel_dlp_job(operation_id)
 
 
-@flaky
 def test_inspect_gcs_file_no_results(bucket, topic_id, subscription_id, capsys):
     inspect_content.inspect_gcs_file(
         GCLOUD_PROJECT,
@@ -327,12 +344,18 @@ def test_inspect_gcs_file_no_results(bucket, topic_id, subscription_id, capsys):
         "harmless.txt",
         topic_id,
         subscription_id,
-        ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
+        ["EMAIL_ADDRESS", "PHONE_NUMBER"],
         timeout=420,
     )
 
     out, _ = capsys.readouterr()
-    assert "No findings" in out
+
+    assert "Inspection operation started" in out
+    # Cancel the operation
+    operation_id = out.split("Inspection operation started: ")[1].split("\n")[0]
+    print(operation_id)
+    client = google.cloud.dlp_v2.DlpServiceClient()
+    client.cancel_dlp_job(operation_id)
 
 
 @pytest.mark.skip(reason="nondeterministically failing")
@@ -343,14 +366,13 @@ def test_inspect_gcs_image_file(bucket, topic_id, subscription_id, capsys):
         "test.png",
         topic_id,
         subscription_id,
-        ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
+        ["EMAIL_ADDRESS", "PHONE_NUMBER"],
     )
 
     out, _ = capsys.readouterr()
     assert "Info type: EMAIL_ADDRESS" in out
 
 
-@flaky
 def test_inspect_gcs_multiple_files(bucket, topic_id, subscription_id, capsys):
     inspect_content.inspect_gcs_file(
         GCLOUD_PROJECT,
@@ -358,12 +380,17 @@ def test_inspect_gcs_multiple_files(bucket, topic_id, subscription_id, capsys):
         "*",
         topic_id,
         subscription_id,
-        ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
+        ["EMAIL_ADDRESS", "PHONE_NUMBER"],
     )
 
     out, _ = capsys.readouterr()
-    assert "Info type: EMAIL_ADDRESS" in out
-    assert "Info type: PHONE_NUMBER" in out
+
+    assert "Inspection operation started" in out
+    # Cancel the operation
+    operation_id = out.split("Inspection operation started: ")[1].split("\n")[0]
+    print(operation_id)
+    client = google.cloud.dlp_v2.DlpServiceClient()
+    client.cancel_dlp_job(operation_id)
 
 
 @flaky
@@ -387,17 +414,19 @@ def test_inspect_datastore(datastore_project, topic_id, subscription_id, capsys)
 def test_inspect_datastore_no_results(
     datastore_project, topic_id, subscription_id, capsys
 ):
-    inspect_content.inspect_datastore(
-        GCLOUD_PROJECT,
-        datastore_project,
-        DATASTORE_KIND,
-        topic_id,
-        subscription_id,
-        ["PHONE_NUMBER"],
-    )
+    @eventually_consistent.call
+    def _():
+        inspect_content.inspect_datastore(
+            GCLOUD_PROJECT,
+            datastore_project,
+            DATASTORE_KIND,
+            topic_id,
+            subscription_id,
+            ["PHONE_NUMBER"],
+        )
 
-    out, _ = capsys.readouterr()
-    assert "No findings" in out
+        out, _ = capsys.readouterr()
+        assert "No findings" in out
 
 
 @pytest.mark.skip(reason="unknown issue")

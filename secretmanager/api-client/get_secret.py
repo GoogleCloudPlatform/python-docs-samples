@@ -27,7 +27,7 @@ def get_secret(project_id, secret_id):
     """
 
     # Import the Secret Manager client library.
-    from google.cloud import secretmanager_v1beta1 as secretmanager
+    from google.cloud import secretmanager
 
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()
@@ -35,7 +35,7 @@ def get_secret(project_id, secret_id):
     # Build the resource name of the secret.
     name = client.secret_path(project_id, secret_id)
 
-    # Delete the secret.
+    # Get the secret.
     response = client.get_secret(name)
 
     # Get the replication policy.

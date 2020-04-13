@@ -14,12 +14,13 @@
 from __future__ import absolute_import
 
 import os
+import uuid
 
 from detect_intent_audio import detect_intent_audio
 
 DIRNAME = os.path.realpath(os.path.dirname(__file__))
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
-SESSION_ID = 'fake_session_for_testing'
+SESSION_ID = 'test_{}'.format(uuid.uuid4())
 AUDIOS = [
     '{0}/resources/book_a_room.wav'.format(DIRNAME),
     '{0}/resources/mountain_view.wav'.format(DIRNAME),

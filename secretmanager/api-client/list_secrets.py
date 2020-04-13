@@ -26,7 +26,7 @@ def list_secrets(project_id):
     """
 
     # Import the Secret Manager client library.
-    from google.cloud import secretmanager_v1beta1 as secretmanager
+    from google.cloud import secretmanager
 
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()
