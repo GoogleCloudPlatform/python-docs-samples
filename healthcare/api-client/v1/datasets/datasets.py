@@ -27,17 +27,12 @@ def get_client():
     api_version = 'v1'
     service_name = 'healthcare'
 
-    return discovery.build(
-        service_name,
-        api_version)
+    return discovery.build(service_name, api_version)
 # [END healthcare_get_client]
 
 
 # [START healthcare_create_dataset]
-def create_dataset(
-        project_id,
-        cloud_region,
-        dataset_id):
+def create_dataset(project_id, cloud_region, dataset_id):
     """Creates a dataset."""
     client = get_client()
     dataset_parent = 'projects/{}/locations/{}'.format(
@@ -56,10 +51,7 @@ def create_dataset(
 
 
 # [START healthcare_delete_dataset]
-def delete_dataset(
-        project_id,
-        cloud_region,
-        dataset_id):
+def delete_dataset(project_id, cloud_region, dataset_id):
     """Deletes a dataset."""
     client = get_client()
     dataset_name = 'projects/{}/locations/{}/datasets/{}'.format(
@@ -78,10 +70,7 @@ def delete_dataset(
 
 
 # [START healthcare_get_dataset]
-def get_dataset(
-        project_id,
-        cloud_region,
-        dataset_id):
+def get_dataset(project_id, cloud_region, dataset_id):
     """Gets any metadata associated with a dataset."""
     client = get_client()
     dataset_name = 'projects/{}/locations/{}/datasets/{}'.format(
@@ -118,11 +107,7 @@ def list_datasets(project_id, cloud_region):
 
 
 # [START healthcare_patch_dataset]
-def patch_dataset(
-        project_id,
-        cloud_region,
-        dataset_id,
-        time_zone):
+def patch_dataset(project_id, cloud_region, dataset_id, time_zone):
     """Updates dataset metadata."""
     client = get_client()
     dataset_parent = 'projects/{}/locations/{}'.format(
@@ -211,10 +196,7 @@ def deidentify_dataset(
 
 
 # [START healthcare_dataset_get_iam_policy]
-def get_dataset_iam_policy(
-        project_id,
-        cloud_region,
-        dataset_id):
+def get_dataset_iam_policy(project_id, cloud_region, dataset_id):
     """Gets the IAM policy for the specified dataset."""
     client = get_client()
     dataset_name = 'projects/{}/locations/{}/datasets/{}'.format(
@@ -259,10 +241,10 @@ def set_dataset_iam_policy(
     policy = {
         "bindings": [
             {
-              "role": role,
-              "members": [
-                member
-              ]
+                "role": role,
+                "members": [
+                    member
+                ]
             }
         ]
     }

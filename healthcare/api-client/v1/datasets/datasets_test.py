@@ -12,9 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
 import os
 import pytest
 import uuid
+
+from googleapiclient import errors
+from retrying import retry
 
 import datasets
 
@@ -25,6 +29,19 @@ dataset_id = 'test-dataset-{}'.format(uuid.uuid4())
 destination_dataset_id = 'test-destination-dataset-{}'.format(uuid.uuid4())
 keeplist_tags = 'PatientID'
 time_zone = 'UTC'
+
+
+def retry_if_server_exception(exception):
+    result = False
+    if isinstance(exception, errors.HttpError):
+        if exception.resp.status != 404:
+            logging.warning("Not a 404. Retrying...")
+            result = True
+        else:
+            logging.error("404 response. Not retrying")
+    else:
+        logging.error("404 response. Not retrying")
+    return result
 
 
 @pytest.fixture(scope="module")
@@ -39,20 +56,55 @@ def test_dataset():
     datasets.delete_dataset(project_id, cloud_region, dataset_id)
 
 
-def test_CRUD_dataset(capsys):
+@pytest.fixture(scope="module")
+def dest_dataset_id():
+    yield destination_dataset_id
+
+    # Clean up
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception)
+    def clean_up():
+        datasets.delete_dataset(
+            project_id,
+            cloud_region,
+            destination_dataset_id)
+
+    clean_up()
+
+
+@pytest.fixture(scope="module")
+def crud_dataset_id():
+    yield dataset_id
+
+    # Clean up
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception)
+    def clean_up():
+        datasets.delete_dataset(project_id, cloud_region, dataset_id)
+
+    clean_up()
+
+
+def test_CRUD_dataset(capsys, crud_dataset_id):
     datasets.create_dataset(
         project_id,
         cloud_region,
-        dataset_id)
+        crud_dataset_id)
 
     datasets.get_dataset(
-        project_id, cloud_region, dataset_id)
+        project_id, cloud_region, crud_dataset_id)
 
     datasets.list_datasets(
         project_id, cloud_region)
 
     datasets.delete_dataset(
-        project_id, cloud_region, dataset_id)
+        project_id, cloud_region, crud_dataset_id)
 
     out, _ = capsys.readouterr()
 
@@ -76,20 +128,13 @@ def test_patch_dataset(capsys, test_dataset):
     assert 'UTC' in out
 
 
-def test_deidentify_dataset(capsys, test_dataset):
+def test_deidentify_dataset(capsys, test_dataset, dest_dataset_id):
     datasets.deidentify_dataset(
         project_id,
         cloud_region,
         dataset_id,
-        destination_dataset_id,
+        dest_dataset_id,
         keeplist_tags)
-
-    # Delete the destination_dataset_id which
-    # is created as part of the de-id test.
-    datasets.delete_dataset(
-        project_id,
-        cloud_region,
-        destination_dataset_id)
 
     out, _ = capsys.readouterr()
 
