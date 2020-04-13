@@ -59,8 +59,8 @@ def batch_parse_form(
     form_extraction_params = documentai.types.FormExtractionParams(
         enabled=True, key_value_pair_hints=key_value_pair_hints)
 
-    # For now, location must be us-central1
-    parent = 'projects/{}/locations/us-central1'.format(project_id)
+    # Location can be 'us' or 'eu'
+    parent = 'projects/{}/locations/us'.format(project_id)
     request = documentai.types.ProcessDocumentRequest(
         input_config=input_config,
         output_config=output_config,

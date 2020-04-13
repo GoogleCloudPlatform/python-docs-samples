@@ -36,7 +36,8 @@ def parse_with_model(
 
     automl_params = documentai.types.AutoMlParams(model=automl_model)
 
-    parent = 'projects/{}/locations/us-central1'.format(project_id)
+    # Location can be 'us' or 'eu'
+    parent = 'projects/{}/locations/us'.format(project_id)
     request = documentai.types.ProcessDocumentRequest(
         parent=parent,
         input_config=input_config,

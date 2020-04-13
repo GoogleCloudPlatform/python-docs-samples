@@ -46,7 +46,8 @@ def parse_form(project_id='YOUR_PROJECT_ID',
     form_extraction_params = documentai.types.FormExtractionParams(
         enabled=True, key_value_pair_hints=key_value_pair_hints)
 
-    parent = "projects/{}/locations/us-central1".format(project_id)
+    # Location can be 'us' or 'eu'
+    parent = "projects/{}/locations/us".format(project_id)
     request = documentai.types.ProcessDocumentRequest(
         parent=parent,
         input_config=input_config,

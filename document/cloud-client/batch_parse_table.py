@@ -79,8 +79,8 @@ def batch_parse_table(
     table_extraction_params = documentai.types.TableExtractionParams(
         enabled=True, table_bound_hints=table_bound_hints)
 
-    # For now, location must be us-central1
-    parent = 'projects/{}/locations/us-central1'.format(project_id)
+    # Location can be 'us' or 'eu'
+    parent = 'projects/{}/locations/us'.format(project_id)
     request = documentai.types.ProcessDocumentRequest(
         input_config=input_config,
         output_config=output_config,

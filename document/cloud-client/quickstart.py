@@ -31,7 +31,8 @@ def main(project_id='YOUR_PROJECT_ID',
     input_config = documentai.types.InputConfig(
         gcs_source=gcs_source, mime_type='application/pdf')
 
-    parent = "projects/{}/locations/us-central1".format(project_id)
+    # Location can be 'us' or 'eu'
+    parent = "projects/{}/locations/us".format(project_id)
     request = documentai.types.ProcessDocumentRequest(
         parent=parent,
         input_config=input_config)

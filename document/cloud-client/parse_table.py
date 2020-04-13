@@ -67,7 +67,8 @@ def parse_table(project_id='YOUR_PROJECT_ID',
     table_extraction_params = documentai.types.TableExtractionParams(
         enabled=True, table_bound_hints=table_bound_hints)
 
-    parent = "projects/{}/locations/us-central1".format(project_id)
+    # Location can be 'us' or 'eu'
+    parent = "projects/{}/locations/us".format(project_id)
     request = documentai.types.ProcessDocumentRequest(
         parent=parent,
         input_config=input_config,
