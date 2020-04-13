@@ -13,4 +13,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 mydir="${0%/*}"
-"$mydir"/run_tests.sh --only-diff
+"$mydir"/run_tests.sh --only-diff-master
