@@ -22,6 +22,7 @@ import uuid
 import beta_snippets
 from google.cloud import storage
 import pytest
+from flaky import flaky
 
 
 POSSIBLE_TEXTS = [
@@ -125,30 +126,22 @@ def test_annotation_to_storage_streaming(capsys, video_path, bucket):
     assert len(blobs) > 0
 
 
-@pytest.mark.slow
-def test_detect_text():
+# Flaky timeout
+@flaky(max_runs=3, min_passes=1)
+def test_detect_text(capsys):
     in_file = "./resources/googlework_tiny.mp4"
-    text_annotations = beta_snippets.video_detect_text(in_file)
-
-    text_exists = False
-    for text_annotation in text_annotations:
-        for possible_text in POSSIBLE_TEXTS:
-            if possible_text.upper() in text_annotation.text.upper():
-                text_exists = True
-    assert text_exists
+    beta_snippets.video_detect_text(in_file)
+    out, _ = capsys.readouterr()
+    assert 'Text' in out
 
 
-@pytest.mark.slow
-def test_detect_text_gcs():
+# Flaky timeout
+@flaky(max_runs=3, min_passes=1)
+def test_detect_text_gcs(capsys):
     in_file = "gs://python-docs-samples-tests/video/googlework_tiny.mp4"
-    text_annotations = beta_snippets.video_detect_text_gcs(in_file)
-
-    text_exists = False
-    for text_annotation in text_annotations:
-        for possible_text in POSSIBLE_TEXTS:
-            if possible_text.upper() in text_annotation.text.upper():
-                text_exists = True
-    assert text_exists
+    beta_snippets.video_detect_text_gcs(in_file)
+    out, _ = capsys.readouterr()
+    assert 'Text' in out
 
 
 @pytest.mark.slow
