@@ -47,11 +47,11 @@ def retry_if_server_exception(exception):
 @pytest.fixture(scope="module")
 def test_dataset():
     @retry(
-        wait_exponential_multiplier=1000)
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10)
     def create():
-        dataset = datasets.create_dataset(
-            project_id, cloud_region, dataset_id
-        )
+        datasets.create_dataset(project_id, cloud_region, dataset_id)
 
     create()
 
