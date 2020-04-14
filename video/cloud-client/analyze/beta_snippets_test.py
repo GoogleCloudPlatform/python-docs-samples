@@ -15,7 +15,6 @@
 # limitations under the License.
 
 from six.moves.urllib.request import urlopen
-import time
 import os
 import uuid
 
