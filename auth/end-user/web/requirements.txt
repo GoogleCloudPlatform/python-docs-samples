@@ -2,5 +2,5 @@ google-auth==1.11.2
 google-auth-oauthlib==0.4.1
 google-auth-httplib2==0.0.3
 google-api-python-client==1.7.11
-flask==1.1.1
+flask==1.1.2
 requests==2.23.0
