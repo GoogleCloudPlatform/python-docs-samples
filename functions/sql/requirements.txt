@@ -1,2 +1,2 @@
-psycopg2==2.8.4
+psycopg2==2.8.5
 PyMySQL==0.9.3
