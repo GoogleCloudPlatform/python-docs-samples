@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START language_classify_text_tutorial]
 """Using the classify_text method to find content categories of text files,
 Then use the content category labels to compare text similarity.
 
@@ -94,7 +93,6 @@ def index(path, index_file):
 # [END language_classify_text_tutorial_index]
 
 
-# [START language_classify_text_tutorial_split_labels]
 def split_labels(categories):
     """The category labels are of the form "/a/b/c" up to three levels,
     for example "/Computers & Electronics/Software", and these labels
@@ -121,10 +119,8 @@ def split_labels(categories):
             _categories[label] = confidence
 
     return _categories
-# [END language_classify_text_tutorial_split_labels]
 
 
-# [START language_classify_text_tutorial_similarity]
 def similarity(categories1, categories2):
     """Cosine similarity of the categories treated as sparse vectors."""
     categories1 = split_labels(categories1)
@@ -143,7 +139,6 @@ def similarity(categories1, categories2):
         dot += confidence * categories2.get(label, 0.0)
 
     return dot / (norm1 * norm2)
-# [END language_classify_text_tutorial_similarity]
 
 
 # [START language_classify_text_tutorial_query]
@@ -255,4 +250,3 @@ if __name__ == '__main__':
         query(args.index_file, args.text)
     if args.command == 'query-category':
         query_category(args.index_file, args.category)
-# [END language_classify_text_tutorial]
