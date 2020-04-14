@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC All Rights Reserved.
+# Copyright 2018, 2019, 2020 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ import pytest
 import uuid
 
 from googleapiclient.errors import HttpError
+from retrying import retry
 
 import datasets
 
@@ -31,28 +32,41 @@ time_zone = 'UTC'
 
 @pytest.fixture(scope="module")
 def test_dataset():
-    try:
-        datasets.create_dataset(project_id, cloud_region, dataset_id)
-    except HttpError as err:
-        if err.resp.status == 409:
-            print(
-                'Got exception {} while creating dataset'.format(
-                    err.resp.status))
-        else:
-            raise
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10)
+    def create():
+        try:
+            datasets.create_dataset(project_id, cloud_region, dataset_id)
+        except HttpError as err:
+            if err.resp.status == 409:
+                print(
+                    'Got exception {} while creating dataset'.format(
+                        err.resp.status))
+            else:
+                raise
+    create()
 
     yield
 
     # Clean up
-    try:
-        datasets.delete_dataset(project_id, cloud_region, dataset_id)
-    except HttpError as err:
-        if err.resp.status == 404:
-            print(
-                'Got exception {} while deleting dataset'.format(
-                    err.resp.status))
-        else:
-            raise
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10)
+    def clean_up():
+        try:
+            datasets.delete_dataset(project_id, cloud_region, dataset_id)
+        except HttpError as err:
+            if err.resp.status == 404:
+                print(
+                    'Got exception {} while deleting dataset'.format(
+                        err.resp.status))
+            else:
+                raise
+
+    clean_up()
 
 
 @pytest.fixture(scope="module")
@@ -60,18 +74,25 @@ def dest_dataset_id():
     yield destination_dataset_id
 
     # Clean up
-    try:
-        datasets.delete_dataset(
-            project_id,
-            cloud_region,
-            destination_dataset_id)
-    except HttpError as err:
-        if err.resp.status == 404:
-            print(
-                'Got exception {} while deleting destination dataset'.format(
-                    err.resp.status))
-        else:
-            raise
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10)
+    def clean_up():
+        try:
+            datasets.delete_dataset(
+                project_id,
+                cloud_region,
+                destination_dataset_id)
+        except HttpError as err:
+            if err.resp.status == 404:
+                print(
+                    'Got exception {} while deleting destination dataset'.format(
+                        err.resp.status))
+            else:
+                raise
+
+    clean_up()
 
 
 @pytest.fixture(scope="module")
@@ -79,15 +100,22 @@ def crud_dataset_id():
     yield dataset_id
 
     # Clean up
-    try:
-        datasets.delete_dataset(project_id, cloud_region, dataset_id)
-    except HttpError as err:
-        if err.resp.status == 404:
-            print(
-                'Got exception {} while deleting dataset'.format(
-                    err.resp.status))
-        else:
-            raise
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10)
+    def clean_up():
+        try:
+            datasets.delete_dataset(project_id, cloud_region, dataset_id)
+        except HttpError as err:
+            if err.resp.status == 404:
+                print(
+                    'Got exception {} while deleting dataset'.format(
+                        err.resp.status))
+            else:
+                raise
+
+    clean_up()
 
 
 def test_CRUD_dataset(capsys, crud_dataset_id):
