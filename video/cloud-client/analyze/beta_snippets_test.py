@@ -154,7 +154,8 @@ def test_track_objects_gcs():
     assert object_annotations[0].frames[0].normalized_bounding_box.left <= 1.0
 
 
-@pytest.mark.slow
+# Flaky Gateway
+@flaky(max_runs=3, min_passes=1)
 def test_streaming_automl_classification(capsys, video_path):
     project_id = os.environ["GCLOUD_PROJECT"]
     model_id = "VCN6363999689846554624"
