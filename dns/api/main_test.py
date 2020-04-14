@@ -12,8 +12,9 @@
 # limitations under the License.
 
 import os
+import uuid
 
-from gcp_devrel.testing.flaky import flaky
+from flaky import flaky
 from google.cloud import dns
 from google.cloud.exceptions import NotFound
 
@@ -22,7 +23,7 @@ import pytest
 import main
 
 PROJECT = os.environ['GCLOUD_PROJECT']
-TEST_ZONE_NAME = 'test-zone'
+TEST_ZONE_NAME = 'test-zone' + str(uuid.uuid4())
 TEST_ZONE_DNS_NAME = 'theadora.is.'
 TEST_ZONE_DESCRIPTION = 'Test zone'
 
