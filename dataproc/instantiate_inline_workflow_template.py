@@ -16,9 +16,11 @@
 # workflow for Cloud Dataproc using the Python client library.
 #
 # This script can be run on its own:
-#   python workflows.py ${PROJECT_ID} ${REGION}
+#   python instantiate_inline_workflow_template.py ${PROJECT_ID} ${REGION}
+
 
 import sys
+
 # [START dataproc_instantiate_inline_workflow_template]
 from google.cloud import dataproc_v1 as dataproc
 
@@ -35,7 +37,8 @@ def instantiate_inline_workflow_template(project_id, region):
     # Create a client with the endpoint set to the desired region.
     workflow_template_client = dataproc.WorkflowTemplateServiceClient(
         client_options={
-            'api_endpoint': '{}-dataproc.googleapis.com:443'.format(region)}
+            'api_endpoint': f'{region}-dataproc.googleapis.com:443'
+        }
     )
 
     parent = workflow_template_client.region_path(project_id, region)
@@ -91,8 +94,14 @@ def instantiate_inline_workflow_template(project_id, region):
 
     # Output a success message.
     print('Workflow ran successfully.')
-# [END dataproc_instantiate_inline_workflow_template]
+    # [END dataproc_instantiate_inline_workflow_template]
 
 
 if __name__ == "__main__":
-    instantiate_inline_workflow_template(sys.argv[1], sys.argv[2])
+    if len(sys.argv) < 3:
+        sys.exit('python instantiate_inline_workflow_template.py '
+                 + 'project_id region')
+
+    project_id = sys.argv[1]
+    region = sys.argv[2]
+    instantiate_inline_workflow_template(project_id, region)
