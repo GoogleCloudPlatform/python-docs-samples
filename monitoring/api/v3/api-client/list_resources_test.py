@@ -23,7 +23,7 @@ for this test, but it could be changed to a different project.
 import os
 import re
 
-from gcp_devrel.testing.flaky import flaky
+from flaky import flaky
 import googleapiclient.discovery
 import pytest
 
@@ -56,7 +56,7 @@ def test_list_metrics(client, capsys):
         client, PROJECT_RESOURCE, METRIC)
     stdout, _ = capsys.readouterr()
     regex = re.compile(
-        u'Delta CPU', re.I)
+        u'Delta', re.I)
     assert regex.search(stdout) is not None
 
 
