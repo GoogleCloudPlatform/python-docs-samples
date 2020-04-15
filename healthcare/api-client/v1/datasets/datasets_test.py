@@ -37,15 +37,8 @@ def test_dataset():
         wait_exponential_max=10000,
         stop_max_attempt_number=10)
     def create():
-        try:
-            datasets.create_dataset(project_id, cloud_region, dataset_id)
-        except HttpError as err:
-            if err.resp.status == 409:
-                print(
-                    'Got exception {} while creating dataset'.format(
-                        err.resp.status))
-            else:
-                raise
+        datasets.create_dataset(project_id, cloud_region, dataset_id)
+
     create()
 
     yield
@@ -56,15 +49,7 @@ def test_dataset():
         wait_exponential_max=10000,
         stop_max_attempt_number=10)
     def clean_up():
-        try:
-            datasets.delete_dataset(project_id, cloud_region, dataset_id)
-        except HttpError as err:
-            if err.resp.status == 404:
-                print(
-                    'Got exception {} while deleting dataset'.format(
-                        err.resp.status))
-            else:
-                raise
+        datasets.delete_dataset(project_id, cloud_region, dataset_id)
 
     clean_up()
 
@@ -79,18 +64,7 @@ def dest_dataset_id():
         wait_exponential_max=10000,
         stop_max_attempt_number=10)
     def clean_up():
-        try:
-            datasets.delete_dataset(
-                project_id,
-                cloud_region,
-                destination_dataset_id)
-        except HttpError as err:
-            if err.resp.status == 404:
-                print(
-                    'Got exception {} while deleting destination dataset'.format(
-                        err.resp.status))
-            else:
-                raise
+        datasets.delete_dataset(project_id, cloud_region, destination_dataset_id)
 
     clean_up()
 
@@ -105,15 +79,7 @@ def crud_dataset_id():
         wait_exponential_max=10000,
         stop_max_attempt_number=10)
     def clean_up():
-        try:
-            datasets.delete_dataset(project_id, cloud_region, dataset_id)
-        except HttpError as err:
-            if err.resp.status == 404:
-                print(
-                    'Got exception {} while deleting dataset'.format(
-                        err.resp.status))
-            else:
-                raise
+        datasets.delete_dataset(project_id, cloud_region, dataset_id)
 
     clean_up()
 
