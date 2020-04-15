@@ -65,7 +65,7 @@ def main(project_id="your-project-id", snapshot_millis=0):
     reader = client.read_rows(session.streams[0].name)
 
     # The read stream contains blocks of Avro-encoded bytes. The rows() method
-    # uses the fastavro library to parse these blocks as an interable of Python
+    # uses the fastavro library to parse these blocks as an iterable of Python
     # dictionaries. Install fastavro with the following command:
     #
     # pip install google-cloud-bigquery-storage[fastavro]
