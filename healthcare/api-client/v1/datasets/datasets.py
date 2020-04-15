@@ -16,7 +16,6 @@ import argparse
 import os
 
 from googleapiclient import discovery
-from googleapiclient.errors import HttpError
 
 
 # [START healthcare_get_client]
@@ -41,12 +40,9 @@ def create_dataset(project_id, cloud_region, dataset_id):
     request = client.projects().locations().datasets().create(
         parent=dataset_parent, body={}, datasetId=dataset_id)
 
-    try:
-        response = request.execute()
-        print('Created dataset: {}'.format(dataset_id))
-        return response
-    except HttpError as e:
-        print('Error, dataset not created: {}'.format(e))
+    response = request.execute()
+    print('Created dataset: {}'.format(dataset_id))
+    return response
 # [END healthcare_create_dataset]
 
 
@@ -60,12 +56,9 @@ def delete_dataset(project_id, cloud_region, dataset_id):
     request = client.projects().locations().datasets().delete(
         name=dataset_name)
 
-    try:
-        response = request.execute()
-        print('Deleted dataset: {}'.format(dataset_id))
-        return response
-    except HttpError as e:
-        print('Error, dataset not deleted: {}'.format(e))
+    response = request.execute()
+    print('Deleted dataset: {}'.format(dataset_id))
+    return response
 # [END healthcare_delete_dataset]
 
 
@@ -122,15 +115,12 @@ def patch_dataset(project_id, cloud_region, dataset_id, time_zone):
     request = client.projects().locations().datasets().patch(
         name=dataset_name, updateMask='timeZone', body=patch)
 
-    try:
-        response = request.execute()
-        print(
-            'Patched dataset {} with time zone: {}'.format(
-                dataset_id,
-                time_zone))
-        return response
-    except HttpError as e:
-        print('Error, dataset not patched: {}'.format(e))
+    response = request.execute()
+    print(
+        'Patched dataset {} with time zone: {}'.format(
+            dataset_id,
+            time_zone))
+    return response
 # [END healthcare_patch_dataset]
 
 
@@ -182,16 +172,13 @@ def deidentify_dataset(
     request = client.projects().locations().datasets().deidentify(
         sourceDataset=source_dataset, body=body)
 
-    try:
-        response = request.execute()
-        print(
-            'Data in dataset {} de-identified.'
-            'De-identified data written to {}'.format(
-                dataset_id,
-                destination_dataset_id))
-        return response
-    except HttpError as e:
-        print('Error, data could not be deidentified: {}'.format(e))
+    response = request.execute()
+    print(
+        'Data in dataset {} de-identified.'
+        'De-identified data written to {}'.format(
+            dataset_id,
+            destination_dataset_id))
+    return response
 # [END healthcare_dicom_keeplist_deidentify_dataset]
 
 

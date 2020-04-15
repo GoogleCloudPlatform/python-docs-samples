@@ -16,6 +16,7 @@ import os
 import pytest
 import uuid
 
+from googleapiclient.errors import HttpError
 from retrying import retry
 
 import datasets
@@ -29,15 +30,30 @@ keeplist_tags = 'PatientID'
 time_zone = 'UTC'
 
 
+def retry_if_server_exception(exception):
+    return isinstance(exception, (HttpError))
+
+
 @pytest.fixture(scope="module")
 def test_dataset():
     @retry(
         wait_exponential_multiplier=1000,
         wait_exponential_max=10000,
-        stop_max_attempt_number=10)
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception)
     def create():
-        datasets.create_dataset(project_id, cloud_region, dataset_id)
-
+        try:
+            datasets.create_dataset(project_id, cloud_region, dataset_id)
+        except HttpError as err:
+            # We ignore 409 conflict here, because we know it's most
+            # likely the first request failed on the client side, but
+            # the creation suceeded on the server side.
+            if err.resp.status == 409:
+                print(
+                    'Got exception {} while creating dataset'.format(
+                        err.resp.status))
+            else:
+                raise
     create()
 
     yield
@@ -46,9 +62,19 @@ def test_dataset():
     @retry(
         wait_exponential_multiplier=1000,
         wait_exponential_max=10000,
-        stop_max_attempt_number=10)
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception)
     def clean_up():
-        datasets.delete_dataset(project_id, cloud_region, dataset_id)
+        try:
+            datasets.delete_dataset(project_id, cloud_region, dataset_id)
+        except HttpError as err:
+            # The API returns 403 when the dataset doesn't exist.
+            if err.resp.status == 404 or err.resp.status == 403:
+                print(
+                    'Got exception {} while deleting dataset'.format(
+                        err.resp.status))
+            else:
+                raise
 
     clean_up()
 
@@ -61,9 +87,20 @@ def dest_dataset_id():
     @retry(
         wait_exponential_multiplier=1000,
         wait_exponential_max=10000,
-        stop_max_attempt_number=10)
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception)
     def clean_up():
-        datasets.delete_dataset(project_id, cloud_region, destination_dataset_id)
+        try:
+            datasets.delete_dataset(
+                project_id, cloud_region, destination_dataset_id)
+        except HttpError as err:
+            # The API returns 403 when the dataset doesn't exist.
+            if err.resp.status == 404 or err.resp.status == 403:
+                print(
+                    'Got exception {} while deleting dataset'.format(
+                        err.resp.status))
+            else:
+                raise
 
     clean_up()
 
@@ -76,9 +113,19 @@ def crud_dataset_id():
     @retry(
         wait_exponential_multiplier=1000,
         wait_exponential_max=10000,
-        stop_max_attempt_number=10)
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception)
     def clean_up():
-        datasets.delete_dataset(project_id, cloud_region, dataset_id)
+        try:
+            datasets.delete_dataset(project_id, cloud_region, dataset_id)
+        except HttpError as err:
+            # The API returns 403 when the dataset doesn't exist.
+            if err.resp.status == 404 or err.resp.status == 403:
+                print(
+                    'Got exception {} while deleting dataset'.format(
+                        err.resp.status))
+            else:
+                raise
 
     clean_up()
 
