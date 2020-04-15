@@ -28,3 +28,13 @@ backend:
     - selector: "*"
       address: grpc://grpc-bookstore.default.svc.cluster.local
       disable_auth: true
+
+#
+# API usage restrictions.
+#
+usage:
+  rules:
+  # ListShelves methods can be called without an API Key.
+  - selector: endpoints.examples.bookstore.Bookstore.ListShelves
+    allow_unregistered_calls: true
+      
