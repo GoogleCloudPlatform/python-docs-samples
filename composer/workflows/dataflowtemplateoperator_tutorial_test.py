@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from airflow import models
 from . import unit_testing
+from airflow import models
 
 
 def test_dag_import():

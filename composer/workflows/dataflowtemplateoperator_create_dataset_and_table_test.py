@@ -1,7 +1,8 @@
-from google.cloud import bigquery
-import pytest
-import google.cloud.exceptions
 import uuid
+
+from google.cloud import bigquery
+import google.cloud.exceptions
+import pytest
 
 client = bigquery.Client()
 dataset_UUID = str(uuid.uuid4()).split("-")[0]

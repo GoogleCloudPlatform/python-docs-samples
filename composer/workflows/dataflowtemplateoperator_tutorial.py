@@ -14,10 +14,11 @@
 
 # [START composer_dataflow_dag]
 
-from airflow import models
+import datetime
+
 from airflow.utils.dates import days_ago
 from airflow.contrib.operators.dataflow_operator import DataflowTemplateOperator
-import datetime
+from airflow import models
 
 # [END composer_dataflow_dag]
 
