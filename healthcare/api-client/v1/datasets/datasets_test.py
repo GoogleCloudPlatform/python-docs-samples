@@ -16,7 +16,6 @@ import os
 import pytest
 import uuid
 
-from googleapiclient.errors import HttpError
 from retrying import retry
 
 import datasets
