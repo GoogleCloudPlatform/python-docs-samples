@@ -24,7 +24,7 @@ def client():
     return main.app.test_client()
 
 
-def test_markdown_handler(client, capsys):
+def test_markdown_handler(client):
     data_input = "**strong text**"
     r = client.post('/', data=data_input)
   

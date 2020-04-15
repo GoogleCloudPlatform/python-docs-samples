@@ -1,0 +1,67 @@
+steps:
+- # Build the renderer image
+  name: gcr.io/cloud-builders/docker:latest
+  args: ['build', 
+         '--tag=gcr.io/$PROJECT_ID/renderer', 'renderer/.']
+  id: build_renderer
+
+- # Push the container image to Container Registry
+  name: gcr.io/cloud-builders/docker
+  args: ['push', 'gcr.io/$PROJECT_ID/renderer']
+  waitFor: build_renderer
+  id: push_renderer
+
+- # Deploy to Cloud Run with renderer-identity service account
+  name: gcr.io/cloud-builders/gcloud
+  args: ['run', 'deploy', 'renderer',
+         '--image', 'gcr.io/$PROJECT_ID/renderer',
+         '--region', 'us-central1',
+         '--platform', 'managed',
+         '--service-account', 'renderer-identity',
+         '--no-allow-unauthenticated'
+  ]
+  id: deploy_renderer
+  waitFor: push_renderer
+
+- # Build the editor image
+  name: gcr.io/cloud-builders/docker:latest
+  args: ['build', 
+         '--tag=gcr.io/$PROJECT_ID/editor', 'editor/.']
+  id: build_editor
+
+- # Push the container image to Container Registry
+  name: gcr.io/cloud-builders/docker
+  args: ['push', 'gcr.io/$PROJECT_ID/editor']
+  waitFor: build_editor
+  id: push_editor
+
+
+- # Grant editor identity access to invoke the renderer service
+  name: gcr.io/cloud-builders/gcloud
+  args: ['run', 'services', 'add-iam-policy-binding', 'renderer', 
+         '--member', 
+         'serviceAccount:editor-identity@$PROJECT_ID.iam.gserviceaccount.com',
+         '--role', 'roles/run.invoker',
+         '--region', 'us-central1',
+         '--platform', 'managed'
+       ]
+  waitFor: push_editor
+  id: run_invoker
+
+- # Deploy with editor identity service account
+  name: gcr.io/cloud-builders/gcloud
+  entrypoint: /bin/bash
+  args: ['-c', "gcloud run deploy editor \
+                --image gcr.io/$PROJECT_ID/editor \
+                --region us-central1 \
+                --platform managed \
+                --service-account editor-identity \
+                --set-env-vars EDITOR_UPSTREAM_RENDER_URL=$(gcloud run --platform managed --region us-central1 services describe renderer --format='value(status.url)') \
+                --no-allow-unauthenticated"]
+  id: deploy_editor
+  waitFor: push_editor
+
+images: [
+  'gcr.io/$PROJECT_ID/renderer',
+  'gcr.io/$PROJECT_ID/editor'
+]

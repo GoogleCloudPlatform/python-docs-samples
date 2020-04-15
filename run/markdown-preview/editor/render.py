@@ -16,10 +16,6 @@ import os
 import urllib
 
 
-METADATA_URL = 'http://metadata.google.internal/computeMetadata/v1/'
-METADATA_HEADERS = {'Metadata-Flavor': 'Google'}
-
-
 def new_request(data):
     """
     new_request creates a new HTTP request with IAM ID Token credential.
@@ -44,9 +40,10 @@ def get_token(url):
     """
     Retrieves the IAM ID Token credential for the url.
     """
-    token_url = (f"{METADATA_URL}instance/service-accounts/"
-                 f"default/identity?audience={url}")
-    token_req = urllib.request.Request(token_url, headers=METADATA_HEADERS)
+    token_url = (f"http://metadata.google.internal/computeMetadata/v1/instance/"
+                 f"service-accounts/default/identity?audience={url}")
+    token_req = urllib.request.Request(token_url, 
+        headers={'Metadata-Flavor': 'Google'})
     token_response = urllib.request.urlopen(token_req)
     token = token_response.read()
     return token.decode()
