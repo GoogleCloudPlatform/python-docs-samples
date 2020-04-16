@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import os
-from flaky import flaky
 
 import pytest
 
@@ -66,7 +65,7 @@ def test_list_dlp_jobs(test_job_name, capsys):
     assert test_job_name not in out
 
 
-@flaky
+@pytest.mark.flaky
 def test_list_dlp_jobs_with_filter(test_job_name, capsys):
     jobs.list_dlp_jobs(
         GCLOUD_PROJECT,
