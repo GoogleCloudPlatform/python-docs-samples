@@ -421,7 +421,6 @@ def test_inspect_datastore(
     client.cancel_dlp_job(operation_id)
 
 
-# @pytest.mark.skip(reason="too slow")
 def test_inspect_datastore_no_results(
         datastore_project, topic_id, subscription_id, capsys):
     inspect_content.inspect_datastore(
