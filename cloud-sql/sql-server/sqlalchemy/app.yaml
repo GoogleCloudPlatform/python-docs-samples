@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-# Copyright 2016 Google Inc. All Rights Reserved.
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,11 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+runtime: custom
+env: flex
 
-import quickstart
+# Remember - storing secrets in plaintext is potentially unsafe. Consider using
+# something like https://cloud.google.com/secret-manager/docs to help keep secrets secret.
+env_variables:
+  DB_USER: <your-username>
+  DB_PASS: <your-password>
+  DB_NAME: <your-db-name>
+  # Whether the app is deployed or running locally
+  DEPLOYED: true
 
-
-def test_quickstart(capsys):
-    quickstart.run_quickstart()
-    out, _ = capsys.readouterr()
-    assert u'Translation' in out
+beta_settings:
+  cloud_sql_instances: <project-name>:<region-name>:<instance-name>=tcp:1433
