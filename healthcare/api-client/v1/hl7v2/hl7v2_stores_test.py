@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC All Rights Reserved.
+# Copyright 2018 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import sys
 import uuid
 
 # Add datasets for bootstrapping datasets for testing
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'datasets')) # noqa
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'datasets'))  # noqa
 import datasets
 import hl7v2_stores
 

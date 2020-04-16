@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC All Rights Reserved.
+# Copyright 2018 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@ import argparse
 import os
 
 from googleapiclient import discovery
-from googleapiclient.errors import HttpError
 
 
 # [START healthcare_get_client]
@@ -27,9 +26,7 @@ def get_client():
     api_version = 'v1'
     service_name = 'healthcare'
 
-    return discovery.build(
-        service_name,
-        api_version)
+    return discovery.build(service_name, api_version)
 # [END healthcare_get_client]
 
 
@@ -47,12 +44,9 @@ def create_hl7v2_store(
     request = client.projects().locations().datasets().hl7V2Stores().create(
         parent=hl7v2_store_parent, body={}, hl7V2StoreId=hl7v2_store_id)
 
-    try:
-        response = request.execute()
-        print('Created HL7v2 store: {}'.format(hl7v2_store_id))
-        return response
-    except HttpError as e:
-        print('Error, HL7v2 store not created: {}'.format(e))
+    response = request.execute()
+    print('Created HL7v2 store: {}'.format(hl7v2_store_id))
+    return response
 # [END healthcare_create_hl7v2_store]
 
 
@@ -72,12 +66,9 @@ def delete_hl7v2_store(
     request = client.projects().locations().datasets(
     ).hl7V2Stores().delete(name=hl7v2_store_name)
 
-    try:
-        response = request.execute()
-        print('Deleted HL7v2 store: {}'.format(hl7v2_store_id))
-        return response
-    except HttpError as e:
-        print('Error, HL7v2 store not deleted: {}'.format(e))
+    response = request.execute()
+    print('Deleted HL7v2 store: {}'.format(hl7v2_store_id))
+    return response
 # [END healthcare_delete_hl7v2_store]
 
 
@@ -152,14 +143,11 @@ def patch_hl7v2_store(
     request = client.projects().locations().datasets().hl7V2Stores().patch(
         name=hl7v2_store_name, updateMask='notificationConfigs', body=patch)
 
-    try:
-        response = request.execute()
-        print(
-            'Patched HL7v2 store {} with Cloud Pub/Sub topic: None'.format(
-                hl7v2_store_id))
-        return response
-    except HttpError as e:
-        print('Error, HL7v2 store not patched: {}'.format(e))
+    response = request.execute()
+    print(
+        'Patched HL7v2 store {} with Cloud Pub/Sub topic: None'.format(
+            hl7v2_store_id))
+    return response
 # [END healthcare_patch_hl7v2_store]
 
 
@@ -177,7 +165,7 @@ def get_hl7v2_store_iam_policy(
         hl7v2_store_parent, hl7v2_store_id)
 
     request = client.projects().locations().datasets().hl7V2Stores(
-        ).getIamPolicy(resource=hl7v2_store_name)
+    ).getIamPolicy(resource=hl7v2_store_name)
     response = request.execute()
 
     print('etag: {}'.format(response.get('name')))
@@ -215,10 +203,10 @@ def set_hl7v2_store_iam_policy(
     policy = {
         "bindings": [
             {
-              "role": role,
-              "members": [
-                member
-              ]
+                "role": role,
+                "members": [
+                    member
+                ]
             }
         ]
     }
@@ -227,7 +215,7 @@ def set_hl7v2_store_iam_policy(
         policy['etag'] = etag
 
     request = client.projects().locations().datasets().hl7V2Stores(
-        ).setIamPolicy(resource=hl7v2_store_name, body={'policy': policy})
+    ).setIamPolicy(resource=hl7v2_store_name, body={'policy': policy})
     response = request.execute()
 
     print('etag: {}'.format(response.get('name')))

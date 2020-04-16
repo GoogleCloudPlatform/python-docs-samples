@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC All Rights Reserved.
+# Copyright 2018 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ import json
 import os
 
 from googleapiclient import discovery
-from googleapiclient.errors import HttpError
 
 
 # [START healthcare_get_client]
@@ -28,9 +27,7 @@ def get_client():
     api_version = 'v1'
     service_name = 'healthcare'
 
-    return discovery.build(
-        service_name,
-        api_version)
+    return discovery.build(service_name, api_version)
 # [END healthcare_get_client]
 
 
@@ -55,12 +52,9 @@ def create_hl7v2_message(
     request = client.projects().locations().datasets().hl7V2Stores(
     ).messages().create(parent=hl7v2_store_name, body=hl7v2_message_content)
 
-    try:
-        response = request.execute()
-        print('Created HL7v2 message from file: {}'.format(hl7v2_message_file))
-        return response
-    except HttpError as e:
-        print('Error, HL7v2 message not created: {}'.format(e))
+    response = request.execute()
+    print('Created HL7v2 message from file: {}'.format(hl7v2_message_file))
+    return response
 # [END healthcare_create_hl7v2_message]
 
 
@@ -80,12 +74,9 @@ def delete_hl7v2_message(
     request = client.projects().locations().datasets(
     ).hl7V2Stores().messages().delete(name=hl7v2_message)
 
-    try:
-        response = request.execute()
-        print('Deleted HL7v2 message with ID: {}'.format(hl7v2_message_id))
-        return response
-    except HttpError as e:
-        print('Error, HL7v2 message not deleted: {}'.format(e))
+    response = request.execute()
+    print('Deleted HL7v2 message with ID: {}'.format(hl7v2_message_id))
+    return response
 # [END healthcare_delete_hl7v2_message]
 
 
@@ -145,13 +136,9 @@ def ingest_hl7v2_message(
     request = client.projects().locations().datasets().hl7V2Stores(
     ).messages().ingest(parent=hl7v2_store_name, body=hl7v2_message_content)
 
-    try:
-        response = request.execute()
-        print('Ingested HL7v2 message from file: {}'.format(
-            hl7v2_message_file))
-        return response
-    except HttpError as e:
-        print('Error, HL7v2 message not ingested: {}'.format(e))
+    response = request.execute()
+    print('Ingested HL7v2 message from file: {}'.format(hl7v2_message_file))
+    return response
 # [END healthcare_ingest_hl7v2_message]
 
 
@@ -205,16 +192,13 @@ def patch_hl7v2_message(
     request = client.projects().locations().datasets().hl7V2Stores().messages(
     ).patch(name=hl7v2_message_name, updateMask='labels', body=patch)
 
-    try:
-        response = request.execute()
-        print(
-            'Patched HL7v2 message {} with labels:\n\t{}: {}'.format(
-                hl7v2_message_id,
-                label_key,
-                label_value))
-        return response
-    except HttpError as e:
-        print('Error, HL7v2 message not patched: {}'.format(e))
+    response = request.execute()
+    print(
+        'Patched HL7v2 message {} with labels:\n\t{}: {}'.format(
+            hl7v2_message_id,
+            label_key,
+            label_value))
+    return response
 # [END healthcare_patch_hl7v2_message]
 
 
