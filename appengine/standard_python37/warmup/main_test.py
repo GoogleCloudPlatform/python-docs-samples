@@ -28,5 +28,5 @@ def test_warmup():
     main.app.testing = True
     client = main.app.test_client()
 
-    r = client.get('/')
+    r = client.get('/_ah/warmup')
     assert r.status_code == 200
