@@ -289,175 +289,160 @@ def test_inspect_image_file(capsys):
     assert "Info type: PHONE_NUMBER" in out
 
 
-def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
-    inspect_content.inspect_gcs_file(
-        GCLOUD_PROJECT,
-        bucket.name,
-        "test.txt",
-        topic_id,
-        subscription_id,
-        ["EMAIL_ADDRESS", "PHONE_NUMBER"],
-        timeout=1
-    )
+def cancel_operation(out):
+    if "Inspection operation started" in out:
+        # Cancel the operation
+        operation_id = out.split(
+            "Inspection operation started: ")[1].split("\n")[0]
+        client = google.cloud.dlp_v2.DlpServiceClient()
+        client.cancel_dlp_job(operation_id)
 
-    out, _ = capsys.readouterr()
-    assert "Inspection operation started" in out
-    # Cancel the operation
-    operation_id = out.split(
-        "Inspection operation started: ")[1].split("\n")[0]
-    print(operation_id)
-    client = google.cloud.dlp_v2.DlpServiceClient()
-    client.cancel_dlp_job(operation_id)
+
+def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
+    try:
+        inspect_content.inspect_gcs_file(
+            GCLOUD_PROJECT,
+            bucket.name,
+            "test.txt",
+            topic_id,
+            subscription_id,
+            ["EMAIL_ADDRESS", "PHONE_NUMBER"],
+            timeout=1
+        )
+
+        out, _ = capsys.readouterr()
+        assert "Inspection operation started" in out
+    finally:
+        cancel_operation(out)
 
 
 def test_inspect_gcs_file_with_custom_info_types(
-    bucket, topic_id, subscription_id, capsys):
-    dictionaries = ["gary@somedomain.com"]
-    regexes = ["\\(\\d{3}\\) \\d{3}-\\d{4}"]
+        bucket, topic_id, subscription_id, capsys):
+    try:
+        dictionaries = ["gary@somedomain.com"]
+        regexes = ["\\(\\d{3}\\) \\d{3}-\\d{4}"]
 
-    inspect_content.inspect_gcs_file(
-        GCLOUD_PROJECT,
-        bucket.name,
-        "test.txt",
-        topic_id,
-        subscription_id,
-        [],
-        custom_dictionaries=dictionaries,
-        custom_regexes=regexes,
-        timeout=1)
+        inspect_content.inspect_gcs_file(
+            GCLOUD_PROJECT,
+            bucket.name,
+            "test.txt",
+            topic_id,
+            subscription_id,
+            [],
+            custom_dictionaries=dictionaries,
+            custom_regexes=regexes,
+            timeout=1)
 
-    out, _ = capsys.readouterr()
+        out, _ = capsys.readouterr()
 
-    assert "Inspection operation started" in out
-    # Cancel the operation
-    operation_id = out.split(
-        "Inspection operation started: ")[1].split("\n")[0]
-    print(operation_id)
-    client = google.cloud.dlp_v2.DlpServiceClient()
-    client.cancel_dlp_job(operation_id)
+        assert "Inspection operation started" in out
+    finally:
+        cancel_operation(out)
 
 
 def test_inspect_gcs_file_no_results(
         bucket, topic_id, subscription_id, capsys):
-    inspect_content.inspect_gcs_file(
-        GCLOUD_PROJECT,
-        bucket.name,
-        "harmless.txt",
-        topic_id,
-        subscription_id,
-        ["EMAIL_ADDRESS", "PHONE_NUMBER"],
-        timeout=1)
+    try:
+        inspect_content.inspect_gcs_file(
+            GCLOUD_PROJECT,
+            bucket.name,
+            "harmless.txt",
+            topic_id,
+            subscription_id,
+            ["EMAIL_ADDRESS", "PHONE_NUMBER"],
+            timeout=1)
 
-    out, _ = capsys.readouterr()
+        out, _ = capsys.readouterr()
 
-    assert "Inspection operation started" in out
-    # Cancel the operation
-    operation_id = out.split(
-        "Inspection operation started: ")[1].split("\n")[0]
-    print(operation_id)
-    client = google.cloud.dlp_v2.DlpServiceClient()
-    client.cancel_dlp_job(operation_id)
+        assert "Inspection operation started" in out
+    finally:
+        cancel_operation(out)
 
 
 def test_inspect_gcs_image_file(bucket, topic_id, subscription_id, capsys):
-    inspect_content.inspect_gcs_file(
-        GCLOUD_PROJECT,
-        bucket.name,
-        "test.png",
-        topic_id,
-        subscription_id,
-        ["EMAIL_ADDRESS", "PHONE_NUMBER"],
-        timeout=1)
+    try:
+        inspect_content.inspect_gcs_file(
+            GCLOUD_PROJECT,
+            bucket.name,
+            "test.png",
+            topic_id,
+            subscription_id,
+            ["EMAIL_ADDRESS", "PHONE_NUMBER"],
+            timeout=1)
 
-    out, _ = capsys.readouterr()
-    assert "Inspection operation started" in out
-    # Cancel the operation
-    operation_id = out.split(
-        "Inspection operation started: ")[1].split("\n")[0]
-    print(operation_id)
-    client = google.cloud.dlp_v2.DlpServiceClient()
-    client.cancel_dlp_job(operation_id)
+        out, _ = capsys.readouterr()
+        assert "Inspection operation started" in out
+    finally:
+        cancel_operation(out)
 
 
 def test_inspect_gcs_multiple_files(bucket, topic_id, subscription_id, capsys):
-    inspect_content.inspect_gcs_file(
-        GCLOUD_PROJECT,
-        bucket.name,
-        "*",
-        topic_id,
-        subscription_id,
-        ["EMAIL_ADDRESS", "PHONE_NUMBER"],
-        timeout=1)
+    try:
+        inspect_content.inspect_gcs_file(
+            GCLOUD_PROJECT,
+            bucket.name,
+            "*",
+            topic_id,
+            subscription_id,
+            ["EMAIL_ADDRESS", "PHONE_NUMBER"],
+            timeout=1)
 
-    out, _ = capsys.readouterr()
+        out, _ = capsys.readouterr()
 
-    assert "Inspection operation started" in out
-    # Cancel the operation
-    operation_id = out.split(
-        "Inspection operation started: ")[1].split("\n")[0]
-    print(operation_id)
-    client = google.cloud.dlp_v2.DlpServiceClient()
-    client.cancel_dlp_job(operation_id)
+        assert "Inspection operation started" in out
+    finally:
+        cancel_operation(out)
 
 
 def test_inspect_datastore(
         datastore_project, topic_id, subscription_id, capsys):
-    inspect_content.inspect_datastore(
-        GCLOUD_PROJECT,
-        datastore_project,
-        DATASTORE_KIND,
-        topic_id,
-        subscription_id,
-        ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
-        timeout=1)
+    try:
+        inspect_content.inspect_datastore(
+            GCLOUD_PROJECT,
+            datastore_project,
+            DATASTORE_KIND,
+            topic_id,
+            subscription_id,
+            ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
+            timeout=1)
 
-    out, _ = capsys.readouterr()
-    assert "Inspection operation started" in out
-    # Cancel the operation
-    operation_id = out.split(
-        "Inspection operation started: ")[1].split("\n")[0]
-    print(operation_id)
-    client = google.cloud.dlp_v2.DlpServiceClient()
-    client.cancel_dlp_job(operation_id)
+        out, _ = capsys.readouterr()
+        assert "Inspection operation started" in out
+    finally:
+        cancel_operation(out)
 
 
 def test_inspect_datastore_no_results(
         datastore_project, topic_id, subscription_id, capsys):
-    inspect_content.inspect_datastore(
-        GCLOUD_PROJECT,
-        datastore_project,
-        DATASTORE_KIND,
-        topic_id,
-        subscription_id,
-        ["PHONE_NUMBER"],
-        timeout=1)
+    try:
+        inspect_content.inspect_datastore(
+            GCLOUD_PROJECT,
+            datastore_project,
+            DATASTORE_KIND,
+            topic_id,
+            subscription_id,
+            ["PHONE_NUMBER"],
+            timeout=1)
 
-    out, _ = capsys.readouterr()
-    assert "Inspection operation started" in out
-    # Cancel the operation
-    operation_id = out.split(
-        "Inspection operation started: ")[1].split("\n")[0]
-    print(operation_id)
-    client = google.cloud.dlp_v2.DlpServiceClient()
-    client.cancel_dlp_job(operation_id)
+        out, _ = capsys.readouterr()
+        assert "Inspection operation started" in out
+    finally:
+        cancel_operation(out)
 
 
 def test_inspect_bigquery(bigquery_project, topic_id, subscription_id, capsys):
-    inspect_content.inspect_bigquery(
-        GCLOUD_PROJECT,
-        bigquery_project,
-        BIGQUERY_DATASET_ID,
-        BIGQUERY_TABLE_ID,
-        topic_id,
-        subscription_id,
-        ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
-        timeout=1)
+    try:
+        inspect_content.inspect_bigquery(
+            GCLOUD_PROJECT,
+            bigquery_project,
+            BIGQUERY_DATASET_ID,
+            BIGQUERY_TABLE_ID,
+            topic_id,
+            subscription_id,
+            ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
+            timeout=1)
 
-    out, _ = capsys.readouterr()
-    assert "Inspection operation started" in out
-    # Cancel the operation
-    operation_id = out.split(
-        "Inspection operation started: ")[1].split("\n")[0]
-    print(operation_id)
-    client = google.cloud.dlp_v2.DlpServiceClient()
-    client.cancel_dlp_job(operation_id)
+        out, _ = capsys.readouterr()
+        assert "Inspection operation started" in out
+    finally:
+        cancel_operation(out)
