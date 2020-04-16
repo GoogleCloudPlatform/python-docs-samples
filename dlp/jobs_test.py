@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import uuid
 
 import pytest
 from retrying import retry
@@ -24,6 +25,7 @@ TEST_COLUMN_NAME = "zip_code"
 TEST_TABLE_PROJECT_ID = "bigquery-public-data"
 TEST_DATASET_ID = "san_francisco"
 TEST_TABLE_ID = "bikeshare_trips"
+test_job_id = "test-job-{}".format(uuid.uuid4())
 
 
 @pytest.fixture(scope="module")
@@ -46,7 +48,7 @@ def test_job_name():
         },
     }
 
-    response = dlp.create_dlp_job(parent, risk_job=risk_job)
+    response = dlp.create_dlp_job(parent, risk_job=risk_job, job_id=test_job_id)
     full_path = response.name
     # API expects only job name, not full project path
     job_name = full_path[full_path.rfind("/") + 1:]
