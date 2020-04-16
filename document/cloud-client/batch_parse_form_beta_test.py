@@ -12,7 +12,7 @@
 # See the License for the specific ladnguage governing permissions and
 # limitations under the License.
 
-import batch_parse_table
+import batch_parse_form_beta
 import os
 import pytest
 import uuid
@@ -36,7 +36,7 @@ def setup_teardown():
     bucket.delete(force=True)
 
 
-def test_batch_parse_table(capsys):
-    batch_parse_table.batch_parse_table(PROJECT_ID, INPUT_URI, BATCH_OUTPUT_URI)
+def test_batch_parse_form(capsys):
+    batch_parse_form_beta.batch_parse_form(PROJECT_ID, INPUT_URI, BATCH_OUTPUT_URI)
     out, _ = capsys.readouterr()
-    assert 'Output files:' in out
+    assert 'Output files' in out

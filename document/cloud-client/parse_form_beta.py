@@ -1,6 +1,6 @@
 # Copyright 2020 Google LLC
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
+# Licensed under the Apache License, Version 2.0 (the 'License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
@@ -47,7 +47,7 @@ def parse_form(project_id='YOUR_PROJECT_ID',
         enabled=True, key_value_pair_hints=key_value_pair_hints)
 
     # Location can be 'us' or 'eu'
-    parent = "projects/{}/locations/us".format(project_id)
+    parent = 'projects/{}/locations/us'.format(project_id)
     request = documentai.types.ProcessDocumentRequest(
         parent=parent,
         input_config=input_config,
@@ -60,8 +60,8 @@ def parse_form(project_id='YOUR_PROJECT_ID',
         in document text. This function converts offsets
         to text snippets.
         """
-        response = ""
-        # If a form field spans several lines, it will
+        response = ''
+        # If a text segment spans several lines, it will
         # be stored in different text segments.
         for segment in el.text_anchor.text_segments:
             start_index = segment.start_index

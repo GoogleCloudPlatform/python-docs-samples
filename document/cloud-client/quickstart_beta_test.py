@@ -13,14 +13,14 @@
 # limitations under the License.
 
 import os
-import set_endpoint
+import quickstart_beta
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 INPUT_URI = 'gs://cloud-samples-data/documentai/invoice.pdf'
 
 
-def test_set_endpoint(capsys):
-    set_endpoint.set_endpoint(PROJECT_ID, INPUT_URI)
+def test_quickstart(capsys):
+    quickstart_beta.main(PROJECT_ID, INPUT_URI)
     out, _ = capsys.readouterr()
     assert 'Entity type' in out
     assert 'Mention text' in out

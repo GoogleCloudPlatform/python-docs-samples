@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-# [START documentai_batch_parse_form]
+# [START documentai_batch_parse_form_beta]
 from google.cloud import documentai_v1beta2 as documentai
 from google.cloud import storage
 import re
@@ -93,4 +93,4 @@ def batch_parse_form(
         print(blob.name)
 
 
-# [END documentai_batch_parse_form]
+# [END documentai_batch_parse_form_beta]

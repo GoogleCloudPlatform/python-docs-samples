@@ -1,6 +1,6 @@
 # Copyright 2020 Google LLC
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
+# Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
@@ -13,14 +13,20 @@
 # limitations under the License.
 
 import os
-import quickstart
+import parse_with_model_beta
 
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 INPUT_URI = 'gs://cloud-samples-data/documentai/invoice.pdf'
+AUTOML_NL_MODEL_ID = 'TCN3472481026502981088'
+
+if 'AUTOML_NL_MODEL_ID' in os.environ:
+    AUTOML_NL_MODEL_ID = os.environ['AUTOML_NL_MODEL_ID']
+
+MODEL_NAME = 'projects/{}/locations/us-central1/models/{}'.format(PROJECT_ID, AUTOML_NL_MODEL_ID)
 
 
-def test_quickstart(capsys):
-    quickstart.main(PROJECT_ID, INPUT_URI)
+def test_parse_with_model(capsys):
+    parse_with_model_beta.parse_with_model(PROJECT_ID, INPUT_URI, MODEL_NAME)
     out, _ = capsys.readouterr()
-    assert 'Entity type' in out
-    assert 'Mention text' in out
+    assert 'Label detected' in out
+    assert 'Confidence' in out

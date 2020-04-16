@@ -56,6 +56,6 @@ def set_endpoint(project_id='YOUR_PROJECT_ID',
         return response
 
     for entity in document.entities:
-        print("Entity type: {}".format(entity.type))
-        print("Text: {}".format(_get_text(entity)))
-        print("Mention text: {}\n".format(entity.mention_text))
+        print('Entity type: {}'.format(entity.type))
+        print('Text: {}'.format(_get_text(entity)))
+        print('Mention text: {}\n'.format(entity.mention_text))

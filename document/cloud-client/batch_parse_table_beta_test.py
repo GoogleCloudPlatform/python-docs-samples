@@ -12,15 +12,31 @@
 # See the License for the specific ladnguage governing permissions and
 # limitations under the License.
 
+import batch_parse_table_beta
 import os
-import parse_table
+import pytest
+import uuid
+from google.cloud import storage
 
+BUCKET = 'document-ai-{}'.format(uuid.uuid4())
+OUTPUT_PREFIX = 'TEST_OUTPUT_{}'.format(uuid.uuid4())
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 INPUT_URI = 'gs://cloud-samples-data/documentai/invoice.pdf'
+BATCH_OUTPUT_URI = 'gs://{}/{}/'.format(BUCKET, OUTPUT_PREFIX)
 
 
-def test_parse_table(capsys):
-    parse_table.parse_table(PROJECT_ID, INPUT_URI)
+@pytest.fixture(autouse=True)
+def setup_teardown():
+    """Create a temporary bucket to store annotation output."""
+    storage_client = storage.Client()
+    bucket = storage_client.create_bucket(BUCKET)
+
+    yield
+
+    bucket.delete(force=True)
+
+
+def test_batch_parse_table(capsys):
+    batch_parse_table_beta.batch_parse_table(PROJECT_ID, INPUT_URI, BATCH_OUTPUT_URI)
     out, _ = capsys.readouterr()
-    assert 'Table' in out
-    assert 'Header Row' in out
+    assert 'Output files:' in out
