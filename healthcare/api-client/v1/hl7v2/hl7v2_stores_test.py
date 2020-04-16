@@ -17,6 +17,9 @@ import pytest
 import sys
 import uuid
 
+from googleapiclient.errors import HttpError
+from retrying import retry
+
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'datasets'))  # noqa
 import datasets
@@ -29,23 +32,129 @@ dataset_id = 'test_dataset_{}'.format(uuid.uuid4())
 hl7v2_store_id = 'test_hl7v2_store-{}'.format(uuid.uuid4())
 
 
-@pytest.fixture(scope='module')
-def test_dataset():
-    dataset = datasets.create_dataset(
-        project_id,
-        cloud_region,
-        dataset_id)
+def retry_if_server_exception(exception):
+    return isinstance(exception, (HttpError))
 
-    yield dataset
+
+@pytest.fixture(scope="module")
+def test_dataset():
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception)
+    def create():
+        try:
+            datasets.create_dataset(project_id, cloud_region, dataset_id)
+        except HttpError as err:
+            # We ignore 409 conflict here, because we know it's most
+            # likely the first request failed on the client side, but
+            # the creation suceeded on the server side.
+            if err.resp.status == 409:
+                print(
+                    'Got exception {} while creating dataset'.format(
+                        err.resp.status))
+            else:
+                raise
+    create()
+
+    yield
 
     # Clean up
-    datasets.delete_dataset(
-        project_id,
-        cloud_region,
-        dataset_id)
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception)
+    def clean_up():
+        try:
+            datasets.delete_dataset(project_id, cloud_region, dataset_id)
+        except HttpError as err:
+            # The API returns 403 when the dataset doesn't exist.
+            if err.resp.status == 404 or err.resp.status == 403:
+                print(
+                    'Got exception {} while deleting dataset'.format(
+                        err.resp.status))
+            else:
+                raise
+
+    clean_up()
 
 
-def test_CRUD_hl7v2_store(test_dataset, capsys):
+@pytest.fixture(scope="module")
+def test_hl7v2_store():
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception)
+    def create():
+        try:
+            hl7v2_stores.create_hl7v2_store(
+                project_id, cloud_region, dataset_id, hl7v2_store_id)
+        except HttpError as err:
+            # We ignore 409 conflict here, because we know it's most
+            # likely the first request failed on the client side, but
+            # the creation suceeded on the server side.
+            if err.resp.status == 409:
+                print(
+                    'Got exception {} while creating HL7v2 store'.format(
+                        err.resp.status))
+            else:
+                raise
+    create()
+
+    yield
+
+    # Clean up
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception)
+    def clean_up():
+        try:
+            hl7v2_stores.delete_hl7v2_store(
+                project_id, cloud_region, dataset_id, hl7v2_store_id)
+        except HttpError as err:
+            # The API returns 403 when the HL7v2 store doesn't exist.
+            if err.resp.status == 404 or err.resp.status == 403:
+                print(
+                    'Got exception {} while deleting HL7v2 store'.format(
+                        err.resp.status))
+            else:
+                raise
+
+    clean_up()
+
+
+@pytest.fixture(scope="module")
+def crud_hl7v2_store_id():
+    yield hl7v2_store_id
+
+    # Clean up
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception)
+    def clean_up():
+        try:
+            hl7v2_stores.delete_hl7v2_store_id(
+                project_id, cloud_region, dataset_id, hl7v2_store_id)
+        except HttpError as err:
+            # The API returns 403 when the HL7v2 store doesn't exist.
+            if err.resp.status == 404 or err.resp.status == 403:
+                print(
+                    'Got exception {} while deleting HL7v2 store'.format(
+                        err.resp.status))
+            else:
+                raise
+
+    clean_up()
+
+
+def test_CRUD_hl7v2_store(test_dataset, crud_hl7v2_store_id, capsys):
     hl7v2_stores.create_hl7v2_store(
         project_id,
         cloud_region,
