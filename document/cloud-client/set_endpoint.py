@@ -13,18 +13,18 @@
 # limitations under the License.
 
 
-# [START documentai_set_endpoint]
-from google.cloud import documentai_v1beta2 as documentai
-
-
 def set_endpoint(project_id='YOUR_PROJECT_ID',
                  input_uri='gs://cloud-samples-data/documentai/invoice.pdf'):
     """Process a single document with the Document AI API, including
     text extraction and entity extraction."""
 
+    # [START documentai_set_endpoint]
+    from google.cloud import documentai_v1beta2 as documentai
+
     client = documentai.DocumentUnderstandingServiceClient(
         client_options={'api_endpoint': 'eu-documentai.googleapis.com'})
-
+    # [END documentai_set_endpoint]
+    
     gcs_source = documentai.types.GcsSource(uri=input_uri)
 
     # mime_type can be application/pdf, image/tiff,
@@ -60,4 +60,3 @@ def set_endpoint(project_id='YOUR_PROJECT_ID',
         print("Text: {}".format(_get_text(entity)))
         print("Mention text: {}\n".format(entity.mention_text))
 
-# [END documentai_set_endpoint]

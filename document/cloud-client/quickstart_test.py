@@ -15,12 +15,12 @@
 import os
 import quickstart
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-INPUT_URI = "gs://cloud-samples-data/documentai/invoice.pdf"
+PROJECT_ID = os.environ['GCLOUD_PROJECT']
+INPUT_URI = 'gs://cloud-samples-data/documentai/invoice.pdf'
 
 
 def test_quickstart(capsys):
     quickstart.main(PROJECT_ID, INPUT_URI)
     out, _ = capsys.readouterr()
-    assert "Entity type" in out
-    assert "Mention text" in out
+    assert 'Entity type' in out
+    assert 'Mention text' in out

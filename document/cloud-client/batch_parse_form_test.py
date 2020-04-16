@@ -18,7 +18,7 @@ import pytest
 import uuid
 from google.cloud import storage
 
-BUCKET = 'document-ai-{}'.format(str(uuid.uuid4()))
+BUCKET = 'document-ai-{}'.format(uuid.uuid4())
 OUTPUT_PREFIX = 'TEST_OUTPUT_{}'.format(uuid.uuid4())
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 INPUT_URI = 'gs://cloud-samples-data/documentai/invoice.pdf'

@@ -32,7 +32,7 @@ def main(project_id='YOUR_PROJECT_ID',
         gcs_source=gcs_source, mime_type='application/pdf')
 
     # Location can be 'us' or 'eu'
-    parent = "projects/{}/locations/us".format(project_id)
+    parent = 'projects/{}/locations/us'.format(project_id)
     request = documentai.types.ProcessDocumentRequest(
         parent=parent,
         input_config=input_config)
@@ -40,14 +40,13 @@ def main(project_id='YOUR_PROJECT_ID',
     document = client.process_document(request=request)
 
     # All text extracted from the document
-    print("Document Text:")
-    print(document.text)
+    print('Document Text: {}'.format(document.text))
 
     def _get_text(el):
         """Convert text offset indexes into text snippets.
         """
-        response = ""
-        # If a form field spans several lines, it will
+        response = ''
+        # If a text segment spans several lines, it will
         # be stored in different text segments.
         for segment in el.text_anchor.text_segments:
             start_index = segment.start_index
@@ -56,8 +55,8 @@ def main(project_id='YOUR_PROJECT_ID',
         return response
 
     for entity in document.entities:
-        print("Entity type: {}".format(entity.type))
-        print("Text: {}".format(_get_text(entity)))
-        print("Mention text: {}\n".format(entity.mention_text))
+        print('Entity type: {}'.format(entity.type))
+        print('Text: {}'.format(_get_text(entity)))
+        print('Mention text: {}\n'.format(entity.mention_text))
 
 # [END documentai_quickstart]

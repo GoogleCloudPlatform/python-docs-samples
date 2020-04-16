@@ -19,8 +19,8 @@ PROJECT_ID = os.environ['GCLOUD_PROJECT']
 INPUT_URI = 'gs://cloud-samples-data/documentai/invoice.pdf'
 AUTOML_NL_MODEL_ID = 'TCN3472481026502981088'
 
-if 'AUTOML_NL_MODEL_ID ' in os.environ:
-    AUTOML_NL_MODEL_ID  = os.environ['AUTOML_NL_MODEL_ID']
+if 'AUTOML_NL_MODEL_ID' in os.environ:
+    AUTOML_NL_MODEL_ID = os.environ['AUTOML_NL_MODEL_ID']
 
 MODEL_NAME = 'projects/{}/locations/us-central1/models/{}'.format(PROJECT_ID, AUTOML_NL_MODEL_ID)
 

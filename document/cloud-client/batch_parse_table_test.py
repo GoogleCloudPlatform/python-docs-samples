@@ -18,7 +18,7 @@ import pytest
 import uuid
 from google.cloud import storage
 
-BUCKET = 'document-ai-{}'.format(str(uuid.uuid4()))
+BUCKET = 'document-ai-{}'.format(uuid.uuid4())
 OUTPUT_PREFIX = 'TEST_OUTPUT_{}'.format(uuid.uuid4())
 PROJECT_ID = os.environ['GCLOUD_PROJECT']
 INPUT_URI = 'gs://cloud-samples-data/documentai/invoice.pdf'
@@ -39,4 +39,4 @@ def setup_teardown():
 def test_batch_parse_table(capsys):
     batch_parse_table.batch_parse_table(PROJECT_ID, INPUT_URI, BATCH_OUTPUT_URI)
     out, _ = capsys.readouterr()
-    assert 'Output files' in out
+    assert 'Output files:' in out

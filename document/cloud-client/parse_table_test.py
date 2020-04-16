@@ -15,12 +15,12 @@
 import os
 import parse_table
 
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-INPUT_URI = "gs://cloud-samples-data/documentai/invoice.pdf"
+PROJECT_ID = os.environ['GCLOUD_PROJECT']
+INPUT_URI = 'gs://cloud-samples-data/documentai/invoice.pdf'
 
 
 def test_parse_table(capsys):
     parse_table.parse_table(PROJECT_ID, INPUT_URI)
     out, _ = capsys.readouterr()
-    assert "Table" in out
-    assert "Header Row" in out
+    assert 'Table' in out
+    assert 'Header Row' in out

@@ -22,7 +22,7 @@ import re
 def batch_parse_form(
         project_id='YOUR_PROJECT_ID',
         input_uri='gs://cloud-samples-data/documentai/form.pdf',
-        destination_uri='DESTINATION_URI'):
+        destination_uri='gs://your-bucket-id/path/to/save/results/'):
     """Parse a form"""
 
     client = documentai.DocumentUnderstandingServiceClient()
@@ -67,14 +67,14 @@ def batch_parse_form(
         form_extraction_params=form_extraction_params)
 
     # Add each ProcessDocumentRequest to the batch request
-    batch_request = []
-    batch_request.append(request)
+    requests = []
+    requests.append(request)
 
-    requests = documentai.types.BatchProcessDocumentsRequest(
-        parent=parent, requests=batch_request
+    batch_request = documentai.types.BatchProcessDocumentsRequest(
+        parent=parent, requests=requests
     )
 
-    operation = client.batch_process_documents(requests)
+    operation = client.batch_process_documents(batch_request)
 
     # Wait for the operation to finish
     operation.result()
