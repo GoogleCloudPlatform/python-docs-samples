@@ -15,6 +15,7 @@
 import os
 
 import pytest
+from retrying import retry
 
 import jobs
 
@@ -58,24 +59,40 @@ def test_job_name():
         print("Issue during teardown, missing job")
 
 
-@pytest.mark.flaky(max_runs=5, min_passes=1)
+def retry_on_assertion_error(exception):
+    return isinstance(exception, (AssertionError))
+
+
 def test_list_dlp_jobs(test_job_name, capsys):
-    jobs.list_dlp_jobs(GCLOUD_PROJECT)
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=5,
+        retry_on_exception=retry_on_assertion_error)
+    def test_real():
+        jobs.list_dlp_jobs(GCLOUD_PROJECT)
 
-    out, _ = capsys.readouterr()
-    assert test_job_name not in out
+        out, _ = capsys.readouterr()
+        assert test_job_name not in out
+    test_real()
 
 
-@pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_list_dlp_jobs_with_filter(test_job_name, capsys):
-    jobs.list_dlp_jobs(
-        GCLOUD_PROJECT,
-        filter_string="state=RUNNING",
-        job_type="RISK_ANALYSIS_JOB",
-    )
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=5,
+        retry_on_exception=retry_on_assertion_error)
+    def test_real():
+        jobs.list_dlp_jobs(
+            GCLOUD_PROJECT,
+            filter_string="state=RUNNING",
+            job_type="RISK_ANALYSIS_JOB",
+        )
 
-    out, _ = capsys.readouterr()
-    assert test_job_name in out
+        out, _ = capsys.readouterr()
+        assert test_job_name in out
+    test_real()
 
 
 def test_list_dlp_jobs_with_job_type(test_job_name, capsys):
