@@ -15,7 +15,7 @@
 import os
 import sys
 import tempfile
-import time
+import uuid
 
 from google.cloud import pubsub
 from google.cloud import storage
@@ -34,9 +34,9 @@ gcs_bucket = os.environ['CLOUD_STORAGE_BUCKET']
 project_id = os.environ['GCLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
-topic_id = 'test-device-events-{}'.format(int(time.time()))
-device_id = 'test-device-{}'.format(int(time.time()))
-registry_id = 'test-registry-{}'.format(int(time.time()))
+topic_id = 'test-device-events-{}'.format(str(uuid.uuid4()))
+device_id = 'test-device-{}'.format(str(uuid.uuid4()))
+registry_id = 'test-registry-{}'.format(str(uuid.uuid4()))
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
 
 cloud_region = 'us-central1'

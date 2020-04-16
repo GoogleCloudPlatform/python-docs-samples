@@ -23,7 +23,7 @@
 /container_registry/            @DanSanche @GoogleCloudPlatform/python-samples-owners
 /datacatalog/                   @shollyman @GoogleCloudPlatform/python-samples-owners
 /dataflow/                      @davidcavazos @GoogleCloudPlatform/python-samples-owners
-/datalabeling/                  @czahedi @GoogleCloudPlatform/python-samples-owners
+/datalabeling/                  @sgreenberg @GoogleCloudPlatform/python-samples-owners
 /dataproc/                      @bradmiro @GoogleCloudPlatform/python-samples-owners
 /datastore/                     @andrewsg @GoogleCloudPlatform/python-samples-owners
 /dialogflow/                    @nnegrey @telpirion @sirtorry @GoogleCloudPlatform/python-samples-owners
