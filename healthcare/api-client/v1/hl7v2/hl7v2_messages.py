@@ -49,8 +49,8 @@ def create_hl7v2_message(
     with open(hl7v2_message_file) as hl7v2_message:
         hl7v2_message_content = json.load(hl7v2_message)
 
-    request = client.projects().locations().datasets().hl7V2Stores(
-    ).messages().create(parent=hl7v2_store_name, body=hl7v2_message_content)
+    request = client.projects().locations().datasets().hl7V2Stores().messages().create(
+        parent=hl7v2_store_name, body=hl7v2_message_content)
 
     response = request.execute()
     print('Created HL7v2 message from file: {}'.format(hl7v2_message_file))
