@@ -60,6 +60,7 @@ def test_job_name():
         print("Issue during teardown, missing job")
 
 
+@pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_list_dlp_jobs(test_job_name, capsys):
     jobs.list_dlp_jobs(GCLOUD_PROJECT)
 
@@ -67,6 +68,7 @@ def test_list_dlp_jobs(test_job_name, capsys):
     assert test_job_name not in out
 
 
+@pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_list_dlp_jobs_with_filter(test_job_name, capsys):
     jobs.list_dlp_jobs(
         GCLOUD_PROJECT,
