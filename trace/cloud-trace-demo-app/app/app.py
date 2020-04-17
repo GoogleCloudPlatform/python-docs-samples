@@ -30,10 +30,9 @@ import random
 
 app = Flask(__name__)
 
+# [START trace_demo_middleware]
 propagator = google_cloud_format.GoogleCloudFormatPropagator()
 
-
-# [START trace_demo_middleware]
 def createMiddleWare(exporter):
     # Configure a flask middleware that listens for each request and applies automatic tracing.
     # This needs to be set up before the application starts.
@@ -58,6 +57,7 @@ def template_test():
         return output_string, 200
     # Endpoint is the next service to send string to.
     data = {'body': output_string}
+    # [START trace_context_header]
     trace_context_header = propagator.to_header(execution_context.get_opencensus_tracer().span_context)
     response = requests.get(
         url,
@@ -65,6 +65,7 @@ def template_test():
         headers={
           'X-Cloud-Trace-Context' : trace_context_header}
     )
+    # [END trace_context_header]
     return response.text + app.config['keyword']
 
 
