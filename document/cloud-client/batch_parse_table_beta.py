@@ -111,4 +111,4 @@ def batch_parse_table(
     for blob in blob_list:
         print(blob.name)
 
-# [END documentai_batch_parse_table_beta
+# [END documentai_batch_parse_table_beta]
