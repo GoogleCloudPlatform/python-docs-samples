@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC All Rights Reserved.
+# Copyright 2018 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,53 +36,145 @@ gcs_uri = os.environ["CLOUD_STORAGE_BUCKET"]
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 source_file_name = "Patient.json"
 resource_file = os.path.join(RESOURCES, source_file_name)
-import_object = gcs_uri + "/" + source_file_name
+import_object = "{}/{}".format(gcs_uri, source_file_name)
 
 
 def retry_if_exception(exception):
-    return (isinstance(exception, errors.HttpError))
+    return isinstance(exception, errors.HttpError)
 
 
 @pytest.fixture(scope="module")
 def test_dataset():
-    dataset = datasets.create_dataset(
-        project_id, cloud_region, dataset_id
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception,
     )
+    def create():
+        try:
+            datasets.create_dataset(project_id, cloud_region, dataset_id)
+        except HttpError as err:
+            # We ignore 409 conflict here, because we know it's most
+            # likely the first request failed on the client side, but
+            # the creation suceeded on the server side.
+            if err.resp.status == 409:
+                print("Got exception {} while creating dataset".format(err.resp.status))
+            else:
+                raise
 
-    yield dataset
+    create()
+
+    yield
 
     # Clean up
-    datasets.delete_dataset(project_id, cloud_region, dataset_id)
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception,
+    )
+    def clean_up():
+        try:
+            datasets.delete_dataset(project_id, cloud_region, dataset_id)
+        except HttpError as err:
+            # The API returns 403 when the dataset doesn't exist.
+            if err.resp.status == 404 or err.resp.status == 403:
+                print("Got exception {} while deleting dataset".format(err.resp.status))
+            else:
+                raise
+
+    clean_up()
 
 
 @pytest.fixture(scope="module")
 def test_fhir_store():
-    fhir_store = fhir_stores.create_fhir_store(
-        project_id, cloud_region, dataset_id, fhir_store_id
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception,
     )
+    def create():
+        try:
+            fhir_stores.create_fhir_store(
+                project_id, cloud_region, dataset_id, fhir_store_id
+            )
+        except HttpError as err:
+            # We ignore 409 conflict here, because we know it's most
+            # likely the first request failed on the client side, but
+            # the creation suceeded on the server side.
+            if err.resp.status == 409:
+                print(
+                    "Got exception {} while creating FHIR store".format(err.resp.status)
+                )
+            else:
+                raise
 
-    yield fhir_store
+    create()
+
+    yield
 
     # Clean up
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception,
+    )
+    def clean_up():
+        try:
+            fhir_stores.delete_fhir_store(
+                project_id, cloud_region, dataset_id, fhir_store_id
+            )
+        except HttpError as err:
+            # The API returns 403 when the FHIR store doesn't exist.
+            if err.resp.status == 404 or err.resp.status == 403:
+                print(
+                    "Got exception {} while deleting FHIR store".format(err.resp.status)
+                )
+            else:
+                raise
+
+    clean_up()
+
+
+@pytest.fixture(scope="module")
+def crud_fhir_store_id():
+    yield fhir_store_id
+
+    # Clean up
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception,
+    )
+    def clean_up():
+        try:
+            fhir_stores.delete_fhir_store(
+                project_id, cloud_region, dataset_id, fhir_store_id
+            )
+        except HttpError as err:
+            # The API returns 403 when the FHIR store doesn't exist.
+            if err.resp.status == 404 or err.resp.status == 403:
+                print(
+                    "Got exception {} while deleting FHIR store".format(err.resp.status)
+                )
+            else:
+                raise
+
+    clean_up()
+
+
+def test_crud_fhir_store(test_dataset, capsys):
+    fhir_stores.create_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id)
+
+    fhir_stores.get_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id)
+
+    fhir_stores.list_fhir_stores(project_id, cloud_region, dataset_id)
+
     fhir_stores.delete_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id)
-
-
-def test_CRUD_fhir_store(test_dataset, capsys):
-    fhir_stores.create_fhir_store(
-        project_id, cloud_region, dataset_id, fhir_store_id
-    )
-
-    fhir_stores.get_fhir_store(
-        project_id, cloud_region, dataset_id, fhir_store_id
-    )
-
-    fhir_stores.list_fhir_stores(
-        project_id, cloud_region, dataset_id
-    )
-
-    fhir_stores.delete_fhir_store(
-        project_id, cloud_region, dataset_id, fhir_store_id
-    )
 
     out, _ = capsys.readouterr()
 
@@ -94,9 +186,7 @@ def test_CRUD_fhir_store(test_dataset, capsys):
 
 
 def test_patch_fhir_store(test_dataset, test_fhir_store, capsys):
-    fhir_stores.patch_fhir_store(
-        project_id, cloud_region, dataset_id, fhir_store_id
-    )
+    fhir_stores.patch_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id)
 
     out, _ = capsys.readouterr()
 
@@ -111,15 +201,15 @@ def test_import_fhir_store_gcs(test_dataset, test_fhir_store, capsys):
     blob.upload_from_filename(resource_file)
 
     # Retry in case the blob hasn't had time to propagate to Cloud Storage.
-    @retry(wait_exponential_multiplier=1000, wait_exponential_max=300000,
-           stop_max_attempt_number=10, retry_on_exception=retry_if_exception)
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=300000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_exception,
+    )
     def test_call():
         fhir_stores.import_fhir_resources(
-            project_id,
-            cloud_region,
-            dataset_id,
-            fhir_store_id,
-            import_object,
+            project_id, cloud_region, dataset_id, fhir_store_id, import_object,
         )
 
         out, _ = capsys.readouterr()
@@ -137,11 +227,7 @@ def test_import_fhir_store_gcs(test_dataset, test_fhir_store, capsys):
 
 def test_export_fhir_store_gcs(test_dataset, test_fhir_store, capsys):
     fhir_stores.export_fhir_store_gcs(
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        gcs_uri,
+        project_id, cloud_region, dataset_id, fhir_store_id, gcs_uri,
     )
 
     out, _ = capsys.readouterr()

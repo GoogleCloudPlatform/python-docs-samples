@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC All Rights Reserved.
+# Copyright 2018 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@ import pytest
 import sys
 import uuid
 
+from retrying import retry
+
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "datasets"))  # noqa
 import datasets
@@ -24,77 +26,162 @@ import fhir_stores
 import fhir_resources
 
 cloud_region = "us-central1"
-base_url = "https://healthcare.googleapis.com/v1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
-bundle = os.path.join(os.path.dirname(__file__), "resources/execute_bundle.json")
 dataset_id = "test_dataset_{}".format(uuid.uuid4())
 fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
 resource_type = "Patient"
 
 
+def retry_if_server_exception(exception):
+    return isinstance(exception, (HttpError))
+
+
 @pytest.fixture(scope="module")
 def test_dataset():
-    dataset = datasets.create_dataset(
-        project_id, cloud_region, dataset_id
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception,
     )
+    def create():
+        try:
+            datasets.create_dataset(project_id, cloud_region, dataset_id)
+        except HttpError as err:
+            # We ignore 409 conflict here, because we know it's most
+            # likely the first request failed on the client side, but
+            # the creation suceeded on the server side.
+            if err.resp.status == 409:
+                print("Got exception {} while creating dataset".format(err.resp.status))
+            else:
+                raise
 
-    yield dataset
+    create()
+
+    yield
 
     # Clean up
-    datasets.delete_dataset(project_id, cloud_region, dataset_id)
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception,
+    )
+    def clean_up():
+        try:
+            datasets.delete_dataset(project_id, cloud_region, dataset_id)
+        except HttpError as err:
+            # The API returns 403 when the dataset doesn't exist.
+            if err.resp.status == 404 or err.resp.status == 403:
+                print("Got exception {} while deleting dataset".format(err.resp.status))
+            else:
+                raise
+
+    clean_up()
 
 
 @pytest.fixture(scope="module")
 def test_fhir_store():
-    fhir_store = fhir_stores.create_fhir_store(
-        project_id, cloud_region, dataset_id, fhir_store_id
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception,
     )
+    def create():
+        try:
+            fhir_stores.create_fhir_store(
+                project_id, cloud_region, dataset_id, fhir_store_id
+            )
+        except HttpError as err:
+            # We ignore 409 conflict here, because we know it's most
+            # likely the first request failed on the client side, but
+            # the creation suceeded on the server side.
+            if err.resp.status == 409:
+                print(
+                    "Got exception {} while creating FHIR store".format(err.resp.status)
+                )
+            else:
+                raise
 
-    yield fhir_store
+    create()
+
+    yield
 
     # Clean up
-    fhir_stores.delete_fhir_store(
-        project_id, cloud_region, dataset_id, fhir_store_id
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception,
     )
+    def clean_up():
+        try:
+            fhir_stores.delete_fhir_store(
+                project_id, cloud_region, dataset_id, fhir_store_id
+            )
+        except HttpError as err:
+            # The API returns 403 when the FHIR store doesn't exist.
+            if err.resp.status == 404 or err.resp.status == 403:
+                print(
+                    "Got exception {} while deleting FHIR store".format(err.resp.status)
+                )
+            else:
+                raise
+
+    clean_up()
 
 
 # Fixture that creates/deletes a Patient resource for various tests.
 @pytest.fixture(scope="module")
 def test_patient():
     patient_response = fhir_resources.create_patient(
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
+        project_id, cloud_region, dataset_id, fhir_store_id,
     )
-    patient_resource_id = patient_response.json()["id"]
+    patient_resource_id = patient_response["id"]
 
     yield patient_resource_id
 
-    # Clean up
-    fhir_resources.delete_resource(
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        resource_type,
-        patient_resource_id,
+    @retry(
+        wait_exponential_multiplier=1000,
+        wait_exponential_max=10000,
+        stop_max_attempt_number=10,
+        retry_on_exception=retry_if_server_exception,
     )
+
+    # Clean up
+    def clean_up():
+        try:
+            fhir_resources.delete_resource(
+                project_id,
+                cloud_region,
+                dataset_id,
+                fhir_store_id,
+                resource_type,
+                patient_resource_id,
+            )
+
+        except HttpError as err:
+            # The API returns 200 whether the resource exists or was
+            # successfully deleted or not, so only retry on
+            # unathorized exceptions.
+            if err.resp.status == 401:
+                print(
+                    "Got exception {} while deleting FHIR store".format(err.resp.status)
+                )
+            else:
+                raise
+
+    clean_up()
 
 
 def test_create_patient(test_dataset, test_fhir_store, capsys):
     # Manually create a new Patient here to test that creating a Patient
     # works.
     fhir_resources.create_patient(
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
+        project_id, cloud_region, dataset_id, fhir_store_id,
     )
 
     out, _ = capsys.readouterr()
@@ -106,13 +193,12 @@ def test_create_patient(test_dataset, test_fhir_store, capsys):
 
 def test_get_patient(test_dataset, test_fhir_store, test_patient, capsys):
     fhir_resources.get_resource(
-        base_url,
         project_id,
         cloud_region,
         dataset_id,
         fhir_store_id,
         resource_type,
-        test_patient
+        test_patient,
     )
 
     out, _ = capsys.readouterr()
@@ -124,13 +210,12 @@ def test_get_patient(test_dataset, test_fhir_store, test_patient, capsys):
 
 def test_update_patient(test_dataset, test_fhir_store, test_patient, capsys):
     fhir_resources.update_resource(
-        base_url,
         project_id,
         cloud_region,
         dataset_id,
         fhir_store_id,
         resource_type,
-        test_patient
+        test_patient,
     )
 
     out, _ = capsys.readouterr()
@@ -140,29 +225,10 @@ def test_update_patient(test_dataset, test_fhir_store, test_patient, capsys):
     assert "Updated Patient resource" in out
 
 
-def test_patch_patient(test_dataset, test_fhir_store, test_patient, capsys):
-    fhir_resources.patch_resource(
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        resource_type,
-        test_patient
-    )
-
-    out, _ = capsys.readouterr()
-
-    print(out)
-
-    assert "Patched Patient resource" in out
-
-
 def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
     # We have to update the resource so that different versions of it are
     # created, then we test to see if we can get/delete those versions.
     fhir_resources.update_resource(
-        base_url,
         project_id,
         cloud_region,
         dataset_id,
@@ -172,7 +238,6 @@ def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
     )
 
     history = fhir_resources.list_resource_history(
-        base_url,
         project_id,
         cloud_region,
         dataset_id,
@@ -182,7 +247,6 @@ def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
     )
 
     fhir_resources.get_resource_history(
-        base_url,
         project_id,
         cloud_region,
         dataset_id,
@@ -190,16 +254,6 @@ def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
         resource_type,
         test_patient,
         history["entry"][-1]["resource"]["meta"]["versionId"],
-    )
-
-    fhir_resources.delete_resource_purge(
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        resource_type,
-        test_patient,
     )
 
     out, _ = capsys.readouterr()
@@ -210,18 +264,11 @@ def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
     assert "History for Patient resource" in out
     # get_resource_history test
     assert "Got history for Patient resource" in out
-    # delete_resource_purge test
-    assert "Deleted versions of Patient resource" in out
 
 
 def test_search_resources_get(test_dataset, test_fhir_store, test_patient, capsys):
     fhir_resources.search_resources_get(
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        resource_type,
+        project_id, cloud_region, dataset_id, fhir_store_id, resource_type,
     )
 
     out, _ = capsys.readouterr()
@@ -229,60 +276,14 @@ def test_search_resources_get(test_dataset, test_fhir_store, test_patient, capsy
     assert "Using GET request" in out
 
 
-def test_search_resources_post(test_dataset, test_fhir_store, test_patient, capsys):
-    fhir_resources.search_resources_post(
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-    )
-
-    out, _ = capsys.readouterr()
-
-    assert "Using POST request" in out
-
-
-def test_get_patient_everything(test_dataset, test_fhir_store, test_patient, capsys):
-    fhir_resources.get_patient_everything(
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        test_patient,
-    )
-
-    out, _ = capsys.readouterr()
-
-    # get_patient_everything test
-    assert "id" in out
-
-
-def test_get_metadata(test_dataset, test_fhir_store, capsys):
-    fhir_resources.get_metadata(
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-    )
-
-    out, _ = capsys.readouterr()
-
-    # get_metadata test
-    assert "fhirVersion" in out
-
-
 def test_delete_patient(test_dataset, test_fhir_store, test_patient, capsys):
     fhir_resources.delete_resource(
-        base_url,
         project_id,
         cloud_region,
         dataset_id,
         fhir_store_id,
         resource_type,
-        test_patient
+        test_patient,
     )
 
     out, _ = capsys.readouterr()
@@ -290,19 +291,3 @@ def test_delete_patient(test_dataset, test_fhir_store, test_patient, capsys):
     print(out)
 
     assert "Deleted Patient resource" in out
-
-
-def test_execute_bundle(test_dataset, test_fhir_store, capsys):
-    fhir_resources.execute_bundle(
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        fhir_store_id,
-        bundle,
-    )
-
-    out, _ = capsys.readouterr()
-
-    # execute_bundle test
-    assert "Executed bundle" in out

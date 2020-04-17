@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC All Rights Reserved.
+# Copyright 2018 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,23 +27,21 @@ def get_client():
     api_version = "v1"
     service_name = "healthcare"
 
-    return discovery.build(
-        service_name,
-        api_version)
+    return discovery.build(service_name, api_version)
+
+
 # [END healthcare_get_client]
 
 
 # [START healthcare_create_fhir_store]
-def create_fhir_store(
-    project_id, cloud_region, dataset_id, fhir_store_id
-):
+def create_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id):
     """Creates a new FHIR store within the parent dataset."""
     client = get_client()
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, cloud_region, dataset_id
     )
 
-    body = {'version': 'STU3'}
+    body = {"version": "STU3"}
 
     request = (
         client.projects()
@@ -53,21 +51,17 @@ def create_fhir_store(
         .create(parent=fhir_store_parent, body=body, fhirStoreId=fhir_store_id)
     )
 
-    try:
-        response = request.execute()
-        print("Created FHIR store: {}".format(fhir_store_id))
-        return response
-    except HttpError as e:
-        print("Error, FHIR store not created: {}".format(e))
+    response = request.execute()
+    print("Created FHIR store: {}".format(fhir_store_id))
+
+    return response
 
 
 # [END healthcare_create_fhir_store]
 
 
 # [START healthcare_delete_fhir_store]
-def delete_fhir_store(
-    project_id, cloud_region, dataset_id, fhir_store_id
-):
+def delete_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id):
     """Deletes the specified FHIR store."""
     client = get_client()
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
@@ -83,21 +77,17 @@ def delete_fhir_store(
         .delete(name=fhir_store_name)
     )
 
-    try:
-        response = request.execute()
-        print("Deleted FHIR store: {}".format(fhir_store_id))
-        return response
-    except HttpError as e:
-        print("Error, FHIR store not deleted: {}".format(e))
+    response = request.execute()
+    print("Deleted FHIR store: {}".format(fhir_store_id))
+
+    return response
 
 
 # [END healthcare_delete_fhir_store]
 
 
 # [START healthcare_get_fhir_store]
-def get_fhir_store(
-    project_id, cloud_region, dataset_id, fhir_store_id
-):
+def get_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id):
     """Gets the specified FHIR store."""
     client = get_client()
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
@@ -166,9 +156,7 @@ def list_fhir_stores(project_id, cloud_region, dataset_id):
 
 
 # [START healthcare_patch_fhir_store]
-def patch_fhir_store(
-    project_id, cloud_region, dataset_id, fhir_store_id
-):
+def patch_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id):
     """Updates the FHIR store."""
     client = get_client()
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
@@ -186,23 +174,17 @@ def patch_fhir_store(
         .patch(name=fhir_store_name, updateMask="notificationConfig", body=patch)
     )
 
-    try:
-        response = request.execute()
-        print(
-            "Patched FHIR store {} with Cloud Pub/Sub topic: None".format(fhir_store_id)
-        )
-        return response
-    except HttpError as e:
-        print("Error, FHIR store not patched: {}".format(e))
+    response = request.execute()
+    print("Patched FHIR store {} with Cloud Pub/Sub topic: None".format(fhir_store_id))
+
+    return response
 
 
 # [END healthcare_patch_fhir_store]
 
 
 # [START healthcare_export_fhir_resources_gcs]
-def export_fhir_store_gcs(
-    project_id, cloud_region, dataset_id, fhir_store_id, gcs_uri
-):
+def export_fhir_store_gcs(project_id, cloud_region, dataset_id, fhir_store_id, gcs_uri):
     """Export resources to a Google Cloud Storage bucket by copying
     them from the FHIR store."""
     client = get_client()
@@ -221,21 +203,17 @@ def export_fhir_store_gcs(
         .export(name=fhir_store_name, body=body)
     )
 
-    try:
-        response = request.execute()
-        print("Exported FHIR resources to bucket: gs://{}".format(gcs_uri))
-        return response
-    except HttpError as e:
-        print("Error, FHIR resources not exported: {}".format(e))
+    response = request.execute()
+    print("Exported FHIR resources to bucket: gs://{}".format(gcs_uri))
+
+    return response
 
 
 # [END healthcare_export_fhir_resources_gcs]
 
 
 # [START healthcare_import_fhir_resources]
-def import_fhir_resources(
-    project_id, cloud_region, dataset_id, fhir_store_id, gcs_uri
-):
+def import_fhir_resources(project_id, cloud_region, dataset_id, fhir_store_id, gcs_uri):
     """Import resources into the FHIR store by copying them from the
     specified source.
     """
@@ -260,21 +238,17 @@ def import_fhir_resources(
         .import_(name=fhir_store_name, body=body)
     )
 
-    try:
-        response = request.execute()
-        print("Imported FHIR resources: {}".format(gcs_uri))
-        return response
-    except HttpError as e:
-        print("Error, FHIR resources not imported: {}".format(e))
+    response = request.execute()
+    print("Imported FHIR resources: {}".format(gcs_uri))
+
+    return response
 
 
 # [END healthcare_import_fhir_resources]
 
 
 # [START healthcare_fhir_store_get_iam_policy]
-def get_fhir_store_iam_policy(
-    project_id, cloud_region, dataset_id, fhir_store_id
-):
+def get_fhir_store_iam_policy(project_id, cloud_region, dataset_id, fhir_store_id):
     """Gets the IAM policy for the specified FHIR store."""
     client = get_client()
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
@@ -300,13 +274,7 @@ def get_fhir_store_iam_policy(
 
 # [START healthcare_fhir_store_set_iam_policy]
 def set_fhir_store_iam_policy(
-    project_id,
-    cloud_region,
-    dataset_id,
-    fhir_store_id,
-    member,
-    role,
-    etag=None,
+    project_id, cloud_region, dataset_id, fhir_store_id, member, role, etag=None,
 ):
     """Sets the IAM policy for the specified FHIR store.
         A single member will be assigned a single role. A member can be any of:
@@ -419,33 +387,22 @@ def run_command(args):
 
     elif args.command == "create-fhir-store":
         create_fhir_store(
-            args.project_id,
-            args.cloud_region,
-            args.dataset_id,
-            args.fhir_store_id,
+            args.project_id, args.cloud_region, args.dataset_id, args.fhir_store_id,
         )
 
     elif args.command == "delete-fhir-store":
         delete_fhir_store(
-            args.project_id,
-            args.cloud_region,
-            args.dataset_id,
-            args.fhir_store_id,
+            args.project_id, args.cloud_region, args.dataset_id, args.fhir_store_id,
         )
 
     elif args.command == "get-fhir-store":
         get_fhir_store(
-            args.project_id,
-            args.cloud_region,
-            args.dataset_id,
-            args.fhir_store_id,
+            args.project_id, args.cloud_region, args.dataset_id, args.fhir_store_id,
         )
 
     elif args.command == "list-fhir-stores":
         list_fhir_stores(
-            args.project_id,
-            args.cloud_region,
-            args.dataset_id,
+            args.project_id, args.cloud_region, args.dataset_id,
         )
 
     elif args.command == "patch-fhir-store":
@@ -477,10 +434,7 @@ def run_command(args):
 
     elif args.command == "get_iam_policy":
         get_fhir_store_iam_policy(
-            args.project_id,
-            args.cloud_region,
-            args.dataset_id,
-            args.fhir_store_id,
+            args.project_id, args.cloud_region, args.dataset_id, args.fhir_store_id,
         )
 
     elif args.command == "set_iam_policy":
