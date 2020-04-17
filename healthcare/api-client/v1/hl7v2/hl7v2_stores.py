@@ -63,8 +63,8 @@ def delete_hl7v2_store(
     hl7v2_store_name = '{}/hl7V2Stores/{}'.format(
         hl7v2_store_parent, hl7v2_store_id)
 
-    request = client.projects().locations().datasets(
-    ).hl7V2Stores().delete(name=hl7v2_store_name)
+    request = client.projects().locations().datasets().hl7V2Stores().delete(
+        name=hl7v2_store_name)
 
     response = request.execute()
     print('Deleted HL7v2 store: {}'.format(hl7v2_store_id))
