@@ -15,7 +15,7 @@
 # limitations under the License.
 
 
-def run_quickstart():
+def run_quickstart(override_values={}):
     # [START bigquery_quickstart]
     # Imports the Google Cloud client library
     from google.cloud import bigquery
@@ -25,6 +25,12 @@ def run_quickstart():
 
     # The name for the new dataset
     dataset_id = 'my_new_dataset'
+
+    # [END bigquery_quickstart]
+    # To facilitate testing, we replace values with alternatives
+    # provided by the testing harness.
+    dataset_id = override_values.get("dataset_id", dataset_id)
+    # [START bigquery_quickstart]
 
     # Prepares a reference to the new dataset
     dataset_ref = bigquery_client.dataset(dataset_id)

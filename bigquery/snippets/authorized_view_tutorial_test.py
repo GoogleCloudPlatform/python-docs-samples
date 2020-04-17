@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import uuid
+
 from google.cloud import bigquery
 import pytest
 
@@ -24,24 +26,24 @@ def client():
 
 
 @pytest.fixture
-def to_delete(client):
+def datasets_to_delete(client):
     doomed = []
     yield doomed
     for item in doomed:
-        if isinstance(item, (bigquery.Dataset, bigquery.DatasetReference)):
-            client.delete_dataset(item, delete_contents=True)
-        elif isinstance(item, (bigquery.Table, bigquery.TableReference)):
-            client.delete_table(item)
-        else:
-            item.delete()
+        client.delete_dataset(item, delete_contents=True)
 
 
-def test_authorized_view_tutorial(client, to_delete):
-    source_dataset_ref = client.dataset('github_source_data')
-    shared_dataset_ref = client.dataset('shared_views')
-    to_delete.extend([source_dataset_ref, shared_dataset_ref])
+def test_authorized_view_tutorial(client, datasets_to_delete):
+    override_values = {
+        "source_dataset_id": "github_source_data_{}".format(str(uuid.uuid4()).replace("-", "_")),
+        "shared_dataset_id": "shared_views_{}".format(str(uuid.uuid4()).replace("-", "_")),
+    }
+    source_dataset_ref = client.dataset(override_values["source_dataset_id"])
+    shared_dataset_ref = client.dataset(override_values["shared_dataset_id"])
+    datasets_to_delete.extend([override_values["source_dataset_id"],
+                               override_values["shared_dataset_id"]])
 
-    authorized_view_tutorial.run_authorized_view_tutorial()
+    authorized_view_tutorial.run_authorized_view_tutorial(override_values)
 
     source_dataset = client.get_dataset(source_dataset_ref)
     shared_dataset = client.get_dataset(shared_dataset_ref)
@@ -55,7 +57,7 @@ def test_authorized_view_tutorial(client, to_delete):
                                if entry.entity_type == 'view']
     expected_view_ref = {
         'projectId': client.project,
-        'datasetId': 'shared_views',
+        'datasetId': override_values["shared_dataset_id"],
         'tableId': 'github_analyst_view',
     }
     assert len(authorized_view_entries) == 1
