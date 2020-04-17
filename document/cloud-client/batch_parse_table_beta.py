@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-# [START documentai_batch_parse_table]
+# [START documentai_batch_parse_table_beta]
 from google.cloud import documentai_v1beta2 as documentai
 from google.cloud import storage
 import re
@@ -111,4 +111,4 @@ def batch_parse_table(
     for blob in blob_list:
         print(blob.name)
 
-# [END documentai_batch_parse_table]
+# [END documentai_batch_parse_table_beta

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START documentai_parse_table]
+# [START documentai_parse_table_beta]
 from google.cloud import documentai_v1beta2 as documentai
 
 
@@ -102,4 +102,4 @@ def parse_table(project_id='YOUR_PROJECT_ID',
                 print('Row {}: {}'.format(row_num, cells))
 
 
-# [END documentai_parse_table]
+# [END documentai_parse_table_beta]

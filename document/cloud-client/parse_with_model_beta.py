@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-# [START documentai_parse_with_model]
+# [START documentai_parse_with_model_beta]
 from google.cloud import documentai_v1beta2 as documentai
 
 
@@ -56,4 +56,4 @@ def parse_with_model(
         print('Label detected: {}'.format(label.name))
         print('Confidence: {}'.format(label.confidence))
 
-# [END documentai_parse_with_model]
+# [END documentai_parse_with_model_beta]

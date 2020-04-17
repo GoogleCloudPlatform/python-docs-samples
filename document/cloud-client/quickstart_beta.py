@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-# [START documentai_quickstart]
+# [START documentai_quickstart_beta]
 from google.cloud import documentai_v1beta2 as documentai
 
 
@@ -59,4 +59,4 @@ def main(project_id='YOUR_PROJECT_ID',
         print('Text: {}'.format(_get_text(entity)))
         print('Mention text: {}\n'.format(entity.mention_text))
 
-# [END documentai_quickstart]
+# [END documentai_quickstart_beta]

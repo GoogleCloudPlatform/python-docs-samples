@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START documentai_parse_form]
+# [START documentai_parse_form_beta]
 from google.cloud import documentai_v1beta2 as documentai
 
 
@@ -79,4 +79,4 @@ def parse_form(project_id='YOUR_PROJECT_ID',
                 _get_text(form_field.field_value),
                 form_field.field_value.confidence))
 
-# [END documentai_parse_form]
+# [END documentai_parse_form_beta]

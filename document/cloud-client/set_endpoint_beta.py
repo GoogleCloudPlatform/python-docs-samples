@@ -18,12 +18,12 @@ def set_endpoint(project_id='YOUR_PROJECT_ID',
     """Process a single document with the Document AI API, including
     text extraction and entity extraction."""
 
-    # [START documentai_set_endpoint]
+    # [START documentai_set_endpoint_beta]
     from google.cloud import documentai_v1beta2 as documentai
 
     client = documentai.DocumentUnderstandingServiceClient(
         client_options={'api_endpoint': 'eu-documentai.googleapis.com'})
-    # [END documentai_set_endpoint]
+    # [END documentai_set_endpoint_beta]
 
     gcs_source = documentai.types.GcsSource(uri=input_uri)
 
@@ -42,20 +42,3 @@ def set_endpoint(project_id='YOUR_PROJECT_ID',
 
     # All text extracted from the document
     print('Document Text: {}'.format(document.text))
-
-    def _get_text(el):
-        """Convert text offset indexes into text snippets.
-        """
-        response = ''
-        # If a form field spans several lines, it will
-        # be stored in different text segments.
-        for segment in el.text_anchor.text_segments:
-            start_index = segment.start_index
-            end_index = segment.end_index
-            response += document.text[start_index:end_index]
-        return response
-
-    for entity in document.entities:
-        print('Entity type: {}'.format(entity.type))
-        print('Text: {}'.format(_get_text(entity)))
-        print('Mention text: {}\n'.format(entity.mention_text))
