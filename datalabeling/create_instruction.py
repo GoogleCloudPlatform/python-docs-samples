@@ -53,7 +53,7 @@ def create_instruction(project_id, data_type, instruction_gcs_uri):
 
     # The format of the resource name:
     # project_id/{project_id}/instruction/{instruction_id}
-    print('The instruction resource name: {}\n'.format(result.name))
+    print('The instruction resource name: {}'.format(result.name))
     print('Display name: {}'.format(result.display_name))
     print('Description: {}'.format(result.description))
     print('Create time:')
@@ -62,7 +62,7 @@ def create_instruction(project_id, data_type, instruction_gcs_uri):
     print('Data type: {}'.format(
         datalabeling.enums.DataType(result.data_type).name))
     print('Pdf instruction:')
-    print('\tGcs file uri: {}'.format(
+    print('\tGcs file uri: {}\n'.format(
         result.pdf_instruction.gcs_file_uri))
 
     return result

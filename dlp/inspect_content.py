@@ -473,7 +473,7 @@ def inspect_gcs_file(
     }
 
     operation = dlp.create_dlp_job(parent, inspect_job=inspect_job)
-
+    print("Inspection operation started: {}".format(operation.name))
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
     subscriber = google.cloud.pubsub.SubscriberClient()

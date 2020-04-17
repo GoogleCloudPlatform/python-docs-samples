@@ -87,6 +87,12 @@ def create_rs256_device(
     """Create a new device with the given id, using RS256 for
     authentication."""
     # [START iot_create_rsa_device]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
+    # device_id = 'your-device-id'
+    # certificate_file = 'path/to/certificate.pem'
+
     client = iot_v1.DeviceManagerClient()
 
     parent = client.registry_path(project_id, cloud_region, registry_id)
@@ -115,6 +121,12 @@ def create_es256_device(
     """Create a new device with the given id, using ES256 for
     authentication."""
     # [START iot_create_es_device]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
+    # device_id = 'your-device-id'
+    # public_key_file = 'path/to/certificate.pem'
+
     client = iot_v1.DeviceManagerClient()
 
     parent = client.registry_path(project_id, cloud_region, registry_id)
@@ -142,6 +154,11 @@ def create_device(
         device_id):
     """Create a device to bind to a gateway if it does not exist."""
     # [START iot_create_device]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
+    # device_id = 'your-device-id'
+
     # Check that the device doesn't already exist
     client = iot_v1.DeviceManagerClient()
 
@@ -177,6 +194,10 @@ def create_unauth_device(
         device_id):
     """Create a new device without authentication."""
     # [START iot_create_unauth_device]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
+    # device_id = 'your-device-id'
     client = iot_v1.DeviceManagerClient()
 
     parent = client.registry_path(project_id, cloud_region, registry_id)
@@ -194,6 +215,10 @@ def delete_device(
         device_id):
     """Delete the device with the given id."""
     # [START iot_delete_device]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
+    # device_id = 'your-device-id'
     print('Delete device')
     client = iot_v1.DeviceManagerClient()
 
@@ -208,6 +233,9 @@ def delete_registry(
        service_account_json, project_id, cloud_region, registry_id):
     """Deletes the specified registry."""
     # [START iot_delete_registry]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
     print('Delete registry')
 
     client = iot_v1.DeviceManagerClient()
@@ -228,6 +256,10 @@ def get_device(
         device_id):
     """Retrieve the device with the given id."""
     # [START iot_get_device]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
+    # device_id = 'your-device-id'
     print('Getting device')
     client = iot_v1.DeviceManagerClient()
     device_path = client.device_path(
@@ -271,6 +303,10 @@ def get_state(
         device_id):
     """Retrieve a device's state blobs."""
     # [START iot_get_device_state]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
+    # device_id = 'your-device-id'
     client = iot_v1.DeviceManagerClient()
     device_path = client.device_path(
         project_id, cloud_region, registry_id, device_id)
@@ -291,6 +327,9 @@ def list_devices(
         service_account_json, project_id, cloud_region, registry_id):
     """List all devices in the registry."""
     # [START iot_list_devices]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
     print('Listing devices')
 
     client = iot_v1.DeviceManagerClient()
@@ -307,6 +346,8 @@ def list_devices(
 def list_registries(service_account_json, project_id, cloud_region):
     """List all registries in the project."""
     # [START iot_list_registries]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
     print('Listing Registries')
     client = iot_v1.DeviceManagerClient()
     parent = client.location_path(project_id, cloud_region)
@@ -327,6 +368,10 @@ def create_registry(
     """ Creates a registry and returns the result. Returns an empty result if
     the registry already exists."""
     # [START iot_create_registry]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # pubsub_topic = 'your-pubsub-topic'
+    # registry_id = 'your-registry-id'
     client = iot_v1.DeviceManagerClient()
     parent = client.location_path(project_id, cloud_region)
 
@@ -357,6 +402,9 @@ def get_registry(
         service_account_json, project_id, cloud_region, registry_id):
     """ Retrieves a device registry."""
     # [START iot_get_registry]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
     client = iot_v1.DeviceManagerClient()
     registry_path = client.registry_path(project_id, cloud_region, registry_id)
 
@@ -368,6 +416,10 @@ def open_registry(
         service_account_json, project_id, cloud_region, pubsub_topic,
         registry_id):
     """Gets or creates a device registry."""
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # pubsub_topic = 'your-pubsub-topic'
+    # registry_id = 'your-registry-id'
     print('Creating registry')
 
     response = create_registry(
@@ -392,6 +444,11 @@ def patch_es256_auth(
         device_id, public_key_file):
     """Patch the device to add an ES256 public key to the device."""
     # [START iot_patch_es]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
+    # device_id = 'your-device-id'
+    # public_key_file = 'path/to/certificate.pem'
     print('Patch device with ES256 certificate')
 
     client = iot_v1.DeviceManagerClient()
@@ -427,6 +484,11 @@ def patch_rsa256_auth(
         public_key_file):
     """Patch the device to add an RSA256 public key to the device."""
     # [START iot_patch_rsa]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
+    # device_id = 'your-device-id'
+    # public_key_file = 'path/to/certificate.pem'
     print('Patch device with RSA256 certificate')
 
     client = iot_v1.DeviceManagerClient()
@@ -462,6 +524,12 @@ def set_config(
         service_account_json, project_id, cloud_region, registry_id, device_id,
         version, config):
     # [START iot_set_device_config]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
+    # device_id = 'your-device-id'
+    # version = '0'
+    # config= 'your-config-data'
     print('Set device configuration')
     client = iot_v1.DeviceManagerClient()
     device_path = client.device_path(
@@ -478,6 +546,10 @@ def get_config_versions(
         device_id):
     """Lists versions of a device config in descending order (newest first)."""
     # [START iot_get_device_configs]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
+    # device_id = 'your-device-id'
     client = iot_v1.DeviceManagerClient()
     device_path = client.device_path(
         project_id, cloud_region, registry_id, device_id)
@@ -498,6 +570,9 @@ def get_iam_permissions(
         service_account_json, project_id, cloud_region, registry_id):
     """Retrieves IAM permissions for the given registry."""
     # [START iot_get_iam_policy]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
     client = iot_v1.DeviceManagerClient()
 
     registry_path = client.registry_path(project_id, cloud_region, registry_id)
@@ -513,6 +588,11 @@ def set_iam_permissions(
         member):
     """Sets IAM permissions for the given registry to a single role/member."""
     # [START iot_set_iam_policy]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
+    # role = 'viewer'
+    # member = 'group:dpebot@google.com'
     client = iot_v1.DeviceManagerClient()
     registry_path = client.registry_path(project_id, cloud_region, registry_id)
 
@@ -549,6 +629,13 @@ def create_gateway(
         gateway_id, certificate_file, algorithm):
     """Create a gateway to bind devices to."""
     # [START iot_create_gateway]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
+    # device_id = 'your-device-id'
+    # gateway_id = 'your-gateway-id'
+    # certificate_file = 'path/to/certificate.pem'
+    # algorithm = 'ES256'
     # Check that the gateway doesn't already exist
     exists = False
     client = iot_v1.DeviceManagerClient()
@@ -602,6 +689,11 @@ def bind_device_to_gateway(
         gateway_id):
     """Binds a device to a gateway."""
     # [START iot_bind_device_to_gateway]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
+    # device_id = 'your-device-id'
+    # gateway_id = 'your-gateway-id'
     client = iot_v1.DeviceManagerClient()
 
     create_device(
@@ -621,6 +713,11 @@ def unbind_device_from_gateway(
         gateway_id):
     """Unbinds a device to a gateway."""
     # [START iot_unbind_device_from_gateway]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
+    # device_id = 'your-device-id'
+    # gateway_id = 'your-gateway-id'
     client = iot_v1.DeviceManagerClient()
 
     parent = client.registry_path(project_id, cloud_region, registry_id)
@@ -635,6 +732,9 @@ def list_gateways(
         service_account_json, project_id, cloud_region, registry_id):
     """Lists gateways in a registry"""
     # [START iot_list_gateways]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
     client = iot_v1.DeviceManagerClient()
 
     path = client.registry_path(project_id, cloud_region, registry_id)
@@ -655,6 +755,10 @@ def list_devices_for_gateway(
         gateway_id):
     """List devices bound to a gateway"""
     # [START iot_list_devices_for_gateway]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
+    # gateway_id = 'your-gateway-id'
     client = iot_v1.DeviceManagerClient()
 
     path = client.registry_path(project_id, cloud_region, registry_id)

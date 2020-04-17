@@ -1,0 +1,24 @@
+# This file is used to generate README.rst
+
+product:
+  name: Cloud Media Translation
+  short_name: Media Translation
+  url: https://cloud.google.com/translate/media/docs
+  description: >
+    With `Cloud Media Translation`, you can dynamically translate text between
+    thousands of language pairs.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: Translate from file
+  file: translate_from_file.py
+  show_help: true
+- name: Translate from mic
+  file: translate_from_mic.py
+
+cloud_client_library: true
+
+folder: media-translation/cloud-client
