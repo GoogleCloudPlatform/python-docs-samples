@@ -140,7 +140,7 @@ def crud_hl7v2_store_id():
         retry_on_exception=retry_if_server_exception)
     def clean_up():
         try:
-            hl7v2_stores.delete_hl7v2_store_id(
+            hl7v2_stores.delete_hl7v2_store(
                 project_id, cloud_region, dataset_id, hl7v2_store_id)
         except HttpError as err:
             # The API returns 403 when the HL7v2 store doesn't exist.
@@ -187,21 +187,8 @@ def test_CRUD_hl7v2_store(test_dataset, crud_hl7v2_store_id, capsys):
     assert 'Deleted HL7v2 store' in out
 
 
-def test_patch_hl7v2_store(test_dataset, capsys):
-    hl7v2_stores.create_hl7v2_store(
-        project_id,
-        cloud_region,
-        dataset_id,
-        hl7v2_store_id)
-
+def test_patch_hl7v2_store(test_dataset, test_hl7v2_store, capsys):
     hl7v2_stores.patch_hl7v2_store(
-        project_id,
-        cloud_region,
-        dataset_id,
-        hl7v2_store_id)
-
-    # Clean up
-    hl7v2_stores.delete_hl7v2_store(
         project_id,
         cloud_region,
         dataset_id,
@@ -212,13 +199,7 @@ def test_patch_hl7v2_store(test_dataset, capsys):
     assert 'Patched HL7v2 store' in out
 
 
-def test_get_set_hl7v2_store_iam_policy(test_dataset, capsys):
-    hl7v2_stores.create_hl7v2_store(
-        project_id,
-        cloud_region,
-        dataset_id,
-        hl7v2_store_id)
-
+def test_get_set_hl7v2_store_iam_policy(test_dataset, test_hl7v2_store, capsys):
     get_response = hl7v2_stores.get_hl7v2_store_iam_policy(
         project_id,
         cloud_region,
@@ -232,13 +213,6 @@ def test_get_set_hl7v2_store_iam_policy(test_dataset, capsys):
         hl7v2_store_id,
         'serviceAccount:python-docs-samples-tests@appspot.gserviceaccount.com',
         'roles/viewer')
-
-    # Clean up
-    hl7v2_stores.delete_hl7v2_store(
-        project_id,
-        cloud_region,
-        dataset_id,
-        hl7v2_store_id)
 
     out, _ = capsys.readouterr()
 
