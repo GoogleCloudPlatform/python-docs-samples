@@ -15,7 +15,6 @@
 import os
 import uuid
 
-import backoff
 import pytest
 
 import jobs
@@ -62,31 +61,21 @@ def test_job_name():
 
 
 def test_list_dlp_jobs(test_job_name, capsys):
-    @backoff.on_exception(backoff.expo,
-                          AssertionError,
-                          max_time=60)
-    def test_real():
-        jobs.list_dlp_jobs(GCLOUD_PROJECT)
+    jobs.list_dlp_jobs(GCLOUD_PROJECT)
 
-        out, _ = capsys.readouterr()
-        assert test_job_name not in out
-    test_real()
+    out, _ = capsys.readouterr()
+    assert test_job_name not in out
 
 
 def test_list_dlp_jobs_with_filter(test_job_name, capsys):
-    @backoff.on_exception(backoff.expo,
-                          AssertionError,
-                          max_time=60)
-    def test_real():
-        jobs.list_dlp_jobs(
-            GCLOUD_PROJECT,
-            filter_string="state=RUNNING",
-            job_type="RISK_ANALYSIS_JOB",
-        )
+    jobs.list_dlp_jobs(
+        GCLOUD_PROJECT,
+        filter_string="state=RUNNING OR state=DONE",
+        job_type="RISK_ANALYSIS_JOB",
+    )
 
-        out, _ = capsys.readouterr()
-        assert test_job_name in out
-    test_real()
+    out, _ = capsys.readouterr()
+    assert test_job_name in out
 
 
 def test_list_dlp_jobs_with_job_type(test_job_name, capsys):
