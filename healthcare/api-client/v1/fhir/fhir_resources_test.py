@@ -17,6 +17,7 @@ import pytest
 import sys
 import uuid
 
+from googleapiclient.errors import HttpError
 from retrying import retry
 
 # Add datasets for bootstrapping datasets for testing
@@ -150,7 +151,6 @@ def test_patient():
         stop_max_attempt_number=10,
         retry_on_exception=retry_if_server_exception,
     )
-
     # Clean up
     def clean_up():
         try:

@@ -16,14 +16,14 @@ import argparse
 import json
 import os
 import httplib2
-import google.auth
 
 from googleapiclient import discovery
-from google.oauth2 import service_account
 from googleapiclient.http import build_http
 from oauth2client.service_account import ServiceAccountCredentials
 
 # [START healthcare_get_client]
+
+
 def get_client():
     """Returns an authorized API client by discovering the Healthcare API and
     creating a service object using the service account credentials in the

@@ -16,7 +16,6 @@ import argparse
 import os
 
 from googleapiclient import discovery
-from googleapiclient.errors import HttpError
 
 
 # [START healthcare_get_client]

@@ -20,6 +20,7 @@ import uuid
 from google.cloud import exceptions, storage
 from googleapiclient import errors
 from retrying import retry
+from googleapiclient.errors import HttpError
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "datasets"))  # noqa
@@ -220,7 +221,8 @@ def test_import_fhir_store_gcs(test_dataset, test_fhir_store, capsys):
     # Clean up
     try:
         blob.delete()
-    # If blob not found, then it's already been deleted, so no need to clean up.
+    # If blob not found, then it's already been deleted, so no need to clean
+    # up.
     except exceptions.NotFound:
         pass
 
