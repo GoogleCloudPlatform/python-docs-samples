@@ -40,6 +40,7 @@ import storage_upload_with_kms_key
 import storage_generate_signed_url_v2
 import storage_generate_signed_url_v4
 import storage_generate_upload_signed_url_v4
+import storage_generate_signed_post_policy_v4
 import storage_set_bucket_default_kms_key
 
 KMS_KEY = os.environ["CLOUD_KMS_KEY"]
@@ -200,6 +201,22 @@ def test_generate_upload_signed_url_v4(test_bucket, capsys):
     bucket = storage.Client().bucket(test_bucket.name)
     blob = bucket.blob(blob_name)
     assert blob.download_as_string() == content
+
+
+def test_generate_signed_policy_v4(test_bucket, capsys):
+    blob_name = "storage_snippets_test_form"
+    short_name = storage_generate_signed_post_policy_v4
+    form = short_name.generate_signed_post_policy_v4(
+        test_bucket.name, blob_name
+    )
+    assert "name='key' value='{}'".format(blob_name) in form
+    assert "name='x-goog-signature'" in form
+    assert "name='x-goog-date'" in form
+    assert "name='x-goog-credential'" in form
+    assert "name='x-goog-algorithm' value='GOOG4-RSA-SHA256'" in form
+    assert "name='policy'" in form
+    assert "name='x-goog-meta-test' value='data'" in form
+    assert "type='file' name='file'/>" in form
 
 
 def test_rename_blob(test_blob):
