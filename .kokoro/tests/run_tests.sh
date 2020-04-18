@@ -20,11 +20,16 @@ set -eo pipefail
 # Enables `**` to include files nested inside sub-folders
 shopt -s globstar
 
-# `--only-changed` will only run tests on projects container changes from the master branch.
-if [[ $* == *--only-diff* ]]; then
-    ONLY_DIFF="true"
-else
-    ONLY_DIFF="false"
+DIFF_FROM=""
+
+# `--only-diff-master will only run tests on project changes from the master branch.
+if [[ $* == *--only-diff-master* ]]; then
+    DIFF_FROM="origin/master.."
+fi
+
+# `--only-diff-master will only run tests on project changes from the previous commit.
+if [[ $* == *--only-diff-head* ]]; then
+    DIFF_FROM="HEAD~.."
 fi
 
 cd github/python-docs-samples
@@ -66,9 +71,9 @@ for file in **/requirements.txt; do
     file=$(dirname "$file")
     cd "$file"
 
-    # If $DIFF_ONLY is true, skip projects without changes.
-    if [[ "$ONLY_DIFF" = "true" ]]; then
-        git diff --quiet origin/master.. .
+    # If $DIFF_FROM is set, use it to check for changes in this directory.
+    if [[ "$DIFF_FROM" != "" ]]; then
+        git diff --quiet "$DIFF_FROM" .
         CHANGED=$?
         if [[ "$CHANGED" -eq 0 ]]; then
           # echo -e "\n Skipping $file: no changes in folder.\n"
@@ -92,17 +97,22 @@ for file in **/requirements.txt; do
 
     # If no local noxfile exists, copy the one from root
     if [[ ! -f "noxfile.py" ]]; then
-      cp "$ROOT/noxfile-template.py" "./noxfile.py"
-      echo -e "\n Using noxfile from project root. \n"
+      PARENT_DIR=$(cd ../ && pwd)
+      while [[ "$PARENT_DIR" != "$ROOT" && ! -f "$PARENT_DIR/noxfile-template.py" ]];
+      do
+        PARENT_DIR=$(dirname "$PARENT_DIR")
+      done
+      cp "$PARENT_DIR/noxfile-template.py" "./noxfile.py"
+      echo -e "\n Using noxfile-template from parent folder ($PARENT_DIR). \n"
     fi
 
     # Use nox to execute the tests for the project.
     nox -s "$RUN_TESTS_SESSION"
     EXIT=$?
 
-    # If this is a continuous build, send the test log to the Build Cop Bot.
+    # If this is a periodic build, send the test log to the Build Cop Bot.
     # See https://github.com/googleapis/repo-automation-bots/tree/master/packages/buildcop.
-    if [[ $KOKORO_BUILD_ARTIFACTS_SUBDIR = *"continuous"* ]]; then
+    if [[ $KOKORO_BUILD_ARTIFACTS_SUBDIR = *"periodic"* ]]; then
       chmod +x $KOKORO_GFILE_DIR/linux_amd64/buildcop
       $KOKORO_GFILE_DIR/linux_amd64/buildcop
     fi
