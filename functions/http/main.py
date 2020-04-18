@@ -85,6 +85,9 @@ def parse_multipart(request):
     # This code will process each file uploaded
     files = request.files.to_dict()
     for file_name, file in files.items():
+        # Note: GCF may not persist saved files across invocations.
+        # Persistent files must be kept in other locations
+        # (such as Cloud Storage buckets).
         file.save(get_file_path(file_name))
         print('Processed file: %s' % file_name)
 
