@@ -32,7 +32,7 @@ from list_secrets import list_secrets
 from update_secret import update_secret
 
 from google.api_core import exceptions
-from google.cloud import secretmanager_v1beta1 as secretmanager
+from google.cloud import secretmanager
 
 
 @pytest.fixture()

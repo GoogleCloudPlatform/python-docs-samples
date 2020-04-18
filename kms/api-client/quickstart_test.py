@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def test_quickstart(api_client_inject_project_id):
+def test_quickstart():
     import quickstart
 
     quickstart.run_quickstart()

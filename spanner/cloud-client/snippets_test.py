@@ -358,3 +358,19 @@ def test_query_data_with_timestamp_parameter(capsys):
     assert 'VenueId: 4, VenueName: Venue 4, LastUpdateTime:' in out
     assert 'VenueId: 19, VenueName: Venue 19, LastUpdateTime:' in out
     assert 'VenueId: 42, VenueName: Venue 42, LastUpdateTime:' in out
+
+
+def test_query_data_with_query_options(capsys):
+    snippets.query_data_with_query_options(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'VenueId: 4, VenueName: Venue 4, LastUpdateTime:' in out
+    assert 'VenueId: 19, VenueName: Venue 19, LastUpdateTime:' in out
+    assert 'VenueId: 42, VenueName: Venue 42, LastUpdateTime:' in out
+
+
+def test_create_client_with_query_options(capsys):
+    snippets.create_client_with_query_options(INSTANCE_ID, DATABASE_ID)
+    out, _ = capsys.readouterr()
+    assert 'VenueId: 4, VenueName: Venue 4, LastUpdateTime:' in out
+    assert 'VenueId: 19, VenueName: Venue 19, LastUpdateTime:' in out
+    assert 'VenueId: 42, VenueName: Venue 42, LastUpdateTime:' in out

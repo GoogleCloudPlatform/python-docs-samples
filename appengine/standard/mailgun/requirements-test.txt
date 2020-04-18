@@ -1,0 +1,5 @@
+pytest==4.6.9
+gcp-devrel-py-tools==0.0.15
+google-api-python-client==1.7.11
+mock==3.0.5
+WebTest==2.0.34
