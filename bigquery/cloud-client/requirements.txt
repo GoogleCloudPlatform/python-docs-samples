@@ -1,7 +1,5 @@
 google-cloud-bigquery[pandas]==1.24.0
 google-auth-oauthlib==0.4.1
-ipython==7.10.2; python_version > '3.0'
-ipython==5.9.0; python_version < '3.0'
-matplotlib==3.1.1; python_version > '3.0'
-matplotlib==2.2.5; python_version < '3.0'
-pytz==2019.2
+ipython==7.13.0
+matplotlib==3.2.1
+pytz==2019.3
