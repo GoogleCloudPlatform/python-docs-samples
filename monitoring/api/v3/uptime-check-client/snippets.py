@@ -19,6 +19,8 @@ import os
 import pprint
 
 from google.cloud import monitoring_v3
+from google.cloud.monitoring_v3.gapic.enums import UptimeCheckConfig
+
 import tabulate
 
 
@@ -32,6 +34,7 @@ def create_uptime_check_config(project_name, host_name=None,
         {'host': host_name or 'example.com'})
     config.http_check.path = '/'
     config.http_check.port = 80
+    config.http_check.request_method = UptimeCheckConfig.HttpCheck.RequestMethod.GET
     config.timeout.seconds = 10
     config.period.seconds = 300
 
