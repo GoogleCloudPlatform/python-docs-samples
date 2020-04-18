@@ -33,6 +33,7 @@ def dataset():
     manage_dataset.delete_dataset(dataset.name)
 
 
+@pytest.mark.flaky(max_runs=3)
 def test_create_dataset(capsys):
     response = manage_dataset.create_dataset(PROJECT_ID)
     out, _ = capsys.readouterr()
@@ -42,18 +43,21 @@ def test_create_dataset(capsys):
     manage_dataset.delete_dataset(response.name)
 
 
+@pytest.mark.flaky(max_runs=3)
 def test_list_dataset(capsys, dataset):
     manage_dataset.list_datasets(PROJECT_ID)
     out, _ = capsys.readouterr()
     assert dataset.name in out
 
 
+@pytest.mark.flaky(max_runs=3)
 def test_get_dataset(capsys, dataset):
     manage_dataset.get_dataset(dataset.name)
     out, _ = capsys.readouterr()
     assert "The dataset resource name:" in out
 
 
+@pytest.mark.flaky(max_runs=3)
 def test_delete_dataset(capsys):
     # Creates a dataset.
     response = manage_dataset.create_dataset(PROJECT_ID)

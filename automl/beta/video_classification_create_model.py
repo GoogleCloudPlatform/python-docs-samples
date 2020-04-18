@@ -12,21 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START automl_video_classification_create_model_beta]
+from google.cloud import automl_v1beta1 as automl
 
-def create_model(project_id, dataset_id, display_name):
-    """Create a model."""
-    # [START automl_video_classification_create_model_beta]
-    from google.cloud import automl_v1beta1 as automl
 
-    # TODO(developer): Uncomment and set the following variables
-    # project_id = "YOUR_PROJECT_ID"
-    # dataset_id = "YOUR_DATASET_ID"
-    # display_name = "your_models_display_name"
-
+def create_model(
+    project_id="YOUR_PROJECT_ID",
+    dataset_id="YOUR_DATASET_ID",
+    display_name="your_models_display_name",
+):
+    """Create a automl video classification model."""
     client = automl.AutoMlClient()
 
     # A resource that represents Google Cloud Platform location.
     project_location = client.location_path(project_id, "us-central1")
+    # Leave model unset to use the default base model provided by Google
     metadata = automl.types.VideoClassificationModelMetadata()
     model = automl.types.Model(
         display_name=display_name,
@@ -39,4 +39,4 @@ def create_model(project_id, dataset_id, display_name):
 
     print("Training operation name: {}".format(response.operation.name))
     print("Training started...")
-    # [END automl_video_classification_create_model_beta]
+# [END automl_video_classification_create_model_beta]
