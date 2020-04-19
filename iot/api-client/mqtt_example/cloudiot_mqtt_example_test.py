@@ -20,11 +20,12 @@ import uuid
 import backoff
 from googleapiclient.errors import HttpError
 from google.cloud import pubsub
+from google.api_core.exceptions import AlreadyExists
 from google.api_core.exceptions import NotFound
 import pytest
 
 # Add manager for bootstrapping device registry / device for testing
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager'))  # noqa
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'manager')) # noqa
 import cloudiot_mqtt_example
 import manager
 
@@ -34,7 +35,7 @@ device_id_template = 'test-device-{}'
 ca_cert_path = 'resources/roots.pem'
 rsa_cert_path = 'resources/rsa_cert.pem'
 rsa_private_path = 'resources/rsa_private.pem'
-topic_id = 'test-device-events-{}'.format(int(time.time()))
+topic_id = 'test-device-events-{}'.format(uuid.uuid4())
 
 project_id = os.environ['GCLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
@@ -42,7 +43,7 @@ service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
 
 # This format is used in the `../manager.py::clean_up_registries()`.
-registry_id = 'test-registry-{}-{}'.format(uuid.uuid1(), int(time.time()))
+registry_id = 'test-registry-{}-{}'.format(uuid.uuid4(), int(time.time()))
 
 mqtt_bridge_hostname = 'mqtt.googleapis.com'
 mqtt_bridge_port = 443
@@ -50,13 +51,29 @@ mqtt_bridge_port = 443
 
 @pytest.fixture(scope='module')
 def test_topic():
-    topic = manager.create_iot_topic(project_id, topic_id)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    def create_topic():
+        try:
+            return manager.create_iot_topic(project_id, topic_id)
+        except AlreadyExists as e:
+            # We ignore this case.
+            print("The topic already exists, detail: {}".format(str(e)))
+
+    topic = create_topic()
 
     yield topic
 
     pubsub_client = pubsub.PublisherClient()
     topic_path = pubsub_client.topic_path(project_id, topic_id)
-    pubsub_client.delete_topic(topic_path)
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    def delete_topic():
+        try:
+            pubsub_client.delete_topic(topic_path)
+        except NotFound as e:
+            # We ignore this case.
+            print("The topic doesn't exist: detail: {}".format(str(e)))
+
+    delete_topic()
 
 
 @pytest.fixture(scope='module')
