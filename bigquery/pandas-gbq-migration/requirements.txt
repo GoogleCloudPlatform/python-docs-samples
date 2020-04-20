@@ -4,4 +4,4 @@ pandas==0.25.3; python_version > '3.0'
 pandas==0.24.2; python_version < '3.0'
 pandas-gbq==0.13.1
 pyarrow==0.15.1
-grpcio==1.27.2
+grpcio==1.28.1
