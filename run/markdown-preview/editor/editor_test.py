@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
+import main
 import os
 import pytest
-import main
 
 
 @pytest.fixture
@@ -26,13 +25,12 @@ def client():
 
 def test_editor_handler(client):
     os.environ["EDITOR_UPSTREAM_RENDER_URL"] = "http://testing.local"
-    r = client.get('/')
+    r = client.get("/")
     body = r.data.decode()
 
     assert r.status_code == 200
     assert "<title>Markdown Editor</title>" in body
     assert "This UI allows a user to write Markdown text" in body
-
 
 def test_render_handler_errors(client):
     r = client.get("/render")

@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
+import main
 import os
 import pytest
-import main
 
 
 @pytest.fixture
@@ -26,17 +25,18 @@ def client():
 
 def test_markdown_handler(client):
     data_input = "**strong text**"
-    r = client.post('/', data=data_input)
-  
+    r = client.post("/", data=data_input)
+
     assert r.status_code == 200
     assert "<p><strong>strong text</strong></p>" == r.data.decode()
 
     data_input = (
-        '<a onblur="alert(secret)" href="http://www.google.com">Google</a>')
+        '<a onblur="alert(secret)" href="http://www.google.com">Google</a>'
+    )
     expect = (
         '<p><a onblur="alert(secret)"'
-        ' href="http://www.google.com">Google</a></p>')
-    r = client.post('/', data=data_input)
+        ' href="http://www.google.com">Google</a></p>'
+    )
+    r = client.post("/", data=data_input)
     assert r.status_code == 200
     assert expect in r.data.decode()
- 

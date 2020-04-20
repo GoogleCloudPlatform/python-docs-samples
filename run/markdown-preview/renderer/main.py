@@ -20,15 +20,15 @@ import os
 app = Flask(__name__)
 
 
-@app.route('/', methods=['POST'])
+@app.route("/", methods=["POST"])
 def index():
     data = request.get_data(as_text=True)
     return markdown.markdown(data)
 
 
-if __name__ == '__main__':
-    PORT = int(os.getenv('PORT')) if os.getenv('PORT') else 8080
+if __name__ == "__main__":
+    PORT = int(os.getenv("PORT")) if os.getenv("PORT") else 8080
 
     # This is used when running locally. Gunicorn is used to run the
     # application on Cloud Run. See entrypoint in Dockerfile.
-    app.run(host='127.0.0.1', port=PORT, debug=True)
+    app.run(host="127.0.0.1", port=PORT, debug=True)

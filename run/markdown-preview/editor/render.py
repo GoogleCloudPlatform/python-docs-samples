@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import sys
 import urllib
 
 
@@ -23,14 +24,19 @@ def new_request(data):
     and Cloud Functions.
     """
 
-    url = os.environ.get('EDITOR_UPSTREAM_RENDER_URL')
-    unauthenticated = os.environ.get('EDITOR_UPSTREAM_UNAUTHENTICATED')
+    url = os.environ.get("EDITOR_UPSTREAM_RENDER_URL")
+    unauthenticated = os.environ.get("EDITOR_UPSTREAM_UNAUTHENTICATED", False)
+    print("Unauthenticated: ", unauthenticated)
+    print("Authenticated: ", not unauthenticated)
 
     req = urllib.request.Request(url, data=data.encode())
 
     if not unauthenticated:
+        print("if statement")
         token = get_token(url)
         req.add_header("Authorization", f"Bearer {token}")
+
+    sys.stdout.flush()
 
     response = urllib.request.urlopen(req)
     return response.read()
@@ -40,10 +46,13 @@ def get_token(url):
     """
     Retrieves the IAM ID Token credential for the url.
     """
-    token_url = (f"http://metadata.google.internal/computeMetadata/v1/instance/"
-                 f"service-accounts/default/identity?audience={url}")
-    token_req = urllib.request.Request(token_url, 
-        headers={'Metadata-Flavor': 'Google'})
+    token_url = (
+        f"http://metadata.google.internal/computeMetadata/v1/instance/"
+        f"service-accounts/default/identity?audience={url}"
+    )
+    token_req = urllib.request.Request(
+        token_url, headers={"Metadata-Flavor": "Google"}
+    )
     token_response = urllib.request.urlopen(token_req)
     token = token_response.read()
     return token.decode()

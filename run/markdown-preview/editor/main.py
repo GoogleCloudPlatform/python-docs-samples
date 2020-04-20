@@ -14,21 +14,21 @@
 
 from flask import Flask, render_template, request
 import os
+import sys
 
 import render
 
 app = Flask(__name__)
 
 
-@app.route('/', methods=['GET'])
+@app.route("/", methods=["GET"])
 def index():
     # Render the default template
     f = open('templates/markdown.md')
-    default = f.read()
-    return render_template('index.html', default=default)
+    return render_template("index.html", default=f.read())
 
 
-@app.route('/render', methods=['POST'])
+@app.route("/render", methods=["POST"])
 def render_handler():
     body = request.get_json()
     if not body:
@@ -39,9 +39,9 @@ def render_handler():
     return parsed_markdown
 
 
-if __name__ == '__main__':
-    PORT = int(os.getenv('PORT')) if os.getenv('PORT') else 8080
+if __name__ == "__main__":
+    PORT = int(os.getenv("PORT")) if os.getenv("PORT") else 8080
 
     # This is used when running locally. Gunicorn is used to run the
     # application on Cloud Run. See entrypoint in Dockerfile.
-    app.run(host='127.0.0.1', port=PORT, debug=True)
+    app.run(host="127.0.0.1", port=PORT, debug=True)
