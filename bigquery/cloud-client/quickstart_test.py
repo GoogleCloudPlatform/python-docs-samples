@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import uuid
+
 from google.cloud import bigquery
-from google.cloud.exceptions import NotFound
 import pytest
 
 import quickstart
@@ -24,31 +25,26 @@ import quickstart
 DATASET_ID = 'my_new_dataset'
 
 
+@pytest.fixture(scope='module')
+def client():
+    return bigquery.Client()
+
+
 @pytest.fixture
-def temporary_dataset():
-    """Fixture that ensures the test dataset does not exist before or
-    after a test."""
-    bigquery_client = bigquery.Client()
-    dataset_ref = bigquery_client.dataset(DATASET_ID)
-
-    if dataset_exists(dataset_ref, bigquery_client):
-        bigquery_client.delete_dataset(dataset_ref)
-
-    yield
-
-    if dataset_exists(dataset_ref, bigquery_client):
-        bigquery_client.delete_dataset(dataset_ref)
+def datasets_to_delete(client):
+    doomed = []
+    yield doomed
+    for item in doomed:
+        client.delete_dataset(item, delete_contents=True)
 
 
-def dataset_exists(dataset, client):
-    try:
-        client.get_dataset(dataset)
-        return True
-    except NotFound:
-        return False
+def test_quickstart(capsys, client, datasets_to_delete):
 
+    override_values = {
+        "dataset_id": "my_new_dataset_{}".format(str(uuid.uuid4()).replace("-", "_")),
+    }
+    datasets_to_delete.append(override_values["dataset_id"])
 
-def test_quickstart(capsys, temporary_dataset):
-    quickstart.run_quickstart()
+    quickstart.run_quickstart(override_values)
     out, _ = capsys.readouterr()
-    assert DATASET_ID in out
+    assert override_values["dataset_id"] in out
