@@ -17,7 +17,6 @@ import json
 import os
 
 from google.auth.transport import requests
-from googleapiclient.errors import HttpError
 from google.oauth2 import service_account
 
 _BASE_URL = "https://healthcare.googleapis.com/v1"
@@ -55,14 +54,11 @@ def dicomweb_store_instance(
     content_type = "application/dicom"
     headers = {"Content-Type": content_type}
 
-    try:
-        response = session.post(dicomweb_path, data=dcm_content, headers=headers)
-        response.raise_for_status()
-        print("Stored DICOM instance:")
-        print(response.text)
-        return response
-    except HttpError as err:
-        print(err)
+    response = session.post(dicomweb_path, data=dcm_content, headers=headers)
+    response.raise_for_status()
+    print("Stored DICOM instance:")
+    print(response.text)
+    return response
 
 
 # [END healthcare_dicomweb_store_instance]

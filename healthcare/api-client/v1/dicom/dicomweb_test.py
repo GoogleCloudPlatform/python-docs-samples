@@ -158,80 +158,86 @@ def test_dicomweb_search_instance_studies(test_dataset, test_dicom_store, capsys
 
 
 def test_dicomweb_retrieve_study(test_dataset, test_dicom_store, capsys):
-    dicomweb.dicomweb_store_instance(
-        base_url, project_id, cloud_region, dataset_id, dicom_store_id, dcm_file
-    )
+    try:
+        dicomweb.dicomweb_store_instance(
+            base_url, project_id, cloud_region, dataset_id, dicom_store_id, dcm_file
+        )
 
-    dicomweb.dicomweb_retrieve_study(
-        base_url, project_id, cloud_region, dataset_id, dicom_store_id, study_uid
-    )
+        dicomweb.dicomweb_retrieve_study(
+            base_url, project_id, cloud_region, dataset_id, dicom_store_id, study_uid
+        )
 
-    # Assert study was downloaded
-    assert os.path.isfile("study.multipart")
+        # Assert study was downloaded
+        assert os.path.isfile("study.multipart")
 
-    out, _ = capsys.readouterr()
+        out, _ = capsys.readouterr()
 
-    # Check that retrieve study worked
-    assert "Retrieved study" in out
+        # Check that retrieve study worked
+        assert "Retrieved study" in out
 
-    # Delete downloaded study
-    os.remove("study.multipart")
+    finally:
+        # Delete downloaded study
+        os.remove("study.multipart")
 
 
 def test_dicomweb_retrieve_instance(test_dataset, test_dicom_store, capsys):
-    dicomweb.dicomweb_store_instance(
-        base_url, project_id, cloud_region, dataset_id, dicom_store_id, dcm_file
-    )
+    try:
+        dicomweb.dicomweb_store_instance(
+            base_url, project_id, cloud_region, dataset_id, dicom_store_id, dcm_file
+        )
 
-    dicomweb.dicomweb_retrieve_instance(
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        dicom_store_id,
-        study_uid,
-        series_uid,
-        instance_uid,
-    )
+        dicomweb.dicomweb_retrieve_instance(
+            base_url,
+            project_id,
+            cloud_region,
+            dataset_id,
+            dicom_store_id,
+            study_uid,
+            series_uid,
+            instance_uid,
+        )
 
-    # Assert instance was downloaded
-    assert os.path.isfile("instance.dcm")
+        # Assert instance was downloaded
+        assert os.path.isfile("instance.dcm")
 
-    out, _ = capsys.readouterr()
+        out, _ = capsys.readouterr()
 
-    # Check that retrieve instance worked
-    assert "Retrieved DICOM instance" in out
+        # Check that retrieve instance worked
+        assert "Retrieved DICOM instance" in out
 
-    # Delete downloaded instance
-    os.remove("instance.dcm")
+    finally:
+        # Delete downloaded instance
+        os.remove("instance.dcm")
 
 
 def test_dicomweb_retrieve_rendered(test_dataset, test_dicom_store, capsys):
-    dicomweb.dicomweb_store_instance(
-        base_url, project_id, cloud_region, dataset_id, dicom_store_id, dcm_file
-    )
+    try:
+        dicomweb.dicomweb_store_instance(
+            base_url, project_id, cloud_region, dataset_id, dicom_store_id, dcm_file
+        )
 
-    dicomweb.dicomweb_retrieve_rendered(
-        base_url,
-        project_id,
-        cloud_region,
-        dataset_id,
-        dicom_store_id,
-        study_uid,
-        series_uid,
-        instance_uid,
-    )
+        dicomweb.dicomweb_retrieve_rendered(
+            base_url,
+            project_id,
+            cloud_region,
+            dataset_id,
+            dicom_store_id,
+            study_uid,
+            series_uid,
+            instance_uid,
+        )
 
-    # Assert rendered image was downloaded
-    assert os.path.isfile("rendered_image.png")
+        # Assert rendered image was downloaded
+        assert os.path.isfile("rendered_image.png")
 
-    out, _ = capsys.readouterr()
+        out, _ = capsys.readouterr()
 
-    # Check that retrieve rendered image worked
-    assert "Retrieved rendered image" in out
+        # Check that retrieve rendered image worked
+        assert "Retrieved rendered image" in out
 
-    # Delete downloaded rendered image
-    os.remove("rendered_image.png")
+    finally:
+        # Delete downloaded rendered image
+        os.remove("rendered_image.png")
 
 
 def test_dicomweb_delete_study(test_dataset, test_dicom_store, capsys):
