@@ -16,15 +16,16 @@
 
 import os
 
-import create_annotation_spec_set
-from google.cloud import datalabeling_v1beta1 as datalabeling
 from google.api_core.client_options import ClientOptions
+from google.cloud import datalabeling_v1beta1 as datalabeling
 import pytest
+
+import create_annotation_spec_set
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 
 
-@pytest.mark.slow
+@pytest.mark.flaky(max_runs=3)
 def test_create_annotation_spec_set(capsys):
     response = create_annotation_spec_set.create_annotation_spec_set(
         PROJECT_ID)

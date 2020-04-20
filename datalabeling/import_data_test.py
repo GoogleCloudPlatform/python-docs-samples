@@ -16,9 +16,10 @@
 
 import os
 
+import pytest
+
 import import_data
 import manage_dataset
-import pytest
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/image/image_dataset.csv'
@@ -35,7 +36,7 @@ def dataset():
     manage_dataset.delete_dataset(dataset.name)
 
 
-@pytest.mark.slow
+@pytest.mark.flaky(max_runs=3)
 def test_import_data(capsys, dataset):
     import_data.import_data(dataset.name, 'IMAGE', INPUT_GCS_URI)
     out, _ = capsys.readouterr()

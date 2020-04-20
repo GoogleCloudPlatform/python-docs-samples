@@ -16,14 +16,15 @@
 
 import os
 
+from google.api_core.client_options import ClientOptions
+from google.cloud import datalabeling_v1beta1 as datalabeling
+import pytest
+
 import create_annotation_spec_set
 import create_instruction
-from google.cloud import datalabeling_v1beta1 as datalabeling
-from google.api_core.client_options import ClientOptions
 import import_data
 import label_text
 import manage_dataset
-import pytest
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 INPUT_GCS_URI = 'gs://cloud-samples-data/datalabeling/text/input.csv'
@@ -86,7 +87,7 @@ def instruction():
 
 # Passing in dataset as the last argument in test_label_image since it needs
 # to be deleted before the annotation_spec_set can be deleted.
-@pytest.mark.slow
+@pytest.mark.flaky(max_runs=3)
 def test_label_text(capsys, annotation_spec_set, instruction, dataset):
 
     # Start labeling.

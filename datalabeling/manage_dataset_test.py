@@ -16,8 +16,9 @@
 
 import os
 
-import manage_dataset
 import pytest
+
+import manage_dataset
 
 PROJECT_ID = os.getenv("GCLOUD_PROJECT")
 
