@@ -24,10 +24,7 @@ _BASE_URL = "https://healthcare.googleapis.com/v1"
 
 
 def get_session():
-    """Returns an authorized Requests Session class using the service account
-    credentials JSON. This class is used to perform requests to the
-    Cloud Healthcare API endpoint."""
-
+    """Creates an authorized Requests Session."""
     credentials = service_account.Credentials.from_service_account_file(
         filename=os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
         scopes=["https://www.googleapis.com/auth/cloud-platform"],
