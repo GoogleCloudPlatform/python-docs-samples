@@ -26,6 +26,7 @@ import datasets
 import fhir_stores
 import fhir_resources
 
+base_url = "https://healthcare.googleapis.com/v1"
 cloud_region = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
@@ -114,11 +115,12 @@ def test_fhir_store():
 
 # Fixture that creates/deletes a Patient resource for various tests.
 @pytest.fixture(scope="module")
-def test_patient(test_fhir_store):
+def test_patient():
     patient_response = fhir_resources.create_patient(
-        project_id, cloud_region, dataset_id, fhir_store_id,
+        base_url, project_id, cloud_region, dataset_id, fhir_store_id,
     )
-    patient_resource_id = patient_response["id"]
+    patient_resource = patient_response.json()
+    patient_resource_id = patient_resource["id"]
 
     yield patient_resource_id
 
@@ -127,6 +129,7 @@ def test_patient(test_fhir_store):
     def clean_up():
         try:
             fhir_resources.delete_resource(
+                base_url,
                 project_id,
                 cloud_region,
                 dataset_id,
@@ -153,7 +156,7 @@ def test_create_patient(test_dataset, test_fhir_store, capsys):
     # Manually create a new Patient here to test that creating a Patient
     # works.
     fhir_resources.create_patient(
-        project_id, cloud_region, dataset_id, fhir_store_id,
+        base_url, project_id, cloud_region, dataset_id, fhir_store_id,
     )
 
     out, _ = capsys.readouterr()
@@ -165,6 +168,7 @@ def test_create_patient(test_dataset, test_fhir_store, capsys):
 
 def test_get_patient(test_dataset, test_fhir_store, test_patient, capsys):
     fhir_resources.get_resource(
+        base_url,
         project_id,
         cloud_region,
         dataset_id,
@@ -182,6 +186,7 @@ def test_get_patient(test_dataset, test_fhir_store, test_patient, capsys):
 
 def test_update_patient(test_dataset, test_fhir_store, test_patient, capsys):
     fhir_resources.update_resource(
+        base_url,
         project_id,
         cloud_region,
         dataset_id,
@@ -201,6 +206,7 @@ def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
     # We have to update the resource so that different versions of it are
     # created, then we test to see if we can get/delete those versions.
     fhir_resources.update_resource(
+        base_url,
         project_id,
         cloud_region,
         dataset_id,
@@ -210,6 +216,7 @@ def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
     )
 
     history = fhir_resources.list_resource_history(
+        base_url,
         project_id,
         cloud_region,
         dataset_id,
@@ -219,6 +226,7 @@ def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
     )
 
     fhir_resources.get_resource_history(
+        base_url,
         project_id,
         cloud_region,
         dataset_id,
@@ -240,7 +248,7 @@ def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
 
 def test_search_resources_post(test_dataset, test_fhir_store, test_patient, capsys):
     fhir_resources.search_resources_post(
-        project_id, cloud_region, dataset_id, fhir_store_id, resource_type,
+        base_url, project_id, cloud_region, dataset_id, fhir_store_id
     )
 
     out, _ = capsys.readouterr()
@@ -250,7 +258,7 @@ def test_search_resources_post(test_dataset, test_fhir_store, test_patient, caps
 
 def test_execute_bundle(test_dataset, test_fhir_store, capsys):
     fhir_resources.execute_bundle(
-        project_id, cloud_region, dataset_id, fhir_store_id, bundle,
+        base_url, project_id, cloud_region, dataset_id, fhir_store_id, bundle,
     )
 
     out, _ = capsys.readouterr()
@@ -260,6 +268,7 @@ def test_execute_bundle(test_dataset, test_fhir_store, capsys):
 
 def test_delete_patient(test_dataset, test_fhir_store, test_patient, capsys):
     fhir_resources.delete_resource(
+        base_url,
         project_id,
         cloud_region,
         dataset_id,
