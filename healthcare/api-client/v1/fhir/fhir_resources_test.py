@@ -17,8 +17,8 @@ import pytest
 import sys
 import uuid
 
+import backoff
 from googleapiclient.errors import HttpError
-from retrying import retry
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "datasets"))  # noqa
@@ -36,18 +36,9 @@ fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
 resource_type = "Patient"
 
 
-def retry_if_server_exception(exception):
-    return isinstance(exception, (HttpError))
-
-
 @pytest.fixture(scope="module")
 def test_dataset():
-    @retry(
-        wait_exponential_multiplier=1000,
-        wait_exponential_max=10000,
-        stop_max_attempt_number=10,
-        retry_on_exception=retry_if_server_exception,
-    )
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def create():
         try:
             datasets.create_dataset(project_id, cloud_region, dataset_id)
@@ -65,12 +56,7 @@ def test_dataset():
     yield
 
     # Clean up
-    @retry(
-        wait_exponential_multiplier=1000,
-        wait_exponential_max=10000,
-        stop_max_attempt_number=10,
-        retry_on_exception=retry_if_server_exception,
-    )
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def clean_up():
         try:
             datasets.delete_dataset(project_id, cloud_region, dataset_id)
@@ -86,16 +72,11 @@ def test_dataset():
 
 @pytest.fixture(scope="module")
 def test_fhir_store():
-    @retry(
-        wait_exponential_multiplier=1000,
-        wait_exponential_max=10000,
-        stop_max_attempt_number=10,
-        retry_on_exception=retry_if_server_exception,
-    )
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def create():
         try:
             fhir_stores.create_fhir_store(
-                project_id, cloud_region, dataset_id, fhir_store_id
+                project_id, cloud_region, dataset_id, fhir_store_id,
             )
         except HttpError as err:
             # We ignore 409 conflict here, because we know it's most
@@ -113,12 +94,7 @@ def test_fhir_store():
     yield
 
     # Clean up
-    @retry(
-        wait_exponential_multiplier=1000,
-        wait_exponential_max=10000,
-        stop_max_attempt_number=10,
-        retry_on_exception=retry_if_server_exception,
-    )
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def clean_up():
         try:
             fhir_stores.delete_fhir_store(
@@ -138,7 +114,7 @@ def test_fhir_store():
 
 # Fixture that creates/deletes a Patient resource for various tests.
 @pytest.fixture(scope="module")
-def test_patient():
+def test_patient(test_fhir_store):
     patient_response = fhir_resources.create_patient(
         project_id, cloud_region, dataset_id, fhir_store_id,
     )
@@ -146,12 +122,7 @@ def test_patient():
 
     yield patient_resource_id
 
-    @retry(
-        wait_exponential_multiplier=1000,
-        wait_exponential_max=10000,
-        stop_max_attempt_number=10,
-        retry_on_exception=retry_if_server_exception,
-    )
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     # Clean up
     def clean_up():
         try:

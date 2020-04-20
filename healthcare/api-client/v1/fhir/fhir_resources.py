@@ -15,84 +15,63 @@
 import argparse
 import json
 import os
-import httplib2
 
-from googleapiclient import discovery
-from googleapiclient.http import build_http
-from oauth2client.service_account import ServiceAccountCredentials
+from google.auth.transport import requests
+from googleapiclient.errors import HttpError
+from google.oauth2 import service_account
 
-# [START healthcare_get_client]
-
-
-def get_client():
-    """Returns an authorized API client by discovering the Healthcare API and
-    creating a service object using the service account credentials in the
-    GOOGLE_APPLICATION_CREDENTIALS environment variable."""
-    api_version = "v1"
-    service_name = "healthcare"
-
-    return discovery.build(service_name, api_version)
+_BASE_URL = "https://healthcare.googleapis.com/v1"
 
 
-# [END healthcare_get_client]
+# [START healthcare_get_session]
+def get_session():
+    """Creates an authorized Requests Session."""
 
-
-# [START healthcare_get_client_fhir]
-def get_client_fhir():
-    """Returns an authorized API client by discovering the Healthcare API and
-    creating a service object using the service account credentials in the
-    GOOGLE_APPLICATION_CREDENTIALS environment variable. Many FHIR resource
-    requests require a custom HTTP header to be set, so we have to override
-    the httplib2.Http object.
-    """
-    credential_path = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
-    scopes = ["https://www.googleapis.com/auth/cloud-platform"]
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(
-        credential_path, scopes
+    # Pass in the credentials and project ID. If none supplied, get them
+    # from the environment.
+    credentials = service_account.Credentials.from_service_account_file(
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
     )
-    http = httplib2.Http()
-    http = credentials.authorize(http=build_http())
-    http.headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
-    return discovery.build("healthcare", "v1", http=http)
+    scoped_credentials = credentials.with_scopes(
+        ["https://www.googleapis.com/auth/cloud-platform"]
+    )
+
+    # Create a requests Session object with the credentials.
+    session = requests.AuthorizedSession(scoped_credentials)
+
+    return session
 
 
-# [END healthcare_get_client_fhir]
+# [END healthcare_get_session]
 
 
 # [START healthcare_create_resource]
-def create_patient(project_id, cloud_region, dataset_id, fhir_store_id):
+def create_patient(base_url, project_id, cloud_region, dataset_id, fhir_store_id):
     """Creates a new Patient resource in a FHIR store."""
-    client = get_client_fhir()
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
-    fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+    fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir/Patient".format(
+        url, dataset_id, fhir_store_id
     )
 
-    fhir_store_name = "{}/fhirStores/{}".format(fhir_store_parent, fhir_store_id)
+    # Make an authenticated API request
+    session = get_session()
 
-    resource_type = "Patient"
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
     body = {
         "name": [{"use": "official", "family": "Smith", "given": ["Darcy"]}],
         "gender": "female",
         "birthDate": "1970-01-01",
-        "active": True,
-        "resourceType": "{}".format(resource_type),
+        "resourceType": "Patient",
     }
 
-    request = (
-        client.projects()
-        .locations()
-        .datasets()
-        .fhirStores()
-        .fhir()
-        .create(parent=fhir_store_name, type=resource_type, body=body)
-    )
+    response = session.post(fhir_store_path, headers=headers, json=body)
+    response.raise_for_status()
 
-    response = request.execute()
+    resource = response.json()
 
-    print("Created Patient resource with ID {}".format(response["id"]))
-    print(json.dumps(response, indent=2))
+    print("Created Patient resource with ID {}".format(resource["id"]))
 
     return response
 
@@ -102,16 +81,21 @@ def create_patient(project_id, cloud_region, dataset_id, fhir_store_id):
 
 # [START healthcare_create_encounter]
 def create_encounter(
-    project_id, cloud_region, dataset_id, fhir_store_id, patient_id,
+    base_url, project_id, cloud_region, dataset_id, fhir_store_id, patient_id,
 ):
     """Creates a new Encounter resource in a FHIR store based on a Patient."""
-    client = get_client_fhir()
-
-    fhir_store_name = "projects/{}/locations/{}/datasets/{}/fhirStores/{}".format(
-        project_id, cloud_region, dataset_id, fhir_store_id
+    url = "{}/projects/{}/locations/{}".format(
+        base_url, project_id, cloud_region, patient_id
     )
 
-    resource_type = "Encounter"
+    fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir/Encounter".format(
+        url, dataset_id, fhir_store_id
+    )
+
+    # Make an authenticated API request
+    session = get_session()
+
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
     body = {
         "status": "finished",
@@ -130,18 +114,14 @@ def create_encounter(
         "resourceType": "Encounter",
     }
 
-    request = (
-        client.projects()
-        .locations()
-        .datasets()
-        .fhirStores()
-        .fhir()
-        .create(parent=fhir_store_name, type=resource_type, body=body)
-    )
-    response = request.execute()
+    response = session.post(fhir_store_path, headers=headers, json=body)
+    response.raise_for_status()
 
-    print("Created Encounter resource with ID {}".format(response["id"]))
-    print(json.dumps(response, indent=2))
+    resource = response.json()
+
+    print("Created Encounter resource with ID {}".format(resource["id"]))
+
+    return response
 
 
 # [END healthcare_create_encounter]
@@ -149,64 +129,49 @@ def create_encounter(
 
 # [START healthcare_create_observation]
 def create_observation(
-    project_id, cloud_region, dataset_id, fhir_store_id, patient_id, encounter_id
+    base_url,
+    project_id,
+    cloud_region,
+    dataset_id,
+    fhir_store_id,
+    patient_id,
+    encounter_id,
 ):
-    """Creates a new Observation resource in a FHIR store based on a Patient and an Encounter."""
-    client = get_client_fhir()
-
-    fhir_store_name = "projects/{}/locations/{}/datasets/{}/fhirStores/{}".format(
-        project_id, cloud_region, dataset_id, fhir_store_id
+    """
+    Creates a new Observation resource in a FHIR store based on
+    an Encounter.
+    """
+    url = "{}/projects/{}/locations/{}".format(
+        base_url, project_id, cloud_region, patient_id
     )
 
-    resource_type = "Observation"
+    fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir/Observation".format(
+        url, dataset_id, fhir_store_id
+    )
 
-    body2 = {
+    # Make an authenticated API request
+    session = get_session()
+
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
+
+    body = {
         "resourceType": "Observation",
-        "status": "final",
         "identifier": [{"system": "my-code-system", "value": "ABC-12345"}],
-        "category": [
-            {
-                "coding": [
-                    {
-                        "system": "http://terminology.hl7.org/CodeSystem/observation-category",
-                        "code": "vital-signs",
-                    }
-                ],
-            }
-        ],
-        "code": {
-            "coding": [
-                {
-                    "system": "http://loinc.org",
-                    "code": "8867-4",
-                    "display": "Heart rate",
-                }
-            ],
-            "text": "Heart rate",
-        },
+        "status": "final",
         "subject": {"reference": "Patient/{}".format(patient_id)},
-        "effectiveDateTime": "2018-01-01T00:00:00+00:00",
-        "valueQuantity": {
-            "value": 80,
-            "unit": "beats/minute",
-            "system": "http://unitsofmeasure.org",
-            "code": "/min",
-        },
+        "effectiveDateTime": "2019-01-01T00:00:00+00:00",
+        "valueQuantity": {"value": 80, "unit": "bpm"},
         "context": {"reference": "Encounter/{}".format(encounter_id)},
     }
 
-    request = (
-        client.projects()
-        .locations()
-        .datasets()
-        .fhirStores()
-        .fhir()
-        .create(parent=fhir_store_name, type=resource_type, body=body2)
-    )
-    response = request.execute()
+    response = session.post(fhir_store_path, headers=headers, json=body)
+    response.raise_for_status()
 
-    print("Created Observation resource with ID {}".format(response["id"]))
-    print(json.dumps(response, indent=2))
+    resource = response.json()
+
+    print("Created Observation resource with ID {}".format(resource["id"]))
+
+    return response
 
 
 # [END healthcare_create_observation]
@@ -214,7 +179,13 @@ def create_observation(
 
 # [START healthcare_delete_resource]
 def delete_resource(
-    project_id, cloud_region, dataset_id, fhir_store_id, resource_type, resource_id,
+    base_url,
+    project_id,
+    cloud_region,
+    dataset_id,
+    fhir_store_id,
+    resource_type,
+    resource_id,
 ):
     """
     Deletes a FHIR resource. Regardless of whether the operation succeeds or
@@ -222,25 +193,16 @@ def delete_resource(
     resource was successfully deleted, search for or get the resource and
     see if it exists.
     """
-    client = get_client()
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
-    fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+    resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}/{}".format(
+        url, dataset_id, fhir_store_id, resource_type, resource_id
     )
 
-    resource_name = "{}/fhirStores/{}/fhir/{}/{}".format(
-        fhir_store_parent, fhir_store_id, resource_type, resource_id
-    )
+    # Make an authenticated API request
+    session = get_session()
 
-    request = (
-        client.projects()
-        .locations()
-        .datasets()
-        .fhirStores()
-        .fhir()
-        .delete(name=resource_name)
-    )
-    response = request.execute()
+    response = session.delete(resource_path)
     print("Deleted {} resource with ID {}.".format(resource_type, resource_id))
 
     return response
@@ -251,33 +213,35 @@ def delete_resource(
 
 # [START healthcare_get_resource]
 def get_resource(
-    project_id, cloud_region, dataset_id, fhir_store_id, resource_type, resource_id,
+    base_url,
+    project_id,
+    cloud_region,
+    dataset_id,
+    fhir_store_id,
+    resource_type,
+    resource_id,
 ):
-    """Reads a FHIR resource."""
-    client = get_client()
+    """Gets a FHIR resource."""
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
-    fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+    resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}/{}".format(
+        url, dataset_id, fhir_store_id, resource_type, resource_id
     )
 
-    resource_name = "{}/fhirStores/{}/fhir/{}/{}".format(
-        fhir_store_parent, fhir_store_id, resource_type, resource_id
-    )
+    # Make an authenticated API request
+    session = get_session()
 
-    request = (
-        client.projects()
-        .locations()
-        .datasets()
-        .fhirStores()
-        .fhir()
-        .read(name=resource_name)
-    )
-    response = request.execute()
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
-    print("Got {} resource:".format(response["resourceType"]))
-    print(json.dumps(response, indent=2))
+    response = session.get(resource_path, headers=headers)
+    response.raise_for_status()
 
-    return response
+    resource = response.json()
+
+    print("Got {} resource:".format(resource["resourceType"]))
+    print(json.dumps(resource, indent=2))
+
+    return resource
 
 
 # [END healthcare_get_resource]
@@ -285,37 +249,39 @@ def get_resource(
 
 # [START healthcare_list_resource_history]
 def list_resource_history(
-    project_id, cloud_region, dataset_id, fhir_store_id, resource_type, resource_id,
+    base_url,
+    project_id,
+    cloud_region,
+    dataset_id,
+    fhir_store_id,
+    resource_type,
+    resource_id,
 ):
     """Gets the history of a resource."""
-    client = get_client()
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
-    fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+    resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}/{}".format(
+        url, dataset_id, fhir_store_id, resource_type, resource_id
     )
 
-    resource_name = "{}/fhirStores/{}/fhir/{}/{}".format(
-        fhir_store_parent, fhir_store_id, resource_type, resource_id
-    )
+    # Make an authenticated API request
+    session = get_session()
 
-    request = (
-        client.projects()
-        .locations()
-        .datasets()
-        .fhirStores()
-        .fhir()
-        .history(name=resource_name)
-    )
-    response = request.execute()
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
+
+    response = session.get(resource_path + "/_history", headers=headers)
+    response.raise_for_status()
+
+    resource = response.json()
 
     print(
         "History for {} resource:".format(
-            response["entry"][0]["resource"]["resourceType"]
+            resource["entry"][0]["resource"]["resourceType"]
         )
     )
-    print(json.dumps(response, indent=2))
+    print(json.dumps(resource, indent=2))
 
-    return response
+    return resource
 
 
 # [END healthcare_list_resource_history]
@@ -323,6 +289,7 @@ def list_resource_history(
 
 # [START healthcare_get_resource_history]
 def get_resource_history(
+    base_url,
     project_id,
     cloud_region,
     dataset_id,
@@ -331,144 +298,284 @@ def get_resource_history(
     resource_id,
     version_id,
 ):
-    """Gets the contents of a version (current or historical) of a FHIR resource
-    by version ID.
-    """
-    client = get_client()
+    """Gets a version resource."""
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
-    fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+    resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}/{}".format(
+        url, dataset_id, fhir_store_id, resource_type, resource_id
     )
+    resource_path += "/_history/{}".format(version_id)
 
-    resource_name = "{}/fhirStores/{}/fhir/{}/{}/_history/{}".format(
-        fhir_store_parent, fhir_store_id, resource_type, resource_id, version_id
-    )
+    # Make an authenticated API request
+    session = get_session()
 
-    request = (
-        client.projects()
-        .locations()
-        .datasets()
-        .fhirStores()
-        .fhir()
-        .vread(name=resource_name)
-    )
-    response = request.execute()
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
+
+    response = session.get(resource_path, headers=headers)
+    response.raise_for_status()
+
+    resource = response.json()
 
     print("Got history for {} resource:".format(resource_type))
-    print(json.dumps(response, indent=2))
+    print(json.dumps(resource, indent=2))
 
-    return response
+    return resource
 
 
 # [END healthcare_get_resource_history]
 
 
+# [START healthcare_delete_resource_purge]
+def delete_resource_purge(
+    base_url,
+    project_id,
+    cloud_region,
+    dataset_id,
+    fhir_store_id,
+    resource_type,
+    resource_id,
+):
+    """Deletes versions of a resource (excluding current version)."""
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
+
+    resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}/{}".format(
+        url, dataset_id, fhir_store_id, resource_type, resource_id
+    )
+    resource_path += "/$purge"
+
+    # Make an authenticated API request
+    session = get_session()
+
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
+
+    response = session.delete(resource_path, headers=headers)
+    response.raise_for_status()
+
+    if response.status_code < 400:
+        print(
+            "Deleted versions of {} resource "
+            "(excluding current version).".format(resource_type)
+        )
+
+    return response
+
+
+# [END healthcare_delete_resource_purge]
+
+
 # [START healthcare_update_resource]
 def update_resource(
-    project_id, cloud_region, dataset_id, fhir_store_id, resource_type, resource_id,
+    base_url,
+    project_id,
+    cloud_region,
+    dataset_id,
+    fhir_store_id,
+    resource_type,
+    resource_id,
 ):
     """Updates an existing resource."""
-    client = get_client_fhir()
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
-    fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
-        project_id, cloud_region, dataset_id
+    resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}/{}".format(
+        url, dataset_id, fhir_store_id, resource_type, resource_id
     )
 
-    resource_name = "{}/fhirStores/{}/fhir/{}/{}".format(
-        fhir_store_parent, fhir_store_id, resource_type, resource_id
-    )
+    # Make an authenticated API request
+    session = get_session()
+
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
     body = {"resourceType": resource_type, "active": True, "id": resource_id}
 
-    request = (
-        client.projects()
-        .locations()
-        .datasets()
-        .fhirStores()
-        .fhir()
-        .update(name=resource_name, body=body)
-    )
-    response = request.execute()
+    response = session.put(resource_path, headers=headers, json=body)
+    response.raise_for_status()
 
-    print("Updated {} resource:".format(response["resourceType"]))
-    print(json.dumps(response, indent=2))
+    resource = response.json()
 
-    return response
+    print("Updated {} resource:".format(resource["resourceType"]))
+    print(json.dumps(resource, indent=2))
+
+    return resource
 
 
 # [END healthcare_update_resource]
 
 
-# [START healthcare_search_resources_post]
-def search_resources_post(
-    project_id, cloud_region, dataset_id, fhir_store_id, resource_type,
+# [START healthcare_patch_resource]
+def patch_resource(
+    base_url,
+    project_id,
+    cloud_region,
+    dataset_id,
+    fhir_store_id,
+    resource_type,
+    resource_id,
+):
+    """Updates part of an existing resource."""
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
+
+    resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}/{}".format(
+        url, dataset_id, fhir_store_id, resource_type, resource_id
+    )
+
+    # Make an authenticated API request
+    session = get_session()
+
+    headers = {"Content-Type": "application/json-patch+json"}
+
+    body = json.dumps([{"op": "replace", "path": "/active", "value": False}])
+
+    response = session.patch(resource_path, headers=headers, data=body)
+    response.raise_for_status()
+
+    resource = response.json()
+
+    print("Patched {} resource:".format(resource["resourceType"]))
+    print(json.dumps(resource, indent=2))
+
+    return resource
+
+
+# [END healthcare_patch_resource]
+
+
+# [START healthcare_search_resources_get]
+def search_resources_get(
+    base_url, project_id, cloud_region, dataset_id, fhir_store_id, resource_type,
 ):
     """
     Searches resources in the given FHIR store using the
-    searchResources POST method. google-api-python-client does not
-    support the use of the searchResources GET method.
+    searchResources GET method.
     """
-    client = get_client()
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
-    fhir_store_name = "projects/{}/locations/{}/datasets/{}/fhirStores/{}".format(
-        project_id, cloud_region, dataset_id, fhir_store_id
+    resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}".format(
+        url, dataset_id, fhir_store_id, resource_type
     )
 
-    body = {"resourceType": resource_type}
-    request = (
-        client.projects()
-        .locations()
-        .datasets()
-        .fhirStores()
-        .fhir()
-        .search(parent=fhir_store_name, body=body)
-    )
+    # Make an authenticated API request
+    session = get_session()
 
-    response = request.execute()
+    response = session.get(resource_path)
+    response.raise_for_status()
+
+    resources = response.json()
 
     print(
-        "Using POST request, found a total of {} {} resources:".format(
-            response["total"], resource_type
+        "Using GET request, found a total of {} {} resources:".format(
+            resources["total"], resource_type
         )
     )
-    print(json.dumps(response, indent=2))
+    print(json.dumps(resources, indent=2))
 
-    return response
+    return resources
+
+
+# [END healthcare_search_resources_get]
+
+
+# [START healthcare_search_resources_post]
+def search_resources_post(
+    base_url, project_id, cloud_region, dataset_id, fhir_store_id
+):
+    """
+    Searches resources in the given FHIR store using the
+    _search POST method and a query string containing the
+    information to search for. In this sample, the search criteria is
+    'family:exact=Smith' on a Patient resource.
+    """
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
+
+    fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir".format(
+        url, dataset_id, fhir_store_id
+    )
+
+    resource_path = "{}/Patient/_search?family:exact=Smith".format(fhir_store_path)
+
+    # Make an authenticated API request
+    session = get_session()
+
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
+
+    response = session.post(resource_path, headers=headers)
+    response.raise_for_status()
+
+    resources = response.json()
+    print(
+        "Using POST request, found a total of {} Patient resources:".format(
+            resources["total"]
+        )
+    )
+
+    print(json.dumps(resources, indent=2))
+
+    return resources
 
 
 # [END healthcare_search_resources_post]
 
 
-# [START healthcare_execute_bundle]
-def execute_bundle(project_id, cloud_region, dataset_id, fhir_store_id, bundle):
-    """Executes the operations in the given bundle."""
-    client = get_client_fhir()
+# [START healthcare_get_patient_everything]
+def get_patient_everything(
+    base_url, project_id, cloud_region, dataset_id, fhir_store_id, resource_id,
+):
+    """Gets all the resources in the patient compartment."""
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
-    fhir_store_name = "projects/{}/locations/{}/datasets/{}/fhirStores/{}".format(
-        project_id, cloud_region, dataset_id, fhir_store_id
+    resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}/{}".format(
+        url, dataset_id, fhir_store_id, "Patient", resource_id
     )
+    resource_path += "/$everything"
+
+    # Make an authenticated API request
+    session = get_session()
+
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
+
+    response = session.get(resource_path, headers=headers)
+    response.raise_for_status()
+
+    resource = response.json()
+
+    print(json.dumps(resource, indent=2))
+
+    return resource
+
+
+# [END healthcare_get_patient_everything]
+
+
+# [START healthcare_fhir_execute_bundle]
+def execute_bundle(
+    base_url, project_id, cloud_region, dataset_id, fhir_store_id, bundle,
+):
+    """Executes the operations in the given bundle."""
+    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
+
+    resource_path = "{}/datasets/{}/fhirStores/{}/fhir".format(
+        url, dataset_id, fhir_store_id
+    )
+
+    # Make an authenticated API request
+    session = get_session()
+
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
     with open(bundle, "r") as bundle_file:
-        bundle_file_content = json.load(bundle_file)
+        bundle_file_content = bundle_file.read()
 
-    request = (
-        client.projects()
-        .locations()
-        .datasets()
-        .fhirStores()
-        .fhir()
-        .executeBundle(parent=fhir_store_name, body=bundle_file_content)
-    )
+    response = session.post(resource_path, headers=headers, data=bundle_file_content)
+    response.raise_for_status()
 
-    response = request.execute()
+    resource = response.json()
 
     print("Executed bundle from file: {}".format(bundle))
-    print(json.dumps(response, indent=2))
+    print(json.dumps(resource, indent=2))
 
-    return response
+    return resource
 
 
-# [END healthcare_execute_bundle]
+# [END healthcare_fhir_execute_bundle]
 
 
 def parse_command_line_args():
@@ -477,6 +584,8 @@ def parse_command_line_args():
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
+
+    parser.add_argument("--base_url", default=_BASE_URL, help="Healthcare API URL.")
 
     parser.add_argument(
         "--project_id",
@@ -510,8 +619,14 @@ def parse_command_line_args():
     parser.add_argument(
         "--encounter_id",
         default=None,
-        help="Identifier for an Encounter resource. Can be used as a reference "
-        "for an Observation",
+        help="Identifier for an Encounter resource. Can be used as a "
+        "reference for an Observation",
+    )
+
+    parser.add_argument(
+        "--bundle",
+        default=None,
+        help="Name of file containing bundle of operations to execute",
     )
 
     parser.add_argument(
@@ -519,12 +634,6 @@ def parse_command_line_args():
     )
 
     parser.add_argument("--version_id", default=None, help="Version of a FHIR resource")
-
-    parser.add_argument(
-        "--bundle",
-        default=None,
-        help="Name of file containing bundle of operations to execute",
-    )
 
     command = parser.add_subparsers(dest="command")
 
@@ -534,10 +643,14 @@ def parse_command_line_args():
     command.add_parser("delete-resource", help=delete_resource.__doc__)
     command.add_parser("get-resource", help=get_resource.__doc__)
     command.add_parser("list-resource-history", help=list_resource_history.__doc__)
-    command.add_parser("get-resource-history", help=get_resource_history.__doc__)
-    command.add_parser("update-resource", help=update_resource.__doc__)
-    command.add_parser("search-resources-post", help=search_resources_post.__doc__)
     command.add_parser("execute-bundle", help=execute_bundle.__doc__)
+    command.add_parser("get-resource-history", help=get_resource_history.__doc__)
+    command.add_parser("delete-resource-purge", help=delete_resource_purge.__doc__)
+    command.add_parser("update-resource", help=update_resource.__doc__)
+    command.add_parser("patch-resource", help=patch_resource.__doc__)
+    command.add_parser("search-resources-get", help=search_resources_get.__doc__)
+    command.add_parser("search-resources-post", help=search_resources_get.__doc__)
+    command.add_parser("get-patient-everything", help=get_patient_everything.__doc__)
 
     return parser.parse_args()
 
@@ -553,11 +666,16 @@ def run_command(args):
 
     elif args.command == "create-patient":
         create_patient(
-            args.project_id, args.cloud_region, args.dataset_id, args.fhir_store_id,
+            args.base_url,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
         )
 
     elif args.command == "create-encounter":
         create_encounter(
+            args.base_url,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -567,6 +685,7 @@ def run_command(args):
 
     elif args.command == "create-observation":
         create_observation(
+            args.base_url,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -577,6 +696,7 @@ def run_command(args):
 
     elif args.command == "delete-resource":
         delete_resource(
+            args.base_url,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -587,6 +707,7 @@ def run_command(args):
 
     elif args.command == "get-resource":
         get_resource(
+            args.base_url,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -595,8 +716,19 @@ def run_command(args):
             args.resource_id,
         )
 
+    elif args.command == "execute-bundle":
+        execute_bundle(
+            args.base_url,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            args.bundle,
+        )
+
     elif args.command == "list-resource-history":
         list_resource_history(
+            args.base_url,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -607,6 +739,7 @@ def run_command(args):
 
     elif args.command == "get-resource-history":
         get_resource_history(
+            args.base_url,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -616,8 +749,9 @@ def run_command(args):
             args.version_id,
         )
 
-    elif args.command == "update-resource":
-        update_resource(
+    elif args.command == "delete-resource-purge":
+        delete_resource_purge(
+            args.base_url,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -626,8 +760,31 @@ def run_command(args):
             args.resource_id,
         )
 
-    elif args.command == "search-resources-post":
-        search_resources_post(
+    elif args.command == "update-resource":
+        update_resource(
+            args.base_url,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            args.resource_type,
+            args.resource_id,
+        )
+
+    elif args.command == "patch-resource":
+        patch_resource(
+            args.base_url,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            args.resource_type,
+            args.resource_id,
+        )
+
+    elif args.command == "search-resources-get":
+        search_resources_get(
+            args.base_url,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
@@ -635,13 +792,23 @@ def run_command(args):
             args.resource_type,
         )
 
-    elif args.command == "execute-bundle":
-        execute_bundle(
+    elif args.command == "search-resources-post":
+        search_resources_post(
+            args.base_url,
             args.project_id,
             args.cloud_region,
             args.dataset_id,
             args.fhir_store_id,
-            args.bundle,
+        )
+
+    elif args.command == "get-patient-everything":
+        get_patient_everything(
+            args.base_url,
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            args.resource_id,
         )
 
 

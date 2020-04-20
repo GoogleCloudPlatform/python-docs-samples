@@ -17,9 +17,9 @@ import pytest
 import sys
 import uuid
 
+import backoff
 from google.cloud import exceptions, storage
 from googleapiclient import errors
-from retrying import retry
 from googleapiclient.errors import HttpError
 
 # Add datasets for bootstrapping datasets for testing
@@ -40,18 +40,9 @@ resource_file = os.path.join(RESOURCES, source_file_name)
 import_object = "{}/{}".format(gcs_uri, source_file_name)
 
 
-def retry_if_server_exception(exception):
-    return isinstance(exception, errors.HttpError)
-
-
 @pytest.fixture(scope="module")
 def test_dataset():
-    @retry(
-        wait_exponential_multiplier=1000,
-        wait_exponential_max=10000,
-        stop_max_attempt_number=10,
-        retry_on_exception=retry_if_server_exception,
-    )
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def create():
         try:
             datasets.create_dataset(project_id, cloud_region, dataset_id)
@@ -69,12 +60,7 @@ def test_dataset():
     yield
 
     # Clean up
-    @retry(
-        wait_exponential_multiplier=1000,
-        wait_exponential_max=10000,
-        stop_max_attempt_number=10,
-        retry_on_exception=retry_if_server_exception,
-    )
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def clean_up():
         try:
             datasets.delete_dataset(project_id, cloud_region, dataset_id)
@@ -90,12 +76,7 @@ def test_dataset():
 
 @pytest.fixture(scope="module")
 def test_fhir_store():
-    @retry(
-        wait_exponential_multiplier=1000,
-        wait_exponential_max=10000,
-        stop_max_attempt_number=10,
-        retry_on_exception=retry_if_server_exception,
-    )
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def create():
         try:
             fhir_stores.create_fhir_store(
@@ -117,12 +98,7 @@ def test_fhir_store():
     yield
 
     # Clean up
-    @retry(
-        wait_exponential_multiplier=1000,
-        wait_exponential_max=10000,
-        stop_max_attempt_number=10,
-        retry_on_exception=retry_if_server_exception,
-    )
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def clean_up():
         try:
             fhir_stores.delete_fhir_store(
@@ -145,12 +121,7 @@ def crud_fhir_store_id():
     yield fhir_store_id
 
     # Clean up
-    @retry(
-        wait_exponential_multiplier=1000,
-        wait_exponential_max=10000,
-        stop_max_attempt_number=10,
-        retry_on_exception=retry_if_server_exception,
-    )
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def clean_up():
         try:
             fhir_stores.delete_fhir_store(
