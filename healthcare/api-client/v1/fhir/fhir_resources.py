@@ -17,7 +17,6 @@ import json
 import os
 
 from google.auth.transport import requests
-from googleapiclient.errors import HttpError
 from google.oauth2 import service_account
 
 _BASE_URL = "https://healthcare.googleapis.com/v1"

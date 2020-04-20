@@ -19,7 +19,6 @@ import uuid
 
 import backoff
 from google.cloud import exceptions, storage
-from googleapiclient import errors
 from googleapiclient.errors import HttpError
 
 # Add datasets for bootstrapping datasets for testing
@@ -183,12 +182,7 @@ def test_import_fhir_store_gcs(test_dataset, test_fhir_store, capsys):
     blob.upload_from_filename(resource_file)
 
     # Retry in case the blob hasn't had time to propagate to Cloud Storage.
-    @retry(
-        wait_exponential_multiplier=1000,
-        wait_exponential_max=300000,
-        stop_max_attempt_number=10,
-        retry_on_exception=retry_if_server_exception,
-    )
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def test_call():
         fhir_stores.import_fhir_resources(
             project_id, cloud_region, dataset_id, fhir_store_id, import_object,
