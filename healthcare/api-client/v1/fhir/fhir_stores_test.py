@@ -181,9 +181,19 @@ def test_crud_fhir_store(test_dataset, capsys):
 
     # Check that create/get/list/delete worked
     assert "Created FHIR store" in out
-    assert "Name" in out
+    assert "name" in out
     assert "fhirStores" in out
     assert "Deleted FHIR store" in out
+
+
+def test_get_fhir_store_metadata(test_dataset, test_fhir_store, capsys):
+    fhir_stores.get_fhir_store_metadata(
+        project_id, cloud_region, dataset_id, fhir_store_id
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "version" in out
 
 
 def test_patch_fhir_store(test_dataset, test_fhir_store, capsys):

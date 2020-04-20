@@ -76,6 +76,7 @@ def create_patient(project_id, cloud_region, dataset_id, fhir_store_id):
         "name": [{"use": "official", "family": "Smith", "given": ["Darcy"]}],
         "gender": "female",
         "birthDate": "1970-01-01",
+        "active": True,
         "resourceType": "{}".format(resource_type),
     }
 
@@ -87,6 +88,7 @@ def create_patient(project_id, cloud_region, dataset_id, fhir_store_id):
         .fhir()
         .create(parent=fhir_store_name, type=resource_type, body=body)
     )
+
     response = request.execute()
 
     print("Created Patient resource with ID {}".format(response["id"]))
@@ -143,6 +145,71 @@ def create_encounter(
 
 
 # [END healthcare_create_encounter]
+
+
+# [START healthcare_create_observation]
+def create_observation(
+    project_id, cloud_region, dataset_id, fhir_store_id, patient_id, encounter_id
+):
+    """Creates a new Observation resource in a FHIR store based on a Patient and an Encounter."""
+    client = get_client_fhir()
+
+    fhir_store_name = "projects/{}/locations/{}/datasets/{}/fhirStores/{}".format(
+        project_id, cloud_region, dataset_id, fhir_store_id
+    )
+
+    resource_type = "Observation"
+
+    body2 = {
+        "resourceType": "Observation",
+        "status": "final",
+        "identifier": [{"system": "my-code-system", "value": "ABC-12345"}],
+        "category": [
+            {
+                "coding": [
+                    {
+                        "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                        "code": "vital-signs",
+                    }
+                ],
+            }
+        ],
+        "code": {
+            "coding": [
+                {
+                    "system": "http://loinc.org",
+                    "code": "8867-4",
+                    "display": "Heart rate",
+                }
+            ],
+            "text": "Heart rate",
+        },
+        "subject": {"reference": "Patient/{}".format(patient_id)},
+        "effectiveDateTime": "2018-01-01T00:00:00+00:00",
+        "valueQuantity": {
+            "value": 80,
+            "unit": "beats/minute",
+            "system": "http://unitsofmeasure.org",
+            "code": "/min",
+        },
+        "context": {"reference": "Encounter/{}".format(encounter_id)},
+    }
+
+    request = (
+        client.projects()
+        .locations()
+        .datasets()
+        .fhirStores()
+        .fhir()
+        .create(parent=fhir_store_name, type=resource_type, body=body2)
+    )
+    response = request.execute()
+
+    print("Created Observation resource with ID {}".format(response["id"]))
+    print(json.dumps(response, indent=2))
+
+
+# [END healthcare_create_observation]
 
 
 # [START healthcare_delete_resource]
@@ -332,13 +399,14 @@ def update_resource(
 # [END healthcare_update_resource]
 
 
-# [START healthcare_search_resources_get]
-def search_resources_get(
+# [START healthcare_search_resources_post]
+def search_resources_post(
     project_id, cloud_region, dataset_id, fhir_store_id, resource_type,
 ):
     """
     Searches resources in the given FHIR store using the
-    searchResources GET method.
+    searchResources POST method. google-api-python-client does not
+    support the use of the searchResources GET method.
     """
     client = get_client()
 
@@ -355,10 +423,11 @@ def search_resources_get(
         .fhir()
         .search(parent=fhir_store_name, body=body)
     )
+
     response = request.execute()
 
     print(
-        "Using GET request, found a total of {} {} resources:".format(
+        "Using POST request, found a total of {} {} resources:".format(
             response["total"], resource_type
         )
     )
@@ -367,10 +436,39 @@ def search_resources_get(
     return response
 
 
-# [END healthcare_search_resources_get]
+# [END healthcare_search_resources_post]
 
 
-# [END healthcare_fhir_execute_bundle]
+# [START healthcare_execute_bundle]
+def execute_bundle(project_id, cloud_region, dataset_id, fhir_store_id, bundle):
+    """Executes the operations in the given bundle."""
+    client = get_client_fhir()
+
+    fhir_store_name = "projects/{}/locations/{}/datasets/{}/fhirStores/{}".format(
+        project_id, cloud_region, dataset_id, fhir_store_id
+    )
+
+    with open(bundle, "r") as bundle_file:
+        bundle_file_content = json.load(bundle_file)
+
+    request = (
+        client.projects()
+        .locations()
+        .datasets()
+        .fhirStores()
+        .fhir()
+        .executeBundle(parent=fhir_store_name, body=bundle_file_content)
+    )
+
+    response = request.execute()
+
+    print("Executed bundle from file: {}".format(bundle))
+    print(json.dumps(response, indent=2))
+
+    return response
+
+
+# [END healthcare_execute_bundle]
 
 
 def parse_command_line_args():
@@ -410,21 +508,36 @@ def parse_command_line_args():
     )
 
     parser.add_argument(
+        "--encounter_id",
+        default=None,
+        help="Identifier for an Encounter resource. Can be used as a reference "
+        "for an Observation",
+    )
+
+    parser.add_argument(
         "--uri_prefix", default=None, help="Prefix of gs:// URIs for import and export"
     )
 
     parser.add_argument("--version_id", default=None, help="Version of a FHIR resource")
 
+    parser.add_argument(
+        "--bundle",
+        default=None,
+        help="Name of file containing bundle of operations to execute",
+    )
+
     command = parser.add_subparsers(dest="command")
 
     command.add_parser("create-patient", help=create_patient.__doc__)
     command.add_parser("create-encounter", help=create_encounter.__doc__)
+    command.add_parser("create-observation", help=create_observation.__doc__)
     command.add_parser("delete-resource", help=delete_resource.__doc__)
     command.add_parser("get-resource", help=get_resource.__doc__)
     command.add_parser("list-resource-history", help=list_resource_history.__doc__)
     command.add_parser("get-resource-history", help=get_resource_history.__doc__)
     command.add_parser("update-resource", help=update_resource.__doc__)
-    command.add_parser("search-resources-get", help=search_resources_get.__doc__)
+    command.add_parser("search-resources-post", help=search_resources_post.__doc__)
+    command.add_parser("execute-bundle", help=execute_bundle.__doc__)
 
     return parser.parse_args()
 
@@ -450,6 +563,16 @@ def run_command(args):
             args.dataset_id,
             args.fhir_store_id,
             args.patient_id,
+        )
+
+    elif args.command == "create-observation":
+        create_observation(
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            args.patient_id,
+            args.encounter_id,
         )
 
     elif args.command == "delete-resource":
@@ -503,13 +626,22 @@ def run_command(args):
             args.resource_id,
         )
 
-    elif args.command == "search-resources-get":
-        search_resources_get(
+    elif args.command == "search-resources-post":
+        search_resources_post(
             args.project_id,
             args.cloud_region,
             args.dataset_id,
             args.fhir_store_id,
             args.resource_type,
+        )
+
+    elif args.command == "execute-bundle":
+        execute_bundle(
+            args.project_id,
+            args.cloud_region,
+            args.dataset_id,
+            args.fhir_store_id,
+            args.bundle,
         )
 
 

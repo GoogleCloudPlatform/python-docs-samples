@@ -30,6 +30,7 @@ cloud_region = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
+bundle = os.path.join(os.path.dirname(__file__), "resources/execute_bundle.json")
 dataset_id = "test_dataset_{}".format(uuid.uuid4())
 fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
 resource_type = "Patient"
@@ -266,14 +267,24 @@ def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
     assert "Got history for Patient resource" in out
 
 
-def test_search_resources_get(test_dataset, test_fhir_store, test_patient, capsys):
-    fhir_resources.search_resources_get(
+def test_search_resources_post(test_dataset, test_fhir_store, test_patient, capsys):
+    fhir_resources.search_resources_post(
         project_id, cloud_region, dataset_id, fhir_store_id, resource_type,
     )
 
     out, _ = capsys.readouterr()
 
-    assert "Using GET request" in out
+    assert "Using POST request" in out
+
+
+def test_execute_bundle(test_dataset, test_fhir_store, capsys):
+    fhir_resources.execute_bundle(
+        project_id, cloud_region, dataset_id, fhir_store_id, bundle,
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "Executed bundle from file" in out
 
 
 def test_delete_patient(test_dataset, test_fhir_store, test_patient, capsys):

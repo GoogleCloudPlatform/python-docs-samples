@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import argparse
+import json
 import os
 
 from googleapiclient import discovery
@@ -97,24 +98,33 @@ def get_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id):
     fhir_stores = client.projects().locations().datasets().fhirStores()
     fhir_store = fhir_stores.get(name=fhir_store_name).execute()
 
-    print("Name: {}".format(fhir_store.get("name")))
-    print("Enable update/create: {}".format(fhir_store.get("enableUpdateCreate")))
-    print("Notification config:")
-    if fhir_store.get("notificationConfig") is not None:
-        notification_config = fhir_store.get("notificationConfig")
-        print(
-            "\tCloud Pub/Sub topic: {}".format(notification_config.get("pubsubTopic"))
-        )
-    print(
-        "Disable referential integrity: {}".format(
-            fhir_store.get("disableReferentialIntegrity")
-        )
-    )
-
+    print(json.dumps(fhir_store, indent=2))
     return fhir_store
 
 
 # [END healthcare_get_fhir_store]
+
+
+# [START healthcare_get_metadata]
+def get_fhir_store_metadata(project_id, cloud_region, dataset_id, fhir_store_id):
+    """Gets the FHIR capability statement (STU3, R4), or the conformance statement
+    in the DSTU2 case for the store, which contains a description of functionality
+    supported by the server.
+    """
+    client = get_client()
+    fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
+        project_id, cloud_region, dataset_id
+    )
+    fhir_store_name = "{}/fhirStores/{}".format(fhir_store_parent, fhir_store_id)
+
+    fhir_stores = client.projects().locations().datasets().fhirStores()
+    response = fhir_stores.fhir().capabilities(name=fhir_store_name).execute()
+
+    print(json.dumps(response, indent=2))
+    return response
+
+
+# [END healthcare_get_metadata]
 
 
 # [START healthcare_list_fhir_stores]
@@ -365,6 +375,7 @@ def parse_command_line_args():
     command.add_parser("create-fhir-store", help=create_fhir_store.__doc__)
     command.add_parser("delete-fhir-store", help=delete_fhir_store.__doc__)
     command.add_parser("get-fhir-store", help=get_fhir_store.__doc__)
+    command.add_parser("get-fhir-store-metadata", help=get_fhir_store_metadata.__doc__)
     command.add_parser("list-fhir-stores", help=list_fhir_stores.__doc__)
     command.add_parser("patch-fhir-store", help=patch_fhir_store.__doc__)
     command.add_parser("import-fhir-resources", help=import_fhir_resources.__doc__)
@@ -396,6 +407,11 @@ def run_command(args):
 
     elif args.command == "get-fhir-store":
         get_fhir_store(
+            args.project_id, args.cloud_region, args.dataset_id, args.fhir_store_id,
+        )
+
+    elif args.command == "get-fhir-store-metadata":
+        get_fhir_store_metadata(
             args.project_id, args.cloud_region, args.dataset_id, args.fhir_store_id,
         )
 
