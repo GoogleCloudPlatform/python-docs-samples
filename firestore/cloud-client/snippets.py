@@ -12,6 +12,7 @@
 # limitations under the License.
 
 import datetime
+import threading
 from time import sleep
 
 from google.cloud import firestore
@@ -660,10 +661,14 @@ def listen_document():
     db = firestore.Client()
     # [START listen_document]
 
+    # Create an Event for notifying main thread.
+    callback_done = threading.Event()
+
     # Create a callback on_snapshot function to capture changes
     def on_snapshot(doc_snapshot, changes, read_time):
         for doc in doc_snapshot:
             print(u'Received document snapshot: {}'.format(doc.id))
+        callback_done.set()
 
     doc_ref = db.collection(u'cities').document(u'SF')
 
@@ -680,7 +685,8 @@ def listen_document():
         u'population': 860000
     }
     doc_ref.set(data)
-    sleep(3)
+    # Wait for the callback.
+    callback_done.wait(timeout=60)
     # [START detach_listener]
     # Terminate watch on a document
     doc_watch.unsubscribe()
@@ -691,12 +697,16 @@ def listen_multiple():
     db = firestore.Client()
     # [START listen_multiple]
 
+    # Create an Event for notifying main thread.
+    callback_done = threading.Event()
+
     # Create a callback on_snapshot function to capture changes
     def on_snapshot(col_snapshot, changes, read_time):
         print(u'Callback received query snapshot.')
         print(u'Current cities in California:')
         for doc in col_snapshot:
             print(u'{}'.format(doc.id))
+        callback_done.set()
 
     col_query = db.collection(u'cities').where(u'state', u'==', u'CA')
 
@@ -713,14 +723,17 @@ def listen_multiple():
         u'population': 860000
     }
     db.collection(u'cities').document(u'SF').set(data)
-    sleep(1)
-
+    # Wait for the callback.
+    callback_done.wait(timeout=60)
     query_watch.unsubscribe()
 
 
 def listen_for_changes():
     db = firestore.Client()
     # [START listen_for_changes]
+
+    # Create an Event for notifying main thread.
+    delete_done = threading.Event()
 
     # Create a callback on_snapshot function to capture changes
     def on_snapshot(col_snapshot, changes, read_time):
@@ -733,6 +746,7 @@ def listen_for_changes():
                 print(u'Modified city: {}'.format(change.document.id))
             elif change.type.name == 'REMOVED':
                 print(u'Removed city: {}'.format(change.document.id))
+                delete_done.set()
 
     col_query = db.collection(u'cities').where(u'state', u'==', u'CA')
 
@@ -763,7 +777,9 @@ def listen_for_changes():
 
     # Delete document
     mtv_document.delete()
-    sleep(1)
+
+    # Wait for the callback captures the deletion.
+    delete_done.wait(timeout=60)
     query_watch.unsubscribe()
 
 
