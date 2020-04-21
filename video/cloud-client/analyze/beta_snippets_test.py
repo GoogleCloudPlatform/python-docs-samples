@@ -18,11 +18,10 @@ from six.moves.urllib.request import urlopen
 import os
 import uuid
 
-import beta_snippets
 from google.cloud import storage
 import pytest
-from flaky import flaky
 
+import beta_snippets
 
 POSSIBLE_TEXTS = [
     "Google",
@@ -114,7 +113,7 @@ def test_annotation_to_storage_streaming(capsys, video_path, bucket):
 
 
 # Flaky timeout
-@flaky(max_runs=3, min_passes=1)
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_detect_text(capsys):
     in_file = "./resources/googlework_tiny.mp4"
     beta_snippets.video_detect_text(in_file)
@@ -123,15 +122,15 @@ def test_detect_text(capsys):
 
 
 # Flaky timeout
-@flaky(max_runs=3, min_passes=1)
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_detect_text_gcs(capsys):
     in_file = "gs://python-docs-samples-tests/video/googlework_tiny.mp4"
     beta_snippets.video_detect_text_gcs(in_file)
     out, _ = capsys.readouterr()
     assert 'Text' in out
 
-
-@pytest.mark.slow
+# Flaky InvalidArgument
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_track_objects(capsys):
     in_file = "./resources/googlework_tiny.mp4"
     beta_snippets.track_objects(in_file)
@@ -154,7 +153,7 @@ def test_track_objects_gcs():
 
 
 # Flaky Gateway
-@flaky(max_runs=3, min_passes=1)
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_streaming_automl_classification(capsys, video_path):
     project_id = os.environ["GCLOUD_PROJECT"]
     model_id = "VCN6363999689846554624"
