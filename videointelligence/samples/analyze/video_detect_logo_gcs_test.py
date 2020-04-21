@@ -14,11 +14,15 @@
 
 import os
 
+import pytest
+
 import video_detect_logo_gcs
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
+# Flaky Deadline
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_detect_logo_gcs(capsys):
     input_uri = "gs://cloud-samples-data/video/googlework_tiny.mp4"
 
