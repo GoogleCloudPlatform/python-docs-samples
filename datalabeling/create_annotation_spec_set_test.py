@@ -16,30 +16,36 @@
 
 import os
 
-from google.api_core.client_options import ClientOptions
-from google.cloud import datalabeling_v1beta1 as datalabeling
+import backoff
+from google.api_core.exceptions import DeadlineExceeded
 import pytest
 
 import create_annotation_spec_set
+import testing_lib
+
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 
 
-@pytest.mark.flaky(max_runs=3)
+@pytest.fixture(scope='module')
+def cleaner():
+    resource_names = []
+
+    yield resource_names
+
+    for resource_name in resource_names:
+        testing_lib.delete_annotation_spec_set(resource_name)
+
+
 def test_create_annotation_spec_set(capsys):
-    response = create_annotation_spec_set.create_annotation_spec_set(
-        PROJECT_ID)
+
+    @backoff.on_exception(backoff.expo, DeadlineExceeded, max_time=60)
+    def run_sample():
+        return create_annotation_spec_set.create_annotation_spec_set(PROJECT_ID)
+
+    response = run_sample()
     out, _ = capsys.readouterr()
     assert 'The annotation_spec_set resource name:' in out
 
-    # Delete the created annotation spec set.
-    annotation_spec_set_name = response.name
-    client = datalabeling.DataLabelingServiceClient()
-
-    # If provided, use a provided test endpoint - this will prevent tests on
-    # this snippet from triggering any action by a real human
-    if 'DATALABELING_ENDPOINT' in os.environ:
-        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
-        client = datalabeling.DataLabelingServiceClient(client_options=opts)
-
-    client.delete_annotation_spec_set(annotation_spec_set_name)
+    # For cleanup
+    cleaner.append(response.name)
