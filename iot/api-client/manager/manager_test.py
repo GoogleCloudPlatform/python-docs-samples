@@ -38,6 +38,8 @@ project_id = os.environ['GCLOUD_PROJECT']
 service_account_json = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 pubsub_topic = 'projects/{}/topics/{}'.format(project_id, topic_id)
+
+# This format is used in the `clean_up_registries()` below.
 registry_id = 'test-registry-{}-{}'.format(uuid.uuid1(), int(time.time()))
 
 
