@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START run_secure_request]
 import os
 import sys
 import urllib
@@ -26,13 +27,10 @@ def new_request(data):
 
     url = os.environ.get("EDITOR_UPSTREAM_RENDER_URL")
     unauthenticated = os.environ.get("EDITOR_UPSTREAM_UNAUTHENTICATED", False)
-    print("Unauthenticated: ", unauthenticated)
-    print("Authenticated: ", not unauthenticated)
-
+    
     req = urllib.request.Request(url, data=data.encode())
 
     if not unauthenticated:
-        print("if statement")
         token = get_token(url)
         req.add_header("Authorization", f"Bearer {token}")
 
@@ -56,3 +54,4 @@ def get_token(url):
     token_response = urllib.request.urlopen(token_req)
     token = token_response.read()
     return token.decode()
+# [END run_secure_request]

@@ -28,6 +28,7 @@ def index():
     return render_template("index.html", default=f.read())
 
 
+# [START run_secure_request_do]
 @app.route("/render", methods=["POST"])
 def render_handler():
     body = request.get_json()
@@ -37,6 +38,7 @@ def render_handler():
     data = body["data"]
     parsed_markdown = render.new_request(data)
     return parsed_markdown
+# [END run_secure_request_do]
 
 
 if __name__ == "__main__":

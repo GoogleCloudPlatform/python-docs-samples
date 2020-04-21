@@ -18,8 +18,6 @@ import subprocess
 from urllib import request
 import os
 
-# Setting up variables for testing
-GCLOUD_PROJECT = os.environ["GCLOUD_PROJECT"]
 
 @pytest.fixture()
 def services():
@@ -54,6 +52,13 @@ def services():
     yield editor, token
 
 
+def tear_down():
+    subprocess.run(["gcloud", "run", "services", "delete", "editor", "--quiet"])
+    subprocess.run(
+        ["gcloud", "run", "services", "delete", "renderer", "--quiet"]
+    )
+
+
 def test_end_to_end(services):
     editor = services[0].decode() + "/render"
     token = services[1].decode()
@@ -73,11 +78,4 @@ def test_end_to_end(services):
 
     body = response.read()
     assert "<p><strong>strong text</strong></p>" in body.decode()
-#     tear_down()
-
-
-# def tear_down():
-#     subprocess.run(["gcloud", "run", "services", "delete", "editor", "--quiet"])
-#     subprocess.run(
-#         ["gcloud", "run", "services", "delete", "renderer", "--quiet"]
-#     )
+    tear_down()
