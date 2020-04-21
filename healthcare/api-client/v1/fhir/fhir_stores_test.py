@@ -19,7 +19,8 @@ import uuid
 import backoff
 import pytest
 
-from google.cloud import exceptions, storage
+from googleapiclient.errors import HttpError
+from google.cloud import storage
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "datasets"))  # noqa
