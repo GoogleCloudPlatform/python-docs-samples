@@ -37,15 +37,16 @@ def cleaner():
         testing_lib.delete_annotation_spec_set(resource_name)
 
 
-def test_create_annotation_spec_set(capsys):
+def test_create_annotation_spec_set(cleaner, capsys):
 
     @backoff.on_exception(backoff.expo, DeadlineExceeded, max_time=60)
     def run_sample():
         return create_annotation_spec_set.create_annotation_spec_set(PROJECT_ID)
 
     response = run_sample()
-    out, _ = capsys.readouterr()
-    assert 'The annotation_spec_set resource name:' in out
 
     # For cleanup
     cleaner.append(response.name)
+
+    out, _ = capsys.readouterr()
+    assert 'The annotation_spec_set resource name:' in out
