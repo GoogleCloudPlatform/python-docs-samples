@@ -1,6 +1,6 @@
 cryptography==2.8
 flask==1.1.2
-git+https://github.com/googleapis/google-auth-library-python.git@6fed2a3b2c9073f769d6e92b4301d71fe5c7007d#egg=google-auth
+google-auth==1.14.1
 gunicorn==20.0.4
 requests==2.23.0
 requests_toolbelt==0.9.1
