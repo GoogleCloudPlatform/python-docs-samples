@@ -13,11 +13,12 @@
 # limitations under the License.
 
 import os
-import pytest
 import sys
 import uuid
 
 import backoff
+import pytest
+
 from google.cloud import exceptions, storage
 from googleapiclient.errors import HttpError
 
@@ -138,6 +139,45 @@ def crud_fhir_store_id():
     clean_up()
 
 
+@pytest.fixture(scope="module")
+def blob():
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    def create():
+        try:
+            storage_client = storage.Client()
+            bucket = storage_client.get_bucket(gcs_uri)
+            blob = bucket.blob(source_file_name)
+
+            blob.upload_from_filename(resource_file)
+        except HttpError as err:
+            # Ignore 409 errors which are likely caused by
+            # the create going through on the server side but
+            # failing on the client.
+            if err.resp.status == 409:
+                print("Got exception {} while creating dataset".format(err.resp.status))
+            else:
+                raise
+
+    create()
+
+    yield
+
+    # Clean up
+    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
+    def clean_up():
+        try:
+            blob.delete()
+        except HttpError as err:
+            if err.resp.status == 404:
+                print(
+                    "Got exception {} while deleting blob. Most likely the blob doesn't exist.".format(
+                        err.resp.status
+                    )
+                )
+            else:
+                raise
+
+
 def test_crud_fhir_store(test_dataset, capsys):
     fhir_stores.create_fhir_store(project_id, cloud_region, dataset_id, fhir_store_id)
 
@@ -174,32 +214,13 @@ def test_patch_fhir_store(test_dataset, test_fhir_store, capsys):
     assert "Patched FHIR store" in out
 
 
-def test_import_fhir_store_gcs(test_dataset, test_fhir_store, capsys):
-    storage_client = storage.Client()
-    bucket = storage_client.get_bucket(gcs_uri)
-    blob = bucket.blob(source_file_name)
+def test_import_fhir_store_gcs(test_dataset, test_fhir_store, blob, capsys):
+    fhir_stores.import_fhir_resources(
+        project_id, cloud_region, dataset_id, fhir_store_id, import_object,
+    )
 
-    blob.upload_from_filename(resource_file)
-
-    # Retry in case the blob hasn't had time to propagate to Cloud Storage.
-    @backoff.on_exception(backoff.expo, HttpError, max_time=60)
-    def test_call():
-        fhir_stores.import_fhir_resources(
-            project_id, cloud_region, dataset_id, fhir_store_id, import_object,
-        )
-
-        out, _ = capsys.readouterr()
-        assert "Imported FHIR resources" in out
-
-    test_call()
-
-    # Clean up
-    try:
-        blob.delete()
-    # If blob not found, then it's already been deleted, so no need to clean
-    # up.
-    except exceptions.NotFound:
-        pass
+    out, _ = capsys.readouterr()
+    assert "Imported FHIR resources" in out
 
 
 def test_export_fhir_store_gcs(test_dataset, test_fhir_store, capsys):

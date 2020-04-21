@@ -21,9 +21,12 @@ from googleapiclient import discovery
 
 # [START healthcare_get_client]
 def get_client():
-    """Returns an authorized API client by discovering the Healthcare API and
-    creating a service object using the service account credentials in the
-    GOOGLE_APPLICATION_CREDENTIALS environment variable."""
+    """Returns an authorized API client.
+
+    Discovers the Healthcare API and
+    creates a service object using the service account credentials in the
+    GOOGLE_APPLICATION_CREDENTIALS environment variable.
+    """
     api_version = "v1"
     service_name = "healthcare"
 
@@ -146,17 +149,7 @@ def list_fhir_stores(project_id, cloud_region, dataset_id):
     )
 
     for fhir_store in fhir_stores:
-        print(
-            "FHIR store: {}\n"
-            "Enable update/create: {}\n"
-            "Notification config: {}\n"
-            "Disable referential integrity: {}".format(
-                fhir_store.get("name"),
-                fhir_store.get("enableUpdateCreate"),
-                fhir_store.get("notificationConfig"),
-                fhir_store.get("disableReferentialIntegrity"),
-            )
-        )
+        print(fhir_store)
 
     return fhir_stores
 
