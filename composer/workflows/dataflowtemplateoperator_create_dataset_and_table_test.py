@@ -1,8 +1,7 @@
-from . import dataflowtemplateoperator_create_dataset_and_table_helper as helper
 from google.cloud import bigquery
 import google.cloud.exceptions
-import google.api_core.exceptions
 import pytest
+from . import dataflowtemplateoperator_create_dataset_and_table_helper as helper
 
 client = bigquery.Client()
 
@@ -36,7 +35,7 @@ def dataset_id():
 def table():
     try:
         table = client.get_table(expected_table_id)
-    except google.api_core.exceptions.NotFound:
+    except google.cloud.exceptions.NotFound:
         table = helper.create_table()
 
     yield table
