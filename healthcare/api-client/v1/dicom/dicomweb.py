@@ -190,9 +190,7 @@ def dicomweb_retrieve_instance(
     session = get_session()
 
     headers = {"Accept": "application/dicom; transfer-syntax=*"}
-
     response = session.get(dicomweb_path, headers=headers)
-
     response.raise_for_status()
 
     with open(file_name, "wb") as f:
@@ -239,9 +237,7 @@ def dicomweb_retrieve_rendered(
     session = get_session()
 
     headers = {"Accept": "image/png"}
-
     response = session.get(dicomweb_path, headers=headers)
-
     response.raise_for_status()
 
     with open(file_name, "wb") as f:
