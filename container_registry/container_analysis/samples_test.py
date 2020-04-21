@@ -177,7 +177,7 @@ class TestContainerAnalysisSamples:
                 time.sleep(SLEEP_TIME)
             job_done.wait(timeout=60)
             print('done. msg_count = {}'.format(receiver.msg_count))
-            assert message_count == receiver.msg_count
+            assert message_count <= receiver.msg_count
         finally:
             # clean up
             client.delete_subscription(subscription_name)
