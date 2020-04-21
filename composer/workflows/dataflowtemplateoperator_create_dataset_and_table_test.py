@@ -10,13 +10,14 @@ expected_schema = schema = [
     bigquery.SchemaField("location", "GEOGRAPHY", mode="REQUIRED"),
     bigquery.SchemaField("average_temperature", "INTEGER", mode="REQUIRED"),
     bigquery.SchemaField("month", "STRING", mode="REQUIRED"),
-    bigquery.SchemaField("inches_of_rain", "NUMERIC", mode="NULLABLE"),        
+    bigquery.SchemaField("inches_of_rain", "NUMERIC", mode="NULLABLE"),
     bigquery.SchemaField("is_current", "BOOLEAN", mode="NULLABLE"),
     bigquery.SchemaField("latest_measurement", "DATE", mode="NULLABLE"),
 ]
 
 expected_table_id = f"{client.project}.average_weather.average_weather"
 expected_dataset_id = f"{client.project}.average_weather"
+
 
 @pytest.fixture(scope="module")
 def dataset_id():
@@ -30,6 +31,7 @@ def dataset_id():
 
     client.delete_dataset(dataset_id, delete_contents=True, not_found_ok=True)
 
+
 @pytest.fixture(scope="module")
 def table():
     try:
@@ -41,9 +43,9 @@ def table():
 
     client.delete_table(table, not_found_ok=True)
 
+
 def test_creation(dataset_id, table):
 
     assert table.table_id == "average_weather"
     assert dataset_id == expected_dataset_id
     assert table.schema == expected_schema
-    

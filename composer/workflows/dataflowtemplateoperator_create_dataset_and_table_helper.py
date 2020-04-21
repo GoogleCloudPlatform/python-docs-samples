@@ -9,8 +9,9 @@ from google.cloud import bigquery
 
 # [END composer_dataflow_dataset_table_creation]
 
-def create_dataset():   
-    # [START composer_dataflow_dataset_table_creation] 
+
+def create_dataset():
+    # [START composer_dataflow_dataset_table_creation]
 
     # Construct a BigQuery client object.
     client = bigquery.Client()
@@ -29,12 +30,13 @@ def create_dataset():
     # Send the dataset to the API for creation.
     # Raises google.api_core.exceptions.Conflict if the Dataset already
     # exists within the project.
-    dataset = client.create_dataset(dataset) # Make an API request.
+    dataset = client.create_dataset(dataset)  # Make an API request.
 
     print(f"Created dataset {client.project} {dataset.dataset_id}")
     # [END composer_dataflow_dataset_table_creation]
 
     return dataset_id
+
 
 def create_table():
 
@@ -58,5 +60,5 @@ def create_table():
     table = client.create_table(table)  # Make an API request.
     print(f"Created table {table.project}.{table.dataset_id}.{table.table_id}")
 
-# [END composer_dataflow_dataset_table_creation]
+    # [END composer_dataflow_dataset_table_creation]
     return table
