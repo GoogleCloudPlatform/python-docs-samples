@@ -13,7 +13,7 @@
 
 import json
 
-import apiclient
+import googleapiclient
 import mock
 import os
 import pytest
@@ -25,7 +25,7 @@ with open('config.json', 'r') as f:
 config = json.loads(data)
 
 
-kg_search = apiclient.discovery.build('kgsearch', 'v1',
+kg_search = googleapiclient.discovery.build('kgsearch', 'v1',
                                       developerKey=os.environ['API_KEY'])
 example_response = kg_search.entities().search(query='lion', limit=1).execute()
 
