@@ -76,11 +76,10 @@ def _validate_iap_jwt(iap_jwt, expected_audience):
             return (None, None, '**ERROR: no key ID**')
         key = get_iap_key(key_id)
 
-        # Verify token signature, and 'aud' (audience), 'iat' (issued at), 'exp'
-        # (expires) claims.
+        # Verify token signature, expiry and audience.
         decoded_jwt = jwt.decode(iap_jwt, certs=key, audience=expected_audience)
 
-        # Verify 'iss' (issuer) clam.
+        # Verify token issuer.
         if decoded_jwt.get('iss') != 'https://cloud.google.com/iap':
             return (None, None, '**ERROR: invalid issuer**')
 
