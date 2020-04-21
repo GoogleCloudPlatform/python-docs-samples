@@ -47,6 +47,7 @@ def test_main(capsys):
     jwt_validation_result = validate_jwt.validate_iap_jwt_from_app_engine(
         iap_jwt, IAP_PROJECT_NUMBER, IAP_APP_ID)
     print("####=====####")
+    print(iap_jwt)
     print(jwt_validation_result)
     assert jwt_validation_result[0]
     assert jwt_validation_result[1]
