@@ -14,12 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+from os import environ
 import pytest
 import snippets
 from google.cloud import servicedirectory_v1beta1
 
-PROJECT_ID = os.environ['GCLOUD_PROJECT']
+PROJECT_ID = environ['GCLOUD_PROJECT']
 LOCATION_ID = 'us-east1'
 NAMESPACE_ID = 'a-namespace'
 SERVICE_ID = 'a-service'

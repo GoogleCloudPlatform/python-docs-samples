@@ -22,7 +22,7 @@ def create_namespace(project_id, location_id, namespace_id):
 
   client = servicedirectory_v1beta1.RegistrationServiceClient()
 
-  namespace = servicedirectory_v1beta1.Endpoint(
+  namespace = servicedirectory_v1beta1.Namespace(
       name='projects/{0}/locations/{1}/namespaces/{2}'.format(
           project_id, location_id, namespace_id))
 
