@@ -13,12 +13,12 @@
 # limitations under the License.
 
 import os
-import pytest
 import sys
 import uuid
 
 import backoff
 from googleapiclient.errors import HttpError
+import pytest
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "datasets"))  # noqa
@@ -142,7 +142,7 @@ def test_patient():
             # The API returns 200 whether the resource exists or was
             # successfully deleted or not, so only retry on
             # unathorized exceptions.
-            if err.resp.status == 401:
+            if err.resp.status > 200:
                 print(
                     "Got exception {} while deleting FHIR store".format(err.resp.status)
                 )
@@ -160,8 +160,6 @@ def test_create_patient(test_dataset, test_fhir_store, capsys):
     )
 
     out, _ = capsys.readouterr()
-
-    print(out)
 
     assert "Created Patient" in out
 

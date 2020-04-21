@@ -31,8 +31,6 @@ def get_client():
     service_name = "healthcare"
 
     return discovery.build(service_name, api_version)
-
-
 # [END healthcare_get_client]
 
 

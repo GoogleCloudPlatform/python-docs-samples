@@ -18,7 +18,6 @@ import uuid
 
 import backoff
 import pytest
-
 from googleapiclient.errors import HttpError
 from google.cloud import storage
 

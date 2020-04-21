@@ -39,8 +39,6 @@ def get_session():
     session = requests.AuthorizedSession(scoped_credentials)
 
     return session
-
-
 # [END healthcare_get_session]
 
 
@@ -187,7 +185,9 @@ def delete_resource(
     resource_id,
 ):
     """
-    Deletes a FHIR resource. Regardless of whether the operation succeeds or
+    Deletes a FHIR resource.
+
+    Regardless of whether the operation succeeds or
     fails, the server returns a 200 OK HTTP status code. To check that the
     resource was successfully deleted, search for or get the resource and
     see if it exists.
@@ -443,8 +443,9 @@ def search_resources_get(
     base_url, project_id, cloud_region, dataset_id, fhir_store_id, resource_type,
 ):
     """
-    Searches resources in the given FHIR store using the
-    searchResources GET method.
+    Searches resources in the given FHIR store.
+
+    It uses the searchResources GET method.
     """
     url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
 
@@ -478,7 +479,9 @@ def search_resources_post(
     base_url, project_id, cloud_region, dataset_id, fhir_store_id
 ):
     """
-    Searches resources in the given FHIR store using the
+    Searches resources in the given FHIR store.
+
+    It uses the
     _search POST method and a query string containing the
     information to search for. In this sample, the search criteria is
     'family:exact=Smith' on a Patient resource.
