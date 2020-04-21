@@ -29,7 +29,12 @@ def create_namespace(project_id, location_id, namespace_id):
   response = client.create_namespace(
       parent='projects/{0}/locations/{1}'.format(project_id, location_id),
       namespace=namespace,
-      namespace_id=namespace_id)
+      namespace_id=namespace_id,
+      metadata=[[
+          'x-goog-request-params',
+          'name=projects/{0}/locations/{1}/namespaces/{2}'.format(
+              project_id, location_id, namespace_id)
+      ]])
 
   print('Created namespace {0}.'.format(response.name))
 
@@ -44,7 +49,13 @@ def delete_namespace(project_id, location_id, namespace_id):
   namespace_name = 'projects/{0}/locations/{1}/namespaces/{2}'.format(
       project_id, location_id, namespace_id)
 
-  client.delete_namespace(name=namespace_name)
+  client.delete_namespace(
+      name=namespace_name,
+      metadata=[[
+          'x-goog-request-params',
+          'name=projects/{0}/locations/{1}/namespaces/{2}'.format(
+              project_id, location_id, namespace_id)
+      ]])
 
   print('Deleted namespace {0}.'.format(namespace_name))
 
@@ -62,7 +73,12 @@ def create_service(project_id, location_id, namespace_id, service_id):
       parent='projects/{0}/locations/{1}/namespaces/{2}'.format(
           project_id, location_id, namespace_id),
       service=service,
-      service_id=service_id)
+      service_id=service_id,
+      metadata=[[
+          'x-goog-request-params',
+          'name=projects/{0}/locations/{1}/namespaces/{2}/services/{3}'.format(
+              project_id, location_id, namespace_id, service_id)
+      ]])
 
   print('Created service {0}.'.format(response.name))
 
@@ -77,7 +93,13 @@ def delete_service(project_id, location_id, namespace_id, service_id):
   service_name = 'projects/{0}/locations/{1}/namespaces/{2}/services/{3}'.format(
       project_id, location_id, namespace_id, service_id)
 
-  client.delete_service(name=service_name)
+  client.delete_service(
+      name=service_name,
+      metadata=[[
+          'x-goog-request-params',
+          'name=projects/{0}/locations/{1}/namespaces/{2}/services/{3}'.format(
+              project_id, location_id, namespace_id, service_id)
+      ]])
 
   print('Deleted service {0}.'.format(service_name))
 
@@ -91,7 +113,13 @@ def resolve_service(project_id, location_id, namespace_id, service_id):
       name='projects/{0}/locations/{1}/namespaces/{2}/services/{3}'.format(
           project_id, location_id, namespace_id, service_id))
 
-  response = client.resolve_service(request=request)
+  response = client.resolve_service(
+      request=request,
+      metadata=[[
+          'x-goog-request-params',
+          'name=projects/{0}/locations/{1}/namespaces/{2}/services/{3}'.format(
+              project_id, location_id, namespace_id, service_id)
+      ]])
 
   print('Endpoints found:')
   for endpoint in response.service.endpoints:
@@ -117,7 +145,13 @@ def create_endpoint(project_id, location_id, namespace_id, service_id,
       parent='projects/{0}/locations/{1}/namespaces/{2}/services/{3}'.format(
           project_id, location_id, namespace_id, service_id),
       endpoint=endpoint,
-      endpoint_id=endpoint_id)
+      endpoint_id=endpoint_id,
+      metadata=[[
+          'x-goog-request-params',
+          'name=projects/{0}/locations/{1}/namespaces/{2}/services/{3}/endpoints/{4}'
+          .format(project_id, location_id, namespace_id, service_id,
+                  endpoint_id)
+      ]])
 
   print('Created endpoint {0}.'.format(response.name))
 
@@ -133,6 +167,13 @@ def delete_endpoint(project_id, location_id, namespace_id, service_id,
   endpoint_name = 'projects/{0}/locations/{1}/namespaces/{2}/services/{3}/endpoints/{4}'.format(
       project_id, location_id, namespace_id, service_id, endpoint_id)
 
-  client.delete_endpoint(name=endpoint_name)
+  client.delete_endpoint(
+      name=endpoint_name,
+      metadata=[[
+          'x-goog-request-params',
+          'name=projects/{0}/locations/{1}/namespaces/{2}/services/{3}/endpoints/{4}'
+          .format(project_id, location_id, namespace_id, service_id,
+                  endpoint_id)
+      ]])
 
   print('Deleted endpoint {0}.'.format(endpoint_name))
