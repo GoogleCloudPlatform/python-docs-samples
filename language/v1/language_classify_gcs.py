@@ -43,7 +43,6 @@ def sample_classify_text(gcs_content_uri):
 
     # gcs_content_uri = 'gs://cloud-samples-data/language/classify-entertainment.txt'
 
-    # [START language_python_migration_document_gcs]
     # Available types: PLAIN_TEXT, HTML
     type_ = enums.Document.Type.PLAIN_TEXT
 
@@ -52,7 +51,6 @@ def sample_classify_text(gcs_content_uri):
     # https://cloud.google.com/natural-language/docs/languages
     language = "en"
     document = {"gcs_content_uri": gcs_content_uri, "type": type_, "language": language}
-    # [END language_python_migration_document_gcs]
 
     response = client.classify_text(document)
     # Loop through classified categories returned from the API

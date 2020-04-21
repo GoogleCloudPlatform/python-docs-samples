@@ -41,7 +41,6 @@ def sample_analyze_sentiment(text_content):
 
     # text_content = 'I am so happy and joyful.'
 
-    # [START language_python_migration_sentiment_text]
     # Available types: PLAIN_TEXT, HTML
     type_ = enums.Document.Type.PLAIN_TEXT
 
@@ -62,8 +61,6 @@ def sample_analyze_sentiment(text_content):
             response.document_sentiment.magnitude
         )
     )
-    # [END language_python_migration_sentiment_text]
-
     # Get sentiment for all sentences in the document
     for sentence in response.sentences:
         print(u"Sentence text: {}".format(sentence.text.content))

@@ -41,7 +41,6 @@ def sample_analyze_entities(text_content):
 
     # text_content = 'California is a state.'
 
-    # [START language_python_migration_entities_text]
     # Available types: PLAIN_TEXT, HTML
     type_ = enums.Document.Type.PLAIN_TEXT
 
@@ -77,7 +76,6 @@ def sample_analyze_entities(text_content):
             print(
                 u"Mention type: {}".format(enums.EntityMention.Type(mention.type).name)
             )
-    # [END language_python_migration_entities_text]
 
     # Get the language of the text, which will be the same as
     # the language specified in the request or, if not specified,

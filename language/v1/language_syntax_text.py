@@ -50,7 +50,6 @@ def sample_analyze_syntax(text_content):
     language = "en"
     document = {"content": text_content, "type": type_, "language": language}
 
-    # [START language_python_migration_syntax_text]
     # Available values: NONE, UTF8, UTF16, UTF32
     encoding_type = enums.EncodingType.UTF8
 
@@ -64,7 +63,7 @@ def sample_analyze_syntax(text_content):
             u"Location of this token in overall document: {}".format(text.begin_offset)
         )
         # Get the part of speech information for this token.
-        # Parts of speech are as defined in:
+        # Parts of spech are as defined in:
         # http://www.lrec-conf.org/proceedings/lrec2012/pdf/274_Paper.pdf
         part_of_speech = token.part_of_speech
         # Get the tag, e.g. NOUN, ADJ for Adjective, et al.
@@ -73,8 +72,6 @@ def sample_analyze_syntax(text_content):
                 enums.PartOfSpeech.Tag(part_of_speech.tag).name
             )
         )
-        # [END language_python_migration_syntax_text]
-
         # Get the voice, e.g. ACTIVE or PASSIVE
         print(u"Voice: {}".format(enums.PartOfSpeech.Voice(part_of_speech.voice).name))
         # Get the tense, e.g. PAST, FUTURE, PRESENT, et al.
