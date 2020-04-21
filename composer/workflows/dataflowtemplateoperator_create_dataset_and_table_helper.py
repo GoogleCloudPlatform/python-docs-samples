@@ -35,7 +35,7 @@ def create_dataset():
     print(f"Created dataset {client.project} {dataset.dataset_id}")
     # [END composer_dataflow_dataset_table_creation]
 
-    return dataset_id
+    return dataset
 
 
 def create_table():

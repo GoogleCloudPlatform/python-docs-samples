@@ -19,16 +19,15 @@ expected_dataset_id = f"{client.project}.average_weather"
 
 
 @pytest.fixture(scope="module")
-def dataset_id():
+def dataset():
     try:
         dataset = client.get_dataset(expected_dataset_id)
-        dataset_id = dataset.dataset_id
     except google.cloud.exceptions.NotFound:
-        dataset_id = helper.create_dataset()
+        dataset = helper.create_dataset()
 
-    yield dataset_id
+    yield dataset
 
-    client.delete_dataset(dataset_id, delete_contents=True, not_found_ok=True)
+    client.delete_dataset(dataset, delete_contents=True, not_found_ok=True)
 
 
 @pytest.fixture(scope="module")
@@ -43,8 +42,7 @@ def table():
     client.delete_table(table, not_found_ok=True)
 
 
-def test_creation(dataset_id, table):
-
+def test_creation(dataset, table):
     assert table.table_id == "average_weather"
-    assert dataset_id == expected_dataset_id
+    assert dataset.dataset_id == "average_weather"
     assert table.schema == expected_schema
