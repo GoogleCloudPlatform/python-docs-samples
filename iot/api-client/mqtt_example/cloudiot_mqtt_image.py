@@ -18,6 +18,7 @@ import binascii
 import io
 import os
 import sys
+import threading
 import time
 
 from google.cloud import pubsub
@@ -51,14 +52,17 @@ def transmit_image(
 # [END iot_mqtt_image]
 
 
-def receive_image(project_id, sub_name, prefix, extension, duration):
+def receive_image(project_id, subscription_path, prefix, extension, timeout):
     """Receieve images transmitted to a PubSub subscription."""
     subscriber = pubsub.SubscriberClient()
-    subscription_path = subscriber.subscription_path(project_id, sub_name)
 
     global count
     count = 0
     file_pattern = '{}-{}.{}'
+
+    # Set up a callback to acknowledge a message. This closes around an event
+    # so that it can signal that it is done and the main thread can continue.
+    job_done = threading.Event()
 
     def callback(message):
         global count
@@ -71,17 +75,18 @@ def receive_image(project_id, sub_name, prefix, extension, duration):
                     file_pattern.format(prefix, count, extension), 'wb') as f:
                 f.write(image_data)
                 message.ack()
+                # Signal to the main thread that we can exit.
+                job_done.set()
 
         except binascii.Error:
             message.ack()  # To move forward if a message can't be processed
 
     subscriber.subscribe(subscription_path, callback=callback)
 
-    sleep_count = 0
     print('Listening for messages on {}'.format(subscription_path))
-    while sleep_count < duration:
-        time.sleep(1)
-        sleep_count = sleep_count + 1
+    finished = job_done.wait(timeout=timeout)
+    if not finished:
+        print("No event received before the timeout.")
 
 
 def parse_command_line_args():
