@@ -12,31 +12,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import uuid
+
 from google.cloud import bigquery
-from google.cloud import exceptions
+import pytest
 
 import natality_tutorial
 
 
-def dataset_exists(dataset, client):
-    try:
-        client.get_dataset(dataset)
-        return True
-    except exceptions.NotFound:
-        return False
+@pytest.fixture(scope='module')
+def client():
+    return bigquery.Client()
 
 
-def test_natality_tutorial():
-    client = bigquery.Client()
-    dataset_ref = client.dataset('natality_regression')
-    assert not dataset_exists(dataset_ref, client)
+@pytest.fixture
+def datasets_to_delete(client):
+    doomed = []
+    yield doomed
+    for item in doomed:
+        client.delete_dataset(item, delete_contents=True)
 
-    natality_tutorial.run_natality_tutorial()
 
-    assert dataset_exists(dataset_ref, client)
+def test_natality_tutorial(client, datasets_to_delete):
+    override_values = {
+        "dataset_id": "natality_regression_{}".format(str(uuid.uuid4()).replace("-", "_")),
+    }
+    datasets_to_delete.append(override_values["dataset_id"])
 
-    table = client.get_table(
-        bigquery.Table(dataset_ref.table('regression_input')))
+    natality_tutorial.run_natality_tutorial(override_values)
+
+    table_ref = bigquery.Dataset(client.dataset(override_values["dataset_id"])).table("regression_input")
+    table = client.get_table(table_ref)
     assert table.num_rows > 0
-
-    client.delete_dataset(dataset_ref, delete_contents=True)

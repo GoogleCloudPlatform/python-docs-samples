@@ -16,34 +16,39 @@
 
 import os
 
-import create_instruction
-from google.api_core.client_options import ClientOptions
-from google.cloud import datalabeling_v1beta1 as datalabeling
+import backoff
+from google.api_core.exceptions import DeadlineExceeded
 import pytest
+
+import create_instruction
+import testing_lib
+
 
 PROJECT_ID = os.getenv('GCLOUD_PROJECT')
 INSTRUCTION_GCS_URI = ('gs://cloud-samples-data/datalabeling'
                        '/instruction/test.pdf')
 
 
-@pytest.mark.slow
-def test_create_instruction(capsys):
-    result = create_instruction.create_instruction(
-        PROJECT_ID,
-        'IMAGE',
-        INSTRUCTION_GCS_URI
-    )
+@pytest.fixture(scope='module')
+def cleaner():
+    resource_names = []
+
+    yield resource_names
+
+    for resource_name in resource_names:
+        testing_lib.delete_instruction(resource_name)
+
+
+def test_create_instruction(cleaner, capsys):
+
+    @backoff.on_exception(
+        backoff.expo, DeadlineExceeded, max_time=testing_lib.RETRY_DEADLINE)
+    def run_sample():
+        return create_instruction.create_instruction(
+            PROJECT_ID, 'IMAGE', INSTRUCTION_GCS_URI)
+
+    instruction = run_sample()
+    cleaner.append(instruction.name)
+
     out, _ = capsys.readouterr()
     assert 'The instruction resource name: ' in out
-
-    # Delete the created instruction.
-    instruction_name = result.name
-    client = datalabeling.DataLabelingServiceClient()
-
-    # If provided, use a provided test endpoint - this will prevent tests on
-    # this snippet from triggering any action by a real human
-    if 'DATALABELING_ENDPOINT' in os.environ:
-        opts = ClientOptions(api_endpoint=os.getenv('DATALABELING_ENDPOINT'))
-        client = datalabeling.DataLabelingServiceClient(client_options=opts)
-
-    client.delete_instruction(instruction_name)
